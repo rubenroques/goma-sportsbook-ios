@@ -22,15 +22,30 @@ enum SportRadarRestAPIClient {
     case regionCompetitions(regionId: String)
     case competitionMarketGroups(competitionId: String)
     case search(query: String, resultLimit: String, page: String)
-    case banners
     case getEventSummary(eventId: String)
+    case getMarketInfo(marketId: String)
+
+    case getEventsForMarketGroup(marketGroupId: String)
+    case getEventForMarket(marketId: String)
+
+    case homeSliders
+    
+    case promotionalTopBanners
+    case promotionalTopEvents
+    case promotionalTopStories
+    case highlightsBoostedOddsEvents
+    case highlightsImageVisualEvents
+
+    case promotedSports
+
     case favoritesList
     case addFavoriteList(name: String)
     case addFavoriteToList(listId: Int, eventId: String)
     case getFavoritesFromList(listId: Int)
     case deleteFavoriteList(listId: Int)
     case deleteFavoriteFromList(eventId: Int)
-    case getMarketInfo(marketId: String)
+
+
 }
 
 extension SportRadarRestAPIClient: Endpoint {
@@ -63,9 +78,33 @@ extension SportRadarRestAPIClient: Endpoint {
             return "/services/content/get"
         case .search:
             return "/services/content/get"
-        case .banners:
-            return "/services/content/get"
         case .getEventSummary:
+            return "/services/content/get"
+        case .getMarketInfo:
+            return "/services/content/get"
+
+        case .getEventsForMarketGroup:
+            return "/services/content/get"
+        case .getEventForMarket:
+            return "/services/content/get"
+
+        //
+        case .homeSliders:
+            return "/services/content/get"
+        case .promotionalTopBanners:
+            return "/services/content/get"
+
+        case .promotionalTopEvents:
+            return "/services/content/get"
+        case .promotionalTopStories:
+            return "/services/content/get"
+
+        case .highlightsBoostedOddsEvents:
+            return "/services/content/get"
+        case .highlightsImageVisualEvents:
+            return "/services/content/get"
+
+        case .promotedSports:
             return "/services/content/get"
 
         //
@@ -81,8 +120,7 @@ extension SportRadarRestAPIClient: Endpoint {
             return "/api/favourites/fw/deleteAccountFavouriteCoupon"
         case .deleteFavoriteFromList:
             return "/api/favourites/fw/deleteAccountFavourites"
-        case .getMarketInfo:
-            return "/services/content/get"
+
         }
     }
 
@@ -99,15 +137,29 @@ extension SportRadarRestAPIClient: Endpoint {
         case .regionCompetitions: return nil
         case .competitionMarketGroups: return nil
         case .search: return nil
-        case .banners: return nil
         case .getEventSummary: return nil
+        case .getMarketInfo: return nil
+
+        case .getEventsForMarketGroup: return nil
+        case .getEventForMarket: return nil
+
+        case .homeSliders: return nil
+        case .promotionalTopBanners: return nil
+        case .promotionalTopEvents: return nil
+        case .promotionalTopStories: return nil
+
+        case .highlightsBoostedOddsEvents: return nil
+        case .highlightsImageVisualEvents: return nil
+
+        case .promotedSports: return nil
+
         case .favoritesList: return nil
         case .addFavoriteList: return nil
         case .addFavoriteToList: return nil
         case .getFavoritesFromList: return nil
         case .deleteFavoriteList: return nil
         case .deleteFavoriteFromList: return nil
-        case .getMarketInfo: return nil
+
         }
     }
 
@@ -124,15 +176,29 @@ extension SportRadarRestAPIClient: Endpoint {
         case .regionCompetitions: return .post
         case .competitionMarketGroups: return .post
         case .search: return .post
-        case .banners: return .post
         case .getEventSummary: return .post
+        case .getMarketInfo: return .post
+
+        case .getEventsForMarketGroup: return .post
+        case .getEventForMarket: return .post
+
+        case .homeSliders: return .post
+        case .promotionalTopBanners: return .post
+        case .promotionalTopEvents: return .post
+        case .promotionalTopStories: return .post
+
+        case .highlightsBoostedOddsEvents: return .post
+        case .highlightsImageVisualEvents: return .post
+
+        case .promotedSports: return .post
+
         case .favoritesList: return .get
         case .addFavoriteList: return .post
         case .addFavoriteToList: return .post
         case .getFavoritesFromList: return .post
         case .deleteFavoriteList: return .delete
         case .deleteFavoriteFromList: return .delete
-        case .getMarketInfo: return .post
+
         }
     }
 
@@ -250,21 +316,7 @@ extension SportRadarRestAPIClient: Endpoint {
                         }
                         """
             return bodyString.data(using: String.Encoding.utf8) ?? Data()
-        case .banners:
-            let bodyString =
-                        """
-                        {
-                            "contentId": {
-                                "type": "headline",
-                                "id": "1356/20/HomepageSliders"
-                            },
-                            "clientContext": {
-                                "language": "\(SportRadarConstants.socketLanguageCode)",
-                                "ipAddress": "127.0.0.1"
-                            }
-                        }
-                        """
-            return bodyString.data(using: String.Encoding.utf8) ?? Data()
+
         case .getEventSummary(let eventId):
             let bodyString =
                         """
@@ -280,6 +332,103 @@ extension SportRadarRestAPIClient: Endpoint {
                         }
                         """
             return bodyString.data(using: String.Encoding.utf8) ?? Data()
+            
+        case .homeSliders:
+            let bodyString =
+                        """
+                        {
+                            "contentId": {
+                                "type": "headline",
+                                "id": "1356/20/HomepageSliders"
+                            },
+                            "clientContext": {
+                                "language": "\(SportRadarConstants.socketLanguageCode)",
+                                "ipAddress": "127.0.0.1"
+                            }
+                        }
+                        """
+            return bodyString.data(using: String.Encoding.utf8) ?? Data()
+
+        case .promotionalTopBanners: // TODO: use correct language
+            let bodyString =
+                        """
+                        {
+                            "contentId": {
+                                "type": "bannerCategoryList",
+                                "id": "1355/Homepage"
+                            },
+                            "clientContext": {
+                                "language": "FR",
+                                "ipAddress": "127.0.0.1"
+                            }
+                        }
+                        """
+            return bodyString.data(using: String.Encoding.utf8) ?? Data()
+
+        case .promotionalTopEvents:
+            let bodyString =
+                        """
+                        {
+                            "contentId": {
+                                "type": "headline",
+                                "id": "1355/20/slidingEvent"
+                            },
+                            "clientContext": {
+                                "language": "FR",
+                                "ipAddress": "127.0.0.1"
+                            }
+                        }
+                        """
+            return bodyString.data(using: String.Encoding.utf8) ?? Data()
+
+        case .promotionalTopStories:
+            let bodyString =
+                        """
+                        {
+                            "contentId": {
+                                "type": "headline",
+                                "id": "1355/20/PromotionsSummary"
+                            },
+                            "clientContext": {
+                                "language": "FR",
+                                "ipAddress": "127.0.0.1"
+                            }
+                        }
+                        """
+            return bodyString.data(using: String.Encoding.utf8) ?? Data()
+
+        case .highlightsBoostedOddsEvents:
+            let bodyString =
+                        """
+                        {
+                            "contentId": {
+                                "type": "headline",
+                                "id": "1355/20/boostedOddCard"
+                            },
+                            "clientContext": {
+                                "language": "FR",
+                                "ipAddress": "127.0.0.1"
+                            }
+                        }
+                        """
+            return bodyString.data(using: String.Encoding.utf8) ?? Data()
+
+        case .highlightsImageVisualEvents:
+            let bodyString =
+                        """
+                        {
+                            "contentId": {
+                                "type": "headline",
+                                "id": "1355/20/eventCard"
+                            },
+                            "clientContext": {
+                                "language": "FR",
+                                "ipAddress": "127.0.0.1"
+                            }
+                        }
+                        """
+            return bodyString.data(using: String.Encoding.utf8) ?? Data()
+
         case .addFavoriteList(let name):
             let bodyString =
                         """
@@ -340,6 +489,56 @@ extension SportRadarRestAPIClient: Endpoint {
                         }
                         """
             return bodyString.data(using: String.Encoding.utf8) ?? Data()
+
+        case .getEventsForMarketGroup(let marketGroupId):
+            let bodyString =
+                        """
+                        {
+                            "contentId": {
+                                "type": "eventGroup",
+                                "id": "\(marketGroupId)"
+                            },
+                            "clientContext": {
+                                "language": "FR",
+                                "ipAddress": "127.0.0.1"
+                            }
+                        }
+                        """
+            return bodyString.data(using: String.Encoding.utf8) ?? Data()
+
+        case .getEventForMarket(let marketId):
+            let bodyString =
+                        """
+                        {
+                            "contentId": {
+                                "type": "market",
+                                "id": "\(marketId)"
+                            },
+                            "clientContext": {
+                                "language": "FR",
+                                "ipAddress": "127.0.0.1"
+                            }
+                        }
+                        """
+            return bodyString.data(using: String.Encoding.utf8) ?? Data()
+
+        case .promotedSports:
+            let bodyString =
+                        """
+                        {
+                            "contentId": {
+                                "type": "boNavigationList",
+                                "id": "1356/top"
+                            },
+                            "clientContext": {
+                                "language": "FR",
+                                "ipAddress": "127.0.0.1"
+                            }
+                        }
+                        """
+            return bodyString.data(using: String.Encoding.utf8) ?? Data()
+
+
         default:
             return nil
         }
@@ -374,9 +573,30 @@ extension SportRadarRestAPIClient: Endpoint {
             return SportRadarConstants.servicesRestHostname
         case .search:
             return SportRadarConstants.servicesRestHostname
-        case .banners:
-            return SportRadarConstants.servicesRestHostname
         case .getEventSummary:
+            return SportRadarConstants.servicesRestHostname
+        case .getMarketInfo:
+            return SportRadarConstants.servicesRestHostname
+
+        case .getEventsForMarketGroup:
+            return SportRadarConstants.servicesRestHostname
+        case .getEventForMarket:
+            return SportRadarConstants.servicesRestHostname
+
+        case .homeSliders:
+            return SportRadarConstants.servicesRestHostname
+        case .promotionalTopBanners:
+            return SportRadarConstants.servicesRestHostname
+        case .promotionalTopEvents:
+            return SportRadarConstants.servicesRestHostname
+        case .promotionalTopStories:
+            return SportRadarConstants.servicesRestHostname
+        case .highlightsBoostedOddsEvents:
+            return SportRadarConstants.servicesRestHostname
+        case .highlightsImageVisualEvents:
+            return SportRadarConstants.servicesRestHostname
+
+        case .promotedSports:
             return SportRadarConstants.servicesRestHostname
 
         case .favoritesList:
@@ -391,8 +611,7 @@ extension SportRadarRestAPIClient: Endpoint {
             return SportRadarConstants.apiRestHostname
         case .deleteFavoriteFromList:
             return SportRadarConstants.apiRestHostname
-        case .getMarketInfo:
-            return SportRadarConstants.servicesRestHostname
+
         }
     }
 
@@ -403,6 +622,7 @@ extension SportRadarRestAPIClient: Endpoint {
             "Media-Type": "application/json",
             "Accept": "application/json"
         ]
+
         switch self {
         case .get:
             return defaultHeaders
@@ -428,10 +648,33 @@ extension SportRadarRestAPIClient: Endpoint {
             return defaultHeaders
         case .search:
             return defaultHeaders
-        case .banners:
-            return defaultHeaders
         case .getEventSummary:
             return defaultHeaders
+        case .getMarketInfo:
+            return defaultHeaders
+
+        case .getEventsForMarketGroup:
+            return defaultHeaders
+        case .getEventForMarket:
+            return defaultHeaders
+            
+        case .highlightsBoostedOddsEvents:
+            return defaultHeaders
+        case .highlightsImageVisualEvents:
+            return defaultHeaders
+
+        case .promotedSports:
+            return defaultHeaders
+            
+        case .homeSliders:
+            return defaultHeaders
+        case .promotionalTopBanners:
+            return defaultHeaders
+        case .promotionalTopEvents:
+            return defaultHeaders
+        case .promotionalTopStories:
+            return defaultHeaders
+
         case .favoritesList, .addFavoriteList, .addFavoriteToList, .getFavoritesFromList, .deleteFavoriteList, .deleteFavoriteFromList:
             return [
                 "Accept-Encoding": "gzip, deflate, br",
@@ -441,8 +684,7 @@ extension SportRadarRestAPIClient: Endpoint {
                 "X-MGS-BusinessUnit": "3",
                 "X-MGS-Location": "UK",
             ]
-        case .getMarketInfo:
-            return defaultHeaders
+
         }
     }
 

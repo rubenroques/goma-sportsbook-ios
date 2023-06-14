@@ -18,62 +18,63 @@ class MatchWidgetCellViewModel {
     var isToday: Bool
     var countryId: String
 
-    var match: Match?
+    var match: Match
+
+    var promoImageURL: URL? {
+        return URL(string: self.match.promoImageURL ?? "")
+    }
 
     var isLiveCard: Bool {
-        if let match = self.match {
-            switch match.status {
-            case .notStarted, .unknown:
-                return false
-            case .inProgress(_), .ended:
-                return true
-            }
+        switch match.status {
+        case .notStarted, .unknown:
+            return false
+        case .inProgress, .ended:
+            return true
         }
-        return false
     }
 
     var isLiveMatch: Bool {
-        if let match = self.match {
-            switch match.status {
-            case .notStarted, .ended, .unknown:
-                return false
-            case .inProgress(_):
-                return true
-            }
+        switch match.status {
+        case .notStarted, .ended, .unknown:
+            return false
+        case .inProgress:
+            return true
         }
-        return false
     }
 
     var inProgressStatusString: String? {
-        if let match = self.match {
-            switch match.status {
-            case .ended, .notStarted, .unknown:
-                return nil
-            case .inProgress(let progress):
-                return progress
-            }
+
+        switch match.status {
+        case .ended, .notStarted, .unknown:
+            return nil
+        case .inProgress(let progress):
+            return progress
         }
-        return nil
+
     }
 
     var matchScore: String {
         var homeScore = "0"
         var awayScore = "0"
-        if let match = self.match, let homeScoreInt = match.homeParticipantScore {
+        if let homeScoreInt = match.homeParticipantScore {
             homeScore = "\(homeScoreInt)"
         }
-        if let match = self.match, let awayScoreInt = match.awayParticipantScore {
+        if let awayScoreInt = match.awayParticipantScore {
             awayScore = "\(awayScoreInt)"
         }
         return "\(homeScore) - \(awayScore)"
     }
 
     var matchTimeDetails: String? {
-        let details = [self.match?.matchTime, self.match?.detailedStatus]
+        let details = [self.match.matchTime, self.match.detailedStatus]
         return details.compactMap({ $0 }).joined(separator: " - ")
     }
 
-    init(match: Match) {
+    var matchWidgetType: MatchWidgetType = .normal
+
+    init(match: Match, matchWidgetType: MatchWidgetType = .normal) {
+
+        self.matchWidgetType = matchWidgetType
 
         self.match = match
 
@@ -112,42 +113,6 @@ class MatchWidgetCellViewModel {
         self.competitionName = match.competitionName
     }
 
-    init(match: EveryMatrix.Match) {
-
-        self.homeTeamName = match.homeParticipantName ?? ""
-        self.awayTeamName = match.awayParticipantName ?? ""
-
-        self.countryISOCode = ""
-        self.countryId = ""
-
-        self.isToday = false
-        self.startDateString = ""
-        self.startTimeString = ""
-
-        if let startDate = match.startDate {
-
-            let relativeFormatter = MatchWidgetCellViewModel.relativeDateFormatter
-            let relativeDateString = relativeFormatter.string(from: startDate)
-            // "Jan 18, 2018"
-
-            let nonRelativeFormatter = MatchWidgetCellViewModel.normalDateFormatter
-            let normalDateString = nonRelativeFormatter.string(from: startDate)
-            // "Jan 18, 2018"
-
-            if relativeDateString == normalDateString {
-                let customFormatter = Date.buildFormatter(locale: Env.locale, dateFormat: "dd MMM")
-                self.startDateString = customFormatter.string(from: startDate)
-            }
-            else {
-                self.startDateString = relativeDateString // Today, Yesterday
-            }
-
-            self.isToday = Env.calendar.isDateInToday(startDate)
-            self.startTimeString = MatchWidgetCellViewModel.hourDateFormatter.string(from: startDate)
-        }
-
-        self.competitionName = match.parentName ?? ""
-    }
 
     static var hourDateFormatter: DateFormatter = {
         var dateFormatter = DateFormatter()

@@ -108,7 +108,7 @@ class PopularDetailsViewModel {
             let matchEvents = eventGroup.events.filter { event in
                 event.type == .match
             }
-            matchEventsGroups.append(EventsGroup(events: matchEvents))
+            matchEventsGroups.append(EventsGroup(events: matchEvents, marketGroupId: eventGroup.marketGroupId))
         }
 
         //
@@ -117,7 +117,7 @@ class PopularDetailsViewModel {
             let competitionEvents = eventGroup.events.filter { event in
                 event.type == .competition
             }
-            competitionEventsGroups.append(EventsGroup(events: competitionEvents))
+            competitionEventsGroups.append(EventsGroup(events: competitionEvents, marketGroupId: eventGroup.marketGroupId))
         }
 
         return (matchEventsGroups, competitionEventsGroups)

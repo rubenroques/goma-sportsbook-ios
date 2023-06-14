@@ -77,12 +77,6 @@ class Router {
 
         self.rootWindow.rootViewController = splashViewController
 
-        // #if DEBUG
-        // self.rootWindow.rootViewController = LoadingSpinnerViewController()
-        //        // AnonymousSideMenuViewController(viewModel: AnonymousSideMenuViewModel())
-        // #endif
-
-
         self.rootWindow.makeKeyAndVisible()
     }
 
@@ -105,6 +99,7 @@ class Router {
 
         // if Development
         //
+        // self.rootWindow.rootViewController = StoriesFullScreenViewController(viewModel: StoriesFullScreenViewModel())
         // Prod
         self.rootWindow.rootViewController = bootRootViewController
         //

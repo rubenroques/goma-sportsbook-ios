@@ -32,6 +32,10 @@ extension ServiceProviderModelMapper {
         return nil
     }
 
+    static func matches(fromEvents events: [ServicesProvider.Event]) -> [Match] {
+        return events.map(Self.match(fromEvent:))
+    }
+
     static func match(fromEvent event: ServicesProvider.Event) -> Match {
 
         var venue: Location?
@@ -55,7 +59,8 @@ extension ServiceProviderModelMapper {
                           markets: Self.markets(fromServiceProviderMarkets: event.markets),
                           rootPartId: "",
                           status: Self.matchStatus(fromInternalEvent: event.status),
-                          matchTime: event.matchTime)
+                          matchTime: event.matchTime,
+                          promoImageURL: event.promoImageURL)
         return match
     }
 

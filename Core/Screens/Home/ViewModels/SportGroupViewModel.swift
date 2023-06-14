@@ -48,6 +48,8 @@ class SportGroupViewModel {
                 self.matchTypes.append(.topCompetition)
             case .competitionsVideos(let title, let contents):
                 self.matchTypes.append(.topCompetitionVideo(title: title, contents: contents))
+            case .mixedEvents(let title):
+                self.matchTypes.append(.mixedEvents(title: title))
             case .unknown:
                 ()
             }

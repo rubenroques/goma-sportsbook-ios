@@ -307,7 +307,7 @@ extension SportMatchSingleLineTableViewCell: UICollectionViewDelegate, UICollect
                 let cellViewModel = MatchWidgetCellViewModel(match: match)
 
                 cell.configure(withViewModel: cellViewModel)
-                cell.tappedMatchWidgetAction = { [weak self] in
+                cell.tappedMatchWidgetAction = { [weak self] match in
                     self?.tappedMatchLineAction?(match)
                 }
 //                cell.didTapFavoriteMatchAction = { [weak self] match in
@@ -327,7 +327,7 @@ extension SportMatchSingleLineTableViewCell: UICollectionViewDelegate, UICollect
                 let cellViewModel = MatchWidgetCellViewModel(match: match)
 
                 cell.configure(withViewModel: cellViewModel)
-                cell.tappedMatchWidgetAction = { [weak self] in
+                cell.tappedMatchWidgetAction = { [weak self] match in
                     self?.tappedMatchLineAction?(match)
                 }
 //                cell.didTapFavoriteMatchAction = { [weak self] match in

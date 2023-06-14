@@ -225,6 +225,12 @@ extension DynamicHomeViewTemplateDataSource: HomeViewTemplateDataSource {
             return self.suggestedBets.isEmpty ? 0 : 1
         case .sport(_, _, let contents):
             return contents.count
+        case .promotionStoriesBar:
+            return 0
+        case .highlightedEvents:
+            return 0
+        case .swipeBetButton:
+            return 0
         case .unknown:
             return 0
         }
@@ -249,6 +255,12 @@ extension DynamicHomeViewTemplateDataSource: HomeViewTemplateDataSource {
             return self.suggestedBets.isNotEmpty ? localized("suggested_bets") : nil
         case .sport(_, let name, _):
             return name.capitalized
+        case .promotionStoriesBar:
+            return nil
+        case .highlightedEvents:
+            return nil
+        case .swipeBetButton:
+            return nil
         case .unknown:
             return nil
         }
@@ -287,6 +299,12 @@ extension DynamicHomeViewTemplateDataSource: HomeViewTemplateDataSource {
             return self.suggestedBets.isNotEmpty
         case .sport:
             return true
+        case .promotionStoriesBar:
+            return false
+        case .highlightedEvents:
+            return false
+        case .swipeBetButton:
+            return false
         case .unknown:
             return false
         }
@@ -316,7 +334,13 @@ extension DynamicHomeViewTemplateDataSource: HomeViewTemplateDataSource {
             return HomeViewModel.Content.suggestedBets
         case .sport(let id, let name, _):
             let sport = Sport(id: id, name: name.capitalized, alphaId: nil, numericId: nil, showEventCategory: false, liveEventsCount: 0)
-            return HomeViewModel.Content.sport(sport)
+            return HomeViewModel.Content.sportGroup(sport)
+        case .promotionStoriesBar:
+            return nil
+        case .highlightedEvents:
+            return nil
+        case .swipeBetButton:
+            return nil
         case .unknown:
             return nil
         }
@@ -389,7 +413,7 @@ extension DynamicHomeViewTemplateDataSource: HomeViewTemplateDataSource {
         }
     }
 
-    func matchStatsViewModel(forMatch match: Match) -> MatchStatsViewModel {
+    func matchStatsViewModel(forMatch match: Match) -> MatchStatsViewModel? {
         if let viewModel = cachedMatchStatsViewModels[match.id] {
             return viewModel
         }
@@ -400,5 +424,16 @@ extension DynamicHomeViewTemplateDataSource: HomeViewTemplateDataSource {
         }
     }
 
-}
+    func quickSwipeStackViewModel() -> QuickSwipeStackCellViewModel? {
+        return nil
+    }
 
+    func highlightedMatchViewModel(forIndex index: Int) -> MatchWidgetCellViewModel? {
+        return nil
+    }
+
+    func promotedMatch(forSection section: Int, forIndex index: Int) -> Match? {
+        return nil
+    }
+
+}

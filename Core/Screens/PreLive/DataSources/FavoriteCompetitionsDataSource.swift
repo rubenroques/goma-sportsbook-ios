@@ -56,16 +56,16 @@ class FavoriteCompetitionsDataSource: NSObject, UITableViewDataSource, UITableVi
             
             cell.setupWithMatch(match)
             cell.shouldShowCountryFlag(false)
-            cell.tappedMatchLineAction = {
-                self.didSelectMatchAction?(match)
+            cell.tappedMatchLineAction = { [weak self] match in
+                self?.didSelectMatchAction?(match)
             }
             
 //            cell.didTapFavoriteMatchAction = { [weak self] match in
 //                self?.didTapFavoriteMatchAction?(match)
 //            }
             
-            cell.matchWentLive = {
-                self.matchWentLiveAction?()
+            cell.matchWentLive = { [weak self] in
+                self?.matchWentLiveAction?()
             }
 
             return cell
