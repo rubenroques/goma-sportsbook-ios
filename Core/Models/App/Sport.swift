@@ -25,7 +25,7 @@ struct Sport {
          showEventCategory: Bool,
          liveEventsCount: Int,
          outrightEventsCount: Int = 0,
-         eventsCount: Int) {
+         eventsCount: Int = 0) {
         self.id = id
         self.name = name
         self.alphaId = alphaId
