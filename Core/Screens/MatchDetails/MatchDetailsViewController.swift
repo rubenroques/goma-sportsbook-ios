@@ -96,8 +96,6 @@ class MatchDetailsViewController: UIViewController {
     @IBOutlet private var awayRedCardsLabel: UILabel!
 
     @IBOutlet private var marketsStackView: UIStackView!
-    @IBOutlet private var contentScrollView: UIScrollView!
-
 
     private lazy var floatingShortcutsView: FloatingShortcutsView = Self.createFloatingShortcutsView()
     private static func createFloatingShortcutsView() -> FloatingShortcutsView {
@@ -455,9 +453,6 @@ class MatchDetailsViewController: UIViewController {
         
         self.headerBarSelection = .none
 
-        let tapMarkets = UITapGestureRecognizer(target: self, action: #selector(didTapMarkets))
-        self.headerDetailView.addGestureRecognizer(tapMarkets)
-        
         self.setupWithTheme()
         
         self.bind(toViewModel: self.viewModel)
@@ -919,12 +914,6 @@ class MatchDetailsViewController: UIViewController {
         }
     }
 
-    @objc func didTapMarkets() {
-        if self.shouldShowLiveFieldWebView {
-            self.contentScrollView.setContentOffset(CGPoint.zero, animated: true)
-        }
-    }
-    
     @objc func didTapLiveButtonHeaderView() {
         
         if !isLiveFieldReady {
@@ -990,11 +979,13 @@ class MatchDetailsViewController: UIViewController {
     }
     
     @objc private func openCompetitionsDetails() {
-        if let match = self.viewModel.match {
-            let competitionDetailsViewModel = CompetitionDetailsViewModel(competitionsIds: [match.competitionId], sport: match.sport)
-            let competitionDetailsViewController = CompetitionDetailsViewController(viewModel: competitionDetailsViewModel)
-            self.navigationController?.pushViewController(competitionDetailsViewController, animated: true)
-        }
+
+//        if let match = self.viewModel.match {
+//            let competitionDetailsViewModel = CompetitionDetailsViewModel(competitionsIds: [match.competitionId], sport: match.sport)
+//            let competitionDetailsViewController = CompetitionDetailsViewController(viewModel: competitionDetailsViewModel)
+//            self.navigationController?.pushViewController(competitionDetailsViewController, animated: true)
+//        }
+
     }
     
     @objc func didTapChatView() {

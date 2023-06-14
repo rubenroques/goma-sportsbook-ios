@@ -323,7 +323,7 @@ extension CompetitionDetailsViewController: UITableViewDelegate, UITableViewData
                 cell.matchStatsViewModel = self.viewModel.matchStatsViewModel(forMatch: match)
                 cell.setupWithMatch(match)
                 cell.shouldShowCountryFlag(false)
-                cell.tappedMatchLineAction = { [weak self] in
+                cell.tappedMatchLineAction = { [weak self] match in
                     self?.openMatchDetails(match)
                 }
                 return cell

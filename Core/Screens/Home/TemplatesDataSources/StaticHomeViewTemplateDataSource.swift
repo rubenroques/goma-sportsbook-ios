@@ -204,7 +204,7 @@ class StaticHomeViewTemplateDataSource {
     func fetchBanners() {
         self.banners = []
 
-        Env.servicesProvider.getBanners()
+        Env.servicesProvider.getHomeSliders()
             .receive(on: DispatchQueue.main)
             .sink(receiveCompletion: { [weak self] completion in
                 switch completion {
@@ -355,6 +355,7 @@ extension StaticHomeViewTemplateDataSource: HomeViewTemplateDataSource {
                 return 0
             }
         }
+        
     }
 
     func title(forSection section: Int) -> String? {
@@ -439,7 +440,7 @@ extension StaticHomeViewTemplateDataSource: HomeViewTemplateDataSource {
         case 6: return HomeViewModel.Content.suggestedBets
         default:
             if let sportForSection = self.sportForSection(section) {
-                return HomeViewModel.Content.sport(sportForSection)
+                return HomeViewModel.Content.sportGroup(sportForSection)
             }
             else {
                 return nil
@@ -514,7 +515,7 @@ extension StaticHomeViewTemplateDataSource: HomeViewTemplateDataSource {
         }
     }
 
-    func matchStatsViewModel(forMatch match: Match) -> MatchStatsViewModel {
+    func matchStatsViewModel(forMatch match: Match) -> MatchStatsViewModel? {
         if let viewModel = cachedMatchStatsViewModels[match.id] {
             return viewModel
         }
@@ -525,6 +526,18 @@ extension StaticHomeViewTemplateDataSource: HomeViewTemplateDataSource {
         }
     }
 
+    func quickSwipeStackViewModel() -> QuickSwipeStackCellViewModel? {
+        return nil
+    }
+
+    func highlightedMatchViewModel(forIndex index: Int) -> MatchWidgetCellViewModel? {
+        return nil
+    }
+
+    func promotedMatch(forSection section: Int, forIndex index: Int) -> Match? {
+        return nil
+    }
+    
 }
 
 extension StaticHomeViewTemplateDataSource {

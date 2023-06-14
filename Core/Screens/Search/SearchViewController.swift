@@ -446,8 +446,8 @@ extension SearchViewController: UITableViewDataSource, UITableViewDelegate {
                 if let cell = tableView.dequeueCellType(MatchLineTableViewCell.self) {
 
                     cell.setupWithMatch(match)
-                    cell.tappedMatchLineAction = {
-                        self.openMatchDetailsScreen(match: match)
+                    cell.tappedMatchLineAction = { [weak self] match in
+                        self?.openMatchDetailsScreen(match: match)
                     }
 
                     cell.didTapFavoriteMatchAction = { [weak self] match in
@@ -500,7 +500,6 @@ extension SearchViewController: UITableViewDataSource, UITableViewDelegate {
 
         }
         return UITableViewCell()
-
     }
 
     func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {

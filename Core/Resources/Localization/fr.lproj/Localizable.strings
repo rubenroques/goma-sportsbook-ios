@@ -717,7 +717,7 @@
 "red_cards" = "Cartons rouges";
 "refused_location" = "Malheureusement, nous n'avons pas pu accéder à votre position cette fois-ci.";
 "refused_location_subtitle" = "À tout moment, veuillez activer cette option dans Paramètres > Betsson";
-"register" = "S'enregistrer";
+"register" = "Inscription";
 "register_error_title" = "Erreur d'inscription";
 "reject" = "Rejeter";
 "remaining" = "Restant";

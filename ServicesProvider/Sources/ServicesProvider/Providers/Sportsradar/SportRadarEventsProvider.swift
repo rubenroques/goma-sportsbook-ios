@@ -152,8 +152,8 @@ class SportRadarEventsProvider: EventsProvider {
         }
         else {
             let paginator = SportRadarEventsPaginator(contentIdentifier: contentIdentifier,
-                                            sessionToken: sessionToken.hash,
-                                            storage: SportRadarEventsStorage())
+                                                      sessionToken: sessionToken.hash,
+                                                      storage: SportRadarEventsStorage())
             self.eventsPaginators[contentIdentifier.pageableId] = paginator
 
             return paginator.requestInitialPage()
@@ -221,8 +221,8 @@ class SportRadarEventsProvider: EventsProvider {
         }
         else {
             let paginator = SportRadarEventsPaginator(contentIdentifier: contentIdentifier,
-                                            sessionToken: sessionToken.hash,
-                                            storage: SportRadarEventsStorage())
+                                                      sessionToken: sessionToken.hash,
+                                                      storage: SportRadarEventsStorage())
             self.eventsPaginators[contentIdentifier.pageableId] = paginator
             return paginator.requestInitialPage()
         }
@@ -275,7 +275,7 @@ class SportRadarEventsProvider: EventsProvider {
         let contentIdentifier = ContentIdentifier(contentType: contentType, contentRoute: contentRoute)
 
         if let publisher = self.competitionEventsPublisher[contentIdentifier],
-            let subscription = self.activeSubscriptions.object(forKey: contentIdentifier) {
+           let subscription = self.activeSubscriptions.object(forKey: contentIdentifier) {
             // We already have a publisher for this events and a subscription object for the caller to store
             return publisher
                 .prepend(.connected(subscription: subscription))
@@ -497,7 +497,7 @@ class SportRadarEventsProvider: EventsProvider {
 
         guard
             let sessionToken = socketConnector.token
-            //let publisher = self.outrightDetailsPublisher
+                //let publisher = self.outrightDetailsPublisher
         else {
             return Fail(error: ServiceProviderError.userSessionNotFound).eraseToAnyPublisher()
         }
@@ -818,7 +818,7 @@ extension SportRadarEventsProvider: SportRadarConnectorSubscriber {
 
     func didReceiveGenericUpdate(content: SportRadarModels.ContentContainer) {
         if let contentIdentifier = content.contentIdentifier,
-            let contentIdentifierPaginator = self.eventsPaginators[contentIdentifier.pageableId] {
+           let contentIdentifierPaginator = self.eventsPaginators[contentIdentifier.pageableId] {
             contentIdentifierPaginator.handleContentUpdate(content)
         }
 
@@ -841,13 +841,13 @@ extension SportRadarEventsProvider {
     func getMarketsFilters(event: Event) -> AnyPublisher<[MarketGroup], Never> {
 
         let defaultMarketGroups = [MarketGroup.init(type: "0",
-                                                   id: "0",
-                                                   groupKey: "All Markets",
-                                                   translatedName: "All Markets",
-                                                   position: 0,
-                                                   isDefault: true,
-                                                   numberOfMarkets: nil,
-                                                   markets: event.markets)]
+                                                    id: "0",
+                                                    groupKey: "All Markets",
+                                                    translatedName: "All Markets",
+                                                    position: 0,
+                                                    isDefault: true,
+                                                    numberOfMarkets: nil,
+                                                    markets: event.markets)]
 
         let endpoint = SportRadarRestAPIClient.marketsFilter
         let requestPublisher: AnyPublisher<MarketFilter, ServiceProviderError> = self.restConnector.request(endpoint)
@@ -1016,7 +1016,7 @@ extension SportRadarEventsProvider {
                 $0.id != "_TOKEN_"
             })
 
-            let filteredEventsGroup = EventsGroup(events: filteredEvents)
+            let filteredEventsGroup = EventsGroup(events: filteredEvents, marketGroupId: mappedEventsGroup.marketGroupId)
 
             return filteredEventsGroup
         })
@@ -1024,22 +1024,190 @@ extension SportRadarEventsProvider {
 
     }
 
-    func getBanners() -> AnyPublisher<BannerResponse, ServiceProviderError> {
+    func getHomeSliders() -> AnyPublisher<BannerResponse, ServiceProviderError> {
 
-        let endpoint = SportRadarRestAPIClient.banners
+        let endpoint = SportRadarRestAPIClient.homeSliders
 
         let requestPublisher: AnyPublisher<SportRadarModels.SportRadarResponse<SportRadarModels.BannerResponse>, ServiceProviderError> = self.restConnector.request(endpoint)
 
         return requestPublisher.map( { sportRadarResponse -> BannerResponse in
             let bannersResponse = sportRadarResponse.data
             let mappedBannersResponse = SportRadarModelMapper.bannerResponse(fromInternalBannerResponse: bannersResponse)
-//            let mappedEventsGroup = SportRadarModelMapper.events(fromInternalEvents: events)
+            //            let mappedEventsGroup = SportRadarModelMapper.events(fromInternalEvents: events)
 
             return mappedBannersResponse
         })
         .eraseToAnyPublisher()
 
     }
+
+    public func getPromotionalTopBanners() -> AnyPublisher<[PromotionalBanner], ServiceProviderError> {
+        let endpoint = SportRadarRestAPIClient.promotionalTopBanners
+        let requestPublisher: AnyPublisher<SportRadarModels.SportRadarResponse<[SportRadarModels.PromotionalBannersResponse]>, ServiceProviderError> = self.restConnector.request(endpoint)
+
+        return requestPublisher.map( { sportRadarResponse -> [PromotionalBanner] in
+            let promotionalBannersResponse = sportRadarResponse.data.flatMap({ $0.promotionalBannerItems })
+            let mappedBannersResponse: [PromotionalBanner] = promotionalBannersResponse.map(SportRadarModelMapper.promotionalBanner(fromInternalPromotionalBanner:))
+            return mappedBannersResponse
+        })
+        .eraseToAnyPublisher()
+    }
+
+    public func getPromotionalSlidingTopEvents() -> AnyPublisher<[Event], ServiceProviderError> {
+        let endpoint = SportRadarRestAPIClient.promotionalTopEvents
+        let requestPublisher: AnyPublisher<SportRadarModels.SportRadarResponse<SportRadarModels.HeadlineResponse>, ServiceProviderError> = self.restConnector.request(endpoint)
+
+        return requestPublisher
+            .map(\.data)
+            .flatMap({ headlineResponse -> AnyPublisher<[Event], ServiceProviderError> in
+
+                let headlineItems = headlineResponse.headlineItems ?? []
+                var headlineItemsImages: [String: String] = [:]
+                headlineItems.forEach({ item in
+                    if let id = item.marketId, let imageURL = item.imageURL {
+                        headlineItemsImages[id] = imageURL
+                    }
+                })
+                let marketIds = headlineItems.map({ item in return item.marketId }).compactMap({ $0 })
+
+                let publishers = marketIds.map(self.getEventForMarket(withId:))
+                let finalPublisher = Publishers.MergeMany(publishers)
+                    .collect()
+                    .map({ (events: [Event?]) -> [Event] in
+                        return events.compactMap({ $0 })
+                    })
+                    .map({ events -> [Event] in // Configure the image of each market
+                        for event in events {
+                            let firstMarketId = event.markets.first?.id ?? ""
+                            event.promoImageURL =  headlineItemsImages[firstMarketId]
+                        }
+
+                        let cleanedEvents = events.compactMap({ $0 })
+
+                        // create a dictionary from cleanedEvents using marketId as a key
+                        let eventDict = Dictionary(uniqueKeysWithValues: cleanedEvents.map { ($0.markets.first?.id ?? "", $0) })
+
+                        // re-order the cleanedEvents based on the order of marketIds in headlineItems
+                        let orderedEvents = headlineItems.compactMap { eventDict[$0.marketId ?? ""] }
+                        return orderedEvents
+                    })
+                    .eraseToAnyPublisher()
+
+                return finalPublisher
+                    .setFailureType(to: ServiceProviderError.self)
+                    .eraseToAnyPublisher()
+            })
+            .eraseToAnyPublisher()
+    }
+
+    func getHighlightedBoostedEvents() -> AnyPublisher<[Event], ServiceProviderError> {
+        let endpoint = SportRadarRestAPIClient.highlightsBoostedOddsEvents
+        let requestPublisher: AnyPublisher<SportRadarModels.SportRadarResponse<SportRadarModels.HeadlineResponse>, ServiceProviderError> = self.restConnector.request(endpoint)
+
+        return requestPublisher
+            .map(\.data)
+            .flatMap({ headlineResponse -> AnyPublisher<[Event], ServiceProviderError> in
+
+                let headlineItems = headlineResponse.headlineItems ?? []
+                let marketIds = headlineItems.map({ item in return item.marketId }).compactMap({ $0 })
+
+                let publishers = marketIds.map(self.getEventForMarket(withId:))
+                let finalPublisher = Publishers.MergeMany(publishers)
+                    .collect()
+                    .map({ (events: [Event?]) -> [Event] in
+
+                        let cleanedEvents = events.compactMap({ $0 })
+
+                        // create a dictionary from cleanedEvents using marketId as a key
+                        let eventDict = Dictionary(uniqueKeysWithValues: cleanedEvents.map { ($0.markets.first?.id ?? "", $0) })
+
+                        // re-order the cleanedEvents based on the order of marketIds in headlineItems
+                        let orderedEvents = headlineItems.compactMap { eventDict[$0.marketId ?? ""] }
+                        return orderedEvents
+                    })
+
+                    .eraseToAnyPublisher()
+
+                return finalPublisher
+                    .setFailureType(to: ServiceProviderError.self)
+                    .eraseToAnyPublisher()
+            })
+            .eraseToAnyPublisher()
+    }
+
+    func getHighlightedVisualImageEvents() -> AnyPublisher<[Event], ServiceProviderError> {
+        let endpoint = SportRadarRestAPIClient.highlightsImageVisualEvents
+        let requestPublisher: AnyPublisher<SportRadarModels.SportRadarResponse<SportRadarModels.HeadlineResponse>, ServiceProviderError> = self.restConnector.request(endpoint)
+
+        return requestPublisher
+            .map(\.data)
+            .flatMap({ headlineResponse -> AnyPublisher<[Event], ServiceProviderError> in
+
+                let headlineItems = headlineResponse.headlineItems ?? []
+                var headlineItemsImages: [String: String] = [:]
+                headlineItems.forEach({ item in
+                    if let id = item.marketId, let imageURL = item.imageURL {
+                        headlineItemsImages[id] = imageURL
+                    }
+                })
+                let marketIds = headlineItems.map({ item in return item.marketId }).compactMap({ $0 })
+
+                let publishers = marketIds.map(self.getEventForMarket(withId:))
+                let finalPublisher = Publishers.MergeMany(publishers)
+                    .collect()
+                    .map({ (events: [Event?]) -> [Event] in
+                        return events.compactMap({ $0 })
+                    })
+                    .map({ events -> [Event] in // Configure the image of each market
+                        for event in events {
+                            let firstMarketId = event.markets.first?.id ?? ""
+                            event.promoImageURL =  headlineItemsImages[firstMarketId]
+                        }
+
+                        let cleanedEvents = events.compactMap({ $0 })
+
+                        // create a dictionary from cleanedEvents using marketId as a key
+                        let eventDict = Dictionary(uniqueKeysWithValues: cleanedEvents.map { ($0.markets.first?.id ?? "", $0) })
+
+                        // re-order the cleanedEvents based on the order of marketIds in headlineItems
+                        let orderedEvents = headlineItems.compactMap { eventDict[$0.marketId ?? ""] }
+                        return orderedEvents
+                    })
+                    .eraseToAnyPublisher()
+
+                return finalPublisher
+                    .setFailureType(to: ServiceProviderError.self)
+                    .eraseToAnyPublisher()
+            })
+            .eraseToAnyPublisher()
+    }
+
+
+    public func getPromotionalTopStories() -> AnyPublisher<BannerResponse, ServiceProviderError> {
+        let endpoint = SportRadarRestAPIClient.promotionalTopStories
+        let requestPublisher: AnyPublisher<SportRadarModels.SportRadarResponse<SportRadarModels.BannerResponse>, ServiceProviderError> = self.restConnector.request(endpoint)
+
+        return requestPublisher.map( { sportRadarResponse -> BannerResponse in
+            let bannersResponse = sportRadarResponse.data
+            let mappedBannersResponse = SportRadarModelMapper.bannerResponse(fromInternalBannerResponse: bannersResponse)
+            return mappedBannersResponse
+        })
+        .eraseToAnyPublisher()
+    }
+
+
+    public func getPromotedSports() -> AnyPublisher<[PromotedSport], ServiceProviderError> {
+        let endpoint = SportRadarRestAPIClient.promotedSports
+        let requestPublisher: AnyPublisher<SportRadarModels.SportRadarResponse<SportRadarModels.PromotedSportsResponse>, ServiceProviderError> = self.restConnector.request(endpoint)
+
+        return requestPublisher.map( { sportRadarResponse -> [PromotedSport] in
+            let promotedSports = sportRadarResponse.data.promotedSports
+            let mappedPromotedSports = promotedSports.map(SportRadarModelMapper.promotedSport(fromInternalPromotedSport:))
+            return mappedPromotedSports
+        })
+        .eraseToAnyPublisher()
+    }
+
 
     func getEventSummary(eventId: String) -> AnyPublisher<Event, ServiceProviderError> {
 
@@ -1072,6 +1240,40 @@ extension SportRadarEventsProvider {
         .eraseToAnyPublisher()
 
     }
+
+    func getEventsForMarketGroup(withId marketGroupId: String) -> AnyPublisher<EventsGroup, ServiceProviderError> {
+
+        let endpoint = SportRadarRestAPIClient.getEventsForMarketGroup(marketGroupId: marketGroupId)
+
+        let requestPublisher: AnyPublisher<SportRadarModels.SportRadarResponse<SportRadarModels.EventsGroup>, ServiceProviderError> = self.restConnector.request(endpoint)
+
+        return requestPublisher.map( { sportRadarResponse -> EventsGroup in
+            let eventsGroup = sportRadarResponse.data
+            let mappedEventsGroup = SportRadarModelMapper.eventsGroup(fromInternalEventsGroup: eventsGroup)
+
+            let filteredEvents = mappedEventsGroup.events.filter({
+                $0.id != "_TOKEN_"
+            })
+
+            let filteredEventsGroup = EventsGroup(events: filteredEvents, marketGroupId: eventsGroup.marketGroupId)
+            return filteredEventsGroup
+        })
+        .eraseToAnyPublisher()
+    }
+
+    func getEventForMarket(withId marketId: String) -> AnyPublisher<Event?, Never> {
+        let endpoint = SportRadarRestAPIClient.getEventForMarket(marketId: marketId)
+        let requestPublisher: AnyPublisher<SportRadarModels.SportRadarResponse<SportRadarModels.Event>, ServiceProviderError> = self.restConnector.request(endpoint)
+
+        return requestPublisher.map( { sportRadarResponse -> Event in
+            let event = sportRadarResponse.data
+            let mappedEvent = SportRadarModelMapper.event(fromInternalEvent: event)
+            return mappedEvent
+        })
+        .replaceError(with: nil)
+        .eraseToAnyPublisher()
+    }
+
 
     //
     // MARK: - Favorites
@@ -1333,12 +1535,12 @@ extension SportRadarEventsProvider {
 
         for availableMarket in availableMarkets {
             let marketGroup = MarketGroup(type: availableMarket.key,
-                                                      id: availableMarket.value.first?.marketGroupId ?? "0",
-                                                      groupKey: "\(availableMarket.value.first?.marketGroupId ?? "0")",
-                                                      translatedName: availableMarket.key.capitalized,
-                                                      position: Int(availableMarket.value.first?.marketGroupId ?? "0") ?? 0,
-                                                      isDefault: availableMarket.key == "All Markets" ? true : false,
-                                                      numberOfMarkets: availableMarket.value.count,
+                                          id: availableMarket.value.first?.marketGroupId ?? "0",
+                                          groupKey: "\(availableMarket.value.first?.marketGroupId ?? "0")",
+                                          translatedName: availableMarket.key.capitalized,
+                                          position: Int(availableMarket.value.first?.marketGroupId ?? "0") ?? 0,
+                                          isDefault: availableMarket.key == "All Markets" ? true : false,
+                                          numberOfMarkets: availableMarket.value.count,
                                           markets: availableMarket.value.map(\.market))
 
             marketGroups[availableMarket.key] = marketGroup
@@ -1361,7 +1563,7 @@ extension SportRadarEventsProvider {
 
         if let initialDay = Int(days[safe: 0] ?? "0"),
            let endDay = Int(days[safe: 1] ?? "365") {
-            
+
             if let startDate = Calendar.current.date(byAdding: .day, value: initialDay, to: Date()),
                let endDate = Calendar.current.date(byAdding: .day, value: endDay, to: Date()) {
                 dates.append(startDate)

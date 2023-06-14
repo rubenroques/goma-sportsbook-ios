@@ -457,11 +457,11 @@ class LiveMatchesViewModelDataSource: NSObject, UITableViewDataSource, UITableVi
                     cell.matchStatsViewModel = matchStatsViewModel
                 }
                 cell.setupWithMatch(match, liveMatch: true)
-                cell.tappedMatchLineAction = {
-                    self.didSelectMatchAction?(match)
+                cell.tappedMatchLineAction = { [weak self] match in
+                    self?.didSelectMatchAction?(match)
                 }
-                cell.didLongPressOdd = { bettingTicket in
-                    self.didLongPressOdd?(bettingTicket)
+                cell.didLongPressOdd = { [weak self] bettingTicket in
+                    self?.didLongPressOdd?(bettingTicket)
                 }
                 
                 return cell

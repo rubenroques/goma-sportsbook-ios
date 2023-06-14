@@ -11,6 +11,7 @@ import FirebaseMessaging
 import SwiftUI
 import ServicesProvider
 import IQKeyboardManagerSwift
+import PhraseSDK
 
 @main
 class AppDelegate: UIResponder, UIApplicationDelegate, MessagingDelegate {
@@ -21,6 +22,33 @@ class AppDelegate: UIResponder, UIApplicationDelegate, MessagingDelegate {
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
 
         Logger.log("App Started")
+
+        //
+        // External Localization tool
+        #if DEBUG
+        let phraseConfiguration = PhraseConfiguration()
+        phraseConfiguration.debugMode = true
+        Phrase.shared.configuration = phraseConfiguration
+
+        Phrase.shared.setup(distributionID: "8dff53ee102cd6a5c31935d4d5938c3f", environmentSecret: "GuBCndN-seQgps-CuyMlx6AXkzsiyGuJMIFicqpvMoc")
+
+        #else
+        Phrase.shared.setup(distributionID: "8dff53ee102cd6a5c31935d4d5938c3f", environmentSecret: "UmPDmeEDM8dGvFdKu9-x_bJxI0-8eaJX5CDeq88Eepk")
+        #endif
+
+        do {
+            try Phrase.shared.updateTranslation { updatedResult in
+                print("PhraseSDK updateTranslation \(dump(updatedResult))")
+
+                let translation = localized("phrase.test")
+                print("PhraseSDK NSLocalizedString via bundle proxy: ", translation)
+            }
+        }
+        catch {
+            print("PhraseSDK updateTranslation crashed error \(error)")
+        }
+        //
+        //
 
         // Disable autolayout errors/warnings console logs
         UserDefaults.standard.set(false, forKey: "_UIConstraintBasedLayoutLogUnsatisfiable")

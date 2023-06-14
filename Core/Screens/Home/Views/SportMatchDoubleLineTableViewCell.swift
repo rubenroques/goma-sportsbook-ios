@@ -395,8 +395,8 @@ extension SportMatchDoubleLineTableViewCell: UICollectionViewDelegate, UICollect
             let cellViewModel = MatchWidgetCellViewModel(match: match)
 
             cell.configure(withViewModel: cellViewModel)
-            cell.tappedMatchWidgetAction = { [weak self] in
-                self?.tappedMatchLineAction?(match)
+            cell.tappedMatchWidgetAction = { [weak self] tappedMatch in
+                self?.tappedMatchLineAction?(tappedMatch)
             }
             cell.didLongPressOdd = { bettingTicket in
                 self.didLongPressOdd?(bettingTicket)
@@ -421,12 +421,12 @@ extension SportMatchDoubleLineTableViewCell: UICollectionViewDelegate, UICollect
                         cell.setupWithMarket(market, match: match,
                                              teamsText: teamsText,
                                              countryIso: countryIso)
-                        cell.tappedMatchWidgetAction = {
-                            self.tappedMatchLineAction?(match)
+                        cell.tappedMatchWidgetAction = { [weak self]  in
+                            self?.tappedMatchLineAction?(match)
                         }
 
-                        cell.didLongPressOdd = { bettingTicket in
-                            self.didLongPressOdd?(bettingTicket)
+                        cell.didLongPressOdd = { [weak self] bettingTicket in
+                            self?.didLongPressOdd?(bettingTicket)
                         }
 
                         return cell
@@ -441,12 +441,12 @@ extension SportMatchDoubleLineTableViewCell: UICollectionViewDelegate, UICollect
                         cell.setupWithMarket(market, match: match,
                                              teamsText: teamsText,
                                              countryIso: countryIso)
-                        cell.tappedMatchWidgetAction = {
-                            self.tappedMatchLineAction?(match)
+                        cell.tappedMatchWidgetAction = { [weak self]  in
+                            self?.tappedMatchLineAction?(match)
                         }
 
-                        cell.didLongPressOdd = { bettingTicket in
-                            self.didLongPressOdd?(bettingTicket)
+                        cell.didLongPressOdd = { [weak self] bettingTicket in
+                            self?.didLongPressOdd?(bettingTicket)
                         }
 
                         

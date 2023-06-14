@@ -27,10 +27,6 @@ struct TargetVariables: SportsbookTarget {
         "https://goma-sportsbook-dev.europe-west1.firebasedatabase.app/"
     }
 
-    static var homeTemplateKey: String? {
-        return nil
-    }
-
     static var everyMatrixHost: String {
         return ""
     }
@@ -51,6 +47,10 @@ struct TargetVariables: SportsbookTarget {
         return .sportradar
     }
 
+    static var homeTemplateBuilder: HomeTemplateBuilderType {
+        return HomeTemplateBuilderType.appStatic
+    }
+    
     static var features: [SportsbookTargetFeatures] {
         return []
     }

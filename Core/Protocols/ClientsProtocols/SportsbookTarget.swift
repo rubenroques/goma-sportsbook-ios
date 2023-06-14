@@ -21,8 +21,6 @@ protocol SportsbookTarget {
     static var gomaGamingLoggedAuthEndpoint: String { get }
 
     static var firebaseDatabaseURL: String { get }
-
-    static var homeTemplateKey: String? { get }
     
     static var everyMatrixHost: String { get }
 
@@ -31,6 +29,8 @@ protocol SportsbookTarget {
     static var defaultCardStyle: CardsStyle { get }
     
     static var serviceProviderType: ServiceProviderType { get }
+
+    static var homeTemplateBuilder: HomeTemplateBuilderType { get }
     
     static var casinoURL: String { get }
 
