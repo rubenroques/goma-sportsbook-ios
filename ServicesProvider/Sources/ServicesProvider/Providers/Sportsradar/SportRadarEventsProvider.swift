@@ -957,7 +957,15 @@ extension SportRadarEventsProvider {
                             let firstMarketId = event.markets.first?.id ?? ""
                             event.promoImageURL =  headlineItemsImages[firstMarketId]
                         }
-                        return events
+
+                        let cleanedEvents = events.compactMap({ $0 })
+
+                        // create a dictionary from cleanedEvents using marketId as a key
+                        let eventDict = Dictionary(uniqueKeysWithValues: cleanedEvents.map { ($0.markets.first?.id ?? "", $0) })
+
+                        // re-order the cleanedEvents based on the order of marketIds in headlineItems
+                        let orderedEvents = headlineItems.compactMap { eventDict[$0.marketId ?? ""] }
+                        return orderedEvents
                     })
                     .eraseToAnyPublisher()
 
@@ -983,8 +991,17 @@ extension SportRadarEventsProvider {
                 let finalPublisher = Publishers.MergeMany(publishers)
                     .collect()
                     .map({ (events: [Event?]) -> [Event] in
-                        return events.compactMap({ $0 })
+
+                        let cleanedEvents = events.compactMap({ $0 })
+
+                        // create a dictionary from cleanedEvents using marketId as a key
+                        let eventDict = Dictionary(uniqueKeysWithValues: cleanedEvents.map { ($0.markets.first?.id ?? "", $0) })
+
+                        // re-order the cleanedEvents based on the order of marketIds in headlineItems
+                        let orderedEvents = headlineItems.compactMap { eventDict[$0.marketId ?? ""] }
+                        return orderedEvents
                     })
+
                     .eraseToAnyPublisher()
 
                 return finalPublisher
@@ -1022,7 +1039,15 @@ extension SportRadarEventsProvider {
                             let firstMarketId = event.markets.first?.id ?? ""
                             event.promoImageURL =  headlineItemsImages[firstMarketId]
                         }
-                        return events
+
+                        let cleanedEvents = events.compactMap({ $0 })
+
+                        // create a dictionary from cleanedEvents using marketId as a key
+                        let eventDict = Dictionary(uniqueKeysWithValues: cleanedEvents.map { ($0.markets.first?.id ?? "", $0) })
+
+                        // re-order the cleanedEvents based on the order of marketIds in headlineItems
+                        let orderedEvents = headlineItems.compactMap { eventDict[$0.marketId ?? ""] }
+                        return orderedEvents
                     })
                     .eraseToAnyPublisher()
 

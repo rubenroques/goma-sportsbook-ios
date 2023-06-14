@@ -10,7 +10,22 @@ import UIKit
 
 class BoostedArrowView: UIView {
 
-    var isReversed: Bool = false
+    var isReversed: Bool = false {
+        didSet {
+            self.drawArrows()
+            self.setNeedsDisplay()
+        }
+    }
+
+    var highlightColor: UIColor = .orange {
+        didSet {
+            self.subviews.forEach({ view in
+                if let arrowView = view as? ArrowBoldCustomView {
+                    arrowView.highlightColor = self.highlightColor
+                }
+            })
+        }
+    }
 
     override init(frame: CGRect) {
         super.init(frame: frame)
@@ -23,6 +38,8 @@ class BoostedArrowView: UIView {
     }
 
     private func commonInit() {
+        self.translatesAutoresizingMaskIntoConstraints = false
+        self.backgroundColor = .clear
         self.drawArrows()
     }
 
@@ -43,12 +60,12 @@ class BoostedArrowView: UIView {
             arrow1.topAnchor.constraint(equalTo: self.topAnchor),
             arrow1.bottomAnchor.constraint(equalTo: self.bottomAnchor),
             arrow1.leadingAnchor.constraint(equalTo: self.leadingAnchor),
-            arrow1.widthAnchor.constraint(equalTo: self.widthAnchor, constant: 0.7),
+            arrow1.widthAnchor.constraint(equalTo: self.widthAnchor, multiplier: 0.56),
 
             arrow2.topAnchor.constraint(equalTo: self.topAnchor),
             arrow2.bottomAnchor.constraint(equalTo: self.bottomAnchor),
             arrow2.trailingAnchor.constraint(equalTo: self.trailingAnchor),
-            arrow2.widthAnchor.constraint(equalTo: self.widthAnchor, constant: 0.7),
+            arrow2.widthAnchor.constraint(equalTo: self.widthAnchor, multiplier: 0.56),
         ])
 
     }
@@ -59,9 +76,15 @@ class BoostedArrowView: UIView {
 
 }
 
-private class ArrowBoldCustomView : UIView {
+private class ArrowBoldCustomView: UIView {
 
     var isReversed: Bool = false
+
+    var highlightColor: UIColor = .orange {
+        didSet {
+            self.setNeedsDisplay()
+        }
+    }
 
     override init(frame: CGRect) {
         super.init(frame: frame)
@@ -100,7 +123,7 @@ private class ArrowBoldCustomView : UIView {
             path.close()
         }
 
-        UIColor.orange.setFill()
+        self.highlightColor.setFill()
         path.fill()
     }
 }

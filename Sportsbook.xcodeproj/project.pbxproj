@@ -752,6 +752,7 @@
 		450FC4122A2E268F000DB866 /* StoriesItemCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 450FC40D2A2E268F000DB866 /* StoriesItemCollectionViewCell.swift */; };
 		450FC4132A2E268F000DB866 /* StoriesItemCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 450FC40D2A2E268F000DB866 /* StoriesItemCollectionViewCell.swift */; };
 		450FC4142A2E268F000DB866 /* StoriesItemCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 450FC40D2A2E268F000DB866 /* StoriesItemCollectionViewCell.swift */; };
+		4516402A2A39FF80003C4276 /* PhraseSDK in Frameworks */ = {isa = PBXBuildFile; productRef = 451640292A39FF80003C4276 /* PhraseSDK */; };
 		451ABD6629CB3B1D0062641F /* Match.swift in Sources */ = {isa = PBXBuildFile; fileRef = 451ABD6529CB3B1D0062641F /* Match.swift */; };
 		451ABD6729CB3B1D0062641F /* Match.swift in Sources */ = {isa = PBXBuildFile; fileRef = 451ABD6529CB3B1D0062641F /* Match.swift */; };
 		451ABD6829CB3B1D0062641F /* Match.swift in Sources */ = {isa = PBXBuildFile; fileRef = 451ABD6529CB3B1D0062641F /* Match.swift */; };
@@ -4025,6 +4026,13 @@
 		45E8E29F28C8A79C00A09B02 /* RankingTypeTableHeaderView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 45E8E29C28C8A79C00A09B02 /* RankingTypeTableHeaderView.swift */; };
 		45E8E2A028C8A79C00A09B02 /* RankingTypeTableHeaderView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 45E8E29C28C8A79C00A09B02 /* RankingTypeTableHeaderView.swift */; };
 		45E8E2A128C8A79C00A09B02 /* RankingTypeTableHeaderView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 45E8E29C28C8A79C00A09B02 /* RankingTypeTableHeaderView.swift */; };
+		45ED1AE62A37781100770CEF /* TinderStyleBetBuilder.html in Resources */ = {isa = PBXBuildFile; fileRef = 45ED1AE52A37781100770CEF /* TinderStyleBetBuilder.html */; };
+		45ED1AE72A37781100770CEF /* TinderStyleBetBuilder.html in Resources */ = {isa = PBXBuildFile; fileRef = 45ED1AE52A37781100770CEF /* TinderStyleBetBuilder.html */; };
+		45ED1AE82A37781100770CEF /* TinderStyleBetBuilder.html in Resources */ = {isa = PBXBuildFile; fileRef = 45ED1AE52A37781100770CEF /* TinderStyleBetBuilder.html */; };
+		45ED1AE92A37781100770CEF /* TinderStyleBetBuilder.html in Resources */ = {isa = PBXBuildFile; fileRef = 45ED1AE52A37781100770CEF /* TinderStyleBetBuilder.html */; };
+		45ED1AEA2A37781100770CEF /* TinderStyleBetBuilder.html in Resources */ = {isa = PBXBuildFile; fileRef = 45ED1AE52A37781100770CEF /* TinderStyleBetBuilder.html */; };
+		45ED1AEB2A37781100770CEF /* TinderStyleBetBuilder.html in Resources */ = {isa = PBXBuildFile; fileRef = 45ED1AE52A37781100770CEF /* TinderStyleBetBuilder.html */; };
+		45ED1AEC2A37781100770CEF /* TinderStyleBetBuilder.html in Resources */ = {isa = PBXBuildFile; fileRef = 45ED1AE52A37781100770CEF /* TinderStyleBetBuilder.html */; };
 		45F2F9A9298C067C0075AF02 /* StaticColors.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 45F2F9A8298C067C0075AF02 /* StaticColors.xcassets */; };
 		45F2F9AA298C067C0075AF02 /* StaticColors.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 45F2F9A8298C067C0075AF02 /* StaticColors.xcassets */; };
 		45F2F9AB298C067C0075AF02 /* StaticColors.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 45F2F9A8298C067C0075AF02 /* StaticColors.xcassets */; };
@@ -5838,6 +5846,7 @@
 		45E5190B270C8B570052794F /* Color+Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Color+Extensions.swift"; sourceTree = "<group>"; };
 		45E8E29528C88E1300A09B02 /* UserRankingPositionTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserRankingPositionTableViewCell.swift; sourceTree = "<group>"; };
 		45E8E29C28C8A79C00A09B02 /* RankingTypeTableHeaderView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RankingTypeTableHeaderView.swift; sourceTree = "<group>"; };
+		45ED1AE52A37781100770CEF /* TinderStyleBetBuilder.html */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.html; path = TinderStyleBetBuilder.html; sourceTree = "<group>"; };
 		45EF54092709E81C00D1E13E /* PopUpStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PopUpStore.swift; sourceTree = "<group>"; };
 		45EF5434270C603D00D1E13E /* MatchFiltersViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MatchFiltersViewController.swift; sourceTree = "<group>"; };
 		45EF5435270C603D00D1E13E /* MatchFiltersViewController.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = MatchFiltersViewController.xib; sourceTree = "<group>"; };
@@ -6355,6 +6364,7 @@
 				45A332B5298976BA008181E9 /* Reachability in Frameworks */,
 				45A332B6298976BA008181E9 /* AdyenComponents in Frameworks */,
 				45A332B7298976BA008181E9 /* IQKeyboardManagerSwift in Frameworks */,
+				4516402A2A39FF80003C4276 /* PhraseSDK in Frameworks */,
 				45A332B8298976BA008181E9 /* Kingfisher in Frameworks */,
 				45A332B9298976BA008181E9 /* FirebaseAuth in Frameworks */,
 				45A332BA298976BA008181E9 /* AdyenCard in Frameworks */,
@@ -8913,6 +8923,7 @@
 		A9B63068291AB5F800BB850E /* Widgets */ = {
 			isa = PBXGroup;
 			children = (
+				45ED1AE52A37781100770CEF /* TinderStyleBetBuilder.html */,
 				A9A521802A03BD8D00C0F6C6 /* zendesk_support.html */,
 				A9B6307B291BE10100BB850E /* field_widget_light.html */,
 				A9B63084291BE10900BB850E /* field_widget_dark.html */,
@@ -9754,6 +9765,7 @@
 				45A33052298976BA008181E9 /* AdyenWeChatPay */,
 				45C8ECB829CC7AE4006A35DC /* HeaderTextField */,
 				45F805922A05357E005296E0 /* Lottie */,
+				451640292A39FF80003C4276 /* PhraseSDK */,
 			);
 			productName = Sportsbook;
 			productReference = 45A3334E298976BA008181E9 /* Betsson.app */;
@@ -9869,6 +9881,7 @@
 				4554ED082976F7FE006942B3 /* XCRemoteSwiftPackageReference "IQKeyboardManager" */,
 				A96FAEDF29829CCA00A0751F /* XCRemoteSwiftPackageReference "adyen-ios" */,
 				45F805912A05357E005296E0 /* XCRemoteSwiftPackageReference "lottie-spm" */,
+				451640282A39FF80003C4276 /* XCRemoteSwiftPackageReference "ios-sdk" */,
 			);
 			productRefGroup = 455A0C5126BD902C00EC572D /* Products */;
 			projectDirPath = "";
@@ -9988,6 +10001,7 @@
 				450B7AFE28F58574009229E3 /* LogViewerViewController.xib in Resources */,
 				450B7AFF28F58574009229E3 /* ActivationAlertView.xib in Resources */,
 				450B7B0028F58574009229E3 /* SportSelectionCollectionViewCell.xib in Resources */,
+				45ED1AE72A37781100770CEF /* TinderStyleBetBuilder.html in Resources */,
 				450B7B0128F58574009229E3 /* TestsViewController.xib in Resources */,
 				450B7B0228F58574009229E3 /* PasswordUpdateViewController.xib in Resources */,
 				450B7B0328F58574009229E3 /* CheckboxToggleView.xib in Resources */,
@@ -10135,6 +10149,7 @@
 				457CBC26282D27D000ED0F00 /* RequestLocationAccessViewController.xib in Resources */,
 				457CBC28282D27D000ED0F00 /* LogViewerViewController.xib in Resources */,
 				457CBC29282D27D000ED0F00 /* ActivationAlertView.xib in Resources */,
+				45ED1AEB2A37781100770CEF /* TinderStyleBetBuilder.html in Resources */,
 				457CBC2A282D27D000ED0F00 /* SportSelectionCollectionViewCell.xib in Resources */,
 				457CBC2B282D27D000ED0F00 /* TestsViewController.xib in Resources */,
 				457CBC2C282D27D000ED0F00 /* PasswordUpdateViewController.xib in Resources */,
@@ -10274,6 +10289,7 @@
 				457CBF0B282D2DEC00ED0F00 /* Crocobet-Assets.xcassets in Resources */,
 				457CBED1282D2CD100ED0F00 /* ActivationAlertView.xib in Resources */,
 				457CBED2282D2CD100ED0F00 /* SportSelectionCollectionViewCell.xib in Resources */,
+				45ED1AEC2A37781100770CEF /* TinderStyleBetBuilder.html in Resources */,
 				457CBED3282D2CD100ED0F00 /* TestsViewController.xib in Resources */,
 				457CBED4282D2CD100ED0F00 /* PasswordUpdateViewController.xib in Resources */,
 				457CBED5282D2CD100ED0F00 /* CheckboxToggleView.xib in Resources */,
@@ -10413,6 +10429,7 @@
 				4589C9A5282024E400243547 /* RequestLocationAccessViewController.xib in Resources */,
 				4589C9A7282024E400243547 /* LogViewerViewController.xib in Resources */,
 				4589C9A8282024E400243547 /* ActivationAlertView.xib in Resources */,
+				45ED1AE82A37781100770CEF /* TinderStyleBetBuilder.html in Resources */,
 				4589C9A9282024E400243547 /* SportSelectionCollectionViewCell.xib in Resources */,
 				4589C9AA282024E400243547 /* TestsViewController.xib in Resources */,
 				4589C9AB282024E400243547 /* PasswordUpdateViewController.xib in Resources */,
@@ -10487,6 +10504,7 @@
 				45A332EA298976BA008181E9 /* SimpleListMarketDetailTableViewCell.xib in Resources */,
 				45A332EB298976BA008181E9 /* ActivationAlertScrollableTableViewCell.xib in Resources */,
 				45A332EC298976BA008181E9 /* ThreeAwayMarketDetailTableViewCell.xib in Resources */,
+				45ED1AE62A37781100770CEF /* TinderStyleBetBuilder.html in Resources */,
 				45E46C172A08FEB900BB9B85 /* sports-loading.json in Resources */,
 				45A332ED298976BA008181E9 /* SeeMoreMarketsCollectionViewCell.xib in Resources */,
 				45A332EE298976BA008181E9 /* Gilroy-Black.ttf in Resources */,
@@ -10692,6 +10710,7 @@
 				45A6BDFE28246A7500D9B416 /* RequestLocationAccessViewController.xib in Resources */,
 				45A6BE0028246A7500D9B416 /* LogViewerViewController.xib in Resources */,
 				45A6BE0128246A7500D9B416 /* ActivationAlertView.xib in Resources */,
+				45ED1AEA2A37781100770CEF /* TinderStyleBetBuilder.html in Resources */,
 				45A6BE0228246A7500D9B416 /* SportSelectionCollectionViewCell.xib in Resources */,
 				45A6BE0328246A7500D9B416 /* TestsViewController.xib in Resources */,
 				45A6BE0428246A7500D9B416 /* PasswordUpdateViewController.xib in Resources */,
@@ -10766,6 +10785,7 @@
 				A9C3431928F9A74A0055360B /* ActivationAlertScrollableTableViewCell.xib in Resources */,
 				A9C3431A28F9A74A0055360B /* ThreeAwayMarketDetailTableViewCell.xib in Resources */,
 				A9C3431B28F9A74A0055360B /* SeeMoreMarketsCollectionViewCell.xib in Resources */,
+				45ED1AE92A37781100770CEF /* TinderStyleBetBuilder.html in Resources */,
 				45E46C1A2A08FEB900BB9B85 /* sports-loading.json in Resources */,
 				A9C3431C28F9A74A0055360B /* Gilroy-Black.ttf in Resources */,
 				A9C3431D28F9A74A0055360B /* PreLiveEventsViewController.xib in Resources */,
@@ -15823,7 +15843,7 @@
 				CODE_SIGN_ENTITLEMENTS = Clients/Betsson/Misc/Betsson.entitlements;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 1148;
+				CURRENT_PROJECT_VERSION = 1152;
 				DEVELOPMENT_TEAM = 422GNXXZJR;
 				INFOPLIST_FILE = "$(SRCROOT)/Clients/Betsson/Misc/Betsson-Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 13.0;
@@ -15849,7 +15869,7 @@
 				CODE_SIGN_ENTITLEMENTS = Clients/Betsson/Misc/Betsson.entitlements;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 1148;
+				CURRENT_PROJECT_VERSION = 1152;
 				DEVELOPMENT_TEAM = 422GNXXZJR;
 				INFOPLIST_FILE = "$(SRCROOT)/Clients/Betsson/Misc/Betsson-Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 13.0;
@@ -16138,6 +16158,14 @@
 			requirement = {
 				kind = upToNextMajorVersion;
 				minimumVersion = 5.1.0;
+			};
+		};
+		451640282A39FF80003C4276 /* XCRemoteSwiftPackageReference "ios-sdk" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/phrase/ios-sdk/";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 4.0.0;
 			};
 		};
 		45166D2A26F3D89B00E69D65 /* XCRemoteSwiftPackageReference "CombineCocoa" */ = {
@@ -16784,6 +16812,11 @@
 		450B784128F58574009229E3 /* SocketIO */ = {
 			isa = XCSwiftPackageProductDependency;
 			productName = SocketIO;
+		};
+		451640292A39FF80003C4276 /* PhraseSDK */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 451640282A39FF80003C4276 /* XCRemoteSwiftPackageReference "ios-sdk" */;
+			productName = PhraseSDK;
 		};
 		4554ED092976F7FE006942B3 /* IQKeyboardManagerSwift */ = {
 			isa = XCSwiftPackageProductDependency;

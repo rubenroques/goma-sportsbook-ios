@@ -42,7 +42,7 @@ class StoriesLineTableViewCell: UITableViewCell, UICollectionViewDataSource, UIC
         self.contentView.backgroundColor = .clear
 
         self.collectionView.backgroundView?.backgroundColor = .clear
-        self.collectionView.backgroundColor = UIColor.App.backgroundSecondary
+        self.collectionView.backgroundColor = UIColor.App.backgroundTertiary
     }
 
     private func setupCollectionView() {

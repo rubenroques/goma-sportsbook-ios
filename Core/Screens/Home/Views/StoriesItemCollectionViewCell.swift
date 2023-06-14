@@ -144,10 +144,12 @@ class StoriesItemCollectionViewCell: UICollectionViewCell {
         if viewModel.read {
             self.gradientBorderView.isHidden = false
             self.backgroundGradientView.isHidden = true
+            self.label.textColor = UIColor.App.textPrimary
         }
         else {
             self.gradientBorderView.isHidden = true
             self.backgroundGradientView.isHidden = false
+            self.label.textColor = UIColor.App.buttonTextPrimary
         }
     }
 

@@ -49,11 +49,15 @@ class QuickSwipeStackTableViewCell: UITableViewCell {
 
     var didTapMatchAction: ((Match) -> Void) = { _ in }
 
-    private let cellHeight: CGFloat = 240.0
+    private let cellHeight: CGFloat = 230.0
 
     private lazy var baseView: UIView = Self.createBaseView()
     private lazy var collectionView: UICollectionView = Self.createCollectionView()
     private lazy var titleLabel: UILabel = Self.createTitleLabel()
+    private lazy var pageControl = Self.createPageControl()
+
+    private var carouselCounter: Int = 0
+    private weak var timer: Timer?
 
     private var viewModel: QuickSwipeStackCellViewModel?
 
@@ -96,16 +100,58 @@ class QuickSwipeStackTableViewCell: UITableViewCell {
         self.collectionView.backgroundColor = .clear
 
         self.titleLabel.textColor = UIColor.App.textPrimary
+
+        self.pageControl.pageIndicatorTintColor = .gray
+        self.pageControl.currentPageIndicatorTintColor = UIColor.App.highlightPrimary
     }
 
     func configure(withViewModel viewModel: QuickSwipeStackCellViewModel) {
         self.viewModel = viewModel
         self.titleLabel.text = viewModel.titleSection
+
+        self.pageControl.numberOfPages = (self.viewModel?.numberOfItems() ?? 0)
+        self.pageControl.currentPage = 0
+
         self.reloadData()
+        self.startCollectionViewTimer()
     }
 
     func reloadData() {
         self.collectionView.reloadData()
+    }
+
+
+    func startCollectionViewTimer() {
+        self.resetTime()
+    }
+
+    func resetTime() {
+        self.timer?.invalidate()
+        self.timer = nil
+
+        self.timer = Timer.scheduledTimer(timeInterval: 6.0, target: self, selector: #selector(self.autoScrollCollectionView), userInfo: nil, repeats: true)
+    }
+
+    @objc func autoScrollCollectionView(_ timer1: Timer) {
+
+        let bannersCount = self.viewModel?.numberOfItems() ?? 0 * 100
+
+        guard bannersCount != 0 else {
+            return
+        }
+
+//        self.carouselCounter += 1
+//
+//        if self.carouselCounter >= bannersCount {
+//            self.carouselCounter = 0
+//        }
+
+        var newXOffset: CGFloat = self.collectionView.contentOffset.x + self.collectionView.frame.width
+        if newXOffset > (self.collectionView.contentSize.width - self.collectionView.frame.width) {
+            newXOffset = 0.0
+        }
+        self.collectionView.setContentOffset(CGPoint(x: newXOffset, y: self.collectionView.contentOffset.y), animated: true)
+
     }
 
 }
@@ -117,14 +163,16 @@ extension QuickSwipeStackTableViewCell: UICollectionViewDelegate, UICollectionVi
     }
 
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        return self.viewModel?.numberOfItems() ?? 0
+        return  (self.viewModel?.numberOfItems() ?? 0) * 100
     }
 
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
 
+        let croppedIndex = indexPath.item % (self.viewModel?.numberOfItems() ?? 0)
+
         guard
             let cell = collectionView.dequeueCellType(MatchWidgetCollectionViewCell.self, indexPath: indexPath),
-            let viewModel = self.viewModel?.matchViewModel(forIndex: indexPath.row)
+            let viewModel = self.viewModel?.matchViewModel(forIndex: croppedIndex)
         else {
             fatalError()
         }
@@ -143,6 +191,13 @@ extension QuickSwipeStackTableViewCell: UICollectionViewDelegate, UICollectionVi
         let leftMargin: CGFloat = 18.0
         return CGSize(width: collectionView.frame.size.width - (leftMargin * 2.0),
                       height: collectionView.frame.size.height - (topMargin * 2.0))
+    }
+
+    func collectionView(_ collectionView: UICollectionView, willDisplay cell: UICollectionViewCell, forItemAt indexPath: IndexPath) {
+        let croppedIndex = indexPath.item % (self.viewModel?.numberOfItems() ?? 0)
+        self.pageControl.currentPage = croppedIndex
+
+        self.resetTime()
     }
 
 }
@@ -178,12 +233,22 @@ extension QuickSwipeStackTableViewCell {
         return topCollectionView
     }
 
+    private static func createPageControl() -> UIPageControl {
+        let pageControl = UIPageControl()
+        pageControl.translatesAutoresizingMaskIntoConstraints = false
+        return pageControl
+    }
+
     private func setupSubviews() {
+
+        self.pageControl.numberOfPages = 5
+        self.pageControl.currentPage = 0
 
         // Add subviews to self.view or each other
         self.contentView.addSubview(self.baseView)
         self.baseView.addSubview(self.collectionView)
         self.baseView.addSubview(self.titleLabel)
+        self.baseView.addSubview(self.pageControl)
 
         // Initialize constraints
         self.initConstraints()
@@ -205,8 +270,11 @@ extension QuickSwipeStackTableViewCell {
 
             self.collectionView.leadingAnchor.constraint(equalTo: self.baseView.leadingAnchor, constant: 0),
             self.collectionView.trailingAnchor.constraint(equalTo: self.baseView.trailingAnchor, constant: 0),
-            self.collectionView.topAnchor.constraint(equalTo: self.titleLabel.bottomAnchor, constant: 12),
+            self.collectionView.topAnchor.constraint(equalTo: self.titleLabel.bottomAnchor, constant: 1),
             self.collectionView.bottomAnchor.constraint(equalTo: self.baseView.bottomAnchor, constant: -8),
+
+            self.pageControl.centerXAnchor.constraint(equalTo: self.baseView.centerXAnchor),
+            self.pageControl.bottomAnchor.constraint(equalTo: self.baseView.bottomAnchor, constant: -18),
      ])
     }
 }

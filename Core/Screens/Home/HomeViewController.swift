@@ -164,6 +164,13 @@ class HomeViewController: UIViewController {
             })
             .store(in: &self.cancellables)
 
+        Env.userSessionStore.userKnowYourCustomerStatusPublisher
+            .receive(on: DispatchQueue.main)
+            .sink { [weak self] _ in
+                self?.viewModel.refresh()
+            }
+            .store(in: &self.cancellables)
+
     }
 
     // MARK: - Convenience
@@ -252,6 +259,13 @@ class HomeViewController: UIViewController {
         let storiesFullScreenViewController = StoriesFullScreenViewController(viewModel: storiesFullScreenViewModel)
         storiesFullScreenViewController.modalPresentationStyle = .fullScreen
         self.present(storiesFullScreenViewController, animated: true)
+    }
+
+    private func openBetTinderCloneView() {
+        let betSelectorViewConroller = InternalBrowserViewController(fileName: "TinderStyleBetBuilder", fileType: "html")
+        let navigationViewController = Router.navigationController(with: betSelectorViewConroller)
+        navigationViewController.modalPresentationStyle = .fullScreen
+        self.present(navigationViewController, animated: true, completion: nil)
     }
 
     @objc private func didTapOpenFavorites() {
@@ -544,6 +558,9 @@ extension HomeViewController: UITableViewDelegate, UITableViewDataSource {
             }
 
             cell.configure(withViewModel: viewModel)
+            cell.didTapMatchAction = { [weak self] match in
+                self?.openMatchDetails(matchId: match.id)
+            }
             return cell
 
         case .makeOwnBetCallToAction:
@@ -552,7 +569,9 @@ extension HomeViewController: UITableViewDelegate, UITableViewDataSource {
             else {
                 fatalError()
             }
-
+            cell.didTapCellAction = { [weak self] in
+                self?.openBetTinderCloneView()
+            }
             return cell
 
         case .highlightedMatches:
@@ -655,6 +674,14 @@ extension HomeViewController: UITableViewDelegate, UITableViewDataSource {
         case .makeOwnBetCallToAction:
             return UITableView.automaticDimension
         case .highlightedMatches:
+            if let viewModel = self.viewModel.highlightedMatchViewModel(forIndex: indexPath.row) {
+                switch viewModel.matchWidgetType {
+                case .topImage:
+                    return 252
+                default:
+                    return 164
+                }
+            }
             return UITableView.automaticDimension
         case .promotionalStories:
             return UITableView.automaticDimension
@@ -713,7 +740,15 @@ extension HomeViewController: UITableViewDelegate, UITableViewDataSource {
         case .makeOwnBetCallToAction:
             return 75
         case .highlightedMatches:
-            return 520
+            if let viewModel = self.viewModel.highlightedMatchViewModel(forIndex: indexPath.row) {
+                switch viewModel.matchWidgetType {
+                case .topImage:
+                    return 252
+                default:
+                    return 164
+                }
+            }
+            return 234
         case .promotionalStories:
             return 115
         case .promotedSportSection:

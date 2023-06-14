@@ -36,7 +36,12 @@ class ClientManagedHomeViewTemplateDataSource {
                 }
             }
 
-            self.bannersLineViewModel = BannerLineCellViewModel(banners: bannerCellViewModels)
+            if bannerCellViewModels.isEmpty {
+                self.bannersLineViewModel = nil
+            }
+            else {
+                self.bannersLineViewModel = BannerLineCellViewModel(banners: bannerCellViewModels)
+            }
         }
     }
     private var bannersLineViewModelCache: [String: BannerCellViewModel] = [:]
@@ -113,7 +118,11 @@ class ClientManagedHomeViewTemplateDataSource {
 
         self.fetchAlerts()
         self.fetchQuickSwipeMatches()
-        self.fetchBanners()
+
+        if !Env.userSessionStore.isUserLogged() {
+            self.fetchBanners()
+        }
+
         self.fetchHighlightMatches()
         self.fetchPromotedSports()
 
@@ -154,6 +163,8 @@ class ClientManagedHomeViewTemplateDataSource {
 
     // User alerts
     func fetchBanners() {
+
+        self.banners = []
 
         Env.servicesProvider.getPromotionalTopBanners()
             .receive(on: DispatchQueue.main)
@@ -309,7 +320,7 @@ extension ClientManagedHomeViewTemplateDataSource: HomeViewTemplateDataSource {
     func title(forSection section: Int) -> String? {
         switch section {
         case 4:
-            return "Highlights"
+            return localized("Highlights")
         default:
             ()
         }
@@ -422,7 +433,7 @@ extension ClientManagedHomeViewTemplateDataSource: HomeViewTemplateDataSource {
         if let match = self.highlightsVisualImageMatches[safe: index] {
             return MatchWidgetCellViewModel(match: match, matchWidgetType: .topImage)
         }
-        else if let match = self.highlightsVisualImageMatches[safe: boostedMatchesIndex] {
+        else if let match = self.highlightsBoostedMatches[safe: boostedMatchesIndex] {
             return MatchWidgetCellViewModel(match: match, matchWidgetType: .boosted)
         }
         return nil

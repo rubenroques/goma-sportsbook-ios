@@ -10,6 +10,8 @@ import UIKit
 
 class MakeYourBetTableViewCell: UITableViewCell {
 
+    var didTapCellAction: (() -> Void) = { }
+
     private let cellHeight: CGFloat = 75.0
 
     private lazy var baseView: UIView = Self.createBaseView()
@@ -21,6 +23,9 @@ class MakeYourBetTableViewCell: UITableViewCell {
 
         self.setupSubviews()
         self.setupWithTheme()
+
+        let tapGesture = UITapGestureRecognizer(target: self, action: #selector(didTapCell))
+        self.addGestureRecognizer(tapGesture)
     }
 
     required init?(coder aDecoder: NSCoder) {
@@ -42,8 +47,12 @@ class MakeYourBetTableViewCell: UITableViewCell {
         self.backgroundView?.backgroundColor = .clear
         self.contentView.backgroundColor = .clear
 
-        self.baseView.backgroundColor = UIColor.App.backgroundOdds
-        self.titleLabel.textColor = UIColor.App.buttonTextPrimary
+        self.baseView.backgroundColor = UIColor.App.pillNavigation
+        self.titleLabel.textColor = UIColor.App.textPrimary
+    }
+
+    @objc func didTapCell() {
+        self.didTapCellAction()
     }
 
 }
