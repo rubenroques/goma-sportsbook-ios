@@ -53,12 +53,12 @@ class FavoriteMatchesDataSource: NSObject, UITableViewDataSource, UITableViewDel
                     }
                     
                     cell.setupWithMatch(match)
-                    cell.tappedMatchLineAction = {
-                        self.didSelectMatchAction?(match)
+                    cell.tappedMatchLineAction = { [weak self] match in
+                        self?.didSelectMatchAction?(match)
                     }
-                    cell.matchWentLive = {
+                    cell.matchWentLive = { [weak self] in
                         DispatchQueue.main.async {
-                            self.matchWentLiveAction?()
+                            self?.matchWentLiveAction?()
                         }
                     }
 

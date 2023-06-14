@@ -582,7 +582,7 @@ class PreLiveEventsViewModel: NSObject {
             let matchEvents = eventGroup.events.filter { event in
                 event.type == .match
             }
-            matchEventsGroups.append(EventsGroup(events: matchEvents))
+            matchEventsGroups.append(EventsGroup(events: matchEvents, marketGroupId: eventGroup.marketGroupId))
         }
 
         //
@@ -591,12 +591,11 @@ class PreLiveEventsViewModel: NSObject {
             let competitionEvents = eventGroup.events.filter { event in
                 event.type == .competition
             }
-            competitionEventsGroups.append(EventsGroup(events: competitionEvents))
+            competitionEventsGroups.append(EventsGroup(events: competitionEvents, marketGroupId: eventGroup.marketGroupId))
         }
 
         return (matchEventsGroups, competitionEventsGroups)
     }
-
 
     func setMainMarkets(matches: [Match]) {
         self.mainMarkets = [:]

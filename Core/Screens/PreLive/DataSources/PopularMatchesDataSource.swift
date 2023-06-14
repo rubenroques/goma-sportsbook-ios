@@ -86,8 +86,8 @@ class PopularMatchesDataSource: NSObject, UITableViewDataSource, UITableViewDele
                 }
 
                 cell.setupWithMatch(match)
-                cell.tappedMatchLineAction = {
-                    self.didSelectMatchAction?(match)
+                cell.tappedMatchLineAction = { [weak self] match in
+                    self?.didSelectMatchAction?(match)
                 }
                 cell.didLongPressOdd = { [weak self] bettingTicket in
                     self?.didLongPressOdd?(bettingTicket)

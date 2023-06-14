@@ -315,7 +315,7 @@ struct BusinessInstanceSettingsResponse: Decodable {
         let settingsContainer = try container.nestedContainer(keyedBy: CodingKeys.self, forKey: .settings)
         let clientsContainer = try settingsContainer.nestedContainer(keyedBy: CodingKeys.self, forKey: .clients)
 
-        if let homeTemplateKey = TargetVariables.homeTemplateKey {
+        if case let .backendDynamic(homeTemplateKey) = TargetVariables.homeTemplateBuilder {
             let clientKey = BusinessInstanceSettingsResponse.CodingKeys(rawValue: homeTemplateKey)!
             self.homeFeedTemplate = try clientsContainer.decode(HomeFeedTemplate.self, forKey: clientKey)
         }
@@ -349,6 +349,11 @@ enum HomeFeedContent: Decodable {
     case userMessageAlerts
     case sport(id: String, name: String, sections: [SportSectionFeedContent])
     case featuredTips
+
+    case promotionStoriesBar
+    case highlightedEvents
+    case swipeBetButton
+
     case unknown
 
     private enum CodingKeys: String, CodingKey {
@@ -399,6 +404,9 @@ enum SportSectionFeedContent: Decodable {
     case liveVideos(title: String, contents: [VideoItemFeedContent])
     case competitions(title: String)
     case competitionsVideos(title: String, contents: [VideoItemFeedContent])
+
+    case mixedEvents(title: String?)
+
     case unknown
 
     private enum CodingKeys: String, CodingKey {

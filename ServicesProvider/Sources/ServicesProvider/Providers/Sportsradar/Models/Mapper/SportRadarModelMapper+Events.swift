@@ -10,9 +10,15 @@ import SharedModels
 
 extension SportRadarModelMapper {
 
+    static func eventsGroup(fromInternalEventsGroup internalEventsGroup: SportRadarModels.EventsGroup) -> EventsGroup {
+        let events = internalEventsGroup.events.map(Self.event(fromInternalEvent:))
+        return EventsGroup(events: events,
+                           marketGroupId: internalEventsGroup.marketGroupId)
+    }
+
     static func eventsGroup(fromInternalEvents internalEvents: [SportRadarModels.Event]) -> EventsGroup {
         let events = internalEvents.map(Self.event(fromInternalEvent:))
-        return EventsGroup(events: events)
+        return EventsGroup(events: events, marketGroupId: nil)
     }
 
     static func event(fromInternalEvent internalEvent: SportRadarModels.Event) -> Event {
@@ -26,7 +32,8 @@ extension SportRadarModelMapper {
                                                alphaId: internalEvent.sportTypeCode,
                                                numberEvents: 0,
                                                numberOutrightEvents: 0,
-                                               numberOutrightMarkets: 0)
+                                               numberOutrightMarkets: 0,
+                                                             numberLiveEvents: 0)
 
         let sport = SportRadarModelMapper.sportType(fromSportRadarSportType: sportRadarSportType)
 
@@ -101,7 +108,14 @@ extension SportRadarModelMapper {
     }
 
     static func banner(fromInternalBanner internalBanner: SportRadarModels.Banner) -> Banner {
-        return Banner(id: internalBanner.id, name: internalBanner.name, title: internalBanner.title, imageUrl: internalBanner.imageUrl, bodyText: internalBanner.bodyText, type: internalBanner.type, linkUrl: internalBanner.linkUrl, marketId: internalBanner.marketId)
+        return Banner(id: internalBanner.id,
+                      name: internalBanner.name,
+                      title: internalBanner.title,
+                      imageUrl: internalBanner.imageUrl,
+                      bodyText: internalBanner.bodyText,
+                      type: internalBanner.type,
+                      linkUrl: internalBanner.linkUrl,
+                      marketId: internalBanner.marketId)
     }
 
     // Favorites

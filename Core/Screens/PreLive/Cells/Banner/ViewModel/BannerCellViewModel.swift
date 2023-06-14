@@ -174,7 +174,7 @@ class BannerCellViewModel {
                           homeParticipant: Participant(id: "", name: market.homeParticipant ?? ""),
                           awayParticipant: Participant(id: "", name: market.awayParticipant ?? ""),
                           date: matchDate,
-                          sport: Sport(id: "1", name: "", alphaId: "", numericId: "", showEventCategory: false, liveEventsCount: 0),
+                          sport: Sport(id: "1", name: "", alphaId: "", numericId: "", showEventCategory: false, liveEventsCount: 0, eventsCount: 0),
                           numberTotalOfMarkets: 1,
                           markets: [market],
                           rootPartId: "",

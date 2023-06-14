@@ -33,6 +33,7 @@ class ManualUploadsDocumentsViewModel {
                           "public.text"]
 
     var isLoadingPublisher: CurrentValueSubject<Bool, Never> = .init(false)
+    var isFileUploaded: CurrentValueSubject<Bool, Never> = .init(false)
 
     var documentTypeCode: DocumentTypeCode
 
@@ -67,9 +68,43 @@ class ManualUploadsDocumentsViewModel {
                 }
             }, receiveValue: { [weak self] addPaymentResponse in
 
-                self?.shouldShowSuccessScreen?()
+                self?.shouldShowAlert?(.success, localized("upload_complete_message"))
                 self?.isLoadingPublisher.send(false)
 
+            })
+            .store(in: &cancellables)
+    }
+
+    func uploadFile(documentType: String, file: Data, fileName: String) {
+
+        self.isLoadingPublisher.send(true)
+
+        Env.servicesProvider.uploadUserDocument(documentType: documentType, file: file, fileName: fileName)
+            .receive(on: DispatchQueue.main)
+            .sink(receiveCompletion: { [weak self] completion in
+                switch completion {
+                case .finished:
+                    ()
+                case .failure(let error):
+                    print("UPLOAD FILE ERROR: \(error)")
+                    switch error {
+                    case .errorMessage(let message):
+                        self?.shouldShowAlert?(.error, message)
+                        self?.isFileUploaded.send(false)
+                        self?.isLoadingPublisher.send(false)
+                    default:
+                        ()
+                    }
+                }
+            }, receiveValue: { [weak self] uploadFileResponse in
+                print("UPLOAD FILE RESPONSE: \(uploadFileResponse)")
+
+                if self?.documentTypeCode == .ibanProof {
+                    self?.isFileUploaded.send(true)
+                }
+                else {
+                    self?.isLoadingPublisher.send(false)
+                }
             })
             .store(in: &cancellables)
     }
@@ -165,6 +200,8 @@ class ManualUploadDocumentsViewController: UIViewController {
         self.setupPublishers()
 
         self.backButton.addTarget(self, action: #selector(didTapBackButton), for: .primaryActionTriggered)
+
+        self.sendButton.addTarget(self, action: #selector(didTapSendButton), for: .primaryActionTriggered)
 
         let tapGestureRecognizer = UITapGestureRecognizer.init(target: self, action: #selector(didTapBackground))
         self.view.addGestureRecognizer(tapGestureRecognizer)
@@ -542,18 +579,19 @@ class ManualUploadDocumentsViewController: UIViewController {
 
         switch alertType {
         case .success:
-            let alert = UIAlertController(title: localized("upload_iban_success"),
+            let alert = UIAlertController(title: localized("upload_complete"),
                                           message: text,
                                           preferredStyle: .alert)
 
             alert.addAction(UIAlertAction(title: localized("ok"), style: .default, handler: { [weak self] _ in
 
-                self?.dismiss(animated: true)
+                //self?.dismiss(animated: true)
+                self?.navigationController?.popViewController(animated: true)
             }))
 
             self.present(alert, animated: true, completion: nil)
         case .error:
-            let alert = UIAlertController(title: localized("upload_iban_error"),
+            let alert = UIAlertController(title: localized("upload_error"),
                                           message: text,
                                           preferredStyle: .alert)
 
@@ -612,11 +650,41 @@ class ManualUploadDocumentsViewController: UIViewController {
             self?.showAlert(alertType: alertType, text: text)
         }
 
+        viewModel.isFileUploaded
+            .sink(receiveValue: { [weak self] isFileUploaded in
+
+                switch viewModel.documentTypeCode {
+                case .ibanProof:
+                    if isFileUploaded {
+
+                        let ribNumber = self?.ribNumberHeaderTextFieldView.text ?? ""
+
+                        self?.viewModel.addPaymentInformation(rib: ribNumber)
+                    }
+                default:
+                    ()
+                }
+            })
+            .store(in: &cancellables)
+
     }
 
     // MARK: Actions
     @objc private func didTapBackButton() {
         self.navigationController?.popViewController(animated: true)
+    }
+
+    @objc private func didTapSendButton() {
+        switch self.viewModel.documentTypeCode {
+        case .ibanProof:
+            if let currentDoc = self.currentDoc,
+               let selectedDoc = self.selectedDocs[currentDoc.documentTypeGroup]?.first {
+
+                self.viewModel.uploadFile(documentType: currentDoc.documentTypeGroup.code, file: selectedDoc.fileData, fileName: selectedDoc.name)
+            }
+        default:
+            ()
+        }
     }
 
     @objc func didTapBackground() {
@@ -976,6 +1044,17 @@ extension ManualUploadDocumentsViewController {
             self.documentUploadsStackView.trailingAnchor.constraint(equalTo: self.contentBaseView.trailingAnchor, constant: -14),
             self.documentUploadsStackView.topAnchor.constraint(equalTo: self.topSectionStackView.bottomAnchor, constant: 25),
             self.documentUploadsStackView.bottomAnchor.constraint(equalTo: self.contentBaseView.bottomAnchor, constant: -20),
+        ])
+
+        // Loading Screen
+        NSLayoutConstraint.activate([
+            self.loadingBaseView.topAnchor.constraint(equalTo: self.view.topAnchor),
+            self.loadingBaseView.leadingAnchor.constraint(equalTo: self.view.leadingAnchor),
+            self.loadingBaseView.trailingAnchor.constraint(equalTo: self.view.trailingAnchor),
+            self.loadingBaseView.bottomAnchor.constraint(equalTo: self.view.bottomAnchor),
+
+            self.activityIndicatorView.centerXAnchor.constraint(equalTo: self.loadingBaseView.centerXAnchor),
+            self.activityIndicatorView.centerYAnchor.constraint(equalTo: self.loadingBaseView.centerYAnchor)
         ])
 
     }

@@ -47,7 +47,7 @@ class IdentificationDocsViewModel {
 
         let userId = Env.userSessionStore.userProfilePublisher.value?.username ?? ""
 
-        Env.servicesProvider.sumsubDataProvider?.getSumsubAccessToken(userId: "adrianotest15", levelName: levelName)
+        Env.servicesProvider.sumsubDataProvider?.getSumsubAccessToken(userId: userId, levelName: levelName)
             .receive(on: DispatchQueue.main)
             .sink(receiveCompletion: { [weak self] completion in
                 switch completion {
@@ -111,7 +111,7 @@ class IdentificationDocsViewModel {
 
         let userId = Env.userSessionStore.userProfilePublisher.value?.username ?? ""
 
-        Env.servicesProvider.sumsubDataProvider?.getApplicantData(userId: "adrianotest15")
+        Env.servicesProvider.sumsubDataProvider?.getApplicantData(userId: userId)
             .receive(on: DispatchQueue.main)
             .sink(receiveCompletion: { [weak self] completion in
                 switch completion {
@@ -130,7 +130,7 @@ class IdentificationDocsViewModel {
                     self?.processSumsubDocuments(documentTypes: requiredDocumentTypes, applicantDataResponse: applicantDataResponse)
                 }
 
-                //self?.isLoadingPublisher.send(false)
+                self?.getUserDocuments()
 
             })
             .store(in: &cancellables)
@@ -198,9 +198,9 @@ class IdentificationDocsViewModel {
 
                 let userDocuments = userDocumentsResponse.userDocuments
 
-                if let requiredDocumentTypes = self?.requiredDocumentTypes {
-                    self?.processDocuments(documentTypes: requiredDocumentTypes, userDocuments: userDocuments)
-                }
+//                if let requiredDocumentTypes = self?.requiredDocumentTypes {
+//                    self?.processDocuments(documentTypes: requiredDocumentTypes, userDocuments: userDocuments)
+//                }
 
             })
             .store(in: &cancellables)

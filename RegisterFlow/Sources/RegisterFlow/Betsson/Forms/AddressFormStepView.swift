@@ -57,7 +57,7 @@ class AddressFormStepViewModel {
     var isStreetNumberValid: AnyPublisher<Bool, Never> {
         return self.streetNumber.map { streetNumber in
             if let streetNumber = streetNumber {
-                return streetNumber.range(of: "^[0-9]*$", options: .regularExpression) != nil && streetNumber.count > 0 && streetNumber.count < 4
+                return streetNumber.range(of: "^[0-9a-zA-Z]*$", options: .regularExpression) != nil && streetNumber.count > 0 && streetNumber.count < 4
             }
             else {
                 return false
@@ -343,7 +343,7 @@ class AddressFormStepView: FormStepView {
         self.numberHeaderTextFieldView.setText(self.viewModel.streetNumber.value ?? "")
 
         self.postCodeHeaderTextFieldView.setKeyboardType(.numberPad)
-        self.numberHeaderTextFieldView.setKeyboardType(.numberPad)
+        self.numberHeaderTextFieldView.setKeyboardType(.numbersAndPunctuation)
 
         self.placeHeaderTextFieldView.textPublisher
             .sink { [weak self] place in

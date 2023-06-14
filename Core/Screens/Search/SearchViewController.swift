@@ -311,7 +311,7 @@ class SearchViewController: UIViewController {
 
     private func openCompetitionDetailsScreen(competition: EveryMatrix.Tournament) {
         // TODO: This sport is incomplete
-        let sport = Sport(id: competition.sportId ?? "", name: "", alphaId: nil, numericId: nil, showEventCategory: false, liveEventsCount: 0)
+        let sport = Sport(id: competition.sportId ?? "", name: "", alphaId: nil, numericId: nil, showEventCategory: false, liveEventsCount: 0, eventsCount: 0)
         let competitionId = competition.id
         let competitionDetailsViewModel = CompetitionDetailsViewModel(competitionsIds: [competitionId], sport: sport)
         let competitionDetailsViewController = CompetitionDetailsViewController(viewModel: competitionDetailsViewModel)
@@ -446,8 +446,8 @@ extension SearchViewController: UITableViewDataSource, UITableViewDelegate {
                 if let cell = tableView.dequeueCellType(MatchLineTableViewCell.self) {
 
                     cell.setupWithMatch(match)
-                    cell.tappedMatchLineAction = {
-                        self.openMatchDetailsScreen(match: match)
+                    cell.tappedMatchLineAction = { [weak self] match in
+                        self?.openMatchDetailsScreen(match: match)
                     }
 
                     cell.didTapFavoriteMatchAction = { [weak self] match in
@@ -500,7 +500,6 @@ extension SearchViewController: UITableViewDataSource, UITableViewDelegate {
 
         }
         return UITableViewCell()
-
     }
 
     func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {

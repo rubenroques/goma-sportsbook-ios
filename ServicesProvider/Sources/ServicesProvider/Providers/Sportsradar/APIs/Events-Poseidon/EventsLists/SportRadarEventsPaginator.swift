@@ -142,7 +142,7 @@ class SportRadarEventsPaginator {
         self.storage.storeEvents(events)
 
         let storedEvents = self.storage.storedEvents()
-        let storedEventsGroup = EventsGroup(events: storedEvents)
+        let storedEventsGroup = EventsGroup(events: storedEvents, marketGroupId: nil)
         self.eventsSubject.send(.contentUpdate(content: [storedEventsGroup]))
     }
 

@@ -88,17 +88,24 @@ class BannerScrollTableViewCell: UITableViewCell {
     }
 
     @objc func autoScrollCollectionView(_ timer1: Timer) {
-        if let banners = self.viewModel?.banners {
-            if self.carouselCounter < (banners.count - 1) {
-                self.carouselCounter += 1
-                let indexPath = IndexPath(item: self.carouselCounter, section: 0)
-                self.collectionView.scrollToItem(at: indexPath, at: .centeredHorizontally, animated: true)
-            }
-            else {
-                self.carouselCounter = 0
-                self.collectionView.scrollToItem(at: IndexPath(item: 0, section: 0), at: .centeredHorizontally, animated: true)
-            }
+
+        guard
+            let banners = self.viewModel?.banners,
+            banners.isNotEmpty
+        else {
+            return
         }
+
+        if self.carouselCounter < (banners.count - 1) {
+            self.carouselCounter += 1
+            let indexPath = IndexPath(item: self.carouselCounter, section: 0)
+            self.collectionView.scrollToItem(at: indexPath, at: .centeredHorizontally, animated: true)
+        }
+        else {
+            self.carouselCounter = 0
+            self.collectionView.scrollToItem(at: IndexPath(item: 0, section: 0), at: .centeredHorizontally, animated: true)
+        }
+
     }
 
     @objc func longPressedResetTimerAction(sender: UILongPressGestureRecognizer) {

@@ -15,6 +15,10 @@ protocol SportRadarConnectorSubscriber: AnyObject {
 
     func liveSportsUpdated(withSportTypes: [SportRadarModels.SportType])
     func preLiveSportsUpdated(withSportTypes: [SportRadarModels.SportType])
+    func allSportsUpdated(withSportTypes: [SportRadarModels.SportType])
+
+    func updateSportLiveCount(nodeId: String, liveCount: Int)
+    func updateSportEventCount(nodeId: String, eventCount: Int)
 
     func eventDetailsUpdated(forContentIdentifier identifier: ContentIdentifier, event: Event)
     func eventDetailsLiveData(contentIdentifier: ContentIdentifier, eventLiveDataExtended: SportRadarModels.EventLiveDataExtended)
@@ -230,7 +234,18 @@ extension SportRadarSocketConnector: WebSocketDelegate {
                     if let subscriber = self.messageSubscriber {
                         subscriber.preLiveSportsUpdated(withSportTypes: sportsTypes)
                     }
-
+                case .allSports(let sportTypes):
+                    if let subscriber = self.messageSubscriber {
+                        subscriber.allSportsUpdated(withSportTypes: sportTypes)
+                    }
+                case .updateAllSportsLiveCount(let contentIdentifier, let nodeId, let eventCount):
+                    if let subscriber = self.messageSubscriber {
+                        subscriber.updateSportLiveCount(nodeId: nodeId, liveCount: eventCount)
+                    }
+                case .updateAllSportsEventCount(let contentIdentifier, let nodeId, let eventCount):
+                    if let subscriber = self.messageSubscriber {
+                        subscriber.updateSportEventCount(nodeId: nodeId, eventCount: eventCount)
+                    }
                 case .eventDetails(let contentIdentifier, let event):
                     if let subscriber = self.messageSubscriber, let eventValue = event {
                         let mappedEvent = SportRadarModelMapper.event(fromInternalEvent: eventValue)

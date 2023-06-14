@@ -97,7 +97,7 @@ class MyFavoriteMatchesDataSource: NSObject, UITableViewDataSource, UITableViewD
                 }
 
                 cell.setupWithMatch(match)
-                cell.tappedMatchLineAction = { [weak self] in
+                cell.tappedMatchLineAction = { [weak self] match in
                     self?.didSelectMatchAction?(match)
                 }
                 cell.matchWentLive = { [weak self] in

@@ -107,6 +107,15 @@ extension ServicesProviderClient {
         return eventsProvider.subscribeLiveSportTypes()
     }
 
+    public func subscribeAllSportTypes() -> AnyPublisher<SubscribableContent<[SportType]>, ServiceProviderError> {
+        guard
+            let eventsProvider = self.eventsProvider
+        else {
+            return Fail(error: ServiceProviderError.eventsProviderNotFound).eraseToAnyPublisher()
+        }
+        return eventsProvider.subscribeAllSportTypes()
+    }
+
     //
     // Events
     //
@@ -321,16 +330,92 @@ extension ServicesProviderClient {
         return eventsProvider.getSearchEvents(query: query, resultLimit: resultLimit, page: page, isLive: isLive)
     }
 
-    public func getBanners() -> AnyPublisher<BannerResponse, ServiceProviderError> {
+    public func getHomeSliders() -> AnyPublisher<BannerResponse, ServiceProviderError> {
         guard
             let eventsProvider = self.eventsProvider
         else {
             return Fail(error: .eventsProviderNotFound).eraseToAnyPublisher()
         }
 
-        return eventsProvider.getBanners()
+        return eventsProvider.getHomeSliders()
     }
 
+    public func getPromotionalTopBanners() -> AnyPublisher<[PromotionalBanner], ServiceProviderError> {
+        guard
+            let eventsProvider = self.eventsProvider
+        else {
+            return Fail(error: .eventsProviderNotFound).eraseToAnyPublisher()
+        }
+
+        return eventsProvider.getPromotionalTopBanners()
+    }
+
+    public func getPromotionalSlidingTopEvents() -> AnyPublisher<[Event], ServiceProviderError> {
+        guard
+            let eventsProvider = self.eventsProvider
+        else {
+            return Fail(error: .eventsProviderNotFound).eraseToAnyPublisher()
+        }
+
+        return eventsProvider.getPromotionalSlidingTopEvents()
+    }
+
+    public func getPromotionalTopStories() -> AnyPublisher<BannerResponse, ServiceProviderError> {
+        guard
+            let eventsProvider = self.eventsProvider
+        else {
+            return Fail(error: .eventsProviderNotFound).eraseToAnyPublisher()
+        }
+
+        return eventsProvider.getPromotionalTopStories()
+    }
+
+
+    public func getHighlightedBoostedEvents() -> AnyPublisher<[Event], ServiceProviderError> {
+        guard
+            let eventsProvider = self.eventsProvider
+        else {
+            return Fail(error: .eventsProviderNotFound).eraseToAnyPublisher()
+        }
+
+        return eventsProvider.getHighlightedBoostedEvents()
+    }
+
+    public func getHighlightedVisualImageEvents() -> AnyPublisher<[Event], ServiceProviderError> {
+        guard
+            let eventsProvider = self.eventsProvider
+        else {
+            return Fail(error: .eventsProviderNotFound).eraseToAnyPublisher()
+        }
+
+        return eventsProvider.getHighlightedVisualImageEvents()
+    }
+
+
+    //
+    //
+    public func getPromotedSports() -> AnyPublisher<[PromotedSport], ServiceProviderError> {
+        guard
+            let eventsProvider = self.eventsProvider
+        else {
+            return Fail(error: .eventsProviderNotFound).eraseToAnyPublisher()
+        }
+
+        return eventsProvider.getPromotedSports()
+    }
+
+    public func getEventsForMarketGroup(withId marketGroupId: String) -> AnyPublisher<EventsGroup, ServiceProviderError> {
+        guard
+            let eventsProvider = self.eventsProvider
+        else {
+            return Fail(error: .eventsProviderNotFound).eraseToAnyPublisher()
+        }
+
+        return eventsProvider.getEventsForMarketGroup(withId: marketGroupId)
+    }
+
+    //
+    //
     public func getEventSummary(eventId: String) -> AnyPublisher<Event, ServiceProviderError> {
         guard
             let eventsProvider = self.eventsProvider

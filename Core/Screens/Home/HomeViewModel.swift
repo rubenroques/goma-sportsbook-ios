@@ -9,6 +9,12 @@ import Foundation
 import Combine
 import OrderedCollections
 
+enum HomeTemplateBuilderType {
+    case appStatic
+    case backendDynamic(clientTemplateKey: String)
+    case clientDynamic
+}
+
 class HomeViewModel {
 
     enum Content {
@@ -16,10 +22,19 @@ class HomeViewModel {
         case userFavorites
         case bannerLine
         case suggestedBets
-        case sport(Sport)
+        case sportGroup(Sport)
+
         case userProfile
         case featuredTips
         case footerBanner
+
+        case quickSwipeStack
+        case makeOwnBetCallToAction
+
+        case highlightedMatches
+
+        case promotionalStories
+        case promotedSportSection
 
         var identifier: String {
             switch self {
@@ -27,10 +42,17 @@ class HomeViewModel {
             case .userFavorites: return "userFavorites"
             case .bannerLine: return "bannerLine"
             case .suggestedBets: return "suggestedBets"
-            case .sport(let sport): return "sport[\(sport)]"
+            case .sportGroup(let sport): return "sport[\(sport)]"
             case .userProfile: return "userProfile"
             case .featuredTips: return "featuredTips"
             case .footerBanner: return "footerBanner"
+
+            case .quickSwipeStack: return "quickSwipeStack"
+            case .makeOwnBetCallToAction: return "makeOwnBetCallToAction"
+            case .highlightedMatches: return "highlightedMatches"
+
+            case .promotionalStories: return "promotionalStories"
+            case .promotedSportSection: return "promotedSportSection"
             }
         }
     }
@@ -42,11 +64,19 @@ class HomeViewModel {
 
     // MARK: - Life Cycle
     init() {
-        if let homeFeedTemplate = Env.appSession.homeFeedTemplate {
-            self.homeViewTemplateDataSource = DynamicHomeViewTemplateDataSource(homeFeedTemplate: homeFeedTemplate)
-        }
-        else {
+
+        switch TargetVariables.homeTemplateBuilder {
+        case .appStatic: // hardcoded in the app code
             self.homeViewTemplateDataSource = StaticHomeViewTemplateDataSource()
+        case .backendDynamic: // provided by our backend
+            if let homeFeedTemplate = Env.appSession.homeFeedTemplate {
+                self.homeViewTemplateDataSource = DynamicHomeViewTemplateDataSource(homeFeedTemplate: homeFeedTemplate)
+            }
+            else {
+                fatalError("homeFeedTemplate or homeTemplateKey not found for client with homeTemplateBuilder = backendDynamic")
+            }
+        case .clientDynamic: // provided by the client backend
+            self.homeViewTemplateDataSource = ClientManagedHomeViewTemplateDataSource()
         }
 
         self.homeViewTemplateDataSource.refreshRequestedPublisher
@@ -110,8 +140,19 @@ extension HomeViewModel {
         return self.homeViewTemplateDataSource.suggestedBetLineViewModel()
     }
 
-    func matchStatsViewModel(forMatch match: Match) -> MatchStatsViewModel {
+    func matchStatsViewModel(forMatch match: Match) -> MatchStatsViewModel? {
         return self.homeViewTemplateDataSource.matchStatsViewModel(forMatch: match)
     }
 
+    func quickSwipeStackViewModel() -> QuickSwipeStackCellViewModel? {
+        return self.homeViewTemplateDataSource.quickSwipeStackViewModel()
+    }
+
+    func highlightedMatchViewModel(forIndex index: Int) -> MatchWidgetCellViewModel? {
+        return self.homeViewTemplateDataSource.highlightedMatchViewModel(forIndex: index)
+    }
+
+    func promotedMatch(forSection section: Int, forIndex index: Int) -> Match? {
+        return self.homeViewTemplateDataSource.promotedMatch(forSection: section, forIndex: index)
+    }
 }

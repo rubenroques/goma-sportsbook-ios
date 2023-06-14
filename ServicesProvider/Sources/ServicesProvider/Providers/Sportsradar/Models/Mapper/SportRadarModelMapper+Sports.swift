@@ -35,7 +35,8 @@ extension SportRadarModelMapper {
                                   showEventCategory: false,
                                   numberEvents: sportRadarSportType.numberEvents,
                                   numberOutrightEvents: sportRadarSportType.numberOutrightEvents,
-                                  numberOutrightMarkets: sportRadarSportType.numberOutrightMarkets)
+                                  numberOutrightMarkets: sportRadarSportType.numberOutrightMarkets,
+                                  numberLiveEvents: sportRadarSportType.numberLiveEvents)
 
         return sportType
     }
@@ -44,10 +45,11 @@ extension SportRadarModelMapper {
 
         let sportUnique = SportRadarModels.SportType(name: sportNode.name,
                                     numericId: sportNode.id,
-                                    alphaId: nil,
+                                                     alphaId: sportNode.alphaCode,
                                     numberEvents: sportNode.numberEvents,
                                     numberOutrightEvents: sportNode.numberOutrightEvents,
-                                    numberOutrightMarkets: sportNode.numberOutrightMarkets)
+                                    numberOutrightMarkets: sportNode.numberOutrightMarkets,
+                                                     numberLiveEvents: sportNode.numberLiveEvents)
         return sportUnique
     }
 
@@ -59,7 +61,7 @@ extension SportRadarModelMapper {
                                                      alphaId: scheduledSport.id,
                                                      numberEvents: 0,
                                                      numberOutrightEvents: 0,
-                                                     numberOutrightMarkets: 0)
+                                                     numberOutrightMarkets: 0, numberLiveEvents: 0)
         return sportUnique
 
     }

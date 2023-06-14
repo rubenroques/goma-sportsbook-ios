@@ -492,17 +492,7 @@ class LiveMatchWidgetCollectionViewCell: UICollectionViewCell {
             self.locationFlagImageView.image = UIImage(named: Assets.flagName(withCountryCode: viewModel.countryId))
         }
 
-        guard
-            let match = viewModel.match
-        else {
-            return
-        }
-
-        if let matchId = viewModel.match {
-            // self.requestRedCards(forMatchWithId: matchId.id)
-        }
-
-        if let market = match.markets.first {
+        if let market = viewModel.match.markets.first {
 
 //            if let marketPublisher = viewModel.store.marketPublisher(withId: market.id) {
 //                self.marketSubscriber = marketPublisher
@@ -693,7 +683,7 @@ class LiveMatchWidgetCollectionViewCell: UICollectionViewCell {
             self.showSeeAllView()
         }
 
-        for matchId in Env.favoritesManager.favoriteEventsIdPublisher.value where matchId == match.id {
+        for matchId in Env.favoritesManager.favoriteEventsIdPublisher.value where matchId == viewModel.match.id {
             self.isFavorite = true
         }
 

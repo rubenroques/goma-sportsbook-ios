@@ -71,6 +71,7 @@ public enum ContentType: String, Codable {
 
     case liveSports = "inplaySportListBySportType"
     case preLiveSports = "sportTypeByDate"
+    case allSports = "boNavigationList"
 
     case eventDetails = "event"
     case eventDetailsLiveData = "liveDataExtended"
@@ -87,6 +88,7 @@ public enum ContentRoute {
 
     case liveSports
     case preLiveSports(startDate: Date?, endDate: Date?)
+    case allSports
 
     case eventDetails(eventId: String)
     case eventDetailsLiveData(eventId: String)
@@ -108,6 +110,8 @@ public enum ContentRoute {
         case .preLiveSports(let startDate, let endDate):
             let dateRange = ContentDateFormatter.getDateRangeId(startDate: startDate, endDate: endDate)
             return dateRange
+        case .allSports:
+            return "1356/top"
 
         case .eventDetails(let eventId):
             return eventId
@@ -133,6 +137,8 @@ public enum ContentRoute {
             return ""
         case .preLiveSports:
             return ""
+        case .allSports:
+            return ""
         case .eventDetails(let eventId):
             return eventId
         case .eventDetailsLiveData(let eventId):
@@ -155,6 +161,8 @@ public enum ContentRoute {
         case .liveSports:
             return nil
         case .preLiveSports:
+            return nil
+        case .allSports:
             return nil
         case .eventDetails:
             return nil
@@ -248,6 +256,8 @@ public class ContentIdentifier: Decodable, Identifiable {
             let endDate = ContentDateFormatter.dateFromString(dateString: endDateString)
 
             self.contentRoute = ContentRoute.preLiveSports(startDate: startDate, endDate: endDate)
+        case .allSports:
+            self.contentRoute = ContentRoute.allSports
 
         case .eventDetails:
             self.contentRoute = ContentRoute.eventDetails(eventId: contentRouteRawString)

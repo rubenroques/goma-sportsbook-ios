@@ -16,6 +16,7 @@ extension SportRadarModels {
 
         case liveSports(sportsTypes: [SportType])
         case preLiveSports(sportsTypes: [SportType])
+        case allSports(sportTypes: [SportType])
 
         case eventDetails(contentIdentifier: ContentIdentifier, event: SportRadarModels.Event?)
         case eventDetailsLiveData(contentIdentifier: ContentIdentifier, eventLiveDataExtended: SportRadarModels.EventLiveDataExtended?)
@@ -38,6 +39,9 @@ extension SportRadarModels {
         case enableMarket(contentIdentifier: ContentIdentifier, marketId: String)
 
         case updateEventLiveDataExtended(contentIdentifier: ContentIdentifier, eventId: String, eventLiveDataExtended: SportRadarModels.EventLiveDataExtended)
+
+        case updateAllSportsLiveCount(ContentIdentifier: ContentIdentifier, nodeId: String, eventCount: Int)
+        case updateAllSportsEventCount(ContentIdentifier: ContentIdentifier, nodeId: String, eventCount: Int)
 
         case updateEventState(contentIdentifier: ContentIdentifier, eventId: String, state: String)
         case updateEventTime(contentIdentifier: ContentIdentifier, eventId: String, newTime: String)
@@ -62,7 +66,8 @@ extension SportRadarModels {
                 return nil
             case .preLiveSports(_):
                 return nil
-
+            case .allSports(_):
+                return nil
             case .eventDetails(let contentIdentifier, _):
                 return contentIdentifier
 
@@ -104,6 +109,11 @@ extension SportRadarModels {
                 return contentIdentifier
 
             case .updateEventLiveDataExtended(let contentIdentifier, _, _):
+                return contentIdentifier
+
+            case .updateAllSportsLiveCount(let contentIdentifier, _, _):
+                return contentIdentifier
+            case .updateAllSportsEventCount(let contentIdentifier, _, _):
                 return contentIdentifier
 
             case .updateEventState(let contentIdentifier, _, _):
@@ -195,12 +205,29 @@ extension SportRadarModels {
                 // change key is optional
                 if container.contains(.change) {
                     let sportsTypes: [FailableDecodable<SportRadarModels.SportType>] = try container.decode([FailableDecodable<SportRadarModels.SportType>].self, forKey: .change)
+
                     return .preLiveSports(sportsTypes: sportsTypes.compactMap({ $0.content }))
                 }
                 else {
                     let sportsTypes: [SportType] = []
                     return .preLiveSports(sportsTypes: sportsTypes)
                 }
+
+            case .allSports:
+                let sportsTypeDetails: FailableDecodable<SportRadarModels.SportsList> = try container.decode(FailableDecodable<SportRadarModels.SportsList>.self, forKey: .change)
+
+                if let sportNodes = sportsTypeDetails.content?.sportNodes {
+
+                    let sportTypes = sportNodes.map(SportRadarModelMapper.sportType(fromSportNode:))
+
+                    let filteredSportTypes = sportTypes.filter({
+                        $0.alphaId != "0"
+                    })
+
+                    return .allSports(sportTypes: filteredSportTypes)
+                }
+
+                return .allSports(sportTypes: [])
 
             case .preLiveEvents:
                 // change key is optional
@@ -275,6 +302,26 @@ extension SportRadarModels {
                     return .updateEventLiveDataExtended(contentIdentifier: contentIdentifier, eventId: eventId, eventLiveDataExtended: eventLiveDataExtended)
                 }
                 return .unknown
+            }
+
+            if path.contains("bonavigationnodes") {
+                if let sportId = SocketMessageParseHelper.extractNodeId(path) {
+
+                    if path.contains("numinplayevents") {
+
+                        let liveEventsCount = try container.decode(String.self, forKey: .change)
+
+                        return .updateAllSportsLiveCount(ContentIdentifier: contentIdentifier, nodeId: sportId, eventCount: Int(liveEventsCount) ?? 0)
+                    }
+
+                    if path.contains("numevents") {
+
+                        let eventsCount = try container.decode(String.self, forKey: .change)
+
+                        return .updateAllSportsEventCount(ContentIdentifier: contentIdentifier, nodeId: sportId, eventCount: Int(eventsCount) ?? 0)
+                    }
+                }
+
             }
 
             if path.contains("idfomarket") && path.contains("istradable"), let marketId = SocketMessageParseHelper.extractMarketId(path) {
@@ -460,6 +507,8 @@ extension SportRadarModels.ContentContainer: CustomDebugStringConvertible {
             return "Live Sports - Sport Types count: \(sportsTypes.count)"
         case .preLiveSports(let sportsTypes):
             return "Pre-live Sports - Sport Types count: \(sportsTypes.count)"
+        case .allSports(let sportsTypes):
+            return "All Sports - Sport Types count: \(sportsTypes.count)"
         case .eventDetails(let contentIdentifier, let event):
             return "Event Details (Content ID: \(contentIdentifier)) - Event: \(String(describing: event))"
         case .eventDetailsLiveData(let contentIdentifier, let eventLiveDataExtended):
@@ -496,6 +545,10 @@ extension SportRadarModels.ContentContainer: CustomDebugStringConvertible {
         case .updateEventLiveDataExtended(let contentIdentifier, let eventId, let eventLiveDataExtended):
             return "Update Event LiveDataExtended (Content ID: \(contentIdentifier)) - Event ID: \(eventId) - LiveDataExtended: \(eventLiveDataExtended)"
 
+        case .updateAllSportsLiveCount(let contentIdentifier, let nodeId, let eventCount):
+            return "Update All Sports Live Count (Content ID: \(contentIdentifier)) - Node ID: \(nodeId) - Event Count: \(eventCount)"
+        case .updateAllSportsEventCount(let contentIdentifier, let nodeId, let eventCount):
+            return "Update All Sports Event Count (Content ID: \(contentIdentifier)) - Node ID: \(nodeId) - Event Count: \(eventCount)"
         case .updateEventState(let contentIdentifier, let eventId, let state):
             return "Update Event State (Content ID: \(contentIdentifier)) - Event ID: \(eventId) - State: \(state)"
         case .updateEventTime(let contentIdentifier, let eventId, let newTime):

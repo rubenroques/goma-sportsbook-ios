@@ -141,6 +141,27 @@ enum DocumentTypeGroup {
         }
     }
 
+    var code: String {
+        switch self {
+        case .identityCard:
+            return "IDENTITY_CARD"
+        case .residenceId:
+            return "RESIDENCE_ID"
+        case .drivingLicense:
+            return "DRIVING_LICENCE"
+        case .passport:
+            return "PASSPORT"
+        case .proofAddress:
+            return "POA"
+        case .rib:
+            return "RIB"
+        case .other:
+            return "OTHERS"
+        default:
+            return ""
+        }
+    }
+
     var codeName: String {
         switch self {
         case .identityCard:

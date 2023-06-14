@@ -1328,4 +1328,6 @@
 "upload_type_info_rule" = "Allowed file types: png, jpg, pdf";
 "upload_size_info_rule" = "Max. size: 10MB";
 "rejected" = "Rejected";
-"incomplete" = "Incomlete";
+"incomplete" = "Incomplete";
+"upload_complete_message" = "Your document(s) were uploaded successfully!";
+"upload_error" = "Upload Error";

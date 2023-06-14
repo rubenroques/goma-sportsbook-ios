@@ -57,4 +57,14 @@ enum SocketMessageParseHelper {
         return "\(minutes)'"
     }
 
+    static func extractNodeId(_ inputString: String) -> String? {
+        let regex = try! NSRegularExpression(pattern: "\\[idfwbonavigation=(\\d+(\\.\\d+)?)\\]")
+        let range = NSRange(location: 0, length: inputString.utf16.count)
+        if let match = regex.firstMatch(in: inputString, options: [], range: range) {
+            let id = (inputString as NSString).substring(with: match.range(at: 1))
+            return id
+        }
+        return nil
+    }
+
 }

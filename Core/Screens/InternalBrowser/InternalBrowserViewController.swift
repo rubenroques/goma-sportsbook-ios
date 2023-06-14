@@ -21,13 +21,23 @@ class InternalBrowserViewController: UIViewController {
     private lazy var loadingBaseView: UIView = Self.createLoadingBaseView()
     private lazy var loadingActivityIndicatorView: UIActivityIndicatorView = Self.createLoadingActivityIndicatorView()
 
-    private var url: URL
+    private var url: URL?
+    private var localFileName: String?
+    private var localFileType: String?
 
     private var shouldShowBackButton: Bool = false
 
     init(url: URL) {
         self.url = url
         super.init(nibName: nil, bundle: nil)
+    }
+
+    // Init for local file
+    init(fileName: String, fileType: String) {
+        super.init(nibName: nil, bundle: nil)
+
+        self.localFileName = fileName
+        self.localFileType = fileType
     }
 
     @available(iOS, unavailable)
@@ -47,7 +57,16 @@ class InternalBrowserViewController: UIViewController {
 
         self.showLoading()
 
-        self.webView.load(URLRequest(url: url))
+        if let url = self.url {
+            self.webView.load(URLRequest(url: url))
+        }
+        else if
+            let fileName = self.localFileName,
+            let fileType = localFileType,
+            let url = Bundle.main.url(forResource: fileName, withExtension: fileType)
+        {
+            self.webView.loadFileURL(url, allowingReadAccessTo: url)
+        }
     }
 
     // MARK: - Layout and Theme
