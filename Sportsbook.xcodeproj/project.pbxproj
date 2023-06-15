@@ -717,20 +717,6 @@
 		450FC3E92A2A6737000DB866 /* DummyImages.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 450FC3E42A2A6737000DB866 /* DummyImages.xcassets */; };
 		450FC3EA2A2A6737000DB866 /* DummyImages.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 450FC3E42A2A6737000DB866 /* DummyImages.xcassets */; };
 		450FC3EB2A2A6737000DB866 /* DummyImages.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 450FC3E42A2A6737000DB866 /* DummyImages.xcassets */; };
-		450FC3ED2A2A6D9D000DB866 /* MatchWidgetView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 450FC3EC2A2A6D97000DB866 /* MatchWidgetView.xib */; };
-		450FC3EE2A2A6D9D000DB866 /* MatchWidgetView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 450FC3EC2A2A6D97000DB866 /* MatchWidgetView.xib */; };
-		450FC3EF2A2A6D9E000DB866 /* MatchWidgetView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 450FC3EC2A2A6D97000DB866 /* MatchWidgetView.xib */; };
-		450FC3F02A2A6D9E000DB866 /* MatchWidgetView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 450FC3EC2A2A6D97000DB866 /* MatchWidgetView.xib */; };
-		450FC3F12A2A6D9F000DB866 /* MatchWidgetView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 450FC3EC2A2A6D97000DB866 /* MatchWidgetView.xib */; };
-		450FC3F22A2A6D9F000DB866 /* MatchWidgetView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 450FC3EC2A2A6D97000DB866 /* MatchWidgetView.xib */; };
-		450FC3F32A2A6DA0000DB866 /* MatchWidgetView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 450FC3EC2A2A6D97000DB866 /* MatchWidgetView.xib */; };
-		450FC3F52A2A6E77000DB866 /* MatchWidgetView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 450FC3F42A2A6DE0000DB866 /* MatchWidgetView.swift */; };
-		450FC3F62A2A6E78000DB866 /* MatchWidgetView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 450FC3F42A2A6DE0000DB866 /* MatchWidgetView.swift */; };
-		450FC3F72A2A6E78000DB866 /* MatchWidgetView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 450FC3F42A2A6DE0000DB866 /* MatchWidgetView.swift */; };
-		450FC3F82A2A6E79000DB866 /* MatchWidgetView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 450FC3F42A2A6DE0000DB866 /* MatchWidgetView.swift */; };
-		450FC3F92A2A6E79000DB866 /* MatchWidgetView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 450FC3F42A2A6DE0000DB866 /* MatchWidgetView.swift */; };
-		450FC3FB2A2A6E7B000DB866 /* MatchWidgetView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 450FC3F42A2A6DE0000DB866 /* MatchWidgetView.swift */; };
-		450FC3FC2A2A6E7B000DB866 /* MatchWidgetView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 450FC3F42A2A6DE0000DB866 /* MatchWidgetView.swift */; };
 		450FC3FE2A2B2588000DB866 /* BoostedArrowView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 450FC3FD2A2B2588000DB866 /* BoostedArrowView.swift */; };
 		450FC3FF2A2B2588000DB866 /* BoostedArrowView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 450FC3FD2A2B2588000DB866 /* BoostedArrowView.swift */; };
 		450FC4002A2B2589000DB866 /* BoostedArrowView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 450FC3FD2A2B2588000DB866 /* BoostedArrowView.swift */; };
@@ -5458,8 +5444,6 @@
 		450B7B3E28F637FA009229E3 /* ServiceProviderModelMapper+Sports.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "ServiceProviderModelMapper+Sports.swift"; sourceTree = "<group>"; };
 		450FC3DC2A2A3899000DB866 /* MatchWidgetContainerTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MatchWidgetContainerTableViewCell.swift; sourceTree = "<group>"; };
 		450FC3E42A2A6737000DB866 /* DummyImages.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = DummyImages.xcassets; sourceTree = "<group>"; };
-		450FC3EC2A2A6D97000DB866 /* MatchWidgetView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = MatchWidgetView.xib; sourceTree = "<group>"; };
-		450FC3F42A2A6DE0000DB866 /* MatchWidgetView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MatchWidgetView.swift; sourceTree = "<group>"; };
 		450FC3FD2A2B2588000DB866 /* BoostedArrowView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BoostedArrowView.swift; sourceTree = "<group>"; };
 		450FC4052A2E1E33000DB866 /* StoriesLineTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StoriesLineTableViewCell.swift; sourceTree = "<group>"; };
 		450FC40D2A2E268F000DB866 /* StoriesItemCollectionViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StoriesItemCollectionViewCell.swift; sourceTree = "<group>"; };
@@ -8045,8 +8029,6 @@
 				457816A82706679400F66878 /* MatchLineTableViewCell.xib */,
 				457816AD2706699900F66878 /* MatchWidgetCollectionViewCell.swift */,
 				457816AE2706699900F66878 /* MatchWidgetCollectionViewCell.xib */,
-				450FC3F42A2A6DE0000DB866 /* MatchWidgetView.swift */,
-				450FC3EC2A2A6D97000DB866 /* MatchWidgetView.xib */,
 				450FC3DC2A2A3899000DB866 /* MatchWidgetContainerTableViewCell.swift */,
 				4503E79F27D6606100077CD2 /* HeadersCellViews */,
 				45CD7B492716F5CB003044C5 /* OddCell */,
@@ -9942,7 +9924,6 @@
 			files = (
 				450B7AA428F58574009229E3 /* WithdrawViewController.xib in Resources */,
 				450B7AA528F58574009229E3 /* SportsTypes.xcassets in Resources */,
-				450FC3F22A2A6D9F000DB866 /* MatchWidgetView.xib in Resources */,
 				450B7AA628F58574009229E3 /* BetslipErrorView.xib in Resources */,
 				450B7AA728F58574009229E3 /* SimpleRegisterDetailsViewController.xib in Resources */,
 				450B7AA828F58574009229E3 /* DebugViewController.xib in Resources */,
@@ -10090,7 +10071,6 @@
 			files = (
 				457CBBCF282D27D000ED0F00 /* WithdrawViewController.xib in Resources */,
 				457CBBD0282D27D000ED0F00 /* SportsTypes.xcassets in Resources */,
-				450FC3EE2A2A6D9D000DB866 /* MatchWidgetView.xib in Resources */,
 				457CBBD1282D27D000ED0F00 /* BetslipErrorView.xib in Resources */,
 				457CBBD2282D27D000ED0F00 /* SimpleRegisterDetailsViewController.xib in Resources */,
 				457CBBD3282D27D000ED0F00 /* DebugViewController.xib in Resources */,
@@ -10230,7 +10210,6 @@
 			files = (
 				457CBE76282D2CD100ED0F00 /* WithdrawViewController.xib in Resources */,
 				457CBE77282D2CD100ED0F00 /* SportsTypes.xcassets in Resources */,
-				450FC3ED2A2A6D9D000DB866 /* MatchWidgetView.xib in Resources */,
 				457CBE78282D2CD100ED0F00 /* BetslipErrorView.xib in Resources */,
 				457CBE79282D2CD100ED0F00 /* SimpleRegisterDetailsViewController.xib in Resources */,
 				457CBE7A282D2CD100ED0F00 /* DebugViewController.xib in Resources */,
@@ -10370,7 +10349,6 @@
 			files = (
 				4589C94D282024E400243547 /* WithdrawViewController.xib in Resources */,
 				4589C94E282024E400243547 /* SportsTypes.xcassets in Resources */,
-				450FC3F12A2A6D9F000DB866 /* MatchWidgetView.xib in Resources */,
 				4589C94F282024E400243547 /* BetslipErrorView.xib in Resources */,
 				4589C950282024E400243547 /* SimpleRegisterDetailsViewController.xib in Resources */,
 				4589C951282024E400243547 /* DebugViewController.xib in Resources */,
@@ -10608,7 +10586,6 @@
 				45A33327298976BA008181E9 /* LogViewerViewController.xib in Resources */,
 				45A33328298976BA008181E9 /* ActivationAlertView.xib in Resources */,
 				45A33329298976BA008181E9 /* SportSelectionCollectionViewCell.xib in Resources */,
-				450FC3F32A2A6DA0000DB866 /* MatchWidgetView.xib in Resources */,
 				45A3332A298976BA008181E9 /* TestsViewController.xib in Resources */,
 				45A3332B298976BA008181E9 /* PasswordUpdateViewController.xib in Resources */,
 				45F2F9A9298C067C0075AF02 /* StaticColors.xcassets in Resources */,
@@ -10651,7 +10628,6 @@
 			files = (
 				45A6BDA628246A7500D9B416 /* WithdrawViewController.xib in Resources */,
 				45A6BDA728246A7500D9B416 /* SportsTypes.xcassets in Resources */,
-				450FC3EF2A2A6D9E000DB866 /* MatchWidgetView.xib in Resources */,
 				45A6BDA828246A7500D9B416 /* BetslipErrorView.xib in Resources */,
 				45A6BDA928246A7500D9B416 /* SimpleRegisterDetailsViewController.xib in Resources */,
 				45A6BDAA28246A7500D9B416 /* DebugViewController.xib in Resources */,
@@ -10889,7 +10865,6 @@
 				A9C3435628F9A74A0055360B /* LogViewerViewController.xib in Resources */,
 				A9C3435728F9A74A0055360B /* ActivationAlertView.xib in Resources */,
 				A9C3435828F9A74A0055360B /* SportSelectionCollectionViewCell.xib in Resources */,
-				450FC3F02A2A6D9E000DB866 /* MatchWidgetView.xib in Resources */,
 				A9C3435928F9A74A0055360B /* TestsViewController.xib in Resources */,
 				A9C3435A28F9A74A0055360B /* PasswordUpdateViewController.xib in Resources */,
 				45F2F9AC298C067C0075AF02 /* StaticColors.xcassets in Resources */,
@@ -11433,7 +11408,6 @@
 				450B79AD28F58574009229E3 /* EmailVerificationTableViewCell.swift in Sources */,
 				450B79AE28F58574009229E3 /* ForbiddenLocationViewController.swift in Sources */,
 				450B79AF28F58574009229E3 /* SharedTicketCardView.swift in Sources */,
-				450FC3FC2A2A6E7B000DB866 /* MatchWidgetView.swift in Sources */,
 				450B79B028F58574009229E3 /* SentTicketMessageTableViewCell.swift in Sources */,
 				450B79B128F58574009229E3 /* OddFormatter.swift in Sources */,
 				A907B6AD29D10C7500AC4A17 /* PromotionsWebViewController.swift in Sources */,
@@ -12246,7 +12220,6 @@
 				45D1ED5F28A150C2001E18E5 /* BusinessModules.swift in Sources */,
 				A9C2D52029C0D4F100DB95BD /* CashoutInfo.swift in Sources */,
 				457CBB5C282D27D000ED0F00 /* NSObject+Extension.swift in Sources */,
-				450FC3F62A2A6E78000DB866 /* MatchWidgetView.swift in Sources */,
 				457CBB5D282D27D000ED0F00 /* Logger.swift in Sources */,
 				457CBB5E282D27D000ED0F00 /* GamesNotificationViewModel.swift in Sources */,
 				45C10F3828772DA700037BBE /* NavControllerTransitionCoordinator.swift in Sources */,
@@ -12804,7 +12777,6 @@
 				A9C1C0A42874404C00E9D6AC /* ShareTicketFriendGroupViewController.swift in Sources */,
 				457CBDD4282D2CD100ED0F00 /* FavoriteCompetitionsDataSource.swift in Sources */,
 				4568B9722858E45F00FA99B3 /* FlipNumberView.swift in Sources */,
-				450FC3F52A2A6E77000DB866 /* MatchWidgetView.swift in Sources */,
 				457C9F2D2A17D72000022C53 /* GradientBorderView.swift in Sources */,
 				457CBDD5282D2CD100ED0F00 /* TabularBarDataSource.swift in Sources */,
 				457CBDD6282D2CD100ED0F00 /* SportSectionHeaderView.swift in Sources */,
@@ -13372,7 +13344,6 @@
 				4589C88C282024E400243547 /* EmailVerificationTableViewCell.swift in Sources */,
 				4589C88D282024E400243547 /* ForbiddenLocationViewController.swift in Sources */,
 				A98EFDA4287C66B000655A26 /* SharedTicketCardView.swift in Sources */,
-				450FC3F92A2A6E79000DB866 /* MatchWidgetView.swift in Sources */,
 				45B6E219283FCF7E001B570C /* SentTicketMessageTableViewCell.swift in Sources */,
 				4589C88E282024E400243547 /* OddFormatter.swift in Sources */,
 				A907B6AE29D10C7500AC4A17 /* PromotionsWebViewController.swift in Sources */,
@@ -13989,7 +13960,6 @@
 				45A331C7298976BA008181E9 /* BannerCellViewModel.swift in Sources */,
 				45A331C8298976BA008181E9 /* EmailVerificationTableViewCell.swift in Sources */,
 				45A331C9298976BA008181E9 /* ForbiddenLocationViewController.swift in Sources */,
-				450FC3FB2A2A6E7B000DB866 /* MatchWidgetView.swift in Sources */,
 				45A331CA298976BA008181E9 /* SharedTicketCardView.swift in Sources */,
 				45A331CB298976BA008181E9 /* SentTicketMessageTableViewCell.swift in Sources */,
 				A907B6AC29D10C7500AC4A17 /* PromotionsWebViewController.swift in Sources */,
@@ -14623,7 +14593,6 @@
 				A9A1B2B92A0E557000F7A8ED /* UserConsent.swift in Sources */,
 				F4DE47AA288F620000CF30AA /* FilterHistoryViewModel.swift in Sources */,
 				45A6BCF428246A7500D9B416 /* ConversationsViewModel.swift in Sources */,
-				450FC3F72A2A6E78000DB866 /* MatchWidgetView.swift in Sources */,
 				45A6BCF528246A7500D9B416 /* FilterRowView.swift in Sources */,
 				A9B946C128C0F7F00091296E /* FeaturedTipCollectionViewModel.swift in Sources */,
 				A9958C7229705D62001474E2 /* DocumentView.swift in Sources */,
@@ -15147,7 +15116,6 @@
 				A9C341BD28F9A74A0055360B /* AutoLayoutDSL.swift in Sources */,
 				A9C341BE28F9A74A0055360B /* UIColor+Extensions.swift in Sources */,
 				A9C341BF28F9A74A0055360B /* ConversationsViewModel.swift in Sources */,
-				450FC3F82A2A6E79000DB866 /* MatchWidgetView.swift in Sources */,
 				A9C341C128F9A74A0055360B /* ConversationBetSelectionViewController.swift in Sources */,
 				A9C341C228F9A74A0055360B /* DepositViewController.swift in Sources */,
 				A9C341C328F9A74A0055360B /* PopularMatchesDataSource.swift in Sources */,
