@@ -18,6 +18,9 @@ class RibDocsViewModel {
     var documents: [DocumentInfo] = []
     var requiredDocumentTypes: [DocumentType] = []
     var isLoadingPublisher: CurrentValueSubject<Bool, Never> = .init(false)
+    var hasLoadedDocumentTypes: CurrentValueSubject<Bool, Never> = .init(false)
+    var hasLoadedUserDocuments: CurrentValueSubject<Bool, Never> = .init(false)
+    var hasDocumentsProcessed: CurrentValueSubject<Bool, Never> = .init(false)
 
     var isLocked: CurrentValueSubject<Bool, Never> = .init(false)
 
@@ -25,13 +28,197 @@ class RibDocsViewModel {
         return Env.userSessionStore.userKnowYourCustomerStatusPublisher.eraseToAnyPublisher()
     }
 
+    var shouldReloadData: (() -> Void)?
+
+    let dateFormatter = DateFormatter()
+
     init() {
 
         self.getKYCStatus()
+
+        self.getDocumentTypes()
     }
 
     private func getKYCStatus() {
         Env.userSessionStore.refreshProfile()
+    }
+
+    private func getDocumentTypes() {
+
+        self.isLoadingPublisher.send(true)
+
+        Env.servicesProvider.getDocumentTypes()
+            .receive(on: DispatchQueue.main)
+            .sink(receiveCompletion: { [weak self] completion in
+                switch completion {
+                case .finished:
+                    ()
+                case .failure(let error):
+                    self?.isLoadingPublisher.send(false)
+                }
+
+            }, receiveValue: { [weak self] documentTypesResponse in
+
+                let documentTypes = documentTypesResponse
+
+                let requiredDocumentTypes = documentTypesResponse.documentTypes.filter({
+                    $0.documentTypeGroup == .rib
+                })
+
+                self?.requiredDocumentTypes.append(contentsOf: requiredDocumentTypes)
+
+                self?.hasLoadedDocumentTypes.send(true)
+
+                self?.getUserDocuments()
+            })
+            .store(in: &cancellables)
+    }
+
+    private func getUserDocuments() {
+
+        self.hasDocumentsProcessed.send(false)
+
+        Env.servicesProvider.getUserDocuments()
+            .receive(on: DispatchQueue.main)
+            .sink(receiveCompletion: { [weak self] completion in
+                switch completion {
+                case .finished:
+                    ()
+                case .failure(let error):
+                    self?.isLoadingPublisher.send(false)
+                }
+
+            }, receiveValue: { [weak self] userDocumentsResponse in
+
+                let userDocuments = userDocumentsResponse.userDocuments
+
+                if let requiredDocumentTypes = self?.requiredDocumentTypes {
+                    self?.processDocuments(documentTypes: requiredDocumentTypes, userDocuments: userDocuments)
+                }
+
+            })
+            .store(in: &cancellables)
+    }
+
+    private func processDocuments(documentTypes: [DocumentType], userDocuments: [UserDocument]) {
+
+        for documentType in documentTypes {
+
+            let documentTypeCode = DocumentTypeCode(code: documentType.documentType)
+
+            if let documentTypeGroup = documentType.documentTypeGroup {
+
+                let mappedDocumentTypeGroup = ServiceProviderModelMapper.documentTypeGroup(fromServiceProviderDocumentTypeGroup: documentTypeGroup)
+
+                let uploadedFiles = userDocuments.filter({
+                    $0.documentType == documentType.documentType
+                }).map({ userDocument -> DocumentFileInfo in
+
+                    let userDocumentStatus = FileState(code: userDocument.status)
+
+                    self.dateFormatter.dateFormat = "dd-MM-yyyy HH:mm:ss"
+                    let uploadDate = self.dateFormatter.date(from: userDocument.uploadDate)
+
+                    return DocumentFileInfo(id: userDocument.documentType,
+                                            name: userDocument.fileName,
+                                            status: userDocumentStatus ?? .pendingApproved,
+                                            uploadDate: uploadDate ?? Date(),
+                                            documentTypeGroup: mappedDocumentTypeGroup)
+                })
+
+                var existingDocumentInfo: DocumentInfo?
+
+                for document in self.documents {
+                    if let typeGroup = document.typeGroup,
+                       typeGroup == mappedDocumentTypeGroup {
+                        existingDocumentInfo = document
+                    }
+                }
+
+                if let existingDocumentInfo {
+                    var documentInfoIndex = self.documents.firstIndex(where: {
+                        $0.id == existingDocumentInfo.id
+                    })
+
+                    if let index = documentInfoIndex {
+                        var documentFileInfo = self.documents[index]
+
+                        documentFileInfo.uploadedFiles.append(contentsOf: uploadedFiles)
+
+                        self.documents[index] = documentFileInfo
+
+                    }
+                }
+                else {
+                    let documentInfo = DocumentInfo(id: documentType.documentType,
+                                                    typeName: documentTypeCode?.codeName ?? "",
+                                                    status: uploadedFiles.isEmpty ? .notReceived : .received,
+                                                    uploadedFiles: uploadedFiles,
+                                                    typeGroup: mappedDocumentTypeGroup)
+
+                    self.documents.append(documentInfo)
+                }
+
+            }
+            else {
+
+                let uploadedFiles = userDocuments.filter({
+                    $0.documentType == documentType.documentType
+                }).map({ userDocument -> DocumentFileInfo in
+
+                    let userDocumentStatus = FileState(code: userDocument.status)
+
+                    self.dateFormatter.dateFormat = "dd-MM-yyyy HH:mm:ss"
+                    let uploadDate = self.dateFormatter.date(from: userDocument.uploadDate)
+
+                    return DocumentFileInfo(id: userDocument.documentType,
+                                            name: userDocument.fileName,
+                                            status: userDocumentStatus ?? .pendingApproved,
+                                            uploadDate: uploadDate ?? Date(),
+                                            documentTypeGroup: .none)
+                })
+
+                var existingDocumentInfo: DocumentInfo?
+
+                for document in self.documents {
+                    if document.id == documentType.documentType  {
+                        existingDocumentInfo = document
+                    }
+                }
+
+                if let existingDocumentInfo {
+                    var documentInfoIndex = self.documents.firstIndex(where: {
+                        $0.id == existingDocumentInfo.id
+                    })
+
+                    if let index = documentInfoIndex {
+                        var documentFileInfo = self.documents[index]
+
+                        documentFileInfo.uploadedFiles.append(contentsOf: uploadedFiles)
+
+                        self.documents[index] = documentFileInfo
+
+                    }
+                }
+                else {
+                    let documentInfo = DocumentInfo(id: documentType.documentType,
+                                                    typeName: documentTypeCode?.codeName ?? "",
+                                                    status: uploadedFiles.isEmpty ? .notReceived : .received,
+                                                    uploadedFiles: uploadedFiles)
+
+                    self.documents.append(documentInfo)
+                }
+
+            }
+        }
+
+        self.isLoadingPublisher.send(false)
+
+        self.hasLoadedUserDocuments.send(false)
+
+        self.hasDocumentsProcessed.send(true)
+
+        self.shouldReloadData?()
     }
 
 }
@@ -213,6 +400,64 @@ class RibDocsViewController: UIViewController {
                 }
             })
             .store(in: &cancellables)
+
+        viewModel.hasDocumentsProcessed
+            .receive(on: DispatchQueue.main)
+            .sink(receiveValue: { [weak self] isProcessed in
+
+                if isProcessed {
+
+                        if let documents = self?.viewModel.documents {
+                            self?.setupDocumentStateViews(documentsInfo: documents)
+
+                        }
+                }
+            })
+            .store(in: &cancellables)
+    }
+
+    // MARK: Functions
+    private func setupDocumentStateViews(documentsInfo: [DocumentInfo]) {
+
+        self.ribDocumentTopStackView.removeAllArrangedSubviews()
+
+        if let documentsFileInfo = self.viewModel.documents.first?.uploadedFiles {
+
+            var mostRecentDocument: DocumentFileInfo?
+
+            for uploadedFile in documentsFileInfo {
+
+                let documentStateView = DocumentStateView()
+
+                documentStateView.configure(documentFileInfo: uploadedFile)
+
+                self.ribDocumentTopStackView.addArrangedSubview(documentStateView)
+
+                if let documentDate = uploadedFile.uploadDate {
+                    if let recentDocument = mostRecentDocument {
+                        if let recentDocumentDate = recentDocument.uploadDate,
+                           documentDate > recentDocumentDate {
+                            mostRecentDocument = uploadedFile
+                        }
+                    }
+                    else {
+                        mostRecentDocument = uploadedFile
+                    }
+                }
+            }
+
+            if let currentDocument = mostRecentDocument {
+
+                if currentDocument.status == .approved || currentDocument.status == .pendingApproved {
+                    self.canAddRibDocs = false
+                }
+                else {
+                    self.canAddRibDocs = true
+                }
+            }
+
+        }
+
     }
 
     // MARK: Action
@@ -408,11 +653,6 @@ extension RibDocsViewController {
 
         self.lockTitleBaseView.addSubview(self.lockTitleLabel)
 
-//        self.topStackView.addArrangedSubview(self.ribNumberBaseView)
-
-//        self.ribNumberBaseView.addSubview(self.ribNumberLabel)
-//        self.ribNumberBaseView.addSubview(self.ribNumberHeaderTextFieldView)
-
         self.contentBaseView.addSubview(self.ribDocumentBaseView)
 
         self.ribDocumentBaseView.addSubview(self.ribDocumentTitleLabel)
@@ -467,16 +707,6 @@ extension RibDocsViewController {
             self.lockTitleLabel.topAnchor.constraint(equalTo: self.lockTitleBaseView.topAnchor, constant: 8),
             self.lockTitleLabel.bottomAnchor.constraint(equalTo: self.lockTitleBaseView.bottomAnchor, constant: -8),
 
-//            self.ribNumberLabel.leadingAnchor.constraint(equalTo: self.ribNumberBaseView.leadingAnchor, constant: 14),
-//            self.ribNumberLabel.trailingAnchor.constraint(equalTo: self.ribNumberBaseView.trailingAnchor, constant: -14),
-//            self.ribNumberLabel.topAnchor.constraint(equalTo: self.ribNumberBaseView.topAnchor, constant: 18),
-//
-//            self.ribNumberHeaderTextFieldView.leadingAnchor.constraint(equalTo: self.ribNumberBaseView.leadingAnchor, constant: 14),
-//            self.ribNumberHeaderTextFieldView.trailingAnchor.constraint(equalTo: self.ribNumberBaseView.trailingAnchor, constant: -14),
-//            self.ribNumberHeaderTextFieldView.topAnchor.constraint(equalTo: self.ribNumberLabel.bottomAnchor, constant: 14),
-//            self.ribNumberHeaderTextFieldView.bottomAnchor.constraint(equalTo: self.ribNumberBaseView.bottomAnchor),
-//            self.ribNumberHeaderTextFieldView.heightAnchor.constraint(equalToConstant: 80)
-
         ])
 
         // RIB Document View
@@ -491,7 +721,7 @@ extension RibDocsViewController {
             self.ribDocumentTitleLabel.topAnchor.constraint(equalTo: self.ribDocumentBaseView.topAnchor, constant: 17),
 
             self.ribDocumentTopStackView.leadingAnchor.constraint(equalTo: self.ribDocumentBaseView.leadingAnchor, constant: 14),
-            self.ribDocumentTopStackView.trailingAnchor.constraint(equalTo: self.ribDocumentBaseView.trailingAnchor),
+            self.ribDocumentTopStackView.trailingAnchor.constraint(equalTo: self.ribDocumentBaseView.trailingAnchor, constant: -14),
             self.ribDocumentTopStackView.topAnchor.constraint(equalTo: self.ribDocumentTitleLabel.bottomAnchor, constant: 4),
 
             self.ribAddDocBaseView.leadingAnchor.constraint(equalTo: self.ribDocumentBaseView.leadingAnchor, constant: 14),

@@ -1385,6 +1385,7 @@
 
 "upload_information" = "Télécharger les informations";
 "upload_document_info_rule" = "Télécharger le recto et le verso du document";
+"upload_solo_document_info_rule" = "Télécharger le recto du document";
 "upload_corner_info_rule" = "Les 4 coins doivent apparaître";
 "upload_type_info_rule" = "Types de fichiers autorisés: png, jpg, pdf";
 "upload_size_info_rule" = "Taille max. : 10MB";

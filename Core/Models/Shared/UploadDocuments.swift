@@ -22,6 +22,20 @@ struct DocumentFileInfo {
     var uploadDate: Date?
     var retry: Bool?
     var documentTypeGroup: DocumentTypeGroup
+
+    init(id: String,
+         name: String,
+         status: FileState,
+         uploadDate: Date? = nil,
+         retry: Bool? = true,
+         documentTypeGroup: DocumentTypeGroup) {
+        self.id = id
+        self.name = name
+        self.status = status
+        self.uploadDate = uploadDate
+        self.retry = retry
+        self.documentTypeGroup = documentTypeGroup
+    }
 }
 
 enum FileState {
@@ -114,7 +128,7 @@ enum DocumentTypeGroup {
     case residenceId
     case proofAddress
     case rib
-    case other
+    case others
     case none
 
     init?(externalCode: String) {
@@ -155,7 +169,7 @@ enum DocumentTypeGroup {
             return "POA"
         case .rib:
             return "RIB"
-        case .other:
+        case .others:
             return "OTHERS"
         default:
             return ""
@@ -176,7 +190,7 @@ enum DocumentTypeGroup {
             return localized("utility_bill")
         case .rib:
             return localized("rib")
-        case .other:
+        case .others:
             return "others"
         case .none:
             return "none"
@@ -196,7 +210,7 @@ enum DocumentTypeGroup {
             return "POA Verification"
         case .rib:
             return "RIB Verification"
-        case .other:
+        case .others:
             return "Others Verification"
         case .none:
             return ""

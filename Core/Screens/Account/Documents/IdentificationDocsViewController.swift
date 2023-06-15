@@ -71,36 +71,6 @@ class IdentificationDocsViewModel {
             })
             .store(in: &cancellables)
 
-//        Env.servicesProvider.getSumsubAccessToken(userId: userId, levelName: levelName)
-//            .receive(on: DispatchQueue.main)
-//            .sink(receiveCompletion: { [weak self] completion in
-//                switch completion {
-//                case .finished:
-//                    ()
-//                case .failure(let error):
-//                    print("SUMSUB ACCESS TOKEN ERROR: \(error)")
-//                    switch error {
-//                    case .errorMessage(let message):
-//                        print("ERROR MESSAGE: \(message)")
-//
-//                    default:
-//                        ()
-//                    }
-//
-//                    self?.isLoadingPublisher.send(false)
-//
-//                }
-//            }, receiveValue: { [weak self] accessTokenResponse in
-//                print("SUMSUB ACCESS TOKEN: \(accessTokenResponse)")
-//
-//                if let accessToken = accessTokenResponse.token {
-//                    self?.sumsubAccessTokenPublisher.send(accessToken)
-//                }
-//
-//                self?.isLoadingPublisher.send(false)
-//
-//            })
-//            .store(in: &cancellables)
     }
 
     func getSumSubDocuments() {
@@ -176,7 +146,6 @@ class IdentificationDocsViewModel {
 
                 self?.hasLoadedDocumentTypes.send(true)
 
-                //self?.getUserDocuments()
                 self?.getSumSubDocuments()
             })
             .store(in: &cancellables)
@@ -198,9 +167,9 @@ class IdentificationDocsViewModel {
 
                 let userDocuments = userDocumentsResponse.userDocuments
 
-//                if let requiredDocumentTypes = self?.requiredDocumentTypes {
-//                    self?.processDocuments(documentTypes: requiredDocumentTypes, userDocuments: userDocuments)
-//                }
+                if let requiredDocumentTypes = self?.requiredDocumentTypes {
+                    self?.processDocuments(documentTypes: requiredDocumentTypes, userDocuments: userDocuments)
+                }
 
             })
             .store(in: &cancellables)
@@ -231,7 +200,7 @@ class IdentificationDocsViewModel {
 
                 var docStatus = FileState.pendingApproved
 
-                var retry = true
+                var retry: Bool = true
 
                 self.dateFormatter.dateFormat = "yyyy-MM-dd HH:mm:ssZ"
                 var uploadDate: Date? = nil
@@ -296,7 +265,6 @@ class IdentificationDocsViewModel {
                                 reviewResult == "GREEN" {
                             docStatus = .approved
 
-                            //retry = reviewStatus == "complete" ? true : false
                             retry = false
                         }
                     }
@@ -357,10 +325,6 @@ class IdentificationDocsViewModel {
         })
         self.proofAddressDocuments = proofAddress
 
-        self.isLoadingPublisher.send(false)
-        self.hasLoadedUserDocuments.send(true)
-        self.hasDocumentsProcessed.send(true)
-        self.shouldReloadData?()
     }
 
     private func processDocuments(documentTypes: [DocumentType], userDocuments: [UserDocument]) {
@@ -389,13 +353,38 @@ class IdentificationDocsViewModel {
                                             documentTypeGroup: mappedDocumentTypeGroup)
                 })
 
-                let documentInfo = DocumentInfo(id: documentType.documentType,
-                                                typeName: documentTypeCode?.codeName ?? "",
-                                                status: uploadedFiles.isEmpty ? .notReceived : .received,
-                                                uploadedFiles: uploadedFiles,
-                                                typeGroup: mappedDocumentTypeGroup)
+                var existingDocumentInfo: DocumentInfo?
 
-                self.documents.append(documentInfo)
+                for document in self.documents {
+                    if let typeGroup = document.typeGroup,
+                       typeGroup == mappedDocumentTypeGroup {
+                        existingDocumentInfo = document
+                    }
+                }
+
+                if let existingDocumentInfo {
+                    var documentInfoIndex = self.documents.firstIndex(where: {
+                        $0.id == existingDocumentInfo.id
+                    })
+
+                    if let index = documentInfoIndex {
+                        var documentFileInfo = self.documents[index]
+
+                        documentFileInfo.uploadedFiles.append(contentsOf: uploadedFiles)
+
+                        self.documents[index] = documentFileInfo
+
+                    }
+                }
+                else {
+                    let documentInfo = DocumentInfo(id: documentType.documentType,
+                                                    typeName: documentTypeCode?.codeName ?? "",
+                                                    status: uploadedFiles.isEmpty ? .notReceived : .received,
+                                                    uploadedFiles: uploadedFiles,
+                                                    typeGroup: mappedDocumentTypeGroup)
+
+                    self.documents.append(documentInfo)
+                }
 
             }
             else {
@@ -416,29 +405,57 @@ class IdentificationDocsViewModel {
                                             documentTypeGroup: .none)
                 })
 
-                let documentInfo = DocumentInfo(id: documentType.documentType,
-                                                typeName: documentTypeCode?.codeName ?? "",
-                                                status: uploadedFiles.isEmpty ? .notReceived : .received,
-                                                uploadedFiles: uploadedFiles)
+                var existingDocumentInfo: DocumentInfo?
 
-                self.documents.append(documentInfo)
+                for document in self.documents {
+                    if document.id == documentType.documentType  {
+                        existingDocumentInfo = document
+                    }
+                }
+
+                if let existingDocumentInfo {
+                    var documentInfoIndex = self.documents.firstIndex(where: {
+                        $0.id == existingDocumentInfo.id
+                    })
+
+                    if let index = documentInfoIndex {
+                        var documentFileInfo = self.documents[index]
+
+                        documentFileInfo.uploadedFiles.append(contentsOf: uploadedFiles)
+
+                        self.documents[index] = documentFileInfo
+
+                    }
+                }
+                else {
+                    let documentInfo = DocumentInfo(id: documentType.documentType,
+                                                    typeName: documentTypeCode?.codeName ?? "",
+                                                    status: uploadedFiles.isEmpty ? .notReceived : .received,
+                                                    uploadedFiles: uploadedFiles)
+
+                    self.documents.append(documentInfo)
+                }
+
             }
         }
 
         let identificationDocuments = self.documents.filter({
-            $0.typeGroup == .identityCard || $0.typeGroup == .residenceId
+            $0.typeGroup == .identityCard ||
+            $0.typeGroup == .residenceId ||
+            $0.typeGroup == .drivingLicense ||
+            $0.typeGroup == .passport
         })
         self.identificationDocuments = identificationDocuments
 
         let proofAddress = self.documents.filter({
-            $0.typeGroup == .drivingLicense || $0.typeGroup == .passport
+            $0.typeGroup == .proofAddress
+
         })
         self.proofAddressDocuments = proofAddress
 
         self.isLoadingPublisher.send(false)
-
-        self.hasLoadedUserDocuments.send(false)
-
+        self.hasLoadedUserDocuments.send(true)
+        self.hasDocumentsProcessed.send(true)
         self.shouldReloadData?()
     }
 }
@@ -630,11 +647,29 @@ class IdentificationDocsViewController: UIViewController {
                 if isProcessed {
 
                         if let identificationDocuments = self?.viewModel.identificationDocuments {
-                            self?.identificationSubtitleLabel.isHidden = identificationDocuments.isEmpty
+
+                            var hasUploadedDocuments = false
+
+                            for identificationDocument in identificationDocuments {
+                                if identificationDocument.uploadedFiles.isNotEmpty {
+                                    hasUploadedDocuments = true
+                                    break
+                                }
+                            }
+
+                            self?.identificationSubtitleLabel.isHidden = hasUploadedDocuments
                         }
 
                         if let proofAddressDocuments = self?.viewModel.proofAddressDocuments {
-                            self?.proofAddressSubtitleLabel.isHidden = proofAddressDocuments.isEmpty
+
+                            var hasUploadedDocuments = false
+
+                            if let proofAddressDocument = proofAddressDocuments.first,
+                               proofAddressDocument.uploadedFiles.isNotEmpty {
+                                hasUploadedDocuments = true
+                            }
+
+                            self?.proofAddressSubtitleLabel.isHidden = hasUploadedDocuments
 
                         }
 
@@ -661,12 +696,12 @@ class IdentificationDocsViewController: UIViewController {
 
     @objc func didTapProofAddDoc() {
         print("ADD PROOF DOC")
-        self.viewModel.getSumsubAccessToken(levelName: "POA Verification")
-//        let manualUploadDocumentViewModel = ManualUploadsDocumentsViewModel()
-//
-//        let manualUploadDocumentViewController = ManualUploadDocumentsViewController(viewModel: manualUploadDocumentViewModel)
-//
-//        self.navigationController?.pushViewController(manualUploadDocumentViewController, animated: true)
+        //self.viewModel.getSumsubAccessToken(levelName: "POA Verification")
+        let manualUploadDocumentViewModel = ManualUploadsDocumentsViewModel(documentTypeCode: .proofAddress)
+
+        let manualUploadDocumentViewController = ManualUploadDocumentsViewController(viewModel: manualUploadDocumentViewModel)
+
+        self.navigationController?.pushViewController(manualUploadDocumentViewController, animated: true)
     }
 
     // MARK: Functions
@@ -711,56 +746,99 @@ class IdentificationDocsViewController: UIViewController {
         self.identificationBottomStackView.removeAllArrangedSubviews()
         self.proofAddressBottomStackView.removeAllArrangedSubviews()
 
-        if let identityFileInfo = self.viewModel.identificationDocuments.first?.uploadedFiles.first {
+        let identityDocuments = self.viewModel.identificationDocuments
 
-            let documentStateView = DocumentStateView()
+        var mostRecentIdentityDocument: DocumentFileInfo?
 
-            documentStateView.configure(documentFileInfo: identityFileInfo)
+        for identityDocument in identityDocuments {
 
-            self.identificationBottomStackView.addArrangedSubview(documentStateView)
+            for identityFileInfo in identityDocument.uploadedFiles {
+                
+                let documentStateView = DocumentStateView()
 
-            self.identificationSubtitleLabel.isHidden = true
+                documentStateView.configure(documentFileInfo: identityFileInfo)
 
-            if let canRetry = identityFileInfo.retry {
+                self.identificationBottomStackView.addArrangedSubview(documentStateView)
 
+                if let documentDate = identityFileInfo.uploadDate {
+                    if let recentDocument = mostRecentIdentityDocument {
+                        if let recentDocumentDate = recentDocument.uploadDate,
+                           documentDate > recentDocumentDate {
+                            mostRecentIdentityDocument = identityFileInfo
+                        }
+                    }
+                    else {
+                        mostRecentIdentityDocument = identityFileInfo
+                    }
+                }
+                else {
+                    mostRecentIdentityDocument = identityFileInfo
+                }
+
+            }
+        }
+
+        if let currentDocument = mostRecentIdentityDocument {
+
+            if let canRetry = currentDocument.retry {
                 self.canAddIdentificationDocs = canRetry
-
+            }
+            else {
+                if currentDocument.status == .approved || currentDocument.status == .pendingApproved {
+                    self.canAddIdentificationDocs = false
+                }
+                else {
+                    self.canAddIdentificationDocs = true
+                }
             }
 
         }
 
-        if let proofAddressFileInfo = self.viewModel.proofAddressDocuments.first?.uploadedFiles.first {
+        if let proofAddressFilesInfo = self.viewModel.proofAddressDocuments.first?.uploadedFiles {
 
-            let documentStateView = DocumentStateView()
+            var mostRecentProofDocument: DocumentFileInfo?
 
-            documentStateView.configure(documentFileInfo: proofAddressFileInfo)
+            for proofFileInfo in proofAddressFilesInfo {
 
-            self.proofAddressBottomStackView.addArrangedSubview(documentStateView)
+                let documentStateView = DocumentStateView()
 
-            self.proofAddressSubtitleLabel.isHidden = true
+                documentStateView.configure(documentFileInfo: proofFileInfo)
 
-            if let canRetry = proofAddressFileInfo.retry {
+                self.proofAddressBottomStackView.addArrangedSubview(documentStateView)
 
-                self.canAddProofDocs = canRetry
+                if let documentDate = proofFileInfo.uploadDate {
+                    if let recentDocument = mostRecentProofDocument {
+                        if let recentDocumentDate = recentDocument.uploadDate,
+                           documentDate > recentDocumentDate {
+                            mostRecentProofDocument = proofFileInfo
+                        }
+                    }
+                    else {
+                        mostRecentProofDocument = proofFileInfo
+                    }
+                }
+                else {
+                    mostRecentProofDocument = proofFileInfo
+                }
+            }
+
+            if let currentDocument = mostRecentProofDocument {
+
+                if let canRetry = currentDocument.retry {
+                    self.canAddProofDocs = canRetry
+                }
+                else {
+                    if currentDocument.status == .approved || currentDocument.status == .pendingApproved {
+                        self.canAddProofDocs = false
+                    }
+                    else {
+                        self.canAddProofDocs = true
+                    }
+                }
 
             }
 
         }
-
-//        if let testDocumentFileInfo = testDocumentInfo.uploadedFiles.first {
-//
-//            let documentStateView = DocumentStateView()
-//
-//            documentStateView.configure(documentFileInfo: testDocumentFileInfo)
-//
-//            self.identificationBottomStackView.addArrangedSubview(documentStateView)
-//
-//            self.identificationSubtitleLabel.isHidden = true
-//
-//            self.canAddIdentificationDocs = false
-//
-//            self.canAddProofDocs = true
-//        }
 
     }
 }

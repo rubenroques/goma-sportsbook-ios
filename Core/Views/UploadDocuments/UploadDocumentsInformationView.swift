@@ -44,6 +44,8 @@ class UploadDocumentsInformationView: UIView {
     var isMultiUpload: Bool = false {
         didSet {
             self.backDocumentBaseView.isHidden = !isMultiUpload
+
+            self.uploadInfoLabel.text = isMultiUpload ? "- \(localized("upload_document_info_rule"))" : "- \(localized("upload_solo_document_info_rule"))"
         }
     }
 

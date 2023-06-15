@@ -51,7 +51,7 @@ extension ServiceProviderModelMapper {
         case .residenceId: return .residenceId
         case .proofOfAddress: return .proofAddress
         case .rib: return .rib
-        case .other: return .other
+        case .others: return .others
         }
     }
 }

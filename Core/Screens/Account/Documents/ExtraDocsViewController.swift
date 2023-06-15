@@ -7,6 +7,7 @@
 
 import UIKit
 import Combine
+import ServicesProvider
 
 class ExtraDocsViewModel {
 
@@ -14,10 +15,213 @@ class ExtraDocsViewModel {
     private var cancellables = Set<AnyCancellable>()
 
     // MARK: Public Properties
+    var documents: [DocumentInfo] = []
+    var requiredDocumentTypes: [DocumentType] = []
     var isLoadingPublisher: CurrentValueSubject<Bool, Never> = .init(false)
+    var hasLoadedDocumentTypes: CurrentValueSubject<Bool, Never> = .init(false)
+    var hasLoadedUserDocuments: CurrentValueSubject<Bool, Never> = .init(false)
+    var hasDocumentsProcessed: CurrentValueSubject<Bool, Never> = .init(false)
 
+    var kycStatusPublisher: AnyPublisher<KnowYourCustomerStatus?, Never> {
+        return Env.userSessionStore.userKnowYourCustomerStatusPublisher.eraseToAnyPublisher()
+    }
+
+    var shouldReloadData: (() -> Void)?
+
+    let dateFormatter = DateFormatter()
+    
     init() {
+        self.getKYCStatus()
 
+        self.getDocumentTypes()
+    }
+
+    private func getKYCStatus() {
+        Env.userSessionStore.refreshProfile()
+    }
+
+    private func getDocumentTypes() {
+
+        self.isLoadingPublisher.send(true)
+
+        Env.servicesProvider.getDocumentTypes()
+            .receive(on: DispatchQueue.main)
+            .sink(receiveCompletion: { [weak self] completion in
+                switch completion {
+                case .finished:
+                    ()
+                case .failure(let error):
+                    self?.isLoadingPublisher.send(false)
+                }
+
+            }, receiveValue: { [weak self] documentTypesResponse in
+
+                let documentTypes = documentTypesResponse
+
+                let requiredDocumentTypes = documentTypesResponse.documentTypes.filter({
+                    $0.documentTypeGroup == .others
+                })
+
+                self?.requiredDocumentTypes.append(contentsOf: requiredDocumentTypes)
+
+                self?.hasLoadedDocumentTypes.send(true)
+
+                self?.getUserDocuments()
+            })
+            .store(in: &cancellables)
+    }
+
+    private func getUserDocuments() {
+
+        self.isLoadingPublisher.send(true)
+
+        self.hasDocumentsProcessed.send(false)
+
+        Env.servicesProvider.getUserDocuments()
+            .receive(on: DispatchQueue.main)
+            .sink(receiveCompletion: { [weak self] completion in
+                switch completion {
+                case .finished:
+                    ()
+                case .failure(let error):
+                    self?.isLoadingPublisher.send(false)
+                }
+
+            }, receiveValue: { [weak self] userDocumentsResponse in
+
+                let userDocuments = userDocumentsResponse.userDocuments
+
+                if let requiredDocumentTypes = self?.requiredDocumentTypes {
+                    self?.processDocuments(documentTypes: requiredDocumentTypes, userDocuments: userDocuments)
+                }
+
+            })
+            .store(in: &cancellables)
+    }
+
+    private func processDocuments(documentTypes: [DocumentType], userDocuments: [UserDocument]) {
+
+        for documentType in documentTypes {
+
+            let documentTypeCode = DocumentTypeCode(code: documentType.documentType)
+
+            if let documentTypeGroup = documentType.documentTypeGroup {
+
+                let mappedDocumentTypeGroup = ServiceProviderModelMapper.documentTypeGroup(fromServiceProviderDocumentTypeGroup: documentTypeGroup)
+
+                let uploadedFiles = userDocuments.filter({
+                    $0.documentType == documentType.documentType
+                }).map({ userDocument -> DocumentFileInfo in
+
+                    let userDocumentStatus = FileState(code: userDocument.status)
+
+                    self.dateFormatter.dateFormat = "dd-MM-yyyy HH:mm:ss"
+                    let uploadDate = self.dateFormatter.date(from: userDocument.uploadDate)
+
+                    return DocumentFileInfo(id: userDocument.documentType,
+                                            name: userDocument.fileName,
+                                            status: userDocumentStatus ?? .pendingApproved,
+                                            uploadDate: uploadDate ?? Date(),
+                                            documentTypeGroup: mappedDocumentTypeGroup)
+                })
+
+                var existingDocumentInfo: DocumentInfo?
+
+                for document in self.documents {
+                    if let typeGroup = document.typeGroup,
+                       typeGroup == mappedDocumentTypeGroup {
+                        existingDocumentInfo = document
+                    }
+                }
+
+                if let existingDocumentInfo {
+                    var documentInfoIndex = self.documents.firstIndex(where: {
+                        $0.id == existingDocumentInfo.id
+                    })
+
+                    if let index = documentInfoIndex {
+                        var documentFileInfo = self.documents[index]
+
+                        documentFileInfo.uploadedFiles.append(contentsOf: uploadedFiles)
+
+                        self.documents[index] = documentFileInfo
+
+                    }
+                }
+                else {
+                    let documentInfo = DocumentInfo(id: documentType.documentType,
+                                                    typeName: documentTypeCode?.codeName ?? "",
+                                                    status: uploadedFiles.isEmpty ? .notReceived : .received,
+                                                    uploadedFiles: uploadedFiles,
+                                                    typeGroup: mappedDocumentTypeGroup)
+
+                    self.documents.append(documentInfo)
+                }
+
+            }
+            else {
+
+                let uploadedFiles = userDocuments.filter({
+                    $0.documentType == documentType.documentType
+                }).map({ userDocument -> DocumentFileInfo in
+
+                    let userDocumentStatus = FileState(code: userDocument.status)
+
+                    self.dateFormatter.dateFormat = "dd-MM-yyyy HH:mm:ss"
+                    let uploadDate = self.dateFormatter.date(from: userDocument.uploadDate)
+
+                    return DocumentFileInfo(id: userDocument.documentType,
+                                            name: userDocument.fileName,
+                                            status: userDocumentStatus ?? .pendingApproved,
+                                            uploadDate: uploadDate ?? Date(),
+                                            documentTypeGroup: .none)
+                })
+
+                var existingDocumentInfo: DocumentInfo?
+
+                for document in self.documents {
+                    if document.id == documentType.documentType  {
+                        existingDocumentInfo = document
+                    }
+                }
+
+                if let existingDocumentInfo {
+                    var documentInfoIndex = self.documents.firstIndex(where: {
+                        $0.id == existingDocumentInfo.id
+                    })
+
+                    if let index = documentInfoIndex {
+                        var documentFileInfo = self.documents[index]
+
+                        documentFileInfo.uploadedFiles.append(contentsOf: uploadedFiles)
+
+                        self.documents[index] = documentFileInfo
+
+                    }
+                }
+                else {
+                    let documentInfo = DocumentInfo(id: documentType.documentType,
+                                                    typeName: documentTypeCode?.codeName ?? "",
+                                                    status: uploadedFiles.isEmpty ? .notReceived : .received,
+                                                    uploadedFiles: uploadedFiles)
+
+                    self.documents.append(documentInfo)
+                }
+
+            }
+        }
+
+        self.isLoadingPublisher.send(false)
+
+        self.hasLoadedUserDocuments.send(false)
+
+        self.hasDocumentsProcessed.send(true)
+
+        self.shouldReloadData?()
+    }
+
+    func refreshDocuments() {
+        self.getUserDocuments()
     }
 }
 
@@ -144,23 +348,90 @@ class ExtraDocsViewController: UIViewController {
             })
             .store(in: &cancellables)
 
-//        viewModel.kycStatusPublisher
-//            .receive(on: DispatchQueue.main)
-//            .sink(receiveValue: { [weak self] kycStatus in
-//
+        viewModel.kycStatusPublisher
+            .receive(on: DispatchQueue.main)
+            .sink(receiveValue: { [weak self] kycStatus in
 //                switch kycStatus {
 //                case .request:
 //                    self?.isLocked = true
 //                default:
 //                    self?.isLocked = false
 //                }
-//            })
-//            .store(in: &cancellables)
+            })
+            .store(in: &cancellables)
+
+        viewModel.hasDocumentsProcessed
+            .receive(on: DispatchQueue.main)
+            .sink(receiveValue: { [weak self] isProcessed in
+
+                if isProcessed {
+
+                    if let documents = self?.viewModel.documents {
+                        self?.setupDocumentStateViews(documentsInfo: documents)
+
+                    }
+                }
+            })
+            .store(in: &cancellables)
+    }
+
+    // MARK: Functions
+    private func setupDocumentStateViews(documentsInfo: [DocumentInfo]) {
+
+        self.extraDocumentTopStackView.removeAllArrangedSubviews()
+
+        if let documentsFileInfo = self.viewModel.documents.first?.uploadedFiles {
+
+            var mostRecentDocument: DocumentFileInfo?
+
+            for uploadedFile in documentsFileInfo {
+
+                let documentStateView = DocumentStateView()
+
+                documentStateView.configure(documentFileInfo: uploadedFile)
+
+                self.extraDocumentTopStackView.addArrangedSubview(documentStateView)
+
+                if let documentDate = uploadedFile.uploadDate {
+                    if let recentDocument = mostRecentDocument {
+                        if let recentDocumentDate = recentDocument.uploadDate,
+                           documentDate > recentDocumentDate {
+                            mostRecentDocument = uploadedFile
+                        }
+                    }
+                    else {
+                        mostRecentDocument = uploadedFile
+                    }
+                }
+            }
+
+            if let currentDocument = mostRecentDocument {
+
+                if currentDocument.status == .approved || currentDocument.status == .pendingApproved {
+                    self.canAddExtraDocs = false
+                }
+                else {
+                    self.canAddExtraDocs = true
+                }
+            }
+
+        }
+
     }
 
     // MARK: Action
     @objc func didTapExtraAddDoc() {
         print("ADD EXTRA DOC")
+
+        let manualUploadDocViewModel = ManualUploadsDocumentsViewModel(documentTypeCode: .others)
+
+        let manualUploadDocViewController = ManualUploadDocumentsViewController(viewModel: manualUploadDocViewModel)
+
+        manualUploadDocViewController.shouldRefreshDocuments = { [weak self] in
+            self?.viewModel.refreshDocuments()
+        }
+
+        self.navigationController?.pushViewController(manualUploadDocViewController, animated: true)
     }
 }
 

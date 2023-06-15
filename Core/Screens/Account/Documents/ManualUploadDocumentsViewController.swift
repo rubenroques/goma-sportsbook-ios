@@ -103,6 +103,7 @@ class ManualUploadsDocumentsViewModel {
                     self?.isFileUploaded.send(true)
                 }
                 else {
+                    self?.isFileUploaded.send(true)
                     self?.isLoadingPublisher.send(false)
                 }
             })
@@ -170,6 +171,8 @@ class ManualUploadDocumentsViewController: UIViewController {
             self.invalidIbanView.isHidden = !showInvalidIban
         }
     }
+
+    var shouldRefreshDocuments: (() -> Void)?
 
     // MARK: - Lifetime and Cycle
     init(viewModel: ManualUploadsDocumentsViewModel) {
@@ -297,7 +300,7 @@ class ManualUploadDocumentsViewController: UIViewController {
         case .others:
             self.documentTypeBaseView.isHidden = true
             self.ribInputBaseView.isHidden = true
-            self.setupDocumentUploadViews(documentTypeGroups: [.other])
+            self.setupDocumentUploadViews(documentTypeGroups: [.others])
         }
     }
 
@@ -495,7 +498,16 @@ class ManualUploadDocumentsViewController: UIViewController {
                 }
             }
         case .others:
-            ()
+            if let selectedDocs = self.selectedDocs[.others] {
+                if selectedDocs.contains(where: {
+                    $0.docSide == .front
+                }) {
+                    self.canSendDocuments = true
+                }
+                else {
+                    self.canSendDocuments = false
+                }
+            }
         }
     }
 
@@ -585,7 +597,7 @@ class ManualUploadDocumentsViewController: UIViewController {
 
             alert.addAction(UIAlertAction(title: localized("ok"), style: .default, handler: { [weak self] _ in
 
-                //self?.dismiss(animated: true)
+                self?.shouldRefreshDocuments?()
                 self?.navigationController?.popViewController(animated: true)
             }))
 
@@ -654,12 +666,24 @@ class ManualUploadDocumentsViewController: UIViewController {
             .sink(receiveValue: { [weak self] isFileUploaded in
 
                 switch viewModel.documentTypeCode {
+                case .proofAddress:
+                    if isFileUploaded {
+
+                        self?.showAlert(alertType: .success, text: localized("upload_complete_message"))
+
+                    }
                 case .ibanProof:
                     if isFileUploaded {
 
                         let ribNumber = self?.ribNumberHeaderTextFieldView.text ?? ""
 
                         self?.viewModel.addPaymentInformation(rib: ribNumber)
+                    }
+                case .others:
+                    if isFileUploaded {
+
+                        self?.showAlert(alertType: .success, text: localized("upload_complete_message"))
+
                     }
                 default:
                     ()
@@ -677,6 +701,12 @@ class ManualUploadDocumentsViewController: UIViewController {
     @objc private func didTapSendButton() {
         switch self.viewModel.documentTypeCode {
         case .ibanProof:
+            if let currentDoc = self.currentDoc,
+               let selectedDoc = self.selectedDocs[currentDoc.documentTypeGroup]?.first {
+
+                self.viewModel.uploadFile(documentType: currentDoc.documentTypeGroup.code, file: selectedDoc.fileData, fileName: selectedDoc.name)
+            }
+        case .others:
             if let currentDoc = self.currentDoc,
                let selectedDoc = self.selectedDocs[currentDoc.documentTypeGroup]?.first {
 

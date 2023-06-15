@@ -429,7 +429,7 @@ public enum DocumentTypeGroup {
     case residenceId
     case proofOfAddress
     case rib
-    case other
+    case others
 
     init?(documentType: String) {
 
@@ -440,7 +440,7 @@ public enum DocumentTypeGroup {
         case "RESIDENCE_ID": self = .residenceId
         case "POA": self = .proofOfAddress
         case "RIB": self = .rib
-        case "OTHER": self = .other
+        case "OTHERS": self = .others
         default: return nil
         }
     }
