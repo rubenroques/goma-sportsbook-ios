@@ -47,7 +47,10 @@ class MakeYourBetTableViewCell: UITableViewCell {
         self.backgroundView?.backgroundColor = .clear
         self.contentView.backgroundColor = .clear
 
-        self.baseView.backgroundColor = UIColor.App.pillNavigation
+        self.baseView.layer.borderWidth = 1
+        self.baseView.layer.borderColor = UIColor.App.highlightSecondary.cgColor
+
+        self.baseView.backgroundColor = UIColor.App.backgroundOdds
         self.titleLabel.textColor = UIColor.App.textPrimary
     }
 

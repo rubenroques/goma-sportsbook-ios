@@ -77,6 +77,20 @@ class HomeViewController: UIViewController {
         self.tableView.register(MatchWidgetContainerTableViewCell.self, forCellReuseIdentifier: MatchWidgetContainerTableViewCell.identifier)
         self.tableView.register(StoriesLineTableViewCell.self, forCellReuseIdentifier: StoriesLineTableViewCell.identifier)
 
+        // Register cell based on the MatchWidgetType
+        for matchWidgetType in MatchWidgetType.allCases {
+            // Register a cell for each cell type to avoid glitches in the redrawing
+            let identifier = MatchWidgetContainerTableViewCell.identifier+matchWidgetType.rawValue
+            self.tableView.register(MatchWidgetContainerTableViewCell.self, forCellReuseIdentifier: identifier)
+        }
+
+        // Register cell based on the MatchWidgetType
+        for matchWidgetType in MatchWidgetType.allCases {
+            // Register a cell for each cell type to avoid glitches in the redrawing
+            let identifier = MatchLineTableViewCell.identifier+matchWidgetType.rawValue
+            self.tableView.register(MatchLineTableViewCell.self, forCellReuseIdentifier: identifier)
+        }
+
         self.refreshControl.tintColor = UIColor.lightGray
         self.refreshControl.addTarget(self, action: #selector(self.refreshControllPulled), for: .valueChanged)
         self.tableView.addSubview(self.refreshControl)
@@ -262,7 +276,7 @@ class HomeViewController: UIViewController {
     }
 
     private func openBetTinderCloneView() {
-        let betSelectorViewConroller = InternalBrowserViewController(fileName: "TinderStyleBetBuilder", fileType: "html")
+        let betSelectorViewConroller = InternalBrowserViewController(fileName: "TinderStyleBetBuilder", fileType: "html", fullscreen: true)
         let navigationViewController = Router.navigationController(with: betSelectorViewConroller)
         navigationViewController.modalPresentationStyle = .fullScreen
         self.present(navigationViewController, animated: true, completion: nil)
@@ -575,9 +589,18 @@ extension HomeViewController: UITableViewDelegate, UITableViewDataSource {
             return cell
 
         case .highlightedMatches:
+
             guard
-                let cell = tableView.dequeueReusableCell(withIdentifier: MatchWidgetContainerTableViewCell.identifier) as? MatchWidgetContainerTableViewCell,
                 let viewModel = self.viewModel.highlightedMatchViewModel(forIndex: indexPath.row)
+            else {
+                fatalError()
+            }
+
+            // Create the identifier based on the cell type
+            let cellIdentifier = MatchWidgetContainerTableViewCell.identifier+viewModel.matchWidgetType.rawValue
+
+            guard
+                let cell = tableView.dequeueReusableCell(withIdentifier: cellIdentifier, for: indexPath) as? MatchWidgetContainerTableViewCell
             else {
                 fatalError()
             }

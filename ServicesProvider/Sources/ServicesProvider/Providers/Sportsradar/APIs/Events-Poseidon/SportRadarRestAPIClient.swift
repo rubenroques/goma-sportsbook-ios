@@ -232,7 +232,7 @@ extension SportRadarRestAPIClient: Endpoint {
                         {
                             "contentId": {
                                 "type": "boNavigationList",
-                                "id": "1356/top"
+                                "id": "\(SportRadarConstants.frontEndCode)/top"
                             },
                             "clientContext": {
                                 "language": "\(SportRadarConstants.socketLanguageCode)",
@@ -262,7 +262,7 @@ extension SportRadarRestAPIClient: Endpoint {
                         {
                             "contentId": {
                                 "type": "boNavigationList",
-                                "id": "1356/\(sportId)"
+                                "id": "\(SportRadarConstants.frontEndCode)/\(sportId)"
                             },
                             "clientContext": {
                                 "language": "\(SportRadarConstants.socketLanguageCode)",
@@ -277,7 +277,7 @@ extension SportRadarRestAPIClient: Endpoint {
                         {
                             "contentId": {
                                 "type": "boNavigationList",
-                                "id": "1356/\(regionId)"
+                                "id": "\(SportRadarConstants.frontEndCode)/\(regionId)"
                             },
                             "clientContext": {
                                 "language": "\(SportRadarConstants.socketLanguageCode)",
@@ -293,7 +293,7 @@ extension SportRadarRestAPIClient: Endpoint {
                         {
                             "contentId": {
                                 "type": "boNavigationList",
-                                "id": "1356/\(competitionId)"
+                                "id": "\(SportRadarConstants.frontEndCode)/\(competitionId)"
                             },
                             "clientContext": {
                                 "language": "\(SportRadarConstants.socketLanguageCode)",
@@ -343,7 +343,7 @@ extension SportRadarRestAPIClient: Endpoint {
                         {
                             "contentId": {
                                 "type": "headline",
-                                "id": "1356/20/HomepageSliders"
+                                "id": "\(SportRadarConstants.frontEndCode)/20/HomepageSliders"
                             },
                             "clientContext": {
                                 "language": "\(SportRadarConstants.socketLanguageCode)",
@@ -359,7 +359,7 @@ extension SportRadarRestAPIClient: Endpoint {
                         {
                             "contentId": {
                                 "type": "bannerCategoryList",
-                                "id": "1355/Homepage"
+                                "id": "\(SportRadarConstants.frontEndCode)/Homepage"
                             },
                             "clientContext": {
                                 "language": "FR",
@@ -375,7 +375,7 @@ extension SportRadarRestAPIClient: Endpoint {
                         {
                             "contentId": {
                                 "type": "headline",
-                                "id": "1355/20/slidingEvent"
+                                "id": "\(SportRadarConstants.frontEndCode)/20/slidingEvent"
                             },
                             "clientContext": {
                                 "language": "FR",
@@ -391,7 +391,7 @@ extension SportRadarRestAPIClient: Endpoint {
                         {
                             "contentId": {
                                 "type": "headline",
-                                "id": "1355/20/PromotionsSummary"
+                                "id": "\(SportRadarConstants.frontEndCode)/20/PromotionsSummary"
                             },
                             "clientContext": {
                                 "language": "FR",
@@ -407,7 +407,7 @@ extension SportRadarRestAPIClient: Endpoint {
                         {
                             "contentId": {
                                 "type": "headline",
-                                "id": "1355/20/boostedOddCard"
+                                "id": "\(SportRadarConstants.frontEndCode)/20/boostedOddCard"
                             },
                             "clientContext": {
                                 "language": "FR",
@@ -423,7 +423,7 @@ extension SportRadarRestAPIClient: Endpoint {
                         {
                             "contentId": {
                                 "type": "headline",
-                                "id": "1355/20/eventCard"
+                                "id": "\(SportRadarConstants.frontEndCode)/20/eventCard"
                             },
                             "clientContext": {
                                 "language": "FR",
@@ -532,7 +532,7 @@ extension SportRadarRestAPIClient: Endpoint {
                         {
                             "contentId": {
                                 "type": "boNavigationList",
-                                "id": "1356/top"
+                                "id": "\(SportRadarConstants.frontEndCode)/top"
                             },
                             "clientContext": {
                                 "language": "FR",

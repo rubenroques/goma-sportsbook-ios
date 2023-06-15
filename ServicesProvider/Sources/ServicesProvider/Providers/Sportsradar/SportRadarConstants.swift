@@ -63,6 +63,8 @@ struct SportRadarConstants {
     // Support
     static var supportHostname = "https://betssonfrance.zendesk.com"
 
+
+    static var frontEndCode = "1356"
     //static var sportRadarLegacyFrontEndURL = "https://cdn1.optimahq.com"
 
 //    ===================================================================================================================

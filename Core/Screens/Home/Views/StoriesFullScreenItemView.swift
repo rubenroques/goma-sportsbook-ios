@@ -27,8 +27,9 @@ class StoriesFullScreenItemView: UIView {
 
     private lazy var contentImageView: UIImageView = Self.createContentImageView()
 
-    private lazy var closebutton: UIButton = Self.createCloseButton()
-    private lazy var actionbutton: UIButton = Self.createActionButton()
+    private lazy var closeImageBaseView: UIView = Self.createCloseImageBaseView()
+    private lazy var closeImageView: UIImageView = Self.createCloseImageView()
+    private lazy var actionButton: UIButton = Self.createActionButton()
 
     override var tag: Int {
         didSet {
@@ -71,7 +72,10 @@ class StoriesFullScreenItemView: UIView {
         let previousTapGesture = UITapGestureRecognizer(target: self, action: #selector(didTapPreviousPageView))
         self.previousPageView.addGestureRecognizer(previousTapGesture)
 
-        self.closebutton.addTarget(self, action: #selector(didTapCloseButton), for: .primaryActionTriggered)
+        let closeTapGesture = UITapGestureRecognizer(target: self, action: #selector(didTapCloseButton))
+        self.closeImageView.addGestureRecognizer(closeTapGesture)
+        self.closeImageView.isUserInteractionEnabled = true
+
     }
 
     override func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {
@@ -85,14 +89,16 @@ class StoriesFullScreenItemView: UIView {
         self.smoothProgressBarView.backgroundColor = .clear
         self.baseView.backgroundColor = .clear
         self.topView.backgroundColor = .clear
-        self.closebutton.imageView?.setImageColor(color: .white)
+
+        self.closeImageBaseView.backgroundColor = .clear
+        self.closeImageView.setImageColor(color: .white)
 
         self.smoothProgressBarView.foregroundBarColor = .white
         self.smoothProgressBarView.backgroundBarColor = UIColor.App.scroll
 
-        StyleHelper.styleButton(button: self.actionbutton)
-        self.actionbutton.titleLabel?.font = AppFont.with(type: .bold, size: 17)
-        self.actionbutton.setBackgroundColor(UIColor.App.buttonBackgroundSecondary, for: .normal)
+        StyleHelper.styleButton(button: self.actionButton)
+        self.actionButton.titleLabel?.font = AppFont.with(type: .bold, size: 17)
+        self.actionButton.setBackgroundColor(UIColor.App.buttonBackgroundSecondary, for: .normal)
     }
 
     func resetProgress() {
@@ -170,11 +176,18 @@ extension StoriesFullScreenItemView {
         return imageView
     }
 
-    private static func createCloseButton() -> UIButton {
-        let button = UIButton()
-        button.setImage(UIImage(named: "arrow_close_icon"), for: .normal)
-        button.translatesAutoresizingMaskIntoConstraints = false
-        return button
+    private static func createCloseImageView() -> UIImageView {
+        let imageView = UIImageView()
+        imageView.image = UIImage(named: "arrow_close_icon")
+        imageView.setImageColor(color: .white)
+        imageView.translatesAutoresizingMaskIntoConstraints = false
+        return imageView
+    }
+
+    private static func createCloseImageBaseView() -> UIView {
+        let view = UIView()
+        view.translatesAutoresizingMaskIntoConstraints = false
+        return view
     }
 
     private static func createActionButton() -> UIButton {
@@ -196,9 +209,10 @@ extension StoriesFullScreenItemView {
 
         self.topView.addSubview(self.smoothProgressBarView)
         self.topView.addSubview(self.topLabel)
-        self.topView.addSubview(self.closebutton)
+        self.topView.addSubview(self.closeImageBaseView)
+        self.closeImageBaseView.addSubview(self.closeImageView)
 
-        self.baseView.addSubview(self.actionbutton)
+        self.baseView.addSubview(self.actionButton)
 
         // Initialize constraints
         self.initConstraints()
@@ -235,14 +249,19 @@ extension StoriesFullScreenItemView {
             self.topView.heightAnchor.constraint(equalToConstant: 66),
 
             self.topLabel.leadingAnchor.constraint(equalTo: self.smoothProgressBarView.leadingAnchor, constant: 1),
-            self.topLabel.trailingAnchor.constraint(equalTo: self.closebutton.leadingAnchor, constant: -6),
+            self.topLabel.trailingAnchor.constraint(equalTo: self.closeImageBaseView.leadingAnchor, constant: -6),
             self.topLabel.bottomAnchor.constraint(equalTo: self.topView.bottomAnchor),
             self.topLabel.topAnchor.constraint(equalTo: self.smoothProgressBarView.bottomAnchor),
 
-            self.closebutton.heightAnchor.constraint(equalToConstant: 44),
-            self.closebutton.heightAnchor.constraint(equalTo: self.closebutton.widthAnchor),
-            self.closebutton.trailingAnchor.constraint(equalTo: self.topView.trailingAnchor, constant: -2),
-            self.closebutton.centerYAnchor.constraint(equalTo: self.topLabel.centerYAnchor),
+            self.closeImageBaseView.heightAnchor.constraint(equalToConstant: 44),
+            self.closeImageBaseView.heightAnchor.constraint(equalTo: self.closeImageBaseView.widthAnchor),
+            self.closeImageBaseView.trailingAnchor.constraint(equalTo: self.topView.trailingAnchor, constant: -2),
+            self.closeImageBaseView.centerYAnchor.constraint(equalTo: self.topLabel.centerYAnchor),
+
+            self.closeImageView.heightAnchor.constraint(equalToConstant: 22),
+            self.closeImageView.heightAnchor.constraint(equalTo: self.closeImageView.widthAnchor),
+            self.closeImageView.centerXAnchor.constraint(equalTo: self.closeImageBaseView.centerXAnchor),
+            self.closeImageView.centerYAnchor.constraint(equalTo: self.closeImageBaseView.centerYAnchor),
 
             self.smoothProgressBarView.leadingAnchor.constraint(equalTo: self.topView.leadingAnchor, constant: 12),
             self.smoothProgressBarView.trailingAnchor.constraint(equalTo: self.topView.trailingAnchor, constant: -12),
@@ -251,10 +270,10 @@ extension StoriesFullScreenItemView {
         ])
 
         NSLayoutConstraint.activate([
-            self.actionbutton.leadingAnchor.constraint(equalTo: self.baseView.leadingAnchor, constant: 16),
-            self.actionbutton.trailingAnchor.constraint(equalTo: self.baseView.trailingAnchor, constant: -16),
-            self.actionbutton.heightAnchor.constraint(equalToConstant: 50),
-            self.actionbutton.bottomAnchor.constraint(equalTo: self.safeAreaLayoutGuide.bottomAnchor, constant: -16)
+            self.actionButton.leadingAnchor.constraint(equalTo: self.baseView.leadingAnchor, constant: 16),
+            self.actionButton.trailingAnchor.constraint(equalTo: self.baseView.trailingAnchor, constant: -16),
+            self.actionButton.heightAnchor.constraint(equalToConstant: 50),
+            self.actionButton.bottomAnchor.constraint(equalTo: self.safeAreaLayoutGuide.bottomAnchor, constant: -16)
         ])
 
     }

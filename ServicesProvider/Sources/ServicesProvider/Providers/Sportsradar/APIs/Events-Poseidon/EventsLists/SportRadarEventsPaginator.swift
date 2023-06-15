@@ -218,7 +218,7 @@ extension SportRadarEventsPaginator {
 
         if self.contentIdentifier.contentType == updatedContentIdentifier.contentType
             && self.contentIdentifier.contentRoute.pageableRoute == updatedContentIdentifier.contentRoute.pageableRoute {
-
+            // It's a valid update for this paginator
         }
         else {
             // ignoring this update, not subscribed by this class
@@ -270,7 +270,10 @@ extension SportRadarEventsPaginator {
             self.storage.updateMarketTradability(withId: marketId, isTradable: false)
         case .removeEvent(_, let eventId):
             self.storage.removedEvent(withId: eventId)
-
+        case .addEvent(_, let updatedEvent):
+            let mappedEvent = SportRadarModelMapper.event(fromInternalEvent: updatedEvent)
+            self.storage.addEvent(withEvent: mappedEvent)
+            
         default:
             () // Ignore other cases
         }

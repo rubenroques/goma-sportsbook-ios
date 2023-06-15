@@ -63,6 +63,10 @@ class StoriesFullScreenViewController: UIViewController {
         }
 
         self.cubicScrollView.addChildViews(items)
+
+        let swipeDown = UISwipeGestureRecognizer(target: self, action: #selector(self.handleSwipeDown(_:)))
+        swipeDown.direction = .down
+        self.view.addGestureRecognizer(swipeDown)
     }
 
     override func viewDidAppear(_ animated: Bool) {
@@ -96,6 +100,14 @@ class StoriesFullScreenViewController: UIViewController {
     func closeFullscreen() {
         self.dismiss(animated: true, completion: nil)
     }
+
+    @objc func handleSwipeDown(_ recognizer: UISwipeGestureRecognizer) {
+
+        if recognizer.state == .ended {
+            self.closeFullscreen()
+        }
+    }
+
 }
 
 extension StoriesFullScreenViewController: CubicScrollViewDelegate {

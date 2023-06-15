@@ -67,6 +67,9 @@ public enum AppColor {
     public static let statsAway = UIColor(named: "statsAway")!
 
     public static let highlightPrimaryContrast = UIColor(named: "highlightPrimaryContrast")!
+    public static var highlightSecondaryContrast: UIColor {
+        return UIColor(named: "highlightSecondaryContrast") ?? Self.highlightPrimaryContrast
+    }
 
     public static let gameHeader = UIColor(named: "gameHeader")!
 

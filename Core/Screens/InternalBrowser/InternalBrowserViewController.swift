@@ -15,7 +15,18 @@ class InternalBrowserViewController: UIViewController {
     private lazy var navigationView: UIView = Self.createNavigationView()
     private lazy var titleLabel: UILabel = Self.createTitleLabel()
     private lazy var backButton: UIButton = Self.createBackButton()
-    private lazy var webView: WKWebView = Self.createWebView()
+
+    private var navigationViewHeightConstraint: NSLayoutConstraint?
+
+    private lazy var webView: WKWebView = {
+        let configuration = WKWebViewConfiguration()
+        configuration.userContentController.add(self, name: "closeController")
+        let webView = WKWebView(frame: .zero, configuration: configuration)
+        webView.translatesAutoresizingMaskIntoConstraints = false
+        webView.navigationDelegate = self
+        return webView
+    }()
+
     private lazy var botttomSafeAreaView: UIView = Self.createBottomSafeAreaView()
 
     private lazy var loadingBaseView: UIView = Self.createLoadingBaseView()
@@ -26,18 +37,21 @@ class InternalBrowserViewController: UIViewController {
     private var localFileType: String?
 
     private var shouldShowBackButton: Bool = false
+    private var fullscreen: Bool
 
-    init(url: URL) {
+    init(url: URL, fullscreen: Bool) {
         self.url = url
+        self.fullscreen = fullscreen
         super.init(nibName: nil, bundle: nil)
     }
 
     // Init for local file
-    init(fileName: String, fileType: String) {
-        super.init(nibName: nil, bundle: nil)
-
+    init(fileName: String, fileType: String, fullscreen: Bool) {
         self.localFileName = fileName
         self.localFileType = fileType
+        self.fullscreen = fullscreen
+
+        super.init(nibName: nil, bundle: nil)
     }
 
     @available(iOS, unavailable)
@@ -51,6 +65,10 @@ class InternalBrowserViewController: UIViewController {
         self.setupSubviews()
         self.setupWithTheme()
 
+        if self.fullscreen, let navigationViewHeightConstraint = self.navigationViewHeightConstraint {
+            navigationViewHeightConstraint.constant = 0
+        }
+
         self.webView.navigationDelegate = self
 
         self.backButton.addTarget(self, action: #selector(didTapBackButton), for: .primaryActionTriggered)
@@ -60,13 +78,12 @@ class InternalBrowserViewController: UIViewController {
         if let url = self.url {
             self.webView.load(URLRequest(url: url))
         }
-        else if
-            let fileName = self.localFileName,
-            let fileType = localFileType,
-            let url = Bundle.main.url(forResource: fileName, withExtension: fileType)
-        {
+        else if let fileName = self.localFileName,
+                let fileType = localFileType,
+                let url = Bundle.main.url(forResource: fileName, withExtension: fileType) {
             self.webView.loadFileURL(url, allowingReadAccessTo: url)
         }
+
     }
 
     // MARK: - Layout and Theme
@@ -78,10 +95,10 @@ class InternalBrowserViewController: UIViewController {
 
     private func setupWithTheme() {
 
-        self.view.backgroundColor = UIColor.App.backgroundPrimary
+        self.view.backgroundColor = .black
 
-        self.topSafeAreaView.backgroundColor = UIColor.App.backgroundPrimary
-        self.botttomSafeAreaView.backgroundColor = UIColor.App.backgroundPrimary
+        self.topSafeAreaView.backgroundColor = .black
+        self.botttomSafeAreaView.backgroundColor = .black
 
         self.navigationView.backgroundColor = UIColor.App.backgroundPrimary
 
@@ -126,6 +143,18 @@ extension InternalBrowserViewController: WKNavigationDelegate {
     }
 }
 
+extension InternalBrowserViewController: WKScriptMessageHandler {
+
+    func userContentController(_ userContentController: WKUserContentController, didReceive message: WKScriptMessage) {
+        if message.name == "closeController", let msg = message.body as? String {
+            if msg == "oniOSCloseBetSwipe" {
+                self.didTapBackButton()
+            }
+        }
+    }
+
+}
+
 extension InternalBrowserViewController {
 
     private static func createTopSafeAreaView() -> UIView {
@@ -136,6 +165,7 @@ extension InternalBrowserViewController {
 
     private static func createNavigationView() -> UIView {
         let view = UIView()
+        view.clipsToBounds = true
         view.translatesAutoresizingMaskIntoConstraints = false
         return view
     }
@@ -156,12 +186,6 @@ extension InternalBrowserViewController {
         backButton.setTitle(nil, for: .normal)
         backButton.translatesAutoresizingMaskIntoConstraints = false
         return backButton
-    }
-
-    private static func createWebView() -> WKWebView {
-        let webView = WKWebView()
-        webView.translatesAutoresizingMaskIntoConstraints = false
-        return webView
     }
 
     private static func createBottomSafeAreaView() -> UIView {
@@ -215,11 +239,13 @@ extension InternalBrowserViewController {
             self.botttomSafeAreaView.bottomAnchor.constraint(equalTo: self.view.bottomAnchor)
         ])
 
+        self.navigationViewHeightConstraint = self.navigationView.heightAnchor.constraint(equalToConstant: 40)
+
         NSLayoutConstraint.activate([
             self.navigationView.leadingAnchor.constraint(equalTo: self.view.leadingAnchor),
             self.navigationView.trailingAnchor.constraint(equalTo: self.view.trailingAnchor),
             self.navigationView.topAnchor.constraint(equalTo: self.topSafeAreaView.bottomAnchor),
-            self.navigationView.heightAnchor.constraint(equalToConstant: 40),
+            self.navigationViewHeightConstraint!,
 
             self.titleLabel.centerXAnchor.constraint(equalTo: self.navigationView.centerXAnchor),
             self.titleLabel.leadingAnchor.constraint(equalTo: self.navigationView.leadingAnchor, constant: 44),
@@ -249,6 +275,4 @@ extension InternalBrowserViewController {
         ])
 
     }
-
 }
-

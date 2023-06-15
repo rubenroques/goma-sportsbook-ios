@@ -891,7 +891,7 @@ class RootViewController: UIViewController {
     }
 
     func openInternalWebview(onURL url: URL) {
-        let internalBrowserViewController = InternalBrowserViewController(url: url)
+        let internalBrowserViewController = InternalBrowserViewController(url: url, fullscreen: false)
         let navigationViewController = Router.navigationController(with: internalBrowserViewController)
         navigationViewController.modalPresentationStyle = .fullScreen
         self.present(navigationViewController, animated: true, completion: nil)

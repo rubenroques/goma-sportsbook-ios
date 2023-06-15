@@ -40,7 +40,6 @@ class MatchWidgetContainerTableViewCell: UITableViewCell {
 
     override func prepareForReuse() {
         super.prepareForReuse()
-
     }
 
     override func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {
@@ -90,10 +89,16 @@ extension MatchWidgetContainerTableViewCell: UICollectionViewDelegate, UICollect
     }
 
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
+
+        guard let viewModel = self.viewModel else {
+            fatalError()
+        }
+
+        // Create the identifier based on the cell type
+        let cellIdentifier = MatchWidgetCollectionViewCell.identifier+viewModel.matchWidgetType.rawValue
+
         guard
-            let cell = collectionView.dequeueCellType(MatchWidgetCollectionViewCell.self,
-                                                      indexPath: indexPath),
-                let viewModel = self.viewModel
+            let cell = collectionView.dequeueReusableCell(withReuseIdentifier: cellIdentifier, for: indexPath) as? MatchWidgetCollectionViewCell
         else {
             fatalError()
         }
@@ -114,8 +119,7 @@ extension MatchWidgetContainerTableViewCell: UICollectionViewDelegate, UICollect
 
     func collectionView(_ collectionView: UICollectionView,
                         layout collectionViewLayout: UICollectionViewLayout,
-                        sizeForItemAt indexPath: IndexPath) -> CGSize
-    {
+                        sizeForItemAt indexPath: IndexPath) -> CGSize {
         let topMargin: CGFloat = 10.0
         let leftMargin: CGFloat = 18.0
         return CGSize(width: collectionView.frame.size.width - (leftMargin * 2.0),
@@ -124,8 +128,7 @@ extension MatchWidgetContainerTableViewCell: UICollectionViewDelegate, UICollect
 
     func collectionView(_ collectionView: UICollectionView,
                         layout collectionViewLayout: UICollectionViewLayout,
-                        insetForSectionAt section: Int) -> UIEdgeInsets
-    {
+                        insetForSectionAt section: Int) -> UIEdgeInsets {
         return UIEdgeInsets(top: 10, left: 18, bottom: 10, right: 18)
     }
 
@@ -150,6 +153,11 @@ extension MatchWidgetContainerTableViewCell {
         collectionView.translatesAutoresizingMaskIntoConstraints = false
 
         collectionView.register(MatchWidgetCollectionViewCell.nib, forCellWithReuseIdentifier: MatchWidgetCollectionViewCell.identifier)
+
+        for matchWidgetType in MatchWidgetType.allCases {
+            // Register a cell for each cell type to avoid glitches in the redrawing
+            collectionView.register(MatchWidgetCollectionViewCell.nib, forCellWithReuseIdentifier: MatchWidgetCollectionViewCell.identifier+matchWidgetType.rawValue)
+        }
 
         return collectionView
     }

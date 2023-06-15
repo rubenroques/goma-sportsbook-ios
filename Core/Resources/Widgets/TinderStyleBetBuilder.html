@@ -1499,73 +1499,128 @@
          justify-content: center;
          }
       </style>
+
+      <style>
+              body {
+                  display: flex;
+                  justify-content: center;
+              }
+              .sr-bb .srt-base-1-primary {
+                  background-color: transparent;
+                  color: #FF6600;
+                  border-color: #FF6600;
+              }
+              .sr-bb .srt-primary-1 {
+                  background-color: #FF6600;
+                  color: #ffffff;
+                  border-color: rgba(255, 255, 255, 0.16);
+              }
+          </style>
+
    </head>
-   
+
+
    <body>
-      <script>
-         (function(a,b,c,d,e,f,g,h,i){a[e]||(i=a[e]=function(){(a[e].q=a[e].q||[]).push(arguments)},i.l=1*new Date,i.o=f,
-         g=b.createElement(c),h=b.getElementsByTagName(c)[0],g.async=1,g.src=d,g.setAttribute("n",e),h.parentNode.insertBefore(g,h)
-         )})(window,document,"script", "https://widgets.sir.sportradar.com/e261cb63db9a62135b35e984baae1efd/widgetloader", "SIR", {
-             theme: false,
-             // TEMPORARY - after VAIX will obtain data remove this line
-             vaixApiUrl: "https://staging-api.vaix.ai",
-         });
-         
-         // TEMPORARY adapter name for testing purpose
-         const ADAPTER_NAME = "mockData";
-         
-         /// Initialize the changeCallback variable
-         let changeCallback = undefined;
-         
-         // Function to register a callback for bet slip changes
-         function onBetSlipChanged(callback) {
-             changeCallback = callback;
-             changeCallback && changeCallback(betSlipState);
-         }
-         
-         // Initialize the betSlipState object
-         let betSlipState = {
-             betslip: [],
-             combinedOddsValue: undefined
-         };
-         
-         // Function to handle item click
-         function onItemClick(target, data) {
-             if (target === 'externalOutcome') {
-                 // This is just an example of implementation.
-                 // Change it with your own betSlip functionality
-                 const newBet = {
-                     externalEventId: data.externalEvent.id,
-                     externalMarketId: data.externalMarket.id,
-                     externalOutcomeId: data.externalOutcome.id
-                 };
-         
-                 betSlipState = {
-                     betslip: [...betSlipState.betslip, newBet],
-                     combinedOddsValue: '14.52' // Just an example, replace with your actual calculation
-                 }
-         
-                 // Update the betSlipState by adding the new bet and the combinedOddsValue
-                 changeCallback && changeCallback(betSlipState);
-             }
-         }
-         
-         SIR("registerAdapter", ADAPTER_NAME, { onBetSlipChanged: onBetSlipChanged });
-         
-         SIR("addWidget", ".sr-widget-1", "betRecommendation.swipeBet",
-             {
-                 user: 0,
-                 isMobile: false,
-                 maxSelectionsSingleMode: 12,
-                 betSlipMode: ['single'],
-                 onItemClick: onItemClick
-             }
-         );
-      </script>
-      <div class="widgets">
-         <div>
-            <div class="sr-widget sr-widget-1"></div>
-         </div>
-      </div>
+   <script>
+           (function(a,b,c,d,e,f,g,h,i){a[e]||(i=a[e]=function(){(a[e].q=a[e].q||[]).push(arguments)},i.l=1*new Date,i.o=f,
+           g=b.createElement(c),h=b.getElementsByTagName(c)[0],g.async=1,g.src=d,g.setAttribute("n",e),h.parentNode.insertBefore(g,h)
+           )})(window,document,"script", "https://widgets.sir.sportradar.com/e261cb63db9a62135b35e984baae1efd/widgetloader", "SIR", {
+               theme: false,
+               // TEMPORARY - after VAIX will obtain data remove this line
+               vaixApiUrl: "https://staging-api.vaix.ai",
+           });
+
+           // TEMPORARY adapter name for testing purpose
+           const ADAPTER_NAME = "mockData";
+
+           /// Initialize the changeCallback variable
+           let changeCallback = undefined;
+
+           // Function to register a callback for bet slip changes
+           function onBetSlipChanged(callback) {
+               changeCallback = callback;
+               changeCallback && changeCallback(betSlipState);
+           }
+
+           // Initialize the betSlipState object
+           let betSlipState = {
+               betslip: [],
+               combinedOddsValue: undefined
+           };
+
+           // Function to handle item click
+           function onItemClick(target, data) {
+               if (target === 'externalOutcome') {
+                       Android.onItemClick(JSON.stringify(data));
+                   // This is just an example of implementation.
+                   // Change it with your own betSlip functionality
+                   const newBet = {
+                       externalEventId: data.externalEvent.id,
+                       externalMarketId: data.externalMarket.id,
+                       externalOutcomeId: data.externalOutcome.id
+                   };
+
+                   betSlipState = {
+                       betslip: [...betSlipState.betslip, newBet],
+                       combinedOddsValue: '14.52' // Just an example, replace with your actual calculation
+                   }
+
+                   // Update the betSlipState by adding the new bet and the combinedOddsValue
+                   changeCallback && changeCallback(betSlipState);
+               }
+           }
+
+           SIR("registerAdapter", ADAPTER_NAME, { onBetSlipChanged: onBetSlipChanged });
+
+           SIR("addWidget", ".sr-widget-1", "betRecommendation.swipeBet",
+               {
+                   user: 0,
+                   isMobile: true,
+                   maxSelectionsSingleMode: 12,
+                   betSlipMode: ['single'],
+                   onItemClick: onItemClick
+               }
+           );
+
+           function clickBetSwipeButtonWhenRendered() {
+               var observer = new MutationObserver(function (mutationsList, observer) {
+                   var button = document.getElementsByClassName("srct-br-widgetbutton").item(0);;
+                   if (button) {
+                       button.click();
+                       observer.disconnect();
+                   }
+               });
+
+               observer.observe(document.documentElement, { childList: true, subtree: true });
+           }
+
+           clickBetSwipeButtonWhenRendered()
+
+
+           let closeBetSwipeButton
+
+           function loadCloseBetSwipeButton() {
+               var observer = new MutationObserver(function (mutationsList, observer) {
+                   closeBetSwipeButton = document.getElementsByClassName("sr-br-sb-header__click-area").item(0);
+                   if (closeBetSwipeButton) {
+                       closeBetSwipeButton.onclick = function () {
+                          window.webkit.messageHandlers.closeController.postMessage("oniOSCloseBetSwipe");
+                       }
+                       observer.disconnect();
+                   }
+               });
+
+               observer.observe(document.documentElement, { childList: true, subtree: true });
+           }
+
+           loadCloseBetSwipeButton()
+       </script>
+   <div class="widgets">
+       <div>
+           <div class="sr-widget sr-widget-1"></div>
+       </div>
+
+   </div>
    </body>
+
 </html>
