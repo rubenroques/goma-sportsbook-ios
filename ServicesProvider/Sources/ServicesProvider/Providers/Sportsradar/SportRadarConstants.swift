@@ -66,6 +66,8 @@ struct SportRadarConstants {
     // Sumsub
     static var sumsubHostname = "https://api.sumsub.com"
 
+    static var frontEndCode = "1356"
+    
     //static var sportRadarLegacyFrontEndURL = "https://cdn1.optimahq.com"
 
 //    ===================================================================================================================

@@ -11,7 +11,7 @@ import LinkPresentation
 import Combine
 import ServicesProvider
 
-enum MatchWidgetType {
+enum MatchWidgetType: String, CaseIterable {
     case normal
     case topImage
     case boosted
@@ -145,6 +145,7 @@ class MatchWidgetCollectionViewCell: UICollectionViewCell {
     @IBOutlet private weak var topImageView: UIImageView!
 
     @IBOutlet private weak var boostedOddBottomLineView: UIView!
+    private let boostedOddBottomLineAnimatedGradientView = GradientView()
 
     private var matchWidgetType: MatchWidgetType = .normal {
         didSet {
@@ -318,35 +319,39 @@ class MatchWidgetCollectionViewCell: UICollectionViewCell {
     override func awakeFromNib() {
         super.awakeFromNib()
 
+        //
         // Add gradient to the bottom booster line
-        let gradientView = GradientView()
-        gradientView.translatesAutoresizingMaskIntoConstraints = false
-        gradientView.colors = [(UIColor.init(hex: 0xFF6600), NSNumber(0.0)),
+        self.boostedOddBottomLineAnimatedGradientView.translatesAutoresizingMaskIntoConstraints = false
+        self.boostedOddBottomLineAnimatedGradientView.colors = [(UIColor.init(hex: 0xFF6600), NSNumber(0.0)),
                                (UIColor.init(hex: 0xFEDB00), NSNumber(1.0))]
-        gradientView.startPoint = CGPoint(x: 0.0, y: 0.5)
-        gradientView.endPoint = CGPoint(x: 1.0, y: 0.5)
-        gradientView.startAnimations()
+        self.boostedOddBottomLineAnimatedGradientView.startPoint = CGPoint(x: 0.0, y: 0.5)
+        self.boostedOddBottomLineAnimatedGradientView.endPoint = CGPoint(x: 1.0, y: 0.5)
+        self.boostedOddBottomLineAnimatedGradientView.startAnimations()
 
-        self.boostedOddBottomLineView.addSubview(gradientView)
+        self.boostedOddBottomLineView.addSubview(self.boostedOddBottomLineAnimatedGradientView)
 
         NSLayoutConstraint.activate([
-            self.boostedOddBottomLineView.leadingAnchor.constraint(equalTo: gradientView.leadingAnchor),
-            self.boostedOddBottomLineView.trailingAnchor.constraint(equalTo: gradientView.trailingAnchor),
-            self.boostedOddBottomLineView.topAnchor.constraint(equalTo: gradientView.topAnchor),
-            self.boostedOddBottomLineView.bottomAnchor.constraint(equalTo: gradientView.bottomAnchor),
+            self.boostedOddBottomLineView.leadingAnchor.constraint(equalTo: self.boostedOddBottomLineAnimatedGradientView.leadingAnchor),
+            self.boostedOddBottomLineView.trailingAnchor.constraint(equalTo: self.boostedOddBottomLineAnimatedGradientView.trailingAnchor),
+            self.boostedOddBottomLineView.topAnchor.constraint(equalTo: self.boostedOddBottomLineAnimatedGradientView.topAnchor),
+            self.boostedOddBottomLineView.bottomAnchor.constraint(equalTo: self.boostedOddBottomLineAnimatedGradientView.bottomAnchor),
         ])
 
         //
         // Create a gradient layer on top of the image
-        let finalColor = UIColor(hex: 0x3B3B3B, alpha: 0.50)
-        let initialColor = UIColor(hex: 0x000000, alpha: 0.73)
+
+//        let finalColor = UIColor(hex: 0x3B3B3B, alpha: 0.50)
+//        let initialColor = UIColor(hex: 0x000000, alpha: 0.73)
+
+        let finalColor = UIColor.App.highlightSecondaryContrast.withAlphaComponent(0.3)
+        let initialColor = UIColor.App.highlightSecondaryContrast.withAlphaComponent(1.0)
 
         self.backgroundImageGradientLayer.frame = self.backgroundImageView.bounds
         self.backgroundImageGradientLayer.colors = [initialColor.cgColor, finalColor.cgColor]
         self.backgroundImageGradientLayer.locations = [0.0, 1.0]
         self.backgroundImageGradientLayer.startPoint = CGPoint(x: 0.5, y: 1.0) // bottom
         self.backgroundImageGradientLayer.endPoint = CGPoint(x: 0.5, y: 0.0) // top
-        self.backgroundImageView.layer.insertSublayer(self.backgroundImageGradientLayer, at: 0)
+        self.backgroundImageView.layer.addSublayer(self.backgroundImageGradientLayer)
 
         //
         // Hide boosted odds views
@@ -361,9 +366,9 @@ class MatchWidgetCollectionViewCell: UICollectionViewCell {
         self.awayNewBoostedOddValueLabel.font = AppFont.with(type: .bold, size: 13)
         self.awayOldBoostedOddValueLabel.font = AppFont.with(type: .semibold, size: 9)
 
-        self.homeOldBoostedOddValueLabel.text = "1̶.̶2̶0̶"
-        self.drawOldBoostedOddValueLabel.text = "2̶.̶2̶0̶"
-        self.awayOldBoostedOddValueLabel.text = "3̶.̶2̶0̶"
+        self.homeOldBoostedOddValueLabel.text = "1̶.̶0̶0̶"
+        self.drawOldBoostedOddValueLabel.text = "1̶.̶0̶0̶"
+        self.awayOldBoostedOddValueLabel.text = "1̶.̶0̶0̶"
 
         //
         //
@@ -389,6 +394,7 @@ class MatchWidgetCollectionViewCell: UICollectionViewCell {
         self.awayBaseView.backgroundColor = .clear
 
         self.awayBaseView.isHidden = false
+        self.drawBaseView.isHidden = false
 
         self.suspendedBaseView.layer.cornerRadius = 4.5
         self.homeBaseView.layer.cornerRadius = 4.5
@@ -573,6 +579,7 @@ class MatchWidgetCollectionViewCell: UICollectionViewCell {
         self.oddsStackView.isHidden = false
 
         self.awayBaseView.isHidden = false
+        self.drawBaseView.isHidden = false
 
         self.isFavorite = false
 
@@ -764,6 +771,8 @@ class MatchWidgetCollectionViewCell: UICollectionViewCell {
             self.drawBaseView.layer.borderWidth = 0
             self.awayBaseView.layer.borderWidth = 0
 
+            self.boostedOddBottomLineAnimatedGradientView.startAnimations()
+
         case .backgroundImage:
             self.baseView.backgroundColor = UIColor.App.backgroundCards
 
@@ -799,18 +808,24 @@ class MatchWidgetCollectionViewCell: UICollectionViewCell {
                 self.homeBaseView.backgroundColor = UIColor.App.highlightPrimary
                 self.homeOddTitleLabel.textColor = UIColor.App.buttonTextPrimary
                 self.homeOddValueLabel.textColor = UIColor.App.buttonTextPrimary
+
+                self.homeBaseView.layer.borderWidth = 0
             }
 
             if isMiddleOutcomeButtonSelected {
                 self.drawBaseView.backgroundColor = UIColor.App.highlightPrimary
                 self.drawOddTitleLabel.textColor = UIColor.App.buttonTextPrimary
                 self.drawOddValueLabel.textColor = UIColor.App.buttonTextPrimary
+
+                self.drawBaseView.layer.borderWidth = 0
             }
 
             if isRightOutcomeButtonSelected {
                 self.awayBaseView.backgroundColor = UIColor.App.highlightPrimary
                 self.awayOddTitleLabel.textColor = UIColor.App.buttonTextPrimary
                 self.awayOddValueLabel.textColor = UIColor.App.buttonTextPrimary
+
+                self.awayBaseView.layer.borderWidth = 0
             }
 
         }
@@ -891,15 +906,6 @@ class MatchWidgetCollectionViewCell: UICollectionViewCell {
     }
 
     func configure(withViewModel viewModel: MatchWidgetCellViewModel) {
-
-        // Refresh the UI
-        let oldMatchWidgetType = self.matchWidgetType
-        defer {
-            if oldMatchWidgetType != self.matchWidgetType {
-                self.setNeedsLayout()
-                self.layoutIfNeeded()
-            }
-        }
 
         self.viewModel = viewModel
         self.matchWidgetType = viewModel.matchWidgetType
@@ -1193,7 +1199,10 @@ class MatchWidgetCollectionViewCell: UICollectionViewCell {
             if market.outcomes.count == 2 {
                 awayBaseView.isHidden = true
             }
-            
+            else if market.outcomes.count == 1 {
+                awayBaseView.isHidden = true
+                drawBaseView.isHidden = true
+            }
         }
         else {
             oddsStackView.alpha = 0.2

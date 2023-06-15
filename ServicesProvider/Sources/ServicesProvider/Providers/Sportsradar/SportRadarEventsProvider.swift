@@ -1085,8 +1085,12 @@ extension SportRadarEventsProvider {
                         let cleanedEvents = events.compactMap({ $0 })
 
                         // create a dictionary from cleanedEvents using marketId as a key
-                        let eventDict = Dictionary(uniqueKeysWithValues: cleanedEvents.map { ($0.markets.first?.id ?? "", $0) })
-
+                        var eventDict: [String: Event] = [:] // Dictionary(uniqueKeysWithValues: cleanedEvents.map { ($0.markets.first?.id ?? "", $0) })
+                        cleanedEvents.forEach({ event in
+                            let firstMarketId = event.markets.first?.id ?? ""
+                            eventDict[firstMarketId] = event
+                        })
+                        
                         // re-order the cleanedEvents based on the order of marketIds in headlineItems
                         let orderedEvents = headlineItems.compactMap { eventDict[$0.marketId ?? ""] }
                         return orderedEvents
@@ -1119,7 +1123,11 @@ extension SportRadarEventsProvider {
                         let cleanedEvents = events.compactMap({ $0 })
 
                         // create a dictionary from cleanedEvents using marketId as a key
-                        let eventDict = Dictionary(uniqueKeysWithValues: cleanedEvents.map { ($0.markets.first?.id ?? "", $0) })
+                        var eventDict: [String: Event] = [:] // Dictionary(uniqueKeysWithValues: cleanedEvents.map { ($0.markets.first?.id ?? "", $0) })
+                        cleanedEvents.forEach({ event in
+                            let firstMarketId = event.markets.first?.id ?? ""
+                            eventDict[firstMarketId] = event
+                        })
 
                         // re-order the cleanedEvents based on the order of marketIds in headlineItems
                         let orderedEvents = headlineItems.compactMap { eventDict[$0.marketId ?? ""] }
@@ -1167,7 +1175,11 @@ extension SportRadarEventsProvider {
                         let cleanedEvents = events.compactMap({ $0 })
 
                         // create a dictionary from cleanedEvents using marketId as a key
-                        let eventDict = Dictionary(uniqueKeysWithValues: cleanedEvents.map { ($0.markets.first?.id ?? "", $0) })
+                        var eventDict: [String: Event] = [:] // Dictionary(uniqueKeysWithValues: cleanedEvents.map { ($0.markets.first?.id ?? "", $0) })
+                        cleanedEvents.forEach({ event in
+                            let firstMarketId = event.markets.first?.id ?? ""
+                            eventDict[firstMarketId] = event
+                        })
 
                         // re-order the cleanedEvents based on the order of marketIds in headlineItems
                         let orderedEvents = headlineItems.compactMap { eventDict[$0.marketId ?? ""] }

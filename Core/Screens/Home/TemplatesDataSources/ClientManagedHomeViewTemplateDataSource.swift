@@ -118,11 +118,7 @@ class ClientManagedHomeViewTemplateDataSource {
 
         self.fetchAlerts()
         self.fetchQuickSwipeMatches()
-
-        if !Env.userSessionStore.isUserLogged() {
-            self.fetchBanners()
-        }
-
+        self.fetchBanners()
         self.fetchHighlightMatches()
         self.fetchPromotedSports()
 
@@ -165,6 +161,10 @@ class ClientManagedHomeViewTemplateDataSource {
     func fetchBanners() {
 
         self.banners = []
+
+        if Env.userSessionStore.isUserLogged() {
+            return
+        }
 
         Env.servicesProvider.getPromotionalTopBanners()
             .receive(on: DispatchQueue.main)

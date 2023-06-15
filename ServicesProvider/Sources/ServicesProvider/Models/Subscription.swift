@@ -111,7 +111,7 @@ public enum ContentRoute {
             let dateRange = ContentDateFormatter.getDateRangeId(startDate: startDate, endDate: endDate)
             return dateRange
         case .allSports:
-            return "1356/top"
+            return "\(SportRadarConstants.frontEndCode)/top"
 
         case .eventDetails(let eventId):
             return eventId
