@@ -52,6 +52,10 @@ class Environment {
     // let urlApp: String = "https://goma-uat.betsson.fr"
     let urlApp: String = "https://sportsbook-stage.gomagaming.com"
 
+    // Sumsub keys
+    let sumsubAppToken = "sbx:yjCFqKsuTX6mTY7XMFFPe6hR.v9i5YpFrNND0CeLcZiHeJnnejrCUDZKT"
+    let sumsubSecretKey = "4PH7gdufQfrFpFS35gJiwz9d2NFZs4kM"
+
     init() {
 
     }

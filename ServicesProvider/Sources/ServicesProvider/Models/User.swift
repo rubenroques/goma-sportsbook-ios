@@ -412,12 +412,37 @@ public struct DocumentType {
     public var issueDateRequired: Bool?
     public var expiryDateRequired: Bool?
     public var documentNumberRequired: Bool?
+    public var documentTypeGroup: DocumentTypeGroup?
 
     enum CodingKeys: String, CodingKey {
         case documentType = "documentType"
         case expiryDateRequired = "expiryDateRequired"
         case documentNumberRequired = "documentNumberRequired"
         case issueDateRequired = "issueDateRequired"
+    }
+}
+
+public enum DocumentTypeGroup {
+    case identityCard
+    case passport
+    case drivingLicense
+    case residenceId
+    case proofOfAddress
+    case rib
+    case others
+
+    init?(documentType: String) {
+
+        switch documentType {
+        case "IDENTITY_CARD": self = .identityCard
+        case "PASSPORT": self = .passport
+        case "DRIVING_LICENCE": self = .drivingLicense
+        case "RESIDENCE_ID": self = .residenceId
+        case "POA": self = .proofOfAddress
+        case "RIB": self = .rib
+        case "OTHERS": self = .others
+        default: return nil
+        }
     }
 }
 
@@ -435,11 +460,13 @@ public struct UserDocument {
     public var documentType: String
     public var fileName: String
     public var status: String
+    public var uploadDate: String
 
     enum CodingKeys: String, CodingKey {
         case documentType = "documentType"
         case fileName = "fileName"
         case status = "status"
+        case uploadDate = "UploadDate"
     }
 }
 

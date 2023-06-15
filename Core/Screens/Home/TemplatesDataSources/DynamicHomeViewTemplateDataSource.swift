@@ -333,7 +333,7 @@ extension DynamicHomeViewTemplateDataSource: HomeViewTemplateDataSource {
         case .suggestedBets:
             return HomeViewModel.Content.suggestedBets
         case .sport(let id, let name, _):
-            let sport = Sport(id: id, name: name.capitalized, alphaId: nil, numericId: nil, showEventCategory: false, liveEventsCount: 0)
+            let sport = Sport(id: id, name: name.capitalized, alphaId: nil, numericId: nil, showEventCategory: false, liveEventsCount: 0, eventsCount: 0)
             return HomeViewModel.Content.sportGroup(sport)
         case .promotionStoriesBar:
             return nil

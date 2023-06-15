@@ -50,6 +50,8 @@ class UploadDocumentsViewModel {
         return Env.userSessionStore.userKnowYourCustomerStatusPublisher.eraseToAnyPublisher()
     }
 
+    let dateFormatter = DateFormatter()
+
     init() {
 
         self.setupPublishers()
@@ -139,7 +141,14 @@ class UploadDocumentsViewModel {
 
                 let userDocumentStatus = FileState(code: userDocument.status)
 
-                return DocumentFileInfo(id: userDocument.documentType, name: userDocument.fileName, status: userDocumentStatus ?? .pendingApproved)
+                self.dateFormatter.dateFormat = "dd-MM-yyyy HH:mm:ss"
+                let uploadDate = self.dateFormatter.date(from: userDocument.uploadDate)
+
+                return DocumentFileInfo(id: userDocument.documentType,
+                                        name: userDocument.fileName,
+                                        status: userDocumentStatus ?? .pendingApproved,
+                                        uploadDate: uploadDate ?? Date(),
+                                        documentTypeGroup: .none)
             })
 
             let documentInfo = DocumentInfo(id: documentType.documentType,

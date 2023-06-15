@@ -328,6 +328,10 @@ class DocumentView: UIView {
             self.statusView.backgroundColor = UIColor.App.alertSuccess
         case .failed:
             self.statusView.backgroundColor = UIColor.App.alertError
+        case .rejected:
+            self.statusView.backgroundColor = UIColor.App.alertError
+        case .incomplete:
+            self.statusView.backgroundColor = UIColor.App.alertWarning
         }
 
         self.statusLabel.text = fileState.statusName

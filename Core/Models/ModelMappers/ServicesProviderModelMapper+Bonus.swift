@@ -41,4 +41,17 @@ extension ServiceProviderModelMapper {
         return ApplicableBonus(code: availableBonus.id, name: availableBonus.name, description: availableBonus.description ?? "", url: nil, html: nil, assets: availableBonus.imageUrl)
 
     }
+
+    static func documentTypeGroup(fromServiceProviderDocumentTypeGroup documentTypeGroup: ServicesProvider.DocumentTypeGroup) -> DocumentTypeGroup {
+
+        switch documentTypeGroup {
+        case .identityCard: return .identityCard
+        case .passport: return .passport
+        case .drivingLicense: return .drivingLicense
+        case .residenceId: return .residenceId
+        case .proofOfAddress: return .proofAddress
+        case .rib: return .rib
+        case .others: return .others
+        }
+    }
 }
