@@ -633,6 +633,8 @@ class IdentificationDocsViewController: UIViewController {
     var totalIdentificationTriesCount: Int = 0
     var totalProofAddressTriesCount: Int = 0
 
+    var hasShownContinueProcessAlert: Bool = false
+
     // MARK: - Lifetime and Cycle
     init(viewModel: IdentificationDocsViewModel) {
         self.viewModel = viewModel
@@ -659,6 +661,11 @@ class IdentificationDocsViewController: UIViewController {
 
         let proofAddDocTap = UITapGestureRecognizer(target: self, action: #selector(self.didTapProofAddDoc))
         self.proofAddDocBaseView.addGestureRecognizer(proofAddDocTap)
+
+        self.scrollView.refreshControl = UIRefreshControl()
+        self.scrollView.refreshControl?.addTarget(self, action:
+                                          #selector(handleRefreshControl),
+                                          for: .valueChanged)
 
     }
 
@@ -827,6 +834,15 @@ class IdentificationDocsViewController: UIViewController {
 
             self.navigationController?.pushViewController(manualUploadDocumentViewController, animated: true)
         }
+    }
+
+    @objc func handleRefreshControl() {
+
+        self.viewModel.refreshDocuments()
+
+       DispatchQueue.main.async {
+          self.scrollView.refreshControl?.endRefreshing()
+       }
     }
 
     // MARK: Functions
@@ -1020,7 +1036,36 @@ class IdentificationDocsViewController: UIViewController {
 
         }
 
+        // Check to show continue process alert
+        if !self.isProofOfAddressDisabled,
+           let uploadedProofAddressDocs = self.viewModel.proofAddressDocuments.first?.uploadedFiles,
+           uploadedProofAddressDocs.isEmpty,
+           !self.hasShownContinueProcessAlert {
+
+            self.showContinueProcessAlert()
+
+        }
+
     }
+
+    private func showContinueProcessAlert() {
+
+        let alert = UIAlertController(title: localized("identity_docs_approved_title"),
+                                      message: localized("identity_docs_approved_text"),
+                                      preferredStyle: .alert)
+
+        alert.addAction(UIAlertAction(title: localized("ok"), style: .default, handler: { [weak self] _ in
+
+            self?.viewModel.getSumsubAccessToken(levelName: "POA Verification")
+
+            self?.hasShownContinueProcessAlert = true
+
+        }))
+
+        self.present(alert, animated: true, completion: nil)
+
+    }
+
 }
 
 extension IdentificationDocsViewController {

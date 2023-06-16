@@ -306,10 +306,15 @@ class RibDocsViewController: UIViewController {
 
         self.isLocked = false
 
+        self.canAddRibDocs = true
+
         let ribAddDocTap = UITapGestureRecognizer(target: self, action: #selector(self.didTapRibAddDoc))
         self.ribAddDocBaseView.addGestureRecognizer(ribAddDocTap)
 
-        self.canAddRibDocs = true
+        self.scrollView.refreshControl = UIRefreshControl()
+        self.scrollView.refreshControl?.addTarget(self, action:
+                                          #selector(handleRefreshControl),
+                                          for: .valueChanged)
     }
 
     override func viewDidLayoutSubviews() {
@@ -460,6 +465,15 @@ class RibDocsViewController: UIViewController {
         }
 
         self.navigationController?.pushViewController(manualUploadDocViewController, animated: true)
+    }
+
+    @objc func handleRefreshControl() {
+
+        self.viewModel.refreshDocuments()
+
+       DispatchQueue.main.async {
+          self.scrollView.refreshControl?.endRefreshing()
+       }
     }
 
 }

@@ -306,10 +306,15 @@ class ExtraDocsViewController: UIViewController {
 
         self.isLocked = false
 
+        self.canAddExtraDocs = true
+
         let extraAddDocTap = UITapGestureRecognizer(target: self, action: #selector(self.didTapExtraAddDoc))
         self.extraAddDocBaseView.addGestureRecognizer(extraAddDocTap)
 
-        self.canAddExtraDocs = true
+        self.scrollView.refreshControl = UIRefreshControl()
+        self.scrollView.refreshControl?.addTarget(self, action:
+                                          #selector(handleRefreshControl),
+                                          for: .valueChanged)
 
     }
 
@@ -460,6 +465,15 @@ class ExtraDocsViewController: UIViewController {
         }
 
         self.navigationController?.pushViewController(manualUploadDocViewController, animated: true)
+    }
+
+    @objc func handleRefreshControl() {
+
+        self.viewModel.refreshDocuments()
+
+       DispatchQueue.main.async {
+          self.scrollView.refreshControl?.endRefreshing()
+       }
     }
 }
 

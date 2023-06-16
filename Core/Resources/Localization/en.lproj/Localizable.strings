@@ -1333,3 +1333,6 @@
 "incomplete" = "Incomplete";
 "upload_complete_message" = "Your document(s) were uploaded successfully!";
 "upload_error" = "Upload Error";
+
+"identity_docs_approved_title" = "Your Identity documents have been approved!";
+"identity_docs_approved_text" = "In order to continue to the next step, you must upload your Proof of Address document.";
