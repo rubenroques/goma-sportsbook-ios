@@ -178,12 +178,12 @@ class DocumentsRootViewController: UIViewController {
                 if let kycStatus = kycStatus {
                     switch kycStatus {
                     case .request:
-                        self?.kycStatusLabel.text = "Requested"
+                        self?.kycStatusLabel.text = kycStatus.statusName
                         self?.kycStatusView.backgroundColor = UIColor.App.statsAway
-                    case .passConditional: self?.kycStatusLabel.text = "Pass Conditional"
+                    case .passConditional: self?.kycStatusLabel.text = kycStatus.statusName
                         self?.kycStatusView.backgroundColor = UIColor.App.alertSuccess
                     case .pass:
-                        self?.kycStatusLabel.text = "Pass"
+                        self?.kycStatusLabel.text = kycStatus.statusName
                         self?.kycStatusView.backgroundColor = UIColor.App.alertSuccess
                     }
                 }

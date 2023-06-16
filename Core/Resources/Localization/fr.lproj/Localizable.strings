@@ -1395,5 +1395,9 @@
 "upload_complete_message" = "Vos documents ont été téléchargés avec succès!";
 "upload_error" = "Erreur de téléchargement";
 
+"requested_kyc" = "Demandé";
+"pass_conditional_kyc" = "Validation conditionnelle";
+"pass_kyc" = "Validé";
+
 "identity_docs_approved_title" = "Vos documents d'identité ont été approuvés!";
 "identity_docs_approved_text" = "Pour passer à l'étape suivante, vous devez télécharger votre document de preuve d'adresse.";

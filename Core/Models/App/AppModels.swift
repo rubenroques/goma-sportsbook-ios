@@ -295,6 +295,15 @@ enum KnowYourCustomerStatus: String, Codable {
     case request
     case passConditional
     case pass
+
+    var statusName: String {
+        switch self {
+        case .request: return localized("requested_kyc")
+        case .passConditional: return localized("pass_conditional_kyc")
+        case .pass: return localized("pass_kyc")
+
+        }
+    }
 }
 
 struct UserProfile: Codable {
