@@ -877,6 +877,16 @@ extension ServicesProviderClient {
         return privilegedAccessManager.uploadUserDocument(documentType: documentType, file: file, fileName: fileName)
     }
 
+    public func uploadMultipleUserDocuments(documentType: String, files: [String: Data]) -> AnyPublisher<UploadDocumentResponse, ServiceProviderError> {
+        guard
+            let privilegedAccessManager = self.privilegedAccessManager
+        else {
+            return Fail(error: ServiceProviderError.privilegedAccessManagerNotFound).eraseToAnyPublisher()
+        }
+
+        return privilegedAccessManager.uploadMultipleUserDocuments(documentType: documentType, files: files)
+    }
+
     public func getPayments() -> AnyPublisher<SimplePaymentMethodsResponse, ServiceProviderError> {
         guard
             let privilegedAccessManager = self.privilegedAccessManager

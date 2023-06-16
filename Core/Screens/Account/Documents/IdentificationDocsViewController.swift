@@ -118,6 +118,13 @@ class IdentificationDocsViewModel {
             .store(in: &cancellables)
     }
 
+    func refreshDocuments() {
+        self.documents = []
+        self.identificationDocuments = []
+        self.proofAddressDocuments = []
+        self.getSumSubDocuments()
+    }
+
     private func getDocumentTypes() {
 
         self.isLoadingPublisher.send(true)
@@ -271,7 +278,19 @@ class IdentificationDocsViewModel {
 
                 }
 
-                let docFileInfo = DocumentFileInfo(id: docId, name: docName, status: docStatus, uploadDate: uploadDate, retry: retry, documentTypeGroup: docTypeGroup ?? .none)
+                var totalRetries: Int?
+
+                if let attempCount = applicantDataResponse.reviewData?.attemptCount {
+                    totalRetries = attempCount
+                }
+
+                let docFileInfo = DocumentFileInfo(id: docId,
+                                                   name: docName,
+                                                   status: docStatus,
+                                                   uploadDate: uploadDate,
+                                                   retry: retry,
+                                                   documentTypeGroup: docTypeGroup ?? .none,
+                                                   totalRetries: totalRetries)
 
                 documentFilesInfo.append(docFileInfo)
             }
@@ -337,21 +356,58 @@ class IdentificationDocsViewModel {
 
                 let mappedDocumentTypeGroup = ServiceProviderModelMapper.documentTypeGroup(fromServiceProviderDocumentTypeGroup: documentTypeGroup)
 
-                let uploadedFiles = userDocuments.filter({
+                var uploadedFiles = [DocumentFileInfo]()
+
+                let filteredUserDocuments = userDocuments.filter({
                     $0.documentType == documentType.documentType
-                }).map({ userDocument -> DocumentFileInfo in
+                })
+
+                for userDocument in filteredUserDocuments {
 
                     let userDocumentStatus = FileState(code: userDocument.status)
 
                     self.dateFormatter.dateFormat = "dd-MM-yyyy HH:mm:ss"
                     let uploadDate = self.dateFormatter.date(from: userDocument.uploadDate)
 
-                    return DocumentFileInfo(id: userDocument.documentType,
-                                            name: userDocument.fileName,
-                                            status: userDocumentStatus ?? .pendingApproved,
-                                            uploadDate: uploadDate ?? Date(),
-                                            documentTypeGroup: mappedDocumentTypeGroup)
-                })
+                    if let userDocumentFiles = userDocument.userDocumentFiles {
+
+                        for userDocumentFile in userDocumentFiles {
+
+                            var retry = true
+
+                            if userDocumentStatus == .approved || userDocumentStatus == .pendingApproved {
+                                retry = false
+                            }
+
+                            let documentFileInfo = DocumentFileInfo(id: userDocument.documentType,
+                                                                    name: userDocumentFile.fileName,
+                                                    status: userDocumentStatus ?? .pendingApproved,
+                                                    uploadDate: uploadDate ?? Date(),
+                                                                    retry: retry,
+                                                    documentTypeGroup: mappedDocumentTypeGroup)
+
+                            uploadedFiles.append(documentFileInfo)
+                        }
+
+                    }
+                    else {
+                        var retry = true
+
+                        if userDocumentStatus == .approved || userDocumentStatus == .pendingApproved {
+                            retry = false
+                        }
+
+                        let documentFileInfo = DocumentFileInfo(id: userDocument.documentType,
+                                                name: userDocument.fileName ?? "",
+                                                status: userDocumentStatus ?? .pendingApproved,
+                                                uploadDate: uploadDate ?? Date(),
+                                                                retry: retry,
+                                                documentTypeGroup: mappedDocumentTypeGroup)
+
+                        uploadedFiles.append(documentFileInfo)
+                    }
+
+                }
 
                 var existingDocumentInfo: DocumentInfo?
 
@@ -389,21 +445,58 @@ class IdentificationDocsViewModel {
             }
             else {
 
-                let uploadedFiles = userDocuments.filter({
+                var uploadedFiles = [DocumentFileInfo]()
+
+                let filteredUserDocuments = userDocuments.filter({
                     $0.documentType == documentType.documentType
-                }).map({ userDocument -> DocumentFileInfo in
+                })
+
+                for userDocument in filteredUserDocuments {
 
                     let userDocumentStatus = FileState(code: userDocument.status)
 
                     self.dateFormatter.dateFormat = "dd-MM-yyyy HH:mm:ss"
                     let uploadDate = self.dateFormatter.date(from: userDocument.uploadDate)
 
-                    return DocumentFileInfo(id: userDocument.documentType,
-                                            name: userDocument.fileName,
-                                            status: userDocumentStatus ?? .pendingApproved,
-                                            uploadDate: uploadDate ?? Date(),
-                                            documentTypeGroup: .none)
-                })
+                    if let userDocumentFiles = userDocument.userDocumentFiles {
+
+                        for userDocumentFile in userDocumentFiles {
+
+                            var retry = true
+
+                            if userDocumentStatus == .approved || userDocumentStatus == .pendingApproved {
+                                retry = false
+                            }
+
+                            let documentFileInfo = DocumentFileInfo(id: userDocument.documentType,
+                                                                    name: userDocumentFile.fileName,
+                                                    status: userDocumentStatus ?? .pendingApproved,
+                                                    uploadDate: uploadDate ?? Date(),
+                                                                    retry: retry,
+                                                                    documentTypeGroup: .none)
+
+                            uploadedFiles.append(documentFileInfo)
+                        }
+
+                    }
+                    else {
+                        var retry = true
+
+                        if userDocumentStatus == .approved || userDocumentStatus == .pendingApproved {
+                            retry = false
+                        }
+
+                        let documentFileInfo = DocumentFileInfo(id: userDocument.documentType,
+                                                name: userDocument.fileName ?? "",
+                                                status: userDocumentStatus ?? .pendingApproved,
+                                                uploadDate: uploadDate ?? Date(),
+                                                                retry: retry,
+                                                                documentTypeGroup: .none)
+
+                        uploadedFiles.append(documentFileInfo)
+                    }
+
+                }
 
                 var existingDocumentInfo: DocumentInfo?
 
@@ -480,6 +573,7 @@ class IdentificationDocsViewController: UIViewController {
     private lazy var idAddDocBottomConstraint: NSLayoutConstraint = Self.createIdAddDocBottomConstraint()
 
     private lazy var proofAddressBaseView: UIView = Self.createProofAddressBaseView()
+    private lazy var proofAddressDisabledView: UIView = Self.createProofAddressDisabledView()
     private lazy var proofAddressTopStackView: UIStackView = Self.createProofAddressTopStackView()
     private lazy var proofAddressTitleLabel: UILabel = Self.createProofAddressTitleLabel()
     private lazy var proofAddressSubtitleLabel: UILabel = Self.createProofAddressSubtitleLabel()
@@ -529,6 +623,16 @@ class IdentificationDocsViewController: UIViewController {
         }
     }
 
+    var isProofOfAddressDisabled: Bool = true {
+        didSet {
+            self.proofAddressDisabledView.isHidden = !isProofOfAddressDisabled
+            self.proofAddressBaseView.isUserInteractionEnabled = !isProofOfAddressDisabled
+        }
+    }
+
+    var totalIdentificationTriesCount: Int = 0
+    var totalProofAddressTriesCount: Int = 0
+
     // MARK: - Lifetime and Cycle
     init(viewModel: IdentificationDocsViewModel) {
         self.viewModel = viewModel
@@ -564,6 +668,8 @@ class IdentificationDocsViewController: UIViewController {
         self.identificationBaseView.layer.cornerRadius = CornerRadius.card
 
         self.proofAddressBaseView.layer.cornerRadius = CornerRadius.card
+
+        self.proofAddressDisabledView.layer.cornerRadius = CornerRadius.card
     }
 
     // MARK: - Layout and Theme
@@ -599,6 +705,8 @@ class IdentificationDocsViewController: UIViewController {
         self.idAddDocIconImageView.setTintColor(color: UIColor.App.highlightPrimary)
 
         self.proofAddressBaseView.backgroundColor = UIColor.App.backgroundSecondary
+
+        self.proofAddressDisabledView.backgroundColor = UIColor.App.backgroundSecondary.withAlphaComponent(0.7)
 
         self.proofAddressTopStackView.backgroundColor = .clear
 
@@ -684,24 +792,41 @@ class IdentificationDocsViewController: UIViewController {
 
     // MARK: Action
     @objc func didTapIdAddDoc() {
-        print("ADD ID DOC")
 
-        self.viewModel.getSumsubAccessToken(levelName: "ID Verifiication")
-//        let manualUploadDocumentViewModel = ManualUploadsDocumentsViewModel()
-//
-//        let manualUploadDocumentViewController = ManualUploadDocumentsViewController(viewModel: manualUploadDocumentViewModel)
-//
-//        self.navigationController?.pushViewController(manualUploadDocumentViewController, animated: true)
+        if self.totalIdentificationTriesCount <= 4 {
+            self.viewModel.getSumsubAccessToken(levelName: "ID Verifiication")
+
+        }
+        else {
+            let manualUploadDocumentViewModel = ManualUploadsDocumentsViewModel(documentTypeCode: .identification)
+
+            let manualUploadDocumentViewController = ManualUploadDocumentsViewController(viewModel: manualUploadDocumentViewModel)
+
+            manualUploadDocumentViewController.shouldRefreshDocuments = { [weak self] in
+                self?.viewModel.refreshDocuments()
+            }
+
+            self.navigationController?.pushViewController(manualUploadDocumentViewController, animated: true)
+        }
+
     }
 
     @objc func didTapProofAddDoc() {
-        print("ADD PROOF DOC")
-        //self.viewModel.getSumsubAccessToken(levelName: "POA Verification")
-        let manualUploadDocumentViewModel = ManualUploadsDocumentsViewModel(documentTypeCode: .proofAddress)
 
-        let manualUploadDocumentViewController = ManualUploadDocumentsViewController(viewModel: manualUploadDocumentViewModel)
+        if self.totalProofAddressTriesCount <= 4 {
+            self.viewModel.getSumsubAccessToken(levelName: "POA Verification")
+        }
+        else {
+            let manualUploadDocumentViewModel = ManualUploadsDocumentsViewModel(documentTypeCode: .proofAddress)
 
-        self.navigationController?.pushViewController(manualUploadDocumentViewController, animated: true)
+            let manualUploadDocumentViewController = ManualUploadDocumentsViewController(viewModel: manualUploadDocumentViewModel)
+
+            manualUploadDocumentViewController.shouldRefreshDocuments = { [weak self] in
+                self?.viewModel.refreshDocuments()
+            }
+
+            self.navigationController?.pushViewController(manualUploadDocumentViewController, animated: true)
+        }
     }
 
     // MARK: Functions
@@ -736,6 +861,37 @@ class IdentificationDocsViewController: UIViewController {
             mainVC.dismiss(animated: true, completion: nil)
 
             self.viewModel.getSumSubDocuments()
+        }
+
+        sdk.onEvent { (sdk, event) in
+
+            switch event.eventType {
+
+            case .applicantLoaded:
+                if let event = event as? SNSEventApplicantLoaded {
+                    print("onEvent: Applicant [\(event.applicantId)] has been loaded")
+                }
+
+            case .stepInitiated:
+                if let event = event as? SNSEventStepInitiated {
+                    print("onEvent: Step \(event.idDocSetType) has been initiated")
+                }
+
+            case .stepCompleted:
+                if let event = event as? SNSEventStepCompleted {
+                    print("onEvent: Step \(event.idDocSetType) has been \(event.isCancelled ? "cancelled" : "fulfilled")")
+
+                }
+
+            case .analytics:
+                if let event = event as? SNSEventAnalytics {
+                    print("onEvent: Analytics event [\(event.eventName)] has occured with payload=\(event.eventPayload ?? [:])")
+                }
+
+            @unknown default:
+                print("onEvent: eventType=\(event.description(for: event.eventType)) payload=\(event.payload)")
+            }
+
         }
 
         self.present(sdk.mainVC, animated: true, completion: nil)
@@ -775,23 +931,43 @@ class IdentificationDocsViewController: UIViewController {
                     mostRecentIdentityDocument = identityFileInfo
                 }
 
+                if let totalRetries = identityFileInfo.totalRetries {
+                    self.totalIdentificationTriesCount = totalRetries
+                }
             }
+
         }
 
         if let currentDocument = mostRecentIdentityDocument {
 
             if let canRetry = currentDocument.retry {
                 self.canAddIdentificationDocs = canRetry
+
+                if !canRetry && currentDocument.status == .approved {
+                    self.isProofOfAddressDisabled = false
+                }
+                else {
+                    self.isProofOfAddressDisabled = true
+                }
             }
             else {
-                if currentDocument.status == .approved || currentDocument.status == .pendingApproved {
+                if currentDocument.status == .approved {
                     self.canAddIdentificationDocs = false
+                    self.isProofOfAddressDisabled = false
+                }
+                else if currentDocument.status == .pendingApproved {
+                    self.canAddIdentificationDocs = false
+                    self.isProofOfAddressDisabled = true
                 }
                 else {
                     self.canAddIdentificationDocs = true
+                    self.isProofOfAddressDisabled = true
                 }
             }
 
+        }
+        else {
+            self.isProofOfAddressDisabled = true
         }
 
         if let proofAddressFilesInfo = self.viewModel.proofAddressDocuments.first?.uploadedFiles {
@@ -819,6 +995,10 @@ class IdentificationDocsViewController: UIViewController {
                 }
                 else {
                     mostRecentProofDocument = proofFileInfo
+                }
+
+                if let totalRetries = proofFileInfo.totalRetries {
+                    self.totalProofAddressTriesCount = totalRetries
                 }
             }
 
@@ -934,6 +1114,12 @@ extension IdentificationDocsViewController {
     }
 
     private static func createProofAddressBaseView() -> UIView {
+        let view = UIView()
+        view.translatesAutoresizingMaskIntoConstraints = false
+        return view
+    }
+
+    private static func createProofAddressDisabledView() -> UIView {
         let view = UIView()
         view.translatesAutoresizingMaskIntoConstraints = false
         return view
@@ -1086,6 +1272,8 @@ extension IdentificationDocsViewController {
         self.proofAddDocView.addSubview(self.proofAddDocTitleLabel)
         self.proofAddDocView.addSubview(self.proofAddDocIconImageView)
 
+        self.proofAddressBaseView.addSubview(self.proofAddressDisabledView)
+
         self.view.addSubview(self.loadingBaseView)
 
         self.loadingBaseView.addSubview(self.activityIndicatorView)
@@ -1153,6 +1341,11 @@ extension IdentificationDocsViewController {
             self.proofAddressBaseView.trailingAnchor.constraint(equalTo: self.contentBaseView.trailingAnchor, constant: -14),
             self.proofAddressBaseView.topAnchor.constraint(equalTo: self.identificationBaseView.bottomAnchor, constant: 20),
             self.proofAddressBaseView.bottomAnchor.constraint(equalTo: self.contentBaseView.bottomAnchor, constant: -20),
+
+            self.proofAddressDisabledView.leadingAnchor.constraint(equalTo: self.proofAddressBaseView.leadingAnchor),
+            self.proofAddressDisabledView.trailingAnchor.constraint(equalTo: self.proofAddressBaseView.trailingAnchor),
+            self.proofAddressDisabledView.topAnchor.constraint(equalTo: self.proofAddressBaseView.topAnchor),
+            self.proofAddressDisabledView.bottomAnchor.constraint(equalTo: self.proofAddressBaseView.bottomAnchor),
 
             self.proofAddressTopStackView.leadingAnchor.constraint(equalTo: self.proofAddressBaseView.leadingAnchor, constant: 14),
             self.proofAddressTopStackView.trailingAnchor.constraint(equalTo: self.proofAddressBaseView.trailingAnchor, constant: -14),

@@ -316,7 +316,7 @@ extension DocumentsRootViewController: UICollectionViewDelegate, UICollectionVie
             cell.setupInfo(title: localized("identification_docs"))
         case 1:
             if let kycStatus = self.viewModel.kycStatus {
-                if kycStatus == .request || kycStatus == .passConditional {
+                if kycStatus != .pass || kycStatus != .passConditional {
                     cell.setupInfo(title: localized("rib"), iconName: "lock_icon")
                 }
                 else {
@@ -328,7 +328,17 @@ extension DocumentsRootViewController: UICollectionViewDelegate, UICollectionVie
                 cell.setupInfo(title: localized("rib"))
             }
         case 2:
-            cell.setupInfo(title: localized("extra_docs"))
+            if let kycStatus = self.viewModel.kycStatus {
+                if kycStatus != .pass || kycStatus != .passConditional {
+                    cell.setupInfo(title: localized("extra_docs"), iconName: "lock_icon")
+                }
+                else {
+                    cell.setupInfo(title: localized("extra_docs"))
+                }
+            }
+            else {
+                cell.setupInfo(title: localized("extra_docs"))
+            }
         default:
             ()
         }

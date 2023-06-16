@@ -1373,6 +1373,7 @@
 "rib_number" = "Numéro du RIB";
 "rib_document" = "RIB Document";
 "locked_rib_message" = "Vos documents d'identité doivent être valides pour que vous puissiez ajouter votre RiB.";
+"locked_extra_docs_message" = "Vos documents d'identification doivent être valides avant que vous puissiez ajouter des documents supplémentaires.";
 "additional_documents" = "Documents complémentaires";
 
 "choose_type_identification" = "Choisir le type d'identification";

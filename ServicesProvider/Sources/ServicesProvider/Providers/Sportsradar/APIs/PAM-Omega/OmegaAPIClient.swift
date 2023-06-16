@@ -118,6 +118,8 @@ enum OmegaAPIClient {
     case getDocumentTypes
     case getUserDocuments
     case uploadUserDocument(documentType: String, file: Data, body: Data, header: String)
+    case uploadMultipleUserDocuments(documentType: String,
+                                     files: [String: Data], body: Data, header: String)
 
     case getPayments
     case processDeposit(paymentMethod: String, amount: Double, option: String)
@@ -213,6 +215,8 @@ extension OmegaAPIClient: Endpoint {
             return "/ps/ips/getUserDocuments"
         case .uploadUserDocument:
             return "/ps/ips/uploadUserDocument"
+        case .uploadMultipleUserDocuments:
+            return "/ps/ips/uploadMultiUserDocument"
 
         case .getPayments:
             return "/ps/ips/getDepositMethods"
@@ -531,6 +535,8 @@ extension OmegaAPIClient: Endpoint {
             return nil
         case .uploadUserDocument:
             return nil
+        case .uploadMultipleUserDocuments:
+            return nil
 
         case .getPayments:
 
@@ -725,6 +731,7 @@ extension OmegaAPIClient: Endpoint {
         case .getDocumentTypes: return .get
         case .getUserDocuments: return .get
         case .uploadUserDocument: return .post
+        case .uploadMultipleUserDocuments: return .post
 
         case .getPayments: return .get
         case .processDeposit: return .post
@@ -771,6 +778,8 @@ extension OmegaAPIClient: Endpoint {
 //                        }
 //                        """
 //            return bodyString.data(using: String.Encoding.utf8) ?? Data()
+        case .uploadMultipleUserDocuments( _, _, let body, _):
+            return body
         case .contactSupport(let userIdentifier, let subject, let message):
             let bodyString =
             """
@@ -836,6 +845,7 @@ extension OmegaAPIClient: Endpoint {
         case .getDocumentTypes: return false
         case .getUserDocuments: return true
         case .uploadUserDocument: return true
+        case .uploadMultipleUserDocuments: return true
 
         case .getPayments: return true
         case .processDeposit: return true
@@ -887,6 +897,11 @@ extension OmegaAPIClient: Endpoint {
     var headers: HTTP.Headers? {
         switch self {
         case .uploadUserDocument( _, _, _, let header):
+            let customHeaders = [
+                "Content-Type": header
+            ]
+            return customHeaders
+        case .uploadMultipleUserDocuments( _, _, _, let header):
             let customHeaders = [
                 "Content-Type": header
             ]

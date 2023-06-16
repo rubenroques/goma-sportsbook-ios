@@ -76,6 +76,8 @@ class RibDocsViewModel {
 
     private func getUserDocuments() {
 
+        self.isLoadingPublisher.send(true)
+
         self.hasDocumentsProcessed.send(false)
 
         Env.servicesProvider.getUserDocuments()
@@ -120,7 +122,7 @@ class RibDocsViewModel {
                     let uploadDate = self.dateFormatter.date(from: userDocument.uploadDate)
 
                     return DocumentFileInfo(id: userDocument.documentType,
-                                            name: userDocument.fileName,
+                                            name: userDocument.fileName ?? "",
                                             status: userDocumentStatus ?? .pendingApproved,
                                             uploadDate: uploadDate ?? Date(),
                                             documentTypeGroup: mappedDocumentTypeGroup)
@@ -172,7 +174,7 @@ class RibDocsViewModel {
                     let uploadDate = self.dateFormatter.date(from: userDocument.uploadDate)
 
                     return DocumentFileInfo(id: userDocument.documentType,
-                                            name: userDocument.fileName,
+                                            name: userDocument.fileName ?? "",
                                             status: userDocumentStatus ?? .pendingApproved,
                                             uploadDate: uploadDate ?? Date(),
                                             documentTypeGroup: .none)
@@ -221,6 +223,11 @@ class RibDocsViewModel {
         self.shouldReloadData?()
     }
 
+    func refreshDocuments() {
+        self.documents = []
+        self.getUserDocuments()
+    }
+
 }
 class RibDocsViewController: UIViewController {
     private lazy var containerView: UIView = Self.createContainerView()
@@ -232,10 +239,6 @@ class RibDocsViewController: UIViewController {
     private lazy var lockTitleLabel: UILabel = Self.createLockTitleLabel()
     private lazy var lockContainerView: UIView = Self.createLockContainerView()
     private lazy var lockIconImageView: UIImageView = Self.createLockIconImageView()
-
-//    private lazy var ribNumberBaseView: UIView = Self.createRibNumberBaseView()
-//    private lazy var ribNumberLabel: UILabel = Self.createRibNumberLabel()
-//    private lazy var ribNumberHeaderTextFieldView: HeaderTextFieldView = Self.createRibNumberHeaderTextFieldView()
 
     private lazy var ribDocumentBaseView: UIView = Self.createRibDocumentBaseView()
     private lazy var ribDocumentTitleLabel: UILabel = Self.createRibDocumentTitleLabel()
@@ -299,9 +302,6 @@ class RibDocsViewController: UIViewController {
         self.setupSubviews()
         self.setupWithTheme()
 
-//        self.ribNumberHeaderTextFieldView.setPlaceholderText(localized("rib_number"))
-//        self.ribNumberHeaderTextFieldView.setKeyboardType(.decimalPad)
-
         self.bind(toViewModel: self.viewModel)
 
         self.isLocked = false
@@ -309,16 +309,11 @@ class RibDocsViewController: UIViewController {
         let ribAddDocTap = UITapGestureRecognizer(target: self, action: #selector(self.didTapRibAddDoc))
         self.ribAddDocBaseView.addGestureRecognizer(ribAddDocTap)
 
-        let tapBackgroundGestureRecognizer = UITapGestureRecognizer.init(target: self, action: #selector(didTapBackground))
-        self.contentBaseView.addGestureRecognizer(tapBackgroundGestureRecognizer)
-
         self.canAddRibDocs = true
     }
 
     override func viewDidLayoutSubviews() {
         super.viewDidLayoutSubviews()
-
-//        self.ribNumberBaseView.layer.cornerRadius = CornerRadius.card
 
         self.ribDocumentBaseView.layer.cornerRadius = CornerRadius.card
 
@@ -348,14 +343,6 @@ class RibDocsViewController: UIViewController {
         self.lockContainerView.backgroundColor = UIColor.App.backgroundPrimary.withAlphaComponent(0.7)
 
         self.lockIconImageView.backgroundColor = .clear
-
-//        self.ribNumberBaseView.backgroundColor = UIColor.App.backgroundSecondary
-//
-//        self.ribNumberLabel.textColor = UIColor.App.textPrimary
-//
-//        self.ribNumberHeaderTextFieldView.setViewColor(UIColor.App.inputBackground)
-//        self.ribNumberHeaderTextFieldView.setHeaderLabelColor(UIColor.App.inputTextTitle)
-//        self.ribNumberHeaderTextFieldView.setTextFieldColor(UIColor.App.inputText)
 
         self.ribDocumentBaseView.backgroundColor = UIColor.App.backgroundSecondary
 
@@ -468,14 +455,11 @@ class RibDocsViewController: UIViewController {
 
         let manualUploadDocViewController = ManualUploadDocumentsViewController(viewModel: manualUploadDocViewModel)
 
+        manualUploadDocViewController.shouldRefreshDocuments = { [weak self] in
+            self?.viewModel.refreshDocuments()
+        }
+
         self.navigationController?.pushViewController(manualUploadDocViewController, animated: true)
-    }
-
-    @objc func didTapBackground() {
-        self.resignFirstResponder()
-
-//        self.ribNumberHeaderTextFieldView.resignFirstResponder()
-
     }
 
 }
@@ -537,29 +521,6 @@ extension RibDocsViewController {
         imageView.contentMode = .scaleAspectFit
         imageView.image = UIImage(named: "lock_blue_icon")
         return imageView
-    }
-
-    private static func createRibNumberBaseView() -> UIView {
-        let view = UIView()
-        view.translatesAutoresizingMaskIntoConstraints = false
-        return view
-    }
-
-    private static func createRibNumberLabel() -> UILabel {
-        let label = UILabel()
-        label.translatesAutoresizingMaskIntoConstraints = false
-        label.text = localized("rib_number")
-        label.font = AppFont.with(type: .bold, size: 16)
-        label.textAlignment = .left
-        return label
-    }
-
-    private static func createRibNumberHeaderTextFieldView() -> HeaderTextFieldView {
-        let headerTextFieldView = HeaderTextFieldView()
-        headerTextFieldView.setTextFieldFont(AppFont.with(type: .semibold, size: 16))
-        headerTextFieldView.setHeaderLabelFont(AppFont.with(type: .semibold, size: 16))
-        headerTextFieldView.translatesAutoresizingMaskIntoConstraints = false
-        return headerTextFieldView
     }
 
     private static func createRibDocumentBaseView() -> UIView {
@@ -754,7 +715,7 @@ extension RibDocsViewController {
             self.activityIndicatorView.centerYAnchor.constraint(equalTo: self.loadingBaseView.centerYAnchor)
         ])
 
-        //Lock View
+        // Lock View
         NSLayoutConstraint.activate([
             self.lockContainerView.leadingAnchor.constraint(equalTo: self.contentBaseView.leadingAnchor),
             self.lockContainerView.trailingAnchor.constraint(equalTo: self.contentBaseView.trailingAnchor),

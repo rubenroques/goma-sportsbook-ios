@@ -22,19 +22,22 @@ struct DocumentFileInfo {
     var uploadDate: Date?
     var retry: Bool?
     var documentTypeGroup: DocumentTypeGroup
+    var totalRetries: Int?
 
     init(id: String,
          name: String,
          status: FileState,
          uploadDate: Date? = nil,
          retry: Bool? = true,
-         documentTypeGroup: DocumentTypeGroup) {
+         documentTypeGroup: DocumentTypeGroup,
+         totalRetries: Int? = nil) {
         self.id = id
         self.name = name
         self.status = status
         self.uploadDate = uploadDate
         self.retry = retry
         self.documentTypeGroup = documentTypeGroup
+        self.totalRetries = totalRetries
     }
 }
 

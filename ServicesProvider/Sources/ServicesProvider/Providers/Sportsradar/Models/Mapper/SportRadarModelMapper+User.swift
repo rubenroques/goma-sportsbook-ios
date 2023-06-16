@@ -159,7 +159,27 @@ extension SportRadarModelMapper {
 
     static func userDocument(fromUserDocument internalUserDocument: SportRadarModels.UserDocument) -> UserDocument {
 
+        if let userDocumentFiles = internalUserDocument.userDocumentFiles {
+
+            let mappedUserDocumentFiles = userDocumentFiles.map({ userDocumentFile -> UserDocumentFile in
+
+                let userDocumentFile = Self.userDocumentFile(fromUserDocumentFile: userDocumentFile)
+
+                return userDocumentFile
+
+            })
+
+            return UserDocument(documentType: internalUserDocument.documentType, fileName: internalUserDocument.fileName, status: internalUserDocument.status, uploadDate: internalUserDocument.uploadDate,
+            userDocumentFiles: mappedUserDocumentFiles)
+
+        }
+
         return UserDocument(documentType: internalUserDocument.documentType, fileName: internalUserDocument.fileName, status: internalUserDocument.status, uploadDate: internalUserDocument.uploadDate)
+    }
+
+    static func userDocumentFile(fromUserDocumentFile internalUserDocumentFile: SportRadarModels.UserDocumentFile) -> UserDocumentFile {
+
+        return UserDocumentFile(fileName: internalUserDocumentFile.fileName)
     }
 
     static func uploadDocumentResponse(fromUploadDocumentResponse internalUploadDocumentResponse: SportRadarModels.UploadDocumentResponse) -> UploadDocumentResponse {

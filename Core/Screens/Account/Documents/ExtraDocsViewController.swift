@@ -22,6 +22,8 @@ class ExtraDocsViewModel {
     var hasLoadedUserDocuments: CurrentValueSubject<Bool, Never> = .init(false)
     var hasDocumentsProcessed: CurrentValueSubject<Bool, Never> = .init(false)
 
+    var isLocked: CurrentValueSubject<Bool, Never> = .init(false)
+
     var kycStatusPublisher: AnyPublisher<KnowYourCustomerStatus?, Never> {
         return Env.userSessionStore.userKnowYourCustomerStatusPublisher.eraseToAnyPublisher()
     }
@@ -119,7 +121,7 @@ class ExtraDocsViewModel {
                     let uploadDate = self.dateFormatter.date(from: userDocument.uploadDate)
 
                     return DocumentFileInfo(id: userDocument.documentType,
-                                            name: userDocument.fileName,
+                                            name: userDocument.fileName ?? "",
                                             status: userDocumentStatus ?? .pendingApproved,
                                             uploadDate: uploadDate ?? Date(),
                                             documentTypeGroup: mappedDocumentTypeGroup)
@@ -171,7 +173,7 @@ class ExtraDocsViewModel {
                     let uploadDate = self.dateFormatter.date(from: userDocument.uploadDate)
 
                     return DocumentFileInfo(id: userDocument.documentType,
-                                            name: userDocument.fileName,
+                                            name: userDocument.fileName ?? "",
                                             status: userDocumentStatus ?? .pendingApproved,
                                             uploadDate: uploadDate ?? Date(),
                                             documentTypeGroup: .none)
@@ -221,6 +223,7 @@ class ExtraDocsViewModel {
     }
 
     func refreshDocuments() {
+        self.documents = []
         self.getUserDocuments()
     }
 }
@@ -230,6 +233,12 @@ class ExtraDocsViewController: UIViewController {
     private lazy var containerView: UIView = Self.createContainerView()
     private lazy var scrollView: UIScrollView = Self.createScrollView()
     private lazy var contentBaseView: UIView = Self.createContentBaseView()
+
+    private lazy var topStackView: UIStackView = Self.createTopStackView()
+    private lazy var lockTitleBaseView: UIView = Self.createLockTitleBaseView()
+    private lazy var lockTitleLabel: UILabel = Self.createLockTitleLabel()
+    private lazy var lockContainerView: UIView = Self.createLockContainerView()
+    private lazy var lockIconImageView: UIImageView = Self.createLockIconImageView()
 
     private lazy var extraDocumentBaseView: UIView = Self.createExtraDocumentBaseView()
     private lazy var extraDocumentTitleLabel: UILabel = Self.createExtraDocumentTitleLabel()
@@ -252,6 +261,13 @@ class ExtraDocsViewController: UIViewController {
     var isLoading: Bool = false {
         didSet {
             self.loadingBaseView.isHidden = !isLoading
+        }
+    }
+
+    var isLocked: Bool = false {
+        didSet {
+            self.lockTitleBaseView.isHidden = !isLocked
+            self.lockContainerView.isHidden = !isLocked
         }
     }
 
@@ -288,6 +304,8 @@ class ExtraDocsViewController: UIViewController {
 
         self.bind(toViewModel: self.viewModel)
 
+        self.isLocked = false
+
         let extraAddDocTap = UITapGestureRecognizer(target: self, action: #selector(self.didTapExtraAddDoc))
         self.extraAddDocBaseView.addGestureRecognizer(extraAddDocTap)
 
@@ -316,6 +334,16 @@ class ExtraDocsViewController: UIViewController {
         self.scrollView.backgroundColor = .clear
 
         self.contentBaseView.backgroundColor = .clear
+
+        self.topStackView.backgroundColor = .clear
+
+        self.lockTitleBaseView.backgroundColor = .clear
+
+        self.lockTitleLabel.textColor = UIColor.App.textSecondary
+
+        self.lockContainerView.backgroundColor = UIColor.App.backgroundPrimary.withAlphaComponent(0.7)
+
+        self.lockIconImageView.backgroundColor = .clear
 
         self.extraDocumentBaseView.backgroundColor = UIColor.App.backgroundSecondary
 
@@ -351,12 +379,12 @@ class ExtraDocsViewController: UIViewController {
         viewModel.kycStatusPublisher
             .receive(on: DispatchQueue.main)
             .sink(receiveValue: { [weak self] kycStatus in
-//                switch kycStatus {
-//                case .request:
-//                    self?.isLocked = true
-//                default:
-//                    self?.isLocked = false
-//                }
+                switch kycStatus {
+                case .request:
+                    self?.isLocked = true
+                default:
+                    self?.isLocked = false
+                }
             })
             .store(in: &cancellables)
 
@@ -455,6 +483,45 @@ extension ExtraDocsViewController {
         return view
     }
 
+    private static func createTopStackView() -> UIStackView {
+        let stackView = UIStackView()
+        stackView.translatesAutoresizingMaskIntoConstraints = false
+        stackView.axis = .vertical
+        stackView.distribution = .equalSpacing
+        stackView.spacing = 20
+        return stackView
+    }
+
+    private static func createLockTitleBaseView() -> UIView {
+        let view = UIView()
+        view.translatesAutoresizingMaskIntoConstraints = false
+        return view
+    }
+
+    private static func createLockTitleLabel() -> UILabel {
+        let label = UILabel()
+        label.translatesAutoresizingMaskIntoConstraints = false
+        label.text = localized("locked_extra_docs_message")
+        label.font = AppFont.with(type: .bold, size: 14)
+        label.textAlignment = .center
+        label.numberOfLines = 0
+        return label
+    }
+
+    private static func createLockContainerView() -> UIView {
+        let view = UIView()
+        view.translatesAutoresizingMaskIntoConstraints = false
+        return view
+    }
+
+    private static func createLockIconImageView() -> UIImageView {
+        let imageView = UIImageView()
+        imageView.translatesAutoresizingMaskIntoConstraints = false
+        imageView.contentMode = .scaleAspectFit
+        imageView.image = UIImage(named: "lock_blue_icon")
+        return imageView
+    }
+
     private static func createExtraDocumentBaseView() -> UIView {
         let view = UIView()
         view.translatesAutoresizingMaskIntoConstraints = false
@@ -540,6 +607,12 @@ extension ExtraDocsViewController {
 
         self.scrollView.addSubview(self.contentBaseView)
 
+        self.contentBaseView.addSubview(self.topStackView)
+
+        self.topStackView.addArrangedSubview(self.lockTitleBaseView)
+
+        self.lockTitleBaseView.addSubview(self.lockTitleLabel)
+
         self.contentBaseView.addSubview(self.extraDocumentBaseView)
 
         self.extraDocumentBaseView.addSubview(self.extraDocumentTitleLabel)
@@ -551,6 +624,10 @@ extension ExtraDocsViewController {
 
         self.extraAddDocView.addSubview(self.extraAddDocTitleLabel)
         self.extraAddDocView.addSubview(self.extraAddDocIconImageView)
+
+        self.contentBaseView.addSubview(self.lockContainerView)
+
+        self.lockContainerView.addSubview(self.lockIconImageView)
 
         self.view.addSubview(self.loadingBaseView)
 
@@ -579,11 +656,24 @@ extension ExtraDocsViewController {
             self.contentBaseView.widthAnchor.constraint(equalTo: self.scrollView.frameLayoutGuide.widthAnchor)
         ])
 
+        // Top stackview
+        NSLayoutConstraint.activate([
+            self.topStackView.leadingAnchor.constraint(equalTo: self.contentBaseView.leadingAnchor, constant: 14),
+            self.topStackView.trailingAnchor.constraint(equalTo: self.contentBaseView.trailingAnchor, constant: -14),
+            self.topStackView.topAnchor.constraint(equalTo: self.contentBaseView.topAnchor, constant: 12),
+
+            self.lockTitleLabel.leadingAnchor.constraint(equalTo: self.lockTitleBaseView.leadingAnchor, constant: 52),
+            self.lockTitleLabel.trailingAnchor.constraint(equalTo: self.lockTitleBaseView.trailingAnchor, constant: -52),
+            self.lockTitleLabel.topAnchor.constraint(equalTo: self.lockTitleBaseView.topAnchor, constant: 8),
+            self.lockTitleLabel.bottomAnchor.constraint(equalTo: self.lockTitleBaseView.bottomAnchor, constant: -8),
+
+        ])
+
         // Extra Document View
         NSLayoutConstraint.activate([
             self.extraDocumentBaseView.leadingAnchor.constraint(equalTo: self.contentBaseView.leadingAnchor, constant: 14),
             self.extraDocumentBaseView.trailingAnchor.constraint(equalTo: self.contentBaseView.trailingAnchor, constant: -14),
-            self.extraDocumentBaseView.topAnchor.constraint(equalTo: self.contentBaseView.topAnchor, constant: 20),
+            self.extraDocumentBaseView.topAnchor.constraint(equalTo: self.topStackView.bottomAnchor, constant: 23),
             self.extraDocumentBaseView.bottomAnchor.constraint(equalTo: self.contentBaseView.bottomAnchor, constant: -20),
 
             self.extraDocumentTitleLabel.leadingAnchor.constraint(equalTo: self.extraDocumentBaseView.leadingAnchor, constant: 14),
@@ -611,6 +701,19 @@ extension ExtraDocsViewController {
             self.extraAddDocIconImageView.widthAnchor.constraint(equalToConstant: 24),
             self.extraAddDocIconImageView.heightAnchor.constraint(equalTo: self.extraAddDocIconImageView.widthAnchor),
             self.extraAddDocIconImageView.centerYAnchor.constraint(equalTo: self.extraAddDocTitleLabel.centerYAnchor)
+        ])
+
+        // Lock View
+        NSLayoutConstraint.activate([
+            self.lockContainerView.leadingAnchor.constraint(equalTo: self.contentBaseView.leadingAnchor),
+            self.lockContainerView.trailingAnchor.constraint(equalTo: self.contentBaseView.trailingAnchor),
+            self.lockContainerView.topAnchor.constraint(equalTo: self.topStackView.topAnchor),
+            self.lockContainerView.bottomAnchor.constraint(equalTo: self.contentBaseView.bottomAnchor),
+
+            self.lockIconImageView.widthAnchor.constraint(equalToConstant: 83),
+            self.lockIconImageView.heightAnchor.constraint(equalTo: self.lockIconImageView.widthAnchor),
+            self.lockIconImageView.topAnchor.constraint(equalTo: self.lockContainerView.topAnchor, constant: 84),
+            self.lockIconImageView.centerXAnchor.constraint(equalTo: self.lockContainerView.centerXAnchor)
         ])
 
         // Loading Screen
