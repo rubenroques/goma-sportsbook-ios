@@ -1372,11 +1372,11 @@
 "add_documents" = "Add documents";
 "rib_number" = "Numéro du RIB";
 "rib_document" = "RIB Document";
-"locked_rib_message" = "Vos documents d'identité doivent être valides pour que vous puissiez ajouter votre RiB.";
-"locked_extra_docs_message" = "Vos documents d'identification doivent être valides avant que vous puissiez ajouter des documents supplémentaires.";
+"docs_need_validation_before_rib" = "Vos documents d'identité doivent être valides pour que vous puissiez ajouter votre RiB";
+"docs_need_validation_before_others" = "Vos documents d'identification doivent être valides avant que vous puissiez ajouter d'autres documents";
 "additional_documents" = "Documents complémentaires";
 
-"choose_type_identification" = "Choisir le type d'identification";
+"choose_type_of_identification" = "Choisir le type d'identification";
 
 "identity_card" = "Carte d'identité";
 "residence_id" = "ID de résidence";
@@ -1385,11 +1385,11 @@
 "utility_bill" = "Facture de services publics";
 
 "upload_information" = "Télécharger les informations";
-"upload_document_info_rule" = "Télécharger le recto et le verso du document";
-"upload_solo_document_info_rule" = "Télécharger le recto du document";
-"upload_corner_info_rule" = "Les 4 coins doivent apparaître";
-"upload_type_info_rule" = "Types de fichiers autorisés: png, jpg, pdf";
-"upload_size_info_rule" = "Taille max. : 10MB";
+"upload_front_and_back" = "Télécharger le recto et le verso du document";
+"upload_front_document" = "Télécharger le recto du document";
+"all_four_corners" = "Les 4 coins doivent apparaître";
+"allowed_file_types" = "Types de fichiers autorisés: {allowedFileTypes}";
+"max_size" = "Taille max. :";
 "rejected" = "Rejeté";
 "incomplete" = "Incomplet";
 "upload_complete_message" = "Vos documents ont été téléchargés avec succès!";
@@ -1401,3 +1401,8 @@
 
 "identity_docs_approved_title" = "Vos documents d'identité ont été approuvés!";
 "identity_docs_approved_text" = "Pour passer à l'étape suivante, vous devez télécharger votre document de preuve d'adresse.";
+
+"progress_not_saved" = "Votre progression ne sera pas sauvegardée.";
+"havent_send_documents" = "Vous n'avez toujours pas envoyé vos documents.";
+"stay_here" = "Restez ici";
+"yes_go_back" = "Oui, retournez-y";

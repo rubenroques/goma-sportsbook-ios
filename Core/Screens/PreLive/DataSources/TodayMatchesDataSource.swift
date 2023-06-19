@@ -110,8 +110,13 @@ class TodayMatchesDataSource: NSObject, UITableViewDataSource, UITableViewDelega
     }
 
     func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
-
-        if self.todayMatches.isEmpty {
+        if section == 0 && self.outrightCompetitions != nil && self.todayMatches.isNotEmpty {
+            return nil
+        }
+        else if section == 0 && self.outrightCompetitions != nil && self.todayMatches.isEmpty {
+            ()
+        }
+        else if self.todayMatches.isEmpty {
             return nil
         }
 
@@ -132,6 +137,9 @@ class TodayMatchesDataSource: NSObject, UITableViewDataSource, UITableViewDelega
     }
 
     func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
+        if section == 0 && self.outrightCompetitions != nil && self.todayMatches.isEmpty {
+            return 54
+        }
 
         if self.todayMatches.isEmpty {
             return .leastNonzeroMagnitude
@@ -144,6 +152,9 @@ class TodayMatchesDataSource: NSObject, UITableViewDataSource, UITableViewDelega
     }
 
     func tableView(_ tableView: UITableView, estimatedHeightForHeaderInSection section: Int) -> CGFloat {
+        if section == 0 && self.outrightCompetitions != nil && self.todayMatches.isEmpty {
+            return 54
+        }
 
         if self.todayMatches.isEmpty {
             return .leastNonzeroMagnitude

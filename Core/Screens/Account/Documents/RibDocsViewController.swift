@@ -516,7 +516,7 @@ extension RibDocsViewController {
     private static func createLockTitleLabel() -> UILabel {
         let label = UILabel()
         label.translatesAutoresizingMaskIntoConstraints = false
-        label.text = localized("locked_rib_message")
+        label.text = localized("docs_need_validation_before_rib")
         label.font = AppFont.with(type: .bold, size: 14)
         label.textAlignment = .center
         label.numberOfLines = 0

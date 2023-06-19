@@ -515,7 +515,7 @@ extension ExtraDocsViewController {
     private static func createLockTitleLabel() -> UILabel {
         let label = UILabel()
         label.translatesAutoresizingMaskIntoConstraints = false
-        label.text = localized("locked_extra_docs_message")
+        label.text = localized("docs_need_validation_before_others")
         label.font = AppFont.with(type: .bold, size: 14)
         label.textAlignment = .center
         label.numberOfLines = 0

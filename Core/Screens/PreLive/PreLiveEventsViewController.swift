@@ -66,12 +66,12 @@ class PreLiveEventsViewController: UIViewController {
                 return
             }
 
-            if let sportIconImage = UIImage(named: "sport_type_mono_icon_\( selectedSport.id)") {
+            if let sportIconImage = UIImage(named: "sport_type_icon_\( selectedSport.id)") {
                 self.sportTypeIconImageView.image = sportIconImage
                 self.sportTypeIconImageView.setImageColor(color: UIColor.App.textPrimary)
             }
             else {
-                self.sportTypeIconImageView.image = UIImage(named: "sport_type_mono_icon_default")
+                self.sportTypeIconImageView.image = UIImage(named: "sport_type_icon_default")
                 self.sportTypeIconImageView.setImageColor(color: UIColor.App.textPrimary)
             }
 

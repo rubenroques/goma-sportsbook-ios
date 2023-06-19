@@ -298,9 +298,9 @@ enum KnowYourCustomerStatus: String, Codable {
 
     var statusName: String {
         switch self {
-        case .request: return localized("requested_kyc")
-        case .passConditional: return localized("pass_conditional_kyc")
-        case .pass: return localized("pass_kyc")
+        case .request: return localized("pending")
+        case .passConditional: return localized("validated")
+        case .pass: return localized("validated")
 
         }
     }

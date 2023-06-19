@@ -1,7 +1,7 @@
 {
   "images" : [
     {
-      "filename" : "sport_type_icon_24.png",
+      "filename" : "24 horseRiding Copy 2.png",
       "idiom" : "universal",
       "scale" : "1x"
     },
@@ -12,12 +12,12 @@
           "value" : "dark"
         }
       ],
-      "filename" : "sport_type_icon_24-1.png",
+      "filename" : "24 horseRiding Copy 3.png",
       "idiom" : "universal",
       "scale" : "1x"
     },
     {
-      "filename" : "sport_type_icon_24@2x.png",
+      "filename" : "24 horseRiding Copy 2@2x.png",
       "idiom" : "universal",
       "scale" : "2x"
     },
@@ -28,12 +28,12 @@
           "value" : "dark"
         }
       ],
-      "filename" : "sport_type_icon_24@2x-1.png",
+      "filename" : "24 horseRiding Copy 3@2x.png",
       "idiom" : "universal",
       "scale" : "2x"
     },
     {
-      "filename" : "sport_type_icon_24@3x.png",
+      "filename" : "24 horseRiding Copy 2@3x.png",
       "idiom" : "universal",
       "scale" : "3x"
     },
@@ -44,7 +44,7 @@
           "value" : "dark"
         }
       ],
-      "filename" : "sport_type_icon_24@3x-1.png",
+      "filename" : "24 horseRiding Copy 3@3x.png",
       "idiom" : "universal",
       "scale" : "3x"
     }

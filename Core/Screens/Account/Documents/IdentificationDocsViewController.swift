@@ -897,6 +897,9 @@ class IdentificationDocsViewController: UIViewController {
                 if let event = event as? SNSEventStepCompleted {
                     print("onEvent: Step \(event.idDocSetType) has been \(event.isCancelled ? "cancelled" : "fulfilled")")
 
+                    sdk.mainVC.dismiss(animated: true)
+                    self.showContinueProcessAlert()
+
                 }
 
             case .analytics:

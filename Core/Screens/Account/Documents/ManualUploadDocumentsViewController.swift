@@ -797,7 +797,24 @@ class ManualUploadDocumentsViewController: UIViewController {
 
     // MARK: Actions
     @objc private func didTapBackButton() {
-        self.navigationController?.popViewController(animated: true)
+
+        if self.canSendDocuments == false {
+            self.navigationController?.popViewController(animated: true)
+        }
+        else {
+            let alert = UIAlertController(title: localized("progress_not_saved"),
+                                          message: localized("havent_send_documents"),
+                                          preferredStyle: .alert)
+            
+            alert.addAction(UIAlertAction(title: localized("stay_here"), style: .cancel, handler: nil ))
+
+            alert.addAction(UIAlertAction(title: localized("yes_go_back"), style: .default, handler: { [weak self] _ in
+
+                self?.navigationController?.popViewController(animated: true)
+            }))
+
+            self.present(alert, animated: true, completion: nil)
+        }
     }
 
     @objc private func didTapSendButton() {
@@ -999,7 +1016,7 @@ extension ManualUploadDocumentsViewController {
     private static func createDocumentTypeTitleLabel() -> UILabel {
         let label = UILabel()
         label.translatesAutoresizingMaskIntoConstraints = false
-        label.text = localized("choose_type_identification")
+        label.text = localized("choose_type_of_identification")
         label.font = AppFont.with(type: .bold, size: 16)
         label.textAlignment = .center
         label.numberOfLines = 0

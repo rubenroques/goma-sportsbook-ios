@@ -1311,11 +1311,11 @@
 "add_documents" = "Add documents";
 "rib_number" = "RIB Number";
 "rib_document" = "RIB Document";
-"locked_rib_message" = "Your identification documents need to be valid before you can add your RiB";
-"locked_extra_docs_message" = "Your identification documents need to be valid before you can add your extra documents";
+"docs_need_validation_before_rib" = "Your identification documents need to be valid before you can add your RiB";
+"docs_need_validation_before_others" = "Your identification documents need to be valid before you can add other documents";
 "additional_documents" = "Additional documents";
 
-"choose_type_identification" = "Choose what type of identification";
+"choose_type_of_identification" = "Choose what type of identification";
 
 "identity_card" = "Identity Card";
 "residence_id" = "Residence ID";
@@ -1324,11 +1324,11 @@
 "utility_bill" = "Utility Bill";
 
 "upload_information" = "Upload information";
-"upload_document_info_rule" = "Upload the front and back of the document";
-"upload_solo_document_info_rule" = "Upload the front of the document";
-"upload_corner_info_rule" = "All 4 corners should appear";
-"upload_type_info_rule" = "Allowed file types: png, jpg, pdf";
-"upload_size_info_rule" = "Max. size: 10MB";
+"upload_front_and_back" = "Upload the front and back of the document";
+"upload_front_document" = "Upload the front of the document";
+"all_four_corners" = "All 4 corners should appear";
+"allowed_file_types" = "Allowed file types: {allowedFileTypes}}";
+"max_size" = "Max. size:";
 "rejected" = "Rejected";
 "incomplete" = "Incomplete";
 "upload_complete_message" = "Your document(s) were uploaded successfully!";
@@ -1336,3 +1336,8 @@
 
 "identity_docs_approved_title" = "Your Identity documents have been approved!";
 "identity_docs_approved_text" = "In order to continue to the next step, you must upload your Proof of Address document.";
+
+"progress_not_saved" = "Your progress will not be saved.";
+"havent_send_documents" = "You still haven’t sent your documents.";
+"stay_here" = "Stay here";
+"yes_go_back" = "Yes, go back";
