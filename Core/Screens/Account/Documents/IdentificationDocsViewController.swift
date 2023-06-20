@@ -260,19 +260,25 @@ class IdentificationDocsViewModel {
                         }
                     }
                     else {
-                        if let reviewResult = applicantDataResponse.reviewData?.reviewResult?.reviewAnswer,
-                           reviewResult == "RED" {
-                            docStatus = .rejected
-
-                            if let reviewRejectType = applicantDataResponse.reviewData?.reviewResult?.reviewRejectType {
-                                retry = reviewRejectType == "RETRY" ? true : false
-                            }
-                        }
-                        else if let reviewResult = applicantDataResponse.reviewData?.reviewResult?.reviewAnswer,
-                                reviewResult == "GREEN" {
+                        if applicantDataResponse.reviewData?.levelName == DocumentTypeGroup.proofAddress.levelName {
                             docStatus = .approved
-
                             retry = false
+                        }
+                        else {
+                            if let reviewResult = applicantDataResponse.reviewData?.reviewResult?.reviewAnswer,
+                               reviewResult == "RED" {
+                                docStatus = .rejected
+
+                                if let reviewRejectType = applicantDataResponse.reviewData?.reviewResult?.reviewRejectType {
+                                    retry = reviewRejectType == "RETRY" ? true : false
+                                }
+                            }
+                            else if let reviewResult = applicantDataResponse.reviewData?.reviewResult?.reviewAnswer,
+                                    reviewResult == "GREEN" {
+                                docStatus = .approved
+
+                                retry = false
+                            }
                         }
                     }
 
@@ -1001,23 +1007,32 @@ class IdentificationDocsViewController: UIViewController {
 
                 self.proofAddressBottomStackView.addArrangedSubview(documentStateView)
 
-                if let documentDate = proofFileInfo.uploadDate {
-                    if let recentDocument = mostRecentProofDocument {
-                        if let recentDocumentDate = recentDocument.uploadDate,
-                           documentDate > recentDocumentDate {
+                if proofAddressFilesInfo.contains(where: {
+                    $0.id == "POA"
+                }) {
+                    if proofFileInfo.id == "POA" {
+                        mostRecentProofDocument = proofFileInfo
+                    }
+                }
+                else {
+                    if let documentDate = proofFileInfo.uploadDate {
+                        if let recentDocument = mostRecentProofDocument {
+                            if let recentDocumentDate = recentDocument.uploadDate,
+                               documentDate > recentDocumentDate {
+                                mostRecentProofDocument = proofFileInfo
+                            }
+                        }
+                        else {
                             mostRecentProofDocument = proofFileInfo
                         }
                     }
                     else {
                         mostRecentProofDocument = proofFileInfo
                     }
-                }
-                else {
-                    mostRecentProofDocument = proofFileInfo
-                }
 
-                if let totalRetries = proofFileInfo.totalRetries {
-                    self.totalProofAddressTriesCount = totalRetries
+                    if let totalRetries = proofFileInfo.totalRetries {
+                        self.totalProofAddressTriesCount = totalRetries
+                    }
                 }
             }
 
