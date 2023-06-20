@@ -163,7 +163,11 @@ class SportSelectionViewController: UIViewController {
                     self?.configureWithSports(liveSports)
                 }
                 else {
-                    self?.configureWithSports(allSports)
+                    let preLiveSports = allSports.filter({
+                        $0.eventsCount > 0 || $0.outrightEventsCount > 0
+                    })
+
+                    self?.configureWithSports(preLiveSports)
                 }
 
                 self?.isLoading = false

@@ -164,7 +164,6 @@ class DocumentsRootViewController: UIViewController {
 
         self.kycStatusLabel.textColor = UIColor.App.buttonTextPrimary
 
-//        self.topBaseView.backgroundColor = UIColor.App.backgroundSecondary
         self.documentTypesCollectionView.backgroundColor = UIColor.App.pillNavigation
 
    }
