@@ -113,7 +113,6 @@ class MatchWidgetCellViewModel {
         self.competitionName = match.competitionName
     }
 
-
     static var hourDateFormatter: DateFormatter = {
         var dateFormatter = DateFormatter()
         dateFormatter.timeStyle = .short

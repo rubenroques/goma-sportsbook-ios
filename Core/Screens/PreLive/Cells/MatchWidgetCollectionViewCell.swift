@@ -44,6 +44,23 @@ class MatchWidgetCollectionViewCell: UICollectionViewCell {
         return liveTipLabel
     }()
 
+    lazy var cashbackIconImageView: UIImageView = {
+        let imageView = UIImageView()
+        imageView.translatesAutoresizingMaskIntoConstraints = false
+        imageView.image = UIImage(named: "cashback_small_blue_icon")
+        return imageView
+    }()
+
+    lazy var cashbackImageViewBaseTrailingConstraint: NSLayoutConstraint = {
+        let constraint = NSLayoutConstraint()
+        return constraint
+    }()
+
+    lazy var cashbackImageViewLiveTrailingConstraint: NSLayoutConstraint = {
+        let constraint = NSLayoutConstraint()
+        return constraint
+    }()
+
     @IBOutlet private weak var favoritesIconImageView: UIImageView!
 
     @IBOutlet private weak var numberOfBetsLabels: UILabel!
@@ -277,6 +294,12 @@ class MatchWidgetCollectionViewCell: UICollectionViewCell {
         }
     }
 
+    var hasCashback: Bool = false {
+        didSet {
+            self.cashbackIconImageView.isHidden = !hasCashback
+        }
+    }
+
     var tappedMatchWidgetAction: ((Match) -> Void)?
     var didTapFavoriteMatchAction: ((Match) -> Void)?
     var didLongPressOdd: ((BettingTicket) -> Void)?
@@ -457,6 +480,33 @@ class MatchWidgetCollectionViewCell: UICollectionViewCell {
             self.liveTipView.topAnchor.constraint(equalTo: self.baseView.topAnchor, constant: 12)
         ])
 
+        // Cashback
+        self.baseView.addSubview(self.cashbackIconImageView)
+
+        NSLayoutConstraint.activate([
+            self.cashbackIconImageView.widthAnchor.constraint(equalToConstant: 20),
+            self.cashbackIconImageView.heightAnchor.constraint(equalTo: self.cashbackIconImageView.widthAnchor),
+            self.cashbackIconImageView.centerYAnchor.constraint(equalTo: self.liveTipView.centerYAnchor)
+        ])
+
+        self.cashbackImageViewBaseTrailingConstraint = NSLayoutConstraint(item: self.cashbackIconImageView,
+                                                                          attribute: .trailing,
+                                                                          relatedBy: .equal,
+                                                                          toItem: self.baseView,
+                                                                          attribute: .trailing,
+                                                                          multiplier: 1,
+                                                                          constant: -8)
+        self.cashbackImageViewBaseTrailingConstraint.isActive = true
+
+        self.cashbackImageViewLiveTrailingConstraint = NSLayoutConstraint(item: self.cashbackIconImageView,
+                                                                          attribute: .trailing,
+                                                                          relatedBy: .equal,
+                                                                          toItem: self.liveTipView,
+                                                                          attribute: .leading,
+                                                                          multiplier: 1,
+                                                                          constant: -4)
+        self.cashbackImageViewLiveTrailingConstraint.isActive = false
+
         self.bringSubviewToFront(self.suspendedBaseView)
         self.bringSubviewToFront(self.seeAllBaseView)
 
@@ -484,8 +534,11 @@ class MatchWidgetCollectionViewCell: UICollectionViewCell {
         let longPressGestureRecognizer = UILongPressGestureRecognizer(target: self, action: #selector(didLongPressCard))
         self.participantsBaseView.addGestureRecognizer(longPressGestureRecognizer)
 
+        self.hasCashback = false
+
         self.adjustDesignToCardStyle()
         self.setupWithTheme()
+
     }
 
     override func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {
@@ -583,6 +636,8 @@ class MatchWidgetCollectionViewCell: UICollectionViewCell {
 
         self.isFavorite = false
 
+        self.hasCashback = false
+
         self.leftOutcomeDisabled = false
         self.middleOutcomeDisabled = false
         self.rightOutcomeDisabled = false
@@ -592,6 +647,7 @@ class MatchWidgetCollectionViewCell: UICollectionViewCell {
 
         self.adjustDesignToCardStyle()
         self.setupWithTheme()
+
     }
 
     func cellDidDisappear() {
@@ -923,11 +979,17 @@ class MatchWidgetCollectionViewCell: UICollectionViewCell {
             self.liveMatchDotBaseView.isHidden = false
             self.gradientBorderView.isHidden = false
             self.liveTipView.isHidden = false
+
+            self.cashbackImageViewBaseTrailingConstraint.isActive = false
+            self.cashbackImageViewLiveTrailingConstraint.isActive = true
         }
         else {
             self.liveMatchDotBaseView.isHidden = true
             self.gradientBorderView.isHidden = true
             self.liveTipView.isHidden = true
+
+            self.cashbackImageViewBaseTrailingConstraint.isActive = true
+            self.cashbackImageViewLiveTrailingConstraint.isActive = false
         }
 
         self.liveMatchDotImageView.isHidden = true
@@ -1210,6 +1272,16 @@ class MatchWidgetCollectionViewCell: UICollectionViewCell {
         }
 
         self.isFavorite = Env.favoritesManager.isEventFavorite(eventId: viewModel.match.id)
+
+        // TEST CASHBACK
+        if viewModel.matchWidgetType == .normal {
+            if viewModel.match.sport.alphaId == "FBL" {
+                self.hasCashback = true
+            }
+            else {
+                self.hasCashback = false
+            }
+        }
     }
 
     //

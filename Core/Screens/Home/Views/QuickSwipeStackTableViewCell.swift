@@ -182,6 +182,7 @@ extension QuickSwipeStackTableViewCell: UICollectionViewDelegate, UICollectionVi
             self?.didTapMatchAction(match)
         }
         cell.shouldShowCountryFlag(true)
+        
         return cell
 
     }

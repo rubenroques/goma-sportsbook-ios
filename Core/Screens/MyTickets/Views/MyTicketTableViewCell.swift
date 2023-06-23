@@ -588,9 +588,6 @@ class MyTicketTableViewCell: UITableViewCell {
 
         self.viewModel?.requestCashoutAvailability()
 
-        // Cashback
-        self.hasCashback = true
-        self.usedCashback = false
     }
 
     func setupPartialCashoutSlider() {
