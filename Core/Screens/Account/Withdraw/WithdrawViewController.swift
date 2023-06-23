@@ -364,31 +364,22 @@ class WithdrawViewController: UIViewController {
         default:
             ()
         }
-        
-        let alert = UIAlertController(title: errorTitle,
-                                      message: errorMessage,
-                                      preferredStyle: .alert)
-        alert.addAction(UIAlertAction(title: localized("ok"), style: .default, handler: nil))
-        self.present(alert, animated: true, completion: nil)
+
+        let genericErrorViewController = GenericErrorViewController()
+
+        genericErrorViewController.setTextInfo(title: errorTitle, subtitle: errorMessage)
+
+        self.present(genericErrorViewController, animated: true)
     }
 
     private func showAlert() {
 
-        let withdrawSuccessViewController = WithdrawSuccessViewController()
+        let withdrawSuccessViewController = GenericSuccessViewController()
 
-        withdrawSuccessViewController.configureInfo(title: localized("withdrawal_request_sent_title"), message: localized("withdrawal_status_message"))
+        withdrawSuccessViewController.setTextInfo(title: "\(localized("success"))!", subtitle: localized("withdrawal_status_message"))
 
         self.navigationController?.pushViewController(withdrawSuccessViewController, animated: true)
-//        let alert = UIAlertController(title: localized("withdrawal_status"),
-//                                      message: localized("withdrawal_status_message"),
-//                                      preferredStyle: .alert)
-//        alert.addAction(UIAlertAction(title: localized("ok"), style: .default, handler: { _ in
-//
-//            self.shouldRefreshUserWallet?()
-//            self.dismiss(animated: true)
-//
-//        }))
-//        self.present(alert, animated: true, completion: nil)
+
     }
 
     private func showWithdrawWebView(cashierUrl: String) {

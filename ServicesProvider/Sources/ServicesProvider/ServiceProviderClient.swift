@@ -404,6 +404,16 @@ extension ServicesProviderClient {
         return eventsProvider.getPromotedSports()
     }
 
+    public func getCashbackSuccessBanner() -> AnyPublisher<BannerResponse, ServiceProviderError> {
+        guard
+            let eventsProvider = self.eventsProvider
+        else {
+            return Fail(error: .eventsProviderNotFound).eraseToAnyPublisher()
+        }
+
+        return eventsProvider.getHomeSliders()
+    }
+
     public func getEventsForMarketGroup(withId marketGroupId: String) -> AnyPublisher<EventsGroup, ServiceProviderError> {
         guard
             let eventsProvider = self.eventsProvider

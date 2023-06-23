@@ -4214,6 +4214,38 @@
 		A92BDD052A1CFF4400E9B045 /* BonusState.swift in Sources */ = {isa = PBXBuildFile; fileRef = A92BDCFF2A1CFF4300E9B045 /* BonusState.swift */; };
 		A92BDD062A1CFF4400E9B045 /* BonusState.swift in Sources */ = {isa = PBXBuildFile; fileRef = A92BDCFF2A1CFF4300E9B045 /* BonusState.swift */; };
 		A92BDD072A1CFF4400E9B045 /* BonusState.swift in Sources */ = {isa = PBXBuildFile; fileRef = A92BDCFF2A1CFF4300E9B045 /* BonusState.swift */; };
+		A93FE2042A435431006A6907 /* GenericSuccessViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A93FE2032A435431006A6907 /* GenericSuccessViewController.swift */; };
+		A93FE2052A435431006A6907 /* GenericSuccessViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A93FE2032A435431006A6907 /* GenericSuccessViewController.swift */; };
+		A93FE2062A435431006A6907 /* GenericSuccessViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A93FE2032A435431006A6907 /* GenericSuccessViewController.swift */; };
+		A93FE2072A435431006A6907 /* GenericSuccessViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A93FE2032A435431006A6907 /* GenericSuccessViewController.swift */; };
+		A93FE2082A435431006A6907 /* GenericSuccessViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A93FE2032A435431006A6907 /* GenericSuccessViewController.swift */; };
+		A93FE2092A435431006A6907 /* GenericSuccessViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A93FE2032A435431006A6907 /* GenericSuccessViewController.swift */; };
+		A93FE20A2A435431006A6907 /* GenericSuccessViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A93FE2032A435431006A6907 /* GenericSuccessViewController.swift */; };
+		A93FE20B2A435431006A6907 /* GenericSuccessViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A93FE2032A435431006A6907 /* GenericSuccessViewController.swift */; };
+		A93FE20D2A445434006A6907 /* GenericErrorViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A93FE20C2A445434006A6907 /* GenericErrorViewController.swift */; };
+		A93FE20E2A445434006A6907 /* GenericErrorViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A93FE20C2A445434006A6907 /* GenericErrorViewController.swift */; };
+		A93FE20F2A445434006A6907 /* GenericErrorViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A93FE20C2A445434006A6907 /* GenericErrorViewController.swift */; };
+		A93FE2102A445434006A6907 /* GenericErrorViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A93FE20C2A445434006A6907 /* GenericErrorViewController.swift */; };
+		A93FE2112A445434006A6907 /* GenericErrorViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A93FE20C2A445434006A6907 /* GenericErrorViewController.swift */; };
+		A93FE2122A445434006A6907 /* GenericErrorViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A93FE20C2A445434006A6907 /* GenericErrorViewController.swift */; };
+		A93FE2132A445434006A6907 /* GenericErrorViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A93FE20C2A445434006A6907 /* GenericErrorViewController.swift */; };
+		A93FE2142A445434006A6907 /* GenericErrorViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A93FE20C2A445434006A6907 /* GenericErrorViewController.swift */; };
+		A93FE2172A44A08C006A6907 /* CashbackRootViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A93FE2162A44A08C006A6907 /* CashbackRootViewController.swift */; };
+		A93FE2182A44A08C006A6907 /* CashbackRootViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A93FE2162A44A08C006A6907 /* CashbackRootViewController.swift */; };
+		A93FE2192A44A08C006A6907 /* CashbackRootViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A93FE2162A44A08C006A6907 /* CashbackRootViewController.swift */; };
+		A93FE21A2A44A08C006A6907 /* CashbackRootViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A93FE2162A44A08C006A6907 /* CashbackRootViewController.swift */; };
+		A93FE21B2A44A08C006A6907 /* CashbackRootViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A93FE2162A44A08C006A6907 /* CashbackRootViewController.swift */; };
+		A93FE21C2A44A08C006A6907 /* CashbackRootViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A93FE2162A44A08C006A6907 /* CashbackRootViewController.swift */; };
+		A93FE21D2A44A08C006A6907 /* CashbackRootViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A93FE2162A44A08C006A6907 /* CashbackRootViewController.swift */; };
+		A93FE21E2A44A08C006A6907 /* CashbackRootViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A93FE2162A44A08C006A6907 /* CashbackRootViewController.swift */; };
+		A93FE2212A45A8B9006A6907 /* CashbackBalanceView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A93FE2202A45A8B9006A6907 /* CashbackBalanceView.swift */; };
+		A93FE2222A45A8B9006A6907 /* CashbackBalanceView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A93FE2202A45A8B9006A6907 /* CashbackBalanceView.swift */; };
+		A93FE2232A45A8B9006A6907 /* CashbackBalanceView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A93FE2202A45A8B9006A6907 /* CashbackBalanceView.swift */; };
+		A93FE2242A45A8B9006A6907 /* CashbackBalanceView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A93FE2202A45A8B9006A6907 /* CashbackBalanceView.swift */; };
+		A93FE2252A45A8B9006A6907 /* CashbackBalanceView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A93FE2202A45A8B9006A6907 /* CashbackBalanceView.swift */; };
+		A93FE2262A45A8B9006A6907 /* CashbackBalanceView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A93FE2202A45A8B9006A6907 /* CashbackBalanceView.swift */; };
+		A93FE2272A45A8B9006A6907 /* CashbackBalanceView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A93FE2202A45A8B9006A6907 /* CashbackBalanceView.swift */; };
+		A93FE2282A45A8B9006A6907 /* CashbackBalanceView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A93FE2202A45A8B9006A6907 /* CashbackBalanceView.swift */; };
 		A96FAEC729804C0600A0751F /* Data+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = A96FAEC629804C0600A0751F /* Data+Extensions.swift */; };
 		A96FAEC829804C0600A0751F /* Data+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = A96FAEC629804C0600A0751F /* Data+Extensions.swift */; };
 		A96FAEC929804C0600A0751F /* Data+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = A96FAEC629804C0600A0751F /* Data+Extensions.swift */; };
@@ -5992,6 +6024,10 @@
 		A92F5DA3272C44A000884BDF /* UploadView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UploadView.swift; sourceTree = "<group>"; };
 		A92F5DA8272C44CD00884BDF /* FullRegisterDocumentsViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FullRegisterDocumentsViewController.swift; sourceTree = "<group>"; };
 		A92F5DA9272C44CD00884BDF /* FullRegisterDocumentsViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = FullRegisterDocumentsViewController.xib; sourceTree = "<group>"; };
+		A93FE2032A435431006A6907 /* GenericSuccessViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GenericSuccessViewController.swift; sourceTree = "<group>"; };
+		A93FE20C2A445434006A6907 /* GenericErrorViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GenericErrorViewController.swift; sourceTree = "<group>"; };
+		A93FE2162A44A08C006A6907 /* CashbackRootViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CashbackRootViewController.swift; sourceTree = "<group>"; };
+		A93FE2202A45A8B9006A6907 /* CashbackBalanceView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CashbackBalanceView.swift; sourceTree = "<group>"; };
 		A948BF93279ED6B9006053C9 /* SearchEvent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchEvent.swift; sourceTree = "<group>"; };
 		A96279EA273ED1E40001E1D5 /* ActivationAlertView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ActivationAlertView.swift; sourceTree = "<group>"; };
 		A96279ED273ED2290001E1D5 /* ActivationAlertView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = ActivationAlertView.xib; sourceTree = "<group>"; };
@@ -7444,6 +7480,8 @@
 		4589F3E926BF0160005DF543 /* Screens */ = {
 			isa = PBXGroup;
 			children = (
+				A93FE2152A44A06B006A6907 /* Cashback */,
+				A93FE2022A4353F7006A6907 /* Generic */,
 				452047BE27036D4600B277B5 /* Splash */,
 				455C962526FE11B300456F30 /* Root */,
 				45C3E8D727B56DC7007A1A0F /* Home */,
@@ -7543,6 +7581,7 @@
 		4589F40726BF01B4005DF543 /* Views */ = {
 			isa = PBXGroup;
 			children = (
+				A93FE21F2A45A89E006A6907 /* Cashback */,
 				A92548182A2A266D0056F832 /* Documents */,
 				A99CC2EE2A26017C0035BA3D /* TopBars */,
 				45CE91612A2F803B00BB3AB7 /* SmoothProgressBarView.swift */,
@@ -8471,6 +8510,31 @@
 				A92F5DA3272C44A000884BDF /* UploadView.swift */,
 			);
 			path = UploadView;
+			sourceTree = "<group>";
+		};
+		A93FE2022A4353F7006A6907 /* Generic */ = {
+			isa = PBXGroup;
+			children = (
+				A93FE2032A435431006A6907 /* GenericSuccessViewController.swift */,
+				A93FE20C2A445434006A6907 /* GenericErrorViewController.swift */,
+			);
+			path = Generic;
+			sourceTree = "<group>";
+		};
+		A93FE2152A44A06B006A6907 /* Cashback */ = {
+			isa = PBXGroup;
+			children = (
+				A93FE2162A44A08C006A6907 /* CashbackRootViewController.swift */,
+			);
+			path = Cashback;
+			sourceTree = "<group>";
+		};
+		A93FE21F2A45A89E006A6907 /* Cashback */ = {
+			isa = PBXGroup;
+			children = (
+				A93FE2202A45A8B9006A6907 /* CashbackBalanceView.swift */,
+			);
+			path = Cashback;
 			sourceTree = "<group>";
 		};
 		A96279E9273ED1AB0001E1D5 /* ActivationAlertView */ = {
@@ -11377,6 +11441,7 @@
 				450B792C28F58574009229E3 /* DebugTableViewDescription.swift in Sources */,
 				450B792D28F58574009229E3 /* SimpleRegisterEmailSentViewController.swift in Sources */,
 				457C9F282A17D72000022C53 /* GradientBorderView.swift in Sources */,
+				A93FE20E2A445434006A6907 /* GenericErrorViewController.swift in Sources */,
 				450B792E28F58574009229E3 /* CompetitionsDataSource.swift in Sources */,
 				450B792F28F58574009229E3 /* TipsSliderViewModel.swift in Sources */,
 				45CE91522A2F40E100BB3AB7 /* StoriesFullScreenItemView.swift in Sources */,
@@ -11552,6 +11617,7 @@
 				450B79CE28F58574009229E3 /* UIView+Extensions.swift in Sources */,
 				450B79D028F58574009229E3 /* HistoryRootViewController.swift in Sources */,
 				450B79D128F58574009229E3 /* TransactionHistory.swift in Sources */,
+				A93FE2182A44A08C006A6907 /* CashbackRootViewController.swift in Sources */,
 				450B79D228F58574009229E3 /* EnvironmentType.swift in Sources */,
 				450B79D328F58574009229E3 /* CountrySelectorTableViewCell.swift in Sources */,
 				450B79D428F58574009229E3 /* FeaturedTipView.swift in Sources */,
@@ -11596,6 +11662,7 @@
 				450B79F828F58574009229E3 /* CompetitionFilterRowViewModel.swift in Sources */,
 				450B79FA28F58574009229E3 /* SearchTextField.swift in Sources */,
 				450B79FB28F58574009229E3 /* FeaturedTipCollectionViewCell.swift in Sources */,
+				A93FE2222A45A8B9006A6907 /* CashbackBalanceView.swift in Sources */,
 				450B79FC28F58574009229E3 /* BettingHistoryViewModel.swift in Sources */,
 				450B79FD28F58574009229E3 /* RefusedAccessViewController.swift in Sources */,
 				450B79FE28F58574009229E3 /* ChatTicketInMessageView.swift in Sources */,
@@ -11673,6 +11740,7 @@
 				450B7A4628F58574009229E3 /* UIViewController+Extensions.swift in Sources */,
 				450B7A4728F58574009229E3 /* ConversationBetSelectionRootViewModel.swift in Sources */,
 				450B7A4828F58574009229E3 /* CompetitionsFiltersView.swift in Sources */,
+				A93FE2052A435431006A6907 /* GenericSuccessViewController.swift in Sources */,
 				450B7A4928F58574009229E3 /* QuickBetViewController.swift in Sources */,
 				455AE1352A2A16E00045FDD3 /* MakeYourBetTableViewCell.swift in Sources */,
 				450B7A4A28F58574009229E3 /* UserNotificationTableViewCell.swift in Sources */,
@@ -11771,6 +11839,7 @@
 				A9D5BB8F290AD0E1001B0E13 /* CodeVerificationViewController.swift in Sources */,
 				A90FB7F629B0C53900D08A7C /* TipsControlViewController.swift in Sources */,
 				A98EC7D22889ADC30044FC46 /* ShareTicketChoiceViewModel.swift in Sources */,
+				A93FE2142A445434006A6907 /* GenericErrorViewController.swift in Sources */,
 				A907B6B329D10C7500AC4A17 /* PromotionsWebViewController.swift in Sources */,
 				A98708C128DA014800F27348 /* UserProfileViewController.swift in Sources */,
 				A90FB7C429AF67B000D08A7C /* AlertType.swift in Sources */,
@@ -11803,6 +11872,7 @@
 				A9B331E2288FFFE000D097F0 /* MessagesViewModel.swift in Sources */,
 				A9DF8E0F28DDFC590083BF56 /* SportStatisticView.swift in Sources */,
 				A9BA04272A33399D007880FC /* UploadDocumentsInformationView.swift in Sources */,
+				A93FE21E2A44A08C006A6907 /* CashbackRootViewController.swift in Sources */,
 				A98708D128DA27DB00F27348 /* UserProfileTipsViewController.swift in Sources */,
 				A90FB7E229B0BCF000D08A7C /* SelfExclusionViewModel.swift in Sources */,
 				A9D5BB86290A9CEC001B0E13 /* EmailVerificationCodeViewController.swift in Sources */,
@@ -11814,6 +11884,7 @@
 				A986D35B28CB48F100AF95D7 /* TipsListViewModel.swift in Sources */,
 				A9DF8E4C28E6F6720083BF56 /* UserNotificationTableViewCell.swift in Sources */,
 				A925482A2A2A466E0056F832 /* RibDocsViewController.swift in Sources */,
+				A93FE20B2A435431006A6907 /* GenericSuccessViewController.swift in Sources */,
 				A9FB6D5028C642AD00E3FE58 /* TipsViewController.swift in Sources */,
 				4589B03128CB47AB0043CE33 /* TipsSliderViewController.swift in Sources */,
 				A9A5217F2A03B74800C0F6C6 /* CardsStyleViewModel.swift in Sources */,
@@ -11825,6 +11896,7 @@
 				A98EC7E22889B0AA0044FC46 /* ConversationBetSelectionRootViewModel.swift in Sources */,
 				A98EC7EB288AF2C00044FC46 /* NewGroupHeaderFooterView.swift in Sources */,
 				A9CB3E7529CDC25600BEF9C1 /* ApplicableBonus.swift in Sources */,
+				A93FE2282A45A8B9006A6907 /* CashbackBalanceView.swift in Sources */,
 				A9BA04162A3099FA007880FC /* ManualUploadDocumentsViewController.swift in Sources */,
 				A96FAECD29804C0600A0751F /* Data+Extensions.swift in Sources */,
 				456D6FCF289ACE5600B7E542 /* MessageDetailWebViewController.swift in Sources */,
@@ -12074,6 +12146,7 @@
 				457CBA8C282D27D000ED0F00 /* RunningPlatform.swift in Sources */,
 				A9863ECF286B17A600A4A1A2 /* ChatTicketStateInMessageView.swift in Sources */,
 				457CBA8D282D27D000ED0F00 /* AppModels.swift in Sources */,
+				A93FE2122A445434006A6907 /* GenericErrorViewController.swift in Sources */,
 				457CBA8E282D27D000ED0F00 /* AddUnregisteredFriendCellViewModel.swift in Sources */,
 				A98EC7E9288AF2C00044FC46 /* NewGroupHeaderFooterView.swift in Sources */,
 				457CBA8F282D27D000ED0F00 /* HeadToHeadCardStatsView.swift in Sources */,
@@ -12231,6 +12304,7 @@
 				457CBB01282D27D000ED0F00 /* SportSelectionCollectionViewCellViewModel.swift in Sources */,
 				A90FB7FE29B0CB4400D08A7C /* TipInfoView.swift in Sources */,
 				457CBB02282D27D000ED0F00 /* ActivationAlertView.swift in Sources */,
+				A93FE21C2A44A08C006A6907 /* CashbackRootViewController.swift in Sources */,
 				457CBB03282D27D000ED0F00 /* Internationalization.swift in Sources */,
 				457CBB04282D27D000ED0F00 /* CasinoWebViewController.swift in Sources */,
 				457CBB05282D27D000ED0F00 /* UIButton+Extensions.swift in Sources */,
@@ -12353,6 +12427,7 @@
 				450B782128F56BA5009229E3 /* ServiceProviderModelMapper.swift in Sources */,
 				457CBB62282D27D000ED0F00 /* AddFriendViewController.swift in Sources */,
 				457CBB63282D27D000ED0F00 /* GroupUserManagementCellViewModel.swift in Sources */,
+				A93FE2092A435431006A6907 /* GenericSuccessViewController.swift in Sources */,
 				457CBB64282D27D000ED0F00 /* NetworkModels.swift in Sources */,
 				457CBB65282D27D000ED0F00 /* RootViewController.swift in Sources */,
 				A9BA041D2A30EA3B007880FC /* CardOptionRadioView.swift in Sources */,
@@ -12448,6 +12523,7 @@
 				457CBBA6282D27D000ED0F00 /* ReceivedMessageTableViewCell.swift in Sources */,
 				A99DE67929A643F800AA24AA /* PaymentStatus.swift in Sources */,
 				457CBBA7282D27D000ED0F00 /* RecentSearchHeaderView.swift in Sources */,
+				A93FE2262A45A8B9006A6907 /* CashbackBalanceView.swift in Sources */,
 				457CBBA8282D27D000ED0F00 /* SharedGameCardView.swift in Sources */,
 				45C10F9E28772DA700037BBE /* DefaultShiftAnimation.swift in Sources */,
 				457CBBA9282D27D000ED0F00 /* Event.swift in Sources */,
@@ -12507,6 +12583,7 @@
 				457CBC9D282D2CD100ED0F00 /* CheckboxToggleView.swift in Sources */,
 				457CBC9E282D2CD100ED0F00 /* MatchDetailsViewController.swift in Sources */,
 				457CBC9F282D2CD100ED0F00 /* HomeViewTemplateDatasource.swift in Sources */,
+				A93FE2132A445434006A6907 /* GenericErrorViewController.swift in Sources */,
 				457CBCA0282D2CD100ED0F00 /* SplashViewController.swift in Sources */,
 				457CBCA1282D2CD100ED0F00 /* BonusHistoryDataSource.swift in Sources */,
 				457CBCA2282D2CD100ED0F00 /* SimpleRegisterEmailCheckViewModel.swift in Sources */,
@@ -12671,6 +12748,7 @@
 				457CBD23282D2CD100ED0F00 /* TabularViewController.swift in Sources */,
 				A9C18AA528661975009F0063 /* ConversationBetSelectionRootViewController.swift in Sources */,
 				457CBD24282D2CD100ED0F00 /* MatchWidgetCellViewModel.swift in Sources */,
+				A93FE21D2A44A08C006A6907 /* CashbackRootViewController.swift in Sources */,
 				457CBD25282D2CD100ED0F00 /* BetSuggestedCollectionViewCell.swift in Sources */,
 				457CBD26282D2CD100ED0F00 /* MultipleBettingTicketTableViewCell.swift in Sources */,
 				A9C2D52129C0D4F100DB95BD /* CashoutInfo.swift in Sources */,
@@ -12722,6 +12800,7 @@
 				457CBD44282D2CD100ED0F00 /* FloatingShortcutsView.swift in Sources */,
 				457CBD45282D2CD100ED0F00 /* OutrightCompetitionLineTableViewCell.swift in Sources */,
 				45C10F6328772DA700037BBE /* CGFloat+Shift.swift in Sources */,
+				A93FE20A2A435431006A6907 /* GenericSuccessViewController.swift in Sources */,
 				457CBD47282D2CD100ED0F00 /* EditAlertView.swift in Sources */,
 				457CBD48282D2CD100ED0F00 /* SharedBetToken.swift in Sources */,
 				457CBD49282D2CD100ED0F00 /* SettingsRadioRowView.swift in Sources */,
@@ -13081,6 +13160,7 @@
 				457CBE54282D2CD100ED0F00 /* GomaClientSettings.swift in Sources */,
 				457CBE55282D2CD100ED0F00 /* ConversationDetailViewController.swift in Sources */,
 				457CBE56282D2CD100ED0F00 /* Endpoint.swift in Sources */,
+				A93FE2272A45A8B9006A6907 /* CashbackBalanceView.swift in Sources */,
 				45CE914F2A2F3B4B00BB3AB7 /* StoriesFullScreenViewController.swift in Sources */,
 				457CBE57282D2CD100ED0F00 /* OutrightMarketDetailsStore.swift in Sources */,
 				45CE91602A2F6C6700BB3AB7 /* CubicScrollView.swift in Sources */,
@@ -13348,6 +13428,7 @@
 				4589C82C282024E400243547 /* SimpleRegisterEmailSentViewController.swift in Sources */,
 				4589C82D282024E400243547 /* CompetitionsDataSource.swift in Sources */,
 				457C9F292A17D72000022C53 /* GradientBorderView.swift in Sources */,
+				A93FE20F2A445434006A6907 /* GenericErrorViewController.swift in Sources */,
 				A9DF8E3628E45D2E0083BF56 /* TipsSliderViewModel.swift in Sources */,
 				4589C82F282024E400243547 /* GamesNotificationViewController.swift in Sources */,
 				45CE91532A2F40E100BB3AB7 /* StoriesFullScreenItemView.swift in Sources */,
@@ -13523,6 +13604,7 @@
 				4589C8A7282024E400243547 /* UIView+Extensions.swift in Sources */,
 				4589C8A9282024E400243547 /* HistoryRootViewController.swift in Sources */,
 				4589C8AA282024E400243547 /* TransactionHistory.swift in Sources */,
+				A93FE2192A44A08C006A6907 /* CashbackRootViewController.swift in Sources */,
 				4589C8AB282024E400243547 /* EnvironmentType.swift in Sources */,
 				4589C8AC282024E400243547 /* CountrySelectorTableViewCell.swift in Sources */,
 				A9B946B828BFAA3E0091296E /* FeaturedTipView.swift in Sources */,
@@ -13567,6 +13649,7 @@
 				4589C8C6282024E400243547 /* CompetitionFilterRowViewModel.swift in Sources */,
 				4589C8C8282024E400243547 /* SearchTextField.swift in Sources */,
 				A9B946B028BE6D520091296E /* FeaturedTipCollectionViewCell.swift in Sources */,
+				A93FE2232A45A8B9006A6907 /* CashbackBalanceView.swift in Sources */,
 				4589C8C9282024E400243547 /* BettingHistoryViewModel.swift in Sources */,
 				4589C8CA282024E400243547 /* RefusedAccessViewController.swift in Sources */,
 				45B6E227283FD08C001B570C /* ChatTicketInMessageView.swift in Sources */,
@@ -13644,6 +13727,7 @@
 				A98EC7DE2889B0AA0044FC46 /* ConversationBetSelectionRootViewModel.swift in Sources */,
 				4589C906282024E400243547 /* CompetitionsFiltersView.swift in Sources */,
 				A90229A228AFD41100972863 /* QuickBetViewController.swift in Sources */,
+				A93FE2062A435431006A6907 /* GenericSuccessViewController.swift in Sources */,
 				A9DF8E4828E6F6720083BF56 /* UserNotificationTableViewCell.swift in Sources */,
 				455AE1362A2A16E00045FDD3 /* MakeYourBetTableViewCell.swift in Sources */,
 				4589C907282024E400243547 /* CompetitionDetailsViewModel.swift in Sources */,
@@ -13973,6 +14057,7 @@
 				45A33142298976BA008181E9 /* DebugTableViewDescription.swift in Sources */,
 				45A33143298976BA008181E9 /* SimpleRegisterEmailSentViewController.swift in Sources */,
 				457C9F272A17D72000022C53 /* GradientBorderView.swift in Sources */,
+				A93FE20D2A445434006A6907 /* GenericErrorViewController.swift in Sources */,
 				45A33144298976BA008181E9 /* CompetitionsDataSource.swift in Sources */,
 				45A33145298976BA008181E9 /* TipsSliderViewModel.swift in Sources */,
 				45CE91512A2F40E100BB3AB7 /* StoriesFullScreenItemView.swift in Sources */,
@@ -14148,6 +14233,7 @@
 				45A331E9298976BA008181E9 /* AddFriendViewModel.swift in Sources */,
 				45A331EA298976BA008181E9 /* TipsListViewController.swift in Sources */,
 				45A331EC298976BA008181E9 /* UIView+Extensions.swift in Sources */,
+				A93FE2172A44A08C006A6907 /* CashbackRootViewController.swift in Sources */,
 				45A331EE298976BA008181E9 /* HistoryRootViewController.swift in Sources */,
 				45A331EF298976BA008181E9 /* TransactionHistory.swift in Sources */,
 				45A331F0298976BA008181E9 /* EnvironmentType.swift in Sources */,
@@ -14192,6 +14278,7 @@
 				45A33216298976BA008181E9 /* FriendProfileViewController.swift in Sources */,
 				45A33217298976BA008181E9 /* CompetitionFilterRowViewModel.swift in Sources */,
 				45A33218298976BA008181E9 /* SearchTextField.swift in Sources */,
+				A93FE2212A45A8B9006A6907 /* CashbackBalanceView.swift in Sources */,
 				45A33219298976BA008181E9 /* FeaturedTipCollectionViewCell.swift in Sources */,
 				45A3321A298976BA008181E9 /* BettingHistoryViewModel.swift in Sources */,
 				45A3321B298976BA008181E9 /* RefusedAccessViewController.swift in Sources */,
@@ -14269,6 +14356,7 @@
 				45A33266298976BA008181E9 /* UIViewController+Extensions.swift in Sources */,
 				45A33267298976BA008181E9 /* ConversationBetSelectionRootViewModel.swift in Sources */,
 				45A33268298976BA008181E9 /* CompetitionsFiltersView.swift in Sources */,
+				A93FE2042A435431006A6907 /* GenericSuccessViewController.swift in Sources */,
 				45A33269298976BA008181E9 /* QuickBetViewController.swift in Sources */,
 				455AE1342A2A16E00045FDD3 /* MakeYourBetTableViewCell.swift in Sources */,
 				45A3326A298976BA008181E9 /* UserNotificationTableViewCell.swift in Sources */,
@@ -14410,6 +14498,7 @@
 				45A6BBDF28246A7500D9B416 /* BettingNotificationsViewController.swift in Sources */,
 				45A6BBE028246A7500D9B416 /* GeoLocationManager.swift in Sources */,
 				45A6BBE228246A7500D9B416 /* PersonalInfoViewController.swift in Sources */,
+				A93FE2082A435431006A6907 /* GenericSuccessViewController.swift in Sources */,
 				A9863EDF286F425400A4A1A2 /* SocialItemCollectionViewCell.swift in Sources */,
 				45A6BBE328246A7500D9B416 /* SharedBetData.swift in Sources */,
 				45A6BBE428246A7500D9B416 /* HeaderTextFieldView.swift in Sources */,
@@ -14648,6 +14737,7 @@
 				45A6BC9E28246A7500D9B416 /* Localization.swift in Sources */,
 				45A6BC9F28246A7500D9B416 /* NewGroupViewController.swift in Sources */,
 				45A6BCA228246A7500D9B416 /* ChatNotificationsViewController.swift in Sources */,
+				A93FE2252A45A8B9006A6907 /* CashbackBalanceView.swift in Sources */,
 				45A6BCA328246A7500D9B416 /* BetslipErrorView.swift in Sources */,
 				45A6BCA428246A7500D9B416 /* CompetitionSearchTableViewCell.swift in Sources */,
 				A9C1C0AA28747FC600E9D6AC /* SelectChatroomTableViewCell.swift in Sources */,
@@ -14695,6 +14785,7 @@
 				45A6BCC428246A7500D9B416 /* Theme.swift in Sources */,
 				45A6BCC528246A7500D9B416 /* UserActionView.swift in Sources */,
 				45A6BCC628246A7500D9B416 /* LoadingSpinnerViewController.swift in Sources */,
+				A93FE21B2A44A08C006A6907 /* CashbackRootViewController.swift in Sources */,
 				45A6BCC728246A7500D9B416 /* MatchWidgetCollectionViewCell.swift in Sources */,
 				45A6BCC828246A7500D9B416 /* UserBalance.swift in Sources */,
 				45E8E29928C88E1300A09B02 /* UserRankingPositionTableViewCell.swift in Sources */,
@@ -14860,6 +14951,7 @@
 				45A6BD4528246A7500D9B416 /* OddsViewController.swift in Sources */,
 				A90FB7CB29AF7C1700D08A7C /* ResponsibleGamingViewController.swift in Sources */,
 				A9BA04242A33399D007880FC /* UploadDocumentsInformationView.swift in Sources */,
+				A93FE2112A445434006A6907 /* GenericErrorViewController.swift in Sources */,
 				A91A05BC29CB534B00E0A772 /* CloseAccountViewController.swift in Sources */,
 				45A6BD4628246A7500D9B416 /* CompetitionDetailsViewController.swift in Sources */,
 				A986D34628CB473700AF95D7 /* TipsCellViewModel.swift in Sources */,
@@ -14996,6 +15088,7 @@
 				A99DE665299E825900AA24AA /* RecoverPasswordViewModel.swift in Sources */,
 				A9C340B028F9A74A0055360B /* FirebaseClientSettings.swift in Sources */,
 				A9C340B128F9A74A0055360B /* CasinoGameDetailViewModel.swift in Sources */,
+				A93FE21A2A44A08C006A6907 /* CashbackRootViewController.swift in Sources */,
 				A9C340B228F9A74A0055360B /* PopUpPromotionView.swift in Sources */,
 				A925480A2A28E0AA0056F832 /* ListTypeIconCollectionViewCell.swift in Sources */,
 				A9C340B328F9A74A0055360B /* ModalTransitionModalTransitioningDelegate.swift in Sources */,
@@ -15117,6 +15210,7 @@
 				A9C3411C28F9A74A0055360B /* SimpleRegisterSendEmailCodeViewController.swift in Sources */,
 				A9C3411D28F9A74A0055360B /* QuickBetViewModel.swift in Sources */,
 				A9C3411E28F9A74A0055360B /* BonusActiveTableViewCell.swift in Sources */,
+				A93FE2102A445434006A6907 /* GenericErrorViewController.swift in Sources */,
 				A9C3411F28F9A74A0055360B /* GomaGamingService.swift in Sources */,
 				A9C3412028F9A74A0055360B /* DateUserLocation.swift in Sources */,
 				A9C3412128F9A74A0055360B /* AppDelegate.swift in Sources */,
@@ -15159,6 +15253,7 @@
 				A9C3414728F9A74A0055360B /* MatchDetailsViewModel.swift in Sources */,
 				A9C3414828F9A74A0055360B /* FilterHistoryViewController.swift in Sources */,
 				A99DE67729A643F800AA24AA /* PaymentStatus.swift in Sources */,
+				A93FE2242A45A8B9006A6907 /* CashbackBalanceView.swift in Sources */,
 				A9C3414928F9A74A0055360B /* MatchStatsViewModel.swift in Sources */,
 				A9C3414A28F9A74A0055360B /* BettingTicket.swift in Sources */,
 				A9C3414B28F9A74A0055360B /* FriendsListViewModel.swift in Sources */,
@@ -15212,6 +15307,7 @@
 				A9C3417728F9A74A0055360B /* MyFavoriteMatchesDataSource.swift in Sources */,
 				A9C3417828F9A74A0055360B /* MultiSliderExtensions.swift in Sources */,
 				A9C3417928F9A74A0055360B /* DynamicHomeViewTemplateDataSource.swift in Sources */,
+				A93FE2072A435431006A6907 /* GenericSuccessViewController.swift in Sources */,
 				A9958C82297AFE42001474E2 /* AddAnotherDocumentView.swift in Sources */,
 				A9C3417A28F9A74A0055360B /* CATransform3D+Shift.swift in Sources */,
 				A9C3417B28F9A74A0055360B /* TipsListViewModel.swift in Sources */,

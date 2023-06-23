@@ -45,7 +45,7 @@ class IdentificationDocsViewModel {
 
         self.isLoadingPublisher.send(true)
 
-        let userId = Env.userSessionStore.userProfilePublisher.value?.username ?? ""
+        let userId = Env.userSessionStore.userProfilePublisher.value?.userIdentifier ?? ""
 
         Env.servicesProvider.sumsubDataProvider?.getSumsubAccessToken(userId: userId, levelName: levelName)
             .receive(on: DispatchQueue.main)
@@ -79,7 +79,7 @@ class IdentificationDocsViewModel {
         self.hasLoadedUserDocuments.send(false)
         self.hasDocumentsProcessed.send(false)
 
-        let userId = Env.userSessionStore.userProfilePublisher.value?.username ?? ""
+        let userId = Env.userSessionStore.userProfilePublisher.value?.userIdentifier ?? ""
 
         Env.servicesProvider.sumsubDataProvider?.getApplicantData(userId: userId)
             .receive(on: DispatchQueue.main)
@@ -88,7 +88,8 @@ class IdentificationDocsViewModel {
                 case .failure(let error):
                     print("SUMSUB DATA ERROR: \(error)")
 
-                    self?.isLoadingPublisher.send(false)
+                    self?.getUserDocuments()
+                    //self?.isLoadingPublisher.send(false)
 
                 case .finished:
                     ()

@@ -46,7 +46,7 @@ enum SportRadarRestAPIClient {
     case deleteFavoriteList(listId: Int)
     case deleteFavoriteFromList(eventId: Int)
 
-
+    case getCashbackSuccessBanner
 }
 
 extension SportRadarRestAPIClient: Endpoint {
@@ -122,6 +122,9 @@ extension SportRadarRestAPIClient: Endpoint {
         case .deleteFavoriteFromList:
             return "/api/favourites/fw/deleteAccountFavourites"
 
+        case .getCashbackSuccessBanner:
+            return "/services/content/get"
+
         }
     }
 
@@ -161,6 +164,7 @@ extension SportRadarRestAPIClient: Endpoint {
         case .deleteFavoriteList: return nil
         case .deleteFavoriteFromList: return nil
 
+        case .getCashbackSuccessBanner: return nil
         }
     }
 
@@ -200,6 +204,7 @@ extension SportRadarRestAPIClient: Endpoint {
         case .deleteFavoriteList: return .delete
         case .deleteFavoriteFromList: return .delete
 
+        case .getCashbackSuccessBanner: return .get
         }
     }
 
@@ -542,6 +547,22 @@ extension SportRadarRestAPIClient: Endpoint {
                         """
             return bodyString.data(using: String.Encoding.utf8) ?? Data()
 
+        case .getCashbackSuccessBanner:
+            let bodyString =
+                        """
+                        {
+                            "contentId": {
+                                "type": "bannerCategoryList",
+                                "id": "1355/cashbackSuccessBanner"
+                            },
+                            "clientContext": {
+                                "language": "FR",
+                                "ipAddress": "127.0.0.1"
+                            }
+                        }
+                        """
+            return bodyString.data(using: String.Encoding.utf8) ?? Data()
+
 
         default:
             return nil
@@ -616,6 +637,8 @@ extension SportRadarRestAPIClient: Endpoint {
         case .deleteFavoriteFromList:
             return SportRadarConstants.apiRestHostname
 
+        case .getCashbackSuccessBanner:
+            return SportRadarConstants.servicesRestHostname
         }
     }
 
@@ -677,6 +700,8 @@ extension SportRadarRestAPIClient: Endpoint {
         case .promotionalTopEvents:
             return defaultHeaders
         case .promotionalTopStories:
+            return defaultHeaders
+        case .getCashbackSuccessBanner:
             return defaultHeaders
 
         case .favoritesList, .addFavoriteList, .addFavoriteToList, .getFavoritesFromList, .deleteFavoriteList, .deleteFavoriteFromList:

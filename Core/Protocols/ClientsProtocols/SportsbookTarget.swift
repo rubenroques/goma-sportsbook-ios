@@ -64,6 +64,7 @@ enum SportsbookTargetFeatures: CaseIterable {
 
     case suggestedBets
     case cashout
+    case cashback
 
     case casino
 }
@@ -82,7 +83,6 @@ extension SportsbookTarget {
     static var shouldUserBlurEffectTabBar: Bool {
         return false
     }
-
 
     static var shouldUseGradientBackgrounds: Bool {
         return false

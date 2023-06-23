@@ -54,6 +54,11 @@ class MyTicketTableViewCell: UITableViewCell {
     @IBOutlet private weak var originalAmountValueLabel: UILabel!
     @IBOutlet private weak var returnedAmountValueLabel: UILabel!
 
+
+    @IBOutlet private weak var cashbackIconImageView: UIImageView!
+    @IBOutlet private weak var cashbackUsedBaseView: UIView!
+    @IBOutlet private weak var cashbackUsedTitleLabel: UILabel!
+
     // Constraints
 //    @IBOutlet private weak var stackBottomToPartialConstraint: NSLayoutConstraint!
 //    @IBOutlet private weak var stackBottomToContainerConstraint: NSLayoutConstraint!
@@ -101,6 +106,18 @@ class MyTicketTableViewCell: UITableViewCell {
     var hasPartialCashoutReturned: Bool = false {
         didSet {
             self.partialAmountsView.isHidden = !hasPartialCashoutReturned
+        }
+    }
+
+    var hasCashback: Bool = false {
+        didSet {
+            self.cashbackIconImageView.isHidden = !hasCashback
+        }
+    }
+
+    var usedCashback: Bool = false {
+        didSet {
+            self.cashbackUsedBaseView.isHidden = !usedCashback
         }
     }
 
@@ -162,7 +179,14 @@ class MyTicketTableViewCell: UITableViewCell {
 
         self.returnedAmountValueLabel.text = "\(localized("returned"))\n€0.10"
 
+        self.cashbackUsedTitleLabel.text = localized("used_cashback").uppercased()
+        self.cashbackUsedTitleLabel.font = AppFont.with(type: .bold, size: 9)
+
         self.hasPartialCashoutReturned = false
+
+        self.hasCashback = false
+
+        self.usedCashback = false
 
         self.setupWithTheme()
     }
@@ -199,12 +223,18 @@ class MyTicketTableViewCell: UITableViewCell {
         self.winningsSubtitleLabel.text = "-"
 
         self.hasPartialCashoutReturned = false
+
+        self.hasCashback = false
+
+        self.usedCashback = false
     }
 
     override func layoutSubviews() {
         super.layoutSubviews()
 
         self.freebetBaseView.layer.cornerRadius = self.freebetBaseView.frame.height / 2
+
+        self.cashbackUsedBaseView.layer.cornerRadius = CornerRadius.status
     }
 
     override func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {
@@ -292,6 +322,12 @@ class MyTicketTableViewCell: UITableViewCell {
         self.partialCashoutButton.layer.cornerRadius = CornerRadius.button
         self.partialCashoutButton.layer.masksToBounds = true
         self.partialCashoutButton.backgroundColor = .clear
+
+        self.cashbackIconImageView.backgroundColor = .clear
+
+        self.cashbackUsedBaseView.backgroundColor = UIColor.App.highlightSecondary
+
+        self.cashbackUsedTitleLabel.textColor = UIColor.App.buttonTextPrimary
     }
 
     func configureCashoutButton(withState state: MyTicketCellViewModel.CashoutButtonState) {
@@ -551,6 +587,10 @@ class MyTicketTableViewCell: UITableViewCell {
             .store(in: &cancellables)
 
         self.viewModel?.requestCashoutAvailability()
+
+        // Cashback
+        self.hasCashback = true
+        self.usedCashback = false
     }
 
     func setupPartialCashoutSlider() {

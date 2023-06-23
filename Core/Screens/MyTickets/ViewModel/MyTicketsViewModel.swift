@@ -492,7 +492,16 @@ extension MyTicketsViewModel: UITableViewDelegate, UITableViewDataSource {
             cell.needsHeightRedraw = { [weak self] withScroll in
                 self?.redrawTableViewAction?(withScroll)
             }
+
             cell.configure(withBetHistoryEntry: ticketValue, countryCodes: locationsCodes, viewModel: viewModel)
+
+            // TEST CASHBACK
+            if indexPath.row % 2 == 0 {
+                cell.hasCashback = true
+            }
+            else {
+                cell.usedCashback = true
+            }
 
             cell.tappedShareAction = { [weak self] in
                 if let cellSnapshot = cell.snapshot,

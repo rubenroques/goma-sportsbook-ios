@@ -23,6 +23,7 @@ public enum TransactionType: CaseIterable {
     case productBonus
     case manualAdjustment
     case withdrawalReject
+    case automatedWithdrawal
 
     init?(transactionType: String) {
 
@@ -41,6 +42,7 @@ public enum TransactionType: CaseIterable {
         case "PRODUC_BON": self = .productBonus
         case "MAN_ADJUST": self = .manualAdjustment
         case "WD_REJECT": self = .withdrawalReject
+        case "ESC_XFER": self = .automatedWithdrawal
         default: return nil
         }
     }
@@ -61,6 +63,7 @@ public enum TransactionType: CaseIterable {
         case .productBonus: return "PRODUC_BON"
         case .manualAdjustment: return "MAN_ADJUST"
         case .withdrawalReject: return "WD_REJECT"
+        case .automatedWithdrawal: return "ESC_XFER"
         }
     }
 

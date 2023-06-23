@@ -151,6 +151,14 @@ extension UIColor {
             return UIColor(named: "navBannerActive") ?? Self.backgroundSecondary
         }
 
+        static var backgroundHeaderGradient1: UIColor {
+            return UIColor(named: "backgroundHeaderGradient1") ?? Self.headerGradient1
+        }
+
+        static var backgroundHeaderGradient2: UIColor {
+            return UIColor(named: "backgroundHeaderGradient2") ?? Self.headerGradient2
+        }
+
     }
 
 }

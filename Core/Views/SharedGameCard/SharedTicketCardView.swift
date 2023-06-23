@@ -70,7 +70,7 @@ class SharedTicketCardView: UIView {
 
     func setupWithTheme() {
 
-        self.backgroundColor = UIColor.App.backgroundPrimary
+        self.backgroundColor = .clear
 
         self.shareButton.backgroundColor = .clear
 
