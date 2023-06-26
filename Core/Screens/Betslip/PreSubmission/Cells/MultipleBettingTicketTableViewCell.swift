@@ -27,6 +27,7 @@ class MultipleBettingTicketTableViewCell: UITableViewCell {
     @IBOutlet private weak var bottomBaseView: UIView!
     @IBOutlet private weak var marketNameLabel: UILabel!
     @IBOutlet private weak var matchDetailLabel: UILabel!
+    @IBOutlet private weak var cashbackIconImageView: UIImageView!
 
     @IBOutlet private weak var stackView: UIStackView!
 
@@ -45,6 +46,12 @@ class MultipleBettingTicketTableViewCell: UITableViewCell {
     var oddSubscriber: AnyCancellable?
     var oddAvailabilitySubscriber: AnyCancellable?
 
+    var hasCashback: Bool = false {
+        didSet {
+            self.cashbackIconImageView.isHidden = !hasCashback
+        }
+    }
+
     override func awakeFromNib() {
         super.awakeFromNib()
         // Initialization code
@@ -61,6 +68,7 @@ class MultipleBettingTicketTableViewCell: UITableViewCell {
 
         self.errorView.isHidden = true
 
+        self.hasCashback = false
     }
 
     override func layoutSubviews() {
@@ -96,6 +104,8 @@ class MultipleBettingTicketTableViewCell: UITableViewCell {
         self.oddValueLabel.text = ""
         self.marketNameLabel.text = ""
         self.matchDetailLabel.text = ""
+
+        self.hasCashback = false
     }
 
     func setupWithTheme() {
@@ -228,6 +238,8 @@ class MultipleBettingTicketTableViewCell: UITableViewCell {
             self.errorLateralTopView.backgroundColor = UIColor.App.backgroundSecondary
             self.errorLateralBottomView.backgroundColor = UIColor.App.backgroundSecondary
         }
+
+        self.hasCashback = true
     }
 
     @IBAction private func didTapDeleteButton() {

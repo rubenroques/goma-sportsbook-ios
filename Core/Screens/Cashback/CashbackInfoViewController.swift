@@ -1,13 +1,17 @@
 //
-//  CashbackRootViewController.swift
+//  CashbackInfoViewController.swift
 //  Sportsbook
 //
-//  Created by André Lascas on 22/06/2023.
+//  Created by André Lascas on 26/06/2023.
 //
 
 import UIKit
 
-class CashbackRootViewController: UIViewController {
+class CashbackInfoViewController: UIViewController {
+
+    private lazy var navigationView: UIView = Self.createNavigationView()
+    private lazy var backButton: UIButton = Self.createBackButton()
+    private lazy var navigationTitleLabel: UILabel = Self.createNavigationTitleLabel()
 
     private lazy var scrollView: UIScrollView = Self.createScrollView()
     private lazy var containerView: UIView = Self.createContainerView()
@@ -45,6 +49,8 @@ class CashbackRootViewController: UIViewController {
         self.setupSubviews()
         self.setupWithTheme()
 
+        self.backButton.addTarget(self, action: #selector(didTapBackButton), for: .primaryActionTriggered)
+
     }
 
     override func viewDidLayoutSubviews() {
@@ -64,6 +70,12 @@ class CashbackRootViewController: UIViewController {
     }
 
     private func setupWithTheme() {
+
+        self.navigationView.backgroundColor = UIColor.App.backgroundPrimary
+
+        self.backButton.backgroundColor = .clear
+
+        self.navigationTitleLabel.textColor = UIColor.App.textPrimary
 
         self.scrollView.backgroundColor = UIColor.App.backgroundPrimary
 
@@ -127,7 +139,31 @@ class CashbackRootViewController: UIViewController {
     }
 }
 
-extension CashbackRootViewController {
+extension CashbackInfoViewController {
+
+    private static func createNavigationView() -> UIView {
+        let view = UIView()
+        view.translatesAutoresizingMaskIntoConstraints = false
+        return view
+    }
+
+    private static func createBackButton() -> UIButton {
+        let button = UIButton()
+        button.translatesAutoresizingMaskIntoConstraints = false
+        let image = UIImage(named: "arrow_back_icon")
+        button.setImage(image, for: .normal)
+        button.setTitle(nil, for: .normal)
+        return button
+    }
+
+    private static func createNavigationTitleLabel() -> UILabel {
+        let label = UILabel()
+        label.translatesAutoresizingMaskIntoConstraints = false
+        label.font = AppFont.with(type: .bold, size: 20)
+        label.text = localized("cashback")
+        label.textAlignment = .center
+        return label
+    }
 
     private static func createScrollView() -> UIScrollView {
         let scrollView = UIScrollView()
@@ -298,6 +334,16 @@ extension CashbackRootViewController {
     }
 
     // Constraints
+    private static func createNavigationTopConstraint() -> NSLayoutConstraint {
+        let constraint = NSLayoutConstraint()
+        return constraint
+    }
+
+    private static func createScrollTopConstraint() -> NSLayoutConstraint {
+        let constraint = NSLayoutConstraint()
+        return constraint
+    }
+
     private static func createBannerImageViewFixedHeightConstraint() -> NSLayoutConstraint {
         let constraint = NSLayoutConstraint()
         return constraint
@@ -309,6 +355,11 @@ extension CashbackRootViewController {
     }
 
     private func setupSubviews() {
+
+        self.view.addSubview(self.navigationView)
+
+        self.navigationView.addSubview(self.backButton)
+        self.navigationView.addSubview(self.navigationTitleLabel)
 
         self.view.addSubview(self.scrollView)
 
@@ -349,10 +400,26 @@ extension CashbackRootViewController {
     private func initConstraints() {
 
         NSLayoutConstraint.activate([
+            self.navigationView.leadingAnchor.constraint(equalTo: self.view.leadingAnchor),
+            self.navigationView.trailingAnchor.constraint(equalTo: self.view.trailingAnchor),
+            self.navigationView.topAnchor.constraint(equalTo: self.view.topAnchor),
+            self.navigationView.heightAnchor.constraint(equalToConstant: 44),
+
+            self.backButton.leadingAnchor.constraint(equalTo: self.navigationView.leadingAnchor, constant: 18),
+            self.backButton.centerYAnchor.constraint(equalTo: self.navigationView.centerYAnchor),
+            self.backButton.widthAnchor.constraint(equalToConstant: 40),
+            self.backButton.heightAnchor.constraint(equalTo: self.backButton.widthAnchor),
+
+            self.navigationTitleLabel.leadingAnchor.constraint(equalTo: self.navigationView.leadingAnchor, constant: 50),
+            self.navigationTitleLabel.trailingAnchor.constraint(equalTo: self.navigationView.trailingAnchor, constant: -50),
+            self.navigationTitleLabel.centerYAnchor.constraint(equalTo: self.navigationView.centerYAnchor),
+        ])
+
+        NSLayoutConstraint.activate([
 
             self.scrollView.leadingAnchor.constraint(equalTo: self.view.leadingAnchor),
             self.scrollView.trailingAnchor.constraint(equalTo: self.view.trailingAnchor),
-            self.scrollView.topAnchor.constraint(equalTo: self.view.topAnchor),
+            self.scrollView.topAnchor.constraint(equalTo: self.navigationView.bottomAnchor),
             self.scrollView.bottomAnchor.constraint(equalTo: self.view.bottomAnchor),
 
             self.containerView.leadingAnchor.constraint(equalTo: self.scrollView.contentLayoutGuide.leadingAnchor),
@@ -476,3 +543,4 @@ extension CashbackRootViewController {
         self.bannerImageViewDynamicHeightConstraint.isActive = false
     }
 }
+

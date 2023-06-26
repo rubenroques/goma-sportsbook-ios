@@ -4246,6 +4246,14 @@
 		A93FE2262A45A8B9006A6907 /* CashbackBalanceView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A93FE2202A45A8B9006A6907 /* CashbackBalanceView.swift */; };
 		A93FE2272A45A8B9006A6907 /* CashbackBalanceView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A93FE2202A45A8B9006A6907 /* CashbackBalanceView.swift */; };
 		A93FE2282A45A8B9006A6907 /* CashbackBalanceView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A93FE2202A45A8B9006A6907 /* CashbackBalanceView.swift */; };
+		A93FE22A2A49D0DF006A6907 /* CashbackInfoView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A93FE2292A49D0DF006A6907 /* CashbackInfoView.swift */; };
+		A93FE22B2A49D0DF006A6907 /* CashbackInfoView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A93FE2292A49D0DF006A6907 /* CashbackInfoView.swift */; };
+		A93FE22C2A49D0DF006A6907 /* CashbackInfoView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A93FE2292A49D0DF006A6907 /* CashbackInfoView.swift */; };
+		A93FE22D2A49D0DF006A6907 /* CashbackInfoView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A93FE2292A49D0DF006A6907 /* CashbackInfoView.swift */; };
+		A93FE22E2A49D0DF006A6907 /* CashbackInfoView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A93FE2292A49D0DF006A6907 /* CashbackInfoView.swift */; };
+		A93FE22F2A49D0DF006A6907 /* CashbackInfoView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A93FE2292A49D0DF006A6907 /* CashbackInfoView.swift */; };
+		A93FE2302A49D0DF006A6907 /* CashbackInfoView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A93FE2292A49D0DF006A6907 /* CashbackInfoView.swift */; };
+		A93FE2312A49D0DF006A6907 /* CashbackInfoView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A93FE2292A49D0DF006A6907 /* CashbackInfoView.swift */; };
 		A96FAEC729804C0600A0751F /* Data+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = A96FAEC629804C0600A0751F /* Data+Extensions.swift */; };
 		A96FAEC829804C0600A0751F /* Data+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = A96FAEC629804C0600A0751F /* Data+Extensions.swift */; };
 		A96FAEC929804C0600A0751F /* Data+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = A96FAEC629804C0600A0751F /* Data+Extensions.swift */; };
@@ -5403,6 +5411,22 @@
 		A9CB3E7C29CE1DCD00BEF9C1 /* BonusEmptyView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9CB3E7629CE1DCD00BEF9C1 /* BonusEmptyView.swift */; };
 		A9CB3E7D29CE1DCD00BEF9C1 /* BonusEmptyView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9CB3E7629CE1DCD00BEF9C1 /* BonusEmptyView.swift */; };
 		A9CB3E7E29CE1DCD00BEF9C1 /* BonusEmptyView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9CB3E7629CE1DCD00BEF9C1 /* BonusEmptyView.swift */; };
+		A9D533F92A49E4FB0013ACF5 /* CashbackLearnMoreView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9D533F82A49E4FB0013ACF5 /* CashbackLearnMoreView.swift */; };
+		A9D533FA2A49E4FB0013ACF5 /* CashbackLearnMoreView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9D533F82A49E4FB0013ACF5 /* CashbackLearnMoreView.swift */; };
+		A9D533FB2A49E4FB0013ACF5 /* CashbackLearnMoreView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9D533F82A49E4FB0013ACF5 /* CashbackLearnMoreView.swift */; };
+		A9D533FC2A49E4FB0013ACF5 /* CashbackLearnMoreView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9D533F82A49E4FB0013ACF5 /* CashbackLearnMoreView.swift */; };
+		A9D533FD2A49E4FB0013ACF5 /* CashbackLearnMoreView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9D533F82A49E4FB0013ACF5 /* CashbackLearnMoreView.swift */; };
+		A9D533FE2A49E4FB0013ACF5 /* CashbackLearnMoreView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9D533F82A49E4FB0013ACF5 /* CashbackLearnMoreView.swift */; };
+		A9D533FF2A49E4FB0013ACF5 /* CashbackLearnMoreView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9D533F82A49E4FB0013ACF5 /* CashbackLearnMoreView.swift */; };
+		A9D534002A49E4FB0013ACF5 /* CashbackLearnMoreView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9D533F82A49E4FB0013ACF5 /* CashbackLearnMoreView.swift */; };
+		A9D534022A4A01980013ACF5 /* CashbackInfoViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9D534012A4A01980013ACF5 /* CashbackInfoViewController.swift */; };
+		A9D534032A4A01980013ACF5 /* CashbackInfoViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9D534012A4A01980013ACF5 /* CashbackInfoViewController.swift */; };
+		A9D534042A4A01980013ACF5 /* CashbackInfoViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9D534012A4A01980013ACF5 /* CashbackInfoViewController.swift */; };
+		A9D534052A4A01980013ACF5 /* CashbackInfoViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9D534012A4A01980013ACF5 /* CashbackInfoViewController.swift */; };
+		A9D534062A4A01980013ACF5 /* CashbackInfoViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9D534012A4A01980013ACF5 /* CashbackInfoViewController.swift */; };
+		A9D534072A4A01980013ACF5 /* CashbackInfoViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9D534012A4A01980013ACF5 /* CashbackInfoViewController.swift */; };
+		A9D534082A4A01980013ACF5 /* CashbackInfoViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9D534012A4A01980013ACF5 /* CashbackInfoViewController.swift */; };
+		A9D534092A4A01980013ACF5 /* CashbackInfoViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9D534012A4A01980013ACF5 /* CashbackInfoViewController.swift */; };
 		A9D5BB7028FD6769001B0E13 /* LaunchScreen-GOMASportRadar.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = A9C3438028F9A7DC0055360B /* LaunchScreen-GOMASportRadar.storyboard */; };
 		A9D5BB7228FD688F001B0E13 /* GOMASportRadar-Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = A9C3438B28F9A7DC0055360B /* GOMASportRadar-Assets.xcassets */; };
 		A9D5BB81290A9CEC001B0E13 /* EmailVerificationCodeViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9D5BB7E290A9CEC001B0E13 /* EmailVerificationCodeViewController.swift */; };
@@ -6028,6 +6052,7 @@
 		A93FE20C2A445434006A6907 /* GenericErrorViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GenericErrorViewController.swift; sourceTree = "<group>"; };
 		A93FE2162A44A08C006A6907 /* CashbackRootViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CashbackRootViewController.swift; sourceTree = "<group>"; };
 		A93FE2202A45A8B9006A6907 /* CashbackBalanceView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CashbackBalanceView.swift; sourceTree = "<group>"; };
+		A93FE2292A49D0DF006A6907 /* CashbackInfoView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CashbackInfoView.swift; sourceTree = "<group>"; };
 		A948BF93279ED6B9006053C9 /* SearchEvent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchEvent.swift; sourceTree = "<group>"; };
 		A96279EA273ED1E40001E1D5 /* ActivationAlertView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ActivationAlertView.swift; sourceTree = "<group>"; };
 		A96279ED273ED2290001E1D5 /* ActivationAlertView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = ActivationAlertView.xib; sourceTree = "<group>"; };
@@ -6302,6 +6327,8 @@
 		A9C82FCF26F9E14800059DCD /* PopUpPromotionView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = PopUpPromotionView.xib; sourceTree = "<group>"; };
 		A9CB3E6D29CDC25600BEF9C1 /* ApplicableBonus.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ApplicableBonus.swift; sourceTree = "<group>"; };
 		A9CB3E7629CE1DCD00BEF9C1 /* BonusEmptyView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BonusEmptyView.swift; sourceTree = "<group>"; };
+		A9D533F82A49E4FB0013ACF5 /* CashbackLearnMoreView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CashbackLearnMoreView.swift; sourceTree = "<group>"; };
+		A9D534012A4A01980013ACF5 /* CashbackInfoViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CashbackInfoViewController.swift; sourceTree = "<group>"; };
 		A9D5BB7E290A9CEC001B0E13 /* EmailVerificationCodeViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EmailVerificationCodeViewController.swift; sourceTree = "<group>"; };
 		A9D5BB87290AD0E1001B0E13 /* CodeVerificationViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CodeVerificationViewController.swift; sourceTree = "<group>"; };
 		A9DF8DF828DDC1D80083BF56 /* UserInfoSimpleCardView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserInfoSimpleCardView.swift; sourceTree = "<group>"; };
@@ -8525,6 +8552,7 @@
 			isa = PBXGroup;
 			children = (
 				A93FE2162A44A08C006A6907 /* CashbackRootViewController.swift */,
+				A9D534012A4A01980013ACF5 /* CashbackInfoViewController.swift */,
 			);
 			path = Cashback;
 			sourceTree = "<group>";
@@ -8533,6 +8561,8 @@
 			isa = PBXGroup;
 			children = (
 				A93FE2202A45A8B9006A6907 /* CashbackBalanceView.swift */,
+				A93FE2292A49D0DF006A6907 /* CashbackInfoView.swift */,
+				A9D533F82A49E4FB0013ACF5 /* CashbackLearnMoreView.swift */,
 			);
 			path = Cashback;
 			sourceTree = "<group>";
@@ -11745,6 +11775,7 @@
 				455AE1352A2A16E00045FDD3 /* MakeYourBetTableViewCell.swift in Sources */,
 				450B7A4A28F58574009229E3 /* UserNotificationTableViewCell.swift in Sources */,
 				450B7A4B28F58574009229E3 /* CompetitionDetailsViewModel.swift in Sources */,
+				A9D533FA2A49E4FB0013ACF5 /* CashbackLearnMoreView.swift in Sources */,
 				450B7A4C28F58574009229E3 /* SportsbookTarget.swift in Sources */,
 				A92548242A2A466E0056F832 /* RibDocsViewController.swift in Sources */,
 				450B7A4D28F58574009229E3 /* FailableDecodable.swift in Sources */,
@@ -11774,6 +11805,7 @@
 				450B7A6328F58574009229E3 /* TransactionsHistoryViewController.swift in Sources */,
 				450B7A6428F58574009229E3 /* TitleTextFieldView.swift in Sources */,
 				450B7A6528F58574009229E3 /* MessageDetailViewController.swift in Sources */,
+				A9D534032A4A01980013ACF5 /* CashbackInfoViewController.swift in Sources */,
 				450B7A6628F58574009229E3 /* ActivationAlert.swift in Sources */,
 				450B7A6728F58574009229E3 /* AddFriendCellViewModel.swift in Sources */,
 				450B7A6828F58574009229E3 /* Debounce.swift in Sources */,
@@ -11787,6 +11819,7 @@
 				450088F129CE244200DA4C30 /* FooterResponsibleGamingViewCell.swift in Sources */,
 				450B7A7228F58574009229E3 /* TabularViewDelegate.swift in Sources */,
 				450B7A7328F58574009229E3 /* BonusSwitchView.swift in Sources */,
+				A93FE22B2A49D0DF006A6907 /* CashbackInfoView.swift in Sources */,
 				450B7A7428F58574009229E3 /* ReceivedMessageTableViewCell.swift in Sources */,
 				450B7A7528F58574009229E3 /* RecentSearchHeaderView.swift in Sources */,
 				454F73B6299152C100437460 /* GradientView.swift in Sources */,
@@ -11824,6 +11857,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				A9D534092A4A01980013ACF5 /* CashbackInfoViewController.swift in Sources */,
 				A9DF8E6428E751F10083BF56 /* ListTitleHeaderFooterView.swift in Sources */,
 				A9958C7E2970641D001474E2 /* UploadDocumentTableViewCell.swift in Sources */,
 				A986D34928CB473700AF95D7 /* TipsCellViewModel.swift in Sources */,
@@ -11896,10 +11930,12 @@
 				A98EC7E22889B0AA0044FC46 /* ConversationBetSelectionRootViewModel.swift in Sources */,
 				A98EC7EB288AF2C00044FC46 /* NewGroupHeaderFooterView.swift in Sources */,
 				A9CB3E7529CDC25600BEF9C1 /* ApplicableBonus.swift in Sources */,
+				A9D534002A49E4FB0013ACF5 /* CashbackLearnMoreView.swift in Sources */,
 				A93FE2282A45A8B9006A6907 /* CashbackBalanceView.swift in Sources */,
 				A9BA04162A3099FA007880FC /* ManualUploadDocumentsViewController.swift in Sources */,
 				A96FAECD29804C0600A0751F /* Data+Extensions.swift in Sources */,
 				456D6FCF289ACE5600B7E542 /* MessageDetailWebViewController.swift in Sources */,
+				A93FE2312A49D0DF006A6907 /* CashbackInfoView.swift in Sources */,
 				A925480E2A28E0AA0056F832 /* ListTypeIconCollectionViewCell.swift in Sources */,
 				A90FB7D829AF9DF800D08A7C /* SelfExclusionViewController.swift in Sources */,
 				A90229B728B6892300972863 /* QuickBetViewModel.swift in Sources */,
@@ -12078,6 +12114,7 @@
 				A9FB6D5628C645C800E3FE58 /* RankingsViewController.swift in Sources */,
 				A98295A9283BA1420014066A /* BetSelectionCellViewModel.swift in Sources */,
 				457CBA55282D27D000ED0F00 /* TournamentTableViewHeader.swift in Sources */,
+				A9D533FE2A49E4FB0013ACF5 /* CashbackLearnMoreView.swift in Sources */,
 				457CBA56282D27D000ED0F00 /* BetslipManager.swift in Sources */,
 				457CBA57282D27D000ED0F00 /* Color+Extensions.swift in Sources */,
 				457CBA58282D27D000ED0F00 /* ProfileLimitsManagementViewController.swift in Sources */,
@@ -12135,6 +12172,7 @@
 				457CBA83282D27D000ED0F00 /* BonusHistoryTableViewCell.swift in Sources */,
 				457CBA84282D27D000ED0F00 /* ChatNotificationsViewModel.swift in Sources */,
 				457CBA85282D27D000ED0F00 /* RequestLocationAccessViewController.swift in Sources */,
+				A93FE22F2A49D0DF006A6907 /* CashbackInfoView.swift in Sources */,
 				457CBA86282D27D000ED0F00 /* Market.swift in Sources */,
 				457CBA87282D27D000ED0F00 /* MyTicketTableViewCell.swift in Sources */,
 				457CBA88282D27D000ED0F00 /* SeeMoreMarketsCollectionViewCell.swift in Sources */,
@@ -12315,6 +12353,7 @@
 				457CBB09282D27D000ED0F00 /* EmailVerificationTableViewCell.swift in Sources */,
 				A98EFDA6287C66B000655A26 /* SharedTicketCardView.swift in Sources */,
 				457CBB0A282D27D000ED0F00 /* ForbiddenLocationViewController.swift in Sources */,
+				A9D534072A4A01980013ACF5 /* CashbackInfoViewController.swift in Sources */,
 				457CBB0B282D27D000ED0F00 /* OddFormatter.swift in Sources */,
 				457CBB0C282D27D000ED0F00 /* FavoriteMatchesDataSource.swift in Sources */,
 				457CBB0D282D27D000ED0F00 /* MyTicketBetLineView.swift in Sources */,
@@ -12755,6 +12794,7 @@
 				457CBD27282D2CD100ED0F00 /* Throttler.swift in Sources */,
 				457CBD28282D2CD100ED0F00 /* LimitsResponse.swift in Sources */,
 				A9B6305C29102BF900BB850E /* RecoverPasswordViewController.swift in Sources */,
+				A9D533FF2A49E4FB0013ACF5 /* CashbackLearnMoreView.swift in Sources */,
 				A90FB7E129B0BCF000D08A7C /* SelfExclusionViewModel.swift in Sources */,
 				A9B946CB28C21C800091296E /* FeaturedTipDetailsViewController.swift in Sources */,
 				457CBD2A282D2CD100ED0F00 /* LoginAccount.swift in Sources */,
@@ -12769,6 +12809,7 @@
 				457CBD2F282D2CD100ED0F00 /* Market.swift in Sources */,
 				457CBD30282D2CD100ED0F00 /* MyTicketTableViewCell.swift in Sources */,
 				457CBD31282D2CD100ED0F00 /* SeeMoreMarketsCollectionViewCell.swift in Sources */,
+				A9D534082A4A01980013ACF5 /* CashbackInfoViewController.swift in Sources */,
 				457CBD32282D2CD100ED0F00 /* SportMatchLineViewModel.swift in Sources */,
 				457CBD33282D2CD100ED0F00 /* SimpleListMarketDetailTableViewCell.swift in Sources */,
 				457CBD34282D2CD100ED0F00 /* PopUpDetails.swift in Sources */,
@@ -13063,6 +13104,7 @@
 				457CBE0C282D2CD100ED0F00 /* NetworkModels.swift in Sources */,
 				457CBE0D282D2CD100ED0F00 /* RootViewController.swift in Sources */,
 				457CBE0F282D2CD100ED0F00 /* SportType.swift in Sources */,
+				A93FE2302A49D0DF006A6907 /* CashbackInfoView.swift in Sources */,
 				457CBE10282D2CD100ED0F00 /* NewGroupViewModel.swift in Sources */,
 				A98708A728D3441800F27348 /* RankingCellViewModel.swift in Sources */,
 				457CBE11282D2CD100ED0F00 /* SegmentControlItemView.swift in Sources */,
@@ -13732,6 +13774,7 @@
 				455AE1362A2A16E00045FDD3 /* MakeYourBetTableViewCell.swift in Sources */,
 				4589C907282024E400243547 /* CompetitionDetailsViewModel.swift in Sources */,
 				4589C908282024E400243547 /* SportsbookTarget.swift in Sources */,
+				A9D533FB2A49E4FB0013ACF5 /* CashbackLearnMoreView.swift in Sources */,
 				4589C909282024E400243547 /* FailableDecodable.swift in Sources */,
 				A92548252A2A466E0056F832 /* RibDocsViewController.swift in Sources */,
 				A9DF8E2428E45C300083BF56 /* UserProfileInfoViewModel.swift in Sources */,
@@ -13761,6 +13804,7 @@
 				4589C918282024E400243547 /* TitleTextFieldView.swift in Sources */,
 				A9B331E628904F4800D097F0 /* MessageDetailViewController.swift in Sources */,
 				4589C919282024E400243547 /* ActivationAlert.swift in Sources */,
+				A9D534042A4A01980013ACF5 /* CashbackInfoViewController.swift in Sources */,
 				4589C91A282024E400243547 /* AddFriendCellViewModel.swift in Sources */,
 				4589C91B282024E400243547 /* Debounce.swift in Sources */,
 				4589C91C282024E400243547 /* UITapGestureRecognizer+Extensions.swift in Sources */,
@@ -13774,6 +13818,7 @@
 				450088F229CE244200DA4C30 /* FooterResponsibleGamingViewCell.swift in Sources */,
 				4589C924282024E400243547 /* TabularViewDelegate.swift in Sources */,
 				4589C925282024E400243547 /* BonusSwitchView.swift in Sources */,
+				A93FE22C2A49D0DF006A6907 /* CashbackInfoView.swift in Sources */,
 				4589C926282024E400243547 /* ReceivedMessageTableViewCell.swift in Sources */,
 				4589C927282024E400243547 /* RecentSearchHeaderView.swift in Sources */,
 				454F73B7299152C100437460 /* GradientView.swift in Sources */,
@@ -14361,6 +14406,7 @@
 				455AE1342A2A16E00045FDD3 /* MakeYourBetTableViewCell.swift in Sources */,
 				45A3326A298976BA008181E9 /* UserNotificationTableViewCell.swift in Sources */,
 				45A3326B298976BA008181E9 /* CompetitionDetailsViewModel.swift in Sources */,
+				A9D533F92A49E4FB0013ACF5 /* CashbackLearnMoreView.swift in Sources */,
 				45A3326C298976BA008181E9 /* SportsbookTarget.swift in Sources */,
 				A92548232A2A466E0056F832 /* RibDocsViewController.swift in Sources */,
 				45A3326D298976BA008181E9 /* FailableDecodable.swift in Sources */,
@@ -14390,6 +14436,7 @@
 				45A33284298976BA008181E9 /* TransactionsHistoryViewController.swift in Sources */,
 				45A33285298976BA008181E9 /* TitleTextFieldView.swift in Sources */,
 				45A33286298976BA008181E9 /* MessageDetailViewController.swift in Sources */,
+				A9D534022A4A01980013ACF5 /* CashbackInfoViewController.swift in Sources */,
 				45A33287298976BA008181E9 /* ActivationAlert.swift in Sources */,
 				45A33288298976BA008181E9 /* AddFriendCellViewModel.swift in Sources */,
 				45A33289298976BA008181E9 /* Debounce.swift in Sources */,
@@ -14403,6 +14450,7 @@
 				450088F029CE244200DA4C30 /* FooterResponsibleGamingViewCell.swift in Sources */,
 				45A33292298976BA008181E9 /* TabularViewDelegate.swift in Sources */,
 				45A33293298976BA008181E9 /* BonusSwitchView.swift in Sources */,
+				A93FE22A2A49D0DF006A6907 /* CashbackInfoView.swift in Sources */,
 				45A33294298976BA008181E9 /* ReceivedMessageTableViewCell.swift in Sources */,
 				45A33295298976BA008181E9 /* RecentSearchHeaderView.swift in Sources */,
 				454F73B5299152C100437460 /* GradientView.swift in Sources */,
@@ -14449,6 +14497,7 @@
 				A90C373429C38DAD007B8AEC /* GrantedBonus.swift in Sources */,
 				A9A7B52A29DDBED900FB22A8 /* BonusTypeMapper.swift in Sources */,
 				45A6BBC328246A7400D9B416 /* TabularViewDataSource.swift in Sources */,
+				A9D533FD2A49E4FB0013ACF5 /* CashbackLearnMoreView.swift in Sources */,
 				A925480B2A28E0AA0056F832 /* ListTypeIconCollectionViewCell.swift in Sources */,
 				45A6BBC428246A7400D9B416 /* SwiftyJSON.swift in Sources */,
 				45C10F7F28772DA700037BBE /* NSObject+Shift.swift in Sources */,
@@ -14499,6 +14548,7 @@
 				45A6BBE028246A7500D9B416 /* GeoLocationManager.swift in Sources */,
 				45A6BBE228246A7500D9B416 /* PersonalInfoViewController.swift in Sources */,
 				A93FE2082A435431006A6907 /* GenericSuccessViewController.swift in Sources */,
+				A9D534062A4A01980013ACF5 /* CashbackInfoViewController.swift in Sources */,
 				A9863EDF286F425400A4A1A2 /* SocialItemCollectionViewCell.swift in Sources */,
 				45A6BBE328246A7500D9B416 /* SharedBetData.swift in Sources */,
 				45A6BBE428246A7500D9B416 /* HeaderTextFieldView.swift in Sources */,
@@ -15010,6 +15060,7 @@
 				45C10FA328772DA700037BBE /* ViewContext.swift in Sources */,
 				A98708AD28D3451C00F27348 /* RankingsViewModel.swift in Sources */,
 				45C10F5528772DA700037BBE /* ModalTransitionPresentationController.swift in Sources */,
+				A93FE22E2A49D0DF006A6907 /* CashbackInfoView.swift in Sources */,
 				45A6BD6D28246A7500D9B416 /* DepositWebViewController.swift in Sources */,
 				45A6BD6E28246A7500D9B416 /* TransactionsHistoryViewController.swift in Sources */,
 				A9B331E728904F4800D097F0 /* MessageDetailViewController.swift in Sources */,
@@ -15408,6 +15459,7 @@
 				A9C341DC28F9A74A0055360B /* TipsViewController.swift in Sources */,
 				A9C341DD28F9A74A0055360B /* BonusViewController.swift in Sources */,
 				A9C341DE28F9A74A0055360B /* ChatMessageView.swift in Sources */,
+				A9D534052A4A01980013ACF5 /* CashbackInfoViewController.swift in Sources */,
 				A9C341DF28F9A74A0055360B /* CurrencyHelper.swift in Sources */,
 				A9C341E028F9A74A0055360B /* FeaturedTipDetailsViewModel.swift in Sources */,
 				A9C341E128F9A74A0055360B /* EditGroupAddUserViewController.swift in Sources */,
@@ -15421,6 +15473,7 @@
 				A9C341EA28F9A74A0055360B /* TopCompetitionLineTableViewCell.swift in Sources */,
 				A9C341EB28F9A74A0055360B /* MatchOddsContent.swift in Sources */,
 				A9C341ED28F9A74A0055360B /* BetSubmissionSuccessViewController.swift in Sources */,
+				A9D533FC2A49E4FB0013ACF5 /* CashbackLearnMoreView.swift in Sources */,
 				A9C341EE28F9A74A0055360B /* ActivationAlertCollectionViewCell.swift in Sources */,
 				A9C341EF28F9A74A0055360B /* NibView.swift in Sources */,
 				A9C341F028F9A74A0055360B /* BonusHistoryCellViewModel.swift in Sources */,
@@ -15444,6 +15497,7 @@
 				A9C3420128F9A74A0055360B /* CasinoWebViewController.swift in Sources */,
 				A9C3420228F9A74A0055360B /* UIButton+Extensions.swift in Sources */,
 				A9C3420328F9A74A0055360B /* ListTypeCollectionViewCell.swift in Sources */,
+				A93FE22D2A49D0DF006A6907 /* CashbackInfoView.swift in Sources */,
 				A9C3420428F9A74A0055360B /* ModalTransitionDismissing.swift in Sources */,
 				A9C3420528F9A74A0055360B /* PreviewChatCellViewModel.swift in Sources */,
 				A9C3420628F9A74A0055360B /* BannerCellViewModel.swift in Sources */,
@@ -16137,7 +16191,7 @@
 				CODE_SIGN_ENTITLEMENTS = Clients/Betsson/Misc/Betsson.entitlements;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 1164;
+				CURRENT_PROJECT_VERSION = 1166;
 				DEVELOPMENT_TEAM = 422GNXXZJR;
 				INFOPLIST_FILE = "$(SRCROOT)/Clients/Betsson/Misc/Betsson-Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 13.0;
@@ -16163,7 +16217,7 @@
 				CODE_SIGN_ENTITLEMENTS = Clients/Betsson/Misc/Betsson.entitlements;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 1164;
+				CURRENT_PROJECT_VERSION = 1166;
 				DEVELOPMENT_TEAM = 422GNXXZJR;
 				INFOPLIST_FILE = "$(SRCROOT)/Clients/Betsson/Misc/Betsson-Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 13.0;

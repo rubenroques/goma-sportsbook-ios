@@ -602,36 +602,36 @@ class SportRadarEventsProvider: EventsProvider {
         }
 
 
-        // Need to subscribe to new event live data from outside lists and detail
-        if self.eventDetailsCoordinator == nil {
-            guard
-                let sessionToken = socketConnector.token
-            else {
-                return Fail(error: ServiceProviderError.userSessionNotFound).eraseToAnyPublisher()
-            }
-
-            self.eventDetailsCoordinator = SportRadarEventDetailsCoordinator(matchId: id,
-                                                                             sessionToken: sessionToken.hash,
-                                                                             storage: SportRadarEventDetailsStorage())
-
-            if let eventDetailsCoordinator = self.eventDetailsCoordinator {
-
-                let publisher = eventDetailsCoordinator.subscribeToEventLiveDataUpdates(withId: id)
-                return publisher.setFailureType(to: ServiceProviderError.self).eraseToAnyPublisher()
-            }
-
-        }
-
-        // event details
-        if let eventDetailsCoordinator = self.eventDetailsCoordinator,
-           !eventDetailsCoordinator.containsEvent(withid: id)
-        {
-
-            eventDetailsCoordinator.setupEvent(withId: id)
-            
-            let publisher = eventDetailsCoordinator.subscribeToEventLiveDataUpdates(withId: id)
-            return publisher.setFailureType(to: ServiceProviderError.self).eraseToAnyPublisher()
-        }
+//        // Need to subscribe to new event live data from outside lists and detail
+//        if self.eventDetailsCoordinator == nil {
+//            guard
+//                let sessionToken = socketConnector.token
+//            else {
+//                return Fail(error: ServiceProviderError.userSessionNotFound).eraseToAnyPublisher()
+//            }
+//
+//            self.eventDetailsCoordinator = SportRadarEventDetailsCoordinator(matchId: id,
+//                                                                             sessionToken: sessionToken.hash,
+//                                                                             storage: SportRadarEventDetailsStorage())
+//
+//            if let eventDetailsCoordinator = self.eventDetailsCoordinator {
+//
+//                let publisher = eventDetailsCoordinator.subscribeToEventLiveDataUpdates(withId: id)
+//                return publisher.setFailureType(to: ServiceProviderError.self).eraseToAnyPublisher()
+//            }
+//
+//        }
+//
+//        // event details
+//        if let eventDetailsCoordinator = self.eventDetailsCoordinator,
+//           !eventDetailsCoordinator.containsEvent(withid: id)
+//        {
+//
+//            eventDetailsCoordinator.setupEvent(withId: id)
+//
+//            let publisher = eventDetailsCoordinator.subscribeToEventLiveDataUpdates(withId: id)
+//            return publisher.setFailureType(to: ServiceProviderError.self).eraseToAnyPublisher()
+//        }
 
         return Just(nil).setFailureType(to: ServiceProviderError.self).eraseToAnyPublisher()
     }
