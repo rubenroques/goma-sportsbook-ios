@@ -50,9 +50,9 @@ class GenericSuccessViewController: UIViewController {
 
         self.successAnimationView.backgroundColor = .clear
 
-        self.titleLabel.textColor = UIColor.App.textPrimary
+        self.titleLabel.textColor = UIColor.App.buttonTextPrimary
 
-        self.subtitleLabel.textColor = UIColor.App.textPrimary
+        self.subtitleLabel.textColor = UIColor.App.buttonTextPrimary
 
         StyleHelper.styleButton(button: self.continueButton)
 

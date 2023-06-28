@@ -68,9 +68,9 @@ class GenericErrorViewController: UIViewController {
 
         self.logoImageView.backgroundColor = .clear
 
-        self.titleLabel.textColor = UIColor.App.textPrimary
+        self.titleLabel.textColor = UIColor.App.buttonTextPrimary
 
-        self.subtitleLabel.textColor = UIColor.App.textPrimary
+        self.subtitleLabel.textColor = UIColor.App.buttonTextPrimary
 
         self.shapeView.backgroundColor = UIColor.App.backgroundPrimary
 

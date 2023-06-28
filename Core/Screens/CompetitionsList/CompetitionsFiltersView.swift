@@ -390,6 +390,18 @@ class CompetitionsFiltersView: UIView, NibLoadable {
         self.layoutIfNeeded()
         self.layoutSubviews()
     }
+
+    func updateSelectedIds(ids: [String]) {
+
+        let groupViewModel = filteredCompetitions
+
+        for model in groupViewModel {
+            for cell in model.cells {
+
+            }
+        }
+
+    }
 }
 
 extension CompetitionsFiltersView: UIScrollViewDelegate {

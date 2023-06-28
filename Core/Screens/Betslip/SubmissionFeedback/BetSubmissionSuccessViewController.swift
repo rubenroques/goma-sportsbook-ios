@@ -173,8 +173,8 @@ class BetSubmissionSuccessViewController: UIViewController {
 
         self.animationBaseView.backgroundColor = .clear
         
-        self.messageTitleLabel.textColor = UIColor.App.textPrimary
-        self.messageSubtitleLabel.textColor = UIColor.App.textPrimary
+        self.messageTitleLabel.textColor = UIColor.App.buttonTextPrimary
+        self.messageSubtitleLabel.textColor = UIColor.App.buttonTextPrimary
 
         self.checkboxLabel.backgroundColor = .clear
         self.checkboxLabel.textColor = UIColor.App.textSecondary

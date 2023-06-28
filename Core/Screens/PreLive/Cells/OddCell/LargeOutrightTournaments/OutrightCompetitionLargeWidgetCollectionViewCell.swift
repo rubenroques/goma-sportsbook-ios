@@ -55,6 +55,8 @@ class OutrightCompetitionLargeWidgetCollectionViewCell: UICollectionViewCell {
     private lazy var seeAllView: UIView = Self.createSeeAllView()
     private lazy var seeAllLabel: UILabel = Self.createSeeAllLabel()
 
+    private lazy var gradientBorderView: GradientBorderView = Self.createGradientBorderView()
+
     private var topMarginSpaceConstraint = NSLayoutConstraint()
     private var bottomMarginSpaceConstraint = NSLayoutConstraint()
     private var leadingMarginSpaceConstraint = NSLayoutConstraint()
@@ -331,6 +333,14 @@ extension OutrightCompetitionLargeWidgetCollectionViewCell {
         return seeAllLabel
     }
 
+    private static func createGradientBorderView() -> GradientBorderView {
+        let gradientBorderView = GradientBorderView()
+        gradientBorderView.translatesAutoresizingMaskIntoConstraints = false
+        gradientBorderView.gradientBorderWidth = 2
+        gradientBorderView.gradientCornerRadius = 9
+        return gradientBorderView
+    }
+
     private func setupSubviews() {
         // Add subviews to self.view or each other
         self.contentView.addSubview(self.baseView)
@@ -348,6 +358,10 @@ extension OutrightCompetitionLargeWidgetCollectionViewCell {
         self.baseView.addSubview(self.seeAllView)
 
         self.baseView.addSubview(self.favoriteCompetitionButton)
+
+        self.baseView.addSubview(self.gradientBorderView)
+        self.baseView.sendSubviewToBack(self.gradientBorderView)
+
         // Initialize constraints
         self.initConstraints()
     }
@@ -400,6 +414,13 @@ extension OutrightCompetitionLargeWidgetCollectionViewCell {
             self.trailingMarginSpaceConstraint, // SeeAll view
             self.bottomMarginSpaceConstraint, // SeeAll view
             self.buttonHeightConstraint, // SeeAll view
+        ])
+
+        NSLayoutConstraint.activate([
+            self.baseView.leadingAnchor.constraint(equalTo: gradientBorderView.leadingAnchor),
+            self.baseView.trailingAnchor.constraint(equalTo: gradientBorderView.trailingAnchor),
+            self.baseView.topAnchor.constraint(equalTo: gradientBorderView.topAnchor),
+            self.baseView.bottomAnchor.constraint(equalTo: gradientBorderView.bottomAnchor),
         ])
     }
 }

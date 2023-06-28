@@ -61,6 +61,8 @@ class MatchWidgetCollectionViewCell: UICollectionViewCell {
         return constraint
     }()
 
+    @IBOutlet private weak var baseStackView: UIStackView!
+
     @IBOutlet private weak var favoritesIconImageView: UIImageView!
 
     @IBOutlet private weak var numberOfBetsLabels: UILabel!
@@ -196,10 +198,13 @@ class MatchWidgetCollectionViewCell: UICollectionViewCell {
                     self.topMarginSpaceConstraint.constant = 11
                 }
 
+                self.gradientBorderView.isHidden = false
+
             case .topImage:
                 self.backgroundImageView.isHidden = true
 
                 self.topImageBaseView.isHidden = false
+
                 self.boostedOddBottomLineView.isHidden = true
                 self.boostedTopRightCornerBaseView.isHidden = true
 
@@ -216,6 +221,8 @@ class MatchWidgetCollectionViewCell: UICollectionViewCell {
                 self.teamsHeightConstraint.constant = 67
                 self.topMarginSpaceConstraint.constant = 11
 
+                self.gradientBorderView.isHidden = false
+
             case .boosted:
                 self.backgroundImageView.isHidden = true
 
@@ -229,14 +236,16 @@ class MatchWidgetCollectionViewCell: UICollectionViewCell {
                 self.drawBoostedOddValueBaseView.isHidden = false
                 self.awayBoostedOddValueBaseView.isHidden = false
 
-                self.baseView.layer.borderWidth = 2
-                self.baseView.layer.borderColor = UIColor.App.separatorLine.cgColor
+//                self.baseView.layer.borderWidth = 2
+//                self.baseView.layer.borderColor = UIColor.App.separatorLine.cgColor
                 self.headerLineStackView.alpha = 1.0
                 self.bottomMarginSpaceConstraint.constant = 12
                 self.teamsHeightConstraint.constant = 67
                 self.topMarginSpaceConstraint.constant = 11
 
                 self.setupBoostedOddsSubviews()
+
+                self.gradientBorderView.isHidden = false
 
             case .backgroundImage:
                 self.backgroundImageView.isHidden = false
@@ -557,6 +566,9 @@ class MatchWidgetCollectionViewCell: UICollectionViewCell {
 
         self.backgroundImageGradientLayer.frame = self.backgroundImageView.bounds
         self.locationFlagImageView.layer.cornerRadius = self.locationFlagImageView.frame.size.width / 2
+
+        self.topImageView.roundCorners(corners: [.topRight, .topLeft], radius: 9)
+
     }
 
     override func prepareForReuse() {
@@ -977,7 +989,7 @@ class MatchWidgetCollectionViewCell: UICollectionViewCell {
 
         if viewModel.isLiveMatch {
             self.liveMatchDotBaseView.isHidden = false
-            self.gradientBorderView.isHidden = false
+            //self.gradientBorderView.isHidden = false
             self.liveTipView.isHidden = false
 
             self.cashbackImageViewBaseTrailingConstraint.isActive = false
@@ -985,7 +997,7 @@ class MatchWidgetCollectionViewCell: UICollectionViewCell {
         }
         else {
             self.liveMatchDotBaseView.isHidden = true
-            self.gradientBorderView.isHidden = true
+            //self.gradientBorderView.isHidden = true
             self.liveTipView.isHidden = true
 
             self.cashbackImageViewBaseTrailingConstraint.isActive = true

@@ -777,6 +777,10 @@ class PreLiveEventsViewModel: NSObject {
         self.competitionsMatchesSubscriptions.value[competitionInfo.id] = competitionInfo
     }
 
+    func getCompetitions() -> [Competition] {
+        return self.competitions
+    }
+
     //
     //
     // MARK: - Setups

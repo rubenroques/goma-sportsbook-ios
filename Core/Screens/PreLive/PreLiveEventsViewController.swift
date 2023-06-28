@@ -53,6 +53,17 @@ class PreLiveEventsViewController: UIViewController {
     @IBOutlet private weak var competitionsFiltersBaseView: UIView!
     @IBOutlet private weak var competitionsFiltersDarkBackgroundView: UIView!
 
+    @IBOutlet private weak var competitionsContainerView: UIView!
+
+    @IBOutlet private weak var competitionHistoryBaseView: UIView!
+
+    @IBOutlet private weak var competitionHistoryCollectionView: UICollectionView!
+
+    // Constraints
+
+    @IBOutlet private weak var tableTopViewConstraint: NSLayoutConstraint!
+    @IBOutlet private weak var tableFilterTopViewConstraint: NSLayoutConstraint!
+
     private var competitionsFiltersView: CompetitionsFiltersView = CompetitionsFiltersView()
 
     var cancellables = Set<AnyCancellable>()
@@ -77,6 +88,16 @@ class PreLiveEventsViewController: UIViewController {
 
             self.competitionsFiltersView.resetSelection()
             self.viewModel.selectedSport = selectedSport
+        }
+    }
+
+    var showCompetitionFilterView: Bool = false {
+        didSet {
+            self.competitionHistoryBaseView.isHidden = !showCompetitionFilterView
+
+            self.tableTopViewConstraint.isActive = !showCompetitionFilterView
+
+            self.tableFilterTopViewConstraint.isActive = showCompetitionFilterView
         }
     }
 
@@ -155,8 +176,14 @@ class PreLiveEventsViewController: UIViewController {
 
         }
 
-        self.tableView.isHidden = false
+        self.competitionsContainerView.isHidden = true
+        //self.tableView.isHidden = false
         self.emptyBaseView.isHidden = true
+        self.competitionHistoryBaseView.isHidden = true
+
+        self.competitionsContainerView.bringSubviewToFront(self.competitionHistoryBaseView)
+
+        self.showCompetitionFilterView = false
 
         self.viewModel.didLongPressOddAction = { [weak self] bettingTicket in
             self?.openQuickbet(bettingTicket)
@@ -165,6 +192,7 @@ class PreLiveEventsViewController: UIViewController {
         self.viewModel.resetScrollPositionAction = { [weak self] in
             self?.tableView.setContentOffset(.zero, animated: false)
         }
+
     }
 
     override func viewWillAppear(_ animated: Bool) {
@@ -254,9 +282,32 @@ class PreLiveEventsViewController: UIViewController {
         filtersCollectionView.showsVerticalScrollIndicator = false
         filtersCollectionView.showsHorizontalScrollIndicator = false
         filtersCollectionView.alwaysBounceHorizontal = true
+
         filtersCollectionView.register(ListTypeCollectionViewCell.nib, forCellWithReuseIdentifier: ListTypeCollectionViewCell.identifier)
+
+        filtersCollectionView.register(CompetitionListIconCollectionViewCell.self,
+                                       forCellWithReuseIdentifier: CompetitionListIconCollectionViewCell.identifier)
+
         filtersCollectionView.delegate = self
         filtersCollectionView.dataSource = self
+
+        // Competition History collection view
+        let competitionFlowLayout = UICollectionViewFlowLayout()
+        competitionFlowLayout.estimatedItemSize = CGSize(width: 100, height: 22)
+        competitionFlowLayout.scrollDirection = .horizontal
+
+        self.competitionHistoryCollectionView.collectionViewLayout = competitionFlowLayout
+        self.competitionHistoryCollectionView.contentInset = UIEdgeInsets(top: 0, left: 12.5, bottom: 0, right: 12.5)
+
+        self.competitionHistoryCollectionView.showsVerticalScrollIndicator = false
+        self.competitionHistoryCollectionView.showsHorizontalScrollIndicator = false
+        self.competitionHistoryCollectionView.alwaysBounceHorizontal = true
+
+        self.competitionHistoryCollectionView.register(CompetitionHistoryCollectionViewCell.self,
+                                       forCellWithReuseIdentifier: CompetitionHistoryCollectionViewCell.identifier)
+
+        self.competitionHistoryCollectionView.delegate = self
+        self.competitionHistoryCollectionView.dataSource = self
 
         filtersCountLabel.isHidden = true
         filtersCountLabel.font = AppFont.with(type: .bold, size: 10.0)
@@ -401,7 +452,21 @@ class PreLiveEventsViewController: UIViewController {
         self.viewModel.dataChangedPublisher
             .receive(on: DispatchQueue.main)
             .sink(receiveValue: { [weak self] in
-                self?.reloadData()
+                guard let self = self else { return }
+
+                if self.filterSelectedOption == 2 {
+                    if self.viewModel.selectedCompetitionsInfoPublisher.value.isEmpty {
+                        self.showCompetitionFilterView = false
+                    }
+                    else {
+                        self.showCompetitionFilterView = true
+                    }
+                }
+                else {
+                    self.showCompetitionFilterView = false
+                }
+
+                self.reloadData()
             })
             .store(in: &cancellables)
 
@@ -414,7 +479,8 @@ class PreLiveEventsViewController: UIViewController {
                     self?.loadingSpinnerViewController.startAnimating()
 
                     self?.emptyBaseView.isHidden = true
-                    self?.tableView.isHidden = false
+                    self?.competitionsContainerView.isHidden = false
+                    //self?.tableView.isHidden = false
                     return
                 }
                 else {
@@ -428,21 +494,25 @@ class PreLiveEventsViewController: UIViewController {
                 switch screenState {
                 case .noEmptyNoFilter:
                     self?.emptyBaseView.isHidden = true
-                    self?.tableView.isHidden = false
+                    self?.competitionsContainerView.isHidden = false
+                    //self?.tableView.isHidden = false
 
                 case .emptyNoFilter:
                     self?.emptyBaseView.isHidden = false
-                    self?.tableView.isHidden = true
+                    self?.competitionsContainerView.isHidden = true
+                    //self?.tableView.isHidden = true
                     self?.setEmptyStateBaseView(firstLabelText: localized("no_results_for_selection"),
                                                 secondLabelText: localized("try_something_else"),
                                                 isUserLoggedIn: true)
                 case .noEmptyAndFilter:
                     self?.emptyBaseView.isHidden = true
-                    self?.tableView.isHidden = false
+                    self?.competitionsContainerView.isHidden = false
+                    //self?.tableView.isHidden = false
 
                 case .emptyAndFilter:
                     self?.emptyBaseView.isHidden = false
-                    self?.tableView.isHidden = true
+                    self?.competitionsContainerView.isHidden = true
+                    // self?.tableView.isHidden = true
                     self?.setEmptyStateBaseView(firstLabelText: localized("empty_list_with_filters"),
                                                 secondLabelText: localized("try_something_else"),
                                                 isUserLoggedIn: true)
@@ -524,6 +594,8 @@ class PreLiveEventsViewController: UIViewController {
         self.filtersBarBaseView.backgroundColor = UIColor.App.backgroundSecondary
         self.filtersSeparatorLineView.backgroundColor = UIColor.App.separatorLine
 
+        self.competitionsContainerView.backgroundColor = .clear
+
         self.tableView.backgroundColor = .clear
         self.tableView.backgroundView?.backgroundColor = .clear
 
@@ -539,6 +611,10 @@ class PreLiveEventsViewController: UIViewController {
 
         self.sportTypeIconImageView.setImageColor(color: UIColor.App.buttonTextPrimary)
         self.sportTypeIconImageView.tintColor = UIColor.App.textPrimary
+
+        self.competitionHistoryBaseView.backgroundColor = UIColor.App.pillNavigation
+
+        self.competitionHistoryCollectionView.backgroundColor = .clear
     }
 
     private func openTab(atIndex index: Int) {
@@ -618,6 +694,9 @@ class PreLiveEventsViewController: UIViewController {
 
     func reloadData() {
         self.tableView.reloadData()
+
+        self.competitionHistoryCollectionView.layoutIfNeeded()
+        self.competitionHistoryCollectionView.reloadData()
     }
 
     func changedSport(_ sport: Sport) {
@@ -836,87 +915,162 @@ extension PreLiveEventsViewController: UITableViewDataSource, UITableViewDelegat
 extension PreLiveEventsViewController: UICollectionViewDelegate, UICollectionViewDataSource {
 
     func numberOfSections(in collectionView: UICollectionView) -> Int {
+
+        // Competition history collection view
+        if collectionView == self.competitionHistoryCollectionView {
+            return 1
+        }
+
         return 1
     }
 
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
+        // Competition history collection view
+        if collectionView == self.competitionHistoryCollectionView {
+            return self.viewModel.getCompetitions().count
+        }
         return 3
     }
 
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
-        guard
-            let cell = collectionView.dequeueCellType(ListTypeCollectionViewCell.self, indexPath: indexPath)
+        // Competition history collection view
+        if collectionView == self.competitionHistoryCollectionView {
+            guard
+                let cell = collectionView.dequeueCellType(CompetitionHistoryCollectionViewCell.self, indexPath: indexPath)
+            else {
+                fatalError()
+            }
+
+            let competition = self.viewModel.getCompetitions()[indexPath.row]
+
+            cell.setupInfo(competition: competition)
+
+            cell.didTapCloseAction = { [weak self] in
+
+                if let filteredCompetitions = self?.viewModel.getCompetitions().filter({
+                    $0.id != competition.id
+                }) {
+
+                    let ids = filteredCompetitions.map({
+                        $0.id
+                    })
+
+                    //self?.competitionsFiltersView.updateSelectedIds(ids: ids)
+
+                    self?.competitionsFiltersView.selectedIds.value = Set(ids)
+
+                    self?.viewModel.fetchCompetitionsMatchesWithIds(ids)
+                }
+            }
+
+            return cell
+        }
+
+        if indexPath.row != 2 {
+            guard
+                let cell = collectionView.dequeueCellType(ListTypeCollectionViewCell.self, indexPath: indexPath)
+            else {
+                fatalError()
+            }
+
+            switch indexPath.row {
+            case 0:
+                cell.setupWithTitle(localized("popular"))
+            case 1:
+                cell.setupWithTitle(localized("upcoming"))
+//            case 2:
+//                cell.setupWithTitle(localized("competitions"))
+                //        case 3:
+                //            cell.setupWithTitle(localized("my_games"))
+                //        case 4:
+                //            cell.setupWithTitle(localized("my_competitions"))
+            default:
+                ()
+            }
+
+            if filterSelectedOption == indexPath.row {
+                cell.setSelectedType(true)
+            }
+            else {
+                cell.setSelectedType(false)
+            }
+
+            return cell
+        }
         else {
-            fatalError()
-        }
 
-        switch indexPath.row {
-        case 0:
-            cell.setupWithTitle(localized("popular"))
-        case 1:
-            cell.setupWithTitle(localized("upcoming"))
-        case 2:
-            cell.setupWithTitle(localized("competitions"))
-//        case 3:
-//            cell.setupWithTitle(localized("my_games"))
-//        case 4:
-//            cell.setupWithTitle(localized("my_competitions"))
-        default:
-            ()
-        }
+            guard
+                let cell = collectionView.dequeueCellType(CompetitionListIconCollectionViewCell.self, indexPath: indexPath)
+            else {
+                fatalError()
+            }
 
-        if filterSelectedOption == indexPath.row {
-            cell.setSelectedType(true)
-        }
-        else {
-            cell.setSelectedType(false)
-        }
+            cell.setupInfo(title: localized("competitions"), iconName: "filter_funnel_icon")
 
-        return cell
+            if filterSelectedOption == indexPath.row {
+                cell.setSelectedType(true)
+            }
+            else {
+                cell.setSelectedType(false)
+            }
+
+            cell.setNeedsLayout()
+            cell.layoutIfNeeded()
+
+            return cell
+        }
     }
 
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
 
-        self.filterSelectedOption = indexPath.row
-
-        switch indexPath.row {
-        case 0:
-            AnalyticsClient.sendEvent(event: .myGamesScreen)
-            self.viewModel.setMatchListType(.popular)
-            self.turnTimeRangeOn = false
-            self.setEmptyStateBaseView(firstLabelText: localized("no_results_for_selection"),
-                                       secondLabelText: localized("try_something_else"),
-                                       isUserLoggedIn: true)
-        case 1:
-            AnalyticsClient.sendEvent(event: .todayScreen)
-            self.viewModel.setMatchListType(.upcoming)
-            self.turnTimeRangeOn = true
-            self.setEmptyStateBaseView(firstLabelText: localized("no_results_for_selection"),
-                                       secondLabelText: localized("try_something_else"),
-                                       isUserLoggedIn: true)
-        case 2:
-            AnalyticsClient.sendEvent(event: .competitionsScreen)
-            self.viewModel.setMatchListType(.competitions)
-            self.turnTimeRangeOn = false
-            self.setEmptyStateBaseView(firstLabelText: localized("no_results_for_selection"),
-                                       secondLabelText: localized("try_something_else"),
-                                       isUserLoggedIn: true)
-//        case 3:
-//            self.viewModel.setMatchListType(.favoriteGames)
-//            self.setEmptyStateBaseView(firstLabelText: localized("empty_my_games"),
-//                                       secondLabelText: localized("go_to_list_to_mark"),
-//                                       isUserLoggedIn: Env.userSessionStore.isUserLogged())
-//        case 4:
-//            self.viewModel.setMatchListType(.favoriteCompetitions)
-//            self.setEmptyStateBaseView(firstLabelText: localized("empty_my_competitions"),
-//                                       secondLabelText: localized("second_empty_my_competitions"),
-//                                       isUserLoggedIn: Env.userSessionStore.isUserLogged())
-        default:
-            ()
+        // Competition history collection view
+        if collectionView == self.competitionHistoryCollectionView {
+            let competition = self.viewModel.getCompetitions()[indexPath.row]
+            print("SELECTED COMPETITION FILTER: \(competition.name)")
         }
-        self.filtersCollectionView.reloadData()
-        self.filtersCollectionView.layoutIfNeeded()
-        self.filtersCollectionView.scrollToItem(at: indexPath, at: .centeredHorizontally, animated: true)
+        else {
+
+            self.filterSelectedOption = indexPath.row
+
+            switch indexPath.row {
+            case 0:
+                AnalyticsClient.sendEvent(event: .myGamesScreen)
+                self.viewModel.setMatchListType(.popular)
+                self.turnTimeRangeOn = false
+                self.setEmptyStateBaseView(firstLabelText: localized("no_results_for_selection"),
+                                           secondLabelText: localized("try_something_else"),
+                                           isUserLoggedIn: true)
+            case 1:
+                AnalyticsClient.sendEvent(event: .todayScreen)
+                self.viewModel.setMatchListType(.upcoming)
+                self.turnTimeRangeOn = true
+                self.setEmptyStateBaseView(firstLabelText: localized("no_results_for_selection"),
+                                           secondLabelText: localized("try_something_else"),
+                                           isUserLoggedIn: true)
+            case 2:
+                AnalyticsClient.sendEvent(event: .competitionsScreen)
+                self.viewModel.setMatchListType(.competitions)
+                self.turnTimeRangeOn = false
+                self.setEmptyStateBaseView(firstLabelText: localized("no_results_for_selection"),
+                                           secondLabelText: localized("try_something_else"),
+                                           isUserLoggedIn: true)
+                //        case 3:
+                //            self.viewModel.setMatchListType(.favoriteGames)
+                //            self.setEmptyStateBaseView(firstLabelText: localized("empty_my_games"),
+                //                                       secondLabelText: localized("go_to_list_to_mark"),
+                //                                       isUserLoggedIn: Env.userSessionStore.isUserLogged())
+                //        case 4:
+                //            self.viewModel.setMatchListType(.favoriteCompetitions)
+                //            self.setEmptyStateBaseView(firstLabelText: localized("empty_my_competitions"),
+                //                                       secondLabelText: localized("second_empty_my_competitions"),
+                //                                       isUserLoggedIn: Env.userSessionStore.isUserLogged())
+            default:
+                ()
+            }
+            self.filtersCollectionView.reloadData()
+            self.filtersCollectionView.layoutIfNeeded()
+            self.filtersCollectionView.scrollToItem(at: indexPath, at: .centeredHorizontally, animated: true)
+        }
 
     }
 
