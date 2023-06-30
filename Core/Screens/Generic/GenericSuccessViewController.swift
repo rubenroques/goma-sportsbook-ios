@@ -18,6 +18,10 @@ class GenericSuccessViewController: UIViewController {
     private lazy var subtitleLabel: UILabel = Self.createSubtitleLabel()
     private lazy var continueButton: UIButton = Self.createContinueButton()
 
+    var hasContinueFlow: Bool = false
+
+    var didTapContinueAction: (() -> Void)?
+
     override func viewDidLoad() {
         super.viewDidLoad()
 
@@ -27,6 +31,8 @@ class GenericSuccessViewController: UIViewController {
         self.closeButton.addTarget(self, action: #selector(didTapCloseButton), for: .primaryActionTriggered)
 
         self.continueButton.addTarget(self, action: #selector(didTapContinueButton), for: .primaryActionTriggered)
+
+        self.hasContinueFlow = false
     }
 
     override func viewWillAppear(_ animated: Bool) {
@@ -67,7 +73,12 @@ class GenericSuccessViewController: UIViewController {
 
     @objc private func didTapCloseButton() {
 
-        self.dismiss(animated: true)
+        if !self.hasContinueFlow {
+            self.dismiss(animated: true)
+        }
+        else {
+            self.didTapContinueAction?()
+        }
 
     }
 

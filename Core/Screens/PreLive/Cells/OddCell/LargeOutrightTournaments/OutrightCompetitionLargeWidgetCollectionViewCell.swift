@@ -8,7 +8,6 @@
 import UIKit
 import Combine
 
-
 class OutrightCompetitionLargeWidgetViewModel {
 
     var competition: Competition

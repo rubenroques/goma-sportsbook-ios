@@ -40,7 +40,7 @@ class BonusEmptyView: UIView {
 
         self.emptyBonusView.backgroundColor = UIColor.App.backgroundSecondary
 
-        self.emptyBonusView.layer.borderColor = UIColor.App.buttonBorderTertiary.cgColor
+        self.emptyBonusView.layer.borderColor = UIColor.App.backgroundBorder.cgColor
 
         self.emptyBonusLabel.textColor = UIColor.App.textDisablePrimary
     }

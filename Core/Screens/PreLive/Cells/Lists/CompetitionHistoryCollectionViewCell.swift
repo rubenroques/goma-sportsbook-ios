@@ -15,7 +15,7 @@ class CompetitionHistoryCollectionViewCell: UICollectionViewCell {
 
     var competition: Competition?
 
-    var didTapCloseAction: (() -> Void)?
+    var didTapCloseAction: ((Competition) -> Void)?
 
     override init(frame: CGRect) {
         super.init(frame: frame)
@@ -71,7 +71,10 @@ class CompetitionHistoryCollectionViewCell: UICollectionViewCell {
 
     @objc private func didTapCloseButton() {
         print("CLOSE COMPETITION FILTER!")
-        self.didTapCloseAction?()
+        if let competition = self.competition {
+            self.didTapCloseAction?(competition)
+
+        }
     }
 }
 

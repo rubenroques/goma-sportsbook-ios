@@ -293,7 +293,8 @@ class PreLiveEventsViewController: UIViewController {
 
         // Competition History collection view
         let competitionFlowLayout = UICollectionViewFlowLayout()
-        competitionFlowLayout.estimatedItemSize = CGSize(width: 100, height: 22)
+        //competitionFlowLayout.estimatedItemSize = CGSize(width: 100, height: 22)
+        competitionFlowLayout.estimatedItemSize = UICollectionViewFlowLayout.automaticSize
         competitionFlowLayout.scrollDirection = .horizontal
 
         self.competitionHistoryCollectionView.collectionViewLayout = competitionFlowLayout
@@ -467,6 +468,7 @@ class PreLiveEventsViewController: UIViewController {
                 }
 
                 self.reloadData()
+                self.reloadCompetitionHistoryCollectionData()
             })
             .store(in: &cancellables)
 
@@ -694,7 +696,9 @@ class PreLiveEventsViewController: UIViewController {
 
     func reloadData() {
         self.tableView.reloadData()
+    }
 
+    func reloadCompetitionHistoryCollectionData() {
         self.competitionHistoryCollectionView.layoutIfNeeded()
         self.competitionHistoryCollectionView.reloadData()
     }
@@ -945,21 +949,23 @@ extension PreLiveEventsViewController: UICollectionViewDelegate, UICollectionVie
 
             cell.setupInfo(competition: competition)
 
-            cell.didTapCloseAction = { [weak self] in
+            cell.didTapCloseAction = { [weak self] cellCompetition in
 
                 if let filteredCompetitions = self?.viewModel.getCompetitions().filter({
-                    $0.id != competition.id
+                    $0.id != cellCompetition.id
                 }) {
 
                     let ids = filteredCompetitions.map({
                         $0.id
                     })
 
-                    //self?.competitionsFiltersView.updateSelectedIds(ids: ids)
-
-                    self?.competitionsFiltersView.selectedIds.value = Set(ids)
+                    self?.competitionsFiltersView.updateSelectedIds(filteredIds: ids, removedCompetition: cellCompetition)
 
                     self?.viewModel.fetchCompetitionsMatchesWithIds(ids)
+
+                    if ids.isEmpty {
+                        self?.openCompetitionsFilters()
+                    }
                 }
             }
 
@@ -1026,7 +1032,12 @@ extension PreLiveEventsViewController: UICollectionViewDelegate, UICollectionVie
         // Competition history collection view
         if collectionView == self.competitionHistoryCollectionView {
             let competition = self.viewModel.getCompetitions()[indexPath.row]
+
             print("SELECTED COMPETITION FILTER: \(competition.name)")
+
+            let indexPath = IndexPath(row: 0, section: indexPath.row)
+
+            tableView.scrollToRow(at: indexPath, at: .top, animated: true)
         }
         else {
 

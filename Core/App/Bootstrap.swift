@@ -15,6 +15,8 @@ class Bootstrap {
     private var environment: Environment?
     private var cancellables = Set<AnyCancellable>()
 
+    private var appInitiated: Bool = false
+
     init(router: Router) {
         self.router = router
     }
@@ -37,13 +39,25 @@ class Bootstrap {
         environment.servicesProvider.connect()
         environment.betslipManager.start()
 
+        // TODO: Check this part to enable app initialization without socket connected
         //
+//        environment.servicesProvider.eventsConnectionStatePublisher
+//            .filter { connectorState in
+//                return connectorState == .connected
+//            }
+//            .sink { _ in
+//                environment.sportsStore.requestInitialSportsData()
+//            }
+//            .store(in: &self.cancellables)
         environment.servicesProvider.eventsConnectionStatePublisher
-            .filter { connectorState in
-                return connectorState == .connected
-            }
-            .sink { _ in
-                environment.sportsStore.requestInitialSportsData()
+            .sink { connectorState in
+                if connectorState == .disconnected && self.appInitiated == false {
+                    environment.sportsStore.requestInitialSportsData()
+                    self.appInitiated = true
+                }
+                else if connectorState == .connected {
+                    environment.sportsStore.requestInitialSportsData()
+                }
             }
             .store(in: &self.cancellables)
 

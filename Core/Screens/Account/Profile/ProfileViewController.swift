@@ -307,9 +307,9 @@ class ProfileViewController: UIViewController {
 
     @objc private func tapCopyCode2() {
 
-        let successVC = GenericSuccessViewController()
+        let depositVC = DepositOnRegisterViewController()
 
-        self.present(successVC, animated: true)
+        self.present(depositVC, animated: true)
     }
 
     private func getOptInBonus() {

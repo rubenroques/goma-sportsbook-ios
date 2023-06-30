@@ -35,6 +35,8 @@ class OutrightCompetitionWidgetCollectionViewCell: UICollectionViewCell {
     private lazy var seeAllView: UIView = Self.createSeeAllView()
     private lazy var seeAllLabel: UILabel = Self.createSeeAllLabel()
 
+    private lazy var gradientBorderView: GradientBorderView = Self.createGradientBorderView()
+
     private var viewModel: OutrightCompetitionWidgetViewModel?
     private var cancellables: Set<AnyCancellable> = []
 
@@ -153,6 +155,14 @@ extension OutrightCompetitionWidgetCollectionViewCell {
         return seeAllLabel
     }
 
+    private static func createGradientBorderView() -> GradientBorderView {
+        let gradientBorderView = GradientBorderView()
+        gradientBorderView.translatesAutoresizingMaskIntoConstraints = false
+        gradientBorderView.gradientBorderWidth = 2
+        gradientBorderView.gradientCornerRadius = 9
+        return gradientBorderView
+    }
+
     private func setupSubviews() {
         // Add subviews to self.view or each other
         self.contentView.addSubview(self.baseView)
@@ -167,6 +177,9 @@ extension OutrightCompetitionWidgetCollectionViewCell {
 
         self.baseStackView.addArrangedSubview(self.topView)
         self.baseStackView.addArrangedSubview(self.bottomView)
+
+        self.baseView.addSubview(self.gradientBorderView)
+        self.baseView.sendSubviewToBack(self.gradientBorderView)
 
         // Initialize constraints
         self.initConstraints()
@@ -197,6 +210,13 @@ extension OutrightCompetitionWidgetCollectionViewCell {
             self.seeAllView.centerXAnchor.constraint(equalTo: self.bottomView.centerXAnchor),
             self.seeAllView.heightAnchor.constraint(equalToConstant: 24),
             self.seeAllView.leadingAnchor.constraint(equalTo: self.bottomView.leadingAnchor, constant: 24),
+        ])
+
+        NSLayoutConstraint.activate([
+            self.baseView.leadingAnchor.constraint(equalTo: gradientBorderView.leadingAnchor),
+            self.baseView.trailingAnchor.constraint(equalTo: gradientBorderView.trailingAnchor),
+            self.baseView.topAnchor.constraint(equalTo: gradientBorderView.topAnchor),
+            self.baseView.bottomAnchor.constraint(equalTo: gradientBorderView.bottomAnchor),
         ])
     }
 }

@@ -391,16 +391,27 @@ class CompetitionsFiltersView: UIView, NibLoadable {
         self.layoutSubviews()
     }
 
-    func updateSelectedIds(ids: [String]) {
+    func updateSelectedIds(filteredIds: [String], removedCompetition: Competition) {
 
-        let groupViewModel = filteredCompetitions
+        // Update selected ids
+        self.selectedIds.value = Set(filteredIds)
 
-        for model in groupViewModel {
-            for cell in model.cells {
+        // Update competitions selected ids
+        for sectionGroup in self.filteredCompetitions {
+            if sectionGroup.cells.map(\.id).contains(where: { $0 == removedCompetition.id }) {
+
+                if var competitions = self.competitionSelectedIds[sectionGroup.id] {
+                    competitions.remove(removedCompetition.id)
+                    self.competitionSelectedIds[sectionGroup.id] = competitions
+                }
+                else {
+                    self.competitionSelectedIds[sectionGroup.id] = []
+                }
 
             }
         }
 
+        self.tableView.reloadData()
     }
 }
 

@@ -41,7 +41,7 @@ class ActionTextFieldView: UIView {
 
                 // NOTA: Sem verificar o tema, a cor da border fica sempre com a cor do dark mode, não sei porquê
                 if self.traitCollection.userInterfaceStyle == .light {
-                    self.actionButton.layer.borderColor = UIColor.App.backgroundDarker.cgColor
+                    self.actionButton.layer.borderColor = UIColor.App.backgroundBorder.cgColor
                 }
                 else {
                     self.actionButton.layer.borderColor = UIColor.App.textPrimary.cgColor
