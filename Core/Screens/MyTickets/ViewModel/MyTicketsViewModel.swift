@@ -45,6 +45,7 @@ class MyTicketsViewModel: NSObject {
     var requestPartialAlertAction: ((String, String) -> Void)?
     var showCashoutSuspendedAction: (() -> Void)?
     var showCashoutState: ((AlertType, String) -> Void)?
+    var shouldShowCashbackInfo: (() -> Void)?
 
     private var matchDetailsDictionary: [String: Match] = [:]
 
@@ -515,6 +516,10 @@ extension MyTicketsViewModel: UITableViewDelegate, UITableViewDataSource {
             cell.tappedMatchDetail = { [weak self] matchId in
                 self?.tappedMatchDetail?(matchId)
 
+            }
+
+            cell.shouldShowCashbackInfo = { [weak self] in
+                self?.shouldShowCashbackInfo?()
             }
 
             return cell

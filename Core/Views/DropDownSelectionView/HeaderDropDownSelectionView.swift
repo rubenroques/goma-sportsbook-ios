@@ -89,10 +89,10 @@ class HeaderDropDownSelectionView: UIView {
 
     // MARK: - Lifetime and Cycle
 
-    @available(iOS, unavailable)
-    convenience init() {
-        self.init(frame: .zero)
-    }
+//    @available(iOS, unavailable)
+//    convenience init() {
+//        self.init(frame: .zero)
+//    }
 
     override init(frame: CGRect) {
         super.init(frame: frame)
@@ -261,8 +261,8 @@ class HeaderDropDownSelectionView: UIView {
         self.textField.textColor = .clear
         self.textField.backgroundColor = .clear
 
-        self.textLabel.backgroundColor = color
-        self.headerLabel.backgroundColor = color
+        self.textLabel.backgroundColor = .clear
+        self.headerLabel.backgroundColor = .clear
     }
 
     func setViewBorderColor(_ color: UIColor) {
@@ -428,7 +428,6 @@ extension HeaderDropDownSelectionView {
         self.baseView.addSubview(self.headerLabel)
         self.baseView.addSubview(self.selectImage)
 
-
         self.addSubview(self.containerView)
 
         self.initConstraints()
@@ -498,6 +497,3 @@ extension HeaderDropDownSelectionView: UIPickerViewDelegate, UIPickerViewDataSou
         self.setText(selectedItem)
     }
 }
-
-
-

@@ -293,8 +293,8 @@ class PreLiveEventsViewController: UIViewController {
 
         // Competition History collection view
         let competitionFlowLayout = UICollectionViewFlowLayout()
-        //competitionFlowLayout.estimatedItemSize = CGSize(width: 100, height: 22)
-        competitionFlowLayout.estimatedItemSize = UICollectionViewFlowLayout.automaticSize
+        competitionFlowLayout.estimatedItemSize = CGSize(width: 100, height: 22)
+        //competitionFlowLayout.estimatedItemSize = UICollectionViewFlowLayout.automaticSize
         competitionFlowLayout.scrollDirection = .horizontal
 
         self.competitionHistoryCollectionView.collectionViewLayout = competitionFlowLayout

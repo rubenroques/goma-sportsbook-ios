@@ -736,7 +736,7 @@
 "reset_pwd" = "Reset Password"; // UNUSED
 "reset_success" = "Your Password has been updated successfuly!"; // UNUSED
 "resolved" = "Resolved";
-"responsible_gambling" = "Responsible Gambling";
+"responsible_gaming_title" = "Responsible Gaming";
 "result" = "Result"; // UNUSED
 "results" = "Results"; // UNUSED
 "results_count" = "{num} Results";
@@ -1359,3 +1359,8 @@
 "fourth_info_descrition_cashback" = "Check for this tag on your bets to see if you used your cash back balance on it.";
 "cashback_info" = "Get back some of your bet if you lose.";
 "learn_more" = "Learn more";
+
+"request_concerns" = "Your request concerns";
+"bonus_and_promotions" = "Bonus & Promotions";
+"betting_rules" = "Betting Rules";
+"other" = "Other";

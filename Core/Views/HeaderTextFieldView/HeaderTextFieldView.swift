@@ -127,6 +127,8 @@ class HeaderTextFieldView: NibView {
         }
     }
 
+    var borderColor: UIColor?
+
     private var isActive: Bool = false
     
     var isDisabled: Bool = false {
@@ -166,6 +168,8 @@ class HeaderTextFieldView: NibView {
 
         containerView.layer.borderWidth = 1
         containerView.layer.borderColor = UIColor.App.backgroundSecondary.cgColor
+
+        self.headerLabel.backgroundColor = .clear
         
         self.textField.autocorrectionType = .no
         self.textField.keyboardType = self.keyboardType
@@ -324,6 +328,7 @@ class HeaderTextFieldView: NibView {
 
     func setViewBorderColor(_ color: UIColor) {
         self.containerView.layer.borderColor = color.cgColor
+        self.borderColor = color
     }
 
     func setImageTextField(_ image: UIImage, size: CGFloat = 30) {
@@ -574,8 +579,13 @@ extension HeaderTextFieldView: UITextFieldDelegate {
         }
 
         if self.textField.text == "" {
-            self.containerView.layer.borderColor = self.highlightColor.withAlphaComponent(0).cgColor
 
+            if let borderColor = self.borderColor {
+                self.containerView.layer.borderColor = borderColor.cgColor
+            }
+            else {
+                self.containerView.layer.borderColor = self.highlightColor.withAlphaComponent(0).cgColor
+            }
             if hasCustomRightLabel {
                 self.showPasswordLabel.isHidden = true
             }

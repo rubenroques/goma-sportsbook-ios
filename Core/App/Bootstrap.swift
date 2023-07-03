@@ -15,7 +15,7 @@ class Bootstrap {
     private var environment: Environment?
     private var cancellables = Set<AnyCancellable>()
 
-    private var appInitiated: Bool = false
+    var appInitiated: Bool = false
 
     init(router: Router) {
         self.router = router
@@ -54,6 +54,7 @@ class Bootstrap {
                 if connectorState == .disconnected && self.appInitiated == false {
                     environment.sportsStore.requestInitialSportsData()
                     self.appInitiated = true
+                    environment.appInitWithoutSocket = true
                 }
                 else if connectorState == .connected {
                     environment.sportsStore.requestInitialSportsData()

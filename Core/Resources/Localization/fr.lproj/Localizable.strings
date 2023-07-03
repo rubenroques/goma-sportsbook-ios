@@ -738,7 +738,7 @@
 "reset_pwd" = "Réinitialiser le mot de passe";
 "reset_success" = "Votre mot de passe a été mis à jour avec succès !";
 "resolved" = "Résolu";
-"responsible_gambling" = "Jeu responsable";
+"responsible_gaming_title" = "Jeu responsable";
 "responsible_gaming" = "Lisez à propos du jeu responsable.";
 "result" = "Résultat";
 "results" = "Résultats";
@@ -1424,3 +1424,8 @@
 "fourth_info_descrition_cashback" = "Check for this tag on your bets to see if you used your cash back balance on it.";
 "cashback_info" = "Get back some of your bet if you lose.";
 "learn_more" = "Learn more";
+
+"request_concerns" = "Votre demande concerne";
+"bonus_and_promotions" = "Bonus & Promotions";
+"betting_rules" = "Règles des paris";
+"other" = "Autre";

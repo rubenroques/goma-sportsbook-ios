@@ -40,6 +40,7 @@ class LoginViewController: UIViewController {
 
     // Variables
     var shouldRememberUser: Bool = true
+    var noSocketLoggedUser: Bool = false
 
     private var shouldPresentRegisterFlow: Bool
     private let registrationFormDataKey = "RegistrationFormDataKey"
@@ -674,11 +675,18 @@ class LoginViewController: UIViewController {
         // is the same behaviour if the user skipped the login
         UserSessionStore.skippedLoginFlow()
 
-        if self.shouldRememberUser {
-            self.showBiometricAuthenticationAlert()
+        // TODO: Biometrics alert not working if socket is not connected
+        if Env.appInitWithoutSocket {
+            Env.userSessionStore.setShouldRequestBiometrics(true)
+            self.showNextViewController()
         }
         else {
-            self.showNextViewController()
+            if self.shouldRememberUser {
+                self.showBiometricAuthenticationAlert()
+            }
+            else {
+                self.showNextViewController()
+            }
         }
 
     }

@@ -212,19 +212,37 @@
                                                         <rect key="frame" x="12" y="0.0" width="369" height="25"/>
                                                         <subviews>
                                                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Total Odd" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="H3D-rO-ceb">
-                                                                <rect key="frame" x="0.0" y="0.0" width="123" height="25"/>
+                                                                <rect key="frame" x="0.0" y="0.0" width="92.5" height="25"/>
                                                                 <fontDescription key="fontDescription" name="Gilroy-Semibold" family="Gilroy" pointSize="12"/>
                                                                 <nil key="textColor"/>
                                                                 <nil key="highlightedColor"/>
                                                             </label>
                                                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Bet Amount" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="vXt-7J-prf">
-                                                                <rect key="frame" x="123" y="0.0" width="123" height="25"/>
+                                                                <rect key="frame" x="92.5" y="0.0" width="92" height="25"/>
                                                                 <fontDescription key="fontDescription" name="Gilroy-Semibold" family="Gilroy" pointSize="12"/>
                                                                 <nil key="textColor"/>
                                                                 <nil key="highlightedColor"/>
                                                             </label>
-                                                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="ayK-Qd-dcW">
-                                                                <rect key="frame" x="246" y="0.0" width="123" height="25"/>
+                                                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="uSX-B0-0mX">
+                                                                <rect key="frame" x="184.5" y="0.0" width="92.5" height="25"/>
+                                                                <subviews>
+                                                                    <view contentMode="scaleToFill" ambiguous="YES" translatesAutoresizingMaskIntoConstraints="NO" id="XvJ-AP-OZx" customClass="CashbackInfoView" customModule="Betsson" customModuleProvider="target">
+                                                                        <rect key="frame" x="11" y="3" width="70" height="19"/>
+                                                                        <color key="backgroundColor" systemColor="systemBackgroundColor"/>
+                                                                        <constraints>
+                                                                            <constraint firstAttribute="height" constant="19" id="gbF-sX-cOh"/>
+                                                                            <constraint firstAttribute="width" relation="greaterThanOrEqual" constant="70" id="lnS-eS-125"/>
+                                                                        </constraints>
+                                                                    </view>
+                                                                </subviews>
+                                                                <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                                                <constraints>
+                                                                    <constraint firstItem="XvJ-AP-OZx" firstAttribute="centerX" secondItem="uSX-B0-0mX" secondAttribute="centerX" id="AqJ-9a-SCv"/>
+                                                                    <constraint firstItem="XvJ-AP-OZx" firstAttribute="centerY" secondItem="uSX-B0-0mX" secondAttribute="centerY" id="QD8-6W-du3"/>
+                                                                </constraints>
+                                                            </view>
+                                                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Gains" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="ayK-Qd-dcW">
+                                                                <rect key="frame" x="277" y="0.0" width="92" height="25"/>
                                                                 <fontDescription key="fontDescription" name="Gilroy-Semibold" family="Gilroy" pointSize="12"/>
                                                                 <nil key="textColor"/>
                                                                 <nil key="highlightedColor"/>
@@ -244,19 +262,25 @@
                                                         <rect key="frame" x="8" y="34" width="377" height="25"/>
                                                         <subviews>
                                                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="15,80" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" minimumScaleFactor="0.80000000000000004" translatesAutoresizingMaskIntoConstraints="NO" id="TJv-VO-6Cg">
-                                                                <rect key="frame" x="0.0" y="0.0" width="125.5" height="25"/>
+                                                                <rect key="frame" x="0.0" y="0.0" width="94.5" height="25"/>
                                                                 <fontDescription key="fontDescription" name="Gilroy-Semibold" family="Gilroy" pointSize="16"/>
                                                                 <nil key="textColor"/>
                                                                 <nil key="highlightedColor"/>
                                                             </label>
                                                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Total" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" minimumScaleFactor="0.80000000000000004" translatesAutoresizingMaskIntoConstraints="NO" id="OvZ-3E-5T1">
-                                                                <rect key="frame" x="125.5" y="0.0" width="126" height="25"/>
+                                                                <rect key="frame" x="94.5" y="0.0" width="94" height="25"/>
                                                                 <fontDescription key="fontDescription" name="Gilroy-Semibold" family="Gilroy" pointSize="16"/>
                                                                 <nil key="textColor"/>
                                                                 <nil key="highlightedColor"/>
                                                             </label>
-                                                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="B" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" minimumScaleFactor="0.80000000000000004" translatesAutoresizingMaskIntoConstraints="NO" id="tyr-1F-fEL">
-                                                                <rect key="frame" x="251.5" y="0.0" width="125.5" height="25"/>
+                                                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="0,00€" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Dbq-dg-s0H">
+                                                                <rect key="frame" x="188.5" y="0.0" width="94.5" height="25"/>
+                                                                <fontDescription key="fontDescription" name="Gilroy-Semibold" family="Gilroy" pointSize="16"/>
+                                                                <nil key="textColor"/>
+                                                                <nil key="highlightedColor"/>
+                                                            </label>
+                                                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="0,00" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" minimumScaleFactor="0.80000000000000004" translatesAutoresizingMaskIntoConstraints="NO" id="tyr-1F-fEL">
+                                                                <rect key="frame" x="283" y="0.0" width="94" height="25"/>
                                                                 <fontDescription key="fontDescription" name="Gilroy-Semibold" family="Gilroy" pointSize="16"/>
                                                                 <nil key="textColor"/>
                                                                 <nil key="highlightedColor"/>
@@ -286,13 +310,13 @@
                                                 <rect key="frame" x="0.0" y="59" width="393" height="25"/>
                                                 <subviews>
                                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="6aL-uL-4BQ">
-                                                        <rect key="frame" x="185" y="2" width="23" height="18"/>
+                                                        <rect key="frame" x="138" y="2" width="23" height="18"/>
                                                         <fontDescription key="fontDescription" name="Gilroy-Semibold" family="Gilroy" pointSize="9"/>
                                                         <nil key="textColor"/>
                                                         <nil key="highlightedColor"/>
                                                     </label>
                                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="VLz-nZ-YQ9">
-                                                        <rect key="frame" x="310.5" y="2" width="23" height="18"/>
+                                                        <rect key="frame" x="326.5" y="2" width="23" height="18"/>
                                                         <fontDescription key="fontDescription" name="Gilroy-Semibold" family="Gilroy" pointSize="9"/>
                                                         <nil key="textColor"/>
                                                         <nil key="highlightedColor"/>
@@ -453,8 +477,10 @@
                 <outlet property="bottomSeparatorLineView" destination="fKZ-IO-dTa" id="epf-1i-c8q"/>
                 <outlet property="bottomStackView" destination="od3-Q5-lI2" id="IEE-Mp-gXO"/>
                 <outlet property="cashbackIconImageView" destination="WSO-cl-Fzf" id="Kwg-dZ-4aJ"/>
+                <outlet property="cashbackInfoView" destination="XvJ-AP-OZx" id="MWD-8t-cDx"/>
                 <outlet property="cashbackUsedBaseView" destination="Cd2-AR-4Bf" id="Kxh-dM-Sht"/>
                 <outlet property="cashbackUsedTitleLabel" destination="SK9-9s-yhl" id="NJO-SD-PIx"/>
+                <outlet property="cashbackValueLabel" destination="Dbq-dg-s0H" id="uKC-Pi-IKB"/>
                 <outlet property="cashoutBaseView" destination="BLE-kd-Pbd" id="Xex-a1-L5G"/>
                 <outlet property="cashoutButton" destination="a2o-OR-1K7" id="5v6-9G-LDX"/>
                 <outlet property="freebetBaseView" destination="jZS-1f-Vac" id="GzR-oJ-LD9"/>
@@ -489,7 +515,7 @@
             <color red="0.94901960784313721" green="0.75294117647058822" blue="0.21568627450980393" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
         </namedColor>
         <namedColor name="buttonBackgroundSecondary">
-            <color red="0.40784313725490196" green="0.50588235294117645" blue="0.6705882352941176" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+            <color red="0.43137254901960786" green="0.45490196078431372" blue="0.52941176470588236" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
         </namedColor>
         <systemColor name="systemBackgroundColor">
             <color white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>

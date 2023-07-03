@@ -80,7 +80,6 @@ class MyTicketsViewController: UIViewController {
         self.refreshControl.addTarget(self, action: #selector(self.refresh), for: .valueChanged)
         self.ticketsTableView.addSubview(self.refreshControl)
 
-
         self.loadingView.alpha = 0.0
         self.loadingView.stopAnimating()
         self.loadingBaseView.isHidden = true
@@ -216,6 +215,10 @@ class MyTicketsViewController: UIViewController {
         self.viewModel.showCashoutState = { [weak self] alertType, text in
             self?.reloadAllMyTickets?()
             self?.showCashoutState(alertType: alertType, text: text)
+        }
+
+        self.viewModel.shouldShowCashbackInfo = { [weak self] in
+            self?.showCashbackInfo()
         }
 
         self.isLoading = false
@@ -389,6 +392,13 @@ class MyTicketsViewController: UIViewController {
 
         self.view.bringSubviewToFront(alertView)
 
+    }
+
+    private func showCashbackInfo() {
+
+        let cashbackInfoViewController = CashbackInfoViewController()
+
+        self.navigationController?.pushViewController(cashbackInfoViewController, animated: true)
     }
 
     private func scrollDown() {

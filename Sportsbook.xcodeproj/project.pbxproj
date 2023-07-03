@@ -4614,6 +4614,14 @@
 		A9A6036B2A15293A00B06DF1 /* OptionRadioView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9A603662A15293A00B06DF1 /* OptionRadioView.swift */; };
 		A9A6036C2A15293A00B06DF1 /* OptionRadioView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9A603662A15293A00B06DF1 /* OptionRadioView.swift */; };
 		A9A6036D2A15293A00B06DF1 /* OptionRadioView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9A603662A15293A00B06DF1 /* OptionRadioView.swift */; };
+		A9A651772A52F0A1001D7A22 /* TitleDropdownView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9A651762A52F0A1001D7A22 /* TitleDropdownView.swift */; };
+		A9A651782A52F0A1001D7A22 /* TitleDropdownView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9A651762A52F0A1001D7A22 /* TitleDropdownView.swift */; };
+		A9A651792A52F0A1001D7A22 /* TitleDropdownView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9A651762A52F0A1001D7A22 /* TitleDropdownView.swift */; };
+		A9A6517A2A52F0A1001D7A22 /* TitleDropdownView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9A651762A52F0A1001D7A22 /* TitleDropdownView.swift */; };
+		A9A6517B2A52F0A1001D7A22 /* TitleDropdownView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9A651762A52F0A1001D7A22 /* TitleDropdownView.swift */; };
+		A9A6517C2A52F0A2001D7A22 /* TitleDropdownView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9A651762A52F0A1001D7A22 /* TitleDropdownView.swift */; };
+		A9A6517D2A52F0A2001D7A22 /* TitleDropdownView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9A651762A52F0A1001D7A22 /* TitleDropdownView.swift */; };
+		A9A6517E2A52F0A2001D7A22 /* TitleDropdownView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9A651762A52F0A1001D7A22 /* TitleDropdownView.swift */; };
 		A9A7B52629DDBED900FB22A8 /* BonusTypeMapper.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9A7B52529DDBED900FB22A8 /* BonusTypeMapper.swift */; };
 		A9A7B52729DDBED900FB22A8 /* BonusTypeMapper.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9A7B52529DDBED900FB22A8 /* BonusTypeMapper.swift */; };
 		A9A7B52829DDBED900FB22A8 /* BonusTypeMapper.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9A7B52529DDBED900FB22A8 /* BonusTypeMapper.swift */; };
@@ -6275,6 +6283,7 @@
 		A9A521772A03B74800C0F6C6 /* CardsStyleViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CardsStyleViewModel.swift; sourceTree = "<group>"; };
 		A9A521802A03BD8D00C0F6C6 /* zendesk_support.html */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.html; path = zendesk_support.html; sourceTree = "<group>"; };
 		A9A603662A15293A00B06DF1 /* OptionRadioView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OptionRadioView.swift; sourceTree = "<group>"; };
+		A9A651762A52F0A1001D7A22 /* TitleDropdownView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TitleDropdownView.swift; sourceTree = "<group>"; };
 		A9A7B52529DDBED900FB22A8 /* BonusTypeMapper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BonusTypeMapper.swift; sourceTree = "<group>"; };
 		A9A836B026C6AC8400508923 /* MaintenanceViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MaintenanceViewController.swift; sourceTree = "<group>"; };
 		A9A836B126C6AC8400508923 /* MaintenanceViewController.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = MaintenanceViewController.xib; sourceTree = "<group>"; };
@@ -9801,6 +9810,7 @@
 			children = (
 				F47BB79E27B2D0EF003FA2BC /* DropDownSelectionView.swift */,
 				454E091727F223DB00391560 /* HeaderDropDownSelectionView.swift */,
+				A9A651762A52F0A1001D7A22 /* TitleDropdownView.swift */,
 			);
 			path = DropDownSelectionView;
 			sourceTree = "<group>";
@@ -11926,6 +11936,7 @@
 				450B7A8528F58574009229E3 /* TestsViewController.swift in Sources */,
 				4546A89E29D7089200ABD562 /* UserTrackingViewController.swift in Sources */,
 				450B7A8728F58574009229E3 /* Odd.swift in Sources */,
+				A9A651782A52F0A1001D7A22 /* TitleDropdownView.swift in Sources */,
 				A99CC2F12A26019E0035BA3D /* TopBarAlternateView.swift in Sources */,
 				450B7A8828F58574009229E3 /* NetworkSession.swift in Sources */,
 				450B7A8928F58574009229E3 /* AddUnregisteredFriendTableViewCell.swift in Sources */,
@@ -11952,6 +11963,7 @@
 				A9B331C0288EF21300D097F0 /* MessagesViewController.swift in Sources */,
 				A91A05BF29CB534B00E0A772 /* CloseAccountViewController.swift in Sources */,
 				A9A521762A02B98A00C0F6C6 /* CardsStyleViewController.swift in Sources */,
+				A9A6517E2A52F0A2001D7A22 /* TitleDropdownView.swift in Sources */,
 				A9958C86297AFE42001474E2 /* AddAnotherDocumentView.swift in Sources */,
 				A9DF8E4328E5A5D80083BF56 /* TipsSettingsViewController.swift in Sources */,
 				A98EC7DA2889AF210044FC46 /* ShareTicketFriendGroupViewModel.swift in Sources */,
@@ -12627,6 +12639,7 @@
 				457CBB8F282D27D000ED0F00 /* MyTicketsRootViewController.swift in Sources */,
 				A9A43CAB2A4C9368008FB399 /* CompetitionHistoryCollectionViewCell.swift in Sources */,
 				455AE1392A2A16E00045FDD3 /* MakeYourBetTableViewCell.swift in Sources */,
+				A9A6517C2A52F0A2001D7A22 /* TitleDropdownView.swift in Sources */,
 				A9A5217D2A03B74800C0F6C6 /* CardsStyleViewModel.swift in Sources */,
 				457CBB90282D27D000ED0F00 /* Throwable.swift in Sources */,
 				457CBB92282D27D000ED0F00 /* NotificationsViewController.swift in Sources */,
@@ -13258,6 +13271,7 @@
 				457CBE31282D2CD100ED0F00 /* FilterLineView.swift in Sources */,
 				457CBE32282D2CD100ED0F00 /* AddContactViewController.swift in Sources */,
 				457CBE33282D2CD100ED0F00 /* Bonus.swift in Sources */,
+				A9A6517D2A52F0A2001D7A22 /* TitleDropdownView.swift in Sources */,
 				457CBE34282D2CD100ED0F00 /* LogViewerViewController.swift in Sources */,
 				457CBE35282D2CD100ED0F00 /* TransactionsHistoryRootViewController.swift in Sources */,
 				457CBE36282D2CD100ED0F00 /* FavoritesManager.swift in Sources */,
@@ -13953,6 +13967,7 @@
 				4589C932282024E400243547 /* TestsViewController.swift in Sources */,
 				4546A89F29D7089200ABD562 /* UserTrackingViewController.swift in Sources */,
 				4589C934282024E400243547 /* Odd.swift in Sources */,
+				A9A651792A52F0A1001D7A22 /* TitleDropdownView.swift in Sources */,
 				A99CC2F22A26019E0035BA3D /* TopBarAlternateView.swift in Sources */,
 				4589C935282024E400243547 /* NetworkSession.swift in Sources */,
 				4589C936282024E400243547 /* AddUnregisteredFriendTableViewCell.swift in Sources */,
@@ -14592,6 +14607,7 @@
 				45A332A5298976BA008181E9 /* TestsViewController.swift in Sources */,
 				4546A89D29D7089200ABD562 /* UserTrackingViewController.swift in Sources */,
 				45A332A7298976BA008181E9 /* Odd.swift in Sources */,
+				A9A651772A52F0A1001D7A22 /* TitleDropdownView.swift in Sources */,
 				A99CC2F02A26019E0035BA3D /* TopBarAlternateView.swift in Sources */,
 				45A332A8298976BA008181E9 /* NetworkSession.swift in Sources */,
 				45A332A9298976BA008181E9 /* AddUnregisteredFriendTableViewCell.swift in Sources */,
@@ -15188,6 +15204,7 @@
 				A93FE22E2A49D0DF006A6907 /* CashbackInfoView.swift in Sources */,
 				45A6BD6D28246A7500D9B416 /* DepositWebViewController.swift in Sources */,
 				45A6BD6E28246A7500D9B416 /* TransactionsHistoryViewController.swift in Sources */,
+				A9A6517B2A52F0A1001D7A22 /* TitleDropdownView.swift in Sources */,
 				A9A43C852A4B2B9C008FB399 /* ExtraDocsViewModel.swift in Sources */,
 				A9B331E728904F4800D097F0 /* MessageDetailViewController.swift in Sources */,
 				45A6BD6F28246A7500D9B416 /* TitleTextFieldView.swift in Sources */,
@@ -15274,6 +15291,7 @@
 				A9C340B428F9A74A0055360B /* CheckboxToggleView.swift in Sources */,
 				A9C340B528F9A74A0055360B /* MatchDetailsViewController.swift in Sources */,
 				A9C340B628F9A74A0055360B /* HomeViewTemplateDatasource.swift in Sources */,
+				A9A6517A2A52F0A1001D7A22 /* TitleDropdownView.swift in Sources */,
 				A9C340B728F9A74A0055360B /* SplashViewController.swift in Sources */,
 				A9C340B828F9A74A0055360B /* BonusHistoryDataSource.swift in Sources */,
 				A9C340B928F9A74A0055360B /* SimpleRegisterEmailCheckViewModel.swift in Sources */,
