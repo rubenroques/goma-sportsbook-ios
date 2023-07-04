@@ -162,6 +162,7 @@ extension ServiceProviderModelMapper {
         case .productBonus: return localized("product_bonus")
         case .manualAdjustment: return localized("man_adjust")
         case .withdrawalReject: return localized("withdrawal_reject")
+        case .automatedWithdrawalThreshold: return localized("automated_withdrawal_threshold")
         case .automatedWithdrawal: return localized("automated_withdrawal")
         default: return nil
         }

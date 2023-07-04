@@ -338,6 +338,13 @@ class BetSubmissionSuccessViewController: UIViewController {
             // self?.ticketSnapshots[betHistory.betId] = snapshot
         }
 
+        sharedTicketCardView.didTapLearnMore = { [weak self] in
+
+            let cashbackInfoViewController = CashbackInfoViewController()
+
+            self?.navigationController?.pushViewController(cashbackInfoViewController, animated: true)
+        }
+
         self.betCardsStackView.addArrangedSubview(sharedTicketCardView)
 
     }

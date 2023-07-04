@@ -32,6 +32,7 @@ extension SportRadarModels {
         var currency: String
         var paymentId: Int?
         var gameTranId: String?
+        var reference: String?
 
         enum CodingKeys: String, CodingKey {
             case id = "id"
@@ -44,6 +45,7 @@ extension SportRadarModels {
             case currency = "currency"
             case paymentId = "paymentId"
             case gameTranId = "gameTranId"
+            case reference = "reference"
         }
     }
 }

@@ -279,7 +279,7 @@
                     <rect key="frame" x="0.0" y="70" width="346" height="723"/>
                 </view>
                 <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="JDo-j5-eFq">
-                    <rect key="frame" x="10" y="78.5" width="326" height="714.5"/>
+                    <rect key="frame" x="10" y="70" width="326" height="723"/>
                 </view>
             </subviews>
             <viewLayoutGuide key="safeArea" id="fnl-2z-Ty3"/>
@@ -303,14 +303,13 @@
                 <constraint firstItem="Dx9-on-mts" firstAttribute="top" secondItem="vRj-e2-Szx" secondAttribute="bottom" id="fqw-O4-8ke"/>
                 <constraint firstItem="vRj-e2-Szx" firstAttribute="top" secondItem="i5M-Pr-FkT" secondAttribute="top" id="h8G-p6-8JQ"/>
                 <constraint firstItem="fnl-2z-Ty3" firstAttribute="bottom" secondItem="kGb-Bw-Z5y" secondAttribute="bottom" id="jIT-UJ-POS"/>
-                <constraint firstItem="JDo-j5-eFq" firstAttribute="top" secondItem="vRj-e2-Szx" secondAttribute="bottom" constant="8.5" id="kWa-DZ-PRy"/>
                 <constraint firstItem="1Zb-TC-NS9" firstAttribute="top" secondItem="vRj-e2-Szx" secondAttribute="bottom" id="l2x-52-4fE"/>
                 <constraint firstItem="vRj-e2-Szx" firstAttribute="leading" secondItem="fnl-2z-Ty3" secondAttribute="leading" id="muJ-IF-tbT"/>
                 <constraint firstItem="1Zb-TC-NS9" firstAttribute="trailing" secondItem="fnl-2z-Ty3" secondAttribute="trailing" id="pgF-hs-khe"/>
                 <constraint firstItem="1Zb-TC-NS9" firstAttribute="leading" secondItem="fnl-2z-Ty3" secondAttribute="leading" id="rIf-Ss-VJ8"/>
                 <constraint firstItem="kGb-Bw-Z5y" firstAttribute="top" secondItem="vRj-e2-Szx" secondAttribute="bottom" id="twW-vH-UOx"/>
                 <constraint firstItem="kGb-Bw-Z5y" firstAttribute="leading" secondItem="fnl-2z-Ty3" secondAttribute="leading" id="vml-O9-ARJ"/>
-                <constraint firstItem="JDo-j5-eFq" firstAttribute="height" secondItem="Dx9-on-mts" secondAttribute="height" multiplier="0.988243" id="w75-nd-lih"/>
+                <constraint firstItem="JDo-j5-eFq" firstAttribute="height" secondItem="Dx9-on-mts" secondAttribute="height" id="w75-nd-lih"/>
                 <constraint firstItem="fnl-2z-Ty3" firstAttribute="bottom" secondItem="m9k-zq-sQG" secondAttribute="bottom" id="xfq-P0-FLn"/>
                 <constraint firstItem="Dx9-on-mts" firstAttribute="leading" secondItem="fnl-2z-Ty3" secondAttribute="leading" id="yR7-4B-ULm"/>
             </constraints>

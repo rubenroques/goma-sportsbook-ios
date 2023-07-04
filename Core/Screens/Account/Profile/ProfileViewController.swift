@@ -300,16 +300,6 @@ class ProfileViewController: UIViewController {
         let copyCodeTap = UITapGestureRecognizer(target: self, action: #selector(self.tapCopyCode))
         self.userCodeStackView.addGestureRecognizer(copyCodeTap)
 
-        let copyCodeTap2 = UITapGestureRecognizer(target: self, action: #selector(self.tapCopyCode2))
-        self.profilePictureBaseView.addGestureRecognizer(copyCodeTap2)
-
-    }
-
-    @objc private func tapCopyCode2() {
-
-        let depositVC = DepositOnRegisterViewController()
-
-        self.present(depositVC, animated: true)
     }
 
     private func getOptInBonus() {

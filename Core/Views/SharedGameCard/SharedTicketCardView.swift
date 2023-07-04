@@ -25,10 +25,24 @@ class SharedTicketCardView: UIView {
     private lazy var betAmountSubtitleLabel: UILabel = Self.createBetAmountSubtitleLabel()
     private lazy var winningsTitleLabel: UILabel = Self.createWinningsTitleLabel()
     private lazy var winningsSubtitleLabel: UILabel = Self.createWinningsSubtitleLabel()
+    private lazy var cashbackInfoBaseView: UIView = Self.createCashbackInfoBaseView()
+    private lazy var cashbackInfoView: CashbackInfoView = Self.createCashbackInfoView()
+    private lazy var cashbackValueLabel: UILabel = Self.createCashbackValueLabel()
+    private lazy var learnMoreBaseView: CashbackLearnMoreView = Self.createLearnMoreBaseView()
+    private lazy var cashbackIconImageView: UIImageView = Self.createCashbackIconImageView()
 
     private var betHistoryEntry: BetHistoryEntry?
 
     var didTappedSharebet: ((UIImage?) -> Void)?
+    var didTapLearnMore: (() -> Void)?
+
+    var hasCashback: Bool = false {
+        didSet {
+            self.cashbackInfoBaseView.isHidden = !hasCashback
+            self.cashbackValueLabel.isHidden = !hasCashback
+            self.cashbackIconImageView.isHidden = !hasCashback
+        }
+    }
 
     // MARK: - Lifetime and Cycle
     override init(frame: CGRect) {
@@ -57,6 +71,26 @@ class SharedTicketCardView: UIView {
         }
         
         self.shareButton.addTarget(self, action: #selector(didTapShareButton), for: .primaryActionTriggered)
+
+        self.cashbackInfoView.didTapInfoAction = { [weak self] in
+
+            UIView.animate(withDuration: 0.5, animations: {
+                self?.learnMoreBaseView.alpha = 1
+            }) { (completed) in
+                if completed {
+                    DispatchQueue.main.asyncAfter(deadline: .now() + 5.0) {
+                        UIView.animate(withDuration: 0.5) {
+                            self?.learnMoreBaseView.alpha = 0
+                        }
+                    }
+                }
+            }
+        }
+
+        self.learnMoreBaseView.didTapLearnMoreAction = { [weak self] in
+
+            self?.didTapLearnMore?()
+        }
     }
 
     override func layoutSubviews() {
@@ -98,6 +132,14 @@ class SharedTicketCardView: UIView {
         self.winningsTitleLabel.textColor = UIColor.App.textSecondary
 
         self.winningsSubtitleLabel.textColor = UIColor.App.textPrimary
+
+        self.cashbackInfoBaseView.backgroundColor = .clear
+
+        self.cashbackValueLabel.textColor = UIColor.App.textPrimary
+
+        self.cashbackIconImageView.backgroundColor = .clear
+
+        self.learnMoreBaseView.alpha = 0
     }
 
     func configure(withBetHistoryEntry betHistoryEntry: BetHistoryEntry, countryCodes: [String], viewModel: MyTicketCellViewModel) {
@@ -139,6 +181,7 @@ class SharedTicketCardView: UIView {
             self.winningsSubtitleLabel.text = maxWinningsString
         }
 
+        self.hasCashback = true
     }
 
     @objc func didTapShareButton() {
@@ -292,6 +335,41 @@ extension SharedTicketCardView {
         return label
     }
 
+    private static func createCashbackInfoBaseView() -> UIView {
+        let view = UIView()
+        view.translatesAutoresizingMaskIntoConstraints = false
+        return view
+    }
+
+    private static func createCashbackInfoView() -> CashbackInfoView {
+        let view = CashbackInfoView()
+        view.translatesAutoresizingMaskIntoConstraints = false
+        return view
+    }
+
+    private static func createCashbackValueLabel() -> UILabel {
+        let label = UILabel()
+        label.translatesAutoresizingMaskIntoConstraints = false
+        label.font = AppFont.with(type: .bold , size: 14)
+        label.text = "-.--"
+        label.textAlignment = .center
+        return label
+    }
+
+    private static func createLearnMoreBaseView() -> CashbackLearnMoreView {
+        let view = CashbackLearnMoreView()
+        view.translatesAutoresizingMaskIntoConstraints = false
+        return view
+    }
+
+    private static func createCashbackIconImageView() -> UIImageView {
+        let imageView = UIImageView()
+        imageView.translatesAutoresizingMaskIntoConstraints = false
+        imageView.image = UIImage(named: "cashback_big_blue_icon")
+        imageView.contentMode = .scaleAspectFit
+        return imageView
+    }
+
     private func setupSubviews() {
         self.addSubview(self.baseView)
 
@@ -315,11 +393,19 @@ extension SharedTicketCardView {
 
         self.bottomTitlesStackView.addArrangedSubview(self.totalOddTitleLabel)
         self.bottomTitlesStackView.addArrangedSubview(self.betAmountTitleLabel)
+        self.bottomTitlesStackView.addArrangedSubview(self.cashbackInfoBaseView)
         self.bottomTitlesStackView.addArrangedSubview(self.winningsTitleLabel)
+
+        self.cashbackInfoBaseView.addSubview(self.cashbackInfoView)
 
         self.bottomSubtitlesStackView.addArrangedSubview(self.totalOddSubtitleLabel)
         self.bottomSubtitlesStackView.addArrangedSubview(self.betAmountSubtitleLabel)
+        self.bottomSubtitlesStackView.addArrangedSubview(self.cashbackValueLabel)
         self.bottomSubtitlesStackView.addArrangedSubview(self.winningsSubtitleLabel)
+
+        self.baseView.addSubview(self.learnMoreBaseView)
+
+        self.baseView.addSubview(self.cashbackIconImageView)
 
         self.initConstraints()
     }
@@ -334,7 +420,7 @@ extension SharedTicketCardView {
 
             self.titleLabel.leadingAnchor.constraint(equalTo: self.baseView.leadingAnchor, constant: 16),
             self.titleLabel.topAnchor.constraint(equalTo: self.baseView.topAnchor, constant: 14),
-            self.titleLabel.trailingAnchor.constraint(equalTo: self.baseView.trailingAnchor, constant: -16),
+            self.titleLabel.trailingAnchor.constraint(lessThanOrEqualTo: self.baseView.trailingAnchor, constant: -36),
 
             self.subtitleLabel.leadingAnchor.constraint(equalTo: self.baseView.leadingAnchor, constant: 16),
             self.subtitleLabel.topAnchor.constraint(equalTo: self.titleLabel.bottomAnchor, constant: 3),
@@ -375,7 +461,23 @@ extension SharedTicketCardView {
             self.bottomSubtitlesStackView.trailingAnchor.constraint(equalTo: self.bottomBaseView.trailingAnchor, constant: -25),
             self.bottomSubtitlesStackView.topAnchor.constraint(equalTo: self.bottomSeparatorLineView.bottomAnchor, constant: 2),
             self.bottomSubtitlesStackView.bottomAnchor.constraint(equalTo: self.bottomBaseView.bottomAnchor, constant: 0),
-            self.bottomSubtitlesStackView.heightAnchor.constraint(equalToConstant: 25)
+            self.bottomSubtitlesStackView.heightAnchor.constraint(equalToConstant: 25),
+
+            self.cashbackInfoView.centerXAnchor.constraint(equalTo: self.cashbackInfoBaseView.centerXAnchor),
+            self.cashbackInfoView.centerYAnchor.constraint(equalTo: self.cashbackInfoBaseView.centerYAnchor),
+
+            self.cashbackIconImageView.widthAnchor.constraint(equalToConstant: 20),
+            self.cashbackIconImageView.heightAnchor.constraint(equalTo: self.cashbackIconImageView.widthAnchor),
+            self.cashbackIconImageView.leadingAnchor.constraint(equalTo: self.titleLabel.trailingAnchor, constant: 10),
+            self.cashbackIconImageView.centerYAnchor.constraint(equalTo: self.titleLabel.centerYAnchor)
+
+        ])
+
+        // Learn more view
+        NSLayoutConstraint.activate([
+
+            self.learnMoreBaseView.bottomAnchor.constraint(equalTo: self.cashbackInfoView.topAnchor, constant: -10),
+            self.learnMoreBaseView.trailingAnchor.constraint(equalTo: self.cashbackInfoView.trailingAnchor, constant: 10)
 
         ])
 
