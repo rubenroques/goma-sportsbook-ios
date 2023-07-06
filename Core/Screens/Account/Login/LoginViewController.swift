@@ -390,8 +390,6 @@ class LoginViewController: UIViewController {
 
         genericSuccessViewController.setTextInfo(title: localized("congratulations"), subtitle: localized("singup_success_text"))
 
-        genericSuccessViewController.hasContinueFlow = true
-
         genericSuccessViewController.didTapContinueAction = { [weak self] in
             self?.showBiometricPromptViewController(onNavigationController: navigationController)
         }

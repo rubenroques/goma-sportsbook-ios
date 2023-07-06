@@ -1,21 +1,34 @@
 //
-//  CompetitionHistoryCollectionViewCell.swift
+//  TopCompetitionCollectionViewCell.swift
 //  Sportsbook
 //
-//  Created by André Lascas on 28/06/2023.
+//  Created by André Lascas on 06/07/2023.
 //
 
 import UIKit
 
-class CompetitionHistoryCollectionViewCell: UICollectionViewCell {
+class TopCompetitionCollectionViewCell: UICollectionViewCell {
 
     private lazy var containerView: UIView = Self.createContainerView()
+    private lazy var iconImageView: UIImageView = Self.createIconImageView()
     private lazy var titleLabel: UILabel = Self.createTitleLabel()
-    private lazy var closeButton: UIButton = Self.createCloseButton()
 
     var competition: Competition?
 
-    var didTapCloseAction: ((Competition) -> Void)?
+    var hasHighlight: Bool = false {
+        didSet {
+            if hasHighlight {
+                self.containerView.backgroundColor = UIColor.App.buttonActiveHoverTertiary
+
+                self.titleLabel.textColor = UIColor.App.textPrimary
+            }
+            else {
+                self.containerView.backgroundColor = UIColor.App.pillNavigation
+
+                self.titleLabel.textColor = UIColor.App.textSecondary
+            }
+        }
+    }
 
     override init(frame: CGRect) {
         super.init(frame: frame)
@@ -23,7 +36,7 @@ class CompetitionHistoryCollectionViewCell: UICollectionViewCell {
         self.setupSubviews()
         self.setupWithTheme()
 
-        self.closeButton.addTarget(self, action: #selector(didTapCloseButton), for: .primaryActionTriggered)
+        self.hasHighlight = false
     }
 
     required init?(coder aDecoder: NSCoder) {
@@ -34,6 +47,8 @@ class CompetitionHistoryCollectionViewCell: UICollectionViewCell {
         super.layoutSubviews()
 
         self.containerView.layer.cornerRadius = self.containerView.frame.height / 2
+
+        self.iconImageView.layer.cornerRadius = self.containerView.frame.height / 2
 
     }
 
@@ -46,6 +61,8 @@ class CompetitionHistoryCollectionViewCell: UICollectionViewCell {
     override func prepareForReuse() {
         super.prepareForReuse()
 
+        self.hasHighlight = false
+
         self.setupWithTheme()
 
     }
@@ -56,34 +73,46 @@ class CompetitionHistoryCollectionViewCell: UICollectionViewCell {
 
         self.containerView.layer.borderColor = UIColor.App.buttonActiveHoverTertiary.cgColor
 
-        self.titleLabel.textColor = UIColor.App.textSecondary
+        self.containerView.layer.borderColor = UIColor.App.buttonActiveHoverTertiary.cgColor
 
-        self.closeButton.backgroundColor = .clear
+        self.iconImageView.backgroundColor = .clear
+
+        self.titleLabel.textColor = UIColor.App.textSecondary
 
     }
 
     func setupInfo(competition: Competition) {
+
+        if let country = competition.venue?.isoCode {
+            self.iconImageView.image = UIImage(named: Assets.flagName(withCountryCode: country))
+        }
+        else {
+            self.iconImageView.image = UIImage(named: Assets.flagName(withCountryCode: ""))
+
+        }
+
         self.titleLabel.text = competition.name
 
         self.competition = competition
     }
 
-    @objc private func didTapCloseButton() {
-        print("CLOSE COMPETITION FILTER!")
-        if let competition = self.competition {
-            self.didTapCloseAction?(competition)
-
-        }
-    }
 }
 
-extension CompetitionHistoryCollectionViewCell {
+extension TopCompetitionCollectionViewCell {
 
     private static func createContainerView() -> UIView {
         let view = UIView()
         view.translatesAutoresizingMaskIntoConstraints = false
         view.layer.borderWidth = 1
         return view
+    }
+
+    private static func createIconImageView() -> UIImageView {
+        let imageView = UIImageView()
+        imageView.translatesAutoresizingMaskIntoConstraints = false
+        imageView.image = UIImage(named: "country_flag_240")
+        imageView.contentMode = .scaleAspectFit
+        return imageView
     }
 
     private static func createTitleLabel() -> UILabel {
@@ -95,21 +124,13 @@ extension CompetitionHistoryCollectionViewCell {
         return label
     }
 
-    private static func createCloseButton() -> UIButton {
-        let button = UIButton()
-        button.translatesAutoresizingMaskIntoConstraints = false
-        button.setTitle("", for: .normal)
-        button.setImage(UIImage(named: "x_close_circle_icon"), for: .normal)
-        return button
-    }
-
     private func setupSubviews() {
 
         self.contentView.addSubview(self.containerView)
 
+        self.containerView.addSubview(self.iconImageView)
         self.containerView.addSubview(self.titleLabel)
 
-        self.containerView.addSubview(self.closeButton)
         self.initConstraints()
 
         self.containerView.setNeedsLayout()
@@ -126,14 +147,15 @@ extension CompetitionHistoryCollectionViewCell {
             self.containerView.bottomAnchor.constraint(equalTo: self.contentView.bottomAnchor),
             self.containerView.heightAnchor.constraint(equalToConstant: 22),
 
-            self.titleLabel.leadingAnchor.constraint(equalTo: self.containerView.leadingAnchor, constant: 8),
-            self.titleLabel.centerYAnchor.constraint(equalTo: self.containerView.centerYAnchor),
+            self.iconImageView.leadingAnchor.constraint(equalTo: self.containerView.leadingAnchor, constant: 8),
+            self.iconImageView.widthAnchor.constraint(equalToConstant: 16),
+            self.iconImageView.heightAnchor.constraint(equalTo: self.iconImageView.widthAnchor),
+            self.iconImageView.topAnchor.constraint(equalTo: self.containerView.topAnchor, constant: 8),
+            self.iconImageView.bottomAnchor.constraint(equalTo: self.containerView.bottomAnchor, constant: -8),
 
-            self.closeButton.leadingAnchor.constraint(equalTo: self.titleLabel.trailingAnchor, constant: 3),
-            self.closeButton.trailingAnchor.constraint(equalTo: self.containerView.trailingAnchor, constant: -8),
-            self.closeButton.widthAnchor.constraint(equalToConstant: 10),
-            self.closeButton.heightAnchor.constraint(equalTo: self.closeButton.widthAnchor),
-            self.closeButton.centerYAnchor.constraint(equalTo: self.titleLabel.centerYAnchor)
+            self.titleLabel.leadingAnchor.constraint(equalTo: self.iconImageView.leadingAnchor, constant: 8),
+            self.titleLabel.trailingAnchor.constraint(equalTo: self.containerView.trailingAnchor, constant: -8),
+            self.titleLabel.centerYAnchor.constraint(equalTo: self.iconImageView.centerYAnchor),
 
         ])
     }

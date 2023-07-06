@@ -376,6 +376,14 @@ class WithdrawViewController: UIViewController {
 
         let withdrawSuccessViewController = GenericSuccessViewController()
 
+        withdrawSuccessViewController.didTapContinueAction = { [weak self] in
+            self?.dismiss(animated: true)
+        }
+
+        withdrawSuccessViewController.didTapCloseAction = { [weak self] in
+            self?.dismiss(animated: true)
+        }
+
         withdrawSuccessViewController.setTextInfo(title: "\(localized("success"))!", subtitle: localized("withdrawal_status_message"))
 
         self.navigationController?.pushViewController(withdrawSuccessViewController, animated: true)

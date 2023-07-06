@@ -294,18 +294,15 @@ class SupportPageViewController: UIViewController {
             let subjectType = self.subjectTypeSelectionView.text
             let subjectText = self.subjectTextField.text
 
-            let title = "\(subjectType) - \(subjectText)"
-
-            self.viewModel.sendEmail(title: title, message: self.descriptionTextView.text)
+            self.viewModel.sendEmail(title: subjectText, message: self.descriptionTextView.text, subjectType: subjectType)
         }
         else {
             let subjectType = self.subjectTypeSelectionView.text
             let subjectText = self.subjectTextField.text
 
-            let title = "\(subjectType) - \(subjectText)"
-
-            self.viewModel.sendEmail(title: title,
+            self.viewModel.sendEmail(title: subjectText,
                                      message: self.descriptionTextView.text,
+                                     subjectType: subjectType,
                                      firstName: self.firstNameHeaderTextFieldView.text,
                                      lastName: self.lastNameHeaderTextFieldView.text,
                                      email: self.emailHeaderTextFieldView.text)
@@ -406,14 +403,9 @@ extension SupportPageViewController {
         let dropDownSelectionView = TitleDropdownView()
         dropDownSelectionView.translatesAutoresizingMaskIntoConstraints = false
         dropDownSelectionView.setTitle(localized("request_concerns"))
-        dropDownSelectionView.setSelectionPicker([localized("register"),
-                                                  localized("my_account"),
-                                                  localized("bonus_and_promotions"),
-                                                  localized("deposits"),
-                                                  localized("withdraws"),
-                                                  localized("responsible_gaming_title"),
-                                                  localized("betting_rules"),
-                                                  localized("other")])
+        let allTypeValues: [String] = SubjectType.allCases.map { $0.typeValue }
+
+        dropDownSelectionView.setSelectionPicker(allTypeValues)
         return dropDownSelectionView
     }
     

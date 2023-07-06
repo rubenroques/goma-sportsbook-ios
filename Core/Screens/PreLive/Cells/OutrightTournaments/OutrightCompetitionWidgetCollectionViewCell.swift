@@ -158,7 +158,7 @@ extension OutrightCompetitionWidgetCollectionViewCell {
     private static func createGradientBorderView() -> GradientBorderView {
         let gradientBorderView = GradientBorderView()
         gradientBorderView.translatesAutoresizingMaskIntoConstraints = false
-        gradientBorderView.gradientBorderWidth = 2
+        gradientBorderView.gradientBorderWidth = 1
         gradientBorderView.gradientCornerRadius = 9
         return gradientBorderView
     }

@@ -390,11 +390,18 @@ class IdentificationDocsViewController: UIViewController {
 
         for identityDocument in identityDocuments {
 
-            for identityFileInfo in identityDocument.uploadedFiles {
+            for (index, identityFileInfo) in identityDocument.uploadedFiles.enumerated() {
                 
                 let documentStateView = DocumentStateView()
 
                 documentStateView.configure(documentFileInfo: identityFileInfo)
+
+                if index != identityDocument.uploadedFiles.count - 1 {
+                    documentStateView.hasSeparator = true
+                }
+                else {
+                    documentStateView.hasSeparator = false
+                }
 
                 self.identificationBottomStackView.addArrangedSubview(documentStateView)
 
@@ -456,11 +463,18 @@ class IdentificationDocsViewController: UIViewController {
 
             var mostRecentProofDocument: DocumentFileInfo?
 
-            for proofFileInfo in proofAddressFilesInfo {
+            for (index, proofFileInfo) in proofAddressFilesInfo.enumerated() {
 
                 let documentStateView = DocumentStateView()
 
                 documentStateView.configure(documentFileInfo: proofFileInfo)
+
+                if index != proofAddressFilesInfo.count - 1 {
+                    documentStateView.hasSeparator = true
+                }
+                else {
+                    documentStateView.hasSeparator = false
+                }
 
                 self.proofAddressBottomStackView.addArrangedSubview(documentStateView)
 
@@ -574,7 +588,7 @@ extension IdentificationDocsViewController {
         stackView.translatesAutoresizingMaskIntoConstraints = false
         stackView.axis = .vertical
         stackView.distribution = .equalSpacing
-        stackView.spacing = 8
+        stackView.spacing = 0
         return stackView
     }
 
@@ -650,7 +664,7 @@ extension IdentificationDocsViewController {
         stackView.translatesAutoresizingMaskIntoConstraints = false
         stackView.axis = .vertical
         stackView.distribution = .equalSpacing
-        stackView.spacing = 8
+        stackView.spacing = 0
         return stackView
     }
 

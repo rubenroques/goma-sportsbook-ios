@@ -34,9 +34,9 @@ class CompetitionListIconCollectionViewCell: UICollectionViewCell {
     override func layoutSubviews() {
         super.layoutSubviews()
 
-        self.selectionHighlightView.layer.cornerRadius = self.selectionHighlightView.frame.size.height / 2
+        self.selectionHighlightView.layer.cornerRadius = self.selectionHighlightView.frame.height / 2
         
-        self.containerView.layer.cornerRadius = self.containerView.frame.size.height / 2
+        self.containerView.layer.cornerRadius = self.containerView.frame.height / 2
     }
 
     override func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {

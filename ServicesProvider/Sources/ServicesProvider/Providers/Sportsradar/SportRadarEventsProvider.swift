@@ -1285,6 +1285,26 @@ extension SportRadarEventsProvider {
 
     }
 
+    func getTopCompetitions() -> AnyPublisher<[TopCompetition], ServiceProviderError> {
+
+        let endpoint = SportRadarRestAPIClient.getTopCompetitions
+
+        let requestPublisher: AnyPublisher<SportRadarModels.SportRadarResponse<[SportRadarModels.TopCompetitionData]>, ServiceProviderError> = self.restConnector.request(endpoint)
+
+        return requestPublisher.map( { sportRadarResponse -> [TopCompetition] in
+
+            let topCompetitionData = sportRadarResponse.data.flatMap({
+                $0.competitions
+            })
+
+            let mappedTopCompetitions = topCompetitionData.map(SportRadarModelMapper.topCompetition(fromInternalTopCompetition:))
+
+            return mappedTopCompetitions
+
+        })
+        .eraseToAnyPublisher()
+
+    }
 
     func getEventSummary(eventId: String) -> AnyPublisher<Event, ServiceProviderError> {
 

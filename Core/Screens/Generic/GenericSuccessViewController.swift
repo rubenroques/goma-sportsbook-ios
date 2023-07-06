@@ -21,6 +21,18 @@ class GenericSuccessViewController: UIViewController {
     var hasContinueFlow: Bool = false
 
     var didTapContinueAction: (() -> Void)?
+    var didTapCloseAction: (() -> Void)?
+
+    init() {
+
+        super.init(nibName: nil, bundle: nil)
+
+    }
+
+    @available(iOS, unavailable)
+    required init?(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -44,13 +56,14 @@ class GenericSuccessViewController: UIViewController {
     override func viewDidLayoutSubviews() {
         super.viewDidLayoutSubviews()
 
-        self.containerGradientView.startPoint = CGPoint(x: 0.0, y: 0.0)
-        self.containerGradientView.endPoint = CGPoint(x: 2.0, y: 0.0)
     }
 
     private func setupWithTheme() {
         self.containerGradientView.colors = [(UIColor(red: 1.0 / 255.0, green: 2.0 / 255.0, blue: 91.0 / 255.0, alpha: 1), NSNumber(0.0)),
                                               (UIColor(red: 64.0 / 255.0, green: 76.0 / 255.0, blue: 255.0 / 255.0, alpha: 1), NSNumber(1.0))]
+        
+        self.containerGradientView.startPoint = CGPoint(x: 0.0, y: 0.0)
+        self.containerGradientView.endPoint = CGPoint(x: 2.0, y: 0.0)
 
         self.closeButton.setTitleColor(UIColor.App.highlightPrimary, for: .normal)
 
@@ -73,24 +86,13 @@ class GenericSuccessViewController: UIViewController {
 
     @objc private func didTapCloseButton() {
 
-        if !self.hasContinueFlow {
-            self.dismiss(animated: true)
-        }
-        else {
-            self.didTapContinueAction?()
-        }
+        self.didTapCloseAction?()
 
     }
 
     @objc private func didTapContinueButton() {
 
-        if self.isModal {
-            self.view.window?.rootViewController?.dismiss(animated: true, completion: nil)
-        }
-        else {
-            self.navigationController?.popToRootViewController(animated: true)
-            self.presentedViewController?.dismiss(animated: true)
-        }
+        self.didTapContinueAction?()
 
     }
 

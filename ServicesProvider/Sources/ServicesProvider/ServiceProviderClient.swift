@@ -414,6 +414,16 @@ extension ServicesProviderClient {
         return eventsProvider.getHomeSliders()
     }
 
+    public func getTopCompetitions() -> AnyPublisher<[TopCompetition], ServiceProviderError> {
+        guard
+            let eventsProvider = self.eventsProvider
+        else {
+            return Fail(error: .eventsProviderNotFound).eraseToAnyPublisher()
+        }
+
+        return eventsProvider.getTopCompetitions()
+    }
+
     public func getEventsForMarketGroup(withId marketGroupId: String) -> AnyPublisher<EventsGroup, ServiceProviderError> {
         guard
             let eventsProvider = self.eventsProvider
@@ -1069,14 +1079,14 @@ extension ServicesProviderClient {
         return privilegedAccessManager.contactUs(firstName: firstName, lastName: lastName, email: email, subject: subject, message: message)
     }
 
-    public func contactSupport(userIdentifier: String, subject: String, message: String) -> AnyPublisher<SupportResponse, ServiceProviderError> {
+    public func contactSupport(userIdentifier: String, firstName: String, lastName: String, email: String, subject: String, subjectType: String, message: String) -> AnyPublisher<SupportResponse, ServiceProviderError> {
         guard
             let privilegedAccessManager = self.privilegedAccessManager
         else {
             return Fail(error: ServiceProviderError.privilegedAccessManagerNotFound).eraseToAnyPublisher()
         }
 
-        return privilegedAccessManager.contactSupport(userIdentifier: userIdentifier, subject: subject, message: message)
+        return privilegedAccessManager.contactSupport(userIdentifier: userIdentifier, firstName: firstName, lastName: lastName, email: email, subject: subject, subjectType: subjectType, message: message)
     }
 
     public func calculateCashout(betId: String, stakeValue: String? = nil) -> AnyPublisher<Cashout, ServiceProviderError> {

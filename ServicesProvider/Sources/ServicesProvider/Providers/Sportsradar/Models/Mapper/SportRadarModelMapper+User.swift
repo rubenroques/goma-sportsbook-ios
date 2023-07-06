@@ -401,10 +401,6 @@ extension SportRadarModelMapper {
 
         var transactionType = TransactionType.init(transactionType: internalTransactionDetail.type)
 
-        if internalTransactionDetail.type == "ESC_XFER" {
-            ()
-        }
-
         if transactionType == .automatedWithdrawalThreshold {
             let transactionReference = internalTransactionDetail.reference
             

@@ -545,6 +545,14 @@ class DepositViewController: UIViewController {
 
             let depositSuccessViewController = GenericSuccessViewController()
 
+            depositSuccessViewController.didTapContinueAction = { [weak self] in
+                self?.dismiss(animated: true)
+            }
+
+            depositSuccessViewController.didTapCloseAction = { [weak self] in
+                self?.dismiss(animated: true)
+            }
+
             depositSuccessViewController.setTextInfo(title: "\(localized("success"))!", subtitle: localized("deposit_success_message"))
 
             self.navigationController?.pushViewController(depositSuccessViewController, animated: true)

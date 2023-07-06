@@ -25,7 +25,7 @@ class MatchWidgetCollectionViewCell: UICollectionViewCell {
     lazy var gradientBorderView: GradientBorderView = {
         var gradientBorderView = GradientBorderView()
         gradientBorderView.translatesAutoresizingMaskIntoConstraints = false
-        gradientBorderView.gradientBorderWidth = 2
+        gradientBorderView.gradientBorderWidth = 1
         gradientBorderView.gradientCornerRadius = 9
         return gradientBorderView
     }()

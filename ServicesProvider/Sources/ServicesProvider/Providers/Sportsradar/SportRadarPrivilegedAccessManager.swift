@@ -1047,9 +1047,9 @@ class SportRadarPrivilegedAccessManager: PrivilegedAccessManager {
         }).eraseToAnyPublisher()
     }
 
-    func contactSupport(userIdentifier: String, subject: String, message: String) -> AnyPublisher<SupportResponse, ServiceProviderError> {
+    func contactSupport(userIdentifier: String, firstName: String, lastName: String, email: String, subject: String, subjectType: String, message: String) -> AnyPublisher<SupportResponse, ServiceProviderError> {
 
-        let endpoint = OmegaAPIClient.contactSupport(userIdentifier: userIdentifier, subject: subject, message: message)
+        let endpoint = OmegaAPIClient.contactSupport(userIdentifier: userIdentifier, firstName: firstName, lastName: lastName, email: email, subject: subject, subjectType: subjectType, message: message)
 
         let publisher: AnyPublisher<SportRadarModels.SupportResponse, ServiceProviderError> = self.connector.request(endpoint)
 

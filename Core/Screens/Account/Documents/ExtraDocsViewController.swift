@@ -198,11 +198,18 @@ class ExtraDocsViewController: UIViewController {
 
             var mostRecentDocument: DocumentFileInfo?
 
-            for uploadedFile in documentsFileInfo {
+            for (index, uploadedFile) in documentsFileInfo.enumerated() {
 
                 let documentStateView = DocumentStateView()
 
                 documentStateView.configure(documentFileInfo: uploadedFile)
+
+                if index != documentsFileInfo.count - 1 {
+                    documentStateView.hasSeparator = true
+                }
+                else {
+                    documentStateView.hasSeparator = false
+                }
 
                 self.extraDocumentTopStackView.addArrangedSubview(documentStateView)
 
@@ -337,7 +344,7 @@ extension ExtraDocsViewController {
         stackView.translatesAutoresizingMaskIntoConstraints = false
         stackView.axis = .vertical
         stackView.distribution = .equalSpacing
-        stackView.spacing = 8
+        stackView.spacing = 0
         return stackView
     }
 
@@ -476,7 +483,7 @@ extension ExtraDocsViewController {
             self.extraDocumentTitleLabel.topAnchor.constraint(equalTo: self.extraDocumentBaseView.topAnchor, constant: 17),
 
             self.extraDocumentTopStackView.leadingAnchor.constraint(equalTo: self.extraDocumentBaseView.leadingAnchor, constant: 14),
-            self.extraDocumentTopStackView.trailingAnchor.constraint(equalTo: self.extraDocumentBaseView.trailingAnchor),
+            self.extraDocumentTopStackView.trailingAnchor.constraint(equalTo: self.extraDocumentBaseView.trailingAnchor, constant: -14),
             self.extraDocumentTopStackView.topAnchor.constraint(equalTo: self.extraDocumentTitleLabel.bottomAnchor, constant: 4),
 
             self.extraAddDocBaseView.leadingAnchor.constraint(equalTo: self.extraDocumentBaseView.leadingAnchor, constant: 14),

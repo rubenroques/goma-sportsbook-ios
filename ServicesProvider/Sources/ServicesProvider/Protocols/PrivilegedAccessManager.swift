@@ -80,7 +80,7 @@ protocol PrivilegedAccessManager {
     func optOutBonus(partyId: String, code: String) -> AnyPublisher<BasicResponse, ServiceProviderError>
 
     func contactUs(firstName: String, lastName: String, email: String, subject: String, message: String) -> AnyPublisher<BasicResponse, ServiceProviderError>
-    func contactSupport(userIdentifier: String, subject: String, message: String) -> AnyPublisher<SupportResponse, ServiceProviderError>
+    func contactSupport(userIdentifier: String, firstName: String, lastName: String, email: String, subject: String, subjectType: String , message: String) -> AnyPublisher<SupportResponse, ServiceProviderError>
 
     func getUserConsents() -> AnyPublisher<[UserConsent], ServiceProviderError>
 

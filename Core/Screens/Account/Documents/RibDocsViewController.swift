@@ -197,11 +197,18 @@ class RibDocsViewController: UIViewController {
 
             var mostRecentDocument: DocumentFileInfo?
 
-            for uploadedFile in documentsFileInfo {
+            for (index, uploadedFile) in documentsFileInfo.enumerated() {
 
                 let documentStateView = DocumentStateView()
 
                 documentStateView.configure(documentFileInfo: uploadedFile)
+
+                if index != documentsFileInfo.count - 1 {
+                    documentStateView.hasSeparator = true
+                }
+                else {
+                    documentStateView.hasSeparator = false
+                }
 
                 self.ribDocumentTopStackView.addArrangedSubview(documentStateView)
 
@@ -337,7 +344,7 @@ extension RibDocsViewController {
         stackView.translatesAutoresizingMaskIntoConstraints = false
         stackView.axis = .vertical
         stackView.distribution = .equalSpacing
-        stackView.spacing = 8
+        stackView.spacing = 0
         return stackView
     }
 

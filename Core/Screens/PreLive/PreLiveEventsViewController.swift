@@ -306,6 +306,8 @@ class PreLiveEventsViewController: UIViewController {
 
         self.competitionHistoryCollectionView.register(CompetitionHistoryCollectionViewCell.self,
                                        forCellWithReuseIdentifier: CompetitionHistoryCollectionViewCell.identifier)
+        self.competitionHistoryCollectionView.register(TopCompetitionCollectionViewCell.self,
+                                       forCellWithReuseIdentifier: TopCompetitionCollectionViewCell.identifier)
 
         self.competitionHistoryCollectionView.delegate = self
         self.competitionHistoryCollectionView.dataSource = self
@@ -455,16 +457,39 @@ class PreLiveEventsViewController: UIViewController {
             .sink(receiveValue: { [weak self] in
                 guard let self = self else { return }
 
-                if self.filterSelectedOption == 2 {
-                    if self.viewModel.selectedCompetitionsInfoPublisher.value.isEmpty {
-                        self.showCompetitionFilterView = false
+                if self.viewModel.hasTopCompetitions.value {
+                    if self.filterSelectedOption == 3 {
+                        if self.viewModel.selectedCompetitionsInfoPublisher.value.isEmpty {
+                            self.showCompetitionFilterView = false
+                        }
+                        else {
+                            self.showCompetitionFilterView = true
+                        }
+                    }
+                    else if self.filterSelectedOption == 2 {
+                        if self.viewModel.selectedTopCompetitionsInfoPublisher.value.isEmpty {
+                            self.showCompetitionFilterView = false
+                        }
+                        else {
+                            self.showCompetitionFilterView = true
+                        }
                     }
                     else {
-                        self.showCompetitionFilterView = true
+                        self.showCompetitionFilterView = false
                     }
                 }
                 else {
-                    self.showCompetitionFilterView = false
+                    if self.filterSelectedOption == 2 {
+                        if self.viewModel.selectedCompetitionsInfoPublisher.value.isEmpty {
+                            self.showCompetitionFilterView = false
+                        }
+                        else {
+                            self.showCompetitionFilterView = true
+                        }
+                    }
+                    else {
+                        self.showCompetitionFilterView = false
+                    }
                 }
 
                 self.reloadData()
@@ -572,6 +597,28 @@ class PreLiveEventsViewController: UIViewController {
             })
             .store(in: &cancellables)
 
+        self.viewModel.hasTopCompetitions
+            .sink(receiveValue: { [weak self] hasTopCompetitions in
+
+                if hasTopCompetitions {
+                    if self?.viewModel.matchListTypePublisher.value == .competitions {
+                        self?.openTab(atIndex: 3)
+                    }
+                }
+                else {
+                    if self?.viewModel.matchListTypePublisher.value == .competitions {
+                        self?.openTab(atIndex: 2)
+                    }
+                    else if self?.viewModel.matchListTypePublisher.value == .topCompetitions {
+                        self?.viewModel.matchListTypePublisher.send(.upcoming)
+                        self?.openTab(atIndex: 1)
+                    }
+                }
+
+                self?.filtersCollectionView.reloadData()
+            })
+            .store(in: &cancellables)
+
     }
 
     @objc func refreshControllPulled() {
@@ -622,30 +669,67 @@ class PreLiveEventsViewController: UIViewController {
     private func openTab(atIndex index: Int) {
         self.filterSelectedOption = index
 
-        switch index {
-        case 0:
-            AnalyticsClient.sendEvent(event: .myGamesScreen)
-            self.viewModel.setMatchListType(.popular)
-            turnTimeRangeOn = false
-            self.setEmptyStateBaseView(firstLabelText: localized("no_results_for_selection"),
-                                       secondLabelText: localized("try_something_else"),
-                                       isUserLoggedIn: true)
-        case 1:
-            AnalyticsClient.sendEvent(event: .todayScreen)
-            self.viewModel.setMatchListType(.upcoming)
-            turnTimeRangeOn = true
-            self.setEmptyStateBaseView(firstLabelText: localized("no_results_for_selection"),
-                                       secondLabelText: localized("try_something_else"),
-                                       isUserLoggedIn: true)
-        case 2:
-            AnalyticsClient.sendEvent(event: .competitionsScreen)
-            self.viewModel.setMatchListType(.competitions)
-            turnTimeRangeOn = false
-            self.setEmptyStateBaseView(firstLabelText: localized("no_results_for_selection"),
-                                       secondLabelText: localized("try_something_else"),
-                                       isUserLoggedIn: true)
-        default:
-            ()
+        if self.viewModel.hasTopCompetitions.value {
+            switch index {
+            case 0:
+                AnalyticsClient.sendEvent(event: .myGamesScreen)
+                self.viewModel.setMatchListType(.popular)
+                turnTimeRangeOn = false
+                self.setEmptyStateBaseView(firstLabelText: localized("no_results_for_selection"),
+                                           secondLabelText: localized("try_something_else"),
+                                           isUserLoggedIn: true)
+            case 1:
+                AnalyticsClient.sendEvent(event: .todayScreen)
+                self.viewModel.setMatchListType(.upcoming)
+                turnTimeRangeOn = true
+                self.setEmptyStateBaseView(firstLabelText: localized("no_results_for_selection"),
+                                           secondLabelText: localized("try_something_else"),
+                                           isUserLoggedIn: true)
+            case 2:
+                AnalyticsClient.sendEvent(event: .topCompetitionsScreen)
+                self.viewModel.setMatchListType(.topCompetitions)
+                turnTimeRangeOn = false
+                self.setEmptyStateBaseView(firstLabelText: localized("no_results_for_selection"),
+                                           secondLabelText: localized("try_something_else"),
+                                           isUserLoggedIn: true)
+            case 3:
+                AnalyticsClient.sendEvent(event: .competitionsScreen)
+                self.viewModel.setMatchListType(.competitions)
+                turnTimeRangeOn = false
+                self.setEmptyStateBaseView(firstLabelText: localized("no_results_for_selection"),
+                                           secondLabelText: localized("try_something_else"),
+                                           isUserLoggedIn: true)
+            default:
+                ()
+            }
+        }
+        else {
+            switch index {
+            case 0:
+                AnalyticsClient.sendEvent(event: .myGamesScreen)
+                self.viewModel.setMatchListType(.popular)
+                turnTimeRangeOn = false
+                self.setEmptyStateBaseView(firstLabelText: localized("no_results_for_selection"),
+                                           secondLabelText: localized("try_something_else"),
+                                           isUserLoggedIn: true)
+            case 1:
+                AnalyticsClient.sendEvent(event: .todayScreen)
+                self.viewModel.setMatchListType(.upcoming)
+                turnTimeRangeOn = true
+                self.setEmptyStateBaseView(firstLabelText: localized("no_results_for_selection"),
+                                           secondLabelText: localized("try_something_else"),
+                                           isUserLoggedIn: true)
+
+            case 2:
+                AnalyticsClient.sendEvent(event: .competitionsScreen)
+                self.viewModel.setMatchListType(.competitions)
+                turnTimeRangeOn = false
+                self.setEmptyStateBaseView(firstLabelText: localized("no_results_for_selection"),
+                                           secondLabelText: localized("try_something_else"),
+                                           isUserLoggedIn: true)
+            default:
+                ()
+            }
         }
 
         self.filtersCollectionView.reloadData()
@@ -663,9 +747,14 @@ class PreLiveEventsViewController: UIViewController {
         self.openTab(atIndex: 1)
     }
 
+    func openTopCompetitionsTab() {
+        //
+        self.openTab(atIndex: 2)
+    }
+
     func openCompetitionTab(withId id: String) {
         self.applyCompetitionsFiltersWithIds([id], animated: false)
-        self.openTab(atIndex: 2)
+        self.openTab(atIndex: 3)
     }
 
     @objc func didTapFilterAction(sender: UITapGestureRecognizer) {
@@ -916,7 +1005,7 @@ extension PreLiveEventsViewController: UITableViewDataSource, UITableViewDelegat
 
 }
 
-extension PreLiveEventsViewController: UICollectionViewDelegate, UICollectionViewDataSource {
+extension PreLiveEventsViewController: UICollectionViewDelegate, UICollectionViewDataSource, UICollectionViewDelegateFlowLayout {
 
     func numberOfSections(in collectionView: UICollectionView) -> Int {
 
@@ -931,99 +1020,185 @@ extension PreLiveEventsViewController: UICollectionViewDelegate, UICollectionVie
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
         // Competition history collection view
         if collectionView == self.competitionHistoryCollectionView {
-            return self.viewModel.getCompetitions().count
+            if self.viewModel.matchListTypePublisher.value == .topCompetitions {
+                return self.viewModel.getTopCompetitions().count
+            }
+            else {
+                return self.viewModel.getCompetitions().count
+            }
         }
+
+        if self.viewModel.hasTopCompetitions.value {
+            return 4
+        }
+
         return 3
     }
 
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         // Competition history collection view
         if collectionView == self.competitionHistoryCollectionView {
-            guard
-                let cell = collectionView.dequeueCellType(CompetitionHistoryCollectionViewCell.self, indexPath: indexPath)
-            else {
-                fatalError()
+
+            if self.viewModel.matchListTypePublisher.value == .topCompetitions {
+
+                guard
+                    let cell = collectionView.dequeueCellType(TopCompetitionCollectionViewCell.self, indexPath: indexPath)
+                else {
+                    fatalError()
+                }
+
+                let competition = self.viewModel.getTopCompetitions()[indexPath.row]
+
+                cell.setupInfo(competition: competition)
+
+                if indexPath.row == 0 {
+                    cell.hasHighlight = true
+                }
+
+                return cell
+
             }
+            else {
+                guard
+                    let cell = collectionView.dequeueCellType(CompetitionHistoryCollectionViewCell.self, indexPath: indexPath)
+                else {
+                    fatalError()
+                }
 
-            let competition = self.viewModel.getCompetitions()[indexPath.row]
+                let competition = self.viewModel.getCompetitions()[indexPath.row]
 
-            cell.setupInfo(competition: competition)
+                cell.setupInfo(competition: competition)
 
-            cell.didTapCloseAction = { [weak self] cellCompetition in
+                cell.didTapCloseAction = { [weak self] cellCompetition in
 
-                if let filteredCompetitions = self?.viewModel.getCompetitions().filter({
-                    $0.id != cellCompetition.id
-                }) {
+                    if let filteredCompetitions = self?.viewModel.getCompetitions().filter({
+                        $0.id != cellCompetition.id
+                    }) {
 
-                    let ids = filteredCompetitions.map({
-                        $0.id
-                    })
+                        let ids = filteredCompetitions.map({
+                            $0.id
+                        })
 
-                    self?.competitionsFiltersView.updateSelectedIds(filteredIds: ids, removedCompetition: cellCompetition)
+                        self?.competitionsFiltersView.updateSelectedIds(filteredIds: ids, removedCompetition: cellCompetition)
 
-                    self?.viewModel.fetchCompetitionsMatchesWithIds(ids)
+                        self?.viewModel.fetchCompetitionsMatchesWithIds(ids)
 
-                    if ids.isEmpty {
-                        self?.openCompetitionsFilters()
+                        if ids.isEmpty {
+                            self?.openCompetitionsFilters()
+                        }
                     }
                 }
-            }
 
-            return cell
+                return cell
+
+            }
         }
 
-        if indexPath.row != 2 {
-            guard
-                let cell = collectionView.dequeueCellType(ListTypeCollectionViewCell.self, indexPath: indexPath)
+        if self.viewModel.hasTopCompetitions.value {
+            if indexPath.row != 3 {
+                guard
+                    let cell = collectionView.dequeueCellType(ListTypeCollectionViewCell.self, indexPath: indexPath)
+                else {
+                    fatalError()
+                }
+
+                switch indexPath.row {
+                case 0:
+                    cell.setupWithTitle(localized("popular"))
+                case 1:
+                    cell.setupWithTitle(localized("upcoming"))
+                case 2:
+                    cell.setupWithTitle(localized("top_competitions"))
+                    //            case 2:
+                    //                cell.setupWithTitle(localized("competitions"))
+                    //        case 3:
+                    //            cell.setupWithTitle(localized("my_games"))
+                    //        case 4:
+                    //            cell.setupWithTitle(localized("my_competitions"))
+                default:
+                    ()
+                }
+
+                if filterSelectedOption == indexPath.row {
+                    cell.setSelectedType(true)
+                }
+                else {
+                    cell.setSelectedType(false)
+                }
+
+                return cell
+            }
             else {
-                fatalError()
-            }
 
-            switch indexPath.row {
-            case 0:
-                cell.setupWithTitle(localized("popular"))
-            case 1:
-                cell.setupWithTitle(localized("upcoming"))
-//            case 2:
-//                cell.setupWithTitle(localized("competitions"))
-                //        case 3:
-                //            cell.setupWithTitle(localized("my_games"))
-                //        case 4:
-                //            cell.setupWithTitle(localized("my_competitions"))
-            default:
-                ()
-            }
+                guard
+                    let cell = collectionView.dequeueCellType(CompetitionListIconCollectionViewCell.self, indexPath: indexPath)
+                else {
+                    fatalError()
+                }
 
-            if filterSelectedOption == indexPath.row {
-                cell.setSelectedType(true)
-            }
-            else {
-                cell.setSelectedType(false)
-            }
+                cell.setupInfo(title: localized("competitions"), iconName: "filter_funnel_icon")
 
-            return cell
+                if filterSelectedOption == indexPath.row {
+                    cell.setSelectedType(true)
+                }
+                else {
+                    cell.setSelectedType(false)
+                }
+
+                cell.setNeedsLayout()
+                cell.layoutIfNeeded()
+
+                return cell
+            }
         }
         else {
+            if indexPath.row != 2 {
+                guard
+                    let cell = collectionView.dequeueCellType(ListTypeCollectionViewCell.self, indexPath: indexPath)
+                else {
+                    fatalError()
+                }
 
-            guard
-                let cell = collectionView.dequeueCellType(CompetitionListIconCollectionViewCell.self, indexPath: indexPath)
+                switch indexPath.row {
+                case 0:
+                    cell.setupWithTitle(localized("popular"))
+                case 1:
+                    cell.setupWithTitle(localized("upcoming"))
+                default:
+                    ()
+                }
+
+                if filterSelectedOption == indexPath.row {
+                    cell.setSelectedType(true)
+                }
+                else {
+                    cell.setSelectedType(false)
+                }
+
+                return cell
+            }
             else {
-                fatalError()
+
+                guard
+                    let cell = collectionView.dequeueCellType(CompetitionListIconCollectionViewCell.self, indexPath: indexPath)
+                else {
+                    fatalError()
+                }
+
+                cell.setupInfo(title: localized("competitions"), iconName: "filter_funnel_icon")
+
+                if filterSelectedOption == indexPath.row {
+                    cell.setSelectedType(true)
+                }
+                else {
+                    cell.setSelectedType(false)
+                }
+
+                cell.setNeedsLayout()
+                cell.layoutIfNeeded()
+
+                return cell
             }
-
-            cell.setupInfo(title: localized("competitions"), iconName: "filter_funnel_icon")
-
-            if filterSelectedOption == indexPath.row {
-                cell.setSelectedType(true)
-            }
-            else {
-                cell.setSelectedType(false)
-            }
-
-            cell.setNeedsLayout()
-            cell.layoutIfNeeded()
-
-            return cell
         }
     }
 
@@ -1031,52 +1206,95 @@ extension PreLiveEventsViewController: UICollectionViewDelegate, UICollectionVie
 
         // Competition history collection view
         if collectionView == self.competitionHistoryCollectionView {
-            let competition = self.viewModel.getCompetitions()[indexPath.row]
+            if self.viewModel.matchListTypePublisher.value == .topCompetitions {
+                let competition = self.viewModel.getTopCompetitions()[indexPath.row]
 
-            print("SELECTED COMPETITION FILTER: \(competition.name)")
+                print("SELECTED TOP COMPETITION FILTER: \(competition.name)")
 
-            let indexPath = IndexPath(row: 0, section: indexPath.row)
+                if let cell = collectionView.cellForItem(at: indexPath) as? TopCompetitionCollectionViewCell {
+                    cell.hasHighlight = true
+                }
 
-            tableView.scrollToRow(at: indexPath, at: .top, animated: true)
+                let indexPath = IndexPath(row: 0, section: indexPath.row)
+
+                tableView.scrollToRow(at: indexPath, at: .top, animated: true)
+            }
+            else {
+                let competition = self.viewModel.getCompetitions()[indexPath.row]
+
+                print("SELECTED COMPETITION FILTER: \(competition.name)")
+
+                let indexPath = IndexPath(row: 0, section: indexPath.row)
+
+                tableView.scrollToRow(at: indexPath, at: .top, animated: true)
+            }
+
+            self.competitionHistoryCollectionView.scrollToItem(at: indexPath, at: .centeredHorizontally, animated: true)
         }
         else {
 
             self.filterSelectedOption = indexPath.row
 
-            switch indexPath.row {
-            case 0:
-                AnalyticsClient.sendEvent(event: .myGamesScreen)
-                self.viewModel.setMatchListType(.popular)
-                self.turnTimeRangeOn = false
-                self.setEmptyStateBaseView(firstLabelText: localized("no_results_for_selection"),
-                                           secondLabelText: localized("try_something_else"),
-                                           isUserLoggedIn: true)
-            case 1:
-                AnalyticsClient.sendEvent(event: .todayScreen)
-                self.viewModel.setMatchListType(.upcoming)
-                self.turnTimeRangeOn = true
-                self.setEmptyStateBaseView(firstLabelText: localized("no_results_for_selection"),
-                                           secondLabelText: localized("try_something_else"),
-                                           isUserLoggedIn: true)
-            case 2:
-                AnalyticsClient.sendEvent(event: .competitionsScreen)
-                self.viewModel.setMatchListType(.competitions)
-                self.turnTimeRangeOn = false
-                self.setEmptyStateBaseView(firstLabelText: localized("no_results_for_selection"),
-                                           secondLabelText: localized("try_something_else"),
-                                           isUserLoggedIn: true)
-                //        case 3:
-                //            self.viewModel.setMatchListType(.favoriteGames)
-                //            self.setEmptyStateBaseView(firstLabelText: localized("empty_my_games"),
-                //                                       secondLabelText: localized("go_to_list_to_mark"),
-                //                                       isUserLoggedIn: Env.userSessionStore.isUserLogged())
-                //        case 4:
-                //            self.viewModel.setMatchListType(.favoriteCompetitions)
-                //            self.setEmptyStateBaseView(firstLabelText: localized("empty_my_competitions"),
-                //                                       secondLabelText: localized("second_empty_my_competitions"),
-                //                                       isUserLoggedIn: Env.userSessionStore.isUserLogged())
-            default:
-                ()
+            if self.viewModel.hasTopCompetitions.value {
+                switch indexPath.row {
+                case 0:
+                    AnalyticsClient.sendEvent(event: .myGamesScreen)
+                    self.viewModel.setMatchListType(.popular)
+                    self.turnTimeRangeOn = false
+                    self.setEmptyStateBaseView(firstLabelText: localized("no_results_for_selection"),
+                                               secondLabelText: localized("try_something_else"),
+                                               isUserLoggedIn: true)
+                case 1:
+                    AnalyticsClient.sendEvent(event: .todayScreen)
+                    self.viewModel.setMatchListType(.upcoming)
+                    self.turnTimeRangeOn = true
+                    self.setEmptyStateBaseView(firstLabelText: localized("no_results_for_selection"),
+                                               secondLabelText: localized("try_something_else"),
+                                               isUserLoggedIn: true)
+                case 2:
+                    AnalyticsClient.sendEvent(event: .topCompetitionsScreen)
+                    self.viewModel.setMatchListType(.topCompetitions)
+                    self.turnTimeRangeOn = false
+                    self.setEmptyStateBaseView(firstLabelText: localized("no_results_for_selection"),
+                                               secondLabelText: localized("try_something_else"),
+                                               isUserLoggedIn: true)
+                case 3:
+                    AnalyticsClient.sendEvent(event: .competitionsScreen)
+                    self.viewModel.setMatchListType(.competitions)
+                    self.turnTimeRangeOn = false
+                    self.setEmptyStateBaseView(firstLabelText: localized("no_results_for_selection"),
+                                               secondLabelText: localized("try_something_else"),
+                                               isUserLoggedIn: true)
+                default:
+                    ()
+                }
+            }
+            else {
+                switch indexPath.row {
+                case 0:
+                    AnalyticsClient.sendEvent(event: .myGamesScreen)
+                    self.viewModel.setMatchListType(.popular)
+                    self.turnTimeRangeOn = false
+                    self.setEmptyStateBaseView(firstLabelText: localized("no_results_for_selection"),
+                                               secondLabelText: localized("try_something_else"),
+                                               isUserLoggedIn: true)
+                case 1:
+                    AnalyticsClient.sendEvent(event: .todayScreen)
+                    self.viewModel.setMatchListType(.upcoming)
+                    self.turnTimeRangeOn = true
+                    self.setEmptyStateBaseView(firstLabelText: localized("no_results_for_selection"),
+                                               secondLabelText: localized("try_something_else"),
+                                               isUserLoggedIn: true)
+                case 2:
+                    AnalyticsClient.sendEvent(event: .competitionsScreen)
+                    self.viewModel.setMatchListType(.competitions)
+                    self.turnTimeRangeOn = false
+                    self.setEmptyStateBaseView(firstLabelText: localized("no_results_for_selection"),
+                                               secondLabelText: localized("try_something_else"),
+                                               isUserLoggedIn: true)
+                default:
+                    ()
+                }
             }
             self.filtersCollectionView.reloadData()
             self.filtersCollectionView.layoutIfNeeded()

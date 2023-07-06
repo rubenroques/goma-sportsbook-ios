@@ -143,7 +143,7 @@ enum OmegaAPIClient {
 
     case contactUs(firstName: String, lastName: String, email: String, subject: String, message: String)
 
-    case contactSupport(userIdentifier: String, subject: String, message: String)
+    case contactSupport(userIdentifier: String, firstName: String, lastName: String, email: String, subject: String, subjectType: String, message: String)
 
     case getUserConsents
     case setUserConsents(consentVersionIds: [Int]? = nil, unconsentVersionIds: [Int]? = nil)
@@ -780,19 +780,31 @@ extension OmegaAPIClient: Endpoint {
 //            return bodyString.data(using: String.Encoding.utf8) ?? Data()
         case .uploadMultipleUserDocuments( _, _, let body, _):
             return body
-        case .contactSupport(let userIdentifier, let subject, let message):
+        case .contactSupport(let userIdentifier, let firstName, let lastName, let email, let subject, let subjectType, let message):
             let bodyString =
             """
             {
-              "request": {
+            "request": {
                 "requester": {
-                  "name": "\(userIdentifier)"
-                },
+                    "name": "\(userIdentifier)",
+                    "email": "\(email)"
+                    },
+                "custom_fields": [
+                    {
+                    "11249444074770": "\(firstName)"
+                    },
+                    {
+                    "11249427898002": "\(lastName)"
+                    },
+                    {
+                    "11096886022546": "\(subjectType)"
+                    }
+                ],
                 "subject": "\(subject)",
                 "comment": {
-                  "body": "\(message)"
+                    "body": "\(message)"
                 }
-              }
+            }
             }
             """
             return bodyString.data(using: String.Encoding.utf8) ?? Data()
