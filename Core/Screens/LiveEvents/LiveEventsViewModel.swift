@@ -92,7 +92,6 @@ class LiveEventsViewModel: NSObject {
 
         self.subscribeToLiveSports()
 
-     
         self.liveMatchesViewModelDataSource.requestNextPage = { [weak self] in
             self?.fetchLiveMatchesNextPage()
         }

@@ -30,6 +30,8 @@ class SportRadarEventsPaginator {
 
     private var eventsSubject: CurrentValueSubject<SubscribableContent<[EventsGroup]>, ServiceProviderError>
 
+    private var cancellables = Set<AnyCancellable>()
+
     init(contentIdentifier: ContentIdentifier, sessionToken: String, storage: SportRadarEventsStorage) {
 
         self.sessionToken = sessionToken
@@ -41,6 +43,13 @@ class SportRadarEventsPaginator {
         self.currentPage = 0
 
         self.eventsSubject = .init(.disconnected)
+
+        self.storage.eventsPublisher
+            .sink { [weak self] newEventsArray in
+                let storedEventsGroup = EventsGroup(events: newEventsArray, marketGroupId: nil)
+                self?.eventsSubject.send(.contentUpdate(content: [storedEventsGroup]))
+            }
+            .store(in: &self.cancellables)
     }
 
     //
@@ -140,10 +149,6 @@ class SportRadarEventsPaginator {
         self.hasNextPage = events.count >= self.eventsPerPage
 
         self.storage.storeEvents(events)
-
-        let storedEvents = self.storage.storedEvents()
-        let storedEventsGroup = EventsGroup(events: storedEvents, marketGroupId: nil)
-        self.eventsSubject.send(.contentUpdate(content: [storedEventsGroup]))
     }
 
     func eventsPublisher() ->AnyPublisher<SubscribableContent<[EventsGroup]>, ServiceProviderError> {

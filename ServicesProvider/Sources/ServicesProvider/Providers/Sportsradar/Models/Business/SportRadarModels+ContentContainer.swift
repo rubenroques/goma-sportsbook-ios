@@ -433,7 +433,6 @@ extension SportRadarModels {
                 let newIsTradable = (try? container.decode(Bool.self, forKey: .change)) ?? true
                 return .updateMarketTradability(contentIdentifier: contentIdentifier, marketId: marketId, isTradable: newIsTradable)
             }
-
             else if path.contains("selections") && path.contains("idfoselection"), let selectionId = SocketMessageParseHelper.extractSelectionId(path) {
                 print("Updated Selection \(selectionId)")
             }

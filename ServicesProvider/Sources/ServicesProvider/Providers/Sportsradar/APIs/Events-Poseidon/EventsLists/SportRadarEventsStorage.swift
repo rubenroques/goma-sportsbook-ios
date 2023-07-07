@@ -11,14 +11,18 @@ import Combine
 
 class SportRadarEventsStorage {
 
-    private var events: [Event]
+    var eventsPublisher: AnyPublisher<[Event], Never> {
+        return self.eventsSubject.eraseToAnyPublisher()
+    }
+
+    private var eventsSubject: CurrentValueSubject<[Event], Never>
 
     private var eventsDictionary: OrderedDictionary<String, CurrentValueSubject<Event, Never>>
     private var marketsDictionary: OrderedDictionary<String, CurrentValueSubject<Market, Never>>
     private var outcomesDictionary: OrderedDictionary<String, CurrentValueSubject<Outcome, Never>>
 
     init() {
-        self.events = []
+        self.eventsSubject = .init([])
 
         self.eventsDictionary = [:]
         self.marketsDictionary = [:]
@@ -26,7 +30,7 @@ class SportRadarEventsStorage {
     }
 
     func reset() {
-        self.events = []
+        self.eventsSubject = .init([])
 
         self.eventsDictionary = [:]
         self.marketsDictionary = [:]
@@ -34,6 +38,7 @@ class SportRadarEventsStorage {
     }
 
     func storeEvents(_ events: [Event]) {
+
         for event in events {
             for market in event.markets {
                 for outcome in market.outcomes {
@@ -44,11 +49,10 @@ class SportRadarEventsStorage {
             eventsDictionary[event.id] = CurrentValueSubject(event)
         }
 
-        self.events.append(contentsOf: events)
-    }
+        var mergedEvents = self.eventsSubject.value
+        mergedEvents.append(contentsOf: events)
 
-    func storedEvents() -> [Event] {
-        return self.events
+        self.eventsSubject.send(mergedEvents)
     }
 
 }
@@ -56,15 +60,14 @@ class SportRadarEventsStorage {
 extension SportRadarEventsStorage {
 
     func addEvent(withEvent updatedEvent: Event) {
-        guard
-            self.eventsDictionary[updatedEvent.id] != nil
-        else {
-            return  // We are not tracking this event
-        }
 
-        // let event = eventSubject.value
-        for market in updatedEvent.markets {
-            self.updateMarketTradability(withId: market.id, isTradable: market.isTradable)
+        if let storedEvent = self.eventsDictionary[updatedEvent.id]?.value {
+            for market in storedEvent.markets {
+                self.updateMarketTradability(withId: market.id, isTradable: market.isTradable)
+            }
+        }
+        else {
+            self.storeEvents([updatedEvent])
         }
 
     }
@@ -76,6 +79,12 @@ extension SportRadarEventsStorage {
         for market in event.markets {
             self.updateMarketTradability(withId: market.id, isTradable: false)
         }
+
+        let newEventsList = self.eventsSubject.value.filter({ event in
+            return event.id != id
+        })
+
+        self.eventsSubject.send(newEventsList)
     }
 
     func updateOutcomeOdd(withId id: String, newOddNumerator: String?, newOddDenominator: String?) {
