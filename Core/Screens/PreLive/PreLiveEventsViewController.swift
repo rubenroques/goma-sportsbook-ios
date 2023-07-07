@@ -66,6 +66,8 @@ class PreLiveEventsViewController: UIViewController {
 
     private var competitionsFiltersView: CompetitionsFiltersView = CompetitionsFiltersView()
 
+    var selectedTopCompetition: Int = 0
+
     var cancellables = Set<AnyCancellable>()
 
     var viewModel: PreLiveEventsViewModel
@@ -293,8 +295,8 @@ class PreLiveEventsViewController: UIViewController {
 
         // Competition History collection view
         let competitionFlowLayout = UICollectionViewFlowLayout()
+        competitionFlowLayout.itemSize = UICollectionViewFlowLayout.automaticSize
         competitionFlowLayout.estimatedItemSize = CGSize(width: 100, height: 22)
-        //competitionFlowLayout.estimatedItemSize = UICollectionViewFlowLayout.automaticSize
         competitionFlowLayout.scrollDirection = .horizontal
 
         self.competitionHistoryCollectionView.collectionViewLayout = competitionFlowLayout
@@ -477,6 +479,8 @@ class PreLiveEventsViewController: UIViewController {
                     else {
                         self.showCompetitionFilterView = false
                     }
+
+                    self.selectedTopCompetition = 0
                 }
                 else {
                     if self.filterSelectedOption == 2 {
@@ -1051,8 +1055,11 @@ extension PreLiveEventsViewController: UICollectionViewDelegate, UICollectionVie
 
                 cell.setupInfo(competition: competition)
 
-                if indexPath.row == 0 {
+                if self.selectedTopCompetition == indexPath.row {
                     cell.hasHighlight = true
+                }
+                else {
+                    cell.hasHighlight = false
                 }
 
                 return cell
@@ -1209,11 +1216,7 @@ extension PreLiveEventsViewController: UICollectionViewDelegate, UICollectionVie
             if self.viewModel.matchListTypePublisher.value == .topCompetitions {
                 let competition = self.viewModel.getTopCompetitions()[indexPath.row]
 
-                print("SELECTED TOP COMPETITION FILTER: \(competition.name)")
-
-                if let cell = collectionView.cellForItem(at: indexPath) as? TopCompetitionCollectionViewCell {
-                    cell.hasHighlight = true
-                }
+                self.selectedTopCompetition = indexPath.row
 
                 let indexPath = IndexPath(row: 0, section: indexPath.row)
 
@@ -1222,13 +1225,13 @@ extension PreLiveEventsViewController: UICollectionViewDelegate, UICollectionVie
             else {
                 let competition = self.viewModel.getCompetitions()[indexPath.row]
 
-                print("SELECTED COMPETITION FILTER: \(competition.name)")
-
                 let indexPath = IndexPath(row: 0, section: indexPath.row)
 
                 tableView.scrollToRow(at: indexPath, at: .top, animated: true)
             }
 
+            self.competitionHistoryCollectionView.reloadData()
+            self.competitionHistoryCollectionView.layoutIfNeeded()
             self.competitionHistoryCollectionView.scrollToItem(at: indexPath, at: .centeredHorizontally, animated: true)
         }
         else {

@@ -299,7 +299,7 @@ enum KnowYourCustomerStatus: String, Codable {
     var statusName: String {
         switch self {
         case .request: return localized("pending")
-        case .passConditional: return localized("validated")
+        case .passConditional: return localized("pre_validated")
         case .pass: return localized("validated")
 
         }

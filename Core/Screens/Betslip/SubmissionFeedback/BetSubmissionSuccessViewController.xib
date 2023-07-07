@@ -18,6 +18,7 @@
         <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner" customClass="BetSubmissionSuccessViewController" customModule="Betsson" customModuleProvider="target">
             <connections>
                 <outlet property="animationBaseView" destination="v7h-Ss-dFD" id="7vv-ca-xop"/>
+                <outlet property="backButton" destination="ef3-FN-pZF" id="gSa-p8-XgU"/>
                 <outlet property="betCardsStackView" destination="6u7-WC-QK4" id="5Tu-jY-nDC"/>
                 <outlet property="betSuccessView" destination="svI-C1-Cy1" id="7Mm-rE-rT8"/>
                 <outlet property="bottomBackgroundView" destination="M6N-ft-lUY" id="7hl-Vb-qbt"/>
@@ -30,6 +31,7 @@
                 <outlet property="loadingBaseView" destination="Ojs-Dd-dvq" id="dop-mM-KJl"/>
                 <outlet property="messageSubtitleLabel" destination="wQM-ZA-FDC" id="vX3-aC-ZG2"/>
                 <outlet property="messageTitleLabel" destination="Lma-b2-GXQ" id="ax8-SE-8Ra"/>
+                <outlet property="navigationView" destination="4XN-Jk-V2x" id="MmM-Rx-hVj"/>
                 <outlet property="safeAreaBottomView" destination="rwT-YU-CvN" id="tVx-lc-Z2z"/>
                 <outlet property="scrollContentView" destination="JvP-Ps-E7u" id="L63-xm-LPd"/>
                 <outlet property="scrollView" destination="32G-Lw-sfI" id="hhT-Ya-0vJ"/>
@@ -236,12 +238,37 @@
                         <constraint firstItem="OTn-yc-NuI" firstAttribute="centerY" secondItem="Ojs-Dd-dvq" secondAttribute="centerY" id="u5x-FH-nYa"/>
                     </constraints>
                 </view>
+                <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="4XN-Jk-V2x">
+                    <rect key="frame" x="0.0" y="0.0" width="470" height="44"/>
+                    <subviews>
+                        <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="ef3-FN-pZF">
+                            <rect key="frame" x="0.0" y="2" width="40" height="40"/>
+                            <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                            <constraints>
+                                <constraint firstAttribute="height" constant="40" id="J24-Ol-Stj"/>
+                                <constraint firstAttribute="width" constant="40" id="lWJ-va-faX"/>
+                            </constraints>
+                            <state key="normal" title="Button"/>
+                            <buttonConfiguration key="configuration" style="plain" image="arrow_back_icon"/>
+                            <connections>
+                                <action selector="didTapBackButton" destination="-1" eventType="touchUpInside" id="emS-EP-1Vb"/>
+                            </connections>
+                        </button>
+                    </subviews>
+                    <color key="backgroundColor" systemColor="systemBackgroundColor"/>
+                    <constraints>
+                        <constraint firstItem="ef3-FN-pZF" firstAttribute="leading" secondItem="4XN-Jk-V2x" secondAttribute="leading" id="Cdd-6b-xMU"/>
+                        <constraint firstItem="ef3-FN-pZF" firstAttribute="centerY" secondItem="4XN-Jk-V2x" secondAttribute="centerY" id="KcP-ga-k3R"/>
+                        <constraint firstAttribute="height" constant="44" id="dId-3D-9wp"/>
+                    </constraints>
+                </view>
             </subviews>
             <viewLayoutGuide key="safeArea" id="fnl-2z-Ty3"/>
             <color key="backgroundColor" white="0.66666666666666663" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
             <constraints>
                 <constraint firstItem="fnl-2z-Ty3" firstAttribute="trailing" secondItem="Ojs-Dd-dvq" secondAttribute="trailing" id="0gE-Xs-ufu"/>
                 <constraint firstItem="iW1-Ih-khd" firstAttribute="leading" secondItem="fnl-2z-Ty3" secondAttribute="leading" id="0v9-07-o82"/>
+                <constraint firstItem="4XN-Jk-V2x" firstAttribute="top" secondItem="3DN-N4-M0e" secondAttribute="top" id="1SC-Po-EUh"/>
                 <constraint firstItem="rwT-YU-CvN" firstAttribute="leading" secondItem="i5M-Pr-FkT" secondAttribute="leading" id="3Cc-ph-qAk"/>
                 <constraint firstItem="Ojs-Dd-dvq" firstAttribute="top" secondItem="32G-Lw-sfI" secondAttribute="top" id="3xa-0y-Iim"/>
                 <constraint firstItem="3DN-N4-M0e" firstAttribute="bottom" secondItem="sdf-va-AVj" secondAttribute="top" id="53C-Az-9xd"/>
@@ -249,10 +276,12 @@
                 <constraint firstItem="iW1-Ih-khd" firstAttribute="trailing" secondItem="fnl-2z-Ty3" secondAttribute="trailing" id="Dqj-Hj-iCB"/>
                 <constraint firstItem="rwT-YU-CvN" firstAttribute="top" secondItem="iW1-Ih-khd" secondAttribute="bottom" constant="20" id="GAE-aB-Juw"/>
                 <constraint firstAttribute="trailing" secondItem="rwT-YU-CvN" secondAttribute="trailing" id="Lsc-7G-sit"/>
+                <constraint firstItem="4XN-Jk-V2x" firstAttribute="leading" secondItem="fnl-2z-Ty3" secondAttribute="leading" id="Rb4-vJ-4u5"/>
                 <constraint firstAttribute="trailing" secondItem="3DN-N4-M0e" secondAttribute="trailing" id="Szs-oh-VIE"/>
                 <constraint firstAttribute="bottom" secondItem="rwT-YU-CvN" secondAttribute="bottom" id="VKa-1V-kjN"/>
                 <constraint firstItem="rwT-YU-CvN" firstAttribute="top" secondItem="fnl-2z-Ty3" secondAttribute="bottom" id="Vn4-He-IOw"/>
                 <constraint firstItem="3DN-N4-M0e" firstAttribute="top" secondItem="i5M-Pr-FkT" secondAttribute="top" id="Yl6-B5-Tvm"/>
+                <constraint firstItem="fnl-2z-Ty3" firstAttribute="trailing" secondItem="4XN-Jk-V2x" secondAttribute="trailing" id="bf4-qb-mMu"/>
                 <constraint firstItem="sdf-va-AVj" firstAttribute="leading" secondItem="i5M-Pr-FkT" secondAttribute="leading" constant="23" id="hOh-Uo-e0h"/>
                 <constraint firstItem="Ojs-Dd-dvq" firstAttribute="leading" secondItem="fnl-2z-Ty3" secondAttribute="leading" id="lIN-bG-wC8"/>
                 <constraint firstItem="iW1-Ih-khd" firstAttribute="top" secondItem="sdf-va-AVj" secondAttribute="bottom" constant="4" id="nuD-va-sFE"/>
@@ -264,6 +293,7 @@
         </view>
     </objects>
     <resources>
+        <image name="arrow_back_icon" width="9" height="15"/>
         <namedColor name="backgroundPrimary">
             <color red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
         </namedColor>

@@ -80,7 +80,7 @@ class DocumentStateView: UIView {
         case .approved:
             self.stateView.backgroundColor = UIColor.App.alertSuccess
         case .pendingApproved:
-            self.stateView.backgroundColor = UIColor.App.statsAway
+            self.stateView.backgroundColor = UIColor.App.alertWarning
         case .failed:
             self.stateView.backgroundColor = UIColor.App.alertError
         case .rejected:

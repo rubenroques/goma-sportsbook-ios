@@ -279,7 +279,7 @@
                     <rect key="frame" x="0.0" y="70" width="346" height="723"/>
                 </view>
                 <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="JDo-j5-eFq">
-                    <rect key="frame" x="10" y="70" width="326" height="723"/>
+                    <rect key="frame" x="10" y="106" width="326" height="687"/>
                 </view>
             </subviews>
             <viewLayoutGuide key="safeArea" id="fnl-2z-Ty3"/>
@@ -309,7 +309,7 @@
                 <constraint firstItem="1Zb-TC-NS9" firstAttribute="leading" secondItem="fnl-2z-Ty3" secondAttribute="leading" id="rIf-Ss-VJ8"/>
                 <constraint firstItem="kGb-Bw-Z5y" firstAttribute="top" secondItem="vRj-e2-Szx" secondAttribute="bottom" id="twW-vH-UOx"/>
                 <constraint firstItem="kGb-Bw-Z5y" firstAttribute="leading" secondItem="fnl-2z-Ty3" secondAttribute="leading" id="vml-O9-ARJ"/>
-                <constraint firstItem="JDo-j5-eFq" firstAttribute="height" secondItem="Dx9-on-mts" secondAttribute="height" id="w75-nd-lih"/>
+                <constraint firstItem="JDo-j5-eFq" firstAttribute="height" secondItem="Dx9-on-mts" secondAttribute="height" multiplier="0.95" id="w75-nd-lih"/>
                 <constraint firstItem="fnl-2z-Ty3" firstAttribute="bottom" secondItem="m9k-zq-sQG" secondAttribute="bottom" id="xfq-P0-FLn"/>
                 <constraint firstItem="Dx9-on-mts" firstAttribute="leading" secondItem="fnl-2z-Ty3" secondAttribute="leading" id="yR7-4B-ULm"/>
             </constraints>
@@ -329,7 +329,7 @@
         <image name="no_content_icon" width="161" height="161"/>
         <image name="sport_type_soccer_icon" width="23" height="23"/>
         <namedColor name="separatorLine">
-            <color red="0.73725490196078436" green="0.78823529411764703" blue="0.82352941176470584" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+            <color red="0.1803921568627451" green="0.1803921568627451" blue="0.1803921568627451" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
         </namedColor>
         <systemColor name="systemBackgroundColor">
             <color white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>

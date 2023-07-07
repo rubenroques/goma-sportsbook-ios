@@ -293,8 +293,12 @@ class PreLiveEventsViewModel: NSObject {
         Publishers.CombineLatest(self.expectedTopCompetitionsPublisher, self.selectedTopCompetitionsInfoPublisher)
             .receive(on: DispatchQueue.main)
             .sink(receiveValue: { [weak self] expectedCompetitions, selectedCompetitionsInfo in
-                if selectedCompetitionsInfo.count == expectedCompetitions {
-                    self?.processTopCompetitionsInfo()
+
+                if expectedCompetitions > 0 {
+                    if selectedCompetitionsInfo.count == expectedCompetitions {
+
+                        self?.processTopCompetitionsInfo()
+                    }
                 }
             })
             .store(in: &cancellables)
@@ -320,12 +324,6 @@ class PreLiveEventsViewModel: NSObject {
                     self?.updateContentList()
                 }
 
-                // Recheck with top competitions
-                if competitionMatchesSubscriptions.isNotEmpty && self?.expectedTopCompetitionsPublisher.value ?? 0 > 0 {
-                    self?.isLoadingCompetitionMatches.send(false)
-                    self?.isLoadingEvents.send(false)
-                    self?.updateContentList()
-                }
             })
             .store(in: &cancellables)
 
@@ -698,7 +696,11 @@ class PreLiveEventsViewModel: NSObject {
 
     private func processTopCompetitionsInfo() {
 
-        let competitionInfos = self.selectedTopCompetitionsInfoPublisher.value.map({ $0.value })
+        let competitionInfos = self.selectedTopCompetitionsInfoPublisher.value.map({ $0.value }).filter({
+            $0.marketGroups.isNotEmpty
+        })
+
+        self.expectedTopCompetitionsPublisher.send(competitionInfos.count)
 
         self.topCompetitions = []
         self.topCompetitionsDataSource.competitions = []
@@ -714,6 +716,12 @@ class PreLiveEventsViewModel: NSObject {
                     self.subscribeTopCompetitionOutright(forMarketGroupId: marketGroup.id, competitionInfo: competitionInfo)
                 }
             }
+        }
+
+        if competitionInfos.isEmpty {
+            self.isLoadingCompetitionMatches.send(false)
+            self.isLoadingEvents.send(false)
+            self.updateContentList()
         }
     }
 
@@ -782,6 +790,9 @@ class PreLiveEventsViewModel: NSObject {
             return
         }
 
+        self.isLoadingCompetitionGroups.send(true)
+        self.isLoadingEvents.send(true)
+
         Env.servicesProvider.getSportRegions(sportId: sportNumericId)
             .receive(on: DispatchQueue.main)
             .sink(receiveCompletion: { [weak self] completion in
@@ -814,6 +825,8 @@ class PreLiveEventsViewModel: NSObject {
                     ()
                 case .failure(let error):
                     print("REGION COMPETITION ERROR: \(error)")
+                    self?.isLoadingCompetitionGroups.send(false)
+                    self?.isLoadingEvents.send(false)
                 }
             }, receiveValue: { [weak self] sportRegionInfo in
                 print("REGION COMPETITIONS: \(sportRegionInfo)")
@@ -974,6 +987,8 @@ class PreLiveEventsViewModel: NSObject {
                         self?.selectedTopCompetitionsInfoPublisher.value[competitionId] = nil
                     }
                 }, receiveValue: { [weak self] competitionInfo in
+                    print("TOP COMPETITIONS INFO: \(competitionInfo)")
+                    
                     self?.selectedTopCompetitionsInfoPublisher.value[competitionInfo.id] = competitionInfo
                 })
                 .store(in: &cancellables)
@@ -1087,6 +1102,9 @@ class PreLiveEventsViewModel: NSObject {
 
             let competitionGroups = ServiceProviderModelMapper.competitionGroups(fromSportRegions: sportRegions, withRegionCompetitions: regionCompetitions)
             self.competitionGroupsPublisher.send(competitionGroups)
+
+            self.isLoadingEvents.send(false)
+            self.isLoadingCompetitionGroups.send(false)
 
             self.updateContentList()
         }

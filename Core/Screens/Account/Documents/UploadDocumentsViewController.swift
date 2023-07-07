@@ -148,12 +148,13 @@ class UploadDocumentsViewController: UIViewController {
                 if let kycStatus = kycStatus {
                     switch kycStatus {
                     case .request:
-                        self?.statusLabel.text = "Requested"
-                        self?.statusView.backgroundColor = UIColor.App.statsAway
-                    case .passConditional: self?.statusLabel.text = "Pass Conditional"
-                        self?.statusView.backgroundColor = UIColor.App.alertSuccess
+                        self?.statusLabel.text = kycStatus.statusName
+                        self?.statusView.backgroundColor = UIColor.App.alertError
+                    case .passConditional:
+                        self?.statusLabel.text = kycStatus.statusName
+                        self?.statusView.backgroundColor = UIColor.App.alertWarning
                     case .pass:
-                        self?.statusLabel.text = "Pass"
+                        self?.statusLabel.text = kycStatus.statusName
                         self?.statusView.backgroundColor = UIColor.App.alertSuccess
                     }
                 }

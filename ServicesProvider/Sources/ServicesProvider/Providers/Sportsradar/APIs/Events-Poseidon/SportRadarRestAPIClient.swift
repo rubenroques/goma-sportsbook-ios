@@ -559,7 +559,7 @@ extension SportRadarRestAPIClient: Endpoint {
                         {
                             "contentId": {
                                 "type": "bannerCategoryList",
-                                "id": "1355/cashbackSuccessBanner"
+                                "id": "\(SportRadarConstants.frontEndCode)/cashbackSuccessBanner"
                             },
                             "clientContext": {
                                 "language": "FR",
@@ -574,7 +574,7 @@ extension SportRadarRestAPIClient: Endpoint {
                         {
                             "contentId": {
                                 "type": "bannerCategoryList",
-                                "id": "1355/QuickLinks"
+                                "id": "\(SportRadarConstants.frontEndCode)/QuickLinks"
                             },
                             "clientContext": {
                                 "language": "FR",

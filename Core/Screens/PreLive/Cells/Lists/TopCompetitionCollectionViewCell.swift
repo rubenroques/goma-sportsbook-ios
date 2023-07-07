@@ -145,7 +145,6 @@ extension TopCompetitionCollectionViewCell {
             self.containerView.trailingAnchor.constraint(equalTo: self.contentView.trailingAnchor),
             self.containerView.topAnchor.constraint(equalTo: self.contentView.topAnchor),
             self.containerView.bottomAnchor.constraint(equalTo: self.contentView.bottomAnchor),
-            self.containerView.heightAnchor.constraint(equalToConstant: 22),
 
             self.iconImageView.leadingAnchor.constraint(equalTo: self.containerView.leadingAnchor, constant: 8),
             self.iconImageView.widthAnchor.constraint(equalToConstant: 16),
@@ -153,7 +152,7 @@ extension TopCompetitionCollectionViewCell {
             self.iconImageView.topAnchor.constraint(equalTo: self.containerView.topAnchor, constant: 8),
             self.iconImageView.bottomAnchor.constraint(equalTo: self.containerView.bottomAnchor, constant: -8),
 
-            self.titleLabel.leadingAnchor.constraint(equalTo: self.iconImageView.leadingAnchor, constant: 8),
+            self.titleLabel.leadingAnchor.constraint(equalTo: self.iconImageView.trailingAnchor, constant: 8),
             self.titleLabel.trailingAnchor.constraint(equalTo: self.containerView.trailingAnchor, constant: -8),
             self.titleLabel.centerYAnchor.constraint(equalTo: self.iconImageView.centerYAnchor),
 

@@ -39,6 +39,9 @@ class BetSubmissionSuccessViewController: UIViewController {
     @IBOutlet private weak var topImageView: UIImageView!
     @IBOutlet private weak var shapeView: UIView!
 
+    @IBOutlet private weak var navigationView: UIView!
+    @IBOutlet private weak var backButton: UIButton!
+
     private var totalOddsValue: String
     private var possibleEarningsValue: String
     private var numberOfBets: Int
@@ -124,6 +127,9 @@ class BetSubmissionSuccessViewController: UIViewController {
 
         self.setupAnimationView()
         self.getBackgroundImage()
+
+        self.backButton.setTitle("", for: .normal)
+        self.backButton.setImage(UIImage(named: "arrow_back_icon"), for: .normal)
     }
 
     override func viewDidLayoutSubviews() {
@@ -194,6 +200,11 @@ class BetSubmissionSuccessViewController: UIViewController {
         self.shapeView.backgroundColor = UIColor.App.backgroundPrimary
 
         self.animationBaseView.backgroundColor = .clear
+
+        self.navigationView.backgroundColor = .clear
+
+        self.backButton.backgroundColor = .clear
+
     }
 
     private func setupAnimationView() {
@@ -353,12 +364,17 @@ class BetSubmissionSuccessViewController: UIViewController {
 
         if !isChecked {
             Env.betslipManager.clearAllBettingTickets()
-        }
-        
-        if self.isModal {
             self.willDismissAction?()
             self.dismiss(animated: true, completion: nil)
         }
+        else {
+            self.navigationController?.popViewController(animated: true)
+        }
+        
+//        if self.isModal {
+//            self.willDismissAction?()
+//            self.dismiss(animated: true, completion: nil)
+//        }
     }
 
     @IBAction private func didTapBackButton() {
