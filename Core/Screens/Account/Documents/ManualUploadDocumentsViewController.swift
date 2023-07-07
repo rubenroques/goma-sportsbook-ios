@@ -8,109 +8,6 @@
 import UIKit
 import Combine
 
-class ManualUploadsDocumentsViewModel {
-
-    // MARK: Private Properties
-    private var cancellables = Set<AnyCancellable>()
-
-    // MARK: Public Properties
-    let supportedTypes = ["com.apple.iwork.pages.pages",
-                          "com.apple.iwork.numbers.numbers",
-                          "com.apple.iwork.keynote.key",
-                          "public.image",
-                          "com.apple.application",
-                          "public.item",
-                          "public.data",
-                          "public.content",
-                          "public.audiovisual-content",
-                          "public.movie",
-                          "public.audiovisual-content",
-                          "public.video", "public.audio",
-                          "public.text", "public.data",
-                          "public.zip-archive",
-                          "com.pkware.zip-archive",
-                          "public.composite-content",
-                          "public.text"]
-
-    var isLoadingPublisher: CurrentValueSubject<Bool, Never> = .init(false)
-    var isFileUploaded: CurrentValueSubject<Bool, Never> = .init(false)
-
-    var documentTypeCode: DocumentTypeCode
-
-    var shouldShowAlert: ((AlertType, String) -> Void)?
-    var shouldShowSuccessScreen: (() -> Void)?
-
-    init(documentTypeCode: DocumentTypeCode) {
-        self.documentTypeCode = documentTypeCode
-    }
-
-    func addPaymentInformation(rib: String) {
-
-        self.isLoadingPublisher.send(true)
-
-        let fieldsInfo = """
-                        {
-                        "IBAN":"\(rib)"
-                        }
-                        """
-
-        Env.servicesProvider.addPaymentInformation(type: "BANK", fields: fieldsInfo)
-            .receive(on: DispatchQueue.main)
-            .sink(receiveCompletion: { [weak self] completion in
-
-                switch completion {
-                case .finished:
-                    ()
-                case .failure(let error):
-                    print("ADD PAYMENT ERROR: \(error)")
-                    self?.shouldShowAlert?(.error, localized("upload_iban_error_message"))
-                    self?.isLoadingPublisher.send(false)
-                }
-            }, receiveValue: { [weak self] addPaymentResponse in
-
-                self?.shouldShowAlert?(.success, localized("upload_complete_message"))
-                self?.isLoadingPublisher.send(false)
-
-            })
-            .store(in: &cancellables)
-    }
-
-    func uploadFile(documentType: String, file: Data, fileName: String) {
-
-        self.isLoadingPublisher.send(true)
-
-        Env.servicesProvider.uploadUserDocument(documentType: documentType, file: file, fileName: fileName)
-            .receive(on: DispatchQueue.main)
-            .sink(receiveCompletion: { [weak self] completion in
-                switch completion {
-                case .finished:
-                    ()
-                case .failure(let error):
-                    print("UPLOAD FILE ERROR: \(error)")
-                    switch error {
-                    case .errorMessage(let message):
-                        self?.shouldShowAlert?(.error, message)
-                        self?.isFileUploaded.send(false)
-                        self?.isLoadingPublisher.send(false)
-                    default:
-                        ()
-                    }
-                }
-            }, receiveValue: { [weak self] uploadFileResponse in
-                print("UPLOAD FILE RESPONSE: \(uploadFileResponse)")
-
-                if self?.documentTypeCode == .ibanProof {
-                    self?.isFileUploaded.send(true)
-                }
-                else {
-                    self?.isFileUploaded.send(true)
-                    self?.isLoadingPublisher.send(false)
-                }
-            })
-            .store(in: &cancellables)
-    }
-}
-
 class ManualUploadDocumentsViewController: UIViewController {
 
     private lazy var containerView: UIView = Self.createContainerView()
@@ -163,6 +60,7 @@ class ManualUploadDocumentsViewController: UIViewController {
     var selectedDocs: [DocumentTypeGroup: [SelectedDoc]] = [:]
 
     var currentDoc: CurrentDoc?
+    var currentSelectedDocumentTypeGroup: DocumentTypeGroup?
 
     var isIbanValid: CurrentValueSubject<Bool, Never> = .init(false)
 
@@ -414,9 +312,14 @@ class ManualUploadDocumentsViewController: UIViewController {
                 uploadDocumentsInformationView.isMultiUpload = false
             }
 
-            if self.viewModel.documentTypeCode == .identification,
-               documentTypeGroup == documentTypeGroups.first {
-                uploadDocumentsInformationView.isHidden = false
+            if self.viewModel.documentTypeCode == .identification {
+                if documentTypeGroup == documentTypeGroups.first {
+                    uploadDocumentsInformationView.isHidden = false
+                    self.currentSelectedDocumentTypeGroup = documentTypeGroup
+                }
+                else {
+                    uploadDocumentsInformationView.isHidden = true
+                }
             }
             else {
                 uploadDocumentsInformationView.isHidden = false
@@ -483,9 +386,71 @@ class ManualUploadDocumentsViewController: UIViewController {
 
         switch self.viewModel.documentTypeCode {
         case .identification:
-            ()
+            if let currentSelectedDocumentTypeGroup {
+                switch currentSelectedDocumentTypeGroup {
+                case .identityCard:
+                    if let selectedDocs = self.selectedDocs[.identityCard] {
+                        if selectedDocs.count > 1 {
+                            self.canSendDocuments = true
+                        }
+                        else {
+                            self.canSendDocuments = false
+                        }
+                    }
+                    else {
+                        self.canSendDocuments = false
+                    }
+                case .residenceId:
+                    if let selectedDocs = self.selectedDocs[.residenceId] {
+                        if selectedDocs.count > 1 {
+                            self.canSendDocuments = true
+                        }
+                        else {
+                            self.canSendDocuments = false
+                        }
+                    }
+                    else {
+                        self.canSendDocuments = false
+                    }
+                case .drivingLicense:
+                    if let selectedDocs = self.selectedDocs[.drivingLicense] {
+                        if selectedDocs.count > 1 {
+                            self.canSendDocuments = true
+                        }
+                        else {
+                            self.canSendDocuments = false
+                        }
+                    }
+                    else {
+                        self.canSendDocuments = false
+                    }
+                case .passport:
+                    if let selectedDocs = self.selectedDocs[.passport] {
+                        if selectedDocs.count > 1 {
+                            self.canSendDocuments = true
+                        }
+                        else {
+                            self.canSendDocuments = false
+                        }
+                    }
+                    else {
+                        self.canSendDocuments = false
+                    }
+                default:
+                    self.canSendDocuments = false
+                }
+            }
         case .proofAddress:
-            ()
+            if let selectedDocs = self.selectedDocs[.others] {
+                if selectedDocs.contains(where: {
+                    $0.docSide == .front
+                }) {
+                    self.canSendDocuments = true
+                }
+                else {
+                    self.canSendDocuments = false
+                }
+            }
         case .ibanProof:
             if let selectedDocs = self.selectedDocs[.rib] {
                 if selectedDocs.contains(where: {
@@ -519,11 +484,14 @@ class ManualUploadDocumentsViewController: UIViewController {
 
             if key == documentTypeGroup {
                 documentUploadsInfoView.isHidden = false
+                self.currentSelectedDocumentTypeGroup = key
             }
             else {
                 documentUploadsInfoView.isHidden = true
             }
         }
+
+        self.checkSendDocument()
     }
 
     private func openFile() {
@@ -695,11 +663,47 @@ class ManualUploadDocumentsViewController: UIViewController {
 
     // MARK: Actions
     @objc private func didTapBackButton() {
-        self.navigationController?.popViewController(animated: true)
+
+        if self.canSendDocuments == false {
+            self.navigationController?.popViewController(animated: true)
+        }
+        else {
+            let alert = UIAlertController(title: localized("progress_not_saved"),
+                                          message: localized("havent_send_documents"),
+                                          preferredStyle: .alert)
+            
+            alert.addAction(UIAlertAction(title: localized("stay_here"), style: .cancel, handler: nil ))
+
+            alert.addAction(UIAlertAction(title: localized("yes_go_back"), style: .default, handler: { [weak self] _ in
+
+                self?.navigationController?.popViewController(animated: true)
+            }))
+
+            self.present(alert, animated: true, completion: nil)
+        }
     }
 
     @objc private func didTapSendButton() {
         switch self.viewModel.documentTypeCode {
+        case .identification:
+            if let currentDocumentTypeGroup = self.currentSelectedDocumentTypeGroup,
+               let selectedDocs = self.selectedDocs[currentDocumentTypeGroup] {
+
+                var files = [String: Data]()
+
+                for selectedDoc in selectedDocs {
+                    files[selectedDoc.name] = selectedDoc.fileData
+                }
+
+                self.viewModel.uploadFiles(documentType: currentDocumentTypeGroup.code, files: files)
+
+            }
+        case .proofAddress:
+            if let currentDoc = self.currentDoc,
+               let selectedDoc = self.selectedDocs[currentDoc.documentTypeGroup]?.first {
+
+                self.viewModel.uploadFile(documentType: currentDoc.documentTypeGroup.code, file: selectedDoc.fileData, fileName: selectedDoc.name)
+            }
         case .ibanProof:
             if let currentDoc = self.currentDoc,
                let selectedDoc = self.selectedDocs[currentDoc.documentTypeGroup]?.first {
@@ -878,7 +882,7 @@ extension ManualUploadDocumentsViewController {
     private static func createDocumentTypeTitleLabel() -> UILabel {
         let label = UILabel()
         label.translatesAutoresizingMaskIntoConstraints = false
-        label.text = localized("choose_type_identification")
+        label.text = localized("choose_type_of_identification")
         label.font = AppFont.with(type: .bold, size: 16)
         label.textAlignment = .center
         label.numberOfLines = 0

@@ -610,6 +610,84 @@ class SportRadarPrivilegedAccessManager: PrivilegedAccessManager {
         }).eraseToAnyPublisher()
     }
 
+    func uploadMultipleUserDocuments(documentType: String, files: [String: Data]) -> AnyPublisher<UploadDocumentResponse, ServiceProviderError> {
+
+        var multipart = MultipartRequest()
+
+        multipart.add(key: "documentType", value: documentType)
+
+        var fileCount = 0
+
+        for (key, file) in files {
+            let mimeType = mimeType(for: file)
+
+            multipart.add(
+                key: "_file_\(fileCount)",
+                fileName: key,
+                fileMimeType: mimeType,
+                fileData: file
+            )
+
+            fileCount += 1
+        }
+
+        let currentDate = Date()
+
+        var issuedDateComponent = DateComponents()
+        issuedDateComponent.year = -1
+        let issuedDate = Calendar.current.date(byAdding: issuedDateComponent, to: currentDate) ?? currentDate
+
+        var expiryDateComponent = DateComponents()
+        expiryDateComponent.year = 3
+        let expiryDate = Calendar.current.date(byAdding: expiryDateComponent, to: currentDate) ?? currentDate
+
+        // Create a date formatter
+        let dateFormatter = DateFormatter()
+        dateFormatter.dateFormat = "yyyy-MM-dd"
+
+        let expiryDateString = dateFormatter.string(from: expiryDate)
+        let issuedDateString = dateFormatter.string(from: issuedDate)
+
+        if documentType == "IDENTITY_CARD" {
+            multipart.add(key: "issueDate", value: issuedDateString)
+            multipart.add(key: "expiryDate", value: expiryDateString)
+            multipart.add(key: "documentNumber", value: "123456789")
+        }
+        else if documentType == "RESIDENCE_ID" {
+            multipart.add(key: "issueDate", value: issuedDateString)
+            multipart.add(key: "expiryDate", value: expiryDateString)
+            multipart.add(key: "documentNumber", value: "123456789")
+        }
+        else if documentType == "DRIVING_LICENCE" {
+            multipart.add(key: "issueDate", value: issuedDateString)
+            multipart.add(key: "expiryDate", value: expiryDateString)
+            multipart.add(key: "documentNumber", value: "123456789")
+        }
+        else if documentType == "RESIDENCE_ID" {
+            multipart.add(key: "issueDate", value: issuedDateString)
+            multipart.add(key: "expiryDate", value: expiryDateString)
+            multipart.add(key: "documentNumber", value: "123456789")
+        }
+        else if documentType == "OTHERS" {
+            multipart.add(key: "expiryDate", value: expiryDateString)
+            multipart.add(key: "documentNumber", value: "120123128")
+        }
+
+        let endpoint = OmegaAPIClient.uploadMultipleUserDocuments(documentType: documentType, files: files, body: multipart.httpBody, header: multipart.httpContentTypeHeaderValue)
+
+        let publisher: AnyPublisher<SportRadarModels.UploadDocumentResponse, ServiceProviderError> = self.connector.request(endpoint)
+
+        return publisher.flatMap({ uploadDocumentResponse -> AnyPublisher<UploadDocumentResponse, ServiceProviderError> in
+            if uploadDocumentResponse.status == "SUCCESS" {
+                let uploadDocumentResponse = SportRadarModelMapper.uploadDocumentResponse(fromUploadDocumentResponse: uploadDocumentResponse)
+                return Just(uploadDocumentResponse).setFailureType(to: ServiceProviderError.self).eraseToAnyPublisher()
+            }
+            else {
+                return Fail(outputType: UploadDocumentResponse.self, failure: ServiceProviderError.errorMessage(message: uploadDocumentResponse.message ?? "Error")).eraseToAnyPublisher()
+            }
+        }).eraseToAnyPublisher()
+    }
+
     func getPayments() -> AnyPublisher<SimplePaymentMethodsResponse, ServiceProviderError> {
 
         let endpoint = OmegaAPIClient.getPayments
@@ -969,9 +1047,9 @@ class SportRadarPrivilegedAccessManager: PrivilegedAccessManager {
         }).eraseToAnyPublisher()
     }
 
-    func contactSupport(userIdentifier: String, subject: String, message: String) -> AnyPublisher<SupportResponse, ServiceProviderError> {
+    func contactSupport(userIdentifier: String, firstName: String, lastName: String, email: String, subject: String, subjectType: String, message: String) -> AnyPublisher<SupportResponse, ServiceProviderError> {
 
-        let endpoint = OmegaAPIClient.contactSupport(userIdentifier: userIdentifier, subject: subject, message: message)
+        let endpoint = OmegaAPIClient.contactSupport(userIdentifier: userIdentifier, firstName: firstName, lastName: lastName, email: email, subject: subject, subjectType: subjectType, message: message)
 
         let publisher: AnyPublisher<SportRadarModels.SupportResponse, ServiceProviderError> = self.connector.request(endpoint)
 

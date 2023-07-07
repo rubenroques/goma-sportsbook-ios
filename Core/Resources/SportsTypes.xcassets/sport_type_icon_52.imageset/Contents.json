@@ -1,7 +1,7 @@
 {
   "images" : [
     {
-      "filename" : "sport_type_icon_52.png",
+      "filename" : "52.png",
       "idiom" : "universal",
       "scale" : "1x"
     },
@@ -12,12 +12,12 @@
           "value" : "dark"
         }
       ],
-      "filename" : "sport_type_icon_52-1.png",
+      "filename" : "52 1.png",
       "idiom" : "universal",
       "scale" : "1x"
     },
     {
-      "filename" : "sport_type_icon_52@2x.png",
+      "filename" : "52@2x.png",
       "idiom" : "universal",
       "scale" : "2x"
     },
@@ -28,12 +28,12 @@
           "value" : "dark"
         }
       ],
-      "filename" : "sport_type_icon_52@2x-1.png",
+      "filename" : "52@2x 1.png",
       "idiom" : "universal",
       "scale" : "2x"
     },
     {
-      "filename" : "sport_type_icon_52@3x.png",
+      "filename" : "52@3x.png",
       "idiom" : "universal",
       "scale" : "3x"
     },
@@ -44,7 +44,7 @@
           "value" : "dark"
         }
       ],
-      "filename" : "sport_type_icon_52@3x-1.png",
+      "filename" : "52@3x 1.png",
       "idiom" : "universal",
       "scale" : "3x"
     }

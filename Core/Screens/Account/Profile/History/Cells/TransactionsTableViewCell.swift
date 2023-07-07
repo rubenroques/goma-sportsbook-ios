@@ -154,16 +154,16 @@ class TransactionsTableViewCell: UITableViewCell {
 //            }
 //        }
 
+        self.transactionTypeLabel.text = transactionHistoryEntry.type
+
         switch transactionHistoryEntry.valueType {
         case .won:
             self.transactionIcon.image = UIImage(named: "deposit_icon")
-            self.transactionTypeLabel.text = transactionHistoryEntry.type
             if let amount = CurrencyFormater.defaultFormat.string(from: NSNumber(value: transactionHistoryEntry.debit.amount)) {
                 self.transactionValueLabel.text = "+" + amount
             }
         case .loss:
             self.transactionIcon.image = UIImage(named: "withdraw_icon")
-            self.transactionTypeLabel.text = transactionHistoryEntry.type
             if let amount = CurrencyFormater.defaultFormat.string(from: NSNumber(value: transactionHistoryEntry.debit.amount)) {
                 if transactionHistoryEntry.debit.amount > 0 {
                     self.transactionValueLabel.text = "-" + amount
@@ -174,7 +174,6 @@ class TransactionsTableViewCell: UITableViewCell {
             }
         case .neutral:
             self.transactionIcon.image = UIImage(named: "neutral_icon")
-            self.transactionTypeLabel.text = transactionHistoryEntry.type
             if let amount = CurrencyFormater.defaultFormat.string(from: NSNumber(value: transactionHistoryEntry.debit.amount)) {
                 self.transactionValueLabel.text = amount
             }

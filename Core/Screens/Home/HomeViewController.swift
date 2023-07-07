@@ -108,18 +108,15 @@ class HomeViewController: UIViewController {
         self.bind(toViewModel: self.viewModel)
 
         self.didSelectActivationAlertAction = { alertType in
-            if alertType == ActivationAlertType.email {
-                let emailVerificationViewController = EmailVerificationViewController()
-                self.present(emailVerificationViewController, animated: true, completion: nil)
-            }
-            else if alertType == ActivationAlertType.profile {
-                let fullRegisterViewController = FullRegisterPersonalInfoViewController(isBackButtonDisabled: true)
-                self.navigationController?.pushViewController(fullRegisterViewController, animated: true)
-            }
-            else if alertType == ActivationAlertType.documents {
-//                let uploadDocumentsViewModel = UploadDocumentsViewModel()
-//                let uploadDocumentsViewController = UploadDocumentsViewController(viewModel: uploadDocumentsViewModel)
-//                self.present(uploadDocumentsViewController, animated: true, completion: nil)
+//            if alertType == ActivationAlertType.email {
+//                let emailVerificationViewController = EmailVerificationViewController()
+//                self.present(emailVerificationViewController, animated: true, completion: nil)
+//            }
+//            if alertType == ActivationAlertType.profile {
+//                let fullRegisterViewController = FullRegisterPersonalInfoViewController(isBackButtonDisabled: true)
+//                self.navigationController?.pushViewController(fullRegisterViewController, animated: true)
+//            }
+            if alertType == ActivationAlertType.documents {
 
                 let documentsRootViewModel = DocumentsRootViewModel()
 

@@ -7,6 +7,7 @@
 
 import UIKit
 import Combine
+import ServicesProvider
 
 class MyTicketBetLineView: NibView {
 
@@ -51,7 +52,8 @@ class MyTicketBetLineView: NibView {
     private var awayResultSubscription: AnyCancellable?
 
     private var cancellables = Set<AnyCancellable>()
-    
+    private var subscription: ServicesProvider.Subscription?
+
     convenience init(betHistoryEntrySelection: BetHistoryEntrySelection, countryCode: String, viewModel: MyTicketBetLineViewModel) {
         self.init(frame: .zero, betHistoryEntrySelection: betHistoryEntrySelection, countryCode: countryCode, viewModel: viewModel)
     }
@@ -65,7 +67,7 @@ class MyTicketBetLineView: NibView {
 
         self.commonInit()
 
-        self.getMatchLiveDetails()
+        self.getMatchDetails()
     }
 
     @available(iOS, unavailable)
@@ -288,6 +290,64 @@ class MyTicketBetLineView: NibView {
             self.dateLabel.isHidden = true
             self.indicatorLabel.text = ""
             self.indicatorBaseView.isHidden = false
+        }
+    }
+
+    func getMatchDetails() {
+
+        if let eventId = self.betHistoryEntrySelection.eventId {
+
+            Env.servicesProvider.subscribeMatchDetails(matchId: eventId)
+                .receive(on: DispatchQueue.main)
+                .sink(receiveCompletion: { [weak self] completion in
+                    print("Env.servicesProvider.subscribeEventDetails completed \(completion)")
+                    switch completion {
+                    case .finished:
+                        ()
+                    case .failure(let error):
+                        switch error {
+                        case .resourceUnavailableOrDeleted: // This match is no longer available
+                            self?.liveIconImage.isHidden = true
+                            self?.dateLabel.isHidden = false
+
+                        default:
+                            print("Error retrieving data! \(error)")
+                            self?.liveIconImage.isHidden = true
+                            self?.dateLabel.isHidden = false
+                        }
+                    }
+                }, receiveValue: { [weak self] (subscribableContent: SubscribableContent<ServicesProvider.Event>) in
+                    switch subscribableContent {
+                    case .connected(let subscription):
+                        self?.subscription = subscription
+                    case .contentUpdate(let serviceProviderEvent):
+                        guard let self = self else { return }
+
+                        let match = ServiceProviderModelMapper.match(fromEvent: serviceProviderEvent)
+
+                        switch match.status {
+                        case .notStarted, .ended, .unknown:
+                            self.liveIconImage.isHidden = true
+                            self.dateLabel.isHidden = false
+                        case .inProgress:
+                            self.liveIconImage.isHidden = false
+                            self.dateLabel.isHidden = true
+
+                            if let homeScore = match.homeParticipantScore {
+                                self.homeTeamScoreLabel.text = "\(homeScore)"
+                            }
+
+                            if let awayScore = match.awayParticipantScore {
+                                self.awayTeamScoreLabel.text = "\(awayScore)"
+                            }
+                        }
+
+                        self.getMatchLiveDetails()
+                    case .disconnected:
+                        print("Disconnected from ws")
+                    }
+                })
+                .store(in: &cancellables)
         }
     }
 

@@ -13,28 +13,51 @@ class SupportPageViewModel {
 
     var cancellables = Set<AnyCancellable>()
     var supportResponseAction: ((Bool, String?) -> Void)?
-
+    var subjectTypes: [SubjectType]
     // MARK: - Life Cycle
     init() {
-        
+        self.subjectTypes = [.register,
+                             .myAccount,
+                             .bonusAndPromotions,
+                             .deposits,
+                             .withdraws,
+                             .responsibleGaming,
+                             .bettingRules,
+                             .other]
     }
     
-    func sendEmail(title: String, message: String, firstName: String? = nil, lastName: String? = nil, email: String? = nil) {
+    func sendEmail(title: String, message: String, subjectType: String, firstName: String? = nil, lastName: String? = nil, email: String? = nil) {
 
         let userProfile = Env.userSessionStore.userProfilePublisher.value
 
         var userIdentifier = ""
+        var subjectTypeTag = ""
+        var name = ""
+        var surname = ""
+        var userEmail = ""
 
         if let firstName,
            let lastName,
            let email {
             userIdentifier = "\(firstName) - \(lastName) - \(email)"
+            name = firstName
+            surname = lastName
+            userEmail = email
         }
         else {
             userIdentifier = "\(userProfile?.userIdentifier ?? "")_\(userProfile?.username ?? "")"
+            name = "\(userProfile?.firstName ?? "")"
+            surname = "\(userProfile?.lastName ?? "")"
+            userEmail = "\(userProfile?.email ?? "")"
         }
 
-        Env.servicesProvider.contactSupport(userIdentifier: userIdentifier, subject: title, message: message)
+        if let filteredSubjectTypeTag = SubjectType.allCases.filter({
+            $0.typeValue == subjectType
+        }).first?.typeTag {
+            subjectTypeTag = filteredSubjectTypeTag
+        }
+
+        Env.servicesProvider.contactSupport(userIdentifier: userIdentifier, firstName: name, lastName: surname, email: userEmail, subject: title, subjectType: subjectTypeTag, message: message)
             .receive(on: DispatchQueue.main)
             .sink(receiveCompletion: { [weak self] completion in
                 switch completion {

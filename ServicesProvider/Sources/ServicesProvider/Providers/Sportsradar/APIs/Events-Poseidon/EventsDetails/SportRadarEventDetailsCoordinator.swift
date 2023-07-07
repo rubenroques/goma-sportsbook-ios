@@ -122,11 +122,13 @@ class SportRadarEventDetailsCoordinator {
         sessionDataTask.resume()
     }
 
-    func updateEventDetails(_ updatedEvent: Event) {
+    func updateEventDetails(_ updatedEvent: Event, forContentIdentifier contentIdentifier: ContentIdentifier) {
         print("☁️SP debugbetslip updateEventDetails SportRadarEventDetailsCoordinator \(marketsContentIdentifier) \(liveDataContentIdentifier)")
 
-        self.storage.storeEvent(updatedEvent)
-        self.eventDetailsCurrentValueSubject.send(.contentUpdate(content: updatedEvent))
+        if contentIdentifier == self.liveDataContentIdentifier || contentIdentifier == self.marketsContentIdentifier {
+            self.storage.storeEvent(updatedEvent)
+            self.eventDetailsCurrentValueSubject.send(.contentUpdate(content: updatedEvent))
+        }
     }
 
     func reconnect(withNewSessionToken newSessionToken: String) {
@@ -171,7 +173,9 @@ class SportRadarEventDetailsCoordinator {
 
 extension SportRadarEventDetailsCoordinator {
 
-    func updatedLiveData(eventLiveDataExtended: SportRadarModels.EventLiveDataExtended) {
+    func updatedLiveData(eventLiveDataExtended: SportRadarModels.EventLiveDataExtended, forContentIdentifier contentIdentifier: ContentIdentifier) {
+
+        guard contentIdentifier == self.liveDataContentIdentifier || contentIdentifier == self.marketsContentIdentifier else { return }
 
         if let newStatus = eventLiveDataExtended.status?.stringValue {
             self.storage.updateEventStatus(newStatus: newStatus)
@@ -282,6 +286,10 @@ extension SportRadarEventDetailsCoordinator {
 
     func containsOutcome(withid id: String) -> Bool {
         return self.storage.containsOutcome(withid: id)
+    }
+
+    func setupEvent(withId id: String) {
+        self.storage.setEventSubject(eventId: id)
     }
 
 }

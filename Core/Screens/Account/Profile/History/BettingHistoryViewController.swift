@@ -250,6 +250,13 @@ class BettingHistoryViewController: UIViewController {
 
         self.tableView.setContentOffset(scrollPoint, animated: true)
     }
+
+    private func showCashbackInfo() {
+
+        let cashbackInfoViewController = CashbackInfoViewController()
+
+        self.navigationController?.pushViewController(cashbackInfoViewController, animated: true)
+    }
 }
 
 //
@@ -319,6 +326,11 @@ extension BettingHistoryViewController: UITableViewDelegate, UITableViewDataSour
                 self?.tappedMatchDetail?(matchId)
 
             }
+
+            cell.shouldShowCashbackInfo = { [weak self] in
+                self?.showCashbackInfo()
+            }
+
             return cell
         case 1:
             if let cell = tableView.dequeueCellType(LoadingMoreTableViewCell.self) {

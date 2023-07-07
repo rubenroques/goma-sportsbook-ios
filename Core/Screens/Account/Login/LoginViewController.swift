@@ -40,6 +40,7 @@ class LoginViewController: UIViewController {
 
     // Variables
     var shouldRememberUser: Bool = true
+    var noSocketLoggedUser: Bool = false
 
     private var shouldPresentRegisterFlow: Bool
     private let registrationFormDataKey = "RegistrationFormDataKey"
@@ -379,11 +380,21 @@ class LoginViewController: UIViewController {
     }
 
     private func showRegisterFeedbackViewController(onNavigationController navigationController: UINavigationController) {
-        let registerFeedbackViewController = RegisterFeedbackViewController(viewModel: RegisterFeedbackViewModel(registerSuccess: true))
-        registerFeedbackViewController.didTapContinueButtonAction = { [weak self] in
+//        let registerFeedbackViewController = RegisterFeedbackViewController(viewModel: RegisterFeedbackViewModel(registerSuccess: true))
+//
+//        registerFeedbackViewController.didTapContinueButtonAction = { [weak self] in
+//            self?.showBiometricPromptViewController(onNavigationController: navigationController)
+//        }
+
+        let genericSuccessViewController = GenericSuccessViewController()
+
+        genericSuccessViewController.setTextInfo(title: localized("congratulations"), subtitle: localized("singup_success_text"))
+
+        genericSuccessViewController.didTapContinueAction = { [weak self] in
             self?.showBiometricPromptViewController(onNavigationController: navigationController)
         }
-        navigationController.pushViewController(registerFeedbackViewController, animated: true)
+
+        navigationController.pushViewController(genericSuccessViewController, animated: true)
     }
 
     private func showBiometricPromptViewController(onNavigationController navigationController: UINavigationController) {
@@ -656,18 +667,24 @@ class LoginViewController: UIViewController {
         spinnerViewController.view.removeFromSuperview()
     }
 
-
     private func loginSuccessful() {
 
         // The user had a suc login, we shouldn't start the app with the login anymore
         // is the same behaviour if the user skipped the login
         UserSessionStore.skippedLoginFlow()
 
-        if self.shouldRememberUser {
-            self.showBiometricAuthenticationAlert()
+        // TODO: Biometrics alert not working if socket is not connected
+        if Env.appInitWithoutSocket {
+            Env.userSessionStore.setShouldRequestBiometrics(true)
+            self.showNextViewController()
         }
         else {
-            self.showNextViewController()
+            if self.shouldRememberUser {
+                self.showBiometricAuthenticationAlert()
+            }
+            else {
+                self.showNextViewController()
+            }
         }
 
     }
@@ -813,7 +830,7 @@ class LoginViewController: UIViewController {
 
             Env.userSessionStore.refreshUserWalletAfterDelay()
 
-            let depositSuccessViewController = DepositSuccessViewController()
+            let depositSuccessViewController = GenericSuccessViewController()
 
             depositSuccessViewController.setTextInfo(title: "\(localized("success"))!", subtitle: localized("first_deposit_success_message"))
 

@@ -30,7 +30,7 @@
                 <autoresizingMask key="autoresizingMask"/>
                 <subviews>
                     <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Tt6-nr-mqM">
-                        <rect key="frame" x="12" y="10" width="393" height="615"/>
+                        <rect key="frame" x="12" y="10" width="393" height="625"/>
                         <subviews>
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="th4-zS-Yw2">
                                 <rect key="frame" x="0.0" y="0.0" width="393" height="8"/>
@@ -39,22 +39,63 @@
                                 </constraints>
                             </view>
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="FTm-sF-tcl">
-                                <rect key="frame" x="0.0" y="8" width="393" height="65"/>
+                                <rect key="frame" x="0.0" y="8" width="393" height="75"/>
                                 <subviews>
                                     <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" spacing="2" translatesAutoresizingMaskIntoConstraints="NO" id="rFM-eh-O7u">
-                                        <rect key="frame" x="12" y="4" width="321" height="57"/>
+                                        <rect key="frame" x="12" y="4" width="321" height="67"/>
                                         <subviews>
-                                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Ticket 1 - Multiple Bet" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="u4V-wd-Z9n">
-                                                <rect key="frame" x="0.0" y="0.0" width="321" height="20"/>
+                                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="oRu-7J-lwR">
+                                                <rect key="frame" x="0.0" y="0.0" width="321" height="30"/>
+                                                <subviews>
+                                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Ticket 1 - Multiple Bet" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="u4V-wd-Z9n">
+                                                        <rect key="frame" x="0.0" y="5" width="159" height="20"/>
+                                                        <constraints>
+                                                            <constraint firstAttribute="height" constant="20" id="t2Q-Iz-KUh"/>
+                                                        </constraints>
+                                                        <fontDescription key="fontDescription" name="Gilroy-Bold" family="Gilroy" pointSize="16"/>
+                                                        <nil key="textColor"/>
+                                                        <nil key="highlightedColor"/>
+                                                    </label>
+                                                    <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="cashback_small_blue_icon" translatesAutoresizingMaskIntoConstraints="NO" id="WSO-cl-Fzf">
+                                                        <rect key="frame" x="164" y="5" width="20" height="20"/>
+                                                        <constraints>
+                                                            <constraint firstAttribute="height" constant="20" id="4XY-YT-B8u"/>
+                                                            <constraint firstAttribute="width" constant="20" id="LyE-Si-aUZ"/>
+                                                        </constraints>
+                                                    </imageView>
+                                                    <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Cd2-AR-4Bf">
+                                                        <rect key="frame" x="164" y="3" width="51.5" height="24.5"/>
+                                                        <subviews>
+                                                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="SK9-9s-yhl">
+                                                                <rect key="frame" x="5" y="2" width="41.5" height="20.5"/>
+                                                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                                                <nil key="textColor"/>
+                                                                <nil key="highlightedColor"/>
+                                                            </label>
+                                                        </subviews>
+                                                        <color key="backgroundColor" systemColor="systemBackgroundColor"/>
+                                                        <constraints>
+                                                            <constraint firstItem="SK9-9s-yhl" firstAttribute="top" secondItem="Cd2-AR-4Bf" secondAttribute="top" constant="2" id="Epv-Lv-IDP"/>
+                                                            <constraint firstAttribute="bottom" secondItem="SK9-9s-yhl" secondAttribute="bottom" constant="2" id="VdA-Gu-jDN"/>
+                                                            <constraint firstItem="SK9-9s-yhl" firstAttribute="leading" secondItem="Cd2-AR-4Bf" secondAttribute="leading" constant="5" id="kqM-ub-v0k"/>
+                                                            <constraint firstAttribute="trailing" secondItem="SK9-9s-yhl" secondAttribute="trailing" constant="5" id="orX-wy-rX6"/>
+                                                        </constraints>
+                                                    </view>
+                                                </subviews>
+                                                <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                                 <constraints>
-                                                    <constraint firstAttribute="height" constant="20" id="t2Q-Iz-KUh"/>
+                                                    <constraint firstAttribute="height" constant="30" id="KK0-B9-rV1"/>
+                                                    <constraint firstItem="WSO-cl-Fzf" firstAttribute="leading" secondItem="u4V-wd-Z9n" secondAttribute="trailing" constant="5" id="LrF-22-6HH"/>
+                                                    <constraint firstItem="Cd2-AR-4Bf" firstAttribute="leading" secondItem="u4V-wd-Z9n" secondAttribute="trailing" constant="5" id="Mkh-aR-yO9"/>
+                                                    <constraint firstAttribute="trailing" relation="greaterThanOrEqual" secondItem="u4V-wd-Z9n" secondAttribute="trailing" constant="100" id="QKg-Y2-dvs"/>
+                                                    <constraint firstItem="WSO-cl-Fzf" firstAttribute="centerY" secondItem="oRu-7J-lwR" secondAttribute="centerY" id="eRW-fw-y7g"/>
+                                                    <constraint firstItem="Cd2-AR-4Bf" firstAttribute="centerY" secondItem="oRu-7J-lwR" secondAttribute="centerY" id="fDu-aO-OQ7"/>
+                                                    <constraint firstItem="u4V-wd-Z9n" firstAttribute="leading" secondItem="oRu-7J-lwR" secondAttribute="leading" id="iip-Ue-nJx"/>
+                                                    <constraint firstItem="u4V-wd-Z9n" firstAttribute="centerY" secondItem="oRu-7J-lwR" secondAttribute="centerY" id="tks-RP-s9e"/>
                                                 </constraints>
-                                                <fontDescription key="fontDescription" name="Gilroy-Bold" family="Gilroy" pointSize="16"/>
-                                                <nil key="textColor"/>
-                                                <nil key="highlightedColor"/>
-                                            </label>
+                                            </view>
                                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="wwr-bp-ugq">
-                                                <rect key="frame" x="0.0" y="22" width="321" height="16"/>
+                                                <rect key="frame" x="0.0" y="32" width="321" height="16"/>
                                                 <subviews>
                                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="02/10/21, 2:30PM" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="qru-Yl-AEW">
                                                         <rect key="frame" x="0.0" y="0.0" width="80" height="16"/>
@@ -98,7 +139,7 @@
                                                 </constraints>
                                             </view>
                                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="#id" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="HlD-gT-Ce5">
-                                                <rect key="frame" x="0.0" y="40" width="321" height="17"/>
+                                                <rect key="frame" x="0.0" y="50" width="321" height="17"/>
                                                 <constraints>
                                                     <constraint firstAttribute="height" constant="17" id="eSL-ek-E7H"/>
                                                 </constraints>
@@ -109,7 +150,7 @@
                                         </subviews>
                                     </stackView>
                                     <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="zuK-D6-xfw">
-                                        <rect key="frame" x="347" y="9.5" width="40" height="40"/>
+                                        <rect key="frame" x="347" y="14.5" width="40" height="40"/>
                                         <constraints>
                                             <constraint firstAttribute="width" constant="40" id="9FA-2X-f6f"/>
                                             <constraint firstAttribute="height" constant="40" id="HGp-0H-uuU"/>
@@ -131,7 +172,7 @@
                                 </constraints>
                             </view>
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="kAq-e8-CXE">
-                                <rect key="frame" x="0.0" y="75" width="393" height="270"/>
+                                <rect key="frame" x="0.0" y="85" width="393" height="270"/>
                                 <subviews>
                                     <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" spacing="14" translatesAutoresizingMaskIntoConstraints="NO" id="g5w-be-8FE">
                                         <rect key="frame" x="10" y="0.0" width="373" height="270"/>
@@ -159,7 +200,7 @@
                                 </constraints>
                             </view>
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="6dB-Ev-5zh">
-                                <rect key="frame" x="0.0" y="357" width="393" height="246"/>
+                                <rect key="frame" x="0.0" y="367" width="393" height="246"/>
                                 <subviews>
                                     <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" spacing="4" translatesAutoresizingMaskIntoConstraints="NO" id="od3-Q5-lI2">
                                         <rect key="frame" x="0.0" y="0.0" width="393" height="246"/>
@@ -171,19 +212,37 @@
                                                         <rect key="frame" x="12" y="0.0" width="369" height="25"/>
                                                         <subviews>
                                                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Total Odd" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="H3D-rO-ceb">
-                                                                <rect key="frame" x="0.0" y="0.0" width="123" height="25"/>
+                                                                <rect key="frame" x="0.0" y="0.0" width="92.5" height="25"/>
                                                                 <fontDescription key="fontDescription" name="Gilroy-Semibold" family="Gilroy" pointSize="12"/>
                                                                 <nil key="textColor"/>
                                                                 <nil key="highlightedColor"/>
                                                             </label>
                                                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Bet Amount" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="vXt-7J-prf">
-                                                                <rect key="frame" x="123" y="0.0" width="123" height="25"/>
+                                                                <rect key="frame" x="92.5" y="0.0" width="92" height="25"/>
                                                                 <fontDescription key="fontDescription" name="Gilroy-Semibold" family="Gilroy" pointSize="12"/>
                                                                 <nil key="textColor"/>
                                                                 <nil key="highlightedColor"/>
                                                             </label>
-                                                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="ayK-Qd-dcW">
-                                                                <rect key="frame" x="246" y="0.0" width="123" height="25"/>
+                                                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="uSX-B0-0mX">
+                                                                <rect key="frame" x="184.5" y="0.0" width="92.5" height="25"/>
+                                                                <subviews>
+                                                                    <view contentMode="scaleToFill" ambiguous="YES" translatesAutoresizingMaskIntoConstraints="NO" id="XvJ-AP-OZx" customClass="CashbackInfoView" customModule="Betsson" customModuleProvider="target">
+                                                                        <rect key="frame" x="11" y="3" width="70" height="19"/>
+                                                                        <color key="backgroundColor" systemColor="systemBackgroundColor"/>
+                                                                        <constraints>
+                                                                            <constraint firstAttribute="height" constant="19" id="gbF-sX-cOh"/>
+                                                                            <constraint firstAttribute="width" relation="greaterThanOrEqual" constant="70" id="lnS-eS-125"/>
+                                                                        </constraints>
+                                                                    </view>
+                                                                </subviews>
+                                                                <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                                                <constraints>
+                                                                    <constraint firstItem="XvJ-AP-OZx" firstAttribute="centerX" secondItem="uSX-B0-0mX" secondAttribute="centerX" id="AqJ-9a-SCv"/>
+                                                                    <constraint firstItem="XvJ-AP-OZx" firstAttribute="centerY" secondItem="uSX-B0-0mX" secondAttribute="centerY" id="QD8-6W-du3"/>
+                                                                </constraints>
+                                                            </view>
+                                                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Gains" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="ayK-Qd-dcW">
+                                                                <rect key="frame" x="277" y="0.0" width="92" height="25"/>
                                                                 <fontDescription key="fontDescription" name="Gilroy-Semibold" family="Gilroy" pointSize="12"/>
                                                                 <nil key="textColor"/>
                                                                 <nil key="highlightedColor"/>
@@ -203,19 +262,25 @@
                                                         <rect key="frame" x="8" y="34" width="377" height="25"/>
                                                         <subviews>
                                                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="15,80" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" minimumScaleFactor="0.80000000000000004" translatesAutoresizingMaskIntoConstraints="NO" id="TJv-VO-6Cg">
-                                                                <rect key="frame" x="0.0" y="0.0" width="125.5" height="25"/>
+                                                                <rect key="frame" x="0.0" y="0.0" width="94.5" height="25"/>
                                                                 <fontDescription key="fontDescription" name="Gilroy-Semibold" family="Gilroy" pointSize="16"/>
                                                                 <nil key="textColor"/>
                                                                 <nil key="highlightedColor"/>
                                                             </label>
                                                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Total" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" minimumScaleFactor="0.80000000000000004" translatesAutoresizingMaskIntoConstraints="NO" id="OvZ-3E-5T1">
-                                                                <rect key="frame" x="125.5" y="0.0" width="126" height="25"/>
+                                                                <rect key="frame" x="94.5" y="0.0" width="94" height="25"/>
                                                                 <fontDescription key="fontDescription" name="Gilroy-Semibold" family="Gilroy" pointSize="16"/>
                                                                 <nil key="textColor"/>
                                                                 <nil key="highlightedColor"/>
                                                             </label>
-                                                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="B" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" minimumScaleFactor="0.80000000000000004" translatesAutoresizingMaskIntoConstraints="NO" id="tyr-1F-fEL">
-                                                                <rect key="frame" x="251.5" y="0.0" width="125.5" height="25"/>
+                                                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="0,00€" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Dbq-dg-s0H">
+                                                                <rect key="frame" x="188.5" y="0.0" width="94.5" height="25"/>
+                                                                <fontDescription key="fontDescription" name="Gilroy-Semibold" family="Gilroy" pointSize="16"/>
+                                                                <nil key="textColor"/>
+                                                                <nil key="highlightedColor"/>
+                                                            </label>
+                                                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="0,00" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" minimumScaleFactor="0.80000000000000004" translatesAutoresizingMaskIntoConstraints="NO" id="tyr-1F-fEL">
+                                                                <rect key="frame" x="283" y="0.0" width="94" height="25"/>
                                                                 <fontDescription key="fontDescription" name="Gilroy-Semibold" family="Gilroy" pointSize="16"/>
                                                                 <nil key="textColor"/>
                                                                 <nil key="highlightedColor"/>
@@ -245,13 +310,13 @@
                                                 <rect key="frame" x="0.0" y="59" width="393" height="25"/>
                                                 <subviews>
                                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="6aL-uL-4BQ">
-                                                        <rect key="frame" x="185" y="2" width="23" height="18"/>
+                                                        <rect key="frame" x="138" y="2" width="23" height="18"/>
                                                         <fontDescription key="fontDescription" name="Gilroy-Semibold" family="Gilroy" pointSize="9"/>
                                                         <nil key="textColor"/>
                                                         <nil key="highlightedColor"/>
                                                     </label>
                                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="VLz-nZ-YQ9">
-                                                        <rect key="frame" x="310.5" y="2" width="23" height="18"/>
+                                                        <rect key="frame" x="326.5" y="2" width="23" height="18"/>
                                                         <fontDescription key="fontDescription" name="Gilroy-Semibold" family="Gilroy" pointSize="9"/>
                                                         <nil key="textColor"/>
                                                         <nil key="highlightedColor"/>
@@ -360,10 +425,10 @@
                                 </constraints>
                             </view>
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="3sD-Ev-YhE">
-                                <rect key="frame" x="0.0" y="0.0" width="393" height="615"/>
+                                <rect key="frame" x="0.0" y="0.0" width="393" height="625"/>
                                 <subviews>
                                     <activityIndicatorView opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" animating="YES" style="large" translatesAutoresizingMaskIntoConstraints="NO" id="q1c-HF-zYC">
-                                        <rect key="frame" x="178" y="289" width="37" height="37"/>
+                                        <rect key="frame" x="178" y="294" width="37" height="37"/>
                                     </activityIndicatorView>
                                 </subviews>
                                 <color key="backgroundColor" red="0.0" green="0.0" blue="0.0" alpha="0.4015159354304636" colorSpace="custom" customColorSpace="sRGB"/>
@@ -411,6 +476,12 @@
                 <outlet property="bottomBaseView" destination="6dB-Ev-5zh" id="ZgF-yh-GHO"/>
                 <outlet property="bottomSeparatorLineView" destination="fKZ-IO-dTa" id="epf-1i-c8q"/>
                 <outlet property="bottomStackView" destination="od3-Q5-lI2" id="IEE-Mp-gXO"/>
+                <outlet property="cashbackIconImageView" destination="WSO-cl-Fzf" id="Kwg-dZ-4aJ"/>
+                <outlet property="cashbackInfoBaseView" destination="uSX-B0-0mX" id="v8M-jN-yJW"/>
+                <outlet property="cashbackInfoView" destination="XvJ-AP-OZx" id="MWD-8t-cDx"/>
+                <outlet property="cashbackUsedBaseView" destination="Cd2-AR-4Bf" id="Kxh-dM-Sht"/>
+                <outlet property="cashbackUsedTitleLabel" destination="SK9-9s-yhl" id="NJO-SD-PIx"/>
+                <outlet property="cashbackValueLabel" destination="Dbq-dg-s0H" id="uKC-Pi-IKB"/>
                 <outlet property="cashoutBaseView" destination="BLE-kd-Pbd" id="Xex-a1-L5G"/>
                 <outlet property="cashoutButton" destination="a2o-OR-1K7" id="5v6-9G-LDX"/>
                 <outlet property="freebetBaseView" destination="jZS-1f-Vac" id="GzR-oJ-LD9"/>
@@ -438,13 +509,14 @@
         </tableViewCell>
     </objects>
     <resources>
+        <image name="cashback_small_blue_icon" width="18" height="18"/>
         <image name="partial_cashout_slider_icon" width="21" height="12"/>
         <image name="send_bet_icon" width="18" height="18"/>
         <namedColor name="alertWarning">
             <color red="0.94901960784313721" green="0.75294117647058822" blue="0.21568627450980393" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
         </namedColor>
         <namedColor name="buttonBackgroundSecondary">
-            <color red="0.46274509803921571" green="0.5725490196078431" blue="0.63529411764705879" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+            <color red="0.43137254901960786" green="0.45490196078431372" blue="0.52941176470588236" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
         </namedColor>
         <systemColor name="systemBackgroundColor">
             <color white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>

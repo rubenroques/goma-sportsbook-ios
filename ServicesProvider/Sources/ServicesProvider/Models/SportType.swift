@@ -434,6 +434,8 @@ enum SportTypeInfo: CaseIterable {
         case "930": self = .numbers
         case "931": self = .emptyBets
         case "932": self = .lotteries
+        case "982": self = .counterStrike
+        case "983": self = .aussieRules
         default: return nil
         }
     }
@@ -463,10 +465,10 @@ enum SportTypeInfo: CaseIterable {
         case "21": self = .wintersports
         case "WAT": self = .waterPolo
         case "23": self = .motorRacing
-        case "24": self = .horseRacing
+        case "HRR": self = .horseRacing
         case "25": self = .fighting
         case "CRK": self = .cricket
-        case "27": self = .greyhounds
+        case "DGR": self = .greyhounds
         case "RBL": self = .rugbyLeague
         case "34": self = .specials
         case "SNK": self = .snooker
@@ -479,7 +481,7 @@ enum SportTypeInfo: CaseIterable {
         case "46": self = .hurling
         case "GAF": self = .gaelicFootball
         case "48": self = .pool
-        case "49": self = .futsal
+        case "FSL": self = .futsal
         case "50": self = .surfing
         case "51": self = .poker
         case "52": self = .chess

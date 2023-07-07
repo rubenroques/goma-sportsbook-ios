@@ -318,6 +318,7 @@ extension MatchLineTableViewCell: UICollectionViewDelegate, UICollectionViewData
                 cell.didLongPressOdd = { [weak self] bettingTicket in
                     self?.didLongPressOdd?(bettingTicket)
                 }
+
             }
             cell.shouldShowCountryFlag(self.shouldShowCountryFlag)
 

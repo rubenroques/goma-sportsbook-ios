@@ -403,6 +403,7 @@ extension SportMatchDoubleLineTableViewCell: UICollectionViewDelegate, UICollect
             }
 
             cell.shouldShowCountryFlag(true)
+
             return cell
             
         }

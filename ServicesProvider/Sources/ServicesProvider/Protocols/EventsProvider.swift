@@ -79,6 +79,10 @@ protocol EventsProvider: Connector {
 
     func getPromotedSports() -> AnyPublisher<[PromotedSport], ServiceProviderError>
 
+    func getCashbackSuccessBanner() -> AnyPublisher<BannerResponse, ServiceProviderError>
+
+    func getTopCompetitions() -> AnyPublisher<[TopCompetition], ServiceProviderError>
+
     func getEventsForMarketGroup(withId marketGroupId: String) -> AnyPublisher<EventsGroup, ServiceProviderError>
 
     //

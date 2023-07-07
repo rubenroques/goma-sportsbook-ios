@@ -8,36 +8,6 @@
 import UIKit
 import Combine
 
-class DocumentsRootViewModel {
-
-    var kycStatusPublisher: AnyPublisher<KnowYourCustomerStatus?, Never> {
-        return Env.userSessionStore.userKnowYourCustomerStatusPublisher.eraseToAnyPublisher()
-    }
-
-    var kycStatus: KnowYourCustomerStatus?
-
-    var selectedDocumentTypeIndexPublisher: CurrentValueSubject<Int?, Never> = .init(nil)
-
-    private var startTabIndex: Int
-
-    init(startTabIndex: Int = 0) {
-
-        self.startTabIndex = startTabIndex
-        self.selectedDocumentTypeIndexPublisher.send(startTabIndex)
-
-        self.getKYCStatus()
-
-    }
-
-    private func getKYCStatus() {
-        Env.userSessionStore.refreshProfile()
-    }
-
-    func selectDocumentType(atIndex index: Int) {
-        self.selectedDocumentTypeIndexPublisher.send(index)
-    }
-}
-
 class DocumentsRootViewController: UIViewController {
 
     private lazy var topSafeAreaView: UIView = Self.createTopSafeAreaView()
@@ -164,7 +134,6 @@ class DocumentsRootViewController: UIViewController {
 
         self.kycStatusLabel.textColor = UIColor.App.buttonTextPrimary
 
-//        self.topBaseView.backgroundColor = UIColor.App.backgroundSecondary
         self.documentTypesCollectionView.backgroundColor = UIColor.App.pillNavigation
 
    }
@@ -178,12 +147,13 @@ class DocumentsRootViewController: UIViewController {
                 if let kycStatus = kycStatus {
                     switch kycStatus {
                     case .request:
-                        self?.kycStatusLabel.text = "Requested"
-                        self?.kycStatusView.backgroundColor = UIColor.App.statsAway
-                    case .passConditional: self?.kycStatusLabel.text = "Pass Conditional"
-                        self?.kycStatusView.backgroundColor = UIColor.App.alertSuccess
+                        self?.kycStatusLabel.text = kycStatus.statusName
+                        self?.kycStatusView.backgroundColor = UIColor.App.alertError
+                    case .passConditional:
+                        self?.kycStatusLabel.text = kycStatus.statusName
+                        self?.kycStatusView.backgroundColor = UIColor.App.alertWarning
                     case .pass:
-                        self?.kycStatusLabel.text = "Pass"
+                        self?.kycStatusLabel.text = kycStatus.statusName
                         self?.kycStatusView.backgroundColor = UIColor.App.alertSuccess
                     }
                 }
@@ -316,7 +286,7 @@ extension DocumentsRootViewController: UICollectionViewDelegate, UICollectionVie
             cell.setupInfo(title: localized("identification_docs"))
         case 1:
             if let kycStatus = self.viewModel.kycStatus {
-                if kycStatus == .request || kycStatus == .passConditional {
+                if kycStatus == .request {
                     cell.setupInfo(title: localized("rib"), iconName: "lock_icon")
                 }
                 else {
@@ -328,7 +298,17 @@ extension DocumentsRootViewController: UICollectionViewDelegate, UICollectionVie
                 cell.setupInfo(title: localized("rib"))
             }
         case 2:
-            cell.setupInfo(title: localized("extra_docs"))
+            if let kycStatus = self.viewModel.kycStatus {
+                if kycStatus == .request {
+                    cell.setupInfo(title: localized("extra_docs"), iconName: "lock_icon")
+                }
+                else {
+                    cell.setupInfo(title: localized("extra_docs"))
+                }
+            }
+            else {
+                cell.setupInfo(title: localized("extra_docs"))
+            }
         default:
             ()
         }

@@ -45,7 +45,7 @@ class UploadDocumentsInformationView: UIView {
         didSet {
             self.backDocumentBaseView.isHidden = !isMultiUpload
 
-            self.uploadInfoLabel.text = isMultiUpload ? "- \(localized("upload_document_info_rule"))" : "- \(localized("upload_solo_document_info_rule"))"
+            self.uploadInfoLabel.text = isMultiUpload ? "- \(localized("upload_front_and_back"))" : "- \(localized("upload_front_document"))"
         }
     }
 
@@ -259,7 +259,7 @@ extension UploadDocumentsInformationView {
         let label = UILabel()
         label.translatesAutoresizingMaskIntoConstraints = false
         label.font = AppFont.with(type: .bold, size: 10)
-        label.text = "- \(localized("upload_document_info_rule"))"
+        label.text = "- \(localized("upload_front_and_back"))"
         return label
     }
 
@@ -267,7 +267,7 @@ extension UploadDocumentsInformationView {
         let label = UILabel()
         label.translatesAutoresizingMaskIntoConstraints = false
         label.font = AppFont.with(type: .bold, size: 10)
-        label.text = "- \(localized("upload_corner_info_rule"))"
+        label.text = "- \(localized("all_four_corners"))"
         return label
     }
 
@@ -275,7 +275,7 @@ extension UploadDocumentsInformationView {
         let label = UILabel()
         label.translatesAutoresizingMaskIntoConstraints = false
         label.font = AppFont.with(type: .bold, size: 10)
-        label.text = "- \(localized("upload_type_info_rule"))"
+        label.text = "- \(localized("allowed_file_types").replacingFirstOccurrence(of: "{allowedFileTypes}", with: "png, jpg, pdf"))"
         return label
     }
 
@@ -283,7 +283,7 @@ extension UploadDocumentsInformationView {
         let label = UILabel()
         label.translatesAutoresizingMaskIntoConstraints = false
         label.font = AppFont.with(type: .bold, size: 10)
-        label.text = "- \(localized("upload_size_info_rule"))"
+        label.text = "- \(localized("max_size")) 10MB"
         return label
     }
 

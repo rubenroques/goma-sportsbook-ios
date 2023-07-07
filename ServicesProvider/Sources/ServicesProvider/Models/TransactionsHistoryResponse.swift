@@ -35,8 +35,9 @@ public struct TransactionDetail {
     public var currency: String
     public var paymentId: Int?
     public var gameTranId: String?
+    public var reference: String?
 
-    public init(id: Int, dateTime: String, type: TransactionType? = nil, amount: Double, postBalance: Double, amountBonus: Double, postBalanceBonus: Double, currency: String, paymentId: Int?, gameTranId: String?) {
+    public init(id: Int, dateTime: String, type: TransactionType? = nil, amount: Double, postBalance: Double, amountBonus: Double, postBalanceBonus: Double, currency: String, paymentId: Int?, gameTranId: String?, reference: String?) {
         self.id = id
         self.dateTime = dateTime
         self.type = type
@@ -47,6 +48,7 @@ public struct TransactionDetail {
         self.currency = currency
         self.paymentId = paymentId
         self.gameTranId = gameTranId
+        self.reference = reference
     }
 }
 

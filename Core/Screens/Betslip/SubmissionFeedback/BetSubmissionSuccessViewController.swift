@@ -8,16 +8,15 @@
 import UIKit
 import Combine
 import ServicesProvider
+import Lottie
 
 class BetSubmissionSuccessViewController: UIViewController {
 
-    @IBOutlet private weak var navigationView: UIView!
-    @IBOutlet private weak var backButton: UIButton!
     @IBOutlet private weak var scrollView: UIView!
     @IBOutlet private weak var scrollContentView: UIView!
 
     @IBOutlet private weak var betSuccessView: UIView!
-    @IBOutlet private weak var checkmarkImageView: UIImageView!
+    @IBOutlet private weak var animationBaseView: UIView!
     @IBOutlet private weak var messageTitleLabel: UILabel!
     @IBOutlet private weak var messageSubtitleLabel: UILabel!
 
@@ -34,6 +33,14 @@ class BetSubmissionSuccessViewController: UIViewController {
     @IBOutlet private weak var betCardsStackView: UIStackView!
 
     @IBOutlet private weak var loadingBaseView: UIView!
+
+    @IBOutlet private weak var topBackgroundView: GradientView!
+    @IBOutlet private weak var bottomBackgroundView: UIView!
+    @IBOutlet private weak var topImageView: UIImageView!
+    @IBOutlet private weak var shapeView: UIView!
+
+    @IBOutlet private weak var navigationView: UIView!
+    @IBOutlet private weak var backButton: UIButton!
 
     private var totalOddsValue: String
     private var possibleEarningsValue: String
@@ -97,10 +104,8 @@ class BetSubmissionSuccessViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
 
-        self.checkmarkImageView.image = UIImage(named: "like_success_icon")
-
         self.messageTitleLabel.text = localized("bet_registered_success")
-        self.messageTitleLabel.font = AppFont.with(type: .semibold, size: 14)
+        self.messageTitleLabel.font = AppFont.with(type: .bold, size: 16)
 
         self.messageSubtitleLabel.text = localized("good_luck")
         self.messageSubtitleLabel.font = AppFont.with(type: .bold, size: 14)
@@ -119,11 +124,39 @@ class BetSubmissionSuccessViewController: UIViewController {
         self.setupWithTheme()
 
         Env.userSessionStore.refreshUserWallet()
+
+        self.setupAnimationView()
+        self.getBackgroundImage()
+
+        self.backButton.setTitle("", for: .normal)
+        self.backButton.setImage(UIImage(named: "arrow_back_icon"), for: .normal)
     }
 
     override func viewDidLayoutSubviews() {
         self.betCardsStackView.layoutIfNeeded()
         self.betCardsStackView.layoutSubviews()
+
+        let startPoint = CGPoint(x: 0, y: 1)
+        let endPoint = CGPoint.bottomToTopPointForAngle(50)
+
+        self.topBackgroundView.startPoint = startPoint
+        self.topBackgroundView.endPoint = endPoint
+
+        let path = UIBezierPath()
+        path.move(to: CGPoint(x: 0.0, y: self.shapeView.frame.size.height))
+        path.addCurve(to: CGPoint(x: self.shapeView.frame.size.width, y: self.shapeView.frame.size.height),
+                      controlPoint1: CGPoint(x: self.shapeView.frame.size.width*0.40, y: 0),
+                      controlPoint2: CGPoint(x:self.shapeView.frame.size.width*0.60, y: 20))
+        path.addLine(to: CGPoint(x: self.shapeView.frame.size.width, y: self.shapeView.frame.size.height))
+        path.addLine(to: CGPoint(x: 0.0, y: self.shapeView.frame.size.height))
+        path.close()
+
+        let shapeLayer = CAShapeLayer()
+        shapeLayer.path = path.cgPath
+        shapeLayer.fillColor = UIColor.App.backgroundPrimary.cgColor
+
+        self.shapeView.layer.mask = shapeLayer
+        self.shapeView.layer.masksToBounds = true
 
         self.view.layoutIfNeeded()
     }
@@ -137,22 +170,102 @@ class BetSubmissionSuccessViewController: UIViewController {
     func setupWithTheme() {
 
         self.view.backgroundColor = UIColor.App.backgroundPrimary
-        self.scrollView.backgroundColor = UIColor.App.backgroundPrimary
+        self.scrollView.backgroundColor = .clear
         self.bottomView.backgroundColor = UIColor.App.backgroundPrimary
         self.bottomSeparatorView.backgroundColor = UIColor.App.separatorLine
         self.safeAreaBottomView.backgroundColor = UIColor.App.backgroundPrimary
 
-        self.navigationView.backgroundColor = UIColor.App.backgroundPrimary
+        self.betSuccessView.backgroundColor = .clear
 
-        self.betSuccessView.backgroundColor = UIColor.App.backgroundPrimary
-
-        self.messageTitleLabel.textColor = UIColor.App.textPrimary
-        self.messageSubtitleLabel.textColor = UIColor.App.textPrimary
+        self.animationBaseView.backgroundColor = .clear
+        
+        self.messageTitleLabel.textColor = UIColor.App.buttonTextPrimary
+        self.messageSubtitleLabel.textColor = UIColor.App.buttonTextPrimary
 
         self.checkboxLabel.backgroundColor = .clear
         self.checkboxLabel.textColor = UIColor.App.textSecondary
 
         self.scrollContentView.backgroundColor = .clear
+
+        self.betCardsStackView.backgroundColor = .clear
+
+        self.loadingBaseView.backgroundColor = .clear
+
+        // Background views
+
+        self.topBackgroundView.colors = [(UIColor.App.backgroundHeaderGradient1, NSNumber(0.0)), (UIColor.App.backgroundHeaderGradient2, NSNumber(1.0))]
+
+        self.bottomBackgroundView.backgroundColor = UIColor.App.backgroundPrimary
+
+        self.shapeView.backgroundColor = UIColor.App.backgroundPrimary
+
+        self.animationBaseView.backgroundColor = .clear
+
+        self.navigationView.backgroundColor = .clear
+
+        self.backButton.backgroundColor = .clear
+
+    }
+
+    private func setupAnimationView() {
+        
+        let animationView = LottieAnimationView()
+
+        animationView.translatesAutoresizingMaskIntoConstraints = false
+        animationView.contentMode = .scaleAspectFill
+
+        self.animationBaseView.addSubview(animationView)
+
+        let starAnimation = LottieAnimation.named("success_thumbs_up")
+
+        animationView.animation = starAnimation
+        animationView.loopMode = .playOnce
+
+        NSLayoutConstraint.activate([
+            animationView.leadingAnchor.constraint(equalTo: self.animationBaseView.leadingAnchor),
+            animationView.trailingAnchor.constraint(equalTo: self.animationBaseView.trailingAnchor),
+            animationView.topAnchor.constraint(equalTo: self.animationBaseView.topAnchor),
+            animationView.bottomAnchor.constraint(equalTo: self.animationBaseView.bottomAnchor)
+        ])
+
+        animationView.play()
+    }
+
+    private func getBackgroundImage() {
+
+        Env.servicesProvider.getCashbackSuccessBanner()
+            .receive(on: DispatchQueue.main)
+            .sink(receiveCompletion: { [weak self] completion in
+                switch completion {
+                case .finished:
+                    ()
+                case .failure(let error):
+                    print("CASHBACK BANNERS ERROR: \(error)")
+
+                    self?.setupDefaultBackgroundImage()
+                }
+            }, receiveValue: { [weak self] bannersResponse in
+                let bannersInfo = bannersResponse
+
+                if let bannerUrl = bannersInfo.bannerItems.first {
+
+                    let backgroundImageUrl = URL(string: "\(bannerUrl.imageUrl)")
+                    self?.topImageView.kf.setImage(with: backgroundImageUrl)
+                }
+                else {
+                    self?.setupDefaultBackgroundImage()
+                }
+            })
+            .store(in: &cancellables)
+
+    }
+
+    private func setupDefaultBackgroundImage() {
+
+        self.topImageView.image = UIImage(named: "success_default_banner")
+        self.topImageView.contentMode = .scaleAspectFill
+        self.topImageView.alpha = 0.26
+
     }
 
     private func showBetShareScreen() {
@@ -236,6 +349,13 @@ class BetSubmissionSuccessViewController: UIViewController {
             // self?.ticketSnapshots[betHistory.betId] = snapshot
         }
 
+        sharedTicketCardView.didTapLearnMore = { [weak self] in
+
+            let cashbackInfoViewController = CashbackInfoViewController()
+
+            self?.navigationController?.pushViewController(cashbackInfoViewController, animated: true)
+        }
+
         self.betCardsStackView.addArrangedSubview(sharedTicketCardView)
 
     }
@@ -244,12 +364,17 @@ class BetSubmissionSuccessViewController: UIViewController {
 
         if !isChecked {
             Env.betslipManager.clearAllBettingTickets()
-        }
-        
-        if self.isModal {
             self.willDismissAction?()
             self.dismiss(animated: true, completion: nil)
         }
+        else {
+            self.navigationController?.popViewController(animated: true)
+        }
+        
+//        if self.isModal {
+//            self.willDismissAction?()
+//            self.dismiss(animated: true, completion: nil)
+//        }
     }
 
     @IBAction private func didTapBackButton() {

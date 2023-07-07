@@ -313,7 +313,7 @@ extension SportMatchSingleLineTableViewCell: UICollectionViewDelegate, UICollect
 //                cell.didTapFavoriteMatchAction = { [weak self] match in
 //                    self?.didTapFavoriteMatchAction?(match)
 //                }
-                
+
                 cell.shouldShowCountryFlag(true)
                 return cell
             }

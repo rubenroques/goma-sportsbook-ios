@@ -177,4 +177,23 @@ extension SportRadarModelMapper {
         return FavoriteEvent(id: internalFavoriteEvent.id, name: internalFavoriteEvent.name, favoriteListId: internalFavoriteEvent.favoriteListId, accountFavoriteId: internalFavoriteEvent.accountFavoriteId)
     }
 
+    static func topCompetitionData(fromInternalTopCompetitionData internalTopCompetitionData: SportRadarModels.TopCompetitionData) -> TopCompetitionData {
+
+        let topCompetitions = internalTopCompetitionData.competitions.map({ topCompetition -> TopCompetition in
+
+            let topCompetition = Self.topCompetition(fromInternalTopCompetition: topCompetition)
+
+            return topCompetition
+
+        })
+
+        return TopCompetitionData(title: internalTopCompetitionData.title, competitions: topCompetitions)
+
+    }
+
+    static func topCompetition(fromInternalTopCompetition internalTopCompetition: SportRadarModels.TopCompetition) -> TopCompetition {
+
+        return TopCompetition(id: internalTopCompetition.id, name: internalTopCompetition.name, competitionId: internalTopCompetition.competitionId)
+    }
+
 }

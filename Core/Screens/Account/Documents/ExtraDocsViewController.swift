@@ -9,227 +9,17 @@ import UIKit
 import Combine
 import ServicesProvider
 
-class ExtraDocsViewModel {
-
-    // MARK: Private Properties
-    private var cancellables = Set<AnyCancellable>()
-
-    // MARK: Public Properties
-    var documents: [DocumentInfo] = []
-    var requiredDocumentTypes: [DocumentType] = []
-    var isLoadingPublisher: CurrentValueSubject<Bool, Never> = .init(false)
-    var hasLoadedDocumentTypes: CurrentValueSubject<Bool, Never> = .init(false)
-    var hasLoadedUserDocuments: CurrentValueSubject<Bool, Never> = .init(false)
-    var hasDocumentsProcessed: CurrentValueSubject<Bool, Never> = .init(false)
-
-    var kycStatusPublisher: AnyPublisher<KnowYourCustomerStatus?, Never> {
-        return Env.userSessionStore.userKnowYourCustomerStatusPublisher.eraseToAnyPublisher()
-    }
-
-    var shouldReloadData: (() -> Void)?
-
-    let dateFormatter = DateFormatter()
-    
-    init() {
-        self.getKYCStatus()
-
-        self.getDocumentTypes()
-    }
-
-    private func getKYCStatus() {
-        Env.userSessionStore.refreshProfile()
-    }
-
-    private func getDocumentTypes() {
-
-        self.isLoadingPublisher.send(true)
-
-        Env.servicesProvider.getDocumentTypes()
-            .receive(on: DispatchQueue.main)
-            .sink(receiveCompletion: { [weak self] completion in
-                switch completion {
-                case .finished:
-                    ()
-                case .failure(let error):
-                    self?.isLoadingPublisher.send(false)
-                }
-
-            }, receiveValue: { [weak self] documentTypesResponse in
-
-                let documentTypes = documentTypesResponse
-
-                let requiredDocumentTypes = documentTypesResponse.documentTypes.filter({
-                    $0.documentTypeGroup == .others
-                })
-
-                self?.requiredDocumentTypes.append(contentsOf: requiredDocumentTypes)
-
-                self?.hasLoadedDocumentTypes.send(true)
-
-                self?.getUserDocuments()
-            })
-            .store(in: &cancellables)
-    }
-
-    private func getUserDocuments() {
-
-        self.isLoadingPublisher.send(true)
-
-        self.hasDocumentsProcessed.send(false)
-
-        Env.servicesProvider.getUserDocuments()
-            .receive(on: DispatchQueue.main)
-            .sink(receiveCompletion: { [weak self] completion in
-                switch completion {
-                case .finished:
-                    ()
-                case .failure(let error):
-                    self?.isLoadingPublisher.send(false)
-                }
-
-            }, receiveValue: { [weak self] userDocumentsResponse in
-
-                let userDocuments = userDocumentsResponse.userDocuments
-
-                if let requiredDocumentTypes = self?.requiredDocumentTypes {
-                    self?.processDocuments(documentTypes: requiredDocumentTypes, userDocuments: userDocuments)
-                }
-
-            })
-            .store(in: &cancellables)
-    }
-
-    private func processDocuments(documentTypes: [DocumentType], userDocuments: [UserDocument]) {
-
-        for documentType in documentTypes {
-
-            let documentTypeCode = DocumentTypeCode(code: documentType.documentType)
-
-            if let documentTypeGroup = documentType.documentTypeGroup {
-
-                let mappedDocumentTypeGroup = ServiceProviderModelMapper.documentTypeGroup(fromServiceProviderDocumentTypeGroup: documentTypeGroup)
-
-                let uploadedFiles = userDocuments.filter({
-                    $0.documentType == documentType.documentType
-                }).map({ userDocument -> DocumentFileInfo in
-
-                    let userDocumentStatus = FileState(code: userDocument.status)
-
-                    self.dateFormatter.dateFormat = "dd-MM-yyyy HH:mm:ss"
-                    let uploadDate = self.dateFormatter.date(from: userDocument.uploadDate)
-
-                    return DocumentFileInfo(id: userDocument.documentType,
-                                            name: userDocument.fileName,
-                                            status: userDocumentStatus ?? .pendingApproved,
-                                            uploadDate: uploadDate ?? Date(),
-                                            documentTypeGroup: mappedDocumentTypeGroup)
-                })
-
-                var existingDocumentInfo: DocumentInfo?
-
-                for document in self.documents {
-                    if let typeGroup = document.typeGroup,
-                       typeGroup == mappedDocumentTypeGroup {
-                        existingDocumentInfo = document
-                    }
-                }
-
-                if let existingDocumentInfo {
-                    var documentInfoIndex = self.documents.firstIndex(where: {
-                        $0.id == existingDocumentInfo.id
-                    })
-
-                    if let index = documentInfoIndex {
-                        var documentFileInfo = self.documents[index]
-
-                        documentFileInfo.uploadedFiles.append(contentsOf: uploadedFiles)
-
-                        self.documents[index] = documentFileInfo
-
-                    }
-                }
-                else {
-                    let documentInfo = DocumentInfo(id: documentType.documentType,
-                                                    typeName: documentTypeCode?.codeName ?? "",
-                                                    status: uploadedFiles.isEmpty ? .notReceived : .received,
-                                                    uploadedFiles: uploadedFiles,
-                                                    typeGroup: mappedDocumentTypeGroup)
-
-                    self.documents.append(documentInfo)
-                }
-
-            }
-            else {
-
-                let uploadedFiles = userDocuments.filter({
-                    $0.documentType == documentType.documentType
-                }).map({ userDocument -> DocumentFileInfo in
-
-                    let userDocumentStatus = FileState(code: userDocument.status)
-
-                    self.dateFormatter.dateFormat = "dd-MM-yyyy HH:mm:ss"
-                    let uploadDate = self.dateFormatter.date(from: userDocument.uploadDate)
-
-                    return DocumentFileInfo(id: userDocument.documentType,
-                                            name: userDocument.fileName,
-                                            status: userDocumentStatus ?? .pendingApproved,
-                                            uploadDate: uploadDate ?? Date(),
-                                            documentTypeGroup: .none)
-                })
-
-                var existingDocumentInfo: DocumentInfo?
-
-                for document in self.documents {
-                    if document.id == documentType.documentType  {
-                        existingDocumentInfo = document
-                    }
-                }
-
-                if let existingDocumentInfo {
-                    var documentInfoIndex = self.documents.firstIndex(where: {
-                        $0.id == existingDocumentInfo.id
-                    })
-
-                    if let index = documentInfoIndex {
-                        var documentFileInfo = self.documents[index]
-
-                        documentFileInfo.uploadedFiles.append(contentsOf: uploadedFiles)
-
-                        self.documents[index] = documentFileInfo
-
-                    }
-                }
-                else {
-                    let documentInfo = DocumentInfo(id: documentType.documentType,
-                                                    typeName: documentTypeCode?.codeName ?? "",
-                                                    status: uploadedFiles.isEmpty ? .notReceived : .received,
-                                                    uploadedFiles: uploadedFiles)
-
-                    self.documents.append(documentInfo)
-                }
-
-            }
-        }
-
-        self.isLoadingPublisher.send(false)
-
-        self.hasLoadedUserDocuments.send(false)
-
-        self.hasDocumentsProcessed.send(true)
-
-        self.shouldReloadData?()
-    }
-
-    func refreshDocuments() {
-        self.getUserDocuments()
-    }
-}
-
 class ExtraDocsViewController: UIViewController {
 
     private lazy var containerView: UIView = Self.createContainerView()
     private lazy var scrollView: UIScrollView = Self.createScrollView()
     private lazy var contentBaseView: UIView = Self.createContentBaseView()
+
+    private lazy var topStackView: UIStackView = Self.createTopStackView()
+    private lazy var lockTitleBaseView: UIView = Self.createLockTitleBaseView()
+    private lazy var lockTitleLabel: UILabel = Self.createLockTitleLabel()
+    private lazy var lockContainerView: UIView = Self.createLockContainerView()
+    private lazy var lockIconImageView: UIImageView = Self.createLockIconImageView()
 
     private lazy var extraDocumentBaseView: UIView = Self.createExtraDocumentBaseView()
     private lazy var extraDocumentTitleLabel: UILabel = Self.createExtraDocumentTitleLabel()
@@ -252,6 +42,13 @@ class ExtraDocsViewController: UIViewController {
     var isLoading: Bool = false {
         didSet {
             self.loadingBaseView.isHidden = !isLoading
+        }
+    }
+
+    var isLocked: Bool = false {
+        didSet {
+            self.lockTitleBaseView.isHidden = !isLocked
+            self.lockContainerView.isHidden = !isLocked
         }
     }
 
@@ -288,10 +85,17 @@ class ExtraDocsViewController: UIViewController {
 
         self.bind(toViewModel: self.viewModel)
 
+        self.isLocked = false
+
+        self.canAddExtraDocs = true
+
         let extraAddDocTap = UITapGestureRecognizer(target: self, action: #selector(self.didTapExtraAddDoc))
         self.extraAddDocBaseView.addGestureRecognizer(extraAddDocTap)
 
-        self.canAddExtraDocs = true
+        self.scrollView.refreshControl = UIRefreshControl()
+        self.scrollView.refreshControl?.addTarget(self, action:
+                                          #selector(handleRefreshControl),
+                                          for: .valueChanged)
 
     }
 
@@ -316,6 +120,16 @@ class ExtraDocsViewController: UIViewController {
         self.scrollView.backgroundColor = .clear
 
         self.contentBaseView.backgroundColor = .clear
+
+        self.topStackView.backgroundColor = .clear
+
+        self.lockTitleBaseView.backgroundColor = .clear
+
+        self.lockTitleLabel.textColor = UIColor.App.textSecondary
+
+        self.lockContainerView.backgroundColor = UIColor.App.backgroundPrimary.withAlphaComponent(0.7)
+
+        self.lockIconImageView.backgroundColor = .clear
 
         self.extraDocumentBaseView.backgroundColor = UIColor.App.backgroundSecondary
 
@@ -351,12 +165,12 @@ class ExtraDocsViewController: UIViewController {
         viewModel.kycStatusPublisher
             .receive(on: DispatchQueue.main)
             .sink(receiveValue: { [weak self] kycStatus in
-//                switch kycStatus {
-//                case .request:
-//                    self?.isLocked = true
-//                default:
-//                    self?.isLocked = false
-//                }
+                switch kycStatus {
+                case .request:
+                    self?.isLocked = true
+                default:
+                    self?.isLocked = false
+                }
             })
             .store(in: &cancellables)
 
@@ -384,11 +198,18 @@ class ExtraDocsViewController: UIViewController {
 
             var mostRecentDocument: DocumentFileInfo?
 
-            for uploadedFile in documentsFileInfo {
+            for (index, uploadedFile) in documentsFileInfo.enumerated() {
 
                 let documentStateView = DocumentStateView()
 
                 documentStateView.configure(documentFileInfo: uploadedFile)
+
+                if index != documentsFileInfo.count - 1 {
+                    documentStateView.hasSeparator = true
+                }
+                else {
+                    documentStateView.hasSeparator = false
+                }
 
                 self.extraDocumentTopStackView.addArrangedSubview(documentStateView)
 
@@ -433,6 +254,15 @@ class ExtraDocsViewController: UIViewController {
 
         self.navigationController?.pushViewController(manualUploadDocViewController, animated: true)
     }
+
+    @objc func handleRefreshControl() {
+
+        self.viewModel.refreshDocuments()
+
+       DispatchQueue.main.async {
+          self.scrollView.refreshControl?.endRefreshing()
+       }
+    }
 }
 
 extension ExtraDocsViewController {
@@ -455,6 +285,45 @@ extension ExtraDocsViewController {
         return view
     }
 
+    private static func createTopStackView() -> UIStackView {
+        let stackView = UIStackView()
+        stackView.translatesAutoresizingMaskIntoConstraints = false
+        stackView.axis = .vertical
+        stackView.distribution = .equalSpacing
+        stackView.spacing = 20
+        return stackView
+    }
+
+    private static func createLockTitleBaseView() -> UIView {
+        let view = UIView()
+        view.translatesAutoresizingMaskIntoConstraints = false
+        return view
+    }
+
+    private static func createLockTitleLabel() -> UILabel {
+        let label = UILabel()
+        label.translatesAutoresizingMaskIntoConstraints = false
+        label.text = localized("docs_need_validation_before_others")
+        label.font = AppFont.with(type: .bold, size: 14)
+        label.textAlignment = .center
+        label.numberOfLines = 0
+        return label
+    }
+
+    private static func createLockContainerView() -> UIView {
+        let view = UIView()
+        view.translatesAutoresizingMaskIntoConstraints = false
+        return view
+    }
+
+    private static func createLockIconImageView() -> UIImageView {
+        let imageView = UIImageView()
+        imageView.translatesAutoresizingMaskIntoConstraints = false
+        imageView.contentMode = .scaleAspectFit
+        imageView.image = UIImage(named: "lock_blue_icon")
+        return imageView
+    }
+
     private static func createExtraDocumentBaseView() -> UIView {
         let view = UIView()
         view.translatesAutoresizingMaskIntoConstraints = false
@@ -475,7 +344,7 @@ extension ExtraDocsViewController {
         stackView.translatesAutoresizingMaskIntoConstraints = false
         stackView.axis = .vertical
         stackView.distribution = .equalSpacing
-        stackView.spacing = 8
+        stackView.spacing = 0
         return stackView
     }
 
@@ -540,6 +409,12 @@ extension ExtraDocsViewController {
 
         self.scrollView.addSubview(self.contentBaseView)
 
+        self.contentBaseView.addSubview(self.topStackView)
+
+        self.topStackView.addArrangedSubview(self.lockTitleBaseView)
+
+        self.lockTitleBaseView.addSubview(self.lockTitleLabel)
+
         self.contentBaseView.addSubview(self.extraDocumentBaseView)
 
         self.extraDocumentBaseView.addSubview(self.extraDocumentTitleLabel)
@@ -551,6 +426,10 @@ extension ExtraDocsViewController {
 
         self.extraAddDocView.addSubview(self.extraAddDocTitleLabel)
         self.extraAddDocView.addSubview(self.extraAddDocIconImageView)
+
+        self.contentBaseView.addSubview(self.lockContainerView)
+
+        self.lockContainerView.addSubview(self.lockIconImageView)
 
         self.view.addSubview(self.loadingBaseView)
 
@@ -579,11 +458,24 @@ extension ExtraDocsViewController {
             self.contentBaseView.widthAnchor.constraint(equalTo: self.scrollView.frameLayoutGuide.widthAnchor)
         ])
 
+        // Top stackview
+        NSLayoutConstraint.activate([
+            self.topStackView.leadingAnchor.constraint(equalTo: self.contentBaseView.leadingAnchor, constant: 14),
+            self.topStackView.trailingAnchor.constraint(equalTo: self.contentBaseView.trailingAnchor, constant: -14),
+            self.topStackView.topAnchor.constraint(equalTo: self.contentBaseView.topAnchor, constant: 12),
+
+            self.lockTitleLabel.leadingAnchor.constraint(equalTo: self.lockTitleBaseView.leadingAnchor, constant: 52),
+            self.lockTitleLabel.trailingAnchor.constraint(equalTo: self.lockTitleBaseView.trailingAnchor, constant: -52),
+            self.lockTitleLabel.topAnchor.constraint(equalTo: self.lockTitleBaseView.topAnchor, constant: 8),
+            self.lockTitleLabel.bottomAnchor.constraint(equalTo: self.lockTitleBaseView.bottomAnchor, constant: -8),
+
+        ])
+
         // Extra Document View
         NSLayoutConstraint.activate([
             self.extraDocumentBaseView.leadingAnchor.constraint(equalTo: self.contentBaseView.leadingAnchor, constant: 14),
             self.extraDocumentBaseView.trailingAnchor.constraint(equalTo: self.contentBaseView.trailingAnchor, constant: -14),
-            self.extraDocumentBaseView.topAnchor.constraint(equalTo: self.contentBaseView.topAnchor, constant: 20),
+            self.extraDocumentBaseView.topAnchor.constraint(equalTo: self.topStackView.bottomAnchor, constant: 23),
             self.extraDocumentBaseView.bottomAnchor.constraint(equalTo: self.contentBaseView.bottomAnchor, constant: -20),
 
             self.extraDocumentTitleLabel.leadingAnchor.constraint(equalTo: self.extraDocumentBaseView.leadingAnchor, constant: 14),
@@ -591,7 +483,7 @@ extension ExtraDocsViewController {
             self.extraDocumentTitleLabel.topAnchor.constraint(equalTo: self.extraDocumentBaseView.topAnchor, constant: 17),
 
             self.extraDocumentTopStackView.leadingAnchor.constraint(equalTo: self.extraDocumentBaseView.leadingAnchor, constant: 14),
-            self.extraDocumentTopStackView.trailingAnchor.constraint(equalTo: self.extraDocumentBaseView.trailingAnchor),
+            self.extraDocumentTopStackView.trailingAnchor.constraint(equalTo: self.extraDocumentBaseView.trailingAnchor, constant: -14),
             self.extraDocumentTopStackView.topAnchor.constraint(equalTo: self.extraDocumentTitleLabel.bottomAnchor, constant: 4),
 
             self.extraAddDocBaseView.leadingAnchor.constraint(equalTo: self.extraDocumentBaseView.leadingAnchor, constant: 14),
@@ -611,6 +503,19 @@ extension ExtraDocsViewController {
             self.extraAddDocIconImageView.widthAnchor.constraint(equalToConstant: 24),
             self.extraAddDocIconImageView.heightAnchor.constraint(equalTo: self.extraAddDocIconImageView.widthAnchor),
             self.extraAddDocIconImageView.centerYAnchor.constraint(equalTo: self.extraAddDocTitleLabel.centerYAnchor)
+        ])
+
+        // Lock View
+        NSLayoutConstraint.activate([
+            self.lockContainerView.leadingAnchor.constraint(equalTo: self.contentBaseView.leadingAnchor),
+            self.lockContainerView.trailingAnchor.constraint(equalTo: self.contentBaseView.trailingAnchor),
+            self.lockContainerView.topAnchor.constraint(equalTo: self.topStackView.topAnchor),
+            self.lockContainerView.bottomAnchor.constraint(equalTo: self.contentBaseView.bottomAnchor),
+
+            self.lockIconImageView.widthAnchor.constraint(equalToConstant: 83),
+            self.lockIconImageView.heightAnchor.constraint(equalTo: self.lockIconImageView.widthAnchor),
+            self.lockIconImageView.topAnchor.constraint(equalTo: self.lockContainerView.topAnchor, constant: 84),
+            self.lockIconImageView.centerXAnchor.constraint(equalTo: self.lockContainerView.centerXAnchor)
         ])
 
         // Loading Screen

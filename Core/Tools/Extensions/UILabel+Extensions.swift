@@ -44,4 +44,19 @@ extension UILabel {
         self.attributedText = attributedString
     }
 
+    func addLineHeight(to label: UILabel, lineHeight: CGFloat) {
+        guard let labelText = label.text else {
+            return
+        }
+
+        let paragraphStyle = NSMutableParagraphStyle()
+        paragraphStyle.lineSpacing = lineHeight - label.font.lineHeight
+        paragraphStyle.alignment = label.textAlignment
+
+        let attributedString = NSMutableAttributedString(string: labelText)
+        attributedString.addAttribute(.paragraphStyle, value: paragraphStyle, range: NSMakeRange(0, attributedString.length))
+
+        label.attributedText = attributedString
+    }
+
 }

@@ -14,6 +14,13 @@ class DocumentStateView: UIView {
     private lazy var dateLabel: UILabel = Self.createDateLabel()
     private lazy var stateView: UIView = Self.createStateView()
     private lazy var stateLabel: UILabel = Self.createStateLabel()
+    private lazy var separatorView: UIView = Self.createSeparatorView()
+
+    var hasSeparator: Bool = false {
+        didSet {
+            self.separatorView.isHidden = !hasSeparator
+        }
+    }
 
     // MARK: - Lifetime and Cycle
     override init(frame: CGRect) {
@@ -33,6 +40,8 @@ class DocumentStateView: UIView {
     func commonInit() {
 
         self.setupSubviews()
+
+        self.hasSeparator = false
     }
 
     override func layoutSubviews() {
@@ -44,13 +53,15 @@ class DocumentStateView: UIView {
     func setupWithTheme() {
         self.containerView.backgroundColor = UIColor.App.backgroundSecondary
 
-        self.titleLabel.textColor = UIColor.App.textSecondary
+        self.titleLabel.textColor = UIColor.App.textPrimary
 
         self.dateLabel.textColor = UIColor.App.textSecondary
 
         self.stateView.backgroundColor = UIColor.App.alertSuccess
 
         self.stateLabel.textColor = UIColor.App.buttonTextPrimary
+
+        self.separatorView.backgroundColor = UIColor.App.separatorLine
     }
 
     // MARK: Functions
@@ -65,12 +76,11 @@ class DocumentStateView: UIView {
             self.dateLabel.text = ""
         }
 
-
         switch documentFileInfo.status {
         case .approved:
             self.stateView.backgroundColor = UIColor.App.alertSuccess
         case .pendingApproved:
-            self.stateView.backgroundColor = UIColor.App.statsAway
+            self.stateView.backgroundColor = UIColor.App.alertWarning
         case .failed:
             self.stateView.backgroundColor = UIColor.App.alertError
         case .rejected:
@@ -134,6 +144,12 @@ extension DocumentStateView {
         return label
     }
 
+    private static func createSeparatorView() -> UIView {
+        let view = UIView()
+        view.translatesAutoresizingMaskIntoConstraints = false
+        return view
+    }
+
     private func setupSubviews() {
 
         self.addSubview(self.containerView)
@@ -143,6 +159,8 @@ extension DocumentStateView {
         self.containerView.addSubview(self.stateView)
 
         self.stateView.addSubview(self.stateLabel)
+
+        self.containerView.addSubview(self.separatorView)
 
         self.initConstraints()
 
@@ -157,12 +175,12 @@ extension DocumentStateView {
             self.containerView.bottomAnchor.constraint(equalTo: self.bottomAnchor),
 
             self.titleLabel.leadingAnchor.constraint(equalTo: self.containerView.leadingAnchor),
-            self.titleLabel.topAnchor.constraint(equalTo: self.containerView.topAnchor, constant: 4),
+            self.titleLabel.topAnchor.constraint(equalTo: self.containerView.topAnchor, constant: 16),
             self.titleLabel.trailingAnchor.constraint(equalTo: self.stateView.leadingAnchor, constant: -8),
 
             self.dateLabel.leadingAnchor.constraint(equalTo: self.containerView.leadingAnchor),
             self.dateLabel.topAnchor.constraint(equalTo: self.titleLabel.bottomAnchor, constant: 4),
-            self.dateLabel.bottomAnchor.constraint(equalTo: self.containerView.bottomAnchor, constant: -4),
+            self.dateLabel.bottomAnchor.constraint(equalTo: self.containerView.bottomAnchor, constant: -16),
             self.dateLabel.trailingAnchor.constraint(equalTo: self.stateView.leadingAnchor, constant: -8),
 
             self.stateView.trailingAnchor.constraint(equalTo: self.containerView.trailingAnchor),
@@ -171,7 +189,12 @@ extension DocumentStateView {
             self.stateLabel.leadingAnchor.constraint(equalTo: self.stateView.leadingAnchor, constant: 6),
             self.stateLabel.trailingAnchor.constraint(equalTo: self.stateView.trailingAnchor, constant: -6),
             self.stateLabel.topAnchor.constraint(equalTo: self.stateView.topAnchor, constant: 4),
-            self.stateLabel.bottomAnchor.constraint(equalTo: self.stateView.bottomAnchor, constant: -4)
+            self.stateLabel.bottomAnchor.constraint(equalTo: self.stateView.bottomAnchor, constant: -4),
+
+            self.separatorView.leadingAnchor.constraint(equalTo: self.containerView.leadingAnchor),
+            self.separatorView.trailingAnchor.constraint(equalTo: self.containerView.trailingAnchor),
+            self.separatorView.bottomAnchor.constraint(equalTo: self.containerView.bottomAnchor),
+            self.separatorView.heightAnchor.constraint(equalToConstant: 1)
 
         ])
 

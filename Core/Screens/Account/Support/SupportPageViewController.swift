@@ -21,6 +21,7 @@ class SupportPageViewController: UIViewController {
     private lazy var firstNameHeaderTextFieldView: HeaderTextFieldView = Self.createFirstNameHeaderTextFieldView()
     private lazy var lastNameHeaderTextFieldView: HeaderTextFieldView = Self.createLastNameHeaderTextFieldView()
     private lazy var emailHeaderTextFieldView: HeaderTextFieldView = Self.createEmailHeaderTextFieldView()
+    private lazy var subjectTypeSelectionView: TitleDropdownView = Self.createSubjectTypeSelectionView()
     private lazy var subjectTextField: HeaderTextFieldView = Self.createSubjectTextField()
     private lazy var descriptionView: UIView = Self.createDescriptionBaseView()
     private lazy var descriptionPlaceholderLabel: UILabel = Self.createDescriptionPlaceholderLabel()
@@ -203,42 +204,45 @@ class SupportPageViewController: UIViewController {
         self.firstNameHeaderTextFieldView.setTextFieldColor(UIColor.App.textPrimary)
         self.firstNameHeaderTextFieldView.setSecureField(false)
         self.firstNameHeaderTextFieldView.textField.font = AppFont.with(type: .semibold, size: 15)
-        self.firstNameHeaderTextFieldView.headerLabel.backgroundColor = UIColor.App.backgroundCards
-        self.firstNameHeaderTextFieldView.setViewColor(UIColor.App.backgroundCards)
+        self.firstNameHeaderTextFieldView.setViewColor(UIColor.App.backgroundPrimary)
+        self.firstNameHeaderTextFieldView.setViewBorderColor(UIColor.App.inputTextTitle)
 
         self.lastNameHeaderTextFieldView.backgroundColor = .clear
         self.lastNameHeaderTextFieldView.setHeaderLabelColor(UIColor.App.textSecondary)
         self.lastNameHeaderTextFieldView.setTextFieldColor(UIColor.App.textPrimary)
         self.lastNameHeaderTextFieldView.setSecureField(false)
         self.lastNameHeaderTextFieldView.textField.font = AppFont.with(type: .semibold, size: 15)
-        self.lastNameHeaderTextFieldView.headerLabel.backgroundColor = UIColor.App.backgroundCards
-        self.lastNameHeaderTextFieldView.setViewColor(UIColor.App.backgroundCards)
+        self.lastNameHeaderTextFieldView.setViewColor(UIColor.App.backgroundPrimary)
+        self.lastNameHeaderTextFieldView.setViewBorderColor(UIColor.App.inputTextTitle)
 
         self.emailHeaderTextFieldView.backgroundColor = .clear
         self.emailHeaderTextFieldView.setHeaderLabelColor(UIColor.App.textSecondary)
         self.emailHeaderTextFieldView.setTextFieldColor(UIColor.App.textPrimary)
         self.emailHeaderTextFieldView.setSecureField(false)
         self.emailHeaderTextFieldView.textField.font = AppFont.with(type: .semibold, size: 15)
-        self.emailHeaderTextFieldView.headerLabel.backgroundColor = UIColor.App.backgroundCards
-        self.emailHeaderTextFieldView.setViewColor(UIColor.App.backgroundCards)
+        self.emailHeaderTextFieldView.setViewColor(UIColor.App.backgroundPrimary)
+        self.emailHeaderTextFieldView.setViewBorderColor(UIColor.App.inputTextTitle)
+
+        self.subjectTypeSelectionView.setViewColor(UIColor.App.backgroundPrimary)
+        self.subjectTypeSelectionView.setViewBorderColor(UIColor.App.inputTextTitle)
         
         self.subjectTextField.backgroundColor = .clear
         self.subjectTextField.setHeaderLabelColor(UIColor.App.textSecondary)
         self.subjectTextField.setTextFieldColor(UIColor.App.textPrimary)
         self.subjectTextField.setSecureField(false)
         self.subjectTextField.textField.font = AppFont.with(type: .semibold, size: 15)
-        self.subjectTextField.headerLabel.backgroundColor = UIColor.App.backgroundCards
-        self.subjectTextField.setViewColor(UIColor.App.backgroundCards)
+        self.subjectTextField.setViewColor(UIColor.App.backgroundPrimary)
+        self.subjectTextField.setViewBorderColor(UIColor.App.inputTextTitle)
         
-        self.descriptionView.backgroundColor = UIColor.App.backgroundCards
+        self.descriptionView.backgroundColor = UIColor.App.backgroundPrimary
         self.descriptionView.layer.cornerRadius = CornerRadius.headerInput
         self.descriptionView.layer.borderWidth = 1
-        self.descriptionView.layer.borderColor = UIColor.App.backgroundSecondary.cgColor
+        self.descriptionView.layer.borderColor = UIColor.App.inputTextTitle.cgColor
         
         self.descriptionTextView.backgroundColor = .clear
         self.descriptionPlaceholderLabel.backgroundColor = .clear
         self.descriptionPlaceholderLabel.textColor = UIColor.App.textSecondary
-        self.descriptionTextView.textColor = UIColor.App.backgroundOdds
+        self.descriptionTextView.textColor = UIColor.App.textPrimary
         
         self.backButtonBaseView.backgroundColor = .clear
 
@@ -286,11 +290,19 @@ class SupportPageViewController: UIViewController {
     @objc func didTapSend() {
 
         if Env.userSessionStore.isUserLogged() {
-            self.viewModel.sendEmail(title: self.subjectTextField.text, message: self.descriptionTextView.text)
+
+            let subjectType = self.subjectTypeSelectionView.text
+            let subjectText = self.subjectTextField.text
+
+            self.viewModel.sendEmail(title: subjectText, message: self.descriptionTextView.text, subjectType: subjectType)
         }
         else {
-            self.viewModel.sendEmail(title: self.subjectTextField.text,
+            let subjectType = self.subjectTypeSelectionView.text
+            let subjectText = self.subjectTextField.text
+
+            self.viewModel.sendEmail(title: subjectText,
                                      message: self.descriptionTextView.text,
+                                     subjectType: subjectType,
                                      firstName: self.firstNameHeaderTextFieldView.text,
                                      lastName: self.lastNameHeaderTextFieldView.text,
                                      email: self.emailHeaderTextFieldView.text)
@@ -385,6 +397,16 @@ extension SupportPageViewController {
         textField.setPlaceholderText(localized("email"))
         textField.keyboardType = .emailAddress
         return textField
+    }
+
+    private static func createSubjectTypeSelectionView() -> TitleDropdownView {
+        let dropDownSelectionView = TitleDropdownView()
+        dropDownSelectionView.translatesAutoresizingMaskIntoConstraints = false
+        dropDownSelectionView.setTitle(localized("request_concerns"))
+        let allTypeValues: [String] = SubjectType.allCases.map { $0.typeValue }
+
+        dropDownSelectionView.setSelectionPicker(allTypeValues)
+        return dropDownSelectionView
     }
     
     private static func createDescriptionPlaceholderLabel() -> UILabel {
@@ -485,7 +507,8 @@ extension SupportPageViewController {
         self.anonymousFieldsView.addSubview(self.firstNameHeaderTextFieldView)
         self.anonymousFieldsView.addSubview(self.lastNameHeaderTextFieldView)
         self.anonymousFieldsView.addSubview(self.emailHeaderTextFieldView)
-        
+
+        self.baseView.addSubview(self.subjectTypeSelectionView)
         self.baseView.addSubview(self.subjectTextField)
         self.baseView.addSubview(self.descriptionView)
         self.baseView.addSubview(self.sendButton)
@@ -531,7 +554,7 @@ extension SupportPageViewController {
 
             self.anonymousFieldsView.leadingAnchor.constraint(equalTo: self.baseView.leadingAnchor, constant: 15),
             self.anonymousFieldsView.trailingAnchor.constraint(equalTo: self.baseView.trailingAnchor, constant: -15),
-            self.anonymousFieldsView.bottomAnchor.constraint(equalTo: self.subjectTextField.topAnchor, constant: 0),
+            self.anonymousFieldsView.bottomAnchor.constraint(equalTo: self.subjectTypeSelectionView.topAnchor, constant: 0),
 
             self.firstNameHeaderTextFieldView.leadingAnchor.constraint(equalTo: self.anonymousFieldsView.leadingAnchor, constant: 15),
             self.firstNameHeaderTextFieldView.trailingAnchor.constraint(equalTo: self.anonymousFieldsView.centerXAnchor, constant: -4),
@@ -548,8 +571,12 @@ extension SupportPageViewController {
             self.emailHeaderTextFieldView.heightAnchor.constraint(equalToConstant: 90),
             self.emailHeaderTextFieldView.topAnchor.constraint(equalTo: self.firstNameHeaderTextFieldView.bottomAnchor, constant: 10),
             self.emailHeaderTextFieldView.bottomAnchor.constraint(equalTo: self.anonymousFieldsView.bottomAnchor, constant: -10),
+
+            self.subjectTypeSelectionView.leadingAnchor.constraint(equalTo: self.view.leadingAnchor, constant: 28),
+            self.subjectTypeSelectionView.trailingAnchor.constraint(equalTo: self.view.trailingAnchor, constant: -28),
+            //self.subjectTypeSelectionView.heightAnchor.constraint(equalToConstant: 90),
             
-            //self.subjectTextField.topAnchor.constraint(equalTo: self.baseView.topAnchor, constant: 30),
+            self.subjectTextField.topAnchor.constraint(equalTo: self.subjectTypeSelectionView.bottomAnchor, constant: 30),
             self.subjectTextField.leadingAnchor.constraint(equalTo: self.view.leadingAnchor, constant: 28),
             self.subjectTextField.trailingAnchor.constraint(equalTo: self.view.trailingAnchor, constant: -28),
             self.subjectTextField.heightAnchor.constraint(equalToConstant: 90),
@@ -598,7 +625,7 @@ extension SupportPageViewController {
         self.anonymousViewTopConstraint = self.anonymousFieldsView.topAnchor.constraint(equalTo: self.baseView.topAnchor, constant: 30)
         self.anonymousViewTopConstraint.isActive = false
 
-        self.subjectViewTopConstraint = self.subjectTextField.topAnchor.constraint(equalTo: self.baseView.topAnchor, constant: 30)
+        self.subjectViewTopConstraint = self.subjectTypeSelectionView.topAnchor.constraint(equalTo: self.baseView.topAnchor, constant: 30)
         self.subjectViewTopConstraint.isActive = true
         
     }
@@ -612,14 +639,18 @@ extension SupportPageViewController: UITextViewDelegate {
         self.descriptionView.layer.borderWidth = 1
         self.descriptionView.layer.borderColor = UIColor.App.textPrimary.cgColor
         
-        self.descriptionTextView.textColor =  UIColor.App.textPrimary
     }
     func textViewDidEndEditing(_ textView: UITextView) {
         self.descriptionView.layer.cornerRadius = CornerRadius.headerInput
         self.descriptionView.layer.borderWidth = 1
-        self.descriptionView.layer.borderColor = UIColor.App.backgroundPrimary.cgColor
+
+        if descriptionTextView.text == "" {
+            self.descriptionView.layer.borderColor = UIColor.App.inputTextTitle.cgColor
+        }
+        else {
+            self.descriptionView.layer.borderColor = UIColor.App.textPrimary.cgColor
+        }
         
-        self.descriptionTextView.textColor =  UIColor.App.backgroundOdds
     }
 
 }

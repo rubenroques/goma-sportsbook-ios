@@ -543,7 +543,15 @@ class DepositViewController: UIViewController {
 
             self.shouldRefreshUserWallet?()
 
-            let depositSuccessViewController = DepositSuccessViewController()
+            let depositSuccessViewController = GenericSuccessViewController()
+
+            depositSuccessViewController.didTapContinueAction = { [weak self] in
+                self?.dismiss(animated: true)
+            }
+
+            depositSuccessViewController.didTapCloseAction = { [weak self] in
+                self?.dismiss(animated: true)
+            }
 
             depositSuccessViewController.setTextInfo(title: "\(localized("success"))!", subtitle: localized("deposit_success_message"))
 
@@ -554,13 +562,11 @@ class DepositViewController: UIViewController {
             alertTitle = localized("payment_refused")
             alertMessage = localized("payment_refused_message")
 
-            let alert = UIAlertController(title: alertTitle,
-                                          message: alertMessage,
-                                          preferredStyle: .alert)
+            let genericErrorViewController = GenericErrorViewController()
 
-            alert.addAction(UIAlertAction(title: localized("ok"), style: .default, handler: nil))
+            genericErrorViewController.setTextInfo(title: alertTitle, subtitle: alertMessage)
 
-            self.present(alert, animated: true, completion: nil)
+            self.present(genericErrorViewController, animated: true)
         }
 
     }
@@ -807,12 +813,18 @@ class DepositViewController: UIViewController {
             ()
         }
 
-        let alert = UIAlertController(title: errorTitle,
-                                      message: errorMessage,
-                                      preferredStyle: .alert)
+//        let alert = UIAlertController(title: errorTitle,
+//                                      message: errorMessage,
+//                                      preferredStyle: .alert)
+//
+//        alert.addAction(UIAlertAction(title: localized("ok"), style: .default, handler: nil))
+//        self.present(alert, animated: true, completion: nil)
 
-        alert.addAction(UIAlertAction(title: localized("ok"), style: .default, handler: nil))
-        self.present(alert, animated: true, completion: nil)
+        let genericErrorViewController = GenericErrorViewController()
+
+        genericErrorViewController.setTextInfo(title: errorTitle, subtitle: errorMessage)
+
+        self.present(genericErrorViewController, animated: true)
     }
 
     @IBAction private func didTapCloseButton() {

@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="19529" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="21507" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
     <device id="retina6_1" orientation="portrait" appearance="light"/>
     <dependencies>
         <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="19519"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="21505"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
     <customFonts key="customFonts">
@@ -15,7 +15,7 @@
         </array>
     </customFonts>
     <objects>
-        <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner" customClass="CompetitionsFiltersView" customModule="ShowcaseBeta" customModuleProvider="target">
+        <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner" customClass="CompetitionsFiltersView" customModule="Betsson" customModuleProvider="target">
             <connections>
                 <outlet property="clearButton" destination="kCd-4H-IjY" id="VpW-UF-KTn"/>
                 <outlet property="closeButton" destination="MYO-kA-okS" id="YCU-ZW-wMZ"/>
@@ -36,8 +36,8 @@
                 <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="OVp-7s-4nc">
                     <rect key="frame" x="0.0" y="0.0" width="418" height="54"/>
                     <subviews>
-                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Select competitions" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="9au-CO-f3c">
-                            <rect key="frame" x="8" y="19" width="402" height="16"/>
+                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="249" verticalHuggingPriority="251" horizontalCompressionResistancePriority="749" text="Select competitions" textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="9au-CO-f3c">
+                            <rect key="frame" x="74" y="19" width="270" height="16"/>
                             <fontDescription key="fontDescription" name="Gilroy-Bold" family="Gilroy" pointSize="16"/>
                             <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                             <nil key="highlightedColor"/>
@@ -52,10 +52,7 @@
                             <nil key="highlightedColor"/>
                         </label>
                         <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="MYO-kA-okS">
-                            <rect key="frame" x="356" y="14.5" width="46" height="25"/>
-                            <constraints>
-                                <constraint firstAttribute="width" relation="greaterThanOrEqual" constant="46" id="PS1-re-eP3"/>
-                            </constraints>
+                            <rect key="frame" x="339" y="14.5" width="63" height="25"/>
                             <fontDescription key="fontDescription" name="Gilroy-Bold" family="Gilroy" pointSize="13"/>
                             <inset key="imageEdgeInsets" minX="0.0" minY="0.0" maxX="2.2250738585072014e-308" maxY="0.0"/>
                             <state key="normal" title="Close"/>
@@ -65,9 +62,6 @@
                         </button>
                         <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="kCd-4H-IjY">
                             <rect key="frame" x="18" y="14.5" width="51" height="25"/>
-                            <constraints>
-                                <constraint firstAttribute="width" relation="greaterThanOrEqual" constant="46" id="bOR-TY-E0R"/>
-                            </constraints>
                             <fontDescription key="fontDescription" name="Gilroy-Semibold" family="Gilroy" pointSize="13"/>
                             <inset key="imageEdgeInsets" minX="0.0" minY="0.0" maxX="2.2250738585072014e-308" maxY="0.0"/>
                             <state key="normal" title="Clear all"/>
@@ -81,9 +75,10 @@
                         <constraint firstItem="2sW-tM-9h9" firstAttribute="leading" secondItem="OVp-7s-4nc" secondAttribute="leading" constant="8" id="5iA-xM-fms"/>
                         <constraint firstItem="2sW-tM-9h9" firstAttribute="top" secondItem="OVp-7s-4nc" secondAttribute="top" id="65I-Bb-9il"/>
                         <constraint firstAttribute="trailing" secondItem="MYO-kA-okS" secondAttribute="trailing" constant="16" id="6jU-Sd-PRk"/>
+                        <constraint firstItem="9au-CO-f3c" firstAttribute="trailing" secondItem="MYO-kA-okS" secondAttribute="leading" constant="5" id="C4R-JT-yZG"/>
                         <constraint firstAttribute="trailing" secondItem="2sW-tM-9h9" secondAttribute="trailing" constant="8" id="GJj-3t-dkx"/>
+                        <constraint firstItem="9au-CO-f3c" firstAttribute="leading" secondItem="kCd-4H-IjY" secondAttribute="trailing" constant="5" id="Gxn-w9-Qjj"/>
                         <constraint firstItem="9au-CO-f3c" firstAttribute="centerY" secondItem="OVp-7s-4nc" secondAttribute="centerY" id="QTC-a9-rG8"/>
-                        <constraint firstItem="9au-CO-f3c" firstAttribute="leading" secondItem="OVp-7s-4nc" secondAttribute="leading" constant="8" id="QkO-8x-xtx"/>
                         <constraint firstItem="MYO-kA-okS" firstAttribute="centerY" secondItem="9au-CO-f3c" secondAttribute="centerY" id="Qxj-ri-8C8"/>
                         <constraint firstItem="9au-CO-f3c" firstAttribute="centerX" secondItem="OVp-7s-4nc" secondAttribute="centerX" id="X8C-2O-6sX"/>
                         <constraint firstAttribute="height" constant="54" id="aZl-Ow-ztN"/>
@@ -100,7 +95,7 @@
                     <rect key="frame" x="0.0" y="54" width="418" height="70"/>
                     <subviews>
                         <searchBar contentMode="redraw" translucent="NO" translatesAutoresizingMaskIntoConstraints="NO" id="hwC-FF-RlT">
-                            <rect key="frame" x="18" y="4.5" width="382" height="51"/>
+                            <rect key="frame" x="18" y="2" width="382" height="56"/>
                             <offsetWrapper key="searchTextPositionAdjustment" horizontal="0.0" vertical="0.0"/>
                             <textInputTraits key="textInputTraits"/>
                         </searchBar>

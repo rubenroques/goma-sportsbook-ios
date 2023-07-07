@@ -9,219 +9,6 @@ import UIKit
 import Combine
 import ServicesProvider
 
-class RibDocsViewModel {
-
-    // MARK: Private Properties
-    private var cancellables = Set<AnyCancellable>()
-
-    // MARK: Public Properties
-    var documents: [DocumentInfo] = []
-    var requiredDocumentTypes: [DocumentType] = []
-    var isLoadingPublisher: CurrentValueSubject<Bool, Never> = .init(false)
-    var hasLoadedDocumentTypes: CurrentValueSubject<Bool, Never> = .init(false)
-    var hasLoadedUserDocuments: CurrentValueSubject<Bool, Never> = .init(false)
-    var hasDocumentsProcessed: CurrentValueSubject<Bool, Never> = .init(false)
-
-    var isLocked: CurrentValueSubject<Bool, Never> = .init(false)
-
-    var kycStatusPublisher: AnyPublisher<KnowYourCustomerStatus?, Never> {
-        return Env.userSessionStore.userKnowYourCustomerStatusPublisher.eraseToAnyPublisher()
-    }
-
-    var shouldReloadData: (() -> Void)?
-
-    let dateFormatter = DateFormatter()
-
-    init() {
-
-        self.getKYCStatus()
-
-        self.getDocumentTypes()
-    }
-
-    private func getKYCStatus() {
-        Env.userSessionStore.refreshProfile()
-    }
-
-    private func getDocumentTypes() {
-
-        self.isLoadingPublisher.send(true)
-
-        Env.servicesProvider.getDocumentTypes()
-            .receive(on: DispatchQueue.main)
-            .sink(receiveCompletion: { [weak self] completion in
-                switch completion {
-                case .finished:
-                    ()
-                case .failure(let error):
-                    self?.isLoadingPublisher.send(false)
-                }
-
-            }, receiveValue: { [weak self] documentTypesResponse in
-
-                let documentTypes = documentTypesResponse
-
-                let requiredDocumentTypes = documentTypesResponse.documentTypes.filter({
-                    $0.documentTypeGroup == .rib
-                })
-
-                self?.requiredDocumentTypes.append(contentsOf: requiredDocumentTypes)
-
-                self?.hasLoadedDocumentTypes.send(true)
-
-                self?.getUserDocuments()
-            })
-            .store(in: &cancellables)
-    }
-
-    private func getUserDocuments() {
-
-        self.hasDocumentsProcessed.send(false)
-
-        Env.servicesProvider.getUserDocuments()
-            .receive(on: DispatchQueue.main)
-            .sink(receiveCompletion: { [weak self] completion in
-                switch completion {
-                case .finished:
-                    ()
-                case .failure(let error):
-                    self?.isLoadingPublisher.send(false)
-                }
-
-            }, receiveValue: { [weak self] userDocumentsResponse in
-
-                let userDocuments = userDocumentsResponse.userDocuments
-
-                if let requiredDocumentTypes = self?.requiredDocumentTypes {
-                    self?.processDocuments(documentTypes: requiredDocumentTypes, userDocuments: userDocuments)
-                }
-
-            })
-            .store(in: &cancellables)
-    }
-
-    private func processDocuments(documentTypes: [DocumentType], userDocuments: [UserDocument]) {
-
-        for documentType in documentTypes {
-
-            let documentTypeCode = DocumentTypeCode(code: documentType.documentType)
-
-            if let documentTypeGroup = documentType.documentTypeGroup {
-
-                let mappedDocumentTypeGroup = ServiceProviderModelMapper.documentTypeGroup(fromServiceProviderDocumentTypeGroup: documentTypeGroup)
-
-                let uploadedFiles = userDocuments.filter({
-                    $0.documentType == documentType.documentType
-                }).map({ userDocument -> DocumentFileInfo in
-
-                    let userDocumentStatus = FileState(code: userDocument.status)
-
-                    self.dateFormatter.dateFormat = "dd-MM-yyyy HH:mm:ss"
-                    let uploadDate = self.dateFormatter.date(from: userDocument.uploadDate)
-
-                    return DocumentFileInfo(id: userDocument.documentType,
-                                            name: userDocument.fileName,
-                                            status: userDocumentStatus ?? .pendingApproved,
-                                            uploadDate: uploadDate ?? Date(),
-                                            documentTypeGroup: mappedDocumentTypeGroup)
-                })
-
-                var existingDocumentInfo: DocumentInfo?
-
-                for document in self.documents {
-                    if let typeGroup = document.typeGroup,
-                       typeGroup == mappedDocumentTypeGroup {
-                        existingDocumentInfo = document
-                    }
-                }
-
-                if let existingDocumentInfo {
-                    var documentInfoIndex = self.documents.firstIndex(where: {
-                        $0.id == existingDocumentInfo.id
-                    })
-
-                    if let index = documentInfoIndex {
-                        var documentFileInfo = self.documents[index]
-
-                        documentFileInfo.uploadedFiles.append(contentsOf: uploadedFiles)
-
-                        self.documents[index] = documentFileInfo
-
-                    }
-                }
-                else {
-                    let documentInfo = DocumentInfo(id: documentType.documentType,
-                                                    typeName: documentTypeCode?.codeName ?? "",
-                                                    status: uploadedFiles.isEmpty ? .notReceived : .received,
-                                                    uploadedFiles: uploadedFiles,
-                                                    typeGroup: mappedDocumentTypeGroup)
-
-                    self.documents.append(documentInfo)
-                }
-
-            }
-            else {
-
-                let uploadedFiles = userDocuments.filter({
-                    $0.documentType == documentType.documentType
-                }).map({ userDocument -> DocumentFileInfo in
-
-                    let userDocumentStatus = FileState(code: userDocument.status)
-
-                    self.dateFormatter.dateFormat = "dd-MM-yyyy HH:mm:ss"
-                    let uploadDate = self.dateFormatter.date(from: userDocument.uploadDate)
-
-                    return DocumentFileInfo(id: userDocument.documentType,
-                                            name: userDocument.fileName,
-                                            status: userDocumentStatus ?? .pendingApproved,
-                                            uploadDate: uploadDate ?? Date(),
-                                            documentTypeGroup: .none)
-                })
-
-                var existingDocumentInfo: DocumentInfo?
-
-                for document in self.documents {
-                    if document.id == documentType.documentType  {
-                        existingDocumentInfo = document
-                    }
-                }
-
-                if let existingDocumentInfo {
-                    var documentInfoIndex = self.documents.firstIndex(where: {
-                        $0.id == existingDocumentInfo.id
-                    })
-
-                    if let index = documentInfoIndex {
-                        var documentFileInfo = self.documents[index]
-
-                        documentFileInfo.uploadedFiles.append(contentsOf: uploadedFiles)
-
-                        self.documents[index] = documentFileInfo
-
-                    }
-                }
-                else {
-                    let documentInfo = DocumentInfo(id: documentType.documentType,
-                                                    typeName: documentTypeCode?.codeName ?? "",
-                                                    status: uploadedFiles.isEmpty ? .notReceived : .received,
-                                                    uploadedFiles: uploadedFiles)
-
-                    self.documents.append(documentInfo)
-                }
-
-            }
-        }
-
-        self.isLoadingPublisher.send(false)
-
-        self.hasLoadedUserDocuments.send(false)
-
-        self.hasDocumentsProcessed.send(true)
-
-        self.shouldReloadData?()
-    }
-
-}
 class RibDocsViewController: UIViewController {
     private lazy var containerView: UIView = Self.createContainerView()
     private lazy var scrollView: UIScrollView = Self.createScrollView()
@@ -232,10 +19,6 @@ class RibDocsViewController: UIViewController {
     private lazy var lockTitleLabel: UILabel = Self.createLockTitleLabel()
     private lazy var lockContainerView: UIView = Self.createLockContainerView()
     private lazy var lockIconImageView: UIImageView = Self.createLockIconImageView()
-
-//    private lazy var ribNumberBaseView: UIView = Self.createRibNumberBaseView()
-//    private lazy var ribNumberLabel: UILabel = Self.createRibNumberLabel()
-//    private lazy var ribNumberHeaderTextFieldView: HeaderTextFieldView = Self.createRibNumberHeaderTextFieldView()
 
     private lazy var ribDocumentBaseView: UIView = Self.createRibDocumentBaseView()
     private lazy var ribDocumentTitleLabel: UILabel = Self.createRibDocumentTitleLabel()
@@ -299,26 +82,23 @@ class RibDocsViewController: UIViewController {
         self.setupSubviews()
         self.setupWithTheme()
 
-//        self.ribNumberHeaderTextFieldView.setPlaceholderText(localized("rib_number"))
-//        self.ribNumberHeaderTextFieldView.setKeyboardType(.decimalPad)
-
         self.bind(toViewModel: self.viewModel)
 
         self.isLocked = false
 
+        self.canAddRibDocs = true
+
         let ribAddDocTap = UITapGestureRecognizer(target: self, action: #selector(self.didTapRibAddDoc))
         self.ribAddDocBaseView.addGestureRecognizer(ribAddDocTap)
 
-        let tapBackgroundGestureRecognizer = UITapGestureRecognizer.init(target: self, action: #selector(didTapBackground))
-        self.contentBaseView.addGestureRecognizer(tapBackgroundGestureRecognizer)
-
-        self.canAddRibDocs = true
+        self.scrollView.refreshControl = UIRefreshControl()
+        self.scrollView.refreshControl?.addTarget(self, action:
+                                          #selector(handleRefreshControl),
+                                          for: .valueChanged)
     }
 
     override func viewDidLayoutSubviews() {
         super.viewDidLayoutSubviews()
-
-//        self.ribNumberBaseView.layer.cornerRadius = CornerRadius.card
 
         self.ribDocumentBaseView.layer.cornerRadius = CornerRadius.card
 
@@ -348,14 +128,6 @@ class RibDocsViewController: UIViewController {
         self.lockContainerView.backgroundColor = UIColor.App.backgroundPrimary.withAlphaComponent(0.7)
 
         self.lockIconImageView.backgroundColor = .clear
-
-//        self.ribNumberBaseView.backgroundColor = UIColor.App.backgroundSecondary
-//
-//        self.ribNumberLabel.textColor = UIColor.App.textPrimary
-//
-//        self.ribNumberHeaderTextFieldView.setViewColor(UIColor.App.inputBackground)
-//        self.ribNumberHeaderTextFieldView.setHeaderLabelColor(UIColor.App.inputTextTitle)
-//        self.ribNumberHeaderTextFieldView.setTextFieldColor(UIColor.App.inputText)
 
         self.ribDocumentBaseView.backgroundColor = UIColor.App.backgroundSecondary
 
@@ -425,11 +197,18 @@ class RibDocsViewController: UIViewController {
 
             var mostRecentDocument: DocumentFileInfo?
 
-            for uploadedFile in documentsFileInfo {
+            for (index, uploadedFile) in documentsFileInfo.enumerated() {
 
                 let documentStateView = DocumentStateView()
 
                 documentStateView.configure(documentFileInfo: uploadedFile)
+
+                if index != documentsFileInfo.count - 1 {
+                    documentStateView.hasSeparator = true
+                }
+                else {
+                    documentStateView.hasSeparator = false
+                }
 
                 self.ribDocumentTopStackView.addArrangedSubview(documentStateView)
 
@@ -468,14 +247,20 @@ class RibDocsViewController: UIViewController {
 
         let manualUploadDocViewController = ManualUploadDocumentsViewController(viewModel: manualUploadDocViewModel)
 
+        manualUploadDocViewController.shouldRefreshDocuments = { [weak self] in
+            self?.viewModel.refreshDocuments()
+        }
+
         self.navigationController?.pushViewController(manualUploadDocViewController, animated: true)
     }
 
-    @objc func didTapBackground() {
-        self.resignFirstResponder()
+    @objc func handleRefreshControl() {
 
-//        self.ribNumberHeaderTextFieldView.resignFirstResponder()
+        self.viewModel.refreshDocuments()
 
+       DispatchQueue.main.async {
+          self.scrollView.refreshControl?.endRefreshing()
+       }
     }
 
 }
@@ -518,7 +303,7 @@ extension RibDocsViewController {
     private static func createLockTitleLabel() -> UILabel {
         let label = UILabel()
         label.translatesAutoresizingMaskIntoConstraints = false
-        label.text = localized("locked_rib_message")
+        label.text = localized("docs_need_validation_before_rib")
         label.font = AppFont.with(type: .bold, size: 14)
         label.textAlignment = .center
         label.numberOfLines = 0
@@ -537,29 +322,6 @@ extension RibDocsViewController {
         imageView.contentMode = .scaleAspectFit
         imageView.image = UIImage(named: "lock_blue_icon")
         return imageView
-    }
-
-    private static func createRibNumberBaseView() -> UIView {
-        let view = UIView()
-        view.translatesAutoresizingMaskIntoConstraints = false
-        return view
-    }
-
-    private static func createRibNumberLabel() -> UILabel {
-        let label = UILabel()
-        label.translatesAutoresizingMaskIntoConstraints = false
-        label.text = localized("rib_number")
-        label.font = AppFont.with(type: .bold, size: 16)
-        label.textAlignment = .left
-        return label
-    }
-
-    private static func createRibNumberHeaderTextFieldView() -> HeaderTextFieldView {
-        let headerTextFieldView = HeaderTextFieldView()
-        headerTextFieldView.setTextFieldFont(AppFont.with(type: .semibold, size: 16))
-        headerTextFieldView.setHeaderLabelFont(AppFont.with(type: .semibold, size: 16))
-        headerTextFieldView.translatesAutoresizingMaskIntoConstraints = false
-        return headerTextFieldView
     }
 
     private static func createRibDocumentBaseView() -> UIView {
@@ -582,7 +344,7 @@ extension RibDocsViewController {
         stackView.translatesAutoresizingMaskIntoConstraints = false
         stackView.axis = .vertical
         stackView.distribution = .equalSpacing
-        stackView.spacing = 8
+        stackView.spacing = 0
         return stackView
     }
 
@@ -754,7 +516,7 @@ extension RibDocsViewController {
             self.activityIndicatorView.centerYAnchor.constraint(equalTo: self.loadingBaseView.centerYAnchor)
         ])
 
-        //Lock View
+        // Lock View
         NSLayoutConstraint.activate([
             self.lockContainerView.leadingAnchor.constraint(equalTo: self.contentBaseView.leadingAnchor),
             self.lockContainerView.trailingAnchor.constraint(equalTo: self.contentBaseView.trailingAnchor),

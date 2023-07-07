@@ -170,5 +170,9 @@ extension SportRadarEventDetailsStorage {
         return self.outcomesDictionary[id] != nil
     }
 
+    func setEventSubject(eventId: String) {
+        self.eventSubject.value?.id = eventId
+    }
+
 }
 

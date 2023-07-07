@@ -37,6 +37,8 @@ class PreSubmissionBetslipViewController: UIViewController {
     @IBOutlet private weak var systemBetTypePickerView: UIPickerView!
     @IBOutlet private weak var selectSystemBetTypeButton: UIButton!
 
+    @IBOutlet private weak var winningsTypeBaseView: UIView!
+
     @IBOutlet private weak var settingsPickerBaseView: UIView!
     @IBOutlet private weak var settingsPickerContainerView: UIView!
     @IBOutlet private weak var settingsPickerView: UIPickerView!
@@ -70,6 +72,13 @@ class PreSubmissionBetslipViewController: UIViewController {
     @IBOutlet private weak var freeBetBalanceLabel: UILabel!
     @IBOutlet private weak var freeBetSwitch: UISwitch!
     @IBOutlet private weak var freeBetCloseButton: UIButton!
+
+    @IBOutlet private weak var cashbackBaseView: UIView!
+    @IBOutlet private weak var cashbackInnerBaseView: UIView!
+    @IBOutlet private weak var cashbackTitleLabel: UILabel!
+    @IBOutlet private weak var cashbackValueLabel: UILabel!
+    @IBOutlet private weak var cashbackSwitch: UISwitch!
+    @IBOutlet private weak var cashbackSeparatorView: UIView!
 
     @IBOutlet private weak var placeBetBaseView: UIView!
     @IBOutlet private weak var placeBetButtonsBaseView: UIView!
@@ -113,9 +122,24 @@ class PreSubmissionBetslipViewController: UIViewController {
     @IBOutlet private weak var emptyBetsBaseView: UIView!
     @IBOutlet private weak var emptyBetslipLabel: UILabel!
 
+    @IBOutlet private weak var cashbackInfoSingleBaseView: UIView!
+    @IBOutlet private weak var cashbackInfoSingleView: CashbackInfoView!
+    @IBOutlet private weak var cashbackInfoSingleValueLabel: UILabel!
+
+    @IBOutlet private weak var cashbackInfoMultipleBaseView: UIView!
+    @IBOutlet private weak var cashbackInfoMultipleView: CashbackInfoView!
+    @IBOutlet private weak var cashbackInfoMultipleValueLabel: UILabel!
+
     @IBOutlet private weak var loadingBaseView: UIView!
     @IBOutlet private weak var loadingView: UIActivityIndicatorView!
     private let loadingSpinnerViewController = LoadingSpinnerViewController()
+
+    // Custom views
+    lazy var learnMoreBaseView: CashbackLearnMoreView = {
+        let view = CashbackLearnMoreView()
+        view.translatesAutoresizingMaskIntoConstraints = false
+        return view
+    }()
 
     @IBOutlet private weak var secondPlaceBetBaseViewConstraint: NSLayoutConstraint!
 
@@ -140,6 +164,15 @@ class PreSubmissionBetslipViewController: UIViewController {
             if isFreebetDismissed {
                 self.freeBetBaseView.isHidden = true
             }
+        }
+    }
+
+    private var isCashbackEnabled: Bool = false {
+        didSet {
+            self.cashbackBaseView.isHidden = !isCashbackEnabled
+            self.cashbackInfoSingleBaseView.isHidden = !isCashbackEnabled
+            self.cashbackInfoMultipleBaseView.isHidden = !isCashbackEnabled
+
         }
     }
 
@@ -292,6 +325,9 @@ class PreSubmissionBetslipViewController: UIViewController {
         self.settingsPickerBaseView.alpha = 0.0
 
         self.freeBetBaseView.isHidden = true
+        self.cashbackBaseView.isHidden = true
+        self.cashbackInfoSingleBaseView.isHidden = true
+        self.cashbackInfoMultipleBaseView.isHidden = true
 
         self.simpleWinningsBaseView.isHidden = false
         self.multipleWinningsBaseView.isHidden = true
@@ -964,6 +1000,64 @@ class PreSubmissionBetslipViewController: UIViewController {
             }
             .store(in: &self.cancellables)
 
+        // Cashback
+        self.isCashbackEnabled = true
+        self.cashbackSwitch.addTarget(self, action: #selector(cashbackSwitchValueChanged(_:)), for: .valueChanged)
+
+        self.cashbackSwitch.setOn(false, animated: true)
+
+        self.cashbackTitleLabel.text = localized("cashback_balance")
+
+        self.cashbackValueLabel.text = "0,00€"
+
+        self.cashbackInfoMultipleView.didTapInfoAction = { [weak self] in
+
+            UIView.animate(withDuration: 0.5, animations: {
+                self?.learnMoreBaseView.alpha = 1
+            }) { (completed) in
+                if completed {
+                    DispatchQueue.main.asyncAfter(deadline: .now() + 5.0) {
+                        UIView.animate(withDuration: 0.5) {
+                            self?.learnMoreBaseView.alpha = 0
+                        }
+                    }
+                }
+            }
+        }
+
+        self.cashbackInfoSingleView.didTapInfoAction = { [weak self] in
+
+            UIView.animate(withDuration: 0.5, animations: {
+                self?.learnMoreBaseView.alpha = 1
+            }) { (completed) in
+                if completed {
+                    DispatchQueue.main.asyncAfter(deadline: .now() + 5.0) {
+                        UIView.animate(withDuration: 0.5) {
+                            self?.learnMoreBaseView.alpha = 0
+                        }
+                    }
+                }
+            }
+        }
+
+        self.placeBetBaseView.addSubview(self.learnMoreBaseView)
+
+        NSLayoutConstraint.activate([
+
+            self.learnMoreBaseView.bottomAnchor.constraint(equalTo: self.winningsTypeBaseView.topAnchor, constant: -1),
+            self.learnMoreBaseView.trailingAnchor.constraint(equalTo: self.cashbackInfoMultipleView.trailingAnchor, constant: 10)
+
+        ])
+
+        self.learnMoreBaseView.didTapLearnMoreAction = { [weak self] in
+
+            let cashbackInfoViewController = CashbackInfoViewController()
+
+            self?.navigationController?.pushViewController(cashbackInfoViewController, animated: true)
+        }
+
+        self.learnMoreBaseView.alpha = 0
+
         self.setupWithTheme()
 
         NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillShow), name: UIResponder.keyboardWillShowNotification, object: nil)
@@ -1241,6 +1335,26 @@ class PreSubmissionBetslipViewController: UIViewController {
         self.freeBetSwitch.onTintColor = UIColor.App.highlightPrimary
 
         self.freeBetCloseButton.imageView?.setTintColor(color: UIColor.App.textPrimary)
+
+        self.cashbackBaseView.backgroundColor = .clear
+
+        self.cashbackInnerBaseView.backgroundColor = UIColor.App.backgroundSecondary
+
+        self.cashbackSeparatorView.backgroundColor = UIColor.App.separatorLine
+
+        self.cashbackTitleLabel.textColor = UIColor.App.textPrimary
+
+        self.cashbackValueLabel.textColor = UIColor.App.textPrimary
+
+        self.cashbackSwitch.onTintColor = UIColor.App.highlightPrimary
+
+        self.cashbackInfoSingleBaseView.backgroundColor = .clear
+
+        self.cashbackInfoSingleValueLabel.textColor = UIColor.App.textPrimary
+
+        self.cashbackInfoMultipleBaseView.backgroundColor = .clear
+
+        self.cashbackInfoMultipleValueLabel.textColor = UIColor.App.textPrimary
 
     }
 
@@ -1580,6 +1694,16 @@ class PreSubmissionBetslipViewController: UIViewController {
 
     @objc private func onFreebetSwitchValueChanged(_ freeBetSwitch: UISwitch) {
         self.isFreebetEnabled.send(freeBetSwitch.isOn)
+    }
+
+    @objc private func cashbackSwitchValueChanged(_ cashbackSwitch: UISwitch) {
+
+        if cashbackSwitch.isOn {
+            self.cashbackValueLabel.textColor = UIColor.App.highlightPrimary
+        }
+        else {
+            self.cashbackValueLabel.textColor = UIColor.App.textPrimary
+        }
     }
 
     @IBAction private func didTapCloseFreebetButton() {

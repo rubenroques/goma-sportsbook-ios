@@ -275,8 +275,8 @@ public class DepositOnRegisterViewController: UIViewController {
 
         self.cancelButton.setTitleColor(AppColor.highlightPrimary, for: .normal)
 
-        self.titleLabel.textColor = AppColor.textPrimary
-        self.subtitleLabel.textColor = AppColor.textPrimary
+        self.titleLabel.textColor = AppColor.buttonTextPrimary
+        self.subtitleLabel.textColor = AppColor.buttonTextPrimary
 
         self.shapeView.backgroundColor = AppColor.backgroundPrimary
 

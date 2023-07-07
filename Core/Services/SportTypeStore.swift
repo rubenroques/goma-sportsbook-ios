@@ -65,6 +65,7 @@ class SportTypeStore {
     }
 
     private func getAllSports() {
+
         Env.servicesProvider.subscribeAllSportTypes()
             .receive(on: DispatchQueue.main)
             .sink(receiveCompletion: { [weak self] completion in

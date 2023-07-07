@@ -344,24 +344,24 @@ class ProfileViewController: UIViewController {
         var showActivationAlertScrollableView = false
         self.alertsArray = []
 
-        if let isUserEmailVerified = Env.userSessionStore.isUserEmailVerified.value, !isUserEmailVerified {
-            let emailActivationAlertData = ActivationAlert(title: localized("verify_email"),
-                                                           description: localized("app_full_potential"),
-                                                           linkLabel: localized("verify_my_account"),
-                                                           alertType: .email)
-            alertsArray.append(emailActivationAlertData)
-            showActivationAlertScrollableView = true
-        }
-
-        if let isUserProfileComplete = Env.userSessionStore.isUserProfileComplete, !isUserProfileComplete {
-            let completeProfileAlertData = ActivationAlert(title: localized("complete_your_profile"),
-                                                           description: localized("complete_profile_description"),
-                                                           linkLabel: localized("finish_up_profile"),
-                                                           alertType: .profile)
-
-            alertsArray.append(completeProfileAlertData)
-            showActivationAlertScrollableView = true
-        }
+//        if let isUserEmailVerified = Env.userSessionStore.isUserEmailVerified.value, !isUserEmailVerified {
+//            let emailActivationAlertData = ActivationAlert(title: localized("verify_email"),
+//                                                           description: localized("app_full_potential"),
+//                                                           linkLabel: localized("verify_my_account"),
+//                                                           alertType: .email)
+//            alertsArray.append(emailActivationAlertData)
+//            showActivationAlertScrollableView = true
+//        }
+//
+//        if let isUserProfileComplete = Env.userSessionStore.isUserProfileComplete, !isUserProfileComplete {
+//            let completeProfileAlertData = ActivationAlert(title: localized("complete_your_profile"),
+//                                                           description: localized("complete_profile_description"),
+//                                                           linkLabel: localized("finish_up_profile"),
+//                                                           alertType: .profile)
+//
+//            alertsArray.append(completeProfileAlertData)
+//            showActivationAlertScrollableView = true
+//        }
 
         if let isUserKycVerified = Env.userSessionStore.userKnowYourCustomerStatus, isUserKycVerified == .request {
             let uploadDocumentsAlertData = ActivationAlert(title: localized("document_validation_required"),

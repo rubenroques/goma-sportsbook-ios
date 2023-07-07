@@ -1,0 +1,224 @@
+//
+//  TopCompetitionsDataSource.swift
+//  Sportsbook
+//
+//  Created by André Lascas on 06/07/2023.
+//
+
+import Foundation
+import UIKit
+
+class TopCompetitionsDataSource: NSObject, UITableViewDataSource, UITableViewDelegate {
+
+    var competitions: [Competition] = [] {
+        didSet {
+            self.collapsedCompetitionsSections = []
+        }
+    }
+
+    var collapsedCompetitionsSections: Set<Int> = []
+
+    var didSelectMatchAction: ((Match) -> Void)?
+    var didSelectCompetitionAction: ((Competition) -> Void)?
+    var didTapFavoriteMatchAction: ((Match) -> Void)?
+
+    var matchStatsViewModelForMatch: ((Match) -> MatchStatsViewModel?)?
+
+    override init() {
+        super.init()
+    }
+
+    func numberOfSections(in tableView: UITableView) -> Int {
+        return self.competitions.count + 1
+    }
+
+    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+        if let competition = competitions[safe: section] {
+            if competition.numberOutrightMarkets > 0 {
+                return competition.matches.count + 1
+            }
+            else {
+                return competition.matches.count
+            }
+        }
+        else if section == self.competitions.count {
+            return 1
+        }
+        return 0
+    }
+
+    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+
+        if indexPath.section == self.competitions.count,
+            let cell = tableView.dequeueCellType(FooterResponsibleGamingViewCell.self) {
+            return cell
+        }
+
+        guard
+            let competition = self.competitions[safe: indexPath.section]
+        else {
+            fatalError()
+        }
+
+        if competition.numberOutrightMarkets > 0 {
+            if indexPath.row == 0 {
+                guard
+                    let cell = tableView.dequeueReusableCell(withIdentifier: OutrightCompetitionLineTableViewCell.identifier)
+                        as? OutrightCompetitionLineTableViewCell
+                else {
+                    fatalError()
+                }
+                cell.configure(withViewModel: OutrightCompetitionLineViewModel(competition: competition))
+                cell.didSelectCompetitionAction = { [weak self] competition in
+                    self?.didSelectCompetitionAction?(competition)
+                }
+                return cell
+            }
+            else if let cell = tableView.dequeueCellType(MatchLineTableViewCell.self),
+                    let match = competition.matches[safe: indexPath.row - 1] {
+
+                if let matchStatsViewModel = self.matchStatsViewModelForMatch?(match) {
+                    cell.matchStatsViewModel = matchStatsViewModel
+                }
+
+                cell.setupWithMatch(match)
+                cell.shouldShowCountryFlag(false)
+                cell.tappedMatchLineAction = { [weak self] match in
+                    self?.didSelectMatchAction?(match)
+                }
+//                cell.didTapFavoriteMatchAction = { [weak self] match in
+//                    self?.didTapFavoriteMatchAction?(match)
+//                }
+                return cell
+            }
+        }
+        else if let cell = tableView.dequeueCellType(MatchLineTableViewCell.self),
+                let match = competition.matches[safe: indexPath.row] {
+
+            if let matchStatsViewModel = self.matchStatsViewModelForMatch?(match) {
+                cell.matchStatsViewModel = matchStatsViewModel
+            }
+
+            cell.setupWithMatch(match)
+            cell.shouldShowCountryFlag(false)
+            cell.tappedMatchLineAction = { [weak self] match in
+                self?.didSelectMatchAction?(match)
+            }
+//            cell.didTapFavoriteMatchAction = { [weak self] match in
+//                self?.didTapFavoriteMatchAction?(match)
+//            }
+            return cell
+        }
+
+        fatalError()
+    }
+
+    func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
+
+        if section == self.competitions.count {
+            return nil // Footer
+        }
+
+        guard
+            let headerView = tableView.dequeueReusableHeaderFooterView(withIdentifier: TournamentTableViewHeader.identifier)
+                as? TournamentTableViewHeader,
+            let competition = self.competitions[safe: section]
+        else {
+            fatalError()
+        }
+
+        headerView.nameTitleLabel.text = competition.name
+        headerView.countryFlagImageView.image = UIImage(named: Assets.flagName(withCountryCode: competition.venue?.isoCode ?? ""))
+        headerView.sectionIndex = section
+        headerView.competition = competition
+        headerView.didToggleHeaderViewAction = { [weak self, weak tableView] section in
+            guard
+                let weakSelf = self,
+                let weakTableView = tableView
+            else { return }
+
+            if weakSelf.collapsedCompetitionsSections.contains(section) {
+                weakSelf.collapsedCompetitionsSections.remove(section)
+            }
+            else {
+                weakSelf.collapsedCompetitionsSections.insert(section)
+            }
+            weakSelf.needReloadSection(section, tableView: weakTableView)
+        }
+
+        if self.collapsedCompetitionsSections.contains(section) {
+            headerView.isCollapsed = true
+        }
+        else {
+            headerView.isCollapsed = false
+        }
+
+        return headerView
+    }
+
+    func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
+        if section == self.competitions.count {
+            return CGFloat(0.01)
+        }
+        return 54
+    }
+
+    func tableView(_ tableView: UITableView, estimatedHeightForHeaderInSection section: Int) -> CGFloat {
+        if section == self.competitions.count {
+            return CGFloat(0.01)
+        }
+        return 54
+    }
+
+    func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
+        if indexPath.section == self.competitions.count {
+            return UITableView.automaticDimension // Footer
+        }
+
+        if self.collapsedCompetitionsSections.contains(indexPath.section) {
+            return .leastNonzeroMagnitude
+        }
+
+        if let competition = competitions[safe: indexPath.section] {
+            if competition.numberOutrightMarkets > 0 && indexPath.row == 0 {
+                return 105
+            }
+            else {
+                return UITableView.automaticDimension
+            }
+        }
+        return .leastNonzeroMagnitude
+    }
+
+    func tableView(_ tableView: UITableView, estimatedHeightForRowAt indexPath: IndexPath) -> CGFloat {
+        if indexPath.section == self.competitions.count {
+            return 120 // Footer
+        }
+
+        if self.collapsedCompetitionsSections.contains(indexPath.section) {
+            return .leastNonzeroMagnitude
+        }
+
+        if let competition = competitions[safe: indexPath.section] {
+            if competition.numberOutrightMarkets > 0 && indexPath.row == 0 {
+                return 105
+            }
+            else {
+                return StyleHelper.cardsStyleHeight() + 20
+            }
+        }
+        return .leastNonzeroMagnitude
+    }
+
+    func needReloadSection(_ section: Int, tableView: UITableView) {
+
+        guard let competition = self.competitions[safe: section] else { return }
+
+        let rows = (0 ..< competition.matches.count).map({ IndexPath(row: $0, section: section) }) // all section rows
+
+        tableView.beginUpdates()
+        tableView.reloadRows(at: rows, with: .automatic)
+        tableView.endUpdates()
+    }
+
+}

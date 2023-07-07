@@ -54,6 +54,7 @@ class RootViewController: UIViewController {
     @IBOutlet private var preLiveBaseView: UIView!
     @IBOutlet private var liveBaseView: UIView!
     @IBOutlet private var tipsBaseView: UIView!
+    @IBOutlet private var cashbackBaseView: UIView!
     @IBOutlet private var casinoBaseView: UIView!
 
     @IBOutlet private var tabBarView: UIView!
@@ -75,6 +76,10 @@ class RootViewController: UIViewController {
     @IBOutlet private var tipsButtonBaseView: UIView!
     @IBOutlet private var tipsIconImageView: UIImageView!
     @IBOutlet private var tipsTitleLabel: UILabel!
+
+    @IBOutlet private var cashbackButtonBaseView: UIView!
+    @IBOutlet private var cashbackIconImageView: UIImageView!
+    @IBOutlet private var cashbackTitleLabel: UILabel!
 
     @IBOutlet private var casinoButtonBaseView: UIView!
     @IBOutlet private var casinoIconImageView: UIImageView!
@@ -197,6 +202,7 @@ class RootViewController: UIViewController {
     lazy var preLiveViewController = PreLiveEventsViewController(selectedSportType: Env.sportsStore.defaultSport)
     lazy var liveEventsViewController = LiveEventsViewController(selectedSport: Env.sportsStore.defaultSport)
     lazy var tipsRootViewController = TipsRootViewController()
+    lazy var cashbackViewController = CashbackRootViewController()
     lazy var casinoViewController = CasinoWebViewController()
 
     // Loaded view controllers
@@ -204,6 +210,7 @@ class RootViewController: UIViewController {
     var preLiveViewControllerLoaded = false
     var liveEventsViewControllerLoaded = false
     var tipsRootViewControllerLoaded = false
+    var cashbackViewControllerLoaded = false
     var casinoViewControllerLoaded = false
 
     var currentSport: Sport
@@ -221,6 +228,7 @@ class RootViewController: UIViewController {
         case preLive
         case live
         case tips
+        case cashback
         case casino
     }
     var selectedTabItem: TabItem {
@@ -234,6 +242,8 @@ class RootViewController: UIViewController {
                 self.selectLiveTabBarItem()
             case .tips:
                 self.selectTipsTabBarItem()
+            case .cashback:
+                self.selectCashbackTabBarItem()
             case .casino:
                 self.selectCasinoTabBarItem()
             }
@@ -580,6 +590,7 @@ class RootViewController: UIViewController {
         self.casinoTitleLabel.text = localized("casino")
         self.sportsbookTitleLabel.text = localized("sportsbook")
         self.tipsTitleLabel.text = localized("tips")
+        self.cashbackTitleLabel.text = localized("cashback")
 
         self.casinoBottomView.backgroundColor = UIColor.App.backgroundPrimary
 
@@ -600,6 +611,9 @@ class RootViewController: UIViewController {
 
         let tipsTapGesture = UITapGestureRecognizer(target: self, action: #selector(didTapTipsTabItem))
         self.tipsButtonBaseView.addGestureRecognizer(tipsTapGesture)
+
+        let cashbackTapgesture = UITapGestureRecognizer(target: self, action: #selector(didTapCashbackTabItem))
+        self.cashbackButtonBaseView.addGestureRecognizer(cashbackTapgesture)
 
         let casinoTapGesture = UITapGestureRecognizer(target: self, action: #selector(didTapCasinoTabItem))
         self.casinoButtonBaseView.addGestureRecognizer(casinoTapGesture)
@@ -640,6 +654,14 @@ class RootViewController: UIViewController {
         }
         else {
             self.tipsButtonBaseView.isHidden = true
+        }
+
+        if TargetVariables.hasFeatureEnabled(feature: .cashback) {
+            self.cashbackButtonBaseView.isHidden = false
+        }
+        else {
+            self.cashbackButtonBaseView.isHidden = true
+
         }
 
         //
@@ -766,6 +788,7 @@ class RootViewController: UIViewController {
         self.sportsButtonBaseView.backgroundColor = .clear // UIColor.App.backgroundPrimary
         self.liveButtonBaseView.backgroundColor = .clear // UIColor.App.backgroundPrimary
         self.tipsButtonBaseView.backgroundColor = .clear // UIColor.App.backgroundPrimary
+        self.cashbackButtonBaseView.backgroundColor = .clear
 
         self.profilePictureBaseView.backgroundColor = UIColor.App.highlightPrimary
 
@@ -1088,6 +1111,14 @@ extension RootViewController {
             tipsRootViewControllerLoaded = true
         }
 
+        if case .cashback = tab, !cashbackViewControllerLoaded {
+            self.addChildViewController(self.cashbackViewController, toView: self.cashbackBaseView)
+
+            // Cashback Callbacks if needed
+
+            cashbackViewControllerLoaded = true
+        }
+
         if case .casino = tab, !casinoViewControllerLoaded {
             self.searchButton.isHidden = true
 
@@ -1305,6 +1336,12 @@ extension RootViewController {
         self.selectedTabItem = .tips
     }
 
+    @objc private func didTapCashbackTabItem() {
+        self.flipToSportsbookIfNeeded()
+
+        self.selectedTabItem = .cashback
+    }
+
     @objc private func didTapCasinoTabItem() {
         self.flipToCasinoIfNeeded()
 
@@ -1326,6 +1363,7 @@ extension RootViewController {
         self.preLiveBaseView.isHidden = true
         self.liveBaseView.isHidden = true
         self.tipsBaseView.isHidden = true
+        self.cashbackBaseView.isHidden = true
 
         self.redrawButtonButtons()
     }
@@ -1337,6 +1375,7 @@ extension RootViewController {
         self.preLiveBaseView.isHidden = false
         self.liveBaseView.isHidden = true
         self.tipsBaseView.isHidden = true
+        self.cashbackBaseView.isHidden = true
 
         self.redrawButtonButtons()
     }
@@ -1348,6 +1387,7 @@ extension RootViewController {
         self.preLiveBaseView.isHidden = true
         self.liveBaseView.isHidden = false
         self.tipsBaseView.isHidden = true
+        self.cashbackBaseView.isHidden = true
 
         self.redrawButtonButtons()
     }
@@ -1359,7 +1399,19 @@ extension RootViewController {
         self.preLiveBaseView.isHidden = true
         self.liveBaseView.isHidden = true
         self.tipsBaseView.isHidden = false
+        self.cashbackBaseView.isHidden = true
 
+        self.redrawButtonButtons()
+    }
+
+    func selectCashbackTabBarItem() {
+        self.loadChildViewControllerIfNeeded(tab: .cashback)
+
+        self.homeBaseView.isHidden = true
+        self.preLiveBaseView.isHidden = true
+        self.liveBaseView.isHidden = true
+        self.tipsBaseView.isHidden = true
+        self.cashbackBaseView.isHidden = false
         self.redrawButtonButtons()
     }
 
@@ -1382,7 +1434,8 @@ extension RootViewController {
             liveIconImageView.setImageColor(color: UIColor.App.iconPrimary)
             tipsTitleLabel.textColor = UIColor.App.iconPrimary
             tipsIconImageView.setImageColor(color: UIColor.App.iconPrimary)
-
+            cashbackTitleLabel.textColor = UIColor.App.iconPrimary
+            cashbackIconImageView.setImageColor(color: UIColor.App.iconPrimary)
         case .preLive:
             sportsButtonBaseView.alpha = self.activeButtonAlpha
             homeTitleLabel.textColor = UIColor.App.iconPrimary
@@ -1393,7 +1446,8 @@ extension RootViewController {
             liveIconImageView.setImageColor(color: UIColor.App.iconPrimary)
             tipsTitleLabel.textColor = UIColor.App.iconPrimary
             tipsIconImageView.setImageColor(color: UIColor.App.iconPrimary)
-
+            cashbackTitleLabel.textColor = UIColor.App.iconPrimary
+            cashbackIconImageView.setImageColor(color: UIColor.App.iconPrimary)
         case .live:
             liveButtonBaseView.alpha = self.activeButtonAlpha
             homeTitleLabel.textColor = UIColor.App.iconPrimary
@@ -1404,7 +1458,8 @@ extension RootViewController {
             liveIconImageView.setImageColor(color: UIColor.App.highlightPrimary)
             tipsTitleLabel.textColor = UIColor.App.iconPrimary
             tipsIconImageView.setImageColor(color: UIColor.App.iconPrimary)
-
+            cashbackTitleLabel.textColor = UIColor.App.iconPrimary
+            cashbackIconImageView.setImageColor(color: UIColor.App.iconPrimary)
         case .tips:
             tipsButtonBaseView.alpha = self.activeButtonAlpha
             homeTitleLabel.textColor = UIColor.App.iconPrimary
@@ -1415,7 +1470,20 @@ extension RootViewController {
             liveIconImageView.setImageColor(color: UIColor.App.iconPrimary)
             tipsTitleLabel.textColor = UIColor.App.highlightPrimary
             tipsIconImageView.setImageColor(color: UIColor.App.highlightPrimary)
-
+            cashbackTitleLabel.textColor = UIColor.App.iconPrimary
+            cashbackIconImageView.setImageColor(color: UIColor.App.iconPrimary)
+        case .cashback:
+            cashbackButtonBaseView.alpha = self.activeButtonAlpha
+            homeTitleLabel.textColor = UIColor.App.iconPrimary
+            homeIconImageView.setImageColor(color: UIColor.App.iconPrimary)
+            sportsTitleLabel.textColor = UIColor.App.iconPrimary
+            sportsIconImageView.setImageColor(color: UIColor.App.iconPrimary)
+            liveTitleLabel.textColor = UIColor.App.iconPrimary
+            liveIconImageView.setImageColor(color: UIColor.App.iconPrimary)
+            tipsTitleLabel.textColor = UIColor.App.iconPrimary
+            tipsIconImageView.setImageColor(color: UIColor.App.iconPrimary)
+            cashbackTitleLabel.textColor = UIColor.App.highlightPrimary
+            cashbackIconImageView.setImageColor(color: UIColor.App.highlightPrimary)
         case .casino:
             homeTitleLabel.textColor = UIColor.App.iconPrimary
             homeIconImageView.setImageColor(color: UIColor.App.iconPrimary)

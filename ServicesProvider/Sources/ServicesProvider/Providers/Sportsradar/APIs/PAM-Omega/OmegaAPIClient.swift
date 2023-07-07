@@ -118,6 +118,8 @@ enum OmegaAPIClient {
     case getDocumentTypes
     case getUserDocuments
     case uploadUserDocument(documentType: String, file: Data, body: Data, header: String)
+    case uploadMultipleUserDocuments(documentType: String,
+                                     files: [String: Data], body: Data, header: String)
 
     case getPayments
     case processDeposit(paymentMethod: String, amount: Double, option: String)
@@ -141,7 +143,7 @@ enum OmegaAPIClient {
 
     case contactUs(firstName: String, lastName: String, email: String, subject: String, message: String)
 
-    case contactSupport(userIdentifier: String, subject: String, message: String)
+    case contactSupport(userIdentifier: String, firstName: String, lastName: String, email: String, subject: String, subjectType: String, message: String)
 
     case getUserConsents
     case setUserConsents(consentVersionIds: [Int]? = nil, unconsentVersionIds: [Int]? = nil)
@@ -213,6 +215,8 @@ extension OmegaAPIClient: Endpoint {
             return "/ps/ips/getUserDocuments"
         case .uploadUserDocument:
             return "/ps/ips/uploadUserDocument"
+        case .uploadMultipleUserDocuments:
+            return "/ps/ips/uploadMultiUserDocument"
 
         case .getPayments:
             return "/ps/ips/getDepositMethods"
@@ -531,6 +535,8 @@ extension OmegaAPIClient: Endpoint {
             return nil
         case .uploadUserDocument:
             return nil
+        case .uploadMultipleUserDocuments:
+            return nil
 
         case .getPayments:
 
@@ -725,6 +731,7 @@ extension OmegaAPIClient: Endpoint {
         case .getDocumentTypes: return .get
         case .getUserDocuments: return .get
         case .uploadUserDocument: return .post
+        case .uploadMultipleUserDocuments: return .post
 
         case .getPayments: return .get
         case .processDeposit: return .post
@@ -771,19 +778,33 @@ extension OmegaAPIClient: Endpoint {
 //                        }
 //                        """
 //            return bodyString.data(using: String.Encoding.utf8) ?? Data()
-        case .contactSupport(let userIdentifier, let subject, let message):
+        case .uploadMultipleUserDocuments( _, _, let body, _):
+            return body
+        case .contactSupport(let userIdentifier, let firstName, let lastName, let email, let subject, let subjectType, let message):
             let bodyString =
             """
             {
-              "request": {
+            "request": {
                 "requester": {
-                  "name": "\(userIdentifier)"
-                },
+                    "name": "\(userIdentifier)",
+                    "email": "\(email)"
+                    },
+                "custom_fields": [
+                    {
+                    "11249444074770": "\(firstName)"
+                    },
+                    {
+                    "11249427898002": "\(lastName)"
+                    },
+                    {
+                    "11096886022546": "\(subjectType)"
+                    }
+                ],
                 "subject": "\(subject)",
                 "comment": {
-                  "body": "\(message)"
+                    "body": "\(message)"
                 }
-              }
+            }
             }
             """
             return bodyString.data(using: String.Encoding.utf8) ?? Data()
@@ -836,6 +857,7 @@ extension OmegaAPIClient: Endpoint {
         case .getDocumentTypes: return false
         case .getUserDocuments: return true
         case .uploadUserDocument: return true
+        case .uploadMultipleUserDocuments: return true
 
         case .getPayments: return true
         case .processDeposit: return true
@@ -887,6 +909,11 @@ extension OmegaAPIClient: Endpoint {
     var headers: HTTP.Headers? {
         switch self {
         case .uploadUserDocument( _, _, _, let header):
+            let customHeaders = [
+                "Content-Type": header
+            ]
+            return customHeaders
+        case .uploadMultipleUserDocuments( _, _, _, let header):
             let customHeaders = [
                 "Content-Type": header
             ]

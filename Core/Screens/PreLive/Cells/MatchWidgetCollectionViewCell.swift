@@ -25,7 +25,7 @@ class MatchWidgetCollectionViewCell: UICollectionViewCell {
     lazy var gradientBorderView: GradientBorderView = {
         var gradientBorderView = GradientBorderView()
         gradientBorderView.translatesAutoresizingMaskIntoConstraints = false
-        gradientBorderView.gradientBorderWidth = 2
+        gradientBorderView.gradientBorderWidth = 1
         gradientBorderView.gradientCornerRadius = 9
         return gradientBorderView
     }()
@@ -43,6 +43,25 @@ class MatchWidgetCollectionViewCell: UICollectionViewCell {
         liveTipLabel.translatesAutoresizingMaskIntoConstraints = false
         return liveTipLabel
     }()
+
+    lazy var cashbackIconImageView: UIImageView = {
+        let imageView = UIImageView()
+        imageView.translatesAutoresizingMaskIntoConstraints = false
+        imageView.image = UIImage(named: "cashback_small_blue_icon")
+        return imageView
+    }()
+
+    lazy var cashbackImageViewBaseTrailingConstraint: NSLayoutConstraint = {
+        let constraint = NSLayoutConstraint()
+        return constraint
+    }()
+
+    lazy var cashbackImageViewLiveTrailingConstraint: NSLayoutConstraint = {
+        let constraint = NSLayoutConstraint()
+        return constraint
+    }()
+
+    @IBOutlet private weak var baseStackView: UIStackView!
 
     @IBOutlet private weak var favoritesIconImageView: UIImageView!
 
@@ -179,10 +198,13 @@ class MatchWidgetCollectionViewCell: UICollectionViewCell {
                     self.topMarginSpaceConstraint.constant = 11
                 }
 
+                self.gradientBorderView.isHidden = false
+
             case .topImage:
                 self.backgroundImageView.isHidden = true
 
                 self.topImageBaseView.isHidden = false
+
                 self.boostedOddBottomLineView.isHidden = true
                 self.boostedTopRightCornerBaseView.isHidden = true
 
@@ -199,6 +221,8 @@ class MatchWidgetCollectionViewCell: UICollectionViewCell {
                 self.teamsHeightConstraint.constant = 67
                 self.topMarginSpaceConstraint.constant = 11
 
+                self.gradientBorderView.isHidden = false
+
             case .boosted:
                 self.backgroundImageView.isHidden = true
 
@@ -212,14 +236,16 @@ class MatchWidgetCollectionViewCell: UICollectionViewCell {
                 self.drawBoostedOddValueBaseView.isHidden = false
                 self.awayBoostedOddValueBaseView.isHidden = false
 
-                self.baseView.layer.borderWidth = 2
-                self.baseView.layer.borderColor = UIColor.App.separatorLine.cgColor
+//                self.baseView.layer.borderWidth = 2
+//                self.baseView.layer.borderColor = UIColor.App.separatorLine.cgColor
                 self.headerLineStackView.alpha = 1.0
                 self.bottomMarginSpaceConstraint.constant = 12
                 self.teamsHeightConstraint.constant = 67
                 self.topMarginSpaceConstraint.constant = 11
 
                 self.setupBoostedOddsSubviews()
+
+                self.gradientBorderView.isHidden = false
 
             case .backgroundImage:
                 self.backgroundImageView.isHidden = false
@@ -274,6 +300,12 @@ class MatchWidgetCollectionViewCell: UICollectionViewCell {
             else {
                 self.favoritesIconImageView.image = UIImage(named: "unselected_favorite_icon")
             }
+        }
+    }
+
+    var hasCashback: Bool = false {
+        didSet {
+            self.cashbackIconImageView.isHidden = !hasCashback
         }
     }
 
@@ -457,6 +489,33 @@ class MatchWidgetCollectionViewCell: UICollectionViewCell {
             self.liveTipView.topAnchor.constraint(equalTo: self.baseView.topAnchor, constant: 12)
         ])
 
+        // Cashback
+        self.baseView.addSubview(self.cashbackIconImageView)
+
+        NSLayoutConstraint.activate([
+            self.cashbackIconImageView.widthAnchor.constraint(equalToConstant: 20),
+            self.cashbackIconImageView.heightAnchor.constraint(equalTo: self.cashbackIconImageView.widthAnchor),
+            self.cashbackIconImageView.centerYAnchor.constraint(equalTo: self.liveTipView.centerYAnchor)
+        ])
+
+        self.cashbackImageViewBaseTrailingConstraint = NSLayoutConstraint(item: self.cashbackIconImageView,
+                                                                          attribute: .trailing,
+                                                                          relatedBy: .equal,
+                                                                          toItem: self.baseView,
+                                                                          attribute: .trailing,
+                                                                          multiplier: 1,
+                                                                          constant: -8)
+        self.cashbackImageViewBaseTrailingConstraint.isActive = true
+
+        self.cashbackImageViewLiveTrailingConstraint = NSLayoutConstraint(item: self.cashbackIconImageView,
+                                                                          attribute: .trailing,
+                                                                          relatedBy: .equal,
+                                                                          toItem: self.liveTipView,
+                                                                          attribute: .leading,
+                                                                          multiplier: 1,
+                                                                          constant: -4)
+        self.cashbackImageViewLiveTrailingConstraint.isActive = false
+
         self.bringSubviewToFront(self.suspendedBaseView)
         self.bringSubviewToFront(self.seeAllBaseView)
 
@@ -484,8 +543,11 @@ class MatchWidgetCollectionViewCell: UICollectionViewCell {
         let longPressGestureRecognizer = UILongPressGestureRecognizer(target: self, action: #selector(didLongPressCard))
         self.participantsBaseView.addGestureRecognizer(longPressGestureRecognizer)
 
+        self.hasCashback = false
+
         self.adjustDesignToCardStyle()
         self.setupWithTheme()
+
     }
 
     override func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {
@@ -504,6 +566,9 @@ class MatchWidgetCollectionViewCell: UICollectionViewCell {
 
         self.backgroundImageGradientLayer.frame = self.backgroundImageView.bounds
         self.locationFlagImageView.layer.cornerRadius = self.locationFlagImageView.frame.size.width / 2
+
+        self.topImageView.roundCorners(corners: [.topRight, .topLeft], radius: 9)
+
     }
 
     override func prepareForReuse() {
@@ -583,6 +648,8 @@ class MatchWidgetCollectionViewCell: UICollectionViewCell {
 
         self.isFavorite = false
 
+        self.hasCashback = false
+
         self.leftOutcomeDisabled = false
         self.middleOutcomeDisabled = false
         self.rightOutcomeDisabled = false
@@ -592,6 +659,7 @@ class MatchWidgetCollectionViewCell: UICollectionViewCell {
 
         self.adjustDesignToCardStyle()
         self.setupWithTheme()
+
     }
 
     func cellDidDisappear() {
@@ -921,13 +989,19 @@ class MatchWidgetCollectionViewCell: UICollectionViewCell {
 
         if viewModel.isLiveMatch {
             self.liveMatchDotBaseView.isHidden = false
-            self.gradientBorderView.isHidden = false
+            //self.gradientBorderView.isHidden = false
             self.liveTipView.isHidden = false
+
+            self.cashbackImageViewBaseTrailingConstraint.isActive = false
+            self.cashbackImageViewLiveTrailingConstraint.isActive = true
         }
         else {
             self.liveMatchDotBaseView.isHidden = true
-            self.gradientBorderView.isHidden = true
+            //self.gradientBorderView.isHidden = true
             self.liveTipView.isHidden = true
+
+            self.cashbackImageViewBaseTrailingConstraint.isActive = true
+            self.cashbackImageViewLiveTrailingConstraint.isActive = false
         }
 
         self.liveMatchDotImageView.isHidden = true
@@ -1210,6 +1284,16 @@ class MatchWidgetCollectionViewCell: UICollectionViewCell {
         }
 
         self.isFavorite = Env.favoritesManager.isEventFavorite(eventId: viewModel.match.id)
+
+        // TEST CASHBACK
+        if viewModel.matchWidgetType == .normal {
+            if viewModel.match.sport.alphaId == "FBL" {
+                self.hasCashback = true
+            }
+            else {
+                self.hasCashback = false
+            }
+        }
     }
 
     //

@@ -523,15 +523,25 @@ extension SportRadarModels {
 
     struct UserDocument: Codable {
         var documentType: String
-        var fileName: String
+        var fileName: String?
         var status: String
         var uploadDate: String
+        var userDocumentFiles: [UserDocumentFile]?
 
         enum CodingKeys: String, CodingKey {
             case documentType = "documentType"
             case fileName = "fileName"
             case status = "status"
             case uploadDate = "uploadDate"
+            case userDocumentFiles = "userDocumentFiles"
+        }
+    }
+
+    struct UserDocumentFile: Codable {
+        var fileName: String
+
+        enum CodingKeys: String, CodingKey {
+            case fileName = "fileName"
         }
     }
 

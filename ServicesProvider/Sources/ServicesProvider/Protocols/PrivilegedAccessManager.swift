@@ -57,6 +57,7 @@ protocol PrivilegedAccessManager {
     func getDocumentTypes() -> AnyPublisher<DocumentTypesResponse, ServiceProviderError>
     func getUserDocuments() -> AnyPublisher<UserDocumentsResponse, ServiceProviderError>
     func uploadUserDocument(documentType: String, file: Data, fileName: String) -> AnyPublisher<UploadDocumentResponse, ServiceProviderError>
+    func uploadMultipleUserDocuments(documentType: String, files: [String: Data]) -> AnyPublisher<UploadDocumentResponse, ServiceProviderError>
 
     func getPayments() -> AnyPublisher<SimplePaymentMethodsResponse, ServiceProviderError>
     func processDeposit(paymentMethod: String, amount: Double, option: String) -> AnyPublisher<ProcessDepositResponse, ServiceProviderError>
@@ -79,7 +80,7 @@ protocol PrivilegedAccessManager {
     func optOutBonus(partyId: String, code: String) -> AnyPublisher<BasicResponse, ServiceProviderError>
 
     func contactUs(firstName: String, lastName: String, email: String, subject: String, message: String) -> AnyPublisher<BasicResponse, ServiceProviderError>
-    func contactSupport(userIdentifier: String, subject: String, message: String) -> AnyPublisher<SupportResponse, ServiceProviderError>
+    func contactSupport(userIdentifier: String, firstName: String, lastName: String, email: String, subject: String, subjectType: String , message: String) -> AnyPublisher<SupportResponse, ServiceProviderError>
 
     func getUserConsents() -> AnyPublisher<[UserConsent], ServiceProviderError>
 

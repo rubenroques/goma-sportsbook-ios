@@ -36,6 +36,11 @@ class MyTicketTableViewCell: UITableViewCell {
     @IBOutlet private weak var winningsTitleLabel: UILabel!
     @IBOutlet private weak var winningsSubtitleLabel: UILabel!
 
+
+    @IBOutlet private weak var cashbackInfoBaseView: UIView!
+    @IBOutlet private weak var cashbackInfoView: CashbackInfoView!
+    @IBOutlet private weak var cashbackValueLabel: UILabel!
+
     @IBOutlet private weak var cashoutBaseView: UIView!
     @IBOutlet private weak var cashoutButton: UIButton!
     @IBOutlet private weak var partialCashoutFilterButton: UIButton!
@@ -54,6 +59,16 @@ class MyTicketTableViewCell: UITableViewCell {
     @IBOutlet private weak var originalAmountValueLabel: UILabel!
     @IBOutlet private weak var returnedAmountValueLabel: UILabel!
 
+    @IBOutlet private weak var cashbackIconImageView: UIImageView!
+    @IBOutlet private weak var cashbackUsedBaseView: UIView!
+    @IBOutlet private weak var cashbackUsedTitleLabel: UILabel!
+
+    // Custom views
+    lazy var learnMoreBaseView: CashbackLearnMoreView = {
+        let view = CashbackLearnMoreView()
+        view.translatesAutoresizingMaskIntoConstraints = false
+        return view
+    }()
     // Constraints
 //    @IBOutlet private weak var stackBottomToPartialConstraint: NSLayoutConstraint!
 //    @IBOutlet private weak var stackBottomToContainerConstraint: NSLayoutConstraint!
@@ -104,11 +119,26 @@ class MyTicketTableViewCell: UITableViewCell {
         }
     }
 
+    var hasCashback: Bool = false {
+        didSet {
+            self.cashbackIconImageView.isHidden = !hasCashback
+            self.cashbackInfoBaseView.isHidden = !hasCashback
+            self.cashbackValueLabel.isHidden = !hasCashback
+        }
+    }
+
+    var usedCashback: Bool = false {
+        didSet {
+            self.cashbackUsedBaseView.isHidden = !usedCashback
+        }
+    }
+
     var snapshot: UIImage?
 
     var needsHeightRedraw: ((Bool) -> Void)?
     var tappedShareAction: (() -> Void)?
     var tappedMatchDetail: ((String) -> Void)?
+    var shouldShowCashbackInfo: (() -> Void)?
     
     var selectedIdPublisher: CurrentValueSubject<String, Never> = .init("")
 
@@ -162,9 +192,49 @@ class MyTicketTableViewCell: UITableViewCell {
 
         self.returnedAmountValueLabel.text = "\(localized("returned"))\n€0.10"
 
+        self.cashbackUsedTitleLabel.text = localized("used_cashback").uppercased()
+        self.cashbackUsedTitleLabel.font = AppFont.with(type: .bold, size: 9)
+
         self.hasPartialCashoutReturned = false
 
+        self.hasCashback = false
+
+        self.usedCashback = false
+
+        self.cashbackInfoView.didTapInfoAction = { [weak self] in
+            print("TAPPED INFO CASHBACK")
+
+            UIView.animate(withDuration: 0.5, animations: {
+                self?.learnMoreBaseView.alpha = 1
+            }) { (completed) in
+                if completed {
+                    DispatchQueue.main.asyncAfter(deadline: .now() + 5.0) {
+                        UIView.animate(withDuration: 0.5) {
+                            self?.learnMoreBaseView.alpha = 0
+                        }
+                    }
+                }
+            }
+        }
+
+        self.baseView.addSubview(self.learnMoreBaseView)
+
+        NSLayoutConstraint.activate([
+
+            self.learnMoreBaseView.bottomAnchor.constraint(equalTo: self.cashbackInfoView.topAnchor, constant: -10),
+            self.learnMoreBaseView.trailingAnchor.constraint(equalTo: self.cashbackInfoView.trailingAnchor, constant: 10)
+
+        ])
+
+        self.learnMoreBaseView.didTapLearnMoreAction = { [weak self] in
+
+            self?.shouldShowCashbackInfo?()
+        }
+
+        self.learnMoreBaseView.alpha = 0
+
         self.setupWithTheme()
+
     }
 
     override func prepareForReuse() {
@@ -199,12 +269,18 @@ class MyTicketTableViewCell: UITableViewCell {
         self.winningsSubtitleLabel.text = "-"
 
         self.hasPartialCashoutReturned = false
+
+        self.hasCashback = false
+
+        self.usedCashback = false
     }
 
     override func layoutSubviews() {
         super.layoutSubviews()
 
         self.freebetBaseView.layer.cornerRadius = self.freebetBaseView.frame.height / 2
+
+        self.cashbackUsedBaseView.layer.cornerRadius = CornerRadius.status
     }
 
     override func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {
@@ -292,6 +368,12 @@ class MyTicketTableViewCell: UITableViewCell {
         self.partialCashoutButton.layer.cornerRadius = CornerRadius.button
         self.partialCashoutButton.layer.masksToBounds = true
         self.partialCashoutButton.backgroundColor = .clear
+
+        self.cashbackIconImageView.backgroundColor = .clear
+
+        self.cashbackUsedBaseView.backgroundColor = UIColor.App.highlightSecondary
+
+        self.cashbackUsedTitleLabel.textColor = UIColor.App.buttonTextPrimary
     }
 
     func configureCashoutButton(withState state: MyTicketCellViewModel.CashoutButtonState) {
@@ -551,6 +633,7 @@ class MyTicketTableViewCell: UITableViewCell {
             .store(in: &cancellables)
 
         self.viewModel?.requestCashoutAvailability()
+
     }
 
     func setupPartialCashoutSlider() {

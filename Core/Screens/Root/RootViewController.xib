@@ -29,6 +29,10 @@
                 <outlet property="anonymousUserMenuImageView" destination="86f-DC-pBV" id="lz2-Rt-bO7"/>
                 <outlet property="bottomSafeAreaView" destination="fh2-pN-wGO" id="mH4-JS-0da"/>
                 <outlet property="cancelUnlockAppButton" destination="EUb-fi-1Mi" id="fkP-On-YfV"/>
+                <outlet property="cashbackBaseView" destination="iEA-Up-vUl" id="Ybg-CT-5Kp"/>
+                <outlet property="cashbackButtonBaseView" destination="LCs-et-jR5" id="DCU-0Z-hPN"/>
+                <outlet property="cashbackIconImageView" destination="iBB-EE-bdq" id="iwy-jH-3zt"/>
+                <outlet property="cashbackTitleLabel" destination="mdF-Bt-dle" id="ypr-DO-kk8"/>
                 <outlet property="casinoBaseView" destination="yX5-sK-euo" id="6X0-49-aNC"/>
                 <outlet property="casinoBottomView" destination="TwO-uo-g7m" id="ZLp-UG-4yE"/>
                 <outlet property="casinoButtonBaseView" destination="WaX-Xt-ClH" id="dTX-6J-5XO"/>
@@ -162,10 +166,15 @@
                                         <view hidden="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="wEK-PC-Y6d">
                                             <rect key="frame" x="0.0" y="0.0" width="430" height="745"/>
                                         </view>
+                                        <view hidden="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="iEA-Up-vUl">
+                                            <rect key="frame" x="0.0" y="0.0" width="430" height="745"/>
+                                        </view>
                                     </subviews>
                                     <constraints>
                                         <constraint firstItem="wEK-PC-Y6d" firstAttribute="top" secondItem="Su0-qa-MeF" secondAttribute="top" id="29U-sD-Rqn"/>
                                         <constraint firstAttribute="bottom" secondItem="Fxl-nZ-JeH" secondAttribute="bottom" id="2Ev-bb-VF8"/>
+                                        <constraint firstItem="iEA-Up-vUl" firstAttribute="top" secondItem="Su0-qa-MeF" secondAttribute="top" id="3ae-Dx-aVN"/>
+                                        <constraint firstAttribute="bottom" secondItem="iEA-Up-vUl" secondAttribute="bottom" id="7EC-MM-O0e"/>
                                         <constraint firstItem="Fxl-nZ-JeH" firstAttribute="top" secondItem="Su0-qa-MeF" secondAttribute="top" id="7ft-1n-StH"/>
                                         <constraint firstItem="wEK-PC-Y6d" firstAttribute="leading" secondItem="Su0-qa-MeF" secondAttribute="leading" id="Bgj-9z-hMx"/>
                                         <constraint firstAttribute="trailing" secondItem="kSr-MY-svK" secondAttribute="trailing" id="E0G-Og-73N"/>
@@ -173,7 +182,9 @@
                                         <constraint firstItem="kSr-MY-svK" firstAttribute="leading" secondItem="Su0-qa-MeF" secondAttribute="leading" id="KYy-WJ-WRc"/>
                                         <constraint firstAttribute="trailing" secondItem="xew-dh-4hf" secondAttribute="trailing" id="OhJ-38-ea9"/>
                                         <constraint firstItem="kSr-MY-svK" firstAttribute="top" secondItem="Su0-qa-MeF" secondAttribute="top" id="P6z-Hk-G5C"/>
+                                        <constraint firstAttribute="trailing" secondItem="iEA-Up-vUl" secondAttribute="trailing" id="P9W-jo-tjf"/>
                                         <constraint firstAttribute="bottom" secondItem="kSr-MY-svK" secondAttribute="bottom" id="Tg8-qk-S6L"/>
+                                        <constraint firstItem="iEA-Up-vUl" firstAttribute="leading" secondItem="Su0-qa-MeF" secondAttribute="leading" id="YsW-3C-Bv9"/>
                                         <constraint firstItem="xew-dh-4hf" firstAttribute="top" secondItem="Su0-qa-MeF" secondAttribute="top" id="dao-AU-Jt9"/>
                                         <constraint firstAttribute="bottom" secondItem="xew-dh-4hf" secondAttribute="bottom" id="lSF-YZ-d89"/>
                                         <constraint firstAttribute="trailing" secondItem="wEK-PC-Y6d" secondAttribute="trailing" id="m9z-id-Qu7"/>
@@ -189,10 +200,10 @@
                                             <rect key="frame" x="0.0" y="0.0" width="430" height="52"/>
                                             <subviews>
                                                 <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="4rF-OG-Pdw">
-                                                    <rect key="frame" x="0.0" y="0.0" width="95.5" height="52"/>
+                                                    <rect key="frame" x="0.0" y="0.0" width="73" height="52"/>
                                                     <subviews>
                                                         <imageView userInteractionEnabled="NO" contentMode="scaleAspectFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="tabbar_home_icon" translatesAutoresizingMaskIntoConstraints="NO" id="Iba-we-Ish">
-                                                            <rect key="frame" x="38" y="8" width="20" height="20"/>
+                                                            <rect key="frame" x="26.5" y="8" width="20" height="20"/>
                                                             <color key="tintColor" name="iconSecondary"/>
                                                             <constraints>
                                                                 <constraint firstAttribute="width" secondItem="Iba-we-Ish" secondAttribute="height" id="GEk-3a-JGs"/>
@@ -200,7 +211,7 @@
                                                             </constraints>
                                                         </imageView>
                                                         <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Home" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="eiC-RB-6o0">
-                                                            <rect key="frame" x="4" y="30" width="87.5" height="19"/>
+                                                            <rect key="frame" x="4" y="30" width="65" height="19"/>
                                                             <constraints>
                                                                 <constraint firstAttribute="height" constant="19" id="MkI-Ry-rGG"/>
                                                             </constraints>
@@ -219,10 +230,10 @@
                                                     </constraints>
                                                 </view>
                                                 <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="0dg-mr-47t">
-                                                    <rect key="frame" x="111.5" y="0.0" width="95.5" height="52"/>
+                                                    <rect key="frame" x="89" y="0.0" width="73.5" height="52"/>
                                                     <subviews>
                                                         <imageView userInteractionEnabled="NO" contentMode="scaleAspectFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="tabbar_sports_icon" translatesAutoresizingMaskIntoConstraints="NO" id="jq1-az-paT">
-                                                            <rect key="frame" x="38" y="8" width="20" height="20"/>
+                                                            <rect key="frame" x="27" y="8" width="20" height="20"/>
                                                             <color key="tintColor" name="iconSecondary"/>
                                                             <constraints>
                                                                 <constraint firstAttribute="width" secondItem="jq1-az-paT" secondAttribute="height" id="LyC-rB-lHg"/>
@@ -230,7 +241,7 @@
                                                             </constraints>
                                                         </imageView>
                                                         <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Sports" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="8B6-32-WvK">
-                                                            <rect key="frame" x="4" y="30" width="87.5" height="20"/>
+                                                            <rect key="frame" x="4" y="30" width="65.5" height="20"/>
                                                             <fontDescription key="fontDescription" name="Gilroy-Bold" family="Gilroy" pointSize="11"/>
                                                             <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                                             <nil key="highlightedColor"/>
@@ -245,10 +256,10 @@
                                                     </constraints>
                                                 </view>
                                                 <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="F4I-4h-jeW">
-                                                    <rect key="frame" x="223" y="0.0" width="95.5" height="52"/>
+                                                    <rect key="frame" x="178.5" y="0.0" width="73" height="52"/>
                                                     <subviews>
                                                         <imageView userInteractionEnabled="NO" contentMode="scaleAspectFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="tabbar_live_icon" translatesAutoresizingMaskIntoConstraints="NO" id="OrN-gr-CSa">
-                                                            <rect key="frame" x="38" y="8" width="20" height="20"/>
+                                                            <rect key="frame" x="26.5" y="8" width="20" height="20"/>
                                                             <color key="tintColor" name="iconSecondary"/>
                                                             <constraints>
                                                                 <constraint firstAttribute="width" constant="20" id="IK8-f9-5ky"/>
@@ -256,7 +267,7 @@
                                                             </constraints>
                                                         </imageView>
                                                         <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Live" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="0RE-N3-etL">
-                                                            <rect key="frame" x="4" y="30" width="87.5" height="20"/>
+                                                            <rect key="frame" x="4" y="30" width="65" height="20"/>
                                                             <fontDescription key="fontDescription" name="Gilroy-Bold" family="Gilroy" pointSize="11"/>
                                                             <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                                             <nil key="highlightedColor"/>
@@ -271,10 +282,10 @@
                                                     </constraints>
                                                 </view>
                                                 <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Wao-as-qb6">
-                                                    <rect key="frame" x="334.5" y="0.0" width="95.5" height="52"/>
+                                                    <rect key="frame" x="267.5" y="0.0" width="73.5" height="52"/>
                                                     <subviews>
                                                         <imageView userInteractionEnabled="NO" contentMode="scaleAspectFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="tabbar_tips_icon" translatesAutoresizingMaskIntoConstraints="NO" id="HPd-kB-5DR">
-                                                            <rect key="frame" x="38" y="8" width="20" height="20"/>
+                                                            <rect key="frame" x="26.5" y="8" width="20" height="20"/>
                                                             <color key="tintColor" name="iconSecondary"/>
                                                             <constraints>
                                                                 <constraint firstAttribute="width" secondItem="HPd-kB-5DR" secondAttribute="height" multiplier="1:1" id="F4t-lV-Y03"/>
@@ -282,7 +293,7 @@
                                                             </constraints>
                                                         </imageView>
                                                         <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Tips" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="r8X-CO-dLy">
-                                                            <rect key="frame" x="4" y="30" width="87.5" height="20"/>
+                                                            <rect key="frame" x="4" y="30" width="65.5" height="20"/>
                                                             <fontDescription key="fontDescription" name="Gilroy-Bold" family="Gilroy" pointSize="11"/>
                                                             <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                                             <nil key="highlightedColor"/>
@@ -296,14 +307,42 @@
                                                         <constraint firstAttribute="bottom" secondItem="r8X-CO-dLy" secondAttribute="bottom" constant="2" id="hg5-qD-FQZ"/>
                                                     </constraints>
                                                 </view>
+                                                <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="LCs-et-jR5">
+                                                    <rect key="frame" x="357" y="0.0" width="73" height="52"/>
+                                                    <subviews>
+                                                        <imageView userInteractionEnabled="NO" contentMode="scaleAspectFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="cashback_icon" translatesAutoresizingMaskIntoConstraints="NO" id="iBB-EE-bdq">
+                                                            <rect key="frame" x="26.5" y="8" width="20" height="20"/>
+                                                            <color key="tintColor" name="iconSecondary"/>
+                                                            <constraints>
+                                                                <constraint firstAttribute="width" constant="20" id="EIz-Uh-iFx"/>
+                                                                <constraint firstAttribute="width" secondItem="iBB-EE-bdq" secondAttribute="height" multiplier="1:1" id="gkQ-7j-FGQ"/>
+                                                            </constraints>
+                                                        </imageView>
+                                                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Cashback" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="mdF-Bt-dle">
+                                                            <rect key="frame" x="4" y="30" width="65" height="20"/>
+                                                            <fontDescription key="fontDescription" name="Gilroy-Bold" family="Gilroy" pointSize="11"/>
+                                                            <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                                            <nil key="highlightedColor"/>
+                                                        </label>
+                                                    </subviews>
+                                                    <color key="backgroundColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                                    <constraints>
+                                                        <constraint firstAttribute="bottom" secondItem="mdF-Bt-dle" secondAttribute="bottom" constant="2" id="1mg-kW-SoF"/>
+                                                        <constraint firstItem="iBB-EE-bdq" firstAttribute="centerX" secondItem="LCs-et-jR5" secondAttribute="centerX" id="Mcc-kj-bQK"/>
+                                                        <constraint firstItem="mdF-Bt-dle" firstAttribute="leading" secondItem="LCs-et-jR5" secondAttribute="leading" constant="4" id="w3B-61-gUe"/>
+                                                        <constraint firstItem="mdF-Bt-dle" firstAttribute="centerX" secondItem="LCs-et-jR5" secondAttribute="centerX" id="zcy-rL-KDN"/>
+                                                    </constraints>
+                                                </view>
                                             </subviews>
                                             <constraints>
                                                 <constraint firstItem="HPd-kB-5DR" firstAttribute="centerY" secondItem="Iba-we-Ish" secondAttribute="centerY" id="Hle-oO-Qya"/>
                                                 <constraint firstItem="jq1-az-paT" firstAttribute="centerY" secondItem="Iba-we-Ish" secondAttribute="centerY" id="Qdv-un-hqO"/>
                                                 <constraint firstItem="OrN-gr-CSa" firstAttribute="centerY" secondItem="Iba-we-Ish" secondAttribute="centerY" id="Rlx-VM-xQM"/>
                                                 <constraint firstItem="0RE-N3-etL" firstAttribute="top" secondItem="eiC-RB-6o0" secondAttribute="top" id="ZAH-QJ-PyE"/>
+                                                <constraint firstItem="iBB-EE-bdq" firstAttribute="centerY" secondItem="Iba-we-Ish" secondAttribute="centerY" id="dwM-JO-psS"/>
                                                 <constraint firstItem="8B6-32-WvK" firstAttribute="top" secondItem="eiC-RB-6o0" secondAttribute="top" id="g9n-Pl-AOD"/>
                                                 <constraint firstItem="r8X-CO-dLy" firstAttribute="top" secondItem="eiC-RB-6o0" secondAttribute="top" id="t6g-LW-EI5"/>
+                                                <constraint firstItem="mdF-Bt-dle" firstAttribute="top" secondItem="eiC-RB-6o0" secondAttribute="top" id="yba-UT-ceU"/>
                                             </constraints>
                                         </stackView>
                                         <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="WaX-Xt-ClH">
@@ -675,6 +714,7 @@
         </view>
     </objects>
     <resources>
+        <image name="cashback_icon" width="16" height="14"/>
         <image name="casino_icon" width="10" height="10"/>
         <image name="empty_user_image" width="100" height="100"/>
         <image name="logo_horizontal_left" width="77" height="37"/>

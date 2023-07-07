@@ -22,6 +22,7 @@ struct AnalyticsClient {
         case userLogout
         case myGamesScreen
         case todayScreen
+        case topCompetitionsScreen
         case competitionsScreen
         case changedSport
         case selectedSport(sportId: String)
@@ -71,6 +72,9 @@ struct AnalyticsClient {
             
         case .todayScreen:
             eventTypeKey = "today_screen_appeared"
+
+        case .topCompetitionsScreen:
+            eventTypeKey = "top_competitions_screen_appeared"
             
         case .competitionsScreen:
             eventTypeKey = "competitions_screen_appeared"

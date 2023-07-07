@@ -159,7 +159,27 @@ extension SportRadarModelMapper {
 
     static func userDocument(fromUserDocument internalUserDocument: SportRadarModels.UserDocument) -> UserDocument {
 
+        if let userDocumentFiles = internalUserDocument.userDocumentFiles {
+
+            let mappedUserDocumentFiles = userDocumentFiles.map({ userDocumentFile -> UserDocumentFile in
+
+                let userDocumentFile = Self.userDocumentFile(fromUserDocumentFile: userDocumentFile)
+
+                return userDocumentFile
+
+            })
+
+            return UserDocument(documentType: internalUserDocument.documentType, fileName: internalUserDocument.fileName, status: internalUserDocument.status, uploadDate: internalUserDocument.uploadDate,
+            userDocumentFiles: mappedUserDocumentFiles)
+
+        }
+
         return UserDocument(documentType: internalUserDocument.documentType, fileName: internalUserDocument.fileName, status: internalUserDocument.status, uploadDate: internalUserDocument.uploadDate)
+    }
+
+    static func userDocumentFile(fromUserDocumentFile internalUserDocumentFile: SportRadarModels.UserDocumentFile) -> UserDocumentFile {
+
+        return UserDocumentFile(fileName: internalUserDocumentFile.fileName)
     }
 
     static func uploadDocumentResponse(fromUploadDocumentResponse internalUploadDocumentResponse: SportRadarModels.UploadDocumentResponse) -> UploadDocumentResponse {
@@ -379,7 +399,16 @@ extension SportRadarModelMapper {
 
     static func transactionDetail(fromInternalTransactionDetail internalTransactionDetail: SportRadarModels.TransactionDetail) -> TransactionDetail {
 
-        let transactionType = TransactionType.init(transactionType: internalTransactionDetail.type)
+        var transactionType = TransactionType.init(transactionType: internalTransactionDetail.type)
+
+        if transactionType == .automatedWithdrawalThreshold {
+            let transactionReference = internalTransactionDetail.reference
+            
+            if transactionReference == "Escrow Auto Withdrawal"
+            {
+                transactionType = .automatedWithdrawal
+            }
+        }
 
         return TransactionDetail(id: internalTransactionDetail.id,
                                  dateTime: internalTransactionDetail.dateTime,
@@ -390,7 +419,8 @@ extension SportRadarModelMapper {
                                  postBalanceBonus: internalTransactionDetail.postBalanceBonus,
                                  currency: internalTransactionDetail.currency,
                                  paymentId: internalTransactionDetail.paymentId,
-                                 gameTranId: internalTransactionDetail.gameTranId)
+                                 gameTranId: internalTransactionDetail.gameTranId,
+                                 reference: internalTransactionDetail.reference)
     }
 
     static func grantedBonusesResponse(fromGrantedBonusesResponse internalGrantedBonusesResponse: SportRadarModels.GrantedBonusResponse) -> GrantedBonusResponse {

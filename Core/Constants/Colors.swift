@@ -72,7 +72,7 @@ extension UIColor {
         static let buttonBackgroundSecondary = UIColor(named: "buttonBackgroundSecondary")!
         static let buttonActiveHoverSecondary = UIColor(named: "buttonActiveHoverSecondary")!
 
-        static let buttonActiveHoverTertiary = UIColor(named: "buttonActiveHoverTertiary")
+        static let buttonActiveHoverTertiary = UIColor(named: "buttonActiveHoverTertiary")!
 
         static let buttonBorderTertiary = UIColor(named: "buttonBorderTertiary")!
 
@@ -149,6 +149,14 @@ extension UIColor {
 
         static var navBannerActive: UIColor {
             return UIColor(named: "navBannerActive") ?? Self.backgroundSecondary
+        }
+
+        static var backgroundHeaderGradient1: UIColor {
+            return UIColor(named: "backgroundHeaderGradient1") ?? Self.headerGradient1
+        }
+
+        static var backgroundHeaderGradient2: UIColor {
+            return UIColor(named: "backgroundHeaderGradient2") ?? Self.headerGradient2
         }
 
     }

@@ -458,15 +458,25 @@ public struct UserDocumentsResponse {
 
 public struct UserDocument {
     public var documentType: String
-    public var fileName: String
+    public var fileName: String?
     public var status: String
     public var uploadDate: String
+    public var userDocumentFiles: [UserDocumentFile]?
 
     enum CodingKeys: String, CodingKey {
         case documentType = "documentType"
         case fileName = "fileName"
         case status = "status"
-        case uploadDate = "UploadDate"
+        case uploadDate = "uploadDate"
+        case userDocumentFiles = "userDocumentFiles"
+    }
+}
+
+public struct UserDocumentFile {
+    public var fileName: String
+
+    enum CodingKeys: String, CodingKey {
+        case fileName = "fileName"
     }
 }
 

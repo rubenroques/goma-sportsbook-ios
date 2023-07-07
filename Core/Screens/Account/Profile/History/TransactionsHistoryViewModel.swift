@@ -302,7 +302,8 @@ class TransactionsHistoryViewModel {
 
         let endDate = self.getDateString(date: self.endDatePublisher.value)
 
-        let types = [TransactionType.withdrawal, TransactionType.withdrawalCancel, TransactionType.withdrawalReject]
+        let types = [TransactionType.withdrawal, TransactionType.withdrawalCancel, TransactionType.withdrawalReject,
+            TransactionType.automatedWithdrawalThreshold]
 
         Env.servicesProvider.getTransactionsHistory(startDate: startDate, endDate: endDate, transactionTypes: types, pageNumber: page)
             .receive(on: DispatchQueue.main)

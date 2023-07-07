@@ -45,6 +45,7 @@ class MyTicketsViewModel: NSObject {
     var requestPartialAlertAction: ((String, String) -> Void)?
     var showCashoutSuspendedAction: (() -> Void)?
     var showCashoutState: ((AlertType, String) -> Void)?
+    var shouldShowCashbackInfo: (() -> Void)?
 
     private var matchDetailsDictionary: [String: Match] = [:]
 
@@ -492,7 +493,16 @@ extension MyTicketsViewModel: UITableViewDelegate, UITableViewDataSource {
             cell.needsHeightRedraw = { [weak self] withScroll in
                 self?.redrawTableViewAction?(withScroll)
             }
+
             cell.configure(withBetHistoryEntry: ticketValue, countryCodes: locationsCodes, viewModel: viewModel)
+
+            // TEST CASHBACK
+            if indexPath.row % 2 == 0 {
+                cell.hasCashback = true
+            }
+            else {
+                cell.usedCashback = true
+            }
 
             cell.tappedShareAction = { [weak self] in
                 if let cellSnapshot = cell.snapshot,
@@ -506,6 +516,10 @@ extension MyTicketsViewModel: UITableViewDelegate, UITableViewDataSource {
             cell.tappedMatchDetail = { [weak self] matchId in
                 self?.tappedMatchDetail?(matchId)
 
+            }
+
+            cell.shouldShowCashbackInfo = { [weak self] in
+                self?.shouldShowCashbackInfo?()
             }
 
             return cell

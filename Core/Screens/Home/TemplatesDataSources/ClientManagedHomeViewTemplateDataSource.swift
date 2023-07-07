@@ -128,32 +128,56 @@ class ClientManagedHomeViewTemplateDataSource {
     func fetchAlerts() {
         self.alertsArray = []
 
-        if let isUserEmailVerified = Env.userSessionStore.isUserEmailVerified.value, !isUserEmailVerified {
-            let emailActivationAlertData = ActivationAlert(title: localized("verify_email"),
-                                                           description: localized("app_full_potential"),
-                                                           linkLabel: localized("verify_my_account"),
-                                                           alertType: .email)
+//        if let isUserEmailVerified = Env.userSessionStore.isUserEmailVerified.value, !isUserEmailVerified {
+//            let emailActivationAlertData = ActivationAlert(title: localized("verify_email"),
+//                                                           description: localized("app_full_potential"),
+//                                                           linkLabel: localized("verify_my_account"),
+//                                                           alertType: .email)
+//
+//            alertsArray.append(emailActivationAlertData)
+//        }
 
-            alertsArray.append(emailActivationAlertData)
-        }
+//        if let isUserProfileComplete = Env.userSessionStore.isUserProfileComplete, !isUserProfileComplete {
+//            let completeProfileAlertData = ActivationAlert(title: localized("complete_your_profile"),
+//                                                           description: localized("complete_profile_description"),
+//                                                           linkLabel: localized("finish_up_profile"),
+//                                                           alertType: .profile)
+//            alertsArray.append(completeProfileAlertData)
+//        }
 
-        if let isUserProfileComplete = Env.userSessionStore.isUserProfileComplete, !isUserProfileComplete {
-            let completeProfileAlertData = ActivationAlert(title: localized("complete_your_profile"),
-                                                           description: localized("complete_profile_description"),
-                                                           linkLabel: localized("finish_up_profile"),
-                                                           alertType: .profile)
-            alertsArray.append(completeProfileAlertData)
-        }
+        Env.userSessionStore.userKnowYourCustomerStatusPublisher
+            .receive(on: DispatchQueue.main)
+            .sink(receiveValue: { [weak self] kycStatus in
 
-        if let userKnowYourCustomerStatus = Env.userSessionStore.userKnowYourCustomerStatus,
-            userKnowYourCustomerStatus == .request {
-            let uploadDocumentsAlertData = ActivationAlert(title: localized("document_validation_required"),
-                                                           description: localized("document_validation_required_description"),
-                                                           linkLabel: localized("complete_your_verification"),
-                                                           alertType: .documents)
+                if kycStatus == .request {
 
-            alertsArray.append(uploadDocumentsAlertData)
-        }
+                    if let alertsArray = self?.alertsArray,
+                       !alertsArray.contains(where: {
+                        $0.alertType == .documents
+                       }) {
+                        let uploadDocumentsAlertData = ActivationAlert(title: localized("document_validation_required"),
+                                                                       description: localized("document_validation_required_description"),
+                                                                       linkLabel: localized("complete_your_verification"),
+                                                                       alertType: .documents)
+
+                        self?.alertsArray.append(uploadDocumentsAlertData)
+                    }
+                }
+                else {
+                    self?.alertsArray = []
+                }
+            })
+            .store(in: &cancellables)
+
+//        if let userKnowYourCustomerStatus = Env.userSessionStore.userKnowYourCustomerStatus,
+//            userKnowYourCustomerStatus == .request {
+//            let uploadDocumentsAlertData = ActivationAlert(title: localized("document_validation_required"),
+//                                                           description: localized("document_validation_required_description"),
+//                                                           linkLabel: localized("complete_your_verification"),
+//                                                           alertType: .documents)
+//
+//            alertsArray.append(uploadDocumentsAlertData)
+//        }
         
     }
 

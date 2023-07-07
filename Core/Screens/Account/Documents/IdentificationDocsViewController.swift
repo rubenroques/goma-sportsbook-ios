@@ -11,455 +11,6 @@ import ServicesProvider
 import IdensicMobileSDK
 import CryptoKit
 
-class IdentificationDocsViewModel {
-
-    // MARK: Private Properties
-    private var cancellables = Set<AnyCancellable>()
-
-    // MARK: Public Properties
-    var documents: [DocumentInfo] = []
-    var requiredDocumentTypes: [DocumentType] = []
-
-    var identificationDocuments: [DocumentInfo] = []
-    var proofAddressDocuments: [DocumentInfo] = []
-
-    var hasLoadedDocumentTypes: CurrentValueSubject<Bool, Never> = .init(false)
-    var hasLoadedUserDocuments: CurrentValueSubject<Bool, Never> = .init(false)
-    var isLoadingPublisher: CurrentValueSubject<Bool, Never> = .init(false)
-    var hasDocumentsProcessed: CurrentValueSubject<Bool, Never> = .init(false)
-
-    var sumsubAccessTokenPublisher: CurrentValueSubject<String, Never> = .init("")
-
-    var shouldReloadData: (() -> Void)?
-
-    let dateFormatter = DateFormatter()
-
-    init() {
-        self.setupPublishers()
-
-        self.getDocumentTypes()
-
-    }
-
-    func getSumsubAccessToken(levelName: String) {
-
-        self.isLoadingPublisher.send(true)
-
-        let userId = Env.userSessionStore.userProfilePublisher.value?.username ?? ""
-
-        Env.servicesProvider.sumsubDataProvider?.getSumsubAccessToken(userId: userId, levelName: levelName)
-            .receive(on: DispatchQueue.main)
-            .sink(receiveCompletion: { [weak self] completion in
-                switch completion {
-                case .failure(let error):
-                    print("SUMSUB ACCESS TOKEN ERROR: \(error)")
-
-                    self?.isLoadingPublisher.send(false)
-
-                case .finished:
-                    ()
-                }
-            }, receiveValue: { [weak self] accessTokenResponse in
-                print("SUMSUB ACCESS TOKEN RESPONSE: \(accessTokenResponse)")
-
-                if let accessToken = accessTokenResponse.token {
-                    self?.sumsubAccessTokenPublisher.send(accessToken)
-                }
-
-                self?.isLoadingPublisher.send(false)
-
-            })
-            .store(in: &cancellables)
-
-    }
-
-    func getSumSubDocuments() {
-
-        self.isLoadingPublisher.send(true)
-        self.hasLoadedUserDocuments.send(false)
-        self.hasDocumentsProcessed.send(false)
-
-        let userId = Env.userSessionStore.userProfilePublisher.value?.username ?? ""
-
-        Env.servicesProvider.sumsubDataProvider?.getApplicantData(userId: userId)
-            .receive(on: DispatchQueue.main)
-            .sink(receiveCompletion: { [weak self] completion in
-                switch completion {
-                case .failure(let error):
-                    print("SUMSUB DATA ERROR: \(error)")
-
-                    self?.isLoadingPublisher.send(false)
-
-                case .finished:
-                    ()
-                }
-            }, receiveValue: { [weak self] applicantDataResponse in
-                print("SUMSUB DATA RESPONSE: \(applicantDataResponse)")
-
-                if let requiredDocumentTypes = self?.requiredDocumentTypes {
-                    self?.processSumsubDocuments(documentTypes: requiredDocumentTypes, applicantDataResponse: applicantDataResponse)
-                }
-
-                self?.getUserDocuments()
-
-            })
-            .store(in: &cancellables)
-    }
-
-    private func setupPublishers() {
-
-        Publishers.CombineLatest(self.hasLoadedDocumentTypes, self.hasLoadedUserDocuments)
-            .sink(receiveValue: { [weak self] hasLoadedDocumentTypes, hasLoadedUserDocuments in
-                if hasLoadedDocumentTypes && hasLoadedUserDocuments {
-                    self?.isLoadingPublisher.send(false)
-                    self?.shouldReloadData?()
-                }
-            })
-            .store(in: &cancellables)
-    }
-
-    private func getDocumentTypes() {
-
-        self.isLoadingPublisher.send(true)
-
-        Env.servicesProvider.getDocumentTypes()
-            .receive(on: DispatchQueue.main)
-            .sink(receiveCompletion: { [weak self] completion in
-                switch completion {
-                case .finished:
-                    ()
-                case .failure(let error):
-                    self?.isLoadingPublisher.send(false)
-                }
-
-            }, receiveValue: { [weak self] documentTypesResponse in
-
-                let requiredDocumentTypes = documentTypesResponse.documentTypes.filter({
-                    $0.documentTypeGroup == .identityCard  ||
-                    $0.documentTypeGroup == .residenceId ||
-                    $0.documentTypeGroup == .drivingLicense ||
-                    $0.documentTypeGroup == .passport ||
-                    $0.documentTypeGroup == .proofOfAddress
-                })
-
-                self?.requiredDocumentTypes.append(contentsOf: requiredDocumentTypes)
-
-                self?.hasLoadedDocumentTypes.send(true)
-
-                self?.getSumSubDocuments()
-            })
-            .store(in: &cancellables)
-    }
-
-    private func getUserDocuments() {
-
-        Env.servicesProvider.getUserDocuments()
-            .receive(on: DispatchQueue.main)
-            .sink(receiveCompletion: { [weak self] completion in
-                switch completion {
-                case .finished:
-                    ()
-                case .failure(let error):
-                    self?.isLoadingPublisher.send(false)
-                }
-
-            }, receiveValue: { [weak self] userDocumentsResponse in
-
-                let userDocuments = userDocumentsResponse.userDocuments
-
-                if let requiredDocumentTypes = self?.requiredDocumentTypes {
-                    self?.processDocuments(documentTypes: requiredDocumentTypes, userDocuments: userDocuments)
-                }
-
-            })
-            .store(in: &cancellables)
-    }
-
-    private func clearDocumentsData() {
-        self.documents = []
-        self.identificationDocuments = []
-        self.proofAddressDocuments = []
-
-    }
-
-    private func processSumsubDocuments(documentTypes: [DocumentType], applicantDataResponse: ApplicantDataResponse) {
-
-        self.clearDocumentsData()
-
-        var documentFilesInfo = [DocumentFileInfo]()
-
-        if let docTypes = applicantDataResponse.info?.applicantDocs {
-
-            for docType in docTypes {
-
-                let docId = docType.docType
-
-                let docTypeGroup = DocumentTypeGroup(externalCode: docId)
-
-                let docName = docTypeGroup?.codeName ?? ""
-
-                var docStatus = FileState.pendingApproved
-
-                var retry: Bool = true
-
-                self.dateFormatter.dateFormat = "yyyy-MM-dd HH:mm:ssZ"
-                var uploadDate: Date? = nil
-
-                // Check documents state
-                if let levelName = applicantDataResponse.reviewData?.levelName,
-                   let reviewStatus = applicantDataResponse.reviewData?.reviewStatus,
-                   let docTypeGroup = docTypeGroup {
-
-                    // Doc in same level group
-                    if levelName == docTypeGroup.levelName {
-
-                        uploadDate = self.dateFormatter.date(from: applicantDataResponse.reviewData?.createDate ?? "")
-
-                        if reviewStatus == "completed" {
-                            if let reviewResult = applicantDataResponse.reviewData?.reviewResult?.reviewAnswer,
-                               reviewResult == "RED" {
-                                docStatus = .rejected
-
-                                if let reviewRejectType = applicantDataResponse.reviewData?.reviewResult?.reviewRejectType {
-                                    retry = reviewRejectType == "RETRY" ? true : false
-                                }
-                            }
-                            else if let reviewResult = applicantDataResponse.reviewData?.reviewResult?.reviewAnswer,
-                                    reviewResult == "GREEN" {
-                                docStatus = .approved
-
-                                retry = false
-                            }
-                        }
-                        else if reviewStatus == "init" {
-                            if let reviewResult = applicantDataResponse.reviewData?.reviewResult?.reviewAnswer,
-                               reviewResult == "RED" {
-                                docStatus = .rejected
-
-                                if let reviewRejectType = applicantDataResponse.reviewData?.reviewResult?.reviewRejectType {
-                                    retry = reviewRejectType == "RETRY" ? true : false
-                                }
-                            }
-                            else if let reviewResult = applicantDataResponse.reviewData?.reviewResult?.reviewAnswer,
-                                    reviewResult == "GREEN" {
-                                docStatus = .incomplete
-
-                                retry = true
-                            }
-                        }
-                        else {
-                            docStatus = .pendingApproved
-                            retry = false
-                        }
-                    }
-                    else {
-                        if let reviewResult = applicantDataResponse.reviewData?.reviewResult?.reviewAnswer,
-                           reviewResult == "RED" {
-                            docStatus = .rejected
-
-                            if let reviewRejectType = applicantDataResponse.reviewData?.reviewResult?.reviewRejectType {
-                                retry = reviewRejectType == "RETRY" ? true : false
-                            }
-                        }
-                        else if let reviewResult = applicantDataResponse.reviewData?.reviewResult?.reviewAnswer,
-                                reviewResult == "GREEN" {
-                            docStatus = .approved
-
-                            retry = false
-                        }
-                    }
-
-                }
-
-                let docFileInfo = DocumentFileInfo(id: docId, name: docName, status: docStatus, uploadDate: uploadDate, retry: retry, documentTypeGroup: docTypeGroup ?? .none)
-
-                documentFilesInfo.append(docFileInfo)
-            }
-        }
-
-        // Associate docFileInfos to documentTypes
-        for documentType in documentTypes {
-
-            let documentTypeCode = DocumentTypeCode(code: documentType.documentType)
-
-            if let documentTypeGroup = documentType.documentTypeGroup {
-
-                let mappedDocumentTypeGroup = ServiceProviderModelMapper.documentTypeGroup(fromServiceProviderDocumentTypeGroup: documentTypeGroup)
-
-                let uploadedFiles = documentFilesInfo.filter( {
-                    $0.documentTypeGroup == mappedDocumentTypeGroup
-                })
-
-                let documentInfo = DocumentInfo(id: documentType.documentType,
-                                                typeName: documentTypeCode?.codeName ?? "",
-                                                status: uploadedFiles.isEmpty ? .notReceived : .received,
-                                                uploadedFiles: uploadedFiles,
-                                                typeGroup: mappedDocumentTypeGroup)
-
-                self.documents.append(documentInfo)
-
-            }
-            else {
-
-                let uploadedFiles = documentFilesInfo
-
-                let documentInfo = DocumentInfo(id: documentType.documentType,
-                                                typeName: documentTypeCode?.codeName ?? "",
-                                                status: uploadedFiles.isEmpty ? .notReceived : .received,
-                                                uploadedFiles: uploadedFiles)
-
-                self.documents.append(documentInfo)
-            }
-        }
-
-        let identificationDocuments = self.documents.filter({
-            $0.typeGroup == .identityCard ||
-            $0.typeGroup == .residenceId ||
-            $0.typeGroup == .drivingLicense ||
-            $0.typeGroup == .passport
-        })
-        self.identificationDocuments = identificationDocuments
-
-        let proofAddress = self.documents.filter({
-            $0.typeGroup == .proofAddress
-        })
-        self.proofAddressDocuments = proofAddress
-
-    }
-
-    private func processDocuments(documentTypes: [DocumentType], userDocuments: [UserDocument]) {
-
-        for documentType in documentTypes {
-
-            let documentTypeCode = DocumentTypeCode(code: documentType.documentType)
-
-            if let documentTypeGroup = documentType.documentTypeGroup {
-
-                let mappedDocumentTypeGroup = ServiceProviderModelMapper.documentTypeGroup(fromServiceProviderDocumentTypeGroup: documentTypeGroup)
-
-                let uploadedFiles = userDocuments.filter({
-                    $0.documentType == documentType.documentType
-                }).map({ userDocument -> DocumentFileInfo in
-
-                    let userDocumentStatus = FileState(code: userDocument.status)
-
-                    self.dateFormatter.dateFormat = "dd-MM-yyyy HH:mm:ss"
-                    let uploadDate = self.dateFormatter.date(from: userDocument.uploadDate)
-
-                    return DocumentFileInfo(id: userDocument.documentType,
-                                            name: userDocument.fileName,
-                                            status: userDocumentStatus ?? .pendingApproved,
-                                            uploadDate: uploadDate ?? Date(),
-                                            documentTypeGroup: mappedDocumentTypeGroup)
-                })
-
-                var existingDocumentInfo: DocumentInfo?
-
-                for document in self.documents {
-                    if let typeGroup = document.typeGroup,
-                       typeGroup == mappedDocumentTypeGroup {
-                        existingDocumentInfo = document
-                    }
-                }
-
-                if let existingDocumentInfo {
-                    var documentInfoIndex = self.documents.firstIndex(where: {
-                        $0.id == existingDocumentInfo.id
-                    })
-
-                    if let index = documentInfoIndex {
-                        var documentFileInfo = self.documents[index]
-
-                        documentFileInfo.uploadedFiles.append(contentsOf: uploadedFiles)
-
-                        self.documents[index] = documentFileInfo
-
-                    }
-                }
-                else {
-                    let documentInfo = DocumentInfo(id: documentType.documentType,
-                                                    typeName: documentTypeCode?.codeName ?? "",
-                                                    status: uploadedFiles.isEmpty ? .notReceived : .received,
-                                                    uploadedFiles: uploadedFiles,
-                                                    typeGroup: mappedDocumentTypeGroup)
-
-                    self.documents.append(documentInfo)
-                }
-
-            }
-            else {
-
-                let uploadedFiles = userDocuments.filter({
-                    $0.documentType == documentType.documentType
-                }).map({ userDocument -> DocumentFileInfo in
-
-                    let userDocumentStatus = FileState(code: userDocument.status)
-
-                    self.dateFormatter.dateFormat = "dd-MM-yyyy HH:mm:ss"
-                    let uploadDate = self.dateFormatter.date(from: userDocument.uploadDate)
-
-                    return DocumentFileInfo(id: userDocument.documentType,
-                                            name: userDocument.fileName,
-                                            status: userDocumentStatus ?? .pendingApproved,
-                                            uploadDate: uploadDate ?? Date(),
-                                            documentTypeGroup: .none)
-                })
-
-                var existingDocumentInfo: DocumentInfo?
-
-                for document in self.documents {
-                    if document.id == documentType.documentType  {
-                        existingDocumentInfo = document
-                    }
-                }
-
-                if let existingDocumentInfo {
-                    var documentInfoIndex = self.documents.firstIndex(where: {
-                        $0.id == existingDocumentInfo.id
-                    })
-
-                    if let index = documentInfoIndex {
-                        var documentFileInfo = self.documents[index]
-
-                        documentFileInfo.uploadedFiles.append(contentsOf: uploadedFiles)
-
-                        self.documents[index] = documentFileInfo
-
-                    }
-                }
-                else {
-                    let documentInfo = DocumentInfo(id: documentType.documentType,
-                                                    typeName: documentTypeCode?.codeName ?? "",
-                                                    status: uploadedFiles.isEmpty ? .notReceived : .received,
-                                                    uploadedFiles: uploadedFiles)
-
-                    self.documents.append(documentInfo)
-                }
-
-            }
-        }
-
-        let identificationDocuments = self.documents.filter({
-            $0.typeGroup == .identityCard ||
-            $0.typeGroup == .residenceId ||
-            $0.typeGroup == .drivingLicense ||
-            $0.typeGroup == .passport
-        })
-        self.identificationDocuments = identificationDocuments
-
-        let proofAddress = self.documents.filter({
-            $0.typeGroup == .proofAddress
-
-        })
-        self.proofAddressDocuments = proofAddress
-
-        self.isLoadingPublisher.send(false)
-        self.hasLoadedUserDocuments.send(true)
-        self.hasDocumentsProcessed.send(true)
-        self.shouldReloadData?()
-    }
-}
-
 class IdentificationDocsViewController: UIViewController {
 
     private lazy var containerView: UIView = Self.createContainerView()
@@ -480,6 +31,7 @@ class IdentificationDocsViewController: UIViewController {
     private lazy var idAddDocBottomConstraint: NSLayoutConstraint = Self.createIdAddDocBottomConstraint()
 
     private lazy var proofAddressBaseView: UIView = Self.createProofAddressBaseView()
+    private lazy var proofAddressDisabledView: UIView = Self.createProofAddressDisabledView()
     private lazy var proofAddressTopStackView: UIStackView = Self.createProofAddressTopStackView()
     private lazy var proofAddressTitleLabel: UILabel = Self.createProofAddressTitleLabel()
     private lazy var proofAddressSubtitleLabel: UILabel = Self.createProofAddressSubtitleLabel()
@@ -529,6 +81,18 @@ class IdentificationDocsViewController: UIViewController {
         }
     }
 
+    var isProofOfAddressDisabled: Bool = true {
+        didSet {
+            self.proofAddressDisabledView.isHidden = !isProofOfAddressDisabled
+            self.proofAddressBaseView.isUserInteractionEnabled = !isProofOfAddressDisabled
+        }
+    }
+
+    var totalIdentificationTriesCount: Int = 0
+    var totalProofAddressTriesCount: Int = 0
+
+    var hasShownContinueProcessAlert: Bool = false
+
     // MARK: - Lifetime and Cycle
     init(viewModel: IdentificationDocsViewModel) {
         self.viewModel = viewModel
@@ -556,6 +120,11 @@ class IdentificationDocsViewController: UIViewController {
         let proofAddDocTap = UITapGestureRecognizer(target: self, action: #selector(self.didTapProofAddDoc))
         self.proofAddDocBaseView.addGestureRecognizer(proofAddDocTap)
 
+        self.scrollView.refreshControl = UIRefreshControl()
+        self.scrollView.refreshControl?.addTarget(self, action:
+                                          #selector(handleRefreshControl),
+                                          for: .valueChanged)
+
     }
 
     override func viewDidLayoutSubviews() {
@@ -564,6 +133,8 @@ class IdentificationDocsViewController: UIViewController {
         self.identificationBaseView.layer.cornerRadius = CornerRadius.card
 
         self.proofAddressBaseView.layer.cornerRadius = CornerRadius.card
+
+        self.proofAddressDisabledView.layer.cornerRadius = CornerRadius.card
     }
 
     // MARK: - Layout and Theme
@@ -599,6 +170,8 @@ class IdentificationDocsViewController: UIViewController {
         self.idAddDocIconImageView.setTintColor(color: UIColor.App.highlightPrimary)
 
         self.proofAddressBaseView.backgroundColor = UIColor.App.backgroundSecondary
+
+        self.proofAddressDisabledView.backgroundColor = UIColor.App.backgroundSecondary.withAlphaComponent(0.7)
 
         self.proofAddressTopStackView.backgroundColor = .clear
 
@@ -684,24 +257,50 @@ class IdentificationDocsViewController: UIViewController {
 
     // MARK: Action
     @objc func didTapIdAddDoc() {
-        print("ADD ID DOC")
 
-        self.viewModel.getSumsubAccessToken(levelName: "ID Verifiication")
-//        let manualUploadDocumentViewModel = ManualUploadsDocumentsViewModel()
-//
-//        let manualUploadDocumentViewController = ManualUploadDocumentsViewController(viewModel: manualUploadDocumentViewModel)
-//
-//        self.navigationController?.pushViewController(manualUploadDocumentViewController, animated: true)
+        if self.totalIdentificationTriesCount <= 4 {
+            self.viewModel.getSumsubAccessToken(levelName: "ID Verifiication")
+
+        }
+        else {
+            let manualUploadDocumentViewModel = ManualUploadsDocumentsViewModel(documentTypeCode: .identification)
+
+            let manualUploadDocumentViewController = ManualUploadDocumentsViewController(viewModel: manualUploadDocumentViewModel)
+
+            manualUploadDocumentViewController.shouldRefreshDocuments = { [weak self] in
+                self?.viewModel.refreshDocuments()
+            }
+
+            self.navigationController?.pushViewController(manualUploadDocumentViewController, animated: true)
+        }
+
     }
 
     @objc func didTapProofAddDoc() {
-        print("ADD PROOF DOC")
-        //self.viewModel.getSumsubAccessToken(levelName: "POA Verification")
-        let manualUploadDocumentViewModel = ManualUploadsDocumentsViewModel(documentTypeCode: .proofAddress)
 
-        let manualUploadDocumentViewController = ManualUploadDocumentsViewController(viewModel: manualUploadDocumentViewModel)
+        if self.totalProofAddressTriesCount <= 4 {
+            self.viewModel.getSumsubAccessToken(levelName: "POA Verification")
+        }
+        else {
+            let manualUploadDocumentViewModel = ManualUploadsDocumentsViewModel(documentTypeCode: .proofAddress)
 
-        self.navigationController?.pushViewController(manualUploadDocumentViewController, animated: true)
+            let manualUploadDocumentViewController = ManualUploadDocumentsViewController(viewModel: manualUploadDocumentViewModel)
+
+            manualUploadDocumentViewController.shouldRefreshDocuments = { [weak self] in
+                self?.viewModel.refreshDocuments()
+            }
+
+            self.navigationController?.pushViewController(manualUploadDocumentViewController, animated: true)
+        }
+    }
+
+    @objc func handleRefreshControl() {
+
+        self.viewModel.refreshDocuments()
+
+       DispatchQueue.main.async {
+          self.scrollView.refreshControl?.endRefreshing()
+       }
     }
 
     // MARK: Functions
@@ -738,6 +337,45 @@ class IdentificationDocsViewController: UIViewController {
             self.viewModel.getSumSubDocuments()
         }
 
+        sdk.onEvent { (sdk, event) in
+
+            switch event.eventType {
+
+            case .applicantLoaded:
+                if let event = event as? SNSEventApplicantLoaded {
+                    print("onEvent: Applicant [\(event.applicantId)] has been loaded")
+                }
+
+            case .stepInitiated:
+                if let event = event as? SNSEventStepInitiated {
+                    print("onEvent: Step \(event.idDocSetType) has been initiated")
+                }
+
+            case .stepCompleted:
+                if let event = event as? SNSEventStepCompleted {
+                    print("onEvent: Step \(event.idDocSetType) has been \(event.isCancelled ? "cancelled" : "fulfilled")")
+
+                    if event.idDocSetType == "IDENTITY" && !event.isCancelled {
+
+                        sdk.mainVC.dismiss(animated: true)
+
+                        self.showContinueProcessAlert()
+
+                    }
+
+                }
+
+            case .analytics:
+                if let event = event as? SNSEventAnalytics {
+                    print("onEvent: Analytics event [\(event.eventName)] has occured with payload=\(event.eventPayload ?? [:])")
+                }
+
+            @unknown default:
+                print("onEvent: eventType=\(event.description(for: event.eventType)) payload=\(event.payload)")
+            }
+
+        }
+
         self.present(sdk.mainVC, animated: true, completion: nil)
 
     }
@@ -752,11 +390,18 @@ class IdentificationDocsViewController: UIViewController {
 
         for identityDocument in identityDocuments {
 
-            for identityFileInfo in identityDocument.uploadedFiles {
+            for (index, identityFileInfo) in identityDocument.uploadedFiles.enumerated() {
                 
                 let documentStateView = DocumentStateView()
 
                 documentStateView.configure(documentFileInfo: identityFileInfo)
+
+                if index != identityDocument.uploadedFiles.count - 1 {
+                    documentStateView.hasSeparator = true
+                }
+                else {
+                    documentStateView.hasSeparator = false
+                }
 
                 self.identificationBottomStackView.addArrangedSubview(documentStateView)
 
@@ -775,50 +420,90 @@ class IdentificationDocsViewController: UIViewController {
                     mostRecentIdentityDocument = identityFileInfo
                 }
 
+                if let totalRetries = identityFileInfo.totalRetries {
+                    self.totalIdentificationTriesCount = totalRetries
+                }
             }
+
         }
 
         if let currentDocument = mostRecentIdentityDocument {
 
             if let canRetry = currentDocument.retry {
                 self.canAddIdentificationDocs = canRetry
+
+                if !canRetry && currentDocument.status == .approved {
+                    self.isProofOfAddressDisabled = false
+                }
+                else {
+                    self.isProofOfAddressDisabled = true
+                }
             }
             else {
-                if currentDocument.status == .approved || currentDocument.status == .pendingApproved {
+                if currentDocument.status == .approved {
                     self.canAddIdentificationDocs = false
+                    self.isProofOfAddressDisabled = false
+                }
+                else if currentDocument.status == .pendingApproved {
+                    self.canAddIdentificationDocs = false
+                    self.isProofOfAddressDisabled = true
                 }
                 else {
                     self.canAddIdentificationDocs = true
+                    self.isProofOfAddressDisabled = true
                 }
             }
 
+        }
+        else {
+            self.isProofOfAddressDisabled = true
         }
 
         if let proofAddressFilesInfo = self.viewModel.proofAddressDocuments.first?.uploadedFiles {
 
             var mostRecentProofDocument: DocumentFileInfo?
 
-            for proofFileInfo in proofAddressFilesInfo {
+            for (index, proofFileInfo) in proofAddressFilesInfo.enumerated() {
 
                 let documentStateView = DocumentStateView()
 
                 documentStateView.configure(documentFileInfo: proofFileInfo)
 
+                if index != proofAddressFilesInfo.count - 1 {
+                    documentStateView.hasSeparator = true
+                }
+                else {
+                    documentStateView.hasSeparator = false
+                }
+
                 self.proofAddressBottomStackView.addArrangedSubview(documentStateView)
 
-                if let documentDate = proofFileInfo.uploadDate {
-                    if let recentDocument = mostRecentProofDocument {
-                        if let recentDocumentDate = recentDocument.uploadDate,
-                           documentDate > recentDocumentDate {
+                if proofAddressFilesInfo.contains(where: {
+                    $0.id == "POA"
+                }) {
+                    if proofFileInfo.id == "POA" {
+                        mostRecentProofDocument = proofFileInfo
+                    }
+                }
+                else {
+                    if let documentDate = proofFileInfo.uploadDate {
+                        if let recentDocument = mostRecentProofDocument {
+                            if let recentDocumentDate = recentDocument.uploadDate,
+                               documentDate > recentDocumentDate {
+                                mostRecentProofDocument = proofFileInfo
+                            }
+                        }
+                        else {
                             mostRecentProofDocument = proofFileInfo
                         }
                     }
                     else {
                         mostRecentProofDocument = proofFileInfo
                     }
-                }
-                else {
-                    mostRecentProofDocument = proofFileInfo
+
+                    if let totalRetries = proofFileInfo.totalRetries {
+                        self.totalProofAddressTriesCount = totalRetries
+                    }
                 }
             }
 
@@ -840,7 +525,36 @@ class IdentificationDocsViewController: UIViewController {
 
         }
 
+        // Check to show continue process alert
+        if !self.isProofOfAddressDisabled,
+           let uploadedProofAddressDocs = self.viewModel.proofAddressDocuments.first?.uploadedFiles,
+           uploadedProofAddressDocs.isEmpty,
+           !self.hasShownContinueProcessAlert {
+
+            self.showContinueProcessAlert()
+
+        }
+
     }
+
+    private func showContinueProcessAlert() {
+
+        let alert = UIAlertController(title: localized("identity_docs_approved_title"),
+                                      message: localized("identity_docs_approved_text"),
+                                      preferredStyle: .alert)
+
+        alert.addAction(UIAlertAction(title: localized("ok"), style: .default, handler: { [weak self] _ in
+
+            self?.viewModel.getSumsubAccessToken(levelName: "POA Verification")
+
+            self?.hasShownContinueProcessAlert = true
+
+        }))
+
+        self.present(alert, animated: true, completion: nil)
+
+    }
+
 }
 
 extension IdentificationDocsViewController {
@@ -874,7 +588,7 @@ extension IdentificationDocsViewController {
         stackView.translatesAutoresizingMaskIntoConstraints = false
         stackView.axis = .vertical
         stackView.distribution = .equalSpacing
-        stackView.spacing = 8
+        stackView.spacing = 0
         return stackView
     }
 
@@ -939,12 +653,18 @@ extension IdentificationDocsViewController {
         return view
     }
 
+    private static func createProofAddressDisabledView() -> UIView {
+        let view = UIView()
+        view.translatesAutoresizingMaskIntoConstraints = false
+        return view
+    }
+
     private static func createProofAddressTopStackView() -> UIStackView {
         let stackView = UIStackView()
         stackView.translatesAutoresizingMaskIntoConstraints = false
         stackView.axis = .vertical
         stackView.distribution = .equalSpacing
-        stackView.spacing = 8
+        stackView.spacing = 0
         return stackView
     }
 
@@ -1086,6 +806,8 @@ extension IdentificationDocsViewController {
         self.proofAddDocView.addSubview(self.proofAddDocTitleLabel)
         self.proofAddDocView.addSubview(self.proofAddDocIconImageView)
 
+        self.proofAddressBaseView.addSubview(self.proofAddressDisabledView)
+
         self.view.addSubview(self.loadingBaseView)
 
         self.loadingBaseView.addSubview(self.activityIndicatorView)
@@ -1153,6 +875,11 @@ extension IdentificationDocsViewController {
             self.proofAddressBaseView.trailingAnchor.constraint(equalTo: self.contentBaseView.trailingAnchor, constant: -14),
             self.proofAddressBaseView.topAnchor.constraint(equalTo: self.identificationBaseView.bottomAnchor, constant: 20),
             self.proofAddressBaseView.bottomAnchor.constraint(equalTo: self.contentBaseView.bottomAnchor, constant: -20),
+
+            self.proofAddressDisabledView.leadingAnchor.constraint(equalTo: self.proofAddressBaseView.leadingAnchor),
+            self.proofAddressDisabledView.trailingAnchor.constraint(equalTo: self.proofAddressBaseView.trailingAnchor),
+            self.proofAddressDisabledView.topAnchor.constraint(equalTo: self.proofAddressBaseView.topAnchor),
+            self.proofAddressDisabledView.bottomAnchor.constraint(equalTo: self.proofAddressBaseView.bottomAnchor),
 
             self.proofAddressTopStackView.leadingAnchor.constraint(equalTo: self.proofAddressBaseView.leadingAnchor, constant: 14),
             self.proofAddressTopStackView.trailingAnchor.constraint(equalTo: self.proofAddressBaseView.trailingAnchor, constant: -14),

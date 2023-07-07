@@ -112,7 +112,13 @@ class PopularMatchesDataSource: NSObject, UITableViewDataSource, UITableViewDele
 
     func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
 
-        if self.matches.isEmpty {
+        if section == 0 && self.outrightCompetitions != nil && self.matches.isNotEmpty {
+            return nil
+        }
+        else if section == 0 && self.outrightCompetitions != nil && self.matches.isEmpty {
+            ()
+        }
+        else if self.matches.isEmpty {
             return nil
         }
 
@@ -134,6 +140,9 @@ class PopularMatchesDataSource: NSObject, UITableViewDataSource, UITableViewDele
     }
 
     func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
+        if section == 0 && self.outrightCompetitions != nil && self.matches.isEmpty {
+            return 54
+        }
 
         if self.matches.isEmpty {
             return .leastNonzeroMagnitude
@@ -146,6 +155,10 @@ class PopularMatchesDataSource: NSObject, UITableViewDataSource, UITableViewDele
     }
 
     func tableView(_ tableView: UITableView, estimatedHeightForHeaderInSection section: Int) -> CGFloat {
+        if section == 0 && self.outrightCompetitions != nil && self.matches.isEmpty {
+            return 54
+        }
+
         if self.matches.isEmpty {
             return .leastNonzeroMagnitude
         }
