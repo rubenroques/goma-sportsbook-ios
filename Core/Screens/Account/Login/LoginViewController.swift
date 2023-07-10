@@ -830,11 +830,19 @@ class LoginViewController: UIViewController {
 
             Env.userSessionStore.refreshUserWalletAfterDelay()
 
-            let depositSuccessViewController = GenericSuccessViewController()
+            let genericSuccessViewController = GenericSuccessViewController()
 
-            depositSuccessViewController.setTextInfo(title: "\(localized("success"))!", subtitle: localized("first_deposit_success_message"))
+            genericSuccessViewController.setTextInfo(title: "\(localized("success"))!", subtitle: localized("first_deposit_success_message"))
 
-            self.depositOnRegisterViewController?.navigationController?.pushViewController(depositSuccessViewController, animated: true)
+            genericSuccessViewController.didTapContinueAction = { [weak self] in
+                self?.dismiss(animated: true)
+            }
+
+            genericSuccessViewController.didTapCloseAction = { [weak self] in
+                self?.dismiss(animated: true)
+            }
+
+            self.depositOnRegisterViewController?.navigationController?.pushViewController(genericSuccessViewController, animated: true)
 
         case .refused:
             alertTitle = localized("payment_refused")
