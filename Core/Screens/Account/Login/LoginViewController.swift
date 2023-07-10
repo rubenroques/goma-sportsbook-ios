@@ -835,11 +835,12 @@ class LoginViewController: UIViewController {
             genericSuccessViewController.setTextInfo(title: "\(localized("success"))!", subtitle: localized("first_deposit_success_message"))
 
             genericSuccessViewController.didTapContinueAction = { [weak self] in
-                self?.dismiss(animated: true)
+                self?.closeLoginRegisterFlow()
             }
 
             genericSuccessViewController.didTapCloseAction = { [weak self] in
-                self?.dismiss(animated: true)
+                self?.closeLoginRegisterFlow()
+
             }
 
             self.depositOnRegisterViewController?.navigationController?.pushViewController(genericSuccessViewController, animated: true)
