@@ -36,7 +36,6 @@ class MyTicketTableViewCell: UITableViewCell {
     @IBOutlet private weak var winningsTitleLabel: UILabel!
     @IBOutlet private weak var winningsSubtitleLabel: UILabel!
 
-
     @IBOutlet private weak var cashbackInfoBaseView: UIView!
     @IBOutlet private weak var cashbackInfoView: CashbackInfoView!
     @IBOutlet private weak var cashbackValueLabel: UILabel!
@@ -370,6 +369,8 @@ class MyTicketTableViewCell: UITableViewCell {
         self.partialCashoutButton.backgroundColor = .clear
 
         self.cashbackIconImageView.backgroundColor = .clear
+
+        self.cashbackValueLabel.textColor = UIColor.App.buttonTextPrimary
 
         self.cashbackUsedBaseView.backgroundColor = UIColor.App.highlightSecondary
 

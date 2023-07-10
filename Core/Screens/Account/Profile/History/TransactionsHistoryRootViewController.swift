@@ -304,6 +304,10 @@ class TransactionsHistoryRootViewController: UIViewController {
         self.currentPageViewControllerIndex = index
     }
 
+    func setInitialPage(index: Int) {
+        self.viewModel.selectedIndexPublisher.send(index)
+    }
+
 }
 
 extension TransactionsHistoryRootViewController: UIPageViewControllerDelegate, UIPageViewControllerDataSource {

@@ -1433,3 +1433,6 @@
 
 "top_competitions" = "Compétitions de haut niveau";
 "pre_validated" = "Prévalidé";
+
+"pending_withdraws_info_message" = "Vous êtes sûr de vouloir effectuer un retrait ? Vous avez déjà un retrait en cours, que vous pouvez annuler.";
+"show_pending_withdraws" = "Afficher les retraits en cours";

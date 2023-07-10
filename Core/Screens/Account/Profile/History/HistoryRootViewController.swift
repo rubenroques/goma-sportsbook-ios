@@ -14,6 +14,7 @@ class HistoryRootViewController: UIViewController {
     private lazy var navigationBaseView: UIView = Self.createNavigationView()
     private lazy var backButton: UIButton = Self.createBackButton()
     private lazy var titleLabel: UILabel = Self.createTitleLabel()
+    private lazy var closeButton: UIButton = Self.createCloseButton()
     private lazy var containerBaseView: UIView = Self.createContainerView()
 
     private var tabViewController: TabularViewController
@@ -22,6 +23,13 @@ class HistoryRootViewController: UIViewController {
 
     private var transactionsHistoryViewController: TransactionsHistoryRootViewController
     private var bettingHistoryRootViewController: BettingHistoryRootViewController
+
+    var isModalViewController: Bool = false {
+        didSet {
+            self.backButton.isHidden = isModalViewController
+            self.closeButton.isHidden = !isModalViewController
+        }
+    }
 
     // MARK: - Lifetime and Cycle
     init() {
@@ -55,7 +63,26 @@ class HistoryRootViewController: UIViewController {
 
         self.backButton.addTarget(self, action: #selector(self.didTapBackButton), for: .primaryActionTriggered)
 
+        self.closeButton.addTarget(self, action: #selector(didTapCloseButton), for: .primaryActionTriggered)
+
         self.setupWithTheme()
+
+        if let navigationController = self.navigationController {
+
+            self.isModalViewController = false
+
+        }
+        else if let presentingViewController = self.presentingViewController {
+
+            self.isModalViewController = true
+
+        }
+        else {
+
+            self.isModalViewController = false
+
+        }
+
     }
 
     override func viewWillAppear(_ animated: Bool) {
@@ -96,10 +123,24 @@ class HistoryRootViewController: UIViewController {
         self.titleLabel.textColor = UIColor.App.textPrimary
 
         self.containerBaseView.backgroundColor = UIColor.App.backgroundPrimary
+
+        self.closeButton.setTitleColor(UIColor.App.highlightPrimary, for: .normal)
     }
 
+    // MARK: Functions
+    func setInitialTransactionPage(index: Int) {
+        self.transactionsHistoryViewController.setInitialPage(index: index)
+    }
+
+    // MARK: Actions
     @objc func didTapBackButton() {
         self.navigationController?.popViewController(animated: true)
+    }
+
+    @objc private func didTapCloseButton() {
+
+        self.dismiss(animated: true)
+
     }
 }
 
@@ -150,6 +191,14 @@ extension HistoryRootViewController {
         return button
     }
 
+    private static func createCloseButton() -> UIButton {
+        let button = UIButton()
+        button.setTitle(localized("close"), for: .normal)
+        button.titleLabel?.font = AppFont.with(type: .bold, size: 16)
+        button.translatesAutoresizingMaskIntoConstraints = false
+        return button
+    }
+
     private static func createContainerView() -> UIView {
         let view = UIView()
         view.translatesAutoresizingMaskIntoConstraints = false
@@ -161,6 +210,7 @@ extension HistoryRootViewController {
         // Add subviews to self.view or each other
         self.navigationBaseView.addSubview(self.titleLabel)
         self.navigationBaseView.addSubview(self.backButton)
+        self.navigationBaseView.addSubview(self.closeButton)
 
         self.view.addSubview(self.topSafeAreaView)
         self.view.addSubview(self.navigationBaseView)
@@ -191,6 +241,10 @@ extension HistoryRootViewController {
             self.backButton.centerYAnchor.constraint(equalTo: self.navigationBaseView.centerYAnchor),
             self.backButton.heightAnchor.constraint(equalToConstant: 44),
             self.backButton.widthAnchor.constraint(equalToConstant: 40),
+
+            self.closeButton.trailingAnchor.constraint(equalTo: self.navigationBaseView.trailingAnchor, constant: -10),
+            self.closeButton.centerYAnchor.constraint(equalTo: self.navigationBaseView.centerYAnchor),
+            self.closeButton.heightAnchor.constraint(equalToConstant: 40),
 
             self.containerBaseView.leadingAnchor.constraint(equalTo: self.view.leadingAnchor),
             self.containerBaseView.trailingAnchor.constraint(equalTo: self.view.trailingAnchor),

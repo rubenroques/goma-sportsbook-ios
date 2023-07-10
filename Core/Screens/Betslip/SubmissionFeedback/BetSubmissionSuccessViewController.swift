@@ -346,7 +346,10 @@ class BetSubmissionSuccessViewController: UIViewController {
 
         sharedTicketCardView.didTappedSharebet = { [weak self] snapshot in
             // self?.getSharedBetToken(betHistoryEntry: betHistory)
-            // self?.ticketSnapshots[betHistory.betId] = snapshot
+            self?.ticketSnapshots[betHistory.betId] = snapshot
+            self?.sharedBetHistory = betHistory
+            self?.sharedBetToken = "\(betHistory.betslipId ?? 0)"
+            self?.showBetShareScreen()
         }
 
         sharedTicketCardView.didTapLearnMore = { [weak self] in

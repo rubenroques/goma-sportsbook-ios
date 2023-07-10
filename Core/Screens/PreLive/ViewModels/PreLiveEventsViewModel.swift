@@ -225,6 +225,10 @@ class PreLiveEventsViewModel: NSObject {
             self?.didSelectMatchAction?(match)
         }
 
+        self.topCompetitionsDataSource.didSelectMatchAction = { [weak self] match in
+            self?.didSelectMatchAction?(match)
+        }
+
         // Did Select a Competition
         //
         self.popularMatchesDataSource.didSelectCompetitionAction = { [weak self] competition in
@@ -234,6 +238,9 @@ class PreLiveEventsViewModel: NSObject {
             self?.didSelectCompetitionAction?(competition)
         }
         self.competitionsDataSource.didSelectCompetitionAction = { [weak self] competition in
+            self?.didSelectCompetitionAction?(competition)
+        }
+        self.topCompetitionsDataSource.didSelectCompetitionAction = { [weak self] competition in
             self?.didSelectCompetitionAction?(competition)
         }
 
@@ -246,6 +253,9 @@ class PreLiveEventsViewModel: NSObject {
             self?.didTapFavoriteMatchAction?(match)
         }
         self.popularMatchesDataSource.didTapFavoriteMatchAction = { [weak self] match in
+            self?.didTapFavoriteMatchAction?(match)
+        }
+        self.topCompetitionsDataSource.didTapFavoriteMatchAction = { [weak self] match in
             self?.didTapFavoriteMatchAction?(match)
         }
 
