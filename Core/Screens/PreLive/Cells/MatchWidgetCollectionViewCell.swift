@@ -473,7 +473,7 @@ class MatchWidgetCollectionViewCell: UICollectionViewCell {
         // Live Tip
         self.baseView.addSubview(self.liveTipView)
         self.liveTipView.addSubview(self.liveTipLabel)
-        self.liveTipLabel.text = localized("live")
+        self.liveTipLabel.text = localized("live") + " ⦿"
 
         self.liveTipView.layer.cornerRadius = 7
 
@@ -720,7 +720,7 @@ class MatchWidgetCollectionViewCell: UICollectionViewCell {
             self.eventNameLabel.textColor = UIColor.App.textSecondary
             self.homeParticipantNameLabel.textColor = UIColor.App.textPrimary
             self.awayParticipantNameLabel.textColor = UIColor.App.textPrimary
-            self.matchTimeLabel.textColor = UIColor.App.textPrimary
+            self.matchTimeLabel.textColor = UIColor.App.buttonBackgroundPrimary
             self.resultLabel.textColor = UIColor.App.textPrimary
             self.liveTipLabel.textColor = UIColor.App.buttonTextPrimary
             self.dateLabel.textColor = UIColor.App.textPrimary
@@ -773,7 +773,7 @@ class MatchWidgetCollectionViewCell: UICollectionViewCell {
             self.eventNameLabel.textColor = UIColor.App.textSecondary
             self.homeParticipantNameLabel.textColor = UIColor.App.textPrimary
             self.awayParticipantNameLabel.textColor = UIColor.App.textPrimary
-            self.matchTimeLabel.textColor = UIColor.App.textPrimary
+            self.matchTimeLabel.textColor = UIColor.App.buttonBackgroundPrimary
             self.resultLabel.textColor = UIColor.App.textPrimary
             self.liveTipLabel.textColor = UIColor.App.buttonTextPrimary
             self.dateLabel.textColor = UIColor.App.textPrimary

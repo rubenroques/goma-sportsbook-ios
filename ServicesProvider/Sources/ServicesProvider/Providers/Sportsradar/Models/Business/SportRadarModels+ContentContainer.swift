@@ -297,9 +297,18 @@ extension SportRadarModels {
                 if let eventLiveData = (try? container.decode(SportRadarModels.EventLiveDataExtended.self, forKey: .change)) {
                     return .updateEventLiveDataExtended(contentIdentifier: contentIdentifier, eventId: eventId , eventLiveDataExtended: eventLiveData)
                 }
-                else if path.lowercased().contains("matchtime"), let matchTime = try container.decodeIfPresent(String.self, forKey: .change) {
-                    let eventLiveDataExtended = SportRadarModels.EventLiveDataExtended.init(id: eventId, homeScore: nil, awayScore: nil, matchTime: matchTime, status: nil)
-                    return .updateEventLiveDataExtended(contentIdentifier: contentIdentifier, eventId: eventId, eventLiveDataExtended: eventLiveDataExtended)
+                else if path.contains("matchTime"),
+                        let matchTime = try container.decodeIfPresent(String.self, forKey: .change),
+                        let minutesPart = SocketMessageParseHelper.extractMatchMinutes(from: matchTime)
+                {
+                    let eventLiveDataExtended = SportRadarModels.EventLiveDataExtended.init(id: eventId,
+                                                                                            homeScore: nil,
+                                                                                            awayScore: nil,
+                                                                                            matchTime: minutesPart,
+                                                                                            status: nil)
+                    return .updateEventLiveDataExtended(contentIdentifier: contentIdentifier,
+                                                        eventId: eventId,
+                                                        eventLiveDataExtended: eventLiveDataExtended)
                 }
                 return .unknown
             }
