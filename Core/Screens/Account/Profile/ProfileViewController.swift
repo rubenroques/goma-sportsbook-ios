@@ -90,6 +90,7 @@ class ProfileViewController: UIViewController {
         super.init(nibName: "ProfileViewController", bundle: nil)
 
         self.getPaymentInfo()
+
     }
 
     @available(iOS, unavailable)
@@ -565,7 +566,6 @@ class ProfileViewController: UIViewController {
     }
 
     // MARK: Actions
-
     @IBAction private func didTapDepositButton() {
         let depositViewController = DepositViewController()
         let navigationViewController = Router.navigationController(with: depositViewController)
@@ -601,6 +601,7 @@ class ProfileViewController: UIViewController {
             let alert = UIAlertController(title: localized("withdrawal_warning"),
                                           message: localized("withdrawal_iban_pending_approval_message"),
                                           preferredStyle: .alert)
+
             alert.addAction(UIAlertAction(title: localized("understood"), style: .default, handler: nil))
             self.present(alert, animated: true, completion: nil)
         }

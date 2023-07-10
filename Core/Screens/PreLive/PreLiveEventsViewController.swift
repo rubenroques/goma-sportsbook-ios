@@ -67,6 +67,8 @@ class PreLiveEventsViewController: UIViewController {
     private var competitionsFiltersView: CompetitionsFiltersView = CompetitionsFiltersView()
 
     var selectedTopCompetition: Int = 0
+    var reachedTopCompetitionSection: Int = 0
+    var topCompetitionsHighlightEnabled: Bool = false
 
     var cancellables = Set<AnyCancellable>()
 
@@ -194,6 +196,8 @@ class PreLiveEventsViewController: UIViewController {
         self.viewModel.resetScrollPositionAction = { [weak self] in
             self?.tableView.setContentOffset(.zero, animated: false)
         }
+
+        self.topCompetitionsHighlightEnabled = false
 
     }
 
@@ -930,10 +934,72 @@ class PreLiveEventsViewController: UIViewController {
         self.present(loginViewController, animated: true, completion: nil)
     }
 
+    func setHighlightedTopCompetition(section: Int) {
+
+        if self.topCompetitionsHighlightEnabled {
+            // Reset highlights on all cells
+            for cell in self.competitionHistoryCollectionView.visibleCells {
+                if let customCell = cell as? TopCompetitionCollectionViewCell {
+                    customCell.hasHighlight = false
+                }
+            }
+
+            if let cell = self.competitionHistoryCollectionView.cellForItem(at: IndexPath(row: section, section: 0)) as? TopCompetitionCollectionViewCell {
+
+                cell.hasHighlight = true
+            }
+
+            self.reachedTopCompetitionSection = section
+
+        }
+    }
 }
 
 extension PreLiveEventsViewController: UIScrollViewDelegate {
     func scrollViewDidScroll(_ scrollView: UIScrollView) {
+
+        if self.viewModel.matchListTypePublisher.value == .topCompetitions {
+
+            // Reached section
+            if self.viewModel.matchListTypePublisher.value == .topCompetitions {
+
+                for section in 0..<tableView.numberOfSections - 1 {
+
+                    let headerRect = tableView.rectForHeader(inSection: section)
+                    let contentOffsetY = scrollView.contentOffset.y + scrollView.contentInset.top
+
+                    let currentContentOffsetY = scrollView.contentOffset.y
+
+                    let maximumOffsetY = scrollView.contentSize.height - scrollView.frame.height
+
+                    if headerRect.origin.y <= contentOffsetY && contentOffsetY < headerRect.maxY {
+
+                        print("Reached section:", section)
+
+                        if self.reachedTopCompetitionSection != section {
+
+                            self.setHighlightedTopCompetition(section: section)
+
+                        }
+                    }
+                    else if currentContentOffsetY >= maximumOffsetY && currentContentOffsetY != 0 {
+
+                        print("Reached the end of the table view scroll - \(currentContentOffsetY)")
+
+                        let lastSection = self.tableView.numberOfSections - 2
+
+                        if self.reachedTopCompetitionSection != lastSection {
+
+                            self.setHighlightedTopCompetition(section: lastSection)
+
+                        }
+
+                    }
+
+                }
+
+            }
+        }
 
         if !shouldDetectScrollMovement {
             return
@@ -957,6 +1023,7 @@ extension PreLiveEventsViewController: UIScrollViewDelegate {
 
         // update the new position acquired
         self.lastContentOffset = scrollView.contentOffset.y
+
     }
 
 }
@@ -1055,11 +1122,13 @@ extension PreLiveEventsViewController: UICollectionViewDelegate, UICollectionVie
 
                 cell.setupInfo(competition: competition)
 
-                if self.selectedTopCompetition == indexPath.row {
-                    cell.hasHighlight = true
-                }
-                else {
-                    cell.hasHighlight = false
+                if self.topCompetitionsHighlightEnabled {
+                    if self.selectedTopCompetition == indexPath.row {
+                        cell.hasHighlight = true
+                    }
+                    else {
+                        cell.hasHighlight = false
+                    }
                 }
 
                 return cell

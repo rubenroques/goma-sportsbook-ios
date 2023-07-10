@@ -18,7 +18,7 @@ class TopCompetitionCollectionViewCell: UICollectionViewCell {
     var hasHighlight: Bool = false {
         didSet {
             if hasHighlight {
-                self.containerView.backgroundColor = UIColor.App.buttonActiveHoverTertiary
+                self.containerView.backgroundColor = UIColor.App.backgroundBorder
 
                 self.titleLabel.textColor = UIColor.App.textPrimary
             }

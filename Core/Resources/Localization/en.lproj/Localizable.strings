@@ -1368,3 +1368,6 @@
 
 "top_competitions" = "Top Competitions";
 "pre_validated" = "Pre Validated";
+
+"pending_withdraws_info_message" = "Are you sure you want to withdraw?You already have a pending withdraw, which you can cancel.";
+"show_pending_withdraws" = "Show pending withdraws";

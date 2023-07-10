@@ -66,7 +66,7 @@ class CompetitionListIconCollectionViewCell: UICollectionViewCell {
         self.setupWithSelection(self.selectedType)
 
         self.iconImageView.backgroundColor = .clear
-        self.iconImageView.tintColor = UIColor.App.textPrimary
+        self.iconImageView.setImageColor(color: UIColor.App.textPrimary)
 
         self.titleLabel.textColor = UIColor.App.textPrimary
 
@@ -76,6 +76,7 @@ class CompetitionListIconCollectionViewCell: UICollectionViewCell {
         self.titleLabel.text = title
 
         self.iconImageView.image = UIImage(named: iconName)
+        self.iconImageView.setImageColor(color: UIColor.App.textPrimary)
 
     }
 

@@ -102,6 +102,8 @@ class WithdrawViewController: UIViewController {
 
         self.setupPublishers()
 
+        self.getPendingWithdraws()
+
         self.isLoading = false
     }
 
@@ -410,6 +412,52 @@ class WithdrawViewController: UIViewController {
         }))
 
         alert.addAction(UIAlertAction(title: localized("cancel"), style: .cancel, handler: nil))
+
+        self.present(alert, animated: true, completion: nil)
+    }
+
+    private func getPendingWithdraws() {
+
+        Env.servicesProvider.getPendingWithdrawals()
+            .receive(on: DispatchQueue.main)
+            .sink(receiveCompletion: { [weak self] completion in
+
+                switch completion {
+                case .finished:
+                    ()
+                case .failure(let error):
+                    print("PENDING WITHDRAWALS ERROR: \(error)")
+
+                }
+            }, receiveValue: { [weak self] pendingWithdrawals in
+
+                print("PENDING WITHDRAWALS: \(pendingWithdrawals)")
+
+                if pendingWithdrawals.isNotEmpty {
+                    self?.showPendingWithdrawAlert()
+                }
+
+            })
+            .store(in: &cancellables)
+
+    }
+
+    private func showPendingWithdrawAlert() {
+
+        let alert = UIAlertController(title: localized("withdrawal_warning"),
+                                      message: localized("pending_withdraws_info_message"),
+                                      preferredStyle: .alert)
+
+        alert.addAction(UIAlertAction(title: localized("show_pending_withdraws"), style: .cancel, handler: { [weak self] _ in
+
+            let historyRootViewController = HistoryRootViewController()
+
+            historyRootViewController.setInitialTransactionPage(index: 2)
+
+            self?.present(historyRootViewController, animated: true)
+        }))
+
+        alert.addAction(UIAlertAction(title: localized("continue_"), style: .default, handler: nil))
 
         self.present(alert, animated: true, completion: nil)
     }
