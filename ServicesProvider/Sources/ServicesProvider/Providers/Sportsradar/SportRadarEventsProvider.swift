@@ -108,14 +108,8 @@ class SportRadarEventsProvider: EventsProvider {
             paginator.reconnect(withNewSessionToken: newSocketToken)
         }
 
-        self.eventDetailsCoordinators = self.eventDetailsCoordinators.filter({
-            $0.value.isActive
-        })
-
-        for eventDetailsCoordinator in self.eventDetailsCoordinators.values where eventDetailsCoordinator.isActive {
-
+        for eventDetailsCoordinator in self.getValidEventDetailsCoordinators() {
             eventDetailsCoordinator.reconnect(withNewSessionToken: newSocketToken)
-
         }
 
         self.marketUpdatesCoordinators = self.marketUpdatesCoordinators.filter { $0.value.isActive }
@@ -493,17 +487,14 @@ class SportRadarEventsProvider: EventsProvider {
             return Fail(error: ServiceProviderError.userSessionNotFound).eraseToAnyPublisher()
         }
 
-        if let eventDetailsCoordinator = self.eventDetailsCoordinators[matchId] {
-
+        if let eventDetailsCoordinator = self.getValidEventDetailsCoordinator(forKey: matchId) {
             return eventDetailsCoordinator.eventDetailsPublisher
         }
         else {
             let eventDetailsCoordinator = SportRadarEventDetailsCoordinator(matchId: matchId,
                                                                              sessionToken: sessionToken.hash,
                                                                              storage: SportRadarEventDetailsStorage())
-
-            self.eventDetailsCoordinators[matchId] = eventDetailsCoordinator
-
+            self.addEventDetailsCoordinator(eventDetailsCoordinator, withKey: matchId)
             return eventDetailsCoordinator.eventDetailsPublisher
         }
     }
@@ -616,44 +607,34 @@ class SportRadarEventsProvider: EventsProvider {
         }
 
         // event details
-        if let eventDetailsCoordinator = self.eventDetailsCoordinators[id],
+        if let eventDetailsCoordinator = self.getValidEventDetailsCoordinator(forKey: id),
            eventDetailsCoordinator.containsEvent(withid: id) {
 
             let publisher = eventDetailsCoordinator.subscribeToEventLiveDataUpdates(withId: id)
             return publisher.setFailureType(to: ServiceProviderError.self).eraseToAnyPublisher()
-
         }
         else {
             let eventDetailsCoordinator = SportRadarEventDetailsCoordinator(matchId: id,
                                                                              sessionToken: sessionToken.hash,
                                                                              storage: SportRadarEventDetailsStorage())
 
-            self.eventDetailsCoordinators[id] = eventDetailsCoordinator
+            self.addEventDetailsCoordinator(eventDetailsCoordinator, withKey: id)
 
             let publisher = eventDetailsCoordinator.subscribeToEventLiveDataUpdates(withId: id)
             return publisher.setFailureType(to: ServiceProviderError.self).eraseToAnyPublisher()
         }
 
-        return Just(nil).setFailureType(to: ServiceProviderError.self).eraseToAnyPublisher()
     }
 
     public func subscribeToEventMarketUpdates(withId id: String) -> AnyPublisher<Market?, ServiceProviderError> {
 
         // event details
-        for eventDetailsCoordinator in self.eventDetailsCoordinators.values {
-
+        for eventDetailsCoordinator in self.getValidEventDetailsCoordinators() {
             if eventDetailsCoordinator.containsMarket(withid: id),
                let publisher = eventDetailsCoordinator.subscribeToEventMarketUpdates(withId: id) {
                 return publisher.map(Optional.init).setFailureType(to: ServiceProviderError.self).eraseToAnyPublisher()
             }
-
         }
-
-//        if let eventDetailsCoordinator = self.eventDetailsCoordinators[id],
-//           eventDetailsCoordinator.containsMarket(withid: id),
-//           let publisher = eventDetailsCoordinator.subscribeToEventMarketUpdates(withId: id) {
-//            return publisher.map(Optional.init).setFailureType(to: ServiceProviderError.self).eraseToAnyPublisher()
-//        }
 
         // events lists
         for paginator in self.eventsPaginators.values {
@@ -668,14 +649,11 @@ class SportRadarEventsProvider: EventsProvider {
     public func subscribeToEventOutcomeUpdates(withId id: String) -> AnyPublisher<Outcome?, ServiceProviderError> {
 
         // event details
-        for eventDetailsCoordinator in self.eventDetailsCoordinators.values {
-
+        for eventDetailsCoordinator in self.getValidEventDetailsCoordinators() {
             if eventDetailsCoordinator.containsOutcome(withid: id),
-               let publisher = eventDetailsCoordinator.subscribeToEventOutcomeUpdates(withId: id)
-            {
+               let publisher = eventDetailsCoordinator.subscribeToEventOutcomeUpdates(withId: id) {
                 return publisher.map(Optional.init).setFailureType(to: ServiceProviderError.self).eraseToAnyPublisher()
             }
-
         }
 
         // events lists
@@ -832,10 +810,8 @@ extension SportRadarEventsProvider: SportRadarConnectorSubscriber {
     }
 
     func eventDetailsUpdated(forContentIdentifier identifier: ContentIdentifier, event: Event) {
-        for eventDetailsCoordinator in self.eventDetailsCoordinators.values {
-
+        for eventDetailsCoordinator in self.getValidEventDetailsCoordinators() {
             eventDetailsCoordinator.updateEventDetails(event, forContentIdentifier: identifier)
-
         }
     }
 
@@ -859,8 +835,7 @@ extension SportRadarEventsProvider: SportRadarConnectorSubscriber {
     }
 
     func eventDetailsLiveData(contentIdentifier: ContentIdentifier, eventLiveDataExtended: SportRadarModels.EventLiveDataExtended) {
-        for eventDetailsCoordinator in self.eventDetailsCoordinators.values {
-
+        for eventDetailsCoordinator in self.getValidEventDetailsCoordinators() {
             eventDetailsCoordinator.updatedLiveData(eventLiveDataExtended: eventLiveDataExtended, forContentIdentifier: contentIdentifier)
         }
     }
@@ -871,7 +846,7 @@ extension SportRadarEventsProvider: SportRadarConnectorSubscriber {
             contentIdentifierPaginator.handleContentUpdate(content)
         }
 
-        for eventDetailsCoordinator in self.eventDetailsCoordinators.values {
+        for eventDetailsCoordinator in self.getValidEventDetailsCoordinators() {
             eventDetailsCoordinator.handleContentUpdate(content)
         }
 
@@ -1672,6 +1647,25 @@ extension SportRadarEventsProvider {
         }
 
         return dates
+    }
+
+}
+
+extension SportRadarEventsProvider {
+
+    func getValidEventDetailsCoordinators() -> [SportRadarEventDetailsCoordinator] {
+        self.eventDetailsCoordinators = self.eventDetailsCoordinators.filter({ $0.value.isActive })
+        return Array(self.eventDetailsCoordinators.values)
+    }
+
+    func getValidEventDetailsCoordinator(forKey key: String) -> SportRadarEventDetailsCoordinator? {
+        self.eventDetailsCoordinators = self.eventDetailsCoordinators.filter({ $0.value.isActive })
+        return self.eventDetailsCoordinators[key]
+    }
+
+    func addEventDetailsCoordinator(_ coordinator: SportRadarEventDetailsCoordinator, withKey key: String) {
+        self.eventDetailsCoordinators = self.eventDetailsCoordinators.filter({ $0.value.isActive })
+        self.eventDetailsCoordinators[key] = coordinator
     }
 
 }
