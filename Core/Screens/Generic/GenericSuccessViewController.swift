@@ -93,7 +93,7 @@ class GenericSuccessViewController: UIViewController {
     @objc private func didTapContinueButton() {
 
         self.didTapContinueAction?()
-
+        
     }
 
 }

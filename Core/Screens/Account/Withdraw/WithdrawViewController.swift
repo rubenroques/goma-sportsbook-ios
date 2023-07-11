@@ -44,6 +44,13 @@ class WithdrawViewController: UIViewController {
 
     var shouldRefreshUserWallet: (() -> Void)?
 
+    var hasPaymentsInfo: Bool = true {
+        didSet {
+            self.paymentsLabel.isHidden = !hasPaymentsInfo
+            self.paymentsLogosStackView.isHidden = !hasPaymentsInfo
+        }
+    }
+
     // MARK: Lifetime and Cycle
     init() {
         self.viewModel = WithdrawViewModel()
@@ -105,6 +112,8 @@ class WithdrawViewController: UIViewController {
         self.getPendingWithdraws()
 
         self.isLoading = false
+
+        self.hasPaymentsInfo = false
     }
 
     // MARK: Layout and Theme
