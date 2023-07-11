@@ -52,6 +52,7 @@ class PreLiveEventsViewModel: NSObject {
                 }
                 self.homeFilterOptions = nil
             }
+            self.selectedCurrentSportId = selectedSport.name.lowercased().replacingOccurrences(of: " ", with: "-")
             self.fetchTopCompetitions()
             self.fetchData()
         }
@@ -94,6 +95,7 @@ class PreLiveEventsViewModel: NSObject {
     var selectedTopCompetitionsInfoPublisher: CurrentValueSubject<[String: SportCompetitionInfo], Never> = .init([:])
     var expectedTopCompetitionsPublisher: CurrentValueSubject<Int, Never> = .init(0)
 
+    var competitionsWithMarketGroups: Int?
     var topCompetitionsMatchesSubscriptions: CurrentValueSubject<[String: SportCompetitionInfo], Never> = .init([:])
 
     //
@@ -151,9 +153,11 @@ class PreLiveEventsViewModel: NSObject {
 
     var topCompetitionsList = [String: [String]]()
     var hasTopCompetitions: CurrentValueSubject<Bool, Never> = .init(false)
+    var selectedCurrentSportId: String
 
     init(selectedSport: Sport) {
         self.selectedSport = selectedSport
+        self.selectedCurrentSportId = selectedSport.name.lowercased().replacingOccurrences(of: " ", with: "-")
 
         isLoadingCompetitionsData = Publishers.CombineLatest(isLoadingCompetitionMatches, isLoadingCompetitionGroups)
             .map({ return $0 || $1 })
@@ -304,12 +308,11 @@ class PreLiveEventsViewModel: NSObject {
             .receive(on: DispatchQueue.main)
             .sink(receiveValue: { [weak self] expectedCompetitions, selectedCompetitionsInfo in
 
-                if expectedCompetitions > 0 {
-                    if selectedCompetitionsInfo.count == expectedCompetitions {
+                if selectedCompetitionsInfo.count == expectedCompetitions {
 
-                        self?.processTopCompetitionsInfo()
-                    }
+                    self?.processTopCompetitionsInfo()
                 }
+
             })
             .store(in: &cancellables)
 
@@ -327,11 +330,14 @@ class PreLiveEventsViewModel: NSObject {
         self.topCompetitionsMatchesSubscriptions
             .receive(on: DispatchQueue.main)
             .sink(receiveValue: { [weak self] competitionMatchesSubscriptions in
+                guard let self = self else { return }
 
-                if competitionMatchesSubscriptions.count == self?.expectedTopCompetitionsPublisher.value {
-                    self?.isLoadingCompetitionMatches.send(false)
-                    self?.isLoadingEvents.send(false)
-                    self?.updateContentList()
+                if let competitionsWithMarketGroups = self.competitionsWithMarketGroups,
+                   competitionMatchesSubscriptions.count == competitionsWithMarketGroups {
+                    self.isLoadingCompetitionMatches.send(false)
+                    self.isLoadingEvents.send(false)
+                    self.updateContentList()
+
                 }
 
             })
@@ -366,7 +372,7 @@ class PreLiveEventsViewModel: NSObject {
 
         self.topCompetitionsList = [:]
 
-        let currentSportName = self.selectedSport.name.lowercased()
+        let currentSportName = self.selectedCurrentSportId
 
         for topCompetition in topCompetitions {
 
@@ -508,7 +514,7 @@ class PreLiveEventsViewModel: NSObject {
 
         self.todayMatchesDataSource.outrightCompetitions = self.todayOutrightCompetitions
 
-        self.topCompetitionsDataSource .competitions = filterCompetitionMatches(with: self.homeFilterOptions, competitions: self.topCompetitions)
+        self.topCompetitionsDataSource.competitions = filterCompetitionMatches(with: self.homeFilterOptions, competitions: self.topCompetitions)
 
         //
         self.competitionsDataSource.competitions = filterCompetitionMatches(with: self.homeFilterOptions, competitions: self.competitions)
@@ -710,7 +716,7 @@ class PreLiveEventsViewModel: NSObject {
             $0.marketGroups.isNotEmpty
         })
 
-        self.expectedTopCompetitionsPublisher.send(competitionInfos.count)
+        self.competitionsWithMarketGroups = competitionInfos.count
 
         self.topCompetitions = []
         self.topCompetitionsDataSource.competitions = []
@@ -770,21 +776,24 @@ class PreLiveEventsViewModel: NSObject {
     }
 
     func fetchTopCompetitionsMatches() {
+        self.selectedTopCompetitionsInfoPublisher.value = [:]
+
+        self.topCompetitions = []
+        self.topCompetitionsDataSource.competitions = self.topCompetitions
+        self.topCompetitionsMatchesSubscriptions.value = [:]
 
         self.isLoadingCompetitionGroups.send(false)
         self.isLoadingEvents.send(false)
         self.updateContentList()
 
-        let currentSportName = self.selectedSport.name.lowercased()
+        let currentSportName = self.selectedCurrentSportId
 
         if let ids = self.topCompetitionsList[currentSportName] {
 
             self.fetchTopCompetitionsMatchesWithIds(ids)
 
         }
-        else {
 
-        }
     }
 
     func fetchCompetitionsFilters() {
@@ -967,13 +976,6 @@ class PreLiveEventsViewModel: NSObject {
     // Top Competitions
     func fetchTopCompetitionsMatchesWithIds(_ ids: [String]) {
 
-        self.selectedTopCompetitionsInfoPublisher.value = [:]
-        self.topCompetitionsMatchesSubscriptions.value = [:]
-
-        self.topCompetitions = []
-        self.topCompetitionsDataSource.competitions = self.topCompetitions
-        self.topCompetitionsMatchesSubscriptions.value = [:]
-
         self.expectedTopCompetitionsPublisher.send(ids.count)
 
         if ids.isEmpty {
@@ -998,8 +1000,9 @@ class PreLiveEventsViewModel: NSObject {
                     }
                 }, receiveValue: { [weak self] competitionInfo in
                     print("TOP COMPETITIONS INFO: \(competitionInfo)")
-                    
+
                     self?.selectedTopCompetitionsInfoPublisher.value[competitionInfo.id] = competitionInfo
+
                 })
                 .store(in: &cancellables)
         }
@@ -1042,9 +1045,8 @@ class PreLiveEventsViewModel: NSObject {
 
         self.setMainMarkets(matches: matches)
         self.topCompetitions.append(newCompetition)
-        self.topCompetitionsDataSource.competitions = self.topCompetitions
+        //self.topCompetitionsDataSource.competitions = self.topCompetitions
         self.topCompetitionsMatchesSubscriptions.value[competitionInfo.id] = competitionInfo
-
     }
 
     func subscribeTopCompetitionOutright(forMarketGroupId marketGroupId: String, competitionInfo: SportCompetitionInfo) {
@@ -1074,19 +1076,25 @@ class PreLiveEventsViewModel: NSObject {
 
     private func processTopCompetitionOutrights(outrightMatch: Match, competitionInfo: SportCompetitionInfo) {
 
-        let numberOutrightMarkets = competitionInfo.numberOutrightMarkets == "0" ? 1 : Int(competitionInfo.numberOutrightMarkets) ?? 0
+        if !self.topCompetitions.contains(where: {
+            $0.id == competitionInfo.id
+        }) {
 
-        let newCompetition = Competition(id: competitionInfo.id,
-                                         name: competitionInfo.name,
-                                         matches: [],
-                                         venue: outrightMatch.venue,
-                                         sport: nil,
-                                         numberOutrightMarkets: numberOutrightMarkets,
-                                         competitionInfo: competitionInfo)
+            let numberOutrightMarkets = competitionInfo.numberOutrightMarkets == "0" ? 1 : Int(competitionInfo.numberOutrightMarkets) ?? 0
 
-        self.topCompetitions.append(newCompetition)
-        self.topCompetitionsDataSource.competitions = self.competitions
-        self.topCompetitionsMatchesSubscriptions.value[competitionInfo.id] = competitionInfo
+            let newCompetition = Competition(id: competitionInfo.id,
+                                             name: competitionInfo.name,
+                                             matches: [],
+                                             venue: outrightMatch.venue,
+                                             sport: nil,
+                                             numberOutrightMarkets: numberOutrightMarkets,
+                                             competitionInfo: competitionInfo)
+
+            self.topCompetitions.append(newCompetition)
+            //        self.topCompetitionsDataSource.competitions = self.competitions
+            self.topCompetitionsMatchesSubscriptions.value[competitionInfo.id] = competitionInfo
+        }
+
     }
 
     func getCompetitions() -> [Competition] {

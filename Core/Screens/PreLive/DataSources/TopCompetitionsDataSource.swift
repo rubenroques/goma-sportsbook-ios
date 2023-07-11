@@ -57,6 +57,7 @@ class TopCompetitionsDataSource: NSObject, UITableViewDataSource, UITableViewDel
         guard
             let competition = self.competitions[safe: indexPath.section]
         else {
+            print("SECTION: \(indexPath.section)")
             fatalError()
         }
 
