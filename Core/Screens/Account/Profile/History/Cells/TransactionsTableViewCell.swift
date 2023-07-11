@@ -115,10 +115,11 @@ class TransactionsTableViewCell: UITableViewCell {
 
         self.gameTransactionIdValueLabel.textColor = UIColor.App.textSecondary
 
-        self.cancelButton.backgroundColor = .clear
+//        self.cancelButton.backgroundColor = .clear
+//
+//        self.cancelButton.setTitleColor(UIColor.App.highlightSecondary, for: .normal)
 
-        self.cancelButton.setTitleColor(UIColor.App.highlightSecondary, for: .normal)
-
+        StyleHelper.styleButton(button: cancelButton)
     }
 
     func configure(withTransactionHistoryEntry transactionHistoryEntry: TransactionHistory,
@@ -284,16 +285,20 @@ extension TransactionsTableViewCell {
     private static func createCancelButton() -> UIButton {
         let button = UIButton()
         button.translatesAutoresizingMaskIntoConstraints = false
-        let labelAttributes: [NSAttributedString.Key: Any] = [
-            .font: AppFont.with(type: .bold, size: 12),
-            .foregroundColor: UIColor.App.highlightSecondary,
-            .underlineStyle: NSUnderlineStyle.single.rawValue
-        ]
-        let attributeString = NSMutableAttributedString(
-            string: localized("cancel"),
-            attributes: labelAttributes
-        )
-        button.setAttributedTitle(attributeString, for: .normal)
+//        let labelAttributes: [NSAttributedString.Key: Any] = [
+//            .font: AppFont.with(type: .bold, size: 12),
+//            .foregroundColor: UIColor.App.highlightSecondary,
+//            .underlineStyle: NSUnderlineStyle.single.rawValue
+//        ]
+//        let attributeString = NSMutableAttributedString(
+//            string: localized("cancel"),
+//            attributes: labelAttributes
+//        )
+//        button.setAttributedTitle(attributeString, for: .normal)
+        button.setTitle(localized("cancel"), for: .normal)
+        button.titleLabel?.font = AppFont.with(type: .bold, size: 12)
+        button.contentEdgeInsets = UIEdgeInsets(top: 0.0, left: 10.0, bottom: 0.0, right: 10.0)
+        button.setContentHuggingPriority(.required, for: .horizontal)
         return button
     }
 
@@ -407,9 +412,10 @@ extension TransactionsTableViewCell {
             self.gameTransactionIdValueLabel.trailingAnchor.constraint(equalTo: self.cancelButton.leadingAnchor, constant: -8),
             self.gameTransactionIdValueLabel.centerYAnchor.constraint(equalTo: self.gameTransactionIdLabel.centerYAnchor),
 
-            self.cancelButton.heightAnchor.constraint(equalToConstant: 40),
-            self.cancelButton.trailingAnchor.constraint(equalTo: self.baseView.trailingAnchor, constant: -20),
-            self.cancelButton.topAnchor.constraint(equalTo: self.transactionDateLabel.bottomAnchor)
+            self.cancelButton.heightAnchor.constraint(equalToConstant: 22),
+            self.cancelButton.trailingAnchor.constraint(equalTo: self.separatorView.trailingAnchor),
+            self.cancelButton.topAnchor.constraint(greaterThanOrEqualTo: self.transactionDateLabel.bottomAnchor, constant: 5),
+            self.cancelButton.bottomAnchor.constraint(equalTo: self.baseView.bottomAnchor, constant: -5)
 
         ])
 

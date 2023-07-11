@@ -43,6 +43,8 @@ class PaymentsDropIn {
     init() {
 
         self.setupPublishers()
+
+        //AdyenLogging.isEnabled = true
     }
 
     private func setupPublishers() {
@@ -82,7 +84,7 @@ class PaymentsDropIn {
                let sessionData = self.sessionData {
 
                 // Optional Payment
-                let payment = Payment(amount: Amount(value: Int(self.dropInDepositAmount) ?? 0, currencyCode: "EUR"), countryCode: "PT")
+                let payment = Payment(amount: Amount(value: Int(self.dropInDepositAmount) ?? 0, currencyCode: "EUR"), countryCode: "FR")
 
                 self.payment = payment
 
@@ -186,6 +188,8 @@ class PaymentsDropIn {
                 self?.sessionId = processDepositResponse.sessionId
 
                 self?.sessionData = processDepositResponse.sessionData
+
+
 
                 self?.getPaymentMethods()
 
