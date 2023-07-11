@@ -49,7 +49,7 @@ struct SportRadarConstants {
 
     static var servicesSubscribeRestHostname = "https://velsv-bson-ssb-ua.betsson.fr" // To subscribe to contentIDs, as in velsv-bson-ssb-ua.betsson.fr/services
 
-    static var socketLanguageCode = Localization.localized("sportradar_content_languange_code")
+    static var socketLanguageCode = "FR" // Localization.localized("sportradar_content_languange_code")
 
     // PAM
     // //static var pamHostname = "https://ps.omegasys.eu"

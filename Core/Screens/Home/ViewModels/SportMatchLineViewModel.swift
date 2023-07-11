@@ -12,6 +12,7 @@ import Combine
 class SportMatchLineViewModel {
 
     enum MatchesType {
+
         case popular
         case popularVideo(title: String, contents: [VideoItemFeedContent])
         case live
