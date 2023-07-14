@@ -495,6 +495,11 @@ class ProfileViewController: UIViewController {
         let responsibleGamingTap = UITapGestureRecognizer(target: self, action: #selector(responsibleGamingViewTapped(sender:)))
         responsibleGamingView.addGestureRecognizer(responsibleGamingTap)
 
+        let recruitFriendView = NavigationCardView()
+        recruitFriendView.setupView(title: localized("recruit_a_friend"), iconTitle: "responsible_gaming_icon")
+        let recruitFriendTap = UITapGestureRecognizer(target: self, action: #selector(recruitFriendViewTapped(sender:)))
+        recruitFriendView.addGestureRecognizer(recruitFriendTap)
+
         let settingsView = NavigationCardView()
         settingsView.setupView(title: localized("app_settings"), iconTitle: "app_settings_profile_icon")
         let settingsTap = UITapGestureRecognizer(target: self, action: #selector(appSettingsViewTapped(sender:)))
@@ -516,6 +521,7 @@ class ProfileViewController: UIViewController {
         self.stackView.addArrangedSubview(messagesView)
         self.stackView.addArrangedSubview(historyView)
         self.stackView.addArrangedSubview(responsibleGamingView)
+        self.stackView.addArrangedSubview(recruitFriendView)
         self.stackView.addArrangedSubview(settingsView)
         self.stackView.addArrangedSubview(contactSettingsView)
         self.stackView.addArrangedSubview(supportView)
@@ -703,6 +709,13 @@ extension ProfileViewController {
         let responsibleGamingViewController = ResponsibleGamingViewController()
         self.navigationController?.pushViewController(responsibleGamingViewController, animated: true)
     }
+
+    @objc func recruitFriendViewTapped(sender: UITapGestureRecognizer) {
+        let recruitAFriendViewController = RecruitAFriendViewController()
+
+        self.navigationController?.pushViewController(recruitAFriendViewController, animated: true)
+    }
+
 //
 //    @objc func limitsViewTapped() {
 //        let profileLimitsManagementViewController = ProfileLimitsManagementViewController()

@@ -61,7 +61,7 @@
                                                 <rect key="frame" x="0.0" y="0.0" width="404" height="171"/>
                                             </imageView>
                                             <stackView opaque="NO" contentMode="scaleToFill" spacing="7" translatesAutoresizingMaskIntoConstraints="NO" id="Ll0-G9-s03">
-                                                <rect key="frame" x="12" y="11" width="332.5" height="17"/>
+                                                <rect key="frame" x="12" y="11" width="320" height="17"/>
                                                 <subviews>
                                                     <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="unselected_favorite_icon" translatesAutoresizingMaskIntoConstraints="NO" id="hjz-Yg-JGd">
                                                         <rect key="frame" x="0.0" y="0.0" width="17" height="17"/>
@@ -82,10 +82,10 @@
                                                         </constraints>
                                                     </imageView>
                                                     <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Yhm-UM-LCk">
-                                                        <rect key="frame" x="72" y="0.0" width="260.5" height="17"/>
+                                                        <rect key="frame" x="72" y="0.0" width="248" height="17"/>
                                                         <subviews>
                                                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="UEFA Champions League" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="MRO-h1-2Aq">
-                                                                <rect key="frame" x="0.0" y="4" width="259.5" height="11"/>
+                                                                <rect key="frame" x="0.0" y="4" width="247" height="11"/>
                                                                 <fontDescription key="fontDescription" name="Gilroy-Semibold" family="Gilroy" pointSize="11"/>
                                                                 <nil key="textColor"/>
                                                                 <nil key="highlightedColor"/>
@@ -592,6 +592,11 @@
                                             <constraint firstItem="WZf-bd-zho" firstAttribute="centerY" secondItem="Ll0-G9-s03" secondAttribute="centerY" id="stQ-y3-xc4"/>
                                             <constraint firstItem="fML-Z9-21w" firstAttribute="centerX" secondItem="hjz-Yg-JGd" secondAttribute="centerX" id="xqw-Bk-PIe"/>
                                         </constraints>
+                                        <variation key="default">
+                                            <mask key="constraints">
+                                                <exclude reference="Luu-zR-4n9"/>
+                                            </mask>
+                                        </variation>
                                     </view>
                                     <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="q88-WX-WNe">
                                         <rect key="frame" x="0.0" y="273" width="404" height="8"/>
