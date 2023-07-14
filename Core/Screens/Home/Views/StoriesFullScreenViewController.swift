@@ -45,7 +45,17 @@ class StoriesFullScreenViewController: UIViewController {
 
         var items: [StoriesFullScreenItemView] = []
         for index in 0...5 {
-            let storiesFullScreenItemView = StoriesFullScreenItemView(index: index)
+
+            let viewModel: StoriesFullScreenItemViewModel
+
+            if index == 2 || index == 5 {
+                viewModel = StoriesFullScreenItemViewModel(videoSourceURL: URL(string: "https://getsamplefiles.com/download/mp4/sample-2.mp4")!)
+            }
+            else {
+                viewModel = StoriesFullScreenItemViewModel(imageSourceURL: URL(string: "https://media.idownloadblog.com/wp-content/uploads/2019/08/sports-wallpaper-basketball-green-city-sports-art-nba-iphone-X.jpg")!)
+            }
+
+            let storiesFullScreenItemView = StoriesFullScreenItemView(viewModel: viewModel)
             storiesFullScreenItemView.tag = index
             storiesFullScreenItemView.previousPageRequestedAction = { [weak self] in
                 self?.goToPreviousPageItem()
@@ -53,7 +63,7 @@ class StoriesFullScreenViewController: UIViewController {
             storiesFullScreenItemView.nextPageRequestedAction = { [weak self] in
                 self?.goToNextPageItem()
             }
-            storiesFullScreenItemView.closeRequestedAction =  { [weak self] in
+            storiesFullScreenItemView.closeRequestedAction = { [weak self] in
                 self?.closeFullscreen()
             }
 

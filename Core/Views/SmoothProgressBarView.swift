@@ -92,19 +92,20 @@ class SmoothProgressBarView: UIView {
         self.layer.cornerRadius = self.frame.size.height / 2
     }
 
-    func startProgress() {
+    func startProgress(duration: TimeInterval? = nil) {
 
         self.animatorCancellable?.cancel()
         self.animatorCancellable = nil
 
         self.animatorCancellable = self.animator.completionSubject
             .sink { [weak self] in
-                print("completionSubject called")
+                print("SmoothProgressBarView completionSubject called")
                 self?.progressBarFinishedAction()
             }
 
         self.animator.animate(constraint: self.foregroundBarWidthConstraint!,
-                              toValue: self.backgroundBar.frame.size.width)
+                              toValue: self.backgroundBar.frame.size.width,
+                              duration: duration)
     }
 
     func resetProgress() {
@@ -127,12 +128,14 @@ class SmoothProgressBarAnimator {
     var currentProgress: CGFloat = 0.0
     var targetProgress: CGFloat = 1.0
     var originalDuration: TimeInterval = 0.0
+    var duration: TimeInterval = 0.0
 
     let completionSubject = PassthroughSubject<Void, Never>()
     var constraint: NSLayoutConstraint?
 
     init(duration: TimeInterval) {
         self.originalDuration = duration
+        self.duration = duration
     }
 
     func animate(constraint: NSLayoutConstraint, fromValue: CGFloat = 0.0, toValue: CGFloat, duration: TimeInterval? = nil) {
@@ -150,10 +153,10 @@ class SmoothProgressBarAnimator {
         constraint.constant = fromValue
         constraint.firstItem?.superview?.layoutIfNeeded()
 
-        var animationDuration = duration ?? self.originalDuration
+        self.duration = duration ?? self.originalDuration
 
         // Calculate the progress increment per timer tick (assuming timer ticks every 0.01 second)
-        let incrementPerTick = targetProgress / (animationDuration * 100)
+        let incrementPerTick = targetProgress / (self.duration * 100)
 
         // Start a new timer
         self.timer = Timer.scheduledTimer(withTimeInterval: 0.01, repeats: true) { [weak self] timer in
@@ -183,8 +186,8 @@ class SmoothProgressBarAnimator {
     func resume() {
         guard let constraint = self.constraint else { return }
 
-        let remainingProgress = targetProgress - currentProgress
-        let remainingTime = originalDuration * Double(remainingProgress / targetProgress)
+        let remainingProgress = self.targetProgress - self.currentProgress
+        let remainingTime = self.duration * Double(remainingProgress / self.targetProgress)
 
         self.animate(constraint: constraint,
                      fromValue: self.currentProgress,

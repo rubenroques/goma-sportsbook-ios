@@ -5,8 +5,29 @@
 //  Created by Ruben Roques on 06/06/2023.
 //
 
-import Foundation
 import UIKit
+import Kingfisher
+import AVFoundation
+import AVKit
+
+struct StoriesFullScreenItemViewModel {
+
+    enum ContentType {
+        case image(sourceUrl: URL)
+        case video(sourceUrl: URL)
+    }
+
+    var contentType: ContentType
+
+    init(videoSourceURL: URL) {
+        self.contentType = .video(sourceUrl: videoSourceURL)
+    }
+
+    init(imageSourceURL: URL) {
+        self.contentType = .image(sourceUrl: imageSourceURL)
+    }
+
+}
 
 class StoriesFullScreenItemView: UIView {
 
@@ -27,9 +48,18 @@ class StoriesFullScreenItemView: UIView {
 
     private lazy var contentImageView: UIImageView = Self.createContentImageView()
 
+    //
+    private lazy var videoBaseView: UIView = Self.createVideoBaseView()
+    private let videoPlayerViewController = AVPlayerViewController()
+    private var playerItemStatusObserver: NSKeyValueObservation?
+    private var isReadyToPlayVideo: Bool = false
+
+    //
     private lazy var closeImageBaseView: UIView = Self.createCloseImageBaseView()
     private lazy var closeImageView: UIImageView = Self.createCloseImageView()
     private lazy var actionButton: UIButton = Self.createActionButton()
+
+    private var viewModel: StoriesFullScreenItemViewModel
 
     override var tag: Int {
         didSet {
@@ -38,24 +68,23 @@ class StoriesFullScreenItemView: UIView {
     }
 
     // MARK: - Lifetime and Cycle
-    init(index: Int) {
+    init(viewModel: StoriesFullScreenItemViewModel) {
+        self.viewModel = viewModel
+
         super.init(frame: .zero)
         self.commonInit()
+
         self.topLabel.text = "Promotions"
     }
 
     @available(iOS, unavailable)
     override init(frame: CGRect) {
-        super.init(frame: frame)
-
-        self.commonInit()
+        fatalError()
     }
 
     @available(iOS, unavailable)
     required init?(coder aDecoder: NSCoder) {
-        super.init(coder: aDecoder)
-
-        self.commonInit()
+        fatalError()
     }
 
     func commonInit() {
@@ -76,6 +105,48 @@ class StoriesFullScreenItemView: UIView {
         self.closeImageView.addGestureRecognizer(closeTapGesture)
         self.closeImageView.isUserInteractionEnabled = true
 
+        switch self.viewModel.contentType {
+        case .video(let sourceUrl):
+            self.videoBaseView.isHidden = false
+            self.contentImageView.isHidden = true
+
+//            let playerItem = AVPlayerItem(url: sourceUrl)
+//            playerItem.addObserver(self, forKeyPath: "status", options: [.new, .initial], context: nil)
+//
+//            self.videoPlayer = AVPlayer(playerItem: playerItem)
+//
+//            self.videoPlayerLayer = AVPlayerLayer(player: self.videoPlayer!)
+//            self.videoPlayerLayer!.videoGravity = .resizeAspect
+//            self.videoPlayerLayer!.needsDisplayOnBoundsChange = true
+//
+//            // Set the playerLayer's frame and attach it to our videoView
+//            self.videoPlayerLayer?.frame = self.videoBaseView.bounds
+//
+//            self.videoBaseView.layer.insertSublayer(self.videoPlayerLayer!, at: 0)
+
+            self.addVideoView(withURL: sourceUrl)
+
+        case .image(let sourceUrl):
+            self.contentImageView.kf.setImage(with: sourceUrl)
+
+            self.contentImageView.isHidden = false
+            self.videoBaseView.isHidden = true
+        }
+    }
+
+    override func layoutSubviews() {
+        super.layoutSubviews()
+
+        if let mainPlayerLayer = self.videoPlayerViewController.view.layer.sublayers?.compactMap({ $0 as? AVPlayerLayer }).first {
+            mainPlayerLayer.videoGravity = AVLayerVideoGravity.resizeAspectFill
+
+            print("VideoStatus Size 3 \(mainPlayerLayer.frame)")
+
+            print("VideoStatus Size 1 \(self.videoBaseView)")
+
+            print("VideoStatus Size 0 \(self.frame)")
+
+        }
     }
 
     override func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {
@@ -96,6 +167,8 @@ class StoriesFullScreenItemView: UIView {
         self.smoothProgressBarView.foregroundBarColor = .white
         self.smoothProgressBarView.backgroundBarColor = UIColor.App.scroll
 
+        self.videoBaseView.backgroundColor = .black
+
         StyleHelper.styleButton(button: self.actionButton)
         self.actionButton.titleLabel?.font = AppFont.with(type: .bold, size: 17)
         self.actionButton.setBackgroundColor(UIColor.App.buttonBackgroundSecondary, for: .normal)
@@ -103,30 +176,130 @@ class StoriesFullScreenItemView: UIView {
 
     func resetProgress() {
         self.smoothProgressBarView.resetProgress()
+
+        self.resetVideo()
     }
 
     func startProgress() {
-        self.smoothProgressBarView.startProgress()
+
+        switch self.viewModel.contentType {
+        case .video:
+            self.playVideo()
+
+            if let duration = self.videoPlayerViewController.player?.currentItem?.duration.seconds {
+                self.smoothProgressBarView.startProgress(duration: TimeInterval(duration))
+            }
+            else {
+                self.smoothProgressBarView.startProgress()
+            }
+
+        case .image:
+            self.smoothProgressBarView.startProgress()
+        }
+
     }
 
     func resumeProgress() {
         self.smoothProgressBarView.resumeAnimation()
+
+        self.resumeVideo()
     }
 
     func pauseProgress() {
         self.smoothProgressBarView.pauseAnimation()
+
+        self.pauseVideo()
     }
 
+    // Video handling
+    private func playVideo() {
+        if isReadyToPlayVideo {
+            self.videoPlayerViewController.player?.play()
+        }
+    }
+
+    private func pauseVideo() {
+        self.videoPlayerViewController.player?.pause()
+    }
+
+    private func resumeVideo() {
+        self.videoPlayerViewController.player?.play()
+    }
+
+    private func resetVideo() {
+        self.videoPlayerViewController.player?.seek(to: CMTime(value: 0, timescale: 1))
+        self.videoPlayerViewController.player?.pause()
+    }
+
+    // Navigation between items
     @objc func didTapNextPageView() {
+        self.resetVideo()
         self.nextPageRequestedAction()
     }
 
     @objc func didTapPreviousPageView() {
+        self.resetVideo()
         self.previousPageRequestedAction()
     }
 
     @objc func didTapCloseButton() {
+        self.resetVideo()
         self.closeRequestedAction()
+    }
+
+}
+
+extension StoriesFullScreenItemView {
+
+    func addVideoView(withURL sourceUrl: URL) {
+
+        let playerItem = AVPlayerItem(url: sourceUrl)
+
+        let videoPlayer = AVPlayer(playerItem: playerItem)
+
+        videoPlayer.isMuted = true
+
+        // Observe the playerItem's status
+        self.playerItemStatusObserver = playerItem.observe(\.status, options: [.new, .initial]) { [weak self] item, _ in
+
+            switch item.status {
+            case .unknown:
+                self?.isReadyToPlayVideo = false
+
+            case .readyToPlay:
+                self?.isReadyToPlayVideo = true
+
+            case .failed:
+                if let error = item.error {
+                    print("VideoStatus: Player item error: \( dump(error) )")
+                    self?.isReadyToPlayVideo = false
+                }
+            @unknown default:
+                self?.isReadyToPlayVideo = false
+            }
+
+        }
+
+        //
+        //
+        self.videoPlayerViewController.view.translatesAutoresizingMaskIntoConstraints = false
+        self.videoPlayerViewController.showsPlaybackControls = false
+        self.videoPlayerViewController.player = videoPlayer
+        self.videoPlayerViewController.videoGravity = .resizeAspectFill
+
+        self.videoBaseView.addSubview(self.videoPlayerViewController.view)
+
+        NSLayoutConstraint.activate([
+            self.videoPlayerViewController.view.topAnchor.constraint(equalTo: self.videoBaseView.topAnchor),
+            self.videoPlayerViewController.view.leadingAnchor.constraint(equalTo: self.videoBaseView.leadingAnchor),
+            self.videoPlayerViewController.view.trailingAnchor.constraint(equalTo: self.videoBaseView.trailingAnchor),
+            self.videoPlayerViewController.view.bottomAnchor.constraint(equalTo: self.videoBaseView.bottomAnchor)
+        ])
+
+        if let mainPlayerLayer = self.videoPlayerViewController.view.layer.sublayers?.compactMap({ $0 as? AVPlayerLayer }).first {
+            mainPlayerLayer.videoGravity = AVLayerVideoGravity.resizeAspectFill
+        }
+
     }
 
 }
@@ -169,8 +342,14 @@ extension StoriesFullScreenItemView {
         return label
     }
 
+    private static func createVideoBaseView() -> UIView {
+        let view = UIView()
+        view.translatesAutoresizingMaskIntoConstraints = false
+        return view
+    }
+
     private static func createContentImageView() -> UIImageView {
-        let imageView = UIImageView(image: UIImage(named: "soccer_promo_dummy"))
+        let imageView = UIImageView()
         imageView.contentMode = .scaleAspectFill
         imageView.translatesAutoresizingMaskIntoConstraints = false
         return imageView
@@ -201,6 +380,7 @@ extension StoriesFullScreenItemView {
 
         self.addSubview(self.baseView)
 
+        self.baseView.addSubview(self.videoBaseView)
         self.baseView.addSubview(self.contentImageView)
         self.baseView.addSubview(self.previousPageView)
         self.baseView.addSubview(self.nextPageView)
@@ -225,6 +405,11 @@ extension StoriesFullScreenItemView {
             self.baseView.trailingAnchor.constraint(equalTo: self.trailingAnchor),
             self.baseView.topAnchor.constraint(equalTo: self.topAnchor),
             self.baseView.bottomAnchor.constraint(equalTo: self.bottomAnchor),
+
+            self.videoBaseView.leadingAnchor.constraint(equalTo: self.baseView.leadingAnchor),
+            self.videoBaseView.trailingAnchor.constraint(equalTo: self.baseView.trailingAnchor),
+            self.videoBaseView.topAnchor.constraint(equalTo: self.baseView.topAnchor),
+            self.videoBaseView.bottomAnchor.constraint(equalTo: self.baseView.bottomAnchor),
 
             self.contentImageView.leadingAnchor.constraint(equalTo: self.baseView.leadingAnchor),
             self.contentImageView.trailingAnchor.constraint(equalTo: self.baseView.trailingAnchor),

@@ -553,7 +553,7 @@ class LiveMatchWidgetCollectionViewCell: UICollectionViewCell {
                                                                     downChangeOddValueImage: weakSelf.homeDownChangeOddValueImage,
                                                                     baseView: weakSelf.homeBaseView)
                                 }
-                                print("Cell Event liveDataSummary updateOutcomeOdd \(currentOddValue) -> \(newOddValue)")
+                                print("Cell Event live Data updateOutcomeOdd \(currentOddValue) -> \(newOddValue)")
                             }
 
                             weakSelf.currentHomeOddValue = newOddValue
@@ -606,7 +606,7 @@ class LiveMatchWidgetCollectionViewCell: UICollectionViewCell {
                                                                     downChangeOddValueImage: weakSelf.drawDownChangeOddValueImage,
                                                                     baseView: weakSelf.drawBaseView)
                                 }
-                                print("Cell Event liveDataSummary updateOutcomeOdd \(currentOddValue) -> \(newOddValue)")
+                                print("Cell Event live Data updateOutcomeOdd \(currentOddValue) -> \(newOddValue)")
                             }
                             weakSelf.currentDrawOddValue = newOddValue
 //                            weakSelf.drawOddValueLabel.text = OddConverter.stringForValue(newOddValue, format: UserDefaults.standard.userOddsFormat)
@@ -656,7 +656,7 @@ class LiveMatchWidgetCollectionViewCell: UICollectionViewCell {
                                                                     downChangeOddValueImage: weakSelf.awayDownChangeOddValueImage,
                                                                     baseView: weakSelf.awayBaseView)
                                 }
-                                print("Cell Event liveDataSummary updateOutcomeOdd \(currentOddValue) -> \(newOddValue)")
+                                print("Cell Event live Data updateOutcomeOdd \(currentOddValue) -> \(newOddValue)")
                             }
 
                             weakSelf.currentAwayOddValue = newOddValue
