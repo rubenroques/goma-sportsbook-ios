@@ -122,6 +122,10 @@ extension SportRadarModelMapper {
                            totalEscrow: playerInfoResponse.totalEscrowBalanceNumber)
     }
 
+    static func cashbackBalance(fromCashbackBalance cashbackBalance: SportRadarModels.CashbackBalance) -> CashbackBalance {
+        
+        return CashbackBalance(status: cashbackBalance.status, balance: cashbackBalance.balance, message: cashbackBalance.message)
+    }
 }
 
 extension SportRadarModelMapper {

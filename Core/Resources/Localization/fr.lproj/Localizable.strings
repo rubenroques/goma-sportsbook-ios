@@ -1437,11 +1437,11 @@
 "pending_withdraws_info_message" = "Vous êtes sûr de vouloir effectuer un retrait ? Vous avez déjà un retrait en cours, que vous pouvez annuler.";
 "show_pending_withdraws" = "Afficher les retraits en cours";
 
-"recruit_a_friend" = "Recruter un ami";
+"referal_friend" = "Recommander un ami";
 
-"recruit_bonus_info_title" = "Parraînez vos amis et touchez 20€ de bonus!";
-"recruit_bonus_info_description" = "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur.";
-"recruit_referral_description" = "Il te reste {referrals} sur les {days} prochains. Après cette période, ton compteur repassera à 5 parrainages possibles.";
+"rf_first_title" = "Parraînez vos amis et touchez 20€ de bonus!";
+"rf_first_description" = "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur.";
+"rf_second_description" = "Il te reste {referrals} sur les {days} prochains. Après cette période, ton compteur repassera à 5 parrainages possibles.";
 
 "referrals_number_single" = "{number} parrainage";
 "referrals_number" = "{number} parrainages";
@@ -1449,37 +1449,37 @@
 "days_number_single" = "{number} jour";
 "days_number" = "{number} jours";
 
-"recruit_methods_title" = "Comment parrainer mon ami?";
-"recruit_methods_description" = "Utilise la méthode de ton choix pour parrainner ton ami";
+"rf_third_title" = "Comment parrainer mon ami?";
+"rf_third_sub_title" = "Utilise la méthode de ton choix pour parrainner ton ami";
 
-"recruit_share_title" = "Partager un lien par SMS, Whatsapp, Email...";
-"recruit_share_description" = "Choisis la méthode de ton choix pour partager le lien de parrainage à ton ami (SMS, Whatsapp, messanger, email, etc...)";
-"recruit_share_link" = "Partager un lien";
+"rf_third_fs_title" = "Partager un lien par SMS, Whatsapp, Email...";
+"rf_third_fs_description" = "Choisis la méthode de ton choix pour partager le lien de parrainage à ton ami (SMS, Whatsapp, messanger, email, etc...)";
+"rf_third_fs_bottom" = "Partager un lien";
 
-"recruit_qr_code_title" = "Afficher un QR code";
-"recruit_qr_code_description" = "Ton ami n’a plus qu’à scanner ce QR code pour s’inscrire et profiter du programme de parrainage.";
-"recruit_qr_code_show" = "Voir le QR code";
+"rf_third_ss_title" = "Afficher un QR code";
+"rf_third_ss_description" = "Ton ami n’a plus qu’à scanner ce QR code pour s’inscrire et profiter du programme de parrainage.";
+"rf_third_ss_bottom" = "Voir le QR code";
 
-"my_referrals" = "Mes filleuls";
-"my_referrals_description" = "Retrouve ici la liste de tes filleuls inscrits ces 12 derniers mois";
-"my_godfather" = "Mon parrain";
+"rf_fourth_title" = "Mes filleuls";
+"rf_fourth_description" = "Retrouve ici la liste de tes filleuls inscrits ces 12 derniers mois";
+"rf_fourth_second_title" = "Mon parrain";
 
 "referral_bonus_won" = "Tu as touché un bonus de 20€ pour ce filleul";
 "referral_account_pending" = "Pour toucher ton bonus, ton ami doit valider son compte";
-"referral_deposit_pending" = "Pour toucher ton bonus, ton ami doit effectuer un dépôt.";
+"referral_deposit_pending" = "Pour toucher ton bonus, ton ami doit effectuer un dépôt";
 
 "account_validated" = "Compte validé";
 "account_not_validated" = "Compte non validé";
-"first_deposit_check" = "✓ 1er dépot";
+"rf_first_deposit" = "✓ 1er dépot";
 
-"referral_regulations_title" = "Règlement relatif à l'affiliation";
-"referral_regulations_description" = "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do ";
+"rf_fifth_title" = "Règlement relatif à l'affiliation";
+"rf_fifth_description" = "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do ";
 
 "qr_code" = "QR code";
 "qr_code_description" = "Demande à ton ami de prendre en photo ce QR code pour s'inscrire sur Betsson.fr";
 
-"recruit_invalid_title" = "Comment parrainer mes amis?";
-"recruit_invalid_description" = "Pour pouvoir parrainer tes amis, tu dois d abord valider ton compte et effectuer un premier dépot";
+"rf_second_title_nv" = "Comment parrainer mes amis?";
+"rf_second_description_nv" = "Pour pouvoir parrainer tes amis, tu dois d abord valider ton compte et effectuer un premier dépot";
 
-"validate_my_account" = "Valider mon compte";
-"do_first_deposit" = "Faire mon 1er dépot";
+"rf_second_first_bottom_nv" = "Valider mon compte";
+"rf_second_second_bottom_nv" = "Faire mon 1er dépot";

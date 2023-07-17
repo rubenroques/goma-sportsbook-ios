@@ -175,6 +175,26 @@ class ProfileViewController: UIViewController {
                 }
             }
             .store(in: &cancellables)
+
+//        Env.userSessionStore.userCashbackBalance
+//            .receive(on: DispatchQueue.main)
+//            .sink { [weak self] cashbackBalance in
+//                if let cashbackBalance = cashbackBalance {
+//                    if let formattedTotalString = CurrencyFormater.defaultFormat.string(from: NSNumber(value: cashbackBalance)) {
+//                        // TODO: Put cashback balance here
+//                    }
+//                    else {
+//                        ()
+//                    }
+//                }
+//                else {
+//                    ()
+//
+//                }
+//            }
+//            .store(in: &cancellables)
+
+        Env.userSessionStore.refreshCashbackBalance()
         
         Env.userSessionStore.isUserProfileCompletePublisher
             .receive(on: DispatchQueue.main)
@@ -496,7 +516,7 @@ class ProfileViewController: UIViewController {
         responsibleGamingView.addGestureRecognizer(responsibleGamingTap)
 
         let recruitFriendView = NavigationCardView()
-        recruitFriendView.setupView(title: localized("recruit_a_friend"), iconTitle: "responsible_gaming_icon")
+        recruitFriendView.setupView(title: localized("referal_friend"), iconTitle: "recruit_icon")
         let recruitFriendTap = UITapGestureRecognizer(target: self, action: #selector(recruitFriendViewTapped(sender:)))
         recruitFriendView.addGestureRecognizer(recruitFriendTap)
 

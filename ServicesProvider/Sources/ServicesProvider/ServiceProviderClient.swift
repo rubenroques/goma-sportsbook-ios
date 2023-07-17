@@ -718,6 +718,15 @@ extension ServicesProviderClient {
         return privilegedAccessManager.getUserBalance()
     }
 
+    public func getUserCashbackBalance() -> AnyPublisher<CashbackBalance, ServiceProviderError> {
+        guard
+            let privilegedAccessManager = self.privilegedAccessManager
+        else {
+            return Fail(error: ServiceProviderError.privilegedAccessManagerNotFound).eraseToAnyPublisher()
+        }
+        return privilegedAccessManager.getUserCashbackBalance()
+    }
+
     public func signUpCompletion(form: ServicesProvider.UpdateUserProfileForm) -> AnyPublisher<Bool, ServiceProviderError> {
         guard
             let privilegedAccessManager = self.privilegedAccessManager

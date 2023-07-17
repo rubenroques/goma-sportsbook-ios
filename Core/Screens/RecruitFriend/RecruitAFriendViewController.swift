@@ -386,7 +386,7 @@ extension RecruitAFriendViewController {
         let label = UILabel()
         label.translatesAutoresizingMaskIntoConstraints = false
         label.font = AppFont.with(type: .bold, size: 20)
-        label.text = localized("recruit_a_friend")
+        label.text = localized("referal_friend")
         label.textAlignment = .center
         return label
     }
@@ -422,7 +422,7 @@ extension RecruitAFriendViewController {
         let label = UILabel()
         label.translatesAutoresizingMaskIntoConstraints = false
         label.font = AppFont.with(type: .bold, size: 18)
-        label.text = localized("recruit_bonus_info_title")
+        label.text = localized("rf_first_title")
         label.textAlignment = .left
         label.numberOfLines = 0
         return label
@@ -432,7 +432,7 @@ extension RecruitAFriendViewController {
         let label = UILabel()
         label.translatesAutoresizingMaskIntoConstraints = false
         label.font = AppFont.with(type: .regular, size: 14)
-        label.text = localized("recruit_bonus_info_description")
+        label.text = localized("rf_first_description")
         label.textAlignment = .left
         label.numberOfLines = 0
         label.addLineHeight(to: label, lineHeight: 18)
@@ -459,7 +459,7 @@ extension RecruitAFriendViewController {
         let label = UILabel()
         label.translatesAutoresizingMaskIntoConstraints = false
         label.font = AppFont.with(type: .regular, size: 14)
-        label.text = localized("recruit_referral_description")
+        label.text = localized("rf_second_description")
         label.textAlignment = .left
         label.numberOfLines = 0
         label.addLineHeight(to: label, lineHeight: 18)
@@ -475,7 +475,7 @@ extension RecruitAFriendViewController {
         localized("days_number_single").replacingFirstOccurrence(of: "{number}", with: "\(days)") :
         localized("days_number").replacingFirstOccurrence(of: "{number}", with: "\(days)")
 
-        let text = localized("recruit_referral_description").replacingFirstOccurrence(of: "{referrals}", with: sponsorsText).replacingFirstOccurrence(of: "{days}", with: daysText)
+        let text = localized("rf_second_description").replacingFirstOccurrence(of: "{referrals}", with: sponsorsText).replacingFirstOccurrence(of: "{days}", with: daysText)
 
         let highlightAttributedString = NSMutableAttributedString(string: text)
 
@@ -502,7 +502,7 @@ extension RecruitAFriendViewController {
         let label = UILabel()
         label.translatesAutoresizingMaskIntoConstraints = false
         label.font = AppFont.with(type: .bold, size: 18)
-        label.text = localized("recruit_invalid_title")
+        label.text = localized("rf_second_title_nv")
         label.textAlignment = .left
         label.numberOfLines = 0
         return label
@@ -512,7 +512,7 @@ extension RecruitAFriendViewController {
         let label = UILabel()
         label.translatesAutoresizingMaskIntoConstraints = false
         label.font = AppFont.with(type: .regular, size: 14)
-        label.text = localized("recruit_invalid_description")
+        label.text = localized("rf_second_description_nv")
         label.textAlignment = .left
         label.numberOfLines = 0
         label.addLineHeight(to: label, lineHeight: 18)
@@ -522,7 +522,7 @@ extension RecruitAFriendViewController {
     private static func createRecruitInvalidDocumentsButton() -> UIButton {
         let button = UIButton()
         button.translatesAutoresizingMaskIntoConstraints = false
-        button.setTitle(localized("validate_my_account"), for: .normal)
+        button.setTitle(localized("rf_second_first_bottom_nv"), for: .normal)
         button.titleLabel?.font = AppFont.with(type: .bold, size: 14)
         button.layer.cornerRadius = CornerRadius.button
         button.layer.masksToBounds = true
@@ -534,7 +534,7 @@ extension RecruitAFriendViewController {
     private static func createRecruitInvalidDepositButton() -> UIButton {
         let button = UIButton()
         button.translatesAutoresizingMaskIntoConstraints = false
-        button.setTitle(localized("do_first_deposit"), for: .normal)
+        button.setTitle(localized("rf_second_second_bottom_nv"), for: .normal)
         button.titleLabel?.font = AppFont.with(type: .bold, size: 14)
         button.layer.cornerRadius = CornerRadius.button
         button.layer.masksToBounds = true
@@ -553,7 +553,7 @@ extension RecruitAFriendViewController {
         let label = UILabel()
         label.translatesAutoresizingMaskIntoConstraints = false
         label.font = AppFont.with(type: .bold, size: 18)
-        label.text = localized("recruit_methods_title")
+        label.text = localized("rf_third_title")
         label.textAlignment = .left
         label.numberOfLines = 0
         return label
@@ -563,7 +563,7 @@ extension RecruitAFriendViewController {
         let label = UILabel()
         label.translatesAutoresizingMaskIntoConstraints = false
         label.font = AppFont.with(type: .regular, size: 14)
-        label.text = localized("recruit_methods_description")
+        label.text = localized("rf_third_sub_title")
         label.textAlignment = .left
         label.numberOfLines = 0
         label.addLineHeight(to: label, lineHeight: 18)
@@ -595,7 +595,7 @@ extension RecruitAFriendViewController {
         let label = UILabel()
         label.translatesAutoresizingMaskIntoConstraints = false
         label.font = AppFont.with(type: .bold, size: 14)
-        label.text = localized("recruit_share_title")
+        label.text = localized("rf_third_fs_title")
         label.textAlignment = .left
         return label
     }
@@ -604,7 +604,7 @@ extension RecruitAFriendViewController {
         let label = UILabel()
         label.translatesAutoresizingMaskIntoConstraints = false
         label.font = AppFont.with(type: .regular, size: 14)
-        label.text = localized("recruit_share_description")
+        label.text = localized("rf_third_fs_description")
         label.textAlignment = .left
         label.numberOfLines = 0
         label.addLineHeight(to: label, lineHeight: 18)
@@ -613,7 +613,7 @@ extension RecruitAFriendViewController {
 
     private static func createShareButton() -> UIButton {
         let button = UIButton()
-        button.setTitle(localized("recruit_share_link"), for: .normal)
+        button.setTitle(localized("rf_third_fs_bottom"), for: .normal)
         button.titleLabel?.font = AppFont.with(type: .bold, size: 18)
         button.translatesAutoresizingMaskIntoConstraints = false
         button.layer.cornerRadius = CornerRadius.button
@@ -646,7 +646,7 @@ extension RecruitAFriendViewController {
         let label = UILabel()
         label.translatesAutoresizingMaskIntoConstraints = false
         label.font = AppFont.with(type: .bold, size: 14)
-        label.text = localized("recruit_qr_code_title")
+        label.text = localized("rf_third_ss_title")
         label.textAlignment = .left
         return label
     }
@@ -655,7 +655,7 @@ extension RecruitAFriendViewController {
         let label = UILabel()
         label.translatesAutoresizingMaskIntoConstraints = false
         label.font = AppFont.with(type: .regular, size: 14)
-        label.text = localized("recruit_qr_code_description")
+        label.text = localized("rf_third_ss_description")
         label.textAlignment = .left
         label.numberOfLines = 0
         label.addLineHeight(to: label, lineHeight: 18)
@@ -664,7 +664,7 @@ extension RecruitAFriendViewController {
 
     private static func createQRCodeButton() -> UIButton {
         let button = UIButton()
-        button.setTitle(localized("recruit_qr_code_show"), for: .normal)
+        button.setTitle(localized("rf_third_ss_bottom"), for: .normal)
         button.titleLabel?.font = AppFont.with(type: .bold, size: 18)
         button.translatesAutoresizingMaskIntoConstraints = false
         button.layer.cornerRadius = CornerRadius.button
@@ -682,7 +682,7 @@ extension RecruitAFriendViewController {
         let label = UILabel()
         label.translatesAutoresizingMaskIntoConstraints = false
         label.font = AppFont.with(type: .bold, size: 14)
-        label.text = localized("my_referrals")
+        label.text = localized("rf_fourth_title")
         label.textAlignment = .left
         return label
     }
@@ -691,7 +691,7 @@ extension RecruitAFriendViewController {
         let label = UILabel()
         label.translatesAutoresizingMaskIntoConstraints = false
         label.font = AppFont.with(type: .regular, size: 14)
-        label.text = localized("my_referrals_description")
+        label.text = localized("rf_fourth_description")
         label.textAlignment = .left
         label.numberOfLines = 0
         return label
@@ -716,7 +716,7 @@ extension RecruitAFriendViewController {
         let label = UILabel()
         label.translatesAutoresizingMaskIntoConstraints = false
         label.font = AppFont.with(type: .bold, size: 14)
-        label.text = localized("my_godfather")
+        label.text = localized("rf_fourth_second_title")
         label.textAlignment = .left
         return label
     }
@@ -738,7 +738,7 @@ extension RecruitAFriendViewController {
         let label = UILabel()
         label.translatesAutoresizingMaskIntoConstraints = false
         label.font = AppFont.with(type: .bold, size: 18)
-        label.text = localized("referral_regulations_title")
+        label.text = localized("rf_fifth_title")
         label.textAlignment = .left
         label.numberOfLines = 0
         return label
@@ -748,7 +748,7 @@ extension RecruitAFriendViewController {
         let label = UILabel()
         label.translatesAutoresizingMaskIntoConstraints = false
         label.font = AppFont.with(type: .regular, size: 14)
-        label.text = localized("referral_regulations_description")
+        label.text = localized("rf_fifth_description")
         label.textAlignment = .left
         label.numberOfLines = 0
         label.addLineHeight(to: label, lineHeight: 18)

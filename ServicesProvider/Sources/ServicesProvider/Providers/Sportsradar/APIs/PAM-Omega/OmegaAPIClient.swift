@@ -101,6 +101,8 @@ enum OmegaAPIClient {
     case lockPlayer(isPermanent: Bool? = nil, lockPeriodUnit: String? = nil, lockPeriod: String? = nil)
 
     case getBalance
+    case getCashbackBalance
+
     case quickSignupCompletion(firstName: String?,
                                lastName: String?,
                                birthDate: Date?,
@@ -207,6 +209,8 @@ extension OmegaAPIClient: Endpoint {
 
         case .getBalance:
             return "/ps/ips/getBalance"
+        case .getCashbackBalance:
+            return "/ps/ips/getSportRadarReportedCashbackBalance"
         case .quickSignupCompletion:
             return "/ps/ips/quickSignupCompletion"
         case .getDocumentTypes:
@@ -502,6 +506,9 @@ extension OmegaAPIClient: Endpoint {
 
         case .getBalance:
             return nil
+        case .getCashbackBalance:
+            return nil
+
         case .quickSignupCompletion(let firstName, let lastName, let birthDate, let gender, let mobileNumber,
                                     let address, let province, let city, let postalCode, let country, let cardId, let securityQuestion, let securityAnswer):
             var query: [URLQueryItem] = []
@@ -727,6 +734,8 @@ extension OmegaAPIClient: Endpoint {
         case .lockPlayer: return .post
 
         case .getBalance: return .get
+        case .getCashbackBalance: return .get
+
         case .quickSignupCompletion: return .get
         case .getDocumentTypes: return .get
         case .getUserDocuments: return .get
@@ -853,6 +862,7 @@ extension OmegaAPIClient: Endpoint {
         case .lockPlayer: return true
 
         case .getBalance: return true
+        case .getCashbackBalance: return true
         case .quickSignupCompletion: return true
         case .getDocumentTypes: return false
         case .getUserDocuments: return true

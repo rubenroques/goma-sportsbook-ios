@@ -1372,12 +1372,12 @@
 "pending_withdraws_info_message" = "Are you sure you want to withdraw?You already have a pending withdraw, which you can cancel.";
 "show_pending_withdraws" = "Show pending withdraws";
 
-"recruit_a_friend" = "Recruit a Friend";
+"referal_friend" = "Referal a friend";
 
-"recruit_bonus_info_title" = "Parraînez vos amis et touchez 20€ de bonus!";
-"recruit_bonus_info_description" = "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur.";
+"rf_first_title" = "Refer your friends and get a €20 bonus!";
+"rf_first_description" = "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur.";
 
-"recruit_referral_description" = "Il te reste {referrals} sur les {days} prochains. Après cette période, ton compteur repassera à 5 parrainages possibles.";
+"rf_second_description" = "You have {referrals} left over the next {days}. After this period, your counter will return to 5 possible referrals.";
 
 "referrals_number_single" = "{number} referral";
 "referrals_number" = "{number} referrals";
@@ -1385,37 +1385,37 @@
 "days_number_single" = "{number} day";
 "days_number" = "{number} days";
 
-"recruit_methods_title" = "Comment parrainer mon ami?";
-"recruit_methods_description" = "Utilise la méthode de ton choix pour parrainner ton ami";
+"rf_third_title" = "How can I sponsor my friend?";
+"rf_third_sub_title" = "Use the method of your choice to sponsor your friend";
 
-"recruit_share_title" = "Partager un lien par SMS, Whatsapp, Email...";
-"recruit_share_description" = "Choisis la méthode de ton choix pour partager le lien de parrainage à ton ami (SMS, Whatsapp, messanger, email, etc...)";
-"recruit_share_link" = "Partager un lien";
+"rf_third_fs_title" = "Share a link by SMS, Whatsapp, Email...";
+"rf_third_fs_description" = "Choose the method of your choice to share the referral link with your friend (SMS, Whatsapp, messanger, email, etc...)";
+"recruit_share_link" = "Share a link";
 
-"recruit_qr_code_title" = "Afficher un QR code";
-"recruit_qr_code_description" = "Ton ami n’a plus qu’à scanner ce QR code pour s’inscrire et profiter du programme de parrainage.";
-"recruit_qr_code_show" = "Voir le QR code";
+"rf_third_ss_title" = "Display a QR code";
+"rf_third_ss_description" = "All your friend has to do is scan this QR code to sign up and take advantage of the referral program.";
+"rf_third_ss_bottom" = "See the QR code";
 
-"my_referrals" = "Mes filleuls";
-"my_referrals_description" = "Retrouve ici la liste de tes filleuls inscrits ces 12 derniers mois";
-"my_godfather" = "Mon parrain";
+"rf_fourth_title" = "My godchildren";
+"rf_fourth_description" = "Find here the list of your godchildren registered in the last 12 months";
+"rf_fourth_second_title" = "My sponsor";
 
-"referral_bonus_won" = "Tu as touché un bonus de 20€ pour ce filleul";
-"referral_account_pending" = "Pour toucher ton bonus, ton ami doit valider son compte";
-"referral_deposit_pending" = "Pour toucher ton bonus, ton ami doit effectuer un dépôt.";
+"referral_bonus_won" = "You received a €20 bonus for this referral";
+"referral_account_pending" = "To receive your bonus, your friend must validate his account";
+"referral_deposit_pending" = "To receive your bonus, your friend must make a deposit";
 
-"account_validated" = "Compte validé";
+"account_validated" = "Account validated";
 "account_not_validated" = "Compte non validé";
-"first_deposit_check" = "✓ 1er dépot";
+"rf_first_deposit" = "✓ 1st deposit";
 
-"referral_regulations_title" = "Règlement relatif à l'affiliation";
-"referral_regulations_description" = "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do ";
+"rf_fifth_title" = "Affiliation Regulations";
+"rf_fifth_description" = "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do ";
 
 "qr_code" = "QR code";
-"qr_code_description" = "Demande à ton ami de prendre en photo ce QR code pour s'inscrire sur Betsson.fr";
+"qr_code_description" = "Ask your friend to take a picture of this QR code to register on Betsson.fr";
 
-"recruit_invalid_title" = "Comment parrainer mes amis?";
-"recruit_invalid_description" = "Pour pouvoir parrainer tes amis, tu dois d abord valider ton compte et effectuer un premier dépot";
+"rf_second_title_nv" = "How can I sponsor my friends?";
+"rf_second_description_nv" = "To be able to sponsor your friends, you must first validate your account and make an initial deposit.";
 
-"validate_my_account" = "Valider mon compte";
-"do_first_deposit" = "Faire mon 1er dépot";
+"rf_second_first_bottom_nv" = "Validate my account";
+"rf_second_second_bottom_nv" = "Make my 1st deposit";

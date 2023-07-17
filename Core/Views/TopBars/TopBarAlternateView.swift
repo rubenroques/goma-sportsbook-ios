@@ -137,10 +137,21 @@ class TopBarAlternateView: UIView {
         let alternateAnonymousTapGesture = UITapGestureRecognizer(target: self, action: #selector(didTapAnonymousButton))
         self.anonymousUserMenuAlternateBaseView.addGestureRecognizer(alternateAnonymousTapGesture)
 
-        // Cashback temporary
-        if let formattedCashbackString = CurrencyFormater.defaultFormat.string(from: NSNumber(value: 0)) {
-            self.cashbackAlternateLabel.text = formattedCashbackString
-        }
+        // Cashback
+        Env.userSessionStore.userCashbackBalance
+            .receive(on: DispatchQueue.main)
+            .sink { [weak self] cashbackBalance in
+                if let cashbackBalance = cashbackBalance,
+                   let formattedTotalString = CurrencyFormater.defaultFormat.string(from: NSNumber(value: cashbackBalance)) {
+                    self?.cashbackAlternateLabel.text = formattedTotalString
+                }
+                else {
+                    self?.cashbackAlternateLabel.text = "-.--€"
+                }
+            }
+            .store(in: &cancellables)
+
+        Env.userSessionStore.refreshCashbackBalance()
 
         // User Profile
         if let userProfile = Env.userSessionStore.userProfilePublisher.value {

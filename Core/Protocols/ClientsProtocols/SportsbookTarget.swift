@@ -65,6 +65,7 @@ enum SportsbookTargetFeatures: CaseIterable {
     case suggestedBets
     case cashout
     case cashback
+    case freebets
 
     case casino
 }

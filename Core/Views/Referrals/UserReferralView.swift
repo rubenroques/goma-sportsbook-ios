@@ -204,7 +204,7 @@ extension UserReferralView {
     private static func createDepositLabel() -> UILabel {
         let label = UILabel()
         label.translatesAutoresizingMaskIntoConstraints = false
-        label.text = localized("first_deposit_check")
+        label.text = localized("rf_first_deposit")
         label.font = AppFont.with(type: .bold, size: 12)
         return label
     }
