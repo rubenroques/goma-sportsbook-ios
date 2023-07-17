@@ -179,6 +179,12 @@ class RecruitAFriendViewController: UIViewController {
         self.regulationsBaseView.layer.cornerRadius = CornerRadius.card
 
         self.resizeBannerImageView()
+
+        for arrangedSubview in self.referralsStackView.arrangedSubviews {
+
+            arrangedSubview.setNeedsLayout()
+            arrangedSubview.layoutIfNeeded()
+        }
     }
 
     private func setupWithTheme() {
@@ -305,8 +311,6 @@ class RecruitAFriendViewController: UIViewController {
         self.referralsStackView.addArrangedSubview(referralView2)
         self.referralsStackView.addArrangedSubview(referralView3)
 
-        self.referralsStackView.setNeedsLayout()
-        self.referralsStackView.layoutIfNeeded()
     }
 
     // MARK: Actions
@@ -720,6 +724,7 @@ extension RecruitAFriendViewController {
     private static func createReferralsGodfatherView() -> UserGodfatherView {
         let view = UserGodfatherView()
         view.translatesAutoresizingMaskIntoConstraints = false
+        view.configure(title: "Godfather", icon: "avatar4")
         return view
     }
 

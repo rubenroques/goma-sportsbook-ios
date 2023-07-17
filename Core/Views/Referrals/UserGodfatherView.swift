@@ -63,6 +63,12 @@ class UserGodfatherView: UIView {
         self.titleLabel.textColor = UIColor.App.highlightPrimary
 
     }
+
+    func configure(title: String, icon: String) {
+        self.titleLabel.text = title
+
+        self.iconImageView.image = UIImage(named: icon)
+    }
 }
 
 extension UserGodfatherView {
