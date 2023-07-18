@@ -157,7 +157,7 @@
 "cashout_info" = "Get a percentage of your bet back before the game is over";
 "cashout_prompt_message" = "Your return money will be “{value} €”";
 "cashout_success_text" = "Your bet was cashed out successfully!";
-"cashout_value" = "Cashout {cashoutAmount}"; // UNUSED
+"cashout_value" = "Cashout {cashoutAmount}";
 "casino" = "Casino";
 "casino_regulation" = "Casino Regulation"; // UNUSED
 "change_password" = "Change Password"; // UNUSED
