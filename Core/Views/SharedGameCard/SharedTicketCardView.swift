@@ -143,7 +143,7 @@ class SharedTicketCardView: UIView {
         self.learnMoreBaseView.alpha = 0
     }
 
-    func configure(withBetHistoryEntry betHistoryEntry: BetHistoryEntry, countryCodes: [String], viewModel: MyTicketCellViewModel) {
+    func configure(withBetHistoryEntry betHistoryEntry: BetHistoryEntry, countryCodes: [String], viewModel: MyTicketCellViewModel, cashbackValue: Double? = nil) {
 
         self.betHistoryEntry = betHistoryEntry
 
@@ -182,7 +182,15 @@ class SharedTicketCardView: UIView {
             self.winningsSubtitleLabel.text = maxWinningsString
         }
 
-        self.hasCashback = true
+        if let cashbackValue {
+            let formattedValue = CurrencyFormater.defaultFormat.string(from: NSNumber(value: cashbackValue)) ?? localized("no_value")
+            self.cashbackValueLabel.text = formattedValue
+            
+            self.hasCashback = true
+        }
+        else {
+            self.hasCashback = false
+        }
     }
 
     @objc func didTapShareButton() {

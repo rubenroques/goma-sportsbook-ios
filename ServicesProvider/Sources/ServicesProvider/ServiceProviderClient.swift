@@ -1127,6 +1127,16 @@ extension ServicesProviderClient {
         return bettingProvider.getFreebet()
     }
 
+    public func calculateCashback(betSelectionData: [BetTicketSelection], stakeValue: String) -> AnyPublisher<CashbackResult, ServiceProviderError> {
+        guard
+            let bettingProvider = self.bettingProvider
+        else {
+            return Fail(error: ServiceProviderError.bettingProviderNotFound).eraseToAnyPublisher()
+        }
+
+        return bettingProvider.calculateCashback(betSelectionData: betSelectionData, stakeValue: stakeValue)
+    }
+
     public func getSharedTicket(betslipId: String) -> AnyPublisher<SharedTicketResponse, ServiceProviderError> {
         guard
             let bettingProvider = self.bettingProvider

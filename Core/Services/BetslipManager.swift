@@ -636,6 +636,49 @@ extension BetslipManager {
             .eraseToAnyPublisher()
     }
 
+    func requestCalculateCashback(stakeValue: String) -> AnyPublisher<CashbackResult, BetslipErrorType> {
+
+        let bettingTickets = self.bettingTicketsPublisher.value
+
+        let betSelections = self.bettingTicketsPublisher.value.map({ bettingTicket in
+
+            var odd = ServiceProviderModelMapper.serviceProviderOddFormat(fromOddFormat: bettingTicket.odd)
+
+            let bettingTicketSelection = ServicesProvider.BetTicketSelection(identifier: bettingTicket.id,
+                                                                             eventName: bettingTicket.matchId,
+                                                                             homeTeamName: "",
+                                                                             awayTeamName: "",
+                                                                             marketName: bettingTicket.marketId,
+                                                                             outcomeName: bettingTicket.outcomeId,
+                                                                             odd: odd, stake: 0)
+
+            return bettingTicketSelection
+        })
+
+        return Env.servicesProvider.calculateCashback(betSelectionData: betSelections, stakeValue: stakeValue)
+            .mapError({ _ in
+                return BetslipErrorType.none
+            })
+            .eraseToAnyPublisher()
+
+//            Env.servicesProvider.calculateCashback(betSelectionData: betSelections, stakeValue: stakeValue)
+//                .receive(on: DispatchQueue.main)
+//                .sink(receiveCompletion: { [weak self] completion in
+//
+//                    switch completion {
+//                    case .finished:
+//                        ()
+//                    case .failure(let error):
+//                        print("CASHBACK RESULT ERROR: \(error)")
+//
+//                    }
+//                }, receiveValue: { [weak self] cashbackResult in
+//                    print("CASHBACK RESULT: \(cashbackResult)")
+//
+//                })
+//                .store(in: &cancellables)
+    }
+
 }
 
 enum BetslipErrorType: Error {

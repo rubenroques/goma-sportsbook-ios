@@ -235,6 +235,7 @@ class PaymentsDropIn {
 
                 let adyenContext = AdyenContext(apiContext: apiContext, payment: payment)
 
+                // Without session payments
 //                let dropInConfiguration = DropInComponent.Configuration()
 //
 //                dropInConfiguration.card.allowedCardTypes = [.visa, .masterCard, .carteBancaire]

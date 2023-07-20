@@ -144,8 +144,8 @@ class BetslipViewController: UIViewController {
 
         //
         //
-        preSubmissionBetslipViewController.betPlacedAction = { [weak self] betPlacedDetails in
-            self?.showBetPlacedScreen(withBetPlacedDetails: betPlacedDetails)
+        preSubmissionBetslipViewController.betPlacedAction = { [weak self] betPlacedDetails, cashbackResultValue in
+            self?.showBetPlacedScreen(withBetPlacedDetails: betPlacedDetails, withCashbackResultValue: cashbackResultValue)
         }
 
         Env.userSessionStore.userProfilePublisher
@@ -248,11 +248,11 @@ class BetslipViewController: UIViewController {
         self.dismiss(animated: true, completion: nil)
     }
 
-    func showBetPlacedScreen(withBetPlacedDetails betPlacedDetailsArray: [BetPlacedDetails]) {
+    func showBetPlacedScreen(withBetPlacedDetails betPlacedDetailsArray: [BetPlacedDetails], withCashbackResultValue cashbackResultValue: Double? = nil) {
 
         Logger.log("Bet placed without erros. Will show feedback screen.")
 
-        let betSubmissionSuccessViewController = BetSubmissionSuccessViewController(betPlacedDetailsArray: betPlacedDetailsArray)
+        let betSubmissionSuccessViewController = BetSubmissionSuccessViewController(betPlacedDetailsArray: betPlacedDetailsArray, cashbackResultValue: cashbackResultValue)
         betSubmissionSuccessViewController.willDismissAction = self.willDismissAction
 
         self.navigationController?.pushViewController(betSubmissionSuccessViewController, animated: true)

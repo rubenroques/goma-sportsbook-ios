@@ -123,14 +123,16 @@ class MyTicketTableViewCell: UITableViewCell {
     var hasCashback: Bool = false {
         didSet {
             self.cashbackIconImageView.isHidden = !hasCashback
-            self.cashbackInfoBaseView.isHidden = !hasCashback
-            self.cashbackValueLabel.isHidden = !hasCashback
+//            self.cashbackInfoBaseView.isHidden = !hasCashback
+//            self.cashbackValueLabel.isHidden = !hasCashback
         }
     }
 
     var usedCashback: Bool = false {
         didSet {
             self.cashbackUsedBaseView.isHidden = !usedCashback
+            self.cashbackInfoBaseView.isHidden = !usedCashback
+            self.cashbackValueLabel.isHidden = !usedCashback
         }
     }
 
@@ -631,9 +633,24 @@ class MyTicketTableViewCell: UITableViewCell {
             self.returnedAmountValueLabel.text = "\(localized("returned"))\n\(returnedBetAmountString ?? "")"
 
             self.hasPartialCashoutReturned = true
+
         }
         else {
             self.hasPartialCashoutReturned = false
+        }
+
+        // Cashback
+        if betHistoryEntry.status?.uppercased() == "OPENED" {
+            self.hasCashback = false
+            self.usedCashback = false
+        }
+        else if let cashbackReturn = betHistoryEntry.cashbackReturn {
+            self.hasCashback = false
+            self.usedCashback = true
+
+            let cashbackReturnString = CurrencyFormater.defaultFormat.string(from: NSNumber(value: cashbackReturn))
+
+            self.cashbackValueLabel.text = cashbackReturnString
         }
 
         self.viewModel?.partialCashout
