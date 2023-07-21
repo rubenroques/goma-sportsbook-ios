@@ -24,6 +24,14 @@ class OverUnderMarketDetailTableViewCell: UITableViewCell {
     @IBOutlet private var expandLabel: UILabel!
     @IBOutlet private var expandArrowImageView: UIImageView!
 
+    lazy var gradientBorderView: GradientBorderView = {
+        var gradientBorderView = GradientBorderView()
+        gradientBorderView.translatesAutoresizingMaskIntoConstraints = false
+        gradientBorderView.gradientBorderWidth = 1
+        gradientBorderView.gradientCornerRadius = 9
+        return gradientBorderView
+    }()
+
     var match: Match?
     var marketId: String?
     var competitionName: String?
@@ -60,6 +68,16 @@ class OverUnderMarketDetailTableViewCell: UITableViewCell {
 
         let expandTapGesture = UITapGestureRecognizer(target: self, action: #selector(didTapExpandBaseView))
         self.expandBaseView.addGestureRecognizer(expandTapGesture)
+
+        self.containerView.addSubview(gradientBorderView)
+        self.containerView.sendSubviewToBack(gradientBorderView)
+
+        NSLayoutConstraint.activate([
+            self.containerView.leadingAnchor.constraint(equalTo: gradientBorderView.leadingAnchor),
+            self.containerView.trailingAnchor.constraint(equalTo: gradientBorderView.trailingAnchor),
+            self.containerView.topAnchor.constraint(equalTo: gradientBorderView.topAnchor),
+            self.containerView.bottomAnchor.constraint(equalTo: gradientBorderView.bottomAnchor),
+        ])
 
         self.setupWithTheme()
     }
