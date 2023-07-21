@@ -509,6 +509,23 @@ class SportRadarPrivilegedAccessManager: PrivilegedAccessManager {
         .eraseToAnyPublisher()
     }
 
+    func getUserCashbackBalance() -> AnyPublisher<CashbackBalance, ServiceProviderError> {
+        let endpoint = OmegaAPIClient.getCashbackBalance
+        let publisher: AnyPublisher<SportRadarModels.CashbackBalance, ServiceProviderError> = self.connector.request(endpoint)
+
+        return publisher.flatMap({ cashbackBalance -> AnyPublisher<CashbackBalance, ServiceProviderError> in
+            if cashbackBalance.status == "SUCCESS" {
+
+                let mappedCashbackBalance = SportRadarModelMapper.cashbackBalance(fromCashbackBalance: cashbackBalance)
+
+                return Just(mappedCashbackBalance).setFailureType(to: ServiceProviderError.self).eraseToAnyPublisher()
+            }
+            return Fail(outputType: CashbackBalance.self,
+                        failure: ServiceProviderError.errorMessage(message: cashbackBalance.message ?? "Error")).eraseToAnyPublisher()
+        })
+        .eraseToAnyPublisher()
+    }
+
     func signUpCompletion(form: ServicesProvider.UpdateUserProfileForm)  -> AnyPublisher<Bool, ServiceProviderError> {
         let endpoint = OmegaAPIClient.quickSignupCompletion(firstName: form.firstName,
                                                             lastName: form.lastName,

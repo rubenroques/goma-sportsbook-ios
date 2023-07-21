@@ -729,6 +729,15 @@ extension ServicesProviderClient {
         return privilegedAccessManager.getUserBalance()
     }
 
+    public func getUserCashbackBalance() -> AnyPublisher<CashbackBalance, ServiceProviderError> {
+        guard
+            let privilegedAccessManager = self.privilegedAccessManager
+        else {
+            return Fail(error: ServiceProviderError.privilegedAccessManagerNotFound).eraseToAnyPublisher()
+        }
+        return privilegedAccessManager.getUserCashbackBalance()
+    }
+
     public func signUpCompletion(form: ServicesProvider.UpdateUserProfileForm) -> AnyPublisher<Bool, ServiceProviderError> {
         guard
             let privilegedAccessManager = self.privilegedAccessManager
@@ -1127,6 +1136,16 @@ extension ServicesProviderClient {
             return Fail(error: ServiceProviderError.bettingProviderNotFound).eraseToAnyPublisher()
         }
         return bettingProvider.getFreebet()
+    }
+
+    public func calculateCashback(betSelectionData: [BetTicketSelection], stakeValue: String) -> AnyPublisher<CashbackResult, ServiceProviderError> {
+        guard
+            let bettingProvider = self.bettingProvider
+        else {
+            return Fail(error: ServiceProviderError.bettingProviderNotFound).eraseToAnyPublisher()
+        }
+
+        return bettingProvider.calculateCashback(betSelectionData: betSelectionData, stakeValue: stakeValue)
     }
 
     public func getSharedTicket(betslipId: String) -> AnyPublisher<SharedTicketResponse, ServiceProviderError> {

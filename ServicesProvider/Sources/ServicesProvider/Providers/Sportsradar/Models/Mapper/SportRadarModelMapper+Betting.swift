@@ -36,7 +36,8 @@ extension SportRadarModelMapper {
                        freebet: firstBet?.freeBet ?? false,
                        partialCashoutReturn: firstBet?.partialCashoutReturn,
                        partialCashoutStake: firstBet?.partialCashoutStake,
-                       betslipId: firstBet?.betslipId)
+                       betslipId: firstBet?.betslipId,
+                       cashbackReturn: firstBet?.cashbackReturn)
         }
         return BettingHistory(bets: bets.sorted(by: { $0.date > $1.date }))
     }
@@ -198,6 +199,10 @@ extension SportRadarModelMapper {
     static func ticketSelection(fromInternalTicketSelection internalTicketSelection: SportRadarModels.TicketSelection) -> TicketSelection {
 
         return TicketSelection(id: internalTicketSelection.id, marketId: internalTicketSelection.marketId, name: internalTicketSelection.name, priceDenominator: internalTicketSelection.priceDenominator, priceNumerator: internalTicketSelection.priceNumerator)
+    }
+
+    static func cashbackResult(fromInternalCashbackResult cashbackResult: SportRadarModels.CashbackResult) -> CashbackResult {
+        return CashbackResult(id: cashbackResult.id, amount: cashbackResult.amount)
     }
 
 }

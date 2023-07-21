@@ -83,6 +83,7 @@ class UserSessionStore {
     }
 
     var userWalletPublisher = CurrentValueSubject<UserWallet?, Never>(nil)
+    var userCashbackBalance = CurrentValueSubject<Double?, Never>(nil)
     var acceptedTrackingPublisher = CurrentValueSubject<UserTrackingStatus, Never>(.unkown)
 
     var shouldRecordUserSession = true
@@ -125,6 +126,7 @@ class UserSessionStore {
             .sink { [weak self] userProfile in
                 if let userProfile = userProfile {
                     self?.refreshUserWallet()
+                    self?.refreshCashbackBalance()
 
                     self?.isUserProfileComplete = userProfile.isRegistrationCompleted
                     self?.isUserEmailVerified = userProfile.isEmailVerified
@@ -196,7 +198,8 @@ class UserSessionStore {
 
         self.userProfilePublisher.send(nil)
         self.userSessionPublisher.send(nil)
-        self.userWalletPublisher.send(nil)        
+        self.userWalletPublisher.send(nil)
+        self.userCashbackBalance.send(nil)
     }
 
     func login(withUsername username: String, password: String) -> AnyPublisher<Void, UserSessionError> {
@@ -400,6 +403,30 @@ extension UserSessionStore {
                                         totalWithdrawable: userWallet.withdrawable,
                                         currency: currency)
                 self?.userWalletPublisher.send(wallet)
+            })
+            .store(in: &self.cancellables)
+    }
+
+    func refreshCashbackBalance() {
+
+        Env.servicesProvider.getUserCashbackBalance()
+            .receive(on: DispatchQueue.main)
+            .sink(receiveCompletion: { [weak self] completion in
+                if case .failure = completion {
+                    self?.userCashbackBalance.send(nil)
+                }
+            }, receiveValue: { [weak self] (cashbackBalance: ServicesProvider.CashbackBalance) in
+                guard
+                    let balance = cashbackBalance.balance
+                else {
+                    self?.userCashbackBalance.send(nil)
+                    return
+                }
+
+                let cashbackBalance = Double(balance)
+
+                self?.userCashbackBalance.send(cashbackBalance)
+
             })
             .store(in: &self.cancellables)
     }

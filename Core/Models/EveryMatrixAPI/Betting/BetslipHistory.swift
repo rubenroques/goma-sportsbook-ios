@@ -40,6 +40,8 @@ struct BetHistoryEntry {
     let betShareToken: String?
     let betslipId: Int?
 
+    let cashbackReturn: Double?
+
     enum CodingKeys: String, CodingKey {
         case betId = "betId"
         case selections = "selections"

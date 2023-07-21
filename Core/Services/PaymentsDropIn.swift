@@ -189,8 +189,6 @@ class PaymentsDropIn {
 
                 self?.sessionData = processDepositResponse.sessionData
 
-
-
                 self?.getPaymentMethods()
 
                 self?.hasProcessedDeposit.send(true)
@@ -226,15 +224,26 @@ class PaymentsDropIn {
         if let paymentMethodsResponse = self.paymentMethodsResponse,
            let clientKey = self.clientKey,
            let apiContext = self.apiContext,
-           let payment = self.payment {
+           let payment = self.payment ,
+           let session = self.adyenSession {
 
             if let paymentResponseData = try? JSONEncoder().encode(paymentMethodsResponse),
                 let paymentMethods = try? JSONDecoder().decode(PaymentMethods.self, from: paymentResponseData) {
 
                 // Optional Payment
-                let payment = Payment(amount: Amount(value: Int(self.dropInDepositAmount) ?? 0, currencyCode: "EUR"), countryCode: "PT")
+                let payment = Payment(amount: Amount(value: Int(self.dropInDepositAmount) ?? 0, currencyCode: "EUR"), countryCode: "FR")
 
-                let dropInComponent = DropInComponent(paymentMethods: paymentMethods, context: AdyenContext(apiContext: apiContext, payment: payment))
+                let adyenContext = AdyenContext(apiContext: apiContext, payment: payment)
+
+                // Without session payments
+//                let dropInConfiguration = DropInComponent.Configuration()
+//
+//                dropInConfiguration.card.allowedCardTypes = [.visa, .masterCard, .carteBancaire]
+//
+//                let dropInComponent = DropInComponent(paymentMethods: paymentMethods, context: adyenContext, configuration: dropInConfiguration)
+
+                // With session payments
+                let dropInComponent = DropInComponent(paymentMethods: session.sessionContext.paymentMethods, context: adyenContext)
 
                 dropInComponent.delegate = self.adyenSession
 

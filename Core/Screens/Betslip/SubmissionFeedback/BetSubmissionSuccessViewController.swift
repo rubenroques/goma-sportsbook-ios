@@ -53,6 +53,7 @@ class BetSubmissionSuccessViewController: UIViewController {
     private var ticketSnapshots: [String: UIImage] = [:]
     private var sharedBetHistory: BetHistoryEntry?
     private var locationsCodesDictionary: [String: String] = [:]
+    private var cashbackResultValue: Double?
 
     private var cancellables = Set<AnyCancellable>()
 
@@ -64,10 +65,13 @@ class BetSubmissionSuccessViewController: UIViewController {
         }
     }
 
-    init(betPlacedDetailsArray: [BetPlacedDetails]) {
+
+    init(betPlacedDetailsArray: [BetPlacedDetails], cashbackResultValue: Double? = nil) {
 
         self.betPlacedDetailsArray = betPlacedDetailsArray
-        
+
+        self.cashbackResultValue = cashbackResultValue
+
         //
         // Possible Earnings
         var possibleEarningsDouble = betPlacedDetailsArray
@@ -342,7 +346,7 @@ class BetSubmissionSuccessViewController: UIViewController {
 
         let betCardViewModel = MyTicketCellViewModel(ticket: betHistory)
 
-        sharedTicketCardView.configure(withBetHistoryEntry: betHistory, countryCodes: [], viewModel: betCardViewModel)
+        sharedTicketCardView.configure(withBetHistoryEntry: betHistory, countryCodes: [], viewModel: betCardViewModel, cashbackValue: self.cashbackResultValue)
 
         sharedTicketCardView.didTappedSharebet = { [weak self] snapshot in
             // self?.getSharedBetToken(betHistoryEntry: betHistory)

@@ -52,6 +52,8 @@ protocol PrivilegedAccessManager {
     func lockPlayer(isPermanent: Bool?, lockPeriodUnit: String?, lockPeriod: String?) -> AnyPublisher<BasicResponse, ServiceProviderError>
 
     func getUserBalance() -> AnyPublisher<UserWallet, ServiceProviderError>
+    func getUserCashbackBalance() -> AnyPublisher<CashbackBalance, ServiceProviderError>
+
     func signUpCompletion(form: ServicesProvider.UpdateUserProfileForm)  -> AnyPublisher<Bool, ServiceProviderError>
 
     func getDocumentTypes() -> AnyPublisher<DocumentTypesResponse, ServiceProviderError>

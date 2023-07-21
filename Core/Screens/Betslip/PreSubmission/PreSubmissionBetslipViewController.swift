@@ -169,12 +169,23 @@ class PreSubmissionBetslipViewController: UIViewController {
 
     private var isCashbackEnabled: Bool = false {
         didSet {
+
             self.cashbackBaseView.isHidden = !isCashbackEnabled
-            self.cashbackInfoSingleBaseView.isHidden = !isCashbackEnabled
-            self.cashbackInfoMultipleBaseView.isHidden = !isCashbackEnabled
+            self.cashbackInfoMultipleBaseView.isHidden = isCashbackEnabled
+
+            // Singles don't have cashback
+            self.cashbackInfoSingleBaseView.isHidden = true
 
         }
     }
+
+    private var showCashbackValues: Bool = false {
+        didSet {
+            self.cashbackInfoMultipleBaseView.isHidden = !showCashbackValues
+        }
+    }
+
+    private var isCashbackSelected: CurrentValueSubject<Bool, Never> = .init(false)
 
     private var cancellables = Set<AnyCancellable>()
 
@@ -270,6 +281,17 @@ class PreSubmissionBetslipViewController: UIViewController {
         }
     }
 
+    private var cashbackBalance: Double {
+        if let cashbackBalance = Env.userSessionStore.userCashbackBalance.value {
+            return cashbackBalance
+        }
+        else {
+            return 0
+        }
+    }
+
+    private var cashbackResultValue: Double?
+
     private var realBetValuePublisher: CurrentValueSubject<Double, Never> = .init(0.0)
 
     private var isKeyboardShowingPublisher: CurrentValueSubject<Bool, Never> = .init(false)
@@ -287,7 +309,7 @@ class PreSubmissionBetslipViewController: UIViewController {
         }
     }
 
-    var betPlacedAction: (([BetPlacedDetails]) -> Void) = { _ in }
+    var betPlacedAction: (([BetPlacedDetails], Double?) -> Void) = { _, _  in }
 
     var acceptingAnyReofferOnBetPlace: Bool = false
 
@@ -505,6 +527,7 @@ class PreSubmissionBetslipViewController: UIViewController {
             .sink { [weak self] _ in
                 self?.requestMultipleBetReturn()
                 self?.requestSystemBetInfo()
+                self?.requestCashbackResult()
             }
             .store(in: &cancellables)
 
@@ -744,14 +767,36 @@ class PreSubmissionBetslipViewController: UIViewController {
                     self?.simpleWinningsBaseView.isHidden = false
                     self?.multipleWinningsBaseView.isHidden = true
                     self?.systemWinningsBaseView.isHidden = true
+
+                    if let cashbackEnabled = self?.isCashbackEnabled,
+                       cashbackEnabled {
+                        self?.cashbackBaseView.isHidden = true
+                    }
                 case .multiple:
                     self?.simpleWinningsBaseView.isHidden = true
                     self?.multipleWinningsBaseView.isHidden = false
                     self?.systemWinningsBaseView.isHidden = true
+
+                    if let cashbackEnabled = self?.isCashbackEnabled,
+                       cashbackEnabled,
+                       let cashbackValue = Env.userSessionStore.userCashbackBalance.value {
+
+                        if cashbackValue > 0 {
+                            self?.cashbackBaseView.isHidden = false
+                        }
+                        else {
+                            self?.cashbackBaseView.isHidden = true
+                        }
+                    }
                 case .system:
                     self?.simpleWinningsBaseView.isHidden = true
                     self?.multipleWinningsBaseView.isHidden = true
                     self?.systemWinningsBaseView.isHidden = false
+
+                    if let cashbackEnabled = self?.isCashbackEnabled,
+                       cashbackEnabled {
+                        self?.cashbackBaseView.isHidden = true
+                    }
                 }
             })
             .store(in: &self.cancellables)
@@ -763,10 +808,17 @@ class PreSubmissionBetslipViewController: UIViewController {
                 return bettingValue > 0
             })
             .sink(receiveValue: { [weak self] hasValidBettingValue in
+
                 if hasValidBettingValue {
                     self?.requestSystemBetInfo()
                     self?.requestMultipleBetReturn()
+                    self?.requestCashbackResult()
                 }
+                else {
+                    self?.multipleWinningsValueLabel.text = localized("no_value")
+                    self?.secondaryMultipleWinningsValueLabel.text = localized("no_value")
+                }
+
                 self?.placeBetButton.isEnabled = hasValidBettingValue
             })
             .store(in: &self.cancellables)
@@ -938,30 +990,31 @@ class PreSubmissionBetslipViewController: UIViewController {
             })
             .store(in: &cancellables)
 
-        Env.servicesProvider
-            .getFreebet()
-            .receive(on: DispatchQueue.main)
-            .sink { [weak self] completion in
-                if case .failure = completion {
-                    self?.freeBetBalanceLabel.text = ""
-                    self?.freeBetBaseView.isHidden = true
+        if TargetVariables.features.contains(.freebets) {
+            Env.servicesProvider
+                .getFreebet()
+                .receive(on: DispatchQueue.main)
+                .sink { [weak self] completion in
+                    if case .failure = completion {
+                        self?.freeBetBalanceLabel.text = ""
+                        self?.freeBetBaseView.isHidden = true
+                    }
+                } receiveValue: { [weak self] freebetBalance in
+                    if freebetBalance.balance > 0.0 {
+                        // Show freebet view
+                        print("Show freebet view")
+                        let balance = CurrencyFormater.defaultFormat.string(from: NSNumber(value: freebetBalance.balance))
+                        self?.freeBetBalanceLabel.text = balance
+                        self?.freeBetBaseView.isHidden = false
+                    }
+                    else {
+                        // Hide freebet view
+                        print("Hide freebet view")
+                        self?.freeBetBalanceLabel.text = ""
+                        self?.freeBetBaseView.isHidden = true
+                    }
                 }
-            } receiveValue: { [weak self] freebetBalance in
-                if freebetBalance.balance > 0.0 {
-                    // Show freebet view
-                    print("Show freebet view")
-                    let balance = CurrencyFormater.defaultFormat.string(from: NSNumber(value: freebetBalance.balance))
-                    self?.freeBetBalanceLabel.text = balance
-                    self?.freeBetBaseView.isHidden = false
-                }
-                else {
-                    // Hide freebet view
-                    print("Hide freebet view")
-                    self?.freeBetBalanceLabel.text = ""
-                    self?.freeBetBaseView.isHidden = true
-                }
-            }
-            .store(in: &self.cancellables)
+                .store(in: &self.cancellables)
 
         // Free bet
         self.freeBetSwitch.addTarget(self, action: #selector(onFreebetSwitchValueChanged(_:)), for: .valueChanged)
@@ -999,64 +1052,125 @@ class PreSubmissionBetslipViewController: UIViewController {
                 self?.tableView.reloadData()
             }
             .store(in: &self.cancellables)
+        }
+        else {
+            self.freeBetBaseView.isHidden = true
+        }
 
         // Cashback
-        self.isCashbackEnabled = true
-        self.cashbackSwitch.addTarget(self, action: #selector(cashbackSwitchValueChanged(_:)), for: .valueChanged)
+        if TargetVariables.features.contains(.cashback) {
+            self.isCashbackEnabled = true
+            self.cashbackSwitch.addTarget(self, action: #selector(cashbackSwitchValueChanged(_:)), for: .valueChanged)
 
-        self.cashbackSwitch.setOn(false, animated: true)
+            self.cashbackTitleLabel.text = localized("cashback_balance")
 
-        self.cashbackTitleLabel.text = localized("cashback_balance")
+            if let cashbackValue = Env.userSessionStore.userCashbackBalance.value,
+               let formattedCashbackString = CurrencyFormater.defaultFormat.string(from: NSNumber(value: cashbackValue)) {
+                self.cashbackValueLabel.text = formattedCashbackString
 
-        self.cashbackValueLabel.text = "0,00€"
+                let cashbackOn = cashbackValue > 0 ? true : false
 
-        self.cashbackInfoMultipleView.didTapInfoAction = { [weak self] in
+                self.cashbackSwitch.setOn(cashbackOn, animated: true)
 
-            UIView.animate(withDuration: 0.5, animations: {
-                self?.learnMoreBaseView.alpha = 1
-            }) { (completed) in
-                if completed {
-                    DispatchQueue.main.asyncAfter(deadline: .now() + 5.0) {
-                        UIView.animate(withDuration: 0.5) {
-                            self?.learnMoreBaseView.alpha = 0
+                self.isCashbackSelected.send(cashbackOn)
+
+                if cashbackValue == 0 {
+                    self.cashbackBaseView.isHidden = true
+                }
+                else {
+                    self.cashbackBaseView.isHidden = false
+                }
+            }
+            else {
+                self.cashbackValueLabel.text = "-.--€"
+
+                self.cashbackSwitch.setOn(false, animated: true)
+
+                self.isCashbackSelected.send(false)
+
+                self.cashbackBaseView.isHidden = true
+
+            }
+
+            self.cashbackInfoMultipleView.didTapInfoAction = { [weak self] in
+
+                UIView.animate(withDuration: 0.5, animations: {
+                    self?.learnMoreBaseView.alpha = 1
+                }) { (completed) in
+                    if completed {
+                        DispatchQueue.main.asyncAfter(deadline: .now() + 5.0) {
+                            UIView.animate(withDuration: 0.5) {
+                                self?.learnMoreBaseView.alpha = 0
+                            }
                         }
                     }
                 }
             }
-        }
 
-        self.cashbackInfoSingleView.didTapInfoAction = { [weak self] in
+            self.cashbackInfoSingleView.didTapInfoAction = { [weak self] in
 
-            UIView.animate(withDuration: 0.5, animations: {
-                self?.learnMoreBaseView.alpha = 1
-            }) { (completed) in
-                if completed {
-                    DispatchQueue.main.asyncAfter(deadline: .now() + 5.0) {
-                        UIView.animate(withDuration: 0.5) {
-                            self?.learnMoreBaseView.alpha = 0
+                UIView.animate(withDuration: 0.5, animations: {
+                    self?.learnMoreBaseView.alpha = 1
+                }) { (completed) in
+                    if completed {
+                        DispatchQueue.main.asyncAfter(deadline: .now() + 5.0) {
+                            UIView.animate(withDuration: 0.5) {
+                                self?.learnMoreBaseView.alpha = 0
+                            }
                         }
                     }
                 }
             }
+
+            self.placeBetBaseView.addSubview(self.learnMoreBaseView)
+
+            NSLayoutConstraint.activate([
+
+                self.learnMoreBaseView.bottomAnchor.constraint(equalTo: self.winningsTypeBaseView.topAnchor, constant: -1),
+                self.learnMoreBaseView.trailingAnchor.constraint(equalTo: self.cashbackInfoMultipleView.trailingAnchor, constant: 10)
+
+            ])
+
+            self.learnMoreBaseView.didTapLearnMoreAction = { [weak self] in
+
+                let cashbackInfoViewController = CashbackInfoViewController()
+
+                self?.navigationController?.pushViewController(cashbackInfoViewController, animated: true)
+            }
+
+            self.learnMoreBaseView.alpha = 0
+
+            self.isCashbackSelected
+                .receive(on: DispatchQueue.main)
+                .sink { [weak self] isCashbackSelected in
+                    if isCashbackSelected {
+                        self?.amountBaseView.layer.borderColor = UIColor.App.highlightPrimary.cgColor
+                        self?.secondaryAmountBaseView.layer.borderColor = UIColor.App.highlightPrimary.cgColor
+
+                        self?.showCashbackValues = false
+                    }
+                    else {
+
+                        if self?.isKeyboardShowingPublisher.value ?? false {
+                            self?.amountBaseView.layer.borderColor = UIColor.App.inputBorderActive.cgColor
+                            self?.secondaryAmountBaseView.layer.borderColor = UIColor.App.inputBorderActive.cgColor
+                        }
+                        else {
+                            self?.amountBaseView.layer.borderColor = UIColor.App.backgroundBorder.cgColor
+                            self?.secondaryAmountBaseView.layer.borderColor = UIColor.App.backgroundBorder.cgColor
+                        }
+
+                        self?.showCashbackValues = true
+
+                    }
+
+                }
+                .store(in: &self.cancellables)
+
         }
-
-        self.placeBetBaseView.addSubview(self.learnMoreBaseView)
-
-        NSLayoutConstraint.activate([
-
-            self.learnMoreBaseView.bottomAnchor.constraint(equalTo: self.winningsTypeBaseView.topAnchor, constant: -1),
-            self.learnMoreBaseView.trailingAnchor.constraint(equalTo: self.cashbackInfoMultipleView.trailingAnchor, constant: 10)
-
-        ])
-
-        self.learnMoreBaseView.didTapLearnMoreAction = { [weak self] in
-
-            let cashbackInfoViewController = CashbackInfoViewController()
-
-            self?.navigationController?.pushViewController(cashbackInfoViewController, animated: true)
+        else {
+            self.isCashbackEnabled = false
         }
-
-        self.learnMoreBaseView.alpha = 0
 
         self.setupWithTheme()
 
@@ -1541,6 +1655,33 @@ class PreSubmissionBetslipViewController: UIViewController {
 
     }
 
+    func requestCashbackResult() {
+
+        let stake = self.realBetValue
+
+        Env.betslipManager.requestCalculateCashback(stakeValue: "\(stake)")
+            .receive(on: DispatchQueue.main)
+            .sink { [weak self] completion in
+                switch completion {
+                case .finished:
+                    ()
+                case .failure(let error):
+                    self?.cashbackInfoMultipleValueLabel.text = localized("no_value")
+                    self?.cashbackResultValue = nil
+                }
+            } receiveValue: { [weak self] cashbackResult in
+
+                self?.cashbackResultValue = cashbackResult.amount
+
+                let cashbackValue = cashbackResult.amount
+
+                let cashbackString = CurrencyFormater.defaultFormat.string(from: NSNumber(value: cashbackValue)) ?? localized("no_value")
+
+                self?.cashbackInfoMultipleValueLabel.text = cashbackString
+            }
+            .store(in: &cancellables)
+    }
+
     @IBAction private func didTapDoneButton() {
         self.dismissKeyboard()
     }
@@ -1573,12 +1714,19 @@ class PreSubmissionBetslipViewController: UIViewController {
                     }
                     self?.isLoading = false
                 } receiveValue: { [weak self] betPlacedDetailsArray in
-                    self?.betPlacedAction(betPlacedDetailsArray)
+                    self?.betPlacedAction(betPlacedDetailsArray, nil)
                 }
                 .store(in: &cancellables)
             }
             else if self.listTypePublisher.value == .multiple {
-                Env.betslipManager.placeMultipleBet(withStake: self.realBetValue, useFreebetBalance: self.isFreebetEnabled.value)
+
+                var isFreeBet = false
+
+                if self.isFreebetEnabled.value == true || self.isCashbackSelected.value == true {
+                    isFreeBet = true
+                }
+
+                Env.betslipManager.placeMultipleBet(withStake: self.realBetValue, useFreebetBalance: isFreeBet)
                     .receive(on: DispatchQueue.main)
                     .sink { [weak self] completion in
                         switch completion {
@@ -1599,7 +1747,12 @@ class PreSubmissionBetslipViewController: UIViewController {
                         }
                         self?.isLoading = false
                     } receiveValue: { [weak self] betPlacedDetails in
-                        self?.betPlacedAction(betPlacedDetails)
+                        if let cashbackSelected = self?.isCashbackSelected.value, cashbackSelected {
+                            self?.betPlacedAction(betPlacedDetails, self?.cashbackResultValue)
+                        }
+                        else {
+                            self?.betPlacedAction(betPlacedDetails, nil)
+                        }
                     }
                     .store(in: &cancellables)
             }
@@ -1627,7 +1780,7 @@ class PreSubmissionBetslipViewController: UIViewController {
                         }
                         self?.isLoading = false
                     } receiveValue: { [weak self] betPlacedDetails in
-                        self?.betPlacedAction(betPlacedDetails)
+                        self?.betPlacedAction(betPlacedDetails, nil)
                     }
                     .store(in: &cancellables)
             }
@@ -1700,10 +1853,14 @@ class PreSubmissionBetslipViewController: UIViewController {
 
         if cashbackSwitch.isOn {
             self.cashbackValueLabel.textColor = UIColor.App.highlightPrimary
+
         }
         else {
             self.cashbackValueLabel.textColor = UIColor.App.textPrimary
         }
+
+        self.isCashbackSelected.send(cashbackSwitch.isOn)
+
     }
 
     @IBAction private func didTapCloseFreebetButton() {
@@ -1730,7 +1887,7 @@ class PreSubmissionBetslipViewController: UIViewController {
 extension PreSubmissionBetslipViewController: UITextFieldDelegate {
 
     func textFieldShouldBeginEditing(_ textField: UITextField) -> Bool {
-        if self.isFreebetEnabled.value {
+        if self.isFreebetEnabled.value || self.isCashbackSelected.value {
             self.amountBaseView.layer.borderColor = UIColor.App.highlightPrimary.cgColor
             self.secondaryAmountBaseView.layer.borderColor = UIColor.App.highlightPrimary.cgColor
             return true // If the isFreebetEnabled the border should stay orange
@@ -1746,7 +1903,7 @@ extension PreSubmissionBetslipViewController: UITextFieldDelegate {
     }
 
     func textFieldDidBeginEditing(_ textField: UITextField) {
-        if self.isFreebetEnabled.value {
+        if self.isFreebetEnabled.value || self.isCashbackSelected.value {
             self.amountBaseView.layer.borderColor = UIColor.App.highlightPrimary.cgColor
             self.secondaryAmountBaseView.layer.borderColor = UIColor.App.highlightPrimary.cgColor
             return // If the isFreebetEnabled the border should stay orange
@@ -1761,11 +1918,17 @@ extension PreSubmissionBetslipViewController: UITextFieldDelegate {
     }
 
     func textFieldDidEndEditing(_ textField: UITextField) {
-        if self.isFreebetEnabled.value {
+        if self.isFreebetEnabled.value || self.isCashbackSelected.value {
             self.amountBaseView.layer.borderColor = UIColor.App.highlightPrimary.cgColor
             self.secondaryAmountBaseView.layer.borderColor = UIColor.App.highlightPrimary.cgColor
             return // If the isFreebetEnabled the border should stay orange
         }
+
+//        if self.isCashbackSelected.value {
+//            self.amountBaseView.layer.borderColor = UIColor.App.highlightPrimary.cgColor
+//            self.secondaryAmountBaseView.layer.borderColor = UIColor.App.highlightPrimary.cgColor
+//            return
+//        }
 
         if textField == self.amountTextfield {
             self.amountBaseView.layer.borderColor = UIColor.App.backgroundBorder.cgColor

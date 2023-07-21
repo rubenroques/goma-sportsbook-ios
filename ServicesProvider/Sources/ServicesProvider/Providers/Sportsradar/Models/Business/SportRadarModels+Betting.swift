@@ -99,6 +99,8 @@ extension SportRadarModels {
 
         var betslipId: Int?
 
+        var cashbackReturn: Double?
+
         enum CodingKeys: String, CodingKey {
             case identifier = "idFOBet"
             case eventName
@@ -135,6 +137,8 @@ extension SportRadarModels {
             case partialCashoutStake = "partialCashoutStake"
 
             case betslipId = "idFOBetslip"
+
+            case cashbackReturn = "soReturn"
 
         }
 
@@ -212,6 +216,8 @@ extension SportRadarModels {
             self.partialCashoutStake = try container.decodeIfPresent(Double.self, forKey: .partialCashoutStake)
 
             self.betslipId = try container.decodeIfPresent(Int.self, forKey: .betslipId)
+
+            self.cashbackReturn = try container.decodeIfPresent(Double.self, forKey: .cashbackReturn)
 
         }
 

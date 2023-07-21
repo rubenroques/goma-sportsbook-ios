@@ -175,6 +175,26 @@ class ProfileViewController: UIViewController {
                 }
             }
             .store(in: &cancellables)
+
+//        Env.userSessionStore.userCashbackBalance
+//            .receive(on: DispatchQueue.main)
+//            .sink { [weak self] cashbackBalance in
+//                if let cashbackBalance = cashbackBalance {
+//                    if let formattedTotalString = CurrencyFormater.defaultFormat.string(from: NSNumber(value: cashbackBalance)) {
+//                        // TODO: Put cashback balance here
+//                    }
+//                    else {
+//                        ()
+//                    }
+//                }
+//                else {
+//                    ()
+//
+//                }
+//            }
+//            .store(in: &cancellables)
+
+        Env.userSessionStore.refreshCashbackBalance()
         
         Env.userSessionStore.isUserProfileCompletePublisher
             .receive(on: DispatchQueue.main)
@@ -495,6 +515,11 @@ class ProfileViewController: UIViewController {
         let responsibleGamingTap = UITapGestureRecognizer(target: self, action: #selector(responsibleGamingViewTapped(sender:)))
         responsibleGamingView.addGestureRecognizer(responsibleGamingTap)
 
+        let recruitFriendView = NavigationCardView()
+        recruitFriendView.setupView(title: localized("referal_friend"), iconTitle: "recruit_icon")
+        let recruitFriendTap = UITapGestureRecognizer(target: self, action: #selector(recruitFriendViewTapped(sender:)))
+        recruitFriendView.addGestureRecognizer(recruitFriendTap)
+
         let settingsView = NavigationCardView()
         settingsView.setupView(title: localized("app_settings"), iconTitle: "app_settings_profile_icon")
         let settingsTap = UITapGestureRecognizer(target: self, action: #selector(appSettingsViewTapped(sender:)))
@@ -516,6 +541,7 @@ class ProfileViewController: UIViewController {
         self.stackView.addArrangedSubview(messagesView)
         self.stackView.addArrangedSubview(historyView)
         self.stackView.addArrangedSubview(responsibleGamingView)
+        self.stackView.addArrangedSubview(recruitFriendView)
         self.stackView.addArrangedSubview(settingsView)
         self.stackView.addArrangedSubview(contactSettingsView)
         self.stackView.addArrangedSubview(supportView)
@@ -703,6 +729,13 @@ extension ProfileViewController {
         let responsibleGamingViewController = ResponsibleGamingViewController()
         self.navigationController?.pushViewController(responsibleGamingViewController, animated: true)
     }
+
+    @objc func recruitFriendViewTapped(sender: UITapGestureRecognizer) {
+        let recruitAFriendViewController = RecruitAFriendViewController()
+
+        self.navigationController?.pushViewController(recruitAFriendViewController, animated: true)
+    }
+
 //
 //    @objc func limitsViewTapped() {
 //        let profileLimitsManagementViewController = ProfileLimitsManagementViewController()

@@ -157,7 +157,7 @@
 "cashout_info" = "Get a percentage of your bet back before the game is over";
 "cashout_prompt_message" = "Your return money will be “{value} €”";
 "cashout_success_text" = "Your bet was cashed out successfully!";
-"cashout_value" = "Cashout {cashoutAmount}"; // UNUSED
+"cashout_value" = "Cashout {cashoutAmount}";
 "casino" = "Casino";
 "casino_regulation" = "Casino Regulation"; // UNUSED
 "change_password" = "Change Password"; // UNUSED
@@ -1371,3 +1371,51 @@
 
 "pending_withdraws_info_message" = "Are you sure you want to withdraw?You already have a pending withdraw, which you can cancel.";
 "show_pending_withdraws" = "Show pending withdraws";
+
+"referal_friend" = "Referal a friend";
+
+"rf_first_title" = "Refer your friends and get a €20 bonus!";
+"rf_first_description" = "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur.";
+
+"rf_second_description" = "You have {referrals} left over the next {days}. After this period, your counter will return to 5 possible referrals.";
+
+"referrals_number_single" = "{number} referral";
+"referrals_number" = "{number} referrals";
+
+"days_number_single" = "{number} day";
+"days_number" = "{number} days";
+
+"rf_third_title" = "How can I sponsor my friend?";
+"rf_third_sub_title" = "Use the method of your choice to sponsor your friend";
+
+"rf_third_fs_title" = "Share a link by SMS, Whatsapp, Email...";
+"rf_third_fs_description" = "Choose the method of your choice to share the referral link with your friend (SMS, Whatsapp, messanger, email, etc...)";
+"recruit_share_link" = "Share a link";
+
+"rf_third_ss_title" = "Display a QR code";
+"rf_third_ss_description" = "All your friend has to do is scan this QR code to sign up and take advantage of the referral program.";
+"rf_third_ss_bottom" = "See the QR code";
+
+"rf_fourth_title" = "My godchildren";
+"rf_fourth_description" = "Find here the list of your godchildren registered in the last 12 months";
+"rf_fourth_second_title" = "My sponsor";
+
+"referral_bonus_won" = "You received a €20 bonus for this referral";
+"referral_account_pending" = "To receive your bonus, your friend must validate his account";
+"referral_deposit_pending" = "To receive your bonus, your friend must make a deposit";
+
+"account_validated" = "Account validated";
+"account_not_validated" = "Compte non validé";
+"rf_first_deposit" = "✓ 1st deposit";
+
+"rf_fifth_title" = "Affiliation Regulations";
+"rf_fifth_description" = "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do ";
+
+"qr_code" = "QR code";
+"qr_code_description" = "Ask your friend to take a picture of this QR code to register on Betsson.fr";
+
+"rf_second_title_nv" = "How can I sponsor my friends?";
+"rf_second_description_nv" = "To be able to sponsor your friends, you must first validate your account and make an initial deposit.";
+
+"rf_second_first_bottom_nv" = "Validate my account";
+"rf_second_second_bottom_nv" = "Make my 1st deposit";

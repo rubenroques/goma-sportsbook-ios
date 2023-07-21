@@ -20,6 +20,7 @@ enum BettingAPIClient {
     case getFreebetBalance
     case getSharedTicket(betslipId: String)
     case getTicketSelection(ticketSelectionId: String)
+    case calculateCashback(betSelectionData: String)
 }
 
 extension BettingAPIClient: Endpoint {
@@ -50,6 +51,8 @@ extension BettingAPIClient: Endpoint {
             return "/api/betting/fo/bookbetslip/\(betslipId)"
         case .getTicketSelection:
             return "/services/content/get"
+        case .calculateCashback:
+            return "/api/special-offer-calculator/v1/calculateSpecialOffers"
         }
     }
     
@@ -117,6 +120,8 @@ extension BettingAPIClient: Endpoint {
         case .getSharedTicket:
             return nil
         case .getTicketSelection:
+            return nil
+        case .calculateCashback:
             return nil
         }
     }
@@ -314,6 +319,15 @@ extension BettingAPIClient: Endpoint {
                        """
             let data = body.data(using: String.Encoding.utf8)!
             return data
+
+        case .calculateCashback(let betSelectionData):
+
+            let body = betSelectionData
+
+            let data = body.data(using: String.Encoding.utf8)!
+
+            return data
+
         }
         
     }
@@ -332,6 +346,7 @@ extension BettingAPIClient: Endpoint {
         case .getFreebetBalance: return .get
         case .getSharedTicket: return .get
         case .getTicketSelection: return .post
+        case .calculateCashback: return .post
         }
     }
     
@@ -349,6 +364,7 @@ extension BettingAPIClient: Endpoint {
         case .getFreebetBalance: return true
         case .getSharedTicket: return true
         case .getTicketSelection: return false
+        case .calculateCashback: return true
         }
     }
     
@@ -390,6 +406,7 @@ extension BettingAPIClient: Endpoint {
         case .getFreebetBalance: return TimeInterval(10)
         case .getSharedTicket: return TimeInterval(20)
         case .getTicketSelection: return TimeInterval(20)
+        case .calculateCashback: return TimeInterval(60)
         }
     }
     
