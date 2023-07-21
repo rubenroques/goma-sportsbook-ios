@@ -111,7 +111,7 @@ class MyTicketTableViewCell: UITableViewCell {
             self.partialCashoutSliderView.isHidden = !showPartialCashoutSliderView
 
             if showPartialCashoutSliderView {
-
+                self.viewModel?.hasRedraw = true
                 self.needsHeightRedraw?(false)
 
             }
