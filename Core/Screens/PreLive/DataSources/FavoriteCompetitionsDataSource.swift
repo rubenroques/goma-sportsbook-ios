@@ -54,7 +54,9 @@ class FavoriteCompetitionsDataSource: NSObject, UITableViewDataSource, UITableVi
                 cell.matchStatsViewModel = matchStatsViewModel
             }
             
-            cell.setupWithMatch(match)
+            let viewModel = MatchLineTableCellViewModel(match: match)
+            cell.viewModel = viewModel
+            
             cell.shouldShowCountryFlag(false)
             cell.tappedMatchLineAction = { [weak self] match in
                 self?.didSelectMatchAction?(match)

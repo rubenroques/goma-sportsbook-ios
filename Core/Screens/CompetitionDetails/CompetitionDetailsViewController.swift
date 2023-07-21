@@ -321,7 +321,10 @@ extension CompetitionDetailsViewController: UITableViewDelegate, UITableViewData
         case .match(let match):
             if let cell = tableView.dequeueCellType(MatchLineTableViewCell.self) {
                 cell.matchStatsViewModel = self.viewModel.matchStatsViewModel(forMatch: match)
-                cell.setupWithMatch(match)
+
+                let viewModel = MatchLineTableCellViewModel(match: match)
+                cell.viewModel = viewModel
+
                 cell.shouldShowCountryFlag(false)
                 cell.tappedMatchLineAction = { [weak self] match in
                     self?.openMatchDetails(match)

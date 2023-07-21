@@ -393,7 +393,8 @@ extension HomeViewController: UITableViewDelegate, UITableViewDataSource {
             }
 
             cell.matchStatsViewModel = self.viewModel.matchStatsViewModel(forMatch: match)
-            cell.setupWithMatch(match)
+            let viewModel = MatchLineTableCellViewModel(match: match)
+            cell.viewModel = viewModel
             cell.tappedMatchLineAction = { [weak self] match in
                 self?.openMatchDetails(matchId: match.id)
             }
@@ -401,12 +402,12 @@ extension HomeViewController: UITableViewDelegate, UITableViewDataSource {
             cell.didLongPressOdd = { [weak self] bettingTicket in
                 self?.openQuickbet(bettingTicket)
             }
-           
+
             return cell
         case .featuredTips:
             guard
                 let cell = tableView.dequeueReusableCell(withIdentifier: FeaturedTipLineTableViewCell.identifier) as? FeaturedTipLineTableViewCell,
-                    let featuredBetLineViewModel = self.viewModel.featuredTipLineViewModel()
+                let featuredBetLineViewModel = self.viewModel.featuredTipLineViewModel()
             else {
                 fatalError()
             }
@@ -637,7 +638,30 @@ extension HomeViewController: UITableViewDelegate, UITableViewDataSource {
             }
 
             cell.matchStatsViewModel = self.viewModel.matchStatsViewModel(forMatch: match)
-            cell.setupWithMatch(match)
+
+            let viewModel = MatchLineTableCellViewModel(match: match)
+            cell.viewModel = viewModel
+
+            cell.tappedMatchLineAction = { [weak self] match in
+                self?.openMatchDetails(matchId: match.id)
+            }
+
+            cell.didLongPressOdd = { [weak self] bettingTicket in
+                self?.openQuickbet(bettingTicket)
+            }
+
+            return cell
+
+        case .supplementaryEvents:
+            guard
+                let cell = tableView.dequeueReusableCell(withIdentifier: MatchLineTableViewCell.identifier) as? MatchLineTableViewCell,
+                let matchLineViewModel = self.viewModel.matchLineTableCellViewModel(forSection: indexPath.section, forIndex: indexPath.row)
+            else {
+                fatalError()
+            }
+
+            cell.viewModel = matchLineViewModel
+
             cell.tappedMatchLineAction = { [weak self] match in
                 self?.openMatchDetails(matchId: match.id)
             }
@@ -713,6 +737,8 @@ extension HomeViewController: UITableViewDelegate, UITableViewDataSource {
             return UITableView.automaticDimension
         case .promotedSportSection:
             return UITableView.automaticDimension
+        case .supplementaryEvents:
+            return UITableView.automaticDimension
         }
 
     }
@@ -778,6 +804,8 @@ extension HomeViewController: UITableViewDelegate, UITableViewDataSource {
         case .promotionalStories:
             return 115
         case .promotedSportSection:
+            return StyleHelper.cardsStyleHeight() + 20
+        case .supplementaryEvents:
             return StyleHelper.cardsStyleHeight() + 20
         }
     }
@@ -919,6 +947,8 @@ extension HomeViewController: UITableViewDataSourcePrefetching {
             case .promotionalStories:
                 ()
             case .promotedSportSection:
+                ()
+            case .supplementaryEvents:
                 ()
             }
         }

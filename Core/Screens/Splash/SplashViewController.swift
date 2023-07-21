@@ -27,8 +27,8 @@ class SplashViewController: UIViewController {
         fatalError("init(coder:) has not been implemented")
     }
 
-    override func viewDidLoad() {
-        super.viewDidLoad()
+    override func viewDidAppear(_ animated: Bool) {
+        super.viewDidAppear(animated)
 
         Logger.log("Starting connections")
 
@@ -43,9 +43,20 @@ class SplashViewController: UIViewController {
         }
 
         // Env.appSession.isLoadingAppSettingsPublisher,
-        self.isLoadingBootDataSubscription = Env.sportsStore.isLoadingSportTypesPublisher
+        self.isLoadingBootDataSubscription = Env.sportsStore.activeSportsPublisher
+            .map({ loadableContent -> Bool in
+                switch loadableContent {
+                case .loading, .idle:
+                    // we need to wait for the request result
+                    return false
+                case .loaded, .failed:
+                    // We received a result, the next screen needs to be
+                    // presented even if the result is a failed request
+                    return true
+                }
+            })
             .receive(on: DispatchQueue.main)
-            .sink { [weak self]  isLoadingSportTypes in
+            .sink { [weak self] isLoadingSportTypes in
                 if !isLoadingSportTypes {
                     self?.splashLoadingCompleted()
                 }

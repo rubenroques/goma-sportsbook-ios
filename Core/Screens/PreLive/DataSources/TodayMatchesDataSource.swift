@@ -80,13 +80,12 @@ class TodayMatchesDataSource: NSObject, UITableViewDataSource, UITableViewDelega
                     cell.matchStatsViewModel = matchStatsViewModel
                 }
                 
-                cell.setupWithMatch(match)
+                let viewModel = MatchLineTableCellViewModel(match: match)
+                cell.viewModel = viewModel
+                
                 cell.tappedMatchLineAction = { [weak self] match in
                     self?.didSelectMatchAction?(match)
                 }
-//                cell.didTapFavoriteMatchAction = { [weak self] match in
-//                    self?.didTapFavoriteMatchAction?(match)
-//                }
 
                 cell.didLongPressOdd = { [weak self] bettingTicket in
                     self?.didLongPressOdd?(bettingTicket)

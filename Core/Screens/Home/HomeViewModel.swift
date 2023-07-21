@@ -36,6 +36,8 @@ class HomeViewModel {
         case promotionalStories
         case promotedSportSection
 
+        case supplementaryEvents
+
         var identifier: String {
             switch self {
             case .userMessage: return "userMessage"
@@ -53,6 +55,8 @@ class HomeViewModel {
 
             case .promotionalStories: return "promotionalStories"
             case .promotedSportSection: return "promotedSportSection"
+
+            case .supplementaryEvents: return "supplementaryEvents"
             }
         }
     }
@@ -155,4 +159,13 @@ extension HomeViewModel {
     func promotedMatch(forSection section: Int, forIndex index: Int) -> Match? {
         return self.homeViewTemplateDataSource.promotedMatch(forSection: section, forIndex: index)
     }
+
+    func supplementaryEventId(forSection section: Int, forIndex index: Int) -> String? {
+        return self.homeViewTemplateDataSource.supplementaryEventId(forSection: section, forIndex: index)
+    }
+
+    func matchLineTableCellViewModel(forSection section: Int, forIndex index: Int) -> MatchLineTableCellViewModel? {
+        return self.homeViewTemplateDataSource.matchLineTableCellViewModel(forSection: section, forIndex: index)
+    }
+
 }

@@ -330,16 +330,14 @@ extension PopularDetailsViewController: UITableViewDelegate, UITableViewDataSour
             }
 
             cell.matchStatsViewModel = self.viewModel.matchStatsViewModel(forMatch: match)
-            cell.setupWithMatch(match)
+
+            let viewModel = MatchLineTableCellViewModel(match: match)
+            cell.viewModel = viewModel
+
             cell.shouldShowCountryFlag(false)
             cell.tappedMatchLineAction = { [weak self] match in
                 self?.openMatchDetails(match)
             }
-
-//            cell.didTapFavoriteMatchAction = { [weak self] match in
-//                self?.viewModel.markAsFavorite(match: match)
-//            }
-
             return cell
 
         case 1:

@@ -11,7 +11,7 @@ import ServicesProvider
 
 class ClientManagedHomeViewTemplateDataSource {
 
-    private let fixedSection = 6
+    private let fixedSection = 7
     private var refreshPublisher = PassthroughSubject<Void, Never>.init()
 
     // User Alert
@@ -87,6 +87,10 @@ class ClientManagedHomeViewTemplateDataSource {
     }
     var promotedSportsMatches: [String: [Match]] = [:]
 
+    var supplementaryEventIds: [String] = []
+
+    var matchLineTableCellViewModelCache: [String: MatchLineTableCellViewModel] = [:]
+
     //
     private var cancellables: Set<AnyCancellable> = []
 
@@ -121,6 +125,7 @@ class ClientManagedHomeViewTemplateDataSource {
         self.fetchBanners()
         self.fetchHighlightMatches()
         self.fetchPromotedSports()
+        self.fetchSupplementaryEventsIds()
 
     }
 
@@ -203,7 +208,36 @@ class ClientManagedHomeViewTemplateDataSource {
 
     }
 
-    func fetchSportsSections() {
+    func fetchSupplementaryEventsIds() {
+
+        self.supplementaryEventIds = [
+            "3225419.1",
+            "3225457.1",
+            "3225190.1",
+            "3224836.1",
+            "3224831.1",
+            "3225090.1",
+            "3225449.1",
+            "3225148.1",
+            "3225149.1",
+            "3225151.1",
+            "3225173.1",
+            "3225420.1",
+            "3225192.1",
+            "3225195.1",
+            "3225247.1",
+            "3225448.1",
+            "3225242.1",
+            "3225265.1",
+            "3225209.1",
+            "3225214.1",
+            "3225124.1",
+            "3225014.1",
+            "3225117.1",
+            "3225039.1"
+        ]
+
+        self.refreshPublisher.send()
 
     }
 
@@ -329,6 +363,8 @@ extension ClientManagedHomeViewTemplateDataSource: HomeViewTemplateDataSource {
             return self.highlightsVisualImageMatches.count + self.highlightsBoostedMatches.count
         case 5:
             return self.shouldShowOwnBetCallToAction ? 1 : 0
+        case 6:
+            return self.supplementaryEventIds.count
         default:
             ()
         }
@@ -397,6 +433,8 @@ extension ClientManagedHomeViewTemplateDataSource: HomeViewTemplateDataSource {
             return .highlightedMatches
         case 5:
             return .makeOwnBetCallToAction
+        case 6:
+            return .supplementaryEvents
         default:
             ()
         }
@@ -471,6 +509,30 @@ extension ClientManagedHomeViewTemplateDataSource: HomeViewTemplateDataSource {
             return match
         }
         return nil
+    }
+
+    func supplementaryEventId(forSection section: Int, forIndex index: Int) -> String? {
+        return self.supplementaryEventIds[safe: index]
+    }
+
+    func matchLineTableCellViewModel(forSection section: Int, forIndex index: Int) -> MatchLineTableCellViewModel? {
+
+        guard
+            let matchId = self.supplementaryEventId(forSection: section, forIndex: index),
+            section == 6
+        else {
+            return nil
+        }
+
+        if let matchLineTableCellViewModel = self.matchLineTableCellViewModelCache[matchId] {
+            return matchLineTableCellViewModel
+        }
+        else {
+            let matchLineTableCellViewModel = MatchLineTableCellViewModel(matchId: matchId)
+            self.matchLineTableCellViewModelCache[matchId] = matchLineTableCellViewModel
+            return matchLineTableCellViewModel
+        }
+
     }
 
 }

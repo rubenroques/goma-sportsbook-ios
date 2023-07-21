@@ -480,21 +480,22 @@ class SportRadarEventsProvider: EventsProvider {
         return publisher.eraseToAnyPublisher()
     }
 
-    func subscribeMatchDetails(matchId: String) -> AnyPublisher<SubscribableContent<Event>, ServiceProviderError> {
+    func subscribeEventDetails(eventId: String) -> AnyPublisher<SubscribableContent<Event>, ServiceProviderError> {
+
         guard
             let sessionToken = socketConnector.token
         else {
             return Fail(error: ServiceProviderError.userSessionNotFound).eraseToAnyPublisher()
         }
 
-        if let eventDetailsCoordinator = self.getValidEventDetailsCoordinator(forKey: matchId) {
+        if let eventDetailsCoordinator = self.getValidEventDetailsCoordinator(forKey: eventId) {
             return eventDetailsCoordinator.eventDetailsPublisher
         }
         else {
-            let eventDetailsCoordinator = SportRadarEventDetailsCoordinator(matchId: matchId,
+            let eventDetailsCoordinator = SportRadarEventDetailsCoordinator(matchId: eventId,
                                                                              sessionToken: sessionToken.hash,
                                                                              storage: SportRadarEventDetailsStorage())
-            self.addEventDetailsCoordinator(eventDetailsCoordinator, withKey: matchId)
+            self.addEventDetailsCoordinator(eventDetailsCoordinator, withKey: eventId)
             return eventDetailsCoordinator.eventDetailsPublisher
         }
     }
@@ -1282,11 +1283,8 @@ extension SportRadarEventsProvider {
     }
 
     func getEventSummary(eventId: String) -> AnyPublisher<Event, ServiceProviderError> {
-
         let endpoint = SportRadarRestAPIClient.getEventSummary(eventId: eventId)
-
         let requestPublisher: AnyPublisher<SportRadarModels.SportRadarResponse<SportRadarModels.Event>, ServiceProviderError> = self.restConnector.request(endpoint)
-
         return requestPublisher.map( { sportRadarResponse -> Event in
             let event = sportRadarResponse.data
             let mappedEvent = SportRadarModelMapper.event(fromInternalEvent: event)
@@ -1439,6 +1437,20 @@ extension SportRadarEventsProvider {
         })
         .eraseToAnyPublisher()
     }
+
+    func getEventDetails(eventId: String) -> AnyPublisher<Event, ServiceProviderError> {
+        let endpoint = SportRadarRestAPIClient.getEventDetails(eventId: eventId)
+
+        let requestPublisher: AnyPublisher<SportRadarModels.SportRadarResponse<SportRadarModels.Event>, ServiceProviderError> = self.restConnector.request(endpoint)
+
+        return requestPublisher.map( { sportRadarResponse -> Event in
+            let event = sportRadarResponse.data
+            let mappedEvent = SportRadarModelMapper.event(fromInternalEvent: event)
+            return mappedEvent
+        })
+        .eraseToAnyPublisher()
+    }
+
 }
 
 extension SportRadarEventsProvider: UnsubscriptionController {

@@ -30,9 +30,6 @@ class SportSelectionViewController: UIViewController {
     var defaultSport: Sport
     var isLiveSport: Bool
 
-    var allSportsPublisher: AnyCancellable?
-    var liveSportsPublisher: AnyCancellable?
-
     var allSportsSubscribePublisher: AnyCancellable?
 
     var selectionDelegate: SportTypeSelectionViewDelegate?
@@ -87,14 +84,7 @@ class SportSelectionViewController: UIViewController {
         self.view.bringSubviewToFront(self.loadingBaseView)
         self.isLoading = true
 
-        if isLiveSport {
-            //self.getSportsLive()
-            self.getAllSports(onlyLiveSports: true)
-        }
-        else {
-            //self.getAvailableSports()
-            self.getAllSports()
-        }
+        self.getAllSports(liveSportsOnly: isLiveSport)
 
         self.navigationLabel.text = localized("choose_sport")
         self.navigationLabel.font = AppFont.with(type: .bold, size: 16)
@@ -149,13 +139,21 @@ class SportSelectionViewController: UIViewController {
 
     }
 
-    func getAllSports(onlyLiveSports: Bool = false) {
+    func getAllSports(liveSportsOnly: Bool = false) {
 
-        Env.sportsStore.sportsPublisher
+        Env.sportsStore.activeSportsPublisher
+            .map({ loadableContent -> [Sport]? in
+                switch loadableContent {
+                case .loading, .idle, .failed: return nil
+                case .loaded(let sports): return sports
+                }
+            })
+            .filter({ $0 != nil })
+            .compactMap({ $0 })
             .receive(on: DispatchQueue.main)
             .sink(receiveValue: { [weak self] allSports in
 
-                if onlyLiveSports {
+                if liveSportsOnly {
                     let liveSports = allSports.filter({
                         $0.liveEventsCount > 0
                     })
@@ -173,80 +171,6 @@ class SportSelectionViewController: UIViewController {
                 self?.isLoading = false
             })
             .store(in: &cancellables)
-
-//        self.allSportsSubscribePublisher = Env.servicesProvider.subscribeAllSportTypes()
-//            .receive(on: DispatchQueue.main)
-//            .sink(receiveCompletion: { [weak self] completion in
-//                print("Env.servicesProvider.allSportTypes completed \(completion)")
-//            }, receiveValue: { [weak self] (subscribableContent: SubscribableContent<[SportType]>) in
-//                switch subscribableContent {
-//                case .connected(subscription: let subscription):
-//                    self?.sportsSubscription = subscription
-//                case .contentUpdate(let sportTypes):
-//
-//                    if onlyLiveSports {
-//                        let liveSportTypes = sportTypes.filter({
-//                            $0.numberLiveEvents > 0
-//                        })
-//                        self?.configureWithSports(liveSportTypes)
-//                    }
-//                    else {
-//                        let preLiveSports = sportTypes.filter({
-//                            $0.numberEvents > 0 || $0.numberLiveEvents > 0 || $0.numberOutrightEvents > 0
-//                        })
-//
-//                        self?.configureWithSports(preLiveSports)
-//                    }
-//
-//                    self?.isLoading = false
-//
-//                case .disconnected:
-//                    ()
-//                }
-//            })
-
-    }
-
-    func getAvailableSports() {
-        self.isLoading = true
-
-        self.allSportsPublisher?.cancel()
-        self.allSportsPublisher = nil
-
-        self.allSportsPublisher = Env.servicesProvider.getAvailableSportTypes()
-            .receive(on: DispatchQueue.main)
-            .sink(receiveCompletion: { [weak self] completion in
-                self?.isLoading = false
-            }, receiveValue: { [weak self] (sportTypes: [SportType]) in
-                self?.configureWithSportTypes(sportTypes)
-                self?.isLoading = false
-            })
-
-    }
-
-    func getSportsLive() {
-        self.isLoading = true
-
-        self.liveSportsPublisher?.cancel()
-        self.liveSportsPublisher = nil
-
-        self.liveSportsPublisher = Env.servicesProvider.subscribeLiveSportTypes()
-            .receive(on: DispatchQueue.main)
-            .sink(receiveCompletion: { [weak self] completion in
-                print("Env.servicesProvider.liveSportTypes completed \(completion)")
-                self?.isLoading = false
-                self?.configureWithSports([])
-            }, receiveValue: { [weak self] (subscribableContent: SubscribableContent<[SportType]>) in
-                switch subscribableContent {
-                case .connected(subscription: let subscription):
-                    self?.sportsSubscription = subscription
-                case .contentUpdate(let sportTypes):
-                    self?.configureWithSportTypes(sportTypes)
-                    self?.isLoading = false
-                case .disconnected:
-                    self?.configureWithSports([])
-                }
-            })
 
     }
 

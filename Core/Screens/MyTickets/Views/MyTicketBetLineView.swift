@@ -297,7 +297,7 @@ class MyTicketBetLineView: NibView {
 
         if let eventId = self.betHistoryEntrySelection.eventId {
 
-            Env.servicesProvider.subscribeMatchDetails(matchId: eventId)
+            Env.servicesProvider.subscribeEventDetails(eventId: eventId)
                 .receive(on: DispatchQueue.main)
                 .sink(receiveCompletion: { [weak self] completion in
                     print("Env.servicesProvider.subscribeEventDetails completed \(completion)")

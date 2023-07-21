@@ -3999,6 +3999,22 @@
 		45D1ED5F28A150C2001E18E5 /* BusinessModules.swift in Sources */ = {isa = PBXBuildFile; fileRef = 45D1ED5A28A150C2001E18E5 /* BusinessModules.swift */; };
 		45D1ED6028A150C2001E18E5 /* BusinessModules.swift in Sources */ = {isa = PBXBuildFile; fileRef = 45D1ED5A28A150C2001E18E5 /* BusinessModules.swift */; };
 		45D3BBAC296F13BB009E0D09 /* RegisterFlow in Frameworks */ = {isa = PBXBuildFile; productRef = 45D3BBAB296F13BB009E0D09 /* RegisterFlow */; };
+		45DB8D9C2A66D9480018C591 /* DebugUserDefaults.swift in Sources */ = {isa = PBXBuildFile; fileRef = 45DB8D9B2A66D9480018C591 /* DebugUserDefaults.swift */; };
+		45DB8D9D2A66D9480018C591 /* DebugUserDefaults.swift in Sources */ = {isa = PBXBuildFile; fileRef = 45DB8D9B2A66D9480018C591 /* DebugUserDefaults.swift */; };
+		45DB8D9E2A66D9480018C591 /* DebugUserDefaults.swift in Sources */ = {isa = PBXBuildFile; fileRef = 45DB8D9B2A66D9480018C591 /* DebugUserDefaults.swift */; };
+		45DB8D9F2A66D9480018C591 /* DebugUserDefaults.swift in Sources */ = {isa = PBXBuildFile; fileRef = 45DB8D9B2A66D9480018C591 /* DebugUserDefaults.swift */; };
+		45DB8DA02A66D9480018C591 /* DebugUserDefaults.swift in Sources */ = {isa = PBXBuildFile; fileRef = 45DB8D9B2A66D9480018C591 /* DebugUserDefaults.swift */; };
+		45DB8DA12A66D9480018C591 /* DebugUserDefaults.swift in Sources */ = {isa = PBXBuildFile; fileRef = 45DB8D9B2A66D9480018C591 /* DebugUserDefaults.swift */; };
+		45DB8DA22A66D9480018C591 /* DebugUserDefaults.swift in Sources */ = {isa = PBXBuildFile; fileRef = 45DB8D9B2A66D9480018C591 /* DebugUserDefaults.swift */; };
+		45DB8DA42A6A905D0018C591 /* CountrySelectionFeature in Frameworks */ = {isa = PBXBuildFile; productRef = 45DB8DA32A6A905D0018C591 /* CountrySelectionFeature */; };
+		45DB8DA62A6A905D0018C591 /* Extensions in Frameworks */ = {isa = PBXBuildFile; productRef = 45DB8DA52A6A905D0018C591 /* Extensions */; };
+		45DB8DA82A6A905D0018C591 /* GomaGamingSDK in Frameworks */ = {isa = PBXBuildFile; productRef = 45DB8DA72A6A905D0018C591 /* GomaGamingSDK */; };
+		45DB8DAA2A6A905D0018C591 /* HeaderTextField in Frameworks */ = {isa = PBXBuildFile; productRef = 45DB8DA92A6A905D0018C591 /* HeaderTextField */; };
+		45DB8DAC2A6A905D0018C591 /* Theming in Frameworks */ = {isa = PBXBuildFile; productRef = 45DB8DAB2A6A905D0018C591 /* Theming */; };
+		45DB8DAE2A6A906C0018C591 /* Theming in Frameworks */ = {isa = PBXBuildFile; productRef = 45DB8DAD2A6A906C0018C591 /* Theming */; };
+		45DB8DB02A6A9C7C0018C591 /* CountrySelectionFeature in Frameworks */ = {isa = PBXBuildFile; productRef = 45DB8DAF2A6A9C7C0018C591 /* CountrySelectionFeature */; };
+		45DB8DB62A6AA10D0018C591 /* IdensicMobileSDK in Frameworks */ = {isa = PBXBuildFile; productRef = 45DB8DB52A6AA10D0018C591 /* IdensicMobileSDK */; };
+		45DB8DB92A6AA5100018C591 /* PhraseSDK in Frameworks */ = {isa = PBXBuildFile; productRef = 45DB8DB82A6AA5100018C591 /* PhraseSDK */; };
 		45E46C172A08FEB900BB9B85 /* sports-loading.json in Resources */ = {isa = PBXBuildFile; fileRef = 45E46C162A08FEB900BB9B85 /* sports-loading.json */; };
 		45E46C182A08FEB900BB9B85 /* sports-loading.json in Resources */ = {isa = PBXBuildFile; fileRef = 45E46C162A08FEB900BB9B85 /* sports-loading.json */; };
 		45E46C192A08FEB900BB9B85 /* sports-loading.json in Resources */ = {isa = PBXBuildFile; fileRef = 45E46C162A08FEB900BB9B85 /* sports-loading.json */; };
@@ -4748,7 +4764,6 @@
 		A9BA04252A33399D007880FC /* UploadDocumentsInformationView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9BA041F2A33399D007880FC /* UploadDocumentsInformationView.swift */; };
 		A9BA04262A33399D007880FC /* UploadDocumentsInformationView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9BA041F2A33399D007880FC /* UploadDocumentsInformationView.swift */; };
 		A9BA04272A33399D007880FC /* UploadDocumentsInformationView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9BA041F2A33399D007880FC /* UploadDocumentsInformationView.swift */; };
-		A9BA04312A37282D007880FC /* IdensicMobileSDK in Frameworks */ = {isa = PBXBuildFile; productRef = A9BA04302A37282D007880FC /* IdensicMobileSDK */; };
 		A9BDD4F1292E3F08001A7799 /* SportTypeStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9BDD4F0292E3F08001A7799 /* SportTypeStore.swift */; };
 		A9BDD4F2292E3F08001A7799 /* SportTypeStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9BDD4F0292E3F08001A7799 /* SportTypeStore.swift */; };
 		A9BDD4F3292E3F08001A7799 /* SportTypeStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9BDD4F0292E3F08001A7799 /* SportTypeStore.swift */; };
@@ -6049,6 +6064,7 @@
 		45D871CB27108F5900F5B87B /* CountryFlags.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = CountryFlags.xcassets; sourceTree = "<group>"; };
 		45D9CBDD270F34D800B8C321 /* EveryMatrixModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EveryMatrixModel.swift; sourceTree = "<group>"; };
 		45D9CBE0270F3C8400B8C321 /* AppSession.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppSession.swift; sourceTree = "<group>"; };
+		45DB8D9B2A66D9480018C591 /* DebugUserDefaults.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DebugUserDefaults.swift; sourceTree = "<group>"; };
 		45DD5302297EBE6A00DBC2AA /* SharedModels */ = {isa = PBXFileReference; lastKnownFileType = wrapper; path = SharedModels; sourceTree = "<group>"; };
 		45DD5303297ED57100DBC2AA /* CountrySelectionFeature */ = {isa = PBXFileReference; lastKnownFileType = wrapper; path = CountrySelectionFeature; sourceTree = "<group>"; };
 		45DDBA8126F2146000A73E45 /* Gilroy-ExtraBold.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Gilroy-ExtraBold.ttf"; sourceTree = "<group>"; };
@@ -6484,6 +6500,9 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				45DB8DA62A6A905D0018C591 /* Extensions in Frameworks */,
+				45DB8DAA2A6A905D0018C591 /* HeaderTextField in Frameworks */,
+				45DB8DB92A6AA5100018C591 /* PhraseSDK in Frameworks */,
 				45D3BBAC296F13BB009E0D09 /* RegisterFlow in Frameworks */,
 				450B7A9128F58574009229E3 /* FirebaseMessaging in Frameworks */,
 				450B7A9228F58574009229E3 /* FirebaseDatabase in Frameworks */,
@@ -6497,19 +6516,23 @@
 				45A33020298935F6008181E9 /* AdyenCard in Frameworks */,
 				450B7A9A28F58574009229E3 /* Collections in Frameworks */,
 				45A33024298935F6008181E9 /* AdyenEncryption in Frameworks */,
+				45DB8DB62A6AA10D0018C591 /* IdensicMobileSDK in Frameworks */,
 				45A3301E298935F6008181E9 /* AdyenActions in Frameworks */,
 				450B7A9B28F58574009229E3 /* CombineCocoa in Frameworks */,
 				450B7A9C28F58574009229E3 /* SwiftyBeaver in Frameworks */,
 				45A33028298935F6008181E9 /* AdyenSwiftUI in Frameworks */,
 				45A3302A298935F6008181E9 /* AdyenWeChatPay in Frameworks */,
 				45A3301C298935F6008181E9 /* Adyen in Frameworks */,
+				45DB8DA42A6A905D0018C591 /* CountrySelectionFeature in Frameworks */,
 				45A33026298935F6008181E9 /* AdyenSession in Frameworks */,
 				450B7A9D28F58574009229E3 /* FirebaseCrashlytics in Frameworks */,
+				45DB8DA82A6A905D0018C591 /* GomaGamingSDK in Frameworks */,
 				450B7A9E28F58574009229E3 /* FirebaseAnalytics in Frameworks */,
 				450B7A9F28F58574009229E3 /* OrderedCollections in Frameworks */,
 				450B7AA028F58574009229E3 /* SweeterSwift in Frameworks */,
 				450B7AA128F58574009229E3 /* Starscream in Frameworks */,
 				450B7AA228F58574009229E3 /* SocketIO in Frameworks */,
+				45DB8DAC2A6A905D0018C591 /* Theming in Frameworks */,
 				456237D9297EE5F600B3FA3A /* SharedModels in Frameworks */,
 				45BA77A5293CD60800B6ACA6 /* ServicesProvider in Frameworks */,
 			);
@@ -6629,11 +6652,12 @@
 				45A332C4298976BA008181E9 /* FirebaseCrashlytics in Frameworks */,
 				45A332C5298976BA008181E9 /* FirebaseAnalytics in Frameworks */,
 				45A332C6298976BA008181E9 /* OrderedCollections in Frameworks */,
+				45DB8DB02A6A9C7C0018C591 /* CountrySelectionFeature in Frameworks */,
 				45A332C7298976BA008181E9 /* SweeterSwift in Frameworks */,
 				45A332C8298976BA008181E9 /* Starscream in Frameworks */,
 				45C8ECB929CC7AE4006A35DC /* HeaderTextField in Frameworks */,
 				45A332C9298976BA008181E9 /* SocketIO in Frameworks */,
-				A9BA04312A37282D007880FC /* IdensicMobileSDK in Frameworks */,
+				45DB8DAE2A6A906C0018C591 /* Theming in Frameworks */,
 				45A332CA298976BA008181E9 /* SharedModels in Frameworks */,
 				45A332CB298976BA008181E9 /* ServicesProvider in Frameworks */,
 			);
@@ -7208,6 +7232,7 @@
 				455A0D1D26BDE7AE00EC572D /* DebugViewController.xib */,
 				456B342B26C18C75009D7D27 /* LogViewerViewController.swift */,
 				456B342C26C18C75009D7D27 /* LogViewerViewController.xib */,
+				45DB8D9B2A66D9480018C591 /* DebugUserDefaults.swift */,
 			);
 			path = DebugHelper;
 			sourceTree = "<group>";
@@ -9907,6 +9932,13 @@
 				45A33025298935F6008181E9 /* AdyenSession */,
 				45A33027298935F6008181E9 /* AdyenSwiftUI */,
 				45A33029298935F6008181E9 /* AdyenWeChatPay */,
+				45DB8DA32A6A905D0018C591 /* CountrySelectionFeature */,
+				45DB8DA52A6A905D0018C591 /* Extensions */,
+				45DB8DA72A6A905D0018C591 /* GomaGamingSDK */,
+				45DB8DA92A6A905D0018C591 /* HeaderTextField */,
+				45DB8DAB2A6A905D0018C591 /* Theming */,
+				45DB8DB52A6AA10D0018C591 /* IdensicMobileSDK */,
+				45DB8DB82A6AA5100018C591 /* PhraseSDK */,
 			);
 			productName = Sportsbook;
 			productReference = 450B7B2428F58574009229E3 /* SportRadar.app */;
@@ -10091,8 +10123,9 @@
 				45A33052298976BA008181E9 /* AdyenWeChatPay */,
 				45C8ECB829CC7AE4006A35DC /* HeaderTextField */,
 				45F805922A05357E005296E0 /* Lottie */,
-				A9BA04302A37282D007880FC /* IdensicMobileSDK */,
 				451640292A39FF80003C4276 /* PhraseSDK */,
+				45DB8DAD2A6A906C0018C591 /* Theming */,
+				45DB8DAF2A6A9C7C0018C591 /* CountrySelectionFeature */,
 			);
 			productName = Sportsbook;
 			productReference = 45A3334E298976BA008181E9 /* Betsson.app */;
@@ -10208,8 +10241,8 @@
 				4554ED082976F7FE006942B3 /* XCRemoteSwiftPackageReference "IQKeyboardManager" */,
 				A96FAEDF29829CCA00A0751F /* XCRemoteSwiftPackageReference "adyen-ios" */,
 				45F805912A05357E005296E0 /* XCRemoteSwiftPackageReference "lottie-spm" */,
-				A9BA042F2A37282D007880FC /* XCRemoteSwiftPackageReference "IdensicMobileSDK-iOS" */,
-				451640282A39FF80003C4276 /* XCRemoteSwiftPackageReference "ios-sdk" */,
+				45DB8DB42A6AA10D0018C591 /* XCRemoteSwiftPackageReference "IdensicMobileSDK-iOS" */,
+				45DB8DB72A6AA5100018C591 /* XCRemoteSwiftPackageReference "ios-sdk" */,
 			);
 			productRefGroup = 455A0C5126BD902C00EC572D /* Products */;
 			projectDirPath = "";
@@ -11844,6 +11877,7 @@
 				45B9F9782A1E245700DA2B88 /* ClientManagedHomeViewTemplateDataSource.swift in Sources */,
 				450B7A1428F58574009229E3 /* BusinessModules.swift in Sources */,
 				450B7A1628F58574009229E3 /* NSObject+Extension.swift in Sources */,
+				45DB8D9D2A66D9480018C591 /* DebugUserDefaults.swift in Sources */,
 				450B7A1728F58574009229E3 /* Logger.swift in Sources */,
 				450B7A1828F58574009229E3 /* NavControllerTransitionCoordinator.swift in Sources */,
 				450B7A1928F58574009229E3 /* GamesNotificationViewModel.swift in Sources */,
@@ -12625,6 +12659,7 @@
 				457CBB71282D27D000ED0F00 /* DropDownSelectionView.swift in Sources */,
 				45B9F98C2A1E564D00DA2B88 /* HomeTemplateParser.swift in Sources */,
 				A986D34728CB473700AF95D7 /* TipsCellViewModel.swift in Sources */,
+				45DB8DA12A66D9480018C591 /* DebugUserDefaults.swift in Sources */,
 				457CBB72282D27D000ED0F00 /* PolicyLinkView.swift in Sources */,
 				A9B331C7288EFE0F00D097F0 /* InAppMessageTableViewCell.swift in Sources */,
 				457CBB74282D27D000ED0F00 /* HomeFilterOptions.swift in Sources */,
@@ -12980,6 +13015,7 @@
 				457CBD3E282D2CD100ED0F00 /* Optional+Extensions.swift in Sources */,
 				45C10F5D28772DA700037BBE /* CATransform3D+Shift.swift in Sources */,
 				A986D35A28CB48F100AF95D7 /* TipsListViewModel.swift in Sources */,
+				45DB8DA22A66D9480018C591 /* DebugUserDefaults.swift in Sources */,
 				457CBD3F282D2CD100ED0F00 /* OutcomeSelectionButtonView.swift in Sources */,
 				457CBD40282D2CD100ED0F00 /* MyFavoriteMatchesDataSource.swift in Sources */,
 				457CBD41282D2CD100ED0F00 /* MultiSliderExtensions.swift in Sources */,
@@ -13884,6 +13920,7 @@
 				45B9F9792A1E245700DA2B88 /* ClientManagedHomeViewTemplateDataSource.swift in Sources */,
 				45D1ED5D28A150C2001E18E5 /* BusinessModules.swift in Sources */,
 				4589C8DE282024E400243547 /* NSObject+Extension.swift in Sources */,
+				45DB8D9E2A66D9480018C591 /* DebugUserDefaults.swift in Sources */,
 				4589C8DF282024E400243547 /* Logger.swift in Sources */,
 				45C10F3628772DA700037BBE /* NavControllerTransitionCoordinator.swift in Sources */,
 				4589C8E0282024E400243547 /* GamesNotificationViewModel.swift in Sources */,
@@ -14527,6 +14564,7 @@
 				45B9F9772A1E245700DA2B88 /* ClientManagedHomeViewTemplateDataSource.swift in Sources */,
 				45A33231298976BA008181E9 /* SimpleRegisterEmailCheckViewController.swift in Sources */,
 				45A33232298976BA008181E9 /* BusinessModules.swift in Sources */,
+				45DB8D9C2A66D9480018C591 /* DebugUserDefaults.swift in Sources */,
 				45A33234298976BA008181E9 /* NSObject+Extension.swift in Sources */,
 				45A33235298976BA008181E9 /* Logger.swift in Sources */,
 				45A33236298976BA008181E9 /* NavControllerTransitionCoordinator.swift in Sources */,
@@ -15046,6 +15084,7 @@
 				45A6BCD928246A7500D9B416 /* ActivationAlertView.swift in Sources */,
 				45A6BCDA28246A7500D9B416 /* Internationalization.swift in Sources */,
 				45A6BCDB28246A7500D9B416 /* CasinoWebViewController.swift in Sources */,
+				45DB8DA02A66D9480018C591 /* DebugUserDefaults.swift in Sources */,
 				45A6BCDC28246A7500D9B416 /* UIButton+Extensions.swift in Sources */,
 				45A6BCDD28246A7500D9B416 /* ListTypeCollectionViewCell.swift in Sources */,
 				45A6BCDE28246A7500D9B416 /* BannerCellViewModel.swift in Sources */,
@@ -15516,6 +15555,7 @@
 				A9C3415628F9A74A0055360B /* EditGroupViewModel.swift in Sources */,
 				A9C3415728F9A74A0055360B /* ConversationBetSelectionRootViewController.swift in Sources */,
 				A9C3415828F9A74A0055360B /* MultipleBettingTicketTableViewCell.swift in Sources */,
+				45DB8D9F2A66D9480018C591 /* DebugUserDefaults.swift in Sources */,
 				A9C3415928F9A74A0055360B /* Throttler.swift in Sources */,
 				A9C3415A28F9A74A0055360B /* LimitsResponse.swift in Sources */,
 				A9A43C7B2A4B2B68008FB399 /* RibDocsViewModel.swift in Sources */,
@@ -16016,7 +16056,7 @@
 				CODE_SIGN_ENTITLEMENTS = Clients/SportRadar/Misc/SportRadar.entitlements;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 1111;
+				CURRENT_PROJECT_VERSION = 1190;
 				DEVELOPMENT_TEAM = 422GNXXZJR;
 				INFOPLIST_FILE = "$(SRCROOT)/Clients/SportRadar/Misc/SportRadar-Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 13.0;
@@ -16042,7 +16082,7 @@
 				CODE_SIGN_ENTITLEMENTS = Clients/SportRadar/Misc/SportRadar.entitlements;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 1111;
+				CURRENT_PROJECT_VERSION = 1190;
 				DEVELOPMENT_TEAM = 422GNXXZJR;
 				INFOPLIST_FILE = "$(SRCROOT)/Clients/SportRadar/Misc/SportRadar-Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 13.0;
@@ -16391,7 +16431,7 @@
 				CODE_SIGN_ENTITLEMENTS = Clients/Betsson/Misc/Betsson.entitlements;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 1188;
+				CURRENT_PROJECT_VERSION = 1190;
 				DEVELOPMENT_TEAM = 422GNXXZJR;
 				INFOPLIST_FILE = "$(SRCROOT)/Clients/Betsson/Misc/Betsson-Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 13.0;
@@ -16417,7 +16457,7 @@
 				CODE_SIGN_ENTITLEMENTS = Clients/Betsson/Misc/Betsson.entitlements;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 1188;
+				CURRENT_PROJECT_VERSION = 1190;
 				DEVELOPMENT_TEAM = 422GNXXZJR;
 				INFOPLIST_FILE = "$(SRCROOT)/Clients/Betsson/Misc/Betsson-Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 13.0;
@@ -17164,6 +17204,22 @@
 				minimumVersion = 1.0.0;
 			};
 		};
+		45DB8DB42A6AA10D0018C591 /* XCRemoteSwiftPackageReference "IdensicMobileSDK-iOS" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/SumSubstance/IdensicMobileSDK-iOS.git";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 1.0.0;
+			};
+		};
+		45DB8DB72A6AA5100018C591 /* XCRemoteSwiftPackageReference "ios-sdk" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/phrase/ios-sdk/";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 4.0.0;
+			};
+		};
 		45EF50E5282E6AA4008180CA /* XCRemoteSwiftPackageReference "socket" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/socketio/socket.io-client-swift";
@@ -17202,14 +17258,6 @@
 			requirement = {
 				kind = upToNextMajorVersion;
 				minimumVersion = 1.0.9;
-			};
-		};
-		A9BA042F2A37282D007880FC /* XCRemoteSwiftPackageReference "IdensicMobileSDK-iOS" */ = {
-			isa = XCRemoteSwiftPackageReference;
-			repositoryURL = "https://github.com/SumSubstance/IdensicMobileSDK-iOS.git";
-			requirement = {
-				kind = upToNextMajorVersion;
-				minimumVersion = 1.0.0;
 			};
 		};
 		A9C3408028F9A74A0055360B /* XCRemoteSwiftPackageReference "Reachability" */ = {
@@ -17886,6 +17934,44 @@
 			isa = XCSwiftPackageProductDependency;
 			productName = RegisterFlow;
 		};
+		45DB8DA32A6A905D0018C591 /* CountrySelectionFeature */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = CountrySelectionFeature;
+		};
+		45DB8DA52A6A905D0018C591 /* Extensions */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = Extensions;
+		};
+		45DB8DA72A6A905D0018C591 /* GomaGamingSDK */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = GomaGamingSDK;
+		};
+		45DB8DA92A6A905D0018C591 /* HeaderTextField */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = HeaderTextField;
+		};
+		45DB8DAB2A6A905D0018C591 /* Theming */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = Theming;
+		};
+		45DB8DAD2A6A906C0018C591 /* Theming */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = Theming;
+		};
+		45DB8DAF2A6A9C7C0018C591 /* CountrySelectionFeature */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = CountrySelectionFeature;
+		};
+		45DB8DB52A6AA10D0018C591 /* IdensicMobileSDK */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 45DB8DB42A6AA10D0018C591 /* XCRemoteSwiftPackageReference "IdensicMobileSDK-iOS" */;
+			productName = IdensicMobileSDK;
+		};
+		45DB8DB82A6AA5100018C591 /* PhraseSDK */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 45DB8DB72A6AA5100018C591 /* XCRemoteSwiftPackageReference "ios-sdk" */;
+			productName = PhraseSDK;
+		};
 		45F805922A05357E005296E0 /* Lottie */ = {
 			isa = XCSwiftPackageProductDependency;
 			package = 45F805912A05357E005296E0 /* XCRemoteSwiftPackageReference "lottie-spm" */;
@@ -17940,11 +18026,6 @@
 			isa = XCSwiftPackageProductDependency;
 			package = A96FAEDF29829CCA00A0751F /* XCRemoteSwiftPackageReference "adyen-ios" */;
 			productName = AdyenDropIn;
-		};
-		A9BA04302A37282D007880FC /* IdensicMobileSDK */ = {
-			isa = XCSwiftPackageProductDependency;
-			package = A9BA042F2A37282D007880FC /* XCRemoteSwiftPackageReference "IdensicMobileSDK-iOS" */;
-			productName = IdensicMobileSDK;
 		};
 		A9C3407F28F9A74A0055360B /* Reachability */ = {
 			isa = XCSwiftPackageProductDependency;

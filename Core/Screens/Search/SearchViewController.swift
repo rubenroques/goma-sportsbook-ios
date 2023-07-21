@@ -445,7 +445,9 @@ extension SearchViewController: UITableViewDataSource, UITableViewDelegate {
 
                 if let cell = tableView.dequeueCellType(MatchLineTableViewCell.self) {
 
-                    cell.setupWithMatch(match)
+                    let viewModel = MatchLineTableCellViewModel(match: match)
+                    cell.viewModel = viewModel
+
                     cell.tappedMatchLineAction = { [weak self] match in
                         self?.openMatchDetailsScreen(match: match)
                     }

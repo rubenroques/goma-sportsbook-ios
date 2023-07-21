@@ -15,8 +15,6 @@ class Bootstrap {
     private var environment: Environment?
     private var cancellables = Set<AnyCancellable>()
 
-    var appInitiated: Bool = false
-
     init(router: Router) {
         self.router = router
     }
@@ -41,26 +39,27 @@ class Bootstrap {
 
         // TODO: Check this part to enable app initialization without socket connected
         //
-//        environment.servicesProvider.eventsConnectionStatePublisher
-//            .filter { connectorState in
-//                return connectorState == .connected
-//            }
-//            .sink { _ in
-//                environment.sportsStore.requestInitialSportsData()
-//            }
-//            .store(in: &self.cancellables)
         environment.servicesProvider.eventsConnectionStatePublisher
-            .sink { connectorState in
-                if connectorState == .disconnected && self.appInitiated == false {
-                    environment.sportsStore.requestInitialSportsData()
-                    self.appInitiated = true
-                    environment.appInitWithoutSocket = true
-                }
-                else if connectorState == .connected {
-                    environment.sportsStore.requestInitialSportsData()
-                }
+            .filter { connectorState in
+                return connectorState == .connected
+            }
+            .sink { _ in
+                environment.sportsStore.requestInitialSportsData()
             }
             .store(in: &self.cancellables)
+
+//        environment.servicesProvider.eventsConnectionStatePublisher
+//            .sink { connectorState in
+//                if connectorState == .disconnected && self.appInitiated == false {
+//                    environment.sportsStore.requestInitialSportsData()
+//                    self.appInitiated = true
+//                    environment.appInitWithoutSocket = true
+//                }
+//                else if connectorState == .connected {
+//                    environment.sportsStore.requestInitialSportsData()
+//                }
+//            }
+//            .store(in: &self.cancellables)
 
         // ConnectModules
         Publishers.CombineLatest(environment.servicesProvider.bettingConnectionStatePublisher,

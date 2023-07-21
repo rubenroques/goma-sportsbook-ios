@@ -47,6 +47,11 @@ class AnonymousSideMenuViewController: UIViewController {
     private var viewModel: AnonymousSideMenuViewModel
     private var cancellables = Set<AnyCancellable>()
 
+    // Debug screen tap
+    private var tapCounter = 0
+    private var lastTapTime: Date?
+
+
     // MARK: - Lifetime and Cycle
     init(viewModel: AnonymousSideMenuViewModel) {
         self.viewModel = viewModel
@@ -84,6 +89,9 @@ class AnonymousSideMenuViewController: UIViewController {
 
         self.registerButton.addTarget(self, action: #selector(didTapRegisterButton), for: .primaryActionTriggered)
         self.loginButton.addTarget(self, action: #selector(didTapLoginButton), for: .primaryActionTriggered)
+
+        let versionBaseViewTap = UITapGestureRecognizer(target: self, action: #selector(handleDebugTap))
+        self.versionBaseView.addGestureRecognizer(versionBaseViewTap)
     }
 
     // MARK: - Layout and Theme
@@ -146,7 +154,6 @@ class AnonymousSideMenuViewController: UIViewController {
     }
 
     // MARK: - Actions
-
     @objc func didTapBackButton() {
         if self.isModal {
             self.dismiss(animated: true, completion: nil)
@@ -156,8 +163,31 @@ class AnonymousSideMenuViewController: UIViewController {
         }
     }
 
-}
+    @objc func handleDebugTap() {
+        if let lastTapTime = lastTapTime, Date().timeIntervalSince(lastTapTime) > 2 {
+            // Reset the counter if more than a second has passed since the last tap
+            tapCounter = 0
+        }
 
+        self.tapCounter += 1
+        self.lastTapTime = Date()
+
+        if tapCounter >= 7 {
+            // If 10 taps have been detected in less than a second, show the developer screen
+            self.showDeveloperScreen()
+            self.tapCounter = 0
+        }
+    }
+
+    private func showDeveloperScreen() {
+        let debugViewController = DebugViewController()
+
+        let navigationController = UINavigationController(rootViewController: debugViewController)
+        navigationController.modalPresentationStyle = .fullScreen
+        self.present(navigationController, animated: true, completion: nil)
+    }
+
+}
 
 extension AnonymousSideMenuViewController {
 

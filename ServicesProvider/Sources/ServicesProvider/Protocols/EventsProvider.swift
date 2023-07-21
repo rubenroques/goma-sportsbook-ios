@@ -30,7 +30,7 @@ protocol EventsProvider: Connector {
 
     //
     //
-    func subscribeMatchDetails(matchId: String) -> AnyPublisher<SubscribableContent<Event>, ServiceProviderError>
+    func subscribeEventDetails(eventId: String) -> AnyPublisher<SubscribableContent<Event>, ServiceProviderError>
     func subscribeEventSummary(eventId: String) -> AnyPublisher<SubscribableContent<[EventsGroup]>, ServiceProviderError>
     func subscribeOutrightMarkets(forMarketGroupId marketGroupId: String) -> AnyPublisher<SubscribableContent<[EventsGroup]>, ServiceProviderError>
 
@@ -46,6 +46,7 @@ protocol EventsProvider: Connector {
     func subscribeToEventOutcomeUpdates(withId id: String) -> AnyPublisher<Outcome?, ServiceProviderError>
 
     func subscribeToMarketDetails(withId marketId: String, onEventId eventId:String) -> AnyPublisher<SubscribableContent<Market>, ServiceProviderError>
+
 
     //
     //
@@ -84,6 +85,8 @@ protocol EventsProvider: Connector {
     func getTopCompetitions() -> AnyPublisher<[TopCompetition], ServiceProviderError>
 
     func getEventsForMarketGroup(withId marketGroupId: String) -> AnyPublisher<EventsGroup, ServiceProviderError>
+
+    func getEventDetails(eventId: String) -> AnyPublisher<Event, ServiceProviderError>
 
     //
     // Favorites

@@ -128,8 +128,8 @@ class StoriesItemCollectionViewCell: UICollectionViewCell {
 
         let gradientLayer = CAGradientLayer()
         gradientLayer.colors = [
-            UIColor(hex: 0xF1681E, alpha: 1.0).cgColor,
-            UIColor(hex: 0xF8C633, alpha: 1.0).cgColor,
+            UIColor(hex: 0xF1681E, alpha: 1.0).cgColor, // UIColor(hex: 0xD60000, alpha: 1.0).cgColor,
+            UIColor(hex: 0xF8C633, alpha: 1.0).cgColor, // UIColor(hex: 0xFF2600, alpha: 1.0).cgColor,
         ]
 
         gradientLayer.startPoint = CGPoint(x: 0.0, y: 1.0)

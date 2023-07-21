@@ -77,11 +77,7 @@ class PreLiveEventsViewController: UIViewController {
     var filterSelectedOption: Int = 0
     var selectedSport: Sport {
         didSet {
-            if oldValue.id == selectedSport.id {
-                return
-            }
-
-            if let sportIconImage = UIImage(named: "sport_type_icon_\( selectedSport.id)") {
+            if let sportIconImage = UIImage(named: "sport_type_icon_\(self.selectedSport.id)") {
                 self.sportTypeIconImageView.image = sportIconImage
                 self.sportTypeIconImageView.setImageColor(color: UIColor.App.textPrimary)
             }
@@ -91,7 +87,7 @@ class PreLiveEventsViewController: UIViewController {
             }
 
             self.competitionsFiltersView.resetSelection()
-            self.viewModel.selectedSport = selectedSport
+            self.viewModel.selectedSport = self.selectedSport
         }
     }
 

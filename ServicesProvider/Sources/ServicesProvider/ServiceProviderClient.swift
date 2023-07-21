@@ -166,14 +166,15 @@ extension ServicesProviderClient {
                                                       sortType: sortType)
     }
 
-    public func subscribeMatchDetails(matchId: String) -> AnyPublisher<SubscribableContent<Event>, ServiceProviderError> {
+    public func subscribeEventDetails(eventId: String) -> AnyPublisher<SubscribableContent<Event>, ServiceProviderError> {
         guard
             let eventsProvider = self.eventsProvider
         else {
             return Fail(error: ServiceProviderError.eventsProviderNotFound).eraseToAnyPublisher()
         }
-        return eventsProvider.subscribeMatchDetails(matchId: matchId)
+        return eventsProvider.subscribeEventDetails(eventId: eventId)
     }
+
 
     public func subscribeCompetitionMatches(forMarketGroupId marketGroupId: String) -> AnyPublisher<SubscribableContent<[EventsGroup]>, ServiceProviderError> {
 
@@ -239,6 +240,16 @@ extension ServicesProviderClient {
             return Fail(error: ServiceProviderError.eventsProviderNotFound).eraseToAnyPublisher()
         }
         return eventsProvider.subscribeToMarketDetails(withId: id, onEventId: eventId)
+    }
+
+
+    public func getEventDetails(eventId: String) -> AnyPublisher<Event, ServiceProviderError> {
+        guard
+            let eventsProvider = self.eventsProvider
+        else {
+            return Fail(error: ServiceProviderError.eventsProviderNotFound).eraseToAnyPublisher()
+        }
+        return eventsProvider.getEventDetails(eventId: eventId)
     }
 
 }

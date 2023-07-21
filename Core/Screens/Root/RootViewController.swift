@@ -199,8 +199,16 @@ class RootViewController: UIViewController {
     //
     // Child view controllers
     lazy var homeViewController = HomeViewController()
-    lazy var preLiveViewController = PreLiveEventsViewController(selectedSportType: Env.sportsStore.defaultSport)
-    lazy var liveEventsViewController = LiveEventsViewController(selectedSport: Env.sportsStore.defaultSport)
+    lazy var preLiveViewController: PreLiveEventsViewController = {
+        let defaultSport = Env.sportsStore.defaultSport
+        let preLiveEventsViewController = PreLiveEventsViewController(selectedSportType: defaultSport)
+        return preLiveEventsViewController
+    }()
+    lazy var liveEventsViewController: LiveEventsViewController = {
+        let defaultSport = Env.sportsStore.defaultSport
+        let liveEventsViewController = LiveEventsViewController(selectedSport: defaultSport)
+        return liveEventsViewController
+    }()
     lazy var tipsRootViewController = TipsRootViewController()
     lazy var cashbackViewController = CashbackRootViewController()
     lazy var casinoViewController = CasinoWebViewController()

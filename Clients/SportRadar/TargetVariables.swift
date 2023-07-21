@@ -39,6 +39,10 @@ struct TargetVariables: SportsbookTarget {
         return .normal
     }
 
+    static var defaultOddsValueType: OddsValueType {
+        return .allOdds
+    }
+
     static var casinoURL: String {
         return "https://sportsbook-cms.gomagaming.com/casino/"
     }
@@ -48,18 +52,23 @@ struct TargetVariables: SportsbookTarget {
     }
 
     static var homeTemplateBuilder: HomeTemplateBuilderType {
-        return HomeTemplateBuilderType.appStatic
+        return HomeTemplateBuilderType.clientDynamic
     }
-    
+
     static var features: [SportsbookTargetFeatures] {
         return []
     }
 
+    static var shouldUserBlurEffectTabBar: Bool {
+        return true
+    }
+
     static var shouldUseGradientBackgrounds: Bool {
-        return false
+        return true
     }
 
     static var shouldUseAlternateTopBar: Bool {
-        return false
+        return true
     }
+
 }

@@ -221,7 +221,7 @@ class MatchWidgetCollectionViewCell: UICollectionViewCell {
                 self.teamsHeightConstraint.constant = 67
                 self.topMarginSpaceConstraint.constant = 11
 
-                self.gradientBorderView.isHidden = false
+                self.gradientBorderView.isHidden = true
 
             case .boosted:
                 self.backgroundImageView.isHidden = true
@@ -267,6 +267,8 @@ class MatchWidgetCollectionViewCell: UICollectionViewCell {
                 self.bottomMarginSpaceConstraint.constant = 28
                 self.teamsHeightConstraint.constant = 47
                 self.topMarginSpaceConstraint.constant = 0
+
+                self.gradientBorderView.isHidden = true
 
                 self.backgroundImageBorderGradientLayer.colors = [UIColor(hex: 0x404CFF).cgColor, UIColor(hex: 0x404CFF).withAlphaComponent(0.0).cgColor]
                 self.backgroundImageBorderGradientLayer.startPoint = CGPoint(x: 0.5, y: 0.0)
@@ -354,8 +356,10 @@ class MatchWidgetCollectionViewCell: UICollectionViewCell {
         //
         // Add gradient to the bottom booster line
         self.boostedOddBottomLineAnimatedGradientView.translatesAutoresizingMaskIntoConstraints = false
-        self.boostedOddBottomLineAnimatedGradientView.colors = [(UIColor.init(hex: 0xFF6600), NSNumber(0.0)),
-                               (UIColor.init(hex: 0xFEDB00), NSNumber(1.0))]
+        self.boostedOddBottomLineAnimatedGradientView.colors = [
+            (UIColor.init(hex: 0xFF6600), NSNumber(0.0)), // (UIColor.init(hex: 0xD60000), NSNumber(0.0)),
+            (UIColor.init(hex: 0xFEDB00), NSNumber(1.0)) // (UIColor.init(hex: 0xFF2600), NSNumber(1.0)),
+        ]
         self.boostedOddBottomLineAnimatedGradientView.startPoint = CGPoint(x: 0.0, y: 0.5)
         self.boostedOddBottomLineAnimatedGradientView.endPoint = CGPoint(x: 1.0, y: 0.5)
         self.boostedOddBottomLineAnimatedGradientView.startAnimations()
@@ -495,7 +499,9 @@ class MatchWidgetCollectionViewCell: UICollectionViewCell {
         NSLayoutConstraint.activate([
             self.cashbackIconImageView.widthAnchor.constraint(equalToConstant: 20),
             self.cashbackIconImageView.heightAnchor.constraint(equalTo: self.cashbackIconImageView.widthAnchor),
-            self.cashbackIconImageView.centerYAnchor.constraint(equalTo: self.liveTipView.centerYAnchor)
+            self.cashbackIconImageView.centerYAnchor.constraint(equalTo: self.liveTipView.centerYAnchor),
+
+            self.headerLineStackView.trailingAnchor.constraint(greaterThanOrEqualTo: self.cashbackIconImageView.leadingAnchor, constant: 1),
         ])
 
         self.cashbackImageViewBaseTrailingConstraint = NSLayoutConstraint(item: self.cashbackIconImageView,
@@ -1285,7 +1291,7 @@ class MatchWidgetCollectionViewCell: UICollectionViewCell {
 
         self.isFavorite = Env.favoritesManager.isEventFavorite(eventId: viewModel.match.id)
 
-        // TEST CASHBACK
+        // TODO: TEST CASHBACK
         if viewModel.matchWidgetType == .normal {
             if viewModel.match.sport.alphaId == "FBL" {
                 self.hasCashback = true

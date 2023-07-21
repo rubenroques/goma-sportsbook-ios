@@ -673,18 +673,11 @@ class LoginViewController: UIViewController {
         // is the same behaviour if the user skipped the login
         UserSessionStore.skippedLoginFlow()
 
-        // TODO: Biometrics alert not working if socket is not connected
-        if Env.appInitWithoutSocket {
-            Env.userSessionStore.setShouldRequestBiometrics(true)
-            self.showNextViewController()
+        if self.shouldRememberUser {
+            self.showBiometricAuthenticationAlert()
         }
         else {
-            if self.shouldRememberUser {
-                self.showBiometricAuthenticationAlert()
-            }
-            else {
-                self.showNextViewController()
-            }
+            self.showNextViewController()
         }
 
     }

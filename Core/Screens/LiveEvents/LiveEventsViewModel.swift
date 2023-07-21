@@ -118,7 +118,15 @@ class LiveEventsViewModel: NSObject {
 
         self.sportsSubscription = nil
 
-        Env.sportsStore.sportsPublisher
+        Env.sportsStore.activeSportsPublisher
+            .map({ loadableContent -> [Sport]? in
+                switch loadableContent {
+                case .loading, .idle, .failed: return nil
+                case .loaded(let sports): return sports
+                }
+            })
+            .filter({ $0 != nil })
+            .compactMap({ $0 })
             .receive(on: DispatchQueue.main)
             .sink(receiveValue: { [weak self] allSports in
                 let liveSports = allSports.filter({
@@ -455,7 +463,10 @@ class LiveMatchesViewModelDataSource: NSObject, UITableViewDataSource, UITableVi
                 if let matchStatsViewModel = self.matchStatsViewModelForMatch?(match) {
                     cell.matchStatsViewModel = matchStatsViewModel
                 }
-                cell.setupWithMatch(match, liveMatch: true)
+
+                let viewModel = MatchLineTableCellViewModel(match: match)
+                cell.viewModel = viewModel
+                
                 cell.tappedMatchLineAction = { [weak self] match in
                     self?.didSelectMatchAction?(match)
                 }

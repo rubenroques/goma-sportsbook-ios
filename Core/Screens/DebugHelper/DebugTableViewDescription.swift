@@ -11,6 +11,7 @@ enum DebugTableViewDescription: TableViewDescriptor {
 
     case production
     case development
+    case toggleSocketConnection
     case clearUserDefaults
     case logoutUser
     case globalLogs
@@ -18,9 +19,12 @@ enum DebugTableViewDescription: TableViewDescriptor {
 
     static var layout: [[DebugTableViewDescription]] {
         return [
+//            [
+//                .production,
+//                .development
+//            ],
             [
-                .production,
-                .development
+                .toggleSocketConnection,
             ],
             [
                 .clearUserDefaults,
@@ -28,7 +32,7 @@ enum DebugTableViewDescription: TableViewDescriptor {
             ],
             [
                 .networking,
-                .globalLogs
+                .globalLogs,
             ]
         ]
     }
@@ -48,10 +52,21 @@ enum DebugTableViewDescription: TableViewDescriptor {
         return nil
     }
 
+    var hasSwitch: Bool {
+        switch self {
+            case .toggleSocketConnection:
+            return true
+            default:
+            return false
+        }
+    }
+
     var label: String {
         switch self {
         case .production: return "Production"
         case .development: return "Development"
+
+        case .toggleSocketConnection: return "Toggle Socket Connection"
 
         case .clearUserDefaults: return "Clear user defaults and caches"
         case .logoutUser: return "Logout User"
