@@ -155,19 +155,22 @@ class MyTicketsViewController: UIViewController {
         }
 
         self.viewModel.redrawTableViewAction = { [weak self] withScroll in
-            // Use CATransaction to detect animation from table updates
-            CATransaction.begin()
-
-            CATransaction.setCompletionBlock({
-                if withScroll {
-                    self?.scrollDown()
-                }
-            })
+//            // Use CATransaction to detect animation from table updates
+//            CATransaction.begin()
+//
+//            CATransaction.setCompletionBlock({
+//                if withScroll {
+//                    self?.scrollDown()
+//                }
+//            })
+//
+//            self?.ticketsTableView.beginUpdates()
+//            self?.ticketsTableView.endUpdates()
+//
+//            CATransaction.commit()
 
             self?.ticketsTableView.beginUpdates()
             self?.ticketsTableView.endUpdates()
-
-            CATransaction.commit()
 
         }
 

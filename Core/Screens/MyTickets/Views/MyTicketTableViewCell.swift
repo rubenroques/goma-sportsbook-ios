@@ -109,7 +109,12 @@ class MyTicketTableViewCell: UITableViewCell {
 //            }
 
             self.partialCashoutSliderView.isHidden = !showPartialCashoutSliderView
-            self.needsHeightRedraw?(showPartialCashoutSliderView)
+
+            if showPartialCashoutSliderView {
+
+                self.needsHeightRedraw?(false)
+
+            }
 
         }
     }
@@ -123,8 +128,7 @@ class MyTicketTableViewCell: UITableViewCell {
     var hasCashback: Bool = false {
         didSet {
             self.cashbackIconImageView.isHidden = !hasCashback
-//            self.cashbackInfoBaseView.isHidden = !hasCashback
-//            self.cashbackValueLabel.isHidden = !hasCashback
+
         }
     }
 
@@ -250,8 +254,8 @@ class MyTicketTableViewCell: UITableViewCell {
         self.viewModel = nil
 
         self.cashoutValue = nil
-        self.showCashoutButton = false
-        self.showPartialCashoutSliderView = false
+        // self.showCashoutButton = false
+        // self.showPartialCashoutSliderView = false
 
         self.cashoutSubscription?.cancel()
         self.cashoutSubscription = nil
@@ -361,9 +365,9 @@ class MyTicketTableViewCell: UITableViewCell {
 
         self.returnedAmountValueLabel.textColor = UIColor.App.textSecondary
 
-        self.partialCashoutButton.setTitleColor(UIColor.App.textPrimary, for: .normal)
-        self.partialCashoutButton.setTitleColor(UIColor.App.textPrimary.withAlphaComponent(0.7), for: .highlighted)
-        self.partialCashoutButton.setTitleColor(UIColor.App.textPrimary.withAlphaComponent(0.39), for: .disabled)
+        self.partialCashoutButton.setTitleColor(UIColor.App.buttonTextPrimary, for: .normal)
+        self.partialCashoutButton.setTitleColor(UIColor.App.buttonTextPrimary.withAlphaComponent(0.7), for: .highlighted)
+        self.partialCashoutButton.setTitleColor(UIColor.App.buttonTextPrimary.withAlphaComponent(0.39), for: .disabled)
 
         self.partialCashoutButton.setBackgroundColor(UIColor.App.highlightPrimary, for: .normal)
         self.partialCashoutButton.setBackgroundColor(UIColor.App.highlightPrimary.withAlphaComponent(0.7), for: .highlighted)
@@ -411,16 +415,15 @@ class MyTicketTableViewCell: UITableViewCell {
             self.freebetBaseView.isHidden = true
         }
 
-//        if let state = self.viewModel?.hasCashoutEnabled.value {
-//            self.configureCashoutButton(withState: state)
-//        }
-
         self.viewModel?.hasCashoutEnabled
             .removeDuplicates()
             .receive(on: DispatchQueue.main)
             .sink(receiveValue: { [weak self] cashoutButtonState in
-                self?.setupPartialCashoutSlider()
-                self?.configureCashoutButton(withState: cashoutButtonState)
+
+                if !viewModel.hasRedraw {
+                    self?.setupPartialCashoutSlider()
+                    self?.configureCashoutButton(withState: cashoutButtonState)
+                }
             })
             .store(in: &cancellables)
 
@@ -669,7 +672,7 @@ class MyTicketTableViewCell: UITableViewCell {
             })
             .store(in: &cancellables)
 
-        self.viewModel?.requestCashoutAvailability()
+        //self.viewModel?.requestCashoutAvailability()
 
     }
 
@@ -731,6 +734,8 @@ class MyTicketTableViewCell: UITableViewCell {
 
         self.partialCashoutButton.isEnabled = false
         self.viewModel?.requestPartialCashoutAvailability(ticket: ticket, stakeValue: "\(maxSliderStake/2)")
+
+        self.viewModel?.partialCashoutSliderValue = Double(maxSliderStake/2)
 
 //        let partialCashoutLabel = localized("partial_cashout_value").replacingFirstOccurrence(of: "{cashoutAmount}", with: "\(maxValue)")
 //        self.partialCashoutButton.setTitle("\(partialCashoutLabel)€", for: .normal)

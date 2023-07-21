@@ -33,6 +33,7 @@ class MatchWidgetCollectionViewCell: UICollectionViewCell {
     lazy var liveTipView: UIView = {
         var liveTipView = UIView()
         liveTipView.translatesAutoresizingMaskIntoConstraints = false
+
         return liveTipView
     }()
 
@@ -41,6 +42,9 @@ class MatchWidgetCollectionViewCell: UICollectionViewCell {
         liveTipLabel.font = AppFont.with(type: .semibold, size: 9)
         liveTipLabel.textAlignment = .left
         liveTipLabel.translatesAutoresizingMaskIntoConstraints = false
+        liveTipLabel.setContentHuggingPriority(.defaultLow, for: .horizontal)
+        liveTipLabel.setContentCompressionResistancePriority(.defaultHigh, for: .horizontal)
+
         return liveTipLabel
     }()
 
@@ -497,7 +501,6 @@ class MatchWidgetCollectionViewCell: UICollectionViewCell {
             self.cashbackIconImageView.heightAnchor.constraint(equalTo: self.cashbackIconImageView.widthAnchor),
             self.cashbackIconImageView.centerYAnchor.constraint(equalTo: self.liveTipView.centerYAnchor),
 
-            self.headerLineStackView.trailingAnchor.constraint(lessThanOrEqualTo: self.cashbackIconImageView.leadingAnchor, constant: -5)
         ])
 
         self.cashbackImageViewBaseTrailingConstraint = NSLayoutConstraint(item: self.cashbackIconImageView,
@@ -517,6 +520,10 @@ class MatchWidgetCollectionViewCell: UICollectionViewCell {
                                                                           multiplier: 1,
                                                                           constant: -4)
         self.cashbackImageViewLiveTrailingConstraint.isActive = false
+
+        NSLayoutConstraint.activate([
+            self.headerLineStackView.trailingAnchor.constraint(lessThanOrEqualTo: self.cashbackIconImageView.leadingAnchor, constant: -5)
+        ])
 
         self.bringSubviewToFront(self.suspendedBaseView)
         self.bringSubviewToFront(self.seeAllBaseView)

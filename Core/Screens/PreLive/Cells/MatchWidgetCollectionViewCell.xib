@@ -60,7 +60,7 @@
                                             <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="soccer_banner_dummy" translatesAutoresizingMaskIntoConstraints="NO" id="HO2-M2-haM">
                                                 <rect key="frame" x="0.0" y="0.0" width="404" height="171"/>
                                             </imageView>
-                                            <stackView opaque="NO" contentMode="scaleToFill" spacing="7" translatesAutoresizingMaskIntoConstraints="NO" id="Ll0-G9-s03">
+                                            <stackView opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" horizontalCompressionResistancePriority="749" spacing="7" translatesAutoresizingMaskIntoConstraints="NO" id="Ll0-G9-s03">
                                                 <rect key="frame" x="12" y="11" width="320" height="17"/>
                                                 <subviews>
                                                     <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="unselected_favorite_icon" translatesAutoresizingMaskIntoConstraints="NO" id="hjz-Yg-JGd">
@@ -84,7 +84,7 @@
                                                     <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Yhm-UM-LCk">
                                                         <rect key="frame" x="72" y="0.0" width="248" height="17"/>
                                                         <subviews>
-                                                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="UEFA Champions League" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="MRO-h1-2Aq">
+                                                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" horizontalCompressionResistancePriority="749" text="UEFA Champions League" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="MRO-h1-2Aq">
                                                                 <rect key="frame" x="0.0" y="4" width="247" height="11"/>
                                                                 <fontDescription key="fontDescription" name="Gilroy-Semibold" family="Gilroy" pointSize="11"/>
                                                                 <nil key="textColor"/>

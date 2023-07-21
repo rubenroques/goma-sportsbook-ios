@@ -37,6 +37,8 @@ class MyTicketCellViewModel {
 
     private var cashoutSubscription: AnyCancellable?
 
+    var hasRedraw: Bool = false
+
     private var cancellables = Set<AnyCancellable>()
 
     enum CashoutButtonState: Equatable {
@@ -77,6 +79,7 @@ class MyTicketCellViewModel {
                 .joined(separator: " - "))
         }
 
+        self.requestCashoutAvailability()
     }
 
     deinit {

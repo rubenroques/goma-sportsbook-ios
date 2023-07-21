@@ -169,9 +169,9 @@ class PreSubmissionBetslipViewController: UIViewController {
 
     private var isCashbackEnabled: Bool = false {
         didSet {
+
             self.cashbackBaseView.isHidden = !isCashbackEnabled
-            //self.cashbackInfoSingleBaseView.isHidden = !isCashbackEnabled
-            self.cashbackInfoMultipleBaseView.isHidden = !isCashbackEnabled
+            self.cashbackInfoMultipleBaseView.isHidden = isCashbackEnabled
 
             // Singles don't have cashback
             self.cashbackInfoSingleBaseView.isHidden = true
@@ -778,8 +778,15 @@ class PreSubmissionBetslipViewController: UIViewController {
                     self?.systemWinningsBaseView.isHidden = true
 
                     if let cashbackEnabled = self?.isCashbackEnabled,
-                       cashbackEnabled {
-                        self?.cashbackBaseView.isHidden = false
+                       cashbackEnabled,
+                       let cashbackValue = Env.userSessionStore.userCashbackBalance.value {
+
+                        if cashbackValue > 0 {
+                            self?.cashbackBaseView.isHidden = false
+                        }
+                        else {
+                            self?.cashbackBaseView.isHidden = true
+                        }
                     }
                 case .system:
                     self?.simpleWinningsBaseView.isHidden = true
@@ -1066,6 +1073,13 @@ class PreSubmissionBetslipViewController: UIViewController {
                 self.cashbackSwitch.setOn(cashbackOn, animated: true)
 
                 self.isCashbackSelected.send(cashbackOn)
+
+                if cashbackValue == 0 {
+                    self.cashbackBaseView.isHidden = true
+                }
+                else {
+                    self.cashbackBaseView.isHidden = false
+                }
             }
             else {
                 self.cashbackValueLabel.text = "-.--€"
@@ -1073,6 +1087,8 @@ class PreSubmissionBetslipViewController: UIViewController {
                 self.cashbackSwitch.setOn(false, animated: true)
 
                 self.isCashbackSelected.send(false)
+
+                self.cashbackBaseView.isHidden = true
 
             }
 
@@ -1131,7 +1147,7 @@ class PreSubmissionBetslipViewController: UIViewController {
                         self?.amountBaseView.layer.borderColor = UIColor.App.highlightPrimary.cgColor
                         self?.secondaryAmountBaseView.layer.borderColor = UIColor.App.highlightPrimary.cgColor
 
-                        self?.showCashbackValues = true
+                        self?.showCashbackValues = false
                     }
                     else {
 
@@ -1144,7 +1160,7 @@ class PreSubmissionBetslipViewController: UIViewController {
                             self?.secondaryAmountBaseView.layer.borderColor = UIColor.App.backgroundBorder.cgColor
                         }
 
-                        self?.showCashbackValues = false
+                        self?.showCashbackValues = true
 
                     }
 
