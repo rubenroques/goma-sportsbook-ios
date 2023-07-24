@@ -65,7 +65,7 @@ struct TargetVariables: SportsbookTarget {
     }
 
     static var features: [SportsbookTargetFeatures] {
-        return [.cashback, .freebets]
+        return [.cashback]
     }
 
     static var shouldUserBlurEffectTabBar: Bool {

@@ -647,7 +647,8 @@ class MyTicketTableViewCell: UITableViewCell {
             self.hasCashback = false
             self.usedCashback = false
         }
-        else if let cashbackReturn = betHistoryEntry.cashbackReturn {
+        else if let cashbackReturn = betHistoryEntry.cashbackReturn,
+                cashbackReturn > 0 {
             self.hasCashback = false
             self.usedCashback = true
 

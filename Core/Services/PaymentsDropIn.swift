@@ -258,6 +258,28 @@ class PaymentsDropIn {
 
         return nil
     }
+
+    func cancelDeposit(paymentId: String) {
+
+        Env.servicesProvider.cancelDeposit(paymentId: paymentId)
+            .receive(on: DispatchQueue.main)
+            .sink(receiveCompletion: { [weak self] completion in
+                switch completion {
+                case .finished:
+                    ()
+                case .failure(let error):
+                    print("CANCEL DEPOSIT ERROR: \(error)")
+                    self?.showPaymentStatus?(.refused)
+
+                }
+            }, receiveValue: { [weak self] cancelDepositResponse in
+
+                print("CANCEL DEPOSIT SUCCESS: \(cancelDepositResponse)")
+
+
+            })
+            .store(in: &cancellables)
+    }
 }
 
 extension PaymentsDropIn: DropInComponentDelegate, AdyenSessionDelegate, PresentationDelegate {
@@ -342,6 +364,11 @@ extension PaymentsDropIn: DropInComponentDelegate, AdyenSessionDelegate, Present
         print("ADYEN SESSION RESULT: \(resultCode)")
 
         if resultCode.rawValue == "Refused" {
+
+            if let paymentId = self.paymentId {
+                self.cancelDeposit(paymentId: paymentId)
+            }
+
             self.dropInComponent?.viewController.dismiss(animated: true)
             self.showPaymentStatus?(.refused)
         }
@@ -351,11 +378,18 @@ extension PaymentsDropIn: DropInComponentDelegate, AdyenSessionDelegate, Present
             self.showPaymentStatus?(.authorised)
         }
 
+        // TODO: Cancel deposit if not success
+
     }
 
     func didFail(with error: Error, from component: Adyen.Component, session: AdyenSession) {
 
         print("ADYEN SESSION FAIL: \(error)")
+
+        if let paymentId = self.paymentId {
+            self.cancelDeposit(paymentId: paymentId)
+        }
+
         self.dropInComponent?.viewController.dismiss(animated: true)
 
     }
