@@ -521,6 +521,9 @@ extension SearchViewController: UITableViewDataSource, UITableViewDelegate {
                 if let matchSportName = match.sportName {
                     eventName = "\(matchSportName)"
                 }
+                else {
+                    eventName = "\(match.sport.name)"
+                }
             case .competition(let competition):
                 if let competitionSportName = competition.sportName {
                     eventName = "\(competitionSportName)"

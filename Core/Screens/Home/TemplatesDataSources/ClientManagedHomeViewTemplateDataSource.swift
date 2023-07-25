@@ -54,7 +54,35 @@ class ClientManagedHomeViewTemplateDataSource {
     //
     // Should show instagram like promotional stories
     var shouldShowPromotionalStories: Bool = true
-
+    //var promotionalStories: [String] = []
+    private var promotionalStories: [PromotionalStory] = [] {
+        didSet {
+            ()
+//            var bannerCellViewModels: [BannerCellViewModel] = []
+//
+//            for promotionalStory in self.promotionalStories {
+//
+//                if let bannerViewModel = self.bannersLineViewModelCache[banner.id] {
+//                    bannerCellViewModels.append(bannerViewModel)
+//                }
+//                else {
+//                    let bannerViewModel = BannerCellViewModel(id: banner.id,
+//                                                              matchId: banner.matchId,
+//                                                              imageURL: banner.imageURL ?? "",
+//                                                              marketId: banner.marketId)
+//                    bannerCellViewModels.append(bannerViewModel)
+//                    self.bannersLineViewModelCache[banner.id] = bannerViewModel
+//                }
+//            }
+//
+//            if bannerCellViewModels.isEmpty {
+//                self.bannersLineViewModel = nil
+//            }
+//            else {
+//                self.bannersLineViewModel = BannerLineCellViewModel(banners: bannerCellViewModels)
+//            }
+        }
+    }
     //
     // Quick Swipe Stack Matches
     private var quickSwipeStackCellViewModel: QuickSwipeStackCellViewModel?
@@ -125,6 +153,7 @@ class ClientManagedHomeViewTemplateDataSource {
         self.fetchBanners()
         self.fetchHighlightMatches()
         self.fetchPromotedSports()
+        self.fetchPromotionalStories()
         self.fetchSupplementaryEventsIds()
 
     }
@@ -208,6 +237,28 @@ class ClientManagedHomeViewTemplateDataSource {
 
     }
 
+    func fetchPromotionalStories() {
+
+        self.promotionalStories = []
+
+        Env.servicesProvider.getPromotionalTopStories()
+            .receive(on: DispatchQueue.main)
+            .sink { completion in
+                print("Promotional stories completion \(dump(completion))")
+
+            } receiveValue: { [weak self] promotionalStories in
+
+                let promotionalStories = promotionalStories
+
+                print("PROMOTIONAL STORIES: \(promotionalStories)")
+            }
+            .store(in: &self.cancellables)
+    }
+
+    func fetchSportsSections() {
+
+    }
+
     func fetchSupplementaryEventsIds() {
 
 //        self.supplementaryEventIds = [
@@ -236,10 +287,8 @@ class ClientManagedHomeViewTemplateDataSource {
 //            "3225117.1",
 //            "3225039.1"
 //        ]
-
         self.supplementaryEventIds = []
         self.refreshPublisher.send()
-
     }
 
     func fetchQuickSwipeMatches() {

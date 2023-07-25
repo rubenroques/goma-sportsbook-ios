@@ -386,3 +386,12 @@ struct UserWallet {
     let currency: String
 
 }
+
+struct PromotionalStory {
+
+    let id: String
+    let title: String
+    let imageUrl: String
+    let linkUrl: String
+    let bodyText: String
+}

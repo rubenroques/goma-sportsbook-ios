@@ -371,7 +371,7 @@ extension ServicesProviderClient {
         return eventsProvider.getPromotionalSlidingTopEvents()
     }
 
-    public func getPromotionalTopStories() -> AnyPublisher<BannerResponse, ServiceProviderError> {
+    public func getPromotionalTopStories() -> AnyPublisher<[PromotionalStory], ServiceProviderError> {
         guard
             let eventsProvider = self.eventsProvider
         else {
@@ -955,6 +955,16 @@ extension ServicesProviderClient {
         }
 
         return privilegedAccessManager.updatePayment(paymentMethod: paymentMethod, amount: amount, paymentId: paymentId, type: type, issuer: issuer)
+    }
+
+    public func cancelDeposit(paymentId: String) -> AnyPublisher<BasicResponse, ServiceProviderError> {
+        guard
+            let privilegedAccessManager = self.privilegedAccessManager
+        else {
+            return Fail(error: ServiceProviderError.privilegedAccessManagerNotFound).eraseToAnyPublisher()
+        }
+
+        return privilegedAccessManager.cancelDeposit(paymentId: paymentId)
     }
 
     public func getWithdrawalMethods() -> AnyPublisher<[WithdrawalMethod], ServiceProviderError> {

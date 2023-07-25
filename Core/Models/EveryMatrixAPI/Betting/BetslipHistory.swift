@@ -41,6 +41,7 @@ struct BetHistoryEntry {
     let betslipId: Int?
 
     let cashbackReturn: Double?
+    let freebetReturn: Double?
 
     enum CodingKeys: String, CodingKey {
         case betId = "betId"

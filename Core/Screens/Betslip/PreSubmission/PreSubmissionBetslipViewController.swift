@@ -1747,7 +1747,7 @@ class PreSubmissionBetslipViewController: UIViewController {
                         }
                         self?.isLoading = false
                     } receiveValue: { [weak self] betPlacedDetails in
-                        if let cashbackSelected = self?.isCashbackSelected.value, cashbackSelected {
+                        if let cashbackSelected = self?.isCashbackSelected.value, !cashbackSelected {
                             self?.betPlacedAction(betPlacedDetails, self?.cashbackResultValue)
                         }
                         else {

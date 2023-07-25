@@ -1235,14 +1235,21 @@ extension SportRadarEventsProvider {
     }
 
 
-    public func getPromotionalTopStories() -> AnyPublisher<BannerResponse, ServiceProviderError> {
-        let endpoint = SportRadarRestAPIClient.promotionalTopStories
-        let requestPublisher: AnyPublisher<SportRadarModels.SportRadarResponse<SportRadarModels.BannerResponse>, ServiceProviderError> = self.restConnector.request(endpoint)
+    public func getPromotionalTopStories() -> AnyPublisher<[PromotionalStory], ServiceProviderError> {
 
-        return requestPublisher.map( { sportRadarResponse -> BannerResponse in
-            let bannersResponse = sportRadarResponse.data
-            let mappedBannersResponse = SportRadarModelMapper.bannerResponse(fromInternalBannerResponse: bannersResponse)
-            return mappedBannersResponse
+        let endpoint = SportRadarRestAPIClient.promotionalTopStories
+
+        let requestPublisher: AnyPublisher<SportRadarModels.SportRadarResponse<SportRadarModels.PromotionalStoriesResponse>, ServiceProviderError> = self.restConnector.request(endpoint)
+
+        return requestPublisher.map( { sportRadarResponse -> [PromotionalStory] in
+
+            let promotionalStoriesResponse = sportRadarResponse.data
+
+            let mappedPromotionalStoriesResponse = SportRadarModelMapper.promotionalStoriesResponse(fromInternalPromotionalStoriesResponse: promotionalStoriesResponse)
+
+            let mappedPromotionalStories = mappedPromotionalStoriesResponse.promotionalStories
+
+            return mappedPromotionalStories
         })
         .eraseToAnyPublisher()
     }

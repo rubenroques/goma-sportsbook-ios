@@ -16,6 +16,8 @@ class StoriesLineTableViewCell: UITableViewCell, UICollectionViewDataSource, UIC
 
     private var collectionView: UICollectionView!
 
+    var promotionalStories: [PromotionalStory] = []
+
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
         self.setupCollectionView()
@@ -75,11 +77,19 @@ class StoriesLineTableViewCell: UITableViewCell, UICollectionViewDataSource, UIC
         self.collectionView.reloadData()
     }
 
+    func configure(promotionalStories: [PromotionalStory]) {
+
+        self.promotionalStories = promotionalStories
+
+        self.reloadData()
+    }
+
     // MARK: - UICollectionViewDataSource
 
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
         // Return the number of items in your collection view
         return 10
+        //return self.promotionalStories.count
     }
 
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
@@ -88,6 +98,11 @@ class StoriesLineTableViewCell: UITableViewCell, UICollectionViewDataSource, UIC
         else {
             fatalError()
         }
+
+        //let promotionalStory = self.promotionalStories[indexPath.row]
+
+        //let viewModel = StoriesItemCellViewModel(imageName: promotionalStory.imageUrl, title: <#T##String#>, read: <#T##Bool#>)
+
         cell.configureWithViewModel(viewModel: StoriesItemCellViewModel(imageName: "", title: "Story \(indexPath.row)", read: indexPath.row == 3))
 
         cell.selectedItemAction = { [weak self] viewModel in
