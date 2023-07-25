@@ -255,12 +255,9 @@ class ClientManagedHomeViewTemplateDataSource {
             .store(in: &self.cancellables)
     }
 
-    func fetchSportsSections() {
-
-    }
-
     func fetchSupplementaryEventsIds() {
 
+// Hardcoded VAIX ids 
 //        self.supplementaryEventIds = [
 //            "3225419.1",
 //            "3225457.1",
@@ -287,6 +284,7 @@ class ClientManagedHomeViewTemplateDataSource {
 //            "3225117.1",
 //            "3225039.1"
 //        ]
+
         self.supplementaryEventIds = []
         self.refreshPublisher.send()
     }
