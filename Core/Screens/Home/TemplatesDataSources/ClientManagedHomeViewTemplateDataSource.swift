@@ -54,7 +54,35 @@ class ClientManagedHomeViewTemplateDataSource {
     //
     // Should show instagram like promotional stories
     var shouldShowPromotionalStories: Bool = true
-    var promotionalStories: [String] = []
+    //var promotionalStories: [String] = []
+    private var promotionalStories: [PromotionalStory] = [] {
+        didSet {
+            ()
+//            var bannerCellViewModels: [BannerCellViewModel] = []
+//
+//            for promotionalStory in self.promotionalStories {
+//
+//                if let bannerViewModel = self.bannersLineViewModelCache[banner.id] {
+//                    bannerCellViewModels.append(bannerViewModel)
+//                }
+//                else {
+//                    let bannerViewModel = BannerCellViewModel(id: banner.id,
+//                                                              matchId: banner.matchId,
+//                                                              imageURL: banner.imageURL ?? "",
+//                                                              marketId: banner.marketId)
+//                    bannerCellViewModels.append(bannerViewModel)
+//                    self.bannersLineViewModelCache[banner.id] = bannerViewModel
+//                }
+//            }
+//
+//            if bannerCellViewModels.isEmpty {
+//                self.bannersLineViewModel = nil
+//            }
+//            else {
+//                self.bannersLineViewModel = BannerLineCellViewModel(banners: bannerCellViewModels)
+//            }
+        }
+    }
     //
     // Quick Swipe Stack Matches
     private var quickSwipeStackCellViewModel: QuickSwipeStackCellViewModel?
@@ -211,7 +239,7 @@ class ClientManagedHomeViewTemplateDataSource {
             .receive(on: DispatchQueue.main)
             .sink { completion in
                 print("Promotional stories completion \(dump(completion))")
-                
+
             } receiveValue: { [weak self] promotionalStories in
 
                 let promotionalStories = promotionalStories

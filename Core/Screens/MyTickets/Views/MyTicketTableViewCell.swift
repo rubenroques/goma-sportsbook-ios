@@ -128,15 +128,16 @@ class MyTicketTableViewCell: UITableViewCell {
     var hasCashback: Bool = false {
         didSet {
             self.cashbackIconImageView.isHidden = !hasCashback
-
+            self.cashbackInfoBaseView.isHidden = !hasCashback
+            self.cashbackValueLabel.isHidden = !hasCashback
         }
     }
 
     var usedCashback: Bool = false {
         didSet {
             self.cashbackUsedBaseView.isHidden = !usedCashback
-            self.cashbackInfoBaseView.isHidden = !usedCashback
-            self.cashbackValueLabel.isHidden = !usedCashback
+//            self.cashbackInfoBaseView.isHidden = !usedCashback
+//            self.cashbackValueLabel.isHidden = !usedCashback
         }
     }
 
@@ -408,11 +409,31 @@ class MyTicketTableViewCell: UITableViewCell {
         self.betHistoryEntry = betHistoryEntry
         self.viewModel = viewModel
 
-        if betHistoryEntry.freeBet ?? false {
-            self.freebetBaseView.isHidden = false
+        if TargetVariables.hasFeatureEnabled(feature: .freebets) {
+            if betHistoryEntry.freeBet ?? false {
+                self.freebetBaseView.isHidden = false
+            }
+            else {
+                self.freebetBaseView.isHidden = true
+
+            }
+        }
+        else if TargetVariables.hasFeatureEnabled(feature: .cashback) {
+            if betHistoryEntry.freeBet ?? false {
+                self.usedCashback = true
+            }
+            else {
+                self.usedCashback = false
+            }
         }
         else {
-            self.freebetBaseView.isHidden = true
+            if betHistoryEntry.freeBet ?? false {
+                self.freebetBaseView.isHidden = false
+            }
+            else {
+                self.freebetBaseView.isHidden = true
+
+            }
         }
 
         self.viewModel?.hasCashoutEnabled
@@ -645,12 +666,23 @@ class MyTicketTableViewCell: UITableViewCell {
         // Cashback
         if betHistoryEntry.status?.uppercased() == "OPENED" {
             self.hasCashback = false
-            self.usedCashback = false
+
+            if TargetVariables.hasFeatureEnabled(feature: .cashback) {
+                if betHistoryEntry.freeBet ?? false {
+                    self.usedCashback = true
+                }
+                else {
+                    self.usedCashback = false
+                }
+            }
+            else {
+                self.usedCashback = false
+            }
         }
         else if let cashbackReturn = betHistoryEntry.cashbackReturn,
                 cashbackReturn > 0 {
-            self.hasCashback = false
-            self.usedCashback = true
+            self.hasCashback = true
+            self.usedCashback = false
 
             let cashbackReturnString = CurrencyFormater.defaultFormat.string(from: NSNumber(value: cashbackReturn))
 
@@ -659,8 +691,8 @@ class MyTicketTableViewCell: UITableViewCell {
         else if let freebetReturn = betHistoryEntry.freebetReturn,
                 freebetReturn > 0 {
 
-            self.hasCashback = false
-            self.usedCashback = true
+            self.hasCashback = true
+            self.usedCashback = false
 
             let cashbackReturnString = CurrencyFormater.defaultFormat.string(from: NSNumber(value: freebetReturn))
 
