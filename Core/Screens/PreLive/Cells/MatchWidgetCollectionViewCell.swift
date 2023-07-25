@@ -1331,26 +1331,6 @@ class MatchWidgetCollectionViewCell: UICollectionViewCell {
                     }
                     .store(in: &self.cancellables)
             }
-//
-//            if let newMarketId = self.viewModel?.match.markets.first?.id {
-//                Env.servicesProvider.getMarketInfo(marketId: newMarketId)
-//                    .receive(on: DispatchQueue.main)
-//                    .map(ServiceProviderModelMapper.market(fromServiceProviderMarket:))
-//                    .sink { _ in
-//                        print("Env.servicesProvider.getMarketInfo(marketId: new boosted market completed")
-//                    } receiveValue: { market in
-//                        if let outcome = market.outcomes[safe: 0] {
-//                            self.setHomeOddValueLabel(toText: OddFormatter.formatOdd(withValue: outcome.bettingOffer.decimalOdd))
-//                        }
-//                        if let outcome = market.outcomes[safe: 1] {
-//                            self.setDrawOddValueLabel(toText: OddFormatter.formatOdd(withValue: outcome.bettingOffer.decimalOdd))
-//                        }
-//                        if let outcome = market.outcomes[safe: 2] {
-//                            self.setAwayOddValueLabel(toText: OddFormatter.formatOdd(withValue: outcome.bettingOffer.decimalOdd))
-//                        }
-//                    }
-//                    .store(in: &self.cancellables)
-//            }
         }
 
         // TODO: TEST CASHBACK
