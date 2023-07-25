@@ -489,26 +489,27 @@ class ProfileViewController: UIViewController {
         let myAccountTap = UITapGestureRecognizer(target: self, action: #selector(myAccountViewTapped(sender:)))
         myAccountView.addGestureRecognizer(myAccountTap)
 
-        let myFavoritesView = NavigationCardView()
-        myFavoritesView.setupView(title: localized("my_favorites"), iconTitle: "favorite_profile_icon")
-        let myFavoritesTap = UITapGestureRecognizer(target: self, action: #selector(favoritesViewTapped(sender:)))
-        myFavoritesView.addGestureRecognizer(myFavoritesTap)
+        let cashbackView = NavigationCardView()
+        cashbackView.setupView(title: localized("cashback"), iconTitle: "cashback_profile_icon")
+        let cashbackTap = UITapGestureRecognizer(target: self, action: #selector(cashbackViewTapped(sender:)))
+        cashbackView.addGestureRecognizer(cashbackTap)
+
+        let betSwipeView = NavigationCardView()
+        betSwipeView.setupView(title: "Bet Swipe", iconTitle: "betswipe_profile_icon")
+        let betSwipeTap = UITapGestureRecognizer(target: self, action: #selector(betSwipeViewTapped(sender:)))
+        betSwipeView.addGestureRecognizer(betSwipeTap)
 
         let bonusView = NavigationCardView()
         bonusView.setupView(title: localized("bonus"), iconTitle: "bonus_profile_icon")
         let bonusTap = UITapGestureRecognizer(target: self, action: #selector(bonusViewTapped(sender:)))
         bonusView.addGestureRecognizer(bonusTap)
 
-        let messagesView = NavigationCardView()
-        messagesView.hasNotifications = true
-        messagesView.setupView(title: localized("promotions"), iconTitle: "promotion_icon")
-        let messagesTap = UITapGestureRecognizer(target: self, action: #selector(messagesViewTapped(sender:)))
-        messagesView.addGestureRecognizer(messagesTap)
+        let promotionsView = NavigationCardView()
+        promotionsView.hasNotifications = true
+        promotionsView.setupView(title: localized("promotions"), iconTitle: "promotion_icon")
+        let promotionsTap = UITapGestureRecognizer(target: self, action: #selector(promotionsViewTapped(sender:)))
+        promotionsView.addGestureRecognizer(promotionsTap)
 
-        let historyView = NavigationCardView()
-        historyView.setupView(title: localized("history"), iconTitle: "history_profile_icon")
-        let historyTap = UITapGestureRecognizer(target: self, action: #selector(historyViewTapped(sender:)))
-        historyView.addGestureRecognizer(historyTap)
 
         let responsibleGamingView = NavigationCardView()
         responsibleGamingView.setupView(title: localized("responsible_gaming"), iconTitle: "responsible_gaming_icon")
@@ -520,15 +521,15 @@ class ProfileViewController: UIViewController {
         let recruitFriendTap = UITapGestureRecognizer(target: self, action: #selector(recruitFriendViewTapped(sender:)))
         recruitFriendView.addGestureRecognizer(recruitFriendTap)
 
+        let myFavoritesView = NavigationCardView()
+        myFavoritesView.setupView(title: localized("my_favorites"), iconTitle: "favorite_profile_icon")
+        let myFavoritesTap = UITapGestureRecognizer(target: self, action: #selector(favoritesViewTapped(sender:)))
+        myFavoritesView.addGestureRecognizer(myFavoritesTap)
+
         let settingsView = NavigationCardView()
         settingsView.setupView(title: localized("app_settings"), iconTitle: "app_settings_profile_icon")
         let settingsTap = UITapGestureRecognizer(target: self, action: #selector(appSettingsViewTapped(sender:)))
         settingsView.addGestureRecognizer(settingsTap)
-
-        let contactSettingsView = NavigationCardView()
-        contactSettingsView.setupView(title: localized("contact_settings"), iconTitle: "messages_profile_icon")
-        let contactSettingsTap = UITapGestureRecognizer(target: self, action: #selector(contactSettingsViewTapped(sender:)))
-        contactSettingsView.addGestureRecognizer(contactSettingsTap)
 
         let supportView = NavigationCardView()
         supportView.setupView(title: localized("support"), iconTitle: "support_profile_icon")
@@ -536,16 +537,16 @@ class ProfileViewController: UIViewController {
         supportView.addGestureRecognizer(supportTap)
 
         self.stackView.addArrangedSubview(myAccountView)
-        self.stackView.addArrangedSubview(myFavoritesView)
+        self.stackView.addArrangedSubview(cashbackView)
+        self.stackView.addArrangedSubview(betSwipeView)
         self.stackView.addArrangedSubview(bonusView)
-        self.stackView.addArrangedSubview(messagesView)
-        self.stackView.addArrangedSubview(historyView)
-        self.stackView.addArrangedSubview(responsibleGamingView)
-        self.stackView.addArrangedSubview(recruitFriendView)
+
+        self.stackView.addArrangedSubview(promotionsView)
+        self.stackView.addArrangedSubview(myFavoritesView)
         self.stackView.addArrangedSubview(settingsView)
-        self.stackView.addArrangedSubview(contactSettingsView)
         self.stackView.addArrangedSubview(supportView)
 
+        // self.stackView.addArrangedSubview(responsibleGamingView)
     }
 
     // MARK: Functions
@@ -562,15 +563,11 @@ class ProfileViewController: UIViewController {
                     ()
                 case .failure(let error):
                     print("PAYMENT INFO ERROR: \(error)")
-
                 }
-
             }, receiveValue: { [weak self] paymentInfo in
-
                 let paymentDetails = paymentInfo.data.filter({
                     $0.details.isNotEmpty
                 })
-
                 if paymentDetails.isNotEmpty {
 
                     if let bankPaymentDetail = paymentDetails.filter({
@@ -579,7 +576,6 @@ class ProfileViewController: UIViewController {
                        let ibanPaymentDetail = bankPaymentDetail.details.filter({
                            $0.key == "IBAN"
                        }).first {
-
                         if ibanPaymentDetail.value != "" {
                             self?.ibanPaymentDetails = ibanPaymentDetail
                         }
@@ -697,32 +693,20 @@ extension ProfileViewController {
         self.navigationController?.pushViewController(bonusRootViewController, animated: true)
     }
 
-    @objc func messagesViewTapped(sender: UITapGestureRecognizer) {
-//        let messagesViewModel = MessagesViewModel()
-//
-//        let messagesRootViewController = MessagesViewController(viewModel: messagesViewModel)
+    @objc func promotionsViewTapped(sender: UITapGestureRecognizer) {
 
         let promotionsWebViewModel = PromotionsWebViewModel()
 
         // TODO: Change to prod url when fixed
         let gomaBaseUrl = GomaGamingEnv.stage.baseUrl
         let appLanguage = Locale.current.languageCode
-
         let isDarkTheme = self.traitCollection.userInterfaceStyle == .dark ? true : false
-
         let urlString = "\(gomaBaseUrl)/\(appLanguage ?? "fr")/in-app/promotions?dark=\(isDarkTheme)"
 
         if let url = URL(string: urlString) {
-
             let promotionsWebViewController = PromotionsWebViewController(url: url, viewModel: promotionsWebViewModel)
-
             self.navigationController?.pushViewController(promotionsWebViewController, animated: true)
         }
-    }
-
-    @objc func historyViewTapped(sender: UITapGestureRecognizer) {
-        let historyRootViewController = HistoryRootViewController()
-        self.navigationController?.pushViewController(historyRootViewController, animated: true)
     }
 
     @objc func responsibleGamingViewTapped(sender: UITapGestureRecognizer) {
@@ -747,17 +731,19 @@ extension ProfileViewController {
         self.navigationController?.pushViewController(appSettingsViewController, animated: true)
     }
 
-    @objc func contactSettingsViewTapped(sender: UITapGestureRecognizer) {
-        let contactSettingsViewModel = ContactSettingsViewModel()
-
-        let contactSettingsViewController = ContactSettingsViewController(viewModel: contactSettingsViewModel )
-
-        self.navigationController?.pushViewController(contactSettingsViewController, animated: true)
-    }
-
     @objc func supportViewTapped(sender: UITapGestureRecognizer) {
         let supportViewController = SupportPageViewController(viewModel: SupportPageViewModel())
         self.navigationController?.pushViewController(supportViewController, animated: true)
+    }
+
+    @objc func cashbackViewTapped(sender: UITapGestureRecognizer) {
+        let cashbackInfoViewController = CashbackInfoViewController()
+        self.navigationController?.pushViewController(cashbackInfoViewController, animated: true)
+    }
+
+    @objc func betSwipeViewTapped(sender: UITapGestureRecognizer) {
+        let betSelectorViewConroller = InternalBrowserViewController(fileName: "TinderStyleBetBuilder", fileType: "html", fullscreen: true)
+        self.navigationController?.pushViewController(betSelectorViewConroller, animated: true)
     }
 
 }

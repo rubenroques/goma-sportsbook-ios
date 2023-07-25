@@ -42,7 +42,7 @@ class MatchWidgetCollectionViewCell: UICollectionViewCell {
         liveTipLabel.font = AppFont.with(type: .semibold, size: 9)
         liveTipLabel.textAlignment = .left
         liveTipLabel.translatesAutoresizingMaskIntoConstraints = false
-        liveTipLabel.setContentHuggingPriority(.defaultLow, for: .horizontal)
+        liveTipLabel.setContentHuggingPriority(.defaultHigh, for: .horizontal)
         liveTipLabel.setContentCompressionResistancePriority(.defaultHigh, for: .horizontal)
 
         return liveTipLabel
@@ -354,6 +354,8 @@ class MatchWidgetCollectionViewCell: UICollectionViewCell {
     private var middleOutcomeDisabled: Bool = false
     private var rightOutcomeDisabled: Bool = false
 
+    private var cancellables: Set<AnyCancellable> = []
+
     override func awakeFromNib() {
         super.awakeFromNib()
 
@@ -406,9 +408,9 @@ class MatchWidgetCollectionViewCell: UICollectionViewCell {
         self.awayNewBoostedOddValueLabel.font = AppFont.with(type: .bold, size: 13)
         self.awayOldBoostedOddValueLabel.font = AppFont.with(type: .semibold, size: 9)
 
-        self.homeOldBoostedOddValueLabel.text = "1̶.̶0̶0̶"
-        self.drawOldBoostedOddValueLabel.text = "1̶.̶0̶0̶"
-        self.awayOldBoostedOddValueLabel.text = "1̶.̶0̶0̶"
+        self.homeOldBoostedOddValueLabel.text = "1.00"
+        self.drawOldBoostedOddValueLabel.text = "1.00"
+        self.awayOldBoostedOddValueLabel.text = "1.00"
 
         //
         //
@@ -1078,7 +1080,7 @@ class MatchWidgetCollectionViewCell: UICollectionViewCell {
                     self?.liveMatchDotBaseView.isHidden = true
                 }
             })
-        
+
         if let market = viewModel.match.markets.first {
 
             self.marketSubscriber = Env.servicesProvider.subscribeToEventMarketUpdates(withId: market.id)
@@ -1298,6 +1300,58 @@ class MatchWidgetCollectionViewCell: UICollectionViewCell {
         }
 
         self.isFavorite = Env.favoritesManager.isEventFavorite(eventId: viewModel.match.id)
+
+        if self.matchWidgetType == .boosted {
+
+            if let originalMarketId = self.viewModel?.match.oldMainMarketId {
+                Env.servicesProvider.getMarketInfo(marketId: originalMarketId)
+                    .receive(on: DispatchQueue.main)
+                    .map(ServiceProviderModelMapper.market(fromServiceProviderMarket:))
+                    .sink { _ in
+                        print("Env.servicesProvider.getMarketInfo(marketId: old boosted market completed")
+                    } receiveValue: { market in
+                        if let outcome = market.outcomes[safe: 0] {
+                            let oddValue = OddFormatter.formatOdd(withValue: outcome.bettingOffer.decimalOdd)
+                            let attributes = [NSAttributedString.Key.strikethroughStyle: NSUnderlineStyle.single.rawValue]
+                            let attributedString = NSAttributedString(string: oddValue, attributes: attributes)
+                            self.homeOldBoostedOddValueLabel.attributedText = attributedString
+                        }
+                        if let outcome = market.outcomes[safe: 1] {
+                            let oddValue = OddFormatter.formatOdd(withValue: outcome.bettingOffer.decimalOdd)
+                            let attributes = [NSAttributedString.Key.strikethroughStyle: NSUnderlineStyle.single.rawValue]
+                            let attributedString = NSAttributedString(string: oddValue, attributes: attributes)
+                            self.drawOldBoostedOddValueLabel.attributedText = attributedString
+                        }
+                        if let outcome = market.outcomes[safe: 2] {
+                            let oddValue = OddFormatter.formatOdd(withValue: outcome.bettingOffer.decimalOdd)
+                            let attributes = [NSAttributedString.Key.strikethroughStyle: NSUnderlineStyle.single.rawValue]
+                            let attributedString = NSAttributedString(string: oddValue, attributes: attributes)
+                            self.awayOldBoostedOddValueLabel.attributedText = attributedString
+                        }
+                    }
+                    .store(in: &self.cancellables)
+            }
+//
+//            if let newMarketId = self.viewModel?.match.markets.first?.id {
+//                Env.servicesProvider.getMarketInfo(marketId: newMarketId)
+//                    .receive(on: DispatchQueue.main)
+//                    .map(ServiceProviderModelMapper.market(fromServiceProviderMarket:))
+//                    .sink { _ in
+//                        print("Env.servicesProvider.getMarketInfo(marketId: new boosted market completed")
+//                    } receiveValue: { market in
+//                        if let outcome = market.outcomes[safe: 0] {
+//                            self.setHomeOddValueLabel(toText: OddFormatter.formatOdd(withValue: outcome.bettingOffer.decimalOdd))
+//                        }
+//                        if let outcome = market.outcomes[safe: 1] {
+//                            self.setDrawOddValueLabel(toText: OddFormatter.formatOdd(withValue: outcome.bettingOffer.decimalOdd))
+//                        }
+//                        if let outcome = market.outcomes[safe: 2] {
+//                            self.setAwayOddValueLabel(toText: OddFormatter.formatOdd(withValue: outcome.bettingOffer.decimalOdd))
+//                        }
+//                    }
+//                    .store(in: &self.cancellables)
+//            }
+        }
 
         // TODO: TEST CASHBACK
         if viewModel.matchWidgetType == .normal {

@@ -86,7 +86,12 @@ class PreLiveEventsViewController: UIViewController {
                 self.sportTypeIconImageView.setImageColor(color: UIColor.App.textPrimary)
             }
 
+            if oldValue.id == selectedSport.id {
+                return
+            }
+
             self.competitionsFiltersView.resetSelection()
+
             self.viewModel.selectedSport = self.selectedSport
         }
     }

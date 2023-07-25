@@ -60,7 +60,8 @@ extension ServiceProviderModelMapper {
                           rootPartId: "",
                           status: Self.matchStatus(fromInternalEvent: event.status),
                           matchTime: event.matchTime,
-                          promoImageURL: event.promoImageURL)
+                          promoImageURL: event.promoImageURL,
+                          oldMainMarketId: event.oldMainMarketId)
         return match
     }
 

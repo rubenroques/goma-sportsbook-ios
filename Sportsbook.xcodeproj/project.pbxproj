@@ -824,6 +824,7 @@
 		4566339A29DDD44C00C4F1A9 /* AnonymousSideMenuViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4566339529DDD44C00C4F1A9 /* AnonymousSideMenuViewController.swift */; };
 		4566339B29DDD44C00C4F1A9 /* AnonymousSideMenuViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4566339529DDD44C00C4F1A9 /* AnonymousSideMenuViewController.swift */; };
 		4566339C29DDD44C00C4F1A9 /* AnonymousSideMenuViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4566339529DDD44C00C4F1A9 /* AnonymousSideMenuViewController.swift */; };
+		4566B95E2A6AEE8A00477046 /* IdensicMobileSDK in Frameworks */ = {isa = PBXBuildFile; productRef = 4566B95D2A6AEE8A00477046 /* IdensicMobileSDK */; };
 		4568B9662858CF4100FA99B3 /* CilinderSceneKitScene.scn in Resources */ = {isa = PBXBuildFile; fileRef = 4568B9632858CF4100FA99B3 /* CilinderSceneKitScene.scn */; };
 		4568B9672858CF4100FA99B3 /* CilinderSceneKitScene.scn in Resources */ = {isa = PBXBuildFile; fileRef = 4568B9632858CF4100FA99B3 /* CilinderSceneKitScene.scn */; };
 		4568B9682858CF4100FA99B3 /* CilinderSceneKitScene.scn in Resources */ = {isa = PBXBuildFile; fileRef = 4568B9632858CF4100FA99B3 /* CilinderSceneKitScene.scn */; };
@@ -4013,7 +4014,6 @@
 		45DB8DAC2A6A905D0018C591 /* Theming in Frameworks */ = {isa = PBXBuildFile; productRef = 45DB8DAB2A6A905D0018C591 /* Theming */; };
 		45DB8DAE2A6A906C0018C591 /* Theming in Frameworks */ = {isa = PBXBuildFile; productRef = 45DB8DAD2A6A906C0018C591 /* Theming */; };
 		45DB8DB02A6A9C7C0018C591 /* CountrySelectionFeature in Frameworks */ = {isa = PBXBuildFile; productRef = 45DB8DAF2A6A9C7C0018C591 /* CountrySelectionFeature */; };
-		45DB8DB62A6AA10D0018C591 /* IdensicMobileSDK in Frameworks */ = {isa = PBXBuildFile; productRef = 45DB8DB52A6AA10D0018C591 /* IdensicMobileSDK */; };
 		45DB8DB92A6AA5100018C591 /* PhraseSDK in Frameworks */ = {isa = PBXBuildFile; productRef = 45DB8DB82A6AA5100018C591 /* PhraseSDK */; };
 		45E46C172A08FEB900BB9B85 /* sports-loading.json in Resources */ = {isa = PBXBuildFile; fileRef = 45E46C162A08FEB900BB9B85 /* sports-loading.json */; };
 		45E46C182A08FEB900BB9B85 /* sports-loading.json in Resources */ = {isa = PBXBuildFile; fileRef = 45E46C162A08FEB900BB9B85 /* sports-loading.json */; };
@@ -6552,7 +6552,6 @@
 				45A33020298935F6008181E9 /* AdyenCard in Frameworks */,
 				450B7A9A28F58574009229E3 /* Collections in Frameworks */,
 				45A33024298935F6008181E9 /* AdyenEncryption in Frameworks */,
-				45DB8DB62A6AA10D0018C591 /* IdensicMobileSDK in Frameworks */,
 				45A3301E298935F6008181E9 /* AdyenActions in Frameworks */,
 				450B7A9B28F58574009229E3 /* CombineCocoa in Frameworks */,
 				450B7A9C28F58574009229E3 /* SwiftyBeaver in Frameworks */,
@@ -6678,6 +6677,7 @@
 				45A332BA298976BA008181E9 /* AdyenCard in Frameworks */,
 				45A332BB298976BA008181E9 /* Collections in Frameworks */,
 				45A332BC298976BA008181E9 /* AdyenEncryption in Frameworks */,
+				4566B95E2A6AEE8A00477046 /* IdensicMobileSDK in Frameworks */,
 				45A332BD298976BA008181E9 /* AdyenActions in Frameworks */,
 				45A332BE298976BA008181E9 /* CombineCocoa in Frameworks */,
 				45A332BF298976BA008181E9 /* SwiftyBeaver in Frameworks */,
@@ -7665,8 +7665,6 @@
 			isa = PBXGroup;
 			children = (
 				A9C7190F2A5EEA57005EB891 /* RecruitFriend */,
-				A93FE2152A44A06B006A6907 /* Cashback */,
-				A93FE2022A4353F7006A6907 /* Generic */,
 				452047BE27036D4600B277B5 /* Splash */,
 				455C962526FE11B300456F30 /* Root */,
 				45C3E8D727B56DC7007A1A0F /* Home */,
@@ -9995,7 +9993,6 @@
 				45DB8DA72A6A905D0018C591 /* GomaGamingSDK */,
 				45DB8DA92A6A905D0018C591 /* HeaderTextField */,
 				45DB8DAB2A6A905D0018C591 /* Theming */,
-				45DB8DB52A6AA10D0018C591 /* IdensicMobileSDK */,
 				45DB8DB82A6AA5100018C591 /* PhraseSDK */,
 			);
 			productName = Sportsbook;
@@ -10184,6 +10181,7 @@
 				451640292A39FF80003C4276 /* PhraseSDK */,
 				45DB8DAD2A6A906C0018C591 /* Theming */,
 				45DB8DAF2A6A9C7C0018C591 /* CountrySelectionFeature */,
+				4566B95D2A6AEE8A00477046 /* IdensicMobileSDK */,
 			);
 			productName = Sportsbook;
 			productReference = 45A3334E298976BA008181E9 /* Betsson.app */;
@@ -10299,8 +10297,8 @@
 				4554ED082976F7FE006942B3 /* XCRemoteSwiftPackageReference "IQKeyboardManager" */,
 				A96FAEDF29829CCA00A0751F /* XCRemoteSwiftPackageReference "adyen-ios" */,
 				45F805912A05357E005296E0 /* XCRemoteSwiftPackageReference "lottie-spm" */,
-				45DB8DB42A6AA10D0018C591 /* XCRemoteSwiftPackageReference "IdensicMobileSDK-iOS" */,
 				45DB8DB72A6AA5100018C591 /* XCRemoteSwiftPackageReference "ios-sdk" */,
+				4566B95C2A6AEE8900477046 /* XCRemoteSwiftPackageReference "IdensicMobileSDK-iOS" */,
 			);
 			productRefGroup = 455A0C5126BD902C00EC572D /* Products */;
 			projectDirPath = "";
@@ -16146,7 +16144,7 @@
 				CODE_SIGN_ENTITLEMENTS = Clients/SportRadar/Misc/SportRadar.entitlements;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 1190;
+				CURRENT_PROJECT_VERSION = 1192;
 				DEVELOPMENT_TEAM = 422GNXXZJR;
 				INFOPLIST_FILE = "$(SRCROOT)/Clients/SportRadar/Misc/SportRadar-Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 13.0;
@@ -16172,7 +16170,7 @@
 				CODE_SIGN_ENTITLEMENTS = Clients/SportRadar/Misc/SportRadar.entitlements;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 1190;
+				CURRENT_PROJECT_VERSION = 1192;
 				DEVELOPMENT_TEAM = 422GNXXZJR;
 				INFOPLIST_FILE = "$(SRCROOT)/Clients/SportRadar/Misc/SportRadar-Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 13.0;
@@ -16521,7 +16519,7 @@
 				CODE_SIGN_ENTITLEMENTS = Clients/Betsson/Misc/Betsson.entitlements;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 1191;
+				CURRENT_PROJECT_VERSION = 1192;
 				DEVELOPMENT_TEAM = 422GNXXZJR;
 				INFOPLIST_FILE = "$(SRCROOT)/Clients/Betsson/Misc/Betsson-Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 13.0;
@@ -16547,7 +16545,7 @@
 				CODE_SIGN_ENTITLEMENTS = Clients/Betsson/Misc/Betsson.entitlements;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 1191;
+				CURRENT_PROJECT_VERSION = 1192;
 				DEVELOPMENT_TEAM = 422GNXXZJR;
 				INFOPLIST_FILE = "$(SRCROOT)/Clients/Betsson/Misc/Betsson-Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 13.0;
@@ -16876,6 +16874,14 @@
 			requirement = {
 				kind = upToNextMajorVersion;
 				minimumVersion = 6.0.0;
+			};
+		};
+		4566B95C2A6AEE8900477046 /* XCRemoteSwiftPackageReference "IdensicMobileSDK-iOS" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/SumSubstance/IdensicMobileSDK-iOS.git";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 1.0.0;
 			};
 		};
 		457CB9C7282D27D000ED0F00 /* XCRemoteSwiftPackageReference "Reachability" */ = {
@@ -17294,14 +17300,6 @@
 				minimumVersion = 1.0.0;
 			};
 		};
-		45DB8DB42A6AA10D0018C591 /* XCRemoteSwiftPackageReference "IdensicMobileSDK-iOS" */ = {
-			isa = XCRemoteSwiftPackageReference;
-			repositoryURL = "https://github.com/SumSubstance/IdensicMobileSDK-iOS.git";
-			requirement = {
-				kind = upToNextMajorVersion;
-				minimumVersion = 1.0.0;
-			};
-		};
 		45DB8DB72A6AA5100018C591 /* XCRemoteSwiftPackageReference "ios-sdk" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/phrase/ios-sdk/";
@@ -17520,6 +17518,11 @@
 		456237D8297EE5F600B3FA3A /* SharedModels */ = {
 			isa = XCSwiftPackageProductDependency;
 			productName = SharedModels;
+		};
+		4566B95D2A6AEE8A00477046 /* IdensicMobileSDK */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 4566B95C2A6AEE8900477046 /* XCRemoteSwiftPackageReference "IdensicMobileSDK-iOS" */;
+			productName = IdensicMobileSDK;
 		};
 		457CB9C6282D27D000ED0F00 /* Reachability */ = {
 			isa = XCSwiftPackageProductDependency;
@@ -18051,11 +18054,6 @@
 		45DB8DAF2A6A9C7C0018C591 /* CountrySelectionFeature */ = {
 			isa = XCSwiftPackageProductDependency;
 			productName = CountrySelectionFeature;
-		};
-		45DB8DB52A6AA10D0018C591 /* IdensicMobileSDK */ = {
-			isa = XCSwiftPackageProductDependency;
-			package = 45DB8DB42A6AA10D0018C591 /* XCRemoteSwiftPackageReference "IdensicMobileSDK-iOS" */;
-			productName = IdensicMobileSDK;
 		};
 		45DB8DB82A6AA5100018C591 /* PhraseSDK */ = {
 			isa = XCSwiftPackageProductDependency;

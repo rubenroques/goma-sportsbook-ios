@@ -210,33 +210,34 @@ class ClientManagedHomeViewTemplateDataSource {
 
     func fetchSupplementaryEventsIds() {
 
-        self.supplementaryEventIds = [
-            "3225419.1",
-            "3225457.1",
-            "3225190.1",
-            "3224836.1",
-            "3224831.1",
-            "3225090.1",
-            "3225449.1",
-            "3225148.1",
-            "3225149.1",
-            "3225151.1",
-            "3225173.1",
-            "3225420.1",
-            "3225192.1",
-            "3225195.1",
-            "3225247.1",
-            "3225448.1",
-            "3225242.1",
-            "3225265.1",
-            "3225209.1",
-            "3225214.1",
-            "3225124.1",
-            "3225014.1",
-            "3225117.1",
-            "3225039.1"
-        ]
+//        self.supplementaryEventIds = [
+//            "3225419.1",
+//            "3225457.1",
+//            "3225190.1",
+//            "3224836.1",
+//            "3224831.1",
+//            "3225090.1",
+//            "3225449.1",
+//            "3225148.1",
+//            "3225149.1",
+//            "3225151.1",
+//            "3225173.1",
+//            "3225420.1",
+//            "3225192.1",
+//            "3225195.1",
+//            "3225247.1",
+//            "3225448.1",
+//            "3225242.1",
+//            "3225265.1",
+//            "3225209.1",
+//            "3225214.1",
+//            "3225124.1",
+//            "3225014.1",
+//            "3225117.1",
+//            "3225039.1"
+//        ]
 
+        self.supplementaryEventIds = []
         self.refreshPublisher.send()
 
     }
@@ -322,7 +323,7 @@ class ClientManagedHomeViewTemplateDataSource {
             .sink { completion in
                 print("completion \(dump(completion))")
             } receiveValue: { [weak self] eventGroups in
-                let matches = eventGroups.flatMap(\.events).map(ServiceProviderModelMapper.match(fromEvent:))
+                let matches = eventGroups.flatMap(\.events).prefix(20).map(ServiceProviderModelMapper.match(fromEvent:))
                 self?.promotedSportsMatches[promotedSport.id] = matches
                 self?.refreshPublisher.send()
             }

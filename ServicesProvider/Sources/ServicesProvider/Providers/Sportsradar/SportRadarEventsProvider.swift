@@ -1138,12 +1138,27 @@ extension SportRadarEventsProvider {
             .flatMap({ headlineResponse -> AnyPublisher<[Event], ServiceProviderError> in
 
                 let headlineItems = headlineResponse.headlineItems ?? []
+                var headlineItemsOldMarkets: [String: String] = [:]
+                headlineItems.forEach({ item in
+                    if let id = item.marketId, let oldMarketId = item.oldMarketId {
+                        headlineItemsOldMarkets[id] = oldMarketId
+                    }
+                })
+
                 let marketIds = headlineItems.map({ item in return item.marketId }).compactMap({ $0 })
 
                 let publishers = marketIds.map(self.getEventForMarket(withId:))
                 let finalPublisher = Publishers.MergeMany(publishers)
                     .collect()
                     .map({ (events: [Event?]) -> [Event] in
+                        return events.compactMap({ $0 })
+                    })
+                    .map({ (events: [Event]) -> [Event] in
+
+                        for event in events {
+                            let firstMarketId = event.markets.first?.id ?? ""
+                            event.oldMainMarketId =  headlineItemsOldMarkets[firstMarketId]
+                        }
 
                         let cleanedEvents = events.compactMap({ $0 })
 

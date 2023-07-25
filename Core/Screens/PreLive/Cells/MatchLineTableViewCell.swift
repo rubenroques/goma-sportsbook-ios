@@ -26,9 +26,17 @@ class MatchLineTableCellViewModel {
         self.loadEventDetails(fromId: matchId)
     }
 
-    init(match: Match) {
+    init(match: Match, withFullMarkets fullMarkets: Bool = false) {
         print("MatchLineTableCellViewModel init with match \(match.homeParticipant.name) x \(match.awayParticipant.name)")
-        self.matchCurrentValueSubject.send(match)
+
+        if !fullMarkets {
+            self.loadEventDetails(fromId: match.id)
+            self.matchCurrentValueSubject.send(match)
+        }
+        else {
+            self.matchCurrentValueSubject.send(match)
+        }
+
     }
 
     deinit {
@@ -36,46 +44,8 @@ class MatchLineTableCellViewModel {
     }
 
     //
+    //
     private func loadEventDetails(fromId id: String) {
-
-//        Env.servicesProvider.subscribeEventDetails(eventId: id)
-//            .receive(on: DispatchQueue.main)
-//            .sink(receiveCompletion: { [weak self] completion in
-//                print("Env.servicesProvider.subscribeEventDetails completed \(completion)")
-//                switch completion {
-//                case .finished:
-//                    ()
-//                case .failure(let error):
-//                    switch error {
-//                    case .resourceUnavailableOrDeleted: // This match is no longer available
-//                        self?.matchCurrentValueSubject.send(nil)
-//
-//                    default:
-//                        print("Error retrieving data! \(error)")
-//                        self?.matchCurrentValueSubject.send(nil)
-//                    }
-//                }
-//            }, receiveValue: { [weak self] (subscribableContent: SubscribableContent<ServicesProvider.Event>) in
-//                switch subscribableContent {
-//                case .connected(let subscription):
-//                    self?.subscription = subscription
-//                case .contentUpdate(let serviceProviderEvent):
-//
-//                    var match = ServiceProviderModelMapper.match(fromEvent: serviceProviderEvent)
-//
-////                    let filteredMarkets = match.markets.filter({ $0.outcomes.count == 3 || $0.outcomes.count == 2 }).sorted { leftMarket, rightMarket  in
-////                        return (leftMarket.marketTypeId ?? "") < (rightMarket.marketTypeId ?? "")
-////                    }.prefix(5)
-////
-////                    match.markets = Array(filteredMarkets)
-//
-//                    self?.matchCurrentValueSubject.send(match)
-//
-//                case .disconnected:
-//                    print("Disconnected from ws")
-//                }
-//            })
-//            .store(in: &cancellables)
 
         Env.servicesProvider.getEventDetails(eventId: id)
             .filter { eventSummary in
@@ -87,12 +57,25 @@ class MatchLineTableCellViewModel {
                 print("completion \(completion)")
             } receiveValue: { [weak self] match in
 
+                var knownMarketGroups: Set<String> = []
+                var filteredMarkets = [Market]()
                 var processedMatch = match
-                let filteredMarkets = processedMatch.markets.filter({ $0.outcomes.count == 3 || $0.outcomes.count == 2 }).sorted { leftMarket, rightMarket  in
+
+                for market in processedMatch.markets.filter({ $0.outcomes.count == 3 || $0.outcomes.count == 2 }) {
+                    if let marketTypeId = market.marketTypeId, !knownMarketGroups.contains(marketTypeId) {
+                        knownMarketGroups.insert(marketTypeId)
+                        filteredMarkets.append(market)
+                    }
+
+                    if knownMarketGroups.count >= 5 {
+                        break
+                    }
+                }
+                var sortedMarkets = filteredMarkets.sorted { leftMarket, rightMarket  in
                     return (leftMarket.marketTypeId ?? "") < (rightMarket.marketTypeId ?? "")
                 }.prefix(5)
 
-                processedMatch.markets = Array(filteredMarkets)
+                processedMatch.markets = Array(sortedMarkets)
 
                 self?.matchCurrentValueSubject.send(processedMatch)
             }

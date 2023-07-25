@@ -35,6 +35,7 @@ extension SportRadarModels {
         var numofselections: String?
         var imageURL: String?
         var linkURL: String?
+        var oldMarketId: String?
 
         enum CodingKeys: String, CodingKey {
             case idfwheadline = "idfwheadline"
@@ -50,13 +51,14 @@ extension SportRadarModels {
             case numofselections = "numofselections"
             case imageURL = "imageurl"
             case linkURL = "linkurl"
+            case oldMarketId = "bodytext"
         }
 
         init(idfwheadline: String?, marketGroupId: String?,
              marketId: String?, name: String?, title: String?,
              tsactivefrom: String?, tsactiveto: String?, idfwheadlinetype: String?,
              headlinemediatype: String?, categoryName: String?, numofselections: String?,
-             imageURL: String?, linkURL: String?
+             imageURL: String?, linkURL: String?, oldMarketId: String?
         ) {
             self.idfwheadline = idfwheadline
             self.marketGroupId = marketGroupId
@@ -71,6 +73,7 @@ extension SportRadarModels {
             self.numofselections = numofselections
             self.imageURL = imageURL
             self.linkURL = linkURL
+            self.oldMarketId = oldMarketId
         }
     }
 

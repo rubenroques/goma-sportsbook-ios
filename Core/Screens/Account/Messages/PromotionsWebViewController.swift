@@ -56,7 +56,7 @@ class PromotionsWebViewController: UIViewController {
 
         self.showLoading()
 
-        self.webView.load(URLRequest(url: url))
+        self.webView.load(URLRequest(url: self.url))
 
     }
 
@@ -98,8 +98,7 @@ class PromotionsWebViewController: UIViewController {
 
     @objc private func didTapBackButton() {
 
-        if let currentUrl = self.webView.url,
-           currentUrl != self.url {
+        if let currentUrl = self.webView.url, currentUrl != self.url {
             self.webView.goBack()
         }
         else {
