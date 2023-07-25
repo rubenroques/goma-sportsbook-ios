@@ -402,7 +402,7 @@ extension SportRadarRestAPIClient: Endpoint {
                         {
                             "contentId": {
                                 "type": "headline",
-                                "id": "\(SportRadarConstants.frontEndCode)/20/PromotionsSummary"
+                                "id": "\(SportRadarConstants.frontEndCode)/20/InstaCard"
                             },
                             "clientContext": {
                                 "language": "FR",

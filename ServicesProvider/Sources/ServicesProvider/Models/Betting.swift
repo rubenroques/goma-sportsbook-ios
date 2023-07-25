@@ -29,6 +29,7 @@ public struct Bet: Codable {
     public var partialCashoutStake: Double?
     public var betslipId: Int?
     public var cashbackReturn: Double?
+    public var freebetReturn: Double?
 }
 
 public struct BetSelection: Codable {

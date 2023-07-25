@@ -656,6 +656,16 @@ class MyTicketTableViewCell: UITableViewCell {
 
             self.cashbackValueLabel.text = cashbackReturnString
         }
+        else if let freebetReturn = betHistoryEntry.freebetReturn,
+                freebetReturn > 0 {
+
+            self.hasCashback = false
+            self.usedCashback = true
+
+            let cashbackReturnString = CurrencyFormater.defaultFormat.string(from: NSNumber(value: freebetReturn))
+
+            self.cashbackValueLabel.text = cashbackReturnString
+        }
 
         self.viewModel?.partialCashout
             .sink(receiveValue: { [weak self] partialCashout in

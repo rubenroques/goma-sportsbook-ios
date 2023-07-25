@@ -118,6 +118,24 @@ extension SportRadarModelMapper {
                       marketId: internalBanner.marketId)
     }
 
+    static func promotionalStoriesResponse(fromInternalPromotionalStoriesResponse internalPromotionalStoriesResponse: SportRadarModels.PromotionalStoriesResponse) -> PromotionalStoriesResponse {
+
+        let promotionalStories = internalPromotionalStoriesResponse.promotionalStories.map({ promotionalStory -> PromotionalStory in
+
+            let mappedPromotionalStory = Self.promotionalStory(fromInternalPromotionalStory: promotionalStory)
+
+            return mappedPromotionalStory
+
+        })
+
+        return PromotionalStoriesResponse(promotionalStories: promotionalStories)
+
+    }
+
+    static func promotionalStory(fromInternalPromotionalStory internalPromotionalStory: SportRadarModels.PromotionalStory) -> PromotionalStory {
+        return PromotionalStory(title: internalPromotionalStory.title, imageUrl: internalPromotionalStory.imageUrl, linkUrl: internalPromotionalStory.linkUrl, bodyText: internalPromotionalStory.bodyText)
+    }
+
     // Favorites
     static func favoritesListResponse(fromInternalFavoritesListResponse internalFavoritesListResponse: SportRadarModels.FavoritesListResponse) -> FavoritesListResponse {
 

@@ -54,7 +54,7 @@ class ClientManagedHomeViewTemplateDataSource {
     //
     // Should show instagram like promotional stories
     var shouldShowPromotionalStories: Bool = true
-
+    var promotionalStories: [String] = []
     //
     // Quick Swipe Stack Matches
     private var quickSwipeStackCellViewModel: QuickSwipeStackCellViewModel?
@@ -121,7 +121,7 @@ class ClientManagedHomeViewTemplateDataSource {
         self.fetchBanners()
         self.fetchHighlightMatches()
         self.fetchPromotedSports()
-
+        self.fetchPromotionalStories()
     }
 
     // User alerts
@@ -201,6 +201,24 @@ class ClientManagedHomeViewTemplateDataSource {
             }
             .store(in: &self.cancellables)
 
+    }
+
+    func fetchPromotionalStories() {
+
+        self.promotionalStories = []
+
+        Env.servicesProvider.getPromotionalTopStories()
+            .receive(on: DispatchQueue.main)
+            .sink { completion in
+                print("Promotional stories completion \(dump(completion))")
+                
+            } receiveValue: { [weak self] promotionalStories in
+
+                let promotionalStories = promotionalStories
+
+                print("PROMOTIONAL STORIES: \(promotionalStories)")
+            }
+            .store(in: &self.cancellables)
     }
 
     func fetchSportsSections() {

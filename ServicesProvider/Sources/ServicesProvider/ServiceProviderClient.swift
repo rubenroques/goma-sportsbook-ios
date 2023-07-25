@@ -360,7 +360,7 @@ extension ServicesProviderClient {
         return eventsProvider.getPromotionalSlidingTopEvents()
     }
 
-    public func getPromotionalTopStories() -> AnyPublisher<BannerResponse, ServiceProviderError> {
+    public func getPromotionalTopStories() -> AnyPublisher<[PromotionalStory], ServiceProviderError> {
         guard
             let eventsProvider = self.eventsProvider
         else {
