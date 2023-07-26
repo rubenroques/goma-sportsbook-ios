@@ -8,15 +8,26 @@
 import Foundation
 import UIKit
 
+class StoriesLineCellViewModel {
+
+    var storiesViewModels: [StoriesItemCellViewModel]
+
+    init(storiesViewModels: [StoriesItemCellViewModel]) {
+        self.storiesViewModels = storiesViewModels
+    }
+}
+
 class StoriesLineTableViewCell: UITableViewCell, UICollectionViewDataSource, UICollectionViewDelegateFlowLayout {
 
-    var selectedItemAction: (Int) -> Void = { _ in }
+    var selectedItemAction: (String) -> Void = { _ in }
 
     private let cellHeight: CGFloat = 118
 
     private var collectionView: UICollectionView!
 
-    var promotionalStories: [PromotionalStory] = []
+    var viewModel: StoriesLineCellViewModel?
+
+    var cachedCellViewModels: [String: StoriesItemCellViewModel] = [:]
 
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
@@ -77,36 +88,40 @@ class StoriesLineTableViewCell: UITableViewCell, UICollectionViewDataSource, UIC
         self.collectionView.reloadData()
     }
 
-    func configure(promotionalStories: [PromotionalStory]) {
+    func configure(withViewModel viewModel: StoriesLineCellViewModel) {
 
-        self.promotionalStories = promotionalStories
+        self.viewModel = viewModel
 
-        self.reloadData()
+        for cellViewModel in viewModel.storiesViewModels {
+            self.cachedCellViewModels[cellViewModel.id] = cellViewModel
+        }
+        
+        self.collectionView.reloadData()
+
     }
 
     // MARK: - UICollectionViewDataSource
 
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
         // Return the number of items in your collection view
-        return 10
-        //return self.promotionalStories.count
+        // return 10
+        return self.viewModel?.storiesViewModels.count ?? 0
     }
 
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         guard
-            let cell = collectionView.dequeueCellType(StoriesItemCollectionViewCell.self, indexPath: indexPath)
+            let cell = collectionView.dequeueCellType(StoriesItemCollectionViewCell.self, indexPath: indexPath),
+            let cellViewModel = self.viewModel?.storiesViewModels[safe: indexPath.row]
         else {
             fatalError()
         }
 
-        //let promotionalStory = self.promotionalStories[indexPath.row]
+        //cell.configureWithViewModel(viewModel: StoriesItemCellViewModel(imageName: "", title: "Story \(indexPath.row)", read: indexPath.row == 3))
 
-        //let viewModel = StoriesItemCellViewModel(imageName: promotionalStory.imageUrl, title: <#T##String#>, read: <#T##Bool#>)
-
-        cell.configureWithViewModel(viewModel: StoriesItemCellViewModel(imageName: "", title: "Story \(indexPath.row)", read: indexPath.row == 3))
+        cell.configureWithViewModel(viewModel: cellViewModel)
 
         cell.selectedItemAction = { [weak self] viewModel in
-            self?.selectedItemAction(0)
+            self?.selectedItemAction(viewModel.id)
         }
 
         return cell

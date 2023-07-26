@@ -29,12 +29,22 @@ struct StoriesFullScreenItemViewModel {
 
 }
 
+class StoriesFullScreenItemViewModel {
+
+    var storyCellViewModel: StoriesItemCellViewModel
+
+    init(storyCellViewModel: StoriesItemCellViewModel) {
+        self.storyCellViewModel = storyCellViewModel
+    }
+}
+
 class StoriesFullScreenItemView: UIView {
 
     var nextPageRequestedAction: () -> Void = { }
     var previousPageRequestedAction: () -> Void = { }
 
     var closeRequestedAction: () -> Void = { }
+    var linkRequestAction: ((String) -> Void)?
 
     private lazy var baseView: UIView = Self.createBaseView()
 
@@ -67,14 +77,14 @@ class StoriesFullScreenItemView: UIView {
         }
     }
 
+    var viewModel: StoriesFullScreenItemViewModel?
+
     // MARK: - Lifetime and Cycle
-    init(viewModel: StoriesFullScreenItemViewModel) {
+    init(index: Int, viewModel: StoriesFullScreenItemViewModel) {
         self.viewModel = viewModel
 
         super.init(frame: .zero)
         self.commonInit()
-
-        self.topLabel.text = "Promotions"
     }
 
     @available(iOS, unavailable)
@@ -105,46 +115,14 @@ class StoriesFullScreenItemView: UIView {
         self.closeImageView.addGestureRecognizer(closeTapGesture)
         self.closeImageView.isUserInteractionEnabled = true
 
-        switch self.viewModel.contentType {
-        case .video(let sourceUrl):
-            self.videoBaseView.isHidden = false
-            self.contentImageView.isHidden = true
+        self.actionButton.addTarget(self, action: #selector(didTapActionButton), for: .primaryActionTriggered)
 
-//            let playerItem = AVPlayerItem(url: sourceUrl)
-//            playerItem.addObserver(self, forKeyPath: "status", options: [.new, .initial], context: nil)
-//
-//            self.videoPlayer = AVPlayer(playerItem: playerItem)
-//
-//            self.videoPlayerLayer = AVPlayerLayer(player: self.videoPlayer!)
-//            self.videoPlayerLayer!.videoGravity = .resizeAspect
-//            self.videoPlayerLayer!.needsDisplayOnBoundsChange = true
-//
-//            // Set the playerLayer's frame and attach it to our videoView
-//            self.videoPlayerLayer?.frame = self.videoBaseView.bounds
-//
-//            self.videoBaseView.layer.insertSublayer(self.videoPlayerLayer!, at: 0)
+        if let viewModel = self.viewModel {
+            self.topLabel.text = viewModel.storyCellViewModel.title
 
-            self.addVideoView(withURL: sourceUrl)
-
-        case .image(let sourceUrl):
-            self.contentImageView.kf.setImage(with: sourceUrl)
-
-            self.contentImageView.isHidden = false
-            self.videoBaseView.isHidden = true
-        }
-    }
-
-    override func layoutSubviews() {
-        super.layoutSubviews()
-
-        if let mainPlayerLayer = self.videoPlayerViewController.view.layer.sublayers?.compactMap({ $0 as? AVPlayerLayer }).first {
-            mainPlayerLayer.videoGravity = AVLayerVideoGravity.resizeAspectFill
-
-            print("VideoStatus Size 3 \(mainPlayerLayer.frame)")
-
-            print("VideoStatus Size 1 \(self.videoBaseView)")
-
-            print("VideoStatus Size 0 \(self.frame)")
+            if let url = URL(string: viewModel.storyCellViewModel.contentString) {
+                self.contentImageView.kf.setImage(with: url)
+            }
 
         }
     }
@@ -245,6 +223,16 @@ class StoriesFullScreenItemView: UIView {
     @objc func didTapCloseButton() {
         self.resetVideo()
         self.closeRequestedAction()
+    }
+
+    @objc func didTapActionButton() {
+
+        if let linkString = self.viewModel?.storyCellViewModel.link {
+
+            let fullLink = "\(Env.urlApp)\(linkString)"
+
+            self.linkRequestAction?(fullLink)
+        }
     }
 
 }
@@ -371,7 +359,7 @@ extension StoriesFullScreenItemView {
 
     private static func createActionButton() -> UIButton {
         let button = UIButton()
-        button.setTitle("See more", for: .normal)
+        button.setTitle(localized("see"), for: .normal)
         button.translatesAutoresizingMaskIntoConstraints = false
         return button
     }

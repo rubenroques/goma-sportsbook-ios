@@ -545,6 +545,11 @@ extension StaticHomeViewTemplateDataSource: HomeViewTemplateDataSource {
     func matchLineTableCellViewModel(forSection section: Int, forIndex index: Int) -> MatchLineTableCellViewModel? {
         return nil
     }
+    
+    func storyLineViewModel() -> StoriesLineCellViewModel? {
+        return nil
+    }
+    
 }
 
 extension StaticHomeViewTemplateDataSource {

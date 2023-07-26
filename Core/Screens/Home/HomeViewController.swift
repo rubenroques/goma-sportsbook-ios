@@ -271,11 +271,17 @@ class HomeViewController: UIViewController {
         self.present(tipsSliderViewController, animated: true)
     }
 
-    private func openStoriesFullScreen(index: Int) {
-        let storiesFullScreenViewModel = StoriesFullScreenViewModel()
-        let storiesFullScreenViewController = StoriesFullScreenViewController(viewModel: storiesFullScreenViewModel)
-        storiesFullScreenViewController.modalPresentationStyle = .fullScreen
-        self.present(storiesFullScreenViewController, animated: true)
+    private func openStoriesFullScreen(withId id: String) {
+        if let storyLineViewModel = self.viewModel.storyLineViewModel() {
+
+            let storiesFullScreenViewModel = StoriesFullScreenViewModel(storiesViewModels: storyLineViewModel.storiesViewModels, initialStoryId: id)
+
+            let storiesFullScreenViewController = StoriesFullScreenViewController(viewModel: storiesFullScreenViewModel)
+
+            storiesFullScreenViewController.modalPresentationStyle = .fullScreen
+
+            self.present(storiesFullScreenViewController, animated: true)
+        }
     }
 
     private func openBetTinderCloneView() {
@@ -620,13 +626,18 @@ extension HomeViewController: UITableViewDelegate, UITableViewDataSource {
 
         case .promotionalStories:
             guard
-                let cell = tableView.dequeueReusableCell(withIdentifier: StoriesLineTableViewCell.identifier) as? StoriesLineTableViewCell
+                let cell = tableView.dequeueReusableCell(withIdentifier: StoriesLineTableViewCell.identifier) as? StoriesLineTableViewCell,
+                let storyLineViewModel = self.viewModel.storyLineViewModel()
             else {
                 fatalError()
             }
-            cell.selectedItemAction = { [weak self] itemIndex in
-                self?.openStoriesFullScreen(index: itemIndex)
+
+            cell.configure(withViewModel: storyLineViewModel)
+
+            cell.selectedItemAction = { [weak self] itemId in
+                self?.openStoriesFullScreen(withId: itemId)
             }
+
             return cell
 
         case .promotedSportSection:

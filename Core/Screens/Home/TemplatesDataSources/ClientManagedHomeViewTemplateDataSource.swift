@@ -57,30 +57,40 @@ class ClientManagedHomeViewTemplateDataSource {
     //var promotionalStories: [String] = []
     private var promotionalStories: [PromotionalStory] = [] {
         didSet {
-            ()
-//            var bannerCellViewModels: [BannerCellViewModel] = []
-//
-//            for promotionalStory in self.promotionalStories {
-//
-//                if let bannerViewModel = self.bannersLineViewModelCache[banner.id] {
-//                    bannerCellViewModels.append(bannerViewModel)
-//                }
-//                else {
-//                    let bannerViewModel = BannerCellViewModel(id: banner.id,
-//                                                              matchId: banner.matchId,
-//                                                              imageURL: banner.imageURL ?? "",
-//                                                              marketId: banner.marketId)
-//                    bannerCellViewModels.append(bannerViewModel)
-//                    self.bannersLineViewModelCache[banner.id] = bannerViewModel
-//                }
-//            }
-//
-//            if bannerCellViewModels.isEmpty {
-//                self.bannersLineViewModel = nil
-//            }
-//            else {
-//                self.bannersLineViewModel = BannerLineCellViewModel(banners: bannerCellViewModels)
-//            }
+
+            var storiesViewModels: [StoriesItemCellViewModel] = []
+
+            for promotionalStory in self.promotionalStories {
+
+                if let storyViewModel = self.storiesViewModelsCache[promotionalStory.id] {
+                    storiesViewModels.append(storyViewModel)
+                }
+                else {
+                    let storyViewModel = StoriesItemCellViewModel(id: promotionalStory.id,
+                                                                  imageName: promotionalStory.imageUrl,
+                                                                  title: promotionalStory.title,
+                                                                  link: promotionalStory.linkUrl,
+                                                                  contentString: promotionalStory.bodyText,
+                                                                  read: false)
+
+                    storiesViewModels.append(storyViewModel)
+
+                    self.storiesViewModelsCache[promotionalStory.id] = storyViewModel
+                }
+            }
+
+            if storiesViewModels.isEmpty {
+                self.storiesLineViewModel = nil
+            }
+            else {
+                self.storiesLineViewModel = StoriesLineCellViewModel(storiesViewModels: storiesViewModels)
+            }
+        }
+    }
+    private var storiesViewModelsCache: [String: StoriesItemCellViewModel] = [:]
+    private var storiesLineViewModel: StoriesLineCellViewModel? {
+        didSet {
+            self.refreshPublisher.send()
         }
     }
     //
@@ -248,9 +258,15 @@ class ClientManagedHomeViewTemplateDataSource {
 
             } receiveValue: { [weak self] promotionalStories in
 
-                let promotionalStories = promotionalStories
-
                 print("PROMOTIONAL STORIES: \(promotionalStories)")
+
+                let mappedPromotionalStories = promotionalStories.map({ promotionalStory in
+                    let promotionalStory = ServiceProviderModelMapper.promotionalStory(fromPromotionalStory: promotionalStory)
+                    return promotionalStory
+                })
+
+                self?.promotionalStories = mappedPromotionalStories
+
             }
             .store(in: &self.cancellables)
     }
@@ -406,7 +422,8 @@ extension ClientManagedHomeViewTemplateDataSource: HomeViewTemplateDataSource {
         case 2:
             return self.quickSwipeStackMatches.isEmpty ? 0 : 1
         case 3:
-            return self.shouldShowPromotionalStories ? 1 : 0
+            //return self.shouldShowPromotionalStories ? 1 : 0
+            return self.storiesLineViewModel == nil ? 0 : 1
         case 4:
             return self.highlightsVisualImageMatches.count + self.highlightsBoostedMatches.count
         case 5:
@@ -504,6 +521,10 @@ extension ClientManagedHomeViewTemplateDataSource: HomeViewTemplateDataSource {
 
     func bannerLineViewModel() -> BannerLineCellViewModel? {
         return self.bannersLineViewModel
+    }
+
+    func storyLineViewModel() -> StoriesLineCellViewModel? {
+        return self.storiesLineViewModel
     }
 
     func sportGroupViewModel(forSection section: Int) -> SportGroupViewModel? {

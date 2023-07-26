@@ -10,6 +10,13 @@ import UIKit
 
 struct StoriesFullScreenViewModel {
 
+    var storiesViewModels: [StoriesItemCellViewModel]
+    var initialStoryId: String
+
+    init(storiesViewModels: [StoriesItemCellViewModel], initialStoryId: String) {
+        self.storiesViewModels = storiesViewModels
+        self.initialStoryId = initialStoryId
+    }
 }
 
 class StoriesFullScreenViewController: UIViewController {
@@ -44,18 +51,13 @@ class StoriesFullScreenViewController: UIViewController {
         self.cubicScrollView.cubeDelegate = self
 
         var items: [StoriesFullScreenItemView] = []
-        for index in 0...5 {
 
-            let viewModel: StoriesFullScreenItemViewModel
+        for (index, storyViewModel) in self.viewModel.storiesViewModels.enumerated() {
 
-            if index == 2 || index == 5 {
-                viewModel = StoriesFullScreenItemViewModel(videoSourceURL: URL(string: "https://getsamplefiles.com/download/mp4/sample-2.mp4")!)
-            }
-            else {
-                viewModel = StoriesFullScreenItemViewModel(imageSourceURL: URL(string: "https://media.idownloadblog.com/wp-content/uploads/2019/08/sports-wallpaper-basketball-green-city-sports-art-nba-iphone-X.jpg")!)
-            }
+            let storiesFullScreenItemViewModel = StoriesFullScreenItemViewModel(storyCellViewModel: storyViewModel)
 
-            let storiesFullScreenItemView = StoriesFullScreenItemView(viewModel: viewModel)
+            let storiesFullScreenItemView = StoriesFullScreenItemView(index: index, viewModel: storiesFullScreenItemViewModel)
+            
             storiesFullScreenItemView.tag = index
             storiesFullScreenItemView.previousPageRequestedAction = { [weak self] in
                 self?.goToPreviousPageItem()
@@ -67,10 +69,31 @@ class StoriesFullScreenViewController: UIViewController {
                 self?.closeFullscreen()
             }
 
+            storiesFullScreenItemView.linkRequestAction = { [weak self] linkString in
+                self?.openUrlAction(urlString: linkString)
+            }
+
             items.append(storiesFullScreenItemView)
 
             self.pagesDictionary[index] = storiesFullScreenItemView
         }
+//        for index in 0...5 {
+//            let storiesFullScreenItemView = StoriesFullScreenItemView(index: index)
+//            storiesFullScreenItemView.tag = index
+//            storiesFullScreenItemView.previousPageRequestedAction = { [weak self] in
+//                self?.goToPreviousPageItem()
+//            }
+//            storiesFullScreenItemView.nextPageRequestedAction = { [weak self] in
+//                self?.goToNextPageItem()
+//            }
+//            storiesFullScreenItemView.closeRequestedAction =  { [weak self] in
+//                self?.closeFullscreen()
+//            }
+//
+//            items.append(storiesFullScreenItemView)
+//
+//            self.pagesDictionary[index] = storiesFullScreenItemView
+//        }
 
         self.cubicScrollView.addChildViews(items)
 
@@ -82,10 +105,36 @@ class StoriesFullScreenViewController: UIViewController {
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
 
+        let index = self.viewModel.storiesViewModels.firstIndex(where: {
+            $0.id == self.viewModel.initialStoryId
+        })
+
+        //self.cubicScrollView.scrollToViewAtIndex(index ?? 0, animated: false)
+
         if let page = self.pagesDictionary[0] {
             page.startProgress()
         }
     }
+
+//    override func viewWillAppear(_ animated: Bool) {
+//        super.viewWillAppear(animated)
+//
+//        let index = self.viewModel.storiesViewModels.firstIndex(where: {
+//            $0.id == self.viewModel.initialStoryId
+//        })
+//
+//        if let index {
+//            self.currentPage = index
+//
+//            self.cubicScrollView.currentPage = index
+//
+//            self.cubicScrollView.scrollToViewAtIndex(index, animated: false)
+//        }
+//
+//        if let page = self.pagesDictionary[index ?? 0] {
+//            page.startProgress()
+//        }
+//    }
 
     override func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {
         super.traitCollectionDidChange(previousTraitCollection)
@@ -109,6 +158,15 @@ class StoriesFullScreenViewController: UIViewController {
 
     func closeFullscreen() {
         self.dismiss(animated: true, completion: nil)
+    }
+
+    func openUrlAction(urlString: String) {
+
+        if let url = URL(string: urlString) {
+            UIApplication.shared.open(url)
+            self.cubicScrollView.setNeedsLayout()
+            self.cubicScrollView.layoutIfNeeded()
+        }
     }
 
     @objc func handleSwipeDown(_ recognizer: UISwipeGestureRecognizer) {

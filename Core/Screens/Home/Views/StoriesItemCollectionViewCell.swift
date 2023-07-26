@@ -10,13 +10,19 @@ import UIKit
 
 struct StoriesItemCellViewModel {
 
+    var id: String
     var imageName: String
     var title: String
+    var link: String
+    var contentString: String
     var read: Bool
 
-    init(imageName: String, title: String, read: Bool) {
+    init(id: String, imageName: String, title: String, link: String, contentString: String, read: Bool) {
+        self.id = id
         self.imageName = imageName
         self.title = title
+        self.link = link
+        self.contentString = contentString
         self.read = read
     }
 
@@ -92,6 +98,23 @@ class StoriesItemCollectionViewCell: UICollectionViewCell {
 
     private var viewModel: StoriesItemCellViewModel?
 
+    var isRead: Bool = false {
+        didSet {
+            self.viewModel?.read = isRead
+
+            if isRead {
+                self.gradientBorderView.isHidden = false
+                self.backgroundGradientView.isHidden = true
+                self.label.textColor = UIColor.App.textPrimary
+            }
+            else {
+                self.gradientBorderView.isHidden = true
+                self.backgroundGradientView.isHidden = false
+                self.label.textColor = UIColor.App.buttonTextPrimary
+            }
+        }
+    }
+
     override init(frame: CGRect) {
         super.init(frame: frame)
 
@@ -102,6 +125,12 @@ class StoriesItemCollectionViewCell: UICollectionViewCell {
         super.init(coder: aDecoder)
 
         self.commonInit()
+    }
+
+    override func prepareForReuse() {
+        super.prepareForReuse()
+
+        self.isRead = false
     }
 
     private func commonInit() {
@@ -194,11 +223,15 @@ class StoriesItemCollectionViewCell: UICollectionViewCell {
     func configureWithViewModel(viewModel: StoriesItemCellViewModel) {
         self.viewModel = viewModel
 
-        self.imageView.image = UIImage(named: viewModel.imageName)
+        if let url = URL(string: viewModel.imageName) {
+            self.imageView.kf.setImage(with: url)
+        }
+
+        //self.imageView.image = UIImage(named: viewModel.imageName)
         self.label.text = viewModel.title
 
-        self.imageView.image = UIImage(named: "avatar3")
-        self.label.text = "Promotions"
+//        self.imageView.image = UIImage(named: "avatar3")
+//        self.label.text = "Promotions"
 
         self.gradientBorderView.isHidden = true
         self.backgroundGradientView.isHidden = false
@@ -219,6 +252,7 @@ class StoriesItemCollectionViewCell: UICollectionViewCell {
     @objc func didTapItemView() {
         if let viewModel = self.viewModel {
             self.selectedItemAction(viewModel)
+            self.isRead = true
         }
     }
 

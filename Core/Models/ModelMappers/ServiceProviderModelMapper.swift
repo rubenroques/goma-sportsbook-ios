@@ -239,5 +239,9 @@ extension ServiceProviderModelMapper {
 
         return competitions
     }
-    
+
+    static func promotionalStory(fromPromotionalStory promotionalStory: ServicesProvider.PromotionalStory) -> PromotionalStory {
+
+        return PromotionalStory(id: promotionalStory.id, title: promotionalStory.title, imageUrl: promotionalStory.imageUrl, linkUrl: promotionalStory.linkUrl, bodyText: promotionalStory.bodyText )
+    }
 }

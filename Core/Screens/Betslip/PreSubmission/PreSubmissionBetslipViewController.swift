@@ -309,7 +309,7 @@ class PreSubmissionBetslipViewController: UIViewController {
         }
     }
 
-    var betPlacedAction: (([BetPlacedDetails], Double?) -> Void) = { _, _  in }
+    var betPlacedAction: (([BetPlacedDetails], Double?, Bool) -> Void) = { _, _, _  in }
 
     var acceptingAnyReofferOnBetPlace: Bool = false
 
@@ -1714,7 +1714,7 @@ class PreSubmissionBetslipViewController: UIViewController {
                     }
                     self?.isLoading = false
                 } receiveValue: { [weak self] betPlacedDetailsArray in
-                    self?.betPlacedAction(betPlacedDetailsArray, nil)
+                    self?.betPlacedAction(betPlacedDetailsArray, nil, false)
                 }
                 .store(in: &cancellables)
             }
@@ -1747,11 +1747,17 @@ class PreSubmissionBetslipViewController: UIViewController {
                         }
                         self?.isLoading = false
                     } receiveValue: { [weak self] betPlacedDetails in
-                        if let cashbackSelected = self?.isCashbackSelected.value, !cashbackSelected {
-                            self?.betPlacedAction(betPlacedDetails, self?.cashbackResultValue)
+                        if let cashbackSelected = self?.isCashbackSelected.value {
+
+                            if !cashbackSelected {
+                                self?.betPlacedAction(betPlacedDetails, self?.cashbackResultValue, false)
+                            }
+                            else {
+                                self?.betPlacedAction(betPlacedDetails, nil, true)
+                            }
                         }
                         else {
-                            self?.betPlacedAction(betPlacedDetails, nil)
+                            self?.betPlacedAction(betPlacedDetails, nil, false)
                         }
                     }
                     .store(in: &cancellables)
@@ -1780,7 +1786,7 @@ class PreSubmissionBetslipViewController: UIViewController {
                         }
                         self?.isLoading = false
                     } receiveValue: { [weak self] betPlacedDetails in
-                        self?.betPlacedAction(betPlacedDetails, nil)
+                        self?.betPlacedAction(betPlacedDetails, nil, false)
                     }
                     .store(in: &cancellables)
             }

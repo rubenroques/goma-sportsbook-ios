@@ -444,4 +444,7 @@ extension DynamicHomeViewTemplateDataSource: HomeViewTemplateDataSource {
         return nil
     }
     
+    func storyLineViewModel() -> StoriesLineCellViewModel? {
+        return nil
+    }
 }

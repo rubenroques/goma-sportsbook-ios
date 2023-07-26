@@ -126,9 +126,15 @@ extension HomeViewModel {
     func alertsArrayViewModel() -> [ActivationAlert] {
         return self.homeViewTemplateDataSource.alertsArrayViewModel()
     }
+
     func bannerLineViewModel() -> BannerLineCellViewModel? {
         return self.homeViewTemplateDataSource.bannerLineViewModel()
     }
+
+    func storyLineViewModel() -> StoriesLineCellViewModel? {
+        return self.homeViewTemplateDataSource.storyLineViewModel()
+    }
+    
     func sportGroupViewModel(forSection section: Int) -> SportGroupViewModel? {
         return self.homeViewTemplateDataSource.sportGroupViewModel(forSection: section)
     }
