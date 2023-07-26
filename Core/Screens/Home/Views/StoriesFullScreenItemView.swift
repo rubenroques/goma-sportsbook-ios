@@ -10,25 +10,6 @@ import Kingfisher
 import AVFoundation
 import AVKit
 
-struct StoriesFullScreenItemViewModel {
-
-    enum ContentType {
-        case image(sourceUrl: URL)
-        case video(sourceUrl: URL)
-    }
-
-    var contentType: ContentType
-
-    init(videoSourceURL: URL) {
-        self.contentType = .video(sourceUrl: videoSourceURL)
-    }
-
-    init(imageSourceURL: URL) {
-        self.contentType = .image(sourceUrl: imageSourceURL)
-    }
-
-}
-
 class StoriesFullScreenItemViewModel {
 
     var storyCellViewModel: StoriesItemCellViewModel
@@ -68,8 +49,6 @@ class StoriesFullScreenItemView: UIView {
     private lazy var closeImageBaseView: UIView = Self.createCloseImageBaseView()
     private lazy var closeImageView: UIImageView = Self.createCloseImageView()
     private lazy var actionButton: UIButton = Self.createActionButton()
-
-    private var viewModel: StoriesFullScreenItemViewModel
 
     override var tag: Int {
         didSet {
@@ -160,20 +139,22 @@ class StoriesFullScreenItemView: UIView {
 
     func startProgress() {
 
-        switch self.viewModel.contentType {
-        case .video:
-            self.playVideo()
-
-            if let duration = self.videoPlayerViewController.player?.currentItem?.duration.seconds {
-                self.smoothProgressBarView.startProgress(duration: TimeInterval(duration))
-            }
-            else {
-                self.smoothProgressBarView.startProgress()
-            }
-
-        case .image:
-            self.smoothProgressBarView.startProgress()
-        }
+        self.smoothProgressBarView.startProgress()
+//
+//        switch self.viewModel.contentType {
+//        case .video:
+//            self.playVideo()
+//
+//            if let duration = self.videoPlayerViewController.player?.currentItem?.duration.seconds {
+//                self.smoothProgressBarView.startProgress(duration: TimeInterval(duration))
+//            }
+//            else {
+//                self.smoothProgressBarView.startProgress()
+//            }
+//
+//        case .image:
+//
+//        }
 
     }
 
