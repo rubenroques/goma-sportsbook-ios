@@ -82,8 +82,9 @@ class MatchLineTableCellViewModel {
                 }
                 else {
                     // We don't have a match yet, we need to use this one
-                    updatedMatch.markets = Array(sortedMarkets)
-                    self?.matchCurrentValueSubject.send(updatedMatch)
+                    var newUpdatedMatch = updatedMatch
+                    newUpdatedMatch.markets = Array(sortedMarkets)
+                    self?.matchCurrentValueSubject.send(newUpdatedMatch)
                 }
 
             }
