@@ -116,9 +116,9 @@ class StoriesFullScreenViewController: UIViewController {
             $0.id == self.viewModel.initialStoryId
         })
 
-        //self.cubicScrollView.scrollToViewAtIndex(index ?? 0, animated: false)
+        self.cubicScrollView.scrollToViewAtIndex(index ?? 0, animated: false)
 
-        if let page = self.pagesDictionary[0] {
+        if let page = self.pagesDictionary[index ?? 0] {
             page.startProgress()
         }
     }

@@ -103,14 +103,12 @@ class StoriesItemCollectionViewCell: UICollectionViewCell {
             self.viewModel?.read = isRead
 
             if isRead {
-                self.gradientBorderView.isHidden = false
-                self.backgroundGradientView.isHidden = true
-                self.label.textColor = UIColor.App.textPrimary
+                self.newPillBaseView.isHidden = true
+
             }
             else {
-                self.gradientBorderView.isHidden = true
-                self.backgroundGradientView.isHidden = false
-                self.label.textColor = UIColor.App.buttonTextPrimary
+                self.newPillBaseView.isHidden = false
+
             }
         }
     }
@@ -242,10 +240,10 @@ class StoriesItemCollectionViewCell: UICollectionViewCell {
         self.newPillForegroundView.backgroundColor = UIColor.App.highlightSecondary
 
         if viewModel.read {
-            self.newPillBaseView.isHidden = false
+            self.newPillBaseView.isHidden = true
         }
         else {
-            self.newPillBaseView.isHidden = true
+            self.newPillBaseView.isHidden = false
         }
     }
 
