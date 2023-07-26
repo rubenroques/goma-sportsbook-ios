@@ -17,12 +17,14 @@ public struct PromotionalStoriesResponse: Codable {
 }
 
 public struct PromotionalStory: Codable {
+    public var id: String
     public var title: String
     public var imageUrl: String
     public var linkUrl: String
     public var bodyText: String
 
     enum CodingKeys: String, CodingKey {
+        case id = "idfwheadline"
         case title = "title"
         case imageUrl = "imageurl"
         case linkUrl = "linkurl"

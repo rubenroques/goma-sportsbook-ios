@@ -133,7 +133,7 @@ extension SportRadarModelMapper {
     }
 
     static func promotionalStory(fromInternalPromotionalStory internalPromotionalStory: SportRadarModels.PromotionalStory) -> PromotionalStory {
-        return PromotionalStory(title: internalPromotionalStory.title, imageUrl: internalPromotionalStory.imageUrl, linkUrl: internalPromotionalStory.linkUrl, bodyText: internalPromotionalStory.bodyText)
+        return PromotionalStory(id: internalPromotionalStory.id , title: internalPromotionalStory.title, imageUrl: internalPromotionalStory.imageUrl, linkUrl: internalPromotionalStory.linkUrl, bodyText: internalPromotionalStory.bodyText)
     }
 
     // Favorites

@@ -19,12 +19,14 @@ extension SportRadarModels {
     }
 
     struct PromotionalStory: Codable {
+        var id: String
         var title: String
         var imageUrl: String
         var linkUrl: String
         var bodyText: String
 
         enum CodingKeys: String, CodingKey {
+            case id = "idfwheadline"
             case title = "title"
             case imageUrl = "imageurl"
             case linkUrl = "linkurl"

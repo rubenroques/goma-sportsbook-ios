@@ -255,8 +255,8 @@ class MyTicketTableViewCell: UITableViewCell {
         self.viewModel = nil
 
         self.cashoutValue = nil
-        // self.showCashoutButton = false
-        // self.showPartialCashoutSliderView = false
+        self.showCashoutButton = false
+        self.showPartialCashoutSliderView = false
 
         self.cashoutSubscription?.cancel()
         self.cashoutSubscription = nil
@@ -441,10 +441,9 @@ class MyTicketTableViewCell: UITableViewCell {
             .receive(on: DispatchQueue.main)
             .sink(receiveValue: { [weak self] cashoutButtonState in
 
-                if !viewModel.hasRedraw {
-                    self?.setupPartialCashoutSlider()
-                    self?.configureCashoutButton(withState: cashoutButtonState)
-                }
+                self?.setupPartialCashoutSlider()
+                self?.configureCashoutButton(withState: cashoutButtonState)
+
             })
             .store(in: &cancellables)
 

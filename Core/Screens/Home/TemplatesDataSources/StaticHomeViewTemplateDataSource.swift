@@ -537,6 +537,10 @@ extension StaticHomeViewTemplateDataSource: HomeViewTemplateDataSource {
     func promotedMatch(forSection section: Int, forIndex index: Int) -> Match? {
         return nil
     }
+
+    func storyLineViewModel() -> StoriesLineCellViewModel? {
+        return nil
+    }
     
 }
 

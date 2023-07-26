@@ -30,6 +30,8 @@ class SharedTicketCardView: UIView {
     private lazy var cashbackValueLabel: UILabel = Self.createCashbackValueLabel()
     private lazy var learnMoreBaseView: CashbackLearnMoreView = Self.createLearnMoreBaseView()
     private lazy var cashbackIconImageView: UIImageView = Self.createCashbackIconImageView()
+    private lazy var cashbackUsedBaseView: UIView = Self.createCashbackUsedBaseView()
+    private lazy var cashbackUsedTitleLabel: UILabel = Self.createCashbackUsedTitleLabel()
 
     private var betHistoryEntry: BetHistoryEntry?
 
@@ -41,6 +43,12 @@ class SharedTicketCardView: UIView {
             self.cashbackInfoBaseView.isHidden = !hasCashback
             self.cashbackValueLabel.isHidden = !hasCashback
             self.cashbackIconImageView.isHidden = !hasCashback
+        }
+    }
+
+    var usedCashback: Bool = false {
+        didSet {
+            self.cashbackUsedBaseView.isHidden = !usedCashback
         }
     }
 
@@ -101,6 +109,8 @@ class SharedTicketCardView: UIView {
         self.baseView.clipsToBounds = true
         self.baseView.layer.masksToBounds = true
 
+        self.cashbackUsedBaseView.layer.cornerRadius = CornerRadius.status
+
     }
 
     func setupWithTheme() {
@@ -141,9 +151,13 @@ class SharedTicketCardView: UIView {
         self.cashbackIconImageView.backgroundColor = .clear
 
         self.learnMoreBaseView.alpha = 0
+
+        self.cashbackUsedBaseView.backgroundColor = UIColor.App.highlightSecondary
+
+        self.cashbackUsedTitleLabel.textColor = UIColor.App.buttonTextPrimary
     }
 
-    func configure(withBetHistoryEntry betHistoryEntry: BetHistoryEntry, countryCodes: [String], viewModel: MyTicketCellViewModel, cashbackValue: Double? = nil) {
+    func configure(withBetHistoryEntry betHistoryEntry: BetHistoryEntry, countryCodes: [String], viewModel: MyTicketCellViewModel, cashbackValue: Double? = nil, usedCashback: Bool) {
 
         self.betHistoryEntry = betHistoryEntry
 
@@ -191,6 +205,9 @@ class SharedTicketCardView: UIView {
         else {
             self.hasCashback = false
         }
+
+        self.usedCashback = usedCashback
+        
     }
 
     @objc func didTapShareButton() {
@@ -379,6 +396,21 @@ extension SharedTicketCardView {
         return imageView
     }
 
+    private static func createCashbackUsedBaseView() -> UIView {
+        let view = UIView()
+        view.translatesAutoresizingMaskIntoConstraints = false
+        return view
+    }
+
+    private static func createCashbackUsedTitleLabel() -> UILabel {
+        let label = UILabel()
+        label.translatesAutoresizingMaskIntoConstraints = false
+        label.font = AppFont.with(type: .bold, size: 9)
+        label.text = localized("used_cashback").uppercased()
+        label.textAlignment = .left
+        return label
+    }
+
     private func setupSubviews() {
         self.addSubview(self.baseView)
 
@@ -415,6 +447,10 @@ extension SharedTicketCardView {
         self.baseView.addSubview(self.learnMoreBaseView)
 
         self.baseView.addSubview(self.cashbackIconImageView)
+
+        self.baseView.addSubview(self.cashbackUsedBaseView)
+
+        self.cashbackUsedBaseView.addSubview(self.cashbackUsedTitleLabel)
 
         self.initConstraints()
     }
@@ -478,7 +514,15 @@ extension SharedTicketCardView {
             self.cashbackIconImageView.widthAnchor.constraint(equalToConstant: 20),
             self.cashbackIconImageView.heightAnchor.constraint(equalTo: self.cashbackIconImageView.widthAnchor),
             self.cashbackIconImageView.leadingAnchor.constraint(equalTo: self.titleLabel.trailingAnchor, constant: 10),
-            self.cashbackIconImageView.centerYAnchor.constraint(equalTo: self.titleLabel.centerYAnchor)
+            self.cashbackIconImageView.centerYAnchor.constraint(equalTo: self.titleLabel.centerYAnchor),
+
+            self.cashbackUsedBaseView.leadingAnchor.constraint(equalTo: self.titleLabel.trailingAnchor, constant: 10),
+            self.cashbackUsedBaseView.centerYAnchor.constraint(equalTo: self.titleLabel.centerYAnchor),
+
+            self.cashbackUsedTitleLabel.leadingAnchor.constraint(equalTo: self.cashbackUsedBaseView.leadingAnchor, constant: 8),
+            self.cashbackUsedTitleLabel.trailingAnchor.constraint(equalTo: self.cashbackUsedBaseView.trailingAnchor, constant: -8),
+            self.cashbackUsedTitleLabel.topAnchor.constraint(equalTo: cashbackUsedBaseView.topAnchor, constant: 3),
+            self.cashbackUsedTitleLabel.bottomAnchor.constraint(equalTo: self.cashbackUsedBaseView.bottomAnchor, constant: -3)
 
         ])
 

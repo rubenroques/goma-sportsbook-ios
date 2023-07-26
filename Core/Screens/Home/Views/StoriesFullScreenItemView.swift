@@ -8,12 +8,22 @@
 import Foundation
 import UIKit
 
+class StoriesFullScreenItemViewModel {
+
+    var storyCellViewModel: StoriesItemCellViewModel
+
+    init(storyCellViewModel: StoriesItemCellViewModel) {
+        self.storyCellViewModel = storyCellViewModel
+    }
+}
+
 class StoriesFullScreenItemView: UIView {
 
     var nextPageRequestedAction: () -> Void = { }
     var previousPageRequestedAction: () -> Void = { }
 
     var closeRequestedAction: () -> Void = { }
+    var linkRequestAction: ((String) -> Void)?
 
     private lazy var baseView: UIView = Self.createBaseView()
 
@@ -37,11 +47,14 @@ class StoriesFullScreenItemView: UIView {
         }
     }
 
+    var viewModel: StoriesFullScreenItemViewModel?
+
     // MARK: - Lifetime and Cycle
-    init(index: Int) {
+    init(index: Int, viewModel: StoriesFullScreenItemViewModel) {
+        self.viewModel = viewModel
+
         super.init(frame: .zero)
         self.commonInit()
-        self.topLabel.text = "Promotions"
     }
 
     @available(iOS, unavailable)
@@ -76,6 +89,16 @@ class StoriesFullScreenItemView: UIView {
         self.closeImageView.addGestureRecognizer(closeTapGesture)
         self.closeImageView.isUserInteractionEnabled = true
 
+        self.actionButton.addTarget(self, action: #selector(didTapActionButton), for: .primaryActionTriggered)
+
+        if let viewModel = self.viewModel {
+            self.topLabel.text = viewModel.storyCellViewModel.title
+
+            if let url = URL(string: viewModel.storyCellViewModel.contentString) {
+                self.contentImageView.kf.setImage(with: url)
+            }
+
+        }
     }
 
     override func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {
@@ -127,6 +150,16 @@ class StoriesFullScreenItemView: UIView {
 
     @objc func didTapCloseButton() {
         self.closeRequestedAction()
+    }
+
+    @objc func didTapActionButton() {
+
+        if let linkString = self.viewModel?.storyCellViewModel.link {
+
+            let fullLink = "\(Env.urlApp)\(linkString)"
+
+            self.linkRequestAction?(fullLink)
+        }
     }
 
 }
@@ -192,7 +225,7 @@ extension StoriesFullScreenItemView {
 
     private static func createActionButton() -> UIButton {
         let button = UIButton()
-        button.setTitle("See more", for: .normal)
+        button.setTitle(localized("see"), for: .normal)
         button.translatesAutoresizingMaskIntoConstraints = false
         return button
     }
