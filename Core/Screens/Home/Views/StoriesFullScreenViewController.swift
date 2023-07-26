@@ -30,6 +30,8 @@ class StoriesFullScreenViewController: UIViewController {
 
     private var viewModel: StoriesFullScreenViewModel
 
+    var markReadAction: ((String) -> Void)?
+
     // MARK: - Lifetime and Cycle
     init(viewModel: StoriesFullScreenViewModel) {
         self.viewModel = viewModel
@@ -71,6 +73,11 @@ class StoriesFullScreenViewController: UIViewController {
 
             storiesFullScreenItemView.linkRequestAction = { [weak self] linkString in
                 self?.openUrlAction(urlString: linkString)
+            }
+
+            storiesFullScreenItemView.markedReadAction = { [weak self] storyId in
+                print("MARK READ: \(storyId)")
+                self?.markReadAction?(storyId)
             }
 
             items.append(storiesFullScreenItemView)
