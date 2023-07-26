@@ -13,6 +13,7 @@ class TodayMatchesDataSource: NSObject, UITableViewDataSource, UITableViewDelega
     var outrightCompetitions: [Competition]? = []
 
     var matchStatsViewModelForMatch: ((Match) -> MatchStatsViewModel?)?
+    var matchLineTableCellViewModelCache: [String: MatchLineTableCellViewModel] = [:]
 
     var canRequestNextPageAction: (() -> Bool)?
     var requestNextPageAction: (() -> Void)?
@@ -80,7 +81,7 @@ class TodayMatchesDataSource: NSObject, UITableViewDataSource, UITableViewDelega
                     cell.matchStatsViewModel = matchStatsViewModel
                 }
                 
-                let viewModel = MatchLineTableCellViewModel(match: match)
+                let viewModel = self.matchLineTableCellViewModel(forMatch: match)
                 cell.viewModel = viewModel
                 
                 cell.tappedMatchLineAction = { [weak self] match in
@@ -199,4 +200,19 @@ class TodayMatchesDataSource: NSObject, UITableViewDataSource, UITableViewDelega
             self.requestNextPageAction?()
         }
     }
+}
+
+extension TodayMatchesDataSource {
+
+    func matchLineTableCellViewModel(forMatch match: Match) -> MatchLineTableCellViewModel {
+        if let matchLineTableCellViewModel = self.matchLineTableCellViewModelCache[match.id] {
+            return matchLineTableCellViewModel
+        }
+        else {
+            let matchLineTableCellViewModel = MatchLineTableCellViewModel(match: match, withFullMarkets: false)
+            self.matchLineTableCellViewModelCache[match.id] = matchLineTableCellViewModel
+            return matchLineTableCellViewModel
+        }
+    }
+    
 }

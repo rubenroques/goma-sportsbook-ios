@@ -546,7 +546,9 @@ class ProfileViewController: UIViewController {
         self.stackView.addArrangedSubview(settingsView)
         self.stackView.addArrangedSubview(supportView)
 
-        // self.stackView.addArrangedSubview(responsibleGamingView)
+        self.stackView.addArrangedSubview(responsibleGamingView)
+        self.stackView.addArrangedSubview(recruitFriendView)
+
     }
 
     // MARK: Functions

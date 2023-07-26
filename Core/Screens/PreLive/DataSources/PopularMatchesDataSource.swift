@@ -9,7 +9,7 @@ import UIKit
 
 class PopularMatchesDataSource: NSObject, UITableViewDataSource, UITableViewDelegate {
 
-    var matches: [Match] = []
+    var matches: [Match] = [] 
     var outrightCompetitions: [Competition]? = [] {
         didSet {
             print("didSet outrightCompetitions")
@@ -17,6 +17,7 @@ class PopularMatchesDataSource: NSObject, UITableViewDataSource, UITableViewDele
     }
 
     var matchStatsViewModelForMatch: ((Match) -> MatchStatsViewModel?)?
+    var matchLineTableCellViewModelCache: [String: MatchLineTableCellViewModel] = [:]
 
     var canRequestNextPageAction: (() -> Bool)?
     var requestNextPageAction: (() -> Void)?
@@ -85,7 +86,7 @@ class PopularMatchesDataSource: NSObject, UITableViewDataSource, UITableViewDele
                     cell.matchStatsViewModel = matchStatsViewModel
                 }
 
-                let viewModel = MatchLineTableCellViewModel(match: match)
+                let viewModel = self.matchLineTableCellViewModel(forMatch: match)
                 cell.viewModel = viewModel
                 
                 cell.tappedMatchLineAction = { [weak self] match in
@@ -207,6 +208,21 @@ class PopularMatchesDataSource: NSObject, UITableViewDataSource, UITableViewDele
                 typedCell.startAnimating()
             }
             self.requestNextPageAction?()
+        }
+    }
+
+}
+
+extension PopularMatchesDataSource {
+
+    func matchLineTableCellViewModel(forMatch match: Match) -> MatchLineTableCellViewModel {
+        if let matchLineTableCellViewModel = self.matchLineTableCellViewModelCache[match.id] {
+            return matchLineTableCellViewModel
+        }
+        else {
+            let matchLineTableCellViewModel = MatchLineTableCellViewModel(match: match, withFullMarkets: false)
+            self.matchLineTableCellViewModelCache[match.id] = matchLineTableCellViewModel
+            return matchLineTableCellViewModel
         }
     }
 

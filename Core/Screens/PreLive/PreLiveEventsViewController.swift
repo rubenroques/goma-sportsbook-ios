@@ -462,6 +462,7 @@ class PreLiveEventsViewController: UIViewController {
         self.viewModel.dataChangedPublisher
             .receive(on: DispatchQueue.main)
             .sink(receiveValue: { [weak self] in
+
                 guard let self = self else { return }
 
                 if self.viewModel.hasTopCompetitions.value {
@@ -516,7 +517,7 @@ class PreLiveEventsViewController: UIViewController {
 
                     self?.emptyBaseView.isHidden = true
                     self?.competitionsContainerView.isHidden = false
-                    //self?.tableView.isHidden = false
+
                     return
                 }
                 else {

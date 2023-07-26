@@ -46,12 +46,14 @@ class PreLiveEventsViewModel: NSObject {
             }
         }
         didSet {
+
             if didChangeSport {
                 if self.matchListTypePublisher.value != .competitions {
                     self.resetScrollPositionAction?()
                 }
                 self.homeFilterOptions = nil
             }
+
             self.selectedCurrentSportId = selectedSport.name.lowercased().replacingOccurrences(of: " ", with: "-")
             self.fetchTopCompetitions()
             self.fetchData()
@@ -409,7 +411,7 @@ class PreLiveEventsViewModel: NSObject {
 
     func fetchData() {
 
-        if didChangeSport {
+        if self.didChangeSport {
             self.clearOldSportData()
             self.didChangeSport = false
         }
@@ -787,9 +789,7 @@ class PreLiveEventsViewModel: NSObject {
         let currentSportName = self.selectedCurrentSportId
 
         if let ids = self.topCompetitionsList[currentSportName] {
-
             self.fetchTopCompetitionsMatchesWithIds(ids)
-
         }
 
     }
