@@ -24,6 +24,9 @@ class OverUnderMarketDetailTableViewCell: UITableViewCell {
     @IBOutlet private var expandLabel: UILabel!
     @IBOutlet private var expandArrowImageView: UIImageView!
 
+    @IBOutlet private var expandAllBaseView: UIView!
+    @IBOutlet private var expandAllArrowImageView: UIImageView!
+
     lazy var gradientBorderView: GradientBorderView = {
         var gradientBorderView = GradientBorderView()
         gradientBorderView.translatesAutoresizingMaskIntoConstraints = false
@@ -41,9 +44,9 @@ class OverUnderMarketDetailTableViewCell: UITableViewCell {
     private let lineHeight: CGFloat = 56
 
     private let collapsedMaxNumberOfLines = 3
-    var isExpanded = false {
+    var seeAllOutcomes = false {
         didSet {
-            if isExpanded {
+            if seeAllOutcomes {
                 self.expandArrowImageView.image = UIImage(named: "arrow_up_icon")
                 self.expandLabel.text = localized("see_less")
             }
@@ -54,20 +57,40 @@ class OverUnderMarketDetailTableViewCell: UITableViewCell {
         }
     }
 
+    var isAllExpanded = false {
+        didSet {
+            if isAllExpanded {
+                self.expandAllArrowImageView.image = UIImage(named: "small_arrow_up_icon")
+            }
+            else {
+                self.expandAllArrowImageView.image = UIImage(named: "small_arrow_down_icon")
+            }
+        }
+    }
+
     var didExpandCellAction: ((String) -> Void)?
     var didColapseCellAction: ((String) -> Void)?
+
+    var didExpandAllCellAction: ((String) -> Void)?
+    var didColapseAllCellAction: ((String) -> Void)?
+
     var didLongPressOdd: ((BettingTicket) -> Void)?
 
     override func awakeFromNib() {
         super.awakeFromNib()
 
-        self.containerView.layer.cornerRadius = CornerRadius.button
+        self.containerView.layer.cornerRadius = 9
 
         self.titleLabel.text = localized("market")
-        self.titleLabel.font = AppFont.with(type: .bold, size: 14)
+        self.titleLabel.font = AppFont.with(type: .bold, size: 16)
 
         let expandTapGesture = UITapGestureRecognizer(target: self, action: #selector(didTapExpandBaseView))
         self.expandBaseView.addGestureRecognizer(expandTapGesture)
+
+        let expandAllTapGesture = UITapGestureRecognizer(target: self, action: #selector(didTapExpandAllBaseView))
+        self.expandAllBaseView.addGestureRecognizer(expandAllTapGesture)
+
+        self.expandAllArrowImageView.image = UIImage(named: "small_arrow_down_icon")
 
         self.containerView.addSubview(gradientBorderView)
         self.containerView.sendSubviewToBack(gradientBorderView)
@@ -92,7 +115,8 @@ class OverUnderMarketDetailTableViewCell: UITableViewCell {
         self.competitionName = nil
         
         self.expandBaseView.isHidden = false
-        self.isExpanded = false
+        self.seeAllOutcomes = false
+        self.isAllExpanded = true
 
         self.leftColumnsStackView.removeAllArrangedSubviews()
         self.rightColumnsStackView.removeAllArrangedSubviews()
@@ -116,12 +140,22 @@ class OverUnderMarketDetailTableViewCell: UITableViewCell {
     }
 
     func configure(withMarketGroupOrganizer marketGroupOrganizer: MarketGroupOrganizer,
+                   seeAllOutcomes: Bool,
                    isExpanded: Bool,
                    betBuilderGrayoutsState: BetBuilderGrayoutsState) {
 
         self.marketGroupOrganizer = marketGroupOrganizer
-        self.isExpanded = isExpanded
+
+        self.seeAllOutcomes = seeAllOutcomes
+        self.isAllExpanded = isExpanded
+
         self.titleLabel.text = marketGroupOrganizer.marketName
+
+        if !self.isAllExpanded {
+            // if all collapsed we only setup the title
+            self.expandBaseView.isHidden = true
+            return
+        }
 
         if marketGroupOrganizer.numberOfLines <= collapsedMaxNumberOfLines {
             self.expandBaseView.isHidden = true
@@ -129,7 +163,7 @@ class OverUnderMarketDetailTableViewCell: UITableViewCell {
         
         for line in 0 ..< marketGroupOrganizer.numberOfLines {
 
-            if !isExpanded && line >= collapsedMaxNumberOfLines {
+            if !seeAllOutcomes && line >= collapsedMaxNumberOfLines {
                 break
             }
 
@@ -182,11 +216,26 @@ class OverUnderMarketDetailTableViewCell: UITableViewCell {
             return
         }
 
-        if self.isExpanded {
+        if self.seeAllOutcomes {
             self.didColapseCellAction?(marketGroupOrganizerId)
         }
         else {
             self.didExpandCellAction?(marketGroupOrganizerId)
+        }
+    }
+
+    @objc func didTapExpandAllBaseView() {
+        guard
+            let marketGroupOrganizerId = self.marketGroupOrganizer?.marketId
+        else {
+            return
+        }
+
+        if self.isAllExpanded {
+            self.didColapseAllCellAction?(marketGroupOrganizerId)
+        }
+        else {
+            self.didExpandAllCellAction?(marketGroupOrganizerId)
         }
     }
 

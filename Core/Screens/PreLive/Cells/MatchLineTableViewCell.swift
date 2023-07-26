@@ -55,13 +55,12 @@ class MatchLineTableCellViewModel {
             .receive(on: DispatchQueue.main)
             .sink { completion in
                 print("completion \(completion)")
-            } receiveValue: { [weak self] match in
+            } receiveValue: { [weak self] updatedMatch in
 
                 var knownMarketGroups: Set<String> = []
                 var filteredMarkets = [Market]()
-                var processedMatch = match
 
-                for market in processedMatch.markets.filter({ $0.outcomes.count == 3 || $0.outcomes.count == 2 }) {
+                for market in updatedMatch.markets.filter({ $0.outcomes.count == 3 || $0.outcomes.count == 2 }) {
                     if let marketTypeId = market.marketTypeId, !knownMarketGroups.contains(marketTypeId) {
                         knownMarketGroups.insert(marketTypeId)
                         filteredMarkets.append(market)
@@ -71,13 +70,22 @@ class MatchLineTableCellViewModel {
                         break
                     }
                 }
-                var sortedMarkets = filteredMarkets.sorted { leftMarket, rightMarket  in
+                let sortedMarkets = filteredMarkets.sorted { leftMarket, rightMarket  in
                     return (leftMarket.marketTypeId ?? "") < (rightMarket.marketTypeId ?? "")
                 }.prefix(5)
 
-                processedMatch.markets = Array(sortedMarkets)
 
-                self?.matchCurrentValueSubject.send(processedMatch)
+                if var oldMatch = self?.matchCurrentValueSubject.value {
+                    // We already have a match we only update/replace the markets
+                    oldMatch.markets = Array(sortedMarkets)
+                    self?.matchCurrentValueSubject.send(oldMatch)
+                }
+                else {
+                    // We don't have a match yet, we need to use this one
+                    updatedMatch.markets = Array(sortedMarkets)
+                    self?.matchCurrentValueSubject.send(updatedMatch)
+                }
+
             }
             .store(in: &self.cancellables)
 

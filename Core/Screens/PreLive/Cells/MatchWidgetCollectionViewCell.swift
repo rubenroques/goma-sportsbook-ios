@@ -33,7 +33,6 @@ class MatchWidgetCollectionViewCell: UICollectionViewCell {
     lazy var liveTipView: UIView = {
         var liveTipView = UIView()
         liveTipView.translatesAutoresizingMaskIntoConstraints = false
-
         return liveTipView
     }()
 
@@ -630,6 +629,7 @@ class MatchWidgetCollectionViewCell: UICollectionViewCell {
         self.timeLabel.text = ""
 
         self.liveMatchDotBaseView.isHidden = true
+        self.liveTipView.isHidden = true
 
         self.matchTimeLabel.text = ""
         self.resultLabel.text = ""
@@ -1005,7 +1005,6 @@ class MatchWidgetCollectionViewCell: UICollectionViewCell {
 
         if viewModel.isLiveMatch {
             self.liveMatchDotBaseView.isHidden = false
-            //self.gradientBorderView.isHidden = false
             self.liveTipView.isHidden = false
 
             self.cashbackImageViewBaseTrailingConstraint.isActive = false
@@ -1013,7 +1012,6 @@ class MatchWidgetCollectionViewCell: UICollectionViewCell {
         }
         else {
             self.liveMatchDotBaseView.isHidden = true
-            //self.gradientBorderView.isHidden = true
             self.liveTipView.isHidden = true
 
             self.cashbackImageViewBaseTrailingConstraint.isActive = true
@@ -1055,6 +1053,43 @@ class MatchWidgetCollectionViewCell: UICollectionViewCell {
             self.topImageView.kf.setImage(with: additionalImageURL)
         }
 
+        //
+        // Get boosted odd old market values
+        //
+        if self.matchWidgetType == .boosted {
+
+            if let originalMarketId = self.viewModel?.match.oldMainMarketId {
+                Env.servicesProvider.getMarketInfo(marketId: originalMarketId)
+                    .receive(on: DispatchQueue.main)
+                    .map(ServiceProviderModelMapper.market(fromServiceProviderMarket:))
+                    .sink { _ in
+                        print("Env.servicesProvider.getMarketInfo(marketId: old boosted market completed")
+                    } receiveValue: { market in
+                        if let outcome = market.outcomes[safe: 0] {
+                            let oddValue = OddFormatter.formatOdd(withValue: outcome.bettingOffer.decimalOdd)
+                            let attributes = [NSAttributedString.Key.strikethroughStyle: NSUnderlineStyle.single.rawValue]
+                            let attributedString = NSAttributedString(string: oddValue, attributes: attributes)
+                            self.homeOldBoostedOddValueLabel.attributedText = attributedString
+                        }
+                        if let outcome = market.outcomes[safe: 1] {
+                            let oddValue = OddFormatter.formatOdd(withValue: outcome.bettingOffer.decimalOdd)
+                            let attributes = [NSAttributedString.Key.strikethroughStyle: NSUnderlineStyle.single.rawValue]
+                            let attributedString = NSAttributedString(string: oddValue, attributes: attributes)
+                            self.drawOldBoostedOddValueLabel.attributedText = attributedString
+                        }
+                        if let outcome = market.outcomes[safe: 2] {
+                            let oddValue = OddFormatter.formatOdd(withValue: outcome.bettingOffer.decimalOdd)
+                            let attributes = [NSAttributedString.Key.strikethroughStyle: NSUnderlineStyle.single.rawValue]
+                            let attributedString = NSAttributedString(string: oddValue, attributes: attributes)
+                            self.awayOldBoostedOddValueLabel.attributedText = attributedString
+                        }
+                    }
+                    .store(in: &self.cancellables)
+            }
+        }
+
+        //
+        //
         //
         self.matchSubscriber?.cancel()
         self.matchSubscriber = nil
@@ -1301,37 +1336,6 @@ class MatchWidgetCollectionViewCell: UICollectionViewCell {
 
         self.isFavorite = Env.favoritesManager.isEventFavorite(eventId: viewModel.match.id)
 
-        if self.matchWidgetType == .boosted {
-
-            if let originalMarketId = self.viewModel?.match.oldMainMarketId {
-                Env.servicesProvider.getMarketInfo(marketId: originalMarketId)
-                    .receive(on: DispatchQueue.main)
-                    .map(ServiceProviderModelMapper.market(fromServiceProviderMarket:))
-                    .sink { _ in
-                        print("Env.servicesProvider.getMarketInfo(marketId: old boosted market completed")
-                    } receiveValue: { market in
-                        if let outcome = market.outcomes[safe: 0] {
-                            let oddValue = OddFormatter.formatOdd(withValue: outcome.bettingOffer.decimalOdd)
-                            let attributes = [NSAttributedString.Key.strikethroughStyle: NSUnderlineStyle.single.rawValue]
-                            let attributedString = NSAttributedString(string: oddValue, attributes: attributes)
-                            self.homeOldBoostedOddValueLabel.attributedText = attributedString
-                        }
-                        if let outcome = market.outcomes[safe: 1] {
-                            let oddValue = OddFormatter.formatOdd(withValue: outcome.bettingOffer.decimalOdd)
-                            let attributes = [NSAttributedString.Key.strikethroughStyle: NSUnderlineStyle.single.rawValue]
-                            let attributedString = NSAttributedString(string: oddValue, attributes: attributes)
-                            self.drawOldBoostedOddValueLabel.attributedText = attributedString
-                        }
-                        if let outcome = market.outcomes[safe: 2] {
-                            let oddValue = OddFormatter.formatOdd(withValue: outcome.bettingOffer.decimalOdd)
-                            let attributes = [NSAttributedString.Key.strikethroughStyle: NSUnderlineStyle.single.rawValue]
-                            let attributedString = NSAttributedString(string: oddValue, attributes: attributes)
-                            self.awayOldBoostedOddValueLabel.attributedText = attributedString
-                        }
-                    }
-                    .store(in: &self.cancellables)
-            }
-        }
 
         // TODO: TEST CASHBACK
         if viewModel.matchWidgetType == .normal {
