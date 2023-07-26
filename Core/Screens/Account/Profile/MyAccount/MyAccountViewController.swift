@@ -51,7 +51,6 @@ class MyAccountViewController: UIViewController {
     }
 
     // MARK: Functions
-
     private func setupStackView() {
         let personalInfoView = NavigationCardView()
         personalInfoView.setupView(title: localized("personal_info"), iconTitle: "card_id_profile_icon")
@@ -68,10 +67,21 @@ class MyAccountViewController: UIViewController {
         let documentsTap = UITapGestureRecognizer(target: self, action: #selector(didTapDocuments(sender:)))
         documentsView.addGestureRecognizer(documentsTap)
 
+        let contactSettingsView = NavigationCardView()
+        contactSettingsView.setupView(title: localized("contact_settings"), iconTitle: "messages_profile_icon")
+        let contactSettingsTap = UITapGestureRecognizer(target: self, action: #selector(contactSettingsViewTapped(sender:)))
+        contactSettingsView.addGestureRecognizer(contactSettingsTap)
+
+        let historyView = NavigationCardView()
+        historyView.setupView(title: localized("history"), iconTitle: "history_profile_icon")
+        let historyTap = UITapGestureRecognizer(target: self, action: #selector(historyViewTapped(sender:)))
+        historyView.addGestureRecognizer(historyTap)
+
         self.stackView.addArrangedSubview(personalInfoView)
         self.stackView.addArrangedSubview(accountSecurityView)
         self.stackView.addArrangedSubview(documentsView)
-
+        self.stackView.addArrangedSubview(contactSettingsView)
+        self.stackView.addArrangedSubview(historyView)
     }
 
 }
@@ -90,27 +100,29 @@ extension MyAccountViewController {
     }
 
     @objc private func didTapAccountSecurity(sender: UITapGestureRecognizer) {
-
         let passwordViewController = PasswordUpdateViewController()
         self.navigationController?.pushViewController(passwordViewController, animated: true)
     }
 
     @objc private func didTapDocuments(sender: UITapGestureRecognizer) {
-
-//        let uploadDocumentsViewModel = UploadDocumentsViewModel()
-//
-//        let uploadDocumentsViewController = UploadDocumentsViewController(viewModel: uploadDocumentsViewModel)
-//
-//        self.present(uploadDocumentsViewController, animated: true)
-
         let documentsRootViewModel = DocumentsRootViewModel()
-
         let documentsRootViewController = DocumentsRootViewController(viewModel: documentsRootViewModel)
-
         self.navigationController?.pushViewController(documentsRootViewController, animated: true)
-
     }
-    
+
+    @objc func contactSettingsViewTapped(sender: UITapGestureRecognizer) {
+        let contactSettingsViewModel = ContactSettingsViewModel()
+
+        let contactSettingsViewController = ContactSettingsViewController(viewModel: contactSettingsViewModel )
+
+        self.navigationController?.pushViewController(contactSettingsViewController, animated: true)
+    }
+
+    @objc func historyViewTapped(sender: UITapGestureRecognizer) {
+        let historyRootViewController = HistoryRootViewController()
+        self.navigationController?.pushViewController(historyRootViewController, animated: true)
+    }
+
 }
 
 //

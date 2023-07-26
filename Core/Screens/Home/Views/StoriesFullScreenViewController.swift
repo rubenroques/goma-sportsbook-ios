@@ -67,7 +67,7 @@ class StoriesFullScreenViewController: UIViewController {
             storiesFullScreenItemView.nextPageRequestedAction = { [weak self] in
                 self?.goToNextPageItem()
             }
-            storiesFullScreenItemView.closeRequestedAction =  { [weak self] in
+            storiesFullScreenItemView.closeRequestedAction = { [weak self] in
                 self?.closeFullscreen()
             }
 

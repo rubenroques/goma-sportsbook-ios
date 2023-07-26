@@ -26,6 +26,8 @@ enum SportRadarRestAPIClient {
     case getEventSummary(eventId: String)
     case getMarketInfo(marketId: String)
 
+    case getEventDetails(eventId: String)
+
     case getEventsForMarketGroup(marketGroupId: String)
     case getEventForMarket(marketId: String)
 
@@ -83,6 +85,8 @@ extension SportRadarRestAPIClient: Endpoint {
         case .getEventSummary:
             return "/services/content/get"
         case .getMarketInfo:
+            return "/services/content/get"
+        case .getEventDetails:
             return "/services/content/get"
 
         case .getEventsForMarketGroup:
@@ -147,6 +151,7 @@ extension SportRadarRestAPIClient: Endpoint {
         case .search: return nil
         case .getEventSummary: return nil
         case .getMarketInfo: return nil
+        case .getEventDetails:  return nil
 
         case .getEventsForMarketGroup: return nil
         case .getEventForMarket: return nil
@@ -186,8 +191,10 @@ extension SportRadarRestAPIClient: Endpoint {
         case .regionCompetitions: return .post
         case .competitionMarketGroups: return .post
         case .search: return .post
+
         case .getEventSummary: return .post
         case .getMarketInfo: return .post
+        case .getEventDetails:  return .post
 
         case .getEventsForMarketGroup: return .post
         case .getEventForMarket: return .post
@@ -347,6 +354,22 @@ extension SportRadarRestAPIClient: Endpoint {
                         }
                         """
             return bodyString.data(using: String.Encoding.utf8) ?? Data()
+
+        case .getEventDetails(let eventId):
+            let bodyString =
+                        """
+                        {
+                            "contentId": {
+                                "type": "event",
+                                "id": "\(eventId)"
+                            },
+                            "clientContext": {
+                                "language": "\(SportRadarConstants.socketLanguageCode)",
+                                "ipAddress": "127.0.0.1"
+                            }
+                        }
+                        """
+            return bodyString.data(using: String.Encoding.utf8) ?? Data()
             
         case .homeSliders:
             let bodyString =
@@ -373,7 +396,7 @@ extension SportRadarRestAPIClient: Endpoint {
                                 "id": "\(SportRadarConstants.frontEndCode)/Homepage"
                             },
                             "clientContext": {
-                                "language": "FR",
+                                "language": "\(SportRadarConstants.socketLanguageCode)",
                                 "ipAddress": "127.0.0.1"
                             }
                         }
@@ -389,7 +412,7 @@ extension SportRadarRestAPIClient: Endpoint {
                                 "id": "\(SportRadarConstants.frontEndCode)/20/slidingEvent"
                             },
                             "clientContext": {
-                                "language": "FR",
+                                "language": "\(SportRadarConstants.socketLanguageCode)",
                                 "ipAddress": "127.0.0.1"
                             }
                         }
@@ -405,7 +428,7 @@ extension SportRadarRestAPIClient: Endpoint {
                                 "id": "\(SportRadarConstants.frontEndCode)/20/InstaCard"
                             },
                             "clientContext": {
-                                "language": "FR",
+                                "language": "\(SportRadarConstants.socketLanguageCode)",
                                 "ipAddress": "127.0.0.1"
                             }
                         }
@@ -421,7 +444,7 @@ extension SportRadarRestAPIClient: Endpoint {
                                 "id": "\(SportRadarConstants.frontEndCode)/20/boostedOddCard"
                             },
                             "clientContext": {
-                                "language": "FR",
+                                "language": "\(SportRadarConstants.socketLanguageCode)",
                                 "ipAddress": "127.0.0.1"
                             }
                         }
@@ -437,7 +460,7 @@ extension SportRadarRestAPIClient: Endpoint {
                                 "id": "\(SportRadarConstants.frontEndCode)/20/eventCard"
                             },
                             "clientContext": {
-                                "language": "FR",
+                                "language": "\(SportRadarConstants.socketLanguageCode)",
                                 "ipAddress": "127.0.0.1"
                             }
                         }
@@ -514,7 +537,7 @@ extension SportRadarRestAPIClient: Endpoint {
                                 "id": "\(marketGroupId)"
                             },
                             "clientContext": {
-                                "language": "FR",
+                                "language": "\(SportRadarConstants.socketLanguageCode)",
                                 "ipAddress": "127.0.0.1"
                             }
                         }
@@ -530,7 +553,7 @@ extension SportRadarRestAPIClient: Endpoint {
                                 "id": "\(marketId)"
                             },
                             "clientContext": {
-                                "language": "FR",
+                                "language": "\(SportRadarConstants.socketLanguageCode)",
                                 "ipAddress": "127.0.0.1"
                             }
                         }
@@ -546,7 +569,7 @@ extension SportRadarRestAPIClient: Endpoint {
                                 "id": "\(SportRadarConstants.frontEndCode)/top"
                             },
                             "clientContext": {
-                                "language": "FR",
+                                "language": "\(SportRadarConstants.socketLanguageCode)",
                                 "ipAddress": "127.0.0.1"
                             }
                         }
@@ -562,7 +585,7 @@ extension SportRadarRestAPIClient: Endpoint {
                                 "id": "\(SportRadarConstants.frontEndCode)/cashbackSuccessBanner"
                             },
                             "clientContext": {
-                                "language": "FR",
+                                "language": "\(SportRadarConstants.socketLanguageCode)",
                                 "ipAddress": "127.0.0.1"
                             }
                         }
@@ -577,7 +600,7 @@ extension SportRadarRestAPIClient: Endpoint {
                                 "id": "\(SportRadarConstants.frontEndCode)/QuickLinks"
                             },
                             "clientContext": {
-                                "language": "FR",
+                                "language": "\(SportRadarConstants.socketLanguageCode)",
                                 "ipAddress": "127.0.0.1"
                             }
                         }
@@ -618,9 +641,12 @@ extension SportRadarRestAPIClient: Endpoint {
             return SportRadarConstants.servicesRestHostname
         case .search:
             return SportRadarConstants.servicesRestHostname
+
         case .getEventSummary:
             return SportRadarConstants.servicesRestHostname
         case .getMarketInfo:
+            return SportRadarConstants.servicesRestHostname
+        case .getEventDetails:
             return SportRadarConstants.servicesRestHostname
 
         case .getEventsForMarketGroup:
@@ -697,9 +723,12 @@ extension SportRadarRestAPIClient: Endpoint {
             return defaultHeaders
         case .search:
             return defaultHeaders
+
         case .getEventSummary:
             return defaultHeaders
         case .getMarketInfo:
+            return defaultHeaders
+        case .getEventDetails:
             return defaultHeaders
 
         case .getEventsForMarketGroup:

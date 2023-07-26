@@ -33,7 +33,6 @@ class MatchWidgetCollectionViewCell: UICollectionViewCell {
     lazy var liveTipView: UIView = {
         var liveTipView = UIView()
         liveTipView.translatesAutoresizingMaskIntoConstraints = false
-
         return liveTipView
     }()
 
@@ -42,7 +41,7 @@ class MatchWidgetCollectionViewCell: UICollectionViewCell {
         liveTipLabel.font = AppFont.with(type: .semibold, size: 9)
         liveTipLabel.textAlignment = .left
         liveTipLabel.translatesAutoresizingMaskIntoConstraints = false
-        liveTipLabel.setContentHuggingPriority(.defaultLow, for: .horizontal)
+        liveTipLabel.setContentHuggingPriority(.defaultHigh, for: .horizontal)
         liveTipLabel.setContentCompressionResistancePriority(.defaultHigh, for: .horizontal)
 
         return liveTipLabel
@@ -225,7 +224,7 @@ class MatchWidgetCollectionViewCell: UICollectionViewCell {
                 self.teamsHeightConstraint.constant = 67
                 self.topMarginSpaceConstraint.constant = 11
 
-                self.gradientBorderView.isHidden = false
+                self.gradientBorderView.isHidden = true
 
             case .boosted:
                 self.backgroundImageView.isHidden = true
@@ -271,6 +270,8 @@ class MatchWidgetCollectionViewCell: UICollectionViewCell {
                 self.bottomMarginSpaceConstraint.constant = 28
                 self.teamsHeightConstraint.constant = 47
                 self.topMarginSpaceConstraint.constant = 0
+
+                self.gradientBorderView.isHidden = true
 
                 self.backgroundImageBorderGradientLayer.colors = [UIColor(hex: 0x404CFF).cgColor, UIColor(hex: 0x404CFF).withAlphaComponent(0.0).cgColor]
                 self.backgroundImageBorderGradientLayer.startPoint = CGPoint(x: 0.5, y: 0.0)
@@ -352,14 +353,18 @@ class MatchWidgetCollectionViewCell: UICollectionViewCell {
     private var middleOutcomeDisabled: Bool = false
     private var rightOutcomeDisabled: Bool = false
 
+    private var cancellables: Set<AnyCancellable> = []
+
     override func awakeFromNib() {
         super.awakeFromNib()
 
         //
         // Add gradient to the bottom booster line
         self.boostedOddBottomLineAnimatedGradientView.translatesAutoresizingMaskIntoConstraints = false
-        self.boostedOddBottomLineAnimatedGradientView.colors = [(UIColor.init(hex: 0xFF6600), NSNumber(0.0)),
-                               (UIColor.init(hex: 0xFEDB00), NSNumber(1.0))]
+        self.boostedOddBottomLineAnimatedGradientView.colors = [
+            (UIColor.init(hex: 0xFF6600), NSNumber(0.0)), // (UIColor.init(hex: 0xD60000), NSNumber(0.0)),
+            (UIColor.init(hex: 0xFEDB00), NSNumber(1.0)) // (UIColor.init(hex: 0xFF2600), NSNumber(1.0)),
+        ]
         self.boostedOddBottomLineAnimatedGradientView.startPoint = CGPoint(x: 0.0, y: 0.5)
         self.boostedOddBottomLineAnimatedGradientView.endPoint = CGPoint(x: 1.0, y: 0.5)
         self.boostedOddBottomLineAnimatedGradientView.startAnimations()
@@ -402,9 +407,9 @@ class MatchWidgetCollectionViewCell: UICollectionViewCell {
         self.awayNewBoostedOddValueLabel.font = AppFont.with(type: .bold, size: 13)
         self.awayOldBoostedOddValueLabel.font = AppFont.with(type: .semibold, size: 9)
 
-        self.homeOldBoostedOddValueLabel.text = "1̶.̶0̶0̶"
-        self.drawOldBoostedOddValueLabel.text = "1̶.̶0̶0̶"
-        self.awayOldBoostedOddValueLabel.text = "1̶.̶0̶0̶"
+        self.homeOldBoostedOddValueLabel.text = "1.00"
+        self.drawOldBoostedOddValueLabel.text = "1.00"
+        self.awayOldBoostedOddValueLabel.text = "1.00"
 
         //
         //
@@ -477,7 +482,7 @@ class MatchWidgetCollectionViewCell: UICollectionViewCell {
         // Live Tip
         self.baseView.addSubview(self.liveTipView)
         self.liveTipView.addSubview(self.liveTipLabel)
-        self.liveTipLabel.text = localized("live")
+        self.liveTipLabel.text = localized("live") + " ⦿"
 
         self.liveTipView.layer.cornerRadius = 7
 
@@ -501,6 +506,7 @@ class MatchWidgetCollectionViewCell: UICollectionViewCell {
             self.cashbackIconImageView.heightAnchor.constraint(equalTo: self.cashbackIconImageView.widthAnchor),
             self.cashbackIconImageView.centerYAnchor.constraint(equalTo: self.liveTipView.centerYAnchor),
 
+            self.headerLineStackView.trailingAnchor.constraint(greaterThanOrEqualTo: self.cashbackIconImageView.leadingAnchor, constant: 1),
         ])
 
         self.cashbackImageViewBaseTrailingConstraint = NSLayoutConstraint(item: self.cashbackIconImageView,
@@ -623,6 +629,7 @@ class MatchWidgetCollectionViewCell: UICollectionViewCell {
         self.timeLabel.text = ""
 
         self.liveMatchDotBaseView.isHidden = true
+        self.liveTipView.isHidden = true
 
         self.matchTimeLabel.text = ""
         self.resultLabel.text = ""
@@ -729,7 +736,7 @@ class MatchWidgetCollectionViewCell: UICollectionViewCell {
             self.eventNameLabel.textColor = UIColor.App.textSecondary
             self.homeParticipantNameLabel.textColor = UIColor.App.textPrimary
             self.awayParticipantNameLabel.textColor = UIColor.App.textPrimary
-            self.matchTimeLabel.textColor = UIColor.App.textPrimary
+            self.matchTimeLabel.textColor = UIColor.App.buttonBackgroundPrimary
             self.resultLabel.textColor = UIColor.App.textPrimary
             self.liveTipLabel.textColor = UIColor.App.buttonTextPrimary
             self.dateLabel.textColor = UIColor.App.textPrimary
@@ -782,7 +789,7 @@ class MatchWidgetCollectionViewCell: UICollectionViewCell {
             self.eventNameLabel.textColor = UIColor.App.textSecondary
             self.homeParticipantNameLabel.textColor = UIColor.App.textPrimary
             self.awayParticipantNameLabel.textColor = UIColor.App.textPrimary
-            self.matchTimeLabel.textColor = UIColor.App.textPrimary
+            self.matchTimeLabel.textColor = UIColor.App.buttonBackgroundPrimary
             self.resultLabel.textColor = UIColor.App.textPrimary
             self.liveTipLabel.textColor = UIColor.App.buttonTextPrimary
             self.dateLabel.textColor = UIColor.App.textPrimary
@@ -998,7 +1005,6 @@ class MatchWidgetCollectionViewCell: UICollectionViewCell {
 
         if viewModel.isLiveMatch {
             self.liveMatchDotBaseView.isHidden = false
-            //self.gradientBorderView.isHidden = false
             self.liveTipView.isHidden = false
 
             self.cashbackImageViewBaseTrailingConstraint.isActive = false
@@ -1006,7 +1012,6 @@ class MatchWidgetCollectionViewCell: UICollectionViewCell {
         }
         else {
             self.liveMatchDotBaseView.isHidden = true
-            //self.gradientBorderView.isHidden = true
             self.liveTipView.isHidden = true
 
             self.cashbackImageViewBaseTrailingConstraint.isActive = true
@@ -1049,6 +1054,43 @@ class MatchWidgetCollectionViewCell: UICollectionViewCell {
         }
 
         //
+        // Get boosted odd old market values
+        //
+        if self.matchWidgetType == .boosted {
+
+            if let originalMarketId = self.viewModel?.match.oldMainMarketId {
+                Env.servicesProvider.getMarketInfo(marketId: originalMarketId)
+                    .receive(on: DispatchQueue.main)
+                    .map(ServiceProviderModelMapper.market(fromServiceProviderMarket:))
+                    .sink { _ in
+                        print("Env.servicesProvider.getMarketInfo(marketId: old boosted market completed")
+                    } receiveValue: { market in
+                        if let outcome = market.outcomes[safe: 0] {
+                            let oddValue = OddFormatter.formatOdd(withValue: outcome.bettingOffer.decimalOdd)
+                            let attributes = [NSAttributedString.Key.strikethroughStyle: NSUnderlineStyle.single.rawValue]
+                            let attributedString = NSAttributedString(string: oddValue, attributes: attributes)
+                            self.homeOldBoostedOddValueLabel.attributedText = attributedString
+                        }
+                        if let outcome = market.outcomes[safe: 1] {
+                            let oddValue = OddFormatter.formatOdd(withValue: outcome.bettingOffer.decimalOdd)
+                            let attributes = [NSAttributedString.Key.strikethroughStyle: NSUnderlineStyle.single.rawValue]
+                            let attributedString = NSAttributedString(string: oddValue, attributes: attributes)
+                            self.drawOldBoostedOddValueLabel.attributedText = attributedString
+                        }
+                        if let outcome = market.outcomes[safe: 2] {
+                            let oddValue = OddFormatter.formatOdd(withValue: outcome.bettingOffer.decimalOdd)
+                            let attributes = [NSAttributedString.Key.strikethroughStyle: NSUnderlineStyle.single.rawValue]
+                            let attributedString = NSAttributedString(string: oddValue, attributes: attributes)
+                            self.awayOldBoostedOddValueLabel.attributedText = attributedString
+                        }
+                    }
+                    .store(in: &self.cancellables)
+            }
+        }
+
+        //
+        //
+        //
         self.matchSubscriber?.cancel()
         self.matchSubscriber = nil
         
@@ -1073,7 +1115,7 @@ class MatchWidgetCollectionViewCell: UICollectionViewCell {
                     self?.liveMatchDotBaseView.isHidden = true
                 }
             })
-        
+
         if let market = viewModel.match.markets.first {
 
             self.marketSubscriber = Env.servicesProvider.subscribeToEventMarketUpdates(withId: market.id)
@@ -1294,7 +1336,8 @@ class MatchWidgetCollectionViewCell: UICollectionViewCell {
 
         self.isFavorite = Env.favoritesManager.isEventFavorite(eventId: viewModel.match.id)
 
-        // TEST CASHBACK
+
+        // TODO: TEST CASHBACK
         if viewModel.matchWidgetType == .normal {
             if viewModel.match.sport.alphaId == "FBL" {
                 self.hasCashback = true

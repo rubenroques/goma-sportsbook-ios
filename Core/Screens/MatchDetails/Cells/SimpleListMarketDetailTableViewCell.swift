@@ -14,6 +14,14 @@ class SimpleListMarketDetailTableViewCell: UITableViewCell {
     @IBOutlet private var collectionView: UICollectionView!
     @IBOutlet private var collectionViewHeightContraint: NSLayoutConstraint!
 
+    lazy var gradientBorderView: GradientBorderView = {
+        var gradientBorderView = GradientBorderView()
+        gradientBorderView.translatesAutoresizingMaskIntoConstraints = false
+        gradientBorderView.gradientBorderWidth = 1
+        gradientBorderView.gradientCornerRadius = 9
+        return gradientBorderView
+    }()
+
     enum ColumnType {
         case double
         case triple
@@ -47,6 +55,16 @@ class SimpleListMarketDetailTableViewCell: UITableViewCell {
         self.collectionView.showsVerticalScrollIndicator = false
         self.collectionView.showsHorizontalScrollIndicator = false
 
+        self.containerView.addSubview(gradientBorderView)
+        self.containerView.sendSubviewToBack(gradientBorderView)
+
+        NSLayoutConstraint.activate([
+            self.containerView.leadingAnchor.constraint(equalTo: gradientBorderView.leadingAnchor),
+            self.containerView.trailingAnchor.constraint(equalTo: gradientBorderView.trailingAnchor),
+            self.containerView.topAnchor.constraint(equalTo: gradientBorderView.topAnchor),
+            self.containerView.bottomAnchor.constraint(equalTo: gradientBorderView.bottomAnchor),
+        ])
+        
         self.setupWithTheme()
     }
 

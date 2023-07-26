@@ -71,8 +71,10 @@ class SportRadarSocketConnector: NSObject, Connector {
     }
     
     private func connectSocket() {
+
         self.socket.delegate = self
         self.socket.connect()
+
     }
     
     private static func socketRequest() -> URLRequest {
@@ -142,7 +144,7 @@ extension SportRadarSocketConnector: WebSocketDelegate {
         case .text(let string):
 
             // DEBUGGING HELPER
-            print("☁️ SP debugbetslip WS recieved text: \(string) \n----------------- \n")
+            // print("☁️ SP debugbetslip WS recieved text: \(string) \n----------------- \n")
 
             if let data = string.data(using: .utf8),
                let sportRadarSocketResponse = try? decoder.decode(SportRadarModels.NotificationType.self, from: data) {

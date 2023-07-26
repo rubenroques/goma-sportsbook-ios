@@ -159,11 +159,11 @@ class PreLiveEventsViewModel: NSObject {
         self.selectedSport = selectedSport
         self.selectedCurrentSportId = selectedSport.name.lowercased().replacingOccurrences(of: " ", with: "-")
 
-        isLoadingCompetitionsData = Publishers.CombineLatest(isLoadingCompetitionMatches, isLoadingCompetitionGroups)
+        self.isLoadingCompetitionsData = Publishers.CombineLatest(isLoadingCompetitionMatches, isLoadingCompetitionGroups)
             .map({ return $0 || $1 })
             .eraseToAnyPublisher()
 
-        isLoading = Publishers.CombineLatest4(matchListTypePublisher, isLoadingTodayList, isLoadingPopularList, isLoadingCompetitionsData)
+        self.isLoading = Publishers.CombineLatest4(matchListTypePublisher, isLoadingTodayList, isLoadingPopularList, isLoadingCompetitionsData)
             .map({ matchListType, isLoadingTodayList, isLoadingPopularList, isLoadingCompetitionsData in
                 switch matchListType {
                 case .popular: return isLoadingPopularList
@@ -180,12 +180,10 @@ class PreLiveEventsViewModel: NSObject {
         self.setupPublishers()
 
         self.fetchTopCompetitions()
-
     }
 
-    deinit { 
+    deinit {
         print("ServerProvider.Subscription.Debug PreLiveEventsViewModel deinit")
-
     }
 
     func setupCallbacks() {

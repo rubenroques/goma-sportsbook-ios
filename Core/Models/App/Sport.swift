@@ -7,7 +7,7 @@
 
 import Foundation
 
-struct Sport {
+struct Sport: Equatable {
 
     let id: String
     let name: String

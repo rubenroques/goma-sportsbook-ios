@@ -99,13 +99,13 @@ class SmoothProgressBarView: UIView {
 
         self.animatorCancellable = self.animator.completionSubject
             .sink { [weak self] in
-                print("completionSubject called")
+                print("SmoothProgressBarView completionSubject called")
                 self?.progressBarFinishedAction()
             }
 
         self.animator.animate(constraint: self.foregroundBarWidthConstraint!,
-                                      toValue: self.backgroundBar.frame.size.width,
-                                      duration: duration)
+                              toValue: self.backgroundBar.frame.size.width,
+                              duration: duration)
     }
 
     func resetProgress() {

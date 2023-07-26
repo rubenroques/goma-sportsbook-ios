@@ -49,6 +49,7 @@ public class Event: Codable {
     public var matchTime: String?
 
     public var promoImageURL: String?
+    public var oldMainMarketId: String?
 
     public var type: EventType {
         if self.homeTeamName.isEmpty && self.awayTeamName.isEmpty {
@@ -126,6 +127,7 @@ public class Event: Codable {
         self.matchTime = matchTime
 
         self.promoImageURL = nil
+        self.oldMainMarketId = nil
     }
 
     public required init(from decoder: Decoder) throws {

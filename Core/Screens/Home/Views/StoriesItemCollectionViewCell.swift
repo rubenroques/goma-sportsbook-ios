@@ -68,6 +68,34 @@ class StoriesItemCollectionViewCell: UICollectionViewCell {
         return label
     }()
 
+    private let newPillBaseView: UIView = {
+        let newPillBaseView = UIView()
+        newPillBaseView.layer.masksToBounds = true
+        newPillBaseView.translatesAutoresizingMaskIntoConstraints = false
+        newPillBaseView.clipsToBounds = true
+        newPillBaseView.backgroundColor = .lightGray.withAlphaComponent(0.6)
+        return newPillBaseView
+    }()
+
+    private let newPillForegroundView: UIView = {
+        let newPillForegroundView = UIView()
+        newPillForegroundView.layer.masksToBounds = true
+        newPillForegroundView.translatesAutoresizingMaskIntoConstraints = false
+        newPillForegroundView.clipsToBounds = true
+        newPillForegroundView.backgroundColor = .gray
+        return newPillForegroundView
+    }()
+
+    private let newPillLabel: UILabel = {
+        let label = UILabel()
+        label.translatesAutoresizingMaskIntoConstraints = false
+        label.textColor = .white
+        label.textAlignment = .center
+        label.font = AppFont.with(type: .semibold, size: 9)
+        label.text = "NEW"
+        return label
+    }()
+
     private var viewModel: StoriesItemCellViewModel?
 
     var isRead: Bool = false {
@@ -113,6 +141,14 @@ class StoriesItemCollectionViewCell: UICollectionViewCell {
         self.setupViews()
     }
 
+    override func layoutSubviews() {
+        super.layoutSubviews()
+
+        self.newPillBaseView.layer.cornerRadius = 4
+        self.newPillForegroundView.layer.cornerRadius = 4
+
+    }
+
     private func setupViews() {
 
         self.backgroundColor = .clear
@@ -121,8 +157,8 @@ class StoriesItemCollectionViewCell: UICollectionViewCell {
 
         let gradientLayer = CAGradientLayer()
         gradientLayer.colors = [
-            UIColor(hex: 0xF1681E, alpha: 1.0).cgColor,
-            UIColor(hex: 0xF8C633, alpha: 1.0).cgColor,
+            UIColor(hex: 0xF1681E, alpha: 1.0).cgColor, // UIColor(hex: 0xD60000, alpha: 1.0).cgColor,
+            UIColor(hex: 0xF8C633, alpha: 1.0).cgColor, // UIColor(hex: 0xFF2600, alpha: 1.0).cgColor,
         ]
 
         gradientLayer.startPoint = CGPoint(x: 0.0, y: 1.0)
@@ -136,6 +172,29 @@ class StoriesItemCollectionViewCell: UICollectionViewCell {
 
         self.addSubview(self.imageView)
         self.addSubview(self.label)
+
+
+        self.newPillForegroundView.addSubview(self.newPillLabel)
+        self.newPillBaseView.addSubview(self.newPillForegroundView)
+
+        self.addSubview(self.newPillBaseView)
+
+        NSLayoutConstraint.activate([
+
+            self.topAnchor.constraint(equalTo: self.newPillBaseView.topAnchor, constant: 4),
+            self.trailingAnchor.constraint(equalTo: self.newPillBaseView.trailingAnchor, constant: 6),
+
+            self.newPillLabel.leadingAnchor.constraint(equalTo: self.newPillForegroundView.leadingAnchor, constant: 4),
+            self.newPillLabel.topAnchor.constraint(equalTo: self.newPillForegroundView.topAnchor, constant: 3),
+            self.newPillLabel.centerXAnchor.constraint(equalTo: self.newPillForegroundView.centerXAnchor),
+            self.newPillLabel.centerYAnchor.constraint(equalTo: self.newPillForegroundView.centerYAnchor),
+
+            self.newPillForegroundView.leadingAnchor.constraint(equalTo: self.newPillBaseView.leadingAnchor, constant: 1),
+            self.newPillForegroundView.topAnchor.constraint(equalTo: self.newPillBaseView.topAnchor, constant: 1),
+            self.newPillForegroundView.centerXAnchor.constraint(equalTo: self.newPillBaseView.centerXAnchor),
+            self.newPillForegroundView.centerYAnchor.constraint(equalTo: self.newPillBaseView.centerYAnchor),
+
+        ])
 
         NSLayoutConstraint.activate([
             self.backgroundGradientView.leadingAnchor.constraint(equalTo: self.gradientBorderView.leadingAnchor),
@@ -174,15 +233,19 @@ class StoriesItemCollectionViewCell: UICollectionViewCell {
 //        self.imageView.image = UIImage(named: "avatar3")
 //        self.label.text = "Promotions"
 
+        self.gradientBorderView.isHidden = true
+        self.backgroundGradientView.isHidden = false
+        self.label.textColor = UIColor.App.buttonTextPrimary
+
+        self.newPillLabel.textColor = UIColor.App.buttonTextPrimary
+        self.newPillBaseView.backgroundColor = UIColor.App.highlightSecondary.withAlphaComponent(0.6)
+        self.newPillForegroundView.backgroundColor = UIColor.App.highlightSecondary
+
         if viewModel.read {
-            self.gradientBorderView.isHidden = false
-            self.backgroundGradientView.isHidden = true
-            self.label.textColor = UIColor.App.textPrimary
+            self.newPillBaseView.isHidden = false
         }
         else {
-            self.gradientBorderView.isHidden = true
-            self.backgroundGradientView.isHidden = false
-            self.label.textColor = UIColor.App.buttonTextPrimary
+            self.newPillBaseView.isHidden = true
         }
     }
 

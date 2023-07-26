@@ -17,7 +17,11 @@ class MarketGroupDetailsViewController: UIViewController {
     private lazy var loadingActivityIndicatorView: UIActivityIndicatorView = Self.createLoadingActivityIndicatorView()
     private let loadingSpinnerViewController = LoadingSpinnerViewController()
 
-    private var expandedMarketGroupIds: Set<String> = []
+    private let expandCollapseButton = UIButton(type: .system)
+
+    private var seeAllOutcomesMarketGroupIds: Set<String> = []
+    private var isCollapsedMarketGroupIds: Set<String> = []
+
     private var viewModel: MarketGroupDetailsViewModel
     private var betBuilderGrayoutsState: BetBuilderGrayoutsState = BetBuilderGrayoutsState()
     
@@ -25,10 +29,12 @@ class MarketGroupDetailsViewController: UIViewController {
 
     weak var innerTableViewScrollDelegate: InnerTableViewScrollDelegate?
 
-    //MARK:- Stored Properties for Scroll Delegate
+    //
+    // MARK: - Stored Properties for Scroll Delegate
     private var dragDirection: InnerScrollDragDirection = .up
     private var oldContentOffset = CGPoint.zero
 
+    //
     // MARK: - Lifetime and Cycle
     init(viewModel: MarketGroupDetailsViewModel) {
         self.viewModel = viewModel
@@ -59,6 +65,26 @@ class MarketGroupDetailsViewController: UIViewController {
         self.tableView.register(OverUnderMarketDetailTableViewCell.nib, forCellReuseIdentifier: OverUnderMarketDetailTableViewCell.identifier)
 
 //        self.tableView.bounces = false
+
+        let headerView = UIView(frame: CGRect(x: 0, y: 0, width: 186, height: 20))
+        headerView.backgroundColor = UIColor.clear
+
+        self.expandCollapseButton.setTitle("Collapse all", for: .normal)
+        self.expandCollapseButton.setTitleColor(UIColor.App.textSecondary, for: .normal)
+        self.expandCollapseButton.titleLabel?.font = AppFont.with(type: .medium, size: 11)
+        self.expandCollapseButton.translatesAutoresizingMaskIntoConstraints = false
+        headerView.addSubview(self.expandCollapseButton)
+        self.expandCollapseButton.addTarget(self, action: #selector(toggleExpandAll), for: .primaryActionTriggered)
+
+        // Set constraints
+        NSLayoutConstraint.activate([
+            self.expandCollapseButton.trailingAnchor.constraint(equalTo: headerView.trailingAnchor, constant: -16),
+
+            self.expandCollapseButton.topAnchor.constraint(equalTo: headerView.topAnchor, constant: 8),
+            self.expandCollapseButton.bottomAnchor.constraint(equalTo: headerView.bottomAnchor, constant: 1),
+        ])
+
+        self.tableView.tableHeaderView = headerView
 
         self.addChildViewController(self.loadingSpinnerViewController, toView: self.loadingBaseView)
 
@@ -138,6 +164,13 @@ class MarketGroupDetailsViewController: UIViewController {
 
     private func reloadTableView() {
         self.tableView.reloadData()
+
+        if self.isCollapsedMarketGroupIds.isEmpty {
+            self.expandCollapseButton.setTitle("Collapse all", for: .normal)
+        }
+        else {
+            self.expandCollapseButton.setTitle("Expand all", for: .normal)
+        }
     }
 
     private func showLoading() {
@@ -172,7 +205,25 @@ class MarketGroupDetailsViewController: UIViewController {
             self.present(loginViewController, animated: true, completion: nil)
         }
     }
+
+    @objc func toggleExpandAll(sender: UIButton) {
+        if self.isCollapsedMarketGroupIds.isEmpty {
+            // Add all to collapsed
+            for row in 0..<self.viewModel.numberOfRows() {
+                if let marketGroupOrganizer = self.viewModel.marketGroupOrganizer(forRow: row) {
+                    self.isCollapsedMarketGroupIds.insert(marketGroupOrganizer.marketId)
+                }
+            }
+        }
+        else {
+            // Clear collapsed
+            self.isCollapsedMarketGroupIds = []
+        }
+
+        self.reloadTableView()
+    }
 }
+
 
 // MARK: - TableView Protocols
 //
@@ -204,15 +255,26 @@ extension MarketGroupDetailsViewController: UITableViewDataSource, UITableViewDe
             cell.match = self.viewModel.match
 
             cell.didExpandCellAction = { [weak self] marketGroupOrganizerId in
-                self?.expandedMarketGroupIds.insert(marketGroupOrganizerId)
+                self?.seeAllOutcomesMarketGroupIds.insert(marketGroupOrganizerId)
                 self?.reloadTableView()
             }
             cell.didColapseCellAction = {  [weak self] marketGroupOrganizerId in
-                self?.expandedMarketGroupIds.remove(marketGroupOrganizerId)
+                self?.seeAllOutcomesMarketGroupIds.remove(marketGroupOrganizerId)
                 self?.reloadTableView()
             }
+
+            cell.didExpandAllCellAction = { [weak self] marketGroupOrganizerId in
+                self?.isCollapsedMarketGroupIds.remove(marketGroupOrganizerId)
+                self?.reloadTableView()
+            }
+            cell.didColapseAllCellAction = {  [weak self] marketGroupOrganizerId in
+                self?.isCollapsedMarketGroupIds.insert(marketGroupOrganizerId)
+                self?.reloadTableView()
+            }
+
             cell.configure(withMarketGroupOrganizer: marketGroupOrganizer,
-                           isExpanded: self.expandedMarketGroupIds.contains(marketGroupOrganizer.marketId),
+                           seeAllOutcomes: self.seeAllOutcomesMarketGroupIds.contains(marketGroupOrganizer.marketId),
+                           isExpanded: !self.isCollapsedMarketGroupIds.contains(marketGroupOrganizer.marketId),
                            betBuilderGrayoutsState: self.betBuilderGrayoutsState)
 
             cell.didLongPressOdd = { [weak self] bettingTicket in
@@ -231,15 +293,26 @@ extension MarketGroupDetailsViewController: UITableViewDataSource, UITableViewDe
             cell.match = self.viewModel.match
 
             cell.didExpandCellAction = {  [weak self] marketGroupOrganizerId in
-                self?.expandedMarketGroupIds.insert(marketGroupOrganizerId)
+                self?.seeAllOutcomesMarketGroupIds.insert(marketGroupOrganizerId)
                 self?.reloadTableView()
             }
             cell.didColapseCellAction = {  [weak self] marketGroupOrganizerId in
-                self?.expandedMarketGroupIds.remove(marketGroupOrganizerId)
+                self?.seeAllOutcomesMarketGroupIds.remove(marketGroupOrganizerId)
                 self?.reloadTableView()
             }
+
+            cell.didExpandAllCellAction = { [weak self] marketGroupOrganizerId in
+                self?.isCollapsedMarketGroupIds.remove(marketGroupOrganizerId)
+                self?.reloadTableView()
+            }
+            cell.didColapseAllCellAction = {  [weak self] marketGroupOrganizerId in
+                self?.isCollapsedMarketGroupIds.insert(marketGroupOrganizerId)
+                self?.reloadTableView()
+            }
+
             cell.configure(withMarketGroupOrganizer: marketGroupOrganizer,
-                           isExpanded: self.expandedMarketGroupIds.contains(marketGroupOrganizer.marketId),
+                           seeAllOutcomes: self.seeAllOutcomesMarketGroupIds.contains(marketGroupOrganizer.marketId),
+                           isExpanded: !self.isCollapsedMarketGroupIds.contains(marketGroupOrganizer.marketId),
                            betBuilderGrayoutsState: self.betBuilderGrayoutsState)
 
             cell.didLongPressOdd = { [weak self] bettingTicket in
@@ -258,15 +331,26 @@ extension MarketGroupDetailsViewController: UITableViewDataSource, UITableViewDe
             cell.match = self.viewModel.match
 
             cell.didExpandCellAction = {  [weak self] marketGroupOrganizerId in
-                self?.expandedMarketGroupIds.insert(marketGroupOrganizerId)
+                self?.seeAllOutcomesMarketGroupIds.insert(marketGroupOrganizerId)
                 self?.reloadTableView()
             }
             cell.didColapseCellAction = {  [weak self] marketGroupOrganizerId in
-                self?.expandedMarketGroupIds.remove(marketGroupOrganizerId)
+                self?.seeAllOutcomesMarketGroupIds.remove(marketGroupOrganizerId)
                 self?.reloadTableView()
             }
+
+            cell.didExpandAllCellAction = { [weak self] marketGroupOrganizerId in
+                self?.isCollapsedMarketGroupIds.remove(marketGroupOrganizerId)
+                self?.reloadTableView()
+            }
+            cell.didColapseAllCellAction = {  [weak self] marketGroupOrganizerId in
+                self?.isCollapsedMarketGroupIds.insert(marketGroupOrganizerId)
+                self?.reloadTableView()
+            }
+
             cell.configure(withMarketGroupOrganizer: marketGroupOrganizer,
-                           isExpanded: self.expandedMarketGroupIds.contains(marketGroupOrganizer.marketId),
+                           seeAllOutcomes: self.seeAllOutcomesMarketGroupIds.contains(marketGroupOrganizer.marketId),
+                           isExpanded: !self.isCollapsedMarketGroupIds.contains(marketGroupOrganizer.marketId),
                            betBuilderGrayoutsState: self.betBuilderGrayoutsState)
 
             cell.didLongPressOdd = { [weak self] bettingTicket in

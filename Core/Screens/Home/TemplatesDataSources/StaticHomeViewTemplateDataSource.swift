@@ -162,7 +162,7 @@ class StaticHomeViewTemplateDataSource {
     }
 
     func requestSports() {
-        let allSports = Env.sportsStore.getAvailableSports()
+        let allSports = Env.sportsStore.getActiveSports()
         let prefixSports = allSports.filter({ $0.alphaId != nil }).prefix(10)
 
         // TODO: REMOVE THIS DEBUG CODE
@@ -538,6 +538,14 @@ extension StaticHomeViewTemplateDataSource: HomeViewTemplateDataSource {
         return nil
     }
 
+    func supplementaryEventId(forSection section: Int, forIndex index: Int) -> String? {
+        return nil
+    }
+
+    func matchLineTableCellViewModel(forSection section: Int, forIndex index: Int) -> MatchLineTableCellViewModel? {
+        return nil
+    }
+    
     func storyLineViewModel() -> StoriesLineCellViewModel? {
         return nil
     }

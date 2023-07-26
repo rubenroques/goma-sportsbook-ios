@@ -55,7 +55,7 @@ class LiveEventsViewController: UIViewController {
     var filterSelectedOption: Int = 0
     var selectedSport: Sport {
         didSet {
-            if let sportIconImage = UIImage(named: "sport_type_icon_\( selectedSport.id)") {
+            if let sportIconImage = UIImage(named: "sport_type_icon_\(self.selectedSport.id)") {
                 self.sportTypeIconImageView.image = sportIconImage
                 self.sportTypeIconImageView.setImageColor(color: UIColor.App.textPrimary)
             }
@@ -63,7 +63,7 @@ class LiveEventsViewController: UIViewController {
                 self.sportTypeIconImageView.image = UIImage(named: "sport_type_icon_default")
                 self.sportTypeIconImageView.setImageColor(color: UIColor.App.textPrimary)
             }
-            self.viewModel.selectedSport = selectedSport
+            self.viewModel.selectedSport = self.selectedSport
         }
     }
 

@@ -5,8 +5,8 @@
 //  Created by Ruben Roques on 06/06/2023.
 //
 
-import Foundation
 import UIKit
+import Kingfisher
 import AVFoundation
 import AVKit
 
@@ -82,6 +82,7 @@ class StoriesFullScreenItemView: UIView {
     private var playerItemStatusObserver: NSKeyValueObservation?
     private var isReadyToPlayVideo: Bool = false
 
+    //
     private lazy var closeImageBaseView: UIView = Self.createCloseImageBaseView()
     private lazy var closeImageView: UIImageView = Self.createCloseImageView()
     private lazy var actionButton: UIButton = Self.createActionButton()
@@ -106,16 +107,12 @@ class StoriesFullScreenItemView: UIView {
 
     @available(iOS, unavailable)
     override init(frame: CGRect) {
-        super.init(frame: frame)
-
-        self.commonInit()
+        fatalError()
     }
 
     @available(iOS, unavailable)
     required init?(coder aDecoder: NSCoder) {
-        super.init(coder: aDecoder)
-
-        self.commonInit()
+        fatalError()
     }
 
     func commonInit() {
@@ -249,6 +246,7 @@ class StoriesFullScreenItemView: UIView {
         self.videoPlayerViewController.player?.pause()
     }
 
+    // Navigation between items
     @objc func didTapNextPageView() {
         self.resetVideo()
         self.nextPageRequestedAction()

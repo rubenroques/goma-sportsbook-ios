@@ -89,6 +89,18 @@ extension SportRadarEventDetailsStorage {
     
 
     // Market updates
+    func addMarket(_ market: Market) {
+        if self.marketsDictionary[market.id] != nil { // We already
+            updateMarketTradability(withId: market.id, isTradable: market.isTradable)
+            return
+        }
+        else {
+
+        }
+
+
+    }
+
     func updateMarketTradability(withId id: String, isTradable: Bool) {
         guard
             let marketSubject = self.marketsDictionary[id]

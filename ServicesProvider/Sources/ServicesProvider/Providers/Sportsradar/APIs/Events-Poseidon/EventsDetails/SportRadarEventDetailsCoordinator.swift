@@ -175,7 +175,11 @@ extension SportRadarEventDetailsCoordinator {
 
     func updatedLiveData(eventLiveDataExtended: SportRadarModels.EventLiveDataExtended, forContentIdentifier contentIdentifier: ContentIdentifier) {
 
-        guard contentIdentifier == self.liveDataContentIdentifier || contentIdentifier == self.marketsContentIdentifier else { return }
+        guard
+            contentIdentifier == self.liveDataContentIdentifier ||  contentIdentifier == self.marketsContentIdentifier
+        else {
+            return
+        }
 
         if let newStatus = eventLiveDataExtended.status?.stringValue {
             self.storage.updateEventStatus(newStatus: newStatus)
@@ -183,6 +187,7 @@ extension SportRadarEventDetailsCoordinator {
         if let newTime = eventLiveDataExtended.matchTime {
             self.storage.updateEventTime(newTime: newTime)
         }
+
         self.storage.updateEventScore(newHomeScore: eventLiveDataExtended.homeScore, newAwayScore: eventLiveDataExtended.awayScore)
 
         if let storedEvent = self.storage.storedEvent() {

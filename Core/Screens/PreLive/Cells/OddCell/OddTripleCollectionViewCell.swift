@@ -404,27 +404,25 @@ class OddTripleCollectionViewCell: UICollectionViewCell {
 
         self.participantsCountryImageView.image = UIImage(named: "market_stats_icon")
 
-
-        self.marketSubscriber = Env.servicesProvider.subscribeToEventMarketUpdates(withId: market.id)
-            .compactMap({ $0 })
-            .map({ (serviceProviderMarket: ServicesProvider.Market) -> Market in
-                return ServiceProviderModelMapper.market(fromServiceProviderMarket: serviceProviderMarket)
-            })
-            .receive(on: DispatchQueue.main)
-            .sink(receiveCompletion: { completion in
-                print("marketSubscriber subscribeToEventMarketUpdates completion: \(completion)")
-            }, receiveValue: { [weak self] (marketUpdated: Market) in
-
-                if marketUpdated.isAvailable {
-                    self?.showMarketButtons()
-                    print("subscribeToEventMarketUpdates market \(marketUpdated.id)-\(marketUpdated.isAvailable) will show \n")
-                }
-                else {
-                    self?.showSuspendedView()
-                    print("subscribeToEventMarketUpdates market \(marketUpdated.id)-\(marketUpdated.isAvailable) will hide \n")
-                }
-            })
-
+//        self.marketSubscriber = Env.servicesProvider.subscribeToEventMarketUpdates(withId: market.id)
+//            .compactMap({ $0 })
+//            .map({ (serviceProviderMarket: ServicesProvider.Market) -> Market in
+//                return ServiceProviderModelMapper.market(fromServiceProviderMarket: serviceProviderMarket)
+//            })
+//            .receive(on: DispatchQueue.main)
+//            .sink(receiveCompletion: { completion in
+//                print("marketSubscriber subscribeToEventMarketUpdates completion: \(completion)")
+//            }, receiveValue: { [weak self] (marketUpdated: Market) in
+//
+//                if marketUpdated.isAvailable {
+//                    self?.showMarketButtons()
+//                    print("subscribeToEventMarketUpdates market \(marketUpdated.id)-\(marketUpdated.isAvailable) will show \n")
+//                }
+//                else {
+//                    self?.showSuspendedView()
+//                    print("subscribeToEventMarketUpdates market \(marketUpdated.id)-\(marketUpdated.isAvailable) will hide \n")
+//                }
+//            })
 
         //
         if let outcome = market.outcomes[safe: 0] {
@@ -433,9 +431,7 @@ class OddTripleCollectionViewCell: UICollectionViewCell {
 
             self.isLeftOutcomeButtonSelected = Env.betslipManager.hasBettingTicket(withId: outcome.bettingOffer.id)
 
-            // Check for SportRadar invalid odd
             if !outcome.bettingOffer.decimalOdd.isNaN {
-//            self.leftOddValueLabel.text = OddConverter.stringForValue(outcome.bettingOffer.decimalOdd, format: UserDefaults.standard.userOddsFormat)
                 self.leftOddValueLabel.text = OddFormatter.formatOdd(withValue: outcome.bettingOffer.decimalOdd)
             }
             else {
@@ -444,47 +440,45 @@ class OddTripleCollectionViewCell: UICollectionViewCell {
                 self.leftOddValueLabel.text = "-"
             }
 
-            self.leftOddButtonSubscriber = Env.servicesProvider
-                .subscribeToEventOutcomeUpdates(withId: outcome.bettingOffer.id)
-                .compactMap({ $0 })
-                .map(ServiceProviderModelMapper.outcome(fromServiceProviderOutcome: ))
-                .map(\.bettingOffer)
-                .receive(on: DispatchQueue.main)
-                .sink(receiveCompletion: { completion in
-                    print("leftOddButtonSubscriber subscribeToOutcomeUpdates completion: \(completion)")
-                }, receiveValue: { [weak self] bettingOffer in
-
-                    guard let weakSelf = self else { return }
-
-                    if !bettingOffer.isAvailable {
-                        weakSelf.leftBaseView.isUserInteractionEnabled = false
-                        weakSelf.leftBaseView.alpha = 0.5
-                        weakSelf.leftOddValueLabel.text = "-"
-                    }
-                    else {
-                        weakSelf.leftBaseView.isUserInteractionEnabled = true
-                        weakSelf.leftBaseView.alpha = 1.0
-
-                        let newOddValue = bettingOffer.decimalOdd
-
-                        if let currentOddValue = weakSelf.currentLeftOddValue {
-                            if newOddValue > currentOddValue {
-                                weakSelf.highlightOddChangeUp(animated: true,
-                                                              upChangeOddValueImage: weakSelf.leftUpChangeOddValueImage,
-                                                              baseView: weakSelf.leftBaseView)
-                            }
-                            else if newOddValue < currentOddValue {
-                                weakSelf.highlightOddChangeDown(animated: true,
-                                                                downChangeOddValueImage: weakSelf.leftDownChangeOddValueImage,
-                                                                baseView: weakSelf.leftBaseView)
-                            }
-                        }
-                        weakSelf.currentLeftOddValue = newOddValue
-//                        weakSelf.leftOddValueLabel.text = OddConverter.stringForValue(newOddValue, format: UserDefaults.standard.userOddsFormat)
-                        weakSelf.leftOddValueLabel.text = OddFormatter.formatOdd(withValue: newOddValue)
-
-                    }
-                })
+//            self.leftOddButtonSubscriber = Env.servicesProvider
+//                .subscribeToEventOutcomeUpdates(withId: outcome.bettingOffer.id)
+//                .compactMap({ $0 })
+//                .map(ServiceProviderModelMapper.outcome(fromServiceProviderOutcome: ))
+//                .map(\.bettingOffer)
+//                .receive(on: DispatchQueue.main)
+//                .sink(receiveCompletion: { completion in
+//                    print("leftOddButtonSubscriber subscribeToOutcomeUpdates completion: \(completion)")
+//                }, receiveValue: { [weak self] bettingOffer in
+//
+//                    guard let weakSelf = self else { return }
+//
+//                    if !bettingOffer.isAvailable {
+//                        weakSelf.leftBaseView.isUserInteractionEnabled = false
+//                        weakSelf.leftBaseView.alpha = 0.5
+//                        weakSelf.leftOddValueLabel.text = "-"
+//                    }
+//                    else {
+//                        weakSelf.leftBaseView.isUserInteractionEnabled = true
+//                        weakSelf.leftBaseView.alpha = 1.0
+//
+//                        let newOddValue = bettingOffer.decimalOdd
+//
+//                        if let currentOddValue = weakSelf.currentLeftOddValue {
+//                            if newOddValue > currentOddValue {
+//                                weakSelf.highlightOddChangeUp(animated: true,
+//                                                              upChangeOddValueImage: weakSelf.leftUpChangeOddValueImage,
+//                                                              baseView: weakSelf.leftBaseView)
+//                            }
+//                            else if newOddValue < currentOddValue {
+//                                weakSelf.highlightOddChangeDown(animated: true,
+//                                                                downChangeOddValueImage: weakSelf.leftDownChangeOddValueImage,
+//                                                                baseView: weakSelf.leftBaseView)
+//                            }
+//                        }
+//                        weakSelf.currentLeftOddValue = newOddValue
+//                        weakSelf.leftOddValueLabel.text = OddFormatter.formatOdd(withValue: newOddValue)
+//                    }
+//                })
         }
 
         if let outcome = market.outcomes[safe: 1] {
@@ -493,9 +487,7 @@ class OddTripleCollectionViewCell: UICollectionViewCell {
 
             self.isMiddleOutcomeButtonSelected = Env.betslipManager.hasBettingTicket(withId: outcome.bettingOffer.id)
 
-            // Check for SportRadar invalid odd
             if !outcome.bettingOffer.decimalOdd.isNaN {
-//            self.middleOddValueLabel.text = OddConverter.stringForValue(outcome.bettingOffer.decimalOdd, format: UserDefaults.standard.userOddsFormat)
                 self.middleOddValueLabel.text = OddFormatter.formatOdd(withValue: outcome.bettingOffer.decimalOdd)
             }
             else {
@@ -504,48 +496,46 @@ class OddTripleCollectionViewCell: UICollectionViewCell {
                 self.middleOddValueLabel.text = "-"
             }
 
-            self.middleOddButtonSubscriber = Env.servicesProvider
-                .subscribeToEventOutcomeUpdates(withId: outcome.bettingOffer.id)
-                .compactMap({ $0 })
-                .map(ServiceProviderModelMapper.outcome(fromServiceProviderOutcome: ))
-                .map(\.bettingOffer)
-                .receive(on: DispatchQueue.main)
-                .sink(receiveCompletion: { completion in
-                    print("leftOddButtonSubscriber subscribeToOutcomeUpdates completion: \(completion)")
-                }, receiveValue: { [weak self] bettingOffer in
-
-                    guard let weakSelf = self else { return }
-
-                    if !bettingOffer.isAvailable {
-                        weakSelf.middleBaseView.isUserInteractionEnabled = false
-                        weakSelf.middleBaseView.alpha = 0.5
-                        weakSelf.middleOddValueLabel.text = "-"
-                    }
-                    else {
-                        weakSelf.middleBaseView.isUserInteractionEnabled = true
-                        weakSelf.middleBaseView.alpha = 1.0
-
-                        let newOddValue = bettingOffer.decimalOdd
-
-
-                        if let currentOddValue = weakSelf.currentMiddleOddValue {
-                            if newOddValue > currentOddValue {
-                                weakSelf.highlightOddChangeUp(animated: true,
-                                                              upChangeOddValueImage: weakSelf.middleUpChangeOddValueImage,
-                                                              baseView: weakSelf.middleBaseView)
-                            }
-                            else if newOddValue < currentOddValue {
-                                weakSelf.highlightOddChangeDown(animated: true,
-                                                                downChangeOddValueImage: weakSelf.middleDownChangeOddValueImage,
-                                                                baseView: weakSelf.middleBaseView)
-                            }
-                        }
-                        weakSelf.currentMiddleOddValue = newOddValue
-//                        weakSelf.middleOddValueLabel.text = OddConverter.stringForValue(newOddValue, format: UserDefaults.standard.userOddsFormat)
-                        weakSelf.middleOddValueLabel.text = OddFormatter.formatOdd(withValue: newOddValue)
-
-                    }
-                })
+//            self.middleOddButtonSubscriber = Env.servicesProvider
+//                .subscribeToEventOutcomeUpdates(withId: outcome.bettingOffer.id)
+//                .compactMap({ $0 })
+//                .map(ServiceProviderModelMapper.outcome(fromServiceProviderOutcome: ))
+//                .map(\.bettingOffer)
+//                .receive(on: DispatchQueue.main)
+//                .sink(receiveCompletion: { completion in
+//                    print("leftOddButtonSubscriber subscribeToOutcomeUpdates completion: \(completion)")
+//                }, receiveValue: { [weak self] bettingOffer in
+//
+//                    guard let weakSelf = self else { return }
+//
+//                    if !bettingOffer.isAvailable {
+//                        weakSelf.middleBaseView.isUserInteractionEnabled = false
+//                        weakSelf.middleBaseView.alpha = 0.5
+//                        weakSelf.middleOddValueLabel.text = "-"
+//                    }
+//                    else {
+//                        weakSelf.middleBaseView.isUserInteractionEnabled = true
+//                        weakSelf.middleBaseView.alpha = 1.0
+//
+//                        let newOddValue = bettingOffer.decimalOdd
+//
+//
+//                        if let currentOddValue = weakSelf.currentMiddleOddValue {
+//                            if newOddValue > currentOddValue {
+//                                weakSelf.highlightOddChangeUp(animated: true,
+//                                                              upChangeOddValueImage: weakSelf.middleUpChangeOddValueImage,
+//                                                              baseView: weakSelf.middleBaseView)
+//                            }
+//                            else if newOddValue < currentOddValue {
+//                                weakSelf.highlightOddChangeDown(animated: true,
+//                                                                downChangeOddValueImage: weakSelf.middleDownChangeOddValueImage,
+//                                                                baseView: weakSelf.middleBaseView)
+//                            }
+//                        }
+//                        weakSelf.currentMiddleOddValue = newOddValue
+//                        weakSelf.middleOddValueLabel.text = OddFormatter.formatOdd(withValue: newOddValue)
+//                    }
+//                })
         }
 
         if let outcome = market.outcomes[safe: 2] {
@@ -556,7 +546,6 @@ class OddTripleCollectionViewCell: UICollectionViewCell {
 
             // Check for SportRadar invalid odd
             if !outcome.bettingOffer.decimalOdd.isNaN {
-//            self.rightOddValueLabel.text = OddConverter.stringForValue(outcome.bettingOffer.decimalOdd, format: UserDefaults.standard.userOddsFormat)
                 self.rightOddValueLabel.text = OddFormatter.formatOdd(withValue: outcome.bettingOffer.decimalOdd)
             }
             else {
@@ -565,49 +554,47 @@ class OddTripleCollectionViewCell: UICollectionViewCell {
                 self.rightOddValueLabel.text = "-"
             }
 
-            self.rightOddButtonSubscriber = Env.servicesProvider
-                .subscribeToEventOutcomeUpdates(withId: outcome.bettingOffer.id)
-                .compactMap({ $0 })
-                .map(ServiceProviderModelMapper.outcome(fromServiceProviderOutcome: ))
-                .map(\.bettingOffer)
-                .receive(on: DispatchQueue.main)
-                .sink(receiveCompletion: { completion in
-                    print("leftOddButtonSubscriber subscribeToOutcomeUpdates completion: \(completion)")
-                }, receiveValue: { [weak self] bettingOffer in
-
-                    guard let weakSelf = self else { return }
-
-                    if !bettingOffer.isAvailable {
-                        weakSelf.rightBaseView.isUserInteractionEnabled = false
-                        weakSelf.rightBaseView.alpha = 0.5
-                        weakSelf.rightOddValueLabel.text = "-"
-                    }
-                    else {
-                        weakSelf.rightBaseView.isUserInteractionEnabled = true
-                        weakSelf.rightBaseView.alpha = 1.0
-
-                        let newOddValue = bettingOffer.decimalOdd
-
-
-                        if let currentOddValue = weakSelf.currentRightOddValue {
-                            if newOddValue > currentOddValue {
-                                weakSelf.highlightOddChangeUp(animated: true,
-                                                              upChangeOddValueImage: weakSelf.rightUpChangeOddValueImage,
-                                                              baseView: weakSelf.rightBaseView)
-                            }
-                            else if newOddValue < currentOddValue {
-                                weakSelf.highlightOddChangeDown(animated: true,
-                                                                downChangeOddValueImage: weakSelf.rightDownChangeOddValueImage,
-                                                                baseView: weakSelf.rightBaseView)
-                            }
-                        }
-
-                        weakSelf.currentRightOddValue = newOddValue
-//                        weakSelf.rightOddValueLabel.text = OddConverter.stringForValue(newOddValue, format: UserDefaults.standard.userOddsFormat)
-                        weakSelf.rightOddValueLabel.text = OddFormatter.formatOdd(withValue: newOddValue)
-
-                    }
-                })
+//            self.rightOddButtonSubscriber = Env.servicesProvider
+//                .subscribeToEventOutcomeUpdates(withId: outcome.bettingOffer.id)
+//                .compactMap({ $0 })
+//                .map(ServiceProviderModelMapper.outcome(fromServiceProviderOutcome: ))
+//                .map(\.bettingOffer)
+//                .receive(on: DispatchQueue.main)
+//                .sink(receiveCompletion: { completion in
+//                    print("leftOddButtonSubscriber subscribeToOutcomeUpdates completion: \(completion)")
+//                }, receiveValue: { [weak self] bettingOffer in
+//
+//                    guard let weakSelf = self else { return }
+//
+//                    if !bettingOffer.isAvailable {
+//                        weakSelf.rightBaseView.isUserInteractionEnabled = false
+//                        weakSelf.rightBaseView.alpha = 0.5
+//                        weakSelf.rightOddValueLabel.text = "-"
+//                    }
+//                    else {
+//                        weakSelf.rightBaseView.isUserInteractionEnabled = true
+//                        weakSelf.rightBaseView.alpha = 1.0
+//
+//                        let newOddValue = bettingOffer.decimalOdd
+//
+//
+//                        if let currentOddValue = weakSelf.currentRightOddValue {
+//                            if newOddValue > currentOddValue {
+//                                weakSelf.highlightOddChangeUp(animated: true,
+//                                                              upChangeOddValueImage: weakSelf.rightUpChangeOddValueImage,
+//                                                              baseView: weakSelf.rightBaseView)
+//                            }
+//                            else if newOddValue < currentOddValue {
+//                                weakSelf.highlightOddChangeDown(animated: true,
+//                                                                downChangeOddValueImage: weakSelf.rightDownChangeOddValueImage,
+//                                                                baseView: weakSelf.rightBaseView)
+//                            }
+//                        }
+//
+//                        weakSelf.currentRightOddValue = newOddValue
+//                        weakSelf.rightOddValueLabel.text = OddFormatter.formatOdd(withValue: newOddValue)
+//                    }
+//                })
         }
     }
 

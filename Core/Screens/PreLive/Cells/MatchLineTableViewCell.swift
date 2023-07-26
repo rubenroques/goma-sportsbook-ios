@@ -7,8 +7,104 @@
 
 import UIKit
 import Combine
+import ServicesProvider
+
+class MatchLineTableCellViewModel {
+
+    var matchPublisher: AnyPublisher<Match?, Never> {
+        return self.matchCurrentValueSubject.eraseToAnyPublisher()
+    }
+
+    private let matchCurrentValueSubject = CurrentValueSubject<Match?, Never>.init(nil)
+
+    private var subscription: ServicesProvider.Subscription?
+    private var cancellables: Set<AnyCancellable> = []
+
+    //
+    init(matchId: String) {
+        print("MatchLineTableCellViewModel init with ID: \(matchId)")
+        self.loadEventDetails(fromId: matchId)
+    }
+
+    init(match: Match, withFullMarkets fullMarkets: Bool = false) {
+        print("MatchLineTableCellViewModel init with match \(match.homeParticipant.name) x \(match.awayParticipant.name)")
+
+        if !fullMarkets {
+            self.loadEventDetails(fromId: match.id)
+            self.matchCurrentValueSubject.send(match)
+        }
+        else {
+            self.matchCurrentValueSubject.send(match)
+        }
+
+    }
+
+    deinit {
+        print("MatchLineTableCellViewModel.deinit")
+    }
+
+    //
+    //
+    private func loadEventDetails(fromId id: String) {
+
+        Env.servicesProvider.getEventDetails(eventId: id)
+            .filter { eventSummary in
+                return eventSummary.type == .match
+            }
+            .map(ServiceProviderModelMapper.match(fromEvent:))
+            .receive(on: DispatchQueue.main)
+            .sink { completion in
+                print("completion \(completion)")
+            } receiveValue: { [weak self] updatedMatch in
+
+                var knownMarketGroups: Set<String> = []
+                var filteredMarkets = [Market]()
+
+                for market in updatedMatch.markets.filter({ $0.outcomes.count == 3 || $0.outcomes.count == 2 }) {
+                    if let marketTypeId = market.marketTypeId, !knownMarketGroups.contains(marketTypeId) {
+                        knownMarketGroups.insert(marketTypeId)
+                        filteredMarkets.append(market)
+                    }
+
+                    if knownMarketGroups.count >= 5 {
+                        break
+                    }
+                }
+                let sortedMarkets = filteredMarkets.sorted { leftMarket, rightMarket  in
+                    return (leftMarket.marketTypeId ?? "") < (rightMarket.marketTypeId ?? "")
+                }.prefix(5)
+
+
+                if var oldMatch = self?.matchCurrentValueSubject.value {
+                    // We already have a match we only update/replace the markets
+                    oldMatch.markets = Array(sortedMarkets)
+                    self?.matchCurrentValueSubject.send(oldMatch)
+                }
+                else {
+                    // We don't have a match yet, we need to use this one
+                    var newUpdatedMatch = updatedMatch
+                    newUpdatedMatch.markets = Array(sortedMarkets)
+                    self?.matchCurrentValueSubject.send(newUpdatedMatch)
+                }
+
+            }
+            .store(in: &self.cancellables)
+
+    }
+
+}
 
 class MatchLineTableViewCell: UITableViewCell {
+
+    var viewModel: MatchLineTableCellViewModel? {
+        didSet {
+            if let viewModel = self.viewModel {
+                self.configureWithViewModel(viewModel)
+            }
+        }
+    }
+
+    var matchStatsViewModel: MatchStatsViewModel?
 
     @IBOutlet private var debugLabel: UILabel!
     @IBOutlet private var backSliderView: UIView!
@@ -20,6 +116,8 @@ class MatchLineTableViewCell: UITableViewCell {
     @IBOutlet private var collectionViewTopMarginConstraint: NSLayoutConstraint!
     @IBOutlet private var collectionViewBottomMarginConstraint: NSLayoutConstraint!
 
+    @IBOutlet private var loadingView: UIActivityIndicatorView!
+
     private var cachedCardsStyle: CardsStyle?
 
     private var match: Match?
@@ -30,8 +128,6 @@ class MatchLineTableViewCell: UITableViewCell {
     private var liveMatch: Bool = false
 
     private var matchInfoPublisher: AnyCancellable?
-
-    var matchStatsViewModel: MatchStatsViewModel?
 
     var tappedMatchLineAction: ((Match) -> Void)?
     var matchWentLive: (() -> Void)?
@@ -45,7 +141,7 @@ class MatchLineTableViewCell: UITableViewCell {
         return cardHeight + cellInternSpace + cellInternSpace
     }
     
-    private var selectedSeeMoreMarketsCollectionViewCell: SeeMoreMarketsCollectionViewCell? = nil {
+    private var selectedSeeMoreMarketsCollectionViewCell: SeeMoreMarketsCollectionViewCell? {
         willSet {
             self.selectedSeeMoreMarketsCollectionViewCell?.transitionId = nil
         }
@@ -54,10 +150,15 @@ class MatchLineTableViewCell: UITableViewCell {
         }
     }
 
+    private var cancellables: Set<AnyCancellable> = []
+
     override func awakeFromNib() {
         super.awakeFromNib()
 
         self.selectionStyle = .none
+
+        self.loadingView.hidesWhenStopped = true
+        self.loadingView.stopAnimating()
 
         self.cachedCardsStyle = StyleHelper.cardsStyleActive()
         
@@ -114,6 +215,11 @@ class MatchLineTableViewCell: UITableViewCell {
 
         self.selectionStyle = .none
 
+        self.viewModel = nil
+
+        self.loadingView.hidesWhenStopped = true
+        self.loadingView.stopAnimating()
+
         self.shouldShowCountryFlag = true
         self.liveMatch = false
 
@@ -152,6 +258,28 @@ class MatchLineTableViewCell: UITableViewCell {
         self.setupWithTheme()
     }
 
+    private func configureWithViewModel(_ viewModel: MatchLineTableCellViewModel) {
+
+        viewModel.matchPublisher
+            .receive(on: DispatchQueue.main)
+            .sink { completion in
+                switch completion {
+                case .finished: ()
+                case .failure: ()
+                }
+            } receiveValue: { match in
+                if let match = match {
+                    self.setupWithMatch(match)
+                    self.loadingView.stopAnimating()
+                }
+                else {
+                    self.loadingView.startAnimating()
+                }
+            }
+            .store(in: &self.cancellables)
+
+    }
+
     func setupWithTheme() {
 
         self.backgroundColor = .clear
@@ -164,7 +292,7 @@ class MatchLineTableViewCell: UITableViewCell {
         self.backSliderView.backgroundColor = UIColor.App.buttonBackgroundSecondary
     }
 
-    func setupWithMatch(_ match: Match, liveMatch: Bool = false) {
+    private func setupWithMatch(_ match: Match, liveMatch: Bool = false) {
         
         self.match = match
         self.liveMatch = liveMatch

@@ -182,7 +182,7 @@ class FavoritesManager {
 
                         let favoriteListId = favoritesListAddResponse.listId
 
-                        if let defaultEventId = Env.sportsStore.defaultSportWithCodeId.numericId {
+                        if let defaultEventId = Env.sportsStore.defaultSport.numericId {
                             self?.addFavoriteToList(listId: favoriteListId, eventId: defaultEventId)
                         }
 

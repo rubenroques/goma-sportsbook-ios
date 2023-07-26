@@ -68,7 +68,7 @@ class OutrightMarketDetailsViewModel {
         self.isLoadingPublisher.send(true)
 
         if competition.competitionInfo == nil {
-            Env.servicesProvider.subscribeMatchDetails(matchId: competition.id)
+            Env.servicesProvider.subscribeEventDetails(eventId: competition.id)
                 .receive(on: DispatchQueue.main)
                 .sink(receiveCompletion: { [weak self] completion in
                     print("Env.servicesProvider.subscribeEventDetails completed \(completion)")

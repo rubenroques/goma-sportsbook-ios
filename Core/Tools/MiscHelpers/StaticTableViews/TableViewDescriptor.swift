@@ -11,6 +11,7 @@ import UIKit
 public protocol TableViewDescriptor {
     var icon: UIImage? { get }
     var label: String { get }
+    var hasSwitch: Bool { get }
     var detailLabel: String? { get }
     static var layout: [[Self]] { get }
     var style: UITableViewCell.CellStyle { get }

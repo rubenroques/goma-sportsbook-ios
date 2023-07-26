@@ -297,9 +297,18 @@ extension SportRadarModels {
                 if let eventLiveData = (try? container.decode(SportRadarModels.EventLiveDataExtended.self, forKey: .change)) {
                     return .updateEventLiveDataExtended(contentIdentifier: contentIdentifier, eventId: eventId , eventLiveDataExtended: eventLiveData)
                 }
-                else if path.lowercased().contains("matchtime"), let matchTime = try container.decodeIfPresent(String.self, forKey: .change) {
-                    let eventLiveDataExtended = SportRadarModels.EventLiveDataExtended.init(id: eventId, homeScore: nil, awayScore: nil, matchTime: matchTime, status: nil)
-                    return .updateEventLiveDataExtended(contentIdentifier: contentIdentifier, eventId: eventId, eventLiveDataExtended: eventLiveDataExtended)
+                else if path.contains("matchTime"),
+                        let matchTime = try container.decodeIfPresent(String.self, forKey: .change),
+                        let minutesPart = SocketMessageParseHelper.extractMatchMinutes(from: matchTime)
+                {
+                    let eventLiveDataExtended = SportRadarModels.EventLiveDataExtended.init(id: eventId,
+                                                                                            homeScore: nil,
+                                                                                            awayScore: nil,
+                                                                                            matchTime: minutesPart,
+                                                                                            status: nil)
+                    return .updateEventLiveDataExtended(contentIdentifier: contentIdentifier,
+                                                        eventId: eventId,
+                                                        eventLiveDataExtended: eventLiveDataExtended)
                 }
                 return .unknown
             }
@@ -362,7 +371,7 @@ extension SportRadarModels {
                     return .updateOutcomeOdd(contentIdentifier: contentIdentifier, selectionId: selectionId, newOddNumerator: oddNumerator, newOddDenominator: oddDenominator)
                 }
             }
-            else if path.contains("idfoevent") && path.contains("numMarkets"), let eventId = SocketMessageParseHelper.extractEventId(path) {
+            else if path.contains("numMarkets"), let eventId = SocketMessageParseHelper.extractEventId(path) {
                 // Changed the number of markets for an event
                 let newMarketCount = try container.decode(Int.self, forKey: .change)
                 return .updateEventMarketCount(contentIdentifier: contentIdentifier, eventId: eventId, newMarketCount: newMarketCount)
@@ -380,21 +389,21 @@ extension SportRadarModels {
 
                 return .updateEventScore(contentIdentifier: contentIdentifier, eventId: eventId, homeScore: homeScore, awayScore: awayScore)
             }
-            else if path.contains("scores") && path.contains("liveDataSummary") && (path.contains("MATCH_SCORE") || path.contains("CURRENT_SCORE")), let eventId = SocketMessageParseHelper.extractEventId(path) {
+            else if path.contains("scores") && (path.contains("MATCH_SCORE") || path.contains("CURRENT_SCORE")), let eventId = SocketMessageParseHelper.extractEventId(path) {
                 // Updated score information
                 let changeContainer = try container.nestedContainer(keyedBy: ScoreUpdateCodingKeys.self, forKey: .change)
                 let homeScore = try changeContainer.decodeIfPresent(Int.self, forKey: .home)
                 let awayScore = try changeContainer.decodeIfPresent(Int.self, forKey: .away)
                 return .updateEventScore(contentIdentifier: contentIdentifier, eventId: eventId, homeScore: homeScore, awayScore: awayScore)
             }
-            else if path.contains("matchTime") && path.contains("liveDataSummary"), let eventId = SocketMessageParseHelper.extractEventId(path) {
+            else if path.contains("matchTime"), let eventId = SocketMessageParseHelper.extractEventId(path) {
                 // Match time
                 let matchTime = try container.decode(String.self, forKey: .change)
                 if let minutesPart = SocketMessageParseHelper.extractMatchMinutes(from: matchTime) {
                     return .updateEventTime(contentIdentifier: contentIdentifier, eventId: eventId, newTime: minutesPart)
                 }
             }
-            else if path.contains("status") && path.contains("liveDataSummary"), let eventId = SocketMessageParseHelper.extractEventId(path) {
+            else if path.contains("status"), let eventId = SocketMessageParseHelper.extractEventId(path) {
                 let newStatus = try container.decode(String.self, forKey: .change)
                 return .updateEventState(contentIdentifier: contentIdentifier, eventId: eventId, state: newStatus)
             }
@@ -404,7 +413,6 @@ extension SportRadarModels {
                    let oddDenominator = try changeContainer.decodeIfPresent(String.self, forKey: .oddDenominator),
                    let selectionId = try? changeContainer.decode(String.self, forKey: .selectionId) {
 
-                    // print("ContentContainer updated market odd with id \(marketId) and associated change \(changeType)")
                     return .updateOutcomeOdd(contentIdentifier: contentIdentifier,
                                              selectionId: selectionId,
                                              newOddNumerator: oddNumerator,
@@ -429,12 +437,11 @@ extension SportRadarModels {
                     }
                 }
             }
-            else if path.contains("markets") && path.contains("idfomarket") && path.contains("istradable"), let marketId = SocketMessageParseHelper.extractMarketId(path) {
+            else if path.contains("markets") && path.contains("istradable"), let marketId = SocketMessageParseHelper.extractMarketId(path) {
                 let newIsTradable = (try? container.decode(Bool.self, forKey: .change)) ?? true
                 return .updateMarketTradability(contentIdentifier: contentIdentifier, marketId: marketId, isTradable: newIsTradable)
             }
-
-            else if path.contains("selections") && path.contains("idfoselection"), let selectionId = SocketMessageParseHelper.extractSelectionId(path) {
+            else if path.contains("selections"), let selectionId = SocketMessageParseHelper.extractSelectionId(path) {
                 print("Updated Selection \(selectionId)")
             }
             else if contentIdentifier.contentType == .market, // Is a contentRout of market updates

@@ -82,14 +82,13 @@ class TopCompetitionsDataSource: NSObject, UITableViewDataSource, UITableViewDel
                     cell.matchStatsViewModel = matchStatsViewModel
                 }
 
-                cell.setupWithMatch(match)
+                let viewModel = MatchLineTableCellViewModel(match: match)
+                cell.viewModel = viewModel
+
                 cell.shouldShowCountryFlag(false)
                 cell.tappedMatchLineAction = { [weak self] match in
                     self?.didSelectMatchAction?(match)
                 }
-//                cell.didTapFavoriteMatchAction = { [weak self] match in
-//                    self?.didTapFavoriteMatchAction?(match)
-//                }
                 return cell
             }
         }
@@ -100,14 +99,13 @@ class TopCompetitionsDataSource: NSObject, UITableViewDataSource, UITableViewDel
                 cell.matchStatsViewModel = matchStatsViewModel
             }
 
-            cell.setupWithMatch(match)
+            let viewModel = MatchLineTableCellViewModel(match: match)
+            cell.viewModel = viewModel
+
             cell.shouldShowCountryFlag(false)
             cell.tappedMatchLineAction = { [weak self] match in
                 self?.didSelectMatchAction?(match)
             }
-//            cell.didTapFavoriteMatchAction = { [weak self] match in
-//                self?.didTapFavoriteMatchAction?(match)
-//            }
             return cell
         }
 

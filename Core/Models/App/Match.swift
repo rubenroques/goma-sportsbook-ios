@@ -37,6 +37,7 @@ struct Match {
     var matchTime: String?
 
     var promoImageURL: String?
+    var oldMainMarketId: String?
 
     var detailedStatus: String {
         switch self.status {
@@ -77,7 +78,8 @@ struct Match {
          rootPartId: String,
          status: Status,
          matchTime: String? = nil,
-         promoImageURL: String? = nil) {
+         promoImageURL: String? = nil,
+         oldMainMarketId: String? = nil) {
 
         self.id = id
         self.competitionId = competitionId
@@ -98,6 +100,7 @@ struct Match {
         self.matchTime = matchTime
 
         self.promoImageURL = promoImageURL
+        self.oldMainMarketId = oldMainMarketId
     }
 
 
