@@ -358,9 +358,6 @@ class PreLiveEventsViewModel: NSObject {
 
                 }
             }, receiveValue: { [weak self] topCompetitions in
-
-                print("TOP COMPETITIONS: \(topCompetitions)")
-
                 self?.processTopCompetitions(topCompetitions: topCompetitions)
 
             })
@@ -400,7 +397,6 @@ class PreLiveEventsViewModel: NSObject {
             $0.key == currentSportName
         }) {
             self.hasTopCompetitions.send(true)
-            self.fetchTopCompetitionsMatches()
         }
         else {
             self.hasTopCompetitions.send(false)
@@ -425,9 +421,7 @@ class PreLiveEventsViewModel: NSObject {
             self.fetchTodayMatches()
         case .topCompetitions:
             self.fetchTopCompetitionsMatches()
-//            if self.lastCompetitionsMatchesRequested.isNotEmpty {
-//                self.fetchCompetitionsMatchesWithIds(lastCompetitionsMatchesRequested)
-//            }
+
         case .competitions:
             self.fetchCompetitionsFilters()
             if self.lastCompetitionsMatchesRequested.isNotEmpty {
