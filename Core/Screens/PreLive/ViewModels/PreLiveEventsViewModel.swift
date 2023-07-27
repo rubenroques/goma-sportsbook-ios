@@ -319,10 +319,15 @@ class PreLiveEventsViewModel: NSObject {
         self.competitionsMatchesSubscriptions
             .receive(on: DispatchQueue.main)
             .sink(receiveValue: { [weak self] competitionMatchesSubscriptions in
-                if competitionMatchesSubscriptions.count == self?.expectedCompetitionsPublisher.value {
-                    self?.isLoadingCompetitionMatches.send(false)
-                    self?.isLoadingEvents.send(false)
-                    self?.updateContentList()
+                guard let self = self else { return }
+
+                if competitionMatchesSubscriptions.count == self.expectedCompetitionsPublisher.value {
+                    self.isLoadingCompetitionMatches.send(false)
+                    self.isLoadingEvents.send(false)
+
+                    if self.matchListTypePublisher.value == .competitions {
+                        self.updateContentList()
+                    }
                 }
             })
             .store(in: &cancellables)
@@ -336,7 +341,10 @@ class PreLiveEventsViewModel: NSObject {
                    competitionMatchesSubscriptions.count == competitionsWithMarketGroups {
                     self.isLoadingCompetitionMatches.send(false)
                     self.isLoadingEvents.send(false)
-                    self.updateContentList()
+
+                    if self.matchListTypePublisher.value == .topCompetitions {
+                        self.updateContentList()
+                    }
                 }
 
             })
