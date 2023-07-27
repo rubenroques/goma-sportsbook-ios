@@ -280,6 +280,10 @@ class HomeViewController: UIViewController {
 
             storiesFullScreenViewController.modalPresentationStyle = .fullScreen
 
+            storiesFullScreenViewController.markReadAction = { [weak self] storyId in
+                self?.markStoryRead(id: storyId)
+            }
+
             self.present(storiesFullScreenViewController, animated: true)
         }
     }
@@ -289,6 +293,44 @@ class HomeViewController: UIViewController {
         let navigationViewController = Router.navigationController(with: betSelectorViewConroller)
         navigationViewController.modalPresentationStyle = .fullScreen
         self.present(navigationViewController, animated: true, completion: nil)
+    }
+
+    private func markStoryRead(id: String) {
+
+        if var storyLineViewModel = self.viewModel.storyLineViewModel() {
+
+            var updatedStoriesViewModels = [StoriesItemCellViewModel]()
+
+            for storyCellViewModel in storyLineViewModel.storiesViewModels {
+                if storyCellViewModel.id == id {
+                    let updatedStory = StoriesItemCellViewModel(id: storyCellViewModel.id,
+                                                                imageName: storyCellViewModel.imageName,
+                                                                title: storyCellViewModel.title,
+                                                                link: storyCellViewModel.link,
+                                                                contentString: storyCellViewModel.contentString,
+                                                                read: true)
+
+                    updatedStoriesViewModels.append(updatedStory)
+
+                }
+                else {
+                    let updatedStory = StoriesItemCellViewModel(id: storyCellViewModel.id,
+                                                                imageName: storyCellViewModel.imageName,
+                                                                title: storyCellViewModel.title,
+                                                                link: storyCellViewModel.link,
+                                                                contentString: storyCellViewModel.contentString,
+                                                                read: storyCellViewModel.read)
+
+                    updatedStoriesViewModels.append(updatedStory)
+                }
+            }
+
+            let updatedLineViewModel = StoriesLineCellViewModel(storiesViewModels: updatedStoriesViewModels)
+
+            self.viewModel.setStoryLineViewModel(viewModel: updatedLineViewModel)
+
+            self.tableView.reloadData()
+        }
     }
 
     @objc private func didTapOpenFavorites() {

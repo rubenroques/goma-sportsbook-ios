@@ -549,6 +549,10 @@ extension StaticHomeViewTemplateDataSource: HomeViewTemplateDataSource {
     func storyLineViewModel() -> StoriesLineCellViewModel? {
         return nil
     }
+
+    func setStoryLineViewModel(viewModel: StoriesLineCellViewModel) {
+        ()
+    }
     
 }
 

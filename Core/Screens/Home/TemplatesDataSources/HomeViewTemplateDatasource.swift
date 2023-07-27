@@ -41,4 +41,5 @@ protocol HomeViewTemplateDataSource {
 
     func matchLineTableCellViewModel(forSection section: Int, forIndex index: Int) -> MatchLineTableCellViewModel?
 
+    func setStoryLineViewModel(viewModel: StoriesLineCellViewModel)
 }

@@ -527,6 +527,10 @@ extension ClientManagedHomeViewTemplateDataSource: HomeViewTemplateDataSource {
         return self.storiesLineViewModel
     }
 
+    func setStoryLineViewModel(viewModel: StoriesLineCellViewModel) {
+        self.storiesLineViewModel = viewModel
+    }
+
     func sportGroupViewModel(forSection section: Int) -> SportGroupViewModel? {
         return nil
     }

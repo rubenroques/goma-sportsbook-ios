@@ -14,14 +14,51 @@ class StoriesFullScreenItemViewModel {
 
     var storyCellViewModel: StoriesItemCellViewModel
 
+    enum ContentType {
+        case image(sourceUrl: URL)
+        case video(sourceUrl: URL)
+    }
+
+    var contentType: ContentType?
+
+    let supportedImageTypes = ["png", "jpeg", "jpg"]
+    let supportedVideoTypes = ["mp4", "avi", "mov"]
+
+//    init(videoSourceURL: URL) {
+//        self.contentType = .video(sourceUrl: videoSourceURL)
+//    }
+//
+//    init(imageSourceURL: URL) {
+//    }
+
     init(storyCellViewModel: StoriesItemCellViewModel) {
         self.storyCellViewModel = storyCellViewModel
+
+        if let fileType = storyCellViewModel.contentString.split(separator: ".").last {
+
+            let fileTypeString = String(fileType)
+
+            if self.supportedImageTypes.contains(fileTypeString) {
+                if let contentUrl = URL(string: storyCellViewModel.contentString) {
+
+                    self.contentType = .image(sourceUrl: contentUrl)
+                }
+            }
+            else if self.supportedVideoTypes.contains(fileTypeString) {
+                if let contentUrl = URL(string: storyCellViewModel.contentString) {
+
+                    self.contentType = .video(sourceUrl: contentUrl)
+                }
+            }
+        }
+
     }
+
 }
 
 class StoriesFullScreenItemView: UIView {
 
-    var nextPageRequestedAction: () -> Void = { }
+    var nextPageRequestedAction: ((String?) -> Void)?
     var previousPageRequestedAction: () -> Void = { }
 
     var closeRequestedAction: () -> Void = { }
@@ -58,6 +95,8 @@ class StoriesFullScreenItemView: UIView {
 
     var viewModel: StoriesFullScreenItemViewModel?
 
+    var markedReadAction: ((String) -> Void)?
+
     // MARK: - Lifetime and Cycle
     init(index: Int, viewModel: StoriesFullScreenItemViewModel) {
         self.viewModel = viewModel
@@ -81,7 +120,7 @@ class StoriesFullScreenItemView: UIView {
         self.setupWithTheme()
 
         self.smoothProgressBarView.progressBarFinishedAction = { [weak self] in
-            self?.nextPageRequestedAction()
+            self?.nextPageRequestedAction?(nil)
         }
 
         let nextTapGesture = UITapGestureRecognizer(target: self, action: #selector(didTapNextPageView))
@@ -99,12 +138,40 @@ class StoriesFullScreenItemView: UIView {
         if let viewModel = self.viewModel {
             self.topLabel.text = viewModel.storyCellViewModel.title
 
-            if let url = URL(string: viewModel.storyCellViewModel.contentString) {
-                self.contentImageView.kf.setImage(with: url)
+            if let contentType = viewModel.contentType {
+                switch contentType {
+                case .video(let sourceUrl):
+                    self.videoBaseView.isHidden = false
+                    self.contentImageView.isHidden = true
+
+                    self.addVideoView(withURL: sourceUrl)
+                case .image(let sourceUrl):
+                    self.videoBaseView.isHidden = true
+                    self.contentImageView.isHidden = false
+
+                    self.contentImageView.kf.setImage(with: sourceUrl)
+
+                }
             }
 
         }
+
     }
+
+    override func layoutSubviews() {
+            super.layoutSubviews()
+
+            if let mainPlayerLayer = self.videoPlayerViewController.view.layer.sublayers?.compactMap({ $0 as? AVPlayerLayer }).first {
+                mainPlayerLayer.videoGravity = AVLayerVideoGravity.resizeAspectFill
+
+                print("VideoStatus Size 3 \(mainPlayerLayer.frame)")
+
+                print("VideoStatus Size 1 \(self.videoBaseView)")
+
+                print("VideoStatus Size 0 \(self.frame)")
+
+            }
+        }
 
     override func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {
         super.traitCollectionDidChange(previousTraitCollection)
@@ -129,6 +196,7 @@ class StoriesFullScreenItemView: UIView {
         StyleHelper.styleButton(button: self.actionButton)
         self.actionButton.titleLabel?.font = AppFont.with(type: .bold, size: 17)
         self.actionButton.setBackgroundColor(UIColor.App.buttonBackgroundSecondary, for: .normal)
+
     }
 
     func resetProgress() {
@@ -138,23 +206,26 @@ class StoriesFullScreenItemView: UIView {
     }
 
     func startProgress() {
+        if let contentType = self.viewModel?.contentType {
+            switch contentType {
+            case .video:
+                self.playVideo()
 
-        self.smoothProgressBarView.startProgress()
-//
-//        switch self.viewModel.contentType {
-//        case .video:
-//            self.playVideo()
-//
-//            if let duration = self.videoPlayerViewController.player?.currentItem?.duration.seconds {
-//                self.smoothProgressBarView.startProgress(duration: TimeInterval(duration))
-//            }
-//            else {
-//                self.smoothProgressBarView.startProgress()
-//            }
-//
-//        case .image:
-//
-//        }
+                if let duration = self.videoPlayerViewController.player?.currentItem?.duration.seconds {
+                    self.smoothProgressBarView.startProgress(duration: TimeInterval(duration))
+                }
+                else {
+                    self.smoothProgressBarView.startProgress()
+                }
+
+            case .image:
+                self.smoothProgressBarView.startProgress()
+            }
+        }
+
+        if let viewModel = self.viewModel {
+            self.markedReadAction?(viewModel.storyCellViewModel.id)
+        }
 
     }
 
@@ -192,8 +263,10 @@ class StoriesFullScreenItemView: UIView {
 
     // Navigation between items
     @objc func didTapNextPageView() {
-        self.resetVideo()
-        self.nextPageRequestedAction()
+        if let storyId = self.viewModel?.storyCellViewModel.id {
+            self.resetVideo()
+            self.nextPageRequestedAction?(storyId)
+        }
     }
 
     @objc func didTapPreviousPageView() {

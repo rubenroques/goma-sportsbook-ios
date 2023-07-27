@@ -30,6 +30,8 @@ class StoriesFullScreenViewController: UIViewController {
 
     private var viewModel: StoriesFullScreenViewModel
 
+    var markReadAction: ((String) -> Void)?
+
     // MARK: - Lifetime and Cycle
     init(viewModel: StoriesFullScreenViewModel) {
         self.viewModel = viewModel
@@ -62,8 +64,20 @@ class StoriesFullScreenViewController: UIViewController {
             storiesFullScreenItemView.previousPageRequestedAction = { [weak self] in
                 self?.goToPreviousPageItem()
             }
-            storiesFullScreenItemView.nextPageRequestedAction = { [weak self] in
-                self?.goToNextPageItem()
+            storiesFullScreenItemView.nextPageRequestedAction = { [weak self] storyId in
+
+                if let storyId = storyId {
+                    if let lastViewModel = self?.viewModel.storiesViewModels.last,
+                       lastViewModel.id == storyId {
+                        self?.closeFullscreen()
+                    }
+                    else {
+                        self?.goToNextPageItem()
+                    }
+                }
+                else {
+                    self?.goToNextPageItem()
+                }
             }
             storiesFullScreenItemView.closeRequestedAction = { [weak self] in
                 self?.closeFullscreen()
@@ -71,6 +85,11 @@ class StoriesFullScreenViewController: UIViewController {
 
             storiesFullScreenItemView.linkRequestAction = { [weak self] linkString in
                 self?.openUrlAction(urlString: linkString)
+            }
+
+            storiesFullScreenItemView.markedReadAction = { [weak self] storyId in
+                print("MARK READ: \(storyId)")
+                self?.markReadAction?(storyId)
             }
 
             items.append(storiesFullScreenItemView)
@@ -109,9 +128,9 @@ class StoriesFullScreenViewController: UIViewController {
             $0.id == self.viewModel.initialStoryId
         })
 
-        //self.cubicScrollView.scrollToViewAtIndex(index ?? 0, animated: false)
+        self.cubicScrollView.scrollToViewAtIndex(index ?? 0, animated: false)
 
-        if let page = self.pagesDictionary[0] {
+        if let page = self.pagesDictionary[index ?? 0] {
             page.startProgress()
         }
     }

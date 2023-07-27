@@ -134,6 +134,10 @@ extension HomeViewModel {
     func storyLineViewModel() -> StoriesLineCellViewModel? {
         return self.homeViewTemplateDataSource.storyLineViewModel()
     }
+
+    func setStoryLineViewModel(viewModel: StoriesLineCellViewModel) {
+        self.homeViewTemplateDataSource.setStoryLineViewModel(viewModel: viewModel)
+    }
     
     func sportGroupViewModel(forSection section: Int) -> SportGroupViewModel? {
         return self.homeViewTemplateDataSource.sportGroupViewModel(forSection: section)
