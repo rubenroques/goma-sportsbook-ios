@@ -397,14 +397,32 @@
                                                             <action selector="didTapPartialCashoutButton" destination="KGk-i7-Jjw" eventType="touchUpInside" id="Z98-3f-qCR"/>
                                                         </connections>
                                                     </button>
+                                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="UsH-hI-rHE">
+                                                        <rect key="frame" x="12" y="15" width="174.5" height="12"/>
+                                                        <fontDescription key="fontDescription" name="Gilroy-Semibold" family="Gilroy" pointSize="12"/>
+                                                        <color key="textColor" name="textPrimary"/>
+                                                        <nil key="highlightedColor"/>
+                                                    </label>
+                                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="right" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Ivc-YZ-wLs">
+                                                        <rect key="frame" x="186.5" y="15" width="174.5" height="12"/>
+                                                        <fontDescription key="fontDescription" name="Gilroy-Semibold" family="Gilroy" pointSize="12"/>
+                                                        <color key="textColor" name="textPrimary"/>
+                                                        <nil key="highlightedColor"/>
+                                                    </label>
                                                 </subviews>
                                                 <color key="backgroundColor" systemColor="systemBackgroundColor"/>
                                                 <constraints>
                                                     <constraint firstItem="hiU-AP-953" firstAttribute="top" secondItem="VSd-xK-xek" secondAttribute="top" id="8iO-lK-rLd"/>
                                                     <constraint firstAttribute="bottom" secondItem="e0A-Pg-rBe" secondAttribute="bottom" constant="17" id="Bx9-2l-wdG"/>
+                                                    <constraint firstAttribute="centerX" secondItem="UsH-hI-rHE" secondAttribute="trailing" id="Dj8-gR-IgL"/>
+                                                    <constraint firstItem="UsH-hI-rHE" firstAttribute="top" secondItem="VSd-xK-xek" secondAttribute="top" constant="15" id="H26-Sw-kDv"/>
                                                     <constraint firstItem="hiU-AP-953" firstAttribute="leading" secondItem="VSd-xK-xek" secondAttribute="leading" constant="12" id="Mux-s5-4Gq"/>
                                                     <constraint firstItem="e0A-Pg-rBe" firstAttribute="top" secondItem="hiU-AP-953" secondAttribute="bottom" id="XyX-wg-GgW"/>
+                                                    <constraint firstItem="Ivc-YZ-wLs" firstAttribute="leading" secondItem="VSd-xK-xek" secondAttribute="centerX" id="aus-Uv-2hu"/>
                                                     <constraint firstAttribute="trailing" secondItem="e0A-Pg-rBe" secondAttribute="trailing" constant="12" id="bOl-sk-cHf"/>
+                                                    <constraint firstItem="Ivc-YZ-wLs" firstAttribute="top" secondItem="VSd-xK-xek" secondAttribute="top" constant="15" id="c91-ze-MrF"/>
+                                                    <constraint firstAttribute="trailing" secondItem="Ivc-YZ-wLs" secondAttribute="trailing" constant="12" id="k5h-MQ-HlH"/>
+                                                    <constraint firstItem="UsH-hI-rHE" firstAttribute="leading" secondItem="VSd-xK-xek" secondAttribute="leading" constant="12" id="nFu-PA-Nsp"/>
                                                     <constraint firstAttribute="trailing" secondItem="hiU-AP-953" secondAttribute="trailing" constant="12" id="njY-HL-rS7"/>
                                                     <constraint firstItem="e0A-Pg-rBe" firstAttribute="leading" secondItem="VSd-xK-xek" secondAttribute="leading" constant="12" id="qSv-Ep-Le1"/>
                                                 </constraints>
@@ -491,6 +509,8 @@
                 <outlet property="headerBaseView" destination="FTm-sF-tcl" id="4tV-PT-DAQ"/>
                 <outlet property="loadingActivityIndicator" destination="q1c-HF-zYC" id="pBr-eT-MIT"/>
                 <outlet property="loadingView" destination="3sD-Ev-YhE" id="K10-lx-s4c"/>
+                <outlet property="maximumCashoutValueLabel" destination="Ivc-YZ-wLs" id="ppB-mw-RHt"/>
+                <outlet property="minimumCashoutValueLabel" destination="UsH-hI-rHE" id="oRZ-LW-ZMd"/>
                 <outlet property="multiSliderInnerView" destination="hiU-AP-953" id="TiM-ei-lvr"/>
                 <outlet property="originalAmountValueLabel" destination="6aL-uL-4BQ" id="bth-Cc-6ew"/>
                 <outlet property="partialAmountsView" destination="Ize-DK-fDR" id="2h5-GM-eHr"/>
@@ -518,7 +538,10 @@
             <color red="0.94901960784313721" green="0.75294117647058822" blue="0.21568627450980393" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
         </namedColor>
         <namedColor name="buttonBackgroundSecondary">
-            <color red="1" green="0.68235294117647061" blue="0.47843137254901963" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+            <color red="0.40784313725490196" green="0.50588235294117645" blue="0.6705882352941176" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+        </namedColor>
+        <namedColor name="textPrimary">
+            <color red="0.070588235294117646" green="0.074509803921568626" blue="0.086274509803921567" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
         </namedColor>
         <systemColor name="systemBackgroundColor">
             <color white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>

@@ -489,7 +489,20 @@ class PreSubmissionBetslipViewController: UIViewController {
         }
 
         singleBettingTicketDataSource.shouldHighlightTextfield = { [weak self] in
-            return self?.isFreebetEnabled.value ?? false
+
+            var isFreeBet = false
+
+            if let freeBetEnabled = self?.isFreebetEnabled.value,
+               let cashbackSelected = self?.isCashbackSelected.value {
+
+                if freeBetEnabled || cashbackSelected {
+                    isFreeBet = true
+                }
+            }
+
+            return isFreeBet
+
+            // return self?.isFreebetEnabled.value ?? false
         }
 
         // Loading settings odd change on bet
@@ -769,9 +782,20 @@ class PreSubmissionBetslipViewController: UIViewController {
                     self?.systemWinningsBaseView.isHidden = true
 
                     if let cashbackEnabled = self?.isCashbackEnabled,
-                       cashbackEnabled {
-                        self?.cashbackBaseView.isHidden = true
+                       cashbackEnabled,
+                       let cashbackValue = Env.userSessionStore.userCashbackBalance.value {
+
+                        if cashbackValue > 0 {
+                            self?.cashbackBaseView.isHidden = false
+                        }
+                        else {
+                            self?.cashbackBaseView.isHidden = true
+                        }
                     }
+//                    if let cashbackEnabled = self?.isCashbackEnabled,
+//                       cashbackEnabled {
+//                        self?.cashbackBaseView.isHidden = true
+//                    }
                 case .multiple:
                     self?.simpleWinningsBaseView.isHidden = true
                     self?.multipleWinningsBaseView.isHidden = false
@@ -794,9 +818,20 @@ class PreSubmissionBetslipViewController: UIViewController {
                     self?.systemWinningsBaseView.isHidden = false
 
                     if let cashbackEnabled = self?.isCashbackEnabled,
-                       cashbackEnabled {
-                        self?.cashbackBaseView.isHidden = true
+                       cashbackEnabled,
+                       let cashbackValue = Env.userSessionStore.userCashbackBalance.value {
+
+                        if cashbackValue > 0 {
+                            self?.cashbackBaseView.isHidden = false
+                        }
+                        else {
+                            self?.cashbackBaseView.isHidden = true
+                        }
                     }
+//                    if let cashbackEnabled = self?.isCashbackEnabled,
+//                       cashbackEnabled {
+//                        self?.cashbackBaseView.isHidden = true
+//                    }
                 }
             })
             .store(in: &self.cancellables)
@@ -1164,6 +1199,7 @@ class PreSubmissionBetslipViewController: UIViewController {
 
                     }
 
+                    self?.tableView.reloadData()
                 }
                 .store(in: &self.cancellables)
 
@@ -1692,8 +1728,14 @@ class PreSubmissionBetslipViewController: UIViewController {
         if Env.userSessionStore.isUserLogged() {
             
             if self.listTypePublisher.value == .simple {
+                var isFreeBet = false
+
+                if self.isFreebetEnabled.value == true || self.isCashbackSelected.value == true {
+                    isFreeBet = true
+                }
+
                 let singleBetTicketStakes = self.simpleBetsBettingValues.value
-                Env.betslipManager.placeSingleBets(amounts: singleBetTicketStakes, useFreebetBalance: self.isFreebetEnabled.value)
+                Env.betslipManager.placeSingleBets(amounts: singleBetTicketStakes, useFreebetBalance: isFreeBet)
                 .receive(on: DispatchQueue.main)
                 .sink { [weak self] completion in
                     switch completion {
@@ -1714,7 +1756,21 @@ class PreSubmissionBetslipViewController: UIViewController {
                     }
                     self?.isLoading = false
                 } receiveValue: { [weak self] betPlacedDetailsArray in
-                    self?.betPlacedAction(betPlacedDetailsArray, nil, false)
+
+                    if let cashbackSelected = self?.isCashbackSelected.value {
+
+                        if !cashbackSelected {
+                            self?.betPlacedAction(betPlacedDetailsArray, nil, false)
+                        }
+                        else {
+                            self?.betPlacedAction(betPlacedDetailsArray, nil, true)
+                        }
+                    }
+                    else {
+                        self?.betPlacedAction(betPlacedDetailsArray, nil, false)
+                    }
+
+                    // self?.betPlacedAction(betPlacedDetailsArray, nil, false)
                 }
                 .store(in: &cancellables)
             }
@@ -1763,9 +1819,15 @@ class PreSubmissionBetslipViewController: UIViewController {
                     .store(in: &cancellables)
             }
             else if self.listTypePublisher.value == .system, let selectedSystemBetType = self.selectedSystemBetType {
+                var isFreeBet = false
+
+                if self.isFreebetEnabled.value == true || self.isCashbackSelected.value == true {
+                    isFreeBet = true
+                }
+
                 Env.betslipManager.placeSystemBet(withStake: self.realBetValue,
                                                   systemBetType: selectedSystemBetType,
-                                                  useFreebetBalance: self.isFreebetEnabled.value)
+                                                  useFreebetBalance: isFreeBet)
                     .receive(on: DispatchQueue.main)
                     .sink { [weak self] completion in
                         switch completion {
@@ -1786,7 +1848,20 @@ class PreSubmissionBetslipViewController: UIViewController {
                         }
                         self?.isLoading = false
                     } receiveValue: { [weak self] betPlacedDetails in
-                        self?.betPlacedAction(betPlacedDetails, nil, false)
+
+                        if let cashbackSelected = self?.isCashbackSelected.value {
+
+                            if !cashbackSelected {
+                                self?.betPlacedAction(betPlacedDetails, nil, false)
+                            }
+                            else {
+                                self?.betPlacedAction(betPlacedDetails, nil, true)
+                            }
+                        }
+                        else {
+                            self?.betPlacedAction(betPlacedDetails, nil, false)
+                        }
+                        // self?.betPlacedAction(betPlacedDetails, nil, false)
                     }
                     .store(in: &cancellables)
             }

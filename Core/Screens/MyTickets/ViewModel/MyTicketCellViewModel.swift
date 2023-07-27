@@ -79,7 +79,15 @@ class MyTicketCellViewModel {
                 .joined(separator: " - "))
         }
 
-        self.requestCashoutAvailability()
+        if let isFreeBet = ticket.freeBet {
+            if !isFreeBet {
+                self.requestCashoutAvailability()
+            }
+        }
+        else {
+            self.requestCashoutAvailability()
+        }
+
     }
 
     deinit {

@@ -62,6 +62,9 @@ class MyTicketTableViewCell: UITableViewCell {
     @IBOutlet private weak var cashbackUsedBaseView: UIView!
     @IBOutlet private weak var cashbackUsedTitleLabel: UILabel!
 
+    @IBOutlet private weak var minimumCashoutValueLabel: UILabel!
+    @IBOutlet private weak var maximumCashoutValueLabel: UILabel!
+
     // Custom views
     lazy var learnMoreBaseView: CashbackLearnMoreView = {
         let view = CashbackLearnMoreView()
@@ -281,6 +284,9 @@ class MyTicketTableViewCell: UITableViewCell {
         self.hasCashback = false
 
         self.usedCashback = false
+
+        self.minimumCashoutValueLabel.text = ""
+        self.maximumCashoutValueLabel.text = ""
     }
 
     override func layoutSubviews() {
@@ -737,11 +743,17 @@ class MyTicketTableViewCell: UITableViewCell {
             maxSliderStake = totalStake - partialCashoutStake
         }
 
-        let minCashout = maxSliderStake/10
+        //let minCashout = maxSliderStake/10
+        let minCashout = 0.01
         let minValue: CGFloat = minCashout
         let maxValue: CGFloat = maxSliderStake
         let values: [CGFloat] = [minValue, maxValue]
-        
+
+        //Minimum and maximum labels
+        self.minimumCashoutValueLabel.text = CurrencyFormater.defaultFormat.string(from: NSNumber(value: minCashout)) ?? ""
+
+        self.maximumCashoutValueLabel.text = CurrencyFormater.defaultFormat.string(from: NSNumber(value: maxSliderStake)) ?? ""
+
         self.partialCashoutMultiSlider = MultiSlider()
         partialCashoutMultiSlider?.backgroundColor = .clear
         partialCashoutMultiSlider?.orientation = .horizontal
