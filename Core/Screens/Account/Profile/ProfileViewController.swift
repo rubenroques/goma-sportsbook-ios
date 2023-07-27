@@ -537,17 +537,18 @@ class ProfileViewController: UIViewController {
         supportView.addGestureRecognizer(supportTap)
 
         self.stackView.addArrangedSubview(myAccountView)
-        self.stackView.addArrangedSubview(cashbackView)
-        self.stackView.addArrangedSubview(betSwipeView)
+        // self.stackView.addArrangedSubview(cashbackView)
+        // self.stackView.addArrangedSubview(betSwipeView)
         self.stackView.addArrangedSubview(bonusView)
 
         self.stackView.addArrangedSubview(promotionsView)
+        self.stackView.addArrangedSubview(recruitFriendView)
         self.stackView.addArrangedSubview(myFavoritesView)
         self.stackView.addArrangedSubview(settingsView)
         self.stackView.addArrangedSubview(supportView)
 
         self.stackView.addArrangedSubview(responsibleGamingView)
-        self.stackView.addArrangedSubview(recruitFriendView)
+
 
     }
 

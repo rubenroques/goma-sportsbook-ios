@@ -1032,7 +1032,6 @@ extension HomeViewController {
 
         self.view.setNeedsLayout()
         self.view.layoutIfNeeded()
-
     }
 
     private func initConstraints() {

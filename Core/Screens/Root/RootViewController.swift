@@ -1635,11 +1635,6 @@ extension RootViewController {
             return
         }
 
-        #if DEBUG
-        self.unlockAppWithUser()
-        return
-        #endif
-
         let context = LAContext()
 
         var error: NSError?
