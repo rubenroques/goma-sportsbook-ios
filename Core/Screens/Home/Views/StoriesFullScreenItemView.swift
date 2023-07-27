@@ -158,6 +158,21 @@ class StoriesFullScreenItemView: UIView {
 
     }
 
+    override func layoutSubviews() {
+            super.layoutSubviews()
+
+            if let mainPlayerLayer = self.videoPlayerViewController.view.layer.sublayers?.compactMap({ $0 as? AVPlayerLayer }).first {
+                mainPlayerLayer.videoGravity = AVLayerVideoGravity.resizeAspectFill
+
+                print("VideoStatus Size 3 \(mainPlayerLayer.frame)")
+
+                print("VideoStatus Size 1 \(self.videoBaseView)")
+
+                print("VideoStatus Size 0 \(self.frame)")
+
+            }
+        }
+
     override func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {
         super.traitCollectionDidChange(previousTraitCollection)
 
