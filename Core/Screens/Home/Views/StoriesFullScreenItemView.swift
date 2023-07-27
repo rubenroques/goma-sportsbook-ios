@@ -58,7 +58,7 @@ class StoriesFullScreenItemViewModel {
 
 class StoriesFullScreenItemView: UIView {
 
-    var nextPageRequestedAction: () -> Void = { }
+    var nextPageRequestedAction: ((String?) -> Void)?
     var previousPageRequestedAction: () -> Void = { }
 
     var closeRequestedAction: () -> Void = { }
@@ -120,7 +120,7 @@ class StoriesFullScreenItemView: UIView {
         self.setupWithTheme()
 
         self.smoothProgressBarView.progressBarFinishedAction = { [weak self] in
-            self?.nextPageRequestedAction()
+            self?.nextPageRequestedAction?(nil)
         }
 
         let nextTapGesture = UITapGestureRecognizer(target: self, action: #selector(didTapNextPageView))
@@ -248,8 +248,10 @@ class StoriesFullScreenItemView: UIView {
 
     // Navigation between items
     @objc func didTapNextPageView() {
-        self.resetVideo()
-        self.nextPageRequestedAction()
+        if let storyId = self.viewModel?.storyCellViewModel.id {
+            self.resetVideo()
+            self.nextPageRequestedAction?(storyId)
+        }
     }
 
     @objc func didTapPreviousPageView() {
