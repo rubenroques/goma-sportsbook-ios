@@ -337,7 +337,6 @@ class PreLiveEventsViewModel: NSObject {
                     self.isLoadingCompetitionMatches.send(false)
                     self.isLoadingEvents.send(false)
                     self.updateContentList()
-
                 }
 
             })
@@ -506,7 +505,6 @@ class PreLiveEventsViewModel: NSObject {
     private func updateContentList() {
 
         self.popularMatchesDataSource.matches = filterPopularMatches(with: self.homeFilterOptions, matches: self.popularMatches)
-
         self.popularMatchesDataSource.outrightCompetitions = self.popularOutrightCompetitions
 
         //
@@ -1043,7 +1041,7 @@ class PreLiveEventsViewModel: NSObject {
 
         self.setMainMarkets(matches: matches)
         self.topCompetitions.append(newCompetition)
-        //self.topCompetitionsDataSource.competitions = self.topCompetitions
+        // self.topCompetitionsDataSource.competitions = self.topCompetitions
         self.topCompetitionsMatchesSubscriptions.value[competitionInfo.id] = competitionInfo
     }
 
@@ -1107,7 +1105,6 @@ class PreLiveEventsViewModel: NSObject {
     //
     // MARK: - Setups
     //
-
     private func setupCompetitionGroups() {
 
         if self.sportRegionsPublisher.value.isNotEmpty,

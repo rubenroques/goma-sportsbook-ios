@@ -17,12 +17,7 @@ import UIKit
 
 open class CubicScrollView: UIScrollView, UIScrollViewDelegate {
 
-    var currentPage: Int = 0 {
-        didSet {
-            self.cubeDelegate?.cubeViewDidEndScrolling(self, toPageIndex: self.currentPage)
-        }
-    }
-
+    var currentPage: Int = 0
     weak var cubeDelegate: CubicScrollViewDelegate?
 
     fileprivate let maxAngle: CGFloat = 60.0
@@ -56,6 +51,8 @@ open class CubicScrollView: UIScrollView, UIScrollViewDelegate {
 
     open func addChildViews(_ views: [UIView]) {
 
+        self.stackView.removeAllArrangedSubviews()
+        
         for view in views {
             view.translatesAutoresizingMaskIntoConstraints = false
             view.layer.masksToBounds = true
@@ -74,6 +71,7 @@ open class CubicScrollView: UIScrollView, UIScrollViewDelegate {
 
             self.childViews.append(view)
         }
+
     }
 
     open func addChildView(_ view: UIView) {
@@ -98,6 +96,15 @@ open class CubicScrollView: UIScrollView, UIScrollViewDelegate {
             self.scrollRectToVisible(frame, animated: animated)
 
             self.currentPage = index
+            self.cubeDelegate?.cubeViewDidEndScrolling(self, toPageIndex: index)
+        }
+    }
+
+    open func setContentOffsetToIndex(_ index: Int) {
+        if index > -1 && index < childViews.count {
+            let width = self.frame.size.width
+            self.contentOffset = CGPoint(x: CGFloat(index)*width, y: 0)
+            self.currentPage = index
         }
     }
 
@@ -112,6 +119,7 @@ open class CubicScrollView: UIScrollView, UIScrollViewDelegate {
         let pageWidth = scrollView.frame.size.width
         let currentPage = Int(scrollView.contentOffset.x / pageWidth)
         self.currentPage = currentPage
+        self.cubeDelegate?.cubeViewDidEndScrolling(self, toPageIndex: currentPage)
     }
 
     public func scrollViewWillBeginDragging(_ scrollView: UIScrollView) {
@@ -136,7 +144,7 @@ open class CubicScrollView: UIScrollView, UIScrollViewDelegate {
 
         // Add layout constraints
 
-        self.addSubview(stackView)
+        self.addSubview(self.stackView)
 
         self.addConstraint(NSLayoutConstraint(
             item: stackView,

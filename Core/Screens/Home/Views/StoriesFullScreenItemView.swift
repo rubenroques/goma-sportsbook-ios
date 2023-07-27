@@ -9,30 +9,39 @@ import UIKit
 import Kingfisher
 import AVFoundation
 import AVKit
+import Combine
 
 class StoriesFullScreenItemViewModel {
-
-    var storyCellViewModel: StoriesItemCellViewModel
 
     enum ContentType {
         case image(sourceUrl: URL)
         case video(sourceUrl: URL)
+        case empty
     }
 
-    var contentType: ContentType?
+    var identifier: String {
+        return storyCellViewModel.id
+    }
 
-    let supportedImageTypes = ["png", "jpeg", "jpg"]
-    let supportedVideoTypes = ["mp4", "avi", "mov"]
+    var title: String {
+        return storyCellViewModel.title
+    }
 
-//    init(videoSourceURL: URL) {
-//        self.contentType = .video(sourceUrl: videoSourceURL)
-//    }
-//
-//    init(imageSourceURL: URL) {
-//    }
+    var externalLinkURL: URL? {
+        let linkString = self.storyCellViewModel.link
+        return URL(string: "\(Env.urlApp)\(linkString)")
+    }
+
+    var contentType: ContentType
+
+    private var storyCellViewModel: StoriesItemCellViewModel
+
+    private let supportedImageTypes = ["png", "jpeg", "jpg"]
+    private let supportedVideoTypes = ["mp4", "avi", "mov"]
 
     init(storyCellViewModel: StoriesItemCellViewModel) {
         self.storyCellViewModel = storyCellViewModel
+        self.contentType = .empty
 
         if let fileType = storyCellViewModel.contentString.split(separator: ".").last {
 
@@ -40,13 +49,11 @@ class StoriesFullScreenItemViewModel {
 
             if self.supportedImageTypes.contains(fileTypeString) {
                 if let contentUrl = URL(string: storyCellViewModel.contentString) {
-
                     self.contentType = .image(sourceUrl: contentUrl)
                 }
             }
             else if self.supportedVideoTypes.contains(fileTypeString) {
                 if let contentUrl = URL(string: storyCellViewModel.contentString) {
-
                     self.contentType = .video(sourceUrl: contentUrl)
                 }
             }
@@ -58,11 +65,11 @@ class StoriesFullScreenItemViewModel {
 
 class StoriesFullScreenItemView: UIView {
 
-    var nextPageRequestedAction: ((String?) -> Void)?
+    var nextPageRequestedAction: ((String?) -> Void) = { _ in }
     var previousPageRequestedAction: () -> Void = { }
 
     var closeRequestedAction: () -> Void = { }
-    var linkRequestAction: ((String) -> Void)?
+    var linkRequestAction: ((URL) -> Void) = { _ in }
 
     private lazy var baseView: UIView = Self.createBaseView()
 
@@ -80,12 +87,19 @@ class StoriesFullScreenItemView: UIView {
     private lazy var videoBaseView: UIView = Self.createVideoBaseView()
     private let videoPlayerViewController = AVPlayerViewController()
     private var playerItemStatusObserver: NSKeyValueObservation?
-    private var isReadyToPlayVideo: Bool = false
+    private lazy var videoLoadingView: UIActivityIndicatorView = Self.createVideoLoadingView()
+
 
     //
     private lazy var closeImageBaseView: UIView = Self.createCloseImageBaseView()
     private lazy var closeImageView: UIImageView = Self.createCloseImageView()
     private lazy var actionButton: UIButton = Self.createActionButton()
+
+    private var isReadyToPlayVideo: CurrentValueSubject<Bool, Never> = .init(false)
+    private var shouldPlayVideo: CurrentValueSubject<Bool, Never> = .init(false)
+
+
+    private var cancellables: Set<AnyCancellable> = []
 
     override var tag: Int {
         didSet {
@@ -93,7 +107,7 @@ class StoriesFullScreenItemView: UIView {
         }
     }
 
-    var viewModel: StoriesFullScreenItemViewModel?
+    private var viewModel: StoriesFullScreenItemViewModel
 
     var markedReadAction: ((String) -> Void)?
 
@@ -120,7 +134,8 @@ class StoriesFullScreenItemView: UIView {
         self.setupWithTheme()
 
         self.smoothProgressBarView.progressBarFinishedAction = { [weak self] in
-            self?.nextPageRequestedAction?(nil)
+            guard let self = self else { return }
+            self.nextPageRequestedAction(self.viewModel.identifier)
         }
 
         let nextTapGesture = UITapGestureRecognizer(target: self, action: #selector(didTapNextPageView))
@@ -135,43 +150,44 @@ class StoriesFullScreenItemView: UIView {
 
         self.actionButton.addTarget(self, action: #selector(didTapActionButton), for: .primaryActionTriggered)
 
-        if let viewModel = self.viewModel {
-            self.topLabel.text = viewModel.storyCellViewModel.title
+        self.topLabel.text = self.viewModel.title
 
-            if let contentType = viewModel.contentType {
-                switch contentType {
-                case .video(let sourceUrl):
-                    self.videoBaseView.isHidden = false
-                    self.contentImageView.isHidden = true
+        switch self.viewModel.contentType {
+        case .video(let sourceUrl):
+            self.videoBaseView.isHidden = false
+            self.contentImageView.isHidden = true
 
-                    self.addVideoView(withURL: sourceUrl)
-                case .image(let sourceUrl):
-                    self.videoBaseView.isHidden = true
-                    self.contentImageView.isHidden = false
+            self.addVideoView(withURL: sourceUrl)
+        case .image(let sourceUrl):
+            self.videoBaseView.isHidden = true
+            self.contentImageView.isHidden = false
 
-                    self.contentImageView.kf.setImage(with: sourceUrl)
-
-                }
-            }
+            self.contentImageView.kf.setImage(with: sourceUrl)
+        case .empty:
+            self.videoBaseView.isHidden = true
+            self.contentImageView.isHidden = true
 
         }
+
+        Publishers.CombineLatest(self.isReadyToPlayVideo, self.shouldPlayVideo)
+            .receive(on: DispatchQueue.main)
+            .sink { isReadyToPlayVideo, shouldPlayVideo in
+                if isReadyToPlayVideo && shouldPlayVideo {
+
+                    self.startVideoProgress()
+                }
+            }
+            .store(in: &self.cancellables)
 
     }
 
     override func layoutSubviews() {
-            super.layoutSubviews()
+        super.layoutSubviews()
 
-            if let mainPlayerLayer = self.videoPlayerViewController.view.layer.sublayers?.compactMap({ $0 as? AVPlayerLayer }).first {
-                mainPlayerLayer.videoGravity = AVLayerVideoGravity.resizeAspectFill
-
-                print("VideoStatus Size 3 \(mainPlayerLayer.frame)")
-
-                print("VideoStatus Size 1 \(self.videoBaseView)")
-
-                print("VideoStatus Size 0 \(self.frame)")
-
-            }
+        if let mainPlayerLayer = self.videoPlayerViewController.view.layer.sublayers?.compactMap({ $0 as? AVPlayerLayer }).first {
+            mainPlayerLayer.videoGravity = AVLayerVideoGravity.resizeAspectFill
         }
+    }
 
     override func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {
         super.traitCollectionDidChange(previousTraitCollection)
@@ -181,8 +197,9 @@ class StoriesFullScreenItemView: UIView {
 
     func setupWithTheme() {
         self.backgroundColor = .black
+        self.baseView.backgroundColor = .black
+
         self.smoothProgressBarView.backgroundColor = .clear
-        self.baseView.backgroundColor = .clear
         self.topView.backgroundColor = .clear
 
         self.closeImageBaseView.backgroundColor = .clear
@@ -193,6 +210,8 @@ class StoriesFullScreenItemView: UIView {
 
         self.videoBaseView.backgroundColor = .black
 
+        self.topLabel.textColor = UIColor.App.buttonTextPrimary
+        
         StyleHelper.styleButton(button: self.actionButton)
         self.actionButton.titleLabel?.font = AppFont.with(type: .bold, size: 17)
         self.actionButton.setBackgroundColor(UIColor.App.buttonBackgroundSecondary, for: .normal)
@@ -206,26 +225,22 @@ class StoriesFullScreenItemView: UIView {
     }
 
     func startProgress() {
-        if let contentType = self.viewModel?.contentType {
-            switch contentType {
-            case .video:
-                self.playVideo()
 
-                if let duration = self.videoPlayerViewController.player?.currentItem?.duration.seconds {
-                    self.smoothProgressBarView.startProgress(duration: TimeInterval(duration))
-                }
-                else {
-                    self.smoothProgressBarView.startProgress()
-                }
+        switch self.viewModel.contentType {
+        case .video:
+            self.shouldPlayVideo.send(true)
 
-            case .image:
-                self.smoothProgressBarView.startProgress()
-            }
+        case .image:
+            self.shouldPlayVideo.send(false)
+            self.smoothProgressBarView.startProgress()
+
+        case .empty:
+            self.shouldPlayVideo.send(false)
+
         }
 
-        if let viewModel = self.viewModel {
-            self.markedReadAction?(viewModel.storyCellViewModel.id)
-        }
+        // mark as read
+        self.markedReadAction?(self.viewModel.identifier)
 
     }
 
@@ -242,10 +257,20 @@ class StoriesFullScreenItemView: UIView {
     }
 
     // Video handling
-    private func playVideo() {
-        if isReadyToPlayVideo {
-            self.videoPlayerViewController.player?.play()
+    private func startVideoProgress() {
+        self.videoLoadingView.stopAnimating()
+        self.playVideo()
+
+        if let duration = self.videoPlayerViewController.player?.currentItem?.duration.seconds, !duration.isNaN {
+            self.smoothProgressBarView.startProgress(duration: TimeInterval(duration))
         }
+        else {
+            self.smoothProgressBarView.startProgress()
+        }
+    }
+
+    private func playVideo() {
+        self.videoPlayerViewController.player?.play()
     }
 
     private func pauseVideo() {
@@ -263,10 +288,9 @@ class StoriesFullScreenItemView: UIView {
 
     // Navigation between items
     @objc func didTapNextPageView() {
-        if let storyId = self.viewModel?.storyCellViewModel.id {
-            self.resetVideo()
-            self.nextPageRequestedAction?(storyId)
-        }
+        self.resetVideo()
+
+        self.nextPageRequestedAction(self.viewModel.identifier)
     }
 
     @objc func didTapPreviousPageView() {
@@ -281,11 +305,8 @@ class StoriesFullScreenItemView: UIView {
 
     @objc func didTapActionButton() {
 
-        if let linkString = self.viewModel?.storyCellViewModel.link {
-
-            let fullLink = "\(Env.urlApp)\(linkString)"
-
-            self.linkRequestAction?(fullLink)
+        if let url = self.viewModel.externalLinkURL {
+            self.linkRequestAction(url)
         }
     }
 
@@ -294,6 +315,8 @@ class StoriesFullScreenItemView: UIView {
 extension StoriesFullScreenItemView {
 
     func addVideoView(withURL sourceUrl: URL) {
+
+        self.videoLoadingView.startAnimating()
 
         let playerItem = AVPlayerItem(url: sourceUrl)
 
@@ -306,18 +329,18 @@ extension StoriesFullScreenItemView {
 
             switch item.status {
             case .unknown:
-                self?.isReadyToPlayVideo = false
+                self?.isReadyToPlayVideo.send(false)
 
             case .readyToPlay:
-                self?.isReadyToPlayVideo = true
+                self?.isReadyToPlayVideo.send(true)
 
             case .failed:
+                self?.isReadyToPlayVideo.send(false)
                 if let error = item.error {
                     print("VideoStatus: Player item error: \( dump(error) )")
-                    self?.isReadyToPlayVideo = false
                 }
             @unknown default:
-                self?.isReadyToPlayVideo = false
+                self?.isReadyToPlayVideo.send(false)
             }
 
         }
@@ -330,12 +353,16 @@ extension StoriesFullScreenItemView {
         self.videoPlayerViewController.videoGravity = .resizeAspectFill
 
         self.videoBaseView.addSubview(self.videoPlayerViewController.view)
+        self.videoBaseView.addSubview(self.videoLoadingView)
 
         NSLayoutConstraint.activate([
             self.videoPlayerViewController.view.topAnchor.constraint(equalTo: self.videoBaseView.topAnchor),
             self.videoPlayerViewController.view.leadingAnchor.constraint(equalTo: self.videoBaseView.leadingAnchor),
             self.videoPlayerViewController.view.trailingAnchor.constraint(equalTo: self.videoBaseView.trailingAnchor),
-            self.videoPlayerViewController.view.bottomAnchor.constraint(equalTo: self.videoBaseView.bottomAnchor)
+            self.videoPlayerViewController.view.bottomAnchor.constraint(equalTo: self.videoBaseView.bottomAnchor),
+
+            self.videoLoadingView.centerXAnchor.constraint(equalTo: self.videoBaseView.centerXAnchor),
+            self.videoLoadingView.centerYAnchor.constraint(equalTo: self.videoBaseView.centerYAnchor),
         ])
 
         if let mainPlayerLayer = self.videoPlayerViewController.view.layer.sublayers?.compactMap({ $0 as? AVPlayerLayer }).first {
@@ -381,7 +408,21 @@ extension StoriesFullScreenItemView {
         label.textAlignment = .left
         label.translatesAutoresizingMaskIntoConstraints = false
         label.textColor = .white
+
+        label.layer.shadowColor = UIColor.lightGray.cgColor
+        label.layer.shadowOffset = CGSize(width: 1, height: 1)
+        label.layer.shadowOpacity = 0.2
+        label.layer.shadowRadius = 1.0
+
         return label
+    }
+
+    private static func createVideoLoadingView() -> UIActivityIndicatorView {
+        let view = UIActivityIndicatorView(style: .large)
+        view.tintColor = .lightGray
+        view.hidesWhenStopped = true
+        view.translatesAutoresizingMaskIntoConstraints = false
+        return view
     }
 
     private static func createVideoBaseView() -> UIView {
@@ -429,6 +470,8 @@ extension StoriesFullScreenItemView {
 
         self.baseView.addSubview(self.topView)
 
+        self.videoBaseView.addSubview(self.videoLoadingView)
+
         self.topView.addSubview(self.smoothProgressBarView)
         self.topView.addSubview(self.topLabel)
         self.topView.addSubview(self.closeImageBaseView)
@@ -452,6 +495,9 @@ extension StoriesFullScreenItemView {
             self.videoBaseView.trailingAnchor.constraint(equalTo: self.baseView.trailingAnchor),
             self.videoBaseView.topAnchor.constraint(equalTo: self.baseView.topAnchor),
             self.videoBaseView.bottomAnchor.constraint(equalTo: self.baseView.bottomAnchor),
+
+            self.videoLoadingView.centerXAnchor.constraint(equalTo: self.videoBaseView.centerXAnchor),
+            self.videoLoadingView.centerYAnchor.constraint(equalTo: self.videoBaseView.centerYAnchor),
 
             self.contentImageView.leadingAnchor.constraint(equalTo: self.baseView.leadingAnchor),
             self.contentImageView.trailingAnchor.constraint(equalTo: self.baseView.trailingAnchor),

@@ -40,7 +40,7 @@
                                         <subviews>
                                             <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="soccer_banner_dummy" translatesAutoresizingMaskIntoConstraints="NO" id="9lk-mQ-XAm">
                                                 <rect key="frame" x="2" y="2" width="400" height="100"/>
-                                                <color key="backgroundColor" systemColor="systemMintColor"/>
+                                                <color key="backgroundColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                                 <constraints>
                                                     <constraint firstAttribute="height" constant="100" id="P4X-mY-aJF"/>
                                                 </constraints>
@@ -59,6 +59,7 @@
                                         <subviews>
                                             <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="soccer_banner_dummy" translatesAutoresizingMaskIntoConstraints="NO" id="HO2-M2-haM">
                                                 <rect key="frame" x="0.0" y="0.0" width="404" height="171"/>
+                                                <color key="backgroundColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                             </imageView>
                                             <stackView opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" horizontalCompressionResistancePriority="749" spacing="7" translatesAutoresizingMaskIntoConstraints="NO" id="Ll0-G9-s03">
                                                 <rect key="frame" x="12" y="11" width="320" height="17"/>
@@ -703,9 +704,6 @@
         <image name="unselected_favorite_icon" width="19" height="18"/>
         <systemColor name="systemBackgroundColor">
             <color white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-        </systemColor>
-        <systemColor name="systemMintColor">
-            <color red="0.0" green="0.7803921568627451" blue="0.74509803921568629" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
         </systemColor>
         <systemColor name="systemOrangeColor">
             <color red="1" green="0.58431372549019611" blue="0.0" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>

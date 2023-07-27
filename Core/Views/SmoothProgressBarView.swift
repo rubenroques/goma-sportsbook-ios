@@ -153,10 +153,18 @@ class SmoothProgressBarAnimator {
         constraint.constant = fromValue
         constraint.firstItem?.superview?.layoutIfNeeded()
 
-        self.duration = duration ?? self.originalDuration
+        if let durationValue = duration, !CGFloat(durationValue).isNaN {
+            self.duration = durationValue
+        }
+        else {
+            self.duration = self.originalDuration
+        }
 
         // Calculate the progress increment per timer tick (assuming timer ticks every 0.01 second)
-        let incrementPerTick = targetProgress / (self.duration * 100)
+        var incrementPerTick = targetProgress / (self.duration * 100)
+        if incrementPerTick.isNaN {
+            incrementPerTick = 0.0
+        }
 
         // Start a new timer
         self.timer = Timer.scheduledTimer(withTimeInterval: 0.01, repeats: true) { [weak self] timer in

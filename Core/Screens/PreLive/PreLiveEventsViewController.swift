@@ -749,24 +749,6 @@ class PreLiveEventsViewController: UIViewController {
         self.filtersCollectionView.scrollToItem(at: indexPath, at: .centeredHorizontally, animated: true)
     }
 
-    func openPopularTab() {
-        self.openTab(atIndex: 0)
-    }
-
-    func openUpcomingTab() {
-        self.openTab(atIndex: 1)
-    }
-
-    func openTopCompetitionsTab() {
-        //
-        self.openTab(atIndex: 2)
-    }
-
-    func openCompetitionTab(withId id: String) {
-        self.applyCompetitionsFiltersWithIds([id], animated: false)
-        self.openTab(atIndex: 3)
-    }
-
     @objc func didTapFilterAction(sender: UITapGestureRecognizer) {
         let homeFilterViewController = HomeFilterViewController(sportsModel: self.viewModel)
         homeFilterViewController.delegate = self

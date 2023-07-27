@@ -1018,37 +1018,6 @@ extension RootViewController {
 
 }
 
-// Navigations between tabs
-extension RootViewController {
-
-    func didSelectSeeAllPopular(sport: Sport) {
-        self.loadChildViewControllerIfNeeded(tab: .preLive)
-        if preLiveViewControllerLoaded {
-            self.selectSport(sport)
-            self.preLiveViewController.openPopularTab()
-            self.didTapSportsTabItem()
-        }
-    }
-
-    func didSelectSeeAllLive(sport: Sport) {
-        self.loadChildViewControllerIfNeeded(tab: .live)
-        if liveEventsViewControllerLoaded {
-            self.selectSport(sport)
-            self.didTapLiveTabItem()
-        }
-    }
-
-    func didSelectSeeAllCompetition(sport: Sport, competitionId: String) {
-        self.loadChildViewControllerIfNeeded(tab: .preLive)
-        if preLiveViewControllerLoaded {
-            self.selectSport(sport)
-            self.preLiveViewController.openCompetitionTab(withId: competitionId)
-            self.didTapSportsTabItem()
-        }
-    }
-
-}
-
 extension RootViewController {
     func loadChildViewControllerIfNeeded(tab: TabItem) {
         if case .home = tab, !homeViewControllerLoaded {

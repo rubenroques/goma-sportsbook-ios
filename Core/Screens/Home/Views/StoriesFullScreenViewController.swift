@@ -13,6 +13,13 @@ struct StoriesFullScreenViewModel {
     var storiesViewModels: [StoriesItemCellViewModel]
     var initialStoryId: String
 
+    var initialIndex: Int {
+        let index = self.storiesViewModels.firstIndex(where: {
+            $0.id == self.initialStoryId
+        })
+        return Int(index ?? 0)
+    }
+
     init(storiesViewModels: [StoriesItemCellViewModel], initialStoryId: String) {
         self.storiesViewModels = storiesViewModels
         self.initialStoryId = initialStoryId
@@ -28,6 +35,7 @@ class StoriesFullScreenViewController: UIViewController {
     private var pagesDictionary: [Int: StoriesFullScreenItemView] = [:]
     private var currentPage: Int = 0
 
+    private var viewDidAlreadyAppear: Bool = false
     private var viewModel: StoriesFullScreenViewModel
 
     var markReadAction: ((String) -> Void)?
@@ -83,12 +91,11 @@ class StoriesFullScreenViewController: UIViewController {
                 self?.closeFullscreen()
             }
 
-            storiesFullScreenItemView.linkRequestAction = { [weak self] linkString in
-                self?.openUrlAction(urlString: linkString)
+            storiesFullScreenItemView.linkRequestAction = { [weak self] url in
+                self?.openInternalWebview(onURL: url)
             }
 
             storiesFullScreenItemView.markedReadAction = { [weak self] storyId in
-                print("MARK READ: \(storyId)")
                 self?.markReadAction?(storyId)
             }
 
@@ -96,64 +103,40 @@ class StoriesFullScreenViewController: UIViewController {
 
             self.pagesDictionary[index] = storiesFullScreenItemView
         }
-//        for index in 0...5 {
-//            let storiesFullScreenItemView = StoriesFullScreenItemView(index: index)
-//            storiesFullScreenItemView.tag = index
-//            storiesFullScreenItemView.previousPageRequestedAction = { [weak self] in
-//                self?.goToPreviousPageItem()
-//            }
-//            storiesFullScreenItemView.nextPageRequestedAction = { [weak self] in
-//                self?.goToNextPageItem()
-//            }
-//            storiesFullScreenItemView.closeRequestedAction =  { [weak self] in
-//                self?.closeFullscreen()
-//            }
-//
-//            items.append(storiesFullScreenItemView)
-//
-//            self.pagesDictionary[index] = storiesFullScreenItemView
-//        }
 
         self.cubicScrollView.addChildViews(items)
 
         let swipeDown = UISwipeGestureRecognizer(target: self, action: #selector(self.handleSwipeDown(_:)))
         swipeDown.direction = .down
         self.view.addGestureRecognizer(swipeDown)
+
+    }
+
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+
+        self.cubicScrollView.alpha = 0.0
     }
 
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
 
-        let index = self.viewModel.storiesViewModels.firstIndex(where: {
-            $0.id == self.viewModel.initialStoryId
-        })
+        if !viewDidAlreadyAppear {
 
-        self.cubicScrollView.scrollToViewAtIndex(index ?? 0, animated: false)
+            self.cubicScrollView.setContentOffsetToIndex(self.viewModel.initialIndex)
 
-        if let page = self.pagesDictionary[index ?? 0] {
-            page.startProgress()
+            if let page = self.pagesDictionary[self.viewModel.initialIndex ?? 0] {
+                page.startProgress()
+            }
+
+            UIView.animate(withDuration: 0.1) {
+                self.cubicScrollView.alpha = 1.0
+            }
+
+            self.viewDidAlreadyAppear = true
         }
-    }
 
-//    override func viewWillAppear(_ animated: Bool) {
-//        super.viewWillAppear(animated)
-//
-//        let index = self.viewModel.storiesViewModels.firstIndex(where: {
-//            $0.id == self.viewModel.initialStoryId
-//        })
-//
-//        if let index {
-//            self.currentPage = index
-//
-//            self.cubicScrollView.currentPage = index
-//
-//            self.cubicScrollView.scrollToViewAtIndex(index, animated: false)
-//        }
-//
-//        if let page = self.pagesDictionary[index ?? 0] {
-//            page.startProgress()
-//        }
-//    }
+    }
 
     override func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {
         super.traitCollectionDidChange(previousTraitCollection)
@@ -164,7 +147,7 @@ class StoriesFullScreenViewController: UIViewController {
     private func setupWithTheme() {
         self.view.backgroundColor = .black
 
-        self.cubicScrollView.backgroundColor = .clear
+        self.cubicScrollView.backgroundColor = .black
     }
 
     func goToNextPageItem() {
@@ -179,17 +162,13 @@ class StoriesFullScreenViewController: UIViewController {
         self.dismiss(animated: true, completion: nil)
     }
 
-    func openUrlAction(urlString: String) {
-
-        if let url = URL(string: urlString) {
-            UIApplication.shared.open(url)
-            self.cubicScrollView.setNeedsLayout()
-            self.cubicScrollView.layoutIfNeeded()
-        }
+    func openInternalWebview(onURL url: URL) {
+        let internalBrowserViewController = InternalBrowserViewController(url: url, fullscreen: false)
+        let navigationViewController = Router.navigationController(with: internalBrowserViewController)
+        self.present(navigationViewController, animated: true, completion: nil)
     }
 
     @objc func handleSwipeDown(_ recognizer: UISwipeGestureRecognizer) {
-
         if recognizer.state == .ended {
             self.closeFullscreen()
         }
@@ -251,9 +230,8 @@ extension StoriesFullScreenViewController {
 
     private static func createCubicScrollView() -> CubicScrollView {
         let scrollView = CubicScrollView()
-        //        scrollView.isPagingEnabled = true
-        //        scrollView.showsVerticalScrollIndicator = false
-        //        scrollView.showsHorizontalScrollIndicator = false
+        scrollView.showsVerticalScrollIndicator = false
+        scrollView.showsHorizontalScrollIndicator = false
         scrollView.translatesAutoresizingMaskIntoConstraints = false
         return scrollView
     }
