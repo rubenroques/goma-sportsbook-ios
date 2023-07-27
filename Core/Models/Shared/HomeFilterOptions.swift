@@ -8,7 +8,7 @@
 import Foundation
 import CoreGraphics
 
-struct HomeFilterOptions {
+struct HomeFilterOptions: Equatable {
 
     let lowerBoundTimeRange: CGFloat
     let highBoundTimeRange: CGFloat
@@ -32,4 +32,5 @@ struct HomeFilterOptions {
         self.highBoundOddsRange = highBoundOddsRange
         self.countFilters = countFilters
     }
+    
 }

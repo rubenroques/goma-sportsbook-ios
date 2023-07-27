@@ -91,7 +91,7 @@ import Foundation
 //
 //}
 
-struct MainMarketType {
+struct MainMarketType: Equatable {
     var id: String
     var marketName: String
 }
