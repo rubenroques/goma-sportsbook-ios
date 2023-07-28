@@ -2,12 +2,6 @@
 <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
 <plist version="1.0">
 <dict>
-	<key>NSPhotoLibraryUsageDescription</key>
-	<string>Let us take a photo</string>
-	<key>NSMicrophoneUsageDescription</key>
-	<string>Let us use your microphone</string>
-	<key>NSCameraUsageDescription</key>
-	<string>Let us take a photo</string>
 	<key>CFBundleDevelopmentRegion</key>
 	<string>$(DEVELOPMENT_LANGUAGE)</string>
 	<key>CFBundleDisplayName</key>
@@ -15,7 +9,7 @@
 	<key>CFBundleExecutable</key>
 	<string>$(EXECUTABLE_NAME)</string>
 	<key>CFBundleGetInfoString</key>
-	<string></string>
+	<string/>
 	<key>CFBundleIcons</key>
 	<dict/>
 	<key>CFBundleIcons~ipad</key>
@@ -47,6 +41,8 @@
 	</array>
 	<key>LSRequiresIPhoneOS</key>
 	<true/>
+	<key>NSCameraUsageDescription</key>
+	<string>Let us take a photo</string>
 	<key>NSFaceIDUsageDescription</key>
 	<string>User Authentication</string>
 	<key>NSLocationAlwaysAndWhenInUseUsageDescription</key>
@@ -57,8 +53,12 @@
 	<string>The app needs your permission to use your location</string>
 	<key>NSLocationWhenInUseUsageDescription</key>
 	<string>The app needs localization permission when in use</string>
+	<key>NSMicrophoneUsageDescription</key>
+	<string>Let us use your microphone</string>
 	<key>NSPhotoLibraryAddUsageDescription</key>
 	<string>The app needs permission to use your photo library.</string>
+	<key>NSPhotoLibraryUsageDescription</key>
+	<string>Let us take a photo</string>
 	<key>NSUserTrackingUsageDescription</key>
 	<string>This information will be used to deliver personalized ads to you.</string>
 	<key>UIAppFonts</key>

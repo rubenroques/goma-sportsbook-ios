@@ -130,6 +130,17 @@ open class CubicScrollView: UIScrollView, UIScrollViewDelegate {
         self.cubeDelegate?.cubeViewEndDragging(self)
     }
 
+    @objc private func handleLongPress(_ gestureRecognizer: UILongPressGestureRecognizer) {
+        if gestureRecognizer.state == .began {
+            // Long press started
+            self.cubeDelegate?.cubeViewStartDragging(self)
+        }
+        else if gestureRecognizer.state == .ended {
+            // Long press ended
+            self.cubeDelegate?.cubeViewEndDragging(self)
+        }
+    }
+
     // MARK: Private methods
     fileprivate func configureScrollView() {
 
@@ -205,6 +216,11 @@ open class CubicScrollView: UIScrollView, UIScrollViewDelegate {
             multiplier: 1,
             constant: 0)
         )
+
+        let longPressGesture = UILongPressGestureRecognizer(target: self, action: #selector(handleLongPress(_:)))
+        longPressGesture.minimumPressDuration = 0.3
+        self.addGestureRecognizer(longPressGesture)
+
     }
 
     fileprivate func transformViewsInScrollView(_ scrollView: UIScrollView) {

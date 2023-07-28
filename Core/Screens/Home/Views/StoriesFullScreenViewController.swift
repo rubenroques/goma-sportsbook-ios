@@ -43,6 +43,7 @@ class StoriesFullScreenViewController: UIViewController {
     // MARK: - Lifetime and Cycle
     init(viewModel: StoriesFullScreenViewModel) {
         self.viewModel = viewModel
+        self.currentPage = viewModel.initialIndex
 
         super.init(nibName: nil, bundle: nil)
     }
@@ -54,6 +55,7 @@ class StoriesFullScreenViewController: UIViewController {
 
     override func viewDidLoad() {
         super.viewDidLoad()
+
 
         self.setupSubviews()
         self.setupWithTheme()

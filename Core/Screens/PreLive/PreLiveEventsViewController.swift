@@ -460,6 +460,7 @@ class PreLiveEventsViewController: UIViewController {
 //            .store(in: &cancellables)
 
         self.viewModel.dataChangedPublisher
+            .throttle(for: .seconds(1), scheduler: DispatchQueue.main, latest: true)
             .receive(on: DispatchQueue.main)
             .sink(receiveValue: { [weak self] in
 

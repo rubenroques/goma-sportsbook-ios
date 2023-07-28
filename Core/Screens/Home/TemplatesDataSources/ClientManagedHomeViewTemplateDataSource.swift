@@ -52,14 +52,9 @@ class ClientManagedHomeViewTemplateDataSource {
     }
 
     //
-    // Should show instagram like promotional stories
-    var shouldShowPromotionalStories: Bool = true
-    //var promotionalStories: [String] = []
     private var promotionalStories: [PromotionalStory] = [] {
         didSet {
-
             var storiesViewModels: [StoriesItemCellViewModel] = []
-
             for promotionalStory in self.promotionalStories {
 
                 if let storyViewModel = self.storiesViewModelsCache[promotionalStory.id] {
@@ -114,7 +109,6 @@ class ClientManagedHomeViewTemplateDataSource {
     // Make your own bet call to action
     var shouldShowOwnBetCallToAction: Bool = true
 
-
     // PromotedSports
     var promotedSports: [PromotedSport] = [] {
         didSet {
@@ -154,9 +148,26 @@ class ClientManagedHomeViewTemplateDataSource {
 //            }
 //            .store(in: &self.cancellables)
 
+        self.refreshPublisher
+            .sink {
+                print("HomeDebug: Internal Publisher Refresh called \(NSDate().timeIntervalSince1970)")
+            }
+            .store(in: &self.cancellables)
+
+        self.refreshRequestedPublisher
+            .sink {
+                print("HomeDebug: Public Publisher Refresh called \(NSDate().timeIntervalSince1970)")
+            }
+            .store(in: &self.cancellables)
     }
 
     func refreshData() {
+
+//        self.banners = []
+//        self.alertsArray = []
+//        self.promotionalStories = []
+//        self.promotedSports = []
+//        self.promotedSportsMatches = [:]
 
         self.fetchAlerts()
         self.fetchQuickSwipeMatches()
@@ -170,67 +181,33 @@ class ClientManagedHomeViewTemplateDataSource {
 
     // User alerts
     func fetchAlerts() {
-        self.alertsArray = []
-
-//        if let isUserEmailVerified = Env.userSessionStore.isUserEmailVerified.value, !isUserEmailVerified {
-//            let emailActivationAlertData = ActivationAlert(title: localized("verify_email"),
-//                                                           description: localized("app_full_potential"),
-//                                                           linkLabel: localized("verify_my_account"),
-//                                                           alertType: .email)
-//
-//            alertsArray.append(emailActivationAlertData)
-//        }
-
-//        if let isUserProfileComplete = Env.userSessionStore.isUserProfileComplete, !isUserProfileComplete {
-//            let completeProfileAlertData = ActivationAlert(title: localized("complete_your_profile"),
-//                                                           description: localized("complete_profile_description"),
-//                                                           linkLabel: localized("finish_up_profile"),
-//                                                           alertType: .profile)
-//            alertsArray.append(completeProfileAlertData)
-//        }
 
         Env.userSessionStore.userKnowYourCustomerStatusPublisher
             .receive(on: DispatchQueue.main)
             .sink(receiveValue: { [weak self] kycStatus in
-
                 if kycStatus == .request {
-
-                    if let alertsArray = self?.alertsArray,
-                       !alertsArray.contains(where: {
-                        $0.alertType == .documents
-                       }) {
-                        let uploadDocumentsAlertData = ActivationAlert(title: localized("document_validation_required"),
-                                                                       description: localized("document_validation_required_description"),
-                                                                       linkLabel: localized("complete_your_verification"),
-                                                                       alertType: .documents)
-
-                        self?.alertsArray.append(uploadDocumentsAlertData)
-                    }
+                    let uploadDocumentsAlertData = ActivationAlert(title: localized("document_validation_required"),
+                                                                   description: localized("document_validation_required_description"),
+                                                                   linkLabel: localized("complete_your_verification"),
+                                                                   alertType: .documents)
+                    self?.alertsArray = [uploadDocumentsAlertData]
                 }
                 else {
                     self?.alertsArray = []
                 }
+                self?.refreshPublisher.send()
             })
             .store(in: &cancellables)
 
-//        if let userKnowYourCustomerStatus = Env.userSessionStore.userKnowYourCustomerStatus,
-//            userKnowYourCustomerStatus == .request {
-//            let uploadDocumentsAlertData = ActivationAlert(title: localized("document_validation_required"),
-//                                                           description: localized("document_validation_required_description"),
-//                                                           linkLabel: localized("complete_your_verification"),
-//                                                           alertType: .documents)
-//
-//            alertsArray.append(uploadDocumentsAlertData)
-//        }
-        
     }
 
     // User alerts
     func fetchBanners() {
 
-        self.banners = []
-
         if Env.userSessionStore.isUserLogged() {
+            // Logged user has no banners
+            self.banners = []
+            self.refreshPublisher.send()
             return
         }
 
@@ -242,6 +219,7 @@ class ClientManagedHomeViewTemplateDataSource {
                 self?.banners = promotionalBanners.map({ promotionalBanner in
                     return BannerInfo(type: "", id: promotionalBanner.id, matchId: nil, imageURL: promotionalBanner.imageURL, priorityOrder: nil, marketId: nil)
                 })
+                self?.refreshPublisher.send()
             }
             .store(in: &self.cancellables)
 
@@ -249,64 +227,27 @@ class ClientManagedHomeViewTemplateDataSource {
 
     func fetchPromotionalStories() {
 
-        self.promotionalStories = []
-
         Env.servicesProvider.getPromotionalTopStories()
             .receive(on: DispatchQueue.main)
             .sink { completion in
-                print("Promotional stories completion \(dump(completion))")
-
+                print("Promotional stories completion \(completion)")
             } receiveValue: { [weak self] promotionalStories in
-
-                print("PROMOTIONAL STORIES: \(promotionalStories)")
-
                 let mappedPromotionalStories = promotionalStories.map({ promotionalStory in
                     let promotionalStory = ServiceProviderModelMapper.promotionalStory(fromPromotionalStory: promotionalStory)
                     return promotionalStory
                 })
-
                 self?.promotionalStories = mappedPromotionalStories
-
+                self?.refreshPublisher.send()
             }
             .store(in: &self.cancellables)
     }
 
     func fetchSupplementaryEventsIds() {
-
-// Hardcoded VAIX ids 
-//        self.supplementaryEventIds = [
-//            "3225419.1",
-//            "3225457.1",
-//            "3225190.1",
-//            "3224836.1",
-//            "3224831.1",
-//            "3225090.1",
-//            "3225449.1",
-//            "3225148.1",
-//            "3225149.1",
-//            "3225151.1",
-//            "3225173.1",
-//            "3225420.1",
-//            "3225192.1",
-//            "3225195.1",
-//            "3225247.1",
-//            "3225448.1",
-//            "3225242.1",
-//            "3225265.1",
-//            "3225209.1",
-//            "3225214.1",
-//            "3225124.1",
-//            "3225014.1",
-//            "3225117.1",
-//            "3225039.1"
-//        ]
-
         self.supplementaryEventIds = []
         self.refreshPublisher.send()
     }
 
     func fetchQuickSwipeMatches() {
-
         Env.servicesProvider.getPromotionalSlidingTopEvents()
             .map(ServiceProviderModelMapper.matches(fromEvents:))
             .receive(on: DispatchQueue.main)
@@ -317,7 +258,6 @@ class ClientManagedHomeViewTemplateDataSource {
                 self?.refreshPublisher.send()
             })
             .store(in: &self.cancellables)
-
     }
 
     func fetchHighlightMatches() {
@@ -360,9 +300,6 @@ class ClientManagedHomeViewTemplateDataSource {
 
     func fetchPromotedSports() {
 
-        self.promotedSports = []
-        self.promotedSportsMatches = [:]
-
         Env.servicesProvider.getPromotedSports()
             .receive(on: DispatchQueue.main)
             .sink { completion in
@@ -399,7 +336,9 @@ class ClientManagedHomeViewTemplateDataSource {
 extension ClientManagedHomeViewTemplateDataSource: HomeViewTemplateDataSource {
 
     var refreshRequestedPublisher: AnyPublisher<Void, Never> {
-        return self.refreshPublisher.eraseToAnyPublisher()
+        return self.refreshPublisher
+            .throttle(for: .seconds(1), scheduler: DispatchQueue.main, latest: true)
+            .eraseToAnyPublisher()
     }
 
     func refresh() {
@@ -422,7 +361,6 @@ extension ClientManagedHomeViewTemplateDataSource: HomeViewTemplateDataSource {
         case 2:
             return self.quickSwipeStackMatches.isEmpty ? 0 : 1
         case 3:
-            //return self.shouldShowPromotionalStories ? 1 : 0
             return self.storiesLineViewModel == nil ? 0 : 1
         case 4:
             return self.highlightsVisualImageMatches.count + self.highlightsBoostedMatches.count
