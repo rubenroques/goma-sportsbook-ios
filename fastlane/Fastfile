@@ -16,6 +16,8 @@
 require 'dotenv'
 Dotenv.load
 
+ENV["FASTLANE_XCODEBUILD_SETTINGS_TIMEOUT"] = "120"
+
 # Fastfile
 default_platform(:ios)
 
@@ -63,18 +65,24 @@ end
 
 lane :distribute_to_firebase do |options|
 
-  build_app(
+  build_ios_app(
     scheme: options[:app_scheme],
     clean: true,
-    silent: false,
-    suppress_xcode_output: false,
-    export_method: "ad-hoc" # Use ad hoc provisioning profile
+    silent: true,
+    suppress_xcode_output: true,
+    export_method: "ad-hoc", # Use ad hoc provisioning profile
+    export_options: {
+        compileBitcode: false,
+        uploadBitcode: false,
+        uploadSymbols: true,
+        manageAppVersionAndBuildNumber: false
+      }
   )
 
   firebase_app_distribution(
     app: "1:844144342615:ios:9d61f3eb24c40f4f8a9512", # Replace with your actual Firebase App ID
     firebase_cli_token: ENV["FIREBASE_CLI_TOKEN"],
-    groups: "ios-internal", # Replace with your desired distribution group(s)
+    groups: " ios-dev ", # "ios-internal", # Replace with your desired distribution group(s)
     debug: true
   )
 
@@ -99,7 +107,7 @@ end
 
 lane :beta do |options|
   desc "Distribute Beta version to Firebase"
-  increment_specific_target_build_number(app_scheme: options[:client])
+  # increment_specific_target_build_number(app_scheme: options[:client])
   distribute_to_firebase(app_scheme: options[:client])
 end
 
