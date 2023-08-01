@@ -4175,6 +4175,20 @@
 		A91A05BD29CB534B00E0A772 /* CloseAccountViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A91A05B729CB534A00E0A772 /* CloseAccountViewController.swift */; };
 		A91A05BE29CB534B00E0A772 /* CloseAccountViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A91A05B729CB534A00E0A772 /* CloseAccountViewController.swift */; };
 		A91A05BF29CB534B00E0A772 /* CloseAccountViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A91A05B729CB534A00E0A772 /* CloseAccountViewController.swift */; };
+		A91A643F2A7801DF002A6984 /* MyFavoritesRootViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A91A643E2A7801DF002A6984 /* MyFavoritesRootViewController.swift */; };
+		A91A64402A7801DF002A6984 /* MyFavoritesRootViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A91A643E2A7801DF002A6984 /* MyFavoritesRootViewController.swift */; };
+		A91A64412A7801DF002A6984 /* MyFavoritesRootViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A91A643E2A7801DF002A6984 /* MyFavoritesRootViewController.swift */; };
+		A91A64422A7801DF002A6984 /* MyFavoritesRootViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A91A643E2A7801DF002A6984 /* MyFavoritesRootViewController.swift */; };
+		A91A64432A7801DF002A6984 /* MyFavoritesRootViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A91A643E2A7801DF002A6984 /* MyFavoritesRootViewController.swift */; };
+		A91A64442A7801DF002A6984 /* MyFavoritesRootViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A91A643E2A7801DF002A6984 /* MyFavoritesRootViewController.swift */; };
+		A91A64452A7801DF002A6984 /* MyFavoritesRootViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A91A643E2A7801DF002A6984 /* MyFavoritesRootViewController.swift */; };
+		A91A64472A780E6A002A6984 /* MyCompetitionsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A91A64462A780E6A002A6984 /* MyCompetitionsViewController.swift */; };
+		A91A64482A780E6A002A6984 /* MyCompetitionsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A91A64462A780E6A002A6984 /* MyCompetitionsViewController.swift */; };
+		A91A64492A780E6A002A6984 /* MyCompetitionsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A91A64462A780E6A002A6984 /* MyCompetitionsViewController.swift */; };
+		A91A644A2A780E6A002A6984 /* MyCompetitionsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A91A64462A780E6A002A6984 /* MyCompetitionsViewController.swift */; };
+		A91A644B2A780E6A002A6984 /* MyCompetitionsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A91A64462A780E6A002A6984 /* MyCompetitionsViewController.swift */; };
+		A91A644C2A780E6A002A6984 /* MyCompetitionsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A91A64462A780E6A002A6984 /* MyCompetitionsViewController.swift */; };
+		A91A644D2A780E6A002A6984 /* MyCompetitionsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A91A64462A780E6A002A6984 /* MyCompetitionsViewController.swift */; };
 		A92547FE2A28AB300056F832 /* DocumentsRootViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A92547FD2A28AB300056F832 /* DocumentsRootViewController.swift */; };
 		A92547FF2A28AB300056F832 /* DocumentsRootViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A92547FD2A28AB300056F832 /* DocumentsRootViewController.swift */; };
 		A92548002A28AB300056F832 /* DocumentsRootViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A92547FD2A28AB300056F832 /* DocumentsRootViewController.swift */; };
@@ -6152,6 +6166,8 @@
 		A90FB7F829B0CB4400D08A7C /* TipInfoView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TipInfoView.swift; sourceTree = "<group>"; };
 		A90FB80229B0F8B100D08A7C /* GenericAlertView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GenericAlertView.swift; sourceTree = "<group>"; };
 		A91A05B729CB534A00E0A772 /* CloseAccountViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CloseAccountViewController.swift; sourceTree = "<group>"; };
+		A91A643E2A7801DF002A6984 /* MyFavoritesRootViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MyFavoritesRootViewController.swift; sourceTree = "<group>"; };
+		A91A64462A780E6A002A6984 /* MyCompetitionsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MyCompetitionsViewController.swift; sourceTree = "<group>"; };
 		A91F4B2927BE918C008C7510 /* LinkPresentationItemSource.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LinkPresentationItemSource.swift; sourceTree = "<group>"; };
 		A91F4B2D27BEAF0F008C7510 /* NotificationsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotificationsViewController.swift; sourceTree = "<group>"; };
 		A91F4B3127BFB8FB008C7510 /* AppearanceViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppearanceViewController.swift; sourceTree = "<group>"; };
@@ -9798,6 +9814,8 @@
 				A9E7C69627B581BD00F784C9 /* Cells */,
 				A9E7C69227B5636800F784C9 /* DataSources */,
 				A9E7C68E27B5404400F784C9 /* ViewModels */,
+				A91A643E2A7801DF002A6984 /* MyFavoritesRootViewController.swift */,
+				A91A64462A780E6A002A6984 /* MyCompetitionsViewController.swift */,
 			);
 			path = MyFavorites;
 			sourceTree = "<group>";
@@ -11731,6 +11749,7 @@
 				450B795328F58574009229E3 /* OverUnderMarketDetailTableViewCell.swift in Sources */,
 				450B795428F58574009229E3 /* SearchViewModel.swift in Sources */,
 				450B795628F58574009229E3 /* DepositResponse.swift in Sources */,
+				A91A64402A7801DF002A6984 /* MyFavoritesRootViewController.swift in Sources */,
 				450B795728F58574009229E3 /* ActivationAlertScrollableTableViewCell.swift in Sources */,
 				450B795828F58574009229E3 /* UserSettingsGoma.swift in Sources */,
 				450B795928F58574009229E3 /* Localization.swift in Sources */,
@@ -11744,6 +11763,7 @@
 				A925481B2A2A26A30056F832 /* DocumentStateView.swift in Sources */,
 				450B796328F58574009229E3 /* AutoLayoutDSL.swift in Sources */,
 				450B796428F58574009229E3 /* UIColor+Extensions.swift in Sources */,
+				A91A64482A780E6A002A6984 /* MyCompetitionsViewController.swift in Sources */,
 				450B796528F58574009229E3 /* ConversationsViewModel.swift in Sources */,
 				450B796728F58574009229E3 /* ConversationBetSelectionViewController.swift in Sources */,
 				450B796828F58574009229E3 /* DepositViewController.swift in Sources */,
@@ -12322,6 +12342,7 @@
 				457CBA40282D27D000ED0F00 /* MultiSlider+Internal.swift in Sources */,
 				457CBA41282D27D000ED0F00 /* Cashout.swift in Sources */,
 				451B0A49286AFDC700005FA5 /* SupportTicketResponse.swift in Sources */,
+				A91A644C2A780E6A002A6984 /* MyCompetitionsViewController.swift in Sources */,
 				A90C373D29C38EB9007B8AEC /* ServicesProviderModelMapper+Bonus.swift in Sources */,
 				457CBA43282D27D000ED0F00 /* SuggestedBetViewModel.swift in Sources */,
 				A9BA040B2A308CCA007880FC /* ExtraDocsViewController.swift in Sources */,
@@ -12752,6 +12773,7 @@
 				457CBB86282D27D000ED0F00 /* CompetitionDetailsViewModel.swift in Sources */,
 				A98EC7E02889B0AA0044FC46 /* ConversationBetSelectionRootViewModel.swift in Sources */,
 				A98295A2283BA0AF0014066A /* BetSelectionTableViewCell.swift in Sources */,
+				A91A64442A7801DF002A6984 /* MyFavoritesRootViewController.swift in Sources */,
 				A90229A428AFD41100972863 /* QuickBetViewController.swift in Sources */,
 				A9DF8E4A28E6F6720083BF56 /* UserNotificationTableViewCell.swift in Sources */,
 				457CBB87282D27D000ED0F00 /* SportsbookTarget.swift in Sources */,
@@ -12904,6 +12926,7 @@
 				457CBCB5282D2CD100ED0F00 /* MultiSlider+Drag.swift in Sources */,
 				457CBCB7282D2CD100ED0F00 /* OddsViewModel.swift in Sources */,
 				457CBCB8282D2CD100ED0F00 /* BonusProgressViewModel.swift in Sources */,
+				A91A644D2A780E6A002A6984 /* MyCompetitionsViewController.swift in Sources */,
 				457CBCB9282D2CD100ED0F00 /* SportSelectionViewController.swift in Sources */,
 				457CBCBA282D2CD100ED0F00 /* SportMatchDoubleLineTableViewCell.swift in Sources */,
 				457CBCBB282D2CD100ED0F00 /* RadioButton.swift in Sources */,
@@ -12932,6 +12955,7 @@
 				45B6E24428415268001B570C /* SelectFriendTableViewCell.swift in Sources */,
 				457CBCC9282D2CD100ED0F00 /* ResultsHeaderFooterView.swift in Sources */,
 				457CBCCA282D2CD100ED0F00 /* EMMatch.swift in Sources */,
+				A91A64452A7801DF002A6984 /* MyFavoritesRootViewController.swift in Sources */,
 				457CBCCB282D2CD100ED0F00 /* RecentSearchRowView.swift in Sources */,
 				457CBCCC282D2CD100ED0F00 /* OddViewPosition.swift in Sources */,
 				459874BE2A28D272008C0ADE /* CardsCollectionViewLayout.swift in Sources */,
@@ -13790,6 +13814,7 @@
 				4589C848282024E400243547 /* SearchViewModel.swift in Sources */,
 				4589C84A282024E400243547 /* DepositResponse.swift in Sources */,
 				4589C84B282024E400243547 /* ActivationAlertScrollableTableViewCell.swift in Sources */,
+				A91A64412A7801DF002A6984 /* MyFavoritesRootViewController.swift in Sources */,
 				4589C84C282024E400243547 /* UserSettingsGoma.swift in Sources */,
 				4589C84D282024E400243547 /* Localization.swift in Sources */,
 				4589C84E282024E400243547 /* NewGroupViewController.swift in Sources */,
@@ -13803,6 +13828,7 @@
 				A925481C2A2A26A30056F832 /* DocumentStateView.swift in Sources */,
 				4589C857282024E400243547 /* UIColor+Extensions.swift in Sources */,
 				45A6BB7C2821400000D9B416 /* ConversationsViewModel.swift in Sources */,
+				A91A64492A780E6A002A6984 /* MyCompetitionsViewController.swift in Sources */,
 				A9829599283B94D00014066A /* ConversationBetSelectionViewController.swift in Sources */,
 				4589C859282024E400243547 /* DepositViewController.swift in Sources */,
 				4589C85A282024E400243547 /* PopularMatchesDataSource.swift in Sources */,
@@ -14438,6 +14464,7 @@
 				45A3316A298976BA008181E9 /* Tournament.swift in Sources */,
 				45A3316B298976BA008181E9 /* OverUnderMarketDetailTableViewCell.swift in Sources */,
 				45A3316C298976BA008181E9 /* SearchViewModel.swift in Sources */,
+				A91A643F2A7801DF002A6984 /* MyFavoritesRootViewController.swift in Sources */,
 				45A3316E298976BA008181E9 /* DepositResponse.swift in Sources */,
 				45A3316F298976BA008181E9 /* ActivationAlertScrollableTableViewCell.swift in Sources */,
 				45A33171298976BA008181E9 /* UserSettingsGoma.swift in Sources */,
@@ -14451,6 +14478,7 @@
 				A925481A2A2A26A30056F832 /* DocumentStateView.swift in Sources */,
 				45A3317B298976BA008181E9 /* SelectChatroomTableViewCell.swift in Sources */,
 				45A3317C298976BA008181E9 /* AutoLayoutDSL.swift in Sources */,
+				A91A64472A780E6A002A6984 /* MyCompetitionsViewController.swift in Sources */,
 				45A3317D298976BA008181E9 /* UIColor+Extensions.swift in Sources */,
 				45A3317E298976BA008181E9 /* ConversationsViewModel.swift in Sources */,
 				45A33180298976BA008181E9 /* ConversationBetSelectionViewController.swift in Sources */,
@@ -15001,6 +15029,7 @@
 				45A6BC6328246A7500D9B416 /* PopUpDetails.swift in Sources */,
 				45A6BC6428246A7500D9B416 /* RunningPlatform.swift in Sources */,
 				45A6BC6528246A7500D9B416 /* AppModels.swift in Sources */,
+				A91A64432A7801DF002A6984 /* MyFavoritesRootViewController.swift in Sources */,
 				A9A9102F29E85CFD003A2C86 /* ContactSettingsViewModel.swift in Sources */,
 				45A6BC6628246A7500D9B416 /* AddUnregisteredFriendCellViewModel.swift in Sources */,
 				45A6BC6728246A7500D9B416 /* HeadToHeadCardStatsView.swift in Sources */,
@@ -15095,6 +15124,7 @@
 				45A6BCA528246A7500D9B416 /* CompetitionWidgetCollectionViewCell.swift in Sources */,
 				45A6BCA628246A7500D9B416 /* XcodePreviewViewController.swift in Sources */,
 				45A6BCA728246A7500D9B416 /* AutoLayoutDSL.swift in Sources */,
+				A91A644B2A780E6A002A6984 /* MyCompetitionsViewController.swift in Sources */,
 				45A6BCA828246A7500D9B416 /* UIColor+Extensions.swift in Sources */,
 				A982959A283B94D00014066A /* ConversationBetSelectionViewController.swift in Sources */,
 				45A6BCAA28246A7500D9B416 /* DepositViewController.swift in Sources */,
@@ -15759,6 +15789,7 @@
 				A9C341C328F9A74A0055360B /* PopularMatchesDataSource.swift in Sources */,
 				A9C341C428F9A74A0055360B /* BonusAvailableCellViewModel.swift in Sources */,
 				A9C341C528F9A74A0055360B /* ActivationAlertScrollableView.swift in Sources */,
+				A91A644A2A780E6A002A6984 /* MyCompetitionsViewController.swift in Sources */,
 				A9C341C628F9A74A0055360B /* SuggestedBetLineTableViewCell.swift in Sources */,
 				A9C341C728F9A74A0055360B /* VideoPreviewLineTableViewCell.swift in Sources */,
 				A9C341C828F9A74A0055360B /* NewGroupManagementViewController.swift in Sources */,
@@ -15921,6 +15952,7 @@
 				A9C3425D28F9A74A0055360B /* BonusDetailViewController.swift in Sources */,
 				A9C3425E28F9A74A0055360B /* MatchFiltersViewController.swift in Sources */,
 				A9C3426028F9A74A0055360B /* CGFloat+Extensions.swift in Sources */,
+				A91A64422A7801DF002A6984 /* MyFavoritesRootViewController.swift in Sources */,
 				A9C3426128F9A74A0055360B /* SportGroupViewModel.swift in Sources */,
 				A9C3426228F9A74A0055360B /* BonusAvailableTableViewCell.swift in Sources */,
 				A9C3426328F9A74A0055360B /* MyFavoritesViewModel.swift in Sources */,
@@ -16519,7 +16551,7 @@
 				CODE_SIGN_ENTITLEMENTS = Clients/Betsson/Misc/Betsson.entitlements;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 1202;
+				CURRENT_PROJECT_VERSION = 1203;
 				DEVELOPMENT_TEAM = 422GNXXZJR;
 				INFOPLIST_FILE = "$(SRCROOT)/Clients/Betsson/Misc/Betsson-Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 13.0;
@@ -16545,7 +16577,7 @@
 				CODE_SIGN_ENTITLEMENTS = Clients/Betsson/Misc/Betsson.entitlements;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 1202;
+				CURRENT_PROJECT_VERSION = 1203;
 				DEVELOPMENT_TEAM = 422GNXXZJR;
 				INFOPLIST_FILE = "$(SRCROOT)/Clients/Betsson/Misc/Betsson-Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 13.0;

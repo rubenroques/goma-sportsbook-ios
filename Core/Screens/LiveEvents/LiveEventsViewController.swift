@@ -20,6 +20,8 @@ class LiveEventsViewController: UIViewController {
     @IBOutlet private weak var sportsSelectorButtonView: UIView!
     @IBOutlet private weak var sportTypeIconImageView: UIImageView!
     @IBOutlet private weak var sportsSelectorExpandImageView: UIImageView!
+
+    @IBOutlet private weak var sportTypeNameLabel: UILabel!
     @IBOutlet private weak var leftGradientBaseView: UIView!
 
     @IBOutlet private weak var rightGradientBaseView: UIView!
@@ -63,6 +65,9 @@ class LiveEventsViewController: UIViewController {
                 self.sportTypeIconImageView.image = UIImage(named: "sport_type_icon_default")
                 self.sportTypeIconImageView.setImageColor(color: UIColor.App.textPrimary)
             }
+
+            self.sportTypeNameLabel.text = selectedSport.name
+
             self.viewModel.selectedSport = self.selectedSport
         }
     }

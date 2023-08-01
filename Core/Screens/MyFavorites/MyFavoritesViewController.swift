@@ -71,6 +71,9 @@ class MyFavoritesViewController: UIViewController {
     init() {
         self.viewModel = MyFavoritesViewModel()
         super.init(nibName: nil, bundle: nil)
+
+        self.title = localized("my_favorites")
+
     }
 
     deinit {

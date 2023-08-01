@@ -38,6 +38,7 @@
                 <outlet property="rightGradientBaseView" destination="FxX-ck-Cyp" id="Y6G-dS-iww"/>
                 <outlet property="secondTextFieldEmptyStateLabel" destination="giU-qb-DgU" id="4QA-Yy-qBa"/>
                 <outlet property="sportTypeIconImageView" destination="iOi-Sv-wfK" id="bdC-qr-Mbb"/>
+                <outlet property="sportTypeNameLabel" destination="Azv-t3-fBh" id="Qof-la-ztx"/>
                 <outlet property="sportsSelectorButtonView" destination="L0P-hR-PWM" id="M7W-hm-vQU"/>
                 <outlet property="sportsSelectorExpandImageView" destination="Y2j-ay-23y" id="8Un-Lb-Y0K"/>
                 <outlet property="tableFilterTopViewConstraint" destination="xWy-Nu-xOV" id="prO-dg-HdI"/>
@@ -235,13 +236,36 @@
                         <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="L0P-hR-PWM">
                             <rect key="frame" x="0.0" y="15" width="55" height="40"/>
                             <subviews>
-                                <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="sport_type_soccer_icon" translatesAutoresizingMaskIntoConstraints="NO" id="iOi-Sv-wfK">
-                                    <rect key="frame" x="9" y="8.5" width="23" height="23"/>
+                                <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="NKT-pj-UGy">
+                                    <rect key="frame" x="4" y="4.5" width="31" height="31"/>
+                                    <subviews>
+                                        <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="sport_type_soccer_icon" translatesAutoresizingMaskIntoConstraints="NO" id="iOi-Sv-wfK">
+                                            <rect key="frame" x="7.5" y="2" width="16" height="16"/>
+                                            <constraints>
+                                                <constraint firstAttribute="height" constant="16" id="G83-2Z-EVx"/>
+                                                <constraint firstAttribute="width" constant="16" id="deX-TK-kxR"/>
+                                            </constraints>
+                                        </imageView>
+                                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Sport" textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="2" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Azv-t3-fBh">
+                                            <rect key="frame" x="0.0" y="22" width="31" height="7"/>
+                                            <fontDescription key="fontDescription" name="Gilroy-Bold" family="Gilroy" pointSize="7"/>
+                                            <color key="textColor" name="textPrimary"/>
+                                            <nil key="highlightedColor"/>
+                                        </label>
+                                    </subviews>
+                                    <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                     <constraints>
-                                        <constraint firstAttribute="height" constant="23" id="G83-2Z-EVx"/>
-                                        <constraint firstAttribute="width" constant="23" id="deX-TK-kxR"/>
+                                        <constraint firstItem="iOi-Sv-wfK" firstAttribute="top" secondItem="NKT-pj-UGy" secondAttribute="top" constant="2" id="2Bi-Ty-CIS"/>
+                                        <constraint firstItem="iOi-Sv-wfK" firstAttribute="centerX" secondItem="NKT-pj-UGy" secondAttribute="centerX" id="3fo-0u-zbj"/>
+                                        <constraint firstItem="Azv-t3-fBh" firstAttribute="leading" secondItem="NKT-pj-UGy" secondAttribute="leading" id="BUK-rq-I3b"/>
+                                        <constraint firstAttribute="bottom" secondItem="Azv-t3-fBh" secondAttribute="bottom" constant="2" id="Lc8-Zq-QoW"/>
+                                        <constraint firstItem="Azv-t3-fBh" firstAttribute="top" secondItem="iOi-Sv-wfK" secondAttribute="bottom" constant="4" id="QRv-l7-udE"/>
+                                        <constraint firstAttribute="bottom" secondItem="Azv-t3-fBh" secondAttribute="bottom" constant="2" id="WJZ-mb-W5w"/>
+                                        <constraint firstAttribute="trailing" secondItem="Azv-t3-fBh" secondAttribute="trailing" id="bnR-hY-ahf"/>
+                                        <constraint firstItem="Azv-t3-fBh" firstAttribute="leading" secondItem="NKT-pj-UGy" secondAttribute="leading" id="tfo-T0-3va"/>
+                                        <constraint firstAttribute="trailing" secondItem="Azv-t3-fBh" secondAttribute="trailing" id="tiy-8L-mQd"/>
                                     </constraints>
-                                </imageView>
+                                </view>
                                 <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="expand_top_down_arrows_icon" translatesAutoresizingMaskIntoConstraints="NO" id="Y2j-ay-23y">
                                     <rect key="frame" x="37" y="9.5" width="10" height="23"/>
                                     <constraints>
@@ -251,11 +275,12 @@
                                 </imageView>
                             </subviews>
                             <constraints>
+                                <constraint firstItem="NKT-pj-UGy" firstAttribute="centerY" secondItem="L0P-hR-PWM" secondAttribute="centerY" id="01S-pQ-cUL"/>
                                 <constraint firstAttribute="width" constant="55" id="3ys-0l-8NQ"/>
                                 <constraint firstAttribute="trailing" secondItem="Y2j-ay-23y" secondAttribute="trailing" constant="8" id="JAQ-xB-4zs"/>
-                                <constraint firstItem="iOi-Sv-wfK" firstAttribute="leading" secondItem="L0P-hR-PWM" secondAttribute="leading" constant="9" id="Lbr-hi-d3f"/>
+                                <constraint firstItem="NKT-pj-UGy" firstAttribute="trailing" secondItem="Y2j-ay-23y" secondAttribute="leading" constant="-2" id="NPT-UJ-KZe"/>
                                 <constraint firstItem="Y2j-ay-23y" firstAttribute="centerY" secondItem="L0P-hR-PWM" secondAttribute="centerY" constant="1" id="RSl-mY-iml"/>
-                                <constraint firstItem="iOi-Sv-wfK" firstAttribute="centerY" secondItem="L0P-hR-PWM" secondAttribute="centerY" id="jxj-Fl-A2p"/>
+                                <constraint firstItem="NKT-pj-UGy" firstAttribute="leading" secondItem="L0P-hR-PWM" secondAttribute="leading" constant="4" id="Rat-73-zDU"/>
                                 <constraint firstAttribute="height" constant="40" id="tjA-Eh-zyX"/>
                             </constraints>
                         </view>
@@ -341,7 +366,10 @@
         <image name="no_content_icon" width="161" height="161"/>
         <image name="sport_type_soccer_icon" width="23" height="23"/>
         <namedColor name="separatorLine">
-            <color red="0.1803921568627451" green="0.1803921568627451" blue="0.1803921568627451" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+            <color red="0.73725490196078436" green="0.78823529411764703" blue="0.82352941176470584" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+        </namedColor>
+        <namedColor name="textPrimary">
+            <color red="0.070588235294117646" green="0.074509803921568626" blue="0.086274509803921567" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
         </namedColor>
         <systemColor name="systemBackgroundColor">
             <color white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
