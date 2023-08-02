@@ -56,7 +56,7 @@ struct Match {
 
     }
 
-    enum Status {
+    enum Status: Equatable {
         case unknown
         case notStarted
         case inProgress(String)

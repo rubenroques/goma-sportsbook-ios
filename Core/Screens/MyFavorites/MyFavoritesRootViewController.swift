@@ -32,7 +32,7 @@ class MyFavoritesRootViewController: UIViewController {
     private var viewControllerTabDataSource: TitleTabularDataSource
     private var viewControllers: [UIViewController] = []
 
-    private var myGamesViewController: RecruitAFriendViewController
+    private var myGamesViewController: MyGamesRootViewController
     private var myCompetitionsViewController: MyCompetitionsViewController
 
     private var cancellables = Set<AnyCancellable>()
@@ -47,7 +47,7 @@ class MyFavoritesRootViewController: UIViewController {
     // MARK: - Lifetime and Cycle
     init() {
 
-        self.myGamesViewController = RecruitAFriendViewController()
+        self.myGamesViewController = MyGamesRootViewController(viewModel: MyGamesRootViewModel())
         self.myCompetitionsViewController = MyCompetitionsViewController()
 
         self.viewControllers = [self.myGamesViewController, self.myCompetitionsViewController]

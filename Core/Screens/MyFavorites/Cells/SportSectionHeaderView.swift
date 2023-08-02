@@ -52,7 +52,7 @@ class SportSectionHeaderView: UITableViewHeaderFooterView {
     func setupWithTheme() {
         self.backgroundColor = .clear
         self.backgroundView?.backgroundColor = .clear
-        self.contentView.backgroundColor = UIColor.App.backgroundPrimary
+        self.contentView.backgroundColor = .clear
 
         self.titleLabel.textColor = UIColor.App.textPrimary
 
@@ -64,7 +64,8 @@ class SportSectionHeaderView: UITableViewHeaderFooterView {
     func configureHeader(title: String, sportTypeId: String) {
         self.titleLabel.text = title
 
-        self.sportIconImageView.image = UIImage(named: "sport_type_mono_icon_\(sportTypeId)")
+        self.sportIconImageView.image = UIImage(named: "sport_type_icon_\(sportTypeId)")
+        self.sportIconImageView.setImageColor(color: UIColor.App.textPrimary)
     }
 
     func setCollapseImage(isCollapsed: Bool) {
