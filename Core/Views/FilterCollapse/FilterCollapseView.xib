@@ -75,7 +75,7 @@
                                 <constraint firstItem="CNk-4G-pza" firstAttribute="leading" secondItem="IoM-Ny-LaF" secondAttribute="trailing" constant="8" id="yKe-Ff-Zjo"/>
                             </constraints>
                         </view>
-                        <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" spacing="8" translatesAutoresizingMaskIntoConstraints="NO" id="J38-OW-1uH">
+                        <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" translatesAutoresizingMaskIntoConstraints="NO" id="J38-OW-1uH">
                             <rect key="frame" x="8" y="41" width="378" height="71"/>
                             <constraints>
                                 <constraint firstAttribute="height" id="4Dg-vB-jWj"/>

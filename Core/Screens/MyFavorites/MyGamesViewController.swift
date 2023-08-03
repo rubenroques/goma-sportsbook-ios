@@ -22,6 +22,8 @@ class MyGamesViewModel {
     var userFavoritesBySportsArray: [FavoriteSportMatches] = []
     var matchesBySportList: [String: [Match]] = [:]
 
+    var fetchedMatchesWithMarketsPublisher: CurrentValueSubject<[Match], Never> = .init([])
+
     var favoriteMatchesDataPublisher: CurrentValueSubject<[Match], Never> = .init([])
     var fetchedEventSummaryPublisher: CurrentValueSubject<[String], Never> = .init([])
     var dataChangedPublisher = PassthroughSubject<Void, Never>.init()
@@ -39,7 +41,7 @@ class MyGamesViewModel {
     var collapsedSportSections: Set<Int> = []
 
     var myGamesTypeList: MyGamesTypeList
-    var myGamesFilterType: MyGamesFilterType
+    var filterApplied: FilterFavoritesValue
 
     // MARK: Caches
     private var cachedMatchStatsViewModels: [String: MatchStatsViewModel] = [:]
@@ -49,11 +51,11 @@ class MyGamesViewModel {
         case highOdds
     }
 
-    init(myGamesTypeList: MyGamesTypeList, myGamesFilterType: MyGamesFilterType = .time) {
+    init(myGamesTypeList: MyGamesTypeList, myGamesFilterType: FilterFavoritesValue = .time) {
 
         self.myGamesTypeList = myGamesTypeList
 
-        self.myGamesFilterType = myGamesFilterType
+        self.filterApplied = myGamesFilterType
 
         Env.favoritesManager.favoriteMatchesIdPublisher
             .receive(on: DispatchQueue.main)
@@ -91,6 +93,18 @@ class MyGamesViewModel {
                 }
             })
             .store(in: &cancellables)
+
+        self.fetchedMatchesWithMarketsPublisher
+            .receive(on: DispatchQueue.main)
+            .sink(receiveValue: { [weak self] fetchedMatches in
+                guard let self = self else { return }
+                if fetchedMatches.count == self.userFavoriteMatches.count && self.userFavoriteMatches.isNotEmpty {
+
+                    self.userFavoriteMatches = fetchedMatches
+                    self.refreshContent()
+                }
+            })
+            .store(in: &cancellables)
     }
 
     func filterMatchesByTypeList(matches: [Match]) {
@@ -102,7 +116,7 @@ class MyGamesViewModel {
             listMatches = matches
         case .live:
             let filteredMatches = matches.filter({
-                $0.status == .inProgress("")
+                self.isDateLive($0.date ?? Date())
             })
 
             listMatches = filteredMatches
@@ -131,6 +145,8 @@ class MyGamesViewModel {
 
             listMatches = filteredMatches
         }
+
+        self.userFavoriteMatches = listMatches
 
         self.setupMatchesBySport(favoriteMatches: listMatches)
         self.updateContentList()
@@ -183,7 +199,6 @@ class MyGamesViewModel {
                         if eventSummary.homeTeamName != "" || eventSummary.awayTeamName != "" {
                             let match = ServiceProviderModelMapper.match(fromEvent: eventSummary)
                             self.favoriteMatchesDataPublisher.value.append(match)
-                            //self.fetchedEventSummaryPublisher.value.append(eventSummary.id)
                         }
 
                     })
@@ -238,15 +253,51 @@ class MyGamesViewModel {
             $0.sportType < $1.sportType
         }
 
-        for index in 0..<self.userFavoritesBySportsArray.count {
-            self.userFavoritesBySportsArray[index].matches.sort {
-                $0.date ?? Date() < $1.date ?? Date()
+        switch self.filterApplied {
+        case .time:
+            for index in 0..<self.userFavoritesBySportsArray.count {
+                self.userFavoritesBySportsArray[index].matches.sort {
+                    $0.date ?? Date() < $1.date ?? Date()
+                }
+            }
+        case .higherOdds:
+            for index in 0..<self.userFavoritesBySportsArray.count {
+
+                let sortingClosure: (Match, Match) -> Bool = { match1, match2 in
+                    // Find the highest decimal odd for each match
+                    let highestOdd1 = match1.markets.flatMap { $0.outcomes }.map { $0.bettingOffer.decimalOdd }.max() ?? 0.0
+                    let highestOdd2 = match2.markets.flatMap { $0.outcomes }.map { $0.bettingOffer.decimalOdd }.max() ?? 0.0
+
+                    // Compare the highest decimal odds for sorting
+                    return highestOdd1 > highestOdd2
+                }
+
+                let sortedFavorites = self.userFavoritesBySportsArray[index].matches.sorted(by: sortingClosure)
+
+                self.userFavoritesBySportsArray[index].matches = sortedFavorites
             }
         }
+    }
 
+    func refreshContent(withUserWalletRefresh: Bool = false) {
+
+        if withUserWalletRefresh {
+            Env.userSessionStore.refreshUserWallet()
+        }
+
+        self.filterMatchesByTypeList(matches: self.userFavoriteMatches)
     }
 
     // Helpers
+    func isDateLive(_ date: Date) -> Bool {
+        let currentDate = Date()
+
+        if date < currentDate {
+            return true
+        }
+
+        return false
+    }
     func isDateToday(_ date: Date) -> Bool {
         let calendar = Calendar.current
 
@@ -464,6 +515,12 @@ class MyGamesViewController: UIViewController {
         self.tableView.reloadData()
     }
 
+    func reloadDataWithFilter(newFilter: FilterFavoritesValue) {
+        self.viewModel.fetchedMatchesWithMarketsPublisher.value = []
+        self.viewModel.filterApplied = newFilter
+        self.viewModel.refreshContent()
+    }
+
     // MARK: Actions
     @objc func didTapLoginButton() {
         let loginViewController = LoginViewController()
@@ -517,6 +574,22 @@ extension MyGamesViewController: UITableViewDataSource, UITableViewDelegate {
                 cell.matchWentLive = { [weak self] in
                     self?.viewModel.matchWentLiveAction?()
                 }
+
+                viewModel.matchPublisher
+                    .dropFirst()
+                    .sink(receiveValue: { [weak self] match in
+                        guard let self = self else { return }
+
+                        if let match = match {
+
+                            if !self.viewModel.fetchedMatchesWithMarketsPublisher.value.contains(where: {
+                                $0.id == match.id
+                            }) {
+                                self.viewModel.fetchedMatchesWithMarketsPublisher.value.append(match)
+                            }
+                        }
+                    })
+                    .store(in: &cancellables)
 
                 return cell
             }

@@ -686,8 +686,12 @@ extension ProfileViewController {
     }
 
     @objc func favoritesViewTapped(sender: UITapGestureRecognizer) {
-        let favoritesViewController = MyFavoritesViewController()
-        self.navigationController?.pushViewController(favoritesViewController, animated: true)
+//        let favoritesViewController = MyFavoritesViewController()
+//        self.navigationController?.pushViewController(favoritesViewController, animated: true)
+
+        let myFavoritesViewController = MyFavoritesRootViewController()
+
+        self.navigationController?.pushViewController(myFavoritesViewController, animated: true)
 
     }
 

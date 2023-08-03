@@ -73,8 +73,7 @@ class MatchLineTableCellViewModel {
                 let sortedMarkets = filteredMarkets.sorted { leftMarket, rightMarket  in
                     return (leftMarket.marketTypeId ?? "") < (rightMarket.marketTypeId ?? "")
                 }.prefix(5)
-
-
+                
                 if var oldMatch = self?.matchCurrentValueSubject.value {
                     // We already have a match we only update/replace the markets
                     oldMatch.markets = Array(sortedMarkets)

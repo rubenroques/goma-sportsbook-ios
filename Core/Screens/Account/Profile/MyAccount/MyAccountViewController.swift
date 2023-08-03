@@ -77,18 +77,11 @@ class MyAccountViewController: UIViewController {
         let historyTap = UITapGestureRecognizer(target: self, action: #selector(historyViewTapped(sender:)))
         historyView.addGestureRecognizer(historyTap)
 
-        //TEMP
-        let favoritesView = NavigationCardView()
-        favoritesView.setupView(title: localized("my_favorites"), iconTitle: "history_profile_icon")
-        let favoritesTap = UITapGestureRecognizer(target: self, action: #selector(favoritesViewTapped(sender:)))
-        favoritesView.addGestureRecognizer(favoritesTap)
-
         self.stackView.addArrangedSubview(personalInfoView)
         self.stackView.addArrangedSubview(accountSecurityView)
         self.stackView.addArrangedSubview(documentsView)
         self.stackView.addArrangedSubview(contactSettingsView)
         self.stackView.addArrangedSubview(historyView)
-        self.stackView.addArrangedSubview(favoritesView)
 
     }
 
@@ -129,11 +122,6 @@ extension MyAccountViewController {
     @objc func historyViewTapped(sender: UITapGestureRecognizer) {
         let historyRootViewController = HistoryRootViewController()
         self.navigationController?.pushViewController(historyRootViewController, animated: true)
-    }
-
-    @objc func favoritesViewTapped(sender: UITapGestureRecognizer) {
-        let favoritesRootViewController = MyFavoritesRootViewController()
-        self.navigationController?.pushViewController(favoritesRootViewController, animated: true)
     }
 
 }

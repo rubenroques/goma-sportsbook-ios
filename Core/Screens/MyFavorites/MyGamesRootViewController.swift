@@ -73,6 +73,11 @@ class MyGamesRootViewController: UIViewController {
 
     private var cancellables = Set<AnyCancellable>()
 
+    // Filter
+    private var filterFavoritesViewController = FilterFavoritesViewController()
+    var filterPublisher: CurrentValueSubject<FilterFavoritesValue, Never> = .init(.time)
+
+
     // MARK: - Lifetime and Cycle
     init(viewModel: MyGamesRootViewModel) {
         self.viewModel = MyGamesRootViewModel()
@@ -97,33 +102,59 @@ class MyGamesRootViewController: UIViewController {
         self.setupSubviews()
         self.setupWithTheme()
 
-        // Set VC's
-        let allMyGamesViewModel = MyGamesViewModel(myGamesTypeList: .all)
-        let allMyGamesViewController = MyGamesViewController(viewModel: allMyGamesViewModel)
+        self.filterPublisher
+            .sink { [weak self] filterApplied in
 
-        let liveMyGamesViewModel = MyGamesViewModel(myGamesTypeList: .live)
-        let liveMyGamesViewController = MyGamesViewController(viewModel: liveMyGamesViewModel)
+                switch filterApplied {
+                case .time:
+                    self?.filtersCountLabel.isHidden = true
+                default:
+                    self?.filtersCountLabel.isHidden = false
+                }
 
-        let todayMyGamesViewModel = MyGamesViewModel(myGamesTypeList: .today)
-        let todayMyGamesViewController = MyGamesViewController(viewModel: todayMyGamesViewModel)
+                if let viewControllers = self?.viewControllers {
+                    if viewControllers.isEmpty {
 
-        let tomorrowMyGamesViewModel = MyGamesViewModel(myGamesTypeList: .tomorrow)
-        let tomorrowMyGamesViewController = MyGamesViewController(viewModel: tomorrowMyGamesViewModel)
+                        let allMyGamesViewModel = MyGamesViewModel(myGamesTypeList: .all)
+                        let allMyGamesViewController = MyGamesViewController(viewModel: allMyGamesViewModel)
 
-        let thisWeekMyGamesViewModel = MyGamesViewModel(myGamesTypeList: .thisWeek)
-        let thisWeekMyGamesViewController = MyGamesViewController(viewModel: thisWeekMyGamesViewModel)
+                        let liveMyGamesViewModel = MyGamesViewModel(myGamesTypeList: .live)
+                        let liveMyGamesViewController = MyGamesViewController(viewModel: liveMyGamesViewModel)
 
-        let nextWeekMyGamesViewModel = MyGamesViewModel(myGamesTypeList: .nextWeek)
-        let nextWeekMyGamesViewController = MyGamesViewController(viewModel: nextWeekMyGamesViewModel)
+                        let todayMyGamesViewModel = MyGamesViewModel(myGamesTypeList: .today)
+                        let todayMyGamesViewController = MyGamesViewController(viewModel: todayMyGamesViewModel)
 
-        self.viewControllers = [
-            allMyGamesViewController,
-            liveMyGamesViewController,
-            todayMyGamesViewController,
-            tomorrowMyGamesViewController,
-            thisWeekMyGamesViewController,
-            nextWeekMyGamesViewController
-        ]
+                        let tomorrowMyGamesViewModel = MyGamesViewModel(myGamesTypeList: .tomorrow)
+                        let tomorrowMyGamesViewController = MyGamesViewController(viewModel: tomorrowMyGamesViewModel)
+
+                        let thisWeekMyGamesViewModel = MyGamesViewModel(myGamesTypeList: .thisWeek)
+                        let thisWeekMyGamesViewController = MyGamesViewController(viewModel: thisWeekMyGamesViewModel)
+
+                        let nextWeekMyGamesViewModel = MyGamesViewModel(myGamesTypeList: .nextWeek)
+                        let nextWeekMyGamesViewController = MyGamesViewController(viewModel: nextWeekMyGamesViewModel)
+
+                        self?.viewControllers = [
+                            allMyGamesViewController,
+                            liveMyGamesViewController,
+                            todayMyGamesViewController,
+                            tomorrowMyGamesViewController,
+                            thisWeekMyGamesViewController,
+                            nextWeekMyGamesViewController
+                        ]
+                    }
+                    else {
+                        for viewController in viewControllers {
+                            let myGamesViewController = viewController as? MyGamesViewController
+
+                            myGamesViewController?.reloadDataWithFilter(newFilter: filterApplied)
+                        }
+                    }
+                }
+
+                self?.reloadCollectionView()
+
+            }
+            .store(in: &cancellables)
 
         self.pagedViewController.delegate = self
         self.pagedViewController.dataSource = self
@@ -268,15 +299,12 @@ class MyGamesRootViewController: UIViewController {
     // MARK: Actions
     @objc func didTapFilterAction(sender: UITapGestureRecognizer) {
 
-        print("TAPPED FILTER")
-//        self.present(self.filterHistoryViewController, animated: true, completion: nil)
-//        self.startTimeFilter = self.filterHistoryViewController.viewModel.startTimeFilterPublisher.value
-//        self.endTimeFilter = self.filterHistoryViewController.viewModel.endTimeFilterPublisher.value
-//
-//        self.filterHistoryViewController.didSelectFilterAction = { [weak self ] opt in
-//            self?.filterPublisher.send(opt)
-//
-//        }
+        self.filterFavoritesViewController.didSelectFilterAction = { [weak self ] filterOption in
+            self?.filterPublisher.send(filterOption)
+        }
+
+        self.present(self.filterFavoritesViewController, animated: true, completion: nil)
+
     }
 
     @objc func didTapBetslipView() {
