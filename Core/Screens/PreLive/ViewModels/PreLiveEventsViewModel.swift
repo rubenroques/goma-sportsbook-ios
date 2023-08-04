@@ -134,23 +134,26 @@ class PreLiveEventsViewModel: NSObject {
 
     var homeFilterOptions: HomeFilterOptions? {
         didSet {
-            if self.matchListType == .upcoming {
-                if let lowerTimeRange = homeFilterOptions?.lowerBoundTimeRange, var highTimeRange = homeFilterOptions?.highBoundTimeRange {
-
-                    if highTimeRange == 6 {
-                        // The value 6 in the slider is presented as "All" days to the user
-                        // so we convert it to 365 days, to get all the events of the next year
-                        highTimeRange = 365
-                    }
-
-                    let daysRange = TodayMatchesDataSource.DaysRange(startDay: lowerTimeRange, endDay: highTimeRange)
-                    self.todayMatchesDataSource.fetchData(forSport: self.selectedSport, daysRange: daysRange)
-                }
-            }
-            else {
-                // TODO: filters
-                // self.updateContentList()
-            }
+            self.popularMatchesDataSource.applyFilters(filtersOptions: self.homeFilterOptions)
+            self.todayMatchesDataSource.applyFilters(filtersOptions: self.homeFilterOptions)
+//
+//            if self.matchListType == .upcoming {
+//                if let lowerTimeRange = homeFilterOptions?.lowerBoundTimeRange, var highTimeRange = homeFilterOptions?.highBoundTimeRange {
+//
+//                    if highTimeRange == 6 {
+//                        // The value 6 in the slider is presented as "All" days to the user
+//                        // so we convert it to 365 days, to get all the events of the next year
+//                        highTimeRange = 365
+//                    }
+//
+//                    let daysRange = TodayMatchesDataSource.DaysRange(startDay: lowerTimeRange, endDay: highTimeRange)
+//                    self.todayMatchesDataSource.fetchData(forSport: self.selectedSport, daysRange: daysRange)
+//                }
+//            }
+//            else {
+//                // TODO: filters
+//                // self.updateContentList()
+//            }
         }
     }
 
@@ -170,14 +173,8 @@ class PreLiveEventsViewModel: NSObject {
     private var userFavoriteMatches: [Match] = []
 
     //
+    //
     var mainMarkets: OrderedDictionary<String, Market> = [:]
-
-    private var filteredOutrightCompetitions: [Competition]?
-
-    private var filteredOutrightTopCompetitions: [Competition]?
-
-    private var favoriteMatches: [Match] = []
-    private var favoriteCompetitions: [Competition] = []
 
     private var popularMatchesDataSource: PopularMatchesDataSource
     private var todayMatchesDataSource: TodayMatchesDataSource
@@ -191,7 +188,6 @@ class PreLiveEventsViewModel: NSObject {
     private var isLoadingCompetitionsData: AnyPublisher<Bool, Never>
     private var lastCompetitionsMatchesRequested: [String] = []
 
-    private var popularTournamentsPublisher: AnyCancellable?
     private var competitionsMatchesPublisher: AnyCancellable?
 
     private var cancellables = Set<AnyCancellable>()
@@ -578,6 +574,16 @@ class PreLiveEventsViewModel: NSObject {
         return self.topCompetitionsDataSource.competitions.value
     }
 
+
+    func competition(forIndex index: Int) -> Competition? {
+        return self.competitionsDataSource.competitions.value[safe: index]
+    }
+
+    func topCompetition(forIndex index: Int) -> Competition? {
+        return self.competitionsDataSource.competitions.value[safe: index]
+    }
+
+
     func setMainMarkets(matches: [Match]) {
         self.mainMarkets = [:]
         for match in matches {
@@ -633,53 +639,6 @@ extension PreLiveEventsViewModel {
     //
     // MARK: - Filters
     //
- 
-    func filterTodayMatches(with filtersOptions: HomeFilterOptions?, matches: [Match]) -> [Match] {
-        guard let filterOptionsValue = filtersOptions else {
-            return matches
-        }
-
-        var filteredMatches: [Match] = []
-
-        for match in matches {
-            if match.markets.isEmpty {
-                continue
-            }
-
-            // Check default market order
-            var marketSort: [Market] = []
-//            let favoriteMarketIndex = match.markets.firstIndex(where: { $0.typeId == filterOptionsValue.defaultMarket.marketId })
-            let favoriteMarketIndex = match.markets.firstIndex(where: { $0.marketTypeId == filterOptionsValue.defaultMarket?.id })
-
-            if let newFirstMarket = match.markets[safe: (favoriteMarketIndex ?? 0)] {
-                marketSort.append(newFirstMarket)
-            }
-
-            for market in match.markets where market.typeId != marketSort[0].typeId {
-                marketSort.append(market)
-            }
-
-            // Check odds filter
-            let matchOdds = marketSort[0].outcomes
-            let oddsRange = filterOptionsValue.lowerBoundOddsRange...filterOptionsValue.highBoundOddsRange
-            var oddsInRange = false
-            for odd in matchOdds {
-                let oddValue = CGFloat(odd.bettingOffer.decimalOdd)
-                if oddsRange.contains(oddValue) {
-                    oddsInRange = true
-                    break
-                }
-            }
-
-            if oddsInRange {
-                var newMatch = match
-                newMatch.markets = marketSort
-
-                filteredMatches.append(newMatch)
-            }
-        }
-        return filteredMatches
-    }
 
     func filterCompetitionMatches (with filtersOptions: HomeFilterOptions?, competitions: [Competition]) -> [Competition] {
 
@@ -753,11 +712,11 @@ extension PreLiveEventsViewModel: UITableViewDataSource, UITableViewDelegate {
     func hasContentForSelectedListType() -> Bool {
         switch self.matchListType {
         case .popular:
-            if self.popularMatchesDataSource.matches.value.isEmpty,
-               let outrightCompetitions = self.popularMatchesDataSource.outrightCompetitions.value {
+            if self.popularMatchesDataSource.allMatches.isEmpty,
+               let outrightCompetitions = self.popularMatchesDataSource.allOutrightCompetitionsSubject.value {
                 return outrightCompetitions.isNotEmpty
             }
-            return self.popularMatchesDataSource.matches.value.isNotEmpty
+            return self.popularMatchesDataSource.allMatches.isNotEmpty
         case .upcoming:
             if self.todayMatchesDataSource.matches.value.isEmpty,
                let outrightCompetitions = self.todayMatchesDataSource.outrightCompetitions.value {

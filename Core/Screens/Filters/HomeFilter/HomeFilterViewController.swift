@@ -13,7 +13,6 @@ protocol HomeFilterOptionsViewDelegate: AnyObject {
     var turnTimeRangeOn: Bool { get set }
     var isLiveEventsMarkets: Bool { get set }
     func setHomeFilters(homeFilters: HomeFilterOptions?)
-
 }
 
 //
@@ -432,27 +431,22 @@ class HomeFilterViewController: UIViewController {
         if viewTapped.viewId == "1" {
             UserDefaults.standard.oddsValueType = .allOdds
 
-            let oddValueType = UserDefaults.standard.oddsValueType
-
-            self.lowerBoundOddsRange = oddValueType.oddRange[0]
-            self.highBoundOddsRange = oddValueType.oddRange[1]
-
+            self.lowerBoundOddsRange = OddsValueType.allOdds.oddRange[0]
+            self.highBoundOddsRange = OddsValueType.allOdds.oddRange[1]
         }
         else if viewTapped.viewId == "2" {
             UserDefaults.standard.oddsValueType = .between2And3
 
-            let oddValueType = UserDefaults.standard.oddsValueType
-
-            self.lowerBoundOddsRange = oddValueType.oddRange[0]
-            self.highBoundOddsRange = oddValueType.oddRange[1]
+            self.lowerBoundOddsRange = OddsValueType.between2And3.oddRange[0]
+            self.highBoundOddsRange = OddsValueType.between2And3.oddRange[1]
         }
         else if viewTapped.viewId == "3" {
             UserDefaults.standard.oddsValueType = .bigOdds
 
             let oddValueType = UserDefaults.standard.oddsValueType
 
-            self.lowerBoundOddsRange = oddValueType.oddRange[0]
-            self.highBoundOddsRange = oddValueType.oddRange[1]
+            self.lowerBoundOddsRange = OddsValueType.bigOdds.oddRange[0]
+            self.highBoundOddsRange = OddsValueType.bigOdds.oddRange[1]
         }
 
     }
@@ -584,17 +578,14 @@ class HomeFilterViewController: UIViewController {
         }
 
         UserDefaults.standard.oddsValueType = .allOdds
-        let oddsValueType = UserDefaults.standard.oddsValueType
+        self.lowerBoundOddsRange = OddsValueType.allOdds.oddRange[0]
+        self.highBoundOddsRange = OddsValueType.allOdds.oddRange[1]
 
-        self.lowerBoundOddsRange = oddsValueType.oddRange[0]
-        self.highBoundOddsRange = oddsValueType.oddRange[1]
-
-        UserDefaults.standard.cardsStyle = .normal
+        UserDefaults.standard.cardsStyle = TargetVariables.defaultCardStyle
         NotificationCenter.default.post(name: .cardsStyleChanged, object: nil)
 
         self.smallCardStyleOption.isChecked = false
         self.normalCardStyleOption.isChecked = true
-
     }
 
     @IBAction private func cancelAction() {
@@ -631,16 +622,19 @@ class HomeFilterViewController: UIViewController {
             }
         }
 
-        let homeFilterOptions = HomeFilterOptions(lowerBoundTimeRange: lowerBoundTimeRange,
-                                                  highBoundTimeRange: highBoundTimeRange,
-                                                  defaultMarket: defaultMarket,
-                                                  lowerBoundOddsRange: lowerBoundOddsRange,
-                                                  highBoundOddsRange: highBoundOddsRange,
+        if UserDefaults.standard.cardsStyle != TargetVariables.defaultCardStyle {
+            countFilters += 1
+        }
+
+        let homeFilterOptions = HomeFilterOptions(lowerBoundTimeRange: self.lowerBoundTimeRange,
+                                                  highBoundTimeRange: self.highBoundTimeRange,
+                                                  defaultMarket: self.defaultMarket,
+                                                  lowerBoundOddsRange: self.lowerBoundOddsRange,
+                                                  highBoundOddsRange: self.highBoundOddsRange,
                                                   countFilters: countFilters)
-        delegate?.setHomeFilters(homeFilters: homeFilterOptions)
+        self.delegate?.setHomeFilters(homeFilters: homeFilterOptions)
         
         self.dismiss(animated: true, completion: nil)
-        
     }
 
 }

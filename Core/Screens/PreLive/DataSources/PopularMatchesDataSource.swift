@@ -13,20 +13,24 @@ class PopularMatchesDataSource: NSObject {
 
     //
     // Public Vars
-    var matches: CurrentValueSubject<[Match], Never> = .init([])
-    var outrightCompetitions: CurrentValueSubject<[Competition]?, Never> = .init(nil)
+    var allMatches: [Match] {
+        return self.allMatchesSubject.value
+    }
+    var filteredMatches: [Match] {
+        return self.filteredMatchesSubject.value
+    }
 
     var isLoadingInitialDataPublisher: AnyPublisher<Bool, Never> {
         return self.isLoadingCurrentValueSubject.eraseToAnyPublisher()
     }
 
     var dataChangedPublisher: AnyPublisher<Void, Never> {
-        let matchesChangedArrayPublisher = self.matches
+        let matchesChangedArrayPublisher = self.filteredMatchesSubject
             .removeDuplicates()
             .map { _ in }
             .eraseToAnyPublisher()
 
-        let outrightsChangedArrayPublisher = self.outrightCompetitions
+        let outrightsChangedArrayPublisher = self.allOutrightCompetitionsSubject
             .removeDuplicates()
             .map { _ in }
             .eraseToAnyPublisher()
@@ -37,11 +41,7 @@ class PopularMatchesDataSource: NSObject {
             .eraseToAnyPublisher()
     }
 
-    var filtersOptions: HomeFilterOptions? {
-        didSet {
-            self.applyFilters()
-        }
-    }
+    private(set) var filtersOptions: HomeFilterOptions?
 
     // Clojures
     var matchStatsViewModelForMatch: ((Match) -> MatchStatsViewModel?)?
@@ -55,7 +55,11 @@ class PopularMatchesDataSource: NSObject {
 
     //
     // Private Vars
-    private var filteredMatches: CurrentValueSubject<[Match], Never> = .init([])
+
+    private var allMatchesSubject: CurrentValueSubject<[Match], Never> = .init([])
+    private var filteredMatchesSubject: CurrentValueSubject<[Match], Never> = .init([])
+
+    var allOutrightCompetitionsSubject: CurrentValueSubject<[Competition]?, Never> = .init(nil)
 
     private var sport: Sport
 
@@ -74,6 +78,13 @@ class PopularMatchesDataSource: NSObject {
         self.sport = sport
         super.init()
 
+        self.allMatchesSubject
+            .sink { [weak self] _ in
+                guard let self = self else { return }
+                self.applyFilters(filtersOptions: self.filtersOptions)
+            }
+            .store(in: &self.cancellables)
+
         self.requestData(forSport: self.sport)
     }
 
@@ -83,8 +94,9 @@ class PopularMatchesDataSource: NSObject {
         }
 
         if self.sport != sport {
-            self.matches.send([])
-            self.outrightCompetitions.send(nil)
+            self.allMatchesSubject.send([])
+            self.filteredMatchesSubject.send([])
+            self.allOutrightCompetitionsSubject.send(nil)
         }
 
         self.requestData(forSport: sport)
@@ -136,7 +148,7 @@ extension PopularMatchesDataSource {
                     ()
                 case .failure(let error):
                     print("PopularMatchesDataSource fetchPopularMatches error: \(error)")
-                    self?.matches.send([])
+                    self?.allMatchesSubject.send([])
                     self?.isLoadingCurrentValueSubject.send(false)
                 }
             }, receiveValue: { [weak self] (subscribableContent: SubscribableContent<[EventsGroup]>) in
@@ -150,10 +162,10 @@ extension PopularMatchesDataSource {
 
                     let splittedEventGroups = self.splitEventsGroups(eventsGroups)
                     let mappedOutrights: [Competition]? = ServiceProviderModelMapper.competitions(fromEventsGroups: splittedEventGroups.competitionsEventGroups)
-                    self.outrightCompetitions.send(mappedOutrights)
+                    self.allOutrightCompetitionsSubject.send(mappedOutrights)
 
                     let mappedMatches = ServiceProviderModelMapper.matches(fromEventsGroups: splittedEventGroups.matchesEventGroups)
-                    self.matches.send(mappedMatches)
+                    self.allMatchesSubject.send(mappedMatches)
 
                     // TODO: main markets
                     // self.setMainMarkets(matches: popularMatches)
@@ -169,12 +181,19 @@ extension PopularMatchesDataSource {
 // Filters
 extension PopularMatchesDataSource {
 
-    private func applyFilters() {
-        let filteredMatches = self.filterPopularMatches(with: self.filtersOptions, matches: self.matches.value)
-        self.filteredMatches.send(filteredMatches)
+    func clearFilters() {
+        self.applyFilters(filtersOptions: nil)
+    }
+
+    func applyFilters(filtersOptions: HomeFilterOptions?) {
+        self.filtersOptions = filtersOptions
+
+        let filteredMatches = self.filterPopularMatches(with: self.filtersOptions, matches: self.allMatches)
+        self.filteredMatchesSubject.send(filteredMatches)
     }
 
     private func filterPopularMatches(with filtersOptions: HomeFilterOptions?, matches: [Match]) -> [Match] {
+
         guard let filterOptionsValue = filtersOptions else {
             return matches
         }
@@ -229,12 +248,12 @@ extension PopularMatchesDataSource: UITableViewDataSource, UITableViewDelegate {
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         switch section {
         case 0:
-            if self.shouldShowOutrightMarkets(), let count = self.outrightCompetitions.value?.count {
+            if self.shouldShowOutrightMarkets(), let count = self.allOutrightCompetitionsSubject.value?.count {
                 return count
             }
             return 0
         case 1:
-            return self.matches.value.count
+            return self.filteredMatches.count
         case 2: // LoadingMoreTableViewCell
             if self.hasNextPage {
                 return 1
@@ -255,7 +274,7 @@ extension PopularMatchesDataSource: UITableViewDataSource, UITableViewDelegate {
             guard
                 let cell = tableView.dequeueReusableCell(withIdentifier: OutrightCompetitionLargeLineTableViewCell.identifier)
                     as? OutrightCompetitionLargeLineTableViewCell,
-                let competition = self.outrightCompetitions.value?[safe: indexPath.row]
+                let competition = self.allOutrightCompetitionsSubject.value?[safe: indexPath.row]
             else {
                 fatalError()
             }
@@ -267,7 +286,7 @@ extension PopularMatchesDataSource: UITableViewDataSource, UITableViewDelegate {
 
         case 1:
             if let cell = tableView.dequeueCellType(MatchLineTableViewCell.self),
-               let match = self.matches.value[safe: indexPath.row] {
+               let match = self.filteredMatches[safe: indexPath.row] {
 
                 if let matchStatsViewModel = self.matchStatsViewModelForMatch?(match) {
                     cell.matchStatsViewModel = matchStatsViewModel
@@ -302,13 +321,13 @@ extension PopularMatchesDataSource: UITableViewDataSource, UITableViewDelegate {
 
     func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
 
-        if section == 0 && self.outrightCompetitions.value != nil && self.matches.value.isNotEmpty {
+        if section == 0 && self.allOutrightCompetitionsSubject.value != nil && self.filteredMatches.isNotEmpty {
             return nil
         }
-        else if section == 0 && self.outrightCompetitions.value != nil && self.matches.value.isEmpty {
+        else if section == 0 && self.allOutrightCompetitionsSubject.value != nil && self.filteredMatches.isEmpty {
             ()
         }
-        else if self.matches.value.isEmpty {
+        else if self.filteredMatches.isEmpty {
             return nil
         }
 
@@ -330,11 +349,11 @@ extension PopularMatchesDataSource: UITableViewDataSource, UITableViewDelegate {
     }
 
     func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
-        if section == 0 && self.outrightCompetitions.value != nil && self.matches.value.isEmpty {
+        if section == 0 && self.allOutrightCompetitionsSubject.value != nil && self.filteredMatches.isEmpty {
             return 54
         }
 
-        if self.matches.value.isEmpty {
+        if self.filteredMatches.isEmpty {
             return .leastNonzeroMagnitude
         }
 
@@ -345,11 +364,11 @@ extension PopularMatchesDataSource: UITableViewDataSource, UITableViewDelegate {
     }
 
     func tableView(_ tableView: UITableView, estimatedHeightForHeaderInSection section: Int) -> CGFloat {
-        if section == 0 && self.outrightCompetitions.value != nil && self.matches.value.isEmpty {
+        if section == 0 && self.allOutrightCompetitionsSubject.value != nil && self.filteredMatches.isEmpty {
             return 54
         }
 
-        if self.matches.value.isEmpty {
+        if self.filteredMatches.isEmpty {
             return .leastNonzeroMagnitude
         }
 
@@ -390,7 +409,7 @@ extension PopularMatchesDataSource: UITableViewDataSource, UITableViewDelegate {
     }
 
     func tableView(_ tableView: UITableView, willDisplay cell: UITableViewCell, forRowAt indexPath: IndexPath) {
-        if indexPath.section == 2, self.matches.value.isNotEmpty {
+        if indexPath.section == 2, self.filteredMatches.isNotEmpty {
             if let loadingMoreTableViewCell = cell as? LoadingMoreTableViewCell {
                 loadingMoreTableViewCell.startAnimating()
             }
@@ -438,7 +457,7 @@ extension PopularMatchesDataSource {
     }
 
     func shouldShowOutrightMarkets() -> Bool {
-        return self.matches.value.isEmpty
+        return self.allMatches.isEmpty
     }
 
 }

@@ -65,7 +65,7 @@ class PreLiveEventsViewController: UIViewController {
 
     private var competitionsFiltersView: CompetitionsFiltersView = CompetitionsFiltersView()
 
-    var selectedTopCompetition: Int = 0
+    var selectedTopCompetitionIndex: Int = 0
     var reachedTopCompetitionSection: Int = 0
     var topCompetitionsHighlightEnabled: Bool = false
 
@@ -409,7 +409,7 @@ class PreLiveEventsViewController: UIViewController {
                 self.reloadData()
                 self.reloadCompetitionHistoryCollectionData()
             })
-            .store(in: &cancellables)
+            .store(in: &self.cancellables)
 
         self.viewModel.shouldShowCompetitionsIndexBarPublisher
             .receive(on: DispatchQueue.main)
@@ -421,11 +421,9 @@ class PreLiveEventsViewController: UIViewController {
         Publishers.CombineLatest(self.viewModel.screenStatePublisher, self.viewModel.isLoading)
             .receive(on: DispatchQueue.main)
             .sink(receiveValue: { [weak self] screenState, isLoading in
-
                 guard let self = self else { return }
 
                 if isLoading {
-
                     if !self.isLoadingFromPullToRefresh {
                         self.loadingBaseView.isHidden = false
                         self.loadingSpinnerViewController.startAnimating()
@@ -433,7 +431,6 @@ class PreLiveEventsViewController: UIViewController {
 
                     self.emptyBaseView.isHidden = true
                     self.competitionsContainerView.isHidden = false
-
                     return
                 }
                 else {
@@ -468,6 +465,43 @@ class PreLiveEventsViewController: UIViewController {
                 }
             })
             .store(in: &cancellables)
+
+        self.viewModel.matchListTypePublisher
+            .removeDuplicates()
+            .receive(on: DispatchQueue.main)
+            .sink { [weak self] newMatchListType in
+
+                switch newMatchListType {
+                case .popular:
+                    self?.turnTimeRangeOn = false
+                    AnalyticsClient.sendEvent(event: .popularEventsList)
+                case .upcoming:
+                    self?.turnTimeRangeOn = true
+                    AnalyticsClient.sendEvent(event: .todayScreen)
+
+                case .competitions:
+                    self?.turnTimeRangeOn = false
+                    AnalyticsClient.sendEvent(event: .competitionsScreen)
+
+                case .topCompetitions:
+                    self?.turnTimeRangeOn = false
+                    AnalyticsClient.sendEvent(event: .topCompetitionsScreen)
+                }
+
+                self?.setEmptyStateBaseView(firstLabelText: localized("no_results_for_selection"),
+                                            secondLabelText: localized("try_something_else"),
+                                            isUserLoggedIn: true)
+
+                self?.filtersCollectionView.reloadData()
+                self?.filtersCollectionView.layoutIfNeeded()
+
+                if let newCenterIndex = self?.viewModel.activeMatchListTypes.firstIndex(of: newMatchListType) {
+                    let newCenterIndexPath = IndexPath(item: newCenterIndex, section: 0)
+                    self?.filtersCollectionView.scrollToItem(at: newCenterIndexPath, at: .centeredHorizontally, animated: true)
+                }
+
+            }
+            .store(in: &self.cancellables)
 
         self.viewModel.matchListTypePublisher
             .map {  $0 == .competitions }
@@ -523,16 +557,15 @@ class PreLiveEventsViewController: UIViewController {
             .sink(receiveValue: { [weak self] hasTopCompetitions in
 
                 if hasTopCompetitions {
-                    if self?.viewModel.matchListTypePublisher.value == .competitions {
+                    if self?.viewModel.matchListType == .competitions {
                         self?.openTab(forType: .competitions)
                     }
                 }
                 else {
-                    if self?.viewModel.matchListTypePublisher.value == .competitions {
+                    if self?.viewModel.matchListType == .competitions {
                         self?.openTab(forType: .competitions)
                     }
-                    else if self?.viewModel.matchListTypePublisher.value == .topCompetitions {
-                        self?.viewModel.matchListTypePublisher.send(.upcoming)
+                    else if self?.viewModel.matchListType == .topCompetitions {
                         self?.openTab(forType: .upcoming)
                     }
                 }
@@ -579,49 +612,7 @@ class PreLiveEventsViewController: UIViewController {
     }
 
     private func openTab(forType type: PreLiveEventsViewModel.MatchListType) {
-
-        switch type {
-        case .popular:
-            AnalyticsClient.sendEvent(event: .myGamesScreen)
-            self.viewModel.setMatchListType(.popular)
-            turnTimeRangeOn = false
-            self.setEmptyStateBaseView(firstLabelText: localized("no_results_for_selection"),
-                                       secondLabelText: localized("try_something_else"),
-                                       isUserLoggedIn: true)
-
-        case .upcoming:
-            AnalyticsClient.sendEvent(event: .todayScreen)
-            self.viewModel.setMatchListType(.upcoming)
-            turnTimeRangeOn = true
-            self.setEmptyStateBaseView(firstLabelText: localized("no_results_for_selection"),
-                                       secondLabelText: localized("try_something_else"),
-                                       isUserLoggedIn: true)
-
-        case .competitions:
-            AnalyticsClient.sendEvent(event: .competitionsScreen)
-            self.viewModel.setMatchListType(.competitions)
-            turnTimeRangeOn = false
-            self.setEmptyStateBaseView(firstLabelText: localized("no_results_for_selection"),
-                                       secondLabelText: localized("try_something_else"),
-                                       isUserLoggedIn: true)
-
-        case .topCompetitions:
-            AnalyticsClient.sendEvent(event: .topCompetitionsScreen)
-            self.viewModel.setMatchListType(.topCompetitions)
-            turnTimeRangeOn = false
-            self.setEmptyStateBaseView(firstLabelText: localized("no_results_for_selection"),
-                                       secondLabelText: localized("try_something_else"),
-                                       isUserLoggedIn: true)
-        }
-
-        self.filtersCollectionView.reloadData()
-        self.filtersCollectionView.layoutIfNeeded()
-
-        if let index = self.viewModel.activeMatchListTypes.firstIndex(of: type) {
-            let indexPath = IndexPath(item: index, section: 0)
-            self.filtersCollectionView.scrollToItem(at: indexPath, at: .centeredHorizontally, animated: true)
-        }
-
+        self.viewModel.setMatchListType(type)
     }
 
     func applyCompetitionsFiltersWithIds(_ ids: [String], animated: Bool = true) {
@@ -732,7 +723,8 @@ class PreLiveEventsViewController: UIViewController {
         }
     }
 
-
+    //
+    // Refresh from the RefreshControll
     @objc func refreshControllPulled() {
         self.isLoadingFromPullToRefresh = true
         self.viewModel.fetchData(forceRefresh: true)
@@ -807,14 +799,11 @@ class PreLiveEventsViewController: UIViewController {
                     customCell.hasHighlight = false
                 }
             }
-
             if let cell = self.competitionHistoryCollectionView.cellForItem(at: IndexPath(row: section, section: 0)) as? TopCompetitionCollectionViewCell {
 
                 cell.hasHighlight = true
             }
-
             self.reachedTopCompetitionSection = section
-
         }
     }
 }
@@ -1006,7 +995,7 @@ extension PreLiveEventsViewController: UICollectionViewDelegate, UICollectionVie
                 cell.setupInfo(competition: competition)
 
                 if self.topCompetitionsHighlightEnabled {
-                    if self.selectedTopCompetition == indexPath.row {
+                    if self.selectedTopCompetitionIndex == indexPath.row {
                         cell.hasHighlight = true
                     }
                     else {
@@ -1106,19 +1095,12 @@ extension PreLiveEventsViewController: UICollectionViewDelegate, UICollectionVie
         // Competition history collection view
         if collectionView == self.competitionHistoryCollectionView {
             if self.viewModel.matchListTypePublisher.value == .topCompetitions {
-                let competition = self.viewModel.getTopCompetitions()[indexPath.row]
-
-                self.selectedTopCompetition = indexPath.row
-
+                self.selectedTopCompetitionIndex = indexPath.row
                 let indexPath = IndexPath(row: 0, section: indexPath.row)
-
                 tableView.scrollToRow(at: indexPath, at: .top, animated: true)
             }
             else {
-                let competition = self.viewModel.getCompetitions()[indexPath.row]
-
                 let indexPath = IndexPath(row: 0, section: indexPath.row)
-
                 tableView.scrollToRow(at: indexPath, at: .top, animated: true)
             }
 
@@ -1147,21 +1129,18 @@ extension PreLiveEventsViewController: SportTypeSelectionViewDelegate {
 extension PreLiveEventsViewController: HomeFilterOptionsViewDelegate {
 
     func setHomeFilters(homeFilters: HomeFilterOptions?) {
-        self.viewModel.homeFilterOptions = homeFilters
 
-        var countFilters = homeFilters?.countFilters ?? 0
-        if StyleHelper.cardsStyleActive() != TargetVariables.defaultCardStyle {
-            countFilters += 1
-        }
-
-        if countFilters != 0 {
-            filtersCountLabel.isHidden = false
-            filtersCountLabel.text = String(countFilters)
+        if homeFilters?.countFilters == 0 {
+            // No active filters, clear viewmodel
+            self.viewModel.homeFilterOptions = nil
         }
         else {
-            filtersCountLabel.isHidden = true
-
+            self.viewModel.homeFilterOptions = homeFilters
         }
+
+        let homeFiltersActive = homeFilters?.countFilters ?? 0
+        self.filtersCountLabel.text = String(homeFiltersActive)
+        self.filtersCountLabel.isHidden = homeFiltersActive != 0
     }
 
 }
