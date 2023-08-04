@@ -82,6 +82,7 @@ class MyAccountViewController: UIViewController {
         self.stackView.addArrangedSubview(documentsView)
         self.stackView.addArrangedSubview(contactSettingsView)
         self.stackView.addArrangedSubview(historyView)
+
     }
 
 }

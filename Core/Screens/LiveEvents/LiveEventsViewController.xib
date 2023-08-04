@@ -4,6 +4,7 @@
     <dependencies>
         <deployment identifier="iOS"/>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="21505"/>
+        <capability name="Named colors" minToolsVersion="9.0"/>
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
@@ -32,6 +33,7 @@
                 <outlet property="rightGradientBaseView" destination="lTR-Hc-701" id="cQG-qV-RDP"/>
                 <outlet property="secondTextFieldEmptyStateLabel" destination="xDr-rR-c5B" id="bqM-B8-uRN"/>
                 <outlet property="sportTypeIconImageView" destination="4K7-2i-ld7" id="13K-o1-meF"/>
+                <outlet property="sportTypeNameLabel" destination="3gZ-e2-hHf" id="h6o-st-CSs"/>
                 <outlet property="sportsSelectorButtonView" destination="E3s-l3-XNu" id="iqj-nw-59L"/>
                 <outlet property="sportsSelectorExpandImageView" destination="Da0-Ux-YuR" id="8d0-nJ-Pmp"/>
                 <outlet property="tableView" destination="l7X-fl-RkH" id="zkD-vO-UsB"/>
@@ -175,13 +177,52 @@
                         <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="E3s-l3-XNu">
                             <rect key="frame" x="0.0" y="15" width="55" height="40"/>
                             <subviews>
-                                <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="sport_type_soccer_icon" translatesAutoresizingMaskIntoConstraints="NO" id="4K7-2i-ld7">
-                                    <rect key="frame" x="9" y="8.5" width="23" height="23"/>
+                                <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="ZRt-yc-CJs">
+                                    <rect key="frame" x="4" y="4.5" width="31" height="31"/>
+                                    <subviews>
+                                        <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="sport_type_soccer_icon" translatesAutoresizingMaskIntoConstraints="NO" id="4K7-2i-ld7">
+                                            <rect key="frame" x="7.5" y="2" width="16" height="16"/>
+                                            <constraints>
+                                                <constraint firstAttribute="height" constant="16" id="3jP-1G-m4J"/>
+                                                <constraint firstAttribute="width" constant="16" id="wXi-EX-Xc2"/>
+                                            </constraints>
+                                        </imageView>
+                                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Sport" textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="2" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="3gZ-e2-hHf">
+                                            <rect key="frame" x="0.0" y="22" width="31" height="7"/>
+                                            <fontDescription key="fontDescription" name="Gilroy-Bold" family="Gilroy" pointSize="7"/>
+                                            <color key="textColor" name="textPrimary"/>
+                                            <nil key="highlightedColor"/>
+                                        </label>
+                                        <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="ULw-jS-y6v">
+                                            <rect key="frame" x="16.5" y="-3" width="12" height="12"/>
+                                            <subviews>
+                                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="0" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="8FA-nH-Muj">
+                                                    <rect key="frame" x="2" y="-1.5" width="8" height="15"/>
+                                                    <fontDescription key="fontDescription" type="system" pointSize="12"/>
+                                                    <nil key="textColor"/>
+                                                    <nil key="highlightedColor"/>
+                                                </label>
+                                            </subviews>
+                                            <constraints>
+                                                <constraint firstItem="8FA-nH-Muj" firstAttribute="centerY" secondItem="ULw-jS-y6v" secondAttribute="centerY" id="dvv-8n-cf7"/>
+                                                <constraint firstAttribute="width" constant="12" id="f2h-ND-PUI"/>
+                                                <constraint firstItem="8FA-nH-Muj" firstAttribute="centerX" secondItem="ULw-jS-y6v" secondAttribute="centerX" id="fBC-7m-g5e"/>
+                                                <constraint firstAttribute="height" constant="12" id="wJy-hP-4f4"/>
+                                            </constraints>
+                                        </view>
+                                    </subviews>
+                                    <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                     <constraints>
-                                        <constraint firstAttribute="height" constant="23" id="3jP-1G-m4J"/>
-                                        <constraint firstAttribute="width" constant="23" id="wXi-EX-Xc2"/>
+                                        <constraint firstAttribute="bottom" secondItem="3gZ-e2-hHf" secondAttribute="bottom" constant="2" id="0yB-En-VYo"/>
+                                        <constraint firstItem="ULw-jS-y6v" firstAttribute="trailing" secondItem="4K7-2i-ld7" secondAttribute="trailing" constant="5" id="FOD-4b-lES"/>
+                                        <constraint firstItem="4K7-2i-ld7" firstAttribute="centerX" secondItem="ZRt-yc-CJs" secondAttribute="centerX" id="FhA-ID-4Vo"/>
+                                        <constraint firstItem="4K7-2i-ld7" firstAttribute="top" secondItem="ZRt-yc-CJs" secondAttribute="top" constant="2" id="LVm-2g-Mbx"/>
+                                        <constraint firstItem="3gZ-e2-hHf" firstAttribute="leading" secondItem="ZRt-yc-CJs" secondAttribute="leading" id="YCG-5r-nhv"/>
+                                        <constraint firstItem="3gZ-e2-hHf" firstAttribute="top" secondItem="4K7-2i-ld7" secondAttribute="bottom" constant="4" id="aCY-c0-cc0"/>
+                                        <constraint firstItem="ULw-jS-y6v" firstAttribute="top" secondItem="4K7-2i-ld7" secondAttribute="top" constant="-5" id="oWM-Zj-vbe"/>
+                                        <constraint firstAttribute="trailing" secondItem="3gZ-e2-hHf" secondAttribute="trailing" id="xCy-fd-ALd"/>
                                     </constraints>
-                                </imageView>
+                                </view>
                                 <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="expand_top_down_arrows_icon" translatesAutoresizingMaskIntoConstraints="NO" id="Da0-Ux-YuR">
                                     <rect key="frame" x="37" y="9.5" width="10" height="23"/>
                                     <constraints>
@@ -189,34 +230,24 @@
                                         <constraint firstAttribute="height" constant="23" id="uag-aL-nH5"/>
                                     </constraints>
                                 </imageView>
-                                <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="ULw-jS-y6v">
-                                    <rect key="frame" x="22" y="0.5" width="15" height="15"/>
-                                    <subviews>
-                                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="0" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="8FA-nH-Muj">
-                                            <rect key="frame" x="3.5" y="0.0" width="8" height="15"/>
-                                            <fontDescription key="fontDescription" type="system" pointSize="12"/>
-                                            <nil key="textColor"/>
-                                            <nil key="highlightedColor"/>
-                                        </label>
-                                    </subviews>
-                                    <constraints>
-                                        <constraint firstItem="8FA-nH-Muj" firstAttribute="centerX" secondItem="ULw-jS-y6v" secondAttribute="centerX" id="LP8-fV-7zy"/>
-                                        <constraint firstAttribute="width" constant="15" id="f2h-ND-PUI"/>
-                                        <constraint firstItem="8FA-nH-Muj" firstAttribute="centerY" secondItem="ULw-jS-y6v" secondAttribute="centerY" id="mu8-Yu-ZJP"/>
-                                        <constraint firstAttribute="height" constant="15" id="wJy-hP-4f4"/>
-                                    </constraints>
-                                </view>
                             </subviews>
                             <constraints>
-                                <constraint firstItem="4K7-2i-ld7" firstAttribute="leading" secondItem="E3s-l3-XNu" secondAttribute="leading" constant="9" id="XaU-t9-eac"/>
+                                <constraint firstItem="ZRt-yc-CJs" firstAttribute="centerY" secondItem="E3s-l3-XNu" secondAttribute="centerY" id="OJA-5S-0RE"/>
                                 <constraint firstItem="Da0-Ux-YuR" firstAttribute="centerY" secondItem="E3s-l3-XNu" secondAttribute="centerY" constant="1" id="ZUE-aj-fHA"/>
-                                <constraint firstItem="ULw-jS-y6v" firstAttribute="top" secondItem="4K7-2i-ld7" secondAttribute="top" constant="-8" id="ZeU-0b-55d"/>
-                                <constraint firstItem="4K7-2i-ld7" firstAttribute="centerY" secondItem="E3s-l3-XNu" secondAttribute="centerY" id="bfr-Xa-wWi"/>
+                                <constraint firstItem="ZRt-yc-CJs" firstAttribute="leading" secondItem="E3s-l3-XNu" secondAttribute="leading" constant="4" id="ehA-4g-a8Z"/>
                                 <constraint firstAttribute="width" constant="55" id="fn2-iH-hUF"/>
+                                <constraint firstItem="ZRt-yc-CJs" firstAttribute="top" relation="greaterThanOrEqual" secondItem="E3s-l3-XNu" secondAttribute="top" constant="4" id="hL8-8u-S0F"/>
                                 <constraint firstAttribute="height" constant="40" id="ksX-vP-4oA"/>
-                                <constraint firstItem="ULw-jS-y6v" firstAttribute="trailing" secondItem="4K7-2i-ld7" secondAttribute="trailing" constant="5" id="o0z-CZ-K5y"/>
+                                <constraint firstItem="ZRt-yc-CJs" firstAttribute="trailing" secondItem="Da0-Ux-YuR" secondAttribute="leading" constant="-2" id="pjL-Rg-6oW"/>
                                 <constraint firstAttribute="trailing" secondItem="Da0-Ux-YuR" secondAttribute="trailing" constant="8" id="rmq-wH-bTE"/>
+                                <constraint firstAttribute="bottom" relation="greaterThanOrEqual" secondItem="ZRt-yc-CJs" secondAttribute="bottom" constant="4" id="u4Z-yU-eeL"/>
                             </constraints>
+                            <variation key="default">
+                                <mask key="constraints">
+                                    <exclude reference="hL8-8u-S0F"/>
+                                    <exclude reference="u4Z-yU-eeL"/>
+                                </mask>
+                            </variation>
                         </view>
                         <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="X95-AQ-boc">
                             <rect key="frame" x="0.0" y="69" width="346" height="1"/>
@@ -274,5 +305,8 @@
         <image name="match_filters_icons" width="23" height="24"/>
         <image name="no_content_icon" width="161" height="161"/>
         <image name="sport_type_soccer_icon" width="23" height="23"/>
+        <namedColor name="textPrimary">
+            <color red="0.070588235294117646" green="0.074509803921568626" blue="0.086274509803921567" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+        </namedColor>
     </resources>
 </document>
