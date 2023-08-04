@@ -632,8 +632,14 @@ class HomeFilterViewController: UIViewController {
                                                   lowerBoundOddsRange: self.lowerBoundOddsRange,
                                                   highBoundOddsRange: self.highBoundOddsRange,
                                                   countFilters: countFilters)
-        self.delegate?.setHomeFilters(homeFilters: homeFilterOptions)
-        
+
+        if countFilters == 0 {
+            self.delegate?.setHomeFilters(homeFilters: nil)
+        }
+        else {
+            self.delegate?.setHomeFilters(homeFilters: homeFilterOptions)
+        }
+
         self.dismiss(animated: true, completion: nil)
     }
 

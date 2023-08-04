@@ -133,28 +133,7 @@ class PreLiveEventsViewModel: NSObject {
     }
 
     var homeFilterOptions: HomeFilterOptions? {
-        didSet {
-            self.popularMatchesDataSource.applyFilters(filtersOptions: self.homeFilterOptions)
-            self.todayMatchesDataSource.applyFilters(filtersOptions: self.homeFilterOptions)
-//
-//            if self.matchListType == .upcoming {
-//                if let lowerTimeRange = homeFilterOptions?.lowerBoundTimeRange, var highTimeRange = homeFilterOptions?.highBoundTimeRange {
-//
-//                    if highTimeRange == 6 {
-//                        // The value 6 in the slider is presented as "All" days to the user
-//                        // so we convert it to 365 days, to get all the events of the next year
-//                        highTimeRange = 365
-//                    }
-//
-//                    let daysRange = TodayMatchesDataSource.DaysRange(startDay: lowerTimeRange, endDay: highTimeRange)
-//                    self.todayMatchesDataSource.fetchData(forSport: self.selectedSport, daysRange: daysRange)
-//                }
-//            }
-//            else {
-//                // TODO: filters
-//                // self.updateContentList()
-//            }
-        }
+        return homeFilterOptionsSubject.value
     }
 
     var didSelectMatchAction: ((Match) -> Void)?
@@ -169,10 +148,6 @@ class PreLiveEventsViewModel: NSObject {
 
     //
     // Private vars
-    //
-    private var userFavoriteMatches: [Match] = []
-
-    //
     //
     var mainMarkets: OrderedDictionary<String, Market> = [:]
 
@@ -190,8 +165,10 @@ class PreLiveEventsViewModel: NSObject {
 
     private var competitionsMatchesPublisher: AnyCancellable?
 
-    private var cancellables = Set<AnyCancellable>()
+    private var homeFilterOptionsSubject: CurrentValueSubject<HomeFilterOptions?, Never> = .init(nil)
 
+    //
+    private var cancellables = Set<AnyCancellable>()
     private var competitionsSubscription: ServicesProvider.Subscription?
 
     init(selectedSport: Sport) {
@@ -323,6 +300,27 @@ class PreLiveEventsViewModel: NSObject {
             }
             .store(in: &self.cancellables)
 
+
+        Publishers.CombineLatest3(self.matchListTypePublisher,
+                                         self.popularMatchesDataSource.mainMarketsPublisher,
+                                         self.todayMatchesDataSource.mainMarketsPublisher)
+        .map { matchListType, popularMainMarkets, todayMainMarkets -> [Market] in
+            switch matchListType {
+            case .competitions:
+                return []
+            case.topCompetitions:
+                return []
+            case .popular:
+                return popularMainMarkets
+            case .upcoming:
+                return todayMainMarkets
+            }
+        }
+        .sink(receiveValue: { [weak self] activeMainMarkets in
+            self?.setMainMarkets(markets: activeMainMarkets)
+        })
+        .store(in: &self.cancellables)
+
 //        Empty screens
 //        Publishers.CombineLatest(self.isLoading, self.dataChangedPublisher)
 //            .filter({ isLoading, _ in
@@ -400,8 +398,17 @@ class PreLiveEventsViewModel: NSObject {
                 // there are any top competitions for that sport
                 self?.topCompetitionsDataSource.setSport(selectedSport)
 
-                self?.homeFilterOptions = nil
+                self?.homeFilterOptionsSubject.send(nil)
+
                 self?.fetchData()
+            }
+            .store(in: &self.cancellables)
+
+        self.homeFilterOptionsSubject
+            .removeDuplicates()
+            .sink { [weak self] newHomeFilterOptions in
+                self?.popularMatchesDataSource.applyFilters(filtersOptions: newHomeFilterOptions)
+                self?.todayMatchesDataSource.applyFilters(filtersOptions: newHomeFilterOptions)
             }
             .store(in: &self.cancellables)
 
@@ -574,7 +581,6 @@ class PreLiveEventsViewModel: NSObject {
         return self.topCompetitionsDataSource.competitions.value
     }
 
-
     func competition(forIndex index: Int) -> Competition? {
         return self.competitionsDataSource.competitions.value[safe: index]
     }
@@ -583,16 +589,20 @@ class PreLiveEventsViewModel: NSObject {
         return self.competitionsDataSource.competitions.value[safe: index]
     }
 
-
-    func setMainMarkets(matches: [Match]) {
+    //
+    func setMainMarkets(markets: [Market]) {
         self.mainMarkets = [:]
-        for match in matches {
-            for market in match.markets {
-                if let marketTypeId = market.marketTypeId {
-                    self.mainMarkets[marketTypeId] = market
-                }
+        for market in markets {
+            if let marketTypeId = market.marketTypeId {
+                self.mainMarkets[marketTypeId] = market
             }
         }
+    }
+
+    //
+    //
+    func applyFilters(filtersOptions: HomeFilterOptions?) {
+        self.homeFilterOptionsSubject.send(filtersOptions)
     }
 
     //
@@ -709,27 +719,27 @@ extension PreLiveEventsViewModel: UITableViewDataSource, UITableViewDelegate {
         }
     }
 
-    func hasContentForSelectedListType() -> Bool {
-        switch self.matchListType {
-        case .popular:
-            if self.popularMatchesDataSource.allMatches.isEmpty,
-               let outrightCompetitions = self.popularMatchesDataSource.allOutrightCompetitionsSubject.value {
-                return outrightCompetitions.isNotEmpty
-            }
-            return self.popularMatchesDataSource.allMatches.isNotEmpty
-        case .upcoming:
-            if self.todayMatchesDataSource.matches.value.isEmpty,
-               let outrightCompetitions = self.todayMatchesDataSource.outrightCompetitions.value {
-                return outrightCompetitions.isNotEmpty
-            }
-            return self.todayMatchesDataSource.matches.value.isNotEmpty
-        case .topCompetitions:
-            return self.topCompetitionsDataSource.competitions.value.isNotEmpty
-        case .competitions:
-            return self.competitionsDataSource.competitions.value.isNotEmpty
-        }
-    }
-    
+//    func hasContentForSelectedListType() -> Bool {
+//        switch self.matchListType {
+//        case .popular:
+//            if self.popularMatchesDataSource.allMatches.isEmpty,
+//               let outrightCompetitions = self.popularMatchesDataSource.allOutrightCompetitionsSubject.value {
+//                return outrightCompetitions.isNotEmpty
+//            }
+//            return self.popularMatchesDataSource.allMatches.isNotEmpty
+//        case .upcoming:
+//            if self.todayMatchesDataSource.allMatches.value.isEmpty,
+//               let outrightCompetitions = self.todayMatchesDataSource.outrightCompetitions.value {
+//                return outrightCompetitions.isNotEmpty
+//            }
+//            return self.todayMatchesDataSource.matches.value.isNotEmpty
+//        case .topCompetitions:
+//            return self.topCompetitionsDataSource.competitions.value.isNotEmpty
+//        case .competitions:
+//            return self.competitionsDataSource.competitions.value.isNotEmpty
+//        }
+//    }
+
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         switch self.matchListType {
         case .popular:

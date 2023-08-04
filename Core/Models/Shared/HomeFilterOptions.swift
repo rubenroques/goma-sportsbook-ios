@@ -19,7 +19,7 @@ struct HomeFilterOptions: Equatable {
     let countFilters: Int
 
     init(lowerBoundTimeRange: Int = 0,
-         highBoundTimeRange: Int = 365,
+         highBoundTimeRange: Int = 6,
          defaultMarket: MainMarketType? = nil,
          lowerBoundOddsRange: CGFloat = 1.0,
          highBoundOddsRange: CGFloat = 300.0,

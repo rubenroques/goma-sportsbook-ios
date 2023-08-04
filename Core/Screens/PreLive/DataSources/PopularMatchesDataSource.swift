@@ -20,6 +20,12 @@ class PopularMatchesDataSource: NSObject {
         return self.filteredMatchesSubject.value
     }
 
+    var mainMarketsPublisher: AnyPublisher<[Market], Never> {
+        return self.filteredMatchesSubject
+            .map { $0.flatMap(\.markets) }
+            .eraseToAnyPublisher()
+    }
+
     var isLoadingInitialDataPublisher: AnyPublisher<Bool, Never> {
         return self.isLoadingCurrentValueSubject.eraseToAnyPublisher()
     }

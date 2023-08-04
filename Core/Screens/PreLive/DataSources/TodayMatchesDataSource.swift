@@ -32,8 +32,13 @@ class TodayMatchesDataSource: NSObject {
         return self.filteredMatchesSubject.value
     }
 
-    var matches: CurrentValueSubject<[Match], Never> = .init([])
     var outrightCompetitions: CurrentValueSubject<[Competition]?, Never> = .init(nil)
+
+    var mainMarketsPublisher: AnyPublisher<[Market], Never> {
+        return self.filteredMatchesSubject
+            .map { $0.flatMap(\.markets) }
+            .eraseToAnyPublisher()
+    }
 
     var isLoadingInitialDataPublisher: AnyPublisher<Bool, Never> {
         return self.isLoadingCurrentValueSubject.eraseToAnyPublisher()
@@ -67,10 +72,13 @@ class TodayMatchesDataSource: NSObject {
     var didLongPressOdd: ((BettingTicket) -> Void)?
     var shouldShowSearch: (() -> Void)?
 
+    private var mainMarketsSubject: CurrentValueSubject<[Market], Never> = .init([])
+
     private var allMatchesSubject: CurrentValueSubject<[Match], Never> = .init([])
     private var filteredMatchesSubject: CurrentValueSubject<[Match], Never> = .init([])
 
     private var sport: Sport
+    private var lastRequestedDaysRange: DaysRange?
 
     private var isLoadingCurrentValueSubject: CurrentValueSubject<Bool, Never> = .init(false)
 
@@ -89,7 +97,7 @@ class TodayMatchesDataSource: NSObject {
         super.init()
 
         self.allMatchesSubject
-            .sink { [weak self] allMatches in
+            .sink { [weak self] _ in
                 guard let self = self else { return }
                 self.applyFilters(filtersOptions: self.filtersOptions)
             }
@@ -104,7 +112,6 @@ class TodayMatchesDataSource: NSObject {
         }
 
         if self.sport != sport {
-
             self.allMatchesSubject.send([])
             self.filteredMatchesSubject.send([])
 
@@ -129,9 +136,9 @@ extension TodayMatchesDataSource {
     private func fetchTodayMatchesNextPage() {
 
         var timeRange = ""
-//        if let daysRange = self.daysRange {
-//            timeRange = "\(daysRange.startDay)-\(daysRange.endDay)"
-//        }
+        if let daysRange = self.lastRequestedDaysRange {
+            timeRange = "\(daysRange.startDay)-\(daysRange.endDay)"
+        }
 
         let datesFilter = Env.servicesProvider.getDatesFilter(timeRange: timeRange)
 
@@ -157,9 +164,9 @@ extension TodayMatchesDataSource {
         self.isLoadingCurrentValueSubject.send(true)
 
         var timeRange = ""
-//        if let daysRange = self.daysRange {
-//            timeRange = "\(daysRange.startDay)-\(daysRange.endDay)"
-//        }
+        if let daysRange = self.lastRequestedDaysRange {
+            timeRange = "\(daysRange.startDay)-\(daysRange.endDay)"
+        }
 
         let datesFilter = Env.servicesProvider.getDatesFilter(timeRange: timeRange)
 
@@ -217,6 +224,24 @@ extension TodayMatchesDataSource {
     func applyFilters(filtersOptions: HomeFilterOptions?) {
         self.filtersOptions = filtersOptions
 
+        // Extract the DayRange from publisher
+        var daysRange: DaysRange?
+        if let filtersOptionsValue = filtersOptions {
+            let startDay = filtersOptionsValue.lowerBoundTimeRange
+            var endDay = filtersOptionsValue.highBoundTimeRange
+            if endDay >= 6 {
+                endDay = 365
+            }
+            daysRange = DaysRange(startDay: startDay, endDay: endDay)
+        }
+
+        // Compare with the last one, if any difference request today with new day range
+        if self.lastRequestedDaysRange != daysRange {
+            self.lastRequestedDaysRange = daysRange
+            self.fetchData(forSport: self.sport, forceRefresh: true)
+        }
+
+        //
         let filteredMatches = self.filterTodayMatches(with: self.filtersOptions, matches: self.allMatches)
         self.filteredMatchesSubject.send(filteredMatches)
     }

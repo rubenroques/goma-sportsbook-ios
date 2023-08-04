@@ -170,11 +170,6 @@ class PreLiveEventsViewController: UIViewController {
         self.floatingShortcutsView.resetAnimations()
     }
 
-    override func viewDidAppear(_ animated: Bool) {
-        super.viewDidAppear(animated)
-
-    }
-
     override func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {
         super.traitCollectionDidChange(previousTraitCollection)
 
@@ -383,7 +378,7 @@ class PreLiveEventsViewController: UIViewController {
             .sink { [weak self] _ in
                 self?.reloadData()
             }
-            .store(in: &cancellables)
+            .store(in: &self.cancellables)
 
         self.viewModel.selectedSportPublisher
             .receive(on: DispatchQueue.main)
@@ -464,7 +459,7 @@ class PreLiveEventsViewController: UIViewController {
                                                 isUserLoggedIn: true)
                 }
             })
-            .store(in: &cancellables)
+            .store(in: &self.cancellables)
 
         self.viewModel.matchListTypePublisher
             .removeDuplicates()
@@ -520,7 +515,7 @@ class PreLiveEventsViewController: UIViewController {
                 self.tableView.layoutIfNeeded()
                 self.tableView.setContentOffset(.zero, animated: true)
             }
-            .store(in: &cancellables)
+            .store(in: &self.cancellables)
 
         self.viewModel.competitionGroupsPublisher
             .map { competitionGroups in
@@ -532,14 +527,14 @@ class PreLiveEventsViewController: UIViewController {
             .sink { [weak self] competitions in
                 self?.competitionsFiltersView.competitions = competitions
             }
-            .store(in: &cancellables)
+            .store(in: &self.cancellables)
 
         self.viewModel.isLoadingCompetitionGroups
             .receive(on: DispatchQueue.main)
             .sink(receiveValue: { [weak self] isLoadingGroups in
                 self?.competitionsFiltersView.isLoading = isLoadingGroups
             })
-            .store(in: &cancellables)
+            .store(in: &self.cancellables)
 
         self.competitionsFiltersView.selectedIds
             .compactMap({ $0.isEmpty })
@@ -549,7 +544,7 @@ class PreLiveEventsViewController: UIViewController {
                     self?.openCompetitionsFilters()
                 }
             })
-            .store(in: &cancellables)
+            .store(in: &self.cancellables)
 
         self.viewModel.hasTopCompetitionsPublisher
             .removeDuplicates()
@@ -572,7 +567,7 @@ class PreLiveEventsViewController: UIViewController {
 
                 self?.filtersCollectionView.reloadData()
             })
-            .store(in: &cancellables)
+            .store(in: &self.cancellables)
 
     }
 
@@ -1130,17 +1125,17 @@ extension PreLiveEventsViewController: HomeFilterOptionsViewDelegate {
 
     func setHomeFilters(homeFilters: HomeFilterOptions?) {
 
-        if homeFilters?.countFilters == 0 {
-            // No active filters, clear viewmodel
-            self.viewModel.homeFilterOptions = nil
+        if let homeFiltersValue = homeFilters, homeFiltersValue.countFilters > 0 {
+            self.viewModel.applyFilters(filtersOptions: homeFiltersValue)
         }
         else {
-            self.viewModel.homeFilterOptions = homeFilters
+            // No active filters, clear viewmodel
+            self.viewModel.applyFilters(filtersOptions: nil)
         }
 
         let homeFiltersActive = homeFilters?.countFilters ?? 0
         self.filtersCountLabel.text = String(homeFiltersActive)
-        self.filtersCountLabel.isHidden = homeFiltersActive != 0
+        self.filtersCountLabel.isHidden = (homeFiltersActive == 0)
     }
 
 }
