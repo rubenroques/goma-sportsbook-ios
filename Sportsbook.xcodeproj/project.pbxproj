@@ -4843,6 +4843,34 @@
 		A9C04C172A7BBAE40025A6DA /* FilterFavoritesValue.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9C04C122A7BBAE40025A6DA /* FilterFavoritesValue.swift */; };
 		A9C04C182A7BBAE40025A6DA /* FilterFavoritesValue.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9C04C122A7BBAE40025A6DA /* FilterFavoritesValue.swift */; };
 		A9C04C192A7BBAE40025A6DA /* FilterFavoritesValue.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9C04C122A7BBAE40025A6DA /* FilterFavoritesValue.swift */; };
+		A9C04C1B2A7D03580025A6DA /* MyGamesViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9C04C1A2A7D03580025A6DA /* MyGamesViewModel.swift */; };
+		A9C04C1C2A7D03580025A6DA /* MyGamesViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9C04C1A2A7D03580025A6DA /* MyGamesViewModel.swift */; };
+		A9C04C1D2A7D03580025A6DA /* MyGamesViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9C04C1A2A7D03580025A6DA /* MyGamesViewModel.swift */; };
+		A9C04C1E2A7D03580025A6DA /* MyGamesViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9C04C1A2A7D03580025A6DA /* MyGamesViewModel.swift */; };
+		A9C04C1F2A7D03580025A6DA /* MyGamesViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9C04C1A2A7D03580025A6DA /* MyGamesViewModel.swift */; };
+		A9C04C202A7D03580025A6DA /* MyGamesViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9C04C1A2A7D03580025A6DA /* MyGamesViewModel.swift */; };
+		A9C04C212A7D03580025A6DA /* MyGamesViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9C04C1A2A7D03580025A6DA /* MyGamesViewModel.swift */; };
+		A9C04C232A7D04430025A6DA /* MyCompetitionsViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9C04C222A7D04430025A6DA /* MyCompetitionsViewModel.swift */; };
+		A9C04C242A7D04430025A6DA /* MyCompetitionsViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9C04C222A7D04430025A6DA /* MyCompetitionsViewModel.swift */; };
+		A9C04C252A7D04430025A6DA /* MyCompetitionsViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9C04C222A7D04430025A6DA /* MyCompetitionsViewModel.swift */; };
+		A9C04C262A7D04430025A6DA /* MyCompetitionsViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9C04C222A7D04430025A6DA /* MyCompetitionsViewModel.swift */; };
+		A9C04C272A7D04430025A6DA /* MyCompetitionsViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9C04C222A7D04430025A6DA /* MyCompetitionsViewModel.swift */; };
+		A9C04C282A7D04430025A6DA /* MyCompetitionsViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9C04C222A7D04430025A6DA /* MyCompetitionsViewModel.swift */; };
+		A9C04C292A7D04430025A6DA /* MyCompetitionsViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9C04C222A7D04430025A6DA /* MyCompetitionsViewModel.swift */; };
+		A9C04C2B2A7D04C50025A6DA /* MyGamesRootViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9C04C2A2A7D04C50025A6DA /* MyGamesRootViewModel.swift */; };
+		A9C04C2C2A7D04C50025A6DA /* MyGamesRootViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9C04C2A2A7D04C50025A6DA /* MyGamesRootViewModel.swift */; };
+		A9C04C2D2A7D04C50025A6DA /* MyGamesRootViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9C04C2A2A7D04C50025A6DA /* MyGamesRootViewModel.swift */; };
+		A9C04C2E2A7D04C50025A6DA /* MyGamesRootViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9C04C2A2A7D04C50025A6DA /* MyGamesRootViewModel.swift */; };
+		A9C04C2F2A7D04C50025A6DA /* MyGamesRootViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9C04C2A2A7D04C50025A6DA /* MyGamesRootViewModel.swift */; };
+		A9C04C302A7D04C50025A6DA /* MyGamesRootViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9C04C2A2A7D04C50025A6DA /* MyGamesRootViewModel.swift */; };
+		A9C04C312A7D04C50025A6DA /* MyGamesRootViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9C04C2A2A7D04C50025A6DA /* MyGamesRootViewModel.swift */; };
+		A9C04C332A7D050B0025A6DA /* FilterFavoritesViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9C04C322A7D050B0025A6DA /* FilterFavoritesViewModel.swift */; };
+		A9C04C342A7D050B0025A6DA /* FilterFavoritesViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9C04C322A7D050B0025A6DA /* FilterFavoritesViewModel.swift */; };
+		A9C04C352A7D050B0025A6DA /* FilterFavoritesViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9C04C322A7D050B0025A6DA /* FilterFavoritesViewModel.swift */; };
+		A9C04C362A7D050B0025A6DA /* FilterFavoritesViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9C04C322A7D050B0025A6DA /* FilterFavoritesViewModel.swift */; };
+		A9C04C372A7D050B0025A6DA /* FilterFavoritesViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9C04C322A7D050B0025A6DA /* FilterFavoritesViewModel.swift */; };
+		A9C04C382A7D050B0025A6DA /* FilterFavoritesViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9C04C322A7D050B0025A6DA /* FilterFavoritesViewModel.swift */; };
+		A9C04C392A7D050B0025A6DA /* FilterFavoritesViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9C04C322A7D050B0025A6DA /* FilterFavoritesViewModel.swift */; };
 		A9C18A94285CDF0B009F0063 /* ToastCustom.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9C18A91285CDF0B009F0063 /* ToastCustom.swift */; };
 		A9C18A95285CDF0B009F0063 /* ToastCustom.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9C18A91285CDF0B009F0063 /* ToastCustom.swift */; };
 		A9C18A96285CDF0B009F0063 /* ToastCustom.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9C18A91285CDF0B009F0063 /* ToastCustom.swift */; };
@@ -6492,6 +6520,10 @@
 		A9BDD4F0292E3F08001A7799 /* SportTypeStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SportTypeStore.swift; sourceTree = "<group>"; };
 		A9C04C0A2A7BB0C90025A6DA /* FilterFavoritesViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FilterFavoritesViewController.swift; sourceTree = "<group>"; };
 		A9C04C122A7BBAE40025A6DA /* FilterFavoritesValue.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FilterFavoritesValue.swift; sourceTree = "<group>"; };
+		A9C04C1A2A7D03580025A6DA /* MyGamesViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MyGamesViewModel.swift; sourceTree = "<group>"; };
+		A9C04C222A7D04430025A6DA /* MyCompetitionsViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MyCompetitionsViewModel.swift; sourceTree = "<group>"; };
+		A9C04C2A2A7D04C50025A6DA /* MyGamesRootViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MyGamesRootViewModel.swift; sourceTree = "<group>"; };
+		A9C04C322A7D050B0025A6DA /* FilterFavoritesViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FilterFavoritesViewModel.swift; sourceTree = "<group>"; };
 		A9C18A91285CDF0B009F0063 /* ToastCustom.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ToastCustom.swift; sourceTree = "<group>"; };
 		A9C18A9F28661975009F0063 /* ConversationBetSelectionRootViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConversationBetSelectionRootViewController.swift; sourceTree = "<group>"; };
 		A9C1C0962873455000E9D6AC /* SocialAppItemCollectionViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SocialAppItemCollectionViewCell.swift; sourceTree = "<group>"; };
@@ -9869,6 +9901,10 @@
 			isa = PBXGroup;
 			children = (
 				A9E7C68F27B5405B00F784C9 /* MyFavoritesViewModel.swift */,
+				A9C04C1A2A7D03580025A6DA /* MyGamesViewModel.swift */,
+				A9C04C222A7D04430025A6DA /* MyCompetitionsViewModel.swift */,
+				A9C04C2A2A7D04C50025A6DA /* MyGamesRootViewModel.swift */,
+				A9C04C322A7D050B0025A6DA /* FilterFavoritesViewModel.swift */,
 			);
 			path = ViewModels;
 			sourceTree = "<group>";
@@ -11559,6 +11595,7 @@
 				450B787A28F58574009229E3 /* BonusProgressViewModel.swift in Sources */,
 				450B787B28F58574009229E3 /* SportSelectionViewController.swift in Sources */,
 				450B787C28F58574009229E3 /* SportMatchDoubleLineTableViewCell.swift in Sources */,
+				A9C04C1C2A7D03580025A6DA /* MyGamesViewModel.swift in Sources */,
 				A9DD89ED2A5707FB00D3A5FE /* TopCompetitionCollectionViewCell.swift in Sources */,
 				450B787D28F58574009229E3 /* RadioButton.swift in Sources */,
 				A9C2D51C29C0D4F100DB95BD /* CashoutInfo.swift in Sources */,
@@ -11741,6 +11778,7 @@
 				450B792828F58574009229E3 /* EditAlertView.swift in Sources */,
 				450B792928F58574009229E3 /* SharedBetToken.swift in Sources */,
 				A9BA04212A33399D007880FC /* UploadDocumentsInformationView.swift in Sources */,
+				A9C04C342A7D050B0025A6DA /* FilterFavoritesViewModel.swift in Sources */,
 				450B792A28F58574009229E3 /* SettingsRadioRowView.swift in Sources */,
 				A9A9102C29E85CFD003A2C86 /* ContactSettingsViewModel.swift in Sources */,
 				450B792B28F58574009229E3 /* CGFloat+Shift.swift in Sources */,
@@ -11793,6 +11831,7 @@
 				450B795028F58574009229E3 /* UserLoginForm.swift in Sources */,
 				450B795128F58574009229E3 /* OutrightCompetitionWidgetCollectionViewCell.swift in Sources */,
 				450B795228F58574009229E3 /* Tournament.swift in Sources */,
+				A9C04C242A7D04430025A6DA /* MyCompetitionsViewModel.swift in Sources */,
 				450B795328F58574009229E3 /* OverUnderMarketDetailTableViewCell.swift in Sources */,
 				450B795428F58574009229E3 /* SearchViewModel.swift in Sources */,
 				450B795628F58574009229E3 /* DepositResponse.swift in Sources */,
@@ -12092,6 +12131,7 @@
 				450B7A6328F58574009229E3 /* TransactionsHistoryViewController.swift in Sources */,
 				450B7A6428F58574009229E3 /* TitleTextFieldView.swift in Sources */,
 				450B7A6528F58574009229E3 /* MessageDetailViewController.swift in Sources */,
+				A9C04C2C2A7D04C50025A6DA /* MyGamesRootViewModel.swift in Sources */,
 				A9D534032A4A01980013ACF5 /* CashbackInfoViewController.swift in Sources */,
 				450B7A6628F58574009229E3 /* ActivationAlert.swift in Sources */,
 				450B7A6728F58574009229E3 /* AddFriendCellViewModel.swift in Sources */,
@@ -12376,6 +12416,7 @@
 				457CBA36282D27D000ED0F00 /* ActionTextFieldView.swift in Sources */,
 				45C10F9228772DA700037BBE /* Animator.swift in Sources */,
 				450B7B4428F637FA009229E3 /* ServiceProviderModelMapper+Sports.swift in Sources */,
+				A9C04C382A7D050B0025A6DA /* FilterFavoritesViewModel.swift in Sources */,
 				A9A1B2E62A14EC3300F7A8ED /* DepositSuccessViewController.swift in Sources */,
 				A9DF8E4128E5A5D80083BF56 /* TipsSettingsViewController.swift in Sources */,
 				45E8E2A128C8A79C00A09B02 /* RankingTypeTableHeaderView.swift in Sources */,
@@ -12520,6 +12561,7 @@
 				457CBA9F282D27D000ED0F00 /* SharedBetToken.swift in Sources */,
 				A9DF8E3828E45D2E0083BF56 /* TipsSliderViewModel.swift in Sources */,
 				457CBAA0282D27D000ED0F00 /* SettingsRadioRowView.swift in Sources */,
+				A9C04C202A7D03580025A6DA /* MyGamesViewModel.swift in Sources */,
 				457CBAA1282D27D000ED0F00 /* DebugTableViewDescription.swift in Sources */,
 				A9D5BB84290A9CEC001B0E13 /* EmailVerificationCodeViewController.swift in Sources */,
 				457CBAA2282D27D000ED0F00 /* SimpleRegisterEmailSentViewController.swift in Sources */,
@@ -12584,6 +12626,7 @@
 				457CBACB282D27D000ED0F00 /* XcodePreviewViewController.swift in Sources */,
 				457CBACC282D27D000ED0F00 /* AutoLayoutDSL.swift in Sources */,
 				457CBACD282D27D000ED0F00 /* UIColor+Extensions.swift in Sources */,
+				A9C04C302A7D04C50025A6DA /* MyGamesRootViewModel.swift in Sources */,
 				457CBACE282D27D000ED0F00 /* ConversationsViewModel.swift in Sources */,
 				457CBAD0282D27D000ED0F00 /* DepositViewController.swift in Sources */,
 				A9A1B2C32A0E55B800F7A8ED /* UserConsentType.swift in Sources */,
@@ -12611,6 +12654,7 @@
 				457CBAE0282D27D000ED0F00 /* GroupUserManagementTableViewCell.swift in Sources */,
 				457CBAE1282D27D000ED0F00 /* HomeViewModel.swift in Sources */,
 				4583864C293E66DF001B96DB /* ServiceProviderModelMapper+Betting.swift in Sources */,
+				A9C04C282A7D04430025A6DA /* MyCompetitionsViewModel.swift in Sources */,
 				457CBAE2282D27D000ED0F00 /* MatchStatsCollectionViewCell.swift in Sources */,
 				457CBAE5282D27D000ED0F00 /* CountryName.swift in Sources */,
 				A9FB6D4E28C642AD00E3FE58 /* TipsViewController.swift in Sources */,
@@ -13111,6 +13155,7 @@
 				457CBD16282D2CD100ED0F00 /* Array+Extensions.swift in Sources */,
 				457CBD17282D2CD100ED0F00 /* MatchDetailsViewModel.swift in Sources */,
 				457CBD18282D2CD100ED0F00 /* FilterHistoryViewController.swift in Sources */,
+				A9C04C292A7D04430025A6DA /* MyCompetitionsViewModel.swift in Sources */,
 				457CBD19282D2CD100ED0F00 /* MatchStatsViewModel.swift in Sources */,
 				457CBD1A282D2CD100ED0F00 /* BettingTicket.swift in Sources */,
 				457CBD1B282D2CD100ED0F00 /* FriendsListViewModel.swift in Sources */,
@@ -13118,6 +13163,7 @@
 				457CBD1E282D2CD100ED0F00 /* TransactionsHistoryViewModel.swift in Sources */,
 				457CBD1F282D2CD100ED0F00 /* NetworkError.swift in Sources */,
 				457CBD21282D2CD100ED0F00 /* FullRegisterAddressCountryViewController.swift in Sources */,
+				A9C04C392A7D050B0025A6DA /* FilterFavoritesViewModel.swift in Sources */,
 				457CBD23282D2CD100ED0F00 /* TabularViewController.swift in Sources */,
 				A9C18AA528661975009F0063 /* ConversationBetSelectionRootViewController.swift in Sources */,
 				457CBD24282D2CD100ED0F00 /* MatchWidgetCellViewModel.swift in Sources */,
@@ -13182,6 +13228,7 @@
 				457CBD49282D2CD100ED0F00 /* SettingsRadioRowView.swift in Sources */,
 				457CBD4A282D2CD100ED0F00 /* DebugTableViewDescription.swift in Sources */,
 				457CBD4B282D2CD100ED0F00 /* SimpleRegisterEmailSentViewController.swift in Sources */,
+				A9C04C312A7D04C50025A6DA /* MyGamesRootViewModel.swift in Sources */,
 				457CBD4C282D2CD100ED0F00 /* CompetitionsDataSource.swift in Sources */,
 				457CBD4E282D2CD100ED0F00 /* GamesNotificationViewController.swift in Sources */,
 				457CBD4F282D2CD100ED0F00 /* MarketGroupDetailsViewModel.swift in Sources */,
@@ -13449,6 +13496,7 @@
 				457CBE0D282D2CD100ED0F00 /* RootViewController.swift in Sources */,
 				A9A43C872A4B2B9C008FB399 /* ExtraDocsViewModel.swift in Sources */,
 				457CBE0F282D2CD100ED0F00 /* SportType.swift in Sources */,
+				A9C04C212A7D03580025A6DA /* MyGamesViewModel.swift in Sources */,
 				A93FE2302A49D0DF006A6907 /* CashbackInfoView.swift in Sources */,
 				457CBE10282D2CD100ED0F00 /* NewGroupViewModel.swift in Sources */,
 				A98708A728D3441800F27348 /* RankingCellViewModel.swift in Sources */,
@@ -13639,6 +13687,7 @@
 				4589C79E282024E400243547 /* BonusProgressViewModel.swift in Sources */,
 				4589C79F282024E400243547 /* SportSelectionViewController.swift in Sources */,
 				4589C7A0282024E400243547 /* SportMatchDoubleLineTableViewCell.swift in Sources */,
+				A9C04C1D2A7D03580025A6DA /* MyGamesViewModel.swift in Sources */,
 				A9DD89EE2A5707FB00D3A5FE /* TopCompetitionCollectionViewCell.swift in Sources */,
 				4589C7A1282024E400243547 /* RadioButton.swift in Sources */,
 				A9C2D51D29C0D4F100DB95BD /* CashoutInfo.swift in Sources */,
@@ -13821,6 +13870,7 @@
 				4589C829282024E400243547 /* SharedBetToken.swift in Sources */,
 				4589C82A282024E400243547 /* SettingsRadioRowView.swift in Sources */,
 				A9BA04222A33399D007880FC /* UploadDocumentsInformationView.swift in Sources */,
+				A9C04C352A7D050B0025A6DA /* FilterFavoritesViewModel.swift in Sources */,
 				45C10F6028772DA700037BBE /* CGFloat+Shift.swift in Sources */,
 				A9A9102D29E85CFD003A2C86 /* ContactSettingsViewModel.swift in Sources */,
 				4589C82B282024E400243547 /* DebugTableViewDescription.swift in Sources */,
@@ -13873,6 +13923,7 @@
 				4589C845282024E400243547 /* OutrightCompetitionWidgetCollectionViewCell.swift in Sources */,
 				4589C846282024E400243547 /* Tournament.swift in Sources */,
 				4589C847282024E400243547 /* OverUnderMarketDetailTableViewCell.swift in Sources */,
+				A9C04C252A7D04430025A6DA /* MyCompetitionsViewModel.swift in Sources */,
 				4589C848282024E400243547 /* SearchViewModel.swift in Sources */,
 				4589C84A282024E400243547 /* DepositResponse.swift in Sources */,
 				4589C84B282024E400243547 /* ActivationAlertScrollableTableViewCell.swift in Sources */,
@@ -14172,6 +14223,7 @@
 				4589C918282024E400243547 /* TitleTextFieldView.swift in Sources */,
 				A9B331E628904F4800D097F0 /* MessageDetailViewController.swift in Sources */,
 				4589C919282024E400243547 /* ActivationAlert.swift in Sources */,
+				A9C04C2D2A7D04C50025A6DA /* MyGamesRootViewModel.swift in Sources */,
 				A9D534042A4A01980013ACF5 /* CashbackInfoViewController.swift in Sources */,
 				4589C91A282024E400243547 /* AddFriendCellViewModel.swift in Sources */,
 				4589C91B282024E400243547 /* Debounce.swift in Sources */,
@@ -14294,6 +14346,7 @@
 				45A3308C298976BA008181E9 /* BonusProgressViewModel.swift in Sources */,
 				45A3308D298976BA008181E9 /* SportSelectionViewController.swift in Sources */,
 				45A3308E298976BA008181E9 /* SportMatchDoubleLineTableViewCell.swift in Sources */,
+				A9C04C1B2A7D03580025A6DA /* MyGamesViewModel.swift in Sources */,
 				A9DD89EC2A5707FB00D3A5FE /* TopCompetitionCollectionViewCell.swift in Sources */,
 				45A3308F298976BA008181E9 /* RadioButton.swift in Sources */,
 				A9C2D51B29C0D4F000DB95BD /* CashoutInfo.swift in Sources */,
@@ -14476,6 +14529,7 @@
 				45A3313E298976BA008181E9 /* EditAlertView.swift in Sources */,
 				45A3313F298976BA008181E9 /* SharedBetToken.swift in Sources */,
 				A9BA04202A33399D007880FC /* UploadDocumentsInformationView.swift in Sources */,
+				A9C04C332A7D050B0025A6DA /* FilterFavoritesViewModel.swift in Sources */,
 				45A33140298976BA008181E9 /* SettingsRadioRowView.swift in Sources */,
 				A9A9102B29E85CFD003A2C86 /* ContactSettingsViewModel.swift in Sources */,
 				45A33141298976BA008181E9 /* CGFloat+Shift.swift in Sources */,
@@ -14528,6 +14582,7 @@
 				45A33167298976BA008181E9 /* MultiSlider.swift in Sources */,
 				45A33168298976BA008181E9 /* UserLoginForm.swift in Sources */,
 				45A33169298976BA008181E9 /* OutrightCompetitionWidgetCollectionViewCell.swift in Sources */,
+				A9C04C232A7D04430025A6DA /* MyCompetitionsViewModel.swift in Sources */,
 				45A3316A298976BA008181E9 /* Tournament.swift in Sources */,
 				45A3316B298976BA008181E9 /* OverUnderMarketDetailTableViewCell.swift in Sources */,
 				45A3316C298976BA008181E9 /* SearchViewModel.swift in Sources */,
@@ -14827,6 +14882,7 @@
 				45A33284298976BA008181E9 /* TransactionsHistoryViewController.swift in Sources */,
 				45A33285298976BA008181E9 /* TitleTextFieldView.swift in Sources */,
 				45A33286298976BA008181E9 /* MessageDetailViewController.swift in Sources */,
+				A9C04C2B2A7D04C50025A6DA /* MyGamesRootViewModel.swift in Sources */,
 				A9D534022A4A01980013ACF5 /* CashbackInfoViewController.swift in Sources */,
 				45A33287298976BA008181E9 /* ActivationAlert.swift in Sources */,
 				45A33288298976BA008181E9 /* AddFriendCellViewModel.swift in Sources */,
@@ -14933,6 +14989,7 @@
 				45A6BBDA28246A7500D9B416 /* FullRegisterDocumentsViewController.swift in Sources */,
 				45A6BBDB28246A7500D9B416 /* PopUpStore.swift in Sources */,
 				45A6BBDC28246A7500D9B416 /* MyTicketsViewController.swift in Sources */,
+				A9C04C372A7D050B0025A6DA /* FilterFavoritesViewModel.swift in Sources */,
 				45C10F3D28772DA700037BBE /* NavControllerTrasntitionPresenting.swift in Sources */,
 				45A6BBDD28246A7500D9B416 /* SuggestedBetsListViewController.swift in Sources */,
 				45A6BBDE28246A7500D9B416 /* PreLiveEventsViewModel.swift in Sources */,
@@ -15029,6 +15086,7 @@
 				45A6BC2928246A7500D9B416 /* AppDelegate.swift in Sources */,
 				45A6BC2A28246A7500D9B416 /* LiveEventsViewController.swift in Sources */,
 				A98295A1283BA0AF0014066A /* BetSelectionTableViewCell.swift in Sources */,
+				A9C04C272A7D04430025A6DA /* MyCompetitionsViewModel.swift in Sources */,
 				45A6BC2B28246A7500D9B416 /* UIImage+Extensions.swift in Sources */,
 				45A6BC2C28246A7500D9B416 /* PreSubmissionBetslipViewModel.swift in Sources */,
 				45A6BC2D28246A7500D9B416 /* SportsAggregator.swift in Sources */,
@@ -15290,6 +15348,7 @@
 				45A6BCEA28246A7500D9B416 /* Observable.swift in Sources */,
 				A9BA040A2A308CCA007880FC /* ExtraDocsViewController.swift in Sources */,
 				45A6BCEB28246A7500D9B416 /* LinkPresentationItemSource.swift in Sources */,
+				A9C04C1F2A7D03580025A6DA /* MyGamesViewModel.swift in Sources */,
 				45A6BCEC28246A7500D9B416 /* OddsFormat.swift in Sources */,
 				45A6BCED28246A7500D9B416 /* MarketOutcomeRelation.swift in Sources */,
 				45A6BCEE28246A7500D9B416 /* EveryMatrixModel.swift in Sources */,
@@ -15398,6 +15457,7 @@
 				45A6BD3928246A7500D9B416 /* EmptyCardTableViewCell.swift in Sources */,
 				45A6BD3B28246A7500D9B416 /* AddFriendViewController.swift in Sources */,
 				45A6BD3C28246A7500D9B416 /* GroupUserManagementCellViewModel.swift in Sources */,
+				A9C04C2F2A7D04C50025A6DA /* MyGamesRootViewModel.swift in Sources */,
 				45B74AD4292BFE3500F2076C /* ServiceProviderType.swift in Sources */,
 				45A6BD3D28246A7500D9B416 /* NetworkModels.swift in Sources */,
 				45A6BD3E28246A7500D9B416 /* RootViewController.swift in Sources */,
@@ -15596,6 +15656,7 @@
 				A9C340CC28F9A74A0055360B /* HeaderTextFieldView.swift in Sources */,
 				A9C340CD28F9A74A0055360B /* SocialItemCollectionViewCell.swift in Sources */,
 				A9C340CE28F9A74A0055360B /* FadeInCenterHorizontalFlowLayout.swift in Sources */,
+				A9C04C1E2A7D03580025A6DA /* MyGamesViewModel.swift in Sources */,
 				A9C340CF28F9A74A0055360B /* AuthToken.swift in Sources */,
 				A9C340D028F9A74A0055360B /* MatchInfo.swift in Sources */,
 				A9C340D128F9A74A0055360B /* MultiSlider+Drag.swift in Sources */,
@@ -15612,8 +15673,10 @@
 				A9C340DC28F9A74A0055360B /* ConversationsDetailViewModel.swift in Sources */,
 				A9C340DD28F9A74A0055360B /* DocumentPickerView.swift in Sources */,
 				A9C340DE28F9A74A0055360B /* NSAttributedString+Extensions.swift in Sources */,
+				A9C04C262A7D04430025A6DA /* MyCompetitionsViewModel.swift in Sources */,
 				A9A1B2B82A0E557000F7A8ED /* UserConsent.swift in Sources */,
 				A96FAEC929804C0600A0751F /* Data+Extensions.swift in Sources */,
+				A9C04C2E2A7D04C50025A6DA /* MyGamesRootViewModel.swift in Sources */,
 				A9C04C0E2A7BB0C90025A6DA /* FilterFavoritesViewController.swift in Sources */,
 				A9C340DF28F9A74A0055360B /* BettingHistoryRootViewController.swift in Sources */,
 				A9C340E028F9A74A0055360B /* DepositViewModel.swift in Sources */,
@@ -16129,6 +16192,7 @@
 				A9C342B728F9A74A0055360B /* DepositWebViewController.swift in Sources */,
 				A9C342B828F9A74A0055360B /* TipsTableViewCell.swift in Sources */,
 				A9C342B928F9A74A0055360B /* ViewContext.swift in Sources */,
+				A9C04C362A7D050B0025A6DA /* FilterFavoritesViewModel.swift in Sources */,
 				A9C342BA28F9A74A0055360B /* RankingsViewModel.swift in Sources */,
 				A9C342BB28F9A74A0055360B /* ModalTransitionPresentationController.swift in Sources */,
 				A9C342BC28F9A74A0055360B /* TransactionsHistoryViewController.swift in Sources */,

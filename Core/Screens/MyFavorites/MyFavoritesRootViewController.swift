@@ -174,8 +174,7 @@ class MyFavoritesRootViewController: UIViewController {
             .receive(on: DispatchQueue.main)
             .sink { [weak self] userWallet in
                 if let userWallet = userWallet,
-                   let formattedTotalString = CurrencyFormater.defaultFormat.string(from: NSNumber(value: userWallet.total))
-                {
+                   let formattedTotalString = CurrencyFormater.defaultFormat.string(from: NSNumber(value: userWallet.total)) {
                     self?.accountValueLabel.text = formattedTotalString
                 }
                 else {
@@ -339,7 +338,6 @@ extension MyFavoritesRootViewController {
 
     private func setupSubviews() {
 
-        // Add subviews to self.view or each other
         self.navigationBaseView.addSubview(self.titleLabel)
         self.navigationBaseView.addSubview(self.backButton)
         self.navigationBaseView.addSubview(self.closeButton)
@@ -428,4 +426,3 @@ extension MyFavoritesRootViewController {
         ])
     }
 }
-

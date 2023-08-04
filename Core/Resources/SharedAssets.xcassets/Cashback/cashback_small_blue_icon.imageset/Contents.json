@@ -1,17 +1,17 @@
 {
   "images" : [
     {
-      "filename" : "cashbackgamecards.png",
+      "filename" : "rp-blue1.png",
       "idiom" : "universal",
       "scale" : "1x"
     },
     {
-      "filename" : "cashbackgamecards@2x.png",
+      "filename" : "rp-blue1@2x.png",
       "idiom" : "universal",
       "scale" : "2x"
     },
     {
-      "filename" : "cashbackgamecards@3x.png",
+      "filename" : "rp-blue1@3x.png",
       "idiom" : "universal",
       "scale" : "3x"
     }

@@ -8,24 +8,6 @@
 import UIKit
 import Combine
 
-class FilterFavoritesViewModel {
-
-    // MARK: - Publishers
-    var selectedFilterPublisher: CurrentValueSubject<FilterFavoritesValue, Never> = .init(.time)
-    private var cancellables = Set<AnyCancellable>()
-
-    init() {
-
-    }
-
-    func didSelectFilter(atIndex index: Int) {
-
-        if let selectedFilter = FilterFavoritesValue.init(filterIndex: index){
-            self.selectedFilterPublisher.send(selectedFilter)
-        }
-    }
-}
-
 class FilterFavoritesViewController: UIViewController {
 
     // MARK: - Private Properties

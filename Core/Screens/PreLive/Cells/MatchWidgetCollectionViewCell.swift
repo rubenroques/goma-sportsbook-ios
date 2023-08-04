@@ -51,6 +51,7 @@ class MatchWidgetCollectionViewCell: UICollectionViewCell {
         let imageView = UIImageView()
         imageView.translatesAutoresizingMaskIntoConstraints = false
         imageView.image = UIImage(named: "cashback_small_blue_icon")
+        imageView.contentMode = .scaleAspectFit
         return imageView
     }()
 

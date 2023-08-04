@@ -1345,18 +1345,18 @@
 "oh_no" = "Oh no";
 "automated_withdrawal" = "Automated withdrawal";
 
-"cashback" = "Cashback";
-"cashback_balance" = "Cashback Balance:";
-"used_cashback" = "Used Cashback";
-"first_info_title_cashback" = "What’s Cashback?";
+"cashback" = "Replay";
+"cashback_balance" = "Replay Balance:";
+"used_cashback" = "Used Replay";
+"first_info_title_cashback" = "What’s Replay?";
 "first_info_descrition_cashback" = "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Curabitur nec auctor mi. Proin mi nibh, commodo nec ante eu, facilisis bibendum urna. Mauris mollis dui sit amet eros mattis, vitae laoreet sapien facilisis. Integer commodo, ligula in tincidunt dignissim, sem lorem congue lacus, sit amet euismod dolor purus ut libero.";
-"second_info_title_cashback" = "Are all bets available to Cashback?";
+"second_info_title_cashback" = "Are all bets available to Replay?";
 "second_info_descrition_cashback" = "Nope! To know which ones are available, check if it has this tag:";
-"third_info_title_cashback" = "Can I withdraw Cashback Balance?";
+"third_info_title_cashback" = "Can I withdraw Replay Balance?";
 "third_info_descrition_one_cashback" = "No, but you can use that balance in any of your bets by selecting it on the betslip. See example:";
 "third_info_descrition_two_cashback" = "By turning on, you can use your balance for the bet.";
-"fourth_info_title_cashback" = "How do I know if I used my cashback balance on one bet?";
-"fourth_info_descrition_cashback" = "Check for this tag on your bets to see if you used your cash back balance on it.";
+"fourth_info_title_cashback" = "How do I know if I used my replay balance on one bet?";
+"fourth_info_descrition_cashback" = "Check for this tag on your bets to see if you used your replay balance on it.";
 "cashback_info" = "Get back some of your bet if you lose.";
 "learn_more" = "Learn more";
 
