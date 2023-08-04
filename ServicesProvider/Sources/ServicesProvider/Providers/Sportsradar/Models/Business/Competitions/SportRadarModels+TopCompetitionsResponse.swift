@@ -20,7 +20,7 @@ extension SportRadarModels {
 
     struct TopCompetitionData: Codable {
         var title: String
-        var competitions: [TopCompetition]
+        var competitions: [TopCompetitionPointer]
 
         enum CodingKeys: String, CodingKey {
             case title = "title"
@@ -28,7 +28,7 @@ extension SportRadarModels {
         }
     }
 
-    struct TopCompetition: Codable {
+    struct TopCompetitionPointer: Codable {
         var id: String
         var name: String
         var competitionId: String

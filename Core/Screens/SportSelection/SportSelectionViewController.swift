@@ -10,7 +10,7 @@ import Combine
 import ServicesProvider
 
 protocol SportTypeSelectionViewDelegate: AnyObject {
-    func selectedSport(_ sport: Sport)
+    func didSelectSport(_ sport: Sport)
 }
 
 class SportSelectionViewController: UIViewController {
@@ -238,7 +238,7 @@ extension SportSelectionViewController: UICollectionViewDelegate, UICollectionVi
         cell.isSelected = true
         self.defaultSport = sportAtIndex
 
-        self.selectionDelegate?.selectedSport(sportAtIndex)
+        self.selectionDelegate?.didSelectSport(sportAtIndex)
 
         AnalyticsClient.sendEvent(event: .selectedSport(sportId: self.defaultSport.id))
         self.dismiss(animated: true, completion: nil)

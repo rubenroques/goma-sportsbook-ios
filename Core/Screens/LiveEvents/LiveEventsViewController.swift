@@ -583,7 +583,7 @@ extension LiveEventsViewController: HomeFilterOptionsViewDelegate {
 
 extension LiveEventsViewController: SportTypeSelectionViewDelegate {
 
-    func selectedSport(_ sport: Sport) {
+    func didSelectSport(_ sport: Sport) {
         self.changedSport(sport)
     }
 

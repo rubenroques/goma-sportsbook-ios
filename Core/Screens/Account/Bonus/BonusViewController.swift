@@ -424,20 +424,6 @@ extension BonusViewController: UITableViewDataSource, UITableViewDelegate {
         }
     }
 
-    func hasContentForSelectedListType() -> Bool {
-
-        switch self.viewModel.bonusListType {
-        case .available:
-            return self.bonusAvailableDataSource.bonusAvailable.isNotEmpty
-        case .active:
-            return self.bonusActiveDataSource.bonusActive.isNotEmpty
-        case .queued:
-            return self.bonusQueuedDataSource.bonusActive.isNotEmpty
-        case .history:
-            return self.bonusHistoryDataSource.bonusHistory.isNotEmpty
-        }
-   }
-
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
 
         switch self.viewModel.bonusListType {

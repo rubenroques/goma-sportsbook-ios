@@ -45,7 +45,7 @@ class LoadingSpinnerViewController: UIViewController {
 
     public func startAnimating() {
         self.animationView.play { (finished) in
-        /// Animation stopped
+            // Animation stopped
         }
     }
 

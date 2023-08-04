@@ -201,7 +201,8 @@ class RootViewController: UIViewController {
     lazy var homeViewController = HomeViewController()
     lazy var preLiveViewController: PreLiveEventsViewController = {
         let defaultSport = Env.sportsStore.defaultSport
-        let preLiveEventsViewController = PreLiveEventsViewController(selectedSportType: defaultSport)
+        let viewModel = PreLiveEventsViewModel(selectedSport: defaultSport)
+        let preLiveEventsViewController = PreLiveEventsViewController(viewModel: viewModel)
         return preLiveEventsViewController
     }()
     lazy var liveEventsViewController: LiveEventsViewController = {
@@ -871,25 +872,25 @@ class RootViewController: UIViewController {
 
     func selectSport(_ sport: Sport) {
         self.currentSport = sport
-        if preLiveViewControllerLoaded {
-            self.preLiveViewController.selectedSport = sport
+        if self.preLiveViewControllerLoaded {
+            self.preLiveViewController.selectSport(sport)
         }
-        if liveEventsViewControllerLoaded {
+        if self.liveEventsViewControllerLoaded {
             self.liveEventsViewController.selectedSport = sport
         }
     }
 
     func didChangedPreLiveSport(_ sport: Sport) {
         self.currentSport = sport
-        if liveEventsViewControllerLoaded {
+        if self.liveEventsViewControllerLoaded {
             self.liveEventsViewController.selectedSport = sport
         }
     }
 
     func didChangedLiveSport(_ sport: Sport) {
         self.currentSport = sport
-        if preLiveViewControllerLoaded {
-            self.preLiveViewController.selectedSport = sport
+        if self.preLiveViewControllerLoaded {
+            self.preLiveViewController.selectSport(sport)
         }
     }
 
@@ -1044,7 +1045,7 @@ extension RootViewController {
         if case .preLive = tab, !preLiveViewControllerLoaded {
             // Iniciar prelive vc
             self.addChildViewController(self.preLiveViewController, toView: self.preLiveBaseView)
-            self.preLiveViewController.selectedSport = self.currentSport
+
             self.preLiveViewController.didChangeSport = { [weak self] newSport in
                 self?.didChangedPreLiveSport(newSport)
             }

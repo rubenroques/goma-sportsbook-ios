@@ -8224,9 +8224,9 @@
 			children = (
 				45C26DC727976A3900513D41 /* FavoriteCompetitionsDataSource.swift */,
 				45C26DCA27976A7300513D41 /* FavoriteMatchesDataSource.swift */,
-				45C26DCD27976AA500513D41 /* CompetitionsDataSource.swift */,
-				45C26DD027976ADF00513D41 /* TodayMatchesDataSource.swift */,
 				45C26DD327976B2100513D41 /* PopularMatchesDataSource.swift */,
+				45C26DD027976ADF00513D41 /* TodayMatchesDataSource.swift */,
+				45C26DCD27976AA500513D41 /* CompetitionsDataSource.swift */,
 				A9DD89E32A56E40B00D3A5FE /* TopCompetitionsDataSource.swift */,
 			);
 			path = DataSources;
@@ -16519,7 +16519,7 @@
 				CODE_SIGN_ENTITLEMENTS = Clients/Betsson/Misc/Betsson.entitlements;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 1202;
+				CURRENT_PROJECT_VERSION = 1206;
 				DEVELOPMENT_TEAM = 422GNXXZJR;
 				INFOPLIST_FILE = "$(SRCROOT)/Clients/Betsson/Misc/Betsson-Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 13.0;
@@ -16545,7 +16545,7 @@
 				CODE_SIGN_ENTITLEMENTS = Clients/Betsson/Misc/Betsson.entitlements;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 1202;
+				CURRENT_PROJECT_VERSION = 1206;
 				DEVELOPMENT_TEAM = 422GNXXZJR;
 				INFOPLIST_FILE = "$(SRCROOT)/Clients/Betsson/Misc/Betsson-Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 13.0;

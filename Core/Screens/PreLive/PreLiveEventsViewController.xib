@@ -33,7 +33,6 @@
                 <outlet property="firstTextFieldEmptyStateLabel" destination="VDj-Nq-fGI" id="GM5-4h-Ex4"/>
                 <outlet property="leftGradientBaseView" destination="Ond-vd-nhl" id="4CI-b7-Yno"/>
                 <outlet property="loadingBaseView" destination="kGb-Bw-Z5y" id="DzJ-v2-UsN"/>
-                <outlet property="loadingView" destination="R1v-pN-KYj" id="l8c-Hq-phP"/>
                 <outlet property="openedCompetitionsFiltersConstraint" destination="QEY-gK-pFr" id="9vt-3h-1zZ"/>
                 <outlet property="rightGradientBaseView" destination="FxX-ck-Cyp" id="Y6G-dS-iww"/>
                 <outlet property="secondTextFieldEmptyStateLabel" destination="giU-qb-DgU" id="4QA-Yy-qBa"/>
@@ -51,17 +50,8 @@
             <rect key="frame" x="0.0" y="0.0" width="346" height="793"/>
             <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
             <subviews>
-                <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="kGb-Bw-Z5y">
+                <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="kGb-Bw-Z5y" userLabel="LoadingBaseView">
                     <rect key="frame" x="0.0" y="70" width="346" height="723"/>
-                    <subviews>
-                        <activityIndicatorView opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" animating="YES" style="large" translatesAutoresizingMaskIntoConstraints="NO" id="R1v-pN-KYj">
-                            <rect key="frame" x="154.5" y="343" width="37" height="37"/>
-                        </activityIndicatorView>
-                    </subviews>
-                    <constraints>
-                        <constraint firstItem="R1v-pN-KYj" firstAttribute="centerX" secondItem="kGb-Bw-Z5y" secondAttribute="centerX" id="6K5-Cx-cXA"/>
-                        <constraint firstItem="R1v-pN-KYj" firstAttribute="centerY" secondItem="kGb-Bw-Z5y" secondAttribute="centerY" id="L72-bf-x0e"/>
-                    </constraints>
                 </view>
                 <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Dx9-on-mts">
                     <rect key="frame" x="0.0" y="70" width="346" height="723"/>
@@ -203,6 +193,13 @@
                         <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="6zP-Po-yfR">
                             <rect key="frame" x="306" y="15" width="40" height="40"/>
                             <subviews>
+                                <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="match_filters_icons" translatesAutoresizingMaskIntoConstraints="NO" id="zbv-kg-RfQ">
+                                    <rect key="frame" x="8.5" y="9.5" width="23" height="21"/>
+                                    <constraints>
+                                        <constraint firstAttribute="width" constant="23" id="8Xv-MM-kpc"/>
+                                        <constraint firstAttribute="height" constant="21" id="UhU-iB-bGo"/>
+                                    </constraints>
+                                </imageView>
                                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="qjl-vo-aTc">
                                     <rect key="frame" x="18" y="-6" width="16" height="16"/>
                                     <color key="backgroundColor" red="0.015686274510000001" green="0.49019607840000001" blue="1" alpha="1" colorSpace="custom" customColorSpace="calibratedRGB"/>
@@ -215,13 +212,6 @@
                                     <nil key="highlightedColor"/>
                                     <size key="shadowOffset" width="1" height="-1"/>
                                 </label>
-                                <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="match_filters_icons" translatesAutoresizingMaskIntoConstraints="NO" id="zbv-kg-RfQ">
-                                    <rect key="frame" x="8.5" y="9.5" width="23" height="21"/>
-                                    <constraints>
-                                        <constraint firstAttribute="width" constant="23" id="8Xv-MM-kpc"/>
-                                        <constraint firstAttribute="height" constant="21" id="UhU-iB-bGo"/>
-                                    </constraints>
-                                </imageView>
                             </subviews>
                             <constraints>
                                 <constraint firstItem="zbv-kg-RfQ" firstAttribute="centerX" secondItem="6zP-Po-yfR" secondAttribute="centerX" id="0Xq-hH-8fs"/>
@@ -341,7 +331,7 @@
         <image name="no_content_icon" width="161" height="161"/>
         <image name="sport_type_soccer_icon" width="23" height="23"/>
         <namedColor name="separatorLine">
-            <color red="0.1803921568627451" green="0.1803921568627451" blue="0.1803921568627451" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+            <color red="0.68235294117647061" green="0.71372549019607845" blue="0.75686274509803919" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
         </namedColor>
         <systemColor name="systemBackgroundColor">
             <color white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>

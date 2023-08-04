@@ -71,7 +71,7 @@ class SportRadarEventsPaginator {
                 let httpResponse = response as? HTTPURLResponse,
                 (200...299).contains(httpResponse.statusCode)
             else {
-                print("SportRadarEventsPaginator: requestInitialPage - error on subscribe to topic")
+                print("SportRadarEventsPaginator: requestInitialPage - error on subscribe to topic \(dump(error)) \(dump(response))")
                 publisher.send(completion: .failure(ServiceProviderError.onSubscribe))
                 return
             }
@@ -85,7 +85,9 @@ class SportRadarEventsPaginator {
 
         self.eventsSubject = publisher
 
-        return self.eventsSubject.eraseToAnyPublisher()
+        return self.eventsSubject
+            .print("PopularMatchesDataSource Debug Helper EventsPaginator")
+            .eraseToAnyPublisher()
     }
 
     // Return as boolean indicating if there is more pages

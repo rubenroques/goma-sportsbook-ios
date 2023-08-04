@@ -12,7 +12,7 @@ enum HighlightedMatchType {
     case visualImageMatch(Match)
 }
 
-struct Match {
+struct Match: Equatable {
 
     var id: String
     var competitionId: String
@@ -56,7 +56,7 @@ struct Match {
 
     }
 
-    enum Status {
+    enum Status: Equatable {
         case unknown
         case notStarted
         case inProgress(String)

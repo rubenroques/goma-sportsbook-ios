@@ -398,7 +398,7 @@ public struct SportCompetition: Codable {
     }
 }
 
-public struct SportCompetitionInfo: Codable {
+public struct SportCompetitionInfo: Codable, Equatable {
     public var id: String
     public var name: String
     public var marketGroups: [SportCompetitionMarketGroup]
@@ -414,7 +414,7 @@ public struct SportCompetitionInfo: Codable {
     }
 }
 
-public struct SportCompetitionMarketGroup: Codable {
+public struct SportCompetitionMarketGroup: Codable, Equatable {
     public var id: String
     public var name: String
 

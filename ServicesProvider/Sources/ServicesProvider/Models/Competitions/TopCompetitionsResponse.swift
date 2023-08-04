@@ -8,7 +8,6 @@
 import Foundation
 
 public struct TopCompetitionsResponse: Codable {
-
     public var data: [TopCompetitionData]
 
     enum CodingKeys: String, CodingKey {
@@ -18,7 +17,7 @@ public struct TopCompetitionsResponse: Codable {
 
 public struct TopCompetitionData: Codable {
     public var title: String
-    public var competitions: [TopCompetition]
+    public var competitions: [TopCompetitionPointer]
 
     enum CodingKeys: String, CodingKey {
         case title = "title"
@@ -26,7 +25,7 @@ public struct TopCompetitionData: Codable {
     }
 }
 
-public struct TopCompetition: Codable {
+public struct TopCompetitionPointer: Codable {
     public var id: String
     public var name: String
     public var competitionId: String
