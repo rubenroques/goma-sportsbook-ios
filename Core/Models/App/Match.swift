@@ -12,7 +12,7 @@ enum HighlightedMatchType {
     case visualImageMatch(Match)
 }
 
-struct Match {
+struct Match: Equatable {
 
     var id: String
     var competitionId: String

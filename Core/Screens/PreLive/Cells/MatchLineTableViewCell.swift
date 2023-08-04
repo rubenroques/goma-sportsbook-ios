@@ -11,6 +11,9 @@ import ServicesProvider
 
 class MatchLineTableCellViewModel {
 
+    var match: Match? {
+        return self.matchCurrentValueSubject.value
+    }
     var matchPublisher: AnyPublisher<Match?, Never> {
         return self.matchCurrentValueSubject.eraseToAnyPublisher()
     }
@@ -201,11 +204,6 @@ class MatchLineTableViewCell: UITableViewCell {
         self.collectionViewTopMarginConstraint.constant = StyleHelper.cardsStyleMargin()
         self.collectionViewBottomMarginConstraint.constant = StyleHelper.cardsStyleMargin()
 
-        UIView.performWithoutAnimation {
-            self.setNeedsLayout()
-            self.layoutIfNeeded()
-        }
-
         self.setupWithTheme()
     }
 
@@ -259,6 +257,10 @@ class MatchLineTableViewCell: UITableViewCell {
 
     private func configureWithViewModel(_ viewModel: MatchLineTableCellViewModel) {
 
+        if let match = viewModel.match {
+            self.setupWithMatch(match)
+        }
+
         viewModel.matchPublisher
             .receive(on: DispatchQueue.main)
             .sink { completion in
@@ -297,7 +299,9 @@ class MatchLineTableViewCell: UITableViewCell {
         self.liveMatch = liveMatch
 
         UIView.performWithoutAnimation {
-            self.collectionView.reloadSections(IndexSet(integer: 0))
+            if self.collectionView.numberOfSections == 3 {
+                 self.collectionView.reloadSections(IndexSet(integer: 1))
+             }
         }
     }
 
@@ -376,83 +380,66 @@ extension MatchLineTableViewCell: UIScrollViewDelegate {
 extension MatchLineTableViewCell: UICollectionViewDelegate, UICollectionViewDataSource, UICollectionViewDelegateFlowLayout {
 
     func numberOfSections(in collectionView: UICollectionView) -> Int {
-        return 2
+        return 3
     }
 
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
 
         guard let match = self.match else { return 0 }
 
-        if section == 1 {
+        if section == 0 { // Match section
             return 1
         }
 
-        if match.markets.isNotEmpty {
-            return match.markets.count
+        if section == 2 { // See all section
+            return 1
         }
 
-        return 1
+        // Section 1
+        if match.markets.isNotEmpty {
+            // all the markets except thee first one
+            // the first market appears in the match cell
+            return match.markets.count - 1
+        }
+
+        return 0
     }
 
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
 
-        if indexPath.section == 1 {
-            guard
-                let cell = collectionView.dequeueCellType(SeeMoreMarketsCollectionViewCell.self, indexPath: indexPath)
-            else {
-                fatalError()
-            }
-            if let match = self.match {
-                let marketsRawString = localized("number_of_markets")
-                let singularMarketRawString = localized("number_of_market_singular")
-                var marketString = ""
-                if match.numberTotalOfMarkets > 1 {
-                    marketString = marketsRawString.replacingOccurrences(of: "{num_markets}", with: "\(match.numberTotalOfMarkets)")
-                }
-                else {
-                    marketString = singularMarketRawString.replacingOccurrences(of: "{num_markets}", with: "\(match.numberTotalOfMarkets)")
-                }
-
-                cell.configureWithSubtitleString(marketString)
-
-                if match.numberTotalOfMarkets == 0 {
-                    cell.hideSubtitle()
-                }
-            }
-            cell.tappedAction = { [weak self] in
-                self?.tappedMatchLine()
-            }
+        guard
+            let match = self.match
+        else {
+            let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "UICollectionViewCell", for: indexPath)
+            cell.backgroundView?.backgroundColor = UIColor.App.backgroundCards
+            cell.backgroundColor = UIColor.App.backgroundCards
+            cell.layer.cornerRadius = 9
             return cell
         }
 
-        if indexPath.row == 0 {
-
+        switch indexPath.section {
+        case 0:
             guard
                 let cell = collectionView.dequeueCellType(MatchWidgetCollectionViewCell.self, indexPath: indexPath)
-
             else {
                 fatalError()
             }
-            if let match = self.match {
 
-                let cellViewModel = MatchWidgetCellViewModel(match: match)
-                cell.configure(withViewModel: cellViewModel)
+            let cellViewModel = MatchWidgetCellViewModel(match: match)
+            cell.configure(withViewModel: cellViewModel)
 
-                cell.tappedMatchWidgetAction = { [weak self] match in
-                    self?.tappedMatchLine()
-                }
+            cell.tappedMatchWidgetAction = { [weak self] _ in
+                self?.tappedMatchLine()
+            }
 
-                cell.didLongPressOdd = { [weak self] bettingTicket in
-                    self?.didLongPressOdd?(bettingTicket)
-                }
-
+            cell.didLongPressOdd = { [weak self] bettingTicket in
+                self?.didLongPressOdd?(bettingTicket)
             }
             cell.shouldShowCountryFlag(self.shouldShowCountryFlag)
 
             return cell
-        }
-        else {
-            if let match = self.match, let market = match.markets[safe: indexPath.row] {
+        case 1:
+            if match.markets.count > 1, let market = match.markets[safe: indexPath.row + 1] {
 
                 let teamsText = "\(match.homeParticipant.name) - \(match.awayParticipant.name)"
                 let countryIso = match.venue?.isoCode ?? ""
@@ -460,9 +447,7 @@ extension MatchLineTableViewCell: UICollectionViewDelegate, UICollectionViewData
                 if market.outcomes.count == 2 {
                     if let cell = collectionView.dequeueCellType(OddDoubleCollectionViewCell.self, indexPath: indexPath) {
                         cell.matchStatsViewModel = self.matchStatsViewModel
-                        cell.setupWithMarket(market, match: match,
-                                             teamsText: teamsText,
-                                             countryIso: countryIso)
+                        cell.setupWithMarket(market, match: match, teamsText: teamsText, countryIso: countryIso)
                         cell.tappedMatchWidgetAction = { [weak self] in
                             self?.tappedMatchLine()
                         }
@@ -477,9 +462,7 @@ extension MatchLineTableViewCell: UICollectionViewDelegate, UICollectionViewData
                 else {
                     if let cell = collectionView.dequeueCellType(OddTripleCollectionViewCell.self, indexPath: indexPath) {
                         cell.matchStatsViewModel = self.matchStatsViewModel
-                        cell.setupWithMarket(market, match: match,
-                                             teamsText: teamsText,
-                                             countryIso: countryIso)
+                        cell.setupWithMarket(market, match: match, teamsText: teamsText, countryIso: countryIso)
                         cell.tappedMatchWidgetAction = {  [weak self] in
                             self?.tappedMatchLine()
                         }
@@ -487,11 +470,41 @@ extension MatchLineTableViewCell: UICollectionViewDelegate, UICollectionViewData
                         cell.didLongPressOdd = { [weak self] bettingTicket in
                             self?.didLongPressOdd?(bettingTicket)
                         }
-                        
+
                         return cell
                     }
                 }
             }
+        case 2:
+            guard
+                let cell = collectionView.dequeueCellType(SeeMoreMarketsCollectionViewCell.self, indexPath: indexPath)
+            else {
+                fatalError()
+            }
+
+            let marketsRawString = localized("number_of_markets")
+            let singularMarketRawString = localized("number_of_market_singular")
+            var marketString = ""
+            if match.numberTotalOfMarkets > 1 {
+                marketString = marketsRawString.replacingOccurrences(of: "{num_markets}", with: "\(match.numberTotalOfMarkets)")
+            }
+            else {
+                marketString = singularMarketRawString.replacingOccurrences(of: "{num_markets}", with: "\(match.numberTotalOfMarkets)")
+            }
+
+            cell.configureWithSubtitleString(marketString)
+
+            if match.numberTotalOfMarkets == 0 {
+                cell.hideSubtitle()
+            }
+
+            cell.tappedAction = { [weak self] in
+                self?.tappedMatchLine()
+            }
+            return cell
+
+        default:
+            ()
         }
 
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "UICollectionViewCell", for: indexPath)
@@ -499,29 +512,49 @@ extension MatchLineTableViewCell: UICollectionViewDelegate, UICollectionViewData
         cell.backgroundColor = UIColor.App.backgroundCards
         cell.layer.cornerRadius = 9
         return cell
+
     }
 
-    func collectionView(_ collectionView: UICollectionView,
-                        didSelectItemAt indexPath: IndexPath) {
+    func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
 
     }
 
     func collectionView(_ collectionView: UICollectionView,
                         layout collectionViewLayout: UICollectionViewLayout,
                         minimumInteritemSpacingForSectionAt section: Int) -> CGFloat {
-        return 16
+        
+        if section == 1, (self.match?.markets.count ?? 0) <= 1 {
+            return 0
+        }
+        else {
+            return 16
+        }
     }
 
     func collectionView(_ collectionView: UICollectionView,
                         layout collectionViewLayout: UICollectionViewLayout,
                         minimumLineSpacingForSectionAt section: Int) -> CGFloat {
-        return 16
+
+        if section == 1, (self.match?.markets.count ?? 0) <= 1 {
+            return 0
+        }
+        else {
+            return 16
+        }
     }
 
     func collectionView(_ collectionView: UICollectionView,
                         layout collectionViewLayout: UICollectionViewLayout,
                         insetForSectionAt section: Int) -> UIEdgeInsets {
-        return UIEdgeInsets(top: 0, left: 8, bottom: 0, right: 8)
+
+        if section == 1, (self.match?.markets.count ?? 0) <= 1 {
+            // We just need insets if we have content
+            return UIEdgeInsets(top: 0, left: 0, bottom: 0, right: 0)
+        }
+        else {
+            return UIEdgeInsets(top: 0, left: 8, bottom: 0, right: 8)
+        }
+
     }
 
     func collectionView(_ collectionView: UICollectionView,
@@ -530,7 +563,7 @@ extension MatchLineTableViewCell: UICollectionViewDelegate, UICollectionViewData
 
         let height = StyleHelper.cardsStyleHeight()
 
-        if indexPath.section == 1 {
+        if indexPath.section == 2 { // see all section
             return CGSize(width: 99, height: height)
         }
         else {

@@ -12,11 +12,35 @@ import ServicesProvider
 
 class PreLiveEventsViewModel: NSObject {
 
-    var dataChangedPublisher = PassthroughSubject<Void, Never>.init()
+    var dataChangedPublisher: AnyPublisher<Void, Never> {
+        let activeDataSourcesChangedPublisher = Publishers.CombineLatest4(self.popularMatchesDataSource.dataChangedPublisher,
+                                                                         self.todayMatchesDataSource.dataChangedPublisher,
+                                                                         self.topCompetitionsDataSource.dataChangedPublisher,
+                                                                        self.competitionsDataSource.dataChangedPublisher)
+        .map({ popularDataChangedPublisher, todayDataChangedPublisher, topCompetitionsDataChangedPublisher, competitionsDataChangedPublisher -> Void? in
+            switch self.matchListType {
+            case .popular: return popularDataChangedPublisher
+            case .upcoming: return todayDataChangedPublisher
+            case .topCompetitions: return topCompetitionsDataChangedPublisher
+            case .competitions: return competitionsDataChangedPublisher
+            }
+        })
+        .compactMap({ $0 })
+
+        let changedArrayPublisher = self.matchListTypePublisher
+            .removeDuplicates()
+            .map { _ in }
+
+        return Publishers.Merge(activeDataSourcesChangedPublisher, changedArrayPublisher)
+            .dropFirst()
+            .eraseToAnyPublisher()
+    }
 
     var competitionGroupsPublisher: CurrentValueSubject<[CompetitionGroup], Never> = .init([])
 
-    var matchListTypePublisher: CurrentValueSubject<MatchListType, Never> = .init(.popular)
+    //
+    // MatchListType
+    //
     enum MatchListType: String, Equatable {
         case popular
         case upcoming
@@ -24,6 +48,24 @@ class PreLiveEventsViewModel: NSObject {
         case competitions
     }
 
+    var matchListTypePublisher: CurrentValueSubject<MatchListType, Never> = .init(.popular)
+
+    var matchListType: MatchListType {
+        return self.matchListTypePublisher.value
+    }
+
+    var activeMatchListTypes: [MatchListType] {
+        if self.hasTopCompetitions {
+            return [.popular, .upcoming, .topCompetitions, .competitions]
+        }
+        else {
+            return [.popular, .upcoming, .competitions]
+        }
+    }
+    // ----
+
+    //
+    //
     var screenStatePublisher: CurrentValueSubject<ScreenState, Never> = .init(.noEmptyNoFilter)
     enum ScreenState: String, Equatable {
         case emptyAndFilter
@@ -34,48 +76,84 @@ class PreLiveEventsViewModel: NSObject {
 
     //
     //
-    var isLoading: AnyPublisher<Bool, Never>
-    var didChangeSport = false
+    var isLoading: AnyPublisher<Bool, Never> {
 
-    var isLoadingEvents: CurrentValueSubject<Bool, Never> = .init(false)
+        let loadingsPublisher = Publishers.CombineLatest4(self.popularMatchesDataSource.isLoadingInitialDataPublisher,
+                                                          self.todayMatchesDataSource.isLoadingInitialDataPublisher,
+                                                          self.topCompetitionsDataSource.isLoadingInitialDataPublisher,
+                                                          self.competitionsDataSource.isLoadingInitialDataPublisher)
+
+        return Publishers.CombineLatest(self.matchListTypePublisher, loadingsPublisher)
+            .map({ matchListType, combinedLoadings in
+                let (isLoadingPopular, isLoadingToday, isLoadingTopCompetitions, isLoadingCompetitions) = combinedLoadings
+                switch matchListType {
+                case .popular: return isLoadingPopular
+                case .upcoming: return isLoadingToday
+                case .topCompetitions: return isLoadingTopCompetitions
+                case .competitions: return isLoadingCompetitions
+                }
+            })
+            .eraseToAnyPublisher()
+    }
+
+    //
+    // Selected Sport
+    //
+    var selectedSportPublisher: AnyPublisher<Sport, Never> {
+        return self.selectedSportSubject
+            .eraseToAnyPublisher()
+    }
+    var selectedSportSubject: CurrentValueSubject<Sport, Never>
 
     var selectedSport: Sport {
-        willSet {
-            if newValue.id != self.selectedSport.id {
-                didChangeSport = true
+        return self.selectedSportSubject.value
+    }
+
+    var shouldShowCompetitionsIndexBarPublisher: AnyPublisher<Bool, Never> {
+        Publishers.CombineLatest3(self.matchListTypePublisher,
+                                  self.competitionsDataSource.competitions,
+                                  self.topCompetitionsDataSource.competitions)
+        .map { matchListType, competitions, topCompetitions in
+            switch matchListType {
+            case .competitions:
+                return competitions.isNotEmpty
+            case.topCompetitions:
+                return topCompetitions.isNotEmpty
+            case .popular, .upcoming:
+                return false
             }
         }
-        didSet {
+        .eraseToAnyPublisher()
+    }
 
-            if didChangeSport {
-                if self.matchListTypePublisher.value != .competitions {
-                    self.resetScrollPositionAction?()
-                }
-                self.homeFilterOptions = nil
-            }
-
-            self.selectedCurrentSportId = selectedSport.name.lowercased().replacingOccurrences(of: " ", with: "-")
-            self.fetchTopCompetitions()
-            self.fetchData()
-        }
+    // Proxy from topCompetitionsDataSource
+    var hasTopCompetitions: Bool = false
+    var hasTopCompetitionsPublisher: AnyPublisher<Bool, Never> {
+        return self.topCompetitionsDataSource.hasTopCompetitionsPublisher.eraseToAnyPublisher()
     }
 
     var homeFilterOptions: HomeFilterOptions? {
         didSet {
-            if self.matchListTypePublisher.value == .upcoming {
-                if let lowerTimeRange = homeFilterOptions?.lowerBoundTimeRange, let highTimeRange = homeFilterOptions?.highBoundTimeRange {
-                    var timeRange = "\(Int(lowerTimeRange))-\(Int(highTimeRange))"
-
-                    if highTimeRange == 6 {
-                        timeRange = "\(Int(lowerTimeRange))-365"
-                    }
-                    self.fetchTodayMatches(withFilter: true, timeRange: timeRange)
-                }
-            }
-            else {
-                self.updateContentList()
-            }
-
+            self.popularMatchesDataSource.applyFilters(filtersOptions: self.homeFilterOptions)
+            self.todayMatchesDataSource.applyFilters(filtersOptions: self.homeFilterOptions)
+//
+//            if self.matchListType == .upcoming {
+//                if let lowerTimeRange = homeFilterOptions?.lowerBoundTimeRange, var highTimeRange = homeFilterOptions?.highBoundTimeRange {
+//
+//                    if highTimeRange == 6 {
+//                        // The value 6 in the slider is presented as "All" days to the user
+//                        // so we convert it to 365 days, to get all the events of the next year
+//                        highTimeRange = 365
+//                    }
+//
+//                    let daysRange = TodayMatchesDataSource.DaysRange(startDay: lowerTimeRange, endDay: highTimeRange)
+//                    self.todayMatchesDataSource.fetchData(forSport: self.selectedSport, daysRange: daysRange)
+//                }
+//            }
+//            else {
+//                // TODO: filters
+//                // self.updateContentList()
+//            }
         }
     }
 
@@ -86,109 +164,59 @@ class PreLiveEventsViewModel: NSObject {
     var resetScrollPositionAction: (() -> Void)?
     var shouldShowSearch: (() -> Void)?
 
-    var selectedCompetitionsInfoPublisher: CurrentValueSubject<[String: SportCompetitionInfo], Never> = .init([:])
-    var expectedCompetitionsPublisher: CurrentValueSubject<Int, Never> = .init(0)
-
-    var competitionsMatchesSubscriptions: CurrentValueSubject<[String: SportCompetitionInfo], Never> = .init([:])
-
     var sportRegionsPublisher: CurrentValueSubject<[SportRegion], Never> = .init([])
     var regionCompetitionsPublisher: CurrentValueSubject<[String: [SportCompetition]], Never> = .init([:])
-
-    var selectedTopCompetitionsInfoPublisher: CurrentValueSubject<[String: SportCompetitionInfo], Never> = .init([:])
-    var expectedTopCompetitionsPublisher: CurrentValueSubject<Int, Never> = .init(0)
-
-    var competitionsWithMarketGroups: Int?
-    var topCompetitionsMatchesSubscriptions: CurrentValueSubject<[String: SportCompetitionInfo], Never> = .init([:])
 
     //
     // Private vars
     //
     private var userFavoriteMatches: [Match] = []
 
-    private var popularMatches: [Match] = []
-    private var popularOutrightCompetitions: [Competition]?
-
-    private var todayMatches: [Match] = []
-    private var todayOutrightCompetitions: [Competition]?
-
+    //
+    //
     var mainMarkets: OrderedDictionary<String, Market> = [:]
 
-    private var competitionsMatches: [Match] = []
-    private var competitions: [Competition] = []
-    private var filteredOutrightCompetitions: [Competition]?
-
-    private var topCompetitionsMatches: [Match] = []
-    private var topCompetitions: [Competition] = []
-    private var filteredOutrightTopCompetitions: [Competition]?
-
-    private var favoriteMatches: [Match] = []
-    private var favoriteCompetitions: [Competition] = []
-
-    private var popularMatchesDataSource = PopularMatchesDataSource()
-    private var todayMatchesDataSource = TodayMatchesDataSource()
+    private var popularMatchesDataSource: PopularMatchesDataSource
+    private var todayMatchesDataSource: TodayMatchesDataSource
     private var competitionsDataSource = CompetitionsDataSource()
-    private var topCompetitionsDataSource = TopCompetitionsDataSource()
+    private var topCompetitionsDataSource: TopCompetitionsDataSource
 
     private var cachedMatchStatsViewModels: [String: MatchStatsViewModel] = [:]
-
-    private var isLoadingPopularList: CurrentValueSubject<Bool, Never> = .init(true)
-    private var isLoadingTodayList: CurrentValueSubject<Bool, Never> = .init(true)
 
     private var isLoadingCompetitionMatches: CurrentValueSubject<Bool, Never> = .init(false)
     var isLoadingCompetitionGroups: CurrentValueSubject<Bool, Never> = .init(true)
     private var isLoadingCompetitionsData: AnyPublisher<Bool, Never>
     private var lastCompetitionsMatchesRequested: [String] = []
 
-    private var popularMatchesPublisher: AnyCancellable?
-    private var popularTournamentsPublisher: AnyCancellable?
-    private var todayMatchesPublisher: AnyCancellable?
     private var competitionsMatchesPublisher: AnyCancellable?
-
-    private var popularMatchesHasNextPage = true
-    private var todayMatchesHasNextPage = true
 
     private var cancellables = Set<AnyCancellable>()
 
-    private var popularSubscription: ServicesProvider.Subscription?
-    private var todaySubscription: ServicesProvider.Subscription?
     private var competitionsSubscription: ServicesProvider.Subscription?
 
-    var topCompetitionsList = [String: [String]]()
-    var hasTopCompetitions: CurrentValueSubject<Bool, Never> = .init(false)
-    var selectedCurrentSportId: String
-
     init(selectedSport: Sport) {
-        self.selectedSport = selectedSport
-        self.selectedCurrentSportId = selectedSport.name.lowercased().replacingOccurrences(of: " ", with: "-")
+
+        self.selectedSportSubject = .init(selectedSport)
+
+        self.popularMatchesDataSource = PopularMatchesDataSource(sport: selectedSport)
+        self.todayMatchesDataSource = TodayMatchesDataSource(sport: selectedSport)
+        self.topCompetitionsDataSource = TopCompetitionsDataSource(sport: selectedSport)
 
         self.isLoadingCompetitionsData = Publishers.CombineLatest(isLoadingCompetitionMatches, isLoadingCompetitionGroups)
             .map({ return $0 || $1 })
             .eraseToAnyPublisher()
 
-        self.isLoading = Publishers.CombineLatest4(matchListTypePublisher, isLoadingTodayList, isLoadingPopularList, isLoadingCompetitionsData)
-            .map({ matchListType, isLoadingTodayList, isLoadingPopularList, isLoadingCompetitionsData in
-                switch matchListType {
-                case .popular: return isLoadingPopularList
-                case .upcoming: return isLoadingTodayList
-                case .topCompetitions: return isLoadingCompetitionsData
-                case .competitions: return isLoadingCompetitionsData
-                }
-            })
-            .eraseToAnyPublisher()
-
         super.init()
 
-        self.setupCallbacks()
+        self.setupDataSourcesCallbacks()
         self.setupPublishers()
-
-        self.fetchTopCompetitions()
     }
 
     deinit {
         print("ServerProvider.Subscription.Debug PreLiveEventsViewModel deinit")
     }
 
-    func setupCallbacks() {
+    func setupDataSourcesCallbacks() {
 
         // Match Stats ViewModel for Match
         self.popularMatchesDataSource.matchStatsViewModelForMatch = { [weak self] match in
@@ -199,22 +227,6 @@ class PreLiveEventsViewModel: NSObject {
         }
         self.competitionsDataSource.matchStatsViewModelForMatch = { [weak self] match in
             return self?.matchStatsViewModel(forMatch: match)
-        }
-
-        // NextPage
-        //
-        self.popularMatchesDataSource.canRequestNextPageAction = { [weak self] in
-            return self?.popularMatchesHasNextPage ?? false
-        }
-        self.todayMatchesDataSource.canRequestNextPageAction = { [weak self] in
-            return self?.todayMatchesHasNextPage ?? false
-        }
-
-        self.popularMatchesDataSource.requestNextPageAction = { [weak self] in
-            self?.fetchPopularMatchesNextPage()
-        }
-        self.todayMatchesDataSource.requestNextPageAction = { [weak self] in
-            self?.fetchTodayMatchesNextPage()
         }
 
         // Did Select a Match
@@ -248,7 +260,7 @@ class PreLiveEventsViewModel: NSObject {
             self?.didSelectCompetitionAction?(competition)
         }
 
-        //Did select fav match
+        // Did select fav match
         //
         self.competitionsDataSource.didTapFavoriteMatchAction = { [weak self] match in
             self?.didTapFavoriteMatchAction?(match)
@@ -285,177 +297,168 @@ class PreLiveEventsViewModel: NSObject {
 
     func setupPublishers() {
 
+        self.topCompetitionsDataSource.hasTopCompetitionsPublisher
+            .sink { [weak self] hasTopCompetitions in
+                self?.hasTopCompetitions = hasTopCompetitions
+            }
+            .store(in: &self.cancellables)
+
+        self.matchListTypePublisher
+            .removeDuplicates()
+            .sink { [weak self] newMatchListType in
+
+                guard let self = self else { return }
+
+                switch newMatchListType {
+                case .popular:
+                    self.popularMatchesDataSource.fetchData(forSport: self.selectedSport)
+                case .upcoming:
+                    self.todayMatchesDataSource.fetchData(forSport: self.selectedSport)
+                case .topCompetitions:
+                    self.topCompetitionsDataSource.fetchData(forSport: self.selectedSport)
+                case .competitions:
+                    self.fetchCompetitionsMatchesWithIds(self.lastCompetitionsMatchesRequested)
+                }
+
+            }
+            .store(in: &self.cancellables)
+
+//        Empty screens
+//        Publishers.CombineLatest(self.isLoading, self.dataChangedPublisher)
+//            .filter({ isLoading, _ in
+//                return !isLoading
+//            })
+//            .debounce(for: .milliseconds(200), scheduler: DispatchQueue.main)
+//            .sink { [weak self] _, _  in
+//
+//                guard let self = self else { return }
+//
+//                let numberOfFilters = self.homeFilterOptions?.countFilters ?? 0
+//                if numberOfFilters > 0 {
+//                    if self.hasContentForSelectedListType() {
+//                        self.screenStatePublisher.send(.noEmptyAndFilter)
+//                    }
+//                    else {
+//                        // No Content
+//                        self.screenStatePublisher.send(.emptyAndFilter)
+//                    }
+//                }
+//                else {
+//                    if self.hasContentForSelectedListType() {
+//                        self.screenStatePublisher.send(.noEmptyNoFilter)
+//                    }
+//                    else {
+//                        // No Content
+//                        self.screenStatePublisher.send(.emptyNoFilter)
+//                    }
+//                }
+//
+//            }
+//            .store(in: &self.cancellables)
+
+//        self.dataChangedPublisher
+//            .sink { [weak self] in
+//                guard let self = self else { return }
+//
+//                let numberOfFilters = self.homeFilterOptions?.countFilters ?? 0
+//                if numberOfFilters > 0 {
+//                    if self.hasContentForSelectedListType() {
+//                        self.screenStatePublisher.send(.noEmptyAndFilter)
+//                    }
+//                    else {
+//                        // No Content
+//                        self.screenStatePublisher.send(.emptyAndFilter)
+//                    }
+//                }
+//                else {
+//                    if self.hasContentForSelectedListType() {
+//                        self.screenStatePublisher.send(.noEmptyNoFilter)
+//                    }
+//                    else {
+//                        // No Content
+//                        self.screenStatePublisher.send(.emptyNoFilter)
+//                    }
+//                }
+//
+//            }
+//            .store(in: &self.cancellables)
+
+        //
+        self.selectedSportPublisher
+            .removeDuplicates()
+            .sink { [weak self] selectedSport in
+
+                // TODO: this resetScrollPositionAction should be on the VC maybe
+                if self?.matchListType != .competitions {
+                    self?.resetScrollPositionAction?()
+                }
+
+                self?.lastCompetitionsMatchesRequested = []
+                self?.fetchCompetitionsFilters()
+
+                // Send the new selected sport to topCompetitionsDataSource to check if
+                // there are any top competitions for that sport
+                self?.topCompetitionsDataSource.setSport(selectedSport)
+
+                self?.homeFilterOptions = nil
+                self?.fetchData()
+            }
+            .store(in: &self.cancellables)
+
+        //
         Publishers.CombineLatest(self.sportRegionsPublisher, self.regionCompetitionsPublisher)
             .receive(on: DispatchQueue.main)
             .sink(receiveValue: { [weak self] sportRegions, regionCompetitions in
-
                 if sportRegions.isNotEmpty && regionCompetitions.isNotEmpty {
                     self?.setupCompetitionGroups()
                 }
             })
             .store(in: &cancellables)
 
-        Publishers.CombineLatest(self.expectedCompetitionsPublisher, self.selectedCompetitionsInfoPublisher)
-            .receive(on: DispatchQueue.main)
-            .sink(receiveValue: { [weak self] expectedCompetitions, selectedCompetitionsInfo in
-                if selectedCompetitionsInfo.count == expectedCompetitions {
-                    self?.processCompetitionsInfo()
-                }
-            })
-            .store(in: &cancellables)
-
-        Publishers.CombineLatest(self.expectedTopCompetitionsPublisher, self.selectedTopCompetitionsInfoPublisher)
-            .receive(on: DispatchQueue.main)
-            .sink(receiveValue: { [weak self] expectedCompetitions, selectedCompetitionsInfo in
-
-                if selectedCompetitionsInfo.count == expectedCompetitions {
-
-                    self?.processTopCompetitionsInfo()
-                }
-
-            })
-            .store(in: &cancellables)
-
-        self.competitionsMatchesSubscriptions
-            .receive(on: DispatchQueue.main)
-            .sink(receiveValue: { [weak self] competitionMatchesSubscriptions in
-                guard let self = self else { return }
-
-                if competitionMatchesSubscriptions.count == self.expectedCompetitionsPublisher.value {
-                    self.isLoadingCompetitionMatches.send(false)
-                    self.isLoadingEvents.send(false)
-
-                    if self.matchListTypePublisher.value == .competitions {
-                        self.updateContentList()
-                    }
-                }
-            })
-            .store(in: &cancellables)
-
-        self.topCompetitionsMatchesSubscriptions
-            .receive(on: DispatchQueue.main)
-            .sink(receiveValue: { [weak self] competitionMatchesSubscriptions in
-                guard let self = self else { return }
-
-                if let competitionsWithMarketGroups = self.competitionsWithMarketGroups,
-                   competitionMatchesSubscriptions.count == competitionsWithMarketGroups {
-                    self.isLoadingCompetitionMatches.send(false)
-                    self.isLoadingEvents.send(false)
-
-                    if self.matchListTypePublisher.value == .topCompetitions {
-                        self.updateContentList()
-                    }
-                }
-
-            })
-            .store(in: &cancellables)
+//
+//        Publishers.CombineLatest(self.expectedCompetitionsPublisher, self.selectedCompetitionsInfoPublisher)
+//            .receive(on: DispatchQueue.main)
+//            .sink(receiveValue: { [weak self] expectedCompetitions, selectedCompetitionsInfo in
+//                if selectedCompetitionsInfo.count == expectedCompetitions {
+//                    self?.processCompetitionsInfo()
+//                }
+//            })
+//            .store(in: &cancellables)
+//
+//        self.competitionsMatchesSubscriptions
+//            .receive(on: DispatchQueue.main)
+//            .sink(receiveValue: { [weak self] competitionMatchesSubscriptions in
+//                guard let self = self else { return }
+//
+//                if competitionMatchesSubscriptions.count == self.expectedCompetitionsPublisher.value {
+//                    self.isLoadingCompetitionMatches.send(false)
+//
+//                    if self.matchListType == .competitions {
+//                        self.updateContentList()
+//                    }
+//                }
+//            })
+//            .store(in: &cancellables)
 
     }
 
-    func fetchTopCompetitions() {
-
-        // Get Top Competitions
-        Env.servicesProvider.getTopCompetitions()
-            .receive(on: DispatchQueue.main)
-            .sink(receiveCompletion: { [weak self] completion in
-                switch completion {
-                case .finished:
-                    ()
-                case .failure(let error):
-                    print("TOP COMPETITIONS ERROR: \(error)")
-
-                }
-            }, receiveValue: { [weak self] topCompetitions in
-                self?.processTopCompetitions(topCompetitions: topCompetitions)
-
-            })
-            .store(in: &cancellables)
+    func selectSport(newSport sport: Sport) {
+        self.selectedSportSubject.send(sport)
     }
 
-    func processTopCompetitions(topCompetitions: [TopCompetition]) {
-
-        self.topCompetitionsList = [:]
-
-        let currentSportName = self.selectedCurrentSportId
-
-        for topCompetition in topCompetitions {
-
-            let competitionComponents = topCompetition.competitionId.components(separatedBy: "/")
-
-            let competitionName = competitionComponents[competitionComponents.count - 2].lowercased()
-
-            if let competitionId = competitionComponents.last {
-
-                if let topCompetition = self.topCompetitionsList[competitionName] {
-                    if !topCompetition.contains(where: {
-                        $0 == competitionId
-                    }) {
-                        self.topCompetitionsList[competitionName]?.append(competitionId)
-                    }
-
-                }
-                else {
-                    self.topCompetitionsList[competitionName] = [competitionId]
-                }
-            }
-
-        }
-
-        if topCompetitionsList.contains(where: {
-            $0.key == currentSportName
-        }) {
-            self.hasTopCompetitions.send(true)
-        }
-        else {
-            self.hasTopCompetitions.send(false)
-        }
-
-    }
-
-    func fetchData() {
-
-        if self.didChangeSport {
-            self.clearOldSportData()
-            self.didChangeSport = false
-        }
-
-        self.popularMatchesHasNextPage = true
-        self.todayMatchesHasNextPage = true
-
-        switch self.matchListTypePublisher.value {
+    func fetchData(forceRefresh: Bool = false) {
+        switch self.matchListType {
         case .popular:
-            self.fetchPopularMatches()
+            self.popularMatchesDataSource.fetchData(forSport: self.selectedSport, forceRefresh: forceRefresh)
         case .upcoming:
-            self.fetchTodayMatches()
+            self.todayMatchesDataSource.fetchData(forSport: self.selectedSport, forceRefresh: forceRefresh)
         case .topCompetitions:
-            self.fetchTopCompetitionsMatches()
-
+            self.topCompetitionsDataSource.fetchData(forSport: self.selectedSport, forceRefresh: forceRefresh)
         case .competitions:
-            self.fetchCompetitionsFilters()
-            if self.lastCompetitionsMatchesRequested.isNotEmpty {
-                self.fetchCompetitionsMatchesWithIds(lastCompetitionsMatchesRequested)
-            }
+            self.fetchCompetitionsMatchesWithIds(lastCompetitionsMatchesRequested, forceRefresh: forceRefresh)
         }
     }
 
-    private func clearOldSportData() {
-        self.competitions = []
-        self.competitionsDataSource.competitions = []
-
-        self.lastCompetitionsMatchesRequested = []
-
-        self.popularMatchesDataSource.outrightCompetitions = nil
-        self.popularOutrightCompetitions = nil
-        self.popularMatches = []
-
-        self.todayMatchesDataSource.todayMatches = []
-        self.todayMatches = []
-        self.todayOutrightCompetitions = nil
-        self.todayMatchesDataSource.outrightCompetitions = nil
-
-        self.dataChangedPublisher.send()
-    }
-    
     func markAsFavorite(match: Match) {
         
         var isFavorite = false
@@ -489,57 +492,6 @@ class PreLiveEventsViewModel: NSObject {
     
     func setMatchListType(_ matchListType: MatchListType) {
         self.matchListTypePublisher.send(matchListType)
-        switch matchListType {
-        case .popular:
-            self.fetchPopularMatches()
-        case .upcoming:
-            self.fetchTodayMatches()
-        case .topCompetitions:
-            self.fetchTopCompetitionsMatches()
-        case .competitions:
-            self.fetchCompetitionsFilters()
-            if let matches = self.competitionsDataSource.competitions.first?.matches {
-                self.setMainMarkets(matches: matches)
-            }
-        }
-    }
-
-    private func updateContentList() {
-
-        self.popularMatchesDataSource.matches = filterPopularMatches(with: self.homeFilterOptions, matches: self.popularMatches)
-        self.popularMatchesDataSource.outrightCompetitions = self.popularOutrightCompetitions
-
-        //
-        self.todayMatchesDataSource.todayMatches = filterTodayMatches(with: self.homeFilterOptions, matches: self.todayMatches)
-
-        self.todayMatchesDataSource.outrightCompetitions = self.todayOutrightCompetitions
-
-        self.topCompetitionsDataSource.competitions = filterCompetitionMatches(with: self.homeFilterOptions, competitions: self.topCompetitions)
-
-        //
-        self.competitionsDataSource.competitions = filterCompetitionMatches(with: self.homeFilterOptions, competitions: self.competitions)
-
-        //
-        //
-        let numberOfFilters = self.homeFilterOptions?.countFilters ?? 0
-        if numberOfFilters > 0 {
-            if !self.hasContentForSelectedListType() {
-                self.screenStatePublisher.send(.emptyAndFilter)
-            }
-            else {
-                self.screenStatePublisher.send(.noEmptyAndFilter)
-            }
-        }
-        else {
-            if !self.hasContentForSelectedListType() {
-                self.screenStatePublisher.send(.emptyNoFilter)
-            }
-            else {
-                self.screenStatePublisher.send(.noEmptyNoFilter)
-            }
-        }
-
-        self.dataChangedPublisher.send()
     }
 
     func matchStatsViewModel(forMatch match: Match) -> MatchStatsViewModel {
@@ -554,251 +506,14 @@ class PreLiveEventsViewModel: NSObject {
     }
 
     //
-    // MARK: - Fetches
-    //
-    private func fetchPopularMatchesNextPage() {
-        let sportType = ServiceProviderModelMapper.serviceProviderSportType(fromSport: self.selectedSport)
-        Env.servicesProvider.requestPreLiveMatchesNextPage(forSportType: sportType, sortType: .popular)
-            .sink { completion in
-                print("requestPreLive fetchPopularMatchesNextPage completion \(completion)")
-            } receiveValue: { [weak self] hasNextPage in
-                self?.popularMatchesHasNextPage = hasNextPage
-                if  !hasNextPage {
-                    self?.updateContentList()
-                }
-            }
-            .store(in: &cancellables)
-    }
-
-    private func fetchPopularMatches() {
-
-        // self.isLoadingPopularList.send(true)
-        self.isLoadingEvents.send(true)
-
-        let sportType = ServiceProviderModelMapper.serviceProviderSportType(fromSport: self.selectedSport)
-
-        self.popularMatchesPublisher?.cancel()
-        self.popularMatchesPublisher = Env.servicesProvider.subscribePreLiveMatches(forSportType: sportType, sortType: .popular)
-            .sink(receiveCompletion: { [weak self] completion in
-                print("Prelive subscribePopularMatches completed \(completion)")
-                switch completion {
-                case .finished:
-                    ()
-                case .failure(let error):
-                    print("Prelive subscribePopularMatches error: \(error)")
-                    self?.popularMatches = []
-                    self?.isLoadingPopularList.send(false)
-                    self?.isLoadingEvents.send(false)
-                    self?.updateContentList()
-                }
-            }, receiveValue: { [weak self] (subscribableContent: SubscribableContent<[EventsGroup]>) in
-                switch subscribableContent {
-                case .connected(let subscription):
-                    self?.popularSubscription = subscription
-                case .contentUpdate(let eventsGroups):
-                    guard let self = self else { return }
-                    let splittedEventGroups = self.splitEventsGroups(eventsGroups)
-
-                    self.popularOutrightCompetitions = ServiceProviderModelMapper.competitions(fromEventsGroups: splittedEventGroups.competitionsEventGroups)
-
-                    let popularMatches = ServiceProviderModelMapper.matches(fromEventsGroups: splittedEventGroups.matchesEventGroups)
-                    self.popularMatches = popularMatches
-                    self.setMainMarkets(matches: popularMatches)
-
-                    self.updateContentList()
-                    self.isLoadingPopularList.send(false)
-                    self.isLoadingEvents.send(false)
-                case .disconnected:
-                    self?.popularMatches = []
-                    self?.updateContentList()
-                }
-            })
-    }
-
-    //
-    private func fetchTodayMatchesNextPage() {
-        var timeRange = ""
-
-        if let lowerTimeRange = homeFilterOptions?.lowerBoundTimeRange, let highTimeRange = homeFilterOptions?.highBoundTimeRange {
-            timeRange = "\(Int(lowerTimeRange))-\(Int(highTimeRange))"
-        }
-
-        let datesFilter = Env.servicesProvider.getDatesFilter(timeRange: timeRange)
-
-        let sportType = ServiceProviderModelMapper.serviceProviderSportType(fromSport: self.selectedSport)
-
-        Env.servicesProvider.requestPreLiveMatchesNextPage(forSportType: sportType, initialDate: datesFilter[safe: 0], endDate: datesFilter[safe: 1], sortType: .date)
-            .sink { completion in
-                print("requestPreLiveMatchesNextPage completion \(completion)")
-            } receiveValue: { [weak self] hasNextPage in
-                self?.todayMatchesHasNextPage = hasNextPage
-                if !hasNextPage {
-                    self?.updateContentList()
-                }
-            }
-            .store(in: &cancellables)
-    }
-
-    private func fetchTodayMatches(withFilter: Bool = false, timeRange: String = "") {
-
-        self.isLoadingEvents.send(true)
-
-        let selectedSportType = ServiceProviderModelMapper.serviceProviderSportType(fromSport: self.selectedSport)
-        let datesFilter = Env.servicesProvider.getDatesFilter(timeRange: timeRange)
-
-        self.todayMatchesPublisher?.cancel()
-        self.todayMatchesPublisher = Env.servicesProvider.subscribePreLiveMatches(forSportType: selectedSportType,
-                                                                                  initialDate: datesFilter[safe: 0],
-                                                                                  endDate: datesFilter[safe: 1],
-                                                                                  sortType: .date)
-            .sink(receiveCompletion: { [weak self] completion in
-                switch completion {
-                case .finished:
-                    ()
-                case .failure(let error):
-                    self?.todayMatches = []
-                    self?.isLoadingTodayList.send(false)
-                    self?.isLoadingEvents.send(false)
-                    self?.updateContentList()
-                }
-            }, receiveValue: { [weak self] (subscribableContent: SubscribableContent<[EventsGroup]>) in
-                switch subscribableContent {
-                case .connected(let subscription):
-                    self?.todaySubscription = subscription
-                case .contentUpdate(let eventsGroups):
-
-                    guard let self = self else { return }
-
-                    let splittedEventGroups = self.splitEventsGroups(eventsGroups)
-                    self.todayOutrightCompetitions = ServiceProviderModelMapper.competitions(fromEventsGroups: splittedEventGroups.competitionsEventGroups)
-
-                    let todayMatches = ServiceProviderModelMapper.matches(fromEventsGroups: splittedEventGroups.matchesEventGroups)
-                    self.todayMatches = todayMatches
-                    self.setMainMarkets(matches: todayMatches)
-
-                    //
-                    self.updateContentList()
-                    self.isLoadingTodayList.send(false)
-                    self.isLoadingEvents.send(false)
-                case .disconnected:
-                    self?.todayMatches = []
-                    self?.updateContentList()
-                }
-            })
-    }
-
-    private func processCompetitionsInfo() {
-
-        let competitionInfos = self.selectedCompetitionsInfoPublisher.value.map({ $0.value })
-
-        self.competitions = []
-        self.competitionsDataSource.competitions = []
-
-        // TODO: André, esta é a unica forma de fazer isto? parece demasiado hardcoded
-        for competitionInfo in competitionInfos {
-            if let marketGroup = competitionInfo.marketGroups.filter({ $0.name.lowercased().contains("main") }).first {
-                self.subscribeCompetitionMatches(forMarketGroupId: marketGroup.id, competitionInfo: competitionInfo)
-            }
-            else {
-                if let marketGroup = competitionInfo.marketGroups.filter({
-                    $0.name.lowercased().contains("outright")
-                }).first {
-                    self.subscribeCompetitionOutright(forMarketGroupId: marketGroup.id, competitionInfo: competitionInfo)
-                    //self.processCompetitionOutrights(competitionInfo: competitionInfo)
-                }
-            }
-        }
-    }
-
-    private func processTopCompetitionsInfo() {
-
-        let competitionInfos = self.selectedTopCompetitionsInfoPublisher.value.map({ $0.value }).filter({
-            $0.marketGroups.isNotEmpty
-        })
-
-        self.competitionsWithMarketGroups = competitionInfos.count
-
-        self.topCompetitions = []
-        self.topCompetitionsDataSource.competitions = []
-
-        for competitionInfo in competitionInfos {
-            if let marketGroup = competitionInfo.marketGroups.filter({ $0.name.lowercased().contains("main") }).first {
-                self.subscribeTopCompetitionMatches(forMarketGroupId: marketGroup.id, competitionInfo: competitionInfo)
-            }
-            else {
-                if let marketGroup = competitionInfo.marketGroups.filter({
-                    $0.name.lowercased().contains("outright")
-                }).first {
-                    self.subscribeTopCompetitionOutright(forMarketGroupId: marketGroup.id, competitionInfo: competitionInfo)
-                }
-            }
-        }
-
-        if competitionInfos.isEmpty {
-            self.isLoadingCompetitionMatches.send(false)
-            self.isLoadingEvents.send(false)
-            self.updateContentList()
-        }
-    }
-
-    private func splitEventsGroups(_ eventsGroups: [EventsGroup]) -> (matchesEventGroups: [EventsGroup], competitionsEventGroups: [EventsGroup]) {
-
-        var matchEventsGroups: [EventsGroup] = []
-        for eventGroup in eventsGroups {
-            let matchEvents = eventGroup.events.filter { event in
-                event.type == .match
-            }
-            matchEventsGroups.append(EventsGroup(events: matchEvents, marketGroupId: eventGroup.marketGroupId))
-        }
-
-        //
-        var competitionEventsGroups: [EventsGroup] = []
-        for eventGroup in eventsGroups {
-            let competitionEvents = eventGroup.events.filter { event in
-                event.type == .competition
-            }
-            competitionEventsGroups.append(EventsGroup(events: competitionEvents, marketGroupId: eventGroup.marketGroupId))
-        }
-
-        return (matchEventsGroups, competitionEventsGroups)
-    }
-
-    func setMainMarkets(matches: [Match]) {
-        self.mainMarkets = [:]
-        for match in matches {
-
-            for market in match.markets {
-                if let marketTypeId = market.marketTypeId {
-                    self.mainMarkets[marketTypeId] = market
-                }
-            }
-        }
-    }
-
-    func fetchTopCompetitionsMatches() {
-        self.selectedTopCompetitionsInfoPublisher.value = [:]
-
-        self.topCompetitions = []
-        self.topCompetitionsDataSource.competitions = self.topCompetitions
-        self.topCompetitionsMatchesSubscriptions.value = [:]
-
-        self.isLoadingCompetitionGroups.send(false)
-        self.isLoadingEvents.send(false)
-        self.updateContentList()
-
-        let currentSportName = self.selectedCurrentSportId
-
-        if let ids = self.topCompetitionsList[currentSportName] {
-            self.fetchTopCompetitionsMatchesWithIds(ids)
-        }
-
+    func fetchCompetitionsMatchesWithIds(_ ids: [String], forceRefresh: Bool = false) {
+        self.lastCompetitionsMatchesRequested = ids
+        self.competitionsDataSource.fetchData(withCompetitionsIds: ids, forceRefresh: forceRefresh)
     }
 
     func fetchCompetitionsFilters() {
 
         self.isLoadingCompetitionGroups.send(false)
-        self.isLoadingEvents.send(false)
-        self.updateContentList()
 
         guard let sportNumericId = self.selectedSport.numericId else {
             // Thats an incompleted Sport without numericId
@@ -808,11 +523,10 @@ class PreLiveEventsViewModel: NSObject {
         }
 
         self.isLoadingCompetitionGroups.send(true)
-        self.isLoadingEvents.send(true)
 
         Env.servicesProvider.getSportRegions(sportId: sportNumericId)
             .receive(on: DispatchQueue.main)
-            .sink(receiveCompletion: { [weak self] completion in
+            .sink(receiveCompletion: { completion in
                 switch completion {
                 case .finished:
                     ()
@@ -843,7 +557,6 @@ class PreLiveEventsViewModel: NSObject {
                 case .failure(let error):
                     print("REGION COMPETITION ERROR: \(error)")
                     self?.isLoadingCompetitionGroups.send(false)
-                    self?.isLoadingEvents.send(false)
                 }
             }, receiveValue: { [weak self] sportRegionInfo in
                 print("REGION COMPETITIONS: \(sportRegionInfo)")
@@ -853,283 +566,43 @@ class PreLiveEventsViewModel: NSObject {
             .store(in: &cancellables)
     }
 
-    func fetchCompetitionsMatchesWithIds(_ ids: [String]) {
-
-        self.selectedCompetitionsInfoPublisher.value = [:]
-        self.competitionsMatchesSubscriptions.value = [:]
-
-        self.expectedCompetitionsPublisher.send(ids.count)
-
-        if ids.isEmpty {
-            self.competitions = []
-            self.competitionsDataSource.competitions = []
-            self.updateContentList()
-            return
-        }
-
-        self.isLoadingCompetitionMatches.send(true)
-        self.isLoadingEvents.send(true)
-
-        for competitionId in ids {
-            Env.servicesProvider.getCompetitionMarketGroups(competitionId: competitionId)
-                .receive(on: DispatchQueue.main)
-                .sink(receiveCompletion: { [weak self] completion in
-                    switch completion {
-                    case .finished:
-                        ()
-                    case .failure(let error):
-                        self?.selectedCompetitionsInfoPublisher.value[competitionId] = nil
-                    }
-                }, receiveValue: { [weak self] competitionInfo in
-                    self?.selectedCompetitionsInfoPublisher.value[competitionInfo.id] = competitionInfo
-                })
-                .store(in: &cancellables)
-        }
-
-    }
-
-    func subscribeCompetitionMatches(forMarketGroupId marketGroupId: String, competitionInfo: SportCompetitionInfo) {
-
-        Env.servicesProvider.subscribeCompetitionMatches(forMarketGroupId: marketGroupId)
-        .sink { (completion: Subscribers.Completion<ServiceProviderError>) in
-            switch completion {
-            case .finished:
-                ()
-            case .failure:
-                ()
-            }
-        } receiveValue: { [weak self] (subscribableContent: SubscribableContent<[EventsGroup]>) in
-            switch subscribableContent {
-            case .connected(let subscription):
-                self?.competitionsSubscription = subscription
-            case .contentUpdate(let eventsGroups):
-                let matches = ServiceProviderModelMapper.matches(fromEventsGroups: eventsGroups)
-                self?.processCompetitionMatches(matches: matches, competitionInfo: competitionInfo)
-            case .disconnected:
-                self?.updateContentList()
-            }
-        }
-        .store(in: &cancellables)
-    }
-
-    private func processCompetitionMatches(matches: [Match], competitionInfo: SportCompetitionInfo) {
-
-        let newCompetition = Competition(id: competitionInfo.id,
-                                         name: competitionInfo.name,
-                                         matches: matches,
-                                         venue: matches.first?.venue,
-                                         sport: nil,
-                                         numberOutrightMarkets: Int(competitionInfo.numberOutrightMarkets) ?? 0,
-                                         competitionInfo: competitionInfo)
-
-        self.setMainMarkets(matches: matches)
-        self.competitions.append(newCompetition)
-        self.competitionsDataSource.competitions = self.competitions
-        self.competitionsMatchesSubscriptions.value[competitionInfo.id] = competitionInfo
-
-    }
-
-    func subscribeCompetitionOutright(forMarketGroupId marketGroupId: String, competitionInfo: SportCompetitionInfo) {
-
-        Env.servicesProvider.subscribeCompetitionMatches(forMarketGroupId: marketGroupId)
-        .sink { [weak self] (completion: Subscribers.Completion<ServiceProviderError>) in
-            switch completion {
-            case .finished:
-                ()
-            case .failure:
-                ()
-            }
-        } receiveValue: { [weak self] (subscribableContent: SubscribableContent<[EventsGroup]>) in
-            switch subscribableContent {
-            case .connected(let subscription):
-                self?.competitionsSubscription = subscription
-            case .contentUpdate(let eventsGroups):
-                if let outrightMatch = ServiceProviderModelMapper.matches(fromEventsGroups: eventsGroups).first {
-                    self?.processCompetitionOutrights(outrightMatch: outrightMatch, competitionInfo: competitionInfo)
-                }
-            case .disconnected:
-                self?.updateContentList()
-            }
-        }
-        .store(in: &cancellables)
-    }
-
-    private func processCompetitionOutrights(outrightMatch: Match, competitionInfo: SportCompetitionInfo) {
-
-        let numberOutrightMarkets = competitionInfo.numberOutrightMarkets == "0" ? 1 : Int(competitionInfo.numberOutrightMarkets) ?? 0
-
-        let newCompetition = Competition(id: competitionInfo.id,
-                                         name: competitionInfo.name,
-                                         matches: [],
-                                         venue: outrightMatch.venue,
-                                         sport: nil,
-                                         numberOutrightMarkets: numberOutrightMarkets,
-                                         competitionInfo: competitionInfo)
-
-        self.competitions.append(newCompetition)
-        self.competitionsDataSource.competitions = self.competitions
-        self.competitionsMatchesSubscriptions.value[competitionInfo.id] = competitionInfo
-    }
-
-    // Top Competitions
-    func fetchTopCompetitionsMatchesWithIds(_ ids: [String]) {
-
-        self.expectedTopCompetitionsPublisher.send(ids.count)
-
-        if ids.isEmpty {
-            self.topCompetitions = []
-            self.topCompetitionsDataSource.competitions = []
-            self.updateContentList()
-            return
-        }
-
-        self.isLoadingCompetitionMatches.send(true)
-        self.isLoadingEvents.send(true)
-
-        for competitionId in ids {
-            Env.servicesProvider.getCompetitionMarketGroups(competitionId: competitionId)
-                .receive(on: DispatchQueue.main)
-                .sink(receiveCompletion: { [weak self] completion in
-                    switch completion {
-                    case .finished:
-                        ()
-                    case .failure(let error):
-                        self?.selectedTopCompetitionsInfoPublisher.value[competitionId] = nil
-                    }
-                }, receiveValue: { [weak self] competitionInfo in
-                    print("TOP COMPETITIONS INFO: \(competitionInfo)")
-
-                    self?.selectedTopCompetitionsInfoPublisher.value[competitionInfo.id] = competitionInfo
-
-                })
-                .store(in: &cancellables)
-        }
-
-    }
-
-    func subscribeTopCompetitionMatches(forMarketGroupId marketGroupId: String, competitionInfo: SportCompetitionInfo) {
-
-        Env.servicesProvider.subscribeCompetitionMatches(forMarketGroupId: marketGroupId)
-        .sink { (completion: Subscribers.Completion<ServiceProviderError>) in
-            switch completion {
-            case .finished:
-                ()
-            case .failure:
-                ()
-            }
-        } receiveValue: { [weak self] (subscribableContent: SubscribableContent<[EventsGroup]>) in
-            switch subscribableContent {
-            case .connected(let subscription):
-                self?.competitionsSubscription = subscription
-            case .contentUpdate(let eventsGroups):
-                let matches = ServiceProviderModelMapper.matches(fromEventsGroups: eventsGroups)
-                self?.processTopCompetitionMatches(matches: matches, competitionInfo: competitionInfo)
-            case .disconnected:
-                self?.updateContentList()
-            }
-        }
-        .store(in: &cancellables)
-    }
-
-    private func processTopCompetitionMatches(matches: [Match], competitionInfo: SportCompetitionInfo) {
-
-        let newCompetition = Competition(id: competitionInfo.id,
-                                         name: competitionInfo.name,
-                                         matches: matches,
-                                         venue: matches.first?.venue,
-                                         sport: nil,
-                                         numberOutrightMarkets: Int(competitionInfo.numberOutrightMarkets) ?? 0,
-                                         competitionInfo: competitionInfo)
-
-        self.setMainMarkets(matches: matches)
-        self.topCompetitions.append(newCompetition)
-        // self.topCompetitionsDataSource.competitions = self.topCompetitions
-        self.topCompetitionsMatchesSubscriptions.value[competitionInfo.id] = competitionInfo
-    }
-
-    func subscribeTopCompetitionOutright(forMarketGroupId marketGroupId: String, competitionInfo: SportCompetitionInfo) {
-
-        Env.servicesProvider.subscribeCompetitionMatches(forMarketGroupId: marketGroupId)
-        .sink { [weak self] (completion: Subscribers.Completion<ServiceProviderError>) in
-            switch completion {
-            case .finished:
-                ()
-            case .failure:
-                ()
-            }
-        } receiveValue: { [weak self] (subscribableContent: SubscribableContent<[EventsGroup]>) in
-            switch subscribableContent {
-            case .connected(let subscription):
-                self?.competitionsSubscription = subscription
-            case .contentUpdate(let eventsGroups):
-                if let outrightMatch = ServiceProviderModelMapper.matches(fromEventsGroups: eventsGroups).first {
-                    self?.processTopCompetitionOutrights(outrightMatch: outrightMatch, competitionInfo: competitionInfo)
-                }
-            case .disconnected:
-                self?.updateContentList()
-            }
-        }
-        .store(in: &cancellables)
-    }
-
-    private func processTopCompetitionOutrights(outrightMatch: Match, competitionInfo: SportCompetitionInfo) {
-
-        if !self.topCompetitions.contains(where: {
-            $0.id == competitionInfo.id
-        }) {
-
-            let numberOutrightMarkets = competitionInfo.numberOutrightMarkets == "0" ? 1 : Int(competitionInfo.numberOutrightMarkets) ?? 0
-
-            let newCompetition = Competition(id: competitionInfo.id,
-                                             name: competitionInfo.name,
-                                             matches: [],
-                                             venue: outrightMatch.venue,
-                                             sport: nil,
-                                             numberOutrightMarkets: numberOutrightMarkets,
-                                             competitionInfo: competitionInfo)
-
-            self.topCompetitions.append(newCompetition)
-            //        self.topCompetitionsDataSource.competitions = self.competitions
-            self.topCompetitionsMatchesSubscriptions.value[competitionInfo.id] = competitionInfo
-        }
-
-    }
-
     func getCompetitions() -> [Competition] {
-        return self.competitions
+        return self.competitionsDataSource.competitions.value
     }
 
     func getTopCompetitions() -> [Competition] {
-        return self.topCompetitions
+        return self.topCompetitionsDataSource.competitions.value
     }
 
-    //
-    //
-    // MARK: - Setups
-    //
-    private func setupCompetitionGroups() {
 
-        if self.sportRegionsPublisher.value.isNotEmpty,
-           self.regionCompetitionsPublisher.value.isNotEmpty {
+    func competition(forIndex index: Int) -> Competition? {
+        return self.competitionsDataSource.competitions.value[safe: index]
+    }
 
-            let sportRegions = self.sportRegionsPublisher.value
-            let regionCompetitions = self.regionCompetitionsPublisher.value
+    func topCompetition(forIndex index: Int) -> Competition? {
+        return self.competitionsDataSource.competitions.value[safe: index]
+    }
 
-            let competitionGroups = ServiceProviderModelMapper.competitionGroups(fromSportRegions: sportRegions, withRegionCompetitions: regionCompetitions)
-            self.competitionGroupsPublisher.send(competitionGroups)
 
-            self.isLoadingEvents.send(false)
-            self.isLoadingCompetitionGroups.send(false)
-
-            self.updateContentList()
+    func setMainMarkets(matches: [Match]) {
+        self.mainMarkets = [:]
+        for match in matches {
+            for market in match.markets {
+                if let marketTypeId = market.marketTypeId {
+                    self.mainMarkets[marketTypeId] = market
+                }
+            }
         }
     }
 
+    //
+    // MARK: - Setups
+    //
     func loadCompetitionByRegion(regionId: String) {
 
         Env.servicesProvider.getRegionCompetitions(regionId: regionId)
             .receive(on: DispatchQueue.main)
-            .sink(receiveCompletion: { [weak self] completion in
+            .sink(receiveCompletion: { completion in
                 switch completion {
                 case .finished:
                     ()
@@ -1143,6 +616,22 @@ class PreLiveEventsViewModel: NSObject {
             .store(in: &cancellables)
     }
 
+    private func setupCompetitionGroups() {
+        if self.sportRegionsPublisher.value.isNotEmpty,
+           self.regionCompetitionsPublisher.value.isNotEmpty {
+
+            let sportRegions = self.sportRegionsPublisher.value
+            let regionCompetitions = self.regionCompetitionsPublisher.value
+
+            let competitionGroups = ServiceProviderModelMapper.competitionGroups(fromSportRegions: sportRegions, withRegionCompetitions: regionCompetitions)
+            self.competitionGroupsPublisher.send(competitionGroups)
+
+            self.isLoadingCompetitionGroups.send(false)
+
+            // Refresh
+        }
+    }
+
 }
 
 extension PreLiveEventsViewModel {
@@ -1150,95 +639,6 @@ extension PreLiveEventsViewModel {
     //
     // MARK: - Filters
     //
-    func filterPopularMatches(with filtersOptions: HomeFilterOptions?, matches: [Match]) -> [Match] {
-        guard let filterOptionsValue = filtersOptions else {
-            return matches
-        }
-
-        var filteredMatches: [Match] = []
-        for match in matches {
-            if match.markets.isEmpty {
-                continue
-            }
-            // Check default market order
-            var marketSort: [Market] = []
-//            let favoriteMarketIndex = match.markets.firstIndex(where: { $0.typeId == filterOptionsValue.defaultMarket.marketId })
-            let favoriteMarketIndex = match.markets.firstIndex(where: { $0.marketTypeId == filterOptionsValue.defaultMarket?.id })
-
-            if let newFirstMarket = match.markets[safe: (favoriteMarketIndex ?? 0)] {
-                marketSort.append(newFirstMarket)
-            }
-
-            for market in match.markets {
-                if market.typeId != marketSort[0].typeId {
-                    marketSort.append(market)
-                }
-            }
-
-            // Check odds filter
-            let matchOdds = marketSort[0].outcomes
-            let oddsRange = filterOptionsValue.lowerBoundOddsRange...filterOptionsValue.highBoundOddsRange
-            for odd in matchOdds {
-                let oddValue = CGFloat(odd.bettingOffer.decimalOdd)
-                if oddsRange.contains(oddValue) {
-                    var newMatch = match
-                    newMatch.markets = marketSort
-
-                    filteredMatches.append(newMatch)
-                    break
-                }
-            }
-
-        }
-        return filteredMatches
-    }
-
-    func filterTodayMatches(with filtersOptions: HomeFilterOptions?, matches: [Match]) -> [Match] {
-        guard let filterOptionsValue = filtersOptions else {
-            return matches
-        }
-
-        var filteredMatches: [Match] = []
-
-        for match in matches {
-            if match.markets.isEmpty {
-                continue
-            }
-
-            // Check default market order
-            var marketSort: [Market] = []
-//            let favoriteMarketIndex = match.markets.firstIndex(where: { $0.typeId == filterOptionsValue.defaultMarket.marketId })
-            let favoriteMarketIndex = match.markets.firstIndex(where: { $0.marketTypeId == filterOptionsValue.defaultMarket?.id })
-
-            if let newFirstMarket = match.markets[safe: (favoriteMarketIndex ?? 0)] {
-                marketSort.append(newFirstMarket)
-            }
-
-            for market in match.markets where market.typeId != marketSort[0].typeId {
-                marketSort.append(market)
-            }
-
-            // Check odds filter
-            let matchOdds = marketSort[0].outcomes
-            let oddsRange = filterOptionsValue.lowerBoundOddsRange...filterOptionsValue.highBoundOddsRange
-            var oddsInRange = false
-            for odd in matchOdds {
-                let oddValue = CGFloat(odd.bettingOffer.decimalOdd)
-                if oddsRange.contains(oddValue) {
-                    oddsInRange = true
-                    break
-                }
-            }
-
-            if oddsInRange {
-                var newMatch = match
-                newMatch.markets = marketSort
-
-                filteredMatches.append(newMatch)
-            }
-        }
-        return filteredMatches
-    }
 
     func filterCompetitionMatches (with filtersOptions: HomeFilterOptions?, competitions: [Competition]) -> [Competition] {
 
@@ -1297,7 +697,7 @@ extension PreLiveEventsViewModel {
 extension PreLiveEventsViewModel: UITableViewDataSource, UITableViewDelegate {
 
     func numberOfSections(in tableView: UITableView) -> Int {
-        switch self.matchListTypePublisher.value {
+        switch self.matchListType {
         case .popular:
             return self.popularMatchesDataSource.numberOfSections(in: tableView)
         case .upcoming:
@@ -1310,28 +710,28 @@ extension PreLiveEventsViewModel: UITableViewDataSource, UITableViewDelegate {
     }
 
     func hasContentForSelectedListType() -> Bool {
-        switch self.matchListTypePublisher.value {
+        switch self.matchListType {
         case .popular:
-            if self.popularMatchesDataSource.matches.isEmpty,
-               let outrightCompetitions = self.popularMatchesDataSource.outrightCompetitions {
+            if self.popularMatchesDataSource.allMatches.isEmpty,
+               let outrightCompetitions = self.popularMatchesDataSource.allOutrightCompetitionsSubject.value {
                 return outrightCompetitions.isNotEmpty
             }
-            return self.popularMatchesDataSource.matches.isNotEmpty
+            return self.popularMatchesDataSource.allMatches.isNotEmpty
         case .upcoming:
-            if self.todayMatchesDataSource.todayMatches.isEmpty,
-               let outrightCompetitions = self.todayMatchesDataSource.outrightCompetitions {
+            if self.todayMatchesDataSource.matches.value.isEmpty,
+               let outrightCompetitions = self.todayMatchesDataSource.outrightCompetitions.value {
                 return outrightCompetitions.isNotEmpty
             }
-            return self.todayMatchesDataSource.todayMatches.isNotEmpty
+            return self.todayMatchesDataSource.matches.value.isNotEmpty
         case .topCompetitions:
-            return self.topCompetitionsDataSource.competitions.isNotEmpty
+            return self.topCompetitionsDataSource.competitions.value.isNotEmpty
         case .competitions:
-            return self.competitionsDataSource.competitions.isNotEmpty
+            return self.competitionsDataSource.competitions.value.isNotEmpty
         }
     }
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        switch self.matchListTypePublisher.value {
+        switch self.matchListType {
         case .popular:
             return self.popularMatchesDataSource.tableView(tableView, numberOfRowsInSection: section)
         case .upcoming:
@@ -1345,7 +745,7 @@ extension PreLiveEventsViewModel: UITableViewDataSource, UITableViewDelegate {
 
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         var cell: UITableViewCell
-        switch self.matchListTypePublisher.value {
+        switch self.matchListType {
         case .popular:
             cell = self.popularMatchesDataSource.tableView(tableView, cellForRowAt: indexPath)
         case .upcoming:
@@ -1359,7 +759,7 @@ extension PreLiveEventsViewModel: UITableViewDataSource, UITableViewDelegate {
     }
 
     func tableView(_ tableView: UITableView, willDisplay cell: UITableViewCell, forRowAt indexPath: IndexPath) {
-        switch self.matchListTypePublisher.value {
+        switch self.matchListType {
         case .popular:
             return self.popularMatchesDataSource.tableView(tableView, willDisplay: cell, forRowAt: indexPath)
         case .upcoming:
@@ -1372,7 +772,7 @@ extension PreLiveEventsViewModel: UITableViewDataSource, UITableViewDelegate {
     }
 
     func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
-        switch self.matchListTypePublisher.value {
+        switch self.matchListType {
         case .popular:
             return self.popularMatchesDataSource.tableView(tableView, viewForHeaderInSection: section)
         case .upcoming:
@@ -1385,7 +785,7 @@ extension PreLiveEventsViewModel: UITableViewDataSource, UITableViewDelegate {
     }
 
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
-        switch self.matchListTypePublisher.value {
+        switch self.matchListType {
         case .popular:
             return self.popularMatchesDataSource.tableView(tableView, heightForRowAt: indexPath)
         case .upcoming:
@@ -1398,7 +798,7 @@ extension PreLiveEventsViewModel: UITableViewDataSource, UITableViewDelegate {
     }
 
     func tableView(_ tableView: UITableView, estimatedHeightForRowAt indexPath: IndexPath) -> CGFloat {
-        switch self.matchListTypePublisher.value {
+        switch self.matchListType {
         case .popular:
             return self.popularMatchesDataSource.tableView(tableView, estimatedHeightForRowAt: indexPath)
         case .upcoming:
@@ -1411,7 +811,7 @@ extension PreLiveEventsViewModel: UITableViewDataSource, UITableViewDelegate {
     }
 
     func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
-        switch self.matchListTypePublisher.value {
+        switch self.matchListType {
         case .popular:
             return self.popularMatchesDataSource.tableView(tableView, heightForHeaderInSection: section)
         case .upcoming:
@@ -1424,7 +824,7 @@ extension PreLiveEventsViewModel: UITableViewDataSource, UITableViewDelegate {
     }
 
     func tableView(_ tableView: UITableView, estimatedHeightForHeaderInSection section: Int) -> CGFloat {
-        switch self.matchListTypePublisher.value {
+        switch self.matchListType {
         case .popular:
             return self.popularMatchesDataSource.tableView(tableView, estimatedHeightForHeaderInSection: section)
         case .upcoming:

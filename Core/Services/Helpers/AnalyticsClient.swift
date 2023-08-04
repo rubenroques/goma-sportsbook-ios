@@ -20,7 +20,7 @@ struct AnalyticsClient {
         case userSignUpFail
         case userRecoverPassword
         case userLogout
-        case myGamesScreen
+        case popularEventsList
         case todayScreen
         case topCompetitionsScreen
         case competitionsScreen
@@ -67,7 +67,7 @@ struct AnalyticsClient {
         case .userLogout:
             eventTypeKey = "user_logout"
             
-        case .myGamesScreen:
+        case .popularEventsList:
             eventTypeKey = "mygames_screen_appeared"
             
         case .todayScreen:

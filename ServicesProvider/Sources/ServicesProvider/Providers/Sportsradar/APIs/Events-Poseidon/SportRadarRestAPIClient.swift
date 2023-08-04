@@ -776,8 +776,9 @@ extension SportRadarRestAPIClient: Endpoint {
 
     var timeout: TimeInterval {
         switch self {
-        case .subscribe: return TimeInterval(10)
-        default: return TimeInterval(20)
+        case .subscribe: return TimeInterval(60)
+        case .unsubscribe: return TimeInterval(20)
+        default: return TimeInterval(120)
         }
     }
 

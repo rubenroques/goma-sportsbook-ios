@@ -444,15 +444,6 @@ extension MyFavoritesViewController: UITableViewDataSource, UITableViewDelegate 
         }
     }
 
-    func hasContentForSelectedListType() -> Bool {
-        switch self.viewModel.favoriteListTypePublisher.value {
-        case .favoriteGames:
-            return self.myFavoriteMatchesDataSource.userFavoriteMatches.isNotEmpty
-        case .favoriteCompetitions:
-            return self.myFavoriteCompetitionsDataSource.competitions.isNotEmpty
-        }
-   }
-
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         switch self.viewModel.favoriteListTypePublisher.value {
         case .favoriteGames:

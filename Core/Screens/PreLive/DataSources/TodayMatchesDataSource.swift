@@ -6,30 +6,270 @@
 //
 
 import UIKit
+import Combine
+import ServicesProvider
 
-class TodayMatchesDataSource: NSObject, UITableViewDataSource, UITableViewDelegate {
+class TodayMatchesDataSource: NSObject {
 
-    var todayMatches: [Match] = []
-    var outrightCompetitions: [Competition]? = []
+    struct DaysRange: Equatable {
+        let startDay: Int
+        let endDay: Int
+
+        init?(startDay: Int, endDay: Int) {
+            guard startDay >= 0, endDay <= 365, startDay <= endDay else {
+                return nil
+            }
+
+            self.startDay = startDay
+            self.endDay = endDay
+        }
+    }
+    
+    var allMatches: [Match] {
+        return self.allMatchesSubject.value
+    }
+    var filteredMatches: [Match] {
+        return self.filteredMatchesSubject.value
+    }
+
+    var matches: CurrentValueSubject<[Match], Never> = .init([])
+    var outrightCompetitions: CurrentValueSubject<[Competition]?, Never> = .init(nil)
+
+    var isLoadingInitialDataPublisher: AnyPublisher<Bool, Never> {
+        return self.isLoadingCurrentValueSubject.eraseToAnyPublisher()
+    }
+
+    var dataChangedPublisher: AnyPublisher<Void, Never> {
+        let matchesChangedArrayPublisher = self.filteredMatchesSubject
+            .removeDuplicates()
+            .map { _ in }
+            .eraseToAnyPublisher()
+
+        let outrightsChangedArrayPublisher = self.outrightCompetitions
+            .removeDuplicates()
+            .map { _ in }
+            .eraseToAnyPublisher()
+
+        return Publishers.Merge3(outrightsChangedArrayPublisher, matchesChangedArrayPublisher, self.forcedRefreshPassthroughSubject)
+            .map({ _ in })
+            .print("TodayMatchesDataSource dataChangedPublisher send")
+            .eraseToAnyPublisher()
+    }
+
+    private(set) var filtersOptions: HomeFilterOptions?
 
     var matchStatsViewModelForMatch: ((Match) -> MatchStatsViewModel?)?
     var matchLineTableCellViewModelCache: [String: MatchLineTableCellViewModel] = [:]
 
-    var canRequestNextPageAction: (() -> Bool)?
-    var requestNextPageAction: (() -> Void)?
     var didSelectMatchAction: ((Match) -> Void)?
     var didSelectCompetitionAction: ((Competition) -> Void)?
     var didTapFavoriteMatchAction: ((Match) -> Void)?
     var didLongPressOdd: ((BettingTicket) -> Void)?
     var shouldShowSearch: (() -> Void)?
 
-    override init() {
+    private var allMatchesSubject: CurrentValueSubject<[Match], Never> = .init([])
+    private var filteredMatchesSubject: CurrentValueSubject<[Match], Never> = .init([])
+
+    private var sport: Sport
+
+    private var isLoadingCurrentValueSubject: CurrentValueSubject<Bool, Never> = .init(false)
+
+    private var hasNextPage = true
+
+    private var todaySubscription: ServicesProvider.Subscription?
+    private var todayMatchesPublisher: AnyCancellable?
+
+    private var forcedRefreshPassthroughSubject: PassthroughSubject<Void, Never> = .init()
+
+    private var cancellables = Set<AnyCancellable>()
+
+    init(sport: Sport) {
+        self.sport = sport
+
         super.init()
+
+        self.allMatchesSubject
+            .sink { [weak self] allMatches in
+                guard let self = self else { return }
+                self.applyFilters(filtersOptions: self.filtersOptions)
+            }
+            .store(in: &self.cancellables)
+
+        self.requestData(forSport: self.sport)
     }
 
-    func shouldShowOutrightMarkets() -> Bool {
-        return self.todayMatches.isEmpty
+    func fetchData(forSport sport: Sport, forceRefresh: Bool = false) {
+        if !forceRefresh && self.sport == sport {
+            return
+        }
+
+        if self.sport != sport {
+
+            self.allMatchesSubject.send([])
+            self.filteredMatchesSubject.send([])
+
+            self.outrightCompetitions.send(nil)
+        }
+
+        self.requestData(forSport: sport)
     }
+
+    private func requestData(forSport sport: Sport) {
+        self.sport = sport
+
+        self.hasNextPage = true
+
+        self.fetchTodayMatches()
+    }
+
+}
+
+extension TodayMatchesDataSource {
+
+    private func fetchTodayMatchesNextPage() {
+
+        var timeRange = ""
+//        if let daysRange = self.daysRange {
+//            timeRange = "\(daysRange.startDay)-\(daysRange.endDay)"
+//        }
+
+        let datesFilter = Env.servicesProvider.getDatesFilter(timeRange: timeRange)
+
+        let sportType = ServiceProviderModelMapper.serviceProviderSportType(fromSport: self.sport)
+
+        Env.servicesProvider.requestPreLiveMatchesNextPage(forSportType: sportType,
+                                                           initialDate: datesFilter[safe: 0],
+                                                           endDate: datesFilter[safe: 1],
+                                                           sortType: .date)
+            .sink { completion in
+                print("requestPreLiveMatchesNextPage completion \(completion)")
+            } receiveValue: { [weak self] hasNextPage in
+                self?.hasNextPage = hasNextPage
+                if !hasNextPage {
+                    self?.forcedRefreshPassthroughSubject.send()
+                }
+            }
+            .store(in: &cancellables)
+    }
+
+    private func fetchTodayMatches() {
+
+        self.isLoadingCurrentValueSubject.send(true)
+
+        var timeRange = ""
+//        if let daysRange = self.daysRange {
+//            timeRange = "\(daysRange.startDay)-\(daysRange.endDay)"
+//        }
+
+        let datesFilter = Env.servicesProvider.getDatesFilter(timeRange: timeRange)
+
+        let selectedSportType = ServiceProviderModelMapper.serviceProviderSportType(fromSport: self.sport)
+
+        // We need to clear old subscriptions and publisher cancellables
+        self.todaySubscription = nil
+        self.todayMatchesPublisher?.cancel()
+
+        self.todayMatchesPublisher = Env.servicesProvider.subscribePreLiveMatches(forSportType: selectedSportType,
+                                                                                  initialDate: datesFilter[safe: 0],
+                                                                                  endDate: datesFilter[safe: 1],
+                                                                                  sortType: .date)
+            .sink(receiveCompletion: { [weak self] completion in
+                switch completion {
+                case .finished:
+                    ()
+                case .failure(let error):
+                    print("TodayMatchesDataSource fetchTodayMatches error: \(error)")
+                    self?.allMatchesSubject.send([])
+                    self?.isLoadingCurrentValueSubject.send(false)
+                }
+            }, receiveValue: { [weak self] (subscribableContent: SubscribableContent<[EventsGroup]>) in
+                switch subscribableContent {
+                case .connected(let subscription):
+                    self?.todaySubscription = subscription
+                case .contentUpdate(let eventsGroups):
+                    guard let self = self else { return }
+
+                    let splittedEventGroups = self.splitEventsGroups(eventsGroups)
+                    let mappedOutrights: [Competition]? = ServiceProviderModelMapper.competitions(fromEventsGroups: splittedEventGroups.competitionsEventGroups)
+                    self.outrightCompetitions.send(mappedOutrights)
+
+                    let mappedMatches = ServiceProviderModelMapper.matches(fromEventsGroups: splittedEventGroups.matchesEventGroups)
+                    self.allMatchesSubject.send(mappedMatches)
+
+                    // TODO: main markets
+                    // self.setMainMarkets(matches: matches)
+
+                    self.isLoadingCurrentValueSubject.send(false)
+                case .disconnected:
+                    print("TodayMatchesDataSource fetchTodayMatches disconnected")
+                }
+            })
+    }
+
+}
+
+extension TodayMatchesDataSource {
+
+    func clearFilters() {
+        self.applyFilters(filtersOptions: nil)
+    }
+
+    func applyFilters(filtersOptions: HomeFilterOptions?) {
+        self.filtersOptions = filtersOptions
+
+        let filteredMatches = self.filterTodayMatches(with: self.filtersOptions, matches: self.allMatches)
+        self.filteredMatchesSubject.send(filteredMatches)
+    }
+
+    private func filterTodayMatches(with filtersOptions: HomeFilterOptions?, matches: [Match]) -> [Match] {
+        guard let filterOptionsValue = filtersOptions else {
+            return matches
+        }
+
+        var filteredMatches: [Match] = []
+
+        for match in matches {
+            if match.markets.isEmpty {
+                continue
+            }
+
+            // Check default market order
+            var marketSort: [Market] = []
+            //            let favoriteMarketIndex = match.markets.firstIndex(where: { $0.typeId == filterOptionsValue.defaultMarket.marketId })
+            let favoriteMarketIndex = match.markets.firstIndex(where: { $0.marketTypeId == filterOptionsValue.defaultMarket?.id })
+
+            if let newFirstMarket = match.markets[safe: (favoriteMarketIndex ?? 0)] {
+                marketSort.append(newFirstMarket)
+            }
+
+            for market in match.markets where market.typeId != marketSort[0].typeId {
+                marketSort.append(market)
+            }
+
+            // Check odds filter
+            let matchOdds = marketSort[0].outcomes
+            let oddsRange = filterOptionsValue.lowerBoundOddsRange...filterOptionsValue.highBoundOddsRange
+            var oddsInRange = false
+            for odd in matchOdds {
+                let oddValue = CGFloat(odd.bettingOffer.decimalOdd)
+                if oddsRange.contains(oddValue) {
+                    oddsInRange = true
+                    break
+                }
+            }
+
+            if oddsInRange {
+                var newMatch = match
+                newMatch.markets = marketSort
+
+                filteredMatches.append(newMatch)
+            }
+        }
+        return filteredMatches
+    }
+}
+
+extension TodayMatchesDataSource: UITableViewDataSource, UITableViewDelegate {
 
     func numberOfSections(in tableView: UITableView) -> Int {
         return 4
@@ -38,14 +278,14 @@ class TodayMatchesDataSource: NSObject, UITableViewDataSource, UITableViewDelega
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         switch section {
         case 0:
-                if self.shouldShowOutrightMarkets(), let count = self.outrightCompetitions?.count {
+            if self.shouldShowOutrightMarkets(), let count = self.outrightCompetitions.value?.count {
                     return count
                 }
                 return 0
         case 1:
-            return self.todayMatches.count
+            return self.filteredMatches.count
         case 2:
-            if self.canRequestNextPageAction?() ?? true {
+            if self.hasNextPage {
                 return 1
             }
             else {
@@ -62,21 +302,20 @@ class TodayMatchesDataSource: NSObject, UITableViewDataSource, UITableViewDelega
 
         switch indexPath.section {
         case 0:
-            guard
-                let cell = tableView.dequeueReusableCell(withIdentifier: OutrightCompetitionLargeLineTableViewCell.identifier)
-                    as? OutrightCompetitionLargeLineTableViewCell,
-                let competition = self.outrightCompetitions?[safe: indexPath.row]
-            else {
-                fatalError()
+            if let cell = tableView.dequeueReusableCell(withIdentifier: OutrightCompetitionLargeLineTableViewCell.identifier)
+                as? OutrightCompetitionLargeLineTableViewCell,
+               let competition = self.outrightCompetitions.value?[safe: indexPath.row] {
+
+                cell.configure(withViewModel: OutrightCompetitionLargeLineViewModel(competition: competition))
+                cell.didSelectCompetitionAction = { [weak self] competition in
+                    self?.didSelectCompetitionAction?(competition)
+                }
+                return cell
             }
-            cell.configure(withViewModel: OutrightCompetitionLargeLineViewModel(competition: competition))
-            cell.didSelectCompetitionAction = { [weak self] competition in
-                self?.didSelectCompetitionAction?(competition)
-            }
-            return cell
         case 1:
             if let cell = tableView.dequeueCellType(MatchLineTableViewCell.self),
-               let match = self.todayMatches[safe: indexPath.row] {
+               let match = self.filteredMatches[safe: indexPath.row] {
+
                 if let matchStatsViewModel = self.matchStatsViewModelForMatch?(match) {
                     cell.matchStatsViewModel = matchStatsViewModel
                 }
@@ -110,13 +349,13 @@ class TodayMatchesDataSource: NSObject, UITableViewDataSource, UITableViewDelega
     }
 
     func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
-        if section == 0 && self.outrightCompetitions != nil && self.todayMatches.isNotEmpty {
+        if section == 0 && self.outrightCompetitions.value != nil && self.filteredMatches.isNotEmpty {
             return nil
         }
-        else if section == 0 && self.outrightCompetitions != nil && self.todayMatches.isEmpty {
+        else if section == 0 && self.outrightCompetitions.value != nil && self.filteredMatches.isEmpty {
             ()
         }
-        else if self.todayMatches.isEmpty {
+        else if self.filteredMatches.isEmpty {
             return nil
         }
 
@@ -137,11 +376,11 @@ class TodayMatchesDataSource: NSObject, UITableViewDataSource, UITableViewDelega
     }
 
     func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
-        if section == 0 && self.outrightCompetitions != nil && self.todayMatches.isEmpty {
+        if section == 0 && self.outrightCompetitions.value != nil && self.filteredMatches.isEmpty {
             return 54
         }
 
-        if self.todayMatches.isEmpty {
+        if self.filteredMatches.isEmpty {
             return .leastNonzeroMagnitude
         }
 
@@ -152,11 +391,11 @@ class TodayMatchesDataSource: NSObject, UITableViewDataSource, UITableViewDelega
     }
 
     func tableView(_ tableView: UITableView, estimatedHeightForHeaderInSection section: Int) -> CGFloat {
-        if section == 0 && self.outrightCompetitions != nil && self.todayMatches.isEmpty {
+        if section == 0 && self.outrightCompetitions.value != nil && self.filteredMatches.isEmpty {
             return 54
         }
 
-        if self.todayMatches.isEmpty {
+        if self.filteredMatches.isEmpty {
             return .leastNonzeroMagnitude
         }
 
@@ -193,15 +432,17 @@ class TodayMatchesDataSource: NSObject, UITableViewDataSource, UITableViewDelega
     }
 
     func tableView(_ tableView: UITableView, willDisplay cell: UITableViewCell, forRowAt indexPath: IndexPath) {
-        if indexPath.section == 2, self.todayMatches.isNotEmpty {
+        if indexPath.section == 2, self.filteredMatches.isNotEmpty {
             if let typedCell = cell as? LoadingMoreTableViewCell {
                 typedCell.startAnimating()
             }
-            self.requestNextPageAction?()
+            self.fetchTodayMatchesNextPage()
         }
     }
 }
 
+//
+// Helpers
 extension TodayMatchesDataSource {
 
     func matchLineTableCellViewModel(forMatch match: Match) -> MatchLineTableCellViewModel {
@@ -214,5 +455,32 @@ extension TodayMatchesDataSource {
             return matchLineTableCellViewModel
         }
     }
+
+    private func splitEventsGroups(_ eventsGroups: [EventsGroup]) -> (matchesEventGroups: [EventsGroup], competitionsEventGroups: [EventsGroup]) {
+
+        var matchEventsGroups: [EventsGroup] = []
+        for eventGroup in eventsGroups {
+            let matchEvents = eventGroup.events.filter { event in
+                event.type == .match
+            }
+            matchEventsGroups.append(EventsGroup(events: matchEvents, marketGroupId: eventGroup.marketGroupId))
+        }
+
+        //
+        var competitionEventsGroups: [EventsGroup] = []
+        for eventGroup in eventsGroups {
+            let competitionEvents = eventGroup.events.filter { event in
+                event.type == .competition
+            }
+            competitionEventsGroups.append(EventsGroup(events: competitionEvents, marketGroupId: eventGroup.marketGroupId))
+        }
+
+        return (matchEventsGroups, competitionEventsGroups)
+    }
+
+    func shouldShowOutrightMarkets() -> Bool {
+        return self.allMatches.isEmpty
+    }
+
     
 }

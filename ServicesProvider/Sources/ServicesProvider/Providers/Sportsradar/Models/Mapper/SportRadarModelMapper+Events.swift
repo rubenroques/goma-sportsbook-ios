@@ -165,30 +165,22 @@ extension SportRadarModelMapper {
     static func favoritesListDeleteResponse(fromInternalFavoritesListDeleteResponse internalFavoritesListDeleteResponse: SportRadarModels.FavoritesListDeleteResponse) -> FavoritesListDeleteResponse {
 
         let favoritesListDeleteResponse = FavoritesListDeleteResponse(listId: internalFavoritesListDeleteResponse.listId)
-
         return favoritesListDeleteResponse
-
     }
 
     static func favoriteAddResponse(fromInternalFavoriteAddResponse internalFavoriteAddResponse: SportRadarModels.FavoriteAddResponse) -> FavoriteAddResponse {
-
         let favoriteAddResponse = FavoriteAddResponse(displayOrder: internalFavoriteAddResponse.displayOrder, idAccountFavorite: internalFavoriteAddResponse.idAccountFavorite)
-
         return favoriteAddResponse
-
     }
 
     static func favoritesEventResponse(fromInternalFavoritesEventResponse internalFavoritesEventResponse: SportRadarModels.FavoriteEventResponse) -> FavoriteEventResponse {
 
         let favoritesEvent = internalFavoritesEventResponse.favoriteEvents.map({ favoriteEvent -> FavoriteEvent in
             let favoriteEvent = Self.favoriteEvent(fromInternalFavoriteEvent: favoriteEvent)
-
             return favoriteEvent
-
         })
 
         return FavoriteEventResponse(favoriteEvents: favoritesEvent)
-
     }
 
     static func favoriteEvent(fromInternalFavoriteEvent internalFavoriteEvent: SportRadarModels.FavoriteEvent) -> FavoriteEvent {
@@ -197,21 +189,18 @@ extension SportRadarModelMapper {
 
     static func topCompetitionData(fromInternalTopCompetitionData internalTopCompetitionData: SportRadarModels.TopCompetitionData) -> TopCompetitionData {
 
-        let topCompetitions = internalTopCompetitionData.competitions.map({ topCompetition -> TopCompetition in
-
-            let topCompetition = Self.topCompetition(fromInternalTopCompetition: topCompetition)
-
+        let topCompetitions = internalTopCompetitionData.competitions.map({ topCompetition -> TopCompetitionPointer in
+            let topCompetition = Self.topCompetitionPointer(fromInternalTopCompetitionPointer: topCompetition)
             return topCompetition
-
         })
 
         return TopCompetitionData(title: internalTopCompetitionData.title, competitions: topCompetitions)
-
     }
 
-    static func topCompetition(fromInternalTopCompetition internalTopCompetition: SportRadarModels.TopCompetition) -> TopCompetition {
-
-        return TopCompetition(id: internalTopCompetition.id, name: internalTopCompetition.name, competitionId: internalTopCompetition.competitionId)
+    static func topCompetitionPointer(fromInternalTopCompetitionPointer internalTopCompetition: SportRadarModels.TopCompetitionPointer) -> TopCompetitionPointer {
+        return TopCompetitionPointer(id: internalTopCompetition.id,
+                                     name: internalTopCompetition.name,
+                                     competitionId: internalTopCompetition.competitionId)
     }
 
 }

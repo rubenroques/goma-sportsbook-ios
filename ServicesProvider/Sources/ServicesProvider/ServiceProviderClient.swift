@@ -425,14 +425,14 @@ extension ServicesProviderClient {
         return eventsProvider.getHomeSliders()
     }
 
-    public func getTopCompetitions() -> AnyPublisher<[TopCompetition], ServiceProviderError> {
+    public func getTopCompetitionsPointers() -> AnyPublisher<[TopCompetitionPointer], ServiceProviderError> {
         guard
             let eventsProvider = self.eventsProvider
         else {
             return Fail(error: .eventsProviderNotFound).eraseToAnyPublisher()
         }
 
-        return eventsProvider.getTopCompetitions()
+        return eventsProvider.getTopCompetitionsPointers()
     }
 
     public func getEventsForMarketGroup(withId marketGroupId: String) -> AnyPublisher<EventsGroup, ServiceProviderError> {

@@ -1268,40 +1268,28 @@ extension SportRadarEventsProvider {
     }
 
     func getCashbackSuccessBanner() -> AnyPublisher<BannerResponse, ServiceProviderError> {
-
         let endpoint = SportRadarRestAPIClient.getCashbackSuccessBanner
-
         let requestPublisher: AnyPublisher<SportRadarModels.SportRadarResponse<SportRadarModels.BannerResponse>, ServiceProviderError> = self.restConnector.request(endpoint)
-
         return requestPublisher.map( { sportRadarResponse -> BannerResponse in
             let bannersResponse = sportRadarResponse.data
             let mappedBannersResponse = SportRadarModelMapper.bannerResponse(fromInternalBannerResponse: bannersResponse)
-
             return mappedBannersResponse
         })
         .eraseToAnyPublisher()
 
     }
 
-    func getTopCompetitions() -> AnyPublisher<[TopCompetition], ServiceProviderError> {
-
+    func getTopCompetitionsPointers() -> AnyPublisher<[TopCompetitionPointer], ServiceProviderError> {
         let endpoint = SportRadarRestAPIClient.getTopCompetitions
-
         let requestPublisher: AnyPublisher<SportRadarModels.SportRadarResponse<[SportRadarModels.TopCompetitionData]>, ServiceProviderError> = self.restConnector.request(endpoint)
-
-        return requestPublisher.map( { sportRadarResponse -> [TopCompetition] in
-
-            let topCompetitionData = sportRadarResponse.data.flatMap({
+        return requestPublisher.map( { sportRadarResponse -> [TopCompetitionPointer] in
+            let topCompetitions = sportRadarResponse.data.flatMap({
                 $0.competitions
             })
-
-            let mappedTopCompetitions = topCompetitionData.map(SportRadarModelMapper.topCompetition(fromInternalTopCompetition:))
-
+            let mappedTopCompetitions = topCompetitions.map(SportRadarModelMapper.topCompetitionPointer(fromInternalTopCompetitionPointer:))
             return mappedTopCompetitions
-
         })
         .eraseToAnyPublisher()
-
     }
 
     func getEventSummary(eventId: String) -> AnyPublisher<Event, ServiceProviderError> {
@@ -1310,27 +1298,20 @@ extension SportRadarEventsProvider {
         return requestPublisher.map( { sportRadarResponse -> Event in
             let event = sportRadarResponse.data
             let mappedEvent = SportRadarModelMapper.event(fromInternalEvent: event)
-
             return mappedEvent
         })
         .eraseToAnyPublisher()
     }
 
     func getMarketInfo(marketId: String) -> AnyPublisher<Market, ServiceProviderError> {
-
         let endpoint = SportRadarRestAPIClient.getMarketInfo(marketId: marketId)
-
         let requestPublisher: AnyPublisher<SportRadarModels.SportRadarResponse<SportRadarModels.Market>, ServiceProviderError> = self.restConnector.request(endpoint)
-
         return requestPublisher.map( { sportRadarResponse -> Market in
             let market = sportRadarResponse.data
-
             let mappedMarket = SportRadarModelMapper.market(fromInternalMarket: market)
-
             return mappedMarket
         })
         .eraseToAnyPublisher()
-
     }
 
     func getEventsForMarketGroup(withId marketGroupId: String) -> AnyPublisher<EventsGroup, ServiceProviderError> {
@@ -1669,15 +1650,11 @@ extension SportRadarEventsProvider {
 
         if let initialDay = Int(days[safe: 0] ?? "0"),
            let endDay = Int(days[safe: 1] ?? "365") {
-
             if let startDate = Calendar.current.date(byAdding: .day, value: initialDay, to: Date()),
                let endDate = Calendar.current.date(byAdding: .day, value: endDay, to: Date()) {
                 dates.append(startDate)
                 dates.append(endDate)
-
-                print("Dates calculated")
             }
-
         }
 
         return dates
