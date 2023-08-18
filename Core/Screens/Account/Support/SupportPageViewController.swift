@@ -7,7 +7,14 @@
 
 import UIKit
 import Combine
-import WebKit
+import ZendeskCoreSDK // Core
+import MessagingSDK // UI provider
+import AnswerBotSDK // UI provider
+import SupportSDK // UI provider
+import ChatSDK // UI provider
+import SupportProvidersSDK // API provider
+import AnswerBotProvidersSDK // API provider
+import ChatProvidersSDK
 
 class SupportPageViewController: UIViewController {
     
@@ -28,26 +35,7 @@ class SupportPageViewController: UIViewController {
     private lazy var descriptionTextView: UITextView = Self.createDescriptionTextView()
     private lazy var baseView: UIView = Self.createBaseView()
     private lazy var sendButton: UIButton = Self.createSendButton()
-
-    private lazy var webView: WKWebView = {
-        let config = WKWebViewConfiguration()
-//        let js = "document.getElementsByClassName('.sc-htpNat')[0].addEventListener('click', function(){ window.webkit.messageHandlers.clickListener.postMessage('Do something'); })"
-        let js = """
-        document.addEventListener('click', function(evt) {
-        var tagClicked = document.elementFromPoint(evt.clientX, evt.clientY);
-        window.webkit.messageHandlers.clickListener.postMessage(tagClicked.outerHTML.toString());
-        })
-        """
-        let script = WKUserScript(source: js, injectionTime: .atDocumentEnd, forMainFrameOnly: false)
-
-        config.userContentController.addUserScript(script)
-        config.userContentController.add(self, name: "clickListener")
-
-        let webview = WKWebView(frame: .zero, configuration: config)
-        webview.translatesAutoresizingMaskIntoConstraints = false
-
-        return webview
-    }()
+    private lazy var chatButton: UIButton = Self.createChatButton()
 
     // Constraints
     private lazy var anonymousViewTopConstraint: NSLayoutConstraint = Self.createAnonymousViewTopConstraint()
@@ -97,6 +85,7 @@ class SupportPageViewController: UIViewController {
             self.isAnonymous = true
         }
 
+        /*
         self.webView.navigationDelegate = self
         
         let zendeskSupportFile = "zendesk_support.html"
@@ -111,6 +100,7 @@ class SupportPageViewController: UIViewController {
 
             self.webView.loadHTMLString(htmlTemplate, baseURL: bundleUrl)
         }
+        */
 
     }
     
@@ -142,7 +132,12 @@ class SupportPageViewController: UIViewController {
         self.sendButton.isUserInteractionEnabled = true
         let tapSendButton = UITapGestureRecognizer(target: self, action: #selector(self.didTapSend))
         self.sendButton.addGestureRecognizer(tapSendButton)
+
+        self.chatButton.addTarget(self, action: #selector(didTapChatButton), for: .primaryActionTriggered)
+
         StyleHelper.styleButton(button: self.sendButton)
+        StyleHelper.styleButton(button: self.chatButton)
+        self.chatButton.layer.cornerRadius = 22
 
         if Env.userSessionStore.isUserLogged() {
             Publishers.CombineLatest(self.subjectTextField.textPublisher, self.descriptionTextView.textPublisher)
@@ -246,9 +241,9 @@ class SupportPageViewController: UIViewController {
         
         self.backButtonBaseView.backgroundColor = .clear
 
-        self.webView.isOpaque = false
-        self.webView.backgroundColor = .clear
-        self.webView.scrollView.backgroundColor = UIColor.clear
+//        self.webView.isOpaque = false
+//        self.webView.backgroundColor = .clear
+//        self.webView.scrollView.backgroundColor = UIColor.clear
 
     }
 
@@ -284,9 +279,53 @@ class SupportPageViewController: UIViewController {
         self.emailHeaderTextFieldView.resignFirstResponder()
         self.subjectTextField.resignFirstResponder()
         self.descriptionTextView.resignFirstResponder()
-        
     }
-    
+
+    @objc func didTapChatButton() {
+        Zendesk.initialize(appId: "90015cb5fb43daa2fc5307a61d4b8cdae1ee3e50c4b88d0b",
+                           clientId: "mobile_sdk_client_96ee05c0fdb1b08671ec",
+                           zendeskUrl: "https://betssonfrance.zendesk.com/")
+
+        // Set an identity for authentication.
+        let identity: Identity
+        if let userProfileId = Env.userSessionStore.loggedUserProfile?.sessionKey {
+            identity = Identity.createJwt(token: userProfileId)
+        }
+        else {
+            identity = Identity.createAnonymous()
+        }
+
+        Zendesk.instance?.setIdentity(identity)
+
+        Support.initialize(withZendesk: Zendesk.instance)
+        AnswerBot.initialize(withZendesk: Zendesk.instance, support: Support.instance!)
+
+        ChatProvidersSDK.Chat.initialize(accountKey: "ogZPdo3sXdALS3KRca771UZ6WSxOlqHM")
+
+        do {
+            let messagingConfiguration = MessagingConfiguration()
+            let answerBotEngine = try AnswerBotEngine.engine()
+            let supportEngine = try SupportEngine.engine()
+            let chatEngine = try ChatEngine.engine()
+
+            let viewController = try Messaging.instance.buildUI(engines: [answerBotEngine, supportEngine, chatEngine], configs: [messagingConfiguration])
+
+            let button = UIBarButtonItem(title: localized("close"), style: .plain, target: self, action: #selector(dismissView))
+            viewController.navigationItem.leftBarButtonItem = button
+
+            let helpNavigationController = UINavigationController(rootViewController: viewController)
+
+            self.present(helpNavigationController, animated: true, completion: nil)
+        } catch {
+            print(error)
+        }
+
+    }
+
+    @objc func dismissView() {
+        self.dismiss(animated: true, completion: nil)
+    }
+
     @objc func didTapSend() {
 
         if Env.userSessionStore.isUserLogged() {
@@ -310,23 +349,6 @@ class SupportPageViewController: UIViewController {
 
     }
 
-}
-
-extension SupportPageViewController: WKNavigationDelegate {
-
-    func webView(_ webView: WKWebView, didStartProvisionalNavigation navigation: WKNavigation!) {
-        print("STARTING LOADING ZENDESK")
-    }
-
-    func webView(_ webView: WKWebView, didFinish navigation: WKNavigation!) {
-        print("FINISHED LOADING ZENDESK")
-
-    }
-
-    func webView(_ webView: WKWebView, didFail navigation: WKNavigation!, withError error: Error) {
-        print("FAILED LOADING ZENDESK")
-
-    }
 }
 
 //
@@ -441,7 +463,20 @@ extension SupportPageViewController {
         
         return descriptionTextView
     }
-    
+
+    private static func createChatButton() -> UIButton {
+        let chatButton = UIButton()
+        chatButton.translatesAutoresizingMaskIntoConstraints = false
+        chatButton.setTitle("Chat with us", for: .normal)
+        chatButton.setImage(UIImage(named: "support_chat_button_icon"), for: .normal)
+        chatButton.setTitleColor(UIColor.App.buttonTextPrimary, for: .normal)
+        chatButton.setBackgroundColor(UIColor.App.buttonBackgroundPrimary, for: .normal)
+
+        chatButton.setInsets(forContentPadding: UIEdgeInsets(top: 4, left: 10, bottom: 4, right: 10), imageTitlePadding: 7)
+
+        return chatButton
+    }
+
     private static func createSendButton() -> UIButton {
         let sendButton = UIButton()
         sendButton.translatesAutoresizingMaskIntoConstraints = false
@@ -454,13 +489,6 @@ extension SupportPageViewController {
         sendButton.setBackgroundColor(UIColor.App.buttonDisablePrimary, for: .disabled)
         
         return sendButton
-    }
-
-    private static func createWebView() -> WKWebView {
-        let webView = WKWebView()
-        webView.translatesAutoresizingMaskIntoConstraints = false
-
-        return webView
     }
 
     private static func createAnonymousViewTopConstraint() -> NSLayoutConstraint {
@@ -517,7 +545,8 @@ extension SupportPageViewController {
         self.view.addSubview(self.baseView)
         self.view.addSubview(self.navigationBaseView)
 
-        self.view.addSubview(self.webView)
+        self.baseView.addSubview(self.chatButton)
+        // self.view.addSubview(self.webView)
 
         self.initConstraints()
     }
@@ -574,37 +603,42 @@ extension SupportPageViewController {
 
             self.subjectTypeSelectionView.leadingAnchor.constraint(equalTo: self.view.leadingAnchor, constant: 28),
             self.subjectTypeSelectionView.trailingAnchor.constraint(equalTo: self.view.trailingAnchor, constant: -28),
-            //self.subjectTypeSelectionView.heightAnchor.constraint(equalToConstant: 90),
-            
+
             self.subjectTextField.topAnchor.constraint(equalTo: self.subjectTypeSelectionView.bottomAnchor, constant: 30),
             self.subjectTextField.leadingAnchor.constraint(equalTo: self.view.leadingAnchor, constant: 28),
             self.subjectTextField.trailingAnchor.constraint(equalTo: self.view.trailingAnchor, constant: -28),
             self.subjectTextField.heightAnchor.constraint(equalToConstant: 90),
-            
+
             self.sendButton.heightAnchor.constraint(equalToConstant: 51),
             self.sendButton.leadingAnchor.constraint(equalTo: self.view.leadingAnchor, constant: 28),
             self.sendButton.trailingAnchor.constraint(equalTo: self.view.trailingAnchor, constant: -28),
             self.sendButton.topAnchor.constraint(equalTo: self.descriptionView.bottomAnchor, constant: 23),
         ])
-        
+
         NSLayoutConstraint.activate([
             self.descriptionView.topAnchor.constraint(equalTo: self.subjectTextField.bottomAnchor, constant: 10),
             self.descriptionView.leadingAnchor.constraint(equalTo: self.view.leadingAnchor, constant: 28),
             self.descriptionView.trailingAnchor.constraint(equalTo: self.view.trailingAnchor, constant: -28),
             self.descriptionView.heightAnchor.constraint(equalToConstant: 274),
-            
+
             self.descriptionPlaceholderLabel.topAnchor.constraint(equalTo: self.descriptionView.topAnchor, constant: 15),
             self.descriptionPlaceholderLabel.leadingAnchor.constraint(equalTo: self.descriptionView.leadingAnchor, constant: 18),
             self.descriptionPlaceholderLabel.trailingAnchor.constraint(equalTo: self.descriptionView.trailingAnchor, constant: -8),
             self.descriptionPlaceholderLabel.bottomAnchor.constraint(equalTo: self.descriptionTextView.topAnchor),
-            
+
             self.descriptionTextView.topAnchor.constraint(equalTo: self.descriptionView.topAnchor, constant: 32),
             self.descriptionTextView.leadingAnchor.constraint(equalTo: self.descriptionView.leadingAnchor, constant: 16),
             self.descriptionTextView.trailingAnchor.constraint(equalTo: self.descriptionView.trailingAnchor, constant: -17),
             self.descriptionTextView.bottomAnchor.constraint(equalTo: self.descriptionView.bottomAnchor, constant: -53),
-            
         ])
 
+        NSLayoutConstraint.activate([
+            self.chatButton.heightAnchor.constraint(equalToConstant: 44),
+            self.chatButton.bottomAnchor.constraint(equalTo: self.baseView.safeAreaLayoutGuide.bottomAnchor, constant: -16),
+            self.chatButton.trailingAnchor.constraint(equalTo: self.baseView.trailingAnchor, constant: -16),
+        ])
+
+        /*
         NSLayoutConstraint.activate([
             self.webView.trailingAnchor.constraint(equalTo: self.view.trailingAnchor),
             self.webView.bottomAnchor.constraint(equalTo: self.view.safeAreaLayoutGuide.bottomAnchor)
@@ -621,13 +655,13 @@ extension SupportPageViewController {
 
         self.webViewTopConstraint = self.webView.topAnchor.constraint(equalTo: self.view.safeAreaLayoutGuide.topAnchor)
         self.webViewTopConstraint.isActive = false
+        */
 
         self.anonymousViewTopConstraint = self.anonymousFieldsView.topAnchor.constraint(equalTo: self.baseView.topAnchor, constant: 30)
         self.anonymousViewTopConstraint.isActive = false
 
         self.subjectViewTopConstraint = self.subjectTypeSelectionView.topAnchor.constraint(equalTo: self.baseView.topAnchor, constant: 30)
         self.subjectViewTopConstraint.isActive = true
-        
     }
 
 }
@@ -653,34 +687,4 @@ extension SupportPageViewController: UITextViewDelegate {
         
     }
 
-}
-
-extension SupportPageViewController: WKScriptMessageHandler {
-    func userContentController(_ userContentController: WKUserContentController, didReceive message: WKScriptMessage) {
-
-        if "\(message.body)".contains("sc-vrqbdz-5 eQUhzA") {
-            DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
-                UIView.animate(withDuration: 0.5, delay: 0, options: UIView.AnimationOptions.curveEaseOut) {
-                    self.webViewWidthConstraint.isActive = true
-                    self.webViewHeightConstraint.isActive = true
-                    self.webViewLeadingConstraint.isActive = false
-                    self.webViewTopConstraint.isActive = false
-                    self.view.setNeedsLayout()
-                    self.view.layoutIfNeeded()
-                }
-            }
-
-        }
-        else {
-            UIView.animate(withDuration: 0.5, delay: 0.25, options: UIView.AnimationOptions.curveEaseOut) {
-                self.webViewWidthConstraint.isActive = false
-                self.webViewHeightConstraint.isActive = false
-                self.webViewLeadingConstraint.isActive = true
-                self.webViewTopConstraint.isActive = true
-                self.view.setNeedsLayout()
-                self.view.layoutIfNeeded()
-            }
-        }
-
-    }
 }

@@ -126,11 +126,28 @@ class AnonymousSideMenuViewController: UIViewController {
 
     private func addMenus() {
 
+        let replayView = NavigationCardView()
+        replayView.hasNotifications = true
+        replayView.setupView(title: localized("replay"), iconTitle: "cashback_icon")
+        let replayTap = UITapGestureRecognizer(target: self, action: #selector(replayViewTapped))
+        replayView.addGestureRecognizer(replayTap)
+
+        let betSwipeView = NavigationCardView()
+        betSwipeView.hasNotifications = true
+        betSwipeView.setupView(title: "Bet Swipe", iconTitle: "betswipe_profile_icon")
+        let betSwipeTap = UITapGestureRecognizer(target: self, action: #selector(betSwipeViewTapped))
+        betSwipeView.addGestureRecognizer(betSwipeTap)
+
         let promotionsView = NavigationCardView()
         promotionsView.hasNotifications = true
         promotionsView.setupView(title: localized("promotions"), iconTitle: "promotion_icon")
         let messagesTap = UITapGestureRecognizer(target: self, action: #selector(promotionsViewTapped))
         promotionsView.addGestureRecognizer(messagesTap)
+
+        let recruitFriendView = NavigationCardView()
+        recruitFriendView.setupView(title: localized("referal_friend"), iconTitle: "recruit_icon")
+        let recruitFriendTap = UITapGestureRecognizer(target: self, action: #selector(recruitFriendViewTapped))
+        recruitFriendView.addGestureRecognizer(recruitFriendTap)
 
         let responsibleGamingView = NavigationCardView()
         responsibleGamingView.setupView(title: localized("responsible_gaming"), iconTitle: "responsible_gaming_icon")
@@ -147,10 +164,12 @@ class AnonymousSideMenuViewController: UIViewController {
         let supportTap = UITapGestureRecognizer(target: self, action: #selector(supportViewTapped))
         supportView.addGestureRecognizer(supportTap)
 
+        self.menusStackView.addArrangedSubview(replayView)
+        self.menusStackView.addArrangedSubview(betSwipeView)
         self.menusStackView.addArrangedSubview(promotionsView)
-        self.menusStackView.addArrangedSubview(responsibleGamingView)
-        // self.menusStackView.addArrangedSubview(settingsView)
+        self.menusStackView.addArrangedSubview(recruitFriendView)
         self.menusStackView.addArrangedSubview(supportView)
+        self.menusStackView.addArrangedSubview(responsibleGamingView)
     }
 
     // MARK: - Actions
@@ -218,23 +237,37 @@ extension AnonymousSideMenuViewController {
         }
     }
 
-    @objc func responsibleGamingViewTapped() {
+    @objc private func responsibleGamingViewTapped() {
         let responsibleGamingViewController = ResponsibleGamingViewController()
         self.navigationController?.pushViewController(responsibleGamingViewController, animated: true)
     }
 
-    @objc func appSettingsViewTapped() {
+    @objc private func appSettingsViewTapped() {
         let appSettingsViewController = AppSettingsViewController()
         self.navigationController?.pushViewController(appSettingsViewController, animated: true)
     }
 
-    @objc func supportViewTapped() {
+    @objc private func supportViewTapped() {
         let supportViewController = SupportPageViewController(viewModel: SupportPageViewModel())
         self.navigationController?.pushViewController(supportViewController, animated: true)
     }
 
-}
+    @objc private func replayViewTapped() {
+        let cashbackInfoViewController = CashbackInfoViewController()
+        self.navigationController?.pushViewController(cashbackInfoViewController, animated: true)
+    }
 
+    @objc private func recruitFriendViewTapped() {
+        let recruitAFriendViewController = RecruitAFriendViewController()
+        self.navigationController?.pushViewController(recruitAFriendViewController, animated: true)
+    }
+
+    @objc private func betSwipeViewTapped() {
+        let betSelectorViewConroller = InternalBrowserViewController(fileName: "TinderStyleBetBuilder", fileType: "html", fullscreen: true)
+        self.navigationController?.pushViewController(betSelectorViewConroller, animated: true)
+    }
+
+}
 
 //
 // MARK: - Subviews Initialization and Setup

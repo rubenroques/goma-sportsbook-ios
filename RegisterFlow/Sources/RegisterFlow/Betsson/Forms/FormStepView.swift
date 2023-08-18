@@ -25,6 +25,13 @@ public class FormStepView: UIView, FormStepCompleter, RegisterErrorPresenter {
         return Just(true).eraseToAnyPublisher()
     }
 
+    var requestNextFormSubject: PassthroughSubject<Void, Never> = .init()
+
+    var canMoveToNextForm: Bool { return true }
+    var canMoveToPreviousForm: Bool { return true }
+
+    var shouldSkipForm: Bool { return false }
+
     lazy var contentView: UIView = Self.createContentView()
     lazy var stackView: UIStackView = Self.createStackView()
 
@@ -71,6 +78,10 @@ public class FormStepView: UIView, FormStepCompleter, RegisterErrorPresenter {
         self.stackView.backgroundColor = AppColor.backgroundPrimary
 
         self.titleLabel.textColor = AppColor.textPrimary
+    }
+
+    func didBecomeMainCenterStep() {
+
     }
 
 }

@@ -57,8 +57,9 @@ class NicknameFormStepViewModel {
 
         self.nickname = .init(nickname)
 
-        if nickname == nil {
+        if nickname == nil || (nickname ?? "").isEmpty {
             self.generatedNickname = .init(nickname)
+            self.shouldUseGeneratedNickname = true
         }
         else {
             self.shouldUseGeneratedNickname = false

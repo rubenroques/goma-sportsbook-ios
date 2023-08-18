@@ -566,11 +566,13 @@ extension SportRadarModels {
     }
 
     struct SportCompetitionInfo: Codable {
+
         var id: String
         var name: String
         var marketGroups: [SportCompetitionMarketGroup]
         var numberOutrightEvents: String
         var numberOutrightMarkets: String
+        var parentId: String?
 
         enum CodingKeys: String, CodingKey {
             case id = "idfwbonavigation"
@@ -578,6 +580,7 @@ extension SportRadarModels {
             case marketGroups = "marketgroups"
             case numberOutrightEvents = "numoutrightevents"
             case numberOutrightMarkets = "numoutrightmarkets"
+            case parentId = "idfwbonavigation_parent"
         }
     }
 
@@ -600,6 +603,18 @@ extension SportRadarModels {
             case id = "idfwmarketgroup"
             case name = "name"
             case events = "events"
+        }
+    }
+
+    struct CompetitionParentNode: Codable {
+        var id: String
+        var name: String
+        var categoryName: String
+
+        enum CodingKeys: String, CodingKey {
+            case id = "idfwbonavigation"
+            case name = "name"
+            case categoryName = "contentcategoryname"
         }
     }
 

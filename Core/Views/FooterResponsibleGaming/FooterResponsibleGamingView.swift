@@ -390,7 +390,7 @@ extension FooterResponsibleGamingView {
             self.baseStackView.leadingAnchor.constraint(equalTo: self.leadingAnchor, constant: 24),
             self.baseStackView.trailingAnchor.constraint(equalTo: self.trailingAnchor, constant: -24),
             self.baseStackView.topAnchor.constraint(equalTo: self.topAnchor),
-            self.baseStackView.bottomAnchor.constraint(equalTo: self.bottomAnchor, constant: -46),
+            self.baseStackView.bottomAnchor.constraint(equalTo: self.bottomAnchor, constant: -12),
         ])
 
         NSLayoutConstraint.activate([

@@ -42,6 +42,10 @@ class ProfileViewController: UIViewController {
     @IBOutlet private weak var bonusBalanceTitleLabel: UILabel!
     @IBOutlet private weak var bonusBalanceLabel: UILabel!
 
+    @IBOutlet private weak var replayBalanceBaseView: UIView!
+    @IBOutlet private weak var replayBalanceTitleLabel: UILabel!
+    @IBOutlet private weak var replayBalanceLabel: UILabel!
+
     @IBOutlet private weak var depositButton: UIButton!
     @IBOutlet private weak var withdrawButton: UIButton!
 
@@ -109,6 +113,11 @@ class ProfileViewController: UIViewController {
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
 
+        // Default is hidden
+        self.bonusBalanceBaseView.isHidden = true
+        // self.replayBalanceBaseView.isHidden = true
+
+        //
         if let user = self.userProfile {
             self.usernameLabel.text = user.username
 
@@ -145,56 +154,66 @@ class ProfileViewController: UIViewController {
             .receive(on: DispatchQueue.main)
             .sink { [weak self] userWallet in
                 if let userWallet = userWallet {
+                    // Total
                     if let formattedTotalString = CurrencyFormater.defaultFormat.string(from: NSNumber(value: userWallet.total)) {
                         self?.totalBalanceLabel.text = formattedTotalString
                     }
                     else {
                         self?.totalBalanceLabel.text = "-.--€"
                     }
-                    if let bonusValue = userWallet.bonus,
-                       let formattedBonusString = CurrencyFormater.defaultFormat.string(from: NSNumber(value: bonusValue)) {
-                        self?.bonusBalanceLabel.text = formattedBonusString
-                    }
-                    else {
-                        self?.bonusBalanceLabel.text = "-.--€"
-                    }
 
+                    // Current
                     if let totalWithdrawable = userWallet.totalWithdrawable,
-                       let formattedTotalWithdrawable = CurrencyFormater.defaultFormat.string(from: NSNumber(value: totalWithdrawable)){
+                       let formattedTotalWithdrawable = CurrencyFormater.defaultFormat.string(from: NSNumber(value: totalWithdrawable)) {
                         self?.currentBalanceLabel.text = formattedTotalWithdrawable
                     }
                     else {
                         self?.currentBalanceLabel.text =  "-.--€"
+                    }
+
+                    // Bonus
+                    if let bonusValue = userWallet.bonus,
+                       let formattedBonusString = CurrencyFormater.defaultFormat.string(from: NSNumber(value: bonusValue)) {
+                        self?.bonusBalanceLabel.text = formattedBonusString
+
+                        if bonusValue <= 0 {
+                            self?.bonusBalanceBaseView.isHidden = true
+                        }
+                        else {
+                            self?.bonusBalanceBaseView.isHidden = false
+                        }
+                    }
+                    else {
+                        self?.bonusBalanceLabel.text = "-.--€"
+                        self?.bonusBalanceBaseView.isHidden = true
                     }
                 }
                 else {
                     self?.totalBalanceLabel.text = "-.--€"
                     self?.currentBalanceLabel.text = "-.--€"
                     self?.bonusBalanceLabel.text = "-.--€"
-                    
                 }
             }
             .store(in: &cancellables)
 
-//        Env.userSessionStore.userCashbackBalance
-//            .receive(on: DispatchQueue.main)
-//            .sink { [weak self] cashbackBalance in
-//                if let cashbackBalance = cashbackBalance {
-//                    if let formattedTotalString = CurrencyFormater.defaultFormat.string(from: NSNumber(value: cashbackBalance)) {
-//                        // TODO: Put cashback balance here
-//                    }
-//                    else {
-//                        ()
-//                    }
-//                }
-//                else {
-//                    ()
-//
-//                }
-//            }
-//            .store(in: &cancellables)
+        Env.userSessionStore.userCashbackBalance
+            .receive(on: DispatchQueue.main)
+            .sink { [weak self] cashbackBalance in
+                self?.replayBalanceLabel.text = "-.--€"
 
-        Env.userSessionStore.refreshCashbackBalance()
+                if let cashbackBalance = cashbackBalance,
+                   let formattedTotalString = CurrencyFormater.defaultFormat.string(from: NSNumber(value: cashbackBalance)) {
+                    self?.replayBalanceLabel.text = formattedTotalString
+
+                    if cashbackBalance <= 0 {
+                        self?.replayBalanceBaseView.isHidden = true
+                    }
+                    else {
+                        self?.replayBalanceBaseView.isHidden = false
+                    }
+                }
+            }
+            .store(in: &cancellables)
         
         Env.userSessionStore.isUserProfileCompletePublisher
             .receive(on: DispatchQueue.main)
@@ -266,18 +285,19 @@ class ProfileViewController: UIViewController {
 
         totalBalanceTitleLabel.text = localized("total")
         totalBalanceTitleLabel.font = AppFont.with(type: .bold, size: 14)
-
         totalBalanceLabel.font = AppFont.with(type: .bold, size: 16)
 
         currentBalanceTitleLabel.text = localized("available")
         currentBalanceTitleLabel.font = AppFont.with(type: .bold, size: 14)
-
         currentBalanceLabel.font = AppFont.with(type: .bold, size: 16)
 
         bonusBalanceTitleLabel.text = localized("bonus")
         bonusBalanceTitleLabel.font = AppFont.with(type: .bold, size: 14)
-
         bonusBalanceLabel.font = AppFont.with(type: .bold, size: 16)
+
+        replayBalanceTitleLabel.text = localized("replay")
+        replayBalanceTitleLabel.font = AppFont.with(type: .bold, size: 14)
+        replayBalanceLabel.font = AppFont.with(type: .bold, size: 16)
 
         depositButton.layer.cornerRadius = CornerRadius.button
         withdrawButton.layer.cornerRadius = CornerRadius.button
@@ -442,24 +462,27 @@ class ProfileViewController: UIViewController {
 
         profilePictureBaseInnerView.backgroundColor = UIColor.App.backgroundPrimary
 
-        totalBalanceView.backgroundColor = UIColor.App.backgroundPrimary
-
-        currentBalanceView.backgroundColor = UIColor.App.backgroundPrimary
-
-        bonusBalanceBaseView.backgroundColor = UIColor.App.backgroundPrimary
-
         usernameLabel.textColor = UIColor.App.textPrimary
         userIdLabel.textColor = UIColor.App.textSecondary
 
+        //
+        totalBalanceView.backgroundColor = UIColor.App.backgroundPrimary
         totalBalanceTitleLabel.textColor =  UIColor.App.textPrimary
         totalBalanceLabel.textColor =  UIColor.App.textPrimary
 
+        currentBalanceView.backgroundColor = UIColor.App.backgroundPrimary
         currentBalanceTitleLabel.textColor =  UIColor.App.textPrimary
         currentBalanceLabel.textColor =  UIColor.App.textPrimary
 
+        bonusBalanceBaseView.backgroundColor = UIColor.App.backgroundPrimary
         bonusBalanceTitleLabel.textColor = UIColor.App.textPrimary
         bonusBalanceLabel.textColor = UIColor.App.textPrimary
 
+        replayBalanceBaseView.backgroundColor = UIColor.App.backgroundPrimary
+        replayBalanceTitleLabel.textColor = UIColor.App.textPrimary
+        replayBalanceLabel.textColor = UIColor.App.textPrimary
+        //
+        
         //
         depositButton.setTitleColor( UIColor.App.buttonTextPrimary, for: .normal)
         depositButton.setTitleColor( UIColor.App.buttonTextPrimary.withAlphaComponent(0.7), for: .highlighted)
@@ -548,7 +571,6 @@ class ProfileViewController: UIViewController {
         self.stackView.addArrangedSubview(supportView)
 
         self.stackView.addArrangedSubview(responsibleGamingView)
-
 
     }
 

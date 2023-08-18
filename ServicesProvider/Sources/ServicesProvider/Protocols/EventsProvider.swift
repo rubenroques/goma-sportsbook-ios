@@ -84,6 +84,8 @@ protocol EventsProvider: Connector {
 
     func getTopCompetitionsPointers() -> AnyPublisher<[TopCompetitionPointer], ServiceProviderError>
 
+    func getTopCompetitions() -> AnyPublisher<[TopCompetition], ServiceProviderError>
+
     func getEventsForMarketGroup(withId marketGroupId: String) -> AnyPublisher<EventsGroup, ServiceProviderError>
 
     func getEventDetails(eventId: String) -> AnyPublisher<Event, ServiceProviderError>

@@ -31,6 +31,31 @@ public class UserRegisterEnvelopUpdater {
             .eraseToAnyPublisher()
     }
 
+    public var fullPhoneNumberPublisher: AnyPublisher<String, Never> {
+        return self.filledDataUpdated
+            .map { updatedUserRegisterEnvelop -> String? in
+                let prefix = updatedUserRegisterEnvelop.phonePrefixCountry?.phonePrefix
+                let phoneNumber = updatedUserRegisterEnvelop.phoneNumber
+                if let prefix, let phoneNumber, !prefix.isEmpty, !phoneNumber.isEmpty {
+                    let fullPhoneNumber = "\(prefix)\(phoneNumber)"
+                    return fullPhoneNumber.lowercased()
+                }
+                return nil
+            }
+            .compactMap({ $0 })
+            .removeDuplicates()
+            .eraseToAnyPublisher()
+    }
+
+    public var isPhoneNumberVerified: Bool {
+        if let phonePrefix = self.userRegisterEnvelop.phonePrefixCountry?.phonePrefix,
+            let phoneNumber = self.userRegisterEnvelop.phoneNumber,
+           let verifiedPhoneNumber = self.userRegisterEnvelop.verifiedPhoneNumber {
+            return "\(phonePrefix)\(phoneNumber)" == verifiedPhoneNumber
+        }
+        return false
+    }
+
     private var filledDataUpdated: CurrentValueSubject<UserRegisterEnvelop, Never>
     private var userRegisterEnvelop: UserRegisterEnvelop
 
@@ -116,6 +141,11 @@ public class UserRegisterEnvelopUpdater {
 
     func setPhoneNumber(_ phoneNumber: String) {
         self.userRegisterEnvelop.phoneNumber = phoneNumber
+        self.filledDataUpdated.send(self.userRegisterEnvelop)
+    }
+
+    func setVerifiedPhoneNumber(_ verifiedPhoneNumber: String?) {
+        self.userRegisterEnvelop.verifiedPhoneNumber = verifiedPhoneNumber
         self.filledDataUpdated.send(self.userRegisterEnvelop)
     }
 

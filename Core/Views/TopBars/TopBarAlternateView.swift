@@ -1,5 +1,5 @@
 //
-//  TopBarAlternateView.swift
+//  TopBarView.swift
 //  Sportsbook
 //
 //  Created by André Lascas on 30/05/2023.
@@ -8,29 +8,29 @@
 import UIKit
 import Combine
 
-class TopBarAlternateView: UIView {
+class TopBarView: UIView {
 
     // MARK: Private properties
-    private lazy var topBarAlternateView: UIView = Self.createTopBarAlternateView()
-    private lazy var appIconAlternateImageView: UIImageView = Self.createAppIconAlternateImageView()
-    private lazy var profileAlternateBaseView: UIView = Self.createProfileAlternateBaseView()
-    private lazy var profilePictureAlternateBaseView: UIView = Self.createProfilePictureAlternateBaseView()
-    private lazy var profilePictureBaseInnerAlternateView: UIView = Self.createProfilePictureBaseInnerAlternateView()
-    private lazy var profilePictureAlternateImageView: UIImageView = Self.createProfilePictureAlternateImageView()
-    private lazy var anonymousUserMenuAlternateBaseView: UIView = Self.createAnonymousUserMenuAlternateBaseView()
-    private lazy var anonymousUserMenuAlternateImageView: UIImageView = Self.createAnonymousUserMenuAlternateImageView()
-    private lazy var userInfoAlternateStackView: UIStackView = Self.createUserInfoAlternateStackView()
-    private lazy var accountValueAlternateBaseView: UIView = Self.createAccountValueAlternateBaseView()
-    private lazy var accountValueAlternateView: UIView = Self.createAccountValueAlternateView()
-    private lazy var accountPlusAlternateView: UIView = Self.createAccountPlusAlternateView()
-    private lazy var accountValueAlternateLabel: UILabel = Self.createAccountValueAlternateLabel()
-    private lazy var accountPlusAlternateImageView: UIImageView = Self.createAccountPlusAlternateImageView()
-    private lazy var cashbackAlternateBaseView: UIView = Self.createCashbackAlternateBaseView()
-    private lazy var cashbackAlternateView: UIView = Self.createCashbackAlternateView()
-    private lazy var cashbackIconAlternateImageView: UIImageView = Self.createCashbackIconAlternateImageView()
-    private lazy var cashbackAlternateLabel: UILabel = Self.createCashbackAlternateLabel()
-    private lazy var loginAlternateBaseView: UIView = Self.createLoginAlternateBaseView()
-    private lazy var loginAlternateButton: UIButton = Self.createLoginAlternateButton()
+    private lazy var topBarView: UIView = Self.createTopBarView()
+    private lazy var appIconImageView: UIImageView = Self.createAppIconImageView()
+    private lazy var profileBaseView: UIView = Self.createProfileBaseView()
+    private lazy var profilePictureBaseView: UIView = Self.createProfilePictureBaseView()
+    private lazy var profilePictureBaseInnerView: UIView = Self.createProfilePictureBaseInnerView()
+    private lazy var profilePictureImageView: UIImageView = Self.createProfilePictureImageView()
+    private lazy var anonymousUserMenuBaseView: UIView = Self.createAnonymousUserMenuBaseView()
+    private lazy var anonymousUserMenuImageView: UIImageView = Self.createAnonymousUserMenuImageView()
+    private lazy var userInfoStackView: UIStackView = Self.createUserInfoStackView()
+    private lazy var accountValueBaseView: UIView = Self.createAccountValueBaseView()
+    private lazy var accountValueView: UIView = Self.createAccountValueView()
+    private lazy var accountPlusView: UIView = Self.createAccountPlusView()
+    private lazy var accountValueLabel: UILabel = Self.createAccountValueLabel()
+    private lazy var accountPlusImageView: UIImageView = Self.createAccountPlusImageView()
+    private lazy var cashbackBaseView: UIView = Self.createCashbackBaseView()
+    private lazy var cashbackView: UIView = Self.createCashbackView()
+    private lazy var cashbackIconImageView: UIImageView = Self.createCashbackIconImageView()
+    private lazy var cashbackLabel: UILabel = Self.createCashbackLabel()
+    private lazy var loginBaseView: UIView = Self.createLoginBaseView()
+    private lazy var loginButton: UIButton = Self.createLoginButton()
 
     private var cancellables = Set<AnyCancellable>()
 
@@ -38,6 +38,7 @@ class TopBarAlternateView: UIView {
     var shouldShowProfile: (() -> Void)?
     var shouldShowLogin: (() -> Void)?
     var shouldShowDeposit: (() -> Void)?
+    var shouldShowReplay: (() -> Void)?
     var shouldShowAnonymousMenu: (() -> Void)?
 
     override init(frame: CGRect) {
@@ -63,106 +64,105 @@ class TopBarAlternateView: UIView {
     override func layoutSubviews() {
         super.layoutSubviews()
 
-        self.profilePictureAlternateBaseView.layer.cornerRadius = profilePictureAlternateBaseView.frame.size.width/2
+        self.profilePictureBaseView.layer.cornerRadius = profilePictureBaseView.frame.size.width/2
 
-        self.profilePictureAlternateImageView.layer.cornerRadius = profilePictureAlternateImageView.frame.size.width/2
-        profilePictureAlternateImageView.layer.masksToBounds = false
-        profilePictureAlternateImageView.clipsToBounds = true
+        self.profilePictureImageView.layer.cornerRadius = profilePictureImageView.frame.size.width/2
+        self.profilePictureImageView.layer.masksToBounds = false
+        self.profilePictureImageView.clipsToBounds = true
 
-        self.profilePictureBaseInnerAlternateView.layer.cornerRadius = self.profilePictureBaseInnerAlternateView.frame.size.width/2
+        self.profilePictureBaseInnerView.layer.cornerRadius = self.profilePictureBaseInnerView.frame.size.width/2
 
-        self.accountValueAlternateView.layer.cornerRadius = CornerRadius.view
-        self.accountValueAlternateView.layer.masksToBounds = true
-        self.accountValueAlternateView.isUserInteractionEnabled = true
+        self.accountValueView.layer.cornerRadius = CornerRadius.view
+        self.accountValueView.layer.masksToBounds = true
+        self.accountValueView.isUserInteractionEnabled = true
 
-        self.accountPlusAlternateView.layer.cornerRadius = CornerRadius.squareView
-        self.accountPlusAlternateView.layer.masksToBounds = true
+        self.accountPlusView.layer.cornerRadius = CornerRadius.squareView
+        self.accountPlusView.layer.masksToBounds = true
 
-        self.accountPlusAlternateImageView.setImageColor(color: UIColor.App.buttonTextPrimary)
+        self.accountPlusImageView.setImageColor(color: UIColor.App.buttonTextPrimary)
 
-        self.cashbackAlternateView.layer.cornerRadius = CornerRadius.squareView
-        self.cashbackAlternateView.layer.masksToBounds = true
+        self.cashbackView.layer.cornerRadius = CornerRadius.squareView
+        self.cashbackView.layer.masksToBounds = true
     }
 
     func setupWithTheme() {
 
         if TargetVariables.shouldUseGradientBackgrounds {
 
-            self.topBarAlternateView.backgroundColor = .clear
+            self.topBarView.backgroundColor = .clear
         }
         else {
-            self.topBarAlternateView.backgroundColor = UIColor.App.backgroundPrimary
+            self.topBarView.backgroundColor = UIColor.App.backgroundPrimary
         }
 
-        self.profilePictureAlternateBaseView.backgroundColor = UIColor.App.highlightPrimary
+        self.profilePictureBaseView.backgroundColor = UIColor.App.highlightPrimary
+        self.profilePictureBaseInnerView.backgroundColor = UIColor.App.backgroundPrimary
 
-        self.profilePictureBaseInnerAlternateView.backgroundColor = UIColor.App.backgroundPrimary
+        self.userInfoStackView.backgroundColor = .clear
 
-        self.userInfoAlternateStackView.backgroundColor = .clear
+        self.accountValueLabel.textColor = UIColor.App.textPrimary
+        self.accountValueView.backgroundColor = UIColor.App.highlightPrimaryContrast.withAlphaComponent(0.1)
+        self.accountPlusView.backgroundColor = UIColor.App.highlightSecondary
 
-        self.accountValueAlternateLabel.textColor = UIColor.App.textPrimary
+        self.cashbackLabel.textColor = UIColor.App.textSecondary
+        self.cashbackView.backgroundColor = UIColor.App.highlightPrimaryContrast.withAlphaComponent(0.05)
 
-        self.accountValueAlternateView.backgroundColor = UIColor.App.highlightPrimaryContrast.withAlphaComponent(0.1)
+        self.loginButton.setTitleColor(UIColor.App.buttonTextPrimary, for: .normal)
+        self.loginButton.setTitleColor(UIColor.App.buttonTextPrimary.withAlphaComponent(0.7), for: .highlighted)
+        self.loginButton.setTitleColor(UIColor.App.buttonTextPrimary.withAlphaComponent(0.4), for: .disabled)
+        self.loginButton.setBackgroundColor(UIColor.App.buttonBackgroundPrimary, for: .normal)
+        self.loginButton.setBackgroundColor(UIColor.App.buttonBackgroundPrimary, for: .highlighted)
 
-        self.accountPlusAlternateView.backgroundColor = UIColor.App.highlightSecondary
-
-        self.cashbackAlternateLabel.textColor = UIColor.App.textSecondary
-
-        self.cashbackAlternateView.backgroundColor = UIColor.App.highlightPrimaryContrast.withAlphaComponent(0.05)
-
-        self.loginAlternateButton.setTitleColor(UIColor.App.buttonTextPrimary, for: .normal)
-        self.loginAlternateButton.setTitleColor(UIColor.App.buttonTextPrimary.withAlphaComponent(0.7), for: .highlighted)
-        self.loginAlternateButton.setTitleColor(UIColor.App.buttonTextPrimary.withAlphaComponent(0.4), for: .disabled)
-        self.loginAlternateButton.setBackgroundColor(UIColor.App.buttonBackgroundPrimary, for: .normal)
-        self.loginAlternateButton.setBackgroundColor(UIColor.App.buttonBackgroundPrimary, for: .highlighted)
-
-        self.loginAlternateButton.layer.cornerRadius = CornerRadius.view
-        self.loginAlternateButton.layer.masksToBounds = true
+        self.loginButton.layer.cornerRadius = CornerRadius.view
+        self.loginButton.layer.masksToBounds = true
 
     }
 
     private func commonInit() {
 
-        self.loginAlternateButton.addTarget(self, action: #selector(self.didTapLoginButton), for: UIControl.Event.primaryActionTriggered)
+        self.loginButton.addTarget(self, action: #selector(self.didTapLoginButton), for: UIControl.Event.primaryActionTriggered)
 
-        let alternateProfileTapGesture = UITapGestureRecognizer(target: self, action: #selector(didTapProfileButton))
-        self.profilePictureAlternateBaseView.addGestureRecognizer(alternateProfileTapGesture)
+        let profileTapGesture = UITapGestureRecognizer(target: self, action: #selector(didTapProfileButton))
+        self.profilePictureBaseView.addGestureRecognizer(profileTapGesture)
 
-        self.accountValueAlternateLabel.text = localized("loading")
-        self.accountValueAlternateLabel.font = AppFont.with(type: .bold, size: 12)
+        self.accountValueLabel.text = localized("loading")
+        self.accountValueLabel.font = AppFont.with(type: .bold, size: 12)
 
-        let alternateAccountValueTapGesture = UITapGestureRecognizer(target: self, action: #selector(didTapAccountValue))
-        self.accountValueAlternateView.addGestureRecognizer(alternateAccountValueTapGesture)
+        let accountValueTapGesture = UITapGestureRecognizer(target: self, action: #selector(didTapAccountValue))
+        self.accountValueView.addGestureRecognizer(accountValueTapGesture)
 
-        let alternateAnonymousTapGesture = UITapGestureRecognizer(target: self, action: #selector(didTapAnonymousButton))
-        self.anonymousUserMenuAlternateBaseView.addGestureRecognizer(alternateAnonymousTapGesture)
+        let anonymousTapGesture = UITapGestureRecognizer(target: self, action: #selector(didTapAnonymousButton))
+        self.anonymousUserMenuBaseView.addGestureRecognizer(anonymousTapGesture)
 
+        let replayTapGesture = UITapGestureRecognizer(target: self, action: #selector(didTapReplayBaseView))
+        self.cashbackBaseView.addGestureRecognizer(replayTapGesture)
+        
         // Cashback
         Env.userSessionStore.userCashbackBalance
             .receive(on: DispatchQueue.main)
             .sink { [weak self] cashbackBalance in
                 if let cashbackBalance = cashbackBalance,
                    let formattedTotalString = CurrencyFormater.defaultFormat.string(from: NSNumber(value: cashbackBalance)) {
-                    self?.cashbackAlternateLabel.text = formattedTotalString
+                    self?.cashbackLabel.text = formattedTotalString
                 }
                 else {
-                    self?.cashbackAlternateLabel.text = "-.--€"
+                    self?.cashbackLabel.text = "-.--€"
                 }
             }
             .store(in: &cancellables)
 
-        Env.userSessionStore.refreshCashbackBalance()
+        Env.userSessionStore.refreshUserWallet()
 
         // User Profile
         if let userProfile = Env.userSessionStore.userProfilePublisher.value {
             self.setupWithState(screenState: .logged(user: userProfile))
 
             if let avatarName = userProfile.avatarName {
-                self.profilePictureAlternateImageView.image = UIImage(named: avatarName)
+                self.profilePictureImageView.image = UIImage(named: avatarName)
             }
             else {
 
-                self.profilePictureAlternateImageView.image = UIImage(named: "empty_user_image")
+                self.profilePictureImageView.image = UIImage(named: "empty_user_image")
             }
         }
         else {
@@ -174,11 +174,11 @@ class TopBarAlternateView: UIView {
         if let userWallet = Env.userSessionStore.userWalletPublisher.value {
             if let formattedTotalString = CurrencyFormater.defaultFormat.string(from: NSNumber(value: userWallet.total)) {
 
-                self.accountValueAlternateLabel.text = formattedTotalString
+                self.accountValueLabel.text = formattedTotalString
             }
         }
         else {
-            self.accountValueAlternateLabel.text = "-.--€"
+            self.accountValueLabel.text = "-.--€"
         }
 
         self.setupPublishers()
@@ -195,11 +195,11 @@ class TopBarAlternateView: UIView {
                     self?.setupWithState(screenState: .logged(user: userProfile))
 
                     if let avatarName = userProfile.avatarName {
-                        self?.profilePictureAlternateImageView.image = UIImage(named: avatarName)
+                        self?.profilePictureImageView.image = UIImage(named: avatarName)
                     }
                     else {
 
-                        self?.profilePictureAlternateImageView.image = UIImage(named: "empty_user_image")
+                        self?.profilePictureImageView.image = UIImage(named: "empty_user_image")
                     }
                 }
                 else {
@@ -213,10 +213,10 @@ class TopBarAlternateView: UIView {
             .sink { [weak self] userWallet in
                 if let userWallet = userWallet,
                    let formattedTotalString = CurrencyFormater.defaultFormat.string(from: NSNumber(value: userWallet.total)) {
-                    self?.accountValueAlternateLabel.text = formattedTotalString
+                    self?.accountValueLabel.text = formattedTotalString
                 }
                 else {
-                    self?.accountValueAlternateLabel.text = "-.--€"
+                    self?.accountValueLabel.text = "-.--€"
                 }
             }
             .store(in: &cancellables)
@@ -226,39 +226,39 @@ class TopBarAlternateView: UIView {
 
         switch screenState {
         case .logged:
-            self.profilePictureAlternateBaseView.isHidden = false
-            self.anonymousUserMenuAlternateBaseView.isHidden = true
+            self.profilePictureBaseView.isHidden = false
+            self.anonymousUserMenuBaseView.isHidden = true
 
-            self.accountValueAlternateBaseView.isHidden = false
-            self.cashbackAlternateBaseView.isHidden = false
+            self.accountValueBaseView.isHidden = false
+            self.cashbackBaseView.isHidden = false
 
-            self.loginAlternateBaseView.isHidden = true
+            self.loginBaseView.isHidden = true
         case .anonymous:
-            self.profilePictureAlternateBaseView.isHidden = true
-            self.anonymousUserMenuAlternateBaseView.isHidden = false
+            self.profilePictureBaseView.isHidden = true
+            self.anonymousUserMenuBaseView.isHidden = false
 
-            self.accountValueAlternateBaseView.isHidden = true
-            self.cashbackAlternateBaseView.isHidden = true
+            self.accountValueBaseView.isHidden = true
+            self.cashbackBaseView.isHidden = true
 
-            self.loginAlternateBaseView.isHidden = false
+            self.loginBaseView.isHidden = false
         }
 //        if isLogged {
-//            self.profilePictureAlternateBaseView.isHidden = false
-//            self.anonymousUserMenuAlternateBaseView.isHidden = true
+//            self.profilePictureBaseView.isHidden = false
+//            self.anonymousUserMenuBaseView.isHidden = true
 //
-//            self.accountValueAlternateBaseView.isHidden = false
-//            self.cashbackAlternateBaseView.isHidden = false
+//            self.accountValueBaseView.isHidden = false
+//            self.cashbackBaseView.isHidden = false
 //
-//            self.loginAlternateBaseView.isHidden = true
+//            self.loginBaseView.isHidden = true
 //        }
 //        else {
-//            self.profilePictureAlternateBaseView.isHidden = true
-//            self.anonymousUserMenuAlternateBaseView.isHidden = false
+//            self.profilePictureBaseView.isHidden = true
+//            self.anonymousUserMenuBaseView.isHidden = false
 //
-//            self.accountValueAlternateBaseView.isHidden = true
-//            self.cashbackAlternateBaseView.isHidden = true
+//            self.accountValueBaseView.isHidden = true
+//            self.cashbackBaseView.isHidden = true
 //
-//            self.loginAlternateBaseView.isHidden = false
+//            self.loginBaseView.isHidden = false
 //        }
     }
 
@@ -280,17 +280,21 @@ class TopBarAlternateView: UIView {
         self.shouldShowAnonymousMenu?()
     }
 
+    @objc private func didTapReplayBaseView() {
+        self.shouldShowReplay?()
+    }
+
 }
 
-extension TopBarAlternateView {
+extension TopBarView {
 
-    private static func createTopBarAlternateView() -> UIView {
+    private static func createTopBarView() -> UIView {
         let view = UIView()
         view.translatesAutoresizingMaskIntoConstraints = false
         return view
     }
 
-    private static func createAppIconAlternateImageView() -> UIImageView {
+    private static func createAppIconImageView() -> UIImageView {
         let imageView = UIImageView()
         imageView.translatesAutoresizingMaskIntoConstraints = false
         imageView.contentMode = .scaleAspectFit
@@ -298,25 +302,25 @@ extension TopBarAlternateView {
         return imageView
     }
 
-    private static func createProfileAlternateBaseView() -> UIView {
+    private static func createProfileBaseView() -> UIView {
         let view = UIView()
         view.translatesAutoresizingMaskIntoConstraints = false
         return view
     }
 
-    private static func createProfilePictureAlternateBaseView() -> UIView {
+    private static func createProfilePictureBaseView() -> UIView {
         let view = UIView()
         view.translatesAutoresizingMaskIntoConstraints = false
         return view
     }
 
-    private static func createProfilePictureBaseInnerAlternateView() -> UIView {
+    private static func createProfilePictureBaseInnerView() -> UIView {
         let view = UIView()
         view.translatesAutoresizingMaskIntoConstraints = false
         return view
     }
 
-    private static func createProfilePictureAlternateImageView() -> UIImageView {
+    private static func createProfilePictureImageView() -> UIImageView {
         let imageView = UIImageView()
         imageView.translatesAutoresizingMaskIntoConstraints = false
         imageView.contentMode = .scaleAspectFit
@@ -324,13 +328,13 @@ extension TopBarAlternateView {
         return imageView
     }
 
-    private static func createAnonymousUserMenuAlternateBaseView() -> UIView {
+    private static func createAnonymousUserMenuBaseView() -> UIView {
         let view = UIView()
         view.translatesAutoresizingMaskIntoConstraints = false
         return view
     }
 
-    private static func createAnonymousUserMenuAlternateImageView() -> UIImageView {
+    private static func createAnonymousUserMenuImageView() -> UIImageView {
         let imageView = UIImageView()
         imageView.translatesAutoresizingMaskIntoConstraints = false
         imageView.contentMode = .scaleAspectFit
@@ -338,7 +342,7 @@ extension TopBarAlternateView {
         return imageView
     }
 
-    private static func createUserInfoAlternateStackView() -> UIStackView {
+    private static func createUserInfoStackView() -> UIStackView {
         let stackView = UIStackView()
         stackView.translatesAutoresizingMaskIntoConstraints = false
         stackView.distribution = .equalSpacing
@@ -347,25 +351,25 @@ extension TopBarAlternateView {
         return stackView
     }
 
-    private static func createAccountValueAlternateBaseView() -> UIView {
+    private static func createAccountValueBaseView() -> UIView {
         let view = UIView()
         view.translatesAutoresizingMaskIntoConstraints = false
         return view
     }
 
-    private static func createAccountValueAlternateView() -> UIView {
+    private static func createAccountValueView() -> UIView {
         let view = UIView()
         view.translatesAutoresizingMaskIntoConstraints = false
         return view
     }
 
-    private static func createAccountPlusAlternateView() -> UIView {
+    private static func createAccountPlusView() -> UIView {
         let view = UIView()
         view.translatesAutoresizingMaskIntoConstraints = false
         return view
     }
 
-    private static func createAccountValueAlternateLabel() -> UILabel {
+    private static func createAccountValueLabel() -> UILabel {
         let label = UILabel()
         label.translatesAutoresizingMaskIntoConstraints = false
         label.text = "-.--"
@@ -373,7 +377,7 @@ extension TopBarAlternateView {
         return label
     }
 
-    private static func createAccountPlusAlternateImageView() -> UIImageView {
+    private static func createAccountPlusImageView() -> UIImageView {
         let imageView = UIImageView()
         imageView.translatesAutoresizingMaskIntoConstraints = false
         imageView.contentMode = .scaleAspectFit
@@ -381,27 +385,27 @@ extension TopBarAlternateView {
         return imageView
     }
 
-    private static func createCashbackAlternateBaseView() -> UIView {
+    private static func createCashbackBaseView() -> UIView {
         let view = UIView()
         view.translatesAutoresizingMaskIntoConstraints = false
         return view
     }
 
-    private static func createCashbackAlternateView() -> UIView {
+    private static func createCashbackView() -> UIView {
         let view = UIView()
         view.translatesAutoresizingMaskIntoConstraints = false
         return view
     }
 
-    private static func createCashbackIconAlternateImageView() -> UIImageView {
+    private static func createCashbackIconImageView() -> UIImageView {
         let imageView = UIImageView()
         imageView.translatesAutoresizingMaskIntoConstraints = false
         imageView.contentMode = .scaleAspectFit
-        imageView.image = UIImage(named: "cashback_icon")
+        imageView.image = UIImage(named: "cashback_small_blue_icon")
         return imageView
     }
 
-    private static func createCashbackAlternateLabel() -> UILabel {
+    private static func createCashbackLabel() -> UILabel {
         let label = UILabel()
         label.translatesAutoresizingMaskIntoConstraints = false
         label.text = "-.--"
@@ -409,60 +413,61 @@ extension TopBarAlternateView {
         return label
     }
 
-    private static func createLoginAlternateBaseView() -> UIView {
+    private static func createLoginBaseView() -> UIView {
         let view = UIView()
         view.translatesAutoresizingMaskIntoConstraints = false
         return view
     }
 
-    private static func createLoginAlternateButton() -> UIButton {
+    private static func createLoginButton() -> UIButton {
         let button = UIButton()
         button.translatesAutoresizingMaskIntoConstraints = false
         button.setTitle(localized("login"), for: .normal)
         button.titleLabel?.font = AppFont.with(type: .bold, size: 13)
+        button.contentEdgeInsets = UIEdgeInsets(top: 10, left: 16, bottom: 11, right: 16)
         return button
     }
 
     private func setupSubviews() {
 
-        self.addSubview(self.topBarAlternateView)
+        self.addSubview(self.topBarView)
 
-        self.topBarAlternateView.addSubview(self.appIconAlternateImageView)
+        self.topBarView.addSubview(self.appIconImageView)
 
-        self.topBarAlternateView.addSubview(profileAlternateBaseView)
+        self.topBarView.addSubview(profileBaseView)
 
-        self.profileAlternateBaseView.addSubview(self.profilePictureAlternateBaseView)
+        self.profileBaseView.addSubview(self.profilePictureBaseView)
 
-        self.profilePictureAlternateBaseView.addSubview(self.profilePictureBaseInnerAlternateView)
-        self.profilePictureAlternateBaseView.addSubview(self.profilePictureAlternateImageView)
+        self.profilePictureBaseView.addSubview(self.profilePictureBaseInnerView)
+        self.profilePictureBaseView.addSubview(self.profilePictureImageView)
 
-        self.profileAlternateBaseView.addSubview(self.anonymousUserMenuAlternateBaseView)
+        self.profileBaseView.addSubview(self.anonymousUserMenuBaseView)
 
-        self.anonymousUserMenuAlternateBaseView.addSubview(self.anonymousUserMenuAlternateImageView)
+        self.anonymousUserMenuBaseView.addSubview(self.anonymousUserMenuImageView)
 
-        self.topBarAlternateView.addSubview(self.userInfoAlternateStackView)
+        self.topBarView.addSubview(self.userInfoStackView)
 
         // Cashback
-        self.userInfoAlternateStackView.addArrangedSubview(self.cashbackAlternateBaseView)
+        self.userInfoStackView.addArrangedSubview(self.cashbackBaseView)
 
-        self.cashbackAlternateBaseView.addSubview(self.cashbackAlternateView)
+        self.cashbackBaseView.addSubview(self.cashbackView)
 
-        self.cashbackAlternateView.addSubview(self.cashbackIconAlternateImageView)
-        self.cashbackAlternateView.addSubview(self.cashbackAlternateLabel)
+        self.cashbackView.addSubview(self.cashbackIconImageView)
+        self.cashbackView.addSubview(self.cashbackLabel)
 
         // Acount value
-        self.userInfoAlternateStackView.addArrangedSubview(self.accountValueAlternateBaseView)
+        self.userInfoStackView.addArrangedSubview(self.accountValueBaseView)
 
-        self.accountValueAlternateBaseView.addSubview(self.accountValueAlternateView)
+        self.accountValueBaseView.addSubview(self.accountValueView)
 
-        self.accountValueAlternateView.addSubview(self.accountPlusAlternateView)
-        self.accountValueAlternateView.addSubview(self.accountValueAlternateLabel)
+        self.accountValueView.addSubview(self.accountPlusView)
+        self.accountValueView.addSubview(self.accountValueLabel)
 
-        self.accountPlusAlternateView.addSubview(self.accountPlusAlternateImageView)
+        self.accountPlusView.addSubview(self.accountPlusImageView)
 
-        self.userInfoAlternateStackView.addArrangedSubview(self.loginAlternateBaseView)
+        self.userInfoStackView.addArrangedSubview(self.loginBaseView)
 
-        self.loginAlternateBaseView.addSubview(self.loginAlternateButton)
+        self.loginBaseView.addSubview(self.loginButton)
 
         self.initConstraints()
 
@@ -474,98 +479,98 @@ extension TopBarAlternateView {
 
         NSLayoutConstraint.activate([
 
-            self.topBarAlternateView.leadingAnchor.constraint(equalTo: self.leadingAnchor),
-            self.topBarAlternateView.trailingAnchor.constraint(equalTo: self.trailingAnchor),
-            self.topBarAlternateView.topAnchor.constraint(equalTo: self.topAnchor),
-            self.topBarAlternateView.bottomAnchor.constraint(equalTo: self.bottomAnchor),
-            self.topBarAlternateView.heightAnchor.constraint(equalToConstant: 64),
+            self.topBarView.leadingAnchor.constraint(equalTo: self.leadingAnchor),
+            self.topBarView.trailingAnchor.constraint(equalTo: self.trailingAnchor),
+            self.topBarView.topAnchor.constraint(equalTo: self.topAnchor),
+            self.topBarView.bottomAnchor.constraint(equalTo: self.bottomAnchor),
+            self.topBarView.heightAnchor.constraint(equalToConstant: 64),
 
-            self.appIconAlternateImageView.leadingAnchor.constraint(equalTo: self.topBarAlternateView.leadingAnchor, constant: 15),
-            self.appIconAlternateImageView.centerYAnchor.constraint(equalTo: self.topBarAlternateView.centerYAnchor),
-            self.appIconAlternateImageView.heightAnchor.constraint(equalToConstant: 30),
-            self.appIconAlternateImageView.widthAnchor.constraint(lessThanOrEqualToConstant: 130),
+            self.appIconImageView.leadingAnchor.constraint(equalTo: self.topBarView.leadingAnchor, constant: 15),
+            self.appIconImageView.centerYAnchor.constraint(equalTo: self.topBarView.centerYAnchor),
+            self.appIconImageView.heightAnchor.constraint(equalToConstant: 30),
+            self.appIconImageView.widthAnchor.constraint(lessThanOrEqualToConstant: 130),
 
-            self.profileAlternateBaseView.trailingAnchor.constraint(equalTo: self.topBarAlternateView.trailingAnchor, constant: -15),
-            self.profileAlternateBaseView.centerYAnchor.constraint(equalTo: self.topBarAlternateView.centerYAnchor),
-            self.profileAlternateBaseView.widthAnchor.constraint(equalToConstant: 45),
-            self.profileAlternateBaseView.heightAnchor.constraint(equalTo: self.profileAlternateBaseView.widthAnchor),
+            self.profileBaseView.trailingAnchor.constraint(equalTo: self.topBarView.trailingAnchor, constant: -15),
+            self.profileBaseView.centerYAnchor.constraint(equalTo: self.topBarView.centerYAnchor),
+            self.profileBaseView.widthAnchor.constraint(equalToConstant: 45),
+            self.profileBaseView.heightAnchor.constraint(equalTo: self.profileBaseView.widthAnchor),
 
-            self.profilePictureAlternateBaseView.widthAnchor.constraint(equalToConstant: 35),
-            self.profilePictureAlternateBaseView.heightAnchor.constraint(equalTo: self.profilePictureAlternateBaseView.widthAnchor),
-            self.profilePictureAlternateBaseView.centerXAnchor.constraint(equalTo: self.profileAlternateBaseView.centerXAnchor),
-            self.profilePictureAlternateBaseView.centerYAnchor.constraint(equalTo: self.profileAlternateBaseView.centerYAnchor),
+            self.profilePictureBaseView.widthAnchor.constraint(equalToConstant: 35),
+            self.profilePictureBaseView.heightAnchor.constraint(equalTo: self.profilePictureBaseView.widthAnchor),
+            self.profilePictureBaseView.centerXAnchor.constraint(equalTo: self.profileBaseView.centerXAnchor),
+            self.profilePictureBaseView.centerYAnchor.constraint(equalTo: self.profileBaseView.centerYAnchor),
 
-            self.profilePictureBaseInnerAlternateView.leadingAnchor.constraint(equalTo: self.profilePictureAlternateBaseView.leadingAnchor, constant: 1),
-            self.profilePictureBaseInnerAlternateView.trailingAnchor.constraint(equalTo: self.profilePictureAlternateBaseView.trailingAnchor, constant: -1),
-            self.profilePictureBaseInnerAlternateView.topAnchor.constraint(equalTo: self.profilePictureAlternateBaseView.topAnchor, constant: 1),
-            self.profilePictureBaseInnerAlternateView.bottomAnchor.constraint(equalTo: self.profilePictureAlternateBaseView.bottomAnchor, constant: -1),
+            self.profilePictureBaseInnerView.leadingAnchor.constraint(equalTo: self.profilePictureBaseView.leadingAnchor, constant: 1),
+            self.profilePictureBaseInnerView.trailingAnchor.constraint(equalTo: self.profilePictureBaseView.trailingAnchor, constant: -1),
+            self.profilePictureBaseInnerView.topAnchor.constraint(equalTo: self.profilePictureBaseView.topAnchor, constant: 1),
+            self.profilePictureBaseInnerView.bottomAnchor.constraint(equalTo: self.profilePictureBaseView.bottomAnchor, constant: -1),
 
-            self.profilePictureAlternateImageView.widthAnchor.constraint(equalToConstant: 40),
-            self.profilePictureAlternateImageView.heightAnchor.constraint(equalTo: self.profilePictureAlternateImageView.widthAnchor),
-            self.profilePictureAlternateImageView.centerXAnchor.constraint(equalTo: self.profilePictureAlternateBaseView.centerXAnchor),
-            self.profilePictureAlternateImageView.centerYAnchor.constraint(equalTo: self.profilePictureAlternateBaseView.centerYAnchor),
+            self.profilePictureImageView.widthAnchor.constraint(equalToConstant: 40),
+            self.profilePictureImageView.heightAnchor.constraint(equalTo: self.profilePictureImageView.widthAnchor),
+            self.profilePictureImageView.centerXAnchor.constraint(equalTo: self.profilePictureBaseView.centerXAnchor),
+            self.profilePictureImageView.centerYAnchor.constraint(equalTo: self.profilePictureBaseView.centerYAnchor),
 
-            self.anonymousUserMenuAlternateBaseView.leadingAnchor.constraint(equalTo: self.profilePictureAlternateBaseView.leadingAnchor),
-            self.anonymousUserMenuAlternateBaseView.trailingAnchor.constraint(equalTo: self.profilePictureAlternateBaseView.trailingAnchor),
-            self.anonymousUserMenuAlternateBaseView.topAnchor.constraint(equalTo: self.profilePictureAlternateBaseView.topAnchor),
-            self.anonymousUserMenuAlternateBaseView.bottomAnchor.constraint(equalTo: self.profilePictureAlternateBaseView.bottomAnchor),
+            self.anonymousUserMenuBaseView.leadingAnchor.constraint(equalTo: self.profilePictureBaseView.leadingAnchor),
+            self.anonymousUserMenuBaseView.trailingAnchor.constraint(equalTo: self.profilePictureBaseView.trailingAnchor),
+            self.anonymousUserMenuBaseView.topAnchor.constraint(equalTo: self.profilePictureBaseView.topAnchor),
+            self.anonymousUserMenuBaseView.bottomAnchor.constraint(equalTo: self.profilePictureBaseView.bottomAnchor),
 
-            self.anonymousUserMenuAlternateImageView.leadingAnchor.constraint(equalTo: self.anonymousUserMenuAlternateBaseView.leadingAnchor, constant: 3),
-            self.anonymousUserMenuAlternateImageView.trailingAnchor.constraint(equalTo: self.anonymousUserMenuAlternateBaseView.trailingAnchor, constant: -3),
-            self.anonymousUserMenuAlternateImageView.topAnchor.constraint(equalTo: self.anonymousUserMenuAlternateBaseView.topAnchor, constant: 3),
-            self.anonymousUserMenuAlternateImageView.bottomAnchor.constraint(equalTo: self.anonymousUserMenuAlternateBaseView.bottomAnchor, constant: -3),
+            self.anonymousUserMenuImageView.leadingAnchor.constraint(equalTo: self.anonymousUserMenuBaseView.leadingAnchor, constant: 3),
+            self.anonymousUserMenuImageView.trailingAnchor.constraint(equalTo: self.anonymousUserMenuBaseView.trailingAnchor, constant: -3),
+            self.anonymousUserMenuImageView.topAnchor.constraint(equalTo: self.anonymousUserMenuBaseView.topAnchor, constant: 3),
+            self.anonymousUserMenuImageView.bottomAnchor.constraint(equalTo: self.anonymousUserMenuBaseView.bottomAnchor, constant: -3),
 
-            //self.userInfoAlternateStackView.leadingAnchor.constraint(equalTo: self.appIconAlternateImageView.trailingAnchor, constant: 4),
-            self.userInfoAlternateStackView.trailingAnchor.constraint(equalTo: self.profileAlternateBaseView.leadingAnchor, constant: -4),
-            self.userInfoAlternateStackView.topAnchor.constraint(equalTo: self.topBarAlternateView.topAnchor),
-            self.userInfoAlternateStackView.bottomAnchor.constraint(equalTo: self.topBarAlternateView.bottomAnchor),
+            //self.userInfoStackView.leadingAnchor.constraint(equalTo: self.appIconImageView.trailingAnchor, constant: 4),
+            self.userInfoStackView.trailingAnchor.constraint(equalTo: self.profileBaseView.leadingAnchor, constant: -4),
+            self.userInfoStackView.topAnchor.constraint(equalTo: self.topBarView.topAnchor),
+            self.userInfoStackView.bottomAnchor.constraint(equalTo: self.topBarView.bottomAnchor),
 
             // Account value
-            self.accountValueAlternateBaseView.centerYAnchor.constraint(equalTo: self.userInfoAlternateStackView.centerYAnchor),
+            self.accountValueBaseView.centerYAnchor.constraint(equalTo: self.userInfoStackView.centerYAnchor),
 
-            self.accountValueAlternateView.leadingAnchor.constraint(equalTo: self.accountValueAlternateBaseView.leadingAnchor),
-            self.accountValueAlternateView.trailingAnchor.constraint(equalTo: self.accountValueAlternateBaseView.trailingAnchor),
-            self.accountValueAlternateView.heightAnchor.constraint(equalToConstant: 24),
-            self.accountValueAlternateView.centerYAnchor.constraint(equalTo: self.accountValueAlternateBaseView.centerYAnchor),
+            self.accountValueView.leadingAnchor.constraint(equalTo: self.accountValueBaseView.leadingAnchor),
+            self.accountValueView.trailingAnchor.constraint(equalTo: self.accountValueBaseView.trailingAnchor),
+            self.accountValueView.heightAnchor.constraint(equalToConstant: 24),
+            self.accountValueView.centerYAnchor.constraint(equalTo: self.accountValueBaseView.centerYAnchor),
 
-            self.accountPlusAlternateView.leadingAnchor.constraint(equalTo: self.accountValueAlternateView.leadingAnchor, constant: 4),
-            self.accountPlusAlternateView.topAnchor.constraint(equalTo: self.accountValueAlternateView.topAnchor, constant: 4),
-            self.accountPlusAlternateView.bottomAnchor.constraint(equalTo: self.accountValueAlternateView.bottomAnchor, constant: -4),
-            self.accountPlusAlternateView.widthAnchor.constraint(equalToConstant: 14),
+            self.accountPlusView.leadingAnchor.constraint(equalTo: self.accountValueView.leadingAnchor, constant: 4),
+            self.accountPlusView.topAnchor.constraint(equalTo: self.accountValueView.topAnchor, constant: 4),
+            self.accountPlusView.bottomAnchor.constraint(equalTo: self.accountValueView.bottomAnchor, constant: -4),
+            self.accountPlusView.widthAnchor.constraint(equalToConstant: 14),
 
-            self.accountPlusAlternateImageView.widthAnchor.constraint(equalToConstant: 12),
-            self.accountPlusAlternateImageView.heightAnchor.constraint(equalTo: self.accountPlusAlternateImageView.widthAnchor),
-            self.accountPlusAlternateImageView.centerXAnchor.constraint(equalTo: self.accountPlusAlternateView.centerXAnchor),
-            self.accountPlusAlternateImageView.centerYAnchor.constraint(equalTo: self.accountPlusAlternateView.centerYAnchor),
+            self.accountPlusImageView.widthAnchor.constraint(equalToConstant: 12),
+            self.accountPlusImageView.heightAnchor.constraint(equalTo: self.accountPlusImageView.widthAnchor),
+            self.accountPlusImageView.centerXAnchor.constraint(equalTo: self.accountPlusView.centerXAnchor),
+            self.accountPlusImageView.centerYAnchor.constraint(equalTo: self.accountPlusView.centerYAnchor),
 
-            self.accountValueAlternateLabel.leadingAnchor.constraint(equalTo: self.accountPlusAlternateView.trailingAnchor, constant: 4),
-            self.accountValueAlternateLabel.trailingAnchor.constraint(equalTo: self.accountValueAlternateView.trailingAnchor, constant: -4),
-            self.accountValueAlternateLabel.centerYAnchor.constraint(equalTo: self.accountValueAlternateView.centerYAnchor),
+            self.accountValueLabel.leadingAnchor.constraint(equalTo: self.accountPlusView.trailingAnchor, constant: 4),
+            self.accountValueLabel.trailingAnchor.constraint(equalTo: self.accountValueView.trailingAnchor, constant: -4),
+            self.accountValueLabel.centerYAnchor.constraint(equalTo: self.accountValueView.centerYAnchor),
 
             // Cashback
-            self.cashbackAlternateBaseView.centerYAnchor.constraint(equalTo: self.userInfoAlternateStackView.centerYAnchor),
+            self.cashbackBaseView.centerYAnchor.constraint(equalTo: self.userInfoStackView.centerYAnchor),
 
-            self.cashbackAlternateView.leadingAnchor.constraint(equalTo: self.cashbackAlternateBaseView.leadingAnchor),
-            self.cashbackAlternateView.trailingAnchor.constraint(equalTo: self.cashbackAlternateBaseView.trailingAnchor),
-            self.cashbackAlternateView.heightAnchor.constraint(equalToConstant: 24),
-            self.cashbackAlternateView.centerYAnchor.constraint(equalTo: self.cashbackAlternateBaseView.centerYAnchor),
+            self.cashbackView.leadingAnchor.constraint(equalTo: self.cashbackBaseView.leadingAnchor),
+            self.cashbackView.trailingAnchor.constraint(equalTo: self.cashbackBaseView.trailingAnchor),
+            self.cashbackView.heightAnchor.constraint(equalToConstant: 24),
+            self.cashbackView.centerYAnchor.constraint(equalTo: self.cashbackBaseView.centerYAnchor),
 
-            self.cashbackIconAlternateImageView.leadingAnchor.constraint(equalTo: self.cashbackAlternateView.leadingAnchor, constant: 4),
-            self.cashbackIconAlternateImageView.topAnchor.constraint(equalTo: self.cashbackAlternateView.topAnchor, constant: 4),
-            self.cashbackIconAlternateImageView.bottomAnchor.constraint(equalTo: self.cashbackAlternateView.bottomAnchor, constant: -4),
-            self.cashbackIconAlternateImageView.widthAnchor.constraint(equalToConstant: 14),
+            self.cashbackIconImageView.leadingAnchor.constraint(equalTo: self.cashbackView.leadingAnchor, constant: 4),
+            self.cashbackIconImageView.topAnchor.constraint(equalTo: self.cashbackView.topAnchor, constant: 4),
+            self.cashbackIconImageView.bottomAnchor.constraint(equalTo: self.cashbackView.bottomAnchor, constant: -4),
+            self.cashbackIconImageView.widthAnchor.constraint(equalToConstant: 14),
 
-            self.cashbackAlternateLabel.leadingAnchor.constraint(equalTo: self.cashbackIconAlternateImageView.trailingAnchor, constant: 4),
-            self.cashbackAlternateLabel.trailingAnchor.constraint(equalTo: self.cashbackAlternateView.trailingAnchor, constant: -4),
-            self.cashbackAlternateLabel.centerYAnchor.constraint(equalTo: self.cashbackAlternateView.centerYAnchor),
+            self.cashbackLabel.leadingAnchor.constraint(equalTo: self.cashbackIconImageView.trailingAnchor, constant: 4),
+            self.cashbackLabel.trailingAnchor.constraint(equalTo: self.cashbackView.trailingAnchor, constant: -4),
+            self.cashbackLabel.centerYAnchor.constraint(equalTo: self.cashbackView.centerYAnchor),
 
-            self.loginAlternateBaseView.centerYAnchor.constraint(equalTo: self.userInfoAlternateStackView.centerYAnchor),
+            self.loginBaseView.centerYAnchor.constraint(equalTo: self.userInfoStackView.centerYAnchor),
 
-            self.loginAlternateButton.leadingAnchor.constraint(equalTo: self.loginAlternateBaseView.leadingAnchor),
-            self.loginAlternateButton.trailingAnchor.constraint(equalTo: self.loginAlternateBaseView.trailingAnchor),
-            self.loginAlternateButton.widthAnchor.constraint(equalToConstant: 80),
-            self.loginAlternateButton.heightAnchor.constraint(equalToConstant: 30),
-            self.loginAlternateButton.centerYAnchor.constraint(equalTo: self.loginAlternateBaseView.centerYAnchor)
+            self.loginButton.leadingAnchor.constraint(equalTo: self.loginBaseView.leadingAnchor),
+            self.loginButton.trailingAnchor.constraint(equalTo: self.loginBaseView.trailingAnchor),
+            self.loginButton.widthAnchor.constraint(greaterThanOrEqualToConstant: 80),
+            self.loginButton.heightAnchor.constraint(equalToConstant: 30),
+            self.loginButton.centerYAnchor.constraint(equalTo: self.loginBaseView.centerYAnchor)
 
         ])
 

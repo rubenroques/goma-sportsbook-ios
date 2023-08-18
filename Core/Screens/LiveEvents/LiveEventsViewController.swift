@@ -49,8 +49,11 @@ class LiveEventsViewController: UIViewController {
     @IBOutlet private weak var loadingView: UIActivityIndicatorView!
     private let loadingSpinnerViewController = LoadingSpinnerViewController()
 
+    private let footerInnerView = UIView(frame: .zero)
+
     private let refreshControl = UIRefreshControl()
 
+    //
     var turnTimeRangeOn: Bool = false
     var isLiveEventsMarkets: Bool = true
 
@@ -152,6 +155,14 @@ class LiveEventsViewController: UIViewController {
         self.filtersButtonView.layer.cornerRadius = self.filtersButtonView.frame.height / 2
         self.sportsSelectorButtonView.layer.cornerRadius = self.sportsSelectorButtonView.frame.height / 2
 
+
+        if let footerView = self.tableView.tableFooterView {
+            let size = self.footerInnerView.frame.size
+            if footerView.frame.size.height != size.height {
+                footerView.frame.size.height = size.height
+                self.tableView.tableFooterView = footerView
+            }
+        }
     }
 
     private func commonInit() {
@@ -247,16 +258,35 @@ class LiveEventsViewController: UIViewController {
             self?.didTapChatView()
         }
 
+
+        //
+        // New Footer view in snap to bottom
+        self.footerInnerView.translatesAutoresizingMaskIntoConstraints = false
+        self.footerInnerView.backgroundColor = .clear
+
+        let tableFooterView = UIView(frame: CGRect(x: 0, y: 0, width: 300, height: 60))
+        tableFooterView.backgroundColor = .clear
+
+        tableView.tableFooterView = tableFooterView
+        tableFooterView.addSubview(self.footerInnerView)
+
         let footerResponsibleGamingView = FooterResponsibleGamingView()
         footerResponsibleGamingView.translatesAutoresizingMaskIntoConstraints = false
-
-        self.emptyBaseView.addSubview(footerResponsibleGamingView)
+        self.footerInnerView.addSubview(footerResponsibleGamingView)
 
         NSLayoutConstraint.activate([
-            footerResponsibleGamingView.leadingAnchor.constraint(equalTo: self.emptyBaseView.leadingAnchor),
-            footerResponsibleGamingView.trailingAnchor.constraint(equalTo: self.emptyBaseView.trailingAnchor),
-            footerResponsibleGamingView.bottomAnchor.constraint(equalTo: self.emptyBaseView.bottomAnchor),
+            self.footerInnerView.rightAnchor.constraint(equalTo: tableFooterView.rightAnchor),
+            self.footerInnerView.leftAnchor.constraint(equalTo: tableFooterView.leftAnchor),
+            self.footerInnerView.bottomAnchor.constraint(equalTo: tableFooterView.bottomAnchor),
+            self.footerInnerView.bottomAnchor.constraint(greaterThanOrEqualTo: tableView.superview!.bottomAnchor),
+
+            footerResponsibleGamingView.leadingAnchor.constraint(equalTo: self.footerInnerView.leadingAnchor, constant: 20),
+            footerResponsibleGamingView.trailingAnchor.constraint(equalTo: self.footerInnerView.trailingAnchor, constant: -20),
+            footerResponsibleGamingView.topAnchor.constraint(equalTo: self.footerInnerView.topAnchor, constant: 12),
+            footerResponsibleGamingView.bottomAnchor.constraint(equalTo: self.footerInnerView.bottomAnchor, constant: -10),
         ])
+        // New Footer
+        //
 
         self.view.setNeedsLayout()
         self.view.layoutIfNeeded()

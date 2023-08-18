@@ -9,16 +9,24 @@ import UIKit
 import Combine
 import ServicesProvider
 
-class CompetitionsDataSource: NSObject, UITableViewDataSource, UITableViewDelegate {
+class CompetitionsDataSource: NSObject {
 
-    var competitions: CurrentValueSubject<[Competition], Never> = .init([])
+    var allCompetitions: [Competition] {
+        return self.allCompetitionsSubject.value
+    }
+    var filteredCompetitions: [Competition] {
+        return self.filteredCompetitionsSubject.value
+    }
+
+    var allCompetitionsSubject: CurrentValueSubject<[Competition], Never> = .init([])
+    var filteredCompetitionsSubject: CurrentValueSubject<[Competition], Never> = .init([])
 
     var isLoadingInitialDataPublisher: AnyPublisher<Bool, Never> {
         return self.isLoadingCurrentValueSubject.eraseToAnyPublisher()
     }
 
     var dataChangedPublisher: AnyPublisher<Void, Never> {
-        let changedArrayPublisher = self.competitions
+        let changedArrayPublisher = self.filteredCompetitionsSubject
             .removeDuplicates()
             .map { _ in }
             .eraseToAnyPublisher()
@@ -27,6 +35,14 @@ class CompetitionsDataSource: NSObject, UITableViewDataSource, UITableViewDelega
             .map({ _ in })
             .eraseToAnyPublisher()
     }
+
+    var mainMarketsPublisher: AnyPublisher<[Market], Never> {
+        return self.filteredCompetitionsSubject
+            .map { $0.flatMap(\.matches).flatMap(\.markets) }
+            .eraseToAnyPublisher()
+    }
+
+    private(set) var filtersOptions: HomeFilterOptions?
 
     var didSelectMatchAction: ((Match) -> Void)?
     var didSelectCompetitionAction: ((Competition) -> Void)?
@@ -56,10 +72,12 @@ class CompetitionsDataSource: NSObject, UITableViewDataSource, UITableViewDelega
 
         super.init()
 
-        self.competitions
+        self.allCompetitionsSubject
             .removeDuplicates()
             .sink { [weak self] _ in
-                self?.collapsedCompetitionsSections = []
+                guard let self = self else { return }
+                self.collapsedCompetitionsSections = []
+                self.applyFilters(filtersOptions: self.filtersOptions)
             }
             .store(in: &self.cancellables)
     }
@@ -78,7 +96,7 @@ class CompetitionsDataSource: NSObject, UITableViewDataSource, UITableViewDelega
 
         if competitionIds.isEmpty {
             self.competitionsMatchesSubscriptions = [:]
-            self.competitions.send([])
+            self.allCompetitionsSubject.send([])
             return
         }
 
@@ -134,7 +152,7 @@ class CompetitionsDataSource: NSObject, UITableViewDataSource, UITableViewDelega
         })
 
         self.competitionsMatchesSubscriptions = [:]
-        self.competitions.send([])
+        self.allCompetitionsSubject.send([])
 
         for competitionInfo in competitionInfos {
             if let marketGroup = competitionInfo.marketGroups.filter({ $0.name.lowercased().contains("main") }).first {
@@ -187,7 +205,7 @@ class CompetitionsDataSource: NSObject, UITableViewDataSource, UITableViewDelega
                                          numberOutrightMarkets: Int(competitionInfo.numberOutrightMarkets) ?? 0,
                                          competitionInfo: competitionInfo)
 
-        self.competitions.value.append(newCompetition)
+        self.allCompetitionsSubject.value.append(newCompetition)
 
     }
 
@@ -225,7 +243,7 @@ class CompetitionsDataSource: NSObject, UITableViewDataSource, UITableViewDelega
     private func processCompetitionOutrights(outrightMatch: Match, competitionInfo: SportCompetitionInfo) {
 
         guard
-            !self.competitions.value.contains(where: { $0.id == competitionInfo.id })
+            !self.allCompetitions.contains(where: { $0.id == competitionInfo.id })
         else {
             return
         }
@@ -240,7 +258,7 @@ class CompetitionsDataSource: NSObject, UITableViewDataSource, UITableViewDelega
                                          numberOutrightMarkets: numberOutrightMarkets,
                                          competitionInfo: competitionInfo)
 
-        self.competitions.value.append(newCompetition)
+        self.allCompetitionsSubject.value.append(newCompetition)
 
     }
 
@@ -248,12 +266,85 @@ class CompetitionsDataSource: NSObject, UITableViewDataSource, UITableViewDelega
 
 extension CompetitionsDataSource {
 
+    func clearFilters() {
+        self.applyFilters(filtersOptions: nil)
+    }
+
+    func applyFilters(filtersOptions: HomeFilterOptions?) {
+        self.filtersOptions = filtersOptions
+
+        let filteredMCompetitions = self.filterCompetitions(with: self.filtersOptions, competitions: self.allCompetitions)
+        self.filteredCompetitionsSubject.send(filteredMCompetitions)
+    }
+
+    private func filterCompetitions(with filtersOptions: HomeFilterOptions?, competitions: [Competition]) -> [Competition] {
+
+        guard let filterOptionsValue = filtersOptions else {
+            return competitions
+        }
+
+        var filteredCompetitions: [Competition] = []
+        for competition in competitions where competition.matches.isNotEmpty {
+
+            var filteredMatches: [Match] = []
+
+            for match in competition.matches {
+
+                if match.markets.isEmpty {
+                    continue
+                }
+
+                // Check default market order
+                var marketSort: [Market] = []
+//                let favoriteMarketIndex = match.markets.firstIndex(where: { $0.typeId == filterOptionsValue.defaultMarket.marketId })
+                let favoriteMarketIndex = match.markets.firstIndex(where: { $0.marketTypeId == filterOptionsValue.defaultMarket?.id })
+
+                if let newFirstMarket = match.markets[safe: (favoriteMarketIndex ?? 0)] {
+                    marketSort.append(newFirstMarket)
+                }
+
+                for market in match.markets {
+                    if market.typeId != marketSort[0].typeId {
+                        marketSort.append(market)
+                    }
+                }
+
+                // Check odds filter
+                let matchOdds = marketSort[0].outcomes
+                let oddsRange = filterOptionsValue.lowerBoundOddsRange...filterOptionsValue.highBoundOddsRange
+                for odd in matchOdds {
+                    let oddValue = CGFloat(odd.bettingOffer.decimalOdd)
+                    if oddsRange.contains(oddValue) {
+                        var newMatch = match
+                        newMatch.markets = marketSort
+
+                        filteredMatches.append(newMatch)
+                        break
+                    }
+                }
+
+            }
+
+            if filteredMatches.isNotEmpty {
+                var newCompetition = competition
+                newCompetition.matches = filteredMatches
+                filteredCompetitions.append(newCompetition)
+            }
+
+        }
+        return filteredCompetitions
+    }
+
+}
+
+extension CompetitionsDataSource: UITableViewDataSource, UITableViewDelegate {
+
     func numberOfSections(in tableView: UITableView) -> Int {
-        return self.competitions.value.count + 1
+        return self.filteredCompetitions.count
     }
 
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        if let competition = competitions.value[safe: section] {
+        if let competition = self.filteredCompetitions[safe: section] {
             if competition.numberOutrightMarkets > 0 {
                 return competition.matches.count + 1
             }
@@ -261,7 +352,7 @@ extension CompetitionsDataSource {
                 return competition.matches.count
             }
         }
-        else if section == self.competitions.value.count {
+        else if section == self.filteredCompetitions.count {
             return 1
         }
         return 0
@@ -269,13 +360,8 @@ extension CompetitionsDataSource {
 
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
 
-        if indexPath.section == self.competitions.value.count,
-            let cell = tableView.dequeueCellType(FooterResponsibleGamingViewCell.self) {
-            return cell
-        }
-
         guard
-            let competition = self.competitions.value[safe: indexPath.section]
+            let competition = self.filteredCompetitions[safe: indexPath.section]
         else {
             fatalError()
         }
@@ -337,15 +423,11 @@ extension CompetitionsDataSource {
     }
 
     func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
-        
-        if section == self.competitions.value.count {
-            return nil // Footer
-        }
 
         guard
             let headerView = tableView.dequeueReusableHeaderFooterView(withIdentifier: TournamentTableViewHeader.identifier)
                 as? TournamentTableViewHeader,
-            let competition = self.competitions.value[safe: section]
+            let competition = self.filteredCompetitions[safe: section]
         else {
             fatalError()
         }
@@ -380,29 +462,26 @@ extension CompetitionsDataSource {
     }
 
     func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
-        if section == self.competitions.value.count {
+        if section == self.filteredCompetitions.count {
             return CGFloat(0.01)
         }
         return 54
     }
 
     func tableView(_ tableView: UITableView, estimatedHeightForHeaderInSection section: Int) -> CGFloat {
-        if section == self.competitions.value.count {
+        if section == self.filteredCompetitions.count {
             return CGFloat(0.01)
         }
         return 54
     }
 
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
-        if indexPath.section == self.competitions.value.count {
-            return UITableView.automaticDimension // Footer
-        }
 
         if self.collapsedCompetitionsSections.contains(indexPath.section) {
             return .leastNonzeroMagnitude
         }
 
-        if let competition = competitions.value[safe: indexPath.section] {
+        if let competition = self.filteredCompetitions[safe: indexPath.section] {
             if competition.numberOutrightMarkets > 0 && indexPath.row == 0 {
                 return 105
             }
@@ -414,15 +493,12 @@ extension CompetitionsDataSource {
     }
 
     func tableView(_ tableView: UITableView, estimatedHeightForRowAt indexPath: IndexPath) -> CGFloat {
-        if indexPath.section == self.competitions.value.count {
-            return 120 // Footer
-        }
 
         if self.collapsedCompetitionsSections.contains(indexPath.section) {
             return .leastNonzeroMagnitude
         }
 
-        if let competition = competitions.value[safe: indexPath.section] {
+        if let competition = self.filteredCompetitions[safe: indexPath.section] {
             if competition.numberOutrightMarkets > 0 && indexPath.row == 0 {
                 return 105
             }
@@ -435,74 +511,13 @@ extension CompetitionsDataSource {
 
     func needReloadSection(_ section: Int, tableView: UITableView) {
 
-        guard let competition = self.competitions.value[safe: section] else { return }
+        guard let competition = self.filteredCompetitions[safe: section] else { return }
 
         let rows = (0 ..< competition.matches.count).map({ IndexPath(row: $0, section: section) }) // all section rows
 
         tableView.beginUpdates()
         tableView.reloadRows(at: rows, with: .automatic)
         tableView.endUpdates()
-    }
-
-}
-
-class FilteredOutrightCompetitionsDataSource: NSObject, UITableViewDataSource, UITableViewDelegate {
-
-    var outrightCompetitions: [Competition]
-
-    var didSelectCompetitionAction: ((Competition) -> Void)?
-    var didTapFavoriteCompetitionAction: ((Competition) -> Void)?
-
-    init(outrightCompetitions: [Competition]) {
-        self.outrightCompetitions = outrightCompetitions
-    }
-
-    func numberOfSections(in tableView: UITableView) -> Int {
-        return 1
-    }
-
-    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return outrightCompetitions.count
-    }
-
-    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        guard
-            let competition = self.outrightCompetitions[safe: indexPath.row]
-        else {
-            fatalError()
-        }
-
-        guard
-            let cell = tableView.dequeueReusableCell(withIdentifier: OutrightCompetitionLargeLineTableViewCell.identifier)
-                as? OutrightCompetitionLargeLineTableViewCell
-        else {
-            fatalError()
-        }
-        cell.configure(withViewModel: OutrightCompetitionLargeLineViewModel(competition: competition))
-        cell.didSelectCompetitionAction = { [weak self] competition in
-            self?.didSelectCompetitionAction?(competition)
-        }
-        return cell
-    }
-
-    func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
-        return 145
-    }
-
-    func tableView(_ tableView: UITableView, estimatedHeightForRowAt indexPath: IndexPath) -> CGFloat {
-        return 145
-    }
-
-    func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
-        return nil
-    }
-
-    func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
-        return .leastNormalMagnitude
-    }
-
-    func tableView(_ tableView: UITableView, estimatedHeightForHeaderInSection section: Int) -> CGFloat {
-        return .leastNormalMagnitude
     }
 
 }

@@ -297,7 +297,7 @@ extension TodayMatchesDataSource {
 extension TodayMatchesDataSource: UITableViewDataSource, UITableViewDelegate {
 
     func numberOfSections(in tableView: UITableView) -> Int {
-        return 4
+        return 3
     }
 
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
@@ -316,8 +316,6 @@ extension TodayMatchesDataSource: UITableViewDataSource, UITableViewDelegate {
             else {
                 return 0
             }
-        case 3:
-            return 1
         default:
             return 0
         }
@@ -360,10 +358,6 @@ extension TodayMatchesDataSource: UITableViewDataSource, UITableViewDelegate {
             }
         case 2:
             if let cell = tableView.dequeueCellType(LoadingMoreTableViewCell.self) {
-                return cell
-            }
-        case 3:
-            if let cell = tableView.dequeueCellType(FooterResponsibleGamingViewCell.self) {
                 return cell
             }
         default:
@@ -436,8 +430,6 @@ extension TodayMatchesDataSource: UITableViewDataSource, UITableViewDelegate {
             return 145 // Outrights
         case 2:
             return 70 // Loading cell
-        case 3:
-            return UITableView.automaticDimension // Footer
         default:
             return UITableView.automaticDimension
         }
@@ -449,8 +441,6 @@ extension TodayMatchesDataSource: UITableViewDataSource, UITableViewDelegate {
             return 145 // Outrights
         case 2:
             return 70 // Loading cell
-        case 3:
-            return 120 // Footer
         default:
             return StyleHelper.cardsStyleHeight() + 20
         }

@@ -205,8 +205,9 @@ class LoginViewController: UIViewController {
         forgotButton.setTitle(localized("forgot"), for: .normal)
         forgotButton.titleLabel?.font = AppFont.with(type: AppFont.AppFontType.semibold, size: 14)
 
-        loginButton.setTitle(localized("login"), for: .normal)
-        loginButton.titleLabel?.font = AppFont.with(type: AppFont.AppFontType.bold, size: 18)
+        self.loginButton.setTitle(localized("login"), for: .normal)
+        self.loginButton.titleLabel?.font = AppFont.with(type: AppFont.AppFontType.bold, size: 18)
+        self.loginButton.addTarget(self, action: #selector(self.didTapLoginButton), for: .primaryActionTriggered)
 
         self.passwordHeaderTextFieldView.setSecureField(true)
 
@@ -325,13 +326,40 @@ class LoginViewController: UIViewController {
 
         let userRegisterEnvelopUpdater = UserRegisterEnvelopUpdater(userRegisterEnvelop: userRegisterEnvelopValue)
 
-        userRegisterEnvelopUpdater.didUpdateUserRegisterEnvelop.sink(receiveValue: { (updatedUserEnvelop: UserRegisterEnvelop) in
-            UserDefaults.standard.set(codable: updatedUserEnvelop, forKey: self.registrationFormDataKey)
-            UserDefaults.standard.synchronize()
-        })
-        .store(in: &self.cancellables)
+        userRegisterEnvelopUpdater.didUpdateUserRegisterEnvelop
+            .sink(receiveValue: { (updatedUserEnvelop: UserRegisterEnvelop) in
+                UserDefaults.standard.set(codable: updatedUserEnvelop, forKey: self.registrationFormDataKey)
+                UserDefaults.standard.synchronize()
+            })
+            .store(in: &self.cancellables)
 
-        let viewModel = SteppedRegistrationViewModel(userRegisterEnvelop: userRegisterEnvelopValue,
+        var registerSteps: [RegisterStep]
+        if Env.businessSettingsSocket.clientSettings?.requiredPhoneVerification ?? false {
+            registerSteps = [
+                        RegisterStep(forms: [.gender, .names]),
+                        RegisterStep(forms: [.avatar, .nickname]),
+                        RegisterStep(forms: [.ageCountry]),
+                        RegisterStep(forms: [.address]),
+                        RegisterStep(forms: [.contacts]),
+                        RegisterStep(forms: [.phoneConfirmation]),
+                        RegisterStep(forms: [.password]),
+                        RegisterStep(forms: [.terms, .promoCodes])
+                    ]
+        }
+        else {
+            registerSteps = [
+                        RegisterStep(forms: [.gender, .names]),
+                        RegisterStep(forms: [.avatar, .nickname]),
+                        RegisterStep(forms: [.ageCountry]),
+                        RegisterStep(forms: [.address]),
+                        RegisterStep(forms: [.contacts]),
+                        RegisterStep(forms: [.password]),
+                        RegisterStep(forms: [.terms, .promoCodes])
+                    ]
+        }
+
+        let viewModel = SteppedRegistrationViewModel(registerSteps: registerSteps,
+                                                     userRegisterEnvelop: userRegisterEnvelopValue,
                                                      serviceProvider: Env.servicesProvider,
                                                      userRegisterEnvelopUpdater: userRegisterEnvelopUpdater)
 
@@ -371,20 +399,13 @@ class LoginViewController: UIViewController {
                 }
 
             }, receiveValue: { [weak self] basicResponse in
-
                 UserDefaults.standard.notificationsUserSettings.notificationsSms = true
                 UserDefaults.standard.notificationsUserSettings.notificationsEmail = true
-
             })
             .store(in: &cancellables)
     }
 
     private func showRegisterFeedbackViewController(onNavigationController navigationController: UINavigationController) {
-//        let registerFeedbackViewController = RegisterFeedbackViewController(viewModel: RegisterFeedbackViewModel(registerSuccess: true))
-//
-//        registerFeedbackViewController.didTapContinueButtonAction = { [weak self] in
-//            self?.showBiometricPromptViewController(onNavigationController: navigationController)
-//        }
 
         let genericSuccessViewController = GenericSuccessViewController()
 
@@ -585,7 +606,8 @@ class LoginViewController: UIViewController {
     }
 
     @IBAction private func didTapLoginButton() {
-        
+
+
         let username = usernameHeaderTextFieldView.text
         let password = passwordHeaderTextFieldView.text
         

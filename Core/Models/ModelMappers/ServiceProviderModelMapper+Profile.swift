@@ -37,8 +37,8 @@ extension ServiceProviderModelMapper {
         case .passConditional: localKYCStatus = .passConditional
         }
 
-
         return UserProfile(userIdentifier: serviceProviderProfile.userIdentifier,
+                           sessionKey: serviceProviderProfile.sessionKey,
                            username: serviceProviderProfile.username,
                            email: serviceProviderProfile.email,
                            firstName: serviceProviderProfile.firstName,

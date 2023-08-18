@@ -1,7 +1,7 @@
 {
   "images" : [
     {
-      "filename" : "cashback_profile_icon.png",
+      "filename" : "replay default light mode.png",
       "idiom" : "universal",
       "scale" : "1x"
     },
@@ -12,12 +12,12 @@
           "value" : "dark"
         }
       ],
-      "filename" : "cashback.png",
+      "filename" : "replay default.png",
       "idiom" : "universal",
       "scale" : "1x"
     },
     {
-      "filename" : "cashback_profile_icon@2x.png",
+      "filename" : "replay default light mode@2x.png",
       "idiom" : "universal",
       "scale" : "2x"
     },
@@ -28,12 +28,12 @@
           "value" : "dark"
         }
       ],
-      "filename" : "cashback@2x.png",
+      "filename" : "replay default@2x.png",
       "idiom" : "universal",
       "scale" : "2x"
     },
     {
-      "filename" : "cashback_profile_icon@3x.png",
+      "filename" : "replay default light mode@3x.png",
       "idiom" : "universal",
       "scale" : "3x"
     },
@@ -44,7 +44,7 @@
           "value" : "dark"
         }
       ],
-      "filename" : "cashback@3x.png",
+      "filename" : "replay default@3x.png",
       "idiom" : "universal",
       "scale" : "3x"
     }

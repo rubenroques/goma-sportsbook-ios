@@ -9,6 +9,12 @@ import UIKit
 import Combine
 import ServicesProvider
 
+enum PreLiveDataSourceState {
+    case loading
+    case data
+    case empty(filtered: Bool)
+}
+
 class PopularMatchesDataSource: NSObject {
 
     //
@@ -248,7 +254,7 @@ extension PopularMatchesDataSource {
 extension PopularMatchesDataSource: UITableViewDataSource, UITableViewDelegate {
 
     func numberOfSections(in tableView: UITableView) -> Int {
-        return 4
+        return 3
     }
 
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
@@ -267,8 +273,6 @@ extension PopularMatchesDataSource: UITableViewDataSource, UITableViewDelegate {
             else {
                 return 0
             }
-        case 3: // FooterResponsibleGamingViewCell
-            return 1
         default:
             return 0
         }
@@ -313,12 +317,6 @@ extension PopularMatchesDataSource: UITableViewDataSource, UITableViewDelegate {
             if let cell = tableView.dequeueCellType(LoadingMoreTableViewCell.self) {
                 return cell
             }
-
-        case 3:
-            if let cell = tableView.dequeueCellType(FooterResponsibleGamingViewCell.self) {
-                return cell
-            }
-            
         default:
             fatalError()
         }
@@ -392,8 +390,6 @@ extension PopularMatchesDataSource: UITableViewDataSource, UITableViewDelegate {
             return UITableView.automaticDimension // Matches
         case 2:
             return 70 // Loading cell
-        case 3:
-            return UITableView.automaticDimension // Footer
         default:
             return UITableView.automaticDimension
         }
@@ -407,8 +403,6 @@ extension PopularMatchesDataSource: UITableViewDataSource, UITableViewDelegate {
             return StyleHelper.cardsStyleHeight() + 20 // Matches
         case 2:
             return 70 // Loading cell
-        case 3:
-            return 120
         default:
             return StyleHelper.cardsStyleHeight() + 20
         }

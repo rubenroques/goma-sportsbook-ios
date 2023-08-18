@@ -15,7 +15,6 @@ class MakeYourBetTableViewCell: UITableViewCell {
     private let cellHeight: CGFloat = 75.0
 
     private lazy var baseView: UIView = Self.createBaseView()
-    private lazy var titleLabel: UILabel = Self.createTitleLabel()
     private lazy var swipeImageView: UIImageView = Self.createImageView()
 
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
@@ -47,11 +46,11 @@ class MakeYourBetTableViewCell: UITableViewCell {
         self.backgroundView?.backgroundColor = .clear
         self.contentView.backgroundColor = .clear
 
-        self.baseView.layer.borderWidth = 1
-        self.baseView.layer.borderColor = UIColor.App.highlightSecondary.cgColor
+//        self.baseView.layer.borderWidth = 1
+//        self.baseView.layer.borderColor = UIColor.App.highlightSecondary.cgColor
 
-        self.baseView.backgroundColor = UIColor.App.backgroundOdds
-        self.titleLabel.textColor = UIColor.App.textPrimary
+        self.baseView.backgroundColor = .clear
+        // self.titleLabel.textColor = UIColor.App.textPrimary
     }
 
     @objc func didTapCell() {
@@ -70,29 +69,40 @@ extension MakeYourBetTableViewCell {
         return view
     }
 
-    private static func createTitleLabel() -> UILabel {
-        let titleLabel = UILabel()
-        titleLabel.numberOfLines = 2
-        titleLabel.textAlignment = .center
-        titleLabel.text = "MAKE YOUR\n              OWN BET"
-        titleLabel.font = AppFont.with(type: .bold, size: 22)
-        titleLabel.translatesAutoresizingMaskIntoConstraints = false
-        return titleLabel
-    }
+//    private static func createTitleLabel() -> UILabel {
+//        let titleLabel = UILabel()
+//        titleLabel.numberOfLines = 2
+//        titleLabel.textAlignment = .center
+//        titleLabel.text = "MAKE YOUR\n              OWN BET"
+//        titleLabel.font = AppFont.with(type: .bold, size: 22)
+//        titleLabel.translatesAutoresizingMaskIntoConstraints = false
+//        return titleLabel
+//    }
+//
+//    private static func createImageView() -> UIImageView {
+//        let view = UIImageView()
+//        view.image = UIImage(named: "hand_pointing_image")
+//        view.translatesAutoresizingMaskIntoConstraints = false
+//        view.contentMode = .scaleAspectFit
+//        view.backgroundColor = .clear
+//        return view
+//    }
 
     private static func createImageView() -> UIImageView {
         let view = UIImageView()
-        view.image = UIImage(named: "hand_pointing_image")
+        view.image = UIImage(named: "bet_swipe_banner_v2")
         view.translatesAutoresizingMaskIntoConstraints = false
         view.contentMode = .scaleAspectFit
         view.backgroundColor = .clear
+        view.layer.cornerRadius = 6
+        view.layer.masksToBounds = true
         return view
     }
 
     private func setupSubviews() {
         // Add subviews to self.view or each other
         self.contentView.addSubview(self.baseView)
-        self.baseView.addSubview(self.titleLabel)
+
         self.baseView.addSubview(self.swipeImageView)
 
         // Initialize constraints
@@ -101,21 +111,19 @@ extension MakeYourBetTableViewCell {
 
     private func initConstraints() {
         NSLayoutConstraint.activate([
-            self.baseView.heightAnchor.constraint(equalToConstant: self.cellHeight),
+            // self.baseView.heightAnchor.constraint(equalToConstant: self.cellHeight),
+            self.baseView.leadingAnchor.constraint(equalTo: self.contentView.leadingAnchor),
+            self.baseView.topAnchor.constraint(equalTo: self.contentView.topAnchor, constant: 16),
+            self.baseView.centerXAnchor.constraint(equalTo: self.contentView.centerXAnchor),
+            self.baseView.centerYAnchor.constraint(equalTo: self.contentView.centerYAnchor),
 
-            self.baseView.leadingAnchor.constraint(equalTo: self.contentView.leadingAnchor, constant: 18),
-            self.baseView.trailingAnchor.constraint(equalTo: self.contentView.trailingAnchor, constant: -18),
-            self.baseView.topAnchor.constraint(equalTo: self.contentView.topAnchor, constant: 6),
-            self.baseView.bottomAnchor.constraint(equalTo: self.contentView.bottomAnchor, constant: -16),
+            // Apply the aspect ratio constraint here (1056:216 = 4.8888)
+            self.swipeImageView.widthAnchor.constraint(equalTo: self.swipeImageView.heightAnchor, multiplier: 4.89),
 
-            self.swipeImageView.widthAnchor.constraint(equalTo: self.swipeImageView.heightAnchor),
             self.swipeImageView.topAnchor.constraint(equalTo: self.baseView.topAnchor),
-            self.swipeImageView.bottomAnchor.constraint(equalTo: self.baseView.bottomAnchor, constant: 28),
-            self.swipeImageView.trailingAnchor.constraint(equalTo: self.baseView.trailingAnchor, constant: -12),
-
-            self.titleLabel.leadingAnchor.constraint(equalTo: self.baseView.leadingAnchor),
-            self.titleLabel.trailingAnchor.constraint(equalTo: self.swipeImageView.leadingAnchor),
-            self.titleLabel.centerYAnchor.constraint(equalTo: self.baseView.centerYAnchor),
+            self.swipeImageView.centerXAnchor.constraint(equalTo: self.baseView.centerXAnchor),
+            self.swipeImageView.leadingAnchor.constraint(equalTo: self.baseView.leadingAnchor, constant: 17),
+            self.swipeImageView.centerYAnchor.constraint(equalTo: self.baseView.centerYAnchor),
         ])
     }
 

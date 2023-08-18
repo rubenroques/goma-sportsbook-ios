@@ -50,6 +50,7 @@ enum SportRadarRestAPIClient {
 
     case getCashbackSuccessBanner
     case getTopCompetitions
+    case getTopCompetitionCountry(competitionId: String)
 }
 
 extension SportRadarRestAPIClient: Endpoint {
@@ -133,6 +134,8 @@ extension SportRadarRestAPIClient: Endpoint {
         case .getTopCompetitions:
             return "/services/content/get"
 
+        case .getTopCompetitionCountry:
+            return "/services/content/get"
         }
     }
 
@@ -175,6 +178,7 @@ extension SportRadarRestAPIClient: Endpoint {
 
         case .getCashbackSuccessBanner: return nil
         case .getTopCompetitions: return nil
+        case .getTopCompetitionCountry: return nil
         }
     }
 
@@ -218,6 +222,7 @@ extension SportRadarRestAPIClient: Endpoint {
 
         case .getCashbackSuccessBanner: return .post
         case .getTopCompetitions: return .post
+        case .getTopCompetitionCountry: return .post
         }
     }
 
@@ -607,6 +612,22 @@ extension SportRadarRestAPIClient: Endpoint {
                         """
             return bodyString.data(using: String.Encoding.utf8) ?? Data()
 
+        case .getTopCompetitionCountry(let competitionId):
+            let bodyString =
+                        """
+                        {
+                            "contentId": {
+                                "type": "boNavigationList",
+                                "id": "\(SportRadarConstants.frontEndCode)/\(competitionId)"
+                            },
+                            "clientContext": {
+                                "language": "\(SportRadarConstants.socketLanguageCode)",
+                                "ipAddress": "127.0.0.1"
+                            }
+                        }
+                        """
+            return bodyString.data(using: String.Encoding.utf8) ?? Data()
+
         default:
             return nil
         }
@@ -687,6 +708,8 @@ extension SportRadarRestAPIClient: Endpoint {
             return SportRadarConstants.servicesRestHostname
         case .getTopCompetitions:
             return SportRadarConstants.servicesRestHostname
+        case .getTopCompetitionCountry:
+            return SportRadarConstants.servicesRestHostname
         }
     }
 
@@ -756,7 +779,9 @@ extension SportRadarRestAPIClient: Endpoint {
             return defaultHeaders
         case .getTopCompetitions:
             return defaultHeaders
-
+        case .getTopCompetitionCountry:
+            return defaultHeaders
+            
         case .favoritesList, .addFavoriteList, .addFavoriteToList, .getFavoritesFromList, .deleteFavoriteList, .deleteFavoriteFromList:
             return [
                 "Accept-Encoding": "gzip, deflate, br",

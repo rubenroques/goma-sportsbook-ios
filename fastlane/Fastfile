@@ -82,7 +82,7 @@ lane :distribute_to_firebase do |options|
   firebase_app_distribution(
     app: "1:844144342615:ios:9d61f3eb24c40f4f8a9512", # Replace with your actual Firebase App ID
     firebase_cli_token: ENV["FIREBASE_CLI_TOKEN"],
-    groups: "ios-dev", # "ios-internal", " ios-dev " # Replace with your desired distribution group(s)
+    groups: "ios-internal", # "ios-internal", " ios-dev " # Replace with your desired distribution group(s)
     debug: true
   )
 

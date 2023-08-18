@@ -18,6 +18,8 @@ struct FirebaseClientSettings: Codable {
     let isOnMaintenance: Bool
     let maintenanceReason: String
 
+    let requiredPhoneVerification: Bool
+
     let locale: Locale?
 
     struct Locale: Codable {
@@ -40,6 +42,7 @@ struct FirebaseClientSettings: Codable {
         case isOnMaintenance = "maintenance_mode"
         case maintenanceReason = "maintenance_reason"
         case locale = "locale"
+        case requiredPhoneVerification = "signup_2fa"
     }
 
     init(from decoder: Decoder) throws {
@@ -57,7 +60,7 @@ struct FirebaseClientSettings: Codable {
         }
 
         let isOnMaintenanceInt = try container.decode(Int.self, forKey: .isOnMaintenance)
-        self.isOnMaintenance = isOnMaintenanceInt == 1 ? true : false
+        self.isOnMaintenance = isOnMaintenanceInt == 1
 
         self.currentAppVersion = try container.decode(String.self, forKey: .currentAppVersion)
         self.requiredAppVersion = try container.decode(String.self, forKey: .requiredAppVersion)
@@ -66,5 +69,7 @@ struct FirebaseClientSettings: Codable {
         self.maintenanceReason = (try? container.decode(String.self, forKey: .maintenanceReason)) ?? ""
         self.locale = try? container.decode(Locale.self, forKey: .locale)
 
+        let requiredPhoneVerificationInt = (try? container.decode(Int.self, forKey: .requiredPhoneVerification)) ?? 0
+        self.requiredPhoneVerification = requiredPhoneVerificationInt == 1
     }
 }

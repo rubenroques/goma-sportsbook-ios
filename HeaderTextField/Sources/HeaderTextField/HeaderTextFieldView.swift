@@ -366,6 +366,10 @@ public class HeaderTextFieldView: NibView {
         self.headerLabel.textColor = color
     }
 
+    public func setTextContentType(_ type: UITextContentType) {
+        self.textField.textContentType = type
+    }
+
     public func setSecureField(_ isSecure: Bool) {
         self.isSecureField = isSecure
     }

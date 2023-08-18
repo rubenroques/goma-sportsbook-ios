@@ -438,7 +438,7 @@ class LiveMatchesViewModelDataSource: NSObject, UITableViewDataSource, UITableVi
     }
 
     func numberOfSections(in tableView: UITableView) -> Int {
-        return 3
+        return 2
     }
 
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
@@ -447,8 +447,6 @@ class LiveMatchesViewModelDataSource: NSObject, UITableViewDataSource, UITableVi
             return self.matches.count
         case 1:
             return self.shouldShowLoadingCell ? 1 : 0
-        case 2:
-            return 1
         default:
             return 0
         }
@@ -478,10 +476,6 @@ class LiveMatchesViewModelDataSource: NSObject, UITableViewDataSource, UITableVi
             }
         case 1:
             if let cell = tableView.dequeueCellType(LoadingMoreTableViewCell.self) {
-                return cell
-            }
-        case 2:
-            if let cell = tableView.dequeueCellType(FooterResponsibleGamingViewCell.self) {
                 return cell
             }
 
@@ -527,8 +521,6 @@ class LiveMatchesViewModelDataSource: NSObject, UITableViewDataSource, UITableVi
         switch indexPath.section {
         case 1:
             return 70 // Loading cell
-        case 2:
-            return UITableView.automaticDimension // Footer
         default:
             return UITableView.automaticDimension
         }
@@ -538,8 +530,6 @@ class LiveMatchesViewModelDataSource: NSObject, UITableViewDataSource, UITableVi
         switch indexPath.section {
         case 1:
             return 70 // Loading cell
-        case 3:
-            return 120 // Footer
         default:
             return StyleHelper.cardsStyleHeight() + 20
         }

@@ -98,7 +98,6 @@ class StoriesFullScreenItemView: UIView {
     private var isReadyToPlayVideo: CurrentValueSubject<Bool, Never> = .init(false)
     private var shouldPlayVideo: CurrentValueSubject<Bool, Never> = .init(false)
 
-
     private var cancellables: Set<AnyCancellable> = []
 
     override var tag: Int {

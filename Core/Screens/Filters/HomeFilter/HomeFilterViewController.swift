@@ -430,21 +430,16 @@ class HomeFilterViewController: UIViewController {
 
         if viewTapped.viewId == "1" {
             UserDefaults.standard.oddsValueType = .allOdds
-
             self.lowerBoundOddsRange = OddsValueType.allOdds.oddRange[0]
             self.highBoundOddsRange = OddsValueType.allOdds.oddRange[1]
         }
         else if viewTapped.viewId == "2" {
             UserDefaults.standard.oddsValueType = .between2And3
-
             self.lowerBoundOddsRange = OddsValueType.between2And3.oddRange[0]
             self.highBoundOddsRange = OddsValueType.between2And3.oddRange[1]
         }
         else if viewTapped.viewId == "3" {
             UserDefaults.standard.oddsValueType = .bigOdds
-
-            let oddValueType = UserDefaults.standard.oddsValueType
-
             self.lowerBoundOddsRange = OddsValueType.bigOdds.oddRange[0]
             self.highBoundOddsRange = OddsValueType.bigOdds.oddRange[1]
         }
@@ -487,7 +482,7 @@ class HomeFilterViewController: UIViewController {
 
             // Default odds selected
             if view.viewId == "\(viewInt)" {
-                self.checkOddsRadioOptions(views: self.oddsValueViews ?? [], viewTapped: view)
+                self.checkOddsRadioOptions(views: self.oddsValueViews, viewTapped: view)
             }
         }
 

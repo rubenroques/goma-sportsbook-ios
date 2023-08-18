@@ -65,6 +65,8 @@ class PreLiveEventsViewController: UIViewController {
     @IBOutlet private weak var tableTopViewConstraint: NSLayoutConstraint!
     @IBOutlet private weak var tableFilterTopViewConstraint: NSLayoutConstraint!
 
+    private let footerInnerView = UIView(frame: .zero)
+
     private var competitionsFiltersView: CompetitionsFiltersView = CompetitionsFiltersView()
 
     var selectedTopCompetitionIndex: Int = 0
@@ -187,6 +189,14 @@ class PreLiveEventsViewController: UIViewController {
         self.sportsSelectorButtonView.layer.cornerRadius = self.sportsSelectorButtonView.frame.height / 2
 
         self.filtersCountLabel.layer.cornerRadius = self.filtersCountLabel.frame.width/2
+
+        if let footerView = self.tableView.tableFooterView {
+            let size = self.footerInnerView.frame.size
+            if footerView.frame.size.height != size.height {
+                footerView.frame.size.height = size.height
+                self.tableView.tableFooterView = footerView
+            }
+        }
     }
 
     private func commonInit() {
@@ -301,6 +311,35 @@ class PreLiveEventsViewController: UIViewController {
         self.tableView.addSubview(self.refreshControl)
 
         //
+        // New Footer view in snap to bottom
+        self.footerInnerView.translatesAutoresizingMaskIntoConstraints = false
+        self.footerInnerView.backgroundColor = .clear
+
+        let tableFooterView = UIView(frame: CGRect(x: 0, y: 0, width: 300, height: 60))
+        tableFooterView.backgroundColor = .clear
+
+        tableView.tableFooterView = tableFooterView
+        tableFooterView.addSubview(self.footerInnerView)
+
+        let footerResponsibleGamingView = FooterResponsibleGamingView()
+        footerResponsibleGamingView.translatesAutoresizingMaskIntoConstraints = false
+        self.footerInnerView.addSubview(footerResponsibleGamingView)
+
+        NSLayoutConstraint.activate([
+            self.footerInnerView.rightAnchor.constraint(equalTo: tableFooterView.rightAnchor),
+            self.footerInnerView.leftAnchor.constraint(equalTo: tableFooterView.leftAnchor),
+            self.footerInnerView.bottomAnchor.constraint(equalTo: tableFooterView.bottomAnchor),
+            self.footerInnerView.bottomAnchor.constraint(greaterThanOrEqualTo: tableView.superview!.bottomAnchor),
+
+            footerResponsibleGamingView.leadingAnchor.constraint(equalTo: self.footerInnerView.leadingAnchor, constant: 20),
+            footerResponsibleGamingView.trailingAnchor.constraint(equalTo: self.footerInnerView.trailingAnchor, constant: -20),
+            footerResponsibleGamingView.topAnchor.constraint(equalTo: self.footerInnerView.topAnchor, constant: 12),
+            footerResponsibleGamingView.bottomAnchor.constraint(equalTo: self.footerInnerView.bottomAnchor, constant: -10),
+        ])
+        // New Footer
+        //
+
+        //
         //
         let didTapSportsSelection = UITapGestureRecognizer(target: self, action: #selector(self.didTapSportSelectionView))
         sportsSelectorButtonView.addGestureRecognizer(didTapSportsSelection)
@@ -342,19 +381,6 @@ class PreLiveEventsViewController: UIViewController {
         self.floatingShortcutsView.didTapChatButtonAction = { [weak self] in
             self?.didTapChatView()
         }
-
-        //
-        // ==
-        let footerResponsibleGamingView = FooterResponsibleGamingView()
-        footerResponsibleGamingView.translatesAutoresizingMaskIntoConstraints = false
-
-        self.emptyBaseView.addSubview(footerResponsibleGamingView)
-
-        NSLayoutConstraint.activate([
-            footerResponsibleGamingView.leadingAnchor.constraint(equalTo: self.emptyBaseView.leadingAnchor),
-            footerResponsibleGamingView.trailingAnchor.constraint(equalTo: self.emptyBaseView.trailingAnchor),
-            footerResponsibleGamingView.bottomAnchor.constraint(equalTo: self.emptyBaseView.bottomAnchor),
-        ])
 
         //
         // New loading
@@ -826,50 +852,6 @@ extension PreLiveEventsViewController {
 
 extension PreLiveEventsViewController: UIScrollViewDelegate {
     func scrollViewDidScroll(_ scrollView: UIScrollView) {
-
-        if self.viewModel.matchListTypePublisher.value == .topCompetitions {
-
-            // Reached section
-            if self.viewModel.matchListTypePublisher.value == .topCompetitions {
-
-                for section in 0..<tableView.numberOfSections - 1 {
-
-                    let headerRect = tableView.rectForHeader(inSection: section)
-                    let contentOffsetY = scrollView.contentOffset.y + scrollView.contentInset.top
-
-                    let currentContentOffsetY = scrollView.contentOffset.y
-
-                    let maximumOffsetY = scrollView.contentSize.height - scrollView.frame.height
-
-                    if headerRect.origin.y <= contentOffsetY && contentOffsetY < headerRect.maxY {
-
-                        print("Reached section:", section)
-
-                        if self.reachedTopCompetitionSection != section {
-
-                            self.setHighlightedTopCompetition(section: section)
-
-                        }
-                    }
-                    else if currentContentOffsetY >= maximumOffsetY && currentContentOffsetY != 0 {
-
-                        print("Reached the end of the table view scroll - \(currentContentOffsetY)")
-
-                        let lastSection = self.tableView.numberOfSections - 2
-
-                        if self.reachedTopCompetitionSection != lastSection {
-
-                            self.setHighlightedTopCompetition(section: lastSection)
-
-                        }
-
-                    }
-
-                }
-
-            }
-        }
-
         if !shouldDetectScrollMovement {
             return
         }

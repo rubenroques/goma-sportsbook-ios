@@ -78,6 +78,7 @@ public struct UserOverview: Codable {
 public struct UserProfile: Codable {
     
     public let userIdentifier: String
+    public let sessionKey: String
     public let username: String
     public let email: String
     public let firstName: String?
@@ -106,6 +107,7 @@ public struct UserProfile: Codable {
     public let currency: String?
     
     public init(userIdentifier: String,
+                sessionKey: String,
                 username: String,
                 email: String,
                 firstName: String?,
@@ -131,6 +133,7 @@ public struct UserProfile: Codable {
                 currency: String?) {
         
         self.userIdentifier = userIdentifier
+        self.sessionKey = sessionKey
         self.username = username
         self.email = email
         self.firstName = firstName

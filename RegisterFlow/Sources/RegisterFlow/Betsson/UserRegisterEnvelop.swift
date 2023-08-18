@@ -9,9 +9,9 @@ import Foundation
 import ServicesProvider
 import SharedModels
 
-public final class UserRegisterEnvelop: Codable {
+public final class UserRegisterEnvelop: Codable, Equatable {
 
-    public enum Gender: String, Codable {
+    public enum Gender: String, Codable, Equatable {
         case male = "M"
         case female = "F"
     }
@@ -37,6 +37,7 @@ public final class UserRegisterEnvelop: Codable {
     public var email: String?
     public var phonePrefixCountry: Country?
     public var phoneNumber: String?
+    public var verifiedPhoneNumber: String?
 
     public var password: String?
 
@@ -48,6 +49,33 @@ public final class UserRegisterEnvelop: Codable {
 
     public var simpleRegistered: Bool
     public var confirmationCode: String?
+
+    enum CodingKeys: CodingKey {
+        case gender
+        case name
+        case surname
+        case avatarName
+        case nickname
+        case dateOfBirth
+        case countryBirth
+        case deparmentOfBirth
+        case placeBirth
+        case placeAddress
+        case postcode
+        case streetAddress
+        case streetNumber
+        case email
+        case phonePrefixCountry
+        case phoneNumber
+        case verifiedPhoneNumber
+        case password
+        case acceptedMarketing
+        case acceptedTerms
+        case promoCode
+        case godfatherCode
+        case simpleRegistered
+        case confirmationCode
+    }
 
     public init(gender: Gender? = nil,
                 name: String? = nil,
@@ -65,6 +93,7 @@ public final class UserRegisterEnvelop: Codable {
                 email: String? = nil,
                 phonePrefixCountry: Country? = nil,
                 phoneNumber: String? = nil,
+                verifiedPhoneNumber: String? = nil,
                 password: String? = nil,
                 acceptedMarketing: Bool = false,
                 acceptedTerms: Bool = false,
@@ -90,6 +119,7 @@ public final class UserRegisterEnvelop: Codable {
         self.email = email
         self.phonePrefixCountry = phonePrefixCountry
         self.phoneNumber = phoneNumber
+        self.verifiedPhoneNumber = verifiedPhoneNumber
         self.password = password
         self.acceptedMarketing = acceptedMarketing
         self.acceptedTerms = acceptedTerms
@@ -97,6 +127,89 @@ public final class UserRegisterEnvelop: Codable {
         self.godfatherCode = godfatherCode
         self.simpleRegistered = simpleRegistered
         self.confirmationCode = confirmationCode
+    }
+
+    public init(from decoder: Decoder) throws {
+        let container = try decoder.container(keyedBy: CodingKeys.self)
+        self.gender = try container.decodeIfPresent(UserRegisterEnvelop.Gender.self, forKey: .gender)
+        self.name = try container.decodeIfPresent(String.self, forKey: .name)
+        self.surname = try container.decodeIfPresent(String.self, forKey: .surname)
+        self.avatarName = try container.decodeIfPresent(String.self, forKey: .avatarName)
+        self.nickname = try container.decodeIfPresent(String.self, forKey: .nickname)
+        self.dateOfBirth = try container.decodeIfPresent(Date.self, forKey: .dateOfBirth)
+        self.countryBirth = try container.decodeIfPresent(Country.self, forKey: .countryBirth)
+        self.deparmentOfBirth = try container.decodeIfPresent(String.self, forKey: .deparmentOfBirth)
+        self.placeBirth = try container.decodeIfPresent(String.self, forKey: .placeBirth)
+        self.placeAddress = try container.decodeIfPresent(String.self, forKey: .placeAddress)
+        self.postcode = try container.decodeIfPresent(String.self, forKey: .postcode)
+        self.streetAddress = try container.decodeIfPresent(String.self, forKey: .streetAddress)
+        self.streetNumber = try container.decodeIfPresent(String.self, forKey: .streetNumber)
+        self.email = try container.decodeIfPresent(String.self, forKey: .email)
+        self.phonePrefixCountry = try container.decodeIfPresent(Country.self, forKey: .phonePrefixCountry)
+        self.phoneNumber = try container.decodeIfPresent(String.self, forKey: .phoneNumber)
+        self.verifiedPhoneNumber = try? container.decodeIfPresent(String.self, forKey: .verifiedPhoneNumber)
+        self.password = try container.decodeIfPresent(String.self, forKey: .password)
+        self.acceptedMarketing = try container.decode(Bool.self, forKey: .acceptedMarketing)
+        self.acceptedTerms = try container.decode(Bool.self, forKey: .acceptedTerms)
+        self.promoCode = try container.decodeIfPresent(String.self, forKey: .promoCode)
+        self.godfatherCode = try? container.decodeIfPresent(String.self, forKey: .godfatherCode)
+        self.simpleRegistered = try container.decode(Bool.self, forKey: .simpleRegistered)
+        self.confirmationCode = try container.decodeIfPresent(String.self, forKey: .confirmationCode)
+    }
+
+    public func encode(to encoder: Encoder) throws {
+        var container = encoder.container(keyedBy: CodingKeys.self)
+        try container.encodeIfPresent(self.gender, forKey: .gender)
+        try container.encodeIfPresent(self.name, forKey: .name)
+        try container.encodeIfPresent(self.surname, forKey: .surname)
+        try container.encodeIfPresent(self.avatarName, forKey: .avatarName)
+        try container.encodeIfPresent(self.nickname, forKey: .nickname)
+        try container.encodeIfPresent(self.dateOfBirth, forKey: .dateOfBirth)
+        try container.encodeIfPresent(self.countryBirth, forKey: .countryBirth)
+        try container.encodeIfPresent(self.deparmentOfBirth, forKey: .deparmentOfBirth)
+        try container.encodeIfPresent(self.placeBirth, forKey: .placeBirth)
+        try container.encodeIfPresent(self.placeAddress, forKey: .placeAddress)
+        try container.encodeIfPresent(self.postcode, forKey: .postcode)
+        try container.encodeIfPresent(self.streetAddress, forKey: .streetAddress)
+        try container.encodeIfPresent(self.streetNumber, forKey: .streetNumber)
+        try container.encodeIfPresent(self.email, forKey: .email)
+        try container.encodeIfPresent(self.phonePrefixCountry, forKey: .phonePrefixCountry)
+        try container.encodeIfPresent(self.phoneNumber, forKey: .phoneNumber)
+        try container.encodeIfPresent(self.verifiedPhoneNumber, forKey: .verifiedPhoneNumber)
+        try container.encodeIfPresent(self.password, forKey: .password)
+        try container.encode(self.acceptedMarketing, forKey: .acceptedMarketing)
+        try container.encode(self.acceptedTerms, forKey: .acceptedTerms)
+        try container.encodeIfPresent(self.promoCode, forKey: .promoCode)
+        try container.encodeIfPresent(self.godfatherCode, forKey: .godfatherCode)
+        try container.encode(self.simpleRegistered, forKey: .simpleRegistered)
+        try container.encodeIfPresent(self.confirmationCode, forKey: .confirmationCode)
+    }
+
+    public static func == (lhs: UserRegisterEnvelop, rhs: UserRegisterEnvelop) -> Bool {
+        return lhs.gender == rhs.gender &&
+               lhs.name == rhs.name &&
+               lhs.surname == rhs.surname &&
+               lhs.avatarName == rhs.avatarName &&
+               lhs.nickname == rhs.nickname &&
+               lhs.dateOfBirth == rhs.dateOfBirth &&
+               lhs.countryBirth == rhs.countryBirth &&
+               lhs.deparmentOfBirth == rhs.deparmentOfBirth &&
+               lhs.placeBirth == rhs.placeBirth &&
+               lhs.placeAddress == rhs.placeAddress &&
+               lhs.postcode == rhs.postcode &&
+               lhs.streetAddress == rhs.streetAddress &&
+               lhs.streetNumber == rhs.streetNumber &&
+               lhs.email == rhs.email &&
+               lhs.phonePrefixCountry == rhs.phonePrefixCountry &&
+               lhs.phoneNumber == rhs.phoneNumber &&
+               lhs.verifiedPhoneNumber == rhs.verifiedPhoneNumber &&
+               lhs.password == rhs.password &&
+               lhs.acceptedMarketing == rhs.acceptedMarketing &&
+               lhs.acceptedTerms == rhs.acceptedTerms &&
+               lhs.promoCode == rhs.promoCode &&
+               lhs.godfatherCode == rhs.godfatherCode &&
+               lhs.simpleRegistered == rhs.simpleRegistered &&
+               lhs.confirmationCode == rhs.confirmationCode
     }
 
     func currentRegisterStep() -> Int {
@@ -116,8 +229,12 @@ public final class UserRegisterEnvelop: Codable {
         if self.email.isEmptyOrNil || self.phonePrefixCountry == nil || self.phoneNumber.isEmptyOrNil {
             return 4
         }
+        if self.verifiedPhoneNumber.isEmptyOrNil {
+            return 4
+        }
+        // Step 5 is the phone confirmation process
 
-        return 5
+        return 6
     }
 
 }
@@ -137,10 +254,11 @@ public extension UserRegisterEnvelop {
                                    postcode: "83727",
                                    streetAddress: "Long street",
                                    streetNumber: "1",
-                                   email: "habee12bi3740@breazeim.com",
+                                   email: "habee12bi3840@breazeim.com",
                                    phonePrefixCountry: Country.country(withISOCode: "FR"),
-                                   phoneNumber: "918437482",
-                                   password: "Ruben12345!",
+                                   phoneNumber: nil,
+                                   verifiedPhoneNumber: nil,
+                                   password: nil,
                                    acceptedMarketing: false,
                                    acceptedTerms: false,
                                    promoCode: nil,

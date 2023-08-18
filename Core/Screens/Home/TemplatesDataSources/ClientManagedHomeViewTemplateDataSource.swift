@@ -11,7 +11,7 @@ import ServicesProvider
 
 class ClientManagedHomeViewTemplateDataSource {
 
-    private let fixedSection = 7
+    private let fixedSection = 8
     private var refreshPublisher = PassthroughSubject<Void, Never>.init()
 
     // User Alert
@@ -108,6 +108,9 @@ class ClientManagedHomeViewTemplateDataSource {
 
     // Make your own bet call to action
     var shouldShowOwnBetCallToAction: Bool = true
+
+    // Make your own bet call to action
+    var shouldShowTopCompetitionsShortcuts: Bool = true
 
     // PromotedSports
     var promotedSports: [PromotedSport] = [] {
@@ -337,7 +340,7 @@ extension ClientManagedHomeViewTemplateDataSource: HomeViewTemplateDataSource {
 
     var refreshRequestedPublisher: AnyPublisher<Void, Never> {
         return self.refreshPublisher
-            .throttle(for: .seconds(1), scheduler: DispatchQueue.main, latest: true)
+            .debounce(for: .seconds(1), scheduler: DispatchQueue.main)
             .eraseToAnyPublisher()
     }
 
@@ -367,6 +370,8 @@ extension ClientManagedHomeViewTemplateDataSource: HomeViewTemplateDataSource {
         case 5:
             return self.shouldShowOwnBetCallToAction ? 1 : 0
         case 6:
+            return self.shouldShowTopCompetitionsShortcuts ? 1 : 0
+        case 7:
             return self.supplementaryEventIds.count
         default:
             ()
@@ -384,6 +389,8 @@ extension ClientManagedHomeViewTemplateDataSource: HomeViewTemplateDataSource {
         switch section {
         case 4:
             return localized("Highlights")
+        case 6:
+            return localized("Top Competitions")
         default:
             ()
         }
@@ -403,6 +410,8 @@ extension ClientManagedHomeViewTemplateDataSource: HomeViewTemplateDataSource {
     func shouldShowTitle(forSection section: Int) -> Bool {
         switch section {
         case 4:
+            return true
+        case 6:
             return true
         default:
             ()
@@ -437,6 +446,8 @@ extension ClientManagedHomeViewTemplateDataSource: HomeViewTemplateDataSource {
         case 5:
             return .makeOwnBetCallToAction
         case 6:
+            return .topCompetitionsShortcuts
+        case 7:
             return .supplementaryEvents
         default:
             ()

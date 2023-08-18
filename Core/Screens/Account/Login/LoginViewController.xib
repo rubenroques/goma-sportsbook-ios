@@ -157,9 +157,6 @@
                                                             </constraints>
                                                             <fontDescription key="fontDescription" name="Gilroy-Bold" family="Gilroy" pointSize="18"/>
                                                             <state key="normal" title="Login"/>
-                                                            <connections>
-                                                                <action selector="didTapLoginButton" destination="-1" eventType="primaryActionTriggered" id="Uhn-lE-cxH"/>
-                                                            </connections>
                                                         </button>
                                                     </subviews>
                                                     <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
@@ -240,9 +237,6 @@
                                     </constraints>
                                     <fontDescription key="fontDescription" name="Gilroy-Bold" family="Gilroy" pointSize="18"/>
                                     <state key="normal" title="Register"/>
-                                    <connections>
-                                        <action selector="didTapLoginButton" destination="-1" eventType="primaryActionTriggered" id="GgI-Sv-Lg2"/>
-                                    </connections>
                                 </button>
                                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="or" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="HKq-qe-QUt">
                                     <rect key="frame" x="199" y="591" width="16" height="20.5"/>

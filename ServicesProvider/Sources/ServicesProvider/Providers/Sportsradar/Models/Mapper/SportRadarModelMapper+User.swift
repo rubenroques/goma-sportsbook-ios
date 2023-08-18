@@ -46,6 +46,7 @@ extension SportRadarModelMapper {
         }
 
         return UserProfile(userIdentifier: playerInfoResponse.partyId,
+                           sessionKey: playerInfoResponse.sessionKey ?? "",
                            username: playerInfoResponse.userId,
                            email: playerInfoResponse.email,
                            firstName: playerInfoResponse.firstName,

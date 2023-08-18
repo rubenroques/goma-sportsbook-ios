@@ -126,7 +126,6 @@ class UserSessionStore {
             .sink { [weak self] userProfile in
                 if let userProfile = userProfile {
                     self?.refreshUserWallet()
-                    self?.refreshCashbackBalance()
 
                     self?.isUserProfileComplete = userProfile.isRegistrationCompleted
                     self?.isUserEmailVerified = userProfile.isEmailVerified
@@ -379,6 +378,8 @@ extension UserSessionStore {
             return
         }
 
+        self.refreshCashbackBalance()
+        
         self.isRefreshingUserWallet = true
 
         Logger.log("UserSessionStore - refreshUserWallet")
@@ -407,7 +408,7 @@ extension UserSessionStore {
             .store(in: &self.cancellables)
     }
 
-    func refreshCashbackBalance() {
+    private func refreshCashbackBalance() {
 
         Env.servicesProvider.getUserCashbackBalance()
             .receive(on: DispatchQueue.main)
@@ -422,11 +423,8 @@ extension UserSessionStore {
                     self?.userCashbackBalance.send(nil)
                     return
                 }
-
                 let cashbackBalance = Double(balance)
-
                 self?.userCashbackBalance.send(cashbackBalance)
-
             })
             .store(in: &self.cancellables)
     }

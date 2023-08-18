@@ -309,6 +309,8 @@ enum KnowYourCustomerStatus: String, Codable {
 struct UserProfile: Codable {
     
     var userIdentifier: String
+    var sessionKey: String
+    
     var username: String
     var email: String
     var firstName: String?
@@ -342,12 +344,14 @@ struct UserProfile: Codable {
 
     var currency: String?
     
-    init(userIdentifier: String, username: String, email: String, firstName: String? = nil, lastName: String? = nil, birthDate: Date,
+    init(userIdentifier: String, sessionKey: String, username: String, email: String, firstName: String? = nil, lastName: String? = nil, birthDate: Date,
          nationality: Country?, country: Country?, gender: UserGender, title: UserTitle?, personalIdNumber: String?, address: String?,
          province: String?, city: String?, postalCode: String?, birthDepartment: String?, streetNumber: String?, avatarName: String?,
          godfatherCode: String?, placeOfBirth: String?, additionalStreetLine: String?,
          isEmailVerified: Bool, isRegistrationCompleted: Bool, kycStatus: KnowYourCustomerStatus, currency: String?) {
+
         self.userIdentifier = userIdentifier
+        self.sessionKey = sessionKey
         self.username = username
         self.email = email
         self.firstName = firstName

@@ -329,7 +329,6 @@
 		450B798D28F58574009229E3 /* UserBalance.swift in Sources */ = {isa = PBXBuildFile; fileRef = 457F495B2737C2280047169D /* UserBalance.swift */; };
 		450B798E28F58574009229E3 /* SearchEvent.swift in Sources */ = {isa = PBXBuildFile; fileRef = A948BF93279ED6B9006053C9 /* SearchEvent.swift */; };
 		450B798F28F58574009229E3 /* UserRankingPositionTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 45E8E29528C88E1300A09B02 /* UserRankingPositionTableViewCell.swift */; };
-		450B799028F58574009229E3 /* TopCompetitionLineTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 45AA91CF27C16B1F00F8BFDD /* TopCompetitionLineTableViewCell.swift */; };
 		450B799128F58574009229E3 /* MatchOddsContent.swift in Sources */ = {isa = PBXBuildFile; fileRef = A979CA52275E6C0B00230E93 /* MatchOddsContent.swift */; };
 		450B799328F58574009229E3 /* BetSubmissionSuccessViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 457F49622737D9110047169D /* BetSubmissionSuccessViewController.swift */; };
 		450B799428F58574009229E3 /* ActivationAlertCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9627A0A274548610001E1D5 /* ActivationAlertCollectionViewCell.swift */; };
@@ -1088,7 +1087,6 @@
 		457CBAEE282D27D000ED0F00 /* MatchWidgetCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 457816AD2706699900F66878 /* MatchWidgetCollectionViewCell.swift */; };
 		457CBAEF282D27D000ED0F00 /* UserBalance.swift in Sources */ = {isa = PBXBuildFile; fileRef = 457F495B2737C2280047169D /* UserBalance.swift */; };
 		457CBAF0282D27D000ED0F00 /* SearchEvent.swift in Sources */ = {isa = PBXBuildFile; fileRef = A948BF93279ED6B9006053C9 /* SearchEvent.swift */; };
-		457CBAF1282D27D000ED0F00 /* TopCompetitionLineTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 45AA91CF27C16B1F00F8BFDD /* TopCompetitionLineTableViewCell.swift */; };
 		457CBAF2282D27D000ED0F00 /* MatchOddsContent.swift in Sources */ = {isa = PBXBuildFile; fileRef = A979CA52275E6C0B00230E93 /* MatchOddsContent.swift */; };
 		457CBAF4282D27D000ED0F00 /* BetSubmissionSuccessViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 457F49622737D9110047169D /* BetSubmissionSuccessViewController.swift */; };
 		457CBAF5282D27D000ED0F00 /* ActivationAlertCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9627A0A274548610001E1D5 /* ActivationAlertCollectionViewCell.swift */; };
@@ -1638,7 +1636,6 @@
 		457CBD96282D2CD100ED0F00 /* MatchWidgetCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 457816AD2706699900F66878 /* MatchWidgetCollectionViewCell.swift */; };
 		457CBD97282D2CD100ED0F00 /* UserBalance.swift in Sources */ = {isa = PBXBuildFile; fileRef = 457F495B2737C2280047169D /* UserBalance.swift */; };
 		457CBD98282D2CD100ED0F00 /* SearchEvent.swift in Sources */ = {isa = PBXBuildFile; fileRef = A948BF93279ED6B9006053C9 /* SearchEvent.swift */; };
-		457CBD99282D2CD100ED0F00 /* TopCompetitionLineTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 45AA91CF27C16B1F00F8BFDD /* TopCompetitionLineTableViewCell.swift */; };
 		457CBD9A282D2CD100ED0F00 /* MatchOddsContent.swift in Sources */ = {isa = PBXBuildFile; fileRef = A979CA52275E6C0B00230E93 /* MatchOddsContent.swift */; };
 		457CBD9C282D2CD100ED0F00 /* BetSubmissionSuccessViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 457F49622737D9110047169D /* BetSubmissionSuccessViewController.swift */; };
 		457CBD9D282D2CD100ED0F00 /* ActivationAlertCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9627A0A274548610001E1D5 /* ActivationAlertCollectionViewCell.swift */; };
@@ -2189,7 +2186,6 @@
 		4589C874282024E400243547 /* MatchWidgetCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 457816AD2706699900F66878 /* MatchWidgetCollectionViewCell.swift */; };
 		4589C875282024E400243547 /* UserBalance.swift in Sources */ = {isa = PBXBuildFile; fileRef = 457F495B2737C2280047169D /* UserBalance.swift */; };
 		4589C876282024E400243547 /* SearchEvent.swift in Sources */ = {isa = PBXBuildFile; fileRef = A948BF93279ED6B9006053C9 /* SearchEvent.swift */; };
-		4589C877282024E400243547 /* TopCompetitionLineTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 45AA91CF27C16B1F00F8BFDD /* TopCompetitionLineTableViewCell.swift */; };
 		4589C878282024E400243547 /* MatchOddsContent.swift in Sources */ = {isa = PBXBuildFile; fileRef = A979CA52275E6C0B00230E93 /* MatchOddsContent.swift */; };
 		4589C87A282024E400243547 /* BetSubmissionSuccessViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 457F49622737D9110047169D /* BetSubmissionSuccessViewController.swift */; };
 		4589C87B282024E400243547 /* ActivationAlertCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9627A0A274548610001E1D5 /* ActivationAlertCollectionViewCell.swift */; };
@@ -2822,7 +2818,6 @@
 		45A331A7298976BA008181E9 /* UserBalance.swift in Sources */ = {isa = PBXBuildFile; fileRef = 457F495B2737C2280047169D /* UserBalance.swift */; };
 		45A331A8298976BA008181E9 /* SearchEvent.swift in Sources */ = {isa = PBXBuildFile; fileRef = A948BF93279ED6B9006053C9 /* SearchEvent.swift */; };
 		45A331A9298976BA008181E9 /* UserRankingPositionTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 45E8E29528C88E1300A09B02 /* UserRankingPositionTableViewCell.swift */; };
-		45A331AA298976BA008181E9 /* TopCompetitionLineTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 45AA91CF27C16B1F00F8BFDD /* TopCompetitionLineTableViewCell.swift */; };
 		45A331AB298976BA008181E9 /* MatchOddsContent.swift in Sources */ = {isa = PBXBuildFile; fileRef = A979CA52275E6C0B00230E93 /* MatchOddsContent.swift */; };
 		45A331AD298976BA008181E9 /* BetSubmissionSuccessViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 457F49622737D9110047169D /* BetSubmissionSuccessViewController.swift */; };
 		45A331AE298976BA008181E9 /* ActivationAlertCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9627A0A274548610001E1D5 /* ActivationAlertCollectionViewCell.swift */; };
@@ -3463,7 +3458,6 @@
 		45A6BCC728246A7500D9B416 /* MatchWidgetCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 457816AD2706699900F66878 /* MatchWidgetCollectionViewCell.swift */; };
 		45A6BCC828246A7500D9B416 /* UserBalance.swift in Sources */ = {isa = PBXBuildFile; fileRef = 457F495B2737C2280047169D /* UserBalance.swift */; };
 		45A6BCC928246A7500D9B416 /* SearchEvent.swift in Sources */ = {isa = PBXBuildFile; fileRef = A948BF93279ED6B9006053C9 /* SearchEvent.swift */; };
-		45A6BCCA28246A7500D9B416 /* TopCompetitionLineTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 45AA91CF27C16B1F00F8BFDD /* TopCompetitionLineTableViewCell.swift */; };
 		45A6BCCB28246A7500D9B416 /* MatchOddsContent.swift in Sources */ = {isa = PBXBuildFile; fileRef = A979CA52275E6C0B00230E93 /* MatchOddsContent.swift */; };
 		45A6BCCD28246A7500D9B416 /* BetSubmissionSuccessViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 457F49622737D9110047169D /* BetSubmissionSuccessViewController.swift */; };
 		45A6BCCE28246A7500D9B416 /* ActivationAlertCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9627A0A274548610001E1D5 /* ActivationAlertCollectionViewCell.swift */; };
@@ -4028,6 +4022,51 @@
 		45E8E29F28C8A79C00A09B02 /* RankingTypeTableHeaderView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 45E8E29C28C8A79C00A09B02 /* RankingTypeTableHeaderView.swift */; };
 		45E8E2A028C8A79C00A09B02 /* RankingTypeTableHeaderView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 45E8E29C28C8A79C00A09B02 /* RankingTypeTableHeaderView.swift */; };
 		45E8E2A128C8A79C00A09B02 /* RankingTypeTableHeaderView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 45E8E29C28C8A79C00A09B02 /* RankingTypeTableHeaderView.swift */; };
+		45ECD74D2A8FFB2000492CB9 /* ZendeskChatSDK in Frameworks */ = {isa = PBXBuildFile; productRef = 45ECD74C2A8FFB2000492CB9 /* ZendeskChatSDK */; };
+		45ECD7502A8FFB5200492CB9 /* ZendeskAnswerBotSDK in Frameworks */ = {isa = PBXBuildFile; productRef = 45ECD74F2A8FFB5200492CB9 /* ZendeskAnswerBotSDK */; };
+		45ECD7532A8FFB8A00492CB9 /* ZendeskSupportSDK in Frameworks */ = {isa = PBXBuildFile; productRef = 45ECD7522A8FFB8A00492CB9 /* ZendeskSupportSDK */; };
+		45ECD7562A90012600492CB9 /* TopCompetitionItemCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 45ECD7542A90012600492CB9 /* TopCompetitionItemCollectionViewCell.swift */; };
+		45ECD7572A90012600492CB9 /* TopCompetitionItemCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 45ECD7542A90012600492CB9 /* TopCompetitionItemCollectionViewCell.swift */; };
+		45ECD7582A90012600492CB9 /* TopCompetitionItemCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 45ECD7542A90012600492CB9 /* TopCompetitionItemCollectionViewCell.swift */; };
+		45ECD7592A90012600492CB9 /* TopCompetitionItemCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 45ECD7542A90012600492CB9 /* TopCompetitionItemCollectionViewCell.swift */; };
+		45ECD75A2A90012600492CB9 /* TopCompetitionItemCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 45ECD7542A90012600492CB9 /* TopCompetitionItemCollectionViewCell.swift */; };
+		45ECD75B2A90012600492CB9 /* TopCompetitionItemCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 45ECD7542A90012600492CB9 /* TopCompetitionItemCollectionViewCell.swift */; };
+		45ECD75C2A90012600492CB9 /* TopCompetitionItemCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 45ECD7542A90012600492CB9 /* TopCompetitionItemCollectionViewCell.swift */; };
+		45ECD75D2A90012600492CB9 /* SuggestedBetLineTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 45ECD7552A90012600492CB9 /* SuggestedBetLineTableViewCell.swift */; };
+		45ECD75E2A90012600492CB9 /* SuggestedBetLineTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 45ECD7552A90012600492CB9 /* SuggestedBetLineTableViewCell.swift */; };
+		45ECD75F2A90012600492CB9 /* SuggestedBetLineTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 45ECD7552A90012600492CB9 /* SuggestedBetLineTableViewCell.swift */; };
+		45ECD7602A90012600492CB9 /* SuggestedBetLineTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 45ECD7552A90012600492CB9 /* SuggestedBetLineTableViewCell.swift */; };
+		45ECD7612A90012600492CB9 /* SuggestedBetLineTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 45ECD7552A90012600492CB9 /* SuggestedBetLineTableViewCell.swift */; };
+		45ECD7622A90012600492CB9 /* SuggestedBetLineTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 45ECD7552A90012600492CB9 /* SuggestedBetLineTableViewCell.swift */; };
+		45ECD7632A90012600492CB9 /* SuggestedBetLineTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 45ECD7552A90012600492CB9 /* SuggestedBetLineTableViewCell.swift */; };
+		45ECD7652A90013C00492CB9 /* TopCompetitionsLineTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 45ECD7642A90013C00492CB9 /* TopCompetitionsLineTableViewCell.swift */; };
+		45ECD7662A90013C00492CB9 /* TopCompetitionsLineTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 45ECD7642A90013C00492CB9 /* TopCompetitionsLineTableViewCell.swift */; };
+		45ECD7672A90013C00492CB9 /* TopCompetitionsLineTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 45ECD7642A90013C00492CB9 /* TopCompetitionsLineTableViewCell.swift */; };
+		45ECD7682A90013C00492CB9 /* TopCompetitionsLineTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 45ECD7642A90013C00492CB9 /* TopCompetitionsLineTableViewCell.swift */; };
+		45ECD7692A90013C00492CB9 /* TopCompetitionsLineTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 45ECD7642A90013C00492CB9 /* TopCompetitionsLineTableViewCell.swift */; };
+		45ECD76A2A90013C00492CB9 /* TopCompetitionsLineTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 45ECD7642A90013C00492CB9 /* TopCompetitionsLineTableViewCell.swift */; };
+		45ECD76B2A90013C00492CB9 /* TopCompetitionsLineTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 45ECD7642A90013C00492CB9 /* TopCompetitionsLineTableViewCell.swift */; };
+		45ECD76D2A90016400492CB9 /* PromotedCompetitionLineTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 45ECD76C2A90016400492CB9 /* PromotedCompetitionLineTableViewCell.swift */; };
+		45ECD76E2A90016400492CB9 /* PromotedCompetitionLineTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 45ECD76C2A90016400492CB9 /* PromotedCompetitionLineTableViewCell.swift */; };
+		45ECD76F2A90016400492CB9 /* PromotedCompetitionLineTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 45ECD76C2A90016400492CB9 /* PromotedCompetitionLineTableViewCell.swift */; };
+		45ECD7702A90016400492CB9 /* PromotedCompetitionLineTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 45ECD76C2A90016400492CB9 /* PromotedCompetitionLineTableViewCell.swift */; };
+		45ECD7712A90016400492CB9 /* PromotedCompetitionLineTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 45ECD76C2A90016400492CB9 /* PromotedCompetitionLineTableViewCell.swift */; };
+		45ECD7722A90016400492CB9 /* PromotedCompetitionLineTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 45ECD76C2A90016400492CB9 /* PromotedCompetitionLineTableViewCell.swift */; };
+		45ECD7732A90016400492CB9 /* PromotedCompetitionLineTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 45ECD76C2A90016400492CB9 /* PromotedCompetitionLineTableViewCell.swift */; };
+		45ECD7772A9001E200492CB9 /* TopCompetitionDetailsViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 45ECD7752A9001E200492CB9 /* TopCompetitionDetailsViewModel.swift */; };
+		45ECD7782A9001E200492CB9 /* TopCompetitionDetailsViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 45ECD7752A9001E200492CB9 /* TopCompetitionDetailsViewModel.swift */; };
+		45ECD7792A9001E200492CB9 /* TopCompetitionDetailsViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 45ECD7752A9001E200492CB9 /* TopCompetitionDetailsViewModel.swift */; };
+		45ECD77A2A9001E200492CB9 /* TopCompetitionDetailsViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 45ECD7752A9001E200492CB9 /* TopCompetitionDetailsViewModel.swift */; };
+		45ECD77B2A9001E200492CB9 /* TopCompetitionDetailsViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 45ECD7752A9001E200492CB9 /* TopCompetitionDetailsViewModel.swift */; };
+		45ECD77C2A9001E200492CB9 /* TopCompetitionDetailsViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 45ECD7752A9001E200492CB9 /* TopCompetitionDetailsViewModel.swift */; };
+		45ECD77D2A9001E200492CB9 /* TopCompetitionDetailsViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 45ECD7752A9001E200492CB9 /* TopCompetitionDetailsViewModel.swift */; };
+		45ECD77E2A9001E200492CB9 /* TopCompetitionDetailsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 45ECD7762A9001E200492CB9 /* TopCompetitionDetailsViewController.swift */; };
+		45ECD77F2A9001E200492CB9 /* TopCompetitionDetailsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 45ECD7762A9001E200492CB9 /* TopCompetitionDetailsViewController.swift */; };
+		45ECD7802A9001E200492CB9 /* TopCompetitionDetailsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 45ECD7762A9001E200492CB9 /* TopCompetitionDetailsViewController.swift */; };
+		45ECD7812A9001E200492CB9 /* TopCompetitionDetailsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 45ECD7762A9001E200492CB9 /* TopCompetitionDetailsViewController.swift */; };
+		45ECD7822A9001E200492CB9 /* TopCompetitionDetailsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 45ECD7762A9001E200492CB9 /* TopCompetitionDetailsViewController.swift */; };
+		45ECD7832A9001E200492CB9 /* TopCompetitionDetailsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 45ECD7762A9001E200492CB9 /* TopCompetitionDetailsViewController.swift */; };
+		45ECD7842A9001E200492CB9 /* TopCompetitionDetailsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 45ECD7762A9001E200492CB9 /* TopCompetitionDetailsViewController.swift */; };
 		45ED1AE62A37781100770CEF /* TinderStyleBetBuilder.html in Resources */ = {isa = PBXBuildFile; fileRef = 45ED1AE52A37781100770CEF /* TinderStyleBetBuilder.html */; };
 		45ED1AE72A37781100770CEF /* TinderStyleBetBuilder.html in Resources */ = {isa = PBXBuildFile; fileRef = 45ED1AE52A37781100770CEF /* TinderStyleBetBuilder.html */; };
 		45ED1AE82A37781100770CEF /* TinderStyleBetBuilder.html in Resources */ = {isa = PBXBuildFile; fileRef = 45ED1AE52A37781100770CEF /* TinderStyleBetBuilder.html */; };
@@ -5209,7 +5248,6 @@
 		A9C341E728F9A74A0055360B /* UserBalance.swift in Sources */ = {isa = PBXBuildFile; fileRef = 457F495B2737C2280047169D /* UserBalance.swift */; };
 		A9C341E828F9A74A0055360B /* SearchEvent.swift in Sources */ = {isa = PBXBuildFile; fileRef = A948BF93279ED6B9006053C9 /* SearchEvent.swift */; };
 		A9C341E928F9A74A0055360B /* UserRankingPositionTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 45E8E29528C88E1300A09B02 /* UserRankingPositionTableViewCell.swift */; };
-		A9C341EA28F9A74A0055360B /* TopCompetitionLineTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 45AA91CF27C16B1F00F8BFDD /* TopCompetitionLineTableViewCell.swift */; };
 		A9C341EB28F9A74A0055360B /* MatchOddsContent.swift in Sources */ = {isa = PBXBuildFile; fileRef = A979CA52275E6C0B00230E93 /* MatchOddsContent.swift */; };
 		A9C341ED28F9A74A0055360B /* BetSubmissionSuccessViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 457F49622737D9110047169D /* BetSubmissionSuccessViewController.swift */; };
 		A9C341EE28F9A74A0055360B /* ActivationAlertCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9627A0A274548610001E1D5 /* ActivationAlertCollectionViewCell.swift */; };
@@ -6072,7 +6110,6 @@
 		45A6BE44282476BA00D9B416 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = "Base.lproj/LaunchScreen-GOMA.storyboard"; sourceTree = "<group>"; };
 		45AA91C927C16AE400F8BFDD /* SportMatchDoubleLineTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SportMatchDoubleLineTableViewCell.swift; sourceTree = "<group>"; };
 		45AA91CC27C16AF800F8BFDD /* SportMatchSingleLineTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SportMatchSingleLineTableViewCell.swift; sourceTree = "<group>"; };
-		45AA91CF27C16B1F00F8BFDD /* TopCompetitionLineTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TopCompetitionLineTableViewCell.swift; sourceTree = "<group>"; };
 		45ACEEAF2721B54E00D0A45F /* BannerCellViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BannerCellViewModel.swift; sourceTree = "<group>"; };
 		45B0BD30271EED6C009C41FA /* CompetitionSectionViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CompetitionSectionViewModel.swift; sourceTree = "<group>"; };
 		45B0BD33271EEE58009C41FA /* CompetitionFilterHeaderView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CompetitionFilterHeaderView.swift; sourceTree = "<group>"; };
@@ -6190,6 +6227,12 @@
 		45E5190B270C8B570052794F /* Color+Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Color+Extensions.swift"; sourceTree = "<group>"; };
 		45E8E29528C88E1300A09B02 /* UserRankingPositionTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserRankingPositionTableViewCell.swift; sourceTree = "<group>"; };
 		45E8E29C28C8A79C00A09B02 /* RankingTypeTableHeaderView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RankingTypeTableHeaderView.swift; sourceTree = "<group>"; };
+		45ECD7542A90012600492CB9 /* TopCompetitionItemCollectionViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TopCompetitionItemCollectionViewCell.swift; sourceTree = "<group>"; };
+		45ECD7552A90012600492CB9 /* SuggestedBetLineTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SuggestedBetLineTableViewCell.swift; sourceTree = "<group>"; };
+		45ECD7642A90013C00492CB9 /* TopCompetitionsLineTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TopCompetitionsLineTableViewCell.swift; sourceTree = "<group>"; };
+		45ECD76C2A90016400492CB9 /* PromotedCompetitionLineTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PromotedCompetitionLineTableViewCell.swift; sourceTree = "<group>"; };
+		45ECD7752A9001E200492CB9 /* TopCompetitionDetailsViewModel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TopCompetitionDetailsViewModel.swift; sourceTree = "<group>"; };
+		45ECD7762A9001E200492CB9 /* TopCompetitionDetailsViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TopCompetitionDetailsViewController.swift; sourceTree = "<group>"; };
 		45ED1AE52A37781100770CEF /* TinderStyleBetBuilder.html */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.html; path = TinderStyleBetBuilder.html; sourceTree = "<group>"; };
 		45EF54092709E81C00D1E13E /* PopUpStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PopUpStore.swift; sourceTree = "<group>"; };
 		45EF5434270C603D00D1E13E /* MatchFiltersViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MatchFiltersViewController.swift; sourceTree = "<group>"; };
@@ -6758,11 +6801,13 @@
 				45F805932A05357E005296E0 /* Lottie in Frameworks */,
 				45A332B5298976BA008181E9 /* Reachability in Frameworks */,
 				45A332B6298976BA008181E9 /* AdyenComponents in Frameworks */,
+				45ECD74D2A8FFB2000492CB9 /* ZendeskChatSDK in Frameworks */,
 				45A332B7298976BA008181E9 /* IQKeyboardManagerSwift in Frameworks */,
 				4516402A2A39FF80003C4276 /* PhraseSDK in Frameworks */,
 				45A332B8298976BA008181E9 /* Kingfisher in Frameworks */,
 				45A332B9298976BA008181E9 /* FirebaseAuth in Frameworks */,
 				45A332BA298976BA008181E9 /* AdyenCard in Frameworks */,
+				45ECD7502A8FFB5200492CB9 /* ZendeskAnswerBotSDK in Frameworks */,
 				45A332BB298976BA008181E9 /* Collections in Frameworks */,
 				45A332BC298976BA008181E9 /* AdyenEncryption in Frameworks */,
 				4566B95E2A6AEE8A00477046 /* IdensicMobileSDK in Frameworks */,
@@ -6781,6 +6826,7 @@
 				45A332C8298976BA008181E9 /* Starscream in Frameworks */,
 				45C8ECB929CC7AE4006A35DC /* HeaderTextField in Frameworks */,
 				45A332C9298976BA008181E9 /* SocketIO in Frameworks */,
+				45ECD7532A8FFB8A00492CB9 /* ZendeskSupportSDK in Frameworks */,
 				45DB8DAE2A6A906C0018C591 /* Theming in Frameworks */,
 				45A332CA298976BA008181E9 /* SharedModels in Frameworks */,
 				45A332CB298976BA008181E9 /* ServicesProvider in Frameworks */,
@@ -7775,6 +7821,7 @@
 				455C676927DF5C8D00AAB2A5 /* PopularDetails */,
 				4503E79827D0E85D00077CD2 /* CompetitionDetails */,
 				454F0A7B27C4146F003123DF /* OutrightMarketDetails */,
+				45ECD7742A9001E200492CB9 /* TopCompetitionDetails */,
 				451B0A35286AFD7300005FA5 /* Support */,
 				454E090627EB82F200391560 /* Social */,
 				4566339429DDD42F00C4F1A9 /* AnonymousSideMenu */,
@@ -8468,18 +8515,21 @@
 				A9B946AC28BE6D210091296E /* Cells */,
 				45AA91C927C16AE400F8BFDD /* SportMatchDoubleLineTableViewCell.swift */,
 				45AA91CC27C16AF800F8BFDD /* SportMatchSingleLineTableViewCell.swift */,
-				45AA91CF27C16B1F00F8BFDD /* TopCompetitionLineTableViewCell.swift */,
 				4540ED2D27BC15CB00A14BB0 /* SuggestedBetLineTableViewCell.swift */,
 				45628E7F27BFBE4900AAB160 /* CompetitionWidgetCollectionViewCell.swift */,
+				45ECD76C2A90016400492CB9 /* PromotedCompetitionLineTableViewCell.swift */,
 				45A6BB962822FF4200D9B416 /* VideoPreviewLineTableViewCell.swift */,
 				45A6BB9A2823D1B300D9B416 /* VideoPreviewCollectionViewCell.swift */,
 				A9B946A528BE67770091296E /* FeaturedTipLineTableViewCell.swift */,
 				455AE12B2A29EBC20045FDD3 /* QuickSwipeStackTableViewCell.swift */,
 				455AE1332A2A16E00045FDD3 /* MakeYourBetTableViewCell.swift */,
+				45ECD7552A90012600492CB9 /* SuggestedBetLineTableViewCell.swift */,
 				450FC4052A2E1E33000DB866 /* StoriesLineTableViewCell.swift */,
 				450FC40D2A2E268F000DB866 /* StoriesItemCollectionViewCell.swift */,
 				45CE91482A2F3B4B00BB3AB7 /* StoriesFullScreenViewController.swift */,
 				45CE91502A2F40E100BB3AB7 /* StoriesFullScreenItemView.swift */,
+				45ECD7542A90012600492CB9 /* TopCompetitionItemCollectionViewCell.swift */,
+				45ECD7642A90013C00492CB9 /* TopCompetitionsLineTableViewCell.swift */,
 			);
 			path = Views;
 			sourceTree = "<group>";
@@ -8542,6 +8592,15 @@
 				451E1F7028290DE2000E957B /* PictureInPictureView.swift */,
 			);
 			path = PictureInPictureView;
+			sourceTree = "<group>";
+		};
+		45ECD7742A9001E200492CB9 /* TopCompetitionDetails */ = {
+			isa = PBXGroup;
+			children = (
+				45ECD7752A9001E200492CB9 /* TopCompetitionDetailsViewModel.swift */,
+				45ECD7762A9001E200492CB9 /* TopCompetitionDetailsViewController.swift */,
+			);
+			path = TopCompetitionDetails;
 			sourceTree = "<group>";
 		};
 		45EF5430270C5FD600D1E13E /* Filters */ = {
@@ -10281,6 +10340,9 @@
 				45DB8DAD2A6A906C0018C591 /* Theming */,
 				45DB8DAF2A6A9C7C0018C591 /* CountrySelectionFeature */,
 				4566B95D2A6AEE8A00477046 /* IdensicMobileSDK */,
+				45ECD74C2A8FFB2000492CB9 /* ZendeskChatSDK */,
+				45ECD74F2A8FFB5200492CB9 /* ZendeskAnswerBotSDK */,
+				45ECD7522A8FFB8A00492CB9 /* ZendeskSupportSDK */,
 			);
 			productName = Sportsbook;
 			productReference = 45A3334E298976BA008181E9 /* Betsson.app */;
@@ -10398,6 +10460,9 @@
 				45F805912A05357E005296E0 /* XCRemoteSwiftPackageReference "lottie-spm" */,
 				45DB8DB72A6AA5100018C591 /* XCRemoteSwiftPackageReference "ios-sdk" */,
 				4566B95C2A6AEE8900477046 /* XCRemoteSwiftPackageReference "IdensicMobileSDK-iOS" */,
+				45ECD74B2A8FFB2000492CB9 /* XCRemoteSwiftPackageReference "chat_sdk_ios" */,
+				45ECD74E2A8FFB5100492CB9 /* XCRemoteSwiftPackageReference "answer_bot_sdk_ios" */,
+				45ECD7512A8FFB8A00492CB9 /* XCRemoteSwiftPackageReference "support_sdk_ios" */,
 			);
 			productRefGroup = 455A0C5126BD902C00EC572D /* Products */;
 			projectDirPath = "";
@@ -11567,6 +11632,7 @@
 				450B786528F58574009229E3 /* ChatTicketSelectionView.swift in Sources */,
 				450B786628F58574009229E3 /* VideoPreviewCollectionViewCell.swift in Sources */,
 				450B786728F58574009229E3 /* PopUpStore.swift in Sources */,
+				45ECD75E2A90012600492CB9 /* SuggestedBetLineTableViewCell.swift in Sources */,
 				450FC4072A2E1E33000DB866 /* StoriesLineTableViewCell.swift in Sources */,
 				450B786828F58574009229E3 /* MyTicketsViewController.swift in Sources */,
 				450B786928F58574009229E3 /* SuggestedBetsListViewController.swift in Sources */,
@@ -11622,6 +11688,7 @@
 				450B789328F58574009229E3 /* OddViewPosition.swift in Sources */,
 				450B789428F58574009229E3 /* FilterSliderInfoView.swift in Sources */,
 				450B789528F58574009229E3 /* BannerScrollTableViewCell.swift in Sources */,
+				45ECD77F2A9001E200492CB9 /* TopCompetitionDetailsViewController.swift in Sources */,
 				450B789628F58574009229E3 /* Environment.swift in Sources */,
 				450B789728F58574009229E3 /* SegmentControlView.swift in Sources */,
 				450B789828F58574009229E3 /* UserInfoView.swift in Sources */,
@@ -11648,6 +11715,7 @@
 				450B78A928F58574009229E3 /* ActionTextFieldView.swift in Sources */,
 				450B7B4228F637FA009229E3 /* ServiceProviderModelMapper+Sports.swift in Sources */,
 				450B78AA28F58574009229E3 /* TipsSettingsViewController.swift in Sources */,
+				45ECD7572A90012600492CB9 /* TopCompetitionItemCollectionViewCell.swift in Sources */,
 				450B78AB28F58574009229E3 /* RankingTypeTableHeaderView.swift in Sources */,
 				450B78AD28F58574009229E3 /* CollapsibleGroupView.swift in Sources */,
 				450B78AE28F58574009229E3 /* BetOutcome.swift in Sources */,
@@ -11769,6 +11837,7 @@
 				450B791E28F58574009229E3 /* MultiSliderExtensions.swift in Sources */,
 				450B791F28F58574009229E3 /* DynamicHomeViewTemplateDataSource.swift in Sources */,
 				450B792028F58574009229E3 /* CATransform3D+Shift.swift in Sources */,
+				45ECD7662A90013C00492CB9 /* TopCompetitionsLineTableViewCell.swift in Sources */,
 				450B792128F58574009229E3 /* TipsListViewModel.swift in Sources */,
 				450B792228F58574009229E3 /* SharedBetTicket.swift in Sources */,
 				450B792328F58574009229E3 /* SentMessageTableViewCell.swift in Sources */,
@@ -11898,7 +11967,6 @@
 				450B798D28F58574009229E3 /* UserBalance.swift in Sources */,
 				450B798E28F58574009229E3 /* SearchEvent.swift in Sources */,
 				450B798F28F58574009229E3 /* UserRankingPositionTableViewCell.swift in Sources */,
-				450B799028F58574009229E3 /* TopCompetitionLineTableViewCell.swift in Sources */,
 				450B799128F58574009229E3 /* MatchOddsContent.swift in Sources */,
 				450B799328F58574009229E3 /* BetSubmissionSuccessViewController.swift in Sources */,
 				450B799428F58574009229E3 /* ActivationAlertCollectionViewCell.swift in Sources */,
@@ -12149,6 +12217,7 @@
 				A93FE22B2A49D0DF006A6907 /* CashbackInfoView.swift in Sources */,
 				450B7A7428F58574009229E3 /* ReceivedMessageTableViewCell.swift in Sources */,
 				450B7A7528F58574009229E3 /* RecentSearchHeaderView.swift in Sources */,
+				45ECD7782A9001E200492CB9 /* TopCompetitionDetailsViewModel.swift in Sources */,
 				454F73B6299152C100437460 /* GradientView.swift in Sources */,
 				45CE914A2A2F3B4B00BB3AB7 /* StoriesFullScreenViewController.swift in Sources */,
 				450B7A7628F58574009229E3 /* SharedGameCardView.swift in Sources */,
@@ -12158,6 +12227,7 @@
 				450B7A7928F58574009229E3 /* UserInfoMultipleCardView.swift in Sources */,
 				450B7A7A28F58574009229E3 /* SportMatchSingleLineTableViewCell.swift in Sources */,
 				450B7A7B28F58574009229E3 /* KDCircularProgress.swift in Sources */,
+				45ECD76E2A90016400492CB9 /* PromotedCompetitionLineTableViewCell.swift in Sources */,
 				450B7A7C28F58574009229E3 /* MessagesViewModel.swift in Sources */,
 				450B7A7D28F58574009229E3 /* CasinoGameDetailViewController.swift in Sources */,
 				450B7A7E28F58574009229E3 /* NibIdentifiable.swift in Sources */,
@@ -12332,6 +12402,7 @@
 				457CB9F6282D27D000ED0F00 /* CheckboxToggleView.swift in Sources */,
 				457CB9F7282D27D000ED0F00 /* MatchDetailsViewController.swift in Sources */,
 				457CB9F8282D27D000ED0F00 /* HomeViewTemplateDatasource.swift in Sources */,
+				45ECD75B2A90012600492CB9 /* TopCompetitionItemCollectionViewCell.swift in Sources */,
 				457CB9F9282D27D000ED0F00 /* SplashViewController.swift in Sources */,
 				A90FB7C229AF67B000D08A7C /* AlertType.swift in Sources */,
 				457CB9FA282D27D000ED0F00 /* BonusHistoryDataSource.swift in Sources */,
@@ -12350,6 +12421,7 @@
 				45C10F3E28772DA700037BBE /* NavControllerTrasntitionPresenting.swift in Sources */,
 				457CBA05282D27D000ED0F00 /* BettingNotificationsViewController.swift in Sources */,
 				457CBA06282D27D000ED0F00 /* GeoLocationManager.swift in Sources */,
+				45ECD7622A90012600492CB9 /* SuggestedBetLineTableViewCell.swift in Sources */,
 				457CBA08282D27D000ED0F00 /* PersonalInfoViewController.swift in Sources */,
 				457CBA09282D27D000ED0F00 /* SharedBetData.swift in Sources */,
 				45B6E231284151DF001B570C /* EditGroupViewController.swift in Sources */,
@@ -12553,6 +12625,7 @@
 				457CBA98282D27D000ED0F00 /* MultiSliderExtensions.swift in Sources */,
 				F4A62A922858CA83007B46C5 /* CasinoViewModel.swift in Sources */,
 				457CBA99282D27D000ED0F00 /* DynamicHomeViewTemplateDataSource.swift in Sources */,
+				45ECD7832A9001E200492CB9 /* TopCompetitionDetailsViewController.swift in Sources */,
 				457CBA9A282D27D000ED0F00 /* SentMessageTableViewCell.swift in Sources */,
 				457CBA9B282D27D000ED0F00 /* FloatingShortcutsView.swift in Sources */,
 				457CBA9C282D27D000ED0F00 /* OutrightCompetitionLineTableViewCell.swift in Sources */,
@@ -12677,7 +12750,6 @@
 				457CBAEF282D27D000ED0F00 /* UserBalance.swift in Sources */,
 				45E8E29A28C88E1300A09B02 /* UserRankingPositionTableViewCell.swift in Sources */,
 				457CBAF0282D27D000ED0F00 /* SearchEvent.swift in Sources */,
-				457CBAF1282D27D000ED0F00 /* TopCompetitionLineTableViewCell.swift in Sources */,
 				A90C372D29C37AB8007B8AEC /* IBANProofViewModel.swift in Sources */,
 				457CBAF2282D27D000ED0F00 /* MatchOddsContent.swift in Sources */,
 				457CBAF4282D27D000ED0F00 /* BetSubmissionSuccessViewController.swift in Sources */,
@@ -12908,6 +12980,7 @@
 				A986D33628C7609800AF95D7 /* TipsTableViewCell.swift in Sources */,
 				45C10FA428772DA700037BBE /* ViewContext.swift in Sources */,
 				A9A43C992A4B316B008FB399 /* CompetitionListIconCollectionViewCell.swift in Sources */,
+				45ECD7722A90016400492CB9 /* PromotedCompetitionLineTableViewCell.swift in Sources */,
 				A98708AE28D3451C00F27348 /* RankingsViewModel.swift in Sources */,
 				45C10F5628772DA700037BBE /* ModalTransitionPresentationController.swift in Sources */,
 				457CBB96282D27D000ED0F00 /* TransactionsHistoryViewController.swift in Sources */,
@@ -12925,6 +12998,7 @@
 				457CBB9F282D27D000ED0F00 /* NavigationCardView.swift in Sources */,
 				457CBBA0282D27D000ED0F00 /* BonusViewModel.swift in Sources */,
 				457CBBA2282D27D000ED0F00 /* SettingsRowView.swift in Sources */,
+				45ECD77C2A9001E200492CB9 /* TopCompetitionDetailsViewModel.swift in Sources */,
 				457CBBA3282D27D000ED0F00 /* TitleTableViewHeader.swift in Sources */,
 				457CBBA4282D27D000ED0F00 /* TabularViewDelegate.swift in Sources */,
 				457CBBA5282D27D000ED0F00 /* BonusSwitchView.swift in Sources */,
@@ -12952,6 +13026,7 @@
 				457CBBB4282D27D000ED0F00 /* Odd.swift in Sources */,
 				457CBBB5282D27D000ED0F00 /* NetworkSession.swift in Sources */,
 				457CBBB6282D27D000ED0F00 /* AddUnregisteredFriendTableViewCell.swift in Sources */,
+				45ECD76A2A90013C00492CB9 /* TopCompetitionsLineTableViewCell.swift in Sources */,
 				A9FB6D6728C65EF100E3FE58 /* RankingsListViewController.swift in Sources */,
 				457CBBB7282D27D000ED0F00 /* PhonePrefixSelectorViewController.swift in Sources */,
 				457CBBB8282D27D000ED0F00 /* ChatSettingsViewModel.swift in Sources */,
@@ -12978,6 +13053,7 @@
 				457CBC93282D2CD100ED0F00 /* RoundButton.swift in Sources */,
 				45C10F8128772DA700037BBE /* NSObject+Shift.swift in Sources */,
 				457CBC94282D2CD100ED0F00 /* HomeAwayCardStatsView.swift in Sources */,
+				45ECD7632A90012600492CB9 /* SuggestedBetLineTableViewCell.swift in Sources */,
 				457CBC95282D2CD100ED0F00 /* MarketGroupOrganizer.swift in Sources */,
 				451B0A3D286AFD7300005FA5 /* SupportPageViewController.swift in Sources */,
 				457CBC97282D2CD100ED0F00 /* UIApplication+Extensions.swift in Sources */,
@@ -13066,6 +13142,7 @@
 				A9A2924D2A61670100A7C334 /* UserReferralView.swift in Sources */,
 				A9CB3E7429CDC25600BEF9C1 /* ApplicableBonus.swift in Sources */,
 				457CBCD0282D2CD100ED0F00 /* SegmentControlView.swift in Sources */,
+				45ECD75C2A90012600492CB9 /* TopCompetitionItemCollectionViewCell.swift in Sources */,
 				4546A8A329D7089200ABD562 /* UserTrackingViewController.swift in Sources */,
 				A98EC7D12889ADC20044FC46 /* ShareTicketChoiceViewModel.swift in Sources */,
 				A9A43C9A2A4B316B008FB399 /* CompetitionListIconCollectionViewCell.swift in Sources */,
@@ -13078,6 +13155,7 @@
 				457CBCD6282D2CD100ED0F00 /* SocialModels.swift in Sources */,
 				457CBCD7282D2CD100ED0F00 /* BonusRootViewController.swift in Sources */,
 				457CBCD8282D2CD100ED0F00 /* Router.swift in Sources */,
+				45ECD76B2A90013C00492CB9 /* TopCompetitionsLineTableViewCell.swift in Sources */,
 				457CBCD9282D2CD100ED0F00 /* Date+Extension.swift in Sources */,
 				A9958C7D2970641D001474E2 /* UploadDocumentTableViewCell.swift in Sources */,
 				457CBCDA282D2CD100ED0F00 /* LiveDetailsViewController.swift in Sources */,
@@ -13291,6 +13369,7 @@
 				457CBD7A282D2CD100ED0F00 /* PopularMatchesDataSource.swift in Sources */,
 				457CBD7B282D2CD100ED0F00 /* BonusAvailableCellViewModel.swift in Sources */,
 				457CBD7C282D2CD100ED0F00 /* ActivationAlertScrollableView.swift in Sources */,
+				45ECD7732A90016400492CB9 /* PromotedCompetitionLineTableViewCell.swift in Sources */,
 				A90FB7D729AF9DF800D08A7C /* SelfExclusionViewController.swift in Sources */,
 				457CBD7D282D2CD100ED0F00 /* SuggestedBetLineTableViewCell.swift in Sources */,
 				A98708B728D3455300F27348 /* RankingsListViewModel.swift in Sources */,
@@ -13332,7 +13411,6 @@
 				457CBD96282D2CD100ED0F00 /* MatchWidgetCollectionViewCell.swift in Sources */,
 				457CBD97282D2CD100ED0F00 /* UserBalance.swift in Sources */,
 				457CBD98282D2CD100ED0F00 /* SearchEvent.swift in Sources */,
-				457CBD99282D2CD100ED0F00 /* TopCompetitionLineTableViewCell.swift in Sources */,
 				457CBD9A282D2CD100ED0F00 /* MatchOddsContent.swift in Sources */,
 				45CE91572A2F40E100BB3AB7 /* StoriesFullScreenItemView.swift in Sources */,
 				457CBD9C282D2CD100ED0F00 /* BetSubmissionSuccessViewController.swift in Sources */,
@@ -13606,9 +13684,11 @@
 				457CBE59282D2CD100ED0F00 /* TestsViewController.swift in Sources */,
 				457CBE5B282D2CD100ED0F00 /* Odd.swift in Sources */,
 				457CBE5C282D2CD100ED0F00 /* NetworkSession.swift in Sources */,
+				45ECD7842A9001E200492CB9 /* TopCompetitionDetailsViewController.swift in Sources */,
 				457CBE5D282D2CD100ED0F00 /* AddUnregisteredFriendTableViewCell.swift in Sources */,
 				A9FB6D6828C65EF100E3FE58 /* RankingsListViewController.swift in Sources */,
 				457CBE5E282D2CD100ED0F00 /* PhonePrefixSelectorViewController.swift in Sources */,
+				45ECD77D2A9001E200492CB9 /* TopCompetitionDetailsViewModel.swift in Sources */,
 				457CBE5F282D2CD100ED0F00 /* ChatSettingsViewModel.swift in Sources */,
 				457CBE60282D2CD100ED0F00 /* GomaGamingSocialServiceClient.swift in Sources */,
 				A9DF8E4228E5A5D80083BF56 /* TipsSettingsViewController.swift in Sources */,
@@ -13659,6 +13739,7 @@
 				A9A207E3283BDFCB00499DBC /* ChatTicketSelectionView.swift in Sources */,
 				45A6BB9D2823D1B400D9B416 /* VideoPreviewCollectionViewCell.swift in Sources */,
 				4589C78E282024E400243547 /* PopUpStore.swift in Sources */,
+				45ECD75F2A90012600492CB9 /* SuggestedBetLineTableViewCell.swift in Sources */,
 				450FC4082A2E1E33000DB866 /* StoriesLineTableViewCell.swift in Sources */,
 				4589C78F282024E400243547 /* MyTicketsViewController.swift in Sources */,
 				4589C790282024E400243547 /* SuggestedBetsListViewController.swift in Sources */,
@@ -13714,6 +13795,7 @@
 				4589C7B2282024E400243547 /* OddViewPosition.swift in Sources */,
 				4589C7B3282024E400243547 /* FilterSliderInfoView.swift in Sources */,
 				4589C7B4282024E400243547 /* BannerScrollTableViewCell.swift in Sources */,
+				45ECD7802A9001E200492CB9 /* TopCompetitionDetailsViewController.swift in Sources */,
 				4589C7B5282024E400243547 /* Environment.swift in Sources */,
 				4589C7B6282024E400243547 /* SegmentControlView.swift in Sources */,
 				45B6E22D284151D1001B570C /* UserInfoView.swift in Sources */,
@@ -13740,6 +13822,7 @@
 				4589C7C1282024E400243547 /* ActionTextFieldView.swift in Sources */,
 				450B7B4128F637FA009229E3 /* ServiceProviderModelMapper+Sports.swift in Sources */,
 				A9DF8E3F28E5A5D80083BF56 /* TipsSettingsViewController.swift in Sources */,
+				45ECD7582A90012600492CB9 /* TopCompetitionItemCollectionViewCell.swift in Sources */,
 				45E8E29F28C8A79C00A09B02 /* RankingTypeTableHeaderView.swift in Sources */,
 				4589C7C3282024E400243547 /* CollapsibleGroupView.swift in Sources */,
 				4589C7C4282024E400243547 /* BetOutcome.swift in Sources */,
@@ -13861,6 +13944,7 @@
 				45A6BB952822B50D00D9B416 /* DynamicHomeViewTemplateDataSource.swift in Sources */,
 				45C10F5A28772DA700037BBE /* CATransform3D+Shift.swift in Sources */,
 				A986D35728CB48F100AF95D7 /* TipsListViewModel.swift in Sources */,
+				45ECD7672A90013C00492CB9 /* TopCompetitionsLineTableViewCell.swift in Sources */,
 				45B6E212283F7D1F001B570C /* SharedBetTicket.swift in Sources */,
 				4589C824282024E400243547 /* SentMessageTableViewCell.swift in Sources */,
 				4589C825282024E400243547 /* FloatingShortcutsView.swift in Sources */,
@@ -13990,7 +14074,6 @@
 				4589C875282024E400243547 /* UserBalance.swift in Sources */,
 				4589C876282024E400243547 /* SearchEvent.swift in Sources */,
 				45E8E29828C88E1300A09B02 /* UserRankingPositionTableViewCell.swift in Sources */,
-				4589C877282024E400243547 /* TopCompetitionLineTableViewCell.swift in Sources */,
 				4589C878282024E400243547 /* MatchOddsContent.swift in Sources */,
 				4589C87A282024E400243547 /* BetSubmissionSuccessViewController.swift in Sources */,
 				4589C87B282024E400243547 /* ActivationAlertCollectionViewCell.swift in Sources */,
@@ -14241,6 +14324,7 @@
 				A93FE22C2A49D0DF006A6907 /* CashbackInfoView.swift in Sources */,
 				4589C926282024E400243547 /* ReceivedMessageTableViewCell.swift in Sources */,
 				4589C927282024E400243547 /* RecentSearchHeaderView.swift in Sources */,
+				45ECD7792A9001E200492CB9 /* TopCompetitionDetailsViewModel.swift in Sources */,
 				454F73B7299152C100437460 /* GradientView.swift in Sources */,
 				45CE914B2A2F3B4B00BB3AB7 /* StoriesFullScreenViewController.swift in Sources */,
 				4589C928282024E400243547 /* SharedGameCardView.swift in Sources */,
@@ -14250,6 +14334,7 @@
 				A9DF8E0328DDF64C0083BF56 /* UserInfoMultipleCardView.swift in Sources */,
 				4589C92A282024E400243547 /* SportMatchSingleLineTableViewCell.swift in Sources */,
 				45C10E2028759FEF00037BBE /* KDCircularProgress.swift in Sources */,
+				45ECD76F2A90016400492CB9 /* PromotedCompetitionLineTableViewCell.swift in Sources */,
 				A9B331DE288FFFE000D097F0 /* MessagesViewModel.swift in Sources */,
 				F4A62A892850FAB5007B46C5 /* CasinoGameDetailViewController.swift in Sources */,
 				4589C92B282024E400243547 /* NibIdentifiable.swift in Sources */,
@@ -14318,6 +14403,7 @@
 				45A33076298976BA008181E9 /* ChatTicketSelectionView.swift in Sources */,
 				45A33077298976BA008181E9 /* VideoPreviewCollectionViewCell.swift in Sources */,
 				45A33078298976BA008181E9 /* PopUpStore.swift in Sources */,
+				45ECD75D2A90012600492CB9 /* SuggestedBetLineTableViewCell.swift in Sources */,
 				450FC4062A2E1E33000DB866 /* StoriesLineTableViewCell.swift in Sources */,
 				45A33079298976BA008181E9 /* MyTicketsViewController.swift in Sources */,
 				45A3307A298976BA008181E9 /* SuggestedBetsListViewController.swift in Sources */,
@@ -14373,6 +14459,7 @@
 				45A330A3298976BA008181E9 /* OddViewPosition.swift in Sources */,
 				45A330A4298976BA008181E9 /* FilterSliderInfoView.swift in Sources */,
 				45A330A5298976BA008181E9 /* BannerScrollTableViewCell.swift in Sources */,
+				45ECD77E2A9001E200492CB9 /* TopCompetitionDetailsViewController.swift in Sources */,
 				45A330A6298976BA008181E9 /* Environment.swift in Sources */,
 				45A330A7298976BA008181E9 /* SegmentControlView.swift in Sources */,
 				45A330A8298976BA008181E9 /* UserInfoView.swift in Sources */,
@@ -14399,6 +14486,7 @@
 				45A330BB298976BA008181E9 /* ActionTextFieldView.swift in Sources */,
 				45A330BC298976BA008181E9 /* ServiceProviderModelMapper+Sports.swift in Sources */,
 				45A330BD298976BA008181E9 /* TipsSettingsViewController.swift in Sources */,
+				45ECD7562A90012600492CB9 /* TopCompetitionItemCollectionViewCell.swift in Sources */,
 				45A330BE298976BA008181E9 /* RankingTypeTableHeaderView.swift in Sources */,
 				45A330C0298976BA008181E9 /* CollapsibleGroupView.swift in Sources */,
 				45A330C1298976BA008181E9 /* BetOutcome.swift in Sources */,
@@ -14520,6 +14608,7 @@
 				45A33135298976BA008181E9 /* DynamicHomeViewTemplateDataSource.swift in Sources */,
 				45A33136298976BA008181E9 /* CATransform3D+Shift.swift in Sources */,
 				45A33137298976BA008181E9 /* TipsListViewModel.swift in Sources */,
+				45ECD7652A90013C00492CB9 /* TopCompetitionsLineTableViewCell.swift in Sources */,
 				45A33138298976BA008181E9 /* SharedBetTicket.swift in Sources */,
 				45A33139298976BA008181E9 /* SentMessageTableViewCell.swift in Sources */,
 				45A3313A298976BA008181E9 /* FloatingShortcutsView.swift in Sources */,
@@ -14650,7 +14739,6 @@
 				45A331A7298976BA008181E9 /* UserBalance.swift in Sources */,
 				45A331A8298976BA008181E9 /* SearchEvent.swift in Sources */,
 				45A331A9298976BA008181E9 /* UserRankingPositionTableViewCell.swift in Sources */,
-				45A331AA298976BA008181E9 /* TopCompetitionLineTableViewCell.swift in Sources */,
 				45A331AB298976BA008181E9 /* MatchOddsContent.swift in Sources */,
 				45A331AD298976BA008181E9 /* BetSubmissionSuccessViewController.swift in Sources */,
 				45A331AE298976BA008181E9 /* ActivationAlertCollectionViewCell.swift in Sources */,
@@ -14900,6 +14988,7 @@
 				A93FE22A2A49D0DF006A6907 /* CashbackInfoView.swift in Sources */,
 				45A33294298976BA008181E9 /* ReceivedMessageTableViewCell.swift in Sources */,
 				45A33295298976BA008181E9 /* RecentSearchHeaderView.swift in Sources */,
+				45ECD7772A9001E200492CB9 /* TopCompetitionDetailsViewModel.swift in Sources */,
 				454F73B5299152C100437460 /* GradientView.swift in Sources */,
 				45CE91492A2F3B4B00BB3AB7 /* StoriesFullScreenViewController.swift in Sources */,
 				45A33296298976BA008181E9 /* SharedGameCardView.swift in Sources */,
@@ -14909,6 +14998,7 @@
 				45A33299298976BA008181E9 /* UserInfoMultipleCardView.swift in Sources */,
 				45A3329A298976BA008181E9 /* SportMatchSingleLineTableViewCell.swift in Sources */,
 				45A3329B298976BA008181E9 /* KDCircularProgress.swift in Sources */,
+				45ECD76D2A90016400492CB9 /* PromotedCompetitionLineTableViewCell.swift in Sources */,
 				45A3329C298976BA008181E9 /* MessagesViewModel.swift in Sources */,
 				45A3329D298976BA008181E9 /* CasinoGameDetailViewController.swift in Sources */,
 				45A3329E298976BA008181E9 /* NibIdentifiable.swift in Sources */,
@@ -15003,6 +15093,7 @@
 				A9863EDF286F425400A4A1A2 /* SocialItemCollectionViewCell.swift in Sources */,
 				45A6BBE328246A7500D9B416 /* SharedBetData.swift in Sources */,
 				45A6BBE428246A7500D9B416 /* HeaderTextFieldView.swift in Sources */,
+				45ECD7712A90016400492CB9 /* PromotedCompetitionLineTableViewCell.swift in Sources */,
 				45A6BBE528246A7500D9B416 /* FadeInCenterHorizontalFlowLayout.swift in Sources */,
 				45A6BBE628246A7500D9B416 /* AuthToken.swift in Sources */,
 				45A6BBE728246A7500D9B416 /* MatchInfo.swift in Sources */,
@@ -15070,6 +15161,7 @@
 				45A6BC1728246A7500D9B416 /* PasswordUpdateViewController.swift in Sources */,
 				45A6BC1828246A7500D9B416 /* SearchV2Response.swift in Sources */,
 				451B0A48286AFDC700005FA5 /* SupportTicketResponse.swift in Sources */,
+				45ECD77B2A9001E200492CB9 /* TopCompetitionDetailsViewModel.swift in Sources */,
 				45A6BC1928246A7500D9B416 /* MultiSlider+Internal.swift in Sources */,
 				45A6BC1A28246A7500D9B416 /* Cashout.swift in Sources */,
 				45A6BC1C28246A7500D9B416 /* SuggestedBetViewModel.swift in Sources */,
@@ -15219,6 +15311,7 @@
 				45A6BC8628246A7500D9B416 /* UserSessionStore.swift in Sources */,
 				45A6BC8728246A7500D9B416 /* AppSettingsViewController.swift in Sources */,
 				45A6BC8828246A7500D9B416 /* GameSuggestedView.swift in Sources */,
+				45ECD75A2A90012600492CB9 /* TopCompetitionItemCollectionViewCell.swift in Sources */,
 				45A6BC8928246A7500D9B416 /* UIStackView+Extensions.swift in Sources */,
 				45A6BC8A28246A7500D9B416 /* AggregatorRepository.swift in Sources */,
 				A9CB3E7B29CE1DCD00BEF9C1 /* BonusEmptyView.swift in Sources */,
@@ -15304,7 +15397,6 @@
 				45A6BCC828246A7500D9B416 /* UserBalance.swift in Sources */,
 				45E8E29928C88E1300A09B02 /* UserRankingPositionTableViewCell.swift in Sources */,
 				45A6BCC928246A7500D9B416 /* SearchEvent.swift in Sources */,
-				45A6BCCA28246A7500D9B416 /* TopCompetitionLineTableViewCell.swift in Sources */,
 				45A6BCCB28246A7500D9B416 /* MatchOddsContent.swift in Sources */,
 				45A6BCCD28246A7500D9B416 /* BetSubmissionSuccessViewController.swift in Sources */,
 				45A6BCCE28246A7500D9B416 /* ActivationAlertCollectionViewCell.swift in Sources */,
@@ -15423,6 +15515,7 @@
 				45A6BD2028246A7500D9B416 /* BettingHistoryViewModel.swift in Sources */,
 				45A6BD2128246A7500D9B416 /* RefusedAccessViewController.swift in Sources */,
 				45A6BD2428246A7500D9B416 /* BetslipSelectionState.swift in Sources */,
+				45ECD7822A9001E200492CB9 /* TopCompetitionDetailsViewController.swift in Sources */,
 				45A6BD2528246A7500D9B416 /* BonusDetailViewController.swift in Sources */,
 				45A6BD2628246A7500D9B416 /* MatchFiltersViewController.swift in Sources */,
 				45A6BD2828246A7500D9B416 /* CGFloat+Extensions.swift in Sources */,
@@ -15521,6 +15614,7 @@
 				45B9F97B2A1E245700DA2B88 /* ClientManagedHomeViewTemplateDataSource.swift in Sources */,
 				45A6BD6628246A7500D9B416 /* FavoritesManager.swift in Sources */,
 				A9A1B2C22A0E55B800F7A8ED /* UserConsentType.swift in Sources */,
+				45ECD7692A90013C00492CB9 /* TopCompetitionsLineTableViewCell.swift in Sources */,
 				45A6BD6728246A7500D9B416 /* MyTicketsRootViewController.swift in Sources */,
 				45A6BD6828246A7500D9B416 /* Throwable.swift in Sources */,
 				45B6E2422841525F001B570C /* NewMessageViewController.swift in Sources */,
@@ -15570,6 +15664,7 @@
 				45C10E2128759FEF00037BBE /* KDCircularProgress.swift in Sources */,
 				450088F429CE244200DA4C30 /* FooterResponsibleGamingViewCell.swift in Sources */,
 				A9B331DF288FFFE000D097F0 /* MessagesViewModel.swift in Sources */,
+				45ECD7612A90012600492CB9 /* SuggestedBetLineTableViewCell.swift in Sources */,
 				F4A62A8A2850FAB5007B46C5 /* CasinoGameDetailViewController.swift in Sources */,
 				A9CB3E7229CDC25600BEF9C1 /* ApplicableBonus.swift in Sources */,
 				45A6BD8228246A7500D9B416 /* SportMatchSingleLineTableViewCell.swift in Sources */,
@@ -15771,6 +15866,7 @@
 				A9C3412F28F9A74A0055360B /* UILabel+Extensions.swift in Sources */,
 				A9C3413028F9A74A0055360B /* WelcomeViewController.swift in Sources */,
 				A9C3413128F9A74A0055360B /* CGPoint+Shift.swift in Sources */,
+				45ECD7812A9001E200492CB9 /* TopCompetitionDetailsViewController.swift in Sources */,
 				A90FB80629B0F8B100D08A7C /* GenericAlertView.swift in Sources */,
 				A9C3413328F9A74A0055360B /* UserSettings.swift in Sources */,
 				A9C3413528F9A74A0055360B /* StaticTableViewController.swift in Sources */,
@@ -15821,6 +15917,7 @@
 				A9A43C7B2A4B2B68008FB399 /* RibDocsViewModel.swift in Sources */,
 				A9C3415C28F9A74A0055360B /* LoginAccount.swift in Sources */,
 				A9C3415D28F9A74A0055360B /* PopularDetailsViewModel.swift in Sources */,
+				45ECD7592A90012600492CB9 /* TopCompetitionItemCollectionViewCell.swift in Sources */,
 				A9C3415E28F9A74A0055360B /* FeaturedTipDetailsViewController.swift in Sources */,
 				A9C3415F28F9A74A0055360B /* BonusHistoryTableViewCell.swift in Sources */,
 				A9BA041B2A30EA3B007880FC /* CardOptionRadioView.swift in Sources */,
@@ -15852,6 +15949,7 @@
 				A9C3417628F9A74A0055360B /* OutcomeSelectionButtonView.swift in Sources */,
 				A9C3417728F9A74A0055360B /* MyFavoriteMatchesDataSource.swift in Sources */,
 				A9C3417828F9A74A0055360B /* MultiSliderExtensions.swift in Sources */,
+				45ECD7702A90016400492CB9 /* PromotedCompetitionLineTableViewCell.swift in Sources */,
 				A9C3417928F9A74A0055360B /* DynamicHomeViewTemplateDataSource.swift in Sources */,
 				A93FE2072A435431006A6907 /* GenericSuccessViewController.swift in Sources */,
 				A9958C82297AFE42001474E2 /* AddAnotherDocumentView.swift in Sources */,
@@ -15955,6 +16053,7 @@
 				A9C341DA28F9A74A0055360B /* CountryName.swift in Sources */,
 				A9C341DB28F9A74A0055360B /* ProfileViewController.swift in Sources */,
 				A9C341DC28F9A74A0055360B /* TipsViewController.swift in Sources */,
+				45ECD7682A90013C00492CB9 /* TopCompetitionsLineTableViewCell.swift in Sources */,
 				A9C341DD28F9A74A0055360B /* BonusViewController.swift in Sources */,
 				A9C341DE28F9A74A0055360B /* ChatMessageView.swift in Sources */,
 				A9D534052A4A01980013ACF5 /* CashbackInfoViewController.swift in Sources */,
@@ -15968,7 +16067,6 @@
 				A9C341E728F9A74A0055360B /* UserBalance.swift in Sources */,
 				A9C341E828F9A74A0055360B /* SearchEvent.swift in Sources */,
 				A9C341E928F9A74A0055360B /* UserRankingPositionTableViewCell.swift in Sources */,
-				A9C341EA28F9A74A0055360B /* TopCompetitionLineTableViewCell.swift in Sources */,
 				A9C341EB28F9A74A0055360B /* MatchOddsContent.swift in Sources */,
 				A9C341ED28F9A74A0055360B /* BetSubmissionSuccessViewController.swift in Sources */,
 				A9D533FC2A49E4FB0013ACF5 /* CashbackLearnMoreView.swift in Sources */,
@@ -16075,9 +16173,11 @@
 				A9A292412A61597C00A7C334 /* UserGodfatherView.swift in Sources */,
 				459874BB2A28D272008C0ADE /* CardsCollectionViewLayout.swift in Sources */,
 				A9C3424928F9A74A0055360B /* Snapshot.swift in Sources */,
+				45ECD77A2A9001E200492CB9 /* TopCompetitionDetailsViewModel.swift in Sources */,
 				A9C3424A28F9A74A0055360B /* InternalBrowserViewController.swift in Sources */,
 				A9C3424B28F9A74A0055360B /* TabularBarButton.swift in Sources */,
 				A9C3424C28F9A74A0055360B /* AddContactViewModel.swift in Sources */,
+				45ECD7602A90012600492CB9 /* SuggestedBetLineTableViewCell.swift in Sources */,
 				A9C3424D28F9A74A0055360B /* TabularBarDelegate.swift in Sources */,
 				A90C373329C38DAD007B8AEC /* GrantedBonus.swift in Sources */,
 				A9C3424E28F9A74A0055360B /* OddDoubleCollectionViewCell.swift in Sources */,
@@ -16695,7 +16795,7 @@
 				CODE_SIGN_ENTITLEMENTS = Clients/Betsson/Misc/Betsson.entitlements;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 1206;
+				CURRENT_PROJECT_VERSION = 1216;
 				DEVELOPMENT_TEAM = 422GNXXZJR;
 				INFOPLIST_FILE = "$(SRCROOT)/Clients/Betsson/Misc/Betsson-Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 13.0;
@@ -16721,7 +16821,7 @@
 				CODE_SIGN_ENTITLEMENTS = Clients/Betsson/Misc/Betsson.entitlements;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 1206;
+				CURRENT_PROJECT_VERSION = 1216;
 				DEVELOPMENT_TEAM = 422GNXXZJR;
 				INFOPLIST_FILE = "$(SRCROOT)/Clients/Betsson/Misc/Betsson-Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 13.0;
@@ -17484,6 +17584,30 @@
 				minimumVersion = 4.0.0;
 			};
 		};
+		45ECD74B2A8FFB2000492CB9 /* XCRemoteSwiftPackageReference "chat_sdk_ios" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/zendesk/chat_sdk_ios";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 4.0.0;
+			};
+		};
+		45ECD74E2A8FFB5100492CB9 /* XCRemoteSwiftPackageReference "answer_bot_sdk_ios" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/zendesk/answer_bot_sdk_ios";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 4.0.0;
+			};
+		};
+		45ECD7512A8FFB8A00492CB9 /* XCRemoteSwiftPackageReference "support_sdk_ios" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/zendesk/support_sdk_ios";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 7.0.0;
+			};
+		};
 		45EF50E5282E6AA4008180CA /* XCRemoteSwiftPackageReference "socket" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/socketio/socket.io-client-swift";
@@ -18235,6 +18359,21 @@
 			isa = XCSwiftPackageProductDependency;
 			package = 45DB8DB72A6AA5100018C591 /* XCRemoteSwiftPackageReference "ios-sdk" */;
 			productName = PhraseSDK;
+		};
+		45ECD74C2A8FFB2000492CB9 /* ZendeskChatSDK */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 45ECD74B2A8FFB2000492CB9 /* XCRemoteSwiftPackageReference "chat_sdk_ios" */;
+			productName = ZendeskChatSDK;
+		};
+		45ECD74F2A8FFB5200492CB9 /* ZendeskAnswerBotSDK */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 45ECD74E2A8FFB5100492CB9 /* XCRemoteSwiftPackageReference "answer_bot_sdk_ios" */;
+			productName = ZendeskAnswerBotSDK;
+		};
+		45ECD7522A8FFB8A00492CB9 /* ZendeskSupportSDK */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 45ECD7512A8FFB8A00492CB9 /* XCRemoteSwiftPackageReference "support_sdk_ios" */;
+			productName = ZendeskSupportSDK;
 		};
 		45F805922A05357E005296E0 /* Lottie */ = {
 			isa = XCSwiftPackageProductDependency;

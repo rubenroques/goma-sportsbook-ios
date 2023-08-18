@@ -137,45 +137,49 @@ class RootViewController: UIViewController {
         return blockingWindow
     }()
 
-    private lazy var topBarAlternateView: TopBarAlternateView = {
-        let alternateTopBar = TopBarAlternateView()
+    private lazy var topBarAlternateView: TopBarView = {
+        let topBar = TopBarView()
 
-        alternateTopBar.translatesAutoresizingMaskIntoConstraints = false
+        topBar.translatesAutoresizingMaskIntoConstraints = false
 
-        alternateTopBar.shouldShowLogin = { [weak self] in
+        topBar.shouldShowLogin = { [weak self] in
             self?.presentLoginScreen()
         }
 
-        alternateTopBar.shouldShowProfile = { [weak self] in
+        topBar.shouldShowProfile = { [weak self] in
             self?.presentProfileViewController()
         }
 
-        alternateTopBar.shouldShowDeposit = { [weak self] in
+        topBar.shouldShowDeposit = { [weak self] in
             let depositViewController = DepositViewController()
 
             let navigationViewController = Router.navigationController(with: depositViewController)
 
-            depositViewController.shouldRefreshUserWallet = { [weak self] in
+            depositViewController.shouldRefreshUserWallet = {
                 Env.userSessionStore.refreshUserWallet()
             }
 
             self?.present(navigationViewController, animated: true, completion: nil)
         }
 
-        alternateTopBar.shouldShowAnonymousMenu = { [weak self] in
+        topBar.shouldShowAnonymousMenu = { [weak self] in
             self?.presentAnonymousSideMenuViewController()
         }
 
-        self.topBarContainerBaseView.addSubview(alternateTopBar)
+        topBar.shouldShowReplay = {  [weak self] in
+            self?.didTapCashbackTabItem()
+        }
+
+        self.topBarContainerBaseView.addSubview(topBar)
 
         NSLayoutConstraint.activate([
-            alternateTopBar.leadingAnchor.constraint(equalTo: self.topBarContainerBaseView.leadingAnchor),
-            alternateTopBar.trailingAnchor.constraint(equalTo: self.topBarContainerBaseView.trailingAnchor),
-            alternateTopBar.topAnchor.constraint(equalTo: self.topBarContainerBaseView.topAnchor),
-            alternateTopBar.bottomAnchor.constraint(equalTo: self.topBarContainerBaseView.bottomAnchor)
+            topBar.leadingAnchor.constraint(equalTo: self.topBarContainerBaseView.leadingAnchor),
+            topBar.trailingAnchor.constraint(equalTo: self.topBarContainerBaseView.trailingAnchor),
+            topBar.topAnchor.constraint(equalTo: self.topBarContainerBaseView.topAnchor),
+            topBar.bottomAnchor.constraint(equalTo: self.topBarContainerBaseView.bottomAnchor)
         ])
 
-        return alternateTopBar
+        return topBar
     }()
 
     var isLocalAuthenticationCoveringView: Bool = true {
@@ -637,15 +641,15 @@ class RootViewController: UIViewController {
         self.anonymousUserMenuBaseView.addGestureRecognizer(anonymousTapGesture)
 
         //
-        accountValueLabel.text = localized("loading")
-        accountValueLabel.font = AppFont.with(type: .bold, size: 12)
+        self.accountValueLabel.text = localized("loading")
+        self.accountValueLabel.font = AppFont.with(type: .bold, size: 12)
 
         let accountValueTapGesture = UITapGestureRecognizer(target: self, action: #selector(didTapAccountValue))
-        accountValueView.addGestureRecognizer(accountValueTapGesture)
+        self.accountValueView.addGestureRecognizer(accountValueTapGesture)
 
         //
-        loginButton.setTitle(localized("login"), for: .normal)
-        loginButton.titleLabel?.font = AppFont.with(type: AppFont.AppFontType.bold, size: 13)
+        self.loginButton.setTitle(localized("login"), for: .normal)
+        self.loginButton.titleLabel?.font = AppFont.with(type: AppFont.AppFontType.bold, size: 13)
 
         self.notificationCounterLabel.font = AppFont.with(type: .semibold, size: 12)
 
@@ -829,7 +833,6 @@ class RootViewController: UIViewController {
         self.isLoadingUserSessionView.tintColor = UIColor.App.textSecondary
         self.isLoadingUserSessionView.color = UIColor.App.textSecondary
 
-
     }
 
     func setupWithState(_ screenState: ScreenState) {
@@ -843,14 +846,6 @@ class RootViewController: UIViewController {
             self.anonymousUserMenuBaseView.isHidden = true
             Env.userSessionStore.refreshUserWallet()
 
-//            self.profilePictureAlternateBaseView.isHidden = false
-//            self.anonymousUserMenuAlternateBaseView.isHidden = true
-//
-//            self.accountValueAlternateBaseView.isHidden = false
-//            self.cashbackAlternateBaseView.isHidden = false
-//
-//            self.loginAlternateBaseView.isHidden = true
-
         case .anonymous:
             self.loginBaseView.isHidden = false
 
@@ -858,15 +853,6 @@ class RootViewController: UIViewController {
             self.accountValueBaseView.isHidden = true
 
             self.anonymousUserMenuBaseView.isHidden = false
-
-//            self.profilePictureAlternateBaseView.isHidden = true
-//            self.anonymousUserMenuAlternateBaseView.isHidden = false
-//
-//            self.accountValueAlternateBaseView.isHidden = true
-//            self.cashbackAlternateBaseView.isHidden = true
-//
-//            self.loginAlternateBaseView.isHidden = false
-
         }
     }
 
@@ -895,15 +881,6 @@ class RootViewController: UIViewController {
     }
 
     func openBetslipModal() {
-//
-//#if DEBUG
-//        let dummyBetPlacedDetails = BetPlacedDetails(response: BetslipPlaceBetResponse(betId: "349383.10"), tickets: [])
-//        let testViewController = BetSubmissionSuccessViewController(betPlacedDetailsArray: [dummyBetPlacedDetails])
-//        testViewController.modalPresentationStyle = .fullScreen
-//        self.present(testViewController, animated: true)
-//        return
-//#endif
-        
         let betslipViewController = BetslipViewController()
         betslipViewController.willDismissAction = { [weak self] in
             self?.reloadChildViewControllersData()
@@ -982,21 +959,7 @@ class RootViewController: UIViewController {
         }
     }
 
-    //
-    @IBAction private func didTapLogin() {
-        let loginViewController = Router.navigationController(with: LoginViewController())
-        self.present(loginViewController, animated: true, completion: nil)
-    }
-
     @IBAction private func didTapSearchButton() {
-
-//        #if DEBUG
-//        let viewModel = LimitsOnRegisterViewModel(servicesProvider: Env.servicesProvider)
-//        let limitsOnRegisterViewController = LimitsOnRegisterViewController(viewModel: viewModel)
-//        self.present(limitsOnRegisterViewController, animated: true)
-//        return
-//        #endif
-
         let searchViewModel = SearchViewModel()
 
         let searchViewController = SearchViewController(viewModel: searchViewModel)
@@ -1669,7 +1632,7 @@ extension RootViewController {
 
 //extension RootViewController {
 //
-//    private static func createTopBarAlternateView() -> UIView {
+//    private static func createTopBarView() -> UIView {
 //        let view = UIView()
 //        view.translatesAutoresizingMaskIntoConstraints = false
 //        return view

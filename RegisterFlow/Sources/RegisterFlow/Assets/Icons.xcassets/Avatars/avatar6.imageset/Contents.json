@@ -1,17 +1,17 @@
 {
   "images" : [
     {
-      "filename" : "dimanche.png",
+      "filename" : "akiko.png",
       "idiom" : "universal",
       "scale" : "1x"
     },
     {
-      "filename" : "dimanche@2x.png",
+      "filename" : "akiko@2x.png",
       "idiom" : "universal",
       "scale" : "2x"
     },
     {
-      "filename" : "dimanche@3x.png",
+      "filename" : "akiko@3x.png",
       "idiom" : "universal",
       "scale" : "3x"
     }

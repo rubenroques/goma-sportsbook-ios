@@ -1,7 +1,7 @@
 {
   "images" : [
     {
-      "filename" : "cashbacksymbollight.png",
+      "filename" : "replay default light mode.png",
       "idiom" : "universal",
       "scale" : "1x"
     },
@@ -12,12 +12,12 @@
           "value" : "dark"
         }
       ],
-      "filename" : "cashbacksymbol.png",
+      "filename" : "replay default.png",
       "idiom" : "universal",
       "scale" : "1x"
     },
     {
-      "filename" : "cashbacksymbollight@2x.png",
+      "filename" : "replay default light mode@2x.png",
       "idiom" : "universal",
       "scale" : "2x"
     },
@@ -28,12 +28,12 @@
           "value" : "dark"
         }
       ],
-      "filename" : "cashbacksymbol@2x.png",
+      "filename" : "replay default@2x.png",
       "idiom" : "universal",
       "scale" : "2x"
     },
     {
-      "filename" : "cashbacksymbollight@3x.png",
+      "filename" : "replay default light mode@3x.png",
       "idiom" : "universal",
       "scale" : "3x"
     },
@@ -44,7 +44,7 @@
           "value" : "dark"
         }
       ],
-      "filename" : "cashbacksymbol@3x.png",
+      "filename" : "replay default@3x.png",
       "idiom" : "universal",
       "scale" : "3x"
     }

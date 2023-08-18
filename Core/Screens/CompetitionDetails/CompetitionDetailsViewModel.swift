@@ -76,7 +76,6 @@ class CompetitionDetailsViewModel {
 
 }
 
-
 extension CompetitionDetailsViewModel {
 
     func shouldShowOutrightMarkets(forSection section: Int) -> Bool {

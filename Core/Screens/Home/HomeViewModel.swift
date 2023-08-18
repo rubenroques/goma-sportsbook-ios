@@ -31,6 +31,8 @@ class HomeViewModel {
         case quickSwipeStack
         case makeOwnBetCallToAction
 
+        case topCompetitionsShortcuts
+
         case highlightedMatches
 
         case promotionalStories
@@ -51,6 +53,7 @@ class HomeViewModel {
 
             case .quickSwipeStack: return "quickSwipeStack"
             case .makeOwnBetCallToAction: return "makeOwnBetCallToAction"
+            case .topCompetitionsShortcuts: return "topCompetitionsShortcuts"
             case .highlightedMatches: return "highlightedMatches"
 
             case .promotionalStories: return "promotionalStories"

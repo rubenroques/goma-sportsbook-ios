@@ -59,6 +59,7 @@ public final class CountrySelectorViewController: UIViewController {
 
         self.view.clipsToBounds = false
 
+        self.dimmedBackgroundView.isUserInteractionEnabled = false
         self.dimmedBackgroundView.clipsToBounds = false
 
         self.dimmedBackgroundView.backgroundColor = .black

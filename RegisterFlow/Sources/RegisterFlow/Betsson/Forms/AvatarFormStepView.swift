@@ -71,7 +71,6 @@ class AvatarFormStepView: FormStepView {
 
     private var avatarViews: [String: UIView] = [:]
     private var avatarViewsTags: [Int: String] = [:]
-    private var avatarBackgroundViews: [String: UIView] = [:]
 
     let viewModel: AvatarFormStepViewModel
 
@@ -118,18 +117,18 @@ class AvatarFormStepView: FormStepView {
                     baseView.centerYAnchor.constraint(equalTo: outerBaseView.centerYAnchor)
                 ])
 
-                let baseInnerView = Self.createAvatarBaseInnerView()
-                baseInnerView.backgroundColor = AppColor.backgroundPrimary
-
-                baseView.addSubview(baseInnerView)
-                baseView.bringSubviewToFront(baseInnerView)
-
-                NSLayoutConstraint.activate([
-                    baseInnerView.leadingAnchor.constraint(equalTo: baseView.leadingAnchor, constant: 2),
-                    baseInnerView.trailingAnchor.constraint(equalTo: baseView.trailingAnchor, constant: -2),
-                    baseInnerView.topAnchor.constraint(equalTo: baseView.topAnchor,constant: 2),
-                    baseInnerView.bottomAnchor.constraint(equalTo: baseView.bottomAnchor, constant: -2)
-                ])
+//                let baseInnerView = Self.createAvatarBaseInnerView()
+//                baseInnerView.backgroundColor = AppColor.backgroundPrimary
+//
+//                baseView.addSubview(baseInnerView)
+//                baseView.bringSubviewToFront(baseInnerView)
+//
+//                NSLayoutConstraint.activate([
+//                    baseInnerView.leadingAnchor.constraint(equalTo: baseView.leadingAnchor, constant: 2),
+//                    baseInnerView.trailingAnchor.constraint(equalTo: baseView.trailingAnchor, constant: -2),
+//                    baseInnerView.topAnchor.constraint(equalTo: baseView.topAnchor,constant: 2),
+//                    baseInnerView.bottomAnchor.constraint(equalTo: baseView.bottomAnchor, constant: -2)
+//                ])
 
                 let imageView = Self.createAvatarImageView()
                 imageView.image = UIImage(named: avatarName, in: Bundle.module, with: nil)
@@ -148,7 +147,6 @@ class AvatarFormStepView: FormStepView {
                 lineStackView.addArrangedSubview(outerBaseView)
 
                 avatarViews[avatarName] = baseView
-                avatarBackgroundViews[avatarName] = baseInnerView
                 avatarViewsTags[tagCounter] = avatarName
 
                 imageView.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(didTapAvatarImageView(_:))))
@@ -164,15 +162,15 @@ class AvatarFormStepView: FormStepView {
 
     public override func layoutSubviews() {
         super.layoutSubviews()
-
-        for avatarView in avatarViews.values {
-            avatarView.layer.cornerRadius = avatarView.frame.height/2
-        }
-
-        for avatarBackgroundView in avatarBackgroundViews.values {
-            avatarBackgroundView.layer.cornerRadius = avatarBackgroundView.frame.height/2
-
-        }
+//
+//        for avatarView in avatarViews.values {
+//            avatarView.layer.cornerRadius = avatarView.frame.height/2
+//        }
+//
+//        for avatarBackgroundView in avatarBackgroundViews.values {
+//            avatarBackgroundView.layer.cornerRadius = avatarBackgroundView.frame.height/2
+//
+//        }
     }
 
     override func setupWithTheme() {
@@ -180,19 +178,14 @@ class AvatarFormStepView: FormStepView {
 
         self.titleLabel.textColor = AppColor.textPrimary
         self.subtitleLabel.textColor = AppColor.textPrimary
-
     }
 
     func selectAvatarWithName(_ name: String) {
         for avatarView in avatarViews.values {
-//            avatarView.layer.borderColor = UIColor.clear.cgColor
-            avatarView.backgroundColor = .clear
-            avatarView.alpha = 0.95
+            avatarView.alpha = 0.6
         }
 
         if let selectedView = avatarViews[name] {
-            //selectedView.layer.borderColor = AppColor.highlightPrimary.cgColor
-            selectedView.backgroundColor = AppColor.highlightPrimary
             selectedView.alpha = 1.0
         }
 
@@ -255,7 +248,7 @@ extension AvatarFormStepView {
         let imageView = UIImageView()
         imageView.translatesAutoresizingMaskIntoConstraints = false
         imageView.contentMode = .scaleAspectFit
-
+        imageView.clipsToBounds = true
 //        imageView.layer.borderWidth = 4.0
 //        imageView.layer.borderColor = UIColor.clear.cgColor
         imageView.isUserInteractionEnabled = true

@@ -63,7 +63,7 @@ class HomeViewController: UIViewController {
 
         self.tableView.register(SportMatchDoubleLineTableViewCell.self, forCellReuseIdentifier: SportMatchDoubleLineTableViewCell.identifier)
         self.tableView.register(SportMatchSingleLineTableViewCell.self, forCellReuseIdentifier: SportMatchSingleLineTableViewCell.identifier)
-        self.tableView.register(TopCompetitionLineTableViewCell.self, forCellReuseIdentifier: TopCompetitionLineTableViewCell.identifier)
+        self.tableView.register(PromotedCompetitionLineTableViewCell.self, forCellReuseIdentifier: PromotedCompetitionLineTableViewCell.identifier)
         self.tableView.register(BannerScrollTableViewCell.nib, forCellReuseIdentifier: BannerScrollTableViewCell.identifier)
         self.tableView.register(MatchLineTableViewCell.nib, forCellReuseIdentifier: MatchLineTableViewCell.identifier)
         self.tableView.register(SuggestedBetLineTableViewCell.self, forCellReuseIdentifier: SuggestedBetLineTableViewCell.identifier)
@@ -76,6 +76,7 @@ class HomeViewController: UIViewController {
         self.tableView.register(MakeYourBetTableViewCell.self, forCellReuseIdentifier: MakeYourBetTableViewCell.identifier)
         self.tableView.register(MatchWidgetContainerTableViewCell.self, forCellReuseIdentifier: MatchWidgetContainerTableViewCell.identifier)
         self.tableView.register(StoriesLineTableViewCell.self, forCellReuseIdentifier: StoriesLineTableViewCell.identifier)
+        self.tableView.register(TopCompetitionsLineTableViewCell.self, forCellReuseIdentifier: TopCompetitionsLineTableViewCell.identifier)
 
         // Register cell based on the MatchWidgetType
         for matchWidgetType in MatchWidgetType.allCases {
@@ -214,6 +215,12 @@ class HomeViewController: UIViewController {
         let competitionDetailsViewModel = CompetitionDetailsViewModel(competitionsIds: competitionsIds, sport: sport)
         let competitionDetailsViewController = CompetitionDetailsViewController(viewModel: competitionDetailsViewModel)
         self.navigationController?.pushViewController(competitionDetailsViewController, animated: true)
+    }
+
+    private func openTopCompetitionsDetails(competitionsIds: [String], sport: Sport) {
+        let topCompetitionDetailsViewModel = TopCompetitionDetailsViewModel(competitionsIds: competitionsIds, sport: sport)
+        let topCompetitionDetailsViewController = TopCompetitionDetailsViewController(viewModel: topCompetitionDetailsViewModel)
+        self.navigationController?.pushViewController(topCompetitionDetailsViewController, animated: true)
     }
 
     private func openOutrightCompetition(competition: Competition) {
@@ -575,7 +582,7 @@ extension HomeViewController: UITableViewDelegate, UITableViewDataSource {
                 
             case .competition:
                 guard
-                    let cell = tableView.dequeueReusableCell(withIdentifier: TopCompetitionLineTableViewCell.identifier) as? TopCompetitionLineTableViewCell
+                    let cell = tableView.dequeueCellType(PromotedCompetitionLineTableViewCell.self)
                 else {
                     fatalError()
                 }
@@ -637,6 +644,51 @@ extension HomeViewController: UITableViewDelegate, UITableViewDataSource {
             }
             cell.didTapCellAction = { [weak self] in
                 self?.openBetTinderCloneView()
+            }
+            return cell
+
+        case .topCompetitionsShortcuts:
+            guard
+                let cell = tableView.dequeueReusableCell(withIdentifier: TopCompetitionsLineTableViewCell.identifier) as? TopCompetitionsLineTableViewCell
+            else {
+                fatalError()
+            }
+
+            /*
+            ▿ 0 : TopCompetitionPointer
+              - id : "509"
+              - name : "Coupe du monde de rugby"
+              - competitionId : "/fr/competitions/rugby-à-xv/35564.1"
+            ▿ 1 : TopCompetitionPointer
+              - id : "510"
+              - name : "Ligue des champions"
+              - competitionId : "/fr/competitions/football/29531.1"
+            ▿ 2 : TopCompetitionPointer
+              - id : "511"
+              - name : "Ligue 1"
+              - competitionId : "/fr/competitions/football/29494.1"
+            ▿ 3 : TopCompetitionPointer
+              - id : "512"
+              - name : "Premier League"
+              - competitionId : "/fr/competitions/football/29519.1"
+            ▿ 4 : TopCompetitionPointer
+              - id : "513"
+              - name : "Liga"
+              - competitionId : "/fr/competitions/football/29534.1"
+            */
+
+//            let viewModel = TopCompetitionsLineCellViewModel(topCompetitionsViewModels: [
+//                TopCompetitionItemCellViewModel(id: "1", name: "Ligue 1", sportName: "1", countryCode: "FR"),
+//                TopCompetitionItemCellViewModel(id: "2", name: "Premier League", sportName: "1", countryCode: "GB1"),
+//                TopCompetitionItemCellViewModel(id: "3", name: "Ligue des Champions UEFA", sportName: "1", countryCode: ""),
+//                TopCompetitionItemCellViewModel(id: "4", name: "FIBA World Cup", sportName: "8", countryCode: ""),
+//            ])
+
+            cell.configure(withViewModel: TopCompetitionsLineCellViewModel() )
+
+            cell.selectedItemAction = { [weak self] competitionId in
+                let sport = Sport(id: "", name: "", alphaId: "", numericId: "", showEventCategory: false, liveEventsCount: 0)
+                self?.openTopCompetitionsDetails(competitionsIds: [competitionId], sport: sport)
             }
             return cell
 
@@ -776,6 +828,8 @@ extension HomeViewController: UITableViewDelegate, UITableViewDataSource {
             return UITableView.automaticDimension
         case .makeOwnBetCallToAction:
             return UITableView.automaticDimension
+        case .topCompetitionsShortcuts:
+            return UITableView.automaticDimension
         case .highlightedMatches:
             if let viewModel = self.viewModel.highlightedMatchViewModel(forIndex: indexPath.row) {
                 switch viewModel.matchWidgetType {
@@ -844,6 +898,8 @@ extension HomeViewController: UITableViewDelegate, UITableViewDataSource {
             return 180
         case .makeOwnBetCallToAction:
             return 75
+        case .topCompetitionsShortcuts:
+            return 124
         case .highlightedMatches:
             if let viewModel = self.viewModel.highlightedMatchViewModel(forIndex: indexPath.row) {
                 switch viewModel.matchWidgetType {
@@ -994,6 +1050,8 @@ extension HomeViewController: UITableViewDataSourcePrefetching {
             case .quickSwipeStack:
                 ()
             case .makeOwnBetCallToAction:
+                ()
+            case .topCompetitionsShortcuts:
                 ()
             case .highlightedMatches:
                 ()

@@ -11,6 +11,7 @@ import UIKit
 import ServicesProvider
 import Theming
 import Extensions
+import Lottie
 
 public enum FormStep: String {
     case gender
@@ -28,6 +29,11 @@ public enum FormStep: String {
 
 public struct RegisterStep {
     var forms: [FormStep]
+
+    public init(forms: [FormStep]) {
+        self.forms = forms
+    }
+
 }
 
 public struct RegisterError {
@@ -44,6 +50,7 @@ public struct RegisterError {
         case "email", "mobile": return .contacts
         case "birthDate", "nationality", "country": return .ageCountry
         case "city", "address", "province": return .address
+        case "phoneConfirmation": return .phoneConfirmation
         case "bonusCode": return .promoCodes
         case "receiveEmail": return .terms
         default:
@@ -142,6 +149,14 @@ public class SteppedRegistrationViewModel {
     }
 
     func scrollToIndex(_ index: Int) {
+
+        if index > numberOfSteps {
+            return
+        }
+        else if index < 0 {
+            return
+        }
+
         self.currentStep.send(index)
     }
 
@@ -211,6 +226,11 @@ public class SteppedRegistrationViewController: UIViewController {
     private lazy var headerBaseView: UIView = Self.createHeaderBaseView()
     private lazy var backButton: UIButton = Self.createBackButton()
     private lazy var progressView: UIProgressView = Self.createProgressView()
+
+    private lazy var progressEndContainerView: UIView = Self.createProgressEndContainerView()
+    var progressEndContainerViewWidth: NSLayoutConstraint?
+    private lazy var progressEndView: LottieAnimationView = Self.createProgressEndView()
+
     private lazy var cancelButton: UIButton = Self.createCancelButton()
 
     private lazy var contentBaseView: UIView = Self.createContentBaseView()
@@ -255,7 +275,18 @@ public class SteppedRegistrationViewController: UIViewController {
         self.viewModel.progressPercentage
             .receive(on: DispatchQueue.main)
             .sink { [weak self] progressPercentage in
-                self?.progressView.setProgress(progressPercentage, animated: true)
+
+                UIView.animate(withDuration: 0.3) { [weak self] in
+                    guard let self = self else { return }
+
+                    self.progressView.setProgress(progressPercentage, animated: true)
+
+                    let newWidth = self.progressView.frame.width * CGFloat(progressPercentage)
+                    self.progressEndContainerViewWidth?.constant = newWidth
+                    self.headerBaseView.setNeedsLayout()
+                    self.headerBaseView.layoutIfNeeded()
+                }
+
             }
             .store(in: &self.cancellables)
 
@@ -323,6 +354,8 @@ public class SteppedRegistrationViewController: UIViewController {
 
     public override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
+
+        self.progressEndView.play()
 
         let currentStepPublisher = self.viewModel.currentStep
             .removeDuplicates()
@@ -392,6 +425,8 @@ public class SteppedRegistrationViewController: UIViewController {
     }
 
     private func createSteps() {
+        self.formStepViews = []
+
         for (index, registerStep) in self.viewModel.registerSteps.enumerated() {
 
             let registerStepViewModel = RegisterStepViewModel(index: index)
@@ -407,6 +442,14 @@ public class SteppedRegistrationViewController: UIViewController {
             }
 
             self.addStepView(registerStepView: registerStepView)
+
+            registerStepView
+                .requestNextFormSubject
+                .receive(on: DispatchQueue.main)
+                .sink { [weak self] in
+                    self?.scrollToNextStep()
+                }
+                .store(in: &self.cancellables)
         }
 
         self.configureRegistrationCompletionPublisher()
@@ -414,7 +457,6 @@ public class SteppedRegistrationViewController: UIViewController {
         self.view.setNeedsLayout()
         self.view.layoutIfNeeded()
     }
-
 
     private func addStepView(registerStepView: RegisterStepView) {
 
@@ -443,7 +485,6 @@ public class SteppedRegistrationViewController: UIViewController {
             .sink(receiveValue: { [weak self] isCurrentStepCompleted in
                 self?.continueButton.isEnabled = isCurrentStepCompleted
             })
-
     }
 
 }
@@ -451,16 +492,11 @@ public class SteppedRegistrationViewController: UIViewController {
 public extension SteppedRegistrationViewController {
 
     @objc private func didTapContinueButton() {
-        if self.viewModel.isLastStep(index: self.viewModel.currentStep.value) {
-            self.requestSignUp()
-        }
-        else {
-            self.viewModel.scrollToNextStep()
-        }
+        self.scrollToNextStep()
     }
 
     @objc private func didTapBackButton() {
-        self.viewModel.scrollToPreviousStep()
+        self.scrollToPreviousStep()
     }
 
     @objc private func didTapCancelButton() {
@@ -469,6 +505,60 @@ public extension SteppedRegistrationViewController {
 
     private func didRegisteredUser() {
         self.didRegisteredUserAction(self.viewModel.userRegisterEnvelop)
+    }
+
+    private func scrollToPreviousStep() {
+        // Check with the register step and inside forms if we can go back
+        let currentPage = self.viewModel.currentStep.value
+        guard
+            let registerStepView = self.registerStepViews[safe: currentPage]
+        else {
+            return
+        }
+
+        let previousRegisterStepView = self.registerStepViews[safe: currentPage-1]
+
+        if !registerStepView.canMoveToPreviousStep {
+            return
+        }
+
+        if previousRegisterStepView?.shouldSkipStep ?? false {
+            self.viewModel.scrollToIndex(self.viewModel.currentStep.value-2)
+        }
+        else {
+            self.viewModel.scrollToPreviousStep()
+        }
+
+    }
+
+    private func scrollToNextStep() {
+
+        // Check with the register step and inside forms if we can go to the next
+        let currentPage = self.viewModel.currentStep.value
+        guard
+            let registerStepView = self.registerStepViews[safe: currentPage]
+        else {
+            return
+        }
+
+        let nextRegisterStepView = self.registerStepViews[safe: currentPage+1]
+
+        if !registerStepView.canMoveToNextStep {
+            return
+        }
+
+        if self.viewModel.isLastStep(index: self.viewModel.currentStep.value) {
+            self.requestSignUp()
+        }
+        else {
+            if nextRegisterStepView?.shouldSkipStep ?? false {
+                self.viewModel.scrollToIndex(self.viewModel.currentStep.value+2)
+            }
+            else {
+                self.viewModel.scrollToNextStep()
+            }
+        }
+
     }
 
 }
@@ -512,6 +602,10 @@ public extension SteppedRegistrationViewController {
 
         self.scrollToItem(newPage: newPage, animated: animated)
         self.scrollToOffset(yPosition: offset, animated: animated)
+
+        if let registerStepView = self.registerStepViews[safe: newPage] {
+            registerStepView.didBecomeMainCenterStep()
+        }
 
     }
 
@@ -653,6 +747,28 @@ public extension SteppedRegistrationViewController {
         return view
     }
 
+    private static func createProgressEndView() -> LottieAnimationView {
+        let animationView = LottieAnimationView()
+
+        animationView.translatesAutoresizingMaskIntoConstraints = false
+        animationView.contentMode = .scaleAspectFit
+
+        let starAnimation = LottieAnimation.named("progress_end_animation")
+
+        animationView.animation = starAnimation
+        animationView.loopMode = .loop
+
+        return animationView
+    }
+
+    private static func createProgressEndContainerView() -> UIView {
+        let view = UIView()
+        view.translatesAutoresizingMaskIntoConstraints = false
+        view.backgroundColor = .clear
+        view.clipsToBounds = false
+        return view
+    }
+
     private func setupSubviews() {
 
         self.stepsScrollView.isScrollEnabled = false
@@ -674,6 +790,9 @@ public extension SteppedRegistrationViewController {
         self.headerBaseView.addSubview(self.backButton)
         self.headerBaseView.addSubview(self.progressView)
         self.headerBaseView.addSubview(self.cancelButton)
+        self.headerBaseView.addSubview(self.progressEndContainerView)
+
+        self.progressEndContainerView.addSubview(self.progressEndView)
 
         self.view.addSubview(self.contentBaseView)
         self.contentBaseView.addSubview(self.stepsScrollView)
@@ -686,6 +805,8 @@ public extension SteppedRegistrationViewController {
 
         self.loadingBaseView.addSubview(self.loadingView)
         self.view.addSubview(self.loadingBaseView)
+
+        self.progressEndContainerViewWidth = self.progressEndContainerView.widthAnchor.constraint(equalToConstant: 0)
 
         NSLayoutConstraint.activate([
             self.topSafeAreaView.leadingAnchor.constraint(equalTo: self.view.leadingAnchor),
@@ -749,6 +870,18 @@ public extension SteppedRegistrationViewController {
 
             self.loadingView.centerXAnchor.constraint(equalTo: self.loadingBaseView.centerXAnchor),
             self.loadingView.centerYAnchor.constraint(equalTo: self.loadingBaseView.centerYAnchor),
+
+            self.progressEndContainerView.heightAnchor.constraint(equalToConstant: 1),
+            self.progressEndContainerView.leadingAnchor.constraint(equalTo: self.progressView.leadingAnchor),
+            self.progressEndContainerView.centerYAnchor.constraint(equalTo: self.progressView.centerYAnchor, constant: -2),
+
+            self.progressEndContainerView.trailingAnchor.constraint(equalTo: self.progressEndView.centerXAnchor),
+            self.progressEndContainerView.centerYAnchor.constraint(equalTo: self.progressEndView.centerYAnchor),
+
+            self.progressEndView.widthAnchor.constraint(equalToConstant: 110),
+            self.progressEndView.heightAnchor.constraint(equalToConstant: 110),
+
+            self.progressEndContainerViewWidth!
         ])
     }
 
