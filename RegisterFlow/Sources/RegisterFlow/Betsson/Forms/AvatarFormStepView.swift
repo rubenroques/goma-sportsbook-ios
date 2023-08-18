@@ -9,6 +9,7 @@ import UIKit
 import Extensions
 import Combine
 import Theming
+import Lottie
 
 class AvatarFormStepViewModel {
 
@@ -69,6 +70,9 @@ class AvatarFormStepView: FormStepView {
     private lazy var verticalStackView: UIStackView = Self.createVerticalStackView()
     private var horizontalStackViews: [UIStackView] = []
 
+    private var animationView: LottieAnimationView?
+    private lazy var avatarAnimationPlaceholdeView: UIView = Self.createAvatarAnimationPlaceholdeView()
+
     private var avatarViews: [String: UIView] = [:]
     private var avatarViewsTags: [Int: String] = [:]
 
@@ -111,7 +115,7 @@ class AvatarFormStepView: FormStepView {
                 outerBaseView.addSubview(baseView)
 
                 NSLayoutConstraint.activate([
-                    baseView.widthAnchor.constraint(equalToConstant: 80),
+                    baseView.widthAnchor.constraint(equalToConstant: 90),
                     baseView.heightAnchor.constraint(equalTo: baseView.widthAnchor),
                     baseView.centerXAnchor.constraint(equalTo: outerBaseView.centerXAnchor),
                     baseView.centerYAnchor.constraint(equalTo: outerBaseView.centerYAnchor)
@@ -157,7 +161,19 @@ class AvatarFormStepView: FormStepView {
         }
 
         self.selectAvatarWithName(self.viewModel.selectedAvatarName.value)
-        
+
+
+        self.insertSubview(self.avatarAnimationPlaceholdeView, at: 0)
+
+        if let secondeArrangedView = self.stackView.arrangedSubviews[safe: 1] { // First line of avatars
+            NSLayoutConstraint.activate([
+                self.avatarAnimationPlaceholdeView.centerXAnchor.constraint(equalTo: self.stackView.centerXAnchor),
+                self.avatarAnimationPlaceholdeView.widthAnchor.constraint(equalTo: self.avatarAnimationPlaceholdeView.heightAnchor),
+                self.avatarAnimationPlaceholdeView.topAnchor.constraint(equalTo: secondeArrangedView.topAnchor),
+                self.avatarAnimationPlaceholdeView.bottomAnchor.constraint(equalTo: self.stackView.bottomAnchor),
+            ])
+        }
+
     }
 
     public override func layoutSubviews() {
@@ -181,15 +197,66 @@ class AvatarFormStepView: FormStepView {
     }
 
     func selectAvatarWithName(_ name: String) {
-        for avatarView in avatarViews.values {
+        for avatarView in self.avatarViews.values {
             avatarView.alpha = 0.6
         }
 
-        if let selectedView = avatarViews[name] {
+        if let selectedView = self.avatarViews[name] {
             selectedView.alpha = 1.0
         }
 
+        self.animateForAvatarWithName(name)
         self.viewModel.setSelectedAvatarName(name)
+    }
+
+    func animateForAvatarWithName(_ name: String) {
+        guard
+            let selectedView = self.avatarViews[name]
+        else { return }
+
+        self.animationView?.removeFromSuperview()
+        self.animationView = nil
+
+        let startFrame = selectedView.convert(selectedView.bounds, to: self)
+        let endFrame = self.avatarAnimationPlaceholdeView.frame
+
+        let avatarAnimationView = Self.createAvatarAnimationView(withFrame: startFrame, andName: name)
+        avatarAnimationView.isUserInteractionEnabled = true
+        avatarAnimationView.alpha = 0.0
+        self.addSubview(avatarAnimationView)
+
+        let tapGesture = UITapGestureRecognizer(target: self, action: #selector(didTapAnimation(_:)))
+        avatarAnimationView.addGestureRecognizer(tapGesture)
+
+        avatarAnimationView.play()
+
+        self.animationView = avatarAnimationView
+
+        UIView.animate(withDuration: 0.15, delay: 0.0) {
+            avatarAnimationView.alpha = 1.0
+        } completion: { completed in
+            UIView.animate(withDuration: 0.6, delay: 0.1) {
+                avatarAnimationView.frame = endFrame
+            } completion: { completed in
+                UIView.animate(withDuration: 0.6, delay: 3.0) {
+                    avatarAnimationView.frame = startFrame
+                } completion: { completed in
+                    avatarAnimationView.alpha = 0.0
+                    avatarAnimationView.stop()
+                    avatarAnimationView.removeFromSuperview()
+                }
+            }
+        }
+    }
+
+    @objc func didTapAnimation(_ gesture: UITapGestureRecognizer) {
+        guard let avatarAnimationView = gesture.view as? LottieAnimationView else {
+            return
+        }
+
+        // Remove the view from superview
+        avatarAnimationView.stop()
+        avatarAnimationView.removeFromSuperview()
     }
 
     @IBAction func didTapAvatarImageView(_ sender: UITapGestureRecognizer? = nil) {
@@ -272,6 +339,25 @@ extension AvatarFormStepView {
         let view = UIView()
         view.translatesAutoresizingMaskIntoConstraints = false
         return view
+    }
+
+    private static func createAvatarAnimationPlaceholdeView() -> UIView {
+        let view = UIView()
+        view.isUserInteractionEnabled = false
+        view.translatesAutoresizingMaskIntoConstraints = false
+        return view
+    }
+
+    private static func createAvatarAnimationView(withFrame frame: CGRect, andName name: String) -> LottieAnimationView {
+        let animationView = LottieAnimationView(frame: frame)
+        animationView.contentMode = .scaleAspectFit
+
+        let avatarAnimation = LottieAnimation.named(name)
+        animationView.animation = avatarAnimation
+
+        animationView.loopMode = .loop
+
+        return animationView
     }
 
 }

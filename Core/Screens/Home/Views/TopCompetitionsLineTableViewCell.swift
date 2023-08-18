@@ -20,6 +20,11 @@ class TopCompetitionsLineCellViewModel {
         return self.topCompetitionsSubject.eraseToAnyPublisher()
     }
 
+    var isLoadingPublisher: AnyPublisher<Bool, Never> {
+        return self.isLoadingSubject.eraseToAnyPublisher()
+    }
+
+    private var isLoadingSubject: CurrentValueSubject<Bool, Never> = .init(false)
     private var topCompetitionsSubject: CurrentValueSubject<[TopCompetitionItemCellViewModel], Never> = .init([])
     private var cancellables = Set<AnyCancellable>()
 
@@ -29,14 +34,17 @@ class TopCompetitionsLineCellViewModel {
 
     private func requestTopCompetitions() {
 
+        self.isLoadingSubject.send(true)
+
         Env.servicesProvider.getTopCompetitions()
-            .sink(receiveCompletion: { completion in
+            .sink(receiveCompletion: { [weak self] completion in
                 switch completion {
                 case .finished:
                     ()
                 case .failure(let error):
                     print("TopCompetitionsLineCellViewModel getTopCompetitionsIdentifier error: \(error)")
                 }
+                self?.isLoadingSubject.send(false)
             }, receiveValue: { [weak self] topCompetitions in
                 let convertedCompetitions = self?.convertTopCompetitions(topCompetitions) ?? []
                 self?.topCompetitionsSubject.send(convertedCompetitions)
@@ -93,13 +101,30 @@ class TopCompetitionsLineTableViewCell: UITableViewCell, UICollectionViewDataSou
     var cachedCellViewModels: [String: TopCompetitionItemCellViewModel] = [:]
 
     private let cellHeight: CGFloat = 124
-    private var collectionView: UICollectionView!
+    private lazy var collectionView: UICollectionView = {
+        let layout = UICollectionViewFlowLayout()
+        layout.scrollDirection = .horizontal
+        layout.sectionInset = UIEdgeInsets(top: 0, left: 16, bottom: 0, right: 16)
+        layout.minimumLineSpacing = 14
+
+        var collectionView = UICollectionView(frame: self.bounds, collectionViewLayout: layout)
+        collectionView.translatesAutoresizingMaskIntoConstraints = false
+        collectionView.showsHorizontalScrollIndicator = false
+        return collectionView
+    }()
+
+    private lazy var loadingView: UIActivityIndicatorView = {
+        let loadingView = UIActivityIndicatorView(style: .medium)
+        loadingView.translatesAutoresizingMaskIntoConstraints = false
+        loadingView.hidesWhenStopped = true
+        return loadingView
+    }()
 
     private var cancellables = Set<AnyCancellable>()
 
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
-        self.setupCollectionView()
+        self.setupSubviews()
         self.setupWithTheme()
     }
 
@@ -124,31 +149,29 @@ class TopCompetitionsLineTableViewCell: UITableViewCell, UICollectionViewDataSou
 
         self.collectionView.backgroundView?.backgroundColor = .clear
         self.collectionView.backgroundColor = .clear
+
+        self.loadingView.color = .gray
     }
 
-    private func setupCollectionView() {
-        let layout = UICollectionViewFlowLayout()
-        layout.scrollDirection = .horizontal
-        layout.sectionInset = UIEdgeInsets(top: 0, left: 16, bottom: 0, right: 16)
-        layout.minimumLineSpacing = 14
+    private func setupSubviews() {
 
-        self.collectionView = UICollectionView(frame: bounds, collectionViewLayout: layout)
-        self.collectionView.translatesAutoresizingMaskIntoConstraints = false
-        self.collectionView.backgroundColor = .clear
-        self.collectionView.showsHorizontalScrollIndicator = false
         self.collectionView.dataSource = self
         self.collectionView.delegate = self
         self.collectionView.register(TopCompetitionItemCollectionViewCell.self,
                                      forCellWithReuseIdentifier: TopCompetitionItemCollectionViewCell.identifier)
 
         self.contentView.addSubview(self.collectionView)
+        self.contentView.addSubview(self.loadingView)
 
         NSLayoutConstraint.activate([
             self.collectionView.heightAnchor.constraint(equalToConstant: self.cellHeight),
             self.collectionView.leadingAnchor.constraint(equalTo: self.contentView.leadingAnchor),
             self.collectionView.trailingAnchor.constraint(equalTo: self.contentView.trailingAnchor),
             self.collectionView.topAnchor.constraint(equalTo: self.contentView.topAnchor),
-            self.collectionView.bottomAnchor.constraint(equalTo: self.contentView.bottomAnchor, constant: 0)
+            self.collectionView.bottomAnchor.constraint(equalTo: self.contentView.bottomAnchor, constant: 0),
+
+            self.loadingView.centerXAnchor.constraint(equalTo: self.collectionView.centerXAnchor),
+            self.loadingView.centerYAnchor.constraint(equalTo: self.collectionView.centerYAnchor),
         ])
     }
 
@@ -159,6 +182,18 @@ class TopCompetitionsLineTableViewCell: UITableViewCell, UICollectionViewDataSou
     func configure(withViewModel viewModel: TopCompetitionsLineCellViewModel) {
 
         self.viewModel = viewModel
+
+        self.viewModel?.isLoadingPublisher
+            .receive(on: DispatchQueue.main)
+            .sink { [weak self] isLoading in
+                if isLoading {
+                    self?.loadingView.startAnimating()
+                }
+                else {
+                    self?.loadingView.stopAnimating()
+                }
+            }
+            .store(in: &self.cancellables)
 
         self.viewModel?.topCompetitionsPublisher
             .receive(on: DispatchQueue.main)
