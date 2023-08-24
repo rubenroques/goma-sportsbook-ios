@@ -897,11 +897,11 @@ extension LoginViewController {
             self.loginButton.isEnabled = true
         }
         else if self.usernameHeaderTextFieldView.text == "jmatos3" {
-            self.usernameHeaderTextFieldView.setText("ivotestsrna170")
+            self.usernameHeaderTextFieldView.setText("Ivolrs")
             self.passwordHeaderTextFieldView.setText("testesdoIvo1@")
             self.loginButton.isEnabled = true
         }
-        else if self.usernameHeaderTextFieldView.text == "ruben5" {
+        else if self.usernameHeaderTextFieldView.text == "Ivolrs" {
             self.usernameHeaderTextFieldView.setText("bohifo2337@dilanfa.com")
             self.passwordHeaderTextFieldView.setText("Ruben)12345")
             self.loginButton.isEnabled = true

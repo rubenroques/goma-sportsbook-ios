@@ -1740,9 +1740,10 @@ class PreSubmissionBetslipViewController: UIViewController {
 
 
             if self.isCashbackSelected.value, let cashbackValue = Env.userSessionStore.userCashbackBalance.value {
-                if self.realBetValue < cashbackValue {
+                if self.realBetValue > cashbackValue {
                     let errorMessage = localized("betslip_replay_error")
                     self.showErrorView(errorMessage: errorMessage)
+                    self.isLoading = false
                     return
                 }
             }

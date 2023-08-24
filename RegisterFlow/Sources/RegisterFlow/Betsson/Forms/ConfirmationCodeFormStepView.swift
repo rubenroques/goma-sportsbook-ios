@@ -121,9 +121,9 @@ class ConfirmationCodeFormStepViewModel {
     // Request Code
     func requestVerifyCode() -> AnyPublisher<PhoneVerificationResponse, PhoneVerificationError> {
         if !self.phoneNumber.value.isEmpty {
-            let response = PhoneVerificationResponse(id: "123", method: "sms", status: nil, errorCode: nil, message: nil, reference: nil)
-            return Just(response).setFailureType(to: PhoneVerificationError.self).eraseToAnyPublisher()
-            // return self.requestVerifyCode(self.phoneNumber.value)
+//            let response = PhoneVerificationResponse(id: "123", method: "sms", status: nil, errorCode: nil, message: nil, reference: nil)
+//            return Just(response).setFailureType(to: PhoneVerificationError.self).eraseToAnyPublisher()
+            return self.requestVerifyCode(self.phoneNumber.value)
         }
         else {
             return Fail(error: PhoneVerificationError.emptyPhoneNumber).eraseToAnyPublisher()
@@ -191,7 +191,7 @@ class ConfirmationCodeFormStepViewModel {
     //
     // Verify Code
     func checkVerificationCode(requestId: String, code: String) -> AnyPublisher<PhoneVerificationResponse, PhoneVerificationError> {
-//
+
 //        if code == "2211" {
 //            let response = PhoneVerificationResponse(id: "123", method: "sms", status: "SUCCESSFUL", errorCode: nil, message: nil, reference: nil)
 //            return Just(response).setFailureType(to: PhoneVerificationError.self).eraseToAnyPublisher()
