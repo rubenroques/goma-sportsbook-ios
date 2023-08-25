@@ -1427,3 +1427,8 @@
 
 "time" = "Time";
 "higher_odds" = "Higher Odds";
+
+"no_favorite_competitions" = "You don’t have any favourite competitions.";
+"add_some_favorites" = "Add some for quick access or check our suggestions bellow.";
+
+"support_success" = "Your message was successfully sent";

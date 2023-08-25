@@ -44,7 +44,7 @@ enum SubjectType: CaseIterable {
         case .register:
             return "inscription"
         case .myAccount:
-            return "mom_compte"
+            return "mon_compte"
         case .bonusAndPromotions:
             return "bonus_et_promotions"
         case .deposits:

@@ -146,7 +146,7 @@ enum OmegaAPIClient {
 
     case contactUs(firstName: String, lastName: String, email: String, subject: String, message: String)
 
-    case contactSupport(userIdentifier: String, firstName: String, lastName: String, email: String, subject: String, subjectType: String, message: String)
+    case contactSupport(userIdentifier: String, firstName: String, lastName: String, email: String, subject: String, subjectType: String, message: String, isLogged: Bool)
 
     case getUserConsents
     case setUserConsents(consentVersionIds: [Int]? = nil, unconsentVersionIds: [Int]? = nil)
@@ -799,7 +799,7 @@ extension OmegaAPIClient: Endpoint {
 //            return bodyString.data(using: String.Encoding.utf8) ?? Data()
         case .uploadMultipleUserDocuments( _, _, let body, _):
             return body
-        case .contactSupport(let userIdentifier, let firstName, let lastName, let email, let subject, let subjectType, let message):
+        case .contactSupport(let userIdentifier, let firstName, let lastName, let email, let subject, let subjectType, let message, _):
             let bodyString =
             """
             {
@@ -943,6 +943,30 @@ extension OmegaAPIClient: Endpoint {
             return header
         case .getSumsubApplicantData( _, _,  let header):
             return header
+        case .contactSupport(_, _, _, let email, _, _, _, let isLogged):
+
+            if isLogged {
+                let authPassword = "GIpqQMrDwD2JnNUEUF7vOm2ilGMEyZ5wnIOSuURP"
+
+                if let authData = (email + "/token" + ":" + authPassword).data(using: .utf8)?.base64EncodedString() {
+
+                    let headers = [
+                        "Accept-Encoding": "gzip, deflate",
+                        "Content-Type": "application/json; charset=UTF-8",
+                        "Accept": "application/json",
+                        "Authorization": "Basic \(authData)"
+                    ]
+                    return headers
+                }
+            }
+
+            let headers = [
+                "Accept-Encoding": "gzip, deflate",
+                "Content-Type": "application/json; charset=UTF-8",
+                "Accept": "application/json"
+            ]
+            return headers
+
         default:
             let defaultHeaders = [
                 "Accept-Encoding": "gzip, deflate",

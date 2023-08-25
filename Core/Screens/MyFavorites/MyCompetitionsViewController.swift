@@ -24,7 +24,12 @@ class MyCompetitionsViewController: UIViewController {
     private lazy var emptyStateTitleLabel: UILabel = Self.createEmptyStateTitleLabel()
     private lazy var emptyStateLoginButton: UIButton = Self.createEmptyStateLoginButton()
 
-    private lazy var floatingShortcutsView: FloatingShortcutsView = Self.createFloatingShortcutsView()
+    private lazy var containerStackView: UIStackView = Self.createContainerStackView()
+    private lazy var suggestedBaseView: SuggestedCompetitionsView = Self.createSuggestedBaseView()
+
+    // Constraints
+//    private lazy var tableTopConstraint: NSLayoutConstraint = Self.createTableTopConstraint()
+//    private lazy var tableTopSuggestedConstraint: NSLayoutConstraint = Self.createTableTopSuggestedConstraint()
 
     private var cancellables = Set<AnyCancellable>()
 
@@ -45,19 +50,25 @@ class MyCompetitionsViewController: UIViewController {
     var isEmptyState: Bool = false {
         didSet {
             if isEmptyState {
-                self.tableView.isHidden = true
+                self.containerStackView.isHidden = true
                 self.emptyStateView.isHidden = false
             }
             else {
-                self.tableView.isHidden = false
+                self.containerStackView.isHidden = false
                 self.emptyStateView.isHidden = true
             }
         }
     }
 
+    var hasSuggested: Bool = false {
+        didSet {
+            self.suggestedBaseView.isHidden = !hasSuggested
+        }
+    }
+
     // MARK: Lifetime and Cycle
-    init() {
-        self.viewModel = MyCompetitionsViewModel()
+    init(viewModel: MyCompetitionsViewModel) {
+        self.viewModel = viewModel
         super.init(nibName: nil, bundle: nil)
 
         self.title = localized("my_competitions")
@@ -82,9 +93,12 @@ class MyCompetitionsViewController: UIViewController {
 
         self.emptyStateLoginButton.addTarget(self, action: #selector(didTapLoginButton), for: .touchUpInside)
 
-        self.floatingShortcutsView.didTapBetslipButtonAction = { [weak self] in
-            self?.didTapBetslipView()
-        }
+        Env.favoritesManager.favoriteCompetitionsIdPublisher
+            .sink(receiveValue: { [weak self] competitionIds in
+                self?.hasSuggested = competitionIds.isEmpty ? true : false
+            })
+            .store(in: &cancellables)
+
     }
 
     // MARK: Layout and Theme
@@ -114,6 +128,8 @@ class MyCompetitionsViewController: UIViewController {
 
         self.loadingScreenBaseView.backgroundColor = UIColor.App.backgroundPrimary.withAlphaComponent(0.7)
         self.emptyStateView.backgroundColor = .clear
+
+        self.containerStackView.backgroundColor = .clear
 
     }
 
@@ -190,12 +206,14 @@ class MyCompetitionsViewController: UIViewController {
         }
     }
 
-    func openBetslipModal() {
-        let betslipViewController = BetslipViewController()
-        betslipViewController.willDismissAction = { [weak self] in
-            self?.tableView.reloadData()
-        }
-        self.present(Router.navigationController(with: betslipViewController), animated: true, completion: nil)
+    func reloadData() {
+        self.tableView.reloadData()
+    }
+
+    func reloadDataWithFilter(newFilter: FilterFavoritesValue) {
+//        self.viewModel.fetchedMatchesWithMarketsPublisher.value = []
+        self.viewModel.filterApplied = newFilter
+        self.viewModel.refreshContent()
     }
 
     // MARK: Actions
@@ -207,9 +225,6 @@ class MyCompetitionsViewController: UIViewController {
         self.navigationController?.popViewController(animated: true)
     }
 
-    @objc func didTapBetslipView() {
-        self.openBetslipModal()
-    }
 }
 
 // MARK: TableView Protocols
@@ -523,10 +538,20 @@ extension MyCompetitionsViewController {
         return button
     }
 
-    private static func createFloatingShortcutsView() -> FloatingShortcutsView {
-        let floatingShortcutsView = FloatingShortcutsView()
-        floatingShortcutsView.translatesAutoresizingMaskIntoConstraints = false
-        return floatingShortcutsView
+    private static func createContainerStackView() -> UIStackView {
+        let stackView = UIStackView()
+        stackView.translatesAutoresizingMaskIntoConstraints = false
+        stackView.axis = .vertical
+        stackView.distribution = .fill
+        stackView.spacing = 8
+        return stackView
+    }
+
+    private static func createSuggestedBaseView() -> SuggestedCompetitionsView {
+        let view = SuggestedCompetitionsView()
+        view.translatesAutoresizingMaskIntoConstraints = false
+        view.configure(title: localized("no_favorite_competitions"), subtitle: localized("add_some_favorites"), icon: "unselected_favorite_icon")
+        return view
     }
 
     private func setupSubviews() {
@@ -534,7 +559,10 @@ extension MyCompetitionsViewController {
 
         self.view.addSubview(self.containerView)
 
-        self.containerView.addSubview(self.tableView)
+        self.containerView.addSubview(self.containerStackView)
+
+        self.containerStackView.addArrangedSubview(self.suggestedBaseView)
+        self.containerStackView.addArrangedSubview(self.tableView)
 
         self.containerView.addSubview(self.loadingScreenBaseView)
 
@@ -564,8 +592,6 @@ extension MyCompetitionsViewController {
         self.emptyStateView.addSubview(self.emptyStateTitleLabel)
         self.emptyStateView.addSubview(self.emptyStateLoginButton)
 
-        self.view.addSubview(self.floatingShortcutsView)
-
         self.initConstraints()
 
         self.containerView.layoutSubviews()
@@ -594,15 +620,22 @@ extension MyCompetitionsViewController {
             self.containerView.topAnchor.constraint(equalTo: self.topSafeAreaView.bottomAnchor),
             self.containerView.leadingAnchor.constraint(equalTo: self.view.leadingAnchor),
             self.containerView.trailingAnchor.constraint(equalTo: self.view.trailingAnchor),
-            self.containerView.bottomAnchor.constraint(equalTo: self.view.bottomAnchor)
+            self.containerView.bottomAnchor.constraint(equalTo: self.view.bottomAnchor),
+
+            self.containerStackView.leadingAnchor.constraint(equalTo: self.containerView.leadingAnchor),
+            self.containerStackView.trailingAnchor.constraint(equalTo: self.containerView.trailingAnchor),
+            self.containerStackView.topAnchor.constraint(equalTo: self.containerView.topAnchor),
+            self.containerStackView.bottomAnchor.constraint(equalTo: self.containerView.bottomAnchor)
         ])
 
         // TableView
         NSLayoutConstraint.activate([
-            self.tableView.topAnchor.constraint(equalTo: self.containerView.topAnchor),
-            self.tableView.leadingAnchor.constraint(equalTo: self.containerView.leadingAnchor),
-            self.tableView.trailingAnchor.constraint(equalTo: self.containerView.trailingAnchor),
-            self.tableView.bottomAnchor.constraint(equalTo: self.bottomSafeAreaView.topAnchor)
+//            self.tableView.topAnchor.constraint(equalTo: self.containerView.topAnchor),
+//            self.tableView.leadingAnchor.constraint(equalTo: self.containerView.leadingAnchor),
+//            self.tableView.trailingAnchor.constraint(equalTo: self.containerView.trailingAnchor),
+//            self.tableView.bottomAnchor.constraint(equalTo: self.bottomSafeAreaView.topAnchor)
+            self.tableView.leadingAnchor.constraint(equalTo: self.containerStackView.leadingAnchor),
+            self.tableView.trailingAnchor.constraint(equalTo: self.containerStackView.trailingAnchor)
         ])
 
         // Loading Screen
@@ -639,11 +672,12 @@ extension MyCompetitionsViewController {
 
         ])
 
-        // Betslip
+        // Suggested view
         NSLayoutConstraint.activate([
-            self.floatingShortcutsView.trailingAnchor.constraint(equalTo: self.view.trailingAnchor, constant: -12),
-            self.floatingShortcutsView.bottomAnchor.constraint(equalTo: self.view.safeAreaLayoutGuide.bottomAnchor, constant: -12),
+            self.suggestedBaseView.leadingAnchor.constraint(equalTo: self.containerStackView.leadingAnchor),
+            self.suggestedBaseView.trailingAnchor.constraint(equalTo: self.containerStackView.trailingAnchor)
         ])
+
     }
 
 }

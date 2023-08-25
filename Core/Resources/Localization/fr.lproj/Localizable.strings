@@ -1491,3 +1491,8 @@
 
 "time" = "Temps";
 "higher_odds" = "Plus de chances";
+
+"no_favorite_competitions" = "Vous n’avez aucune compétition préférée.";
+"add_some_favorites" = "Ajoutez-en pour un accès rapide ou consultez nos suggestions ci-dessous.";
+
+"support_success" = "Votre message a bien été envoyé";
