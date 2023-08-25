@@ -36,6 +36,9 @@ class MyCompetitionsViewModel {
     private var cancellables = Set<AnyCancellable>()
     private var subscriptions = Set<ServicesProvider.Subscription>()
 
+    var myCompetitionsTypeList: MyGamesTypeList
+    var filterApplied: FilterFavoritesValue
+
     // Callbacks
     var didSelectMatchAction: ((Match) -> Void)?
     var didTapFavoriteCompetitionAction: ((Competition) -> Void)?
@@ -43,55 +46,109 @@ class MyCompetitionsViewModel {
     var didSelectCompetitionAction: ((Competition) -> Void)?
     var matchWentLiveAction: (() -> Void)?
 
-    init() {
+    init(myCompetitionsTypeList: MyGamesTypeList, myGamesFilterType: FilterFavoritesValue = .time) {
 
-        Env.favoritesManager.favoriteCompetitionsIdPublisher
-            .receive(on: DispatchQueue.main)
-            .sink(receiveValue: { [weak self] favoriteEvents in
-                if Env.userSessionStore.isUserLogged() {
-                    if self?.initialLoading == true {
-                     self?.isLoadingPublisher.send(true)
-                        self?.initialLoading = false
-                    }
+        self.myCompetitionsTypeList = myCompetitionsTypeList
 
-                    if favoriteEvents.isNotEmpty {
-                        self?.favoriteEventsIds = favoriteEvents
-                        self?.fetchFavoriteCompetitionMatches()
-                    }
-                    else {
-                        self?.clearData()
-                    }
+        self.filterApplied = myGamesFilterType
 
+//        Env.favoritesManager.favoriteCompetitionsIdPublisher
+//            .receive(on: DispatchQueue.main)
+//            .sink(receiveValue: { [weak self] favoriteEvents in
+//                if Env.userSessionStore.isUserLogged() {
+//                    if self?.initialLoading == true {
+//                     self?.isLoadingPublisher.send(true)
+//                        self?.initialLoading = false
+//                    }
+//
+//                    if favoriteEvents.isNotEmpty {
+//                        self?.favoriteEventsIds = favoriteEvents
+//                        self?.fetchFavoriteCompetitionMatches()
+//                    }
+//                    else {
+//                        self?.clearData()
+//                    }
+//
+//                }
+//                else {
+//                    self?.isLoadingPublisher.send(false)
+//                    self?.dataChangedPublisher.send()
+//                    self?.emptyStateStatusPublisher.send(.noLogin)
+//                }
+//            })
+//            .store(in: &cancellables)
+//
+//        self.fetchedEventSummaryPublisher
+//            .receive(on: DispatchQueue.main)
+//            .sink(receiveValue: { [weak self]  fetchedEventsSummmary in
+//
+//                if fetchedEventsSummmary.count == self?.favoriteEventsIds.count && fetchedEventsSummmary.isNotEmpty {
+//                    self?.updateContentList()
+//                }
+//            })
+//            .store(in: &cancellables)
+//
+//        Publishers.CombineLatest(self.expectedCompetitionsPublisher, self.selectedCompetitionsInfoPublisher)
+//            .receive(on: DispatchQueue.main)
+//            .sink(receiveValue: { [weak self] expectedCompetitions, selectedCompetitionsInfo in
+//
+//                if selectedCompetitionsInfo.count == expectedCompetitions {
+//                    print("ALL COMPETITIONS DATA")
+//                    self?.processCompetitionsInfo()
+//                }
+//            })
+//            .store(in: &cancellables)
+
+    }
+
+    func updateContentData(competitions: [Competition], outrightCompetitions: [Competition]) {
+
+        if Env.userSessionStore.isUserLogged() {
+            if competitions.isEmpty &&
+                outrightCompetitions.isEmpty {
+
+                self.emptyStateStatusPublisher.send(.noCompetitions)
+            }
+            else if competitions.isNotEmpty {
+                self.emptyStateStatusPublisher.send(.none)
+            }
+
+        }
+        else {
+            self.emptyStateStatusPublisher.send(.noLogin)
+        }
+
+        self.competitions = competitions
+
+        self.outrightCompetitions = outrightCompetitions
+
+        switch self.filterApplied {
+        case .time:
+            for index in 0..<self.competitions.count {
+                self.competitions[index].matches.sort {
+                    $0.date ?? Date() < $1.date ?? Date()
                 }
-                else {
-                    self?.isLoadingPublisher.send(false)
-                    self?.dataChangedPublisher.send()
-                    self?.emptyStateStatusPublisher.send(.noLogin)
+            }
+        case .higherOdds:
+            for index in 0..<competitions.count {
+
+                let sortingClosure: (Match, Match) -> Bool = { match1, match2 in
+                    // Find the highest decimal odd for each match
+                    let highestOdd1 = match1.markets.flatMap { $0.outcomes }.map { $0.bettingOffer.decimalOdd }.max() ?? 0.0
+                    let highestOdd2 = match2.markets.flatMap { $0.outcomes }.map { $0.bettingOffer.decimalOdd }.max() ?? 0.0
+
+                    // Compare the highest decimal odds for sorting
+                    return highestOdd1 > highestOdd2
                 }
-            })
-            .store(in: &cancellables)
 
-        self.fetchedEventSummaryPublisher
-            .receive(on: DispatchQueue.main)
-            .sink(receiveValue: { [weak self]  fetchedEventsSummmary in
+                let sortedFavorites = self.competitions[index].matches.sorted(by: sortingClosure)
 
-                if fetchedEventsSummmary.count == self?.favoriteEventsIds.count && fetchedEventsSummmary.isNotEmpty {
-                    self?.updateContentList()
-                }
-            })
-            .store(in: &cancellables)
+                self.competitions[index].matches = sortedFavorites
+            }
+        }
 
-        Publishers.CombineLatest(self.expectedCompetitionsPublisher, self.selectedCompetitionsInfoPublisher)
-            .receive(on: DispatchQueue.main)
-            .sink(receiveValue: { [weak self] expectedCompetitions, selectedCompetitionsInfo in
-
-                if selectedCompetitionsInfo.count == expectedCompetitions {
-                    print("ALL COMPETITIONS DATA")
-                    self?.processCompetitionsInfo()
-                }
-            })
-            .store(in: &cancellables)
-
+        self.isLoadingPublisher.send(false)
+        self.dataChangedPublisher.send()
     }
 
     private func fetchFavoriteCompetitionMatches() {
@@ -191,7 +248,7 @@ class MyCompetitionsViewModel {
 
     }
 
-    private func updateContentList() {
+    func updateContentList() {
 
         if Env.userSessionStore.isUserLogged() {
             if self.favoriteCompetitionsDataPublisher.value.isEmpty &&
@@ -227,5 +284,10 @@ class MyCompetitionsViewModel {
 
         self.updateContentList()
 
+    }
+
+    func refreshContent() {
+
+        self.updateContentData(competitions: self.competitions, outrightCompetitions: self.outrightCompetitions)
     }
 }

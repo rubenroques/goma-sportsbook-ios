@@ -118,6 +118,7 @@ class SupportPageViewController: UIViewController {
 
         self.setupWithTheme()
     }
+
     func commonInit() {
         self.descriptionTextView.delegate = self
         
@@ -247,13 +248,50 @@ class SupportPageViewController: UIViewController {
 
     }
 
+    // MARK: Functions
+    func showAlert(type: EditAlertView.AlertState, text: String = "") {
+
+        let popup = EditAlertView()
+        popup.alertState = type
+        if text != "" {
+            popup.setAlertText(text)
+        }
+
+        popup.translatesAutoresizingMaskIntoConstraints = false
+        self.view.addSubview(popup)
+
+        NSLayoutConstraint.activate([
+            popup.leadingAnchor.constraint(equalTo: self.view.safeAreaLayoutGuide.leadingAnchor),
+            popup.trailingAnchor.constraint(equalTo: self.view.safeAreaLayoutGuide.trailingAnchor),
+            popup.bottomAnchor.constraint(equalTo: self.view.safeAreaLayoutGuide.bottomAnchor)
+        ])
+
+        UIView.animate(withDuration: 0.2, delay: 0, options: .curveEaseIn, animations: {
+            popup.alpha = 1
+        }, completion: { _ in
+        })
+
+        popup.onClose = {
+            UIView.animate(withDuration: 0.2, delay: 0, options: .curveEaseIn, animations: {
+                popup.alpha = 0
+            }, completion: { _ in
+                popup.removeFromSuperview()
+            })
+
+        }
+        self.view.bringSubviewToFront(popup)
+    }
+
     // MARK: Binding
     private func bind(toViewModel viewModel: SupportPageViewModel) {
 
         viewModel.supportResponseAction = { [weak self] withSuccess, message in
 
             if withSuccess {
-                self?.didTapBackButton()
+                self?.showAlert(type: .success, text: localized("support_success"))
+                DispatchQueue.main.asyncAfter(deadline: .now() + 2) {
+                    self?.didTapBackButton()
+                }
             }
             else {
                 if let message {

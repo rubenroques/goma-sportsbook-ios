@@ -35,6 +35,7 @@ class SupportPageViewModel {
         var name = ""
         var surname = ""
         var userEmail = ""
+        var isLogged = false
 
         if let firstName,
            let lastName,
@@ -45,10 +46,12 @@ class SupportPageViewModel {
             userEmail = email
         }
         else {
-            userIdentifier = "\(userProfile?.userIdentifier ?? "")_\(userProfile?.username ?? "")"
+            // userIdentifier = "\(userProfile?.userIdentifier ?? "")_\(userProfile?.username ?? "")"
+            userIdentifier = "\(userProfile?.firstName ?? "") \(userProfile?.lastName ?? "")"
             name = "\(userProfile?.firstName ?? "")"
             surname = "\(userProfile?.lastName ?? "")"
             userEmail = "\(userProfile?.email ?? "")"
+            isLogged = true
         }
 
         if let filteredSubjectTypeTag = SubjectType.allCases.filter({
@@ -57,7 +60,14 @@ class SupportPageViewModel {
             subjectTypeTag = filteredSubjectTypeTag
         }
 
-        Env.servicesProvider.contactSupport(userIdentifier: userIdentifier, firstName: name, lastName: surname, email: userEmail, subject: title, subjectType: subjectTypeTag, message: message)
+        Env.servicesProvider.contactSupport(userIdentifier: userIdentifier,
+                                            firstName: name,
+                                            lastName: surname,
+                                            email: userEmail,
+                                            subject: title,
+                                            subjectType: subjectTypeTag,
+                                            message: message,
+                                            isLogged: isLogged)
             .receive(on: DispatchQueue.main)
             .sink(receiveCompletion: { [weak self] completion in
                 switch completion {

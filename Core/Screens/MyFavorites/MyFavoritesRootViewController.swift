@@ -33,7 +33,7 @@ class MyFavoritesRootViewController: UIViewController {
     private var viewControllers: [UIViewController] = []
 
     private var myGamesViewController: MyGamesRootViewController
-    private var myCompetitionsViewController: MyCompetitionsViewController
+    private var myCompetitionsViewController: MyCompetitionsRootViewController
 
     private var cancellables = Set<AnyCancellable>()
 
@@ -48,9 +48,9 @@ class MyFavoritesRootViewController: UIViewController {
     init() {
 
         self.myGamesViewController = MyGamesRootViewController(viewModel: MyGamesRootViewModel())
-        self.myCompetitionsViewController = MyCompetitionsViewController()
+        self.myCompetitionsViewController = MyCompetitionsRootViewController(viewModel: MyCompetitionsRootViewModel())
 
-        self.viewControllers = [self.myGamesViewController, self.myCompetitionsViewController]
+        self.viewControllers = [self.myCompetitionsViewController, self.myGamesViewController]
         self.viewControllerTabDataSource = TitleTabularDataSource(with: viewControllers)
 
         self.viewControllerTabDataSource.initialPage = 0
