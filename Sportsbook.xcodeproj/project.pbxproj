@@ -842,6 +842,13 @@
 		454F73BA299152C100437460 /* GradientView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 454F73B4299152C100437460 /* GradientView.swift */; };
 		454F73BB299152C100437460 /* GradientView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 454F73B4299152C100437460 /* GradientView.swift */; };
 		4554ED0A2976F7FE006942B3 /* IQKeyboardManagerSwift in Frameworks */ = {isa = PBXBuildFile; productRef = 4554ED092976F7FE006942B3 /* IQKeyboardManagerSwift */; };
+		455897E92A97FCAD00E39598 /* RePlayFeatureHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 455897E82A97FCAD00E39598 /* RePlayFeatureHelper.swift */; };
+		455897EA2A97FCAD00E39598 /* RePlayFeatureHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 455897E82A97FCAD00E39598 /* RePlayFeatureHelper.swift */; };
+		455897EB2A97FCAD00E39598 /* RePlayFeatureHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 455897E82A97FCAD00E39598 /* RePlayFeatureHelper.swift */; };
+		455897EC2A97FCAD00E39598 /* RePlayFeatureHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 455897E82A97FCAD00E39598 /* RePlayFeatureHelper.swift */; };
+		455897ED2A97FCAD00E39598 /* RePlayFeatureHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 455897E82A97FCAD00E39598 /* RePlayFeatureHelper.swift */; };
+		455897EE2A97FCAD00E39598 /* RePlayFeatureHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 455897E82A97FCAD00E39598 /* RePlayFeatureHelper.swift */; };
+		455897EF2A97FCAD00E39598 /* RePlayFeatureHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 455897E82A97FCAD00E39598 /* RePlayFeatureHelper.swift */; };
 		455A0C6B26BD902F00EC572D /* SportsbookTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 455A0C6A26BD902F00EC572D /* SportsbookTests.swift */; };
 		455AE12C2A29EBC20045FDD3 /* QuickSwipeStackTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 455AE12B2A29EBC20045FDD3 /* QuickSwipeStackTableViewCell.swift */; };
 		455AE12D2A29EBC20045FDD3 /* QuickSwipeStackTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 455AE12B2A29EBC20045FDD3 /* QuickSwipeStackTableViewCell.swift */; };
@@ -5945,6 +5952,7 @@
 		45505F4C28058EB900D4B53E /* BonusRootViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BonusRootViewController.swift; sourceTree = "<group>"; };
 		4556439D26F2631700EE78FA /* FirebaseClientSettings.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FirebaseClientSettings.swift; sourceTree = "<group>"; };
 		455643A026F2634E00EE78FA /* GomaClientSettings.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GomaClientSettings.swift; sourceTree = "<group>"; };
+		455897E82A97FCAD00E39598 /* RePlayFeatureHelper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RePlayFeatureHelper.swift; sourceTree = "<group>"; };
 		455A0C5326BD902C00EC572D /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		455A0C6626BD902F00EC572D /* SportsbookTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = SportsbookTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		455A0C6A26BD902F00EC572D /* SportsbookTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SportsbookTests.swift; sourceTree = "<group>"; };
@@ -7449,6 +7457,7 @@
 				A96B619E27AC0642005DC376 /* URLSchemaManager.swift */,
 				A9BDD4F0292E3F08001A7799 /* SportTypeStore.swift */,
 				A996B3F229893FEC00A535FC /* PaymentsDropIn.swift */,
+				455897E82A97FCAD00E39598 /* RePlayFeatureHelper.swift */,
 			);
 			path = Services;
 			sourceTree = "<group>";
@@ -12252,6 +12261,7 @@
 				450B7A3728F58574009229E3 /* Aggregator.swift in Sources */,
 				450B7A3828F58574009229E3 /* OutrightMarketDetailsViewModel.swift in Sources */,
 				459874B92A28D272008C0ADE /* CardsCollectionViewLayout.swift in Sources */,
+				455897EA2A97FCAD00E39598 /* RePlayFeatureHelper.swift in Sources */,
 				450B7A3928F58574009229E3 /* BonusActiveCellViewModel.swift in Sources */,
 				450B7A3A28F58574009229E3 /* CompetitionFilterHeaderView.swift in Sources */,
 				450B7A3B28F58574009229E3 /* CashoutSubmission.swift in Sources */,
@@ -13055,6 +13065,7 @@
 				A9A43C742A4B2A33008FB399 /* IdentificationDocsViewModel.swift in Sources */,
 				457CBB88282D27D000ED0F00 /* FailableDecodable.swift in Sources */,
 				45B6E2412841525E001B570C /* NewMessageViewController.swift in Sources */,
+				455897EE2A97FCAD00E39598 /* RePlayFeatureHelper.swift in Sources */,
 				A9DF8E2628E45C300083BF56 /* UserProfileInfoViewModel.swift in Sources */,
 				457CBB89282D27D000ED0F00 /* FilterLineView.swift in Sources */,
 				A925480C2A28E0AA0056F832 /* ListTypeIconCollectionViewCell.swift in Sources */,
@@ -13767,6 +13778,7 @@
 				457CBE4C282D2CD100ED0F00 /* BonusSwitchView.swift in Sources */,
 				457CBE4D282D2CD100ED0F00 /* ReceivedMessageTableViewCell.swift in Sources */,
 				457CBE4E282D2CD100ED0F00 /* RecentSearchHeaderView.swift in Sources */,
+				455897EF2A97FCAD00E39598 /* RePlayFeatureHelper.swift in Sources */,
 				457CBE4F282D2CD100ED0F00 /* SharedGameCardView.swift in Sources */,
 				45C10F9F28772DA700037BBE /* DefaultShiftAnimation.swift in Sources */,
 				457CBE50282D2CD100ED0F00 /* Event.swift in Sources */,
@@ -14359,6 +14371,7 @@
 				4589C8F8282024E400243547 /* OutrightMarketDetailsViewModel.swift in Sources */,
 				4589C8F9282024E400243547 /* BonusActiveCellViewModel.swift in Sources */,
 				459874BA2A28D272008C0ADE /* CardsCollectionViewLayout.swift in Sources */,
+				455897EB2A97FCAD00E39598 /* RePlayFeatureHelper.swift in Sources */,
 				4589C8FA282024E400243547 /* CompetitionFilterHeaderView.swift in Sources */,
 				4589C8FB282024E400243547 /* CashoutSubmission.swift in Sources */,
 				4589C8FC282024E400243547 /* ProfileLimitsManagementViewModel.swift in Sources */,
@@ -15023,6 +15036,7 @@
 				45A33257298976BA008181E9 /* Aggregator.swift in Sources */,
 				45A33258298976BA008181E9 /* OutrightMarketDetailsViewModel.swift in Sources */,
 				459874B82A28D272008C0ADE /* CardsCollectionViewLayout.swift in Sources */,
+				455897E92A97FCAD00E39598 /* RePlayFeatureHelper.swift in Sources */,
 				45A33259298976BA008181E9 /* BonusActiveCellViewModel.swift in Sources */,
 				45A3325A298976BA008181E9 /* CompetitionFilterHeaderView.swift in Sources */,
 				45A3325B298976BA008181E9 /* CashoutSubmission.swift in Sources */,
@@ -15407,6 +15421,7 @@
 				A986D36028CF4C5C00AF95D7 /* InviteContactTableViewCell.swift in Sources */,
 				45C10F2B28772DA700037BBE /* Animations.swift in Sources */,
 				45A6BC8528246A7500D9B416 /* NotificationsViewModel.swift in Sources */,
+				455897ED2A97FCAD00E39598 /* RePlayFeatureHelper.swift in Sources */,
 				A9FB6D4428C61D2100E3FE58 /* TipsRootViewController.swift in Sources */,
 				45B6E23A284151F8001B570C /* ActionButtonTableViewCell.swift in Sources */,
 				45B6E209283E3F2A001B570C /* EditGroupAddFriendViewModel.swift in Sources */,
@@ -15998,6 +16013,7 @@
 				A9C3414828F9A74A0055360B /* FilterHistoryViewController.swift in Sources */,
 				A99DE67729A643F800AA24AA /* PaymentStatus.swift in Sources */,
 				A93FE2242A45A8B9006A6907 /* CashbackBalanceView.swift in Sources */,
+				455897EC2A97FCAD00E39598 /* RePlayFeatureHelper.swift in Sources */,
 				A9C3414928F9A74A0055360B /* MatchStatsViewModel.swift in Sources */,
 				A9C3414A28F9A74A0055360B /* BettingTicket.swift in Sources */,
 				A9C3414B28F9A74A0055360B /* FriendsListViewModel.swift in Sources */,
@@ -16910,8 +16926,11 @@
 				MARKETING_VERSION = 0.1.1;
 				OTHER_LDFLAGS = "$(inherited)";
 				PRODUCT_BUNDLE_IDENTIFIER = com.gomagaming.betsson;
-				PRODUCT_NAME = "$(TARGET_NAME)";
+				PRODUCT_NAME = Betsson;
 				PROVISIONING_PROFILE_SPECIFIER = "";
+				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
+				SUPPORTS_MACCATALYST = NO;
+				SUPPORTS_MAC_DESIGNED_FOR_IPHONE_IPAD = NO;
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};
@@ -16936,8 +16955,11 @@
 				MARKETING_VERSION = 0.1.1;
 				OTHER_LDFLAGS = "$(inherited)";
 				PRODUCT_BUNDLE_IDENTIFIER = com.gomagaming.betsson;
-				PRODUCT_NAME = "$(TARGET_NAME)";
+				PRODUCT_NAME = Betsson;
 				PROVISIONING_PROFILE_SPECIFIER = "";
+				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
+				SUPPORTS_MACCATALYST = NO;
+				SUPPORTS_MAC_DESIGNED_FOR_IPHONE_IPAD = NO;
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};

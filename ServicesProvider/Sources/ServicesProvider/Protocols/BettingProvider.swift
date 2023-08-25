@@ -27,7 +27,7 @@ protocol BettingProvider: Connector {
 
     func cashoutBet(betId: String, cashoutValue: Double, stakeValue: Double?) -> AnyPublisher<CashoutResult, ServiceProviderError>
 
-    func calculateCashback(betSelectionData: [BetTicketSelection], stakeValue: String) -> AnyPublisher<CashbackResult, ServiceProviderError>
+    func calculateCashback(forBetTicket betTicket: BetTicket)  -> AnyPublisher<CashbackResult, ServiceProviderError>
 
     func getBetslipSettings() -> AnyPublisher<BetslipSettings?, Never>
     func updateBetslipSettings(_ betslipSettings: BetslipSettings) -> AnyPublisher<Bool, Never>

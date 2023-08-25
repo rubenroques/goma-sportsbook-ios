@@ -53,6 +53,10 @@ class MatchWidgetCellViewModel {
 
     }
 
+    var canHaveCashback: Bool {
+        return self.matchWidgetType == .normal && RePlayFeatureHelper.shouldShowRePlay(forMatch: self.match)
+    }
+
     var matchScore: String {
         var homeScore = "0"
         var awayScore = "0"

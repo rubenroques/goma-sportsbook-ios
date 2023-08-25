@@ -1337,16 +1337,7 @@ class MatchWidgetCollectionViewCell: UICollectionViewCell {
 
         self.isFavorite = Env.favoritesManager.isEventFavorite(eventId: viewModel.match.id)
 
-
-        // TODO: TEST CASHBACK
-        if viewModel.matchWidgetType == .normal {
-            if viewModel.match.sport.alphaId == "FBL" {
-                self.hasCashback = true
-            }
-            else {
-                self.hasCashback = false
-            }
-        }
+        self.hasCashback = viewModel.canHaveCashback
     }
 
     //

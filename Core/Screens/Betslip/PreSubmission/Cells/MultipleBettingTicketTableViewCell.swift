@@ -239,7 +239,10 @@ class MultipleBettingTicketTableViewCell: UITableViewCell {
             self.errorLateralBottomView.backgroundColor = UIColor.App.backgroundSecondary
         }
 
-        self.hasCashback = true
+        if let sport = bettingTicket.sport {
+            self.hasCashback = RePlayFeatureHelper.shouldShowRePlay(forSport: sport)
+        }
+
     }
 
     @IBAction private func didTapDeleteButton() {

@@ -57,7 +57,7 @@ class MaintenanceViewController: UIViewController {
         textLabel.font = AppFont.with(type: AppFont.AppFontType.medium, size: 16)
         textLabel.textColor = UIColor.white
         textLabel.numberOfLines = 0
-        textLabel.text = Env.businessSettingsSocket.clientSettings?.maintenanceReason ?? ""
+        textLabel.text = Env.businessSettingsSocket.clientSettings.maintenanceReason
         textLabel.sizeToFit()
     }
 

@@ -363,12 +363,10 @@ class MyTicketBetLineView: NibView {
                 }, receiveValue: { [weak self] updatedMatch in
                     switch updatedMatch.status {
                     case .notStarted, .ended, .unknown:
-//                        self?.matchModePublisher.send(.preLive)
                         self?.liveIconImage.isHidden = true
                         self?.dateLabel.isHidden = false
 
                     case .inProgress:
-//                        self?.matchModePublisher.send(.live)
                         self?.liveIconImage.isHidden = false
                         self?.dateLabel.isHidden = true
 
@@ -380,8 +378,6 @@ class MyTicketBetLineView: NibView {
                             self?.awayTeamScoreLabel.text = "\(awayScore)"
                         }
                     }
-
-//                    self?.matchPublisher.send(.loaded(updatedMatch))
                 })
                 .store(in: &self.cancellables)
         }

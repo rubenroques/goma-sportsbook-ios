@@ -261,6 +261,7 @@ class OutcomeSelectionButtonView: NibView {
                                           matchDescription: matchDescription,
                                           marketDescription: marketDescription,
                                           outcomeDescription: outcomeDescription,
+                                          sport: match.sport,
                                           odd: self.currentOdd ?? outcome.bettingOffer.odd)
         }
         else {
@@ -283,6 +284,7 @@ class OutcomeSelectionButtonView: NibView {
                                           matchDescription: matchDescription,
                                           marketDescription: marketDescription,
                                           outcomeDescription: outcomeDescription,
+                                          sport: nil,
                                           odd: self.currentOdd ?? outcome.bettingOffer.odd)
         }
 
@@ -338,6 +340,7 @@ class OutcomeSelectionButtonView: NibView {
                                               matchDescription: matchDescription,
                                               marketDescription: marketDescription,
                                               outcomeDescription: outcomeDescription,
+                                              sport: match.sport,
                                               odd: outcome.bettingOffer.odd)
             }
             else {
@@ -360,6 +363,7 @@ class OutcomeSelectionButtonView: NibView {
                                               matchDescription: matchDescription,
                                               marketDescription: marketDescription,
                                               outcomeDescription: outcomeDescription,
+                                              sport: nil,
                                               odd: outcome.bettingOffer.odd)
             }
 

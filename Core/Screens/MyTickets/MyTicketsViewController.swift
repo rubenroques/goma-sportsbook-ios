@@ -227,7 +227,6 @@ class MyTicketsViewController: UIViewController {
         self.isLoading = false
 
         self.setupWithTheme()
-        
     }
 
     override func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {
