@@ -174,6 +174,10 @@ class MyTicketsViewController: UIViewController {
 
         }
 
+        self.viewModel.updateCellAtIndexPath = { [weak self] cellIndexPath in
+            self?.ticketsTableView.reloadRows(at: [cellIndexPath], with: .automatic)
+        }
+
         self.viewModel.requestShareActivityView = { [weak self] image, betId, betStatus in
             self?.isLoading = true
             self?.viewModel.clickedCellSnapshot = image

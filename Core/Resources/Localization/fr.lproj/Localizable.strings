@@ -1496,3 +1496,7 @@
 "add_some_favorites" = "Ajoutez-en pour un accès rapide ou consultez nos suggestions ci-dessous.";
 
 "support_success" = "Votre message a bien été envoyé";
+
+"total_balance_automated_withdrawal" = "Ce solde comprend également le retrait automatisé (ESCROW).";
+
+"replay_balance" = "Solde Replay";

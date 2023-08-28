@@ -51,6 +51,7 @@
                 <outlet property="shadowView" destination="VDW-H2-PFU" id="z3V-DQ-qKE"/>
                 <outlet property="stackView" destination="6QV-ge-SXI" id="i6L-MC-BTC"/>
                 <outlet property="topBarView" destination="upr-br-gCP" id="kBu-NP-iT4"/>
+                <outlet property="totalBalanceInfoImageView" destination="zQX-7w-xuI" id="6BE-Dy-WIb"/>
                 <outlet property="totalBalanceLabel" destination="F24-gl-VWS" id="NVQ-MP-O0b"/>
                 <outlet property="totalBalanceTitleLabel" destination="ZNA-lM-Y9t" id="x9d-if-LRb"/>
                 <outlet property="totalBalanceView" destination="4us-C6-c7y" id="HGL-HF-0K7"/>
@@ -270,13 +271,20 @@ Sportsbook® All Rights Reserved</string>
                                                 <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="4us-C6-c7y">
                                                     <rect key="frame" x="0.0" y="0.0" width="314" height="30"/>
                                                     <subviews>
-                                                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" verticalHuggingPriority="251" text="Current Balance" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="ZNA-lM-Y9t">
-                                                            <rect key="frame" x="0.0" y="6" width="153" height="18"/>
+                                                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" horizontalCompressionResistancePriority="749" text="Current Balance" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="ZNA-lM-Y9t">
+                                                            <rect key="frame" x="0.0" y="6" width="131" height="18"/>
                                                             <fontDescription key="fontDescription" name="Gilroy-Bold" family="Gilroy" pointSize="18"/>
                                                             <color key="textColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                                             <nil key="highlightedColor"/>
                                                         </label>
-                                                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="49.875.655,59€" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="F24-gl-VWS">
+                                                        <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" verticalHuggingPriority="251" image="info_small_icon" translatesAutoresizingMaskIntoConstraints="NO" id="zQX-7w-xuI">
+                                                            <rect key="frame" x="137" y="8" width="14" height="14"/>
+                                                            <constraints>
+                                                                <constraint firstAttribute="height" constant="14" id="XnD-d4-sR0"/>
+                                                                <constraint firstAttribute="width" constant="14" id="c4g-mQ-f4Y"/>
+                                                            </constraints>
+                                                        </imageView>
+                                                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="249" verticalHuggingPriority="251" horizontalCompressionResistancePriority="751" text="49.875.655,59€" textAlignment="right" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="F24-gl-VWS">
                                                             <rect key="frame" x="157" y="3" width="157" height="24"/>
                                                             <fontDescription key="fontDescription" name="Gilroy-Bold" family="Gilroy" pointSize="24"/>
                                                             <color key="textColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
@@ -285,12 +293,14 @@ Sportsbook® All Rights Reserved</string>
                                                     </subviews>
                                                     <color key="backgroundColor" systemColor="systemBackgroundColor"/>
                                                     <constraints>
+                                                        <constraint firstItem="zQX-7w-xuI" firstAttribute="centerY" secondItem="ZNA-lM-Y9t" secondAttribute="centerY" id="1aN-En-RYj"/>
+                                                        <constraint firstItem="zQX-7w-xuI" firstAttribute="leading" secondItem="ZNA-lM-Y9t" secondAttribute="trailing" constant="6" id="2pV-Gi-biP"/>
                                                         <constraint firstItem="F24-gl-VWS" firstAttribute="centerY" secondItem="4us-C6-c7y" secondAttribute="centerY" id="7HC-NN-UdT"/>
                                                         <constraint firstAttribute="trailing" secondItem="F24-gl-VWS" secondAttribute="trailing" id="Fgx-jP-U4L"/>
                                                         <constraint firstAttribute="height" constant="30" id="OCu-vH-ZeX"/>
                                                         <constraint firstItem="ZNA-lM-Y9t" firstAttribute="centerY" secondItem="4us-C6-c7y" secondAttribute="centerY" id="RMT-fo-4Qh"/>
                                                         <constraint firstItem="ZNA-lM-Y9t" firstAttribute="leading" secondItem="4us-C6-c7y" secondAttribute="leading" id="ceQ-sb-XE1"/>
-                                                        <constraint firstItem="F24-gl-VWS" firstAttribute="leading" secondItem="ZNA-lM-Y9t" secondAttribute="trailing" constant="4" id="x6V-jt-m4B"/>
+                                                        <constraint firstItem="F24-gl-VWS" firstAttribute="leading" secondItem="zQX-7w-xuI" secondAttribute="trailing" constant="6" id="x6V-jt-m4B"/>
                                                     </constraints>
                                                 </view>
                                                 <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="YKL-xJ-gdA">
@@ -472,6 +482,7 @@ Sportsbook® All Rights Reserved</string>
     <resources>
         <image name="copy_clipboard_icon" width="16" height="16"/>
         <image name="empty_user_image" width="100" height="100"/>
+        <image name="info_small_icon" width="11" height="11"/>
         <image name="logout_account_icon" width="18" height="19"/>
         <namedColor name="backgroundPrimary">
             <color red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>

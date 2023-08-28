@@ -33,6 +33,7 @@ class ProfileViewController: UIViewController {
     @IBOutlet private weak var totalBalanceView: UIView!
     @IBOutlet private weak var totalBalanceTitleLabel: UILabel!
     @IBOutlet private weak var totalBalanceLabel: UILabel!
+    @IBOutlet private weak var totalBalanceInfoImageView: UIImageView!
 
     @IBOutlet private weak var currentBalanceView: UIView!
     @IBOutlet private weak var currentBalanceTitleLabel: UILabel!
@@ -65,6 +66,14 @@ class ProfileViewController: UIViewController {
 
     @IBOutlet private weak var footerBaseView: UIView!
     private var footerResponsibleGamingView = FooterResponsibleGamingView()
+
+    // Custom views
+    lazy var totalBalanceInfoDialogView: InfoDialogView = {
+        let view = InfoDialogView()
+        view.translatesAutoresizingMaskIntoConstraints = false
+        view.configure(title: localized("total_balance_automated_withdrawal"))
+        return view
+    }()
 
     var depositOnRegisterViewController: DepositOnRegisterViewController?
 
@@ -283,11 +292,27 @@ class ProfileViewController: UIViewController {
 
         bonusBalanceBaseView.layer.cornerRadius = CornerRadius.view
 
-        totalBalanceTitleLabel.text = localized("total")
+        totalBalanceTitleLabel.text = localized("total_balance")
         totalBalanceTitleLabel.font = AppFont.with(type: .bold, size: 14)
         totalBalanceLabel.font = AppFont.with(type: .bold, size: 16)
 
-        currentBalanceTitleLabel.text = localized("available")
+        totalBalanceInfoImageView.image = UIImage(named: "info_small_icon")
+        
+        let totalBalanceInfoTap = UITapGestureRecognizer(target: self, action: #selector(self.tapTotalBalanceInfo))
+        totalBalanceView.addGestureRecognizer(totalBalanceInfoTap)
+
+        self.view.addSubview(self.totalBalanceInfoDialogView)
+
+        NSLayoutConstraint.activate([
+
+            self.totalBalanceInfoDialogView.bottomAnchor.constraint(equalTo: self.totalBalanceInfoImageView.topAnchor, constant: -10),
+            self.totalBalanceInfoDialogView.trailingAnchor.constraint(equalTo: self.totalBalanceInfoImageView.trailingAnchor, constant: 8),
+            self.totalBalanceInfoDialogView.widthAnchor.constraint(lessThanOrEqualToConstant: 160)
+        ])
+
+        self.totalBalanceInfoDialogView.alpha = 0
+
+        currentBalanceTitleLabel.text = localized("current_balance")
         currentBalanceTitleLabel.font = AppFont.with(type: .bold, size: 14)
         currentBalanceLabel.font = AppFont.with(type: .bold, size: 16)
 
@@ -295,7 +320,7 @@ class ProfileViewController: UIViewController {
         bonusBalanceTitleLabel.font = AppFont.with(type: .bold, size: 14)
         bonusBalanceLabel.font = AppFont.with(type: .bold, size: 16)
 
-        replayBalanceTitleLabel.text = localized("replay")
+        replayBalanceTitleLabel.text = localized("replay_balance")
         replayBalanceTitleLabel.font = AppFont.with(type: .bold, size: 14)
         replayBalanceLabel.font = AppFont.with(type: .bold, size: 16)
 
@@ -680,6 +705,22 @@ class ProfileViewController: UIViewController {
                 self.present(alert, animated: true, completion: nil)
             }
 
+        }
+    }
+
+    @objc private func tapTotalBalanceInfo() {
+        print("TAPPED TOTAL BALANCE INFO!")
+
+        UIView.animate(withDuration: 0.5, animations: {
+            self.totalBalanceInfoDialogView.alpha = 1
+        }) { (completed) in
+            if completed {
+                DispatchQueue.main.asyncAfter(deadline: .now() + 5.0) {
+                    UIView.animate(withDuration: 0.5) {
+                        self.totalBalanceInfoDialogView.alpha = 0
+                    }
+                }
+            }
         }
     }
 

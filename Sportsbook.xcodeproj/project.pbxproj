@@ -4407,6 +4407,13 @@
 		A9527C282A990E60006F4E37 /* MyCompetitionsRootViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9527C232A990E60006F4E37 /* MyCompetitionsRootViewModel.swift */; };
 		A9527C292A990E60006F4E37 /* MyCompetitionsRootViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9527C232A990E60006F4E37 /* MyCompetitionsRootViewModel.swift */; };
 		A9527C2A2A990E60006F4E37 /* MyCompetitionsRootViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9527C232A990E60006F4E37 /* MyCompetitionsRootViewModel.swift */; };
+		A9527C2C2A9CEDC1006F4E37 /* InfoDialogView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9527C2B2A9CEDC0006F4E37 /* InfoDialogView.swift */; };
+		A9527C2D2A9CEDC1006F4E37 /* InfoDialogView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9527C2B2A9CEDC0006F4E37 /* InfoDialogView.swift */; };
+		A9527C2E2A9CEDC1006F4E37 /* InfoDialogView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9527C2B2A9CEDC0006F4E37 /* InfoDialogView.swift */; };
+		A9527C2F2A9CEDC1006F4E37 /* InfoDialogView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9527C2B2A9CEDC0006F4E37 /* InfoDialogView.swift */; };
+		A9527C302A9CEDC1006F4E37 /* InfoDialogView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9527C2B2A9CEDC0006F4E37 /* InfoDialogView.swift */; };
+		A9527C312A9CEDC1006F4E37 /* InfoDialogView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9527C2B2A9CEDC0006F4E37 /* InfoDialogView.swift */; };
+		A9527C322A9CEDC1006F4E37 /* InfoDialogView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9527C2B2A9CEDC0006F4E37 /* InfoDialogView.swift */; };
 		A96FAEC729804C0600A0751F /* Data+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = A96FAEC629804C0600A0751F /* Data+Extensions.swift */; };
 		A96FAEC829804C0600A0751F /* Data+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = A96FAEC629804C0600A0751F /* Data+Extensions.swift */; };
 		A96FAEC929804C0600A0751F /* Data+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = A96FAEC629804C0600A0751F /* Data+Extensions.swift */; };
@@ -6384,6 +6391,7 @@
 		A9527C132A97A2F4006F4E37 /* MyCompetitionsRootViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MyCompetitionsRootViewController.swift; sourceTree = "<group>"; };
 		A9527C1B2A98FA66006F4E37 /* SuggestedCompetitionsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SuggestedCompetitionsView.swift; sourceTree = "<group>"; };
 		A9527C232A990E60006F4E37 /* MyCompetitionsRootViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MyCompetitionsRootViewModel.swift; sourceTree = "<group>"; };
+		A9527C2B2A9CEDC0006F4E37 /* InfoDialogView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InfoDialogView.swift; sourceTree = "<group>"; };
 		A96279EA273ED1E40001E1D5 /* ActivationAlertView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ActivationAlertView.swift; sourceTree = "<group>"; };
 		A96279ED273ED2290001E1D5 /* ActivationAlertView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = ActivationAlertView.xib; sourceTree = "<group>"; };
 		A96279F12743D3AA0001E1D5 /* EmailVerificationViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EmailVerificationViewController.swift; sourceTree = "<group>"; };
@@ -8038,6 +8046,7 @@
 				A9A603662A15293A00B06DF1 /* OptionRadioView.swift */,
 				A9BA04172A30EA3B007880FC /* CardOptionRadioView.swift */,
 				A9527C1B2A98FA66006F4E37 /* SuggestedCompetitionsView.swift */,
+				A9527C2B2A9CEDC0006F4E37 /* InfoDialogView.swift */,
 			);
 			path = Views;
 			sourceTree = "<group>";
@@ -12096,6 +12105,7 @@
 				450B798B28F58574009229E3 /* LoadingSpinnerViewController.swift in Sources */,
 				450B798C28F58574009229E3 /* MatchWidgetCollectionViewCell.swift in Sources */,
 				450B798D28F58574009229E3 /* UserBalance.swift in Sources */,
+				A9527C2D2A9CEDC1006F4E37 /* InfoDialogView.swift in Sources */,
 				450B798E28F58574009229E3 /* SearchEvent.swift in Sources */,
 				450B798F28F58574009229E3 /* UserRankingPositionTableViewCell.swift in Sources */,
 				450B799128F58574009229E3 /* MatchOddsContent.swift in Sources */,
@@ -12996,6 +13006,7 @@
 				457CBB43282D27D000ED0F00 /* BonusSwitchTableViewCell.swift in Sources */,
 				457CBB44282D27D000ED0F00 /* CompetitionFilterRowViewModel.swift in Sources */,
 				457CBB46282D27D000ED0F00 /* SearchTextField.swift in Sources */,
+				A9527C312A9CEDC1006F4E37 /* InfoDialogView.swift in Sources */,
 				A96FAEDC2981912100A0751F /* UploadDocuments.swift in Sources */,
 				457CBB47282D27D000ED0F00 /* BettingHistoryViewModel.swift in Sources */,
 				A9B946B228BE6D520091296E /* FeaturedTipCollectionViewCell.swift in Sources */,
@@ -13776,6 +13787,7 @@
 				A98708AF28D3451C00F27348 /* RankingsViewModel.swift in Sources */,
 				457CBE3B282D2CD100ED0F00 /* LiveDetailsViewModel.swift in Sources */,
 				457CBE3C282D2CD100ED0F00 /* TitleTabularDataSource.swift in Sources */,
+				A9527C322A9CEDC1006F4E37 /* InfoDialogView.swift in Sources */,
 				A91A64652A7A66B5002A6984 /* MyGamesTypeList.swift in Sources */,
 				456D6FCE289ACE5600B7E542 /* MessageDetailWebViewController.swift in Sources */,
 				457CBE3D282D2CD100ED0F00 /* DepositWebViewController.swift in Sources */,
@@ -14212,6 +14224,7 @@
 				4589C873282024E400243547 /* LoadingSpinnerViewController.swift in Sources */,
 				4589C874282024E400243547 /* MatchWidgetCollectionViewCell.swift in Sources */,
 				4589C875282024E400243547 /* UserBalance.swift in Sources */,
+				A9527C2E2A9CEDC1006F4E37 /* InfoDialogView.swift in Sources */,
 				4589C876282024E400243547 /* SearchEvent.swift in Sources */,
 				45E8E29828C88E1300A09B02 /* UserRankingPositionTableViewCell.swift in Sources */,
 				4589C878282024E400243547 /* MatchOddsContent.swift in Sources */,
@@ -14879,6 +14892,7 @@
 				45A331A4298976BA008181E9 /* UserActionView.swift in Sources */,
 				45A331A5298976BA008181E9 /* LoadingSpinnerViewController.swift in Sources */,
 				45A331A6298976BA008181E9 /* MatchWidgetCollectionViewCell.swift in Sources */,
+				A9527C2C2A9CEDC1006F4E37 /* InfoDialogView.swift in Sources */,
 				45A331A7298976BA008181E9 /* UserBalance.swift in Sources */,
 				45A331A8298976BA008181E9 /* SearchEvent.swift in Sources */,
 				45A331A9298976BA008181E9 /* UserRankingPositionTableViewCell.swift in Sources */,
@@ -15272,6 +15286,7 @@
 				45A6BBFE28246A7500D9B416 /* RecentSearchRowView.swift in Sources */,
 				45A6BBFF28246A7500D9B416 /* OddViewPosition.swift in Sources */,
 				45A6BC0028246A7500D9B416 /* FilterSliderInfoView.swift in Sources */,
+				A9527C302A9CEDC1006F4E37 /* InfoDialogView.swift in Sources */,
 				45A6BC0128246A7500D9B416 /* BannerScrollTableViewCell.swift in Sources */,
 				45B6E22F284151D6001B570C /* UserInfoView.swift in Sources */,
 				A98EC7CF2889ADC10044FC46 /* ShareTicketChoiceViewModel.swift in Sources */,
@@ -16166,6 +16181,7 @@
 				45B9F97A2A1E245700DA2B88 /* ClientManagedHomeViewTemplateDataSource.swift in Sources */,
 				A9C341B428F9A74A0055360B /* NewGroupViewController.swift in Sources */,
 				A9C341B728F9A74A0055360B /* ChatNotificationsViewController.swift in Sources */,
+				A9527C2F2A9CEDC1006F4E37 /* InfoDialogView.swift in Sources */,
 				A9C341B828F9A74A0055360B /* BetslipErrorView.swift in Sources */,
 				A9C341B928F9A74A0055360B /* CompetitionSearchTableViewCell.swift in Sources */,
 				A9C341BA28F9A74A0055360B /* CompetitionWidgetCollectionViewCell.swift in Sources */,

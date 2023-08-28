@@ -40,6 +40,7 @@ class MyTicketsViewModel: NSObject {
     var redrawTableViewAction: ((Bool) -> Void)?
     var tappedMatchDetail: ((String) -> Void)?
     var requestShareActivityView: ((UIImage, String, String) -> Void)?
+    var updateCellAtIndexPath: ((IndexPath) -> Void)?
 
     var requestAlertAction: ((String, String) -> Void)?
     var requestPartialAlertAction: ((String, String) -> Void)?
@@ -492,6 +493,10 @@ extension MyTicketsViewModel: UITableViewDelegate, UITableViewDataSource {
 
             cell.needsHeightRedraw = { [weak self] withScroll in
                 self?.redrawTableViewAction?(withScroll)
+            }
+
+            cell.needsDataUpdate = { [weak self] in
+                self?.updateCellAtIndexPath?(indexPath)
             }
 
             cell.configure(withBetHistoryEntry: ticketValue, countryCodes: locationsCodes, viewModel: viewModel)

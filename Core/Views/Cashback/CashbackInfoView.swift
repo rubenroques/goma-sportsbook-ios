@@ -89,7 +89,6 @@ extension CashbackInfoView {
         return imageView
     }
 
-
     private func setupSubviews() {
         self.addSubview(self.containerView)
 

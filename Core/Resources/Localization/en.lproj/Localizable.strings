@@ -1432,3 +1432,7 @@
 "add_some_favorites" = "Add some for quick access or check our suggestions bellow.";
 
 "support_success" = "Your message was successfully sent";
+
+"total_balance_automated_withdrawal" = "This balance includes also Automated withdrawal (ESCROW).";
+
+"replay_balance" = "Balance Replay";

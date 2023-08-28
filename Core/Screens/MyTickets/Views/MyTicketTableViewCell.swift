@@ -94,7 +94,7 @@ class MyTicketTableViewCell: UITableViewCell {
         didSet {
             self.cashoutBaseView.isHidden = !showCashoutButton
             if showCashoutButton {
-                self.needsHeightRedraw?(false)
+                //self.needsHeightRedraw?(false)
             }
         }
     }
@@ -114,9 +114,12 @@ class MyTicketTableViewCell: UITableViewCell {
             self.partialCashoutSliderView.isHidden = !showPartialCashoutSliderView
 
             if showPartialCashoutSliderView {
-                self.viewModel?.hasRedraw = true
-                self.needsHeightRedraw?(false)
 
+                if self.viewModel?.hasRedraw == false {
+                    self.needsDataUpdate?()
+                }
+                self.viewModel?.hasRedraw = true
+                
             }
 
         }
@@ -150,6 +153,7 @@ class MyTicketTableViewCell: UITableViewCell {
     var tappedShareAction: (() -> Void)?
     var tappedMatchDetail: ((String) -> Void)?
     var shouldShowCashbackInfo: (() -> Void)?
+    var needsDataUpdate: (() -> Void)?
     
     var selectedIdPublisher: CurrentValueSubject<String, Never> = .init("")
 
