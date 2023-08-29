@@ -472,9 +472,9 @@ extension MyTicketsViewModel: UITableViewDelegate, UITableViewDataSource {
             case .resolved:
                 ticket = resolvedMyTickets.value[safe: indexPath.row] ?? nil
             case .opened:
-                ticket =  openedMyTickets.value[safe: indexPath.row] ?? nil
+                ticket = openedMyTickets.value[safe: indexPath.row] ?? nil
             case .won:
-                ticket =  wonMyTickets.value[safe: indexPath.row] ?? nil
+                ticket = wonMyTickets.value[safe: indexPath.row] ?? nil
             }
 
             guard

@@ -219,19 +219,23 @@ class BettingHistoryViewController: UIViewController {
     private func redrawTableView(withScroll: Bool) {
 
         // Use CATransaction to detect animation from table updates
-        CATransaction.begin()
-
-        CATransaction.setCompletionBlock({
-            if withScroll {
-                self.scrollDown()
-            }
-        })
+//        CATransaction.begin()
+//
+//        CATransaction.setCompletionBlock({
+//            if withScroll {
+//                self.scrollDown()
+//            }
+//        })
 
         self.tableView.beginUpdates()
         self.tableView.endUpdates()
 
         CATransaction.commit()
 
+    }
+
+    private func updateCellAtIndexPath(indexPath: IndexPath) {
+        self.tableView.reloadRows(at: [indexPath], with: .automatic)
     }
 
     private func scrollDown() {
@@ -311,6 +315,10 @@ extension BettingHistoryViewController: UITableViewDelegate, UITableViewDataSour
 
             cell.needsHeightRedraw = { [weak self] withScroll in
                 self?.redrawTableView(withScroll: withScroll)
+            }
+
+            cell.needsDataUpdate = { [weak self] in
+                self?.updateCellAtIndexPath(indexPath: indexPath)
             }
 
             cell.configure(withBetHistoryEntry: ticketValue, countryCodes: locationsCodes, viewModel: viewModel)
