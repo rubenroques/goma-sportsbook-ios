@@ -849,6 +849,20 @@
 		455897ED2A97FCAD00E39598 /* RePlayFeatureHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 455897E82A97FCAD00E39598 /* RePlayFeatureHelper.swift */; };
 		455897EE2A97FCAD00E39598 /* RePlayFeatureHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 455897E82A97FCAD00E39598 /* RePlayFeatureHelper.swift */; };
 		455897EF2A97FCAD00E39598 /* RePlayFeatureHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 455897E82A97FCAD00E39598 /* RePlayFeatureHelper.swift */; };
+		455897F12A9CE5C300E39598 /* progress_end_animation.json in Resources */ = {isa = PBXBuildFile; fileRef = 455897F02A9CE5C300E39598 /* progress_end_animation.json */; };
+		455897F22A9CE5C300E39598 /* progress_end_animation.json in Resources */ = {isa = PBXBuildFile; fileRef = 455897F02A9CE5C300E39598 /* progress_end_animation.json */; };
+		455897F32A9CE5C300E39598 /* progress_end_animation.json in Resources */ = {isa = PBXBuildFile; fileRef = 455897F02A9CE5C300E39598 /* progress_end_animation.json */; };
+		455897F42A9CE5C300E39598 /* progress_end_animation.json in Resources */ = {isa = PBXBuildFile; fileRef = 455897F02A9CE5C300E39598 /* progress_end_animation.json */; };
+		455897F52A9CE5C300E39598 /* progress_end_animation.json in Resources */ = {isa = PBXBuildFile; fileRef = 455897F02A9CE5C300E39598 /* progress_end_animation.json */; };
+		455897F62A9CE5C300E39598 /* progress_end_animation.json in Resources */ = {isa = PBXBuildFile; fileRef = 455897F02A9CE5C300E39598 /* progress_end_animation.json */; };
+		455897F72A9CE5C300E39598 /* progress_end_animation.json in Resources */ = {isa = PBXBuildFile; fileRef = 455897F02A9CE5C300E39598 /* progress_end_animation.json */; };
+		455897F92A9CE5CE00E39598 /* progress_bar_fire_ball.json in Resources */ = {isa = PBXBuildFile; fileRef = 455897F82A9CE5CE00E39598 /* progress_bar_fire_ball.json */; };
+		455897FA2A9CE5CE00E39598 /* progress_bar_fire_ball.json in Resources */ = {isa = PBXBuildFile; fileRef = 455897F82A9CE5CE00E39598 /* progress_bar_fire_ball.json */; };
+		455897FB2A9CE5CE00E39598 /* progress_bar_fire_ball.json in Resources */ = {isa = PBXBuildFile; fileRef = 455897F82A9CE5CE00E39598 /* progress_bar_fire_ball.json */; };
+		455897FC2A9CE5CE00E39598 /* progress_bar_fire_ball.json in Resources */ = {isa = PBXBuildFile; fileRef = 455897F82A9CE5CE00E39598 /* progress_bar_fire_ball.json */; };
+		455897FD2A9CE5CE00E39598 /* progress_bar_fire_ball.json in Resources */ = {isa = PBXBuildFile; fileRef = 455897F82A9CE5CE00E39598 /* progress_bar_fire_ball.json */; };
+		455897FE2A9CE5CE00E39598 /* progress_bar_fire_ball.json in Resources */ = {isa = PBXBuildFile; fileRef = 455897F82A9CE5CE00E39598 /* progress_bar_fire_ball.json */; };
+		455897FF2A9CE5CE00E39598 /* progress_bar_fire_ball.json in Resources */ = {isa = PBXBuildFile; fileRef = 455897F82A9CE5CE00E39598 /* progress_bar_fire_ball.json */; };
 		455A0C6B26BD902F00EC572D /* SportsbookTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 455A0C6A26BD902F00EC572D /* SportsbookTests.swift */; };
 		455AE12C2A29EBC20045FDD3 /* QuickSwipeStackTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 455AE12B2A29EBC20045FDD3 /* QuickSwipeStackTableViewCell.swift */; };
 		455AE12D2A29EBC20045FDD3 /* QuickSwipeStackTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 455AE12B2A29EBC20045FDD3 /* QuickSwipeStackTableViewCell.swift */; };
@@ -5974,6 +5988,8 @@
 		4556439D26F2631700EE78FA /* FirebaseClientSettings.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FirebaseClientSettings.swift; sourceTree = "<group>"; };
 		455643A026F2634E00EE78FA /* GomaClientSettings.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GomaClientSettings.swift; sourceTree = "<group>"; };
 		455897E82A97FCAD00E39598 /* RePlayFeatureHelper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RePlayFeatureHelper.swift; sourceTree = "<group>"; };
+		455897F02A9CE5C300E39598 /* progress_end_animation.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = progress_end_animation.json; sourceTree = "<group>"; };
+		455897F82A9CE5CE00E39598 /* progress_bar_fire_ball.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = progress_bar_fire_ball.json; sourceTree = "<group>"; };
 		455A0C5326BD902C00EC572D /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		455A0C6626BD902F00EC572D /* SportsbookTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = SportsbookTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		455A0C6A26BD902F00EC572D /* SportsbookTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SportsbookTests.swift; sourceTree = "<group>"; };
@@ -8716,7 +8732,9 @@
 			children = (
 				452BA1532A902BB000D0AA48 /* SignUpAvatars */,
 				A92BDCF72A163D0100E9B045 /* success_thumbs_up.json */,
+				455897F02A9CE5C300E39598 /* progress_end_animation.json */,
 				A9A1B2D82A128D8A00F7A8ED /* deposit_animation.json */,
+				455897F82A9CE5CE00E39598 /* progress_bar_fire_ball.json */,
 				45E46C162A08FEB900BB9B85 /* sports-loading.json */,
 				45F805952A05385B005296E0 /* dots-loading.json */,
 			);
@@ -10626,9 +10644,11 @@
 				450FC3E62A2A6737000DB866 /* DummyImages.xcassets in Resources */,
 				450B7AC828F58574009229E3 /* BannerMatchCollectionViewCell.xib in Resources */,
 				450B7AC928F58574009229E3 /* PopUpPromotionView.xib in Resources */,
+				455897F22A9CE5C300E39598 /* progress_end_animation.json in Resources */,
 				450B7ACA28F58574009229E3 /* Gilroy-Light.ttf in Resources */,
 				452BA1992A902C4900D0AA48 /* avatar1.json in Resources */,
 				450B7ACB28F58574009229E3 /* PreSubmissionBetslipViewController.xib in Resources */,
+				455897FA2A9CE5CE00E39598 /* progress_bar_fire_ball.json in Resources */,
 				450B7ACC28F58574009229E3 /* BannerScrollTableViewCell.xib in Resources */,
 				450B7ACD28F58574009229E3 /* BetslipViewController.xib in Resources */,
 				450B7ACF28F58574009229E3 /* MatchFiltersViewController.xib in Resources */,
@@ -10779,9 +10799,11 @@
 				450FC3EA2A2A6737000DB866 /* DummyImages.xcassets in Resources */,
 				457CBBF1282D27D000ED0F00 /* FullRegisterDocumentsViewController.xib in Resources */,
 				457CBBF2282D27D000ED0F00 /* README.md in Resources */,
+				455897F62A9CE5C300E39598 /* progress_end_animation.json in Resources */,
 				457CBBF3282D27D000ED0F00 /* BannerMatchCollectionViewCell.xib in Resources */,
 				452BA19D2A902C4900D0AA48 /* avatar1.json in Resources */,
 				457CBBF4282D27D000ED0F00 /* PopUpPromotionView.xib in Resources */,
+				455897FE2A9CE5CE00E39598 /* progress_bar_fire_ball.json in Resources */,
 				457CBBF5282D27D000ED0F00 /* Gilroy-Light.ttf in Resources */,
 				457CBBF6282D27D000ED0F00 /* PreSubmissionBetslipViewController.xib in Resources */,
 				457CBBF7282D27D000ED0F00 /* BannerScrollTableViewCell.xib in Resources */,
@@ -10924,9 +10946,11 @@
 				450FC3EB2A2A6737000DB866 /* DummyImages.xcassets in Resources */,
 				457CBE9B282D2CD100ED0F00 /* README.md in Resources */,
 				457CBE9C282D2CD100ED0F00 /* BannerMatchCollectionViewCell.xib in Resources */,
+				455897F72A9CE5C300E39598 /* progress_end_animation.json in Resources */,
 				457CBE9D282D2CD100ED0F00 /* PopUpPromotionView.xib in Resources */,
 				452BA19E2A902C4900D0AA48 /* avatar1.json in Resources */,
 				457CBE9E282D2CD100ED0F00 /* Gilroy-Light.ttf in Resources */,
+				455897FF2A9CE5CE00E39598 /* progress_bar_fire_ball.json in Resources */,
 				457CBE9F282D2CD100ED0F00 /* PreSubmissionBetslipViewController.xib in Resources */,
 				457CBEA0282D2CD100ED0F00 /* BannerScrollTableViewCell.xib in Resources */,
 				457CBEA1282D2CD100ED0F00 /* BetslipViewController.xib in Resources */,
@@ -11069,9 +11093,11 @@
 				450FC3E72A2A6737000DB866 /* DummyImages.xcassets in Resources */,
 				4589C972282024E400243547 /* BannerMatchCollectionViewCell.xib in Resources */,
 				4589C973282024E400243547 /* PopUpPromotionView.xib in Resources */,
+				455897F32A9CE5C300E39598 /* progress_end_animation.json in Resources */,
 				4589C974282024E400243547 /* Gilroy-Light.ttf in Resources */,
 				452BA19A2A902C4900D0AA48 /* avatar1.json in Resources */,
 				4589C975282024E400243547 /* PreSubmissionBetslipViewController.xib in Resources */,
+				455897FB2A9CE5CE00E39598 /* progress_bar_fire_ball.json in Resources */,
 				4589C976282024E400243547 /* BannerScrollTableViewCell.xib in Resources */,
 				4589C977282024E400243547 /* BetslipViewController.xib in Resources */,
 				4589C9E12820279E00243547 /* Colors.xcassets in Resources */,
@@ -11240,6 +11266,7 @@
 				45A33306298976BA008181E9 /* CilinderSceneKitScene.scn in Resources */,
 				45A33307298976BA008181E9 /* WithdrawWebViewController.xib in Resources */,
 				45A33308298976BA008181E9 /* DocumentPickerView.xib in Resources */,
+				455897F12A9CE5C300E39598 /* progress_end_animation.json in Resources */,
 				45A33309298976BA008181E9 /* MaintenanceViewController.xib in Resources */,
 				45A3330A298976BA008181E9 /* Gilroy-Bold.ttf in Resources */,
 				45A3330B298976BA008181E9 /* SimpleRegisterEmailSentViewController.xib in Resources */,
@@ -11279,6 +11306,7 @@
 				45A3332B298976BA008181E9 /* PasswordUpdateViewController.xib in Resources */,
 				45F2F9A9298C067C0075AF02 /* StaticColors.xcassets in Resources */,
 				45A3332C298976BA008181E9 /* CheckboxToggleView.xib in Resources */,
+				455897F92A9CE5CE00E39598 /* progress_bar_fire_ball.json in Resources */,
 				45A3332D298976BA008181E9 /* MatchStatsCollectionViewCell.xib in Resources */,
 				45A3332E298976BA008181E9 /* ProfileViewController.xib in Resources */,
 				452BA19F2A902C4900D0AA48 /* avatar4.json in Resources */,
@@ -11360,9 +11388,11 @@
 				450FC3E92A2A6737000DB866 /* DummyImages.xcassets in Resources */,
 				45A6BDCB28246A7500D9B416 /* BannerMatchCollectionViewCell.xib in Resources */,
 				45A6BDCC28246A7500D9B416 /* PopUpPromotionView.xib in Resources */,
+				455897F52A9CE5C300E39598 /* progress_end_animation.json in Resources */,
 				45A6BDCD28246A7500D9B416 /* Gilroy-Light.ttf in Resources */,
 				452BA19C2A902C4900D0AA48 /* avatar1.json in Resources */,
 				45A6BDCE28246A7500D9B416 /* PreSubmissionBetslipViewController.xib in Resources */,
+				455897FD2A9CE5CE00E39598 /* progress_bar_fire_ball.json in Resources */,
 				45A6BDCF28246A7500D9B416 /* BannerScrollTableViewCell.xib in Resources */,
 				45A6BDD028246A7500D9B416 /* BetslipViewController.xib in Resources */,
 				45A6BDD128246A7500D9B416 /* MatchFiltersViewController.xib in Resources */,
@@ -11531,6 +11561,7 @@
 				A9C3433528F9A74A0055360B /* CilinderSceneKitScene.scn in Resources */,
 				A9C3433628F9A74A0055360B /* WithdrawWebViewController.xib in Resources */,
 				A9C3433728F9A74A0055360B /* DocumentPickerView.xib in Resources */,
+				455897F42A9CE5C300E39598 /* progress_end_animation.json in Resources */,
 				A9C3433828F9A74A0055360B /* MaintenanceViewController.xib in Resources */,
 				A9C3433A28F9A74A0055360B /* Gilroy-Bold.ttf in Resources */,
 				A9C3433B28F9A74A0055360B /* SimpleRegisterEmailSentViewController.xib in Resources */,
@@ -11570,6 +11601,7 @@
 				A9C3435A28F9A74A0055360B /* PasswordUpdateViewController.xib in Resources */,
 				45F2F9AC298C067C0075AF02 /* StaticColors.xcassets in Resources */,
 				A9C3435B28F9A74A0055360B /* CheckboxToggleView.xib in Resources */,
+				455897FC2A9CE5CE00E39598 /* progress_bar_fire_ball.json in Resources */,
 				A9C3435C28F9A74A0055360B /* MatchStatsCollectionViewCell.xib in Resources */,
 				A9C3435D28F9A74A0055360B /* ProfileViewController.xib in Resources */,
 				452BA1A22A902C4900D0AA48 /* avatar4.json in Resources */,
