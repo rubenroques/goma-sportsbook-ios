@@ -543,7 +543,7 @@ class DepositViewController: UIViewController {
 
             self.shouldRefreshUserWallet?()
 
-            let depositSuccessViewController = GenericSuccessViewController()
+            let depositSuccessViewController = GenericAvatarSuccessViewController()
 
             depositSuccessViewController.didTapContinueAction = { [weak self] in
                 self?.dismiss(animated: true)
@@ -562,11 +562,21 @@ class DepositViewController: UIViewController {
             alertTitle = localized("payment_refused")
             alertMessage = localized("payment_refused_message")
 
-            let genericErrorViewController = GenericErrorViewController()
+            let genericAvatarErrorViewController = GenericAvatarErrorViewController()
 
-            genericErrorViewController.setTextInfo(title: alertTitle, subtitle: alertMessage)
+            genericAvatarErrorViewController.setTextInfo(title: alertTitle, subtitle: alertMessage)
 
-            self.present(genericErrorViewController, animated: true)
+            genericAvatarErrorViewController.didTapCloseAction = { [weak self] in
+
+                genericAvatarErrorViewController.dismiss(animated: true)
+            }
+
+            genericAvatarErrorViewController.didTapBackAction = { [weak self] in
+
+                genericAvatarErrorViewController.dismiss(animated: true)
+            }
+
+            self.present(genericAvatarErrorViewController, animated: true)
         }
 
     }

@@ -4414,6 +4414,13 @@
 		A9527C302A9CEDC1006F4E37 /* InfoDialogView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9527C2B2A9CEDC0006F4E37 /* InfoDialogView.swift */; };
 		A9527C312A9CEDC1006F4E37 /* InfoDialogView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9527C2B2A9CEDC0006F4E37 /* InfoDialogView.swift */; };
 		A9527C322A9CEDC1006F4E37 /* InfoDialogView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9527C2B2A9CEDC0006F4E37 /* InfoDialogView.swift */; };
+		A9527C342A9E4868006F4E37 /* GenericAvatarSuccessViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9527C332A9E4868006F4E37 /* GenericAvatarSuccessViewController.swift */; };
+		A9527C352A9E4868006F4E37 /* GenericAvatarSuccessViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9527C332A9E4868006F4E37 /* GenericAvatarSuccessViewController.swift */; };
+		A9527C362A9E4868006F4E37 /* GenericAvatarSuccessViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9527C332A9E4868006F4E37 /* GenericAvatarSuccessViewController.swift */; };
+		A9527C372A9E4868006F4E37 /* GenericAvatarSuccessViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9527C332A9E4868006F4E37 /* GenericAvatarSuccessViewController.swift */; };
+		A9527C382A9E4868006F4E37 /* GenericAvatarSuccessViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9527C332A9E4868006F4E37 /* GenericAvatarSuccessViewController.swift */; };
+		A9527C392A9E4868006F4E37 /* GenericAvatarSuccessViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9527C332A9E4868006F4E37 /* GenericAvatarSuccessViewController.swift */; };
+		A9527C3A2A9E4868006F4E37 /* GenericAvatarSuccessViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9527C332A9E4868006F4E37 /* GenericAvatarSuccessViewController.swift */; };
 		A96FAEC729804C0600A0751F /* Data+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = A96FAEC629804C0600A0751F /* Data+Extensions.swift */; };
 		A96FAEC829804C0600A0751F /* Data+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = A96FAEC629804C0600A0751F /* Data+Extensions.swift */; };
 		A96FAEC929804C0600A0751F /* Data+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = A96FAEC629804C0600A0751F /* Data+Extensions.swift */; };
@@ -5691,6 +5698,20 @@
 		A9C719162A5EEA88005EB891 /* RecruitAFriendViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9C719102A5EEA88005EB891 /* RecruitAFriendViewController.swift */; };
 		A9C719172A5EEA88005EB891 /* RecruitAFriendViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9C719102A5EEA88005EB891 /* RecruitAFriendViewController.swift */; };
 		A9C719182A5EEA88005EB891 /* RecruitAFriendViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9C719102A5EEA88005EB891 /* RecruitAFriendViewController.swift */; };
+		A9C9C3912A9F573E00DD3A03 /* GenericAvatarErrorViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9C9C3902A9F573E00DD3A03 /* GenericAvatarErrorViewController.swift */; };
+		A9C9C3922A9F573E00DD3A03 /* GenericAvatarErrorViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9C9C3902A9F573E00DD3A03 /* GenericAvatarErrorViewController.swift */; };
+		A9C9C3932A9F573E00DD3A03 /* GenericAvatarErrorViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9C9C3902A9F573E00DD3A03 /* GenericAvatarErrorViewController.swift */; };
+		A9C9C3942A9F573E00DD3A03 /* GenericAvatarErrorViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9C9C3902A9F573E00DD3A03 /* GenericAvatarErrorViewController.swift */; };
+		A9C9C3952A9F573E00DD3A03 /* GenericAvatarErrorViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9C9C3902A9F573E00DD3A03 /* GenericAvatarErrorViewController.swift */; };
+		A9C9C3962A9F573E00DD3A03 /* GenericAvatarErrorViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9C9C3902A9F573E00DD3A03 /* GenericAvatarErrorViewController.swift */; };
+		A9C9C3972A9F573E00DD3A03 /* GenericAvatarErrorViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9C9C3902A9F573E00DD3A03 /* GenericAvatarErrorViewController.swift */; };
+		A9C9C3992A9F612F00DD3A03 /* GenericAvatarWarningViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9C9C3982A9F612F00DD3A03 /* GenericAvatarWarningViewController.swift */; };
+		A9C9C39A2A9F612F00DD3A03 /* GenericAvatarWarningViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9C9C3982A9F612F00DD3A03 /* GenericAvatarWarningViewController.swift */; };
+		A9C9C39B2A9F612F00DD3A03 /* GenericAvatarWarningViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9C9C3982A9F612F00DD3A03 /* GenericAvatarWarningViewController.swift */; };
+		A9C9C39C2A9F612F00DD3A03 /* GenericAvatarWarningViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9C9C3982A9F612F00DD3A03 /* GenericAvatarWarningViewController.swift */; };
+		A9C9C39D2A9F612F00DD3A03 /* GenericAvatarWarningViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9C9C3982A9F612F00DD3A03 /* GenericAvatarWarningViewController.swift */; };
+		A9C9C39E2A9F612F00DD3A03 /* GenericAvatarWarningViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9C9C3982A9F612F00DD3A03 /* GenericAvatarWarningViewController.swift */; };
+		A9C9C39F2A9F612F00DD3A03 /* GenericAvatarWarningViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9C9C3982A9F612F00DD3A03 /* GenericAvatarWarningViewController.swift */; };
 		A9CB3E6E29CDC25600BEF9C1 /* ApplicableBonus.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9CB3E6D29CDC25600BEF9C1 /* ApplicableBonus.swift */; };
 		A9CB3E6F29CDC25600BEF9C1 /* ApplicableBonus.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9CB3E6D29CDC25600BEF9C1 /* ApplicableBonus.swift */; };
 		A9CB3E7029CDC25600BEF9C1 /* ApplicableBonus.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9CB3E6D29CDC25600BEF9C1 /* ApplicableBonus.swift */; };
@@ -6392,6 +6413,7 @@
 		A9527C1B2A98FA66006F4E37 /* SuggestedCompetitionsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SuggestedCompetitionsView.swift; sourceTree = "<group>"; };
 		A9527C232A990E60006F4E37 /* MyCompetitionsRootViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MyCompetitionsRootViewModel.swift; sourceTree = "<group>"; };
 		A9527C2B2A9CEDC0006F4E37 /* InfoDialogView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InfoDialogView.swift; sourceTree = "<group>"; };
+		A9527C332A9E4868006F4E37 /* GenericAvatarSuccessViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GenericAvatarSuccessViewController.swift; sourceTree = "<group>"; };
 		A96279EA273ED1E40001E1D5 /* ActivationAlertView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ActivationAlertView.swift; sourceTree = "<group>"; };
 		A96279ED273ED2290001E1D5 /* ActivationAlertView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = ActivationAlertView.xib; sourceTree = "<group>"; };
 		A96279F12743D3AA0001E1D5 /* EmailVerificationViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EmailVerificationViewController.swift; sourceTree = "<group>"; };
@@ -6681,6 +6703,8 @@
 		A9C82FC226F89B4500059DCD /* PasswordUpdateViewController.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = PasswordUpdateViewController.xib; sourceTree = "<group>"; };
 		A9C82FCD26F9E0F900059DCD /* PopUpPromotionView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PopUpPromotionView.swift; sourceTree = "<group>"; };
 		A9C82FCF26F9E14800059DCD /* PopUpPromotionView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = PopUpPromotionView.xib; sourceTree = "<group>"; };
+		A9C9C3902A9F573E00DD3A03 /* GenericAvatarErrorViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GenericAvatarErrorViewController.swift; sourceTree = "<group>"; };
+		A9C9C3982A9F612F00DD3A03 /* GenericAvatarWarningViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GenericAvatarWarningViewController.swift; sourceTree = "<group>"; };
 		A9CB3E6D29CDC25600BEF9C1 /* ApplicableBonus.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ApplicableBonus.swift; sourceTree = "<group>"; };
 		A9CB3E7629CE1DCD00BEF9C1 /* BonusEmptyView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BonusEmptyView.swift; sourceTree = "<group>"; };
 		A9D533F82A49E4FB0013ACF5 /* CashbackLearnMoreView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CashbackLearnMoreView.swift; sourceTree = "<group>"; };
@@ -8951,6 +8975,9 @@
 			children = (
 				A93FE2032A435431006A6907 /* GenericSuccessViewController.swift */,
 				A93FE20C2A445434006A6907 /* GenericErrorViewController.swift */,
+				A9527C332A9E4868006F4E37 /* GenericAvatarSuccessViewController.swift */,
+				A9C9C3902A9F573E00DD3A03 /* GenericAvatarErrorViewController.swift */,
+				A9C9C3982A9F612F00DD3A03 /* GenericAvatarWarningViewController.swift */,
 			);
 			path = Generic;
 			sourceTree = "<group>";
@@ -11766,6 +11793,7 @@
 				450B785F28F58574009229E3 /* SimpleRegisterEmailCheckViewModel.swift in Sources */,
 				A9958C81297AFE42001474E2 /* AddAnotherDocumentView.swift in Sources */,
 				450B786128F58574009229E3 /* SuggestedBetSummary.swift in Sources */,
+				A9527C352A9E4868006F4E37 /* GenericAvatarSuccessViewController.swift in Sources */,
 				450B786228F58574009229E3 /* Bundle+Extensions.swift in Sources */,
 				450B786328F58574009229E3 /* SportStatisticView.swift in Sources */,
 				450B786428F58574009229E3 /* FullRegisterDocumentsViewController.swift in Sources */,
@@ -11798,6 +11826,7 @@
 				450B787628F58574009229E3 /* MatchInfo.swift in Sources */,
 				450B787728F58574009229E3 /* MultiSlider+Drag.swift in Sources */,
 				450B787928F58574009229E3 /* OddsViewModel.swift in Sources */,
+				A9C9C3922A9F573E00DD3A03 /* GenericAvatarErrorViewController.swift in Sources */,
 				450B787A28F58574009229E3 /* BonusProgressViewModel.swift in Sources */,
 				450B787B28F58574009229E3 /* SportSelectionViewController.swift in Sources */,
 				450B787C28F58574009229E3 /* SportMatchDoubleLineTableViewCell.swift in Sources */,
@@ -12159,6 +12188,7 @@
 				450B79BA28F58574009229E3 /* Observable.swift in Sources */,
 				450B79BB28F58574009229E3 /* LinkPresentationItemSource.swift in Sources */,
 				450B79BC28F58574009229E3 /* OddsFormat.swift in Sources */,
+				A9C9C39A2A9F612F00DD3A03 /* GenericAvatarWarningViewController.swift in Sources */,
 				450B79BD28F58574009229E3 /* MarketOutcomeRelation.swift in Sources */,
 				450B79BE28F58574009229E3 /* EveryMatrixModel.swift in Sources */,
 				450B79BF28F58574009229E3 /* OutrightMarketDetailsViewController.swift in Sources */,
@@ -12570,6 +12600,7 @@
 				457CBA09282D27D000ED0F00 /* SharedBetData.swift in Sources */,
 				45B6E231284151DF001B570C /* EditGroupViewController.swift in Sources */,
 				457CBA0A282D27D000ED0F00 /* HeaderTextFieldView.swift in Sources */,
+				A9C9C3962A9F573E00DD3A03 /* GenericAvatarErrorViewController.swift in Sources */,
 				457CBA0B282D27D000ED0F00 /* FadeInCenterHorizontalFlowLayout.swift in Sources */,
 				A9863EE0286F425400A4A1A2 /* SocialItemCollectionViewCell.swift in Sources */,
 				457CBA0C282D27D000ED0F00 /* AuthToken.swift in Sources */,
@@ -12677,6 +12708,7 @@
 				A9FB6D5628C645C800E3FE58 /* RankingsViewController.swift in Sources */,
 				A98295A9283BA1420014066A /* BetSelectionCellViewModel.swift in Sources */,
 				457CBA55282D27D000ED0F00 /* TournamentTableViewHeader.swift in Sources */,
+				A9527C392A9E4868006F4E37 /* GenericAvatarSuccessViewController.swift in Sources */,
 				A9D533FE2A49E4FB0013ACF5 /* CashbackLearnMoreView.swift in Sources */,
 				457CBA56282D27D000ED0F00 /* BetslipManager.swift in Sources */,
 				457CBA57282D27D000ED0F00 /* Color+Extensions.swift in Sources */,
@@ -13072,6 +13104,7 @@
 				457CBB75282D27D000ED0F00 /* Aggregator.swift in Sources */,
 				457CBB76282D27D000ED0F00 /* OutrightMarketDetailsViewModel.swift in Sources */,
 				457CBB77282D27D000ED0F00 /* BonusActiveCellViewModel.swift in Sources */,
+				A9C9C39E2A9F612F00DD3A03 /* GenericAvatarWarningViewController.swift in Sources */,
 				457CBB78282D27D000ED0F00 /* CompetitionFilterHeaderView.swift in Sources */,
 				457CBB79282D27D000ED0F00 /* CashoutSubmission.swift in Sources */,
 				457CBB7A282D27D000ED0F00 /* ProfileLimitsManagementViewModel.swift in Sources */,
@@ -13409,6 +13442,7 @@
 				457CBD2A282D2CD100ED0F00 /* LoginAccount.swift in Sources */,
 				A9863EC2286A09B900A4A1A2 /* BetSelectionStateTableViewCell.swift in Sources */,
 				A9DF8E1728E45B970083BF56 /* UserProfileTipsViewModel.swift in Sources */,
+				A9527C3A2A9E4868006F4E37 /* GenericAvatarSuccessViewController.swift in Sources */,
 				45C10F6F28772DA700037BBE /* CALayer+Shift.swift in Sources */,
 				457CBD2B282D2CD100ED0F00 /* PopularDetailsViewModel.swift in Sources */,
 				457CBD2C282D2CD100ED0F00 /* BonusHistoryTableViewCell.swift in Sources */,
@@ -13522,6 +13556,7 @@
 				457CBD7C282D2CD100ED0F00 /* ActivationAlertScrollableView.swift in Sources */,
 				45ECD7732A90016400492CB9 /* PromotedCompetitionLineTableViewCell.swift in Sources */,
 				A90FB7D729AF9DF800D08A7C /* SelfExclusionViewController.swift in Sources */,
+				A9C9C3972A9F573E00DD3A03 /* GenericAvatarErrorViewController.swift in Sources */,
 				457CBD7D282D2CD100ED0F00 /* SuggestedBetLineTableViewCell.swift in Sources */,
 				A98708B728D3455300F27348 /* RankingsListViewModel.swift in Sources */,
 				457CBD7E282D2CD100ED0F00 /* VideoPreviewLineTableViewCell.swift in Sources */,
@@ -13714,6 +13749,7 @@
 				457CBE04282D2CD100ED0F00 /* NSObject+Extension.swift in Sources */,
 				457CBE05282D2CD100ED0F00 /* Logger.swift in Sources */,
 				A996B3F829893FEC00A535FC /* PaymentsDropIn.swift in Sources */,
+				A9C9C39F2A9F612F00DD3A03 /* GenericAvatarWarningViewController.swift in Sources */,
 				457CBE06282D2CD100ED0F00 /* GamesNotificationViewModel.swift in Sources */,
 				45C10F3928772DA700037BBE /* NavControllerTransitionCoordinator.swift in Sources */,
 				457CBE07282D2CD100ED0F00 /* SearchTitleSectionHeaderView.swift in Sources */,
@@ -13885,6 +13921,7 @@
 				4589C789282024E400243547 /* SimpleRegisterEmailCheckViewModel.swift in Sources */,
 				A9958C80297AFE42001474E2 /* AddAnotherDocumentView.swift in Sources */,
 				4589C78B282024E400243547 /* SuggestedBetSummary.swift in Sources */,
+				A9527C362A9E4868006F4E37 /* GenericAvatarSuccessViewController.swift in Sources */,
 				4589C78C282024E400243547 /* Bundle+Extensions.swift in Sources */,
 				A9DF8E0B28DDFC590083BF56 /* SportStatisticView.swift in Sources */,
 				4589C78D282024E400243547 /* FullRegisterDocumentsViewController.swift in Sources */,
@@ -13917,6 +13954,7 @@
 				4589C79A282024E400243547 /* MatchInfo.swift in Sources */,
 				4589C79B282024E400243547 /* MultiSlider+Drag.swift in Sources */,
 				4589C79D282024E400243547 /* OddsViewModel.swift in Sources */,
+				A9C9C3932A9F573E00DD3A03 /* GenericAvatarErrorViewController.swift in Sources */,
 				4589C79E282024E400243547 /* BonusProgressViewModel.swift in Sources */,
 				4589C79F282024E400243547 /* SportSelectionViewController.swift in Sources */,
 				4589C7A0282024E400243547 /* SportMatchDoubleLineTableViewCell.swift in Sources */,
@@ -14278,6 +14316,7 @@
 				4589C897282024E400243547 /* Observable.swift in Sources */,
 				4589C898282024E400243547 /* LinkPresentationItemSource.swift in Sources */,
 				4589C899282024E400243547 /* OddsFormat.swift in Sources */,
+				A9C9C39B2A9F612F00DD3A03 /* GenericAvatarWarningViewController.swift in Sources */,
 				4589C89A282024E400243547 /* MarketOutcomeRelation.swift in Sources */,
 				4589C89B282024E400243547 /* EveryMatrixModel.swift in Sources */,
 				4589C89C282024E400243547 /* OutrightMarketDetailsViewController.swift in Sources */,
@@ -14553,6 +14592,7 @@
 				45A3306F298976BA008181E9 /* SimpleRegisterEmailCheckViewModel.swift in Sources */,
 				45A33071298976BA008181E9 /* AddAnotherDocumentView.swift in Sources */,
 				45A33072298976BA008181E9 /* SuggestedBetSummary.swift in Sources */,
+				A9527C342A9E4868006F4E37 /* GenericAvatarSuccessViewController.swift in Sources */,
 				45A33073298976BA008181E9 /* Bundle+Extensions.swift in Sources */,
 				45A33074298976BA008181E9 /* SportStatisticView.swift in Sources */,
 				45A33075298976BA008181E9 /* FullRegisterDocumentsViewController.swift in Sources */,
@@ -14585,6 +14625,7 @@
 				45A33088298976BA008181E9 /* MatchInfo.swift in Sources */,
 				45A33089298976BA008181E9 /* MultiSlider+Drag.swift in Sources */,
 				45A3308B298976BA008181E9 /* OddsViewModel.swift in Sources */,
+				A9C9C3912A9F573E00DD3A03 /* GenericAvatarErrorViewController.swift in Sources */,
 				45A3308C298976BA008181E9 /* BonusProgressViewModel.swift in Sources */,
 				45A3308D298976BA008181E9 /* SportSelectionViewController.swift in Sources */,
 				45A3308E298976BA008181E9 /* SportMatchDoubleLineTableViewCell.swift in Sources */,
@@ -14946,6 +14987,7 @@
 				45A331D6298976BA008181E9 /* FriendsListViewController.swift in Sources */,
 				45A331D7298976BA008181E9 /* Observable.swift in Sources */,
 				45A331D8298976BA008181E9 /* LinkPresentationItemSource.swift in Sources */,
+				A9C9C3992A9F612F00DD3A03 /* GenericAvatarWarningViewController.swift in Sources */,
 				45A331D9298976BA008181E9 /* OddsFormat.swift in Sources */,
 				45A331DA298976BA008181E9 /* MarketOutcomeRelation.swift in Sources */,
 				45A331DB298976BA008181E9 /* EveryMatrixModel.swift in Sources */,
@@ -15338,6 +15380,7 @@
 				45A6BC2628246A7500D9B416 /* BonusActiveTableViewCell.swift in Sources */,
 				45A6BC2728246A7500D9B416 /* GomaGamingService.swift in Sources */,
 				45A6BC2828246A7500D9B416 /* DateUserLocation.swift in Sources */,
+				A9C9C3952A9F573E00DD3A03 /* GenericAvatarErrorViewController.swift in Sources */,
 				45A6BC2928246A7500D9B416 /* AppDelegate.swift in Sources */,
 				45A6BC2A28246A7500D9B416 /* LiveEventsViewController.swift in Sources */,
 				A98295A1283BA0AF0014066A /* BetSelectionTableViewCell.swift in Sources */,
@@ -15407,6 +15450,7 @@
 				45A6BC5C28246A7500D9B416 /* ChatNotificationsViewModel.swift in Sources */,
 				45A6BC5D28246A7500D9B416 /* RequestLocationAccessViewController.swift in Sources */,
 				45A6BC5E28246A7500D9B416 /* Market.swift in Sources */,
+				A9527C382A9E4868006F4E37 /* GenericAvatarSuccessViewController.swift in Sources */,
 				45A6BC5F28246A7500D9B416 /* MyTicketTableViewCell.swift in Sources */,
 				45A6BC6028246A7500D9B416 /* SeeMoreMarketsCollectionViewCell.swift in Sources */,
 				45A6BC6128246A7500D9B416 /* SportMatchLineViewModel.swift in Sources */,
@@ -15426,6 +15470,7 @@
 				45A6BC6C28246A7500D9B416 /* SuggestedBetTableViewCell.swift in Sources */,
 				45A6BC6D28246A7500D9B416 /* Optional+Extensions.swift in Sources */,
 				A91A645B2A7A5CB3002A6984 /* MyGamesRootViewController.swift in Sources */,
+				A9C9C39D2A9F612F00DD3A03 /* GenericAvatarWarningViewController.swift in Sources */,
 				45A6BC6F28246A7500D9B416 /* OutcomeSelectionButtonView.swift in Sources */,
 				45A6BC7028246A7500D9B416 /* MyFavoriteMatchesDataSource.swift in Sources */,
 				45A6BC7128246A7500D9B416 /* DynamicHomeViewTemplateDataSource.swift in Sources */,
@@ -15923,6 +15968,7 @@
 				A9C340D428F9A74A0055360B /* BonusProgressViewModel.swift in Sources */,
 				A9C340D528F9A74A0055360B /* SportSelectionViewController.swift in Sources */,
 				A9C340D628F9A74A0055360B /* SportMatchDoubleLineTableViewCell.swift in Sources */,
+				A9C9C3942A9F573E00DD3A03 /* GenericAvatarErrorViewController.swift in Sources */,
 				A9BA04122A3099FA007880FC /* ManualUploadDocumentsViewController.swift in Sources */,
 				A9C340D728F9A74A0055360B /* RadioButton.swift in Sources */,
 				A9C340D928F9A74A0055360B /* SocialAppItemCollectionViewCell.swift in Sources */,
@@ -16028,6 +16074,7 @@
 				A9C3412C28F9A74A0055360B /* ProfileLimitsManagementViewController.swift in Sources */,
 				A9C3412E28F9A74A0055360B /* TipsSliderViewController.swift in Sources */,
 				A9C3412F28F9A74A0055360B /* UILabel+Extensions.swift in Sources */,
+				A9527C372A9E4868006F4E37 /* GenericAvatarSuccessViewController.swift in Sources */,
 				A9C3413028F9A74A0055360B /* WelcomeViewController.swift in Sources */,
 				A9C3413128F9A74A0055360B /* CGPoint+Shift.swift in Sources */,
 				45ECD7812A9001E200492CB9 /* TopCompetitionDetailsViewController.swift in Sources */,
@@ -16273,6 +16320,7 @@
 				A9C3420F28F9A74A0055360B /* NewGroupManagementViewModel.swift in Sources */,
 				A9C3421028F9A74A0055360B /* EveryMatrixSocketResponse.swift in Sources */,
 				A9527C1F2A98FA66006F4E37 /* SuggestedCompetitionsView.swift in Sources */,
+				A9C9C39C2A9F612F00DD3A03 /* GenericAvatarWarningViewController.swift in Sources */,
 				A9C3421128F9A74A0055360B /* MyTicketCellViewModel.swift in Sources */,
 				A9C3421328F9A74A0055360B /* FriendsListViewController.swift in Sources */,
 				A9C3421428F9A74A0055360B /* Observable.swift in Sources */,

@@ -1436,3 +1436,7 @@
 "total_balance_automated_withdrawal" = "This balance includes also Automated withdrawal (ESCROW).";
 
 "replay_balance" = "Balance Replay";
+
+"hold_on" = "Hold on";
+
+"payment_processing_hold" = "Payment is being processed! Awaiting finalization of payment.";

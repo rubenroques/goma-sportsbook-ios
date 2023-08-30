@@ -1500,3 +1500,7 @@
 "total_balance_automated_withdrawal" = "Ce solde comprend également le retrait automatisé (ESCROW).";
 
 "replay_balance" = "Solde Replay";
+
+"hold_on" = "Attendez";
+
+"payment_processing_hold" = "Le paiement est en cours de traitement! En attente de la finalisation du paiement.";
