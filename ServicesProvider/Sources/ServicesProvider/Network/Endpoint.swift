@@ -47,11 +47,11 @@ extension Endpoint {
             }
         }
 
-        print("Endpoint request created: \n ",
-              dump(request),
-              "\n -- with body: \n",
-              String(data: request.httpBody ?? Data(), encoding: .utf8) ?? "[no body]"
-        )
+//        print("Endpoint request created: \n ",
+//              dump(request),
+//              "\n -- with body: \n",
+//              String(data: request.httpBody ?? Data(), encoding: .utf8) ?? "[no body]"
+//        )
 
         return request
     }

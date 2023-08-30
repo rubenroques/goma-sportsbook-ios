@@ -569,9 +569,7 @@ class PreLiveEventsViewModel: NSObject {
                     print("REGION COMPETITION ERROR: \(error)")
                     self?.isLoadingCompetitionGroups.send(false)
                 }
-            }, receiveValue: { [weak self] sportRegionInfo in
-                print("REGION COMPETITIONS: \(sportRegionInfo)")
-                
+            }, receiveValue: { [weak self] sportRegionInfo in                
                 self?.regionCompetitionsPublisher.value[sportRegionInfo.id] = sportRegionInfo.competitionNodes
             })
             .store(in: &cancellables)

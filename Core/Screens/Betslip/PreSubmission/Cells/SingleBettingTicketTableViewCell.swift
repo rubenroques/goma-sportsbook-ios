@@ -385,9 +385,6 @@ class SingleBettingTicketTableViewCell: UITableViewCell {
             .removeDuplicates(by: { lhs, rhs in
                 return lhs.id == rhs.id && lhs.decimalOdd == rhs.decimalOdd
             })
-            .handleEvents(receiveOutput: {
-                print("debugbetslip-\($0.bettingId) Betslip Cell \($0.decimalOdd) ")
-            })
             .map(\.decimalOdd)
             .compactMap({ $0 })
             .receive(on: DispatchQueue.main)

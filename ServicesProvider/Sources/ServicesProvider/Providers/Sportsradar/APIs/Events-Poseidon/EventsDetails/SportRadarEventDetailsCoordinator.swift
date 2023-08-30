@@ -108,7 +108,7 @@ class SportRadarEventDetailsCoordinator {
                 let httpResponse = response as? HTTPURLResponse,
                 (200...299).contains(httpResponse.statusCode)
             else {
-                print("SportRadarEventDetailsCoordinator: requestEventLiveData")
+                print("ServiceProvider SportRadarEventDetailsCoordinator: requestEventLiveData")
                 publisher.send(completion: .failure(ServiceProviderError.onSubscribe))
                 return
             }
@@ -123,7 +123,7 @@ class SportRadarEventDetailsCoordinator {
     }
 
     func updateEventDetails(_ updatedEvent: Event, forContentIdentifier contentIdentifier: ContentIdentifier) {
-        print("☁️SP debugbetslip updateEventDetails SportRadarEventDetailsCoordinator \(marketsContentIdentifier) \(liveDataContentIdentifier)")
+        print("ServiceProvider updateEventDetails SportRadarEventDetailsCoordinator \(marketsContentIdentifier) \(liveDataContentIdentifier)")
 
         if contentIdentifier == self.liveDataContentIdentifier || contentIdentifier == self.marketsContentIdentifier {
             self.storage.storeEvent(updatedEvent)

@@ -57,7 +57,7 @@ class MatchLineTableCellViewModel {
             .map(ServiceProviderModelMapper.match(fromEvent:))
             .receive(on: DispatchQueue.main)
             .sink { completion in
-                print("completion \(completion)")
+                print("MatchLineTableCellViewModel getEventDetails completion \(completion)")
             } receiveValue: { [weak self] updatedMatch in
 
                 var knownMarketGroups: Set<String> = []

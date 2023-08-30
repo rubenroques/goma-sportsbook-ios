@@ -206,9 +206,6 @@ class MultipleBettingTicketTableViewCell: UITableViewCell {
         self.oddSubscriber = nil
 
         self.oddSubscriber = Env.betslipManager.bettingTicketPublisher(withId: bettingTicket.id)?
-            .handleEvents(receiveOutput: {
-                print("debugbetslip-\($0.bettingId) Betslip Cell multip \($0.decimalOdd) ")
-            })
             .map(\.decimalOdd)
             .compactMap({ $0 })
             .receive(on: DispatchQueue.main)
