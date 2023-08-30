@@ -87,8 +87,7 @@ class OutrightMarketDetailsViewModel {
                         let eventMapped = ServiceProviderModelMapper.match(fromEvent: serviceProviderEvent)
                         self.storeMarkets(markets: eventMapped.markets)
                     case .disconnected:
-                        print("Disconnected from ws")
-
+                        print("getMatchDetails subscribeEventDetails disconnected")
                     }
                 })
                 .store(in: &cancellables)

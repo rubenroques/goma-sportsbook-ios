@@ -206,9 +206,6 @@ class MultipleBettingTicketTableViewCell: UITableViewCell {
         self.oddSubscriber = nil
 
         self.oddSubscriber = Env.betslipManager.bettingTicketPublisher(withId: bettingTicket.id)?
-            .handleEvents(receiveOutput: {
-                print("debugbetslip-\($0.bettingId) Betslip Cell multip \($0.decimalOdd) ")
-            })
             .map(\.decimalOdd)
             .compactMap({ $0 })
             .receive(on: DispatchQueue.main)
@@ -239,7 +236,10 @@ class MultipleBettingTicketTableViewCell: UITableViewCell {
             self.errorLateralBottomView.backgroundColor = UIColor.App.backgroundSecondary
         }
 
-        self.hasCashback = true
+        if let sport = bettingTicket.sport {
+            self.hasCashback = RePlayFeatureHelper.shouldShowRePlay(forSport: sport)
+        }
+
     }
 
     @IBAction private func didTapDeleteButton() {

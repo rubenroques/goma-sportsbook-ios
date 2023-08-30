@@ -20,7 +20,7 @@ class RealtimeSocketClient {
 
     let clientSettingsPublisher = CurrentValueSubject<FirebaseClientSettings?, Never>(nil)
 
-    var clientSettings: FirebaseClientSettings?
+    var clientSettings: FirebaseClientSettings = .defaultSettings
 
     init() {
         let url = TargetVariables.firebaseDatabaseURL

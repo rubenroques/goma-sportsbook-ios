@@ -334,7 +334,7 @@ class LoginViewController: UIViewController {
             .store(in: &self.cancellables)
 
         var registerSteps: [RegisterStep]
-        if Env.businessSettingsSocket.clientSettings?.requiredPhoneVerification ?? false {
+        if Env.businessSettingsSocket.clientSettings.requiredPhoneVerification {
             registerSteps = [
                         RegisterStep(forms: [.gender, .names]),
                         RegisterStep(forms: [.avatar, .nickname]),

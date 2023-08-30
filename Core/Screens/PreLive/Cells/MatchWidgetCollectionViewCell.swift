@@ -1131,11 +1131,9 @@ class MatchWidgetCollectionViewCell: UICollectionViewCell {
 
                     if marketUpdated.isAvailable {
                         self?.showMarketButtons()
-                        print("subscribeToEventMarketUpdates market \(marketUpdated.id)-\(marketUpdated.isAvailable) will show \n")
                     }
                     else {
                         self?.showSuspendedView()
-                        print("subscribeToEventMarketUpdates market \(marketUpdated.id)-\(marketUpdated.isAvailable) will hide \n")
                     }
                 })
 
@@ -1160,7 +1158,6 @@ class MatchWidgetCollectionViewCell: UICollectionViewCell {
                     .compactMap({ $0 })
                     .map(ServiceProviderModelMapper.outcome(fromServiceProviderOutcome: ))
                     .handleEvents(receiveOutput: { [weak self] outcome in
-                        print("debugbetslip-\(outcome.bettingOffer.id) List Cell  \(outcome.bettingOffer.decimalOdd) left ")
                         self?.leftOutcome = outcome
                     })
                     .map(\.bettingOffer)
@@ -1221,13 +1218,12 @@ class MatchWidgetCollectionViewCell: UICollectionViewCell {
                     .compactMap({ $0 })
                     .map(ServiceProviderModelMapper.outcome(fromServiceProviderOutcome:))
                     .handleEvents(receiveOutput: { [weak self] outcome in
-                        print("debugbetslip-\(outcome.bettingOffer.id) List Cell  \(outcome.bettingOffer.decimalOdd) center ")
                         self?.middleOutcome = outcome
                     })
                     .map(\.bettingOffer)
                     .receive(on: DispatchQueue.main)
                     .sink(receiveCompletion: { completion in
-                        print("leftOddButtonSubscriber subscribeToOutcomeUpdates completion: \(completion)")
+                        print("middleOddButtonSubscriber subscribeToOutcomeUpdates completion: \(completion)")
                     }, receiveValue: { [weak self] bettingOffer in
                         
                         guard let weakSelf = self else { return }
@@ -1281,7 +1277,6 @@ class MatchWidgetCollectionViewCell: UICollectionViewCell {
                     .compactMap({ $0 })
                     .map(ServiceProviderModelMapper.outcome(fromServiceProviderOutcome:))
                     .handleEvents(receiveOutput: { [weak self] outcome in
-                        print("debugbetslip-\(outcome.bettingOffer.id) List Cell  \(outcome.bettingOffer.decimalOdd) right ")
                         self?.rightOutcome = outcome
                     })
                     .map(\.bettingOffer)
@@ -1337,16 +1332,7 @@ class MatchWidgetCollectionViewCell: UICollectionViewCell {
 
         self.isFavorite = Env.favoritesManager.isEventFavorite(eventId: viewModel.match.id)
 
-
-        // TODO: TEST CASHBACK
-        if viewModel.matchWidgetType == .normal {
-            if viewModel.match.sport.alphaId == "FBL" {
-                self.hasCashback = true
-            }
-            else {
-                self.hasCashback = false
-            }
-        }
+        self.hasCashback = viewModel.canHaveCashback
     }
 
     //

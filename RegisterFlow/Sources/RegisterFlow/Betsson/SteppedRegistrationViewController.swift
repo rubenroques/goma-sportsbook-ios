@@ -231,6 +231,8 @@ public class SteppedRegistrationViewController: UIViewController {
     var progressEndContainerViewWidth: NSLayoutConstraint?
     private lazy var progressEndView: LottieAnimationView = Self.createProgressEndView()
 
+    private lazy var progressEndImageView: UIImageView = Self.createProgressImageView()
+
     private lazy var cancelButton: UIButton = Self.createCancelButton()
 
     private lazy var contentBaseView: UIView = Self.createContentBaseView()
@@ -266,6 +268,34 @@ public class SteppedRegistrationViewController: UIViewController {
         fatalError("init(coder:) has not been implemented")
     }
 
+    private func animateProgress(toPercentage percentage: Float) {
+
+
+        UIView.animate(withDuration: 0.1, animations: {
+            // 1 - Show lottie
+            self.progressEndView.alpha = 1.0
+        }, completion: { completion in
+
+            UIView.animate(withDuration: 0.45) {
+                // 2 - animate progress
+                self.progressView.setProgress(percentage, animated: true)
+
+                let newWidth = self.progressView.frame.width * CGFloat(percentage)
+                self.progressEndContainerViewWidth?.constant = newWidth
+                self.headerBaseView.setNeedsLayout()
+                self.headerBaseView.layoutIfNeeded()
+
+            } completion: { completed in
+                UIView.animate(withDuration: 0.22, delay: 1.5) {
+                    // 3 - Hide lottie after 3 seconds
+                    self.progressEndView.alpha = 0.0
+                }
+            }
+        })
+
+
+    }
+
     override public func viewDidLoad() {
         super.viewDidLoad()
 
@@ -275,18 +305,7 @@ public class SteppedRegistrationViewController: UIViewController {
         self.viewModel.progressPercentage
             .receive(on: DispatchQueue.main)
             .sink { [weak self] progressPercentage in
-
-                UIView.animate(withDuration: 0.3) { [weak self] in
-                    guard let self = self else { return }
-
-                    self.progressView.setProgress(progressPercentage, animated: true)
-
-                    let newWidth = self.progressView.frame.width * CGFloat(progressPercentage)
-                    self.progressEndContainerViewWidth?.constant = newWidth
-                    self.headerBaseView.setNeedsLayout()
-                    self.headerBaseView.layoutIfNeeded()
-                }
-
+                self?.animateProgress(toPercentage: progressPercentage)
             }
             .store(in: &self.cancellables)
 
@@ -753,12 +772,20 @@ public extension SteppedRegistrationViewController {
         animationView.translatesAutoresizingMaskIntoConstraints = false
         animationView.contentMode = .scaleAspectFit
 
-        let starAnimation = LottieAnimation.named("progress_end_animation")
+        let starAnimation = LottieAnimation.named("progress_bar_fire_ball")
 
         animationView.animation = starAnimation
         animationView.loopMode = .loop
 
         return animationView
+    }
+
+    private static func createProgressImageView() -> UIImageView {
+        let imageView = UIImageView()
+        imageView.image = UIImage(named: "progress_bar_animation")
+        imageView.contentMode = .scaleAspectFit
+        imageView.translatesAutoresizingMaskIntoConstraints = false
+        return imageView
     }
 
     private static func createProgressEndContainerView() -> UIView {
@@ -783,7 +810,6 @@ public extension SteppedRegistrationViewController {
     }
 
     private func initConstraints() {
-
         self.view.addSubview(self.topSafeAreaView)
 
         self.view.addSubview(self.headerBaseView)
@@ -793,6 +819,7 @@ public extension SteppedRegistrationViewController {
         self.headerBaseView.addSubview(self.progressEndContainerView)
 
         self.progressEndContainerView.addSubview(self.progressEndView)
+        self.progressEndContainerView.addSubview(self.progressEndImageView)
 
         self.view.addSubview(self.contentBaseView)
         self.contentBaseView.addSubview(self.stepsScrollView)
@@ -807,6 +834,7 @@ public extension SteppedRegistrationViewController {
         self.view.addSubview(self.loadingBaseView)
 
         self.progressEndContainerViewWidth = self.progressEndContainerView.widthAnchor.constraint(equalToConstant: 0)
+
 
         NSLayoutConstraint.activate([
             self.topSafeAreaView.leadingAnchor.constraint(equalTo: self.view.leadingAnchor),
@@ -878,10 +906,16 @@ public extension SteppedRegistrationViewController {
             self.progressEndContainerView.trailingAnchor.constraint(equalTo: self.progressEndView.centerXAnchor),
             self.progressEndContainerView.centerYAnchor.constraint(equalTo: self.progressEndView.centerYAnchor),
 
-            self.progressEndView.widthAnchor.constraint(equalToConstant: 110),
-            self.progressEndView.heightAnchor.constraint(equalToConstant: 110),
+            self.progressEndView.widthAnchor.constraint(equalToConstant: 73),
+            self.progressEndView.heightAnchor.constraint(equalToConstant: 73),
 
-            self.progressEndContainerViewWidth!
+            self.progressEndContainerViewWidth!,
+
+            self.progressEndImageView.trailingAnchor.constraint(equalTo: self.progressEndView.trailingAnchor, constant: -14.5),
+            self.progressEndImageView.centerYAnchor.constraint(equalTo: self.progressEndView.centerYAnchor),
+
+            self.progressEndImageView.widthAnchor.constraint(equalToConstant: 20),
+            self.progressEndImageView.heightAnchor.constraint(equalToConstant: 20),
         ])
     }
 

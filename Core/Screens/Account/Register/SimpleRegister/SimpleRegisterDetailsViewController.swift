@@ -342,7 +342,7 @@ class SimpleRegisterDetailsViewController: UIViewController {
             return
         }
         
-        let currency = Env.businessSettingsSocket.clientSettings?.locale?.currency ?? "EUR"
+        let currency = Env.businessSettingsSocket.clientSettings.locale?.currency ?? "EUR"
         
         if !checkDateBirth() {
             return
@@ -358,16 +358,16 @@ class SimpleRegisterDetailsViewController: UIViewController {
 //                                                  countryCode: selectedCountryISO,
 //                                                  currencyCode: currency)
 
-        let form = ServicesProvider.SimpleSignUpForm.init(email: email,
-                                                         username: username,
-                                                         password: password,
-                                                         birthDate: birthDate,
-                                                         mobilePrefix: mobilePrefixTextual,
-                                                         mobileNumber: mobile,
-                                                         countryIsoCode: selectedCountryISO,
-                                                         currencyCode: currency)
-        
-        self.showLoadingSpinner()
+//        let form = ServicesProvider.SimpleSignUpForm.init(email: email,
+//                                                         username: username,
+//                                                         password: password,
+//                                                         birthDate: birthDate,
+//                                                         mobilePrefix: mobilePrefixTextual,
+//                                                         mobileNumber: mobile,
+//                                                         countryIsoCode: selectedCountryISO,
+//                                                         currencyCode: currency)
+//
+//        self.showLoadingSpinner()
 
         self.hideLoadingSpinner()
 

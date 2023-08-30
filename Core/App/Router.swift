@@ -286,11 +286,13 @@ class Router {
 
     static func shouldShowUpdateAppPopUpScreen() -> Bool {
         guard
-            let currentVersion = Bundle.main.versionNumber,
-            let serverVersion = Env.businessSettingsSocket.clientSettings?.currentAppVersion else {
+            let currentVersion = Bundle.main.versionNumber
+        else {
                 return false
             }
 
+        let serverVersion = Env.businessSettingsSocket.clientSettings.currentAppVersion
+        
         return currentVersion.compare(serverVersion, options: .numeric) == .orderedAscending
     }
 

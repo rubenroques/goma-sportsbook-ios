@@ -148,14 +148,12 @@ class OutcomeSelectionButtonView: NibView {
                 })
                 .receive(on: DispatchQueue.main)
                 .sink(receiveCompletion: { completion in
-                    // Logger.log("marketSubscriber subscribeToEventMarketUpdates completion: \(completion)")
+                    print("OutcomeSelectionButtonView marketSubscriber subscribeToEventMarketUpdates completion: \(completion)")
                 }, receiveValue: { [weak self] (marketUpdated: Market) in
 
                     if marketUpdated.isAvailable {
                         self?.isUserInteractionEnabled = true
                         self?.containerView.alpha = 1.0
-
-                        Logger.log("subscribeToEventMarketUpdates market \(marketUpdated.id)-\(marketUpdated.isAvailable) will show \n")
 
                         self?.stackView.isHidden = false
                         self?.closedMarketLabel.isHidden = true
@@ -163,8 +161,6 @@ class OutcomeSelectionButtonView: NibView {
                     else {
                         self?.isUserInteractionEnabled = false
                         self?.containerView.alpha = 0.5
-
-                        Logger.log("subscribeToEventMarketUpdates market \(marketUpdated.id)-\(marketUpdated.isAvailable) will hide \n")
 
                         self?.stackView.isHidden = true
                         self?.closedMarketLabel.isHidden = false
@@ -182,7 +178,7 @@ class OutcomeSelectionButtonView: NibView {
             .map(\.bettingOffer)
             .receive(on: DispatchQueue.main)
             .sink(receiveCompletion: { completion in
-                print("oddUpdatesPublisher subscribeToOutcomeUpdates completion: \(completion)")
+                print("OutcomeSelectionButtonView oddUpdatesPublisher subscribeToOutcomeUpdates completion: \(completion)")
             }, receiveValue: { [weak self] (updatedBettingOffer: BettingOffer) in
                 guard let weakSelf = self else { return }
 
@@ -261,6 +257,7 @@ class OutcomeSelectionButtonView: NibView {
                                           matchDescription: matchDescription,
                                           marketDescription: marketDescription,
                                           outcomeDescription: outcomeDescription,
+                                          sport: match.sport,
                                           odd: self.currentOdd ?? outcome.bettingOffer.odd)
         }
         else {
@@ -283,6 +280,7 @@ class OutcomeSelectionButtonView: NibView {
                                           matchDescription: matchDescription,
                                           marketDescription: marketDescription,
                                           outcomeDescription: outcomeDescription,
+                                          sport: nil,
                                           odd: self.currentOdd ?? outcome.bettingOffer.odd)
         }
 
@@ -338,6 +336,7 @@ class OutcomeSelectionButtonView: NibView {
                                               matchDescription: matchDescription,
                                               marketDescription: marketDescription,
                                               outcomeDescription: outcomeDescription,
+                                              sport: match.sport,
                                               odd: outcome.bettingOffer.odd)
             }
             else {
@@ -360,6 +359,7 @@ class OutcomeSelectionButtonView: NibView {
                                               matchDescription: matchDescription,
                                               marketDescription: marketDescription,
                                               outcomeDescription: outcomeDescription,
+                                              sport: nil,
                                               odd: outcome.bettingOffer.odd)
             }
 

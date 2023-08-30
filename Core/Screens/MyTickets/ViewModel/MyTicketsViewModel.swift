@@ -182,7 +182,8 @@ class MyTicketsViewModel: NSObject {
                 nextTickets.append(contentsOf: betHistoryEntries)
                 self.wonMyTickets.send(nextTickets)
             }
-        default: ()
+        default:
+            ()
         }
 
         self.listStatePublisher.send(.loaded)
@@ -209,11 +210,8 @@ class MyTicketsViewModel: NSObject {
                 let bettingHistoryResponse = ServiceProviderModelMapper.bettingHistory(fromServiceProviderBettingHistory: bettingHistory)
 
                 if let bettingHistoryEntries = bettingHistoryResponse.betList {
-
                     if bettingHistoryEntries.isNotEmpty {
-
                         self.processBettingHistory(betHistoryEntries: bettingHistoryEntries)
-
                     }
                     else {
                         self.hasNextPage = false

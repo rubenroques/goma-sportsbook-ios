@@ -22,6 +22,8 @@ struct FirebaseClientSettings: Codable {
 
     let locale: Locale?
 
+    let replaySportsCodes: [String]
+
     struct Locale: Codable {
         var currency: String
         var language: String
@@ -43,6 +45,7 @@ struct FirebaseClientSettings: Codable {
         case maintenanceReason = "maintenance_reason"
         case locale = "locale"
         case requiredPhoneVerification = "signup_2fa"
+        case replaySportsCodes = "replay_sports"
     }
 
     init(from decoder: Decoder) throws {
@@ -71,5 +74,52 @@ struct FirebaseClientSettings: Codable {
 
         let requiredPhoneVerificationInt = (try? container.decode(Int.self, forKey: .requiredPhoneVerification)) ?? 0
         self.requiredPhoneVerification = requiredPhoneVerificationInt == 1
+
+        if let replaySportsCodesDictionary = try? container.decode([Int: String].self, forKey: .replaySportsCodes) {
+            self.replaySportsCodes = replaySportsCodesDictionary.map(\.value)
+        }
+        else if let replaySportsCodesArray = try? container.decode([String].self, forKey: .replaySportsCodes) {
+            self.replaySportsCodes = replaySportsCodesArray
+        }
+        else {
+            self.replaySportsCodes = []
+        }
+    }
+
+    init(showInformationPopUp: Bool,
+         currentAppVersion: String,
+         requiredAppVersion: String,
+         lastUpdate: TimeInterval,
+         isOnMaintenance: Bool,
+         maintenanceReason: String,
+         requiredPhoneVerification: Bool,
+         locale: Locale?,
+         replaySportsCodes: [String]) {
+
+        self.showInformationPopUp = showInformationPopUp
+        self.currentAppVersion = currentAppVersion
+        self.requiredAppVersion = requiredAppVersion
+        self.lastUpdate = lastUpdate
+        self.isOnMaintenance = isOnMaintenance
+        self.maintenanceReason = maintenanceReason
+        self.requiredPhoneVerification = requiredPhoneVerification
+        self.locale = locale
+        self.replaySportsCodes = replaySportsCodes
+
+    }
+
+}
+
+extension FirebaseClientSettings {
+    static var defaultSettings: FirebaseClientSettings {
+        return FirebaseClientSettings(showInformationPopUp: false,
+                                      currentAppVersion: "1.0.0",
+                                      requiredAppVersion: "1.0.0",
+                                      lastUpdate: Date().timeIntervalSince1970,
+                                      isOnMaintenance: false,
+                                      maintenanceReason: "",
+                                      requiredPhoneVerification: false,
+                                      locale: nil,
+                                      replaySportsCodes: [])
     }
 }

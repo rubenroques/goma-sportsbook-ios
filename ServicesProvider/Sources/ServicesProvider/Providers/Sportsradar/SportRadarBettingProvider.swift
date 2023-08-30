@@ -298,63 +298,67 @@ class SportRadarBettingProvider: BettingProvider, Connector {
             .eraseToAnyPublisher()
     }
 
-    func calculateCashback(betSelectionData: [BetTicketSelection], stakeValue: String) -> AnyPublisher<CashbackResult, ServiceProviderError> {
-
-        let betLegs = betSelectionData.map({ betSelection in
-
-            let betLeg = BetLeg(idFOEvent: betSelection.eventName, idFOMarket: betSelection.marketName, idFOSport: "SPORT", idFOSelection: betSelection.identifier, priceType: "CP", priceUp: "\(betSelection.odd.fractionOdd?.numerator ?? 0)", priceDown: "\(betSelection.odd.fractionOdd?.denominator ?? 0)")
-
-            return betLeg
-        })
-
-        let betData = BetData(betLegs: betLegs, betType: "A", wunitstake: stakeValue)
-
-        var bodyString = ""
-
-        let encoder = JSONEncoder()
-        encoder.outputFormatting = .prettyPrinted
-
-        do {
-            let jsonData = try encoder.encode(betData)
-            if let jsonString = String(data: jsonData, encoding: .utf8) {
-                bodyString = jsonString
-            }
-        } catch {
-            print("Error encoding JSON: \(error)")
-        }
-
-        let endpoint = BettingAPIClient.calculateCashback(betSelectionData: bodyString)
-
-        let publisher: AnyPublisher<[SportRadarModels.CashbackResult], ServiceProviderError> = self.connector.request(endpoint)
-
-        return publisher
-            .flatMap { (cashbackResultResponse: [SportRadarModels.CashbackResult]) -> AnyPublisher<CashbackResult, ServiceProviderError> in
-
-                if let cashbackResult = cashbackResultResponse.first {
-
-                    let mappedCashbackResult = SportRadarModelMapper.cashbackResult(fromInternalCashbackResult: cashbackResult)
-
-                    return Just(mappedCashbackResult).setFailureType(to: ServiceProviderError.self).eraseToAnyPublisher()
-                }
-
-                return Fail(outputType: CashbackResult.self, failure: ServiceProviderError.invalidResponse).eraseToAnyPublisher()
-
-            }
-            .eraseToAnyPublisher()
-
+//    func calculateCashback(betSelectionData: [BetTicketSelection], stakeValue: String) -> AnyPublisher<CashbackResult, ServiceProviderError> {
+//
+//        let betLegs = betSelectionData.map({ betSelection in
+//
+//            let betLeg = BetLeg(idFOEvent: betSelection.eventName, idFOMarket: betSelection.marketName, idFOSport: "SPORT", idFOSelection: betSelection.identifier, priceType: "CP", priceUp: "\(betSelection.odd.fractionOdd?.numerator ?? 0)", priceDown: "\(betSelection.odd.fractionOdd?.denominator ?? 0)")
+//
+//            return betLeg
+//        })
+//
+//        let betData = BetData(betLegs: betLegs, betType: "A", wunitstake: stakeValue)
+//
+//        var bodyString = ""
+//
+//        let encoder = JSONEncoder()
+//        encoder.outputFormatting = .prettyPrinted
+//
+//        do {
+//            let jsonData = try encoder.encode(betData)
+//            if let jsonString = String(data: jsonData, encoding: .utf8) {
+//                bodyString = jsonString
+//            }
+//        } catch {
+//            print("Error encoding JSON: \(error)")
+//        }
+//
+//        let endpoint = BettingAPIClient.calculateCashback(betSelectionData: bodyString)
+//
+//        let publisher: AnyPublisher<[SportRadarModels.CashbackResult], ServiceProviderError> = self.connector.request(endpoint)
+//
 //        return publisher
-//            .map( { cashbackResultResponse in
+//            .flatMap { (cashbackResultResponse: [SportRadarModels.CashbackResult]) -> AnyPublisher<CashbackResult, ServiceProviderError> in
 //
 //                if let cashbackResult = cashbackResultResponse.first {
 //
 //                    let mappedCashbackResult = SportRadarModelMapper.cashbackResult(fromInternalCashbackResult: cashbackResult)
 //
-//                    return mappedCashbackResult
+//                    return Just(mappedCashbackResult).setFailureType(to: ServiceProviderError.self).eraseToAnyPublisher()
 //                }
 //
 //                return Fail(outputType: CashbackResult.self, failure: ServiceProviderError.invalidResponse).eraseToAnyPublisher()
 //
-//            }).eraseToAnyPublisher()
+//            }
+//            .eraseToAnyPublisher()
+//
+//    }
+
+
+    func calculateCashback(forBetTicket betTicket: BetTicket)  -> AnyPublisher<CashbackResult, ServiceProviderError> {
+        let endpoint = BettingAPIClient.calculateCashback(betTicket: betTicket)
+        let publisher: AnyPublisher<[SportRadarModels.CashbackResult], ServiceProviderError> = self.connector.request(endpoint)
+
+        return publisher
+            .flatMap { (cashbackResultResponse: [SportRadarModels.CashbackResult]) -> AnyPublisher<CashbackResult, ServiceProviderError> in
+                if let cashbackResult = cashbackResultResponse.first {
+                    let mappedCashbackResult = SportRadarModelMapper.cashbackResult(fromInternalCashbackResult: cashbackResult)
+                    return Just(mappedCashbackResult).setFailureType(to: ServiceProviderError.self).eraseToAnyPublisher()
+                }
+                return Fail(outputType: CashbackResult.self, failure: ServiceProviderError.invalidResponse).eraseToAnyPublisher()
+            }
+            .eraseToAnyPublisher()
+
     }
 
 }

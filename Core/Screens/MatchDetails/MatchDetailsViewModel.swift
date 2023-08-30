@@ -195,7 +195,7 @@ class MatchDetailsViewModel: NSObject {
                     }
                     self.getMatchLiveDetails()
                 case .disconnected:
-                    print("Disconnected from ws")
+                    print("getMatchDetails subscribeEventDetails disconnected")
                 }
             })
             .store(in: &cancellables)

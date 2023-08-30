@@ -20,7 +20,7 @@ enum BettingAPIClient {
     case getFreebetBalance
     case getSharedTicket(betslipId: String)
     case getTicketSelection(ticketSelectionId: String)
-    case calculateCashback(betSelectionData: String)
+    case calculateCashback(betTicket: BetTicket)
 }
 
 extension BettingAPIClient: Endpoint {
@@ -320,14 +320,8 @@ extension BettingAPIClient: Endpoint {
             let data = body.data(using: String.Encoding.utf8)!
             return data
 
-        case .calculateCashback(let betSelectionData):
-
-            let body = betSelectionData
-
-            let data = body.data(using: String.Encoding.utf8)!
-
-            return data
-
+        case .calculateCashback(let betTicket):
+            return Self.createCashbackBetLegsJSONBody(fromBetTicket: betTicket)
         }
         
     }
@@ -523,6 +517,83 @@ extension BettingAPIClient: Endpoint {
         return data
     }
 
-}
+    private static func createCashbackBetLegsJSONBody(fromBetTicket betTicket: BetTicket) -> Data {
 
+        var legsStringArray: [String] = []
+        for selection in betTicket.tickets {
+            let priceDown: String
+            let priceUp: String
+
+            switch selection.odd {
+            case .fraction(let numerator, let denominator):
+                priceUp = "\(numerator)"
+                priceDown = "\(denominator)"
+            case .decimal:
+                priceUp = ""
+                priceDown = ""
+            }
+
+            legsStringArray.append(
+                """
+                {
+                "priceType": "CP",
+                "idFOSelection": "\(selection.identifier)",
+                "priceDown": "\(priceDown)",
+                "priceUp": "\(priceUp)",
+                "idFOSport": "SPORT",
+                "idFOMarket": "\(selection.marketName)",
+                "idFOEvent": "\(selection.eventName)"
+                }
+                """)
+        }
+
+        let legsString = legsStringArray.joined(separator: ",")
+        let body =
+                """
+                {
+                    "betLegs": [ \(legsString) ],
+                    "betType": "\(betTicket.betGroupingType.identifier)",
+                    "wunitstake": \(betTicket.globalStake ?? 0.0)
+                }
+                """
+
+        let data = body.data(using: String.Encoding.utf8)!
+        return data
+    }
+
+}
+//
+//{
+//    "betLegs": [
+//        {
+//            "priceType": "CP",
+//            "idFOSelection": "251663186.1",
+//            "priceDown": "100",
+//            "priceUp": "79",
+//            "idFOSport": "SPORT",
+//            "idFOMarket": "50930219.1",
+//            "idFOEvent": "3234242.1"
+//        },
+//        {
+//            "priceType": "CP",
+//            "idFOSelection": "251663184.1",
+//            "priceDown": "100",
+//            "priceUp": "61",
+//            "idFOSport": "SPORT",
+//            "idFOMarket": "50930218.1",
+//            "idFOEvent": "3234243.1"
+//        },
+//        {
+//            "priceType": "CP",
+//            "idFOSelection": "251260968.1",
+//            "priceDown": "100",
+//            "priceUp": "187",
+//            "idFOSport": "SPORT",
+//            "idFOMarket": "50844314.1",
+//            "idFOEvent": "3233037.1"
+//        }
+//    ],
+//    "betType": "T",
+//    "wunitstake": 10
+//}
 

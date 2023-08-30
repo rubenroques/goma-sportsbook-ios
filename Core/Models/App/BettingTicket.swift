@@ -7,8 +7,7 @@
 
 import Foundation
 
-
-struct BettingTicket: Hashable, Codable {
+struct BettingTicket: Equatable, Codable {
 
     var id: String
 
@@ -26,6 +25,8 @@ struct BettingTicket: Hashable, Codable {
     var outcomeDescription: String
 
     var odd: OddFormat
+
+    var sport: Sport?
 
     var decimalOdd: Double {
         switch self.odd {
@@ -58,6 +59,7 @@ struct BettingTicket: Hashable, Codable {
          matchDescription: String,
          marketDescription: String,
          outcomeDescription: String,
+         sport: Sport?,
          odd: OddFormat) {
 
         self.id = id
@@ -69,6 +71,7 @@ struct BettingTicket: Hashable, Codable {
         self.marketDescription = marketDescription
         self.outcomeDescription = outcomeDescription
         self.odd = odd
+        self.sport = sport
     }
 
     init(id: String,
@@ -79,7 +82,8 @@ struct BettingTicket: Hashable, Codable {
          isAvailable: Bool,
          matchDescription: String,
          marketDescription: String,
-         outcomeDescription: String) {
+         outcomeDescription: String,
+         sport: Sport? = nil) {
 
         self.id = id
         self.outcomeId = outcomeId
@@ -90,6 +94,8 @@ struct BettingTicket: Hashable, Codable {
         self.marketDescription = marketDescription
         self.outcomeDescription = outcomeDescription
         self.odd = OddFormat.decimal(odd: decimalOdd)
+
+        self.sport = sport
     }
 
 }
@@ -108,6 +114,7 @@ extension BettingTicket {
                   matchDescription: matchDescription,
                   marketDescription: marketDescription,
                   outcomeDescription: outcomeDescription,
+                  sport: match.sport,
                   odd: outcome.bettingOffer.odd)
     }
 
@@ -125,6 +132,7 @@ extension BettingTicket {
                   matchDescription: matchDescription,
                   marketDescription: marketDescription,
                   outcomeDescription: outcomeDescription,
+                  sport: match.sport,
                   odd: outcome.bettingOffer.odd)
     }
 

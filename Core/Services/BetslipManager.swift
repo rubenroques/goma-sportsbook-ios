@@ -25,6 +25,18 @@ class BetslipManager: NSObject {
     private var serviceProviderSubscriptions: [String: ServicesProvider.Subscription] = [:]
     private var bettingTicketsCancellables: [String: AnyCancellable] = [:]
 
+    var liveTicketsPublisher: AnyPublisher<[String: Bool], Never> {
+        return self.liveTicketsSubject.eraseToAnyPublisher()
+    }
+    var hasLiveTicketsPublisher: AnyPublisher<Bool, Never> {
+        return self.liveTicketsSubject
+            .map({ $0.values.contains(true) })
+            .eraseToAnyPublisher()
+    }
+
+    private var liveTicketsSubject = CurrentValueSubject<[String: Bool], Never>.init([:])
+    private var liveTicketsServiceProviderSubscriptions: [String: ServicesProvider.Subscription] = [:]
+
     private var cancellables: Set<AnyCancellable> = []
 
     override init() {
@@ -77,6 +89,63 @@ class BetslipManager: NSObject {
                 self?.requestAllowedBetTypes(withBettingTickets: bettingTickets)
             })
             .store(in: &cancellables)
+
+        // -
+        Publishers.CombineLatest(Env.servicesProvider.eventsConnectionStatePublisher.removeDuplicates(),
+                                 self.bettingTicketsPublisher.removeDuplicates())
+        .filter({ state, _ in
+            return state == .connected
+        })
+        .sink(receiveValue: { [weak self] _, tickets in
+
+            let allMatchIds = tickets.map(\.matchId)
+            let knownMatchIds = Array((self?.liveTicketsServiceProviderSubscriptions ?? [:]).keys)
+
+            // The ones we are not subcribed already
+            let nonKnownMatchIds = allMatchIds.filter { !knownMatchIds.contains($0) }
+            // The ones we don't need anymore
+            let removedMatchIds = knownMatchIds.filter { !allMatchIds.contains($0) }
+
+            //
+            for removedMatchId in removedMatchIds {
+                self?.liveTicketsServiceProviderSubscriptions[removedMatchId] = nil
+                self?.liveTicketsSubject.value.removeValue(forKey: removedMatchId)
+            }
+
+            //
+            guard let selfValue = self else { return }
+
+            for nonKnownMatchId in nonKnownMatchIds {
+                Env.servicesProvider.subscribeEventDetails(eventId: nonKnownMatchId)
+                    .receive(on: DispatchQueue.main)
+                    .sink(receiveCompletion: { completion in
+                        switch completion {
+                        case .finished:
+                            print("Env.servicesProvider.subscribeEventDetails completed")
+                        case .failure(let error):
+                            print("Env.servicesProvider.subscribeEventDetails failure \(error)")
+                        }
+                    }, receiveValue: { [weak self] (subscribableContent: SubscribableContent<ServicesProvider.Event>) in
+                        switch subscribableContent {
+                        case .connected(let subscription):
+                            self?.liveTicketsServiceProviderSubscriptions[nonKnownMatchId] = subscription
+                        case .contentUpdate(let serviceProviderEvent):
+                            let match = ServiceProviderModelMapper.match(fromEvent: serviceProviderEvent)
+                            switch match.status {
+                            case .notStarted, .ended, .unknown:
+                                self?.liveTicketsSubject.value[nonKnownMatchId] = false
+                            case .inProgress:
+                                self?.liveTicketsSubject.value[nonKnownMatchId] = true
+                            }
+                        case .disconnected:
+                            self?.liveTicketsSubject.value[nonKnownMatchId] = false
+                            self?.liveTicketsServiceProviderSubscriptions[nonKnownMatchId] = nil
+                        }
+                    })
+                    .store(in: &selfValue.cancellables)
+            }
+        })
+        .store(in: &self.cancellables)
 
     }
 
@@ -139,7 +208,6 @@ class BetslipManager: NSObject {
         }
 
         let bettingTicketSubscriber = Env.servicesProvider.subscribeToMarketDetails(withId: bettingTicket.marketId, onEventId: bettingTicket.matchId)
-            .print("debugbetslip2-A")
             .receive(on: DispatchQueue.main)
             .sink { [weak self] completion in
                 switch completion {
@@ -179,6 +247,7 @@ class BetslipManager: NSObject {
                                                       matchDescription: bettingTicket.matchDescription,
                                                       marketDescription: bettingTicket.marketDescription,
                                                       outcomeDescription: bettingTicket.outcomeDescription,
+                                                      sport: bettingTicket.sport,
                                                       odd: bettingTicket.odd)
 
             self.bettingTicketsDictionaryPublisher.value[bettingTicket.id] = newBettingTicket
@@ -199,6 +268,7 @@ class BetslipManager: NSObject {
                                                           matchDescription: bettingTicket.matchDescription,
                                                           marketDescription: bettingTicket.marketDescription,
                                                           outcomeDescription: bettingTicket.outcomeDescription,
+                                                          sport: bettingTicket.sport,
                                                           odd: newOdd)
 
                 self.bettingTicketsDictionaryPublisher.value[bettingTicket.id] = newBettingTicket
@@ -636,47 +706,42 @@ extension BetslipManager {
             .eraseToAnyPublisher()
     }
 
-    func requestCalculateCashback(stakeValue: String) -> AnyPublisher<CashbackResult, BetslipErrorType> {
+    func requestCalculateCashback(stakeValue stake: Double) -> AnyPublisher<CashbackResult, BetslipErrorType> {
 
-        let bettingTickets = self.bettingTicketsPublisher.value
+        let betTicketSelections = self.bettingTicketsPublisher.value.map { bettingTicket in
+            let odd = ServiceProviderModelMapper.serviceProviderOddFormat(fromOddFormat: bettingTicket.odd)
+            let betTicketSelection = ServicesProvider.BetTicketSelection(identifier: bettingTicket.id,
+                                                                         eventName: bettingTicket.matchId,
+                                                                         homeTeamName: "",
+                                                                         awayTeamName: "",
+                                                                         marketName: bettingTicket.marketId,
+                                                                         outcomeName: bettingTicket.outcomeId,
+                                                                         odd: odd,
+                                                                         stake: 0)
+            return betTicketSelection
+        }
 
-        let betSelections = self.bettingTicketsPublisher.value.map({ bettingTicket in
+        var multipleBetIdentifier = "A"
+        if case let .loaded(allowedBetTypes) =  self.allowedBetTypesPublisher.value {
+            allowedBetTypes.forEach { betType in
+                switch betType {
+                case .multiple(let identifier):
+                    multipleBetIdentifier = identifier
+                default:
+                    ()
+                }
+            }
+        }
 
-            var odd = ServiceProviderModelMapper.serviceProviderOddFormat(fromOddFormat: bettingTicket.odd)
+        let betTicket = BetTicket.init(tickets: betTicketSelections,
+                                       stake: stake,
+                                       betGroupingType: BetGroupingType.multiple(identifier: multipleBetIdentifier))
 
-            let bettingTicketSelection = ServicesProvider.BetTicketSelection(identifier: bettingTicket.id,
-                                                                             eventName: bettingTicket.matchId,
-                                                                             homeTeamName: "",
-                                                                             awayTeamName: "",
-                                                                             marketName: bettingTicket.marketId,
-                                                                             outcomeName: bettingTicket.outcomeId,
-                                                                             odd: odd, stake: 0)
-
-            return bettingTicketSelection
-        })
-
-        return Env.servicesProvider.calculateCashback(betSelectionData: betSelections, stakeValue: stakeValue)
+        return Env.servicesProvider.calculateCashback(forBetTicket: betTicket)
             .mapError({ _ in
-                return BetslipErrorType.none
+                return BetslipErrorType.invalidStake
             })
             .eraseToAnyPublisher()
-
-//            Env.servicesProvider.calculateCashback(betSelectionData: betSelections, stakeValue: stakeValue)
-//                .receive(on: DispatchQueue.main)
-//                .sink(receiveCompletion: { [weak self] completion in
-//
-//                    switch completion {
-//                    case .finished:
-//                        ()
-//                    case .failure(let error):
-//                        print("CASHBACK RESULT ERROR: \(error)")
-//
-//                    }
-//                }, receiveValue: { [weak self] cashbackResult in
-//                    print("CASHBACK RESULT: \(cashbackResult)")
-//
-//                })
-//                .store(in: &cancellables)
     }
 
 }
@@ -687,6 +752,7 @@ enum BetslipErrorType: Error {
     case potentialReturn
     case betPlacementDetailedError(message: String)
     case forbiddenRequest
+    case invalidStake
     case none
 }
 

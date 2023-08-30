@@ -324,16 +324,7 @@ class SupportPageViewController: UIViewController {
                            clientId: "mobile_sdk_client_96ee05c0fdb1b08671ec",
                            zendeskUrl: "https://betssonfrance.zendesk.com/")
 
-        // Set an identity for authentication.
-        let identity: Identity
-        if let userProfileId = Env.userSessionStore.loggedUserProfile?.sessionKey {
-            identity = Identity.createJwt(token: userProfileId)
-        }
-        else {
-            identity = Identity.createAnonymous()
-        }
-
-        Zendesk.instance?.setIdentity(identity)
+        Zendesk.instance?.setIdentity(Identity.createAnonymous())
 
         Support.initialize(withZendesk: Zendesk.instance)
         AnswerBot.initialize(withZendesk: Zendesk.instance, support: Support.instance!)
@@ -354,7 +345,8 @@ class SupportPageViewController: UIViewController {
             let helpNavigationController = UINavigationController(rootViewController: viewController)
 
             self.present(helpNavigationController, animated: true, completion: nil)
-        } catch {
+        }
+        catch {
             print(error)
         }
 

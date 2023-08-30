@@ -217,8 +217,6 @@ class MyTicketTableViewCell: UITableViewCell {
         self.usedCashback = false
 
         self.cashbackInfoView.didTapInfoAction = { [weak self] in
-            print("TAPPED INFO CASHBACK")
-
             UIView.animate(withDuration: 0.5, animations: {
                 self?.learnMoreBaseView.alpha = 1
             }) { (completed) in

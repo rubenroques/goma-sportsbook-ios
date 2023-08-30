@@ -7,7 +7,7 @@
 
 import Foundation
 
-struct Sport: Equatable {
+struct Sport: Codable, Equatable {
 
     let id: String
     let name: String
