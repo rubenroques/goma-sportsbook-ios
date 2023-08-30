@@ -366,45 +366,6 @@ class ProfileViewController: UIViewController {
         let copyCodeTap = UITapGestureRecognizer(target: self, action: #selector(self.tapCopyCode))
         self.userCodeStackView.addGestureRecognizer(copyCodeTap)
 
-        let copyCodeTap2 = UITapGestureRecognizer(target: self, action: #selector(self.tapCopyCode2))
-        self.profilePictureBaseView.addGestureRecognizer(copyCodeTap2)
-
-    }
-
-    @objc func tapCopyCode2() {
-        // Success
-//        let vc = GenericAvatarSuccessViewController()
-//
-//        vc.setTextInfo(title: "\(localized("success"))!", subtitle: localized("deposit_success_message"))
-//
-//        vc.didTapCloseAction = { [weak self] in
-//            vc.dismiss(animated: true)
-//        }
-
-        // Error
-//        let vc = GenericAvatarErrorViewController()
-//
-//        vc.setTextInfo(title: "\(localized("oh_no"))!", subtitle: localized("deposit_error_message"))
-//
-//        vc.didTapCloseAction = { [weak self] in
-//            vc.dismiss(animated: true)
-//        }
-//
-//        vc.didTapBackAction = { [weak self] in
-//            vc.navigationController?.popViewController(animated: true)
-//        }
-
-        // Warning
-        let vc = GenericAvatarWarningViewController()
-
-        vc.setTextInfo(title: "\(localized("hold_on"))!", subtitle: localized("payment_processing_hold"))
-
-        vc.didTapCloseAction = { [weak self] in
-            vc.dismiss(animated: true)
-        }
-
-        self.present(vc, animated: true)
-//        self.navigationController?.pushViewController(vc, animated: true)
     }
 
     private func getOptInBonus() {
