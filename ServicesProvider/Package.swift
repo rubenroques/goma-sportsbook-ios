@@ -19,7 +19,6 @@ let package = Package(
         // Dependencies declare other packages that this package depends on.
         // .package(url: /* package url */, from: "1.0.0"),
         .package(url: "https://github.com/apple/swift-collections.git", .upToNextMajor(from: "1.0.0")),
-        .package(url: "https://github.com/daltoniam/Starscream.git", .upToNextMajor(from: "4.0.0")),
         .package(url: "https://github.com/airbnb/lottie-spm.git", .upToNextMajor(from: "4.2.0")),
         .package(name: "SharedModels", path: "../SharedModels"),
         .package(name: "Extensions", path: "../Extensions"),
@@ -34,7 +33,6 @@ let package = Package(
             dependencies: [
                 .product(name: "OrderedCollections", package: "swift-collections"),
                 .product(name: "Lottie", package: "lottie-spm"),
-                "Starscream",
                 "SharedModels",
                 "Extensions",
                 "GomaGamingSDK",
