@@ -359,11 +359,33 @@ extension PaymentsDropIn: DropInComponentDelegate, AdyenSessionDelegate, Present
     }
 
     // ADYEN SESSION
-    func didComplete(with resultCode: SessionPaymentResultCode, component: Adyen.Component, session: AdyenSession) {
+    // LEGACY COMPLETE
+//    func didComplete(with resultCode: SessionPaymentResultCode, component: Adyen.Component, session: AdyenSession) {
+//
+//        print("ADYEN SESSION RESULT: \(resultCode)")
+//
+//        if resultCode.rawValue == "Refused" {
+//
+//            if let paymentId = self.paymentId {
+//                self.cancelDeposit(paymentId: paymentId)
+//            }
+//
+//            self.dropInComponent?.viewController.dismiss(animated: true)
+//            self.showPaymentStatus?(.refused)
+//        }
+//
+//        if resultCode.rawValue == "Authorised" {
+//            self.dropInComponent?.viewController.dismiss(animated: true)
+//            self.showPaymentStatus?(.authorised)
+//        }
+//
+//    }
 
-        print("ADYEN SESSION RESULT: \(resultCode)")
+    func didComplete(with result: AdyenSessionResult, component: Adyen.Component, session: AdyenSession) {
 
-        if resultCode.rawValue == "Refused" {
+        print("ADYEN SESSION RESULT: \(result)")
+
+        if result.resultCode == .refused {
 
             if let paymentId = self.paymentId {
                 self.cancelDeposit(paymentId: paymentId)
@@ -373,12 +395,10 @@ extension PaymentsDropIn: DropInComponentDelegate, AdyenSessionDelegate, Present
             self.showPaymentStatus?(.refused)
         }
 
-        if resultCode.rawValue == "Authorised" {
+        if result.resultCode == .authorised {
             self.dropInComponent?.viewController.dismiss(animated: true)
             self.showPaymentStatus?(.authorised)
         }
-
-        // TODO: Cancel deposit if not success
 
     }
 

@@ -101,7 +101,9 @@ class MyCompetitionsRootViewModel {
 
                 if fetchedEventsSummmary.count == self?.favoriteEventsIds.count && fetchedEventsSummmary.isNotEmpty {
 
+                    print("UPDATING MY COMPETITIONS!")
                     self?.shouldUpdateContent?()
+                    self?.fetchedEventSummaryPublisher.value = []
                 }
             })
             .store(in: &cancellables)
@@ -120,6 +122,7 @@ class MyCompetitionsRootViewModel {
     private func fetchFavoriteCompetitionMatches(customIds: [String]? = nil) {
         if self.favoriteCompetitionsDataPublisher.value.isNotEmpty {
             self.favoriteCompetitionsDataPublisher.value = []
+            self.subscriptions.removeAll()
         }
 
         var favoriteCompetitionIds = Env.favoritesManager.favoriteCompetitionsIdPublisher.value
@@ -214,6 +217,7 @@ class MyCompetitionsRootViewModel {
 
         self.favoriteCompetitionsDataPublisher.value.append(newCompetition)
 
+        print("FETCHED COMP: \(competitionInfo.name)")
         self.fetchedEventSummaryPublisher.value.append(competitionInfo.id)
 
     }
