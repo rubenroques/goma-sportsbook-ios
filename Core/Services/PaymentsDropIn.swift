@@ -284,6 +284,7 @@ class PaymentsDropIn {
 
 extension PaymentsDropIn: DropInComponentDelegate, AdyenSessionDelegate, PresentationDelegate {
 
+
     func didSubmit(_ data: Adyen.PaymentComponentData, from component: Adyen.PaymentComponent, in dropInComponent: Adyen.AnyDropInComponent) {
 
         if let paymentIssuerType = data.paymentMethod.dictionary.value?["type"],
@@ -356,6 +357,10 @@ extension PaymentsDropIn: DropInComponentDelegate, AdyenSessionDelegate, Present
         print("PAYMENT CANCEL")
 
         dropInComponent.viewController.dismiss(animated: true)
+    }
+
+    func didComplete(with result: AdyenSessionResult, component: Adyen.Component, session: AdyenSession) {
+
     }
 
     // ADYEN SESSION
