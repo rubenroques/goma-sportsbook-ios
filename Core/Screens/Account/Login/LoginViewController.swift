@@ -861,16 +861,33 @@ class LoginViewController: UIViewController {
             self.depositOnRegisterViewController?.navigationController?.pushViewController(genericAvatarSuccessViewController, animated: true)
 
         case .refused:
-            alertTitle = localized("payment_refused")
-            alertMessage = localized("payment_refused_message")
+//            alertTitle = localized("payment_refused")
+//            alertMessage = localized("payment_refused_message")
+//
+//            let alert = UIAlertController(title: alertTitle,
+//                                          message: alertMessage,
+//                                          preferredStyle: .alert)
+//
+//            alert.addAction(UIAlertAction(title: localized("ok"), style: .default, handler: nil))
+//
+//            self.depositOnRegisterViewController?.present(alert, animated: true, completion: nil)
 
-            let alert = UIAlertController(title: alertTitle,
-                                          message: alertMessage,
-                                          preferredStyle: .alert)
+            Env.userSessionStore.refreshUserWalletAfterDelay()
 
-            alert.addAction(UIAlertAction(title: localized("ok"), style: .default, handler: nil))
+            let genericAvatarErrorViewController = GenericAvatarErrorViewController()
 
-            self.depositOnRegisterViewController?.present(alert, animated: true, completion: nil)
+            genericAvatarErrorViewController.setTextInfo(title: "\(localized("success"))!", subtitle: localized("first_deposit_success_message"))
+
+            genericAvatarErrorViewController.didTapBackAction = { [weak self] in
+                genericAvatarErrorViewController.navigationController?.popViewController(animated: true)
+            }
+
+            genericAvatarErrorViewController.didTapCloseAction = { [weak self] in
+                self?.closeLoginRegisterFlow()
+
+            }
+
+            self.depositOnRegisterViewController?.navigationController?.pushViewController(genericAvatarErrorViewController, animated: true)
         }
 
     }

@@ -559,8 +559,8 @@ class DepositViewController: UIViewController {
 
         case .refused:
 
-            alertTitle = localized("payment_refused")
-            alertMessage = localized("payment_refused_message")
+            alertTitle = localized("oh_no")
+            alertMessage = localized("deposit_error_message")
 
             let genericAvatarErrorViewController = GenericAvatarErrorViewController()
 

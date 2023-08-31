@@ -102,9 +102,9 @@ class GenericAvatarWarningViewController: UIViewController {
 
         self.infoContainerView.backgroundColor = UIColor.App.backgroundPrimary
 
-        self.titleLabel.textColor = UIColor.App.buttonTextPrimary
+        self.titleLabel.textColor = UIColor.App.textPrimary
 
-        self.subtitleLabel.textColor = UIColor.App.buttonTextPrimary
+        self.subtitleLabel.textColor = UIColor.App.textPrimary
 
         StyleHelper.styleButton(button: self.backButton)
 
