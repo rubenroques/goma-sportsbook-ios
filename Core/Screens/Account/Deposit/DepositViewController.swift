@@ -535,8 +535,6 @@ class DepositViewController: UIViewController {
     }
 
     private func showPaymentStatusAlert(paymentStatus: PaymentStatus) {
-        var alertTitle = ""
-        var alertMessage = ""
 
         switch paymentStatus {
         case .authorised:
@@ -559,12 +557,9 @@ class DepositViewController: UIViewController {
 
         case .refused:
 
-            alertTitle = localized("oh_no")
-            alertMessage = localized("deposit_error_message")
-
             let genericAvatarErrorViewController = GenericAvatarErrorViewController()
 
-            genericAvatarErrorViewController.setTextInfo(title: alertTitle, subtitle: alertMessage)
+            genericAvatarErrorViewController.setTextInfo(title: "\(localized("oh_no"))!", subtitle: localized("deposit_error_message"))
 
             genericAvatarErrorViewController.didTapCloseAction = { [weak self] in
 
@@ -573,10 +568,10 @@ class DepositViewController: UIViewController {
 
             genericAvatarErrorViewController.didTapBackAction = { [weak self] in
 
-                genericAvatarErrorViewController.dismiss(animated: true)
+                genericAvatarErrorViewController.navigationController?.popViewController(animated: true)
             }
 
-            self.present(genericAvatarErrorViewController, animated: true)
+            self.navigationController?.pushViewController(genericAvatarErrorViewController, animated: true)
         }
 
     }
@@ -830,11 +825,22 @@ class DepositViewController: UIViewController {
 //        alert.addAction(UIAlertAction(title: localized("ok"), style: .default, handler: nil))
 //        self.present(alert, animated: true, completion: nil)
 
-        let genericErrorViewController = GenericErrorViewController()
+        let genericAvatarErrorViewController = GenericAvatarErrorViewController()
 
-        genericErrorViewController.setTextInfo(title: errorTitle, subtitle: errorMessage)
+        genericAvatarErrorViewController.setTextInfo(title: errorTitle, subtitle: errorMessage)
 
-        self.present(genericErrorViewController, animated: true)
+        genericAvatarErrorViewController.didTapCloseAction = { [weak self] in
+
+            genericAvatarErrorViewController.dismiss(animated: true)
+        }
+
+        genericAvatarErrorViewController.didTapBackAction = { [weak self] in
+
+            genericAvatarErrorViewController.navigationController?.popViewController(animated: true)
+        }
+
+        self.navigationController?.pushViewController(genericAvatarErrorViewController, animated: true)
+
     }
 
     @IBAction private func didTapCloseButton() {

@@ -356,6 +356,7 @@ class MyTicketBetLineView: NibView {
         if let eventId = self.betHistoryEntrySelection.eventId {
 
             Env.servicesProvider.subscribeToEventLiveDataUpdates(withId: eventId)
+                .receive(on: DispatchQueue.main)
                 .compactMap({ $0 })
                 .map(ServiceProviderModelMapper.match(fromEvent:))
                 .sink(receiveCompletion: { completion in

@@ -118,7 +118,11 @@ extension ServiceProviderModelMapper {
 
         var valueType = TransactionValueType.neutral
 
-        let transactionType = Self.stringFromTransactionType(transactionType: transactionDetail.type)
+        var transactionType = Self.stringFromTransactionType(transactionType: transactionDetail.type)
+
+        if transactionDetail.type == .withdrawal && transactionDetail.reference != nil {
+            transactionType = Self.stringFromTransactionType(transactionType: .automatedWithdrawal)
+        }
 
         if transactionDetail.amount < 0.0 {
             valueType = .loss

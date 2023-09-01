@@ -109,7 +109,23 @@ class LoginViewController: UIViewController {
                 .sink(receiveValue: { [weak self] depositError in
                     switch depositError {
                     case .error(let message):
-                        self?.depositOnRegisterViewController?.showErrorAlert(errorTitle: localized("deposit_error"), errorMessage: message)
+                        // self?.depositOnRegisterViewController?.showErrorAlert(errorTitle: localized("deposit_error"), errorMessage: message)
+
+                        let genericAvatarErrorViewController = GenericAvatarErrorViewController()
+
+                        genericAvatarErrorViewController.setTextInfo(title: localized("deposit_error"), subtitle: message)
+
+                        genericAvatarErrorViewController.didTapCloseAction = { [weak self] in
+
+                            genericAvatarErrorViewController.dismiss(animated: true)
+                        }
+
+                        genericAvatarErrorViewController.didTapBackAction = { [weak self] in
+
+                            genericAvatarErrorViewController.dismiss(animated: true)
+                        }
+
+                        self?.depositOnRegisterViewController?.present(genericAvatarErrorViewController, animated: true)
                     default:
                         ()
                     }
@@ -837,8 +853,6 @@ class LoginViewController: UIViewController {
     }
 
     private func showPaymentStatusAlert(paymentStatus: PaymentStatus) {
-        var alertTitle = ""
-        var alertMessage = ""
 
         switch paymentStatus {
         case .authorised:
@@ -876,7 +890,7 @@ class LoginViewController: UIViewController {
 
             let genericAvatarErrorViewController = GenericAvatarErrorViewController()
 
-            genericAvatarErrorViewController.setTextInfo(title: "\(localized("success"))!", subtitle: localized("first_deposit_success_message"))
+            genericAvatarErrorViewController.setTextInfo(title: "\(localized("oh_no"))!", subtitle: localized("deposit_error_message"))
 
             genericAvatarErrorViewController.didTapBackAction = { [weak self] in
                 genericAvatarErrorViewController.navigationController?.popViewController(animated: true)

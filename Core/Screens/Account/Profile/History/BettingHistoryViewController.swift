@@ -235,7 +235,9 @@ class BettingHistoryViewController: UIViewController {
     }
 
     private func updateCellAtIndexPath(indexPath: IndexPath) {
-        self.tableView.reloadRows(at: [indexPath], with: .automatic)
+//        self.tableView.reloadRows(at: [indexPath], with: .automatic)
+        self.tableView.beginUpdates()
+        self.tableView.endUpdates()
     }
 
     private func scrollDown() {

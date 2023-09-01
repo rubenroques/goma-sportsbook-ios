@@ -27,8 +27,18 @@ class MyCompetitionsRootViewModel {
     var shouldUpdateContent: (() -> Void)?
     var sendLoadingStatus: (() -> Void)?
 
+    var isLoading: Bool = false {
+        didSet {
+            if isLoading {
+                self.sendLoadingStatus?()
+            }
+        }
+    }
+
     private var cancellables = Set<AnyCancellable>()
     private var subscriptions = Set<ServicesProvider.Subscription>()
+
+    private var timer = Timer()
 
     init(startTabIndex: Int = 0) {
         self.startTabIndex = startTabIndex
@@ -76,14 +86,15 @@ class MyCompetitionsRootViewModel {
                 if Env.userSessionStore.isUserLogged() {
 
                     if favoriteEvents.isNotEmpty {
-                        self?.sendLoadingStatus?()
+                        self?.isLoading = true
+                        //self?.sendLoadingStatus?()
                         self?.favoriteEventsIds = favoriteEvents
                         self?.fetchFavoriteCompetitionMatches()
                     }
                     else {
-                        //self?.clearData()
                         let popularCompetitionIds = ["29494.1", "29519.1", "29531.1", "29534.1"]
-                        self?.sendLoadingStatus?()
+                        self?.isLoading = true
+                        //self?.sendLoadingStatus?()
                         self?.favoriteEventsIds = popularCompetitionIds
                         self?.fetchFavoriteCompetitionMatches(customIds: popularCompetitionIds)
                     }
@@ -104,6 +115,7 @@ class MyCompetitionsRootViewModel {
                     print("UPDATING MY COMPETITIONS!")
                     self?.shouldUpdateContent?()
                     self?.fetchedEventSummaryPublisher.value = []
+                    self?.isLoading = false
                 }
             })
             .store(in: &cancellables)
@@ -117,6 +129,26 @@ class MyCompetitionsRootViewModel {
                 }
             })
             .store(in: &cancellables)
+
+        // Set timer to verify events fetched if subscribed events are failing to fetch
+        self.timer = Timer.scheduledTimer(withTimeInterval: 10.0, repeats: false) { _ in
+            self.verifyEventsFetchedCompletion()
+        }
+
+        RunLoop.current.add(self.timer, forMode: .common)
+    }
+
+    private func verifyEventsFetchedCompletion() {
+
+        print("TIMER'S UP!")
+
+        if self.isLoading {
+            self.clearData()
+            self.fetchFavoriteCompetitionMatches(customIds: self.favoriteEventsIds)
+        }
+        else {
+            self.timer.invalidate()
+        }
     }
 
     private func fetchFavoriteCompetitionMatches(customIds: [String]? = nil) {
@@ -226,9 +258,7 @@ class MyCompetitionsRootViewModel {
 
         self.favoriteCompetitionsDataPublisher.value = []
         self.favoriteOutrightCompetitionsDataPublisher.value = []
-
-        self.shouldUpdateContent?()
-
+        self.fetchedEventSummaryPublisher.value = []
     }
 
     // Helpers

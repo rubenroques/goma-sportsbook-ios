@@ -181,6 +181,15 @@ class TransactionsTableViewCell: UITableViewCell {
 
         }
 
+        // Automated withdraw icons
+
+        if transactionHistoryEntry.type == localized("automated_withdrawal") {
+            self.transactionIcon.image = UIImage(named: "automated_withdraw_icon")
+        }
+        else if transactionHistoryEntry.type == localized("automated_withdrawal_threshold") {
+            self.transactionIcon.image = UIImage(named: "automated_withdraw_threshold_icon")
+        }
+
         self.hasPendingTransaction = false
 
         if let gameTranId = transactionHistoryEntry.id,
