@@ -300,7 +300,6 @@ class MyTicketBetLineView: NibView {
             Env.servicesProvider.subscribeEventDetails(eventId: eventId)
                 .receive(on: DispatchQueue.main)
                 .sink(receiveCompletion: { [weak self] completion in
-                    print("Env.servicesProvider.subscribeEventDetails completed \(completion)")
                     switch completion {
                     case .finished:
                         ()
@@ -311,7 +310,7 @@ class MyTicketBetLineView: NibView {
                             self?.dateLabel.isHidden = false
 
                         default:
-                            print("Error retrieving data! \(error)")
+                            print("MatchDetailsViewModel Error retrieving data! \(error)")
                             self?.liveIconImage.isHidden = true
                             self?.dateLabel.isHidden = false
                         }
@@ -344,7 +343,7 @@ class MyTicketBetLineView: NibView {
 
                         self.getMatchLiveDetails()
                     case .disconnected:
-                        print("getMatchDetails subscribeEventDetails disconnected")
+                        print("MatchDetailsViewModel getMatchDetails subscribeEventDetails disconnected")
                     }
                 })
                 .store(in: &cancellables)
@@ -359,7 +358,7 @@ class MyTicketBetLineView: NibView {
                 .compactMap({ $0 })
                 .map(ServiceProviderModelMapper.match(fromEvent:))
                 .sink(receiveCompletion: { completion in
-                    print("matchSubscriber subscribeToEventLiveDataUpdates completion: \(completion)")
+                    print("MatchDetailsViewModel subscribeToEventLiveDataUpdates completion: \(completion)")
                 }, receiveValue: { [weak self] updatedMatch in
                     switch updatedMatch.status {
                     case .notStarted, .ended, .unknown:

@@ -25,13 +25,10 @@ class MatchLineTableCellViewModel {
 
     //
     init(matchId: String) {
-        print("MatchLineTableCellViewModel init with ID: \(matchId)")
         self.loadEventDetails(fromId: matchId)
     }
 
     init(match: Match, withFullMarkets fullMarkets: Bool = false) {
-        print("MatchLineTableCellViewModel init with match \(match.homeParticipant.name) x \(match.awayParticipant.name)")
-
         if !fullMarkets {
             self.loadEventDetails(fromId: match.id)
             self.matchCurrentValueSubject.send(match)
@@ -57,7 +54,7 @@ class MatchLineTableCellViewModel {
             .map(ServiceProviderModelMapper.match(fromEvent:))
             .receive(on: DispatchQueue.main)
             .sink { completion in
-                print("MatchLineTableCellViewModel getEventDetails completion \(completion)")
+                // print("MatchLineTableCellViewModel getEventDetails completion \(completion)")
             } receiveValue: { [weak self] updatedMatch in
 
                 var knownMarketGroups: Set<String> = []

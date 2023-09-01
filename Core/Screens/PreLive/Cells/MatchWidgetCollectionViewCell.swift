@@ -1099,7 +1099,7 @@ class MatchWidgetCollectionViewCell: UICollectionViewCell {
             .compactMap({ $0 })
             .map(ServiceProviderModelMapper.match(fromEvent:))
             .sink(receiveCompletion: { completion in
-                print("matchSubscriber subscribeToEventLiveDataUpdates completion: \(completion)")
+                print("MatchWidgetCollectionViewCell matchSubscriber subscribeToEventLiveDataUpdates completion: \(completion)")
             }, receiveValue: { [weak self] updatedMatch in
                 self?.viewModel?.match = updatedMatch
 
@@ -1126,7 +1126,7 @@ class MatchWidgetCollectionViewCell: UICollectionViewCell {
                 })
                 .receive(on: DispatchQueue.main)
                 .sink(receiveCompletion: { completion in
-                    print("marketSubscriber subscribeToEventMarketUpdates completion: \(completion)")
+                    // print("marketSubscriber subscribeToEventMarketUpdates completion: \(completion)")
                 }, receiveValue: { [weak self] (marketUpdated: Market) in
 
                     if marketUpdated.isAvailable {
@@ -1163,7 +1163,7 @@ class MatchWidgetCollectionViewCell: UICollectionViewCell {
                     .map(\.bettingOffer)
                     .receive(on: DispatchQueue.main)
                     .sink(receiveCompletion: { completion in
-                        print("leftOddButtonSubscriber subscribeToOutcomeUpdates completion: \(completion)")
+                        // print("leftOddButtonSubscriber subscribeToOutcomeUpdates completion: \(completion)")
                     }, receiveValue: { [weak self] bettingOffer in
                         guard let weakSelf = self else { return }
                         
@@ -1223,7 +1223,7 @@ class MatchWidgetCollectionViewCell: UICollectionViewCell {
                     .map(\.bettingOffer)
                     .receive(on: DispatchQueue.main)
                     .sink(receiveCompletion: { completion in
-                        print("middleOddButtonSubscriber subscribeToOutcomeUpdates completion: \(completion)")
+                        // print("middleOddButtonSubscriber subscribeToOutcomeUpdates completion: \(completion)")
                     }, receiveValue: { [weak self] bettingOffer in
                         
                         guard let weakSelf = self else { return }
@@ -1282,7 +1282,7 @@ class MatchWidgetCollectionViewCell: UICollectionViewCell {
                     .map(\.bettingOffer)
                     .receive(on: DispatchQueue.main)
                     .sink(receiveCompletion: { completion in
-                        print("leftOddButtonSubscriber subscribeToOutcomeUpdates completion: \(completion)")
+                        // print("leftOddButtonSubscriber subscribeToOutcomeUpdates completion: \(completion)")
                     }, receiveValue: { [weak self] bettingOffer in
                         
                         guard let weakSelf = self else { return }

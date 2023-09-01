@@ -67,7 +67,6 @@ extension SportRadarModels {
                 let context = DecodingError.Context(codingPath: [CodingKeys.node], debugDescription: "PromotedSportsResponse popular node not found")
                 throw DecodingError.valueNotFound(ContentRoute.self, context)
             }
-            print("")
         }
 
         func encode(to encoder: Encoder) throws {

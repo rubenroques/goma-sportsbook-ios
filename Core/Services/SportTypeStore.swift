@@ -45,7 +45,7 @@ class SportTypeStore {
         self.activeSportsCurrentValueSubject.send(.loading)
 
         Env.servicesProvider.subscribeAllSportTypes()
-            .retry(2)
+            .retry(4)
             .receive(on: DispatchQueue.main)
             .sink(receiveCompletion: { [weak self] completion in
                 switch completion {
@@ -60,13 +60,10 @@ class SportTypeStore {
             case .connected(let subscription):
                 self?.sportsSubscription = subscription
             case .contentUpdate(let sportTypes):
-                // Prelive sports
                 let sports = sportTypes.map(ServiceProviderModelMapper.sport(fromServiceProviderSportType:))
-
                 let filteredSports = sports.filter({
                     $0.eventsCount > 0 || $0.liveEventsCount > 0 || $0.outrightEventsCount > 0
                 })
-
                 self?.activeSportsCurrentValueSubject.send(.loaded(filteredSports))
 
             case .disconnected:

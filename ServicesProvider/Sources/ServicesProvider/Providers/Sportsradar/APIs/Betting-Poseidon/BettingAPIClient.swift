@@ -377,7 +377,8 @@ extension BettingAPIClient: Endpoint {
             "Content-Type": "application/json; charset=UTF-8",
             "Accept": "application/json",
             "X-MGS-BusinessUnit": "3",
-            "X-MGS-Location": "UK",
+            "Accept-Languag": "\(SportRadarConstants.socketLanguageCode)",
+            "X-MGS-Location": "\(SportRadarConstants.socketLanguageCode)",
         ]
         return defaultHeaders
     }

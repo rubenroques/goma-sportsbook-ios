@@ -8,28 +8,28 @@
 import Foundation
 import Combine
 
-public enum WebSocketEvent {
+public enum WebSocketEventMessage {
     case connected
     case text(String)
     case binary(Data)
     case disconnected
 }
 
-public typealias WebSocketStream = AsyncThrowingStream<WebSocketEvent, Error>
+public typealias WebSocketAsyncStream = AsyncThrowingStream<WebSocketEventMessage, Error>
 
 public class WebSocketClientStream: NSObject, AsyncSequence {
-    public typealias AsyncIterator = WebSocketStream.Iterator
-    public typealias Element = WebSocketEvent
+    public typealias AsyncIterator = WebSocketAsyncStream.Iterator
+    public typealias Element = WebSocketEventMessage
 
     private let url: URL
 
     private var urlSession = URLSession(configuration: .default)
     private var webSocketTask: URLSessionWebSocketTask?
 
-    private var continuation: WebSocketStream.Continuation?
+    private var continuation: WebSocketAsyncStream.Continuation?
 
-    private lazy var stream: WebSocketStream = {
-        return WebSocketStream { continuation in
+    private lazy var stream: WebSocketAsyncStream = {
+        return WebSocketAsyncStream { continuation in
             self.continuation = continuation
             self.waitForNextValue()
         }
@@ -79,11 +79,9 @@ public class WebSocketClientStream: NSObject, AsyncSequence {
         let session = URLSession(configuration: URLSessionConfiguration.default, delegate: self, delegateQueue: nil)
         self.webSocketTask = session.webSocketTask(with: request)
 
-        // self.waitForNextValue()
-    }
-
-    private func prepareSession() {
-
+        // Set the maximum message size to 25 MB
+        let maximumMessageSize: Int = 25 * 1024 * 1024 // 25 MB in bytes
+        self.webSocketTask?.maximumMessageSize = maximumMessageSize
     }
 
     deinit {
@@ -91,7 +89,7 @@ public class WebSocketClientStream: NSObject, AsyncSequence {
     }
 
     public func makeAsyncIterator() -> AsyncIterator {
-        return stream.makeAsyncIterator()
+        return self.stream.makeAsyncIterator()
     }
 
     public func connect() {

@@ -179,7 +179,7 @@ class ClientManagedHomeViewTemplateDataSource {
         Env.servicesProvider.getPromotionalTopBanners()
             .receive(on: DispatchQueue.main)
             .sink { completion in
-                print("getPromotionalTopBanners completion \(completion)")
+                print("ClientManagedHomeTemplate getPromotionalTopBanners completion \(completion)")
             } receiveValue: { [weak self] (promotionalBanners: [PromotionalBanner]) in
                 self?.banners = promotionalBanners.map({ promotionalBanner in
                     return BannerInfo(type: "", id: promotionalBanner.id, matchId: nil, imageURL: promotionalBanner.imageURL, priorityOrder: nil, marketId: nil)
@@ -195,7 +195,7 @@ class ClientManagedHomeViewTemplateDataSource {
         Env.servicesProvider.getPromotionalTopStories()
             .receive(on: DispatchQueue.main)
             .sink { completion in
-                print("getPromotionalTopStories Promotional stories completion \(completion)")
+                print("ClientManagedHomeTemplate getPromotionalTopStories Promotional stories completion \(completion)")
             } receiveValue: { [weak self] promotionalStories in
                 let mappedPromotionalStories = promotionalStories.map({ promotionalStory in
                     let promotionalStory = ServiceProviderModelMapper.promotionalStory(fromPromotionalStory: promotionalStory)
@@ -217,7 +217,7 @@ class ClientManagedHomeViewTemplateDataSource {
             .map(ServiceProviderModelMapper.matches(fromEvents:))
             .receive(on: DispatchQueue.main)
             .sink(receiveCompletion: { completion in
-                print("getPromotionalSlidingTopEvents completion \(completion)")
+                print("ClientManagedHomeTemplate getPromotionalSlidingTopEvents completion \(completion)")
             }, receiveValue: { [weak self] matches in
                 self?.quickSwipeStackMatches = matches
                 self?.refreshPublisher.send()
@@ -241,7 +241,7 @@ class ClientManagedHomeViewTemplateDataSource {
         }
         .receive(on: DispatchQueue.main)
         .sink(receiveCompletion: { completion in
-            print("fetchHighlightMatches completion \(completion)")
+            print("ClientManagedHomeTemplate fetchHighlightMatches completion \(completion)")
         }, receiveValue: { [weak self] highlightedMatchTypes in
             var imageMatches: [Match] = [ ]
             var boostedMatches: [Match] = []
@@ -268,7 +268,7 @@ class ClientManagedHomeViewTemplateDataSource {
         Env.servicesProvider.getPromotedSports()
             .receive(on: DispatchQueue.main)
             .sink { completion in
-                print("getPromotedSports completion \(completion)")
+                print("ClientManagedHomeTemplate getPromotedSports completion \(completion)")
             } receiveValue: { [weak self] promotedSports in
                 self?.promotedSports = promotedSports
                 self?.refreshPublisher.send()
@@ -285,7 +285,7 @@ class ClientManagedHomeViewTemplateDataSource {
             .collect()
             .receive(on: DispatchQueue.main)
             .sink { completion in
-                print("fetchMatchesForPromotedSport completion \(completion)")
+                print("ClientManagedHomeTemplate fetchMatchesForPromotedSport completion \(completion)")
             } receiveValue: { [weak self] eventGroups in
                 let matches = eventGroups.flatMap(\.events).prefix(20).map(ServiceProviderModelMapper.match(fromEvent:))
                 self?.promotedSportsMatches[promotedSport.id] = matches
@@ -351,7 +351,7 @@ extension ClientManagedHomeViewTemplateDataSource: HomeViewTemplateDataSource {
         case 4:
             return localized("Highlights")
         case 6:
-            return localized("Top Competitions")
+            return localized("top_competitions")
         default:
             ()
         }

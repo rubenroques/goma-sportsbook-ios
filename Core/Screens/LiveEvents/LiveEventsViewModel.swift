@@ -38,20 +38,12 @@ class LiveEventsViewModel: NSObject {
 
     var shouldShowSearch: (() -> Void)?
 
-    var didChangeSportType = false
     var selectedSport: Sport {
-        willSet {
-            if newValue.id != self.selectedSport.id {
-                self.didChangeSportType = true
-            }
-        }
         didSet {
-            if didChangeSportType {
-                self.resetScrollPosition?()
-                self.fetchLiveMatches()
-                self.configureWithSports(self.liveSports)
-                self.didChangeSportType = false
-            }
+            self.resetScrollPosition?()
+            self.fetchLiveMatches()
+            self.fetchUpcomingMatches()
+            self.configureWithSports(self.liveSports)
         }
     }
 
@@ -69,20 +61,27 @@ class LiveEventsViewModel: NSObject {
 
     var mainMarkets: OrderedDictionary<String, Market> = [:]
 
+    private var liveMatchesViewModelDataSource = LiveMatchesViewModelDataSource(liveMatches: [], upcomingMatches: [])
+
     private var liveMatches: [Match] = []
-    private var liveMatchesViewModelDataSource = LiveMatchesViewModelDataSource(matches: [])
+    private var upcomingMatches: [Match] = []
+
     private var isLoadingSubject: CurrentValueSubject<Bool, Never> = .init(true)
 
     private var cachedMatchStatsViewModels: [String: MatchStatsViewModel] = [:]
 
     private var liveMatchesSubscriber: AnyCancellable?
+    private var upcomingMatchesSubscriber: AnyCancellable?
 
     private var liveMatchesHasMorePages = true
 
     private var cancellables = Set<AnyCancellable>()
 
-    private var eventsSubscription: ServicesProvider.Subscription?
+    private var liveMatchesSubscription: ServicesProvider.Subscription?
+    private var upcomingMatchesSubscription: ServicesProvider.Subscription?
+
     private var sportsSubscription: ServicesProvider.Subscription?
+    private var matchLineTableCellViewModelCache: [String: MatchLineTableCellViewModel] = [:]
 
     init(selectedSport: Sport) {
 
@@ -245,11 +244,12 @@ class LiveEventsViewModel: NSObject {
 
     private func updateContentList() {
 
-        self.liveMatchesViewModelDataSource.matches = filterLiveMatches(with: self.homeFilterOptions, matches: self.liveMatches)
+        self.liveMatchesViewModelDataSource.liveMatches = filterLiveMatches(with: self.homeFilterOptions, matches: self.liveMatches)
+        self.liveMatchesViewModelDataSource.upcomingMatches = filterLiveMatches(with: self.homeFilterOptions, matches: self.upcomingMatches)
 
         if let numberOfFilters = self.homeFilterOptions?.countFilters {
             if numberOfFilters > 0 {
-                if self.liveMatchesViewModelDataSource.matches.isEmpty {
+                if self.liveMatchesViewModelDataSource.liveMatches.isEmpty && self.liveMatchesViewModelDataSource.upcomingMatches.isEmpty {
                     self.screenStatePublisher.send(.emptyAndFilter)
                 }
                 else {
@@ -257,7 +257,7 @@ class LiveEventsViewModel: NSObject {
                 }
             }
             else {
-                if !self.liveMatchesViewModelDataSource.matches.isNotEmpty {
+                if !self.liveMatchesViewModelDataSource.liveMatches.isNotEmpty {
                     self.screenStatePublisher.send(.emptyNoFilter)
                 }
                 else {
@@ -266,7 +266,7 @@ class LiveEventsViewModel: NSObject {
             }
         }
         else {
-            if self.liveMatchesViewModelDataSource.matches.isEmpty {
+            if self.liveMatchesViewModelDataSource.liveMatches.isEmpty && self.liveMatchesViewModelDataSource.upcomingMatches.isEmpty {
                 self.screenStatePublisher.send(.emptyNoFilter)
             }
             else {
@@ -280,6 +280,7 @@ class LiveEventsViewModel: NSObject {
         DispatchQueue.main.async {
             self.dataDidChangedAction?()
         }
+
     }
 
     //
@@ -303,14 +304,10 @@ class LiveEventsViewModel: NSObject {
 
     func fetchLiveMatches() {
 
-        if self.didChangeSportType {
-            self.clearOldSportData()
-        }
-
         self.liveMatchesHasMorePages = true
         self.liveMatchesSubscriber?.cancel()
 
-        self.eventsSubscription = nil
+        self.liveMatchesSubscription = nil
 
         self.isLoadingSubject.send(true)
 
@@ -327,13 +324,14 @@ class LiveEventsViewModel: NSObject {
                 case .failure(let error):
                     Logger.log("subscribeLiveMatches error \(error)")
                     self?.liveMatches = []
+                    self?.updateContentList()
                 }
                 self?.isLoadingSubject.send(false)
             }, receiveValue: { [weak self] (subscribableContent: SubscribableContent<[EventsGroup]>) in
                 switch subscribableContent {
                 case .connected(let subscription):
                     Logger.log("subscribeLiveMatches connected")
-                    self?.eventsSubscription = subscription
+                    self?.liveMatchesSubscription = subscription
                 case .contentUpdate(let eventsGroups):
                     Logger.log("subscribeLiveMatches content")
                     self?.liveMatches = ServiceProviderModelMapper.matches(fromEventsGroups: eventsGroups)
@@ -344,6 +342,54 @@ class LiveEventsViewModel: NSObject {
                     self?.isLoadingSubject.send(false)
                 case .disconnected:
                     Logger.log("subscribeLiveMatches disconnected")
+                }
+            })
+    }
+
+    private func fetchUpcomingMatches() {
+
+        self.isLoadingSubject.send(true)
+
+        let selectedSportType = ServiceProviderModelMapper.serviceProviderSportType(fromSport: self.selectedSport)
+
+        // We need to clear old subscriptions and publisher cancellables
+        self.upcomingMatchesSubscriber = nil
+        self.upcomingMatchesSubscriber?.cancel()
+
+        self.upcomingMatchesSubscriber = Env.servicesProvider.subscribePreLiveMatches(forSportType: selectedSportType,
+                                                                                  initialDate: nil,
+                                                                                  endDate: nil,
+                                                                                  sortType: .date)
+            .sink(receiveCompletion: { [weak self] completion in
+                switch completion {
+                case .finished:
+                    ()
+                case .failure(let error):
+                    print("TodayMatchesDataSource fetchUpcomingMatches error: \(error)")
+                    self?.upcomingMatches = []
+                    self?.updateContentList()
+                }
+                self?.isLoadingSubject.send(false)
+            }, receiveValue: { [weak self] (subscribableContent: SubscribableContent<[EventsGroup]>) in
+                switch subscribableContent {
+                case .connected(let subscription):
+                    self?.upcomingMatchesSubscription = subscription
+
+                case .contentUpdate(let eventsGroups):
+                    guard let self = self else { return }
+
+                    let splittedEventGroups = self.splitEventsGroups(eventsGroups)
+
+                    let mappedMatches = ServiceProviderModelMapper.matches(fromEventsGroups: splittedEventGroups.matchesEventGroups)
+                    self.upcomingMatches = mappedMatches
+
+                    // TODO: main markets
+                    // self.setMainMarkets(matches: matches)
+                    self.updateContentList()
+                    self.isLoadingSubject.send(false)
+
+                case .disconnected:
+                    print("TodayMatchesDataSource fetchUpcomingMatches disconnected")
                 }
             })
     }
@@ -359,14 +405,6 @@ class LiveEventsViewModel: NSObject {
                 }
             }
         }
-    }
-
-    private func clearOldSportData() {
-
-        self.liveMatches = []
-        self.liveMatchesViewModelDataSource.matches = []
-
-        self.updateContentList()
     }
 
 }
@@ -419,9 +457,49 @@ extension LiveEventsViewModel: UITableViewDataSource, UITableViewDelegate {
 
 }
 
+// Helpers
+extension LiveEventsViewModel {
+
+    func matchLineTableCellViewModel(forMatch match: Match) -> MatchLineTableCellViewModel {
+        if let matchLineTableCellViewModel = self.matchLineTableCellViewModelCache[match.id] {
+            return matchLineTableCellViewModel
+        }
+        else {
+            let matchLineTableCellViewModel = MatchLineTableCellViewModel(match: match, withFullMarkets: false)
+            self.matchLineTableCellViewModelCache[match.id] = matchLineTableCellViewModel
+            return matchLineTableCellViewModel
+        }
+    }
+
+    private func splitEventsGroups(_ eventsGroups: [EventsGroup]) -> (matchesEventGroups: [EventsGroup], competitionsEventGroups: [EventsGroup]) {
+
+        var matchEventsGroups: [EventsGroup] = []
+        for eventGroup in eventsGroups {
+            let matchEvents = eventGroup.events.filter { event in
+                event.type == .match
+            }
+            matchEventsGroups.append(EventsGroup(events: matchEvents, marketGroupId: eventGroup.marketGroupId))
+        }
+
+        //
+        var competitionEventsGroups: [EventsGroup] = []
+        for eventGroup in eventsGroups {
+            let competitionEvents = eventGroup.events.filter { event in
+                event.type == .competition
+            }
+            competitionEventsGroups.append(EventsGroup(events: competitionEvents, marketGroupId: eventGroup.marketGroupId))
+        }
+
+        return (matchEventsGroups, competitionEventsGroups)
+    }
+
+}
+
 class LiveMatchesViewModelDataSource: NSObject, UITableViewDataSource, UITableViewDelegate {
 
-    var matches: [Match] = []
+    var liveMatches: [Match] = []
+    var upcomingMatches: [Match] = []
+
     var requestNextPage: (() -> Void)?
     var didSelectMatchAction: ((Match) -> Void)?
     var didTapFavoriteAction: ((Match) -> Void)?
@@ -432,21 +510,25 @@ class LiveMatchesViewModelDataSource: NSObject, UITableViewDataSource, UITableVi
 
     var shouldShowLoadingCell = true
 
-    init(matches: [Match]) {
-        self.matches = matches
+    init(liveMatches: [Match], upcomingMatches: [Match]) {
+        self.liveMatches = liveMatches
+        self.upcomingMatches = upcomingMatches
+
         super.init()
     }
 
     func numberOfSections(in tableView: UITableView) -> Int {
-        return 2
+        return 3
     }
 
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         switch section {
         case 0:
-            return self.matches.count
+            return self.liveMatches.count
         case 1:
             return self.shouldShowLoadingCell ? 1 : 0
+        case 2:
+            return self.upcomingMatches.count
         default:
             return 0
         }
@@ -456,7 +538,7 @@ class LiveMatchesViewModelDataSource: NSObject, UITableViewDataSource, UITableVi
         switch indexPath.section {
         case 0:
             if let cell = tableView.dequeueCellType(MatchLineTableViewCell.self),
-               let match = self.matches[safe: indexPath.row] {
+               let match = self.liveMatches[safe: indexPath.row] {
 
                 if let matchStatsViewModel = self.matchStatsViewModelForMatch?(match) {
                     cell.matchStatsViewModel = matchStatsViewModel
@@ -478,7 +560,26 @@ class LiveMatchesViewModelDataSource: NSObject, UITableViewDataSource, UITableVi
             if let cell = tableView.dequeueCellType(LoadingMoreTableViewCell.self) {
                 return cell
             }
+        case 2:
+            if let cell = tableView.dequeueCellType(MatchLineTableViewCell.self),
+               let match = self.upcomingMatches[safe: indexPath.row] {
 
+                if let matchStatsViewModel = self.matchStatsViewModelForMatch?(match) {
+                    cell.matchStatsViewModel = matchStatsViewModel
+                }
+
+                let viewModel = MatchLineTableCellViewModel(match: match)
+                cell.viewModel = viewModel
+
+                cell.tappedMatchLineAction = { [weak self] match in
+                    self?.didSelectMatchAction?(match)
+                }
+                cell.didLongPressOdd = { [weak self] bettingTicket in
+                    self?.didLongPressOdd?(bettingTicket)
+                }
+
+                return cell
+            }
         default:
             fatalError()
         }
@@ -486,35 +587,54 @@ class LiveMatchesViewModelDataSource: NSObject, UITableViewDataSource, UITableVi
     }
 
     func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
-        guard
-            let headerView = tableView.dequeueReusableHeaderFooterView(withIdentifier: TitleTableViewHeader.identifier) as? TitleTableViewHeader
-        else {
-            fatalError()
+
+        switch section {
+        case 0:
+            guard
+                let headerView = tableView.dequeueReusableHeaderFooterView(withIdentifier: TitleTableViewHeader.identifier) as? TitleTableViewHeader
+            else {
+                fatalError()
+            }
+            headerView.configureWithTitle(localized("all_live_events"))
+            headerView.setSearchIcon(hasSearch: true)
+            headerView.shouldShowSearch = { [weak self] in
+                self?.shouldShowSearch?()
+            }
+            return headerView
+        case 2:
+            guard
+                let headerView = tableView.dequeueReusableHeaderFooterView(withIdentifier: TitleTableViewHeader.identifier) as? TitleTableViewHeader
+            else {
+                fatalError()
+            }
+            headerView.configureWithTitle(localized("upcoming"))
+            headerView.setSearchIcon(hasSearch: false)
+            headerView.shouldShowSearch = { [weak self] in
+                self?.shouldShowSearch?()
+            }
+            return headerView
+        default:
+            return nil
         }
 
-        headerView.configureWithTitle(localized("all_live_events"))
-
-        headerView.setSearchIcon(hasSearch: true)
-
-        headerView.shouldShowSearch = { [weak self] in
-            self?.shouldShowSearch?()
-        }
-
-        return headerView
     }
 
     func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
-        if section == 0 {
+        switch section {
+        case 0, 2:
             return 54
+        default:
+            return 0.01
         }
-        return 0.01
     }
 
     func tableView(_ tableView: UITableView, estimatedHeightForHeaderInSection section: Int) -> CGFloat {
-        if section == 0 {
+        switch section {
+        case 0, 2:
             return 54
+        default:
+            return 0.01
         }
-        return 0.01
     }
 
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
@@ -536,7 +656,7 @@ class LiveMatchesViewModelDataSource: NSObject, UITableViewDataSource, UITableVi
     }
 
     func tableView(_ tableView: UITableView, willDisplay cell: UITableViewCell, forRowAt indexPath: IndexPath) {
-        if indexPath.section == 1, self.matches.isNotEmpty {
+        if indexPath.section == 1, self.liveMatches.isNotEmpty {
             if let typedCell = cell as? LoadingMoreTableViewCell {
                 typedCell.startAnimating()
             }

@@ -134,7 +134,6 @@ class SportRadarEventsProvider: EventsProvider {
             return Fail(error: ServiceProviderError.incompletedSportData).eraseToAnyPublisher()
         }
 
-
         let eventCountValue = eventCount ?? self.defaultEventCount
 
         // contentType -> eventListBySportTypeDate
@@ -197,7 +196,6 @@ class SportRadarEventsProvider: EventsProvider {
     }
 
     func subscribeLiveMatches(forSportType sportType: SportType) -> AnyPublisher<SubscribableContent<[EventsGroup]>, ServiceProviderError> {
-
         // Get the session
         guard
             let sessionToken = socketConnector.token

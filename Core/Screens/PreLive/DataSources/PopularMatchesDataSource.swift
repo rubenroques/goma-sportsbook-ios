@@ -179,9 +179,6 @@ extension PopularMatchesDataSource {
                     let mappedMatches = ServiceProviderModelMapper.matches(fromEventsGroups: splittedEventGroups.matchesEventGroups)
                     self.allMatchesSubject.send(mappedMatches)
 
-                    // TODO: main markets
-                    // self.setMainMarkets(matches: popularMatches)
-
                     self.isLoadingCurrentValueSubject.send(false)
                 case .disconnected:
                     print("PopularMatchesDataSource fetchPopularMatches disconnected")

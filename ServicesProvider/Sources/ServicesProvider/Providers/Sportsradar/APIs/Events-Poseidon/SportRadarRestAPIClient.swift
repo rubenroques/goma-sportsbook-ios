@@ -789,7 +789,8 @@ extension SportRadarRestAPIClient: Endpoint {
                 "Media-Type": "application/json",
                 "Accept": "application/json",
                 "X-MGS-BusinessUnit": "3",
-                "X-MGS-Location": "UK",
+                "Accept-Languag": "\(SportRadarConstants.socketLanguageCode)",
+                "X-MGS-Location": "\(SportRadarConstants.socketLanguageCode)",
             ]
 
         }

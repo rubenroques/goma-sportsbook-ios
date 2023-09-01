@@ -55,6 +55,7 @@ class SportSelectionViewController: UIViewController {
     init(defaultSport: Sport, isLiveSport: Bool = false) {
         self.defaultSport = defaultSport
         self.isLiveSport = isLiveSport
+
         super.init(nibName: "SportSelectionViewController", bundle: nil)
     }
 
@@ -84,7 +85,7 @@ class SportSelectionViewController: UIViewController {
         self.view.bringSubviewToFront(self.loadingBaseView)
         self.isLoading = true
 
-        self.getAllSports(liveSportsOnly: isLiveSport)
+        self.getAllSports(showLiveSportsFirst: self.isLiveSport)
 
         self.navigationLabel.text = localized("choose_sport")
         self.navigationLabel.font = AppFont.with(type: .bold, size: 16)
@@ -124,9 +125,7 @@ class SportSelectionViewController: UIViewController {
             textfield.textColor = UIColor.App.textPrimary
             textfield.tintColor = UIColor.App.textPrimary
             textfield.attributedPlaceholder = NSAttributedString(string: localized("search_field"),
-                                                                 attributes: [NSAttributedString.Key.foregroundColor:
-                                                                                
-                                                                                               UIColor.App.inputTextTitle])
+                                                                 attributes: [NSAttributedString.Key.foregroundColor: UIColor.App.inputTextTitle])
 
             if let glassIconView = textfield.leftView as? UIImageView {
                 glassIconView.image = glassIconView.image?.withRenderingMode(.alwaysTemplate)
@@ -136,10 +135,9 @@ class SportSelectionViewController: UIViewController {
         }
 
         self.loadingBaseView.backgroundColor = UIColor.App.backgroundPrimary
-
     }
 
-    func getAllSports(liveSportsOnly: Bool = false) {
+    func getAllSports(showLiveSportsFirst: Bool = false) {
 
         Env.sportsStore.activeSportsPublisher
             .map({ loadableContent -> [Sport]? in
@@ -153,12 +151,19 @@ class SportSelectionViewController: UIViewController {
             .receive(on: DispatchQueue.main)
             .sink(receiveValue: { [weak self] allSports in
 
-                if liveSportsOnly {
+                if showLiveSportsFirst {
+
                     let liveSports = allSports.filter({
                         $0.liveEventsCount > 0
                     })
+                    let notLiveSports = allSports.filter({
+                        $0.liveEventsCount <= 0
+                    })
 
-                    self?.configureWithSports(liveSports)
+                    var mergedSports = liveSports
+                    mergedSports.append(contentsOf: notLiveSports)
+
+                    self?.configureWithSports(mergedSports)
                 }
                 else {
                     let preLiveSports = allSports.filter({

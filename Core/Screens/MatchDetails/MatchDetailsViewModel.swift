@@ -136,7 +136,6 @@ class MatchDetailsViewModel: NSObject {
             }
             .store(in: &cancellables)
 
-
         self.matchStatsViewModel.statsTypePublisher
             .receive(on: DispatchQueue.main)
             .sink { [weak self] statsJSON in
@@ -152,7 +151,6 @@ class MatchDetailsViewModel: NSObject {
         Env.servicesProvider.subscribeEventDetails(eventId: self.matchId)
             .receive(on: DispatchQueue.main)
             .sink(receiveCompletion: { [weak self] completion in
-                print("Env.servicesProvider.subscribeEventDetails completed \(completion)")
                 switch completion {
                 case .finished:
                     ()
@@ -163,7 +161,7 @@ class MatchDetailsViewModel: NSObject {
                         self?.marketGroupsState.send(.failed)
 
                     default:
-                        print("Error retrieving data! \(error)")
+                        print("MatchDetailsViewModel getMatchDetails Error retrieving data! \(error)")
                         self?.matchPublisher.send(.failed)
                         self?.marketGroupsState.send(.failed)
                     }
@@ -195,7 +193,7 @@ class MatchDetailsViewModel: NSObject {
                     }
                     self.getMatchLiveDetails()
                 case .disconnected:
-                    print("getMatchDetails subscribeEventDetails disconnected")
+                    print("MatchDetailsViewModel getMatchDetails subscribeEventDetails disconnected")
                 }
             })
             .store(in: &cancellables)
@@ -208,7 +206,7 @@ class MatchDetailsViewModel: NSObject {
             .compactMap({ $0 })
             .map(ServiceProviderModelMapper.match(fromEvent:))
             .sink(receiveCompletion: { completion in
-                print("matchSubscriber subscribeToEventLiveDataUpdates completion: \(completion)")
+                print("MatchDetailsViewModel matchSubscriber subscribeToEventLiveDataUpdates completion: \(completion)")
             }, receiveValue: { [weak self] updatedMatch in
                 switch updatedMatch.status {
                 case .notStarted, .ended, .unknown:

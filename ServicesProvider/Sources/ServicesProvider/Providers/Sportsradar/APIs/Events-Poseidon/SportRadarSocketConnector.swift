@@ -69,15 +69,12 @@ class SportRadarSocketConnector: NSObject, Connector {
 
         self.createWebSocketClientStream()
         self.watchSocketStream()
-
     }
 
     private func createWebSocketClientStream() {
-
         let urlString = SportRadarConstants.socketURL
         let url = URL(string: urlString)!
         self.webSocketClientStream = WebSocketClientStream(url: url)
-
     }
 
     private func watchSocketStream() {
@@ -98,6 +95,7 @@ class SportRadarSocketConnector: NSObject, Connector {
 
                     case .text(let stringContent):
                         // DEBUGGING HELPER
+
                         // print("☁️ SP debugbetslip WS recieved text: \(stringContent) \n----------------- \n")
 
                         if let data = stringContent.data(using: .utf8),
@@ -105,7 +103,7 @@ class SportRadarSocketConnector: NSObject, Connector {
                             self.handleContentMessage(sportRadarSocketResponse, messageData: data)
 
                             //
-                            //
+            //
                             // DEBUGGING HELPER
             //                switch sportRadarSocketResponse {
             //                case .listeningStarted:

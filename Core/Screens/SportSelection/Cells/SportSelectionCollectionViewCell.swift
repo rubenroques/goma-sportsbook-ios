@@ -48,36 +48,36 @@ class SportSelectionCollectionViewCell: UICollectionViewCell {
     }
 
     func setupWithTheme() {
-        containerView.backgroundColor = UIColor.App.backgroundSecondary
-        containerView.layer.borderColor = UIColor.App.backgroundSecondary.cgColor
-        
-        iconImageView.backgroundColor = UIColor.App.backgroundSecondary
-        
-        nameLabel.font = AppFont.with(type: .bold, size: 12)
-        nameLabel.textColor = UIColor.App.textPrimary
-        
-        eventCountView.backgroundColor = UIColor.App.highlightSecondary
-        
-        eventCountLabel.textColor = UIColor.App.buttonTextPrimary
+        self.containerView.backgroundColor = UIColor.App.backgroundSecondary
+        self.containerView.layer.borderColor = UIColor.App.backgroundSecondary.cgColor
+
+        self.iconImageView.backgroundColor = UIColor.App.backgroundSecondary
+
+        self.nameLabel.font = AppFont.with(type: .bold, size: 12)
+        self.nameLabel.textColor = UIColor.App.textPrimary
+
+        self.eventCountView.backgroundColor = UIColor.App.highlightSecondary
+
+        self.eventCountLabel.textColor = UIColor.App.buttonTextPrimary
     }
     
     func commonInit() {
 
         // self.backgroundColor = UIColor.App.backgroundSecondary
 
-        containerView.layer.cornerRadius = containerView.frame.size.height/2
-        containerView.layer.borderWidth = 2
+        self.containerView.layer.cornerRadius = self.containerView.frame.size.height/2
+        self.containerView.layer.borderWidth = 2
 
-        iconImageView.image = UIImage(named: "sport_type_icon")
-        iconImageView.contentMode = .scaleAspectFit
+        self.iconImageView.image = UIImage(named: "sport_type_icon")
+        self.iconImageView.contentMode = .scaleAspectFit
 
-        nameLabel.text = localized("sport")
-        nameLabel.numberOfLines = 2
+        self.nameLabel.text = localized("sport")
+        self.nameLabel.numberOfLines = 2
 
-        eventCountView.isHidden = true
-        eventCountView.layer.cornerRadius = eventCountView.frame.size.width/2
+        self.eventCountView.isHidden = true
+        self.eventCountView.layer.cornerRadius = eventCountView.frame.size.width/2
         
-        eventCountLabel.font = AppFont.with(type: .semibold, size: 10)
+        self.eventCountLabel.font = AppFont.with(type: .semibold, size: 10)
         
     }
 
@@ -87,13 +87,13 @@ class SportSelectionCollectionViewCell: UICollectionViewCell {
         self.nameLabel.text = viewModel.sportName
 
         if let sportIconName = viewModel.sportIconName, let sportIconImage = UIImage(named: sportIconName) {
-            iconImageView.image = sportIconImage
+            self.iconImageView.image = sportIconImage
         }
         else {
-            iconImageView.image = UIImage(named: "sport_type_icon_default")
+            self.iconImageView.image = UIImage(named: "sport_type_icon_default")
         }
         
-        if viewModel.isLive, let numberOfLiveEvents = viewModel.numberOfLiveEvents {
+        if viewModel.isLive, let numberOfLiveEvents = viewModel.numberOfLiveEvents, (Int(numberOfLiveEvents) ?? 0) > 0 {
             self.showEventCount(numberOfLiveEvents)
         }
 

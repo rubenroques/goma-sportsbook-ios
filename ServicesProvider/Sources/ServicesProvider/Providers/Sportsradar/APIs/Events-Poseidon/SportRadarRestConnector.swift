@@ -43,6 +43,11 @@ class SportRadarRestConnector {
             let error = ServiceProviderError.invalidRequestFormat
             return AnyPublisher(Fail<T, ServiceProviderError>(error: error))
         }
+
+//        print("ServiceProvider - SportRadarRestConnector [[ requesting ]] ",
+//              dump(request),
+//              dump(String.init(data: request.httpBody ?? Data(), encoding: .utf8)) ?? "no body found")
+
         return self.session.dataTaskPublisher(for: request)
             .tryMap { result in
                 if let httpResponse = result.response as? HTTPURLResponse, httpResponse.statusCode == 401 {
@@ -61,13 +66,13 @@ class SportRadarRestConnector {
                 return result.data
             }
             // Debug helper
-//            .handleEvents(receiveOutput: { data in
-//                print("ServiceProvider-NetworkManager [[ requesting ]] ",
-//                      dump(request),
-//                      dump(String.init(data: request.httpBody ?? Data(), encoding: .utf8)) ?? "no body found",
-//                      " [[ response ]]",
-//                      String(data: data, encoding: .utf8) ?? "!?" )
-//            })
+            .handleEvents(receiveOutput: { data in
+                print("ServiceProvider-NetworkManager [[ requesting ]] ",
+                      dump(request),
+                      dump(String.init(data: request.httpBody ?? Data(), encoding: .utf8)) ?? "no body found",
+                      " [[ response ]]",
+                      String(data: data, encoding: .utf8) ?? "!?" )
+            })
             .decode(type: T.self, decoder: self.decoder)
             .mapError { error in
                 // Debug helper

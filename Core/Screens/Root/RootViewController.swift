@@ -867,17 +867,17 @@ class RootViewController: UIViewController {
     }
 
     func didChangedPreLiveSport(_ sport: Sport) {
-        self.currentSport = sport
-        if self.liveEventsViewControllerLoaded {
-            self.liveEventsViewController.selectedSport = sport
-        }
+//        self.currentSport = sport
+//        if self.liveEventsViewControllerLoaded {
+//            self.liveEventsViewController.selectedSport = sport
+//        }
     }
 
     func didChangedLiveSport(_ sport: Sport) {
-        self.currentSport = sport
-        if self.preLiveViewControllerLoaded {
-            self.preLiveViewController.selectSport(sport)
-        }
+//        self.currentSport = sport
+//        if self.preLiveViewControllerLoaded {
+//            self.preLiveViewController.selectSport(sport)
+//        }
     }
 
     func openBetslipModal() {

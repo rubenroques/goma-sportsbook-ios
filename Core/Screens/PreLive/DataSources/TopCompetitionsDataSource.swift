@@ -340,7 +340,6 @@ extension TopCompetitionsDataSource {
 
         self.allCompetitionsSubject.value.append(newCompetition)
 
-
     }
 
 }

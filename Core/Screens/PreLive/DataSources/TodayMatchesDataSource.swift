@@ -203,9 +203,6 @@ extension TodayMatchesDataSource {
                     let mappedMatches = ServiceProviderModelMapper.matches(fromEventsGroups: splittedEventGroups.matchesEventGroups)
                     self.allMatchesSubject.send(mappedMatches)
 
-                    // TODO: main markets
-                    // self.setMainMarkets(matches: matches)
-
                     self.isLoadingCurrentValueSubject.send(false)
                 case .disconnected:
                     print("TodayMatchesDataSource fetchTodayMatches disconnected")
@@ -497,5 +494,4 @@ extension TodayMatchesDataSource {
         return self.allMatches.isEmpty
     }
 
-    
 }
