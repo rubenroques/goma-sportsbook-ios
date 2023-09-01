@@ -62,6 +62,8 @@ class BettingHistoryViewModel {
     private var wonPage = 0
     private var cashoutPage = 0
 
+    private var loadedInitialContent: Bool = false
+
     private var cancellables = Set<AnyCancellable>()
 
     private let dateFormatter = DateFormatter()
@@ -88,7 +90,10 @@ class BettingHistoryViewModel {
         Env.servicesProvider.eventsConnectionStatePublisher
             .sink { serviceStatus in
                 if serviceStatus == .connected {
-                    self.initialContentLoad()
+                    if !self.loadedInitialContent {
+                        self.initialContentLoad()
+                        self.loadedInitialContent = true
+                    }
                 }
             }
             .store(in: &cancellables)

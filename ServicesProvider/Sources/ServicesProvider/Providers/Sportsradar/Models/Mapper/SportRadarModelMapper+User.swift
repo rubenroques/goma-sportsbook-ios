@@ -415,6 +415,16 @@ extension SportRadarModelMapper {
             }
         }
 
+//        if transactionType == .withdrawal {
+//            let transactionReference = internalTransactionDetail.reference
+//
+//            if transactionReference == "Escrow Auto Withdrawal"
+//            {
+//                transactionType = .automatedWithdrawal
+//            }
+//
+//        }
+
         return TransactionDetail(id: internalTransactionDetail.id,
                                  dateTime: internalTransactionDetail.dateTime,
                                  type: transactionType,

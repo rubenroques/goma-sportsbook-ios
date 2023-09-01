@@ -102,9 +102,9 @@ class GenericAvatarWarningViewController: UIViewController {
 
         self.infoContainerView.backgroundColor = UIColor.App.backgroundPrimary
 
-        self.titleLabel.textColor = UIColor.App.buttonTextPrimary
+        self.titleLabel.textColor = UIColor.App.textPrimary
 
-        self.subtitleLabel.textColor = UIColor.App.buttonTextPrimary
+        self.subtitleLabel.textColor = UIColor.App.textPrimary
 
         StyleHelper.styleButton(button: self.backButton)
 
@@ -156,7 +156,7 @@ extension GenericAvatarWarningViewController {
     private static func createAvatarImageView() -> UIImageView {
         let imageView = UIImageView()
         imageView.translatesAutoresizingMaskIntoConstraints = false
-        imageView.image = UIImage(named: "avatar_warning")
+        imageView.image = UIImage(named: "avatar_check")
         imageView.contentMode = .scaleAspectFit
         return imageView
     }
@@ -249,7 +249,7 @@ extension GenericAvatarWarningViewController {
             self.closeButton.heightAnchor.constraint(equalToConstant: 40),
 
             self.avatarImageView.bottomAnchor.constraint(equalTo: self.shapeView.topAnchor, constant: 60),
-            self.avatarImageView.centerXAnchor.constraint(equalTo: self.containerGradientView.centerXAnchor, constant: -15),
+            self.avatarImageView.centerXAnchor.constraint(equalTo: self.containerGradientView.centerXAnchor),
 
             self.shadowShapeView.leadingAnchor.constraint(equalTo: self.containerGradientView.leadingAnchor),
             self.shadowShapeView.trailingAnchor.constraint(equalTo: self.containerGradientView.trailingAnchor),

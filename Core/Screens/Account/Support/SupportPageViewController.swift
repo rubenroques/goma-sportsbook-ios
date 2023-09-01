@@ -36,6 +36,7 @@ class SupportPageViewController: UIViewController {
     private lazy var baseView: UIView = Self.createBaseView()
     private lazy var sendButton: UIButton = Self.createSendButton()
     private lazy var chatButton: UIButton = Self.createChatButton()
+    private lazy var contentScrollView: UIScrollView = Self.createContentScrollView()
 
     // Constraints
     private lazy var anonymousViewTopConstraint: NSLayoutConstraint = Self.createAnonymousViewTopConstraint()
@@ -242,6 +243,8 @@ class SupportPageViewController: UIViewController {
         
         self.backButtonBaseView.backgroundColor = .clear
 
+        self.contentScrollView.backgroundColor = .clear
+
 //        self.webView.isOpaque = false
 //        self.webView.backgroundColor = .clear
 //        self.webView.scrollView.backgroundColor = UIColor.clear
@@ -395,6 +398,12 @@ extension SupportPageViewController {
         let view = UIView()
         view.translatesAutoresizingMaskIntoConstraints = false
         return view
+    }
+
+    private static func createContentScrollView() -> UIScrollView {
+        let scrollView = UIScrollView()
+        scrollView.translatesAutoresizingMaskIntoConstraints = false
+        return scrollView
     }
     
     private static func createBaseView() -> UIView {
@@ -572,8 +581,11 @@ extension SupportPageViewController {
         self.baseView.addSubview(self.sendButton)
 
         self.view.addSubview(self.topSafeAreaView)
-        self.view.addSubview(self.baseView)
+        //self.view.addSubview(self.baseView)
         self.view.addSubview(self.navigationBaseView)
+        self.view.addSubview(self.contentScrollView)
+
+        self.contentScrollView.addSubview(self.baseView)
 
         self.baseView.addSubview(self.chatButton)
         // self.view.addSubview(self.webView)
@@ -606,10 +618,16 @@ extension SupportPageViewController {
         ])
         
         NSLayoutConstraint.activate([
-            self.baseView.leadingAnchor.constraint(equalTo: self.view.leadingAnchor),
-            self.baseView.trailingAnchor.constraint(equalTo: self.view.trailingAnchor),
-            self.baseView.topAnchor.constraint(equalTo: self.navigationBaseView.bottomAnchor),
-            self.baseView.bottomAnchor.constraint(equalTo: self.view.bottomAnchor),
+            self.contentScrollView.leadingAnchor.constraint(equalTo: self.view.leadingAnchor),
+            self.contentScrollView.trailingAnchor.constraint(equalTo: self.view.trailingAnchor),
+            self.contentScrollView.topAnchor.constraint(equalTo: self.navigationBaseView.bottomAnchor),
+            self.contentScrollView.bottomAnchor.constraint(equalTo: self.view.safeAreaLayoutGuide.bottomAnchor),
+
+            self.baseView.leadingAnchor.constraint(equalTo: self.contentScrollView.contentLayoutGuide.leadingAnchor),
+            self.baseView.trailingAnchor.constraint(equalTo: self.contentScrollView.contentLayoutGuide.trailingAnchor),
+            self.baseView.topAnchor.constraint(equalTo: self.contentScrollView.contentLayoutGuide.topAnchor),
+            self.baseView.bottomAnchor.constraint(equalTo: self.contentScrollView.contentLayoutGuide.bottomAnchor),
+            self.baseView.widthAnchor.constraint(equalTo: self.contentScrollView.frameLayoutGuide.widthAnchor),
 
             self.anonymousFieldsView.leadingAnchor.constraint(equalTo: self.baseView.leadingAnchor, constant: 15),
             self.anonymousFieldsView.trailingAnchor.constraint(equalTo: self.baseView.trailingAnchor, constant: -15),
@@ -643,6 +661,7 @@ extension SupportPageViewController {
             self.sendButton.leadingAnchor.constraint(equalTo: self.view.leadingAnchor, constant: 28),
             self.sendButton.trailingAnchor.constraint(equalTo: self.view.trailingAnchor, constant: -28),
             self.sendButton.topAnchor.constraint(equalTo: self.descriptionView.bottomAnchor, constant: 23),
+            self.sendButton.bottomAnchor.constraint(equalTo: self.baseView.bottomAnchor, constant: -30)
         ])
 
         NSLayoutConstraint.activate([
@@ -664,8 +683,8 @@ extension SupportPageViewController {
 
         NSLayoutConstraint.activate([
             self.chatButton.heightAnchor.constraint(equalToConstant: 44),
-            self.chatButton.bottomAnchor.constraint(equalTo: self.baseView.safeAreaLayoutGuide.bottomAnchor, constant: -16),
-            self.chatButton.trailingAnchor.constraint(equalTo: self.baseView.trailingAnchor, constant: -16),
+            self.chatButton.bottomAnchor.constraint(equalTo: self.view.safeAreaLayoutGuide.bottomAnchor, constant: -16),
+            self.chatButton.trailingAnchor.constraint(equalTo: self.view.trailingAnchor, constant: -16),
         ])
 
         /*

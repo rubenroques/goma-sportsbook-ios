@@ -126,7 +126,6 @@ class MyTicketsViewController: UIViewController {
                     self?.emptyBaseView.isHidden = true
                    
                     self?.ticketsTableView.reloadData()
-                    
                 }
             })
             .store(in: &self.cancellables)
@@ -167,7 +166,7 @@ class MyTicketsViewController: UIViewController {
 //            self?.ticketsTableView.beginUpdates()
 //            self?.ticketsTableView.endUpdates()
 //
-//            CATransaction.commit()
+//      <      CATransaction.commit()
 
             self?.ticketsTableView.beginUpdates()
             self?.ticketsTableView.endUpdates()
@@ -175,7 +174,9 @@ class MyTicketsViewController: UIViewController {
         }
 
         self.viewModel.updateCellAtIndexPath = { [weak self] cellIndexPath in
-            self?.ticketsTableView.reloadRows(at: [cellIndexPath], with: .automatic)
+//            self?.ticketsTableView.reloadRows(at: [cellIndexPath], with: .automatic)
+            self?.ticketsTableView.beginUpdates()
+            self?.ticketsTableView.endUpdates()
         }
 
         self.viewModel.requestShareActivityView = { [weak self] image, betId, betStatus in

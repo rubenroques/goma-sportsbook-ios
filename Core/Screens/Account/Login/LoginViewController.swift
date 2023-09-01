@@ -109,7 +109,23 @@ class LoginViewController: UIViewController {
                 .sink(receiveValue: { [weak self] depositError in
                     switch depositError {
                     case .error(let message):
-                        self?.depositOnRegisterViewController?.showErrorAlert(errorTitle: localized("deposit_error"), errorMessage: message)
+                        // self?.depositOnRegisterViewController?.showErrorAlert(errorTitle: localized("deposit_error"), errorMessage: message)
+
+                        let genericAvatarErrorViewController = GenericAvatarErrorViewController()
+
+                        genericAvatarErrorViewController.setTextInfo(title: localized("deposit_error"), subtitle: message)
+
+                        genericAvatarErrorViewController.didTapCloseAction = { [weak self] in
+
+                            genericAvatarErrorViewController.dismiss(animated: true)
+                        }
+
+                        genericAvatarErrorViewController.didTapBackAction = { [weak self] in
+
+                            genericAvatarErrorViewController.dismiss(animated: true)
+                        }
+
+                        self?.depositOnRegisterViewController?.present(genericAvatarErrorViewController, animated: true)
                     default:
                         ()
                     }
@@ -837,8 +853,6 @@ class LoginViewController: UIViewController {
     }
 
     private func showPaymentStatusAlert(paymentStatus: PaymentStatus) {
-        var alertTitle = ""
-        var alertMessage = ""
 
         switch paymentStatus {
         case .authorised:
@@ -861,16 +875,33 @@ class LoginViewController: UIViewController {
             self.depositOnRegisterViewController?.navigationController?.pushViewController(genericAvatarSuccessViewController, animated: true)
 
         case .refused:
-            alertTitle = localized("payment_refused")
-            alertMessage = localized("payment_refused_message")
+//            alertTitle = localized("payment_refused")
+//            alertMessage = localized("payment_refused_message")
+//
+//            let alert = UIAlertController(title: alertTitle,
+//                                          message: alertMessage,
+//                                          preferredStyle: .alert)
+//
+//            alert.addAction(UIAlertAction(title: localized("ok"), style: .default, handler: nil))
+//
+//            self.depositOnRegisterViewController?.present(alert, animated: true, completion: nil)
 
-            let alert = UIAlertController(title: alertTitle,
-                                          message: alertMessage,
-                                          preferredStyle: .alert)
+            Env.userSessionStore.refreshUserWalletAfterDelay()
 
-            alert.addAction(UIAlertAction(title: localized("ok"), style: .default, handler: nil))
+            let genericAvatarErrorViewController = GenericAvatarErrorViewController()
 
-            self.depositOnRegisterViewController?.present(alert, animated: true, completion: nil)
+            genericAvatarErrorViewController.setTextInfo(title: "\(localized("oh_no"))!", subtitle: localized("deposit_error_message"))
+
+            genericAvatarErrorViewController.didTapBackAction = { [weak self] in
+                genericAvatarErrorViewController.navigationController?.popViewController(animated: true)
+            }
+
+            genericAvatarErrorViewController.didTapCloseAction = { [weak self] in
+                self?.closeLoginRegisterFlow()
+
+            }
+
+            self.depositOnRegisterViewController?.navigationController?.pushViewController(genericAvatarErrorViewController, animated: true)
         }
 
     }

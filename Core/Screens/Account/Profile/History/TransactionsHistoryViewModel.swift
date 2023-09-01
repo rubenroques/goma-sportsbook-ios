@@ -59,6 +59,8 @@ class TransactionsHistoryViewModel {
 
     private let dateFormatter = DateFormatter()
 
+    private var loadedInitialContent: Bool = false
+
     // MARK: - Life Cycle
     init(transactionsType: TransactionsType, filterApplied: FilterHistoryViewModel.FilterValue) {
 
@@ -78,8 +80,9 @@ class TransactionsHistoryViewModel {
    
         Env.servicesProvider.eventsConnectionStatePublisher
             .sink { serviceStatus in
-                if serviceStatus == .connected {
+                if !self.loadedInitialContent {
                     self.initialContentLoad()
+                    self.loadedInitialContent = true
                 }
             }
             .store(in: &cancellables)
@@ -220,7 +223,18 @@ class TransactionsHistoryViewModel {
                     self?.listStatePublisher.send(.serverError)
                 }
             }, receiveValue: { [weak self] transactionsDeposits in
-                self?.processTransactions(transactions: transactionsDeposits, transactionType: .all)
+
+                guard let self = self else { return }
+
+                let filteredTransactions = transactionsDeposits.filter({
+                    $0.type != .automatedWithdrawal
+                })
+
+                if transactionsDeposits.count < self.recordsPerPage {
+                    self.transactionsHasNextPage = false
+                }
+
+                self.processTransactions(transactions: filteredTransactions, transactionType: .all)
             })
             .store(in: &cancellables)
     }
@@ -254,7 +268,17 @@ class TransactionsHistoryViewModel {
                 }
             }, receiveValue: { [weak self] transactionsDeposits in
 
-                self?.processTransactions(transactions: transactionsDeposits, transactionType: .deposit)
+                guard let self = self else { return }
+
+                let filteredTransactions = transactionsDeposits.filter({
+                    $0.type != .automatedWithdrawal
+                })
+
+                if transactionsDeposits.count < self.recordsPerPage {
+                    self.transactionsHasNextPage = false
+                }
+
+                self.processTransactions(transactions: filteredTransactions, transactionType: .deposit)
 
             })
             .store(in: &cancellables)
@@ -322,7 +346,17 @@ class TransactionsHistoryViewModel {
                 }
             }, receiveValue: { [weak self] transactionsWithdrawals in
 
-                self?.processTransactions(transactions: transactionsWithdrawals, transactionType: .withdraw)
+                guard let self = self else { return }
+
+                let filteredTransactions = transactionsWithdrawals.filter({
+                    $0.type != .automatedWithdrawal
+                })
+
+                if transactionsWithdrawals.count < self.recordsPerPage {
+                    self.transactionsHasNextPage = false
+                }
+
+                self.processTransactions(transactions: filteredTransactions, transactionType: .withdraw)
 
             })
             .store(in: &cancellables)
@@ -338,9 +372,9 @@ class TransactionsHistoryViewModel {
             return transactionHistory
         }
 
-        if transactions.count < self.recordsPerPage {
-            self.transactionsHasNextPage = false
-        }
+//        if transactions.count < self.recordsPerPage {
+//            self.transactionsHasNextPage = false
+//        }
 
         switch transactionType {
         case .all:

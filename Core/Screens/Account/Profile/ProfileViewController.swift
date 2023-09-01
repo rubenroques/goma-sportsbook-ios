@@ -297,6 +297,7 @@ class ProfileViewController: UIViewController {
         totalBalanceLabel.font = AppFont.with(type: .bold, size: 16)
 
         totalBalanceInfoImageView.image = UIImage(named: "info_small_icon")
+        totalBalanceInfoImageView.setImageColor(color: UIColor.App.textPrimary)
         
         let totalBalanceInfoTap = UITapGestureRecognizer(target: self, action: #selector(self.tapTotalBalanceInfo))
         totalBalanceView.addGestureRecognizer(totalBalanceInfoTap)
