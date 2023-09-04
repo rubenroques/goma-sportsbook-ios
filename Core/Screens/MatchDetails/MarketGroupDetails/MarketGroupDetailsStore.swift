@@ -103,9 +103,37 @@ class MarketGroupDetailsStore {
                 similarMarkets[similarMarketKey] = [sortedOutcomeMarket]
             }
 
-            similarMarketsNames[similarMarketKey] = sortedOutcomeMarket.name
-        }
+            // Handicap name checked to be changed
+            if sortedOutcomeMarket.name.lowercased().contains("handicap") {
+                let pattern = "\\d+:\\d+"
+                if let regex = try? NSRegularExpression(pattern: pattern) {
 
+                    // Find all matches in the input string
+                    let marketNameMatches = regex.matches(in: sortedOutcomeMarket.name, range: NSRange(sortedOutcomeMarket.name.startIndex..., in: sortedOutcomeMarket.name))
+
+                    if marketNameMatches.isNotEmpty {
+                        // Replace all matches with an empty string
+                        let modifiedString = regex.stringByReplacingMatches(in: sortedOutcomeMarket.name,
+                                                                            range: NSRange(sortedOutcomeMarket.name.startIndex...,
+                                                                                           in: sortedOutcomeMarket.name),
+                                                                            withTemplate: "").replacingFirstOccurrence(of: " ", with: "")
+
+                        similarMarketsNames[similarMarketKey] = modifiedString
+                    }
+                    else {
+                        similarMarketsNames[similarMarketKey] = sortedOutcomeMarket.name
+
+                    }
+                }
+                else {
+                    similarMarketsNames[similarMarketKey] = sortedOutcomeMarket.name
+                }
+
+            }
+            else {
+                similarMarketsNames[similarMarketKey] = sortedOutcomeMarket.name
+            }
+        }
 
         //
         var marketGroupOrganizers: [MarketGroupOrganizer] = []

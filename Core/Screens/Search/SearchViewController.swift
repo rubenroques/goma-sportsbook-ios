@@ -184,7 +184,8 @@ class SearchViewController: UIViewController {
         self.tableView.register(MatchLineTableViewCell.nib, forCellReuseIdentifier: MatchLineTableViewCell.identifier)
         self.tableView.register(CompetitionSearchTableViewCell.nib, forCellReuseIdentifier: CompetitionSearchTableViewCell.identifier)
         self.tableView.register(LoadingMoreTableViewCell.nib, forCellReuseIdentifier: LoadingMoreTableViewCell.identifier)
-        self.tableView.register(SearchTitleSectionHeaderView.nib, forHeaderFooterViewReuseIdentifier: SearchTitleSectionHeaderView.identifier)
+        self.tableView.register(SearchSportHeaderView.self, forHeaderFooterViewReuseIdentifier: SearchSportHeaderView.identifier)
+
         self.tableView.register(RecentSearchHeaderView.nib, forHeaderFooterViewReuseIdentifier: RecentSearchHeaderView.identifier)
         self.tableView.register(RecentSearchTableViewCell.nib, forCellReuseIdentifier: RecentSearchTableViewCell.identifier)
 
@@ -194,6 +195,10 @@ class SearchViewController: UIViewController {
         self.tableView.estimatedRowHeight = 155
         self.tableView.estimatedSectionHeaderHeight = 0
         self.tableView.estimatedSectionFooterHeight = 0
+
+        if #available(iOS 15.0, *) {
+            self.tableView.sectionHeaderTopPadding = 0
+        }
 
         self.showSearchResultsTableView = false
 
@@ -508,7 +513,7 @@ extension SearchViewController: UITableViewDataSource, UITableViewDelegate {
 
         if !self.viewModel.isEmptySearch {
             guard
-                let headerView = tableView.dequeueReusableHeaderFooterView(withIdentifier: SearchTitleSectionHeaderView.identifier) as? SearchTitleSectionHeaderView
+                let headerView = tableView.dequeueReusableHeaderFooterView(withIdentifier: SearchSportHeaderView.identifier) as? SearchSportHeaderView
             else {
                 fatalError()
             }
@@ -516,13 +521,17 @@ extension SearchViewController: UITableViewDataSource, UITableViewDelegate {
             let searchEvent = self.viewModel.sportMatchesArrayPublisher.value[section].matches.first
 
             var eventName = ""
+            var sportId = ""
+
             switch searchEvent {
             case .match(let match):
                 if let matchSportName = match.sportName {
                     eventName = "\(matchSportName)"
+                    sportId = match.sport.id
                 }
                 else {
                     eventName = "\(match.sport.name)"
+                    sportId = match.sport.id
                 }
             case .competition(let competition):
                 if let competitionSportName = competition.sportName {
@@ -534,7 +543,7 @@ extension SearchViewController: UITableViewDataSource, UITableViewDelegate {
 
             let resultsLabel = self.viewModel.setHeaderSectionTitle(section: section)
 
-            headerView.configureLabels(nameText: "\(eventName) - ", countText: resultsLabel)
+            headerView.configure(title: "\(eventName) - ", result: resultsLabel, icon: sportId)
 
             return headerView
         }
@@ -556,12 +565,14 @@ extension SearchViewController: UITableViewDataSource, UITableViewDelegate {
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
 
         if !self.viewModel.isEmptySearch {
-            let cellInfo = self.viewModel.sportMatchesArrayPublisher.value[indexPath.section].matches[indexPath.row]
+            let cellInfo = self.viewModel.sportMatchesArrayPublisher.value[safe: indexPath.section]?.matches[safe: indexPath.row]
 
             switch cellInfo {
             case .match:
                 return UITableView.automaticDimension
             case .competition:
+                return UITableView.automaticDimension
+            default:
                 return UITableView.automaticDimension
             }
         }
@@ -574,13 +585,15 @@ extension SearchViewController: UITableViewDataSource, UITableViewDelegate {
     func tableView(_ tableView: UITableView, estimatedHeightForRowAt indexPath: IndexPath) -> CGFloat {
 
         if !self.viewModel.isEmptySearch {
-            let cellInfo = self.viewModel.sportMatchesArrayPublisher.value[indexPath.section].matches[indexPath.row]
+            let cellInfo = self.viewModel.sportMatchesArrayPublisher.value[safe: indexPath.section]?.matches[safe: indexPath.row]
 
             switch cellInfo {
             case .match:
                 return StyleHelper.cardsStyleHeight() + 20
             case .competition:
                 return 56
+            default:
+                return 50
             }
         }
         else {
@@ -590,12 +603,12 @@ extension SearchViewController: UITableViewDataSource, UITableViewDelegate {
     }
 
     func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
-        return 54
+        return UITableView.automaticDimension
 
     }
 
     func tableView(_ tableView: UITableView, estimatedHeightForHeaderInSection section: Int) -> CGFloat {
-        return 54
+        return 45
 
     }
 
