@@ -277,7 +277,7 @@ extension MyGamesViewController: UITableViewDataSource, UITableViewDelegate {
             guard
                 let headerView = tableView.dequeueReusableHeaderFooterView(withIdentifier: SportSectionHeaderView.identifier) as? SportSectionHeaderView
             else {
-                fatalError()
+                return nil
             }
 
             if let favoriteMatch = self.viewModel.userFavoritesBySportsArray[section].matches.first {

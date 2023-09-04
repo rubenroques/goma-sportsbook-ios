@@ -287,15 +287,14 @@ class PreLiveEventsViewController: UIViewController {
         tableView.register(MatchLineTableViewCell.nib, forCellReuseIdentifier: MatchLineTableViewCell.identifier)
         tableView.register(BannerScrollTableViewCell.nib, forCellReuseIdentifier: BannerScrollTableViewCell.identifier)
         tableView.register(LoadingMoreTableViewCell.nib, forCellReuseIdentifier: LoadingMoreTableViewCell.identifier)
-        tableView.register(TitleTableViewHeader.nib, forHeaderFooterViewReuseIdentifier: TitleTableViewHeader.identifier)
-        tableView.register(TournamentTableViewHeader.nib,
-                           forHeaderFooterViewReuseIdentifier: TournamentTableViewHeader.identifier)
+
         tableView.register(EmptyCardTableViewCell.nib, forCellReuseIdentifier: EmptyCardTableViewCell.identifier)
 
-        tableView.register(FooterResponsibleGamingViewCell.self,
-                           forCellReuseIdentifier: FooterResponsibleGamingViewCell.identifier)
-        tableView.register(UITableViewCell.self,
-                           forCellReuseIdentifier: UITableViewCell.identifier)
+        tableView.register(FooterResponsibleGamingViewCell.self, forCellReuseIdentifier: FooterResponsibleGamingViewCell.identifier)
+        tableView.register(UITableViewCell.self, forCellReuseIdentifier: UITableViewCell.identifier)
+
+        tableView.register(TitleTableViewHeader.nib, forHeaderFooterViewReuseIdentifier: TitleTableViewHeader.identifier)
+        tableView.register(TournamentTableViewHeader.nib, forHeaderFooterViewReuseIdentifier: TournamentTableViewHeader.identifier)
 
         tableView.delegate = self
         tableView.dataSource = self

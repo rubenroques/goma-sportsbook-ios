@@ -361,33 +361,6 @@ extension PaymentsDropIn: DropInComponentDelegate, AdyenSessionDelegate, Present
 
     func didComplete(with result: AdyenSessionResult, component: Adyen.Component, session: AdyenSession) {
 
-    }
-
-    // ADYEN SESSION
-    // LEGACY COMPLETE
-//    func didComplete(with resultCode: SessionPaymentResultCode, component: Adyen.Component, session: AdyenSession) {
-//
-//        print("ADYEN SESSION RESULT: \(resultCode)")
-//
-//        if resultCode.rawValue == "Refused" {
-//
-//            if let paymentId = self.paymentId {
-//                self.cancelDeposit(paymentId: paymentId)
-//            }
-//
-//            self.dropInComponent?.viewController.dismiss(animated: true)
-//            self.showPaymentStatus?(.refused)
-//        }
-//
-//        if resultCode.rawValue == "Authorised" {
-//            self.dropInComponent?.viewController.dismiss(animated: true)
-//            self.showPaymentStatus?(.authorised)
-//        }
-//
-//    }
-
-    func didComplete(with result: AdyenSessionResult, component: Adyen.Component, session: AdyenSession) {
-
         print("ADYEN SESSION RESULT: \(result)")
 
         if result.resultCode == .refused {

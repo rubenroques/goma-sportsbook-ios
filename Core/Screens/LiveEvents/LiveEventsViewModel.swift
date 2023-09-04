@@ -309,6 +309,9 @@ class LiveEventsViewModel: NSObject {
 
         self.liveMatchesSubscription = nil
 
+        // Clear old data from the array of liveMatches
+        self.liveMatches = []
+
         self.isLoadingSubject.send(true)
 
         let sportType = ServiceProviderModelMapper.serviceProviderSportType(fromSport: self.selectedSport)
@@ -347,6 +350,9 @@ class LiveEventsViewModel: NSObject {
     }
 
     private func fetchUpcomingMatches() {
+
+        // Clear old data from the array of upcomingMatches
+        self.upcomingMatches = []
 
         self.isLoadingSubject.send(true)
 

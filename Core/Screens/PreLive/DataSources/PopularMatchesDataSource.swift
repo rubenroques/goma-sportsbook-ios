@@ -335,7 +335,7 @@ extension PopularMatchesDataSource: UITableViewDataSource, UITableViewDelegate {
         guard
             let headerView = tableView.dequeueReusableHeaderFooterView(withIdentifier: TitleTableViewHeader.identifier) as? TitleTableViewHeader
         else {
-            fatalError()
+            return nil
         }
 
         headerView.configureWithTitle(localized("popular_games"))

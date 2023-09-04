@@ -116,13 +116,16 @@ class UserSessionStore {
     init() {
         self.acceptedTrackingPublisher.send(self.hasAcceptedTracking)
 
-        self.userSessionPublisher.compactMap({ $0 })
+        self.userSessionPublisher
+            .compactMap({ $0 })
+            .receive(on: DispatchQueue.main)
             .sink { [weak self] userSession in
                 self?.saveUserSession(userSession)
             }
             .store(in: &self.cancellables)
 
         self.userProfilePublisher
+            .receive(on: DispatchQueue.main)
             .sink { [weak self] userProfile in
                 if let userProfile = userProfile {
                     self?.refreshUserWallet()
@@ -288,6 +291,10 @@ class UserSessionStore {
 
 extension UserSessionStore {
 
+    func refreshUserProfile() {
+        self.startUserSessionIfNeeded()
+    }
+
     func refreshProfile() {
         Env.servicesProvider.getProfile()
             .map(ServiceProviderModelMapper.userProfile(_:))
@@ -360,6 +367,10 @@ extension UserSessionStore {
         UserDefaults.standard.bettingUserSettings = bettingUserSettings
     }
 
+}
+
+extension UserSessionStore {
+
     func refreshUserWalletAfterDelay() {
         executeDelayed(0.3) {
             self.refreshUserWallet()
@@ -367,6 +378,16 @@ extension UserSessionStore {
     }
 
     func refreshUserWallet() {
+
+        if Thread.isMainThread {
+            // This code is running on the main thread
+            // You can put your main-thread-specific logic here
+            print("UserSessionStore refreshUserWallet isMainThread")
+        } else {
+            // This code is running on a background thread
+            // You may need to dispatch UI-related tasks to the main thread if necessary
+            print("UserSessionStore refreshUserWallet not isMainThread")
+        }
 
         guard self.isUserLogged() else {
             self.isRefreshingUserWallet = false
@@ -427,10 +448,6 @@ extension UserSessionStore {
                 self?.userCashbackBalance.send(cashbackBalance)
             })
             .store(in: &self.cancellables)
-    }
-    
-    func refreshUserProfile() {
-        self.startUserSessionIfNeeded()
     }
 
 }

@@ -71,6 +71,7 @@ class MarketGroupDetailsViewController: UIViewController {
 
         self.expandCollapseButton.setTitle("Collapse all", for: .normal)
         self.expandCollapseButton.setTitleColor(UIColor.App.textSecondary, for: .normal)
+        self.expandCollapseButton.titleLabel?.textAlignment = .right
         self.expandCollapseButton.titleLabel?.font = AppFont.with(type: .medium, size: 11)
         self.expandCollapseButton.translatesAutoresizingMaskIntoConstraints = false
         headerView.addSubview(self.expandCollapseButton)
@@ -78,8 +79,8 @@ class MarketGroupDetailsViewController: UIViewController {
 
         // Set constraints
         NSLayoutConstraint.activate([
+            self.expandCollapseButton.widthAnchor.constraint(equalToConstant: 60),
             self.expandCollapseButton.trailingAnchor.constraint(equalTo: headerView.trailingAnchor, constant: -16),
-
             self.expandCollapseButton.topAnchor.constraint(equalTo: headerView.topAnchor, constant: 8),
             self.expandCollapseButton.bottomAnchor.constraint(equalTo: headerView.bottomAnchor, constant: 1),
         ])

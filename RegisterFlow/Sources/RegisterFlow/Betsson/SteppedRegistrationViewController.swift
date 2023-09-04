@@ -318,11 +318,6 @@ public class SteppedRegistrationViewController: UIViewController {
                     self.cancelButton.isHidden = false
                     self.progressView.isHidden = false
                 }
-                else if currentStep == 7 {
-                    self.backButton.isHidden = true
-                    self.cancelButton.isHidden = true
-                    self.progressView.isHidden = true
-                }
                 else {
                     self.backButton.alpha = 1.0
                     self.backButton.isHidden = false
@@ -331,13 +326,6 @@ public class SteppedRegistrationViewController: UIViewController {
                 }
             }
             .store(in: &self.cancellables)
-
-//        self.viewModel.shouldPushPhoneConfirmationStep
-//            .receive(on: DispatchQueue.main)
-//            .sink { [weak self] in
-//                self?.showPhoneVerification()
-//            }
-//            .store(in: &self.cancellables)
 
         self.viewModel.shouldPushSuccessStep
             .receive(on: DispatchQueue.main)

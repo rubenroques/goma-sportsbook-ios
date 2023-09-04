@@ -123,7 +123,7 @@ class SportRadarEventDetailsCoordinator {
     }
 
     func updateEventDetails(_ updatedEvent: Event, forContentIdentifier contentIdentifier: ContentIdentifier) {
-        print("ServiceProvider updateEventDetails SportRadarEventDetailsCoordinator \(marketsContentIdentifier) \(liveDataContentIdentifier)")
+        print("ServiceProvider SportRadarEventDetailsCoordinator updateEventDetails \(marketsContentIdentifier) \(liveDataContentIdentifier)")
 
         if contentIdentifier == self.liveDataContentIdentifier || contentIdentifier == self.marketsContentIdentifier {
             self.storage.storeEvent(updatedEvent)

@@ -80,7 +80,7 @@ public class WebSocketClientStream: NSObject, AsyncSequence {
         self.webSocketTask = session.webSocketTask(with: request)
 
         // Set the maximum message size to 25 MB
-        let maximumMessageSize: Int = 25 * 1024 * 1024 // 25 MB in bytes
+        let maximumMessageSize: Int = 100 * 1024 * 1024 // 25 MB in bytes
         self.webSocketTask?.maximumMessageSize = maximumMessageSize
     }
 

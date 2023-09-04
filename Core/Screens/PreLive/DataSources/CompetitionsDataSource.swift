@@ -429,7 +429,7 @@ extension CompetitionsDataSource: UITableViewDataSource, UITableViewDelegate {
                 as? TournamentTableViewHeader,
             let competition = self.filteredCompetitions[safe: section]
         else {
-            fatalError()
+            return nil
         }
 
         headerView.nameTitleLabel.text = competition.name

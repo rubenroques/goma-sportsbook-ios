@@ -47,9 +47,9 @@ class AppDelegate: UIResponder, UIApplicationDelegate, MessagingDelegate {
         catch {
             print("PhraseSDK updateTranslation crashed error \(error)")
         }
+        
         //
         //
-
 //        // Disable autolayout errors/warnings console logs
 //        UserDefaults.standard.set(false, forKey: "_UIConstraintBasedLayoutLogUnsatisfiable")
 
@@ -76,7 +76,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate, MessagingDelegate {
             guard let user = authResult?.user else { return }
             let isAnonymous = user.isAnonymous  // true
             let uid = user.uid
-            print("FirebaseCore Auth UID \(uid) [isAnonymous:\(isAnonymous)]")
+            print("FirebaseCore Auth UID \(uid) [isAnonymous: \(isAnonymous)]")
         }
 
         // FCM

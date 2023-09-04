@@ -264,7 +264,7 @@ extension RankingsListViewController: UITableViewDelegate, UITableViewDataSource
             let headerView = tableView.dequeueReusableHeaderFooterView(withIdentifier: RankingTypeTableHeaderView.identifier)
                 as? RankingTypeTableHeaderView
         else {
-            fatalError()
+            return nil
         }
         
         let sortType = self.viewModel.sortTypePublisher.value.title

@@ -127,7 +127,7 @@ class MyFavoriteMatchesDataSource: NSObject, UITableViewDataSource, UITableViewD
             guard
                 let headerView = tableView.dequeueReusableHeaderFooterView(withIdentifier: SportSectionHeaderView.identifier) as? SportSectionHeaderView
             else {
-                fatalError()
+                return nil
             }
 
             if let favoriteMatch = self.userFavoritesBySportsArray[section].matches.first {

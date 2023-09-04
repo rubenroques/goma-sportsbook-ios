@@ -244,11 +244,11 @@ class LoginViewController: UIViewController {
 
         self.logoImageView.isUserInteractionEnabled = true
 
-        #if DEBUG
+        // #if DEBUG
         let debugLogoImageViewTap = UITapGestureRecognizer(target: self, action: #selector(didTapDebugFormFill))
-        debugLogoImageViewTap.numberOfTapsRequired = 3
+        debugLogoImageViewTap.numberOfTapsRequired = 5
         self.logoImageView.addGestureRecognizer(debugLogoImageViewTap)
-        #endif
+        // #endif
   
     }
 
@@ -889,18 +889,14 @@ class LoginViewController: UIViewController {
             Env.userSessionStore.refreshUserWalletAfterDelay()
 
             let genericAvatarErrorViewController = GenericAvatarErrorViewController()
-
             genericAvatarErrorViewController.setTextInfo(title: "\(localized("oh_no"))!", subtitle: localized("deposit_error_message"))
-
             genericAvatarErrorViewController.didTapBackAction = { [weak self] in
                 genericAvatarErrorViewController.navigationController?.popViewController(animated: true)
             }
-
             genericAvatarErrorViewController.didTapCloseAction = { [weak self] in
                 self?.closeLoginRegisterFlow()
 
             }
-
             self.depositOnRegisterViewController?.navigationController?.pushViewController(genericAvatarErrorViewController, animated: true)
         }
 
