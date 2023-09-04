@@ -1096,6 +1096,7 @@ class MatchWidgetCollectionViewCell: UICollectionViewCell {
         self.matchSubscriber = nil
         
         self.matchSubscriber = Env.servicesProvider.subscribeToEventLiveDataUpdates(withId: viewModel.match.id)
+            .receive(on: DispatchQueue.main)
             .compactMap({ $0 })
             .map(ServiceProviderModelMapper.match(fromEvent:))
             .sink(receiveCompletion: { completion in

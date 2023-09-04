@@ -742,7 +742,7 @@
 "responsible_gaming" = "Lisez à propos du jeu responsable.";
 "result" = "Résultat";
 "results" = "Résultats";
-"results_count" = "{num} résultats";
+"results_count" = "{num} Résultats";
 "results_count_singular" = "{num} Résultat";
 "return_text" = "Retour";
 "return_money" = "Votre retour sera";

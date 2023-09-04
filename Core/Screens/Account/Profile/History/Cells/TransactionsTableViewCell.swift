@@ -252,6 +252,8 @@ extension TransactionsTableViewCell {
         label.translatesAutoresizingMaskIntoConstraints = false
         label.font = AppFont.with(type: .bold, size: 16)
         label.text = "Transaction Type"
+        label.setContentHuggingPriority(.defaultHigh, for: .horizontal)
+        label.setContentCompressionResistancePriority(.defaultLow, for: .horizontal)
         return label
     }
 
@@ -260,6 +262,9 @@ extension TransactionsTableViewCell {
         label.translatesAutoresizingMaskIntoConstraints = false
         label.font = AppFont.with(type: .bold, size: 16)
         label.text = "0.0€"
+        label.textAlignment = .right
+        label.setContentHuggingPriority(.defaultLow, for: .horizontal)
+        label.setContentCompressionResistancePriority(.defaultHigh, for: .horizontal)
         return label
     }
 
@@ -393,10 +398,10 @@ extension TransactionsTableViewCell {
             self.transactionIcon.centerYAnchor.constraint(equalTo: self.baseIconView.centerYAnchor),
             
             self.transactionTypeLabel.leadingAnchor.constraint(equalTo: self.baseIconView.trailingAnchor, constant: 20),
-            self.transactionTypeLabel.trailingAnchor.constraint(equalTo: self.transactionValueLabel.leadingAnchor, constant: -6),
             self.transactionTypeLabel.topAnchor.constraint(equalTo: self.baseView.topAnchor, constant: 13),
 
             self.transactionValueLabel.trailingAnchor.constraint(equalTo: self.baseView.trailingAnchor, constant: -14),
+            self.transactionValueLabel.leadingAnchor.constraint(equalTo: self.transactionTypeLabel.trailingAnchor, constant: 6),
             self.transactionValueLabel.topAnchor.constraint(equalTo: self.baseView.topAnchor, constant: 9),
 
             self.separatorView.leadingAnchor.constraint(equalTo: self.transactionTypeLabel.leadingAnchor),
