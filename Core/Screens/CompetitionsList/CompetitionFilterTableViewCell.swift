@@ -49,6 +49,7 @@ class CompetitionFilterTableViewCell: UITableViewCell {
         imageView.translatesAutoresizingMaskIntoConstraints = false
         imageView.image = UIImage(named: "country_flag_240")
         imageView.contentMode = .scaleAspectFill
+        imageView.layer.borderWidth = 0.5
         return imageView
     }()
 
@@ -189,6 +190,8 @@ class CompetitionFilterTableViewCell: UITableViewCell {
         self.separatorLineView.backgroundColor = UIColor.App.separatorLine
 
         self.countryImageView.backgroundColor = .clear
+        self.countryImageView.layer.borderColor = UIColor.App.highlightPrimaryContrast.cgColor
+
     }
 
     func configure(withViewModel viewModel: CompetitionFilterCellViewModel) {

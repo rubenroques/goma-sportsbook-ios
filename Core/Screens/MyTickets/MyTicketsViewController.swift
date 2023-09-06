@@ -150,6 +150,7 @@ class MyTicketsViewController: UIViewController {
             .store(in: &cancellables)
 
         self.viewModel.reloadTableViewAction = { [weak self] in
+            print("RELOAD TICKET TABLE!")
             self?.ticketsTableView.reloadData()
         }
 
@@ -167,6 +168,7 @@ class MyTicketsViewController: UIViewController {
 //            self?.ticketsTableView.endUpdates()
 //
 //      <      CATransaction.commit()
+            print("REDRAW TICKET CELL UNUSED!")
 
             self?.ticketsTableView.beginUpdates()
             self?.ticketsTableView.endUpdates()
@@ -175,6 +177,7 @@ class MyTicketsViewController: UIViewController {
 
         self.viewModel.updateCellAtIndexPath = { [weak self] cellIndexPath in
 //            self?.ticketsTableView.reloadRows(at: [cellIndexPath], with: .automatic)
+            print("REDRAW TICKET CELL!")
             self?.ticketsTableView.beginUpdates()
             self?.ticketsTableView.endUpdates()
         }

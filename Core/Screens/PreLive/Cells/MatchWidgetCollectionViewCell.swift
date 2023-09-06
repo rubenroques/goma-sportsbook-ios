@@ -583,6 +583,8 @@ class MatchWidgetCollectionViewCell: UICollectionViewCell {
         self.backgroundImageGradientLayer.frame = self.backgroundImageView.bounds
         self.locationFlagImageView.layer.cornerRadius = self.locationFlagImageView.frame.size.width / 2
 
+        self.locationFlagImageView.layer.borderWidth = 0.5
+
         self.topImageView.roundCorners(corners: [.topRight, .topLeft], radius: 9)
 
     }
@@ -713,6 +715,8 @@ class MatchWidgetCollectionViewCell: UICollectionViewCell {
         self.seeAllLabel.textColor = UIColor.App.textPrimary
 
         self.sportTypeImageView.setTintColor(color: UIColor.App.textPrimary)
+
+        self.locationFlagImageView.layer.borderColor = UIColor.App.highlightPrimaryContrast.cgColor
 
         // Boosted Odds
         self.boostedTopRightCornerLabel.textColor = UIColor.App.textPrimary

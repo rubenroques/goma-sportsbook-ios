@@ -59,6 +59,7 @@ class TopCompetitionItemCollectionViewCell: UICollectionViewCell {
         let imageView = UIImageView()
         imageView.translatesAutoresizingMaskIntoConstraints = false
         imageView.contentMode = .scaleAspectFill
+        imageView.layer.borderWidth = 0.5
         imageView.clipsToBounds = true
         return imageView
     }()
@@ -122,6 +123,9 @@ class TopCompetitionItemCollectionViewCell: UICollectionViewCell {
         self.baseView.layer.borderColor = UIColor.App.backgroundOdds.cgColor
 
         self.nameLabel.textColor = UIColor.App.textPrimary
+
+        self.countryImageView.layer.borderColor = UIColor.App.highlightPrimaryContrast.cgColor
+
     }
 
     private func setupViews() {

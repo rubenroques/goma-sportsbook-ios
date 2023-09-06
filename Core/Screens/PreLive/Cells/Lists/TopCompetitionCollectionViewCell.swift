@@ -48,7 +48,8 @@ class TopCompetitionCollectionViewCell: UICollectionViewCell {
 
         self.containerView.layer.cornerRadius = self.containerView.frame.height / 2
 
-        self.iconImageView.layer.cornerRadius = self.containerView.frame.height / 2
+        self.iconImageView.layer.cornerRadius = self.iconImageView.frame.height / 2
+        self.iconImageView.layer.borderWidth = 0.5
 
     }
 
@@ -76,6 +77,7 @@ class TopCompetitionCollectionViewCell: UICollectionViewCell {
         self.containerView.layer.borderColor = UIColor.App.buttonActiveHoverTertiary.cgColor
 
         self.iconImageView.backgroundColor = .clear
+        self.iconImageView.layer.borderColor = UIColor.App.highlightPrimaryContrast.cgColor
 
         self.titleLabel.textColor = UIColor.App.textSecondary
 
@@ -111,7 +113,8 @@ extension TopCompetitionCollectionViewCell {
         let imageView = UIImageView()
         imageView.translatesAutoresizingMaskIntoConstraints = false
         imageView.image = UIImage(named: "country_flag_240")
-        imageView.contentMode = .scaleAspectFit
+        imageView.contentMode = .scaleAspectFill
+        imageView.layer.masksToBounds = true
         return imageView
     }
 
