@@ -83,25 +83,32 @@ class MyCompetitionsRootViewModel {
         Env.favoritesManager.favoriteCompetitionsIdPublisher
             .receive(on: DispatchQueue.main)
             .sink(receiveValue: { [weak self] favoriteEvents in
+                guard let self = self else { return }
+
                 if Env.userSessionStore.isUserLogged() {
 
+                    // Set timer to verify events fetched if subscribed events are failing to fetch
+                    self.timer = Timer.scheduledTimer(withTimeInterval: 10.0, repeats: false) { _ in
+                        self.verifyEventsFetchedCompletion()
+                    }
+
+                    RunLoop.current.add(self.timer, forMode: .common)
+
                     if favoriteEvents.isNotEmpty {
-                        self?.isLoading = true
-                        //self?.sendLoadingStatus?()
-                        self?.favoriteEventsIds = favoriteEvents
-                        self?.fetchFavoriteCompetitionMatches()
+                        self.isLoading = true
+                        self.favoriteEventsIds = favoriteEvents
+                        self.fetchFavoriteCompetitionMatches()
                     }
                     else {
                         let popularCompetitionIds = ["29494.1", "29519.1", "29531.1", "29534.1"]
-                        self?.isLoading = true
-                        //self?.sendLoadingStatus?()
-                        self?.favoriteEventsIds = popularCompetitionIds
-                        self?.fetchFavoriteCompetitionMatches(customIds: popularCompetitionIds)
+                        self.isLoading = true
+                        self.favoriteEventsIds = popularCompetitionIds
+                        self.fetchFavoriteCompetitionMatches(customIds: popularCompetitionIds)
                     }
 
                 }
                 else {
-                    self?.shouldUpdateContent?()
+                    self.shouldUpdateContent?()
                 }
             })
             .store(in: &cancellables)
@@ -112,7 +119,6 @@ class MyCompetitionsRootViewModel {
 
                 if fetchedEventsSummmary.count == self?.favoriteEventsIds.count && fetchedEventsSummmary.isNotEmpty {
 
-                    print("UPDATING MY COMPETITIONS!")
                     self?.shouldUpdateContent?()
                     self?.fetchedEventSummaryPublisher.value = []
                     self?.isLoading = false
@@ -130,17 +136,9 @@ class MyCompetitionsRootViewModel {
             })
             .store(in: &cancellables)
 
-        // Set timer to verify events fetched if subscribed events are failing to fetch
-        self.timer = Timer.scheduledTimer(withTimeInterval: 10.0, repeats: false) { _ in
-            self.verifyEventsFetchedCompletion()
-        }
-
-        RunLoop.current.add(self.timer, forMode: .common)
     }
 
     private func verifyEventsFetchedCompletion() {
-
-        print("TIMER'S UP!")
 
         if self.isLoading {
             self.clearData()
@@ -249,7 +247,6 @@ class MyCompetitionsRootViewModel {
 
         self.favoriteCompetitionsDataPublisher.value.append(newCompetition)
 
-        print("FETCHED COMP: \(competitionInfo.name)")
         self.fetchedEventSummaryPublisher.value.append(competitionInfo.id)
 
     }

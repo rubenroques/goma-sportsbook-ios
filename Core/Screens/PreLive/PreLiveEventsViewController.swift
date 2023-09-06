@@ -228,7 +228,7 @@ class PreLiveEventsViewController: UIViewController {
         filtersBarBaseView.backgroundColor = UIColor.App.backgroundSecondary
         filtersCollectionView.backgroundColor = UIColor.App.pillNavigation
 
-        sportsSelectorButtonView.backgroundColor = UIColor.App.pillSettings
+        sportsSelectorButtonView.backgroundColor = UIColor.App.highlightPrimary
         sportsSelectorButtonView.layer.maskedCorners = [.layerMaxXMinYCorner, .layerMaxXMaxYCorner]
 
         filtersButtonView.layer.maskedCorners = [.layerMinXMinYCorner, .layerMinXMaxYCorner]

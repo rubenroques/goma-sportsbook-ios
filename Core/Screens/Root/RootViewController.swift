@@ -821,10 +821,10 @@ class RootViewController: UIViewController {
         self.accountPlusView.backgroundColor = UIColor.App.highlightSecondary
 
         self.casinoButtonBaseView.alpha = self.activeButtonAlpha
-        self.casinoIconImageView.setImageColor(color: UIColor.App.iconPrimary)
+        self.casinoIconImageView.setImageColor(color: UIColor.App.iconSecondary)
 
         self.sportsbookButtonBaseView.alpha = self.activeButtonAlpha
-        self.sportsbookIconImageView.setImageColor(color: UIColor.App.iconPrimary)
+        self.sportsbookIconImageView.setImageColor(color: UIColor.App.iconSecondary)
 
         self.redrawButtonButtons()
 
@@ -1369,69 +1369,69 @@ extension RootViewController {
             homeButtonBaseView.alpha = self.activeButtonAlpha
             homeTitleLabel.textColor = UIColor.App.highlightPrimary
             homeIconImageView.setImageColor(color: UIColor.App.highlightPrimary)
-            sportsTitleLabel.textColor = UIColor.App.iconPrimary
-            sportsIconImageView.setImageColor(color: UIColor.App.iconPrimary)
-            liveTitleLabel.textColor = UIColor.App.iconPrimary
-            liveIconImageView.setImageColor(color: UIColor.App.iconPrimary)
-            tipsTitleLabel.textColor = UIColor.App.iconPrimary
-            tipsIconImageView.setImageColor(color: UIColor.App.iconPrimary)
-            cashbackTitleLabel.textColor = UIColor.App.iconPrimary
-            cashbackIconImageView.setImageColor(color: UIColor.App.iconPrimary)
+            sportsTitleLabel.textColor = UIColor.App.iconSecondary
+            sportsIconImageView.setImageColor(color: UIColor.App.iconSecondary)
+            liveTitleLabel.textColor = UIColor.App.iconSecondary
+            liveIconImageView.setImageColor(color: UIColor.App.iconSecondary)
+            tipsTitleLabel.textColor = UIColor.App.iconSecondary
+            tipsIconImageView.setImageColor(color: UIColor.App.iconSecondary)
+            cashbackTitleLabel.textColor = UIColor.App.iconSecondary
+            cashbackIconImageView.setImageColor(color: UIColor.App.iconSecondary)
         case .preLive:
             sportsButtonBaseView.alpha = self.activeButtonAlpha
-            homeTitleLabel.textColor = UIColor.App.iconPrimary
-            homeIconImageView.setImageColor(color: UIColor.App.iconPrimary)
+            homeTitleLabel.textColor = UIColor.App.iconSecondary
+            homeIconImageView.setImageColor(color: UIColor.App.iconSecondary)
             sportsTitleLabel.textColor = UIColor.App.highlightPrimary
             sportsIconImageView.setImageColor(color: UIColor.App.highlightPrimary)
-            liveTitleLabel.textColor = UIColor.App.iconPrimary
-            liveIconImageView.setImageColor(color: UIColor.App.iconPrimary)
-            tipsTitleLabel.textColor = UIColor.App.iconPrimary
-            tipsIconImageView.setImageColor(color: UIColor.App.iconPrimary)
-            cashbackTitleLabel.textColor = UIColor.App.iconPrimary
-            cashbackIconImageView.setImageColor(color: UIColor.App.iconPrimary)
+            liveTitleLabel.textColor = UIColor.App.iconSecondary
+            liveIconImageView.setImageColor(color: UIColor.App.iconSecondary)
+            tipsTitleLabel.textColor = UIColor.App.iconSecondary
+            tipsIconImageView.setImageColor(color: UIColor.App.iconSecondary)
+            cashbackTitleLabel.textColor = UIColor.App.iconSecondary
+            cashbackIconImageView.setImageColor(color: UIColor.App.iconSecondary)
         case .live:
             liveButtonBaseView.alpha = self.activeButtonAlpha
-            homeTitleLabel.textColor = UIColor.App.iconPrimary
-            homeIconImageView.setImageColor(color: UIColor.App.iconPrimary)
-            sportsTitleLabel.textColor = UIColor.App.iconPrimary
-            sportsIconImageView.setImageColor(color: UIColor.App.iconPrimary)
+            homeTitleLabel.textColor = UIColor.App.iconSecondary
+            homeIconImageView.setImageColor(color: UIColor.App.iconSecondary)
+            sportsTitleLabel.textColor = UIColor.App.iconSecondary
+            sportsIconImageView.setImageColor(color: UIColor.App.iconSecondary)
             liveTitleLabel.textColor = UIColor.App.highlightPrimary
             liveIconImageView.setImageColor(color: UIColor.App.highlightPrimary)
-            tipsTitleLabel.textColor = UIColor.App.iconPrimary
-            tipsIconImageView.setImageColor(color: UIColor.App.iconPrimary)
-            cashbackTitleLabel.textColor = UIColor.App.iconPrimary
-            cashbackIconImageView.setImageColor(color: UIColor.App.iconPrimary)
+            tipsTitleLabel.textColor = UIColor.App.iconSecondary
+            tipsIconImageView.setImageColor(color: UIColor.App.iconSecondary)
+            cashbackTitleLabel.textColor = UIColor.App.iconSecondary
+            cashbackIconImageView.setImageColor(color: UIColor.App.iconSecondary)
         case .tips:
             tipsButtonBaseView.alpha = self.activeButtonAlpha
-            homeTitleLabel.textColor = UIColor.App.iconPrimary
-            homeIconImageView.setImageColor(color: UIColor.App.iconPrimary)
-            sportsTitleLabel.textColor = UIColor.App.iconPrimary
-            sportsIconImageView.setImageColor(color: UIColor.App.iconPrimary)
-            liveTitleLabel.textColor = UIColor.App.iconPrimary
-            liveIconImageView.setImageColor(color: UIColor.App.iconPrimary)
+            homeTitleLabel.textColor = UIColor.App.iconSecondary
+            homeIconImageView.setImageColor(color: UIColor.App.iconSecondary)
+            sportsTitleLabel.textColor = UIColor.App.iconSecondary
+            sportsIconImageView.setImageColor(color: UIColor.App.iconSecondary)
+            liveTitleLabel.textColor = UIColor.App.iconSecondary
+            liveIconImageView.setImageColor(color: UIColor.App.iconSecondary)
             tipsTitleLabel.textColor = UIColor.App.highlightPrimary
             tipsIconImageView.setImageColor(color: UIColor.App.highlightPrimary)
-            cashbackTitleLabel.textColor = UIColor.App.iconPrimary
-            cashbackIconImageView.setImageColor(color: UIColor.App.iconPrimary)
+            cashbackTitleLabel.textColor = UIColor.App.iconSecondary
+            cashbackIconImageView.setImageColor(color: UIColor.App.iconSecondary)
         case .cashback:
             cashbackButtonBaseView.alpha = self.activeButtonAlpha
-            homeTitleLabel.textColor = UIColor.App.iconPrimary
-            homeIconImageView.setImageColor(color: UIColor.App.iconPrimary)
-            sportsTitleLabel.textColor = UIColor.App.iconPrimary
-            sportsIconImageView.setImageColor(color: UIColor.App.iconPrimary)
-            liveTitleLabel.textColor = UIColor.App.iconPrimary
-            liveIconImageView.setImageColor(color: UIColor.App.iconPrimary)
-            tipsTitleLabel.textColor = UIColor.App.iconPrimary
-            tipsIconImageView.setImageColor(color: UIColor.App.iconPrimary)
+            homeTitleLabel.textColor = UIColor.App.iconSecondary
+            homeIconImageView.setImageColor(color: UIColor.App.iconSecondary)
+            sportsTitleLabel.textColor = UIColor.App.iconSecondary
+            sportsIconImageView.setImageColor(color: UIColor.App.iconSecondary)
+            liveTitleLabel.textColor = UIColor.App.iconSecondary
+            liveIconImageView.setImageColor(color: UIColor.App.iconSecondary)
+            tipsTitleLabel.textColor = UIColor.App.iconSecondary
+            tipsIconImageView.setImageColor(color: UIColor.App.iconSecondary)
             cashbackTitleLabel.textColor = UIColor.App.highlightPrimary
             cashbackIconImageView.setImageColor(color: UIColor.App.highlightPrimary)
         case .casino:
-            homeTitleLabel.textColor = UIColor.App.iconPrimary
-            homeIconImageView.setImageColor(color: UIColor.App.iconPrimary)
-            sportsTitleLabel.textColor = UIColor.App.iconPrimary
-            sportsIconImageView.setImageColor(color: UIColor.App.iconPrimary)
-            liveTitleLabel.textColor = UIColor.App.iconPrimary
-            liveIconImageView.setImageColor(color: UIColor.App.iconPrimary)
+            homeTitleLabel.textColor = UIColor.App.iconSecondary
+            homeIconImageView.setImageColor(color: UIColor.App.iconSecondary)
+            sportsTitleLabel.textColor = UIColor.App.iconSecondary
+            sportsIconImageView.setImageColor(color: UIColor.App.iconSecondary)
+            liveTitleLabel.textColor = UIColor.App.iconSecondary
+            liveIconImageView.setImageColor(color: UIColor.App.iconSecondary)
         }
 
     }

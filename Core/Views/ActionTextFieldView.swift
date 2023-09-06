@@ -34,18 +34,10 @@ class ActionTextFieldView: UIView {
         didSet {
             if isActionDisabled {
                 self.actionButton.isEnabled = false
-                self.actionButton.layer.borderColor = UIColor.App.buttonTextDisablePrimary.cgColor
             }
             else {
                 self.actionButton.isEnabled = true
 
-                // NOTA: Sem verificar o tema, a cor da border fica sempre com a cor do dark mode, não sei porquê
-                if self.traitCollection.userInterfaceStyle == .light {
-                    self.actionButton.layer.borderColor = UIColor.App.backgroundBorder.cgColor
-                }
-                else {
-                    self.actionButton.layer.borderColor = UIColor.App.textPrimary.cgColor
-                }
             }
         }
     }
@@ -88,6 +80,13 @@ class ActionTextFieldView: UIView {
         self.setupWithTheme()
     }
 
+    override func layoutSubviews() {
+        super.layoutSubviews()
+
+        self.actionButton.layer.cornerRadius = CornerRadius.button
+        self.actionButton.layer.masksToBounds = true
+    }
+
     func setupWithTheme() {
         self.backgroundColor = .clear
 
@@ -98,7 +97,12 @@ class ActionTextFieldView: UIView {
 
         self.textField.backgroundColor = .clear
 
-        self.actionButton.setTitleColor(UIColor.App.textPrimary, for: .normal)
+        self.actionButton.setTitleColor(UIColor.App.buttonTextPrimary, for: .normal)
+        self.actionButton.setTitleColor(UIColor.App.buttonTextPrimary.withAlphaComponent(0.7), for: .highlighted)
+        self.actionButton.setTitleColor(UIColor.App.buttonTextDisablePrimary, for: .disabled)
+
+        self.actionButton.setBackgroundColor(UIColor.App.highlightPrimary, for: .normal)
+        self.actionButton.setBackgroundColor(UIColor.App.buttonDisablePrimary, for: .disabled)
 
     }
 
@@ -218,17 +222,6 @@ extension ActionTextFieldView {
         button.translatesAutoresizingMaskIntoConstraints = false
         button.setTitle("Action", for: .normal)
         button.titleLabel?.font = AppFont.with(type: .bold, size: 14)
-
-        button.setTitleColor(UIColor.App.buttonTextPrimary, for: .normal)
-        button.setTitleColor(UIColor.App.buttonTextPrimary.withAlphaComponent(0.7), for: .highlighted)
-        button.setTitleColor(UIColor.App.buttonTextDisablePrimary, for: .disabled)
-
-        button.layer.cornerRadius = CornerRadius.button
-        button.layer.borderWidth = 1
-        button.layer.borderColor = UIColor.App.textPrimary.cgColor
-        button.layer.masksToBounds = true
-        button.backgroundColor = .clear
-
         button.contentEdgeInsets = UIEdgeInsets(top: 0, left: 8, bottom: 0, right: 8)
         button.setContentHuggingPriority(.defaultHigh, for: .horizontal)
         return button

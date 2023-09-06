@@ -210,6 +210,11 @@ class MyTicketsViewModel: NSObject {
                 let bettingHistoryResponse = ServiceProviderModelMapper.bettingHistory(fromServiceProviderBettingHistory: bettingHistory)
 
                 if let bettingHistoryEntries = bettingHistoryResponse.betList {
+
+                    if bettingHistoryEntries.count < self.recordsPerPage {
+                        self.hasNextPage = false
+                    }
+
                     if bettingHistoryEntries.isNotEmpty {
                         self.processBettingHistory(betHistoryEntries: bettingHistoryEntries)
                     }
@@ -246,6 +251,11 @@ class MyTicketsViewModel: NSObject {
 
                 let bettingHistoryResponse = ServiceProviderModelMapper.bettingHistory(fromServiceProviderBettingHistory: bettingHistory)
                 if let bettingHistoryEntries = bettingHistoryResponse.betList {
+
+                    if bettingHistoryEntries.count < self.recordsPerPage {
+                        self.hasNextPage = false
+                    }
+
                     if bettingHistoryEntries.isNotEmpty {
                         self.processBettingHistory(betHistoryEntries: bettingHistoryEntries)
                     }
@@ -284,6 +294,10 @@ class MyTicketsViewModel: NSObject {
                 let bettingHistoryResponse = ServiceProviderModelMapper.bettingHistory(fromServiceProviderBettingHistory: bettingHistory)
 
                 if let bettingHistoryEntries = bettingHistoryResponse.betList {
+
+                    if bettingHistoryEntries.count < self.recordsPerPage {
+                        self.hasNextPage = false
+                    }
 
                     if bettingHistoryEntries.isNotEmpty {
 
@@ -428,6 +442,8 @@ class MyTicketsViewModel: NSObject {
     }
     
     func requestNextPage() {
+
+        print("MY TICKETS NEXT PAGE!")
            
         switch myTicketsTypePublisher.value {
         case .opened:

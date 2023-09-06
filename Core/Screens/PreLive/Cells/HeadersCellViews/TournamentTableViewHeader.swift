@@ -87,6 +87,8 @@ class TournamentTableViewHeader: UITableViewHeaderFooterView {
         super.layoutSubviews()
 
         self.countryFlagImageView.layer.cornerRadius = self.countryFlagImageView.frame.size.width / 2
+
+        self.countryFlagImageView.layer.borderWidth = 0.5
     }
 
     override func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {
@@ -104,6 +106,9 @@ class TournamentTableViewHeader: UITableViewHeaderFooterView {
         self.collapseBaseView.backgroundColor = UIColor.App.backgroundSecondary
 
         self.nameTitleLabel.textColor = UIColor.App.textPrimary
+
+        self.countryFlagImageView.layer.borderColor = UIColor.App.highlightPrimaryContrast.cgColor
+
     }
 
     func setupCompetition() {
