@@ -389,19 +389,19 @@ extension BettingAPIClient: Endpoint {
     
     var timeout: TimeInterval {
         switch self {
-        case .betHistory: return TimeInterval(20)
-        case .betDetails: return TimeInterval(20)
-        case .calculateReturns: return TimeInterval(20)
-        case .getAllowedBetTypes: return TimeInterval(20)
-        case .placeBets: return TimeInterval(60)
-        case .calculateCashout: return TimeInterval(60)
-        case .cashoutBet: return TimeInterval(20)
-        case .getBetslipSettings: return TimeInterval(10)
-        case .updateBetslipSettings: return TimeInterval(10)
-        case .getFreebetBalance: return TimeInterval(10)
-        case .getSharedTicket: return TimeInterval(20)
-        case .getTicketSelection: return TimeInterval(20)
-        case .calculateCashback: return TimeInterval(60)
+        case .betHistory: return TimeInterval(180)
+        case .betDetails: return TimeInterval(180)
+        case .calculateReturns: return TimeInterval(180)
+        case .getAllowedBetTypes: return TimeInterval(180)
+        case .placeBets: return TimeInterval(180)
+        case .calculateCashout: return TimeInterval(180)
+        case .cashoutBet: return TimeInterval(180)
+        case .getBetslipSettings: return TimeInterval(180)
+        case .updateBetslipSettings: return TimeInterval(180)
+        case .getFreebetBalance: return TimeInterval(180)
+        case .getSharedTicket: return TimeInterval(180)
+        case .getTicketSelection: return TimeInterval(180)
+        case .calculateCashback: return TimeInterval(180)
         }
     }
     

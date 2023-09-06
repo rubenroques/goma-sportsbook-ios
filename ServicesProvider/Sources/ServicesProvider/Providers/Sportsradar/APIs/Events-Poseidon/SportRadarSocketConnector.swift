@@ -96,7 +96,7 @@ class SportRadarSocketConnector: NSObject, Connector {
                     case .text(let stringContent):
                         // DEBUGGING HELPER
 
-                        // print("☁️ SP debugbetslip WS recieved text: \(stringContent) \n----------------- \n")
+                        print("☁️ SP debugbetslip WS recieved text: \(stringContent) \n----------------- \n")
 
                         if let data = stringContent.data(using: .utf8),
                            let sportRadarSocketResponse = try? Self.decoder.decode(SportRadarModels.NotificationType.self, from: data) {

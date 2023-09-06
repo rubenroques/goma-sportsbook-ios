@@ -49,10 +49,10 @@ class SportRadarEventsStorage {
             eventsDictionary[event.id] = CurrentValueSubject(event)
         }
 
-        var mergedEvents = self.eventsSubject.value
-        mergedEvents.append(contentsOf: events)
-
-        self.eventsSubject.send(mergedEvents)
+        // Avoid duplication, we just just a values of the dictionary
+        let subjectValues = self.eventsDictionary.values
+        let orderedEvents = Array(subjectValues).map(\.value)
+        self.eventsSubject.send(orderedEvents)
     }
 
 }

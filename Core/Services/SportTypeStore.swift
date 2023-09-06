@@ -12,11 +12,22 @@ import ServicesProvider
 class SportTypeStore {
 
     var defaultSport: Sport {
-        if case .loaded(let sports) = self.activeSportsCurrentValueSubject.value, let firstSport = sports.first {
+        if case .loaded(let sports) = self.activeSportsCurrentValueSubject.value,
+            let firstSport = sports.first {
             return firstSport
         }
         else {
             return Sport(id: "1", name: "Football", alphaId: "FBL", numericId: "19781.1", showEventCategory: false, liveEventsCount: 0, eventsCount: 0)
+        }
+    }
+
+    var defaultLiveSport: Sport {
+        if case .loaded(let sports) = self.activeSportsCurrentValueSubject.value,
+           let firstLiveSport = sports.first(where: { sport in sport.liveEventsCount > 0 }) {
+            return firstLiveSport
+        }
+        else {
+            return self.defaultSport
         }
     }
 
