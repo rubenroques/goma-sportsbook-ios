@@ -714,8 +714,6 @@ class MatchWidgetCollectionViewCell: UICollectionViewCell {
         self.seeAllBaseView.backgroundColor = UIColor.App.backgroundDisabledOdds
         self.seeAllLabel.textColor = UIColor.App.textPrimary
 
-        self.sportTypeImageView.setTintColor(color: UIColor.App.textPrimary)
-
         self.locationFlagImageView.layer.borderColor = UIColor.App.highlightPrimaryContrast.cgColor
 
         // Boosted Odds
@@ -744,7 +742,7 @@ class MatchWidgetCollectionViewCell: UICollectionViewCell {
             self.matchTimeLabel.textColor = UIColor.App.buttonBackgroundPrimary
             self.resultLabel.textColor = UIColor.App.textPrimary
             self.liveTipLabel.textColor = UIColor.App.buttonTextPrimary
-            self.dateLabel.textColor = UIColor.App.textPrimary
+            self.dateLabel.textColor = UIColor.App.textSecondary
             self.timeLabel.textColor = UIColor.App.textPrimary
 
             if isLeftOutcomeButtonSelected {
@@ -797,7 +795,7 @@ class MatchWidgetCollectionViewCell: UICollectionViewCell {
             self.matchTimeLabel.textColor = UIColor.App.buttonBackgroundPrimary
             self.resultLabel.textColor = UIColor.App.textPrimary
             self.liveTipLabel.textColor = UIColor.App.buttonTextPrimary
-            self.dateLabel.textColor = UIColor.App.textPrimary
+            self.dateLabel.textColor = UIColor.App.textSecondary
             self.timeLabel.textColor = UIColor.App.textPrimary
 
             if isLeftOutcomeButtonSelected {
@@ -871,8 +869,8 @@ class MatchWidgetCollectionViewCell: UICollectionViewCell {
             self.matchTimeLabel.textColor = UIColor.App.buttonTextPrimary
             self.resultLabel.textColor = UIColor.App.buttonTextPrimary
             self.liveTipLabel.textColor = UIColor.App.buttonTextPrimary
-            self.dateLabel.textColor = UIColor.App.buttonTextPrimary
-            self.timeLabel.textColor = UIColor.App.buttonTextPrimary
+            self.dateLabel.textColor = UIColor.App.textSecondary
+            self.timeLabel.textColor = UIColor.App.textPrimary
 
             self.homeBaseView.layer.borderColor = UIColor.App.buttonTextPrimary.cgColor
             self.drawBaseView.layer.borderColor = UIColor.App.buttonTextPrimary.cgColor
@@ -1051,7 +1049,7 @@ class MatchWidgetCollectionViewCell: UICollectionViewCell {
         else {
             self.sportTypeImageView.image = UIImage(named: "sport_type_icon_default")
         }
-        self.sportTypeImageView.setTintColor(color: UIColor.App.textPrimary)
+        //self.sportTypeImageView.setTintColor(color: UIColor.App.textPrimary)
 
         if let additionalImageURL = viewModel.promoImageURL {
             self.backgroundImageView.kf.setImage(with: additionalImageURL)

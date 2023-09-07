@@ -63,7 +63,6 @@ class MatchDetailsViewController: UIViewController {
     @IBOutlet private var matchFieldWebView: WKWebView!
     @IBOutlet private var matchFieldWebViewHeight: NSLayoutConstraint!
 
-
     @IBOutlet private var statsBaseView: UIView!
     @IBOutlet private var statsCollectionBaseView: UIView!
     @IBOutlet private var statsCollectionView: UICollectionView!
@@ -333,6 +332,7 @@ class MatchDetailsViewController: UIViewController {
         self.headerCompetitionImageView.image = nil
         self.headerCompetitionImageView.layer.cornerRadius = self.headerCompetitionImageView.frame.width/2
         self.headerCompetitionImageView.contentMode = .scaleAspectFill
+        self.headerCompetitionImageView.layer.borderWidth = 0.5
         
         self.headerDetailHomeLabel.text = localized("home_label_default")
         self.headerDetailHomeLabel.font = AppFont.with(type: .bold, size: 16)
@@ -528,6 +528,8 @@ class MatchDetailsViewController: UIViewController {
         self.headerCompetitionDetailView.backgroundColor = .clear
         self.headerCompetitionLabel.textColor = UIColor.App.textSecondary
         self.headerCompetitionSportImageView.setTintColor(color: UIColor.App.textPrimary)
+
+        self.headerCompetitionImageView.layer.borderColor = UIColor.App.highlightPrimaryContrast.cgColor
 
         self.headerDetailStackView.backgroundColor = .clear
         self.headerDetailHomeView.backgroundColor = .clear
@@ -749,6 +751,14 @@ class MatchDetailsViewController: UIViewController {
                 }
             })
             .store(in: &cancellables)
+
+        self.viewModel.scrollToTopAction = { [weak self] indexRow in
+
+            if let marketGroupViewController = self?.marketGroupsViewControllers[safe: indexRow] as? MarketGroupDetailsViewController {
+
+                marketGroupViewController.scrollToTop()
+            }
+        }
 
     }
 

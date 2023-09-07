@@ -73,4 +73,7 @@ public enum AppColor {
 
     public static let gameHeader = UIColor(named: "gameHeader")!
 
+    public static let navBanner = UIColor(named: "navBanner")!
+    public static let navBannerActive = UIColor(named: "navBannerActive")!
+
 }

@@ -1255,17 +1255,30 @@ extension RootViewController {
 
         self.flipToSportsbookIfNeeded()
 
+        if self.selectedTabItem == .home {
+            self.homeViewController.scrollToTop()
+        }
+
         self.selectedTabItem = .home
+
     }
 
     @objc private func didTapSportsTabItem() {
         self.flipToSportsbookIfNeeded()
+
+        if self.selectedTabItem == .preLive {
+            self.preLiveViewController.scrollToTop()
+        }
 
         self.selectedTabItem = .preLive
     }
 
     @objc private func didTapLiveTabItem() {
         self.flipToSportsbookIfNeeded()
+
+        if self.selectedTabItem == .live {
+            self.liveEventsViewController.scrollToTop()
+        }
 
         self.selectedTabItem = .live
     }
@@ -1279,6 +1292,10 @@ extension RootViewController {
 
     @objc private func didTapCashbackTabItem() {
         self.flipToSportsbookIfNeeded()
+
+        if self.selectedTabItem == .cashback {
+            self.cashbackViewController.scrollToTop()
+        }
 
         self.selectedTabItem = .cashback
     }
@@ -1298,6 +1315,7 @@ extension RootViewController {
     //
     //
     func selectHomeTabBarItem() {
+
         self.loadChildViewControllerIfNeeded(tab: .home)
 
         self.homeBaseView.isHidden = false

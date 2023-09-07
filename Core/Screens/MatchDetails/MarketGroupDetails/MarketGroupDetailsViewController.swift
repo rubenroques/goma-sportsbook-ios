@@ -207,6 +207,11 @@ class MarketGroupDetailsViewController: UIViewController {
         }
     }
 
+    func scrollToTop() {
+        let topOffset = CGPoint(x: 0, y: -self.tableView.contentInset.top)
+        self.tableView.setContentOffset(topOffset, animated: true)
+    }
+
     @objc func toggleExpandAll(sender: UIButton) {
         if self.isCollapsedMarketGroupIds.isEmpty {
             // Add all to collapsed

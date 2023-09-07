@@ -25,6 +25,8 @@ class SportTypeStore {
         return self.activeSportsCurrentValueSubject.eraseToAnyPublisher()
     }
 
+    var activeSports: [Sport] = []
+
     private var sportsSubscription: ServicesProvider.Subscription?
     private var cancellables = Set<AnyCancellable>()
 
@@ -65,6 +67,7 @@ class SportTypeStore {
                     $0.eventsCount > 0 || $0.liveEventsCount > 0 || $0.outrightEventsCount > 0
                 })
                 self?.activeSportsCurrentValueSubject.send(.loaded(filteredSports))
+                self?.activeSports = filteredSports
 
             case .disconnected:
                 ()
