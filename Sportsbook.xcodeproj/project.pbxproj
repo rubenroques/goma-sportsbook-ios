@@ -3,7 +3,7 @@
 	archiveVersion = 1;
 	classes = {
 	};
-	objectVersion = 52;
+	objectVersion = 53;
 	objects = {
 
 /* Begin PBXBuildFile section */
@@ -296,7 +296,6 @@
 		450B796928F58574009229E3 /* PopularMatchesDataSource.swift in Sources */ = {isa = PBXBuildFile; fileRef = 45C26DD327976B2100513D41 /* PopularMatchesDataSource.swift */; };
 		450B796A28F58574009229E3 /* BonusAvailableCellViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = A96CA7B927F4748B00022DB2 /* BonusAvailableCellViewModel.swift */; };
 		450B796B28F58574009229E3 /* ActivationAlertScrollableView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9627A04274529670001E1D5 /* ActivationAlertScrollableView.swift */; };
-		450B796C28F58574009229E3 /* SuggestedBetLineTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4540ED2D27BC15CB00A14BB0 /* SuggestedBetLineTableViewCell.swift */; };
 		450B796D28F58574009229E3 /* VideoPreviewLineTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 45A6BB962822FF4200D9B416 /* VideoPreviewLineTableViewCell.swift */; };
 		450B796E28F58574009229E3 /* NewGroupManagementViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9F1041C2811BE420011AAAC /* NewGroupManagementViewController.swift */; };
 		450B796F28F58574009229E3 /* TabularBarView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 454E0AA92732C58D00794E0C /* TabularBarView.swift */; };
@@ -1124,7 +1123,6 @@
 		457CBAD1282D27D000ED0F00 /* PopularMatchesDataSource.swift in Sources */ = {isa = PBXBuildFile; fileRef = 45C26DD327976B2100513D41 /* PopularMatchesDataSource.swift */; };
 		457CBAD2282D27D000ED0F00 /* BonusAvailableCellViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = A96CA7B927F4748B00022DB2 /* BonusAvailableCellViewModel.swift */; };
 		457CBAD3282D27D000ED0F00 /* ActivationAlertScrollableView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9627A04274529670001E1D5 /* ActivationAlertScrollableView.swift */; };
-		457CBAD4282D27D000ED0F00 /* SuggestedBetLineTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4540ED2D27BC15CB00A14BB0 /* SuggestedBetLineTableViewCell.swift */; };
 		457CBAD5282D27D000ED0F00 /* VideoPreviewLineTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 45A6BB962822FF4200D9B416 /* VideoPreviewLineTableViewCell.swift */; };
 		457CBAD6282D27D000ED0F00 /* NewGroupManagementViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9F1041C2811BE420011AAAC /* NewGroupManagementViewController.swift */; };
 		457CBAD7282D27D000ED0F00 /* TabularBarView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 454E0AA92732C58D00794E0C /* TabularBarView.swift */; };
@@ -1673,7 +1671,6 @@
 		457CBD7A282D2CD100ED0F00 /* PopularMatchesDataSource.swift in Sources */ = {isa = PBXBuildFile; fileRef = 45C26DD327976B2100513D41 /* PopularMatchesDataSource.swift */; };
 		457CBD7B282D2CD100ED0F00 /* BonusAvailableCellViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = A96CA7B927F4748B00022DB2 /* BonusAvailableCellViewModel.swift */; };
 		457CBD7C282D2CD100ED0F00 /* ActivationAlertScrollableView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9627A04274529670001E1D5 /* ActivationAlertScrollableView.swift */; };
-		457CBD7D282D2CD100ED0F00 /* SuggestedBetLineTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4540ED2D27BC15CB00A14BB0 /* SuggestedBetLineTableViewCell.swift */; };
 		457CBD7E282D2CD100ED0F00 /* VideoPreviewLineTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 45A6BB962822FF4200D9B416 /* VideoPreviewLineTableViewCell.swift */; };
 		457CBD7F282D2CD100ED0F00 /* NewGroupManagementViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9F1041C2811BE420011AAAC /* NewGroupManagementViewController.swift */; };
 		457CBD80282D2CD100ED0F00 /* TabularBarView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 454E0AA92732C58D00794E0C /* TabularBarView.swift */; };
@@ -2232,7 +2229,6 @@
 		4589C85A282024E400243547 /* PopularMatchesDataSource.swift in Sources */ = {isa = PBXBuildFile; fileRef = 45C26DD327976B2100513D41 /* PopularMatchesDataSource.swift */; };
 		4589C85B282024E400243547 /* BonusAvailableCellViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = A96CA7B927F4748B00022DB2 /* BonusAvailableCellViewModel.swift */; };
 		4589C85C282024E400243547 /* ActivationAlertScrollableView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9627A04274529670001E1D5 /* ActivationAlertScrollableView.swift */; };
-		4589C85D282024E400243547 /* SuggestedBetLineTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4540ED2D27BC15CB00A14BB0 /* SuggestedBetLineTableViewCell.swift */; };
 		4589C85E282024E400243547 /* NewGroupManagementViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9F1041C2811BE420011AAAC /* NewGroupManagementViewController.swift */; };
 		4589C85F282024E400243547 /* TabularBarView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 454E0AA92732C58D00794E0C /* TabularBarView.swift */; };
 		4589C860282024E400243547 /* SimpleRegisterDetailsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 45BEA47C26F4DC9900680181 /* SimpleRegisterDetailsViewController.swift */; };
@@ -2853,7 +2849,6 @@
 		45A33182298976BA008181E9 /* PopularMatchesDataSource.swift in Sources */ = {isa = PBXBuildFile; fileRef = 45C26DD327976B2100513D41 /* PopularMatchesDataSource.swift */; };
 		45A33183298976BA008181E9 /* BonusAvailableCellViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = A96CA7B927F4748B00022DB2 /* BonusAvailableCellViewModel.swift */; };
 		45A33184298976BA008181E9 /* ActivationAlertScrollableView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9627A04274529670001E1D5 /* ActivationAlertScrollableView.swift */; };
-		45A33185298976BA008181E9 /* SuggestedBetLineTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4540ED2D27BC15CB00A14BB0 /* SuggestedBetLineTableViewCell.swift */; };
 		45A33186298976BA008181E9 /* VideoPreviewLineTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 45A6BB962822FF4200D9B416 /* VideoPreviewLineTableViewCell.swift */; };
 		45A33187298976BA008181E9 /* NewGroupManagementViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9F1041C2811BE420011AAAC /* NewGroupManagementViewController.swift */; };
 		45A33188298976BA008181E9 /* TabularBarView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 454E0AA92732C58D00794E0C /* TabularBarView.swift */; };
@@ -3272,7 +3267,6 @@
 		45A33348298976BA008181E9 /* MyTicketBetLineView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 458BAC802770EF53006C4BC7 /* MyTicketBetLineView.xib */; };
 		45A33349298976BA008181E9 /* OddTripleCollectionViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 45CD7B4D2716F5CB003044C5 /* OddTripleCollectionViewCell.xib */; };
 		45A3335F298976E3008181E9 /* LaunchScreen-Betsson.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 45A33352298976E3008181E9 /* LaunchScreen-Betsson.storyboard */; };
-		45A33360298976E3008181E9 /* Betsson-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 45A33357298976E3008181E9 /* Betsson-Info.plist */; };
 		45A33361298976E3008181E9 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 45A33358298976E3008181E9 /* GoogleService-Info.plist */; };
 		45A33362298976E3008181E9 /* TargetVariables.swift in Sources */ = {isa = PBXBuildFile; fileRef = 45A3335A298976E3008181E9 /* TargetVariables.swift */; };
 		45A33363298976E3008181E9 /* Betsson-Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 45A3335C298976E3008181E9 /* Betsson-Assets.xcassets */; };
@@ -4105,8 +4099,6 @@
 		45ECD75D2A90012600492CB9 /* SuggestedBetLineTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 45ECD7552A90012600492CB9 /* SuggestedBetLineTableViewCell.swift */; };
 		45ECD75E2A90012600492CB9 /* SuggestedBetLineTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 45ECD7552A90012600492CB9 /* SuggestedBetLineTableViewCell.swift */; };
 		45ECD75F2A90012600492CB9 /* SuggestedBetLineTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 45ECD7552A90012600492CB9 /* SuggestedBetLineTableViewCell.swift */; };
-		45ECD7602A90012600492CB9 /* SuggestedBetLineTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 45ECD7552A90012600492CB9 /* SuggestedBetLineTableViewCell.swift */; };
-		45ECD7612A90012600492CB9 /* SuggestedBetLineTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 45ECD7552A90012600492CB9 /* SuggestedBetLineTableViewCell.swift */; };
 		45ECD7622A90012600492CB9 /* SuggestedBetLineTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 45ECD7552A90012600492CB9 /* SuggestedBetLineTableViewCell.swift */; };
 		45ECD7632A90012600492CB9 /* SuggestedBetLineTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 45ECD7552A90012600492CB9 /* SuggestedBetLineTableViewCell.swift */; };
 		45ECD7652A90013C00492CB9 /* TopCompetitionsLineTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 45ECD7642A90013C00492CB9 /* TopCompetitionsLineTableViewCell.swift */; };
@@ -5714,7 +5706,6 @@
 		A9C3437628F9A74A0055360B /* MyTicketBetLineView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 458BAC802770EF53006C4BC7 /* MyTicketBetLineView.xib */; };
 		A9C3437728F9A74A0055360B /* OddTripleCollectionViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 45CD7B4D2716F5CB003044C5 /* OddTripleCollectionViewCell.xib */; };
 		A9C3439028F9A7DC0055360B /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = A9C3438628F9A7DC0055360B /* GoogleService-Info.plist */; };
-		A9C3439128F9A7DC0055360B /* GOMASportRadar-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = A9C3438828F9A7DC0055360B /* GOMASportRadar-Info.plist */; };
 		A9C3439228F9A7DC0055360B /* TargetVariables.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9C3438928F9A7DC0055360B /* TargetVariables.swift */; };
 		A9C3439428F9A7DC0055360B /* Colors.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = A9C3438C28F9A7DC0055360B /* Colors.xcassets */; };
 		A9C3439528F9A7DC0055360B /* ClientVariables.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9C3438D28F9A7DC0055360B /* ClientVariables.swift */; };
@@ -10595,8 +10586,9 @@
 		455A0C4826BD902C00EC572D /* Project object */ = {
 			isa = PBXProject;
 			attributes = {
+				BuildIndependentTargetsInParallel = YES;
 				LastSwiftUpdateCheck = 1250;
-				LastUpgradeCheck = 1340;
+				LastUpgradeCheck = 1430;
 				TargetAttributes = {
 					455A0C6526BD902F00EC572D = {
 						CreatedOnToolsVersion = 12.5.1;
@@ -11341,7 +11333,6 @@
 				451F51EC298D2D7D00994660 /* Gradients.xcassets in Resources */,
 				45A3331A298976BA008181E9 /* SearchViewController.xib in Resources */,
 				452BA1982A902C4900D0AA48 /* avatar1.json in Resources */,
-				45A33360298976E3008181E9 /* Betsson-Info.plist in Resources */,
 				45A3331B298976BA008181E9 /* ForbiddenLocationViewController.xib in Resources */,
 				45A3331C298976BA008181E9 /* MatchDetailsViewController.xib in Resources */,
 				45A3331E298976BA008181E9 /* PersonalInfoViewController.xib in Resources */,
@@ -11638,7 +11629,6 @@
 				452BA19B2A902C4900D0AA48 /* avatar1.json in Resources */,
 				A9C3434A28F9A74A0055360B /* SearchViewController.xib in Resources */,
 				A9C3434B28F9A74A0055360B /* ForbiddenLocationViewController.xib in Resources */,
-				A9C3439128F9A7DC0055360B /* GOMASportRadar-Info.plist in Resources */,
 				A9C3434C28F9A74A0055360B /* MatchDetailsViewController.xib in Resources */,
 				A9C3434D28F9A74A0055360B /* PersonalInfoViewController.xib in Resources */,
 				A9C3434E28F9A74A0055360B /* FullRegisterAddressCountryViewController.xib in Resources */,
@@ -12156,7 +12146,6 @@
 				450B796A28F58574009229E3 /* BonusAvailableCellViewModel.swift in Sources */,
 				45CE915B2A2F6C6700BB3AB7 /* CubicScrollView.swift in Sources */,
 				450B796B28F58574009229E3 /* ActivationAlertScrollableView.swift in Sources */,
-				450B796C28F58574009229E3 /* SuggestedBetLineTableViewCell.swift in Sources */,
 				450B796D28F58574009229E3 /* VideoPreviewLineTableViewCell.swift in Sources */,
 				450B796E28F58574009229E3 /* NewGroupManagementViewController.swift in Sources */,
 				450B796F28F58574009229E3 /* TabularBarView.swift in Sources */,
@@ -12949,7 +12938,6 @@
 				457CBAD2282D27D000ED0F00 /* BonusAvailableCellViewModel.swift in Sources */,
 				A9958C84297AFE42001474E2 /* AddAnotherDocumentView.swift in Sources */,
 				457CBAD3282D27D000ED0F00 /* ActivationAlertScrollableView.swift in Sources */,
-				457CBAD4282D27D000ED0F00 /* SuggestedBetLineTableViewCell.swift in Sources */,
 				457CBAD5282D27D000ED0F00 /* VideoPreviewLineTableViewCell.swift in Sources */,
 				457CBAD6282D27D000ED0F00 /* NewGroupManagementViewController.swift in Sources */,
 				457CBAD7282D27D000ED0F00 /* TabularBarView.swift in Sources */,
@@ -13624,7 +13612,6 @@
 				45ECD7732A90016400492CB9 /* PromotedCompetitionLineTableViewCell.swift in Sources */,
 				A90FB7D729AF9DF800D08A7C /* SelfExclusionViewController.swift in Sources */,
 				A9C9C3972A9F573E00DD3A03 /* GenericAvatarErrorViewController.swift in Sources */,
-				457CBD7D282D2CD100ED0F00 /* SuggestedBetLineTableViewCell.swift in Sources */,
 				A98708B728D3455300F27348 /* RankingsListViewModel.swift in Sources */,
 				457CBD7E282D2CD100ED0F00 /* VideoPreviewLineTableViewCell.swift in Sources */,
 				457CBD7F282D2CD100ED0F00 /* NewGroupManagementViewController.swift in Sources */,
@@ -14292,7 +14279,6 @@
 				4589C85B282024E400243547 /* BonusAvailableCellViewModel.swift in Sources */,
 				4589C85C282024E400243547 /* ActivationAlertScrollableView.swift in Sources */,
 				45CE915C2A2F6C6700BB3AB7 /* CubicScrollView.swift in Sources */,
-				4589C85D282024E400243547 /* SuggestedBetLineTableViewCell.swift in Sources */,
 				45A6BB992822FF4200D9B416 /* VideoPreviewLineTableViewCell.swift in Sources */,
 				4589C85E282024E400243547 /* NewGroupManagementViewController.swift in Sources */,
 				4589C85F282024E400243547 /* TabularBarView.swift in Sources */,
@@ -14968,7 +14954,6 @@
 				45CE915A2A2F6C6700BB3AB7 /* CubicScrollView.swift in Sources */,
 				45A33183298976BA008181E9 /* BonusAvailableCellViewModel.swift in Sources */,
 				45A33184298976BA008181E9 /* ActivationAlertScrollableView.swift in Sources */,
-				45A33185298976BA008181E9 /* SuggestedBetLineTableViewCell.swift in Sources */,
 				45A33186298976BA008181E9 /* VideoPreviewLineTableViewCell.swift in Sources */,
 				45A33187298976BA008181E9 /* NewGroupManagementViewController.swift in Sources */,
 				45A33188298976BA008181E9 /* TabularBarView.swift in Sources */,
@@ -15950,7 +15935,6 @@
 				45C10E2128759FEF00037BBE /* KDCircularProgress.swift in Sources */,
 				450088F429CE244200DA4C30 /* FooterResponsibleGamingViewCell.swift in Sources */,
 				A9B331DF288FFFE000D097F0 /* MessagesViewModel.swift in Sources */,
-				45ECD7612A90012600492CB9 /* SuggestedBetLineTableViewCell.swift in Sources */,
 				F4A62A8A2850FAB5007B46C5 /* CasinoGameDetailViewController.swift in Sources */,
 				A9CB3E7229CDC25600BEF9C1 /* ApplicableBonus.swift in Sources */,
 				45A6BD8228246A7500D9B416 /* SportMatchSingleLineTableViewCell.swift in Sources */,
@@ -16471,7 +16455,6 @@
 				A9C3424A28F9A74A0055360B /* InternalBrowserViewController.swift in Sources */,
 				A9C3424B28F9A74A0055360B /* TabularBarButton.swift in Sources */,
 				A9C3424C28F9A74A0055360B /* AddContactViewModel.swift in Sources */,
-				45ECD7602A90012600492CB9 /* SuggestedBetLineTableViewCell.swift in Sources */,
 				A9C3424D28F9A74A0055360B /* TabularBarDelegate.swift in Sources */,
 				A90C373329C38DAD007B8AEC /* GrantedBonus.swift in Sources */,
 				A9C3424E28F9A74A0055360B /* OddDoubleCollectionViewCell.swift in Sources */,
