@@ -70,7 +70,7 @@ class InternalBrowserViewController: UIViewController {
         }
 
         self.webView.navigationDelegate = self
-
+        
         self.backButton.addTarget(self, action: #selector(didTapBackButton), for: .primaryActionTriggered)
 
         self.showLoading()
@@ -81,7 +81,19 @@ class InternalBrowserViewController: UIViewController {
         else if let fileName = self.localFileName,
                 let fileType = localFileType,
                 let url = Bundle.main.url(forResource: fileName, withExtension: fileType) {
-            self.webView.loadFileURL(url, allowingReadAccessTo: url)
+            
+            // Define custom headers
+            var headers = [String: String]()
+            headers["Origin"] = "https://sportsbook-stage.gomagaming.ruben.com/"
+            
+            // Create a URLRequest with custom headers
+            var request = URLRequest(url: url)
+            request.allHTTPHeaderFields = headers
+            
+            // Load the local file with custom headers
+            self.webView.load(request)
+            
+            // self.webView.loadFileURL(url, allowingReadAccessTo: url)
         }
 
     }

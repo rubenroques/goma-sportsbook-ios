@@ -1,4 +1,4 @@
-git_url("https://github.com/gomagaming/FastlaneAppleCertificates")
+git_url("git@github.com:gomagaming/FastlaneAppleCertificates.git")
 
 storage_mode("git")
 
@@ -21,4 +21,3 @@ app_identifier([
 # Remove the # in the beginning of the line to enable the other options
 
 # The docs are available on https://docs.fastlane.tools/actions/match
-
