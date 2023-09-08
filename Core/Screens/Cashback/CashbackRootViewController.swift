@@ -122,6 +122,13 @@ class CashbackRootViewController: UIViewController {
         }
     }
 
+    func scrollToTop() {
+
+        let topOffset = CGPoint(x: 0, y: -self.scrollView.contentInset.top)
+        self.scrollView.setContentOffset(topOffset, animated: true)
+
+    }
+
     @objc private func didTapBackButton() {
         self.navigationController?.popViewController(animated: true)
     }

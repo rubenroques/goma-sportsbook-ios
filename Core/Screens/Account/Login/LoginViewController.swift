@@ -240,16 +240,27 @@ class LoginViewController: UIViewController {
         self.dismissButton.setTitle(localized("close"), for: .normal)
         self.dismissButton.setTitleColor(UIColor.App.highlightPrimary, for: .normal)
 
+        self.orLabel.text = localized("or")
+
         self.checkPolicyLinks()
 
         self.logoImageView.isUserInteractionEnabled = true
 
         // #if DEBUG
-        let debugLogoImageViewTap = UITapGestureRecognizer(target: self, action: #selector(didTapDebugFormFill))
-        debugLogoImageViewTap.numberOfTapsRequired = 5
+//        let debugLogoImageViewTap = UITapGestureRecognizer(target: self, action: #selector(didTapDebugFormFill))
+//        debugLogoImageViewTap.numberOfTapsRequired = 5
+//        self.logoImageView.addGestureRecognizer(debugLogoImageViewTap)
+        let debugLogoImageViewTap = UITapGestureRecognizer(target: self, action: #selector(showDeposit))
+        debugLogoImageViewTap.numberOfTapsRequired = 2
         self.logoImageView.addGestureRecognizer(debugLogoImageViewTap)
         // #endif
-  
+
+    }
+
+    @objc private func showDeposit() {
+        if let navigationController = self.navigationController {
+            self.showDepositOnRegisterViewController(onNavigationController: navigationController)
+        }
     }
 
     func setupWithTheme() {
@@ -622,7 +633,6 @@ class LoginViewController: UIViewController {
     }
 
     @IBAction private func didTapLoginButton() {
-
 
         let username = usernameHeaderTextFieldView.text
         let password = passwordHeaderTextFieldView.text

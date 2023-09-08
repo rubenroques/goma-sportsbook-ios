@@ -831,6 +831,13 @@ class PreLiveEventsViewController: UIViewController {
             self.reachedTopCompetitionSection = section
         }
     }
+
+    func scrollToTop() {
+
+        let topOffset = CGPoint(x: 0, y: -self.tableView.contentInset.top)
+        self.tableView.setContentOffset(topOffset, animated: true)
+
+    }
 }
 
 extension PreLiveEventsViewController {

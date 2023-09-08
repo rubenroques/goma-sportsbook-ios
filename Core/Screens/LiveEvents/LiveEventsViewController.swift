@@ -453,6 +453,13 @@ class LiveEventsViewController: UIViewController {
         self.present(navigationViewController, animated: true, completion: nil)
     }
 
+    func scrollToTop() {
+
+        let topOffset = CGPoint(x: 0, y: -self.tableView.contentInset.top)
+        self.tableView.setContentOffset(topOffset, animated: true)
+
+    }
+
     @objc func handleSportsSelectionTap() {
         let sportSelectionViewController = SportSelectionViewController(defaultSport: self.viewModel.selectedSport, isLiveSport: true)
         sportSelectionViewController.selectionDelegate = self

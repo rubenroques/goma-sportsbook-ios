@@ -1168,7 +1168,7 @@
 "freebet" = "Freebet";
 
 "read_about_terms_placeholders" = "Read about our {terms_and_conditions}.";
-"agree_terms_conditions_placeholders" = "By Signing up, you agree to our \n{terms_and_conditions}, {privacy_policy}, and {sport_betting_rules}";
+"signing_agree_terms_conditions" = "By Signing up, you agree to our {terms_and_conditions}, {privacy_policy}, and {sport_betting_rules}";
 
 "terms_and_conditions" = "Terms and Conditions";
 "privacy_policy" = "Privacy Policy";

@@ -120,6 +120,8 @@ class BetslipViewController: UIViewController {
         self.tabViewController.textFont = AppFont.with(type: .bold, size: 16)
         self.tabViewController.setBarDistribution(.parent)
 
+        self.betsLabel.text = localized("bets")
+
         //
         //
         self.closeButton.titleLabel?.font = AppFont.with(type: AppFont.AppFontType.semibold, size: 17)

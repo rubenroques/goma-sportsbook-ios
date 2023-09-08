@@ -81,6 +81,8 @@ public class DepositOnRegisterViewController: UIViewController {
 
     private var cancellables = Set<AnyCancellable>()
 
+    var currentSelectedButton: UIButton?
+
     public var isLoading: Bool = false {
         didSet {
             self.loadingBaseView.isHidden = !isLoading
@@ -158,14 +160,8 @@ public class DepositOnRegisterViewController: UIViewController {
 
                 guard let self = self else { return }
 
-                if text != "" && self.depositHeaderTextFieldView.isManualInput {
-                    self.disableAmountButtons = true
-                }
-                else {
-                    self.disableAmountButtons = false
-                }
+                self.checkUserInputs()
 
-                self.depositButton.isEnabled = text != "" ? true : false
             })
             .store(in: &cancellables)
 
@@ -308,6 +304,69 @@ public class DepositOnRegisterViewController: UIViewController {
 
     }
 
+    private func checkUserInputs() {
+
+        let depositText = depositHeaderTextFieldView.text == "" ? false : true
+
+        if depositText {
+            self.depositButton.isEnabled = true
+            self.checkForHighlightedAmountButton()
+
+            if depositHeaderTextFieldView.text == "20" {
+                self.amountButton1.setBackgroundColor(AppColor.buttonBackgroundPrimary, for: .normal)
+                self.amountButton1.layer.borderColor = AppColor.buttonBackgroundPrimary.cgColor
+                currentSelectedButton = self.amountButton1
+            }
+            else if depositHeaderTextFieldView.text == "50" {
+                self.amountButton2.setBackgroundColor(AppColor.buttonBackgroundPrimary, for: .normal)
+                self.amountButton2.layer.borderColor = AppColor.buttonBackgroundPrimary.cgColor
+                currentSelectedButton = self.amountButton2
+            }
+            else if depositHeaderTextFieldView.text == "100" {
+                self.amountButton3.setBackgroundColor(AppColor.buttonBackgroundPrimary, for: .normal)
+                self.amountButton3.layer.borderColor = AppColor.buttonBackgroundPrimary.cgColor
+                currentSelectedButton = self.amountButton3
+            }
+            else if depositHeaderTextFieldView.text == "200" {
+                self.amountButton4.setBackgroundColor(AppColor.buttonBackgroundPrimary, for: .normal)
+                self.amountButton4.layer.borderColor = AppColor.buttonBackgroundPrimary.cgColor
+                currentSelectedButton = self.amountButton4
+            }
+            else {
+                self.amountButton1.setBackgroundColor(AppColor.navBanner, for: .normal)
+                self.amountButton1.layer.borderColor = AppColor.navBanner.cgColor
+
+                self.amountButton2.setBackgroundColor(AppColor.navBanner, for: .normal)
+                self.amountButton2.layer.borderColor = AppColor.navBanner.cgColor
+
+                self.amountButton3.setBackgroundColor(AppColor.navBanner, for: .normal)
+                self.amountButton3.layer.borderColor = AppColor.navBanner.cgColor
+
+                self.amountButton4.setBackgroundColor(AppColor.navBanner, for: .normal)
+                self.amountButton4.layer.borderColor = AppColor.navBanner.cgColor
+            }
+
+            if self.depositHeaderTextFieldView.isManualInput {
+                self.disableAmountButtons = true
+            }
+            else {
+                self.disableAmountButtons = false
+            }
+
+        }
+        else {
+            self.depositButton.isEnabled = false
+            self.disableAmountButtons = false
+        }
+    }
+
+    private func checkForHighlightedAmountButton() {
+        if currentSelectedButton != nil {
+            currentSelectedButton?.setBackgroundColor(AppColor.navBanner, for: .normal)
+            currentSelectedButton?.layer.borderColor = AppColor.navBanner.cgColor
+        }
+    }
+
     @objc func didTapBackButton() {
         self.didTapBackButtonAction()
     }
@@ -337,34 +396,74 @@ public class DepositOnRegisterViewController: UIViewController {
     }
 
     @objc func didTapAmountButton1() {
+
         self.depositHeaderTextFieldView.isManualInput = false
+
+        self.checkForHighlightedAmountButton()
+
+        self.amountButton1.setBackgroundColor(AppColor.buttonBackgroundPrimary, for: .normal)
+        self.amountButton1.layer.borderColor = AppColor.buttonBackgroundPrimary.cgColor
+
+        self.currentSelectedButton = self.amountButton1
+
         self.depositHeaderTextFieldView.setText("20")
+        self.depositButton.isEnabled = true
     }
 
     @objc func didTapAmountButton2() {
+
         self.depositHeaderTextFieldView.isManualInput = false
+
+        self.checkForHighlightedAmountButton()
+
+        self.amountButton2.setBackgroundColor(AppColor.buttonBackgroundPrimary, for: .normal)
+        self.amountButton2.layer.borderColor = AppColor.buttonBackgroundPrimary.cgColor
+
+        self.currentSelectedButton = self.amountButton2
+
         self.depositHeaderTextFieldView.setText("50")
+        self.depositButton.isEnabled = true
     }
 
     @objc func didTapAmountButton3() {
+
         self.depositHeaderTextFieldView.isManualInput = false
+
+        self.checkForHighlightedAmountButton()
+
+        self.amountButton3.setBackgroundColor(AppColor.buttonBackgroundPrimary, for: .normal)
+        self.amountButton3.layer.borderColor = AppColor.buttonBackgroundPrimary.cgColor
+
+        self.currentSelectedButton = self.amountButton3
+
         self.depositHeaderTextFieldView.setText("100")
+        self.depositButton.isEnabled = true
     }
 
     @objc func didTapAmountButton4() {
+
         self.depositHeaderTextFieldView.isManualInput = false
+
+        self.checkForHighlightedAmountButton()
+
+        self.amountButton4.setBackgroundColor(AppColor.buttonBackgroundPrimary, for: .normal)
+        self.amountButton4.layer.borderColor = AppColor.buttonBackgroundPrimary.cgColor
+
+        self.currentSelectedButton = self.amountButton4
+
         self.depositHeaderTextFieldView.setText("200")
+        self.depositButton.isEnabled = true
     }
 
     private func configureStyleOnButton(_ button: UIButton) {
 
         button.setTitleColor(AppColor.buttonTextPrimary, for: .normal)
-        button.setTitleColor(AppColor.buttonTextPrimary.withAlphaComponent(0.7), for: .highlighted)
-        button.setTitleColor(AppColor.buttonTextDisablePrimary, for: .disabled)
+        button.setTitleColor(AppColor.navBannerActive, for: .disabled)
 
-        button.setBackgroundColor(AppColor.buttonBackgroundPrimary, for: .normal)
-        button.setBackgroundColor(AppColor.buttonBackgroundSecondary, for: .highlighted)
+        button.setBackgroundColor(AppColor.navBanner, for: .normal)
 
+        button.layer.borderWidth = 2
+        button.layer.borderColor = AppColor.navBanner.cgColor
         button.layer.cornerRadius = 8
         button.layer.masksToBounds = true
         button.backgroundColor = .clear

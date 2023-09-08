@@ -210,6 +210,13 @@ class HomeViewController: UIViewController {
         self.loadingSpinnerViewController.stopAnimating()
     }
 
+    func scrollToTop() {
+
+        let topOffset = CGPoint(x: 0, y: -self.tableView.contentInset.top)
+        self.tableView.setContentOffset(topOffset, animated: true)
+
+    }
+
     // MARK: - Actions
     private func openCompetitionsDetails(competitionsIds: [String], sport: Sport) {
         let competitionDetailsViewModel = CompetitionDetailsViewModel(competitionsIds: competitionsIds, sport: sport)
@@ -974,9 +981,11 @@ extension HomeViewController: UITableViewDelegate, UITableViewDataSource {
             if let sportIconImage = UIImage(named: "sport_type_icon_\(imageName)") {
                 sportImageView.image = sportIconImage
             }
+            else if let sectionIconImage = UIImage(named: imageName) {
+                sportImageView.image = sectionIconImage
+            }
             else {
                 sportImageView.image = UIImage(named: "sport_type_icon_default")
-
             }
         }
         else {

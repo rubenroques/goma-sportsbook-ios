@@ -80,6 +80,9 @@ class MyTicketsViewController: UIViewController {
         self.refreshControl.addTarget(self, action: #selector(self.refresh), for: .valueChanged)
         self.ticketsTableView.addSubview(self.refreshControl)
 
+        self.firstTextFieldLabel.text = localized("no_tickets_here")
+        self.secondTextFieldLabel.text = localized("second_empty_no_bets")
+
         self.loadingView.alpha = 0.0
         self.loadingView.stopAnimating()
         self.loadingBaseView.isHidden = true
@@ -144,6 +147,8 @@ class MyTicketsViewController: UIViewController {
                 }
                 else {
                     self?.emptyBaseView.isHidden = !isTicketsEmpty
+                    self?.firstTextFieldLabel.text = localized("no_tickets_here")
+                    self?.secondTextFieldLabel.text = localized("second_empty_no_bets")
                 }
 
             })

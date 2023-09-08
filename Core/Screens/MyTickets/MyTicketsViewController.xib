@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="20037" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="21507" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
     <device id="retina6_1" orientation="portrait" appearance="light"/>
     <dependencies>
         <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="20020"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="21505"/>
         <capability name="Named colors" minToolsVersion="9.0"/>
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
         <capability name="System colors in document resources" minToolsVersion="11.0"/>
@@ -15,7 +15,7 @@
         </array>
     </customFonts>
     <objects>
-        <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner" customClass="MyTicketsViewController" customModule="Crocobet" customModuleProvider="target">
+        <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner" customClass="MyTicketsViewController" customModule="Betsson" customModuleProvider="target">
             <connections>
                 <outlet property="emptyBaseView" destination="GIT-G2-MgX" id="38n-g5-PmX"/>
                 <outlet property="firstTextFieldLabel" destination="NSD-he-oH5" id="h91-CN-bD1"/>
@@ -60,13 +60,13 @@
                     <rect key="frame" x="0.0" y="0.0" width="423" height="725"/>
                     <subviews>
                         <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="249" verticalHuggingPriority="249" text="You haven't made a bet yet, it's time to bet on your favourites." textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="2" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="wJu-lK-SDR">
-                            <rect key="frame" x="10.5" y="382.5" width="402" height="14"/>
+                            <rect key="frame" x="30" y="382.5" width="363" height="28"/>
                             <fontDescription key="fontDescription" name="Gilroy-Bold" family="Gilroy" pointSize="14"/>
                             <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                             <nil key="highlightedColor"/>
                         </label>
                         <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="There's no tickets here!" textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="NSD-he-oH5">
-                            <rect key="frame" x="106" y="350.5" width="211" height="20"/>
+                            <rect key="frame" x="30" y="350.5" width="363" height="20"/>
                             <fontDescription key="fontDescription" name="Gilroy-Bold" family="Gilroy" pointSize="20"/>
                             <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                             <nil key="highlightedColor"/>
@@ -75,7 +75,7 @@
                             <rect key="frame" x="131" y="171.5" width="161" height="161"/>
                         </imageView>
                         <button hidden="YES" opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="9QP-4d-L0p">
-                            <rect key="frame" x="30" y="446.5" width="363" height="50"/>
+                            <rect key="frame" x="30" y="460.5" width="363" height="50"/>
                             <color key="backgroundColor" name="mainTintColor"/>
                             <constraints>
                                 <constraint firstAttribute="height" constant="50" id="Ub4-4b-swD"/>
@@ -90,10 +90,14 @@
                     <color key="backgroundColor" systemColor="systemBackgroundColor"/>
                     <constraints>
                         <constraint firstItem="wJu-lK-SDR" firstAttribute="top" secondItem="NSD-he-oH5" secondAttribute="bottom" constant="12" id="1mg-Nh-sDC"/>
+                        <constraint firstAttribute="trailing" secondItem="NSD-he-oH5" secondAttribute="trailing" constant="30" id="2FT-T0-ely"/>
+                        <constraint firstAttribute="trailing" secondItem="wJu-lK-SDR" secondAttribute="trailing" constant="30" id="3yo-dP-wzb"/>
                         <constraint firstItem="Zr1-IX-MMC" firstAttribute="bottom" secondItem="GIT-G2-MgX" secondAttribute="centerY" constant="-30" id="5QV-RP-U6q"/>
+                        <constraint firstItem="wJu-lK-SDR" firstAttribute="leading" secondItem="GIT-G2-MgX" secondAttribute="leading" constant="30" id="95Q-U7-UDl"/>
                         <constraint firstItem="wJu-lK-SDR" firstAttribute="centerX" secondItem="GIT-G2-MgX" secondAttribute="centerX" id="IHp-Y5-kEw"/>
                         <constraint firstItem="Zr1-IX-MMC" firstAttribute="centerX" secondItem="GIT-G2-MgX" secondAttribute="centerX" id="REY-zB-Yn5"/>
                         <constraint firstItem="NSD-he-oH5" firstAttribute="centerX" secondItem="GIT-G2-MgX" secondAttribute="centerX" id="Y9s-M9-AeF"/>
+                        <constraint firstItem="NSD-he-oH5" firstAttribute="leading" secondItem="GIT-G2-MgX" secondAttribute="leading" constant="30" id="a9j-QF-cJm"/>
                         <constraint firstAttribute="trailing" secondItem="9QP-4d-L0p" secondAttribute="trailing" constant="30" id="d7N-OY-GpI"/>
                         <constraint firstItem="9QP-4d-L0p" firstAttribute="leading" secondItem="GIT-G2-MgX" secondAttribute="leading" constant="30" id="gep-8l-y18"/>
                         <constraint firstItem="NSD-he-oH5" firstAttribute="top" secondItem="Zr1-IX-MMC" secondAttribute="bottom" constant="18" id="tV7-b5-laX"/>

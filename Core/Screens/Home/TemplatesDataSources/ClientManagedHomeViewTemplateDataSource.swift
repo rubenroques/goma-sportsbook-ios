@@ -349,7 +349,7 @@ extension ClientManagedHomeViewTemplateDataSource: HomeViewTemplateDataSource {
     func title(forSection section: Int) -> String? {
         switch section {
         case 4:
-            return localized("Highlights")
+            return localized("highlights")
         case 6:
             return localized("top_competitions")
         default:
@@ -365,6 +365,30 @@ extension ClientManagedHomeViewTemplateDataSource: HomeViewTemplateDataSource {
     }
 
     func iconName(forSection section: Int) -> String? {
+        // return nil
+        switch section {
+        case 4:
+            return "pin_icon"
+        case 6:
+            return "trophy_icon"
+        default:
+            ()
+        }
+
+        let activeSports = Env.sportsStore.activeSports
+
+        let croppedSection = section - self.fixedSection
+
+        // NOTE: ID's don't match from regular and promoted same sport
+        if let promotedSport = self.promotedSports[safe: croppedSection] {
+
+            let currentSport = activeSports.filter({
+                $0.name == promotedSport.name
+            }).first
+
+            return currentSport?.id
+        }
+
         return nil
     }
 

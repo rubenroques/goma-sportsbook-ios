@@ -308,7 +308,7 @@ class ProfileViewController: UIViewController {
 
             self.totalBalanceInfoDialogView.bottomAnchor.constraint(equalTo: self.totalBalanceInfoImageView.topAnchor, constant: -10),
             self.totalBalanceInfoDialogView.trailingAnchor.constraint(equalTo: self.totalBalanceInfoImageView.trailingAnchor, constant: 8),
-            self.totalBalanceInfoDialogView.widthAnchor.constraint(lessThanOrEqualToConstant: 160)
+            self.totalBalanceInfoDialogView.widthAnchor.constraint(lessThanOrEqualToConstant: 150)
         ])
 
         self.totalBalanceInfoDialogView.alpha = 0
@@ -336,7 +336,6 @@ class ProfileViewController: UIViewController {
         withdrawButton.backgroundColor = UIColor.App.buttonBackgroundSecondary
         withdrawButton.layer.cornerRadius = CornerRadius.button
         withdrawButton.layer.masksToBounds = true
-        withdrawButton.layer.borderWidth = 2
         withdrawButton.setTitle(localized("withdraw"), for: .normal)
 
         logoutButton.backgroundColor = .clear
@@ -519,7 +518,8 @@ class ProfileViewController: UIViewController {
         withdrawButton.setTitleColor( UIColor.App.buttonTextPrimary, for: .normal)
         withdrawButton.setTitleColor( UIColor.App.buttonTextPrimary.withAlphaComponent(0.7), for: .highlighted)
         withdrawButton.setTitleColor( UIColor.App.buttonTextPrimary.withAlphaComponent(0.4), for: .disabled)
-        withdrawButton.layer.borderColor = UIColor.App.backgroundSecondary.cgColor
+        withdrawButton.setBackgroundColor(UIColor.App.buttonBackgroundSecondary, for: .normal)
+        withdrawButton.setBackgroundColor(UIColor.App.buttonBackgroundSecondary, for: .highlighted)
 
         logoutButton.setTitleColor( UIColor.App.textPrimary, for: .normal)
         logoutButton.setTitleColor( UIColor.App.textPrimary.withAlphaComponent(0.7), for: .highlighted)

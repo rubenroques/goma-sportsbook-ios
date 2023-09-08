@@ -94,6 +94,8 @@ class MatchDetailsViewModel: NSObject {
 
     private var liveDataSubscription: ServicesProvider.Subscription?
 
+    var scrollToTopAction: ((Int) -> Void)?
+
     init(matchMode: MatchMode = .preLive, match: Match) {
         self.matchId = match.id
         self.matchStatsViewModel = MatchStatsViewModel(matchId: match.id)
@@ -334,8 +336,13 @@ extension MatchDetailsViewModel: UICollectionViewDataSource, UICollectionViewDel
         let previousSelectionValue = self.selectedMarketTypeIndexPublisher.value ?? -1
 
         if indexPath.row != previousSelectionValue {
+            print("CHANGING TAB!")
             self.selectedMarketTypeIndexPublisher.send(indexPath.row)
             collectionView.scrollToItem(at: indexPath, at: .centeredHorizontally, animated: true)
+        }
+        else {
+            print("CURRENT TAB!")
+            self.scrollToTopAction?(indexPath.row)
         }
     }
 
