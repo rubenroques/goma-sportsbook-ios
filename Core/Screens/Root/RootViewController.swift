@@ -613,6 +613,10 @@ class RootViewController: UIViewController {
         self.sportsbookButtonBaseView.backgroundColor = UIColor.App.backgroundCards
         self.sportsbookButtonBaseView.layer.maskedCorners = [.layerMaxXMaxYCorner, .layerMaxXMinYCorner]
 
+        self.unlockAppButton.setTitle(localized("unlock_app"), for: .normal)
+
+        self.cancelUnlockAppButton.setTitle(localized("cancel_unlock_app"), for: .normal)
+
         let homeTapGesture = UITapGestureRecognizer(target: self, action: #selector(didTapHomeTabItem))
         self.homeButtonBaseView.addGestureRecognizer(homeTapGesture)
 
@@ -1594,20 +1598,20 @@ extension RootViewController {
             // Device can use biometric authentication
             context.evaluatePolicy(
                 LAPolicy.deviceOwnerAuthentication,
-                localizedReason: "Access requires authentication",
+                localizedReason: localized("access_requires_authentication"),
                 reply: { success, error in
 
                     DispatchQueue.main.async {
                         if let err = error {
                             switch err._code {
                             case LAError.Code.systemCancel.rawValue:
-                                self.notifyUser("Session cancelled", errorMessage: err.localizedDescription)
+                                self.notifyUser(localized("session_cancelled"), errorMessage: err.localizedDescription)
                             case LAError.Code.userCancel.rawValue:
-                                self.notifyUser("Please try again", errorMessage: err.localizedDescription)
+                                self.notifyUser(localized("please_try_again"), errorMessage: err.localizedDescription)
                             case LAError.Code.userFallback.rawValue:
-                                self.notifyUser("Authentication", errorMessage: "Password option selected")
+                                self.notifyUser(localized("authentication"), errorMessage: localized("password_option_selected"))
                             default:
-                                self.notifyUser("Authentication failed", errorMessage: err.localizedDescription)
+                                self.notifyUser(localized("authentication_failed"), errorMessage: err.localizedDescription)
                             }
                         }
                         else {
@@ -1623,13 +1627,13 @@ extension RootViewController {
             if let err = error {
                 switch err.code {
                 case LAError.Code.biometryNotEnrolled.rawValue:
-                    notifyUser("User is not enrolled", errorMessage: err.localizedDescription)
+                    notifyUser(localized("user_not_enrolled"), errorMessage: err.localizedDescription)
                 case LAError.Code.passcodeNotSet.rawValue:
-                    notifyUser("A passcode has not been set", errorMessage: err.localizedDescription)
+                    notifyUser(localized("passcode_not_set"), errorMessage: err.localizedDescription)
                 case LAError.Code.biometryNotAvailable.rawValue:
-                    notifyUser("Biometric authentication not available", errorMessage: err.localizedDescription)
+                    notifyUser(localized("biometric_auth_not_available"), errorMessage: err.localizedDescription)
                 default:
-                    notifyUser("Unknown error", errorMessage: err.localizedDescription)
+                    notifyUser(localized("unknown_error"), errorMessage: err.localizedDescription)
                 }
             }
         }
@@ -1640,7 +1644,7 @@ extension RootViewController {
         let alert = UIAlertController(title: title,
                                       message: errorMessage,
                                       preferredStyle: .alert)
-        let cancelAction = UIAlertAction(title: "OK",
+        let cancelAction = UIAlertAction(title: localized("ok"),
                                          style: .cancel, handler: nil)
         alert.addAction(cancelAction)
         self.present(alert, animated: true, completion: nil)

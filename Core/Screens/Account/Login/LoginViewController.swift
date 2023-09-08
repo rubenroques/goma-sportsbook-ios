@@ -240,6 +240,8 @@ class LoginViewController: UIViewController {
         self.dismissButton.setTitle(localized("close"), for: .normal)
         self.dismissButton.setTitleColor(UIColor.App.highlightPrimary, for: .normal)
 
+        self.orLabel.text = localized("or")
+
         self.checkPolicyLinks()
 
         self.logoImageView.isUserInteractionEnabled = true
@@ -631,7 +633,6 @@ class LoginViewController: UIViewController {
     }
 
     @IBAction private func didTapLoginButton() {
-
 
         let username = usernameHeaderTextFieldView.text
         let password = passwordHeaderTextFieldView.text

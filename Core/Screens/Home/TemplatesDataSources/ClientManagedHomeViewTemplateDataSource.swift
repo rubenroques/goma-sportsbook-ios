@@ -349,7 +349,7 @@ extension ClientManagedHomeViewTemplateDataSource: HomeViewTemplateDataSource {
     func title(forSection section: Int) -> String? {
         switch section {
         case 4:
-            return localized("Highlights")
+            return localized("highlights")
         case 6:
             return localized("top_competitions")
         default:

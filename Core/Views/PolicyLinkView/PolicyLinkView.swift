@@ -17,7 +17,7 @@ class PolicyLinkView: NibView {
     var didTapEula: (() -> Void)?
 
     private var termsText: String {
-        var termsText = localized("agree_terms_conditions_placeholders")
+        var termsText = localized("signing_agree_terms_conditions")
         termsText = termsText.replacingOccurrences(of: "{terms_and_conditions}", with: localized("terms_and_conditions"))
         termsText = termsText.replacingOccurrences(of: "{privacy_policy}", with: localized("privacy_policy"))
         termsText = termsText.replacingOccurrences(of: "{sport_betting_rules}", with: localized("sport_betting_rules"))
@@ -91,6 +91,5 @@ class PolicyLinkView: NibView {
     override var intrinsicContentSize: CGSize {
         return CGSize(width: self.frame.width, height: termsLabel.frame.height)
     }
-
 
 }

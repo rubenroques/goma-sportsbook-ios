@@ -308,7 +308,7 @@ class ProfileViewController: UIViewController {
 
             self.totalBalanceInfoDialogView.bottomAnchor.constraint(equalTo: self.totalBalanceInfoImageView.topAnchor, constant: -10),
             self.totalBalanceInfoDialogView.trailingAnchor.constraint(equalTo: self.totalBalanceInfoImageView.trailingAnchor, constant: 8),
-            self.totalBalanceInfoDialogView.widthAnchor.constraint(lessThanOrEqualToConstant: 160)
+            self.totalBalanceInfoDialogView.widthAnchor.constraint(lessThanOrEqualToConstant: 150)
         ])
 
         self.totalBalanceInfoDialogView.alpha = 0

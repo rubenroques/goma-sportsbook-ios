@@ -378,7 +378,7 @@ extension TransactionsHistoryViewController {
         let button = UIButton(type: .custom)
         button.translatesAutoresizingMaskIntoConstraints = false
         button.titleLabel?.font = AppFont.with(type: .bold, size: 17)
-        button.setTitle("Make a deposit", for: .normal)
+        button.setTitle(localized("make_a_deposit"), for: .normal)
         return button
     }
 

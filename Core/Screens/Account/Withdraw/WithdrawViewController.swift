@@ -7,16 +7,22 @@
 
 import UIKit
 import Combine
+import Lottie
 
 class WithdrawViewController: UIViewController {
 
     // MARK: Private Properties
     @IBOutlet private var topView: UIView!
     @IBOutlet private var containerView: UIView!
-    @IBOutlet private var navigationView: UIView!
+    @IBOutlet private var navigationView: GradientView!
     @IBOutlet private var navigationLabel: UILabel!
     @IBOutlet private var navigationButton: UIButton!
+
+    @IBOutlet private var backgroundGradientView: GradientView!
+    @IBOutlet private var animationBaseView: UIView!
     @IBOutlet private var titleLabel: UILabel!
+    @IBOutlet private var shapeView: UIView!
+
     @IBOutlet private var withdrawHeaderTextFieldView: HeaderTextFieldView!
     @IBOutlet private var tipLabel: UILabel!
     @IBOutlet private var nextButton: UIButton!
@@ -72,12 +78,59 @@ class WithdrawViewController: UIViewController {
 
     }
 
+    override func viewDidLayoutSubviews() {
+        super.viewDidLayoutSubviews()
+
+        self.navigationView.startPoint = CGPoint(x: 0.0, y: 0.0)
+        self.navigationView.endPoint = CGPoint(x: 2.0, y: 0.0)
+
+        self.backgroundGradientView.startPoint = CGPoint(x: 0.0, y: 0.0)
+        self.backgroundGradientView.endPoint = CGPoint(x: 2.0, y: 0.0)
+
+        let path = UIBezierPath()
+        path.move(to: CGPoint(x: 0.0, y: self.shapeView.frame.size.height))
+        path.addCurve(to: CGPoint(x: self.shapeView.frame.size.width, y: self.shapeView.frame.size.height),
+                      controlPoint1: CGPoint(x: self.shapeView.frame.size.width*0.40, y: 0),
+                      controlPoint2: CGPoint(x: self.shapeView.frame.size.width*0.60, y: 20))
+        path.addLine(to: CGPoint(x: self.shapeView.frame.size.width, y: self.shapeView.frame.size.height))
+        path.addLine(to: CGPoint(x: 0.0, y: self.shapeView.frame.size.height))
+        path.close()
+
+        let shapeLayer = CAShapeLayer()
+        shapeLayer.path = path.cgPath
+        shapeLayer.fillColor = UIColor.App.backgroundPrimary.cgColor
+
+        self.shapeView.layer.mask = shapeLayer
+        self.shapeView.layer.masksToBounds = true
+    }
+
     private func commonInit() {
         self.navigationLabel.text = localized("withdraw")
         self.navigationLabel.font = AppFont.with(type: .bold, size: 17)
 
         self.navigationButton.setTitle(localized("cancel"), for: .normal)
         self.navigationButton.setTitleColor(UIColor.App.highlightPrimary, for: .normal)
+
+        let animationView = LottieAnimationView()
+
+        animationView.translatesAutoresizingMaskIntoConstraints = false
+        animationView.contentMode = .scaleAspectFit
+
+        self.animationBaseView.addSubview(animationView)
+
+        let starAnimation = LottieAnimation.named("deposit_animation")
+
+        animationView.animation = starAnimation
+        animationView.loopMode = .loop
+
+        NSLayoutConstraint.activate([
+            animationView.leadingAnchor.constraint(equalTo: self.animationBaseView.leadingAnchor),
+            animationView.trailingAnchor.constraint(equalTo: self.animationBaseView.trailingAnchor),
+            animationView.topAnchor.constraint(equalTo: self.animationBaseView.topAnchor),
+            animationView.bottomAnchor.constraint(equalTo: self.animationBaseView.bottomAnchor)
+        ])
+
+        animationView.play()
 
         self.titleLabel.text = localized("how_much_withdraw")
         self.titleLabel.font = AppFont.with(type: .bold, size: 20)
@@ -91,7 +144,6 @@ class WithdrawViewController: UIViewController {
         tipLabel.font = AppFont.with(type: .semibold, size: 12)
         tipLabel.isHidden = true
 
-        StyleHelper.styleButton(button: self.nextButton)
         self.nextButton.setTitle(localized("next"), for: .normal)
         self.nextButton.isEnabled = false
         self.nextButton.titleLabel?.font = AppFont.with(type: .bold, size: 16)
@@ -130,12 +182,20 @@ class WithdrawViewController: UIViewController {
 
         self.containerView.backgroundColor = UIColor.App.backgroundPrimary
 
-        self.navigationView.backgroundColor = .clear
+        self.navigationView.colors = [(UIColor(red: 1.0 / 255.0, green: 2.0 / 255.0, blue: 91.0 / 255.0, alpha: 1), NSNumber(0.0)),
+                                              (UIColor(red: 64.0 / 255.0, green: 76.0 / 255.0, blue: 255.0 / 255.0, alpha: 1), NSNumber(1.0))]
 
         self.navigationLabel.textColor = UIColor.App.textPrimary
 
         self.navigationButton.backgroundColor = .clear
         self.navigationButton.tintColor = UIColor.App.textPrimary
+
+        self.backgroundGradientView.colors = [(UIColor(red: 1.0 / 255.0, green: 2.0 / 255.0, blue: 91.0 / 255.0, alpha: 1), NSNumber(0.0)),
+                                              (UIColor(red: 64.0 / 255.0, green: 76.0 / 255.0, blue: 255.0 / 255.0, alpha: 1), NSNumber(1.0))]
+
+        self.animationBaseView.backgroundColor = .clear
+
+        self.shapeView.backgroundColor = UIColor.App.backgroundPrimary
 
         self.titleLabel.textColor = UIColor.App.textPrimary
 
@@ -145,10 +205,10 @@ class WithdrawViewController: UIViewController {
 
         self.tipLabel.textColor = UIColor.App.textSecondary
 
-        self.nextButton.setBackgroundColor(UIColor.App.highlightPrimary, for: .normal)
+        self.nextButton.setBackgroundColor(UIColor.App.buttonBackgroundPrimary, for: .normal)
         self.nextButton.setBackgroundColor(UIColor.App.buttonDisablePrimary, for: .disabled)
         self.nextButton.setTitleColor(UIColor.App.buttonTextPrimary, for: .normal)
-        self.nextButton.setTitleColor(UIColor.App.textDisablePrimary, for: .disabled)
+        self.nextButton.setTitleColor(UIColor.App.buttonTextDisablePrimary, for: .disabled)
         self.nextButton.layer.cornerRadius = CornerRadius.button
         self.nextButton.layer.masksToBounds = true
 

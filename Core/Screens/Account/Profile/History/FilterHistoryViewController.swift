@@ -59,12 +59,12 @@ class FilterHistoryViewController: UIViewController {
         self.setupSubviews()
         self.setupWithTheme()
         
-        self.startTimeHeaderTextView.setPlaceholderText("From")
+        self.startTimeHeaderTextView.setPlaceholderText(localized("from"))
         self.startTimeHeaderTextView.setImageTextField(UIImage(named: "calendar_regular_icon")!)
         //self.startTimeHeaderTextView.isDisabled = false
         self.startTimeHeaderTextView.setDatePickerMode()
         
-        self.endTimeHeaderTextView.setPlaceholderText("To")
+        self.endTimeHeaderTextView.setPlaceholderText(localized("to"))
         self.endTimeHeaderTextView.setImageTextField(UIImage(named: "calendar_regular_icon")!)
         //self.endTimeHeaderTextView.isDisabled = false
         self.endTimeHeaderTextView.setDatePickerMode()
@@ -436,7 +436,7 @@ extension FilterHistoryViewController {
     
     private static func createTopLabel() -> UILabel {
         let label = UILabel()
-        label.text = localized("Filter")
+        label.text = localized("filter")
         label.font = AppFont.with(type: .bold, size: 17)
         label.translatesAutoresizingMaskIntoConstraints = false
         return label
