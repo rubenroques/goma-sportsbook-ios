@@ -15,11 +15,6 @@ class BetSubmissionSuccessViewController: UIViewController {
     @IBOutlet private weak var scrollView: UIView!
     @IBOutlet private weak var scrollContentView: UIView!
 
-    @IBOutlet private weak var betSuccessView: UIView!
-    @IBOutlet private weak var animationBaseView: UIView!
-    @IBOutlet private weak var messageTitleLabel: UILabel!
-    @IBOutlet private weak var messageSubtitleLabel: UILabel!
-
     @IBOutlet private weak var bottomView: UIView!
     @IBOutlet private weak var bottomSeparatorView: UIView!
     @IBOutlet private weak var continueButton: UIButton!
@@ -110,12 +105,6 @@ class BetSubmissionSuccessViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
 
-        self.messageTitleLabel.text = localized("bet_registered_success")
-        self.messageTitleLabel.font = AppFont.with(type: .bold, size: 16)
-
-        self.messageSubtitleLabel.text = localized("good_luck")
-        self.messageSubtitleLabel.font = AppFont.with(type: .bold, size: 14)
-
         StyleHelper.styleButton(button: self.continueButton)
 
         self.checkboxImage.image = UIImage(named: "checkbox_unselected_icon")
@@ -131,7 +120,6 @@ class BetSubmissionSuccessViewController: UIViewController {
 
         Env.userSessionStore.refreshUserWallet()
 
-        self.setupAnimationView()
         self.getBackgroundImage()
 
         self.backButton.setTitle("", for: .normal)
@@ -181,13 +169,6 @@ class BetSubmissionSuccessViewController: UIViewController {
         self.bottomSeparatorView.backgroundColor = UIColor.App.separatorLine
         self.safeAreaBottomView.backgroundColor = UIColor.App.backgroundPrimary
 
-        self.betSuccessView.backgroundColor = .clear
-
-        self.animationBaseView.backgroundColor = .clear
-        
-        self.messageTitleLabel.textColor = UIColor.App.buttonTextPrimary
-        self.messageSubtitleLabel.textColor = UIColor.App.buttonTextPrimary
-
         self.checkboxLabel.backgroundColor = .clear
         self.checkboxLabel.textColor = UIColor.App.textSecondary
 
@@ -205,36 +186,10 @@ class BetSubmissionSuccessViewController: UIViewController {
 
         self.shapeView.backgroundColor = UIColor.App.backgroundPrimary
 
-        self.animationBaseView.backgroundColor = .clear
-
         self.navigationView.backgroundColor = .clear
 
         self.backButton.backgroundColor = .clear
 
-    }
-
-    private func setupAnimationView() {
-        
-        let animationView = LottieAnimationView()
-
-        animationView.translatesAutoresizingMaskIntoConstraints = false
-        animationView.contentMode = .scaleAspectFill
-
-        self.animationBaseView.addSubview(animationView)
-
-        let starAnimation = LottieAnimation.named("success_thumbs_up")
-
-        animationView.animation = starAnimation
-        animationView.loopMode = .playOnce
-
-        NSLayoutConstraint.activate([
-            animationView.leadingAnchor.constraint(equalTo: self.animationBaseView.leadingAnchor),
-            animationView.trailingAnchor.constraint(equalTo: self.animationBaseView.trailingAnchor),
-            animationView.topAnchor.constraint(equalTo: self.animationBaseView.topAnchor),
-            animationView.bottomAnchor.constraint(equalTo: self.animationBaseView.bottomAnchor)
-        ])
-
-        animationView.play()
     }
 
     private func getBackgroundImage() {
@@ -266,9 +221,9 @@ class BetSubmissionSuccessViewController: UIViewController {
 
     private func setupDefaultBackgroundImage() {
 
-        self.topImageView.image = UIImage(named: "success_default_banner")
+        self.topImageView.image = UIImage(named: "bet_placed_banner")
         self.topImageView.contentMode = .scaleAspectFill
-        self.topImageView.alpha = 0.26
+        //self.topImageView.alpha = 1
 
     }
 

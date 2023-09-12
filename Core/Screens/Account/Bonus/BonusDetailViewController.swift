@@ -17,8 +17,7 @@ class BonusDetailViewController: UIViewController {
     private lazy var containerView: UIView = Self.createContainerView()
     private lazy var titleLabel: UILabel = Self.createTitleLabel()
     private lazy var descriptionLabel: UILabel = Self.createDescriptionLabel()
-    private lazy var termsTitleLabel: UILabel = Self.createTermsTitleLabel()
-    private lazy var termsLinkLabel: UILabel = Self.createTermsLinkLabel()
+    private lazy var termsButton: UIButton = Self.createTermsButton()
     private lazy var bonusImageView: UIImageView = Self.createBonusImageView()
     private lazy var bonusImageViewFixedHeightConstraint: NSLayoutConstraint = Self.createbonusImageViewFixedHeightConstraint()
     private lazy var bonusImageViewDynamicHeightConstraint: NSLayoutConstraint = Self.createbonusImageViewDynamicHeightConstraint()
@@ -60,10 +59,7 @@ class BonusDetailViewController: UIViewController {
 
         self.backButton.addTarget(self, action: #selector(didTapBackButton), for: .touchUpInside)
 
-        let termsLinktap = UITapGestureRecognizer(target: self, action: #selector(didTapTermsLinkLabel))
-
-        self.termsLinkLabel.isUserInteractionEnabled = true
-        self.termsLinkLabel.addGestureRecognizer(termsLinktap)
+        self.termsButton.addTarget(self, action: #selector(didTapTermsButton), for: .primaryActionTriggered)
 
         self.bind(toViewModel: self.viewModel)
     }
@@ -86,9 +82,7 @@ class BonusDetailViewController: UIViewController {
 
         self.descriptionLabel.textColor = UIColor.App.textPrimary
 
-        self.termsTitleLabel.textColor = UIColor.App.textPrimary
-
-        self.termsLinkLabel.textColor = UIColor.App.textPrimary
+        StyleHelper.styleButton(button: self.termsButton)
     }
 
     // MARK: Binding
@@ -108,13 +102,7 @@ class BonusDetailViewController: UIViewController {
 
         viewModel.termsTitlePublisher
             .sink(receiveValue: { [weak self] termsTitle in
-                self?.termsTitleLabel.text = termsTitle
-            })
-            .store(in: &cancellables)
-
-        viewModel.termsLinkStringPublisher
-            .sink(receiveValue: { [weak self] termsLinkString in
-                self?.termsLinkLabel.text = termsLinkString
+                self?.termsButton.setTitle(termsTitle, for: .normal)
             })
             .store(in: &cancellables)
 
@@ -163,7 +151,7 @@ extension BonusDetailViewController {
         self.navigationController?.popViewController(animated: true)
     }
 
-    @objc private func didTapTermsLinkLabel() {
+    @objc private func didTapTermsButton() {
         
         if let url = URL(string: self.viewModel.termsLinkStringPublisher.value) {
             UIApplication.shared.open(url)
@@ -233,24 +221,12 @@ extension BonusDetailViewController {
         return label
     }
 
-    private static func createTermsTitleLabel() -> UILabel {
-        let label = UILabel()
-        label.translatesAutoresizingMaskIntoConstraints = false
-        label.text = "Terms"
-        label.font = AppFont.with(type: .bold, size: 16)
-        label.textAlignment = .left
-        label.numberOfLines = 0
-        return label
-    }
-
-    private static func createTermsLinkLabel() -> UILabel {
-        let label = UILabel()
-        label.translatesAutoresizingMaskIntoConstraints = false
-        label.text = "Terms Link"
-        label.font = AppFont.with(type: .medium, size: 10)
-        label.textAlignment = .left
-        label.numberOfLines = 0
-        return label
+    private static func createTermsButton() -> UIButton {
+        let button = UIButton()
+        button.translatesAutoresizingMaskIntoConstraints = false
+        button.setTitle(localized("bonus_tc"), for: .normal)
+        button.titleLabel?.font = AppFont.with(type: .bold, size: 16)
+        return button
     }
 
     private static func createBonusImageView() -> UIImageView {
@@ -297,8 +273,7 @@ extension BonusDetailViewController {
         self.bonusStackView.addArrangedSubview(self.titleLabel)
 
         self.containerView.addSubview(self.descriptionLabel)
-        self.containerView.addSubview(self.termsTitleLabel)
-        self.containerView.addSubview(self.termsLinkLabel)
+        self.containerView.addSubview(self.termsButton)
 
         self.initConstraints()
     }
@@ -354,13 +329,11 @@ extension BonusDetailViewController {
             self.descriptionLabel.trailingAnchor.constraint(equalTo: self.containerView.trailingAnchor, constant: -35),
             self.descriptionLabel.topAnchor.constraint(equalTo: self.bonusStackView.bottomAnchor, constant: 20),
 
-            self.termsTitleLabel.leadingAnchor.constraint(equalTo: self.containerView.leadingAnchor, constant: 35),
-            self.termsTitleLabel.trailingAnchor.constraint(equalTo: self.containerView.trailingAnchor, constant: -35),
-            self.termsTitleLabel.topAnchor.constraint(equalTo: self.descriptionLabel.bottomAnchor, constant: 30),
+            self.termsButton.leadingAnchor.constraint(equalTo: self.containerView.leadingAnchor, constant: 35),
+            self.termsButton.trailingAnchor.constraint(equalTo: self.containerView.trailingAnchor, constant: -35),
+            self.termsButton.topAnchor.constraint(equalTo: self.descriptionLabel.bottomAnchor, constant: 30),
+            self.termsButton.heightAnchor.constraint(equalToConstant: 50)
 
-            self.termsLinkLabel.leadingAnchor.constraint(equalTo: self.containerView.leadingAnchor, constant: 35),
-            self.termsLinkLabel.trailingAnchor.constraint(equalTo: self.containerView.trailingAnchor, constant: -35),
-            self.termsLinkLabel.topAnchor.constraint(equalTo: self.termsTitleLabel.bottomAnchor, constant: 20),
         ])
 
         self.bonusImageViewFixedHeightConstraint =
