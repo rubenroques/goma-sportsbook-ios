@@ -406,7 +406,7 @@ extension SharedTicketCardView {
         let label = UILabel()
         label.translatesAutoresizingMaskIntoConstraints = false
         label.font = AppFont.with(type: .bold, size: 9)
-        label.text = localized("used_cashback").uppercased()
+        label.text = localized("used_replay").uppercased()
         label.textAlignment = .left
         return label
     }

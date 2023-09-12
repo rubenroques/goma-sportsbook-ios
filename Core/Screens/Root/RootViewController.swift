@@ -603,7 +603,7 @@ class RootViewController: UIViewController {
         self.casinoTitleLabel.text = localized("casino")
         self.sportsbookTitleLabel.text = localized("sportsbook")
         self.tipsTitleLabel.text = localized("tips")
-        self.cashbackTitleLabel.text = localized("cashback")
+        self.cashbackTitleLabel.text = localized("replay")
 
         self.casinoBottomView.backgroundColor = UIColor.App.backgroundPrimary
 

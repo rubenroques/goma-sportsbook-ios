@@ -358,7 +358,7 @@ extension PasswordFormStepView {
         label.font = AppFont.with(type: .semibold, size: 12)
         label.numberOfLines = 2
         label.translatesAutoresizingMaskIntoConstraints = false
-        label.text = Localization.localized("password_tips_title")
+        label.text = "• \(Localization.localized("protect_account"))"
         return label
     }
 
@@ -367,7 +367,7 @@ extension PasswordFormStepView {
         label.font = AppFont.with(type: .semibold, size: 12)
         label.numberOfLines = 2
         label.translatesAutoresizingMaskIntoConstraints = false
-        label.text = Localization.localized("password_tips_number")
+        label.text = "• \(Localization.localized("fourth_password_requirement"))"
         return label
     }
 
@@ -376,7 +376,7 @@ extension PasswordFormStepView {
         label.font = AppFont.with(type: .semibold, size: 12)
         label.numberOfLines = 2
         label.translatesAutoresizingMaskIntoConstraints = false
-        label.text = Localization.localized("password_tips_uppercase")
+        label.text = "• \(Localization.localized("second_password_requirement"))"
         return label
     }
 
@@ -385,7 +385,7 @@ extension PasswordFormStepView {
         label.font = AppFont.with(type: .semibold, size: 12)
         label.numberOfLines = 2
         label.translatesAutoresizingMaskIntoConstraints = false
-        label.text = Localization.localized("password_tips_lowercase")
+        label.text = "• \(Localization.localized("third_password_requirement"))"
         return label
     }
 
@@ -394,7 +394,8 @@ extension PasswordFormStepView {
         label.font = AppFont.with(type: .semibold, size: 12)
         label.numberOfLines = 2
         label.translatesAutoresizingMaskIntoConstraints = false
-        label.text = Localization.localized("password_tips_alphanumeric")
+        let symbols = "-!@^$&*+"
+        label.text = "• \(Localization.localized("fifth_password_requirement").replacingOccurrences(of: "{symbols}", with: symbols))"
         return label
     }
 
@@ -403,7 +404,7 @@ extension PasswordFormStepView {
         label.font = AppFont.with(type: .semibold, size: 12)
         label.numberOfLines = 2
         label.translatesAutoresizingMaskIntoConstraints = false
-        label.text = Localization.localized("password_tips_length")
+        label.text = Localization.localized("first_password_requirement")
         return label
     }
 

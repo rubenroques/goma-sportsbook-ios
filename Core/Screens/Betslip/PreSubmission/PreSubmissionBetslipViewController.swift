@@ -1341,7 +1341,7 @@ class PreSubmissionBetslipViewController: UIViewController {
     private func setupCashback() {
         self.cashbackSwitch.addTarget(self, action: #selector(cashbackSwitchValueChanged(_:)), for: .valueChanged)
 
-        self.cashbackTitleLabel.text = localized("cashback_balance")
+        self.cashbackTitleLabel.text = localized("replay_balance")
         self.cashbackSwitch.setOn(false, animated: false)
         self.isCashbackToggleOn.send(false)
 

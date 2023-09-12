@@ -160,7 +160,7 @@ extension CashbackInfoViewController {
         let label = UILabel()
         label.translatesAutoresizingMaskIntoConstraints = false
         label.font = AppFont.with(type: .bold, size: 20)
-        label.text = localized("cashback")
+        label.text = localized("replay")
         label.textAlignment = .center
         return label
     }
@@ -196,7 +196,7 @@ extension CashbackInfoViewController {
         let label = UILabel()
         label.translatesAutoresizingMaskIntoConstraints = false
         label.font = AppFont.with(type: .bold, size: 18)
-        label.text = localized("first_info_title_cashback")
+        label.text = localized("first_info_title_replay")
         label.textAlignment = .left
         return label
     }
@@ -205,7 +205,7 @@ extension CashbackInfoViewController {
         let label = UILabel()
         label.translatesAutoresizingMaskIntoConstraints = false
         label.font = AppFont.with(type: .regular, size: 14)
-        label.text = localized("first_info_descrition_cashback")
+        label.text = localized("first_info_descrition_replay")
         label.textAlignment = .left
         label.numberOfLines = 0
         label.addLineHeight(to: label, lineHeight: 18)
@@ -222,7 +222,7 @@ extension CashbackInfoViewController {
         let label = UILabel()
         label.translatesAutoresizingMaskIntoConstraints = false
         label.font = AppFont.with(type: .bold, size: 18)
-        label.text = localized("second_info_title_cashback")
+        label.text = localized("second_info_title_replay")
         label.textAlignment = .left
         return label
     }
@@ -231,7 +231,7 @@ extension CashbackInfoViewController {
         let label = UILabel()
         label.translatesAutoresizingMaskIntoConstraints = false
         label.font = AppFont.with(type: .regular, size: 14)
-        label.text = localized("second_info_descrition_cashback")
+        label.text = localized("second_info_descrition_replay")
         label.textAlignment = .left
         label.numberOfLines = 0
         label.addLineHeight(to: label, lineHeight: 18)
@@ -256,7 +256,7 @@ extension CashbackInfoViewController {
         let label = UILabel()
         label.translatesAutoresizingMaskIntoConstraints = false
         label.font = AppFont.with(type: .bold, size: 18)
-        label.text = localized("third_info_title_cashback")
+        label.text = localized("third_info_title_replay")
         label.textAlignment = .left
         return label
     }
@@ -265,7 +265,7 @@ extension CashbackInfoViewController {
         let label = UILabel()
         label.translatesAutoresizingMaskIntoConstraints = false
         label.font = AppFont.with(type: .regular, size: 14)
-        label.text = localized("third_info_descrition_one_cashback")
+        label.text = localized("third_info_descrition_one_replay")
         label.textAlignment = .left
         label.numberOfLines = 0
         label.addLineHeight(to: label, lineHeight: 18)
@@ -284,7 +284,7 @@ extension CashbackInfoViewController {
         let label = UILabel()
         label.translatesAutoresizingMaskIntoConstraints = false
         label.font = AppFont.with(type: .regular, size: 14)
-        label.text = localized("third_info_descrition_two_cashback")
+        label.text = localized("third_info_descrition_two_replay")
         label.textAlignment = .left
         label.numberOfLines = 0
         label.addLineHeight(to: label, lineHeight: 18)
@@ -301,7 +301,7 @@ extension CashbackInfoViewController {
         let label = UILabel()
         label.translatesAutoresizingMaskIntoConstraints = false
         label.font = AppFont.with(type: .bold, size: 18)
-        label.text = localized("fourth_info_title_cashback")
+        label.text = localized("fourth_info_title_replay")
         label.textAlignment = .left
         label.numberOfLines = 0
         return label
@@ -311,7 +311,7 @@ extension CashbackInfoViewController {
         let label = UILabel()
         label.translatesAutoresizingMaskIntoConstraints = false
         label.font = AppFont.with(type: .regular, size: 14)
-        label.text = localized("fourth_info_descrition_cashback")
+        label.text = localized("fourth_info_descrition_replay")
         label.textAlignment = .left
         label.numberOfLines = 0
         label.addLineHeight(to: label, lineHeight: 18)
@@ -328,7 +328,7 @@ extension CashbackInfoViewController {
         let label = UILabel()
         label.translatesAutoresizingMaskIntoConstraints = false
         label.font = AppFont.with(type: .bold, size: 13)
-        label.text = localized("used_cashback").uppercased()
+        label.text = localized("used_replay").uppercased()
         label.textAlignment = .left
         return label
     }
