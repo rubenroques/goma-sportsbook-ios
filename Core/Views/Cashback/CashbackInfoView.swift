@@ -75,7 +75,7 @@ extension CashbackInfoView {
     private static func createTitleLabel() -> UILabel {
         let label = UILabel()
         label.translatesAutoresizingMaskIntoConstraints = false
-        label.text = localized("cashback")
+        label.text = localized("replay")
         label.font = AppFont.with(type: .bold, size: 11)
         label.numberOfLines = 0
         return label

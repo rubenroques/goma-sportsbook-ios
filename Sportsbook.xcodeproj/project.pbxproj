@@ -620,7 +620,6 @@
 		450B7AD328F58574009229E3 /* HeadToHeadCardStatsView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 45A642D627985AAB008EFD5B /* HeadToHeadCardStatsView.xib */; };
 		450B7AD428F58574009229E3 /* Gilroy-Regular.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 45DDBA8426F2146000A73E45 /* Gilroy-Regular.ttf */; };
 		450B7AD528F58574009229E3 /* Gilroy-Medium.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 45DDBA8A26F2146000A73E45 /* Gilroy-Medium.ttf */; };
-		450B7AD628F58574009229E3 /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = 455A0CB126BD982000EC572D /* Localizable.strings */; };
 		450B7AD728F58574009229E3 /* LoadingMoreTableViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 45726330272B13D7002F2959 /* LoadingMoreTableViewCell.xib */; };
 		450B7AD828F58574009229E3 /* MatchLineTableViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 457816A82706679400F66878 /* MatchLineTableViewCell.xib */; };
 		450B7AD928F58574009229E3 /* RecentSearchHeaderView.xib in Resources */ = {isa = PBXBuildFile; fileRef = A96B619027A0496C005DC376 /* RecentSearchHeaderView.xib */; };
@@ -1387,7 +1386,6 @@
 		457CBBFE282D27D000ED0F00 /* HeadToHeadCardStatsView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 45A642D627985AAB008EFD5B /* HeadToHeadCardStatsView.xib */; };
 		457CBBFF282D27D000ED0F00 /* Gilroy-Regular.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 45DDBA8426F2146000A73E45 /* Gilroy-Regular.ttf */; };
 		457CBC00282D27D000ED0F00 /* Gilroy-Medium.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 45DDBA8A26F2146000A73E45 /* Gilroy-Medium.ttf */; };
-		457CBC01282D27D000ED0F00 /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = 455A0CB126BD982000EC572D /* Localizable.strings */; };
 		457CBC02282D27D000ED0F00 /* LoadingMoreTableViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 45726330272B13D7002F2959 /* LoadingMoreTableViewCell.xib */; };
 		457CBC03282D27D000ED0F00 /* MatchLineTableViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 457816A82706679400F66878 /* MatchLineTableViewCell.xib */; };
 		457CBC04282D27D000ED0F00 /* RecentSearchHeaderView.xib in Resources */ = {isa = PBXBuildFile; fileRef = A96B619027A0496C005DC376 /* RecentSearchHeaderView.xib */; };
@@ -1935,7 +1933,6 @@
 		457CBEA6282D2CD100ED0F00 /* HeadToHeadCardStatsView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 45A642D627985AAB008EFD5B /* HeadToHeadCardStatsView.xib */; };
 		457CBEA7282D2CD100ED0F00 /* Gilroy-Regular.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 45DDBA8426F2146000A73E45 /* Gilroy-Regular.ttf */; };
 		457CBEA8282D2CD100ED0F00 /* Gilroy-Medium.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 45DDBA8A26F2146000A73E45 /* Gilroy-Medium.ttf */; };
-		457CBEA9282D2CD100ED0F00 /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = 455A0CB126BD982000EC572D /* Localizable.strings */; };
 		457CBEAA282D2CD100ED0F00 /* LoadingMoreTableViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 45726330272B13D7002F2959 /* LoadingMoreTableViewCell.xib */; };
 		457CBEAB282D2CD100ED0F00 /* MatchLineTableViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 457816A82706679400F66878 /* MatchLineTableViewCell.xib */; };
 		457CBEAC282D2CD100ED0F00 /* RecentSearchHeaderView.xib in Resources */ = {isa = PBXBuildFile; fileRef = A96B619027A0496C005DC376 /* RecentSearchHeaderView.xib */; };
@@ -2484,7 +2481,6 @@
 		4589C97C282024E400243547 /* HeadToHeadCardStatsView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 45A642D627985AAB008EFD5B /* HeadToHeadCardStatsView.xib */; };
 		4589C97D282024E400243547 /* Gilroy-Regular.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 45DDBA8426F2146000A73E45 /* Gilroy-Regular.ttf */; };
 		4589C97E282024E400243547 /* Gilroy-Medium.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 45DDBA8A26F2146000A73E45 /* Gilroy-Medium.ttf */; };
-		4589C97F282024E400243547 /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = 455A0CB126BD982000EC572D /* Localizable.strings */; };
 		4589C980282024E400243547 /* LoadingMoreTableViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 45726330272B13D7002F2959 /* LoadingMoreTableViewCell.xib */; };
 		4589C981282024E400243547 /* MatchLineTableViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 457816A82706679400F66878 /* MatchLineTableViewCell.xib */; };
 		4589C982282024E400243547 /* RecentSearchHeaderView.xib in Resources */ = {isa = PBXBuildFile; fileRef = A96B619027A0496C005DC376 /* RecentSearchHeaderView.xib */; };
@@ -3196,7 +3192,6 @@
 		45A332FC298976BA008181E9 /* HeadToHeadCardStatsView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 45A642D627985AAB008EFD5B /* HeadToHeadCardStatsView.xib */; };
 		45A332FD298976BA008181E9 /* Gilroy-Regular.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 45DDBA8426F2146000A73E45 /* Gilroy-Regular.ttf */; };
 		45A332FE298976BA008181E9 /* Gilroy-Medium.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 45DDBA8A26F2146000A73E45 /* Gilroy-Medium.ttf */; };
-		45A332FF298976BA008181E9 /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = 455A0CB126BD982000EC572D /* Localizable.strings */; };
 		45A33300298976BA008181E9 /* LoadingMoreTableViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 45726330272B13D7002F2959 /* LoadingMoreTableViewCell.xib */; };
 		45A33301298976BA008181E9 /* MatchLineTableViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 457816A82706679400F66878 /* MatchLineTableViewCell.xib */; };
 		45A33302298976BA008181E9 /* RecentSearchHeaderView.xib in Resources */ = {isa = PBXBuildFile; fileRef = A96B619027A0496C005DC376 /* RecentSearchHeaderView.xib */; };
@@ -3760,7 +3755,6 @@
 		45A6BDD528246A7500D9B416 /* HeadToHeadCardStatsView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 45A642D627985AAB008EFD5B /* HeadToHeadCardStatsView.xib */; };
 		45A6BDD628246A7500D9B416 /* Gilroy-Regular.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 45DDBA8426F2146000A73E45 /* Gilroy-Regular.ttf */; };
 		45A6BDD728246A7500D9B416 /* Gilroy-Medium.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 45DDBA8A26F2146000A73E45 /* Gilroy-Medium.ttf */; };
-		45A6BDD828246A7500D9B416 /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = 455A0CB126BD982000EC572D /* Localizable.strings */; };
 		45A6BDD928246A7500D9B416 /* LoadingMoreTableViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 45726330272B13D7002F2959 /* LoadingMoreTableViewCell.xib */; };
 		45A6BDDA28246A7500D9B416 /* MatchLineTableViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 457816A82706679400F66878 /* MatchLineTableViewCell.xib */; };
 		45A6BDDB28246A7500D9B416 /* RecentSearchHeaderView.xib in Resources */ = {isa = PBXBuildFile; fileRef = A96B619027A0496C005DC376 /* RecentSearchHeaderView.xib */; };
@@ -4966,6 +4960,13 @@
 		A9BA04252A33399D007880FC /* UploadDocumentsInformationView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9BA041F2A33399D007880FC /* UploadDocumentsInformationView.swift */; };
 		A9BA04262A33399D007880FC /* UploadDocumentsInformationView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9BA041F2A33399D007880FC /* UploadDocumentsInformationView.swift */; };
 		A9BA04272A33399D007880FC /* UploadDocumentsInformationView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9BA041F2A33399D007880FC /* UploadDocumentsInformationView.swift */; };
+		A9BAFB432AB0B46D002EDBA1 /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = A9BAFB412AB0B46D002EDBA1 /* Localizable.strings */; };
+		A9BAFB442AB0B46D002EDBA1 /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = A9BAFB412AB0B46D002EDBA1 /* Localizable.strings */; };
+		A9BAFB452AB0B46D002EDBA1 /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = A9BAFB412AB0B46D002EDBA1 /* Localizable.strings */; };
+		A9BAFB462AB0B46D002EDBA1 /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = A9BAFB412AB0B46D002EDBA1 /* Localizable.strings */; };
+		A9BAFB472AB0B46D002EDBA1 /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = A9BAFB412AB0B46D002EDBA1 /* Localizable.strings */; };
+		A9BAFB482AB0B46D002EDBA1 /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = A9BAFB412AB0B46D002EDBA1 /* Localizable.strings */; };
+		A9BAFB492AB0B46D002EDBA1 /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = A9BAFB412AB0B46D002EDBA1 /* Localizable.strings */; };
 		A9BDD4F1292E3F08001A7799 /* SportTypeStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9BDD4F0292E3F08001A7799 /* SportTypeStore.swift */; };
 		A9BDD4F2292E3F08001A7799 /* SportTypeStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9BDD4F0292E3F08001A7799 /* SportTypeStore.swift */; };
 		A9BDD4F3292E3F08001A7799 /* SportTypeStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9BDD4F0292E3F08001A7799 /* SportTypeStore.swift */; };
@@ -5643,7 +5644,6 @@
 		A9C3432B28F9A74A0055360B /* HeadToHeadCardStatsView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 45A642D627985AAB008EFD5B /* HeadToHeadCardStatsView.xib */; };
 		A9C3432C28F9A74A0055360B /* Gilroy-Regular.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 45DDBA8426F2146000A73E45 /* Gilroy-Regular.ttf */; };
 		A9C3432D28F9A74A0055360B /* Gilroy-Medium.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 45DDBA8A26F2146000A73E45 /* Gilroy-Medium.ttf */; };
-		A9C3432E28F9A74A0055360B /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = 455A0CB126BD982000EC572D /* Localizable.strings */; };
 		A9C3432F28F9A74A0055360B /* LoadingMoreTableViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 45726330272B13D7002F2959 /* LoadingMoreTableViewCell.xib */; };
 		A9C3433028F9A74A0055360B /* MatchLineTableViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 457816A82706679400F66878 /* MatchLineTableViewCell.xib */; };
 		A9C3433128F9A74A0055360B /* RecentSearchHeaderView.xib in Resources */ = {isa = PBXBuildFile; fileRef = A96B619027A0496C005DC376 /* RecentSearchHeaderView.xib */; };
@@ -5924,7 +5924,6 @@
 		450088EF29CE244200DA4C30 /* FooterResponsibleGamingViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FooterResponsibleGamingViewCell.swift; sourceTree = "<group>"; };
 		4502BF362798712E00F5B0CD /* HomeAwayCardStatsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeAwayCardStatsView.swift; sourceTree = "<group>"; };
 		4502BF392798713C00F5B0CD /* HomeAwayCardStatsView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = HomeAwayCardStatsView.xib; sourceTree = "<group>"; };
-		4503D32C29C48100004CF6FF /* fr */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = fr; path = fr.lproj/Localizable.strings; sourceTree = "<group>"; };
 		4503E79927D0E89600077CD2 /* CompetitionDetailsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CompetitionDetailsViewController.swift; sourceTree = "<group>"; };
 		4503E79C27D0E9FC00077CD2 /* CompetitionDetailsViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CompetitionDetailsViewModel.swift; sourceTree = "<group>"; };
 		45044AFA291022E90053311D /* ServiceProviderModelMapper+Profile.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "ServiceProviderModelMapper+Profile.swift"; sourceTree = "<group>"; };
@@ -6036,7 +6035,6 @@
 		455A0C6C26BD903000EC572D /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		455A0CA126BD96BF00EC572D /* SportsbookTarget.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SportsbookTarget.swift; sourceTree = "<group>"; };
 		455A0CAB26BD981900EC572D /* SharedAssets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = SharedAssets.xcassets; sourceTree = "<group>"; };
-		455A0CB026BD982000EC572D /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/Localizable.strings; sourceTree = "<group>"; };
 		455A0CB526BD9B6000EC572D /* EnvironmentType.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EnvironmentType.swift; sourceTree = "<group>"; };
 		455A0CC026BD9D9000EC572D /* RunningPlatform.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RunningPlatform.swift; sourceTree = "<group>"; };
 		455A0CC126BD9D9000EC572D /* Throttler.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Throttler.swift; sourceTree = "<group>"; };
@@ -6688,6 +6686,8 @@
 		A9BA6D5A281168AA00E82724 /* AddUnregisteredFriendCellViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddUnregisteredFriendCellViewModel.swift; sourceTree = "<group>"; };
 		A9BA6D5E281179DA00E82724 /* NewGroupViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NewGroupViewController.swift; sourceTree = "<group>"; };
 		A9BA6D6228119F0700E82724 /* NewGroupViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NewGroupViewModel.swift; sourceTree = "<group>"; };
+		A9BAFB422AB0B46D002EDBA1 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/Localizable.strings; sourceTree = "<group>"; };
+		A9BAFB4A2AB0B47B002EDBA1 /* fr */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = fr; path = fr.lproj/Localizable.strings; sourceTree = "<group>"; };
 		A9BCF42C274BBE7B006DD528 /* PolicyLinkView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PolicyLinkView.swift; sourceTree = "<group>"; };
 		A9BCF42F274BBE8D006DD528 /* PolicyLinkView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = PolicyLinkView.xib; sourceTree = "<group>"; };
 		A9BCF432274D1A77006DD528 /* MatchDetailsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MatchDetailsViewController.swift; sourceTree = "<group>"; };
@@ -7439,7 +7439,7 @@
 		455A0C9926BD946500EC572D /* Localization */ = {
 			isa = PBXGroup;
 			children = (
-				455A0CB126BD982000EC572D /* Localizable.strings */,
+				A9BAFB412AB0B46D002EDBA1 /* Localizable.strings */,
 			);
 			path = Localization;
 			sourceTree = "<group>";
@@ -10709,6 +10709,7 @@
 				450B7AC928F58574009229E3 /* PopUpPromotionView.xib in Resources */,
 				455897F22A9CE5C300E39598 /* progress_end_animation.json in Resources */,
 				450B7ACA28F58574009229E3 /* Gilroy-Light.ttf in Resources */,
+				A9BAFB442AB0B46D002EDBA1 /* Localizable.strings in Resources */,
 				452BA1992A902C4900D0AA48 /* avatar1.json in Resources */,
 				450B7ACB28F58574009229E3 /* PreSubmissionBetslipViewController.xib in Resources */,
 				455897FA2A9CE5CE00E39598 /* progress_bar_fire_ball.json in Resources */,
@@ -10722,7 +10723,6 @@
 				450B7AD328F58574009229E3 /* HeadToHeadCardStatsView.xib in Resources */,
 				450B7AD428F58574009229E3 /* Gilroy-Regular.ttf in Resources */,
 				450B7AD528F58574009229E3 /* Gilroy-Medium.ttf in Resources */,
-				450B7AD628F58574009229E3 /* Localizable.strings in Resources */,
 				450B7AD728F58574009229E3 /* LoadingMoreTableViewCell.xib in Resources */,
 				450B7AD828F58574009229E3 /* MatchLineTableViewCell.xib in Resources */,
 				450B7AD928F58574009229E3 /* RecentSearchHeaderView.xib in Resources */,
@@ -10864,6 +10864,7 @@
 				457CBBF2282D27D000ED0F00 /* README.md in Resources */,
 				455897F62A9CE5C300E39598 /* progress_end_animation.json in Resources */,
 				457CBBF3282D27D000ED0F00 /* BannerMatchCollectionViewCell.xib in Resources */,
+				A9BAFB482AB0B46D002EDBA1 /* Localizable.strings in Resources */,
 				452BA19D2A902C4900D0AA48 /* avatar1.json in Resources */,
 				457CBBF4282D27D000ED0F00 /* PopUpPromotionView.xib in Resources */,
 				455897FE2A9CE5CE00E39598 /* progress_bar_fire_ball.json in Resources */,
@@ -10879,7 +10880,6 @@
 				457CBBFE282D27D000ED0F00 /* HeadToHeadCardStatsView.xib in Resources */,
 				457CBBFF282D27D000ED0F00 /* Gilroy-Regular.ttf in Resources */,
 				457CBC00282D27D000ED0F00 /* Gilroy-Medium.ttf in Resources */,
-				457CBC01282D27D000ED0F00 /* Localizable.strings in Resources */,
 				457CBC02282D27D000ED0F00 /* LoadingMoreTableViewCell.xib in Resources */,
 				457CBC03282D27D000ED0F00 /* MatchLineTableViewCell.xib in Resources */,
 				457CBC04282D27D000ED0F00 /* RecentSearchHeaderView.xib in Resources */,
@@ -11011,6 +11011,7 @@
 				457CBE9C282D2CD100ED0F00 /* BannerMatchCollectionViewCell.xib in Resources */,
 				455897F72A9CE5C300E39598 /* progress_end_animation.json in Resources */,
 				457CBE9D282D2CD100ED0F00 /* PopUpPromotionView.xib in Resources */,
+				A9BAFB492AB0B46D002EDBA1 /* Localizable.strings in Resources */,
 				452BA19E2A902C4900D0AA48 /* avatar1.json in Resources */,
 				457CBE9E282D2CD100ED0F00 /* Gilroy-Light.ttf in Resources */,
 				455897FF2A9CE5CE00E39598 /* progress_bar_fire_ball.json in Resources */,
@@ -11025,7 +11026,6 @@
 				457CBEA6282D2CD100ED0F00 /* HeadToHeadCardStatsView.xib in Resources */,
 				457CBEA7282D2CD100ED0F00 /* Gilroy-Regular.ttf in Resources */,
 				457CBEA8282D2CD100ED0F00 /* Gilroy-Medium.ttf in Resources */,
-				457CBEA9282D2CD100ED0F00 /* Localizable.strings in Resources */,
 				457CBEAA282D2CD100ED0F00 /* LoadingMoreTableViewCell.xib in Resources */,
 				457CBEAB282D2CD100ED0F00 /* MatchLineTableViewCell.xib in Resources */,
 				457CBEAC282D2CD100ED0F00 /* RecentSearchHeaderView.xib in Resources */,
@@ -11158,6 +11158,7 @@
 				4589C973282024E400243547 /* PopUpPromotionView.xib in Resources */,
 				455897F32A9CE5C300E39598 /* progress_end_animation.json in Resources */,
 				4589C974282024E400243547 /* Gilroy-Light.ttf in Resources */,
+				A9BAFB452AB0B46D002EDBA1 /* Localizable.strings in Resources */,
 				452BA19A2A902C4900D0AA48 /* avatar1.json in Resources */,
 				4589C975282024E400243547 /* PreSubmissionBetslipViewController.xib in Resources */,
 				455897FB2A9CE5CE00E39598 /* progress_bar_fire_ball.json in Resources */,
@@ -11172,7 +11173,6 @@
 				4589C97C282024E400243547 /* HeadToHeadCardStatsView.xib in Resources */,
 				4589C97D282024E400243547 /* Gilroy-Regular.ttf in Resources */,
 				4589C97E282024E400243547 /* Gilroy-Medium.ttf in Resources */,
-				4589C97F282024E400243547 /* Localizable.strings in Resources */,
 				4589C980282024E400243547 /* LoadingMoreTableViewCell.xib in Resources */,
 				4589C981282024E400243547 /* MatchLineTableViewCell.xib in Resources */,
 				4589C982282024E400243547 /* RecentSearchHeaderView.xib in Resources */,
@@ -11261,6 +11261,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				45A332CD298976BA008181E9 /* WithdrawViewController.xib in Resources */,
+				A9BAFB432AB0B46D002EDBA1 /* Localizable.strings in Resources */,
 				45A332CE298976BA008181E9 /* SportsTypes.xcassets in Resources */,
 				45A332CF298976BA008181E9 /* BetslipErrorView.xib in Resources */,
 				45A332D0298976BA008181E9 /* SimpleRegisterDetailsViewController.xib in Resources */,
@@ -11319,7 +11320,6 @@
 				A92BDCF82A163D0200E9B045 /* success_thumbs_up.json in Resources */,
 				45A332FD298976BA008181E9 /* Gilroy-Regular.ttf in Resources */,
 				45A332FE298976BA008181E9 /* Gilroy-Medium.ttf in Resources */,
-				45A332FF298976BA008181E9 /* Localizable.strings in Resources */,
 				45A33300298976BA008181E9 /* LoadingMoreTableViewCell.xib in Resources */,
 				45A33301298976BA008181E9 /* MatchLineTableViewCell.xib in Resources */,
 				45A33302298976BA008181E9 /* RecentSearchHeaderView.xib in Resources */,
@@ -11452,6 +11452,7 @@
 				45A6BDCC28246A7500D9B416 /* PopUpPromotionView.xib in Resources */,
 				455897F52A9CE5C300E39598 /* progress_end_animation.json in Resources */,
 				45A6BDCD28246A7500D9B416 /* Gilroy-Light.ttf in Resources */,
+				A9BAFB472AB0B46D002EDBA1 /* Localizable.strings in Resources */,
 				452BA19C2A902C4900D0AA48 /* avatar1.json in Resources */,
 				45A6BDCE28246A7500D9B416 /* PreSubmissionBetslipViewController.xib in Resources */,
 				455897FD2A9CE5CE00E39598 /* progress_bar_fire_ball.json in Resources */,
@@ -11465,7 +11466,6 @@
 				45A6BDD528246A7500D9B416 /* HeadToHeadCardStatsView.xib in Resources */,
 				45A6BDD628246A7500D9B416 /* Gilroy-Regular.ttf in Resources */,
 				45A6BDD728246A7500D9B416 /* Gilroy-Medium.ttf in Resources */,
-				45A6BDD828246A7500D9B416 /* Localizable.strings in Resources */,
 				45A6BDD928246A7500D9B416 /* LoadingMoreTableViewCell.xib in Resources */,
 				45A6BE3528246AFA00D9B416 /* Colors.xcassets in Resources */,
 				45A6BE3728246AFA00D9B416 /* GoogleService-Info.plist in Resources */,
@@ -11555,6 +11555,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				A9C342FC28F9A74A0055360B /* WithdrawViewController.xib in Resources */,
+				A9BAFB462AB0B46D002EDBA1 /* Localizable.strings in Resources */,
 				A9C342FD28F9A74A0055360B /* SportsTypes.xcassets in Resources */,
 				A9C342FE28F9A74A0055360B /* BetslipErrorView.xib in Resources */,
 				A9C342FF28F9A74A0055360B /* SimpleRegisterDetailsViewController.xib in Resources */,
@@ -11613,7 +11614,6 @@
 				A92BDCFB2A163D0200E9B045 /* success_thumbs_up.json in Resources */,
 				A9C3432C28F9A74A0055360B /* Gilroy-Regular.ttf in Resources */,
 				A9C3432D28F9A74A0055360B /* Gilroy-Medium.ttf in Resources */,
-				A9C3432E28F9A74A0055360B /* Localizable.strings in Resources */,
 				A9C3432F28F9A74A0055360B /* LoadingMoreTableViewCell.xib in Resources */,
 				A9C3433028F9A74A0055360B /* MatchLineTableViewCell.xib in Resources */,
 				A9C3433128F9A74A0055360B /* RecentSearchHeaderView.xib in Resources */,
@@ -16661,15 +16661,6 @@
 			name = "LaunchScreen-SportRadar.storyboard";
 			sourceTree = "<group>";
 		};
-		455A0CB126BD982000EC572D /* Localizable.strings */ = {
-			isa = PBXVariantGroup;
-			children = (
-				455A0CB026BD982000EC572D /* en */,
-				4503D32C29C48100004CF6FF /* fr */,
-			);
-			name = Localizable.strings;
-			sourceTree = "<group>";
-		};
 		457CBC67282D2AE800ED0F00 /* LaunchScreen-EveryMatrix.storyboard */ = {
 			isa = PBXVariantGroup;
 			children = (
@@ -16701,6 +16692,15 @@
 				45A6BE43282476A100D9B416 /* Base */,
 			);
 			name = "LaunchScreen-DAZN.storyboard";
+			sourceTree = "<group>";
+		};
+		A9BAFB412AB0B46D002EDBA1 /* Localizable.strings */ = {
+			isa = PBXVariantGroup;
+			children = (
+				A9BAFB422AB0B46D002EDBA1 /* en */,
+				A9BAFB4A2AB0B47B002EDBA1 /* fr */,
+			);
+			name = Localizable.strings;
 			sourceTree = "<group>";
 		};
 		A9C3438028F9A7DC0055360B /* LaunchScreen-GOMASportRadar.storyboard */ = {

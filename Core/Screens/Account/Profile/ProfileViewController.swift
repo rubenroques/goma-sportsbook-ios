@@ -539,7 +539,7 @@ class ProfileViewController: UIViewController {
         myAccountView.addGestureRecognizer(myAccountTap)
 
         let cashbackView = NavigationCardView()
-        cashbackView.setupView(title: localized("cashback"), iconTitle: "cashback_profile_icon")
+        cashbackView.setupView(title: localized("replay"), iconTitle: "cashback_profile_icon")
         let cashbackTap = UITapGestureRecognizer(target: self, action: #selector(cashbackViewTapped(sender:)))
         cashbackView.addGestureRecognizer(cashbackTap)
 

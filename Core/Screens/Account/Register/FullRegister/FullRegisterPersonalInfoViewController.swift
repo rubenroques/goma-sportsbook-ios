@@ -200,7 +200,6 @@ class FullRegisterPersonalInfoViewController: UIViewController {
         let cityText = cityHeaderTextFieldView.text == "" ? false : true
         let postalCodeText = postalCodeHeaderTextFieldView.text == "" ? false : true
         
-        
         if titleText && firstNameText && lastNameText && address1Text
             && cityText && postalCodeText && self.selectedCountry != nil {
             

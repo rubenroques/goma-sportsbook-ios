@@ -91,12 +91,13 @@ class PasswordUpdateViewController: UIViewController {
         self.self.editButton.setTitle(localized("save"), for: .normal)
         editButton.titleLabel?.font = AppFont.with(type: .bold, size: 16)
 
-        self.tipTitleLabel.text = localized("password_tips_title")
-        self.numbersTipLabel.text = localized("password_tips_number")
-        self.uppercaseTipLabel.text = localized("password_tips_uppercase")
-        self.lowercaseTipLabel.text = localized("password_tips_lowercase")
-        self.symbolsTipLabel.text = localized("password_tips_alphanumeric")
-        self.lengthTipLabel.text = localized("password_tips_length")
+        self.tipTitleLabel.text = localized("protect_account")
+        self.numbersTipLabel.text = "• \(localized("fourth_password_requirement"))"
+        self.uppercaseTipLabel.text = "• \(localized("second_password_requirement"))"
+        self.lowercaseTipLabel.text = "• \(localized("third_password_requirement"))"
+        let symbols = "-!@^$&*+"
+        self.symbolsTipLabel.text = "• \(localized("fifth_password_requirement").replacingOccurrences(of: "{symbols}", with: symbols))"
+        self.lengthTipLabel.text = "• \(localized("first_password_requirement"))"
 
         self.tipTitleLabel.font = AppFont.with(type: .semibold, size: 13)
         self.numbersTipLabel.font = AppFont.with(type: .semibold, size: 12)

@@ -1345,7 +1345,7 @@
 "oh_no" = "Oh no";
 "automated_withdrawal" = "Automated withdrawal";
 
-"cashback" = "Replay";
+"replay" = "Replay";
 "cashback_balance" = "Replay Balance:";
 "used_cashback" = "Used Replay";
 "first_info_title_cashback" = "What’s Replay?";

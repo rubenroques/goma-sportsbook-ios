@@ -122,7 +122,7 @@ extension CashbackBalanceView {
     private static func createTitleLabel() -> UILabel {
         let label = UILabel()
         label.translatesAutoresizingMaskIntoConstraints = false
-        label.text = localized("cashback_balance")
+        label.text = localized("replay_balance")
         label.font = AppFont.with(type: .semibold, size: 12)
         label.numberOfLines = 0
         return label

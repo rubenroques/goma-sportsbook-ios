@@ -207,7 +207,7 @@ class MyTicketTableViewCell: UITableViewCell {
 
         self.returnedAmountValueLabel.text = "\(localized("returned"))\n€0.10"
 
-        self.cashbackUsedTitleLabel.text = localized("used_cashback").uppercased()
+        self.cashbackUsedTitleLabel.text = localized("used_replay").uppercased()
         self.cashbackUsedTitleLabel.font = AppFont.with(type: .bold, size: 9)
 
         self.hasPartialCashoutReturned = false
