@@ -66,13 +66,13 @@ class SportRadarRestConnector {
                 return result.data
             }
             // Debug helper
-            .handleEvents(receiveOutput: { data in
-                print("ServiceProvider-NetworkManager [[ requesting ]] ",
-                      dump(request),
-                      dump(String.init(data: request.httpBody ?? Data(), encoding: .utf8)) ?? "no body found",
-                      " [[ response ]]",
-                      String(data: data, encoding: .utf8) ?? "!?" )
-            })
+//            .handleEvents(receiveOutput: { data in
+//                print("ServiceProvider-NetworkManager [[ requesting ]] ",
+//                      dump(request),
+//                      dump(String.init(data: request.httpBody ?? Data(), encoding: .utf8)) ?? "no body found",
+//                      " [[ response ]]",
+//                      String(data: data, encoding: .utf8) ?? "!?" )
+//            })
             .decode(type: T.self, decoder: self.decoder)
             .mapError { error in
                 // Debug helper

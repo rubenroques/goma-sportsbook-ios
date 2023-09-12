@@ -4143,6 +4143,13 @@
 		45F2F9AD298C067C0075AF02 /* StaticColors.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 45F2F9A8298C067C0075AF02 /* StaticColors.xcassets */; };
 		45F2F9AE298C067C0075AF02 /* StaticColors.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 45F2F9A8298C067C0075AF02 /* StaticColors.xcassets */; };
 		45F2F9AF298C067C0075AF02 /* StaticColors.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 45F2F9A8298C067C0075AF02 /* StaticColors.xcassets */; };
+		45F6BA702AAF32A100C81DE1 /* BetslipProxyWebViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 45F6BA6F2AAF32A100C81DE1 /* BetslipProxyWebViewController.swift */; };
+		45F6BA712AAF32A100C81DE1 /* BetslipProxyWebViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 45F6BA6F2AAF32A100C81DE1 /* BetslipProxyWebViewController.swift */; };
+		45F6BA722AAF32A100C81DE1 /* BetslipProxyWebViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 45F6BA6F2AAF32A100C81DE1 /* BetslipProxyWebViewController.swift */; };
+		45F6BA732AAF32A100C81DE1 /* BetslipProxyWebViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 45F6BA6F2AAF32A100C81DE1 /* BetslipProxyWebViewController.swift */; };
+		45F6BA742AAF32A100C81DE1 /* BetslipProxyWebViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 45F6BA6F2AAF32A100C81DE1 /* BetslipProxyWebViewController.swift */; };
+		45F6BA752AAF32A100C81DE1 /* BetslipProxyWebViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 45F6BA6F2AAF32A100C81DE1 /* BetslipProxyWebViewController.swift */; };
+		45F6BA762AAF32A100C81DE1 /* BetslipProxyWebViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 45F6BA6F2AAF32A100C81DE1 /* BetslipProxyWebViewController.swift */; };
 		45F805932A05357E005296E0 /* Lottie in Frameworks */ = {isa = PBXBuildFile; productRef = 45F805922A05357E005296E0 /* Lottie */; };
 		45F805962A05385B005296E0 /* dots-loading.json in Resources */ = {isa = PBXBuildFile; fileRef = 45F805952A05385B005296E0 /* dots-loading.json */; };
 		45F805972A05385B005296E0 /* dots-loading.json in Resources */ = {isa = PBXBuildFile; fileRef = 45F805952A05385B005296E0 /* dots-loading.json */; };
@@ -6366,6 +6373,7 @@
 		45EF5435270C603D00D1E13E /* MatchFiltersViewController.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = MatchFiltersViewController.xib; sourceTree = "<group>"; };
 		45EF543A270C664100D1E13E /* CollapsibleView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CollapsibleView.swift; sourceTree = "<group>"; };
 		45F2F9A8298C067C0075AF02 /* StaticColors.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = StaticColors.xcassets; sourceTree = "<group>"; };
+		45F6BA6F2AAF32A100C81DE1 /* BetslipProxyWebViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BetslipProxyWebViewController.swift; sourceTree = "<group>"; };
 		45F805952A05385B005296E0 /* dots-loading.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = "dots-loading.json"; sourceTree = "<group>"; };
 		45F8B156274BFF710087652B /* SystemBetResponse.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SystemBetResponse.swift; sourceTree = "<group>"; };
 		45FF105229D74721009AC196 /* UserTrackingSettingsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserTrackingSettingsViewController.swift; sourceTree = "<group>"; };
@@ -7983,6 +7991,7 @@
 				A9B8409426DE44BF00269B05 /* GeoLocation */,
 				4546A89B29D7083D00ABD562 /* UserTracking */,
 				451E1F6A2825634E000E957B /* InternalBrowser */,
+				45F6BA6E2AAF327D00C81DE1 /* BetslipProxyWebViewController */,
 				455A0D2226BDE7B900EC572D /* DebugHelper */,
 				A92F5D8F2729730100884BDF /* Spinner */,
 			);
@@ -8766,6 +8775,14 @@
 				45BF4E6C270DC37D00785E79 /* FilterLineView.swift */,
 			);
 			path = Filters;
+			sourceTree = "<group>";
+		};
+		45F6BA6E2AAF327D00C81DE1 /* BetslipProxyWebViewController */ = {
+			isa = PBXGroup;
+			children = (
+				45F6BA6F2AAF32A100C81DE1 /* BetslipProxyWebViewController.swift */,
+			);
+			path = BetslipProxyWebViewController;
 			sourceTree = "<group>";
 		};
 		45F805942A053841005296E0 /* Animations */ = {
@@ -12347,6 +12364,7 @@
 				A9BDD4F2292E3F08001A7799 /* SportTypeStore.swift in Sources */,
 				450B7A1E28F58574009229E3 /* EmptyCardTableViewCell.swift in Sources */,
 				450B7A2028F58574009229E3 /* AddFriendViewController.swift in Sources */,
+				45F6BA712AAF32A100C81DE1 /* BetslipProxyWebViewController.swift in Sources */,
 				450B7A2128F58574009229E3 /* GroupUserManagementCellViewModel.swift in Sources */,
 				450B7A2228F58574009229E3 /* NetworkModels.swift in Sources */,
 				450B7A2328F58574009229E3 /* RootViewController.swift in Sources */,
@@ -12609,6 +12627,7 @@
 				457CB9E9282D27D000ED0F00 /* HeaderDropDownSelectionView.swift in Sources */,
 				457CB9EA282D27D000ED0F00 /* TabularViewDataSource.swift in Sources */,
 				457CB9EB282D27D000ED0F00 /* SwiftyJSON.swift in Sources */,
+				45F6BA752AAF32A100C81DE1 /* BetslipProxyWebViewController.swift in Sources */,
 				457CB9EC282D27D000ED0F00 /* RoundButton.swift in Sources */,
 				45C10F8028772DA700037BBE /* NSObject+Shift.swift in Sources */,
 				457CB9ED282D27D000ED0F00 /* HomeAwayCardStatsView.swift in Sources */,
@@ -13359,6 +13378,7 @@
 				45FF105429D74721009AC196 /* UserTrackingSettingsViewController.swift in Sources */,
 				450FC40C2A2E1E33000DB866 /* StoriesLineTableViewCell.swift in Sources */,
 				A9863ED8286F01E500A4A1A2 /* ShareTicketChoiceViewController.swift in Sources */,
+				45F6BA762AAF32A100C81DE1 /* BetslipProxyWebViewController.swift in Sources */,
 				457CBCC5282D2CD100ED0F00 /* LoadableContent.swift in Sources */,
 				457CBCC6282D2CD100ED0F00 /* CollapsibleView.swift in Sources */,
 				457CBCC7282D2CD100ED0F00 /* OutrightCompetitionLargeWidgetCollectionViewCell.swift in Sources */,
@@ -14481,6 +14501,7 @@
 				A9BDD4F1292E3F08001A7799 /* SportTypeStore.swift in Sources */,
 				4589C8E4282024E400243547 /* AddFriendViewController.swift in Sources */,
 				4589C8E5282024E400243547 /* GroupUserManagementCellViewModel.swift in Sources */,
+				45F6BA722AAF32A100C81DE1 /* BetslipProxyWebViewController.swift in Sources */,
 				4589C8E6282024E400243547 /* NetworkModels.swift in Sources */,
 				4589C8E7282024E400243547 /* RootViewController.swift in Sources */,
 				4589C8E9282024E400243547 /* SportType.swift in Sources */,
@@ -15154,6 +15175,7 @@
 				45A3323D298976BA008181E9 /* SportTypeStore.swift in Sources */,
 				45A3323E298976BA008181E9 /* EmptyCardTableViewCell.swift in Sources */,
 				45A33240298976BA008181E9 /* AddFriendViewController.swift in Sources */,
+				45F6BA702AAF32A100C81DE1 /* BetslipProxyWebViewController.swift in Sources */,
 				45A33241298976BA008181E9 /* GroupUserManagementCellViewModel.swift in Sources */,
 				45A33242298976BA008181E9 /* NetworkModels.swift in Sources */,
 				45A33243298976BA008181E9 /* RootViewController.swift in Sources */,
@@ -15683,6 +15705,7 @@
 				45C10F7328772DA700037BBE /* UIView+Shift.swift in Sources */,
 				45A6BCD528246A7500D9B416 /* MatchLineTableViewCell.swift in Sources */,
 				A9B331EF289422FC00D097F0 /* MessageDetailViewModel.swift in Sources */,
+				45F6BA742AAF32A100C81DE1 /* BetslipProxyWebViewController.swift in Sources */,
 				A9DD89F02A5707FB00D3A5FE /* TopCompetitionCollectionViewCell.swift in Sources */,
 				45A6BCD628246A7500D9B416 /* KeychainInterface.swift in Sources */,
 				45A6BCD728246A7500D9B416 /* UserDefaults.swift in Sources */,
@@ -15967,6 +15990,7 @@
 				A9C340A128F9A74A0055360B /* AppSession.swift in Sources */,
 				A9C340A228F9A74A0055360B /* HeaderDropDownSelectionView.swift in Sources */,
 				A9C340A328F9A74A0055360B /* TabularViewDataSource.swift in Sources */,
+				45F6BA732AAF32A100C81DE1 /* BetslipProxyWebViewController.swift in Sources */,
 				A9DD89EF2A5707FB00D3A5FE /* TopCompetitionCollectionViewCell.swift in Sources */,
 				A9A43CA92A4C9368008FB399 /* CompetitionHistoryCollectionViewCell.swift in Sources */,
 				A9A292532A619A3E00A7C334 /* ReferralQRCodeViewController.swift in Sources */,
@@ -17099,7 +17123,7 @@
 				CODE_SIGN_IDENTITY = "Apple Development";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				CODE_SIGN_STYLE = Manual;
-				CURRENT_PROJECT_VERSION = 1240;
+				CURRENT_PROJECT_VERSION = 1243;
 				DEVELOPMENT_TEAM = "";
 				"DEVELOPMENT_TEAM[sdk=iphoneos*]" = 422GNXXZJR;
 				INFOPLIST_FILE = "$(SRCROOT)/Clients/Betsson/Misc/Betsson-Info.plist";
@@ -17131,7 +17155,7 @@
 				CODE_SIGN_IDENTITY = "Apple Distribution";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution";
 				CODE_SIGN_STYLE = Manual;
-				CURRENT_PROJECT_VERSION = 1240;
+				CURRENT_PROJECT_VERSION = 1243;
 				DEVELOPMENT_TEAM = "";
 				"DEVELOPMENT_TEAM[sdk=iphoneos*]" = 422GNXXZJR;
 				INFOPLIST_FILE = "$(SRCROOT)/Clients/Betsson/Misc/Betsson-Info.plist";

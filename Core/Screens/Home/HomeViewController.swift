@@ -303,12 +303,64 @@ class HomeViewController: UIViewController {
     }
 
     private func openBetTinderCloneView() {
-        let betSelectorViewConroller = InternalBrowserViewController(fileName: "TinderStyleBetBuilder", fileType: "html", fullscreen: true)
+        let userId = Env.userSessionStore.loggedUserProfile?.userIdentifier ?? "0"
+        let iframeURL = URL(string: "https://sportsbook-stage.gomagaming.com/betswipe.html?user=\(userId)&mobile=true&language=fr")!
+        
+        let betSelectorViewConroller = BetslipProxyWebViewController(url: iframeURL)
         let navigationViewController = Router.navigationController(with: betSelectorViewConroller)
         navigationViewController.modalPresentationStyle = .fullScreen
+        
+        betSelectorViewConroller.showsBetslip = { [weak self] in
+            navigationViewController.dismiss(animated: true) {
+                self?.didTapBetslipButtonAction?()
+            }
+        }
+        
+        betSelectorViewConroller.closeBetSwipe = {
+            navigationViewController.dismiss(animated: true)
+        }
+        
+        betSelectorViewConroller.addToBetslip = { [weak self] betSwipeData in
+            self?.addBetToBetslip(withBetSwipeData: betSwipeData)
+        }
+        
         self.present(navigationViewController, animated: true, completion: nil)
     }
 
+    private func addBetToBetslip(withBetSwipeData betSwipeData: BetSwipeData) {
+        
+        if let externalMarketId = betSwipeData.externalMarketId, let selectedOutcomeId = betSwipeData.externalOutcomeId {
+            
+            Publishers.CombineLatest(
+                Env.servicesProvider.getEventSummary(forMarketId: externalMarketId),
+                Env.servicesProvider.getMarketInfo(marketId: externalMarketId)
+            )
+            .map({ event, externalMarket -> BettingTicket? in
+                let match = ServiceProviderModelMapper.match(fromEvent: event)
+                let market = ServiceProviderModelMapper.market(fromServiceProviderMarket: externalMarket)
+                let selectedOutcome = market.outcomes.first { outcome in
+                    outcome.id == selectedOutcomeId
+                }
+                if let selectedOutcomeValue = selectedOutcome {
+                    return BettingTicket(match: match, market: market, outcome: selectedOutcomeValue)
+                }
+                else {
+                    return nil
+                }
+            })
+            .compactMap({ $0 })
+            .receive(on: DispatchQueue.main)
+            .sink { completion in
+                print("HomeViewController addBetToBetslip completed: \(completion)")
+            } receiveValue: { bettingTicket in
+                Env.betslipManager.addBettingTicket(bettingTicket)
+            }
+            .store(in: &self.cancellables)
+            
+        }
+        
+    }
+    
     private func markStoryRead(id: String) {
 
         if var storyLineViewModel = self.viewModel.storyLineViewModel() {

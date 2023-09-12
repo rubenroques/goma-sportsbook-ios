@@ -1,29 +1,46 @@
 //
-//  InternalBrowserViewController.swift
+//  BetslipProxyWebViewController.swift
 //  Sportsbook
 //
-//  Created by Ruben Roques on 06/05/2022.
+//  Created by Ruben Roques on 11/09/2023.
 //
 
-import UIKit
+import Foundation
 import WebKit
 
-class InternalBrowserViewController: UIViewController {
+// Define a struct to represent the message model
+struct WebMessage: Codable {
+    let messageType: String
+    let data: BetSwipeData?
+}
 
+struct BetSwipeData: Codable {
+    let externalEventId: String?
+    let externalMarketId: String?
+    let externalOutcomeId: String?
+    let outcomeOdds: Double?
+}
+
+
+class BetslipProxyWebViewController: UIViewController {
+
+    var closeBetSwipe: () -> Void = { }
+    var showsBetslip: () -> Void = { }
+    var addToBetslip: (BetSwipeData) -> Void = { _ in }
+    
     // MARK: - Private Properties
     private lazy var topSafeAreaView: UIView = Self.createTopSafeAreaView()
     private lazy var navigationView: UIView = Self.createNavigationView()
     private lazy var titleLabel: UILabel = Self.createTitleLabel()
     private lazy var backButton: UIButton = Self.createBackButton()
 
-    private var navigationViewHeightConstraint: NSLayoutConstraint?
-
     private lazy var webView: WKWebView = {
         let configuration = WKWebViewConfiguration()
         configuration.userContentController.add(self, name: "postMessageListener")
+        
         let webView = WKWebView(frame: .zero, configuration: configuration)
         webView.translatesAutoresizingMaskIntoConstraints = false
-        webView.navigationDelegate = self
+        
         return webView
     }()
 
@@ -33,24 +50,9 @@ class InternalBrowserViewController: UIViewController {
     private lazy var loadingActivityIndicatorView: UIActivityIndicatorView = Self.createLoadingActivityIndicatorView()
 
     private var url: URL?
-    private var localFileName: String?
-    private var localFileType: String?
 
-    private var shouldShowBackButton: Bool = false
-    private var fullscreen: Bool
-
-    init(url: URL, fullscreen: Bool) {
+    init(url: URL) {
         self.url = url
-        self.fullscreen = fullscreen
-        super.init(nibName: nil, bundle: nil)
-    }
-
-    // Init for local file
-    init(fileName: String, fileType: String, fullscreen: Bool) {
-        self.localFileName = fileName
-        self.localFileType = fileType
-        self.fullscreen = fullscreen
-
         super.init(nibName: nil, bundle: nil)
     }
 
@@ -65,10 +67,6 @@ class InternalBrowserViewController: UIViewController {
         self.setupSubviews()
         self.setupWithTheme()
 
-        if self.fullscreen, let navigationViewHeightConstraint = self.navigationViewHeightConstraint {
-            navigationViewHeightConstraint.constant = 0
-        }
-
         self.webView.navigationDelegate = self
         
         self.backButton.addTarget(self, action: #selector(didTapBackButton), for: .primaryActionTriggered)
@@ -78,19 +76,7 @@ class InternalBrowserViewController: UIViewController {
         if let url = self.url {
             self.webView.load(URLRequest(url: url))
         }
-        else if let fileName = self.localFileName,
-                let fileType = localFileType,
-                let url = Bundle.main.url(forResource: fileName, withExtension: fileType) {
-            
-            var headers = [String: String]()
-            headers["Origin"] = "https://sportsbook-stage.gomagaming.com/"
-            
-            var request = URLRequest(url: url)
-            request.allHTTPHeaderFields = headers
-            
-            self.webView.load(request)
-        }
-
+       
     }
 
     // MARK: - Layout and Theme
@@ -135,7 +121,7 @@ class InternalBrowserViewController: UIViewController {
 
 }
 
-extension InternalBrowserViewController: WKNavigationDelegate {
+extension BetslipProxyWebViewController: WKNavigationDelegate {
 
     func webView(_ webView: WKWebView, didStartProvisionalNavigation navigation: WKNavigation!) {
         self.showLoading()
@@ -150,19 +136,67 @@ extension InternalBrowserViewController: WKNavigationDelegate {
     }
 }
 
-extension InternalBrowserViewController: WKScriptMessageHandler {
+extension BetslipProxyWebViewController: WKScriptMessageHandler {
+/*
+    func userContentController(_ userContentController: WKUserContentController, didReceive message: WKScriptMessage) {
+        if message.name == "postMessageListener", let messageBody = message.body as? String {
+            if messageBody == "closeBetSwipe" {
+                self.didTapBackButton()
+            }
+            else if messageBody == "goToBetSlip" {
+                self.didTapBackButton()
+            }
+            else {
+                print("BetslipProxyWebViewController - userContentController messageBody: \(messageBody)")
+            }
+        }
+        
+    }
+    */
 
     func userContentController(_ userContentController: WKUserContentController, didReceive message: WKScriptMessage) {
-        if message.name == "postMessageListener", let msg = message.body as? String {
-            if msg == "oniOSCloseBetSwipe" {
-                self.didTapBackButton()
+        // Handle the received message
+        if message.name == "postMessageListener" {
+            
+            // Parse the JSON data directly into the WebMessage struct
+            if let jsonData = try? JSONSerialization.data(withJSONObject: message.body, options: []),
+               let webMessage = try? JSONDecoder().decode(WebMessage.self, from: jsonData) {
+
+                switch webMessage.messageType {
+                case "closeBetSwipe":
+                    self.closeBetSwipeReceived()
+                case "goToBetSlip":
+                    self.goToBetslipReceived()
+                case "betSwipeBetAdded":
+                    if let data = webMessage.data {
+                        self.betAddedReceived(withData: data)
+                    }
+                default:
+                    break
+                }
             }
         }
     }
-
+    
 }
 
-extension InternalBrowserViewController {
+extension BetslipProxyWebViewController {
+        
+    private func closeBetSwipeReceived() {
+        self.closeBetSwipe()
+    }
+    
+    private func goToBetslipReceived() {
+        self.showsBetslip()
+    }
+    
+    private func betAddedReceived(withData betSwipeData: BetSwipeData) {
+        self.addToBetslip(betSwipeData)
+    }
+    
+}
+
+extension BetslipProxyWebViewController {
 
     private static func createTopSafeAreaView() -> UIView {
         let view = UIView()
@@ -246,13 +280,11 @@ extension InternalBrowserViewController {
             self.botttomSafeAreaView.bottomAnchor.constraint(equalTo: self.view.bottomAnchor)
         ])
 
-        self.navigationViewHeightConstraint = self.navigationView.heightAnchor.constraint(equalToConstant: 40)
-
         NSLayoutConstraint.activate([
             self.navigationView.leadingAnchor.constraint(equalTo: self.view.leadingAnchor),
             self.navigationView.trailingAnchor.constraint(equalTo: self.view.trailingAnchor),
             self.navigationView.topAnchor.constraint(equalTo: self.topSafeAreaView.bottomAnchor),
-            self.navigationViewHeightConstraint!,
+            self.navigationView.heightAnchor.constraint(equalToConstant: 0),
 
             self.titleLabel.centerXAnchor.constraint(equalTo: self.navigationView.centerXAnchor),
             self.titleLabel.leadingAnchor.constraint(equalTo: self.navigationView.leadingAnchor, constant: 44),

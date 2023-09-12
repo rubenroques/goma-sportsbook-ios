@@ -467,6 +467,16 @@ extension ServicesProviderClient {
         return eventsProvider.getEventSummary(eventId: eventId)
     }
 
+    public func getEventSummary(forMarketId marketId: String) -> AnyPublisher<Event, ServiceProviderError> {
+        guard
+            let eventsProvider = self.eventsProvider
+        else {
+            return Fail(error: .eventsProviderNotFound).eraseToAnyPublisher()
+        }
+
+        return eventsProvider.getEventSummary(forMarketId: marketId)
+    }
+    
     public func getMarketInfo(marketId: String) -> AnyPublisher<Market, ServiceProviderError> {
         guard
             let eventsProvider = self.eventsProvider
