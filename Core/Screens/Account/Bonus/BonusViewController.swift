@@ -596,7 +596,7 @@ extension BonusViewController {
         imageView.translatesAutoresizingMaskIntoConstraints = false
         imageView.contentMode = .scaleAspectFit
         imageView.layer.cornerRadius = imageView.frame.width/2
-        imageView.image = UIImage(named: "no_content_icon")
+        imageView.image = UIImage(named: "bonus_empty_icon")
         return imageView
     }
 

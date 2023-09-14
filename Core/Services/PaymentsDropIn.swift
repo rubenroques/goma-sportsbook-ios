@@ -160,9 +160,6 @@ class PaymentsDropIn {
 
     private func processDepositResponse(amount: Double) {
 
-        print("AMOUNT DEPOSIT: \(amount)")
-
-        // TODO: ADYEN_IDEAL -> ADYEN_CARD
         Env.servicesProvider.processDeposit(paymentMethod: "ADYEN_CARD", amount: amount, option: "DROP_IN")
             .receive(on: DispatchQueue.main)
             .sink(receiveCompletion: { [weak self] completion in
@@ -224,7 +221,7 @@ class PaymentsDropIn {
         if let paymentMethodsResponse = self.paymentMethodsResponse,
            let clientKey = self.clientKey,
            let apiContext = self.apiContext,
-           let payment = self.payment ,
+           let payment = self.payment,
            let session = self.adyenSession {
 
             if let paymentResponseData = try? JSONEncoder().encode(paymentMethodsResponse),
@@ -232,18 +229,20 @@ class PaymentsDropIn {
 
                 // Optional Payment
                 let payment = Payment(amount: Amount(value: Int(self.dropInDepositAmount) ?? 0, currencyCode: "EUR"), countryCode: "FR")
-
+                
                 let adyenContext = AdyenContext(apiContext: apiContext, payment: payment)
 
                 // Without session payments
-//                let dropInConfiguration = DropInComponent.Configuration()
-//
-//                dropInConfiguration.card.allowedCardTypes = [.visa, .masterCard, .carteBancaire]
-//
-//                let dropInComponent = DropInComponent(paymentMethods: paymentMethods, context: adyenContext, configuration: dropInConfiguration)
+                let dropInConfiguration = DropInComponent.Configuration()
+
+//                dropInConfiguration.card.allowedCardTypes = [.visa, .masterCard, .carteBancaire,]
+
+                print("CARD BRANDS: \(session.sessionContext.paymentMethods)")
+
+                let dropInComponent = DropInComponent(paymentMethods: paymentMethods, context: adyenContext, configuration: dropInConfiguration)
 
                 // With session payments
-                let dropInComponent = DropInComponent(paymentMethods: session.sessionContext.paymentMethods, context: adyenContext)
+//                let dropInComponent = DropInComponent(paymentMethods: session.sessionContext.paymentMethods, context: adyenContext)
 
                 dropInComponent.delegate = self.adyenSession
 
@@ -365,9 +364,9 @@ extension PaymentsDropIn: DropInComponentDelegate, AdyenSessionDelegate, Present
 
         if result.resultCode == .refused {
 
-            if let paymentId = self.paymentId {
-                self.cancelDeposit(paymentId: paymentId)
-            }
+//            if let paymentId = self.paymentId {
+//                self.cancelDeposit(paymentId: paymentId)
+//            }
 
             self.dropInComponent?.viewController.dismiss(animated: true)
             self.showPaymentStatus?(.refused)

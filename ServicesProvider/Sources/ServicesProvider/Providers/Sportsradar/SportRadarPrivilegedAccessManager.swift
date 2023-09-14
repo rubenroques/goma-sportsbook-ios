@@ -1199,6 +1199,25 @@ class SportRadarPrivilegedAccessManager: PrivilegedAccessManager {
             }
         }).eraseToAnyPublisher()
     }
+
+    func generateDocumentTypeToken(docType: String) -> AnyPublisher<AccessTokenResponse, ServiceProviderError> {
+
+        let endpoint = OmegaAPIClient.generateDocumentTypeToken(docType: docType)
+
+        let publisher: AnyPublisher<SportRadarModels.AccessTokenResponse, ServiceProviderError> = self.connector.request(endpoint)
+
+        return publisher.flatMap({ accessTokenResponse -> AnyPublisher<AccessTokenResponse, ServiceProviderError> in
+            if let acessToken = accessTokenResponse.token {
+                
+                let mappedAccessTokenResponse = SportRadarModelMapper.accessTokenResponse(fromInternalAccessTokenResponse: accessTokenResponse)
+
+                return Just(mappedAccessTokenResponse).setFailureType(to: ServiceProviderError.self).eraseToAnyPublisher()
+            }
+            else {
+                return Fail(outputType: AccessTokenResponse.self, failure: ServiceProviderError.errorMessage(message: accessTokenResponse.description ?? "Error")).eraseToAnyPublisher()
+            }
+        }).eraseToAnyPublisher()
+    }
 }
 
 extension SportRadarPrivilegedAccessManager: SportRadarSessionTokenUpdater {

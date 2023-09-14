@@ -39,6 +39,34 @@ class IdentificationDocsViewModel {
 
         self.getDocumentTypes()
 
+        self.generateDocumentTypeToken()
+    }
+
+    private func generateDocumentTypeToken() {
+
+        Env.servicesProvider.generateDocumentTypeToken(docType: "IDENTITY_CARD")
+            .receive(on: DispatchQueue.main)
+            .sink(receiveCompletion: { [weak self] completion in
+                switch completion {
+                case .failure(let error):
+                    print("OMEGA SUMSUB ACCESS TOKEN ERROR: \(error)")
+
+                    self?.isLoadingPublisher.send(false)
+
+                case .finished:
+                    ()
+                }
+            }, receiveValue: { [weak self] accessTokenResponse in
+                print("OMEGA SUMSUB ACCESS TOKEN RESPONSE: \(accessTokenResponse)")
+
+//                if let accessToken = accessTokenResponse.token {
+//                    self?.sumsubAccessTokenPublisher.send(accessToken)
+//                }
+//
+//                self?.isLoadingPublisher.send(false)
+
+            })
+            .store(in: &cancellables)
     }
 
     func getSumsubAccessToken(levelName: String) {

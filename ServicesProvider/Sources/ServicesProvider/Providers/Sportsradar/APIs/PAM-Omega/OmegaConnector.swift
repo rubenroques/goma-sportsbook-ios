@@ -227,16 +227,21 @@ class OmegaConnector: Connector {
                     self.cacheSessionKey(sessionKey)
                     self.sessionCredentials = OmegaSessionCredentials(username: username, password: password)
 
-                    return self.openSession(withSessionKey: sessionKey)
-                        .handleEvents(receiveOutput: { [weak self] (newLaunchToken: String?) in
-                            if let newLaunchTokenValue = newLaunchToken {
-                                self?.cacheLaunchKey(newLaunchTokenValue)
-                            }
-                        })
-                        .map({ _ -> SportRadarModels.LoginResponse in
-                            return loginResponse
-                        })
-                        .eraseToAnyPublisher()
+                    // IGNORE GAME SESSION
+                    self.cacheLaunchKey("")
+
+                    return Just(loginResponse).setFailureType(to: ServiceProviderError.self).eraseToAnyPublisher()
+
+//                    return self.openSession(withSessionKey: sessionKey)
+//                        .handleEvents(receiveOutput: { [weak self] (newLaunchToken: String?) in
+//                            if let newLaunchTokenValue = newLaunchToken {
+//                                self?.cacheLaunchKey(newLaunchTokenValue)
+//                            }
+//                        })
+//                        .map({ _ -> SportRadarModels.LoginResponse in
+//                            return loginResponse
+//                        })
+//                        .eraseToAnyPublisher()
                 }
                 else {
                     let message = loginResponse.message ?? "Login Error"

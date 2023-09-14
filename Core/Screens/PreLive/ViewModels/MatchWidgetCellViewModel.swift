@@ -54,7 +54,7 @@ class MatchWidgetCellViewModel {
     }
 
     var canHaveCashback: Bool {
-        return self.matchWidgetType == .normal && RePlayFeatureHelper.shouldShowRePlay(forMatch: self.match)
+        return (self.matchWidgetType == .normal || self.matchWidgetType == .topImage) && RePlayFeatureHelper.shouldShowRePlay(forMatch: self.match)
     }
 
     var matchScore: String {

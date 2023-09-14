@@ -143,12 +143,13 @@ class MyTicketsViewController: UIViewController {
                     self?.secondTextFieldLabel.text = localized("need_login_tickets")
                     self?.noBetsButton.setTitle(localized("login"), for: .normal)
                     self?.noBetsButton.isHidden = false
-                    self?.noBetsImage.image = UIImage(named: "no_internet_icon")
+                    self?.noBetsImage.image = UIImage(named: "my_tickets_logged_off_icon")
                 }
                 else {
                     self?.emptyBaseView.isHidden = !isTicketsEmpty
                     self?.firstTextFieldLabel.text = localized("no_tickets_here")
                     self?.secondTextFieldLabel.text = localized("second_empty_no_bets")
+                    self?.noBetsImage.image = UIImage(named: "my_tickets_empty_icon")
                 }
 
             })

@@ -131,14 +131,17 @@ public class LimitsOnRegisterViewController: UIViewController {
     private lazy var playerTypeStackView: UIStackView = Self.createPlayerTypeStackView()
 
     private lazy var beginnerBaseView: UIView = Self.createPlayerTypeBaseView()
+    private lazy var beginnerImageBaseView: UIView = Self.createBeginnerImageBaseView()
     private lazy var beginnerImageView: UIImageView = Self.createPlayerTypeImageView()
     private lazy var beginnerLabel: UILabel = Self.createPlayerTypeLabel()
 
     private lazy var intermediateBaseView: UIView = Self.createPlayerTypeBaseView()
+    private lazy var intermediateImageBaseView: UIView = Self.createIntermediateImageBaseView()
     private lazy var intermediateImageView: UIImageView = Self.createPlayerTypeImageView()
     private lazy var intermediateLabel: UILabel = Self.createPlayerTypeLabel()
 
     private lazy var advancedBaseView: UIView = Self.createPlayerTypeBaseView()
+    private lazy var advancedImageBaseView: UIView = Self.createAdvancedImageBaseView()
     private lazy var advancedImageView: UIImageView = Self.createPlayerTypeImageView()
     private lazy var advancedLabel: UILabel = Self.createPlayerTypeLabel()
 
@@ -181,9 +184,9 @@ public class LimitsOnRegisterViewController: UIViewController {
         self.titleLabel.text = Localization.localized("limits_management")
         self.subtitleLabel.text = Localization.localized("limits_management_subtitle")
 
-        self.beginnerImageView.image = UIImage(named: "level_beginner", in: Bundle.module, with: nil)
-        self.intermediateImageView.image = UIImage(named: "level_intermediate", in: Bundle.module, with: nil)
-        self.advancedImageView.image = UIImage(named: "level_advanced", in: Bundle.module, with: nil)
+        self.beginnerImageView.image = UIImage(named: "limits_begginer_icon", in: Bundle.module, with: nil)
+        self.intermediateImageView.image = UIImage(named: "limits_intermediate_icon", in: Bundle.module, with: nil)
+        self.advancedImageView.image = UIImage(named: "limits_advanced_icon", in: Bundle.module, with: nil)
 
         self.beginnerLabel.text = Localization.localized("beginner")
         self.intermediateLabel.text = Localization.localized("intermediate")
@@ -247,9 +250,11 @@ public class LimitsOnRegisterViewController: UIViewController {
     }
 
     public override func viewDidLayoutSubviews() {
-        self.beginnerImageView.layer.cornerRadius = self.beginnerImageView.frame.height/2
-        self.intermediateImageView.layer.cornerRadius = self.intermediateImageView.frame.height/2
-        self.advancedImageView.layer.cornerRadius = self.advancedImageView.frame.height/2
+        self.beginnerImageBaseView.layer.cornerRadius = self.beginnerImageBaseView.frame.height/2
+
+        self.intermediateImageBaseView.layer.cornerRadius = self.intermediateImageBaseView.frame.height/2
+
+        self.advancedImageBaseView.layer.cornerRadius = self.advancedImageBaseView.frame.height/2
     }
 
     override public func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {
@@ -328,14 +333,14 @@ public class LimitsOnRegisterViewController: UIViewController {
         let borderColor = AppColor.highlightPrimary.cgColor
         let borderWidth: CGFloat = 2
 
-        self.beginnerImageView.layer.borderWidth = (selectedProfile == .beginner) ? borderWidth : 0
-        self.beginnerImageView.layer.borderColor = borderColor
+        self.beginnerImageBaseView.layer.borderWidth = (selectedProfile == .beginner) ? borderWidth : 0
+        self.beginnerImageBaseView.layer.borderColor = borderColor
 
-        self.intermediateImageView.layer.borderWidth = (selectedProfile == .intermediate) ? borderWidth : 0
-        self.intermediateImageView.layer.borderColor = borderColor
+        self.intermediateImageBaseView.layer.borderWidth = (selectedProfile == .intermediate) ? borderWidth : 0
+        self.intermediateImageBaseView.layer.borderColor = borderColor
 
-        self.advancedImageView.layer.borderWidth = (selectedProfile == .advanced) ? borderWidth : 0
-        self.advancedImageView.layer.borderColor = borderColor
+        self.advancedImageBaseView.layer.borderWidth = (selectedProfile == .advanced) ? borderWidth : 0
+        self.advancedImageBaseView.layer.borderColor = borderColor
     }
 
     func saveNewLimits() {
@@ -459,6 +464,24 @@ public extension LimitsOnRegisterViewController {
         return view
     }
 
+    private static func createBeginnerImageBaseView() -> UIView {
+        let view = UIView()
+        view.translatesAutoresizingMaskIntoConstraints = false
+        return view
+    }
+
+    private static func createIntermediateImageBaseView() -> UIView {
+        let view = UIView()
+        view.translatesAutoresizingMaskIntoConstraints = false
+        return view
+    }
+
+    private static func createAdvancedImageBaseView() -> UIView {
+        let view = UIView()
+        view.translatesAutoresizingMaskIntoConstraints = false
+        return view
+    }
+
     private static func createPlayerTypeImageView() -> UIImageView {
         let imageView = UIImageView()
         imageView.translatesAutoresizingMaskIntoConstraints = false
@@ -533,44 +556,67 @@ public extension LimitsOnRegisterViewController {
 
         self.cancelButton.setTitleColor(AppColor.highlightPrimary, for: .normal)
 
-        self.beginnerBaseView.addSubview(self.beginnerImageView)
+        self.beginnerBaseView.addSubview(self.beginnerImageBaseView)
+        self.beginnerImageBaseView.addSubview(self.beginnerImageView)
         self.beginnerBaseView.addSubview(self.beginnerLabel)
 
-        self.intermediateBaseView.addSubview(self.intermediateImageView)
+        self.intermediateBaseView.addSubview(self.intermediateImageBaseView)
+        self.intermediateImageBaseView.addSubview(self.intermediateImageView)
         self.intermediateBaseView.addSubview(self.intermediateLabel)
 
-        self.advancedBaseView.addSubview(self.advancedImageView)
+        self.advancedBaseView.addSubview(self.advancedImageBaseView)
+        self.advancedImageBaseView.addSubview(self.advancedImageView)
         self.advancedBaseView.addSubview(self.advancedLabel)
 
         NSLayoutConstraint.activate([
-            self.beginnerImageView.topAnchor.constraint(equalTo: self.beginnerBaseView.topAnchor),
-            self.beginnerImageView.centerXAnchor.constraint(equalTo: self.beginnerBaseView.centerXAnchor),
-            self.beginnerImageView.widthAnchor.constraint(equalTo: self.beginnerImageView.heightAnchor),
-            self.beginnerImageView.widthAnchor.constraint(equalToConstant: 80),
+            self.beginnerImageBaseView.topAnchor.constraint(equalTo: self.beginnerBaseView.topAnchor),
+            self.beginnerImageBaseView.widthAnchor.constraint(equalToConstant: 92),
+            self.beginnerImageBaseView.heightAnchor.constraint(equalTo: self.beginnerImageBaseView.widthAnchor),
+            self.beginnerImageBaseView.centerXAnchor.constraint(equalTo: self.beginnerBaseView.centerXAnchor),
 
-            self.beginnerLabel.topAnchor.constraint(equalTo: self.beginnerImageView.bottomAnchor, constant: 8),
+            self.beginnerImageView.centerYAnchor.constraint(equalTo: self.beginnerImageBaseView.centerYAnchor, constant: 10),
+            self.beginnerImageView.centerXAnchor.constraint(equalTo: self.beginnerImageBaseView.centerXAnchor),
+            self.beginnerImageView.widthAnchor.constraint(equalToConstant: 82),
+            self.beginnerImageView.heightAnchor.constraint(equalTo: self.beginnerImageView.widthAnchor),
+
+            self.beginnerLabel.topAnchor.constraint(equalTo: self.beginnerImageBaseView.bottomAnchor, constant: 8),
             self.beginnerLabel.leadingAnchor.constraint(equalTo: self.beginnerBaseView.leadingAnchor),
             self.beginnerLabel.centerXAnchor.constraint(equalTo: self.beginnerBaseView.centerXAnchor),
             self.beginnerLabel.bottomAnchor.constraint(equalTo: self.beginnerBaseView.bottomAnchor, constant: -10),
             self.beginnerLabel.heightAnchor.constraint(equalToConstant: 18),
 
-            self.intermediateImageView.topAnchor.constraint(equalTo: self.intermediateBaseView.topAnchor),
-            self.intermediateImageView.centerXAnchor.constraint(equalTo: self.intermediateBaseView.centerXAnchor),
-            self.intermediateImageView.widthAnchor.constraint(equalTo: self.intermediateImageView.heightAnchor),
-            self.intermediateImageView.widthAnchor.constraint(equalToConstant: 80),
+            self.intermediateImageBaseView.topAnchor.constraint(equalTo: self.intermediateBaseView.topAnchor),
+            self.intermediateImageBaseView.widthAnchor.constraint(equalToConstant: 92),
+            self.intermediateImageBaseView.heightAnchor.constraint(equalTo: self.intermediateImageBaseView.widthAnchor),
+            self.intermediateImageBaseView.centerXAnchor.constraint(equalTo: self.intermediateBaseView.centerXAnchor),
 
-            self.intermediateLabel.topAnchor.constraint(equalTo: self.intermediateImageView.bottomAnchor, constant: 8),
+            self.intermediateImageView.centerYAnchor.constraint(equalTo: self.intermediateImageBaseView.centerYAnchor, constant: 10),
+            self.intermediateImageView.centerXAnchor.constraint(equalTo: self.intermediateImageBaseView.centerXAnchor),
+            self.intermediateImageView.widthAnchor.constraint(equalToConstant: 82),
+            self.intermediateImageView.heightAnchor.constraint(equalTo: self.intermediateImageView.widthAnchor),
+
+            self.intermediateLabel.topAnchor.constraint(equalTo: self.intermediateImageBaseView.bottomAnchor, constant: 8),
             self.intermediateLabel.leadingAnchor.constraint(equalTo: self.intermediateBaseView.leadingAnchor),
             self.intermediateLabel.centerXAnchor.constraint(equalTo: self.intermediateBaseView.centerXAnchor),
             self.intermediateLabel.bottomAnchor.constraint(equalTo: self.intermediateBaseView.bottomAnchor, constant: -10),
             self.intermediateLabel.heightAnchor.constraint(equalToConstant: 18),
 
-            self.advancedImageView.topAnchor.constraint(equalTo: self.advancedBaseView.topAnchor),
-            self.advancedImageView.centerXAnchor.constraint(equalTo: self.advancedBaseView.centerXAnchor),
-            self.advancedImageView.widthAnchor.constraint(equalTo: self.advancedImageView.heightAnchor),
-            self.advancedImageView.widthAnchor.constraint(equalToConstant: 80),
+            self.advancedImageBaseView.topAnchor.constraint(equalTo: self.advancedBaseView.topAnchor),
+            self.advancedImageBaseView.widthAnchor.constraint(equalToConstant: 92),
+            self.advancedImageBaseView.heightAnchor.constraint(equalTo: self.advancedImageBaseView.widthAnchor),
+            self.advancedImageBaseView.centerXAnchor.constraint(equalTo: self.advancedBaseView.centerXAnchor),
 
-            self.advancedLabel.topAnchor.constraint(equalTo: self.advancedImageView.bottomAnchor, constant: 8),
+            self.advancedImageView.centerYAnchor.constraint(equalTo: self.advancedImageBaseView.centerYAnchor, constant: 10),
+            self.advancedImageView.centerXAnchor.constraint(equalTo: self.advancedImageBaseView.centerXAnchor),
+            self.advancedImageView.widthAnchor.constraint(equalToConstant: 82),
+            self.advancedImageView.heightAnchor.constraint(equalTo: self.advancedImageView.widthAnchor),
+
+//            self.advancedImageView.topAnchor.constraint(equalTo: self.advancedBaseView.topAnchor),
+//            self.advancedImageView.centerXAnchor.constraint(equalTo: self.advancedBaseView.centerXAnchor),
+//            self.advancedImageView.widthAnchor.constraint(equalTo: self.advancedImageView.heightAnchor),
+//            self.advancedImageView.widthAnchor.constraint(equalToConstant: 80),
+
+            self.advancedLabel.topAnchor.constraint(equalTo: self.advancedImageBaseView.bottomAnchor, constant: 8),
             self.advancedLabel.leadingAnchor.constraint(equalTo: self.advancedBaseView.leadingAnchor),
             self.advancedLabel.centerXAnchor.constraint(equalTo: self.advancedBaseView.centerXAnchor),
             self.advancedLabel.bottomAnchor.constraint(equalTo: self.advancedBaseView.bottomAnchor, constant: -10),

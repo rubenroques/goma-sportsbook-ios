@@ -185,7 +185,7 @@ class WithdrawViewController: UIViewController {
         self.navigationView.colors = [(UIColor(red: 1.0 / 255.0, green: 2.0 / 255.0, blue: 91.0 / 255.0, alpha: 1), NSNumber(0.0)),
                                               (UIColor(red: 64.0 / 255.0, green: 76.0 / 255.0, blue: 255.0 / 255.0, alpha: 1), NSNumber(1.0))]
 
-        self.navigationLabel.textColor = UIColor.App.textPrimary
+        self.navigationLabel.textColor = UIColor.App.buttonTextPrimary
 
         self.navigationButton.backgroundColor = .clear
         self.navigationButton.tintColor = UIColor.App.textPrimary
@@ -197,7 +197,7 @@ class WithdrawViewController: UIViewController {
 
         self.shapeView.backgroundColor = UIColor.App.backgroundPrimary
 
-        self.titleLabel.textColor = UIColor.App.textPrimary
+        self.titleLabel.textColor = UIColor.App.buttonTextPrimary
 
         self.withdrawHeaderTextFieldView.backgroundColor = .clear
         self.withdrawHeaderTextFieldView.setPlaceholderColor(UIColor.App.textSecondary)
