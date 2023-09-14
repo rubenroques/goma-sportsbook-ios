@@ -459,9 +459,9 @@ class PersonalInfoViewController: UIViewController {
                     }
 
                 }, receiveValue: { [weak self] limitsResponse in
-
+                    
                     print("EXTRA INFO RESPONSE: \(limitsResponse)")
-
+                    
                 })
                 .store(in: &cancellables)
         }

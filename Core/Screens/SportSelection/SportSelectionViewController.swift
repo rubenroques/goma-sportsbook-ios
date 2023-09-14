@@ -157,7 +157,7 @@ class SportSelectionViewController: UIViewController {
                         $0.liveEventsCount > 0
                     })
                     let notLiveSports = allSports.filter({
-                        $0.liveEventsCount <= 0
+                        $0.liveEventsCount <= 0 && $0.eventsCount > 0
                     })
 
                     var mergedSports = liveSports

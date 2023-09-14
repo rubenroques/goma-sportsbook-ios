@@ -610,7 +610,6 @@ extension ServicesProviderClient {
     }
 
     public func updateExtraInfo(placeOfBirth: String?, address2: String?) -> AnyPublisher<BasicResponse, ServiceProviderError> {
-
         guard
             let privilegedAccessManager = self.privilegedAccessManager
         else {
@@ -618,6 +617,16 @@ extension ServicesProviderClient {
         }
         return privilegedAccessManager.updateExtraInfo(placeOfBirth: placeOfBirth, address2: address2)
     }
+    
+    public func updateDeviceIdentifier(deviceIdentifier: String) -> AnyPublisher<BasicResponse, ServiceProviderError> {
+        guard
+            let privilegedAccessManager = self.privilegedAccessManager
+        else {
+            return Fail(error: ServiceProviderError.privilegedAccessManagerNotFound).eraseToAnyPublisher()
+        }
+        return privilegedAccessManager.updateDeviceIdentifier(deviceIdentifier: deviceIdentifier)
+    }
+
 
     public func checkEmailRegistered(_ email: String) -> AnyPublisher<Bool, ServiceProviderError> {
         guard

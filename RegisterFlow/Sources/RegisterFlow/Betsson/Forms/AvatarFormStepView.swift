@@ -223,7 +223,7 @@ class AvatarFormStepView: FormStepView {
         let startFrame = selectedView.convert(selectedView.bounds, to: self)
         let endFrame = self.avatarAnimationPlaceholdeView.frame
 
-        let avatarAnimationView = Self.createAvatarAnimationView(withFrame: startFrame, andName: name)
+        let avatarAnimationView = self.createAvatarAnimationView(withFrame: startFrame, andName: name)
         avatarAnimationView.isUserInteractionEnabled = false
         avatarAnimationView.alpha = 0.0
         self.addSubview(avatarAnimationView)
@@ -348,11 +348,18 @@ extension AvatarFormStepView {
         return view
     }
 
-    private static func createAvatarAnimationView(withFrame frame: CGRect, andName name: String) -> LottieAnimationView {
+    private func createAvatarAnimationView(withFrame frame: CGRect, andName name: String) -> LottieAnimationView {
         let animationView = LottieAnimationView(frame: frame)
         animationView.contentMode = .scaleAspectFit
 
-        let avatarAnimation = LottieAnimation.named(name)
+        let animationName: String
+        if self.traitCollection.userInterfaceStyle == .dark {
+            animationName = name + "-dark"
+        } else {
+            animationName = name + "-light"
+        }
+        
+        let avatarAnimation = LottieAnimation.named(animationName)
         animationView.animation = avatarAnimation
 
         animationView.loopMode = .loop

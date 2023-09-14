@@ -140,7 +140,7 @@ class Authenticator {
                 "device_uuid": deviceId,
                 "device_type": "ios",
                 "type": "anonymous",
-                "device_token": Env.deviceFCMToken
+                "device_token": Env.deviceFirebaseCloudMessagingToken
             ]
 
             let jsonData = try! JSONEncoder().encode(bodyJSON) // swiftlint:disable:this force_try

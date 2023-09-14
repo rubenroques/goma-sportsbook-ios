@@ -216,13 +216,14 @@ class LiveEventsViewController: UIViewController {
 
         self.tableView.separatorStyle = .none
         self.tableView.register(MatchLineTableViewCell.nib, forCellReuseIdentifier: MatchLineTableViewCell.identifier)
+        self.tableView.register(OutrightCompetitionLargeLineTableViewCell.self, forCellReuseIdentifier: OutrightCompetitionLargeLineTableViewCell.identifier)
         self.tableView.register(BannerScrollTableViewCell.nib, forCellReuseIdentifier: BannerScrollTableViewCell.identifier)
+        self.tableView.register(EmptyLiveMessageBannerTableViewCell.self, forCellReuseIdentifier: EmptyLiveMessageBannerTableViewCell.identifier)
         self.tableView.register(LoadingMoreTableViewCell.nib, forCellReuseIdentifier: LoadingMoreTableViewCell.identifier)
         self.tableView.register(FooterResponsibleGamingViewCell.self, forCellReuseIdentifier: FooterResponsibleGamingViewCell.identifier)
         self.tableView.register(TournamentTableViewHeader.nib, forHeaderFooterViewReuseIdentifier: TournamentTableViewHeader.identifier)
         self.tableView.register(TitleTableViewHeader.nib, forHeaderFooterViewReuseIdentifier: TitleTableViewHeader.identifier)
-        self.tableView.register(EmptyLiveMessageBannerTableViewCell.self, forCellReuseIdentifier: EmptyLiveMessageBannerTableViewCell.identifier)
-
+        
         self.tableView.delegate = self
         self.tableView.dataSource = self
 

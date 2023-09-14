@@ -224,7 +224,7 @@ class PaymentsDropIn {
         if let paymentMethodsResponse = self.paymentMethodsResponse,
            let clientKey = self.clientKey,
            let apiContext = self.apiContext,
-           let payment = self.payment ,
+           let payment = self.payment,
            let session = self.adyenSession {
 
             if let paymentResponseData = try? JSONEncoder().encode(paymentMethodsResponse),

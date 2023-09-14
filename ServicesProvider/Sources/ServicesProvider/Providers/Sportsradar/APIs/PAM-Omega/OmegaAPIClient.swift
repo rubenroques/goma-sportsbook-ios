@@ -80,6 +80,8 @@ enum OmegaAPIClient {
     
     case updateExtraInfo(placeOfBirth: String?, address2: String?)
 
+    case updateDeviceIdentifier(deviceIdentifier: String)
+    
     case resendVerificationCode(username: String)
     case signupConfirmation(email: String,
                             confirmationCode: String)
@@ -191,6 +193,8 @@ extension OmegaAPIClient: Endpoint {
         case .updatePassword:
             return "/ps/ips/updatePassword"
         case .updateExtraInfo:
+            return "/ps/ips/updateExtraInfo"
+        case .updateDeviceIdentifier:
             return "/ps/ips/updateExtraInfo"
 
         case .updateWeeklyDepositLimits:
@@ -388,17 +392,28 @@ extension OmegaAPIClient: Endpoint {
 
         case .updateExtraInfo(let placeOfBirth, let address2):
             var query: [URLQueryItem] = []
-
             let extraInfo = """
                             {
-                            "placeOfBirth":"\(placeOfBirth ?? "")",
-                            "streetLine2":"\(address2 ?? "")"
+                                "placeOfBirth":"\(placeOfBirth ?? "")",
+                                "streetLine2":"\(address2 ?? "")"
                             }
                             """
-
             query.append(URLQueryItem(name: "extraInfo", value: extraInfo))
-
             return query
+            
+        case .updateDeviceIdentifier(let deviceIdentifier):
+            var query: [URLQueryItem] = []
+            let extraInfo = """
+                            {
+                                "device_token_ios": "\(deviceIdentifier)",
+                                "device_token_android": "",
+                                "device_token_web": "",
+                                "device_token_last" : "\(deviceIdentifier)"
+                            }
+                            """
+            query.append(URLQueryItem(name: "extraInfo", value: extraInfo))
+            return query
+            
         case .resendVerificationCode(let username):
             return [
                 URLQueryItem(name: "username", value: username),
@@ -733,6 +748,7 @@ extension OmegaAPIClient: Endpoint {
         case .forgotPassword: return .get
         case .updatePassword: return .get
         case .updateExtraInfo: return .post
+        case .updateDeviceIdentifier: return .post
 
         case .updateWeeklyDepositLimits: return .get
         case .updateWeeklyBettingLimits: return .get
@@ -862,7 +878,8 @@ extension OmegaAPIClient: Endpoint {
         case .forgotPassword: return false
         case .updatePassword: return true
         case .updateExtraInfo: return true
-
+        case .updateDeviceIdentifier: return true
+            
         case .updateWeeklyDepositLimits: return true
         case .updateWeeklyBettingLimits: return true
         case .updateResponsibleGamingLimits: return true

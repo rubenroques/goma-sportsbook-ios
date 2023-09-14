@@ -61,12 +61,13 @@ extension EmptyLiveMessageBannerTableViewCell {
     private static func createBaseView() -> UIView {
         let baseView  = UIView()
         baseView.clipsToBounds = true
+        baseView.layer.cornerRadius = 9
         baseView.translatesAutoresizingMaskIntoConstraints = false
         return baseView
     }
 
     private static func createGradientBorderView() -> GradientBorderView {
-        var gradientBorderView = GradientBorderView()
+        let gradientBorderView = GradientBorderView()
         gradientBorderView.translatesAutoresizingMaskIntoConstraints = false
         gradientBorderView.gradientBorderWidth = 1
         gradientBorderView.gradientCornerRadius = 9

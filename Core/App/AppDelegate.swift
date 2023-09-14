@@ -109,7 +109,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate, MessagingDelegate {
 
     func messaging(_ messaging: Messaging, didReceiveRegistrationToken fcmToken: String?) {
         print("FCM token: \(fcmToken ?? "[Token Error]")")
-        Env.deviceFCMToken = fcmToken ?? ""
+        Env.deviceFirebaseCloudMessagingToken = fcmToken ?? ""
     }
 
     func applicationDidEnterBackground(_ application: UIApplication) {
