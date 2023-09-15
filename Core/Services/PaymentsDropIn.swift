@@ -237,8 +237,6 @@ class PaymentsDropIn {
 
 //                dropInConfiguration.card.allowedCardTypes = [.visa, .masterCard, .carteBancaire,]
 
-                print("CARD BRANDS: \(session.sessionContext.paymentMethods)")
-
                 let dropInComponent = DropInComponent(paymentMethods: paymentMethods, context: adyenContext, configuration: dropInConfiguration)
 
                 // With session payments
@@ -282,7 +280,6 @@ class PaymentsDropIn {
 }
 
 extension PaymentsDropIn: DropInComponentDelegate, AdyenSessionDelegate, PresentationDelegate {
-
 
     func didSubmit(_ data: Adyen.PaymentComponentData, from component: Adyen.PaymentComponent, in dropInComponent: Adyen.AnyDropInComponent) {
 

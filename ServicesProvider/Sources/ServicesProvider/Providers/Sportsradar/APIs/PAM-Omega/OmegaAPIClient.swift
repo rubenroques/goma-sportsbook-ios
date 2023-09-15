@@ -155,6 +155,7 @@ enum OmegaAPIClient {
     case getSumsubApplicantData(userId: String, body: Data? = nil, header: [String: String])
 
     case generateDocumentTypeToken(docType: String)
+    case checkDocumentationData
 
 }
 
@@ -281,6 +282,9 @@ extension OmegaAPIClient: Endpoint {
 
         case .generateDocumentTypeToken:
             return "/ps/ips/generateToken"
+
+        case .checkDocumentationData:
+            return "/ps/ips/checkDocumentation"
         }
     }
     
@@ -724,6 +728,14 @@ extension OmegaAPIClient: Endpoint {
                 URLQueryItem(name: "docType", value: docType)
 
             ]
+
+        case .checkDocumentationData:
+            return [
+
+                URLQueryItem(name: "target", value: "SUMSUB"),
+                URLQueryItem(name: "resultType", value: "OVERALL")
+
+            ]
         }
     }
     
@@ -794,6 +806,7 @@ extension OmegaAPIClient: Endpoint {
         case .getSumsubApplicantData: return .get
 
         case .generateDocumentTypeToken: return .get
+        case .checkDocumentationData: return .get
         }
     }
     
@@ -925,6 +938,7 @@ extension OmegaAPIClient: Endpoint {
         case .getSumsubApplicantData: return false
 
         case .generateDocumentTypeToken: return true
+        case .checkDocumentationData: return true
         }
     }
     

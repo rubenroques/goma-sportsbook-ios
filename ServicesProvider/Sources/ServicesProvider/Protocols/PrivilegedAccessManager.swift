@@ -94,4 +94,6 @@ protocol PrivilegedAccessManager {
     func getSumsubApplicantData(userId: String) -> AnyPublisher<ApplicantDataResponse, ServiceProviderError>
 
     func generateDocumentTypeToken(docType: String) -> AnyPublisher<AccessTokenResponse, ServiceProviderError>
+
+    func checkDocumentationData() -> AnyPublisher<ApplicantDataResponse, ServiceProviderError>
 }

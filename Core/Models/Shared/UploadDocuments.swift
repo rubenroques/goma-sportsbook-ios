@@ -202,15 +202,15 @@ enum DocumentTypeGroup {
     var levelName: String {
         switch self {
         case .identityCard:
-            return "ID Verifiication"
+            return "kyc-level-1-id-verification"
         case .residenceId:
-            return "ID Verifiication"
+            return "kyc-level-1-id-verification"
         case .drivingLicense:
-            return "ID Verifiication"
+            return "kyc-level-1-id-verification"
         case .passport:
-            return "ID Verifiication"
+            return "kyc-level-1-id-verification"
         case .proofAddress:
-            return "POA Verification"
+            return "kyc-level-2-poa-verification"
         case .rib:
             return "RIB Verification"
         case .others:

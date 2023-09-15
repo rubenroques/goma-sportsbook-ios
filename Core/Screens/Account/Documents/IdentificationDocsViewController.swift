@@ -259,7 +259,7 @@ class IdentificationDocsViewController: UIViewController {
     @objc func didTapIdAddDoc() {
 
         if self.totalIdentificationTriesCount <= 4 {
-            self.viewModel.getSumsubAccessToken(levelName: "ID Verifiication")
+            self.viewModel.generateDocumentTypeToken(docType: "IDENTITY_CARD")
 
         }
         else {
@@ -279,7 +279,9 @@ class IdentificationDocsViewController: UIViewController {
     @objc func didTapProofAddDoc() {
 
         if self.totalProofAddressTriesCount <= 4 {
-            self.viewModel.getSumsubAccessToken(levelName: "POA Verification")
+
+            self.viewModel.generateDocumentTypeToken(docType: "POA_CARD")
+
         }
         else {
             let manualUploadDocumentViewModel = ManualUploadsDocumentsViewModel(documentTypeCode: .proofAddress)
@@ -334,7 +336,8 @@ class IdentificationDocsViewController: UIViewController {
         sdk.dismissHandler { (sdk, mainVC) in
             mainVC.dismiss(animated: true, completion: nil)
 
-            self.viewModel.getSumSubDocuments()
+//            self.viewModel.getSumSubDocuments()
+            self.viewModel.checkDocumentationData()
         }
 
         sdk.onEvent { (sdk, event) in
@@ -545,7 +548,7 @@ class IdentificationDocsViewController: UIViewController {
 
         alert.addAction(UIAlertAction(title: localized("ok"), style: .default, handler: { [weak self] _ in
 
-            self?.viewModel.getSumsubAccessToken(levelName: "POA Verification")
+            self?.viewModel.generateDocumentTypeToken(docType: "POA_CARD")
 
             self?.hasShownContinueProcessAlert = true
 

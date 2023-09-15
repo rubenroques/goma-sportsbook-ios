@@ -39,12 +39,11 @@ class IdentificationDocsViewModel {
 
         self.getDocumentTypes()
 
-        self.generateDocumentTypeToken()
     }
 
-    private func generateDocumentTypeToken() {
+    func generateDocumentTypeToken(docType: String) {
 
-        Env.servicesProvider.generateDocumentTypeToken(docType: "IDENTITY_CARD")
+        Env.servicesProvider.generateDocumentTypeToken(docType: docType)
             .receive(on: DispatchQueue.main)
             .sink(receiveCompletion: { [weak self] completion in
                 switch completion {
@@ -59,37 +58,6 @@ class IdentificationDocsViewModel {
             }, receiveValue: { [weak self] accessTokenResponse in
                 print("OMEGA SUMSUB ACCESS TOKEN RESPONSE: \(accessTokenResponse)")
 
-//                if let accessToken = accessTokenResponse.token {
-//                    self?.sumsubAccessTokenPublisher.send(accessToken)
-//                }
-//
-//                self?.isLoadingPublisher.send(false)
-
-            })
-            .store(in: &cancellables)
-    }
-
-    func getSumsubAccessToken(levelName: String) {
-
-        self.isLoadingPublisher.send(true)
-
-        let userId = Env.userSessionStore.userProfilePublisher.value?.userIdentifier ?? ""
-
-        Env.servicesProvider.sumsubDataProvider?.getSumsubAccessToken(userId: userId, levelName: levelName)
-            .receive(on: DispatchQueue.main)
-            .sink(receiveCompletion: { [weak self] completion in
-                switch completion {
-                case .failure(let error):
-                    print("SUMSUB ACCESS TOKEN ERROR: \(error)")
-
-                    self?.isLoadingPublisher.send(false)
-
-                case .finished:
-                    ()
-                }
-            }, receiveValue: { [weak self] accessTokenResponse in
-                print("SUMSUB ACCESS TOKEN RESPONSE: \(accessTokenResponse)")
-
                 if let accessToken = accessTokenResponse.token {
                     self?.sumsubAccessTokenPublisher.send(accessToken)
                 }
@@ -98,18 +66,80 @@ class IdentificationDocsViewModel {
 
             })
             .store(in: &cancellables)
-
     }
 
-    func getSumSubDocuments() {
+//    func getSumsubAccessToken(levelName: String) {
+//
+//        self.isLoadingPublisher.send(true)
+//
+//        let userId = Env.userSessionStore.userProfilePublisher.value?.userIdentifier ?? ""
+//
+//        Env.servicesProvider.sumsubDataProvider?.getSumsubAccessToken(userId: userId, levelName: levelName)
+//            .receive(on: DispatchQueue.main)
+//            .sink(receiveCompletion: { [weak self] completion in
+//                switch completion {
+//                case .failure(let error):
+//                    print("SUMSUB ACCESS TOKEN ERROR: \(error)")
+//
+//                    self?.isLoadingPublisher.send(false)
+//
+//                case .finished:
+//                    ()
+//                }
+//            }, receiveValue: { [weak self] accessTokenResponse in
+//                print("SUMSUB ACCESS TOKEN RESPONSE: \(accessTokenResponse)")
+//
+//                if let accessToken = accessTokenResponse.token {
+//                    self?.sumsubAccessTokenPublisher.send(accessToken)
+//                }
+//
+//                self?.isLoadingPublisher.send(false)
+//
+//            })
+//            .store(in: &cancellables)
+//
+//    }
+
+//    func getSumSubDocuments() {
+//
+//        self.isLoadingPublisher.send(true)
+//        self.hasLoadedUserDocuments.send(false)
+//        self.hasDocumentsProcessed.send(false)
+//
+//        let userId = Env.userSessionStore.userProfilePublisher.value?.userIdentifier ?? ""
+//
+//        Env.servicesProvider.sumsubDataProvider?.getApplicantData(userId: userId)
+//            .receive(on: DispatchQueue.main)
+//            .sink(receiveCompletion: { [weak self] completion in
+//                switch completion {
+//                case .failure(let error):
+//                    print("SUMSUB DATA ERROR: \(error)")
+//
+//                    self?.getUserDocuments()
+//
+//                case .finished:
+//                    ()
+//                }
+//            }, receiveValue: { [weak self] applicantDataResponse in
+//                print("SUMSUB DATA RESPONSE: \(applicantDataResponse)")
+//
+//                if let requiredDocumentTypes = self?.requiredDocumentTypes {
+//                    self?.processSumsubDocuments(documentTypes: requiredDocumentTypes, applicantDataResponse: applicantDataResponse)
+//                }
+//
+//                self?.getUserDocuments()
+//
+//            })
+//            .store(in: &cancellables)
+//    }
+
+    func checkDocumentationData() {
 
         self.isLoadingPublisher.send(true)
         self.hasLoadedUserDocuments.send(false)
         self.hasDocumentsProcessed.send(false)
 
-        let userId = Env.userSessionStore.userProfilePublisher.value?.userIdentifier ?? ""
-
-        Env.servicesProvider.sumsubDataProvider?.getApplicantData(userId: userId)
+        Env.servicesProvider.checkDocumentationData()
             .receive(on: DispatchQueue.main)
             .sink(receiveCompletion: { [weak self] completion in
                 switch completion {
@@ -117,7 +147,6 @@ class IdentificationDocsViewModel {
                     print("SUMSUB DATA ERROR: \(error)")
 
                     self?.getUserDocuments()
-                    //self?.isLoadingPublisher.send(false)
 
                 case .finished:
                     ()
@@ -151,7 +180,7 @@ class IdentificationDocsViewModel {
         self.documents = []
         self.identificationDocuments = []
         self.proofAddressDocuments = []
-        self.getSumSubDocuments()
+        self.checkDocumentationData()
     }
 
     private func getDocumentTypes() {
@@ -182,7 +211,7 @@ class IdentificationDocsViewModel {
 
                 self?.hasLoadedDocumentTypes.send(true)
 
-                self?.getSumSubDocuments()
+                self?.checkDocumentationData()
             })
             .store(in: &cancellables)
     }
@@ -386,6 +415,33 @@ class IdentificationDocsViewModel {
 
     private func processDocuments(documentTypes: [DocumentType], userDocuments: [UserDocument]) {
 
+        // Check for identification user documents on Omega
+        if userDocuments.isNotEmpty && userDocuments.contains(where: {
+            $0.documentType == "IDENTITY_CARD"
+        }) {
+            self.identificationDocuments = []
+            let filteredDocuments = self.documents.filter({
+                $0.typeGroup == .proofAddress
+            })
+
+            self.documents = filteredDocuments
+        }
+
+        // Check for poa user documents on Omega
+        if userDocuments.isNotEmpty && userDocuments.contains(where: {
+            $0.documentType == "POA"
+        }) {
+            self.proofAddressDocuments = []
+            let filteredDocuments = self.documents.filter({
+                $0.typeGroup == .identityCard ||
+                $0.typeGroup == .drivingLicense ||
+                $0.typeGroup == .passport ||
+                $0.typeGroup == .residenceId
+            })
+
+            self.documents = filteredDocuments
+        }
+
         for documentType in documentTypes {
 
             let documentTypeCode = DocumentTypeCode(code: documentType.documentType)
@@ -417,8 +473,19 @@ class IdentificationDocsViewModel {
                                 retry = false
                             }
 
+                            var fileName = userDocument.documentType
+
+                            if userDocumentFiles.count > 1 {
+                                if userDocumentFile.fileName == userDocumentFiles.first?.fileName {
+                                    fileName = "\(fileName) \(localized("upload_front"))"
+                                }
+                                else {
+                                    fileName = "\(fileName) \(localized("upload_back"))"
+                                }
+                            }
+
                             let documentFileInfo = DocumentFileInfo(id: userDocument.documentType,
-                                                                    name: userDocumentFile.fileName,
+                                                                    name: fileName,
                                                     status: userDocumentStatus ?? .pendingApproved,
                                                     uploadDate: uploadDate ?? Date(),
                                                                     retry: retry,
