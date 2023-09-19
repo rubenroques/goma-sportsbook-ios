@@ -1245,6 +1245,25 @@ extension ServicesProviderClient {
         return privilegedAccessManager.getSumsubApplicantData(userId: userId)
     }
 
+    public func generateDocumentTypeToken(docType: String) -> AnyPublisher<AccessTokenResponse, ServiceProviderError> {
+        guard
+            let privilegedAccessManager = self.privilegedAccessManager
+        else {
+            return Fail(error: ServiceProviderError.privilegedAccessManagerNotFound).eraseToAnyPublisher()
+        }
+
+        return privilegedAccessManager.generateDocumentTypeToken(docType: docType)
+    }
+
+    public func checkDocumentationData() -> AnyPublisher<ApplicantDataResponse, ServiceProviderError> {
+        guard
+            let privilegedAccessManager = self.privilegedAccessManager
+        else {
+            return Fail(error: ServiceProviderError.privilegedAccessManagerNotFound).eraseToAnyPublisher()
+        }
+
+        return privilegedAccessManager.checkDocumentationData()
+    }
 }
 
 // Utilities

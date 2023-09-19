@@ -256,7 +256,7 @@ class LoginViewController: UIViewController {
 
     @objc private func showDeposit() {
         if let navigationController = self.navigationController {
-            self.showDepositOnRegisterViewController(onNavigationController: navigationController)
+            self.showRegisterFeedbackViewController(onNavigationController: navigationController)
         }
     }
 
@@ -431,15 +431,16 @@ class LoginViewController: UIViewController {
 
     private func showRegisterFeedbackViewController(onNavigationController navigationController: UINavigationController) {
 
-        let genericSuccessViewController = GenericSuccessViewController()
+        let registerSuccessViewController = RegisterSuccessViewController()
 
-        genericSuccessViewController.setTextInfo(title: localized("congratulations"), subtitle: localized("singup_success_text"))
+        registerSuccessViewController.setTextInfo(title: localized("congratulations"), subtitle: localized("singup_success_text"))
 
-        genericSuccessViewController.didTapContinueAction = { [weak self] in
+        registerSuccessViewController.didTapContinueAction = { [weak self] in
             self?.showBiometricPromptViewController(onNavigationController: navigationController)
         }
 
-        navigationController.pushViewController(genericSuccessViewController, animated: true)
+        navigationController.pushViewController(registerSuccessViewController, animated: true)
+
     }
 
     private func showBiometricPromptViewController(onNavigationController navigationController: UINavigationController) {

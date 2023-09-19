@@ -156,6 +156,9 @@ enum OmegaAPIClient {
     case getSumsubAccessToken(userId: String, levelName: String, body: Data? = nil, header: [String: String])
     case getSumsubApplicantData(userId: String, body: Data? = nil, header: [String: String])
 
+    case generateDocumentTypeToken(docType: String)
+    case checkDocumentationData
+
 }
 
 extension OmegaAPIClient: Endpoint {
@@ -280,6 +283,12 @@ extension OmegaAPIClient: Endpoint {
             return "/resources/accessTokens"
         case .getSumsubApplicantData(let userId, _, _):
             return "/resources/applicants/-;externalUserId=\(userId)/one"
+
+        case .generateDocumentTypeToken:
+            return "/ps/ips/generateToken"
+
+        case .checkDocumentationData:
+            return "/ps/ips/checkDocumentation"
         }
     }
     
@@ -726,6 +735,22 @@ extension OmegaAPIClient: Endpoint {
 
         case .getSumsubApplicantData:
             return nil
+
+        case .generateDocumentTypeToken(let docType):
+            return [
+
+                URLQueryItem(name: "target", value: "SUMSUB"),
+                URLQueryItem(name: "docType", value: docType)
+
+            ]
+
+        case .checkDocumentationData:
+            return [
+
+                URLQueryItem(name: "target", value: "SUMSUB"),
+                URLQueryItem(name: "resultType", value: "OVERALL")
+
+            ]
         }
     }
     
@@ -795,6 +820,9 @@ extension OmegaAPIClient: Endpoint {
 
         case .getSumsubAccessToken: return .post
         case .getSumsubApplicantData: return .get
+
+        case .generateDocumentTypeToken: return .get
+        case .checkDocumentationData: return .get
         }
     }
     
@@ -925,6 +953,9 @@ extension OmegaAPIClient: Endpoint {
 
         case .getSumsubAccessToken: return false
         case .getSumsubApplicantData: return false
+
+        case .generateDocumentTypeToken: return true
+        case .checkDocumentationData: return true
         }
     }
     

@@ -5860,6 +5860,20 @@
 		A9BAFB472AB0B46D002EDBA1 /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = A9BAFB412AB0B46D002EDBA1 /* Localizable.strings */; };
 		A9BAFB482AB0B46D002EDBA1 /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = A9BAFB412AB0B46D002EDBA1 /* Localizable.strings */; };
 		A9BAFB492AB0B46D002EDBA1 /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = A9BAFB412AB0B46D002EDBA1 /* Localizable.strings */; };
+		A9BAFB4D2AB213E6002EDBA1 /* RegisterSuccessViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9BAFB4C2AB213E5002EDBA1 /* RegisterSuccessViewController.swift */; };
+		A9BAFB4E2AB213E6002EDBA1 /* RegisterSuccessViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9BAFB4C2AB213E5002EDBA1 /* RegisterSuccessViewController.swift */; };
+		A9BAFB4F2AB213E6002EDBA1 /* RegisterSuccessViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9BAFB4C2AB213E5002EDBA1 /* RegisterSuccessViewController.swift */; };
+		A9BAFB502AB213E6002EDBA1 /* RegisterSuccessViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9BAFB4C2AB213E5002EDBA1 /* RegisterSuccessViewController.swift */; };
+		A9BAFB512AB213E6002EDBA1 /* RegisterSuccessViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9BAFB4C2AB213E5002EDBA1 /* RegisterSuccessViewController.swift */; };
+		A9BAFB522AB213E6002EDBA1 /* RegisterSuccessViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9BAFB4C2AB213E5002EDBA1 /* RegisterSuccessViewController.swift */; };
+		A9BAFB532AB213E6002EDBA1 /* RegisterSuccessViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9BAFB4C2AB213E5002EDBA1 /* RegisterSuccessViewController.swift */; };
+		A9BB462A2AB366400003741E /* RegisterErrorViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9BB46292AB366400003741E /* RegisterErrorViewController.swift */; };
+		A9BB462B2AB366400003741E /* RegisterErrorViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9BB46292AB366400003741E /* RegisterErrorViewController.swift */; };
+		A9BB462C2AB366400003741E /* RegisterErrorViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9BB46292AB366400003741E /* RegisterErrorViewController.swift */; };
+		A9BB462D2AB366400003741E /* RegisterErrorViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9BB46292AB366400003741E /* RegisterErrorViewController.swift */; };
+		A9BB462E2AB366400003741E /* RegisterErrorViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9BB46292AB366400003741E /* RegisterErrorViewController.swift */; };
+		A9BB462F2AB366400003741E /* RegisterErrorViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9BB46292AB366400003741E /* RegisterErrorViewController.swift */; };
+		A9BB46302AB366400003741E /* RegisterErrorViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9BB46292AB366400003741E /* RegisterErrorViewController.swift */; };
 		A9BDD4F1292E3F08001A7799 /* SportTypeStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9BDD4F0292E3F08001A7799 /* SportTypeStore.swift */; };
 		A9BDD4F2292E3F08001A7799 /* SportTypeStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9BDD4F0292E3F08001A7799 /* SportTypeStore.swift */; };
 		A9BDD4F3292E3F08001A7799 /* SportTypeStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9BDD4F0292E3F08001A7799 /* SportTypeStore.swift */; };
@@ -6795,6 +6809,8 @@
 		A9FB6D6728C65EF100E3FE58 /* RankingsListViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9FB6D6228C65EF100E3FE58 /* RankingsListViewController.swift */; };
 		A9FB6D6828C65EF100E3FE58 /* RankingsListViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9FB6D6228C65EF100E3FE58 /* RankingsListViewController.swift */; };
 		A9FB6D6928C65EF100E3FE58 /* RankingsListViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9FB6D6228C65EF100E3FE58 /* RankingsListViewController.swift */; };
+		A9FEF5752AB8630600CB638F /* RegisterSuccessViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9BAFB4C2AB213E5002EDBA1 /* RegisterSuccessViewController.swift */; };
+		A9FEF5762AB8630B00CB638F /* RegisterErrorViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9BB46292AB366400003741E /* RegisterErrorViewController.swift */; };
 		F4A62A892850FAB5007B46C5 /* CasinoGameDetailViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4A62A862850FAB5007B46C5 /* CasinoGameDetailViewController.swift */; };
 		F4A62A8A2850FAB5007B46C5 /* CasinoGameDetailViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4A62A862850FAB5007B46C5 /* CasinoGameDetailViewController.swift */; };
 		F4A62A8B2850FAB5007B46C5 /* CasinoGameDetailViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4A62A862850FAB5007B46C5 /* CasinoGameDetailViewController.swift */; };
@@ -7590,6 +7606,8 @@
 		A9BA6D6228119F0700E82724 /* NewGroupViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NewGroupViewModel.swift; sourceTree = "<group>"; };
 		A9BAFB422AB0B46D002EDBA1 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/Localizable.strings; sourceTree = "<group>"; };
 		A9BAFB4A2AB0B47B002EDBA1 /* fr */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = fr; path = fr.lproj/Localizable.strings; sourceTree = "<group>"; };
+		A9BAFB4C2AB213E5002EDBA1 /* RegisterSuccessViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RegisterSuccessViewController.swift; sourceTree = "<group>"; };
+		A9BB46292AB366400003741E /* RegisterErrorViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RegisterErrorViewController.swift; sourceTree = "<group>"; };
 		A9BCF42C274BBE7B006DD528 /* PolicyLinkView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PolicyLinkView.swift; sourceTree = "<group>"; };
 		A9BCF42F274BBE8D006DD528 /* PolicyLinkView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = PolicyLinkView.xib; sourceTree = "<group>"; };
 		A9BCF432274D1A77006DD528 /* MatchDetailsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MatchDetailsViewController.swift; sourceTree = "<group>"; };
@@ -8984,6 +9002,7 @@
 		4589F3EE26BF017A005DF543 /* Register */ = {
 			isa = PBXGroup;
 			children = (
+				A9BAFB4B2AB213B9002EDBA1 /* RegisterState */,
 				45BEA47626F4DC9900680181 /* SimpleRegister */,
 				A99A971926FDDEC100F8D163 /* FullRegister */,
 				451E03E42708E82E00DF887E /* CountrySelection */,
@@ -10839,6 +10858,15 @@
 				A97D24672812EFE1003EEDEC /* GroupUserManagementCellViewModel.swift */,
 			);
 			path = ViewModels;
+			sourceTree = "<group>";
+		};
+		A9BAFB4B2AB213B9002EDBA1 /* RegisterState */ = {
+			isa = PBXGroup;
+			children = (
+				A9BAFB4C2AB213E5002EDBA1 /* RegisterSuccessViewController.swift */,
+				A9BB46292AB366400003741E /* RegisterErrorViewController.swift */,
+			);
+			path = RegisterState;
 			sourceTree = "<group>";
 		};
 		A9BCF42B274BBE55006DD528 /* PolicyLinkView */ = {
@@ -13247,6 +13275,7 @@
 				A9D5BB8B290AD0E1001B0E13 /* CodeVerificationViewController.swift in Sources */,
 				450B78E628F58574009229E3 /* TipsViewModel.swift in Sources */,
 				450B78E728F58574009229E3 /* ListActionHeaderFooterView.swift in Sources */,
+				A9BB462B2AB366400003741E /* RegisterErrorViewController.swift in Sources */,
 				450B78E828F58574009229E3 /* PasswordUpdateViewModel.swift in Sources */,
 				450B78E928F58574009229E3 /* LiveMatchWidgetCollectionViewCell.swift in Sources */,
 				450B78EA28F58574009229E3 /* NetworkManager.swift in Sources */,
@@ -13433,6 +13462,7 @@
 				45711908294B9A27000395F0 /* BetType.swift in Sources */,
 				450B798A28F58574009229E3 /* UserActionView.swift in Sources */,
 				450B798B28F58574009229E3 /* LoadingSpinnerViewController.swift in Sources */,
+				A9BAFB4E2AB213E6002EDBA1 /* RegisterSuccessViewController.swift in Sources */,
 				450B798C28F58574009229E3 /* MatchWidgetCollectionViewCell.swift in Sources */,
 				450B798D28F58574009229E3 /* UserBalance.swift in Sources */,
 				A9527C2D2A9CEDC1006F4E37 /* InfoDialogView.swift in Sources */,
@@ -13857,6 +13887,7 @@
 			files = (
 				457CB9E6282D27D000ED0F00 /* SearchViewController.swift in Sources */,
 				457CB9E7282D27D000ED0F00 /* BetslipHistory.swift in Sources */,
+				A9BAFB522AB213E6002EDBA1 /* RegisterSuccessViewController.swift in Sources */,
 				457CB9E8282D27D000ED0F00 /* AppSession.swift in Sources */,
 				457CB9E9282D27D000ED0F00 /* HeaderDropDownSelectionView.swift in Sources */,
 				457CB9EA282D27D000ED0F00 /* TabularViewDataSource.swift in Sources */,
@@ -14007,6 +14038,7 @@
 				457CBA4F282D27D000ED0F00 /* AppDelegate.swift in Sources */,
 				457CBA50282D27D000ED0F00 /* LiveEventsViewController.swift in Sources */,
 				A9C719162A5EEA88005EB891 /* RecruitAFriendViewController.swift in Sources */,
+				A9BB462F2AB366400003741E /* RegisterErrorViewController.swift in Sources */,
 				457CBA51282D27D000ED0F00 /* UIImage+Extensions.swift in Sources */,
 				457CBA52282D27D000ED0F00 /* PreSubmissionBetslipViewModel.swift in Sources */,
 				457CBA53282D27D000ED0F00 /* SportsAggregator.swift in Sources */,
@@ -14557,6 +14589,7 @@
 				457CBC9F282D2CD100ED0F00 /* HomeViewTemplateDatasource.swift in Sources */,
 				A93FE2132A445434006A6907 /* GenericErrorViewController.swift in Sources */,
 				457CBCA0282D2CD100ED0F00 /* SplashViewController.swift in Sources */,
+				A9BB46302AB366400003741E /* RegisterErrorViewController.swift in Sources */,
 				457CBCA1282D2CD100ED0F00 /* BonusHistoryDataSource.swift in Sources */,
 				457CBCA2282D2CD100ED0F00 /* SimpleRegisterEmailCheckViewModel.swift in Sources */,
 				A90FB80929B0F8B100D08A7C /* GenericAlertView.swift in Sources */,
@@ -15077,6 +15110,7 @@
 				45C10F8728772DA700037BBE /* UIViewController+Shift.swift in Sources */,
 				457CBE12282D2CD100ED0F00 /* AppearanceViewController.swift in Sources */,
 				457CBE13282D2CD100ED0F00 /* TransportSessionIDModel.swift in Sources */,
+				A9BAFB532AB213E6002EDBA1 /* RegisterSuccessViewController.swift in Sources */,
 				457CBE14282D2CD100ED0F00 /* OddsViewController.swift in Sources */,
 				457CBE15282D2CD100ED0F00 /* CompetitionDetailsViewController.swift in Sources */,
 				457CBE16282D2CD100ED0F00 /* MyFavoritesViewController.swift in Sources */,
@@ -15384,6 +15418,7 @@
 				A9D5BB8A290AD0E1001B0E13 /* CodeVerificationViewController.swift in Sources */,
 				A9DF8E5828E7447E0083BF56 /* ListActionHeaderFooterView.swift in Sources */,
 				4589C7F4282024E400243547 /* PasswordUpdateViewModel.swift in Sources */,
+				A9BB462C2AB366400003741E /* RegisterErrorViewController.swift in Sources */,
 				4589C7F5282024E400243547 /* LiveMatchWidgetCollectionViewCell.swift in Sources */,
 				4589C7F6282024E400243547 /* NetworkManager.swift in Sources */,
 				4589C7F7282024E400243547 /* SystemBetResponse.swift in Sources */,
@@ -15570,6 +15605,7 @@
 				45711907294B9A27000395F0 /* BetType.swift in Sources */,
 				4589C872282024E400243547 /* UserActionView.swift in Sources */,
 				4589C873282024E400243547 /* LoadingSpinnerViewController.swift in Sources */,
+				A9BAFB4F2AB213E6002EDBA1 /* RegisterSuccessViewController.swift in Sources */,
 				4589C874282024E400243547 /* MatchWidgetCollectionViewCell.swift in Sources */,
 				4589C875282024E400243547 /* UserBalance.swift in Sources */,
 				A9527C2E2A9CEDC1006F4E37 /* InfoDialogView.swift in Sources */,
@@ -16058,6 +16094,7 @@
 				45A330FA298976BA008181E9 /* TipsViewModel.swift in Sources */,
 				45A330FB298976BA008181E9 /* ListActionHeaderFooterView.swift in Sources */,
 				45A330FC298976BA008181E9 /* PasswordUpdateViewModel.swift in Sources */,
+				A9BB462A2AB366400003741E /* RegisterErrorViewController.swift in Sources */,
 				45A330FD298976BA008181E9 /* LiveMatchWidgetCollectionViewCell.swift in Sources */,
 				45A330FE298976BA008181E9 /* NetworkManager.swift in Sources */,
 				45A330FF298976BA008181E9 /* SystemBetResponse.swift in Sources */,
@@ -16244,6 +16281,7 @@
 				45A331A2298976BA008181E9 /* Theme.swift in Sources */,
 				45A331A3298976BA008181E9 /* BetType.swift in Sources */,
 				45A331A4298976BA008181E9 /* UserActionView.swift in Sources */,
+				A9BAFB4D2AB213E6002EDBA1 /* RegisterSuccessViewController.swift in Sources */,
 				45A331A5298976BA008181E9 /* LoadingSpinnerViewController.swift in Sources */,
 				45A331A6298976BA008181E9 /* MatchWidgetCollectionViewCell.swift in Sources */,
 				A9527C2C2A9CEDC1006F4E37 /* InfoDialogView.swift in Sources */,
@@ -16620,6 +16658,7 @@
 				45A6BBEB28246A7500D9B416 /* BonusProgressViewModel.swift in Sources */,
 				450FC40A2A2E1E33000DB866 /* StoriesLineTableViewCell.swift in Sources */,
 				45A6BBEC28246A7500D9B416 /* SportSelectionViewController.swift in Sources */,
+				A9BAFB512AB213E6002EDBA1 /* RegisterSuccessViewController.swift in Sources */,
 				45A6BBED28246A7500D9B416 /* SportMatchDoubleLineTableViewCell.swift in Sources */,
 				A9C1C09A2873455000E9D6AC /* SocialAppItemCollectionViewCell.swift in Sources */,
 				45A6BBEE28246A7500D9B416 /* RadioButton.swift in Sources */,
@@ -17169,6 +17208,7 @@
 				45A6BD7428246A7500D9B416 /* UITapGestureRecognizer+Extensions.swift in Sources */,
 				45A6BD7528246A7500D9B416 /* ConversationsViewController.swift in Sources */,
 				459874BC2A28D272008C0ADE /* CardsCollectionViewLayout.swift in Sources */,
+				A9BB462E2AB366400003741E /* RegisterErrorViewController.swift in Sources */,
 				45A6BD7628246A7500D9B416 /* WithdrawResponse.swift in Sources */,
 				A907B6B029D10C7500AC4A17 /* PromotionsWebViewController.swift in Sources */,
 				45A6BD7728246A7500D9B416 /* NavigationCardView.swift in Sources */,
@@ -17505,6 +17545,7 @@
 				45F6BBFB2AB3732C00C81DE1 /* UserSessionStore.swift in Sources */,
 				45F6BBFC2AB3732C00C81DE1 /* TipsRootViewController.swift in Sources */,
 				45F6BBFD2AB3732C00C81DE1 /* ActionButtonTableViewCell.swift in Sources */,
+				A9FEF5752AB8630600CB638F /* RegisterSuccessViewController.swift in Sources */,
 				45F6BBFE2AB3732C00C81DE1 /* EditGroupAddFriendViewModel.swift in Sources */,
 				45F6BBFF2AB3732C00C81DE1 /* UserReferralView.swift in Sources */,
 				45F6BC002AB3732C00C81DE1 /* UserProfileTipsViewController.swift in Sources */,
@@ -17531,6 +17572,7 @@
 				45F6BC152AB3732C00C81DE1 /* OutrightCompetitionWidgetCollectionViewCell.swift in Sources */,
 				45F6BC162AB3732C00C81DE1 /* MyCompetitionsViewModel.swift in Sources */,
 				45F6BC172AB3732C00C81DE1 /* Tournament.swift in Sources */,
+				A9FEF5762AB8630B00CB638F /* RegisterErrorViewController.swift in Sources */,
 				45F6BC182AB3732C00C81DE1 /* OverUnderMarketDetailTableViewCell.swift in Sources */,
 				45F6BC192AB3732C00C81DE1 /* SearchViewModel.swift in Sources */,
 				45F6BC1A2AB3732C00C81DE1 /* MyFavoritesRootViewController.swift in Sources */,
@@ -18202,6 +18244,7 @@
 				A9C341A228F9A74A0055360B /* Fonts.swift in Sources */,
 				A9A6036A2A15293A00B06DF1 /* OptionRadioView.swift in Sources */,
 				A90FB7FC29B0CB4400D08A7C /* TipInfoView.swift in Sources */,
+				A9BB462D2AB366400003741E /* RegisterErrorViewController.swift in Sources */,
 				A9C341A428F9A74A0055360B /* UserProfileInfoViewController.swift in Sources */,
 				A9C341A628F9A74A0055360B /* NotEmpty.swift in Sources */,
 				A9C341A728F9A74A0055360B /* VersionUpdateViewController.swift in Sources */,
@@ -18438,6 +18481,7 @@
 				4566339929DDD44C00C4F1A9 /* AnonymousSideMenuViewController.swift in Sources */,
 				A9C3428028F9A74A0055360B /* EditContactViewController.swift in Sources */,
 				A9C3428128F9A74A0055360B /* NewGroupViewModel.swift in Sources */,
+				A9BAFB502AB213E6002EDBA1 /* RegisterSuccessViewController.swift in Sources */,
 				A9C3428228F9A74A0055360B /* SegmentControlItemView.swift in Sources */,
 				A92548012A28AB300056F832 /* DocumentsRootViewController.swift in Sources */,
 				A9C3428328F9A74A0055360B /* AppearanceViewController.swift in Sources */,

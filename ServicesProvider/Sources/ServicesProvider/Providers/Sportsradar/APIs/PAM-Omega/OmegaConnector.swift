@@ -227,6 +227,11 @@ class OmegaConnector: Connector {
                     self.cacheSessionKey(sessionKey)
                     self.sessionCredentials = OmegaSessionCredentials(username: username, password: password)
 
+                    // IGNORE GAME SESSION
+//                    self.cacheLaunchKey("")
+//
+//                    return Just(loginResponse).setFailureType(to: ServiceProviderError.self).eraseToAnyPublisher()
+
                     return self.openSession(withSessionKey: sessionKey)
                         .handleEvents(receiveOutput: { [weak self] (newLaunchToken: String?) in
                             if let newLaunchTokenValue = newLaunchToken {

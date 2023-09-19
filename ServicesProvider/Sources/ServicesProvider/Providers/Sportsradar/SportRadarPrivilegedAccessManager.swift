@@ -732,15 +732,29 @@ class SportRadarPrivilegedAccessManager: PrivilegedAccessManager {
             if paymentsResponse.status == "SUCCESS" {
                 let paymentsResponse = SportRadarModelMapper.paymentsResponse(fromPaymentsResponse: paymentsResponse)
 
+                // Only ADYEN_ALL methods
+                let allPaymentMethods = paymentsResponse.depositMethods.filter({
+                    $0.code == "ADYEN_ALL"
+                })
+
                 // Aditional encoding/decoding data needed for Omega
                 // If needed to get all methods
-                let paymentMethods = paymentsResponse.depositMethods.compactMap({ $0.methods }).filter({!$0.isEmpty}).flatMap({$0})
+                let paymentMethods = allPaymentMethods.compactMap({ $0.methods }).filter({!$0.isEmpty}).flatMap({$0})
 
-                    //                if let paymentMethods = paymentsResponse.depositMethods[safe: 0]?.methods {
                 if !paymentMethods.isEmpty {
+
                     let simplePaymentMethods = paymentMethods.map({ method -> SimplePaymentMethod in
                         return SimplePaymentMethod(name: method.name, type: method.type)
                     })
+
+//                    // Remove duplicates
+//                    var uniqueSimplePaymentMethods = [SimplePaymentMethod]()
+//
+//                    for method in simplePaymentMethods {
+//                        if !uniqueSimplePaymentMethods.contains(method) {
+//                            uniqueSimplePaymentMethods.append(method)
+//                        }
+//                    }
 
                     let simplePaymentMethodsResponse = SimplePaymentMethodsResponse(paymentMethods: simplePaymentMethods)
 
@@ -1214,6 +1228,45 @@ class SportRadarPrivilegedAccessManager: PrivilegedAccessManager {
             }
             else {
                 return Fail(outputType: ApplicantDataResponse.self, failure: ServiceProviderError.errorMessage(message: applicantDataResponse.description ?? "Error")).eraseToAnyPublisher()
+            }
+        }).eraseToAnyPublisher()
+    }
+
+    func generateDocumentTypeToken(docType: String) -> AnyPublisher<AccessTokenResponse, ServiceProviderError> {
+
+        let endpoint = OmegaAPIClient.generateDocumentTypeToken(docType: docType)
+
+        let publisher: AnyPublisher<SportRadarModels.AccessTokenResponse, ServiceProviderError> = self.connector.request(endpoint)
+
+        return publisher.flatMap({ accessTokenResponse -> AnyPublisher<AccessTokenResponse, ServiceProviderError> in
+            if let acessToken = accessTokenResponse.token {
+                
+                let mappedAccessTokenResponse = SportRadarModelMapper.accessTokenResponse(fromInternalAccessTokenResponse: accessTokenResponse)
+
+                return Just(mappedAccessTokenResponse).setFailureType(to: ServiceProviderError.self).eraseToAnyPublisher()
+            }
+            else {
+                return Fail(outputType: AccessTokenResponse.self, failure: ServiceProviderError.errorMessage(message: accessTokenResponse.description ?? "Error")).eraseToAnyPublisher()
+            }
+        }).eraseToAnyPublisher()
+    }
+
+    func checkDocumentationData() -> AnyPublisher<ApplicantDataResponse, ServiceProviderError> {
+
+        let endpoint = OmegaAPIClient.checkDocumentationData
+
+        let publisher: AnyPublisher<SportRadarModels.ApplicantRootResponse, ServiceProviderError> = self.connector.request(endpoint)
+
+        return publisher.flatMap({ applicantRootResponse -> AnyPublisher<ApplicantDataResponse, ServiceProviderError> in
+
+            if applicantRootResponse.status == "SUCCESS" {
+
+                let mappedApplicantDataResponse = SportRadarModelMapper.applicantDataResponse(fromInternalApplicantDataResponse: applicantRootResponse.data)
+
+                return Just(mappedApplicantDataResponse).setFailureType(to: ServiceProviderError.self).eraseToAnyPublisher()
+            }
+            else {
+                return Fail(outputType: ApplicantDataResponse.self, failure: ServiceProviderError.errorMessage(message: applicantRootResponse.message ?? "Error")).eraseToAnyPublisher()
             }
         }).eraseToAnyPublisher()
     }

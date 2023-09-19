@@ -120,6 +120,7 @@ class PreSubmissionBetslipViewController: UIViewController {
     @IBOutlet private weak var secondarySystemWinningsSeparatorView: UIView!
 
     @IBOutlet private weak var emptyBetsBaseView: UIView!
+    @IBOutlet private weak var emptyBetsImageView: UIImageView!
     @IBOutlet private weak var emptyBetslipLabel: UILabel!
 
     @IBOutlet private weak var cashbackInfoSingleBaseView: UIView!
@@ -414,7 +415,9 @@ class PreSubmissionBetslipViewController: UIViewController {
         self.secondarySystemOddsTitleLabel.text = localized("total_bet_amount")
         self.secondarySystemOddsValueLabel.text = localized("no_value")
 
-        self.emptyBetslipLabel.text = localized("not_bets_tickets_section_yet")
+        self.emptyBetsImageView.image = UIImage(named: "avatar_empty")
+
+        self.emptyBetslipLabel.text = localized("empty_betslip_info_title")
         self.emptyBetslipLabel.textAlignment = .center
         self.emptyBetslipLabel.font = AppFont.with(type: .semibold, size: 18)
 

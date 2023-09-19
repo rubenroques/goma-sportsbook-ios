@@ -12,6 +12,7 @@ import SwiftUI
 import ServicesProvider
 import IQKeyboardManagerSwift
 import PhraseSDK
+import AdyenActions
 
 @main
 class AppDelegate: UIResponder, UIApplicationDelegate, MessagingDelegate {

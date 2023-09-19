@@ -326,7 +326,7 @@ extension MyTicketsRootViewController {
     private static func createNoLoginImageView() -> UIImageView {
         let imageView = UIImageView()
         imageView.contentMode = .scaleAspectFit
-        imageView.image = UIImage(named: "no_internet_icon")
+        imageView.image = UIImage(named: "my_tickets_logged_off_icon")
         imageView.translatesAutoresizingMaskIntoConstraints = false
         return imageView
     }
@@ -445,7 +445,7 @@ extension MyTicketsRootViewController {
             self.noLoginImageView.centerXAnchor.constraint(equalTo: self.noLoginBaseView.centerXAnchor),
             self.noLoginImageView.widthAnchor.constraint(equalTo: self.noLoginImageView.heightAnchor),
             self.noLoginImageView.widthAnchor.constraint(equalToConstant: 160),
-            self.noLoginImageView.bottomAnchor.constraint(equalTo: self.noLoginTitleLabel.topAnchor, constant: -36)
+            self.noLoginImageView.bottomAnchor.constraint(equalTo: self.noLoginTitleLabel.topAnchor, constant: -10)
         ])
 
     }

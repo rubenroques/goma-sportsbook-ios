@@ -357,9 +357,9 @@ extension PaymentsDropIn: DropInComponentDelegate, AdyenSessionDelegate, Present
 
         if result.resultCode == .refused {
 
-            if let paymentId = self.paymentId {
-                self.cancelDeposit(paymentId: paymentId)
-            }
+//            if let paymentId = self.paymentId {
+//                self.cancelDeposit(paymentId: paymentId)
+//            }
 
             self.dropInComponent?.viewController.dismiss(animated: true)
             self.showPaymentStatus?(.refused)

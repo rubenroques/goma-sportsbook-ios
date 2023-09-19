@@ -482,7 +482,7 @@ class LiveEventsViewController: UIViewController {
     func setEmptyStateBaseView(firstLabelText: String, secondLabelText: String, isUserLoggedIn: Bool) {
 
         if isUserLoggedIn {
-            self.emptyStateImage.image = UIImage(named: "no_content_icon")
+            self.emptyStateImage.image = UIImage(named: "my_tickets_logged_off_icon")
             self.firstTextFieldEmptyStateLabel.text = firstLabelText
             self.secondTextFieldEmptyStateLabel.text = secondLabelText
             self.emptyStateButton.isHidden = isUserLoggedIn

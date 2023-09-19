@@ -9,6 +9,18 @@ import Foundation
 
 extension SportRadarModels {
 
+    struct ApplicantRootResponse: Codable {
+        var status: String
+        var message: String?
+        var data: ApplicantDataResponse
+
+        enum CodingKeys: String, CodingKey {
+            case status = "status"
+            case message = "message"
+            case data = "data"
+        }
+    }
+
     struct ApplicantDataResponse: Codable {
         var externalUserId: String?
         var info: ApplicantDataInfo?
