@@ -1396,6 +1396,19 @@ extension SportRadarEventsProvider {
         .eraseToAnyPublisher()
     }
 
+    public func getEventSummary(forMarketId marketId: String) -> AnyPublisher<Event, ServiceProviderError> {
+        
+        let endpoint = SportRadarRestAPIClient.getMarketInfo(marketId: marketId)
+        let requestPublisher: AnyPublisher<SportRadarModels.SportRadarResponse<SportRadarModels.Event>, ServiceProviderError> = self.restConnector.request(endpoint)
+        return requestPublisher.map( { sportRadarResponse -> Event in
+            let event = sportRadarResponse.data
+            let mappedEvent = SportRadarModelMapper.event(fromInternalEvent: event)
+            return mappedEvent
+        })
+        .eraseToAnyPublisher()
+        
+    }
+    
     func getMarketInfo(marketId: String) -> AnyPublisher<Market, ServiceProviderError> {
         let endpoint = SportRadarRestAPIClient.getMarketInfo(marketId: marketId)
         let requestPublisher: AnyPublisher<SportRadarModels.SportRadarResponse<SportRadarModels.Market>, ServiceProviderError> = self.restConnector.request(endpoint)

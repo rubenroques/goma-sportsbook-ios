@@ -20,7 +20,7 @@ class InternalBrowserViewController: UIViewController {
 
     private lazy var webView: WKWebView = {
         let configuration = WKWebViewConfiguration()
-        configuration.userContentController.add(self, name: "closeController")
+        configuration.userContentController.add(self, name: "postMessageListener")
         let webView = WKWebView(frame: .zero, configuration: configuration)
         webView.translatesAutoresizingMaskIntoConstraints = false
         webView.navigationDelegate = self
@@ -70,7 +70,7 @@ class InternalBrowserViewController: UIViewController {
         }
 
         self.webView.navigationDelegate = self
-
+        
         self.backButton.addTarget(self, action: #selector(didTapBackButton), for: .primaryActionTriggered)
 
         self.showLoading()
@@ -81,7 +81,14 @@ class InternalBrowserViewController: UIViewController {
         else if let fileName = self.localFileName,
                 let fileType = localFileType,
                 let url = Bundle.main.url(forResource: fileName, withExtension: fileType) {
-            self.webView.loadFileURL(url, allowingReadAccessTo: url)
+            
+            var headers = [String: String]()
+            headers["Origin"] = "https://sportsbook-stage.gomagaming.com/"
+            
+            var request = URLRequest(url: url)
+            request.allHTTPHeaderFields = headers
+            
+            self.webView.load(request)
         }
 
     }
@@ -146,7 +153,7 @@ extension InternalBrowserViewController: WKNavigationDelegate {
 extension InternalBrowserViewController: WKScriptMessageHandler {
 
     func userContentController(_ userContentController: WKUserContentController, didReceive message: WKScriptMessage) {
-        if message.name == "closeController", let msg = message.body as? String {
+        if message.name == "postMessageListener", let msg = message.body as? String {
             if msg == "oniOSCloseBetSwipe" {
                 self.didTapBackButton()
             }

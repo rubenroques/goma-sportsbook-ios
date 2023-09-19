@@ -12,6 +12,7 @@ import SwiftUI
 import ServicesProvider
 import IQKeyboardManagerSwift
 import PhraseSDK
+import AdyenActions
 
 @main
 class AppDelegate: UIResponder, UIApplicationDelegate, MessagingDelegate {
@@ -109,7 +110,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate, MessagingDelegate {
 
     func messaging(_ messaging: Messaging, didReceiveRegistrationToken fcmToken: String?) {
         print("FCM token: \(fcmToken ?? "[Token Error]")")
-        Env.deviceFCMToken = fcmToken ?? ""
+        Env.deviceFirebaseCloudMessagingToken = fcmToken ?? ""
     }
 
     func applicationDidEnterBackground(_ application: UIApplication) {

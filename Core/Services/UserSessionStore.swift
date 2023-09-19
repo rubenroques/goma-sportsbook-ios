@@ -129,6 +129,8 @@ class UserSessionStore {
             .sink { [weak self] userProfile in
                 if let userProfile = userProfile {
                     self?.refreshUserWallet()
+                    
+                    self?.updateDeviceIdentifier()
 
                     self?.isUserProfileComplete = userProfile.isRegistrationCompleted
                     self?.isUserEmailVerified = userProfile.isEmailVerified
@@ -287,6 +289,27 @@ class UserSessionStore {
             .eraseToAnyPublisher()
     }
 
+}
+
+extension UserSessionStore {
+    
+    private func updateDeviceIdentifier() {
+        
+        if Env.deviceFirebaseCloudMessagingToken.isNotEmpty {
+            Env.servicesProvider
+                .updateDeviceIdentifier(deviceIdentifier: "")
+                .receive(on: DispatchQueue.main)
+                .sink { completion in
+                    print("UserSessionStore updateDeviceIdentifier completed: \(completion)")
+                } receiveValue: { response in
+                    print("UserSessionStore updateDeviceIdentifier response: \(response)")
+                }
+                .store(in: &self.cancellables)
+
+        }
+        
+    }
+    
 }
 
 extension UserSessionStore {
@@ -502,7 +525,7 @@ extension UserSessionStore {
 extension UserSessionStore {
     
     private func loginGomaAPI(username: String, password: String) {
-        let userLoginForm = UserLoginForm(username: username, password: password, deviceToken: Env.deviceFCMToken)
+        let userLoginForm = UserLoginForm(username: username, password: password, deviceToken: Env.deviceFirebaseCloudMessagingToken)
 
         Env.gomaNetworkClient.requestLogin(deviceId: Env.deviceId, loginForm: userLoginForm)
             .receive(on: DispatchQueue.main)
@@ -527,7 +550,7 @@ extension UserSessionStore {
                                                 mobile: form.mobileNumber,
                                                 birthDate: form.birthDate,
                                                 userProviderId: userId,
-                                                deviceToken: Env.deviceFCMToken)
+                                                deviceToken: Env.deviceFirebaseCloudMessagingToken)
         Env.gomaNetworkClient
             .requestUserRegister(deviceId: deviceId, userRegisterForm: userRegisterForm)
             .replaceError(with: MessageNetworkResponse.failed)

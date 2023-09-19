@@ -533,9 +533,13 @@ public struct SimplePaymentMethodsResponse: Codable {
 
 }
 
-public struct SimplePaymentMethod: Codable {
+public struct SimplePaymentMethod: Codable, Equatable {
     public var name: String
     public var type: String
+
+    public static func == (lhs: SimplePaymentMethod, rhs: SimplePaymentMethod) -> Bool {
+        return lhs.name == rhs.name
+    }
 }
 
 public struct ProcessDepositResponse: Codable {

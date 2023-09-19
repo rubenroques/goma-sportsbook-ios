@@ -229,9 +229,11 @@ class ClientManagedHomeViewTemplateDataSource {
 
         let imageMatches = Env.servicesProvider.getHighlightedVisualImageEvents()
             .map(ServiceProviderModelMapper.matches(fromEvents:))
-
+            .replaceError(with: [])
+        
         let boostedMatches = Env.servicesProvider.getHighlightedBoostedEvents()
             .map(ServiceProviderModelMapper.matches(fromEvents:))
+            .replaceError(with: [])
 
         Publishers.CombineLatest(imageMatches, boostedMatches)
         .map { highlightedVisualImageEvents, highlightedBoostedEvents -> [HighlightedMatchType] in

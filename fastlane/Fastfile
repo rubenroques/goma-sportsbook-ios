@@ -21,6 +21,14 @@ ENV["FASTLANE_XCODEBUILD_SETTINGS_TIMEOUT"] = "120"
 # Fastfile
 default_platform(:ios)
 
+lane :test do
+  puts "GITHUB_API_TOKEN: #{ENV['GITHUB_API_TOKEN']}"                  
+  
+  puts "DISCORD_WEBHOOK_URL: #{ENV['DISCORD_WEBHOOK_URL']}"
+  
+  puts "FIREBASE_CLI_TOKEN: #{ENV['FIREBASE_CLI_TOKEN']}"
+end
+
 platform :ios do
   lane :create_github_release do
     version = get_version_number
@@ -49,66 +57,66 @@ platform :ios do
     )
   end
 
-lane :certificates do
-  
-  register_devices(    
-    devices_file: "./fastlane/devices.txt"
-  )
-  
-  match(
-    type: "adhoc",
-    force_for_new_devices: true,
-    readonly: false
-  )
+  lane :certificates do
+    
+    register_devices(    
+      devices_file: "./fastlane/devices.txt"
+    )
+    
+    match(
+      type: "adhoc",
+      force_for_new_devices: true,
+      readonly: false
+    )
 
-end
+  end
 
-lane :distribute_to_firebase do |options|
+  lane :distribute_to_firebase do |options|
 
-  build_ios_app(
-    scheme: options[:app_scheme],
-    clean: true,
-    silent: true,
-    suppress_xcode_output: true,
-    export_method: "ad-hoc", # Use ad hoc provisioning profile
-    export_options: {
-        compileBitcode: false,
-        uploadBitcode: false,
-        uploadSymbols: true,
-        manageAppVersionAndBuildNumber: false
-      }
-  )
+    build_ios_app(
+      scheme: options[:app_scheme],
+      clean: true,
+      silent: true,
+      suppress_xcode_output: true,
+      export_method: "ad-hoc", # Use ad hoc provisioning profile
+      export_options: {
+          compileBitcode: false,
+          uploadBitcode: false,
+          uploadSymbols: true,
+          manageAppVersionAndBuildNumber: false
+        }
+    )
 
-  firebase_app_distribution(
-    app: "1:844144342615:ios:9d61f3eb24c40f4f8a9512", # Replace with your actual Firebase App ID
-    firebase_cli_token: ENV["FIREBASE_CLI_TOKEN"],
-    groups: "ios-internal", # "ios-internal", " ios-dev " # Replace with your desired distribution group(s)
-    debug: true
-  )
+    firebase_app_distribution(
+      app: "1:844144342615:ios:9d61f3eb24c40f4f8a9512", # Replace with your actual Firebase App ID
+      firebase_cli_token: ENV["FIREBASE_CLI_TOKEN"],
+      groups: "ios-internal", # "ios-internal", " ios-dev " # Replace with your desired distribution group(s)
+      debug: true
+    )
 
-end
+  end
 
 
-lane :increment_specific_target_build_number do |options|
-  target = options[:app_scheme]
+  lane :increment_specific_target_build_number do |options|
+    target = options[:app_scheme]
 
-  # Get the path to the target's Info.plist file
-  plist_path = "./Clients/#{target}/Misc/#{target}-Info.plist"
+    # Get the path to the target's Info.plist file
+    plist_path = "./Clients/#{target}/Misc/#{target}-Info.plist"
 
-  # Read the current build number
-  current_build_number = get_info_plist_value(path: plist_path, key: "CFBundleVersion")
+    # Read the current build number
+    current_build_number = get_info_plist_value(path: plist_path, key: "CFBundleVersion")
 
-  # Increment the build number
-  new_build_number = current_build_number.to_i + 1
+    # Increment the build number
+    new_build_number = current_build_number.to_i + 1
 
-  # Update the build number in the Info.plist file
-  set_info_plist_value(path: plist_path, key: "CFBundleVersion", value: new_build_number.to_s)
-end
+    # Update the build number in the Info.plist file
+    set_info_plist_value(path: plist_path, key: "CFBundleVersion", value: new_build_number.to_s)
+  end
 
-lane :beta do |options|
-  desc "Distribute Beta version to Firebase"
-  # increment_specific_target_build_number(app_scheme: options[:client])
-  distribute_to_firebase(app_scheme: options[:client])
-end
+  lane :beta do |options|
+    desc "Distribute Beta version to Firebase"
+    # increment_specific_target_build_number(app_scheme: options[:client])
+    distribute_to_firebase(app_scheme: options[:client])
+  end
 
 end

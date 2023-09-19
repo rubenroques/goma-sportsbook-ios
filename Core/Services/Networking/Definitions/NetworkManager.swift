@@ -43,7 +43,7 @@ struct NetworkManager {
 
         var userLoginForm: UserLoginForm?
         if let user = Env.userSessionStore.loggedUserProfile {
-            userLoginForm = UserLoginForm(username: user.username, password: user.userIdentifier, deviceToken: Env.deviceFCMToken)
+            userLoginForm = UserLoginForm(username: user.username, password: user.userIdentifier, deviceToken: Env.deviceFirebaseCloudMessagingToken)
         }
 
         return authenticator.validToken(deviceId: deviceId, loggedUser: userLoginForm)

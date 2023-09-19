@@ -406,10 +406,8 @@ class DepositViewController: UIViewController {
     private func getPaymentDropIn() {
 
         if let paymentDropIn = self.viewModel.paymentsDropIn.setupPaymentDropIn() {
-
             self.dropInComponent = paymentDropIn
-
-            present(paymentDropIn.viewController, animated: true)
+            self.present(paymentDropIn.viewController, animated: true)
         }
 
     }

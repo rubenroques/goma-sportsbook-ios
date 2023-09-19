@@ -13,6 +13,14 @@ class OddTripleCollectionViewCell: UICollectionViewCell {
 
     @IBOutlet private weak var baseView: UIView!
 
+    lazy var gradientBorderView: GradientBorderView = {
+        var gradientBorderView = GradientBorderView()
+        gradientBorderView.translatesAutoresizingMaskIntoConstraints = false
+        gradientBorderView.gradientBorderWidth = 1
+        gradientBorderView.gradientCornerRadius = 9
+        return gradientBorderView
+    }()
+    
     @IBOutlet private weak var participantsNameLabel: UILabel!
     @IBOutlet private weak var participantsCountryImageView: UIImageView!
 
@@ -166,6 +174,19 @@ class OddTripleCollectionViewCell: UICollectionViewCell {
         let tapMatchView = UITapGestureRecognizer(target: self, action: #selector(didTapMatchView))
         self.addGestureRecognizer(tapMatchView)
 
+        
+        // Add gradient border
+        self.baseView.addSubview(self.gradientBorderView)
+        self.baseView.sendSubviewToBack(self.gradientBorderView)
+
+        NSLayoutConstraint.activate([
+            self.baseView.leadingAnchor.constraint(equalTo: gradientBorderView.leadingAnchor),
+            self.baseView.trailingAnchor.constraint(equalTo: gradientBorderView.trailingAnchor),
+            self.baseView.topAnchor.constraint(equalTo: gradientBorderView.topAnchor),
+            self.baseView.bottomAnchor.constraint(equalTo: gradientBorderView.bottomAnchor),
+        ])
+        
+        //
         self.adjustDesignToCardStyle()
         self.setupWithTheme()
     }

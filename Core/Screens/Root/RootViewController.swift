@@ -210,8 +210,9 @@ class RootViewController: UIViewController {
         return preLiveEventsViewController
     }()
     lazy var liveEventsViewController: LiveEventsViewController = {
-        let defaultSport = Env.sportsStore.defaultSport
-        let liveEventsViewController = LiveEventsViewController(selectedSport: defaultSport)
+        let defaultLiveSport = Env.sportsStore.defaultLiveSport
+        let liveEventsViewModel = LiveEventsViewModel(selectedSport: defaultLiveSport)
+        let liveEventsViewController = LiveEventsViewController(viewModel: liveEventsViewModel)
         return liveEventsViewController
     }()
     lazy var tipsRootViewController = TipsRootViewController()
@@ -862,11 +863,13 @@ class RootViewController: UIViewController {
 
     func selectSport(_ sport: Sport) {
         self.currentSport = sport
+
         if self.preLiveViewControllerLoaded {
             self.preLiveViewController.selectSport(sport)
         }
+
         if self.liveEventsViewControllerLoaded {
-            self.liveEventsViewController.selectedSport = sport
+            self.liveEventsViewController.selectSport(sport)
         }
     }
 
@@ -1027,7 +1030,7 @@ extension RootViewController {
 
         if case .live = tab, !liveEventsViewControllerLoaded {
             self.addChildViewController(self.liveEventsViewController, toView: self.liveBaseView)
-            self.liveEventsViewController.selectedSport = self.currentSport
+
             self.liveEventsViewController.didChangeSport = { [weak self] newSport in
                 self?.didChangedLiveSport(newSport)
             }

@@ -22,7 +22,11 @@ class LiveEventsViewModel: NSObject {
     var screenStatePublisher: CurrentValueSubject<ScreenState, Never> = .init(.emptyNoFilter)
 
     var isLoading: AnyPublisher<Bool, Never> {
-        return self.isLoadingSubject.eraseToAnyPublisher()
+        return Publishers.CombineLatest(self.isLoadingLiveSubject, self.isLoadingUpcomingSubject)
+            .map({ isLoadingLive, isLoadingUpcoming in
+                return isLoadingLive || isLoadingUpcoming
+            })
+            .eraseToAnyPublisher()
     }
 
     var liveEventsCountPublisher: CurrentValueSubject<Int, Never> = .init(0)
@@ -38,14 +42,18 @@ class LiveEventsViewModel: NSObject {
 
     var shouldShowSearch: (() -> Void)?
 
-    var selectedSport: Sport {
-        didSet {
-            self.resetScrollPosition?()
-            self.fetchLiveMatches()
-            self.fetchUpcomingMatches()
-            self.configureWithSports(self.liveSports)
-        }
+    //
+    // Selected Sport
+    private var selectedSportSubject: CurrentValueSubject<Sport, Never>
+
+    public var selectedSportPublisher: AnyPublisher<Sport, Never> {
+        return self.selectedSportSubject.eraseToAnyPublisher()
     }
+
+    public var selectedSport: Sport {
+        return self.selectedSportSubject.value
+    }
+    //
 
     var liveSports: [Sport] = [] {
         didSet {
@@ -63,10 +71,16 @@ class LiveEventsViewModel: NSObject {
 
     private var liveMatchesViewModelDataSource = LiveMatchesViewModelDataSource(liveMatches: [], upcomingMatches: [])
 
-    private var liveMatches: [Match] = []
+    private var liveMatches: [Match] = [] {
+        didSet {
+            print("LiveMatchesViewModel liveMatches did set")
+        }
+    }
     private var upcomingMatches: [Match] = []
-
-    private var isLoadingSubject: CurrentValueSubject<Bool, Never> = .init(true)
+    private var outrightCompetitions: [Competition] = []
+    
+    private var isLoadingLiveSubject: CurrentValueSubject<Bool, Never> = .init(true)
+    private var isLoadingUpcomingSubject: CurrentValueSubject<Bool, Never> = .init(true)
 
     private var cachedMatchStatsViewModels: [String: MatchStatsViewModel] = [:]
 
@@ -85,15 +99,12 @@ class LiveEventsViewModel: NSObject {
 
     init(selectedSport: Sport) {
 
-        self.selectedSport = selectedSport
+        self.selectedSportSubject = .init(selectedSport)
 
         super.init()
 
+        self.connectPublishers()
         self.subscribeToLiveSports()
-
-        self.liveMatchesViewModelDataSource.requestNextPage = { [weak self] in
-            self?.fetchLiveMatchesNextPage()
-        }
 
         self.liveMatchesViewModelDataSource.didSelectMatchAction = { [weak self] match in
             self?.didSelectMatchAction?(match)
@@ -110,6 +121,30 @@ class LiveEventsViewModel: NSObject {
         self.liveMatchesViewModelDataSource.shouldShowSearch = { [weak self] in
             self?.shouldShowSearch?()
         }
+
+    }
+
+    func connectPublishers() {
+
+        self.selectedSportPublisher
+            .removeDuplicates()
+            .receive(on: DispatchQueue.main)
+            .sink { [weak self] newSport in
+                self?.resetScrollPosition?()
+                self?.fetchLiveMatches()
+                self?.fetchUpcomingMatches()
+                self?.configureWithSports(self?.liveSports ?? [])
+            }
+            .store(in: &self.cancellables)
+        
+        self.isLoading
+            .receive(on: DispatchQueue.main)
+            .sink { [weak self] isLoading in
+                if !isLoading {
+                    self?.updateContentList()
+                }
+            }
+            .store(in: &self.cancellables)
 
     }
 
@@ -151,6 +186,10 @@ class LiveEventsViewModel: NSObject {
 //                    self?.liveSports = []
 //                }
 //            })
+    }
+
+    func selectedSport(_ sport: Sport) {
+        self.selectedSportSubject.send(sport)
     }
 
     func configureWithSports(_ liveSports: [Sport]) {
@@ -246,10 +285,11 @@ class LiveEventsViewModel: NSObject {
 
         self.liveMatchesViewModelDataSource.liveMatches = filterLiveMatches(with: self.homeFilterOptions, matches: self.liveMatches)
         self.liveMatchesViewModelDataSource.upcomingMatches = filterLiveMatches(with: self.homeFilterOptions, matches: self.upcomingMatches)
-
+        self.liveMatchesViewModelDataSource.outrightCompetitions = self.outrightCompetitions
+        
         if let numberOfFilters = self.homeFilterOptions?.countFilters {
             if numberOfFilters > 0 {
-                if self.liveMatchesViewModelDataSource.liveMatches.isEmpty && self.liveMatchesViewModelDataSource.upcomingMatches.isEmpty {
+                if self.liveMatchesViewModelDataSource.isEmpty {
                     self.screenStatePublisher.send(.emptyAndFilter)
                 }
                 else {
@@ -266,41 +306,21 @@ class LiveEventsViewModel: NSObject {
             }
         }
         else {
-            if self.liveMatchesViewModelDataSource.liveMatches.isEmpty && self.liveMatchesViewModelDataSource.upcomingMatches.isEmpty {
+            if self.liveMatchesViewModelDataSource.isEmpty {
                 self.screenStatePublisher.send(.emptyNoFilter)
             }
             else {
                 self.screenStatePublisher.send(.contentNoFilter)
             }
         }
-
-        self.liveMatchesViewModelDataSource.shouldShowLoadingCell = false
-
-        // TODO: - Code Review
-        DispatchQueue.main.async {
-            self.dataDidChangedAction?()
-        }
-
+        
+        self.dataDidChangedAction?()
     }
 
     //
     // MARK: - Fetches
     //
     //
-    private func fetchLiveMatchesNextPage() {
-        let sportType = ServiceProviderModelMapper.serviceProviderSportType(fromSport: self.selectedSport)
-        Env.servicesProvider.requestLiveMatchesNextPage(forSportType: sportType)
-            .sink { completion in
-                print("requestPreLiveMatchesNextPage completion \(completion)")
-            } receiveValue: { [weak self] hasNextPage in
-                self?.liveMatchesHasMorePages = hasNextPage
-                self?.liveMatchesViewModelDataSource.shouldShowLoadingCell = hasNextPage
-                if !hasNextPage {
-                    self?.updateContentList()
-                }
-            }
-            .store(in: &cancellables)
-    }
 
     func fetchLiveMatches() {
 
@@ -312,13 +332,12 @@ class LiveEventsViewModel: NSObject {
         // Clear old data from the array of liveMatches
         self.liveMatches = []
 
-        self.isLoadingSubject.send(true)
+        self.isLoadingLiveSubject.send(true)
 
         let sportType = ServiceProviderModelMapper.serviceProviderSportType(fromSport: self.selectedSport)
-        
-        print("subscribeLiveMatches called")
-        
+
         self.liveMatchesSubscriber = Env.servicesProvider.subscribeLiveMatches(forSportType: sportType)
+            .receive(on: DispatchQueue.main)
             .sink(receiveCompletion: { [weak self] completion in
                 // TODO: subscribeLiveMatches receiveCompletion
                 switch completion {
@@ -327,9 +346,8 @@ class LiveEventsViewModel: NSObject {
                 case .failure(let error):
                     Logger.log("subscribeLiveMatches error \(error)")
                     self?.liveMatches = []
-                    self?.updateContentList()
                 }
-                self?.isLoadingSubject.send(false)
+                self?.isLoadingLiveSubject.send(false)
             }, receiveValue: { [weak self] (subscribableContent: SubscribableContent<[EventsGroup]>) in
                 switch subscribableContent {
                 case .connected(let subscription):
@@ -341,8 +359,7 @@ class LiveEventsViewModel: NSObject {
                     if let liveMatches = self?.liveMatches {
                         self?.setMainMarkets(matches: liveMatches)
                     }
-                    self?.updateContentList()
-                    self?.isLoadingSubject.send(false)
+                    self?.isLoadingLiveSubject.send(false)
                 case .disconnected:
                     Logger.log("subscribeLiveMatches disconnected")
                 }
@@ -353,8 +370,9 @@ class LiveEventsViewModel: NSObject {
 
         // Clear old data from the array of upcomingMatches
         self.upcomingMatches = []
-
-        self.isLoadingSubject.send(true)
+        self.outrightCompetitions = []
+        
+        self.isLoadingUpcomingSubject.send(true)
 
         let selectedSportType = ServiceProviderModelMapper.serviceProviderSportType(fromSport: self.selectedSport)
 
@@ -366,6 +384,7 @@ class LiveEventsViewModel: NSObject {
                                                                                   initialDate: nil,
                                                                                   endDate: nil,
                                                                                   sortType: .date)
+            .receive(on: DispatchQueue.main)
             .sink(receiveCompletion: { [weak self] completion in
                 switch completion {
                 case .finished:
@@ -373,9 +392,9 @@ class LiveEventsViewModel: NSObject {
                 case .failure(let error):
                     print("TodayMatchesDataSource fetchUpcomingMatches error: \(error)")
                     self?.upcomingMatches = []
-                    self?.updateContentList()
+                    self?.outrightCompetitions = []
                 }
-                self?.isLoadingSubject.send(false)
+                self?.isLoadingUpcomingSubject.send(false)
             }, receiveValue: { [weak self] (subscribableContent: SubscribableContent<[EventsGroup]>) in
                 switch subscribableContent {
                 case .connected(let subscription):
@@ -386,14 +405,13 @@ class LiveEventsViewModel: NSObject {
 
                     let splittedEventGroups = self.splitEventsGroups(eventsGroups)
 
+                    let mappedOutrights: [Competition]? = ServiceProviderModelMapper.competitions(fromEventsGroups: splittedEventGroups.competitionsEventGroups)
+                    self.outrightCompetitions = mappedOutrights ?? []
+                    
                     let mappedMatches = ServiceProviderModelMapper.matches(fromEventsGroups: splittedEventGroups.matchesEventGroups)
                     self.upcomingMatches = mappedMatches
 
-                    // TODO: main markets
-                    // self.setMainMarkets(matches: matches)
-                    self.updateContentList()
-                    self.isLoadingSubject.send(false)
-
+                    self.isLoadingUpcomingSubject.send(false)
                 case .disconnected:
                     print("TodayMatchesDataSource fetchUpcomingMatches disconnected")
                 }
@@ -502,54 +520,67 @@ extension LiveEventsViewModel {
 }
 
 class LiveMatchesViewModelDataSource: NSObject, UITableViewDataSource, UITableViewDelegate {
-
-    var liveMatches: [Match] = []
+    
+    var liveMatches: [Match] = [] {
+        didSet {
+            print("LiveMatchesViewModelDataSource liveMatches did set")
+        }
+    }
+    
     var upcomingMatches: [Match] = []
-
-    var requestNextPage: (() -> Void)?
+    
+    var outrightCompetitions: [Competition] = []
+    
     var didSelectMatchAction: ((Match) -> Void)?
+    var didSelectCompetitionAction: ((Competition) -> Void)?
     var didTapFavoriteAction: ((Match) -> Void)?
     var didLongPressOdd: ((BettingTicket) -> Void)?
     var shouldShowSearch: (() -> Void)?
-
+    
     var matchStatsViewModelForMatch: ((Match) -> MatchStatsViewModel?)?
-
-    var shouldShowLoadingCell = true
-
+        
+    var isEmpty: Bool {
+        return self.liveMatches.isEmpty && self.upcomingMatches.isEmpty && self.outrightCompetitions.isEmpty
+    }
+    
     init(liveMatches: [Match], upcomingMatches: [Match]) {
         self.liveMatches = liveMatches
         self.upcomingMatches = upcomingMatches
-
+        
         super.init()
     }
-
+    
     func numberOfSections(in tableView: UITableView) -> Int {
-        return 3
+        return 5
     }
-
+    
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         switch section {
         case 0:
             return self.liveMatches.count
         case 1:
-            return self.shouldShowLoadingCell ? 1 : 0
+            return self.liveMatches.isEmpty ? 1 : 0
         case 2:
+            return 0 // LoadingMoreTableViewCell
+        case 3:
             return self.upcomingMatches.count
+        case 4:
+            return self.shouldShowOutrightMarkets() ? self.outrightCompetitions.count : 0
         default:
             return 0
         }
     }
-
+    
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         switch indexPath.section {
         case 0:
             if let cell = tableView.dequeueCellType(MatchLineTableViewCell.self),
                let match = self.liveMatches[safe: indexPath.row] {
-
+                
                 if let matchStatsViewModel = self.matchStatsViewModelForMatch?(match) {
                     cell.matchStatsViewModel = matchStatsViewModel
                 }
-
+                
                 let viewModel = MatchLineTableCellViewModel(match: match)
                 cell.viewModel = viewModel
                 
@@ -563,39 +594,59 @@ class LiveMatchesViewModelDataSource: NSObject, UITableViewDataSource, UITableVi
                 return cell
             }
         case 1:
-            if let cell = tableView.dequeueCellType(LoadingMoreTableViewCell.self) {
+            if let cell = tableView.dequeueCellType(EmptyLiveMessageBannerTableViewCell.self) {
                 return cell
             }
         case 2:
+            if let cell = tableView.dequeueCellType(LoadingMoreTableViewCell.self) {
+                return cell
+            }
+        case 3:
             if let cell = tableView.dequeueCellType(MatchLineTableViewCell.self),
                let match = self.upcomingMatches[safe: indexPath.row] {
-
+                
                 if let matchStatsViewModel = self.matchStatsViewModelForMatch?(match) {
                     cell.matchStatsViewModel = matchStatsViewModel
                 }
-
+                
                 let viewModel = MatchLineTableCellViewModel(match: match)
                 cell.viewModel = viewModel
-
+                
                 cell.tappedMatchLineAction = { [weak self] match in
                     self?.didSelectMatchAction?(match)
                 }
                 cell.didLongPressOdd = { [weak self] bettingTicket in
                     self?.didLongPressOdd?(bettingTicket)
                 }
-
+                
                 return cell
             }
+        case 4:
+            if let cell = tableView.dequeueReusableCell(withIdentifier: OutrightCompetitionLargeLineTableViewCell.identifier)
+                as? OutrightCompetitionLargeLineTableViewCell,
+               let competition = self.outrightCompetitions[safe: indexPath.row] {
+                
+                cell.configure(withViewModel: OutrightCompetitionLargeLineViewModel(competition: competition))
+                cell.didSelectCompetitionAction = { [weak self] competition in
+                    self?.didSelectCompetitionAction?(competition)
+                }
+                return cell
+            }
+            
         default:
             fatalError()
         }
         return UITableViewCell()
     }
-
+    
     func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
-
+        
         switch section {
         case 0:
+            if self.liveMatches.isEmpty {
+                return nil // No live events -> No header
+            }
+            
             guard
                 let headerView = tableView.dequeueReusableHeaderFooterView(withIdentifier: TitleTableViewHeader.identifier) as? TitleTableViewHeader
             else {
@@ -607,7 +658,25 @@ class LiveMatchesViewModelDataSource: NSObject, UITableViewDataSource, UITableVi
                 self?.shouldShowSearch?()
             }
             return headerView
-        case 2:
+        case 3:
+            if self.upcomingMatches.isEmpty {
+                return nil
+            }
+            guard
+                let headerView = tableView.dequeueReusableHeaderFooterView(withIdentifier: TitleTableViewHeader.identifier) as? TitleTableViewHeader
+            else {
+                fatalError()
+            }
+            headerView.configureWithTitle(localized("upcoming"))
+            headerView.setSearchIcon(hasSearch: false)
+            headerView.shouldShowSearch = { [weak self] in
+                self?.shouldShowSearch?()
+            }
+            return headerView
+        case 4:
+            if self.shouldShowOutrightMarkets() && self.outrightCompetitions.isEmpty {
+                return nil
+            }
             guard
                 let headerView = tableView.dequeueReusableHeaderFooterView(withIdentifier: TitleTableViewHeader.identifier) as? TitleTableViewHeader
             else {
@@ -622,51 +691,67 @@ class LiveMatchesViewModelDataSource: NSObject, UITableViewDataSource, UITableVi
         default:
             return nil
         }
-
+        
     }
-
+    
     func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
         switch section {
-        case 0, 2:
-            return 54
+        case 0:
+            return self.liveMatches.isEmpty ? 0.001 : 54
+        case 3:
+            return self.upcomingMatches.isEmpty ? 0.001 : 54
+        case 4:
+            return self.outrightCompetitions.isEmpty ? 0.001 : 54
         default:
             return 0.01
         }
     }
-
+    
     func tableView(_ tableView: UITableView, estimatedHeightForHeaderInSection section: Int) -> CGFloat {
         switch section {
-        case 0, 2:
-            return 54
+        case 0:
+            return self.liveMatches.isEmpty ? 0.001 : 54
+        case 3:
+            return self.upcomingMatches.isEmpty ? 0.001 : 54
+        case 4:
+            return self.outrightCompetitions.isEmpty ? 0.001 : 54
         default:
             return 0.01
         }
     }
-
+    
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
         switch indexPath.section {
-        case 1:
+        case 2:
             return 70 // Loading cell
+        case 4:
+            return 145 // Outrights
         default:
             return UITableView.automaticDimension
         }
     }
-
+    
     func tableView(_ tableView: UITableView, estimatedHeightForRowAt indexPath: IndexPath) -> CGFloat {
         switch indexPath.section {
-        case 1:
+        case 2:
             return 70 // Loading cell
+        case 4:
+            return 145 // Outrights
         default:
             return StyleHelper.cardsStyleHeight() + 20
         }
     }
-
+    
     func tableView(_ tableView: UITableView, willDisplay cell: UITableViewCell, forRowAt indexPath: IndexPath) {
-        if indexPath.section == 1, self.liveMatches.isNotEmpty {
-            if let typedCell = cell as? LoadingMoreTableViewCell {
-                typedCell.startAnimating()
-            }
-            self.requestNextPage?()
-        }
+        
     }
+    
+}
+
+extension LiveMatchesViewModelDataSource {
+    
+    private func shouldShowOutrightMarkets() -> Bool {
+        return self.upcomingMatches.isEmpty
+    }
+
 }

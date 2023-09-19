@@ -247,11 +247,8 @@ class LoginViewController: UIViewController {
         self.logoImageView.isUserInteractionEnabled = true
 
         // #if DEBUG
-//        let debugLogoImageViewTap = UITapGestureRecognizer(target: self, action: #selector(didTapDebugFormFill))
-//        debugLogoImageViewTap.numberOfTapsRequired = 5
-//        self.logoImageView.addGestureRecognizer(debugLogoImageViewTap)
-        let debugLogoImageViewTap = UITapGestureRecognizer(target: self, action: #selector(showDeposit))
-        debugLogoImageViewTap.numberOfTapsRequired = 2
+        let debugLogoImageViewTap = UITapGestureRecognizer(target: self, action: #selector(didTapDebugFormFill))
+        debugLogoImageViewTap.numberOfTapsRequired = 5
         self.logoImageView.addGestureRecognizer(debugLogoImageViewTap)
         // #endif
 

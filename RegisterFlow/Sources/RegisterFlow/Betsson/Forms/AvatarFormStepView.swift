@@ -92,6 +92,9 @@ class AvatarFormStepView: FormStepView {
     
     func configureSubviews() {
 
+        let tapGesture = UITapGestureRecognizer(target: self, action: #selector(didTapCancelAnimation(_:)))
+        self.addGestureRecognizer(tapGesture)
+        
         self.titleLabel.text = self.viewModel.title
         self.subtitleLabel.text = self.viewModel.subtitle
 
@@ -220,13 +223,10 @@ class AvatarFormStepView: FormStepView {
         let startFrame = selectedView.convert(selectedView.bounds, to: self)
         let endFrame = self.avatarAnimationPlaceholdeView.frame
 
-        let avatarAnimationView = Self.createAvatarAnimationView(withFrame: startFrame, andName: name)
-        avatarAnimationView.isUserInteractionEnabled = true
+        let avatarAnimationView = self.createAvatarAnimationView(withFrame: startFrame, andName: name)
+        avatarAnimationView.isUserInteractionEnabled = false
         avatarAnimationView.alpha = 0.0
         self.addSubview(avatarAnimationView)
-
-        let tapGesture = UITapGestureRecognizer(target: self, action: #selector(didTapAnimation(_:)))
-        avatarAnimationView.addGestureRecognizer(tapGesture)
 
         avatarAnimationView.play()
 
@@ -249,8 +249,8 @@ class AvatarFormStepView: FormStepView {
         }
     }
 
-    @objc func didTapAnimation(_ gesture: UITapGestureRecognizer) {
-        guard let avatarAnimationView = gesture.view as? LottieAnimationView else {
+    @objc func didTapCancelAnimation(_ gesture: UITapGestureRecognizer) {
+        guard let avatarAnimationView = self.animationView else {
             return
         }
 
@@ -348,11 +348,18 @@ extension AvatarFormStepView {
         return view
     }
 
-    private static func createAvatarAnimationView(withFrame frame: CGRect, andName name: String) -> LottieAnimationView {
+    private func createAvatarAnimationView(withFrame frame: CGRect, andName name: String) -> LottieAnimationView {
         let animationView = LottieAnimationView(frame: frame)
         animationView.contentMode = .scaleAspectFit
 
-        let avatarAnimation = LottieAnimation.named(name)
+        let animationName: String
+        if self.traitCollection.userInterfaceStyle == .dark {
+            animationName = name + "-dark"
+        } else {
+            animationName = name + "-light"
+        }
+        
+        let avatarAnimation = LottieAnimation.named(animationName)
         animationView.animation = avatarAnimation
 
         animationView.loopMode = .loop

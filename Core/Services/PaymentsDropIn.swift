@@ -88,18 +88,19 @@ class PaymentsDropIn {
 
                 self.payment = payment
 
+                let context = AdyenContext(apiContext: apiContext, payment: payment)
                 let adyenSessionConfiguration = AdyenSession.Configuration(sessionIdentifier: sessionId,
                                                                            initialSessionData: sessionData,
-                                                                           context: AdyenContext(apiContext: apiContext, payment: payment))
+                                                                           context: context)
 
                 AdyenSession.initialize(with: adyenSessionConfiguration, delegate: self, presentationDelegate: self) { [weak self] result in
                         switch result {
                         case let .success(session):
-                            //Store the session object.
+                            // Store the session object.
                             self?.adyenSession = session
                             self?.hasSessionInitialized.send(true)
                         case let .failure(error):
-                            //Handle the error.
+                            // Handle the error.
                             print("ADYEN SESSION INIT FAILURE: \(error)")
                         }
                     }
@@ -159,6 +160,8 @@ class PaymentsDropIn {
     }
 
     private func processDepositResponse(amount: Double) {
+
+        print("AMOUNT DEPOSIT: \(amount)")
 
         Env.servicesProvider.processDeposit(paymentMethod: "ADYEN_CARD", amount: amount, option: "DROP_IN")
             .receive(on: DispatchQueue.main)
@@ -229,21 +232,18 @@ class PaymentsDropIn {
 
                 // Optional Payment
                 let payment = Payment(amount: Amount(value: Int(self.dropInDepositAmount) ?? 0, currencyCode: "EUR"), countryCode: "FR")
-                
                 let adyenContext = AdyenContext(apiContext: apiContext, payment: payment)
 
                 // Without session payments
                 let dropInConfiguration = DropInComponent.Configuration()
-
-//                dropInConfiguration.card.allowedCardTypes = [.visa, .masterCard, .carteBancaire,]
-
+                // dropInConfiguration.card.allowedCardTypes = [.visa, .masterCard, .carteBancaire]
                 let dropInComponent = DropInComponent(paymentMethods: paymentMethods, context: adyenContext, configuration: dropInConfiguration)
-
-                // With session payments
-//                let dropInComponent = DropInComponent(paymentMethods: session.sessionContext.paymentMethods, context: adyenContext)
-
                 dropInComponent.delegate = self.adyenSession
-
+                
+                // With session payments
+                // let dropInComponent = DropInComponent(paymentMethods: session.sessionContext.paymentMethods, context: adyenContext)
+                // dropInComponent.delegate = self.adyenSession
+                
                 self.dropInComponent = dropInComponent
 
                 return dropInComponent
@@ -393,3 +393,4 @@ extension PaymentsDropIn: DropInComponentDelegate, AdyenSessionDelegate, Present
 
     }
 }
+

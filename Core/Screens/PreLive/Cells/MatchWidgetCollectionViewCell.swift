@@ -505,7 +505,7 @@ class MatchWidgetCollectionViewCell: UICollectionViewCell {
         NSLayoutConstraint.activate([
             self.cashbackIconImageView.widthAnchor.constraint(equalToConstant: 20),
             self.cashbackIconImageView.heightAnchor.constraint(equalTo: self.cashbackIconImageView.widthAnchor),
-            self.cashbackIconImageView.centerYAnchor.constraint(equalTo: self.liveTipView.centerYAnchor),
+            self.cashbackIconImageView.centerYAnchor.constraint(equalTo: self.headerLineStackView.centerYAnchor),
 
             self.headerLineStackView.trailingAnchor.constraint(greaterThanOrEqualTo: self.cashbackIconImageView.leadingAnchor, constant: 1),
         ])

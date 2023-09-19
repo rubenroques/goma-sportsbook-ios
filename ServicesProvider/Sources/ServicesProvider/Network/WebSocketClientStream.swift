@@ -45,29 +45,29 @@ public class WebSocketClientStream: NSObject, AsyncSequence {
             self.continuation?.finish()
             return
         }
-
-        webSocketTask.receive(completionHandler: { [weak self] result in
-            guard let continuation = self?.continuation else {
+        
+        webSocketTask.receive { [weak self] result in
+            guard let self = self else {
                 return
             }
-
+            
             do {
                 let message = try result.get()
                 switch message {
                 case .string(let string):
-                    continuation.yield(.text(string))
+                    self.continuation?.yield(.text(string))
                 case .data(let data):
-                    continuation.yield(.binary(data))
+                    self.continuation?.yield(.binary(data))
                 @unknown default:
                     break
                 }
-
-                self?.waitForNextValue()
-
+                self.waitForNextValue()
             } catch {
-                continuation.finish(throwing: error)
+                self.continuation?.finish(throwing: error)
             }
-        })
+            
+        }
+
     }
 
     public init(url: URL) {
@@ -108,7 +108,7 @@ public class WebSocketClientStream: NSObject, AsyncSequence {
 
 }
 
-extension WebSocketClientStream: URLSessionDataDelegate, URLSessionWebSocketDelegate {
+extension WebSocketClientStream: URLSessionWebSocketDelegate {
 
     public func urlSession(_ session: URLSession, webSocketTask: URLSessionWebSocketTask, didOpenWithProtocol protocol: String?) {
         self.continuation?.yield(.connected)

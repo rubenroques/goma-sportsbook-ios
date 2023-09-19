@@ -58,22 +58,6 @@ class LiveEventsViewController: UIViewController {
     var isLiveEventsMarkets: Bool = true
 
     var filterSelectedOption: Int = 0
-    var selectedSport: Sport {
-        didSet {
-            if let sportIconImage = UIImage(named: "sport_type_icon_\(self.selectedSport.id)") {
-                self.sportTypeIconImageView.image = sportIconImage
-                self.sportTypeIconImageView.setImageColor(color: UIColor.App.textPrimary)
-            }
-            else {
-                self.sportTypeIconImageView.image = UIImage(named: "sport_type_icon_default")
-                self.sportTypeIconImageView.setImageColor(color: UIColor.App.textPrimary)
-            }
-
-            self.sportTypeNameLabel.text = selectedSport.name
-
-            self.viewModel.selectedSport = self.selectedSport
-        }
-    }
 
     var didChangeSport: ((Sport) -> Void)?
     var didTapChatButtonAction: (() -> Void)?
@@ -82,9 +66,9 @@ class LiveEventsViewController: UIViewController {
     private var viewModel: LiveEventsViewModel
     private var cancellables = Set<AnyCancellable>()
 
-    init(selectedSport: Sport) {
-        self.selectedSport = selectedSport
-        self.viewModel = LiveEventsViewModel(selectedSport: self.selectedSport)
+    init(viewModel: LiveEventsViewModel) {
+        self.viewModel = viewModel
+
         super.init(nibName: "LiveEventsViewController", bundle: nil)
     }
 
@@ -99,8 +83,6 @@ class LiveEventsViewController: UIViewController {
         self.commonInit()
         self.setupWithTheme()
         self.connectPublishers()
-
-        self.viewModel.fetchLiveMatches()
 
         self.viewModel.didSelectMatchAction = { match in
             let matchDetailsViewController = MatchDetailsViewController(viewModel: MatchDetailsViewModel(match: match))
@@ -121,6 +103,24 @@ class LiveEventsViewController: UIViewController {
         self.viewModel.shouldShowSearch = { [weak self] in
             self?.showSearch()
         }
+
+        self.viewModel.selectedSportPublisher
+            .receive(on: DispatchQueue.main)
+            .sink { [weak self] newSport in
+                self?.didChangeSport?(newSport)
+
+                if let sportIconImage = UIImage(named: "sport_type_icon_\(newSport.id)") {
+                    self?.sportTypeIconImageView.image = sportIconImage
+                    self?.sportTypeIconImageView.setImageColor(color: UIColor.App.textPrimary)
+                }
+                else {
+                    self?.sportTypeIconImageView.image = UIImage(named: "sport_type_icon_default")
+                    self?.sportTypeIconImageView.setImageColor(color: UIColor.App.textPrimary)
+                }
+
+                self?.sportTypeNameLabel.text = newSport.name
+            }
+            .store(in: &self.cancellables)
 
         // New loading
         self.loadingView.alpha = 0.0
@@ -214,29 +214,24 @@ class LiveEventsViewController: UIViewController {
         refreshControl.addTarget(self, action: #selector(self.refreshControllPulled), for: .valueChanged)
         tableView.addSubview(self.refreshControl)
 
-        tableView.separatorStyle = .none
-        tableView.register(MatchLineTableViewCell.nib,
-                           forCellReuseIdentifier: MatchLineTableViewCell.identifier)
-        tableView.register(BannerScrollTableViewCell.nib,
-                           forCellReuseIdentifier: BannerScrollTableViewCell.identifier)
-        tableView.register(LoadingMoreTableViewCell.nib,
-                           forCellReuseIdentifier: LoadingMoreTableViewCell.identifier)
-        tableView.register(FooterResponsibleGamingViewCell.self,
-                           forCellReuseIdentifier: FooterResponsibleGamingViewCell.identifier)
-        tableView.register(TournamentTableViewHeader.nib,
-                           forHeaderFooterViewReuseIdentifier: TournamentTableViewHeader.identifier)
-        tableView.register(TitleTableViewHeader.nib,
-                           forHeaderFooterViewReuseIdentifier: TitleTableViewHeader.identifier)
+        self.tableView.separatorStyle = .none
+        self.tableView.register(MatchLineTableViewCell.nib, forCellReuseIdentifier: MatchLineTableViewCell.identifier)
+        self.tableView.register(OutrightCompetitionLargeLineTableViewCell.self, forCellReuseIdentifier: OutrightCompetitionLargeLineTableViewCell.identifier)
+        self.tableView.register(BannerScrollTableViewCell.nib, forCellReuseIdentifier: BannerScrollTableViewCell.identifier)
+        self.tableView.register(EmptyLiveMessageBannerTableViewCell.self, forCellReuseIdentifier: EmptyLiveMessageBannerTableViewCell.identifier)
+        self.tableView.register(LoadingMoreTableViewCell.nib, forCellReuseIdentifier: LoadingMoreTableViewCell.identifier)
+        self.tableView.register(FooterResponsibleGamingViewCell.self, forCellReuseIdentifier: FooterResponsibleGamingViewCell.identifier)
+        self.tableView.register(TournamentTableViewHeader.nib, forHeaderFooterViewReuseIdentifier: TournamentTableViewHeader.identifier)
+        self.tableView.register(TitleTableViewHeader.nib, forHeaderFooterViewReuseIdentifier: TitleTableViewHeader.identifier)
+        
+        self.tableView.delegate = self
+        self.tableView.dataSource = self
 
+        self.tableView.clipsToBounds = false
 
-        tableView.delegate = self
-        tableView.dataSource = self
-
-        tableView.clipsToBounds = false
-
-        tableView.estimatedRowHeight = 155
-        tableView.estimatedSectionHeaderHeight = 0
-        tableView.estimatedSectionFooterHeight = 0
+        self.tableView.estimatedRowHeight = 155
+        self.tableView.estimatedSectionHeaderHeight = 0
+        self.tableView.estimatedSectionFooterHeight = 0
 
         let didTapSportsSelection = UITapGestureRecognizer(target: self, action: #selector(handleSportsSelectionTap))
         sportsSelectorButtonView.addGestureRecognizer(didTapSportsSelection)
@@ -428,10 +423,6 @@ class LiveEventsViewController: UIViewController {
         self.tableView.reloadData()
     }
 
-    func changedSport(_ sport: Sport) {
-        self.selectedSport = sport
-        self.didChangeSport?(sport)
-    }
 
     private func openQuickbet(_ bettingTicket: BettingTicket) {
 
@@ -471,7 +462,7 @@ class LiveEventsViewController: UIViewController {
     }
 
     @objc func handleSportsSelectionTap() {
-        let sportSelectionViewController = SportSelectionViewController(defaultSport: self.selectedSport, isLiveSport: true)
+        let sportSelectionViewController = SportSelectionViewController(defaultSport: self.viewModel.selectedSport, isLiveSport: true)
         sportSelectionViewController.selectionDelegate = self
         self.present(sportSelectionViewController, animated: true, completion: nil)
     }
@@ -507,6 +498,21 @@ class LiveEventsViewController: UIViewController {
     }
 
 }
+
+extension LiveEventsViewController {
+
+    public func selectSport(_ sport: Sport) {
+        self.changedSport(sport)
+    }
+
+    private func changedSport(_ sport: Sport) {
+        self.viewModel.selectedSport(sport)
+
+        self.didChangeSport?(sport)
+    }
+
+}
+
 
 extension LiveEventsViewController: UITableViewDataSource, UITableViewDelegate {
 
@@ -630,4 +636,3 @@ extension LiveEventsViewController: SportTypeSelectionViewDelegate {
     }
 
 }
-

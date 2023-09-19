@@ -284,6 +284,24 @@ class SportRadarPrivilegedAccessManager: PrivilegedAccessManager {
         })
         .eraseToAnyPublisher()
     }
+    
+    func updateDeviceIdentifier(deviceIdentifier: String) -> AnyPublisher<BasicResponse, ServiceProviderError> {
+
+        let endpoint = OmegaAPIClient.updateDeviceIdentifier(deviceIdentifier: deviceIdentifier)
+        let publisher: AnyPublisher<SportRadarModels.BasicResponse, ServiceProviderError> = self.connector.request(endpoint)
+
+        return publisher.flatMap({ basicResponse -> AnyPublisher<BasicResponse, ServiceProviderError> in
+            if basicResponse.status == "SUCCESS" {
+
+                let basicResponse = SportRadarModelMapper.basicResponse(fromInternalBasicResponse: basicResponse)
+
+                return Just(basicResponse).setFailureType(to: ServiceProviderError.self).eraseToAnyPublisher()
+            }
+            return Fail(outputType: BasicResponse.self, failure: ServiceProviderError.invalidResponse).eraseToAnyPublisher()
+        })
+        .eraseToAnyPublisher()
+    }
+
 
     public func getCountries() -> AnyPublisher<[Country], ServiceProviderError> {
 
@@ -714,15 +732,29 @@ class SportRadarPrivilegedAccessManager: PrivilegedAccessManager {
             if paymentsResponse.status == "SUCCESS" {
                 let paymentsResponse = SportRadarModelMapper.paymentsResponse(fromPaymentsResponse: paymentsResponse)
 
+                // Only ADYEN_ALL methods
+                let allPaymentMethods = paymentsResponse.depositMethods.filter({
+                    $0.code == "ADYEN_ALL"
+                })
+
                 // Aditional encoding/decoding data needed for Omega
                 // If needed to get all methods
-                let paymentMethods = paymentsResponse.depositMethods.compactMap({ $0.methods }).filter({!$0.isEmpty}).flatMap({$0})
+                let paymentMethods = allPaymentMethods.compactMap({ $0.methods }).filter({!$0.isEmpty}).flatMap({$0})
 
-                    //                if let paymentMethods = paymentsResponse.depositMethods[safe: 0]?.methods {
                 if !paymentMethods.isEmpty {
+
                     let simplePaymentMethods = paymentMethods.map({ method -> SimplePaymentMethod in
                         return SimplePaymentMethod(name: method.name, type: method.type)
                     })
+
+//                    // Remove duplicates
+//                    var uniqueSimplePaymentMethods = [SimplePaymentMethod]()
+//
+//                    for method in simplePaymentMethods {
+//                        if !uniqueSimplePaymentMethods.contains(method) {
+//                            uniqueSimplePaymentMethods.append(method)
+//                        }
+//                    }
 
                     let simplePaymentMethodsResponse = SimplePaymentMethodsResponse(paymentMethods: simplePaymentMethods)
 

@@ -67,6 +67,9 @@ protocol EventsProvider: Connector {
     func getSearchEvents(query: String, resultLimit: String, page: String, isLive: Bool) -> AnyPublisher<EventsGroup, ServiceProviderError>
 
     func getEventSummary(eventId: String) -> AnyPublisher<Event, ServiceProviderError>
+    
+    func getEventSummary(forMarketId marketId: String) -> AnyPublisher<Event, ServiceProviderError>
+    
     func getMarketInfo(marketId: String) -> AnyPublisher<Market, ServiceProviderError>
 
     func getHomeSliders() -> AnyPublisher<BannerResponse, ServiceProviderError>

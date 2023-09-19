@@ -40,7 +40,7 @@ class Environment {
     var date: () -> Date = { Date.init() }
 
     var favoritesManager = FavoritesManager()
-    var deviceFCMToken: String = ""
+    var deviceFirebaseCloudMessagingToken: String = ""
 
     var deviceId: String {
         UserDefaults.standard.string(forKey: "device_id") ?? ""

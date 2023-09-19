@@ -467,6 +467,16 @@ extension ServicesProviderClient {
         return eventsProvider.getEventSummary(eventId: eventId)
     }
 
+    public func getEventSummary(forMarketId marketId: String) -> AnyPublisher<Event, ServiceProviderError> {
+        guard
+            let eventsProvider = self.eventsProvider
+        else {
+            return Fail(error: .eventsProviderNotFound).eraseToAnyPublisher()
+        }
+
+        return eventsProvider.getEventSummary(forMarketId: marketId)
+    }
+    
     public func getMarketInfo(marketId: String) -> AnyPublisher<Market, ServiceProviderError> {
         guard
             let eventsProvider = self.eventsProvider
@@ -600,7 +610,6 @@ extension ServicesProviderClient {
     }
 
     public func updateExtraInfo(placeOfBirth: String?, address2: String?) -> AnyPublisher<BasicResponse, ServiceProviderError> {
-
         guard
             let privilegedAccessManager = self.privilegedAccessManager
         else {
@@ -608,6 +617,16 @@ extension ServicesProviderClient {
         }
         return privilegedAccessManager.updateExtraInfo(placeOfBirth: placeOfBirth, address2: address2)
     }
+    
+    public func updateDeviceIdentifier(deviceIdentifier: String) -> AnyPublisher<BasicResponse, ServiceProviderError> {
+        guard
+            let privilegedAccessManager = self.privilegedAccessManager
+        else {
+            return Fail(error: ServiceProviderError.privilegedAccessManagerNotFound).eraseToAnyPublisher()
+        }
+        return privilegedAccessManager.updateDeviceIdentifier(deviceIdentifier: deviceIdentifier)
+    }
+
 
     public func checkEmailRegistered(_ email: String) -> AnyPublisher<Bool, ServiceProviderError> {
         guard

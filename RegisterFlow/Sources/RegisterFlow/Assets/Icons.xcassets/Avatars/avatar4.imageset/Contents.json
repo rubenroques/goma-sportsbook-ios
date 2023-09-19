@@ -1,16 +1,49 @@
 {
   "images" : [
     {
+      "filename" : "Flambeur-Johnny-La-Flamme 2.png",
+      "idiom" : "universal",
+      "scale" : "1x"
+    },
+    {
+      "appearances" : [
+        {
+          "appearance" : "luminosity",
+          "value" : "dark"
+        }
+      ],
       "filename" : "johnny.png",
       "idiom" : "universal",
       "scale" : "1x"
     },
     {
+      "filename" : "Flambeur-Johnny-La-Flamme 1.png",
+      "idiom" : "universal",
+      "scale" : "2x"
+    },
+    {
+      "appearances" : [
+        {
+          "appearance" : "luminosity",
+          "value" : "dark"
+        }
+      ],
       "filename" : "johnny@2x.png",
       "idiom" : "universal",
       "scale" : "2x"
     },
     {
+      "filename" : "Flambeur-Johnny-La-Flamme.png",
+      "idiom" : "universal",
+      "scale" : "3x"
+    },
+    {
+      "appearances" : [
+        {
+          "appearance" : "luminosity",
+          "value" : "dark"
+        }
+      ],
       "filename" : "johnny@3x.png",
       "idiom" : "universal",
       "scale" : "3x"
