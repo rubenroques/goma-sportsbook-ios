@@ -674,7 +674,7 @@ class LiveMatchesViewModelDataSource: NSObject, UITableViewDataSource, UITableVi
             }
             return headerView
         case 4:
-            if self.shouldShowOutrightMarkets() && self.outrightCompetitions.isEmpty {
+            if self.upcomingMatches.isNotEmpty || self.outrightCompetitions.isEmpty {
                 return nil
             }
             guard

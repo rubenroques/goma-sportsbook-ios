@@ -18,16 +18,13 @@ class DepositViewModel: NSObject {
     var showErrorAlertTypePublisher: CurrentValueSubject<BalanceErrorType?, Never> = .init(nil)
     var cashierUrlPublisher: CurrentValueSubject<String?, Never> = .init(nil)
     var minimumValue: CurrentValueSubject<String, Never> = .init("")
-
-//    var paymentMethodsResponse: SimplePaymentMethodsResponse?
     var shouldShowPaymentDropIn: CurrentValueSubject<Bool, Never> = .init(false)
-//    var hasPaymentOptions: CurrentValueSubject<Bool, Never> = .init(false)
-//    var hasProcessedDeposit: CurrentValueSubject<Bool, Never> = .init(false)
-//
-//    var dropInDepositAmount: String = ""
-//    var depositAmount: Double = 0.0
-//    var clientKey: String?
-//    var paymentId: String?
+    var presentSafariViewControllerAction: ((URL) -> Void) = { _ in } {
+        didSet {
+            self.paymentsDropIn.presentSafariViewControllerAction = self.presentSafariViewControllerAction
+        }
+    }
+    
     var paymentsDropIn: PaymentsDropIn
 
     var availableBonuses: CurrentValueSubject<[AvailableBonus], Never> = .init([])
@@ -36,15 +33,13 @@ class DepositViewModel: NSObject {
 
     // MARK: Lifetime and Cycle
     override init() {
-
         self.paymentsDropIn = PaymentsDropIn()
-
+        self.paymentsDropIn.presentSafariViewControllerAction = self.presentSafariViewControllerAction
+        
         super.init()
 
         self.setupPublishers()
-
         self.getOptInBonus()
-
     }
 
     // MARK: Functions

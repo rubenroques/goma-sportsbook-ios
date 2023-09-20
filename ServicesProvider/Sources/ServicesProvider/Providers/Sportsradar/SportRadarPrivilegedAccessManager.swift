@@ -787,9 +787,10 @@ class SportRadarPrivilegedAccessManager: PrivilegedAccessManager {
         }).eraseToAnyPublisher()
     }
 
-    func updatePayment(paymentMethod: String, amount: Double, paymentId: String, type: String, issuer: String) -> AnyPublisher<UpdatePaymentResponse, ServiceProviderError> {
+    func updatePayment(amount: Double, paymentId: String, type: String, returnUrl: String?) -> AnyPublisher<UpdatePaymentResponse, ServiceProviderError> {
 
-        let endpoint = OmegaAPIClient.updatePayment(paymentMethod: paymentMethod, amount: amount, paymentId: paymentId, type: type, issuer: issuer)
+        let endpoint = OmegaAPIClient.updatePayment(amount: amount, paymentId: paymentId, type: type, returnUrl: returnUrl)
+        
         let publisher: AnyPublisher<SportRadarModels.UpdatePaymentResponse, ServiceProviderError> = self.connector.request(endpoint)
 
         return publisher.flatMap({ updatePaymentResponse -> AnyPublisher<UpdatePaymentResponse, ServiceProviderError> in
@@ -820,11 +821,29 @@ class SportRadarPrivilegedAccessManager: PrivilegedAccessManager {
                 return Just(basicResponse).setFailureType(to: ServiceProviderError.self).eraseToAnyPublisher()
             }
             else {
-                return Fail(outputType: BasicResponse.self, failure: ServiceProviderError.errorMessage(message: basicResponse.message ?? "Error")).eraseToAnyPublisher()
+                return Fail(outputType: BasicResponse.self, failure: ServiceProviderError.errorMessage(message: basicResponse.message ?? "Error"))
+                    .eraseToAnyPublisher()
             }
         }).eraseToAnyPublisher()
     }
 
+    func checkPaymentStatus(paymentMethod: String, paymentId: String) -> AnyPublisher<PaymentStatusResponse, ServiceProviderError> {
+
+        let endpoint = OmegaAPIClient.checkPaymentStatus(paymentMethod: paymentMethod, paymentId: paymentId)
+        let publisher: AnyPublisher<SportRadarModels.PaymentStatusResponse, ServiceProviderError> = self.connector.request(endpoint)
+
+        return publisher.flatMap({ paymentStatusResponse -> AnyPublisher<PaymentStatusResponse, ServiceProviderError> in
+            if paymentStatusResponse.status == "SUCCESS" {
+                let basicResponse = SportRadarModelMapper.paymentStatusResponse(fromPaymentStatusResponse: paymentStatusResponse)
+                return Just(basicResponse).setFailureType(to: ServiceProviderError.self).eraseToAnyPublisher()
+            }
+            else {
+                return Fail(outputType: PaymentStatusResponse.self, failure: ServiceProviderError.errorMessage(message: paymentStatusResponse.message ?? "Error"))
+                    .eraseToAnyPublisher()
+            }
+        }).eraseToAnyPublisher()
+    }
+    
     func getWithdrawalMethods() -> AnyPublisher<[WithdrawalMethod], ServiceProviderError> {
 
         let endpoint = OmegaAPIClient.getWithdrawalsMethods

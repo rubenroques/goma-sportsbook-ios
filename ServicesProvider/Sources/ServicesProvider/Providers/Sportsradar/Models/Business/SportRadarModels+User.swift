@@ -694,6 +694,20 @@ extension SportRadarModels {
         }
     }
 
+    struct PaymentStatusResponse: Codable {
+        var status: String
+        var paymentId: String?
+        var paymentStatus: String?
+        var message: String?
+
+        enum CodingKeys: String, CodingKey {
+            case status = "status"
+            case paymentId = "paymentId"
+            case paymentStatus = "paymentStatus"
+            case message = "message"
+        }
+    }
+    
     struct SupportResponse: Codable {
         var request: SupportRequest?
         var error: String?

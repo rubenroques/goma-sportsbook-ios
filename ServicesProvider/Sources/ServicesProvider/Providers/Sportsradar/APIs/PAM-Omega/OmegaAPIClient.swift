@@ -127,8 +127,9 @@ enum OmegaAPIClient {
 
     case getPayments
     case processDeposit(paymentMethod: String, amount: Double, option: String)
-    case updatePayment(paymentMethod: String, amount: Double, paymentId: String, type: String, issuer: String)
+    case updatePayment(amount: Double, paymentId: String, type: String, returnUrl: String?)
     case cancelDeposit(paymentId: String)
+    case checkPaymentStatus(paymentMethod: String, paymentId: String)
 
     case getWithdrawalsMethods
     case processWithdrawal(withdrawalMethod: String, amount: Double)
@@ -238,6 +239,8 @@ extension OmegaAPIClient: Endpoint {
             return "/ps/ips/updatePayment"
         case .cancelDeposit:
             return "/ps/ips/cancelDeposit"
+        case .checkPaymentStatus:
+            return "/ps/ips/checkPaymentStatus"
 
         case .getWithdrawalsMethods:
             return "/ps/ips/getWithdrawalMethods"
@@ -599,26 +602,31 @@ extension OmegaAPIClient: Endpoint {
             return nil
         case .cancelWithdrawal(let paymentId):
             return [
-
                 URLQueryItem(name: "paymentId", value: "\(paymentId)")
             ]
-
-        case .updatePayment(let paymentMethod, let amount, let paymentId, let type, let issuer):
-            return [
-
-                URLQueryItem(name: "paymentMethod", value: paymentMethod),
+        
+        case .updatePayment(let amount, let paymentId, let type, let returnUrl):
+            var query = [
                 URLQueryItem(name: "amount", value: "\(amount)"),
                 URLQueryItem(name: "paymentId", value: paymentId),
                 URLQueryItem(name: "type", value: type),
-                URLQueryItem(name: "issuer", value: issuer)
             ]
+            
+            if let returnUrlValue = returnUrl {
+                query.append(URLQueryItem(name: "returnUrl", value: returnUrlValue))
+            }
+            return query
 
         case .cancelDeposit(let paymentId):
             return [
-
                 URLQueryItem(name: "paymentId", value: paymentId)
             ]
-
+        case .checkPaymentStatus(let paymentMethod, let paymentId):
+            return [
+                URLQueryItem(name: "paymentMethod", value: "\(paymentMethod)"),
+                URLQueryItem(name: "paymentId", value: "\(paymentId)")
+            ]
+            
         case .getWithdrawalsMethods:
             return nil
 
@@ -796,7 +804,8 @@ extension OmegaAPIClient: Endpoint {
         case .processDeposit: return .post
         case .updatePayment: return .post
         case .cancelDeposit: return .post
-
+        case .checkPaymentStatus: return .post
+            
         case .getWithdrawalsMethods: return .get
         case .processWithdrawal: return .post
         case .getPendingWithdrawals: return .get
@@ -928,7 +937,8 @@ extension OmegaAPIClient: Endpoint {
         case .processDeposit: return true
         case .updatePayment: return true
         case .cancelDeposit: return true
-
+        case .checkPaymentStatus: return true
+            
         case .getWithdrawalsMethods: return true
         case .processWithdrawal: return true
         case .getPendingWithdrawals: return true

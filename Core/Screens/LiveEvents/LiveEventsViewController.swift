@@ -410,7 +410,6 @@ class LiveEventsViewController: UIViewController {
         self.sportsSelectorExpandImageView.setImageColor(color: UIColor.App.textPrimary)
         self.sportsSelectorExpandImageView.tintColor = UIColor.App.textPrimary
 
-
     }
 
     @objc func didTapFilterAction(sender: UITapGestureRecognizer) {

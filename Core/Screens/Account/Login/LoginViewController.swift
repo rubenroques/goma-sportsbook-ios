@@ -132,8 +132,7 @@ class LoginViewController: UIViewController {
                 })
                 .store(in: &cancellables)
 
-            paymentsDropIn.showPaymentStatus = { [weak self] paymentStatus in
-
+            paymentsDropIn.showPaymentStatus = { [weak self] paymentStatus, paymentId in
                 self?.showPaymentStatusAlert(paymentStatus: paymentStatus)
             }
         }
@@ -868,31 +867,16 @@ class LoginViewController: UIViewController {
             Env.userSessionStore.refreshUserWalletAfterDelay()
 
             let genericAvatarSuccessViewController = GenericAvatarSuccessViewController()
-
             genericAvatarSuccessViewController.setTextInfo(title: "\(localized("success"))!", subtitle: localized("first_deposit_success_message"))
-
             genericAvatarSuccessViewController.didTapContinueAction = { [weak self] in
                 self?.closeLoginRegisterFlow()
             }
-
             genericAvatarSuccessViewController.didTapCloseAction = { [weak self] in
                 self?.closeLoginRegisterFlow()
-
             }
-
             self.depositOnRegisterViewController?.navigationController?.pushViewController(genericAvatarSuccessViewController, animated: true)
 
         case .refused:
-//            alertTitle = localized("payment_refused")
-//            alertMessage = localized("payment_refused_message")
-//
-//            let alert = UIAlertController(title: alertTitle,
-//                                          message: alertMessage,
-//                                          preferredStyle: .alert)
-//
-//            alert.addAction(UIAlertAction(title: localized("ok"), style: .default, handler: nil))
-//
-//            self.depositOnRegisterViewController?.present(alert, animated: true, completion: nil)
 
             Env.userSessionStore.refreshUserWalletAfterDelay()
 
@@ -903,9 +887,10 @@ class LoginViewController: UIViewController {
             }
             genericAvatarErrorViewController.didTapCloseAction = { [weak self] in
                 self?.closeLoginRegisterFlow()
-
             }
             self.depositOnRegisterViewController?.navigationController?.pushViewController(genericAvatarErrorViewController, animated: true)
+        case .startedProcessing:
+            break
         }
 
     }
@@ -917,11 +902,11 @@ extension LoginViewController {
     @objc func didTapDebugFormFill() {
         
         if self.usernameHeaderTextFieldView.text.isEmpty || self.usernameHeaderTextFieldView.text == "ruben" {
-            self.usernameHeaderTextFieldView.setText("rroques11") // ("pafeha4474@lance7.com") // ("gomafrontend") // ("ruben@gomadevelopment.pt")
+            self.usernameHeaderTextFieldView.setText("rroques7") // ("pafeha4474@lance7.com") // ("gomafrontend") // ("ruben@gomadevelopment.pt")
             self.passwordHeaderTextFieldView.setText("Ruben12345!") // ("iosGoma123") // ("Omega123") // ("ruben=GOMA=12345")
             self.loginButton.isEnabled = true
         }
-        else if self.usernameHeaderTextFieldView.text == "rroques11" {
+        else if self.usernameHeaderTextFieldView.text == "rroques7" {
             self.usernameHeaderTextFieldView.setText("pgomes99")
             self.passwordHeaderTextFieldView.setText("12345-gomaA")
             self.loginButton.isEnabled = true

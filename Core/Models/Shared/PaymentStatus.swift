@@ -10,4 +10,13 @@ import Foundation
 enum PaymentStatus {
     case authorised
     case refused
+    case startedProcessing
+}
+
+enum BalanceErrorType {
+    case wallet
+    case deposit
+    case withdraw
+    case error(message: String)
+    case bonus
 }
