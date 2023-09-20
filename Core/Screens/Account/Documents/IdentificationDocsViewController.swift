@@ -336,7 +336,6 @@ class IdentificationDocsViewController: UIViewController {
         sdk.dismissHandler { (sdk, mainVC) in
             mainVC.dismiss(animated: true, completion: nil)
 
-//            self.viewModel.getSumSubDocuments()
             self.viewModel.checkDocumentationData()
         }
 
@@ -362,7 +361,7 @@ class IdentificationDocsViewController: UIViewController {
 
                         sdk.mainVC.dismiss(animated: true)
 
-                        self.showContinueProcessAlert()
+                        self.viewModel.checkDocumentationData()
 
                     }
 
@@ -377,6 +376,44 @@ class IdentificationDocsViewController: UIViewController {
                 print("onEvent: eventType=\(event.description(for: event.eventType)) payload=\(event.payload)")
             }
 
+        }
+
+        sdk.onStatusDidChange { (sdk, prevStatus) in
+
+            print("onStatusDidChange: [\(sdk.description(for: prevStatus))] -> [\(sdk.description(for: sdk.status))]")
+
+            switch sdk.status {
+
+            case .ready:
+                // Technically .ready couldn't ever be passed here, since the callback has been set after `status` became .ready
+                break
+
+            case .failed:
+                print("failReason: [\(sdk.description(for: sdk.failReason))] - \(sdk.verboseStatus)")
+
+            case .initial:
+                print("No verification steps are passed yet")
+
+            case .incomplete:
+                print("Some but not all of the verification steps have been passed over")
+
+            case .pending:
+                print("Verification is pending")
+
+            case .temporarilyDeclined:
+                print("Applicant has been temporarily declined")
+
+            case .finallyRejected:
+                print("Applicant has been finally rejected")
+                self.viewModel.checkDocumentationData()
+
+            case .approved:
+                print("Applicant has been approved")
+                self.viewModel.checkDocumentationData()
+
+            case .actionCompleted:
+                print("Applicant action has been completed")
+            }
         }
 
         self.present(sdk.mainVC, animated: true, completion: nil)
@@ -534,7 +571,14 @@ class IdentificationDocsViewController: UIViewController {
            uploadedProofAddressDocs.isEmpty,
            !self.hasShownContinueProcessAlert {
 
-            self.showContinueProcessAlert()
+            if let currentDocumentLevelStatus = self.viewModel.currentDocumentLevelStatus {
+
+                if (currentDocumentLevelStatus.levelName == .identificationLevel && currentDocumentLevelStatus.status == .completed) || currentDocumentLevelStatus.levelName == .poaLevel {
+
+                    self.showContinueProcessAlert()
+
+                }
+            }
 
         }
 

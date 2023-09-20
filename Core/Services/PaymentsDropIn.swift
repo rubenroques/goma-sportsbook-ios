@@ -248,6 +248,8 @@ class PaymentsDropIn {
         if let applePayPayment = try? ApplePayPayment(payment: payment, brand: "Betsson France") {
             dropInConfiguration.applePay = ApplePayComponent.Configuration.init(payment: applePayPayment, 
                                                                                 merchantIdentifier: "merchant.com.Adyen.betssonfrance")
+
+            //dropInConfiguration.applePay?.allowOnboarding = true
         }
         
         let adyenContext = AdyenContext(apiContext: apiContext, payment: payment)
@@ -381,6 +383,7 @@ extension PaymentsDropIn: DropInComponentDelegate {
             castedAdyenSession.didComplete(from: component, in: dropInComponent)
         }
     }
+
     
     func didOpenExternalApplication(component: ActionComponent, in dropInComponent: AnyDropInComponent) {
         if let adyenSession  = self.adyenSession, let castedAdyenSession = adyenSession as? DropInComponentDelegate {

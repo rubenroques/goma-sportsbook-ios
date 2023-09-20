@@ -30,6 +30,8 @@ class IdentificationDocsViewModel {
 
     var sumsubAccessTokenPublisher: CurrentValueSubject<String, Never> = .init("")
 
+    var currentDocumentLevelStatus: CurrentDocumentLevelStatus?
+
     var shouldReloadData: (() -> Void)?
 
     let dateFormatter = DateFormatter()
@@ -146,7 +148,7 @@ class IdentificationDocsViewModel {
                 case .failure(let error):
                     print("SUMSUB DATA ERROR: \(error)")
 
-                    self?.getUserDocuments()
+                    self?.reloadData()
 
                 case .finished:
                     ()
@@ -154,11 +156,29 @@ class IdentificationDocsViewModel {
             }, receiveValue: { [weak self] applicantDataResponse in
                 print("SUMSUB DATA RESPONSE: \(applicantDataResponse)")
 
-                if let requiredDocumentTypes = self?.requiredDocumentTypes {
-                    self?.processSumsubDocuments(documentTypes: requiredDocumentTypes, applicantDataResponse: applicantDataResponse)
-                }
+                if let applicantDocs = applicantDataResponse.info?.applicantDocs,
+                   applicantDocs.isNotEmpty {
 
-                self?.getUserDocuments()
+                    if let requiredDocumentTypes = self?.requiredDocumentTypes {
+                        self?.processSumsubDocuments(documentTypes: requiredDocumentTypes, applicantDataResponse: applicantDataResponse)
+                    }
+
+                    if let reviewData = applicantDataResponse.reviewData {
+
+                        let documentLevelName = DocumentLevelName(levelName: reviewData.levelName)
+
+                        let documentStatus = DocumentStatus(status: reviewData.reviewStatus)
+
+                        self?.currentDocumentLevelStatus = CurrentDocumentLevelStatus(status: documentStatus, levelName: documentLevelName)
+
+                    }
+
+                    self?.getUserDocuments()
+
+                }
+                else {
+                    self?.reloadData()
+                }
 
             })
             .store(in: &cancellables)
@@ -225,16 +245,39 @@ class IdentificationDocsViewModel {
                 case .finished:
                     ()
                 case .failure(let error):
-                    self?.isLoadingPublisher.send(false)
+                    //self?.isLoadingPublisher.send(false)
+                    self?.reloadData()
                 }
 
             }, receiveValue: { [weak self] userDocumentsResponse in
 
                 let userDocuments = userDocumentsResponse.userDocuments
 
-                if let requiredDocumentTypes = self?.requiredDocumentTypes {
-                    self?.processDocuments(documentTypes: requiredDocumentTypes, userDocuments: userDocuments)
+                // Check sumsub status to get omega documents after validation
+                if let currentDocumentLevelStatus = self?.currentDocumentLevelStatus {
+
+                    if currentDocumentLevelStatus.levelName == .identificationLevel && currentDocumentLevelStatus.status == .completed {
+
+                        if let requiredDocumentTypes = self?.requiredDocumentTypes {
+                            self?.processDocuments(documentTypes: requiredDocumentTypes, userDocuments: userDocuments)
+                        }
+
+                    }
+                    else if currentDocumentLevelStatus.levelName == .poaLevel {
+
+                        if let requiredDocumentTypes = self?.requiredDocumentTypes {
+                            self?.processDocuments(documentTypes: requiredDocumentTypes, userDocuments: userDocuments)
+                        }
+
+                    }
+                    else {
+                        self?.reloadData()
+                    }
                 }
+
+//                if let requiredDocumentTypes = self?.requiredDocumentTypes {
+//                    self?.processDocuments(documentTypes: requiredDocumentTypes, userDocuments: userDocuments)
+//                }
 
             })
             .store(in: &cancellables)
@@ -655,5 +698,14 @@ class IdentificationDocsViewModel {
         self.hasLoadedUserDocuments.send(true)
         self.hasDocumentsProcessed.send(true)
         self.shouldReloadData?()
+    }
+
+    private func reloadData() {
+
+        self.isLoadingPublisher.send(false)
+        self.hasLoadedUserDocuments.send(true)
+        self.hasDocumentsProcessed.send(true)
+        self.shouldReloadData?()
+
     }
 }

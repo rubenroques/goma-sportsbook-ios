@@ -36,7 +36,7 @@ extension SportRadarModels {
     }
 
     struct ApplicantDataInfo: Codable {
-        var applicantDocs: [ApplicantDoc]
+        var applicantDocs: [ApplicantDoc]?
 
         enum CodingKeys: String, CodingKey {
             case applicantDocs = "idDocs"

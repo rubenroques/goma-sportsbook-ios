@@ -577,15 +577,20 @@ extension SportRadarModelMapper {
 
     static func applicantDataInfo(fromInternalApplicantDataInfo internalApplicantDataInfo: SportRadarModels.ApplicantDataInfo) -> ApplicantDataInfo {
 
-        let mappedApplicantDocs = internalApplicantDataInfo.applicantDocs.map({
-            applicantDoc -> ApplicantDoc in
+        if let applicantDocs = internalApplicantDataInfo.applicantDocs {
 
-            let applicantDoc = Self.applicantDoc(fromInternalApplicantDoc: applicantDoc)
+            let mappedApplicantDocs = applicantDocs.map({
+                applicantDoc -> ApplicantDoc in
 
-            return applicantDoc
-        })
+                let applicantDoc = Self.applicantDoc(fromInternalApplicantDoc: applicantDoc)
 
-        return ApplicantDataInfo(applicantDocs: mappedApplicantDocs)
+                return applicantDoc
+            })
+
+            return ApplicantDataInfo(applicantDocs: mappedApplicantDocs)
+        }
+
+        return ApplicantDataInfo(applicantDocs: [])
     }
 
     static func applicantDoc(fromInternalApplicantDoc internalApplicantDoc: SportRadarModels.ApplicantDoc) -> ApplicantDoc {
