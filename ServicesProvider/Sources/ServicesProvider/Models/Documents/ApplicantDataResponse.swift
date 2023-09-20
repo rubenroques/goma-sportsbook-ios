@@ -22,7 +22,7 @@ public struct ApplicantDataResponse: Codable {
 }
 
 public struct ApplicantDataInfo: Codable {
-    public var applicantDocs: [ApplicantDoc]
+    public var applicantDocs: [ApplicantDoc]?
 
     enum CodingKeys: String, CodingKey {
         case applicantDocs = "idDocs"

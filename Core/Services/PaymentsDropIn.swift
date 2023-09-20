@@ -243,6 +243,8 @@ class PaymentsDropIn {
         if let applePayPayment = try? ApplePayPayment(payment: payment, brand: "Betsson France") {
             dropInConfiguration.applePay = ApplePayComponent.Configuration.init(payment: applePayPayment, 
                                                                                 merchantIdentifier: "merchant.com.Adyen.betssonfrance")
+
+            //dropInConfiguration.applePay?.allowOnboarding = true
         }
         
         let adyenContext = AdyenContext(apiContext: apiContext, payment: payment)
@@ -388,5 +390,6 @@ extension PaymentsDropIn: DropInComponentDelegate, AdyenSessionDelegate, Present
         print("PaymentsDropIn - ADYEN SESSION PRESENT")
 
     }
+
 }
 
