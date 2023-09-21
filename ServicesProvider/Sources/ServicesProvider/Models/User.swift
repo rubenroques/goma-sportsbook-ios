@@ -674,6 +674,20 @@ public struct BasicResponse: Codable {
     }
 }
 
+public struct PaymentStatusResponse: Codable {
+    public var status: String
+    public var paymentId: String?
+    public var paymentStatus: String?
+    public var message: String?
+
+    enum CodingKeys: String, CodingKey {
+        case status = "status"
+        case paymentId = "paymentId"
+        case paymentStatus = "paymentStatus"
+        case message = "message"
+    }
+}
+
 public struct SupportResponse: Codable {
     public var request: SupportRequest?
     public var error: String?

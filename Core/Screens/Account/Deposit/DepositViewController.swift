@@ -12,6 +12,7 @@ import Adyen
 import AdyenDropIn
 import AdyenComponents
 import Lottie
+import SafariServices
 
 class DepositViewController: UIViewController {
 
@@ -80,7 +81,7 @@ class DepositViewController: UIViewController {
     var dropInComponent: DropInComponent?
 
     var shouldRefreshUserWallet: (() -> Void)?
-
+    
     var hasBonus: Bool = false {
         didSet {
             self.bonusContentView.isHidden = !hasBonus
@@ -317,7 +318,11 @@ class DepositViewController: UIViewController {
 
     // MARK: Binding
     private func bind(toViewModel viewModel: DepositViewModel) {
-
+        
+        viewModel.presentSafariViewControllerAction = { [weak self] url in
+            self?.presentSafariViewController(onURL: url)
+        }
+        
         viewModel.isLoadingPublisher
             .receive(on: DispatchQueue.main)
             .sink(receiveValue: { [weak self] isLoading in
@@ -352,13 +357,8 @@ class DepositViewController: UIViewController {
             })
             .store(in: &cancellables)
 
-        viewModel.paymentsDropIn.showPaymentStatus = { [weak self] paymentStatus in
-
-            if paymentStatus == .authorised {
-                Env.userSessionStore.refreshUserWalletAfterDelay()
-            }
-
-            self?.showPaymentStatusAlert(paymentStatus: paymentStatus)
+        viewModel.paymentsDropIn.showPaymentStatus = { [weak self] paymentStatus, paymentId in
+            self?.showPaymentStatusAlert(paymentStatus: paymentStatus, paymentId: paymentId)
         }
 
         viewModel.minimumValue
@@ -400,16 +400,6 @@ class DepositViewController: UIViewController {
                 self?.checkUserInputs()
             })
             .store(in: &cancellables)
-
-    }
-
-    private func getPaymentDropIn() {
-
-        if let paymentDropIn = self.viewModel.paymentsDropIn.setupPaymentDropIn() {
-            self.dropInComponent = paymentDropIn
-            self.present(paymentDropIn.viewController, animated: true)
-        }
-
     }
 
     private func createPaymentsLogosImageViews() {
@@ -493,9 +483,7 @@ class DepositViewController: UIViewController {
                                       preferredStyle: .alert)
 
         alert.addAction(UIAlertAction(title: localized("ok"), style: .default, handler: { [weak self] _ in
-
             self?.viewModel.getDepositInfo(amountText: bonusAmount)
-
         }))
 
         alert.addAction(UIAlertAction(title: localized("cancel"), style: .cancel, handler: nil))
@@ -532,48 +520,63 @@ class DepositViewController: UIViewController {
         responsibleGamingLabel.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(tapResponsabibleGamingUnderlineLabel(gesture:))))
     }
 
-    private func showPaymentStatusAlert(paymentStatus: PaymentStatus) {
+    private func showPaymentStatusAlert(paymentStatus: PaymentStatus, paymentId: String?) {
 
         switch paymentStatus {
         case .authorised:
-
-            self.shouldRefreshUserWallet?()
-
-            let depositSuccessViewController = GenericAvatarSuccessViewController()
-
-            depositSuccessViewController.didTapContinueAction = { [weak self] in
-                self?.dismiss(animated: true)
-            }
-
-            depositSuccessViewController.didTapCloseAction = { [weak self] in
-                self?.dismiss(animated: true)
-            }
-
-            depositSuccessViewController.setTextInfo(title: "\(localized("success"))!", subtitle: localized("deposit_success_message"))
-
-            self.navigationController?.pushViewController(depositSuccessViewController, animated: true)
-
+            self.showPaymentFeedbackSuccess()
         case .refused:
-
-            let genericAvatarErrorViewController = GenericAvatarErrorViewController()
-
-            genericAvatarErrorViewController.setTextInfo(title: "\(localized("oh_no"))!", subtitle: localized("deposit_error_message"))
-
-            genericAvatarErrorViewController.didTapCloseAction = { [weak self] in
-
-                genericAvatarErrorViewController.dismiss(animated: true)
+            self.showPaymentFeedbackError()
+        case .startedProcessing:
+            if let paymentIdValue = paymentId {
+                self.showPaymentFeedbackLoading(paymentId: paymentIdValue)
             }
-
-            genericAvatarErrorViewController.didTapBackAction = { [weak self] in
-
-                genericAvatarErrorViewController.navigationController?.popViewController(animated: true)
-            }
-
-            self.navigationController?.pushViewController(genericAvatarErrorViewController, animated: true)
         }
 
     }
 
+    func showPaymentFeedbackError() {
+        self.shouldRefreshUserWallet?()
+        
+        let genericAvatarErrorViewController = GenericAvatarErrorViewController()
+        genericAvatarErrorViewController.setTextInfo(title: "\(localized("oh_no"))!", subtitle: localized("deposit_error_message"))
+        genericAvatarErrorViewController.didTapCloseAction = {
+            genericAvatarErrorViewController.dismiss(animated: true)
+        }
+        genericAvatarErrorViewController.didTapBackAction = {
+            genericAvatarErrorViewController.navigationController?.popViewController(animated: true)
+        }
+        self.navigationController?.pushViewController(genericAvatarErrorViewController, animated: true)
+    }
+    
+    func showPaymentFeedbackLoading(paymentId: String) {
+        let genericAvatarWarningViewController = GenericAvatarWarningViewController(paymentId: paymentId)
+        genericAvatarWarningViewController.continueWithPaymentStatusOk = { [weak self] isPaymentStatusOk in
+            if isPaymentStatusOk {
+                self?.showPaymentFeedbackSuccess()
+            }
+            else {
+                self?.showPaymentFeedbackError()
+            }
+        }
+        self.navigationController?.pushViewController(genericAvatarWarningViewController, animated: true)
+    }
+    
+    func showPaymentFeedbackSuccess() {
+        self.shouldRefreshUserWallet?()
+        
+        let depositSuccessViewController = GenericAvatarSuccessViewController()
+        depositSuccessViewController.didTapContinueAction = { [weak self] in
+            self?.dismiss(animated: true)
+        }
+        depositSuccessViewController.didTapCloseAction = { [weak self] in
+            self?.dismiss(animated: true)
+        }
+        depositSuccessViewController.setTextInfo(title: "\(localized("success"))!", subtitle: localized("deposit_success_message"))
+        self.navigationController?.pushViewController(depositSuccessViewController, animated: true)
+    }
+    
+    
     @IBAction private func tapResponsabibleGamingUnderlineLabel(gesture: UITapGestureRecognizer) {
         let text = localized("responsible_gaming")
 
@@ -786,6 +789,14 @@ class DepositViewController: UIViewController {
     }
 
     @IBAction private func didTapNextButton() {
+        
+//        let genericPayment = GenericAvatarWarningViewController(paymentId: "3550")
+//        genericPayment.continueWithPaymentStatusOk = { paymentOk in
+//            print("")
+//        }
+//        self.navigationController?.pushViewController(genericPayment, animated: true)
+//
+
         let amountText = self.depositHeaderTextFieldView.text
 
         if self.viewModel.bonusState == .declined {
@@ -794,7 +805,6 @@ class DepositViewController: UIViewController {
         else {
             self.viewModel.getDepositInfo(amountText: amountText)
         }
-
     }
 
     func showErrorAlert(errorType: BalanceErrorType) {
@@ -819,29 +829,16 @@ class DepositViewController: UIViewController {
             ()
         }
 
-//        let alert = UIAlertController(title: errorTitle,
-//                                      message: errorMessage,
-//                                      preferredStyle: .alert)
-//
-//        alert.addAction(UIAlertAction(title: localized("ok"), style: .default, handler: nil))
-//        self.present(alert, animated: true, completion: nil)
-
         let genericAvatarErrorViewController = GenericAvatarErrorViewController()
-
         genericAvatarErrorViewController.setTextInfo(title: errorTitle, subtitle: errorMessage)
-
-        genericAvatarErrorViewController.didTapCloseAction = { [weak self] in
-
+        genericAvatarErrorViewController.didTapCloseAction = {
             genericAvatarErrorViewController.dismiss(animated: true)
         }
-
-        genericAvatarErrorViewController.didTapBackAction = { [weak self] in
-
+        genericAvatarErrorViewController.didTapBackAction = {
             genericAvatarErrorViewController.navigationController?.popViewController(animated: true)
         }
-
+        
         self.navigationController?.pushViewController(genericAvatarErrorViewController, animated: true)
-
     }
 
     @IBAction private func didTapCloseButton() {
@@ -873,10 +870,35 @@ class DepositViewController: UIViewController {
 
 }
 
-enum BalanceErrorType {
-    case wallet
-    case deposit
-    case withdraw
-    case error(message: String)
-    case bonus
+extension DepositViewController {
+
+    private func getPaymentDropIn() {
+        if let paymentDropIn = self.viewModel.paymentsDropIn.setupPaymentDropIn() {
+            self.dropInComponent = paymentDropIn
+            self.present(paymentDropIn.viewController, animated: true)
+        }
+    }
+    
+    func presentSafariViewController(onURL url: URL) {
+        
+        let paymentsBrowserViewController = PaymentsBrowserViewController(url: url)
+        
+        paymentsBrowserViewController.presentedURLPublisher
+            .receive(on: DispatchQueue.main)
+            .sink { [weak self] presentedURL in
+                self?.viewModel.paymentsDropIn.checkSuccessOnRedirectURL(presentedURL)
+            }
+            .store(in: &self.cancellables)
+
+        if let presentedViewController = self.presentedViewController {
+            presentedViewController.dismiss(animated: true) {
+                self.navigationController?.pushViewController(paymentsBrowserViewController, animated: true)
+            }
+        }
+        else {
+            self.navigationController?.pushViewController(paymentsBrowserViewController, animated: true)
+        }
+        
+    }
+    
 }

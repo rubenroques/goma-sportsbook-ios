@@ -4136,6 +4136,14 @@
 		45F2F9AD298C067C0075AF02 /* StaticColors.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 45F2F9A8298C067C0075AF02 /* StaticColors.xcassets */; };
 		45F2F9AE298C067C0075AF02 /* StaticColors.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 45F2F9A8298C067C0075AF02 /* StaticColors.xcassets */; };
 		45F2F9AF298C067C0075AF02 /* StaticColors.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 45F2F9A8298C067C0075AF02 /* StaticColors.xcassets */; };
+		45F5C5162ABAE7F5001AD544 /* PaymentsBrowserViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 45F5C5152ABAE7F5001AD544 /* PaymentsBrowserViewController.swift */; };
+		45F5C5172ABAE7F5001AD544 /* PaymentsBrowserViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 45F5C5152ABAE7F5001AD544 /* PaymentsBrowserViewController.swift */; };
+		45F5C5192ABAE7F5001AD544 /* PaymentsBrowserViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 45F5C5152ABAE7F5001AD544 /* PaymentsBrowserViewController.swift */; };
+		45F5C51A2ABAE7F5001AD544 /* PaymentsBrowserViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 45F5C5152ABAE7F5001AD544 /* PaymentsBrowserViewController.swift */; };
+		45F5C51B2ABAE7F5001AD544 /* PaymentsBrowserViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 45F5C5152ABAE7F5001AD544 /* PaymentsBrowserViewController.swift */; };
+		45F5C51D2ABAE7F5001AD544 /* PaymentsBrowserViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 45F5C5152ABAE7F5001AD544 /* PaymentsBrowserViewController.swift */; };
+		45F5C51E2ABAE9E3001AD544 /* PaymentsBrowserViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 45F5C5152ABAE7F5001AD544 /* PaymentsBrowserViewController.swift */; };
+		45F5C51F2ABAE9E3001AD544 /* PaymentsBrowserViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 45F5C5152ABAE7F5001AD544 /* PaymentsBrowserViewController.swift */; };
 		45F6BA702AAF32A100C81DE1 /* BetslipProxyWebViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 45F6BA6F2AAF32A100C81DE1 /* BetslipProxyWebViewController.swift */; };
 		45F6BA712AAF32A100C81DE1 /* BetslipProxyWebViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 45F6BA6F2AAF32A100C81DE1 /* BetslipProxyWebViewController.swift */; };
 		45F6BA722AAF32A100C81DE1 /* BetslipProxyWebViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 45F6BA6F2AAF32A100C81DE1 /* BetslipProxyWebViewController.swift */; };
@@ -7288,6 +7296,7 @@
 		45EF5435270C603D00D1E13E /* MatchFiltersViewController.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = MatchFiltersViewController.xib; sourceTree = "<group>"; };
 		45EF543A270C664100D1E13E /* CollapsibleView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CollapsibleView.swift; sourceTree = "<group>"; };
 		45F2F9A8298C067C0075AF02 /* StaticColors.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = StaticColors.xcassets; sourceTree = "<group>"; };
+		45F5C5152ABAE7F5001AD544 /* PaymentsBrowserViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PaymentsBrowserViewController.swift; sourceTree = "<group>"; };
 		45F6BA6F2AAF32A100C81DE1 /* BetslipProxyWebViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BetslipProxyWebViewController.swift; sourceTree = "<group>"; };
 		45F6BA772AB1F2B500C81DE1 /* avatar2-light.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = "avatar2-light.json"; sourceTree = "<group>"; };
 		45F6BA782AB1F2B500C81DE1 /* avatar3-light.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = "avatar3-light.json"; sourceTree = "<group>"; };
@@ -8103,6 +8112,7 @@
 		451E1F6A2825634E000E957B /* InternalBrowser */ = {
 			isa = PBXGroup;
 			children = (
+				45F5C5152ABAE7F5001AD544 /* PaymentsBrowserViewController.swift */,
 				451E1F6B2825636F000E957B /* InternalBrowserViewController.swift */,
 			);
 			path = InternalBrowser;
@@ -13711,6 +13721,7 @@
 				A99DE67529A643F800AA24AA /* PaymentStatus.swift in Sources */,
 				450B7A5F28F58574009229E3 /* TipsTableViewCell.swift in Sources */,
 				450B7A6028F58574009229E3 /* ViewContext.swift in Sources */,
+				45F5C5172ABAE7F5001AD544 /* PaymentsBrowserViewController.swift in Sources */,
 				450B7A6128F58574009229E3 /* RankingsViewModel.swift in Sources */,
 				450B7A6228F58574009229E3 /* ModalTransitionPresentationController.swift in Sources */,
 				450B7A6328F58574009229E3 /* TransactionsHistoryViewController.swift in Sources */,
@@ -14383,6 +14394,7 @@
 				457CBB41282D27D000ED0F00 /* OddDoubleCollectionViewCell.swift in Sources */,
 				A9BA04142A3099FA007880FC /* ManualUploadDocumentsViewController.swift in Sources */,
 				457CBB42282D27D000ED0F00 /* BonusActiveDataSource.swift in Sources */,
+				45F5C5192ABAE7F5001AD544 /* PaymentsBrowserViewController.swift in Sources */,
 				457CBB43282D27D000ED0F00 /* BonusSwitchTableViewCell.swift in Sources */,
 				457CBB44282D27D000ED0F00 /* CompetitionFilterRowViewModel.swift in Sources */,
 				457CBB46282D27D000ED0F00 /* SearchTextField.swift in Sources */,
@@ -15014,6 +15026,7 @@
 				A9B946C328C0F7F00091296E /* FeaturedTipCollectionViewModel.swift in Sources */,
 				457CBDC5282D2CD100ED0F00 /* CashoutAggregator.swift in Sources */,
 				A9C719172A5EEA88005EB891 /* RecruitAFriendViewController.swift in Sources */,
+				45F5C51A2ABAE7F5001AD544 /* PaymentsBrowserViewController.swift in Sources */,
 				457CBDC6282D2CD100ED0F00 /* FilterRowView.swift in Sources */,
 				A96FAECC29804C0600A0751F /* Data+Extensions.swift in Sources */,
 				45B6E1FB283E3EFB001B570C /* NewMessageViewModel.swift in Sources */,
@@ -15857,6 +15870,7 @@
 				A99DE67629A643F800AA24AA /* PaymentStatus.swift in Sources */,
 				45C10FA228772DA700037BBE /* ViewContext.swift in Sources */,
 				A98708AC28D3451C00F27348 /* RankingsViewModel.swift in Sources */,
+				45F5C51D2ABAE7F5001AD544 /* PaymentsBrowserViewController.swift in Sources */,
 				45C10F5428772DA700037BBE /* ModalTransitionPresentationController.swift in Sources */,
 				4589C917282024E400243547 /* TransactionsHistoryViewController.swift in Sources */,
 				4589C918282024E400243547 /* TitleTextFieldView.swift in Sources */,
@@ -16402,6 +16416,7 @@
 				45A33202298976BA008181E9 /* LiveEventsViewModel.swift in Sources */,
 				45A33204298976BA008181E9 /* SharedTicketBetLineView.swift in Sources */,
 				45A33206298976BA008181E9 /* ShareTicketFriendGroupViewModel.swift in Sources */,
+				45F5C51F2ABAE9E3001AD544 /* PaymentsBrowserViewController.swift in Sources */,
 				45A33207298976BA008181E9 /* WithdrawViewController.swift in Sources */,
 				45A33208298976BA008181E9 /* OutrightCompetitionLargeLineTableViewCell.swift in Sources */,
 				45A33209298976BA008181E9 /* Location.swift in Sources */,
@@ -17116,6 +17131,7 @@
 				45A6BD3128246A7500D9B416 /* WithdrawViewModel.swift in Sources */,
 				A9A2924B2A61670100A7C334 /* UserReferralView.swift in Sources */,
 				A9A521732A02B98A00C0F6C6 /* CardsStyleViewController.swift in Sources */,
+				45F5C5162ABAE7F5001AD544 /* PaymentsBrowserViewController.swift in Sources */,
 				45A6BD3228246A7500D9B416 /* String+Extensions.swift in Sources */,
 				45D1ED5E28A150C2001E18E5 /* BusinessModules.swift in Sources */,
 				45A6BD3328246A7500D9B416 /* SimpleRegisterEmailCheckViewController.swift in Sources */,
@@ -17755,6 +17771,7 @@
 				45F6BCBA2AB3732C00C81DE1 /* LiveEventsViewModel.swift in Sources */,
 				45F6BCBB2AB3732C00C81DE1 /* SharedTicketBetLineView.swift in Sources */,
 				45F6BCBC2AB3732C00C81DE1 /* ShareTicketFriendGroupViewModel.swift in Sources */,
+				45F5C51E2ABAE9E3001AD544 /* PaymentsBrowserViewController.swift in Sources */,
 				45F6BCBD2AB3732C00C81DE1 /* WithdrawViewController.swift in Sources */,
 				45F6BCBE2AB3732C00C81DE1 /* OutrightCompetitionLargeLineTableViewCell.swift in Sources */,
 				45F6BCBF2AB3732C00C81DE1 /* Location.swift in Sources */,
@@ -18163,6 +18180,7 @@
 				A9C3414B28F9A74A0055360B /* FriendsListViewModel.swift in Sources */,
 				A9C3414D28F9A74A0055360B /* URLSchemaManager.swift in Sources */,
 				45CE91542A2F40E100BB3AB7 /* StoriesFullScreenItemView.swift in Sources */,
+				45F5C51B2ABAE7F5001AD544 /* PaymentsBrowserViewController.swift in Sources */,
 				A9A1B2E42A14EC3300F7A8ED /* DepositSuccessViewController.swift in Sources */,
 				A9C3414E28F9A74A0055360B /* TransactionsHistoryViewModel.swift in Sources */,
 				A925481D2A2A26A30056F832 /* DocumentStateView.swift in Sources */,
@@ -19208,7 +19226,7 @@
 				CODE_SIGN_ENTITLEMENTS = Clients/Betsson/Betsson.entitlements;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Manual;
-				CURRENT_PROJECT_VERSION = 1245;
+				CURRENT_PROJECT_VERSION = 1250;
 				DEVELOPMENT_TEAM = 422GNXXZJR;
 				INFOPLIST_FILE = "$(SRCROOT)/Clients/Betsson/Misc-UAT/Betsson-UAT-Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 13.0;
@@ -19237,7 +19255,7 @@
 				CODE_SIGN_ENTITLEMENTS = Clients/Betsson/Betsson.entitlements;
 				CODE_SIGN_IDENTITY = "Apple Distribution";
 				CODE_SIGN_STYLE = Manual;
-				CURRENT_PROJECT_VERSION = 1245;
+				CURRENT_PROJECT_VERSION = 1250;
 				DEVELOPMENT_TEAM = 422GNXXZJR;
 				INFOPLIST_FILE = "$(SRCROOT)/Clients/Betsson/Misc-UAT/Betsson-UAT-Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 13.0;

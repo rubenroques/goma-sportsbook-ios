@@ -6,6 +6,8 @@
 //
 
 import UIKit
+import ServicesProvider
+import Combine
 
 class GenericAvatarWarningViewController: UIViewController {
 
@@ -19,14 +21,19 @@ class GenericAvatarWarningViewController: UIViewController {
     private lazy var titleLabel: UILabel = Self.createTitleLabel()
     private lazy var subtitleLabel: UILabel = Self.createSubtitleLabel()
     private lazy var backButton: UIButton = Self.createBackButton()
-
+    private lazy var activityIndicatorView: UIActivityIndicatorView = Self.createActivityIndicatorView()
+    
+    var continueWithPaymentStatusOk: (Bool) -> Void = { _ in }
     var didTapBackAction: (() -> Void)?
     var didTapCloseAction: (() -> Void)?
 
-    init() {
-
+    private var paymentId: String
+    
+    private var cancellables = Set<AnyCancellable>()
+    
+    init(paymentId: String) {
+        self.paymentId = paymentId
         super.init(nibName: nil, bundle: nil)
-
     }
 
     @available(iOS, unavailable)
@@ -41,11 +48,12 @@ class GenericAvatarWarningViewController: UIViewController {
         self.setupWithTheme()
 
         self.closeButton.addTarget(self, action: #selector(didTapCloseButton), for: .primaryActionTriggered)
-
         self.backButton.addTarget(self, action: #selector(didTapBackButton), for: .primaryActionTriggered)
 
         self.backButton.isHidden = true
-
+        self.closeButton.isHidden = true
+        
+        self.requestPendindStatusUpdate()
     }
 
     override func viewDidLayoutSubviews() {
@@ -124,11 +132,43 @@ class GenericAvatarWarningViewController: UIViewController {
     }
 
     @objc private func didTapBackButton() {
-
         self.didTapBackAction?()
-
     }
+    
+    func requestPendindStatusUpdate(retryCount: Int = 0) {
+        
+        guard retryCount < 5 else {
+            self.activityIndicatorView.stopAnimating()
+            self.continueWithPaymentStatusOk(false)
+            return
+        }
 
+        self.activityIndicatorView.startAnimating()
+        
+        DispatchQueue.main.asyncAfter(deadline: .now() + 3.0) {
+            
+            Env.servicesProvider.checkPaymentStatus(paymentMethod: "ADYEN_ALL", paymentId: self.paymentId)
+                .receive(on: DispatchQueue.main)
+                .sink { completion in
+                    print("GenericAvatarWarningViewController checkPaymentStatus completed: \(completion)")
+                } receiveValue: { [weak self] paymentStatusResponse in
+                    print("GenericAvatarWarningViewController checkPaymentStatus value: \(paymentStatusResponse)")
+                    if (paymentStatusResponse.paymentStatus ?? "").lowercased() == "pending" {
+                        self?.requestPendindStatusUpdate(retryCount: retryCount + 1)
+                    }
+                    else if (paymentStatusResponse.paymentStatus ?? "").lowercased() == "completed" {
+                        self?.activityIndicatorView.stopAnimating()
+                        self?.continueWithPaymentStatusOk(true)
+                    }
+                    else {
+                        self?.activityIndicatorView.stopAnimating()
+                        self?.continueWithPaymentStatusOk(false)
+                    }
+                }
+                .store(in: &self.cancellables)
+        }
+    }
+    
 }
 
 extension GenericAvatarWarningViewController {
@@ -207,6 +247,14 @@ extension GenericAvatarWarningViewController {
         return button
     }
 
+    private static func createActivityIndicatorView() -> UIActivityIndicatorView {
+        let activityIndicatorView = UIActivityIndicatorView.init(style: .large)
+        activityIndicatorView.translatesAutoresizingMaskIntoConstraints = false
+        activityIndicatorView.hidesWhenStopped = true
+        activityIndicatorView.startAnimating()
+        return activityIndicatorView
+    }
+    
     private func setupSubviews() {
 
         self.view.addSubview(self.containerGradientView)
@@ -225,7 +273,8 @@ extension GenericAvatarWarningViewController {
         self.infoContainerView.addSubview(self.titleLabel)
         self.infoContainerView.addSubview(self.subtitleLabel)
         self.infoContainerView.addSubview(self.backButton)
-
+        self.infoContainerView.addSubview(self.activityIndicatorView)
+        
         self.initConstraints()
 
     }
@@ -274,6 +323,9 @@ extension GenericAvatarWarningViewController {
             self.subtitleLabel.trailingAnchor.constraint(equalTo: self.infoContainerView.trailingAnchor, constant: -30),
             self.subtitleLabel.topAnchor.constraint(equalTo: self.titleLabel.bottomAnchor, constant: 12),
 
+            self.activityIndicatorView.centerXAnchor.constraint(equalTo: self.infoContainerView.centerXAnchor),
+            self.activityIndicatorView.topAnchor.constraint(equalTo: self.subtitleLabel.bottomAnchor, constant: 24),
+            
             self.backButton.leadingAnchor.constraint(equalTo: self.infoContainerView.leadingAnchor, constant: 30),
             self.backButton.trailingAnchor.constraint(equalTo: self.infoContainerView.trailingAnchor, constant: -30),
             self.backButton.bottomAnchor.constraint(equalTo: self.infoContainerView.bottomAnchor, constant: -50),

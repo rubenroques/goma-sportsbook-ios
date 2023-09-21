@@ -12,6 +12,7 @@ import AdyenSession
 import Combine
 import ServicesProvider
 import AdyenComponents
+import AdyenActions
 
 class PaymentsDropIn {
 
@@ -26,8 +27,10 @@ class PaymentsDropIn {
     var showErrorAlertTypePublisher: CurrentValueSubject<BalanceErrorType?, Never> = .init(nil)
     var isLoadingPublisher: CurrentValueSubject<Bool, Never> = .init(false)
     var shouldProccessPayment: ((String) -> Void)?
-    var showPaymentStatus: ((PaymentStatus) -> Void)?
+    var showPaymentStatus: ((PaymentStatus, String?) -> Void)?
 
+    var presentSafariViewControllerAction: ((URL) -> Void) = { _ in }
+    
     var dropInDepositAmount: String = ""
     var depositAmount: Double = 0.0
     var clientKey: String?
@@ -72,8 +75,8 @@ class PaymentsDropIn {
                 }
             })
             .store(in: &cancellables)
+        
     }
-
 
     func getDepositInfo(amountText: String) {
 
@@ -148,8 +151,8 @@ class PaymentsDropIn {
                 }
             }, receiveValue: { [weak self] processDepositResponse in
 
-                print("processDepositResponse: ")
-                print(dump(processDepositResponse))
+//                print("processDepositResponse: ")
+//                print(dump(processDepositResponse))
                 
                 self?.clientKey = processDepositResponse.clientKey
                 self?.paymentId = processDepositResponse.paymentId
@@ -178,8 +181,8 @@ class PaymentsDropIn {
                 }
             }, receiveValue: { [weak self] paymentsResponse in
                 
-                print("getPaymentMethods: ")
-                print(dump(paymentsResponse))
+//                print("getPaymentMethods: ")
+//                print(dump(paymentsResponse))
                 
                 self?.paymentMethodsResponse = paymentsResponse
                 self?.hasPaymentOptions.send(true)
@@ -220,6 +223,8 @@ class PaymentsDropIn {
             }
         }
         
+
+
     }
     
     func setupPaymentDropIn() -> DropInComponent? {
@@ -250,7 +255,7 @@ class PaymentsDropIn {
         let adyenContext = AdyenContext(apiContext: apiContext, payment: payment)
         
         let dropInComponent = DropInComponent(paymentMethods: paymentMethods, context: adyenContext, configuration: dropInConfiguration)
-        dropInComponent.delegate = self.adyenSession
+        dropInComponent.delegate = self // self.adyenSession
  
         self.dropInComponent = dropInComponent
         return dropInComponent
@@ -266,7 +271,7 @@ class PaymentsDropIn {
                     ()
                 case .failure(let error):
                     print("CANCEL DEPOSIT ERROR: \(error)")
-                    self?.showPaymentStatus?(.refused)
+                    self?.showPaymentStatus?(.refused, nil)
                 }
             }, receiveValue: { [weak self] cancelDepositResponse in
                 print("CANCEL DEPOSIT SUCCESS: \(cancelDepositResponse)")
@@ -275,106 +280,30 @@ class PaymentsDropIn {
     }
 }
 
-extension PaymentsDropIn: DropInComponentDelegate, AdyenSessionDelegate, PresentationDelegate {
-
-    func didSubmit(_ data: Adyen.PaymentComponentData, from component: Adyen.PaymentComponent, in dropInComponent: Adyen.AnyDropInComponent) {
-
-        print("PaymentsDropIn - DropInComponentDelegate PAYMENT didSubmit \(data) \(component) \(dropInComponent)")
-        
-        if let paymentIssuerType = data.paymentMethod.dictionary.value?["type"],
-           let paymentId = self.paymentId {
-
-            let paymentIssuer = "\(paymentIssuerType)"
-            let amount = self.depositAmount
-
-            // TODO: Not working, enable later
-            self.shouldProccessPayment?("\(paymentIssuer) - \(amount)")
-//            Env.servicesProvider.updatePayment(paymentMethod: "ADYEN_IDEAL", amount: amount, paymentId: paymentId, type: "ideal", issuer: paymentIssuer)
-//                .receive(on: DispatchQueue.main)
-//                .sink(receiveCompletion: { [weak self] completion in
-//                    switch completion {
-//                    case .finished:
-//                        ()
-//                    case .failure(let error):
-//                        print("PaymentsDropIn - UPDATE PAYMENT RESPONSE ERROR: \(error)")
-//                        switch error {
-//                        case .errorMessage(let message):
-//                            self?.showErrorAlert(errorType: .error(message: message))
-//                        default:
-//                            ()
-//                        }
-//                    }
-//
-//                }, receiveValue: { [weak self] updatePaymentResponse in
-//                    print("PaymentsDropIn - UPDATE PAYMENT RESPONSE: \(updatePaymentResponse)")
-//                })
-//                .store(in: &cancellables)
-        }
-
+extension PaymentsDropIn: PresentationDelegate {
+    func present(component: Adyen.PresentableComponent) {
+        print("PaymentsDropIn - ADYEN SESSION PRESENT")
     }
+}
 
-    func didFail(with error: Error, from component: Adyen.PaymentComponent, in dropInComponent: Adyen.AnyDropInComponent) {
+extension PaymentsDropIn: AdyenSessionDelegate {
 
-        print("PaymentsDropIn - DropInComponentDelegate PAYMENT FAIL: \(error)")
-
-        dropInComponent.viewController.dismiss(animated: true)
-
-    }
-
-    func didProvide(_ data: Adyen.ActionComponentData, from component: Adyen.ActionComponent, in dropInComponent: Adyen.AnyDropInComponent) {
-
-        print("PaymentsDropIn - DropInComponentDelegate PAYMENT PROVIDE: \(data)")
-
-    }
-
-    func didComplete(from component: Adyen.ActionComponent, in dropInComponent: Adyen.AnyDropInComponent) {
-
-        print("PaymentsDropIn - DropInComponentDelegate PAYMENT COMPLETE")
-
-    }
-
-    func didFail(with error: Error, from component: Adyen.ActionComponent, in dropInComponent: Adyen.AnyDropInComponent) {
-
-        print("PaymentsDropIn - DropInComponentDelegate PAYMENT FAIL 2: \(error)")
-
-    }
-
-    func didFail(with error: Error, from dropInComponent: Adyen.AnyDropInComponent) {
-
-        print("PaymentsDropIn - DropInComponentDelegate PAYMENT FAIL FULL: \(error)")
-
-        dropInComponent.viewController.dismiss(animated: true)
-
-    }
-
-    func didCancel(component: PaymentComponent, from dropInComponent: AnyDropInComponent) {
-        print("PaymentsDropIn - DropInComponentDelegate PAYMENT CANCEL")
-
-        dropInComponent.viewController.dismiss(animated: true)
-    }
-
-    func didComplete(with result: AdyenSessionResult, component: Adyen.Component, session: AdyenSession) {
+    func didComplete(with result: AdyenSessionResult, component: Component, session: AdyenSession) {
 
         print("PaymentsDropIn - ADYEN SESSION RESULT: \(result)")
 
         if result.resultCode == .refused {
-
-//            if let paymentId = self.paymentId {
-//                self.cancelDeposit(paymentId: paymentId)
-//            }
-
             self.dropInComponent?.viewController.dismiss(animated: true)
-            self.showPaymentStatus?(.refused)
+            self.showPaymentStatus?(.refused, nil)
         }
 
         if result.resultCode == .authorised {
             self.dropInComponent?.viewController.dismiss(animated: true)
-            self.showPaymentStatus?(.authorised)
+            self.showPaymentStatus?(.authorised, nil)
         }
-
     }
 
-    func didFail(with error: Error, from component: Adyen.Component, session: AdyenSession) {
+    func didFail(with error: Error, from component: Component, session: AdyenSession) {
 
         print("PaymentsDropIn - ADYEN SESSION FAIL: \(error)")
 
@@ -383,13 +312,127 @@ extension PaymentsDropIn: DropInComponentDelegate, AdyenSessionDelegate, Present
         }
 
         self.dropInComponent?.viewController.dismiss(animated: true)
-
     }
 
-    func present(component: Adyen.PresentableComponent) {
-        print("PaymentsDropIn - ADYEN SESSION PRESENT")
-
+    func didOpenExternalApplication(component: ActionComponent, session: AdyenSession) {
+        
     }
-
+    
+    func handlerForAdditionalDetails(in component: ActionComponent, session: AdyenSession) -> AdyenSessionPaymentDetailsHandler? {
+        return self
+    }
+    
+    func handlerForPayments(in component: PaymentComponent, session: AdyenSession) -> AdyenSessionPaymentsHandler? {
+        return self
+    }
+    
 }
 
+extension PaymentsDropIn: AdyenSessionPaymentsHandler, AdyenSessionPaymentDetailsHandler {
+ 
+    func didSubmit(_ paymentComponentData: PaymentComponentData, from component: Component, dropInComponent: AnyDropInComponent?, session: AdyenSession) {
+        self.adyenSession?.didSubmit(paymentComponentData,
+                                     from: component,
+                                     dropInComponent: dropInComponent,
+                                     session: session)
+    }
+    
+    func didProvide(_ actionComponentData: ActionComponentData, from component: ActionComponent, session: AdyenSession) {
+        self.adyenSession?.didProvide(actionComponentData,
+                                      from: component,
+                                      session: session)
+    }
+ 
+}
+
+extension PaymentsDropIn: DropInComponentDelegate {
+    
+    func didSubmit(_ data: PaymentComponentData, from component: PaymentComponent, in dropInComponent: AnyDropInComponent) {
+        if (data.paymentMethod as? InstantPaymentDetails)?.type == .other("paysafecard") {
+            Env.servicesProvider.updatePayment(amount: self.depositAmount,
+                                               paymentId: self.paymentId ?? "",
+                                               type: "paysafecard",
+                                               returnUrl: nil)
+            .receive(on: DispatchQueue.main)
+            .sink { completion in
+                print("updatePayment completion: \(dump(completion))")
+            } receiveValue: { updatePaymentResponse in
+                print("updatePayment: \(dump(updatePaymentResponse))")
+                
+                if let redirectURL = URL(string: updatePaymentResponse.action.url) {
+                    self.presentSafariViewController(onURL: redirectURL)
+                }
+            }
+            .store(in: &self.cancellables)
+        }
+        else {
+            if let adyenSession  = self.adyenSession, let castedAdyenSession = adyenSession as? DropInComponentDelegate {
+                castedAdyenSession.didSubmit(data, from: component, in: dropInComponent)
+            }
+        }
+    }
+    
+    func didProvide(_ data: ActionComponentData, from component: ActionComponent, in dropInComponent: AnyDropInComponent) {
+        if let adyenSession  = self.adyenSession, let castedAdyenSession = adyenSession as? DropInComponentDelegate {
+            castedAdyenSession.didProvide(data, from: component, in: dropInComponent)
+        }
+    }
+    
+    func didComplete(from component: ActionComponent, in dropInComponent: AnyDropInComponent) {
+        if let adyenSession  = self.adyenSession, let castedAdyenSession = adyenSession as? DropInComponentDelegate {
+            castedAdyenSession.didComplete(from: component, in: dropInComponent)
+        }
+    }
+
+    
+    func didOpenExternalApplication(component: ActionComponent, in dropInComponent: AnyDropInComponent) {
+        if let adyenSession  = self.adyenSession, let castedAdyenSession = adyenSession as? DropInComponentDelegate {
+            castedAdyenSession.didOpenExternalApplication(component: component, in: dropInComponent)
+        }
+    }
+    
+    //
+    func didCancel(component: PaymentComponent, from dropInComponent: AnyDropInComponent) {
+        if let adyenSession  = self.adyenSession, let castedAdyenSession = adyenSession as? DropInComponentDelegate {
+            castedAdyenSession.didCancel(component: component, from: dropInComponent)
+        }
+    }
+    
+    //
+    func didFail(with error: Error, from component: PaymentComponent, in dropInComponent: AnyDropInComponent) {
+        // Invoked when a payment component fails.
+        if let adyenSession  = self.adyenSession, let castedAdyenSession = adyenSession as? DropInComponentDelegate {
+            castedAdyenSession.didFail(with: error, from: component, in: dropInComponent)
+        }
+    }
+    
+    func didFail(with error: Error, from component: ActionComponent, in dropInComponent: AnyDropInComponent) {
+        // Invoked when the action component fails.
+        if let adyenSession  = self.adyenSession, let castedAdyenSession = adyenSession as? DropInComponentDelegate {
+            castedAdyenSession.didFail(with: error, from: component, in: dropInComponent)
+        }
+    }
+    
+    func didFail(with error: Error, from dropInComponent: AnyDropInComponent) {
+        if let adyenSession  = self.adyenSession, let castedAdyenSession = adyenSession as? DropInComponentDelegate {
+            castedAdyenSession.didFail(with: error, from: dropInComponent)
+        }
+    }
+        
+}
+
+extension PaymentsDropIn {
+    
+    func presentSafariViewController(onURL url: URL) {
+        self.presentSafariViewControllerAction(url)
+    }
+    
+    func checkSuccessOnRedirectURL(_ url: URL) {
+        if url.absoluteString.contains("deposit-results.html") && url.absoluteString.contains("resultCode=authorised") {
+            self.dropInComponent?.viewController.dismiss(animated: true)
+            if let paymentId = self.paymentId {
+                self.showPaymentStatus?(.startedProcessing, paymentId)
+            }
+        }
+    }
+}

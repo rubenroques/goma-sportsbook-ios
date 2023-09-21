@@ -368,6 +368,13 @@ extension SportRadarModelMapper {
         return BasicResponse(status: internalBasicResponse.status, message: internalBasicResponse.message)
     }
 
+    static func paymentStatusResponse(fromPaymentStatusResponse paymentStatusResponse: SportRadarModels.PaymentStatusResponse) -> PaymentStatusResponse {
+        return PaymentStatusResponse(status: paymentStatusResponse.status,
+                                     paymentId: paymentStatusResponse.paymentId,
+                                     paymentStatus: paymentStatusResponse.paymentStatus,
+                                     message: paymentStatusResponse.message)
+    }
+    
     static func supportResponse(fromInternalSupportResponse internalSupportResponse: SportRadarModels.SupportResponse) -> SupportResponse {
 
         if let supportRequest = internalSupportResponse.request {
