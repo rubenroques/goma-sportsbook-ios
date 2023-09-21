@@ -256,14 +256,9 @@ class IdentificationDocsViewModel {
                 // Check sumsub status to get omega documents after validation
                 if let currentDocumentLevelStatus = self?.currentDocumentLevelStatus {
 
-                    if currentDocumentLevelStatus.levelName == .identificationLevel && currentDocumentLevelStatus.status == .completed {
-
-                        if let requiredDocumentTypes = self?.requiredDocumentTypes {
-                            self?.processDocuments(documentTypes: requiredDocumentTypes, userDocuments: userDocuments)
-                        }
-
-                    }
-                    else if currentDocumentLevelStatus.levelName == .poaLevel {
+                    if (currentDocumentLevelStatus.levelName == .identificationLevel && currentDocumentLevelStatus.status == .completed) ||
+                        currentDocumentLevelStatus.levelName == .poaLevel ||
+                        (currentDocumentLevelStatus.levelName == .identificationLevel && currentDocumentLevelStatus.status == .initial)  {
 
                         if let requiredDocumentTypes = self?.requiredDocumentTypes {
                             self?.processDocuments(documentTypes: requiredDocumentTypes, userDocuments: userDocuments)

@@ -16,6 +16,7 @@ enum DocumentStatus {
     case completed
     case pending
     case rejected
+    case initial
     case none
 
     init(status: String) {
@@ -27,6 +28,8 @@ enum DocumentStatus {
             self = .rejected
         case "pending":
             self = .pending
+        case "init":
+            self = .initial
         default:
             self = .none
         }
