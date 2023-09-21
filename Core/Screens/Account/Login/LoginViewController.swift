@@ -38,20 +38,16 @@ class LoginViewController: UIViewController {
     @IBOutlet private var leftOrView: UIView!
     @IBOutlet private var orLabel: UILabel!
 
+    //
     // Variables
-    var shouldRememberUser: Bool = true
-    var noSocketLoggedUser: Bool = false
+    private var shouldRememberUser: Bool = true
 
     private var shouldPresentRegisterFlow: Bool
     private let registrationFormDataKey = "RegistrationFormDataKey"
 
-    var cancellables = Set<AnyCancellable>()
+    private var cancellables = Set<AnyCancellable>()
 
-    let spinnerViewController = LoadingSpinnerViewController()
-
-    var dropInComponent: DropInComponent?
-    var paymentsDropIn: PaymentsDropIn?
-    var depositOnRegisterViewController: DepositOnRegisterViewController?
+    private let spinnerViewController = LoadingSpinnerViewController()
 
     init(shouldPresentRegisterFlow: Bool = false) {
         self.shouldPresentRegisterFlow = shouldPresentRegisterFlow
@@ -87,55 +83,6 @@ class LoginViewController: UIViewController {
                 self?.loginButton.isEnabled = validFields
             })
             .store(in: &cancellables)
-
-        self.paymentsDropIn = PaymentsDropIn()
-
-        if let paymentsDropIn = self.paymentsDropIn {
-
-            paymentsDropIn.shouldShowPaymentDropIn
-                .sink(receiveValue: { [weak self] shouldShowDropIn in
-                    if shouldShowDropIn {
-                        self?.getPaymentDropIn()
-                    }
-                })
-                .store(in: &cancellables)
-
-            paymentsDropIn.isLoadingPublisher.sink(receiveValue: { [weak self] isLoading in
-                self?.depositOnRegisterViewController?.isLoading = isLoading
-            })
-            .store(in: &cancellables)
-
-            paymentsDropIn.showErrorAlertTypePublisher
-                .sink(receiveValue: { [weak self] depositError in
-                    switch depositError {
-                    case .error(let message):
-                        // self?.depositOnRegisterViewController?.showErrorAlert(errorTitle: localized("deposit_error"), errorMessage: message)
-
-                        let genericAvatarErrorViewController = GenericAvatarErrorViewController()
-
-                        genericAvatarErrorViewController.setTextInfo(title: localized("deposit_error"), subtitle: message)
-
-                        genericAvatarErrorViewController.didTapCloseAction = { [weak self] in
-
-                            genericAvatarErrorViewController.dismiss(animated: true)
-                        }
-
-                        genericAvatarErrorViewController.didTapBackAction = { [weak self] in
-
-                            genericAvatarErrorViewController.dismiss(animated: true)
-                        }
-
-                        self?.depositOnRegisterViewController?.present(genericAvatarErrorViewController, animated: true)
-                    default:
-                        ()
-                    }
-                })
-                .store(in: &cancellables)
-
-            paymentsDropIn.showPaymentStatus = { [weak self] paymentStatus, paymentId in
-                self?.showPaymentStatusAlert(paymentStatus: paymentStatus)
-            }
-        }
 
     }
 
@@ -412,8 +359,7 @@ class LoginViewController: UIViewController {
 
         Env.servicesProvider.setUserConsents(consentVersionIds: [UserConsentType.sms.versionId, UserConsentType.email.versionId])
             .receive(on: DispatchQueue.main)
-            .sink(receiveCompletion: { [weak self] completion in
-
+            .sink(receiveCompletion: { completion in
                 switch completion {
                 case .finished:
                     ()
@@ -421,11 +367,12 @@ class LoginViewController: UIViewController {
                     print("SET USER CONSENTS REGISTER ERROR: \(error)")
                 }
 
-            }, receiveValue: { [weak self] basicResponse in
+            }, receiveValue: { _ in
                 UserDefaults.standard.notificationsUserSettings.notificationsSms = true
                 UserDefaults.standard.notificationsUserSettings.notificationsEmail = true
             })
-            .store(in: &cancellables)
+            .store(in: &self.cancellables)
+        
     }
 
     private func showRegisterFeedbackViewController(onNavigationController navigationController: UINavigationController) {
@@ -471,115 +418,26 @@ class LoginViewController: UIViewController {
             self?.closeLoginRegisterFlow()
         }
         limitsOnRegisterViewController.triggeredContinueAction = { [weak self] in
-            self?.showDepositOnRegisterViewController(onNavigationController: navigationController)
+            self?.showDepositViewController(onNavigationController: navigationController)
         }
         navigationController.pushViewController(limitsOnRegisterViewController, animated: true)
     }
 
-    private func showDepositOnRegisterViewController(onNavigationController navigationController: UINavigationController) {
-        let depositOnRegisterViewController = DepositOnRegisterViewController()
-
-        self.depositOnRegisterViewController = depositOnRegisterViewController
-
-        depositOnRegisterViewController.didTapBackButtonAction = {
+    private func showDepositViewController(onNavigationController navigationController: UINavigationController) {
+        
+        let depositViewController = DepositViewController()
+        
+        depositViewController.didTapBackButtonAction = {
             navigationController.popViewController(animated: true)
         }
-        depositOnRegisterViewController.didTapCancelButtonAction = { [weak self] in
+        depositViewController.didTapCancelButtonAction = { [weak self] in
             self?.closeLoginRegisterFlow()
         }
-
-        depositOnRegisterViewController.didTapDepositButtonAction = { [weak self] amount in
-
-            if depositOnRegisterViewController.bonusState == .accepted {
-                if let bonusId = depositOnRegisterViewController.availableBonuses.value.first?.id {
-                    self?.redeemBonus(bonusId: bonusId, amountText: amount)
-                }
-            }
-            else {
-                self?.paymentsDropIn?.getDepositInfo(amountText: amount)
-            }
-
+        depositViewController.shouldDismissAction = { [weak self] in
+            self?.closeLoginRegisterFlow()
         }
-
-        depositOnRegisterViewController.getOptInBonus = { [weak self] in
-            self?.getOptInBonus()
-        }
-
-        depositOnRegisterViewController.didTapBonusDetailAction = { [weak self] availableBonus in
-
-            let bonus = ServiceProviderModelMapper.applicableBonus(fromServiceProviderAvailableBonus: availableBonus)
-
-            let bonusDetailViewModel = BonusDetailViewModel(bonus: bonus)
-            let bonusDetailViewController = BonusDetailViewController(viewModel: bonusDetailViewModel)
-
-            navigationController.pushViewController(bonusDetailViewController, animated: true)
-        }
-
-        navigationController.pushViewController(depositOnRegisterViewController, animated: true)
-    }
-
-    private func getOptInBonus() {
-
-        Env.servicesProvider.getAvailableBonuses()
-            .receive(on: DispatchQueue.main)
-            .sink(receiveCompletion: { [weak self] completion in
-
-                switch completion {
-                case .finished:
-                    ()
-                case .failure(let error):
-                    print("AVAILABLE BONUSES ERROR: \(error)")
-                }
-
-            }, receiveValue: { [weak self] availableBonuses in
-
-                let filteredBonus = availableBonuses.filter({
-                    $0.type == "DEPOSIT"
-                })
-
-                self?.depositOnRegisterViewController?.availableBonuses.send(filteredBonus)
-            })
-            .store(in: &cancellables)
-
-    }
-
-    private func redeemBonus(bonusId: String, amountText: String) {
-
-        if let partyId = Env.userSessionStore.userProfilePublisher.value?.userIdentifier {
-
-            Env.servicesProvider.redeemAvailableBonus(partyId: partyId, code: bonusId)
-                .receive(on: DispatchQueue.main)
-                .sink(receiveCompletion: { [weak self] completion in
-
-                    switch completion {
-                    case .finished:
-                        ()
-                    case .failure(let error):
-                        print("REDEEM AVAILABLE BONUS ERROR: \(error)")
-                        switch error {
-                        case .errorMessage(let message):
-                            if message == "BONUSPLAN_NOT_FOUND" {
-                                print("REDEEM BONUS ERROR: \(message)")
-
-                            }
-                            else {
-                                print("REDEEM BONUS ERROR: \(message)")
-                            }
-                        default:
-                            ()
-                        }
-
-                        self?.depositOnRegisterViewController?.showErrorAlert(errorTitle: localized("error"), errorMessage: localized("bonus_dialog_error"))
-                    }
-                }, receiveValue: { [weak self] redeemAvailableBonusResponse in
-
-                    print("REDEEM CODE SUCCESS: \(redeemAvailableBonusResponse)")
-
-                    self?.paymentsDropIn?.getDepositInfo(amountText: amountText)
-
-                })
-                .store(in: &cancellables)
-        }
+        
+        navigationController.pushViewController(depositViewController, animated: true)
     }
 
     private func deleteCachedRegistrationData() {
@@ -843,56 +701,6 @@ class LoginViewController: UIViewController {
         let recoverPasswordViewController = RecoverPasswordViewController(viewModel: recoverPasswordViewModel)
 
         self.navigationController?.pushViewController(recoverPasswordViewController, animated: true)
-    }
-
-    private func getPaymentDropIn() {
-
-        if let paymentDropIn = self.paymentsDropIn?.setupPaymentDropIn() {
-
-            self.dropInComponent = paymentDropIn
-
-            if let depositOnRegisterViewController {
-                depositOnRegisterViewController.present(paymentDropIn.viewController, animated: true)
-            }
-
-        }
-
-    }
-
-    private func showPaymentStatusAlert(paymentStatus: PaymentStatus) {
-
-        switch paymentStatus {
-        case .authorised:
-
-            Env.userSessionStore.refreshUserWalletAfterDelay()
-
-            let genericAvatarSuccessViewController = GenericAvatarSuccessViewController()
-            genericAvatarSuccessViewController.setTextInfo(title: "\(localized("success"))!", subtitle: localized("first_deposit_success_message"))
-            genericAvatarSuccessViewController.didTapContinueAction = { [weak self] in
-                self?.closeLoginRegisterFlow()
-            }
-            genericAvatarSuccessViewController.didTapCloseAction = { [weak self] in
-                self?.closeLoginRegisterFlow()
-            }
-            self.depositOnRegisterViewController?.navigationController?.pushViewController(genericAvatarSuccessViewController, animated: true)
-
-        case .refused:
-
-            Env.userSessionStore.refreshUserWalletAfterDelay()
-
-            let genericAvatarErrorViewController = GenericAvatarErrorViewController()
-            genericAvatarErrorViewController.setTextInfo(title: "\(localized("oh_no"))!", subtitle: localized("deposit_error_message"))
-            genericAvatarErrorViewController.didTapBackAction = { [weak self] in
-                genericAvatarErrorViewController.navigationController?.popViewController(animated: true)
-            }
-            genericAvatarErrorViewController.didTapCloseAction = { [weak self] in
-                self?.closeLoginRegisterFlow()
-            }
-            self.depositOnRegisterViewController?.navigationController?.pushViewController(genericAvatarErrorViewController, animated: true)
-        case .startedProcessing:
-            break
-        }
-
     }
 
 }

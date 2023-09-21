@@ -223,8 +223,6 @@ class PaymentsDropIn {
             }
         }
         
-
-
     }
     
     func setupPaymentDropIn() -> DropInComponent? {
@@ -245,12 +243,14 @@ class PaymentsDropIn {
         let payment = Payment(amount: Amount(value: Int(self.dropInDepositAmount) ?? 0, currencyCode: "EUR"), countryCode: "FR")
         let dropInConfiguration = DropInComponent.Configuration()
         
+        dropInConfiguration.card = DropInComponent.Card(showsStorePaymentMethodField: false)
+        
         if let applePayPayment = try? ApplePayPayment(payment: payment, brand: "Betsson France") {
             dropInConfiguration.applePay = ApplePayComponent.Configuration.init(payment: applePayPayment, 
                                                                                 merchantIdentifier: "merchant.com.Adyen.betssonfrance")
-
-            //dropInConfiguration.applePay?.allowOnboarding = true
+            // dropInConfiguration.applePay?.allowOnboarding = true
         }
+        
         
         let adyenContext = AdyenContext(apiContext: apiContext, payment: payment)
         

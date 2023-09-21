@@ -16,12 +16,18 @@ import SafariServices
 
 class DepositViewController: UIViewController {
 
+    public var shouldDismissAction: (() -> Void)? = nil
+    public var didTapBackButtonAction: (() -> Void)? = nil
+    public var didTapCancelButtonAction: (() -> Void)? = nil
+    public var shouldRefreshUserWallet: (() -> Void)? = nil
+    
     @IBOutlet private var topView: UIView!
     @IBOutlet private var containerView: UIView!
     @IBOutlet private var navigationView: GradientView!
     @IBOutlet private var navigationLabel: UILabel!
     @IBOutlet private var navigationButton: UIButton!
-
+    @IBOutlet private var backButton: UIButton!
+    
     @IBOutlet private var backgroundGradientView: GradientView!
     @IBOutlet private var animationBaseView: UIView!
     @IBOutlet private var shapeView: UIView!
@@ -75,14 +81,12 @@ class DepositViewController: UIViewController {
     private var viewModel: DepositViewModel
 
     // MARK: Public Properties
-    var currentSelectedButton: UIButton?
-    var cancellables = Set<AnyCancellable>()
+    private var currentSelectedButton: UIButton?
+    private var cancellables = Set<AnyCancellable>()
 
-    var dropInComponent: DropInComponent?
+    private var dropInComponent: DropInComponent?
 
-    var shouldRefreshUserWallet: (() -> Void)?
-    
-    var hasBonus: Bool = false {
+    private var hasBonus: Bool = false {
         didSet {
             self.bonusContentView.isHidden = !hasBonus
 
@@ -160,7 +164,11 @@ class DepositViewController: UIViewController {
     }
 
     func commonInit() {
-
+        self.backButton.isHidden = true
+        self.backButton.addTarget(self, action: #selector(didTapBackButton), for: .primaryActionTriggered)
+        
+        self.navigationButton.addTarget(self, action: #selector(didTapCloseButton), for: .primaryActionTriggered)
+        
         self.navigationLabel.text = localized("deposit")
         self.navigationLabel.font = AppFont.with(type: .bold, size: 17)
 
@@ -536,12 +544,16 @@ class DepositViewController: UIViewController {
     }
 
     func showPaymentFeedbackError() {
+        if let presentedViewController = self.presentedViewController {
+            presentedViewController.dismiss(animated: false)
+        }
+        
         self.shouldRefreshUserWallet?()
         
         let genericAvatarErrorViewController = GenericAvatarErrorViewController()
         genericAvatarErrorViewController.setTextInfo(title: "\(localized("oh_no"))!", subtitle: localized("deposit_error_message"))
-        genericAvatarErrorViewController.didTapCloseAction = {
-            genericAvatarErrorViewController.dismiss(animated: true)
+        genericAvatarErrorViewController.didTapCloseAction = { [weak self] in
+            self?.shouldDismiss()
         }
         genericAvatarErrorViewController.didTapBackAction = {
             genericAvatarErrorViewController.navigationController?.popViewController(animated: true)
@@ -550,6 +562,10 @@ class DepositViewController: UIViewController {
     }
     
     func showPaymentFeedbackLoading(paymentId: String) {
+        if let presentedViewController = self.presentedViewController {
+            presentedViewController.dismiss(animated: false)
+        }
+        
         let genericAvatarWarningViewController = GenericAvatarWarningViewController(paymentId: paymentId)
         genericAvatarWarningViewController.continueWithPaymentStatusOk = { [weak self] isPaymentStatusOk in
             if isPaymentStatusOk {
@@ -563,14 +579,18 @@ class DepositViewController: UIViewController {
     }
     
     func showPaymentFeedbackSuccess() {
+        if let presentedViewController = self.presentedViewController {
+            presentedViewController.dismiss(animated: false)
+        }
+        
         self.shouldRefreshUserWallet?()
         
         let depositSuccessViewController = GenericAvatarSuccessViewController()
         depositSuccessViewController.didTapContinueAction = { [weak self] in
-            self?.dismiss(animated: true)
+            self?.shouldDismiss()
         }
         depositSuccessViewController.didTapCloseAction = { [weak self] in
-            self?.dismiss(animated: true)
+            self?.shouldDismiss()
         }
         depositSuccessViewController.setTextInfo(title: "\(localized("success"))!", subtitle: localized("deposit_success_message"))
         self.navigationController?.pushViewController(depositSuccessViewController, animated: true)
@@ -789,14 +809,6 @@ class DepositViewController: UIViewController {
     }
 
     @IBAction private func didTapNextButton() {
-        
-//        let genericPayment = GenericAvatarWarningViewController(paymentId: "3550")
-//        genericPayment.continueWithPaymentStatusOk = { paymentOk in
-//            print("")
-//        }
-//        self.navigationController?.pushViewController(genericPayment, animated: true)
-//
-
         let amountText = self.depositHeaderTextFieldView.text
 
         if self.viewModel.bonusState == .declined {
@@ -841,8 +853,47 @@ class DepositViewController: UIViewController {
         self.navigationController?.pushViewController(genericAvatarErrorViewController, animated: true)
     }
 
-    @IBAction private func didTapCloseButton() {
-        if presentingViewController != nil {
+    //
+    // Navigation iteraction
+    //
+    @objc private func didTapBackButton() {
+        if let action = self.didTapBackButtonAction {
+            action()
+        }
+        else {
+            self.backButtonDefaultAction()
+        }
+    }
+    
+    @objc private func didTapCloseButton() {
+        if let action = self.didTapCancelButtonAction {
+            action()
+        }
+        else {
+            self.closeButtonDefaultAction()
+        }
+    }
+    
+    private func shouldDismiss() {
+        if let action = self.shouldDismissAction {
+            action()
+        }
+        else {
+            self.shouldDimsissDefaultAction()
+        }
+    }
+    
+    //
+    // Navigation default actions
+    //
+    private func backButtonDefaultAction() {
+        self.navigationController?.popViewController(animated: true)
+    }
+    
+    
+    private func closeButtonDefaultAction() {
+        
+        if self.presentingViewController != nil {
             self.navigationController?.dismiss(animated: true, completion: nil)
         }
         else {
@@ -850,7 +901,13 @@ class DepositViewController: UIViewController {
         }
         
     }
+    
+    private func shouldDimsissDefaultAction() {
+        self.dismiss(animated: true)
+    }
 
+    //
+    //
     @objc func didTapBackground() {
         self.resignFirstResponder()
 

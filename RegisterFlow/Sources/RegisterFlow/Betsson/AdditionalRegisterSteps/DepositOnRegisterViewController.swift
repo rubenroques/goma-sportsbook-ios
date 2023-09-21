@@ -379,13 +379,6 @@ public class DepositOnRegisterViewController: UIViewController {
 
         let amount = self.depositHeaderTextFieldView.text
 
-//        if declineBonusView.isChecked {
-//            self.showBonusAlert(bonusAmount: amount)
-//        }
-//        else if acceptBonusView.isChecked {
-//            self.didTapDepositButtonAction(amount)
-//        }
-
         if self.bonusState == .declined {
             self.showBonusAlert(bonusAmount: amount)
         }

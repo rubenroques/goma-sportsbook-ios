@@ -6949,6 +6949,7 @@
 		45505F4628045F1100D4B53E /* SuggestedBetTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SuggestedBetTableViewCell.swift; sourceTree = "<group>"; };
 		45505F4928058E8300D4B53E /* HistoryRootViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HistoryRootViewController.swift; sourceTree = "<group>"; };
 		45505F4C28058EB900D4B53E /* BonusRootViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BonusRootViewController.swift; sourceTree = "<group>"; };
+		45539DD52ABC6152001B6BEC /* Betsson-PROD.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = "Betsson-PROD.entitlements"; sourceTree = "<group>"; };
 		4556439D26F2631700EE78FA /* FirebaseClientSettings.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FirebaseClientSettings.swift; sourceTree = "<group>"; };
 		455643A026F2634E00EE78FA /* GomaClientSettings.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GomaClientSettings.swift; sourceTree = "<group>"; };
 		455897E82A97FCAD00E39598 /* RePlayFeatureHelper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RePlayFeatureHelper.swift; sourceTree = "<group>"; };
@@ -7141,7 +7142,7 @@
 		45A33354298976E3008181E9 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = "Base.lproj/LaunchScreen-Betsson.storyboard"; sourceTree = "<group>"; };
 		45A33357298976E3008181E9 /* Betsson-UAT-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "Betsson-UAT-Info.plist"; sourceTree = "<group>"; };
 		45A33358298976E3008181E9 /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
-		45A33359298976E3008181E9 /* Betsson.entitlements */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.entitlements; path = Betsson.entitlements; sourceTree = "<group>"; };
+		45A33359298976E3008181E9 /* Betsson-UAT.entitlements */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.entitlements; path = "Betsson-UAT.entitlements"; sourceTree = "<group>"; };
 		45A3335A298976E3008181E9 /* TargetVariables.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TargetVariables.swift; sourceTree = "<group>"; };
 		45A3335C298976E3008181E9 /* Betsson-Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = "Betsson-Assets.xcassets"; sourceTree = "<group>"; };
 		45A3335D298976E3008181E9 /* Colors.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Colors.xcassets; sourceTree = "<group>"; };
@@ -9185,7 +9186,8 @@
 			children = (
 				45A3335E298976E3008181E9 /* ClientVariables.swift */,
 				45A3335A298976E3008181E9 /* TargetVariables.swift */,
-				45A33359298976E3008181E9 /* Betsson.entitlements */,
+				45A33359298976E3008181E9 /* Betsson-UAT.entitlements */,
+				45539DD52ABC6152001B6BEC /* Betsson-PROD.entitlements */,
 				45F6BE3B2AB3739F00C81DE1 /* Misc-PROD */,
 				45B9F97E2A1E2BCE00DA2B88 /* home_template.js */,
 				45A33351298976E3008181E9 /* LaunchScreen */,
@@ -19107,10 +19109,10 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = "AppIcon-Betsson";
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
-				CODE_SIGN_ENTITLEMENTS = Clients/Betsson/Betsson.entitlements;
+				CODE_SIGN_ENTITLEMENTS = "Clients/Betsson/Betsson-PROD.entitlements";
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Manual;
-				CURRENT_PROJECT_VERSION = 1245;
+				CURRENT_PROJECT_VERSION = 1260;
 				DEVELOPMENT_TEAM = QN2DYX5K4M;
 				INFOPLIST_FILE = "$(SRCROOT)/Clients/Betsson/Misc-PROD/Betsson-PROD-Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 13.0;
@@ -19136,11 +19138,13 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = "AppIcon-Betsson";
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
-				CODE_SIGN_ENTITLEMENTS = Clients/Betsson/Betsson.entitlements;
+				CODE_SIGN_ENTITLEMENTS = "Clients/Betsson/Betsson-PROD.entitlements";
 				CODE_SIGN_IDENTITY = "Apple Distribution";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution";
 				CODE_SIGN_STYLE = Manual;
-				CURRENT_PROJECT_VERSION = 1245;
+				CURRENT_PROJECT_VERSION = 1260;
 				DEVELOPMENT_TEAM = QN2DYX5K4M;
+				"DEVELOPMENT_TEAM[sdk=iphoneos*]" = QN2DYX5K4M;
 				INFOPLIST_FILE = "$(SRCROOT)/Clients/Betsson/Misc-PROD/Betsson-PROD-Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 13.0;
 				LD_RUNPATH_SEARCH_PATHS = (
@@ -19152,6 +19156,7 @@
 				PRODUCT_BUNDLE_IDENTIFIER = fr.betsson.ios.app;
 				PRODUCT_NAME = Betsson;
 				PROVISIONING_PROFILE_SPECIFIER = "Betsson - Distribution - Ad Hoc";
+				"PROVISIONING_PROFILE_SPECIFIER[sdk=iphoneos*]" = "Betsson - Distribution - Ad Hoc";
 				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
 				SUPPORTS_MACCATALYST = NO;
 				SUPPORTS_MAC_DESIGNED_FOR_IPHONE_IPAD = NO;
@@ -19223,11 +19228,13 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = "AppIcon-Betsson";
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
-				CODE_SIGN_ENTITLEMENTS = Clients/Betsson/Betsson.entitlements;
+				CODE_SIGN_ENTITLEMENTS = "Clients/Betsson/Betsson-UAT.entitlements";
 				CODE_SIGN_IDENTITY = "Apple Development";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "Apple Development";
 				CODE_SIGN_STYLE = Manual;
-				CURRENT_PROJECT_VERSION = 1250;
+				CURRENT_PROJECT_VERSION = 1260;
 				DEVELOPMENT_TEAM = 422GNXXZJR;
+				"DEVELOPMENT_TEAM[sdk=iphoneos*]" = 422GNXXZJR;
 				INFOPLIST_FILE = "$(SRCROOT)/Clients/Betsson/Misc-UAT/Betsson-UAT-Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 13.0;
 				LD_RUNPATH_SEARCH_PATHS = (
@@ -19239,6 +19246,7 @@
 				PRODUCT_BUNDLE_IDENTIFIER = com.gomagaming.betsson;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "match Development com.gomagaming.betsson";
+				"PROVISIONING_PROFILE_SPECIFIER[sdk=iphoneos*]" = "match Development com.gomagaming.betsson";
 				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
 				SUPPORTS_MACCATALYST = NO;
 				SUPPORTS_MAC_DESIGNED_FOR_IPHONE_IPAD = NO;
@@ -19252,11 +19260,13 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = "AppIcon-Betsson";
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
-				CODE_SIGN_ENTITLEMENTS = Clients/Betsson/Betsson.entitlements;
+				CODE_SIGN_ENTITLEMENTS = "Clients/Betsson/Betsson-UAT.entitlements";
 				CODE_SIGN_IDENTITY = "Apple Distribution";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution";
 				CODE_SIGN_STYLE = Manual;
-				CURRENT_PROJECT_VERSION = 1250;
+				CURRENT_PROJECT_VERSION = 1260;
 				DEVELOPMENT_TEAM = 422GNXXZJR;
+				"DEVELOPMENT_TEAM[sdk=iphoneos*]" = 422GNXXZJR;
 				INFOPLIST_FILE = "$(SRCROOT)/Clients/Betsson/Misc-UAT/Betsson-UAT-Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 13.0;
 				LD_RUNPATH_SEARCH_PATHS = (
@@ -19268,6 +19278,7 @@
 				PRODUCT_BUNDLE_IDENTIFIER = com.gomagaming.betsson;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "match AdHoc com.gomagaming.betsson";
+				"PROVISIONING_PROFILE_SPECIFIER[sdk=iphoneos*]" = "match AdHoc com.gomagaming.betsson";
 				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
 				SUPPORTS_MACCATALYST = NO;
 				SUPPORTS_MAC_DESIGNED_FOR_IPHONE_IPAD = NO;

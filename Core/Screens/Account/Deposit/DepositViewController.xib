@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="21507" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="21701" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
     <device id="retina6_1" orientation="portrait" appearance="light"/>
     <dependencies>
         <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="21505"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="21679"/>
         <capability name="Named colors" minToolsVersion="9.0"/>
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
         <capability name="System colors in document resources" minToolsVersion="11.0"/>
@@ -28,6 +28,7 @@
                 <outlet property="amount50Button" destination="atD-RP-Syo" id="9S5-oQ-bHe"/>
                 <outlet property="amountButtonStackView" destination="cjs-fx-QLC" id="JvS-3a-M4V"/>
                 <outlet property="animationBaseView" destination="IMF-yC-hsC" id="pG9-Qv-zdr"/>
+                <outlet property="backButton" destination="Flc-vx-VaF" id="4L1-9N-NJq"/>
                 <outlet property="backgroundGradientView" destination="YJ8-mw-xhc" id="Buo-3R-swz"/>
                 <outlet property="bonusContentView" destination="l5U-K3-Duk" id="Fpm-nF-Adb"/>
                 <outlet property="bonusDetailLabel" destination="7XK-qW-d6X" id="EJl-5K-eo7"/>
@@ -315,6 +316,16 @@
                 <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="puZ-O4-0OE" customClass="GradientView" customModule="Betsson" customModuleProvider="target">
                     <rect key="frame" x="0.0" y="48" width="414" height="44"/>
                     <subviews>
+                        <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Flc-vx-VaF">
+                            <rect key="frame" x="8" y="2" width="36" height="40"/>
+                            <constraints>
+                                <constraint firstAttribute="width" constant="36" id="JLN-S4-ej5"/>
+                                <constraint firstAttribute="height" constant="40" id="f6j-Ir-JwK"/>
+                            </constraints>
+                            <state key="normal" image="back_icon">
+                                <color key="titleColor" name="highlightPrimary"/>
+                            </state>
+                        </button>
                         <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="p3M-Lq-Kqx">
                             <rect key="frame" x="186.5" y="12" width="41.5" height="20.5"/>
                             <fontDescription key="fontDescription" type="system" pointSize="17"/>
@@ -329,14 +340,14 @@
                             <state key="normal" title="Close">
                                 <color key="titleColor" name="highlightPrimary"/>
                             </state>
-                            <connections>
-                                <action selector="didTapCloseButton" destination="-1" eventType="touchUpInside" id="oPe-Lw-uVP"/>
-                            </connections>
                         </button>
                     </subviews>
                     <constraints>
+                        <constraint firstItem="Flc-vx-VaF" firstAttribute="centerY" secondItem="puZ-O4-0OE" secondAttribute="centerY" id="9Ny-aP-Idq"/>
                         <constraint firstAttribute="trailing" secondItem="xFA-Gb-EU8" secondAttribute="trailing" constant="8" id="E09-tH-atU"/>
+                        <constraint firstItem="xFA-Gb-EU8" firstAttribute="leading" relation="greaterThanOrEqual" secondItem="p3M-Lq-Kqx" secondAttribute="trailing" constant="2" id="T0x-Qf-f24"/>
                         <constraint firstItem="xFA-Gb-EU8" firstAttribute="centerY" secondItem="puZ-O4-0OE" secondAttribute="centerY" id="T3m-l6-ztZ"/>
+                        <constraint firstItem="Flc-vx-VaF" firstAttribute="leading" secondItem="puZ-O4-0OE" secondAttribute="leading" constant="8" id="ZQ7-bg-PTI"/>
                         <constraint firstItem="p3M-Lq-Kqx" firstAttribute="centerY" secondItem="puZ-O4-0OE" secondAttribute="centerY" id="gHx-iy-XCk"/>
                         <constraint firstItem="p3M-Lq-Kqx" firstAttribute="centerX" secondItem="puZ-O4-0OE" secondAttribute="centerX" id="iAK-9b-JNN"/>
                         <constraint firstAttribute="height" constant="44" id="vkv-Gq-IYM"/>
@@ -381,8 +392,9 @@
         </view>
     </objects>
     <resources>
+        <image name="back_icon" width="9" height="15"/>
         <namedColor name="highlightPrimary">
-            <color red="1" green="0.40000000000000002" blue="0.0" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+            <color red="1" green="0.14901960784313725" blue="0.0" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
         </namedColor>
         <systemColor name="systemBackgroundColor">
             <color white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
