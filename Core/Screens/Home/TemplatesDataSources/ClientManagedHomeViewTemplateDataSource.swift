@@ -109,9 +109,6 @@ class ClientManagedHomeViewTemplateDataSource {
     // Make your own bet call to action
     var shouldShowOwnBetCallToAction: Bool = true
 
-    // Make your own bet call to action
-    var shouldShowTopCompetitionsShortcuts: Bool = true
-
     // PromotedSports
     var promotedSports: [PromotedSport] = [] {
         didSet {
@@ -126,6 +123,8 @@ class ClientManagedHomeViewTemplateDataSource {
 
     var matchLineTableCellViewModelCache: [String: MatchLineTableCellViewModel] = [:]
 
+    private var topCompetitionsLineCellViewModel: TopCompetitionsLineCellViewModel = TopCompetitionsLineCellViewModel(topCompetitions: [])
+    
     //
     private var cancellables: Set<AnyCancellable> = []
 
@@ -141,7 +140,7 @@ class ClientManagedHomeViewTemplateDataSource {
         self.fetchPromotedSports()
         self.fetchPromotionalStories()
         self.fetchSupplementaryEventsIds()
-
+        self.fetchTopCompetitions()
     }
 
     // User alerts
@@ -296,6 +295,64 @@ class ClientManagedHomeViewTemplateDataSource {
             .store(in: &self.cancellables)
 
     }
+    
+    
+    private func fetchTopCompetitions() {
+
+        Env.servicesProvider.getTopCompetitions()
+            .sink(receiveCompletion: { completion in
+                switch completion {
+                case .finished:
+                    ()
+                case .failure(let error):
+                    print("TopCompetitionsLineCellViewModel getTopCompetitionsIdentifier error: \(error)")
+                }
+            }, receiveValue: { [weak self] topCompetitions in
+                let convertedCompetitions = self?.convertTopCompetitions(topCompetitions) ?? []
+                self?.topCompetitionsLineCellViewModel = TopCompetitionsLineCellViewModel(topCompetitions: convertedCompetitions)
+                self?.refreshPublisher.send()
+            })
+            .store(in: &cancellables)
+
+    }
+
+    private func processTopCompetitions(topCompetitions: [TopCompetitionPointer]) -> [String: [String]] {
+        var competitionsIdentifiers: [String: [String]] = [:]
+        for topCompetition in topCompetitions {
+            let competitionComponents = topCompetition.competitionId.components(separatedBy: "/")
+            let competitionName = competitionComponents[competitionComponents.count - 2].lowercased()
+            if let competitionId = competitionComponents.last {
+                if let topCompetition = competitionsIdentifiers[competitionName] {
+                    if !topCompetition.contains(where: {
+                        $0 == competitionId
+                    }) {
+                        competitionsIdentifiers[competitionName]?.append(competitionId)
+                    }
+
+                }
+                else {
+                    competitionsIdentifiers[competitionName] = [competitionId]
+                }
+            }
+        }
+        return competitionsIdentifiers
+    }
+
+    private func convertTopCompetitions(_ topCompetitions: [TopCompetition]) -> [TopCompetitionItemCellViewModel] {
+        return topCompetitions.map { pointer -> TopCompetitionItemCellViewModel? in
+            let mappedSport = ServiceProviderModelMapper.sport(fromServiceProviderSportType: pointer.sportType)
+            if let pointerCountry = pointer.country {
+                let mappedCountry = ServiceProviderModelMapper.country(fromServiceProviderCountry: pointerCountry)
+                return TopCompetitionItemCellViewModel(id: pointer.id,
+                                                       name: pointer.name,
+                                                       sport: mappedSport,
+                                                       country: mappedCountry)
+            }
+            return nil
+        }
+        .compactMap({ $0 })
+
+    }
 
 }
 
@@ -333,7 +390,7 @@ extension ClientManagedHomeViewTemplateDataSource: HomeViewTemplateDataSource {
         case 5:
             return self.shouldShowOwnBetCallToAction ? 1 : 0
         case 6:
-            return self.shouldShowTopCompetitionsShortcuts ? 1 : 0
+            return !self.topCompetitionsLineCellViewModel.isEmpty ? 1 : 0
         case 7:
             return self.supplementaryEventIds.count
         default:
@@ -399,7 +456,7 @@ extension ClientManagedHomeViewTemplateDataSource: HomeViewTemplateDataSource {
         case 4:
             return true
         case 6:
-            return true
+            return !self.topCompetitionsLineCellViewModel.isEmpty
         default:
             ()
         }
@@ -542,6 +599,10 @@ extension ClientManagedHomeViewTemplateDataSource: HomeViewTemplateDataSource {
             return matchLineTableCellViewModel
         }
 
+    }
+    
+    func topCompetitionsLineCellViewModel(forSection section: Int) -> TopCompetitionsLineCellViewModel? {
+        return self.topCompetitionsLineCellViewModel
     }
 
 }

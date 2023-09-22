@@ -181,4 +181,8 @@ extension HomeViewModel {
         return self.homeViewTemplateDataSource.matchLineTableCellViewModel(forSection: section, forIndex: index)
     }
 
+    func topCompetitionsLineCellViewModel(forSection section: Int) -> TopCompetitionsLineCellViewModel? {
+        return self.homeViewTemplateDataSource.topCompetitionsLineCellViewModel(forSection: section)
+    }
+    
 }

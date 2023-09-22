@@ -551,7 +551,11 @@ extension StaticHomeViewTemplateDataSource: HomeViewTemplateDataSource {
     }
 
     func setStoryLineViewModel(viewModel: StoriesLineCellViewModel) {
-        ()
+        
+    }
+    
+    func topCompetitionsLineCellViewModel(forSection section: Int) -> TopCompetitionsLineCellViewModel? {
+        return nil
     }
     
 }
