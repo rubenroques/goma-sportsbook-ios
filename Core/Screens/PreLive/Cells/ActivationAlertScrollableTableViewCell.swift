@@ -113,7 +113,7 @@ extension ActivationAlertScrollableTableViewCell: UICollectionViewDelegate, UICo
         if width > 390 {
             width = 390
         }
-        return CGSize(width: width, height: 110)
+        return CGSize(width: width, height: 172)
     }
 
 }

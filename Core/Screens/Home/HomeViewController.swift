@@ -851,7 +851,7 @@ extension HomeViewController: UITableViewDelegate, UITableViewDataSource {
                 }
             }
         case .userProfile:
-            return 126
+            return 210
         case .footerBanner:
             return UITableView.automaticDimension
         case .quickSwipeStack:
@@ -921,7 +921,7 @@ extension HomeViewController: UITableViewDelegate, UITableViewDataSource {
                 }
             }
         case .userProfile:
-            return 126
+            return 210
         case .footerBanner:
             return 120
         case .quickSwipeStack:
