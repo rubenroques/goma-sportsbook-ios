@@ -159,6 +159,10 @@ extension UIColor {
             return UIColor(named: "backgroundHeaderGradient2") ?? Self.headerGradient2
         }
 
+        static var highlightTertiary: UIColor {
+            return UIColor(named: "highlightTertiary") ?? Self.alertSuccess
+        }
+
     }
 
 }

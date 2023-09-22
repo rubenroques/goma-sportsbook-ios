@@ -120,6 +120,14 @@ class BonusViewModel {
                     self?.processAvailableBonus(bonuses: applicableBonus)
                 }
                 else {
+                    if let bonusAvailable = self?.bonusAvailable,
+                    bonusAvailable.isEmpty {
+                        self?.isBonusAvailableEmptyPublisher.send(true)
+                    }
+                    else {
+                        self?.isBonusAvailableEmptyPublisher.send(false)
+                    }
+
                     self?.isBonusApplicableLoading.send(false)
                     self?.isBonusClaimableLoading.send(false)
                 }

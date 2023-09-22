@@ -168,16 +168,16 @@
                     <rect key="frame" x="0.0" y="126" width="414" height="1312"/>
                     <subviews>
                         <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Eng-Gg-IcO">
-                            <rect key="frame" x="0.0" y="0.0" width="414" height="578"/>
+                            <rect key="frame" x="0.0" y="0.0" width="414" height="648"/>
                             <subviews>
                                 <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="VDW-H2-PFU">
-                                    <rect key="frame" x="0.0" y="358" width="414" height="30"/>
+                                    <rect key="frame" x="0.0" y="428" width="414" height="30"/>
                                     <constraints>
                                         <constraint firstAttribute="height" constant="30" id="K1M-c2-O3M"/>
                                     </constraints>
                                 </view>
                                 <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="zVU-2r-bIc">
-                                    <rect key="frame" x="0.0" y="388" width="414" height="190"/>
+                                    <rect key="frame" x="0.0" y="458" width="414" height="190"/>
                                     <subviews>
                                         <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" spacing="8" translatesAutoresizingMaskIntoConstraints="NO" id="XuX-QK-mls">
                                             <rect key="frame" x="0.0" y="0.0" width="414" height="190"/>
@@ -263,7 +263,7 @@ Sportsbook® All Rights Reserved</string>
                                     </constraints>
                                 </view>
                                 <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="lFI-1X-kZb">
-                                    <rect key="frame" x="0.0" y="0.0" width="414" height="388"/>
+                                    <rect key="frame" x="0.0" y="0.0" width="414" height="458"/>
                                     <subviews>
                                         <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" distribution="fillEqually" spacing="4" translatesAutoresizingMaskIntoConstraints="NO" id="r6R-XK-U3Z">
                                             <rect key="frame" x="50" y="8" width="314" height="132"/>
@@ -409,12 +409,12 @@ Sportsbook® All Rights Reserved</string>
                                             </subviews>
                                         </stackView>
                                         <stackView opaque="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="1bn-gy-5Xw">
-                                            <rect key="frame" x="20" y="250" width="374" height="130"/>
+                                            <rect key="frame" x="20" y="250" width="374" height="200"/>
                                             <subviews>
                                                 <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="fTo-pj-31Q" customClass="ActivationAlertScrollableView" customModule="Betsson" customModuleProvider="target">
-                                                    <rect key="frame" x="0.0" y="0.0" width="374" height="130"/>
+                                                    <rect key="frame" x="0.0" y="0.0" width="374" height="200"/>
                                                     <constraints>
-                                                        <constraint firstAttribute="height" constant="130" id="AR1-5w-JbD"/>
+                                                        <constraint firstAttribute="height" constant="200" id="AR1-5w-JbD"/>
                                                     </constraints>
                                                 </view>
                                             </subviews>
@@ -485,7 +485,7 @@ Sportsbook® All Rights Reserved</string>
         <image name="info_small_icon" width="11" height="11"/>
         <image name="logout_account_icon" width="18" height="19"/>
         <namedColor name="backgroundPrimary">
-            <color red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+            <color red="0.043137254901960784" green="0.043137254901960784" blue="0.043137254901960784" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
         </namedColor>
         <systemColor name="systemBackgroundColor">
             <color white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
