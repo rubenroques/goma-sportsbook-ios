@@ -6,6 +6,7 @@
 //
 
 import Foundation
+import RegisterFlow
 
 enum UserDefaultsKey: String {
 
@@ -24,6 +25,8 @@ enum UserDefaultsKey: String {
 
     case oddsValueType = "oddsValueType"
 
+    case startedUserRegisterInfo = "RegistrationFormDataKey"
+    
     var key: String {
         return self.rawValue
     }
@@ -74,13 +77,15 @@ extension UserDefaults {
     
     var cachedBetslipTickets: [BettingTicket] {
         get {
+            let defaultValue = [BettingTicket]()
             let bettingTickets: [BettingTicket]? = self.codable(forKey: UserDefaultsKey.cachedBetslipTickets.key)
             if let bettingTicketsValue = bettingTickets {
                 return bettingTicketsValue
             }
-            self.set([], forKey: UserDefaultsKey.cachedBetslipTickets.key)
+            
+            self.set(defaultValue, forKey: UserDefaultsKey.cachedBetslipTickets.key)
             self.synchronize()
-            return []
+            return defaultValue
         }
         set {
             self.set(codable: newValue, forKey: UserDefaultsKey.cachedBetslipTickets.key)
@@ -135,6 +140,31 @@ extension UserDefaults {
         }
         set {
             self.set(codable: newValue, forKey: UserDefaultsKey.notificationsUserSettings.key)
+            self.synchronize()
+        }
+    }
+    
+    var startedUserRegisterInfo: UserRegisterEnvelop? {
+        get {
+            let defaultValue = UserRegisterEnvelop()
+            let userRegisterEnvelop: UserRegisterEnvelop? = self.codable(forKey: UserDefaultsKey.startedUserRegisterInfo.key)
+            
+            if let userRegisterEnvelopValue = userRegisterEnvelop {
+                return userRegisterEnvelopValue
+            }
+            else {
+                self.set(codable: defaultValue, forKey: UserDefaultsKey.startedUserRegisterInfo.key)
+                self.synchronize()
+                return defaultValue
+            }
+        }
+        set {
+            if newValue == nil {
+                self.removeObject(forKey: UserDefaultsKey.startedUserRegisterInfo.key)
+            }
+            else {
+                self.set(codable: newValue, forKey: UserDefaultsKey.startedUserRegisterInfo.key)
+            }
             self.synchronize()
         }
     }

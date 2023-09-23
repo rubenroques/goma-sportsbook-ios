@@ -43,7 +43,6 @@ class LoginViewController: UIViewController {
     private var shouldRememberUser: Bool = true
 
     private var shouldPresentRegisterFlow: Bool
-    private let registrationFormDataKey = "RegistrationFormDataKey"
 
     private var cancellables = Set<AnyCancellable>()
 
@@ -291,15 +290,16 @@ class LoginViewController: UIViewController {
     }
 
     private func presentRegister(animated: Bool = true) {
-        let userRegisterEnvelop: UserRegisterEnvelop? = UserDefaults.standard.codable(forKey: self.registrationFormDataKey)
-        let userRegisterEnvelopValue: UserRegisterEnvelop = userRegisterEnvelop ?? UserRegisterEnvelop()
+
+        let userRegisterEnvelopValue: UserRegisterEnvelop = UserDefaults.standard.startedUserRegisterInfo ?? UserRegisterEnvelop()
 
         let userRegisterEnvelopUpdater = UserRegisterEnvelopUpdater(userRegisterEnvelop: userRegisterEnvelopValue)
 
         userRegisterEnvelopUpdater.didUpdateUserRegisterEnvelop
+            .removeDuplicates()
+            .print("userRegisterEnvelopUpdater: ")
             .sink(receiveValue: { (updatedUserEnvelop: UserRegisterEnvelop) in
-                UserDefaults.standard.set(codable: updatedUserEnvelop, forKey: self.registrationFormDataKey)
-                UserDefaults.standard.synchronize()
+                UserDefaults.standard.startedUserRegisterInfo = updatedUserEnvelop
             })
             .store(in: &self.cancellables)
 
@@ -441,8 +441,7 @@ class LoginViewController: UIViewController {
     }
 
     private func deleteCachedRegistrationData() {
-        UserDefaults.standard.removeObject(forKey: self.registrationFormDataKey)
-        UserDefaults.standard.synchronize()
+        UserDefaults.standard.startedUserRegisterInfo = nil
     }
 
     @objc func rememberUserOptionTapped() {
@@ -512,8 +511,6 @@ class LoginViewController: UIViewController {
                         self.showServerErrorStatus()
                     case .errorMessage(let errorMessage):
                         self.showServerErrorStatus(errorMessage: errorMessage)
-                    default:
-                        self.showServerErrorStatus()
                     }
                 case .finished:
                     ()

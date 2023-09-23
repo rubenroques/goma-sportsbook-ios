@@ -65,123 +65,171 @@ public class UserRegisterEnvelopUpdater {
     }
 
     func setGender(_ gender: UserRegisterEnvelop.Gender) {
-        self.userRegisterEnvelop.gender = gender
-        self.filledDataUpdated.send(self.userRegisterEnvelop)
+        var newUserEnvelop = self.userRegisterEnvelop
+        newUserEnvelop.gender = gender
+        self.filledDataUpdated.send(newUserEnvelop)
+        self.userRegisterEnvelop = newUserEnvelop
     }
     
     func setName(_ name: String?) {
-        self.userRegisterEnvelop.name = name
-        self.filledDataUpdated.send(self.userRegisterEnvelop)
+        var newUserEnvelop = self.userRegisterEnvelop
+        newUserEnvelop.name = name
+        self.filledDataUpdated.send(newUserEnvelop)
+        self.userRegisterEnvelop = newUserEnvelop
     }
 
     func setSurname(_ surname: String?) {
-        self.userRegisterEnvelop.surname = surname
-        self.filledDataUpdated.send(self.userRegisterEnvelop)
+        var newUserEnvelop = self.userRegisterEnvelop
+        newUserEnvelop.surname = surname
+        self.filledDataUpdated.send(newUserEnvelop)
+        self.userRegisterEnvelop = newUserEnvelop
     }
 
     func setAvatarName(_ avatarName: String) {
-        self.userRegisterEnvelop.avatarName = avatarName
-        self.filledDataUpdated.send(self.userRegisterEnvelop)
+        var newUserEnvelop = self.userRegisterEnvelop
+        newUserEnvelop.avatarName = avatarName
+        self.filledDataUpdated.send(newUserEnvelop)
+        self.userRegisterEnvelop = newUserEnvelop
     }
 
     func setNickname(_ nickname: String?) {
-        self.userRegisterEnvelop.nickname = nickname
-        self.filledDataUpdated.send(self.userRegisterEnvelop)
+        var newUserEnvelop = self.userRegisterEnvelop
+        newUserEnvelop.nickname = nickname
+        self.filledDataUpdated.send(newUserEnvelop)
+        self.userRegisterEnvelop = newUserEnvelop
     }
 
     func setDateOfBirth(_ dateOfBirth: Date) {
-        self.userRegisterEnvelop.dateOfBirth = dateOfBirth
-        self.filledDataUpdated.send(self.userRegisterEnvelop)
+        var newUserEnvelop = self.userRegisterEnvelop
+        newUserEnvelop.dateOfBirth = dateOfBirth
+        self.filledDataUpdated.send(newUserEnvelop)
+        self.userRegisterEnvelop = newUserEnvelop
     }
 
     func setCountryBirth(_ countryBirth: SharedModels.Country) {
-        self.userRegisterEnvelop.countryBirth = countryBirth
-        self.filledDataUpdated.send(self.userRegisterEnvelop)
+        var newUserEnvelop = self.userRegisterEnvelop
+        newUserEnvelop.countryBirth = countryBirth
+        self.filledDataUpdated.send(newUserEnvelop)
+        self.userRegisterEnvelop = newUserEnvelop
     }
 
     func setDepartmentOfBirth(_ deparmentOfBirth: String?) {
-        self.userRegisterEnvelop.deparmentOfBirth = deparmentOfBirth
-        self.filledDataUpdated.send(self.userRegisterEnvelop)
+        var newUserEnvelop = self.userRegisterEnvelop
+        newUserEnvelop.deparmentOfBirth = deparmentOfBirth
+        self.filledDataUpdated.send(newUserEnvelop)
+        self.userRegisterEnvelop = newUserEnvelop
     }
 
     func setPlaceBirth(_ placeBirth: String?) {
-        self.userRegisterEnvelop.placeBirth = placeBirth
-        self.filledDataUpdated.send(self.userRegisterEnvelop)
+        var newUserEnvelop = self.userRegisterEnvelop
+        newUserEnvelop.placeBirth = placeBirth
+        self.filledDataUpdated.send(newUserEnvelop)
+        self.userRegisterEnvelop = newUserEnvelop
     }
 
     func setPlaceAddress(_ placeAddress: String?) {
-        self.userRegisterEnvelop.placeAddress = placeAddress
-        self.filledDataUpdated.send(self.userRegisterEnvelop)
+        var newUserEnvelop = self.userRegisterEnvelop
+        newUserEnvelop.placeAddress = placeAddress
+        self.filledDataUpdated.send(newUserEnvelop)
+        self.userRegisterEnvelop = newUserEnvelop
     }
 
     func setPostcode(_ postcode: String?) {
-        self.userRegisterEnvelop.postcode = postcode
-        self.filledDataUpdated.send(self.userRegisterEnvelop)
+        var newUserEnvelop = self.userRegisterEnvelop
+        newUserEnvelop.postcode = postcode
+        self.filledDataUpdated.send(newUserEnvelop)
+        self.userRegisterEnvelop = newUserEnvelop
     }
 
     func setStreetAddress(_ streetAddress: String?) {
-        self.userRegisterEnvelop.streetAddress = streetAddress
-        self.filledDataUpdated.send(self.userRegisterEnvelop)
+        var newUserEnvelop = self.userRegisterEnvelop
+        newUserEnvelop.streetAddress = streetAddress
+        self.filledDataUpdated.send(newUserEnvelop)
+        self.userRegisterEnvelop = newUserEnvelop
     }
 
     func setStreetNumber(_ streetNumber: String?) {
-        self.userRegisterEnvelop.streetNumber = streetNumber
-        self.filledDataUpdated.send(self.userRegisterEnvelop)
+        var newUserEnvelop = self.userRegisterEnvelop
+        newUserEnvelop.streetNumber = streetNumber
+        self.filledDataUpdated.send(newUserEnvelop)
+        self.userRegisterEnvelop = newUserEnvelop
     }
 
     func setEmail(_ email: String?) {
-        self.userRegisterEnvelop.email = email
-        self.filledDataUpdated.send(self.userRegisterEnvelop)
+        var newUserEnvelop = self.userRegisterEnvelop
+        newUserEnvelop.email = email
+        self.filledDataUpdated.send(newUserEnvelop)
+        self.userRegisterEnvelop = newUserEnvelop
     }
 
     func setPhonePrefixCountry(_ phonePrefixCountry: SharedModels.Country) {
-        self.userRegisterEnvelop.phonePrefixCountry = phonePrefixCountry
-        self.filledDataUpdated.send(self.userRegisterEnvelop)
+        var newUserEnvelop = self.userRegisterEnvelop
+        newUserEnvelop.phonePrefixCountry = phonePrefixCountry
+        self.filledDataUpdated.send(newUserEnvelop)
+        self.userRegisterEnvelop = newUserEnvelop
     }
 
     func setPhoneNumber(_ phoneNumber: String) {
-        self.userRegisterEnvelop.phoneNumber = phoneNumber
-        self.filledDataUpdated.send(self.userRegisterEnvelop)
+        var newUserEnvelop = self.userRegisterEnvelop
+        newUserEnvelop.phoneNumber = phoneNumber
+        self.filledDataUpdated.send(newUserEnvelop)
+        self.userRegisterEnvelop = newUserEnvelop
     }
 
     func setVerifiedPhoneNumber(_ verifiedPhoneNumber: String?) {
-        self.userRegisterEnvelop.verifiedPhoneNumber = verifiedPhoneNumber
-        self.filledDataUpdated.send(self.userRegisterEnvelop)
+        var newUserEnvelop = self.userRegisterEnvelop
+        newUserEnvelop.verifiedPhoneNumber = verifiedPhoneNumber
+        self.filledDataUpdated.send(newUserEnvelop)
+        self.userRegisterEnvelop = newUserEnvelop
     }
 
     func setPassword(_ password: String?) {
-        self.userRegisterEnvelop.password = password
-        self.filledDataUpdated.send(self.userRegisterEnvelop)
+        var newUserEnvelop = self.userRegisterEnvelop
+        newUserEnvelop.password = password
+        self.filledDataUpdated.send(newUserEnvelop)
+        self.userRegisterEnvelop = newUserEnvelop
     }
 
     func setAcceptedMarketing(_ acceptedMarketing: Bool) {
-        self.userRegisterEnvelop.acceptedMarketing = acceptedMarketing
-        self.filledDataUpdated.send(self.userRegisterEnvelop)
+        var newUserEnvelop = self.userRegisterEnvelop
+        newUserEnvelop.acceptedMarketing = acceptedMarketing
+        self.filledDataUpdated.send(newUserEnvelop)
+        self.userRegisterEnvelop = newUserEnvelop
     }
 
     func setAcceptedTerms(_ acceptedTerms: Bool) {
-        self.userRegisterEnvelop.acceptedTerms = acceptedTerms
-        self.filledDataUpdated.send(self.userRegisterEnvelop)
+        var newUserEnvelop = self.userRegisterEnvelop
+        newUserEnvelop.acceptedTerms = acceptedTerms
+        self.filledDataUpdated.send(newUserEnvelop)
+        self.userRegisterEnvelop = newUserEnvelop
     }
 
     func setPromoCode(_ promoCode: String) {
-        self.userRegisterEnvelop.promoCode = promoCode
-        self.filledDataUpdated.send(self.userRegisterEnvelop)
+        var newUserEnvelop = self.userRegisterEnvelop
+        newUserEnvelop.promoCode = promoCode
+        self.filledDataUpdated.send(newUserEnvelop)
+        self.userRegisterEnvelop = newUserEnvelop
     }
 
     func setGodfatherCode(_ godfatherCode: String) {
-        self.userRegisterEnvelop.godfatherCode = godfatherCode
-        self.filledDataUpdated.send(self.userRegisterEnvelop)
+        var newUserEnvelop = self.userRegisterEnvelop
+        newUserEnvelop.godfatherCode = godfatherCode
+        self.filledDataUpdated.send(newUserEnvelop)
+        self.userRegisterEnvelop = newUserEnvelop
     }
 
     func setSimpleRegistered(_ registered: Bool) {
-        self.userRegisterEnvelop.simpleRegistered = registered
-        self.filledDataUpdated.send(self.userRegisterEnvelop)
+        var newUserEnvelop = self.userRegisterEnvelop
+        newUserEnvelop.simpleRegistered = registered
+        self.filledDataUpdated.send(newUserEnvelop)
+        self.userRegisterEnvelop = newUserEnvelop
     }
 
     func setConfirmationCode(_ code: String?) {
-        self.userRegisterEnvelop.confirmationCode = code
-        self.filledDataUpdated.send(self.userRegisterEnvelop)
+        var newUserEnvelop = self.userRegisterEnvelop
+        newUserEnvelop.confirmationCode = code
+        self.filledDataUpdated.send(newUserEnvelop)
+        self.userRegisterEnvelop = newUserEnvelop
     }
 
 }
