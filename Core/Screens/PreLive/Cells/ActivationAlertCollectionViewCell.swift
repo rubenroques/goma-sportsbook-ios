@@ -103,10 +103,10 @@ class ActivationAlertCollectionViewCell: UICollectionViewCell {
 
         self.backgroundImageView.backgroundColor = .clear
 
-        self.titleLabel.textColor = UIColor.App.textPrimary
+        self.titleLabel.textColor = UIColor.App.buttonTextPrimary
         self.titleLabel.font = AppFont.with(type: .bold, size: 16)
 
-        self.descriptionLabel.textColor = UIColor.App.textPrimary
+        self.descriptionLabel.textColor = UIColor.App.buttonTextPrimary
         self.descriptionLabel.font = AppFont.with(type: .semibold, size: 13)
 
         self.actionButton.backgroundColor = UIColor.App.highlightTertiary
