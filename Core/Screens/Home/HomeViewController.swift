@@ -708,42 +708,13 @@ extension HomeViewController: UITableViewDelegate, UITableViewDataSource {
 
         case .topCompetitionsShortcuts:
             guard
-                let cell = tableView.dequeueReusableCell(withIdentifier: TopCompetitionsLineTableViewCell.identifier) as? TopCompetitionsLineTableViewCell
+                let cell = tableView.dequeueReusableCell(withIdentifier: TopCompetitionsLineTableViewCell.identifier) as? TopCompetitionsLineTableViewCell,
+                let viewModel = self.viewModel.topCompetitionsLineCellViewModel(forSection: indexPath.section)
             else {
                 fatalError()
             }
 
-            /*
-            ▿ 0 : TopCompetitionPointer
-              - id : "509"
-              - name : "Coupe du monde de rugby"
-              - competitionId : "/fr/competitions/rugby-à-xv/35564.1"
-            ▿ 1 : TopCompetitionPointer
-              - id : "510"
-              - name : "Ligue des champions"
-              - competitionId : "/fr/competitions/football/29531.1"
-            ▿ 2 : TopCompetitionPointer
-              - id : "511"
-              - name : "Ligue 1"
-              - competitionId : "/fr/competitions/football/29494.1"
-            ▿ 3 : TopCompetitionPointer
-              - id : "512"
-              - name : "Premier League"
-              - competitionId : "/fr/competitions/football/29519.1"
-            ▿ 4 : TopCompetitionPointer
-              - id : "513"
-              - name : "Liga"
-              - competitionId : "/fr/competitions/football/29534.1"
-            */
-
-//            let viewModel = TopCompetitionsLineCellViewModel(topCompetitionsViewModels: [
-//                TopCompetitionItemCellViewModel(id: "1", name: "Ligue 1", sportName: "1", countryCode: "FR"),
-//                TopCompetitionItemCellViewModel(id: "2", name: "Premier League", sportName: "1", countryCode: "GB1"),
-//                TopCompetitionItemCellViewModel(id: "3", name: "Ligue des Champions UEFA", sportName: "1", countryCode: ""),
-//                TopCompetitionItemCellViewModel(id: "4", name: "FIBA World Cup", sportName: "8", countryCode: ""),
-//            ])
-
-            cell.configure(withViewModel: TopCompetitionsLineCellViewModel() )
+            cell.configure(withViewModel: viewModel)
 
             cell.selectedItemAction = { [weak self] competitionId in
                 let sport = Sport(id: "", name: "", alphaId: "", numericId: "", showEventCategory: false, liveEventsCount: 0)

@@ -194,9 +194,9 @@ class UserSessionStore {
         Env.favoritesManager.clearCachedFavorites()
         Env.gomaSocialClient.clearUserChatroomsData()
 
-        // TODO: Migrate to UserDefaults extensions
-        UserDefaults.standard.removeObject(forKey: "RegistrationFormDataKey")
-
+        // Remove previous registration info
+        UserDefaults.standard.startedUserRegisterInfo = nil
+        
         //
         Env.gomaNetworkClient.reconnectSession()
 

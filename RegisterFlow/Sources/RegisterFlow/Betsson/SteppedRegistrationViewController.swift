@@ -73,7 +73,8 @@ public class SteppedRegistrationViewModel {
         return self.currentStep.map { [weak self] currentStep in
             let totalSteps = self?.numberOfSteps ?? 0
             if totalSteps > 0 {
-                return Float(currentStep) / Float(totalSteps)
+                let calculatedPercentage =  Float(currentStep) / Float(totalSteps-1)
+                return calculatedPercentage
             }
             return Float(0.0)
         }.eraseToAnyPublisher()
@@ -225,11 +226,11 @@ public class SteppedRegistrationViewController: UIViewController {
 
     private lazy var headerBaseView: UIView = Self.createHeaderBaseView()
     private lazy var backButton: UIButton = Self.createBackButton()
-    private lazy var progressView: UIProgressView = Self.createProgressView()
+    private lazy var progressView: TallProgressBarView = Self.createProgressView()
 
     private lazy var progressEndContainerView: UIView = Self.createProgressEndContainerView()
     var progressEndContainerViewWidth: NSLayoutConstraint?
-    private lazy var progressEndView: LottieAnimationView = Self.createProgressEndView()
+    private lazy var progressEndLottieView: LottieAnimationView = Self.createProgressEndLottieView()
 
     private lazy var progressEndImageView: UIImageView = Self.createProgressImageView()
 
@@ -268,12 +269,13 @@ public class SteppedRegistrationViewController: UIViewController {
         fatalError("init(coder:) has not been implemented")
     }
 
-    private func animateProgress(toPercentage percentage: Float) {
-
+    private func animateProgress(toPercentage percentage: Float, previousPercentage: Float) {
 
         UIView.animate(withDuration: 0.1, animations: {
-            // 1 - Show lottie
-            self.progressEndView.alpha = 1.0
+            // Show lottie
+            if previousPercentage < percentage {
+                self.progressEndLottieView.alpha = 1.0
+            }
         }, completion: { completion in
 
             UIView.animate(withDuration: 0.45) {
@@ -288,7 +290,12 @@ public class SteppedRegistrationViewController: UIViewController {
             } completion: { completed in
                 UIView.animate(withDuration: 0.22, delay: 1.5) {
                     // 3 - Hide lottie after 3 seconds
-                    self.progressEndView.alpha = 0.0
+                    if percentage >= 1.0 {
+                        self.progressEndLottieView.alpha = 1.0
+                    }
+                    else {
+                        self.progressEndLottieView.alpha = 0.0
+                    }
                 }
             }
         })
@@ -303,9 +310,10 @@ public class SteppedRegistrationViewController: UIViewController {
         self.setupWithTheme()
 
         self.viewModel.progressPercentage
+            .withPrevious()
             .receive(on: DispatchQueue.main)
-            .sink { [weak self] progressPercentage in
-                self?.animateProgress(toPercentage: progressPercentage)
+            .sink { [weak self] previousPercentage, progressPercentage in
+                self?.animateProgress(toPercentage: progressPercentage, previousPercentage: previousPercentage ?? 0.0)
             }
             .store(in: &self.cancellables)
 
@@ -362,7 +370,7 @@ public class SteppedRegistrationViewController: UIViewController {
     public override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
 
-        self.progressEndView.play()
+        self.progressEndLottieView.play()
 
         let currentStepPublisher = self.viewModel.currentStep
             .removeDuplicates()
@@ -672,8 +680,8 @@ public extension SteppedRegistrationViewController {
         return button
     }
 
-    private static func createProgressView() -> UIProgressView {
-        let progressView = UIProgressView()
+    private static func createProgressView() -> TallProgressBarView {
+        let progressView = TallProgressBarView()
         progressView.progress = 0.0
         progressView.translatesAutoresizingMaskIntoConstraints = false
         return progressView
@@ -754,7 +762,7 @@ public extension SteppedRegistrationViewController {
         return view
     }
 
-    private static func createProgressEndView() -> LottieAnimationView {
+    private static func createProgressEndLottieView() -> LottieAnimationView {
         let animationView = LottieAnimationView()
 
         animationView.translatesAutoresizingMaskIntoConstraints = false
@@ -806,7 +814,7 @@ public extension SteppedRegistrationViewController {
         self.headerBaseView.addSubview(self.cancelButton)
         self.headerBaseView.addSubview(self.progressEndContainerView)
 
-        self.progressEndContainerView.addSubview(self.progressEndView)
+        self.progressEndContainerView.addSubview(self.progressEndLottieView)
         self.progressEndContainerView.addSubview(self.progressEndImageView)
 
         self.view.addSubview(self.contentBaseView)
@@ -841,11 +849,12 @@ public extension SteppedRegistrationViewController {
             self.backButton.widthAnchor.constraint(equalToConstant: 40),
 
             self.cancelButton.centerYAnchor.constraint(equalTo: self.headerBaseView.centerYAnchor),
-            self.cancelButton.trailingAnchor.constraint(equalTo: self.headerBaseView.trailingAnchor, constant: -34),
+            self.cancelButton.trailingAnchor.constraint(equalTo: self.headerBaseView.trailingAnchor, constant: -18),
 
+            self.progressView.heightAnchor.constraint(equalToConstant: 12),
             self.progressView.centerYAnchor.constraint(equalTo: self.headerBaseView.centerYAnchor),
             self.progressView.leadingAnchor.constraint(equalTo: self.backButton.trailingAnchor, constant: 7),
-            self.progressView.trailingAnchor.constraint(equalTo: self.cancelButton.leadingAnchor, constant: -19),
+            self.progressView.trailingAnchor.constraint(equalTo: self.cancelButton.leadingAnchor, constant: -26),
 
             self.contentBaseView.leadingAnchor.constraint(equalTo: self.view.leadingAnchor),
             self.contentBaseView.trailingAnchor.constraint(equalTo: self.view.trailingAnchor),
@@ -888,23 +897,37 @@ public extension SteppedRegistrationViewController {
             self.loadingView.centerYAnchor.constraint(equalTo: self.loadingBaseView.centerYAnchor),
 
             self.progressEndContainerView.heightAnchor.constraint(equalToConstant: 1),
-            self.progressEndContainerView.leadingAnchor.constraint(equalTo: self.progressView.leadingAnchor),
-            self.progressEndContainerView.centerYAnchor.constraint(equalTo: self.progressView.centerYAnchor, constant: -2),
+            self.progressEndContainerView.leadingAnchor.constraint(equalTo: self.progressView.leadingAnchor, constant: -7),
+            self.progressEndContainerView.centerYAnchor.constraint(equalTo: self.progressView.centerYAnchor),
 
-            self.progressEndContainerView.trailingAnchor.constraint(equalTo: self.progressEndView.centerXAnchor),
-            self.progressEndContainerView.centerYAnchor.constraint(equalTo: self.progressEndView.centerYAnchor),
+            self.progressEndContainerView.trailingAnchor.constraint(equalTo: self.progressEndLottieView.centerXAnchor),
+            self.progressEndContainerView.centerYAnchor.constraint(equalTo: self.progressEndLottieView.centerYAnchor),
 
-            self.progressEndView.widthAnchor.constraint(equalToConstant: 73),
-            self.progressEndView.heightAnchor.constraint(equalToConstant: 73),
+            self.progressEndLottieView.widthAnchor.constraint(equalToConstant: 92),
+            self.progressEndLottieView.heightAnchor.constraint(equalToConstant: 92),
 
             self.progressEndContainerViewWidth!,
 
-            self.progressEndImageView.trailingAnchor.constraint(equalTo: self.progressEndView.trailingAnchor, constant: -14.5),
-            self.progressEndImageView.centerYAnchor.constraint(equalTo: self.progressEndView.centerYAnchor),
+            self.progressEndImageView.trailingAnchor.constraint(equalTo: self.progressEndLottieView.trailingAnchor, constant: -20),
+            self.progressEndImageView.centerYAnchor.constraint(equalTo: self.progressEndLottieView.centerYAnchor),
 
-            self.progressEndImageView.widthAnchor.constraint(equalToConstant: 20),
-            self.progressEndImageView.heightAnchor.constraint(equalToConstant: 20),
+            self.progressEndImageView.widthAnchor.constraint(equalToConstant: 23),
+            self.progressEndImageView.heightAnchor.constraint(equalToConstant: 23),
         ])
     }
 
+}
+
+class TallProgressBarView: UIProgressView {
+    
+    override func layoutSubviews() {
+         super.layoutSubviews()
+
+         let maskLayerPath = UIBezierPath(roundedRect: bounds, cornerRadius: 6.0)
+         let maskLayer = CAShapeLayer()
+         maskLayer.frame = self.bounds
+         maskLayer.path = maskLayerPath.cgPath
+         layer.mask = maskLayer
+     }
+    
 }

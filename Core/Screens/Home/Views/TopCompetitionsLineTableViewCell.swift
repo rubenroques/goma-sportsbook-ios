@@ -12,83 +12,14 @@ import ServicesProvider
 
 class TopCompetitionsLineCellViewModel {
 
-    var topCompetitions: [TopCompetitionItemCellViewModel] {
-        return self.topCompetitionsSubject.value
+    var topCompetitions: [TopCompetitionItemCellViewModel] = []
+    
+    var isEmpty: Bool {
+        self.topCompetitions.isEmpty
     }
-
-    var topCompetitionsPublisher: AnyPublisher<[TopCompetitionItemCellViewModel], Never> {
-        return self.topCompetitionsSubject.eraseToAnyPublisher()
-    }
-
-    var isLoadingPublisher: AnyPublisher<Bool, Never> {
-        return self.isLoadingSubject.eraseToAnyPublisher()
-    }
-
-    private var isLoadingSubject: CurrentValueSubject<Bool, Never> = .init(false)
-    private var topCompetitionsSubject: CurrentValueSubject<[TopCompetitionItemCellViewModel], Never> = .init([])
-    private var cancellables = Set<AnyCancellable>()
-
-    init() {
-        self.requestTopCompetitions()
-    }
-
-    private func requestTopCompetitions() {
-
-        self.isLoadingSubject.send(true)
-
-        Env.servicesProvider.getTopCompetitions()
-            .sink(receiveCompletion: { [weak self] completion in
-                switch completion {
-                case .finished:
-                    ()
-                case .failure(let error):
-                    print("TopCompetitionsLineCellViewModel getTopCompetitionsIdentifier error: \(error)")
-                }
-                self?.isLoadingSubject.send(false)
-            }, receiveValue: { [weak self] topCompetitions in
-                let convertedCompetitions = self?.convertTopCompetitions(topCompetitions) ?? []
-                self?.topCompetitionsSubject.send(convertedCompetitions)
-            })
-            .store(in: &cancellables)
-
-    }
-
-    private func processTopCompetitions(topCompetitions: [TopCompetitionPointer]) -> [String: [String]] {
-        var competitionsIdentifiers: [String: [String]] = [:]
-        for topCompetition in topCompetitions {
-            let competitionComponents = topCompetition.competitionId.components(separatedBy: "/")
-            let competitionName = competitionComponents[competitionComponents.count - 2].lowercased()
-            if let competitionId = competitionComponents.last {
-                if let topCompetition = competitionsIdentifiers[competitionName] {
-                    if !topCompetition.contains(where: {
-                        $0 == competitionId
-                    }) {
-                        competitionsIdentifiers[competitionName]?.append(competitionId)
-                    }
-
-                }
-                else {
-                    competitionsIdentifiers[competitionName] = [competitionId]
-                }
-            }
-        }
-        return competitionsIdentifiers
-    }
-
-    private func convertTopCompetitions(_ topCompetitions: [TopCompetition]) -> [TopCompetitionItemCellViewModel] {
-        return topCompetitions.map { pointer -> TopCompetitionItemCellViewModel? in
-            let mappedSport = ServiceProviderModelMapper.sport(fromServiceProviderSportType: pointer.sportType)
-            if let pointerCountry = pointer.country {
-                let mappedCountry = ServiceProviderModelMapper.country(fromServiceProviderCountry: pointerCountry)
-                return TopCompetitionItemCellViewModel(id: pointer.id,
-                                                       name: pointer.name,
-                                                       sport: mappedSport,
-                                                       country: mappedCountry)
-            }
-            return nil
-        }
-        .compactMap({ $0 })
-
+    
+    init(topCompetitions: [TopCompetitionItemCellViewModel]) {
+        self.topCompetitions = topCompetitions
     }
 
 }
@@ -183,25 +114,8 @@ class TopCompetitionsLineTableViewCell: UITableViewCell, UICollectionViewDataSou
 
         self.viewModel = viewModel
 
-        self.viewModel?.isLoadingPublisher
-            .receive(on: DispatchQueue.main)
-            .sink { [weak self] isLoading in
-                if isLoading {
-                    self?.loadingView.startAnimating()
-                }
-                else {
-                    self?.loadingView.stopAnimating()
-                }
-            }
-            .store(in: &self.cancellables)
-
-        self.viewModel?.topCompetitionsPublisher
-            .receive(on: DispatchQueue.main)
-            .sink { [weak self] _ in
-                self?.collectionView.reloadData()
-            }
-            .store(in: &self.cancellables)
-
+        self.collectionView.reloadData()
+        
     }
 
     // MARK: - UICollectionViewDataSource

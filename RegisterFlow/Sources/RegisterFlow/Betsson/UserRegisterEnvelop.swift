@@ -9,7 +9,7 @@ import Foundation
 import ServicesProvider
 import SharedModels
 
-public final class UserRegisterEnvelop: Codable, Equatable {
+public struct UserRegisterEnvelop: Codable, Equatable {
 
     public enum Gender: String, Codable, Equatable {
         case male = "M"
@@ -238,6 +238,40 @@ public final class UserRegisterEnvelop: Codable, Equatable {
     }
 
 }
+
+extension UserRegisterEnvelop: CustomStringConvertible {
+    public var description: String {
+        return """
+        UserRegisterEnvelop(
+            gender: \(String(describing: gender)),
+            name: \(String(describing: name)),
+            surname: \(String(describing: surname)),
+            avatarName: \(String(describing: avatarName)),
+            nickname: \(String(describing: nickname)),
+            dateOfBirth: \(String(describing: dateOfBirth)),
+            countryBirth: \(String(describing: countryBirth)),
+            deparmentOfBirth: \(String(describing: deparmentOfBirth)),
+            placeBirth: \(String(describing: placeBirth)),
+            placeAddress: \(String(describing: placeAddress)),
+            postcode: \(String(describing: postcode)),
+            streetAddress: \(String(describing: streetAddress)),
+            streetNumber: \(String(describing: streetNumber)),
+            email: \(String(describing: email)),
+            phonePrefixCountry: \(String(describing: phonePrefixCountry)),
+            phoneNumber: \(String(describing: phoneNumber)),
+            verifiedPhoneNumber: \(String(describing: verifiedPhoneNumber)),
+            password: \(String(describing: password)),
+            acceptedMarketing: \(acceptedMarketing),
+            acceptedTerms: \(acceptedTerms),
+            promoCode: \(String(describing: promoCode)),
+            godfatherCode: \(String(describing: godfatherCode)),
+            simpleRegistered: \(simpleRegistered),
+            confirmationCode: \(String(describing: confirmationCode))
+        )
+        """
+    }
+}
+
 
 public extension UserRegisterEnvelop {
     static var debug: UserRegisterEnvelop {

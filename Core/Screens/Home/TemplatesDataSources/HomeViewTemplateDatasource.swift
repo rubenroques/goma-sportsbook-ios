@@ -40,6 +40,8 @@ protocol HomeViewTemplateDataSource {
     func supplementaryEventId(forSection section: Int, forIndex index: Int) -> String?
 
     func matchLineTableCellViewModel(forSection section: Int, forIndex index: Int) -> MatchLineTableCellViewModel?
-
+    func topCompetitionsLineCellViewModel(forSection section: Int) -> TopCompetitionsLineCellViewModel?
+    
     func setStoryLineViewModel(viewModel: StoriesLineCellViewModel)
+    
 }
