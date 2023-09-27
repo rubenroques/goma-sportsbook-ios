@@ -537,7 +537,7 @@ extension BettingAPIClient: Endpoint {
             legsStringArray.append(
                 """
                 {
-                "priceType": "CP",
+                "idFOPriceType": "CP",
                 "idFOSelection": "\(selection.identifier)",
                 "priceDown": "\(priceDown)",
                 "priceUp": "\(priceUp)",
@@ -553,7 +553,7 @@ extension BettingAPIClient: Endpoint {
                 """
                 {
                     "betLegs": [ \(legsString) ],
-                    "betType": "\(betTicket.betGroupingType.identifier)",
+                    "idFOBetType": "\(betTicket.betGroupingType.identifier)",
                     "wunitstake": \(betTicket.globalStake ?? 0.0)
                 }
                 """
