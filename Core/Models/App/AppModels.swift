@@ -278,8 +278,9 @@ struct BannerInfo {
     var imageURL: String?
     var priorityOrder: Int?
     var marketId: String?
+    var location: String?
+    var specialAction: BannerSpecialAction
 }
-
 
 struct Country: Codable {
     var name: String

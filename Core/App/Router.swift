@@ -27,6 +27,8 @@ class Router {
         UIApplication.shared.windows.first?.rootViewController
     }
 
+    var mainRootViewController: RootViewController?
+
     private var cancellables = Set<AnyCancellable>()
     private var showingDebugViewController: Bool = false
 
@@ -91,7 +93,12 @@ class Router {
 
         var bootRootViewController: UIViewController
         if Env.userSessionStore.isUserLogged() || UserSessionStore.didSkipLoginFlow() {
-            bootRootViewController = Router.mainScreenViewControllerFlow()
+
+            let rootViewController = RootViewController(defaultSport: Env.sportsStore.defaultSport)
+
+            self.mainRootViewController = rootViewController
+
+            bootRootViewController = Router.mainScreenViewControllerFlow(rootViewController)
         }
         else {
             bootRootViewController = Router.createLoginViewControllerFlow()
@@ -213,6 +220,7 @@ class Router {
     // Open from notifications
     func configureStartingRoute(_ route: Route) {
         self.startingRoute = route
+
     }
 
     func requestStartingRoute() -> Route {
@@ -328,11 +336,44 @@ class Router {
     }
 
     func showMatchDetailScreen(matchId: String) {
+
+        var hasSentMatchId = false
+
         if self.rootViewController?.presentedViewController?.isModal == true {
             self.rootViewController?.presentedViewController?.dismiss(animated: true, completion: nil)
         }
-        let matchDetailsViewController = MatchDetailsViewController(viewModel: MatchDetailsViewModel(matchId: matchId))
-        self.rootViewController?.present(matchDetailsViewController, animated: true, completion: nil)
+
+        if let appSharedState = self.appSharedState {
+            switch appSharedState {
+            case .inactiveApp:
+
+                if let rootViewController = self.mainRootViewController {
+
+                    rootViewController.openMatchDetail(matchId: matchId)
+                }
+
+            case .activeApp:
+
+                Env.servicesProvider.eventsConnectionStatePublisher
+                    .filter({ $0 == .connected })
+                    .receive(on: DispatchQueue.main)
+                    .sink(receiveCompletion: { _ in
+
+                    }, receiveValue: { [weak self] _ in
+                        if !hasSentMatchId {
+                            if let rootViewController = self?.mainRootViewController {
+
+                                rootViewController.openMatchDetail(matchId: matchId)
+
+                                hasSentMatchId = true
+                            }
+                        }
+
+                    })
+                    .store(in: &cancellables)
+            }
+        }
+        
     }
 
     func showMyTickets(ticketType: MyTicketsType, ticketId: String) {
@@ -357,6 +398,8 @@ class Router {
 
     func showBetslipWithTicket(token: String) {
 
+        var hasSentBetId = false
+
         if self.rootViewController?.presentedViewController?.isModal == true {
             self.rootViewController?.presentedViewController?.dismiss(animated: true, completion: nil)
         }
@@ -364,9 +407,16 @@ class Router {
         if let appSharedState = self.appSharedState {
             switch appSharedState {
             case .inactiveApp:
-                let betslipViewController = BetslipViewController(startScreen: .sharedBet(token))
-                let navigationViewController = Router.navigationController(with: betslipViewController)
-                self.rootViewController?.present(navigationViewController, animated: true, completion: nil)
+
+                if let rootViewController = self.mainRootViewController {
+
+                    rootViewController.openBetslipModalWithShareData(ticketToken: token)
+                }
+                
+//                let betslipViewController = BetslipViewController(startScreen: .sharedBet(token))
+//
+//                let navigationViewController = Router.navigationController(with: betslipViewController)
+//                self.rootViewController?.present(navigationViewController, animated: true, completion: nil)
             case .activeApp:
 
                 Env.servicesProvider.eventsConnectionStatePublisher
@@ -375,9 +425,17 @@ class Router {
                     .sink(receiveCompletion: { _ in
 
                     }, receiveValue: { [weak self] _ in
-                        let betslipViewController = BetslipViewController(startScreen: .sharedBet(token))
-                        let navigationViewController = Router.navigationController(with: betslipViewController)
-                        self?.rootViewController?.present(navigationViewController, animated: true, completion: nil)
+                        if !hasSentBetId {
+                            if let rootViewController = self?.mainRootViewController {
+
+                                rootViewController.openBetslipModalWithShareData(ticketToken: token)
+                                hasSentBetId = true
+                            }
+                        }
+//                        let betslipViewController = BetslipViewController(startScreen: .sharedBet(token))
+//
+//                        let navigationViewController = Router.navigationController(with: betslipViewController)
+//                        self?.rootViewController?.present(navigationViewController, animated: true, completion: nil)
                     })
                     .store(in: &cancellables)
             }
@@ -474,8 +532,10 @@ extension Router {
         return RootViewController(defaultSport: Env.sportsStore.defaultSport)
     }
 
-    static func mainScreenViewControllerFlow() -> UIViewController {
-        return Router.navigationController(with: RootViewController(defaultSport: Env.sportsStore.defaultSport) )
+    static func mainScreenViewControllerFlow(_ viewController: UIViewController) -> UIViewController {
+//        let rootViewController = RootViewController(defaultSport: Env.sportsStore.defaultSport)
+
+        return Router.navigationController(with: viewController)
     }
 
 }

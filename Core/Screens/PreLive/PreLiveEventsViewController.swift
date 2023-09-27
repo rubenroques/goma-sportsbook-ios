@@ -201,8 +201,8 @@ class PreLiveEventsViewController: UIViewController {
 
     private func commonInit() {
 
-        self.sportTypeIconImageView.setImageColor(color: UIColor.App.textPrimary)
-        self.sportTypeIconImageView.tintColor = UIColor.App.textPrimary
+        self.sportTypeIconImageView.setImageColor(color: UIColor.App.buttonTextPrimary)
+        self.sportTypeIconImageView.tintColor = UIColor.App.buttonTextPrimary
 
         let color = UIColor.App.backgroundPrimary
 
@@ -412,11 +412,11 @@ class PreLiveEventsViewController: UIViewController {
             .sink { newSelectedSport in
                 if let sportIconImage = UIImage(named: "sport_type_icon_\(newSelectedSport.id)") {
                     self.sportTypeIconImageView.image = sportIconImage
-                    self.sportTypeIconImageView.setImageColor(color: UIColor.App.textPrimary)
+                    self.sportTypeIconImageView.setImageColor(color: UIColor.App.buttonTextPrimary)
                 }
                 else {
                     self.sportTypeIconImageView.image = UIImage(named: "sport_type_icon_default")
-                    self.sportTypeIconImageView.setImageColor(color: UIColor.App.textPrimary)
+                    self.sportTypeIconImageView.setImageColor(color: UIColor.App.buttonTextPrimary)
                 }
 
                 self.sportTypeNameLabel.text = newSelectedSport.name
@@ -625,11 +625,11 @@ class PreLiveEventsViewController: UIViewController {
         self.secondTextFieldEmptyStateLabel.textColor = UIColor.App.textPrimary
         self.emptyStateButton.backgroundColor = UIColor.App.buttonBackgroundPrimary
 
-        self.sportsSelectorExpandImageView.setImageColor(color: UIColor.App.textPrimary)
-        self.sportsSelectorExpandImageView.tintColor = UIColor.App.textPrimary
+        self.sportsSelectorExpandImageView.setImageColor(color: UIColor.App.buttonTextPrimary)
+        self.sportsSelectorExpandImageView.tintColor = UIColor.App.buttonTextPrimary
 
         self.sportTypeIconImageView.setImageColor(color: UIColor.App.buttonTextPrimary)
-        self.sportTypeIconImageView.tintColor = UIColor.App.textPrimary
+        self.sportTypeIconImageView.tintColor = UIColor.App.buttonTextPrimary
 
         self.competitionHistoryBaseView.backgroundColor = UIColor.App.pillNavigation
 

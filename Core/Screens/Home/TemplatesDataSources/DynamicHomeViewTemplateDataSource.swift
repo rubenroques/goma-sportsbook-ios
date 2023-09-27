@@ -66,15 +66,15 @@ class DynamicHomeViewTemplateDataSource {
                         return BannerCellViewModel(presentationType: .externalMatch(contentId: String(contentId),
                                                                                     imageURLString: bannerItemFeedContent.typeImageURL ?? "",
                                                                                     eventPartId: String(bannerItemFeedContent.eventPartId ?? 0),
-                                                                                    betTypeId: String(bannerItemFeedContent.bettingTypeId ?? 0) ))
+                                                                                    betTypeId: String(bannerItemFeedContent.bettingTypeId ?? 0) ), specialAction: .none)
                     }
                     else if bannerItemFeedContent.type == "stream" {
                         return BannerCellViewModel(presentationType: .externalStream(imageURLString: bannerItemFeedContent.typeImageURL ?? "",
-                                                                                     streamURLString: bannerItemFeedContent.streamURL ?? ""))
+                                                                                     streamURLString: bannerItemFeedContent.streamURL ?? ""), specialAction: .none)
                     }
                     else if bannerItemFeedContent.type == "external" {
                         return BannerCellViewModel(presentationType: .externalLink(imageURLString: bannerItemFeedContent.typeImageURL ?? "",
-                                                                                   linkURLString: bannerItemFeedContent.externalLinkURL ?? ""))
+                                                                                   linkURLString: bannerItemFeedContent.externalLinkURL ?? ""), specialAction: .none)
                     }
                     return nil
                 }.compactMap({ $0 })

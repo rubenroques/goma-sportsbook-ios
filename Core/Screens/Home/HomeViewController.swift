@@ -7,6 +7,7 @@
 
 import UIKit
 import Combine
+import ServicesProvider
 
 class HomeViewController: UIViewController {
 
@@ -258,21 +259,31 @@ class HomeViewController: UIViewController {
         self.navigationController?.pushViewController(bonusRootViewController, animated: true)
     }
 
-    private func openPromotionsView() {
-        let promotionsWebViewModel = PromotionsWebViewModel()
+    private func openPromotionsView(specialAction: BannerSpecialAction?) {
 
-        let gomaBaseUrl = GomaGamingEnv.stage.baseUrl
-        let appLanguage = Locale.current.languageCode
+        if let specialAction = specialAction,
+           specialAction == .register {
 
-        let isDarkTheme = self.traitCollection.userInterfaceStyle == .dark ? true : false
+            let loginViewController = Router.navigationController(with: LoginViewController(shouldPresentRegisterFlow: true))
+            self.present(loginViewController, animated: true, completion: nil)
 
-        let urlString = "\(gomaBaseUrl)/\(appLanguage ?? "fr")/in-app/promotions?dark=\(isDarkTheme)"
+        }
+        else {
+            let promotionsWebViewModel = PromotionsWebViewModel()
 
-        if let url = URL(string: urlString) {
+            let gomaBaseUrl = GomaGamingEnv.stage.baseUrl
+            let appLanguage = Locale.current.languageCode
 
-            let promotionsWebViewController = PromotionsWebViewController(url: url, viewModel: promotionsWebViewModel)
+            let isDarkTheme = self.traitCollection.userInterfaceStyle == .dark ? true : false
 
-            self.navigationController?.pushViewController(promotionsWebViewController, animated: true)
+            let urlString = "\(gomaBaseUrl)/\(appLanguage ?? "fr")/in-app/promotions?dark=\(isDarkTheme)"
+
+            if let url = URL(string: urlString) {
+
+                let promotionsWebViewController = PromotionsWebViewController(url: url, viewModel: promotionsWebViewModel)
+
+                self.navigationController?.pushViewController(promotionsWebViewController, animated: true)
+            }
         }
     }
 
@@ -472,11 +483,11 @@ extension HomeViewController: UITableViewDelegate, UITableViewDataSource {
             }
             cell.configure(withViewModel: sportMatchLineViewModel)
 
-            cell.didTapBannerViewAction = { [weak self] presentationType in
+            cell.didTapBannerViewAction = { [weak self] presentationType, specialAction in
                 switch presentationType {
                 case .image:
                     // self?.openBonusView()
-                    self?.openPromotionsView()
+                    self?.openPromotionsView(specialAction: specialAction)
                 case .match(let matchId):
                     self?.openMatchDetails(matchId: matchId)
                 case .externalMatch(let matchId, _, _, _):

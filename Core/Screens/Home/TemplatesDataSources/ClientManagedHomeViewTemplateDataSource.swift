@@ -30,7 +30,8 @@ class ClientManagedHomeViewTemplateDataSource {
                     let bannerViewModel = BannerCellViewModel(id: banner.id,
                                                               matchId: banner.matchId,
                                                               imageURL: banner.imageURL ?? "",
-                                                              marketId: banner.marketId)
+                                                              marketId: banner.marketId,
+                                                              location: banner.location, specialAction: banner.specialAction)
                     bannerCellViewModels.append(bannerViewModel)
                     self.bannersLineViewModelCache[banner.id] = bannerViewModel
                 }
@@ -181,7 +182,14 @@ class ClientManagedHomeViewTemplateDataSource {
                 print("ClientManagedHomeTemplate getPromotionalTopBanners completion \(completion)")
             } receiveValue: { [weak self] (promotionalBanners: [PromotionalBanner]) in
                 self?.banners = promotionalBanners.map({ promotionalBanner in
-                    return BannerInfo(type: "", id: promotionalBanner.id, matchId: nil, imageURL: promotionalBanner.imageURL, priorityOrder: nil, marketId: nil)
+                    return BannerInfo(type: "",
+                                      id: promotionalBanner.id,
+                                      matchId: nil,
+                                      imageURL: promotionalBanner.imageURL,
+                                      priorityOrder: nil,
+                                      marketId: nil,
+                                      location: promotionalBanner.location,
+                                      specialAction: promotionalBanner.specialAction)
                 })
                 self?.refreshPublisher.send()
             }
@@ -442,7 +450,8 @@ extension ClientManagedHomeViewTemplateDataSource: HomeViewTemplateDataSource {
         if let promotedSport = self.promotedSports[safe: croppedSection] {
 
             let currentSport = activeSports.filter({
-                $0.name == promotedSport.name
+                //$0.name == promotedSport.name
+                promotedSport.name.contains($0.name)
             }).first
 
             return currentSport?.id

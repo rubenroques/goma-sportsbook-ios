@@ -111,11 +111,11 @@ class LiveEventsViewController: UIViewController {
 
                 if let sportIconImage = UIImage(named: "sport_type_icon_\(newSport.id)") {
                     self?.sportTypeIconImageView.image = sportIconImage
-                    self?.sportTypeIconImageView.setImageColor(color: UIColor.App.textPrimary)
+                    self?.sportTypeIconImageView.setImageColor(color: UIColor.App.buttonTextPrimary)
                 }
                 else {
                     self?.sportTypeIconImageView.image = UIImage(named: "sport_type_icon_default")
-                    self?.sportTypeIconImageView.setImageColor(color: UIColor.App.textPrimary)
+                    self?.sportTypeIconImageView.setImageColor(color: UIColor.App.buttonTextPrimary)
                 }
 
                 self?.sportTypeNameLabel.text = newSport.name
@@ -404,11 +404,11 @@ class LiveEventsViewController: UIViewController {
 
         self.loadingBaseView.backgroundColor = .clear
 
-        self.sportTypeIconImageView.setImageColor(color: UIColor.App.textPrimary)
-        self.sportTypeIconImageView.tintColor = UIColor.App.textPrimary
+        self.sportTypeIconImageView.setImageColor(color: UIColor.App.buttonTextPrimary)
+        self.sportTypeIconImageView.tintColor = UIColor.App.buttonTextPrimary
 
-        self.sportsSelectorExpandImageView.setImageColor(color: UIColor.App.textPrimary)
-        self.sportsSelectorExpandImageView.tintColor = UIColor.App.textPrimary
+        self.sportsSelectorExpandImageView.setImageColor(color: UIColor.App.buttonTextPrimary)
+        self.sportsSelectorExpandImageView.tintColor = UIColor.App.buttonTextPrimary
 
     }
 

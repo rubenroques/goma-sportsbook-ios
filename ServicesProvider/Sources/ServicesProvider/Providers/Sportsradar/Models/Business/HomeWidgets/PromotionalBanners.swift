@@ -49,4 +49,9 @@ extension SportRadarModels {
         }
 
     }
+
+    enum BannerSpecialAction {
+        case register
+        case none
+    }
 }
