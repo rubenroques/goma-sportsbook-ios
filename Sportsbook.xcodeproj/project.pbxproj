@@ -876,6 +876,7 @@
 		455AE1382A2A16E00045FDD3 /* MakeYourBetTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 455AE1332A2A16E00045FDD3 /* MakeYourBetTableViewCell.swift */; };
 		455AE1392A2A16E00045FDD3 /* MakeYourBetTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 455AE1332A2A16E00045FDD3 /* MakeYourBetTableViewCell.swift */; };
 		455AE13A2A2A16E00045FDD3 /* MakeYourBetTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 455AE1332A2A16E00045FDD3 /* MakeYourBetTableViewCell.swift */; };
+		455E86B92AC464B20031AF26 /* TargetVariables-PROD.swift in Sources */ = {isa = PBXBuildFile; fileRef = 455E86B82AC464920031AF26 /* TargetVariables-PROD.swift */; };
 		456237D9297EE5F600B3FA3A /* SharedModels in Frameworks */ = {isa = PBXBuildFile; productRef = 456237D8297EE5F600B3FA3A /* SharedModels */; };
 		4566339629DDD44C00C4F1A9 /* AnonymousSideMenuViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4566339529DDD44C00C4F1A9 /* AnonymousSideMenuViewController.swift */; };
 		4566339729DDD44C00C4F1A9 /* AnonymousSideMenuViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4566339529DDD44C00C4F1A9 /* AnonymousSideMenuViewController.swift */; };
@@ -3262,7 +3263,6 @@
 		45A33348298976BA008181E9 /* MyTicketBetLineView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 458BAC802770EF53006C4BC7 /* MyTicketBetLineView.xib */; };
 		45A33349298976BA008181E9 /* OddTripleCollectionViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 45CD7B4D2716F5CB003044C5 /* OddTripleCollectionViewCell.xib */; };
 		45A3335F298976E3008181E9 /* LaunchScreen-Betsson.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 45A33352298976E3008181E9 /* LaunchScreen-Betsson.storyboard */; };
-		45A33362298976E3008181E9 /* TargetVariables.swift in Sources */ = {isa = PBXBuildFile; fileRef = 45A3335A298976E3008181E9 /* TargetVariables.swift */; };
 		45A33363298976E3008181E9 /* Betsson-Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 45A3335C298976E3008181E9 /* Betsson-Assets.xcassets */; };
 		45A33364298976E3008181E9 /* Colors.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 45A3335D298976E3008181E9 /* Colors.xcassets */; };
 		45A33365298976E3008181E9 /* ClientVariables.swift in Sources */ = {isa = PBXBuildFile; fileRef = 45A3335E298976E3008181E9 /* ClientVariables.swift */; };
@@ -4639,7 +4639,7 @@
 		45F6BC9A2AB3732C00C81DE1 /* FilterRowView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A92F5D782717169900884BDF /* FilterRowView.swift */; };
 		45F6BC9B2AB3732C00C81DE1 /* UserTrackingSettingsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 45FF105229D74721009AC196 /* UserTrackingSettingsViewController.swift */; };
 		45F6BC9C2AB3732C00C81DE1 /* UploadView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A92F5DA3272C44A000884BDF /* UploadView.swift */; };
-		45F6BC9D2AB3732C00C81DE1 /* TargetVariables.swift in Sources */ = {isa = PBXBuildFile; fileRef = 45A3335A298976E3008181E9 /* TargetVariables.swift */; };
+		45F6BC9D2AB3732C00C81DE1 /* TargetVariables-UAT.swift in Sources */ = {isa = PBXBuildFile; fileRef = 45A3335A298976E3008181E9 /* TargetVariables-UAT.swift */; };
 		45F6BC9E2AB3732C00C81DE1 /* ThreeAwayMarketDetailTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 45626E36275541790069B89B /* ThreeAwayMarketDetailTableViewCell.swift */; };
 		45F6BC9F2AB3732C00C81DE1 /* AddFriendViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9BA6D3C280DB18900E82724 /* AddFriendViewModel.swift */; };
 		45F6BCA02AB3732C00C81DE1 /* TipsListViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9FB6D5A28C657CE00E3FE58 /* TipsListViewController.swift */; };
@@ -7010,6 +7010,7 @@
 		455C962026FDD66300456F30 /* ProfileViewController.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = ProfileViewController.xib; sourceTree = "<group>"; };
 		455C962626FE11CA00456F30 /* RootViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RootViewController.swift; sourceTree = "<group>"; };
 		455C962726FE11CA00456F30 /* RootViewController.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = RootViewController.xib; sourceTree = "<group>"; };
+		455E86B82AC464920031AF26 /* TargetVariables-PROD.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "TargetVariables-PROD.swift"; sourceTree = "<group>"; };
 		455F765026F0EFCE00B9B85D /* LoginAccount.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginAccount.swift; sourceTree = "<group>"; };
 		45626E33275530990069B89B /* OddFormatter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OddFormatter.swift; sourceTree = "<group>"; };
 		45626E36275541790069B89B /* ThreeAwayMarketDetailTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ThreeAwayMarketDetailTableViewCell.swift; sourceTree = "<group>"; };
@@ -7143,7 +7144,7 @@
 		45A33357298976E3008181E9 /* Betsson-UAT-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "Betsson-UAT-Info.plist"; sourceTree = "<group>"; };
 		45A33358298976E3008181E9 /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
 		45A33359298976E3008181E9 /* Betsson-UAT.entitlements */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.entitlements; path = "Betsson-UAT.entitlements"; sourceTree = "<group>"; };
-		45A3335A298976E3008181E9 /* TargetVariables.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TargetVariables.swift; sourceTree = "<group>"; };
+		45A3335A298976E3008181E9 /* TargetVariables-UAT.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "TargetVariables-UAT.swift"; sourceTree = "<group>"; };
 		45A3335C298976E3008181E9 /* Betsson-Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = "Betsson-Assets.xcassets"; sourceTree = "<group>"; };
 		45A3335D298976E3008181E9 /* Colors.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Colors.xcassets; sourceTree = "<group>"; };
 		45A3335E298976E3008181E9 /* ClientVariables.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ClientVariables.swift; sourceTree = "<group>"; };
@@ -9185,7 +9186,8 @@
 			isa = PBXGroup;
 			children = (
 				45A3335E298976E3008181E9 /* ClientVariables.swift */,
-				45A3335A298976E3008181E9 /* TargetVariables.swift */,
+				45A3335A298976E3008181E9 /* TargetVariables-UAT.swift */,
+				455E86B82AC464920031AF26 /* TargetVariables-PROD.swift */,
 				45A33359298976E3008181E9 /* Betsson-UAT.entitlements */,
 				45539DD52ABC6152001B6BEC /* Betsson-PROD.entitlements */,
 				45F6BE3B2AB3739F00C81DE1 /* Misc-PROD */,
@@ -16386,7 +16388,6 @@
 				45A331E5298976BA008181E9 /* FilterRowView.swift in Sources */,
 				45FF105629D74721009AC196 /* UserTrackingSettingsViewController.swift in Sources */,
 				45A331E7298976BA008181E9 /* UploadView.swift in Sources */,
-				45A33362298976E3008181E9 /* TargetVariables.swift in Sources */,
 				45A331E8298976BA008181E9 /* ThreeAwayMarketDetailTableViewCell.swift in Sources */,
 				45A331E9298976BA008181E9 /* AddFriendViewModel.swift in Sources */,
 				45A331EA298976BA008181E9 /* TipsListViewController.swift in Sources */,
@@ -16479,6 +16480,7 @@
 				45A3323D298976BA008181E9 /* SportTypeStore.swift in Sources */,
 				45A3323E298976BA008181E9 /* EmptyCardTableViewCell.swift in Sources */,
 				45A33240298976BA008181E9 /* AddFriendViewController.swift in Sources */,
+				455E86B92AC464B20031AF26 /* TargetVariables-PROD.swift in Sources */,
 				45F6BA702AAF32A100C81DE1 /* BetslipProxyWebViewController.swift in Sources */,
 				45A33241298976BA008181E9 /* GroupUserManagementCellViewModel.swift in Sources */,
 				45A33242298976BA008181E9 /* NetworkModels.swift in Sources */,
@@ -17741,7 +17743,7 @@
 				45F6BC9A2AB3732C00C81DE1 /* FilterRowView.swift in Sources */,
 				45F6BC9B2AB3732C00C81DE1 /* UserTrackingSettingsViewController.swift in Sources */,
 				45F6BC9C2AB3732C00C81DE1 /* UploadView.swift in Sources */,
-				45F6BC9D2AB3732C00C81DE1 /* TargetVariables.swift in Sources */,
+				45F6BC9D2AB3732C00C81DE1 /* TargetVariables-UAT.swift in Sources */,
 				45F6BC9E2AB3732C00C81DE1 /* ThreeAwayMarketDetailTableViewCell.swift in Sources */,
 				45F6BC9F2AB3732C00C81DE1 /* AddFriendViewModel.swift in Sources */,
 				45F6BCA02AB3732C00C81DE1 /* TipsListViewController.swift in Sources */,
@@ -19112,7 +19114,7 @@
 				CODE_SIGN_ENTITLEMENTS = "Clients/Betsson/Betsson-PROD.entitlements";
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Manual;
-				CURRENT_PROJECT_VERSION = 1265;
+				CURRENT_PROJECT_VERSION = 10001;
 				DEVELOPMENT_TEAM = QN2DYX5K4M;
 				INFOPLIST_FILE = "$(SRCROOT)/Clients/Betsson/Misc-PROD/Betsson-PROD-Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 13.0;
@@ -19120,7 +19122,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 0.1.1;
+				MARKETING_VERSION = 1.0.0;
 				OTHER_LDFLAGS = "$(inherited)";
 				PRODUCT_BUNDLE_IDENTIFIER = fr.betsson.ios.app;
 				PRODUCT_NAME = Betsson;
@@ -19142,7 +19144,7 @@
 				CODE_SIGN_IDENTITY = "Apple Distribution";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution";
 				CODE_SIGN_STYLE = Manual;
-				CURRENT_PROJECT_VERSION = 1265;
+				CURRENT_PROJECT_VERSION = 10001;
 				DEVELOPMENT_TEAM = QN2DYX5K4M;
 				"DEVELOPMENT_TEAM[sdk=iphoneos*]" = QN2DYX5K4M;
 				INFOPLIST_FILE = "$(SRCROOT)/Clients/Betsson/Misc-PROD/Betsson-PROD-Info.plist";
@@ -19151,7 +19153,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 0.1.1;
+				MARKETING_VERSION = 1.0.0;
 				OTHER_LDFLAGS = "$(inherited)";
 				PRODUCT_BUNDLE_IDENTIFIER = fr.betsson.ios.app;
 				PRODUCT_NAME = Betsson;

@@ -243,7 +243,7 @@ extension SportRadarRestAPIClient: Endpoint {
                     "id": "\(eventId)/SportRadarWidget"
                 },
                 "clientContext": {
-                    "language": "\(SportRadarConstants.socketLanguageCode)",
+                    "language": "\(SportRadarConfiguration.shared.socketLanguageCode)",
                     "ipAddress": "127.0.0.1"
                 }
             }
@@ -255,10 +255,10 @@ extension SportRadarRestAPIClient: Endpoint {
                         {
                             "contentId": {
                                 "type": "boNavigationList",
-                                "id": "\(SportRadarConstants.frontEndCode)/top"
+                                "id": "\(SportRadarConfiguration.shared.frontEndCode)/top"
                             },
                             "clientContext": {
-                                "language": "\(SportRadarConstants.socketLanguageCode)",
+                                "language": "\(SportRadarConfiguration.shared.socketLanguageCode)",
                                 "ipAddress": "127.0.0.1"
                             }
                         }
@@ -273,7 +273,7 @@ extension SportRadarRestAPIClient: Endpoint {
                                 "id": "\(dateRange)"
                             },
                             "clientContext": {
-                                "language": "\(SportRadarConstants.socketLanguageCode)",
+                                "language": "\(SportRadarConfiguration.shared.socketLanguageCode)",
                                 "ipAddress": "127.0.0.1"
                             }
                         }
@@ -285,10 +285,10 @@ extension SportRadarRestAPIClient: Endpoint {
                         {
                             "contentId": {
                                 "type": "boNavigationList",
-                                "id": "\(SportRadarConstants.frontEndCode)/\(sportId)"
+                                "id": "\(SportRadarConfiguration.shared.frontEndCode)/\(sportId)"
                             },
                             "clientContext": {
-                                "language": "\(SportRadarConstants.socketLanguageCode)",
+                                "language": "\(SportRadarConfiguration.shared.socketLanguageCode)",
                                 "ipAddress": "127.0.0.1"
                             }
                         }
@@ -300,10 +300,10 @@ extension SportRadarRestAPIClient: Endpoint {
                         {
                             "contentId": {
                                 "type": "boNavigationList",
-                                "id": "\(SportRadarConstants.frontEndCode)/\(regionId)"
+                                "id": "\(SportRadarConfiguration.shared.frontEndCode)/\(regionId)"
                             },
                             "clientContext": {
-                                "language": "\(SportRadarConstants.socketLanguageCode)",
+                                "language": "\(SportRadarConfiguration.shared.socketLanguageCode)",
                                 "ipAddress": "127.0.0.1"
                             }
                         }
@@ -316,10 +316,10 @@ extension SportRadarRestAPIClient: Endpoint {
                         {
                             "contentId": {
                                 "type": "boNavigationList",
-                                "id": "\(SportRadarConstants.frontEndCode)/\(competitionId)"
+                                "id": "\(SportRadarConfiguration.shared.frontEndCode)/\(competitionId)"
                             },
                             "clientContext": {
-                                "language": "\(SportRadarConstants.socketLanguageCode)",
+                                "language": "\(SportRadarConfiguration.shared.socketLanguageCode)",
                                 "ipAddress": "127.0.0.1"
                             }
                         }
@@ -337,7 +337,7 @@ extension SportRadarRestAPIClient: Endpoint {
                                 "id": "\(query)/\(resultLimit)/\(page)/\(type)"
                             },
                             "clientContext": {
-                                "language": "\(SportRadarConstants.socketLanguageCode)",
+                                "language": "\(SportRadarConfiguration.shared.socketLanguageCode)",
                                 "ipAddress": "127.0.0.1"
                             }
                         }
@@ -353,7 +353,7 @@ extension SportRadarRestAPIClient: Endpoint {
                                 "id": "\(eventId)"
                             },
                             "clientContext": {
-                                "language": "\(SportRadarConstants.socketLanguageCode)",
+                                "language": "\(SportRadarConfiguration.shared.socketLanguageCode)",
                                 "ipAddress": "127.0.0.1"
                             }
                         }
@@ -369,7 +369,7 @@ extension SportRadarRestAPIClient: Endpoint {
                                 "id": "\(eventId)"
                             },
                             "clientContext": {
-                                "language": "\(SportRadarConstants.socketLanguageCode)",
+                                "language": "\(SportRadarConfiguration.shared.socketLanguageCode)",
                                 "ipAddress": "127.0.0.1"
                             }
                         }
@@ -382,10 +382,10 @@ extension SportRadarRestAPIClient: Endpoint {
                         {
                             "contentId": {
                                 "type": "headline",
-                                "id": "\(SportRadarConstants.frontEndCode)/20/HomepageSliders"
+                                "id": "\(SportRadarConfiguration.shared.frontEndCode)/20/HomepageSliders"
                             },
                             "clientContext": {
-                                "language": "\(SportRadarConstants.socketLanguageCode)",
+                                "language": "\(SportRadarConfiguration.shared.socketLanguageCode)",
                                 "ipAddress": "127.0.0.1"
                             }
                         }
@@ -398,10 +398,10 @@ extension SportRadarRestAPIClient: Endpoint {
                         {
                             "contentId": {
                                 "type": "bannerCategoryList",
-                                "id": "\(SportRadarConstants.frontEndCode)/Homepage"
+                                "id": "\(SportRadarConfiguration.shared.frontEndCode)/Homepage"
                             },
                             "clientContext": {
-                                "language": "\(SportRadarConstants.socketLanguageCode)",
+                                "language": "\(SportRadarConfiguration.shared.socketLanguageCode)",
                                 "ipAddress": "127.0.0.1"
                             }
                         }
@@ -414,10 +414,10 @@ extension SportRadarRestAPIClient: Endpoint {
                         {
                             "contentId": {
                                 "type": "headline",
-                                "id": "\(SportRadarConstants.frontEndCode)/20/slidingEvent"
+                                "id": "\(SportRadarConfiguration.shared.frontEndCode)/20/slidingEvent"
                             },
                             "clientContext": {
-                                "language": "\(SportRadarConstants.socketLanguageCode)",
+                                "language": "\(SportRadarConfiguration.shared.socketLanguageCode)",
                                 "ipAddress": "127.0.0.1"
                             }
                         }
@@ -430,10 +430,10 @@ extension SportRadarRestAPIClient: Endpoint {
                         {
                             "contentId": {
                                 "type": "headline",
-                                "id": "\(SportRadarConstants.frontEndCode)/20/InstaCard"
+                                "id": "\(SportRadarConfiguration.shared.frontEndCode)/20/InstaCard"
                             },
                             "clientContext": {
-                                "language": "\(SportRadarConstants.socketLanguageCode)",
+                                "language": "\(SportRadarConfiguration.shared.socketLanguageCode)",
                                 "ipAddress": "127.0.0.1"
                             }
                         }
@@ -446,10 +446,10 @@ extension SportRadarRestAPIClient: Endpoint {
                         {
                             "contentId": {
                                 "type": "headline",
-                                "id": "\(SportRadarConstants.frontEndCode)/20/boostedOddCard"
+                                "id": "\(SportRadarConfiguration.shared.frontEndCode)/20/boostedOddCard"
                             },
                             "clientContext": {
-                                "language": "\(SportRadarConstants.socketLanguageCode)",
+                                "language": "\(SportRadarConfiguration.shared.socketLanguageCode)",
                                 "ipAddress": "127.0.0.1"
                             }
                         }
@@ -462,10 +462,10 @@ extension SportRadarRestAPIClient: Endpoint {
                         {
                             "contentId": {
                                 "type": "headline",
-                                "id": "\(SportRadarConstants.frontEndCode)/20/eventCard"
+                                "id": "\(SportRadarConfiguration.shared.frontEndCode)/20/eventCard"
                             },
                             "clientContext": {
-                                "language": "\(SportRadarConstants.socketLanguageCode)",
+                                "language": "\(SportRadarConfiguration.shared.socketLanguageCode)",
                                 "ipAddress": "127.0.0.1"
                             }
                         }
@@ -526,7 +526,7 @@ extension SportRadarRestAPIClient: Endpoint {
                                 "id": "\(marketId)"
                             },
                             "clientContext": {
-                                "language": "\(SportRadarConstants.socketLanguageCode)",
+                                "language": "\(SportRadarConfiguration.shared.socketLanguageCode)",
                                 "ipAddress": "127.0.0.1"
                             }
                         }
@@ -542,7 +542,7 @@ extension SportRadarRestAPIClient: Endpoint {
                                 "id": "\(marketGroupId)"
                             },
                             "clientContext": {
-                                "language": "\(SportRadarConstants.socketLanguageCode)",
+                                "language": "\(SportRadarConfiguration.shared.socketLanguageCode)",
                                 "ipAddress": "127.0.0.1"
                             }
                         }
@@ -558,7 +558,7 @@ extension SportRadarRestAPIClient: Endpoint {
                                 "id": "\(marketId)"
                             },
                             "clientContext": {
-                                "language": "\(SportRadarConstants.socketLanguageCode)",
+                                "language": "\(SportRadarConfiguration.shared.socketLanguageCode)",
                                 "ipAddress": "127.0.0.1"
                             }
                         }
@@ -571,10 +571,10 @@ extension SportRadarRestAPIClient: Endpoint {
                         {
                             "contentId": {
                                 "type": "boNavigationList",
-                                "id": "\(SportRadarConstants.frontEndCode)/top"
+                                "id": "\(SportRadarConfiguration.shared.frontEndCode)/top"
                             },
                             "clientContext": {
-                                "language": "\(SportRadarConstants.socketLanguageCode)",
+                                "language": "\(SportRadarConfiguration.shared.socketLanguageCode)",
                                 "ipAddress": "127.0.0.1"
                             }
                         }
@@ -587,10 +587,10 @@ extension SportRadarRestAPIClient: Endpoint {
                         {
                             "contentId": {
                                 "type": "bannerCategoryList",
-                                "id": "\(SportRadarConstants.frontEndCode)/cashbackSuccessBanner"
+                                "id": "\(SportRadarConfiguration.shared.frontEndCode)/cashbackSuccessBanner"
                             },
                             "clientContext": {
-                                "language": "\(SportRadarConstants.socketLanguageCode)",
+                                "language": "\(SportRadarConfiguration.shared.socketLanguageCode)",
                                 "ipAddress": "127.0.0.1"
                             }
                         }
@@ -602,10 +602,10 @@ extension SportRadarRestAPIClient: Endpoint {
                         {
                             "contentId": {
                                 "type": "bannerCategoryList",
-                                "id": "\(SportRadarConstants.frontEndCode)/QuickLinks"
+                                "id": "\(SportRadarConfiguration.shared.frontEndCode)/QuickLinks"
                             },
                             "clientContext": {
-                                "language": "\(SportRadarConstants.socketLanguageCode)",
+                                "language": "\(SportRadarConfiguration.shared.socketLanguageCode)",
                                 "ipAddress": "127.0.0.1"
                             }
                         }
@@ -618,10 +618,10 @@ extension SportRadarRestAPIClient: Endpoint {
                         {
                             "contentId": {
                                 "type": "boNavigationList",
-                                "id": "\(SportRadarConstants.frontEndCode)/\(competitionId)"
+                                "id": "\(SportRadarConfiguration.shared.frontEndCode)/\(competitionId)"
                             },
                             "clientContext": {
-                                "language": "\(SportRadarConstants.socketLanguageCode)",
+                                "language": "\(SportRadarConfiguration.shared.socketLanguageCode)",
                                 "ipAddress": "127.0.0.1"
                             }
                         }
@@ -637,79 +637,79 @@ extension SportRadarRestAPIClient: Endpoint {
         switch self {
         case .get:
             // https://www-bson-ssb-ua.betsson.fr/services/content/get
-            return SportRadarConstants.servicesRestHostname
+            return SportRadarConfiguration.shared.servicesRestHostname
         case .subscribe:
             // https://velsv-bson-ssb-ua.betsson.fr/services/content/subscribe
-            return SportRadarConstants.servicesSubscribeRestHostname
+            return SportRadarConfiguration.shared.servicesSubscribeRestHostname
         case .unsubscribe:
             // https://velsv-bson-ssb-ua.betsson.fr/services/content/unsubscribe
-            return SportRadarConstants.servicesSubscribeRestHostname
+            return SportRadarConfiguration.shared.servicesSubscribeRestHostname
 
         case .marketsFilter:
-            return SportRadarConstants.sportRadarFrontEndURL
+            return SportRadarConfiguration.shared.sportRadarFrontEndURL
             
         case .fieldWidgetId:
-            return SportRadarConstants.servicesRestHostname
+            return SportRadarConfiguration.shared.servicesRestHostname
         case .sportsBoNavigationList:
-            return SportRadarConstants.servicesRestHostname
+            return SportRadarConfiguration.shared.servicesRestHostname
         case .sportsScheduledList:
-            return SportRadarConstants.servicesRestHostname
+            return SportRadarConfiguration.shared.servicesRestHostname
         case .sportRegionsNavigationList:
-            return SportRadarConstants.servicesRestHostname
+            return SportRadarConfiguration.shared.servicesRestHostname
         case .regionCompetitions:
-            return SportRadarConstants.servicesRestHostname
+            return SportRadarConfiguration.shared.servicesRestHostname
         case .competitionMarketGroups:
-            return SportRadarConstants.servicesRestHostname
+            return SportRadarConfiguration.shared.servicesRestHostname
         case .search:
-            return SportRadarConstants.servicesRestHostname
+            return SportRadarConfiguration.shared.servicesRestHostname
 
         case .getEventSummary:
-            return SportRadarConstants.servicesRestHostname
+            return SportRadarConfiguration.shared.servicesRestHostname
         case .getMarketInfo:
-            return SportRadarConstants.servicesRestHostname
+            return SportRadarConfiguration.shared.servicesRestHostname
         case .getEventDetails:
-            return SportRadarConstants.servicesRestHostname
+            return SportRadarConfiguration.shared.servicesRestHostname
 
         case .getEventsForMarketGroup:
-            return SportRadarConstants.servicesRestHostname
+            return SportRadarConfiguration.shared.servicesRestHostname
         case .getEventForMarket:
-            return SportRadarConstants.servicesRestHostname
+            return SportRadarConfiguration.shared.servicesRestHostname
 
         case .homeSliders:
-            return SportRadarConstants.servicesRestHostname
+            return SportRadarConfiguration.shared.servicesRestHostname
         case .promotionalTopBanners:
-            return SportRadarConstants.servicesRestHostname
+            return SportRadarConfiguration.shared.servicesRestHostname
         case .promotionalTopEvents:
-            return SportRadarConstants.servicesRestHostname
+            return SportRadarConfiguration.shared.servicesRestHostname
         case .promotionalTopStories:
-            return SportRadarConstants.servicesRestHostname
+            return SportRadarConfiguration.shared.servicesRestHostname
         case .highlightsBoostedOddsEvents:
-            return SportRadarConstants.servicesRestHostname
+            return SportRadarConfiguration.shared.servicesRestHostname
         case .highlightsImageVisualEvents:
-            return SportRadarConstants.servicesRestHostname
+            return SportRadarConfiguration.shared.servicesRestHostname
 
         case .promotedSports:
-            return SportRadarConstants.servicesRestHostname
+            return SportRadarConfiguration.shared.servicesRestHostname
 
         case .favoritesList:
-            return SportRadarConstants.apiRestHostname
+            return SportRadarConfiguration.shared.apiRestHostname
         case .addFavoriteList:
-            return SportRadarConstants.apiRestHostname
+            return SportRadarConfiguration.shared.apiRestHostname
         case .addFavoriteToList:
-            return SportRadarConstants.apiRestHostname
+            return SportRadarConfiguration.shared.apiRestHostname
         case .getFavoritesFromList:
-            return SportRadarConstants.apiRestHostname
+            return SportRadarConfiguration.shared.apiRestHostname
         case .deleteFavoriteList:
-            return SportRadarConstants.apiRestHostname
+            return SportRadarConfiguration.shared.apiRestHostname
         case .deleteFavoriteFromList:
-            return SportRadarConstants.apiRestHostname
+            return SportRadarConfiguration.shared.apiRestHostname
 
         case .getCashbackSuccessBanner:
-            return SportRadarConstants.servicesRestHostname
+            return SportRadarConfiguration.shared.servicesRestHostname
         case .getTopCompetitions:
-            return SportRadarConstants.servicesRestHostname
+            return SportRadarConfiguration.shared.servicesRestHostname
         case .getTopCompetitionCountry:
-            return SportRadarConstants.servicesRestHostname
+            return SportRadarConfiguration.shared.servicesRestHostname
         }
     }
 
@@ -789,8 +789,8 @@ extension SportRadarRestAPIClient: Endpoint {
                 "Media-Type": "application/json",
                 "Accept": "application/json",
                 "X-MGS-BusinessUnit": "3",
-                "Accept-Languag": "\(SportRadarConstants.socketLanguageCode)",
-                "X-MGS-Location": "\(SportRadarConstants.socketLanguageCode)",
+                "Accept-Languag": "\(SportRadarConfiguration.shared.socketLanguageCode)",
+                "X-MGS-Location": "\(SportRadarConfiguration.shared.socketLanguageCode)",
             ]
 
         }
@@ -843,7 +843,7 @@ extension SportRadarRestAPIClient {
                         "id": "\(contentIdentifier.contentRoute.fullRoute)"
                     },
                     "clientContext": {
-                        "language": "\(SportRadarConstants.socketLanguageCode)",
+                        "language": "\(SportRadarConfiguration.shared.socketLanguageCode)",
                         "ipAddress": "127.0.0.1"
                     }
                 }
@@ -859,7 +859,7 @@ extension SportRadarRestAPIClient {
                         "id": "\(contentIdentifier.contentRoute.fullRoute)"
                     },
                     "clientContext": {
-                        "language": "\(SportRadarConstants.socketLanguageCode)",
+                        "language": "\(SportRadarConfiguration.shared.socketLanguageCode)",
                         "ipAddress": "127.0.0.1"
                     }
                 }

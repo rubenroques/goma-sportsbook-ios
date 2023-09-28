@@ -42,6 +42,7 @@ protocol SportsbookTarget {
 
     static var shouldUseGradientBackgrounds: Bool { get }
 
+    static var serviceProviderEnvironment: EnvironmentType { get }
 }
 
 enum SportsbookTargetFeatures: CaseIterable {

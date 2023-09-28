@@ -1809,7 +1809,7 @@ extension SportRadarEventsProvider {
                 "id": "\(contentRoute.fullRoute)"
             },
             "clientContext": {
-                "language": "\(SportRadarConstants.socketLanguageCode)",
+                "language": "\(SportRadarConfiguration.shared.socketLanguageCode)",
                 "ipAddress": "127.0.0.1"
             }
         }
@@ -1818,7 +1818,7 @@ extension SportRadarEventsProvider {
     }
 
     private func createSubscribeRequest(withHTTPBody body: Data? = nil) -> URLRequest {
-        let hostname = SportRadarConstants.servicesRestHostname
+        let hostname = SportRadarConfiguration.shared.servicesRestHostname
         let url = URL(string: "\(hostname)/services/content/subscribe")!
         var request = URLRequest(url: url)
         request.httpBody = body
@@ -1829,7 +1829,7 @@ extension SportRadarEventsProvider {
     }
 
     private func createUnsubscribeRequest(withHTTPBody body: Data? = nil) -> URLRequest {
-        let hostname = SportRadarConstants.servicesRestHostname
+        let hostname = SportRadarConfiguration.shared.servicesRestHostname
         let url = URL(string: "\(hostname)/services/content/unsubscribe")!
         var request = URLRequest(url: url)
         request.httpBody = body

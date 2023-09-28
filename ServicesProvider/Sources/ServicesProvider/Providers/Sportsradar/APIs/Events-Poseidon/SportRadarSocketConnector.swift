@@ -72,7 +72,7 @@ class SportRadarSocketConnector: NSObject, Connector {
     }
 
     private func createWebSocketClientStream() {
-        let urlString = SportRadarConstants.socketURL
+        let urlString = SportRadarConfiguration.shared.socketURL
         let url = URL(string: urlString)!
         self.webSocketClientStream = WebSocketClientStream(url: url)
     }
@@ -162,7 +162,7 @@ class SportRadarSocketConnector: NSObject, Connector {
         let body = """
                    {
                      "subscriberId": null, "versionList": [],
-                     "clientContext": { "language":"\(SportRadarConstants.socketLanguageCode)", "ipAddress":"" }
+                     "clientContext": { "language":"\(SportRadarConfiguration.shared.socketLanguageCode)", "ipAddress":"" }
                    }
                    """
         Task {

@@ -365,9 +365,9 @@ extension BettingAPIClient: Endpoint {
     var url: String {
         switch self {
         case .getTicketSelection:
-            return SportRadarConstants.servicesRestHostname
+            return SportRadarConfiguration.shared.servicesRestHostname
         default:
-            return SportRadarConstants.apiRestHostname
+            return SportRadarConfiguration.shared.apiRestHostname
         }
     }
     
@@ -377,8 +377,8 @@ extension BettingAPIClient: Endpoint {
             "Content-Type": "application/json; charset=UTF-8",
             "Accept": "application/json",
             "X-MGS-BusinessUnit": "3",
-            "Accept-Languag": "\(SportRadarConstants.socketLanguageCode)",
-            "X-MGS-Location": "\(SportRadarConstants.socketLanguageCode)",
+            "Accept-Languag": "\(SportRadarConfiguration.shared.socketLanguageCode)",
+            "X-MGS-Location": "\(SportRadarConfiguration.shared.socketLanguageCode)",
         ]
         return defaultHeaders
     }

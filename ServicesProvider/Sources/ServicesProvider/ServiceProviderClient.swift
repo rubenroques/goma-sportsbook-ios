@@ -29,8 +29,23 @@ public class ServicesProviderClient {
 
     public var sumsubDataProvider: SumsubDataProvider?
 
-    public init(providerType: ProviderType) {
+    private var configuration = ServicesProviderConfiguration() {
+        didSet {
+            switch self.configuration.environment {
+            case .production:
+                SportRadarConfiguration.shared.environment = .production
+            case .staging:
+                SportRadarConfiguration.shared.environment = .staging
+            case .development:
+                SportRadarConfiguration.shared.environment = .development
+            }
+            
+        }
+    }
+    
+    public init(providerType: ProviderType, configuration: ServicesProviderConfiguration) {
         self.providerType = providerType
+        self.configuration = configuration
     }
 
     public func connect() {
