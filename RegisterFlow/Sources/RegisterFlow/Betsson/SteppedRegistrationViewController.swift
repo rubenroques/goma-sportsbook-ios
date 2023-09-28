@@ -119,6 +119,15 @@ public class SteppedRegistrationViewModel {
 
         self.serviceProvider = serviceProvider
         self.userRegisterEnvelopUpdater = userRegisterEnvelopUpdater
+        
+        self.userRegisterEnvelopUpdater.didUpdateUserRegisterEnvelop
+            .receive(on: DispatchQueue.main)
+            .sink { [weak self] updatedUserRegisterEnvelop in
+                self?.userRegisterEnvelop = updatedUserRegisterEnvelop
+            }
+            .store(in: &self.cancellables)
+            
+        
     }
 
     private static func defaultRegisterSteps() -> [RegisterStep] {

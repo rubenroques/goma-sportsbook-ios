@@ -973,13 +973,13 @@ extension OmegaAPIClient: Endpoint {
 
         switch self {
         case .contactSupport:
-            return SportRadarConstants.supportHostname
+            return SportRadarConfiguration.shared.supportHostname
         case .getSumsubAccessToken:
-            return SportRadarConstants.sumsubHostname
+            return SportRadarConfiguration.shared.sumsubHostname
         case .getSumsubApplicantData:
-            return SportRadarConstants.sumsubHostname
+            return SportRadarConfiguration.shared.sumsubHostname
         default:
-            return SportRadarConstants.pamHostname
+            return SportRadarConfiguration.shared.pamHostname
         }
 
 

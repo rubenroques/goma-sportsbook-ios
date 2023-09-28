@@ -8,32 +8,32 @@
 import Foundation
 
 struct TargetVariables: SportsbookTarget {
-        
-#if DEBUG
+
+    #if DEBUG
     static var environmentType: EnvironmentType = .dev
-#else
+    #else
     static var environmentType: EnvironmentType = .prod
-#endif
-    
+    #endif
+
     static var gomaGamingHost: String {
-        return "https://sportsbook-api.gomagaming.com"
+        return "https://gomagaming.com" // https://sportsbook-api.gomagaming.com"
     }
-    
+
     static var gomaGamingAnonymousAuthEndpoint: String {
-        "https://sportsbook-api.gomagaming.com/api/auth/v1"
+        return "https://gomagaming.com" // https://sportsbook-api.gomagaming.com/api/auth/v1"
     }
-    
+
     static var gomaGamingLoggedAuthEndpoint: String {
-        "https://sportsbook-api.gomagaming.com/api/auth/v1/login"
+        return "https://gomagaming.com" // https://sportsbook-api.gomagaming.com/api/auth/v1/login"
     }
-    
+
     static var firebaseDatabaseURL: String {
-#if DEBUG
+        #if DEBUG
         "https://goma-sportsbook-ios-dev.europe-west1.firebasedatabase.app/"
-#else
+        #else
         "https://goma-sportsbook-dev.europe-west1.firebasedatabase.app/"
         // "ht tps://goma-sportsbook.europe-west1.firebasedatabase.app/"
-#endif
+        #endif
     }
 
     static var everyMatrixHost: String {
@@ -43,27 +43,43 @@ struct TargetVariables: SportsbookTarget {
     static var supportedThemes: [Theme] {
         return Theme.allCases
     }
-    
+
     static var defaultCardStyle: CardsStyle {
         return .normal
     }
-    
+
+    static var defaultOddsValueType: OddsValueType {
+        return .allOdds
+    }
+
     static var casinoURL: String {
         return "https://sportsbook-cms.gomagaming.com/casino/"
     }
-    
+
     static var serviceProviderType: ServiceProviderType {
-        return .everymatrix
+        return .sportradar
     }
 
     static var homeTemplateBuilder: HomeTemplateBuilderType {
-        return HomeTemplateBuilderType.backendDynamic(clientTemplateKey: "crocobet")
+        return HomeTemplateBuilderType.clientDynamic
     }
 
     static var features: [SportsbookTargetFeatures] {
-        return SportsbookTargetFeatures.allCases
+        return [.cashback]
     }
-    
+
+    static var shouldUserBlurEffectTabBar: Bool {
+        return true
+    }
+
+    static var shouldUseGradientBackgrounds: Bool {
+        return true
+    }
+
+    static var shouldUseAlternateTopBar: Bool {
+        return true
+    }
+
     static var serviceProviderEnvironment: EnvironmentType {
         return .dev
     }

@@ -64,4 +64,8 @@ struct TargetVariables: SportsbookTarget {
         return SportsbookTargetFeatures.allCases
     }
     
+    static var serviceProviderEnvironment: EnvironmentType {
+        return .dev
+    }
+    
 }
