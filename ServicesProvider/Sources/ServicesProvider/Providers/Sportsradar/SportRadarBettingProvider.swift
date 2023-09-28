@@ -118,10 +118,11 @@ class SportRadarBettingProvider: BettingProvider, Connector {
         return publisher
             .flatMap { (internalPlacedBetsResponse: SportRadarModels.PlacedBetsResponse) -> AnyPublisher<PlacedBetsResponse, ServiceProviderError> in
 
-                if internalPlacedBetsResponse.responseCode == "1" ||
-                    internalPlacedBetsResponse.responseCode == "2" ||
-                    internalPlacedBetsResponse.responseCode == "3"
-                {
+//                if internalPlacedBetsResponse.responseCode == "1" ||
+//                    internalPlacedBetsResponse.responseCode == "2" ||
+//                    internalPlacedBetsResponse.responseCode == "3"
+
+                if internalPlacedBetsResponse.responseCode == "2" {
                     let placedBetsResponse = SportRadarModelMapper.placedBetsResponse(fromInternalPlacedBetsResponse: internalPlacedBetsResponse)
                     return Just( placedBetsResponse ).setFailureType(to: ServiceProviderError.self).eraseToAnyPublisher()
                 }

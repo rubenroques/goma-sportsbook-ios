@@ -160,6 +160,8 @@ enum OmegaAPIClient {
     case generateDocumentTypeToken(docType: String)
     case checkDocumentationData
 
+    case getMobileVerificationCode(mobileNumber: String)
+    case verifyMobileCode(code: String, requestId: String)
 }
 
 extension OmegaAPIClient: Endpoint {
@@ -292,6 +294,11 @@ extension OmegaAPIClient: Endpoint {
 
         case .checkDocumentationData:
             return "/ps/ips/checkDocumentation"
+            
+        case .getMobileVerificationCode:
+            return "/ps/ips/verify"
+        case .verifyMobileCode:
+            return "/ps/ips/verify"
         }
     }
     
@@ -754,11 +761,22 @@ extension OmegaAPIClient: Endpoint {
 
         case .checkDocumentationData:
             return [
-
                 URLQueryItem(name: "target", value: "SUMSUB"),
                 URLQueryItem(name: "resultType", value: "OVERALL")
-
             ]
+            
+        case .getMobileVerificationCode(let mobileNumber):
+            return [
+                URLQueryItem(name: "verificationType", value: "MOBILE"),
+                URLQueryItem(name: "verificationValue", value: mobileNumber)
+            ]
+        
+        case .verifyMobileCode(let code, let requestId):
+            return [
+                URLQueryItem(name: "verificationRequestId", value: requestId),
+                URLQueryItem(name: "verificationCode", value: code)
+            ]
+
         }
     }
     
@@ -832,6 +850,9 @@ extension OmegaAPIClient: Endpoint {
 
         case .generateDocumentTypeToken: return .get
         case .checkDocumentationData: return .get
+            
+        case .getMobileVerificationCode: return .get
+        case .verifyMobileCode: return .get
         }
     }
     
@@ -966,6 +987,9 @@ extension OmegaAPIClient: Endpoint {
 
         case .generateDocumentTypeToken: return true
         case .checkDocumentationData: return true
+            
+        case .getMobileVerificationCode: return false
+        case .verifyMobileCode: return false
         }
     }
     
