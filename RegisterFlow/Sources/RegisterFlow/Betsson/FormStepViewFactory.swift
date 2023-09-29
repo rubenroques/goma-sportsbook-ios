@@ -112,6 +112,7 @@ struct FormStepViewFactory {
             //
         case .phoneConfirmation:
             return ConfirmationCodeFormStepView(viewModel: ConfirmationCodeFormStepViewModel(title: Localization.localized("verification_code"),
+                                                                                             serviceProvider: serviceProvider,
                                                                                              userRegisterEnvelopUpdater: userRegisterEnvelopUpdater))
         }
     }

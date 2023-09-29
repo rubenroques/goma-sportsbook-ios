@@ -231,5 +231,12 @@ public class UserRegisterEnvelopUpdater {
         self.filledDataUpdated.send(newUserEnvelop)
         self.userRegisterEnvelop = newUserEnvelop
     }
-
+    
+    func setMobileVerificationRequestId(_ requestId: String?) {
+        var newUserEnvelop = self.userRegisterEnvelop
+        newUserEnvelop.mobileVerificationRequestId = requestId
+        self.filledDataUpdated.send(newUserEnvelop)
+        self.userRegisterEnvelop = newUserEnvelop
+    }
+    
 }

@@ -791,6 +791,25 @@ extension ServicesProviderClient {
         return privilegedAccessManager.signUpCompletion(form: form)
     }
 
+    
+    public func getMobileVerificationCode(forMobileNumber mobileNumber: String) -> AnyPublisher<BasicResponse, ServiceProviderError> {
+        guard
+            let privilegedAccessManager = self.privilegedAccessManager
+        else {
+            return Fail(error: ServiceProviderError.privilegedAccessManagerNotFound).eraseToAnyPublisher()
+        }
+        return privilegedAccessManager.getMobileVerificationCode(forMobileNumber: mobileNumber)
+    }
+    
+    public func verifyMobileCode(code: String, requestId: String) -> AnyPublisher<BasicResponse, ServiceProviderError> {
+        guard
+            let privilegedAccessManager = self.privilegedAccessManager
+        else {
+            return Fail(error: ServiceProviderError.privilegedAccessManagerNotFound).eraseToAnyPublisher()
+        }
+        return privilegedAccessManager.verifyMobileCode(code: code, requestId: requestId)
+    }
+    
 
 }
 

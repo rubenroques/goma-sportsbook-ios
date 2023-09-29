@@ -239,6 +239,8 @@ public class SignUpForm {
     public var avatarName: String?
     public var additionalStreetAddress: String?
     public var godfatherCode: String?
+    
+    public var mobileVerificationRequestId: String?
 
     public init(email: String, username: String, password: String, birthDate: Date,
                 mobilePrefix: String, mobileNumber: String, nationalityIsoCode: String,
@@ -248,7 +250,7 @@ public class SignUpForm {
                 receiveMarketingEmails: Bool? = nil, avatarName: String? = nil,
                 godfatherCode: String? = nil, postCode: String,
                 birthDepartment: String, streetNumber: String,
-                birthCountry: String, birthCity: String) {
+                birthCountry: String, birthCity: String, mobileVerificationRequestId: String?) {
 
         self.email = email
         self.username = username
@@ -273,7 +275,7 @@ public class SignUpForm {
         self.streetNumber = streetNumber
         self.birthCountry = birthCountry
         self.birthCity = birthCity
-        
+        self.mobileVerificationRequestId = mobileVerificationRequestId
     }
 
 }

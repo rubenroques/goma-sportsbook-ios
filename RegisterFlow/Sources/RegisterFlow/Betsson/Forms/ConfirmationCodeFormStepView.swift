@@ -11,6 +11,7 @@ import Theming
 import Extensions
 import Combine
 import HeaderTextField
+import ServicesProvider
 
 class ConfirmationCodeFormStepViewModel {
 
@@ -79,11 +80,13 @@ class ConfirmationCodeFormStepViewModel {
     private var verifiedCode: CurrentValueSubject<String?, Never>
     private var isVerifiedSubject: CurrentValueSubject<Bool, Never> = .init(false)
 
+    private let serviceProvider: ServicesProviderClient
     private var userRegisterEnvelopUpdater: UserRegisterEnvelopUpdater
 
     private var cancellables = Set<AnyCancellable>()
 
     init(title: String,
+         serviceProvider: ServicesProviderClient,
          userRegisterEnvelopUpdater: UserRegisterEnvelopUpdater) {
 
         self.title = title
@@ -91,6 +94,8 @@ class ConfirmationCodeFormStepViewModel {
 
         self.userRegisterEnvelopUpdater = userRegisterEnvelopUpdater
 
+        self.serviceProvider = serviceProvider
+        
         self.userRegisterEnvelopUpdater
             .fullPhoneNumberPublisher
             .sink { [weak self] fullPhoneNumber in
@@ -103,16 +108,18 @@ class ConfirmationCodeFormStepViewModel {
         self.verifiedCode.send(code)
     }
 
-    func setVerified(_ success: Bool) {
+    func setVerified(_ success: Bool, requestId: String?) {
         self.isVerifiedSubject.send(success)
         if success {
             self.userRegisterEnvelopUpdater.setVerifiedPhoneNumber(self.phoneNumber.value)
+            self.userRegisterEnvelopUpdater.setMobileVerificationRequestId(requestId)
         }
         else {
             self.userRegisterEnvelopUpdater.setVerifiedPhoneNumber(nil)
+            self.userRegisterEnvelopUpdater.setMobileVerificationRequestId(nil)
         }
     }
-
+    
     var shouldSkipForm: Bool {
         return self.userRegisterEnvelopUpdater.isPhoneNumberVerified
     }
@@ -131,124 +138,42 @@ class ConfirmationCodeFormStepViewModel {
     }
 
     private func requestVerifyCode(_ phoneNumber: String) -> AnyPublisher<PhoneVerificationResponse, PhoneVerificationError> {
-        let apiUrl = URL(string: "https://verification.api.sinch.com/verification/v1/verifications")!
-        var request = URLRequest(url: apiUrl)
-        request.httpMethod = "POST"
-
-        // Set headers
-        request.setValue("application/json", forHTTPHeaderField: "Content-Type")
-        request.setValue("fr-FR", forHTTPHeaderField: "Accept-Language")
-
-        // User credentials
-        let apiId = "e306a6db-1aa3-4a00-acb5-707e63bf61de"
-        let apiSecret = "gCSZP1EXBEKzCRJk8ktDrA=="
-        let loginString = "\(apiId):\(apiSecret)"
-        if let data = loginString.data(using: .utf8) {
-            let credentials = data.base64EncodedString(options: [])
-            request.setValue("Basic \(credentials)", forHTTPHeaderField: "Authorization")
-        }
-
-        // Set JSON payload
-        let payload: [String: Any] = [
-            "identity": [
-                "type": "number",
-                "endpoint": phoneNumber.replacingOccurrences(of: " ", with: "")
-            ],
-            "method": "sms"
-        ]
-
-        if let jsonData = try? JSONSerialization.data(withJSONObject: payload, options: []) {
-            request.httpBody = jsonData
-        }
-
-        return URLSession.shared.dataTaskPublisher(for: request)
-            .tryMap { data, response -> PhoneVerificationResponse in
-                guard let httpResponse = response as? HTTPURLResponse else {
-                    throw PhoneVerificationError.networkError
-                }
-
-                if (200...299).contains(httpResponse.statusCode) {
-                    let successResponse = try JSONDecoder().decode(PhoneVerificationResponse.self, from: data)
-                    return successResponse
-                } else {
-                    let errorResponse = try JSONDecoder().decode(PhoneVerificationResponse.self, from: data)
-                    return errorResponse
-                }
+        let formattedPhoneNumber = phoneNumber.replacingOccurrences(of: " ", with: "")
+                                                                        
+        return self.serviceProvider.getMobileVerificationCode(forMobileNumber: formattedPhoneNumber)
+            .map { response -> PhoneVerificationResponse in
+                return PhoneVerificationResponse(id: nil,
+                                                 method: nil,
+                                                 status: nil,
+                                                 errorCode: nil,
+                                                 message: nil,
+                                                 reference: nil)
+                
             }
             .mapError { error -> PhoneVerificationError in
-                if error is URLError {
-                    return .networkError
-                }
                 if let verificationError = error as? PhoneVerificationError {
                     return verificationError
                 }
                 return .customError(message: error.localizedDescription)
             }
             .eraseToAnyPublisher()
-
-    }
+                                                                    
+                                                                    }
 
     //
     // Verify Code
     func checkVerificationCode(requestId: String, code: String) -> AnyPublisher<PhoneVerificationResponse, PhoneVerificationError> {
-
-//        if code == "2211" {
-//            let response = PhoneVerificationResponse(id: "123", method: "sms", status: "SUCCESSFUL", errorCode: nil, message: nil, reference: nil)
-//            return Just(response).setFailureType(to: PhoneVerificationError.self).eraseToAnyPublisher()
-//            // return self.requestVerifyCode(self.phoneNumber.value)
-//        }
-//        else {
-//            return Fail(error: PhoneVerificationError.nonMatchingCode).eraseToAnyPublisher()
-//        }
-//
-
-        let urlString = "https://dc-euc1-std.verification.api.sinch.com/verification/v1/verifications/id/\(requestId)"
-        guard let url = URL(string: urlString) else {
-            return Fail(error: PhoneVerificationError.customError(message: "Invalid URL")).eraseToAnyPublisher()
-        }
-
-        var request = URLRequest(url: url)
-        request.httpMethod = "PUT"
-
-        // Headers
-        request.setValue("application/json", forHTTPHeaderField: "Content-Type")
-
-        // Authorization
-        let apiId = "e306a6db-1aa3-4a00-acb5-707e63bf61de"
-        let apiSecret = "gCSZP1EXBEKzCRJk8ktDrA=="
-        let loginString = "\(apiId):\(apiSecret)"
-        if let data = loginString.data(using: .utf8) {
-            let credentials = data.base64EncodedString(options: [])
-            request.setValue("Basic \(credentials)", forHTTPHeaderField: "Authorization")
-        }
-
-        // Body
-        let payload: [String: Any] = [
-            "method": "sms",
-            "sms": [
-                "code": code
-            ]
-        ]
-        request.httpBody = try? JSONSerialization.data(withJSONObject: payload, options: [])
-
-        return URLSession.shared.dataTaskPublisher(for: request)
-            .tryMap { data, response -> PhoneVerificationResponse in
-                guard let httpResponse = response as? HTTPURLResponse else {
-                    throw PhoneVerificationError.networkError
-                }
-
-                if (200...299).contains(httpResponse.statusCode) {
-                    let successResponse = try JSONDecoder().decode(PhoneVerificationResponse.self, from: data)
-                    return successResponse
-                } else {
-                    let errorResponse = try JSONDecoder().decode(PhoneVerificationResponse.self, from: data)
-                    return errorResponse
-                }
+        return self.serviceProvider.verifyMobileCode(code: code, requestId: requestId)
+            .map { response -> PhoneVerificationResponse in
+                return PhoneVerificationResponse(id: nil,
+                                                 method: nil,
+                                                 status: nil,
+                                                 errorCode: nil,
+                                                 message: nil,
+                                                 reference: nil)
+                
             }
             .mapError { error -> PhoneVerificationError in
-                if error is URLError {
-                    return .networkError
-                }
                 if let verificationError = error as? PhoneVerificationError {
                     return verificationError
                 }
@@ -420,14 +345,14 @@ class ConfirmationCodeFormStepView: FormStepView {
                         default:
                             self?.codeHeaderTextFieldView.showError(withMessage: "Something went wrong, please try again")
                         }
-                        self?.viewModel.setVerified(false)
+                        self?.viewModel.setVerified(false, requestId: nil)
                     }
                 } receiveValue: { [weak self] response in
                     print("checkVerificationCode \(response)")
                     if response.errorCode == nil,
                        let method = response.method, method == "sms",
                        let status = response.status, status.lowercased() == "successful" {
-                        self?.viewModel.setVerified(true)
+                        self?.viewModel.setVerified(true, requestId: self?.requestId)
                     }
                 }
                 .store(in: &self.cancellables)
@@ -458,7 +383,7 @@ class ConfirmationCodeFormStepView: FormStepView {
 
         self.startCountdown()
 
-        self.viewModel.setVerified(false)
+        self.viewModel.setVerified(false, requestId: nil)
 
         self.codeHeaderTextFieldView.setText("")
 

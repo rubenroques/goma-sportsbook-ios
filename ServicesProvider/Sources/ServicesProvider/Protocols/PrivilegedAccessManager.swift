@@ -98,4 +98,9 @@ protocol PrivilegedAccessManager {
     func generateDocumentTypeToken(docType: String) -> AnyPublisher<AccessTokenResponse, ServiceProviderError>
 
     func checkDocumentationData() -> AnyPublisher<ApplicantDataResponse, ServiceProviderError>
+    
+    func getMobileVerificationCode(forMobileNumber mobileNumber: String) -> AnyPublisher<BasicResponse, ServiceProviderError>
+    
+    func verifyMobileCode(code: String, requestId: String) -> AnyPublisher<BasicResponse, ServiceProviderError>
+    
 }

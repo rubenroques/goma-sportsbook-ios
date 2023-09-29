@@ -1289,6 +1289,43 @@ class SportRadarPrivilegedAccessManager: PrivilegedAccessManager {
             }
         }).eraseToAnyPublisher()
     }
+    
+    func getMobileVerificationCode(forMobileNumber mobileNumber: String) -> AnyPublisher<BasicResponse, ServiceProviderError> {
+        let endpoint = OmegaAPIClient.getMobileVerificationCode(mobileNumber: mobileNumber)
+
+        let publisher: AnyPublisher<SportRadarModels.BasicResponse, ServiceProviderError> = self.connector.request(endpoint)
+
+        return publisher.flatMap({ basicResponse -> AnyPublisher<BasicResponse, ServiceProviderError> in
+            if basicResponse.status == "SUCCESS" {
+
+                let basicResponse = SportRadarModelMapper.basicResponse(fromInternalBasicResponse: basicResponse)
+
+                return Just(basicResponse).setFailureType(to: ServiceProviderError.self).eraseToAnyPublisher()
+            }
+            return Fail(outputType: BasicResponse.self, failure: ServiceProviderError.errorMessage(message: basicResponse.message ?? "Error")).eraseToAnyPublisher()
+        })
+        .eraseToAnyPublisher()
+        
+    }
+    
+    func verifyMobileCode(code: String, requestId: String) -> AnyPublisher<BasicResponse, ServiceProviderError> {
+        let endpoint = OmegaAPIClient.verifyMobileCode(code: code, requestId: requestId)
+
+        let publisher: AnyPublisher<SportRadarModels.BasicResponse, ServiceProviderError> = self.connector.request(endpoint)
+
+        return publisher.flatMap({ basicResponse -> AnyPublisher<BasicResponse, ServiceProviderError> in
+            if basicResponse.status == "SUCCESS" {
+
+                let basicResponse = SportRadarModelMapper.basicResponse(fromInternalBasicResponse: basicResponse)
+
+                return Just(basicResponse).setFailureType(to: ServiceProviderError.self).eraseToAnyPublisher()
+            }
+            return Fail(outputType: BasicResponse.self, failure: ServiceProviderError.errorMessage(message: basicResponse.message ?? "Error")).eraseToAnyPublisher()
+        })
+        .eraseToAnyPublisher()
+        
+    }
+    
 }
 
 extension SportRadarPrivilegedAccessManager: SportRadarSessionTokenUpdater {
