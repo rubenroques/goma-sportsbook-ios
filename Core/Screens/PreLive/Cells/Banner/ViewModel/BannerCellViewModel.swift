@@ -34,6 +34,8 @@ class BannerCellViewModel {
     var matchId: String?
     var imageURL: URL?
     var marketId: String?
+    var location: String?
+    var specialAction: BannerSpecialAction
 
     var eventPartId: String?
     var betTypeId: String?
@@ -63,10 +65,13 @@ class BannerCellViewModel {
 
     let dateFormatter = DateFormatter()
 
-    init(id: String, matchId: String?, imageURL: String, marketId: String?) {
+    init(id: String, matchId: String?, imageURL: String, marketId: String?, location: String?, specialAction: BannerSpecialAction) {
         self.id = id
         self.matchId = matchId
         self.marketId = marketId
+        self.location = location
+        self.specialAction = specialAction
+
         let imageURLString = imageURL
 
         if let matchId = self.matchId {
@@ -97,10 +102,11 @@ class BannerCellViewModel {
 
     }
 
-    init(presentationType: PresentationType, imageURL: String? = nil) {
+    init(presentationType: PresentationType, imageURL: String? = nil, specialAction: BannerSpecialAction) {
 
         self.id = ""
         self.presentationType = presentationType
+        self.specialAction = specialAction
 
         let imageURLString = imageURL ?? ""
 

@@ -7,6 +7,7 @@
 
 import UIKit
 import Combine
+import ServicesProvider
 
 class BannerMatchCollectionViewCell: UICollectionViewCell {
 
@@ -67,7 +68,7 @@ class BannerMatchCollectionViewCell: UICollectionViewCell {
 
     var completeMatch: Match?
 
-    var didTapBannerViewAction: ((BannerCellViewModel.PresentationType) -> Void)?
+    var didTapBannerViewAction: ((BannerCellViewModel.PresentationType, BannerSpecialAction?) -> Void)?
     var didLongPressOdd: ((BettingTicket) -> Void)?
 
     private var leftOutcome: Outcome?
@@ -687,7 +688,13 @@ class BannerMatchCollectionViewCell: UICollectionViewCell {
 
     @objc func didTapBannerView() {
         if let presentationType = self.viewModel?.presentationType {
-            self.didTapBannerViewAction?(presentationType)
+            if let specialAction = self.viewModel?.specialAction {
+                self.didTapBannerViewAction?(presentationType, specialAction)
+            }
+            else {
+                self.didTapBannerViewAction?(presentationType, nil)
+            }
+
         }
     }
 

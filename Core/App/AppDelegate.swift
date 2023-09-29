@@ -134,13 +134,17 @@ class AppDelegate: UIResponder, UIApplicationDelegate, MessagingDelegate {
             let urlSections = url.pathComponents
             if urlSections.contains("gamedetail") {
                 if let gameDetailId = urlSections.last {
-                    self.openRoute(Route.event(id: gameDetailId), onApplication: application)
+//                    self.openRoute(Route.event(id: gameDetailId), onApplication: application)
+                    self.openSharedRoute(Route.event(id: gameDetailId), onApplication: application)
+
                 }
             }
             else if urlSections.contains("bet") {
                 if let ticketId = urlSections.last {
 
-                    self.openRoute(Route.ticket(id: ticketId), onApplication: application)
+//                    self.openRoute(Route.ticket(id: ticketId), onApplication: application)
+                    self.openSharedRoute(Route.ticket(id: ticketId), onApplication: application)
+
                 }
             }
         }
@@ -244,6 +248,11 @@ extension AppDelegate: UNUserNotificationCenterDelegate {
             self.bootstrap.router.configureStartingRoute(route)
         }
 
+    }
+
+    private func openSharedRoute(_ route: Route, onApplication application: UIApplication) {
+
+        self.bootstrap.router.openedNotificationRouteWhileActive(route)
     }
 
 }
