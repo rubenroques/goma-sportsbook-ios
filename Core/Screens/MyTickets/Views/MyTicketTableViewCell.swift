@@ -47,6 +47,7 @@ class MyTicketTableViewCell: UITableViewCell {
     @IBOutlet private weak var partialCashoutSliderView: UIView!
     @IBOutlet private weak var multiSliderInnerView: UIView!
     @IBOutlet private weak var partialCashoutButton: UIButton!
+    @IBOutlet private weak var partialCashoutDisableView: UIView!
 
     @IBOutlet private weak var loadingView: UIView!
     @IBOutlet private weak var loadingActivityIndicator: UIActivityIndicatorView!
@@ -99,28 +100,19 @@ class MyTicketTableViewCell: UITableViewCell {
         }
     }
 
-    private var showPartialCashoutSliderView: Bool = false {
+    private var showPartialCashoutSliderView: Bool = true {
         didSet {
-//            if showPartialCashoutSliderView {
-//                self.partialCashoutFilterButton.setImage(UIImage(named: "close_dark_icon"), for: .normal)
-//                self.cashoutButton.isEnabled = false
-//
-//            }
-//            else {
-//                self.partialCashoutFilterButton.setImage(UIImage(named: "partial_cashout_slider_icon"), for: .normal)
-//                self.cashoutButton.isEnabled = true
-//            }
 
             self.partialCashoutSliderView.isHidden = !showPartialCashoutSliderView
 
-            if showPartialCashoutSliderView {
-
-                if self.viewModel?.hasRedraw == false {
-                    self.needsDataUpdate?()
-                }
-                self.viewModel?.hasRedraw = true
-                
-            }
+//            if showPartialCashoutSliderView {
+//
+//                if self.viewModel?.hasRedraw == false {
+//                    self.needsDataUpdate?()
+//                }
+//                self.viewModel?.hasRedraw = true
+//
+//            }
 
         }
     }
@@ -144,6 +136,13 @@ class MyTicketTableViewCell: UITableViewCell {
             self.cashbackUsedBaseView.isHidden = !usedCashback
 //            self.cashbackInfoBaseView.isHidden = !usedCashback
 //            self.cashbackValueLabel.isHidden = !usedCashback
+        }
+    }
+
+    var isPartialCashoutDisabled: Bool = false {
+        didSet {
+            self.partialCashoutDisableView.isHidden = !isPartialCashoutDisabled
+            self.partialCashoutSliderView.isUserInteractionEnabled = !isPartialCashoutDisabled
         }
     }
 
@@ -175,7 +174,8 @@ class MyTicketTableViewCell: UITableViewCell {
         self.loadingView.isHidden = true
 
         self.cashoutBaseView.isHidden = true
-        self.partialCashoutSliderView.isHidden = true
+        self.partialCashoutSliderView.isHidden = false
+        self.partialCashoutDisableView.isHidden = true
 
         self.baseView.clipsToBounds = true
         self.baseView.layer.cornerRadius = 10
@@ -261,7 +261,7 @@ class MyTicketTableViewCell: UITableViewCell {
 
         self.cashoutValue = nil
         self.showCashoutButton = false
-        self.showPartialCashoutSliderView = false
+        self.showPartialCashoutSliderView = true
 
         self.cashoutSubscription?.cancel()
         self.cashoutSubscription = nil
@@ -366,6 +366,10 @@ class MyTicketTableViewCell: UITableViewCell {
         self.partialCashoutSliderView.layer.cornerRadius = CornerRadius.view
         self.partialCashoutSliderView.layer.masksToBounds = true
 
+        self.partialCashoutDisableView.backgroundColor = UIColor.App.backgroundPrimary.withAlphaComponent(0.7)
+        self.partialCashoutDisableView.layer.cornerRadius = CornerRadius.view
+        self.partialCashoutDisableView.layer.masksToBounds = true
+
         self.multiSliderInnerView.backgroundColor = .clear
 
         self.partialAmountsView.backgroundColor = .clear
@@ -404,10 +408,14 @@ class MyTicketTableViewCell: UITableViewCell {
 
 //            self.showCashoutButton = true
             self.showPartialCashoutSliderView = true
+            self.isPartialCashoutDisabled = false
         }
         else {
 //            self.showCashoutButton = false
-            self.showPartialCashoutSliderView = false
+            self.showPartialCashoutSliderView = true
+            let partialCashoutLabel = localized("cashout_value").replacingFirstOccurrence(of: "{cashoutAmount}", with: localized("unavailable"))
+            self.partialCashoutButton.setTitle("\(partialCashoutLabel)", for: .normal)
+            self.isPartialCashoutDisabled = true
 
         }
     }
@@ -727,15 +735,16 @@ class MyTicketTableViewCell: UITableViewCell {
     }
 
     func setupPartialCashoutSlider() {
-        guard let cashout = self.viewModel?.cashout,
-        let ticket = self.viewModel?.ticket
+        guard let ticket = self.viewModel?.ticket
         else {
             return
 
         }
 
-        let cashoutValue = cashout.value ?? 0.0
-        let cashoutStake = cashout.stake ?? 0.0
+        let cashout = self.viewModel?.cashout
+
+        let cashoutValue = cashout?.value ?? 0.0
+        let cashoutStake = cashout?.stake ?? (ticket.totalBetAmount ?? 0.0)
 
         var maxSliderStake = cashoutStake
 

@@ -35,6 +35,10 @@ struct AnalyticsClient {
 
     static func sendEvent(event: Event) {
 
+        if UserDefaults.standard.acceptedTracking == false {
+            return
+        }
+
         var eventTypeKey = ""
         var parameters: [String: String]?
 

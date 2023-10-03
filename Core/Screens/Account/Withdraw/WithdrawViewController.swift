@@ -445,6 +445,8 @@ class WithdrawViewController: UIViewController {
 
     private func showAlert() {
 
+        self.shouldRefreshUserWallet?()
+
         let withdrawSuccessViewController = GenericSuccessViewController()
 
         withdrawSuccessViewController.didTapContinueAction = { [weak self] in

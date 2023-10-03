@@ -409,12 +409,19 @@
                                                         <color key="textColor" name="textPrimary"/>
                                                         <nil key="highlightedColor"/>
                                                     </label>
+                                                    <view alpha="0.69999999999999996" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="STo-9D-118">
+                                                        <rect key="frame" x="0.0" y="0.0" width="373" height="132"/>
+                                                        <color key="backgroundColor" name="backgroundPrimary"/>
+                                                    </view>
                                                 </subviews>
                                                 <color key="backgroundColor" systemColor="systemBackgroundColor"/>
                                                 <constraints>
+                                                    <constraint firstItem="STo-9D-118" firstAttribute="top" secondItem="VSd-xK-xek" secondAttribute="top" id="0Bi-dP-Qf6"/>
+                                                    <constraint firstAttribute="trailing" secondItem="STo-9D-118" secondAttribute="trailing" id="0OB-hj-BRq"/>
                                                     <constraint firstItem="hiU-AP-953" firstAttribute="top" secondItem="VSd-xK-xek" secondAttribute="top" id="8iO-lK-rLd"/>
                                                     <constraint firstAttribute="bottom" secondItem="e0A-Pg-rBe" secondAttribute="bottom" constant="17" id="Bx9-2l-wdG"/>
                                                     <constraint firstAttribute="centerX" secondItem="UsH-hI-rHE" secondAttribute="trailing" id="Dj8-gR-IgL"/>
+                                                    <constraint firstItem="STo-9D-118" firstAttribute="leading" secondItem="VSd-xK-xek" secondAttribute="leading" id="Fti-Ut-KZk"/>
                                                     <constraint firstItem="UsH-hI-rHE" firstAttribute="top" secondItem="VSd-xK-xek" secondAttribute="top" constant="15" id="H26-Sw-kDv"/>
                                                     <constraint firstItem="hiU-AP-953" firstAttribute="leading" secondItem="VSd-xK-xek" secondAttribute="leading" constant="12" id="Mux-s5-4Gq"/>
                                                     <constraint firstItem="e0A-Pg-rBe" firstAttribute="top" secondItem="hiU-AP-953" secondAttribute="bottom" id="XyX-wg-GgW"/>
@@ -425,6 +432,7 @@
                                                     <constraint firstItem="UsH-hI-rHE" firstAttribute="leading" secondItem="VSd-xK-xek" secondAttribute="leading" constant="12" id="nFu-PA-Nsp"/>
                                                     <constraint firstAttribute="trailing" secondItem="hiU-AP-953" secondAttribute="trailing" constant="12" id="njY-HL-rS7"/>
                                                     <constraint firstItem="e0A-Pg-rBe" firstAttribute="leading" secondItem="VSd-xK-xek" secondAttribute="leading" constant="12" id="qSv-Ep-Le1"/>
+                                                    <constraint firstAttribute="bottom" secondItem="STo-9D-118" secondAttribute="bottom" id="v3g-0a-pkQ"/>
                                                 </constraints>
                                             </view>
                                         </subviews>
@@ -515,6 +523,7 @@
                 <outlet property="originalAmountValueLabel" destination="6aL-uL-4BQ" id="bth-Cc-6ew"/>
                 <outlet property="partialAmountsView" destination="Ize-DK-fDR" id="2h5-GM-eHr"/>
                 <outlet property="partialCashoutButton" destination="e0A-Pg-rBe" id="mic-JN-W9K"/>
+                <outlet property="partialCashoutDisableView" destination="STo-9D-118" id="iyR-J2-dUj"/>
                 <outlet property="partialCashoutFilterButton" destination="25M-S7-CFH" id="CBc-m8-MxD"/>
                 <outlet property="partialCashoutSliderView" destination="VSd-xK-xek" id="E73-o6-pub"/>
                 <outlet property="returnedAmountValueLabel" destination="VLz-nZ-YQ9" id="za6-RF-ari"/>
@@ -531,17 +540,20 @@
         </tableViewCell>
     </objects>
     <resources>
-        <image name="cashback_small_blue_icon" width="18" height="18"/>
+        <image name="cashback_small_blue_icon" width="49" height="39"/>
         <image name="partial_cashout_slider_icon" width="21" height="12"/>
         <image name="send_bet_icon" width="18" height="18"/>
         <namedColor name="alertWarning">
             <color red="0.94901960784313721" green="0.75294117647058822" blue="0.21568627450980393" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
         </namedColor>
+        <namedColor name="backgroundPrimary">
+            <color red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+        </namedColor>
         <namedColor name="buttonBackgroundSecondary">
-            <color red="0.40784313725490196" green="0.50588235294117645" blue="0.6705882352941176" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+            <color red="0.4823529411764706" green="0.53333333333333333" blue="0.59999999999999998" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
         </namedColor>
         <namedColor name="textPrimary">
-            <color red="0.070588235294117646" green="0.074509803921568626" blue="0.086274509803921567" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+            <color red="0.066666666666666666" green="0.090196078431372548" blue="0.11764705882352941" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
         </namedColor>
         <systemColor name="systemBackgroundColor">
             <color white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
