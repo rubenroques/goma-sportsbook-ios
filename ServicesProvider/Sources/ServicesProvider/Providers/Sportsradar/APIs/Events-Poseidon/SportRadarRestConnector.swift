@@ -67,11 +67,9 @@ class SportRadarRestConnector {
             }
             // Debug helper
             .handleEvents(receiveOutput: { data in
-                print("ServiceProvider-NetworkManager [[ requesting ]] ",
-                      dump(request),
-                      dump(String.init(data: request.httpBody ?? Data(), encoding: .utf8)) ?? "no body found",
-                      " [[ response ]]",
-                      String(data: data, encoding: .utf8) ?? "!?" )
+                let urlString = request.url?.absoluteString ?? ""
+                let bodyString = String.init(data: request.httpBody ?? Data(), encoding: .utf8) ?? ""
+                print("ServiceProvider-SportRadarRestConnector [[ requesting ]] [url: \(urlString) ] \n [body: \(bodyString) ] ")
             })
             .decode(type: T.self, decoder: self.decoder)
             .mapError { error in
@@ -99,3 +97,4 @@ class SportRadarRestConnector {
         return self.token?.hash
     }
 }
+

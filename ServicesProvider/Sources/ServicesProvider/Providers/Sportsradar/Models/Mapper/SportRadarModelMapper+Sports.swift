@@ -37,9 +37,6 @@ extension SportRadarModelMapper {
                                   numberOutrightEvents: sportRadarSportType.numberOutrightEvents,
                                   numberOutrightMarkets: sportRadarSportType.numberOutrightMarkets,
                                   numberLiveEvents: sportRadarSportType.numberLiveEvents)
-
-        print("SportsListDebug sport: \(sportType.alphaId ?? "---") \(sportType.name) ")
-
         return sportType
     }
 

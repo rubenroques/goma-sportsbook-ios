@@ -672,6 +672,9 @@ class MatchDetailsViewController: UIViewController {
 
                     self?.statsCollectionView.reloadData()
                 case .failed:
+                    self?.loadingSpinnerViewController.view.isHidden = true
+                    self?.loadingSpinnerViewController.stopAnimating()
+                    
                     self?.showMatchNotAvailableView()
                 }
             })

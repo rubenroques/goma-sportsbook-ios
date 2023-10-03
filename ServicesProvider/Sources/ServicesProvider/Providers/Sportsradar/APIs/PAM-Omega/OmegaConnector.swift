@@ -110,10 +110,10 @@ class OmegaConnector: Connector {
         }
         
         return self.session.dataTaskPublisher(for: request)
-            .handleEvents(receiveOutput: { result in
-                print("ServiceProvider-OmegaConnector [[ requesting ]] ", request,
-                      " [[ response ]] ", String(data: result.data, encoding: .utf8) ?? "!?" )
-            })
+//            .handleEvents(receiveOutput: { result in
+//                print("ServiceProvider-OmegaConnector [[ requesting ]] ", request,
+//                      " [[ response ]] ", String(data: result.data, encoding: .utf8) ?? "!?" )
+//            })
             .tryMap { result -> Data in
                 if let httpResponse = result.response as? HTTPURLResponse, httpResponse.statusCode == 401 {
                     throw ServiceProviderError.unauthorized
@@ -186,10 +186,10 @@ class OmegaConnector: Connector {
         }
         
         return self.session.dataTaskPublisher(for: request)
-            .handleEvents(receiveOutput: { result in
-                print("ServiceProvider-OmegaConnector login [[ requesting ]] ", request,
-                      " [[ response ]] ", String(data: result.data, encoding: .utf8) ?? "!?" )
-            })
+//            .handleEvents(receiveOutput: { result in
+//                print("ServiceProvider-OmegaConnector login [[ requesting ]] ", request,
+//                      " [[ response ]] ", String(data: result.data, encoding: .utf8) ?? "!?" )
+//            })
             .tryMap { result in
                 if let httpResponse = result.response as? HTTPURLResponse, httpResponse.statusCode == 401 {
                     throw ServiceProviderError.unauthorized
@@ -268,10 +268,10 @@ class OmegaConnector: Connector {
         print("Openieng Session for SESSION KEY: \(sessionKey)")
 
         return self.session.dataTaskPublisher(for: request)
-            .handleEvents(receiveOutput: { result in
-                print("ServiceProvider-OmegaConnector openSession [[ requesting ]] ", request,
-                      " [[ response ]] ", String(data: result.data, encoding: .utf8) ?? "!?" )
-            })
+//            .handleEvents(receiveOutput: { result in
+//                print("ServiceProvider-OmegaConnector openSession [[ requesting ]] ", request,
+//                      " [[ response ]] ", String(data: result.data, encoding: .utf8) ?? "!?" )
+//            })
             .tryMap { result in
                 if let httpResponse = result.response as? HTTPURLResponse, httpResponse.statusCode == 401 {
                     throw ServiceProviderError.unauthorized
