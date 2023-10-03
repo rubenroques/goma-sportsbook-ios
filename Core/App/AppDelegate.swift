@@ -51,9 +51,10 @@ class AppDelegate: UIResponder, UIApplicationDelegate, MessagingDelegate {
         
         //
         //
-//        // Disable autolayout errors/warnings console logs
-//        UserDefaults.standard.set(false, forKey: "_UIConstraintBasedLayoutLogUnsatisfiable")
+        // Disable autolayout errors/warnings console logs
+        UserDefaults.standard.set(false, forKey: "_UIConstraintBasedLayoutLogUnsatisfiable")
 
+        //
         IQKeyboardManager.shared.keyboardDistanceFromTextField = 24.0
         IQKeyboardManager.shared.enable = true
         IQKeyboardManager.shared.enableAutoToolbar = true

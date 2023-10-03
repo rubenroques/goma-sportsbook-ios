@@ -76,8 +76,6 @@ class SportRadarMarketDetailsCoordinator {
                 }
             } receiveValue: { _ in }
             .store(in: &self.cancellables)
-
-        print("🤷 betslipbug  \"type\":\"market\" SportRadarMarketDetailsCoordinator init \(self.contentIdentifier) \(self.marketId) \(self.eventId)")
     }
 
     private func checkMarketUpdatesAvailable() -> AnyPublisher<Void, ServiceProviderError> {
