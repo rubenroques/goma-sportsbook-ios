@@ -6,6 +6,7 @@
 //
 
 import UIKit
+import ServicesProvider
 
 class BannerScrollTableViewCell: UITableViewCell {
 
@@ -16,7 +17,7 @@ class BannerScrollTableViewCell: UITableViewCell {
     @IBOutlet private var collectionView: UICollectionView!
 
     var viewModel: BannerLineCellViewModel?
-    var didTapBannerViewAction: ((BannerCellViewModel.PresentationType) -> Void)?
+    var didTapBannerViewAction: ((BannerCellViewModel.PresentationType, BannerSpecialAction?) -> Void)?
     var didLongPressOdd: ((BettingTicket) -> Void)?
 
     private var carouselCounter: Int = 0
@@ -153,9 +154,9 @@ extension BannerScrollTableViewCell: UICollectionViewDelegate, UICollectionViewD
         
         cell.setupWithViewModel(cellViewModel)
 
-        cell.didTapBannerViewAction = { [weak self] presentationType in
+        cell.didTapBannerViewAction = { [weak self] presentationType, specialAction in
             AnalyticsClient.sendEvent(event: .promoBannerClicked)
-            self?.didTapBannerViewAction?(presentationType)
+            self?.didTapBannerViewAction?(presentationType, specialAction)
         }
 
         cell.didLongPressOdd = { [weak self] bettingTicket in

@@ -190,7 +190,7 @@
                                         <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Sport" textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="2" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="3gZ-e2-hHf">
                                             <rect key="frame" x="0.0" y="22" width="31" height="7"/>
                                             <fontDescription key="fontDescription" name="Gilroy-Bold" family="Gilroy" pointSize="7"/>
-                                            <color key="textColor" name="textPrimary"/>
+                                            <color key="textColor" name="buttonTextPrimary"/>
                                             <nil key="highlightedColor"/>
                                         </label>
                                         <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="ULw-jS-y6v">
@@ -305,8 +305,8 @@
         <image name="match_filters_icons" width="23" height="24"/>
         <image name="no_content_icon" width="161" height="161"/>
         <image name="sport_type_soccer_icon" width="23" height="23"/>
-        <namedColor name="textPrimary">
-            <color red="0.070588235294117646" green="0.074509803921568626" blue="0.086274509803921567" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+        <namedColor name="buttonTextPrimary">
+            <color red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
         </namedColor>
     </resources>
 </document>

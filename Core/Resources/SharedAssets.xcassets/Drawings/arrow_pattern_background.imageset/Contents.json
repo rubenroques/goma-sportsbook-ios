@@ -1,17 +1,17 @@
 {
   "images" : [
     {
-      "filename" : "arrow_pattern.png",
+      "filename" : "pattern arrows.png",
       "idiom" : "universal",
       "scale" : "1x"
     },
     {
-      "filename" : "arrow_pattern 1.png",
+      "filename" : "pattern arrows@2x.png",
       "idiom" : "universal",
       "scale" : "2x"
     },
     {
-      "filename" : "arrow_pattern 2.png",
+      "filename" : "pattern arrows@3x.png",
       "idiom" : "universal",
       "scale" : "3x"
     }

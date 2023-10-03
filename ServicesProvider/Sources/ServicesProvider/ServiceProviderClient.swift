@@ -46,6 +46,15 @@ public class ServicesProviderClient {
     public init(providerType: ProviderType, configuration: ServicesProviderConfiguration) {
         self.providerType = providerType
         self.configuration = configuration
+
+        switch configuration.environment {
+        case .production:
+            SportRadarConfiguration.shared.environment = .production
+        case .staging:
+            SportRadarConfiguration.shared.environment = .staging
+        case .development:
+            SportRadarConfiguration.shared.environment = .development
+        }
     }
 
     public func connect() {

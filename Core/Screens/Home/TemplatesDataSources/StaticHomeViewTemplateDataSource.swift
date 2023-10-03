@@ -48,7 +48,9 @@ class StaticHomeViewTemplateDataSource {
                     let bannerViewModel = BannerCellViewModel(id: banner.id,
                                                               matchId: banner.matchId,
                                                               imageURL: banner.imageURL ?? "",
-                                                              marketId: banner.marketId)
+                                                              marketId: banner.marketId,
+                                                              location: banner.location,
+                                                              specialAction: banner.specialAction)
                     bannerCellViewModels.append(bannerViewModel)
                     self.bannersLineViewModelCache[banner.id] = bannerViewModel
                 }
@@ -220,11 +222,11 @@ class StaticHomeViewTemplateDataSource {
                     if let linkUrl = $0.linkUrl,
                        // linkUrl.contains("event"),
                        let matchId = linkUrl.components(separatedBy: "/").last {
-                        let bannerInfo = BannerInfo(type: $0.type, id: $0.id, matchId: matchId, imageURL: $0.imageUrl, marketId: $0.marketId)
+                        let bannerInfo = BannerInfo(type: $0.type, id: $0.id, matchId: matchId, imageURL: $0.imageUrl, marketId: $0.marketId, specialAction: .none)
                         return bannerInfo
                     }
 
-                    let bannerInfo = BannerInfo(type: $0.type, id: $0.id, imageURL: $0.imageUrl)
+                    let bannerInfo = BannerInfo(type: $0.type, id: $0.id, imageURL: $0.imageUrl, specialAction: .none)
                     return bannerInfo
                 })
                 self?.banners = banners

@@ -895,6 +895,16 @@ class RootViewController: UIViewController {
         self.present(Router.navigationController(with: betslipViewController), animated: true, completion: nil)
     }
 
+    func openBetslipModalWithShareData(ticketToken: String) {
+        let betslipViewController = BetslipViewController(startScreen: .sharedBet(ticketToken))
+
+        betslipViewController.willDismissAction = { [weak self] in
+            self?.reloadChildViewControllersData()
+        }
+        
+        self.present(Router.navigationController(with: betslipViewController), animated: true, completion: nil)
+    }
+
     func openChatModal() {
         if Env.userSessionStore.isUserLogged() {
             let socialViewController = SocialViewController()
@@ -919,6 +929,13 @@ class RootViewController: UIViewController {
         let userProfileViewController = UserProfileViewController(viewModel: userProfileViewModel)
 
         self.navigationController?.pushViewController(userProfileViewController, animated: true)
+    }
+
+    func openMatchDetail(matchId: String) {
+
+        let matchDetailsViewController = MatchDetailsViewController(viewModel: MatchDetailsViewModel(matchId: matchId))
+
+        self.present(Router.navigationController(with: matchDetailsViewController), animated: true, completion: nil)
     }
 
     //
@@ -964,6 +981,16 @@ class RootViewController: UIViewController {
         if homeViewControllerLoaded {
             self.homeViewController.reloadData()
         }
+    }
+
+    func reloadViewControllersFromSharedData() {
+        if preLiveViewControllerLoaded {
+            self.preLiveViewController.reloadData()
+        }
+        if liveEventsViewControllerLoaded {
+            self.liveEventsViewController.reloadData()
+        }
+        self.homeViewController.reloadData()
     }
 
     @IBAction private func didTapSearchButton() {

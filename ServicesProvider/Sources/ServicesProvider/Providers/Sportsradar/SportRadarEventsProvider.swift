@@ -492,8 +492,8 @@ class SportRadarEventsProvider: EventsProvider {
         }
         else {
             let eventDetailsCoordinator = SportRadarEventDetailsCoordinator(matchId: eventId,
-                                                                             sessionToken: sessionToken.hash,
-                                                                             storage: SportRadarEventDetailsStorage())
+                                                                            sessionToken: sessionToken.hash,
+                                                                            storage: SportRadarEventDetailsStorage())
             self.addEventDetailsCoordinator(eventDetailsCoordinator, withKey: eventId)
             return eventDetailsCoordinator.eventDetailsPublisher
         }

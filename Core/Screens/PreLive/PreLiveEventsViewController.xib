@@ -239,7 +239,7 @@
                                         <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Sport" textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="2" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Azv-t3-fBh">
                                             <rect key="frame" x="0.0" y="22" width="31" height="7"/>
                                             <fontDescription key="fontDescription" name="Gilroy-Bold" family="Gilroy" pointSize="7"/>
-                                            <color key="textColor" name="textPrimary"/>
+                                            <color key="textColor" name="buttonTextPrimary"/>
                                             <nil key="highlightedColor"/>
                                         </label>
                                     </subviews>
@@ -355,11 +355,11 @@
         <image name="match_filters_icons" width="23" height="24"/>
         <image name="no_content_icon" width="161" height="161"/>
         <image name="sport_type_soccer_icon" width="23" height="23"/>
-        <namedColor name="separatorLine">
-            <color red="0.1803921568627451" green="0.1803921568627451" blue="0.1803921568627451" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+        <namedColor name="buttonTextPrimary">
+            <color red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
         </namedColor>
-        <namedColor name="textPrimary">
-            <color red="0.0" green="0.0039215686274509803" blue="0.078431372549019607" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+        <namedColor name="separatorLine">
+            <color red="0.75294117647058822" green="0.79607843137254897" blue="0.8666666666666667" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
         </namedColor>
         <systemColor name="systemBackgroundColor">
             <color white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
