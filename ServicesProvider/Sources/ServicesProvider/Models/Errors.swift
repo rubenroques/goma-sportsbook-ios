@@ -21,6 +21,8 @@ public enum ServiceProviderError: Error {
     case invalidSignUpUsername
     case invalidSignUpPassword
 
+    case invalidMobileVerifyCode
+    
     case incompletedSportData
     case userSessionNotFound
 

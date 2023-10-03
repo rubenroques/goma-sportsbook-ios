@@ -467,9 +467,10 @@ extension RecruitAFriendViewController {
         let sponsors = 1
         let days = 19
 
-        let sponsorsText = sponsors == 1 ?
-        localized("referrals_number_single").replacingFirstOccurrence(of: "{number}", with: "\(sponsors)") :
-        localized("referrals_number").replacingFirstOccurrence(of: "{number}", with: "\(sponsors)")
+//        let sponsorsText = sponsors == 1 ?
+//        localized("referrals_number_single").replacingFirstOccurrence(of: "{number}", with: "\(sponsors)") :
+//        localized("referrals_number").replacingFirstOccurrence(of: "{number}", with: "\(sponsors)")
+        let sponsorsText = "\(sponsors)"
 
         let daysText = days == 1 ?
         localized("days_number_single").replacingFirstOccurrence(of: "{number}", with: "\(days)") :

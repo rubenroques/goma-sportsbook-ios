@@ -10,46 +10,48 @@ import ServicesProvider
 import SharedModels
 
 public struct UserRegisterEnvelop: Codable, Equatable {
-
+    
     public enum Gender: String, Codable, Equatable {
         case male = "M"
         case female = "F"
     }
-
+    
     public var gender: Gender?
-
+    
     public var name: String?
     public var surname: String?
-
+    
     public var avatarName: String?
     public var nickname: String?
-
+    
     public var dateOfBirth: Date?
     public var countryBirth: Country?
     public var deparmentOfBirth: String?
     public var placeBirth: String?
-
+    
     public var placeAddress: String?
     public var postcode: String?
     public var streetAddress: String?
     public var streetNumber: String?
-
+    
     public var email: String?
     public var phonePrefixCountry: Country?
     public var phoneNumber: String?
     public var verifiedPhoneNumber: String?
-
+    
     public var password: String?
-
+    
     public var acceptedMarketing: Bool
     public var acceptedTerms: Bool
-
+    
     public var promoCode: String?
     public var godfatherCode: String?
-
+    
     public var simpleRegistered: Bool
     public var confirmationCode: String?
-
+    
+    public var mobileVerificationRequestId: String?
+    
     enum CodingKeys: CodingKey {
         case gender
         case name
@@ -75,8 +77,9 @@ public struct UserRegisterEnvelop: Codable, Equatable {
         case godfatherCode
         case simpleRegistered
         case confirmationCode
+        case mobileVerificationRequestId
     }
-
+    
     public init(gender: Gender? = nil,
                 name: String? = nil,
                 surname: String? = nil,
@@ -100,9 +103,10 @@ public struct UserRegisterEnvelop: Codable, Equatable {
                 promoCode: String? = nil,
                 godfatherCode: String? = nil,
                 simpleRegistered: Bool = false,
-                confirmationCode: String? = nil
+                confirmationCode: String? = nil,
+                mobileVerificationRequestId: String? = nil
     ) {
-
+        
         self.gender = gender
         self.name = name
         self.surname = surname
@@ -127,8 +131,9 @@ public struct UserRegisterEnvelop: Codable, Equatable {
         self.godfatherCode = godfatherCode
         self.simpleRegistered = simpleRegistered
         self.confirmationCode = confirmationCode
+        self.mobileVerificationRequestId = mobileVerificationRequestId
     }
-
+    
     public init(from decoder: Decoder) throws {
         let container = try decoder.container(keyedBy: CodingKeys.self)
         self.gender = try container.decodeIfPresent(UserRegisterEnvelop.Gender.self, forKey: .gender)
@@ -155,8 +160,9 @@ public struct UserRegisterEnvelop: Codable, Equatable {
         self.godfatherCode = try? container.decodeIfPresent(String.self, forKey: .godfatherCode)
         self.simpleRegistered = try container.decode(Bool.self, forKey: .simpleRegistered)
         self.confirmationCode = try container.decodeIfPresent(String.self, forKey: .confirmationCode)
+        self.mobileVerificationRequestId = try? container.decodeIfPresent(String.self, forKey: .mobileVerificationRequestId)
     }
-
+    
     public func encode(to encoder: Encoder) throws {
         var container = encoder.container(keyedBy: CodingKeys.self)
         try container.encodeIfPresent(self.gender, forKey: .gender)
@@ -183,35 +189,37 @@ public struct UserRegisterEnvelop: Codable, Equatable {
         try container.encodeIfPresent(self.godfatherCode, forKey: .godfatherCode)
         try container.encode(self.simpleRegistered, forKey: .simpleRegistered)
         try container.encodeIfPresent(self.confirmationCode, forKey: .confirmationCode)
+        try container.encodeIfPresent(self.mobileVerificationRequestId, forKey: .mobileVerificationRequestId)
     }
-
+    
     public static func == (lhs: UserRegisterEnvelop, rhs: UserRegisterEnvelop) -> Bool {
         return lhs.gender == rhs.gender &&
-               lhs.name == rhs.name &&
-               lhs.surname == rhs.surname &&
-               lhs.avatarName == rhs.avatarName &&
-               lhs.nickname == rhs.nickname &&
-               lhs.dateOfBirth == rhs.dateOfBirth &&
-               lhs.countryBirth == rhs.countryBirth &&
-               lhs.deparmentOfBirth == rhs.deparmentOfBirth &&
-               lhs.placeBirth == rhs.placeBirth &&
-               lhs.placeAddress == rhs.placeAddress &&
-               lhs.postcode == rhs.postcode &&
-               lhs.streetAddress == rhs.streetAddress &&
-               lhs.streetNumber == rhs.streetNumber &&
-               lhs.email == rhs.email &&
-               lhs.phonePrefixCountry == rhs.phonePrefixCountry &&
-               lhs.phoneNumber == rhs.phoneNumber &&
-               lhs.verifiedPhoneNumber == rhs.verifiedPhoneNumber &&
-               lhs.password == rhs.password &&
-               lhs.acceptedMarketing == rhs.acceptedMarketing &&
-               lhs.acceptedTerms == rhs.acceptedTerms &&
-               lhs.promoCode == rhs.promoCode &&
-               lhs.godfatherCode == rhs.godfatherCode &&
-               lhs.simpleRegistered == rhs.simpleRegistered &&
-               lhs.confirmationCode == rhs.confirmationCode
+        lhs.name == rhs.name &&
+        lhs.surname == rhs.surname &&
+        lhs.avatarName == rhs.avatarName &&
+        lhs.nickname == rhs.nickname &&
+        lhs.dateOfBirth == rhs.dateOfBirth &&
+        lhs.countryBirth == rhs.countryBirth &&
+        lhs.deparmentOfBirth == rhs.deparmentOfBirth &&
+        lhs.placeBirth == rhs.placeBirth &&
+        lhs.placeAddress == rhs.placeAddress &&
+        lhs.postcode == rhs.postcode &&
+        lhs.streetAddress == rhs.streetAddress &&
+        lhs.streetNumber == rhs.streetNumber &&
+        lhs.email == rhs.email &&
+        lhs.phonePrefixCountry == rhs.phonePrefixCountry &&
+        lhs.phoneNumber == rhs.phoneNumber &&
+        lhs.verifiedPhoneNumber == rhs.verifiedPhoneNumber &&
+        lhs.password == rhs.password &&
+        lhs.acceptedMarketing == rhs.acceptedMarketing &&
+        lhs.acceptedTerms == rhs.acceptedTerms &&
+        lhs.promoCode == rhs.promoCode &&
+        lhs.godfatherCode == rhs.godfatherCode &&
+        lhs.simpleRegistered == rhs.simpleRegistered &&
+        lhs.confirmationCode == rhs.confirmationCode &&
+        lhs.mobileVerificationRequestId == rhs.mobileVerificationRequestId
     }
-
+    
     func currentRegisterStep() -> Int {
         
         if self.gender == nil || self.name.isEmptyOrNil || self.surname.isEmptyOrNil {
@@ -229,14 +237,10 @@ public struct UserRegisterEnvelop: Codable, Equatable {
         if self.email.isEmptyOrNil || self.phonePrefixCountry == nil || self.phoneNumber.isEmptyOrNil {
             return 4
         }
-        if self.verifiedPhoneNumber.isEmptyOrNil {
-            return 4
-        }
-        // Step 5 is the phone confirmation process
-
-        return 6
+    
+        return 5
     }
-
+    
 }
 
 extension UserRegisterEnvelop: CustomStringConvertible {
@@ -266,7 +270,8 @@ extension UserRegisterEnvelop: CustomStringConvertible {
             promoCode: \(String(describing: promoCode)),
             godfatherCode: \(String(describing: godfatherCode)),
             simpleRegistered: \(simpleRegistered),
-            confirmationCode: \(String(describing: confirmationCode))
+            confirmationCode: \(String(describing: confirmationCode)),
+            mobileVerificationRequestId: \(String(describing: mobileVerificationRequestId))
         )
         """
     }
@@ -303,9 +308,9 @@ public extension UserRegisterEnvelop {
 }
 
 public extension UserRegisterEnvelop {
-
+    
     func convertToSignUpForm() -> ServicesProvider.SignUpForm? {
-
+        
         guard
             let email = self.email,
             let username = self.nickname,
@@ -326,7 +331,7 @@ public extension UserRegisterEnvelop {
         else {
             return nil
         }
-
+        
         var genderString = ""
         switch gender {
         case .male:
@@ -334,7 +339,7 @@ public extension UserRegisterEnvelop {
         case .female:
             genderString = "F"
         }
-
+        
         return ServicesProvider.SignUpForm.init(email: email,
                                                 username: username,
                                                 password: password,
@@ -357,15 +362,16 @@ public extension UserRegisterEnvelop {
                                                 birthDepartment: deparmentOfBirth,
                                                 streetNumber: streetNumber,
                                                 birthCountry: countryBirthIsoCode,
-                                                birthCity: birthCityName)
+                                                birthCity: birthCityName,
+                                                mobileVerificationRequestId: self.mobileVerificationRequestId)
     }
-
+    
 }
 
 private extension Optional where Wrapped == String {
-
+    
     var isEmptyOrNil: Bool {
         return self?.isEmpty ?? true
     }
-
+    
 }

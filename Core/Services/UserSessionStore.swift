@@ -185,6 +185,11 @@ class UserSessionStore {
     //
     func logout() {
 
+        if !self.isUserLogged() {
+            // There is no user logged in
+            return
+        }
+        
         if let userSession = self.storedUserSession {
             try? KeychainInterface.deletePassword(service: Env.bundleId, account: userSession.userId)
         }

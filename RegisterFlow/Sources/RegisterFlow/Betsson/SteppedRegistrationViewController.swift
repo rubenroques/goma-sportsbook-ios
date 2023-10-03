@@ -197,6 +197,8 @@ public class SteppedRegistrationViewModel {
             self.isMarketingSelected = true
         }
 
+        // 
+        //
         serviceProvider.signUp(form: form)
             .receive(on: DispatchQueue.main)
             .sink { [weak self] completion in

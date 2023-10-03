@@ -364,10 +364,16 @@ extension SportRadarModelMapper {
     }
 
     static func basicResponse(fromInternalBasicResponse internalBasicResponse: SportRadarModels.BasicResponse) -> BasicResponse {
-
         return BasicResponse(status: internalBasicResponse.status, message: internalBasicResponse.message)
     }
-
+    
+    static func mobileVerifyResponse(fromInternalMobileVerifyResponse internalMobileVerifyResponse: SportRadarModels.MobileVerifyResponse) -> MobileVerifyResponse {
+        let requestIdString: String? = internalMobileVerifyResponse.requestId != nil ? String(internalMobileVerifyResponse.requestId ?? -1) : nil
+        return MobileVerifyResponse(status: internalMobileVerifyResponse.status,
+                                    message: internalMobileVerifyResponse.message,
+                                    requestId: requestIdString)
+    }
+    
     static func paymentStatusResponse(fromPaymentStatusResponse paymentStatusResponse: SportRadarModels.PaymentStatusResponse) -> PaymentStatusResponse {
         return PaymentStatusResponse(status: paymentStatusResponse.status,
                                      paymentId: paymentStatusResponse.paymentId,

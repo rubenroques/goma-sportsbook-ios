@@ -1289,6 +1289,43 @@ class SportRadarPrivilegedAccessManager: PrivilegedAccessManager {
             }
         }).eraseToAnyPublisher()
     }
+    
+    func getMobileVerificationCode(forMobileNumber mobileNumber: String) -> AnyPublisher<MobileVerifyResponse, ServiceProviderError> {
+        let endpoint = OmegaAPIClient.getMobileVerificationCode(mobileNumber: mobileNumber)
+
+        let publisher: AnyPublisher<SportRadarModels.MobileVerifyResponse, ServiceProviderError> = self.connector.request(endpoint)
+
+        return publisher.flatMap({ mobileVerifyResponse -> AnyPublisher<MobileVerifyResponse, ServiceProviderError> in
+            if mobileVerifyResponse.status == "PENDING" {
+                let response = SportRadarModelMapper.mobileVerifyResponse(fromInternalMobileVerifyResponse: mobileVerifyResponse)
+                return Just(response).setFailureType(to: ServiceProviderError.self).eraseToAnyPublisher()
+            }
+            return Fail(outputType: MobileVerifyResponse.self, failure: ServiceProviderError.errorMessage(message: mobileVerifyResponse.message ?? "Error")).eraseToAnyPublisher()
+        })
+        .eraseToAnyPublisher()
+        
+    }
+    
+    func verifyMobileCode(code: String, requestId: String) -> AnyPublisher<MobileVerifyResponse, ServiceProviderError> {
+        let endpoint = OmegaAPIClient.verifyMobileCode(code: code, requestId: requestId)
+
+        let publisher: AnyPublisher<SportRadarModels.MobileVerifyResponse, ServiceProviderError> = self.connector.request(endpoint)
+
+        return publisher.flatMap({ mobileVerifyResponse -> AnyPublisher<MobileVerifyResponse, ServiceProviderError> in
+            if mobileVerifyResponse.status == "SUCCESS" {
+                let response = SportRadarModelMapper.mobileVerifyResponse(fromInternalMobileVerifyResponse: mobileVerifyResponse)
+                return Just(response).setFailureType(to: ServiceProviderError.self).eraseToAnyPublisher()
+            }
+            else if mobileVerifyResponse.status == "INVALID_VALUE" {
+                return Fail(outputType: MobileVerifyResponse.self, failure: ServiceProviderError.invalidMobileVerifyCode).eraseToAnyPublisher()
+            }
+            
+            return Fail(outputType: MobileVerifyResponse.self, failure: ServiceProviderError.errorMessage(message: mobileVerifyResponse.message ?? "Error")).eraseToAnyPublisher()
+        })
+        .eraseToAnyPublisher()
+        
+    }
+    
 }
 
 extension SportRadarPrivilegedAccessManager: SportRadarSessionTokenUpdater {

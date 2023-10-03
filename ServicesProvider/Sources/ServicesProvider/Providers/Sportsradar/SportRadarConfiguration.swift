@@ -88,7 +88,7 @@ struct SportRadarConfiguration {
     }
 
     public var frontEndCode: String {
-        return "1356"  // This can also be switched based on the environment if needed
+        return "1356"
     }
 }
 

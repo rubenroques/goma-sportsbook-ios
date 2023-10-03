@@ -311,9 +311,9 @@ class LoginViewController: UIViewController {
                         RegisterStep(forms: [.ageCountry]),
                         RegisterStep(forms: [.address]),
                         RegisterStep(forms: [.contacts]),
-                        RegisterStep(forms: [.phoneConfirmation]),
                         RegisterStep(forms: [.password]),
-                        RegisterStep(forms: [.terms, .promoCodes])
+                        RegisterStep(forms: [.terms, .promoCodes]),
+                        RegisterStep(forms: [.phoneConfirmation])
                     ]
         }
         else {
