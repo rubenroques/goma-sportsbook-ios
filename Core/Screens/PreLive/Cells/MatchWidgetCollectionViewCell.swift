@@ -359,6 +359,8 @@ class MatchWidgetCollectionViewCell: UICollectionViewCell {
     override func awakeFromNib() {
         super.awakeFromNib()
 
+        self.topImageBaseView.layer.masksToBounds = true
+
         //
         // Add gradient to the bottom booster line
         self.boostedOddBottomLineAnimatedGradientView.translatesAutoresizingMaskIntoConstraints = false
