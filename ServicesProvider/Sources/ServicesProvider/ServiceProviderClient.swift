@@ -801,7 +801,7 @@ extension ServicesProviderClient {
     }
 
     
-    public func getMobileVerificationCode(forMobileNumber mobileNumber: String) -> AnyPublisher<BasicResponse, ServiceProviderError> {
+    public func getMobileVerificationCode(forMobileNumber mobileNumber: String) -> AnyPublisher<MobileVerifyResponse, ServiceProviderError> {
         guard
             let privilegedAccessManager = self.privilegedAccessManager
         else {
@@ -810,7 +810,7 @@ extension ServicesProviderClient {
         return privilegedAccessManager.getMobileVerificationCode(forMobileNumber: mobileNumber)
     }
     
-    public func verifyMobileCode(code: String, requestId: String) -> AnyPublisher<BasicResponse, ServiceProviderError> {
+    public func verifyMobileCode(code: String, requestId: String) -> AnyPublisher<MobileVerifyResponse, ServiceProviderError> {
         guard
             let privilegedAccessManager = self.privilegedAccessManager
         else {

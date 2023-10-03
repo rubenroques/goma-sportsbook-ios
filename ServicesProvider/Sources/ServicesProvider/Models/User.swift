@@ -676,6 +676,19 @@ public struct BasicResponse: Codable {
     }
 }
 
+public struct MobileVerifyResponse: Codable {
+    public var status: String
+    public var message: String?
+    public var requestId: String?
+    
+    enum CodingKeys: String, CodingKey {
+        case status = "status"
+        case message = "message"
+        case requestId = "verificationRequestId"
+    }
+}
+
+
 public struct PaymentStatusResponse: Codable {
     public var status: String
     public var paymentId: String?

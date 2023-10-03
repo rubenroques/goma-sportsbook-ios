@@ -121,7 +121,7 @@ class ConfirmationCodeFormStepViewModel {
     }
     
     var shouldSkipForm: Bool {
-        return self.userRegisterEnvelopUpdater.isPhoneNumberVerified
+        return false
     }
 
     //
@@ -139,43 +139,40 @@ class ConfirmationCodeFormStepViewModel {
 
     private func requestVerifyCode(_ phoneNumber: String) -> AnyPublisher<PhoneVerificationResponse, PhoneVerificationError> {
         let formattedPhoneNumber = phoneNumber.replacingOccurrences(of: " ", with: "")
-                                                                        
+        
         return self.serviceProvider.getMobileVerificationCode(forMobileNumber: formattedPhoneNumber)
             .map { response -> PhoneVerificationResponse in
-                return PhoneVerificationResponse(id: nil,
-                                                 method: nil,
-                                                 status: nil,
+                return PhoneVerificationResponse(id: response.requestId,
+                                                 method: "MOBILE",
+                                                 status: "PENDING",
                                                  errorCode: nil,
                                                  message: nil,
                                                  reference: nil)
                 
             }
             .mapError { error -> PhoneVerificationError in
-                if let verificationError = error as? PhoneVerificationError {
-                    return verificationError
-                }
                 return .customError(message: error.localizedDescription)
             }
             .eraseToAnyPublisher()
-                                                                    
-                                                                    }
+    
+    }
 
     //
     // Verify Code
     func checkVerificationCode(requestId: String, code: String) -> AnyPublisher<PhoneVerificationResponse, PhoneVerificationError> {
         return self.serviceProvider.verifyMobileCode(code: code, requestId: requestId)
             .map { response -> PhoneVerificationResponse in
-                return PhoneVerificationResponse(id: nil,
-                                                 method: nil,
-                                                 status: nil,
+                return PhoneVerificationResponse(id: requestId,
+                                                 method: "MOBILE",
+                                                 status: "SUCCESS",
                                                  errorCode: nil,
                                                  message: nil,
                                                  reference: nil)
                 
             }
             .mapError { error -> PhoneVerificationError in
-                if let verificationError = error as? PhoneVerificationError {
-                    return verificationError
+                if case .invalidMobileVerifyCode = error {
+                    return .nonMatchingCode
                 }
                 return .customError(message: error.localizedDescription)
             }
@@ -348,11 +345,9 @@ class ConfirmationCodeFormStepView: FormStepView {
                         self?.viewModel.setVerified(false, requestId: nil)
                     }
                 } receiveValue: { [weak self] response in
-                    print("checkVerificationCode \(response)")
-                    if response.errorCode == nil,
-                       let method = response.method, method == "sms",
-                       let status = response.status, status.lowercased() == "successful" {
-                        self?.viewModel.setVerified(true, requestId: self?.requestId)
+                    if let requestId = response.id, let method = response.method, method == "MOBILE",
+                       let status = response.status, status.uppercased() == "SUCCESS" {
+                        self?.viewModel.setVerified(true, requestId: requestId)
                     }
                 }
                 .store(in: &self.cancellables)

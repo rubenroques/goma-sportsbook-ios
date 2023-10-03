@@ -1190,16 +1190,14 @@ extension RootViewController {
             Env.gomaNetworkClient.requestPopUpInfo(deviceId: Env.deviceId)
                 .compactMap({$0})
                 .receive(on: DispatchQueue.main)
-                .sink(receiveValue: showPopUp(_:))
+                .sink(receiveValue: { popUpDetails in
+                    print("popUpDetails \(popUpDetails)")
+                })
                 .store(in: &cancellables)
         }
     }
 
     func showPopUp(_ details: PopUpDetails) {
-
-        #if DEBUG
-        return
-        #endif
 
         if !PopUpStore.shouldShowPopUp(withId: details.id) {
             return
@@ -1219,9 +1217,7 @@ extension RootViewController {
         popUpPromotionView.alpha = 0
         popUpPromotionView.didTapCloseButton = { [weak self] in
             PopUpStore.didHidePopUp(withId: details.id, withTimeout: details.intervalMinutes ?? 0)
-
             self?.closePopUp()
-
         }
         popUpPromotionView.didTapPromotionButton = { [weak self] link in
             if let link = link, let url = URL(string: link) {
@@ -1272,12 +1268,12 @@ extension RootViewController {
         UIView.animate(
             withDuration: 0.5, delay: 0, usingSpringWithDamping: 0.55, initialSpringVelocity: 3,
             options: .curveEaseOut, animations: {
-                popUpPromotionView.alpha = 0
-                popUpPromotionView.transform = CGAffineTransform(scaleX: 0.5, y: 0.5)
-            }, completion: { _ in
-                popUpBackgroundView.removeFromSuperview()
-                popUpPromotionView.removeFromSuperview()
-            })
+            popUpPromotionView.alpha = 0
+            popUpPromotionView.transform = CGAffineTransform(scaleX: 0.5, y: 0.5)
+        }, completion: { _ in
+            popUpBackgroundView.removeFromSuperview()
+            popUpPromotionView.removeFromSuperview()
+        })
 
     }
 

@@ -197,10 +197,6 @@ public class SteppedRegistrationViewModel {
             self.isMarketingSelected = true
         }
 
-        // TODO: avoid register in tests
-        return true
-        
-        //
         // 
         //
         serviceProvider.signUp(form: form)

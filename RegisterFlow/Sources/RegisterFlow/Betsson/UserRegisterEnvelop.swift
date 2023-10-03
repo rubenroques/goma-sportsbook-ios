@@ -237,12 +237,8 @@ public struct UserRegisterEnvelop: Codable, Equatable {
         if self.email.isEmptyOrNil || self.phonePrefixCountry == nil || self.phoneNumber.isEmptyOrNil {
             return 4
         }
-        if self.verifiedPhoneNumber.isEmptyOrNil {
-            return 4
-        }
-        // Step 5 is the phone confirmation process
-        
-        return 6
+    
+        return 5
     }
     
 }
