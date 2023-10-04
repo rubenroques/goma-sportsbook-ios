@@ -68,7 +68,6 @@ class FavoritesManager {
                 }
 
             }, receiveValue: { [weak self] favoritesListResponse in
-                print("FAVORITES LIST: \(favoritesListResponse)")
 
                 if !favoritesListResponse.favoritesList.contains(where: {
                     $0.name == "Competitions"
@@ -151,9 +150,9 @@ class FavoritesManager {
             .sink(receiveCompletion: { [weak self] completion in
                 switch completion {
                 case .finished:
-                    ()
-                case .failure(let error):
-                    print("FAVORITES LIST ADD ERROR: \(error)")
+                    break
+                case .failure:
+                    break
                 }
 
             }, receiveValue: { [weak self] favoritesListAddResponse in
@@ -173,9 +172,9 @@ class FavoritesManager {
                     .sink(receiveCompletion: { [weak self] completion in
                         switch completion {
                         case .finished:
-                            ()
-                        case .failure(let error):
-                            print("FAVORITES LIST ADD ERROR: \(error)")
+                            break
+                        case .failure:
+                            break
                         }
 
                     }, receiveValue: { [weak self] favoritesListAddResponse in
@@ -201,7 +200,6 @@ class FavoritesManager {
                             case .finished:
                                 ()
                             case .failure(let error):
-                                print("FAVORITES LIST DELETE ERROR: \(error)")
 
                                 if "\(error)" == "emptyData"  {
                                     print("EMPTY DATA SUCCESS")

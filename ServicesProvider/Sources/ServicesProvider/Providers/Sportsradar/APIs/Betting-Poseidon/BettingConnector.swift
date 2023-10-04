@@ -80,19 +80,19 @@ class BettingConnector: Connector {
                 return result.data
             }
 
-            .handleEvents(receiveCompletion: { completion in
-                switch completion {
-                case .failure(let error):
-                    print("Betting-NetworkManager [[ requesting ]] ", dump(request),
-                          " [[ error completion ]] ", error)
-                case .finished:
-                    print("Betting-NetworkManager [[ requesting ]] ", dump(request), " [[ normal completion ]] ")
-                }
-            })
-            .handleEvents(receiveOutput: { data in
-                print("Betting-NetworkManager [[ requesting ]] ", request,
-                      " [[ response ]] ", String(data: data, encoding: .utf8) ?? "!?" )
-            })
+//            .handleEvents(receiveCompletion: { completion in
+//                switch completion {
+//                case .failure(let error):
+//                    print("Betting-NetworkManager [[ requesting ]] ", dump(request),
+//                          " [[ error completion ]] ", error)
+//                case .finished:
+//                    print("Betting-NetworkManager [[ requesting ]] ", dump(request), " [[ normal completion ]] ")
+//                }
+//            })
+//            .handleEvents(receiveOutput: { data in
+//                print("Betting-NetworkManager [[ requesting ]] ", request,
+//                      " [[ response ]] ", String(data: data, encoding: .utf8) ?? "!?" )
+//            })
         
             .decode(type: T.self, decoder: self.decoder)
             .mapError({ error -> ServiceProviderError in

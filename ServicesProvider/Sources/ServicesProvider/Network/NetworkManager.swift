@@ -43,11 +43,13 @@ class NetworkManager {
                 }
                 return result.data
             }
+        
             // Debug helper
 //            .handleEvents(receiveOutput: { data in
 //                print("ServiceProvider-NetworkManager [[ requesting ]] ", request,
 //                      " [[ response ]] ", String(data: data, encoding: .utf8) ?? "!?" )
 //            })
+        
             .decode(type: T.self, decoder: self.decoder)
             .mapError { error in
                 // Debug helper

@@ -123,7 +123,6 @@ class OutcomeSelectionButtonView: NibView {
         if !outcome.bettingOffer.decimalOdd.isNaN {
             self.containerView.isUserInteractionEnabled = true
             self.containerView.alpha = 1.0
-//            self.marketOddLabel.text = OddConverter.stringForValue(outcome.bettingOffer.decimalOdd, format: UserDefaults.standard.userOddsFormat)
             self.marketOddLabel.text = OddFormatter.formatOdd(withValue: outcome.bettingOffer.decimalOdd)
         }
         else {
@@ -133,12 +132,9 @@ class OutcomeSelectionButtonView: NibView {
         }
 
         if let marketId = outcome.marketId {
-
-            Logger.log("marketSubscriber subscribeToEventMarketUpdates \(marketId)")
-
+            
             self.marketStateCancellable?.cancel()
             self.marketStateCancellable = Env.servicesProvider.subscribeToEventMarketUpdates(withId: marketId)
-                // .print("matchDetails marketSubscriber")
                 .compactMap({ $0 })
                 .map({ (serviceProviderMarket: ServicesProvider.Market) -> Market in
                     return ServiceProviderModelMapper.market(fromServiceProviderMarket: serviceProviderMarket)
@@ -148,7 +144,12 @@ class OutcomeSelectionButtonView: NibView {
                 })
                 .receive(on: DispatchQueue.main)
                 .sink(receiveCompletion: { completion in
-                    print("OutcomeSelectionButtonView marketSubscriber subscribeToEventMarketUpdates completion: \(completion)")
+                    switch completion {
+                    case .finished:
+                        break
+                    case .failure:
+                        break
+                    }
                 }, receiveValue: { [weak self] (marketUpdated: Market) in
 
                     if marketUpdated.isAvailable {
@@ -168,7 +169,7 @@ class OutcomeSelectionButtonView: NibView {
                 })
         }
         else {
-            print("Error ")
+            print("OutcomeSelectionButtonView Error, no market id found.")
         }
 
         self.oddUpdatesPublisher = Env.servicesProvider
@@ -178,15 +179,14 @@ class OutcomeSelectionButtonView: NibView {
             .map(\.bettingOffer)
             .receive(on: DispatchQueue.main)
             .sink(receiveCompletion: { completion in
-                print("OutcomeSelectionButtonView oddUpdatesPublisher subscribeToOutcomeUpdates completion: \(completion)")
+                switch completion {
+                case .finished:
+                    break
+                case .failure:
+                    break
+                }
             }, receiveValue: { [weak self] (updatedBettingOffer: BettingOffer) in
                 guard let weakSelf = self else { return }
-
-                // print("oddUpdatesPublisher subscribeToOutcomeUpdates receiveValue: \(updatedBettingOffer)")
-
-                if !updatedBettingOffer.isAvailable {
-                    print("STOP")
-                }
 
                 if !updatedBettingOffer.isAvailable || updatedBettingOffer.decimalOdd.isNaN {
                     weakSelf.stackView.isUserInteractionEnabled = false
@@ -214,7 +214,6 @@ class OutcomeSelectionButtonView: NibView {
                         }
                     }
                     weakSelf.currentOddDecimalValue = newOddValue
-//                    weakSelf.marketOddLabel.text = OddConverter.stringForValue(newOddValue, format: UserDefaults.standard.userOddsFormat)
                     weakSelf.marketOddLabel.text = OddFormatter.formatOdd(withValue: newOddValue)
                 }
             })

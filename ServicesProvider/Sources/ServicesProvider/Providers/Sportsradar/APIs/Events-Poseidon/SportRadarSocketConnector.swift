@@ -6,7 +6,6 @@
 //
 
 import Foundation
-import Starscream
 import Combine
 
 protocol SportRadarConnectorSubscriber: AnyObject {
@@ -49,8 +48,8 @@ class SportRadarSocketConnector: NSObject, Connector {
     }
     private let connectionStateSubject: CurrentValueSubject<ConnectorState, Never>
     
-    private var webSocket : URLSessionWebSocketTask?
-    private var socket: WebSocket
+    private var webSocketClientStream: WebSocketClientStream?
+
     private var isConnected: Bool {
         didSet {
             if self.isConnected {
@@ -65,38 +64,81 @@ class SportRadarSocketConnector: NSObject, Connector {
     override init() {
         self.connectionStateSubject = .init(.disconnected)
         self.isConnected = false
-        
-        self.socket = WebSocket.init(request: Self.socketRequest(), useCustomEngine: false)
+
         super.init()
+
+        self.createWebSocketClientStream()
+        self.watchSocketStream()
+    }
+
+    private func createWebSocketClientStream() {
+        let urlString = SportRadarConfiguration.shared.socketURL
+        let url = URL(string: urlString)!
+        self.webSocketClientStream = WebSocketClientStream(url: url)
+    }
+
+    private func watchSocketStream() {
+
+        Task {
+            do {
+                guard
+                    let webSocketClientStream = self.webSocketClientStream
+                else {
+                    return
+                }
+
+                for try await message in webSocketClientStream {
+                    switch message {
+                    case .connected:
+                        self.sendListeningStarted()
+                        print("ServiceProvider - SportRadarSocketConnector websocket is connected")
+
+                    case .text(let stringContent):
+                        print("☁️ SP debugbetslip WS recieved text: \(stringContent.prefix(125)) \n----------------- \n")
+                        if let data = stringContent.data(using: .utf8),
+                           let sportRadarSocketResponse = try? Self.decoder.decode(SportRadarModels.NotificationType.self, from: data) {
+                            self.handleContentMessage(sportRadarSocketResponse, messageData: data)
+                        }
+
+                    case .binary(let dataContent):
+                        if let sportRadarSocketResponse = try? Self.decoder.decode(SportRadarModels.NotificationType.self, from: dataContent) {
+                            self.handleContentMessage(sportRadarSocketResponse, messageData: dataContent)
+                        }
+                    case .disconnected:
+                        print("ServiceProvider - SportRadarSocketConnector websocket is disconnected")
+                        self.isConnected = false
+                        self.refreshConnection()
+                    }
+                }
+            } catch {
+                print("ServiceProvider - SportRadarSocketConnector terminated with error: \(error)")
+                self.refreshConnection()
+            }
+
+            print("ServiceProvider - SportRadarSocketConnector stream ended")
+        }
+
     }
     
     private func connectSocket() {
-
-        self.socket.delegate = self
-        self.socket.connect()
-
-    }
-    
-    private static func socketRequest() -> URLRequest {
-        let wssURLString = SportRadarConfiguration.shared.socketURL
-        return URLRequest(url: URL(string: wssURLString)!)
+        self.webSocketClientStream?.connect()
     }
     
     private func sendListeningStarted() {
         
-        // TODO: ipAddress is empty, and language is hardcoded
         let body = """
                    {
-                     "subscriberId": null,
-                     "versionList": [],
-                     "clientContext": {
-                       "language":"\(SportRadarConfiguration.shared.socketLanguageCode)",
-                       "ipAddress":""
-                     }
+                     "subscriberId": null, "versionList": [],
+                     "clientContext": { "language":"\(SportRadarConfiguration.shared.socketLanguageCode)", "ipAddress":"" }
                    }
                    """
-        self.socket.write(string: body) {
-            print("ServiceProvider - SportRadarSocketConnector: sendListeningStarted sent")
+        Task {
+            do {
+                try await self.webSocketClientStream?.send(remoteMessage: body)
+            }
+            catch {
+                print("ServiceProvider - SportRadarSocketConnector sendListeningStarted failed \(error)")
+            }
         }
         
     }
@@ -107,110 +149,26 @@ class SportRadarSocketConnector: NSObject, Connector {
     
     func refreshConnection() {
         self.isConnected = false
-        self.socket.forceDisconnect()
-        self.socket = WebSocket.init(request: Self.socketRequest(), useCustomEngine: false)
-        
+
+        self.createWebSocketClientStream()
+        self.watchSocketStream()
+
         self.connectSocket()
     }
     
     func disconnect() {
-        self.socket.forceDisconnect()
+        self.webSocketClientStream?.close()
     }
 
-}
-
-
-extension SportRadarSocketConnector: Starscream.WebSocketDelegate {
-
-    func didReceive(event: Starscream.WebSocketEvent, client: Starscream.WebSocketClient) {
-        
-        // yyyy-MM-dd'T'HH:mm:ss.SSSZZZZZ
-        // 2022-07-05T09:51:00.000+02:00
+    private static var decoder: JSONDecoder {
         let dateFormatter = DateFormatter()
         dateFormatter.dateFormat = "yyyy-MM-dd'T'HH:mm:ss.SSSZZZZZ"
 
         let decoder = JSONDecoder()
         decoder.dateDecodingStrategy = .formatted(dateFormatter)
-        
-        switch event {
-        case .connected(let headers):
-            self.sendListeningStarted()
-            print("ServiceProvider - SportRadarSocketConnector websocket is connected: \(headers)")
-
-        case .disconnected(let reason, let code):
-            self.isConnected = false
-            self.refreshConnection()
-            print("ServiceProvider - SportRadarSocketConnector websocket is disconnected: \(reason) with code: \(code)")
-
-        case .text(let string):
-
-            // DEBUGGING HELPER
-            // print("☁️ SP debugbetslip WS recieved text: \(string) \n----------------- \n")
-
-            if let data = string.data(using: .utf8),
-               let sportRadarSocketResponse = try? decoder.decode(SportRadarModels.NotificationType.self, from: data) {
-                self.handleContentMessage(sportRadarSocketResponse, messageData: data)
-
-                //
-                //
-                // DEBUGGING HELPER
-//                switch sportRadarSocketResponse {
-//                case .listeningStarted:
-//                    ()
-//                case .contentChanges(let contents):
-//                    for content in contents {
-//
-//                        switch content {
-//                        case .liveEvents, .preLiveEvents, .liveSports, .preLiveSports, .eventDetails, .eventGroup, .outrightEventGroup, .eventSummary, .marketDetails:
-//                            ()
-//                        case .eventDetailsLiveData:
-//                            print("☁️SP debugbetslip WS recieved text with live data: \(string) \n\n")
-//                        case .addEvent, .removeEvent, .addMarket, .enableMarket, .removeMarket, .updateEventState, .updateEventTime, .updateEventScore, .updateMarketTradability, .updateEventMarketCount, .updateOutcomeOdd, .updateOutcomeTradability:
-//                            print("☁️SP debugbetslip WS recieved text with content update:\n\(string)\n -------------------> Converted to: \n\(content)\n-----\n")
-//                        case .unknown:
-//                            print("☁️SP debugbetslip WS recieved text with unknown part of the content: \(string) \n\n")
-//                        }
-//                    }
-//                case .unknown:
-//                    print("☁️SP debugbetslip WS recieved text with unknown message: \(string)\n")
-//                }
-                //
-                //
-                //
-            }
-
-        case .binary(let data):
-            // print("ServiceProvider - SportRadarSocketConnector websocket recieved binary: \(String(data: data, encoding: .utf8) ?? "--")")
-            if let sportRadarSocketResponse = try? decoder.decode(SportRadarModels.NotificationType.self, from: data) {
-                self.handleContentMessage(sportRadarSocketResponse, messageData: data)
-            }
-
-        case .ping(_):
-            print("ServiceProvider - SportRadarSocketConnector ping")
-            break
-        case .pong(_):
-            print("ServiceProvider - SportRadarSocketConnector pong")
-            break
-        case .viabilityChanged(_):
-            print("ServiceProvider - SportRadarSocketConnector viabilityChanged")
-            break
-        case .reconnectSuggested(_):
-            self.refreshConnection()
-            print("ServiceProvider - SportRadarSocketConnector reconnectSuggested")
-        case .cancelled:
-            self.isConnected = false
-            print("ServiceProvider - SportRadarSocketConnector cancelled")
-        case .error(let error):
-            self.isConnected = false
-            print("ServiceProvider - SportRadarSocketConnector websocket Error \(error.debugDescription)")
-            self.refreshConnection()
-        case .peerClosed:
-            print("ServiceProvider - SportRadarSocketConnector peerClosed")
-            break
-        }
-        
+        return decoder
     }
-    
+
     func handleContentMessage(_ messageType: SportRadarModels.NotificationType, messageData: Data) {
         
         switch messageType {

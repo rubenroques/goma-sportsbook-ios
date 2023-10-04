@@ -149,8 +149,6 @@ class MarketGroupDetailsViewController: UIViewController {
             .sink { betBuilderGrayoutsState in
                 self.betBuilderGrayoutsState = betBuilderGrayoutsState
                 self.reloadTableView()
-                
-                print("grayoutdebug vc refreshing tableview")
             }
             .store(in: &cancellables)
         

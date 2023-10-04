@@ -297,7 +297,6 @@ class LoginViewController: UIViewController {
 
         userRegisterEnvelopUpdater.didUpdateUserRegisterEnvelop
             .removeDuplicates()
-            .print("userRegisterEnvelopUpdater: ")
             .sink(receiveValue: { (updatedUserEnvelop: UserRegisterEnvelop) in
                 UserDefaults.standard.startedUserRegisterInfo = updatedUserEnvelop
             })
