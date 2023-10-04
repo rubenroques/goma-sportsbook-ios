@@ -513,6 +513,13 @@ extension MyTicketsViewModel: UITableViewDelegate, UITableViewDataSource {
                 self?.updateCellAtIndexPath?(indexPath)
             }
 
+            switch myTicketsTypePublisher.value {
+            case .opened:
+                cell.showPartialCashoutSliderView = true
+            default:
+                cell.showPartialCashoutSliderView = false
+            }
+
             cell.configure(withBetHistoryEntry: ticketValue, countryCodes: locationsCodes, viewModel: viewModel)
 
             cell.tappedShareAction = { [weak self] in

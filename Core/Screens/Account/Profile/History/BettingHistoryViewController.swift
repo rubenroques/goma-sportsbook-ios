@@ -323,8 +323,14 @@ extension BettingHistoryViewController: UITableViewDelegate, UITableViewDataSour
                 self?.updateCellAtIndexPath(indexPath: indexPath)
             }
 
+            switch self.viewModel.bettingTicketsType {
+            case .opened:
+                cell.showPartialCashoutSliderView = true
+            default:
+                cell.showPartialCashoutSliderView = false
+            }
+
             cell.configure(withBetHistoryEntry: ticketValue, countryCodes: locationsCodes, viewModel: viewModel)
-            //cell.configureCashoutButton(withState: .hidden)
 
             cell.tappedShareAction = { [weak self] in
                 if let cellSnapshot = cell.snapshot, let ticketStatus = ticketValue.status {

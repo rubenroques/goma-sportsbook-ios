@@ -100,12 +100,12 @@ class MyTicketTableViewCell: UITableViewCell {
         }
     }
 
-    private var showPartialCashoutSliderView: Bool = true {
+    var showPartialCashoutSliderView: Bool = true {
         didSet {
 
             self.partialCashoutSliderView.isHidden = !showPartialCashoutSliderView
 
-//            if showPartialCashoutSliderView {
+//            if !showPartialCashoutSliderView {
 //
 //                if self.viewModel?.hasRedraw == false {
 //                    self.needsDataUpdate?()
@@ -412,11 +412,15 @@ class MyTicketTableViewCell: UITableViewCell {
         }
         else {
 //            self.showCashoutButton = false
-            self.showPartialCashoutSliderView = true
-            let partialCashoutLabel = localized("cashout_value").replacingFirstOccurrence(of: "{cashoutAmount}", with: localized("unavailable"))
-            self.partialCashoutButton.setTitle("\(partialCashoutLabel)", for: .normal)
-            self.isPartialCashoutDisabled = true
-
+            if self.viewModel?.ticket.status?.uppercased() == "OPENED" {
+                self.showPartialCashoutSliderView = true
+                let partialCashoutLabel = localized("cashout_value").replacingFirstOccurrence(of: "{cashoutAmount}", with: localized("unavailable"))
+                self.partialCashoutButton.setTitle("\(partialCashoutLabel)", for: .normal)
+                self.isPartialCashoutDisabled = true
+            }
+            else {
+                self.showPartialCashoutSliderView = false
+            }
         }
     }
 

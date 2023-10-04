@@ -187,6 +187,7 @@ class MyTicketBetLineView: NibView {
 //            baseView.addGestureRecognizer(baseViewTapGesture)
         }
         else if let date = self.betHistoryEntrySelection.eventDate {
+
             self.dateLabel.text = MyTicketBetLineView.dateFormatter.string(from: date)
             self.liveIconImage.isHidden = true
             self.dateLabel.isHidden = false
@@ -242,7 +243,7 @@ class MyTicketBetLineView: NibView {
 
         self.bottomBaseView.backgroundColor = .clear
         
-        self.configureFromStatus()
+        //self.configureFromStatus()
     }
 
     func configureFromStatus() {
@@ -293,6 +294,17 @@ class MyTicketBetLineView: NibView {
         }
     }
 
+    func recheckMatchStatusWithFailureDetails() {
+        switch self.betHistoryEntrySelection.result {
+        case .open:
+            self.dateLabel.isHidden = false
+            self.liveIconImage.isHidden = true
+        default:
+            self.dateLabel.isHidden = true
+            self.liveIconImage.isHidden = true
+        }
+    }
+
     func getMatchDetails() {
 
         if let eventId = self.betHistoryEntrySelection.eventId {
@@ -306,13 +318,13 @@ class MyTicketBetLineView: NibView {
                     case .failure(let error):
                         switch error {
                         case .resourceUnavailableOrDeleted: // This match is no longer available
-                            self?.liveIconImage.isHidden = true
-                            self?.dateLabel.isHidden = false
+                            self?.recheckMatchStatusWithFailureDetails()
 
                         default:
                             print("MatchDetailsViewModel Error retrieving data! \(error)")
-                            self?.liveIconImage.isHidden = true
-                            self?.dateLabel.isHidden = false
+//                            self?.liveIconImage.isHidden = true
+//                            self?.dateLabel.isHidden = false
+                            self?.recheckMatchStatusWithFailureDetails()
                         }
                     }
                 }, receiveValue: { [weak self] (subscribableContent: SubscribableContent<ServicesProvider.Event>) in
