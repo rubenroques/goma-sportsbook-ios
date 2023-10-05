@@ -9,6 +9,7 @@ import UIKit
 import Combine
 import ServicesProvider
 import RegisterFlow
+import OptimoveSDK
 
 class ProfileViewController: UIViewController {
 
@@ -116,6 +117,8 @@ class ProfileViewController: UIViewController {
 
         self.commonInit()
         self.setupWithTheme()
+
+        Optimove.shared.reportScreenVisit(screenTitle: "Profile")
 
     }
 

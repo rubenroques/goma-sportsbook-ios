@@ -7,6 +7,7 @@ import AdyenDropIn
 import AdyenComponents
 import HeaderTextField
 import LocalAuthentication
+import OptimoveSDK
 
 class LoginViewController: UIViewController {
 
@@ -577,6 +578,11 @@ class LoginViewController: UIViewController {
         }
         else {
             self.showNextViewController()
+        }
+
+        if let userId = Env.userSessionStore.loggedUserProfile?.userIdentifier {
+            Optimove.shared.setUserId(userId)
+
         }
 
     }

@@ -13,6 +13,7 @@ import RegisterFlow
 import Adyen
 import AdyenDropIn
 import AdyenComponents
+import OptimoveSDK
 
 class RootViewController: UIViewController {
 
@@ -324,6 +325,8 @@ class RootViewController: UIViewController {
         super.viewDidLoad()
 
         AnalyticsClient.sendEvent(event: .appStart)
+
+        Optimove.shared.reportScreenVisit(screenTitle: "Home")
 
         self.commonInit()
         // self.loadChildViewControllerIfNeeded(tab: )

@@ -323,6 +323,7 @@ class SupportPageViewController: UIViewController {
     }
 
     @objc func didTapChatButton() {
+        print("TAPPED CHAT!")
         Zendesk.initialize(appId: "90015cb5fb43daa2fc5307a61d4b8cdae1ee3e50c4b88d0b",
                            clientId: "mobile_sdk_client_96ee05c0fdb1b08671ec",
                            zendeskUrl: "https://betssonfrance.zendesk.com/")
@@ -587,7 +588,7 @@ extension SupportPageViewController {
 
         self.contentScrollView.addSubview(self.baseView)
 
-        self.baseView.addSubview(self.chatButton)
+        self.view.addSubview(self.chatButton)
         // self.view.addSubview(self.webView)
 
         self.initConstraints()
