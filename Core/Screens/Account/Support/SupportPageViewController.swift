@@ -587,7 +587,7 @@ extension SupportPageViewController {
 
         self.contentScrollView.addSubview(self.baseView)
 
-        self.baseView.addSubview(self.chatButton)
+        self.view.addSubview(self.chatButton)
         // self.view.addSubview(self.webView)
 
         self.initConstraints()
