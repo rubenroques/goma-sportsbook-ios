@@ -191,10 +191,16 @@ class PaymentsDropIn {
     }
 
     private func setupSession() {
+
+        var adyenEnvironment = Adyen.Environment.liveEurope
+
+        if TargetVariables.serviceProviderEnvironment == .dev {
+            adyenEnvironment = Adyen.Environment.test
+        }
         
         guard
             let clientKey = self.clientKey,
-            let apiContext = try? APIContext(environment: Adyen.Environment.test, clientKey: clientKey), // test_HNOW5H423JB7JEJYVXMQF655YAT7M5IB
+            let apiContext = try? APIContext(environment: adyenEnvironment, clientKey: clientKey), // test_HNOW5H423JB7JEJYVXMQF655YAT7M5IB
             let sessionId = self.sessionId,
             let sessionData = self.sessionData
         else {
