@@ -183,7 +183,7 @@ class DepositViewController: UIViewController {
 
         depositTipLabel.text = localized("minimum_deposit_value")
         depositTipLabel.font = AppFont.with(type: .semibold, size: 12)
-        depositTipLabel.isHidden = true
+        depositTipLabel.isHidden = false
 
         self.setDepositAmountButtonDesign(button: self.amount10Button, title: "€20")
         self.setDepositAmountButtonDesign(button: self.amount20Button, title: "€50")
@@ -369,16 +369,16 @@ class DepositViewController: UIViewController {
             self?.showPaymentStatusAlert(paymentStatus: paymentStatus, paymentId: paymentId)
         }
 
-        viewModel.minimumValue
-            .receive(on: DispatchQueue.main)
-            .sink(receiveValue: { [weak self] minimumValue in
-                let depositTipText = localized("minimum_deposit_value")
-                    .replacingOccurrences(of: "{value}", with: minimumValue)
-                    .replacingOccurrences(of: "{currency}", with: "€")
-                self?.depositTipLabel.text = depositTipText
-                self?.depositTipLabel.isHidden = false
-            })
-            .store(in: &cancellables)
+//        viewModel.minimumValue
+//            .receive(on: DispatchQueue.main)
+//            .sink(receiveValue: { [weak self] minimumValue in
+//                let depositTipText = localized("minimum_deposit_value")
+//                    .replacingOccurrences(of: "{value}", with: minimumValue)
+//                    .replacingOccurrences(of: "{currency}", with: "€")
+//                self?.depositTipLabel.text = depositTipText
+//                self?.depositTipLabel.isHidden = false
+//            })
+//            .store(in: &cancellables)
 
         viewModel.availableBonuses
             .dropFirst()
