@@ -12,6 +12,7 @@ import ServicesProvider
 class DepositViewModel: NSObject {
     // MARK: Private Properties
     private var cancellables = Set<AnyCancellable>()
+    private let dateFormatter = DateFormatter()
 
     // MARK: Public Properties
     var isLoadingPublisher: CurrentValueSubject<Bool, Never> = .init(false)
@@ -31,6 +32,8 @@ class DepositViewModel: NSObject {
 
     var bonusState: BonusState = .nonExistent
 
+    var isFirstDeposit: Bool = true
+
     // MARK: Lifetime and Cycle
     override init() {
         self.paymentsDropIn = PaymentsDropIn()
@@ -40,6 +43,8 @@ class DepositViewModel: NSObject {
 
         self.setupPublishers()
         self.getOptInBonus()
+
+        self.getDepositHistory()
     }
 
     // MARK: Functions
@@ -110,6 +115,54 @@ class DepositViewModel: NSObject {
             })
             .store(in: &cancellables)
 
+    }
+
+    private func getDepositHistory() {
+
+        let endDate = Date()
+        var startDate = endDate
+
+        let calendar = Calendar.current
+        var oneYearAgoComponents = DateComponents()
+        oneYearAgoComponents.year = -1
+
+        if let startDateFinal = calendar.date(byAdding: oneYearAgoComponents, to: endDate) {
+            startDate = startDateFinal
+        } else {
+            print("There was an error calculating the date.")
+        }
+
+        let startDateString = self.getDateString(date: startDate)
+
+        let endDateString = self.getDateString(date: endDate)
+
+        Env.servicesProvider.getTransactionsHistory(startDate: startDateString, endDate: endDateString, transactionTypes: [TransactionType.deposit], pageNumber: 1)
+            .receive(on: DispatchQueue.main)
+            .sink(receiveCompletion: { [weak self] completion in
+
+                switch completion {
+                case .finished:
+                    ()
+                case .failure(let error):
+                    print("TRANSACTIONS WITHDRAWALS ERROR: \(error)")
+
+                }
+            }, receiveValue: { [weak self] transactionsWithdrawals in
+
+                guard let self = self else { return }
+
+                self.isFirstDeposit = transactionsWithdrawals.isNotEmpty ? false : true
+
+            })
+            .store(in: &cancellables)
+    }
+
+    private func getDateString(date: Date) -> String {
+        self.dateFormatter.dateFormat = "yyyy-MM-dd'T'HH:mm:ss"
+
+        let dateString = self.dateFormatter.string(from: date).appending("Z")
+
+        return dateString
     }
 
     private func redeemBonus(bonusId: String, amountText: String) {

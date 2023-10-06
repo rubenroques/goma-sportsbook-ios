@@ -326,8 +326,6 @@ class RootViewController: UIViewController {
 
         AnalyticsClient.sendEvent(event: .appStart)
 
-        Optimove.shared.reportScreenVisit(screenTitle: "Home")
-
         self.commonInit()
         // self.loadChildViewControllerIfNeeded(tab: )
 

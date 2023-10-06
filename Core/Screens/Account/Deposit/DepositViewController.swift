@@ -13,6 +13,7 @@ import AdyenDropIn
 import AdyenComponents
 import Lottie
 import SafariServices
+import OptimoveSDK
 
 class DepositViewController: UIViewController {
 
@@ -584,6 +585,14 @@ class DepositViewController: UIViewController {
         }
         
         self.shouldRefreshUserWallet?()
+
+        // Optimove success deposit
+        if self.viewModel.isFirstDeposit {
+            Optimove.shared.reportScreenVisit(screenTitle: "firstDeposit")
+        }
+        else {
+            Optimove.shared.reportScreenVisit(screenTitle: "purchase")
+        }
         
         let depositSuccessViewController = GenericAvatarSuccessViewController()
         depositSuccessViewController.didTapContinueAction = { [weak self] in

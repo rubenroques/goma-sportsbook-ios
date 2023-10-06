@@ -12,6 +12,7 @@ import ServicesProvider
 import Theming
 import Extensions
 import Lottie
+import OptimoveSDK
 
 public enum FormStep: String {
     case gender
@@ -564,6 +565,11 @@ public extension SteppedRegistrationViewController {
             let registerStepView = self.registerStepViews[safe: currentPage]
         else {
             return
+        }
+
+        // Optimove initiate register step
+        if currentPage == 0 {
+            Optimove.shared.reportScreenVisit(screenTitle: "registerStart")
         }
 
         let nextRegisterStepView = self.registerStepViews[safe: currentPage+1]

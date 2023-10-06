@@ -118,8 +118,6 @@ class ProfileViewController: UIViewController {
         self.commonInit()
         self.setupWithTheme()
 
-        Optimove.shared.reportScreenVisit(screenTitle: "Profile")
-
     }
 
     override func viewWillAppear(_ animated: Bool) {
