@@ -38,6 +38,7 @@ class PaymentsDropIn {
     var sessionId: String?
     var sessionData: String?
     var adyenSession: AdyenSession?
+    var adyenEnvironment = Adyen.Environment.liveEurope
     
     var payment: Payment?
     var paymentMethodsResponse: SimplePaymentMethodsResponse?
@@ -45,6 +46,10 @@ class PaymentsDropIn {
 
     // MARK: Lifetime and Cycle
     init() {
+
+        if TargetVariables.serviceProviderEnvironment == .dev {
+            adyenEnvironment = Adyen.Environment.test
+        }
 
         self.setupPublishers()
 
@@ -191,16 +196,10 @@ class PaymentsDropIn {
     }
 
     private func setupSession() {
-
-        var adyenEnvironment = Adyen.Environment.liveEurope
-
-        if TargetVariables.serviceProviderEnvironment == .dev {
-            adyenEnvironment = Adyen.Environment.test
-        }
         
         guard
             let clientKey = self.clientKey,
-            let apiContext = try? APIContext(environment: adyenEnvironment, clientKey: clientKey), // test_HNOW5H423JB7JEJYVXMQF655YAT7M5IB
+            let apiContext = try? APIContext(environment: self.adyenEnvironment, clientKey: clientKey), // test_HNOW5H423JB7JEJYVXMQF655YAT7M5IB
             let sessionId = self.sessionId,
             let sessionData = self.sessionData
         else {
@@ -241,7 +240,7 @@ class PaymentsDropIn {
             let adyenSession = self.adyenSession,
             //
             let clientKey = self.clientKey,
-            let apiContext = try? APIContext(environment: Adyen.Environment.test, clientKey: clientKey)
+            let apiContext = try? APIContext(environment: self.adyenEnvironment, clientKey: clientKey)
         else {
             return nil
         }
@@ -256,7 +255,6 @@ class PaymentsDropIn {
                                                                                 merchantIdentifier: "merchant.com.Adyen.betssonfrance")
             // dropInConfiguration.applePay?.allowOnboarding = true
         }
-        
         
         let adyenContext = AdyenContext(apiContext: apiContext, payment: payment)
         
