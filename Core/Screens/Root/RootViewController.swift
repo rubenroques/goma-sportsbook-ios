@@ -477,7 +477,7 @@ class RootViewController: UIViewController {
         self.localAuthenticationBaseView.alpha = 1.0
         self.showLocalAuthenticationCoveringViewIfNeeded()
 
-        self.authenticateUser()
+        // self.authenticateUser()
     }
 
     override func viewWillAppear(_ animated: Bool) {
@@ -1583,6 +1583,8 @@ extension RootViewController {
     }
 
     @objc func appWillEnterForeground() {
+        Env.userSessionStore.shouldAuthenticateUser = true
+        
         if Env.userSessionStore.shouldRequestBiometrics() {
             self.authenticateUser()
         }
@@ -1593,6 +1595,8 @@ extension RootViewController {
     }
 
     @objc func appDidEnterBackground() {
+        Env.userSessionStore.shouldAuthenticateUser = true
+        
         self.showLocalAuthenticationCoveringViewIfNeeded()
         print("LocalAuth Background")
     }
@@ -1644,9 +1648,7 @@ extension RootViewController {
                             self.unlockAppWithUser()
                         }
                     }
-
             })
-
         }
         else {
             // Device cannot use biometric authentication

@@ -113,12 +113,7 @@ class Router {
             bootRootViewController = Router.createLoginViewControllerFlow()
         }
 
-        // if Development
-        //
-        // self.rootWindow.rootViewController = StoriesFullScreenViewController(viewModel: StoriesFullScreenViewModel())
-        // Prod
         self.rootWindow.rootViewController = bootRootViewController
-        //
 
     }
 

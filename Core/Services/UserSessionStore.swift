@@ -89,6 +89,8 @@ class UserSessionStore {
     var shouldRecordUserSession = true
     var shouldSkipLimitsScreen = false
 
+    var shouldAuthenticateUser = true
+    
     var loggedUserProfile: UserProfile? {
         return self.userProfilePublisher.value
     }
@@ -240,8 +242,8 @@ class UserSessionStore {
                 return (session, userProfile)
             }
             .handleEvents(receiveOutput: { [weak self] session, profile in
-                self?.userProfilePublisher.send(profile)
                 self?.userSessionPublisher.send(session)
+                self?.userProfilePublisher.send(profile)
             })
             .map({ _ in
                 return ()
