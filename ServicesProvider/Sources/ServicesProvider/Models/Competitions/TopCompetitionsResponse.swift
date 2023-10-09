@@ -46,7 +46,7 @@ public struct TopCompetitionPointer: Codable {
 }
 
 
-public struct TopCompetition: Codable {
+public struct TopCompetition: Codable, Equatable {
 
     public var id: String
     public var name: String

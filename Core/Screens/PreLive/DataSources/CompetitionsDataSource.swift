@@ -363,7 +363,7 @@ extension CompetitionsDataSource: UITableViewDataSource, UITableViewDelegate {
         guard
             let competition = self.filteredCompetitions[safe: indexPath.section]
         else {
-            fatalError()
+            return UITableViewCell()
         }
 
         if competition.numberOutrightMarkets > 0 {
@@ -419,7 +419,7 @@ extension CompetitionsDataSource: UITableViewDataSource, UITableViewDelegate {
             return cell
         }
 
-        fatalError()
+        return UITableViewCell()
     }
 
     func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {

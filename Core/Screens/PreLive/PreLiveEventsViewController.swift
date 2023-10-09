@@ -281,6 +281,8 @@ class PreLiveEventsViewController: UIViewController {
 
         tableView.separatorStyle = .none
 
+        tableView.register(UITableViewCell.self, forCellReuseIdentifier: UITableViewCell.identifier) // fallback
+        
         tableView.register(OutrightCompetitionLineTableViewCell.self, forCellReuseIdentifier: OutrightCompetitionLineTableViewCell.identifier)
         tableView.register(OutrightCompetitionLargeLineTableViewCell.self, forCellReuseIdentifier: OutrightCompetitionLargeLineTableViewCell.identifier)
 
@@ -291,8 +293,7 @@ class PreLiveEventsViewController: UIViewController {
         tableView.register(EmptyCardTableViewCell.nib, forCellReuseIdentifier: EmptyCardTableViewCell.identifier)
 
         tableView.register(FooterResponsibleGamingViewCell.self, forCellReuseIdentifier: FooterResponsibleGamingViewCell.identifier)
-        tableView.register(UITableViewCell.self, forCellReuseIdentifier: UITableViewCell.identifier)
-
+        
         tableView.register(TitleTableViewHeader.nib, forHeaderFooterViewReuseIdentifier: TitleTableViewHeader.identifier)
         tableView.register(TournamentTableViewHeader.nib, forHeaderFooterViewReuseIdentifier: TournamentTableViewHeader.identifier)
 

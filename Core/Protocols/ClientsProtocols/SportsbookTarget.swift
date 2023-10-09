@@ -43,6 +43,9 @@ protocol SportsbookTarget {
     static var shouldUseGradientBackgrounds: Bool { get }
 
     static var serviceProviderEnvironment: EnvironmentType { get }
+    
+    static var supportedLanguages: [SportsbookSupportedLanguage] { get }
+    
 }
 
 enum SportsbookTargetFeatures: CaseIterable {
@@ -71,6 +74,15 @@ enum SportsbookTargetFeatures: CaseIterable {
     case casino
 }
 
+enum SportsbookSupportedLanguage: String, CaseIterable {
+    case english = "en"
+    case french = "fr"
+    
+    var languageCode: String {
+        return self.rawValue
+    }
+}
+
 extension SportsbookTarget {
 
     static func hasFeatureEnabled(feature: SportsbookTargetFeatures) -> Bool {
@@ -88,6 +100,10 @@ extension SportsbookTarget {
 
     static var shouldUseGradientBackgrounds: Bool {
         return false
+    }
+    
+    static var supportedLanguages: [SportsbookSupportedLanguage] {
+        return SportsbookSupportedLanguage.allCases
     }
 
 }

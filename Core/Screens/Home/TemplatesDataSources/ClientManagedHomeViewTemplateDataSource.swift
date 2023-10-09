@@ -308,6 +308,8 @@ class ClientManagedHomeViewTemplateDataSource {
     private func fetchTopCompetitions() {
 
         Env.servicesProvider.getTopCompetitions()
+            .removeDuplicates()
+            .receive(on: DispatchQueue.main)
             .sink(receiveCompletion: { completion in
                 switch completion {
                 case .finished:

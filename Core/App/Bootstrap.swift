@@ -26,6 +26,8 @@ class Bootstrap {
 
         self.router.makeKeyAndVisible()
 
+        self.router.setSupportedLanguages()
+        
         environment.businessSettingsSocket.connect()
 
         if TargetVariables.hasFeatureEnabled(feature: .getLocationLimits) {

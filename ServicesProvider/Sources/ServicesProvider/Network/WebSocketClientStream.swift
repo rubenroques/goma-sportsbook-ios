@@ -8,18 +8,18 @@
 import Foundation
 import Combine
 
-public enum WebSocketEventMessage {
+public enum WebSocketAsyncEventMessage {
     case connected
     case text(String)
     case binary(Data)
     case disconnected
 }
 
-public typealias WebSocketAsyncStream = AsyncThrowingStream<WebSocketEventMessage, Error>
+public typealias WebSocketAsyncStream = AsyncThrowingStream<WebSocketAsyncEventMessage, Error>
 
 public class WebSocketClientStream: NSObject, AsyncSequence {
     public typealias AsyncIterator = WebSocketAsyncStream.Iterator
-    public typealias Element = WebSocketEventMessage
+    public typealias Element = WebSocketAsyncEventMessage
 
     private let url: URL
 

@@ -408,7 +408,7 @@ class AgeCountryFormStepView: FormStepView {
                         self?.departmentBirthHeaderTextFieldView.hideTipAndError()
                     }
                     else {
-                        self?.departmentBirthHeaderTextFieldView.showError(withMessage: "This departement of birth is invalid")
+                        self?.departmentBirthHeaderTextFieldView.showError(withMessage: Localization.localized("department_of_birth_invalid") )
                     }
                 }
             }
