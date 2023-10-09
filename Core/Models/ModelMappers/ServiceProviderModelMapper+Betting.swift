@@ -40,7 +40,9 @@ extension ServiceProviderModelMapper {
                         betShareToken: nil,
                         betslipId: bet.betslipId,
                         cashbackReturn: bet.cashbackReturn,
-                        freebetReturn: bet.freebetReturn)
+                        freebetReturn: bet.freebetReturn,
+                        potentialCashbackReturn: bet.potentialCashbackReturn,
+                        potentialFreebetReturn: bet.potentialFreebetReturn)
     }
 
     static func betHistoryEntrySelection(fromServiceProviderBetSelection betSelection: ServicesProvider.BetSelection) -> BetHistoryEntrySelection {
