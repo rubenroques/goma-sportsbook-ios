@@ -68,6 +68,8 @@ class RecruitAFriendViewController: UIViewController {
     private lazy var bannerImageViewDynamicHeightConstraint: NSLayoutConstraint = Self.createBannerImageViewDynamicHeightConstraint()
     private lazy var referralsStackViewBottomBaseConstraint: NSLayoutConstraint = Self.createReferralsStackViewBottomBaseConstraint()
     private lazy var referralsStackViewBottomGodfatherConstraint: NSLayoutConstraint = Self.createReferralsStackViewBottomGodfatherConstraint()
+    private lazy var regulationReferralsTopConstraint: NSLayoutConstraint = Self.createRegulationReferralsTopConstraint()
+    private lazy var regulationRecruitTopConstraint: NSLayoutConstraint = Self.createRegulationRecruitTopConstraint()
 
     private var aspectRatio: CGFloat = 1.0
 
@@ -94,6 +96,12 @@ class RecruitAFriendViewController: UIViewController {
             }
 
             self.recruitInvalidDocumentsButton.isUserInteractionEnabled = !isKYCVerified
+
+            self.regulationReferralsTopConstraint.isActive = isKYCVerified
+
+            self.regulationRecruitTopConstraint.isActive = !isKYCVerified
+
+            self.referralsBaseView.isHidden = !isKYCVerified
 
         }
     }
@@ -129,7 +137,13 @@ class RecruitAFriendViewController: UIViewController {
 
         self.recruitInvalidDepositButton.addTarget(self, action: #selector(didTapDeposit), for: .primaryActionTriggered)
 
-        self.isKYCVerified = true
+        if let isUserKycVerified = Env.userSessionStore.userKnowYourCustomerStatus, isUserKycVerified == .request {
+            self.isKYCVerified = false
+        }
+        else {
+            self.isKYCVerified = true
+        }
+
         self.hasDeposit = true
         self.hasGodfather = true
 
@@ -244,6 +258,7 @@ class RecruitAFriendViewController: UIViewController {
         self.shareDescriptionLabel.textColor = UIColor.App.textPrimary
 
         StyleHelper.styleButton(button: self.shareButton)
+        self.shareButton.setBackgroundColor(UIColor.App.buttonDisablePrimary, for: .disabled)
 
         self.qrCodeBaseView.backgroundColor = .clear
 
@@ -256,6 +271,7 @@ class RecruitAFriendViewController: UIViewController {
         self.qrCodeDescriptionLabel.textColor = UIColor.App.textPrimary
 
         StyleHelper.styleButton(button: self.qrCodeButton)
+        self.qrCodeButton.setBackgroundColor(UIColor.App.buttonDisablePrimary, for: .disabled)
 
         self.referralsBaseView.backgroundColor = UIColor.App.backgroundCards
 
@@ -777,6 +793,16 @@ extension RecruitAFriendViewController {
         return constraint
     }
 
+    private static func createRegulationReferralsTopConstraint() -> NSLayoutConstraint {
+        let constraint = NSLayoutConstraint()
+        return constraint
+    }
+
+    private static func createRegulationRecruitTopConstraint() -> NSLayoutConstraint {
+        let constraint = NSLayoutConstraint()
+        return constraint
+    }
+
     private func setupSubviews() {
 
         self.view.addSubview(self.navigationView)
@@ -1051,7 +1077,7 @@ extension RecruitAFriendViewController {
         NSLayoutConstraint.activate([
             self.regulationsBaseView.leadingAnchor.constraint(equalTo: self.containerView.leadingAnchor, constant: 14),
             self.regulationsBaseView.trailingAnchor.constraint(equalTo: self.containerView.trailingAnchor, constant: -14),
-            self.regulationsBaseView.topAnchor.constraint(equalTo: self.referralsBaseView.bottomAnchor, constant: 15),
+            //self.regulationsBaseView.topAnchor.constraint(equalTo: self.referralsBaseView.bottomAnchor, constant: 15),
             self.regulationsBaseView.bottomAnchor.constraint(equalTo: self.containerView.bottomAnchor, constant: -20),
 
             self.regulationsTitleLabel.leadingAnchor.constraint(equalTo: self.regulationsBaseView.leadingAnchor, constant: 16),
@@ -1103,5 +1129,25 @@ extension RecruitAFriendViewController {
                            multiplier: 1,
                            constant: -15)
         self.referralsStackViewBottomGodfatherConstraint.isActive = false
+
+        self.regulationReferralsTopConstraint =
+        NSLayoutConstraint(item: self.regulationsBaseView,
+                           attribute: .top,
+                           relatedBy: .equal,
+                           toItem: self.referralsBaseView,
+                           attribute: .bottom,
+                           multiplier: 1,
+                           constant: 15)
+        self.regulationReferralsTopConstraint.isActive = true
+
+        self.regulationRecruitTopConstraint =
+        NSLayoutConstraint(item: self.regulationsBaseView,
+                           attribute: .top,
+                           relatedBy: .equal,
+                           toItem: self.recruitMethodsBaseView,
+                           attribute: .bottom,
+                           multiplier: 1,
+                           constant: 15)
+        self.regulationRecruitTopConstraint.isActive = false
     }
 }
