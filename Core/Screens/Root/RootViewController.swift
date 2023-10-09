@@ -477,7 +477,7 @@ class RootViewController: UIViewController {
         self.localAuthenticationBaseView.alpha = 1.0
         self.showLocalAuthenticationCoveringViewIfNeeded()
 
-        // self.authenticateUser()
+        self.authenticateUser()
     }
 
     override func viewWillAppear(_ animated: Bool) {
@@ -1583,8 +1583,6 @@ extension RootViewController {
     }
 
     @objc func appWillEnterForeground() {
-        Env.userSessionStore.shouldAuthenticateUser = true
-        
         if Env.userSessionStore.shouldRequestBiometrics() {
             self.authenticateUser()
         }
@@ -1595,8 +1593,6 @@ extension RootViewController {
     }
 
     @objc func appDidEnterBackground() {
-        Env.userSessionStore.shouldAuthenticateUser = true
-        
         self.showLocalAuthenticationCoveringViewIfNeeded()
         print("LocalAuth Background")
     }
@@ -1609,17 +1605,28 @@ extension RootViewController {
     }
 
     @objc func appWillResignActive() {
-        //  self.isLocalAuthenticationCoveringView = true
+        Env.userSessionStore.shouldAuthenticateUser = true
+        
+        self.showLocalAuthenticationCoveringViewIfNeeded()
         print("LocalAuth Inactive")
     }
 
     func authenticateUser() {
-        
+
+        if Env.userSessionStore.shouldAuthenticateUser {
+            print("LocalAuth shouldAuthenticateUser yes")
+        }
+        else {
+            print("LocalAuth shouldAuthenticateUser not")
+            self.unlockAppWithUser()
+            return
+        }
+
         if !Env.userSessionStore.shouldRequestBiometrics() {
             self.unlockAppAnonymous()
             return
         }
-
+        
         let context = LAContext()
 
         var error: NSError?
@@ -1664,6 +1671,7 @@ extension RootViewController {
                     notifyUser(localized("unknown_error"), errorMessage: err.localizedDescription)
                 }
             }
+            
         }
 
     }
