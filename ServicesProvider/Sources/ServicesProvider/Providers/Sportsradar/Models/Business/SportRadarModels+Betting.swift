@@ -102,6 +102,9 @@ extension SportRadarModels {
         var cashbackReturn: Double?
         var freebetReturn: Double?
 
+        var potentialCashbackReturn: Double?
+        var potentialFreebetReturn: Double?
+
         enum CodingKeys: String, CodingKey {
             case identifier = "idFOBet"
             case eventName
@@ -141,6 +144,9 @@ extension SportRadarModels {
 
             case cashbackReturn = "soReturn"
             case freebetReturn = "soFreeReturn"
+
+            case potentialCashbackReturn = "soPotentialReturn"
+            case potentialFreebetReturn = "soPotentialFreeReturn"
         }
 
         init(from decoder: Decoder) throws {
@@ -221,6 +227,10 @@ extension SportRadarModels {
             self.cashbackReturn = try container.decodeIfPresent(Double.self, forKey: .cashbackReturn)
 
             self.freebetReturn = try container.decodeIfPresent(Double.self, forKey: .freebetReturn)
+
+            self.potentialCashbackReturn = try container.decodeIfPresent(Double.self, forKey: .potentialCashbackReturn)
+
+            self.potentialFreebetReturn = try container.decodeIfPresent(Double.self, forKey: .potentialFreebetReturn)
 
         }
 
