@@ -144,10 +144,10 @@ class AnonymousSideMenuViewController: UIViewController {
         let messagesTap = UITapGestureRecognizer(target: self, action: #selector(promotionsViewTapped))
         promotionsView.addGestureRecognizer(messagesTap)
 
-        let recruitFriendView = NavigationCardView()
-        recruitFriendView.setupView(title: localized("referal_friend"), iconTitle: "recruit_icon")
-        let recruitFriendTap = UITapGestureRecognizer(target: self, action: #selector(recruitFriendViewTapped))
-        recruitFriendView.addGestureRecognizer(recruitFriendTap)
+//        let recruitFriendView = NavigationCardView()
+//        recruitFriendView.setupView(title: localized("referal_friend"), iconTitle: "recruit_icon")
+//        let recruitFriendTap = UITapGestureRecognizer(target: self, action: #selector(recruitFriendViewTapped))
+//        recruitFriendView.addGestureRecognizer(recruitFriendTap)
 
         let responsibleGamingView = NavigationCardView()
         responsibleGamingView.setupView(title: localized("responsible_gaming"), iconTitle: "responsible_gaming_icon")
@@ -167,7 +167,7 @@ class AnonymousSideMenuViewController: UIViewController {
         self.menusStackView.addArrangedSubview(replayView)
         self.menusStackView.addArrangedSubview(betSwipeView)
         self.menusStackView.addArrangedSubview(promotionsView)
-        self.menusStackView.addArrangedSubview(recruitFriendView)
+//        self.menusStackView.addArrangedSubview(recruitFriendView)
         self.menusStackView.addArrangedSubview(supportView)
         self.menusStackView.addArrangedSubview(responsibleGamingView)
     }
