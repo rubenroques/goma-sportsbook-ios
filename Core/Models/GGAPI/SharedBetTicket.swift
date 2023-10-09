@@ -165,7 +165,9 @@ extension BetHistoryEntry {
                   betShareToken: sharedBetTicket.betShareToken,
                   betslipId: nil,
                   cashbackReturn: nil,
-                  freebetReturn: nil)
+                  freebetReturn: nil,
+                  potentialCashbackReturn: nil,
+                  potentialFreebetReturn: nil)
     }
 
 }
