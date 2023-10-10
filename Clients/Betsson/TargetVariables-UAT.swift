@@ -81,7 +81,9 @@ struct TargetVariables: SportsbookTarget {
 
     static var serviceProviderEnvironment: EnvironmentType {
         return .dev
-        //return .prod
     }
-    
+
+    static var clientBaseUrl: String {
+        return "https://sportsbook-stage.gomagaming.com"
+    }
 }

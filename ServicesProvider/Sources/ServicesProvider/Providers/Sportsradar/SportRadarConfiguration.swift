@@ -91,7 +91,7 @@ struct SportRadarConfiguration {
         return "1356"
     }
 
-    public var appBaseUrl: String {
+    public var clientBaseUrl: String {
         switch self.environment {
         case .production:
             return "https://betsson.fr"

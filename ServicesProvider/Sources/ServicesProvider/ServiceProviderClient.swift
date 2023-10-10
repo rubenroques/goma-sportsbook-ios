@@ -43,7 +43,7 @@ public class ServicesProviderClient {
         }
     }
 
-    public var appBaseUrl: String = SportRadarConfiguration.shared.appBaseUrl
+    public var appBaseUrl: String = SportRadarConfiguration.shared.clientBaseUrl
     
     public init(providerType: ProviderType, configuration: ServicesProviderConfiguration) {
         self.providerType = providerType
