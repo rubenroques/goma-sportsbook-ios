@@ -56,11 +56,29 @@ class Environment {
         UserDefaults.standard.string(forKey: "device_id") ?? ""
     }
 
-    // let urlMobileShares: String = "https://goma-uat.betsson.fr"
-    let urlMobileShares: String = "https://sportsbook-stage.gomagaming.com"
+    //let urlMobileSharesProd: String = "https://betsson.fr"
+    //let urlMobileShares: String = "https://sportsbook-stage.gomagaming.com"
     let urlSchemaManager = URLSchemaManager()
-    // let urlApp: String = "https://goma-uat.betsson.fr"
-    let urlApp: String = "https://sportsbook-stage.gomagaming.com"
+    //let urlAppProd: String = "https://betsson.fr"
+    //let urlApp: String = "https://sportsbook-stage.gomagaming.com"
+
+    lazy var urlMobileShares: String = {
+        switch TargetVariables.serviceProviderEnvironment {
+        case .prod:
+            return "https://betsson.fr"
+        case .dev:
+            return "https://sportsbook-stage.gomagaming.com"
+        }
+    }()
+
+    lazy var urlApp: String = {
+        switch TargetVariables.serviceProviderEnvironment {
+        case .prod:
+            return "https://betsson.fr"
+        case .dev:
+            return "https://sportsbook-stage.gomagaming.com"
+        }
+    }()
 
     // Sumsub keys
     let sumsubAppToken = "sbx:yjCFqKsuTX6mTY7XMFFPe6hR.v9i5YpFrNND0CeLcZiHeJnnejrCUDZKT"

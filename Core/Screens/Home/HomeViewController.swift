@@ -315,7 +315,7 @@ class HomeViewController: UIViewController {
 
     private func openBetTinderCloneView() {
         let userId = Env.userSessionStore.loggedUserProfile?.userIdentifier ?? "0"
-        let iframeURL = URL(string: "https://sportsbook-stage.gomagaming.com/betswipe.html?user=\(userId)&mobile=true&language=fr")!
+        let iframeURL = URL(string: "\(Env.urlApp)/betswipe.html?user=\(userId)&mobile=true&language=fr")!
         
         let betSelectorViewConroller = BetslipProxyWebViewController(url: iframeURL)
         let navigationViewController = Router.navigationController(with: betSelectorViewConroller)

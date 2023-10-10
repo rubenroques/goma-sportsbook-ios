@@ -90,6 +90,15 @@ struct SportRadarConfiguration {
     public var frontEndCode: String {
         return "1356"
     }
+
+    public var appBaseUrl: String {
+        switch self.environment {
+        case .production:
+            return "https://betsson.fr"
+        default:
+            return "https://sportsbook-stage.gomagaming.com"
+        }
+    }
 }
 
 

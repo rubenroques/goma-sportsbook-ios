@@ -133,7 +133,7 @@ enum GomaGamingEnv {
         case .stage:
             return "https://sportsbook-stage.gomagaming.com"
         case .prod:
-            return "https://goma-uat.betsson.fr"
+            return "https://betsson.fr"
         }
     }
 }

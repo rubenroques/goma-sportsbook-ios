@@ -268,18 +268,18 @@ class LoginViewController: UIViewController {
     
     func checkPolicyLinks() {
         policyLinkView.didTapTerms = {
-            if let url = URL(string: "https://goma-uat.betsson.fr/terms-and-conditions.pdf") {
+            if let url = URL(string: "\(Env.urlApp)/terms-and-conditions.pdf") {
                 UIApplication.shared.open(url)
             }
         }
         
         policyLinkView.didTapPrivacy = {
-            if let url = URL(string: "https://goma-uat.betsson.fr/fr/privacy-policy") {
+            if let url = URL(string: "\(Env.urlApp)/fr/politique-de-confidentialite") {
                 UIApplication.shared.open(url)
             }            }
         
         policyLinkView.didTapEula = {
-            if let url = URL(string: "https://goma-uat.betsson.fr/betting-rules.pdf") {
+            if let url = URL(string: "\(Env.urlApp)/betting-rules.pdf") {
                 UIApplication.shared.open(url)
             }
         }
