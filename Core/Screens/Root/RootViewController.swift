@@ -1593,6 +1593,8 @@ extension RootViewController {
     }
 
     @objc func appDidEnterBackground() {
+        Env.userSessionStore.shouldAuthenticateUser = true
+        
         self.showLocalAuthenticationCoveringViewIfNeeded()
         print("LocalAuth Background")
     }
@@ -1605,9 +1607,7 @@ extension RootViewController {
     }
 
     @objc func appWillResignActive() {
-        Env.userSessionStore.shouldAuthenticateUser = true
-        
-        self.showLocalAuthenticationCoveringViewIfNeeded()
+        // self.showLocalAuthenticationCoveringViewIfNeeded()
         print("LocalAuth Inactive")
     }
 
@@ -1617,7 +1617,7 @@ extension RootViewController {
             print("LocalAuth shouldAuthenticateUser yes")
         }
         else {
-            print("LocalAuth shouldAuthenticateUser not")
+            print("LocalAuth shouldAuthenticateUser no")
             self.unlockAppWithUser()
             return
         }
