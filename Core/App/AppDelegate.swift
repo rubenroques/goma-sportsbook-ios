@@ -13,6 +13,8 @@ import ServicesProvider
 import IQKeyboardManagerSwift
 import PhraseSDK
 import AdyenActions
+import OptimoveSDK
+import OptimoveNotificationServiceExtension
 
 @main
 class AppDelegate: UIResponder, UIApplicationDelegate, MessagingDelegate {
@@ -97,6 +99,13 @@ class AppDelegate: UIResponder, UIApplicationDelegate, MessagingDelegate {
             options: authOptions,
             completionHandler: { _, _ in }
         )
+
+        // Optimove
+        let config = OptimoveConfigBuilder(optimoveCredentials: "WzEsIjEzMGRjNGIwNTZiYzRhNmQ5NWI0ZWJjODczNGJlYmJhIiwibW9iaWxlLWNvbmZpZ3VyYXRpb24uMS4wLjAiXQ==",
+                                           optimobileCredentials: "WzEsImV1LWNlbnRyYWwtMiIsImU2ZDZiMzU1LWE0MjAtNDEzYi1hZjZkLWViMjZkZmY2MTkzNiIsIlBlUmtqWGppaFF4WHc2Lzkvdnphb3lETWtsdXFFWjlQZlZBMSJd")
+                    .build()
+
+        Optimove.initialize(with: config)
 
         application.registerForRemoteNotifications()
 

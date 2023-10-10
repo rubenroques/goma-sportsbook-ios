@@ -10,6 +10,7 @@ import Combine
 import AppTrackingTransparency
 import AdSupport
 import ServicesProvider
+import OptimoveSDK
 
 enum UserSessionError: Error {
     case invalidEmailPassword
@@ -137,6 +138,9 @@ class UserSessionStore {
                     self?.isUserProfileComplete = userProfile.isRegistrationCompleted
                     self?.isUserEmailVerified = userProfile.isEmailVerified
                     self?.userKnowYourCustomerStatus = userProfile.kycStatus
+
+                    print("OPTIMOVE USER ID!")
+                    Optimove.shared.setUserId(userProfile.userIdentifier)
                 }
                 else {
                     self?.isUserProfileComplete = nil

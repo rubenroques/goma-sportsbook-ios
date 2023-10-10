@@ -9,6 +9,7 @@ import UIKit
 import Combine
 import ServicesProvider
 import RegisterFlow
+import OptimoveSDK
 
 class ProfileViewController: UIViewController {
 

@@ -13,6 +13,7 @@ import RegisterFlow
 import Adyen
 import AdyenDropIn
 import AdyenComponents
+import OptimoveSDK
 
 class RootViewController: UIViewController {
 

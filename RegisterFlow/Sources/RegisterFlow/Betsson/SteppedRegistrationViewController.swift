@@ -566,6 +566,11 @@ public extension SteppedRegistrationViewController {
             return
         }
 
+        // Optimove initiate register step
+//        if currentPage == 0 {
+//            Optimove.shared.reportScreenVisit(screenTitle: "registerStart")
+//        }
+
         let nextRegisterStepView = self.registerStepViews[safe: currentPage+1]
 
         if !registerStepView.canMoveToNextStep {

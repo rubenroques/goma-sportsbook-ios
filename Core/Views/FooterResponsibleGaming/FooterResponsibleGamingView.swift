@@ -71,15 +71,15 @@ class FooterResponsibleGamingView: UIView {
         self.topView.addGestureRecognizer(tapGestureRecognizer)
 
         // Set text for each label
-        self.affiliateSystemLabel.text = localized("affiliate_system_footer_link")
-        self.privacyPolicyLabel.text = localized("privacy_policy_footer_link")
+        self.affiliateSystemLabel.text = localized("affiliate_system")
+        self.privacyPolicyLabel.text = localized("privacy_policy")
         self.securityRulesLabel.text = localized("security_rules_footer_link")
-        self.cookiePolicyLabel.text = localized("cookie_policy_footer_link")
-        self.sportsBettingRulesLabel.text = localized("sports_betting_rules_footer_link")
-        self.termsAndConditionsLabel.text = localized("terms_and_conditions_footer_link")
-        self.aboutLabel.text = localized("about_footer_link")
-        self.faqLabel.text = localized("faqs_footer_link")
-        self.responsibleGamblingLabel.text = localized("responsible_gambling_footer_link")
+        self.cookiePolicyLabel.text = localized("cookie_policy")
+        self.sportsBettingRulesLabel.text = localized("sport_betting_rules")
+        self.termsAndConditionsLabel.text = localized("terms_and_conditions")
+        self.aboutLabel.text = localized("about_us")
+        self.faqLabel.text = localized("faqs")
+        self.responsibleGamblingLabel.text = localized("responsible_gambling")
 
         self.addTapGestureRecognizer(to: self.affiliateSystemLabel, action: #selector(openAffiliateSystemURL))
         self.addTapGestureRecognizer(to: self.responsibleGamblingLabel, action: #selector(openResponsibleGamblingURL))
@@ -158,35 +158,41 @@ class FooterResponsibleGamingView: UIView {
     }
 
     @objc func openAffiliateSystemURL() {
-        self.openURL("https://goma-uat.betsson.fr/")
+        self.openURL("http://www.partenaire-betsson.fr/")
     }
 
     @objc func openResponsibleGamblingURL() {
-        self.openURL("https://goma-uat.betsson.fr/")
+        let url = "\(Env.urlApp)/fr/jeu-responsable"
+        self.openURL(url)
     }
 
     @objc func openPrivacyPolicyURL() {
-        self.openURL("https://goma-uat.betsson.fr/fr/privacy-policy")
+        let url = "\(Env.urlApp)/fr/politique-de-confidentialite"
+        self.openURL(url)
     }
 
     @objc func openCookiePolicyURL() {
-        self.openURL("https://goma-uat.betsson.fr/fr/privacy-policy/#cookies")
+        let url = "\(Env.urlApp)/fr/politique-de-confidentialite/#cookies"
+        self.openURL(url)
     }
 
     @objc func openSportsBettingRulesURL() {
-        self.openURL("https://goma-uat.betsson.fr/betting-rules.pdf")
+        let url = "\(Env.urlApp)/betting-rules.pdf"
+        self.openURL(url)
     }
 
     @objc func openTermsAndConditionsURL() {
-        self.openURL("https://goma-uat.betsson.fr/terms-and-conditions.pdf")
+        let url = "\(Env.urlApp)/terms-and-conditions.pdf"
+        self.openURL(url)
     }
 
     @objc func openAboutURL() {
-        self.openURL("https://goma-uat.betsson.fr/")
+        let url = "\(Env.urlApp)/fr/about"
+        self.openURL(url)
     }
 
     @objc func openFAQsURL() {
-        self.openURL("https://goma-uat.betsson.fr/")
+        self.openURL("https://betssonfrance.zendesk.com/hc/fr")
     }
 
     func openURL(_ urlString: String) {
@@ -195,19 +201,19 @@ class FooterResponsibleGamingView: UIView {
     }
 
     @objc func openFacebookURL() {
-        self.openURL("http://www.facebook.com/")
+        self.openURL("https://www.facebook.com/profile.php?id=61551148828863&locale=fr_FR")
     }
 
     @objc func openYoutubeURL() {
-        self.openURL("https://www.youtube.com/")
+        self.openURL("https://www.youtube.com/channel/UCVYLZg-cDBbe1h8ege0N5Eg")
     }
 
     @objc func openIntagramURL() {
-        self.openURL("https://www.instagram.com/")
+        self.openURL("https://www.instagram.com/betssonfrance/")
     }
 
     @objc func openTwitterURL() {
-        self.openURL("https://twitter.com/")
+        self.openURL("https://twitter.com/BetssonFR")
     }
 }
 

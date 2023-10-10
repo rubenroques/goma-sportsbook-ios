@@ -8,6 +8,7 @@
 	<array>
 		<string>applinks:sportsbook-stage.gomagaming.com</string>
 		<string>applinks:goma-uat.betsson.fr</string>
+		<string>webcredentials:example.com</string>
 	</array>
 	<key>com.apple.developer.in-app-payments</key>
 	<array>

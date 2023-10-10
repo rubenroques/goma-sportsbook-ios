@@ -37,6 +37,14 @@ class SupportPageViewController: UIViewController {
     private lazy var sendButton: UIButton = Self.createSendButton()
     private lazy var chatButton: UIButton = Self.createChatButton()
     private lazy var contentScrollView: UIScrollView = Self.createContentScrollView()
+    private lazy var helpBaseView: UIView = Self.createHelpBaseView()
+    private lazy var helpTitleLabel: UILabel = Self.createHelpTitleLabel()
+    private lazy var helpDescriptionLabel: UILabel = Self.createHelpDescriptionLabel()
+    private lazy var helpButton: UIButton = Self.createHelpButton()
+    private lazy var helpTopSeparatorView: UIView = Self.createHelpTopSeparatorView()
+    private lazy var helpBottomSeparatorView: UIView = Self.createHelpBottomSeparatorView()
+    private lazy var contactTitleLabel: UILabel = Self.createContactTitleLabel()
+    private lazy var contactDescriptionLabel: UILabel = Self.createContactDescriptionLabel()
 
     // Constraints
     private lazy var anonymousViewTopConstraint: NSLayoutConstraint = Self.createAnonymousViewTopConstraint()
@@ -124,6 +132,8 @@ class SupportPageViewController: UIViewController {
         self.descriptionTextView.delegate = self
         
         self.backButton.addTarget(self, action: #selector(didTapBackButton), for: .primaryActionTriggered)
+
+        self.helpButton.addTarget(self, action: #selector(didTapHelpButton), for: .primaryActionTriggered)
 
         let tapBackButtonGestureRecognizer = UITapGestureRecognizer.init(target: self, action: #selector(didTapBackButton))
         self.backButtonBaseView.addGestureRecognizer(tapBackButtonGestureRecognizer)
@@ -245,6 +255,22 @@ class SupportPageViewController: UIViewController {
 
         self.contentScrollView.backgroundColor = .clear
 
+        self.helpBaseView.backgroundColor = .clear
+
+        self.helpTitleLabel.textColor = UIColor.App.textPrimary
+
+        self.helpDescriptionLabel.textColor = UIColor.App.textPrimary
+
+        self.helpTopSeparatorView.backgroundColor = UIColor.App.separatorLine
+
+        self.helpBottomSeparatorView.backgroundColor = UIColor.App.separatorLine
+
+        self.contactTitleLabel.textColor = UIColor.App.textPrimary
+
+        self.contactDescriptionLabel.textColor = UIColor.App.textPrimary
+
+        StyleHelper.styleButton(button: self.helpButton)
+
 //        self.webView.isOpaque = false
 //        self.webView.backgroundColor = .clear
 //        self.webView.scrollView.backgroundColor = UIColor.clear
@@ -311,6 +337,11 @@ class SupportPageViewController: UIViewController {
     @objc func didTapBackButton() {
         self.navigationController?.popViewController(animated: true)
     }
+
+    @objc func didTapHelpButton() {
+        guard let url = URL(string: "https://betssonfrance.zendesk.com/hc/fr") else { return }
+        UIApplication.shared.open(url)
+    }
     
     @objc func didTapBackground() {
         self.resignFirstResponder()
@@ -323,6 +354,7 @@ class SupportPageViewController: UIViewController {
     }
 
     @objc func didTapChatButton() {
+        print("TAPPED CHAT!")
         Zendesk.initialize(appId: "90015cb5fb43daa2fc5307a61d4b8cdae1ee3e50c4b88d0b",
                            clientId: "mobile_sdk_client_96ee05c0fdb1b08671ec",
                            zendeskUrl: "https://betssonfrance.zendesk.com/")
@@ -506,7 +538,7 @@ extension SupportPageViewController {
     private static func createChatButton() -> UIButton {
         let chatButton = UIButton()
         chatButton.translatesAutoresizingMaskIntoConstraints = false
-        chatButton.setTitle("Chat with us", for: .normal)
+        chatButton.setTitle(localized("discuss"), for: .normal)
         chatButton.setImage(UIImage(named: "support_chat_button_icon"), for: .normal)
         chatButton.setTitleColor(UIColor.App.buttonTextPrimary, for: .normal)
         chatButton.setBackgroundColor(UIColor.App.buttonBackgroundPrimary, for: .normal)
@@ -519,8 +551,8 @@ extension SupportPageViewController {
     private static func createSendButton() -> UIButton {
         let sendButton = UIButton()
         sendButton.translatesAutoresizingMaskIntoConstraints = false
-        sendButton.setTitle("Send", for: .normal)
-        sendButton.setTitle("Send", for: .disabled)
+        sendButton.setTitle(localized("send"), for: .normal)
+        sendButton.setTitle(localized("send"), for: .disabled)
         sendButton.isEnabled = false
         sendButton.setTitleColor(UIColor.App.buttonTextPrimary, for: .normal)
         sendButton.setTitleColor(UIColor.App.buttonTextDisablePrimary, for: .disabled)
@@ -528,6 +560,78 @@ extension SupportPageViewController {
         sendButton.setBackgroundColor(UIColor.App.buttonDisablePrimary, for: .disabled)
         
         return sendButton
+    }
+
+    private static func createHelpBaseView() -> UIView {
+        let view = UIView()
+        view.translatesAutoresizingMaskIntoConstraints = false
+        return view
+    }
+
+    private static func createHelpTitleLabel() -> UILabel {
+        let label = UILabel()
+        label.translatesAutoresizingMaskIntoConstraints = false
+        label.font = AppFont.with(type: .bold, size: 18)
+        label.text = localized("support_helpcenter_title")
+        label.textAlignment = .left
+        return label
+    }
+
+    private static func createHelpDescriptionLabel() -> UILabel {
+        let label = UILabel()
+        label.translatesAutoresizingMaskIntoConstraints = false
+        label.font = AppFont.with(type: .semibold, size: 15)
+        label.text = localized("support_helpcenter_title_description")
+        label.addLineHeight(to: label, lineHeight: 20)
+        label.textAlignment = .left
+        label.numberOfLines = 0
+        return label
+    }
+
+    private static func createHelpButton() -> UIButton {
+        let button = UIButton()
+        button.translatesAutoresizingMaskIntoConstraints = false
+        button.setTitle(localized("support_helpcenter_button_text"), for: .normal)
+        button.titleLabel?.font = AppFont.with(type: .bold, size: 18)
+        button.setImage(UIImage(named: "arrow_square_icon"), for: .normal)
+        button.transform = CGAffineTransform(scaleX: -1.0, y: 1.0)
+        button.titleLabel?.transform = CGAffineTransform(scaleX: -1.0, y: 1.0)
+        button.imageView?.transform = CGAffineTransform(scaleX: -1.0, y: 1.0)
+        button.titleEdgeInsets = UIEdgeInsets(top: 0, left: 0, bottom: 0, right: -10)
+        button.imageEdgeInsets = UIEdgeInsets(top: 0, left: -10, bottom: 5, right: 0)
+        button.contentEdgeInsets = UIEdgeInsets(top: 0, left: 20, bottom: 0, right: 20)
+        return button
+    }
+
+    private static func createHelpTopSeparatorView() -> UIView {
+        let view = UIView()
+        view.translatesAutoresizingMaskIntoConstraints = false
+        return view
+    }
+
+    private static func createHelpBottomSeparatorView() -> UIView {
+        let view = UIView()
+        view.translatesAutoresizingMaskIntoConstraints = false
+        return view
+    }
+
+    private static func createContactTitleLabel() -> UILabel {
+        let label = UILabel()
+        label.translatesAutoresizingMaskIntoConstraints = false
+        label.font = AppFont.with(type: .bold, size: 18)
+        label.text = localized("support_send_us_a_message_title")
+        label.textAlignment = .left
+        return label
+    }
+
+    private static func createContactDescriptionLabel() -> UILabel {
+        let label = UILabel()
+        label.translatesAutoresizingMaskIntoConstraints = false
+        label.font = AppFont.with(type: .semibold, size: 15)
+        label.text = localized("support_send_us_a_message_description")
+        label.textAlignment = .left
+        label.numberOfLines = 0
+        return label
     }
 
     private static func createAnonymousViewTopConstraint() -> NSLayoutConstraint {
@@ -565,7 +669,19 @@ extension SupportPageViewController {
         self.navigationBaseView.addSubview(self.backButtonBaseView)
         
         self.backButtonBaseView.addSubview(self.backButton)
-        
+
+        self.baseView.addSubview(self.helpBaseView)
+
+        self.helpBaseView.addSubview(self.helpTopSeparatorView)
+        self.helpBaseView.addSubview(self.helpTitleLabel)
+        self.helpBaseView.addSubview(self.helpDescriptionLabel)
+        self.helpBaseView.addSubview(self.helpButton)
+        self.helpBaseView.addSubview(self.helpBottomSeparatorView)
+
+        self.baseView.addSubview(self.contactTitleLabel)
+
+        self.baseView.addSubview(self.contactDescriptionLabel)
+
         self.descriptionView.addSubview(self.descriptionPlaceholderLabel)
         self.descriptionView.addSubview(self.descriptionTextView)
 
@@ -628,6 +744,41 @@ extension SupportPageViewController {
             self.baseView.topAnchor.constraint(equalTo: self.contentScrollView.contentLayoutGuide.topAnchor),
             self.baseView.bottomAnchor.constraint(equalTo: self.contentScrollView.contentLayoutGuide.bottomAnchor),
             self.baseView.widthAnchor.constraint(equalTo: self.contentScrollView.frameLayoutGuide.widthAnchor),
+
+            self.helpBaseView.leadingAnchor.constraint(equalTo: self.baseView.leadingAnchor, constant: 28),
+            self.helpBaseView.trailingAnchor.constraint(equalTo: self.baseView.trailingAnchor, constant: -28),
+            self.helpBaseView.topAnchor.constraint(equalTo: self.baseView.topAnchor, constant: 10),
+
+            self.helpTopSeparatorView.leadingAnchor.constraint(equalTo: self.helpBaseView.leadingAnchor),
+            self.helpTopSeparatorView.trailingAnchor.constraint(equalTo: self.helpBaseView.trailingAnchor),
+            self.helpTopSeparatorView.topAnchor.constraint(equalTo: self.helpBaseView.topAnchor),
+            self.helpTopSeparatorView.heightAnchor.constraint(equalToConstant: 1),
+
+            self.helpTitleLabel.leadingAnchor.constraint(equalTo: self.helpBaseView.leadingAnchor),
+            self.helpTitleLabel.trailingAnchor.constraint(equalTo: self.helpBaseView.trailingAnchor),
+            self.helpTitleLabel.topAnchor.constraint(equalTo: self.helpTopSeparatorView.bottomAnchor, constant: 30),
+
+            self.helpDescriptionLabel.leadingAnchor.constraint(equalTo: self.helpBaseView.leadingAnchor),
+            self.helpDescriptionLabel.trailingAnchor.constraint(equalTo: self.helpBaseView.trailingAnchor),
+            self.helpDescriptionLabel.topAnchor.constraint(equalTo: self.helpTitleLabel.bottomAnchor, constant: 20),
+
+            self.helpButton.leadingAnchor.constraint(equalTo: self.helpBaseView.leadingAnchor),
+            self.helpButton.heightAnchor.constraint(equalToConstant: 40),
+            self.helpButton.topAnchor.constraint(equalTo: self.helpDescriptionLabel.bottomAnchor, constant: 20),
+
+            self.helpBottomSeparatorView.leadingAnchor.constraint(equalTo: self.helpBaseView.leadingAnchor),
+            self.helpBottomSeparatorView.trailingAnchor.constraint(equalTo: self.helpBaseView.trailingAnchor),
+            self.helpBottomSeparatorView.topAnchor.constraint(equalTo: self.helpButton.bottomAnchor, constant: 30),
+            self.helpBottomSeparatorView.bottomAnchor.constraint(equalTo: self.helpBaseView.bottomAnchor),
+            self.helpBottomSeparatorView.heightAnchor.constraint(equalToConstant: 1),
+
+            self.contactTitleLabel.leadingAnchor.constraint(equalTo: self.baseView.leadingAnchor, constant: 28),
+            self.contactTitleLabel.trailingAnchor.constraint(equalTo: self.baseView.trailingAnchor, constant: -28),
+            self.contactTitleLabel.topAnchor.constraint(equalTo: self.helpBaseView.bottomAnchor, constant: 30),
+
+            self.contactDescriptionLabel.leadingAnchor.constraint(equalTo: self.baseView.leadingAnchor, constant: 28),
+            self.contactDescriptionLabel.trailingAnchor.constraint(equalTo: self.baseView.trailingAnchor, constant: -28),
+            self.contactDescriptionLabel.topAnchor.constraint(equalTo: self.contactTitleLabel.bottomAnchor, constant: 20),
 
             self.anonymousFieldsView.leadingAnchor.constraint(equalTo: self.baseView.leadingAnchor, constant: 15),
             self.anonymousFieldsView.trailingAnchor.constraint(equalTo: self.baseView.trailingAnchor, constant: -15),
@@ -706,10 +857,10 @@ extension SupportPageViewController {
         self.webViewTopConstraint.isActive = false
         */
 
-        self.anonymousViewTopConstraint = self.anonymousFieldsView.topAnchor.constraint(equalTo: self.baseView.topAnchor, constant: 30)
+        self.anonymousViewTopConstraint = self.anonymousFieldsView.topAnchor.constraint(equalTo: self.contactDescriptionLabel.bottomAnchor, constant: 30)
         self.anonymousViewTopConstraint.isActive = false
 
-        self.subjectViewTopConstraint = self.subjectTypeSelectionView.topAnchor.constraint(equalTo: self.baseView.topAnchor, constant: 30)
+        self.subjectViewTopConstraint = self.subjectTypeSelectionView.topAnchor.constraint(equalTo: self.contactDescriptionLabel.bottomAnchor, constant: 30)
         self.subjectViewTopConstraint.isActive = true
     }
 

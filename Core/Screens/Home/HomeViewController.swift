@@ -271,7 +271,15 @@ class HomeViewController: UIViewController {
         else {
             let promotionsWebViewModel = PromotionsWebViewModel()
 
-            let gomaBaseUrl = GomaGamingEnv.stage.baseUrl
+            var gomaBaseUrl = GomaGamingEnv.stage.baseUrl
+
+            if TargetVariables.serviceProviderEnvironment == .prod {
+                gomaBaseUrl = GomaGamingEnv.prod.baseUrl
+            }
+            else {
+                gomaBaseUrl = GomaGamingEnv.stage.baseUrl
+            }
+
             let appLanguage = Locale.current.languageCode
 
             let isDarkTheme = self.traitCollection.userInterfaceStyle == .dark ? true : false
@@ -315,7 +323,7 @@ class HomeViewController: UIViewController {
 
     private func openBetTinderCloneView() {
         let userId = Env.userSessionStore.loggedUserProfile?.userIdentifier ?? "0"
-        let iframeURL = URL(string: "https://betsson.fr/betswipe.html?user=\(userId)&mobile=true&language=fr")!
+        let iframeURL = URL(string: "\(Env.urlApp)/betswipe.html?user=\(userId)&mobile=true&language=fr")!
         
         let betSelectorViewConroller = BetslipProxyWebViewController(url: iframeURL)
         let navigationViewController = Router.navigationController(with: betSelectorViewConroller)

@@ -7,6 +7,7 @@ import AdyenDropIn
 import AdyenComponents
 import HeaderTextField
 import LocalAuthentication
+import OptimoveSDK
 
 class LoginViewController: UIViewController {
 
@@ -268,18 +269,18 @@ class LoginViewController: UIViewController {
     
     func checkPolicyLinks() {
         policyLinkView.didTapTerms = {
-            if let url = URL(string: "https://goma-uat.betsson.fr/terms-and-conditions.pdf") {
+            if let url = URL(string: "\(Env.urlApp)/terms-and-conditions.pdf") {
                 UIApplication.shared.open(url)
             }
         }
         
         policyLinkView.didTapPrivacy = {
-            if let url = URL(string: "https://goma-uat.betsson.fr/fr/privacy-policy") {
+            if let url = URL(string: "\(Env.urlApp)/fr/politique-de-confidentialite") {
                 UIApplication.shared.open(url)
             }            }
         
         policyLinkView.didTapEula = {
-            if let url = URL(string: "https://goma-uat.betsson.fr/betting-rules.pdf") {
+            if let url = URL(string: "\(Env.urlApp)/betting-rules.pdf") {
                 UIApplication.shared.open(url)
             }
         }
@@ -340,6 +341,9 @@ class LoginViewController: UIViewController {
         
         steppedRegistrationViewController.didRegisteredUserAction = { [weak self] registeredUser in
             if let nickname = registeredUser.nickname, let password = registeredUser.password {
+
+                // Optimove complete register
+                Optimove.shared.reportScreenVisit(screenTitle: "sign_up")
 
                 self?.triggerLoginAfterRegister(username: nickname, password: password, withUserConsents: viewModel.isMarketingSelected ? true : false)
 
@@ -577,6 +581,11 @@ class LoginViewController: UIViewController {
         }
         else {
             self.showNextViewController()
+        }
+
+        if let userId = Env.userSessionStore.loggedUserProfile?.userIdentifier {
+            Optimove.shared.setUserId(userId)
+
         }
 
     }

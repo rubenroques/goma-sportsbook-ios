@@ -336,7 +336,7 @@ class RecruitAFriendViewController: UIViewController {
 
     @objc private func didTapShareButton() {
 
-        guard let url = URL(string: "https://sportsbook-stage.gomagaming.com/") else { return }
+        guard var url = URL(string: "\(Env.urlApp)") else { return }
 
         let shareActivityViewController = UIActivityViewController(activityItems: [url], applicationActivities: nil)
 
