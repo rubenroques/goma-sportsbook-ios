@@ -53,6 +53,10 @@ class PaymentsDropIn {
 
         self.setupPublishers()
 
+        if TargetVariables.serviceProviderEnvironment == .dev {
+            adyenEnvironment = Adyen.Environment.test
+        }
+
         AdyenLogging.isEnabled = true
     }
 
@@ -156,7 +160,7 @@ class PaymentsDropIn {
                 }
             }, receiveValue: { [weak self] processDepositResponse in
 
-//                print("processDepositResponse: ")
+                print("processDepositResponse: \(processDepositResponse)")
 //                print(dump(processDepositResponse))
                 
                 self?.clientKey = processDepositResponse.clientKey

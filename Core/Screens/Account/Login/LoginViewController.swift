@@ -7,6 +7,7 @@ import AdyenDropIn
 import AdyenComponents
 import HeaderTextField
 import LocalAuthentication
+import OptimoveSDK
 
 class LoginViewController: UIViewController {
 
@@ -341,6 +342,9 @@ class LoginViewController: UIViewController {
         steppedRegistrationViewController.didRegisteredUserAction = { [weak self] registeredUser in
             if let nickname = registeredUser.nickname, let password = registeredUser.password {
 
+                // Optimove complete register
+                Optimove.shared.reportScreenVisit(screenTitle: "sign_up")
+
                 self?.triggerLoginAfterRegister(username: nickname, password: password, withUserConsents: viewModel.isMarketingSelected ? true : false)
 
                 self?.showRegisterFeedbackViewController(onNavigationController: registerNavigationController)
@@ -577,6 +581,11 @@ class LoginViewController: UIViewController {
         }
         else {
             self.showNextViewController()
+        }
+
+        if let userId = Env.userSessionStore.loggedUserProfile?.userIdentifier {
+            Optimove.shared.setUserId(userId)
+
         }
 
     }

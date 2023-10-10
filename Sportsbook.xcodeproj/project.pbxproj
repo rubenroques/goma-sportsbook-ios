@@ -6639,6 +6639,9 @@
 		A9C3439228F9A7DC0055360B /* TargetVariables.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9C3438928F9A7DC0055360B /* TargetVariables.swift */; };
 		A9C3439428F9A7DC0055360B /* Colors.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = A9C3438C28F9A7DC0055360B /* Colors.xcassets */; };
 		A9C3439528F9A7DC0055360B /* ClientVariables.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9C3438D28F9A7DC0055360B /* ClientVariables.swift */; };
+		A9C5AC1D2ACDB30100C3FD56 /* OptimoveCore in Frameworks */ = {isa = PBXBuildFile; productRef = A9C5AC1C2ACDB30100C3FD56 /* OptimoveCore */; };
+		A9C5AC1F2ACDB30100C3FD56 /* OptimoveNotificationServiceExtension in Frameworks */ = {isa = PBXBuildFile; productRef = A9C5AC1E2ACDB30100C3FD56 /* OptimoveNotificationServiceExtension */; settings = {ATTRIBUTES = (Required, ); }; };
+		A9C5AC212ACDB30100C3FD56 /* OptimoveSDK in Frameworks */ = {isa = PBXBuildFile; productRef = A9C5AC202ACDB30100C3FD56 /* OptimoveSDK */; };
 		A9C719112A5EEA88005EB891 /* RecruitAFriendViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9C719102A5EEA88005EB891 /* RecruitAFriendViewController.swift */; };
 		A9C719122A5EEA88005EB891 /* RecruitAFriendViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9C719102A5EEA88005EB891 /* RecruitAFriendViewController.swift */; };
 		A9C719132A5EEA88005EB891 /* RecruitAFriendViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9C719102A5EEA88005EB891 /* RecruitAFriendViewController.swift */; };
@@ -7946,6 +7949,7 @@
 				45F6BD7B2AB3732C00C81DE1 /* RegisterFlow in Frameworks */,
 				45F6BD7C2AB3732C00C81DE1 /* FirebaseMessaging in Frameworks */,
 				45F6BD7D2AB3732C00C81DE1 /* FirebaseDatabase in Frameworks */,
+				A9C5AC1F2ACDB30100C3FD56 /* OptimoveNotificationServiceExtension in Frameworks */,
 				45F6BD7E2AB3732C00C81DE1 /* AdyenDropIn in Frameworks */,
 				45F6BD7F2AB3732C00C81DE1 /* DictionaryCoding in Frameworks */,
 				45F6BD802AB3732C00C81DE1 /* Lottie in Frameworks */,
@@ -7966,11 +7970,13 @@
 				45F6BD8F2AB3732C00C81DE1 /* SwiftyBeaver in Frameworks */,
 				45F6BD902AB3732C00C81DE1 /* AdyenSwiftUI in Frameworks */,
 				45F6BD912AB3732C00C81DE1 /* AdyenWeChatPay in Frameworks */,
+				A9C5AC212ACDB30100C3FD56 /* OptimoveSDK in Frameworks */,
 				45F6BD922AB3732C00C81DE1 /* Adyen in Frameworks */,
 				45F6BD932AB3732C00C81DE1 /* AdyenSession in Frameworks */,
 				45F6BD942AB3732C00C81DE1 /* FirebaseCrashlytics in Frameworks */,
 				45F6BD952AB3732C00C81DE1 /* FirebaseAnalytics in Frameworks */,
 				45F6BD962AB3732C00C81DE1 /* OrderedCollections in Frameworks */,
+				A9C5AC1D2ACDB30100C3FD56 /* OptimoveCore in Frameworks */,
 				45F6BD972AB3732C00C81DE1 /* CountrySelectionFeature in Frameworks */,
 				45F6BD982AB3732C00C81DE1 /* SweeterSwift in Frameworks */,
 				45F6BD992AB3732C00C81DE1 /* Starscream in Frameworks */,
@@ -11629,6 +11635,9 @@
 				45F6BAD82AB3732C00C81DE1 /* ZendeskChatSDK */,
 				45F6BADA2AB3732C00C81DE1 /* ZendeskAnswerBotSDK */,
 				45F6BADC2AB3732C00C81DE1 /* ZendeskSupportSDK */,
+				A9C5AC1C2ACDB30100C3FD56 /* OptimoveCore */,
+				A9C5AC1E2ACDB30100C3FD56 /* OptimoveNotificationServiceExtension */,
+				A9C5AC202ACDB30100C3FD56 /* OptimoveSDK */,
 			);
 			productName = Sportsbook;
 			productReference = 45F6BE372AB3732C00C81DE1 /* Betsson UAT.app */;
@@ -11714,6 +11723,7 @@
 				45ECD74B2A8FFB2000492CB9 /* XCRemoteSwiftPackageReference "chat_sdk_ios" */,
 				45ECD74E2A8FFB5100492CB9 /* XCRemoteSwiftPackageReference "answer_bot_sdk_ios" */,
 				45ECD7512A8FFB8A00492CB9 /* XCRemoteSwiftPackageReference "support_sdk_ios" */,
+				A9C5AC1B2ACDB30000C3FD56 /* XCRemoteSwiftPackageReference "Optimove-SDK-iOS" */,
 			);
 			productRefGroup = 455A0C5126BD902C00EC572D /* Products */;
 			projectDirPath = "";
@@ -20269,6 +20279,14 @@
 				minimumVersion = 1.0.0;
 			};
 		};
+		A9C5AC1B2ACDB30000C3FD56 /* XCRemoteSwiftPackageReference "Optimove-SDK-iOS" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/optimove-tech/Optimove-SDK-iOS";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 5.0.0;
+			};
+		};
 		F4E3B75C2742BF9C00855C58 /* XCRemoteSwiftPackageReference "SweeterSwift" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/yonat/SweeterSwift";
@@ -21230,6 +21248,21 @@
 		A9C3409C28F9A74A0055360B /* SocketIO */ = {
 			isa = XCSwiftPackageProductDependency;
 			productName = SocketIO;
+		};
+		A9C5AC1C2ACDB30100C3FD56 /* OptimoveCore */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = A9C5AC1B2ACDB30000C3FD56 /* XCRemoteSwiftPackageReference "Optimove-SDK-iOS" */;
+			productName = OptimoveCore;
+		};
+		A9C5AC1E2ACDB30100C3FD56 /* OptimoveNotificationServiceExtension */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = A9C5AC1B2ACDB30000C3FD56 /* XCRemoteSwiftPackageReference "Optimove-SDK-iOS" */;
+			productName = OptimoveNotificationServiceExtension;
+		};
+		A9C5AC202ACDB30100C3FD56 /* OptimoveSDK */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = A9C5AC1B2ACDB30000C3FD56 /* XCRemoteSwiftPackageReference "Optimove-SDK-iOS" */;
+			productName = OptimoveSDK;
 		};
 /* End XCSwiftPackageProductDependency section */
 	};
