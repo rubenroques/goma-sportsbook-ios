@@ -262,7 +262,7 @@ class PaymentsDropIn {
         
         let adyenContext = AdyenContext(apiContext: apiContext, payment: payment)
         
-        let dropInComponent = DropInComponent(paymentMethods: paymentMethods, context: adyenContext, configuration: dropInConfiguration)
+        let dropInComponent = DropInComponent(paymentMethods: adyenSession.sessionContext.paymentMethods, context: adyenContext, configuration: dropInConfiguration)
         dropInComponent.delegate = self // self.adyenSession
  
         self.dropInComponent = dropInComponent
