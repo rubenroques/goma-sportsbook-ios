@@ -156,7 +156,7 @@ extension TopCompetitionsDataSource {
         var competitionsIdentifiers: [String: [String]] = [:]
         for topCompetition in topCompetitions {
             let competitionComponents = topCompetition.competitionId.components(separatedBy: "/")
-            let competitionName = competitionComponents[competitionComponents.count - 2].lowercased()
+            let competitionName = competitionComponents[competitionComponents.count - 3].lowercased()
             if let competitionId = competitionComponents.last {
                 if let topCompetition = competitionsIdentifiers[competitionName] {
                     if !topCompetition.contains(where: {
