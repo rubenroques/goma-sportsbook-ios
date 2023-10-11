@@ -698,7 +698,6 @@ class MyTicketTableViewCell: UITableViewCell {
                 self.usedCashback = false
             }
 
-            // TODO: NEEDS TESTING
 //            if let potentialCashbackReturn = betHistoryEntry.potentialCashbackReturn {
 //                self.hasCashback = true
 //

@@ -81,6 +81,15 @@ class Router {
 
         self.rootWindow.makeKeyAndVisible()
     }
+    
+    func setSupportedLanguages() {
+        
+        // Force the target supported languages
+        let targetSupportedLanguages = TargetVariables.supportedLanguages.map(\.languageCode)
+        UserDefaults.standard.set(targetSupportedLanguages, forKey: "AppleLanguages")
+        UserDefaults.standard.synchronize()
+        
+    }
 
     @objc func applicationDidBecomeActive(notification: NSNotification) {
 
@@ -104,12 +113,7 @@ class Router {
             bootRootViewController = Router.createLoginViewControllerFlow()
         }
 
-        // if Development
-        //
-        // self.rootWindow.rootViewController = StoriesFullScreenViewController(viewModel: StoriesFullScreenViewModel())
-        // Prod
         self.rootWindow.rootViewController = bootRootViewController
-        //
 
     }
 

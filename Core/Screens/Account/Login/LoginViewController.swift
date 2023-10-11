@@ -193,9 +193,9 @@ class LoginViewController: UIViewController {
         self.logoImageView.isUserInteractionEnabled = true
 
         // #if DEBUG
-        let debugLogoImageViewTap = UITapGestureRecognizer(target: self, action: #selector(didTapDebugFormFill))
-        debugLogoImageViewTap.numberOfTapsRequired = 5
-        self.logoImageView.addGestureRecognizer(debugLogoImageViewTap)
+//        let debugLogoImageViewTap = UITapGestureRecognizer(target: self, action: #selector(didTapDebugFormFill))
+//        debugLogoImageViewTap.numberOfTapsRequired = 5
+//        self.logoImageView.addGestureRecognizer(debugLogoImageViewTap)
         // #endif
 
     }
@@ -715,11 +715,11 @@ extension LoginViewController {
     @objc func didTapDebugFormFill() {
         
         if self.usernameHeaderTextFieldView.text.isEmpty || self.usernameHeaderTextFieldView.text == "ruben" {
-            self.usernameHeaderTextFieldView.setText("rroques7") // ("pafeha4474@lance7.com") // ("gomafrontend") // ("ruben@gomadevelopment.pt")
+            self.usernameHeaderTextFieldView.setText("rroques") // ("pafeha4474@lance7.com") // ("gomafrontend") // ("ruben@gomadevelopment.pt")
             self.passwordHeaderTextFieldView.setText("Ruben12345!") // ("iosGoma123") // ("Omega123") // ("ruben=GOMA=12345")
             self.loginButton.isEnabled = true
         }
-        else if self.usernameHeaderTextFieldView.text == "rroques7" {
+        else if self.usernameHeaderTextFieldView.text == "rroques" {
             self.usernameHeaderTextFieldView.setText("pgomes99")
             self.passwordHeaderTextFieldView.setText("12345-gomaA")
             self.loginButton.isEnabled = true

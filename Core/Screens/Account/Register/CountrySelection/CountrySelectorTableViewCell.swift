@@ -56,9 +56,13 @@ class CountrySelectorTableViewCell: UITableViewCell {
     }
 
     private func formatIndicativeCountry(_ country: Country) -> String {
-        var stringCountry = "\(country.iso2Code) - \(country.name)"
+        var translatedCountryName = localized("\(country.iso2Code)")
+        if translatedCountryName.isEmpty {
+            translatedCountryName = country.name
+        }
+        var stringCountry = "\(country.iso2Code) - \(translatedCountryName)"
         if let flag = CountryFlagHelper.flag(forCode: country.iso2Code) {
-            stringCountry = "\(flag) \(country.name)"
+            stringCountry = "\(flag) \(translatedCountryName)"
         }
         return stringCountry
     }

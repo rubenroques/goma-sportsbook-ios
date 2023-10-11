@@ -1594,6 +1594,8 @@ extension RootViewController {
     }
 
     @objc func appDidEnterBackground() {
+        Env.userSessionStore.shouldAuthenticateUser = true
+        
         self.showLocalAuthenticationCoveringViewIfNeeded()
         print("LocalAuth Background")
     }
@@ -1606,17 +1608,26 @@ extension RootViewController {
     }
 
     @objc func appWillResignActive() {
-        //  self.isLocalAuthenticationCoveringView = true
+        // self.showLocalAuthenticationCoveringViewIfNeeded()
         print("LocalAuth Inactive")
     }
 
     func authenticateUser() {
-        
+
+        if Env.userSessionStore.shouldAuthenticateUser {
+            print("LocalAuth shouldAuthenticateUser yes")
+        }
+        else {
+            print("LocalAuth shouldAuthenticateUser no")
+            self.unlockAppWithUser()
+            return
+        }
+
         if !Env.userSessionStore.shouldRequestBiometrics() {
             self.unlockAppAnonymous()
             return
         }
-
+        
         let context = LAContext()
 
         var error: NSError?
@@ -1645,9 +1656,7 @@ extension RootViewController {
                             self.unlockAppWithUser()
                         }
                     }
-
             })
-
         }
         else {
             // Device cannot use biometric authentication
@@ -1663,6 +1672,7 @@ extension RootViewController {
                     notifyUser(localized("unknown_error"), errorMessage: err.localizedDescription)
                 }
             }
+            
         }
 
     }

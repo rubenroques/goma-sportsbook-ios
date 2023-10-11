@@ -68,4 +68,8 @@ struct TargetVariables: SportsbookTarget {
         return .dev
     }
     
+    static var supportedLanguages: [SportsbookSupportedLanguage] {
+        return SportsbookSupportedLanguage.allCases
+    }
+    
 }

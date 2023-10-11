@@ -90,6 +90,8 @@ class UserSessionStore {
     var shouldRecordUserSession = true
     var shouldSkipLimitsScreen = false
 
+    var shouldAuthenticateUser = true
+    
     var loggedUserProfile: UserProfile? {
         return self.userProfilePublisher.value
     }
@@ -217,6 +219,8 @@ class UserSessionStore {
 
     func login(withUsername username: String, password: String) -> AnyPublisher<Void, UserSessionError> {
 
+        
+        
         let publisher = Env.servicesProvider.loginUser(withUsername: username, andPassword: password)
             .mapError { (error: ServiceProviderError) -> UserSessionError in
                 switch error {
@@ -244,8 +248,10 @@ class UserSessionStore {
                 return (session, userProfile)
             }
             .handleEvents(receiveOutput: { [weak self] session, profile in
-                self?.userProfilePublisher.send(profile)
+                self?.shouldAuthenticateUser = false
+                
                 self?.userSessionPublisher.send(session)
+                self?.userProfilePublisher.send(profile)
             })
             .map({ _ in
                 return ()
@@ -599,7 +605,7 @@ extension UserSessionStore {
 
     func shouldRequestBiometrics() -> Bool {
         let hasStoredUserSession = self.storedUserSession != nil
-        return hasStoredUserSession && UserDefaults.standard.biometricAuthenticationEnabled
+        return hasStoredUserSession && UserDefaults.standard.biometricAuthenticationEnabled 
     }
 
 }

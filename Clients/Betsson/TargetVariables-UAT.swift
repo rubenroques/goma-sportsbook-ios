@@ -82,8 +82,9 @@ struct TargetVariables: SportsbookTarget {
     static var serviceProviderEnvironment: EnvironmentType {
         return .dev
     }
-
-    static var clientBaseUrl: String {
-        return "https://sportsbook-stage.gomagaming.com"
+    
+    static var supportedLanguages: [SportsbookSupportedLanguage] {
+        return [SportsbookSupportedLanguage.french]
     }
+
 }
