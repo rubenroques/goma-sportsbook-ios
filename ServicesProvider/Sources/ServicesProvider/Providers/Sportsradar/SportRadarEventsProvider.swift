@@ -1371,7 +1371,7 @@ extension SportRadarEventsProvider {
                                     let country: Country? = Country.country(withName: competitonCountryName)
                                     
                                     let sportNameComponents = topCompetitionPointer.competitionId.components(separatedBy: "/")
-                                    let sportName: String = (sportNameComponents[safe: sportNameComponents.count - 2] ?? "").lowercased()
+                                    let sportName: String = (sportNameComponents[safe: sportNameComponents.count - 3] ?? "").lowercased()
                                     
                                     let namedSport: SportRadarModels.SportType = SportRadarModels.SportType.init(name: sportName, numberEvents: 0, numberOutrightEvents: 0, numberOutrightMarkets: 0, numberLiveEvents: 0)
                                     let mappedSport = SportRadarModelMapper.sportType(fromSportRadarSportType: namedSport)
@@ -1380,9 +1380,7 @@ extension SportRadarEventsProvider {
                                         TopCompetition(id: competitionId,
                                                        name: topCompetitionPointer.name,
                                                        country: country,
-                                                       sportType: mappedSport)
-                                    )
-                                    
+                                                       sportType: mappedSport))
                                 }
                                 return topCompetitionsArray
                             }
