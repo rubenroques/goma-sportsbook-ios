@@ -45,6 +45,8 @@ protocol SportsbookTarget {
     static var serviceProviderEnvironment: EnvironmentType { get }
     
     static var supportedLanguages: [SportsbookSupportedLanguage] { get }
+
+    static var clientBaseUrl: String { get }
     
 }
 

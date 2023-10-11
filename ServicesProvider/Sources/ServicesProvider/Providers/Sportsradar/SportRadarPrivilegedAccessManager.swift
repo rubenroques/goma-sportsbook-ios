@@ -744,7 +744,7 @@ class SportRadarPrivilegedAccessManager: PrivilegedAccessManager {
                 if !paymentMethods.isEmpty {
 
                     let simplePaymentMethods = paymentMethods.map({ method -> SimplePaymentMethod in
-                        return SimplePaymentMethod(name: method.name, type: method.type)
+                        return SimplePaymentMethod(name: method.name, type: method.type, brands: method.brands)
                     })
 
 //                    // Remove duplicates

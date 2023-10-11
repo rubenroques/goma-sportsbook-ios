@@ -78,5 +78,9 @@ struct TargetVariables: SportsbookTarget {
     static var supportedLanguages: [SportsbookSupportedLanguage] {
         return [SportsbookSupportedLanguage.french]
     }
+
+    static var clientBaseUrl: String {
+        return "https://betsson.fr"
+    }
     
 }

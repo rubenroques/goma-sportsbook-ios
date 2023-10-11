@@ -87,4 +87,8 @@ struct TargetVariables: SportsbookTarget {
         return [SportsbookSupportedLanguage.french]
     }
 
+    static var clientBaseUrl: String {
+        return "https://sportsbook-stage.gomagaming.com"
+    }
+
 }
