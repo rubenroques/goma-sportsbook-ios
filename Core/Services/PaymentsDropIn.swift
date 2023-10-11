@@ -256,7 +256,7 @@ class PaymentsDropIn {
         
         if let applePayPayment = try? ApplePayPayment(payment: payment, brand: "Betsson France") {
             dropInConfiguration.applePay = ApplePayComponent.Configuration.init(payment: applePayPayment, 
-                                                                                merchantIdentifier: "merchant.com.Adyen.betssonfrance")
+                                                                                merchantIdentifier: "merchant.com.Adyen.betssonfrance.ecom")
             // dropInConfiguration.applePay?.allowOnboarding = true
         }
         

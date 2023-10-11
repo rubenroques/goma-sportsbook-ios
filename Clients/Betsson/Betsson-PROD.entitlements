@@ -11,6 +11,8 @@
 		<string>applinks:betsson.fr</string>
 	</array>
 	<key>com.apple.developer.in-app-payments</key>
-	<array/>
+	<array>
+		<string>merchant.com.adyen.betssonfrance.ecom</string>
+	</array>
 </dict>
 </plist>

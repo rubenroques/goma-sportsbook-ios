@@ -19,6 +19,7 @@ let package = Package(
         // Dependencies declare other packages that this package depends on.
         // .package(url: /* package url */, from: "1.0.0"),
         .package(url: "https://github.com/airbnb/lottie-spm.git", .upToNextMajor(from: "4.2.0")),
+        .package(url: "https://github.com/optimove-tech/Optimove-SDK-iOS.git", .upToNextMajor(from: "5.0.0")),
         .package(name: "Extensions", path: "../Extensions"),
         .package(name: "HeaderTextField", path: "../HeaderTextField"),
         .package(name: "SharedModels", path: "../SharedModels"),
@@ -35,6 +36,7 @@ let package = Package(
             name: "RegisterFlow",
             dependencies: [
                 .product(name: "Lottie", package: "lottie-spm"),
+                .product(name: "OptimoveSDK", package: "Optimove-SDK-iOS"),
                 "SharedModels",
                 "HeaderTextField",
                 "ServicesProvider",

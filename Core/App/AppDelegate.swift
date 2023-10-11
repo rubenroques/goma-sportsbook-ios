@@ -14,7 +14,6 @@ import IQKeyboardManagerSwift
 import PhraseSDK
 import AdyenActions
 import OptimoveSDK
-import OptimoveNotificationServiceExtension
 
 @main
 class AppDelegate: UIResponder, UIApplicationDelegate, MessagingDelegate {
