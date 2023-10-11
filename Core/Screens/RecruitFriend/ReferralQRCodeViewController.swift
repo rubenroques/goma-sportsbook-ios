@@ -38,7 +38,7 @@ class ReferralQRCodeViewController: UIViewController {
         self.closeButton.addTarget(self, action: #selector(didTapCloseButton), for: .primaryActionTriggered)
 
         // QR Code for url
-        if let url = URL(string: "\(Env.urlApp)") {
+        if let url = URL(string: "\(TargetVariables.clientBaseUrl)") {
             if let qrCodeImage = generateQRCodeImageFromURL(for: url, size: CGSize(width: 200, height: 200)) {
 
                 self.qrCodeImageView.image = qrCodeImage

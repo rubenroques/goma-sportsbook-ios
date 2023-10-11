@@ -261,9 +261,9 @@ class SelfExclusionViewController: UIViewController {
 
         switch periodValueTypeError {
         case .lowValue:
-            message = "Value cannot be lower than \(periodValue)"
+            message = localized("value_less_than").replacingFirstOccurrence(of: "{value}", with: periodValue)
         case .highValue:
-            message = "Value cannot be higher than \(periodValue)"
+            message = localized("value_greater_than").replacingFirstOccurrence(of: "{value}", with: periodValue)
         }
 
         let periodAlert = UIAlertController(title: localized("invalid_period_value"),

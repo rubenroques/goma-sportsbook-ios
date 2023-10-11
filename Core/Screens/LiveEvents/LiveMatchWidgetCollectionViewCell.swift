@@ -1061,7 +1061,7 @@ extension LiveMatchWidgetCollectionViewCell {
         }
 
         let metadata = LPLinkMetadata()
-        let urlMobile = Env.urlMobileShares
+        let urlMobile = TargetVariables.clientBaseUrl
 
         if let matchUrl = URL(string: "\(urlMobile)/gamedetail/\(match.id)") {
 

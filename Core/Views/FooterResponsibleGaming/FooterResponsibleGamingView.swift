@@ -162,32 +162,32 @@ class FooterResponsibleGamingView: UIView {
     }
 
     @objc func openResponsibleGamblingURL() {
-        let url = "\(Env.urlApp)/fr/jeu-responsable"
+        let url = "\(TargetVariables.clientBaseUrl)/fr/jeu-responsable"
         self.openURL(url)
     }
 
     @objc func openPrivacyPolicyURL() {
-        let url = "\(Env.urlApp)/fr/politique-de-confidentialite"
+        let url = "\(TargetVariables.clientBaseUrl)/fr/politique-de-confidentialite"
         self.openURL(url)
     }
 
     @objc func openCookiePolicyURL() {
-        let url = "\(Env.urlApp)/fr/politique-de-confidentialite/#cookies"
+        let url = "\(TargetVariables.clientBaseUrl)/fr/politique-de-confidentialite/#cookies"
         self.openURL(url)
     }
 
     @objc func openSportsBettingRulesURL() {
-        let url = "\(Env.urlApp)/betting-rules.pdf"
+        let url = "\(TargetVariables.clientBaseUrl)/betting-rules.pdf"
         self.openURL(url)
     }
 
     @objc func openTermsAndConditionsURL() {
-        let url = "\(Env.urlApp)/terms-and-conditions.pdf"
+        let url = "\(TargetVariables.clientBaseUrl)/terms-and-conditions.pdf"
         self.openURL(url)
     }
 
     @objc func openAboutURL() {
-        let url = "\(Env.urlApp)/fr/about"
+        let url = "\(TargetVariables.clientBaseUrl)/fr/about"
         self.openURL(url)
     }
 

@@ -908,7 +908,7 @@ extension SportRadarEventsProvider {
             let contentData = FileManager.default.contents(atPath: filePath!)
             let emailTemplate = NSString(data: contentData!, encoding: String.Encoding.utf8.rawValue) as? String
             if let fieldWidgetId = fieldWidget.data,
-               let replacedHtmlContent = emailTemplate?.replacingOccurrences(of: "@eventId", with: fieldWidgetId),
+               let replacedHtmlContent = emailTemplate?.replacingOccurrences(of: "@eventId", with: fieldWidgetId).replacingOccurrences(of: "@languageCode", with: Locale.current.languageCode ?? "fr"),
                let bundleUrl = Bundle.main.url(forResource: fileStringSplit[0], withExtension: fileStringSplit[1]) {
                 // let fieldWidgetRenderData = FieldWidgetRenderData(url: bundleUrl, htmlString: replacedHtmlContent)
                 let fieldWidgetRenderDataType = FieldWidgetRenderDataType.htmlString(url: bundleUrl, htmlString: replacedHtmlContent)

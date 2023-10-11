@@ -29,7 +29,7 @@ class StoriesFullScreenItemViewModel {
 
     var externalLinkURL: URL? {
         let linkString = self.storyCellViewModel.link
-        return URL(string: "\(Env.urlApp)\(linkString)")
+        return URL(string: "\(TargetVariables.clientBaseUrl)\(linkString)")
     }
 
     var contentType: ContentType

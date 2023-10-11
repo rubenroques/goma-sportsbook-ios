@@ -256,7 +256,7 @@ class WithdrawViewController: UIViewController {
                 if minimumValue != "" {
                     let tipText = localized("minimum_withdraw_value")
                         .replacingOccurrences(of: "{value}", with: minimumValue)
-                        .replacingOccurrences(of: "{currency}", with: "€")
+                        .replacingOccurrences(of: "{currency}", with: Env.userSessionStore.userProfilePublisher.value?.currency ?? "€")
                     self?.tipLabel.text = tipText
                     self?.tipLabel.isHidden = false
                 }
