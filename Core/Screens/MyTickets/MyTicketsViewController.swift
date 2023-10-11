@@ -280,7 +280,7 @@ class MyTicketsViewController: UIViewController {
     private func shareBet() {
 
         //          let metadata = LPLinkMetadata()
-        //          let urlMobile = Env.urlMobileShares
+        //          let urlMobile = TargetVariables.clientBaseUrl
         //
         //          if let gameSnapshot = self.viewModel.clickedCellSnapshot, let betStatus = self.viewModel.clickedBetStatus {
         //

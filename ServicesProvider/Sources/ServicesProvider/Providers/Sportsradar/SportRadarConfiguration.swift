@@ -8,7 +8,7 @@
 import Foundation
 import Extensions
 
-struct SportRadarConfiguration {
+public struct SportRadarConfiguration {
 
     enum Environment {
         case production
@@ -17,7 +17,7 @@ struct SportRadarConfiguration {
     }
     
     var environment: Environment
-    static var shared = SportRadarConfiguration(environment: .production)
+    public static var shared = SportRadarConfiguration(environment: .production)
     
     init(environment: Environment) {
         self.environment = environment

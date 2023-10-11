@@ -231,7 +231,7 @@ class ShareTicketChoiceViewController: UIViewController {
 
         if socialApp.urlShare != "" {
             if let betStatus = self.viewModel.clickedShareTicketInfo?.betStatus {
-                let urlMobile = Env.urlMobileShares
+                let urlMobile = TargetVariables.clientBaseUrl
                 if betStatus == "OPEN",
                    let betToken = self.viewModel.clickedShareTicketInfo?.betToken {
                     let userLocale = Locale.current.languageCode != "fr" ? "en" : Locale.current.languageCode
@@ -274,7 +274,7 @@ class ShareTicketChoiceViewController: UIViewController {
 
         if let betStatus = self.viewModel.clickedShareTicketInfo?.betStatus {
 
-            let urlMobile = Env.urlMobileShares
+            let urlMobile = TargetVariables.clientBaseUrl
 
             if betStatus == "OPEN",
                let betToken = self.viewModel.clickedShareTicketInfo?.betToken {
@@ -298,7 +298,7 @@ class ShareTicketChoiceViewController: UIViewController {
     @objc func didTapSendViaButton() {
 
         let metadata = LPLinkMetadata()
-        let urlMobile = Env.urlMobileShares
+        let urlMobile = TargetVariables.clientBaseUrl
 
         if let gameSnapshot = self.viewModel.clickedShareTicketInfo?.snapshot, let betStatus = self.viewModel.clickedShareTicketInfo?.betStatus {
 

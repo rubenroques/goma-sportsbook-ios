@@ -36,7 +36,7 @@ class BonusDetailViewModel: NSObject {
         self.titlePublisher.value = self.bonus.name
         self.descriptionPublisher.value = self.bonus.description
         self.termsTitlePublisher.value = localized("bonus_tc")
-        self.termsLinkStringPublisher.value = "\(Env.urlApp)/bonus_TC.pdf"
+        self.termsLinkStringPublisher.value = "\(TargetVariables.clientBaseUrl)/bonus_TC.pdf"
         self.bonusBannerPublisher.value = self.bonusBannerUrl
     }
 

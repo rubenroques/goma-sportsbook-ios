@@ -172,7 +172,8 @@ class TermsCondFormStepView: FormStepView {
     }
 
     func openTermWebPage() {
-        if let url = URL(string: "https://betsson.fr/fr/terms-and-conditions") {
+        let clientBaseUrl = SportRadarConfiguration.shared.clientBaseUrl
+        if let url = URL(string: "\(clientBaseUrl)/fr/terms-and-conditions") {
             UIApplication.shared.open(url)
         }
     }

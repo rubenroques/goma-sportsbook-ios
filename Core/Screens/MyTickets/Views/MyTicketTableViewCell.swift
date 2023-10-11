@@ -698,13 +698,14 @@ class MyTicketTableViewCell: UITableViewCell {
                 self.usedCashback = false
             }
 
-//            if let potentialCashbackReturn = betHistoryEntry.potentialCashbackReturn {
-//                self.hasCashback = true
-//
-//                let potentialCashbackReturnString = CurrencyFormater.defaultFormat.string(from: NSNumber(value: potentialCashbackReturn))
-//
-//                self.cashbackValueLabel.text = potentialCashbackReturnString
-//            }
+            if let potentialCashbackReturn = betHistoryEntry.potentialCashbackReturn,
+               potentialCashbackReturn > 0 {
+                self.hasCashback = true
+
+                let potentialCashbackReturnString = CurrencyFormater.defaultFormat.string(from: NSNumber(value: potentialCashbackReturn))
+
+                self.cashbackValueLabel.text = potentialCashbackReturnString
+            }
         }
         else if let cashbackReturn = betHistoryEntry.cashbackReturn,
                 cashbackReturn > 0 {

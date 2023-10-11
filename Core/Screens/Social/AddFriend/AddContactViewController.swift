@@ -220,7 +220,7 @@ class AddContactViewController: UIViewController {
     private func shareAppInvite() {
 
         let metadata = LPLinkMetadata()
-        let urlMobile = Env.urlApp
+        let urlMobile = TargetVariables.clientBaseUrl
 
         metadata.url = URL(string: urlMobile)
         metadata.originalURL = metadata.url

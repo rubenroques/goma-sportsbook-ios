@@ -368,7 +368,7 @@ class OutrightMarketDetailsViewController: UIViewController {
         }
 
         let metadata = LPLinkMetadata()
-        let urlMobile = Env.urlMobileShares
+        let urlMobile = TargetVariables.clientBaseUrl
 
         if let matchUrl = URL(string: "\(urlMobile)/gamedetail/\(matchId)") {
 
