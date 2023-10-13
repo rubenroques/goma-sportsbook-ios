@@ -503,7 +503,7 @@ class AgeCountryFormStepView: FormStepView {
         case ("birthDate", _):
             self.dateHeaderTextFieldView.showError(withMessage: Localization.localized("invalid_birth_date"))
         case ("country", _):
-            self.countryHeaderTextFieldView.showError(withMessage: "Please enter a valid Country")
+            self.countryHeaderTextFieldView.showError(withMessage: Localization.localized("invalid_country"))
         default:
             ()
         }

@@ -36,7 +36,7 @@ class ContactSettingsViewModel {
             .sink(receiveCompletion: { [weak self] completion in
                 switch completion {
                 case .finished:
-                    ()
+                    break
                 case .failure(let error):
                     print("USER CONSENTS ERROR: \(error)")
                 }

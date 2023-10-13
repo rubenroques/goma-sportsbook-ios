@@ -309,7 +309,7 @@ extension BettingAPIClient: Endpoint {
                        {
                         "clientContext": {
                             "ipAddress": "127.0.0.1",
-                            "language": "UK"
+                            "language": "\(SportRadarConfiguration.shared.socketLanguageCode)"
                         },
                         "contentId": {
                             "id": "\(ticketSelectionId)",

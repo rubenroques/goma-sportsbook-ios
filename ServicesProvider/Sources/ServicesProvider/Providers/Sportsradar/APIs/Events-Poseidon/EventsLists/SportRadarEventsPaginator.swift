@@ -216,22 +216,22 @@ extension SportRadarEventsPaginator {
 
     func handleContentUpdate(_ content: SportRadarModels.ContentContainer) {
 
-        guard
-            let updatedContentIdentifier = content.contentIdentifier
-        else {
-            // print("☁️SP debugdetails SportRadarEventsPaginator ignoring contentIdentifierLess \(content)")
-            return
-        }
-
-        if self.contentIdentifier.contentType == updatedContentIdentifier.contentType
-            && self.contentIdentifier.contentRoute.pageableRoute == updatedContentIdentifier.contentRoute.pageableRoute {
-            // It's a valid update for this paginator
-        }
-        else {
-            // ignoring this update, not subscribed by this class
-            // print("☁️SP debugdetails SportRadarEventsPaginator ignoring \(updatedContentIdentifier)")
-            return
-        }
+//        guard
+//            let updatedContentIdentifier = content.contentIdentifier
+//        else {
+//            // print("☁️SP debugdetails SportRadarEventsPaginator ignoring contentIdentifierLess \(content)")
+//            return
+//        }
+//
+//        if self.contentIdentifier.contentType == updatedContentIdentifier.contentType
+//            && self.contentIdentifier.contentRoute.pageableRoute == updatedContentIdentifier.contentRoute.pageableRoute {
+//            // It's a valid update for this paginator
+//        }
+//        else {
+//            // ignoring this update, not subscribed by this class
+//            // print("☁️SP debugdetails SportRadarEventsPaginator ignoring \(updatedContentIdentifier)")
+//            return
+//        }
 
         // print("☁️SP debugdetails SportRadarEventsPaginator handleContentUpdate \(content)")
 

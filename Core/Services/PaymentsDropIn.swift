@@ -236,8 +236,16 @@ class PaymentsDropIn {
     
     func setupPaymentDropIn() -> DropInComponent? {
         
+        
         guard
-            let paymentMethodsResponse = self.paymentMethodsResponse,
+            let paymentMethodsResponse = self.paymentMethodsResponse
+        else {
+            return nil
+        }
+            
+        print("paymentMethodsResponse: \(paymentMethodsResponse)")
+        
+        guard
             let paymentResponseData = try? JSONEncoder().encode(paymentMethodsResponse),
             let paymentMethods = try? JSONDecoder().decode(PaymentMethods.self, from: paymentResponseData),
             //
@@ -256,8 +264,8 @@ class PaymentsDropIn {
         
         if let applePayPayment = try? ApplePayPayment(payment: payment, brand: "Betsson France") {
             dropInConfiguration.applePay = ApplePayComponent.Configuration.init(payment: applePayPayment, 
-                                                                                merchantIdentifier: "merchant.com.Adyen.betssonfrance.ecom")
-            // dropInConfiguration.applePay?.allowOnboarding = true
+                                                                                merchantIdentifier: "merchant.com.adyen.betssonfrance.ecom")
+            dropInConfiguration.applePay?.allowOnboarding = true
         }
         
         let adyenContext = AdyenContext(apiContext: apiContext, payment: payment)

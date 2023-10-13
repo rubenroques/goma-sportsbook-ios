@@ -89,10 +89,10 @@ class BettingConnector: Connector {
 //                    print("Betting-NetworkManager [[ requesting ]] ", dump(request), " [[ normal completion ]] ")
 //                }
 //            })
-//            .handleEvents(receiveOutput: { data in
-//                print("Betting-NetworkManager [[ requesting ]] ", request,
-//                      " [[ response ]] ", String(data: data, encoding: .utf8) ?? "!?" )
-//            })
+            .handleEvents(receiveOutput: { data in
+                print("Betting-NetworkManager [[ requesting ]] ", request,
+                      " [[ response ]] ", String(data: data, encoding: .utf8) ?? "!?" )
+            })
         
             .decode(type: T.self, decoder: self.decoder)
             .mapError({ error -> ServiceProviderError in

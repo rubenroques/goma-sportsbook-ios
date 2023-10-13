@@ -186,6 +186,8 @@ extension SportRadarModels {
 
         private static func parseRefreshed(container: KeyedDecodingContainer<CodingKeys>) throws -> ContentContainer {
 
+            print("ContentContainer parseRefreshed")
+            
             let contentTypeContainer = try container.nestedContainer(keyedBy: CodingKeys.self, forKey: .content)
             let contentType = try contentTypeContainer.decode(ContentType.self, forKey: .contentType)
             let contentIdentifier = try container.decode(ContentIdentifier.self, forKey: .content)
@@ -205,7 +207,6 @@ extension SportRadarModels {
                 // change key is optional
                 if container.contains(.change) {
                     let sportsTypes: [FailableDecodable<SportRadarModels.SportType>] = try container.decode([FailableDecodable<SportRadarModels.SportType>].self, forKey: .change)
-
                     return .preLiveSports(sportsTypes: sportsTypes.compactMap({ $0.content }))
                 }
                 else {
@@ -217,13 +218,10 @@ extension SportRadarModels {
                 let sportsTypeDetails: FailableDecodable<SportRadarModels.SportsList> = try container.decode(FailableDecodable<SportRadarModels.SportsList>.self, forKey: .change)
 
                 if let sportNodes = sportsTypeDetails.content?.sportNodes {
-
                     let sportTypes = sportNodes.map(SportRadarModelMapper.sportType(fromSportNode:))
-
                     let filteredSportTypes = sportTypes.filter({
                         $0.alphaId != "0"
                     })
-
                     return .allSports(sportTypes: filteredSportTypes)
                 }
 
@@ -289,6 +287,8 @@ extension SportRadarModels {
 
         private static func parseUpdated(container: KeyedDecodingContainer<CodingKeys>) throws -> ContentContainer {
 
+            print("ContentContainer parseUpdated")
+            
             let contentIdentifier = try container.decode(ContentIdentifier.self, forKey: .content)
             let path: String = try container.decodeIfPresent(String.self, forKey: .path) ?? ""
 
@@ -457,7 +457,7 @@ extension SportRadarModels {
         }
 
         private static func parseAdded(container: KeyedDecodingContainer<CodingKeys>) throws -> ContentContainer {
-
+            print("ContentContainer parseAdded")
             let contentIdentifier = try container.decode(ContentIdentifier.self, forKey: .content)
             let path: String = try container.decodeIfPresent(String.self, forKey: .path) ?? ""
 
@@ -477,6 +477,8 @@ extension SportRadarModels {
 
         private static func parseRemoved(container: KeyedDecodingContainer<CodingKeys>) throws -> ContentContainer {
 
+            print("ContentContainer parseRemoved")
+            
             let contentIdentifier = try container.decode(ContentIdentifier.self, forKey: .content)
             let path: String = try container.decodeIfPresent(String.self, forKey: .path) ?? ""
 
@@ -569,7 +571,7 @@ extension SportRadarModels.ContentContainer: CustomDebugStringConvertible {
             return "Update Market Tradability (Content ID: \(contentIdentifier)) - Market ID: \(marketId) - Tradable: \(isTradable)"
 
         case .updateOutcomeOdd(let contentIdentifier, let selectionId, let newOddNumerator, let newOddDenominator):
-            return "Update Outcome Odd (Content ID: \(contentIdentifier)) - Selection ID: \(selectionId) - New Odd Numerator: \(String(describing: newOddNumerator)) - New Odd Denominator: \(String(describing: newOddDenominator))"
+            return "🅾️Update Outcome Odd (Content ID: \(contentIdentifier)) - Selection ID: \(selectionId) - New Odd Numerator: \(String(describing: newOddNumerator)) - New Odd Denominator: \(String(describing: newOddDenominator))"
         case .updateOutcomeTradability(let contentIdentifier, let selectionId, let isTradable):
             return "Update Outcome Tradability (Content ID: \(contentIdentifier)) - Market ID: \(selectionId) - Tradable: \(isTradable)"
 

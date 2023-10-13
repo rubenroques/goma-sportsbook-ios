@@ -411,6 +411,11 @@ class PreSubmissionBetslipViewController: UIViewController {
         self.systemOddsTitleLabel.text = localized("total_bet_amount")
         self.systemOddsValueLabel.text = localized("no_value")
         
+        self.systemBetTypeTitleLabel.text = localized("system_options")
+        
+        self.selectSystemBetTypeButton.setTitle(localized("select"), for: .normal)
+        self.settingsPickerButton.setTitle(localized("select"), for: .normal)
+        
         self.secondarySystemWinningsValueLabel.text = localized("no_value")
         self.secondarySystemOddsTitleLabel.text = localized("total_bet_amount")
         self.secondarySystemOddsValueLabel.text = localized("no_value")
@@ -1784,6 +1789,15 @@ class PreSubmissionBetslipViewController: UIViewController {
                 }
 
                 let singleBetTicketStakes = self.simpleBetsBettingValues.value
+                
+                let totalValue = singleBetTicketStakes.values.reduce(0.0, +)
+                
+                if totalValue > self.maxBetValue {
+                    self.showErrorView(errorMessage: localized("deposit_more_funds"))
+                    self.isLoading = false
+                    return
+                }
+                
                 Env.betslipManager.placeSingleBets(amounts: singleBetTicketStakes, useFreebetBalance: isFreeBet)
                 .receive(on: DispatchQueue.main)
                 .sink { [weak self] completion in
@@ -1819,6 +1833,12 @@ class PreSubmissionBetslipViewController: UIViewController {
             }
             else if self.listTypePublisher.value == .multiple {
 
+                if self.realBetValue > self.maxBetValue {
+                    self.showErrorView(errorMessage: localized("deposit_more_funds"))
+                    self.isLoading = false
+                    return
+                }
+                
                 var isFreeBet = false
 
                 if self.isFreebetEnabled.value == true || self.isCashbackToggleOn.value == true {
@@ -1858,6 +1878,13 @@ class PreSubmissionBetslipViewController: UIViewController {
                     .store(in: &cancellables)
             }
             else if self.listTypePublisher.value == .system, let selectedSystemBetType = self.selectedSystemBetType {
+               
+                if self.realBetValue > self.maxBetValue {
+                    self.showErrorView(errorMessage: localized("deposit_more_funds"))
+                    self.isLoading = false
+                    return
+                }
+                
                 var isFreeBet = false
 
                 if self.isFreebetEnabled.value == true || self.isCashbackToggleOn.value == true {

@@ -142,8 +142,14 @@ class SportSelectionViewController: UIViewController {
         Env.sportsStore.activeSportsPublisher
             .map({ loadableContent -> [Sport]? in
                 switch loadableContent {
-                case .loading, .idle, .failed: return nil
-                case .loaded(let sports): return sports
+                case .loading:
+                    return nil
+                case .idle:
+                    return nil
+                case .failed:
+                    return nil
+                case .loaded(let sports):
+                    return sports
                 }
             })
             .filter({ $0 != nil })

@@ -93,7 +93,7 @@ class SportRadarEventDetailsCoordinator {
         return self.session.dataTaskPublisher(for: request)
             .retry(1)
             .map({ return String(data: $0.data, encoding: .utf8) ?? "" })
-            .mapError({ _ in return ServiceProviderError.invalidRequestFormat })
+            .mapError({ _ in return ServiceProviderError.resourceUnavailableOrDeleted })
             .flatMap { responseString -> AnyPublisher<Void, ServiceProviderError> in
                 if responseString.uppercased().contains("CONTENT_NOT_FOUND") {
                     return Fail(outputType: Void.self, failure: ServiceProviderError.resourceUnavailableOrDeleted).eraseToAnyPublisher()
@@ -240,19 +240,19 @@ extension SportRadarEventDetailsCoordinator {
 
     func handleContentUpdate(_ content: SportRadarModels.ContentContainer) {
 
-        guard
-            let updatedContentIdentifier = content.contentIdentifier
-        else {
-            // ignoring contentIdentifierLess updates
-            // print("☁️SP debugdetails ignoring contentIdentifierLess \(content)")
-            return
-        }
-
-        if self.eventDetailsIdentifier != updatedContentIdentifier && self.liveDataContentIdentifier != updatedContentIdentifier {
-            // ignoring this update, not subscribed by this class
-            // print("☁️SP debugdetails ignoring \(updatedContentIdentifier) != \(eventDetailsIdentifier) \(liveDataContentIdentifier)")
-            return
-        }
+//        guard
+//            let updatedContentIdentifier = content.contentIdentifier
+//        else {
+//            // ignoring contentIdentifierLess updates
+//            // print("☁️SP debugdetails ignoring contentIdentifierLess \(content)")
+//            return
+//        }
+//
+//        if self.eventDetailsIdentifier != updatedContentIdentifier && self.liveDataContentIdentifier != updatedContentIdentifier {
+//            // ignoring this update, not subscribed by this class
+//            // print("☁️SP debugdetails ignoring \(updatedContentIdentifier) != \(eventDetailsIdentifier) \(liveDataContentIdentifier)")
+//            return
+//        }
 
         // print("☁️SP debugdetails SportRadarEventDetailsCoordinator handleContentUpdate \(content)")
 

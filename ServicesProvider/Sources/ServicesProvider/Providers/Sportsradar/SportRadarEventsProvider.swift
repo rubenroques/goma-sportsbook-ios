@@ -412,6 +412,8 @@ class SportRadarEventsProvider: EventsProvider {
             let publisher = self.allSportsListTypesPublisher,
             let request = endpoint.request()
         else {
+            self.allSportsListTypesPublisher = nil
+            self.allSportTypesSubscription = nil
             return Fail(error: ServiceProviderError.invalidRequestFormat).eraseToAnyPublisher()
         }
 

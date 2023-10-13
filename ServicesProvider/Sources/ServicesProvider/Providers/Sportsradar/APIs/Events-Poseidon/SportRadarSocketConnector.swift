@@ -141,7 +141,7 @@ extension SportRadarSocketConnector: Starscream.WebSocketDelegate {
             print("ServiceProvider - SportRadarSocketConnector websocket is disconnected: \(reason) with code: \(code)")
 
         case .text(let string):
-            // print("☁️ SP debugbetslip WS recieved text: \(string) \n----------------- \n")
+            print("\n▶️ServiceProvider - SportRadarSocketConnector recieved text: \(string.prefix(500))◀️")
             if let data = string.data(using: .utf8),
                let sportRadarSocketResponse = try? decoder.decode(SportRadarModels.NotificationType.self, from: data) {
                 self.handleContentMessage(sportRadarSocketResponse, messageData: data)
@@ -245,6 +245,7 @@ extension SportRadarSocketConnector: Starscream.WebSocketDelegate {
                     }
                 default:
                     if let subscriber = self.messageSubscriber {
+                        print("*️⃣SportRadarSocketConnector handleContentMessage didReceiveGenericUpdate:\n  - \(content)")
                         subscriber.didReceiveGenericUpdate(content: content)
                     }
                 }

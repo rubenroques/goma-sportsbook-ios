@@ -13,7 +13,6 @@
 	<key>com.apple.developer.in-app-payments</key>
 	<array>
 		<string>merchant.com.adyen.betssonfrance.ecom</string>
-		<string>merchant.com.Adyen.betssonfrance</string>
 	</array>
 </dict>
 </plist>
