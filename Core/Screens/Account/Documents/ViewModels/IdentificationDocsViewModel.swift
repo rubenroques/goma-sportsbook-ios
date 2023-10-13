@@ -167,7 +167,13 @@ class IdentificationDocsViewModel {
 
                         let documentLevelName = DocumentLevelName(levelName: reviewData.levelName)
 
-                        let documentStatus = DocumentStatus(status: reviewData.reviewStatus)
+                        var documentStatus = DocumentStatus(status: reviewData.reviewStatus, result: reviewData.reviewResult?.reviewAnswer)
+
+//                        if let reviewResult = reviewData.reviewResult {
+//                            if reviewResult.reviewAnswer == "RED" {
+//                                documentStatus = .rejected
+//                            }
+//                        }
 
                         self?.currentDocumentLevelStatus = CurrentDocumentLevelStatus(status: documentStatus, levelName: documentLevelName)
 

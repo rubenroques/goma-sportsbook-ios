@@ -79,7 +79,9 @@ class PromotionsWebViewController: UIViewController {
         self.titleLabel.backgroundColor = .clear
         self.titleLabel.textColor = UIColor.App.textPrimary
 
-        self.webView.backgroundColor = UIColor.App.backgroundPrimary
+        self.webView.backgroundColor = .clear
+
+        self.webView.scrollView.backgroundColor = .clear
 
         self.loadingBaseView.backgroundColor = UIColor.black.withAlphaComponent(0.7)
         self.loadingActivityIndicatorView.color = UIColor.lightGray

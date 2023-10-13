@@ -319,6 +319,10 @@ class ClientManagedHomeViewTemplateDataSource {
                 }
             }, receiveValue: { [weak self] topCompetitions in
                 let convertedCompetitions = self?.convertTopCompetitions(topCompetitions) ?? []
+
+                let topCompetitionIds = convertedCompetitions.map { $0.id }
+                Env.favoritesManager.topCompetitionIds = topCompetitionIds
+
                 self?.topCompetitionsLineCellViewModel = TopCompetitionsLineCellViewModel(topCompetitions: convertedCompetitions)
                 self?.refreshPublisher.send()
             })

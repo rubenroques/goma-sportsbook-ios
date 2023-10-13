@@ -698,7 +698,7 @@ class MyTicketTableViewCell: UITableViewCell {
                 self.usedCashback = false
             }
 
-            if let potentialCashbackReturn = betHistoryEntry.potentialCashbackReturn,
+            if let potentialCashbackReturn = betHistoryEntry.potentialCashbackReturn != nil ? betHistoryEntry.potentialCashbackReturn : betHistoryEntry.potentialFreebetReturn,
                potentialCashbackReturn > 0 {
                 self.hasCashback = true
 
@@ -707,7 +707,7 @@ class MyTicketTableViewCell: UITableViewCell {
                 self.cashbackValueLabel.text = potentialCashbackReturnString
             }
         }
-        else if let cashbackReturn = betHistoryEntry.cashbackReturn,
+        else if let cashbackReturn = betHistoryEntry.cashbackReturn != nil ? betHistoryEntry.cashbackReturn : betHistoryEntry.freebetReturn,
                 cashbackReturn > 0 {
             self.hasCashback = true
             self.usedCashback = false

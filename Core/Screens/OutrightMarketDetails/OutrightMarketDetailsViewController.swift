@@ -368,9 +368,11 @@ class OutrightMarketDetailsViewController: UIViewController {
         }
 
         let metadata = LPLinkMetadata()
-        let urlMobile = TargetVariables.clientBaseUrl
 
-        if let matchUrl = URL(string: "\(urlMobile)/gamedetail/\(matchId)") {
+        let matchSlugUrl = self.generateUrlSlug(competition: self.viewModel.competition)
+        print("OUTRIGHT SLUG: \(matchSlugUrl)")
+        
+        if let matchUrl = URL(string: matchSlugUrl) {
 
             let imageProvider = NSItemProvider(object: snapshot)
             metadata.imageProvider = imageProvider
@@ -429,6 +431,26 @@ class OutrightMarketDetailsViewController: UIViewController {
             let loginViewController = Router.navigationController(with: LoginViewController())
             self.present(loginViewController, animated: true, completion: nil)
         }
+    }
+
+    private func generateUrlSlug(competition: Competition) -> String {
+        // https://betsson.fr/fr/competitions/cyclisme/tour-de-france-international/3059212.1/outrights
+
+        var sportName = competition.sport?.name.lowercased() ?? ""
+
+        if let realSportName = Env.sportsStore.activeSports.filter({
+            $0.alphaId == competition.sport?.alphaId
+        }).compactMap({
+            return $0.name
+        }).first {
+            sportName = realSportName.lowercased()
+        }
+
+        let competitionName = competition.name.slugify()
+
+        let fullString = "\(TargetVariables.clientBaseUrl)/\(Locale.current.languageCode ?? "fr")/competitions/\(sportName)/\(competitionName)/\(competition.id)/outrights"
+
+        return fullString
     }
     
 }
