@@ -1118,9 +1118,10 @@ class MatchDetailsViewController: UIViewController {
         }
         
         let metadata = LPLinkMetadata()
-        let urlMobile = TargetVariables.clientBaseUrl
-        
-        if let matchUrl = URL(string: "\(urlMobile)/gamedetail/\(match.id)") {
+
+        let matchSlugUrl = self.generateUrlSlug(match: match)
+
+        if let matchUrl = URL(string: matchSlugUrl) {
             
             let imageProvider = NSItemProvider(object: snapshot)
             metadata.imageProvider = imageProvider
@@ -1143,6 +1144,44 @@ class MatchDetailsViewController: UIViewController {
         self.present(shareActivityViewController, animated: true, completion: nil)
         
     }
+
+    private func generateUrlSlug(match: Match) -> String {
+
+        var sportName = match.sportName?.lowercased() ?? ""
+
+        if let realSportName = Env.sportsStore.activeSports.filter({
+            $0.alphaId == match.sport.alphaId
+        }).compactMap({
+            return $0.name
+        }).first {
+            sportName = realSportName.lowercased()
+        }
+
+        let competitionName = match.competitionName.slugify()
+
+        let homeTeamName = match.homeParticipant.name.slugify()
+
+        let awayTeamName = match.awayParticipant.name.slugify()
+
+        let matchName = "\(homeTeamName)-vs-\(awayTeamName)"
+
+        let matchStatus = self.viewModel.matchModePublisher.value == .preLive ? "competitions" : "live"
+
+        let fullString = "\(TargetVariables.clientBaseUrl)/\(Locale.current.languageCode ?? "fr")/\(matchStatus)/\(sportName)/\(competitionName)/\(match.competitionId)/\(matchName)/\(match.id)"
+
+        return fullString
+    }
+
+//    func slugify(_ inputString: String) -> String {
+//        let normalizedString = inputString.folding(options: .diacriticInsensitive, locale: .current)
+//        let withoutSpecialCharacters = normalizedString.replacingOccurrences(of: "[^a-zA-Z0-9\\s-]", with: "", options: .regularExpression, range: nil)
+//        let lowercasedString = withoutSpecialCharacters.lowercased()
+//        let trimmedString = lowercasedString.trimmingCharacters(in: .whitespacesAndNewlines)
+//        let replacingSpacesWithDash = trimmedString.replacingOccurrences(of: "\\s+", with: "-", options: .regularExpression, range: nil)
+//        let removingConsecutiveDashes = replacingSpacesWithDash.replacingOccurrences(of: "--+", with: "-", options: .regularExpression, range: nil)
+//
+//        return removingConsecutiveDashes
+//    }
     
 }
 

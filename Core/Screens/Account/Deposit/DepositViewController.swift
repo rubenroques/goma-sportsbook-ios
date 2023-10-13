@@ -51,7 +51,9 @@ class DepositViewController: UIViewController {
     @IBOutlet private var nextButton: UIButton!
     @IBOutlet private var paymentsLabel: UILabel!
     @IBOutlet private var paymentsLogosStackView: UIStackView!
+    @IBOutlet private var readAboutLabel: UILabel!
     @IBOutlet private var responsibleGamingLabel: UILabel!
+    @IBOutlet private var questionPaymentLabel: UILabel!
     @IBOutlet private var faqLabel: UILabel!
     @IBOutlet private var depositTipLabel: UILabel!
     @IBOutlet private var loadingBaseView: UIView!
@@ -203,6 +205,12 @@ class DepositViewController: UIViewController {
         self.setupResponsableGamingUnderlineClickableLabel()
         self.setupFaqUnderlineClickableLabel()
 
+        self.readAboutLabel.text = localized("read_about")
+        self.readAboutLabel.font = AppFont.with(type: .medium, size: 10)
+
+        self.questionPaymentLabel.text = localized("any_questions_about_payment_process")
+        self.questionPaymentLabel.font = AppFont.with(type: .medium, size: 10)
+
         let tapGestureRecognizer = UITapGestureRecognizer.init(target: self, action: #selector(didTapBackground))
         self.view.addGestureRecognizer(tapGestureRecognizer)
 
@@ -323,6 +331,10 @@ class DepositViewController: UIViewController {
         self.paymentsLogosStackView.backgroundColor = .clear
 
         self.loadingBaseView.backgroundColor = UIColor.App.backgroundPrimary.withAlphaComponent(0.7)
+
+        self.readAboutLabel.textColor = UIColor.App.textPrimary
+
+        self.questionPaymentLabel.textColor = UIColor.App.textPrimary
     }
 
     // MARK: Binding
@@ -502,24 +514,22 @@ class DepositViewController: UIViewController {
 
     private func setupResponsableGamingUnderlineClickableLabel() {
 
-        let fullString = localized("responsible_gaming")
+        let fullString = localized("responsible_gambling")
 
         responsibleGamingLabel.text = fullString
         responsibleGamingLabel.numberOfLines = 0
         responsibleGamingLabel.font = AppFont.with(type: .medium, size: 10)
-        responsibleGamingLabel.textColor =  UIColor.App.textSecondary
+        responsibleGamingLabel.textColor =  UIColor.App.textPrimary
 
         let underlineAttriString = NSMutableAttributedString(string: fullString)
 
         let range1 = (fullString as NSString).range(of: localized("responsible_gambling"))
 
-        underlineAttriString.addAttribute(.font, value: AppFont.with(type: .regular, size: 10), range: range1)
+        underlineAttriString.addAttribute(.font, value: AppFont.with(type: .medium, size: 10), range: range1)
         underlineAttriString.addAttribute(.foregroundColor, value: UIColor.App.buttonBackgroundPrimary, range: range1)
         underlineAttriString.addAttribute(.underlineStyle, value: NSUnderlineStyle.single.rawValue, range: range1)
 
         let paragraphStyle = NSMutableParagraphStyle()
-
-        paragraphStyle.lineHeightMultiple = TextSpacing.subtitle
         paragraphStyle.alignment = .left
 
         underlineAttriString.addAttribute(.paragraphStyle, value: paragraphStyle, range: NSRange(location: 0, length: underlineAttriString.length))
@@ -604,44 +614,43 @@ class DepositViewController: UIViewController {
         depositSuccessViewController.setTextInfo(title: "\(localized("success"))!", subtitle: localized("deposit_success_message"))
         self.navigationController?.pushViewController(depositSuccessViewController, animated: true)
     }
-    
-    
+
     @IBAction private func tapResponsabibleGamingUnderlineLabel(gesture: UITapGestureRecognizer) {
-        let text = localized("responsible_gaming")
+        let text = localized("responsible_gambling")
 
         let stringRange1 = (text as NSString).range(of: localized("responsible_gambling"))
 
         if gesture.didTapAttributedTextInLabel(label: self.responsibleGamingLabel, inRange: stringRange1, alignment: .left) {
-            // Action
+            let casualGamblingViewController = CasualGamblingViewController()
+
+            self.navigationController?.pushViewController(casualGamblingViewController, animated: true)
         }
 
     }
 
     func setupFaqUnderlineClickableLabel() {
 
-        let fullString = localized("faq")
+        let fullString = "\(localized("faq")) \(localized("or")) \(localized("contact_us"))"
 
         faqLabel.text = fullString
         faqLabel.numberOfLines = 0
         faqLabel.font = AppFont.with(type: .medium, size: 10)
-        faqLabel.textColor =  UIColor.App.textSecondary
+        faqLabel.textColor =  UIColor.App.textPrimary
 
         let underlineAttriString = NSMutableAttributedString(string: fullString)
 
         let range1 = (fullString as NSString).range(of: localized("faq"))
         let range2 = (fullString as NSString).range(of: localized("contact_us"))
 
-        underlineAttriString.addAttribute(.font, value: AppFont.with(type: .regular, size: 10), range: range1)
+        underlineAttriString.addAttribute(.font, value: AppFont.with(type: .medium, size: 10), range: range1)
         underlineAttriString.addAttribute(.foregroundColor, value: UIColor.App.buttonBackgroundPrimary, range: range1)
         underlineAttriString.addAttribute(.underlineStyle, value: NSUnderlineStyle.single.rawValue, range: range1)
 
-        underlineAttriString.addAttribute(.font, value: AppFont.with(type: .regular, size: 10), range: range2)
+        underlineAttriString.addAttribute(.font, value: AppFont.with(type: .medium, size: 10), range: range2)
         underlineAttriString.addAttribute(.foregroundColor, value: UIColor.App.buttonBackgroundPrimary, range: range2)
         underlineAttriString.addAttribute(.underlineStyle, value: NSUnderlineStyle.single.rawValue, range: range2)
 
         let paragraphStyle = NSMutableParagraphStyle()
-
-        paragraphStyle.lineHeightMultiple = TextSpacing.subtitle
         paragraphStyle.alignment = .left
 
         underlineAttriString.addAttribute(.paragraphStyle, value: paragraphStyle, range: NSRange(location: 0, length: underlineAttriString.length))
@@ -652,16 +661,20 @@ class DepositViewController: UIViewController {
     }
 
     @IBAction private func tapFaqUnderlineLabel(gesture: UITapGestureRecognizer) {
-        let text = localized("faq")
+        
+        let text = "\(localized("faq")) \(localized("or")) \(localized("contact_us"))"
 
         let stringRange1 = (text as NSString).range(of: localized("faq"))
         let stringRange2 = (text as NSString).range(of: localized("contact_us"))
 
         if gesture.didTapAttributedTextInLabel(label: self.faqLabel, inRange: stringRange1, alignment: .left) {
-            // Action
+            guard let url = URL(string: "https://betssonfrance.zendesk.com/hc/fr") else { return }
+            UIApplication.shared.open(url)
         }
         else if gesture.didTapAttributedTextInLabel(label: self.faqLabel, inRange: stringRange2, alignment: .left) {
-            // Action
+            let supportViewController = SupportPageViewController(viewModel: SupportPageViewModel())
+
+            self.navigationController?.pushViewController(supportViewController, animated: true)
         }
 
     }

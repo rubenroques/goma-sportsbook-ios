@@ -100,7 +100,9 @@ class MyCompetitionsRootViewModel {
                         self.fetchFavoriteCompetitionMatches()
                     }
                     else {
-                        let popularCompetitionIds = ["29494.1", "29519.1", "29531.1", "29534.1"]
+                        //let popularCompetitionIds = ["29494.1", "29519.1", "29531.1", "29534.1"]
+                        let popularCompetitionIds = Env.favoritesManager.topCompetitionIds
+                        
                         self.isLoading = true
                         self.favoriteEventsIds = popularCompetitionIds
                         self.fetchFavoriteCompetitionMatches(customIds: popularCompetitionIds)

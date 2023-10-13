@@ -47,5 +47,16 @@ extension String {
         let emailPred = NSPredicate(format: "SELF MATCHES %@", emailRegEx)
         return emailPred.evaluate(with: self)
     }
+
+    func slugify() -> String {
+        let normalizedString = self.folding(options: .diacriticInsensitive, locale: .current)
+        let withoutSpecialCharacters = normalizedString.replacingOccurrences(of: "[^a-zA-Z0-9\\s-]", with: "", options: .regularExpression, range: nil)
+        let lowercasedString = withoutSpecialCharacters.lowercased()
+        let trimmedString = lowercasedString.trimmingCharacters(in: .whitespacesAndNewlines)
+        let replacingSpacesWithDash = trimmedString.replacingOccurrences(of: "\\s+", with: "-", options: .regularExpression, range: nil)
+        let removingConsecutiveDashes = replacingSpacesWithDash.replacingOccurrences(of: "--+", with: "-", options: .regularExpression, range: nil)
+
+        return removingConsecutiveDashes
+    }
     
 }

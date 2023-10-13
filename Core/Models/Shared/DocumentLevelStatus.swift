@@ -19,11 +19,21 @@ enum DocumentStatus {
     case initial
     case none
 
-    init(status: String) {
+    init(status: String, result: String? = nil) {
 
         switch status {
         case "completed":
-            self = .completed
+            if let result {
+                if result == "GREEN" {
+                    self = .completed
+                }
+                else {
+                    self = .rejected
+                }
+            }
+            else {
+                self = .completed
+            }
         case "rejected":
             self = .rejected
         case "pending":

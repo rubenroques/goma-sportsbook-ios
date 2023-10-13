@@ -147,7 +147,8 @@ class AppDelegate: UIResponder, UIApplicationDelegate, MessagingDelegate {
             }
 
             let urlSections = url.pathComponents
-            if urlSections.contains("gamedetail") {
+            //if urlSections.contains("gamedetail") {
+            if urlSections.contains("competitions") || urlSections.contains("live") {
                 if let gameDetailId = urlSections.last {
 //                    self.openRoute(Route.event(id: gameDetailId), onApplication: application)
                     self.openSharedRoute(Route.event(id: gameDetailId), onApplication: application)

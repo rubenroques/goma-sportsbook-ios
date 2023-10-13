@@ -28,6 +28,8 @@ class FavoritesManager {
     var fetchedCompetitionsListsIds: [String: Int] = [:]
     var competitionListId: Int?
 
+    var topCompetitionIds: [String] = []
+
     // MARK: Lifetime and cycle
     init(eventsId: [String] = []) {
         self.favoriteEventsIdPublisher = .init(eventsId)
