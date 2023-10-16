@@ -71,20 +71,24 @@ class FavoritesManager {
 
             }, receiveValue: { [weak self] favoritesListResponse in
 
-                if !favoritesListResponse.favoritesList.contains(where: {
+//                if !favoritesListResponse.favoritesList.contains(where: {
+//                    $0.name == "Competitions"
+//                }) {
+//                    self?.createCompetitionsList()
+//                }
+//                else {
+                if let competitionListId = favoritesListResponse.favoritesList.first(where: {
                     $0.name == "Competitions"
                 }) {
-                    self?.createCompetitionsList()
+                    self?.competitionListId = competitionListId.id
+                    self?.getCompetitionsIds(competitionListId: competitionListId.id, favoritesList: favoritesListResponse.favoritesList)
                 }
                 else {
-                    if let competitionListId = favoritesListResponse.favoritesList.first(where: {
-                        $0.name == "Competitions"
-                    }) {
-                        self?.competitionListId = competitionListId.id
-                        self?.getCompetitionsIds(competitionListId: competitionListId.id, favoritesList: favoritesListResponse.favoritesList)
-                    }
-                    self?.processFavoritesLists(favoritesLists: favoritesListResponse.favoritesList)
+                    self?.finishedCompetitionsIds.send(true)
                 }
+
+                self?.processFavoritesLists(favoritesLists: favoritesListResponse.favoritesList)
+//                }
             })
             .store(in: &cancellables)
     }
@@ -100,6 +104,7 @@ class FavoritesManager {
                 case .failure(let error):
                     print("FAVORITE EVENTS ERROR: \(error)")
                     self?.finishedCompetitionsIds.send(true)
+                    self?.removeEmptyList(listId: competitionListId)
                 }
 
             }, receiveValue: { [weak self] favoriteEventsResponse in
@@ -129,8 +134,7 @@ class FavoritesManager {
 
             let favoriteListSplit = favoriteList.name.components(separatedBy: ":")
             
-            if let favoriteId = favoriteListSplit[safe: 1]
-            {
+            if let favoriteId = favoriteListSplit[safe: 1] {
 
                 if !favoriteIds.contains(favoriteId) {
                     favoriteIds.append(favoriteId)
@@ -145,7 +149,7 @@ class FavoritesManager {
         self.finishedMatchesIds.send(true)
     }
 
-    private func createCompetitionsList() {
+    private func createCompetitionsList(withEventId eventId: String) {
 
         Env.servicesProvider.addFavoritesList(name: "Competitions")
             .receive(on: DispatchQueue.main)
@@ -159,7 +163,9 @@ class FavoritesManager {
 
             }, receiveValue: { [weak self] favoritesListAddResponse in
                 self?.competitionListId = favoritesListAddResponse.listId
-                self?.getUserFavorites()
+
+                self?.addFavoriteToList(listId: favoritesListAddResponse.listId, eventId: eventId, isCompetitionFavorite: true)
+                //self?.getUserFavorites()
             })
             .store(in: &cancellables)
     }
@@ -226,29 +232,60 @@ class FavoritesManager {
 
                     self.addFavoriteToList(listId: competitionListId, eventId: eventId, isCompetitionFavorite: true)
                 }
+                else {
+                    self.createCompetitionsList(withEventId: eventId)
+                }
             }
             else if favoriteAction == .remove {
 
                 if let eventListId = self.fetchedCompetitionsListsIds[eventId] {
-                    Env.servicesProvider.deleteFavoriteFromList(eventId: eventListId)
-                        .receive(on: DispatchQueue.main)
-                        .sink(receiveCompletion: { [weak self] completion in
-                            switch completion {
-                            case .finished:
-                                ()
-                            case .failure(let error):
-                                print("FAVORITE EVENT DELETE ERROR: \(error)")
 
-                                if "\(error)" == "emptyData"  {
-                                    print("EMPTY DATA SUCCESS")
+                    if self.fetchedCompetitionsListsIds.count == 1 {
+
+                        if let listId = self.competitionListId {
+                            Env.servicesProvider.deleteFavoritesList(listId: listId)
+                                .receive(on: DispatchQueue.main)
+                                .sink(receiveCompletion: { [weak self] completion in
+                                    switch completion {
+                                    case .finished:
+                                        ()
+                                    case .failure(let error):
+
+                                        if "\(error)" == "emptyData"  {
+                                            print("EMPTY DATA SUCCESS")
+                                            self?.fetchedCompetitionsListsIds.removeValue(forKey: eventId)
+                                        }
+                                    }
+
+                                }, receiveValue: { [weak self] favoritesListDeleteResponse in
+
                                     self?.fetchedCompetitionsListsIds.removeValue(forKey: eventId)
-                                }
-                            }
-                        }, receiveValue: { [weak self] favoritesListDeleteResponse in
 
-                            self?.fetchedCompetitionsListsIds.removeValue(forKey: eventId)
-                        })
-                        .store(in: &cancellables)
+                                })
+                                .store(in: &cancellables)
+                        }
+                    }
+                    else {
+                        Env.servicesProvider.deleteFavoriteFromList(eventId: eventListId)
+                            .receive(on: DispatchQueue.main)
+                            .sink(receiveCompletion: { [weak self] completion in
+                                switch completion {
+                                case .finished:
+                                    ()
+                                case .failure(let error):
+                                    print("FAVORITE EVENT DELETE ERROR: \(error)")
+
+                                    if "\(error)" == "emptyData"  {
+                                        print("EMPTY DATA SUCCESS")
+                                        self?.fetchedCompetitionsListsIds.removeValue(forKey: eventId)
+                                    }
+                                }
+                            }, receiveValue: { [weak self] favoritesListDeleteResponse in
+
+                                self?.fetchedCompetitionsListsIds.removeValue(forKey: eventId)
+                            })
+                            .store(in: &cancellables)
+                    }
                 }
             }
         }
@@ -373,6 +410,27 @@ class FavoritesManager {
         self.fetchedMatchesListIds = [:]
         self.fetchedCompetitionsListsIds = [:]
         self.fetchedFavoriteEventIds = []
+    }
+
+    func removeEmptyList(listId: Int) {
+
+        Env.servicesProvider.deleteFavoritesList(listId: listId)
+            .receive(on: DispatchQueue.main)
+            .sink(receiveCompletion: { [weak self] completion in
+                switch completion {
+                case .finished:
+                    ()
+                case .failure(let error):
+
+                    if "\(error)" == "emptyData"  {
+                        print("EMPTY DATA SUCCESS")
+                    }
+                }
+
+            }, receiveValue: { [weak self] favoritesListDeleteResponse in
+                
+            })
+            .store(in: &cancellables)
     }
 
 }
