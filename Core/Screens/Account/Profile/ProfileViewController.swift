@@ -770,10 +770,12 @@ extension ProfileViewController {
         let promotionsWebViewModel = PromotionsWebViewModel()
 
         // TODO: Change to prod url when fixed
-        let gomaBaseUrl = GomaGamingEnv.stage.baseUrl
-        let appLanguage = Locale.current.languageCode
+        
+        var gomaBaseUrl = TargetVariables.clientBaseUrl
+        let appLanguage = "fr"
+
         let isDarkTheme = self.traitCollection.userInterfaceStyle == .dark ? true : false
-        let urlString = "\(gomaBaseUrl)/\(appLanguage ?? "fr")/in-app/promotions?dark=\(isDarkTheme)"
+        let urlString = "\(gomaBaseUrl)/\(appLanguage)/in-app/promotions?dark=\(isDarkTheme)"
 
         if let url = URL(string: urlString) {
             let promotionsWebViewController = PromotionsWebViewController(url: url, viewModel: promotionsWebViewModel)

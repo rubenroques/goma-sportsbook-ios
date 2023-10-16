@@ -271,20 +271,12 @@ class HomeViewController: UIViewController {
         else {
             let promotionsWebViewModel = PromotionsWebViewModel()
 
-            var gomaBaseUrl = GomaGamingEnv.stage.baseUrl
-
-            if TargetVariables.serviceProviderEnvironment == .prod {
-                gomaBaseUrl = GomaGamingEnv.prod.baseUrl
-            }
-            else {
-                gomaBaseUrl = GomaGamingEnv.stage.baseUrl
-            }
-
-            let appLanguage = Locale.current.languageCode
+            var gomaBaseUrl = TargetVariables.clientBaseUrl
+            let appLanguage = "fr"
 
             let isDarkTheme = self.traitCollection.userInterfaceStyle == .dark ? true : false
 
-            let urlString = "\(gomaBaseUrl)/\(appLanguage ?? "fr")/in-app/promotions?dark=\(isDarkTheme)"
+            let urlString = "\(gomaBaseUrl)/\(appLanguage)/in-app/promotions?dark=\(isDarkTheme)"
 
             if let url = URL(string: urlString) {
 
