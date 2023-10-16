@@ -193,11 +193,27 @@ class LoginViewController: UIViewController {
         self.logoImageView.isUserInteractionEnabled = true
 
          #if DEBUG
-        let debugLogoImageViewTap = UITapGestureRecognizer(target: self, action: #selector(didTapDebugFormFill))
+//        let debugLogoImageViewTap = UITapGestureRecognizer(target: self, action: #selector(didTapDebugFormFill))
+        let debugLogoImageViewTap = UITapGestureRecognizer(target: self, action: #selector(testTap))
         debugLogoImageViewTap.numberOfTapsRequired = 3
         self.logoImageView.addGestureRecognizer(debugLogoImageViewTap)
          #endif
 
+    }
+
+    @objc private func testTap() {
+        if let navigationController = self.navigationController {
+
+            let registerSuccessViewController = RegisterSuccessViewController()
+
+            registerSuccessViewController.setTextInfo(title: localized("congratulations"), subtitle: localized("singup_success_text"))
+
+            registerSuccessViewController.didTapContinueAction = { [weak self] in
+                self?.showBiometricPromptViewController(onNavigationController: navigationController)
+            }
+
+            navigationController.pushViewController(registerSuccessViewController, animated: true)
+        }
     }
 
     @objc private func showDeposit() {

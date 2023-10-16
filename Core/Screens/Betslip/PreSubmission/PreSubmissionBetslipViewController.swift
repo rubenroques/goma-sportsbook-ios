@@ -229,9 +229,11 @@ class PreSubmissionBetslipViewController: UIViewController {
     private var showingSystemBetOptionsSelector: Bool = false {
         didSet {
             if showingSystemBetOptionsSelector {
+                self.systemBetTypeSelectorBaseView.isHidden = false
                 self.systemBetTypeSelectorBaseView.alpha = 1.0
             }
             else {
+                self.systemBetTypeSelectorBaseView.isHidden = true
                 self.systemBetTypeSelectorBaseView.alpha = 0.0
             }
         }

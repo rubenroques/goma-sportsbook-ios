@@ -33,6 +33,8 @@ class MyTicketCellViewModel {
 
     var partialCashoutSliderValue: Double?
 
+    var cashoutReoffer: Double?
+
     var hasSetupPartialCashoutSlider: Bool = false
 
     private var cashoutSubscription: AnyCancellable?
@@ -117,6 +119,10 @@ class MyTicketCellViewModel {
     }
 
     func requestPartialCashoutAvailability(ticket: BetHistoryEntry, stakeValue: String) {
+
+        // Reset cashout reoffer value
+        self.cashoutReoffer = nil
+
         Env.servicesProvider.calculateCashout(betId: ticket.betId, stakeValue: stakeValue)
             .receive(on: DispatchQueue.main)
             .sink(receiveCompletion: { [weak self] completion in
@@ -178,7 +184,7 @@ class MyTicketCellViewModel {
                     else if cashoutResult.cashoutResult == 1 {
                         if let cashoutReoffer = cashoutResult.cashoutReoffer,
                            let ticket = self?.ticket {
-                            self?.requestCashoutAvailability()
+                            //self?.requestCashoutAvailability()
                             self?.requestAlertAction?("\(cashoutReoffer)", ticket.betId)
                             self?.isLoadingCellData.send(false)
                         }
@@ -202,7 +208,7 @@ class MyTicketCellViewModel {
         guard let partialCashout = self.partialCashout.value else { return }
 
         if let betId = partialCashout.betId,
-           let cashoutValue = partialCashout.value,
+           let cashoutValue = self.cashoutReoffer == nil ? partialCashout.value : self.cashoutReoffer,
            let stakeValue = self.partialCashoutSliderValue {
 
             self.isLoadingCellData.send(true)
@@ -232,7 +238,8 @@ class MyTicketCellViewModel {
                     else if cashoutResult.cashoutResult == 1 {
                         if let cashoutReoffer = cashoutResult.cashoutReoffer,
                            let ticket = self?.ticket {
-                            self?.requestPartialCashoutAvailability(ticket: ticket, stakeValue: "\(stakeValue)")
+                            //self?.requestPartialCashoutAvailability(ticket: ticket, stakeValue: "\(stakeValue)")
+                            self?.cashoutReoffer = cashoutReoffer
                             self?.requestPartialAlertAction?("\(cashoutReoffer)", ticket.betId)
                             self?.isLoadingCellData.send(false)
                         }

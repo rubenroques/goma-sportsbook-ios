@@ -9,10 +9,13 @@ import UIKit
 
 class RegisterErrorViewController: UIViewController {
 
-    private lazy var containerView: UIView = Self.createContainerView()
+    private lazy var containerGradientView: GradientView = Self.createContainerGradientView()
     private lazy var headerView: UIView = Self.createHeaderView()
     private lazy var closeButton: UIButton = Self.createCloseButton()
-    private lazy var iconImageView: UIImageView = Self.createIconImageView()
+    private lazy var avatarImageView: UIImageView = Self.createAvatarImageView()
+    private lazy var shapeView: GradientView = Self.createShapeView()
+    private lazy var shadowShapeView: UIView = Self.createShadowShapeView()
+    private lazy var infoContainerGradientView: GradientView = Self.createInfoContainerGradientView()
     private lazy var titleLabel: UILabel = Self.createTitleLabel()
     private lazy var subtitleLabel: UILabel = Self.createSubtitleLabel()
     private lazy var continueButton: UIButton = Self.createContinueButton()
@@ -49,18 +52,68 @@ class RegisterErrorViewController: UIViewController {
     override func viewDidLayoutSubviews() {
         super.viewDidLayoutSubviews()
 
+        self.containerGradientView.startPoint = CGPoint(x: 0.0, y: 0.0)
+        self.containerGradientView.endPoint = CGPoint(x: 2.0, y: 0.0)
+
+        let path = UIBezierPath()
+        path.move(to: CGPoint(x: 0.0, y: self.shapeView.frame.size.height))
+        path.addCurve(to: CGPoint(x: self.shapeView.frame.size.width, y: self.shapeView.frame.size.height),
+                      controlPoint1: CGPoint(x: self.shapeView.frame.size.width*0.40, y: 0),
+                      controlPoint2: CGPoint(x: self.shapeView.frame.size.width*0.60, y: 20))
+        path.addLine(to: CGPoint(x: self.shapeView.frame.size.width, y: self.shapeView.frame.size.height))
+        path.addLine(to: CGPoint(x: 0.0, y: self.shapeView.frame.size.height))
+        path.close()
+
+        let shapeLayer = CAShapeLayer()
+        shapeLayer.path = path.cgPath
+        shapeLayer.fillColor = UIColor.black.cgColor
+
+        let shadowLayer = CAShapeLayer()
+        shadowLayer.path = path.cgPath
+        shadowLayer.fillColor = UIColor.black.cgColor
+
+        shadowLayer.shadowOpacity = 0.5
+        shadowLayer.shadowRadius = 5
+        shadowLayer.shadowColor = UIColor.black.cgColor
+        shadowLayer.shadowOffset = .zero
+        shadowLayer.shadowPath = path.cgPath
+
+        self.shadowShapeView.layer.mask = shadowLayer
+        self.shadowShapeView.layer.masksToBounds = false
+
+        self.shapeView.layer.mask = shapeLayer
+        self.shapeView.layer.masksToBounds = false
+
     }
 
     private func setupWithTheme() {
-        self.containerView.backgroundColor = UIColor.App.backgroundPrimary
+
+        self.containerGradientView.colors = [(UIColor.App.backgroundHeaderGradient1, NSNumber(0.0)),
+                                              (UIColor.App.backgroundHeaderGradient2, NSNumber(1.0))]
+
+        self.containerGradientView.startPoint = CGPoint(x: 0.0, y: 0.0)
+        self.containerGradientView.endPoint = CGPoint(x: 2.0, y: 0.0)
 
         self.closeButton.setTitleColor(UIColor.App.highlightPrimary, for: .normal)
 
-        self.iconImageView.backgroundColor = .clear
+        self.avatarImageView.backgroundColor = .clear
 
-        self.titleLabel.textColor = UIColor.App.textPrimary
+        self.shadowShapeView.backgroundColor = .black
+        self.shapeView.colors = [(UIColor.App.backgroundPrimary, NSNumber(1.0)),
+                                              (UIColor.App.backgroundPrimary, NSNumber(1.0))]
 
-        self.subtitleLabel.textColor = UIColor.App.textPrimary
+        self.shapeView.startPoint = CGPoint(x: 0.0, y: 0.0)
+        self.shapeView.endPoint = CGPoint(x: 2.0, y: 0.0)
+
+        self.infoContainerGradientView.colors = [(UIColor.App.backgroundPrimary, NSNumber(1.0)),
+                                                 (UIColor.App.backgroundPrimary, NSNumber(1.0))]
+
+        self.infoContainerGradientView.startPoint = CGPoint(x: 0.0, y: 0.0)
+        self.infoContainerGradientView.endPoint = CGPoint(x: 2.0, y: 0.0)
+
+        self.titleLabel.textColor = UIColor.App.buttonTextPrimary
+
+        self.subtitleLabel.textColor = UIColor.App.buttonTextPrimary
 
         StyleHelper.styleButton(button: self.continueButton)
 
@@ -89,8 +142,8 @@ class RegisterErrorViewController: UIViewController {
 
 extension RegisterErrorViewController {
 
-    private static func createContainerView() -> UIView {
-        let view = UIView()
+    private static func createContainerGradientView() -> GradientView {
+        let view = GradientView()
         view.translatesAutoresizingMaskIntoConstraints = false
         return view
     }
@@ -109,7 +162,7 @@ extension RegisterErrorViewController {
         return button
     }
 
-    private static func createIconImageView() -> UIImageView {
+    private static func createAvatarImageView() -> UIImageView {
         let imageView = UIImageView()
         imageView.translatesAutoresizingMaskIntoConstraints = false
         imageView.image = UIImage(named: "avatar_check")
@@ -117,10 +170,28 @@ extension RegisterErrorViewController {
         return imageView
     }
 
+    private static func createShapeView() -> GradientView {
+        let view = GradientView()
+        view.translatesAutoresizingMaskIntoConstraints = false
+        return view
+    }
+
+    private static func createShadowShapeView() -> UIView {
+        let view = UIView()
+        view.translatesAutoresizingMaskIntoConstraints = false
+        return view
+    }
+
+    private static func createInfoContainerGradientView() -> GradientView {
+        let view = GradientView()
+        view.translatesAutoresizingMaskIntoConstraints = false
+        return view
+    }
+
     private static func createTitleLabel() -> UILabel {
         let label = UILabel()
         label.font = AppFont.with(type: .bold, size: 30)
-        label.text = "\(localized("oh_no"))!"
+        label.text = localized("unsucess_register_title")
         label.textAlignment = .center
         label.translatesAutoresizingMaskIntoConstraints = false
         label.numberOfLines = 0
@@ -147,16 +218,22 @@ extension RegisterErrorViewController {
 
     private func setupSubviews() {
 
-        self.view.addSubview(self.containerView)
+        self.view.addSubview(self.containerGradientView)
 
-        self.containerView.addSubview(self.headerView)
+        self.containerGradientView.addSubview(self.headerView)
 
         self.headerView.addSubview(self.closeButton)
 
-        self.containerView.addSubview(self.iconImageView)
-        self.containerView.addSubview(self.titleLabel)
-        self.containerView.addSubview(self.subtitleLabel)
-        self.containerView.addSubview(self.continueButton)
+        self.containerGradientView.addSubview(self.avatarImageView)
+
+        self.containerGradientView.addSubview(self.shadowShapeView)
+        self.containerGradientView.addSubview(self.shapeView)
+
+        self.view.addSubview(self.infoContainerGradientView)
+
+        self.infoContainerGradientView.addSubview(self.titleLabel)
+        self.infoContainerGradientView.addSubview(self.subtitleLabel)
+        self.infoContainerGradientView.addSubview(self.continueButton)
 
         self.initConstraints()
 
@@ -166,36 +243,49 @@ extension RegisterErrorViewController {
 
         NSLayoutConstraint.activate([
 
-            self.containerView.leadingAnchor.constraint(equalTo: self.view.leadingAnchor),
-            self.containerView.trailingAnchor.constraint(equalTo: self.view.trailingAnchor),
-            self.containerView.topAnchor.constraint(equalTo: self.view.topAnchor),
-            self.containerView.bottomAnchor.constraint(equalTo: self.view.bottomAnchor),
+            self.containerGradientView.leadingAnchor.constraint(equalTo: self.view.leadingAnchor),
+            self.containerGradientView.trailingAnchor.constraint(equalTo: self.view.trailingAnchor),
+            self.containerGradientView.topAnchor.constraint(equalTo: self.view.topAnchor),
+            self.containerGradientView.bottomAnchor.constraint(equalTo: self.view.centerYAnchor),
 
-            self.headerView.leadingAnchor.constraint(equalTo: self.containerView.leadingAnchor),
-            self.headerView.trailingAnchor.constraint(equalTo: self.containerView.trailingAnchor),
-            self.headerView.topAnchor.constraint(equalTo: self.containerView.topAnchor),
+            self.headerView.leadingAnchor.constraint(equalTo: self.containerGradientView.leadingAnchor),
+            self.headerView.trailingAnchor.constraint(equalTo: self.containerGradientView.trailingAnchor),
+            self.headerView.topAnchor.constraint(equalTo: self.containerGradientView.topAnchor),
             self.headerView.heightAnchor.constraint(equalToConstant: 60),
 
             self.closeButton.trailingAnchor.constraint(equalTo: self.headerView.trailingAnchor, constant: -34),
             self.closeButton.centerYAnchor.constraint(equalTo: self.headerView.centerYAnchor),
             self.closeButton.heightAnchor.constraint(equalToConstant: 40),
 
-            self.iconImageView.centerXAnchor.constraint(equalTo: self.containerView.centerXAnchor),
-            self.iconImageView.widthAnchor.constraint(equalToConstant: 200),
-            self.iconImageView.heightAnchor.constraint(equalTo: self.iconImageView.widthAnchor),
-            self.iconImageView.topAnchor.constraint(equalTo: self.headerView.bottomAnchor, constant: 40),
+            self.avatarImageView.bottomAnchor.constraint(equalTo: self.shapeView.topAnchor, constant: 60),
+            self.avatarImageView.centerXAnchor.constraint(equalTo: self.containerGradientView.centerXAnchor),
 
-            self.titleLabel.leadingAnchor.constraint(equalTo: self.containerView.leadingAnchor, constant: 30),
-            self.titleLabel.trailingAnchor.constraint(equalTo: self.containerView.trailingAnchor, constant: -30),
-            self.titleLabel.topAnchor.constraint(equalTo: self.iconImageView.bottomAnchor, constant: 30),
+            self.shadowShapeView.leadingAnchor.constraint(equalTo: self.containerGradientView.leadingAnchor),
+            self.shadowShapeView.trailingAnchor.constraint(equalTo: self.containerGradientView.trailingAnchor),
+            self.shadowShapeView.bottomAnchor.constraint(equalTo: self.containerGradientView.bottomAnchor),
+            self.shadowShapeView.heightAnchor.constraint(equalToConstant: 40),
 
-            self.subtitleLabel.leadingAnchor.constraint(equalTo: self.containerView.leadingAnchor, constant: 30),
-            self.subtitleLabel.trailingAnchor.constraint(equalTo: self.containerView.trailingAnchor, constant: -30),
-            self.subtitleLabel.topAnchor.constraint(equalTo: self.titleLabel.bottomAnchor, constant: 20),
+            self.shapeView.leadingAnchor.constraint(equalTo: self.containerGradientView.leadingAnchor),
+            self.shapeView.trailingAnchor.constraint(equalTo: self.containerGradientView.trailingAnchor),
+            self.shapeView.bottomAnchor.constraint(equalTo: self.containerGradientView.bottomAnchor),
+            self.shapeView.heightAnchor.constraint(equalToConstant: 40),
 
-            self.continueButton.leadingAnchor.constraint(equalTo: self.containerView.leadingAnchor, constant: 30),
-            self.continueButton.trailingAnchor.constraint(equalTo: self.containerView.trailingAnchor, constant: -30),
-            self.continueButton.bottomAnchor.constraint(equalTo: self.containerView.bottomAnchor, constant: -50),
+            self.infoContainerGradientView.leadingAnchor.constraint(equalTo: self.view.leadingAnchor),
+            self.infoContainerGradientView.trailingAnchor.constraint(equalTo: self.view.trailingAnchor),
+            self.infoContainerGradientView.topAnchor.constraint(equalTo: self.containerGradientView.bottomAnchor),
+            self.infoContainerGradientView.bottomAnchor.constraint(equalTo: self.view.bottomAnchor),
+
+            self.titleLabel.leadingAnchor.constraint(equalTo: self.infoContainerGradientView.leadingAnchor, constant: 30),
+            self.titleLabel.trailingAnchor.constraint(equalTo: self.infoContainerGradientView.trailingAnchor, constant: -30),
+            self.titleLabel.topAnchor.constraint(equalTo: self.infoContainerGradientView.topAnchor, constant: 10),
+
+            self.subtitleLabel.leadingAnchor.constraint(equalTo: self.infoContainerGradientView.leadingAnchor, constant: 30),
+            self.subtitleLabel.trailingAnchor.constraint(equalTo: self.infoContainerGradientView.trailingAnchor, constant: -30),
+            self.subtitleLabel.topAnchor.constraint(equalTo: self.titleLabel.bottomAnchor, constant: 12),
+
+            self.continueButton.leadingAnchor.constraint(equalTo: self.infoContainerGradientView.leadingAnchor, constant: 30),
+            self.continueButton.trailingAnchor.constraint(equalTo: self.infoContainerGradientView.trailingAnchor, constant: -30),
+            self.continueButton.bottomAnchor.constraint(equalTo: self.infoContainerGradientView.bottomAnchor, constant: -50),
             self.continueButton.heightAnchor.constraint(equalToConstant: 50)
         ])
 

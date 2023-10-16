@@ -132,7 +132,7 @@ class CompetitionsFiltersView: UIView, NibLoadable {
                     self.clearButton.alpha = 1.0
                 }
             case .bar:
-                self.headerBaseView.backgroundColor = UIColor.App.backgroundBorder
+                self.headerBaseView.backgroundColor = UIColor.App.highlightSecondary
                 UIView.animate(withDuration: 0.4) {
                     self.titleLabel.alpha = 1.0
                     self.smallTitleLabel.alpha = 0.0
@@ -140,7 +140,7 @@ class CompetitionsFiltersView: UIView, NibLoadable {
                     self.clearButton.alpha = 0.0
                 }
             case .line:
-                self.headerBaseView.backgroundColor = UIColor.App.backgroundBorder
+                self.headerBaseView.backgroundColor = UIColor.App.highlightSecondary
                 UIView.animate(withDuration: 0.4) {
                     self.titleLabel.alpha = 0.0
                     self.smallTitleLabel.alpha = 1.0
