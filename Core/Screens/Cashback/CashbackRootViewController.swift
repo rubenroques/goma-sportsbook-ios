@@ -34,8 +34,13 @@ class CashbackRootViewController: UIViewController {
     private lazy var cashbackUsedExampleView: UIView = Self.createCashbackUsedExampleView()
     private lazy var cashbackUsedExampleTitleLabel: UILabel = Self.createCashbackUsedExampleTitleLabel()
 
+    private lazy var bottomBannerImageView: UIImageView = Self.createBottomBannerImageView()
+
     private lazy var bannerImageViewFixedHeightConstraint: NSLayoutConstraint = Self.createBannerImageViewFixedHeightConstraint()
     private lazy var bannerImageViewDynamicHeightConstraint: NSLayoutConstraint = Self.createBannerImageViewDynamicHeightConstraint()
+
+    private lazy var bottomBannerImageViewFixedHeightConstraint: NSLayoutConstraint = Self.createBottomBannerImageViewFixedHeightConstraint()
+    private lazy var bottomBannerImageViewDynamicHeightConstraint: NSLayoutConstraint = Self.createBottomBannerImageViewDynamicHeightConstraint()
 
     private var aspectRatio: CGFloat = 1.0
 
@@ -61,6 +66,8 @@ class CashbackRootViewController: UIViewController {
         self.cashbackUsedExampleView.layer.cornerRadius = CornerRadius.headerInput
 
         self.resizeBannerImageView()
+
+        self.resizeBottomBannerImageView()
     }
 
     private func setupWithTheme() {
@@ -122,6 +129,27 @@ class CashbackRootViewController: UIViewController {
         }
     }
 
+    private func resizeBottomBannerImageView() {
+
+        if let bannerImage = self.bannerImageView.image {
+
+            self.aspectRatio = bannerImage.size.width/bannerImage.size.height
+
+            self.bottomBannerImageViewFixedHeightConstraint.isActive = false
+
+            self.bottomBannerImageViewDynamicHeightConstraint =
+            NSLayoutConstraint(item: self.bottomBannerImageView,
+                               attribute: .height,
+                               relatedBy: .equal,
+                               toItem: self.bottomBannerImageView,
+                               attribute: .width,
+                               multiplier: 1/self.aspectRatio,
+                               constant: 0)
+
+            self.bottomBannerImageViewDynamicHeightConstraint.isActive = true
+        }
+    }
+
     func scrollToTop() {
 
         let topOffset = CGPoint(x: 0, y: -self.scrollView.contentInset.top)
@@ -152,7 +180,7 @@ extension CashbackRootViewController {
     private static func createBannerImageView() -> UIImageView {
         let imageView = UIImageView()
         imageView.translatesAutoresizingMaskIntoConstraints = false
-        imageView.image = UIImage(named: "betsson_banner")
+        imageView.image = UIImage(named: "replay_top_banner")
         imageView.contentMode = .scaleAspectFill
         return imageView
     }
@@ -304,6 +332,14 @@ extension CashbackRootViewController {
         return label
     }
 
+    private static func createBottomBannerImageView() -> UIImageView {
+        let imageView = UIImageView()
+        imageView.translatesAutoresizingMaskIntoConstraints = false
+        imageView.image = UIImage(named: "replay_bottom_banner")
+        imageView.contentMode = .scaleAspectFill
+        return imageView
+    }
+
     // Constraints
     private static func createBannerImageViewFixedHeightConstraint() -> NSLayoutConstraint {
         let constraint = NSLayoutConstraint()
@@ -311,6 +347,16 @@ extension CashbackRootViewController {
     }
 
     private static func createBannerImageViewDynamicHeightConstraint() -> NSLayoutConstraint {
+        let constraint = NSLayoutConstraint()
+        return constraint
+    }
+
+    private static func createBottomBannerImageViewFixedHeightConstraint() -> NSLayoutConstraint {
+        let constraint = NSLayoutConstraint()
+        return constraint
+    }
+
+    private static func createBottomBannerImageViewDynamicHeightConstraint() -> NSLayoutConstraint {
         let constraint = NSLayoutConstraint()
         return constraint
     }
@@ -348,6 +394,8 @@ extension CashbackRootViewController {
         self.cashbackUsedBaseView.addSubview(self.cashbackUsedExampleView)
 
         self.cashbackUsedExampleView.addSubview(self.cashbackUsedExampleTitleLabel)
+
+        self.containerView.addSubview(self.bottomBannerImageView)
 
         self.initConstraints()
 
@@ -441,7 +489,7 @@ extension CashbackRootViewController {
             self.cashbackUsedBaseView.leadingAnchor.constraint(equalTo: self.containerView.leadingAnchor, constant: 14),
             self.cashbackUsedBaseView.trailingAnchor.constraint(equalTo: self.containerView.trailingAnchor, constant: -14),
             self.cashbackUsedBaseView.topAnchor.constraint(equalTo: self.cashbackBalanceBaseView.bottomAnchor, constant: 16),
-            self.cashbackUsedBaseView.bottomAnchor.constraint(equalTo: self.containerView.bottomAnchor, constant: -20),
+            //self.cashbackUsedBaseView.bottomAnchor.constraint(equalTo: self.containerView.bottomAnchor, constant: -20),
 
             self.cashbackUsedTitleLabel.leadingAnchor.constraint(equalTo: self.cashbackUsedBaseView.leadingAnchor, constant: 16),
             self.cashbackUsedTitleLabel.trailingAnchor.constraint(equalTo: self.cashbackUsedBaseView.trailingAnchor, constant: -16),
@@ -460,6 +508,14 @@ extension CashbackRootViewController {
             self.cashbackUsedExampleTitleLabel.topAnchor.constraint(equalTo: cashbackUsedExampleView.topAnchor, constant: 3),
             self.cashbackUsedExampleTitleLabel.bottomAnchor.constraint(equalTo: self.cashbackUsedExampleView.bottomAnchor, constant: -3)
 
+        ])
+
+        // Bottom banner
+        NSLayoutConstraint.activate([
+            self.bottomBannerImageView.leadingAnchor.constraint(equalTo: self.containerView.leadingAnchor),
+            self.bottomBannerImageView.trailingAnchor.constraint(equalTo: self.containerView.trailingAnchor),
+            self.bottomBannerImageView.topAnchor.constraint(equalTo: self.cashbackUsedBaseView.bottomAnchor, constant: 20),
+            self.bottomBannerImageView.bottomAnchor.constraint(equalTo: self.containerView.bottomAnchor)
         ])
 
         self.bannerImageViewFixedHeightConstraint =
@@ -481,5 +537,25 @@ extension CashbackRootViewController {
                            multiplier: 1/self.aspectRatio,
                            constant: 0)
         self.bannerImageViewDynamicHeightConstraint.isActive = false
+
+        self.bottomBannerImageViewFixedHeightConstraint =
+        NSLayoutConstraint(item: self.bottomBannerImageView,
+                           attribute: .height,
+                           relatedBy: .equal,
+                           toItem: nil,
+                           attribute: .notAnAttribute,
+                           multiplier: 1,
+                           constant: 165)
+        self.bottomBannerImageViewFixedHeightConstraint.isActive = true
+
+        self.bottomBannerImageViewDynamicHeightConstraint =
+        NSLayoutConstraint(item: self.bottomBannerImageView,
+                           attribute: .height,
+                           relatedBy: .equal,
+                           toItem: self.bottomBannerImageView,
+                           attribute: .width,
+                           multiplier: 1/self.aspectRatio,
+                           constant: 0)
+        self.bottomBannerImageViewDynamicHeightConstraint.isActive = false
     }
 }
