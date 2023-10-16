@@ -20,8 +20,7 @@ class MatchDetailsViewModel: NSObject {
     var matchId: String
     var homeRedCardsScorePublisher: CurrentValueSubject<String, Never> = .init("0")
     var awayRedCardsScorePublisher: CurrentValueSubject<String, Never> = .init("0")
-
-    var matchModePublisher: CurrentValueSubject<MatchMode, Never> = .init(.preLive)
+    
     var matchPublisher: CurrentValueSubject<LoadableContent<Match>, Never> = .init(.idle)
 
     var marketGroupsState: CurrentValueSubject<LoadableContent<[MarketGroup]>, Never> = .init(.idle)
@@ -43,7 +42,6 @@ class MatchDetailsViewModel: NSObject {
 
     var marketFilters: [EventMarket]?
     var availableMarkets: [String: [String]] = [:]
-    var marketGroups: [MarketGroup] = []
 
     var isLiveMatch: Bool {
         if let match = self.match {
@@ -99,7 +97,6 @@ class MatchDetailsViewModel: NSObject {
     init(matchMode: MatchMode = .preLive, match: Match) {
         self.matchId = match.id
         self.matchStatsViewModel = MatchStatsViewModel(matchId: match.id)
-        self.matchModePublisher.send(matchMode)
 
         super.init()
 
@@ -110,7 +107,6 @@ class MatchDetailsViewModel: NSObject {
     init(matchMode: MatchMode = .preLive, matchId: String) {
         self.matchId = matchId
         self.matchStatsViewModel = MatchStatsViewModel(matchId: matchId)
-        self.matchModePublisher.send(matchMode)
 
         super.init()
 
@@ -151,6 +147,7 @@ class MatchDetailsViewModel: NSObject {
     func getMatchDetails() {
 
         Env.servicesProvider.subscribeEventDetails(eventId: self.matchId)
+            
             .receive(on: DispatchQueue.main)
             .sink(receiveCompletion: { [weak self] completion in
                 switch completion {
@@ -176,49 +173,15 @@ class MatchDetailsViewModel: NSObject {
                     guard let self = self else { return }
 
                     let match = ServiceProviderModelMapper.match(fromEvent: serviceProviderEvent)
-
-                    switch match.status {
-                    case .notStarted, .ended, .unknown:
-                        self.matchModePublisher.send(.preLive)
-                    case .inProgress:
-                        self.matchModePublisher.send(.live)
-                    }
-
                     self.matchPublisher.send(.loaded(match))
-
-                    if self.marketGroups.isEmpty {
-                        self.getMarketGroups(event: serviceProviderEvent)
-                    }
-                    else {
-                        let marketGroups = self.marketGroups
-                        self.marketGroupsState.send(.loaded(marketGroups))
-                    }
-                    self.getMatchLiveDetails()
+                    self.getMarketGroups(event: serviceProviderEvent)
+//                    self.getMatchLiveDetails()
+                    
                 case .disconnected:
                     print("MatchDetailsViewModel getMatchDetails subscribeEventDetails disconnected")
                 }
             })
             .store(in: &cancellables)
-
-    }
-
-    func getMatchLiveDetails() {
-//
-        Env.servicesProvider.subscribeToEventLiveDataUpdates(withId: self.matchId)
-            .compactMap({ $0 })
-            .map(ServiceProviderModelMapper.match(fromEvent:))
-            .sink(receiveCompletion: { completion in
-                print("MatchDetailsViewModel matchSubscriber subscribeToEventLiveDataUpdates completion: \(completion)")
-            }, receiveValue: { [weak self] updatedMatch in
-                switch updatedMatch.status {
-                case .notStarted, .ended, .unknown:
-                    self?.matchModePublisher.send(.preLive)
-                case .inProgress:
-                    self?.matchModePublisher.send(.live)
-                }
-                self?.matchPublisher.send(.loaded(updatedMatch))
-            })
-            .store(in: &self.cancellables)
 
     }
 
@@ -236,7 +199,6 @@ class MatchDetailsViewModel: NSObject {
                     self?.marketGroupsState.send(.failed)
                 }
             }, receiveValue: { [weak self] marketGroups in
-                self?.marketGroups = marketGroups
                 self?.marketGroupsState.send(.loaded(marketGroups))
             })
             .store(in: &cancellables)

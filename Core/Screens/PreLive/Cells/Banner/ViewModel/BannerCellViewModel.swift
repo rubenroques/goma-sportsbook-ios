@@ -81,12 +81,11 @@ class BannerCellViewModel {
                 self.imageURL = URL(string: imageURLString)
             }
             else {
-                self.imageURL = URL(string: EveryMatrixInfo.staticHost + imageURLString)
+                self.imageURL = URL(string: "")
             }
 
             if let marketId = marketId {
                 self.requestMatchInfo(matchId: matchId, marketId: marketId)
-                // self.requestMatchOdds()
             }
         }
         else {
@@ -96,7 +95,7 @@ class BannerCellViewModel {
                 self.imageURL = URL(string: imageURLString)
             }
             else {
-                self.imageURL = URL(string: EveryMatrixInfo.staticHost + imageURLString)
+                self.imageURL = URL(string: "")
             }
         }
 
@@ -112,21 +111,17 @@ class BannerCellViewModel {
 
         switch presentationType {
         case .image:
-            self.imageURL = URL(string: EveryMatrixInfo.staticHost + imageURLString)
+            self.imageURL = URL(string: "")
 
         case .match(let id):
-            self.imageURL = URL(string: EveryMatrixInfo.staticHost + imageURLString)
-            // self.requestMatchInfo(id)
-            // self.requestMatchOdds()
+            self.imageURL = URL(string: "")
 
         case .externalMatch(let contentId, let imageURLString, let eventPartId, let betTypeId):
             self.matchId = contentId
             self.imageURL = URL(string: imageURLString)
             self.eventPartId = eventPartId
             self.betTypeId = betTypeId
-            // self.requestMatchInfo(contentId)
-            // self.requestMatchOdds()
-
+            
         case .externalLink(let imageURLString, _):
             self.imageURL = URL(string: imageURLString)
 

@@ -164,27 +164,16 @@ class MarketGroupDetailsStore {
                     }
                 }
 
-                // Need to full verify if needed
-//                if let drawKey = outcomesDictionary["D"],
-//                   outcomesDictionary.keys.count > 3 {
-//
-//                    for outcome in outcomesDictionary {
-//                        if outcome.key != "A" && outcome.key != "D" && outcome.key != "H" {
-//                            if let outcomeSelected = outcome.value.first,
-//                            var outcomesList = outcomesDictionary["D"] {
-//                                outcomesList.append(outcomeSelected)
-//                                outcomesDictionary["D"] = outcomesList
-//                                outcomesDictionary[outcome.key] = nil
-//                            }
-//                        }
-//                    }
-//                }
-
-
                 //
                 // Select the correct organizer
                 //
-                if outcomesDictionary.keys.count == 1 && (outcomesDictionary.keys.first == "" || outcomesDictionary.keys.first == "exact") {
+                if marketGroupName.contains("&") {
+                    let simpleListGroupMarketGroupOrganizer = SimpleListGroupMarketGroupOrganizer(id: firstMarket.id,
+                                                                                             name: marketGroupName,
+                                                                                             outcomes: outcomesDictionary)
+                    marketGroupOrganizers.append(simpleListGroupMarketGroupOrganizer)
+                }
+                else if outcomesDictionary.keys.count == 1 && (outcomesDictionary.keys.first == "" || outcomesDictionary.keys.first == "exact") {
 
                     // Undefined markets without keys for outcomes grouping
                     let sequentialMarketGroupOrganizer = SequentialMarketGroupOrganizer(id: firstMarket.id,

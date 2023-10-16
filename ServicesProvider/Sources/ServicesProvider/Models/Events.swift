@@ -18,12 +18,12 @@ public class EventsGroup {
     }
 }
 
-public enum EventType: String {
+public enum EventType: String, Equatable {
     case match
     case competition
 }
 
-public class Event: Codable {
+public class Event: Codable, Equatable {
 
     public var id: String
     public var homeTeamName: String
@@ -60,7 +60,7 @@ public class Event: Codable {
         }
     }
 
-    public enum Status {
+    public enum Status: Equatable {
         case unknown
         case notStarted
         case inProgress(String)
@@ -158,9 +158,28 @@ public class Event: Codable {
         try container.encodeIfPresent(self.numberMarkets, forKey: .numberMarkets)
     }
 
+    public static func == (lhs: Event, rhs: Event) -> Bool {
+        // Compare all properties for equality
+        return lhs.id == rhs.id &&
+               lhs.homeTeamName == rhs.homeTeamName &&
+               lhs.awayTeamName == rhs.awayTeamName &&
+               lhs.homeTeamScore == rhs.homeTeamScore &&
+               lhs.awayTeamScore == rhs.awayTeamScore &&
+               lhs.competitionId == rhs.competitionId &&
+               lhs.competitionName == rhs.competitionName &&
+               lhs.sport == rhs.sport &&
+               lhs.startDate == rhs.startDate &&
+               lhs.markets == rhs.markets &&
+               lhs.venueCountry == rhs.venueCountry &&
+               lhs.numberMarkets == rhs.numberMarkets &&
+               lhs.name == rhs.name &&
+               lhs.status == rhs.status &&
+               lhs.matchTime == rhs.matchTime
+    }
 }
 
-public class Market: Codable {
+
+public class Market: Codable, Equatable {
     
     public var id: String
     public var name: String
@@ -235,9 +254,26 @@ public class Market: Codable {
         self.eventId = try container.decodeIfPresent(String.self, forKey: .eventId)
     }
 
+    public static func == (lhs: Market, rhs: Market) -> Bool {
+        // Compare all properties for equality
+        return lhs.id == rhs.id &&
+               lhs.name == rhs.name &&
+               lhs.outcomes == rhs.outcomes &&
+               lhs.marketTypeId == rhs.marketTypeId &&
+               lhs.eventMarketTypeId == rhs.eventMarketTypeId &&
+               lhs.eventName == rhs.eventName &&
+               lhs.isMainOutright == rhs.isMainOutright &&
+               lhs.eventMarketCount == rhs.eventMarketCount &&
+               lhs.isTradable == rhs.isTradable &&
+               lhs.startDate == rhs.startDate &&
+               lhs.homeParticipant == rhs.homeParticipant &&
+               lhs.awayParticipant == rhs.awayParticipant &&
+               lhs.eventId == rhs.eventId
+    }
 }
 
-public class Outcome: Codable {
+
+public class Outcome: Codable, Equatable {
     
     public var id: String
     public var name: String
@@ -285,7 +321,18 @@ public class Outcome: Codable {
         self.isTradable = (try? container.decode(Bool.self, forKey: .isTradable)) ?? false
     }
 
+    public static func == (lhs: Outcome, rhs: Outcome) -> Bool {
+        // Compare all properties for equality
+        return lhs.id == rhs.id &&
+               lhs.name == rhs.name &&
+               lhs.odd == rhs.odd &&
+               lhs.marketId == rhs.marketId &&
+               lhs.orderValue == rhs.orderValue &&
+               lhs.externalReference == rhs.externalReference &&
+               lhs.isTradable == rhs.isTradable
+    }
 }
+
 
 public struct FieldWidget: Codable {
     public var data: String?

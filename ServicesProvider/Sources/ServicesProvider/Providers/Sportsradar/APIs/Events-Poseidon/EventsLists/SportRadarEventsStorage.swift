@@ -11,18 +11,18 @@ import Combine
 
 class SportRadarEventsStorage {
 
-    var eventsPublisher: AnyPublisher<[Event], Never> {
+    var eventsPublisher: AnyPublisher<[Event]?, Never> {
         return self.eventsSubject.eraseToAnyPublisher()
     }
 
-    private var eventsSubject: CurrentValueSubject<[Event], Never>
+    private var eventsSubject: CurrentValueSubject<[Event]?, Never>
 
     private var eventsDictionary: OrderedDictionary<String, CurrentValueSubject<Event, Never>>
     private var marketsDictionary: OrderedDictionary<String, CurrentValueSubject<Market, Never>>
     private var outcomesDictionary: OrderedDictionary<String, CurrentValueSubject<Outcome, Never>>
 
     init() {
-        self.eventsSubject = .init([])
+        self.eventsSubject = .init(nil)
 
         self.eventsDictionary = [:]
         self.marketsDictionary = [:]
@@ -30,7 +30,7 @@ class SportRadarEventsStorage {
     }
 
     func reset() {
-        self.eventsSubject = .init([])
+        self.eventsSubject = .init(nil)
 
         self.eventsDictionary = [:]
         self.marketsDictionary = [:]
@@ -80,7 +80,7 @@ extension SportRadarEventsStorage {
             self.updateMarketTradability(withId: market.id, isTradable: false)
         }
 
-        let newEventsList = self.eventsSubject.value.filter({ event in
+        let newEventsList = (self.eventsSubject.value ?? []).filter({ event in
             return event.id != id
         })
 

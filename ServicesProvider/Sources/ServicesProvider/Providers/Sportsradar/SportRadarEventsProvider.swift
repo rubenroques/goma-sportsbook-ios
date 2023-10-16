@@ -86,6 +86,7 @@ class SportRadarEventsProvider: EventsProvider {
 
     private var eventsPaginators: [String: SportRadarEventsPaginator] = [:]
     private var eventDetailsCoordinators: [String: SportRadarEventDetailsCoordinator] = [:]
+    private var liveEventDetailsCoordinators: [String: SportRadarLiveEventDetailsCoordinator] = [:]
     private var marketUpdatesCoordinators: [String: SportRadarMarketDetailsCoordinator] = [:]
 
     private var competitionEventsPublisher: [ContentIdentifier: CurrentValueSubject<SubscribableContent<[EventsGroup]>, ServiceProviderError>] = [:]
@@ -149,15 +150,15 @@ class SportRadarEventsProvider: EventsProvider {
         let contentIdentifier = ContentIdentifier(contentType: contentType, contentRoute: contentRoute)
 
         if let paginator = self.eventsPaginators[contentIdentifier.pageableId], paginator.isActive {
-            return paginator.eventsPublisher()
+            return paginator.eventsGroupPublisher
         }
         else {
             let paginator = SportRadarEventsPaginator(contentIdentifier: contentIdentifier,
                                                       sessionToken: sessionToken.hash,
                                                       storage: SportRadarEventsStorage())
+            
             self.eventsPaginators[contentIdentifier.pageableId] = paginator
-
-            return paginator.requestInitialPage()
+            return paginator.eventsGroupPublisher
         }
     }
 
@@ -217,14 +218,14 @@ class SportRadarEventsProvider: EventsProvider {
         let contentIdentifier = ContentIdentifier(contentType: contentType, contentRoute: contentRoute)
 
         if let paginator = self.eventsPaginators[contentIdentifier.pageableId], paginator.isActive {
-            return paginator.eventsPublisher()
+            return paginator.eventsGroupPublisher
         }
         else {
             let paginator = SportRadarEventsPaginator(contentIdentifier: contentIdentifier,
                                                       sessionToken: sessionToken.hash,
                                                       storage: SportRadarEventsStorage())
             self.eventsPaginators[contentIdentifier.pageableId] = paginator
-            return paginator.requestInitialPage()
+            return paginator.eventsGroupPublisher
         }
 
     }
@@ -495,7 +496,7 @@ class SportRadarEventsProvider: EventsProvider {
         else {
             let eventDetailsCoordinator = SportRadarEventDetailsCoordinator(matchId: eventId,
                                                                             sessionToken: sessionToken.hash,
-                                                                            storage: SportRadarEventDetailsStorage())
+                                                                            storage: SportRadarEventStorage())
             self.addEventDetailsCoordinator(eventDetailsCoordinator, withKey: eventId)
             return eventDetailsCoordinator.eventDetailsPublisher
         }
@@ -593,7 +594,42 @@ class SportRadarEventsProvider: EventsProvider {
     //
     // MARK: - Subcribable Updates
     //
-    public func subscribeToEventLiveDataUpdates(withId id: String) -> AnyPublisher<Event?, ServiceProviderError> {
+//    public func subscribeToEventLiveDataUpdates(withId id: String) -> AnyPublisher<Event?, ServiceProviderError> {
+//
+//        guard
+//            let sessionToken = socketConnector.token
+//        else {
+//            return Fail(error: ServiceProviderError.userSessionNotFound).eraseToAnyPublisher()
+//        }
+//
+//        // events lists
+//        for paginator in self.eventsPaginators.values {
+//            if paginator.containsEvent(withid: id), let publisher = paginator.subscribeToEventLiveDataUpdates(withId: id) {
+//                return publisher.map(Optional.init).setFailureType(to: ServiceProviderError.self).eraseToAnyPublisher()
+//            }
+//        }
+//
+//        // event details
+//        if let liveEventDetailsCoordinator = self.getValidLiveEventDetailsCoordinator(forKey: id),
+//           liveEventDetailsCoordinator.containsEvent(withid: id) {
+//
+//            let publisher = liveEventDetailsCoordinator.subscribeToEventLiveDataUpdates(withId: id)
+//            return publisher.setFailureType(to: ServiceProviderError.self).eraseToAnyPublisher()
+//        }
+//        else {
+//            let liveEventDetailsCoordinator = SportRadarLiveEventDetailsCoordinator(eventId: id,
+//                                                                             sessionToken: sessionToken.hash,
+//                                                                             storage: SportRadarEventStorage() )
+//
+//            self.addEventDetailsCoordinator(liveEventDetailsCoordinator, withKey: id)
+//
+//            let publisher = eventDetailsCoordinator.subscribeToEventLiveDataUpdates(withId: id)
+//            return publisher.setFailureType(to: ServiceProviderError.self).eraseToAnyPublisher()
+//        }
+//
+//    }
+
+    public func subscribeToEventLiveDataUpdates(withId id: String) -> AnyPublisher<SubscribableContent<Event>, ServiceProviderError> {
 
         guard
             let sessionToken = socketConnector.token
@@ -601,33 +637,22 @@ class SportRadarEventsProvider: EventsProvider {
             return Fail(error: ServiceProviderError.userSessionNotFound).eraseToAnyPublisher()
         }
 
-        // events lists
-        for paginator in self.eventsPaginators.values {
-            if paginator.containsEvent(withid: id), let publisher = paginator.subscribeToEventLiveDataUpdates(withId: id) {
-                return publisher.map(Optional.init).setFailureType(to: ServiceProviderError.self).eraseToAnyPublisher()
-            }
-        }
-
         // event details
-        if let eventDetailsCoordinator = self.getValidEventDetailsCoordinator(forKey: id),
-           eventDetailsCoordinator.containsEvent(withid: id) {
+        if let liveEventDetailsCoordinator = self.getValidLiveEventDetailsCoordinator(forKey: id),
+           liveEventDetailsCoordinator.containsEvent(withid: id) {
 
-            let publisher = eventDetailsCoordinator.subscribeToEventLiveDataUpdates(withId: id)
-            return publisher.setFailureType(to: ServiceProviderError.self).eraseToAnyPublisher()
+            return liveEventDetailsCoordinator.liveEventPublisher
         }
         else {
-            let eventDetailsCoordinator = SportRadarEventDetailsCoordinator(matchId: id,
+            let liveEventDetailsCoordinator = SportRadarLiveEventDetailsCoordinator(eventId: id,
                                                                              sessionToken: sessionToken.hash,
-                                                                             storage: SportRadarEventDetailsStorage())
-
-            self.addEventDetailsCoordinator(eventDetailsCoordinator, withKey: id)
-
-            let publisher = eventDetailsCoordinator.subscribeToEventLiveDataUpdates(withId: id)
-            return publisher.setFailureType(to: ServiceProviderError.self).eraseToAnyPublisher()
+                                                                             storage: SportRadarEventStorage() )
+            self.addLiveEventDetailsCoordinator(liveEventDetailsCoordinator, withKey: id)
+            return liveEventDetailsCoordinator.liveEventPublisher
         }
 
     }
-
+    
     public func subscribeToEventMarketUpdates(withId id: String) -> AnyPublisher<Market?, ServiceProviderError> {
 
         // event details
@@ -863,9 +888,9 @@ extension SportRadarEventsProvider: SportRadarConnectorSubscriber {
 // MARK: - Competition and Match Details
 //
 extension SportRadarEventsProvider {
-
+    
     func getMarketsFilters(event: Event) -> AnyPublisher<[MarketGroup], Never> {
-
+        
         let defaultMarketGroups = [MarketGroup.init(type: "0",
                                                     id: "0",
                                                     groupKey: "All Markets",
@@ -874,17 +899,18 @@ extension SportRadarEventsProvider {
                                                     isDefault: true,
                                                     numberOfMarkets: nil,
                                                     markets: event.markets)]
-
+        
         let endpoint = SportRadarRestAPIClient.marketsFilter
         let requestPublisher: AnyPublisher<MarketFilter, ServiceProviderError> = self.restConnector.request(endpoint)
-
-        return requestPublisher.flatMap({ marketFilters -> AnyPublisher<[MarketGroup], ServiceProviderError> in
-            let marketGroups = self.processMarketFilters(marketFilter: marketFilters, match: event)
-            return Just(marketGroups).setFailureType(to: ServiceProviderError.self).eraseToAnyPublisher()
-        })
-        .replaceError(with: defaultMarketGroups)
-        .eraseToAnyPublisher()
-
+        
+        return requestPublisher
+            .flatMap({ marketFilters -> AnyPublisher<[MarketGroup], ServiceProviderError> in
+                let marketGroups = self.processMarketFilters(marketFilter: marketFilters, match: event)
+                return Just(marketGroups).setFailureType(to: ServiceProviderError.self).eraseToAnyPublisher()
+            })
+            .replaceError(with: defaultMarketGroups)
+            .eraseToAnyPublisher()
+        
     }
 
     func getFieldWidgetId(eventId: String) -> AnyPublisher<FieldWidget, ServiceProviderError> {
@@ -1781,18 +1807,43 @@ extension SportRadarEventsProvider {
 extension SportRadarEventsProvider {
 
     func getValidEventDetailsCoordinators() -> [SportRadarEventDetailsCoordinator] {
-        self.eventDetailsCoordinators = self.eventDetailsCoordinators.filter({ $0.value.isActive })
+        print("LoadingBug p get all c")
+        // self.eventDetailsCoordinators = self.eventDetailsCoordinators.filter({ $0.value.isActive })
         return Array(self.eventDetailsCoordinators.values)
     }
 
     func getValidEventDetailsCoordinator(forKey key: String) -> SportRadarEventDetailsCoordinator? {
-        self.eventDetailsCoordinators = self.eventDetailsCoordinators.filter({ $0.value.isActive })
+        print("LoadingBug p get c \(key)")
+        // self.eventDetailsCoordinators = self.eventDetailsCoordinators.filter({ $0.value.isActive })
         return self.eventDetailsCoordinators[key]
     }
 
     func addEventDetailsCoordinator(_ coordinator: SportRadarEventDetailsCoordinator, withKey key: String) {
-        self.eventDetailsCoordinators = self.eventDetailsCoordinators.filter({ $0.value.isActive })
+        print("LoadingBug p add c \(key)")
+        // self.eventDetailsCoordinators = self.eventDetailsCoordinators.filter({ $0.value.isActive })
         self.eventDetailsCoordinators[key] = coordinator
+    }
+
+}
+
+extension SportRadarEventsProvider {
+
+    func getValidLiveEventDetailsCoordinators() -> [SportRadarLiveEventDetailsCoordinator] {
+        print("LoadingBug p get all c")
+        // self.eventDetailsCoordinators = self.eventDetailsCoordinators.filter({ $0.value.isActive })
+        return Array(self.liveEventDetailsCoordinators.values)
+    }
+
+    func getValidLiveEventDetailsCoordinator(forKey key: String) -> SportRadarLiveEventDetailsCoordinator? {
+        print("LoadingBug p get c \(key)")
+        // self.eventDetailsCoordinators = self.eventDetailsCoordinators.filter({ $0.value.isActive })
+        return self.liveEventDetailsCoordinators[key]
+    }
+
+    func addLiveEventDetailsCoordinator(_ coordinator: SportRadarLiveEventDetailsCoordinator, withKey key: String) {
+        print("LoadingBug p add c \(key)")
+        // self.eventDetailsCoordinators = self.eventDetailsCoordinators.filter({ $0.value.isActive })
+        self.liveEventDetailsCoordinators[key] = coordinator
     }
 
 }

@@ -9,7 +9,7 @@ import Foundation
 import OrderedCollections
 import Combine
 
-class SportRadarEventDetailsStorage {
+class SportRadarEventStorage {
 
     private var eventSubject: CurrentValueSubject<Event?, Never>
     private var marketsDictionary: OrderedDictionary<String, CurrentValueSubject<Market, Never>>
@@ -46,7 +46,7 @@ class SportRadarEventDetailsStorage {
 
 }
 
-extension SportRadarEventDetailsStorage {
+extension SportRadarEventStorage {
 
 //    func removedEvent(withId id: String) {
 //        guard let event = self.eventSubject.value else { return }
@@ -139,7 +139,7 @@ extension SportRadarEventDetailsStorage {
 
 }
 
-extension SportRadarEventDetailsStorage {
+extension SportRadarEventStorage {
 
     func subscribeToEventLiveDataUpdates(withId id: String) -> AnyPublisher<Event?, Never> {
         return self.eventSubject.eraseToAnyPublisher()

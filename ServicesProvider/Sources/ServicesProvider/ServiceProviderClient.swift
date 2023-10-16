@@ -231,7 +231,8 @@ extension ServicesProviderClient {
         return eventsProvider.subscribeEventSummary(eventId: eventId)
     }
 
-    public func subscribeToEventLiveDataUpdates(withId id: String) -> AnyPublisher<Event?, ServiceProviderError> {
+    
+    public func subscribeToEventLiveDataUpdates(withId id: String) -> AnyPublisher<SubscribableContent<Event>, ServiceProviderError> {
         guard
             let eventsProvider = self.eventsProvider
         else {

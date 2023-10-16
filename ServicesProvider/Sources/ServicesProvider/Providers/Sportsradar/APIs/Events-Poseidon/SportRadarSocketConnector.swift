@@ -243,9 +243,12 @@ extension SportRadarSocketConnector: Starscream.WebSocketDelegate {
                     if let subscriber = self.messageSubscriber, let eventLiveDataExtendedValue = eventLiveDataExtended {
                         subscriber.eventDetailsLiveData(contentIdentifier: contentIdentifier, eventLiveDataExtended: eventLiveDataExtendedValue)
                     }
+                case .unknown:
+                    print("*️⃣SportRadarSocketConnector handleContentMessage unknown: \(content)")
+                    
                 default:
                     if let subscriber = self.messageSubscriber {
-                        print("*️⃣SportRadarSocketConnector handleContentMessage didReceiveGenericUpdate:\n  - \(content)")
+                        print("*️⃣SportRadarSocketConnector handleContentMessage didReceiveGenericUpdate: \n  - \(content)")
                         subscriber.didReceiveGenericUpdate(content: content)
                     }
                 }

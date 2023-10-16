@@ -235,7 +235,7 @@ extension UserDefaults {
     }
 
     func clear() {
-        let domain = Bundle.main.bundleIdentifier!
+        let domain = Env.bundleId
         self.removePersistentDomain(forName: domain)
         self.synchronize()
     }

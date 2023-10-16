@@ -51,9 +51,13 @@ class MyTicketBetLineView: NibView {
     private var homeResultSubscription: AnyCancellable?
     private var awayResultSubscription: AnyCancellable?
 
-    private var cancellables = Set<AnyCancellable>()
-    private var subscription: ServicesProvider.Subscription?
-
+    //
+    private var matchDetailsSubscription: ServicesProvider.Subscription?
+    private var liveMatchDetailsSubscription: ServicesProvider.Subscription?
+    
+    private var matchDetailsCancellable: AnyCancellable?
+    private var liveMatchDetailsCancellable: AnyCancellable?
+    
     convenience init(betHistoryEntrySelection: BetHistoryEntrySelection, countryCode: String, viewModel: MyTicketBetLineViewModel) {
         self.init(frame: .zero, betHistoryEntrySelection: betHistoryEntrySelection, countryCode: countryCode, viewModel: viewModel)
     }
@@ -79,10 +83,10 @@ class MyTicketBetLineView: NibView {
         print("MyTicketBetLineView deinit")
 
         self.homeResultSubscription?.cancel()
-        self.homeResultSubscription = nil
-
         self.awayResultSubscription?.cancel()
-        self.awayResultSubscription = nil
+        
+        self.matchDetailsCancellable?.cancel()
+        self.liveMatchDetailsCancellable?.cancel()
     }
 
     override func layoutSubviews() {
@@ -165,9 +169,6 @@ class MyTicketBetLineView: NibView {
         self.oddTitleLabel.text = localized("odd")
 
         if let oddValue = self.betHistoryEntrySelection.priceValue {
-            // self.oddValueLabel.text = String(format: "%.2f", Double(floor(oddValue * 100)/100))
-            // let newOddValue = Double(floor(oddValue * 100)/100)
-//            self.oddValueLabel.text = OddConverter.stringForValue(oddValue, format: UserDefaults.standard.userOddsFormat)
             self.oddValueLabel.text = OddFormatter.formatOdd(withValue: oddValue)
         }
 
@@ -182,9 +183,7 @@ class MyTicketBetLineView: NibView {
                 self.liveIconImage.isHidden = true
                 self.dateLabel.isHidden = false
             }
-            
-//            let baseViewTapGesture = UITapGestureRecognizer(target: self, action: #selector(didTapBaseView))
-//            baseView.addGestureRecognizer(baseViewTapGesture)
+
         }
         else if let date = self.betHistoryEntrySelection.eventDate {
 
@@ -242,8 +241,6 @@ class MyTicketBetLineView: NibView {
         self.indicatorLabel.textColor = UIColor.white
 
         self.bottomBaseView.backgroundColor = .clear
-        
-        //self.configureFromStatus()
     }
 
     func configureFromStatus() {
@@ -309,7 +306,12 @@ class MyTicketBetLineView: NibView {
 
         if let eventId = self.betHistoryEntrySelection.eventId {
 
-            Env.servicesProvider.subscribeEventDetails(eventId: eventId)
+            self.matchDetailsSubscription = nil
+            
+            self.matchDetailsCancellable?.cancel()
+            self.matchDetailsCancellable = nil
+            
+            self.matchDetailsCancellable = Env.servicesProvider.subscribeEventDetails(eventId: eventId)
                 .receive(on: DispatchQueue.main)
                 .sink(receiveCompletion: { [weak self] completion in
                     switch completion {
@@ -322,15 +324,13 @@ class MyTicketBetLineView: NibView {
 
                         default:
                             print("MatchDetailsViewModel Error retrieving data! \(error)")
-//                            self?.liveIconImage.isHidden = true
-//                            self?.dateLabel.isHidden = false
                             self?.recheckMatchStatusWithFailureDetails()
                         }
                     }
                 }, receiveValue: { [weak self] (subscribableContent: SubscribableContent<ServicesProvider.Event>) in
                     switch subscribableContent {
                     case .connected(let subscription):
-                        self?.subscription = subscription
+                        self?.matchDetailsSubscription = subscription
                     case .contentUpdate(let serviceProviderEvent):
                         guard let self = self else { return }
 
@@ -358,7 +358,7 @@ class MyTicketBetLineView: NibView {
                         print("MatchDetailsViewModel getMatchDetails subscribeEventDetails disconnected")
                     }
                 })
-                .store(in: &cancellables)
+                
         }
     }
 
@@ -366,32 +366,47 @@ class MyTicketBetLineView: NibView {
 
         if let eventId = self.betHistoryEntrySelection.eventId {
 
-            Env.servicesProvider.subscribeToEventLiveDataUpdates(withId: eventId)
+            self.liveMatchDetailsSubscription = nil
+            
+            self.liveMatchDetailsCancellable?.cancel()
+            self.liveMatchDetailsCancellable = nil
+            
+            self.liveMatchDetailsCancellable = Env.servicesProvider.subscribeToEventLiveDataUpdates(withId: eventId)
                 .receive(on: DispatchQueue.main)
-                .compactMap({ $0 })
-                .map(ServiceProviderModelMapper.match(fromEvent:))
                 .sink(receiveCompletion: { completion in
-                    print("MatchDetailsViewModel subscribeToEventLiveDataUpdates completion: \(completion)")
-                }, receiveValue: { [weak self] updatedMatch in
-                    switch updatedMatch.status {
-                    case .notStarted, .ended, .unknown:
-                        self?.liveIconImage.isHidden = true
-                        self?.dateLabel.isHidden = false
 
-                    case .inProgress:
-                        self?.liveIconImage.isHidden = false
-                        self?.dateLabel.isHidden = true
+                    print("MatchWidgetCollectionViewCell matchLiveDataSubscriber subscribeToEventLiveDataUpdates completion: \(completion)")
+                    
+                }, receiveValue: { [weak self] (eventSubscribableContent: SubscribableContent<ServicesProvider.Event>) in
+                    switch eventSubscribableContent {
+                    case .connected(let subscription):
+                        self?.liveMatchDetailsSubscription = subscription
+                    case .contentUpdate(let event):
+                        let updatedMatch = ServiceProviderModelMapper.match(fromEvent: event)
+                        
+                        switch updatedMatch.status {
+                        case .notStarted, .ended, .unknown:
+                            self?.liveIconImage.isHidden = true
+                            self?.dateLabel.isHidden = false
 
-                        if let homeScore = updatedMatch.homeParticipantScore {
-                            self?.homeTeamScoreLabel.text = "\(homeScore)"
+                        case .inProgress:
+                            self?.liveIconImage.isHidden = false
+                            self?.dateLabel.isHidden = true
+
+                            if let homeScore = updatedMatch.homeParticipantScore {
+                                self?.homeTeamScoreLabel.text = "\(homeScore)"
+                            }
+
+                            if let awayScore = updatedMatch.awayParticipantScore {
+                                self?.awayTeamScoreLabel.text = "\(awayScore)"
+                            }
                         }
-
-                        if let awayScore = updatedMatch.awayParticipantScore {
-                            self?.awayTeamScoreLabel.text = "\(awayScore)"
-                        }
+                        
+                    case .disconnected:
+                        break
                     }
                 })
-                .store(in: &self.cancellables)
+            
         }
 
     }

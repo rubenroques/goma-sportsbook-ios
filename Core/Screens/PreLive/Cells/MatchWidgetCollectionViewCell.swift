@@ -323,7 +323,7 @@ class MatchWidgetCollectionViewCell: UICollectionViewCell {
     private var middleOddButtonSubscriber: AnyCancellable?
     private var rightOddButtonSubscriber: AnyCancellable?
 
-    private var matchSubscriber: AnyCancellable?
+    private var matchLiveDataSubscriber: AnyCancellable?
     private var marketSubscriber: AnyCancellable?
 
     private var leftOutcome: Outcome?
@@ -354,6 +354,8 @@ class MatchWidgetCollectionViewCell: UICollectionViewCell {
     private var middleOutcomeDisabled: Bool = false
     private var rightOutcomeDisabled: Bool = false
 
+    private var liveMatchDetailsSubscription: ServicesProvider.Subscription?
+    
     private var cancellables: Set<AnyCancellable> = []
 
     override func awakeFromNib() {
@@ -1096,34 +1098,8 @@ class MatchWidgetCollectionViewCell: UICollectionViewCell {
         //
         //
         //
-        self.matchSubscriber?.cancel()
-        self.matchSubscriber = nil
-        
-//
-//  TODO: Lots of requests!
-//
-        self.matchSubscriber = Env.servicesProvider.subscribeToEventLiveDataUpdates(withId: viewModel.match.id)
-            .receive(on: DispatchQueue.main)
-            .compactMap({ $0 })
-            .map(ServiceProviderModelMapper.match(fromEvent:))
-            .sink(receiveCompletion: { completion in
-                print("MatchWidgetCollectionViewCell matchSubscriber subscribeToEventLiveDataUpdates completion: \(completion)")
-            }, receiveValue: { [weak self] updatedMatch in
-                self?.viewModel?.match = updatedMatch
-
-                self?.dateLabel.text = "\(viewModel.startDateString)"
-                self?.timeLabel.text = "\(viewModel.startTimeString)"
-
-                self?.resultLabel.text = "\(viewModel.matchScore)"
-                self?.matchTimeLabel.text = viewModel.matchTimeDetails
-
-                if viewModel.isLiveMatch {
-                    self?.liveMatchDotBaseView.isHidden = false
-                }
-                else {
-                    self?.liveMatchDotBaseView.isHidden = true
-                }
-            })
+        self.matchLiveDataSubscriber?.cancel()
+        self.matchLiveDataSubscriber = nil
 
         if let market = viewModel.match.markets.first {
 

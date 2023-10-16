@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="21507" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="22154" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
     <device id="retina6_1" orientation="portrait" appearance="light"/>
     <dependencies>
         <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="21505"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="22130"/>
         <capability name="Named colors" minToolsVersion="9.0"/>
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
@@ -126,20 +126,29 @@
                                     <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="fZi-WD-3Ny">
                                         <rect key="frame" x="0.0" y="51" width="397" height="60"/>
                                         <subviews>
-                                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="CS0-Ub-bbm">
-                                                <rect key="frame" x="12" y="9" width="36" height="14"/>
+                                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="258" verticalHuggingPriority="258" horizontalCompressionResistancePriority="1000" verticalCompressionResistancePriority="1000" text="Label" textAlignment="natural" lineBreakMode="tailTruncation" numberOfLines="3" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="CS0-Ub-bbm">
+                                                <rect key="frame" x="12" y="9" width="373" height="14"/>
+                                                <constraints>
+                                                    <constraint firstAttribute="height" relation="greaterThanOrEqual" constant="14" id="CM7-7O-t8A"/>
+                                                </constraints>
                                                 <fontDescription key="fontDescription" name="Gilroy-Bold" family="Gilroy" pointSize="14"/>
                                                 <nil key="textColor"/>
                                                 <nil key="highlightedColor"/>
                                             </label>
-                                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="ZcZ-Bq-usf">
-                                                <rect key="frame" x="12" y="29" width="31" height="12"/>
+                                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="254" verticalHuggingPriority="254" horizontalCompressionResistancePriority="1000" verticalCompressionResistancePriority="1000" text="Label" textAlignment="natural" lineBreakMode="tailTruncation" numberOfLines="3" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="ZcZ-Bq-usf">
+                                                <rect key="frame" x="12" y="29" width="373" height="12"/>
+                                                <constraints>
+                                                    <constraint firstAttribute="height" relation="greaterThanOrEqual" constant="12" id="LSJ-dG-x1e"/>
+                                                </constraints>
                                                 <fontDescription key="fontDescription" name="Gilroy-Semibold" family="Gilroy" pointSize="12"/>
                                                 <nil key="textColor"/>
                                                 <nil key="highlightedColor"/>
                                             </label>
-                                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="5lh-bi-eep">
-                                                <rect key="frame" x="12" y="47" width="31" height="12"/>
+                                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" horizontalCompressionResistancePriority="1000" verticalCompressionResistancePriority="1000" text="Label" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="5lh-bi-eep">
+                                                <rect key="frame" x="12" y="47" width="373" height="12"/>
+                                                <constraints>
+                                                    <constraint firstAttribute="height" constant="12" id="zup-UC-SCz"/>
+                                                </constraints>
                                                 <fontDescription key="fontDescription" name="Gilroy-Semibold" family="Gilroy" pointSize="12"/>
                                                 <nil key="textColor"/>
                                                 <nil key="highlightedColor"/>
@@ -147,10 +156,13 @@
                                         </subviews>
                                         <constraints>
                                             <constraint firstItem="5lh-bi-eep" firstAttribute="leading" secondItem="CS0-Ub-bbm" secondAttribute="leading" id="0lh-m0-apg"/>
-                                            <constraint firstAttribute="height" constant="60" id="8dA-Ad-G4I"/>
+                                            <constraint firstAttribute="bottom" secondItem="5lh-bi-eep" secondAttribute="bottom" constant="1" id="56C-pW-6Os"/>
                                             <constraint firstItem="ZcZ-Bq-usf" firstAttribute="top" secondItem="CS0-Ub-bbm" secondAttribute="bottom" constant="6" id="BEW-lL-kVM"/>
+                                            <constraint firstAttribute="trailing" secondItem="ZcZ-Bq-usf" secondAttribute="trailing" constant="12" id="EjY-8D-n7Z"/>
                                             <constraint firstItem="CS0-Ub-bbm" firstAttribute="top" secondItem="fZi-WD-3Ny" secondAttribute="top" constant="9" id="N1w-Jz-D2n"/>
                                             <constraint firstItem="5lh-bi-eep" firstAttribute="top" secondItem="ZcZ-Bq-usf" secondAttribute="bottom" constant="6" id="R8q-cm-CVx"/>
+                                            <constraint firstAttribute="trailing" secondItem="5lh-bi-eep" secondAttribute="trailing" constant="12" id="Z8n-cO-xuE"/>
+                                            <constraint firstAttribute="trailing" secondItem="CS0-Ub-bbm" secondAttribute="trailing" constant="12" id="gV3-4D-o0B"/>
                                             <constraint firstItem="ZcZ-Bq-usf" firstAttribute="leading" secondItem="CS0-Ub-bbm" secondAttribute="leading" id="xns-dC-VdQ"/>
                                         </constraints>
                                     </view>

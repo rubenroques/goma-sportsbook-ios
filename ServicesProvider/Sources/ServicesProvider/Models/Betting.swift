@@ -163,7 +163,7 @@ public struct BetTicket: Codable {
     }
 }
 
-public enum OddFormat: Codable {
+public enum OddFormat: Codable, Equatable {
     case fraction(numerator: Int, denominator: Int)
     case decimal(odd: Double)
 

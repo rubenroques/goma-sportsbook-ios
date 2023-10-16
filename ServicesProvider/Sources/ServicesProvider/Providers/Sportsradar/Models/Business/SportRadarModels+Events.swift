@@ -87,7 +87,7 @@ extension SportRadarModels {
         }
     }
 
-    struct EventLiveDataExtended: Decodable {
+    struct EventLiveDataExtended: Codable {
         var id: String?
 
         var homeScore: Int?
@@ -175,6 +175,26 @@ extension SportRadarModels {
             }
 
         }
+        
+        func encode(to encoder: Encoder) throws {
+            var container = encoder.container(keyedBy: CodingKeys.self)
+            
+            try container.encode(id, forKey: .targetEventId)
+            
+            var attributesContainer = container.nestedContainer(keyedBy: CodingKeys.self, forKey: .attributedContainer)
+            var completeContainer = attributesContainer.nestedContainer(keyedBy: CodingKeys.self, forKey: .completeContainer)
+            var statusContainer = completeContainer.nestedContainer(keyedBy: CodingKeys.self, forKey: .statusContainer)
+            var eventContainer = statusContainer.nestedContainer(keyedBy: CodingKeys.self, forKey: .eventContainer)
+                    
+            var currentScoreContainer = completeContainer.nestedContainer(keyedBy: CodingKeys.self, forKey: .currentScoreContainer)
+            var competitorContainer = currentScoreContainer.nestedContainer(keyedBy: CodingKeys.self, forKey: .competitorContainer)
+            
+            try competitorContainer.encode(homeScore, forKey: .homeScore)
+            try competitorContainer.encode(awayScore, forKey: .awayScore)
+            
+            try container.encode(matchTime, forKey: .matchTime)
+        }
+
     }
 
     struct EventsGroup: Codable {
@@ -563,6 +583,7 @@ extension SportRadarModels {
             case numberEvents = "numevents"
             case numberOutrightEvents = "numoutrightevents"
         }
+        
     }
 
     struct SportCompetitionInfo: Codable {
