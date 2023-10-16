@@ -37,8 +37,8 @@
                                     <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="VKz-IS-Fl5">
                                         <rect key="frame" x="0.0" y="0.0" width="472" height="45"/>
                                         <subviews>
-                                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="u2k-HB-uF2">
-                                                <rect key="frame" x="12" y="15" width="38.5" height="15"/>
+                                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="249" verticalHuggingPriority="253" horizontalCompressionResistancePriority="1000" verticalCompressionResistancePriority="1000" text="Label" textAlignment="natural" lineBreakMode="tailTruncation" numberOfLines="3" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="u2k-HB-uF2">
+                                                <rect key="frame" x="12" y="15" width="346" height="15"/>
                                                 <fontDescription key="fontDescription" name="Gilroy-Bold" family="Gilroy" pointSize="15"/>
                                                 <nil key="textColor"/>
                                                 <nil key="highlightedColor"/>
@@ -88,13 +88,15 @@
                                             </button>
                                         </subviews>
                                         <constraints>
-                                            <constraint firstAttribute="height" constant="45" id="6vz-5f-c0P"/>
                                             <constraint firstItem="NRb-mS-ve9" firstAttribute="leading" secondItem="cpF-GL-WwQ" secondAttribute="trailing" constant="5" id="Ddf-Q7-OSR"/>
                                             <constraint firstItem="NRb-mS-ve9" firstAttribute="leading" secondItem="f0h-GL-09q" secondAttribute="trailing" constant="5" id="Fcg-NW-Mkg"/>
+                                            <constraint firstItem="u2k-HB-uF2" firstAttribute="top" secondItem="VKz-IS-Fl5" secondAttribute="top" constant="15" id="JP4-J8-a7F"/>
+                                            <constraint firstItem="f0h-GL-09q" firstAttribute="leading" secondItem="u2k-HB-uF2" secondAttribute="trailing" constant="12" id="L5a-Ld-QLP"/>
                                             <constraint firstItem="pe7-dX-k3O" firstAttribute="centerY" secondItem="VKz-IS-Fl5" secondAttribute="centerY" id="LWQ-S6-ezE"/>
                                             <constraint firstAttribute="trailing" secondItem="pe7-dX-k3O" secondAttribute="trailing" constant="3" id="PUX-hW-F3L"/>
                                             <constraint firstItem="cpF-GL-WwQ" firstAttribute="top" secondItem="NRb-mS-ve9" secondAttribute="centerY" constant="-2" id="Sby-0q-YKo"/>
                                             <constraint firstItem="pe7-dX-k3O" firstAttribute="leading" secondItem="NRb-mS-ve9" secondAttribute="trailing" constant="1" id="Tkz-za-0Zs"/>
+                                            <constraint firstAttribute="bottom" secondItem="u2k-HB-uF2" secondAttribute="bottom" constant="15" id="cmJ-MZ-zc0"/>
                                             <constraint firstItem="f0h-GL-09q" firstAttribute="bottom" secondItem="NRb-mS-ve9" secondAttribute="centerY" constant="4" id="peq-6S-Tzg"/>
                                             <constraint firstItem="u2k-HB-uF2" firstAttribute="centerY" secondItem="VKz-IS-Fl5" secondAttribute="centerY" id="rWW-qW-5Gc"/>
                                             <constraint firstItem="NRb-mS-ve9" firstAttribute="centerY" secondItem="VKz-IS-Fl5" secondAttribute="centerY" id="tyI-yb-rMV"/>
