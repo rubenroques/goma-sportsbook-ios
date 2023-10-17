@@ -178,6 +178,8 @@ class LiveMatchWidgetCollectionViewCell: UICollectionViewCell {
         self.matchTimeLabel.text = ""
         self.resultLabel.text = ""
 
+        self.suspendedLabel.text = localized("suspended")
+        
         self.locationFlagImageView.image = nil
         self.suspendedBaseView.isHidden = true
         self.seeAllBaseView.isHidden = true

@@ -13,10 +13,13 @@ import OptimoveSDK
 
 class ProfileViewController: UIViewController {
 
+    public var requestBetSwipeAction: () -> Void = { }
+    public var requestHomeAction: () -> Void = { }
+    public var requestRegisterAction: () -> Void = { }
+
+    // Outlets
     @IBOutlet private weak var safeAreaTopView: UIView!
-
     @IBOutlet private weak var closeButton: UIButton!
-
     @IBOutlet private weak var topBarView: UIView!
 
     @IBOutlet private weak var profileBaseView: UIView!
@@ -767,10 +770,6 @@ extension ProfileViewController {
 
     @objc func promotionsViewTapped(sender: UITapGestureRecognizer) {
 
-        let promotionsWebViewModel = PromotionsWebViewModel()
-
-        // TODO: Change to prod url when fixed
-        
         var gomaBaseUrl = TargetVariables.clientBaseUrl
         let appLanguage = "fr"
 
@@ -778,7 +777,17 @@ extension ProfileViewController {
         let urlString = "\(gomaBaseUrl)/\(appLanguage)/in-app/promotions?dark=\(isDarkTheme)"
 
         if let url = URL(string: urlString) {
+            let promotionsWebViewModel = PromotionsWebViewModel()
             let promotionsWebViewController = PromotionsWebViewController(url: url, viewModel: promotionsWebViewModel)
+            promotionsWebViewController.openBetSwipeAction = { [weak self] in
+                self?.requestBetSwipeAction()
+            }
+            promotionsWebViewController.openRegisterAction = { [weak self] in
+                self?.requestRegisterAction()
+            }
+            promotionsWebViewController.openHomeAction = { [weak self] in
+                self?.requestHomeAction()
+            }
             self.navigationController?.pushViewController(promotionsWebViewController, animated: true)
         }
     }

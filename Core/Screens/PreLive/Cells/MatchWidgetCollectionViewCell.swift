@@ -463,6 +463,8 @@ class MatchWidgetCollectionViewCell: UICollectionViewCell {
         self.dateLabel.text = ""
         self.timeLabel.text = ""
 
+        self.suspendedLabel.text = localized("suspended")
+        
         self.locationFlagImageView.image = nil
         self.sportTypeImageView.image = nil
 

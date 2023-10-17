@@ -15,12 +15,27 @@ class PromotionsWebViewModel {
 
 class PromotionsWebViewController: UIViewController {
 
+    var openRegisterAction: () -> Void = { }
+    var openBetSwipeAction: () -> Void = { }
+    var openHomeAction: () -> Void = { }
+    
     // MARK: - Private Properties
     private lazy var topSafeAreaView: UIView = Self.createTopSafeAreaView()
     private lazy var navigationView: UIView = Self.createNavigationView()
     private lazy var titleLabel: UILabel = Self.createTitleLabel()
     private lazy var backButton: UIButton = Self.createBackButton()
-    private lazy var webView: WKWebView = Self.createWebView()
+    
+    private lazy var webView: WKWebView = {
+        let configuration = WKWebViewConfiguration()
+        configuration.userContentController.add(self, name: "postMessageListener")
+        configuration.preferences.javaScriptEnabled = true
+        
+        let webView = WKWebView(frame: .zero, configuration: configuration)
+        webView.translatesAutoresizingMaskIntoConstraints = false
+        webView.navigationDelegate = self
+        return webView
+    }()
+    
     private lazy var botttomSafeAreaView: UIView = Self.createBottomSafeAreaView()
 
     private lazy var loadingBaseView: UIView = Self.createLoadingBaseView()
@@ -141,6 +156,31 @@ extension PromotionsWebViewController: WKNavigationDelegate {
     }
 }
 
+
+extension PromotionsWebViewController: WKScriptMessageHandler {
+
+    func userContentController(_ userContentController: WKUserContentController, didReceive message: WKScriptMessage) {
+        if message.name == "postMessageListener" {
+            // Parse the JSON data directly into the WebMessage struct
+            if let jsonData = try? JSONSerialization.data(withJSONObject: message.body, options: []),
+               let webMessage = try? JSONDecoder().decode(WebMessage.self, from: jsonData) {
+
+                switch webMessage.messageType {
+                case "openRegister":
+                    self.openRegisterAction()
+                case "openBetSwipe":
+                    self.openBetSwipeAction()
+                case "goHome":
+                    self.openHomeAction()
+                default:
+                    break
+                }
+            }
+        }
+    }
+    
+}
+
 extension PromotionsWebViewController {
 
     private static func createTopSafeAreaView() -> UIView {
@@ -171,13 +211,6 @@ extension PromotionsWebViewController {
         backButton.setTitle(nil, for: .normal)
         backButton.translatesAutoresizingMaskIntoConstraints = false
         return backButton
-    }
-
-    private static func createWebView() -> WKWebView {
-        let webView = WKWebView()
-        webView.translatesAutoresizingMaskIntoConstraints = false
-        webView.configuration.preferences.javaScriptEnabled = true
-        return webView
     }
 
     private static func createBottomSafeAreaView() -> UIView {

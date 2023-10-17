@@ -137,27 +137,9 @@ extension BetslipProxyWebViewController: WKNavigationDelegate {
 }
 
 extension BetslipProxyWebViewController: WKScriptMessageHandler {
-/*
-    func userContentController(_ userContentController: WKUserContentController, didReceive message: WKScriptMessage) {
-        if message.name == "postMessageListener", let messageBody = message.body as? String {
-            if messageBody == "closeBetSwipe" {
-                self.didTapBackButton()
-            }
-            else if messageBody == "goToBetSlip" {
-                self.didTapBackButton()
-            }
-            else {
-                print("BetslipProxyWebViewController - userContentController messageBody: \(messageBody)")
-            }
-        }
-        
-    }
-    */
 
     func userContentController(_ userContentController: WKUserContentController, didReceive message: WKScriptMessage) {
-        // Handle the received message
         if message.name == "postMessageListener" {
-            
             // Parse the JSON data directly into the WebMessage struct
             if let jsonData = try? JSONSerialization.data(withJSONObject: message.body, options: []),
                let webMessage = try? JSONDecoder().decode(WebMessage.self, from: jsonData) {

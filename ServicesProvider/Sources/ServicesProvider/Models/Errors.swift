@@ -44,5 +44,7 @@ public enum ServiceProviderError: Error {
     case decodingError(message: String)
     case errorMessage(message: String)
     
+    case errorDetailedMessage(key: String, message: String)
+    
     case unknown
 }

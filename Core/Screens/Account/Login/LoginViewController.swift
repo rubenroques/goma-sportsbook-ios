@@ -193,8 +193,7 @@ class LoginViewController: UIViewController {
         self.logoImageView.isUserInteractionEnabled = true
 
          #if DEBUG
-//        let debugLogoImageViewTap = UITapGestureRecognizer(target: self, action: #selector(didTapDebugFormFill))
-        let debugLogoImageViewTap = UITapGestureRecognizer(target: self, action: #selector(testTap))
+        let debugLogoImageViewTap = UITapGestureRecognizer(target: self, action: #selector(didTapDebugFormFill))
         debugLogoImageViewTap.numberOfTapsRequired = 3
         self.logoImageView.addGestureRecognizer(debugLogoImageViewTap)
          #endif
@@ -308,7 +307,7 @@ class LoginViewController: UIViewController {
 
     private func presentRegister(animated: Bool = true) {
 
-        let userRegisterEnvelopValue: UserRegisterEnvelop = UserDefaults.standard.startedUserRegisterInfo ?? UserRegisterEnvelop()
+        let userRegisterEnvelopValue: UserRegisterEnvelop = UserRegisterEnvelop.debug // UserDefaults.standard.startedUserRegisterInfo ?? UserRegisterEnvelop()
 
         let userRegisterEnvelopUpdater = UserRegisterEnvelopUpdater(userRegisterEnvelop: userRegisterEnvelopValue)
 
@@ -522,14 +521,14 @@ class LoginViewController: UIViewController {
                     switch error {
                     case .invalidEmailPassword:
                         self.showWrongPasswordStatus()
-                    case .restrictedCountry(let errorMessage):
-                        self.showServerErrorStatus(errorMessage: errorMessage)
+                    case .restrictedCountry:
+                        self.showServerErrorStatus()
                     case .serverError:
                         self.showServerErrorStatus()
                     case .quickSignUpIncomplete:
                         self.showServerErrorStatus()
-                    case .errorMessage(let errorMessage):
-                        self.showServerErrorStatus(errorMessage: errorMessage)
+                    case .errorMessage:
+                        self.showServerErrorStatus()
                     }
                 case .finished:
                     ()
@@ -655,7 +654,9 @@ class LoginViewController: UIViewController {
             self.present(alertController, animated: true)
         }
         else if let error = error as? LAError, error.code == .userCancel {
-            let alertController = UIAlertController(title: localized("biometric_error_title"), message: localized("biometric_error_denied_message"), preferredStyle: .alert)
+            let alertController = UIAlertController(title: localized("biometric_error_title"),
+                                                    message: localized("biometric_error_denied_message"),
+                                                    preferredStyle: .alert)
             let okAction = UIAlertAction(title: localized("ok"), style: .default, handler: { _ in
                 Env.userSessionStore.setShouldRequestBiometrics(false)
                 self.showNextViewController()
@@ -665,7 +666,9 @@ class LoginViewController: UIViewController {
 
         }
         else {
-            let alertController = UIAlertController(title: localized("biometric_error_title"), message: localized("biometric_error_general_message"), preferredStyle: .alert)
+            let alertController = UIAlertController(title: localized("biometric_error_title"),
+                                                    message: localized("biometric_error_general_message"),
+                                                    preferredStyle: .alert)
             let okAction = UIAlertAction(title: localized("ok"), style: .default, handler: { _ in
                 Env.userSessionStore.setShouldRequestBiometrics(false)
                 self.showNextViewController()
@@ -675,52 +678,25 @@ class LoginViewController: UIViewController {
         }
     }
 
-
-//    func authenticateUser(with context: LAContext) {
-//        context.evaluatePolicy(.deviceOwnerAuthenticationWithBiometrics, localizedReason: "Access requires authentication") { (success, error) in
-//            DispatchQueue.main.async {
-//                if success {
-//                    print("Authentication successful")
-//                } else {
-//                    print("Authentication failed")
-//                }
-//
-//                self.showNextViewController()
-//            }
-//        }
-//    }
-
     private func showWrongPasswordStatus() {
-        let alert = UIAlertController(title: localized("login_error_title"),
-                                      message: localized("login_error_message"),
+        let alert = UIAlertController(title: localized("error"),
+                                      message: localized("omega_error_fail_un_pw"),
                                       preferredStyle: .alert)
         alert.addAction(UIAlertAction(title: localized("ok"), style: .default, handler: nil))
         self.present(alert, animated: true, completion: nil)
     }
 
-    private func showServerErrorStatus(errorMessage: String? = nil) {
-        if let errorMessage = errorMessage {
-            let alert = UIAlertController(title: localized("login_error_title"),
-                                          message: errorMessage,
-                                          preferredStyle: .alert)
-            alert.addAction(UIAlertAction(title: localized("ok"), style: .default, handler: nil))
-            self.present(alert, animated: true, completion: nil)
-        }
-        else {
-            let alert = UIAlertController(title: localized("login_error_title"),
-                                          message: localized("server_error_message"),
-                                          preferredStyle: .alert)
-            alert.addAction(UIAlertAction(title: localized("ok"), style: .default, handler: nil))
-            self.present(alert, animated: true, completion: nil)
-        }
-
+    private func showServerErrorStatus() {
+        let alert = UIAlertController(title: localized("error"),
+                                        message: localized("server_error_message"),
+                                        preferredStyle: .alert)
+        alert.addAction(UIAlertAction(title: localized("ok"), style: .default, handler: nil))
+        self.present(alert, animated: true, completion: nil)
     }
 
     @IBAction private func didTapRecoverPassword() {
         let recoverPasswordViewModel = RecoverPasswordViewModel()
-
         let recoverPasswordViewController = RecoverPasswordViewController(viewModel: recoverPasswordViewModel)
-
         self.navigationController?.pushViewController(recoverPasswordViewController, animated: true)
     }
 

@@ -215,7 +215,7 @@ class CodeVerificationViewController: UIViewController {
                         self?.showErrorMessage(errorTitle: localized("code_verification_error"), errorMessage: message)
                     }
                     else {
-                        self?.showErrorMessage(errorTitle: localized("server_error_title"), errorMessage: localized("server_error_message"))
+                        self?.showErrorMessage(errorTitle: localized("error"), errorMessage: localized("server_error_message"))
                     }
 
                 }

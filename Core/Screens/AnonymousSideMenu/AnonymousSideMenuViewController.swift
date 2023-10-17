@@ -15,6 +15,9 @@ struct AnonymousSideMenuViewModel {
 
 class AnonymousSideMenuViewController: UIViewController {
 
+    var requestBetSwipeAction: () -> Void = { }
+    var requestHomeAction: () -> Void = { }
+    
     var requestRegisterAction: () -> Void = { }
     var requestLoginAction: () -> Void = { }
 
@@ -221,18 +224,23 @@ extension AnonymousSideMenuViewController {
     @objc func promotionsViewTapped() {
         let promotionsWebViewModel = PromotionsWebViewModel()
 
-        // TODO: Change to prod url when fixed
         let baseUrl = TargetVariables.clientBaseUrl
         let appLanguage = "fr"
 
         let isDarkTheme = self.traitCollection.userInterfaceStyle == .dark ? true : false
-
         let urlString = "\(baseUrl)/\(appLanguage)/in-app/promotions?dark=\(isDarkTheme)"
 
         if let url = URL(string: urlString) {
-
             let promotionsWebViewController = PromotionsWebViewController(url: url, viewModel: promotionsWebViewModel)
-
+            promotionsWebViewController.openBetSwipeAction = { [weak self] in
+                self?.requestBetSwipeAction()
+            }
+            promotionsWebViewController.openRegisterAction = { [weak self] in
+                self?.requestRegisterAction()
+            }
+            promotionsWebViewController.openHomeAction = { [weak self] in
+                self?.requestHomeAction()
+            }
             self.navigationController?.pushViewController(promotionsWebViewController, animated: true)
         }
     }

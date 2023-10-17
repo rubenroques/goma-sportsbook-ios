@@ -169,6 +169,7 @@ class SingleBettingTicketTableViewCell: UITableViewCell {
         self.plusFiveButtonView.setTitle("+20", for: .normal)
         self.maxValueButtonView.setTitle("+50", for: .normal)
 
+        self.suspendedBettingOfferLabel.text = localized("suspended")
         self.setupSubviews()
     }
 

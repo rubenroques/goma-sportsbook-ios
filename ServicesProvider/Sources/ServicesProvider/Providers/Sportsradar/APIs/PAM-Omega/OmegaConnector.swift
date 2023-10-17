@@ -7,6 +7,7 @@
 
 import Foundation
 import Combine
+import Extensions
 
 class OmegaConnector: Connector {
     
@@ -110,10 +111,10 @@ class OmegaConnector: Connector {
         }
         
         return self.session.dataTaskPublisher(for: request)
-//            .handleEvents(receiveOutput: { result in
-//                print("ServiceProvider-OmegaConnector [[ requesting ]] ", request,
-//                      " [[ response ]] ", String(data: result.data, encoding: .utf8) ?? "!?" )
-//            })
+            .handleEvents(receiveOutput: { result in
+                print("ServiceProvider-OmegaConnector [[ requesting ]] ", request,
+                      " [[ response ]] ", String(data: result.data, encoding: .utf8) ?? "!?" )
+            })
             .tryMap { result -> Data in
                 if let httpResponse = result.response as? HTTPURLResponse, httpResponse.statusCode == 401 {
                     throw ServiceProviderError.unauthorized
@@ -153,13 +154,16 @@ class OmegaConnector: Connector {
                             return Just(mappedObject).setFailureType(to: ServiceProviderError.self).eraseToAnyPublisher()
                         }
                         catch {
-                            print("ServiceProvider-OmegaConnector Decoding Error \(error)")
-                            return Fail(error: ServiceProviderError.invalidResponse).eraseToAnyPublisher()
+                            let localizedErrorKey = "omega_error_" + responseStatus.status.lowercased()
+                            var localizedMessage = Localization.localized(localizedErrorKey)
+                            if localizedMessage.isEmpty {
+                                localizedMessage = Localization.localized("server_error_message")
+                            }
+                            return Fail(error: ServiceProviderError.errorDetailedMessage(key: responseStatus.status, message: localizedMessage)).eraseToAnyPublisher()
                         }
                     }
                 }
                 else if let requestStatus = try? JSONDecoder().decode(SportRadarModels.SupportResponse.self, from: data) {
-
                     do {
                         let mappedObject = try self.decoder.decode(T.self, from: data)
                         return Just(mappedObject).setFailureType(to: ServiceProviderError.self).eraseToAnyPublisher()
@@ -168,7 +172,6 @@ class OmegaConnector: Connector {
                         print("ServiceProvider-OmegaConnector Decoding Error \(error)")
                         return Fail(error: ServiceProviderError.invalidResponse).eraseToAnyPublisher()
                     }
-
                 }
                 else {
                     return Fail(error: ServiceProviderError.invalidResponse).eraseToAnyPublisher()
@@ -244,8 +247,12 @@ class OmegaConnector: Connector {
                         .eraseToAnyPublisher()
                 }
                 else {
-                    let message = loginResponse.message ?? "Login Error"
-                    return Fail(error: ServiceProviderError.errorMessage(message: message)).eraseToAnyPublisher()
+                    let localizedErrorKey = "omega_error_" + loginResponse.status.lowercased()
+                    var localizedMessage = Localization.localized(localizedErrorKey)
+                    if localizedMessage.isEmpty {
+                        localizedMessage = Localization.localized("server_error_message")
+                    }
+                    return Fail(error: ServiceProviderError.errorDetailedMessage(key: loginResponse.status, message: localizedMessage)).eraseToAnyPublisher()
                 }
             })
             .eraseToAnyPublisher()
@@ -265,7 +272,7 @@ class OmegaConnector: Connector {
             return Fail(error: ServiceProviderError.userSessionNotFound).eraseToAnyPublisher()
         }
 
-        print("Openieng Session for SESSION KEY: \(sessionKey)")
+        print("Opening Session for SESSION KEY: \(sessionKey)")
 
         return self.session.dataTaskPublisher(for: request)
 //            .handleEvents(receiveOutput: { result in
@@ -299,35 +306,6 @@ class OmegaConnector: Connector {
             .map({ $0.launchToken })
             .eraseToAnyPublisher()
 
-//            .sink(receiveCompletion: { completion in
-//
-//            }, receiveValue: { [weak self] openSessionResponse in
-//                self?.cacheLaunchKey(openSessionResponse.launchToken)
-//            })
-//            .store(in: &cancellables)
-
-
-
-//            .flatMap({ openSessionResponse -> AnyPublisher<SportRadarModels.OpenSessionResponse, ServiceProviderError> in
-//                if openSessionResponse.status == "FAIL_UN_PW" {
-//                    self.logout()
-//                    return Fail(outputType: SportRadarModels.LoginResponse.self,
-//                                failure: ServiceProviderError.invalidEmailPassword).eraseToAnyPublisher()
-//                }
-//                else if openSessionResponse.status == "FAIL_QUICK_OPEN_STATUS" {
-//                    return Fail(outputType: SportRadarModels.LoginResponse.self,
-//                                failure: ServiceProviderError.quickSignUpIncomplete).eraseToAnyPublisher()
-//                }
-//                else if openSessionResponse.status == "SUCCESS", let launchToken = openSessionResponse.launchToken {
-//                    self.cacheLaunchKey(launchToken)
-//                    return Just(loginResponse)
-//                        .setFailureType(to: ServiceProviderError.self)
-//                        .eraseToAnyPublisher()
-//                }
-//                return Fail(outputType: SportRadarModels.LoginResponse.self,
-//                            failure: ServiceProviderError.invalidResponse).eraseToAnyPublisher()
-//            })
-//            .eraseToAnyPublisher()
     }
     
     
