@@ -198,7 +198,18 @@ class PreSubmissionBetslipViewController: UIViewController {
     private var selectedSystemBetType: SystemBetType? {
         didSet {
             if let systemBetType = self.selectedSystemBetType {
-                self.systemBetTypeLabel.text = "\(systemBetType.name ?? localized("system_bet")) x\(systemBetType.numberOfBets ?? 0)"
+                let optionName = systemBetType.name ?? localized("system_bet")
+
+                let normalizedOptionName = optionName.replacingOccurrences(of: "[^a-zA-Z0-9]", with: "_", options: .regularExpression).lowercased()
+
+                let optionKeyName = "allowed_bet_types_\(normalizedOptionName)"
+
+                let optionKey = localized(optionKeyName)
+
+                let name = "\(optionKey) x\(systemBetType.numberOfBets ?? 0)"
+
+                self.systemBetTypeLabel.text = name
+                // self.systemBetTypeLabel.text = "\(systemBetType.name ?? localized("system_bet")) x\(systemBetType.numberOfBets ?? 0)"
             }
         }
     }
@@ -2123,7 +2134,16 @@ extension PreSubmissionBetslipViewController: UIPickerViewDelegate, UIPickerView
 
     func pickerView(_ pickerView: UIPickerView, attributedTitleForRow row: Int, forComponent component: Int) -> NSAttributedString? {
         if pickerView.tag == 1 {
-            let name = "\(self.systemBetOptions[safe: row]?.name ?? "--") x\(self.systemBetOptions[safe: row]?.numberOfBets ?? 0)"
+            let optionName = self.systemBetOptions[safe: row]?.name ?? localized("system_bet")
+
+            let normalizedOptionName = optionName.replacingOccurrences(of: "[^a-zA-Z0-9]", with: "_", options: .regularExpression).lowercased()
+
+            let optionKeyName = "allowed_bet_types_\(normalizedOptionName)"
+
+            let optionKey = localized(optionKeyName)
+
+            let name = "\(optionKey) x\(self.systemBetOptions[safe: row]?.numberOfBets ?? 0)"
+            // let name = "\(self.systemBetOptions[safe: row]?.name ?? "--") x\(self.systemBetOptions[safe: row]?.numberOfBets ?? 0)"
             return NSAttributedString(string: name,
                                       attributes: [NSAttributedString.Key.foregroundColor: UIColor.App.textPrimary])
         }

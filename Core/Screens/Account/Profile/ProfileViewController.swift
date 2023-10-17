@@ -120,7 +120,7 @@ class ProfileViewController: UIViewController {
 
         self.commonInit()
         self.setupWithTheme()
-
+        
     }
 
     override func viewWillAppear(_ animated: Bool) {

@@ -200,21 +200,6 @@ class LoginViewController: UIViewController {
 
     }
 
-    @objc private func testTap() {
-        if let navigationController = self.navigationController {
-
-            let registerSuccessViewController = RegisterSuccessViewController()
-
-            registerSuccessViewController.setTextInfo(title: localized("congratulations"), subtitle: localized("singup_success_text"))
-
-            registerSuccessViewController.didTapContinueAction = { [weak self] in
-                self?.showBiometricPromptViewController(onNavigationController: navigationController)
-            }
-
-            navigationController.pushViewController(registerSuccessViewController, animated: true)
-        }
-    }
-
     @objc private func showDeposit() {
         if let navigationController = self.navigationController {
             self.showRegisterFeedbackViewController(onNavigationController: navigationController)

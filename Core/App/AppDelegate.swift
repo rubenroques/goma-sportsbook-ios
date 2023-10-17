@@ -97,10 +97,12 @@ class AppDelegate: UIResponder, UIApplicationDelegate, MessagingDelegate {
 
         // Optimove
         let config = OptimoveConfigBuilder(optimoveCredentials: "WzEsIjEzMGRjNGIwNTZiYzRhNmQ5NWI0ZWJjODczNGJlYmJhIiwibW9iaWxlLWNvbmZpZ3VyYXRpb24uMS4wLjAiXQ==",
-                                           optimobileCredentials: "WzEsImV1LWNlbnRyYWwtMiIsImU2ZDZiMzU1LWE0MjAtNDEzYi1hZjZkLWViMjZkZmY2MTkzNiIsIlBlUmtqWGppaFF4WHc2Lzkvdnphb3lETWtsdXFFWjlQZlZBMSJd")
+                                           optimobileCredentials: "WzEsImV1LWNlbnRyYWwtMiIsImJkYzg1MTk5LTk4ODEtNGRhMy05NmYzLWI3ZGZkOWM3NzI0NCIsImpDNFMzODF4SDhCU2JSeS94aVlsQ25ubUVsT2ZTTEUxYUdhSyJd")
                     .build()
 
         Optimove.initialize(with: config)
+
+        //Optimove.shared.pushRequestDeviceToken()
 
         application.registerForRemoteNotifications()
 
