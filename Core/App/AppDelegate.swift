@@ -106,6 +106,8 @@ class AppDelegate: UIResponder, UIApplicationDelegate, MessagingDelegate {
 
         Optimove.initialize(with: config)
 
+        //Optimove.shared.pushRequestDeviceToken()
+
         application.registerForRemoteNotifications()
 
         //

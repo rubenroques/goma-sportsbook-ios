@@ -47,6 +47,8 @@ class RegisterSuccessViewController: UIViewController {
         self.continueButton.addTarget(self, action: #selector(didTapContinueButton), for: .primaryActionTriggered)
 
         self.hasContinueFlow = false
+
+        self.closeButton.isHidden = true
     }
 
     override func viewDidLayoutSubviews() {
