@@ -292,7 +292,7 @@ class LoginViewController: UIViewController {
 
     private func presentRegister(animated: Bool = true) {
 
-        let userRegisterEnvelopValue: UserRegisterEnvelop = UserRegisterEnvelop.debug // UserDefaults.standard.startedUserRegisterInfo ?? UserRegisterEnvelop()
+        let userRegisterEnvelopValue: UserRegisterEnvelop = UserDefaults.standard.startedUserRegisterInfo ?? UserRegisterEnvelop()
 
         let userRegisterEnvelopUpdater = UserRegisterEnvelopUpdater(userRegisterEnvelop: userRegisterEnvelopValue)
 
