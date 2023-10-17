@@ -319,7 +319,16 @@ extension MatchDetailsViewModel: UICollectionViewDataSource, UICollectionViewDel
             fatalError()
         }
 
-        cell.setupWithTitle(item.translatedName ?? localized("market"))
+        let marketTranslatedName = item.translatedName ?? localized("market")
+
+        //let normalizedTranslatedName = marketTranslatedName.replacingOccurrences(of: " ", with: "_").replacingOccurrences(of: "/", with: "_").lowercased()
+        let normalizedTranslatedName = marketTranslatedName.replacingOccurrences(of: "[^a-zA-Z0-9]", with: "_", options: .regularExpression).lowercased()
+
+        let marketKey = "market_group_\(normalizedTranslatedName)"
+
+        let marketName = localized(marketKey)
+
+        cell.setupWithTitle(marketName)
 
         if let index = self.selectedMarketTypeIndexPublisher.value, index == indexPath.row {
             cell.setSelectedType(true)
