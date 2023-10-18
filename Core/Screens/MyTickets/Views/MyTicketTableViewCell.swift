@@ -234,8 +234,9 @@ class MyTicketTableViewCell: UITableViewCell {
 
         NSLayoutConstraint.activate([
 
-            self.learnMoreBaseView.bottomAnchor.constraint(equalTo: self.cashbackInfoView.topAnchor, constant: -10),
-            self.learnMoreBaseView.trailingAnchor.constraint(equalTo: self.cashbackInfoView.trailingAnchor, constant: 10)
+            self.learnMoreBaseView.bottomAnchor.constraint(equalTo: self.cashbackInfoBaseView.topAnchor, constant: -10),
+            self.learnMoreBaseView.trailingAnchor.constraint(equalTo: self.cashbackInfoBaseView.trailingAnchor, constant: 10),
+            self.learnMoreBaseView.leadingAnchor.constraint(equalTo: self.baseView.leadingAnchor, constant: 10)
 
         ])
 
@@ -698,11 +699,18 @@ class MyTicketTableViewCell: UITableViewCell {
                 self.usedCashback = false
             }
 
-            if let potentialCashbackReturn = betHistoryEntry.potentialCashbackReturn != nil ? betHistoryEntry.potentialCashbackReturn : betHistoryEntry.potentialFreebetReturn,
-               potentialCashbackReturn > 0 {
+            if let potentialCashbackReturn = betHistoryEntry.potentialCashbackReturn,
+               let potentialFreebetReturn = betHistoryEntry.potentialFreebetReturn {
+
+                var cashbackReturn = potentialCashbackReturn
+
+                if potentialCashbackReturn == 0 && potentialFreebetReturn > 0 {
+                    cashbackReturn = potentialFreebetReturn
+                }
+
                 self.hasCashback = true
 
-                let potentialCashbackReturnString = CurrencyFormater.defaultFormat.string(from: NSNumber(value: potentialCashbackReturn))
+                let potentialCashbackReturnString = CurrencyFormater.defaultFormat.string(from: NSNumber(value: cashbackReturn))
 
                 self.cashbackValueLabel.text = potentialCashbackReturnString
             }
