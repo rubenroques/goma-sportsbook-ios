@@ -15,29 +15,34 @@ class SportRadarEventDetailsCoordinator {
 
     let eventDetailsIdentifier: ContentIdentifier
     let liveDataContentIdentifier: ContentIdentifier
-
+    
+    weak var liveDataSubscription: Subscription?
+    
     weak var marketsSubscription: Subscription?
+    
     var isActive: Bool {
+        if self.waitingSubscription {
+            // We haven't tried to subscribe or the
+            // subscribe request it's ongoing right now
+            return true
+        }
         return self.marketsSubscription != nil
     }
 
-    weak var liveDataSubscription: Subscription?
-
     var eventDetailsPublisher: AnyPublisher<SubscribableContent<Event>, ServiceProviderError> {
         return eventDetailsCurrentValueSubject
-            .removeDuplicates()
             .eraseToAnyPublisher()
     }
 
     private var eventDetailsCurrentValueSubject: CurrentValueSubject<SubscribableContent<Event>, ServiceProviderError> = .init(.disconnected)
-
+    
+    private var waitingSubscription = true
     private let decoder = JSONDecoder()
     private let session = URLSession.init(configuration: .default)
     
     private var cancellables = Set<AnyCancellable>()
 
     init(matchId: String, sessionToken: String, storage: SportRadarEventStorage) {
-        print("LoadingBug c0 init \(matchId)")
         self.sessionToken = sessionToken
         self.storage = storage
 
@@ -53,20 +58,32 @@ class SportRadarEventDetailsCoordinator {
 
         self.liveDataContentIdentifier = liveDataContentIdentifier
 
-        print("LoadingBug c1")
+        //DEBUG SUBS
+        self.eventDetailsPublisher.sink { completion in
+            
+        } receiveValue: { subscribableContent in
+            switch subscribableContent {
+            case .connected(let subscription):
+                print("LiveBug Event: connected")
+            case .contentUpdate(let event):
+                print("LiveBug Event: \(event.id) - \(String(describing: event.status))")
+            case .disconnected:
+                print("LiveBug Event: disconnected")
+            }
+        }
+        .store(in: &self.cancellables)
+        
+        
         // Boot the coordinator
         self.checkEventDetailsAvailable()
             .flatMap { [weak self] _ -> AnyPublisher<Void, ServiceProviderError>  in
-                print("LoadingBug c3a")
                 guard let self = self else {
                     return Fail(error: ServiceProviderError.onSubscribe).eraseToAnyPublisher()
                 }
-                print("LoadingBug c3b")
                 return self.subscribeEventDetails()
             }
             .sink { [weak self] completion in
                 guard let self = self else { return }
-                print("LoadingBug c5")
                 switch completion {
                 case .finished:
                     let subscription = Subscription(contentIdentifier: self.eventDetailsIdentifier,
@@ -75,24 +92,21 @@ class SportRadarEventDetailsCoordinator {
                     self.eventDetailsCurrentValueSubject.send(.connected(subscription: subscription))
                     self.marketsSubscription = subscription
                     
-                    print("LoadingBug c6")
                     
                     // try to get live data
                     self.requestEventLiveData()
-                    print("LoadingBug c7")
                     
                 case .failure(let error):
                     self.eventDetailsCurrentValueSubject.send(completion: .failure(error))
                 }
+                self.waitingSubscription = false
             } receiveValue: { _ in
-                print("LoadingBug c4")
             }
             .store(in: &self.cancellables)
 
     }
 
     deinit {
-        print("LoadingBug c deinit")
     }
     
     private func checkEventDetailsAvailable() -> AnyPublisher<Void, ServiceProviderError> {
@@ -104,23 +118,14 @@ class SportRadarEventDetailsCoordinator {
             return Fail(error: ServiceProviderError.invalidRequestFormat).eraseToAnyPublisher()
         }
 
-        print("LoadingBug c2a")
         return self.session.dataTaskPublisher(for: request)
-            .handleEvents(receiveCancel: {
-                print("LoadingBug c2b cancel")
-            })
-            .print("LoadingBug c2b")
             .map({ response in
-                print("LoadingBug c2c")
                 return String(data: response.data, encoding: .utf8) ?? ""
             })
             .mapError({ error in
-                print("LoadingBug c3d")
-
                 return ServiceProviderError.resourceUnavailableOrDeleted
             })
             .flatMap { responseString -> AnyPublisher<Void, ServiceProviderError> in
-                print("LoadingBug c2e")
                 if responseString.uppercased().contains("CONTENT_NOT_FOUND") {
                     return Fail(outputType: Void.self, failure: ServiceProviderError.resourceUnavailableOrDeleted).eraseToAnyPublisher()
                 }
@@ -141,25 +146,18 @@ class SportRadarEventDetailsCoordinator {
         else {
             return Fail(error: ServiceProviderError.invalidRequestFormat).eraseToAnyPublisher()
         }
-        print("LoadingBug c3b 1")
         return self.session.dataTaskPublisher(for: request)
-            .print("SportRadarEventDetailsCoordinator subscribeEventDetails")
             .tryMap { data, response -> Data in
-                print("LoadingBug c3b 2")
-
                 guard
                     let httpResponse = response as? HTTPURLResponse,
                     (200...299).contains(httpResponse.statusCode)
                 else {
                     throw ServiceProviderError.onSubscribe
                 }
-                print("LoadingBug c3b 2")
                 return data
             }
             .mapError { _ in ServiceProviderError.onSubscribe }
             .flatMap { data -> AnyPublisher<Void, ServiceProviderError> in
-                print("LoadingBug c3b 4")
-
                 if let responseString = String(data: data, encoding: .utf8), responseString.lowercased().contains("version") {
                     return Just(()).setFailureType(to: ServiceProviderError.self).eraseToAnyPublisher()
                 } else {
@@ -179,6 +177,7 @@ class SportRadarEventDetailsCoordinator {
             return
         }
 
+        print("LoadingBug requestEventLiveData")
         let sessionDataTask = self.session.dataTask(with: request) { data, response, error in
             guard
                 (error == nil),
@@ -186,6 +185,7 @@ class SportRadarEventDetailsCoordinator {
                 (200...299).contains(httpResponse.statusCode)
             else {
                 publisher.send(completion: .failure(ServiceProviderError.onSubscribe))
+                print("LoadingBug requestEventLiveData not found")
                 return
             }
             let subscription = Subscription(contentIdentifier: self.liveDataContentIdentifier,
@@ -193,6 +193,7 @@ class SportRadarEventDetailsCoordinator {
                                             unsubscriber: self)
             self.liveDataSubscription = subscription
             self.marketsSubscription?.associateSubscription(subscription)
+            print("LoadingBug requestEventLiveData found")
         }
 
         sessionDataTask.resume()

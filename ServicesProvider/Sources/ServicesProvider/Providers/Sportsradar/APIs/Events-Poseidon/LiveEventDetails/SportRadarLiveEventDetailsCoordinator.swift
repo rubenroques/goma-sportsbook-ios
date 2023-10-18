@@ -19,6 +19,11 @@ class SportRadarLiveEventDetailsCoordinator {
 
     weak var subscription: Subscription?
     var isActive: Bool {
+        if self.waitingSubscription {
+            // We haven't tried to subscribe or the
+            // subscribe request it's ongoing right now
+            return true
+        }
         return self.subscription != nil
     }
 
@@ -28,6 +33,7 @@ class SportRadarLiveEventDetailsCoordinator {
 
     private var liveEventCurrentValueSubject: CurrentValueSubject<SubscribableContent<Event>, ServiceProviderError> = .init(.disconnected)
 
+    private var waitingSubscription = true
     private let decoder = JSONDecoder()
     private let session = URLSession.init(configuration: .default)
     
@@ -60,6 +66,7 @@ class SportRadarLiveEventDetailsCoordinator {
                 case .failure(let error):
                     self.liveEventCurrentValueSubject.send(completion: .failure(error))
                 }
+                self.waitingSubscription = false
             } receiveValue: { [weak self] eventLiveDataExtended in
                 guard let self = self else { return }
                 
@@ -69,8 +76,8 @@ class SportRadarLiveEventDetailsCoordinator {
                 self.liveEventCurrentValueSubject.send(.connected(subscription: subscription))
                 self.subscription = subscription
                 
+                self.waitingSubscription = false
                 // Publish the event live details
-                
             }
             .store(in: &self.cancellables)
 
@@ -88,7 +95,7 @@ class SportRadarLiveEventDetailsCoordinator {
         return self.session.dataTaskPublisher(for: request)
             .retry(1)
             .map({ return String(data: $0.data, encoding: .utf8) ?? "" })
-            .mapError({ _ in return ServiceProviderError.invalidRequestFormat })
+            .mapError({ _ in return ServiceProviderError.resourceUnavailableOrDeleted })
             .flatMap { responseString -> AnyPublisher<Void, ServiceProviderError> in
                 if responseString.uppercased().contains("CONTENT_NOT_FOUND") {
                     return Fail(outputType: Void.self, failure: ServiceProviderError.resourceUnavailableOrDeleted).eraseToAnyPublisher()
@@ -123,15 +130,6 @@ class SportRadarLiveEventDetailsCoordinator {
             .map(\.data)
             .mapError { _ in ServiceProviderError.onSubscribe }
             .eraseToAnyPublisher()
-    }
-
-    func updateEventDetails(_ updatedEvent: Event, forContentIdentifier contentIdentifier: ContentIdentifier) {
-        print("ServiceProvider SportRadarLiveEventDetailsCoordinator update \(liveEventContentIdentifier) ")
-
-        if contentIdentifier == self.liveEventContentIdentifier {
-            self.storage.storeEvent(updatedEvent)
-            self.liveEventCurrentValueSubject.send(.contentUpdate(content: updatedEvent))
-        }
     }
 
     func reconnect(withNewSessionToken newSessionToken: String) {

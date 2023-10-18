@@ -266,6 +266,23 @@ enum CardsStyle: Int {
     case normal = 5
 }
 
+public enum BetslipOddChangeSetting: String, Codable, Equatable, Hashable, CaseIterable {
+    case none
+    case any
+    case higher
+    
+    var localizedString: String {
+        switch self {
+        case .none:
+            return localized("allow_no_odds_change")
+        case .any:
+            return localized("allow_any_odd")
+        case .higher:
+            return localized("allow_higher_odds")
+        }
+    }
+}
+
 enum BetslipOddValidationType: String, CaseIterable {
 
     case acceptAny = "ACCEPT_ANY"

@@ -60,7 +60,7 @@ public class Event: Codable, Equatable {
         }
     }
 
-    public enum Status: Equatable {
+    public enum Status: Equatable, Hashable {
         case unknown
         case notStarted
         case inProgress(String)
@@ -73,6 +73,22 @@ public class Event: Codable, Equatable {
             default: self = .inProgress(value)
             }
         }
+//        
+//        public static func ==(lhs: Status, rhs: Status) -> Bool {
+//            switch (lhs, rhs) {
+//            case (.unknown, .unknown):
+//                return true
+//            case (.notStarted, .notStarted):
+//                return true
+//            case let (.inProgress(lhsValue), .inProgress(rhsValue)):
+//                return lhsValue == rhsValue
+//            case (.ended, .ended):
+//                return true
+//            default:
+//                return false
+//            }
+//        }
+//        
     }
 
 

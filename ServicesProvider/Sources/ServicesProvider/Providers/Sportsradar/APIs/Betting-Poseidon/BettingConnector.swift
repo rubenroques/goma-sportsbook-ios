@@ -89,8 +89,11 @@ class BettingConnector: Connector {
 //                    print("Betting-NetworkManager [[ requesting ]] ", dump(request), " [[ normal completion ]] ")
 //                }
 //            })
+
             .handleEvents(receiveOutput: { data in
-                print("Betting-NetworkManager [[ requesting ]] ", request,
+                print("Betting-NetworkManager [[ requesting ]] ",
+                      request, " Body: ",
+                      String(data: request.httpBody ?? Data(), encoding: .utf8) ?? "" ,
                       " [[ response ]] ", String(data: data, encoding: .utf8) ?? "!?" )
             })
         

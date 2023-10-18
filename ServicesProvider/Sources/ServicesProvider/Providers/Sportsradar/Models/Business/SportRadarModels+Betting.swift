@@ -446,7 +446,7 @@ extension SportRadarModels {
 
 
     struct BetslipSettings: Codable {
-        var acceptingAnyReoffer: Bool
+        var oddChange: BetslipOddChangeSetting
 
         enum CodingKeys: String, CodingKey {
             case name = "name"
@@ -461,18 +461,27 @@ extension SportRadarModels {
                 let acceptingReofferSetting = settings.first(where: { $0.name == "ACCEPTINRREOFFER" }),
                 let value = acceptingReofferSetting.value
             else {
-                acceptingAnyReoffer = false
+                self.oddChange = .none
                 return
             }
 
             switch value {
             case "0":
-                acceptingAnyReoffer = false
+                self.oddChange = .none
             case "-1":
-                acceptingAnyReoffer = true
+                self.oddChange = .any
+            
+            case "none":
+                self.oddChange = .none
+            case "any":
+                self.oddChange = .any
+            case "higher":
+                self.oddChange = .higher
+                
             default:
-                acceptingAnyReoffer = false
+                self.oddChange = .none
             }
+            
         }
 
         private struct Settings: Codable {
@@ -482,7 +491,7 @@ extension SportRadarModels {
 
         func encode(to encoder: Encoder) throws {
             var container = encoder.container(keyedBy: SportRadarModels.BetslipSettings.CodingKeys.self)
-            try container.encode(self.acceptingAnyReoffer, forKey: .acceptingAnyReoffer)
+            try container.encode(self.oddChange, forKey: .acceptingAnyReoffer)
         }
 
     }

@@ -175,7 +175,7 @@ class SportRadarBettingProvider: BettingProvider, Connector {
 
         return publisher
             .map({ internalBetslipSettings in
-                return BetslipSettings(acceptingAnyReoffer: internalBetslipSettings.acceptingAnyReoffer)
+                return BetslipSettings(oddChange: internalBetslipSettings.oddChange)
             })
             .replaceError(with: nil)
             .eraseToAnyPublisher()
@@ -183,8 +183,8 @@ class SportRadarBettingProvider: BettingProvider, Connector {
 
     func updateBetslipSettings(_ betslipSettings: BetslipSettings) -> AnyPublisher<Bool, Never> {
 
-        let endpoint = BettingAPIClient.updateBetslipSettings(acceptingReoffer: betslipSettings.acceptingAnyReoffer)
-        let publisher: AnyPublisher<SportRadarModels.BetslipSettings, ServiceProviderError> = self.connector.request(endpoint)
+        let endpoint = BettingAPIClient.updateBetslipSettings(oddChange: betslipSettings.oddChange)
+        let publisher: AnyPublisher<String, ServiceProviderError> = self.connector.request(endpoint)
 
         return publisher
             .mapError({ error in

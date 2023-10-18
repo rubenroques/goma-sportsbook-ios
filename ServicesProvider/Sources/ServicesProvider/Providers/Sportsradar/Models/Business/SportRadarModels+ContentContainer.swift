@@ -292,10 +292,6 @@ extension SportRadarModels {
             let contentIdentifier = try container.decode(ContentIdentifier.self, forKey: .content)
             let path: String = try container.decodeIfPresent(String.self, forKey: .path) ?? ""
 
-            if contentIdentifier.contentType == .eventDetailsLiveData {
-                print("LoadingBug Stop")
-            }
-
             if case let ContentRoute.eventDetailsLiveData(eventId) = contentIdentifier.contentRoute {
                 if let eventLiveData = (try? container.decode(SportRadarModels.EventLiveDataExtended.self, forKey: .change)) {
                     return .updateEventLiveDataExtended(contentIdentifier: contentIdentifier, eventId: eventId , eventLiveDataExtended: eventLiveData)

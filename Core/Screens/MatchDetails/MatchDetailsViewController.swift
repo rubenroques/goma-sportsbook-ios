@@ -287,7 +287,6 @@ class MatchDetailsViewController: UIViewController {
     
     // MARK: - Lifetime and Cycle
     init(viewModel: MatchDetailsViewModel) {
-        print("LoadingBug 1")
         self.viewModel = viewModel
         
         self.marketGroupsPagedViewController = UIPageViewController(transitionStyle: .scroll,
@@ -305,7 +304,6 @@ class MatchDetailsViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        print("LoadingBug 2")
         
         self.view.transitionId = "SeeMoreToMatchDetails"
         
@@ -478,7 +476,6 @@ class MatchDetailsViewController: UIViewController {
         
         self.marketTypesCollectionView.reloadData()
 
-        print("LoadingBug 3")
         //
         //
         // Add loading view controller
@@ -510,7 +507,6 @@ class MatchDetailsViewController: UIViewController {
         //
         self.view.bringSubviewToFront(self.matchNotAvailableView)
         
-        print("LoadingBug 4")
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -633,7 +629,6 @@ class MatchDetailsViewController: UIViewController {
     // MARK: - Bindings
     private func bind(toViewModel viewModel: MatchDetailsViewModel) {
         
-        print("LoadingBug 5")
         
         Env.userSessionStore.userProfilePublisher
             .receive(on: DispatchQueue.main)
@@ -659,8 +654,6 @@ class MatchDetailsViewController: UIViewController {
                 }
             }
             .store(in: &cancellables)
-        
-        print("LoadingBug 6")
         
         self.viewModel.marketGroupsState
             .removeDuplicates()
@@ -696,7 +689,6 @@ class MatchDetailsViewController: UIViewController {
         print("LoadingBug 7")
         //
         self.viewModel.matchPublisher
-            .removeDuplicates()
             .receive(on: DispatchQueue.main)
             .sink(receiveValue: { [weak self] loadableMatch in
                 switch loadableMatch {
@@ -832,8 +824,6 @@ class MatchDetailsViewController: UIViewController {
                 marketGroupViewController.scrollToTop()
             }
         }
-
-        print("LoadingBug 8")
     }
 
     func reloadMarketGroupDetails(_ marketGroups: [MarketGroup]) {
