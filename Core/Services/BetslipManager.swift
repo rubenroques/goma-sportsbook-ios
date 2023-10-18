@@ -248,6 +248,7 @@ class BetslipManager: NSObject {
                                                       marketDescription: bettingTicket.marketDescription,
                                                       outcomeDescription: bettingTicket.outcomeDescription,
                                                       sport: bettingTicket.sport,
+                                                      sportIdCode: bettingTicket.sportIdCode,
                                                       odd: bettingTicket.odd)
 
             self.bettingTicketsDictionaryPublisher.value[bettingTicket.id] = newBettingTicket
@@ -269,6 +270,7 @@ class BetslipManager: NSObject {
                                                           marketDescription: bettingTicket.marketDescription,
                                                           outcomeDescription: bettingTicket.outcomeDescription,
                                                           sport: bettingTicket.sport,
+                                                          sportIdCode: bettingTicket.sportIdCode,
                                                           odd: newOdd)
 
                 self.bettingTicketsDictionaryPublisher.value[bettingTicket.id] = newBettingTicket
@@ -307,7 +309,8 @@ extension BetslipManager {
                                                                          marketName: "",
                                                                          outcomeName: "",
                                                                          odd: convertedOdd,
-                                                                         stake: 1)
+                                                                         stake: 1,
+                                                                         sportIdCode: bettingTicket.sportIdCode)
             return betTicketSelection
         }
 
@@ -364,7 +367,8 @@ extension BetslipManager {
                                                                      marketName: "",
                                                                      outcomeName: "",
                                                                      odd: convertedOdd,
-                                                                     stake: amount)
+                                                                     stake: amount,
+                                                                     sportIdCode: bettingTicket.sportIdCode)
 
         let betTicket = ServicesProvider.BetTicket(tickets: [betTicketSelection],
                                                    stake: amount,
@@ -417,7 +421,8 @@ extension BetslipManager {
                                                                          marketName: "",
                                                                          outcomeName: "",
                                                                          odd: convertedOdd,
-                                                                         stake: stake)
+                                                                         stake: stake,
+                                                                         sportIdCode: singleTicket.sportIdCode)
 
             let betTicket = ServicesProvider.BetTicket(tickets: [betTicketSelection],
                                                        stake: stake,
@@ -477,7 +482,8 @@ extension BetslipManager {
                                                                          marketName: "",
                                                                          outcomeName: "",
                                                                          odd: odd,
-                                                                         stake: stake)
+                                                                         stake: stake,
+                                                                         sportIdCode: bettingTicket.sportIdCode)
             return betTicketSelection
         }
 
@@ -546,7 +552,7 @@ extension BetslipManager {
                                                                          marketName: "",
                                                                          outcomeName: "",
                                                                          odd: odd,
-                                                                         stake: stake)
+                                                                         stake: stake, sportIdCode: bettingTicket.sportIdCode)
             return betTicketSelection
         }
 
@@ -605,7 +611,8 @@ extension BetslipManager {
                                                            marketName: "",
                                                            outcomeName: "",
                                                            odd: odd,
-                                                           stake: stake)
+                                                           stake: stake,
+                                                           sportIdCode: ticket.sportIdCode)
             }
 
         let betTicket = ServicesProvider.BetTicket(tickets: ticketSelections,
@@ -641,7 +648,8 @@ extension BetslipManager {
                                                                          marketName: "",
                                                                          outcomeName: "",
                                                                          odd: odd,
-                                                                         stake: stake)
+                                                                         stake: stake,
+                                                                         sportIdCode: bettingTicket.sportIdCode)
             return betTicketSelection
         }
 
@@ -685,7 +693,8 @@ extension BetslipManager {
                                                                          marketName: "",
                                                                          outcomeName: "",
                                                                          odd: odd,
-                                                                         stake: stake)
+                                                                         stake: stake,
+                                                                         sportIdCode: bettingTicket.sportIdCode)
             return betTicketSelection
         }
 
@@ -710,6 +719,9 @@ extension BetslipManager {
 
         let betTicketSelections = self.bettingTicketsPublisher.value.map { bettingTicket in
             let odd = ServiceProviderModelMapper.serviceProviderOddFormat(fromOddFormat: bettingTicket.odd)
+
+            let bet = bettingTicket
+
             let betTicketSelection = ServicesProvider.BetTicketSelection(identifier: bettingTicket.id,
                                                                          eventName: bettingTicket.matchId,
                                                                          homeTeamName: "",
@@ -717,7 +729,8 @@ extension BetslipManager {
                                                                          marketName: bettingTicket.marketId,
                                                                          outcomeName: bettingTicket.outcomeId,
                                                                          odd: odd,
-                                                                         stake: 0)
+                                                                         stake: 0,
+                                                                         sportIdCode: bettingTicket.sportIdCode)
             return betTicketSelection
         }
 

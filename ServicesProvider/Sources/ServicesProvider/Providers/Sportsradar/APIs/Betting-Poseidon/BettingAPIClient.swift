@@ -522,6 +522,7 @@ extension BettingAPIClient: Endpoint {
 
         var legsStringArray: [String] = []
         for selection in betTicket.tickets {
+            let sport = selection
             let priceDown: String
             let priceUp: String
 
@@ -541,7 +542,7 @@ extension BettingAPIClient: Endpoint {
                 "idFOSelection": "\(selection.identifier)",
                 "priceDown": "\(priceDown)",
                 "priceUp": "\(priceUp)",
-                "idFOSport": "SPORT",
+                "idFOSport": "\(selection.sportIdCode ?? "SPORT")",
                 "idFOMarket": "\(selection.marketName)",
                 "idFOEvent": "\(selection.eventName)"
                 }

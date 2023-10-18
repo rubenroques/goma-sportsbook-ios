@@ -45,6 +45,7 @@ extension SportRadarModelMapper {
                      competitionId: internalEvent.competitionId ?? "",
                      competitionName: internalEvent.competitionName ?? "",
                      sport: sport,
+                     sportIdCode: internalEvent.sportIdCode,
                      startDate: internalEvent.startDate ?? Date(),
                      markets: markets,
                      venueCountry: country,
