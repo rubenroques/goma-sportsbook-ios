@@ -354,12 +354,20 @@ class SupportPageViewController: UIViewController {
     }
 
     @objc func didTapChatButton() {
-        print("TAPPED CHAT!")
+
         Zendesk.initialize(appId: "90015cb5fb43daa2fc5307a61d4b8cdae1ee3e50c4b88d0b",
                            clientId: "mobile_sdk_client_96ee05c0fdb1b08671ec",
                            zendeskUrl: "https://betssonfrance.zendesk.com/")
 
-        Zendesk.instance?.setIdentity(Identity.createAnonymous())
+        if let userLogged = Env.userSessionStore.userProfilePublisher.value,
+           Env.userSessionStore.isUserLogged() {
+
+            Zendesk.instance?.setIdentity(Identity.createAnonymous(name: userLogged.username, email: userLogged.email))
+
+        }
+        else {
+            Zendesk.instance?.setIdentity(Identity.createAnonymous())
+        }
 
         Support.initialize(withZendesk: Zendesk.instance)
         AnswerBot.initialize(withZendesk: Zendesk.instance, support: Support.instance!)

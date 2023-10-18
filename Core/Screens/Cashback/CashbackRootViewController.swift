@@ -169,8 +169,6 @@ class CashbackRootViewController: UIViewController {
 
         self.termsToggleButton.backgroundColor = .clear
 
-        //self.termsDescriptionLabel.textColor = UIColor.App.textPrimary
-
     }
 
     private func resizeBannerImageView() {
@@ -311,7 +309,7 @@ extension CashbackRootViewController {
         let imageView = UIImageView()
         imageView.translatesAutoresizingMaskIntoConstraints = false
         imageView.image = UIImage(named: "cashback_big_blue_icon")
-        imageView.contentMode = .center
+        imageView.contentMode = .scaleAspectFit
         return imageView
     }
 
@@ -478,6 +476,7 @@ extension CashbackRootViewController {
 
         return label
     }
+
     // Constraints
     private static func createBannerImageViewFixedHeightConstraint() -> NSLayoutConstraint {
         let constraint = NSLayoutConstraint()
@@ -610,7 +609,7 @@ extension CashbackRootViewController {
             self.cashbackBetDescriptionLabel.trailingAnchor.constraint(equalTo: self.cashbackBetTitleLabel.trailingAnchor),
             self.cashbackBetDescriptionLabel.topAnchor.constraint(equalTo: self.cashbackBetTitleLabel.bottomAnchor, constant: 7),
 
-            self.cashbackBetIconImageView.widthAnchor.constraint(equalToConstant: 20),
+            self.cashbackBetIconImageView.widthAnchor.constraint(equalToConstant: 25),
             self.cashbackBetIconImageView.heightAnchor.constraint(equalTo: self.cashbackBetIconImageView.widthAnchor),
             self.cashbackBetIconImageView.topAnchor.constraint(equalTo: self.cashbackBetDescriptionLabel.bottomAnchor, constant: 4),
             self.cashbackBetIconImageView.bottomAnchor.constraint(equalTo: self.cashbackBetBaseView.bottomAnchor, constant: -16),
@@ -648,7 +647,6 @@ extension CashbackRootViewController {
             self.cashbackUsedBaseView.leadingAnchor.constraint(equalTo: self.containerView.leadingAnchor, constant: 14),
             self.cashbackUsedBaseView.trailingAnchor.constraint(equalTo: self.containerView.trailingAnchor, constant: -14),
             self.cashbackUsedBaseView.topAnchor.constraint(equalTo: self.cashbackBalanceBaseView.bottomAnchor, constant: 16),
-            //self.cashbackUsedBaseView.bottomAnchor.constraint(equalTo: self.containerView.bottomAnchor, constant: -20),
 
             self.cashbackUsedTitleLabel.leadingAnchor.constraint(equalTo: self.cashbackUsedBaseView.leadingAnchor, constant: 16),
             self.cashbackUsedTitleLabel.trailingAnchor.constraint(equalTo: self.cashbackUsedBaseView.trailingAnchor, constant: -16),
@@ -673,8 +671,7 @@ extension CashbackRootViewController {
         NSLayoutConstraint.activate([
             self.bottomBannerImageView.leadingAnchor.constraint(equalTo: self.containerView.leadingAnchor),
             self.bottomBannerImageView.trailingAnchor.constraint(equalTo: self.containerView.trailingAnchor),
-            self.bottomBannerImageView.topAnchor.constraint(equalTo: self.cashbackUsedBaseView.bottomAnchor, constant: 20),
-            //self.bottomBannerImageView.bottomAnchor.constraint(equalTo: self.containerView.bottomAnchor)
+            self.bottomBannerImageView.topAnchor.constraint(equalTo: self.cashbackUsedBaseView.bottomAnchor, constant: 20)
         ])
 
         // Terms info

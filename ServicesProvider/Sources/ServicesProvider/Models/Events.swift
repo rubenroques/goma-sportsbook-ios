@@ -29,6 +29,7 @@ public class Event: Codable, Equatable {
     public var homeTeamName: String
     public var awayTeamName: String
     public var sport: SportType
+    public var sportIdCode: String?
 
     public var homeTeamScore: Int?
     public var awayTeamScore: Int?
@@ -99,6 +100,7 @@ public class Event: Codable, Equatable {
         case competitionId = "competitionId"
         case competitionName = "competitionName"
         case sport = "sport"
+        case sportIdCode = "sportIdCode"
         case startDate = "startDate"
         case markets = "markets"
         case venueCountry = "venueCountry"
@@ -113,6 +115,7 @@ public class Event: Codable, Equatable {
                 competitionId: String,
                 competitionName: String,
                 sport: SportType,
+                sportIdCode: String?,
                 startDate: Date,
                 markets: [Market],
                 venueCountry: Country? = nil,
@@ -132,6 +135,8 @@ public class Event: Codable, Equatable {
         self.competitionName = competitionName
 
         self.sport = sport
+
+        self.sportIdCode = sportIdCode
 
         self.startDate = startDate
         self.markets = markets
@@ -158,6 +163,7 @@ public class Event: Codable, Equatable {
         self.markets = try container.decode([Market].self, forKey: .markets)
         self.venueCountry = try container.decodeIfPresent(Country.self, forKey: .venueCountry)
         self.numberMarkets = try container.decodeIfPresent(Int.self, forKey: .numberMarkets)
+        self.sportIdCode = try container.decodeIfPresent(String.self, forKey: .sportIdCode)
     }
 
     public func encode(to encoder: Encoder) throws {
@@ -172,6 +178,7 @@ public class Event: Codable, Equatable {
         try container.encode(self.markets, forKey: .markets)
         try container.encodeIfPresent(self.venueCountry, forKey: .venueCountry)
         try container.encodeIfPresent(self.numberMarkets, forKey: .numberMarkets)
+        try container.encodeIfPresent(self.sportIdCode, forKey: .sportIdCode)
     }
 
     public static func == (lhs: Event, rhs: Event) -> Bool {

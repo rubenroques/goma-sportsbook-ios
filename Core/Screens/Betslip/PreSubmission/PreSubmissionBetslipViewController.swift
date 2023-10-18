@@ -1426,7 +1426,8 @@ class PreSubmissionBetslipViewController: UIViewController {
 
         NSLayoutConstraint.activate([
             self.learnMoreBaseView.bottomAnchor.constraint(equalTo: self.winningsTypeBaseView.topAnchor, constant: -1),
-            self.learnMoreBaseView.trailingAnchor.constraint(equalTo: self.cashbackInfoMultipleView.trailingAnchor, constant: 10)
+            self.learnMoreBaseView.trailingAnchor.constraint(equalTo: self.cashbackInfoMultipleBaseView.trailingAnchor, constant: -60),
+            self.learnMoreBaseView.leadingAnchor.constraint(equalTo: self.view.leadingAnchor, constant: 10)
         ])
 
         self.learnMoreBaseView.didTapLearnMoreAction = { [weak self] in
@@ -1788,7 +1789,27 @@ class PreSubmissionBetslipViewController: UIViewController {
                     self?.cashbackResultValuePublisher.send(nil)
                 }
             } receiveValue: { [weak self] cashbackResult in
-                self?.cashbackResultValuePublisher.send(cashbackResult.amount)
+                if let cashbackAmountResult = cashbackResult.amount {
+                    if let cashbackFreeResult = cashbackResult.amountFree,
+                    cashbackFreeResult > 0 && cashbackAmountResult == 0 {
+                        self?.cashbackResultValuePublisher.send(cashbackFreeResult)
+                    }
+                    else {
+                        self?.cashbackResultValuePublisher.send(cashbackAmountResult)
+
+                    }
+                }
+                else if let cashbackAmountFreeResult = cashbackResult.amountFree {
+                    if let cashbackAmountResult = cashbackResult.amount,
+                       cashbackAmountResult > 0 && cashbackAmountFreeResult == 0 {
+
+                        self?.cashbackResultValuePublisher.send(cashbackAmountResult)
+                    }
+                    else {
+                        self?.cashbackResultValuePublisher.send(cashbackAmountFreeResult)
+
+                    }
+                }
             }
             .store(in: &cancellables)
     }

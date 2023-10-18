@@ -208,8 +208,8 @@ public struct BetTicketSelection: Codable {
     public var marketName: String
     public var outcomeName: String
     public var odd: OddFormat
-
     public var stake: Double
+    public var sportIdCode: String?
 
     public init(identifier: String,
                 eventName: String,
@@ -218,7 +218,8 @@ public struct BetTicketSelection: Codable {
                 marketName: String,
                 outcomeName: String,
                 odd: OddFormat,
-                stake: Double) {
+                stake: Double,
+                sportIdCode: String?) {
         
         self.identifier = identifier
         self.eventName = eventName
@@ -228,6 +229,7 @@ public struct BetTicketSelection: Codable {
         self.outcomeName = outcomeName
         self.odd = odd
         self.stake = stake
+        self.sportIdCode = sportIdCode
     }
 
 }

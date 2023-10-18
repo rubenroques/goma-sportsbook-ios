@@ -219,6 +219,7 @@ extension SportRadarModels {
         var awayName: String?
         var sportTypeName: String?
         var sportTypeCode: String?
+        var sportIdCode: String?
 
         var competitionId: String?
         var competitionName: String?
@@ -274,7 +275,7 @@ extension SportRadarModels {
             case numberMarkets = "numMarkets"
             case name = "name"
             case sportTypeCode = "idfosporttype"
-
+            case sportIdCode = "idfosport"
             case liveDataSummary = "liveDataSummary"
 
             case scoresContainer = "scores"
@@ -316,6 +317,8 @@ extension SportRadarModels {
 
             self.sportTypeName = try container.decodeIfPresent(String.self, forKey: .sportTypeName)
             self.sportTypeCode = try container.decodeIfPresent(String.self, forKey: .sportTypeCode)
+
+            self.sportIdCode = try container.decodeIfPresent(String.self, forKey: .sportIdCode)
 
 //            #if DEBUG
 //            self.homeName = self.id + " " + (self.homeName ?? "")

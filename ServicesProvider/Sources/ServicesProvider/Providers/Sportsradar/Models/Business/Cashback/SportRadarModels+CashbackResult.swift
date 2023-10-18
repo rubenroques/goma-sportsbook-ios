@@ -11,11 +11,13 @@ extension SportRadarModels {
 
     struct CashbackResult: Codable {
         var id: Double
-        var amount: Double
+        var amount: Double?
+        var amountFree: Double?
 
         enum CodingKeys: String, CodingKey {
             case id = "idFoSOOffer"
             case amount = "soReturn"
+            case amountFree = "soFreeReturn"
         }
     }
 }

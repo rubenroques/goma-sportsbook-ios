@@ -9,10 +9,12 @@ import Foundation
 
 public struct CashbackResult: Codable {
     public var id: Double
-    public var amount: Double
+    public var amount: Double?
+    public var amountFree: Double?
 
     enum CodingKeys: String, CodingKey {
         case id = "idFoSOOffer"
         case amount = "soReturn"
+        case amountFree = "soFreeReturn"
     }
 }
