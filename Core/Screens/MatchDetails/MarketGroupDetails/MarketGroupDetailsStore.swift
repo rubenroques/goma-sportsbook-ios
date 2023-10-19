@@ -58,7 +58,7 @@ class MarketGroupDetailsStore {
 
         for market in markets {
 
-            let similarMarketKey = "\(market.bettingTypeId ?? "000")-\(match.homeParticipant.name ?? "x")-\(match.awayParticipant.name ?? "x")"
+            let similarMarketKey = "\(market.marketTypeId ?? "000")-\(match.homeParticipant.name ?? "x")-\(match.awayParticipant.name ?? "x")"
 
             if self.firstMarketCache == nil {
                 self.firstMarketCache = market
@@ -142,10 +142,6 @@ class MarketGroupDetailsStore {
             if let value = similarMarkets[marketKey] {
 
                 guard let firstMarket = value.first else { continue }
-
-                if firstMarket.name == "Anytime goalscorer" {
-                    print("DEBUG")
-                }
 
                 let marketGroupName = similarMarketsNames[marketKey] ?? ""
 
