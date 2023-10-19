@@ -135,7 +135,7 @@ extension SportRadarEventsStorage {
         guard let eventSubject = self.eventsDictionary[id] else { return }
         let event = eventSubject.value
 
-        event.status = Event.Status(value: newStatus)
+        event.status = EventStatus(value: newStatus)
 
         eventSubject.send(event)
     }

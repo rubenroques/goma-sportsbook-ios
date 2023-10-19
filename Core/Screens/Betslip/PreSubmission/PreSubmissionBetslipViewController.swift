@@ -2171,27 +2171,41 @@ extension PreSubmissionBetslipViewController: UIPickerViewDelegate, UIPickerView
         }
     }
 
-    func pickerView(_ pickerView: UIPickerView, attributedTitleForRow row: Int, forComponent component: Int) -> NSAttributedString? {
+    func pickerView(_ pickerView: UIPickerView, viewForRow row: Int, forComponent component: Int, reusing view: UIView?) -> UIView {
+        let label: UILabel
+
+        if let labelView = view as? UILabel {
+            label = labelView
+        }
+        else {
+            label = UILabel(frame: CGRect(x: 0, y: 0, width: pickerView.frame.width - 32, height: 400))
+        }
+        label.font = AppFont.with(type: .medium, size: 18)
+        label.lineBreakMode = .byWordWrapping
+        label.textAlignment = .center
+        label.numberOfLines = 0
+        
         if pickerView.tag == 1 {
             let optionName = self.systemBetOptions[safe: row]?.name ?? localized("system_bet")
-
             let normalizedOptionName = optionName.replacingOccurrences(of: "[^a-zA-Z0-9]", with: "_", options: .regularExpression).lowercased()
-
             let optionKeyName = "allowed_bet_types_\(normalizedOptionName)"
-
             let optionKey = localized(optionKeyName)
 
             let name = "\(optionKey) x\(self.systemBetOptions[safe: row]?.numberOfBets ?? 0)"
-            // let name = "\(self.systemBetOptions[safe: row]?.name ?? "--") x\(self.systemBetOptions[safe: row]?.numberOfBets ?? 0)"
-            return NSAttributedString(string: name,
+            label.attributedText = NSAttributedString(string: name,
                                       attributes: [NSAttributedString.Key.foregroundColor: UIColor.App.textPrimary])
         }
         else {
-            return NSAttributedString(string: BetslipOddChangeSetting.allCases[safe: row]?.localizedString ?? "--",
-                                      attributes: [NSAttributedString.Key.foregroundColor: UIColor.App.textPrimary])
+            let title = BetslipOddChangeSetting.allCases[safe: row]?.localizedString ?? "--"
+            label.attributedText = NSAttributedString(string: title,
+                                                      attributes: [NSAttributedString.Key.foregroundColor: UIColor.App.textPrimary])
         }
+        
+        label.sizeToFit()
+        
+        return label
     }
-
+    
     func pickerView(_ pickerView: UIPickerView, didSelectRow row: Int, inComponent component: Int) {
         if pickerView.tag == 1 {
             self.selectedSystemBetType = self.systemBetOptions[safe: row]
@@ -2203,6 +2217,15 @@ extension PreSubmissionBetslipViewController: UIPickerViewDelegate, UIPickerView
         }
     }
 
+    func pickerView(_ pickerView: UIPickerView, rowHeightForComponent component: Int) -> CGFloat {
+        if pickerView.tag == 1 {
+            return 30.0
+        }
+        else {
+            return 40.0
+        }
+    }
+    
 }
 
 typealias UITableViewDelegateDataSource = UITableViewDelegate & UITableViewDataSource

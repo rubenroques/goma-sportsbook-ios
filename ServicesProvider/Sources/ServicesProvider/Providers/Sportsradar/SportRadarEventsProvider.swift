@@ -12,7 +12,7 @@ import Extensions
 import SharedModels
 
 class SportRadarEventsProvider: EventsProvider {
-
+    
     private var socketConnector: SportRadarSocketConnector
     private var restConnector: SportRadarRestConnector
 
@@ -86,7 +86,7 @@ class SportRadarEventsProvider: EventsProvider {
 
     private var eventsPaginators: [String: SportRadarEventsPaginator] = [:]
     private var eventDetailsCoordinators: [String: SportRadarEventDetailsCoordinator] = [:]
-    private var liveEventDetailsCoordinators: [String: SportRadarLiveEventDetailsCoordinator] = [:]
+    private var liveEventDetailsCoordinators: [String: SportRadarLiveEventDataCoordinator] = [:]
     private var marketUpdatesCoordinators: [String: SportRadarMarketDetailsCoordinator] = [:]
 
     private var competitionEventsPublisher: [ContentIdentifier: CurrentValueSubject<SubscribableContent<[EventsGroup]>, ServiceProviderError>] = [:]
@@ -112,6 +112,10 @@ class SportRadarEventsProvider: EventsProvider {
 
         for eventDetailsCoordinator in self.getValidEventDetailsCoordinators() {
             eventDetailsCoordinator.reconnect(withNewSessionToken: newSocketToken)
+        }
+        
+        for liveEventDetailsCoordinator in self.getValidLiveEventDetailsCoordinators() {
+            liveEventDetailsCoordinator.reconnect(withNewSessionToken: newSocketToken)
         }
 
         self.marketUpdatesCoordinators = self.marketUpdatesCoordinators.filter { $0.value.isActive }
@@ -482,26 +486,6 @@ class SportRadarEventsProvider: EventsProvider {
         return publisher.eraseToAnyPublisher()
     }
 
-    func subscribeEventDetails(eventId: String) -> AnyPublisher<SubscribableContent<Event>, ServiceProviderError> {
-
-        guard
-            let sessionToken = socketConnector.token
-        else {
-            return Fail(error: ServiceProviderError.userSessionNotFound).eraseToAnyPublisher()
-        }
-
-        if let eventDetailsCoordinator = self.getValidEventDetailsCoordinator(forKey: eventId) {
-            return eventDetailsCoordinator.eventDetailsPublisher
-        }
-        else {
-            let eventDetailsCoordinator = SportRadarEventDetailsCoordinator(matchId: eventId,
-                                                                            sessionToken: sessionToken.hash,
-                                                                            storage: SportRadarEventStorage())
-            self.addEventDetailsCoordinator(eventDetailsCoordinator, withKey: eventId)
-            return eventDetailsCoordinator.eventDetailsPublisher
-        }
-    }
-
     func subscribeOutrightMarkets(forMarketGroupId marketGroupId: String) -> AnyPublisher<SubscribableContent<[EventsGroup]>, ServiceProviderError> {
 
         //self.outrightDetailsPublisher = CurrentValueSubject<SubscribableContent<[EventsGroup]>, ServiceProviderError>.init(.disconnected)
@@ -629,7 +613,27 @@ class SportRadarEventsProvider: EventsProvider {
 //
 //    }
 
-    public func subscribeToEventLiveDataUpdates(withId id: String) -> AnyPublisher<SubscribableContent<Event>, ServiceProviderError> {
+    func subscribeEventDetails(eventId: String) -> AnyPublisher<SubscribableContent<Event>, ServiceProviderError> {
+
+        guard
+            let sessionToken = socketConnector.token
+        else {
+            return Fail(error: ServiceProviderError.userSessionNotFound).eraseToAnyPublisher()
+        }
+
+        if let eventDetailsCoordinator = self.getValidEventDetailsCoordinator(forKey: eventId) {
+            return eventDetailsCoordinator.eventDetailsPublisher
+        }
+        else {
+            let eventDetailsCoordinator = SportRadarEventDetailsCoordinator(matchId: eventId,
+                                                                            sessionToken: sessionToken.hash,
+                                                                            storage: SportRadarEventStorage())
+            self.addEventDetailsCoordinator(eventDetailsCoordinator, withKey: eventId)
+            return eventDetailsCoordinator.eventDetailsPublisher
+        }
+    }
+
+    public func subscribeToLiveDataUpdates(forEventWithId id: String) -> AnyPublisher<SubscribableContent<EventLiveData>, ServiceProviderError> {
 
         guard
             let sessionToken = socketConnector.token
@@ -640,15 +644,14 @@ class SportRadarEventsProvider: EventsProvider {
         // event details
         if let liveEventDetailsCoordinator = self.getValidLiveEventDetailsCoordinator(forKey: id),
            liveEventDetailsCoordinator.containsEvent(withid: id) {
-
-            return liveEventDetailsCoordinator.liveEventPublisher
+            return liveEventDetailsCoordinator.eventLiveDataPublisher
         }
         else {
-            let liveEventDetailsCoordinator = SportRadarLiveEventDetailsCoordinator(eventId: id,
+            let liveEventDetailsCoordinator = SportRadarLiveEventDataCoordinator(eventId: id,
                                                                              sessionToken: sessionToken.hash,
                                                                              storage: SportRadarEventStorage() )
             self.addLiveEventDetailsCoordinator(liveEventDetailsCoordinator, withKey: id)
-            return liveEventDetailsCoordinator.liveEventPublisher
+            return liveEventDetailsCoordinator.eventLiveDataPublisher
         }
 
     }
@@ -865,6 +868,10 @@ extension SportRadarEventsProvider: SportRadarConnectorSubscriber {
         for eventDetailsCoordinator in self.getValidEventDetailsCoordinators() {
             eventDetailsCoordinator.updatedLiveData(eventLiveDataExtended: eventLiveDataExtended, forContentIdentifier: contentIdentifier)
         }
+        for liveEventDetailsCoordinator in self.getValidLiveEventDetailsCoordinators() {
+            liveEventDetailsCoordinator.updatedLiveData(eventLiveDataExtended: eventLiveDataExtended, forContentIdentifier: contentIdentifier)
+        }
+        
     }
 
     func didReceiveGenericUpdate(content: SportRadarModels.ContentContainer) {
@@ -877,6 +884,10 @@ extension SportRadarEventsProvider: SportRadarConnectorSubscriber {
             eventDetailsCoordinator.handleContentUpdate(content)
         }
 
+        for liveEventDetailsCoordinator in self.getValidLiveEventDetailsCoordinators() {
+            liveEventDetailsCoordinator.handleContentUpdate(content)
+        }
+        
         for marketUpdatesCoordinator in self.marketUpdatesCoordinators.values {
             marketUpdatesCoordinator.handleContentUpdate(content)
         }
@@ -1825,17 +1836,17 @@ extension SportRadarEventsProvider {
 
 extension SportRadarEventsProvider {
 
-    func getValidLiveEventDetailsCoordinators() -> [SportRadarLiveEventDetailsCoordinator] {
+    func getValidLiveEventDetailsCoordinators() -> [SportRadarLiveEventDataCoordinator] {
         self.liveEventDetailsCoordinators = self.liveEventDetailsCoordinators.filter({ $0.value.isActive })
         return Array(self.liveEventDetailsCoordinators.values)
     }
 
-    func getValidLiveEventDetailsCoordinator(forKey key: String) -> SportRadarLiveEventDetailsCoordinator? {
+    func getValidLiveEventDetailsCoordinator(forKey key: String) -> SportRadarLiveEventDataCoordinator? {
         self.liveEventDetailsCoordinators = self.liveEventDetailsCoordinators.filter({ $0.value.isActive })
         return self.liveEventDetailsCoordinators[key]
     }
 
-    func addLiveEventDetailsCoordinator(_ coordinator: SportRadarLiveEventDetailsCoordinator, withKey key: String) {
+    func addLiveEventDetailsCoordinator(_ coordinator: SportRadarLiveEventDataCoordinator, withKey key: String) {
         self.liveEventDetailsCoordinators = self.liveEventDetailsCoordinators.filter({ $0.value.isActive })
         self.liveEventDetailsCoordinators[key] = coordinator
     }

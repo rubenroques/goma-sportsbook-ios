@@ -71,7 +71,7 @@ class MyTicketBetLineView: NibView {
 
         self.commonInit()
 
-        self.getMatchDetails()
+        self.getMatchLiveDetails()
     }
 
     @available(iOS, unavailable)
@@ -301,7 +301,8 @@ class MyTicketBetLineView: NibView {
             self.liveIconImage.isHidden = true
         }
     }
-
+    
+    /*
     func getMatchDetails() {
 
         if let eventId = self.betHistoryEntrySelection.eventId {
@@ -361,7 +362,8 @@ class MyTicketBetLineView: NibView {
                 
         }
     }
-
+    */
+    
     func getMatchLiveDetails() {
 
         if let eventId = self.betHistoryEntrySelection.eventId {
@@ -371,20 +373,21 @@ class MyTicketBetLineView: NibView {
             self.liveMatchDetailsCancellable?.cancel()
             self.liveMatchDetailsCancellable = nil
             
-            self.liveMatchDetailsCancellable = Env.servicesProvider.subscribeToEventLiveDataUpdates(withId: eventId)
+            self.liveMatchDetailsCancellable = Env.servicesProvider.subscribeToLiveDataUpdates(forEventWithId: eventId)
                 .receive(on: DispatchQueue.main)
                 .sink(receiveCompletion: { completion in
-
                     print("MatchWidgetCollectionViewCell matchLiveDataSubscriber subscribeToEventLiveDataUpdates completion: \(completion)")
-                    
-                }, receiveValue: { [weak self] (eventSubscribableContent: SubscribableContent<ServicesProvider.Event>) in
+                }, receiveValue: { [weak self] (eventSubscribableContent: SubscribableContent<ServicesProvider.EventLiveData>) in
                     switch eventSubscribableContent {
                     case .connected(let subscription):
                         self?.liveMatchDetailsSubscription = subscription
-                    case .contentUpdate(let event):
-                        let updatedMatch = ServiceProviderModelMapper.match(fromEvent: event)
                         
-                        switch updatedMatch.status {
+                        self?.liveIconImage.isHidden = true
+                        self?.dateLabel.isHidden = false
+                        
+                    case .contentUpdate(let eventLiveData):
+                        
+                        switch eventLiveData.status {
                         case .notStarted, .ended, .unknown:
                             self?.liveIconImage.isHidden = true
                             self?.dateLabel.isHidden = false
@@ -393,17 +396,21 @@ class MyTicketBetLineView: NibView {
                             self?.liveIconImage.isHidden = false
                             self?.dateLabel.isHidden = true
 
-                            if let homeScore = updatedMatch.homeParticipantScore {
+                            if let homeScore = eventLiveData.homeScore {
                                 self?.homeTeamScoreLabel.text = "\(homeScore)"
                             }
 
-                            if let awayScore = updatedMatch.awayParticipantScore {
+                            if let awayScore = eventLiveData.awayScore {
                                 self?.awayTeamScoreLabel.text = "\(awayScore)"
                             }
+                        case .none:
+                            self?.liveIconImage.isHidden = true
+                            self?.dateLabel.isHidden = false
                         }
                         
                     case .disconnected:
-                        break
+                        self?.liveIconImage.isHidden = true
+                        self?.dateLabel.isHidden = false
                     }
                 })
             

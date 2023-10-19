@@ -570,7 +570,7 @@ extension SportRadarModels.ContentContainer: CustomDebugStringConvertible {
             return "Update Market Tradability (Content ID: \(contentIdentifier)) - Market ID: \(marketId) - Tradable: \(isTradable)"
 
         case .updateOutcomeOdd(let contentIdentifier, let selectionId, let newOddNumerator, let newOddDenominator):
-            return "🅾️Update Outcome Odd (Content ID: \(contentIdentifier)) - Selection ID: \(selectionId) - New Odd Numerator: \(String(describing: newOddNumerator)) - New Odd Denominator: \(String(describing: newOddDenominator))"
+            return "Update Outcome Odd (Content ID: \(contentIdentifier)) - Selection ID: \(selectionId) - New Odd Numerator: \(String(describing: newOddNumerator)) - New Odd Denominator: \(String(describing: newOddDenominator))"
         case .updateOutcomeTradability(let contentIdentifier, let selectionId, let isTradable):
             return "Update Outcome Tradability (Content ID: \(contentIdentifier)) - Market ID: \(selectionId) - Tradable: \(isTradable)"
 

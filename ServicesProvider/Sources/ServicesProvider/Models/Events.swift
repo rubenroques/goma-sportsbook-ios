@@ -23,6 +23,21 @@ public enum EventType: String, Equatable {
     case competition
 }
 
+public enum EventStatus: Equatable, Hashable {
+    case unknown
+    case notStarted
+    case inProgress(String)
+    case ended
+    
+    public init(value: String) {
+        switch value {
+        case "not_started": self = .notStarted
+        case "ended": self = .ended
+        default: self = .inProgress(value)
+        }
+    }
+}
+
 public class Event: Codable, Equatable {
 
     public var id: String
@@ -45,7 +60,7 @@ public class Event: Codable, Equatable {
 
     public var name: String?
 
-    public var status: Status?
+    public var status: EventStatus?
 
     public var matchTime: String?
 
@@ -60,39 +75,7 @@ public class Event: Codable, Equatable {
             return .match
         }
     }
-
-    public enum Status: Equatable, Hashable {
-        case unknown
-        case notStarted
-        case inProgress(String)
-        case ended
-
-        public init(value: String) {
-            switch value {
-            case "not_started": self = .notStarted
-            case "ended": self = .ended
-            default: self = .inProgress(value)
-            }
-        }
-//        
-//        public static func ==(lhs: Status, rhs: Status) -> Bool {
-//            switch (lhs, rhs) {
-//            case (.unknown, .unknown):
-//                return true
-//            case (.notStarted, .notStarted):
-//                return true
-//            case let (.inProgress(lhsValue), .inProgress(rhsValue)):
-//                return lhsValue == rhsValue
-//            case (.ended, .ended):
-//                return true
-//            default:
-//                return false
-//            }
-//        }
-//        
-    }
-
-
+    
     enum CodingKeys: String, CodingKey {
         case id = "id"
         case homeTeamName = "homeName"
@@ -121,7 +104,7 @@ public class Event: Codable, Equatable {
                 venueCountry: Country? = nil,
                 numberMarkets: Int? = nil,
                 name: String? = nil,
-                status: Status?,
+                status: EventStatus?,
                 matchTime: String?) {
 
         self.id = id
@@ -356,6 +339,64 @@ public class Outcome: Codable, Equatable {
     }
 }
 
+public struct EventLiveData: Equatable {
+    
+    public var id: String
+    public var homeScore: Int?
+    public var awayScore: Int?
+    public var matchTime: String?
+    public var status: EventStatus?
+    
+    enum CodingKeys: String, CodingKey {
+        case id = "id"
+        case homeScore = "homeScore"
+        case awayScore = "awayScore"
+        case matchTime = "matchTime"
+        case status = "status"
+    }
+    
+    public init(id: String, homeScore: Int?, awayScore: Int?, matchTime: String?, status: EventStatus?) {
+        self.id = id
+        self.homeScore = homeScore
+        self.awayScore = awayScore
+        self.matchTime = matchTime
+        self.status = status
+    }
+    
+    public init(from decoder: Decoder) throws {
+        let container = try decoder.container(keyedBy: CodingKeys.self)
+        id = try container.decode(String.self, forKey: .id)
+        homeScore = try container.decodeIfPresent(Int.self, forKey: .homeScore)
+        awayScore = try container.decodeIfPresent(Int.self, forKey: .awayScore)
+        matchTime = try container.decodeIfPresent(String.self, forKey: .matchTime)
+        
+        // Decode the status based on the "status" key
+        let statusValue = try container.decode(String.self, forKey: .status)
+        status = EventStatus(value: statusValue)
+    }
+    
+    public func encode(to encoder: Encoder) throws {
+        var container = encoder.container(keyedBy: CodingKeys.self)
+        try container.encode(id, forKey: .id)
+        try container.encodeIfPresent(homeScore, forKey: .homeScore)
+        try container.encodeIfPresent(awayScore, forKey: .awayScore)
+        try container.encodeIfPresent(matchTime, forKey: .matchTime)
+        
+        if let status = self.status {
+            switch status {
+            case .unknown:
+                try container.encode("unknown", forKey: .status)
+            case .notStarted:
+                try container.encode("not_started", forKey: .status)
+            case .inProgress(let value):
+                try container.encode(value, forKey: .status)
+            case .ended:
+                try container.encode("ended", forKey: .status)
+            }
+        }
+    }
+    
+}
 
 public struct FieldWidget: Codable {
     public var data: String?

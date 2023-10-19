@@ -41,7 +41,7 @@ protocol EventsProvider: Connector {
     func subscribeAllSportTypes() -> AnyPublisher<SubscribableContent<[SportType]>, ServiceProviderError>
 
     //
-    func subscribeToEventLiveDataUpdates(withId id: String) -> AnyPublisher<SubscribableContent<Event>, ServiceProviderError>
+    func subscribeToLiveDataUpdates(forEventWithId id: String) -> AnyPublisher<SubscribableContent<EventLiveData>, ServiceProviderError>
     
     func subscribeToEventMarketUpdates(withId id: String) -> AnyPublisher<Market?, ServiceProviderError>
     func subscribeToEventOutcomeUpdates(withId id: String) -> AnyPublisher<Outcome?, ServiceProviderError>

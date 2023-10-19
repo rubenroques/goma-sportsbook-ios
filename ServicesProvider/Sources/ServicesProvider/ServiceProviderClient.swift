@@ -232,13 +232,13 @@ extension ServicesProviderClient {
     }
 
     
-    public func subscribeToEventLiveDataUpdates(withId id: String) -> AnyPublisher<SubscribableContent<Event>, ServiceProviderError> {
+    public func subscribeToLiveDataUpdates(forEventWithId id: String) -> AnyPublisher<SubscribableContent<EventLiveData>, ServiceProviderError> {
         guard
             let eventsProvider = self.eventsProvider
         else {
             return Fail(error: ServiceProviderError.eventsProviderNotFound).eraseToAnyPublisher()
         }
-        return eventsProvider.subscribeToEventLiveDataUpdates(withId: id)
+        return eventsProvider.subscribeToLiveDataUpdates(forEventWithId: id)
     }
 
     public func subscribeToEventMarketUpdates(withId id: String) -> AnyPublisher<Market?, ServiceProviderError> {

@@ -66,7 +66,7 @@ extension ServiceProviderModelMapper {
         return match
     }
 
-    static func matchStatus(fromInternalEvent internalEventStatus: ServicesProvider.Event.Status?) -> Match.Status {
+    static func matchStatus(fromInternalEvent internalEventStatus: ServicesProvider.EventStatus?) -> Match.Status {
         guard let internalEventStatus else { return Match.Status.notStarted }
 
         switch internalEventStatus {
