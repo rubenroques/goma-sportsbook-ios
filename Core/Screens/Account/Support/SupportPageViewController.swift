@@ -1026,8 +1026,8 @@ extension SupportPageViewController: WKScriptMessageHandler {
                                 webWidget: {
                                     contactForm: {
                                         fields: [
-                                            { id: 11249444074770, prefill: { '': '\(firstName)' } },
-                                            { id: 11249427898002, prefill: { '': '\(surname)' } }
+                                            { id: 11249444074770, prefill: { '*': '\(firstName)' } },
+                                            { id: 11249427898002, prefill: { '*': '\(surname)' } }
                                         ]
                                     }
                                 }
