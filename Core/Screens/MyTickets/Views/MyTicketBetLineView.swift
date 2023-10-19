@@ -152,12 +152,6 @@ class MyTicketBetLineView: NibView {
         else {
             self.locationImageView.isHidden = true
         }
-//        if let image = UIImage(named: Assets.flagName(withCountryCode: self.countryCode)) {
-//            self.locationImageView.image = image
-//        }
-//        else {
-//            self.locationImageView.isHidden = true
-//        }
 
         if let marketName = self.betHistoryEntrySelection.marketName, let partName = self.betHistoryEntrySelection.bettingTypeEventPartName {
             self.marketLabel.text = "\(marketName) (\(partName))"
@@ -172,24 +166,12 @@ class MyTicketBetLineView: NibView {
             self.oddValueLabel.text = OddFormatter.formatOdd(withValue: oddValue)
         }
 
+        self.indicatorBaseView.isHidden = true
+        self.dateLabel.isHidden = true
+        
         self.dateLabel.text = ""
-        if let statusId = self.betHistoryEntrySelection.eventStatusId {
-            if statusId == "2" {
-                self.dateLabel.isHidden = true
-                self.liveIconImage.isHidden = false
-            }
-            else if let date = self.betHistoryEntrySelection.eventDate {
-                self.dateLabel.text = MyTicketBetLineView.dateFormatter.string(from: date)
-                self.liveIconImage.isHidden = true
-                self.dateLabel.isHidden = false
-            }
-
-        }
-        else if let date = self.betHistoryEntrySelection.eventDate {
-
+        if let date = self.betHistoryEntrySelection.eventDate {
             self.dateLabel.text = MyTicketBetLineView.dateFormatter.string(from: date)
-            self.liveIconImage.isHidden = true
-            self.dateLabel.isHidden = false
         }
 
         if self.betHistoryEntrySelection.status == .opened {
@@ -198,7 +180,6 @@ class MyTicketBetLineView: NibView {
         }
 
         self.homeTeamScoreLabel.text = self.betHistoryEntrySelection.homeParticipantScore ?? "-"
-
         self.awayTeamScoreLabel.text = self.betHistoryEntrySelection.awayParticipantScore ?? "-"
 
         if (self.homeTeamNameLabel.text?.isEmpty ?? true) && (self.awayTeamNameLabel.text?.isEmpty ?? true) {
@@ -289,81 +270,9 @@ class MyTicketBetLineView: NibView {
             self.indicatorLabel.text = ""
             self.indicatorBaseView.isHidden = false
         }
+        
     }
 
-    func recheckMatchStatusWithFailureDetails() {
-        switch self.betHistoryEntrySelection.result {
-        case .open:
-            self.dateLabel.isHidden = false
-            self.liveIconImage.isHidden = true
-        default:
-            self.dateLabel.isHidden = true
-            self.liveIconImage.isHidden = true
-        }
-    }
-    
-    /*
-    func getMatchDetails() {
-
-        if let eventId = self.betHistoryEntrySelection.eventId {
-
-            self.matchDetailsSubscription = nil
-            
-            self.matchDetailsCancellable?.cancel()
-            self.matchDetailsCancellable = nil
-            
-            self.matchDetailsCancellable = Env.servicesProvider.subscribeEventDetails(eventId: eventId)
-                .receive(on: DispatchQueue.main)
-                .sink(receiveCompletion: { [weak self] completion in
-                    switch completion {
-                    case .finished:
-                        ()
-                    case .failure(let error):
-                        switch error {
-                        case .resourceUnavailableOrDeleted: // This match is no longer available
-                            self?.recheckMatchStatusWithFailureDetails()
-
-                        default:
-                            print("MatchDetailsViewModel Error retrieving data! \(error)")
-                            self?.recheckMatchStatusWithFailureDetails()
-                        }
-                    }
-                }, receiveValue: { [weak self] (subscribableContent: SubscribableContent<ServicesProvider.Event>) in
-                    switch subscribableContent {
-                    case .connected(let subscription):
-                        self?.matchDetailsSubscription = subscription
-                    case .contentUpdate(let serviceProviderEvent):
-                        guard let self = self else { return }
-
-                        let match = ServiceProviderModelMapper.match(fromEvent: serviceProviderEvent)
-
-                        switch match.status {
-                        case .notStarted, .ended, .unknown:
-                            self.liveIconImage.isHidden = true
-                            self.dateLabel.isHidden = false
-                        case .inProgress:
-                            self.liveIconImage.isHidden = false
-                            self.dateLabel.isHidden = true
-
-                            if let homeScore = match.homeParticipantScore {
-                                self.homeTeamScoreLabel.text = "\(homeScore)"
-                            }
-
-                            if let awayScore = match.awayParticipantScore {
-                                self.awayTeamScoreLabel.text = "\(awayScore)"
-                            }
-                        }
-
-                        self.getMatchLiveDetails()
-                    case .disconnected:
-                        print("MatchDetailsViewModel getMatchDetails subscribeEventDetails disconnected")
-                    }
-                })
-                
-        }
-    }
-    */
-    
     func getMatchLiveDetails() {
 
         if let eventId = self.betHistoryEntrySelection.eventId {
@@ -382,20 +291,13 @@ class MyTicketBetLineView: NibView {
                     case .connected(let subscription):
                         self?.liveMatchDetailsSubscription = subscription
                         
-                        self?.liveIconImage.isHidden = true
-                        self?.dateLabel.isHidden = false
-                        
                     case .contentUpdate(let eventLiveData):
                         
                         switch eventLiveData.status {
                         case .notStarted, .ended, .unknown:
-                            self?.liveIconImage.isHidden = true
-                            self?.dateLabel.isHidden = false
-
+                            break
+                            
                         case .inProgress:
-                            self?.liveIconImage.isHidden = false
-                            self?.dateLabel.isHidden = true
-
                             if let homeScore = eventLiveData.homeScore {
                                 self?.homeTeamScoreLabel.text = "\(homeScore)"
                             }
@@ -404,14 +306,14 @@ class MyTicketBetLineView: NibView {
                                 self?.awayTeamScoreLabel.text = "\(awayScore)"
                             }
                         case .none:
-                            self?.liveIconImage.isHidden = true
-                            self?.dateLabel.isHidden = false
+                            break
                         }
                         
                     case .disconnected:
-                        self?.liveIconImage.isHidden = true
-                        self?.dateLabel.isHidden = false
+                        break
                     }
+                    
+                    self?.configureFromStatus()
                 })
             
         }

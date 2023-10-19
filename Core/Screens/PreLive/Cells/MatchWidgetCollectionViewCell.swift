@@ -1099,10 +1099,32 @@ class MatchWidgetCollectionViewCell: UICollectionViewCell {
 
         //
         //
-        //
         self.matchLiveDataSubscriber?.cancel()
         self.matchLiveDataSubscriber = nil
+        
+        self.matchLiveDataSubscriber = Env.servicesProvider.subscribeToEventLiveDataUpdates(withId: viewModel.match.id)
+            .receive(on: DispatchQueue.main)
+            .compactMap({ $0 })
+            .map(ServiceProviderModelMapper.match(fromEvent:))
+            .sink(receiveCompletion: { completion in
+                print("MatchWidgetCollectionViewCell matchSubscriber subscribeToEventLiveDataUpdates completion: \(completion)")
+            }, receiveValue: { [weak self] updatedMatch in
+                self?.viewModel?.match = updatedMatch
 
+                self?.dateLabel.text = "\(viewModel.startDateString)"
+                self?.timeLabel.text = "\(viewModel.startTimeString)"
+
+                self?.resultLabel.text = "\(viewModel.matchScore)"
+                self?.matchTimeLabel.text = viewModel.matchTimeDetails
+
+                if viewModel.isLiveMatch {
+                    self?.liveMatchDotBaseView.isHidden = false
+                }
+                else {
+                    self?.liveMatchDotBaseView.isHidden = true
+                }
+            })
+        
         if let market = viewModel.match.markets.first {
 
             self.marketSubscriber = Env.servicesProvider.subscribeToEventMarketUpdates(withId: market.id)

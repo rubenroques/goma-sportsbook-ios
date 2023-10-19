@@ -30,6 +30,7 @@ protocol EventsProvider: Connector {
 
     //
     //
+    func subscribeToMarketDetails(withId marketId: String, onEventId eventId:String) -> AnyPublisher<SubscribableContent<Market>, ServiceProviderError>
     func subscribeEventDetails(eventId: String) -> AnyPublisher<SubscribableContent<Event>, ServiceProviderError>
     func subscribeEventSummary(eventId: String) -> AnyPublisher<SubscribableContent<[EventsGroup]>, ServiceProviderError>
     func subscribeOutrightMarkets(forMarketGroupId marketGroupId: String) -> AnyPublisher<SubscribableContent<[EventsGroup]>, ServiceProviderError>
@@ -41,12 +42,15 @@ protocol EventsProvider: Connector {
     func subscribeAllSportTypes() -> AnyPublisher<SubscribableContent<[SportType]>, ServiceProviderError>
 
     //
+    // Live Data extended info independent from the lists
+    // This one creates a new subscription
     func subscribeToLiveDataUpdates(forEventWithId id: String) -> AnyPublisher<SubscribableContent<EventLiveData>, ServiceProviderError>
     
+    // Publishers associated with the events lists (prelive and live)
+    // Those publishers come from the paginator events
+    func subscribeToEventLiveDataUpdates(withId id: String) -> AnyPublisher<Event?, ServiceProviderError>
     func subscribeToEventMarketUpdates(withId id: String) -> AnyPublisher<Market?, ServiceProviderError>
     func subscribeToEventOutcomeUpdates(withId id: String) -> AnyPublisher<Outcome?, ServiceProviderError>
-
-    func subscribeToMarketDetails(withId marketId: String, onEventId eventId:String) -> AnyPublisher<SubscribableContent<Market>, ServiceProviderError>
 
 
     //

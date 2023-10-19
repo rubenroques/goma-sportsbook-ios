@@ -146,12 +146,7 @@ extension SportRadarEventStorage {
     }
 
     func subscribeToEventMarketUpdates(withId id: String) -> AnyPublisher<Market, Never>? {
-        if let publisher = self.marketsDictionary[id] {
-            return publisher.eraseToAnyPublisher()
-        }
-        else {
-            return nil
-        }
+        return self.marketsDictionary[id]?.eraseToAnyPublisher()
     }
 
     func subscribeToEventOutcomeUpdates(withId id: String) -> AnyPublisher<Outcome, Never>? {
@@ -168,10 +163,6 @@ extension SportRadarEventStorage {
 
     func containsOutcome(withid id: String) -> Bool {
         return self.outcomesDictionary[id] != nil
-    }
-
-    func setEventSubject(eventId: String) {
-        self.eventSubject.value?.id = eventId
     }
 
 }

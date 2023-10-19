@@ -298,8 +298,8 @@ extension BettingAPIClient: Endpoint {
             
             let body = """
                        {
-                       "id": 101,
-                       "name": "ACCEPTINRREOFFER",
+                       "id": 648,
+                       "name": "OddsChange",
                        "value": "\(acceptingReofferStringValue)"}
                        """
             let data = body.data(using: String.Encoding.utf8)!

@@ -370,10 +370,6 @@ extension SportRadarEventDetailsCoordinator {
         return self.storage.containsOutcome(withid: id)
     }
 
-    func setupEvent(withId id: String) {
-        self.storage.setEventSubject(eventId: id)
-    }
-
 }
 
 extension SportRadarEventDetailsCoordinator: UnsubscriptionController {

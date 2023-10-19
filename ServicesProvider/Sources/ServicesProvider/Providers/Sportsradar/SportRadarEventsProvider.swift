@@ -633,6 +633,7 @@ class SportRadarEventsProvider: EventsProvider {
         }
     }
 
+    // Independent Live Data extended info
     public func subscribeToLiveDataUpdates(forEventWithId id: String) -> AnyPublisher<SubscribableContent<EventLiveData>, ServiceProviderError> {
 
         guard
@@ -655,6 +656,34 @@ class SportRadarEventsProvider: EventsProvider {
         }
 
     }
+    
+    // live info associated with the paginator
+    public func subscribeToEventLiveDataUpdates(withId id: String) -> AnyPublisher<Event?, ServiceProviderError> {
+
+        guard
+            let sessionToken = socketConnector.token
+        else {
+            return Fail(error: ServiceProviderError.userSessionNotFound).eraseToAnyPublisher()
+        }
+
+        // events lists
+        for paginator in self.eventsPaginators.values {
+            if paginator.containsEvent(withid: id), let publisher = paginator.subscribeToEventLiveDataUpdates(withId: id) {
+                return publisher.map(Optional.init).setFailureType(to: ServiceProviderError.self).eraseToAnyPublisher()
+            }
+        }
+        
+        // event details
+        for eventDetailsCoordinator in self.getValidEventDetailsCoordinators() {
+            if eventDetailsCoordinator.containsEvent(withid: id) {
+                let publisher = eventDetailsCoordinator.subscribeToEventLiveDataUpdates(withId: id)
+                return publisher.setFailureType(to: ServiceProviderError.self).eraseToAnyPublisher()
+            }
+        }
+        
+        return Just(nil).setFailureType(to: ServiceProviderError.self).eraseToAnyPublisher()
+    }
+    
     
     public func subscribeToEventMarketUpdates(withId id: String) -> AnyPublisher<Market?, ServiceProviderError> {
 

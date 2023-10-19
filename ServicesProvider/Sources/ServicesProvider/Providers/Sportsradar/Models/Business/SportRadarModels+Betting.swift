@@ -458,7 +458,7 @@ extension SportRadarModels {
             let container = try decoder.singleValueContainer()
             let settings = try container.decode([Settings].self)
             guard
-                let acceptingReofferSetting = settings.first(where: { $0.name == "ACCEPTINRREOFFER" }),
+                let acceptingReofferSetting = settings.first(where: { $0.name == "OddsChange" }),
                 let value = acceptingReofferSetting.value
             else {
                 self.oddChange = .none
