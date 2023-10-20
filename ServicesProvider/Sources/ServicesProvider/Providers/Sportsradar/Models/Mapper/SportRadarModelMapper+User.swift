@@ -620,7 +620,8 @@ extension SportRadarModelMapper {
 
     static func applicantReviewResult(fromInternalApplicantReviewResult internalApplicantReviewResult: SportRadarModels.ApplicantReviewResult) -> ApplicantReviewResult {
 
-        return ApplicantReviewResult(reviewAnswer: internalApplicantReviewResult.reviewAnswer, reviewRejectType: internalApplicantReviewResult.reviewRejectType)
+        return ApplicantReviewResult(reviewAnswer: internalApplicantReviewResult.reviewAnswer, reviewRejectType: internalApplicantReviewResult.reviewRejectType,
+                                     moderationComment: internalApplicantReviewResult.moderationComment)
     }
 
 }

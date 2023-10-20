@@ -73,10 +73,12 @@ extension SportRadarModels {
     struct ApplicantReviewResult: Codable {
         var reviewAnswer: String
         var reviewRejectType: String?
+        var moderationComment: String?
 
         enum CodingKeys: String, CodingKey {
             case reviewAnswer = "reviewAnswer"
             case reviewRejectType = "reviewRejectType"
+            case moderationComment = "moderationComment"
         }
     }
 
