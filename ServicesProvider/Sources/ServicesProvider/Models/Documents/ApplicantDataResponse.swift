@@ -59,9 +59,11 @@ public struct ApplicantReviewData: Codable {
 public struct ApplicantReviewResult: Codable {
     public var reviewAnswer: String
     public var reviewRejectType: String?
+    public var moderationComment: String?
 
     enum CodingKeys: String, CodingKey {
         case reviewAnswer = "reviewAnswer"
         case reviewRejectType = "reviewRejectType"
+        case moderationComment = "moderationComment"
     }
 }
