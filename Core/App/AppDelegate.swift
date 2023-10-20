@@ -95,14 +95,12 @@ class AppDelegate: UIResponder, UIApplicationDelegate, MessagingDelegate {
             completionHandler: { _, _ in }
         )
 
+        let optimoveCredentials = "WzEsIjEzMGRjNGIwNTZiYzRhNmQ5NWI0ZWJjODczNGJlYmJhIiwibW9iaWxlLWNvbmZpZ3VyYXRpb24uMS4wLjAiXQ=="
+        let optimobileCredntials = "WzEsImV1LWNlbnRyYWwtMiIsImJkYzg1MTk5LTk4ODEtNGRhMy05NmYzLWI3ZGZkOWM3NzI0NCIsImpDNFMzODF4SDhCU2JSeS94aVlsQ25ubUVsT2ZTTEUxYUdhSyJd"
+
         // Optimove
-        let config = OptimoveConfigBuilder(optimoveCredentials: "WzEsIjEzMGRjNGIwNTZiYzRhNmQ5NWI0ZWJjODczNGJlYmJhIiwibW9iaWxlLWNvbmZpZ3VyYXRpb24uMS4wLjAiXQ==",
-                                           optimobileCredentials: "WzEsImV1LWNlbnRyYWwtMiIsImJkYzg1MTk5LTk4ODEtNGRhMy05NmYzLWI3ZGZkOWM3NzI0NCIsImpDNFMzODF4SDhCU2JSeS94aVlsQ25ubUVsT2ZTTEUxYUdhSyJd")
-                    .build()
-
+        let config = OptimoveConfigBuilder(optimoveCredentials: optimoveCredentials, optimobileCredentials: optimobileCredntials).build()
         Optimove.initialize(with: config)
-
-        Optimove.shared.pushRequestDeviceToken()
 
         application.registerForRemoteNotifications()
 
@@ -163,6 +161,17 @@ class AppDelegate: UIResponder, UIApplicationDelegate, MessagingDelegate {
             }
         }
         return true
+    }
+    
+    func application(_ application: UIApplication, didRegisterForRemoteNotificationsWithDeviceToken deviceToken: Data) {
+        let tokenParts = deviceToken.map {
+            data in String(format: "%02.2hhx", data)
+        }
+        let token = tokenParts.joined()
+        print("Device Token: \(token)")
+        
+        Optimove.shared.pushRegister(deviceToken)
+        Messaging.messaging().apnsToken = deviceToken
     }
 
 }
