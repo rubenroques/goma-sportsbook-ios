@@ -65,7 +65,7 @@ class MyTicketsRootViewController: UIViewController {
     }
 
     deinit {
-        print("MyTicketsRootViewController deinit")
+        print("MyTicketsRootViewController.deinit")
     }
 
     override func viewDidLoad() {
@@ -79,6 +79,7 @@ class MyTicketsRootViewController: UIViewController {
 //            MyTicketsViewController(viewModel: MyTicketsViewModel(myTicketType: .resolved)),
 //            MyTicketsViewController(viewModel: MyTicketsViewModel(myTicketType: .won))
 //        ]
+        
         self.setupViewControllers()
 
         self.ticketTypePagedViewController.delegate = self
@@ -127,12 +128,11 @@ class MyTicketsRootViewController: UIViewController {
                 self?.reloadCollectionView()
                 self?.scrollToViewController(atIndex: newIndex)
             }
-            .store(in: &cancellables)
+            .store(in: &self.cancellables)
 
         Env.userSessionStore.userProfileStatusPublisher
             .receive(on: DispatchQueue.main)
             .sink {[weak self]  userSessionStatus in
-
                 switch userSessionStatus {
                 case .logged:
                     self?.hideNoLoginFoundView()
@@ -140,7 +140,7 @@ class MyTicketsRootViewController: UIViewController {
                     self?.showNoLoginFoundView()
                 }
             }
-            .store(in: &cancellables)
+            .store(in: &self.cancellables)
     }
 
     @objc func didTapLoginButton() {
@@ -186,15 +186,12 @@ class MyTicketsRootViewController: UIViewController {
     private func setupViewControllers() {
 
         let openedMyTicketsViewModel = MyTicketsViewModel(myTicketType: .opened)
-
         let openedMyTicketsViewController = MyTicketsViewController(viewModel: openedMyTicketsViewModel)
 
         let resolvedMyTicketsViewModel = MyTicketsViewModel(myTicketType: .resolved)
-
         let resolvedMyTicketsViewController = MyTicketsViewController(viewModel: resolvedMyTicketsViewModel)
 
         let wonMyTicketsViewModel = MyTicketsViewModel(myTicketType: .won)
-
         let wonMyTicketsViewController = MyTicketsViewController(viewModel: wonMyTicketsViewModel)
 
         // Callbacks
@@ -222,18 +219,18 @@ extension MyTicketsRootViewController: UIPageViewControllerDelegate, UIPageViewC
     }
 
     func pageViewController(_ pageViewController: UIPageViewController, viewControllerBefore viewController: UIViewController) -> UIViewController? {
-        if let index = ticketTypesViewControllers.firstIndex(of: viewController) {
+        if let index = self.ticketTypesViewControllers.firstIndex(of: viewController) {
             if index > 0 {
-                return ticketTypesViewControllers[index - 1]
+                return self.ticketTypesViewControllers[index - 1]
             }
         }
         return nil
     }
 
     func pageViewController(_ pageViewController: UIPageViewController, viewControllerAfter viewController: UIViewController) -> UIViewController? {
-        if let index = ticketTypesViewControllers.firstIndex(of: viewController) {
-            if index < ticketTypesViewControllers.count - 1 {
-                return ticketTypesViewControllers[index + 1]
+        if let index = self.ticketTypesViewControllers.firstIndex(of: viewController) {
+            if index < self.ticketTypesViewControllers.count - 1 {
+                return self.ticketTypesViewControllers[index + 1]
             }
         }
         return nil

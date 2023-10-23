@@ -43,19 +43,15 @@ class MyTicketBetLineView: NibView {
     @IBOutlet private weak var baseViewHeightConstraint: NSLayoutConstraint!
 
     var betHistoryEntrySelection: BetHistoryEntrySelection
+    var matchLiveData: MatchLiveData?
+                      
     var countryCode: String = ""
 
     var viewModel: MyTicketBetLineViewModel?
-    var tappedMatchDetail: ((String) -> Void)?
-    
-    private var homeResultSubscription: AnyCancellable?
-    private var awayResultSubscription: AnyCancellable?
+    var tappedMatchDetail: ((String) -> Void) = { _ in }
 
     //
-    private var matchDetailsSubscription: ServicesProvider.Subscription?
     private var liveMatchDetailsSubscription: ServicesProvider.Subscription?
-    
-    private var matchDetailsCancellable: AnyCancellable?
     private var liveMatchDetailsCancellable: AnyCancellable?
     
     convenience init(betHistoryEntrySelection: BetHistoryEntrySelection, countryCode: String, viewModel: MyTicketBetLineViewModel) {
@@ -82,11 +78,10 @@ class MyTicketBetLineView: NibView {
     deinit {
         print("MyTicketBetLineView deinit")
 
-        self.homeResultSubscription?.cancel()
-        self.awayResultSubscription?.cancel()
-        
-        self.matchDetailsCancellable?.cancel()
         self.liveMatchDetailsCancellable?.cancel()
+        
+        self.liveMatchDetailsCancellable = nil
+        self.liveMatchDetailsSubscription = nil
     }
 
     override func layoutSubviews() {
@@ -124,12 +119,6 @@ class MyTicketBetLineView: NibView {
         self.homeTeamNameLabel.text = self.betHistoryEntrySelection.homeParticipantName ?? ""
         self.awayTeamNameLabel.text = self.betHistoryEntrySelection.awayParticipantName ?? ""
 
-//        if let sportId = self.betHistoryEntrySelection.sportId, let image = UIImage(named: "sport_type_icon_\(sportId)") {
-//            self.sportTypeImageView.image = image
-//        }
-//        else {
-//            self.sportTypeImageView.image = UIImage(named: "sport_type_icon_default")
-//        }
         if let sportCode = self.betHistoryEntrySelection.sportName {
 
             if let sportId = Env.sportsStore.getSportId(sportCode: sportCode) {
@@ -190,7 +179,7 @@ class MyTicketBetLineView: NibView {
             self.baseViewHeightConstraint.constant = 100
         }
 
-        self.configureFromStatus()
+        self.configureViewFromStatus()
         self.setupWithTheme()
     }
 
@@ -224,7 +213,8 @@ class MyTicketBetLineView: NibView {
         self.bottomBaseView.backgroundColor = .clear
     }
 
-    func configureFromStatus() {
+    func configureViewFromStatus() {
+        
         switch self.betHistoryEntrySelection.result {
         case .won:
             self.indicatorBaseView.isHidden = false
@@ -262,9 +252,21 @@ class MyTicketBetLineView: NibView {
             self.indicatorLabel.text = localized("draw")
             self.separatorView.isHidden = false
         case .open:
-            self.dateLabel.isHidden = false
-            self.indicatorLabel.text = ""
-            self.indicatorBaseView.isHidden = true
+            
+            let matchStatus = self.matchLiveData?.status
+            switch matchStatus {
+            case .unknown, .notStarted, .ended, .none:
+                self.dateLabel.isHidden = false
+                self.liveIconImage.isHidden = true
+                self.indicatorLabel.text = ""
+                self.indicatorBaseView.isHidden = true
+            case .inProgress:
+                self.dateLabel.isHidden = true
+                self.liveIconImage.isHidden = false
+                self.indicatorLabel.text = ""
+                self.indicatorBaseView.isHidden = true
+            }
+            
         case .undefined:
             self.dateLabel.isHidden = true
             self.indicatorLabel.text = ""
@@ -276,7 +278,8 @@ class MyTicketBetLineView: NibView {
     func getMatchLiveDetails() {
 
         if let eventId = self.betHistoryEntrySelection.eventId {
-
+            self.matchLiveData = nil
+            
             self.liveMatchDetailsSubscription = nil
             
             self.liveMatchDetailsCancellable?.cancel()
@@ -290,41 +293,28 @@ class MyTicketBetLineView: NibView {
                     switch eventSubscribableContent {
                     case .connected(let subscription):
                         self?.liveMatchDetailsSubscription = subscription
-                        
+                        self?.configureViewFromStatus()
                     case .contentUpdate(let eventLiveData):
-                        
-                        switch eventLiveData.status {
-                        case .notStarted, .ended, .unknown:
-                            break
-                            
-                        case .inProgress:
-                            if let homeScore = eventLiveData.homeScore {
-                                self?.homeTeamScoreLabel.text = "\(homeScore)"
-                            }
-
-                            if let awayScore = eventLiveData.awayScore {
-                                self?.awayTeamScoreLabel.text = "\(awayScore)"
-                            }
-                        case .none:
-                            break
+                        self?.matchLiveData = ServiceProviderModelMapper.matchLiveData(fromServiceProviderEventLiveData: eventLiveData)
+                        if let homeScore = eventLiveData.homeScore {
+                            self?.homeTeamScoreLabel.text = "\(homeScore)"
                         }
-                        
+                        if let awayScore = eventLiveData.awayScore {
+                            self?.awayTeamScoreLabel.text = "\(awayScore)"
+                        }
+                        self?.configureViewFromStatus()
                     case .disconnected:
-                        break
+                        self?.configureViewFromStatus()
                     }
-                    
-                    self?.configureFromStatus()
                 })
-            
         }
 
     }
     
     @IBAction private func didTapBaseView() {
         if let matchId = self.betHistoryEntrySelection.eventId {
-            self.tappedMatchDetail?(matchId)
+            self.tappedMatchDetail(matchId)
         }
-       
     }
 
 }

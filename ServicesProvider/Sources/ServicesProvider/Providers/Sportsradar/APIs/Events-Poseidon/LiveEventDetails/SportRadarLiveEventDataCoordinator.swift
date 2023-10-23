@@ -80,7 +80,7 @@ class SportRadarLiveEventDataCoordinator {
                     self.liveEventCurrentValueSubject.send(completion: .failure(error))
                 }
                 self.waitingSubscription = false
-            } receiveValue: { [weak self] eventLiveDataExtended in
+            } receiveValue: { [weak self] success in
                 guard let self = self else { return }
                 
                 let subscription = Subscription(contentIdentifier: self.liveEventContentIdentifier,
@@ -121,7 +121,7 @@ class SportRadarLiveEventDataCoordinator {
 
     }
 
-    func subscribeLiveEventDetails() -> AnyPublisher<SportRadarModels.EventLiveDataExtended, ServiceProviderError> {
+    func subscribeLiveEventDetails() -> AnyPublisher<Bool, ServiceProviderError> {
         let endpoint = SportRadarRestAPIClient.subscribe(sessionToken: self.sessionToken,
                                                          contentIdentifier: self.liveEventContentIdentifier)
 
@@ -139,9 +139,27 @@ class SportRadarLiveEventDataCoordinator {
                 }
                 return data
             }
-            .decode(type: SportRadarModels.SportRadarResponse<SportRadarModels.EventLiveDataExtended>.self, decoder: JSONDecoder())
-            .map(\.data)
-            .mapError { _ in ServiceProviderError.onSubscribe }
+            .tryMap { data in
+                do {
+                    if let json = try JSONSerialization.jsonObject(with: data, options: []) as? [String: Any] {
+                        if let version = json["version"] as? Int {
+                            return version
+                        }
+                    }
+                    throw ServiceProviderError.invalidResponse
+                } catch {
+                    throw ServiceProviderError.invalidResponse
+                }
+            }
+            .map { version in
+                return version != 0
+            }
+            .mapError { error in
+                if let typedError = error as? ServiceProviderError {
+                    return typedError
+                }
+               return ServiceProviderError.onSubscribe
+            }
             .eraseToAnyPublisher()
     }
 

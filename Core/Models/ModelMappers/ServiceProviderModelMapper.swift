@@ -80,6 +80,15 @@ extension ServiceProviderModelMapper {
             return Match.Status.ended
         }
     }
+    
+    static func matchLiveData(fromServiceProviderEventLiveData eventLiveData: ServicesProvider.EventLiveData) -> MatchLiveData {
+        let mappeddStatus = Self.matchStatus(fromInternalEvent: eventLiveData.status)
+        return MatchLiveData(id: eventLiveData.id,
+                             homeScore: eventLiveData.homeScore,
+                             awayScore: eventLiveData.awayScore,
+                             matchTime: eventLiveData.matchTime,
+                             status: mappeddStatus)
+    }
 
     // Market
     static func markets(fromServiceProviderMarkets markets: [ServicesProvider.Market]) -> [Market] {

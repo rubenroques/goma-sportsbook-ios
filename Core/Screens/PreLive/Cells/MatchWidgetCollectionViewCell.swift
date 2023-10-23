@@ -293,7 +293,13 @@ class MatchWidgetCollectionViewCell: UICollectionViewCell {
 
     //
     //
-    var viewModel: MatchWidgetCellViewModel?
+    var viewModel: MatchWidgetCellViewModel? {
+        didSet {
+            if self.viewModel?.match.id == "3234891.1" {
+                print("TapBug stop 4 \(self.viewModel?.match.markets.map({ return "\($0.name) "}) )")
+            }
+        }
+    }
 
     static var normalCellHeight: CGFloat = 156
     static var smallCellHeight: CGFloat = 90
@@ -1000,6 +1006,10 @@ class MatchWidgetCollectionViewCell: UICollectionViewCell {
 
     func configure(withViewModel viewModel: MatchWidgetCellViewModel) {
 
+        if viewModel.match.id == "3234891.1" {
+            print("TapBug stop 3 \(viewModel.match.markets.map({ return "\($0.name) "}) ) ")
+        }
+        
         self.viewModel = viewModel
         self.matchWidgetType = viewModel.matchWidgetType
 
@@ -1109,19 +1119,22 @@ class MatchWidgetCollectionViewCell: UICollectionViewCell {
             .sink(receiveCompletion: { completion in
                 print("MatchWidgetCollectionViewCell matchSubscriber subscribeToEventLiveDataUpdates completion: \(completion)")
             }, receiveValue: { [weak self] updatedMatch in
-                self?.viewModel?.match = updatedMatch
+                guard let self = self else { return }
+                
+                // Temp live data viewModel
+                let liveDataViewModel = MatchWidgetCellViewModel(match: updatedMatch)
+                
+                self.dateLabel.text = "\(liveDataViewModel.startDateString)"
+                self.timeLabel.text = "\(liveDataViewModel.startTimeString)"
 
-                self?.dateLabel.text = "\(viewModel.startDateString)"
-                self?.timeLabel.text = "\(viewModel.startTimeString)"
+                self.resultLabel.text = "\(liveDataViewModel.matchScore)"
+                self.matchTimeLabel.text = liveDataViewModel.matchTimeDetails
 
-                self?.resultLabel.text = "\(viewModel.matchScore)"
-                self?.matchTimeLabel.text = viewModel.matchTimeDetails
-
-                if viewModel.isLiveMatch {
-                    self?.liveMatchDotBaseView.isHidden = false
+                if liveDataViewModel.isLiveMatch {
+                    self.liveMatchDotBaseView.isHidden = false
                 }
                 else {
-                    self?.liveMatchDotBaseView.isHidden = true
+                    self.liveMatchDotBaseView.isHidden = true
                 }
             })
         

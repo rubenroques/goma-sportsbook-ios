@@ -93,7 +93,7 @@ class MyTicketCellViewModel {
     }
 
     deinit {
-        print("MyTicketCellViewModel deinit")
+        print("MyTicketCellViewModel.deinit")
     }
 
     func requestCashoutAvailability() {
@@ -102,10 +102,9 @@ class MyTicketCellViewModel {
         Env.servicesProvider.calculateCashout(betId: ticket.betId)
             .receive(on: DispatchQueue.main)
             .sink(receiveCompletion: { [weak self] completion in
-
                 switch completion {
                 case .finished:
-                    ()
+                    break
                 case .failure(let error):
                     print("CASHOUT INFO ERROR: \(error)")
                 }
@@ -129,9 +128,8 @@ class MyTicketCellViewModel {
 
                 switch completion {
                 case .finished:
-                    ()
+                    break
                 case .failure(let error):
-                    print("PARTIAL CASHOUT INFO ERROR: \(error)")
                     self?.partialCashout.send(nil)
                 }
             }, receiveValue: { [weak self] cashoutInfo in
@@ -198,7 +196,7 @@ class MyTicketCellViewModel {
                     }
 
                 })
-                .store(in: &cancellables)
+                .store(in: &self.cancellables)
         }
 
     }
@@ -253,7 +251,7 @@ class MyTicketCellViewModel {
                     }
 
                 })
-                .store(in: &cancellables)
+                .store(in: &self.cancellables)
         }
 
     }
