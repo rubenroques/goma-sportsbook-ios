@@ -59,6 +59,9 @@ enum FileState {
         else if code == "APPROVED" {
             self = .approved
         }
+        else if code == "DECLINED" {
+            self = .rejected
+        }
         else {
             self = .failed
         }
