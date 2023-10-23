@@ -139,7 +139,6 @@ class UserSessionStore {
                     self?.isUserEmailVerified = userProfile.isEmailVerified
                     self?.userKnowYourCustomerStatus = userProfile.kycStatus
 
-                    print("OPTIMOVE USER ID!")
                     Optimove.shared.setUserId(userProfile.userIdentifier)
                 }
                 else {
@@ -215,6 +214,8 @@ class UserSessionStore {
         self.userSessionPublisher.send(nil)
         self.userWalletPublisher.send(nil)
         self.userCashbackBalance.send(nil)
+
+        Optimove.shared.signOutUser()
     }
 
     func login(withUsername username: String, password: String) -> AnyPublisher<Void, UserSessionError> {

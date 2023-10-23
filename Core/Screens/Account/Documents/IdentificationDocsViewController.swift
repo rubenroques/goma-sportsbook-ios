@@ -50,7 +50,6 @@ class IdentificationDocsViewController: UIViewController {
     private lazy var proofAddDocBottomConstraint: NSLayoutConstraint = Self.createProofAddDocBottomConstraint()
     private lazy var proofWarningBottomConstraint: NSLayoutConstraint = Self.createProofWarningBottomConstraint()
 
-
     private lazy var loadingBaseView: UIView = Self.createLoadingBaseView()
     private lazy var activityIndicatorView: UIActivityIndicatorView = Self.createActivityIndicatorView()
 
@@ -107,7 +106,7 @@ class IdentificationDocsViewController: UIViewController {
             self.proofWarningView.isHidden = !showProofWarning
             self.canAddProofDocs = !showProofWarning
 
-            self.idBottomStackViewBottomConstraint.isActive = !showProofWarning
+            self.proofBottomStackViewBottomConstraint.isActive = !showProofWarning
             self.proofWarningBottomConstraint.isActive = showProofWarning
 
             self.proofAddressBaseView.setNeedsLayout()
@@ -542,6 +541,7 @@ class IdentificationDocsViewController: UIViewController {
                 }
 
             }
+
         }
         else {
             if hasApprovedIdentityDocuments {
@@ -667,10 +667,10 @@ class IdentificationDocsViewController: UIViewController {
                 }
                 else {
                     if canRetry {
-                        self.canAddProofDocs = false
+                        self.canAddProofDocs = true
                     }
                     else {
-                        self.canAddProofDocs = true
+                        self.canAddProofDocs = false
                     }
 
                 }
@@ -835,6 +835,7 @@ extension IdentificationDocsViewController {
         let errorView = BetslipErrorView()
         errorView.translatesAutoresizingMaskIntoConstraints = false
         errorView.setDescription(description: localized("error"))
+        errorView.isHidden = true
         return errorView
     }
 
@@ -918,6 +919,7 @@ extension IdentificationDocsViewController {
         let errorView = BetslipErrorView()
         errorView.translatesAutoresizingMaskIntoConstraints = false
         errorView.setDescription(description: localized("error"))
+        errorView.isHidden = true
         return errorView
     }
 
@@ -1108,7 +1110,6 @@ extension IdentificationDocsViewController {
             self.proofAddDocBaseView.leadingAnchor.constraint(equalTo: self.proofAddressBaseView.leadingAnchor, constant: 14),
             self.proofAddDocBaseView.trailingAnchor.constraint(equalTo: self.proofAddressBaseView.trailingAnchor, constant: -14),
             self.proofAddDocBaseView.topAnchor.constraint(equalTo: self.proofAddressBottomStackView.bottomAnchor, constant: 5),
-            self.proofAddDocBaseView.bottomAnchor.constraint(equalTo: self.proofAddressBaseView.bottomAnchor, constant: -20),
             self.proofAddDocBaseView.heightAnchor.constraint(equalToConstant: 30),
 
             self.proofAddDocView.centerXAnchor.constraint(equalTo: self.proofAddDocBaseView.centerXAnchor),
