@@ -360,7 +360,8 @@ class LoginViewController: UIViewController {
 
     private func setUserConsents() {
 
-        Env.servicesProvider.setUserConsents(consentVersionIds: [UserConsentType.sms.versionId, UserConsentType.email.versionId])
+        let types = [UserConsentType.sms.versionId, UserConsentType.email.versionId]
+        Env.servicesProvider.setUserConsents(consentVersionIds: types)
             .receive(on: DispatchQueue.main)
             .sink(receiveCompletion: { completion in
                 switch completion {
@@ -376,6 +377,58 @@ class LoginViewController: UIViewController {
             })
             .store(in: &self.cancellables)
         
+    }
+    
+    private func setTermsConsents() {
+        
+        let types = [UserConsentType.terms.versionId]
+        
+        Env.servicesProvider.getAllConsents()
+            .filter({ consents in
+                return consents.contains { consent in
+                    consent.key == "terms"
+                }
+            })
+            .map({ consents -> ConsentInfo? in
+                return consents.filter { consent in
+                    consent.key == "terms"
+                }
+                .first
+            })
+            .compactMap({ $0 })
+            .flatMap({ consent in
+                return Env.servicesProvider.setUserConsents(consentVersionIds: [consent.consentVersionId])
+                    .eraseToAnyPublisher()
+            })
+            .receive(on: DispatchQueue.main)
+            .sink(receiveCompletion: { completion in
+                switch completion {
+                case .finished:
+                    print("LoginViewController setTermsConsents finished")
+                case .failure(let error):
+                    print("LoginViewController setTermsConsents failure with error \(error)")
+                }
+
+            }, receiveValue: { _ in
+                print("LoginViewController setTermsConsents ok")
+            })
+            .store(in: &self.cancellables)
+        
+//        
+//        Env.servicesProvider.setUserConsents(consentVersionIds: types)
+//            .receive(on: DispatchQueue.main)
+//            .sink(receiveCompletion: { completion in
+//                switch completion {
+//                case .finished:
+//                    print("LoginViewController setTermsConsents finished")
+//                case .failure(let error):
+//                    print("LoginViewController setTermsConsents failure with error \(error)")
+//                }
+//
+//            }, receiveValue: { _ in
+//                print("LoginViewController setTermsConsents ok")
+//            })
+//            .store(in: &self.cancellables)
     }
 
     private func showRegisterFeedbackViewController(onNavigationController navigationController: UINavigationController) {
@@ -500,29 +553,30 @@ class LoginViewController: UIViewController {
         
         Env.userSessionStore.login(withUsername: username, password: password)
             .receive(on: DispatchQueue.main)
-            .sink(receiveCompletion: { completion in
+            .sink(receiveCompletion: { [weak self] completion in
                 switch completion {
                 case .failure(let error):
                     switch error {
                     case .invalidEmailPassword:
-                        self.showWrongPasswordStatus()
+                        self?.showWrongPasswordStatus()
                     case .restrictedCountry:
-                        self.showServerErrorStatus()
+                        self?.showServerErrorStatus()
                     case .serverError:
-                        self.showServerErrorStatus()
+                        self?.showServerErrorStatus()
                     case .quickSignUpIncomplete:
-                        self.showServerErrorStatus()
+                        self?.showServerErrorStatus()
                     case .errorMessage:
-                        self.showServerErrorStatus()
+                        self?.showServerErrorStatus()
                     }
                 case .finished:
                     ()
                 }
-                self.hideLoadingSpinner()
-                self.loginButton.isEnabled = true
-            }, receiveValue: { _ in
+                self?.hideLoadingSpinner()
+                self?.loginButton.isEnabled = true
+            }, receiveValue: { [weak self] _ in
                 // self.showNextViewController()
-                self.loginSuccessful()
+                self?.loginSuccessful()
+                self?.setTermsConsents()
             })
             .store(in: &cancellables)
     }
@@ -536,10 +590,10 @@ class LoginViewController: UIViewController {
                 self?.deleteCachedRegistrationData()
             } receiveValue: { [weak self] success in
                 print("triggerLoginAfterRegister ", success)
-
                 if withUserConsents {
                     self?.setUserConsents()
                 }
+                self?.setTermsConsents()
             }
             .store(in: &cancellables)
     }
@@ -585,7 +639,6 @@ class LoginViewController: UIViewController {
 
         if let userId = Env.userSessionStore.loggedUserProfile?.userIdentifier {
             Optimove.shared.setUserId(userId)
-
         }
 
     }

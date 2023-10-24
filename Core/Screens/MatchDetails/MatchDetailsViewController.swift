@@ -629,7 +629,6 @@ class MatchDetailsViewController: UIViewController {
     // MARK: - Bindings
     private func bind(toViewModel viewModel: MatchDetailsViewModel) {
         
-        
         Env.userSessionStore.userProfilePublisher
             .receive(on: DispatchQueue.main)
             .sink { [weak self] userProfile in
@@ -663,10 +662,8 @@ class MatchDetailsViewController: UIViewController {
                 case .idle, .loading:
                     break
                 case let .loaded(marketGroups):
-                    print("LoadingBug 6a")
                     self?.showMarkets()
                     self?.reloadMarketGroupDetails(marketGroups)
-                    print("LoadingBug 6b")
                 case .failed:
                     self?.showMarketsNotAvailableView()
                     self?.reloadMarketGroupDetails([])
@@ -685,9 +682,7 @@ class MatchDetailsViewController: UIViewController {
                 }
             }
             .store(in: &cancellables)
-        
-        print("LoadingBug 7")
-        //
+
         self.viewModel.matchPublisher
             .receive(on: DispatchQueue.main)
             .sink(receiveValue: { [weak self] loadableMatch in
@@ -695,7 +690,6 @@ class MatchDetailsViewController: UIViewController {
                 case .idle, .loading:
                     break
                 case .loaded(let match):
-                    print("LoadingBug 7a")
                     switch match.status {
                     case .notStarted, .ended, .unknown:
                         self?.matchMode = .preLive
@@ -712,9 +706,7 @@ class MatchDetailsViewController: UIViewController {
                     
                     self?.loadingSpinnerViewController.view.isHidden = true
                     self?.loadingSpinnerViewController.stopAnimating()
-                    print("LoadingBug 7b")
                 case .failed:
-                    print("LoadingBug 7c")
                     self?.loadingSpinnerViewController.view.isHidden = true
                     self?.loadingSpinnerViewController.stopAnimating()
                     
@@ -1025,12 +1017,10 @@ class MatchDetailsViewController: UIViewController {
     }
 
     func showMarketsNotAvailableView() {
-
         self.marketGroupsPagedBaseView.isHidden = true
         self.marketTypesCollectionView.isHidden = true
         self.marketsNotAvailableView.isHidden = false
         self.matchNotAvailableView.isHidden = true
-
     }
     
     @objc func didTapBetslipView() {

@@ -288,7 +288,7 @@ class MyTicketBetLineView: NibView {
             self.liveMatchDetailsCancellable = Env.servicesProvider.subscribeToLiveDataUpdates(forEventWithId: eventId)
                 .receive(on: DispatchQueue.main)
                 .sink(receiveCompletion: { completion in
-                    print("MatchWidgetCollectionViewCell matchLiveDataSubscriber subscribeToEventLiveDataUpdates completion: \(completion)")
+                    print("MatchWidgetCollectionViewCell matchLiveDataSubscriber subscribeToLiveDataUpdates completion: \(completion)")
                 }, receiveValue: { [weak self] (eventSubscribableContent: SubscribableContent<ServicesProvider.EventLiveData>) in
                     switch eventSubscribableContent {
                     case .connected(let subscription):

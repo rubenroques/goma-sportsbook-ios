@@ -87,8 +87,10 @@ protocol PrivilegedAccessManager {
     func contactUs(firstName: String, lastName: String, email: String, subject: String, message: String) -> AnyPublisher<BasicResponse, ServiceProviderError>
     func contactSupport(userIdentifier: String, firstName: String, lastName: String, email: String, subject: String, subjectType: String , message: String, isLogged: Bool) -> AnyPublisher<SupportResponse, ServiceProviderError>
 
+    func getAllConsents() -> AnyPublisher<[ConsentInfo], ServiceProviderError>
+    
     func getUserConsents() -> AnyPublisher<[UserConsent], ServiceProviderError>
-
+    
     func setUserConsents(consentVersionIds: [Int]?, unconsenVersionIds: [Int]?) -> AnyPublisher<BasicResponse, ServiceProviderError>
 
     func getSumsubAccessToken(userId: String, levelName: String) -> AnyPublisher<AccessTokenResponse, ServiceProviderError>

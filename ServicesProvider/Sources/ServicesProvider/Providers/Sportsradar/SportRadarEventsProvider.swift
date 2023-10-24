@@ -681,7 +681,7 @@ class SportRadarEventsProvider: EventsProvider {
             }
         }
         
-        return Just(nil).setFailureType(to: ServiceProviderError.self).eraseToAnyPublisher()
+        return Fail(error: ServiceProviderError.resourceNotFound).eraseToAnyPublisher()
     }
     
     

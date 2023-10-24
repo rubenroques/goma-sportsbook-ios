@@ -154,12 +154,17 @@ class OmegaConnector: Connector {
                             return Just(mappedObject).setFailureType(to: ServiceProviderError.self).eraseToAnyPublisher()
                         }
                         catch {
+                            if error is DecodingError {
+                                return Fail(error: ServiceProviderError.decodingError(message: error.localizedDescription))
+                                    .eraseToAnyPublisher()
+                            }
                             let localizedErrorKey = "omega_error_" + responseStatus.status.lowercased()
                             var localizedMessage = Localization.localized(localizedErrorKey)
                             if localizedMessage.isEmpty {
                                 localizedMessage = Localization.localized("server_error_message")
                             }
-                            return Fail(error: ServiceProviderError.errorDetailedMessage(key: responseStatus.status, message: localizedMessage)).eraseToAnyPublisher()
+                            return Fail(error: ServiceProviderError.errorDetailedMessage(key: responseStatus.status, message: localizedMessage))
+                                .eraseToAnyPublisher()
                         }
                     }
                 }
