@@ -230,6 +230,11 @@ class OmegaConnector: Connector {
                 else if loginResponse.status == "FAIL_QUICK_OPEN_STATUS" {
                     return Fail(error: ServiceProviderError.quickSignUpIncomplete).eraseToAnyPublisher()
                 }
+                else if loginResponse.status == "FAIL_TEMP_LOCK" {
+                    let date = loginResponse.lockUntilDateFormatted ?? ""
+
+                    return Fail(error: ServiceProviderError.failedTempLock(date: date)).eraseToAnyPublisher()
+                }
                 else if loginResponse.status == "SUCCESS", let sessionKey = loginResponse.sessionKey {
 
                     self.cacheSessionKey(sessionKey)

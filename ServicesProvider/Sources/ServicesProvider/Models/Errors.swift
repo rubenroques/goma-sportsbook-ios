@@ -22,6 +22,8 @@ public enum ServiceProviderError: Error {
     case invalidSignUpPassword
 
     case invalidMobileVerifyCode
+
+    case failedTempLock(date: String)
     
     case incompletedSportData
     case userSessionNotFound
