@@ -248,7 +248,7 @@ extension CashbackRootViewController {
     private static func createBannerImageView() -> UIImageView {
         let imageView = UIImageView()
         imageView.translatesAutoresizingMaskIntoConstraints = false
-        imageView.image = UIImage(named: "replay_top_banner")
+        imageView.image = UIImage(named: "replay_big_banner")
         imageView.contentMode = .scaleAspectFill
         return imageView
     }
@@ -620,7 +620,7 @@ extension CashbackRootViewController {
         NSLayoutConstraint.activate([
             self.cashbackBalanceBaseView.leadingAnchor.constraint(equalTo: self.containerView.leadingAnchor, constant: 14),
             self.cashbackBalanceBaseView.trailingAnchor.constraint(equalTo: self.containerView.trailingAnchor, constant: -14),
-            self.cashbackBalanceBaseView.topAnchor.constraint(equalTo: self.cashbackBetBaseView.bottomAnchor, constant: 16),
+            self.cashbackBalanceBaseView.topAnchor.constraint(equalTo: self.bottomBannerImageView.bottomAnchor, constant: 16),
 
             self.cashbackBalanceTitleLabel.leadingAnchor.constraint(equalTo: self.cashbackBalanceBaseView.leadingAnchor, constant: 16),
             self.cashbackBalanceTitleLabel.trailingAnchor.constraint(equalTo: self.cashbackBalanceBaseView.trailingAnchor, constant: -16),
@@ -671,14 +671,14 @@ extension CashbackRootViewController {
         NSLayoutConstraint.activate([
             self.bottomBannerImageView.leadingAnchor.constraint(equalTo: self.containerView.leadingAnchor),
             self.bottomBannerImageView.trailingAnchor.constraint(equalTo: self.containerView.trailingAnchor),
-            self.bottomBannerImageView.topAnchor.constraint(equalTo: self.cashbackUsedBaseView.bottomAnchor, constant: 20)
+            self.bottomBannerImageView.topAnchor.constraint(equalTo: self.cashbackBetBaseView.bottomAnchor, constant: 20)
         ])
 
         // Terms info
         NSLayoutConstraint.activate([
             self.separatorLineView.leadingAnchor.constraint(equalTo: self.containerView.leadingAnchor),
             self.separatorLineView.trailingAnchor.constraint(equalTo: self.containerView.trailingAnchor),
-            self.separatorLineView.topAnchor.constraint(equalTo: self.bottomBannerImageView.bottomAnchor, constant: 20),
+            self.separatorLineView.topAnchor.constraint(equalTo: self.cashbackUsedBaseView.bottomAnchor, constant: 20),
             self.separatorLineView.heightAnchor.constraint(equalToConstant: 1),
 
             self.termsContainerView.leadingAnchor.constraint(equalTo: self.containerView.leadingAnchor, constant: 14),

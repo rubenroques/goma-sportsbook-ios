@@ -193,11 +193,19 @@ class LoginViewController: UIViewController {
         self.logoImageView.isUserInteractionEnabled = true
 
          #if DEBUG
-        let debugLogoImageViewTap = UITapGestureRecognizer(target: self, action: #selector(didTapDebugFormFill))
+//        let debugLogoImageViewTap = UITapGestureRecognizer(target: self, action: #selector(didTapDebugFormFill))
+        let debugLogoImageViewTap = UITapGestureRecognizer(target: self, action: #selector(tapTest))
+
         debugLogoImageViewTap.numberOfTapsRequired = 3
         self.logoImageView.addGestureRecognizer(debugLogoImageViewTap)
          #endif
 
+    }
+
+    @objc private func tapTest() {
+        if let navVC = self.navigationController {
+            self.showRegisterFeedbackViewController(onNavigationController: navVC)
+        }
     }
 
     @objc private func showDeposit() {
@@ -382,8 +390,6 @@ class LoginViewController: UIViewController {
 
         let registerSuccessViewController = RegisterSuccessViewController()
 
-        registerSuccessViewController.setTextInfo(title: localized("congratulations"), subtitle: localized("singup_success_text"))
-
         registerSuccessViewController.didTapContinueAction = { [weak self] in
             self?.showBiometricPromptViewController(onNavigationController: navigationController)
         }
@@ -514,6 +520,9 @@ class LoginViewController: UIViewController {
                         self.showServerErrorStatus()
                     case .errorMessage(let errorMessage):
                         self.showServerErrorStatus(errorMessage: errorMessage)
+                    case .failedTempLock(let date):
+                        let failedLockMessage = localized("omega_error_fail_temp_lock").replacingFirstOccurrence(of: "{date}", with: date)
+                        self.showServerErrorStatus(errorMessage: failedLockMessage)
                     }
                 case .finished:
                     ()

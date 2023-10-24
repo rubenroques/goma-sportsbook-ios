@@ -18,6 +18,7 @@ enum UserSessionError: Error {
     case serverError
     case quickSignUpIncomplete
     case errorMessage(errorMessage: String)
+    case failedTempLock(date: String)
 }
 
 enum RegisterUserError: Error {
@@ -231,6 +232,8 @@ class UserSessionStore {
                     return .quickSignUpIncomplete
                 case .errorMessage(let message):
                     return .errorMessage(errorMessage: message)
+                case .failedTempLock(let date):
+                    return .failedTempLock(date: date)
                 default:
                     return .serverError
                 }
@@ -523,6 +526,8 @@ extension UserSessionStore {
                     case .serverError:
                         ()
                     case .errorMessage(let errorMessage):
+                        ()
+                    case .failedTempLock(let date):
                         ()
                     }
                     print("UserSessionStore login failed, error: \(error)")
