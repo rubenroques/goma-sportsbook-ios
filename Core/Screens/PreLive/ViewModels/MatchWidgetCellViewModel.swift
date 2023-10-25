@@ -77,31 +77,31 @@ class MatchWidgetCellViewModel {
     var matchWidgetType: MatchWidgetType = .normal
 
     init(match: Match, matchWidgetType: MatchWidgetType = .normal) {
-
+        
         self.matchWidgetType = matchWidgetType
-
+        
         self.match = match
-
+        
         self.homeTeamName = match.homeParticipant.name
         self.awayTeamName = match.awayParticipant.name
-
+        
         self.countryISOCode = match.venue?.isoCode ?? ""
         self.countryId = match.venue?.id ?? ""
-
+        
         self.isToday = false
         self.startDateString = ""
         self.startTimeString = ""
-
+        
         if let startDate = match.date {
-
+            
             let relativeFormatter = MatchWidgetCellViewModel.relativeDateFormatter
             let relativeDateString = relativeFormatter.string(from: startDate)
             // "Jan 18, 2018"
-
+            
             let nonRelativeFormatter = MatchWidgetCellViewModel.normalDateFormatter
             let normalDateString = nonRelativeFormatter.string(from: startDate)
             // "Jan 18, 2018"
-
+            
             if relativeDateString == normalDateString {
                 let customFormatter = Date.buildFormatter(locale: Env.locale, dateFormat: "dd MMM")
                 self.startDateString = customFormatter.string(from: startDate)
@@ -109,14 +109,14 @@ class MatchWidgetCellViewModel {
             else {
                 self.startDateString = relativeDateString // Today, Yesterday
             }
-
+            
             self.isToday = Env.calendar.isDateInToday(startDate)
             self.startTimeString = MatchWidgetCellViewModel.hourDateFormatter.string(from: startDate)
         }
-
+        
         self.competitionName = match.competitionName
     }
-
+    
     static var hourDateFormatter: DateFormatter = {
         var dateFormatter = DateFormatter()
         dateFormatter.timeStyle = .short

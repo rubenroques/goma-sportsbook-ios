@@ -169,6 +169,7 @@ class SingleBettingTicketTableViewCell: UITableViewCell {
         self.plusFiveButtonView.setTitle("+20", for: .normal)
         self.maxValueButtonView.setTitle("+50", for: .normal)
 
+        self.suspendedBettingOfferLabel.text = localized("suspended")
         self.setupSubviews()
     }
 
@@ -350,9 +351,10 @@ class SingleBettingTicketTableViewCell: UITableViewCell {
 
         self.bettingTicket = bettingTicket
         self.outcomeNameLabel.text = bettingTicket.outcomeDescription
+
         let newOddValue = Double(round(bettingTicket.decimalOdd * 100)/100)
-        //self.oddValueLabel.text = OddConverter.stringForValue(newOddValue, format: UserDefaults.standard.userOddsFormat)
         self.oddValueLabel.text = OddFormatter.formatOdd(withValue: newOddValue)
+
         self.marketNameLabel.text = bettingTicket.marketDescription
         self.matchDetailLabel.text = bettingTicket.matchDescription
 

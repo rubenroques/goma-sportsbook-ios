@@ -112,7 +112,9 @@ class WithdrawViewModel: NSObject {
                             print("PROCESS WITHDRAWAL ERROR: \(error)")
                             switch error {
                             case .errorMessage(let message):
-                                self?.showErrorAlertTypePublisher.send(.error(message: message))
+                                let messageLocalized = localized(message)
+
+                                self?.showErrorAlertTypePublisher.send(.error(message: messageLocalized))
                             default:
                                 ()
                             }

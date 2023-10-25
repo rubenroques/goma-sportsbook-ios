@@ -8,11 +8,6 @@
 import Foundation
 import UIKit
 
-enum AnimationDuration {
-    static let normal: TimeInterval = 0.30
-    static let short: TimeInterval = 0.15
-}
-
 enum CornerRadius {
     static let modal: CGFloat = 11.0
     static let headerInput: CGFloat = 10.0
@@ -28,18 +23,6 @@ enum CornerRadius {
 
 enum TextSpacing {
     static let subtitle: CGFloat = 1.25
-}
-
-enum EveryMatrixInfo {
-    static let version: String = "v2"
-    static let url: String = "wss://api-phoenix-stage.everymatrix.coeverymatrix.com"
-    static let realm: String = "http://www.gomadevelopment.pt"
-
-    static func emailVerificationURL(withUserEmail email: String) -> String {
-        return "https://sportsbook.gomagaming.com/Register/Activate?email=\(email)&key="
-    }
-
-    static let staticHost = "https://static.everymatrix.com"
 }
 
 enum Assets {
@@ -110,7 +93,6 @@ enum UserTitle: String, Codable, CaseIterable {
         default: return "F"
         }
     }
-    // static let titles = ["Mr.", "Ms.", "Mrs.", "Miss"]
 }
 
 enum UserGender: String, Codable, CaseIterable {
@@ -121,19 +103,4 @@ enum UserGender: String, Codable, CaseIterable {
         return Self.allCases.map(\.rawValue)
     }
 
-}
-// swiftlint:enable line_length
-
-enum GomaGamingEnv {
-    case stage
-    case prod
-
-    var baseUrl: String {
-        switch self {
-        case .stage:
-            return "https://sportsbook-stage.gomagaming.com"
-        case .prod:
-            return "https://betsson.fr"
-        }
-    }
 }

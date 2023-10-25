@@ -121,6 +121,8 @@ class CompetitionsFiltersView: UIView, NibLoadable {
             switch self.state {
             case .opened:
                 self.headerBaseView.backgroundColor = UIColor.App.backgroundSecondary
+                self.titleLabel.textColor = UIColor.App.textPrimary
+                self.smallTitleLabel.textColor = UIColor.App.textPrimary
 
                 self.initialSelectedIds = self.selectedIds.value
                 self.closeButton.setTitle(localized("close"), for: .normal)
@@ -132,7 +134,10 @@ class CompetitionsFiltersView: UIView, NibLoadable {
                     self.clearButton.alpha = 1.0
                 }
             case .bar:
-                self.headerBaseView.backgroundColor = UIColor.App.backgroundBorder
+                self.headerBaseView.backgroundColor = UIColor.App.highlightSecondary
+                self.titleLabel.textColor = UIColor.App.buttonTextPrimary
+                self.smallTitleLabel.textColor = UIColor.App.buttonTextPrimary
+
                 UIView.animate(withDuration: 0.4) {
                     self.titleLabel.alpha = 1.0
                     self.smallTitleLabel.alpha = 0.0
@@ -140,7 +145,10 @@ class CompetitionsFiltersView: UIView, NibLoadable {
                     self.clearButton.alpha = 0.0
                 }
             case .line:
-                self.headerBaseView.backgroundColor = UIColor.App.backgroundBorder
+                self.headerBaseView.backgroundColor = UIColor.App.highlightSecondary
+                self.titleLabel.textColor = UIColor.App.buttonTextPrimary
+                self.smallTitleLabel.textColor = UIColor.App.buttonTextPrimary
+                
                 UIView.animate(withDuration: 0.4) {
                     self.titleLabel.alpha = 0.0
                     self.smallTitleLabel.alpha = 1.0
@@ -275,16 +283,19 @@ class CompetitionsFiltersView: UIView, NibLoadable {
         switch self.state {
         case .opened:
             self.headerBaseView.backgroundColor = UIColor.App.backgroundSecondary
+            self.titleLabel.textColor = UIColor.App.textPrimary
+            self.smallTitleLabel.textColor = UIColor.App.textPrimary
         case .bar:
-            self.headerBaseView.backgroundColor = UIColor.App.backgroundBorder
+            self.headerBaseView.backgroundColor = UIColor.App.highlightSecondary
+            self.titleLabel.textColor = UIColor.App.buttonTextPrimary
+            self.smallTitleLabel.textColor = UIColor.App.buttonTextPrimary
         case .line:
-            self.headerBaseView.backgroundColor = UIColor.App.backgroundBorder
+            self.headerBaseView.backgroundColor = UIColor.App.highlightSecondary
+            self.titleLabel.textColor = UIColor.App.buttonTextPrimary
+            self.smallTitleLabel.textColor = UIColor.App.buttonTextPrimary
         }
 
         self.searchBarBaseView.backgroundColor = UIColor.App.backgroundSecondary
-
-        self.titleLabel.textColor = UIColor.App.textPrimary
-        self.smallTitleLabel.textColor = UIColor.App.textPrimary
 
         self.tableView.backgroundView?.backgroundColor = UIColor.App.backgroundSecondary
         self.tableView.backgroundColor = UIColor.App.backgroundSecondary

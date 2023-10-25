@@ -205,7 +205,7 @@ extension SportRadarModelMapper {
     }
 
     static func cashbackResult(fromInternalCashbackResult cashbackResult: SportRadarModels.CashbackResult) -> CashbackResult {
-        return CashbackResult(id: cashbackResult.id, amount: cashbackResult.amount)
+        return CashbackResult(id: cashbackResult.id, amount: cashbackResult.amount, amountFree: cashbackResult.amountFree)
     }
 
 }

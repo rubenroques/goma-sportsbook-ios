@@ -10,31 +10,39 @@ import Combine
 
 class SportRadarEventDetailsCoordinator {
 
-    var storage: SportRadarEventDetailsStorage
+    var storage: SportRadarEventStorage
     var sessionToken: String
 
     let eventDetailsIdentifier: ContentIdentifier
     let liveDataContentIdentifier: ContentIdentifier
-
+    
+    weak var liveDataSubscription: Subscription?
+    
     weak var marketsSubscription: Subscription?
+    
     var isActive: Bool {
+        if self.waitingSubscription {
+            // We haven't tried to subscribe or the
+            // subscribe request it's ongoing right now
+            return true
+        }
         return self.marketsSubscription != nil
     }
 
-    weak var liveDataSubscription: Subscription?
-
     var eventDetailsPublisher: AnyPublisher<SubscribableContent<Event>, ServiceProviderError> {
-        return eventDetailsCurrentValueSubject.eraseToAnyPublisher()
+        return eventDetailsCurrentValueSubject
+            .eraseToAnyPublisher()
     }
 
     private var eventDetailsCurrentValueSubject: CurrentValueSubject<SubscribableContent<Event>, ServiceProviderError> = .init(.disconnected)
-
+    
+    private var waitingSubscription = true
     private let decoder = JSONDecoder()
     private let session = URLSession.init(configuration: .default)
     
     private var cancellables = Set<AnyCancellable>()
 
-    init(matchId: String, sessionToken: String, storage: SportRadarEventDetailsStorage) {
+    init(matchId: String, sessionToken: String, storage: SportRadarEventStorage) {
         self.sessionToken = sessionToken
         self.storage = storage
 
@@ -49,7 +57,6 @@ class SportRadarEventDetailsCoordinator {
         let liveDataContentIdentifier = ContentIdentifier(contentType: liveDataContentType, contentRoute: liveDataContentRoute)
 
         self.liveDataContentIdentifier = liveDataContentIdentifier
-
         
         // Boot the coordinator
         self.checkEventDetailsAvailable()
@@ -69,17 +76,20 @@ class SportRadarEventDetailsCoordinator {
                     self.eventDetailsCurrentValueSubject.send(.connected(subscription: subscription))
                     self.marketsSubscription = subscription
                     
-                    // try to get live data
                     self.requestEventLiveData()
                     
                 case .failure(let error):
                     self.eventDetailsCurrentValueSubject.send(completion: .failure(error))
                 }
-            } receiveValue: { _ in }
+                self.waitingSubscription = false
+            } receiveValue: { _ in
+            }
             .store(in: &self.cancellables)
 
     }
 
+    deinit {
+    }
     
     private func checkEventDetailsAvailable() -> AnyPublisher<Void, ServiceProviderError> {
         let endpoint = SportRadarRestAPIClient.get(contentIdentifier: self.eventDetailsIdentifier)
@@ -91,9 +101,12 @@ class SportRadarEventDetailsCoordinator {
         }
 
         return self.session.dataTaskPublisher(for: request)
-            .retry(1)
-            .map({ return String(data: $0.data, encoding: .utf8) ?? "" })
-            .mapError({ _ in return ServiceProviderError.invalidRequestFormat })
+            .map({ response in
+                return String(data: response.data, encoding: .utf8) ?? ""
+            })
+            .mapError({ error in
+                return ServiceProviderError.resourceUnavailableOrDeleted
+            })
             .flatMap { responseString -> AnyPublisher<Void, ServiceProviderError> in
                 if responseString.uppercased().contains("CONTENT_NOT_FOUND") {
                     return Fail(outputType: Void.self, failure: ServiceProviderError.resourceUnavailableOrDeleted).eraseToAnyPublisher()
@@ -115,11 +128,12 @@ class SportRadarEventDetailsCoordinator {
         else {
             return Fail(error: ServiceProviderError.invalidRequestFormat).eraseToAnyPublisher()
         }
-
         return self.session.dataTaskPublisher(for: request)
-            .retry(1) // 
             .tryMap { data, response -> Data in
-                guard let httpResponse = response as? HTTPURLResponse, (200...299).contains(httpResponse.statusCode) else {
+                guard
+                    let httpResponse = response as? HTTPURLResponse,
+                    (200...299).contains(httpResponse.statusCode)
+                else {
                     throw ServiceProviderError.onSubscribe
                 }
                 return data
@@ -145,6 +159,7 @@ class SportRadarEventDetailsCoordinator {
             return
         }
 
+        print("LoadingBug requestEventLiveData")
         let sessionDataTask = self.session.dataTask(with: request) { data, response, error in
             guard
                 (error == nil),
@@ -152,6 +167,7 @@ class SportRadarEventDetailsCoordinator {
                 (200...299).contains(httpResponse.statusCode)
             else {
                 publisher.send(completion: .failure(ServiceProviderError.onSubscribe))
+                print("LoadingBug requestEventLiveData not found")
                 return
             }
             let subscription = Subscription(contentIdentifier: self.liveDataContentIdentifier,
@@ -215,14 +231,8 @@ class SportRadarEventDetailsCoordinator {
 
 extension SportRadarEventDetailsCoordinator {
 
-    func updatedLiveData(eventLiveDataExtended: SportRadarModels.EventLiveDataExtended, forContentIdentifier contentIdentifier: ContentIdentifier) {
-
-        guard
-            contentIdentifier == self.liveDataContentIdentifier ||  contentIdentifier == self.eventDetailsIdentifier
-        else {
-            return
-        }
-
+    private func updateWithLiveDataExtended(eventLiveDataExtended: SportRadarModels.EventLiveDataExtended) {
+        
         if let newStatus = eventLiveDataExtended.status?.stringValue {
             self.storage.updateEventStatus(newStatus: newStatus)
         }
@@ -237,43 +247,44 @@ extension SportRadarEventDetailsCoordinator {
         }
         
     }
+    
+    func updatedLiveData(eventLiveDataExtended: SportRadarModels.EventLiveDataExtended, forContentIdentifier contentIdentifier: ContentIdentifier) {
+
+        guard
+            contentIdentifier == self.liveDataContentIdentifier ||  contentIdentifier == self.eventDetailsIdentifier
+        else {
+            return
+        }
+
+        self.updateWithLiveDataExtended(eventLiveDataExtended: eventLiveDataExtended)
+    }
 
     func handleContentUpdate(_ content: SportRadarModels.ContentContainer) {
-
+        
         guard
             let updatedContentIdentifier = content.contentIdentifier
         else {
-            // ignoring contentIdentifierLess updates
-            // print("☁️SP debugdetails ignoring contentIdentifierLess \(content)")
             return
         }
-
+        
         if self.eventDetailsIdentifier != updatedContentIdentifier && self.liveDataContentIdentifier != updatedContentIdentifier {
-            // ignoring this update, not subscribed by this class
-            // print("☁️SP debugdetails ignoring \(updatedContentIdentifier) != \(eventDetailsIdentifier) \(liveDataContentIdentifier)")
             return
         }
-
+        
         // print("☁️SP debugdetails SportRadarEventDetailsCoordinator handleContentUpdate \(content)")
-
+        
         switch content {
-
-        // Odds
+            
+            // Odds
         case .updateOutcomeOdd(_, let selectionId, let newOddNumerator, let newOddDenominator):
             self.storage.updateOutcomeOdd(withId: selectionId, newOddNumerator: newOddNumerator, newOddDenominator: newOddDenominator)
         case .updateOutcomeTradability(_, let selectionId, let isTradable):
             self.storage.updateOutcomeTradability(withId: selectionId, isTradable: isTradable)
-
-        // Live Data
-        case .updateEventLiveDataExtended(_, let eventId, let eventLiveDataExtended):
-            if let newTime = eventLiveDataExtended.matchTime {
-                self.storage.updateEventTime(newTime: newTime)
-            }
-            if let newStatus = eventLiveDataExtended.status {
-                self.storage.updateEventStatus(newStatus: newStatus.stringValue)
-            }
-            self.storage.updateEventScore(newHomeScore: eventLiveDataExtended.homeScore, newAwayScore: eventLiveDataExtended.awayScore)
-
+            
+            // Live Data
+        case .updateEventLiveDataExtended(_, _, let eventLiveDataExtended):
+            self.updateWithLiveDataExtended(eventLiveDataExtended: eventLiveDataExtended)
+            
         case .updateEventState(_, _, let newStatus):
             self.storage.updateEventStatus(newStatus: newStatus)
             
@@ -281,11 +292,11 @@ extension SportRadarEventDetailsCoordinator {
             self.storage.updateEventTime(newTime: newTime)
         case .updateEventScore(_, _, let homeScore, let awayScore):
             self.storage.updateEventScore(newHomeScore: homeScore, newAwayScore: awayScore)
-
-        // Markets
+            
+            // Markets
         case .updateMarketTradability(_, let marketId, let isTradable):
             self.storage.updateMarketTradability(withId: marketId, isTradable: isTradable)
-
+            
         case .addMarket(_, let market):
             for outcome in market.outcomes {
                 if let fractionOdd = outcome.odd.fractionOdd {
@@ -293,19 +304,19 @@ extension SportRadarEventDetailsCoordinator {
                 }
             }
             self.storage.updateMarketTradability(withId: market.id, isTradable: market.isTradable)
-
+            
         case .enableMarket(_, let marketId):
             self.storage.updateMarketTradability(withId: marketId, isTradable: true)
         case .removeMarket(_, let marketId):
             self.storage.updateMarketTradability(withId: marketId, isTradable: false)
-
-
-//        case .removeEvent(_, let eventId):
-//            self.storage.removedEvent(withId: eventId)
-
+            
+            //        case .removeEvent(_, let eventId):
+            //            self.storage.removedEvent(withId: eventId)
+            
         default:
             () // Ignore other cases
         }
+        
     }
 }
 
@@ -333,10 +344,6 @@ extension SportRadarEventDetailsCoordinator {
 
     func containsOutcome(withid id: String) -> Bool {
         return self.storage.containsOutcome(withid: id)
-    }
-
-    func setupEvent(withId id: String) {
-        self.storage.setEventSubject(eventId: id)
     }
 
 }

@@ -241,10 +241,6 @@ extension SportRadarEventsGroupCoordinator {
         case .removeMarket(_, let marketId):
             self.storage.updateMarketTradability(withId: marketId, isTradable: false)
 
-
-//        case .removeEvent(_, let eventId):
-//            self.storage.removedEvent(withId: eventId)
-
         default:
             () // Ignore other cases
         }
@@ -275,10 +271,6 @@ extension SportRadarEventsGroupCoordinator {
 
     func containsOutcome(withid id: String) -> Bool {
         return self.storage.containsOutcome(withid: id)
-    }
-
-    func setupEvent(withId id: String) {
-        self.storage.setEventSubject(eventId: id)
     }
 
 }

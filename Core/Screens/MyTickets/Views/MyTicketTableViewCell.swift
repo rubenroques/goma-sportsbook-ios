@@ -94,26 +94,12 @@ class MyTicketTableViewCell: UITableViewCell {
     private var showCashoutButton: Bool = false {
         didSet {
             self.cashoutBaseView.isHidden = !showCashoutButton
-            if showCashoutButton {
-                //self.needsHeightRedraw?(false)
-            }
         }
     }
 
     var showPartialCashoutSliderView: Bool = true {
         didSet {
-
             self.partialCashoutSliderView.isHidden = !showPartialCashoutSliderView
-
-//            if !showPartialCashoutSliderView {
-//
-//                if self.viewModel?.hasRedraw == false {
-//                    self.needsDataUpdate?()
-//                }
-//                self.viewModel?.hasRedraw = true
-//
-//            }
-
         }
     }
 
@@ -134,8 +120,6 @@ class MyTicketTableViewCell: UITableViewCell {
     var usedCashback: Bool = false {
         didSet {
             self.cashbackUsedBaseView.isHidden = !usedCashback
-//            self.cashbackInfoBaseView.isHidden = !usedCashback
-//            self.cashbackValueLabel.isHidden = !usedCashback
         }
     }
 
@@ -154,10 +138,12 @@ class MyTicketTableViewCell: UITableViewCell {
     var shouldShowCashbackInfo: (() -> Void)?
     var needsDataUpdate: (() -> Void)?
     
-    var selectedIdPublisher: CurrentValueSubject<String, Never> = .init("")
-
     var partialCashoutMultiSlider: MultiSlider?
 
+    deinit {
+        print("MyTicketTableViewCell.deinit")
+    }
+    
     override func awakeFromNib() {
         super.awakeFromNib()
 
@@ -217,26 +203,25 @@ class MyTicketTableViewCell: UITableViewCell {
         self.usedCashback = false
 
         self.cashbackInfoView.didTapInfoAction = { [weak self] in
-            UIView.animate(withDuration: 0.5, animations: {
+            
+            UIView.animate(withDuration: 0.5, animations: { [weak self] in
                 self?.learnMoreBaseView.alpha = 1
-            }) { (completed) in
+            }, completion: { [weak self] completed in
                 if completed {
-                    DispatchQueue.main.asyncAfter(deadline: .now() + 5.0) {
-                        UIView.animate(withDuration: 0.5) {
-                            self?.learnMoreBaseView.alpha = 0
-                        }
-                    }
+                    UIView.animate(withDuration: 0.5, delay: 5.0, animations: {
+                        self?.learnMoreBaseView.alpha = 0
+                    })
                 }
-            }
+            })
+            
         }
 
         self.baseView.addSubview(self.learnMoreBaseView)
 
         NSLayoutConstraint.activate([
-
-            self.learnMoreBaseView.bottomAnchor.constraint(equalTo: self.cashbackInfoView.topAnchor, constant: -10),
-            self.learnMoreBaseView.trailingAnchor.constraint(equalTo: self.cashbackInfoView.trailingAnchor, constant: 10)
-
+            self.learnMoreBaseView.bottomAnchor.constraint(equalTo: self.cashbackInfoBaseView.topAnchor, constant: -10),
+            self.learnMoreBaseView.trailingAnchor.constraint(equalTo: self.cashbackInfoBaseView.trailingAnchor, constant: 10),
+            self.learnMoreBaseView.leadingAnchor.constraint(equalTo: self.baseView.leadingAnchor, constant: 10)
         ])
 
         self.learnMoreBaseView.didTapLearnMoreAction = { [weak self] in
@@ -400,18 +385,12 @@ class MyTicketTableViewCell: UITableViewCell {
 
     func configureCashoutButton(withState state: MyTicketCellViewModel.CashoutButtonState) {
         if case .visible(let cashoutValue) = state {
-//            self.cashoutButton.setTitle(localized("cashout"), for: .normal)
-//            if let cashoutValueString = CurrencyFormater.defaultFormat.string(from: NSNumber(value: cashoutValue)) {
-//                self.cashoutButton.setTitle(localized("cashout")+"  \(cashoutValueString)", for: .normal)
-//            }
             self.cashoutValue = cashoutValue
 
-//            self.showCashoutButton = true
             self.showPartialCashoutSliderView = true
             self.isPartialCashoutDisabled = false
         }
         else {
-//            self.showCashoutButton = false
             if self.viewModel?.ticket.status?.uppercased() == "OPENED" {
                 self.showPartialCashoutSliderView = true
                 let partialCashoutLabel = localized("cashout_value").replacingFirstOccurrence(of: "{cashoutAmount}", with: localized("unavailable"))
@@ -460,12 +439,10 @@ class MyTicketTableViewCell: UITableViewCell {
             .removeDuplicates()
             .receive(on: DispatchQueue.main)
             .sink(receiveValue: { [weak self] cashoutButtonState in
-
                 self?.setupPartialCashoutSlider()
                 self?.configureCashoutButton(withState: cashoutButtonState)
-
             })
-            .store(in: &cancellables)
+            .store(in: &self.cancellables)
 
         self.isLoadingCellDataSubscription = self.viewModel?.isLoadingCellData
             .removeDuplicates()
@@ -489,7 +466,6 @@ class MyTicketTableViewCell: UITableViewCell {
                                                           viewModel: viewModel.selections[index])
             myTicketBetLineView.tappedMatchDetail = { [weak self] matchId in
                 self?.tappedMatchDetail?(matchId)
-                
             }
            
             self.betCardsStackView.addArrangedSubview(myTicketBetLineView)
@@ -698,13 +674,20 @@ class MyTicketTableViewCell: UITableViewCell {
                 self.usedCashback = false
             }
 
-            if let potentialCashbackReturn = betHistoryEntry.potentialCashbackReturn != nil ? betHistoryEntry.potentialCashbackReturn : betHistoryEntry.potentialFreebetReturn,
-               potentialCashbackReturn > 0 {
-                self.hasCashback = true
+            if let potentialCashbackReturn = betHistoryEntry.potentialCashbackReturn,
+               let potentialFreebetReturn = betHistoryEntry.potentialFreebetReturn {
 
-                let potentialCashbackReturnString = CurrencyFormater.defaultFormat.string(from: NSNumber(value: potentialCashbackReturn))
+                var cashbackReturn = potentialCashbackReturn
 
-                self.cashbackValueLabel.text = potentialCashbackReturnString
+                if potentialCashbackReturn == 0 && potentialFreebetReturn > 0 {
+                    cashbackReturn = potentialFreebetReturn
+                }
+
+                if cashbackReturn > 0 {
+                    self.hasCashback = true
+                    let potentialCashbackReturnString = CurrencyFormater.defaultFormat.string(from: NSNumber(value: cashbackReturn))
+                    self.cashbackValueLabel.text = potentialCashbackReturnString
+                }
             }
         }
         else if let cashbackReturn = betHistoryEntry.cashbackReturn != nil ? betHistoryEntry.cashbackReturn : betHistoryEntry.freebetReturn,
@@ -728,6 +711,7 @@ class MyTicketTableViewCell: UITableViewCell {
         }
 
         self.viewModel?.partialCashout
+            .receive(on: DispatchQueue.main)
             .sink(receiveValue: { [weak self] partialCashout in
 
                 if let partialCashout,
@@ -741,9 +725,7 @@ class MyTicketTableViewCell: UITableViewCell {
                     self?.partialCashoutButton.isEnabled = false
                 }
             })
-            .store(in: &cancellables)
-
-        //self.viewModel?.requestCashoutAvailability()
+            .store(in: &self.cancellables)
 
     }
 

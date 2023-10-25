@@ -13,10 +13,13 @@ import OptimoveSDK
 
 class ProfileViewController: UIViewController {
 
+    public var requestBetSwipeAction: () -> Void = { }
+    public var requestHomeAction: () -> Void = { }
+    public var requestRegisterAction: () -> Void = { }
+
+    // Outlets
     @IBOutlet private weak var safeAreaTopView: UIView!
-
     @IBOutlet private weak var closeButton: UIButton!
-
     @IBOutlet private weak var topBarView: UIView!
 
     @IBOutlet private weak var profileBaseView: UIView!
@@ -117,7 +120,7 @@ class ProfileViewController: UIViewController {
 
         self.commonInit()
         self.setupWithTheme()
-
+        
     }
 
     override func viewWillAppear(_ animated: Bool) {
@@ -587,6 +590,8 @@ class ProfileViewController: UIViewController {
         supportView.addGestureRecognizer(supportTap)
 
         self.stackView.addArrangedSubview(myAccountView)
+        self.stackView.addArrangedSubview(responsibleGamingView)
+        
         // self.stackView.addArrangedSubview(cashbackView)
         // self.stackView.addArrangedSubview(betSwipeView)
         self.stackView.addArrangedSubview(bonusView)
@@ -596,8 +601,6 @@ class ProfileViewController: UIViewController {
         self.stackView.addArrangedSubview(myFavoritesView)
         self.stackView.addArrangedSubview(settingsView)
         self.stackView.addArrangedSubview(supportView)
-
-        self.stackView.addArrangedSubview(responsibleGamingView)
 
     }
 
@@ -767,16 +770,24 @@ extension ProfileViewController {
 
     @objc func promotionsViewTapped(sender: UITapGestureRecognizer) {
 
-        let promotionsWebViewModel = PromotionsWebViewModel()
+        var gomaBaseUrl = TargetVariables.clientBaseUrl
+        let appLanguage = "fr"
 
-        // TODO: Change to prod url when fixed
-        let gomaBaseUrl = GomaGamingEnv.stage.baseUrl
-        let appLanguage = Locale.current.languageCode
         let isDarkTheme = self.traitCollection.userInterfaceStyle == .dark ? true : false
-        let urlString = "\(gomaBaseUrl)/\(appLanguage ?? "fr")/in-app/promotions?dark=\(isDarkTheme)"
+        let urlString = "\(gomaBaseUrl)/\(appLanguage)/in-app/promotions?dark=\(isDarkTheme)"
 
         if let url = URL(string: urlString) {
+            let promotionsWebViewModel = PromotionsWebViewModel()
             let promotionsWebViewController = PromotionsWebViewController(url: url, viewModel: promotionsWebViewModel)
+            promotionsWebViewController.openBetSwipeAction = { [weak self] in
+                self?.requestBetSwipeAction()
+            }
+            promotionsWebViewController.openRegisterAction = { [weak self] in
+                self?.requestRegisterAction()
+            }
+            promotionsWebViewController.openHomeAction = { [weak self] in
+                self?.requestHomeAction()
+            }
             self.navigationController?.pushViewController(promotionsWebViewController, animated: true)
         }
     }

@@ -27,8 +27,11 @@ class IdentificationDocsViewController: UIViewController {
     private lazy var idAddDocTitleLabel: UILabel = Self.createIdAddDocTitleLabel()
     private lazy var idAddDocIconImageView: UIImageView = Self.createIdAddDocIconImageView()
 
+    private lazy var idWarningView: BetslipErrorView = Self.createIdWarningView()
+
     private lazy var idBottomStackViewBottomConstraint: NSLayoutConstraint = Self.createIdBottomStackViewBottomConstraint()
     private lazy var idAddDocBottomConstraint: NSLayoutConstraint = Self.createIdAddDocBottomConstraint()
+    private lazy var idWarningBottomConstraint: NSLayoutConstraint = Self.createIdWarningBottomConstraint()
 
     private lazy var proofAddressBaseView: UIView = Self.createProofAddressBaseView()
     private lazy var proofAddressDisabledView: UIView = Self.createProofAddressDisabledView()
@@ -41,8 +44,11 @@ class IdentificationDocsViewController: UIViewController {
     private lazy var proofAddDocTitleLabel: UILabel = Self.createProofAddDocTitleLabel()
     private lazy var proofAddDocIconImageView: UIImageView = Self.createProofAddDocIconImageView()
 
+    private lazy var proofWarningView: BetslipErrorView = Self.createIdWarningView()
+
     private lazy var proofBottomStackViewBottomConstraint: NSLayoutConstraint = Self.createProofBottomStackViewBottomConstraint()
     private lazy var proofAddDocBottomConstraint: NSLayoutConstraint = Self.createProofAddDocBottomConstraint()
+    private lazy var proofWarningBottomConstraint: NSLayoutConstraint = Self.createProofWarningBottomConstraint()
 
     private lazy var loadingBaseView: UIView = Self.createLoadingBaseView()
     private lazy var activityIndicatorView: UIActivityIndicatorView = Self.createActivityIndicatorView()
@@ -69,12 +75,39 @@ class IdentificationDocsViewController: UIViewController {
         }
     }
 
+    var showIdentityWarning: Bool = false {
+        didSet {
+            self.idWarningView.isHidden = !showIdentityWarning
+            self.canAddIdentificationDocs = !showIdentityWarning
+
+            self.idBottomStackViewBottomConstraint.isActive = !showIdentityWarning
+            self.idWarningBottomConstraint.isActive = showIdentityWarning
+
+            self.identificationBaseView.setNeedsLayout()
+            self.identificationBaseView.layoutIfNeeded()
+
+        }
+    }
+
     var canAddProofDocs: Bool = true {
         didSet {
             self.proofBottomStackViewBottomConstraint.isActive = !canAddProofDocs
             self.proofAddDocBottomConstraint.isActive = canAddProofDocs
 
             self.proofAddDocBaseView.isHidden = !canAddProofDocs
+
+            self.proofAddressBaseView.setNeedsLayout()
+            self.proofAddressBaseView.layoutIfNeeded()
+        }
+    }
+
+    var showProofWarning: Bool = false {
+        didSet {
+            self.proofWarningView.isHidden = !showProofWarning
+            self.canAddProofDocs = !showProofWarning
+
+            self.proofBottomStackViewBottomConstraint.isActive = !showProofWarning
+            self.proofWarningBottomConstraint.isActive = showProofWarning
 
             self.proofAddressBaseView.setNeedsLayout()
             self.proofAddressBaseView.layoutIfNeeded()
@@ -258,7 +291,7 @@ class IdentificationDocsViewController: UIViewController {
     // MARK: Action
     @objc func didTapIdAddDoc() {
 
-        if self.totalIdentificationTriesCount <= 4 {
+        if self.totalIdentificationTriesCount <= -1 {
             self.viewModel.generateDocumentTypeToken(docType: "IDENTITY_CARD")
 
         }
@@ -424,9 +457,14 @@ class IdentificationDocsViewController: UIViewController {
         self.identificationBottomStackView.removeAllArrangedSubviews()
         self.proofAddressBottomStackView.removeAllArrangedSubviews()
 
+        self.showIdentityWarning = false
+        self.showProofWarning = false
+
         let identityDocuments = self.viewModel.identificationDocuments
 
         var mostRecentIdentityDocument: DocumentFileInfo?
+        var sumsubIdentityDocument: DocumentFileInfo?
+        var hasApprovedIdentityDocuments = false
 
         for identityDocument in identityDocuments {
 
@@ -436,12 +474,12 @@ class IdentificationDocsViewController: UIViewController {
 
                 documentStateView.configure(documentFileInfo: identityFileInfo)
 
-                if index != identityDocument.uploadedFiles.count - 1 {
-                    documentStateView.hasSeparator = true
-                }
-                else {
-                    documentStateView.hasSeparator = false
-                }
+//                if index != identityDocument.uploadedFiles.count - 1 {
+//                    documentStateView.hasSeparator = true
+//                }
+//                else {
+//                    documentStateView.hasSeparator = false
+//                }
 
                 self.identificationBottomStackView.addArrangedSubview(documentStateView)
 
@@ -460,48 +498,99 @@ class IdentificationDocsViewController: UIViewController {
                     mostRecentIdentityDocument = identityFileInfo
                 }
 
+                if identityFileInfo.status == .approved {
+                    hasApprovedIdentityDocuments = true
+                }
+
                 if let totalRetries = identityFileInfo.totalRetries {
                     self.totalIdentificationTriesCount = totalRetries
+                    sumsubIdentityDocument = identityFileInfo
                 }
             }
 
         }
 
-        if let currentDocument = mostRecentIdentityDocument {
+        if let sumsubDoc = sumsubIdentityDocument {
 
-            if let canRetry = currentDocument.retry {
-                self.canAddIdentificationDocs = canRetry
+            let retries = self.totalIdentificationTriesCount
+            let canRetry = sumsubDoc.retry ?? true
+            let moderationComment = sumsubDoc.moderationComment
 
-                if !canRetry && currentDocument.status == .approved {
-                    self.isProofOfAddressDisabled = false
-                }
-                else {
-                    self.isProofOfAddressDisabled = true
-                }
+            if sumsubDoc.status == .rejected && moderationComment != nil && retries < 5 && hasApprovedIdentityDocuments {
+                self.idWarningView.setDescription(description: moderationComment ?? localized("error"))
+                self.showIdentityWarning = true
             }
-            else {
-                if currentDocument.status == .approved {
+            else if retries > 4 {
+                if hasApprovedIdentityDocuments {
                     self.canAddIdentificationDocs = false
                     self.isProofOfAddressDisabled = false
-                }
-                else if currentDocument.status == .pendingApproved {
-                    self.canAddIdentificationDocs = false
-                    self.isProofOfAddressDisabled = true
                 }
                 else {
                     self.canAddIdentificationDocs = true
                     self.isProofOfAddressDisabled = true
                 }
             }
+            else {
+                if canRetry {
+                    self.canAddIdentificationDocs = true
+                    self.isProofOfAddressDisabled = true
+                }
+                else {
+                    self.canAddIdentificationDocs = false
+                    self.isProofOfAddressDisabled = false
+                }
+
+            }
 
         }
         else {
-            self.isProofOfAddressDisabled = true
+            if hasApprovedIdentityDocuments {
+                self.canAddIdentificationDocs = false
+                self.isProofOfAddressDisabled = false
+            }
+            else {
+                self.canAddIdentificationDocs = true
+                self.isProofOfAddressDisabled = true
+            }
         }
+
+//        if let currentDocument = mostRecentIdentityDocument {
+//
+//            if let canRetry = currentDocument.retry {
+//                self.canAddIdentificationDocs = canRetry
+//
+//                if !canRetry && currentDocument.status == .approved {
+//                    self.isProofOfAddressDisabled = false
+//                }
+//                else {
+//                    self.isProofOfAddressDisabled = true
+//                }
+//            }
+//            else {
+//                if currentDocument.status == .approved {
+//                    self.canAddIdentificationDocs = false
+//                    self.isProofOfAddressDisabled = false
+//                }
+//                else if currentDocument.status == .pendingApproved {
+//                    self.canAddIdentificationDocs = false
+//                    self.isProofOfAddressDisabled = true
+//                }
+//                else {
+//                    self.canAddIdentificationDocs = true
+//                    self.isProofOfAddressDisabled = true
+//                }
+//            }
+//
+//        }
+//        else {
+//            self.isProofOfAddressDisabled = true
+//        }
 
         if let proofAddressFilesInfo = self.viewModel.proofAddressDocuments.first?.uploadedFiles {
 
             var mostRecentProofDocument: DocumentFileInfo?
+            var sumsubProofDocument: DocumentFileInfo?
+            var hasApprovedProofDocuments = false
 
             for (index, proofFileInfo) in proofAddressFilesInfo.enumerated() {
 
@@ -509,12 +598,12 @@ class IdentificationDocsViewController: UIViewController {
 
                 documentStateView.configure(documentFileInfo: proofFileInfo)
 
-                if index != proofAddressFilesInfo.count - 1 {
-                    documentStateView.hasSeparator = true
-                }
-                else {
-                    documentStateView.hasSeparator = false
-                }
+//                if index != proofAddressFilesInfo.count - 1 {
+//                    documentStateView.hasSeparator = true
+//                }
+//                else {
+//                    documentStateView.hasSeparator = false
+//                }
 
                 self.proofAddressBottomStackView.addArrangedSubview(documentStateView)
 
@@ -541,27 +630,75 @@ class IdentificationDocsViewController: UIViewController {
                         mostRecentProofDocument = proofFileInfo
                     }
 
+                    if proofFileInfo.status == .approved {
+                        hasApprovedProofDocuments = true
+                    }
+
                     if let totalRetries = proofFileInfo.totalRetries {
-                        self.totalProofAddressTriesCount = totalRetries
+                        if self.totalIdentificationTriesCount >= 5 {
+                            self.totalProofAddressTriesCount = self.totalIdentificationTriesCount
+                        }
+                        else {
+                            self.totalProofAddressTriesCount = totalRetries
+
+                        }
+                        sumsubProofDocument = proofFileInfo
                     }
                 }
             }
 
-            if let currentDocument = mostRecentProofDocument {
+            if let sumsubDoc = sumsubProofDocument {
 
-                if let canRetry = currentDocument.retry {
-                    self.canAddProofDocs = canRetry
+                let retries = self.totalProofAddressTriesCount
+                let canRetry = sumsubDoc.retry ?? true
+                let moderationComment = sumsubDoc.moderationComment
+
+                if sumsubDoc.status == .rejected && moderationComment != nil && retries < 5 && hasApprovedProofDocuments {
+                    self.proofWarningView.setDescription(description: moderationComment ?? localized("error"))
+                    self.showProofWarning = true
                 }
-                else {
-                    if currentDocument.status == .approved || currentDocument.status == .pendingApproved {
+                else if retries > 4 {
+                    if hasApprovedProofDocuments {
                         self.canAddProofDocs = false
                     }
                     else {
                         self.canAddProofDocs = true
                     }
                 }
+                else {
+                    if canRetry {
+                        self.canAddProofDocs = true
+                    }
+                    else {
+                        self.canAddProofDocs = false
+                    }
 
+                }
             }
+            else {
+                if hasApprovedProofDocuments {
+                    self.canAddProofDocs = false
+                }
+                else {
+                    self.canAddProofDocs = true
+                }
+            }
+
+//            if let currentDocument = mostRecentProofDocument {
+//
+//                if let canRetry = currentDocument.retry {
+//                    self.canAddProofDocs = canRetry
+//                }
+//                else {
+//                    if currentDocument.status == .approved || currentDocument.status == .pendingApproved {
+//                        self.canAddProofDocs = false
+//                    }
+//                    else {
+//                        self.canAddProofDocs = true
+//                    }
+//                }
+//
+//            }
 
         }
 
@@ -694,6 +831,14 @@ extension IdentificationDocsViewController {
         return imageView
     }
 
+    private static func createIdWarningView() -> BetslipErrorView {
+        let errorView = BetslipErrorView()
+        errorView.translatesAutoresizingMaskIntoConstraints = false
+        errorView.setDescription(description: localized("error"))
+        errorView.isHidden = true
+        return errorView
+    }
+
     private static func createProofAddressBaseView() -> UIView {
         let view = UIView()
         view.translatesAutoresizingMaskIntoConstraints = false
@@ -770,6 +915,14 @@ extension IdentificationDocsViewController {
         return imageView
     }
 
+    private static func createProofWarningView() -> BetslipErrorView {
+        let errorView = BetslipErrorView()
+        errorView.translatesAutoresizingMaskIntoConstraints = false
+        errorView.setDescription(description: localized("error"))
+        errorView.isHidden = true
+        return errorView
+    }
+
     private static func createBackButton() -> UIButton {
         let button = UIButton()
         button.translatesAutoresizingMaskIntoConstraints = false
@@ -813,6 +966,16 @@ extension IdentificationDocsViewController {
         return constraint
     }
 
+    private static func createIdWarningBottomConstraint() -> NSLayoutConstraint {
+        let constraint = NSLayoutConstraint()
+        return constraint
+    }
+
+    private static func createProofWarningBottomConstraint() -> NSLayoutConstraint {
+        let constraint = NSLayoutConstraint()
+        return constraint
+    }
+
     private func setupSubviews() {
 
         self.view.addSubview(self.containerView)
@@ -837,6 +1000,8 @@ extension IdentificationDocsViewController {
         self.idAddDocView.addSubview(self.idAddDocTitleLabel)
         self.idAddDocView.addSubview(self.idAddDocIconImageView)
 
+        self.identificationBaseView.addSubview(self.idWarningView)
+
         self.contentBaseView.addSubview(self.proofAddressBaseView)
 
         self.proofAddressBaseView.addSubview(self.proofAddressTopStackView)
@@ -852,6 +1017,8 @@ extension IdentificationDocsViewController {
 
         self.proofAddDocView.addSubview(self.proofAddDocTitleLabel)
         self.proofAddDocView.addSubview(self.proofAddDocIconImageView)
+
+        self.proofAddressBaseView.addSubview(self.proofWarningView)
 
         self.proofAddressBaseView.addSubview(self.proofAddressDisabledView)
 
@@ -912,7 +1079,11 @@ extension IdentificationDocsViewController {
             self.idAddDocIconImageView.trailingAnchor.constraint(equalTo: self.idAddDocView.trailingAnchor),
             self.idAddDocIconImageView.widthAnchor.constraint(equalToConstant: 24),
             self.idAddDocIconImageView.heightAnchor.constraint(equalTo: self.idAddDocIconImageView.widthAnchor),
-            self.idAddDocIconImageView.centerYAnchor.constraint(equalTo: self.idAddDocTitleLabel.centerYAnchor)
+            self.idAddDocIconImageView.centerYAnchor.constraint(equalTo: self.idAddDocTitleLabel.centerYAnchor),
+
+            self.idWarningView.leadingAnchor.constraint(equalTo: self.identificationBaseView.leadingAnchor),
+            self.idWarningView.trailingAnchor.constraint(equalTo: self.identificationBaseView.trailingAnchor),
+            self.idWarningView.topAnchor.constraint(equalTo: self.identificationBottomStackView.bottomAnchor, constant: 5)
 
         ])
 
@@ -939,7 +1110,6 @@ extension IdentificationDocsViewController {
             self.proofAddDocBaseView.leadingAnchor.constraint(equalTo: self.proofAddressBaseView.leadingAnchor, constant: 14),
             self.proofAddDocBaseView.trailingAnchor.constraint(equalTo: self.proofAddressBaseView.trailingAnchor, constant: -14),
             self.proofAddDocBaseView.topAnchor.constraint(equalTo: self.proofAddressBottomStackView.bottomAnchor, constant: 5),
-            self.proofAddDocBaseView.bottomAnchor.constraint(equalTo: self.proofAddressBaseView.bottomAnchor, constant: -20),
             self.proofAddDocBaseView.heightAnchor.constraint(equalToConstant: 30),
 
             self.proofAddDocView.centerXAnchor.constraint(equalTo: self.proofAddDocBaseView.centerXAnchor),
@@ -953,7 +1123,11 @@ extension IdentificationDocsViewController {
             self.proofAddDocIconImageView.trailingAnchor.constraint(equalTo: self.proofAddDocView.trailingAnchor),
             self.proofAddDocIconImageView.widthAnchor.constraint(equalToConstant: 24),
             self.proofAddDocIconImageView.heightAnchor.constraint(equalTo: self.proofAddDocIconImageView.widthAnchor),
-            self.proofAddDocIconImageView.centerYAnchor.constraint(equalTo: self.proofAddDocTitleLabel.centerYAnchor)
+            self.proofAddDocIconImageView.centerYAnchor.constraint(equalTo: self.proofAddDocTitleLabel.centerYAnchor),
+
+            self.proofWarningView.leadingAnchor.constraint(equalTo: self.proofAddressBaseView.leadingAnchor),
+            self.proofWarningView.trailingAnchor.constraint(equalTo: self.proofAddressBaseView.trailingAnchor),
+            self.proofWarningView.topAnchor.constraint(equalTo: self.proofAddressBottomStackView.bottomAnchor, constant: 5),
         ])
 
         // Loading Screen
@@ -973,10 +1147,16 @@ extension IdentificationDocsViewController {
         self.idAddDocBottomConstraint = self.idAddDocBaseView.bottomAnchor.constraint(equalTo: self.identificationBaseView.bottomAnchor, constant: -20)
         self.idAddDocBottomConstraint.isActive = true
 
+        self.idWarningBottomConstraint = self.idWarningView.bottomAnchor.constraint(equalTo: self.identificationBaseView.bottomAnchor, constant: -20)
+        self.idWarningBottomConstraint.isActive = false
+
         self.proofBottomStackViewBottomConstraint = self.proofAddressBottomStackView.bottomAnchor.constraint(equalTo: self.proofAddressBaseView.bottomAnchor, constant: -20)
         self.proofBottomStackViewBottomConstraint.isActive = false
 
         self.proofAddDocBottomConstraint = self.proofAddDocBaseView.bottomAnchor.constraint(equalTo: self.proofAddressBaseView.bottomAnchor, constant: -20)
         self.proofAddDocBottomConstraint.isActive = true
+
+        self.proofWarningBottomConstraint = self.proofWarningView.bottomAnchor.constraint(equalTo: self.proofAddressBaseView.bottomAnchor, constant: -20)
+        self.proofWarningBottomConstraint.isActive = false
     }
 }

@@ -298,15 +298,15 @@ public class SteppedRegistrationViewController: UIViewController {
                 self.headerBaseView.layoutIfNeeded()
 
             } completion: { completed in
-                UIView.animate(withDuration: 0.22, delay: 1.5) {
-                    // 3 - Hide lottie after 3 seconds
-                    if percentage >= 1.0 {
-                        self.progressEndLottieView.alpha = 1.0
-                    }
-                    else {
-                        self.progressEndLottieView.alpha = 0.0
-                    }
-                }
+//                UIView.animate(withDuration: 0.22, delay: 1.5) {
+//                    // 3 - Hide lottie after 3 seconds
+//                    if percentage >= 1.0 {
+//                        self.progressEndLottieView.alpha = 1.0
+//                    }
+//                    else {
+//                        self.progressEndLottieView.alpha = 0.0
+//                    }
+//                }
             }
         })
 

@@ -260,25 +260,25 @@ class IdentificationDocsViewModel {
                 let userDocuments = userDocumentsResponse.userDocuments
 
                 // Check sumsub status to get omega documents after validation
-                if let currentDocumentLevelStatus = self?.currentDocumentLevelStatus {
-
-                    if (currentDocumentLevelStatus.levelName == .identificationLevel && currentDocumentLevelStatus.status == .completed) ||
-                        currentDocumentLevelStatus.levelName == .poaLevel ||
-                        (currentDocumentLevelStatus.levelName == .identificationLevel && currentDocumentLevelStatus.status == .initial)  {
-
-                        if let requiredDocumentTypes = self?.requiredDocumentTypes {
-                            self?.processDocuments(documentTypes: requiredDocumentTypes, userDocuments: userDocuments)
-                        }
-
-                    }
-                    else {
-                        self?.reloadData()
-                    }
-                }
-
-//                if let requiredDocumentTypes = self?.requiredDocumentTypes {
-//                    self?.processDocuments(documentTypes: requiredDocumentTypes, userDocuments: userDocuments)
+//                if let currentDocumentLevelStatus = self?.currentDocumentLevelStatus {
+//
+//                    if (currentDocumentLevelStatus.levelName == .identificationLevel && currentDocumentLevelStatus.status == .completed) ||
+//                        currentDocumentLevelStatus.levelName == .poaLevel ||
+//                        (currentDocumentLevelStatus.levelName == .identificationLevel && currentDocumentLevelStatus.status == .initial)  {
+//
+//                        if let requiredDocumentTypes = self?.requiredDocumentTypes {
+//                            self?.processDocuments(documentTypes: requiredDocumentTypes, userDocuments: userDocuments)
+//                        }
+//
+//                    }
+//                    else {
+//                        self?.reloadData()
+//                    }
 //                }
+
+                if let requiredDocumentTypes = self?.requiredDocumentTypes {
+                    self?.processDocuments(documentTypes: requiredDocumentTypes, userDocuments: userDocuments)
+                }
 
             })
             .store(in: &cancellables)
@@ -390,9 +390,14 @@ class IdentificationDocsViewModel {
                 }
 
                 var totalRetries: Int?
+                var moderationComment: String?
 
                 if let attempCount = applicantDataResponse.reviewData?.attemptCount {
                     totalRetries = attempCount
+                }
+
+                if let comment = applicantDataResponse.reviewData?.reviewResult?.moderationComment {
+                    moderationComment = comment
                 }
 
                 let docFileInfo = DocumentFileInfo(id: docId,
@@ -401,7 +406,7 @@ class IdentificationDocsViewModel {
                                                    uploadDate: uploadDate,
                                                    retry: retry,
                                                    documentTypeGroup: docTypeGroup ?? .none,
-                                                   totalRetries: totalRetries)
+                                                   totalRetries: totalRetries, moderationComment: moderationComment)
 
                 documentFilesInfo.append(docFileInfo)
             }
@@ -463,27 +468,35 @@ class IdentificationDocsViewModel {
         if userDocuments.isNotEmpty && userDocuments.contains(where: {
             $0.documentType == "IDENTITY_CARD"
         }) {
-            self.identificationDocuments = []
-            let filteredDocuments = self.documents.filter({
-                $0.typeGroup == .proofAddress
-            })
 
-            self.documents = filteredDocuments
+            if let currentDocumentLevelStatus = self.currentDocumentLevelStatus,
+               currentDocumentLevelStatus.levelName == .identificationLevel && currentDocumentLevelStatus.status == .completed {
+                self.identificationDocuments = []
+                let filteredDocuments = self.documents.filter({
+                    $0.typeGroup == .proofAddress
+                })
+
+                self.documents = filteredDocuments
+            }
         }
 
         // Check for poa user documents on Omega
         if userDocuments.isNotEmpty && userDocuments.contains(where: {
             $0.documentType == "POA"
         }) {
-            self.proofAddressDocuments = []
-            let filteredDocuments = self.documents.filter({
-                $0.typeGroup == .identityCard ||
-                $0.typeGroup == .drivingLicense ||
-                $0.typeGroup == .passport ||
-                $0.typeGroup == .residenceId
-            })
+            if let currentDocumentLevelStatus = self.currentDocumentLevelStatus,
+               currentDocumentLevelStatus.levelName == .poaLevel && currentDocumentLevelStatus.status == .completed {
 
-            self.documents = filteredDocuments
+                self.proofAddressDocuments = []
+                let filteredDocuments = self.documents.filter({
+                    $0.typeGroup == .identityCard ||
+                    $0.typeGroup == .drivingLicense ||
+                    $0.typeGroup == .passport ||
+                    $0.typeGroup == .residenceId
+                })
+
+                self.documents = filteredDocuments
+            }
         }
 
         for documentType in documentTypes {

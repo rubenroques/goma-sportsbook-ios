@@ -23,6 +23,7 @@ struct DocumentFileInfo {
     var retry: Bool?
     var documentTypeGroup: DocumentTypeGroup
     var totalRetries: Int?
+    var moderationComment: String?
 
     init(id: String,
          name: String,
@@ -30,7 +31,8 @@ struct DocumentFileInfo {
          uploadDate: Date? = nil,
          retry: Bool? = true,
          documentTypeGroup: DocumentTypeGroup,
-         totalRetries: Int? = nil) {
+         totalRetries: Int? = nil,
+         moderationComment: String? = nil) {
         self.id = id
         self.name = name
         self.status = status
@@ -38,6 +40,7 @@ struct DocumentFileInfo {
         self.retry = retry
         self.documentTypeGroup = documentTypeGroup
         self.totalRetries = totalRetries
+        self.moderationComment = moderationComment
     }
 }
 
@@ -55,6 +58,9 @@ enum FileState {
         }
         else if code == "APPROVED" {
             self = .approved
+        }
+        else if code == "DECLINED" {
+            self = .rejected
         }
         else {
             self = .failed

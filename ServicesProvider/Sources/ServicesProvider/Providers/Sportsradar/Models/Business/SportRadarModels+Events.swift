@@ -25,7 +25,7 @@ extension SportRadarModels {
         var awayScore: Int
 
         var matchTime: String?
-        var status: Event.Status
+        var status: EventStatus
 
         enum CodingKeys: String, CodingKey {
             case scoresContainer = "scores"
@@ -37,7 +37,7 @@ extension SportRadarModels {
             case matchTime = "matchTime"
         }
 
-        init(id: String, homeScore: Int, awayScore: Int, matchTime: String? = nil, status: Event.Status) {
+        init(id: String, homeScore: Int, awayScore: Int, matchTime: String? = nil, status: EventStatus) {
             self.id = id
             self.homeScore = homeScore
             self.awayScore = awayScore
@@ -57,7 +57,7 @@ extension SportRadarModels {
             // Status
             self.status = .unknown
             if let statusString = try? container.decode(String.self, forKey: .eventStatus) {
-                self.status = Event.Status.init(value: statusString)
+                self.status = EventStatus.init(value: statusString)
             }
 
             // Scores
@@ -87,14 +87,14 @@ extension SportRadarModels {
         }
     }
 
-    struct EventLiveDataExtended: Decodable {
-        var id: String?
+    struct EventLiveDataExtended: Codable {
+        var id: String
 
         var homeScore: Int?
         var awayScore: Int?
 
         var matchTime: String?
-        var status: Event.Status?
+        var status: EventStatus?
         
         enum CodingKeys: String, CodingKey {
             case targetEventId = "targetEventId"
@@ -112,7 +112,7 @@ extension SportRadarModels {
             case matchTime = "matchTime"
         }
 
-        init(id: String, homeScore: Int?, awayScore: Int?, matchTime: String?, status: Event.Status?) {
+        init(id: String, homeScore: Int?, awayScore: Int?, matchTime: String?, status: EventStatus?) {
             self.id = id
             self.homeScore = homeScore
             self.awayScore = awayScore
@@ -123,7 +123,7 @@ extension SportRadarModels {
         init(from decoder: Decoder) throws {
             let container: KeyedDecodingContainer<CodingKeys> = try decoder.container(keyedBy: CodingKeys.self)
 
-            self.id = try container.decodeIfPresent(String.self, forKey: .targetEventId)
+            self.id = (try? container.decode(String.self, forKey: .targetEventId)) ?? "000"
 
             self.matchTime = nil
             if let fullMatchTime = try container.decodeIfPresent(String.self, forKey: .matchTime),
@@ -138,7 +138,7 @@ extension SportRadarModels {
                let statusContainer = try? completeContainer.nestedContainer(keyedBy: CodingKeys.self, forKey: .statusContainer),
                let eventContainer = try? statusContainer.nestedContainer(keyedBy: CodingKeys.self, forKey: .eventContainer) {
                 let statusValue =  try eventContainer.decode(String.self, forKey: .emptyContainer)
-                self.status = Event.Status.init(value: statusValue)
+                self.status = EventStatus.init(value: statusValue)
             }
 
             // Scores
@@ -175,6 +175,26 @@ extension SportRadarModels {
             }
 
         }
+        
+        func encode(to encoder: Encoder) throws {
+            var container = encoder.container(keyedBy: CodingKeys.self)
+            
+            try container.encode(id, forKey: .targetEventId)
+            
+            var attributesContainer = container.nestedContainer(keyedBy: CodingKeys.self, forKey: .attributedContainer)
+            var completeContainer = attributesContainer.nestedContainer(keyedBy: CodingKeys.self, forKey: .completeContainer)
+            var statusContainer = completeContainer.nestedContainer(keyedBy: CodingKeys.self, forKey: .statusContainer)
+            var eventContainer = statusContainer.nestedContainer(keyedBy: CodingKeys.self, forKey: .eventContainer)
+                    
+            var currentScoreContainer = completeContainer.nestedContainer(keyedBy: CodingKeys.self, forKey: .currentScoreContainer)
+            var competitorContainer = currentScoreContainer.nestedContainer(keyedBy: CodingKeys.self, forKey: .competitorContainer)
+            
+            try competitorContainer.encode(homeScore, forKey: .homeScore)
+            try competitorContainer.encode(awayScore, forKey: .awayScore)
+            
+            try container.encode(matchTime, forKey: .matchTime)
+        }
+
     }
 
     struct EventsGroup: Codable {
@@ -192,6 +212,30 @@ extension SportRadarModels {
         }
     }
 
+    enum EventStatus {
+        case unknown
+        case notStarted
+        case inProgress(String)
+        case ended
+
+        init(value: String) {
+            switch value {
+            case "not_started": self = .notStarted
+            case "ended": self = .ended
+            default: self = .inProgress(value)
+            }
+        }
+
+        var stringValue: String {
+            switch self {
+            case .notStarted: return "not_started"
+            case .ended: return "ended"
+            case .inProgress(let value): return value
+            case .unknown: return ""
+            }
+        }
+    }
+    
     struct Event: Codable {
         
         var id: String
@@ -199,6 +243,7 @@ extension SportRadarModels {
         var awayName: String?
         var sportTypeName: String?
         var sportTypeCode: String?
+        var sportIdCode: String?
 
         var competitionId: String?
         var competitionName: String?
@@ -215,31 +260,9 @@ extension SportRadarModels {
         var awayScore: Int
 
         var matchTime: String?
-        var status: Status
+        var status: EventStatus
 
-        enum Status {
-            case unknown
-            case notStarted
-            case inProgress(String)
-            case ended
-
-            init(value: String) {
-                switch value {
-                case "not_started": self = .notStarted
-                case "ended": self = .ended
-                default: self = .inProgress(value)
-                }
-            }
-
-            var stringValue: String {
-                switch self {
-                case .notStarted: return "not_started"
-                case .ended: return "ended"
-                case .inProgress(let value): return value
-                case .unknown: return ""
-                }
-            }
-        }
+        
 
         enum CodingKeys: String, CodingKey {
             case id = "idfoevent"
@@ -254,7 +277,7 @@ extension SportRadarModels {
             case numberMarkets = "numMarkets"
             case name = "name"
             case sportTypeCode = "idfosporttype"
-
+            case sportIdCode = "idfosport"
             case liveDataSummary = "liveDataSummary"
 
             case scoresContainer = "scores"
@@ -297,6 +320,8 @@ extension SportRadarModels {
             self.sportTypeName = try container.decodeIfPresent(String.self, forKey: .sportTypeName)
             self.sportTypeCode = try container.decodeIfPresent(String.self, forKey: .sportTypeCode)
 
+            self.sportIdCode = try container.decodeIfPresent(String.self, forKey: .sportIdCode)
+
 //            #if DEBUG
 //            self.homeName = self.id + " " + (self.homeName ?? "")
 //            self.awayName = (self.markets.first?.id ?? "") + " " + (self.awayName ?? "")
@@ -328,7 +353,7 @@ extension SportRadarModels {
                 // Status
                 self.status = .unknown
                 if let statusString = try? liveDataInfoContainer.decode(String.self, forKey: .eventStatus) {
-                    self.status = Self.Status.init(value: statusString)
+                    self.status = EventStatus.init(value: statusString)
                 }
 
                 // Scores
@@ -563,6 +588,7 @@ extension SportRadarModels {
             case numberEvents = "numevents"
             case numberOutrightEvents = "numoutrightevents"
         }
+        
     }
 
     struct SportCompetitionInfo: Codable {

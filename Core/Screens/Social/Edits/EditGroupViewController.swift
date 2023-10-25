@@ -298,7 +298,7 @@ class EditGroupViewController: UIViewController {
     }
 
     private func showErrorAlert() {
-        let errorAlert = UIAlertController(title: localized("server_error_title"),
+        let errorAlert = UIAlertController(title: localized("error"),
                                             message: localized("server_error_message"),
                                             preferredStyle: UIAlertController.Style.alert)
 

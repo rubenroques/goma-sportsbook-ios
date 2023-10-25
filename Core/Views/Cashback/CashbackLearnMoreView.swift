@@ -11,7 +11,6 @@ class CashbackLearnMoreView: UIView {
 
     private lazy var containerView: UIView = Self.createContainerView()
     private lazy var titleLabel: UILabel = Self.createTitleLabel()
-    private lazy var linkLabel: UILabel = Self.createLinkLabel()
 
     var didTapLearnMoreAction: (() -> Void)?
 
@@ -54,8 +53,6 @@ class CashbackLearnMoreView: UIView {
         // Add the triangle layer to the view's layer
         self.containerView.layer.addSublayer(triangleLayer)
 
-
-
         self.containerView.layer.shadowColor = UIColor(red: 3.0 / 255.0, green: 6.0 / 255.0, blue: 27.0 / 255.0, alpha: 1).cgColor
 
         self.containerView.layer.shadowOpacity = 1
@@ -78,14 +75,9 @@ class CashbackLearnMoreView: UIView {
 
         self.containerView.backgroundColor = UIColor.App.backgroundTertiary
 
-        self.titleLabel.textColor = UIColor.App.textPrimary
-
-        self.linkLabel.textColor = UIColor.App.highlightSecondary
-
     }
 
     @objc private func tapLearnMore() {
-        print("TAPPED LEARN MORE")
 
         self.didTapLearnMoreAction?()
     }
@@ -102,22 +94,22 @@ extension CashbackLearnMoreView {
     private static func createTitleLabel() -> UILabel {
         let label = UILabel()
         label.translatesAutoresizingMaskIntoConstraints = false
-        label.text = localized("cashback_info")
+        label.text = "\(localized("cashback_info")) \(localized("learn_more"))"
         label.font = AppFont.with(type: .semibold, size: 10)
         label.numberOfLines = 0
-        return label
-    }
 
-    private static func createLinkLabel() -> UILabel {
-        let label = UILabel()
-        label.translatesAutoresizingMaskIntoConstraints = false
-        label.text = localized("learn_more")
-        label.font = AppFont.with(type: .semibold, size: 10)
-        let text = localized("learn_more")
+        let text = "\(localized("cashback_info")) \(localized("learn_more"))"
         let underlineAttriString = NSMutableAttributedString(string: text)
-        let range = (text as NSString).range(of: text)
+        let fullRange = (text as NSString).range(of: text)
+        var range = (text as NSString).range(of: localized("learn_more"))
+
+        underlineAttriString.addAttribute(.foregroundColor, value: UIColor.App.textPrimary, range: fullRange)
+        underlineAttriString.addAttribute(.foregroundColor, value: UIColor.App.highlightSecondary, range: range)
+        underlineAttriString.addAttribute(.font, value: AppFont.with(type: .semibold, size: 10), range: fullRange)
         underlineAttriString.addAttribute(NSAttributedString.Key.underlineStyle, value: NSUnderlineStyle.single.rawValue, range: range)
+
         label.attributedText = underlineAttriString
+
         return label
     }
 
@@ -125,7 +117,6 @@ extension CashbackLearnMoreView {
         self.addSubview(self.containerView)
 
         self.containerView.addSubview(self.titleLabel)
-        self.containerView.addSubview(self.linkLabel)
 
         self.initConstraints()
     }
@@ -142,10 +133,7 @@ extension CashbackLearnMoreView {
             self.titleLabel.leadingAnchor.constraint(equalTo: self.containerView.leadingAnchor, constant: 10),
             self.titleLabel.topAnchor.constraint(equalTo: self.containerView.topAnchor, constant: 5),
             self.titleLabel.bottomAnchor.constraint(equalTo: self.containerView.bottomAnchor, constant: -5),
-
-            self.linkLabel.leadingAnchor.constraint(equalTo: self.titleLabel.trailingAnchor, constant: 2),
-            self.linkLabel.centerYAnchor.constraint(equalTo: self.titleLabel.centerYAnchor),
-            self.linkLabel.trailingAnchor.constraint(equalTo: self.containerView.trailingAnchor, constant: -10)
+            self.titleLabel.trailingAnchor.constraint(equalTo: self.containerView.trailingAnchor, constant: -10)
 
         ])
 

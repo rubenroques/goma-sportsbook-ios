@@ -389,9 +389,9 @@ class NicknameFormStepView: FormStepView {
         case ("username", "INVALID_LENGTH"):
             self.nicknameHeaderTextFieldView.showError(withMessage: Localization.localized("nickname_too_long"))
         case ("username", "DUPLICATE"):
-            self.nicknameHeaderTextFieldView.showError(withMessage: "This nickname is already in use")
+            self.nicknameHeaderTextFieldView.showError(withMessage: Localization.localized("nickname_already_in_use"))
         case ("username", _):
-            self.nicknameHeaderTextFieldView.showError(withMessage: "Please enter a valid nickname")
+            self.nicknameHeaderTextFieldView.showError(withMessage: Localization.localized("invalid_nickname"))
         default:
             ()
         }

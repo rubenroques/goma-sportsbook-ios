@@ -12,7 +12,7 @@ import ServicesProvider
 class PreSubmissionBetslipViewModel {
 
     // MARK: Public Properties
-    var bonusBetslipArrayPublisher: CurrentValueSubject<[BonusBetslip], Never> = .init([])
+    var bonusBTetslipArrayPublisher: CurrentValueSubject<[BonusBetslip], Never> = .init([])
     var sharedBetsPublisher: CurrentValueSubject<LoadableContent<[BettingTicket]>, Never> = .init(LoadableContent.idle)
     var isPartialBetSelection: CurrentValueSubject<Bool, Never> = .init(false)
     var isUnavailableBetSelection: CurrentValueSubject<Bool, Never> = .init(false)
@@ -198,6 +198,7 @@ class PreSubmissionBetslipViewModel {
                           awayParticipant: Participant(id: "", name: market.awayParticipant ?? ""),
                           date: matchDate,
                           sport: Sport(id: "1", name: "", alphaId: "", numericId: "", showEventCategory: false, liveEventsCount: 0, eventsCount: 0),
+                          sportIdCode: "",
                           numberTotalOfMarkets: 1,
                           markets: [market],
                           rootPartId: "",

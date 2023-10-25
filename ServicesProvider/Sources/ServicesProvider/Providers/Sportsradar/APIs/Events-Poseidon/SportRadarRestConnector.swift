@@ -66,11 +66,11 @@ class SportRadarRestConnector {
                 return result.data
             }
             // Debug helper
-            .handleEvents(receiveOutput: { data in
-                let urlString = request.url?.absoluteString ?? ""
-                let bodyString = String.init(data: request.httpBody ?? Data(), encoding: .utf8) ?? ""
-                print("ServiceProvider-SportRadarRestConnector [[ requesting ]] [url: \(urlString) ] \n [body: \(bodyString) ] ")
-            })
+//            .handleEvents(receiveOutput: { data in
+//                let urlString = request.url?.absoluteString ?? ""
+//                let bodyString = String.init(data: request.httpBody ?? Data(), encoding: .utf8) ?? ""
+//                print("ServiceProvider-SportRadarRestConnector [[ requesting ]] [url: \(urlString) ] \n [body: \(bodyString) ] ")
+//            })
             .decode(type: T.self, decoder: self.decoder)
             .mapError { error in
                 // Debug helper

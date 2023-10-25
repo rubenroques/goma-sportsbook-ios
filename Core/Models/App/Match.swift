@@ -12,6 +12,32 @@ enum HighlightedMatchType {
     case visualImageMatch(Match)
 }
 
+struct MatchLiveData: Equatable {
+    
+    var id: String
+    var homeScore: Int?
+    var awayScore: Int?
+    var matchTime: String?
+    var status: Match.Status?
+    
+    enum CodingKeys: String, CodingKey {
+        case id = "id"
+        case homeScore = "homeScore"
+        case awayScore = "awayScore"
+        case matchTime = "matchTime"
+        case status = "status"
+    }
+    
+    init(id: String, homeScore: Int?, awayScore: Int?, matchTime: String?, status: Match.Status?) {
+        self.id = id
+        self.homeScore = homeScore
+        self.awayScore = awayScore
+        self.matchTime = matchTime
+        self.status = status
+    }
+    
+}
+
 struct Match: Equatable {
 
     var id: String
@@ -22,6 +48,7 @@ struct Match: Equatable {
     var date: Date?
 
     var sport: Sport
+    var sportIdCode: String?
 
     var venue: Location?
     var numberTotalOfMarkets: Int
@@ -72,6 +99,7 @@ struct Match: Equatable {
          awayParticipantScore: Int? = nil,
          date: Date? = nil,
          sport: Sport,
+         sportIdCode: String?,
          venue: Location? = nil,
          numberTotalOfMarkets: Int,
          markets: [Market],
@@ -91,7 +119,8 @@ struct Match: Equatable {
         self.date = date
 
         self.sport = sport
-
+        self.sportIdCode = sportIdCode
+        
         self.venue = venue
         self.numberTotalOfMarkets = numberTotalOfMarkets
         self.markets = markets
@@ -102,7 +131,6 @@ struct Match: Equatable {
         self.promoImageURL = promoImageURL
         self.oldMainMarketId = oldMainMarketId
     }
-
 
 }
 
@@ -347,30 +375,35 @@ extension Match {
                   homeParticipant: Participant(id: "P1", name: "Benfica"),
                   awayParticipant: Participant(id: "P2", name: "Braga"), date: Date(timeIntervalSince1970: 1696620600),
                   sport: Sport.init(id: "1", name: "Football", alphaId: nil, numericId: nil, showEventCategory: false, liveEventsCount: 0, eventsCount: 0),
+                  sportIdCode: "",
                   numberTotalOfMarkets: 0,
                   markets: markets, rootPartId: "", status: .notStarted),
             Match(id: "A2", competitionId: "PL2", competitionName: "Serie A",
                   homeParticipant: Participant(id: "P3", name: "Juventus"),
                   awayParticipant: Participant(id: "P4", name: "Inter Milan"), date: Date(timeIntervalSince1970: 1696620600),
                   sport: Sport.init(id: "1", name: "Football", alphaId: nil, numericId: nil, showEventCategory: false, liveEventsCount: 0, eventsCount: 0),
+                  sportIdCode: "",
                   numberTotalOfMarkets: 0,
                   markets: markets, rootPartId: "", status: .notStarted),
             Match(id: "A3", competitionId: "PL3", competitionName: "La Liga",
                   homeParticipant: Participant(id: "P5", name: "Real Madrid"),
                   awayParticipant: Participant(id: "P6", name: "Barcelona"), date: Date(timeIntervalSince1970: 1696620600),
                   sport: Sport.init(id: "1", name: "Football", alphaId: nil, numericId: nil, showEventCategory: false, liveEventsCount: 0, eventsCount: 0),
+                  sportIdCode: "",
                   numberTotalOfMarkets: 0,
                   markets: markets, rootPartId: "", status: .notStarted),
             Match(id: "A4", competitionId: "PL4", competitionName: "Bundesliga",
                   homeParticipant: Participant(id: "P7", name: "Bayern Munich"),
                   awayParticipant: Participant(id: "P8", name: "Dortmund"), date: Date(timeIntervalSince1970: 1696620600),
                   sport: Sport.init(id: "1", name: "Football", alphaId: nil, numericId: nil, showEventCategory: false, liveEventsCount: 0, eventsCount: 0),
+                  sportIdCode: "",
                   numberTotalOfMarkets: 0,
                   markets: markets, rootPartId: "", status: .notStarted),
             Match(id: "A5", competitionId: "PL5", competitionName: "Premier League",
                   homeParticipant: Participant(id: "P9", name: "Manchester United"),
                   awayParticipant: Participant(id: "P10", name: "Manchester City"), date: Date(timeIntervalSince1970: 1696620600),
                   sport: Sport.init(id: "1", name: "Football", alphaId: nil, numericId: nil, showEventCategory: false, liveEventsCount: 0, eventsCount: 0),
+                  sportIdCode: "",
                   numberTotalOfMarkets: 0,
                   markets: markets, rootPartId: "", status: .notStarted)
 

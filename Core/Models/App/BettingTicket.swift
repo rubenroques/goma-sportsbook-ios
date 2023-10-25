@@ -27,6 +27,7 @@ struct BettingTicket: Equatable, Codable {
     var odd: OddFormat
 
     var sport: Sport?
+    var sportIdCode: String?
 
     var decimalOdd: Double {
         switch self.odd {
@@ -60,6 +61,7 @@ struct BettingTicket: Equatable, Codable {
          marketDescription: String,
          outcomeDescription: String,
          sport: Sport?,
+         sportIdCode: String?,
          odd: OddFormat) {
 
         self.id = id
@@ -72,6 +74,7 @@ struct BettingTicket: Equatable, Codable {
         self.outcomeDescription = outcomeDescription
         self.odd = odd
         self.sport = sport
+        self.sportIdCode = sportIdCode
     }
 
     init(id: String,
@@ -83,7 +86,8 @@ struct BettingTicket: Equatable, Codable {
          matchDescription: String,
          marketDescription: String,
          outcomeDescription: String,
-         sport: Sport? = nil) {
+         sport: Sport? = nil,
+         sportIdCode: String?) {
 
         self.id = id
         self.outcomeId = outcomeId
@@ -96,6 +100,7 @@ struct BettingTicket: Equatable, Codable {
         self.odd = OddFormat.decimal(odd: decimalOdd)
 
         self.sport = sport
+        self.sportIdCode = sportIdCode
     }
 
 }
@@ -115,6 +120,7 @@ extension BettingTicket {
                   marketDescription: marketDescription,
                   outcomeDescription: outcomeDescription,
                   sport: match.sport,
+                  sportIdCode: match.sportIdCode,
                   odd: outcome.bettingOffer.odd)
     }
 
@@ -133,6 +139,7 @@ extension BettingTicket {
                   marketDescription: marketDescription,
                   outcomeDescription: outcomeDescription,
                   sport: match.sport,
+                  sportIdCode: match.sportIdCode,
                   odd: outcome.bettingOffer.odd)
     }
 

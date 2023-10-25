@@ -41,7 +41,7 @@ public class Subscription: Hashable, Identifiable {
     }
 
     deinit {
-        // print("ServiceProvider.Subscription deinit \(self)")
+        print("LoadingBug subscr deinit \(self)")
         self.unsubscriber?.unsubscribe(subscription: self)
     }
 

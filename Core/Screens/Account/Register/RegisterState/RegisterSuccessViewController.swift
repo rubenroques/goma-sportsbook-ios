@@ -9,12 +9,10 @@ import UIKit
 
 class RegisterSuccessViewController: UIViewController {
 
-    private lazy var containerView: UIView = Self.createContainerView()
+    private lazy var containerGradientView: GradientView = Self.createContainerGradientView()
     private lazy var headerView: UIView = Self.createHeaderView()
     private lazy var closeButton: UIButton = Self.createCloseButton()
-    private lazy var iconImageView: UIImageView = Self.createIconImageView()
-    private lazy var titleLabel: UILabel = Self.createTitleLabel()
-    private lazy var subtitleLabel: UILabel = Self.createSubtitleLabel()
+    private lazy var avatarImageView: UIImageView = Self.createAvatarImageView()
     private lazy var continueButton: UIButton = Self.createContinueButton()
 
     var hasContinueFlow: Bool = false
@@ -44,33 +42,31 @@ class RegisterSuccessViewController: UIViewController {
         self.continueButton.addTarget(self, action: #selector(didTapContinueButton), for: .primaryActionTriggered)
 
         self.hasContinueFlow = false
+
+        self.closeButton.isHidden = true
     }
 
     override func viewDidLayoutSubviews() {
         super.viewDidLayoutSubviews()
 
+        self.containerGradientView.startPoint = CGPoint(x: 0.0, y: 0.0)
+        self.containerGradientView.endPoint = CGPoint(x: 2.0, y: 0.0)
+
     }
 
     private func setupWithTheme() {
-        self.containerView.backgroundColor = UIColor.App.backgroundPrimary
+        self.containerGradientView.colors = [(UIColor.App.backgroundHeaderGradient1, NSNumber(0.0)),
+                                              (UIColor.App.backgroundHeaderGradient2, NSNumber(1.0))]
+
+        self.containerGradientView.startPoint = CGPoint(x: 0.0, y: 0.0)
+        self.containerGradientView.endPoint = CGPoint(x: 2.0, y: 0.0)
 
         self.closeButton.setTitleColor(UIColor.App.highlightPrimary, for: .normal)
 
-        self.iconImageView.backgroundColor = .clear
-
-        self.titleLabel.textColor = UIColor.App.textPrimary
-
-        self.subtitleLabel.textColor = UIColor.App.textPrimary
+        self.avatarImageView.backgroundColor = .clear
 
         StyleHelper.styleButton(button: self.continueButton)
 
-    }
-
-    func setTextInfo(title: String, subtitle: String) {
-
-        self.titleLabel.text = title
-
-        self.subtitleLabel.text = subtitle
     }
 
     @objc private func didTapCloseButton() {
@@ -88,8 +84,8 @@ class RegisterSuccessViewController: UIViewController {
 
 extension RegisterSuccessViewController {
 
-    private static func createContainerView() -> UIView {
-        let view = UIView()
+    private static func createContainerGradientView() -> GradientView {
+        let view = GradientView()
         view.translatesAutoresizingMaskIntoConstraints = false
         return view
     }
@@ -108,32 +104,12 @@ extension RegisterSuccessViewController {
         return button
     }
 
-    private static func createIconImageView() -> UIImageView {
+    private static func createAvatarImageView() -> UIImageView {
         let imageView = UIImageView()
         imageView.translatesAutoresizingMaskIntoConstraints = false
-        imageView.image = UIImage(named: "avatar_register_success")
+        imageView.image = UIImage(named: "avatar_register_big_success")
         imageView.contentMode = .scaleAspectFit
         return imageView
-    }
-
-    private static func createTitleLabel() -> UILabel {
-        let label = UILabel()
-        label.font = AppFont.with(type: .bold, size: 30)
-        label.text = localized("congratulations")
-        label.textAlignment = .center
-        label.translatesAutoresizingMaskIntoConstraints = false
-        label.numberOfLines = 0
-        return label
-    }
-
-    private static func createSubtitleLabel() -> UILabel {
-        let label = UILabel()
-        label.font = AppFont.with(type: .bold, size: 16)
-        label.text = localized("singup_success_text")
-        label.textAlignment = .center
-        label.numberOfLines = 0
-        label.translatesAutoresizingMaskIntoConstraints = false
-        return label
     }
 
     private static func createContinueButton() -> UIButton {
@@ -146,16 +122,15 @@ extension RegisterSuccessViewController {
 
     private func setupSubviews() {
 
-        self.view.addSubview(self.containerView)
+        self.view.addSubview(self.containerGradientView)
 
-        self.containerView.addSubview(self.headerView)
+        self.containerGradientView.addSubview(self.headerView)
 
         self.headerView.addSubview(self.closeButton)
 
-        self.containerView.addSubview(self.iconImageView)
-        self.containerView.addSubview(self.titleLabel)
-        self.containerView.addSubview(self.subtitleLabel)
-        self.containerView.addSubview(self.continueButton)
+        self.containerGradientView.addSubview(self.avatarImageView)
+
+        self.containerGradientView.addSubview(self.continueButton)
 
         self.initConstraints()
 
@@ -165,36 +140,29 @@ extension RegisterSuccessViewController {
 
         NSLayoutConstraint.activate([
 
-            self.containerView.leadingAnchor.constraint(equalTo: self.view.leadingAnchor),
-            self.containerView.trailingAnchor.constraint(equalTo: self.view.trailingAnchor),
-            self.containerView.topAnchor.constraint(equalTo: self.view.topAnchor),
-            self.containerView.bottomAnchor.constraint(equalTo: self.view.bottomAnchor),
+            self.containerGradientView.leadingAnchor.constraint(equalTo: self.view.leadingAnchor),
+            self.containerGradientView.trailingAnchor.constraint(equalTo: self.view.trailingAnchor),
+            self.containerGradientView.topAnchor.constraint(equalTo: self.view.topAnchor),
+            self.containerGradientView.bottomAnchor.constraint(equalTo: self.view.bottomAnchor),
 
-            self.headerView.leadingAnchor.constraint(equalTo: self.containerView.leadingAnchor),
-            self.headerView.trailingAnchor.constraint(equalTo: self.containerView.trailingAnchor),
-            self.headerView.topAnchor.constraint(equalTo: self.containerView.topAnchor),
+            self.headerView.leadingAnchor.constraint(equalTo: self.containerGradientView.leadingAnchor),
+            self.headerView.trailingAnchor.constraint(equalTo: self.containerGradientView.trailingAnchor),
+            self.headerView.topAnchor.constraint(equalTo: self.containerGradientView.topAnchor),
             self.headerView.heightAnchor.constraint(equalToConstant: 60),
 
             self.closeButton.trailingAnchor.constraint(equalTo: self.headerView.trailingAnchor, constant: -34),
             self.closeButton.centerYAnchor.constraint(equalTo: self.headerView.centerYAnchor),
             self.closeButton.heightAnchor.constraint(equalToConstant: 40),
 
-            self.iconImageView.centerXAnchor.constraint(equalTo: self.containerView.centerXAnchor),
-            self.iconImageView.widthAnchor.constraint(equalToConstant: 200),
-            self.iconImageView.heightAnchor.constraint(equalTo: self.iconImageView.widthAnchor),
-            self.iconImageView.topAnchor.constraint(equalTo: self.headerView.bottomAnchor, constant: 40),
+            self.avatarImageView.topAnchor.constraint(equalTo: self.headerView.topAnchor),
+            self.avatarImageView.bottomAnchor.constraint(equalTo: self.continueButton.topAnchor),
+            self.avatarImageView.leadingAnchor.constraint(equalTo: self.containerGradientView.leadingAnchor, constant: 30),
+            self.avatarImageView.trailingAnchor.constraint(equalTo: self.containerGradientView.trailingAnchor, constant: -30),
+            //self.avatarImageView.centerXAnchor.constraint(equalTo: self.containerGradientView.centerXAnchor),
 
-            self.titleLabel.leadingAnchor.constraint(equalTo: self.containerView.leadingAnchor, constant: 30),
-            self.titleLabel.trailingAnchor.constraint(equalTo: self.containerView.trailingAnchor, constant: -30),
-            self.titleLabel.topAnchor.constraint(equalTo: self.iconImageView.bottomAnchor, constant: 30),
-
-            self.subtitleLabel.leadingAnchor.constraint(equalTo: self.containerView.leadingAnchor, constant: 30),
-            self.subtitleLabel.trailingAnchor.constraint(equalTo: self.containerView.trailingAnchor, constant: -30),
-            self.subtitleLabel.topAnchor.constraint(equalTo: self.titleLabel.bottomAnchor, constant: 20),
-
-            self.continueButton.leadingAnchor.constraint(equalTo: self.containerView.leadingAnchor, constant: 30),
-            self.continueButton.trailingAnchor.constraint(equalTo: self.containerView.trailingAnchor, constant: -30),
-            self.continueButton.bottomAnchor.constraint(equalTo: self.containerView.bottomAnchor, constant: -50),
+            self.continueButton.leadingAnchor.constraint(equalTo: self.containerGradientView.leadingAnchor, constant: 30),
+            self.continueButton.trailingAnchor.constraint(equalTo: self.containerGradientView.trailingAnchor, constant: -30),
+            self.continueButton.bottomAnchor.constraint(equalTo: self.containerGradientView.bottomAnchor, constant: -50),
             self.continueButton.heightAnchor.constraint(equalToConstant: 50)
         ])
 

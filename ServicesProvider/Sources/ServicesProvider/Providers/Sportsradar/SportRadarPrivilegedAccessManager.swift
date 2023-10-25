@@ -782,7 +782,9 @@ class SportRadarPrivilegedAccessManager: PrivilegedAccessManager {
                 return Just(processDepositResponse).setFailureType(to: ServiceProviderError.self).eraseToAnyPublisher()
             }
             else {
-                return Fail(outputType: ProcessDepositResponse.self, failure: ServiceProviderError.errorMessage(message: processDepositResponse.message ?? "Error")).eraseToAnyPublisher()
+                let messageKeyError = self.localizeOmegaErrorMessage(status: processDepositResponse.status)
+
+                return Fail(outputType: ProcessDepositResponse.self, failure: ServiceProviderError.errorMessage(message: messageKeyError)).eraseToAnyPublisher()
             }
         }).eraseToAnyPublisher()
     }
@@ -876,7 +878,9 @@ class SportRadarPrivilegedAccessManager: PrivilegedAccessManager {
                 return Just(processWithdrawalResponse).setFailureType(to: ServiceProviderError.self).eraseToAnyPublisher()
             }
             else {
-                return Fail(outputType: ProcessWithdrawalResponse.self, failure: ServiceProviderError.errorMessage(message: processWithdrawalResponse.message ?? "Error")).eraseToAnyPublisher()
+                let messageKeyError = self.localizeOmegaErrorMessage(status: processWithdrawalResponse.status)
+
+                return Fail(outputType: ProcessWithdrawalResponse.self, failure: ServiceProviderError.errorMessage(message: messageKeyError)).eraseToAnyPublisher()
             }
         }).eraseToAnyPublisher()
     }
@@ -1155,6 +1159,24 @@ class SportRadarPrivilegedAccessManager: PrivilegedAccessManager {
         }).eraseToAnyPublisher()
     }
 
+    func getAllConsents() -> AnyPublisher<[ConsentInfo], ServiceProviderError> {
+        let endpoint = OmegaAPIClient.getAllConsents
+
+        let publisher: AnyPublisher<SportRadarModels.ConsentsResponse, ServiceProviderError> = self.connector.request(endpoint)
+
+        return publisher.flatMap({ userConsentsResponse -> AnyPublisher<[ConsentInfo], ServiceProviderError> in
+            if userConsentsResponse.status == "SUCCESS" {
+                let mappedConsents = userConsentsResponse.consents.map({ consent in
+                    return ConsentInfo(id: consent.id, key: consent.key, name: consent.name, consentVersionId: consent.consentVersionId)
+                })
+                return Just(mappedConsents).setFailureType(to: ServiceProviderError.self).eraseToAnyPublisher()
+            }
+            else {
+                return Fail(outputType: [ConsentInfo].self, failure: ServiceProviderError.invalidResponse).eraseToAnyPublisher()
+            }
+        }).eraseToAnyPublisher()
+    }
+    
     func getUserConsents() -> AnyPublisher<[UserConsent], ServiceProviderError> {
 
         let endpoint = OmegaAPIClient.getUserConsents
@@ -1183,9 +1205,7 @@ class SportRadarPrivilegedAccessManager: PrivilegedAccessManager {
 
         return publisher.flatMap({ basicResponse -> AnyPublisher<BasicResponse, ServiceProviderError> in
             if basicResponse.status == "SUCCESS" {
-
                 let basicResponse = SportRadarModelMapper.basicResponse(fromInternalBasicResponse: basicResponse)
-
                 return Just(basicResponse).setFailureType(to: ServiceProviderError.self).eraseToAnyPublisher()
             }
             return Fail(outputType: BasicResponse.self, failure: ServiceProviderError.errorMessage(message: basicResponse.message ?? "Error")).eraseToAnyPublisher()
@@ -1375,5 +1395,13 @@ extension SportRadarPrivilegedAccessManager: SportRadarSessionTokenUpdater {
         ]
 
         return headers
+    }
+
+    func localizeOmegaErrorMessage(status: String) -> String {
+
+        let sanitizedStatusName = status.replacingOccurrences(of: "[^a-zA-Z0-9]", with: "_", options: .regularExpression).lowercased()
+        let concatenatedString = "omega_error_\(sanitizedStatusName)"
+
+        return concatenatedString
     }
 }

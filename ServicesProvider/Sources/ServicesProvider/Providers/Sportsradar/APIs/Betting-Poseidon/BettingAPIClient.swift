@@ -16,7 +16,7 @@ enum BettingAPIClient {
     case calculateCashout(betId: String, stakeValue: String?)
     case cashoutBet(betId: String, cashoutValue: Double, stakeValue: Double?)
     case getBetslipSettings
-    case updateBetslipSettings(acceptingReoffer: Bool)
+    case updateBetslipSettings(oddChange: BetslipOddChangeSetting)
     case getFreebetBalance
     case getSharedTicket(betslipId: String)
     case getTicketSelection(ticketSelectionId: String)
@@ -284,17 +284,22 @@ extension BettingAPIClient: Endpoint {
 
         case .getBetslipSettings:
             return nil
-        case .updateBetslipSettings(let acceptingReoffer):
+        case .updateBetslipSettings(let oddChange):
 
-            var acceptingReofferStringValue = "0"
-            if acceptingReoffer {
-                acceptingReofferStringValue = "-1"
+            var acceptingReofferStringValue = "none"
+            switch oddChange {
+            case .none:
+                acceptingReofferStringValue = "none"
+            case .any:
+                acceptingReofferStringValue = "any"
+            case .higher:
+                acceptingReofferStringValue = "higher"
             }
-
+            
             let body = """
                        {
-                       "id": 101,
-                       "name": "ACCEPTINRREOFFER",
+                       "id": 648,
+                       "name": "OddsChange",
                        "value": "\(acceptingReofferStringValue)"}
                        """
             let data = body.data(using: String.Encoding.utf8)!
@@ -309,7 +314,7 @@ extension BettingAPIClient: Endpoint {
                        {
                         "clientContext": {
                             "ipAddress": "127.0.0.1",
-                            "language": "UK"
+                            "language": "\(SportRadarConfiguration.shared.socketLanguageCode)"
                         },
                         "contentId": {
                             "id": "\(ticketSelectionId)",
@@ -522,6 +527,7 @@ extension BettingAPIClient: Endpoint {
 
         var legsStringArray: [String] = []
         for selection in betTicket.tickets {
+            let sport = selection
             let priceDown: String
             let priceUp: String
 
@@ -541,7 +547,7 @@ extension BettingAPIClient: Endpoint {
                 "idFOSelection": "\(selection.identifier)",
                 "priceDown": "\(priceDown)",
                 "priceUp": "\(priceUp)",
-                "idFOSport": "SPORT",
+                "idFOSport": "\(selection.sportIdCode ?? "SPORT")",
                 "idFOMarket": "\(selection.marketName)",
                 "idFOEvent": "\(selection.eventName)"
                 }

@@ -67,6 +67,7 @@ class SportTypeStore {
                 case .failure(let error):
                     print("All sports error: \(error)")
                     self?.activeSportsCurrentValueSubject.send(.failed)
+                    self?.sportsSubscription = nil
                 }
         }, receiveValue: { [weak self] (subscribableContent: SubscribableContent<[SportType]>) in
             switch subscribableContent {
@@ -81,7 +82,7 @@ class SportTypeStore {
                 self?.activeSports = filteredSports
 
             case .disconnected:
-                ()
+                break
             }
 
         })

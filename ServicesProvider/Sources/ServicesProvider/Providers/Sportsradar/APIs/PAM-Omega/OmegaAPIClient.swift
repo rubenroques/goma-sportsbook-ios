@@ -151,6 +151,7 @@ enum OmegaAPIClient {
 
     case contactSupport(userIdentifier: String, firstName: String, lastName: String, email: String, subject: String, subjectType: String, message: String, isLogged: Bool)
 
+    case getAllConsents
     case getUserConsents
     case setUserConsents(consentVersionIds: [Int]? = nil, unconsentVersionIds: [Int]? = nil)
 
@@ -279,6 +280,8 @@ extension OmegaAPIClient: Endpoint {
         case .contactSupport:
             return "/api/v2/requests"
 
+        case .getAllConsents:
+            return "/ps/ips/consents"
         case .getUserConsents:
             return "/ps/ips/user/consents"
         case .setUserConsents:
@@ -715,6 +718,8 @@ extension OmegaAPIClient: Endpoint {
         case .contactSupport:
             return nil
 
+        case .getAllConsents:
+            return nil
         case .getUserConsents:
             return nil
 
@@ -842,6 +847,7 @@ extension OmegaAPIClient: Endpoint {
         case .contactUs: return .get
         case .contactSupport: return .post
 
+        case .getAllConsents: return .get
         case .getUserConsents: return .get
         case .setUserConsents: return .post
 
@@ -979,6 +985,7 @@ extension OmegaAPIClient: Endpoint {
         case .contactUs: return false
         case .contactSupport: return false
 
+        case .getAllConsents: return false
         case .getUserConsents: return true
         case .setUserConsents: return true
 

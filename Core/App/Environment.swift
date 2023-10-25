@@ -34,6 +34,7 @@ class Environment {
         case .sportradar:
             return ServicesProviderClient(providerType: .sportradar, configuration: servicesProviderConfiguration)
         }
+        
     }()
 
     let betslipManager = BetslipManager()

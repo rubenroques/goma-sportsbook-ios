@@ -69,7 +69,7 @@ class MarketGroupDetailsViewController: UIViewController {
         let headerView = UIView(frame: CGRect(x: 0, y: 0, width: 186, height: 20))
         headerView.backgroundColor = UIColor.clear
 
-        self.expandCollapseButton.setTitle("Collapse all", for: .normal)
+        self.expandCollapseButton.setTitle(localized("collapse_all"), for: .normal)
         self.expandCollapseButton.setTitleColor(UIColor.App.textSecondary, for: .normal)
         self.expandCollapseButton.titleLabel?.textAlignment = .right
         self.expandCollapseButton.titleLabel?.font = AppFont.with(type: .medium, size: 11)
@@ -165,10 +165,10 @@ class MarketGroupDetailsViewController: UIViewController {
         self.tableView.reloadData()
 
         if self.isCollapsedMarketGroupIds.isEmpty {
-            self.expandCollapseButton.setTitle("Collapse all", for: .normal)
+            self.expandCollapseButton.setTitle(localized("collapse_all"), for: .normal)
         }
         else {
-            self.expandCollapseButton.setTitle("Expand all", for: .normal)
+            self.expandCollapseButton.setTitle(localized("expand_all"), for: .normal)
         }
     }
 

@@ -68,6 +68,8 @@ class MultipleBettingTicketTableViewCell: UITableViewCell {
 
         self.errorView.isHidden = true
 
+        self.suspendedBettingOfferLabel.text = localized("suspended")
+        
         self.hasCashback = false
     }
 

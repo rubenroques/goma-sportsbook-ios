@@ -37,5 +37,7 @@ extension ServiceProviderModelMapper {
             return .sms
         case .email:
             return .email
+        case .terms:
+            return .terms
         }
     }}

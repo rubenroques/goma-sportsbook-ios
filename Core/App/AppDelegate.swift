@@ -28,20 +28,16 @@ class AppDelegate: UIResponder, UIApplicationDelegate, MessagingDelegate {
         //
         // External Localization tool
         #if DEBUG
-        
         let phraseConfiguration = PhraseConfiguration()
         phraseConfiguration.debugMode = true
         phraseConfiguration.localeOverride = "fr-FR"
         Phrase.shared.configuration = phraseConfiguration
         Phrase.shared.setup(distributionID: "8dff53ee102cd6a5c31935d4d5938c3f", environmentSecret: "GuBCndN-seQgps-CuyMlx6AXkzsiyGuJMIFicqpvMoc")
-
         #else
-
         let phraseConfiguration = PhraseConfiguration()
         phraseConfiguration.localeOverride = "fr-FR"
         Phrase.shared.configuration = phraseConfiguration
         Phrase.shared.setup(distributionID: "8dff53ee102cd6a5c31935d4d5938c3f", environmentSecret: "UmPDmeEDM8dGvFdKu9-x_bJxI0-8eaJX5CDeq88Eepk")
-        
         #endif
 
         do {
@@ -99,11 +95,11 @@ class AppDelegate: UIResponder, UIApplicationDelegate, MessagingDelegate {
             completionHandler: { _, _ in }
         )
 
-        // Optimove
-        let config = OptimoveConfigBuilder(optimoveCredentials: "WzEsIjEzMGRjNGIwNTZiYzRhNmQ5NWI0ZWJjODczNGJlYmJhIiwibW9iaWxlLWNvbmZpZ3VyYXRpb24uMS4wLjAiXQ==",
-                                           optimobileCredentials: "WzEsImV1LWNlbnRyYWwtMiIsImU2ZDZiMzU1LWE0MjAtNDEzYi1hZjZkLWViMjZkZmY2MTkzNiIsIlBlUmtqWGppaFF4WHc2Lzkvdnphb3lETWtsdXFFWjlQZlZBMSJd")
-                    .build()
+        let optimoveCredentials = "WzEsIjEzMGRjNGIwNTZiYzRhNmQ5NWI0ZWJjODczNGJlYmJhIiwibW9iaWxlLWNvbmZpZ3VyYXRpb24uMS4wLjAiXQ=="
+        let optimobileCredntials = "WzEsImV1LWNlbnRyYWwtMiIsImJkYzg1MTk5LTk4ODEtNGRhMy05NmYzLWI3ZGZkOWM3NzI0NCIsImpDNFMzODF4SDhCU2JSeS94aVlsQ25ubUVsT2ZTTEUxYUdhSyJd"
 
+        // Optimove
+        let config = OptimoveConfigBuilder(optimoveCredentials: optimoveCredentials, optimobileCredentials: optimobileCredntials).build()
         Optimove.initialize(with: config)
 
         application.registerForRemoteNotifications()
@@ -165,6 +161,17 @@ class AppDelegate: UIResponder, UIApplicationDelegate, MessagingDelegate {
             }
         }
         return true
+    }
+    
+    func application(_ application: UIApplication, didRegisterForRemoteNotificationsWithDeviceToken deviceToken: Data) {
+        let tokenParts = deviceToken.map {
+            data in String(format: "%02.2hhx", data)
+        }
+        let token = tokenParts.joined()
+        print("Device Token: \(token)")
+        
+        Optimove.shared.pushRegister(deviceToken)
+        Messaging.messaging().apnsToken = deviceToken
     }
 
 }

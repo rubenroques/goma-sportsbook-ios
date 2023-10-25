@@ -186,6 +186,8 @@ extension SportRadarModels {
 
         private static func parseRefreshed(container: KeyedDecodingContainer<CodingKeys>) throws -> ContentContainer {
 
+            print("ContentContainer parseRefreshed")
+            
             let contentTypeContainer = try container.nestedContainer(keyedBy: CodingKeys.self, forKey: .content)
             let contentType = try contentTypeContainer.decode(ContentType.self, forKey: .contentType)
             let contentIdentifier = try container.decode(ContentIdentifier.self, forKey: .content)
@@ -205,7 +207,6 @@ extension SportRadarModels {
                 // change key is optional
                 if container.contains(.change) {
                     let sportsTypes: [FailableDecodable<SportRadarModels.SportType>] = try container.decode([FailableDecodable<SportRadarModels.SportType>].self, forKey: .change)
-
                     return .preLiveSports(sportsTypes: sportsTypes.compactMap({ $0.content }))
                 }
                 else {
@@ -217,13 +218,10 @@ extension SportRadarModels {
                 let sportsTypeDetails: FailableDecodable<SportRadarModels.SportsList> = try container.decode(FailableDecodable<SportRadarModels.SportsList>.self, forKey: .change)
 
                 if let sportNodes = sportsTypeDetails.content?.sportNodes {
-
                     let sportTypes = sportNodes.map(SportRadarModelMapper.sportType(fromSportNode:))
-
                     let filteredSportTypes = sportTypes.filter({
                         $0.alphaId != "0"
                     })
-
                     return .allSports(sportTypes: filteredSportTypes)
                 }
 
@@ -289,18 +287,21 @@ extension SportRadarModels {
 
         private static func parseUpdated(container: KeyedDecodingContainer<CodingKeys>) throws -> ContentContainer {
 
+            print("ContentContainer parseUpdated")
+            
             let contentIdentifier = try container.decode(ContentIdentifier.self, forKey: .content)
             let path: String = try container.decodeIfPresent(String.self, forKey: .path) ?? ""
-
 
             if case let ContentRoute.eventDetailsLiveData(eventId) = contentIdentifier.contentRoute {
                 if let eventLiveData = (try? container.decode(SportRadarModels.EventLiveDataExtended.self, forKey: .change)) {
                     return .updateEventLiveDataExtended(contentIdentifier: contentIdentifier, eventId: eventId , eventLiveDataExtended: eventLiveData)
                 }
                 else if path.contains("matchTime"),
-                        let matchTime = try container.decodeIfPresent(String.self, forKey: .change),
-                        let minutesPart = SocketMessageParseHelper.extractMatchMinutes(from: matchTime)
-                {
+                     let matchTime = try container.decodeIfPresent(String.self, forKey: .change),
+                     let minutesPart = SocketMessageParseHelper.extractMatchMinutes(from: matchTime) {
+                    
+                    // {"version":1,"data":[{"contentId":{"type":"liveDataExtended","id":"3305392.1"},"path":"matchTime","changeType":"updated","change":"45:00 +7:49","version":443461723},{"contentId":{"type":"liveDataExtended","id":"3305392.1"},"path":"tsMatchTime","changeType":"updated","change":"2023-10-24T00:22:54.359Z","version":443461723}],"notificationType":"CONTENT_CHANGES"}
+
                     let eventLiveDataExtended = SportRadarModels.EventLiveDataExtended.init(id: eventId,
                                                                                             homeScore: nil,
                                                                                             awayScore: nil,
@@ -309,7 +310,31 @@ extension SportRadarModels {
                     return .updateEventLiveDataExtended(contentIdentifier: contentIdentifier,
                                                         eventId: eventId,
                                                         eventLiveDataExtended: eventLiveDataExtended)
+                    
                 }
+                else if path.contains("COMPLETE"),
+                        path.contains("STATUS"),
+                        let changeDictionary = try container.decodeIfPresent([String: [String: String]].self, forKey: .change),
+                        let eventDictionary = changeDictionary["EVENT"],
+                        let newStatusString = eventDictionary[""] {
+                        
+                    // {"version":1,"data":[{"contentId":{"type":"liveDataExtended","id":"3305392.1"},"path":"attributes|COMPLETE|STATUS","changeType":"updated","change":{"EVENT":{"":"paused"}},"version":443467966}],"notificationType":"CONTENT_CHANGES"}◀️
+
+                    let newStatus = EventStatus.init(value: newStatusString)
+                    let eventLiveDataExtended = SportRadarModels.EventLiveDataExtended.init(id: eventId,
+                                                                                            homeScore: nil,
+                                                                                            awayScore: nil,
+                                                                                            matchTime: nil,
+                                                                                            status: newStatus)
+                    return .updateEventLiveDataExtended(contentIdentifier: contentIdentifier,
+                                                        eventId: eventId,
+                                                        eventLiveDataExtended: eventLiveDataExtended)
+                    
+                }
+                else if path.contains("COMPLETE"), path.contains("CURRENT_SCORE") {
+                    return .unknown // TODO: this update is also missing
+                }
+                
                 return .unknown
             }
 
@@ -457,7 +482,7 @@ extension SportRadarModels {
         }
 
         private static func parseAdded(container: KeyedDecodingContainer<CodingKeys>) throws -> ContentContainer {
-
+            print("ContentContainer parseAdded")
             let contentIdentifier = try container.decode(ContentIdentifier.self, forKey: .content)
             let path: String = try container.decodeIfPresent(String.self, forKey: .path) ?? ""
 
@@ -477,6 +502,8 @@ extension SportRadarModels {
 
         private static func parseRemoved(container: KeyedDecodingContainer<CodingKeys>) throws -> ContentContainer {
 
+            print("ContentContainer parseRemoved")
+            
             let contentIdentifier = try container.decode(ContentIdentifier.self, forKey: .content)
             let path: String = try container.decodeIfPresent(String.self, forKey: .path) ?? ""
 

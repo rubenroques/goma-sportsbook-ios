@@ -217,6 +217,10 @@ class HomeViewController: UIViewController {
         self.tableView.setContentOffset(topOffset, animated: true)
 
     }
+    
+    public func openBetSwipe() {
+        self.openBetSwipeWebView()
+    }
 
     // MARK: - Actions
     private func openCompetitionsDetails(competitionsIds: [String], sport: Sport) {
@@ -263,33 +267,23 @@ class HomeViewController: UIViewController {
 
         if let specialAction = specialAction,
            specialAction == .register {
-
             let loginViewController = Router.navigationController(with: LoginViewController(shouldPresentRegisterFlow: true))
             self.present(loginViewController, animated: true, completion: nil)
-
         }
         else {
             let promotionsWebViewModel = PromotionsWebViewModel()
 
-            var gomaBaseUrl = GomaGamingEnv.stage.baseUrl
-
-            if TargetVariables.serviceProviderEnvironment == .prod {
-                gomaBaseUrl = GomaGamingEnv.prod.baseUrl
-            }
-            else {
-                gomaBaseUrl = GomaGamingEnv.stage.baseUrl
-            }
-
-            let appLanguage = Locale.current.languageCode
+            var gomaBaseUrl = TargetVariables.clientBaseUrl
+            let appLanguage = "fr"
 
             let isDarkTheme = self.traitCollection.userInterfaceStyle == .dark ? true : false
-
-            let urlString = "\(gomaBaseUrl)/\(appLanguage ?? "fr")/in-app/promotions?dark=\(isDarkTheme)"
+            let urlString = "\(gomaBaseUrl)/\(appLanguage)/in-app/promotions?dark=\(isDarkTheme)"
 
             if let url = URL(string: urlString) {
-
                 let promotionsWebViewController = PromotionsWebViewController(url: url, viewModel: promotionsWebViewModel)
-
+                promotionsWebViewController.openHomeAction = { [weak self] in
+                    self?.navigationController?.popViewController(animated: true)
+                }
                 self.navigationController?.pushViewController(promotionsWebViewController, animated: true)
             }
         }
@@ -321,7 +315,7 @@ class HomeViewController: UIViewController {
         }
     }
 
-    private func openBetTinderCloneView() {
+    private func openBetSwipeWebView() {
         let userId = Env.userSessionStore.loggedUserProfile?.userIdentifier ?? "0"
         let iframeURL = URL(string: "\(TargetVariables.clientBaseUrl)/betswipe.html?user=\(userId)&mobile=true&language=fr")!
         
@@ -469,7 +463,7 @@ extension HomeViewController: UITableViewDelegate, UITableViewDataSource {
         guard
             let contentType = self.viewModel.contentType(forSection: indexPath.section)
         else {
-            fatalError()
+            return UITableViewCell()
         }
 
         switch contentType {
@@ -477,7 +471,7 @@ extension HomeViewController: UITableViewDelegate, UITableViewDataSource {
             guard
                 let cell = tableView.dequeueReusableCell(withIdentifier: FooterResponsibleGamingViewCell.identifier) as? FooterResponsibleGamingViewCell
             else {
-                fatalError()
+                return UITableViewCell()
             }
             return cell
         case .userMessage:
@@ -487,7 +481,7 @@ extension HomeViewController: UITableViewDelegate, UITableViewDataSource {
                 let cell = tableView.dequeueReusableCell(withIdentifier: BannerScrollTableViewCell.identifier) as? BannerScrollTableViewCell,
                 let sportMatchLineViewModel = self.viewModel.bannerLineViewModel()
             else {
-                fatalError()
+                return UITableViewCell()
             }
             cell.configure(withViewModel: sportMatchLineViewModel)
 
@@ -522,7 +516,7 @@ extension HomeViewController: UITableViewDelegate, UITableViewDataSource {
                 let cell = tableView.dequeueReusableCell(withIdentifier: MatchLineTableViewCell.identifier) as? MatchLineTableViewCell,
                 let match = self.viewModel.favoriteMatch(forIndex: indexPath.row)
             else {
-                fatalError()
+                return UITableViewCell()
             }
 
             cell.matchStatsViewModel = self.viewModel.matchStatsViewModel(forMatch: match)
@@ -542,7 +536,7 @@ extension HomeViewController: UITableViewDelegate, UITableViewDataSource {
                 let cell = tableView.dequeueReusableCell(withIdentifier: FeaturedTipLineTableViewCell.identifier) as? FeaturedTipLineTableViewCell,
                 let featuredBetLineViewModel = self.viewModel.featuredTipLineViewModel()
             else {
-                fatalError()
+                return UITableViewCell()
             }
 
             cell.openFeaturedTipDetailAction = { [weak self] featuredTip in
@@ -573,7 +567,7 @@ extension HomeViewController: UITableViewDelegate, UITableViewDataSource {
                 let cell = tableView.dequeueReusableCell(withIdentifier: SuggestedBetLineTableViewCell.identifier) as? SuggestedBetLineTableViewCell,
                 let suggestedBetLineViewModel = self.viewModel.suggestedBetLineViewModel()
             else {
-                fatalError()
+                return UITableViewCell()
             }
             cell.configure(withViewModel: suggestedBetLineViewModel)
             cell.betNowCallbackAction = { [weak self] in
@@ -586,7 +580,7 @@ extension HomeViewController: UITableViewDelegate, UITableViewDataSource {
                 let sportGroupViewModel = self.viewModel.sportGroupViewModel(forSection: indexPath.section),
                 let sportMatchLineViewModel = sportGroupViewModel.sportMatchLineViewModel(forIndex: indexPath.row)
             else {
-                fatalError()
+                return UITableViewCell()
             }
             
             switch sportMatchLineViewModel.loadingPublisher.value {
@@ -603,7 +597,7 @@ extension HomeViewController: UITableViewDelegate, UITableViewDataSource {
                     let cell = tableView.dequeueReusableCell(withIdentifier: SportMatchDoubleLineTableViewCell.identifier)
                         as? SportMatchDoubleLineTableViewCell
                 else {
-                    fatalError()
+                    return UITableViewCell()
                 }
 
                 cell.matchStatsViewModelForMatch = { [weak self] match in
@@ -633,7 +627,7 @@ extension HomeViewController: UITableViewDelegate, UITableViewDataSource {
                 guard
                     let cell = tableView.dequeueReusableCell(withIdentifier: SportMatchSingleLineTableViewCell.identifier) as? SportMatchSingleLineTableViewCell
                 else {
-                    fatalError()
+                    return UITableViewCell()
                 }
                 cell.matchStatsViewModelForMatch = { [weak self] match in
                     self?.viewModel.matchStatsViewModel(forMatch: match)
@@ -662,7 +656,7 @@ extension HomeViewController: UITableViewDelegate, UITableViewDataSource {
                 guard
                     let cell = tableView.dequeueCellType(PromotedCompetitionLineTableViewCell.self)
                 else {
-                    fatalError()
+                    return UITableViewCell()
                 }
                 cell.configure(withViewModel: sportMatchLineViewModel)
                 cell.didSelectSeeAllCompetitionsAction = { [weak self] sport, competitions in
@@ -674,7 +668,7 @@ extension HomeViewController: UITableViewDelegate, UITableViewDataSource {
                 guard
                     let cell = tableView.dequeueReusableCell(withIdentifier: VideoPreviewLineTableViewCell.identifier) as? VideoPreviewLineTableViewCell
                 else {
-                    fatalError()
+                    return UITableViewCell()
                 }
                 if let videoPreviewLineCellViewModel = sportMatchLineViewModel.videoPreviewLineCellViewModel() {
                     cell.configure(withViewModel: videoPreviewLineCellViewModel)
@@ -690,7 +684,7 @@ extension HomeViewController: UITableViewDelegate, UITableViewDataSource {
         case .userProfile:
             guard let cell = tableView.dequeueCellType(ActivationAlertScrollableTableViewCell.self)
             else {
-                fatalError()
+                return UITableViewCell()
             }
             cell.activationAlertCollectionViewCellLinkLabelAction = { alertType in
                 self.didSelectActivationAlertAction?(alertType)
@@ -705,7 +699,7 @@ extension HomeViewController: UITableViewDelegate, UITableViewDataSource {
                 let cell = tableView.dequeueReusableCell(withIdentifier: QuickSwipeStackTableViewCell.identifier) as? QuickSwipeStackTableViewCell,
                 let viewModel = self.viewModel.quickSwipeStackViewModel()
             else {
-                fatalError()
+                return UITableViewCell()
             }
 
             cell.configure(withViewModel: viewModel)
@@ -718,10 +712,10 @@ extension HomeViewController: UITableViewDelegate, UITableViewDataSource {
             guard
                 let cell = tableView.dequeueReusableCell(withIdentifier: MakeYourBetTableViewCell.identifier) as? MakeYourBetTableViewCell
             else {
-                fatalError()
+                return UITableViewCell()
             }
             cell.didTapCellAction = { [weak self] in
-                self?.openBetTinderCloneView()
+                self?.openBetSwipeWebView()
             }
             return cell
 
@@ -730,7 +724,7 @@ extension HomeViewController: UITableViewDelegate, UITableViewDataSource {
                 let cell = tableView.dequeueReusableCell(withIdentifier: TopCompetitionsLineTableViewCell.identifier) as? TopCompetitionsLineTableViewCell,
                 let viewModel = self.viewModel.topCompetitionsLineCellViewModel(forSection: indexPath.section)
             else {
-                fatalError()
+                return UITableViewCell()
             }
 
             cell.configure(withViewModel: viewModel)
@@ -746,7 +740,7 @@ extension HomeViewController: UITableViewDelegate, UITableViewDataSource {
             guard
                 let viewModel = self.viewModel.highlightedMatchViewModel(forIndex: indexPath.row)
             else {
-                fatalError()
+                return UITableViewCell()
             }
 
             // Create the identifier based on the cell type
@@ -755,7 +749,7 @@ extension HomeViewController: UITableViewDelegate, UITableViewDataSource {
             guard
                 let cell = tableView.dequeueReusableCell(withIdentifier: cellIdentifier, for: indexPath) as? MatchWidgetContainerTableViewCell
             else {
-                fatalError()
+                return UITableViewCell()
             }
 
             cell.setupWithViewModel(viewModel)
@@ -772,7 +766,7 @@ extension HomeViewController: UITableViewDelegate, UITableViewDataSource {
                 let cell = tableView.dequeueReusableCell(withIdentifier: StoriesLineTableViewCell.identifier) as? StoriesLineTableViewCell,
                 let storyLineViewModel = self.viewModel.storyLineViewModel()
             else {
-                fatalError()
+                return UITableViewCell()
             }
 
             cell.configure(withViewModel: storyLineViewModel)
@@ -788,7 +782,7 @@ extension HomeViewController: UITableViewDelegate, UITableViewDataSource {
                 let cell = tableView.dequeueReusableCell(withIdentifier: MatchLineTableViewCell.identifier) as? MatchLineTableViewCell,
                 let match = self.viewModel.promotedMatch(forSection: indexPath.section, forIndex: indexPath.row)
             else {
-                fatalError()
+                return UITableViewCell()
             }
 
             cell.matchStatsViewModel = self.viewModel.matchStatsViewModel(forMatch: match)
@@ -811,7 +805,7 @@ extension HomeViewController: UITableViewDelegate, UITableViewDataSource {
                 let cell = tableView.dequeueReusableCell(withIdentifier: MatchLineTableViewCell.identifier) as? MatchLineTableViewCell,
                 let matchLineViewModel = self.viewModel.matchLineTableCellViewModel(forSection: indexPath.section, forIndex: indexPath.row)
             else {
-                fatalError()
+                return UITableViewCell()
             }
 
             cell.viewModel = matchLineViewModel

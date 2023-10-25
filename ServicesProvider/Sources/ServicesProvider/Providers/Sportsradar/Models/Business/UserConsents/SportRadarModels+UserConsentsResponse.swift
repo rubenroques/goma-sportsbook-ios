@@ -9,6 +9,27 @@ import Foundation
 
 extension SportRadarModels {
 
+    // MARK: - ConsentsResponse
+    struct ConsentsResponse: Codable {
+        let status: String
+        let consents: [Consent]
+    }
+
+    // MARK: - Consent
+    struct Consent: Codable {
+        let id: Int
+        let key: String
+        let name: String
+        let consentVersionId: Int
+        
+        enum CodingKeys: String, CodingKey {
+            case id = "id"
+            case key = "key"
+            case name = "name"
+            case consentVersionId = "consentVersionId"
+        }
+    }
+
     struct UserConsentsResponse: Codable {
         var status: String
         var message: String?

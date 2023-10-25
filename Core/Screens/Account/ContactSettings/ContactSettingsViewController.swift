@@ -153,6 +153,7 @@ class ContactSettingsViewController: UIViewController {
 
     // MARK: Actions
     @objc private func didTapBackButton() {
+        self.viewModel.updateTerms()
         self.navigationController?.popViewController(animated: true)
     }
 

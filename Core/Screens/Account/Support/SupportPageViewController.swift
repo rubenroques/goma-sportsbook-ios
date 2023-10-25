@@ -15,6 +15,7 @@ import ChatSDK // UI provider
 import SupportProvidersSDK // API provider
 import AnswerBotProvidersSDK // API provider
 import ChatProvidersSDK
+import WebKit
 
 class SupportPageViewController: UIViewController {
     
@@ -46,6 +47,26 @@ class SupportPageViewController: UIViewController {
     private lazy var contactTitleLabel: UILabel = Self.createContactTitleLabel()
     private lazy var contactDescriptionLabel: UILabel = Self.createContactDescriptionLabel()
 
+    private lazy var webView: WKWebView = {
+        let config = WKWebViewConfiguration()
+        //        let js = "document.getElementsByClassName('.sc-htpNat')[0].addEventListener('click', function(){ window.webkit.messageHandlers.clickListener.postMessage('Do something'); })"
+        let js = """
+            document.addEventListener('click', function(evt) {
+            var tagClicked = document.elementFromPoint(evt.clientX, evt.clientY);
+            window.webkit.messageHandlers.clickListener.postMessage(tagClicked.outerHTML.toString());
+            }, true)
+            """
+        let script = WKUserScript(source: js, injectionTime: .atDocumentEnd, forMainFrameOnly: false)
+
+        config.userContentController.addUserScript(script)
+        config.userContentController.add(self, name: "clickListener")
+        config.userContentController.add(self, name: "postMessageListener")
+        let webview = WKWebView(frame: .zero, configuration: config)
+        webview.translatesAutoresizingMaskIntoConstraints = false
+
+        return webview
+    }()
+
     // Constraints
     private lazy var anonymousViewTopConstraint: NSLayoutConstraint = Self.createAnonymousViewTopConstraint()
     private lazy var subjectViewTopConstraint: NSLayoutConstraint = Self.createSubjectViewTopConstraint()
@@ -66,6 +87,28 @@ class SupportPageViewController: UIViewController {
     }
 
     var hasSupportDetails: CurrentValueSubject<Bool, Never> = .init(false)
+
+    var showWebView: Bool = false {
+        didSet {
+            if showWebView {
+                self.chatButton.isHidden = true
+
+                UIView.animate(withDuration: 0.5, delay: 0, options: UIView.AnimationOptions.curveEaseIn) {
+                    self.webView.alpha = 1
+                    self.webView.isHidden = false
+                }
+
+            }
+            else {
+                self.chatButton.isHidden = false
+
+                UIView.animate(withDuration: 0.5, delay: 0, options: UIView.AnimationOptions.curveEaseOut) {
+                    self.webView.alpha = 0
+                    self.webView.isHidden = true
+                }
+            }
+        }
+    }
    
     // MARK: - Lifetime and Cycle
     init(viewModel: SupportPageViewModel) {
@@ -94,9 +137,8 @@ class SupportPageViewController: UIViewController {
             self.isAnonymous = true
         }
 
-        /*
         self.webView.navigationDelegate = self
-        
+
         let zendeskSupportFile = "zendesk_support.html"
         let fileStringSplit = zendeskSupportFile.components(separatedBy: ".")
 
@@ -109,8 +151,8 @@ class SupportPageViewController: UIViewController {
 
             self.webView.loadHTMLString(htmlTemplate, baseURL: bundleUrl)
         }
-        */
 
+        self.showWebView = false
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -271,9 +313,10 @@ class SupportPageViewController: UIViewController {
 
         StyleHelper.styleButton(button: self.helpButton)
 
-//        self.webView.isOpaque = false
-//        self.webView.backgroundColor = .clear
-//        self.webView.scrollView.backgroundColor = UIColor.clear
+        self.webView.isOpaque = false
+        self.webView.backgroundColor = .clear
+        self.webView.scrollView.backgroundColor = UIColor.clear
+        self.webView.isHidden = true
 
     }
 
@@ -354,36 +397,74 @@ class SupportPageViewController: UIViewController {
     }
 
     @objc func didTapChatButton() {
-        print("TAPPED CHAT!")
-        Zendesk.initialize(appId: "90015cb5fb43daa2fc5307a61d4b8cdae1ee3e50c4b88d0b",
-                           clientId: "mobile_sdk_client_96ee05c0fdb1b08671ec",
-                           zendeskUrl: "https://betssonfrance.zendesk.com/")
 
-        Zendesk.instance?.setIdentity(Identity.createAnonymous())
+        let javascript = """
+                var iframe = document.getElementById('launcher');
+                if (iframe) {
+                    var iframeContent = iframe.contentDocument || iframe.contentWindow.document;
+                    var button = iframeContent.querySelector('[data-testid="launcher"]');
+                    if (button) {
+                        button.click();
+                    }
+                }
+            """
 
-        Support.initialize(withZendesk: Zendesk.instance)
-        AnswerBot.initialize(withZendesk: Zendesk.instance, support: Support.instance!)
-
-        ChatProvidersSDK.Chat.initialize(accountKey: "ogZPdo3sXdALS3KRca771UZ6WSxOlqHM")
-
-        do {
-            let messagingConfiguration = MessagingConfiguration()
-            let answerBotEngine = try AnswerBotEngine.engine()
-            let supportEngine = try SupportEngine.engine()
-            let chatEngine = try ChatEngine.engine()
-
-            let viewController = try Messaging.instance.buildUI(engines: [answerBotEngine, supportEngine, chatEngine], configs: [messagingConfiguration])
-
-            let button = UIBarButtonItem(title: localized("close"), style: .plain, target: self, action: #selector(dismissView))
-            viewController.navigationItem.leftBarButtonItem = button
-
-            let helpNavigationController = UINavigationController(rootViewController: viewController)
-
-            self.present(helpNavigationController, animated: true, completion: nil)
+        self.webView.evaluateJavaScript(javascript) { (result, error) in
+            if let error = error {
+                print("Error triggering click event: \(error)")
+            } else {
+                print("Click event triggered successfully")
+                self.showWebView = true
+            }
         }
-        catch {
-            print(error)
-        }
+//        webView.evaluateJavaScript("document.documentElement.outerHTML") { (result, error) in
+//            if let htmlString = result as? String {
+//                print(htmlString)
+//            } else if let error = error {
+//                print("Error: \(error)")
+//            }
+//        }
+
+        // Old Key: 90015cb5fb43daa2fc5307a61d4b8cdae1ee3e50c4b88d0b
+        // client old key: mobile_sdk_client_96ee05c0fdb1b08671ec
+
+//        Zendesk.initialize(appId: "84369c27e05c03aabf1bc75b598675dda4cec2ed96392451",
+//                           clientId: "mobile_sdk_client_d1c0e4365472c8ce5078",
+//                           zendeskUrl: "https://betssonfrance.zendesk.com/")
+//
+//        if let userLogged = Env.userSessionStore.userProfilePublisher.value,
+//           Env.userSessionStore.isUserLogged() {
+//
+//            Zendesk.instance?.setIdentity(Identity.createAnonymous(name: userLogged.username, email: userLogged.email))
+//
+//        }
+//        else {
+//            Zendesk.instance?.setIdentity(Identity.createAnonymous())
+//        }
+//
+//        Support.initialize(withZendesk: Zendesk.instance)
+//        AnswerBot.initialize(withZendesk: Zendesk.instance, support: Support.instance!)
+//
+//        ChatProvidersSDK.Chat.initialize(accountKey: "ogZPdo3sXdALS3KRca771UZ6WSxOlqHM")
+//
+//        do {
+//            let messagingConfiguration = MessagingConfiguration()
+//            let answerBotEngine = try AnswerBotEngine.engine()
+//            let supportEngine = try SupportEngine.engine()
+//            let chatEngine = try ChatEngine.engine()
+//
+//            let viewController = try Messaging.instance.buildUI(engines: [answerBotEngine, supportEngine, chatEngine], configs: [messagingConfiguration])
+//
+//            let button = UIBarButtonItem(title: localized("close"), style: .plain, target: self, action: #selector(dismissView))
+//            viewController.navigationItem.leftBarButtonItem = button
+//
+//            let helpNavigationController = UINavigationController(rootViewController: viewController)
+//
+//            self.present(helpNavigationController, animated: true, completion: nil)
+//        }
+//        catch {
+//            print(error)
+//        }
 
     }
 
@@ -414,6 +495,23 @@ class SupportPageViewController: UIViewController {
 
     }
 
+}
+
+extension SupportPageViewController: WKNavigationDelegate {
+
+    func webView(_ webView: WKWebView, didStartProvisionalNavigation navigation: WKNavigation!) {
+        print("STARTING LOADING ZENDESK")
+    }
+
+    func webView(_ webView: WKWebView, didFinish navigation: WKNavigation!) {
+        print("FINISHED LOADING ZENDESK")
+
+    }
+
+    func webView(_ webView: WKWebView, didFail navigation: WKNavigation!, withError error: Error) {
+        print("FAILED LOADING ZENDESK")
+
+    }
 }
 
 //
@@ -634,6 +732,12 @@ extension SupportPageViewController {
         return label
     }
 
+    private static func createWebView() -> WKWebView {
+        let webView = WKWebView()
+        webView.translatesAutoresizingMaskIntoConstraints = false
+        return webView
+    }
+
     private static func createAnonymousViewTopConstraint() -> NSLayoutConstraint {
         let constraint = NSLayoutConstraint()
         return constraint
@@ -704,7 +808,7 @@ extension SupportPageViewController {
         self.contentScrollView.addSubview(self.baseView)
 
         self.view.addSubview(self.chatButton)
-        // self.view.addSubview(self.webView)
+        self.view.addSubview(self.webView)
 
         self.initConstraints()
     }
@@ -838,24 +942,22 @@ extension SupportPageViewController {
             self.chatButton.trailingAnchor.constraint(equalTo: self.view.trailingAnchor, constant: -16),
         ])
 
-        /*
         NSLayoutConstraint.activate([
             self.webView.trailingAnchor.constraint(equalTo: self.view.trailingAnchor),
             self.webView.bottomAnchor.constraint(equalTo: self.view.safeAreaLayoutGuide.bottomAnchor)
         ])
 
         self.webViewWidthConstraint = self.webView.widthAnchor.constraint(equalToConstant: 100)
-        self.webViewWidthConstraint.isActive = true
+        self.webViewWidthConstraint.isActive = false
 
         self.webViewHeightConstraint = self.webView.heightAnchor.constraint(equalToConstant: 100)
-        self.webViewHeightConstraint.isActive = true
+        self.webViewHeightConstraint.isActive = false
 
         self.webViewLeadingConstraint = self.webView.leadingAnchor.constraint(equalTo: self.view.leadingAnchor)
-        self.webViewLeadingConstraint.isActive = false
+        self.webViewLeadingConstraint.isActive = true
 
         self.webViewTopConstraint = self.webView.topAnchor.constraint(equalTo: self.view.safeAreaLayoutGuide.topAnchor)
-        self.webViewTopConstraint.isActive = false
-        */
+        self.webViewTopConstraint.isActive = true
 
         self.anonymousViewTopConstraint = self.anonymousFieldsView.topAnchor.constraint(equalTo: self.contactDescriptionLabel.bottomAnchor, constant: 30)
         self.anonymousViewTopConstraint.isActive = false
@@ -887,4 +989,92 @@ extension SupportPageViewController: UITextViewDelegate {
         
     }
 
+}
+
+extension SupportPageViewController: WKScriptMessageHandler {
+    func userContentController(_ userContentController: WKUserContentController, didReceive message: WKScriptMessage) {
+
+        print("MESSAGE NAME: \(message.name)")
+
+        if message.name == "postMessageListener",
+           let messageBody = message.body as? [String: Any],
+           let messageType = messageBody["messageType"] as? String {
+            if messageType == "zendeskOpened" {
+                print("INJECT DATA")
+
+                var username = ""
+                var email = ""
+                var firstName = ""
+                var surname = ""
+
+                if let userLogged = Env.userSessionStore.userProfilePublisher.value {
+
+                    username = userLogged.username
+                    email = userLogged.email
+                    firstName = userLogged.firstName ?? ""
+                    surname = userLogged.lastName ?? ""
+
+                    let javascript = """
+                        (function() {
+
+                            window.zE.identify({
+                                name: '\(username)',
+                                email: '\(email)'
+                            })
+
+                            window.zE("webWidget", "updateSettings", {
+                                webWidget: {
+                                    contactForm: {
+                                        fields: [
+                                            { id: 11249444074770, prefill: { '*': '\(firstName)' } },
+                                            { id: 11249427898002, prefill: { '*': '\(surname)' } }
+                                        ]
+                                    }
+                                }
+                            })
+
+                        })();
+                    """
+
+                    self.webView.evaluateJavaScript(javascript) { (result, error) in
+                        if let error = error {
+                            print("Error pushing data: \(error)")
+                        } else {
+                            print("Data pushed successfully!")
+                        }
+                    }
+
+                }
+            }
+            else if messageType == "zendeskClosed" {
+                print("CLOSED ZENDESK")
+            }
+        }
+
+        if ("\(message.body)".hasPrefix("<button") || "\(message.body)".hasPrefix("<svg")) && "\(message.body)".contains("Icon--dash") {
+//            DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
+//                UIView.animate(withDuration: 0.5, delay: 0, options: UIView.AnimationOptions.curveEaseOut) {
+//                    self.webViewWidthConstraint.isActive = true
+//                    self.webViewHeightConstraint.isActive = true
+//                    self.webViewLeadingConstraint.isActive = false
+//                    self.webViewTopConstraint.isActive = false
+//                    self.view.setNeedsLayout()
+//                    self.view.layoutIfNeeded()
+//                }
+//            }
+            self.showWebView = false
+
+        }
+        else {
+//            UIView.animate(withDuration: 0.5, delay: 0.25, options: UIView.AnimationOptions.curveEaseOut) {
+//                self.webViewWidthConstraint.isActive = false
+//                self.webViewHeightConstraint.isActive = false
+//                self.webViewLeadingConstraint.isActive = true
+//                self.webViewTopConstraint.isActive = true
+//                self.view.setNeedsLayout()
+//                self.view.layoutIfNeeded()
+//            }
+        }
+
+    }
 }

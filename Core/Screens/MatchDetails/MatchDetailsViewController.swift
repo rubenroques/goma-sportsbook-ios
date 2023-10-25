@@ -164,6 +164,23 @@ class MatchDetailsViewController: UIViewController {
         }
     }
 
+    private var matchMode: MatchDetailsViewModel.MatchMode = .preLive {
+        didSet {
+            if self.matchMode == .preLive {
+                self.headerDetailLiveView.isHidden = true
+                self.headerDetailPreliveView.isHidden = false
+
+                self.liveButtonLabel.text = localized("statistics")
+            }
+            else {
+                self.headerDetailPreliveView.isHidden = true
+                self.headerDetailLiveView.isHidden = false
+
+                self.liveButtonLabel.text = localized("live_stats")
+            }
+        }
+    }
+    
     // ScrollView content offset
     private var lastContentOffset: CGFloat = 0
     private var autoScrollEnabled: Bool = true
@@ -270,7 +287,6 @@ class MatchDetailsViewController: UIViewController {
     
     // MARK: - Lifetime and Cycle
     init(viewModel: MatchDetailsViewModel) {
-        
         self.viewModel = viewModel
         
         self.marketGroupsPagedViewController = UIPageViewController(transitionStyle: .scroll,
@@ -287,6 +303,7 @@ class MatchDetailsViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        
         
         self.view.transitionId = "SeeMoreToMatchDetails"
         
@@ -459,18 +476,37 @@ class MatchDetailsViewController: UIViewController {
         
         self.marketTypesCollectionView.reloadData()
 
-        self.addChildViewController(self.loadingSpinnerViewController, toView: self.view)
-        self.loadingSpinnerViewController.view.isHidden = true
+        //
+        //
+        // Add loading view controller
+        self.loadingSpinnerViewController.willMove(toParent: self)
+        self.addChild(self.loadingSpinnerViewController)
 
+        self.loadingSpinnerViewController.view.translatesAutoresizingMaskIntoConstraints = false
+        self.view.addSubview(self.loadingSpinnerViewController.view)
+        
+        NSLayoutConstraint.activate([
+            self.view.leadingAnchor.constraint(equalTo: self.loadingSpinnerViewController.view.leadingAnchor),
+            self.view.trailingAnchor.constraint(equalTo: self.loadingSpinnerViewController.view.trailingAnchor),
+            self.headerDetailView.bottomAnchor.constraint(equalTo: self.loadingSpinnerViewController.view.topAnchor),
+            self.view.bottomAnchor.constraint(equalTo: self.loadingSpinnerViewController.view.bottomAnchor)
+        ])
+        
+        self.loadingSpinnerViewController.didMove(toParent: self)
+        
+        // Start loading
+        self.loadingSpinnerViewController.startAnimating()
+        self.loadingSpinnerViewController.view.isHidden = false
+        //
+        //
+        //
+        
         // Shared Game
         self.view.sendSubviewToBack(self.sharedGameCardView)
         
         //
         self.view.bringSubviewToFront(self.matchNotAvailableView)
-
-        self.view.setNeedsLayout()
-        self.view.layoutIfNeeded()
-
+        
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -617,36 +653,25 @@ class MatchDetailsViewController: UIViewController {
                 }
             }
             .store(in: &cancellables)
-
+        
         self.viewModel.marketGroupsState
+            .removeDuplicates()
             .receive(on: DispatchQueue.main)
             .sink { [weak self] marketGroupState in
                 switch marketGroupState {
-                case .idle:
-                    self?.loadingSpinnerViewController.startAnimating()
-                    self?.loadingSpinnerViewController.view.isHidden = false
-
-                case .loading:
-                    self?.loadingSpinnerViewController.startAnimating()
-                    self?.loadingSpinnerViewController.view.isHidden = false
-
+                case .idle, .loading:
+                    break
                 case let .loaded(marketGroups):
-                    self?.loadingSpinnerViewController.view.isHidden = true
-                    self?.loadingSpinnerViewController.stopAnimating()
-
                     self?.showMarkets()
                     self?.reloadMarketGroupDetails(marketGroups)
                 case .failed:
-                    self?.loadingSpinnerViewController.view.isHidden = true
-                    self?.loadingSpinnerViewController.stopAnimating()
-
                     self?.showMarketsNotAvailableView()
                     self?.reloadMarketGroupDetails([])
                 }
                 self?.reloadCollectionView()
             }
             .store(in: &cancellables)
-        
+//        
         self.viewModel.selectedMarketTypeIndexPublisher
             .removeDuplicates()
             .receive(on: DispatchQueue.main)
@@ -657,20 +682,30 @@ class MatchDetailsViewController: UIViewController {
                 }
             }
             .store(in: &cancellables)
-        
+
         self.viewModel.matchPublisher
             .receive(on: DispatchQueue.main)
             .sink(receiveValue: { [weak self] loadableMatch in
                 switch loadableMatch {
                 case .idle, .loading:
-                    ()
-                case .loaded:
-                    self?.setupHeaderDetails()
-
+                    break
+                case .loaded(let match):
+                    switch match.status {
+                    case .notStarted, .ended, .unknown:
+                        self?.matchMode = .preLive
+                    case .inProgress:
+                        self?.matchMode = .live
+                    }
+                    
+                    self?.setupHeaderDetails(withMatch: match)
+                    
                     let theme = self?.traitCollection.userInterfaceStyle
                     viewModel.getFieldWidget(isDarkTheme: theme == .dark ? true : false)
 
                     self?.statsCollectionView.reloadData()
+                    
+                    self?.loadingSpinnerViewController.view.isHidden = true
+                    self?.loadingSpinnerViewController.stopAnimating()
                 case .failed:
                     self?.loadingSpinnerViewController.view.isHidden = true
                     self?.loadingSpinnerViewController.stopAnimating()
@@ -680,29 +715,48 @@ class MatchDetailsViewController: UIViewController {
             })
             .store(in: &cancellables)
 
-        self.viewModel.matchModePublisher
-            .receive(on: DispatchQueue.main)
-            .sink(receiveValue: { [weak self] matchMode in
-                
-                if matchMode == .preLive {
-                    self?.headerDetailLiveView.isHidden = true
-                    self?.headerDetailPreliveView.isHidden = false
-
-                    self?.liveButtonLabel.text = localized("statistics")
-                }
-                else {
-                    self?.headerDetailPreliveView.isHidden = true
-                    self?.headerDetailLiveView.isHidden = false
-
-                    self?.liveButtonLabel.text = localized("live_stats")
-                }
-
-                self?.view.setNeedsLayout()
-                self?.view.layoutIfNeeded()
-
-                self?.setupHeaderDetails()
-            })
-            .store(in: &cancellables)
+//        
+//        Publishers.CombineLatest(
+//            self.viewModel.matchPublisher.removeDuplicates(),
+//            self.viewModel.marketGroupsState.removeDuplicates()
+//        )
+//        .receive(on: DispatchQueue.main)
+//        .sink { [weak self] matchPublisherLoadableContent, marketGroupsStateLoadableContent in
+//            
+//            switch (matchPublisherLoadableContent, marketGroupsStateLoadableContent) {
+//            case (.failed, _):
+//                self?.loadingSpinnerViewController.view.isHidden = true
+//                self?.loadingSpinnerViewController.stopAnimating()
+//                
+//                self?.showMatchNotAvailableView()
+//                
+//            case (.loaded(let match), .loaded(let marketGroups)):
+//                switch match.status {
+//                case .notStarted, .ended, .unknown:
+//                    self?.matchMode = .preLive
+//                case .inProgress:
+//                    self?.matchMode = .live
+//                }
+//                
+//                self?.setupHeaderDetails(withMatch: match)
+//                
+//                let theme = self?.traitCollection.userInterfaceStyle
+//                viewModel.getFieldWidget(isDarkTheme: theme == .dark ? true : false)
+//                
+//                self?.statsCollectionView.reloadData()
+//                
+//                self?.reloadMarketGroupDetails(marketGroups)
+//                self?.showMarkets()
+//                self?.reloadCollectionView()
+//                
+//                self?.loadingSpinnerViewController.view.isHidden = true
+//                self?.loadingSpinnerViewController.stopAnimating()
+//                
+//            default:
+//                ()
+//            }
+//        }
+//        .store(in: &self.cancellables)
         
         self.viewModel.matchStatsUpdatedPublisher
             .receive(on: DispatchQueue.main)
@@ -762,7 +816,6 @@ class MatchDetailsViewController: UIViewController {
                 marketGroupViewController.scrollToTop()
             }
         }
-
     }
 
     func reloadMarketGroupDetails(_ marketGroups: [MarketGroup]) {
@@ -881,13 +934,7 @@ class MatchDetailsViewController: UIViewController {
 
     }
     
-    func setupHeaderDetails() {
-        guard
-            let match = self.viewModel.match
-        else {
-            return
-        }
-        
+    func setupHeaderDetails(withMatch match: Match) {
         let cellViewModel = MatchWidgetCellViewModel(match: match)
         
         if cellViewModel.countryISOCode != "" {
@@ -901,7 +948,7 @@ class MatchDetailsViewController: UIViewController {
         self.headerDetailHomeLabel.text = cellViewModel.homeTeamName
         self.headerDetailAwayLabel.text = cellViewModel.awayTeamName
         
-        if self.viewModel.matchModePublisher.value == .preLive {
+        if self.matchMode == .preLive {
             self.headerDetailPreliveTopLabel.text = cellViewModel.startDateString
             self.headerDetailPreliveBottomLabel.text = cellViewModel.startTimeString
         }
@@ -970,12 +1017,10 @@ class MatchDetailsViewController: UIViewController {
     }
 
     func showMarketsNotAvailableView() {
-
         self.marketGroupsPagedBaseView.isHidden = true
         self.marketTypesCollectionView.isHidden = true
         self.marketsNotAvailableView.isHidden = false
         self.matchNotAvailableView.isHidden = true
-
     }
     
     @objc func didTapBetslipView() {
@@ -1165,7 +1210,7 @@ class MatchDetailsViewController: UIViewController {
 
         let matchName = "\(homeTeamName)-vs-\(awayTeamName)"
 
-        let matchStatus = self.viewModel.matchModePublisher.value == .preLive ? "competitions" : "live"
+        let matchStatus = self.matchMode == .preLive ? "competitions" : "live"
 
         let fullString = "\(TargetVariables.clientBaseUrl)/\(Locale.current.languageCode ?? "fr")/\(matchStatus)/\(sportName)/\(competitionName)/\(match.competitionId)/\(matchName)/\(match.id)"
 

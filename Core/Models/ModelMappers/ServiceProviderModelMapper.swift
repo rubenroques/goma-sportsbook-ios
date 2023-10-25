@@ -54,6 +54,7 @@ extension ServiceProviderModelMapper {
                           awayParticipantScore: event.awayTeamScore,
                           date: event.startDate,
                           sport: sport,
+                          sportIdCode: event.sportIdCode,
                           venue: venue,
                           numberTotalOfMarkets: event.numberMarkets ?? 0,
                           markets: Self.markets(fromServiceProviderMarkets: event.markets),
@@ -65,7 +66,7 @@ extension ServiceProviderModelMapper {
         return match
     }
 
-    static func matchStatus(fromInternalEvent internalEventStatus: ServicesProvider.Event.Status?) -> Match.Status {
+    static func matchStatus(fromInternalEvent internalEventStatus: ServicesProvider.EventStatus?) -> Match.Status {
         guard let internalEventStatus else { return Match.Status.notStarted }
 
         switch internalEventStatus {
@@ -78,6 +79,15 @@ extension ServiceProviderModelMapper {
         case .ended:
             return Match.Status.ended
         }
+    }
+    
+    static func matchLiveData(fromServiceProviderEventLiveData eventLiveData: ServicesProvider.EventLiveData) -> MatchLiveData {
+        let mappeddStatus = Self.matchStatus(fromInternalEvent: eventLiveData.status)
+        return MatchLiveData(id: eventLiveData.id,
+                             homeScore: eventLiveData.homeScore,
+                             awayScore: eventLiveData.awayScore,
+                             matchTime: eventLiveData.matchTime,
+                             status: mappeddStatus)
     }
 
     // Market

@@ -14,10 +14,11 @@ import OptimoveSDK
 
 enum UserSessionError: Error {
     case invalidEmailPassword
-    case restrictedCountry(errorMessage: String)
+    case restrictedCountry
     case serverError
     case quickSignUpIncomplete
     case errorMessage(errorMessage: String)
+    case failedTempLock(date: String)
 }
 
 enum RegisterUserError: Error {
@@ -139,7 +140,6 @@ class UserSessionStore {
                     self?.isUserEmailVerified = userProfile.isEmailVerified
                     self?.userKnowYourCustomerStatus = userProfile.kycStatus
 
-                    print("OPTIMOVE USER ID!")
                     Optimove.shared.setUserId(userProfile.userIdentifier)
                 }
                 else {
@@ -215,12 +215,12 @@ class UserSessionStore {
         self.userSessionPublisher.send(nil)
         self.userWalletPublisher.send(nil)
         self.userCashbackBalance.send(nil)
+
+        Optimove.shared.signOutUser()
     }
 
     func login(withUsername username: String, password: String) -> AnyPublisher<Void, UserSessionError> {
 
-        
-        
         let publisher = Env.servicesProvider.loginUser(withUsername: username, andPassword: password)
             .mapError { (error: ServiceProviderError) -> UserSessionError in
                 switch error {
@@ -230,6 +230,10 @@ class UserSessionStore {
                     return .quickSignUpIncomplete
                 case .errorMessage(let message):
                     return .errorMessage(errorMessage: message)
+                case .errorDetailedMessage(_, let message):
+                    return .errorMessage(errorMessage: message)
+                case .failedTempLock(let date):
+                    return .failedTempLock(date: date)
                 default:
                     return .serverError
                 }
@@ -517,12 +521,14 @@ extension UserSessionStore {
                         self?.logout()
                     case .quickSignUpIncomplete:
                         self?.logout()
-                    case .restrictedCountry(let errorMessage):
-                        ()
+                    case .restrictedCountry:
+                        break
                     case .serverError:
-                        ()
-                    case .errorMessage(let errorMessage):
-                        ()
+                        break
+                    case .errorMessage:
+                        break
+                    case .failedTempLock(let date):
+                        break
                     }
                     print("UserSessionStore login failed, error: \(error)")
                 case .finished:

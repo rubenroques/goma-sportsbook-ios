@@ -57,6 +57,10 @@ class MatchLineTableCellViewModel {
                 // print("MatchLineTableCellViewModel getEventDetails completion \(completion)")
             } receiveValue: { [weak self] updatedMatch in
 
+                if updatedMatch.id == "3234891.1" {
+                    print("TapBug stop 1 \(updatedMatch.markets.count )")
+                }
+                
                 var knownMarketGroups: Set<String> = []
                 var filteredMarkets = [Market]()
 
@@ -271,7 +275,7 @@ class MatchLineTableViewCell: UITableViewCell {
                     self.loadingView.stopAnimating()
                 }
                 else {
-                    self.loadingView.startAnimating()
+                    self.loadingView.stopAnimating()
                 }
             }
             .store(in: &self.cancellables)
@@ -295,11 +299,13 @@ class MatchLineTableViewCell: UITableViewCell {
         self.match = match
         self.liveMatch = liveMatch
 
-        UIView.performWithoutAnimation {
-            if self.collectionView.numberOfSections == 3 {
-                 self.collectionView.reloadSections(IndexSet(integer: 1))
-             }
-        }
+        self.collectionView.reloadData()
+        
+//        UIView.performWithoutAnimation {
+//            if self.collectionView.numberOfSections == 3 {
+//                 self.collectionView.reloadSections(IndexSet(integer: 1))
+//             }
+//        }
     }
 
     func shouldShowCountryFlag(_ show: Bool) {
@@ -422,6 +428,10 @@ extension MatchLineTableViewCell: UICollectionViewDelegate, UICollectionViewData
                 fatalError()
             }
 
+            if match.id == "3234891.1" {
+                print("TapBug stop 2 \(match.markets.map({ return "\($0.name) "}) ) ")
+            }
+            
             let cellViewModel = MatchWidgetCellViewModel(match: match)
             cell.configure(withViewModel: cellViewModel)
 

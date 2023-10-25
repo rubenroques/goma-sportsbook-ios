@@ -22,6 +22,7 @@ class LoadingSpinnerViewController: UIViewController {
         self.animationView.translatesAutoresizingMaskIntoConstraints = false
         self.animationView.contentMode = .scaleAspectFit
 
+
         self.view.addSubview(self.animationView)
 
         // Some time later
@@ -44,12 +45,14 @@ class LoadingSpinnerViewController: UIViewController {
     }
 
     public func startAnimating() {
+        self.animationView.isHidden = false
         self.animationView.play { (finished) in
             // Animation stopped
         }
     }
 
     public func stopAnimating() {
+        self.animationView.isHidden = true
         self.animationView.stop()
     }
 

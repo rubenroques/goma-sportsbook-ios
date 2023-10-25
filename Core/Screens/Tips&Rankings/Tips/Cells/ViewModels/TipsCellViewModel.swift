@@ -67,7 +67,8 @@ class TipsCellViewModel {
                                        isAvailable: true,
                                        matchDescription: selection.eventName,
                                        marketDescription: selection.extraSelectionInfo.marketName,
-                                       outcomeDescription: selection.betName)
+                                       outcomeDescription: selection.betName,
+                                       sportIdCode: nil)
 
             if !Env.betslipManager.hasBettingTicket(withId: "\(selection.extraSelectionInfo.bettingOfferId)") {
 

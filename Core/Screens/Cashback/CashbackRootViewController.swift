@@ -34,16 +34,74 @@ class CashbackRootViewController: UIViewController {
     private lazy var cashbackUsedExampleView: UIView = Self.createCashbackUsedExampleView()
     private lazy var cashbackUsedExampleTitleLabel: UILabel = Self.createCashbackUsedExampleTitleLabel()
 
+    private lazy var bottomBannerImageView: UIImageView = Self.createBottomBannerImageView()
+
+    private lazy var separatorLineView: UIView = Self.createSeparatorLineView()
+
+    private lazy var termsContainerView: UIView = Self.createTermsContainerView()
+    private lazy var termsView: UIView = Self.createTermsView()
+    private lazy var termsTitleLabel: UILabel = Self.createTermsTitleLabel()
+    private lazy var termsToggleButton: UIButton = Self.createTermsToggleButton()
+    private lazy var termsDescriptionLabel: UILabel = Self.createTermsDescriptionLabel()
+
     private lazy var bannerImageViewFixedHeightConstraint: NSLayoutConstraint = Self.createBannerImageViewFixedHeightConstraint()
     private lazy var bannerImageViewDynamicHeightConstraint: NSLayoutConstraint = Self.createBannerImageViewDynamicHeightConstraint()
 
+    private lazy var bottomBannerImageViewFixedHeightConstraint: NSLayoutConstraint = Self.createBottomBannerImageViewFixedHeightConstraint()
+    private lazy var bottomBannerImageViewDynamicHeightConstraint: NSLayoutConstraint = Self.createBottomBannerImageViewDynamicHeightConstraint()
+
+    private lazy var termsViewBottomConstraint: NSLayoutConstraint = Self.createTermsViewBottomConstraint()
+    private lazy var termsDescriptionLabelBottomConstraint: NSLayoutConstraint = Self.createTermsDescriptionLabelBottomConstraint()
+
     private var aspectRatio: CGFloat = 1.0
+
+    var isTermsCollapsed = true {
+        didSet {
+            if isTermsCollapsed {
+                self.termsToggleButton.setImage(UIImage(named: "arrow_up_icon"), for: .normal)
+
+                UIView.animate(withDuration: 0.2, delay: 0, options: .curveEaseIn, animations: {
+                    self.termsDescriptionLabel.alpha = 0
+                }, completion: { _ in
+                    self.termsDescriptionLabel.isHidden = true
+                })
+                self.termsViewBottomConstraint.isActive = true
+                self.termsDescriptionLabelBottomConstraint.isActive = false
+
+            }
+            else {
+                self.termsToggleButton.setImage(UIImage(named: "arrow_down_icon"), for: .normal)
+
+                UIView.animate(withDuration: 0.2, delay: 0, options: .curveEaseIn, animations: {
+                    if self.termsDescriptionLabel.alpha != self.enabledAlpha && self.termsDescriptionLabel.alpha != 0 {
+                        self.termsDescriptionLabel.alpha = self.disabledAlpha
+                    }
+                    else {
+                        self.termsDescriptionLabel.alpha = self.enabledAlpha
+                    }
+                    self.termsDescriptionLabel.isHidden = false
+                }, completion: { _ in
+                })
+                self.termsViewBottomConstraint.isActive = false
+                self.termsDescriptionLabelBottomConstraint.isActive = true
+
+            }
+        }
+    }
+
+    var disabledAlpha: CGFloat = 0.7
+    var enabledAlpha: CGFloat = 1.0
 
     override func viewDidLoad() {
         super.viewDidLoad()
 
         self.setupSubviews()
         self.setupWithTheme()
+
+        self.isTermsCollapsed = true
+
+        let termsToggleTap = UITapGestureRecognizer(target: self, action: #selector(didTapToggleButton))
+        self.termsView.addGestureRecognizer(termsToggleTap)
 
     }
 
@@ -61,6 +119,8 @@ class CashbackRootViewController: UIViewController {
         self.cashbackUsedExampleView.layer.cornerRadius = CornerRadius.headerInput
 
         self.resizeBannerImageView()
+
+        self.resizeBottomBannerImageView()
     }
 
     private func setupWithTheme() {
@@ -99,6 +159,16 @@ class CashbackRootViewController: UIViewController {
 
         self.cashbackUsedExampleTitleLabel.textColor = UIColor.App.buttonTextPrimary
 
+        self.separatorLineView.backgroundColor = UIColor.App.separatorLine
+
+        self.termsContainerView.backgroundColor = .clear
+
+        self.termsView.backgroundColor = .clear
+
+        self.termsTitleLabel.textColor = UIColor.App.textSecondary
+
+        self.termsToggleButton.backgroundColor = .clear
+
     }
 
     private func resizeBannerImageView() {
@@ -122,6 +192,27 @@ class CashbackRootViewController: UIViewController {
         }
     }
 
+    private func resizeBottomBannerImageView() {
+
+        if let bannerImage = self.bannerImageView.image {
+
+            self.aspectRatio = bannerImage.size.width/bannerImage.size.height
+
+            self.bottomBannerImageViewFixedHeightConstraint.isActive = false
+
+            self.bottomBannerImageViewDynamicHeightConstraint =
+            NSLayoutConstraint(item: self.bottomBannerImageView,
+                               attribute: .height,
+                               relatedBy: .equal,
+                               toItem: self.bottomBannerImageView,
+                               attribute: .width,
+                               multiplier: 1/self.aspectRatio,
+                               constant: 0)
+
+            self.bottomBannerImageViewDynamicHeightConstraint.isActive = true
+        }
+    }
+
     func scrollToTop() {
 
         let topOffset = CGPoint(x: 0, y: -self.scrollView.contentInset.top)
@@ -131,6 +222,11 @@ class CashbackRootViewController: UIViewController {
 
     @objc private func didTapBackButton() {
         self.navigationController?.popViewController(animated: true)
+    }
+
+    @objc private func didTapToggleButton() {
+
+        self.isTermsCollapsed = !self.isTermsCollapsed
     }
 }
 
@@ -152,7 +248,7 @@ extension CashbackRootViewController {
     private static func createBannerImageView() -> UIImageView {
         let imageView = UIImageView()
         imageView.translatesAutoresizingMaskIntoConstraints = false
-        imageView.image = UIImage(named: "betsson_banner")
+        imageView.image = UIImage(named: "replay_big_banner")
         imageView.contentMode = .scaleAspectFill
         return imageView
     }
@@ -167,7 +263,7 @@ extension CashbackRootViewController {
         let label = UILabel()
         label.translatesAutoresizingMaskIntoConstraints = false
         label.font = AppFont.with(type: .bold, size: 18)
-        label.text = localized("first_info_title_replay")
+        label.text = localized("replay_page_section_1_title")
         label.textAlignment = .left
         return label
     }
@@ -176,7 +272,7 @@ extension CashbackRootViewController {
         let label = UILabel()
         label.translatesAutoresizingMaskIntoConstraints = false
         label.font = AppFont.with(type: .regular, size: 14)
-        label.text = localized("first_info_descrition_replay")
+        label.text = localized("replay_page_section_1_description")
         label.textAlignment = .left
         label.numberOfLines = 0
         label.addLineHeight(to: label, lineHeight: 18)
@@ -193,7 +289,7 @@ extension CashbackRootViewController {
         let label = UILabel()
         label.translatesAutoresizingMaskIntoConstraints = false
         label.font = AppFont.with(type: .bold, size: 18)
-        label.text = localized("second_info_title_replay")
+        label.text = localized("replay_page_section_2_title")
         label.textAlignment = .left
         return label
     }
@@ -202,7 +298,7 @@ extension CashbackRootViewController {
         let label = UILabel()
         label.translatesAutoresizingMaskIntoConstraints = false
         label.font = AppFont.with(type: .regular, size: 14)
-        label.text = localized("second_info_descrition_replay")
+        label.text = localized("replay_page_section_2_description")
         label.textAlignment = .left
         label.numberOfLines = 0
         label.addLineHeight(to: label, lineHeight: 18)
@@ -213,7 +309,7 @@ extension CashbackRootViewController {
         let imageView = UIImageView()
         imageView.translatesAutoresizingMaskIntoConstraints = false
         imageView.image = UIImage(named: "cashback_big_blue_icon")
-        imageView.contentMode = .center
+        imageView.contentMode = .scaleAspectFit
         return imageView
     }
 
@@ -227,7 +323,7 @@ extension CashbackRootViewController {
         let label = UILabel()
         label.translatesAutoresizingMaskIntoConstraints = false
         label.font = AppFont.with(type: .bold, size: 18)
-        label.text = localized("third_info_title_replay")
+        label.text = localized("replay_page_section_3_title")
         label.textAlignment = .left
         return label
     }
@@ -236,7 +332,7 @@ extension CashbackRootViewController {
         let label = UILabel()
         label.translatesAutoresizingMaskIntoConstraints = false
         label.font = AppFont.with(type: .regular, size: 14)
-        label.text = localized("third_info_descrition_one_replay")
+        label.text = localized("replay_page_section_3_description_1")
         label.textAlignment = .left
         label.numberOfLines = 0
         label.addLineHeight(to: label, lineHeight: 18)
@@ -255,7 +351,7 @@ extension CashbackRootViewController {
         let label = UILabel()
         label.translatesAutoresizingMaskIntoConstraints = false
         label.font = AppFont.with(type: .regular, size: 14)
-        label.text = localized("third_info_descrition_two_replay")
+        label.text = localized("replay_page_section_3_description_2")
         label.textAlignment = .left
         label.numberOfLines = 0
         label.addLineHeight(to: label, lineHeight: 18)
@@ -272,7 +368,7 @@ extension CashbackRootViewController {
         let label = UILabel()
         label.translatesAutoresizingMaskIntoConstraints = false
         label.font = AppFont.with(type: .bold, size: 18)
-        label.text = localized("fourth_info_title_replay")
+        label.text = localized("replay_page_section_4_title")
         label.textAlignment = .left
         label.numberOfLines = 0
         return label
@@ -282,7 +378,7 @@ extension CashbackRootViewController {
         let label = UILabel()
         label.translatesAutoresizingMaskIntoConstraints = false
         label.font = AppFont.with(type: .regular, size: 14)
-        label.text = localized("fourth_info_descrition_replay")
+        label.text = localized("replay_page_section_4_description")
         label.textAlignment = .left
         label.numberOfLines = 0
         label.addLineHeight(to: label, lineHeight: 18)
@@ -304,6 +400,83 @@ extension CashbackRootViewController {
         return label
     }
 
+    private static func createBottomBannerImageView() -> UIImageView {
+        let imageView = UIImageView()
+        imageView.translatesAutoresizingMaskIntoConstraints = false
+        imageView.image = UIImage(named: "replay_bottom_banner")
+        imageView.contentMode = .scaleAspectFill
+        return imageView
+    }
+
+    private static func createSeparatorLineView() -> UIView {
+        let view = UIView()
+        view.translatesAutoresizingMaskIntoConstraints = false
+        return view
+    }
+
+    private static func createTermsContainerView() -> UIView {
+        let view = UIView()
+        view.translatesAutoresizingMaskIntoConstraints = false
+        return view
+    }
+
+    private static func createTermsView() -> UIView {
+        let view = UIView()
+        view.translatesAutoresizingMaskIntoConstraints = false
+        return view
+    }
+
+    private static func createTermsTitleLabel() -> UILabel {
+        let label = UILabel()
+        label.translatesAutoresizingMaskIntoConstraints = false
+        label.font = AppFont.with(type: .bold, size: 13)
+        label.text = localized("terms_and_conditions")
+        label.textAlignment = .center
+        return label
+    }
+
+    private static func createTermsToggleButton() -> UIButton {
+        let button = UIButton()
+        button.translatesAutoresizingMaskIntoConstraints = false
+        button.setTitle("", for: .normal)
+        button.setImage(UIImage(named: "arrow_up_icon"), for: .normal)
+        return button
+    }
+
+    private static func createTermsDescriptionLabel() -> UILabel {
+        let label = UILabel()
+        label.translatesAutoresizingMaskIntoConstraints = false
+        label.font = AppFont.with(type: .bold, size: 14)
+        label.text = localized("promotions_replay_terms_and_conditions")
+        label.textAlignment = .left
+        label.numberOfLines = 0
+
+        let text = localized("promotions_replay_terms_and_conditions")
+        let attributedString = NSMutableAttributedString(string: text)
+        let fullRange = (text as NSString).range(of: localized("promotions_replay_terms_and_conditions"))
+        var range = (text as NSString).range(of: "•")
+
+        let paragraphStyle = NSMutableParagraphStyle()
+
+        paragraphStyle.lineHeightMultiple = TextSpacing.subtitle
+        paragraphStyle.lineSpacing = 2
+        paragraphStyle.alignment = .left
+
+        attributedString.addAttribute(.foregroundColor, value: UIColor.App.textPrimary, range: fullRange)
+        attributedString.addAttribute(.font, value: AppFont.with(type: .bold, size: 14), range: fullRange)
+
+        while range.location != NSNotFound {
+            attributedString.addAttribute(.foregroundColor, value: UIColor.App.highlightPrimary, range: range)
+            range = (text as NSString).range(of: "•", range: NSRange(location: range.location + 1, length: text.count - range.location - 1))
+        }
+
+        attributedString.addAttribute(.paragraphStyle, value: paragraphStyle, range: NSRange(location: 0, length: attributedString.length))
+
+        label.attributedText = attributedString
+
+        return label
+    }
+
     // Constraints
     private static func createBannerImageViewFixedHeightConstraint() -> NSLayoutConstraint {
         let constraint = NSLayoutConstraint()
@@ -311,6 +484,26 @@ extension CashbackRootViewController {
     }
 
     private static func createBannerImageViewDynamicHeightConstraint() -> NSLayoutConstraint {
+        let constraint = NSLayoutConstraint()
+        return constraint
+    }
+
+    private static func createBottomBannerImageViewFixedHeightConstraint() -> NSLayoutConstraint {
+        let constraint = NSLayoutConstraint()
+        return constraint
+    }
+
+    private static func createBottomBannerImageViewDynamicHeightConstraint() -> NSLayoutConstraint {
+        let constraint = NSLayoutConstraint()
+        return constraint
+    }
+
+    private static func createTermsViewBottomConstraint() -> NSLayoutConstraint {
+        let constraint = NSLayoutConstraint()
+        return constraint
+    }
+
+    private static func createTermsDescriptionLabelBottomConstraint() -> NSLayoutConstraint {
         let constraint = NSLayoutConstraint()
         return constraint
     }
@@ -348,6 +541,19 @@ extension CashbackRootViewController {
         self.cashbackUsedBaseView.addSubview(self.cashbackUsedExampleView)
 
         self.cashbackUsedExampleView.addSubview(self.cashbackUsedExampleTitleLabel)
+
+        self.containerView.addSubview(self.bottomBannerImageView)
+
+        self.containerView.addSubview(self.separatorLineView)
+
+        self.containerView.addSubview(self.termsContainerView)
+
+        self.termsContainerView.addSubview(self.termsView)
+
+        self.termsView.addSubview(self.termsTitleLabel)
+        self.termsView.addSubview(self.termsToggleButton)
+
+        self.termsContainerView.addSubview(self.termsDescriptionLabel)
 
         self.initConstraints()
 
@@ -403,7 +609,7 @@ extension CashbackRootViewController {
             self.cashbackBetDescriptionLabel.trailingAnchor.constraint(equalTo: self.cashbackBetTitleLabel.trailingAnchor),
             self.cashbackBetDescriptionLabel.topAnchor.constraint(equalTo: self.cashbackBetTitleLabel.bottomAnchor, constant: 7),
 
-            self.cashbackBetIconImageView.widthAnchor.constraint(equalToConstant: 20),
+            self.cashbackBetIconImageView.widthAnchor.constraint(equalToConstant: 25),
             self.cashbackBetIconImageView.heightAnchor.constraint(equalTo: self.cashbackBetIconImageView.widthAnchor),
             self.cashbackBetIconImageView.topAnchor.constraint(equalTo: self.cashbackBetDescriptionLabel.bottomAnchor, constant: 4),
             self.cashbackBetIconImageView.bottomAnchor.constraint(equalTo: self.cashbackBetBaseView.bottomAnchor, constant: -16),
@@ -414,7 +620,7 @@ extension CashbackRootViewController {
         NSLayoutConstraint.activate([
             self.cashbackBalanceBaseView.leadingAnchor.constraint(equalTo: self.containerView.leadingAnchor, constant: 14),
             self.cashbackBalanceBaseView.trailingAnchor.constraint(equalTo: self.containerView.trailingAnchor, constant: -14),
-            self.cashbackBalanceBaseView.topAnchor.constraint(equalTo: self.cashbackBetBaseView.bottomAnchor, constant: 16),
+            self.cashbackBalanceBaseView.topAnchor.constraint(equalTo: self.bottomBannerImageView.bottomAnchor, constant: 16),
 
             self.cashbackBalanceTitleLabel.leadingAnchor.constraint(equalTo: self.cashbackBalanceBaseView.leadingAnchor, constant: 16),
             self.cashbackBalanceTitleLabel.trailingAnchor.constraint(equalTo: self.cashbackBalanceBaseView.trailingAnchor, constant: -16),
@@ -441,7 +647,6 @@ extension CashbackRootViewController {
             self.cashbackUsedBaseView.leadingAnchor.constraint(equalTo: self.containerView.leadingAnchor, constant: 14),
             self.cashbackUsedBaseView.trailingAnchor.constraint(equalTo: self.containerView.trailingAnchor, constant: -14),
             self.cashbackUsedBaseView.topAnchor.constraint(equalTo: self.cashbackBalanceBaseView.bottomAnchor, constant: 16),
-            self.cashbackUsedBaseView.bottomAnchor.constraint(equalTo: self.containerView.bottomAnchor, constant: -20),
 
             self.cashbackUsedTitleLabel.leadingAnchor.constraint(equalTo: self.cashbackUsedBaseView.leadingAnchor, constant: 16),
             self.cashbackUsedTitleLabel.trailingAnchor.constraint(equalTo: self.cashbackUsedBaseView.trailingAnchor, constant: -16),
@@ -459,6 +664,43 @@ extension CashbackRootViewController {
             self.cashbackUsedExampleTitleLabel.trailingAnchor.constraint(equalTo: self.cashbackUsedExampleView.trailingAnchor, constant: -8),
             self.cashbackUsedExampleTitleLabel.topAnchor.constraint(equalTo: cashbackUsedExampleView.topAnchor, constant: 3),
             self.cashbackUsedExampleTitleLabel.bottomAnchor.constraint(equalTo: self.cashbackUsedExampleView.bottomAnchor, constant: -3)
+
+        ])
+
+        // Bottom banner
+        NSLayoutConstraint.activate([
+            self.bottomBannerImageView.leadingAnchor.constraint(equalTo: self.containerView.leadingAnchor),
+            self.bottomBannerImageView.trailingAnchor.constraint(equalTo: self.containerView.trailingAnchor),
+            self.bottomBannerImageView.topAnchor.constraint(equalTo: self.cashbackBetBaseView.bottomAnchor, constant: 20)
+        ])
+
+        // Terms info
+        NSLayoutConstraint.activate([
+            self.separatorLineView.leadingAnchor.constraint(equalTo: self.containerView.leadingAnchor),
+            self.separatorLineView.trailingAnchor.constraint(equalTo: self.containerView.trailingAnchor),
+            self.separatorLineView.topAnchor.constraint(equalTo: self.cashbackUsedBaseView.bottomAnchor, constant: 20),
+            self.separatorLineView.heightAnchor.constraint(equalToConstant: 1),
+
+            self.termsContainerView.leadingAnchor.constraint(equalTo: self.containerView.leadingAnchor, constant: 14),
+            self.termsContainerView.trailingAnchor.constraint(equalTo: self.containerView.trailingAnchor, constant: -14),
+            self.termsContainerView.topAnchor.constraint(equalTo: self.separatorLineView.bottomAnchor, constant: 20),
+            self.termsContainerView.bottomAnchor.constraint(equalTo: self.containerView.bottomAnchor, constant: -20),
+
+            self.termsView.topAnchor.constraint(equalTo: self.termsContainerView.topAnchor),
+            self.termsView.centerXAnchor.constraint(equalTo: self.termsContainerView.centerXAnchor),
+
+            self.termsTitleLabel.leadingAnchor.constraint(equalTo: self.termsView.leadingAnchor),
+            self.termsTitleLabel.topAnchor.constraint(equalTo: self.termsView.topAnchor, constant: 10),
+            self.termsTitleLabel.bottomAnchor.constraint(equalTo: self.termsView.bottomAnchor, constant: -10),
+
+            self.termsToggleButton.leadingAnchor.constraint(equalTo: self.termsTitleLabel.trailingAnchor, constant: 5),
+            self.termsToggleButton.trailingAnchor.constraint(equalTo: self.termsView.trailingAnchor),
+            self.termsToggleButton.heightAnchor.constraint(equalToConstant: 20),
+            self.termsToggleButton.centerYAnchor.constraint(equalTo: self.termsTitleLabel.centerYAnchor),
+
+            self.termsDescriptionLabel.leadingAnchor.constraint(equalTo: self.termsContainerView.leadingAnchor),
+            self.termsDescriptionLabel.trailingAnchor.constraint(equalTo: self.termsContainerView.trailingAnchor),
+            self.termsDescriptionLabel.topAnchor.constraint(equalTo: self.termsView.bottomAnchor, constant: 5)
 
         ])
 
@@ -481,5 +723,45 @@ extension CashbackRootViewController {
                            multiplier: 1/self.aspectRatio,
                            constant: 0)
         self.bannerImageViewDynamicHeightConstraint.isActive = false
+
+        self.bottomBannerImageViewFixedHeightConstraint =
+        NSLayoutConstraint(item: self.bottomBannerImageView,
+                           attribute: .height,
+                           relatedBy: .equal,
+                           toItem: nil,
+                           attribute: .notAnAttribute,
+                           multiplier: 1,
+                           constant: 165)
+        self.bottomBannerImageViewFixedHeightConstraint.isActive = true
+
+        self.bottomBannerImageViewDynamicHeightConstraint =
+        NSLayoutConstraint(item: self.bottomBannerImageView,
+                           attribute: .height,
+                           relatedBy: .equal,
+                           toItem: self.bottomBannerImageView,
+                           attribute: .width,
+                           multiplier: 1/self.aspectRatio,
+                           constant: 0)
+        self.bottomBannerImageViewDynamicHeightConstraint.isActive = false
+
+        self.termsViewBottomConstraint =
+        NSLayoutConstraint(item: self.termsView,
+                           attribute: .bottom,
+                           relatedBy: .equal,
+                           toItem: self.termsContainerView,
+                           attribute: .bottom,
+                           multiplier: 1,
+                           constant: 0)
+        self.termsViewBottomConstraint.isActive = true
+
+        self.termsDescriptionLabelBottomConstraint =
+        NSLayoutConstraint(item: self.termsDescriptionLabel,
+                           attribute: .bottom,
+                           relatedBy: .equal,
+                           toItem: self.termsContainerView,
+                           attribute: .bottom,
+                           multiplier: 1,
+                           constant: 0)
+        self.termsDescriptionLabelBottomConstraint.isActive = false
     }
 }

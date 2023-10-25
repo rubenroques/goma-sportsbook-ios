@@ -552,6 +552,9 @@ extension SportRadarModelMapper {
         else if userConsentInfo.key == "email_promotions" {
             userConsentType = .email
         }
+        else if userConsentInfo.key == "terms" {
+            userConsentType = .terms
+        }
 
         return UserConsent(consentInfo: userConsentInfo, consentStatus: userConsentStatus, consentType: userConsentType)
     }
@@ -620,7 +623,8 @@ extension SportRadarModelMapper {
 
     static func applicantReviewResult(fromInternalApplicantReviewResult internalApplicantReviewResult: SportRadarModels.ApplicantReviewResult) -> ApplicantReviewResult {
 
-        return ApplicantReviewResult(reviewAnswer: internalApplicantReviewResult.reviewAnswer, reviewRejectType: internalApplicantReviewResult.reviewRejectType)
+        return ApplicantReviewResult(reviewAnswer: internalApplicantReviewResult.reviewAnswer, reviewRejectType: internalApplicantReviewResult.reviewRejectType,
+                                     moderationComment: internalApplicantReviewResult.moderationComment)
     }
 
 }

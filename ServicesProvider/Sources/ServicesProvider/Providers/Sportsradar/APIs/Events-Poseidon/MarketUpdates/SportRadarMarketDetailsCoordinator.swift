@@ -26,9 +26,12 @@ class SportRadarMarketDetailsCoordinator {
     private var marketCurrentValueSubject: CurrentValueSubject<SubscribableContent<Market>, ServiceProviderError>
     private var market: Market? {
         switch self.marketCurrentValueSubject.value {
-        case .disconnected: return nil
-        case .connected: return nil
-        case .contentUpdate(let content): return content
+        case .disconnected:
+            return nil
+        case .connected:
+            return nil
+        case .contentUpdate(let content):
+            return content
         }
     }
 
@@ -40,11 +43,12 @@ class SportRadarMarketDetailsCoordinator {
     private let decoder = JSONDecoder()
     private let session = URLSession.init(configuration: .default)
 
-    private var cancellables = Set<AnyCancellable>()
+    private var marketCancellable: AnyCancellable?
 
     init(marketId: String, eventId: String, sessionToken: String, contentIdentifier: ContentIdentifier) {
 
-        // print("☁️SP debugbetslip new SportRadarMarketDetailsCoordinator \(contentIdentifier)")
+        print("SportRadarMarketDetailsCoordinator new \(contentIdentifier)")
+        
         self.marketId = marketId
         self.eventId = eventId
 
@@ -56,29 +60,47 @@ class SportRadarMarketDetailsCoordinator {
         
         self.marketCurrentValueSubject = .init(.disconnected)
 
+        self.connectListenner()
+    }
+
+    private func connectListenner() {
+        
+        self.marketCancellable?.cancel()
+        self.marketCancellable = nil
+        
         // Boot the coordinator
-        self.checkMarketUpdatesAvailable()
-            .flatMap { [weak self] _ -> AnyPublisher<Void, ServiceProviderError>  in
+        self.marketCancellable = self.checkMarketUpdatesAvailable()
+            .flatMap { [weak self] market -> AnyPublisher<Void, ServiceProviderError>  in
                 guard let self = self else {
                     return Fail(error: ServiceProviderError.onSubscribe).eraseToAnyPublisher()
                 }
+                
+                // Create the subscription
+                let subscription = Subscription(contentIdentifier: self.contentIdentifier, sessionToken: self.sessionToken, unsubscriber: self)
+                self.marketCurrentValueSubject.send(.connected(subscription: subscription))
+                self.subscription = subscription
+                
+                // update with the market from the get request
+                self.updateMarket(market)
+                
                 return self.requestMarketUpdates()
             }
-            .sink { [weak self] completion in
-                guard let self = self else { return }
+            .sink(receiveCompletion: { [weak self] completion in
                 switch completion {
                 case .finished:
-                    let subscription = Subscription(contentIdentifier: self.contentIdentifier, sessionToken: self.sessionToken, unsubscriber: self)
-                    self.marketCurrentValueSubject.send(.connected(subscription: subscription))
-                    self.subscription = subscription
+                    break
                 case .failure(let error):
-                    self.marketCurrentValueSubject.send(completion: .failure(error))
+                    self?.subscription = nil
+                    self?.marketCurrentValueSubject.send(completion: .failure(error))
                 }
-            } receiveValue: { _ in }
-            .store(in: &self.cancellables)
-    }
+                
+            }, receiveValue: { _ in
+                
+            })
 
-    private func checkMarketUpdatesAvailable() -> AnyPublisher<Void, ServiceProviderError> {
+    }
+    
+    private func checkMarketUpdatesAvailable() -> AnyPublisher<Market, ServiceProviderError> {
         let endpoint = SportRadarRestAPIClient.get(contentIdentifier: self.contentIdentifier)
 
         guard
@@ -89,16 +111,26 @@ class SportRadarMarketDetailsCoordinator {
 
         return self.session.dataTaskPublisher(for: request)
             .retry(1)
-            .map({ return String(data: $0.data, encoding: .utf8) ?? "" })
+            .map({ return $0.data  })
             .mapError({ _ in return ServiceProviderError.invalidRequestFormat })
-            .flatMap { responseString -> AnyPublisher<Void, ServiceProviderError> in
-                if responseString.uppercased().contains("CONTENT_NOT_FOUND") {
-                    return Fail(outputType: Void.self, failure: ServiceProviderError.resourceUnavailableOrDeleted).eraseToAnyPublisher()
+            .flatMap { (data: Data) -> AnyPublisher<Data, ServiceProviderError> in
+                if let responseString = String(data: data, encoding: .utf8), responseString.uppercased().contains("CONTENT_NOT_FOUND") {
+                    return Fail(outputType: Data.self, failure: ServiceProviderError.resourceUnavailableOrDeleted).eraseToAnyPublisher()
                 }
                 else {
-                    return Just(()).setFailureType(to: ServiceProviderError.self).eraseToAnyPublisher()
+                    return Just(data).setFailureType(to: ServiceProviderError.self).eraseToAnyPublisher()
                 }
             }
+            .decode(type: SportRadarModels.SportRadarResponse<SportRadarModels.Market>.self, decoder: JSONDecoder() )
+            .map({ SportRadarModelMapper.market(fromInternalMarket: $0.data) })
+            .mapError({ error in
+                if let serviceProviderError = error as? ServiceProviderError {
+                    return serviceProviderError
+                }
+                else {
+                    return ServiceProviderError.invalidResponse
+                }
+            })
             .eraseToAnyPublisher()
 
     }
@@ -149,6 +181,9 @@ class SportRadarMarketDetailsCoordinator {
         self.marketCurrentValueSubject.send(.disconnected)
 
         self.outcomesDictionary = [:]
+        self.subscription = nil
+        
+        self.connectListenner()
     }
 
     func reconnect(withNewSessionToken newSessionToken: String) {
@@ -185,21 +220,21 @@ extension SportRadarMarketDetailsCoordinator {
 
     func handleContentUpdate(_ content: SportRadarModels.ContentContainer) {
 
-        guard
-            let updatedContentIdentifier = content.contentIdentifier
-        else {
-            print("SportRadarMarketDetailsCoordinator ignoring contentIdentifierLess \(content)")
-            return
-        }
-
-        if self.contentIdentifier != updatedContentIdentifier {
-            // ignoring this update, not subscribed by this class
-            // print("☁️SP \"type\":\"market\" SportRadarMarketDetailsCoordinator ignoring \(updatedContentIdentifier) != \(self.contentIdentifier)")
-            return
-        }
-        else {
-            print("☁️SP \"type\":\"market\" SportRadarMarketDetailsCoordinator handling \(updatedContentIdentifier) ==  self \(self.contentIdentifier)")
-        }
+//        guard
+//            let updatedContentIdentifier = content.contentIdentifier
+//        else {
+//            print("SportRadarMarketDetailsCoordinator ignoring contentIdentifierLess \(content)")
+//            return
+//        }
+//
+//        if self.contentIdentifier != updatedContentIdentifier {
+//            // ignoring this update, not subscribed by this class
+//            // print("☁️SP \"type\":\"market\" SportRadarMarketDetailsCoordinator ignoring \(updatedContentIdentifier) != \(self.contentIdentifier)")
+//            return
+//        }
+//        else {
+//            print("☁️SP \"type\":\"market\" SportRadarMarketDetailsCoordinator handling \(updatedContentIdentifier) ==  self \(self.contentIdentifier)")
+//        }
 
         // print("☁️SP debugdetails  \"type\":\"market\" SportRadarMarketDetailsCoordinator handleContentUpdate \(content)")
 
@@ -260,7 +295,11 @@ extension SportRadarMarketDetailsCoordinator {
     }
 
     func updateOutcomeOdd(withId id: String, newOddNumerator: String?, newOddDenominator: String?) {
-        guard let newMarket = self.market else { return }
+        guard 
+            let newMarket = self.market
+        else {
+            return
+        }
         guard let outcomeSubject = self.outcomesDictionary[id] else { return }
 
         let outcome = outcomeSubject.value
