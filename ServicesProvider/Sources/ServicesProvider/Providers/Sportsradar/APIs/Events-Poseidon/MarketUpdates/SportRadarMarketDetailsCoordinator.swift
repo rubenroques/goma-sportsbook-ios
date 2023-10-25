@@ -111,15 +111,6 @@ class SportRadarMarketDetailsCoordinator {
 
         return self.session.dataTaskPublisher(for: request)
             .retry(1)
-            .handleEvents(receiveOutput: { (data, response) in
-                      // Print the request and response data
-                      print("Request: \(request)")
-                      if let responseData = String(data: data, encoding: .utf8) {
-                          print("Response Data: \(responseData)")
-                      } else {
-                          print("Failed to decode response data.")
-                      }
-                  })
             .map({ return $0.data  })
             .mapError({ _ in return ServiceProviderError.invalidRequestFormat })
             .flatMap { (data: Data) -> AnyPublisher<Data, ServiceProviderError> in

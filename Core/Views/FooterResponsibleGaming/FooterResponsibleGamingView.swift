@@ -31,7 +31,8 @@ class FooterResponsibleGamingView: UIView {
     private lazy var aboutLabel: UILabel = Self.createLinkLabel()
     private lazy var faqLabel: UILabel = Self.createLinkLabel()
     private lazy var responsibleGamblingLabel: UILabel = Self.createLinkLabel()
-
+    private lazy var bonusRulesLabel: UILabel = Self.createLinkLabel()
+    
     private lazy var socialBaseView: UIView = Self.createView()
     private lazy var socialStackView: UIStackView = Self.createSocialStackView()
 
@@ -71,16 +72,22 @@ class FooterResponsibleGamingView: UIView {
         self.topView.addGestureRecognizer(tapGestureRecognizer)
 
         // Set text for each label
-        self.affiliateSystemLabel.text = localized("affiliate_system")
-        self.privacyPolicyLabel.text = localized("privacy_policy")
+        // 1st row
+        self.responsibleGamblingLabel.text = localized("responsible_gambling_footer_link")
+        self.termsAndConditionsLabel.text = localized("terms_and_conditions_footer_link")
+        self.privacyPolicyLabel.text = localized("privacy_policy_footer_link")
+        self.sportsBettingRulesLabel.text = localized("sports_betting_rules_footer_link")
+        self.bonusRulesLabel.text = localized("bonus_terms_and_conditions")
+        // 2 row
+        self.faqLabel.text = localized("faqs_footer_link")
+        self.affiliateSystemLabel.text = localized("affiliate_system_footer_link")
+        self.aboutLabel.text = localized("about_us")
+        
+        // not used right now
         self.securityRulesLabel.text = localized("security_rules_footer_link")
         self.cookiePolicyLabel.text = localized("cookie_policy")
-        self.sportsBettingRulesLabel.text = localized("sport_betting_rules")
-        self.termsAndConditionsLabel.text = localized("terms_and_conditions")
-        self.aboutLabel.text = localized("about_us")
-        self.faqLabel.text = localized("faqs")
-        self.responsibleGamblingLabel.text = localized("responsible_gambling")
 
+        // Add actions to each label
         self.addTapGestureRecognizer(to: self.affiliateSystemLabel, action: #selector(openAffiliateSystemURL))
         self.addTapGestureRecognizer(to: self.responsibleGamblingLabel, action: #selector(openResponsibleGamblingURL))
         self.addTapGestureRecognizer(to: self.privacyPolicyLabel, action: #selector(openPrivacyPolicyURL))
@@ -89,7 +96,8 @@ class FooterResponsibleGamingView: UIView {
         self.addTapGestureRecognizer(to: self.termsAndConditionsLabel, action: #selector(openTermsAndConditionsURL))
         self.addTapGestureRecognizer(to: self.aboutLabel, action: #selector(openAboutURL))
         self.addTapGestureRecognizer(to: self.faqLabel, action: #selector(openFAQsURL))
-
+        self.addTapGestureRecognizer(to: self.bonusRulesLabel, action: #selector(openBonusRulesURL))
+        
         self.facebookSocialButton.setImage(UIImage(named: "facebook_icon_mono")?.withRenderingMode(.alwaysTemplate),
                                            for: .normal)
         self.youtubeSocialButton.setImage(UIImage(named: "youtube_icon_mono")?.withRenderingMode(.alwaysTemplate),
@@ -185,7 +193,12 @@ class FooterResponsibleGamingView: UIView {
         let url = "\(TargetVariables.clientBaseUrl)/terms-and-conditions.pdf"
         self.openURL(url)
     }
-
+    
+    @objc func openBonusRulesURL() {
+        let url = "\(TargetVariables.clientBaseUrl)/bonus_TC.pdf"
+        self.openURL(url)
+    }
+    
     @objc func openAboutURL() {
         let url = "\(TargetVariables.clientBaseUrl)/fr/about"
         self.openURL(url)
@@ -363,15 +376,34 @@ extension FooterResponsibleGamingView {
 
         self.baseStackView.addArrangedSubview(self.topView)
 
-        let view1 = self.createViewWithLabels(leftLabel: self.affiliateSystemLabel, rightLabel: self.aboutLabel)
-        let view2 = self.createViewWithLabels(leftLabel: self.responsibleGamblingLabel, rightLabel: self.cookiePolicyLabel)
-        let view3 = self.createViewWithLabels(leftLabel: self.privacyPolicyLabel, rightLabel: self.termsAndConditionsLabel)
-        let view4 = self.createViewWithLabels(leftLabel: self.sportsBettingRulesLabel, rightLabel: self.faqLabel)
+        /*
+         1st Row:
+         Jeu responsable
+         Conditions générales d'utilisation
+         Politique de confidentialité
+         Règles des paris sportifs
+         Modalités des bonus
 
+         2nd Row:
+         FAQ
+         Programme d'affiliation
+         Qui sommes nous?
+         */
+        let emptyLabel1 =  Self.createLinkLabel()
+        let emptyLabel2 =  Self.createLinkLabel()
+        
+        let view1 = self.createViewWithLabels(leftLabel: self.responsibleGamblingLabel, rightLabel: self.faqLabel)
+        let view2 = self.createViewWithLabels(leftLabel: self.termsAndConditionsLabel, rightLabel: self.affiliateSystemLabel)
+        
+        let view3 = self.createViewWithLabels(leftLabel: self.privacyPolicyLabel, rightLabel:  self.aboutLabel)
+        let view4 = self.createViewWithLabels(leftLabel: self.sportsBettingRulesLabel, rightLabel: emptyLabel1)
+        let view5 = self.createViewWithLabels(leftLabel: self.bonusRulesLabel, rightLabel: emptyLabel2)
+                
         self.linksStackView.addArrangedSubview(view1)
         self.linksStackView.addArrangedSubview(view2)
         self.linksStackView.addArrangedSubview(view3)
         self.linksStackView.addArrangedSubview(view4)
+        self.linksStackView.addArrangedSubview(view5)
 
         self.linksBaseView.addSubview(self.linksStackView)
         self.baseStackView.addArrangedSubview(self.linksBaseView)

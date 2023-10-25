@@ -116,7 +116,7 @@ extension SportRadarEventsGroupStorage {
     // Live data updates
     func updateEventStatus(newStatus: String) {
         guard let event = self.eventSubject.value else { return }
-        event.status = Event.Status(value: newStatus)
+        event.status = EventStatus(value: newStatus)
         eventSubject.send(event)
     }
 
@@ -168,10 +168,6 @@ extension SportRadarEventsGroupStorage {
 
     func containsOutcome(withid id: String) -> Bool {
         return self.outcomesDictionary[id] != nil
-    }
-
-    func setEventSubject(eventId: String) {
-        self.eventSubject.value?.id = eventId
     }
 
 }

@@ -18,12 +18,27 @@ public class EventsGroup {
     }
 }
 
-public enum EventType: String {
+public enum EventType: String, Equatable {
     case match
     case competition
 }
 
-public class Event: Codable {
+public enum EventStatus: Equatable, Hashable {
+    case unknown
+    case notStarted
+    case inProgress(String)
+    case ended
+    
+    public init(value: String) {
+        switch value {
+        case "not_started": self = .notStarted
+        case "ended": self = .ended
+        default: self = .inProgress(value)
+        }
+    }
+}
+
+public class Event: Codable, Equatable {
 
     public var id: String
     public var homeTeamName: String
@@ -45,7 +60,7 @@ public class Event: Codable {
 
     public var name: String?
 
-    public var status: Status?
+    public var status: EventStatus?
 
     public var matchTime: String?
 
@@ -60,23 +75,7 @@ public class Event: Codable {
             return .match
         }
     }
-
-    public enum Status {
-        case unknown
-        case notStarted
-        case inProgress(String)
-        case ended
-
-        public init(value: String) {
-            switch value {
-            case "not_started": self = .notStarted
-            case "ended": self = .ended
-            default: self = .inProgress(value)
-            }
-        }
-    }
-
-
+    
     enum CodingKeys: String, CodingKey {
         case id = "id"
         case homeTeamName = "homeName"
@@ -105,7 +104,7 @@ public class Event: Codable {
                 venueCountry: Country? = nil,
                 numberMarkets: Int? = nil,
                 name: String? = nil,
-                status: Status?,
+                status: EventStatus?,
                 matchTime: String?) {
 
         self.id = id
@@ -165,9 +164,28 @@ public class Event: Codable {
         try container.encodeIfPresent(self.sportIdCode, forKey: .sportIdCode)
     }
 
+    public static func == (lhs: Event, rhs: Event) -> Bool {
+        // Compare all properties for equality
+        return lhs.id == rhs.id &&
+               lhs.homeTeamName == rhs.homeTeamName &&
+               lhs.awayTeamName == rhs.awayTeamName &&
+               lhs.homeTeamScore == rhs.homeTeamScore &&
+               lhs.awayTeamScore == rhs.awayTeamScore &&
+               lhs.competitionId == rhs.competitionId &&
+               lhs.competitionName == rhs.competitionName &&
+               lhs.sport == rhs.sport &&
+               lhs.startDate == rhs.startDate &&
+               lhs.markets == rhs.markets &&
+               lhs.venueCountry == rhs.venueCountry &&
+               lhs.numberMarkets == rhs.numberMarkets &&
+               lhs.name == rhs.name &&
+               lhs.status == rhs.status &&
+               lhs.matchTime == rhs.matchTime
+    }
 }
 
-public class Market: Codable {
+
+public class Market: Codable, Equatable {
     
     public var id: String
     public var name: String
@@ -242,9 +260,26 @@ public class Market: Codable {
         self.eventId = try container.decodeIfPresent(String.self, forKey: .eventId)
     }
 
+    public static func == (lhs: Market, rhs: Market) -> Bool {
+        // Compare all properties for equality
+        return lhs.id == rhs.id &&
+               lhs.name == rhs.name &&
+               lhs.outcomes == rhs.outcomes &&
+               lhs.marketTypeId == rhs.marketTypeId &&
+               lhs.eventMarketTypeId == rhs.eventMarketTypeId &&
+               lhs.eventName == rhs.eventName &&
+               lhs.isMainOutright == rhs.isMainOutright &&
+               lhs.eventMarketCount == rhs.eventMarketCount &&
+               lhs.isTradable == rhs.isTradable &&
+               lhs.startDate == rhs.startDate &&
+               lhs.homeParticipant == rhs.homeParticipant &&
+               lhs.awayParticipant == rhs.awayParticipant &&
+               lhs.eventId == rhs.eventId
+    }
 }
 
-public class Outcome: Codable {
+
+public class Outcome: Codable, Equatable {
     
     public var id: String
     public var name: String
@@ -292,6 +327,75 @@ public class Outcome: Codable {
         self.isTradable = (try? container.decode(Bool.self, forKey: .isTradable)) ?? false
     }
 
+    public static func == (lhs: Outcome, rhs: Outcome) -> Bool {
+        // Compare all properties for equality
+        return lhs.id == rhs.id &&
+               lhs.name == rhs.name &&
+               lhs.odd == rhs.odd &&
+               lhs.marketId == rhs.marketId &&
+               lhs.orderValue == rhs.orderValue &&
+               lhs.externalReference == rhs.externalReference &&
+               lhs.isTradable == rhs.isTradable
+    }
+}
+
+public struct EventLiveData: Equatable {
+    
+    public var id: String
+    public var homeScore: Int?
+    public var awayScore: Int?
+    public var matchTime: String?
+    public var status: EventStatus?
+    
+    enum CodingKeys: String, CodingKey {
+        case id = "id"
+        case homeScore = "homeScore"
+        case awayScore = "awayScore"
+        case matchTime = "matchTime"
+        case status = "status"
+    }
+    
+    public init(id: String, homeScore: Int?, awayScore: Int?, matchTime: String?, status: EventStatus?) {
+        self.id = id
+        self.homeScore = homeScore
+        self.awayScore = awayScore
+        self.matchTime = matchTime
+        self.status = status
+    }
+    
+    public init(from decoder: Decoder) throws {
+        let container = try decoder.container(keyedBy: CodingKeys.self)
+        id = try container.decode(String.self, forKey: .id)
+        homeScore = try container.decodeIfPresent(Int.self, forKey: .homeScore)
+        awayScore = try container.decodeIfPresent(Int.self, forKey: .awayScore)
+        matchTime = try container.decodeIfPresent(String.self, forKey: .matchTime)
+        
+        // Decode the status based on the "status" key
+        let statusValue = try container.decode(String.self, forKey: .status)
+        status = EventStatus(value: statusValue)
+    }
+    
+    public func encode(to encoder: Encoder) throws {
+        var container = encoder.container(keyedBy: CodingKeys.self)
+        try container.encode(id, forKey: .id)
+        try container.encodeIfPresent(homeScore, forKey: .homeScore)
+        try container.encodeIfPresent(awayScore, forKey: .awayScore)
+        try container.encodeIfPresent(matchTime, forKey: .matchTime)
+        
+        if let status = self.status {
+            switch status {
+            case .unknown:
+                try container.encode("unknown", forKey: .status)
+            case .notStarted:
+                try container.encode("not_started", forKey: .status)
+            case .inProgress(let value):
+                try container.encode(value, forKey: .status)
+            case .ended:
+                try container.encode("ended", forKey: .status)
+            }
+        }
+    }
+    
 }
 
 public struct FieldWidget: Codable {

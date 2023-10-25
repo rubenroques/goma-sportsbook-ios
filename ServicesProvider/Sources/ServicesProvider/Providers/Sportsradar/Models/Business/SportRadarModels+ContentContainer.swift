@@ -292,15 +292,16 @@ extension SportRadarModels {
             let contentIdentifier = try container.decode(ContentIdentifier.self, forKey: .content)
             let path: String = try container.decodeIfPresent(String.self, forKey: .path) ?? ""
 
-
             if case let ContentRoute.eventDetailsLiveData(eventId) = contentIdentifier.contentRoute {
                 if let eventLiveData = (try? container.decode(SportRadarModels.EventLiveDataExtended.self, forKey: .change)) {
                     return .updateEventLiveDataExtended(contentIdentifier: contentIdentifier, eventId: eventId , eventLiveDataExtended: eventLiveData)
                 }
                 else if path.contains("matchTime"),
-                        let matchTime = try container.decodeIfPresent(String.self, forKey: .change),
-                        let minutesPart = SocketMessageParseHelper.extractMatchMinutes(from: matchTime)
-                {
+                     let matchTime = try container.decodeIfPresent(String.self, forKey: .change),
+                     let minutesPart = SocketMessageParseHelper.extractMatchMinutes(from: matchTime) {
+                    
+                    // {"version":1,"data":[{"contentId":{"type":"liveDataExtended","id":"3305392.1"},"path":"matchTime","changeType":"updated","change":"45:00 +7:49","version":443461723},{"contentId":{"type":"liveDataExtended","id":"3305392.1"},"path":"tsMatchTime","changeType":"updated","change":"2023-10-24T00:22:54.359Z","version":443461723}],"notificationType":"CONTENT_CHANGES"}
+
                     let eventLiveDataExtended = SportRadarModels.EventLiveDataExtended.init(id: eventId,
                                                                                             homeScore: nil,
                                                                                             awayScore: nil,
@@ -309,7 +310,31 @@ extension SportRadarModels {
                     return .updateEventLiveDataExtended(contentIdentifier: contentIdentifier,
                                                         eventId: eventId,
                                                         eventLiveDataExtended: eventLiveDataExtended)
+                    
                 }
+                else if path.contains("COMPLETE"),
+                        path.contains("STATUS"),
+                        let changeDictionary = try container.decodeIfPresent([String: [String: String]].self, forKey: .change),
+                        let eventDictionary = changeDictionary["EVENT"],
+                        let newStatusString = eventDictionary[""] {
+                        
+                    // {"version":1,"data":[{"contentId":{"type":"liveDataExtended","id":"3305392.1"},"path":"attributes|COMPLETE|STATUS","changeType":"updated","change":{"EVENT":{"":"paused"}},"version":443467966}],"notificationType":"CONTENT_CHANGES"}◀️
+
+                    let newStatus = EventStatus.init(value: newStatusString)
+                    let eventLiveDataExtended = SportRadarModels.EventLiveDataExtended.init(id: eventId,
+                                                                                            homeScore: nil,
+                                                                                            awayScore: nil,
+                                                                                            matchTime: nil,
+                                                                                            status: newStatus)
+                    return .updateEventLiveDataExtended(contentIdentifier: contentIdentifier,
+                                                        eventId: eventId,
+                                                        eventLiveDataExtended: eventLiveDataExtended)
+                    
+                }
+                else if path.contains("COMPLETE"), path.contains("CURRENT_SCORE") {
+                    return .unknown // TODO: this update is also missing
+                }
+                
                 return .unknown
             }
 
@@ -571,7 +596,7 @@ extension SportRadarModels.ContentContainer: CustomDebugStringConvertible {
             return "Update Market Tradability (Content ID: \(contentIdentifier)) - Market ID: \(marketId) - Tradable: \(isTradable)"
 
         case .updateOutcomeOdd(let contentIdentifier, let selectionId, let newOddNumerator, let newOddDenominator):
-            return "🅾️Update Outcome Odd (Content ID: \(contentIdentifier)) - Selection ID: \(selectionId) - New Odd Numerator: \(String(describing: newOddNumerator)) - New Odd Denominator: \(String(describing: newOddDenominator))"
+            return "Update Outcome Odd (Content ID: \(contentIdentifier)) - Selection ID: \(selectionId) - New Odd Numerator: \(String(describing: newOddNumerator)) - New Odd Denominator: \(String(describing: newOddDenominator))"
         case .updateOutcomeTradability(let contentIdentifier, let selectionId, let isTradable):
             return "Update Outcome Tradability (Content ID: \(contentIdentifier)) - Market ID: \(selectionId) - Tradable: \(isTradable)"
 

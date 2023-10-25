@@ -9,7 +9,7 @@ import Foundation
 import OrderedCollections
 import Combine
 
-class SportRadarEventDetailsStorage {
+class SportRadarEventStorage {
 
     private var eventSubject: CurrentValueSubject<Event?, Never>
     private var marketsDictionary: OrderedDictionary<String, CurrentValueSubject<Market, Never>>
@@ -46,7 +46,7 @@ class SportRadarEventDetailsStorage {
 
 }
 
-extension SportRadarEventDetailsStorage {
+extension SportRadarEventStorage {
 
 //    func removedEvent(withId id: String) {
 //        guard let event = self.eventSubject.value else { return }
@@ -116,7 +116,7 @@ extension SportRadarEventDetailsStorage {
     // Live data updates
     func updateEventStatus(newStatus: String) {
         guard let event = self.eventSubject.value else { return }
-        event.status = Event.Status(value: newStatus)
+        event.status = EventStatus(value: newStatus)
         eventSubject.send(event)
     }
 
@@ -139,19 +139,14 @@ extension SportRadarEventDetailsStorage {
 
 }
 
-extension SportRadarEventDetailsStorage {
+extension SportRadarEventStorage {
 
     func subscribeToEventLiveDataUpdates(withId id: String) -> AnyPublisher<Event?, Never> {
         return self.eventSubject.eraseToAnyPublisher()
     }
 
     func subscribeToEventMarketUpdates(withId id: String) -> AnyPublisher<Market, Never>? {
-        if let publisher = self.marketsDictionary[id] {
-            return publisher.eraseToAnyPublisher()
-        }
-        else {
-            return nil
-        }
+        return self.marketsDictionary[id]?.eraseToAnyPublisher()
     }
 
     func subscribeToEventOutcomeUpdates(withId id: String) -> AnyPublisher<Outcome, Never>? {
@@ -168,10 +163,6 @@ extension SportRadarEventDetailsStorage {
 
     func containsOutcome(withid id: String) -> Bool {
         return self.outcomesDictionary[id] != nil
-    }
-
-    func setEventSubject(eventId: String) {
-        self.eventSubject.value?.id = eventId
     }
 
 }

@@ -29,6 +29,7 @@ class PaymentsBrowserViewController: UIViewController {
         return webView
     }()
 
+
     private lazy var loadingBaseView: UIView = Self.createLoadingBaseView()
     private lazy var loadingActivityIndicatorView: UIActivityIndicatorView = Self.createLoadingActivityIndicatorView()
 
@@ -122,25 +123,22 @@ extension PaymentsBrowserViewController: WKNavigationDelegate {
     
     func webView(_ webView: WKWebView, didStartProvisionalNavigation navigation: WKNavigation!) {
         self.showLoading()
-        print("PaymentsBrowserViewController didStartProvisionalNavigation: \(navigation)")
     }
     
     func webView(_ webView: WKWebView, didFinish navigation: WKNavigation!) {
         self.hideLoading()
-        print("PaymentsBrowserViewController didFinish: \(navigation)")
     }
     
     func webView(_ webView: WKWebView, didFail navigation: WKNavigation!, withError error: Error) {
         self.hideLoading()
-        print("PaymentsBrowserViewController failed with error: \(error)")
     }
     
     func webView(_ webView: WKWebView, decidePolicyFor navigationAction: WKNavigationAction, decisionHandler: @escaping (WKNavigationActionPolicy) -> Void) {
-        print("PaymentsBrowserViewController decidePolicyFor: \(navigationAction)")
         decisionHandler(.allow)
     }
     
 }
+
 
 extension PaymentsBrowserViewController {
 

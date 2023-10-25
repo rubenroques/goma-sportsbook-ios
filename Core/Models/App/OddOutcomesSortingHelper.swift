@@ -14,11 +14,19 @@ struct OddOutcomesSortingHelper {
         case "yes": return 10
         case "no": return 20
 
+        case "oui": return 10
+        case "non": return 20
+            
         case "home": return 10
         case "draw": return 20
         case "none": return 21
         case "": return 22
         case "away": return 30
+            
+        case "domicile": return 10
+        case "nul": return 20
+        case "aucun": return 21
+        case "extérieur": return 30
 
         case "home_draw": return 10
         case "home_away": return 20
@@ -27,9 +35,15 @@ struct OddOutcomesSortingHelper {
         case "over": return 10
         case "under": return 20
 
+        case "plus": return 10
+        case "moins": return 20
+
         case "odd": return 10
         case "even": return 20
 
+        case "impair": return 10
+        case "pair": return 20
+            
         case "exact": return 10
         case "range": return 20
         case "more_than": return 30

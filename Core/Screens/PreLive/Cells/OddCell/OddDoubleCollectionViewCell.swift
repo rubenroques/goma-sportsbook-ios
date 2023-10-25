@@ -124,6 +124,8 @@ class OddDoubleCollectionViewCell: UICollectionViewCell {
         self.leftOddValueLabel.text = "-"
         self.rightOddValueLabel.text = "-"
 
+        self.suspendedLabel.text = localized("suspended")
+        
         self.suspendedBaseView.isHidden = true
 
         self.leftUpChangeOddValueImage.alpha = 0.0

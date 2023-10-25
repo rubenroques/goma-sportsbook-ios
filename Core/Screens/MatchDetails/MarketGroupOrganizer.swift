@@ -18,7 +18,7 @@ protocol MarketGroupOrganizer {
 
 }
 
-struct MarketGroup {
+struct MarketGroup: Equatable {
     let id: String
     let type: String
     let groupKey: String?
@@ -488,6 +488,71 @@ struct UnorderedGroupMarketGroupOrganizer: MarketGroupOrganizer {
         }
 
         self.maxLineValue = ceil(Double(self.sortedOutcomes.count)/Double(self.maxColumnValue))
+    }
+
+    var marketId: String {
+        return self.id
+    }
+
+    var marketName: String {
+        return "\(name)"
+    }
+
+    var numberOfColumns: Int {
+        return self.maxColumnValue
+    }
+
+    var numberOfLines: Int {
+        return Int(self.maxLineValue)
+    }
+
+    func outcomeFor(column: Int, line: Int) -> Outcome? {
+        let index = (line * numberOfColumns) + column
+        if let outcome = self.sortedOutcomes[safe: index] {
+            return outcome
+        }
+        return nil
+    }
+}
+
+
+struct SimpleListGroupMarketGroupOrganizer: MarketGroupOrganizer {
+
+    var id: String
+    var name: String
+    var outcomes: [String: [Outcome]]
+
+    private var sortedOutcomes: [Outcome]
+
+    private var maxColumnValue: Int
+    private var maxLineValue: Double
+
+    init(id: String, name: String, outcomes: [String: [Outcome]]) {
+
+        self.id = id
+        self.name = name
+        self.outcomes = outcomes
+
+        self.sortedOutcomes = []
+
+        for outcome in outcomes {
+            self.sortedOutcomes.append(contentsOf: outcome.value)
+        }
+
+        if outcomes.keys.contains("A") || outcomes.keys.contains("D") || outcomes.keys.contains("H") {
+
+            self.sortedOutcomes = []
+
+            let sortedOutcomes = outcomes.sorted(by: { $0.0 > $1.0 })
+
+            for outcome in sortedOutcomes {
+                self.sortedOutcomes.append(contentsOf: outcome.value)
+            }
+
+        }
+
+        self.maxColumnValue = 1
+        self.maxLineValue = Double(self.sortedOutcomes.count)
     }
 
     var marketId: String {

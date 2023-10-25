@@ -108,7 +108,7 @@ class SportRadarSocketConnector: NSObject, Connector {
     func refreshConnection() {
         self.isConnected = false
         self.socket.forceDisconnect()
-        self.socket = WebSocket.init(request: Self.socketRequest(), useCustomEngine: false)
+        self.socket = WebSocket.init(request: Self.socketRequest(), useCustomEngine: true)
         self.connectSocket()
     }
     
@@ -133,7 +133,7 @@ extension SportRadarSocketConnector: Starscream.WebSocketDelegate {
         switch event {
         case .connected(let headers):
             self.sendListeningStarted()
-            print("ServiceProvider - SportRadarSocketConnector websocket is connected: \(headers)")
+            print("ServiceProvider - SportRadarSocketConnector websocket 🟢 is connected : \(headers)")
 
         case .disconnected(let reason, let code):
             self.isConnected = false
@@ -169,7 +169,7 @@ extension SportRadarSocketConnector: Starscream.WebSocketDelegate {
             print("ServiceProvider - SportRadarSocketConnector cancelled")
         case .error(let error):
             self.isConnected = false
-            print("ServiceProvider - SportRadarSocketConnector websocket Error \(error.debugDescription)")
+            print("ServiceProvider - SportRadarSocketConnector websocket ❌ Error \(error.debugDescription)")
             self.refreshConnection()
         case .peerClosed:
             self.refreshConnection()
@@ -243,9 +243,12 @@ extension SportRadarSocketConnector: Starscream.WebSocketDelegate {
                     if let subscriber = self.messageSubscriber, let eventLiveDataExtendedValue = eventLiveDataExtended {
                         subscriber.eventDetailsLiveData(contentIdentifier: contentIdentifier, eventLiveDataExtended: eventLiveDataExtendedValue)
                     }
+                case .unknown:
+                    print("❓SportRadarSocketConnector handleContentMessage unknown: \(content)")
+                    
                 default:
                     if let subscriber = self.messageSubscriber {
-                        print("*️⃣SportRadarSocketConnector handleContentMessage didReceiveGenericUpdate:\n  - \(content)")
+                        print("*️⃣SportRadarSocketConnector handleContentMessage didReceiveGenericUpdate: \n  - \(content)")
                         subscriber.didReceiveGenericUpdate(content: content)
                     }
                 }

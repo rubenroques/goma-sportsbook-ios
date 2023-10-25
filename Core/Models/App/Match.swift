@@ -12,6 +12,32 @@ enum HighlightedMatchType {
     case visualImageMatch(Match)
 }
 
+struct MatchLiveData: Equatable {
+    
+    var id: String
+    var homeScore: Int?
+    var awayScore: Int?
+    var matchTime: String?
+    var status: Match.Status?
+    
+    enum CodingKeys: String, CodingKey {
+        case id = "id"
+        case homeScore = "homeScore"
+        case awayScore = "awayScore"
+        case matchTime = "matchTime"
+        case status = "status"
+    }
+    
+    init(id: String, homeScore: Int?, awayScore: Int?, matchTime: String?, status: Match.Status?) {
+        self.id = id
+        self.homeScore = homeScore
+        self.awayScore = awayScore
+        self.matchTime = matchTime
+        self.status = status
+    }
+    
+}
+
 struct Match: Equatable {
 
     var id: String
@@ -105,7 +131,6 @@ struct Match: Equatable {
         self.promoImageURL = promoImageURL
         self.oldMainMarketId = oldMainMarketId
     }
-
 
 }
 

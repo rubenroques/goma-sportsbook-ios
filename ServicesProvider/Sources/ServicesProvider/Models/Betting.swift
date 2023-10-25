@@ -163,7 +163,13 @@ public struct BetTicket: Codable {
     }
 }
 
-public enum OddFormat: Codable {
+public enum BetslipOddChangeSetting: String, Codable, Equatable, Hashable {
+    case none
+    case any
+    case higher
+}
+    
+public enum OddFormat: Codable, Equatable, Hashable {
     case fraction(numerator: Int, denominator: Int)
     case decimal(odd: Double)
 
@@ -294,10 +300,10 @@ public struct PlacedBetLeg: Codable {
 
 public struct BetslipSettings: Codable {
 
-    public var acceptingAnyReoffer: Bool
+    public var oddChange: BetslipOddChangeSetting
 
-    public init(acceptingAnyReoffer: Bool) {
-        self.acceptingAnyReoffer = acceptingAnyReoffer
+    public init(oddChange: BetslipOddChangeSetting) {
+        self.oddChange = oddChange
     }
     
 }

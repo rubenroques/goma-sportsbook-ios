@@ -324,7 +324,7 @@ class SimpleRegisterDetailsViewController: UIViewController {
         let email = emailHeaderTextView.text
         let password = passwordHeaderTextView.text
         let confirmPassword = confirmPasswordHeaderTextView.text
-        let emailVerificationURL = EveryMatrixInfo.emailVerificationURL(withUserEmail: email)
+        let emailVerificationURL = ""
 
         if password != confirmPassword {
             passwordHeaderTextView.showErrorOnField(text: localized("password_not_match"), color: UIColor.App.alertError)

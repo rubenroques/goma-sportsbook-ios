@@ -120,6 +120,8 @@ class OverUnderMarketDetailTableViewCell: UITableViewCell {
 
         self.leftColumnsStackView.removeAllArrangedSubviews()
         self.rightColumnsStackView.removeAllArrangedSubviews()
+        
+        self.rightColumnsBaseView.isHidden = false
     }
 
     override func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {
@@ -159,6 +161,10 @@ class OverUnderMarketDetailTableViewCell: UITableViewCell {
 
         if marketGroupOrganizer.numberOfLines <= collapsedMaxNumberOfLines {
             self.expandBaseView.isHidden = true
+        }
+        
+        if marketGroupOrganizer.numberOfColumns == 1 {
+            self.rightColumnsBaseView.isHidden = true
         }
         
         for line in 0 ..< marketGroupOrganizer.numberOfLines {

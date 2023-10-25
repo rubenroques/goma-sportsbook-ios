@@ -98,9 +98,7 @@ class ContactSettingsViewModel {
         if let versionId = self.userConsents?.filter({
             $0.consentType == .sms
         }).first?.consentVersionId {
-
             self.setUserConsents(versionId: versionId, isConsent: enabled)
-
         }
 
     }
@@ -120,6 +118,16 @@ class ContactSettingsViewModel {
 
     }
 
+    func updateTerms() {
+
+        if let versionId = self.userConsents?.filter({
+            $0.consentType == .terms
+        }).first?.consentVersionId {
+            self.setUserConsents(versionId: versionId, isConsent: true)
+        }
+
+    }
+    
     private func postOddsSettingsToGoma() {
         let notificationsUserSettings = UserDefaults.standard.notificationsUserSettings
         Env.gomaNetworkClient.postNotificationsUserSettings(deviceId: Env.deviceId, notificationsUserSettings: notificationsUserSettings)
@@ -150,13 +158,9 @@ class ContactSettingsViewModel {
                 self?.isLoadingPublisher.send(false)
 
             }, receiveValue: { [weak self] basicResponse in
-
                 if let notificationUserSettings = self?.notificationsUserSettings {
-
                     UserDefaults.standard.notificationsUserSettings = notificationUserSettings
-
                 }
-
             })
             .store(in: &cancellables)
     }

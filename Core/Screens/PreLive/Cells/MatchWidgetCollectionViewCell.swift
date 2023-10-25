@@ -293,7 +293,13 @@ class MatchWidgetCollectionViewCell: UICollectionViewCell {
 
     //
     //
-    var viewModel: MatchWidgetCellViewModel?
+    var viewModel: MatchWidgetCellViewModel? {
+        didSet {
+            if self.viewModel?.match.id == "3234891.1" {
+                print("TapBug stop 4 \(self.viewModel?.match.markets.map({ return "\($0.name) "}) )")
+            }
+        }
+    }
 
     static var normalCellHeight: CGFloat = 156
     static var smallCellHeight: CGFloat = 90
@@ -323,7 +329,7 @@ class MatchWidgetCollectionViewCell: UICollectionViewCell {
     private var middleOddButtonSubscriber: AnyCancellable?
     private var rightOddButtonSubscriber: AnyCancellable?
 
-    private var matchSubscriber: AnyCancellable?
+    private var matchLiveDataSubscriber: AnyCancellable?
     private var marketSubscriber: AnyCancellable?
 
     private var leftOutcome: Outcome?
@@ -354,6 +360,8 @@ class MatchWidgetCollectionViewCell: UICollectionViewCell {
     private var middleOutcomeDisabled: Bool = false
     private var rightOutcomeDisabled: Bool = false
 
+    private var liveMatchDetailsSubscription: ServicesProvider.Subscription?
+    
     private var cancellables: Set<AnyCancellable> = []
 
     override func awakeFromNib() {
@@ -461,6 +469,8 @@ class MatchWidgetCollectionViewCell: UICollectionViewCell {
         self.dateLabel.text = ""
         self.timeLabel.text = ""
 
+        self.suspendedLabel.text = localized("suspended")
+        
         self.locationFlagImageView.image = nil
         self.sportTypeImageView.image = nil
 
@@ -996,6 +1006,10 @@ class MatchWidgetCollectionViewCell: UICollectionViewCell {
 
     func configure(withViewModel viewModel: MatchWidgetCellViewModel) {
 
+        if viewModel.match.id == "3234891.1" {
+            print("TapBug stop 3 \(viewModel.match.markets.map({ return "\($0.name) "}) ) ")
+        }
+        
         self.viewModel = viewModel
         self.matchWidgetType = viewModel.matchWidgetType
 
@@ -1095,36 +1109,35 @@ class MatchWidgetCollectionViewCell: UICollectionViewCell {
 
         //
         //
-        //
-        self.matchSubscriber?.cancel()
-        self.matchSubscriber = nil
+        self.matchLiveDataSubscriber?.cancel()
+        self.matchLiveDataSubscriber = nil
         
-//
-//  TODO: Lots of requests!
-//
-        self.matchSubscriber = Env.servicesProvider.subscribeToEventLiveDataUpdates(withId: viewModel.match.id)
+        self.matchLiveDataSubscriber = Env.servicesProvider.subscribeToEventLiveDataUpdates(withId: viewModel.match.id)
             .receive(on: DispatchQueue.main)
             .compactMap({ $0 })
             .map(ServiceProviderModelMapper.match(fromEvent:))
             .sink(receiveCompletion: { completion in
                 print("MatchWidgetCollectionViewCell matchSubscriber subscribeToEventLiveDataUpdates completion: \(completion)")
             }, receiveValue: { [weak self] updatedMatch in
-                self?.viewModel?.match = updatedMatch
+                guard let self = self else { return }
+                
+                // Temp live data viewModel
+                let liveDataViewModel = MatchWidgetCellViewModel(match: updatedMatch)
+                
+                self.dateLabel.text = "\(liveDataViewModel.startDateString)"
+                self.timeLabel.text = "\(liveDataViewModel.startTimeString)"
 
-                self?.dateLabel.text = "\(viewModel.startDateString)"
-                self?.timeLabel.text = "\(viewModel.startTimeString)"
+                self.resultLabel.text = "\(liveDataViewModel.matchScore)"
+                self.matchTimeLabel.text = liveDataViewModel.matchTimeDetails
 
-                self?.resultLabel.text = "\(viewModel.matchScore)"
-                self?.matchTimeLabel.text = viewModel.matchTimeDetails
-
-                if viewModel.isLiveMatch {
-                    self?.liveMatchDotBaseView.isHidden = false
+                if liveDataViewModel.isLiveMatch {
+                    self.liveMatchDotBaseView.isHidden = false
                 }
                 else {
-                    self?.liveMatchDotBaseView.isHidden = true
+                    self.liveMatchDotBaseView.isHidden = true
                 }
             })
-
+        
         if let market = viewModel.match.markets.first {
 
             self.marketSubscriber = Env.servicesProvider.subscribeToEventMarketUpdates(withId: market.id)

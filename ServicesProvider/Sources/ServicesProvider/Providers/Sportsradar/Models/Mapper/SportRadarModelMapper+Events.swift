@@ -55,18 +55,34 @@ extension SportRadarModelMapper {
                      matchTime: internalEvent.matchTime)
     }
 
-    static func eventStatus(fromInternalEvent internalEventStatus: SportRadarModels.Event.Status) -> Event.Status? {
+    static func eventStatus(fromInternalEvent internalEventStatus: SportRadarModels.EventStatus) -> EventStatus? {
         switch internalEventStatus {
         case .unknown:
             return nil
         case .notStarted:
-            return Event.Status.notStarted
+            return EventStatus.notStarted
         case .inProgress(let detail):
-            return Event.Status.inProgress(detail)
+            return EventStatus.inProgress(detail)
         case .ended:
-            return Event.Status.ended
+            return EventStatus.ended
         }
     }
+    
+    static func eventLiveData(fromInternalEventLiveData internalEventLiveData: SportRadarModels.EventLiveDataExtended) -> EventLiveData {
+        
+        var eventStatus: EventStatus?
+        if let statusValue = internalEventLiveData.status {
+            eventStatus = Self.eventStatus(fromInternalEvent: statusValue)
+        }
+        
+        return EventLiveData(id: internalEventLiveData.id,
+                             homeScore: internalEventLiveData.homeScore,
+                             awayScore: internalEventLiveData.awayScore,
+                             matchTime: internalEventLiveData.matchTime,
+                             status: eventStatus)
+    }
+    
+    
     
     static func market(fromInternalMarket internalMarket: SportRadarModels.Market) -> Market {
         let outcomes = internalMarket.outcomes.map(Self.outcome(fromInternalOutcome:))

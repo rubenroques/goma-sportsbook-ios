@@ -1143,6 +1143,26 @@ extension RootViewController {
         if let loggedUser = Env.userSessionStore.loggedUserProfile {
             let profileViewController = ProfileViewController(userProfile: loggedUser)
             let navigationViewController = Router.navigationController(with: profileViewController)
+            
+            profileViewController.requestRegisterAction = { [weak self] in
+                navigationViewController.dismiss(animated: true, completion: {
+                    self?.presentRegisterScreen()
+                })
+            }
+
+            profileViewController.requestHomeAction = { [weak self] in
+                navigationViewController.dismiss(animated: true, completion: {
+                    self?.didTapHomeTabItem()
+                })
+            }
+            
+            profileViewController.requestBetSwipeAction = { [weak self] in
+                navigationViewController.dismiss(animated: true, completion: {
+                    self?.didTapHomeTabItem()
+                    self?.homeViewController.openBetSwipe()
+                })
+            }
+            
             self.present(navigationViewController, animated: true, completion: nil)
         }
     }
@@ -1168,6 +1188,19 @@ extension RootViewController {
             })
         }
 
+        anonymousSideMenuViewController.requestHomeAction = { [weak self] in
+            anonymousNavigationViewController.dismiss(animated: true, completion: {
+                self?.didTapHomeTabItem()
+            })
+        }
+        
+        anonymousSideMenuViewController.requestBetSwipeAction = { [weak self] in
+            anonymousNavigationViewController.dismiss(animated: true, completion: {
+                self?.didTapHomeTabItem()
+                self?.homeViewController.openBetSwipe()
+            })
+        }
+        
         self.present(anonymousNavigationViewController, animated: true, completion: nil)
     }
 

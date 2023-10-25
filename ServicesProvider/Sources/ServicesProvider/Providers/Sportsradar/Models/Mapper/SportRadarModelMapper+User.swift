@@ -552,6 +552,9 @@ extension SportRadarModelMapper {
         else if userConsentInfo.key == "email_promotions" {
             userConsentType = .email
         }
+        else if userConsentInfo.key == "terms" {
+            userConsentType = .terms
+        }
 
         return UserConsent(consentInfo: userConsentInfo, consentStatus: userConsentStatus, consentType: userConsentType)
     }

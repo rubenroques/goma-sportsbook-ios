@@ -58,8 +58,15 @@ class MarketGroupDetailsStore {
 
         for market in markets {
 
-            let similarMarketKey = "\(market.marketTypeId ?? "000")-\(match.homeParticipant.name ?? "x")-\(match.awayParticipant.name ?? "x")"
-
+            var similarMarketKey = "\(market.marketTypeId ?? "000")-\(match.homeParticipant.name )-\(match.awayParticipant.name)"
+            
+            // Avoid grouping markets with this id
+            // add here if we need to ungroup more ids
+            if market.marketTypeId ?? "000" == "1492" {
+                similarMarketKey = "\(market.id)-\(match.homeParticipant.name )-\(match.awayParticipant.name)"
+            }
+            
+            //
             if self.firstMarketCache == nil {
                 self.firstMarketCache = market
             }
@@ -69,6 +76,7 @@ class MarketGroupDetailsStore {
             var sortedOutcomes: [Outcome] = []
 
             sortedOutcomes = outcomes.sorted { out1, out2 in
+
                 if let orderValue1 = out1.orderValue,
                    let orderValue2 = out2.orderValue {
                     let out1Value = OddOutcomesSortingHelper.sortValueForOutcome(orderValue1)
@@ -80,7 +88,6 @@ class MarketGroupDetailsStore {
                 let out2Value = OddOutcomesSortingHelper.sortValueForOutcome(out2.codeName)
                 return out1Value < out2Value
             }
-//            }
 
             let sortedOutcomeMarket = Market(id: market.id,
                                 typeId: market.typeId,
@@ -160,27 +167,16 @@ class MarketGroupDetailsStore {
                     }
                 }
 
-                // Need to full verify if needed
-//                if let drawKey = outcomesDictionary["D"],
-//                   outcomesDictionary.keys.count > 3 {
-//
-//                    for outcome in outcomesDictionary {
-//                        if outcome.key != "A" && outcome.key != "D" && outcome.key != "H" {
-//                            if let outcomeSelected = outcome.value.first,
-//                            var outcomesList = outcomesDictionary["D"] {
-//                                outcomesList.append(outcomeSelected)
-//                                outcomesDictionary["D"] = outcomesList
-//                                outcomesDictionary[outcome.key] = nil
-//                            }
-//                        }
-//                    }
-//                }
-
-
                 //
                 // Select the correct organizer
                 //
-                if outcomesDictionary.keys.count == 1 && (outcomesDictionary.keys.first == "" || outcomesDictionary.keys.first == "exact") {
+                if marketGroupName.contains("&") {
+                    let simpleListGroupMarketGroupOrganizer = SimpleListGroupMarketGroupOrganizer(id: firstMarket.id,
+                                                                                             name: marketGroupName,
+                                                                                             outcomes: outcomesDictionary)
+                    marketGroupOrganizers.append(simpleListGroupMarketGroupOrganizer)
+                }
+                else if outcomesDictionary.keys.count == 1 && (outcomesDictionary.keys.first == "" || outcomesDictionary.keys.first == "exact") {
 
                     // Undefined markets without keys for outcomes grouping
                     let sequentialMarketGroupOrganizer = SequentialMarketGroupOrganizer(id: firstMarket.id,

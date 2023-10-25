@@ -21,8 +21,13 @@ class MatchDetailsViewModel: NSObject {
     var homeRedCardsScorePublisher: CurrentValueSubject<String, Never> = .init("0")
     var awayRedCardsScorePublisher: CurrentValueSubject<String, Never> = .init("0")
 
-    var matchModePublisher: CurrentValueSubject<MatchMode, Never> = .init(.preLive)
-    var matchPublisher: CurrentValueSubject<LoadableContent<Match>, Never> = .init(.idle)
+    var matchPublisher: AnyPublisher<LoadableContent<Match>, Never> {
+        return self.matchCurrentValueSubject
+            .removeDuplicates()
+            .eraseToAnyPublisher()
+    }
+
+    private var matchCurrentValueSubject: CurrentValueSubject<LoadableContent<Match>, Never> = .init(.idle)
 
     var marketGroupsState: CurrentValueSubject<LoadableContent<[MarketGroup]>, Never> = .init(.idle)
     var selectedMarketTypeIndexPublisher: CurrentValueSubject<Int?, Never> = .init(nil)
@@ -33,7 +38,7 @@ class MatchDetailsViewModel: NSObject {
     var fieldWidgetRenderDataType: FieldWidgetRenderDataType?
 
     var match: Match? {
-        switch matchPublisher.value {
+        switch matchCurrentValueSubject.value {
         case .loaded(let match):
             return match
         default:
@@ -43,7 +48,6 @@ class MatchDetailsViewModel: NSObject {
 
     var marketFilters: [EventMarket]?
     var availableMarkets: [String: [String]] = [:]
-    var marketGroups: [MarketGroup] = []
 
     var isLiveMatch: Bool {
         if let match = self.match {
@@ -99,7 +103,6 @@ class MatchDetailsViewModel: NSObject {
     init(matchMode: MatchMode = .preLive, match: Match) {
         self.matchId = match.id
         self.matchStatsViewModel = MatchStatsViewModel(matchId: match.id)
-        self.matchModePublisher.send(matchMode)
 
         super.init()
 
@@ -110,7 +113,6 @@ class MatchDetailsViewModel: NSObject {
     init(matchMode: MatchMode = .preLive, matchId: String) {
         self.matchId = matchId
         self.matchStatsViewModel = MatchStatsViewModel(matchId: matchId)
-        self.matchModePublisher.send(matchMode)
 
         super.init()
 
@@ -149,8 +151,11 @@ class MatchDetailsViewModel: NSObject {
     }
 
     func getMatchDetails() {
+        
+        let eventDetailsPublisher = Env.servicesProvider.subscribeEventDetails(eventId: self.matchId)
 
-        Env.servicesProvider.subscribeEventDetails(eventId: self.matchId)
+        // Subscribe to the content of the event details
+        eventDetailsPublisher
             .receive(on: DispatchQueue.main)
             .sink(receiveCompletion: { [weak self] completion in
                 switch completion {
@@ -159,12 +164,12 @@ class MatchDetailsViewModel: NSObject {
                 case .failure(let error):
                     switch error {
                     case .resourceUnavailableOrDeleted: // This match is no longer available
-                        self?.matchPublisher.send(.failed)
+                        self?.matchCurrentValueSubject.send(.failed)
                         self?.marketGroupsState.send(.failed)
 
                     default:
                         print("MatchDetailsViewModel getMatchDetails Error retrieving data! \(error)")
-                        self?.matchPublisher.send(.failed)
+                        self?.matchCurrentValueSubject.send(.failed)
                         self?.marketGroupsState.send(.failed)
                     }
                 }
@@ -174,90 +179,81 @@ class MatchDetailsViewModel: NSObject {
                     self?.subscription = subscription
                 case .contentUpdate(let serviceProviderEvent):
                     guard let self = self else { return }
-
                     let match = ServiceProviderModelMapper.match(fromEvent: serviceProviderEvent)
-
-                    switch match.status {
-                    case .notStarted, .ended, .unknown:
-                        self.matchModePublisher.send(.preLive)
-                    case .inProgress:
-                        self.matchModePublisher.send(.live)
-                    }
-
-                    self.matchPublisher.send(.loaded(match))
-
-                    if self.marketGroups.isEmpty {
-                        self.getMarketGroups(event: serviceProviderEvent)
-                    }
-                    else {
-                        let marketGroups = self.marketGroups
-                        self.marketGroupsState.send(.loaded(marketGroups))
-                    }
-                    self.getMatchLiveDetails()
+                    self.matchCurrentValueSubject.send(.loaded(match))
+                    
                 case .disconnected:
                     print("MatchDetailsViewModel getMatchDetails subscribeEventDetails disconnected")
                 }
             })
-            .store(in: &cancellables)
-
-    }
-
-    func getMatchLiveDetails() {
-//
-        Env.servicesProvider.subscribeToEventLiveDataUpdates(withId: self.matchId)
-            .compactMap({ $0 })
-            .map(ServiceProviderModelMapper.match(fromEvent:))
-            .sink(receiveCompletion: { completion in
-                print("MatchDetailsViewModel matchSubscriber subscribeToEventLiveDataUpdates completion: \(completion)")
-            }, receiveValue: { [weak self] updatedMatch in
-                switch updatedMatch.status {
-                case .notStarted, .ended, .unknown:
-                    self?.matchModePublisher.send(.preLive)
-                case .inProgress:
-                    self?.matchModePublisher.send(.live)
-                }
-                self?.matchPublisher.send(.loaded(updatedMatch))
-            })
             .store(in: &self.cancellables)
 
-    }
+        // The first published value of the full
+        // match should trigger the match market groups flow
+        let matchDetailsRecievedPublisher = eventDetailsPublisher
+            .replaceError(with: .disconnected)
+            .filter { (subscribableContent: SubscribableContent<ServicesProvider.Event>) -> Bool in
+                if case .contentUpdate = subscribableContent {
+                    return true
+                }
+                return false
+            }
+            .first()
+            .map({ subscribableContent -> Optional<ServicesProvider.Event> in
+                if case .contentUpdate(let event) = subscribableContent {
+                    return event
+                }
+                return nil
+            })
+            .compactMap({ $0 })
+            .eraseToAnyPublisher()
+        
+        // Show marketGroups loading
+        matchDetailsRecievedPublisher.map({ _ in
+            return ()
+        })
+        .sink { [weak self] in
+            self?.marketGroupsState.send(.loading)
+        }
+        .store(in: &self.cancellables)
 
-    //
-    //
-    private func getMarketGroups(event: ServicesProvider.Event) {
-
-        self.marketGroupsState.send(.loading)
-
-        Env.servicesProvider.getMarketsFilters(event: event)
-            .map(self.convertMarketGroups(_:))
-            .receive(on: DispatchQueue.main)
-            .sink(receiveCompletion: { [weak self] completion in
+        // Request the remaining marketGroups details
+        matchDetailsRecievedPublisher
+            .flatMap({ (event: ServicesProvider.Event) -> AnyPublisher<[MarketGroup], Never> in
+                return Env.servicesProvider.getMarketsFilters(event: event)
+                        .map(Self.convertMarketGroups(_:))
+                        .eraseToAnyPublisher()
+            })
+            .sink { [weak self] completion in
                 if case .failure = completion {
                     self?.marketGroupsState.send(.failed)
                 }
-            }, receiveValue: { [weak self] marketGroups in
-                self?.marketGroups = marketGroups
+            } receiveValue: { [weak self] marketGroups in
                 self?.marketGroupsState.send(.loaded(marketGroups))
-            })
-            .store(in: &cancellables)
+            }
+            .store(in: &self.cancellables)
+        
+        
     }
 
-    private func convertMarketGroups(_ marketGroups: [ServicesProvider.MarketGroup]) -> [MarketGroup] {
-        let marketGroups = marketGroups.map { rawMarketGroup in
-            MarketGroup(id: rawMarketGroup.id,
-                        type: rawMarketGroup.type,
-                        groupKey: rawMarketGroup.groupKey,
-                        translatedName: rawMarketGroup.translatedName,
-                        isDefault: rawMarketGroup.isDefault,
-                        markets: ServiceProviderModelMapper.optionalMarkets(fromServiceProviderMarkets: rawMarketGroup.markets),
-                        position: rawMarketGroup.position)
-
-        }
-        let sortedMarketGroups = marketGroups.sorted(by: {
-            $0.position ?? 0 < $1.position ?? 99
-        })
-        return sortedMarketGroups
-    }
+    //
+    //
+//    private func getMarketGroups(event: ServicesProvider.Event) {
+//
+//        self.marketGroupsState.send(.loading)
+//
+//        Env.servicesProvider.getMarketsFilters(event: event)
+//            .map(Self.convertMarketGroups(_:))
+//            .receive(on: DispatchQueue.main)
+//            .sink(receiveCompletion: { [weak self] completion in
+//                if case .failure = completion {
+//                    self?.marketGroupsState.send(.failed)
+//                }
+//            }, receiveValue: { [weak self] marketGroups in
+//                self?.marketGroupsState.send(.loaded(marketGroups))
+//            })
+//            .store(in: &cancellables)
+//    }
 
     func getFieldWidget(isDarkTheme: Bool) {
 
@@ -299,6 +295,28 @@ class MatchDetailsViewModel: NSObject {
             return nil
         }
     }
+    
+}
+
+extension MatchDetailsViewModel {
+    
+    private static func convertMarketGroups(_ marketGroups: [ServicesProvider.MarketGroup]) -> [MarketGroup] {
+        let marketGroups = marketGroups.map { rawMarketGroup in
+            MarketGroup(id: rawMarketGroup.id,
+                        type: rawMarketGroup.type,
+                        groupKey: rawMarketGroup.groupKey,
+                        translatedName: rawMarketGroup.translatedName,
+                        isDefault: rawMarketGroup.isDefault,
+                        markets: ServiceProviderModelMapper.optionalMarkets(fromServiceProviderMarkets: rawMarketGroup.markets),
+                        position: rawMarketGroup.position)
+
+        }
+        let sortedMarketGroups = marketGroups.sorted(by: {
+            $0.position ?? 0 < $1.position ?? 99
+        })
+        return sortedMarketGroups
+    }
+
 }
 
 extension MatchDetailsViewModel: UICollectionViewDataSource, UICollectionViewDelegate {

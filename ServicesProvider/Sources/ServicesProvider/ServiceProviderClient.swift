@@ -192,6 +192,17 @@ extension ServicesProviderClient {
                                                       sortType: sortType)
     }
 
+    //
+    // Creates new Subscriptions
+    public func subscribeToMarketDetails(withId id: String, onEventId eventId: String) -> AnyPublisher<SubscribableContent<Market>, ServiceProviderError> {
+        guard
+            let eventsProvider = self.eventsProvider
+        else {
+            return Fail(error: ServiceProviderError.eventsProviderNotFound).eraseToAnyPublisher()
+        }
+        return eventsProvider.subscribeToMarketDetails(withId: id, onEventId: eventId)
+    }
+
     public func subscribeEventDetails(eventId: String) -> AnyPublisher<SubscribableContent<Event>, ServiceProviderError> {
         guard
             let eventsProvider = self.eventsProvider
@@ -200,7 +211,6 @@ extension ServicesProviderClient {
         }
         return eventsProvider.subscribeEventDetails(eventId: eventId)
     }
-
 
     public func subscribeCompetitionMatches(forMarketGroupId marketGroupId: String) -> AnyPublisher<SubscribableContent<[EventsGroup]>, ServiceProviderError> {
 
@@ -231,6 +241,19 @@ extension ServicesProviderClient {
         return eventsProvider.subscribeEventSummary(eventId: eventId)
     }
 
+    
+    public func subscribeToLiveDataUpdates(forEventWithId id: String) -> AnyPublisher<SubscribableContent<EventLiveData>, ServiceProviderError> {
+        guard
+            let eventsProvider = self.eventsProvider
+        else {
+            return Fail(error: ServiceProviderError.eventsProviderNotFound).eraseToAnyPublisher()
+        }
+        return eventsProvider.subscribeToLiveDataUpdates(forEventWithId: id)
+    }
+
+    //
+    // Uses the publishers from the events list (prelive and live)
+    //
     public func subscribeToEventLiveDataUpdates(withId id: String) -> AnyPublisher<Event?, ServiceProviderError> {
         guard
             let eventsProvider = self.eventsProvider
@@ -239,7 +262,7 @@ extension ServicesProviderClient {
         }
         return eventsProvider.subscribeToEventLiveDataUpdates(withId: id)
     }
-
+    
     public func subscribeToEventMarketUpdates(withId id: String) -> AnyPublisher<Market?, ServiceProviderError> {
         guard
             let eventsProvider = self.eventsProvider
@@ -258,17 +281,8 @@ extension ServicesProviderClient {
         return eventsProvider.subscribeToEventOutcomeUpdates(withId: id)
     }
 
-
-    public func subscribeToMarketDetails(withId id: String, onEventId eventId: String) -> AnyPublisher<SubscribableContent<Market>, ServiceProviderError> {
-        guard
-            let eventsProvider = self.eventsProvider
-        else {
-            return Fail(error: ServiceProviderError.eventsProviderNotFound).eraseToAnyPublisher()
-        }
-        return eventsProvider.subscribeToMarketDetails(withId: id, onEventId: eventId)
-    }
-
-
+    //
+    //
     public func getEventDetails(eventId: String) -> AnyPublisher<Event, ServiceProviderError> {
         guard
             let eventsProvider = self.eventsProvider
@@ -1258,6 +1272,16 @@ extension ServicesProviderClient {
             return Fail(error: ServiceProviderError.bettingProviderNotFound).eraseToAnyPublisher()
         }
         return bettingProvider.getTicketSelection(ticketSelectionId: ticketSelectionId)
+    }
+
+    public func getAllConsents() -> AnyPublisher<[ConsentInfo], ServiceProviderError> {
+        guard
+            let privilegedAccessManager = self.privilegedAccessManager
+        else {
+            return Fail(error: ServiceProviderError.privilegedAccessManagerNotFound).eraseToAnyPublisher()
+        }
+
+        return privilegedAccessManager.getAllConsents()
     }
 
     public func getUserConsents() -> AnyPublisher<[UserConsent], ServiceProviderError> {

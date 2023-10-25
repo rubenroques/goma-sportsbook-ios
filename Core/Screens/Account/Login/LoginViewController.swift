@@ -360,7 +360,8 @@ class LoginViewController: UIViewController {
 
     private func setUserConsents() {
 
-        Env.servicesProvider.setUserConsents(consentVersionIds: [UserConsentType.sms.versionId, UserConsentType.email.versionId])
+        let types = [UserConsentType.sms.versionId, UserConsentType.email.versionId]
+        Env.servicesProvider.setUserConsents(consentVersionIds: types)
             .receive(on: DispatchQueue.main)
             .sink(receiveCompletion: { completion in
                 switch completion {
@@ -376,6 +377,58 @@ class LoginViewController: UIViewController {
             })
             .store(in: &self.cancellables)
         
+    }
+    
+    private func setTermsConsents() {
+        
+        let types = [UserConsentType.terms.versionId]
+        
+        Env.servicesProvider.getAllConsents()
+            .filter({ consents in
+                return consents.contains { consent in
+                    consent.key == "terms"
+                }
+            })
+            .map({ consents -> ConsentInfo? in
+                return consents.filter { consent in
+                    consent.key == "terms"
+                }
+                .first
+            })
+            .compactMap({ $0 })
+            .flatMap({ consent in
+                return Env.servicesProvider.setUserConsents(consentVersionIds: [consent.consentVersionId])
+                    .eraseToAnyPublisher()
+            })
+            .receive(on: DispatchQueue.main)
+            .sink(receiveCompletion: { completion in
+                switch completion {
+                case .finished:
+                    print("LoginViewController setTermsConsents finished")
+                case .failure(let error):
+                    print("LoginViewController setTermsConsents failure with error \(error)")
+                }
+
+            }, receiveValue: { _ in
+                print("LoginViewController setTermsConsents ok")
+            })
+            .store(in: &self.cancellables)
+        
+//        
+//        Env.servicesProvider.setUserConsents(consentVersionIds: types)
+//            .receive(on: DispatchQueue.main)
+//            .sink(receiveCompletion: { completion in
+//                switch completion {
+//                case .finished:
+//                    print("LoginViewController setTermsConsents finished")
+//                case .failure(let error):
+//                    print("LoginViewController setTermsConsents failure with error \(error)")
+//                }
+//
+//            }, receiveValue: { _ in
+//                print("LoginViewController setTermsConsents ok")
+//            })
+//            .store(in: &self.cancellables)
     }
 
     private func showRegisterFeedbackViewController(onNavigationController navigationController: UINavigationController) {
@@ -498,32 +551,33 @@ class LoginViewController: UIViewController {
         
         Env.userSessionStore.login(withUsername: username, password: password)
             .receive(on: DispatchQueue.main)
-            .sink(receiveCompletion: { completion in
+            .sink(receiveCompletion: { [weak self] completion in
                 switch completion {
                 case .failure(let error):
                     switch error {
                     case .invalidEmailPassword:
-                        self.showWrongPasswordStatus()
-                    case .restrictedCountry(let errorMessage):
-                        self.showServerErrorStatus(errorMessage: errorMessage)
+                        self?.showWrongPasswordStatus()
+                    case .restrictedCountry:
+                        self?.showGenericServerErrorStatus()
                     case .serverError:
-                        self.showServerErrorStatus()
+                        self?.showGenericServerErrorStatus()
                     case .quickSignUpIncomplete:
-                        self.showServerErrorStatus()
-                    case .errorMessage(let errorMessage):
-                        self.showServerErrorStatus(errorMessage: errorMessage)
+                        self?.showGenericServerErrorStatus()
+                    case .errorMessage:
+                        self?.showGenericServerErrorStatus()
                     case .failedTempLock(let date):
                         let failedLockMessage = localized("omega_error_fail_temp_lock").replacingFirstOccurrence(of: "{date}", with: date)
-                        self.showServerErrorStatus(errorMessage: failedLockMessage)
+                        self?.showServerErrorStatus(errorMessage: failedLockMessage)
                     }
                 case .finished:
                     ()
                 }
-                self.hideLoadingSpinner()
-                self.loginButton.isEnabled = true
-            }, receiveValue: { _ in
+                self?.hideLoadingSpinner()
+                self?.loginButton.isEnabled = true
+            }, receiveValue: { [weak self] _ in
                 // self.showNextViewController()
-                self.loginSuccessful()
+                self?.loginSuccessful()
+                self?.setTermsConsents()
             })
             .store(in: &cancellables)
     }
@@ -537,10 +591,10 @@ class LoginViewController: UIViewController {
                 self?.deleteCachedRegistrationData()
             } receiveValue: { [weak self] success in
                 print("triggerLoginAfterRegister ", success)
-
                 if withUserConsents {
                     self?.setUserConsents()
                 }
+                self?.setTermsConsents()
             }
             .store(in: &cancellables)
     }
@@ -586,7 +640,6 @@ class LoginViewController: UIViewController {
 
         if let userId = Env.userSessionStore.loggedUserProfile?.userIdentifier {
             Optimove.shared.setUserId(userId)
-
         }
 
     }
@@ -640,7 +693,9 @@ class LoginViewController: UIViewController {
             self.present(alertController, animated: true)
         }
         else if let error = error as? LAError, error.code == .userCancel {
-            let alertController = UIAlertController(title: localized("biometric_error_title"), message: localized("biometric_error_denied_message"), preferredStyle: .alert)
+            let alertController = UIAlertController(title: localized("biometric_error_title"),
+                                                    message: localized("biometric_error_denied_message"),
+                                                    preferredStyle: .alert)
             let okAction = UIAlertAction(title: localized("ok"), style: .default, handler: { _ in
                 Env.userSessionStore.setShouldRequestBiometrics(false)
                 self.showNextViewController()
@@ -650,7 +705,9 @@ class LoginViewController: UIViewController {
 
         }
         else {
-            let alertController = UIAlertController(title: localized("biometric_error_title"), message: localized("biometric_error_general_message"), preferredStyle: .alert)
+            let alertController = UIAlertController(title: localized("biometric_error_title"),
+                                                    message: localized("biometric_error_general_message"),
+                                                    preferredStyle: .alert)
             let okAction = UIAlertAction(title: localized("ok"), style: .default, handler: { _ in
                 Env.userSessionStore.setShouldRequestBiometrics(false)
                 self.showNextViewController()
@@ -660,52 +717,33 @@ class LoginViewController: UIViewController {
         }
     }
 
-
-//    func authenticateUser(with context: LAContext) {
-//        context.evaluatePolicy(.deviceOwnerAuthenticationWithBiometrics, localizedReason: "Access requires authentication") { (success, error) in
-//            DispatchQueue.main.async {
-//                if success {
-//                    print("Authentication successful")
-//                } else {
-//                    print("Authentication failed")
-//                }
-//
-//                self.showNextViewController()
-//            }
-//        }
-//    }
-
     private func showWrongPasswordStatus() {
-        let alert = UIAlertController(title: localized("login_error_title"),
-                                      message: localized("login_error_message"),
+        let alert = UIAlertController(title: localized("error"),
+                                      message: localized("omega_error_fail_un_pw"),
                                       preferredStyle: .alert)
         alert.addAction(UIAlertAction(title: localized("ok"), style: .default, handler: nil))
         self.present(alert, animated: true, completion: nil)
     }
 
-    private func showServerErrorStatus(errorMessage: String? = nil) {
-        if let errorMessage = errorMessage {
-            let alert = UIAlertController(title: localized("login_error_title"),
-                                          message: errorMessage,
-                                          preferredStyle: .alert)
-            alert.addAction(UIAlertAction(title: localized("ok"), style: .default, handler: nil))
-            self.present(alert, animated: true, completion: nil)
-        }
-        else {
-            let alert = UIAlertController(title: localized("login_error_title"),
-                                          message: localized("server_error_message"),
-                                          preferredStyle: .alert)
-            alert.addAction(UIAlertAction(title: localized("ok"), style: .default, handler: nil))
-            self.present(alert, animated: true, completion: nil)
-        }
-
+    private func showGenericServerErrorStatus() {
+        let alert = UIAlertController(title: localized("error"),
+                                        message: localized("server_error_message"),
+                                        preferredStyle: .alert)
+        alert.addAction(UIAlertAction(title: localized("ok"), style: .default, handler: nil))
+        self.present(alert, animated: true, completion: nil)
     }
 
+    private func showServerErrorStatus(errorMessage: String) {
+        let alert = UIAlertController(title: localized("login_error_title"),
+                                      message: errorMessage,
+                                      preferredStyle: .alert)
+        alert.addAction(UIAlertAction(title: localized("ok"), style: .default, handler: nil))
+        self.present(alert, animated: true, completion: nil)
+    }
+    
     @IBAction private func didTapRecoverPassword() {
         let recoverPasswordViewModel = RecoverPasswordViewModel()
-
         let recoverPasswordViewController = RecoverPasswordViewController(viewModel: recoverPasswordViewModel)
-
         self.navigationController?.pushViewController(recoverPasswordViewController, animated: true)
     }
 

@@ -10,21 +10,45 @@ import Combine
 
 class SportRadarEventsPaginator {
 
-    var storage: SportRadarEventsStorage
-
-    var startPageIndex: Int = 0
-    var currentPage: Int
-
-    var hasNextPage: Bool = false
-
-    weak var subscription: Subscription?
+    let contentIdentifier: ContentIdentifier
+    
+    var eventsGroupPublisher: AnyPublisher<SubscribableContent<[EventsGroup]>, ServiceProviderError> {
+        if case let .connected(subscription) = eventsSubject.value {
+            return self.eventsSubject
+                .prepend(.connected(subscription: subscription))
+                .print("SportRadarEventsPaginator eventsGroupPublisher connected")
+                .eraseToAnyPublisher()
+        }
+        else if case .contentUpdate(_) = eventsSubject.value {
+            if let subscription = self.subscription {
+                return self.eventsSubject
+                    .prepend(.connected(subscription: subscription))
+                    .print("SportRadarEventsPaginator eventsGroupPublisher contentUpdate")
+                    .eraseToAnyPublisher()
+            }
+            else {
+                return self.eventsSubject.eraseToAnyPublisher()
+            }
+        }
+        else {
+            return self.eventsSubject.eraseToAnyPublisher()
+        }
+    }
+    
     var isActive: Bool {
         return self.subscription != nil
     }
     
-    let contentIdentifier: ContentIdentifier
+    weak var subscription: Subscription?
+    
+    private var storage: SportRadarEventsStorage
 
-    var sessionToken: String
+    private var startPageIndex: Int = 0
+    private var currentPage: Int
+
+    private var hasNextPage: Bool = false
+
+    private var sessionToken: String
 
     private var eventsPerPage: Int
 
@@ -44,50 +68,85 @@ class SportRadarEventsPaginator {
 
         self.eventsSubject = .init(.disconnected)
 
-        self.storage.eventsPublisher
-            .sink { [weak self] newEventsArray in
-                let storedEventsGroup = EventsGroup(events: newEventsArray, marketGroupId: nil)
-                self?.eventsSubject.send(.contentUpdate(content: [storedEventsGroup]))
+        Publishers.CombineLatest(self.storage.eventsPublisher,
+                                 self.eventsGroupPublisher.replaceError(with: .disconnected))
+            .filter({ storedEvents, eventsGroupPublisher in
+                switch eventsGroupPublisher {
+                case .connected, .contentUpdate:
+                    return true && (storedEvents != nil)
+                case .disconnected:
+                    return false
+                }
+            })
+            .compactMap({ (newEvents: [Event]?, _)  in
+                if let newEvents {
+                    return EventsGroup(events: newEvents, marketGroupId: nil)
+                }
+                else {
+                    return nil
+                }
+            })
+            .sink { [weak self] (newEventsGroup: EventsGroup) in
+                self?.eventsSubject.send(.contentUpdate(content: [newEventsGroup]))
             }
+            .store(in: &self.cancellables)
+        
+        self.requestInitialPage()
+            .retry(2)
+            .sink(receiveCompletion: { [weak self] completion in
+                switch completion {
+                case .finished:
+                    break
+                case .failure(let error):
+                    self?.eventsSubject.send(.disconnected)
+                    self?.eventsSubject.send(completion: .failure(error))
+                }
+            }, receiveValue: { [weak self] subscribableContent in
+                self?.eventsSubject.send(subscribableContent)
+                
+                if case .connected(let subscription) = subscribableContent {
+                    self?.subscription = subscription
+                }
+            })
             .store(in: &self.cancellables)
     }
 
+    deinit {
+        print("SportRadarEventsPaginator deinit \(self.contentIdentifier)")
+    }
+    
     //
-    func requestInitialPage() -> AnyPublisher<SubscribableContent<[EventsGroup]>, ServiceProviderError> {
-
-        let publisher = CurrentValueSubject<SubscribableContent<[EventsGroup]>, ServiceProviderError>.init(.disconnected)
-
-        let endpoint = SportRadarRestAPIClient.subscribe(sessionToken: self.sessionToken,
-                                                         contentIdentifier: self.contentIdentifier)
-        guard
-            let request = endpoint.request()
-        else {
+    private func requestInitialPage() -> AnyPublisher<SubscribableContent<[EventsGroup]>, ServiceProviderError> {
+        
+        let endpoint = SportRadarRestAPIClient.subscribe(sessionToken: self.sessionToken, contentIdentifier: self.contentIdentifier)
+        
+        guard let request = endpoint.request() else {
             return Fail(error: ServiceProviderError.invalidRequestFormat).eraseToAnyPublisher()
         }
 
-        let sessionDataTask = URLSession.shared.dataTask(with: request) { data, response, error in
-            guard
-                (error == nil),
-                let httpResponse = response as? HTTPURLResponse,
-                (200...299).contains(httpResponse.statusCode)
-            else {
-                print("SportRadarEventsPaginator: requestInitialPage - error on subscribe to topic \(dump(error)) \(dump(response))")
-                publisher.send(completion: .failure(ServiceProviderError.onSubscribe))
-                return
+        return Future<Subscription, ServiceProviderError> { promise in
+            let sessionDataTask = URLSession.shared.dataTask(with: request) { data, response, error in
+                guard
+                    error == nil,
+                    let httpResponse = response as? HTTPURLResponse,
+                    (200...299).contains(httpResponse.statusCode)
+                else {
+                    print("SportRadarEventsPaginator: requestInitialPage - error on subscribe to topic \(String(describing: dump(error))) \(String(describing: dump(response)))")
+                    promise(.failure(ServiceProviderError.onSubscribe))
+                    return
+                }
+                
+                let subscription = Subscription(contentIdentifier: self.contentIdentifier,
+                                                sessionToken: self.sessionToken,
+                                                unsubscriber: self)
+                promise(.success(subscription))
             }
-            let subscription = Subscription(contentIdentifier: self.contentIdentifier,
-                                            sessionToken: self.sessionToken,
-                                               unsubscriber: self)
-            publisher.send(.connected(subscription: subscription))
-            self.subscription = subscription
+            sessionDataTask.resume()
         }
-        sessionDataTask.resume()
-
-        self.eventsSubject = publisher
-
-        return self.eventsSubject
-            .print("PopularMatchesDataSource Debug Helper EventsPaginator")
-            .eraseToAnyPublisher()
+        .map { subscription in
+            return .connected(subscription: subscription)
+        }
+        .eraseToAnyPublisher()
     }
 
     // Return as boolean indicating if there is more pages
@@ -153,27 +212,6 @@ class SportRadarEventsPaginator {
         self.storage.storeEvents(events)
     }
 
-    func eventsPublisher() ->AnyPublisher<SubscribableContent<[EventsGroup]>, ServiceProviderError> {
-        if case let .connected(subscription) = eventsSubject.value {
-            return self.eventsSubject
-                .prepend(.connected(subscription: subscription))
-                .eraseToAnyPublisher()
-        }
-        else if case .contentUpdate(_) = eventsSubject.value {
-            if let subscription = self.subscription {
-                return self.eventsSubject
-                    .prepend(.connected(subscription: subscription))
-                    .eraseToAnyPublisher()
-            }
-            else {
-                return self.eventsSubject.eraseToAnyPublisher()
-            }
-        }
-        else {
-            return self.eventsSubject.eraseToAnyPublisher()
-        }
-    }
-
     func reconnect(withNewSessionToken newSessionToken: String) {
 
         // Update the socket session token
@@ -205,7 +243,6 @@ class SportRadarEventsPaginator {
                 }
             }
             sessionDataTask.resume()
-
         }
 
     }
@@ -216,22 +253,22 @@ extension SportRadarEventsPaginator {
 
     func handleContentUpdate(_ content: SportRadarModels.ContentContainer) {
 
-//        guard
-//            let updatedContentIdentifier = content.contentIdentifier
-//        else {
-//            // print("☁️SP debugdetails SportRadarEventsPaginator ignoring contentIdentifierLess \(content)")
-//            return
-//        }
-//
-//        if self.contentIdentifier.contentType == updatedContentIdentifier.contentType
-//            && self.contentIdentifier.contentRoute.pageableRoute == updatedContentIdentifier.contentRoute.pageableRoute {
-//            // It's a valid update for this paginator
-//        }
-//        else {
-//            // ignoring this update, not subscribed by this class
-//            // print("☁️SP debugdetails SportRadarEventsPaginator ignoring \(updatedContentIdentifier)")
-//            return
-//        }
+        guard
+            let updatedContentIdentifier = content.contentIdentifier
+        else {
+            // print("☁️SP debugdetails SportRadarEventsPaginator ignoring contentIdentifierLess \(content)")
+            return
+        }
+
+        if self.contentIdentifier.contentType == updatedContentIdentifier.contentType
+            && self.contentIdentifier.contentRoute.pageableRoute == updatedContentIdentifier.contentRoute.pageableRoute {
+            // It's a valid update for this paginator
+        }
+        else {
+            // ignoring this update, not subscribed by this class
+            // print("☁️SP debugdetails SportRadarEventsPaginator ignoring \(updatedContentIdentifier)")
+            return
+        }
 
         // print("☁️SP debugdetails SportRadarEventsPaginator handleContentUpdate \(content)")
 
