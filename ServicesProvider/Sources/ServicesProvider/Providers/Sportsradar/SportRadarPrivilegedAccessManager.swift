@@ -782,7 +782,9 @@ class SportRadarPrivilegedAccessManager: PrivilegedAccessManager {
                 return Just(processDepositResponse).setFailureType(to: ServiceProviderError.self).eraseToAnyPublisher()
             }
             else {
-                return Fail(outputType: ProcessDepositResponse.self, failure: ServiceProviderError.errorMessage(message: processDepositResponse.message ?? "Error")).eraseToAnyPublisher()
+                let messageKeyError = self.localizeOmegaErrorMessage(status: processDepositResponse.status)
+
+                return Fail(outputType: ProcessDepositResponse.self, failure: ServiceProviderError.errorMessage(message: messageKeyError)).eraseToAnyPublisher()
             }
         }).eraseToAnyPublisher()
     }
@@ -876,7 +878,9 @@ class SportRadarPrivilegedAccessManager: PrivilegedAccessManager {
                 return Just(processWithdrawalResponse).setFailureType(to: ServiceProviderError.self).eraseToAnyPublisher()
             }
             else {
-                return Fail(outputType: ProcessWithdrawalResponse.self, failure: ServiceProviderError.errorMessage(message: processWithdrawalResponse.message ?? "Error")).eraseToAnyPublisher()
+                let messageKeyError = self.localizeOmegaErrorMessage(status: processWithdrawalResponse.status)
+
+                return Fail(outputType: ProcessWithdrawalResponse.self, failure: ServiceProviderError.errorMessage(message: messageKeyError)).eraseToAnyPublisher()
             }
         }).eraseToAnyPublisher()
     }
@@ -1391,5 +1395,13 @@ extension SportRadarPrivilegedAccessManager: SportRadarSessionTokenUpdater {
         ]
 
         return headers
+    }
+
+    func localizeOmegaErrorMessage(status: String) -> String {
+
+        let sanitizedStatusName = status.replacingOccurrences(of: "[^a-zA-Z0-9]", with: "_", options: .regularExpression).lowercased()
+        let concatenatedString = "omega_error_\(sanitizedStatusName)"
+
+        return concatenatedString
     }
 }

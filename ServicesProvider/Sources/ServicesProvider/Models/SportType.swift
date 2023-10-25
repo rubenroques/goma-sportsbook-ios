@@ -476,7 +476,7 @@ enum SportTypeInfo: CaseIterable {
         case "38": self = .afl
         case "RBU": self = .rugbyUnion
         case "40": self = .bandy
-        case "41": self = .floorball
+        case "FLR": self = .floorball
         case "DAR": self = .darts
         case "46": self = .hurling
         case "GAF": self = .gaelicFootball

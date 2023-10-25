@@ -200,12 +200,6 @@ class LoginViewController: UIViewController {
 
     }
 
-    @objc private func tapTest() {
-        if let navVC = self.navigationController {
-            self.showRegisterFeedbackViewController(onNavigationController: navVC)
-        }
-    }
-
     @objc private func showDeposit() {
         if let navigationController = self.navigationController {
             self.showRegisterFeedbackViewController(onNavigationController: navigationController)
