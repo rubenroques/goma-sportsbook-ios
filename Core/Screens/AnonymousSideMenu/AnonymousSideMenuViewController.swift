@@ -137,7 +137,7 @@ class AnonymousSideMenuViewController: UIViewController {
 
         let betSwipeView = NavigationCardView()
         betSwipeView.hasNotifications = true
-        betSwipeView.setupView(title: "Bet Swipe", iconTitle: "betswipe_profile_icon")
+        betSwipeView.setupView(title: localized("bet_swipe"), iconTitle: "betswipe_profile_icon")
         let betSwipeTap = UITapGestureRecognizer(target: self, action: #selector(betSwipeViewTapped))
         betSwipeView.addGestureRecognizer(betSwipeTap)
 
@@ -167,12 +167,13 @@ class AnonymousSideMenuViewController: UIViewController {
         let supportTap = UITapGestureRecognizer(target: self, action: #selector(supportViewTapped))
         supportView.addGestureRecognizer(supportTap)
 
+        self.menusStackView.addArrangedSubview(responsibleGamingView)
         self.menusStackView.addArrangedSubview(replayView)
         self.menusStackView.addArrangedSubview(betSwipeView)
         self.menusStackView.addArrangedSubview(promotionsView)
 //        self.menusStackView.addArrangedSubview(recruitFriendView)
         self.menusStackView.addArrangedSubview(supportView)
-        self.menusStackView.addArrangedSubview(responsibleGamingView)
+        
     }
 
     // MARK: - Actions

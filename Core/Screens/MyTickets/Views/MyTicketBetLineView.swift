@@ -287,13 +287,26 @@ class MyTicketBetLineView: NibView {
             
             self.liveMatchDetailsCancellable = Env.servicesProvider.subscribeToLiveDataUpdates(forEventWithId: eventId)
                 .receive(on: DispatchQueue.main)
-                .sink(receiveCompletion: { completion in
-                    print("MatchWidgetCollectionViewCell matchLiveDataSubscriber subscribeToLiveDataUpdates completion: \(completion)")
+                .sink(receiveCompletion: { [weak self] completion in
+                    switch completion {
+                    case .finished:
+                        ()
+                    case .failure(let error):
+                        switch error {
+                        case .resourceUnavailableOrDeleted:
+                            self?.matchLiveData = nil
+                            self?.configureViewFromStatus()
+                        default:
+                            print("MatchDetailsViewModel getMatchDetails Error retrieving data! \(error)")
+                        }
+                    }
+                    
+                    self?.liveMatchDetailsSubscription = nil
+                    self?.liveMatchDetailsCancellable?.cancel()
                 }, receiveValue: { [weak self] (eventSubscribableContent: SubscribableContent<ServicesProvider.EventLiveData>) in
                     switch eventSubscribableContent {
                     case .connected(let subscription):
-                        self?.liveMatchDetailsSubscription = subscription
-                        self?.configureViewFromStatus()
+                        break
                     case .contentUpdate(let eventLiveData):
                         self?.matchLiveData = ServiceProviderModelMapper.matchLiveData(fromServiceProviderEventLiveData: eventLiveData)
                         if let homeScore = eventLiveData.homeScore {
@@ -304,7 +317,7 @@ class MyTicketBetLineView: NibView {
                         }
                         self?.configureViewFromStatus()
                     case .disconnected:
-                        self?.configureViewFromStatus()
+                        break
                     }
                 })
         }

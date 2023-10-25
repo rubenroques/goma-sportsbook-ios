@@ -331,8 +331,35 @@ extension SportRadarModels {
                                                         eventLiveDataExtended: eventLiveDataExtended)
                     
                 }
-                else if path.contains("COMPLETE"), path.contains("CURRENT_SCORE") {
-                    return .unknown // TODO: this update is also missing
+                else if path.contains("COMPLETE"),
+                        path.contains("MATCH_SCORE"),
+                        let changeDictionary = try container.decodeIfPresent([String: [String: Int]].self, forKey: .change),
+                        let scoreDictionary = changeDictionary["COMPETITOR"]{
+                    
+                    let eventLiveDataExtended = SportRadarModels.EventLiveDataExtended.init(id: eventId,
+                                                                                            homeScore: scoreDictionary["home"],
+                                                                                            awayScore: scoreDictionary["away"],
+                                                                                            matchTime: nil,
+                                                                                            status: nil)
+                    return .updateEventLiveDataExtended(contentIdentifier: contentIdentifier,
+                                                        eventId: eventId,
+                                                        eventLiveDataExtended: eventLiveDataExtended)
+                    
+                }
+                else if path.contains("COMPLETE"),
+                        path.contains("CURRENT_SCORE"),
+                        let changeDictionary = try container.decodeIfPresent([String: [String: Int]].self, forKey: .change),
+                        let scoreDictionary = changeDictionary["COMPETITOR"]{
+                    
+                    let eventLiveDataExtended = SportRadarModels.EventLiveDataExtended.init(id: eventId,
+                                                                                            homeScore: scoreDictionary["home"],
+                                                                                            awayScore: scoreDictionary["away"],
+                                                                                            matchTime: nil,
+                                                                                            status: nil)
+                    return .updateEventLiveDataExtended(contentIdentifier: contentIdentifier,
+                                                        eventId: eventId,
+                                                        eventLiveDataExtended: eventLiveDataExtended)
+                    
                 }
                 
                 return .unknown

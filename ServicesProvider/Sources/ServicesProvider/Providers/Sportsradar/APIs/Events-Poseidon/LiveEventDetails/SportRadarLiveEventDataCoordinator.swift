@@ -70,7 +70,22 @@ class SportRadarLiveEventDataCoordinator {
         self.waitingSubscription = true
         
         // Boot the coordinator
-        self.subscribeLiveEventDetails()
+        self.checkLiveEventDetailsAvailable()
+            .flatMap { [weak self] _ -> AnyPublisher<Bool, ServiceProviderError>  in
+                guard let self = self else {
+                    return Fail(error: ServiceProviderError.onSubscribe).eraseToAnyPublisher()
+                }
+                
+                let subscription = Subscription(contentIdentifier: self.liveEventContentIdentifier,
+                                                sessionToken: self.sessionToken,
+                                                unsubscriber: self)
+                self.liveEventCurrentValueSubject.send(.connected(subscription: subscription))
+                self.subscription = subscription
+                
+                self.waitingSubscription = false
+                
+                return self.subscribeLiveEventDetails()
+            }
             .sink { [weak self] completion in
                 guard let self = self else { return }
                 switch completion {
@@ -81,15 +96,6 @@ class SportRadarLiveEventDataCoordinator {
                 }
                 self.waitingSubscription = false
             } receiveValue: { [weak self] success in
-                guard let self = self else { return }
-                
-                let subscription = Subscription(contentIdentifier: self.liveEventContentIdentifier,
-                                                sessionToken: self.sessionToken,
-                                                unsubscriber: self)
-                self.liveEventCurrentValueSubject.send(.connected(subscription: subscription))
-                self.subscription = subscription
-                
-                self.waitingSubscription = false
                 // Publish the event live details
             }
             .store(in: &self.cancellables)

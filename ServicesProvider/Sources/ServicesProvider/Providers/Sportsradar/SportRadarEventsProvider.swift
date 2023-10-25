@@ -653,7 +653,7 @@ class SportRadarEventsProvider: EventsProvider {
                                                                              storage: SportRadarEventStorage() )
             self.addLiveEventDetailsCoordinator(liveEventDetailsCoordinator, withKey: id)
             return liveEventDetailsCoordinator.eventLiveDataPublisher
-        }
+         }
 
     }
     

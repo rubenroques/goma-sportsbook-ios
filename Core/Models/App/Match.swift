@@ -71,14 +71,18 @@ struct Match: Equatable {
         case .unknown:
             return ""
         case .notStarted:
-            return "Not started"
+            let translatedStatus = localized("live_status_not_started")
+            return translatedStatus.isEmpty ? "Not started" : translatedStatus
         case .inProgress(let details):
-            if let sportAlphaId = self.sport.alphaId {
-                return self.convertStatus(sportAlphaId, details)
-            }
-            return "\(details)"
+            let translatedStatus = "live_status_" + details
+            return localized(translatedStatus)
+//            if let sportAlphaId = self.sport.alphaId {
+//                return self.convertStatus(sportAlphaId, details)
+//            }
+//            return "\(details)"
         case .ended:
-            return "Ended"
+            let translatedStatus = localized("live_status_ended")
+            return translatedStatus.isEmpty ? "Ended" : translatedStatus
         }
 
     }

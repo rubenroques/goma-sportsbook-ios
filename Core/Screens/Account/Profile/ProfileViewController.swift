@@ -548,7 +548,7 @@ class ProfileViewController: UIViewController {
         cashbackView.addGestureRecognizer(cashbackTap)
 
         let betSwipeView = NavigationCardView()
-        betSwipeView.setupView(title: "Bet Swipe", iconTitle: "betswipe_profile_icon")
+        betSwipeView.setupView(title: localized("bet_swipe"), iconTitle: "betswipe_profile_icon")
         let betSwipeTap = UITapGestureRecognizer(target: self, action: #selector(betSwipeViewTapped(sender:)))
         betSwipeView.addGestureRecognizer(betSwipeTap)
 

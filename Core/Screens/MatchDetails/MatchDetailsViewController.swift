@@ -304,7 +304,6 @@ class MatchDetailsViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        
         self.view.transitionId = "SeeMoreToMatchDetails"
         
         //
