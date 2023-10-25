@@ -152,7 +152,9 @@ class PaymentsDropIn {
                     print("PROCESS DEPOSIT RESPONSE ERROR: \(error)")
                     switch error {
                     case .errorMessage(let message):
-                        self?.showErrorAlertTypePublisher.send(.error(message: message))
+                        let messageLocalized = localized(message)
+
+                        self?.showErrorAlertTypePublisher.send(.error(message: messageLocalized))
                     default:
                         ()
                     }
