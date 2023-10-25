@@ -71,6 +71,7 @@ class FavoritesManager {
 
             }, receiveValue: { [weak self] favoritesListResponse in
 
+                print("FAVORITES LIST: \(favoritesListResponse)")
 //                if !favoritesListResponse.favoritesList.contains(where: {
 //                    $0.name == "Competitions"
 //                }) {
@@ -160,8 +161,11 @@ class FavoritesManager {
                 case .failure:
                     break
                 }
+                print("FAILED ADD COMPETITIONS LIST")
 
             }, receiveValue: { [weak self] favoritesListAddResponse in
+                print("CREATED COMPETITIONS LIST: \(favoritesListAddResponse)")
+
                 self?.competitionListId = favoritesListAddResponse.listId
 
                 self?.addFavoriteToList(listId: favoritesListAddResponse.listId, eventId: eventId, isCompetitionFavorite: true)
@@ -252,7 +256,7 @@ class FavoritesManager {
                                     case .failure(let error):
 
                                         if "\(error)" == "emptyData"  {
-                                            print("EMPTY DATA SUCCESS")
+                                            print("EMPTY DATA SUCCESS REMOVE COMPETITIONS LIST")
                                             self?.fetchedCompetitionsListsIds.removeValue(forKey: eventId)
                                         }
                                     }
@@ -276,7 +280,7 @@ class FavoritesManager {
                                     print("FAVORITE EVENT DELETE ERROR: \(error)")
 
                                     if "\(error)" == "emptyData"  {
-                                        print("EMPTY DATA SUCCESS")
+                                        print("EMPTY DATA SUCCESS FAVORITE EVENT")
                                         self?.fetchedCompetitionsListsIds.removeValue(forKey: eventId)
                                     }
                                 }
