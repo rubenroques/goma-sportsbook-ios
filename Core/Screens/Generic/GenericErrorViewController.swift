@@ -70,7 +70,7 @@ class GenericErrorViewController: UIViewController {
 
         self.titleLabel.textColor = UIColor.App.buttonTextPrimary
 
-        self.subtitleLabel.textColor = UIColor.App.buttonTextPrimary
+        self.subtitleLabel.textColor = UIColor.App.textPrimary
 
         self.shapeView.backgroundColor = UIColor.App.backgroundPrimary
 
