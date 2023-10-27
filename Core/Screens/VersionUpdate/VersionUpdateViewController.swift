@@ -106,7 +106,9 @@ class VersionUpdateViewController: UIViewController {
     }
 
     @IBAction private func updateAction(_ sender: UIButton) {
-        UIApplication.shared.open(NSURL(string: "https://gomadevelopment.pt/")! as URL, options: [:], completionHandler: nil)
+        if let url = URL(string: TargetVariables.clientBaseUrl) {
+            UIApplication.shared.open(url, options: [:], completionHandler: nil)
+        }
     }
 
     @IBAction private func dismissAction() {

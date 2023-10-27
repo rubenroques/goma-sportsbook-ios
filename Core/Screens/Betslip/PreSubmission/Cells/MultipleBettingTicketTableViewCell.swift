@@ -52,6 +52,10 @@ class MultipleBettingTicketTableViewCell: UITableViewCell {
         }
     }
 
+    deinit {
+        print("MultipleBettingTicketTableViewCell.deinit")
+    }
+    
     override func awakeFromNib() {
         super.awakeFromNib()
         // Initialization code

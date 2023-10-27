@@ -138,6 +138,10 @@ class SingleBettingTicketTableViewCell: UITableViewCell {
 
     var didUpdateBettingValueAction: ((String, Double) -> Void)?
 
+    deinit {
+        print("SingleBettingTicketTableViewCell.deinit")
+    }
+    
     override func awakeFromNib() {
         super.awakeFromNib()
 

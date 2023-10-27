@@ -12,7 +12,7 @@ class CashbackLearnMoreView: UIView {
     private lazy var containerView: UIView = Self.createContainerView()
     private lazy var titleLabel: UILabel = Self.createTitleLabel()
 
-    var didTapLearnMoreAction: (() -> Void)?
+    var didTapLearnMoreAction: (() -> Void) = { }
 
     // MARK: Lifetime and Cycle
     override init(frame: CGRect) {
@@ -60,26 +60,20 @@ class CashbackLearnMoreView: UIView {
         self.containerView.layer.shadowRadius = 10
         self.containerView.layer.shouldRasterize = true
         self.containerView.layer.rasterizationScale = UIScreen.main.scale
-
     }
 
     func commonInit() {
-
         let learnMoreTap = UITapGestureRecognizer(target: self, action: #selector(self.tapLearnMore))
         self.containerView.addGestureRecognizer(learnMoreTap)
-
     }
 
     func setupWithTheme() {
         self.backgroundColor = .clear
-
         self.containerView.backgroundColor = UIColor.App.backgroundTertiary
-
     }
 
     @objc private func tapLearnMore() {
-
-        self.didTapLearnMoreAction?()
+        self.didTapLearnMoreAction()
     }
 }
 

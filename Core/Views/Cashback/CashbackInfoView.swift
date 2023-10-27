@@ -13,7 +13,7 @@ class CashbackInfoView: UIView {
     private lazy var titleLabel: UILabel = Self.createTitleLabel()
     private lazy var iconImageView: UIImageView = Self.createIconImageView()
 
-    var didTapInfoAction: (() -> Void)?
+    var didTapInfoAction: (() -> Void) = { }
 
     // MARK: Lifetime and Cycle
     override init(frame: CGRect) {
@@ -36,31 +36,23 @@ class CashbackInfoView: UIView {
         super.layoutSubviews()
 
         self.containerView.layer.cornerRadius = CornerRadius.headerInput
-
     }
 
     func commonInit() {
-
         let infoTap = UITapGestureRecognizer(target: self, action: #selector(self.tapInfo))
         self.containerView.addGestureRecognizer(infoTap)
-
     }
 
     func setupWithTheme() {
         self.backgroundColor = .clear
 
         self.containerView.backgroundColor = UIColor.App.highlightSecondary
-
         self.titleLabel.textColor = UIColor.App.buttonTextPrimary
-
         self.iconImageView.backgroundColor = .clear
-
     }
 
     @objc private func tapInfo() {
-        print("TAPPED CASHBACK INFO")
-
-        self.didTapInfoAction?()
+        self.didTapInfoAction()
     }
 }
 

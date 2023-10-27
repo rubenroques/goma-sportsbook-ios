@@ -1381,21 +1381,21 @@ class PreSubmissionBetslipViewController: UIViewController {
             .receive(on: DispatchQueue.main)
             .sink { completion in
                 print("userSessionStore userCashbackBalance completion: \(completion)")
-            } receiveValue: { value in
+            } receiveValue: { [weak self] value in
                 if let cashbackValue = value,
                    let formattedCashbackString = CurrencyFormater.defaultFormat.string(from: NSNumber(value: cashbackValue)) {
-                    self.cashbackValueLabel.text = formattedCashbackString
+                    self?.cashbackValueLabel.text = formattedCashbackString
 
                     if cashbackValue <= 0 {
-                        self.cashbackBaseView.isHidden = true
+                        self?.cashbackBaseView.isHidden = true
                     }
                     else {
-                        self.cashbackBaseView.isHidden = false
+                        self?.cashbackBaseView.isHidden = false
                     }
                 }
                 else {
-                    self.cashbackValueLabel.text = "-.--€"
-                    self.cashbackBaseView.isHidden = true
+                    self?.cashbackValueLabel.text = "-.--€"
+                    self?.cashbackBaseView.isHidden = true
                 }
             }
             .store(in: &self.cancellables)

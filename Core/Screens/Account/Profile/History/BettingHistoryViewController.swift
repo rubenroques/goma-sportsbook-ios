@@ -332,9 +332,9 @@ extension BettingHistoryViewController: UITableViewDelegate, UITableViewDataSour
 
             cell.configure(withBetHistoryEntry: ticketValue, countryCodes: locationsCodes, viewModel: viewModel)
 
-            cell.tappedShareAction = { [weak self] in
-                if let cellSnapshot = cell.snapshot, let ticketStatus = ticketValue.status {
-                    self?.requestShareActivityView?(cellSnapshot, ticketValue.betId, ticketStatus)
+            cell.tappedShareAction = { [weak self] cellSnapshotImage, ticketValue in
+                if let ticketStatus = ticketValue.status {
+                    self?.requestShareActivityView?(cellSnapshotImage, ticketValue.betId, ticketStatus)
                 }
             }
 

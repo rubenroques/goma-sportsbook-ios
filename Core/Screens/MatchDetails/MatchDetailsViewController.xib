@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="21507" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="22154" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
     <device id="retina6_1" orientation="portrait" appearance="light"/>
     <dependencies>
         <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="21505"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="22130"/>
         <capability name="Named colors" minToolsVersion="9.0"/>
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
         <capability name="System colors in document resources" minToolsVersion="11.0"/>
@@ -326,7 +326,11 @@
                                                                     <nil key="highlightedColor"/>
                                                                 </label>
                                                                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label se" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Lj9-UQ-4au">
-                                                                    <rect key="frame" x="8" y="40" width="178" height="20.5"/>
+                                                                    <rect key="frame" x="-33" y="40" width="260" height="21"/>
+                                                                    <constraints>
+                                                                        <constraint firstAttribute="height" relation="greaterThanOrEqual" constant="21" id="ac6-pR-tEt"/>
+                                                                        <constraint firstAttribute="width" constant="260" id="amZ-fI-zUc"/>
+                                                                    </constraints>
                                                                     <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                                                     <nil key="textColor"/>
                                                                     <nil key="highlightedColor"/>
@@ -334,10 +338,8 @@
                                                             </subviews>
                                                             <color key="backgroundColor" systemColor="systemBackgroundColor"/>
                                                             <constraints>
-                                                                <constraint firstItem="Lj9-UQ-4au" firstAttribute="leading" secondItem="MUm-Fw-4DM" secondAttribute="leading" constant="8" id="2fR-aj-aEG"/>
                                                                 <constraint firstItem="f9q-hi-zcH" firstAttribute="centerX" secondItem="MUm-Fw-4DM" secondAttribute="centerX" id="5mQ-ct-elR"/>
                                                                 <constraint firstAttribute="trailing" secondItem="f9q-hi-zcH" secondAttribute="trailing" id="Aoh-uG-0jQ"/>
-                                                                <constraint firstAttribute="trailing" secondItem="Lj9-UQ-4au" secondAttribute="trailing" constant="8" id="Hhc-WX-Qje"/>
                                                                 <constraint firstItem="f9q-hi-zcH" firstAttribute="centerY" secondItem="MUm-Fw-4DM" secondAttribute="centerY" id="eyo-0D-yl4"/>
                                                                 <constraint firstItem="Lj9-UQ-4au" firstAttribute="centerX" secondItem="MUm-Fw-4DM" secondAttribute="centerX" id="vta-Mc-p86"/>
                                                                 <constraint firstAttribute="trailing" secondItem="f9q-hi-zcH" secondAttribute="trailing" id="wzo-gg-Ub8"/>

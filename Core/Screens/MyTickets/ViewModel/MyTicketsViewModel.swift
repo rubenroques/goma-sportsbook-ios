@@ -522,11 +522,9 @@ extension MyTicketsViewModel: UITableViewDelegate, UITableViewDataSource {
 
             cell.configure(withBetHistoryEntry: ticketValue, countryCodes: locationsCodes, viewModel: viewModel)
 
-            cell.tappedShareAction = { [weak self] in
-                if let cellSnapshot = cell.snapshot,
-                   let ticketStatus = ticketValue.status,
-                   let betslipId = ticketValue.betslipId {
-                    self?.requestShareActivityView?(cellSnapshot, "\(betslipId)", ticketStatus)
+            cell.tappedShareAction = { [weak self] cellSnapshotImage, ticketValue in
+                if let ticketStatus = ticketValue.status, let betslipId = ticketValue.betslipId {
+                    self?.requestShareActivityView?(cellSnapshotImage, "\(betslipId)", ticketStatus)
                     self?.clickedBetHistory = ticketValue
                 }
             }

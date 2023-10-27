@@ -130,10 +130,8 @@ class MyTicketTableViewCell: UITableViewCell {
         }
     }
 
-    var snapshot: UIImage?
-
     var needsHeightRedraw: ((Bool) -> Void)?
-    var tappedShareAction: (() -> Void)?
+    var tappedShareAction: ((UIImage, BetHistoryEntry) -> Void) = { _, _ in }
     var tappedMatchDetail: ((String) -> Void)?
     var shouldShowCashbackInfo: (() -> Void)?
     var needsDataUpdate: (() -> Void)?
@@ -203,7 +201,6 @@ class MyTicketTableViewCell: UITableViewCell {
         self.usedCashback = false
 
         self.cashbackInfoView.didTapInfoAction = { [weak self] in
-            
             UIView.animate(withDuration: 0.5, animations: { [weak self] in
                 self?.learnMoreBaseView.alpha = 1
             }, completion: { [weak self] completed in
@@ -213,7 +210,6 @@ class MyTicketTableViewCell: UITableViewCell {
                     })
                 }
             })
-            
         }
 
         self.baseView.addSubview(self.learnMoreBaseView)
@@ -225,14 +221,12 @@ class MyTicketTableViewCell: UITableViewCell {
         ])
 
         self.learnMoreBaseView.didTapLearnMoreAction = { [weak self] in
-
             self?.shouldShowCashbackInfo?()
         }
 
         self.learnMoreBaseView.alpha = 0
 
         self.setupWithTheme()
-
     }
 
     override func prepareForReuse() {
@@ -280,7 +274,6 @@ class MyTicketTableViewCell: UITableViewCell {
         super.layoutSubviews()
 
         self.freebetBaseView.layer.cornerRadius = self.freebetBaseView.frame.height / 2
-
         self.cashbackUsedBaseView.layer.cornerRadius = CornerRadius.status
     }
 
@@ -291,7 +284,6 @@ class MyTicketTableViewCell: UITableViewCell {
     }
 
     func setupWithTheme() {
-
         self.backgroundColor = UIColor.App.backgroundPrimary
 
         self.backgroundView?.backgroundColor = UIColor.clear
@@ -498,8 +490,6 @@ class MyTicketTableViewCell: UITableViewCell {
             self.betIdLabel.text = "\(localized("bet_id")): \(betId)"
         }
         if let oddValue = betHistoryEntry.totalPriceValue, betHistoryEntry.type != "SYSTEM" {
-            // let newOddValue = Double(floor(oddValue * 100)/100)
-//            self.totalOddSubtitleLabel.text = oddValue == 0.0 ? "-" : OddConverter.stringForValue(oddValue, format: UserDefaults.standard.userOddsFormat)
             self.totalOddSubtitleLabel.text = oddValue == 0.0 ? "-" : OddFormatter.formatOdd(withValue: oddValue)
         }
 
@@ -706,7 +696,6 @@ class MyTicketTableViewCell: UITableViewCell {
             self.usedCashback = false
 
             let cashbackReturnString = CurrencyFormater.defaultFormat.string(from: NSNumber(value: freebetReturn))
-
             self.cashbackValueLabel.text = cashbackReturnString
         }
 
@@ -733,7 +722,6 @@ class MyTicketTableViewCell: UITableViewCell {
         guard let ticket = self.viewModel?.ticket
         else {
             return
-
         }
 
         let cashout = self.viewModel?.cashout
@@ -796,9 +784,6 @@ class MyTicketTableViewCell: UITableViewCell {
         self.viewModel?.requestPartialCashoutAvailability(ticket: ticket, stakeValue: "\(maxSliderStake/2)")
 
         self.viewModel?.partialCashoutSliderValue = Double(maxSliderStake/2)
-
-//        let partialCashoutLabel = localized("partial_cashout_value").replacingFirstOccurrence(of: "{cashoutAmount}", with: "\(maxValue)")
-//        self.partialCashoutButton.setTitle("\(partialCashoutLabel)€", for: .normal)
     }
 
     @objc func partialSliderChanged(_ slider: MultiSlider) {
@@ -811,8 +796,6 @@ class MyTicketTableViewCell: UITableViewCell {
             self.partialCashoutButton.isEnabled = false
             self.viewModel?.requestPartialCashoutAvailability(ticket: betTicket, stakeValue: "\(partialCashoutValue)")
         }
-//        let partialCashoutLabel = localized("partial_cashout_value").replacingFirstOccurrence(of: "{cashoutAmount}", with: "\(partialCashoutValue)")
-//        self.partialCashoutButton.setTitle("\(partialCashoutLabel)€", for: .normal)
     }
 
     @IBAction func didTapShareButton() {
@@ -820,9 +803,10 @@ class MyTicketTableViewCell: UITableViewCell {
         let image = renderer.image { _ in
             self.baseView.drawHierarchy(in: self.baseView.bounds, afterScreenUpdates: true)
         }
-        self.snapshot = image
 
-        self.tappedShareAction?()
+        if let betHistoryEntry = self.betHistoryEntry {
+            self.tappedShareAction(image, betHistoryEntry)
+        }
     }
 
     @IBAction private func didTapCashoutButton() {
@@ -841,8 +825,8 @@ class MyTicketTableViewCell: UITableViewCell {
         let submitCashoutAlert = UIAlertController(title: titleMessage,
                                                    message: cashoutAlertMessage,
                                                    preferredStyle: UIAlertController.Style.alert)
-        let okAction = UIAlertAction(title: localized("cashout"), style: .default, handler: { _ in
-            self.viewModel?.requestCashout()
+        let okAction = UIAlertAction(title: localized("cashout"), style: .default, handler: { [weak self] _ in
+            self?.viewModel?.requestCashout()
         })
 
         okAction.setValue(UIColor.App.highlightPrimary, forKey: "titleTextColor")
@@ -876,8 +860,8 @@ class MyTicketTableViewCell: UITableViewCell {
         let submitCashoutAlert = UIAlertController(title: titleMessage,
                                                    message: cashoutAlertMessage,
                                                    preferredStyle: UIAlertController.Style.alert)
-        submitCashoutAlert.addAction(UIAlertAction(title: localized("cashout"), style: .default, handler: { _ in
-            self.viewModel?.requestPartialCashout()
+        submitCashoutAlert.addAction(UIAlertAction(title: localized("cashout"), style: .default, handler: { [weak self] _ in
+            self?.viewModel?.requestPartialCashout()
         }))
 
         submitCashoutAlert.addAction(UIAlertAction(title: localized("cancel"), style: .cancel))

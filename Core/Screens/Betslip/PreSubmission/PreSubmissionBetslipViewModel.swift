@@ -82,6 +82,10 @@ class PreSubmissionBetslipViewModel {
             .store(in: &cancellables)
     }
 
+    deinit {
+        print("PreSubmissionBetslipViewModel.deinit")
+    }
+    
     private func getSharedTicket(betId: String) {
 
         self.sharedBetsPublisher.send(.loading)
