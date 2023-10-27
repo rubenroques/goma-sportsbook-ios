@@ -71,13 +71,6 @@ class FavoritesManager {
 
             }, receiveValue: { [weak self] favoritesListResponse in
 
-                print("FAVORITES LIST: \(favoritesListResponse)")
-//                if !favoritesListResponse.favoritesList.contains(where: {
-//                    $0.name == "Competitions"
-//                }) {
-//                    self?.createCompetitionsList()
-//                }
-//                else {
                 if let competitionListId = favoritesListResponse.favoritesList.first(where: {
                     $0.name == "Competitions"
                 }) {
@@ -89,7 +82,6 @@ class FavoritesManager {
                 }
 
                 self?.processFavoritesLists(favoritesLists: favoritesListResponse.favoritesList)
-//                }
             })
             .store(in: &cancellables)
     }
@@ -109,8 +101,6 @@ class FavoritesManager {
                 }
 
             }, receiveValue: { [weak self] favoriteEventsResponse in
-
-                print("FAVORITE EVENTS RESPONSE: \(favoriteEventsResponse)")
 
                 for favoriteEvent in favoriteEventsResponse.favoriteEvents {
                     self?.fetchedFavoriteEventIds.append(favoriteEvent.id)
@@ -164,12 +154,11 @@ class FavoritesManager {
                 print("FAILED ADD COMPETITIONS LIST")
 
             }, receiveValue: { [weak self] favoritesListAddResponse in
-                print("CREATED COMPETITIONS LIST: \(favoritesListAddResponse)")
 
                 self?.competitionListId = favoritesListAddResponse.listId
 
                 self?.addFavoriteToList(listId: favoritesListAddResponse.listId, eventId: eventId, isCompetitionFavorite: true)
-                //self?.getUserFavorites()
+                
             })
             .store(in: &cancellables)
     }
@@ -277,7 +266,6 @@ class FavoritesManager {
                                 case .finished:
                                     ()
                                 case .failure(let error):
-                                    print("FAVORITE EVENT DELETE ERROR: \(error)")
 
                                     if "\(error)" == "emptyData"  {
                                         print("EMPTY DATA SUCCESS FAVORITE EVENT")
@@ -309,8 +297,6 @@ class FavoritesManager {
                 }
 
             }, receiveValue: { [weak self] favoriteAddResponse in
-
-                print("FAVORITE ADD RESPONSE: \(favoriteAddResponse)")
 
                 if isCompetitionFavorite {
                     if var fetchedFavoriteEventIds = self?.fetchedFavoriteEventIds {

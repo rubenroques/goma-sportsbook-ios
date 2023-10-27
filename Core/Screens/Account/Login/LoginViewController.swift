@@ -48,6 +48,8 @@ class LoginViewController: UIViewController {
     private var cancellables = Set<AnyCancellable>()
 
     private let spinnerViewController = LoadingSpinnerViewController()
+    
+    private let dateFormatter = DateFormatter()
 
     init(shouldPresentRegisterFlow: Bool = false) {
         self.shouldPresentRegisterFlow = shouldPresentRegisterFlow
@@ -566,7 +568,19 @@ class LoginViewController: UIViewController {
                     case .errorMessage:
                         self?.showGenericServerErrorStatus()
                     case .failedTempLock(let date):
-                        let failedLockMessage = localized("omega_error_fail_temp_lock").replacingFirstOccurrence(of: "{date}", with: date)
+                        var dateFinal = date
+                        
+                        if let dateFormatter = self?.dateFormatter {
+                            dateFormatter.dateFormat = "dd-MM-yyyy HH:mm:ss"
+                            
+                            if let dateFormatted = dateFormatter.date(from: date) {
+                                dateFormatter.dateFormat = "dd-MM-yyyy"
+                                dateFinal = dateFormatter.string(from: dateFormatted)
+                            }
+                        }
+                        
+                        let failedLockMessage = localized("omega_error_fail_temp_lock").replacingFirstOccurrence(of: "{date}", with: dateFinal)
+                        
                         self?.showServerErrorStatus(errorMessage: failedLockMessage)
                     }
                 case .finished:
