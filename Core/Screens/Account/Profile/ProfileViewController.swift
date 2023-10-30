@@ -462,8 +462,8 @@ class ProfileViewController: UIViewController {
                     let documentsRootViewModel = DocumentsRootViewModel()
 
                     let documentsRootViewController = DocumentsRootViewController(viewModel: documentsRootViewModel)
-
-                    self.present(documentsRootViewController, animated: true)
+                    
+                    self.navigationController?.pushViewController(documentsRootViewController, animated: true)
                 }
             }
         }

@@ -484,11 +484,17 @@ class LoginViewController: UIViewController {
         depositViewController.didTapBackButtonAction = {
             navigationController.popViewController(animated: true)
         }
+        
         depositViewController.didTapCancelButtonAction = { [weak self] in
             self?.closeLoginRegisterFlow()
         }
+        
         depositViewController.shouldDismissAction = { [weak self] in
             self?.closeLoginRegisterFlow()
+        }
+        
+        depositViewController.shouldRefreshUserWallet = {
+            Env.userSessionStore.refreshUserWallet()
         }
         
         navigationController.pushViewController(depositViewController, animated: true)

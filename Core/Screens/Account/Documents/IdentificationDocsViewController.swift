@@ -291,7 +291,7 @@ class IdentificationDocsViewController: UIViewController {
     // MARK: Action
     @objc func didTapIdAddDoc() {
 
-        if self.totalIdentificationTriesCount <= -1 {
+        if self.totalIdentificationTriesCount <= 4 {
             self.viewModel.generateDocumentTypeToken(docType: "IDENTITY_CARD")
 
         }
@@ -456,9 +456,6 @@ class IdentificationDocsViewController: UIViewController {
 
         self.identificationBottomStackView.removeAllArrangedSubviews()
         self.proofAddressBottomStackView.removeAllArrangedSubviews()
-
-        self.showIdentityWarning = false
-        self.showProofWarning = false
 
         let identityDocuments = self.viewModel.identificationDocuments
 

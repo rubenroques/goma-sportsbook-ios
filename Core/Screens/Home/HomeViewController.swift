@@ -124,7 +124,7 @@ class HomeViewController: UIViewController {
 
                 let documentsRootViewController = DocumentsRootViewController(viewModel: documentsRootViewModel)
 
-                self.present(documentsRootViewController, animated: true)
+                self.navigationController?.pushViewController(documentsRootViewController, animated: true)
             }
         }
 
