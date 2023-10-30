@@ -316,7 +316,7 @@ extension UserSessionStore {
         
         if Env.deviceFirebaseCloudMessagingToken.isNotEmpty {
             Env.servicesProvider
-                .updateDeviceIdentifier(deviceIdentifier: "")
+                .updateDeviceIdentifier(deviceIdentifier: Env.deviceFirebaseCloudMessagingToken)
                 .receive(on: DispatchQueue.main)
                 .sink { completion in
                     print("UserSessionStore updateDeviceIdentifier completed: \(completion)")

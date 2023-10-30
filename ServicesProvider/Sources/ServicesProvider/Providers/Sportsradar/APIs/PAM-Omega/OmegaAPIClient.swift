@@ -424,12 +424,11 @@ extension OmegaAPIClient: Endpoint {
             return query
             
         case .updateDeviceIdentifier(let deviceIdentifier):
+            
             var query: [URLQueryItem] = []
             let extraInfo = """
                             {
                                 "device_token_ios": "\(deviceIdentifier)",
-                                "device_token_android": "",
-                                "device_token_web": "",
                                 "device_token_last" : "\(deviceIdentifier)"
                             }
                             """
