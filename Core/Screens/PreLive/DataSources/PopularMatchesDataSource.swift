@@ -170,7 +170,7 @@ extension PopularMatchesDataSource {
                     self?.popularSubscription = subscription
                 case .contentUpdate(let eventsGroups):
                     guard let self = self else { return }
-                    print("PopularMatchesDataSource fetchPopularMatches recieved data \(eventsGroups.count)")
+                    print("PopularMatchesDataSource fetchPopularMatches received data \(eventsGroups.count)")
 
                     let splittedEventGroups = self.splitEventsGroups(eventsGroups)
                     let mappedOutrights: [Competition]? = ServiceProviderModelMapper.competitions(fromEventsGroups: splittedEventGroups.competitionsEventGroups)

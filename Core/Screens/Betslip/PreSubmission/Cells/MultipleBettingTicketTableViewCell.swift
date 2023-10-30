@@ -43,6 +43,8 @@ class MultipleBettingTicketTableViewCell: UITableViewCell {
     var currentOddValue: Double?
     var bettingTicket: BettingTicket?
 
+    var liveTicketCancellable: AnyCancellable?
+    
     var oddSubscriber: AnyCancellable?
     var oddAvailabilitySubscriber: AnyCancellable?
 
@@ -242,10 +244,26 @@ class MultipleBettingTicketTableViewCell: UITableViewCell {
             self.errorLateralBottomView.backgroundColor = UIColor.App.backgroundSecondary
         }
 
-        if let sport = bettingTicket.sport {
-            self.hasCashback = RePlayFeatureHelper.shouldShowRePlay(forSport: sport)
-        }
-
+        //
+        self.liveTicketCancellable = Env.betslipManager.liveTicketsPublisher
+            .receive(on: DispatchQueue.main)
+            .sink { [weak self] liveTicketsDictionary in
+                guard let self = self else { return }
+                if let isLiveTicket = liveTicketsDictionary[self.bettingTicket?.matchId ?? ""] {
+                    if !isLiveTicket {
+                        if let sport = self.bettingTicket?.sport {
+                            self.hasCashback = RePlayFeatureHelper.shouldShowRePlay(forSport: sport)
+                        }
+                    }
+                    else {
+                        self.hasCashback = false
+                    }
+                }
+                else if let sport = self.bettingTicket?.sport {
+                    self.hasCashback = RePlayFeatureHelper.shouldShowRePlay(forSport: sport)
+                }
+            }
+        
     }
 
     @IBAction private func didTapDeleteButton() {

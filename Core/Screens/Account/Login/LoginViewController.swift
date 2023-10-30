@@ -383,8 +383,6 @@ class LoginViewController: UIViewController {
     
     private func setTermsConsents() {
         
-        let types = [UserConsentType.terms.versionId]
-        
         Env.servicesProvider.getAllConsents()
             .filter({ consents in
                 return consents.contains { consent in
@@ -591,7 +589,6 @@ class LoginViewController: UIViewController {
             }, receiveValue: { [weak self] _ in
                 // self.showNextViewController()
                 self?.loginSuccessful()
-                self?.setTermsConsents()
             })
             .store(in: &cancellables)
     }

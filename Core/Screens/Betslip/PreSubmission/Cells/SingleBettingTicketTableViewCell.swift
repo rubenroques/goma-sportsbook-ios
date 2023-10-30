@@ -10,8 +10,6 @@ import Combine
 
 class SingleBettingTicketTableViewCell: UITableViewCell {
 
-    //TODO: Code Review - A baseView é utilizada como a primeira view da cell, se precisarmos que editar as cells deixar a baseView como root se a mesma existir
-
     @IBOutlet private weak var stackView: UIStackView!
 
     @IBOutlet private weak var baseView: UIView!

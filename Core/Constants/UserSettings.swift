@@ -268,15 +268,15 @@ enum CardsStyle: Int {
 
 public enum BetslipOddChangeSetting: String, Codable, Equatable, Hashable, CaseIterable {
     case none
-    case any
+    // case any // remover
     case higher
     
     var localizedString: String {
         switch self {
         case .none:
             return localized("allow_no_odds_change")
-        case .any:
-            return localized("allow_any_odd")
+//        case .any:
+//            return localized("allow_any_odd")
         case .higher:
             return localized("allow_higher_odds")
         }

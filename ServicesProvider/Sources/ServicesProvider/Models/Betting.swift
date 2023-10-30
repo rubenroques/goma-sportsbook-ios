@@ -165,7 +165,7 @@ public struct BetTicket: Codable {
 
 public enum BetslipOddChangeSetting: String, Codable, Equatable, Hashable {
     case none
-    case any
+    // case any
     case higher
 }
     

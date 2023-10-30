@@ -529,12 +529,12 @@ class PreSubmissionBetslipViewController: UIViewController {
                     case .none:
                         self?.betslipOddChangeSetting = .none
                         self?.settingsPickerView.selectRow(0, inComponent: 0, animated: false)
-                    case .any:
-                        self?.betslipOddChangeSetting = .any
-                        self?.settingsPickerView.selectRow(1, inComponent: 0, animated: false)
+//                    case .any:
+//                        self?.betslipOddChangeSetting = .any
+//                        self?.settingsPickerView.selectRow(1, inComponent: 0, animated: false)
                     case .higher:
                         self?.betslipOddChangeSetting = .higher
-                        self?.settingsPickerView.selectRow(2, inComponent: 0, animated: false)
+                        self?.settingsPickerView.selectRow(1, inComponent: 0, animated: false)
                     }
                     
                     self?.settingsButton.isEnabled = true
@@ -1541,8 +1541,8 @@ class PreSubmissionBetslipViewController: UIViewController {
         switch self.betslipOddChangeSetting {
         case .none:
             externalSetting = .none
-        case .any:
-            externalSetting = .any
+//        case .any:
+//            externalSetting = .any
         case .higher:
             externalSetting = .higher
         }

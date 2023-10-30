@@ -290,8 +290,10 @@ extension BettingAPIClient: Endpoint {
             switch oddChange {
             case .none:
                 acceptingReofferStringValue = "none"
-            case .any:
-                acceptingReofferStringValue = "any"
+
+//            case .any:
+//                acceptingReofferStringValue = "any"
+                
             case .higher:
                 acceptingReofferStringValue = "higher"
             }

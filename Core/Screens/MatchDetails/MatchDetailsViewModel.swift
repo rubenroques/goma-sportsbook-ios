@@ -190,7 +190,7 @@ class MatchDetailsViewModel: NSObject {
 
         // The first published value of the full
         // match should trigger the match market groups flow
-        let matchDetailsRecievedPublisher = eventDetailsPublisher
+        let matchDetailsReceivedPublisher = eventDetailsPublisher
             .replaceError(with: .disconnected)
             .filter { (subscribableContent: SubscribableContent<ServicesProvider.Event>) -> Bool in
                 if case .contentUpdate = subscribableContent {
@@ -209,7 +209,7 @@ class MatchDetailsViewModel: NSObject {
             .eraseToAnyPublisher()
         
         // Show marketGroups loading
-        matchDetailsRecievedPublisher.map({ _ in
+        matchDetailsReceivedPublisher.map({ _ in
             return ()
         })
         .sink { [weak self] in
@@ -218,7 +218,7 @@ class MatchDetailsViewModel: NSObject {
         .store(in: &self.cancellables)
 
         // Request the remaining marketGroups details
-        matchDetailsRecievedPublisher
+        matchDetailsReceivedPublisher
             .flatMap({ (event: ServicesProvider.Event) -> AnyPublisher<[MarketGroup], Never> in
                 return Env.servicesProvider.getMarketsFilters(event: event)
                         .map(Self.convertMarketGroups(_:))

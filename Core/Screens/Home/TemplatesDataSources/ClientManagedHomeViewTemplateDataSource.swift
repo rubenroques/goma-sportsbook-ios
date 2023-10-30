@@ -62,12 +62,13 @@ class ClientManagedHomeViewTemplateDataSource {
                     storiesViewModels.append(storyViewModel)
                 }
                 else {
+                    var readStory = Self.checkStoryInReadInstaStoriesArray(promotionalStory.id)
                     let storyViewModel = StoriesItemCellViewModel(id: promotionalStory.id,
                                                                   imageName: promotionalStory.imageUrl,
                                                                   title: promotionalStory.title,
                                                                   link: promotionalStory.linkUrl,
                                                                   contentString: promotionalStory.bodyText,
-                                                                  read: false)
+                                                                  read: readStory)
 
                     storiesViewModels.append(storyViewModel)
 
@@ -620,4 +621,21 @@ extension ClientManagedHomeViewTemplateDataSource: HomeViewTemplateDataSource {
         return self.topCompetitionsLineCellViewModel
     }
 
+}
+
+extension ClientManagedHomeViewTemplateDataSource {
+    
+    static func appendToReadInstaStoriesArray(_ newStory: String) {
+        let key = "readInstaStoriesArray"
+        var existingStories = UserDefaults.standard.stringArray(forKey: key) ?? []
+        existingStories.append(newStory)
+        UserDefaults.standard.set(existingStories, forKey: key)
+    }
+
+    static func checkStoryInReadInstaStoriesArray(_ storyToCheck: String) -> Bool {
+        let key = "readInstaStoriesArray"
+        let existingStories = UserDefaults.standard.stringArray(forKey: key) ?? []
+        return existingStories.contains(storyToCheck)
+    }
+    
 }

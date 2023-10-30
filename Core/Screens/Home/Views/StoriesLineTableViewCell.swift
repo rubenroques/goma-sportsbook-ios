@@ -116,8 +116,6 @@ class StoriesLineTableViewCell: UITableViewCell, UICollectionViewDataSource, UIC
             fatalError()
         }
 
-        //cell.configureWithViewModel(viewModel: StoriesItemCellViewModel(imageName: "", title: "Story \(indexPath.row)", read: indexPath.row == 3))
-
         cell.configureWithViewModel(viewModel: cellViewModel)
 
         cell.selectedItemAction = { [weak self] viewModel in

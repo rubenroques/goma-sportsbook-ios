@@ -206,7 +206,7 @@ class SportRadarEventsPaginator {
     }
 
     func updateEventsList(events: [Event]) {
-        // If the number of recieved events is >= than eventsPerPage it means we can try request more
+        // If the number of received events is >= than eventsPerPage it means we can try request more
         self.hasNextPage = events.count >= self.eventsPerPage
 
         self.storage.storeEvents(events)

@@ -54,13 +54,14 @@ class MatchLineTableCellViewModel {
             .map(ServiceProviderModelMapper.match(fromEvent:))
             .receive(on: DispatchQueue.main)
             .sink { completion in
-                // print("MatchLineTableCellViewModel getEventDetails completion \(completion)")
+                switch completion {
+                case .finished:
+                    break
+                case .failure:
+                    break
+                }
             } receiveValue: { [weak self] updatedMatch in
 
-                if updatedMatch.id == "3234891.1" {
-                    print("TapBug stop 1 \(updatedMatch.markets.count )")
-                }
-                
                 var knownMarketGroups: Set<String> = []
                 var filteredMarkets = [Market]()
 
@@ -74,14 +75,25 @@ class MatchLineTableCellViewModel {
                         break
                     }
                 }
-                let sortedMarkets = filteredMarkets.sorted { leftMarket, rightMarket  in
+                var sortedMarkets = filteredMarkets.sorted { leftMarket, rightMarket  in
                     return (leftMarket.marketTypeId ?? "") < (rightMarket.marketTypeId ?? "")
                 }.prefix(5)
                 
                 if var oldMatch = self?.matchCurrentValueSubject.value {
                     // We already have a match we only update/replace the markets
-                    oldMatch.markets = Array(sortedMarkets)
-                    self?.matchCurrentValueSubject.send(oldMatch)
+                    
+                    if let firstMarket = oldMatch.markets.first { // Kepp the first market if it exists
+                        sortedMarkets.removeAll { $0.id == firstMarket.id }
+                        var concatenatedMarkets = [firstMarket]
+                        concatenatedMarkets.append(contentsOf: sortedMarkets)
+                        
+                        oldMatch.markets = concatenatedMarkets
+                        self?.matchCurrentValueSubject.send(oldMatch)
+                    } else {
+                        oldMatch.markets = Array(sortedMarkets)
+                        self?.matchCurrentValueSubject.send(oldMatch)
+                    }
+                    
                 }
                 else {
                     // We don't have a match yet, we need to use this one

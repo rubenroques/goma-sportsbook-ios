@@ -466,15 +466,10 @@ extension SportRadarModels {
             }
 
             switch value {
-            case "0":
-                self.oddChange = .none
-            case "-1":
-                self.oddChange = .any
-            
             case "none":
                 self.oddChange = .none
-            case "any":
-                self.oddChange = .any
+//            case "any":
+//                self.oddChange = .any
             case "higher":
                 self.oddChange = .higher
                 

@@ -376,6 +376,10 @@ class HomeViewController: UIViewController {
     
     private func markStoryRead(id: String) {
 
+        // Save story
+        ClientManagedHomeViewTemplateDataSource.appendToReadInstaStoriesArray(id)
+        
+        // Refresh view models
         if var storyLineViewModel = self.viewModel.storyLineViewModel() {
 
             var updatedStoriesViewModels = [StoriesItemCellViewModel]()
@@ -390,7 +394,6 @@ class HomeViewController: UIViewController {
                                                                 read: true)
 
                     updatedStoriesViewModels.append(updatedStory)
-
                 }
                 else {
                     let updatedStory = StoriesItemCellViewModel(id: storyCellViewModel.id,
