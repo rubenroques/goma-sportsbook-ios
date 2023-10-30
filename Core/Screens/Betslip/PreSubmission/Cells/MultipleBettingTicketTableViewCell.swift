@@ -250,13 +250,13 @@ class MultipleBettingTicketTableViewCell: UITableViewCell {
             .sink { [weak self] liveTicketsDictionary in
                 guard let self = self else { return }
                 if let isLiveTicket = liveTicketsDictionary[self.bettingTicket?.matchId ?? ""] {
-                    if !isLiveTicket {
+                    if isLiveTicket {
+                        self.hasCashback = false
+                    }
+                    else {
                         if let sport = self.bettingTicket?.sport {
                             self.hasCashback = RePlayFeatureHelper.shouldShowRePlay(forSport: sport)
                         }
-                    }
-                    else {
-                        self.hasCashback = false
                     }
                 }
                 else if let sport = self.bettingTicket?.sport {
