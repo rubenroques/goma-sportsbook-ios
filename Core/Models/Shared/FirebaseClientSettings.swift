@@ -21,6 +21,8 @@ struct FirebaseClientSettings: Codable {
     let requiredPhoneVerification: Bool
 
     let locale: Locale?
+    
+    let partialCashoutEnabled: Bool
 
     let replaySportsCodes: [String]
 
@@ -44,6 +46,7 @@ struct FirebaseClientSettings: Codable {
         case isOnMaintenance = "maintenance_mode"
         case maintenanceReason = "maintenance_reason"
         case locale = "locale"
+        case partialCashoutEnabled = "partial_cashout"
         case requiredPhoneVerification = "signup_2fa"
         case replaySportsCodes = "replay_sports"
     }
@@ -74,6 +77,9 @@ struct FirebaseClientSettings: Codable {
 
         let requiredPhoneVerificationInt = (try? container.decode(Int.self, forKey: .requiredPhoneVerification)) ?? 0
         self.requiredPhoneVerification = requiredPhoneVerificationInt == 1
+        
+        let partialCashoutEnabledInt = try container.decode(Int.self, forKey: .partialCashoutEnabled)
+        self.partialCashoutEnabled = partialCashoutEnabledInt == 1
 
         if let replaySportsCodesDictionary = try? container.decode([Int: String].self, forKey: .replaySportsCodes) {
             self.replaySportsCodes = replaySportsCodesDictionary.map(\.value)
@@ -94,6 +100,7 @@ struct FirebaseClientSettings: Codable {
          maintenanceReason: String,
          requiredPhoneVerification: Bool,
          locale: Locale?,
+         partialCashoutEnabled: Bool,
          replaySportsCodes: [String]) {
 
         self.showInformationPopUp = showInformationPopUp
@@ -104,6 +111,7 @@ struct FirebaseClientSettings: Codable {
         self.maintenanceReason = maintenanceReason
         self.requiredPhoneVerification = requiredPhoneVerification
         self.locale = locale
+        self.partialCashoutEnabled = partialCashoutEnabled
         self.replaySportsCodes = replaySportsCodes
 
     }
@@ -120,6 +128,7 @@ extension FirebaseClientSettings {
                                       maintenanceReason: "",
                                       requiredPhoneVerification: false,
                                       locale: nil,
+                                      partialCashoutEnabled: false,
                                       replaySportsCodes: [])
     }
 }

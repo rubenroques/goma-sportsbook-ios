@@ -53,6 +53,7 @@ class RealtimeSocketClient {
             else {
                 self?.maintenanceModePublisher.send(nil)
             }
+            
         }
     }
 }

@@ -101,7 +101,7 @@ class MyTicketTableViewCell: UITableViewCell {
         didSet {
             self.partialCashoutSliderView.isHidden = !showPartialCashoutSliderView
             
-            let partialCashoutEnabled = TargetVariables.partialCashoutEnabled
+            let partialCashoutEnabled = Env.businessSettingsSocket.clientSettings.partialCashoutEnabled
             
             self.partialCashoutMultiSlider?.isHidden = !partialCashoutEnabled
             self.maximumCashoutValueLabel.isHidden = !partialCashoutEnabled
@@ -227,7 +227,7 @@ class MyTicketTableViewCell: UITableViewCell {
 
         self.learnMoreBaseView.alpha = 0
         
-        let partialCashoutEnabled = TargetVariables.partialCashoutEnabled
+        let partialCashoutEnabled = Env.businessSettingsSocket.clientSettings.partialCashoutEnabled
         
         self.multisliderZeroHeightConstraint.isActive = !partialCashoutEnabled
         self.multisliderNormalHeightConstraint.isActive = partialCashoutEnabled
@@ -784,7 +784,7 @@ class MyTicketTableViewCell: UITableViewCell {
 
         self.partialCashoutButton.isEnabled = false
         
-        if TargetVariables.partialCashoutEnabled {
+        if Env.businessSettingsSocket.clientSettings.partialCashoutEnabled {
             self.viewModel?.requestPartialCashoutAvailability(ticket: ticket, stakeValue: "\(maxSliderStake/2)")
             
             self.viewModel?.partialCashoutSliderValue = Double(maxSliderStake/2)
