@@ -600,8 +600,8 @@ class ProfileLimitsManagementViewController: UIViewController {
             if let depositAmount = self.viewModel.depositLimit?.current?.amount,
                let currentAmount = Double(amount),
                currentAmount > depositAmount {
-                let title = localized("increasing_limit_warning_title").replacingFirstOccurrence(of: "{}", with: localized("deposit"))
-                let message = localized("increasing_limit_warning_text").replacingFirstOccurrence(of: "{}", with: localized("deposit"))
+                let title = localized("increasing_limit_warning_title").replacingFirstOccurrence(of: "{depositOrBetting}", with: localized("deposit_text"))
+                let message = localized("increasing_limit_warning_text").replacingFirstOccurrence(of: "{depositOrBetting}", with: localized("deposit_text"))
 
                 let alert = UIAlertController(title: title,
                                               message: message,
@@ -642,8 +642,8 @@ class ProfileLimitsManagementViewController: UIViewController {
             if let bettingAmount = self.viewModel.wageringLimit?.current?.amount,
                let currentAmount = Double(amount),
                currentAmount > bettingAmount {
-                let title = localized("increasing_limit_warning_title").replacingFirstOccurrence(of: "{}", with: localized("betting"))
-                let message = localized("increasing_limit_warning_text").replacingFirstOccurrence(of: "{}", with: localized("betting"))
+                let title = localized("increasing_limit_warning_title").replacingFirstOccurrence(of: "{depositOrBetting}", with: localized("betting"))
+                let message = localized("increasing_limit_warning_text").replacingFirstOccurrence(of: "{depositOrBetting}", with: localized("betting"))
 
                 let alert = UIAlertController(title: title,
                                               message: message,

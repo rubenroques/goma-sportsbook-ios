@@ -83,7 +83,4 @@ struct TargetVariables: SportsbookTarget {
         return "https://betsson.fr"
     }
     
-    static var partialCashoutEnabled: Bool {
-        return false
-    }
 }
