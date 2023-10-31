@@ -16,14 +16,14 @@ class SportRadarEventsPaginator {
         if case let .connected(subscription) = eventsSubject.value {
             return self.eventsSubject
                 .prepend(.connected(subscription: subscription))
-                .print("SportRadarEventsPaginator eventsGroupPublisher connected")
+                .print("SportRadarEventsPaginator eventsGroupPublisher prepend connected")
                 .eraseToAnyPublisher()
         }
         else if case .contentUpdate(_) = eventsSubject.value {
             if let subscription = self.subscription {
                 return self.eventsSubject
                     .prepend(.connected(subscription: subscription))
-                    .print("SportRadarEventsPaginator eventsGroupPublisher contentUpdate")
+                    .print("SportRadarEventsPaginator eventsGroupPublisher prepend connected and contentUpdate")
                     .eraseToAnyPublisher()
             }
             else {
@@ -31,7 +31,9 @@ class SportRadarEventsPaginator {
             }
         }
         else {
-            return self.eventsSubject.eraseToAnyPublisher()
+            return self.eventsSubject
+                .print("SportRadarEventsPaginator eventsGroupPublisher disconnected")
+                .eraseToAnyPublisher()
         }
     }
     
@@ -46,7 +48,11 @@ class SportRadarEventsPaginator {
     private var startPageIndex: Int = 0
     private var currentPage: Int
 
-    private var hasNextPage: Bool = false
+    private var hasNextPage: Bool = false {
+        didSet {
+            print("SportRadarEventsPaginator set hasNextPage: \(self.hasNextPage)")
+        }
+    }
 
     private var sessionToken: String
 
@@ -152,7 +158,10 @@ class SportRadarEventsPaginator {
     // Return as boolean indicating if there is more pages
     func requestNextPage() -> AnyPublisher<Bool, ServiceProviderError> {
 
+        print("SportRadarEventsPaginator requestNextPage")
+               
         if !hasNextPage {
+            print("SportRadarEventsPaginator requestNextPage hasNextPage: false")
             return Just(false).setFailureType(to: ServiceProviderError.self).eraseToAnyPublisher()
         }
 

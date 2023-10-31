@@ -165,14 +165,12 @@ class StoriesFullScreenItemView: UIView {
         case .empty:
             self.videoBaseView.isHidden = true
             self.contentImageView.isHidden = true
-
         }
 
         Publishers.CombineLatest(self.isReadyToPlayVideo, self.shouldPlayVideo)
             .receive(on: DispatchQueue.main)
             .sink { isReadyToPlayVideo, shouldPlayVideo in
                 if isReadyToPlayVideo && shouldPlayVideo {
-
                     self.startVideoProgress()
                 }
             }
@@ -321,7 +319,7 @@ extension StoriesFullScreenItemView {
 
         let videoPlayer = AVPlayer(playerItem: playerItem)
 
-        videoPlayer.isMuted = true
+        videoPlayer.isMuted = false
 
         // Observe the playerItem's status
         self.playerItemStatusObserver = playerItem.observe(\.status, options: [.new, .initial]) { [weak self] item, _ in

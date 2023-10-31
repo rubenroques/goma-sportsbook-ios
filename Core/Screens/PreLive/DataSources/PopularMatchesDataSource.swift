@@ -130,7 +130,12 @@ extension PopularMatchesDataSource {
         let sportType = ServiceProviderModelMapper.serviceProviderSportType(fromSport: self.sport)
         Env.servicesProvider.requestPreLiveMatchesNextPage(forSportType: sportType, sortType: .popular)
             .sink { completion in
-                print("PopularMatchesDataSource fetchPopularMatchesNextPage completion \(completion)")
+                switch completion {
+                case .finished:
+                    print("PopularMatchesDataSource fetchPopularMatchesNextPage completion finished")
+                case .failure(let serviceProviderError):
+                    print("PopularMatchesDataSource fetchPopularMatchesNextPage completion error: \(serviceProviderError)")
+                }
             } receiveValue: { [weak self] hasNextPage in
                 self?.hasNextPage = hasNextPage
 

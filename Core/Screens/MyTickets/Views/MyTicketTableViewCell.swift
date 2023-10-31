@@ -65,22 +65,17 @@ class MyTicketTableViewCell: UITableViewCell {
     @IBOutlet private weak var minimumCashoutValueLabel: UILabel!
     @IBOutlet private weak var maximumCashoutValueLabel: UILabel!
     
-    @IBOutlet weak var multisliderZeroHeightConstraint: NSLayoutConstraint!
-    @IBOutlet weak var multisliderNormalHeightConstraint: NSLayoutConstraint!
-    @IBOutlet weak var partialCashoutButtonTopSliderConstraint: NSLayoutConstraint!
-    @IBOutlet weak var partialCashoutButtonTopViewConstraint: NSLayoutConstraint!
+    @IBOutlet private weak var multisliderZeroHeightConstraint: NSLayoutConstraint!
+    @IBOutlet private weak var multisliderNormalHeightConstraint: NSLayoutConstraint!
+    @IBOutlet private weak var partialCashoutButtonTopSliderConstraint: NSLayoutConstraint!
+    @IBOutlet private weak var partialCashoutButtonTopViewConstraint: NSLayoutConstraint!
     
-
     // Custom views
     lazy var learnMoreBaseView: CashbackLearnMoreView = {
         let view = CashbackLearnMoreView()
         view.translatesAutoresizingMaskIntoConstraints = false
         return view
     }()
-    // Constraints
-//    @IBOutlet private weak var stackBottomToPartialConstraint: NSLayoutConstraint!
-//    @IBOutlet private weak var stackBottomToContainerConstraint: NSLayoutConstraint!
-//    @IBOutlet private weak var partialBottomToContainerConstraint: NSLayoutConstraint!
 
     private var betHistoryEntry: BetHistoryEntry?
 

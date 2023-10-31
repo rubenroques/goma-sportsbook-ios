@@ -15,14 +15,14 @@ class SportRadarEventsStorage {
         return self.eventsSubject.eraseToAnyPublisher()
     }
 
-    private var eventsSubject: CurrentValueSubject<[Event]?, Never>
+    private var eventsSubject: CurrentValueSubject<[Event]?, Never> = .init(nil)
 
     private var eventsDictionary: OrderedDictionary<String, CurrentValueSubject<Event, Never>>
     private var marketsDictionary: OrderedDictionary<String, CurrentValueSubject<Market, Never>>
     private var outcomesDictionary: OrderedDictionary<String, CurrentValueSubject<Outcome, Never>>
 
     init() {
-        self.eventsSubject = .init(nil)
+        self.eventsSubject.send(nil)
 
         self.eventsDictionary = [:]
         self.marketsDictionary = [:]
@@ -30,7 +30,7 @@ class SportRadarEventsStorage {
     }
 
     func reset() {
-        self.eventsSubject = .init(nil)
+        self.eventsSubject.send(nil)
 
         self.eventsDictionary = [:]
         self.marketsDictionary = [:]
