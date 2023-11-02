@@ -65,6 +65,8 @@ struct Match: Equatable {
 
     var promoImageURL: String?
     var oldMainMarketId: String?
+    
+    var competitionOutright: Competition?
 
     var detailedStatus: String {
         switch self.status {
@@ -111,7 +113,8 @@ struct Match: Equatable {
          status: Status,
          matchTime: String? = nil,
          promoImageURL: String? = nil,
-         oldMainMarketId: String? = nil) {
+         oldMainMarketId: String? = nil,
+         competitionOutright: Competition? = nil) {
 
         self.id = id
         self.competitionId = competitionId
@@ -134,6 +137,8 @@ struct Match: Equatable {
 
         self.promoImageURL = promoImageURL
         self.oldMainMarketId = oldMainMarketId
+        
+        self.competitionOutright = competitionOutright
     }
 
 }

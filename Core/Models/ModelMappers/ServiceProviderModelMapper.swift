@@ -62,7 +62,8 @@ extension ServiceProviderModelMapper {
                           status: Self.matchStatus(fromInternalEvent: event.status),
                           matchTime: event.matchTime,
                           promoImageURL: event.promoImageURL,
-                          oldMainMarketId: event.oldMainMarketId)
+                          oldMainMarketId: event.oldMainMarketId,
+                          competitionOutright: Self.competition(fromEvent: event))
         return match
     }
 
@@ -177,6 +178,20 @@ extension ServiceProviderModelMapper {
         case .fraction(let numerator, let denominator):
             return .fraction(numerator: numerator, denominator: denominator)
         }
+    }
+    
+    static func competition(fromEvent event: ServicesProvider.Event) -> Competition {
+        let sport = Self.sport(fromServiceProviderSportType: event.sport)
+        
+        let location = Location(id: event.venueCountry?.capital ?? "", name: event.venueCountry?.name ?? "", isoCode: event.venueCountry?.iso2Code ?? "")
+        let competition = Competition(id: event.id,
+                                      name: event.name ?? event.competitionName,
+                                      venue: location,
+                                      sport: sport,
+                                      numberOutrightMarkets: event.markets.count,
+                                      outrightMarkets: ServiceProviderModelMapper.markets(fromServiceProviderMarkets: event.markets))
+        
+        return competition
     }
 
     static func competitions(fromEventsGroups eventsGroups: [EventsGroup]) -> [Competition] {

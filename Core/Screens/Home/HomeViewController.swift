@@ -245,6 +245,12 @@ class HomeViewController: UIViewController {
         let matchDetailsViewController = MatchDetailsViewController(viewModel: MatchDetailsViewModel(matchId: matchId))
         self.navigationController?.pushViewController(matchDetailsViewController, animated: true)
     }
+    
+    private func openOutrightDetails(competition: Competition) {
+        let viewModel = OutrightMarketDetailsViewModel(competition: competition, store: OutrightMarketDetailsStore())
+        let outrightMarketDetailsViewController = OutrightMarketDetailsViewController(viewModel: viewModel)
+        self.navigationController?.pushViewController(outrightMarketDetailsViewController, animated: true)
+    }
 
     private func openPopularDetails(_ sport: Sport) {
         let viewModel = PopularDetailsViewModel(sport: sport)
@@ -753,9 +759,15 @@ extension HomeViewController: UITableViewDelegate, UITableViewDataSource {
             }
 
             cell.setupWithViewModel(viewModel)
+            
             cell.tappedMatchLineAction = { [weak self] match in
                 self?.openMatchDetails(matchId: match.id)
             }
+                
+            cell.tappedMatchOutrightLineAction = { [weak self] competition in
+                self?.openOutrightDetails(competition: competition)
+            }
+            
             cell.didLongPressOdd = { [weak self] bettingTicket in
                 self?.openQuickbet(bettingTicket)
             }
@@ -876,7 +888,7 @@ extension HomeViewController: UITableViewDelegate, UITableViewDataSource {
         case .highlightedMatches:
             if let viewModel = self.viewModel.highlightedMatchViewModel(forIndex: indexPath.row) {
                 switch viewModel.matchWidgetType {
-                case .topImage:
+                case .topImage, .topImageOutright:
                     return 252
                 default:
                     return 164
@@ -946,7 +958,7 @@ extension HomeViewController: UITableViewDelegate, UITableViewDataSource {
         case .highlightedMatches:
             if let viewModel = self.viewModel.highlightedMatchViewModel(forIndex: indexPath.row) {
                 switch viewModel.matchWidgetType {
-                case .topImage:
+                case .topImage, .topImageOutright:
                     return 252
                 default:
                     return 164

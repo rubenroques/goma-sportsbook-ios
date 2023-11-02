@@ -14,6 +14,8 @@ class MatchWidgetContainerTableViewCell: UITableViewCell {
     var matchWentLive: ((Match) -> Void) = { _ in }
     var didTapFavoriteMatchAction: ((Match) -> Void) = { _ in }
     var didLongPressOdd: ((BettingTicket) -> Void) = { _ in }
+    var tappedMatchOutrightLineAction: ((Competition) -> Void) = { _ in }
+
 
     private lazy var baseView: UIView = Self.createBaseView()
     private lazy var collectionView: UICollectionView = Self.createCell()
@@ -65,7 +67,7 @@ class MatchWidgetContainerTableViewCell: UITableViewCell {
         switch viewModel.matchWidgetType {
         case .normal, .backgroundImage:
             self.collectionViewHeightConstraint?.constant = 145
-        case .topImage:
+        case .topImage, .topImageOutright:
             self.collectionViewHeightConstraint?.constant = 254
         case .boosted:
             self.collectionViewHeightConstraint?.constant = 160
@@ -107,6 +109,10 @@ extension MatchWidgetContainerTableViewCell: UICollectionViewDelegate, UICollect
 
         cell.tappedMatchWidgetAction = { match in
             self.tappedMatchLineAction(match)
+        }
+        
+        cell.tappedMatchOutrightWidgetAction = { competition in
+            self.tappedMatchOutrightLineAction(competition)
         }
 
         cell.didLongPressOdd = { bettingTicket in

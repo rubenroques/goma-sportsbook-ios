@@ -1259,12 +1259,31 @@ extension SportRadarEventsProvider {
 
                 let headlineItems = headlineResponse.headlineItems ?? []
                 var headlineItemsImages: [String: String] = [:]
+                
                 headlineItems.forEach({ item in
                     if let id = item.marketId, let imageURL = item.imageURL {
                         headlineItemsImages[id] = imageURL
                     }
                 })
                 let marketIds = headlineItems.map({ item in return item.marketId }).compactMap({ $0 })
+                
+                // TEST
+//                let testIds = ["48526055.1", "45934912.1"]
+//                let testHeadlineItems = Array(headlineItems.prefix(2))
+//                var finalTestHeadlineItems = [SportRadarModels.HeadlineItem]()
+//                
+//                for (index, headItem) in testHeadlineItems.enumerated() {
+//                    var newItem = headItem
+//                    newItem.marketId = testIds[index]
+//                    finalTestHeadlineItems.append(newItem)
+//                }
+//                var testHeadlineItemsImages: [String: String] = [:]
+                
+//                for (index, testItem) in testHeadlineItems.enumerated() {
+//                    testHeadlineItemsImages[testIds[index]] = testItem.imageURL ?? ""
+//                }
+//                
+//                let marketIds = testIds
 
                 let publishers = marketIds.map(self.getEventForMarket(withId:))
                 let finalPublisher = Publishers.MergeMany(publishers)
@@ -1276,6 +1295,7 @@ extension SportRadarEventsProvider {
                         for event in events {
                             let firstMarketId = event.markets.first?.id ?? ""
                             event.promoImageURL =  headlineItemsImages[firstMarketId]
+//                            event.promoImageURL =  testHeadlineItemsImages[firstMarketId]
                         }
 
                         let cleanedEvents = events.compactMap({ $0 })
@@ -1289,6 +1309,7 @@ extension SportRadarEventsProvider {
 
                         // re-order the cleanedEvents based on the order of marketIds in headlineItems
                         let orderedEvents = headlineItems.compactMap { eventDict[$0.marketId ?? ""] }
+//                        let orderedEvents = finalTestHeadlineItems.compactMap { eventDict[$0.marketId ?? ""] }
                         return orderedEvents
                     })
                     .eraseToAnyPublisher()
