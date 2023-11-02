@@ -104,6 +104,7 @@ class ClientManagedHomeViewTemplateDataSource {
     //
     // Quick Swipe Stack Matches
     private var highlightsVisualImageMatches: [Match]  = []
+    private var highlightsVisualImageOutrights: [Match] = []
     private var highlightsBoostedMatches: [Match] = []
 
     //
@@ -264,7 +265,14 @@ class ClientManagedHomeViewTemplateDataSource {
                 }
             }
 
-            self?.highlightsVisualImageMatches = imageMatches
+            self?.highlightsVisualImageMatches = imageMatches.filter({
+                $0.homeParticipant.name != "" && $0.awayParticipant.name != ""
+            })
+            
+            self?.highlightsVisualImageOutrights = imageMatches.filter({
+                $0.homeParticipant.name == "" && $0.awayParticipant.name == ""
+            })
+            
             self?.highlightsBoostedMatches = boostedMatches
 
             self?.refreshPublisher.send()
@@ -401,7 +409,9 @@ extension ClientManagedHomeViewTemplateDataSource: HomeViewTemplateDataSource {
         case 3:
             return self.storiesLineViewModel == nil ? 0 : 1
         case 4:
-            return self.highlightsVisualImageMatches.count + self.highlightsBoostedMatches.count
+            return self.highlightsVisualImageMatches.count +
+            self.highlightsVisualImageOutrights.count +
+            self.highlightsBoostedMatches.count
         case 5:
             return self.shouldShowOwnBetCallToAction ? 1 : 0
         case 6:
@@ -573,12 +583,19 @@ extension ClientManagedHomeViewTemplateDataSource: HomeViewTemplateDataSource {
     }
 
     func highlightedMatchViewModel(forIndex index: Int) -> MatchWidgetCellViewModel? {
-        let boostedMatchesIndex = index-self.highlightsVisualImageMatches.count
+        
+        let boostedMatchesIndex = index-self.highlightsVisualImageMatches.count-self.highlightsVisualImageOutrights.count
+        
+        let highlightsOutrightsMatchesIndex = index-self.highlightsVisualImageMatches.count
+        
         if let match = self.highlightsVisualImageMatches[safe: index] {
             return MatchWidgetCellViewModel(match: match, matchWidgetType: .topImage)
         }
         else if let match = self.highlightsBoostedMatches[safe: boostedMatchesIndex] {
             return MatchWidgetCellViewModel(match: match, matchWidgetType: .boosted)
+        }
+        else if let match = self.highlightsVisualImageOutrights[safe: highlightsOutrightsMatchesIndex] {
+            return MatchWidgetCellViewModel(match: match, matchWidgetType: .topImageOutright)
         }
         return nil
     }
