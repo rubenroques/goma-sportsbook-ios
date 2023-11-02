@@ -9,14 +9,14 @@ import Foundation
 
 struct Sport: Codable, Equatable {
 
-    let id: String
-    let name: String
-    let alphaId: String?
-    let numericId: String?
-    let showEventCategory: Bool
-    let liveEventsCount: Int
-    let outrightEventsCount: Int
-    let eventsCount: Int
+    var id: String
+    var name: String
+    var alphaId: String?
+    var numericId: String?
+    var showEventCategory: Bool
+    var liveEventsCount: Int
+    var outrightEventsCount: Int
+    var eventsCount: Int
 
     init(id: String,
          name: String,

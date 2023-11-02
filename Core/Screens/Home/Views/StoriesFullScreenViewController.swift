@@ -35,6 +35,14 @@ class StoriesFullScreenViewController: UIViewController {
     private var pagesDictionary: [Int: StoriesFullScreenItemView] = [:]
     private var currentPage: Int = 0
 
+    private var isMuted: Bool = false {
+        didSet {
+            for page in pagesDictionary.values {
+                page.updateVideoMuted(isMuted: self.isMuted)
+            }
+        }
+    }
+    
     private var viewDidAlreadyAppear: Bool = false
     private var viewModel: StoriesFullScreenViewModel
 
@@ -55,7 +63,6 @@ class StoriesFullScreenViewController: UIViewController {
 
     override func viewDidLoad() {
         super.viewDidLoad()
-
 
         self.setupSubviews()
         self.setupWithTheme()
@@ -101,6 +108,9 @@ class StoriesFullScreenViewController: UIViewController {
                 self?.markReadAction?(storyId)
             }
 
+            storiesFullScreenItemView.didUpdateMutedStateAction = { [weak self] isMuted in
+                self?.isMuted = isMuted
+            }
             items.append(storiesFullScreenItemView)
 
             self.pagesDictionary[index] = storiesFullScreenItemView

@@ -71,6 +71,20 @@ class StoriesFullScreenItemView: UIView {
     var closeRequestedAction: () -> Void = { }
     var linkRequestAction: ((URL) -> Void) = { _ in }
 
+    var didUpdateMutedStateAction: ((Bool) -> Void) = { _ in }
+    
+    var isMuted: Bool = false {
+        didSet {
+            if self.isMuted {
+                self.soundImageView.image = UIImage(systemName: "speaker.slash.fill")?.withRenderingMode(.alwaysTemplate)
+            }
+            else {
+                self.soundImageView.image = UIImage(systemName: "speaker.3.fill")?.withRenderingMode(.alwaysTemplate)
+            }
+            self.videoPlayerViewController.player?.isMuted = self.isMuted
+        }
+    }
+    
     private lazy var baseView: UIView = Self.createBaseView()
 
     private lazy var nextPageView: UIView = Self.createTapView()
@@ -91,6 +105,11 @@ class StoriesFullScreenItemView: UIView {
 
 
     //
+    
+    private lazy var soundImageBaseView: UIView = Self.createSoundImageBaseView()
+    private lazy var soundImageView: UIImageView = Self.createSoundImageView()
+    
+    
     private lazy var closeImageBaseView: UIView = Self.createCloseImageBaseView()
     private lazy var closeImageView: UIImageView = Self.createCloseImageView()
     private lazy var actionButton: UIButton = Self.createActionButton()
@@ -147,6 +166,10 @@ class StoriesFullScreenItemView: UIView {
         self.closeImageView.addGestureRecognizer(closeTapGesture)
         self.closeImageView.isUserInteractionEnabled = true
 
+        let soundTapGesture = UITapGestureRecognizer(target: self, action: #selector(didTapSoundButton))
+        self.soundImageView.addGestureRecognizer(soundTapGesture)
+        self.soundImageView.isUserInteractionEnabled = true
+
         self.actionButton.addTarget(self, action: #selector(didTapActionButton), for: .primaryActionTriggered)
 
         self.topLabel.text = self.viewModel.title
@@ -201,6 +224,9 @@ class StoriesFullScreenItemView: UIView {
 
         self.closeImageBaseView.backgroundColor = .clear
         self.closeImageView.setImageColor(color: .white)
+
+        self.soundImageBaseView.backgroundColor = .clear
+        self.soundImageView.tintColor = .white
 
         self.smoothProgressBarView.foregroundBarColor = .white
         self.smoothProgressBarView.backgroundBarColor = UIColor.App.scroll
@@ -310,6 +336,19 @@ class StoriesFullScreenItemView: UIView {
 }
 
 extension StoriesFullScreenItemView {
+    
+    @objc private func didTapSoundButton() {
+        self.isMuted.toggle()
+        self.didUpdateMutedStateAction(self.isMuted)
+    }
+    
+    func updateVideoMuted(isMuted: Bool) {
+        self.isMuted = isMuted
+    }
+    
+}
+
+extension StoriesFullScreenItemView {
 
     func addVideoView(withURL sourceUrl: URL) {
 
@@ -319,7 +358,7 @@ extension StoriesFullScreenItemView {
 
         let videoPlayer = AVPlayer(playerItem: playerItem)
 
-        videoPlayer.isMuted = false
+        videoPlayer.isMuted = self.isMuted
 
         // Observe the playerItem's status
         self.playerItemStatusObserver = playerItem.observe(\.status, options: [.new, .initial]) { [weak self] item, _ in
@@ -435,6 +474,21 @@ extension StoriesFullScreenItemView {
         return imageView
     }
 
+    private static func createSoundImageView() -> UIImageView {
+        let imageView = UIImageView()
+        imageView.image = UIImage(systemName: "speaker.3.fill")?.withRenderingMode(.alwaysTemplate)
+        imageView.contentMode = .scaleAspectFit
+        imageView.setImageColor(color: .white)
+        imageView.translatesAutoresizingMaskIntoConstraints = false
+        return imageView
+    }
+    
+    private static func createSoundImageBaseView() -> UIView {
+        let view = UIView()
+        view.translatesAutoresizingMaskIntoConstraints = false
+        return view
+    }
+    
     private static func createCloseImageView() -> UIImageView {
         let imageView = UIImageView()
         imageView.image = UIImage(named: "arrow_close_icon")
@@ -472,8 +526,12 @@ extension StoriesFullScreenItemView {
         self.topView.addSubview(self.smoothProgressBarView)
         self.topView.addSubview(self.topLabel)
         self.topView.addSubview(self.closeImageBaseView)
+        self.topView.addSubview(self.soundImageBaseView)
+        
         self.closeImageBaseView.addSubview(self.closeImageView)
 
+        self.soundImageBaseView.addSubview(self.soundImageView)
+        
         self.baseView.addSubview(self.actionButton)
 
         // Initialize constraints
@@ -527,11 +585,21 @@ extension StoriesFullScreenItemView {
             self.closeImageBaseView.heightAnchor.constraint(equalTo: self.closeImageBaseView.widthAnchor),
             self.closeImageBaseView.trailingAnchor.constraint(equalTo: self.topView.trailingAnchor, constant: -2),
             self.closeImageBaseView.centerYAnchor.constraint(equalTo: self.topLabel.centerYAnchor),
-
+            
             self.closeImageView.heightAnchor.constraint(equalToConstant: 22),
             self.closeImageView.heightAnchor.constraint(equalTo: self.closeImageView.widthAnchor),
             self.closeImageView.centerXAnchor.constraint(equalTo: self.closeImageBaseView.centerXAnchor),
             self.closeImageView.centerYAnchor.constraint(equalTo: self.closeImageBaseView.centerYAnchor),
+            
+            self.soundImageBaseView.heightAnchor.constraint(equalToConstant: 44),
+            self.soundImageBaseView.heightAnchor.constraint(equalTo: self.soundImageBaseView.widthAnchor),
+            self.soundImageBaseView.trailingAnchor.constraint(equalTo: self.closeImageBaseView.leadingAnchor, constant: -3),
+            self.soundImageBaseView.centerYAnchor.constraint(equalTo: self.topLabel.centerYAnchor),
+            
+            self.soundImageView.heightAnchor.constraint(equalToConstant: 26),
+            self.soundImageView.widthAnchor.constraint(equalToConstant: 32),
+            self.soundImageView.centerXAnchor.constraint(equalTo: self.soundImageBaseView.centerXAnchor),
+            self.soundImageView.centerYAnchor.constraint(equalTo: self.soundImageBaseView.centerYAnchor),
 
             self.smoothProgressBarView.leadingAnchor.constraint(equalTo: self.topView.leadingAnchor, constant: 12),
             self.smoothProgressBarView.trailingAnchor.constraint(equalTo: self.topView.trailingAnchor, constant: -12),

@@ -31,13 +31,36 @@ class SportTypeStore {
         }
     }
 
+    private var liveSportsCountCurrentValueSubject: CurrentValueSubject<[String: Int], Never> = .init([:])
+    
     private var activeSportsCurrentValueSubject: CurrentValueSubject<LoadableContent<[Sport]>, Never> = .init(.idle)
     var activeSportsPublisher: AnyPublisher<LoadableContent<[Sport]>, Never> {
-        return self.activeSportsCurrentValueSubject.eraseToAnyPublisher()
+        Publishers.CombineLatest(self.activeSportsCurrentValueSubject, self.liveSportsCountCurrentValueSubject)
+            .map { sportsList, liveCountDict -> LoadableContent<[Sport]> in
+                switch sportsList {
+                case .idle, .failed, .loading:
+                    return sportsList
+                case .loaded(let sportsList):
+                    var updatedSportsList: [Sport] = []
+                    for sport in sportsList {
+                        if let alphaId = sport.alphaId, let newLiveCount = liveCountDict[alphaId] {
+                            var updatedSport = sport
+                            updatedSport.liveEventsCount = newLiveCount
+                            updatedSportsList.append(updatedSport)
+                        }
+                        else {
+                            updatedSportsList.append(sport)
+                        }
+                    }
+                    return .loaded(updatedSportsList)
+                }
+            }
+            .eraseToAnyPublisher()
     }
 
     var activeSports: [Sport] = []
 
+    private var liveSportsCountSubscription: ServicesProvider.Subscription?
     private var sportsSubscription: ServicesProvider.Subscription?
     private var cancellables = Set<AnyCancellable>()
 
@@ -57,8 +80,30 @@ class SportTypeStore {
 
         self.activeSportsCurrentValueSubject.send(.loading)
 
+        Env.servicesProvider.subscribeLiveSportTypes()
+            .retry(3)
+            .receive(on: DispatchQueue.main)
+            .sink(receiveCompletion: { completion in
+                print("SportTypeStore subscribeLiveSportTypes completion \(completion)")
+            }, receiveValue: { [weak self] subscribableContent in
+                switch subscribableContent {
+                case .connected(let subscription):
+                    self?.liveSportsCountSubscription = subscription
+                case .contentUpdate(let sportTypes):
+                    let mappedSportTypes = sportTypes.map(ServiceProviderModelMapper.sport(fromServiceProviderSportType:))
+                    var sportLiveCount: [String: Int] = [:]
+                    for sport in mappedSportTypes {
+                        sportLiveCount[sport.alphaId ?? sport.id] = sport.eventsCount
+                    }
+                    self?.liveSportsCountCurrentValueSubject.send(sportLiveCount)
+                case .disconnected:
+                    print("SportTypeStore subscribeLiveSportTypes")
+                }
+            })
+            .store(in: &self.cancellables)
+        
         Env.servicesProvider.subscribeAllSportTypes()
-            .retry(4)
+            .retry(3)
             .receive(on: DispatchQueue.main)
             .sink(receiveCompletion: { [weak self] completion in
                 switch completion {
