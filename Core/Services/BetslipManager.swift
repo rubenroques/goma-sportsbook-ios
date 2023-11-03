@@ -378,8 +378,18 @@ extension BetslipManager {
                 case .forbidden:
                     return BetslipErrorType.forbiddenRequest
                 case .errorMessage(let message):
+                    
+                    if message.contains("bet_error") {
+                        return BetslipErrorType.betPlacementDetailedError(message: localized(message))
+                    }
+                    
                     return BetslipErrorType.betPlacementDetailedError(message: message)
                 case .notPlacedBet(let message):
+                    
+                    if message.contains("bet_error") {
+                        return BetslipErrorType.betPlacementDetailedError(message: localized(message))
+                    }
+                    
                     return BetslipErrorType.betPlacementDetailedError(message: message)
                 default:
                     return BetslipErrorType.betPlacementError
@@ -434,8 +444,18 @@ extension BetslipManager {
                 case .forbidden:
                     return BetslipErrorType.forbiddenRequest
                 case .errorMessage(let message):
+                    
+                    if message.contains("bet_error") {
+                        return BetslipErrorType.betPlacementDetailedError(message: localized(message))
+                    }
+                    
                     return BetslipErrorType.betPlacementDetailedError(message: message)
                 case .notPlacedBet(let message):
+                    
+                    if message.contains("bet_error") {
+                        return BetslipErrorType.betPlacementDetailedError(message: localized(message))
+                    }
+                    
                     return BetslipErrorType.betPlacementDetailedError(message: message)
                 default:
                     return BetslipErrorType.betPlacementError
@@ -504,8 +524,18 @@ extension BetslipManager {
                 case .forbidden:
                     return BetslipErrorType.forbiddenRequest
                 case .errorMessage(let message):
+                    
+                    if message.contains("bet_error") {
+                        return BetslipErrorType.betPlacementDetailedError(message: localized(message))
+                    }
+                    
                     return BetslipErrorType.betPlacementDetailedError(message: message)
                 case .notPlacedBet(let message):
+                    
+                    if message.contains("bet_error") {
+                        return BetslipErrorType.betPlacementDetailedError(message: localized(message))
+                    }
+                    
                     return BetslipErrorType.betPlacementDetailedError(message: message)
                 default:
                     return BetslipErrorType.betPlacementError
@@ -564,8 +594,18 @@ extension BetslipManager {
                 case .forbidden:
                     return BetslipErrorType.forbiddenRequest
                 case .errorMessage(let message):
+                    
+                    if message.contains("bet_error") {
+                        return BetslipErrorType.betPlacementDetailedError(message: localized(message))
+                    }
+                    
                     return BetslipErrorType.betPlacementDetailedError(message: message)
                 case .notPlacedBet(let message):
+                    
+                    if message.contains("bet_error") {
+                        return BetslipErrorType.betPlacementDetailedError(message: localized(message))
+                    }
+                    
                     return BetslipErrorType.betPlacementDetailedError(message: message)
                 default:
                     return BetslipErrorType.betPlacementError
