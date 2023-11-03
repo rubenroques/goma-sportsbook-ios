@@ -225,7 +225,13 @@ class MatchLineTableViewCell: UITableViewCell {
 
         self.selectionStyle = .none
 
+        self.matchInfoPublisher?.cancel()
+        self.matchInfoPublisher = nil
+        
         self.viewModel = nil
+        self.match = nil
+
+        self.matchStatsViewModel = nil
 
         self.loadingView.hidesWhenStopped = true
         self.loadingView.stopAnimating()
@@ -237,13 +243,6 @@ class MatchLineTableViewCell: UITableViewCell {
 
         self.collectionView.layoutSubviews()
         self.collectionView.setContentOffset(CGPoint(x: -self.collectionView.contentInset.left, y: 1), animated: false)
-
-        self.match = nil
-
-        self.matchStatsViewModel = nil
-
-        self.matchInfoPublisher?.cancel()
-        self.matchInfoPublisher = nil
 
         if self.cachedCardsStyle != StyleHelper.cardsStyleActive() {
 
@@ -274,7 +273,7 @@ class MatchLineTableViewCell: UITableViewCell {
             self.setupWithMatch(match)
         }
 
-        viewModel.matchPublisher
+        self.matchInfoPublisher = viewModel.matchPublisher
             .receive(on: DispatchQueue.main)
             .sink { completion in
                 switch completion {
@@ -290,7 +289,6 @@ class MatchLineTableViewCell: UITableViewCell {
                     self.loadingView.stopAnimating()
                 }
             }
-            .store(in: &self.cancellables)
 
     }
 

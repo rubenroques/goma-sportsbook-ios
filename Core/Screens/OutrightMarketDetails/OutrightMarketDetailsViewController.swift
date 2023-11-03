@@ -438,7 +438,7 @@ class OutrightMarketDetailsViewController: UIViewController {
 
         var sportName = competition.sport?.name.lowercased() ?? ""
 
-        if let realSportName = Env.sportsStore.activeSports.filter({
+        if let realSportName = Env.sportsStore.getActiveSports().filter({
             $0.alphaId == competition.sport?.alphaId
         }).compactMap({
             return $0.name

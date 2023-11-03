@@ -188,10 +188,10 @@ class DepositViewController: UIViewController {
         depositTipLabel.font = AppFont.with(type: .semibold, size: 12)
         depositTipLabel.isHidden = false
 
-        self.setDepositAmountButtonDesign(button: self.amount10Button, title: "€20")
-        self.setDepositAmountButtonDesign(button: self.amount20Button, title: "€50")
-        self.setDepositAmountButtonDesign(button: self.amount50Button, title: "€100")
-        self.setDepositAmountButtonDesign(button: self.amount100Button, title: "€200")
+        self.setDepositAmountButtonDesign(button: self.amount10Button, title: "20€")
+        self.setDepositAmountButtonDesign(button: self.amount20Button, title: "50€")
+        self.setDepositAmountButtonDesign(button: self.amount50Button, title: "100€")
+        self.setDepositAmountButtonDesign(button: self.amount100Button, title: "200€")
 
         self.nextButton.setTitle(localized("next"), for: .normal)
         self.nextButton.isEnabled = false

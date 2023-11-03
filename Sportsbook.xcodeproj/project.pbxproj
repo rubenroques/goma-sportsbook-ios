@@ -2564,6 +2564,8 @@
 		459874BC2A28D272008C0ADE /* CardsCollectionViewLayout.swift in Sources */ = {isa = PBXBuildFile; fileRef = 459874B72A28D271008C0ADE /* CardsCollectionViewLayout.swift */; };
 		459874BD2A28D272008C0ADE /* CardsCollectionViewLayout.swift in Sources */ = {isa = PBXBuildFile; fileRef = 459874B72A28D271008C0ADE /* CardsCollectionViewLayout.swift */; };
 		459874BE2A28D272008C0ADE /* CardsCollectionViewLayout.swift in Sources */ = {isa = PBXBuildFile; fileRef = 459874B72A28D271008C0ADE /* CardsCollectionViewLayout.swift */; };
+		459F410C2AF54C86006BAEE9 /* SwiftPrettyPrint in Frameworks */ = {isa = PBXBuildFile; productRef = 459F410B2AF54C86006BAEE9 /* SwiftPrettyPrint */; };
+		459F410E2AF54D5E006BAEE9 /* SwiftPrettyPrint in Frameworks */ = {isa = PBXBuildFile; productRef = 459F410D2AF54D5E006BAEE9 /* SwiftPrettyPrint */; };
 		45A3301C298935F6008181E9 /* Adyen in Frameworks */ = {isa = PBXBuildFile; productRef = 45A3301B298935F6008181E9 /* Adyen */; };
 		45A3301E298935F6008181E9 /* AdyenActions in Frameworks */ = {isa = PBXBuildFile; productRef = 45A3301D298935F6008181E9 /* AdyenActions */; };
 		45A33020298935F6008181E9 /* AdyenCard in Frameworks */ = {isa = PBXBuildFile; productRef = 45A3301F298935F6008181E9 /* AdyenCard */; };
@@ -7914,6 +7916,7 @@
 				45A332C6298976BA008181E9 /* OrderedCollections in Frameworks */,
 				458C074F2AD5B4930096E0D4 /* OptimoveCore in Frameworks */,
 				45DB8DB02A6A9C7C0018C591 /* CountrySelectionFeature in Frameworks */,
+				459F410C2AF54C86006BAEE9 /* SwiftPrettyPrint in Frameworks */,
 				45A332C7298976BA008181E9 /* SweeterSwift in Frameworks */,
 				45A332C8298976BA008181E9 /* Starscream in Frameworks */,
 				45C8ECB929CC7AE4006A35DC /* HeaderTextField in Frameworks */,
@@ -7984,6 +7987,7 @@
 				45F6BD962AB3732C00C81DE1 /* OrderedCollections in Frameworks */,
 				A9C5AC1D2ACDB30100C3FD56 /* OptimoveCore in Frameworks */,
 				45F6BD972AB3732C00C81DE1 /* CountrySelectionFeature in Frameworks */,
+				459F410E2AF54D5E006BAEE9 /* SwiftPrettyPrint in Frameworks */,
 				45F6BD982AB3732C00C81DE1 /* SweeterSwift in Frameworks */,
 				45F6BD992AB3732C00C81DE1 /* Starscream in Frameworks */,
 				45F6BD9A2AB3732C00C81DE1 /* HeaderTextField in Frameworks */,
@@ -11551,6 +11555,7 @@
 				458C074E2AD5B4930096E0D4 /* OptimoveCore */,
 				458C07502AD5B49A0096E0D4 /* OptimoveNotificationServiceExtension */,
 				458C07522AD5B4A10096E0D4 /* OptimoveSDK */,
+				459F410B2AF54C86006BAEE9 /* SwiftPrettyPrint */,
 			);
 			productName = Sportsbook;
 			productReference = 45A3334E298976BA008181E9 /* Betsson.app */;
@@ -11647,6 +11652,7 @@
 				A9C5AC1C2ACDB30100C3FD56 /* OptimoveCore */,
 				A9C5AC1E2ACDB30100C3FD56 /* OptimoveNotificationServiceExtension */,
 				A9C5AC202ACDB30100C3FD56 /* OptimoveSDK */,
+				459F410D2AF54D5E006BAEE9 /* SwiftPrettyPrint */,
 			);
 			productName = Sportsbook;
 			productReference = 45F6BE372AB3732C00C81DE1 /* Betsson UAT.app */;
@@ -11733,6 +11739,7 @@
 				45ECD74E2A8FFB5100492CB9 /* XCRemoteSwiftPackageReference "answer_bot_sdk_ios" */,
 				45ECD7512A8FFB8A00492CB9 /* XCRemoteSwiftPackageReference "support_sdk_ios" */,
 				A9C5AC1B2ACDB30000C3FD56 /* XCRemoteSwiftPackageReference "Optimove-SDK-iOS" */,
+				459F410A2AF54C86006BAEE9 /* XCRemoteSwiftPackageReference "SwiftPrettyPrint" */,
 			);
 			productRefGroup = 455A0C5126BD902C00EC572D /* Products */;
 			projectDirPath = "";
@@ -19133,7 +19140,7 @@
 				CODE_SIGN_ENTITLEMENTS = "Clients/Betsson/Betsson-PROD.entitlements";
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Manual;
-				CURRENT_PROJECT_VERSION = 10056;
+				CURRENT_PROJECT_VERSION = 10060;
 				DEVELOPMENT_TEAM = QN2DYX5K4M;
 				INFOPLIST_FILE = "$(SRCROOT)/Clients/Betsson/Misc-PROD/Betsson-PROD-Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 13.0;
@@ -19162,7 +19169,7 @@
 				CODE_SIGN_ENTITLEMENTS = "Clients/Betsson/Betsson-PROD.entitlements";
 				CODE_SIGN_IDENTITY = "Apple Distribution";
 				CODE_SIGN_STYLE = Manual;
-				CURRENT_PROJECT_VERSION = 10056;
+				CURRENT_PROJECT_VERSION = 10060;
 				DEVELOPMENT_TEAM = QN2DYX5K4M;
 				INFOPLIST_FILE = "$(SRCROOT)/Clients/Betsson/Misc-PROD/Betsson-PROD-Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 13.0;
@@ -19827,6 +19834,14 @@
 			requirement = {
 				kind = upToNextMajorVersion;
 				minimumVersion = 1.0.0;
+			};
+		};
+		459F410A2AF54C86006BAEE9 /* XCRemoteSwiftPackageReference "SwiftPrettyPrint" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/YusukeHosonuma/SwiftPrettyPrint.git";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 1.4.0;
 			};
 		};
 		45A3302D298976BA008181E9 /* XCRemoteSwiftPackageReference "Reachability" */ = {
@@ -20631,6 +20646,16 @@
 			isa = XCSwiftPackageProductDependency;
 			package = A9C5AC1B2ACDB30000C3FD56 /* XCRemoteSwiftPackageReference "Optimove-SDK-iOS" */;
 			productName = OptimoveSDK;
+		};
+		459F410B2AF54C86006BAEE9 /* SwiftPrettyPrint */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 459F410A2AF54C86006BAEE9 /* XCRemoteSwiftPackageReference "SwiftPrettyPrint" */;
+			productName = SwiftPrettyPrint;
+		};
+		459F410D2AF54D5E006BAEE9 /* SwiftPrettyPrint */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 459F410A2AF54C86006BAEE9 /* XCRemoteSwiftPackageReference "SwiftPrettyPrint" */;
+			productName = SwiftPrettyPrint;
 		};
 		45A3301B298935F6008181E9 /* Adyen */ = {
 			isa = XCSwiftPackageProductDependency;

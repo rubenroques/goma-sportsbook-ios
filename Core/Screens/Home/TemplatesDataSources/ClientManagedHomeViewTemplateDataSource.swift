@@ -459,7 +459,7 @@ extension ClientManagedHomeViewTemplateDataSource: HomeViewTemplateDataSource {
             ()
         }
 
-        let activeSports = Env.sportsStore.activeSports
+        let activeSports = Env.sportsStore.getActiveSports()
 
         let croppedSection = section - self.fixedSection
 

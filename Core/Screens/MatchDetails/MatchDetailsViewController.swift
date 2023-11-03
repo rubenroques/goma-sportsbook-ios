@@ -1193,7 +1193,7 @@ class MatchDetailsViewController: UIViewController {
 
         var sportName = match.sportName?.lowercased() ?? ""
 
-        if let realSportName = Env.sportsStore.activeSports.filter({
+        if let realSportName = Env.sportsStore.getActiveSports().filter({
             $0.alphaId == match.sport.alphaId
         }).compactMap({
             return $0.name

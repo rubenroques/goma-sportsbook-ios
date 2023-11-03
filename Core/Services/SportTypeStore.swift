@@ -8,6 +8,7 @@
 import Foundation
 import Combine
 import ServicesProvider
+import SwiftPrettyPrint
 
 class SportTypeStore {
 
@@ -55,10 +56,9 @@ class SportTypeStore {
                     return .loaded(updatedSportsList)
                 }
             }
+            .prettyPrint("SportTypeStoreDebug combine", when: [.output, .completion], format: .singleline)
             .eraseToAnyPublisher()
     }
-
-    var activeSports: [Sport] = []
 
     private var liveSportsCountSubscription: ServicesProvider.Subscription?
     private var sportsSubscription: ServicesProvider.Subscription?
@@ -83,6 +83,7 @@ class SportTypeStore {
         Env.servicesProvider.subscribeLiveSportTypes()
             .retry(3)
             .receive(on: DispatchQueue.main)
+            .prettyPrint("SportTypeStoreDebug subscribeLiveSportTypes", format: .singleline)
             .sink(receiveCompletion: { completion in
                 print("SportTypeStore subscribeLiveSportTypes completion \(completion)")
             }, receiveValue: { [weak self] subscribableContent in
@@ -100,17 +101,19 @@ class SportTypeStore {
                     print("SportTypeStore subscribeLiveSportTypes")
                 }
             })
+            
             .store(in: &self.cancellables)
         
         Env.servicesProvider.subscribeAllSportTypes()
             .retry(3)
             .receive(on: DispatchQueue.main)
+            .prettyPrint("SportTypeStoreDebug subscribeAllSportTypes", format: .singleline)
             .sink(receiveCompletion: { [weak self] completion in
                 switch completion {
                 case .finished:
                     ()
                 case .failure(let error):
-                    print("All sports error: \(error)")
+                    print("SportTypeStore: All sports error: \(error)")
                     self?.activeSportsCurrentValueSubject.send(.failed)
                     self?.sportsSubscription = nil
                 }
@@ -124,7 +127,6 @@ class SportTypeStore {
                     $0.eventsCount > 0 || $0.liveEventsCount > 0 || $0.outrightEventsCount > 0
                 })
                 self?.activeSportsCurrentValueSubject.send(.loaded(filteredSports))
-                self?.activeSports = filteredSports
 
             case .disconnected:
                 break

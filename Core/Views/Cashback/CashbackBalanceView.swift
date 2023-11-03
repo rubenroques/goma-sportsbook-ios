@@ -131,7 +131,7 @@ extension CashbackBalanceView {
     private static func createValueLabel() -> UILabel {
         let label = UILabel()
         label.translatesAutoresizingMaskIntoConstraints = false
-        label.text = "€0,00"
+        label.text = "0,00€"
         label.font = AppFont.with(type: .bold, size: 14)
         label.numberOfLines = 0
         return label

@@ -147,6 +147,10 @@ class StoriesFullScreenItemView: UIView {
         fatalError()
     }
 
+    deinit {
+        print("StoriesFullScreenItemView.deinit")
+    }
+    
     func commonInit() {
         self.setupSubviews()
         self.setupWithTheme()
@@ -192,9 +196,9 @@ class StoriesFullScreenItemView: UIView {
 
         Publishers.CombineLatest(self.isReadyToPlayVideo, self.shouldPlayVideo)
             .receive(on: DispatchQueue.main)
-            .sink { isReadyToPlayVideo, shouldPlayVideo in
+            .sink { [weak self] isReadyToPlayVideo, shouldPlayVideo in
                 if isReadyToPlayVideo && shouldPlayVideo {
-                    self.startVideoProgress()
+                    self?.startVideoProgress()
                 }
             }
             .store(in: &self.cancellables)
@@ -336,6 +340,10 @@ class StoriesFullScreenItemView: UIView {
 }
 
 extension StoriesFullScreenItemView {
+    
+    public func stopPlaying() {
+        self.resetProgress()
+    }
     
     @objc private func didTapSoundButton() {
         self.isMuted.toggle()

@@ -131,10 +131,10 @@ public class DepositOnRegisterViewController: UIViewController {
 
         self.depositHeaderTextFieldView.setCurrencyMode(true, currencySymbol: "€")
 
-        self.amountButton1.setTitle("€20", for: .normal)
-        self.amountButton2.setTitle("€50", for: .normal)
-        self.amountButton3.setTitle("€100", for: .normal)
-        self.amountButton4.setTitle("€200", for: .normal)
+        self.amountButton1.setTitle("20€", for: .normal)
+        self.amountButton2.setTitle("50€", for: .normal)
+        self.amountButton3.setTitle("100€", for: .normal)
+        self.amountButton4.setTitle("200€", for: .normal)
 
         self.amountButton1.addTarget(self, action: #selector(didTapAmountButton1), for: .primaryActionTriggered)
         self.amountButton2.addTarget(self, action: #selector(didTapAmountButton2), for: .primaryActionTriggered)

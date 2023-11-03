@@ -61,16 +61,23 @@ class StoriesFullScreenViewController: UIViewController {
         fatalError("init(coder:) has not been implemented")
     }
 
+    deinit {
+        print("StoriesFullScreenViewController.deinit")
+    }
+    
     override func viewDidLoad() {
         super.viewDidLoad()
 
         self.setupSubviews()
         self.setupWithTheme()
 
+        let swipeDown = UISwipeGestureRecognizer(target: self, action: #selector(self.handleSwipeDown(_:)))
+        swipeDown.direction = .down
+        self.view.addGestureRecognizer(swipeDown)
+        
         self.cubicScrollView.cubeDelegate = self
 
         var items: [StoriesFullScreenItemView] = []
-
         for (index, storyViewModel) in self.viewModel.storiesViewModels.enumerated() {
 
             let storiesFullScreenItemViewModel = StoriesFullScreenItemViewModel(storyCellViewModel: storyViewModel)
@@ -118,10 +125,6 @@ class StoriesFullScreenViewController: UIViewController {
 
         self.cubicScrollView.addChildViews(items)
 
-        let swipeDown = UISwipeGestureRecognizer(target: self, action: #selector(self.handleSwipeDown(_:)))
-        swipeDown.direction = .down
-        self.view.addGestureRecognizer(swipeDown)
-
     }
 
     override func viewWillAppear(_ animated: Bool) {
@@ -137,7 +140,7 @@ class StoriesFullScreenViewController: UIViewController {
 
             self.cubicScrollView.setContentOffsetToIndex(self.viewModel.initialIndex)
 
-            if let page = self.pagesDictionary[self.viewModel.initialIndex ?? 0] {
+            if let page = self.pagesDictionary[self.viewModel.initialIndex] {
                 page.startProgress()
             }
 
@@ -149,7 +152,15 @@ class StoriesFullScreenViewController: UIViewController {
         }
 
     }
-
+    
+    override func viewDidDisappear(_ animated: Bool) {
+        super.viewDidDisappear(animated)
+        
+        for page in pagesDictionary.values {
+            page.stopPlaying()
+        }
+    }
+    
     override func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {
         super.traitCollectionDidChange(previousTraitCollection)
 
