@@ -127,6 +127,16 @@ class SportRadarBettingProvider: BettingProvider, Connector {
                     return Just( placedBetsResponse ).setFailureType(to: ServiceProviderError.self).eraseToAnyPublisher()
                 }
                 else {
+                    
+                    if internalPlacedBetsResponse.responseCode == "4",
+                       let message = internalPlacedBetsResponse.errorMessage,
+                       message.contains("wager limit") {
+                        
+                        let notPlacedBetError = ServiceProviderError.notPlacedBet(message: "bet_error_wager_limit")
+                        return Fail(outputType: PlacedBetsResponse.self, failure: notPlacedBetError)
+                            .eraseToAnyPublisher()
+                    }
+                    
                     let notPlacedBetError = ServiceProviderError.notPlacedBet(message: internalPlacedBetsResponse.errorMessage ?? "")
                     return Fail(outputType: PlacedBetsResponse.self, failure: notPlacedBetError)
                         .eraseToAnyPublisher()
