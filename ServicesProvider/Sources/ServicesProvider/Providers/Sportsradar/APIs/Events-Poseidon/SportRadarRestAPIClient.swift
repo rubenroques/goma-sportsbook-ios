@@ -327,15 +327,14 @@ extension SportRadarRestAPIClient: Endpoint {
             return bodyString.data(using: String.Encoding.utf8) ?? Data()
         case .search(let query, let resultLimit, let page, let isLive):
 
-            //let type = isLive ? "Inplay" : "Prematch"
-            let type = "Prematch"
+            let type = isLive ? "Inplay" : "Prematch"
 
             let bodyString =
                         """
                         {
                             "contentId": {
                                 "type": "eventSearch",
-                                "id": "\(query)/\(resultLimit)/\(page)/\(type)"
+                                "id": "\(query)/\(resultLimit)/\(page)"
                             },
                             "clientContext": {
                                 "language": "\(SportRadarConfiguration.shared.socketLanguageCode)",

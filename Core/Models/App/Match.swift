@@ -73,8 +73,9 @@ struct Match: Equatable {
         case .unknown:
             return ""
         case .notStarted:
-            let translatedStatus = localized("live_status_not_started")
-            return translatedStatus.isEmpty ? "Not started" : translatedStatus
+            let translatedStatus = localized("live_status_starting_soon")
+            return translatedStatus
+            
         case .inProgress(let details):
             let translatedStatus = "live_status_" + details
             return localized(translatedStatus)
@@ -84,7 +85,7 @@ struct Match: Equatable {
 //            return "\(details)"
         case .ended:
             let translatedStatus = localized("live_status_ended")
-            return translatedStatus.isEmpty ? "Ended" : translatedStatus
+            return translatedStatus
         }
 
     }

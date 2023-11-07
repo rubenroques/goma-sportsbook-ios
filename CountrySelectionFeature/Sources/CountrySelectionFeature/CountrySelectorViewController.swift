@@ -69,6 +69,8 @@ public final class CountrySelectorViewController: UIViewController {
         self.containerView.clipsToBounds = true
         self.containerBottomContraint.constant = -(defaultHeight + 40)
         
+        self.containerTitleLabel.text = Localization.localized("select_your_country")
+        
         self.tableView.register(CountrySelectorTableViewCell.nib, forCellReuseIdentifier: CountrySelectorTableViewCell.identifier)
         self.tableView.delegate = self
         self.tableView.dataSource = self

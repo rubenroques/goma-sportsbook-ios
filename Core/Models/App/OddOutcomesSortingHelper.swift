@@ -90,6 +90,9 @@ struct OddOutcomesSortingHelper {
         case "h": return 10
         case "d": return 20
         case "a": return 30
+            
+//        case "other": return 20
+//        case "autres": return 20
 
         default:
             return 1000

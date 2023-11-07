@@ -106,6 +106,7 @@ class BetSubmissionSuccessViewController: UIViewController {
         super.viewDidLoad()
 
         StyleHelper.styleButton(button: self.continueButton)
+        self.continueButton.setTitle(localized("continue_"), for: .normal)
 
         self.checkboxImage.image = UIImage(named: "checkbox_unselected_icon")
         self.checkboxLabel.text = localized("keep_bet")

@@ -152,7 +152,7 @@ class MarketGroupDetailsStore {
 
                 let marketGroupName = similarMarketsNames[marketKey] ?? ""
 
-                let allOutcomes = value.flatMap({ $0.outcomes })
+                var allOutcomes = value.flatMap({ $0.outcomes })
                 var outcomesDictionary: [String: [Outcome]] = [:]
                 
                 for outcomeIt in allOutcomes {

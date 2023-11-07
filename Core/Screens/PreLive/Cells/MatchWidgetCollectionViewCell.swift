@@ -1883,7 +1883,8 @@ extension MatchWidgetCollectionViewCell {
 
         self.boostedTopRightCornerLabel.translatesAutoresizingMaskIntoConstraints = false
         self.boostedTopRightCornerLabel.backgroundColor = .clear
-        self.boostedTopRightCornerLabel.text = "BOOSTED\nODDS"
+//        self.boostedTopRightCornerLabel.text = "BOOSTED\nODDS"
+        self.boostedTopRightCornerLabel.text = "COTE\nBOOSTÉE"
         self.boostedTopRightCornerLabel.font = AppFont.with(type: .bold, size: 10)
         
         self.boostedTopRightCornerLabel.adjustsFontSizeToFitWidth = true
