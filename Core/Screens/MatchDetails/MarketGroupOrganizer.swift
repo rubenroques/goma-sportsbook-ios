@@ -68,6 +68,25 @@ struct ColumnListedMarketGroupOrganizer: MarketGroupOrganizer {
         self.outcomes = processedOutcomes
 
         self.sortedOutcomeKeys = []
+        
+        // When there is H and A type outcomes, and a random third type
+        if self.outcomes.keys.count == 3,
+           !self.outcomes.keys.contains("D"),
+           let homeKey = self.outcomes["H"],
+           let awayKey = self.outcomes["A"] {
+            var tempOutcomes = [String: [Outcome]]()
+            
+            for (key, _) in self.outcomes {
+                if key != "A" && key != "H" {
+                    tempOutcomes["D"] = self.outcomes[key]
+                }
+                else {
+                    tempOutcomes[key] = self.outcomes[key]
+                }
+            }
+            
+            self.outcomes = tempOutcomes
+        }
 
         self.sortedOutcomeKeys = self.outcomes.keys.sorted { out1Name, out2Name in
             let out1Value = OddOutcomesSortingHelper.sortValueForOutcome(out1Name)

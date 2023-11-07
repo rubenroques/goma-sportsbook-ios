@@ -371,6 +371,14 @@ class Router {
 
                                 hasSentMatchId = true
                             }
+                            else {
+                                if let currentViewController = self?.rootViewController as? RootViewController {
+                                    
+                                    currentViewController.openMatchDetail(matchId: matchId)
+
+                                    hasSentMatchId = true
+                                }
+                            }
                         }
 
                     })
@@ -433,6 +441,13 @@ class Router {
                             if let rootViewController = self?.mainRootViewController {
 
                                 rootViewController.openBetslipModalWithShareData(ticketToken: token)
+                                hasSentBetId = true
+                            }
+                        }
+                        else {
+                            if let currentViewController = self?.rootViewController as? RootViewController {
+                                
+                                currentViewController.openBetslipModalWithShareData(ticketToken: token)
                                 hasSentBetId = true
                             }
                         }
