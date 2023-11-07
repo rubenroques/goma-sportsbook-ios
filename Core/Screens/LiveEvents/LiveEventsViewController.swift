@@ -122,6 +122,12 @@ class LiveEventsViewController: UIViewController {
             }
             .store(in: &self.cancellables)
 
+        self.viewModel.didSelectCompetitionAction = { competition in
+            let viewModel = OutrightMarketDetailsViewModel(competition: competition, store: OutrightMarketDetailsStore())
+            let outrightMarketDetailsViewController = OutrightMarketDetailsViewController(viewModel: viewModel)
+            self.navigationController?.pushViewController(outrightMarketDetailsViewController, animated: true)
+        }
+        
         // New loading
         self.loadingView.alpha = 0.0
         self.addChildViewController(self.loadingSpinnerViewController, toView: self.loadingBaseView)

@@ -340,12 +340,18 @@ public extension UserRegisterEnvelop {
             genderString = "F"
         }
         
+        // We need to ignore the 0 on register and phone verification
+        var formattedPhoneNumber = mobileNumber
+        if formattedPhoneNumber.hasPrefix("0") {
+            formattedPhoneNumber.removeFirst()
+        }
+        
         return ServicesProvider.SignUpForm.init(email: email,
                                                 username: username,
                                                 password: password,
                                                 birthDate: birthDate,
                                                 mobilePrefix: mobilePrefix,
-                                                mobileNumber: mobileNumber,
+                                                mobileNumber: formattedPhoneNumber,
                                                 nationalityIsoCode: countryBirthIsoCode,
                                                 currencyCode: "EUR",
                                                 firstName: firstName,

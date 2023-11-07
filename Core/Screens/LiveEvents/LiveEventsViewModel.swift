@@ -37,6 +37,8 @@ class LiveEventsViewModel: NSObject {
     var dataDidChangedAction: (() -> Void)?
     var didSelectMatchAction: ((Match) -> Void)?
 
+    var didSelectCompetitionAction: ((Competition) -> Void) = { _ in }
+    
     var didTapFavoriteMatchAction: ((Match) -> Void)?
     var didLongPressOdd: ((BettingTicket) -> Void)?
 
@@ -122,6 +124,10 @@ class LiveEventsViewModel: NSObject {
             self?.shouldShowSearch?()
         }
 
+        self.liveMatchesViewModelDataSource.didSelectCompetitionAction = { [weak self] competition in
+            self?.didSelectCompetitionAction(competition)
+        }
+        
     }
 
     func connectPublishers() {
@@ -532,10 +538,12 @@ class LiveMatchesViewModelDataSource: NSObject, UITableViewDataSource, UITableVi
     var outrightCompetitions: [Competition] = []
     
     var didSelectMatchAction: ((Match) -> Void)?
-    var didSelectCompetitionAction: ((Competition) -> Void)?
+    
     var didTapFavoriteAction: ((Match) -> Void)?
     var didLongPressOdd: ((BettingTicket) -> Void)?
     var shouldShowSearch: (() -> Void)?
+    
+    var didSelectCompetitionAction: ((Competition) -> Void) = { _ in }
     
     var matchStatsViewModelForMatch: ((Match) -> MatchStatsViewModel?)?
         
@@ -628,7 +636,7 @@ class LiveMatchesViewModelDataSource: NSObject, UITableViewDataSource, UITableVi
                 
                 cell.configure(withViewModel: OutrightCompetitionLargeLineViewModel(competition: competition))
                 cell.didSelectCompetitionAction = { [weak self] competition in
-                    self?.didSelectCompetitionAction?(competition)
+                    self?.didSelectCompetitionAction(competition)
                 }
                 return cell
             }

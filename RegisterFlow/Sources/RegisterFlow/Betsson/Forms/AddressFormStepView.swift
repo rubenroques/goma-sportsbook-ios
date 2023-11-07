@@ -57,7 +57,7 @@ class AddressFormStepViewModel {
     var isStreetNumberValid: AnyPublisher<Bool, Never> {
         return self.streetNumber.map { streetNumber in
             if let streetNumber = streetNumber {
-                return streetNumber.range(of: "^[0-9a-zA-Z]*$", options: .regularExpression) != nil && streetNumber.count > 0 && streetNumber.count < 4
+                return streetNumber.range(of: "^[0-9a-zA-Z]*$", options: .regularExpression) != nil && streetNumber.count > 0 && streetNumber.count < 6
             }
             else {
                 return false

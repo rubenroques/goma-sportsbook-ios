@@ -85,7 +85,22 @@ class SportRadarSocketConnector: NSObject, Connector {
     private func sendListeningStarted() {
         
         // TODO: ipAddress is empty, and language is hardcoded
-        let body = """
+        var body: String = ""
+        
+        if let previousSessionId = self.token {
+            body = """
+                       {
+                         "subscriberId": "\(previousSessionId)",
+                         "versionList": [],
+                         "clientContext": {
+                           "language":"\(SportRadarConfiguration.shared.socketLanguageCode)",
+                           "ipAddress":""
+                         }
+                       }
+                       """
+        }
+        else {
+            body = """
                    {
                      "subscriberId": null,
                      "versionList": [],
@@ -95,6 +110,8 @@ class SportRadarSocketConnector: NSObject, Connector {
                      }
                    }
                    """
+        }
+        
         self.socket.write(string: body) {
             print("ServiceProvider - SportRadarSocketConnector: sendListeningStarted sent")
         }

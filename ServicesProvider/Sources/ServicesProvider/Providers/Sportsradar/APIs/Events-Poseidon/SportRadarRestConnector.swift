@@ -44,9 +44,9 @@ class SportRadarRestConnector {
             return AnyPublisher(Fail<T, ServiceProviderError>(error: error))
         }
 
-//        print("ServiceProvider - SportRadarRestConnector [[ requesting ]] ",
-//              dump(request),
-//              dump(String.init(data: request.httpBody ?? Data(), encoding: .utf8)) ?? "no body found")
+        print("ServiceProvider - SportRadarRestConnector [[ requesting ]] ",
+              dump(request),
+              dump(String.init(data: request.httpBody ?? Data(), encoding: .utf8)) ?? "no body found")
 
         return self.session.dataTaskPublisher(for: request)
             .tryMap { result in

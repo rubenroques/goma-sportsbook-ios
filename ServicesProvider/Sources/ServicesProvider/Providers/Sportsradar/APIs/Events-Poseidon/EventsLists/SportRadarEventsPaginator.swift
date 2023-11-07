@@ -159,7 +159,7 @@ class SportRadarEventsPaginator {
     func requestNextPage() -> AnyPublisher<Bool, ServiceProviderError> {
 
         print("SportRadarEventsPaginator requestNextPage")
-               
+
         if !hasNextPage {
             print("SportRadarEventsPaginator requestNextPage hasNextPage: false")
             return Just(false).setFailureType(to: ServiceProviderError.self).eraseToAnyPublisher()
@@ -167,7 +167,7 @@ class SportRadarEventsPaginator {
 
         self.currentPage = self.currentPage + 1
         let nextPageIndex = self.currentPage
-        
+
         let nextPageRoute: ContentRoute
         switch self.contentIdentifier.contentRoute {
         case .preLiveEvents(let sportAlphaId, let startDate, let endDate, _, let eventCount, let sortType):

@@ -399,8 +399,8 @@ class ContactsFormStepView: FormStepView {
             .store(in: &self.cancellables)
 
         self.phoneHeaderTextFieldView.textPublisher
-            .sink { [weak self] email in
-                self?.viewModel.setPhoneNumber(email)
+            .sink { [weak self] phone in
+                self?.viewModel.setPhoneNumber(phone)
             }
             .store(in: &self.cancellables)
 

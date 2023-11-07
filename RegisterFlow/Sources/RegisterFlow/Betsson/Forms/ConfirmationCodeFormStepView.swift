@@ -138,7 +138,10 @@ class ConfirmationCodeFormStepViewModel {
     }
 
     private func requestVerifyCode(_ phoneNumber: String) -> AnyPublisher<PhoneVerificationResponse, PhoneVerificationError> {
-        let formattedPhoneNumber = phoneNumber.replacingOccurrences(of: " ", with: "")
+        var formattedPhoneNumber = phoneNumber.replacingOccurrences(of: " ", with: "")
+        if formattedPhoneNumber.hasPrefix("0") {
+            formattedPhoneNumber.removeFirst()
+        }
         
         return self.serviceProvider.getMobileVerificationCode(forMobileNumber: formattedPhoneNumber)
             .map { response -> PhoneVerificationResponse in
