@@ -172,7 +172,7 @@ class ManualUploadDocumentsViewController: UIViewController {
         self.documentTypeStackView.backgroundColor = .clear
 
         self.documentUploadsStackView.backgroundColor = .clear
-
+        
         StyleHelper.styleButton(button: self.sendButton)
 
         self.loadingBaseView.backgroundColor = UIColor.App.backgroundPrimary.withAlphaComponent(0.7)
@@ -360,6 +360,13 @@ class ManualUploadDocumentsViewController: UIViewController {
                     documentInformationView.removeFrontDoc()
 
                     self?.checkSendDocument()
+                    
+                    self?.checkInputWithDocumentState()
+                    
+                    if let isIbanValid = self?.isIbanValid.value {
+                        self?.checkDocumentRequired(isIbanValid: isIbanValid)
+                    }
+
                 }
             }
 
@@ -532,6 +539,59 @@ class ManualUploadDocumentsViewController: UIViewController {
             }
 
             self.checkSendDocument()
+            
+            self.checkInputWithDocumentState()
+            
+            self.checkDocumentRequired(isIbanValid: self.isIbanValid.value)
+        }
+    }
+    
+    private func checkInputWithDocumentState() {
+        
+        if self.viewModel.documentTypeCode == .ibanProof {
+            if let selectedDocs = self.selectedDocs[.rib] {
+                if selectedDocs.isNotEmpty && self.ribNumberHeaderTextFieldView.text == "" {
+                    self.ribNumberHeaderTextFieldView.showBorderState(state: .error)
+                    self.showInvalidIban = true
+                    //self.isIbanValid.send(false)
+                }
+                else if selectedDocs.isEmpty && self.ribNumberHeaderTextFieldView.text == "" {
+                    self.ribNumberHeaderTextFieldView.showBorderState(state: .hidden)
+                    self.showInvalidIban = false
+                    //self.isIbanValid.send(false)
+                }
+            }
+            else {
+                self.ribNumberHeaderTextFieldView.showBorderState(state: .hidden)
+                self.showInvalidIban = false
+            }
+        }
+    }
+    
+    private func checkDocumentRequired(isIbanValid: Bool) {
+        
+        if self.viewModel.documentTypeCode == .ibanProof,
+           let ribUploadView = self.documentUploadsInfoViews[.rib] {
+            if let selectedDocs = self.selectedDocs[.rib] {
+                if selectedDocs.isEmpty {
+                    ribUploadView.showRequiredDocumentWarning(isEnabled: isIbanValid)
+                    
+                    ribUploadView.setNeedsLayout()
+                    ribUploadView.layoutIfNeeded()
+                }
+                else {
+                    ribUploadView.showRequiredDocumentWarning(isEnabled: false)
+                    
+                    ribUploadView.setNeedsLayout()
+                    ribUploadView.layoutIfNeeded()
+                }
+            }
+            else {
+                ribUploadView.showRequiredDocumentWarning(isEnabled: isIbanValid)
+                
+                ribUploadView.setNeedsLayout()
+                ribUploadView.layoutIfNeeded()
+            }
         }
     }
 
@@ -588,19 +648,25 @@ class ManualUploadDocumentsViewController: UIViewController {
             .debounce(for: .seconds(0.5), scheduler: DispatchQueue.main)
             .receive(on: DispatchQueue.main)
             .sink(receiveValue: { [weak self] textValue in
-                if let textValue {
+                guard let self = self else { return }
 
+                if let textValue {
+                    
                     if textValue != "" {
-                        self?.validateIBANFormat(ibanValue: textValue)
+                        self.validateIBANFormat(ibanValue: textValue)
                     }
                     else {
-                        self?.ribNumberHeaderTextFieldView.showBorderState(state: .hidden)
-                        self?.showInvalidIban = false
-                        self?.isIbanValid.send(false)
+                        self.checkInputWithDocumentState()
+                        self.isIbanValid.send(false)
+//                        else {
+//                            self.ribNumberHeaderTextFieldView.showBorderState(state: .hidden)
+//                            self.showInvalidIban = false
+//                            self.isIbanValid.send(false)
+//                        }
                     }
 
-                    self?.ribInputBaseView.setNeedsLayout()
-                    self?.ribInputBaseView.layoutIfNeeded()
+                    self.ribInputBaseView.setNeedsLayout()
+                    self.ribInputBaseView.layoutIfNeeded()
                 }
             })
             .store(in: &cancellables)
@@ -608,8 +674,11 @@ class ManualUploadDocumentsViewController: UIViewController {
         self.isIbanValid
             .receive(on: DispatchQueue.main)
             .sink(receiveValue: { [weak self] isIbanValid in
-
-                self?.checkSendDocument()
+                
+                guard let self = self else { return }
+                self.checkSendDocument()
+                
+                self.checkDocumentRequired(isIbanValid: isIbanValid)
             })
             .store(in: &cancellables)
     }

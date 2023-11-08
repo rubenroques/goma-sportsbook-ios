@@ -38,6 +38,12 @@ class UploadDocumentsInformationView: UIView {
     private lazy var backPickedView: UIView = Self.createBackPickedView()
     private lazy var backPickedTitleLabel: UILabel = Self.createBackPickedTitleLabel()
     private lazy var backPickedRemoveButton: UIButton = Self.createBackPickedRemoveButton()
+    
+    private lazy var documentRequiredLabel: UILabel = Self.createDocumentRequiredLabel()
+    
+    // Constraints
+    private lazy var uploadStackViewBottomConstraint: NSLayoutConstraint = Self.createUploadStackViewBottomConstraint()
+    private lazy var documentRequiredLabelBottomConstraint: NSLayoutConstraint = Self.createDocumentRequiredLabelBottomConstraint()
 
     var documentTypeGroup: DocumentTypeGroup?
     
@@ -162,6 +168,7 @@ class UploadDocumentsInformationView: UIView {
 
         self.backPickedView.backgroundColor = .clear
 
+        self.documentRequiredLabel.textColor = UIColor.App.inputError
     }
 
     private func commonInit() {
@@ -207,6 +214,14 @@ class UploadDocumentsInformationView: UIView {
         self.backPickedTitleLabel.text = ""
         self.backDocumentUploadState = .preUpload
 
+    }
+    
+    func showRequiredDocumentWarning(isEnabled: Bool) {
+        
+        self.documentRequiredLabel.isHidden = !isEnabled
+        self.uploadStackViewBottomConstraint.isActive = !isEnabled
+        self.documentRequiredLabelBottomConstraint.isActive = isEnabled
+        
     }
 
     @objc private func didTapFrontDocument() {
@@ -413,6 +428,28 @@ extension UploadDocumentsInformationView {
         button.setImage(UIImage(named: "trash_icon"), for: .normal)
         return button
     }
+    
+    private static func createDocumentRequiredLabel() -> UILabel {
+        let label = UILabel()
+        label.translatesAutoresizingMaskIntoConstraints = false
+        label.text = localized("one_or_more_files_required")
+        label.font = AppFont.with(type: .semibold, size: 12)
+        label.textAlignment = .left
+        label.numberOfLines = 0
+        label.isHidden = true
+        return label
+    }
+    
+    // Constraints
+    private static func createUploadStackViewBottomConstraint() -> NSLayoutConstraint {
+        let constraint = NSLayoutConstraint()
+        return constraint
+    }
+
+    private static func createDocumentRequiredLabelBottomConstraint() -> NSLayoutConstraint {
+        let constraint = NSLayoutConstraint()
+        return constraint
+    }
 
     private func setupSubviews() {
 
@@ -453,6 +490,8 @@ extension UploadDocumentsInformationView {
         self.backPickedView.addSubview(self.backPickedTitleLabel)
         self.backPickedView.addSubview(self.backPickedRemoveButton)
 
+        self.containerView.addSubview(self.documentRequiredLabel)
+        
         self.initConstraints()
 
         self.setNeedsLayout()
@@ -490,7 +529,11 @@ extension UploadDocumentsInformationView {
             self.uploadStackView.leadingAnchor.constraint(equalTo: self.containerView.leadingAnchor, constant: 17),
             self.uploadStackView.trailingAnchor.constraint(equalTo: self.containerView.trailingAnchor, constant: -17),
             self.uploadStackView.topAnchor.constraint(equalTo: self.sizeInfoLabel.bottomAnchor, constant: 15),
-            self.uploadStackView.bottomAnchor.constraint(equalTo: self.containerView.bottomAnchor, constant: -25)
+//            self.uploadStackView.bottomAnchor.constraint(equalTo: self.containerView.bottomAnchor, constant: -25)
+            
+            self.documentRequiredLabel.leadingAnchor.constraint(equalTo: self.containerView.leadingAnchor, constant: 17),
+            self.documentRequiredLabel.trailingAnchor.constraint(equalTo: self.containerView.trailingAnchor, constant: -17),
+            self.documentRequiredLabel.topAnchor.constraint(equalTo: self.uploadStackView.bottomAnchor, constant: 10)
 
         ])
 
@@ -558,5 +601,22 @@ extension UploadDocumentsInformationView {
             self.backPickedRemoveButton.centerYAnchor.constraint(equalTo: self.backPickedView.centerYAnchor)
         ])
 
+        self.uploadStackViewBottomConstraint = NSLayoutConstraint(item: self.uploadStackView,
+                           attribute: .bottom,
+                           relatedBy: .equal,
+                           toItem: self.containerView,
+                           attribute: .bottom,
+                           multiplier: 1,
+                           constant: -25)
+        self.uploadStackViewBottomConstraint.isActive = true
+        
+        self.documentRequiredLabelBottomConstraint = NSLayoutConstraint(item: self.documentRequiredLabel,
+                           attribute: .bottom,
+                           relatedBy: .equal,
+                           toItem: self.containerView,
+                           attribute: .bottom,
+                           multiplier: 1,
+                           constant: -25)
+        self.documentRequiredLabelBottomConstraint.isActive = false
     }
 }
