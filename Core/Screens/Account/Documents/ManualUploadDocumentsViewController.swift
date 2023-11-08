@@ -913,7 +913,7 @@ extension ManualUploadDocumentsViewController {
         headerTextFieldView.translatesAutoresizingMaskIntoConstraints = false
         headerTextFieldView.setTextFieldFont(AppFont.with(type: .semibold, size: 16))
         headerTextFieldView.setHeaderLabelFont(AppFont.with(type: .semibold, size: 16))
-        headerTextFieldView.setPlaceholderText(localized("rib"))
+        headerTextFieldView.setPlaceholderText(localized("iban"))
         headerTextFieldView.setKeyboardType(.default)
         return headerTextFieldView
     }
