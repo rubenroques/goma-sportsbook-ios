@@ -90,7 +90,7 @@ class SportRadarSocketConnector: NSObject, Connector {
         if let previousSessionId = self.token {
             body = """
                        {
-                         "subscriberId": "\(previousSessionId)",
+                         "subscriberId": "\(previousSessionId.hash)",
                          "versionList": [],
                          "clientContext": {
                            "language":"\(SportRadarConfiguration.shared.socketLanguageCode)",

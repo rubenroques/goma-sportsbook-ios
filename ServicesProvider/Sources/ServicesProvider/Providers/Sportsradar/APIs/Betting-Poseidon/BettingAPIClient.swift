@@ -384,6 +384,7 @@ extension BettingAPIClient: Endpoint {
             "Content-Type": "application/json; charset=UTF-8",
             "Accept": "application/json",
             "X-MGS-BusinessUnit": "3",
+            "app-origin": "ios",
             "Accept-Languag": "\(SportRadarConfiguration.shared.socketLanguageCode)",
             "X-MGS-Location": "\(SportRadarConfiguration.shared.socketLanguageCode)",
         ]

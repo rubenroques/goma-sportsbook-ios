@@ -718,6 +718,7 @@ extension SportRadarRestAPIClient: Endpoint {
             "Accept-Encoding": "gzip, deflate",
             "Content-Type": "application/json; charset=UTF-8",
             "Media-Type": "application/json",
+            "app-origin": "ios",
             "Accept": "application/json"
         ]
 
@@ -726,9 +727,11 @@ extension SportRadarRestAPIClient: Endpoint {
             return defaultHeaders
         case .subscribe:
             return ["Content-Type": "application/json",
+                    "app-origin": "ios",
                     "Media-Type": "application/json"]
         case .unsubscribe:
             return ["Content-Type": "application/json",
+                    "app-origin": "ios",
                     "Media-Type": "application/json"]
         case .marketsFilter:
             return defaultHeaders
@@ -789,6 +792,7 @@ extension SportRadarRestAPIClient: Endpoint {
                 "Media-Type": "application/json",
                 "Accept": "application/json",
                 "X-MGS-BusinessUnit": "3",
+                "app-origin": "ios",
                 "Accept-Languag": "\(SportRadarConfiguration.shared.socketLanguageCode)",
                 "X-MGS-Location": "\(SportRadarConfiguration.shared.socketLanguageCode)",
             ]

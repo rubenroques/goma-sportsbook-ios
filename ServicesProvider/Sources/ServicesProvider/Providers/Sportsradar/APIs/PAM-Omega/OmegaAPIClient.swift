@@ -1019,12 +1019,14 @@ extension OmegaAPIClient: Endpoint {
         switch self {
         case .uploadUserDocument( _, _, _, let header):
             let customHeaders = [
-                "Content-Type": header
+                "Content-Type": header,
+                "app-origin": "ios",
             ]
             return customHeaders
         case .uploadMultipleUserDocuments( _, _, _, let header):
             let customHeaders = [
-                "Content-Type": header
+                "Content-Type": header,
+                "app-origin": "ios",
             ]
             return customHeaders
         case .getSumsubAccessToken(_ , _, _, let header):
@@ -1042,6 +1044,7 @@ extension OmegaAPIClient: Endpoint {
                         "Accept-Encoding": "gzip, deflate",
                         "Content-Type": "application/json; charset=UTF-8",
                         "Accept": "application/json",
+                        "app-origin": "ios",
                         "Authorization": "Basic \(authData)"
                     ]
                     return headers
@@ -1051,7 +1054,8 @@ extension OmegaAPIClient: Endpoint {
             let headers = [
                 "Accept-Encoding": "gzip, deflate",
                 "Content-Type": "application/json; charset=UTF-8",
-                "Accept": "application/json"
+                "Accept": "application/json",
+                "app-origin": "ios",
             ]
             return headers
 
@@ -1059,7 +1063,8 @@ extension OmegaAPIClient: Endpoint {
             let defaultHeaders = [
                 "Accept-Encoding": "gzip, deflate",
                 "Content-Type": "application/json; charset=UTF-8",
-                "Accept": "application/json"
+                "Accept": "application/json",
+                "app-origin": "ios",
             ]
             return defaultHeaders
         }

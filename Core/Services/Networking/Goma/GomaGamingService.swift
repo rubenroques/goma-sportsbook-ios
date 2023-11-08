@@ -344,6 +344,7 @@ extension GomaGamingService: Endpoint {
         let defaultHeaders = [
             "Accept-Encoding": "gzip, deflate",
             "Content-Type": "application/json; charset=UTF-8",
+            "app-origin": "ios",
             "Accept": "application/json"
         ]
         return defaultHeaders
