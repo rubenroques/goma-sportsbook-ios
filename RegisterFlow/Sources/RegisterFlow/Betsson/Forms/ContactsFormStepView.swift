@@ -182,12 +182,15 @@ class ContactsFormStepViewModel {
 
         self.countriesState.send(.loading)
 
-        self.serviceProvider.getCountries()
+        self.serviceProvider.getAllCountries()
             .sink { completion in
 
             } receiveValue: { [weak self] countries in
-                self?.defaultCountrySubject.send(countries.first(where: { $0.iso3Code == self?.defaultCountryIso3Code}))
-                self?.countriesState.send(.loaded(countries: countries))
+                let sortedCountries = countries.sorted { c1, c2 in
+                    c1.frenchName.localizedCompare(c2.frenchName) == .orderedAscending
+                }
+                self?.defaultCountrySubject.send(sortedCountries.first(where: { $0.iso3Code == self?.defaultCountryIso3Code}))
+                self?.countriesState.send(.loaded(countries: sortedCountries))
             }
             .store(in: &self.cancellables)
 

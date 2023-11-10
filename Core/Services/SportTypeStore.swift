@@ -32,10 +32,10 @@ class SportTypeStore {
         }
     }
 
-    private var liveSportsCountCurrentValueSubject: CurrentValueSubject<[String: Int], Never> = .init([:])
+    private var liveSportsCountCurrentValueSubject: CurrentValueSubject<[String: Int], ServiceProviderError> = .init([:])
     
-    private var activeSportsCurrentValueSubject: CurrentValueSubject<LoadableContent<[Sport]>, Never> = .init(.idle)
-    var activeSportsPublisher: AnyPublisher<LoadableContent<[Sport]>, Never> {
+    private var activeSportsCurrentValueSubject: CurrentValueSubject<LoadableContent<[Sport]>, ServiceProviderError> = .init(.idle)
+    var activeSportsPublisher: AnyPublisher<LoadableContent<[Sport]>, ServiceProviderError> {
         Publishers.CombineLatest(self.activeSportsCurrentValueSubject, self.liveSportsCountCurrentValueSubject)
             .map { sportsList, liveCountDict -> LoadableContent<[Sport]> in
                 switch sportsList {
@@ -84,8 +84,13 @@ class SportTypeStore {
             .retry(3)
             .receive(on: DispatchQueue.main)
             .prettyPrint("SportTypeStoreDebug subscribeLiveSportTypes", format: .singleline)
-            .sink(receiveCompletion: { completion in
-                print("SportTypeStore subscribeLiveSportTypes completion \(completion)")
+            .sink(receiveCompletion: { [weak self] completion in
+                switch completion {
+                case .finished:
+                    break
+                case .failure(let error):
+                    self?.liveSportsCountCurrentValueSubject.send(completion: .failure(error))
+                }
             }, receiveValue: { [weak self] subscribableContent in
                 switch subscribableContent {
                 case .connected(let subscription):
@@ -101,7 +106,6 @@ class SportTypeStore {
                     print("SportTypeStore subscribeLiveSportTypes")
                 }
             })
-            
             .store(in: &self.cancellables)
         
         Env.servicesProvider.subscribeAllSportTypes()
@@ -114,7 +118,7 @@ class SportTypeStore {
                     ()
                 case .failure(let error):
                     print("SportTypeStore: All sports error: \(error)")
-                    self?.activeSportsCurrentValueSubject.send(.failed)
+                    self?.activeSportsCurrentValueSubject.send(completion: .failure(error))
                     self?.sportsSubscription = nil
                 }
         }, receiveValue: { [weak self] (subscribableContent: SubscribableContent<[SportType]>) in

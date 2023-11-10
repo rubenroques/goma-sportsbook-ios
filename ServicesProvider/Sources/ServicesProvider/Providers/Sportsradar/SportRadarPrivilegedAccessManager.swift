@@ -284,7 +284,7 @@ class SportRadarPrivilegedAccessManager: PrivilegedAccessManager {
         })
         .eraseToAnyPublisher()
     }
-    
+
     func updateDeviceIdentifier(deviceIdentifier: String) -> AnyPublisher<BasicResponse, ServiceProviderError> {
 
         let endpoint = OmegaAPIClient.updateDeviceIdentifier(deviceIdentifier: deviceIdentifier)
@@ -302,6 +302,10 @@ class SportRadarPrivilegedAccessManager: PrivilegedAccessManager {
         .eraseToAnyPublisher()
     }
 
+    public func getAllCountries() -> AnyPublisher<[Country], ServiceProviderError> {
+        let allCountries = Country.allCountries
+        return Just(allCountries).setFailureType(to: ServiceProviderError.self).eraseToAnyPublisher()
+    }
 
     public func getCountries() -> AnyPublisher<[Country], ServiceProviderError> {
 

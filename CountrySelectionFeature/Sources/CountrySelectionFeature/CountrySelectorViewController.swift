@@ -321,8 +321,10 @@ extension CountrySelectorViewController: UISearchBarDelegate {
         var filteredCountries: [Country] = []
         
         for country in countries {
-            if fuzzySearch(originalString: country.name, stringToSearch: text) ||
-                country.phonePrefix.contains(text) {
+            if self.fuzzySearch(originalString: country.name, stringToSearch: text) || country.phonePrefix.contains(text) {
+                filteredCountries.append(country)
+            }
+            else if self.fuzzySearch(originalString: country.frenchName, stringToSearch: text) || country.phonePrefix.contains(text) {
                 filteredCountries.append(country)
             }
         }

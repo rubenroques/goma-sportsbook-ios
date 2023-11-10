@@ -35,6 +35,7 @@ protocol PrivilegedAccessManager {
     func updateExtraInfo(placeOfBirth: String?, address2: String?) -> AnyPublisher<BasicResponse, ServiceProviderError>
     func updateDeviceIdentifier(deviceIdentifier: String) -> AnyPublisher<BasicResponse, ServiceProviderError>
     
+    func getAllCountries() -> AnyPublisher<[Country], ServiceProviderError>
     func getCountries() -> AnyPublisher<[Country], ServiceProviderError>
     func getCurrentCountry() -> AnyPublisher<Country?, ServiceProviderError>
         

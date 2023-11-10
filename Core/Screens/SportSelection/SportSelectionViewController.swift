@@ -155,8 +155,10 @@ class SportSelectionViewController: UIViewController {
             .filter({ $0 != nil })
             .compactMap({ $0 })
             .receive(on: DispatchQueue.main)
-            .sink(receiveValue: { [weak self] allSports in
-
+            .sink(receiveCompletion: { completion in
+                
+            }, 
+            receiveValue: { [weak self] allSports in
                 if showLiveSportsFirst {
 
                     let liveSports = allSports.filter({

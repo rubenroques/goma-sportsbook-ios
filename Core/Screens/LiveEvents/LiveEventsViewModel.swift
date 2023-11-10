@@ -168,7 +168,9 @@ class LiveEventsViewModel: NSObject {
             .filter({ $0 != nil })
             .compactMap({ $0 })
             .receive(on: DispatchQueue.main)
-            .sink(receiveValue: { [weak self] allSports in
+            .sink(receiveCompletion: { _ in
+                
+            }, receiveValue: { [weak self] allSports in
                 let liveSports = allSports.filter({
                     $0.liveEventsCount > 0
                 })
@@ -176,22 +178,7 @@ class LiveEventsViewModel: NSObject {
             })
             .store(in: &cancellables)
         
-//        self.liveSportsCancellable = Env.servicesProvider.subscribeLiveSportTypes()
-//            .receive(on: DispatchQueue.main)
-//            .sink(receiveCompletion: { [weak self] completion in
-//                print("LiveEventsViewModel subscribeLiveSportTypes completed \(completion)")
-//                self?.liveSports = []
-//            }, receiveValue: { [weak self] (subscribableContent: SubscribableContent<[SportType]>) in
-//                switch subscribableContent {
-//                case .connected(let subscription):
-//                    self?.sportsSubscription = subscription
-//                case .contentUpdate(let sportTypes):
-//                    let sports = sportTypes.map(ServiceProviderModelMapper.sport(fromServiceProviderSportType:))
-//                    self?.liveSports = sports
-//                case .disconnected:
-//                    self?.liveSports = []
-//                }
-//            })
+
     }
 
     func selectedSport(_ sport: Sport) {

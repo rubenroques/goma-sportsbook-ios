@@ -840,6 +840,16 @@ extension ServicesProviderClient {
 
 extension ServicesProviderClient {
 
+    public func getAllCountries() -> AnyPublisher<[Country], ServiceProviderError> {
+        guard
+            let privilegedAccessManager = self.privilegedAccessManager
+        else {
+            return Fail(error: ServiceProviderError.privilegedAccessManagerNotFound).eraseToAnyPublisher()
+        }
+
+        return privilegedAccessManager.getAllCountries()
+    }
+    
     public func getCountries() -> AnyPublisher<[Country], ServiceProviderError> {
         guard
             let privilegedAccessManager = self.privilegedAccessManager

@@ -1823,15 +1823,6 @@ class PreSubmissionBetslipViewController: UIViewController {
         self.isLoading = true
         if Env.userSessionStore.isUserLogged() {
 
-            if self.isCashbackToggleOn.value, let cashbackValue = Env.userSessionStore.userCashbackBalance.value {
-                if self.realBetValue > cashbackValue {
-                    let errorMessage = localized("betslip_replay_error")
-                    self.showErrorView(errorMessage: errorMessage)
-                    self.isLoading = false
-                    return
-                }
-            }
-
             //
             if self.listTypePublisher.value == .simple {
                 var isFreeBet = false
@@ -1844,7 +1835,16 @@ class PreSubmissionBetslipViewController: UIViewController {
                 
                 let totalValue = singleBetTicketStakes.values.reduce(0.0, +)
                 
-                if totalValue > self.maxBetValue {
+                if self.isCashbackToggleOn.value, let cashbackValue = Env.userSessionStore.userCashbackBalance.value {
+                    if totalValue > cashbackValue {
+                        let errorMessage = localized("betslip_replay_error")
+                        self.showErrorView(errorMessage: errorMessage)
+                        self.isLoading = false
+                        return
+                    }
+                }
+                
+                if !self.isCashbackToggleOn.value, totalValue > self.maxBetValue {
                     self.showErrorView(errorMessage: localized("deposit_more_funds"))
                     self.isLoading = false
                     return
@@ -1885,7 +1885,16 @@ class PreSubmissionBetslipViewController: UIViewController {
             }
             else if self.listTypePublisher.value == .multiple {
 
-                if self.realBetValue > self.maxBetValue {
+                if self.isCashbackToggleOn.value, let cashbackValue = Env.userSessionStore.userCashbackBalance.value {
+                    if self.realBetValue > cashbackValue {
+                        let errorMessage = localized("betslip_replay_error")
+                        self.showErrorView(errorMessage: errorMessage)
+                        self.isLoading = false
+                        return
+                    }
+                }
+                
+                if !self.isCashbackToggleOn.value, self.realBetValue > self.maxBetValue {
                     self.showErrorView(errorMessage: localized("deposit_more_funds"))
                     self.isLoading = false
                     return
@@ -1931,7 +1940,16 @@ class PreSubmissionBetslipViewController: UIViewController {
             }
             else if self.listTypePublisher.value == .system, let selectedSystemBetType = self.selectedSystemBetType {
                
-                if self.realBetValue > self.maxBetValue {
+                if self.isCashbackToggleOn.value, let cashbackValue = Env.userSessionStore.userCashbackBalance.value {
+                    if self.realBetValue > cashbackValue {
+                        let errorMessage = localized("betslip_replay_error")
+                        self.showErrorView(errorMessage: errorMessage)
+                        self.isLoading = false
+                        return
+                    }
+                }
+                
+                if !self.isCashbackToggleOn.value, self.realBetValue > self.maxBetValue {
                     self.showErrorView(errorMessage: localized("deposit_more_funds"))
                     self.isLoading = false
                     return

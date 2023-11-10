@@ -45,22 +45,35 @@ class SplashViewController: UIViewController {
         // Env.appSession.isLoadingAppSettingsPublisher,
         self.isLoadingBootDataSubscription = Env.sportsStore.activeSportsPublisher
             .map({ loadableContent -> Bool in
-                switch loadableContent {
+                switch loadableContent { // isLoading?
                 case .loading, .idle:
                     // we need to wait for the request result
-                    return false
+                    return true
                 case .loaded, .failed:
                     // We received a result, the next screen needs to be
                     // presented even if the result is a failed request
-                    return true
+                    return false
                 }
             })
             .receive(on: DispatchQueue.main)
-            .sink { [weak self] isLoadingSportTypes in
+            .sink(receiveCompletion: { [weak self] completion in
+                switch completion {
+                case .finished:
+                    break
+                case .failure(let failure):
+                    switch failure {
+                    case .invalidUserLocation:
+                        self?.invalidLocationDetected()
+                    default:
+                        break
+                    }
+                }
+            }, receiveValue: { [weak self] isLoadingSportTypes in
                 if !isLoadingSportTypes {
                     self?.splashLoadingCompleted()
                 }
-            }
+            })
+            
     }
 
     func splashLoadingCompleted() {
@@ -68,4 +81,10 @@ class SplashViewController: UIViewController {
         self.loadingCompleted()
     }
 
+    func invalidLocationDetected() {
+        let forbiddenAccessViewController = ForbiddenLocationViewController()
+        forbiddenAccessViewController.modalPresentationStyle = .fullScreen
+        self.present(forbiddenAccessViewController, animated: false, completion: nil)
+    }
+    
 }

@@ -9,8 +9,10 @@ public struct Country: Codable, Equatable {
     public var iso3Code: String
     public var numericCode: String
     public var phonePrefix: String
+    
+    public var frenchName: String
 
-    public init(name: String, capital: String? = nil, region: String, iso2Code: String, iso3Code: String, numericCode: String, phonePrefix: String) {
+    public init(name: String, capital: String? = nil, region: String, iso2Code: String, iso3Code: String, numericCode: String, phonePrefix: String, frenchName: String) {
         self.name = name
         self.capital = capital
         self.region = region
@@ -18,6 +20,7 @@ public struct Country: Codable, Equatable {
         self.iso3Code = iso3Code
         self.numericCode = numericCode
         self.phonePrefix = phonePrefix
+        self.frenchName = frenchName
     }
 
 }

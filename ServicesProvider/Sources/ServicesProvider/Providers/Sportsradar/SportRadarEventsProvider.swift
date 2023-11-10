@@ -360,17 +360,22 @@ class SportRadarEventsProvider: EventsProvider {
         }
 
         let sessionDataTask = URLSession.shared.dataTask(with: request) { data, response, error in
-            guard
-                error == nil,
-                let httpResponse = response as? HTTPURLResponse,
-                (200...299).contains(httpResponse.statusCode)
-            else {
-                print("ServiceProvider subscribeLiveSportTypes \(error) \(response)")
-                publisher.send(completion: .failure(ServiceProviderError.onSubscribe))
-                return
+            
+            if error == nil, let httpResponse = response as? HTTPURLResponse, (200...299).contains(httpResponse.statusCode) {
+                publisher.send(.connected(subscription: liveSportsSubscription))
             }
-
-            publisher.send(.connected(subscription: liveSportsSubscription))
+            else if let httpResponse = response as? HTTPURLResponse,
+                        httpResponse.statusCode == 403,
+                        let dataValue = data,
+                        let stringData = String(data: dataValue, encoding: .utf8),
+                        stringData.lowercased().contains("unauthorised location")
+            {
+                publisher.send(completion: .failure(ServiceProviderError.invalidUserLocation))
+            }
+            else {
+                publisher.send(completion: .failure(ServiceProviderError.onSubscribe))
+            }
+            
         }
 
         sessionDataTask.resume()
@@ -423,17 +428,22 @@ class SportRadarEventsProvider: EventsProvider {
         }
 
         let sessionDataTask = URLSession.shared.dataTask(with: request) { data, response, error in
-            guard
-                error == nil,
-                let httpResponse = response as? HTTPURLResponse,
-                (200...299).contains(httpResponse.statusCode)
-            else {
-                print("ServiceProvider subscribeAllSportTypes \(error) \(response)")
-                publisher.send(completion: .failure(ServiceProviderError.onSubscribe))
-                return
+            
+            if error == nil, let httpResponse = response as? HTTPURLResponse, (200...299).contains(httpResponse.statusCode) {
+                publisher.send(.connected(subscription: allSportsSubscription))
             }
-
-            publisher.send(.connected(subscription: allSportsSubscription))
+            else if let httpResponse = response as? HTTPURLResponse,
+                        httpResponse.statusCode == 403,
+                        let dataValue = data,
+                        let stringData = String(data: dataValue, encoding: .utf8),
+                        stringData.lowercased().contains("unauthorised location")
+            {
+                publisher.send(completion: .failure(ServiceProviderError.invalidUserLocation))
+            }
+            else {
+                publisher.send(completion: .failure(ServiceProviderError.onSubscribe))
+            }
+            
         }
 
         sessionDataTask.resume()

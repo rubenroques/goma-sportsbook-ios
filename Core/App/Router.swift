@@ -78,7 +78,7 @@ class Router {
         })
 
         self.rootWindow.rootViewController = splashViewController
-
+        
         self.rootWindow.makeKeyAndVisible()
     }
     

@@ -178,14 +178,15 @@ class AgeCountryFormStepViewModel {
 
         self.countryState.send(.loading)
 
-        self.serviceProvider.getCountries()
+        self.serviceProvider.getAllCountries()
             .sink { completion in
 
             } receiveValue: { [weak self] countries in
-                self?.countryState.send(.loaded(countries: countries))
-
-                self?.defaultCountry.send(countries.first(where: { $0.iso3Code == self?.defaultCountryIso3Code}))
-
+                let sortedCountries = countries.sorted { c1, c2 in
+                    c1.frenchName.localizedCompare(c2.frenchName) == .orderedAscending
+                }
+                self?.countryState.send(.loaded(countries: sortedCountries ))
+                self?.defaultCountry.send(sortedCountries.first(where: { $0.iso3Code == self?.defaultCountryIso3Code}))
             }
             .store(in: &self.cancellables)
 
