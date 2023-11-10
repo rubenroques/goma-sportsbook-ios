@@ -27,6 +27,8 @@ class RibDocsViewModel {
     var kycStatusPublisher: AnyPublisher<KnowYourCustomerStatus?, Never> {
         return Env.userSessionStore.userKnowYourCustomerStatusPublisher.eraseToAnyPublisher()
     }
+    
+    var ibanPaymentDetails: BankPaymentDetail?
 
     var shouldReloadData: (() -> Void)?
 
@@ -36,7 +38,54 @@ class RibDocsViewModel {
 
         self.getKYCStatus()
 
-        self.getDocumentTypes()
+        //self.getDocumentTypes()
+        
+        self.getPaymentInfo()
+    }
+    
+    private func getPaymentInfo() {
+
+        Env.servicesProvider.getPaymentInformation()
+            .receive(on: DispatchQueue.main)
+            .sink(receiveCompletion: { [weak self] completion in
+
+                switch completion {
+                case .finished:
+                    ()
+                case .failure(let error):
+                    print("PAYMENT INFO ERROR: \(error)")
+
+                }
+                
+                self?.getDocumentTypes()
+
+            }, receiveValue: { [weak self] paymentInfo in
+                print("PAYMENT INFO: \(paymentInfo)")
+
+                let paymentDetails = paymentInfo.data.filter({
+                    $0.details.isNotEmpty
+                })
+
+                if paymentDetails.isNotEmpty {
+
+                    let bankPaymentDetails = paymentDetails.filter({
+                        $0.type == "BANK"
+                    })
+                    
+                    let priorityBankPaymentDetail: BankPaymentDetail?
+                    
+                    if let priorityIbanDetail = bankPaymentDetails.min(by: { $0.priority ?? 0 < $1.priority ?? 1 }),
+                        let ibanPaymentDetail = priorityIbanDetail.details.filter({
+                            $0.key == "IBAN"
+                        }).first {
+                            
+                        self?.ibanPaymentDetails = ibanPaymentDetail
+                    }
+
+                }
+
+            })
+            .store(in: &cancellables)
     }
 
     private func getKYCStatus() {
@@ -120,9 +169,24 @@ class RibDocsViewModel {
 
                     self.dateFormatter.dateFormat = "dd-MM-yyyy HH:mm:ss"
                     let uploadDate = self.dateFormatter.date(from: userDocument.uploadDate)
+                    
+                    //var documentName = userDocument.fileName ?? ""
+                    var documentName = localized("rib")
+                    
+                    if let ibanPaymentDetails = self.ibanPaymentDetails {
+                        
+                        if ibanPaymentDetails.value.count >= 5 {
+                            let cutIban = String(ibanPaymentDetails.value.suffix(5))
+                            
+                            let ibanSecured = "\(localized("rib")) **\(cutIban)"
+                            
+                            documentName = ibanSecured
+
+                        }
+                    }
 
                     return DocumentFileInfo(id: userDocument.documentType,
-                                            name: userDocument.fileName ?? "",
+                                            name: documentName,
                                             status: userDocumentStatus ?? .pendingApproved,
                                             uploadDate: uploadDate ?? Date(),
                                             documentTypeGroup: mappedDocumentTypeGroup)

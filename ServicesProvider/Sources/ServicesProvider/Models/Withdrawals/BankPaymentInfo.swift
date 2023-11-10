@@ -13,6 +13,7 @@ public struct BankPaymentInfo: Codable {
     public var partyId: Int
     public var type: String
     public var description: String?
+    public var priority: Int?
     public var details: [BankPaymentDetail]
 
     enum CodingKeys: String, CodingKey {
@@ -20,6 +21,7 @@ public struct BankPaymentInfo: Codable {
         case partyId = "partyId"
         case type = "type"
         case description = "description"
+        case priority = "priority"
         case details = "details"
     }
 }

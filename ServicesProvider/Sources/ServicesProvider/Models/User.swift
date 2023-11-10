@@ -94,7 +94,11 @@ public struct UserProfile: Codable {
     public let postalCode: String?
     public let birthDepartment: String?
     public let streetNumber: String?
-
+    public let phoneNumber: String?
+    public let mobilePhone: String?
+    public let mobileCountryCode: String?
+    public let mobileLocalNumber: String?
+    
     public let avatarName: String?
     public let godfatherCode: String?
     public let placeOfBirth: String?
@@ -123,6 +127,10 @@ public struct UserProfile: Codable {
                 postalCode: String?,
                 birthDepartment: String?,
                 streetNumber: String?,
+                phoneNumber: String?,
+                mobilePhone: String?,
+                mobileCountryCode: String?,
+                mobileLocalNumber: String?,
                 avatarName: String?,
                 godfatherCode: String?,
                 placeOfBirth: String?,
@@ -149,7 +157,11 @@ public struct UserProfile: Codable {
         self.postalCode = postalCode
         self.birthDepartment = birthDepartment
         self.streetNumber = streetNumber
-
+        self.phoneNumber = phoneNumber
+        self.mobilePhone = mobilePhone
+        self.mobileCountryCode = mobileCountryCode
+        self.mobileLocalNumber = mobileLocalNumber
+        
         self.avatarName = avatarName
         self.godfatherCode = godfatherCode
         self.placeOfBirth = placeOfBirth
