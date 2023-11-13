@@ -28,8 +28,8 @@ class RibDocsViewModel {
         return Env.userSessionStore.userKnowYourCustomerStatusPublisher.eraseToAnyPublisher()
     }
     
-    var ibanPaymentDetails: BankPaymentDetail?
-
+    var ibanPaymentsDetails: [BankPaymentDetail] = []
+    
     var shouldReloadData: (() -> Void)?
 
     let dateFormatter = DateFormatter()
@@ -72,15 +72,26 @@ class RibDocsViewModel {
                         $0.type == "BANK"
                     })
                     
-                    let priorityBankPaymentDetail: BankPaymentDetail?
-                    
-                    if let priorityIbanDetail = bankPaymentDetails.min(by: { $0.priority ?? 0 < $1.priority ?? 1 }),
-                        let ibanPaymentDetail = priorityIbanDetail.details.filter({
+                    // Using all the IBAN's associated
+                    for bankPaymentDetail in bankPaymentDetails {
+                        
+                        let ibanPaymentDetails = bankPaymentDetail.details.filter({
                             $0.key == "IBAN"
-                        }).first {
-                            
-                        self?.ibanPaymentDetails = ibanPaymentDetail
+                        })
+                        
+                        self?.ibanPaymentsDetails.append(contentsOf: ibanPaymentDetails)
                     }
+                    
+                    self?.ibanPaymentsDetails.sort { $0.id > $1.id }
+                    
+                    // If using only the priorityIBAN
+//                    if let priorityIbanDetail = bankPaymentDetails.min(by: { $0.priority ?? 0 < $1.priority ?? 1 }),
+//                        let ibanPaymentDetail = priorityIbanDetail.details.filter({
+//                            $0.key == "IBAN"
+//                        }).first {
+//                            
+//                        self?.ibanPaymentDetails = ibanPaymentDetail
+//                    }
 
                 }
 
@@ -163,22 +174,21 @@ class RibDocsViewModel {
 
                 let uploadedFiles = userDocuments.filter({
                     $0.documentType == documentType.documentType
-                }).map({ userDocument -> DocumentFileInfo in
+                }).enumerated().map({ (index, userDocument) -> DocumentFileInfo in
 
                     let userDocumentStatus = FileState(code: userDocument.status)
 
                     self.dateFormatter.dateFormat = "dd-MM-yyyy HH:mm:ss"
                     let uploadDate = self.dateFormatter.date(from: userDocument.uploadDate)
                     
-                    //var documentName = userDocument.fileName ?? ""
-                    var documentName = localized("rib")
+                    var documentName = localized("iban")
                     
-                    if let ibanPaymentDetails = self.ibanPaymentDetails {
+                    if let ibanPaymentDetails = self.ibanPaymentsDetails[safe: index] {
                         
                         if ibanPaymentDetails.value.count >= 5 {
                             let cutIban = String(ibanPaymentDetails.value.suffix(5))
                             
-                            let ibanSecured = "\(localized("rib")) **\(cutIban)"
+                            let ibanSecured = "\(localized("iban")) **\(cutIban)"
                             
                             documentName = ibanSecured
 
@@ -289,7 +299,9 @@ class RibDocsViewModel {
 
     func refreshDocuments() {
         self.documents = []
-        self.getUserDocuments()
+        self.ibanPaymentsDetails = []
+        self.requiredDocumentTypes = []
+        self.getPaymentInfo()
     }
 
 }

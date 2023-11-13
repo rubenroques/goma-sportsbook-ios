@@ -1441,6 +1441,7 @@
 
 "payment_processing_hold" = "Payment is being processed! Awaiting finalization of payment.";
 
+"deleted" = "Deleted";
 
 /* Localizable.strings */
 "AF" = "Afghanistan";

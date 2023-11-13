@@ -50,6 +50,7 @@ enum FileState {
     case failed
     case rejected
     case incomplete
+    case deleted
 
     init?(code: String) {
 
@@ -61,6 +62,9 @@ enum FileState {
         }
         else if code == "DECLINED" {
             self = .rejected
+        }
+        else if code == "DELETED" {
+            self = .deleted
         }
         else {
             self = .failed
@@ -79,6 +83,8 @@ enum FileState {
             return localized("rejected")
         case .incomplete:
             return localized("incomplete")
+        case .deleted:
+            return localized("deleted")
         }
     }
 }
