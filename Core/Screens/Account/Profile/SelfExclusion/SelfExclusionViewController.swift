@@ -23,6 +23,8 @@ class SelfExclusionViewController: UIViewController {
     private lazy var periodTypeSelectTextFieldView: DropDownSelectionView = Self.createPeriodTypeSelectTextFieldView()
     private lazy var periodValueHeaderTextFieldView: HeaderTextField.HeaderTextFieldView = Self.createPeriodValueHeaderTextFieldView()
 
+    private lazy var footerResponsibleGamingView: FooterResponsibleGamingView = Self.createFooterResponsibleGamingView()
+    
     private lazy var loadingBaseView: UIView = Self.createLoadingBaseView()
     private lazy var loadingActivityIndicatorView: UIActivityIndicatorView = Self.createLoadingActivityIndicatorView()
 
@@ -69,6 +71,10 @@ class SelfExclusionViewController: UIViewController {
         super.viewDidLoad()
 
         self.setupSubviews()
+        
+        self.footerResponsibleGamingView.hideLinksView()
+        self.footerResponsibleGamingView.hideSocialView()
+        
         self.setupWithTheme()
 
         self.backButton.addTarget(self, action: #selector(didTapBackButton), for: .touchUpInside)
@@ -454,6 +460,51 @@ extension SelfExclusionViewController {
         return activityIndicatorView
     }
 
+    
+    private static func createInterdictionTitleBaseView() -> UIView {
+        let view = UIView()
+        view.translatesAutoresizingMaskIntoConstraints = false
+        view.clipsToBounds = true
+        return view
+    }
+
+    private static func createInterdictionTitleLabel() -> UILabel {
+        let label = UILabel()
+        label.translatesAutoresizingMaskIntoConstraints = false
+        label.numberOfLines = 1
+        label.textAlignment = .left
+        label.text = localized("voluntary_gambling_ban_title")
+        label.font = AppFont.with(type: .semibold, size: 12)
+        label.textColor = UIColor.App.highlightPrimary
+        return label
+    }
+    
+    private static func createInterdictionDetailsBaseView() -> UIView {
+        let view = UIView()
+        view.translatesAutoresizingMaskIntoConstraints = false
+        view.clipsToBounds = true
+        return view
+    }
+
+    private static func createInterdictionDetailsLabel() -> UILabel {
+        let label = UILabel()
+        label.translatesAutoresizingMaskIntoConstraints = false
+        label.numberOfLines = 0
+        label.textAlignment = .left
+        label.text = localized("voluntary_gambling_ban_description")
+        label.font = AppFont.with(type: .semibold, size: 12)
+        label.textColor = UIColor.App.textPrimary
+        return label
+    }
+    
+    private static func createFooterResponsibleGamingView() -> FooterResponsibleGamingView {
+        let view = FooterResponsibleGamingView()
+        view.translatesAutoresizingMaskIntoConstraints = false
+        view.showLinksView()
+        view.showSocialView()
+        return view
+    }
+    
     private func setupSubviews() {
         self.view.addSubview(self.topView)
 
@@ -471,6 +522,8 @@ extension SelfExclusionViewController {
         self.periodValuesView.addSubview(self.periodTypeSelectTextFieldView)
         self.periodValuesView.addSubview(self.periodValueHeaderTextFieldView)
 
+        self.view.addSubview(self.footerResponsibleGamingView)
+        
         self.view.addSubview(self.loadingBaseView)
 
         self.loadingBaseView.addSubview(self.loadingActivityIndicatorView)
@@ -499,7 +552,6 @@ extension SelfExclusionViewController {
             self.editButton.trailingAnchor.constraint(equalTo: self.topView.trailingAnchor, constant: -8),
             self.editButton.heightAnchor.constraint(equalToConstant: 44),
             self.editButton.centerYAnchor.constraint(equalTo: self.topView.centerYAnchor)
-
 
         ])
 
@@ -544,6 +596,13 @@ extension SelfExclusionViewController {
 
             self.loadingActivityIndicatorView.centerXAnchor.constraint(equalTo: self.loadingBaseView.centerXAnchor),
             self.loadingActivityIndicatorView.centerYAnchor.constraint(equalTo: self.loadingBaseView.centerYAnchor)
+        ])
+        
+        NSLayoutConstraint.activate([
+            self.footerResponsibleGamingView.leadingAnchor.constraint(equalTo: self.exclusionSelectTextFieldView.leadingAnchor),
+            self.footerResponsibleGamingView.trailingAnchor.constraint(equalTo: self.exclusionSelectTextFieldView.trailingAnchor),
+            
+            self.footerResponsibleGamingView.bottomAnchor.constraint(equalTo: self.view.safeAreaLayoutGuide.bottomAnchor, constant: -20),
         ])
     }
 

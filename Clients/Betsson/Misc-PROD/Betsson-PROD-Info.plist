@@ -24,6 +24,8 @@
 	<string>$(MARKETING_VERSION)</string>
 	<key>CFBundleVersion</key>
 	<string>$(CURRENT_PROJECT_VERSION)</string>
+	<key>ITSAppUsesNonExemptEncryption</key>
+	<false/>
 	<key>LSApplicationCategoryType</key>
 	<string></string>
 	<key>LSApplicationQueriesSchemes</key>
@@ -41,6 +43,8 @@
 	<true/>
 	<key>NSCameraUsageDescription</key>
 	<string>Let us take a photo</string>
+	<key>NSContactsUsageDescription</key>
+	<string>This app requires contacts access to function properly.</string>
 	<key>NSFaceIDUsageDescription</key>
 	<string>User Authentication</string>
 	<key>NSLocationAlwaysAndWhenInUseUsageDescription</key>
@@ -57,8 +61,6 @@
 	<string>The app needs permission to use your photo library.</string>
 	<key>NSPhotoLibraryUsageDescription</key>
 	<string>Let us take a photo</string>
-    <key>NSContactsUsageDescription</key>
-    <string>This app requires contacts access to function properly.</string>
 	<key>NSUserTrackingUsageDescription</key>
 	<string>This information will be used to deliver personalized ads to you.</string>
 	<key>UIAppFonts</key>
@@ -94,12 +96,10 @@
 	</array>
 	<key>UISupportedInterfaceOrientations~ipad</key>
 	<array>
-		<string>UIInterfaceOrientationPortrait</string>
-		<string>UIInterfaceOrientationPortraitUpsideDown</string>
 		<string>UIInterfaceOrientationLandscapeLeft</string>
 		<string>UIInterfaceOrientationLandscapeRight</string>
+		<string>UIInterfaceOrientationPortrait</string>
+		<string>UIInterfaceOrientationPortraitUpsideDown</string>
 	</array>
-    <key>ITSAppUsesNonExemptEncryption</key>
-    <false/>
 </dict>
 </plist>

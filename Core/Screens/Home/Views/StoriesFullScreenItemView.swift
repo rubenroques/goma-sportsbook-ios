@@ -394,8 +394,14 @@ extension StoriesFullScreenItemView {
         self.videoPlayerViewController.view.translatesAutoresizingMaskIntoConstraints = false
         self.videoPlayerViewController.showsPlaybackControls = false
         self.videoPlayerViewController.player = videoPlayer
-        self.videoPlayerViewController.videoGravity = .resizeAspectFill
-
+        
+        if UIDevice.current.orientation.isLandscape {
+            self.videoPlayerViewController.videoGravity = .resizeAspect
+        }
+        else {
+            self.videoPlayerViewController.videoGravity = .resizeAspectFill
+        }
+        
         self.videoBaseView.addSubview(self.videoPlayerViewController.view)
         self.videoBaseView.addSubview(self.videoLoadingView)
 

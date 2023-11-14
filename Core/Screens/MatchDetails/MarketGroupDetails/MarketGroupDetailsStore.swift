@@ -58,15 +58,13 @@ class MarketGroupDetailsStore {
 
         for market in markets {
 
-            if market.name.lowercased().contains("total") {
-                print("marketgroups break")
-            }
-            
             var similarMarketKey = "\(market.marketTypeId ?? "000")-\(match.homeParticipant.name )-\(match.awayParticipant.name)"
             
             // Avoid grouping markets with this id
             // add here if we need to ungroup more ids
-            if market.marketTypeId ?? "000" == "1492" {
+            if market.marketTypeId ?? "000" == "1492" ||
+                market.marketTypeId ?? "000" == "1730" ||
+                market.marketTypeId ?? "000" == "1731" {
                 similarMarketKey = "\(market.id)-\(match.homeParticipant.name )-\(match.awayParticipant.name)"
             }
             

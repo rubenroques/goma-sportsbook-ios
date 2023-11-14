@@ -129,6 +129,26 @@ extension BetslipProxyWebViewController: WKNavigationDelegate {
 
     func webView(_ webView: WKWebView, didFinish navigation: WKNavigation!) {
         self.hideLoading()
+        
+        var odd = 1.0
+        let tickets = Env.betslipManager.bettingTicketsPublisher.value.map { bettingTicket in
+            odd *= bettingTicket.decimalOdd
+            return "{ marketId: \(bettingTicket.marketId), id: \(bettingTicket.outcomeId) }"
+        }
+        .joined(separator: ", ")
+        let oddString = String(format: "%.2f", odd)
+        
+        let javascriptCode = """
+             var event = new Event('message');
+             event.data = {
+                 event: 'betslip',
+                 selections: [ \(tickets) ],
+                 multipleTotalOddConverted: \(oddString)
+             };
+             window.dispatchEvent(event);
+         """
+         webView.evaluateJavaScript(javascriptCode, completionHandler: nil)
+        
     }
 
     func webView(_ webView: WKWebView, didFail navigation: WKNavigation!, withError error: Error) {

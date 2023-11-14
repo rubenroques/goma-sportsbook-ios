@@ -41,6 +41,10 @@ class FooterResponsibleGamingView: UIView {
     private lazy var instagramSocialButton: UIButton = Self.createSocialButton()
     private lazy var twitterSocialButton: UIButton = Self.createSocialButton()
 
+    private lazy var interdictionBaseView: UIView = Self.createInterdictionBaseView()
+    private lazy var interdictionTitleLabel: UILabel = Self.createInterdictionTitleLabel()
+    private lazy var interdictionDetailsLabel: UILabel = Self.createInterdictionDetailsLabel()
+    
     // MARK: - Lifetime and Cycle
     init() {
         super.init(frame: .zero)
@@ -112,6 +116,9 @@ class FooterResponsibleGamingView: UIView {
         self.instagramSocialButton.addTarget(self, action: #selector(openIntagramURL), for: .primaryActionTriggered)
         self.twitterSocialButton.addTarget(self, action: #selector(openTwitterURL), for: .primaryActionTriggered)
 
+        self.addTapGestureRecognizer(to: self.interdictionTitleLabel, action: #selector(openInterdictionURL))
+        self.addTapGestureRecognizer(to: self.interdictionDetailsLabel, action: #selector(openInterdictionURL))
+        
         self.hideLinksView()
         self.hideSocialView()
     }
@@ -141,6 +148,9 @@ class FooterResponsibleGamingView: UIView {
         self.youtubeSocialButton.tintColor = UIColor.App.textPrimary
         self.instagramSocialButton.tintColor = UIColor.App.textPrimary
         self.twitterSocialButton.tintColor = UIColor.App.textPrimary
+        
+        self.interdictionTitleLabel.textColor = UIColor.App.highlightPrimary
+        self.interdictionDetailsLabel.textColor = UIColor.App.textPrimary
     }
 
     func hideLinksView() {
@@ -228,6 +238,12 @@ class FooterResponsibleGamingView: UIView {
     @objc func openTwitterURL() {
         self.openURL("https://twitter.com/BetssonFR")
     }
+    
+    @objc func openInterdictionURL() {
+        let url = "https://anj.fr/ts"
+        self.openURL(url)
+    }
+    
 }
 
 extension FooterResponsibleGamingView {
@@ -365,6 +381,36 @@ extension FooterResponsibleGamingView {
         return label
     }
 
+    
+    private static func createInterdictionBaseView() -> UIView {
+        let view = UIView()
+        view.translatesAutoresizingMaskIntoConstraints = false
+        view.clipsToBounds = true
+        return view
+    }
+
+    private static func createInterdictionTitleLabel() -> UILabel {
+        let label = UILabel()
+        label.translatesAutoresizingMaskIntoConstraints = false
+        label.numberOfLines = 1
+        label.textAlignment = .left
+        label.text = localized("voluntary_gambling_ban_title")
+        label.font = AppFont.with(type: .semibold, size: 8)
+        label.textColor = UIColor.App.highlightPrimary
+        return label
+    }
+
+    private static func createInterdictionDetailsLabel() -> UILabel {
+        let label = UILabel()
+        label.translatesAutoresizingMaskIntoConstraints = false
+        label.numberOfLines = 0
+        label.textAlignment = .left
+        label.text = localized("voluntary_gambling_ban_description")
+        label.font = AppFont.with(type: .semibold, size: 8)
+        label.textColor = UIColor.App.textPrimary
+        return label
+    }
+    
     private func setupSubviews() {
 
         // Add subviews to self.view or each other
@@ -417,6 +463,13 @@ extension FooterResponsibleGamingView {
 
         self.baseStackView.addArrangedSubview(self.socialBaseView)
 
+        self.baseStackView.addArrangedSubview(self.socialBaseView)
+
+        self.interdictionBaseView.addSubview(self.interdictionTitleLabel)
+        self.interdictionBaseView.addSubview(self.interdictionDetailsLabel)
+        
+        self.baseStackView.addArrangedSubview(self.interdictionBaseView)
+        
         self.addSubview(self.baseStackView)
 
         // Initialize constraints
@@ -476,5 +529,18 @@ extension FooterResponsibleGamingView {
             self.twitterSocialButton.heightAnchor.constraint(equalToConstant: 30),
             self.twitterSocialButton.heightAnchor.constraint(equalTo: self.twitterSocialButton.widthAnchor),
         ])
+        
+        NSLayoutConstraint.activate([
+            self.interdictionTitleLabel.topAnchor.constraint(equalTo: self.interdictionBaseView.topAnchor),
+            self.interdictionTitleLabel.leadingAnchor.constraint(equalTo: self.interdictionBaseView.leadingAnchor),
+            self.interdictionTitleLabel.trailingAnchor.constraint(equalTo: self.interdictionBaseView.trailingAnchor),
+            
+            self.interdictionDetailsLabel.topAnchor.constraint(equalTo: self.interdictionTitleLabel.bottomAnchor, constant: 4),
+            
+            self.interdictionDetailsLabel.leadingAnchor.constraint(equalTo: self.interdictionBaseView.leadingAnchor),
+            self.interdictionDetailsLabel.trailingAnchor.constraint(equalTo: self.interdictionBaseView.trailingAnchor),
+            self.interdictionDetailsLabel.bottomAnchor.constraint(equalTo: self.interdictionBaseView.bottomAnchor),
+        ])
+        
     }
 }

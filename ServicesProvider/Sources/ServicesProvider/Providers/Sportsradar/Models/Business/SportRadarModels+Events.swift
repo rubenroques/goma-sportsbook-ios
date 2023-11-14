@@ -417,6 +417,8 @@ extension SportRadarModels {
         var awayParticipant: String?
         var eventId: String?
 
+        var isOverUnder: Bool
+
         enum CodingKeys: String, CodingKey {
             case id = "idfomarket"
             case name = "name"
@@ -431,9 +433,10 @@ extension SportRadarModels {
             case homeParticipant = "participantname_home"
             case awayParticipant = "participantname_away"
             case eventId = "idfoevent"
+            case isOverUnder = "isunderover"
         }
 
-        init(id: String, name: String, outcomes: [Outcome], marketTypeId: String? = nil, eventMarketTypeId: String? = nil, eventName: String? = nil, isMainOutright: Bool? = nil, eventMarketCount: Int? = nil, isTradable: Bool, startDate: String? = nil, homeParticipant: String? = nil, awayParticipant: String? = nil, eventId: String? = nil) {
+        init(id: String, name: String, outcomes: [Outcome], marketTypeId: String? = nil, eventMarketTypeId: String? = nil, eventName: String? = nil, isMainOutright: Bool? = nil, eventMarketCount: Int? = nil, isTradable: Bool, startDate: String? = nil, homeParticipant: String? = nil, awayParticipant: String? = nil, eventId: String? = nil, isOverUnder: Bool = false) {
             self.id = id
             self.name = name
             self.outcomes = outcomes
@@ -447,6 +450,7 @@ extension SportRadarModels {
             self.homeParticipant = homeParticipant
             self.awayParticipant = awayParticipant
             self.eventId = eventId
+            self.isOverUnder = isOverUnder
         }
 
         init(from decoder: Decoder) throws {
@@ -464,7 +468,20 @@ extension SportRadarModels {
             self.homeParticipant = try container.decodeIfPresent(String.self, forKey: .homeParticipant)
             self.awayParticipant = try container.decodeIfPresent(String.self, forKey: .awayParticipant)
             self.eventId = try container.decodeIfPresent(String.self, forKey: .eventId)
-//
+            
+            
+            self.isOverUnder = (try container.decodeIfPresent(Bool.self, forKey: .isOverUnder)) ?? false
+            if self.isOverUnder {
+                for index in outcomes.indices {
+                    if (outcomes[index].orderValue ?? "").lowercased() == "h" {
+                        outcomes[index].orderValue = "a"
+                    }
+                    else if (outcomes[index].orderValue ?? "").lowercased() == "a" {
+                        outcomes[index].orderValue = "h"
+                    }
+                }
+            }
+            
 //            #if DEBUG
 //            self.name = self.id + " " + self.name
 //            #endif
@@ -488,7 +505,8 @@ extension SportRadarModels {
         private var priceDenominator: String?
 
         var isTradable: Bool?
-
+        var isOverUnder: Bool
+        
         enum CodingKeys: String, CodingKey {
             case id = "idfoselection"
             case name = "name"
@@ -499,6 +517,7 @@ extension SportRadarModels {
             case orderValue = "hadvalue"
             case externalReference = "externalreference"
             case isTradable = "istradable"
+            case isOverUnder = "isunderover"
         }
 
         init(from decoder: Decoder) throws {
@@ -518,6 +537,16 @@ extension SportRadarModels {
             self.odd = .fraction(numerator: Int(numerator), denominator: Int(denominator) )
             self.isTradable = (try? container.decode(Bool.self, forKey: .isTradable)) ?? true
 
+            self.isOverUnder = (try container.decodeIfPresent(Bool.self, forKey: SportRadarModels.Outcome.CodingKeys.isOverUnder)) ?? false
+            if self.isOverUnder {
+                if (self.orderValue ?? "").lowercased() == "h" {
+                    self.orderValue = "a"
+                }
+                else if (self.orderValue ?? "").lowercased() == "a" {
+                    self.orderValue = "h"
+                }
+            }
+            
 //            #if DEBUG
 //            self.name = self.id + " " + self.name
 //            #endif

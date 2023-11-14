@@ -10,11 +10,7 @@ import Foundation
 struct OddOutcomesSortingHelper {
 
     static func sortValueForOutcome(_ key: String) -> Int {
-        
-        if key.lowercased().contains("plus") || key.lowercased().contains("0.5") {
-            print("OddOutcomesSortingHelper break")
-        }
-        
+
         switch key.lowercased() {
         case "yes": return 10
         case "no": return 20

@@ -1627,10 +1627,10 @@ extension RootViewController {
     }
 
     @objc func appDidEnterBackground() {
-        Env.userSessionStore.shouldAuthenticateUser = true
-        
-        self.showLocalAuthenticationCoveringViewIfNeeded()
-        print("LocalAuth Background")
+//        Env.userSessionStore.shouldAuthenticateUser = true
+//        
+//        self.showLocalAuthenticationCoveringViewIfNeeded()
+//        print("LocalAuth Background")
     }
 
     @objc func appDidBecomeActive() {

@@ -28,6 +28,8 @@ class HomeViewController: UIViewController {
     private lazy var tableView: UITableView = Self.createTableView()
     private lazy var loadingBaseView: UIView = Self.createLoadingBaseView()
 
+    private let footerInnerView = UIView(frame: .zero)
+
     private let loadingSpinnerViewController = LoadingSpinnerViewController()
 
     private lazy var floatingShortcutsView: FloatingShortcutsView = Self.createFloatingShortcutsView()
@@ -97,6 +99,35 @@ class HomeViewController: UIViewController {
         self.refreshControl.addTarget(self, action: #selector(self.refreshControllPulled), for: .valueChanged)
         self.tableView.addSubview(self.refreshControl)
 
+        //
+        // New Footer view in snap to bottom
+        self.footerInnerView.translatesAutoresizingMaskIntoConstraints = false
+        self.footerInnerView.backgroundColor = .clear
+
+        let tableFooterView = UIView(frame: CGRect(x: 0, y: 0, width: 300, height: 60))
+        tableFooterView.backgroundColor = .clear
+
+        self.tableView.tableFooterView = tableFooterView
+        tableFooterView.addSubview(self.footerInnerView)
+
+        let footerResponsibleGamingView = FooterResponsibleGamingView()
+        footerResponsibleGamingView.translatesAutoresizingMaskIntoConstraints = false
+        self.footerInnerView.addSubview(footerResponsibleGamingView)
+
+        NSLayoutConstraint.activate([
+            self.footerInnerView.rightAnchor.constraint(equalTo: tableFooterView.rightAnchor),
+            self.footerInnerView.leftAnchor.constraint(equalTo: tableFooterView.leftAnchor),
+            self.footerInnerView.bottomAnchor.constraint(equalTo: tableFooterView.bottomAnchor),
+            self.footerInnerView.bottomAnchor.constraint(greaterThanOrEqualTo: self.tableView.superview!.bottomAnchor),
+
+            footerResponsibleGamingView.leadingAnchor.constraint(equalTo: self.footerInnerView.leadingAnchor, constant: 20),
+            footerResponsibleGamingView.trailingAnchor.constraint(equalTo: self.footerInnerView.trailingAnchor, constant: -20),
+            footerResponsibleGamingView.topAnchor.constraint(equalTo: self.footerInnerView.topAnchor, constant: 12),
+            footerResponsibleGamingView.bottomAnchor.constraint(equalTo: self.footerInnerView.bottomAnchor, constant: -10),
+        ])
+        // New Footer
+        //
+        
         self.loadingBaseView.isHidden = true
 
         self.floatingShortcutsView.didTapBetslipButtonAction = { [weak self] in
@@ -128,10 +159,14 @@ class HomeViewController: UIViewController {
             }
         }
 
+        
         self.addChildViewController(self.loadingSpinnerViewController, toView: self.loadingBaseView)
 
         self.showLoading()
 
+        self.view.setNeedsLayout()
+        self.view.layoutIfNeeded()
+        
         executeDelayed(2.0) {
             self.hideLoading()
         }
@@ -147,6 +182,18 @@ class HomeViewController: UIViewController {
         super.viewWillDisappear(animated)
         
         self.floatingShortcutsView.resetAnimations()
+    }
+    
+    override func viewDidLayoutSubviews() {
+        super.viewDidLayoutSubviews()
+        
+        if let footerView = self.tableView.tableFooterView {
+            let size = self.footerInnerView.frame.size
+            if footerView.frame.size.height != size.height {
+                footerView.frame.size.height = size.height
+                self.tableView.tableFooterView = footerView
+            }
+        }
     }
     
     override func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {
