@@ -14,6 +14,7 @@ extension SportRadarModels {
         var partyId: Int
         var type: String
         var description: String?
+        var priority: Int?
         var details: [BankPaymentDetail]
 
         enum CodingKeys: String, CodingKey {
@@ -21,6 +22,7 @@ extension SportRadarModels {
             case partyId = "partyId"
             case type = "type"
             case description = "description"
+            case priority = "priority"
             case details = "details"
         }
     }

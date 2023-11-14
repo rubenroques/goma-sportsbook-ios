@@ -31,6 +31,8 @@ class PersonalInfoViewController: UIViewController {
     @IBOutlet private var lineView: UIView!
     @IBOutlet private var usernameHeaderTextFieldView: HeaderTextFieldView!
     @IBOutlet private var emailHeaderTextFieldView: HeaderTextFieldView!
+    
+    @IBOutlet private weak var phoneNumberHeaderTextFieldView: HeaderTextFieldView!
     @IBOutlet private var cardIdHeaderTextFieldView: HeaderTextFieldView!
     @IBOutlet private var bankIdHeaderTextFieldView: HeaderTextFieldView!
 
@@ -136,6 +138,9 @@ class PersonalInfoViewController: UIViewController {
 
         emailHeaderTextFieldView.setPlaceholderText(localized("email"))
         emailHeaderTextFieldView.isDisabled = true
+        
+        phoneNumberHeaderTextFieldView.setPlaceholderText(localized("phone_number"))
+        phoneNumberHeaderTextFieldView.isDisabled = true
 
         cardIdHeaderTextFieldView.setPlaceholderText(localized("id_number"))
 
@@ -242,6 +247,11 @@ class PersonalInfoViewController: UIViewController {
         emailHeaderTextFieldView.setHeaderLabelColor(UIColor.App.inputTextTitle)
         emailHeaderTextFieldView.setTextFieldColor(UIColor.App.inputText)
         emailHeaderTextFieldView.isDisabled = true
+        
+        phoneNumberHeaderTextFieldView.backgroundColor = UIColor.App.backgroundPrimary
+        phoneNumberHeaderTextFieldView.setHeaderLabelColor(UIColor.App.inputTextTitle)
+        phoneNumberHeaderTextFieldView.setTextFieldColor(UIColor.App.inputText)
+        phoneNumberHeaderTextFieldView.isDisabled = true
 
         cardIdHeaderTextFieldView.backgroundColor = UIColor.App.backgroundPrimary
         cardIdHeaderTextFieldView.setHeaderLabelColor(UIColor.App.inputTextTitle)
@@ -279,6 +289,7 @@ class PersonalInfoViewController: UIViewController {
                              self.postalCodeHeaderTextFieldView.textPublisher.eraseToAnyPublisher(),
                              self.usernameHeaderTextFieldView.textPublisher.eraseToAnyPublisher(),
                              self.emailHeaderTextFieldView.textPublisher.eraseToAnyPublisher(),
+                             self.phoneNumberHeaderTextFieldView.textPublisher.eraseToAnyPublisher(),
                              self.cardIdHeaderTextFieldView.textPublisher.eraseToAnyPublisher(),
                              self.bankIdHeaderTextFieldView.textPublisher.eraseToAnyPublisher(),
                              self.placeOfBirthHeaderTextFieldView.textPublisher.eraseToAnyPublisher(),
@@ -329,6 +340,7 @@ class PersonalInfoViewController: UIViewController {
                 self.postalCodeHeaderTextFieldView.text,
                 self.usernameHeaderTextFieldView.text,
                 self.emailHeaderTextFieldView.text,
+                self.phoneNumberHeaderTextFieldView.text,
                 self.cardIdHeaderTextFieldView.text,
                 self.bankIdHeaderTextFieldView.text,
                 self.placeOfBirthHeaderTextFieldView.text,
@@ -525,6 +537,10 @@ class PersonalInfoViewController: UIViewController {
         
         self.usernameHeaderTextFieldView.setText(profile.username)
         self.emailHeaderTextFieldView.setText(profile.email)
+        
+        let fullMobilePhone = "\(profile.mobilePhone ?? "-")"
+        
+        self.phoneNumberHeaderTextFieldView.setText(fullMobilePhone)
         
         self.firstNameHeaderTextFieldView.setText(profile.firstName ?? "-")
         self.lastNameHeaderTextFieldView.setText(profile.lastName ?? "-")

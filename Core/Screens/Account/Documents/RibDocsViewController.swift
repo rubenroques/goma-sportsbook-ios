@@ -68,7 +68,7 @@ class RibDocsViewController: UIViewController {
         self.viewModel = viewModel
 
         super.init(nibName: nil, bundle: nil)
-
+        
     }
 
     @available(iOS, unavailable)
@@ -241,7 +241,6 @@ class RibDocsViewController: UIViewController {
 
     // MARK: Action
     @objc func didTapRibAddDoc() {
-        print("ADD RIB DOC")
 
         let manualUploadDocViewModel = ManualUploadsDocumentsViewModel(documentTypeCode: .ibanProof)
 

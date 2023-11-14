@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="21507" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="22155" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
     <device id="retina6_1" orientation="portrait" appearance="light"/>
     <dependencies>
         <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="21505"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="22131"/>
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
         <capability name="System colors in document resources" minToolsVersion="11.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
@@ -30,6 +30,7 @@
                 <outlet property="infoView" destination="LQA-BT-oJn" id="hVm-F8-neT"/>
                 <outlet property="lastNameHeaderTextFieldView" destination="64c-44-siR" id="Hl9-Wh-wlH"/>
                 <outlet property="lineView" destination="OmS-ZR-XyP" id="JYz-29-eS4"/>
+                <outlet property="phoneNumberHeaderTextFieldView" destination="bXj-Hg-4PK" id="blo-TZ-FnD"/>
                 <outlet property="placeOfBirthHeaderTextFieldView" destination="vZS-jN-qxW" id="srS-Id-DfI"/>
                 <outlet property="postalCodeHeaderTextFieldView" destination="CP6-gF-fhM" id="CJX-y2-XWI"/>
                 <outlet property="scrollView" destination="Y3Z-Zp-eDo" id="DRS-es-ins"/>
@@ -40,7 +41,7 @@
         </placeholder>
         <placeholder placeholderIdentifier="IBFirstResponder" id="-2" customClass="UIResponder"/>
         <view clearsContextBeforeDrawing="NO" contentMode="scaleToFill" id="i5M-Pr-FkT">
-            <rect key="frame" x="0.0" y="0.0" width="414" height="1288"/>
+            <rect key="frame" x="0.0" y="0.0" width="414" height="1443"/>
             <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
             <subviews>
                 <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Kzd-gV-ZoX">
@@ -88,10 +89,10 @@
                     </constraints>
                 </view>
                 <scrollView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Y3Z-Zp-eDo">
-                    <rect key="frame" x="0.0" y="100" width="414" height="1154"/>
+                    <rect key="frame" x="0.0" y="100" width="414" height="1309"/>
                     <subviews>
                         <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="1gG-hR-Fft">
-                            <rect key="frame" x="0.0" y="0.0" width="414" height="1179"/>
+                            <rect key="frame" x="0.0" y="0.0" width="414" height="1259"/>
                             <subviews>
                                 <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="RSd-Yc-g2A" customClass="HeaderTextFieldView" customModule="Betsson" customModuleProvider="target">
                                     <rect key="frame" x="16" y="88" width="382" height="80"/>
@@ -177,6 +178,13 @@
                                         <constraint firstAttribute="height" constant="80" id="78W-HD-MbP"/>
                                     </constraints>
                                 </view>
+                                <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="bXj-Hg-4PK" customClass="HeaderTextFieldView" customModule="Betsson" customModuleProvider="target">
+                                    <rect key="frame" x="16" y="1061" width="382" height="80"/>
+                                    <color key="backgroundColor" systemColor="systemBackgroundColor"/>
+                                    <constraints>
+                                        <constraint firstAttribute="height" constant="80" id="q84-zA-EpV"/>
+                                    </constraints>
+                                </view>
                                 <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Zvu-Rc-BwZ" customClass="HeaderTextFieldView" customModule="Betsson" customModuleProvider="target">
                                     <rect key="frame" x="16" y="965" width="382" height="80"/>
                                     <color key="backgroundColor" systemColor="systemBackgroundColor"/>
@@ -206,7 +214,7 @@
                                     </constraints>
                                 </view>
                                 <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="LQA-BT-oJn">
-                                    <rect key="frame" x="16" y="1069" width="382" height="70"/>
+                                    <rect key="frame" x="16" y="1149" width="382" height="70"/>
                                     <subviews>
                                         <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="nn2-O1-XM8">
                                             <rect key="frame" x="8" y="24.5" width="366" height="21"/>
@@ -234,11 +242,14 @@
                                 <constraint firstAttribute="trailing" secondItem="64c-44-siR" secondAttribute="trailing" constant="16" id="51e-84-8rx"/>
                                 <constraint firstItem="eNO-fq-jLM" firstAttribute="leading" secondItem="1gG-hR-Fft" secondAttribute="leading" constant="16" id="7nM-1o-vWn"/>
                                 <constraint firstItem="CUN-hX-sYG" firstAttribute="top" secondItem="OmS-ZR-XyP" secondAttribute="bottom" constant="22" id="8em-7G-uYE"/>
+                                <constraint firstAttribute="trailing" secondItem="bXj-Hg-4PK" secondAttribute="trailing" constant="16" id="8iF-Ej-H5t"/>
                                 <constraint firstItem="OFR-Qr-0DU" firstAttribute="bottom" secondItem="eNO-fq-jLM" secondAttribute="top" constant="-8" id="9aY-XK-CHY"/>
                                 <constraint firstAttribute="trailing" secondItem="hVs-Yj-IdY" secondAttribute="trailing" constant="16" id="ArH-bq-KLr"/>
                                 <constraint firstItem="hVs-Yj-IdY" firstAttribute="top" secondItem="G8k-H1-yHP" secondAttribute="bottom" constant="8" id="BXQ-VS-YcM"/>
+                                <constraint firstItem="bXj-Hg-4PK" firstAttribute="top" secondItem="hb2-tJ-haa" secondAttribute="bottom" id="E8l-Xg-sao"/>
                                 <constraint firstItem="hb2-tJ-haa" firstAttribute="top" secondItem="CUN-hX-sYG" secondAttribute="bottom" constant="8" id="FhS-Tz-Avd"/>
                                 <constraint firstAttribute="trailing" secondItem="LQA-BT-oJn" secondAttribute="trailing" constant="16" id="FyC-mR-X7j"/>
+                                <constraint firstItem="bXj-Hg-4PK" firstAttribute="leading" secondItem="1gG-hR-Fft" secondAttribute="leading" constant="16" id="Gs7-ml-jBN"/>
                                 <constraint firstItem="6rd-p4-die" firstAttribute="leading" secondItem="CP6-gF-fhM" secondAttribute="trailing" constant="16" id="HaL-uW-axt"/>
                                 <constraint firstItem="4bo-qc-VHQ" firstAttribute="top" secondItem="1gG-hR-Fft" secondAttribute="top" id="KOh-VV-Bbv"/>
                                 <constraint firstItem="CP6-gF-fhM" firstAttribute="leading" secondItem="1gG-hR-Fft" secondAttribute="leading" constant="16" id="LUN-FT-ZKN"/>
@@ -252,6 +263,7 @@
                                 <constraint firstAttribute="trailing" secondItem="OFR-Qr-0DU" secondAttribute="trailing" constant="16" id="RuN-0q-5yi"/>
                                 <constraint firstItem="OFR-Qr-0DU" firstAttribute="leading" secondItem="1gG-hR-Fft" secondAttribute="leading" constant="16" id="Ty0-4V-Qgf"/>
                                 <constraint firstItem="RSd-Yc-g2A" firstAttribute="top" secondItem="4bo-qc-VHQ" secondAttribute="bottom" constant="8" id="WP8-Rf-NPp"/>
+                                <constraint firstItem="bXj-Hg-4PK" firstAttribute="bottom" secondItem="LQA-BT-oJn" secondAttribute="top" constant="-8" id="XEw-p2-GdK"/>
                                 <constraint firstItem="4bo-qc-VHQ" firstAttribute="leading" secondItem="1gG-hR-Fft" secondAttribute="leading" constant="16" id="Y3t-QO-Rkg"/>
                                 <constraint firstAttribute="trailing" secondItem="vZS-jN-qxW" secondAttribute="trailing" constant="16" id="bD7-Tb-DwZ"/>
                                 <constraint firstItem="G8k-H1-yHP" firstAttribute="leading" secondItem="1gG-hR-Fft" secondAttribute="leading" constant="16" id="bFJ-Qm-irI"/>
@@ -268,7 +280,6 @@
                                 <constraint firstItem="O1P-Mb-hlb" firstAttribute="leading" secondItem="1gG-hR-Fft" secondAttribute="leading" constant="16" id="nQ5-QU-5lI"/>
                                 <constraint firstItem="Zvu-Rc-BwZ" firstAttribute="top" secondItem="hb2-tJ-haa" secondAttribute="bottom" constant="8" id="nWB-eO-HVi"/>
                                 <constraint firstItem="6rd-p4-die" firstAttribute="width" secondItem="CP6-gF-fhM" secondAttribute="width" id="qvF-KS-deI"/>
-                                <constraint firstItem="LQA-BT-oJn" firstAttribute="top" secondItem="hb2-tJ-haa" secondAttribute="bottom" constant="8" id="sQC-dL-bap"/>
                                 <constraint firstItem="6rd-p4-die" firstAttribute="top" secondItem="hVs-Yj-IdY" secondAttribute="bottom" constant="8" id="u94-tq-IVc"/>
                                 <constraint firstItem="Lvj-YW-x7r" firstAttribute="leading" secondItem="1gG-hR-Fft" secondAttribute="leading" constant="16" id="uSb-W9-PdV"/>
                                 <constraint firstAttribute="trailing" secondItem="4bo-qc-VHQ" secondAttribute="trailing" constant="16" id="wd6-Ll-7Yw"/>
@@ -314,7 +325,7 @@
                 <constraint firstItem="Y3Z-Zp-eDo" firstAttribute="top" secondItem="Kzd-gV-ZoX" secondAttribute="bottom" constant="8" id="sTp-S2-0rY"/>
             </constraints>
             <freeformSimulatedSizeMetrics key="simulatedDestinationMetrics"/>
-            <point key="canvasLocation" x="-146.37681159420291" y="62.276785714285708"/>
+            <point key="canvasLocation" x="-146.37681159420291" y="114.17410714285714"/>
         </view>
     </objects>
     <resources>

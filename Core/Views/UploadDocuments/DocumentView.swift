@@ -332,6 +332,8 @@ class DocumentView: UIView {
             self.statusView.backgroundColor = UIColor.App.alertError
         case .incomplete:
             self.statusView.backgroundColor = UIColor.App.alertWarning
+        case .deleted:
+            self.statusView.backgroundColor = UIColor.App.alertError
         }
 
         self.statusLabel.text = fileState.statusName

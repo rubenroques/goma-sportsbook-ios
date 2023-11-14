@@ -87,6 +87,8 @@ class DocumentStateView: UIView {
             self.stateView.backgroundColor = UIColor.App.alertError
         case .incomplete:
             self.stateView.backgroundColor = UIColor.App.alertWarning
+        case .deleted:
+            self.stateView.backgroundColor = UIColor.App.alertError
 
         }
 

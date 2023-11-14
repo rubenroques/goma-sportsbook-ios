@@ -62,6 +62,10 @@ extension SportRadarModelMapper {
                            postalCode: playerInfoResponse.postalCode,
                            birthDepartment: playerInfoResponse.birthDepartment,
                            streetNumber: playerInfoResponse.streetNumber,
+                           phoneNumber: playerInfoResponse.phone,
+                           mobilePhone: playerInfoResponse.mobilePhone,
+                           mobileCountryCode: playerInfoResponse.mobileCountryCode,
+                           mobileLocalNumber: playerInfoResponse.mobileLocalNumber,
                            avatarName: avatarName,
                            godfatherCode: godfatherCode,
                            placeOfBirth: playerInfoResponse.birthCity,
@@ -308,7 +312,7 @@ extension SportRadarModelMapper {
 
         })
 
-        return BankPaymentInfo(id: internalBankPaymentInfo.id, partyId: internalBankPaymentInfo.partyId, type: internalBankPaymentInfo.type, description: internalBankPaymentInfo.description, details: bankPaymentDetails)
+        return BankPaymentInfo(id: internalBankPaymentInfo.id, partyId: internalBankPaymentInfo.partyId, type: internalBankPaymentInfo.type, description: internalBankPaymentInfo.description, priority: internalBankPaymentInfo.priority, details: bankPaymentDetails)
     }
 
     static func bankPaymentDetail(fromBankPaymentDetail internalBankPaymentDetail: SportRadarModels.BankPaymentDetail) -> BankPaymentDetail {
