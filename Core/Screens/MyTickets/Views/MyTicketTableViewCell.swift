@@ -175,6 +175,10 @@ class MyTicketTableViewCell: UITableViewCell {
         self.titleLabel.text = ""
         self.subtitleLabel.text = ""
         self.betIdLabel.text = ""
+        
+        self.totalOddTitleLabel.text = localized("total_odd")
+        self.betAmountTitleLabel.text = localized("bet_amount")
+        self.winningsTitleLabel.text = localized("return_text")
 
         self.totalOddSubtitleLabel.text = "-"
         self.betAmountSubtitleLabel.text = "-"

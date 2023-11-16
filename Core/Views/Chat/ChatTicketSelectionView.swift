@@ -113,6 +113,9 @@ class ChatTicketSelectionView: UIView {
             case .drawn:
                 self.betStatusView.backgroundColor = UIColor.App.myTicketsOther
                 self.betStatusLabel.text = localized("draw")
+            case .void:
+                self.betStatusView.backgroundColor = UIColor.App.myTicketsOther
+                self.betStatusLabel.text = localized("void")
             case .undefined, .open:
                 self.hasBetStatus = false
             }

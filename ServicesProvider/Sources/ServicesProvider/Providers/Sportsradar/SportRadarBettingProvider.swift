@@ -73,6 +73,7 @@ class SportRadarBettingProvider: BettingProvider, Connector {
         let publisher: AnyPublisher<[SportRadarModels.Bet], ServiceProviderError> = self.connector.request(endpoint)
         return publisher
             .map { bets in
+                let bets = bets
                 return SportRadarModels.BettingHistory(bets: bets)
             }
             .map(SportRadarModelMapper.bettingHistory(fromInternalBettingHistory:)).eraseToAnyPublisher()
