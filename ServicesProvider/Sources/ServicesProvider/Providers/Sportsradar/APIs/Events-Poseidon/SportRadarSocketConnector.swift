@@ -189,7 +189,7 @@ extension SportRadarSocketConnector: Starscream.WebSocketDelegate {
             print("ServiceProvider - SportRadarSocketConnector websocket ❌ Error \(error.debugDescription)")
             self.refreshConnection()
         case .peerClosed:
-            self.refreshConnection()
+            self.isConnected = false
             print("ServiceProvider - SportRadarSocketConnector peerClosed")
         }
         
@@ -201,7 +201,7 @@ extension SportRadarSocketConnector: Starscream.WebSocketDelegate {
         case .listeningStarted(let sessionTokenId):
             self.tokenSubject.send(SportRadarSessionAccessToken(hash: sessionTokenId))
             self.isConnected = true
-
+            
         case .contentChanges(let contents):
             for content in contents {
                 switch content {
@@ -270,9 +270,17 @@ extension SportRadarSocketConnector: Starscream.WebSocketDelegate {
                     }
                 }
             }
+            
+        case .subscriberIdNotFoundError(let oldId):
+            print("SportRadarSocketConnector subscriberIdNotFoundError error: \(oldId ?? "no id returned")")
+            self.tokenSubject.send(nil) // Clear old token
+            self.refreshConnection()
+            
+        case .genericError:
+            print("SportRadarSocketConnector Uknown error")
+            
         case .unknown:
-            ()
-            print("Uknown Response \( String(data: messageData, encoding: .utf8) ?? "" )")
+            print("SportRadarSocketConnector Uknown Response \( String(data: messageData, encoding: .utf8) ?? "" )")
         }
         
     }

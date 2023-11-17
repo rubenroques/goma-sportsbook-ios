@@ -79,4 +79,16 @@ struct TargetVariables: SportsbookTarget {
         return SportsbookSupportedLanguage.allCases
     }
     
+    static var clientBaseUrl: String {
+        return ""
+    }
+    
+    static var appStoreUrl: String? {
+        return nil
+    }
+    
+    static var secundaryMarketSpecsUrl: String? {
+        return nil
+    }
+    
 }

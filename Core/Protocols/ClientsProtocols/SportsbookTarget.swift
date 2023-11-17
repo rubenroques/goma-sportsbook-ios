@@ -50,6 +50,8 @@ protocol SportsbookTarget {
     
     static var appStoreUrl: String? { get }
     
+    static var secundaryMarketSpecsUrl: String? { get }
+    
 }
 
 enum SportsbookTargetFeatures: CaseIterable {
@@ -108,10 +110,6 @@ extension SportsbookTarget {
     
     static var supportedLanguages: [SportsbookSupportedLanguage] {
         return SportsbookSupportedLanguage.allCases
-    }
-
-    static var appStoreUrl: String? {
-        return nil
     }
     
 }

@@ -100,7 +100,7 @@ extension ServiceProviderModelMapper {
         return Market(id: market.id,
                       typeId: market.name,
                       name: market.name,
-                      nameDigit1: nil,
+                      nameDigit1: Double(market.marketDigitLine ?? ""),
                       nameDigit2: nil,
                       nameDigit3: nil,
                       eventPartId: nil,

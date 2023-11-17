@@ -418,7 +418,8 @@ extension SportRadarModels {
         var eventId: String?
 
         var isOverUnder: Bool
-
+        var marketDigitLine: String?
+        
         enum CodingKeys: String, CodingKey {
             case id = "idfomarket"
             case name = "name"
@@ -434,9 +435,10 @@ extension SportRadarModels {
             case awayParticipant = "participantname_away"
             case eventId = "idfoevent"
             case isOverUnder = "isunderover"
+            case marketDigitLine = "line"
         }
 
-        init(id: String, name: String, outcomes: [Outcome], marketTypeId: String? = nil, eventMarketTypeId: String? = nil, eventName: String? = nil, isMainOutright: Bool? = nil, eventMarketCount: Int? = nil, isTradable: Bool, startDate: String? = nil, homeParticipant: String? = nil, awayParticipant: String? = nil, eventId: String? = nil, isOverUnder: Bool = false) {
+        init(id: String, name: String, outcomes: [Outcome], marketTypeId: String? = nil, eventMarketTypeId: String? = nil, eventName: String? = nil, isMainOutright: Bool? = nil, eventMarketCount: Int? = nil, isTradable: Bool, startDate: String? = nil, homeParticipant: String? = nil, awayParticipant: String? = nil, eventId: String? = nil, isOverUnder: Bool = false, marketDigitLine: String?) {
             self.id = id
             self.name = name
             self.outcomes = outcomes
@@ -451,6 +453,7 @@ extension SportRadarModels {
             self.awayParticipant = awayParticipant
             self.eventId = eventId
             self.isOverUnder = isOverUnder
+            self.marketDigitLine = marketDigitLine
         }
 
         init(from decoder: Decoder) throws {
@@ -469,6 +472,13 @@ extension SportRadarModels {
             self.awayParticipant = try container.decodeIfPresent(String.self, forKey: .awayParticipant)
             self.eventId = try container.decodeIfPresent(String.self, forKey: .eventId)
             
+            self.marketDigitLine = nil
+            if let marketDigitLineString = try? container.decodeIfPresent(String.self, forKey: .marketDigitLine) {
+                self.marketDigitLine = marketDigitLineString
+            }
+            else if let marketDigitLineDouble = try? container.decodeIfPresent(Double.self, forKey: .marketDigitLine) {
+                self.marketDigitLine = String(marketDigitLineDouble)
+            }
             
             self.isOverUnder = (try container.decodeIfPresent(Bool.self, forKey: .isOverUnder)) ?? false
             if self.isOverUnder {

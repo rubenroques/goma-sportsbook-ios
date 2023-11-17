@@ -98,7 +98,8 @@ extension SportRadarModelMapper {
                       startDate: internalMarket.startDate,
                       homeParticipant: internalMarket.homeParticipant,
                       awayParticipant: internalMarket.awayParticipant,
-                      eventId: internalMarket.eventId)
+                      eventId: internalMarket.eventId,
+                      marketDigitLine: internalMarket.marketDigitLine)
     }
 
     static func outcome(fromInternalOutcome internalOutcome: SportRadarModels.Outcome) -> Outcome {

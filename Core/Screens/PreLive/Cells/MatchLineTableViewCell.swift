@@ -52,6 +52,12 @@ class MatchLineTableCellViewModel {
                 return eventSummary.type == .match
             }
             .map(ServiceProviderModelMapper.match(fromEvent:))
+            .flatMap({ match -> AnyPublisher<(Match, SecundarySportMarkets), ServiceProviderError> in
+                return SecundaryMarketsService.fetchSecundaryMarkets()
+                    .map { secundaryMarkets in (match, secundaryMarkets) }
+                    .mapError { error in ServiceProviderError.errorMessage(message: error.localizedDescription) }
+                    .eraseToAnyPublisher()
+            })
             .receive(on: DispatchQueue.main)
             .sink { completion in
                 switch completion {
@@ -60,24 +66,84 @@ class MatchLineTableCellViewModel {
                 case .failure:
                     break
                 }
-            } receiveValue: { [weak self] updatedMatch in
-
+            } receiveValue: { [weak self] updatedMatch, secundaryMarkets in
+                
+                //
+                // The fallback markets logic
                 var knownMarketGroups: Set<String> = []
                 var filteredMarkets = [Market]()
-
+                
                 for market in updatedMatch.markets.filter({ $0.outcomes.count == 3 || $0.outcomes.count == 2 }) {
                     if let marketTypeId = market.marketTypeId, !knownMarketGroups.contains(marketTypeId) {
                         knownMarketGroups.insert(marketTypeId)
                         filteredMarkets.append(market)
                     }
-
+                    
                     if knownMarketGroups.count >= 5 {
                         break
                     }
                 }
-                var sortedMarkets = filteredMarkets.sorted { leftMarket, rightMarket  in
+                
+                var fallbackSortedMarkets = filteredMarkets.sorted { leftMarket, rightMarket  in
                     return (leftMarket.marketTypeId ?? "") < (rightMarket.marketTypeId ?? "")
-                }.prefix(5)
+                }.prefix(5).map({ $0 })
+                //
+                
+                //
+                //
+                var sortedMarkets: [Market] = [] // the final list of markets
+                
+                if let secundaryMarketsForSport = secundaryMarkets.first(where: { secundarySportMarket in
+                    if secundarySportMarket.sportId == (updatedMatch.sport.alphaId ?? "") {
+                        return true
+                    }
+                    if secundarySportMarket.sportId == (updatedMatch.sportIdCode ?? "") {
+                        return true
+                    }
+                    return false
+                }) {
+                    for secundaryMarket in secundaryMarketsForSport.markets {
+                        print("secundaryMarket: ", secundaryMarket)
+                        
+                        if let line = secundaryMarket.line {
+                            if let foundMarket = updatedMatch.markets.first(where: { market in
+                                (market.marketTypeId ?? "") == secundaryMarket.typeId &&
+                                line == String(market.nameDigit1 ?? -99.0)
+                            }) {
+                                sortedMarkets.append(foundMarket)
+                            }
+                        }
+                        else if let foundMarket = updatedMatch.markets.first(where: { market in
+                            (market.marketTypeId ?? "") == secundaryMarket.typeId
+                        }) {
+                            sortedMarkets.append(foundMarket)
+                        }
+                        
+                    }
+                    
+                    if sortedMarkets.count < 5 {
+                        // We join both markets lists, avoiding repeat market to make
+                        // sure the final list as 5 markets
+                        // eg. 3 secundary found markets + 5 fallback markets . prefix(5)
+                        var mergedMarkets = sortedMarkets
+                        for fallbackMarket in fallbackSortedMarkets {
+                            if !mergedMarkets.contains(where: { market in
+                                fallbackMarket.id == market.id
+                            }) {
+                                mergedMarkets.append(fallbackMarket)
+                            }
+                        }
+                        
+                        // Then we get only the first 5 elements
+                        sortedMarkets = mergedMarkets.prefix(5).map({ $0 })
+                    }
+                }
+                else {
+                    // We don't have details of secundary markets
+                    // for this event sport type, use all the fallbacks
+                    
+                    sortedMarkets = fallbackSortedMarkets
+                }
                 
                 if var oldMatch = self?.matchCurrentValueSubject.value {
                     // We already have a match we only update/replace the markets
@@ -89,7 +155,8 @@ class MatchLineTableCellViewModel {
                         
                         oldMatch.markets = concatenatedMarkets
                         self?.matchCurrentValueSubject.send(oldMatch)
-                    } else {
+                    } 
+                    else {
                         oldMatch.markets = Array(sortedMarkets)
                         self?.matchCurrentValueSubject.send(oldMatch)
                     }

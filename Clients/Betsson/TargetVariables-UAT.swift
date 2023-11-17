@@ -88,7 +88,15 @@ struct TargetVariables: SportsbookTarget {
     }
 
     static var clientBaseUrl: String {
-        return "https://sportsbook-stage.gomagaming.com"
+        return "https://goma-uat.betsson.fr"
+    }
+    
+    static var appStoreUrl: String? {
+        return "https://apps.apple.com/fr/app/betsson/id6463237718"
     }
 
+    static var secundaryMarketSpecsUrl: String? {
+        return "https://goma-uat.betsson.fr/secondary_markets_config.json"
+    }
+    
 }

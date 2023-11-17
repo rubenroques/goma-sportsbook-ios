@@ -200,7 +200,8 @@ public class Market: Codable, Equatable {
     public var homeParticipant: String?
     public var awayParticipant: String?
     public var eventId: String?
-
+    public var marketDigitLine: String?
+    
     enum CodingKeys: String, CodingKey {
         case id = "id"
         case name = "name"
@@ -215,6 +216,7 @@ public class Market: Codable, Equatable {
         case homeParticipant = "participantname_home"
         case awayParticipant = "participantname_away"
         case eventId = "idfoevent"
+        case marketDigitLine = "marketDigitLine"
     }
 
     public init(id: String,
@@ -229,7 +231,8 @@ public class Market: Codable, Equatable {
                 startDate: String?,
                 homeParticipant: String?,
                 awayParticipant: String?,
-                eventId: String?) {
+                eventId: String?,
+                marketDigitLine: String?) {
 
         self.id = id
         self.name = name
@@ -244,6 +247,7 @@ public class Market: Codable, Equatable {
         self.homeParticipant = homeParticipant
         self.awayParticipant = awayParticipant
         self.eventId = eventId
+        self.marketDigitLine = marketDigitLine
     }
 
     required public init(from decoder: Decoder) throws {
