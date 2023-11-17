@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="22154" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="22155" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
     <device id="retina6_1" orientation="portrait" appearance="light"/>
     <dependencies>
         <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="22130"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="22131"/>
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
@@ -34,17 +34,26 @@
                                             <constraint firstAttribute="width" secondItem="Bbb-t9-7GA" secondAttribute="height" multiplier="1:1" id="roP-tI-laX"/>
                                         </constraints>
                                     </imageView>
+                                    <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="Zo4-T1-F0F">
+                                        <rect key="frame" x="318" y="12.5" width="20" height="20"/>
+                                        <constraints>
+                                            <constraint firstAttribute="height" constant="20" id="C6S-mh-kgZ"/>
+                                            <constraint firstAttribute="width" constant="20" id="u7l-Rs-rXm"/>
+                                        </constraints>
+                                    </imageView>
                                 </subviews>
                                 <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 <constraints>
+                                    <constraint firstItem="Zo4-T1-F0F" firstAttribute="centerY" secondItem="U61-bE-P6Z" secondAttribute="centerY" id="6ju-NV-FGt"/>
                                     <constraint firstItem="Bbb-t9-7GA" firstAttribute="centerY" secondItem="U61-bE-P6Z" secondAttribute="centerY" id="Bja-AQ-zSm"/>
                                     <constraint firstAttribute="height" constant="45" id="K92-UC-yhc"/>
                                     <constraint firstAttribute="trailing" secondItem="Bbb-t9-7GA" secondAttribute="trailing" constant="15" id="NKT-If-5Us"/>
+                                    <constraint firstItem="Bbb-t9-7GA" firstAttribute="leading" secondItem="Zo4-T1-F0F" secondAttribute="trailing" constant="5" id="Opq-78-Ocv"/>
                                     <constraint firstAttribute="trailing" secondItem="Bbb-t9-7GA" secondAttribute="trailing" constant="15" id="con-OE-ROe"/>
                                 </constraints>
                             </view>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" horizontalCompressionResistancePriority="1000" verticalCompressionResistancePriority="1000" text="Label Label Label Label Label Label Label Label " textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="2" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="OlA-UR-Bn9">
-                                <rect key="frame" x="32" y="12" width="311" height="34"/>
+                                <rect key="frame" x="57" y="12" width="261" height="34"/>
                                 <constraints>
                                     <constraint firstAttribute="height" relation="greaterThanOrEqual" constant="30" id="ok5-2C-3kM"/>
                                 </constraints>
@@ -142,7 +151,7 @@
                         <constraints>
                             <constraint firstItem="U61-bE-P6Z" firstAttribute="centerY" secondItem="OlA-UR-Bn9" secondAttribute="centerY" id="1T3-9y-Rfj"/>
                             <constraint firstAttribute="trailing" secondItem="JbR-Wf-e1d" secondAttribute="trailing" constant="12" id="1VX-mG-x2n"/>
-                            <constraint firstItem="OlA-UR-Bn9" firstAttribute="leading" secondItem="iYJ-UL-FZt" secondAttribute="leading" constant="32" id="5WO-nj-f6S"/>
+                            <constraint firstItem="OlA-UR-Bn9" firstAttribute="leading" secondItem="iYJ-UL-FZt" secondAttribute="leading" constant="57" id="5WO-nj-f6S"/>
                             <constraint firstItem="OlA-UR-Bn9" firstAttribute="top" secondItem="iYJ-UL-FZt" secondAttribute="top" constant="12" id="6VC-1c-xvd"/>
                             <constraint firstItem="JbR-Wf-e1d" firstAttribute="top" secondItem="OlA-UR-Bn9" secondAttribute="bottom" constant="8" symbolic="YES" id="BF1-wg-2iJ"/>
                             <constraint firstItem="U61-bE-P6Z" firstAttribute="leading" secondItem="iYJ-UL-FZt" secondAttribute="leading" id="L6y-9Y-VHQ"/>
@@ -162,6 +171,7 @@
             </tableViewCellContentView>
             <viewLayoutGuide key="safeArea" id="njF-e1-oar"/>
             <connections>
+                <outlet property="cashbackIconImageView" destination="Zo4-T1-F0F" id="7mH-G8-6fu"/>
                 <outlet property="columnsBaseView" destination="SJ5-z4-6Bk" id="ucf-rv-q9b"/>
                 <outlet property="containerView" destination="iYJ-UL-FZt" id="HtN-aA-Tjk"/>
                 <outlet property="expandAllArrowImageView" destination="Bbb-t9-7GA" id="zZ1-NB-FX9"/>

@@ -28,7 +28,8 @@ class ThreeAwayMarketDetailTableViewCell: UITableViewCell {
 
     @IBOutlet private var expandAllBaseView: UIView!
     @IBOutlet private var expandAllArrowImageView: UIImageView!
-
+    @IBOutlet private weak var cashbackIconImageView: UIImageView!
+    
     lazy var gradientBorderView: GradientBorderView = {
         var gradientBorderView = GradientBorderView()
         gradientBorderView.translatesAutoresizingMaskIntoConstraints = false
@@ -68,6 +69,12 @@ class ThreeAwayMarketDetailTableViewCell: UITableViewCell {
             }
         }
     }
+    
+    var hasCashback: Bool = false {
+        didSet {
+            self.cashbackIconImageView.isHidden = !hasCashback
+        }
+    }
 
     var didExpandCellAction: ((String) -> Void)?
     var didColapseCellAction: ((String) -> Void)?
@@ -92,6 +99,11 @@ class ThreeAwayMarketDetailTableViewCell: UITableViewCell {
         self.expandAllBaseView.addGestureRecognizer(expandAllTapGesture)
 
         self.expandAllArrowImageView.image = UIImage(named: "small_arrow_down_icon")
+        
+        self.cashbackIconImageView.image = UIImage(named: "cashback_small_blue_icon")
+        self.cashbackIconImageView.contentMode = .scaleAspectFit
+        
+        self.hasCashback = false
         
         self.containerView.addSubview(gradientBorderView)
         self.containerView.sendSubviewToBack(gradientBorderView)
@@ -118,6 +130,7 @@ class ThreeAwayMarketDetailTableViewCell: UITableViewCell {
         self.expandBaseView.isHidden = false
         self.seeAllOutcomes = false
         self.isAllExpanded = true
+        self.hasCashback = false
 
         self.leftColumnsStackView.removeAllArrangedSubviews()
         self.middleColumnsStackView.removeAllArrangedSubviews()

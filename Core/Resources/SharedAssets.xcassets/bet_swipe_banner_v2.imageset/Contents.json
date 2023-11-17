@@ -1,15 +1,17 @@
 {
   "images" : [
     {
+      "filename" : "betswipe.png",
       "idiom" : "universal",
       "scale" : "1x"
     },
     {
+      "filename" : "betswipe@2x.png",
       "idiom" : "universal",
       "scale" : "2x"
     },
     {
-      "filename" : "make-your-own-bet-betswipe-banner-static-v-mobile.png",
+      "filename" : "betswipe@3x.png",
       "idiom" : "universal",
       "scale" : "3x"
     }
