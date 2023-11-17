@@ -57,7 +57,8 @@ class OddTripleCollectionViewCell: UICollectionViewCell {
     @IBOutlet private weak var homeNameCaptionLabel: UILabel!
     @IBOutlet private weak var awayCircleCaptionView: UIView!
     @IBOutlet private weak var awayNameCaptionLabel: UILabel!
-
+    @IBOutlet private weak var cashbackIconImageView: UIImageView!
+    
     //
     // Design Constraints
     @IBOutlet private weak var topMarginSpaceConstraint: NSLayoutConstraint!
@@ -107,6 +108,12 @@ class OddTripleCollectionViewCell: UICollectionViewCell {
             self.isRightOutcomeButtonSelected ? self.selectRightOddButton() : self.deselectRightOddButton()
         }
     }
+    
+    var hasCashback: Bool = false {
+        didSet {
+            self.cashbackIconImageView.isHidden = !hasCashback
+        }
+    }
 
     var tappedMatchWidgetAction: (() -> Void)?
     var didLongPressOdd: ((BettingTicket) -> Void)?
@@ -153,6 +160,11 @@ class OddTripleCollectionViewCell: UICollectionViewCell {
 
         self.homeNameCaptionLabel.text = ""
         self.awayNameCaptionLabel.text = ""
+        
+        self.cashbackIconImageView.image = UIImage(named: "cashback_small_blue_icon")
+        self.cashbackIconImageView.contentMode = .scaleAspectFit
+        
+        self.hasCashback = false
 
         let tapLeftOddButton = UITapGestureRecognizer(target: self, action: #selector(didTapLeftOddButton))
         self.leftBaseView.addGestureRecognizer(tapLeftOddButton)
@@ -276,6 +288,8 @@ class OddTripleCollectionViewCell: UICollectionViewCell {
         self.currentRightOddValue = nil
 
         self.suspendedBaseView.isHidden = true
+
+        self.hasCashback = false
 
         switch StyleHelper.cardsStyleActive() {
         case .small:
@@ -618,6 +632,8 @@ class OddTripleCollectionViewCell: UICollectionViewCell {
 //                    }
 //                })
         }
+        
+        self.hasCashback = RePlayFeatureHelper.shouldShowRePlay(forMatch: match)
     }
 
     @IBAction private func didTapMatchView(_ sender: Any) {

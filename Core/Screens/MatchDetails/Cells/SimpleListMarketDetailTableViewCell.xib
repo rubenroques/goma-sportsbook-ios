@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="19455" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="22155" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
     <device id="retina6_1" orientation="portrait" appearance="light"/>
     <dependencies>
         <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="19454"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="22131"/>
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
         <capability name="System colors in document resources" minToolsVersion="11.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
@@ -11,7 +11,7 @@
     <objects>
         <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner"/>
         <placeholder placeholderIdentifier="IBFirstResponder" id="-2" customClass="UIResponder"/>
-        <tableViewCell contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" rowHeight="120" id="KGk-i7-Jjw" customClass="SimpleListMarketDetailTableViewCell" customModule="ShowcaseBeta" customModuleProvider="target">
+        <tableViewCell contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" rowHeight="120" id="KGk-i7-Jjw" customClass="SimpleListMarketDetailTableViewCell" customModule="Betsson" customModuleProvider="target">
             <rect key="frame" x="0.0" y="0.0" width="320" height="120"/>
             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
             <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="KGk-i7-Jjw" id="H2p-sc-9uM">
@@ -22,11 +22,18 @@
                         <rect key="frame" x="16" y="8" width="288" height="104"/>
                         <subviews>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" horizontalCompressionResistancePriority="1000" verticalCompressionResistancePriority="1000" text="Label" textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="2" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="iC8-cf-KmV">
-                                <rect key="frame" x="8" y="12" width="272" height="26"/>
+                                <rect key="frame" x="33" y="12" width="222" height="26"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                 <nil key="textColor"/>
                                 <nil key="highlightedColor"/>
                             </label>
+                            <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="kGI-kj-0wZ">
+                                <rect key="frame" x="260" y="15" width="20" height="20"/>
+                                <constraints>
+                                    <constraint firstAttribute="width" constant="20" id="Elh-g4-jI8"/>
+                                    <constraint firstAttribute="height" constant="20" id="wBA-RM-IWK"/>
+                                </constraints>
+                            </imageView>
                             <collectionView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" dataMode="none" translatesAutoresizingMaskIntoConstraints="NO" id="t2W-Ve-ZMA">
                                 <rect key="frame" x="12" y="46" width="264" height="50"/>
                                 <color key="backgroundColor" systemColor="systemBackgroundColor"/>
@@ -43,12 +50,14 @@
                         </subviews>
                         <color key="backgroundColor" systemColor="systemBackgroundColor"/>
                         <constraints>
-                            <constraint firstAttribute="trailing" secondItem="iC8-cf-KmV" secondAttribute="trailing" constant="8" id="FvT-qM-d5h"/>
-                            <constraint firstItem="iC8-cf-KmV" firstAttribute="leading" secondItem="gzC-Wx-rsw" secondAttribute="leading" constant="8" id="LjH-ZQ-KWh"/>
+                            <constraint firstItem="kGI-kj-0wZ" firstAttribute="centerY" secondItem="iC8-cf-KmV" secondAttribute="centerY" id="40q-6G-3K7"/>
+                            <constraint firstAttribute="trailing" secondItem="iC8-cf-KmV" secondAttribute="trailing" constant="33" id="FvT-qM-d5h"/>
+                            <constraint firstItem="iC8-cf-KmV" firstAttribute="leading" secondItem="gzC-Wx-rsw" secondAttribute="leading" constant="33" id="LjH-ZQ-KWh"/>
                             <constraint firstAttribute="trailing" secondItem="t2W-Ve-ZMA" secondAttribute="trailing" constant="12" id="Mlu-cJ-K8T"/>
                             <constraint firstItem="t2W-Ve-ZMA" firstAttribute="leading" secondItem="gzC-Wx-rsw" secondAttribute="leading" constant="12" id="ZgK-BC-4hy"/>
                             <constraint firstAttribute="bottom" secondItem="t2W-Ve-ZMA" secondAttribute="bottom" constant="8" id="pNh-GN-ct4"/>
                             <constraint firstItem="t2W-Ve-ZMA" firstAttribute="top" secondItem="iC8-cf-KmV" secondAttribute="bottom" constant="8" id="rA3-pB-wLS"/>
+                            <constraint firstAttribute="trailing" secondItem="kGI-kj-0wZ" secondAttribute="trailing" constant="8" id="sLf-mS-o5u"/>
                             <constraint firstItem="iC8-cf-KmV" firstAttribute="top" secondItem="gzC-Wx-rsw" secondAttribute="top" constant="12" id="sMp-SV-f2p"/>
                         </constraints>
                     </view>
@@ -62,6 +71,7 @@
             </tableViewCellContentView>
             <viewLayoutGuide key="safeArea" id="njF-e1-oar"/>
             <connections>
+                <outlet property="cashbackIconImageView" destination="kGI-kj-0wZ" id="OK3-VM-fx1"/>
                 <outlet property="collectionView" destination="t2W-Ve-ZMA" id="JdN-xK-PVC"/>
                 <outlet property="collectionViewHeightContraint" destination="9Ub-KP-1iQ" id="aH7-mf-hxJ"/>
                 <outlet property="containerView" destination="gzC-Wx-rsw" id="OpZ-GN-rak"/>

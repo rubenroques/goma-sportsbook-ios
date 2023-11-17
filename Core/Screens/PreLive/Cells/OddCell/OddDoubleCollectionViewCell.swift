@@ -51,7 +51,8 @@ class OddDoubleCollectionViewCell: UICollectionViewCell {
     @IBOutlet private weak var homeNameCaptionLabel: UILabel!
     @IBOutlet private weak var awayCircleCaptionView: UIView!
     @IBOutlet private weak var awayNameCaptionLabel: UILabel!
-
+    @IBOutlet private weak var cashbackIconImageView: UIImageView!
+    
     //
     // Design Constraints
     @IBOutlet private weak var topMarginSpaceConstraint: NSLayoutConstraint!
@@ -93,6 +94,12 @@ class OddDoubleCollectionViewCell: UICollectionViewCell {
             self.isRightOutcomeButtonSelected ? self.selectRightOddButton() : self.deselectRightOddButton()
         }
     }
+    
+    var hasCashback: Bool = false {
+        didSet {
+            self.cashbackIconImageView.isHidden = !hasCashback
+        }
+    }
 
     var tappedMatchWidgetAction: (() -> Void)?
     var didLongPressOdd: ((BettingTicket) -> Void)?
@@ -132,6 +139,11 @@ class OddDoubleCollectionViewCell: UICollectionViewCell {
         self.leftDownChangeOddValueImage.alpha = 0.0
         self.rightUpChangeOddValueImage.alpha = 0.0
         self.rightDownChangeOddValueImage.alpha = 0.0
+        
+        self.cashbackIconImageView.image = UIImage(named: "cashback_small_blue_icon")
+        self.cashbackIconImageView.contentMode = .scaleAspectFit
+        
+        self.hasCashback = false
 
         let tapLeftOddButton = UITapGestureRecognizer(target: self, action: #selector(didTapLeftOddButton))
         self.leftBaseView.addGestureRecognizer(tapLeftOddButton)
@@ -161,6 +173,7 @@ class OddDoubleCollectionViewCell: UICollectionViewCell {
         
         self.adjustDesignToCardStyle()
         self.setupWithTheme()
+        
     }
 
     override func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {
@@ -236,6 +249,8 @@ class OddDoubleCollectionViewCell: UICollectionViewCell {
         self.currentRightOddValue = nil
 
         self.suspendedBaseView.isHidden = true
+        
+        self.hasCashback = false
 
         switch StyleHelper.cardsStyleActive() {
         case .small:
@@ -502,6 +517,8 @@ class OddDoubleCollectionViewCell: UICollectionViewCell {
 //                    }
 //                })
         }
+        
+        self.hasCashback = RePlayFeatureHelper.shouldShowRePlay(forMatch: match) 
 
     }
 

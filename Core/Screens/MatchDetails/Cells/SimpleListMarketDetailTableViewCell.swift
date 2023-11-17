@@ -13,7 +13,8 @@ class SimpleListMarketDetailTableViewCell: UITableViewCell {
     @IBOutlet private var titleLabel: UILabel!
     @IBOutlet private var collectionView: UICollectionView!
     @IBOutlet private var collectionViewHeightContraint: NSLayoutConstraint!
-
+    @IBOutlet private weak var cashbackIconImageView: UIImageView!
+    
     lazy var gradientBorderView: GradientBorderView = {
         var gradientBorderView = GradientBorderView()
         gradientBorderView.translatesAutoresizingMaskIntoConstraints = false
@@ -34,6 +35,12 @@ class SimpleListMarketDetailTableViewCell: UITableViewCell {
     var competitionName: String?
     
     var betBuilderGrayoutsState = BetBuilderGrayoutsState.defaultState
+    
+    var hasCashback: Bool = false {
+        didSet {
+            self.cashbackIconImageView.isHidden = !hasCashback
+        }
+    }
 
     var didLongPressOdd: ((BettingTicket) -> Void)?
 
@@ -46,6 +53,11 @@ class SimpleListMarketDetailTableViewCell: UITableViewCell {
 
         self.titleLabel.text = localized("market")
         self.titleLabel.font = AppFont.with(type: .bold, size: 14)
+        
+        self.cashbackIconImageView.image = UIImage(named: "cashback_small_blue_icon")
+        self.cashbackIconImageView.contentMode = .scaleAspectFit
+        
+        self.hasCashback = false
 
         self.collectionView.delegate = self
         self.collectionView.dataSource = self
@@ -78,6 +90,7 @@ class SimpleListMarketDetailTableViewCell: UITableViewCell {
         self.match = nil
         self.market = nil
         self.competitionName = nil
+        self.hasCashback = false
         
         self.betBuilderGrayoutsState = BetBuilderGrayoutsState.defaultState
     }

@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="19529" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="22155" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
     <device id="retina6_1" orientation="portrait" appearance="light"/>
     <dependencies>
         <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="19519"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="22131"/>
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
         <capability name="System colors in document resources" minToolsVersion="11.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
@@ -22,7 +22,7 @@
     <objects>
         <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner"/>
         <placeholder placeholderIdentifier="IBFirstResponder" id="-2" customClass="UIResponder"/>
-        <collectionViewCell opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" id="TAf-cl-Qsl" customClass="OddTripleCollectionViewCell" customModule="Crocobet" customModuleProvider="target">
+        <collectionViewCell opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" id="TAf-cl-Qsl" customClass="OddTripleCollectionViewCell" customModule="Betsson" customModuleProvider="target">
             <rect key="frame" x="0.0" y="0.0" width="331" height="163"/>
             <autoresizingMask key="autoresizingMask"/>
             <view key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center">
@@ -315,6 +315,7 @@
                                         <rect key="frame" x="58" y="5" width="6" height="6"/>
                                         <color key="backgroundColor" systemColor="systemRedColor"/>
                                         <constraints>
+                                            <constraint firstAttribute="width" secondItem="PPA-AP-vQO" secondAttribute="height" multiplier="1:1" id="1eC-bt-1bD"/>
                                             <constraint firstAttribute="width" constant="6" id="viZ-g1-7wt"/>
                                         </constraints>
                                     </view>
@@ -327,7 +328,6 @@
                                 </subviews>
                                 <color key="backgroundColor" systemColor="systemBackgroundColor"/>
                                 <constraints>
-                                    <constraint firstItem="PPA-AP-vQO" firstAttribute="width" secondItem="PPA-AP-vQO" secondAttribute="height" multiplier="1:1" id="1eC-bt-1bD"/>
                                     <constraint firstItem="Xwx-gt-50I" firstAttribute="centerY" secondItem="YjF-Ys-Nn8" secondAttribute="centerY" id="Dej-CZ-fva"/>
                                     <constraint firstItem="PPA-AP-vQO" firstAttribute="centerY" secondItem="YjF-Ys-Nn8" secondAttribute="centerY" id="EAg-ll-4T4"/>
                                     <constraint firstItem="PPA-AP-vQO" firstAttribute="leading" secondItem="kbw-u3-Ehl" secondAttribute="trailing" constant="6" id="EjV-Ob-KNd"/>
@@ -341,6 +341,13 @@
                                     <constraint firstItem="Xwx-gt-50I" firstAttribute="top" secondItem="YjF-Ys-Nn8" secondAttribute="top" id="vDa-7B-CwQ"/>
                                 </constraints>
                             </view>
+                            <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="W6i-j8-X2z">
+                                <rect key="frame" x="303" y="4" width="20" height="20"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="20" id="GNo-2M-7hy"/>
+                                    <constraint firstAttribute="width" constant="20" id="H1T-ia-V3A"/>
+                                </constraints>
+                            </imageView>
                         </subviews>
                         <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                         <constraints>
@@ -357,7 +364,9 @@
                             <constraint firstItem="0kA-Ih-MnC" firstAttribute="trailing" secondItem="j5N-E1-ul8" secondAttribute="trailing" id="Na1-EU-6kc"/>
                             <constraint firstItem="kOL-6e-IWL" firstAttribute="leading" secondItem="j5N-E1-ul8" secondAttribute="leading" id="PdN-8U-WHT"/>
                             <constraint firstItem="0kA-Ih-MnC" firstAttribute="leading" secondItem="j5N-E1-ul8" secondAttribute="leading" id="QEJ-or-YCe"/>
+                            <constraint firstAttribute="trailing" secondItem="W6i-j8-X2z" secondAttribute="trailing" constant="8" id="S41-jR-JA6"/>
                             <constraint firstItem="YjF-Ys-Nn8" firstAttribute="leading" secondItem="kOL-6e-IWL" secondAttribute="leading" id="Vyc-lw-Cck"/>
+                            <constraint firstItem="W6i-j8-X2z" firstAttribute="centerY" secondItem="YjF-Ys-Nn8" secondAttribute="centerY" id="Wt1-9C-eca"/>
                             <constraint firstItem="RY7-Dv-fSr" firstAttribute="trailing" secondItem="mau-eG-JPv" secondAttribute="trailing" id="ZrM-H8-sOJ"/>
                             <constraint firstItem="YjF-Ys-Nn8" firstAttribute="bottom" secondItem="kOL-6e-IWL" secondAttribute="bottom" id="bvE-k3-YAt"/>
                             <constraint firstAttribute="width" constant="331" id="dS7-Qn-uqc"/>
@@ -382,6 +391,7 @@
                 <outlet property="baseView" destination="gRn-8b-XSa" id="hiG-mF-K20"/>
                 <outlet property="bottomMarginSpaceConstraint" destination="GEB-Q2-cmf" id="QiC-rd-oVj"/>
                 <outlet property="buttonsHeightConstraint" destination="GjW-wR-6eA" id="zq8-cR-LON"/>
+                <outlet property="cashbackIconImageView" destination="W6i-j8-X2z" id="F0U-eX-V0j"/>
                 <outlet property="headerHeightConstraint" destination="lmd-Yz-3bB" id="DAw-4o-qhH"/>
                 <outlet property="homeCircleCaptionView" destination="uFu-Y2-2sE" id="7UV-ge-wIB"/>
                 <outlet property="homeNameCaptionLabel" destination="kbw-u3-Ehl" id="gFM-X7-c9V"/>
