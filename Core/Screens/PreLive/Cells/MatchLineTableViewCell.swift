@@ -93,57 +93,60 @@ class MatchLineTableCellViewModel {
                 //
                 var sortedMarkets: [Market] = [] // the final list of markets
                 
-                if let secundaryMarketsForSport = secundaryMarkets.first(where: { secundarySportMarket in
-                    if secundarySportMarket.sportId == (updatedMatch.sport.alphaId ?? "") {
-                        return true
-                    }
-                    if secundarySportMarket.sportId == (updatedMatch.sportIdCode ?? "") {
-                        return true
-                    }
-                    return false
-                }) {
-                    for secundaryMarket in secundaryMarketsForSport.markets {
-                        print("secundaryMarket: ", secundaryMarket)
-                        
-                        if let line = secundaryMarket.line {
-                            if let foundMarket = updatedMatch.markets.first(where: { market in
-                                (market.marketTypeId ?? "") == secundaryMarket.typeId &&
-                                line == String(market.nameDigit1 ?? -99.0)
-                            }) {
-                                sortedMarkets.append(foundMarket)
-                            }
-                        }
-                        else if let foundMarket = updatedMatch.markets.first(where: { market in
-                            (market.marketTypeId ?? "") == secundaryMarket.typeId
-                        }) {
-                            sortedMarkets.append(foundMarket)
-                        }
-                        
-                    }
-                    
-                    if sortedMarkets.count < 5 {
-                        // We join both markets lists, avoiding repeat market to make
-                        // sure the final list as 5 markets
-                        // eg. 3 secundary found markets + 5 fallback markets . prefix(5)
-                        var mergedMarkets = sortedMarkets
-                        for fallbackMarket in fallbackSortedMarkets {
-                            if !mergedMarkets.contains(where: { market in
-                                fallbackMarket.id == market.id
-                            }) {
-                                mergedMarkets.append(fallbackMarket)
-                            }
-                        }
-                        
-                        // Then we get only the first 5 elements
-                        sortedMarkets = mergedMarkets.prefix(5).map({ $0 })
-                    }
-                }
-                else {
-                    // We don't have details of secundary markets
-                    // for this event sport type, use all the fallbacks
-                    
-                    sortedMarkets = fallbackSortedMarkets
-                }
+                // Remove this line
+                sortedMarkets = fallbackSortedMarkets
+//                
+//                if let secundaryMarketsForSport = secundaryMarkets.first(where: { secundarySportMarket in
+//                    if secundarySportMarket.sportId == (updatedMatch.sport.alphaId ?? "") {
+//                        return true
+//                    }
+//                    if secundarySportMarket.sportId == (updatedMatch.sportIdCode ?? "") {
+//                        return true
+//                    }
+//                    return false
+//                }) {
+//                    for secundaryMarket in secundaryMarketsForSport.markets {
+//                        print("secundaryMarket: ", secundaryMarket)
+//                        
+//                        if let line = secundaryMarket.line {
+//                            if let foundMarket = updatedMatch.markets.first(where: { market in
+//                                (market.marketTypeId ?? "") == secundaryMarket.typeId &&
+//                                line == String(market.nameDigit1 ?? -99.0)
+//                            }) {
+//                                sortedMarkets.append(foundMarket)
+//                            }
+//                        }
+//                        else if let foundMarket = updatedMatch.markets.first(where: { market in
+//                            (market.marketTypeId ?? "") == secundaryMarket.typeId
+//                        }) {
+//                            sortedMarkets.append(foundMarket)
+//                        }
+//                        
+//                    }
+//                    
+//                    if sortedMarkets.count < 5 {
+//                        // We join both markets lists, avoiding repeat market to make
+//                        // sure the final list as 5 markets
+//                        // eg. 3 secundary found markets + 5 fallback markets . prefix(5)
+//                        var mergedMarkets = sortedMarkets
+//                        for fallbackMarket in fallbackSortedMarkets {
+//                            if !mergedMarkets.contains(where: { market in
+//                                fallbackMarket.id == market.id
+//                            }) {
+//                                mergedMarkets.append(fallbackMarket)
+//                            }
+//                        }
+//                        
+//                        // Then we get only the first 5 elements
+//                        sortedMarkets = mergedMarkets.prefix(5).map({ $0 })
+//                    }
+//                }
+//                else {
+//                    // We don't have details of secundary markets
+//                    // for this event sport type, use all the fallbacks
+//                    
+//                    sortedMarkets = fallbackSortedMarkets
+//                }
                 
                 if var oldMatch = self?.matchCurrentValueSubject.value {
                     // We already have a match we only update/replace the markets
