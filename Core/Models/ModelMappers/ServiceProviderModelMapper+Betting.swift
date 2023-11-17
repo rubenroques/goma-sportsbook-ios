@@ -57,6 +57,7 @@ extension ServiceProviderModelMapper {
         case .won: status = .won
         case .lost: status = .lost
         case .cashedOut: status = .cashedOut
+        case .void: status = .void
         case .undefined: status = .undefined
         }
 
@@ -66,6 +67,7 @@ extension ServiceProviderModelMapper {
         case .opened: result = .open
         case .won: result = .won
         case .lost: result = .lost
+        case .void: result = .void
         default: result = .undefined
         }
 //        let result: BetSelectionResult

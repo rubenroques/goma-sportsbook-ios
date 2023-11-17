@@ -111,6 +111,7 @@ public enum BetState: String, Codable {
     case won
     case lost
     case cashedOut
+    case void
     case undefined
 }
 

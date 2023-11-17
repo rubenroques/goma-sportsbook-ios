@@ -59,6 +59,7 @@ extension SportRadarModelMapper {
         case .won: state = .won
         case .lost: state = .lost
         case .cashedOut: state = .cashedOut
+        case .void: state = .void
         }
 
         let result: BetResult
@@ -83,6 +84,7 @@ extension SportRadarModelMapper {
         case .allStates: globalState = .undefined
         case .won: globalState = .won
         case .lost: globalState = .lost
+        case .void: globalState = .void
         case .cashedOut: globalState = .cashedOut
         }
 

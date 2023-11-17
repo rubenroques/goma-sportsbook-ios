@@ -29,6 +29,7 @@ extension SportRadarModels {
         case won = "Won"
         case lost = "Lost"
         case cashedOut = "Cashed Out"
+        case void = "Void"
         case undefined = "Undefined"
 
         init?(rawValue: String) {
@@ -49,6 +50,8 @@ extension SportRadarModels {
                 self = .lost
             case "cashed out":
                 self = .cashedOut
+            case "void":
+                self = .void
             default:
                 self = .undefined
             }

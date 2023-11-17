@@ -266,7 +266,13 @@ class MyTicketBetLineView: NibView {
                 self.indicatorLabel.text = ""
                 self.indicatorBaseView.isHidden = true
             }
-            
+        case .void:
+            self.indicatorBaseView.isHidden = false
+            self.dateLabel.isHidden = true
+            self.indicatorInternalBaseView.backgroundColor = UIColor.App.myTicketsOther
+            self.bottomBaseView.backgroundColor = .clear
+            self.indicatorLabel.text = localized("void")
+            self.separatorView.isHidden = false
         case .undefined:
             self.dateLabel.isHidden = true
             self.indicatorLabel.text = ""
