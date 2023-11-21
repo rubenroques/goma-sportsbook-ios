@@ -43,6 +43,8 @@ class MyFavoritesRootViewController: UIViewController {
             self.closeButton.isHidden = !isModalViewController
         }
     }
+    
+    var resumeContentAction: (() -> Void)?
 
     // MARK: - Lifetime and Cycle
     init() {
@@ -203,7 +205,7 @@ class MyFavoritesRootViewController: UIViewController {
     }
 
     @objc private func didTapCloseButton() {
-
+        self.resumeContentAction?()
         self.dismiss(animated: true)
 
     }
@@ -269,9 +271,9 @@ extension MyFavoritesRootViewController {
 
     private static func createCloseButton() -> UIButton {
         let button = UIButton()
-        button.setTitle(localized("close"), for: .normal)
-        button.titleLabel?.font = AppFont.with(type: .bold, size: 16)
         button.translatesAutoresizingMaskIntoConstraints = false
+        button.setTitle("", for: .normal)
+        button.setImage(UIImage(named: "arrow_close_icon"), for: .normal)
         return button
     }
 
@@ -381,9 +383,10 @@ extension MyFavoritesRootViewController {
             self.titleLabel.leadingAnchor.constraint(equalTo: self.backButton.trailingAnchor, constant: 8),
             self.titleLabel.centerYAnchor.constraint(equalTo: self.navigationBaseView.centerYAnchor),
 
-            self.closeButton.trailingAnchor.constraint(equalTo: self.navigationBaseView.trailingAnchor, constant: -10),
+            self.closeButton.leadingAnchor.constraint(equalTo: self.navigationBaseView.leadingAnchor),
             self.closeButton.centerYAnchor.constraint(equalTo: self.navigationBaseView.centerYAnchor),
             self.closeButton.heightAnchor.constraint(equalToConstant: 40),
+            self.closeButton.widthAnchor.constraint(equalToConstant: 40),
 
             self.accountValueView.centerYAnchor.constraint(equalTo: self.navigationBaseView.centerYAnchor),
             self.accountValueView.heightAnchor.constraint(equalToConstant: 24),

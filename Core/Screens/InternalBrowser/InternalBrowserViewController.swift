@@ -38,6 +38,11 @@ class InternalBrowserViewController: UIViewController {
 
     private var shouldShowBackButton: Bool = false
     private var fullscreen: Bool
+    
+    var resumeContentAction: ((URL?) -> Void)?
+    var requestRegisterAction: (() -> Void)?
+    var requestHomeAction: (() -> Void)?
+    var requestBetswipeAction: (() -> Void)?
 
     init(url: URL, fullscreen: Bool) {
         self.url = url
@@ -90,6 +95,8 @@ class InternalBrowserViewController: UIViewController {
             
             self.webView.load(request)
         }
+        
+        self.presentationController?.delegate = self
 
     }
 
@@ -116,6 +123,8 @@ class InternalBrowserViewController: UIViewController {
 
         self.loadingBaseView.backgroundColor = UIColor.black.withAlphaComponent(0.7)
         self.loadingActivityIndicatorView.color = UIColor.lightGray
+        
+        self.webView.scrollView.backgroundColor = .clear
 
     }
 
@@ -130,6 +139,9 @@ class InternalBrowserViewController: UIViewController {
     }
 
     @objc private func didTapBackButton() {
+        
+        self.resumeContentAction?(self.url ?? nil)
+        
         self.presentingViewController?.dismiss(animated: true, completion: nil)
     }
 
@@ -153,13 +165,46 @@ extension InternalBrowserViewController: WKNavigationDelegate {
 extension InternalBrowserViewController: WKScriptMessageHandler {
 
     func userContentController(_ userContentController: WKUserContentController, didReceive message: WKScriptMessage) {
-        if message.name == "postMessageListener", let msg = message.body as? String {
-            if msg == "oniOSCloseBetSwipe" {
-                self.didTapBackButton()
+//        if message.name == "postMessageListener", let msg = message.body as? String {
+//            if msg == "oniOSCloseBetSwipe" {
+//                self.didTapBackButton()
+//            }
+//        }
+        
+        if message.name == "postMessageListener" {
+            if let jsonData = try? JSONSerialization.data(withJSONObject: message.body, options: []),
+               let webMessage = try? JSONDecoder().decode(WebMessage.self, from: jsonData) {
+
+                switch webMessage.messageType {
+                case "oniOSCloseBetSwipe":
+                    print("CLOSE BETSWIPE!")
+                    self.didTapBackButton()
+                case "openRegister":
+                    print("OPEN REGISTER!")
+                    self.requestRegisterAction?()
+                case "openBetSwipe":
+                    print("OPEN BETSWIPE!")
+                    self.requestBetswipeAction?()
+                case "goHome":
+                    print("OPEN HOME!")
+                    self.requestHomeAction?()
+                default:
+                    break
+                }
             }
         }
     }
 
+}
+
+extension InternalBrowserViewController: UIAdaptivePresentationControllerDelegate {
+    
+    func presentationControllerDidDismiss(_ presentationController: UIPresentationController) {
+
+        self.resumeContentAction?(self.url ?? nil)
+    }
+    
+    
 }
 
 extension InternalBrowserViewController {

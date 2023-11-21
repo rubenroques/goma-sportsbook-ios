@@ -363,9 +363,35 @@ class HomeViewController: UIViewController {
             storiesFullScreenViewController.markReadAction = { [weak self] storyId in
                 self?.markStoryRead(id: storyId)
             }
+            
+            storiesFullScreenViewController.requestRegisterAction = { [weak self] in
+                                
+                storiesFullScreenViewController.dismiss(animated: true, completion: {
+                    self?.presentRegisterScreen()
+                })
+                
+            }
+            
+            storiesFullScreenViewController.requestBetswipeAction = { [weak self] in
+                
+                storiesFullScreenViewController.dismiss(animated: true, completion: {
+                    self?.openBetSwipe()
+                })
+                
+            }
+            
+            storiesFullScreenViewController.requestHomeAction = { [weak self] in
+                storiesFullScreenViewController.dismiss(animated: true)
+            }
 
             self.present(storiesFullScreenViewController, animated: true)
         }
+    }
+    
+    private func presentRegisterScreen() {
+        let loginViewController = Router.navigationController(with: LoginViewController(shouldPresentRegisterFlow: true))
+        
+        self.present(loginViewController, animated: true, completion: nil)
     }
 
     private func openBetSwipeWebView() {
