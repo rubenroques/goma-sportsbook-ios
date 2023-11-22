@@ -312,6 +312,10 @@ class StoriesFullScreenItemView: UIView {
         self.videoPlayerViewController.player?.seek(to: CMTime(value: 0, timescale: 1))
         self.videoPlayerViewController.player?.pause()
     }
+    
+    func getStoryURL() -> String {
+        return self.viewModel.externalLinkURL?.absoluteString ?? ""
+    }
 
     // Navigation between items
     @objc func didTapNextPageView() {
@@ -333,6 +337,7 @@ class StoriesFullScreenItemView: UIView {
     @objc func didTapActionButton() {
 
         if let url = self.viewModel.externalLinkURL {
+            self.pauseProgress()
             self.linkRequestAction(url)
         }
     }

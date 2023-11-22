@@ -47,6 +47,9 @@ class StoriesFullScreenViewController: UIViewController {
     private var viewModel: StoriesFullScreenViewModel
 
     var markReadAction: ((String) -> Void)?
+    var requestRegisterAction: (() -> Void)?
+    var requestHomeAction: (() -> Void)?
+    var requestBetswipeAction: (() -> Void)?
 
     // MARK: - Lifetime and Cycle
     init(viewModel: StoriesFullScreenViewModel) {
@@ -124,7 +127,7 @@ class StoriesFullScreenViewController: UIViewController {
         }
 
         self.cubicScrollView.addChildViews(items)
-
+        
     }
 
     override func viewWillAppear(_ animated: Bool) {
@@ -184,11 +187,66 @@ class StoriesFullScreenViewController: UIViewController {
     func closeFullscreen() {
         self.dismiss(animated: true, completion: nil)
     }
+    
+    func resumeStoryContent(url: URL) {
+        
+        for page in self.pagesDictionary.values {
+            
+            if page.getStoryURL() == url.absoluteString {
+                
+                page.resumeProgress()
+            }
+        }
+                
+    }
 
     func openInternalWebview(onURL url: URL) {
-        let internalBrowserViewController = InternalBrowserViewController(url: url, fullscreen: false)
-        let navigationViewController = Router.navigationController(with: internalBrowserViewController)
-        self.present(navigationViewController, animated: true, completion: nil)
+        
+        if url.absoluteString.contains("favoris") {
+            
+            let myFavoritesRootViewController = MyFavoritesRootViewController()
+                        
+            myFavoritesRootViewController.resumeContentAction = { [weak self] in
+                self?.resumeStoryContent(url: url)
+            }
+            
+            myFavoritesRootViewController.presentationController?.delegate = self
+            
+            self.present(myFavoritesRootViewController, animated: true, completion: nil)
+
+        }
+        else {
+            let internalBrowserViewController = InternalBrowserViewController(url: url, fullscreen: false)
+            let navigationViewController = Router.navigationController(with: internalBrowserViewController)
+            
+            navigationViewController.presentationController?.delegate = self
+            
+            internalBrowserViewController.resumeContentAction = { [weak self] url in
+                if let url {
+                    self?.resumeStoryContent(url: url)
+                }
+            }
+            
+            internalBrowserViewController.requestRegisterAction = { [weak self] in
+                navigationViewController.dismiss(animated: true, completion: {
+                    self?.requestRegisterAction?()
+                })
+            }
+            
+            internalBrowserViewController.requestBetswipeAction = { [weak self] in
+                navigationViewController.dismiss(animated: true, completion: {
+                    self?.requestBetswipeAction?()
+                })
+            }
+            
+            internalBrowserViewController.requestHomeAction = { [weak self] in
+                navigationViewController.dismiss(animated: true, completion: {
+                    self?.requestHomeAction?()
+                })
+            }
+            
+            self.present(navigationViewController, animated: true, completion: nil)
+        }
     }
 
     @objc func handleSwipeDown(_ recognizer: UISwipeGestureRecognizer) {
@@ -197,6 +255,18 @@ class StoriesFullScreenViewController: UIViewController {
         }
     }
 
+}
+
+extension StoriesFullScreenViewController: UIAdaptivePresentationControllerDelegate {
+    
+    func presentationControllerDidDismiss(_ presentationController: UIPresentationController) {
+
+        if let currentPage = self.pagesDictionary[self.currentPage] {
+            currentPage.resumeProgress()
+        }
+    }
+    
+    
 }
 
 extension StoriesFullScreenViewController: CubicScrollViewDelegate {
