@@ -82,10 +82,10 @@ class SearchViewController: UIViewController {
         super.viewDidLoad()
 
         self.setupSubviews()
-        commonInit()
-        setupWithTheme()
+        self.commonInit()
+        self.setupWithTheme()
 
-        setupPublishers()
+        self.setupPublishers()
 
         self.view.layoutSubviews()
 
@@ -181,6 +181,10 @@ class SearchViewController: UIViewController {
         self.tableView.backgroundView?.backgroundColor = .clear
 
         self.tableView.separatorStyle = .none
+        
+        self.tableView.delegate = self
+        self.tableView.dataSource = self
+        
         self.tableView.register(MatchLineTableViewCell.nib, forCellReuseIdentifier: MatchLineTableViewCell.identifier)
         self.tableView.register(CompetitionSearchTableViewCell.nib, forCellReuseIdentifier: CompetitionSearchTableViewCell.identifier)
         self.tableView.register(LoadingMoreTableViewCell.nib, forCellReuseIdentifier: LoadingMoreTableViewCell.identifier)
@@ -188,9 +192,6 @@ class SearchViewController: UIViewController {
 
         self.tableView.register(RecentSearchHeaderView.nib, forHeaderFooterViewReuseIdentifier: RecentSearchHeaderView.identifier)
         self.tableView.register(RecentSearchTableViewCell.nib, forCellReuseIdentifier: RecentSearchTableViewCell.identifier)
-
-        self.tableView.delegate = self
-        self.tableView.dataSource = self
 
         self.tableView.estimatedRowHeight = 155
         self.tableView.estimatedSectionHeaderHeight = 0
@@ -228,12 +229,17 @@ class SearchViewController: UIViewController {
         self.viewModel.recentSearchesPublisher
             .receive(on: DispatchQueue.main)
             .sink(receiveValue: { [weak self] value in
+                guard let self = self else { return }
+                
                 if !value.isEmpty {
-                    self?.showSearchResultsTableView = true
-                    self?.tableView.reloadData()
+                    self.showSearchResultsTableView = true
+                    
+                    if self.viewModel.isEmptySearch {
+                        self.tableView.reloadData()
+                    }
                 }
                 else {
-                    self?.showSearchResultsTableView = false
+                    self.showSearchResultsTableView = false
                 }
             })
             .store(in: &cancellables)
@@ -505,6 +511,7 @@ extension SearchViewController: UITableViewDataSource, UITableViewDelegate {
             }
 
         }
+        
         return UITableViewCell()
     }
 
@@ -514,7 +521,7 @@ extension SearchViewController: UITableViewDataSource, UITableViewDelegate {
             guard
                 let headerView = tableView.dequeueReusableHeaderFooterView(withIdentifier: SearchSportHeaderView.identifier) as? SearchSportHeaderView
             else {
-                fatalError()
+                return nil
             }
 
             let searchEvent = self.viewModel.sportMatchesArrayPublisher.value[section].matches.first
@@ -550,7 +557,7 @@ extension SearchViewController: UITableViewDataSource, UITableViewDelegate {
             guard
                 let headerView = tableView.dequeueReusableHeaderFooterView(withIdentifier: RecentSearchHeaderView.identifier) as? RecentSearchHeaderView
             else {
-                fatalError()
+                return nil
             }
 
             headerView.clearAllAction = {

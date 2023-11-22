@@ -96,9 +96,6 @@ class Router {
     }
 
     func showPostLoadingFlow() {
-        self.subscribeToUserActionBlockers()
-        self.subscribeToURLRedirects()
-        self.subscribeToNotificationsOpened()
 
         var bootRootViewController: UIViewController
         if Env.userSessionStore.isUserLogged() || UserSessionStore.didSkipLoginFlow() {
@@ -112,6 +109,10 @@ class Router {
         else {
             bootRootViewController = Router.createLoginViewControllerFlow()
         }
+        
+        self.subscribeToUserActionBlockers()
+        self.subscribeToURLRedirects()
+        self.subscribeToNotificationsOpened()
 
         self.rootWindow.rootViewController = bootRootViewController
 
@@ -350,10 +351,18 @@ class Router {
         if let appSharedState = self.appSharedState {
             switch appSharedState {
             case .inactiveApp:
-
+                
                 if let rootViewController = self.mainRootViewController {
 
                     rootViewController.openMatchDetail(matchId: matchId)
+                }
+                else {
+                    if let currentViewController = self.rootViewController as? RootViewController {
+                        
+                        currentViewController.openMatchDetail(matchId: matchId)
+
+                        hasSentMatchId = true
+                    }
                 }
 
             case .activeApp:
@@ -373,7 +382,6 @@ class Router {
                             }
                             else {
                                 if let currentViewController = self?.rootViewController as? RootViewController {
-                                    
                                     currentViewController.openMatchDetail(matchId: matchId)
 
                                     hasSentMatchId = true
@@ -419,10 +427,17 @@ class Router {
         if let appSharedState = self.appSharedState {
             switch appSharedState {
             case .inactiveApp:
-
+                
                 if let rootViewController = self.mainRootViewController {
-
+                    
                     rootViewController.openBetslipModalWithShareData(ticketToken: token)
+                    hasSentBetId = true
+                }
+                
+                if let currentViewController = self.rootViewController as? RootViewController {
+                    
+                    currentViewController.openBetslipModalWithShareData(ticketToken: token)
+                    hasSentBetId = true
                 }
                 
 //                let betslipViewController = BetslipViewController(startScreen: .sharedBet(token))
