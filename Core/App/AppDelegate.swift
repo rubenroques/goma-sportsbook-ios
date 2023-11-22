@@ -146,16 +146,16 @@ class AppDelegate: UIResponder, UIApplicationDelegate, MessagingDelegate {
             //if urlSections.contains("gamedetail") {
             if urlSections.contains("competitions") || urlSections.contains("live") {
                 if let gameDetailId = urlSections.last {
-//                    self.openRoute(Route.event(id: gameDetailId), onApplication: application)
-                    self.openSharedRoute(Route.event(id: gameDetailId), onApplication: application)
+                    self.openRoute(Route.event(id: gameDetailId), onApplication: application)
+//                    self.openSharedRoute(Route.event(id: gameDetailId), onApplication: application)
 
                 }
             }
             else if urlSections.contains("bet") {
                 if let ticketId = urlSections.last {
 
-//                    self.openRoute(Route.ticket(id: ticketId), onApplication: application)
-                    self.openSharedRoute(Route.ticket(id: ticketId), onApplication: application)
+                    self.openRoute(Route.ticket(id: ticketId), onApplication: application)
+//                    self.openSharedRoute(Route.ticket(id: ticketId), onApplication: application)
 
                 }
             }

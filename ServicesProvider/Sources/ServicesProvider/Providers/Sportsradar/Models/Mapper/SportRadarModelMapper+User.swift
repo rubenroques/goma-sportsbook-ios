@@ -17,7 +17,7 @@ extension SportRadarModelMapper {
 
         var avatarName: String?
         var godfatherCode: String?
-        //var placeOfBirth: String?
+        // var placeOfBirth: String?
         var additionalStreetLine: String?
 
         for extraInfo in playerInfoResponse.extraInfos ?? [] {

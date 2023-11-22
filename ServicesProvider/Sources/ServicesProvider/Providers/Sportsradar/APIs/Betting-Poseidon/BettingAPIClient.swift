@@ -363,7 +363,7 @@ extension BettingAPIClient: Endpoint {
         case .getBetslipSettings: return true
         case .updateBetslipSettings: return true
         case .getFreebetBalance: return true
-        case .getSharedTicket: return true
+        case .getSharedTicket: return false
         case .getTicketSelection: return false
         case .calculateCashback: return true
         }

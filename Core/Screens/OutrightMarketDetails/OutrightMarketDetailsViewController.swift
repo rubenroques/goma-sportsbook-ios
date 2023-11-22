@@ -324,20 +324,22 @@ class OutrightMarketDetailsViewController: UIViewController {
     @objc func didTapMoreOptionsButton() {
       
         let actionSheetController: UIAlertController = UIAlertController(title: nil, message: nil, preferredStyle: .actionSheet)
-
-        if Env.favoritesManager.isEventFavorite(eventId: self.viewModel.competition.id) {
-            let favoriteAction: UIAlertAction = UIAlertAction(title: "Remove from favorites", style: .default) { _ -> Void in
-                Env.favoritesManager.removeFavorite(eventId: self.viewModel.competition.id, favoriteType: .match)
-                
+        
+        if Env.userSessionStore.isUserLogged(){
+            if Env.favoritesManager.isEventFavorite(eventId: self.viewModel.competition.id) {
+                let favoriteAction: UIAlertAction = UIAlertAction(title: "Remove from favorites", style: .default) { _ -> Void in
+                    Env.favoritesManager.removeFavorite(eventId: self.viewModel.competition.id, favoriteType: .match)
+                    
+                }
+                actionSheetController.addAction(favoriteAction)
             }
-            actionSheetController.addAction(favoriteAction)
-        }
-        else {
-            let favoriteAction: UIAlertAction = UIAlertAction(title: localized("add_to_favorites"), style: .default) { _ -> Void in
-                Env.favoritesManager.addFavorite(eventId: self.viewModel.competition.id, favoriteType: .match)
-                
+            else {
+                let favoriteAction: UIAlertAction = UIAlertAction(title: localized("add_to_favorites"), style: .default) { _ -> Void in
+                    Env.favoritesManager.addFavorite(eventId: self.viewModel.competition.id, favoriteType: .match)
+                    
+                }
+                actionSheetController.addAction(favoriteAction)
             }
-            actionSheetController.addAction(favoriteAction)
         }
 
         let shareAction: UIAlertAction = UIAlertAction(title: localized("share_event"), style: .default) { [weak self] _ -> Void in

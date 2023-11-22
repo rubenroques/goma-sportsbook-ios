@@ -89,40 +89,40 @@ class PreSubmissionBetslipViewModel {
     private func getSharedTicket(betId: String) {
 
         self.sharedBetsPublisher.send(.loading)
-
-        Env.servicesProvider.getSharedTicket(betslipId: betId)
-            .receive(on: DispatchQueue.main)
-            .sink(receiveCompletion: { [weak self] completion in
-                switch completion {
-                case .finished:
-                    ()
-                case .failure(let error):
-                    print("SHARED TICKET ERROR: \(error)")
-                    if self?.getSharedRetries == 0 {
-                        self?.sharedBetsPublisher.send(.failed)
-                    }
-                    else {
-                        DispatchQueue.main.asyncAfter(deadline: .now() + 1) {
-                            self?.getSharedRetries -= 1
-                            self?.getSharedTicket(betId: betId)
+                    
+            Env.servicesProvider.getSharedTicket(betslipId: betId)
+                .receive(on: DispatchQueue.main)
+                .sink(receiveCompletion: { [weak self] completion in
+                    switch completion {
+                    case .finished:
+                        ()
+                    case .failure(let error):
+                        print("SHARED TICKET ERROR: \(error)")
+                        if self?.getSharedRetries == 0 {
+                            self?.sharedBetsPublisher.send(.failed)
                         }
+                        else {
+                            DispatchQueue.main.asyncAfter(deadline: .now() + 1) {
+                                self?.getSharedRetries -= 1
+                                self?.getSharedTicket(betId: betId)
+                            }
+                        }
+                        
                     }
-
-                }
-
-            }, receiveValue: { [weak self] sharedTicketResponse in
-
-                print("SHARED TICKET RESPONSE: \(sharedTicketResponse)")
-
-                if let sharedBet = sharedTicketResponse.bets.first {
-                    self?.expectedTicketSelections = sharedBet.betSelections.count
-
-                    self?.getTicketSelections(sharedBet: sharedBet)
-
-                }
-
-            })
-            .store(in: &cancellables)
+                    
+                }, receiveValue: { [weak self] sharedTicketResponse in
+                    
+                    print("SHARED TICKET RESPONSE: \(sharedTicketResponse)")
+                    
+                    if let sharedBet = sharedTicketResponse.bets.first {
+                        self?.expectedTicketSelections = sharedBet.betSelections.count
+                        
+                        self?.getTicketSelections(sharedBet: sharedBet)
+                        
+                    }
+                    
+                })
+                .store(in: &cancellables)
 
     }
 
