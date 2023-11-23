@@ -192,7 +192,8 @@ class SearchViewController: UIViewController {
 
         self.tableView.register(RecentSearchHeaderView.nib, forHeaderFooterViewReuseIdentifier: RecentSearchHeaderView.identifier)
         self.tableView.register(RecentSearchTableViewCell.nib, forCellReuseIdentifier: RecentSearchTableViewCell.identifier)
-
+        self.tableView.register(UITableViewCell.self, forCellReuseIdentifier: UITableViewCell.identifier)
+        
         self.tableView.estimatedRowHeight = 155
         self.tableView.estimatedSectionHeaderHeight = 0
         self.tableView.estimatedSectionFooterHeight = 0

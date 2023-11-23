@@ -50,6 +50,7 @@ class StoriesFullScreenViewController: UIViewController {
     var requestRegisterAction: (() -> Void)?
     var requestHomeAction: (() -> Void)?
     var requestBetswipeAction: (() -> Void)?
+    var requestFavoritesAction: (() -> Void)?
 
     // MARK: - Lifetime and Cycle
     init(viewModel: StoriesFullScreenViewModel) {
@@ -204,15 +205,19 @@ class StoriesFullScreenViewController: UIViewController {
         
         if url.absoluteString.contains("favoris") {
             
-            let myFavoritesRootViewController = MyFavoritesRootViewController()
-                        
-            myFavoritesRootViewController.resumeContentAction = { [weak self] in
-                self?.resumeStoryContent(url: url)
-            }
+            self.requestFavoritesAction?()
             
-            myFavoritesRootViewController.presentationController?.delegate = self
-            
-            self.present(myFavoritesRootViewController, animated: true, completion: nil)
+//            let myFavoritesRootViewController = MyFavoritesRootViewController()
+//            
+//            let navigationViewController = Router.navigationController(with: myFavoritesRootViewController)
+//            
+//            navigationViewController.presentationController?.delegate = self
+//                        
+//            myFavoritesRootViewController.resumeContentAction = { [weak self] in
+//                self?.resumeStoryContent(url: url)
+//            }
+//                                    
+//            self.present(navigationViewController, animated: true, completion: nil)
 
         }
         else {
