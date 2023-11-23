@@ -32,6 +32,7 @@ class FooterResponsibleGamingView: UIView {
     private lazy var faqLabel: UILabel = Self.createLinkLabel()
     private lazy var responsibleGamblingLabel: UILabel = Self.createLinkLabel()
     private lazy var bonusRulesLabel: UILabel = Self.createLinkLabel()
+    private lazy var nosPartenairesLabel: UILabel = Self.createLinkLabel()
     
     private lazy var socialBaseView: UIView = Self.createView()
     private lazy var socialStackView: UIStackView = Self.createSocialStackView()
@@ -86,6 +87,7 @@ class FooterResponsibleGamingView: UIView {
         self.faqLabel.text = localized("faqs_footer_link")
         self.affiliateSystemLabel.text = localized("affiliate_system_footer_link")
         self.aboutLabel.text = localized("about_us")
+        self.nosPartenairesLabel.text = localized("nos_partenaires")
         
         // not used right now
         self.securityRulesLabel.text = localized("security_rules_footer_link")
@@ -101,6 +103,7 @@ class FooterResponsibleGamingView: UIView {
         self.addTapGestureRecognizer(to: self.aboutLabel, action: #selector(openAboutURL))
         self.addTapGestureRecognizer(to: self.faqLabel, action: #selector(openFAQsURL))
         self.addTapGestureRecognizer(to: self.bonusRulesLabel, action: #selector(openBonusRulesURL))
+        self.addTapGestureRecognizer(to: self.nosPartenairesLabel, action: #selector(nosPartenairesURL))
         
         self.facebookSocialButton.setImage(UIImage(named: "facebook_icon_mono")?.withRenderingMode(.alwaysTemplate),
                                            for: .normal)
@@ -208,6 +211,12 @@ class FooterResponsibleGamingView: UIView {
         let url = "\(TargetVariables.clientBaseUrl)/bonus_TC.pdf"
         self.openURL(url)
     }
+    
+    @objc func nosPartenairesURL() {
+        let url = "\(TargetVariables.clientBaseUrl)/fr/nos-partenaires"
+        self.openURL(url)
+    }
+    
     
     @objc func openAboutURL() {
         let url = "\(TargetVariables.clientBaseUrl)/fr/about"
@@ -441,8 +450,8 @@ extension FooterResponsibleGamingView {
         let view1 = self.createViewWithLabels(leftLabel: self.responsibleGamblingLabel, rightLabel: self.faqLabel)
         let view2 = self.createViewWithLabels(leftLabel: self.termsAndConditionsLabel, rightLabel: self.affiliateSystemLabel)
         
-        let view3 = self.createViewWithLabels(leftLabel: self.privacyPolicyLabel, rightLabel:  self.aboutLabel)
-        let view4 = self.createViewWithLabels(leftLabel: self.sportsBettingRulesLabel, rightLabel: emptyLabel1)
+        let view3 = self.createViewWithLabels(leftLabel: self.privacyPolicyLabel, rightLabel: self.aboutLabel)
+        let view4 = self.createViewWithLabels(leftLabel: self.sportsBettingRulesLabel, rightLabel: self.nosPartenairesLabel)
         let view5 = self.createViewWithLabels(leftLabel: self.bonusRulesLabel, rightLabel: emptyLabel2)
                 
         self.linksStackView.addArrangedSubview(view1)
