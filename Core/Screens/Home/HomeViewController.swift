@@ -383,6 +383,13 @@ class HomeViewController: UIViewController {
             storiesFullScreenViewController.requestHomeAction = { [weak self] in
                 storiesFullScreenViewController.dismiss(animated: true)
             }
+            
+            storiesFullScreenViewController.requestFavoritesAction = { [weak self] in
+                
+                storiesFullScreenViewController.dismiss(animated: true, completion: {
+                    self?.openFavorites()
+                })
+            }
 
             self.present(storiesFullScreenViewController, animated: true)
         }
@@ -504,8 +511,8 @@ class HomeViewController: UIViewController {
     }
     
     private func openFavorites() {
-        let myFavoritesViewController = MyFavoritesViewController()
-        self.navigationController?.pushViewController(myFavoritesViewController, animated: true)
+        let myFavoritesRootViewController = MyFavoritesRootViewController()
+        self.navigationController?.pushViewController(myFavoritesRootViewController, animated: true)
     }
 
     private func openQuickbet(_ bettingTicket: BettingTicket) {
