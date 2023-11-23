@@ -971,35 +971,69 @@ extension SportRadarEventsProvider {
     }
 
     func getFieldWidget(eventId: String, isDarkTheme: Bool? = nil) -> AnyPublisher<FieldWidgetRenderDataType, ServiceProviderError> {
-
+        
         var fieldWidgetFile = "field_widget_light.html"
-
         if isDarkTheme ?? true {
             fieldWidgetFile = "field_widget_dark.html"
         }
-
+        
         return self.getFieldWidgetId(eventId: eventId).flatMap({ fieldWidget -> AnyPublisher<FieldWidgetRenderDataType, ServiceProviderError> in
-
+            
             let fileStringSplit = fieldWidgetFile.components(separatedBy: ".")
+            
+            let filePath = Bundle.main.path(forResource: fileStringSplit[0], ofType: fileStringSplit[1])
+            let contentData = FileManager.default.contents(atPath: filePath!)
+            guard
+                let widgetHTMLTemplate = NSString(data: contentData!, encoding: String.Encoding.utf8.rawValue) as? String,
+                let fieldWidgetId = fieldWidget.data,
+                let bundleUrl = Bundle.main.url(forResource: fileStringSplit[0], withExtension: fileStringSplit[1])
+            else {
+                return Fail(outputType: FieldWidgetRenderDataType.self, failure: ServiceProviderError.invalidResponse).eraseToAnyPublisher()
+            }
+            
+            var replacedHtmlContent = widgetHTMLTemplate.replacingOccurrences(of: "@eventId", with: fieldWidgetId)
+            replacedHtmlContent = replacedHtmlContent.replacingOccurrences(of: "@languageCode", with: "fr")
+            
+            let fieldWidgetRenderDataType = FieldWidgetRenderDataType.htmlString(url: bundleUrl, htmlString: replacedHtmlContent)
+            return Just(fieldWidgetRenderDataType).setFailureType(to: ServiceProviderError.self).eraseToAnyPublisher()
+            
+        }).eraseToAnyPublisher()
+        
+    }
+
+    func getStatsWidget(eventId: String, marketTypeName: String, isDarkTheme: Bool?) -> AnyPublisher<StatsWidgetRenderDataType, ServiceProviderError> {
+        
+        var statsWidgetFile = "stats_widget_light.html"
+        if isDarkTheme ?? true {
+            statsWidgetFile = "stats_widget_dark.html"
+        }
+
+        return self.getFieldWidgetId(eventId: eventId).flatMap({ statsWidget -> AnyPublisher<StatsWidgetRenderDataType, ServiceProviderError> in
+
+            let fileStringSplit = statsWidgetFile.components(separatedBy: ".")
 
             let filePath = Bundle.main.path(forResource: fileStringSplit[0], ofType: fileStringSplit[1])
             let contentData = FileManager.default.contents(atPath: filePath!)
-            let emailTemplate = NSString(data: contentData!, encoding: String.Encoding.utf8.rawValue) as? String
-            if let fieldWidgetId = fieldWidget.data,
-               let replacedHtmlContent = emailTemplate?.replacingOccurrences(of: "@eventId", with: fieldWidgetId).replacingOccurrences(of: "@languageCode", with: Locale.current.languageCode ?? "fr"),
-               let bundleUrl = Bundle.main.url(forResource: fileStringSplit[0], withExtension: fileStringSplit[1]) {
-                // let fieldWidgetRenderData = FieldWidgetRenderData(url: bundleUrl, htmlString: replacedHtmlContent)
-                let fieldWidgetRenderDataType = FieldWidgetRenderDataType.htmlString(url: bundleUrl, htmlString: replacedHtmlContent)
-                return Just(fieldWidgetRenderDataType).setFailureType(to: ServiceProviderError.self).eraseToAnyPublisher()
+            let widgetHTMLTemplate = NSString(data: contentData!, encoding: String.Encoding.utf8.rawValue) as? String
+            if let statsWidgetId = statsWidget.data,
+               let replacedHtmlContent = widgetHTMLTemplate?.replacingOccurrences(of: "@MATCH_ID_PLACEHOLDER", with: statsWidgetId)
+                .replacingOccurrences(of: "@MARKET_TYPE_PLACEHOLDER", with: marketTypeName)
+                .replacingOccurrences(of: "@LANGUAGE_CODE_PLACEHOLDER", with: "fr"),
+               
+                let bundleUrl = Bundle.main.url(forResource: fileStringSplit[0], withExtension: fileStringSplit[1]) {
+
+                let statsWidgetRenderDataType = StatsWidgetRenderDataType.htmlString(url: bundleUrl, htmlString: replacedHtmlContent)
+                return Just(statsWidgetRenderDataType).setFailureType(to: ServiceProviderError.self).eraseToAnyPublisher()
             }
 
-            return Fail(outputType: FieldWidgetRenderDataType.self, failure: ServiceProviderError.invalidResponse).eraseToAnyPublisher()
+            return Fail(outputType: StatsWidgetRenderDataType.self, failure: ServiceProviderError.invalidResponse).eraseToAnyPublisher()
 
         })
         .eraseToAnyPublisher()
 
+        
     }
-
+    
     func getAvailableSportTypes(initialDate: Date? = nil, endDate: Date? = nil) -> AnyPublisher<[SportType], ServiceProviderError> {
 
         // Navigation Sports

@@ -1886,20 +1886,26 @@ $base: #141435;
   <body class="auth-wrapper" style="margin: 0;">
 
     <div class="widgets">
-        <div><div id="my-widget" class="sr-widget sr-widget-1"></div></div>
+        <div>
+            <div class="sr-widget-title"></div>
+            <div class="sr-widget sr-widget-1"></div>
+        </div>
     </div>
 
-    <div hidden id="game_id">@eventId</div>
-
+    <div hidden id="match_id">@MATCH_ID_PLACEHOLDER</div>
+    <div hidden id="market_id">@MARKET_TYPE_PLACEHOLDER</div>
+    
     <script type="text/javascript">
         (function(a,b,c,d,e,f,g,h,i){a[e]||(i=a[e]=function(){(a[e].q=a[e].q||[]).push(arguments)},i.l=1*new Date,i.o=f,
         g=b.createElement(c),h=b.getElementsByTagName(c)[0],g.async=1,g.src=d,g.setAttribute("n",e),h.parentNode.insertBefore(g,h)
-        )})(window,document,"script","https://widgets.sir.sportradar.com/e261cb63db9a62135b35e984baae1efd/widgetloader","SIR", {
-            language: '@languageCode' // SIR global options
+        )})(window,document,"script","https://widgets.sir.sportradar.com/lmtdemo/widgetloader","SIR", {
+            theme: false, // using custom theme
+            language: "@LANGUAGE_CODE_PLACEHOLDER" // SIR global options
         });
-        SIR("addWidget", "#my-widget", "betAssist.standalone", { @matchId, @market });
-
+        SIR("addWidget", ".sr-widget-1", "betAssist.standalone", { "matchId": "@MATCH_ID_PLACEHOLDER", "market": "@MARKET_TYPE_PLACEHOLDER"});
     </script>
+
+  </body>
 
   </body>
 

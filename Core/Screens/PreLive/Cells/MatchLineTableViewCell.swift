@@ -107,16 +107,18 @@ class MatchLineTableCellViewModel {
                         print("secundaryMarket: ", secundaryMarket)
                         
                         if let line = secundaryMarket.line {
-                            if let foundMarket = updatedMatch.markets.first(where: { market in
+                            if var foundMarket = updatedMatch.markets.first(where: { market in
                                 (market.marketTypeId ?? "") == secundaryMarket.typeId &&
                                 line == String(market.nameDigit1 ?? -99.0)
                             }) {
+                                foundMarket.statsTypeId = secundaryMarket.statsId
                                 sortedMarkets.append(foundMarket)
                             }
                         }
-                        else if let foundMarket = updatedMatch.markets.first(where: { market in
+                        else if var foundMarket = updatedMatch.markets.first(where: { market in
                             (market.marketTypeId ?? "") == secundaryMarket.typeId
                         }) {
+                            foundMarket.statsTypeId = secundaryMarket.statsId
                             sortedMarkets.append(foundMarket)
                         }
                         

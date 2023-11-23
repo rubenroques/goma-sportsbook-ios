@@ -63,6 +63,8 @@ protocol EventsProvider: Connector {
     
     func getFieldWidget(eventId: String, isDarkTheme: Bool?) -> AnyPublisher<FieldWidgetRenderDataType, ServiceProviderError>
 
+    func getStatsWidget(eventId: String, marketTypeName: String, isDarkTheme: Bool?) -> AnyPublisher<StatsWidgetRenderDataType, ServiceProviderError>
+    
     func getSportRegions(sportId: String) -> AnyPublisher<SportNodeInfo, ServiceProviderError>
 
     func getRegionCompetitions(regionId: String) -> AnyPublisher<SportRegionInfo, ServiceProviderError>
