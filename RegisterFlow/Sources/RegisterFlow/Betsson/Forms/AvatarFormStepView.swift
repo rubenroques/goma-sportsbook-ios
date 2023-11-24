@@ -231,22 +231,45 @@ class AvatarFormStepView: FormStepView {
         avatarAnimationView.play()
 
         self.animationView = avatarAnimationView
+        
+        // simplifiend animation
+//        self.animationView?.frame = endFrame
+//        UIView.animate(withDuration: 0.35, delay: 0) {
+//            avatarAnimationView.alpha = 1.0
+//        } completion: { completed in
+//            UIView.animate(withDuration: 0.35, delay: 3.0) {
+//                avatarAnimationView.alpha = 0.0
+//            } completion: { completed in
+//                avatarAnimationView.stop()
+//                avatarAnimationView.removeFromSuperview()
+//            }
+//        }
+        //
+        
+        // Using CGAffineTransform
+        // Initial transform (scale or other transformations can be added here)
+         avatarAnimationView.transform = CGAffineTransform.identity
 
-        UIView.animate(withDuration: 0.15, delay: 0.0) {
-            avatarAnimationView.alpha = 1.0
-        } completion: { completed in
-            UIView.animate(withDuration: 0.6, delay: 0.1) {
-                avatarAnimationView.frame = endFrame
-            } completion: { completed in
-                UIView.animate(withDuration: 0.6, delay: 3.0) {
-                    avatarAnimationView.frame = startFrame
-                } completion: { completed in
-                    avatarAnimationView.alpha = 0.0
-                    avatarAnimationView.stop()
-                    avatarAnimationView.removeFromSuperview()
-                }
-            }
-        }
+         UIView.animate(withDuration: 0.1, delay: 0.0) {
+             avatarAnimationView.alpha = 1.0
+         } completion: { completed in
+             UIView.animate(withDuration: 0.6, delay: 0.1) {
+                 // Calculate the translation needed
+                 let translationX = endFrame.midX - startFrame.midX
+                 let translationY = endFrame.midY - startFrame.midY
+                 let frameTransofrm = CGAffineTransform(translationX: translationX, y: translationY)
+                 avatarAnimationView.transform = frameTransofrm.scaledBy(x: 1.9, y: 1.9)
+             } completion: { completed in
+                 UIView.animate(withDuration: 0.6, delay: 3.0) {
+                     avatarAnimationView.transform = CGAffineTransform.identity
+                 } completion: { completed in
+                     avatarAnimationView.alpha = 0.0
+                     avatarAnimationView.stop()
+                     avatarAnimationView.removeFromSuperview()
+                 }
+             }
+         }
+       
     }
 
     @objc func didTapCancelAnimation(_ gesture: UITapGestureRecognizer) {
@@ -350,8 +373,10 @@ extension AvatarFormStepView {
 
     private func createAvatarAnimationView(withFrame frame: CGRect, andName name: String) -> LottieAnimationView {
         let animationView = LottieAnimationView(frame: frame)
-        animationView.contentMode = .scaleAspectFit
-
+        animationView.contentMode = .scaleAspectFill
+        animationView.clipsToBounds = false
+        animationView.loopMode = .loop
+        
         let animationName: String
         if self.traitCollection.userInterfaceStyle == .dark {
             animationName = name + "-dark"
@@ -361,8 +386,6 @@ extension AvatarFormStepView {
         
         let avatarAnimation = LottieAnimation.named(animationName)
         animationView.animation = avatarAnimation
-
-        animationView.loopMode = .loop
 
         return animationView
     }
