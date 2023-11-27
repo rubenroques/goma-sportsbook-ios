@@ -66,7 +66,7 @@ class SportRadarSocketConnector: NSObject, Connector {
         self.connectionStateSubject = .init(.disconnected)
         self.isConnected = false
         
-        self.socket = WebSocket.init(request: Self.socketRequest(), useCustomEngine: true)
+        self.socket = WebSocket.init(request: Self.socketRequest(), useCustomEngine: false)
         super.init()
     }
     
@@ -187,9 +187,6 @@ extension SportRadarSocketConnector: Starscream.WebSocketDelegate {
         case .error(let error):
             self.isConnected = false
             print("ServiceProvider - SportRadarSocketConnector websocket ❌ Error \(error.debugDescription)")
-            if error.debugDescription.lowercased().contains("message too long") {
-                self.tokenSubject.send(nil) // Clear old token
-            }
             self.refreshConnection()
         case .peerClosed:
             self.isConnected = false

@@ -56,6 +56,7 @@ class TransactionsHistoryViewController: UIViewController {
         self.tableView.delegate = self
         self.tableView.dataSource = self
 
+        self.tableView.register(UITableViewCell.self, forCellReuseIdentifier: UITableViewCell.identifier) // fallback
         self.tableView.register(TransactionsTableViewCell.self, forCellReuseIdentifier: TransactionsTableViewCell.identifier)
 
         self.tableView.register(LoadingMoreTableViewCell.nib, forCellReuseIdentifier: LoadingMoreTableViewCell.identifier)
@@ -270,7 +271,7 @@ extension TransactionsHistoryViewController: UITableViewDelegate, UITableViewDat
                 let cell = tableView.dequeueReusableCell(withIdentifier: TransactionsTableViewCell.identifier, for: indexPath) as? TransactionsTableViewCell,
                 let transaction = self.viewModel.transactionForRow(atIndex: indexPath.row)
             else {
-                fatalError("")
+                return UITableViewCell()
             }
             cell.configure(withTransactionHistoryEntry: transaction, transactionType: viewModel.transactionsType)
 
@@ -290,10 +291,10 @@ extension TransactionsHistoryViewController: UITableViewDelegate, UITableViewDat
             if let cell = tableView.dequeueCellType(LoadingMoreTableViewCell.self) {
                 return cell
             }
-
         default:
-            fatalError()
+            break
         }
+        
         return UITableViewCell()
     }
 

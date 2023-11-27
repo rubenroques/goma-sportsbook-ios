@@ -369,7 +369,9 @@ public extension UserRegisterEnvelop {
                                                 streetNumber: streetNumber,
                                                 birthCountry: countryBirthIsoCode,
                                                 birthCity: birthCityName,
-                                                mobileVerificationRequestId: self.mobileVerificationRequestId)
+                                                mobileVerificationRequestId: self.mobileVerificationRequestId,
+                                                consentedIds: [],
+                                                unConsentedIds: [])
     }
     
 }

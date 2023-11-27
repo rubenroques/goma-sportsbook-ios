@@ -140,34 +140,34 @@ class LoginViewController: UIViewController {
             self?.didTapLoginButton()
         }
 
-        skipButton.titleLabel?.font = AppFont.with(type: AppFont.AppFontType.semibold, size: 17)
-        skipButton.setTitle(localized("skip"), for: .normal)
-
-        dismissButton.titleLabel?.font = AppFont.with(type: AppFont.AppFontType.semibold, size: 17)
-        dismissButton.setTitle(localized("close"), for: .normal)
-
-        logoImageView.image = UIImage(named: "logo_horizontal_center")
-        logoImageView.sizeToFit()
-
-        loginLabel.font = AppFont.with(type: AppFont.AppFontType.bold, size: 26)
-        loginLabel.text = localized("login")
+        self.skipButton.titleLabel?.font = AppFont.with(type: AppFont.AppFontType.semibold, size: 17)
+        self.skipButton.setTitle(localized("skip"), for: .normal)
+        
+        self.dismissButton.titleLabel?.font = AppFont.with(type: AppFont.AppFontType.semibold, size: 17)
+        self.dismissButton.setTitle(localized("close"), for: .normal)
+        
+        self.logoImageView.image = UIImage(named: "logo_horizontal_center")
+        self.logoImageView.sizeToFit()
+        
+        self.loginLabel.font = AppFont.with(type: AppFont.AppFontType.bold, size: 26)
+        self.loginLabel.text = localized("login")
 
         self.usernameHeaderTextFieldView.setPlaceholderText(localized("email"))
         self.passwordHeaderTextFieldView.setPlaceholderText(localized("password"))
 
-        self.usernameHeaderTextFieldView.highlightColor = .white
-        self.passwordHeaderTextFieldView.highlightColor = .white
+        self.usernameHeaderTextFieldView.highlightColor = UIColor.white
+        self.passwordHeaderTextFieldView.highlightColor = UIColor.white
 
-        rememberLabel.text = localized("remember")
-        rememberLabel.font = AppFont.with(type: AppFont.AppFontType.semibold, size: 12)
-        rememberToggleView.layer.cornerRadius = CornerRadius.checkBox
-        rememberImageView.backgroundColor = .clear
-        rememberImageView.contentMode = .scaleAspectFit
+        self.rememberLabel.text = localized("remember")
+        self.rememberLabel.font = AppFont.with(type: AppFont.AppFontType.semibold, size: 12)
+        self.rememberToggleView.layer.cornerRadius = CornerRadius.checkBox
+        self.rememberImageView.backgroundColor = .clear
+        self.rememberImageView.contentMode = .scaleAspectFit
 
         self.enableRememberUser()
 
-        forgotButton.setTitle(localized("forgot"), for: .normal)
-        forgotButton.titleLabel?.font = AppFont.with(type: AppFont.AppFontType.semibold, size: 14)
+        self.forgotButton.setTitle(localized("forgot"), for: .normal)
+        self.forgotButton.titleLabel?.font = AppFont.with(type: AppFont.AppFontType.semibold, size: 14)
 
         self.loginButton.setTitle(localized("login"), for: .normal)
         self.loginButton.titleLabel?.font = AppFont.with(type: AppFont.AppFontType.bold, size: 18)
@@ -179,8 +179,8 @@ class LoginViewController: UIViewController {
         self.view.addGestureRecognizer(tapGestureRecognizer)
 
         let tapImageGestureRecognizer = UITapGestureRecognizer(target: self, action: #selector(rememberUserOptionTapped))
-        rememberView.isUserInteractionEnabled = true
-        rememberView.addGestureRecognizer(tapImageGestureRecognizer)
+        self.rememberView.isUserInteractionEnabled = true
+        self.rememberView.addGestureRecognizer(tapImageGestureRecognizer)
 
         self.registerButton.setTitle(localized("create_a_new_account"), for: .normal)
         self.registerButton.addTarget(self, action: #selector(self.didTapRegister), for: .primaryActionTriggered)
@@ -345,7 +345,7 @@ class LoginViewController: UIViewController {
             if let nickname = registeredUser.nickname, let password = registeredUser.password {
                 // Optimove complete register
                 Optimove.shared.reportScreenVisit(screenTitle: "sign_up")
-                self?.triggerLoginAfterRegister(username: nickname, password: password, withUserConsents: viewModel.isMarketingSelected ? true : false)
+                self?.triggerLoginAfterRegister(username: nickname, password: password, withUserConsents: registeredUser.acceptedMarketing)
                 self?.showRegisterFeedbackViewController(onNavigationController: registerNavigationController)
             }
         }

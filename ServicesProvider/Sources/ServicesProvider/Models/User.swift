@@ -253,6 +253,9 @@ public class SignUpForm {
     public var godfatherCode: String?
     
     public var mobileVerificationRequestId: String?
+    
+    public var consentedIds: [String]
+    public var unConsentedIds: [String]
 
     public init(email: String, username: String, password: String, birthDate: Date,
                 mobilePrefix: String, mobileNumber: String, nationalityIsoCode: String,
@@ -262,7 +265,8 @@ public class SignUpForm {
                 receiveMarketingEmails: Bool? = nil, avatarName: String? = nil,
                 godfatherCode: String? = nil, postCode: String,
                 birthDepartment: String, streetNumber: String,
-                birthCountry: String, birthCity: String, mobileVerificationRequestId: String?) {
+                birthCountry: String, birthCity: String, mobileVerificationRequestId: String?,
+                consentedIds: [String], unConsentedIds: [String]) {
 
         self.email = email
         self.username = username
@@ -288,6 +292,9 @@ public class SignUpForm {
         self.birthCountry = birthCountry
         self.birthCity = birthCity
         self.mobileVerificationRequestId = mobileVerificationRequestId
+        
+        self.consentedIds = consentedIds
+        self.unConsentedIds = unConsentedIds
     }
 
 }
