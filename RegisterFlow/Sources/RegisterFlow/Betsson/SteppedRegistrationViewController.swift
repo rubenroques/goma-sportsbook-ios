@@ -91,7 +91,6 @@ public class SteppedRegistrationViewModel {
     var showRegisterErrors: CurrentValueSubject<[RegisterError]?, Never> = .init(nil)
 
     var confirmationCodeFilled: String?
-    public var isMarketingSelected: Bool = false
 
     private var cancellables = Set<AnyCancellable>()
 
@@ -186,19 +185,42 @@ public class SteppedRegistrationViewModel {
     func requestRegister() -> Bool {
 
         guard
-            let form = self.userRegisterEnvelop.convertToSignUpForm()
+            var form = self.userRegisterEnvelop.convertToSignUpForm()
         else {
             return false
         }
 
         self.isLoading.send(true)
+        
+        
+        self.serviceProvider.getAllConsents()
+            .flatMap({ [weak self] (consentInfos: [ConsentInfo]) -> AnyPublisher<SignUpResponse, ServiceProviderError> in
 
-        if self.userRegisterEnvelop.acceptedMarketing {
-            self.isMarketingSelected = true
-        }
-
-        //
-        serviceProvider.signUp(form: form)
+                guard
+                    let self = self
+                else {
+                    return Fail(outputType: SignUpResponse.self, failure: ServiceProviderError.unknown).eraseToAnyPublisher()
+                }
+                
+                for consentInfo in consentInfos {
+                    switch consentInfo.key.lowercased() {
+                    case "terms":
+                        form.consentedIds.append(String(consentInfo.consentVersionId))
+                        
+                    case "sms_promotions", "email_promotions":
+                        if form.receiveMarketingEmails ?? false {
+                            form.consentedIds.append(String(consentInfo.consentVersionId))
+                        }
+                        else {
+                            form.unConsentedIds.append(String(consentInfo.consentVersionId))
+                        }
+                    default:
+                        print("consentInfos unknown")
+                    }
+                }
+                
+                return self.serviceProvider.signUp(form: form).eraseToAnyPublisher()
+            })
             .receive(on: DispatchQueue.main)
             .sink { [weak self] completion in
                 switch completion {

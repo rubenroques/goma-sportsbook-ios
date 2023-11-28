@@ -76,7 +76,9 @@ enum OmegaAPIClient {
                 birthCity: String,
                 birthCountry: String,
 
-                streetNumber: String)
+                streetNumber: String,
+                consentedIds: [String],
+                unconsentedIds: [String] )
     
     case updateExtraInfo(placeOfBirth: String?, address2: String?)
 
@@ -365,7 +367,9 @@ extension OmegaAPIClient: Endpoint {
                      let birthDepartment,
                      let birthCity,
                      let birthCountry,
-                     let streetNumber):
+                     let streetNumber,
+                     let consentedIds,
+                     let unconsentedIds):
 
             let phoneNumber = "\(mobilePrefix)\(mobileNumber)".replacingOccurrences(of: "+", with: "")
 
@@ -410,6 +414,15 @@ extension OmegaAPIClient: Endpoint {
                             """
             query.append(URLQueryItem(name: "extraInfo", value: extraInfo))
 
+            for consentedId in consentedIds {
+                query.append(URLQueryItem(name: "consentedVersions[]", value: consentedId))
+            }
+            
+            for unconsentedId in unconsentedIds {
+                query.append(URLQueryItem(name: "unConsentedversions[]", value: unconsentedId))
+            }
+            
+            
             return query
 
         case .updateExtraInfo(let placeOfBirth, let address2):

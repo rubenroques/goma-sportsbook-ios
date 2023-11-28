@@ -139,7 +139,7 @@ class ConfirmationCodeFormStepViewModel {
 
     private func requestVerifyCode(_ phoneNumber: String) -> AnyPublisher<PhoneVerificationResponse, PhoneVerificationError> {
         var formattedPhoneNumber = phoneNumber.replacingOccurrences(of: " ", with: "")
-        if formattedPhoneNumber.hasPrefix("0") {
+        while formattedPhoneNumber.hasPrefix("0") {
             formattedPhoneNumber.removeFirst()
         }
         

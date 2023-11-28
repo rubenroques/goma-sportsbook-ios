@@ -342,7 +342,7 @@ public extension UserRegisterEnvelop {
         
         // We need to ignore the 0 on register and phone verification
         var formattedPhoneNumber = mobileNumber
-        if formattedPhoneNumber.hasPrefix("0") {
+        while formattedPhoneNumber.hasPrefix("0") {
             formattedPhoneNumber.removeFirst()
         }
         
@@ -369,7 +369,9 @@ public extension UserRegisterEnvelop {
                                                 streetNumber: streetNumber,
                                                 birthCountry: countryBirthIsoCode,
                                                 birthCity: birthCityName,
-                                                mobileVerificationRequestId: self.mobileVerificationRequestId)
+                                                mobileVerificationRequestId: self.mobileVerificationRequestId,
+                                                consentedIds: [],
+                                                unConsentedIds: [])
     }
     
 }

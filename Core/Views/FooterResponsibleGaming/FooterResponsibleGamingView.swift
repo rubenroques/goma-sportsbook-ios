@@ -18,6 +18,7 @@ class FooterResponsibleGamingView: UIView {
 
     private lazy var ageBaseView: UIView = Self.createAgeBaseView()
     private lazy var ageLabel: UILabel = Self.createAgeLabel()
+    private lazy var ageIconImageView: UIImageView = Self.createAgeIconImageView()
 
     private lazy var linksBaseView: UIView = Self.createView()
     private lazy var linksStackView: UIStackView = Self.createLinksStackView()
@@ -154,6 +155,8 @@ class FooterResponsibleGamingView: UIView {
         
         self.interdictionTitleLabel.textColor = UIColor.App.highlightPrimary
         self.interdictionDetailsLabel.textColor = UIColor.App.textPrimary
+        
+        self.ageIconImageView.backgroundColor = .clear
     }
 
     func hideLinksView() {
@@ -390,6 +393,13 @@ extension FooterResponsibleGamingView {
         return label
     }
 
+    private static func createAgeIconImageView() -> UIImageView {
+        let imageView = UIImageView()
+        imageView.translatesAutoresizingMaskIntoConstraints = false
+        imageView.image = UIImage(named: "minus_18_icon")
+        imageView.contentMode = .scaleAspectFit
+        return imageView
+    }
     
     private static func createInterdictionBaseView() -> UIView {
         let view = UIView()
@@ -426,8 +436,10 @@ extension FooterResponsibleGamingView {
         self.topView.addSubview(self.topLabel)
         self.topView.addSubview(self.bottomLabel)
 
-        self.topView.addSubview(self.ageBaseView)
-        self.ageBaseView.addSubview(self.ageLabel)
+//        self.topView.addSubview(self.ageBaseView)
+//        self.ageBaseView.addSubview(self.ageLabel)
+        
+        self.topView.addSubview(self.ageIconImageView)
 
         self.baseStackView.addArrangedSubview(self.topView)
 
@@ -504,14 +516,20 @@ extension FooterResponsibleGamingView {
             self.bottomLabel.bottomAnchor.constraint(equalTo: self.topView.bottomAnchor, constant: -16),
             self.bottomLabel.leadingAnchor.constraint(greaterThanOrEqualTo: self.topView.leadingAnchor),
 
-            self.ageLabel.centerYAnchor.constraint(equalTo: self.ageBaseView.centerYAnchor),
-            self.ageLabel.centerXAnchor.constraint(equalTo: self.ageBaseView.centerXAnchor),
-
-            self.ageBaseView.leadingAnchor.constraint(greaterThanOrEqualTo: self.topView.leadingAnchor, constant: 8),
-            self.ageBaseView.widthAnchor.constraint(equalToConstant: 26),
-            self.ageBaseView.widthAnchor.constraint(equalTo: self.ageBaseView.heightAnchor),
-            self.ageBaseView.centerYAnchor.constraint(equalTo: self.bottomLabel.centerYAnchor),
-            self.ageBaseView.trailingAnchor.constraint(equalTo: self.bottomLabel.leadingAnchor, constant: -12)
+//            self.ageLabel.centerYAnchor.constraint(equalTo: self.ageBaseView.centerYAnchor),
+//            self.ageLabel.centerXAnchor.constraint(equalTo: self.ageBaseView.centerXAnchor),
+//
+//            self.ageBaseView.leadingAnchor.constraint(greaterThanOrEqualTo: self.topView.leadingAnchor, constant: 8),
+//            self.ageBaseView.widthAnchor.constraint(equalToConstant: 26),
+//            self.ageBaseView.widthAnchor.constraint(equalTo: self.ageBaseView.heightAnchor),
+//            self.ageBaseView.centerYAnchor.constraint(equalTo: self.bottomLabel.centerYAnchor),
+//            self.ageBaseView.trailingAnchor.constraint(equalTo: self.bottomLabel.leadingAnchor, constant: -12),
+            
+            self.ageIconImageView.leadingAnchor.constraint(greaterThanOrEqualTo: self.topView.leadingAnchor, constant: 8),
+            self.ageIconImageView.widthAnchor.constraint(equalToConstant: 26),
+            self.ageIconImageView.heightAnchor.constraint(equalTo: self.ageIconImageView.widthAnchor),
+            self.ageIconImageView.centerYAnchor.constraint(equalTo: self.bottomLabel.centerYAnchor),
+            self.ageIconImageView.trailingAnchor.constraint(equalTo: self.bottomLabel.leadingAnchor, constant: -12),
         ])
 
         NSLayoutConstraint.activate([

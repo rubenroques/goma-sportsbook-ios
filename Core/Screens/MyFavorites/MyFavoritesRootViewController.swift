@@ -372,7 +372,7 @@ extension MyFavoritesRootViewController {
         NSLayoutConstraint.activate([
             self.navigationBaseView.leadingAnchor.constraint(equalTo: self.view.leadingAnchor),
             self.navigationBaseView.trailingAnchor.constraint(equalTo: self.view.trailingAnchor),
-            self.navigationBaseView.topAnchor.constraint(equalTo: self.view.topAnchor),
+            self.navigationBaseView.topAnchor.constraint(equalTo: self.topSafeAreaView.bottomAnchor),
             self.navigationBaseView.heightAnchor.constraint(equalToConstant: 44),
 
             self.backButton.leadingAnchor.constraint(equalTo: self.navigationBaseView.leadingAnchor),

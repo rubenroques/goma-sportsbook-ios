@@ -89,15 +89,15 @@ class SportRadarSocketConnector: NSObject, Connector {
         
         if let previousSessionId = self.token {
             body = """
-                       {
-                         "subscriberId": "\(previousSessionId.hash)",
-                         "versionList": [],
-                         "clientContext": {
-                           "language":"\(SportRadarConfiguration.shared.socketLanguageCode)",
-                           "ipAddress":""
-                         }
-                       }
-                       """
+                   {
+                     "subscriberId": "\(previousSessionId.hash)",
+                     "versionList": [],
+                     "clientContext": {
+                       "language":"\(SportRadarConfiguration.shared.socketLanguageCode)",
+                       "ipAddress":""
+                     }
+                   }
+                   """
         }
         else {
             body = """
@@ -125,7 +125,7 @@ class SportRadarSocketConnector: NSObject, Connector {
     func refreshConnection() {
         self.isConnected = false
         self.socket.forceDisconnect()
-        self.socket = WebSocket.init(request: Self.socketRequest(), useCustomEngine: true)
+        self.socket = WebSocket.init(request: Self.socketRequest(), useCustomEngine: false)
         self.connectSocket()
     }
     
@@ -286,3 +286,16 @@ extension SportRadarSocketConnector: Starscream.WebSocketDelegate {
     }
     
 }
+
+//
+//class LargeNativeEngine: Starscream.NativeEngine {
+//    
+//    override func start(request: URLRequest) {
+//        super.start(request: request)
+//        
+//        let maximumMessageSize: Int = 250 * 1024 * 1024 // 25 MB in bytes
+//        self.task?.maximumMessageSize = maximumMessageSize
+//        
+//    }
+//    
+//}
