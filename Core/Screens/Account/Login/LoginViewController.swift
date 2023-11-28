@@ -357,25 +357,29 @@ class LoginViewController: UIViewController {
         self.present(registerNavigationController, animated: animated)
     }
 
-    private func setUserConsents() {
-
-        let types = [UserConsentType.sms.versionId, UserConsentType.email.versionId]
-        Env.servicesProvider.setUserConsents(consentVersionIds: types)
-            .receive(on: DispatchQueue.main)
-            .sink(receiveCompletion: { completion in
-                switch completion {
-                case .finished:
-                    ()
-                case .failure(let error):
-                    print("SET USER CONSENTS REGISTER ERROR: \(error)")
-                }
-
-            }, receiveValue: { _ in
-                UserDefaults.standard.notificationsUserSettings.notificationsSms = true
-                UserDefaults.standard.notificationsUserSettings.notificationsEmail = true
-            })
-            .store(in: &self.cancellables)
-        
+    private func setUserConsents(enabled: Bool) {
+        if enabled {
+            let types = [UserConsentType.sms.versionId, UserConsentType.email.versionId]
+            Env.servicesProvider.setUserConsents(consentVersionIds: types)
+                .receive(on: DispatchQueue.main)
+                .sink(receiveCompletion: { completion in
+                    switch completion {
+                    case .finished:
+                        ()
+                    case .failure(let error):
+                        print("SET USER CONSENTS REGISTER ERROR: \(error)")
+                    }
+                    
+                }, receiveValue: { _ in
+                    UserDefaults.standard.notificationsUserSettings.notificationsSms = true
+                    UserDefaults.standard.notificationsUserSettings.notificationsEmail = true
+                })
+                .store(in: &self.cancellables)
+        }
+        else {
+            UserDefaults.standard.notificationsUserSettings.notificationsSms = false
+            UserDefaults.standard.notificationsUserSettings.notificationsEmail = false
+        }
     }
     
     private func setTermsConsents() {
@@ -605,10 +609,8 @@ class LoginViewController: UIViewController {
                 self?.deleteCachedRegistrationData()
             } receiveValue: { [weak self] success in
                 print("triggerLoginAfterRegister ", success)
-                if withUserConsents {
-                    self?.setUserConsents()
-                }
-                self?.setTermsConsents()
+                self?.setUserConsents(enabled: withUserConsents)
+                // self?.setTermsConsents()
             }
             .store(in: &cancellables)
     }
