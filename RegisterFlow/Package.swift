@@ -20,6 +20,7 @@ let package = Package(
         // .package(url: /* package url */, from: "1.0.0"),
         .package(url: "https://github.com/airbnb/lottie-spm.git", .upToNextMajor(from: "4.2.0")),
         .package(url: "https://github.com/optimove-tech/Optimove-SDK-iOS.git", .upToNextMajor(from: "5.0.0")),
+        .package(url: "https://github.com/marmelroy/PhoneNumberKit", from: "3.7.0"),
         .package(name: "Extensions", path: "../Extensions"),
         .package(name: "HeaderTextField", path: "../HeaderTextField"),
         .package(name: "SharedModels", path: "../SharedModels"),
@@ -27,7 +28,7 @@ let package = Package(
         .package(name: "ServicesProvider", path: "../ServicesProvider"),
         .package(name: "CountrySelectionFeature", path: "../CountrySelectionFeature"),
         .package(name: "AdresseFrancaise", path: "../AdresseFrancaise"),
-
+        
     ],
     targets: [
         // Targets are the basic building blocks of a package. A target can define a module or a test suite.
@@ -37,6 +38,7 @@ let package = Package(
             dependencies: [
                 .product(name: "Lottie", package: "lottie-spm"),
                 .product(name: "OptimoveSDK", package: "Optimove-SDK-iOS"),
+                .product(name: "PhoneNumberKit", package: "PhoneNumberKit"),
                 "SharedModels",
                 "HeaderTextField",
                 "ServicesProvider",

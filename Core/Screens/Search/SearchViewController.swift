@@ -185,6 +185,8 @@ class SearchViewController: UIViewController {
         self.tableView.delegate = self
         self.tableView.dataSource = self
         
+        self.tableView.register(UITableViewCell.self, forCellReuseIdentifier: UITableViewCell.identifier) // fallback
+        
         self.tableView.register(MatchLineTableViewCell.nib, forCellReuseIdentifier: MatchLineTableViewCell.identifier)
         self.tableView.register(CompetitionSearchTableViewCell.nib, forCellReuseIdentifier: CompetitionSearchTableViewCell.identifier)
         self.tableView.register(LoadingMoreTableViewCell.nib, forCellReuseIdentifier: LoadingMoreTableViewCell.identifier)

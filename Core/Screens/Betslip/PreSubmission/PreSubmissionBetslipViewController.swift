@@ -2148,28 +2148,35 @@ extension PreSubmissionBetslipViewController: UITextFieldDelegate {
     }
 
     private  func addAmountValue(_ value: Double, isMax: Bool = false) {
+        var internalValue = self.displayBetValue
+        
         if !isMax {
-            displayBetValue += Int(value * 100.0)
+            internalValue = internalValue + Int(value * 100) // swiftlint:disable:this shorthand_operator
         }
         else {
-            displayBetValue = Int(value * 100.0)
+            internalValue = Int(value * 100)
         }
 
-        let calculatedAmount = Double(displayBetValue/100) + Double(displayBetValue%100)/100
-        amountTextfield.text = CurrencyFormater.defaultFormat.string(from: NSNumber(value: calculatedAmount))
-        secondaryAmountTextfield.text = CurrencyFormater.defaultFormat.string(from: NSNumber(value: calculatedAmount))
+        let calculatedAmount = Double(internalValue/100) + Double(internalValue%100)/100
+        self.amountTextfield.text = CurrencyFormater.defaultFormat.string(from: NSNumber(value: calculatedAmount))
+        self.secondaryAmountTextfield.text = CurrencyFormater.defaultFormat.string(from: NSNumber(value: calculatedAmount))
+        
+        self.displayBetValue = internalValue
     }
 
     private func updateAmountDigit(_ newValue: String) {
+        var internalValue = self.displayBetValue
         if let insertedDigit = Int(newValue) {
-            displayBetValue = displayBetValue * 10 + insertedDigit
+            internalValue = internalValue * 10 + insertedDigit
         }
         if newValue == "" {
-            displayBetValue /= 10
+            internalValue = internalValue / 10 // swiftlint:disable:this shorthand_operator
         }
-        let calculatedAmount = Double(displayBetValue/100) + Double(displayBetValue%100)/100
-        amountTextfield.text = CurrencyFormater.defaultFormat.string(from: NSNumber(value: calculatedAmount))
-        secondaryAmountTextfield.text = CurrencyFormater.defaultFormat.string(from: NSNumber(value: calculatedAmount))
+        let calculatedAmount = Double(internalValue/100) + Double(internalValue%100)/100
+        self.amountTextfield.text = CurrencyFormater.defaultFormat.string(from: NSNumber(value: calculatedAmount))
+        self.secondaryAmountTextfield.text = CurrencyFormater.defaultFormat.string(from: NSNumber(value: calculatedAmount))
+        
+        self.displayBetValue = internalValue
     }
 
 }

@@ -623,30 +623,34 @@ extension SingleBettingTicketTableViewCell: UITextFieldDelegate {
     }
 
     func addAmountValue(_ value: Double, isMax: Bool = false) {
+        var internalValue = self.currentValue
 
         if !isMax {
-            currentValue += Int(value * 100.0)
+            internalValue = internalValue + Int(value * 100) // swiftlint:disable:this shorthand_operator
         }
         else {
-            currentValue = Int(value * 100.0)
+            internalValue = Int(value * 100)
         }
 
-        let calculatedAmount = Double(currentValue/100) + Double(currentValue%100)/100
+        let calculatedAmount = Double(internalValue/100) + Double(internalValue%100)/100
         self.amountTextfield.text = CurrencyFormater.defaultFormat.string(from: NSNumber(value: calculatedAmount))
-
+        self.currentValue = internalValue
+        
         self.refreshPossibleWinnings()
     }
 
     func updateAmountValue(_ newValue: String) {
+        var internalValue = self.currentValue
         if let insertedDigit = Int(newValue) {
-            currentValue = currentValue * 10 + insertedDigit
+            internalValue = internalValue * 10 + insertedDigit
         }
         if newValue == "" {
-            currentValue /= 10
+            internalValue = internalValue / 10 // swiftlint:disable:this shorthand_operator
         }
-        let calculatedAmount = Double(currentValue/100) + Double(currentValue%100)/100
+        let calculatedAmount = Double(internalValue/100) + Double(internalValue%100)/100
         self.amountTextfield.text = CurrencyFormater.defaultFormat.string(from: NSNumber(value: calculatedAmount))
-
+        self.currentValue = internalValue
+        
         self.refreshPossibleWinnings()
     }
 

@@ -37,7 +37,12 @@ public class UserRegisterEnvelopUpdater {
                 let prefix = updatedUserRegisterEnvelop.phonePrefixCountry?.phonePrefix
                 let phoneNumber = updatedUserRegisterEnvelop.phoneNumber
                 if let prefix, let phoneNumber, !prefix.isEmpty, !phoneNumber.isEmpty {
-                    let fullPhoneNumber = "\(prefix)\(phoneNumber)"
+                    var formattedPhoneNumber = phoneNumber.replacingOccurrences(of: " ", with: "")
+                    while formattedPhoneNumber.hasPrefix("0") {
+                        formattedPhoneNumber.removeFirst()
+                    }
+                    
+                    let fullPhoneNumber = "\(prefix)\(formattedPhoneNumber)"
                     return fullPhoneNumber.lowercased()
                 }
                 return nil

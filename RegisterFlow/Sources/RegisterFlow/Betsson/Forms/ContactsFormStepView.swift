@@ -14,6 +14,7 @@ import Combine
 import SharedModels
 import CountrySelectionFeature
 import HeaderTextField
+import PhoneNumberKit
 
 class ContactsFormStepViewModel {
 
@@ -264,10 +265,17 @@ class ContactsFormStepViewModel {
 //        let phoneNumberValidationPredicate = NSPredicate(format: "SELF MATCHES %@", phoneNumberValidationRegex)
 //        return phoneNumberValidationPredicate.evaluate(with: phoneNumber)
 
-        let numbersCharacterSet: NSCharacterSet = NSCharacterSet(charactersIn: "0123456789")
+        let numbersCharacterSet: NSCharacterSet = NSCharacterSet(charactersIn: "0123456789 ")
         if phoneNumber.rangeOfCharacter(from: numbersCharacterSet.inverted) != nil {
             return false
         }
+        
+//        let phoneNumberKit = PhoneNumberKit()
+//        if let phoneNumberFrance = try? phoneNumberKit.parse(phoneNumber, withRegion: "FR", ignoreType: false) {
+//            return true
+//        }
+//        return false
+
         return phoneNumber.count > 2
     }
 

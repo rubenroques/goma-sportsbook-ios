@@ -222,7 +222,9 @@ class SportRadarPrivilegedAccessManager: PrivilegedAccessManager {
                                              birthDepartment: form.birthDepartment,
                                              birthCity: form.birthCity,
                                              birthCountry: form.birthCountry,
-                                             streetNumber: form.streetNumber)
+                                             streetNumber: form.streetNumber,
+                                             consentedIds: form.consentedIds,
+                                             unconsentedIds: form.unConsentedIds)
 
         let publisher: AnyPublisher<SportRadarModels.StatusResponse, ServiceProviderError> = self.connector.request(endpoint)
 
