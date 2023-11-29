@@ -291,7 +291,7 @@ class ProfileLimitsManagementViewModel: NSObject {
                         let limitErrorMessage = localized("limit_update_error_message").replacingFirstOccurrence(of: "{limitType}", with: localized("deposit"))
                         self?.limitOptionsErrorPublisher.send(limitErrorMessage)
 
-                        self?.limitOptionsCheckPublisher.value.append("deposit")
+                        //self?.limitOptionsCheckPublisher.value.append("deposit")
                         self?.isDepositLimitUpdated.send(true)
 
                         self?.isLoadingPublisher.send(false)
@@ -322,7 +322,7 @@ class ProfileLimitsManagementViewModel: NSObject {
                         let limitErrorMessage = localized("limit_update_error_message").replacingFirstOccurrence(of: "{limitType}", with: localized("betting"))
                         self?.limitOptionsErrorPublisher.send(limitErrorMessage)
 
-                        self?.limitOptionsCheckPublisher.value.append("wagering")
+                        //self?.limitOptionsCheckPublisher.value.append("wagering")
                         self?.isBettingLimitUpdated.send(true)
 
                         self?.isLoadingPublisher.send(false)
@@ -353,7 +353,7 @@ class ProfileLimitsManagementViewModel: NSObject {
                         let limitErrorMessage = localized("limit_update_error_message").replacingFirstOccurrence(of: "{limitType}", with: localized("auto_payout"))
                         self?.limitOptionsErrorPublisher.send(limitErrorMessage)
 
-                        self?.limitOptionsCheckPublisher.value.append("loss")
+                        //self?.limitOptionsCheckPublisher.value.append("loss")
                         self?.isAutoPayoutLimitUpdated.send(true)
 
                         self?.isLoadingPublisher.send(false)

@@ -340,6 +340,10 @@ class ProfileLimitsManagementViewController: UIViewController {
                         self?.showAlert(type: .success)
                         self?.viewModel.getLimits()
                     }
+                    else if limitOptions != viewModel.limitOptionsSet && viewModel.limitOptionsSet.isNotEmpty && limitOptions.isNotEmpty {
+                        self?.viewModel.isLoadingPublisher.send(false)
+                        self?.viewModel.getLimits()
+                    }
                 }
             })
             .store(in: &cancellables)
