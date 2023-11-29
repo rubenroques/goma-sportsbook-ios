@@ -48,7 +48,9 @@ class BonusHistoryCellViewModel: NSObject {
         dateFormatterGet.dateFormat = "dd-MM-yyyy HH:mm:ss"
 
         let dateFormatterPrint = DateFormatter()
-        dateFormatterPrint.dateFormat = "yyyy-MM-dd HH:mm"
+//        dateFormatterPrint.dateFormat = "yyyy-MM-dd HH:mm"
+        dateFormatterPrint.dateFormat = "dd-MM-yyyy HH:mm"
+
 
         let date = dateString
 
@@ -60,20 +62,4 @@ class BonusHistoryCellViewModel: NSObject {
         return ""
     }
 
-//    private func getDateFormatted(dateString: String) -> String {
-//        let dateFormatterGet = DateFormatter()
-//        dateFormatterGet.dateFormat = "yyyy-MM-dd'T'HH:mm:ssZ"
-//
-//        let dateFormatterPrint = DateFormatter()
-//        dateFormatterPrint.dateFormat = "yyyy-MM-dd HH:mm"
-//
-//        let date = dateString
-//
-//        if let formattedDate = dateFormatterGet.date(from: date) {
-//
-//            return dateFormatterPrint.string(from: formattedDate)
-//        }
-//
-//        return ""
-//    }
 }

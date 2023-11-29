@@ -174,6 +174,8 @@ class LiveEventsViewModel: NSObject {
                 let liveSports = allSports.filter({
                     $0.liveEventsCount > 0
                 })
+                print("LIVE SPORTS UPDATE: \(liveSports)")
+                
                 self?.liveSports = liveSports
             })
             .store(in: &cancellables)

@@ -401,6 +401,8 @@ class ProfileLimitsManagementViewModel: NSObject {
         var limitCurrentObject: LimitInfo?
 
         var limitAmountFilter = limitAmount.filter("0123456789.,".contains)
+        
+        limitAmountFilter = self.normalizeAmounts(amount: limitAmountFilter)
 
         if limitType == "deposit" {
             limitCurrentObject = self.depositLimit?.current
@@ -409,10 +411,12 @@ class ProfileLimitsManagementViewModel: NSObject {
             limitCurrentObject = self.wageringLimit?.current
         }
         else if limitType == "loss" {
-            limitCurrentObject = self.lossLimit?.current
+//            limitCurrentObject = self.lossLimit?.current
+            limitCurrentObject = self.autoPayoutLimit?.current
         }
 
         if let limitCurrentAmount = limitCurrentObject?.amount {
+            //let normalizedCurrentAmount = self.normalizeAmounts(amount: "\(limitCurrentAmount)")
             limitCurrentAmountString = "\(limitCurrentAmount)"
         }
 
@@ -435,6 +439,22 @@ class ProfileLimitsManagementViewModel: NSObject {
                 self.canUpdateLoss = true
             }
         }
+    }
+    
+    func normalizeAmounts(amount: String) -> String {
+        
+        let numberFormatter = NumberFormatter()
+        numberFormatter.numberStyle = .decimal
+        numberFormatter.minimumFractionDigits = 0
+        
+        if let formattedNumber = numberFormatter.number(from: amount) {
+            let numericValueString = "\(formattedNumber.doubleValue)"
+            return numericValueString
+        } else {
+            print("Error formatting number")
+        }
+        
+        return amount
     }
 
     func cleanLimitOptions() {

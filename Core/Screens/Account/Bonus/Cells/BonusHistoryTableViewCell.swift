@@ -118,6 +118,9 @@ class BonusHistoryTableViewCell: UITableViewCell {
                 case .released:
                     self?.bonusStatusView.backgroundColor = UIColor.App.iconSecondary
                     self?.bonusStatusIconImageView.image = UIImage(named: "prohibit_icon")
+                case .spent:
+                    self?.bonusStatusView.backgroundColor = UIColor.App.iconSecondary
+                    self?.bonusStatusIconImageView.image = UIImage(named: "pause_circle_icon")
                 default:
                     self?.bonusStatusView.backgroundColor = UIColor.App.iconSecondary
                     self?.bonusStatusIconImageView.image = UIImage(named: "prohibit_icon")
