@@ -731,26 +731,39 @@ extension OddDoubleCollectionViewCell {
         button.addTarget(self, action: #selector(self.openStatsWidgetFullscreen), for: .primaryActionTriggered)
         button.translatesAutoresizingMaskIntoConstraints = false
         button.setTitle(localized("view_stats"), for: .normal)
-        button.setTitleColor(UIColor.App.buttonTextPrimary, for: .normal)
+        button.setTitleColor(UIColor.App.textPrimary, for: .normal)
         let statsImage = UIImage(named: "open_stats_icon")?.withRenderingMode(.alwaysTemplate)
         button.setImage(statsImage, for: .normal)
-        button.tintColor = UIColor.App.buttonTextPrimary
+        button.imageView?.setTintColor(color: UIColor.App.textPrimary)
+        button.tintColor = UIColor.App.textPrimary
         button.titleLabel?.font = AppFont.with(type: .semibold, size: 11)
         
         button.layer.cornerRadius = CornerRadius.button
         button.layer.masksToBounds = true
         button.backgroundColor = .clear
         
-        button.setBackgroundColor(UIColor.App.buttonBackgroundSecondary, for: .normal)
+        button.setBackgroundColor(UIColor.App.backgroundBorder, for: .normal)
         button.setInsets(forContentPadding: UIEdgeInsets(top: 4, left: 8, bottom: 4, right: 8), imageTitlePadding: 4)
 
+        let shadowBackgroundView = UIView()
+        shadowBackgroundView.translatesAutoresizingMaskIntoConstraints = false
+        shadowBackgroundView.backgroundColor = UIColor.App.highlightPrimary
+        shadowBackgroundView.layer.cornerRadius = CornerRadius.button
+        shadowBackgroundView.layer.masksToBounds = true
+        
+        baseView.addSubview(shadowBackgroundView)
         baseView.addSubview(button)
         
         NSLayoutConstraint.activate([
             baseView.centerXAnchor.constraint(equalTo: button.centerXAnchor),
-            baseView.centerYAnchor.constraint(equalTo: button.centerYAnchor),
+            baseView.centerYAnchor.constraint(equalTo: button.centerYAnchor, constant: 3),
             
             button.heightAnchor.constraint(equalToConstant: 24),
+            
+            shadowBackgroundView.leadingAnchor.constraint(equalTo: button.leadingAnchor),
+            shadowBackgroundView.trailingAnchor.constraint(equalTo: button.trailingAnchor),
+            shadowBackgroundView.topAnchor.constraint(equalTo: button.topAnchor),
+            shadowBackgroundView.bottomAnchor.constraint(equalTo: button.bottomAnchor, constant: 2),
         ])
         
         self.marketStatsStackView.addArrangedSubview(baseView)
@@ -939,12 +952,18 @@ class StatsWebViewController: UIViewController, WKNavigationDelegate {
                 }
             }
         
+        let tapGesture = UITapGestureRecognizer(target: self, action:  #selector(closeButtonTapped))
+        self.view.addGestureRecognizer(tapGesture)
     }
 
     private func setupCloseButton() {
         self.closeButton = UIButton(type: .custom)
-        self.closeButton.setImage(UIImage(named: "arrow_close_icon"), for: .normal)
-        self.closeButton.imageView?.setImageColor(color: .white)
+        
+        let closeImage = UIImage(named: "arrow_close_icon")?.withRenderingMode(.alwaysTemplate)
+
+        
+        self.closeButton.setImage(closeImage, for: .normal)
+        self.closeButton.imageView?.setImageColor(color: UIColor.App.buttonTextPrimary)
         self.view.addSubview(self.closeButton)
 
         self.closeButton.translatesAutoresizingMaskIntoConstraints = false
@@ -959,10 +978,9 @@ class StatsWebViewController: UIViewController, WKNavigationDelegate {
     }
 
     @objc private func closeButtonTapped() {
-        dismiss(animated: true, completion: nil)
+        self.dismiss(animated: true, completion: nil)
     }
 
-    
     func webView(_ webView: WKWebView, didStartProvisionalNavigation navigation: WKNavigation!) {
         self.loadingView.startAnimating()
     }

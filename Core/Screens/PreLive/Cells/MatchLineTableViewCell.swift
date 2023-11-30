@@ -137,8 +137,7 @@ class MatchLineTableCellViewModel {
                             }
                         }
                         
-                        // Then we get only the first 5 elements
-                        sortedMarkets = mergedMarkets.prefix(5).map({ $0 })
+                        sortedMarkets = mergedMarkets
                     }
                 }
                 else {
@@ -156,11 +155,11 @@ class MatchLineTableCellViewModel {
                         var concatenatedMarkets = [firstMarket]
                         concatenatedMarkets.append(contentsOf: sortedMarkets)
                         
-                        oldMatch.markets = concatenatedMarkets
+                        oldMatch.markets = Array(concatenatedMarkets.prefix(6))
                         self?.matchCurrentValueSubject.send(oldMatch)
                     } 
                     else {
-                        oldMatch.markets = Array(sortedMarkets)
+                        oldMatch.markets = Array(sortedMarkets.prefix(6))
                         self?.matchCurrentValueSubject.send(oldMatch)
                     }
                     
@@ -168,7 +167,7 @@ class MatchLineTableCellViewModel {
                 else {
                     // We don't have a match yet, we need to use this one
                     var newUpdatedMatch = updatedMatch
-                    newUpdatedMatch.markets = Array(sortedMarkets)
+                    newUpdatedMatch.markets = Array(sortedMarkets.prefix(6))
                     self?.matchCurrentValueSubject.send(newUpdatedMatch)
                 }
 
