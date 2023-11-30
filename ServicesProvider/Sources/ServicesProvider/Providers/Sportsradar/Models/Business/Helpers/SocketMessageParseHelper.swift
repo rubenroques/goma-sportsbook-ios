@@ -28,6 +28,16 @@ enum SocketMessageParseHelper {
         }
         return nil
     }
+    
+    static func extractSportCode(_ inputString: String) -> String? {
+        let regex = try! NSRegularExpression(pattern: "\\[idfosporttype=(\\w+)\\]")
+        let range = NSRange(location: 0, length: inputString.utf16.count)
+        if let match = regex.firstMatch(in: inputString, options: [], range: range) {
+            let code = (inputString as NSString).substring(with: match.range(at: 1))
+            return code
+        }
+        return nil
+    }
 
     static func extractSelectionId(_ inputString: String) -> String? {
         let regex = try! NSRegularExpression(pattern: "\\[idfoselection=(\\d+(\\.\\d+)?)\\]")

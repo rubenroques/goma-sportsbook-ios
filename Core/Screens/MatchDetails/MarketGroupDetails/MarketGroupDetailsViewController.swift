@@ -160,6 +160,11 @@ class MarketGroupDetailsViewController: UIViewController {
     func reloadContent() {
         self.reloadTableView()
     }
+    
+    func setUpdatedMatch(match: Match) {
+        self.viewModel.match = match
+        self.reloadContent()
+    }
 
     private func reloadTableView() {
         self.tableView.reloadData()
@@ -258,8 +263,6 @@ extension MarketGroupDetailsViewController: UITableViewDataSource, UITableViewDe
             cell.marketId = marketGroupOrganizer.marketId
             cell.match = self.viewModel.match
             
-            cell.hasCashback = RePlayFeatureHelper.shouldShowRePlay(forMatch: self.viewModel.match)
-
             cell.didExpandCellAction = { [weak self] marketGroupOrganizerId in
                 self?.seeAllOutcomesMarketGroupIds.insert(marketGroupOrganizerId)
                 self?.reloadTableView()
@@ -298,8 +301,6 @@ extension MarketGroupDetailsViewController: UITableViewDataSource, UITableViewDe
             cell.marketId = marketGroupOrganizer.marketId
             cell.match = self.viewModel.match
             
-            cell.hasCashback = RePlayFeatureHelper.shouldShowRePlay(forMatch: self.viewModel.match)
-
             cell.didExpandCellAction = {  [weak self] marketGroupOrganizerId in
                 self?.seeAllOutcomesMarketGroupIds.insert(marketGroupOrganizerId)
                 self?.reloadTableView()
@@ -337,8 +338,6 @@ extension MarketGroupDetailsViewController: UITableViewDataSource, UITableViewDe
             }
             cell.marketId = marketGroupOrganizer.marketId
             cell.match = self.viewModel.match
-
-            cell.hasCashback = RePlayFeatureHelper.shouldShowRePlay(forMatch: self.viewModel.match)
             
             cell.didExpandCellAction = {  [weak self] marketGroupOrganizerId in
                 self?.seeAllOutcomesMarketGroupIds.insert(marketGroupOrganizerId)
@@ -375,9 +374,7 @@ extension MarketGroupDetailsViewController: UITableViewDataSource, UITableViewDe
                 return UITableViewCell()
             }
             cell.match = self.viewModel.match
-            
-            cell.hasCashback = RePlayFeatureHelper.shouldShowRePlay(forMatch: self.viewModel.match)
-            
+                        
             cell.market = self.viewModel.match.markets.first(where: {
                 $0.id == marketGroupOrganizer.marketId
             })

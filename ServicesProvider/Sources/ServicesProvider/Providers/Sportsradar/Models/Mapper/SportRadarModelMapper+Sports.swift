@@ -64,6 +64,13 @@ extension SportRadarModelMapper {
         return sportUnique
 
     }
+    
+    static func sportTypeName(fromAlphaCode alphaCode: String) -> String {
+        
+        let sportTypeInfoName = SportTypeInfo.init(alphaCode: alphaCode)?.name ?? ""
+        
+        return sportTypeInfoName
+    }
 
     private static func simplify(string: String) -> String {
         let validChars = Set("abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLKMNOPQRSTUVWXYZ1234567890")

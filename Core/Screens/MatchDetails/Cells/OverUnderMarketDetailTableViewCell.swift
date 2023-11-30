@@ -226,6 +226,10 @@ class OverUnderMarketDetailTableViewCell: UITableViewCell {
                 }
             }
         }
+        
+        if let match = self.match {
+            self.hasCashback = RePlayFeatureHelper.shouldShowRePlay(forMatch: match)
+        }
     }
 
     @objc func didTapExpandBaseView() {

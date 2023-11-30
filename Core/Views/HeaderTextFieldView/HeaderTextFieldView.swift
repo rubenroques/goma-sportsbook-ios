@@ -44,6 +44,7 @@ class HeaderTextFieldView: NibView {
     var selectionArray: [String] = []
     var shouldScalePlaceholder = true
     var isCurrency: Bool = false
+    var hasSeparatorSpace: Bool = false
     var isTipPermanent: Bool = false
     var isSlidedUp: Bool = false
 
@@ -594,9 +595,16 @@ extension HeaderTextFieldView: UITextFieldDelegate {
         self.isActive = false
 
         if isCurrency {
-            let currencyFormatter = CurrencyFormater()
-            let amountFormatted = currencyFormatter.currencyTypeFormatting(string: textField.text ?? "")
-            textField.text = amountFormatted
+            if hasSeparatorSpace {
+                let currencyFormatter = CurrencyFormater()
+                let amountFormatted = currencyFormatter.currencyTypeWithSeparatorFormatting(string: textField.text ?? "")
+                textField.text = amountFormatted
+            }
+            else {
+                let currencyFormatter = CurrencyFormater()
+                let amountFormatted = currencyFormatter.currencyTypeFormatting(string: textField.text ?? "")
+                textField.text = amountFormatted
+            }
         }
 
         if self.textField.text != "" {

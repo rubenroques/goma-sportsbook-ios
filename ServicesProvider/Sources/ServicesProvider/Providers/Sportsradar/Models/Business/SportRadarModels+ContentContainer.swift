@@ -35,6 +35,7 @@ extension SportRadarModels {
         case removeEvent(contentIdentifier: ContentIdentifier, eventId: String)
         case removeMarket(contentIdentifier: ContentIdentifier, marketId: String)
         case removeSelection(contentIdentifier: ContentIdentifier, selectionId: String)
+        case removeSport(ContentIdentifier: ContentIdentifier, sportCode: String)
 
         case enableMarket(contentIdentifier: ContentIdentifier, marketId: String)
 
@@ -101,6 +102,8 @@ extension SportRadarModels {
                 return contentIdentifier
 
             case .addSport(let contentIdentifier, _):
+                return contentIdentifier
+            case .removeSport(let contentIdentifier, _):
                 return contentIdentifier
 
             case .updateOutcomeOdd(let contentIdentifier, _, _, _):
@@ -364,6 +367,23 @@ extension SportRadarModels {
                 
                 return .unknown
             }
+            
+            if path.contains("idfosporttype") {
+                if let sportCode = SocketMessageParseHelper.extractSportCode(path) {
+                    
+                    if path.contains("numEvents") {
+                        
+                        print("UPDATING SPORT PARSE: \(sportCode)")
+
+                        let liveEventsCount = try container.decode(Int.self, forKey: .change)
+                        
+                        let sportType = SportType(name: sportCode,
+                                    alphaId: sportCode, numberEvents: liveEventsCount, numberOutrightEvents: 0, numberOutrightMarkets: 0, numberLiveEvents: liveEventsCount)
+                        
+                        return .liveSports(sportsTypes: [sportType])
+                    }
+                }
+            }
 
             if path.contains("bonavigationnodes") {
                 if let sportId = SocketMessageParseHelper.extractNodeId(path) {
@@ -512,6 +532,21 @@ extension SportRadarModels {
             print("ContentContainer parseAdded")
             let contentIdentifier = try container.decode(ContentIdentifier.self, forKey: .content)
             let path: String = try container.decodeIfPresent(String.self, forKey: .path) ?? ""
+            
+            if case let ContentRoute.liveSports = contentIdentifier.contentRoute {
+                if path.contains("idfosporttype"),
+                   let newSport = try? container.decodeIfPresent(SportRadarModels.SportTypeDetails.self, forKey: .change) {
+                    
+                    print("ADDING SPORT PARSE: \(newSport)")
+                    
+                    let newSportType = SportType(name: newSport.sportName,
+                                                 alphaId: newSport.sportType.alphaId,
+                                                 numberEvents: newSport.eventsCount, numberOutrightEvents: 0, numberOutrightMarkets: 0, numberLiveEvents: newSport.eventsCount)
+                    
+                    return .liveSports(sportsTypes: [newSportType])
+                }
+                    
+            }
 
             if path.contains("idfomarket"), let newMarket = try? container.decode(SportRadarModels.Market.self, forKey: .change) {
                 return .addMarket(contentIdentifier: contentIdentifier, market: newMarket)
@@ -533,6 +568,23 @@ extension SportRadarModels {
             
             let contentIdentifier = try container.decode(ContentIdentifier.self, forKey: .content)
             let path: String = try container.decodeIfPresent(String.self, forKey: .path) ?? ""
+            
+            if case let ContentRoute.liveSports = contentIdentifier.contentRoute {
+                if path.contains("idfosporttype"),
+                   let sportCode = SocketMessageParseHelper.extractSportCode(path) {
+                    
+                    print("REMOVING SPORT PARSE: \(sportCode)")
+                    
+                    let sportName = SportRadarModelMapper.sportTypeName(fromAlphaCode: sportCode)
+                                        
+                    let removedSport = SportType(name: sportName,
+                                                 alphaId: sportCode,
+                                                 numberEvents: 0, numberOutrightEvents: 0, numberOutrightMarkets: 0, numberLiveEvents: 0)
+                    
+                    return .liveSports(sportsTypes: [removedSport])
+                }
+                    
+            }
 
             if contentIdentifier.contentType == .market, case .market(let marketId) = contentIdentifier.contentRoute {
                 return .removeMarket(contentIdentifier: contentIdentifier, marketId: marketId)
@@ -543,8 +595,11 @@ extension SportRadarModels {
             else if path.contains("idfomarket"), let marketId = SocketMessageParseHelper.extractMarketId(path) {
                 return .removeMarket(contentIdentifier: contentIdentifier, marketId: marketId)
             }
-            else if path.contains("idfoevent"), let eventId = SocketMessageParseHelper.extractEventId(path)  {
+            else if path.contains("idfoevent"), let eventId = SocketMessageParseHelper.extractSportCode(path)  {
                 return .removeEvent(contentIdentifier: contentIdentifier, eventId: eventId)
+            }
+            else if path.contains("idfosporttype"), let sportCode = SocketMessageParseHelper.extractSportCode(path) {
+                return .removeSport(ContentIdentifier: contentIdentifier, sportCode: sportCode)
             }
 
             print("ContentContainer ignored update for \(path) and associated change: Removed")
@@ -602,6 +657,8 @@ extension SportRadarModels.ContentContainer: CustomDebugStringConvertible {
 
         case .addSport(let contentIdentifier, let sportType):
             return "Add Sport (Content ID: \(contentIdentifier)) - Sport ID: \(sportType)"
+        case .removeSport(let contentIdentifier, let sportCode):
+            return "Remove Sport (Content ID: \(contentIdentifier)) - Sport Code: \(sportCode)"
 
         case .updateEventLiveDataExtended(let contentIdentifier, let eventId, let eventLiveDataExtended):
             return "Update Event LiveDataExtended (Content ID: \(contentIdentifier)) - Event ID: \(eventId) - LiveDataExtended: \(eventLiveDataExtended)"

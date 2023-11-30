@@ -32,7 +32,7 @@ class SportTypeStore {
         }
     }
 
-    private var liveSportsCountCurrentValueSubject: CurrentValueSubject<[String: Int], ServiceProviderError> = .init([:])
+    private var liveSportsCountCurrentValueSubject: CurrentValueSubject<[String: LiveSport], ServiceProviderError> = .init([:])
     
     private var activeSportsCurrentValueSubject: CurrentValueSubject<LoadableContent<[Sport]>, ServiceProviderError> = .init(.idle)
     var activeSportsPublisher: AnyPublisher<LoadableContent<[Sport]>, ServiceProviderError> {
@@ -43,14 +43,39 @@ class SportTypeStore {
                     return sportsList
                 case .loaded(let sportsList):
                     var updatedSportsList: [Sport] = []
+                    
                     for sport in sportsList {
-                        if let alphaId = sport.alphaId, let newLiveCount = liveCountDict[alphaId] {
-                            var updatedSport = sport
-                            updatedSport.liveEventsCount = newLiveCount
-                            updatedSportsList.append(updatedSport)
+                        if let alphaId = sport.alphaId {
+                            if let newLiveCount = liveCountDict[alphaId] {
+                                var updatedSport = sport
+                                updatedSport.liveEventsCount = newLiveCount.numberEvents
+                                updatedSportsList.append(updatedSport)
+                            }
+                            else {
+                                var updatedSport = sport
+                                updatedSport.liveEventsCount = 0
+                                updatedSportsList.append(updatedSport)
+                            }
                         }
                         else {
                             updatedSportsList.append(sport)
+                        }
+                    }
+                    
+                    // Find alphaCodes from the dictionary that are not present in the sportsArray
+                    let missingLiveSports = liveCountDict.keys.filter { alphaCode in
+                        !updatedSportsList.contains { sport in
+                            sport.alphaId == alphaCode
+                        }
+                    }
+
+                    // Add missing alphaCodes to the sportsArray
+                    for missingLiveSport in missingLiveSports {
+                        if let liveSport = liveCountDict[missingLiveSport] {
+                            let newSport = Sport(id: liveSport.id, name: liveSport.name, alphaId: liveSport.id, numericId: nil, showEventCategory: false, liveEventsCount: liveSport.numberEvents)
+                            
+                            updatedSportsList.append(newSport)
+                            print("Added new Sport for alphaCode: \(liveSport)")
                         }
                     }
                     return .loaded(updatedSportsList)
@@ -65,7 +90,25 @@ class SportTypeStore {
     private var cancellables = Set<AnyCancellable>()
 
     init() {
-
+//        DispatchQueue.main.asyncAfter(deadline: .now() + 15) {
+//            let mappedSportTypes = [Sport(id: "63", name: "Table Tennis", alphaId: "TBT", numericId: nil, showEventCategory: false, liveEventsCount: 1, eventsCount: 1)]
+//            
+//            var sportLiveCount: [String: LiveSport] = [:]
+//            var currentLiveCount = self.liveSportsCountCurrentValueSubject.value
+//
+//            for sport in mappedSportTypes {
+//                let liveSport = LiveSport(id: sport.id, name: sport.name, numberEvents: sport.eventsCount, iconIdentifier: sport.id)
+//                sportLiveCount[sport.alphaId ?? sport.id] = liveSport
+//            }
+//            
+//            let mergedSports = currentLiveCount.merging(sportLiveCount) { (_, new) in new }
+//            
+//            let finalSports = mergedSports.filter { $0.value.numberEvents != 0 }
+//            
+//            print("UPDATED LIVE COUNT: \(finalSports)")
+//            Logger.log("UPDATED LIVE COUNT: \(finalSports)")
+//            self.liveSportsCountCurrentValueSubject.send(finalSports)
+//        }
     }
 
     deinit {
@@ -97,11 +140,20 @@ class SportTypeStore {
                     self?.liveSportsCountSubscription = subscription
                 case .contentUpdate(let sportTypes):
                     let mappedSportTypes = sportTypes.map(ServiceProviderModelMapper.sport(fromServiceProviderSportType:))
-                    var sportLiveCount: [String: Int] = [:]
+                    
+                    var sportLiveCount: [String: LiveSport] = [:]
+                    let currentLiveCount = self?.liveSportsCountCurrentValueSubject.value ?? [:]
+
                     for sport in mappedSportTypes {
-                        sportLiveCount[sport.alphaId ?? sport.id] = sport.eventsCount
+                        let liveSport = LiveSport(id: sport.id, name: sport.name, numberEvents: sport.eventsCount, iconIdentifier: sport.id)
+                        sportLiveCount[sport.alphaId ?? sport.id] = liveSport
                     }
-                    self?.liveSportsCountCurrentValueSubject.send(sportLiveCount)
+                    
+                    let mergedSports = currentLiveCount.merging(sportLiveCount) { (_, new) in new }
+                    
+                    let finalSports = mergedSports.filter { $0.value.numberEvents != 0 }
+                    
+                    self?.liveSportsCountCurrentValueSubject.send(finalSports)
                 case .disconnected:
                     print("SportTypeStore subscribeLiveSportTypes")
                 }
@@ -130,6 +182,7 @@ class SportTypeStore {
                 let filteredSports = sports.filter({
                     $0.eventsCount > 0 || $0.liveEventsCount > 0 || $0.outrightEventsCount > 0
                 })
+                
                 self?.activeSportsCurrentValueSubject.send(.loaded(filteredSports))
 
             case .disconnected:
@@ -154,4 +207,11 @@ class SportTypeStore {
             $0.alphaId == sportCode
         })?.id
     }
+}
+
+struct LiveSport {
+    var id: String
+    var name: String
+    var numberEvents: Int
+    var iconIdentifier: String
 }

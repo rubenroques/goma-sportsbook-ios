@@ -5097,6 +5097,11 @@
 		45FF105729D74721009AC196 /* UserTrackingSettingsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 45FF105229D74721009AC196 /* UserTrackingSettingsViewController.swift */; };
 		45FF105829D74721009AC196 /* UserTrackingSettingsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 45FF105229D74721009AC196 /* UserTrackingSettingsViewController.swift */; };
 		45FF105929D74721009AC196 /* UserTrackingSettingsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 45FF105229D74721009AC196 /* UserTrackingSettingsViewController.swift */; };
+		655B5A692B17AA5500C59000 /* Adjust in Frameworks */ = {isa = PBXBuildFile; productRef = 655B5A682B17AA5500C59000 /* Adjust */; };
+		655B5A6B2B17AA5500C59000 /* Criteo in Frameworks */ = {isa = PBXBuildFile; productRef = 655B5A6A2B17AA5500C59000 /* Criteo */; };
+		655B5A6D2B17AA5500C59000 /* Sociomantic in Frameworks */ = {isa = PBXBuildFile; productRef = 655B5A6C2B17AA5500C59000 /* Sociomantic */; };
+		655B5A6F2B17AA5500C59000 /* Trademob in Frameworks */ = {isa = PBXBuildFile; productRef = 655B5A6E2B17AA5500C59000 /* Trademob */; };
+		655B5A712B17AA5500C59000 /* WebBridge in Frameworks */ = {isa = PBXBuildFile; productRef = 655B5A702B17AA5500C59000 /* WebBridge */; };
 		A90229A228AFD41100972863 /* QuickBetViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A902299F28AFD41100972863 /* QuickBetViewController.swift */; };
 		A90229A328AFD41100972863 /* QuickBetViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A902299F28AFD41100972863 /* QuickBetViewController.swift */; };
 		A90229A428AFD41100972863 /* QuickBetViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A902299F28AFD41100972863 /* QuickBetViewController.swift */; };
@@ -7924,9 +7929,12 @@
 				45A332B1298976BA008181E9 /* FirebaseMessaging in Frameworks */,
 				45A332B2298976BA008181E9 /* FirebaseDatabase in Frameworks */,
 				458C07512AD5B49A0096E0D4 /* OptimoveNotificationServiceExtension in Frameworks */,
+				655B5A712B17AA5500C59000 /* WebBridge in Frameworks */,
 				45A332B3298976BA008181E9 /* AdyenDropIn in Frameworks */,
 				45A332B4298976BA008181E9 /* DictionaryCoding in Frameworks */,
 				45F805932A05357E005296E0 /* Lottie in Frameworks */,
+				655B5A6F2B17AA5500C59000 /* Trademob in Frameworks */,
+				655B5A692B17AA5500C59000 /* Adjust in Frameworks */,
 				45A332B5298976BA008181E9 /* Reachability in Frameworks */,
 				45A332B6298976BA008181E9 /* AdyenComponents in Frameworks */,
 				45ECD74D2A8FFB2000492CB9 /* ZendeskChatSDK in Frameworks */,
@@ -7939,6 +7947,7 @@
 				45A332BB298976BA008181E9 /* Collections in Frameworks */,
 				45A332BC298976BA008181E9 /* AdyenEncryption in Frameworks */,
 				4566B95E2A6AEE8A00477046 /* IdensicMobileSDK in Frameworks */,
+				655B5A6D2B17AA5500C59000 /* Sociomantic in Frameworks */,
 				45A332BD298976BA008181E9 /* AdyenActions in Frameworks */,
 				45A332BE298976BA008181E9 /* CombineCocoa in Frameworks */,
 				45A332BF298976BA008181E9 /* SwiftyBeaver in Frameworks */,
@@ -7951,6 +7960,7 @@
 				45A332C5298976BA008181E9 /* FirebaseAnalytics in Frameworks */,
 				45A332C6298976BA008181E9 /* OrderedCollections in Frameworks */,
 				458C074F2AD5B4930096E0D4 /* OptimoveCore in Frameworks */,
+				655B5A6B2B17AA5500C59000 /* Criteo in Frameworks */,
 				45DB8DB02A6A9C7C0018C591 /* CountrySelectionFeature in Frameworks */,
 				459F410C2AF54C86006BAEE9 /* SwiftPrettyPrint in Frameworks */,
 				45A332C7298976BA008181E9 /* SweeterSwift in Frameworks */,
@@ -11612,6 +11622,11 @@
 				458C07502AD5B49A0096E0D4 /* OptimoveNotificationServiceExtension */,
 				458C07522AD5B4A10096E0D4 /* OptimoveSDK */,
 				459F410B2AF54C86006BAEE9 /* SwiftPrettyPrint */,
+				655B5A682B17AA5500C59000 /* Adjust */,
+				655B5A6A2B17AA5500C59000 /* Criteo */,
+				655B5A6C2B17AA5500C59000 /* Sociomantic */,
+				655B5A6E2B17AA5500C59000 /* Trademob */,
+				655B5A702B17AA5500C59000 /* WebBridge */,
 			);
 			productName = Sportsbook;
 			productReference = 45A3334E298976BA008181E9 /* Betsson.app */;
@@ -11796,6 +11811,7 @@
 				45ECD7512A8FFB8A00492CB9 /* XCRemoteSwiftPackageReference "support_sdk_ios" */,
 				A9C5AC1B2ACDB30000C3FD56 /* XCRemoteSwiftPackageReference "Optimove-SDK-iOS" */,
 				459F410A2AF54C86006BAEE9 /* XCRemoteSwiftPackageReference "SwiftPrettyPrint" */,
+				655B5A672B17AA5500C59000 /* XCRemoteSwiftPackageReference "ios_sdk" */,
 			);
 			productRefGroup = 455A0C5126BD902C00EC572D /* Products */;
 			projectDirPath = "";
@@ -20296,6 +20312,14 @@
 				minimumVersion = 4.0.0;
 			};
 		};
+		655B5A672B17AA5500C59000 /* XCRemoteSwiftPackageReference "ios_sdk" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/adjust/ios_sdk";
+			requirement = {
+				branch = master;
+				kind = branch;
+			};
+		};
 		A96FAEDF29829CCA00A0751F /* XCRemoteSwiftPackageReference "adyen-ios" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/Adyen/adyen-ios";
@@ -21254,6 +21278,31 @@
 			isa = XCSwiftPackageProductDependency;
 			package = 45F805912A05357E005296E0 /* XCRemoteSwiftPackageReference "lottie-spm" */;
 			productName = Lottie;
+		};
+		655B5A682B17AA5500C59000 /* Adjust */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 655B5A672B17AA5500C59000 /* XCRemoteSwiftPackageReference "ios_sdk" */;
+			productName = Adjust;
+		};
+		655B5A6A2B17AA5500C59000 /* Criteo */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 655B5A672B17AA5500C59000 /* XCRemoteSwiftPackageReference "ios_sdk" */;
+			productName = Criteo;
+		};
+		655B5A6C2B17AA5500C59000 /* Sociomantic */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 655B5A672B17AA5500C59000 /* XCRemoteSwiftPackageReference "ios_sdk" */;
+			productName = Sociomantic;
+		};
+		655B5A6E2B17AA5500C59000 /* Trademob */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 655B5A672B17AA5500C59000 /* XCRemoteSwiftPackageReference "ios_sdk" */;
+			productName = Trademob;
+		};
+		655B5A702B17AA5500C59000 /* WebBridge */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 655B5A672B17AA5500C59000 /* XCRemoteSwiftPackageReference "ios_sdk" */;
+			productName = WebBridge;
 		};
 		A96FAEE029829CCB00A0751F /* Adyen */ = {
 			isa = XCSwiftPackageProductDependency;

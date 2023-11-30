@@ -243,6 +243,7 @@ class ProfileLimitsManagementViewController: UIViewController {
         }
         depositHeaderTextFieldView.setKeyboardType(.decimalPad)
         depositHeaderTextFieldView.isCurrency = true
+        depositHeaderTextFieldView.hasSeparatorSpace = true
         depositHeaderTextFieldView.didTapIcon = { [weak self] in
             self?.setLimitAlertInfo(alertType: LimitType.deposit.identifier.lowercased())
 
@@ -266,6 +267,7 @@ class ProfileLimitsManagementViewController: UIViewController {
         }
         bettingHeaderTextFieldView.setKeyboardType(.numberPad)
         bettingHeaderTextFieldView.isCurrency = true
+        bettingHeaderTextFieldView.hasSeparatorSpace = true
         bettingHeaderTextFieldView.didTapIcon = { [weak self] in
             self?.setLimitAlertInfo(alertType: LimitType.wagering.identifier.lowercased())
         }
@@ -288,6 +290,7 @@ class ProfileLimitsManagementViewController: UIViewController {
         }
         lossHeaderTextFieldView.setKeyboardType(.numberPad)
         lossHeaderTextFieldView.isCurrency = true
+        lossHeaderTextFieldView.hasSeparatorSpace = true
         lossHeaderTextFieldView.didTapIcon = { [weak self] in
             self?.setLimitAlertInfo(alertType: LimitType.loss.identifier.lowercased())
         }
@@ -335,6 +338,10 @@ class ProfileLimitsManagementViewController: UIViewController {
                     if limitOptions == viewModel.limitOptionsSet && viewModel.limitOptionsSet.isNotEmpty {
                         self?.viewModel.isLoadingPublisher.send(false)
                         self?.showAlert(type: .success)
+                        self?.viewModel.getLimits()
+                    }
+                    else if limitOptions != viewModel.limitOptionsSet && viewModel.limitOptionsSet.isNotEmpty && limitOptions.isNotEmpty {
+                        self?.viewModel.isLoadingPublisher.send(false)
                         self?.viewModel.getLimits()
                     }
                 }
@@ -409,7 +416,7 @@ class ProfileLimitsManagementViewController: UIViewController {
         if let depositLimit = self.viewModel.depositLimit {
             if let limitAmount = depositLimit.current?.amount {
                 let amountString = "\(limitAmount)"
-                let amountFormatted = currencyFormatter.currencyTypeFormatting(string: amountString)
+                let amountFormatted = currencyFormatter.currencyTypeWithSeparatorFormatting(string: amountString)
                 self.depositHeaderTextFieldView.setText(amountFormatted)
             }
 
@@ -430,7 +437,7 @@ class ProfileLimitsManagementViewController: UIViewController {
         if let wageringLimit = self.viewModel.wageringLimit {
             if let wageringAmount = wageringLimit.current?.amount {
                 let amountString = "\(wageringAmount)"
-                let amountFormatted = currencyFormatter.currencyTypeFormatting(string: amountString)
+                let amountFormatted = currencyFormatter.currencyTypeWithSeparatorFormatting(string: amountString)
                 self.bettingHeaderTextFieldView.setText(amountFormatted)
             }
 
@@ -451,7 +458,7 @@ class ProfileLimitsManagementViewController: UIViewController {
         if let autoPayoutLimit = self.viewModel.autoPayoutLimit {
             if let autoPayoutAmount = autoPayoutLimit.current?.amount {
                 let amountString = "\(autoPayoutAmount)"
-                let amountFormatted = currencyFormatter.currencyTypeFormatting(string: amountString)
+                let amountFormatted = currencyFormatter.currencyTypeWithSeparatorFormatting(string: amountString)
                 self.lossHeaderTextFieldView.setText(amountFormatted)
             }
 
@@ -595,7 +602,7 @@ class ProfileLimitsManagementViewController: UIViewController {
             let amountString = self.depositHeaderTextFieldView.text
             let amountFiltered = String( amountString.filter { acceptedInputs.contains($0)
             })
-            let amount = amountFiltered.replacingOccurrences(of: ",", with: ".")
+            let amount = amountFiltered.replacingOccurrences(of: ",", with: ".").replacingOccurrences(of: " ", with: "")
 
             if let depositAmount = self.viewModel.depositLimit?.current?.amount,
                let currentAmount = Double(amount),
@@ -613,7 +620,9 @@ class ProfileLimitsManagementViewController: UIViewController {
 
                 }))
 
-                alert.addAction(UIAlertAction(title: localized("cancel"), style: .cancel, handler: nil))
+                alert.addAction(UIAlertAction(title: localized("cancel"), style: .cancel, handler: { [weak self] _ in
+                    self?.viewModel.isLoadingPublisher.send(false)
+                }))
 
                 self.present(alert, animated: true, completion: nil)
             }
@@ -637,7 +646,7 @@ class ProfileLimitsManagementViewController: UIViewController {
             let amountString = self.bettingHeaderTextFieldView.text
             let amountFiltered = String( amountString.filter { acceptedInputs.contains($0)
             })
-            let amount = amountFiltered.replacingOccurrences(of: ",", with: ".")
+            let amount = amountFiltered.replacingOccurrences(of: ",", with: ".").replacingOccurrences(of: " ", with: "")
 
             if let bettingAmount = self.viewModel.wageringLimit?.current?.amount,
                let currentAmount = Double(amount),
@@ -655,7 +664,9 @@ class ProfileLimitsManagementViewController: UIViewController {
 
                 }))
 
-                alert.addAction(UIAlertAction(title: localized("cancel"), style: .cancel, handler: nil))
+                alert.addAction(UIAlertAction(title: localized("cancel"), style: .cancel, handler: { [weak self] _ in
+                    self?.viewModel.isLoadingPublisher.send(false)
+                }))
 
                 self.present(alert, animated: true, completion: nil)
             }
@@ -680,7 +691,7 @@ class ProfileLimitsManagementViewController: UIViewController {
             let period = self.lossFrequencySelectHeaderTextFieldView.text
             let amountString = self.lossHeaderTextFieldView.text
             let amountFiltered = String( amountString.filter{ acceptedInputs.contains($0)} )
-            let amount = amountFiltered.replacingOccurrences(of: ",", with: ".")
+            let amount = amountFiltered.replacingOccurrences(of: ",", with: ".").replacingOccurrences(of: " ", with: "")
 
             self.viewModel.updateResponsibleGamingLimit(amount: amount)
 

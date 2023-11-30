@@ -1507,6 +1507,7 @@
 
 "deleted" = "Supprimé";
 "void" = "Annulé";
+"spent" = "Utilisé";
 
 /* Localizable.strings */
 "AF" = "Afghanistan";
