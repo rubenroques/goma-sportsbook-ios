@@ -170,6 +170,10 @@ class SimpleListMarketDetailTableViewCell: UITableViewCell {
             self.columnType = ColumnType.double
             self.collectionViewHeightContraint.constant = CGFloat(numberOfLines) * lineHeight
         }
+        
+        if let match = self.match {
+            self.hasCashback = RePlayFeatureHelper.shouldShowRePlay(forMatch: match)
+        }
 
         // each line is 50 including space
         self.setNeedsLayout()

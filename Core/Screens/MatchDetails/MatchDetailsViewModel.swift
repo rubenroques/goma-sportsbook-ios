@@ -97,12 +97,16 @@ class MatchDetailsViewModel: NSObject {
     private var subscription: ServicesProvider.Subscription?
 
     private var liveDataSubscription: ServicesProvider.Subscription?
+    
+    var isFromLiveCard: Bool = false
 
     var scrollToTopAction: ((Int) -> Void)?
 
     init(matchMode: MatchMode = .preLive, match: Match) {
         self.matchId = match.id
         self.matchStatsViewModel = MatchStatsViewModel(matchId: match.id)
+        
+        self.isFromLiveCard = match.status == .notStarted ? false : true
 
         super.init()
 

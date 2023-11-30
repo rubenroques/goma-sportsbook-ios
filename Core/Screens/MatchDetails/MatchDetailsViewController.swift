@@ -694,10 +694,11 @@ class MatchDetailsViewController: UIViewController {
                         self?.matchMode = .preLive
                     case .inProgress:
                         self?.matchMode = .live
+                        self?.reloadMarketsWithLiveMatch(match: match)
                     }
-                    
+                                        
                     self?.setupHeaderDetails(withMatch: match)
-                    
+                                        
                     let theme = self?.traitCollection.userInterfaceStyle
                     viewModel.getFieldWidget(isDarkTheme: theme == .dark ? true : false)
 
@@ -813,6 +814,17 @@ class MatchDetailsViewController: UIViewController {
             if let marketGroupViewController = self?.marketGroupsViewControllers[safe: indexRow] as? MarketGroupDetailsViewController {
 
                 marketGroupViewController.scrollToTop()
+            }
+        }
+    }
+    
+    func reloadMarketsWithLiveMatch(match: Match) {
+        
+        for viewController in marketGroupsViewControllers {
+            
+            if let marketGroupViewController = viewController as? MarketGroupDetailsViewController {
+                
+                marketGroupViewController.setUpdatedMatch(match: match)
             }
         }
     }

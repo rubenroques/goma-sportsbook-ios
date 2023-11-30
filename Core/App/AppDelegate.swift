@@ -103,7 +103,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate, MessagingDelegate {
         Optimove.initialize(with: config)
 
         application.registerForRemoteNotifications()
-
+        
         //
         self.window = UIWindow()
 
