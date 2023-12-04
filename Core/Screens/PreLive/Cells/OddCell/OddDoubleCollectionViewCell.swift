@@ -81,6 +81,8 @@ class OddDoubleCollectionViewCell: UICollectionViewCell {
 
     private var marketSubscriber: AnyCancellable?
 
+    
+    
     private var currentLeftOddValue: Double?
     private var currentRightOddValue: Double?
 
@@ -371,6 +373,13 @@ class OddDoubleCollectionViewCell: UICollectionViewCell {
                 })
         }
 
+        if market.statsTypeId != nil {
+            self.showStatsButton()
+        }
+        else {
+            // No market statys type id found, show error label
+        }
+        
         self.match = match
         self.market = market
 
@@ -693,6 +702,73 @@ class OddDoubleCollectionViewCell: UICollectionViewCell {
 }
 
 extension OddDoubleCollectionViewCell {
+    
+    @objc private func openStatsWidgetFullscreen() {
+        if let rootViewController = self.window?.rootViewController, let matchId = self.match?.id, let marketTypeId = self.market?.statsTypeId {
+            let statsWebViewController = StatsWebViewController(matchId: matchId, marketTypeId: marketTypeId)
+            statsWebViewController.modalPresentationStyle = .overCurrentContext
+            rootViewController.present(statsWebViewController, animated: true)
+        }
+    }
+    
+    private func showStatsButton() {
+        
+        self.marketStatsStackView.distribution = .fillEqually
+        self.marketStatsStackView.spacing = 2
+        
+        let stackSubviews = self.marketStatsStackView.arrangedSubviews
+        stackSubviews.forEach({
+            if $0 != self.marketNameLabel {
+                self.marketStatsStackView.removeArrangedSubview($0)
+                $0.removeFromSuperview()
+            }
+        })
+        
+        let baseView = UIView()
+        baseView.translatesAutoresizingMaskIntoConstraints = false
+        
+        let button = UIButton()
+        button.addTarget(self, action: #selector(self.openStatsWidgetFullscreen), for: .primaryActionTriggered)
+        button.translatesAutoresizingMaskIntoConstraints = false
+        button.setTitle(localized("view_stats"), for: .normal)
+        button.setTitleColor(UIColor.App.textPrimary, for: .normal)
+        let statsImage = UIImage(named: "open_stats_icon")?.withRenderingMode(.alwaysTemplate)
+        button.setImage(statsImage, for: .normal)
+        button.imageView?.setTintColor(color: UIColor.App.textPrimary)
+        button.tintColor = UIColor.App.textPrimary
+        button.titleLabel?.font = AppFont.with(type: .semibold, size: 11)
+        
+        button.layer.cornerRadius = CornerRadius.button
+        button.layer.masksToBounds = true
+        button.backgroundColor = .clear
+        
+        button.setBackgroundColor(UIColor.App.backgroundBorder, for: .normal)
+        button.setInsets(forContentPadding: UIEdgeInsets(top: 4, left: 8, bottom: 4, right: 8), imageTitlePadding: 4)
+
+        let shadowBackgroundView = UIView()
+        shadowBackgroundView.translatesAutoresizingMaskIntoConstraints = false
+        shadowBackgroundView.backgroundColor = UIColor.App.highlightPrimary
+        shadowBackgroundView.layer.cornerRadius = CornerRadius.button
+        shadowBackgroundView.layer.masksToBounds = true
+        
+        baseView.addSubview(shadowBackgroundView)
+        baseView.addSubview(button)
+        
+        NSLayoutConstraint.activate([
+            baseView.centerXAnchor.constraint(equalTo: button.centerXAnchor),
+            baseView.centerYAnchor.constraint(equalTo: button.centerYAnchor, constant: 3),
+            
+            button.heightAnchor.constraint(equalToConstant: 24),
+            
+            shadowBackgroundView.leadingAnchor.constraint(equalTo: button.leadingAnchor),
+            shadowBackgroundView.trailingAnchor.constraint(equalTo: button.trailingAnchor),
+            shadowBackgroundView.topAnchor.constraint(equalTo: button.topAnchor),
+            shadowBackgroundView.bottomAnchor.constraint(equalTo: button.bottomAnchor, constant: 2),
+        ])
+        
+        self.marketStatsStackView.addArrangedSubview(baseView)
+    }
+    
     private func setupStatsLine(withjson json: JSON) {
 
         if StyleHelper.cardsStyleActive() == .small {
@@ -794,4 +870,159 @@ extension OddDoubleCollectionViewCell {
             }
         }
     }
+}
+
+
+
+import WebKit
+
+class StatsWebViewController: UIViewController, WKNavigationDelegate {
+    
+    private var loadingView: UIActivityIndicatorView!
+    private var webView: WKWebView!
+    private var webViewHeightConstraint: NSLayoutConstraint!
+    private var closeButton: UIButton!
+
+    private var matchId: String
+    private var marketTypeId: String
+    
+    private var marketStatsSubscriber: AnyCancellable?
+    
+    init(matchId: String, marketTypeId: String) {
+        self.matchId = matchId
+        self.marketTypeId = marketTypeId
+        super.init(nibName: nil, bundle: nil)
+    }
+
+    required init?(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
+
+    override func viewDidLoad() {
+        super.viewDidLoad()
+        view.backgroundColor = UIColor.black.withAlphaComponent(0.7)
+
+        self.setupCloseButton()
+
+        let webConfiguration = WKWebViewConfiguration()
+        self.webView = WKWebView(frame: .zero, configuration: webConfiguration)
+        self.webView.navigationDelegate = self
+        self.webView.isOpaque = false
+
+        self.webView.backgroundColor = UIColor.clear
+        self.webView.scrollView.backgroundColor = UIColor.clear
+        self.webView.scrollView.isScrollEnabled = false
+        
+        self.view.addSubview(webView)
+
+        self.webView.translatesAutoresizingMaskIntoConstraints = false
+        
+        self.loadingView = UIActivityIndicatorView()
+        self.loadingView.translatesAutoresizingMaskIntoConstraints = false
+        
+        self.view.addSubview(self.loadingView)
+        
+        self.webViewHeightConstraint = self.webView.heightAnchor.constraint(equalToConstant: 0)
+        
+        NSLayoutConstraint.activate([
+            self.webView.widthAnchor.constraint(equalTo: self.view.widthAnchor),
+            self.webView.centerXAnchor.constraint(equalTo: self.view.centerXAnchor),
+            self.webView.centerYAnchor.constraint(equalTo: self.view.centerYAnchor),
+            self.webViewHeightConstraint,
+            
+            self.loadingView.centerXAnchor.constraint(equalTo: self.view.centerXAnchor),
+            self.loadingView.centerYAnchor.constraint(equalTo: self.view.centerYAnchor),
+        ])
+
+        self.loadingView.startAnimating()
+        
+        let theme = self.traitCollection.userInterfaceStyle
+        self.marketStatsSubscriber = Env.servicesProvider.getStatsWidget(eventId: self.matchId,
+                                                                         marketTypeName: self.marketTypeId,
+                                                                         isDarkTheme: theme == .dark ? true : false)
+            .receive(on: DispatchQueue.main)
+            .sink { completion in
+                print("getStatsWidget completion \(completion)")
+            } receiveValue: { [weak self] statsWidgetRenderDataType in
+                switch statsWidgetRenderDataType {
+                case .url:
+                    break
+                case .htmlString(let url, let htmlString):
+                    self?.webView.loadHTMLString(htmlString, baseURL: url)
+                }
+            }
+        
+        let tapGesture = UITapGestureRecognizer(target: self, action:  #selector(closeButtonTapped))
+        self.view.addGestureRecognizer(tapGesture)
+    }
+
+    private func setupCloseButton() {
+        self.closeButton = UIButton(type: .custom)
+        
+        let closeImage = UIImage(named: "arrow_close_icon")?.withRenderingMode(.alwaysTemplate)
+
+        
+        self.closeButton.setImage(closeImage, for: .normal)
+        self.closeButton.imageView?.setImageColor(color: UIColor.App.buttonTextPrimary)
+        self.view.addSubview(self.closeButton)
+
+        self.closeButton.translatesAutoresizingMaskIntoConstraints = false
+        NSLayoutConstraint.activate([
+            self.closeButton.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 10),
+            self.closeButton.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -10),
+            self.closeButton.widthAnchor.constraint(equalToConstant: 40),
+            self.closeButton.heightAnchor.constraint(equalToConstant: 40)
+        ])
+
+        self.closeButton.addTarget(self, action: #selector(closeButtonTapped), for: .touchUpInside)
+    }
+
+    @objc private func closeButtonTapped() {
+        self.dismiss(animated: true, completion: nil)
+    }
+
+    func webView(_ webView: WKWebView, didStartProvisionalNavigation navigation: WKNavigation!) {
+        self.loadingView.startAnimating()
+    }
+    
+    func webView(_ webView: WKWebView, didFail navigation: WKNavigation!, withError error: Error) {
+        self.loadingView.stopAnimating()
+    }
+    
+    func webView(_ webView: WKWebView, didFinish navigation: WKNavigation!) {
+        self.webView.evaluateJavaScript("document.readyState", completionHandler: { [weak self] complete, error in
+            if complete != nil {
+                self?.recalculateWebview()
+            }
+            else if let error = error {
+                Logger.log("Match details WKWebView didFinish error \(error)")
+            }
+        })
+    }
+    
+    private func recalculateWebview() {
+        executeDelayed(0.2) {
+             self.webView.evaluateJavaScript("document.body.scrollHeight", completionHandler: { [weak self] height, error in
+                 if let heightFloat = height as? CGFloat {
+                     self?.redrawWebView(withHeight: heightFloat)
+                 }
+                 if let error = error {
+                     Logger.log("Match details WKWebView didFinish error \(error)")
+                 }
+             })
+         }
+     }
+     
+     private func redrawWebView(withHeight heigth: CGFloat) {
+         if heigth < 10 {
+            self.recalculateWebview()
+         }
+         else {
+             self.webViewHeightConstraint.constant = heigth
+             self.view.layoutIfNeeded()
+             self.loadingView.stopAnimating()
+         }
+     }
+     
+    
 }

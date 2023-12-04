@@ -19247,7 +19247,7 @@
 				CODE_SIGN_ENTITLEMENTS = "Clients/Betsson/Betsson-PROD.entitlements";
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Manual;
-				CURRENT_PROJECT_VERSION = 10701;
+				CURRENT_PROJECT_VERSION = 10704;
 				DEVELOPMENT_TEAM = QN2DYX5K4M;
 				INFOPLIST_FILE = "$(SRCROOT)/Clients/Betsson/Misc-PROD/Betsson-PROD-Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 13.0;
@@ -19276,7 +19276,7 @@
 				CODE_SIGN_ENTITLEMENTS = "Clients/Betsson/Betsson-PROD.entitlements";
 				CODE_SIGN_IDENTITY = "Apple Distribution";
 				CODE_SIGN_STYLE = Manual;
-				CURRENT_PROJECT_VERSION = 10701;
+				CURRENT_PROJECT_VERSION = 10704;
 				DEVELOPMENT_TEAM = QN2DYX5K4M;
 				INFOPLIST_FILE = "$(SRCROOT)/Clients/Betsson/Misc-PROD/Betsson-PROD-Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 13.0;
@@ -19364,7 +19364,7 @@
 				CODE_SIGN_IDENTITY = "Apple Development";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				CODE_SIGN_STYLE = Manual;
-				CURRENT_PROJECT_VERSION = 10701;
+				CURRENT_PROJECT_VERSION = 10702;
 				DEVELOPMENT_TEAM = 422GNXXZJR;
 				INFOPLIST_FILE = "$(SRCROOT)/Clients/Betsson/Misc-UAT/Betsson-UAT-Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 13.0;
@@ -19394,7 +19394,7 @@
 				CODE_SIGN_IDENTITY = "Apple Distribution";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution";
 				CODE_SIGN_STYLE = Manual;
-				CURRENT_PROJECT_VERSION = 10701;
+				CURRENT_PROJECT_VERSION = 10702;
 				DEVELOPMENT_TEAM = 422GNXXZJR;
 				INFOPLIST_FILE = "$(SRCROOT)/Clients/Betsson/Misc-UAT/Betsson-UAT-Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 13.0;

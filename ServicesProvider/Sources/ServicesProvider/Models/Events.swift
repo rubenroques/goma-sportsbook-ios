@@ -448,6 +448,11 @@ public enum FieldWidgetRenderDataType {
     case htmlString(url: URL, htmlString: String)
 }
 
+public enum StatsWidgetRenderDataType {
+    case url(url: URL)
+    case htmlString(url: URL, htmlString: String)
+}
+
 public struct SportNodeInfo: Codable {
     public var id: String
     public var regionNodes: [SportRegion]

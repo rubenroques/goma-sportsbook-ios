@@ -416,7 +416,7 @@ class OddTripleCollectionViewCell: UICollectionViewCell {
 
     func setupWithMarket(_ market: Market, match: Match, teamsText: String, countryIso: String) {
 
-        if let matchStatsViewModel = matchStatsViewModel,
+        if let matchStatsViewModel = self.matchStatsViewModel,
            market.eventPartId != nil,
            market.bettingTypeId != nil {
 
@@ -431,6 +431,13 @@ class OddTripleCollectionViewCell: UICollectionViewCell {
                 })
         }
 
+        if market.statsTypeId != nil {
+            self.showStatsButton()
+        }
+        else {
+            // No market statys type id found, show error label
+        }
+        
         self.match = match
         self.market = market
 
@@ -863,6 +870,74 @@ class OddTripleCollectionViewCell: UICollectionViewCell {
 }
 
 extension OddTripleCollectionViewCell {
+    
+    @objc private func openStatsWidgetFullscreen() {
+        if let rootViewController = self.window?.rootViewController, let matchId = self.match?.id, let marketTypeId = self.market?.statsTypeId {
+            let statsWebViewController = StatsWebViewController(matchId: matchId, marketTypeId: marketTypeId)
+            statsWebViewController.modalPresentationStyle = .overCurrentContext
+            rootViewController.present(statsWebViewController, animated: true)
+        }
+    }
+    
+    private func showStatsButton() {
+        
+        self.marketStatsStackView.distribution = .fillEqually
+        self.marketStatsStackView.spacing = 2
+        
+        let stackSubviews = self.marketStatsStackView.arrangedSubviews
+        stackSubviews.forEach({
+            if $0 != self.marketNameLabel {
+                self.marketStatsStackView.removeArrangedSubview($0)
+                $0.removeFromSuperview()
+            }
+        })
+        
+        let baseView = UIView()
+        baseView.translatesAutoresizingMaskIntoConstraints = false
+        
+        let button = UIButton()
+        button.addTarget(self, action: #selector(self.openStatsWidgetFullscreen), for: .primaryActionTriggered)
+        button.translatesAutoresizingMaskIntoConstraints = false
+        button.setTitle(localized("view_stats"), for: .normal)
+        button.setTitleColor(UIColor.App.textPrimary, for: .normal)
+        let statsImage = UIImage(named: "open_stats_icon")?.withRenderingMode(.alwaysTemplate)
+        button.setImage(statsImage, for: .normal)
+        button.imageView?.setTintColor(color: UIColor.App.textPrimary)
+        button.tintColor = UIColor.App.textPrimary
+        button.titleLabel?.font = AppFont.with(type: .semibold, size: 11)
+        
+        button.layer.cornerRadius = CornerRadius.button
+        button.layer.masksToBounds = true
+        button.backgroundColor = .clear
+        
+        button.setBackgroundColor(UIColor.App.backgroundBorder, for: .normal)
+        button.setInsets(forContentPadding: UIEdgeInsets(top: 4, left: 8, bottom: 4, right: 8), imageTitlePadding: 4)
+
+        let shadowBackgroundView = UIView()
+        shadowBackgroundView.translatesAutoresizingMaskIntoConstraints = false
+        shadowBackgroundView.backgroundColor = UIColor.App.highlightPrimary
+        shadowBackgroundView.layer.cornerRadius = CornerRadius.button
+        shadowBackgroundView.layer.masksToBounds = true
+        
+        baseView.addSubview(shadowBackgroundView)
+        baseView.addSubview(button)
+        
+        NSLayoutConstraint.activate([
+            baseView.centerXAnchor.constraint(equalTo: button.centerXAnchor),
+            baseView.centerYAnchor.constraint(equalTo: button.centerYAnchor, constant: 3),
+            
+            button.heightAnchor.constraint(equalToConstant: 24),
+            
+            shadowBackgroundView.leadingAnchor.constraint(equalTo: button.leadingAnchor),
+            shadowBackgroundView.trailingAnchor.constraint(equalTo: button.trailingAnchor),
+            shadowBackgroundView.topAnchor.constraint(equalTo: button.topAnchor),
+            shadowBackgroundView.bottomAnchor.constraint(equalTo: button.bottomAnchor, constant: 2),
+        ])
+        
+        self.marketStatsStackView.addArrangedSubview(baseView)
+    }
+    
+    
     private func setupStatsLine(withjson json: JSON) {
 
         if StyleHelper.cardsStyleActive() == .small {
