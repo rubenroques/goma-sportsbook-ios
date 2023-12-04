@@ -767,6 +767,7 @@
                 <outlet property="locationFlagImageView" destination="BvN-9q-msd" id="Z8B-jh-Ehe"/>
                 <outlet property="mainContentBaseView" destination="T2w-ri-ozy" id="wzb-mL-jSq"/>
                 <outlet property="marketBottomConstraint" destination="3ON-QZ-rnM" id="FLy-IS-pQD"/>
+                <outlet property="marketHeightConstraint" destination="snM-CF-W4M" id="BtP-IP-w47"/>
                 <outlet property="marketNameInnerView" destination="j5j-Qr-4ae" id="mza-Es-ylI"/>
                 <outlet property="marketNameLabel" destination="Apt-Hi-3bs" id="2e7-uS-VFe"/>
                 <outlet property="marketNameView" destination="RmP-yp-eRX" id="NiE-Qn-aa3"/>

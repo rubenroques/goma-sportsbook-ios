@@ -29,8 +29,8 @@ class ForbiddenLocationViewController: UIViewController {
 
         self.isModalInPresentation = true
 
-        setupWithTheme()
         commonInit()
+        setupWithTheme()
     }
 
     override func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {
@@ -52,7 +52,6 @@ class ForbiddenLocationViewController: UIViewController {
         forbiddenImageView.image = UIImage(named: "location_error_icon")
         forbiddenImageView.contentMode = .scaleAspectFill
         textLabel.font = AppFont.with(type: AppFont.AppFontType.medium, size: 20)
-        textLabel.textColor = UIColor.white
         textLabel.numberOfLines = 0
         textLabel.text = localized("access_forbidden")
         textLabel.sizeToFit()

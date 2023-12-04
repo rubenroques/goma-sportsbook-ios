@@ -169,6 +169,7 @@ class MatchWidgetCollectionViewCell: UICollectionViewCell {
     
     @IBOutlet weak var marketBottomConstraint: NSLayoutConstraint!
     @IBOutlet weak var marketTopConstraint: NSLayoutConstraint!
+    @IBOutlet weak var marketHeightConstraint: NSLayoutConstraint!
     @IBOutlet weak var participantsBottomConstraint: NSLayoutConstraint!
     
 
@@ -1063,20 +1064,25 @@ class MatchWidgetCollectionViewCell: UICollectionViewCell {
         
         if isShown {
             self.marketNameView.isHidden = false
-            self.marketTopConstraint.isActive = true
-            self.marketBottomConstraint.isActive = true
-            self.participantsBottomConstraint.isActive = false
+            self.marketTopConstraint.constant = 8
+            self.marketBottomConstraint.constant = -10
+            self.marketHeightConstraint.constant = 15
+            //self.participantsBottomConstraint.isActive = false
             
             self.marketNameLabel.text = self.viewModel?.match.markets.first?.name
         }
         else {
             self.marketNameView.isHidden = true
-            self.marketTopConstraint.isActive = false
-            self.marketBottomConstraint.isActive = false
-            self.participantsBottomConstraint.isActive = true
+            self.marketTopConstraint.constant = 0
+            self.marketBottomConstraint.constant = 0
+            self.marketHeightConstraint.constant = 0
+            //self.participantsBottomConstraint.isActive = true
             
             self.marketNameLabel.text = ""
         }
+        
+        self.setNeedsLayout()
+        self.layoutIfNeeded()
     }
 
     private func adjustDesignToCardStyle() {
