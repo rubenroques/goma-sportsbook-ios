@@ -14,7 +14,6 @@ import IQKeyboardManagerSwift
 import PhraseSDK
 import AdyenActions
 import OptimoveSDK
-import Adjust
 
 @main
 class AppDelegate: UIResponder, UIApplicationDelegate, MessagingDelegate {
@@ -104,17 +103,6 @@ class AppDelegate: UIResponder, UIApplicationDelegate, MessagingDelegate {
         Optimove.initialize(with: config)
 
         application.registerForRemoteNotifications()
-        
-        // Adjust
-        let yourAppToken = "u9xpbb9chxj4"
-        let environment = ADJEnvironmentProduction
-        let adjustConfig = ADJConfig(
-            appToken: yourAppToken,
-            environment: environment)
-
-        adjustConfig?.logLevel = ADJLogLevelVerbose
-
-        Adjust.appDidLaunch(adjustConfig)
         
         //
         self.window = UIWindow()

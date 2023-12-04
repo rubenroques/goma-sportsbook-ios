@@ -5097,12 +5097,10 @@
 		45FF105729D74721009AC196 /* UserTrackingSettingsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 45FF105229D74721009AC196 /* UserTrackingSettingsViewController.swift */; };
 		45FF105829D74721009AC196 /* UserTrackingSettingsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 45FF105229D74721009AC196 /* UserTrackingSettingsViewController.swift */; };
 		45FF105929D74721009AC196 /* UserTrackingSettingsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 45FF105229D74721009AC196 /* UserTrackingSettingsViewController.swift */; };
-		655B5A692B17AA5500C59000 /* Adjust in Frameworks */ = {isa = PBXBuildFile; productRef = 655B5A682B17AA5500C59000 /* Adjust */; };
 		655B5A6B2B17AA5500C59000 /* Criteo in Frameworks */ = {isa = PBXBuildFile; productRef = 655B5A6A2B17AA5500C59000 /* Criteo */; };
 		655B5A6D2B17AA5500C59000 /* Sociomantic in Frameworks */ = {isa = PBXBuildFile; productRef = 655B5A6C2B17AA5500C59000 /* Sociomantic */; };
 		655B5A6F2B17AA5500C59000 /* Trademob in Frameworks */ = {isa = PBXBuildFile; productRef = 655B5A6E2B17AA5500C59000 /* Trademob */; };
 		655B5A712B17AA5500C59000 /* WebBridge in Frameworks */ = {isa = PBXBuildFile; productRef = 655B5A702B17AA5500C59000 /* WebBridge */; };
-		6565745C2B1E0E5D00A2ADF9 /* Adjust in Frameworks */ = {isa = PBXBuildFile; productRef = 6565745B2B1E0E5D00A2ADF9 /* Adjust */; };
 		A90229A228AFD41100972863 /* QuickBetViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A902299F28AFD41100972863 /* QuickBetViewController.swift */; };
 		A90229A328AFD41100972863 /* QuickBetViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A902299F28AFD41100972863 /* QuickBetViewController.swift */; };
 		A90229A428AFD41100972863 /* QuickBetViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A902299F28AFD41100972863 /* QuickBetViewController.swift */; };
@@ -7935,7 +7933,6 @@
 				45A332B4298976BA008181E9 /* DictionaryCoding in Frameworks */,
 				45F805932A05357E005296E0 /* Lottie in Frameworks */,
 				655B5A6F2B17AA5500C59000 /* Trademob in Frameworks */,
-				655B5A692B17AA5500C59000 /* Adjust in Frameworks */,
 				45A332B5298976BA008181E9 /* Reachability in Frameworks */,
 				45A332B6298976BA008181E9 /* AdyenComponents in Frameworks */,
 				45ECD74D2A8FFB2000492CB9 /* ZendeskChatSDK in Frameworks */,
@@ -8009,7 +8006,6 @@
 				45F6BD7E2AB3732C00C81DE1 /* AdyenDropIn in Frameworks */,
 				45F6BD7F2AB3732C00C81DE1 /* DictionaryCoding in Frameworks */,
 				45F6BD802AB3732C00C81DE1 /* Lottie in Frameworks */,
-				6565745C2B1E0E5D00A2ADF9 /* Adjust in Frameworks */,
 				45F6BD812AB3732C00C81DE1 /* Reachability in Frameworks */,
 				45F6BD822AB3732C00C81DE1 /* AdyenComponents in Frameworks */,
 				45F6BD832AB3732C00C81DE1 /* ZendeskChatSDK in Frameworks */,
@@ -11624,7 +11620,6 @@
 				458C07502AD5B49A0096E0D4 /* OptimoveNotificationServiceExtension */,
 				458C07522AD5B4A10096E0D4 /* OptimoveSDK */,
 				459F410B2AF54C86006BAEE9 /* SwiftPrettyPrint */,
-				655B5A682B17AA5500C59000 /* Adjust */,
 				655B5A6A2B17AA5500C59000 /* Criteo */,
 				655B5A6C2B17AA5500C59000 /* Sociomantic */,
 				655B5A6E2B17AA5500C59000 /* Trademob */,
@@ -11726,7 +11721,6 @@
 				A9C5AC1E2ACDB30100C3FD56 /* OptimoveNotificationServiceExtension */,
 				A9C5AC202ACDB30100C3FD56 /* OptimoveSDK */,
 				459F410D2AF54D5E006BAEE9 /* SwiftPrettyPrint */,
-				6565745B2B1E0E5D00A2ADF9 /* Adjust */,
 			);
 			productName = Sportsbook;
 			productReference = 45F6BE372AB3732C00C81DE1 /* Betsson UAT.app */;
@@ -19247,7 +19241,7 @@
 				CODE_SIGN_ENTITLEMENTS = "Clients/Betsson/Betsson-PROD.entitlements";
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Manual;
-				CURRENT_PROJECT_VERSION = 10704;
+				CURRENT_PROJECT_VERSION = 10800;
 				DEVELOPMENT_TEAM = QN2DYX5K4M;
 				INFOPLIST_FILE = "$(SRCROOT)/Clients/Betsson/Misc-PROD/Betsson-PROD-Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 13.0;
@@ -19255,7 +19249,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 1.0.7;
+				MARKETING_VERSION = 1.0.8;
 				OTHER_LDFLAGS = "$(inherited)";
 				PRODUCT_BUNDLE_IDENTIFIER = fr.betsson.ios.app;
 				PRODUCT_NAME = Betsson;
@@ -19276,7 +19270,7 @@
 				CODE_SIGN_ENTITLEMENTS = "Clients/Betsson/Betsson-PROD.entitlements";
 				CODE_SIGN_IDENTITY = "Apple Distribution";
 				CODE_SIGN_STYLE = Manual;
-				CURRENT_PROJECT_VERSION = 10704;
+				CURRENT_PROJECT_VERSION = 10800;
 				DEVELOPMENT_TEAM = QN2DYX5K4M;
 				INFOPLIST_FILE = "$(SRCROOT)/Clients/Betsson/Misc-PROD/Betsson-PROD-Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 13.0;
@@ -19284,7 +19278,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 1.0.7;
+				MARKETING_VERSION = 1.0.8;
 				OTHER_LDFLAGS = "$(inherited)";
 				PRODUCT_BUNDLE_IDENTIFIER = fr.betsson.ios.app;
 				PRODUCT_NAME = Betsson;
@@ -21282,11 +21276,6 @@
 			package = 45F805912A05357E005296E0 /* XCRemoteSwiftPackageReference "lottie-spm" */;
 			productName = Lottie;
 		};
-		655B5A682B17AA5500C59000 /* Adjust */ = {
-			isa = XCSwiftPackageProductDependency;
-			package = 655B5A672B17AA5500C59000 /* XCRemoteSwiftPackageReference "ios_sdk" */;
-			productName = Adjust;
-		};
 		655B5A6A2B17AA5500C59000 /* Criteo */ = {
 			isa = XCSwiftPackageProductDependency;
 			package = 655B5A672B17AA5500C59000 /* XCRemoteSwiftPackageReference "ios_sdk" */;
@@ -21306,11 +21295,6 @@
 			isa = XCSwiftPackageProductDependency;
 			package = 655B5A672B17AA5500C59000 /* XCRemoteSwiftPackageReference "ios_sdk" */;
 			productName = WebBridge;
-		};
-		6565745B2B1E0E5D00A2ADF9 /* Adjust */ = {
-			isa = XCSwiftPackageProductDependency;
-			package = 655B5A672B17AA5500C59000 /* XCRemoteSwiftPackageReference "ios_sdk" */;
-			productName = Adjust;
 		};
 		A96FAEE029829CCB00A0751F /* Adyen */ = {
 			isa = XCSwiftPackageProductDependency;
