@@ -119,7 +119,12 @@ class MatchWidgetCollectionViewCell: UICollectionViewCell {
     // Boosted odds View
     private var boostedTopRightCornerBaseView = UIView()
     private var boostedTopRightCornerLabel = UILabel()
-
+    
+    // Market name view
+    @IBOutlet private weak var marketNameView: UIView!
+    @IBOutlet private weak var marketNameInnerView: UIView!
+    @IBOutlet private weak var marketNameLabel: UILabel!
+    
     @IBOutlet private weak var homeBoostedOddValueBaseView: UIView!
     @IBOutlet private weak var homeNewBoostedOddValueLabel: UILabel!
     @IBOutlet private weak var homeBoostedOddArrowView: BoostedArrowView!
@@ -161,6 +166,11 @@ class MatchWidgetCollectionViewCell: UICollectionViewCell {
     @IBOutlet private weak var teamsHeightConstraint: NSLayoutConstraint!
     @IBOutlet private weak var resultCenterConstraint: NSLayoutConstraint!
     @IBOutlet private weak var buttonsHeightConstraint: NSLayoutConstraint!
+    
+    @IBOutlet weak var marketBottomConstraint: NSLayoutConstraint!
+    @IBOutlet weak var marketTopConstraint: NSLayoutConstraint!
+    @IBOutlet weak var participantsBottomConstraint: NSLayoutConstraint!
+    
 
     private var cachedCardsStyle: CardsStyle?
     //
@@ -522,6 +532,10 @@ class MatchWidgetCollectionViewCell: UICollectionViewCell {
         // Outright
         self.outrightSeeLabel.text = localized("view_competition_markets")
         self.outrightSeeLabel.font = AppFont.with(type: .semibold, size: 12)
+        
+        // Market view and label
+        self.marketNameLabel.text = ""
+        self.marketNameLabel.font = AppFont.with(type: .bold, size: 8)
 
         // Live add ons to the base view
         // Gradient Border
@@ -644,6 +658,8 @@ class MatchWidgetCollectionViewCell: UICollectionViewCell {
         self.locationFlagImageView.layer.borderWidth = 0.5
 
         self.topImageView.roundCorners(corners: [.topRight, .topLeft], radius: 9)
+        
+        self.marketNameInnerView.layer.cornerRadius = self.marketNameInnerView.frame.size.height / 2
 
     }
 
@@ -695,6 +711,8 @@ class MatchWidgetCollectionViewCell: UICollectionViewCell {
 
         self.matchTimeLabel.text = ""
         self.resultLabel.text = ""
+        
+        self.marketNameLabel.text = ""
 
         //
         self.homeOddTitleLabel.text = "-"
@@ -987,6 +1005,12 @@ class MatchWidgetCollectionViewCell: UICollectionViewCell {
             self.liveTipLabel.textColor = UIColor.App.buttonTextPrimary
             self.dateLabel.textColor = UIColor.App.textSecondary
             self.timeLabel.textColor = UIColor.App.textPrimary
+            
+            self.marketNameView.backgroundColor = .clear
+            
+            self.marketNameInnerView.backgroundColor = UIColor.App.highlightPrimary
+            
+            self.marketNameLabel.textColor = UIColor.App.buttonTextPrimary
 
             self.homeBaseView.layer.borderColor = UIColor.App.buttonTextPrimary.cgColor
             self.drawBaseView.layer.borderColor = UIColor.App.buttonTextPrimary.cgColor
@@ -1033,6 +1057,26 @@ class MatchWidgetCollectionViewCell: UICollectionViewCell {
 
         }
 
+    }
+    
+    private func adjustMarketNameView(isShown: Bool) {
+        
+        if isShown {
+            self.marketNameView.isHidden = false
+            self.marketTopConstraint.isActive = true
+            self.marketBottomConstraint.isActive = true
+            self.participantsBottomConstraint.isActive = false
+            
+            self.marketNameLabel.text = self.viewModel?.match.markets.first?.name
+        }
+        else {
+            self.marketNameView.isHidden = true
+            self.marketTopConstraint.isActive = false
+            self.marketBottomConstraint.isActive = false
+            self.participantsBottomConstraint.isActive = true
+            
+            self.marketNameLabel.text = ""
+        }
     }
 
     private func adjustDesignToCardStyle() {
@@ -1137,6 +1181,14 @@ class MatchWidgetCollectionViewCell: UICollectionViewCell {
 
             self.cashbackImageViewBaseTrailingConstraint.isActive = false
             self.cashbackImageViewLiveTrailingConstraint.isActive = true
+            
+            switch StyleHelper.cardsStyleActive() {
+            case .small:
+                self.adjustMarketNameView(isShown: false)
+            case .normal:
+                self.adjustMarketNameView(isShown: true)
+            }
+            
         }
         else {
             self.liveMatchDotBaseView.isHidden = true
@@ -1144,6 +1196,9 @@ class MatchWidgetCollectionViewCell: UICollectionViewCell {
 
             self.cashbackImageViewBaseTrailingConstraint.isActive = true
             self.cashbackImageViewLiveTrailingConstraint.isActive = false
+            
+            self.adjustMarketNameView(isShown: false)
+
         }
 
         self.liveMatchDotImageView.isHidden = true

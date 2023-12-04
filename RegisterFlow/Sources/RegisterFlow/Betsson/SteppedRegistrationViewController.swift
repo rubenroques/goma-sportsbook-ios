@@ -253,6 +253,7 @@ public class SteppedRegistrationViewModel {
 public class SteppedRegistrationViewController: UIViewController {
 
     public var didRegisteredUserAction: (UserRegisterEnvelop) -> Void = { _ in }
+    public var sendRegisterEventAction: (() -> Void)?
 
     private lazy var topSafeAreaView: UIView = Self.createTopSafeAreaView()
 
@@ -589,9 +590,9 @@ public extension SteppedRegistrationViewController {
         }
 
         // Optimove initiate register step
-//        if currentPage == 0 {
-//            Optimove.shared.reportScreenVisit(screenTitle: "registerStart")
-//        }
+        if currentPage == 0 {
+            self.sendRegisterEventAction?()
+        }
 
         let nextRegisterStepView = self.registerStepViews[safe: currentPage+1]
 

@@ -8,6 +8,7 @@ import AdyenComponents
 import HeaderTextField
 import LocalAuthentication
 import OptimoveSDK
+import Adjust
 
 class LoginViewController: UIViewController {
 
@@ -345,9 +346,21 @@ class LoginViewController: UIViewController {
             if let nickname = registeredUser.nickname, let password = registeredUser.password {
                 // Optimove complete register
                 Optimove.shared.reportScreenVisit(screenTitle: "sign_up")
+                
+                // Adjust
+                let event = ADJEvent(eventToken: "p6p4xw")
+                Adjust.trackEvent(event)
+                
                 self?.triggerLoginAfterRegister(username: nickname, password: password, withUserConsents: registeredUser.acceptedMarketing)
                 self?.showRegisterFeedbackViewController(onNavigationController: registerNavigationController)
             }
+        }
+        
+        steppedRegistrationViewController.sendRegisterEventAction = { [weak self] in
+            Optimove.shared.reportScreenVisit(screenTitle: "register_start")
+            
+            let event = ADJEvent(eventToken: "x9jrel")
+            Adjust.trackEvent(event)
         }
 
         if !animated {

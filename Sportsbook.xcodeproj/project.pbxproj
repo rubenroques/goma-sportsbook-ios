@@ -5102,6 +5102,7 @@
 		655B5A6D2B17AA5500C59000 /* Sociomantic in Frameworks */ = {isa = PBXBuildFile; productRef = 655B5A6C2B17AA5500C59000 /* Sociomantic */; };
 		655B5A6F2B17AA5500C59000 /* Trademob in Frameworks */ = {isa = PBXBuildFile; productRef = 655B5A6E2B17AA5500C59000 /* Trademob */; };
 		655B5A712B17AA5500C59000 /* WebBridge in Frameworks */ = {isa = PBXBuildFile; productRef = 655B5A702B17AA5500C59000 /* WebBridge */; };
+		6565745C2B1E0E5D00A2ADF9 /* Adjust in Frameworks */ = {isa = PBXBuildFile; productRef = 6565745B2B1E0E5D00A2ADF9 /* Adjust */; };
 		A90229A228AFD41100972863 /* QuickBetViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A902299F28AFD41100972863 /* QuickBetViewController.swift */; };
 		A90229A328AFD41100972863 /* QuickBetViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A902299F28AFD41100972863 /* QuickBetViewController.swift */; };
 		A90229A428AFD41100972863 /* QuickBetViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A902299F28AFD41100972863 /* QuickBetViewController.swift */; };
@@ -8008,6 +8009,7 @@
 				45F6BD7E2AB3732C00C81DE1 /* AdyenDropIn in Frameworks */,
 				45F6BD7F2AB3732C00C81DE1 /* DictionaryCoding in Frameworks */,
 				45F6BD802AB3732C00C81DE1 /* Lottie in Frameworks */,
+				6565745C2B1E0E5D00A2ADF9 /* Adjust in Frameworks */,
 				45F6BD812AB3732C00C81DE1 /* Reachability in Frameworks */,
 				45F6BD822AB3732C00C81DE1 /* AdyenComponents in Frameworks */,
 				45F6BD832AB3732C00C81DE1 /* ZendeskChatSDK in Frameworks */,
@@ -11724,6 +11726,7 @@
 				A9C5AC1E2ACDB30100C3FD56 /* OptimoveNotificationServiceExtension */,
 				A9C5AC202ACDB30100C3FD56 /* OptimoveSDK */,
 				459F410D2AF54D5E006BAEE9 /* SwiftPrettyPrint */,
+				6565745B2B1E0E5D00A2ADF9 /* Adjust */,
 			);
 			productName = Sportsbook;
 			productReference = 45F6BE372AB3732C00C81DE1 /* Betsson UAT.app */;
@@ -21303,6 +21306,11 @@
 			isa = XCSwiftPackageProductDependency;
 			package = 655B5A672B17AA5500C59000 /* XCRemoteSwiftPackageReference "ios_sdk" */;
 			productName = WebBridge;
+		};
+		6565745B2B1E0E5D00A2ADF9 /* Adjust */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 655B5A672B17AA5500C59000 /* XCRemoteSwiftPackageReference "ios_sdk" */;
+			productName = Adjust;
 		};
 		A96FAEE029829CCB00A0751F /* Adyen */ = {
 			isa = XCSwiftPackageProductDependency;

@@ -349,6 +349,21 @@ extension FooterResponsibleGamingView {
         label.font = AppFont.with(type: .semibold, size: 10)
         label.translatesAutoresizingMaskIntoConstraints = false
         label.textColor = .white
+        // Create attributed text with padding
+        
+        let paragraphStyle = NSMutableParagraphStyle()
+        paragraphStyle.alignment = .center
+
+        let attributedString = NSAttributedString(
+            string: localized("gambling_warning_footer_link"),
+            attributes: [
+                NSAttributedString.Key.paragraphStyle: paragraphStyle,
+                NSAttributedString.Key.font: AppFont.with(type: .semibold, size: 10),
+                NSAttributedString.Key.baselineOffset: -1
+            ]
+        )
+        
+        label.attributedText = attributedString
         return label
     }
 
