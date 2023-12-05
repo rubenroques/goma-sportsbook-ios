@@ -106,7 +106,21 @@ class MatchLineTableCellViewModel {
                     for secundaryMarket in secundaryMarketsForSport.markets {
                         print("secundaryMarket: ", secundaryMarket)
                         
-                        if let line = secundaryMarket.line {
+                        let handicaps = updatedMatch.markets.filter({
+                            ($0.marketTypeId ?? "") == "14"
+                        })
+                        
+                        let filteredHandicaps = handicaps.filter({
+                            "\(($0.nameDigit1 ?? -99))" == "-1.0"
+                        })
+                        
+                        if var line = secundaryMarket.line {
+                            
+                            // We have to make sure that when we get -1, 1, etc, the string to compare must be like '-1.0', '1.0' to found correct market
+                            if let lineInt = Int(line) {
+                                line = "\(Double(lineInt))"
+                            }
+                            
                             if var foundMarket = updatedMatch.markets.first(where: { market in
                                 (market.marketTypeId ?? "") == secundaryMarket.typeId &&
                                 line == String(market.nameDigit1 ?? -99.0)

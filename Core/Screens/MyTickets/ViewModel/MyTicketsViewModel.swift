@@ -65,6 +65,8 @@ class MyTicketsViewModel: NSObject {
     
     private var hasNextPage = true
 
+    private let dateFormatter = DateFormatter()
+
     // Cached view models
     var cachedViewModels: [String: MyTicketCellViewModel] = [:]
     //
@@ -195,8 +197,24 @@ class MyTicketsViewModel: NSObject {
         if !isNextPage {
             self.isLoadingTickets.send(true)
         }
+        
+        let calendar = Calendar.current
+        var currentDate = Date()
+        
+        var startDate = ""
+        var endDate = ""
 
-        Env.servicesProvider.getResolvedBetsHistory(pageIndex: page)
+        if let oneYearAgo = calendar.date(byAdding: .year, value: -1, to: currentDate) {
+            let dateFormatter = DateFormatter()
+            dateFormatter.dateFormat = "yyyy-MM-dd"
+            
+            startDate = self.getDateString(date: oneYearAgo)
+            endDate = self.getDateString(date: currentDate, isEndDate: true)
+        } else {
+            print("Error calculating one year ago")
+        }
+
+        Env.servicesProvider.getResolvedBetsHistory(pageIndex: page, startDate: startDate, endDate: endDate)
             .receive(on: DispatchQueue.main)
             .sink { [weak self] completion in
                 if case let .failure(error) = completion {
@@ -237,8 +255,24 @@ class MyTicketsViewModel: NSObject {
         if !isNextPage {
             self.isLoadingTickets.send(true)
         }
+        
+        let calendar = Calendar.current
+        var currentDate = Date()
+        
+        var startDate = ""
+        var endDate = ""
 
-        Env.servicesProvider.getOpenBetsHistory(pageIndex: page)
+        if let oneYearAgo = calendar.date(byAdding: .year, value: -1, to: currentDate) {
+            let dateFormatter = DateFormatter()
+            dateFormatter.dateFormat = "yyyy-MM-dd"
+            
+            startDate = self.getDateString(date: oneYearAgo)
+            endDate = self.getDateString(date: currentDate, isEndDate: true)
+        } else {
+            print("Error calculating one year ago")
+        }
+        
+        Env.servicesProvider.getOpenBetsHistory(pageIndex: page, startDate: startDate, endDate: endDate)
             .receive(on: DispatchQueue.main)
             .sink { [weak self] completion in
                 if case let .failure(error) = completion {
@@ -279,8 +313,24 @@ class MyTicketsViewModel: NSObject {
         if !isNextPage {
             self.isLoadingTickets.send(true)
         }
+        
+        let calendar = Calendar.current
+        var currentDate = Date()
+        
+        var startDate = ""
+        var endDate = ""
 
-        Env.servicesProvider.getWonBetsHistory(pageIndex: page)
+        if let oneYearAgo = calendar.date(byAdding: .year, value: -1, to: currentDate) {
+            let dateFormatter = DateFormatter()
+            dateFormatter.dateFormat = "yyyy-MM-dd"
+            
+            startDate = self.getDateString(date: oneYearAgo)
+            endDate = self.getDateString(date: currentDate, isEndDate: true)
+        } else {
+            print("Error calculating one year ago")
+        }
+
+        Env.servicesProvider.getWonBetsHistory(pageIndex: page, startDate: startDate, endDate: endDate)
             .receive(on: DispatchQueue.main)
             .sink { [weak self] completion in
                 if case let .failure(error) = completion {
@@ -326,6 +376,39 @@ class MyTicketsViewModel: NSObject {
             }
             .store(in: &cancellables)
 
+    }
+    
+    private func getDateString(date: Date, isEndDate: Bool = false) -> String {
+
+        // Set initial and end date hours
+        var calendar = Calendar.current
+        let components: Set<Calendar.Component> = [.year, .month, .day]
+
+        var finalDate = date
+
+        if !isEndDate {
+            // Get the date with time components reset to 00:00:00
+            if let resetDate = calendar.date(bySettingHour: 0, minute: 0, second: 0, of: date) {
+                finalDate = resetDate
+
+            } else {
+                print("Failed to reset to start date.")
+            }
+        }
+        else {
+            if let resetDate = calendar.date(bySettingHour: 23, minute: 59, second: 59, of: date) {
+                finalDate = resetDate
+
+            } else {
+                print("Failed to reset to end date.")
+            }
+        }
+
+        self.dateFormatter.dateFormat = "yyyy-MM-dd'T'HH:mm:ss"
+
+        let dateString = self.dateFormatter.string(from: finalDate).appending(".000")
+
+        return dateString
     }
 
     func refresh() {
