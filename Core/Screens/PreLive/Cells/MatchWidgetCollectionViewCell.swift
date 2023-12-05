@@ -172,7 +172,14 @@ class MatchWidgetCollectionViewCell: UICollectionViewCell {
     @IBOutlet weak var marketHeightConstraint: NSLayoutConstraint!
     @IBOutlet weak var participantsBottomConstraint: NSLayoutConstraint!
     
-
+    @IBOutlet weak var homeCenterViewConstraint: NSLayoutConstraint!
+    @IBOutlet weak var homeResultCenterViewConstraint: NSLayoutConstraint!
+    @IBOutlet weak var awayCenterViewConstraint: NSLayoutConstraint!
+    @IBOutlet weak var awayResultCenterViewConstraint: NSLayoutConstraint!
+    
+    @IBOutlet weak var homeTrailingConstraint: NSLayoutConstraint!
+    @IBOutlet weak var awayLeadingConstraint: NSLayoutConstraint!
+    
     private var cachedCardsStyle: CardsStyle?
     //
     @IBOutlet private weak var mainContentBaseView: UIView!
@@ -1070,6 +1077,16 @@ class MatchWidgetCollectionViewCell: UICollectionViewCell {
             //self.participantsBottomConstraint.isActive = false
             
             self.marketNameLabel.text = self.viewModel?.match.markets.first?.name
+            
+            self.homeCenterViewConstraint.isActive = false
+            self.homeResultCenterViewConstraint.isActive = true
+            
+            self.awayCenterViewConstraint.isActive = false
+            
+            self.awayResultCenterViewConstraint.isActive = true
+            
+            self.homeTrailingConstraint.constant = 20
+            self.awayLeadingConstraint.constant = 20
         }
         else {
             self.marketNameView.isHidden = true
@@ -1079,6 +1096,16 @@ class MatchWidgetCollectionViewCell: UICollectionViewCell {
             //self.participantsBottomConstraint.isActive = true
             
             self.marketNameLabel.text = ""
+            
+            self.homeCenterViewConstraint.isActive = true
+            self.homeResultCenterViewConstraint.isActive = false
+            
+            self.awayCenterViewConstraint.isActive = true
+            
+            self.awayResultCenterViewConstraint.isActive = false
+            
+            self.homeTrailingConstraint.constant = 10
+            self.awayLeadingConstraint.constant = 10
         }
         
         self.setNeedsLayout()
@@ -1182,7 +1209,7 @@ class MatchWidgetCollectionViewCell: UICollectionViewCell {
         }
 
         if viewModel.isLiveMatch {
-            self.liveMatchDotBaseView.isHidden = false
+            self.liveMatchDotBaseView.isHidden = true
             self.liveTipView.isHidden = false
 
             self.cashbackImageViewBaseTrailingConstraint.isActive = false
@@ -1301,7 +1328,7 @@ class MatchWidgetCollectionViewCell: UICollectionViewCell {
                 self.matchTimeLabel.text = liveDataViewModel.matchTimeDetails
 
                 if liveDataViewModel.isLiveMatch {
-                    self.liveMatchDotBaseView.isHidden = false
+                    self.liveMatchDotBaseView.isHidden = true
                 }
                 else {
                     self.liveMatchDotBaseView.isHidden = true

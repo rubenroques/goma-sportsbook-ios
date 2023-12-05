@@ -571,13 +571,21 @@
                                                     <constraint firstItem="rwv-VC-F8F" firstAttribute="leading" secondItem="0C8-cR-9rM" secondAttribute="trailing" constant="10" id="KEd-Rf-vlw"/>
                                                     <constraint firstAttribute="trailing" secondItem="rwv-VC-F8F" secondAttribute="trailing" id="Ll5-Dk-XAf"/>
                                                     <constraint firstItem="jak-MM-0V4" firstAttribute="leading" secondItem="D8R-G1-Yk3" secondAttribute="leading" id="Rzd-jP-jeT"/>
+                                                    <constraint firstItem="jak-MM-0V4" firstAttribute="centerY" secondItem="iph-Xc-owq" secondAttribute="centerY" id="TIr-Lx-HgP"/>
                                                     <constraint firstAttribute="height" relation="greaterThanOrEqual" constant="67" id="WkJ-AG-pI4"/>
                                                     <constraint firstItem="rwv-VC-F8F" firstAttribute="top" secondItem="D8R-G1-Yk3" secondAttribute="top" constant="4" id="aIx-bo-x7K"/>
                                                     <constraint firstItem="rwv-VC-F8F" firstAttribute="centerY" secondItem="D8R-G1-Yk3" secondAttribute="centerY" id="d3E-63-Daf"/>
                                                     <constraint firstItem="jak-MM-0V4" firstAttribute="top" secondItem="D8R-G1-Yk3" secondAttribute="top" constant="4" id="eLH-bI-eAm"/>
                                                     <constraint firstItem="iph-Xc-owq" firstAttribute="centerX" secondItem="D8R-G1-Yk3" secondAttribute="centerX" id="eih-VX-8b9"/>
                                                     <constraint firstItem="0C8-cR-9rM" firstAttribute="leading" secondItem="jak-MM-0V4" secondAttribute="trailing" constant="10" id="gh6-nU-IiK"/>
+                                                    <constraint firstItem="rwv-VC-F8F" firstAttribute="centerY" secondItem="iph-Xc-owq" secondAttribute="centerY" id="oIp-M4-OEm"/>
                                                 </constraints>
+                                                <variation key="default">
+                                                    <mask key="constraints">
+                                                        <exclude reference="TIr-Lx-HgP"/>
+                                                        <exclude reference="oIp-M4-OEm"/>
+                                                    </mask>
+                                                </variation>
                                             </view>
                                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="rDf-xB-CUD">
                                                 <rect key="frame" x="12" y="32" width="380" height="105"/>
@@ -723,12 +731,15 @@
                 <outlet property="awayBaseView" destination="hqr-8r-9MW" id="x5D-bW-FeG"/>
                 <outlet property="awayBoostedOddArrowView" destination="eaV-UD-93W" id="WUa-oX-j4k"/>
                 <outlet property="awayBoostedOddValueBaseView" destination="znd-6M-sgl" id="HLd-HH-BeA"/>
+                <outlet property="awayCenterViewConstraint" destination="d3E-63-Daf" id="JAo-bN-iP6"/>
                 <outlet property="awayDownChangeOddValueImage" destination="zZE-cC-AJK" id="njp-iO-AdV"/>
+                <outlet property="awayLeadingConstraint" destination="KEd-Rf-vlw" id="yCV-o8-5pp"/>
                 <outlet property="awayNewBoostedOddValueLabel" destination="Kfj-TM-Gp4" id="4vl-2D-B2L"/>
                 <outlet property="awayOddTitleLabel" destination="zhr-Li-prE" id="Ana-Ag-1sA"/>
                 <outlet property="awayOddValueLabel" destination="inY-A0-OM8" id="J9v-1d-qqR"/>
                 <outlet property="awayOldBoostedOddValueLabel" destination="esH-Iu-I2V" id="2UT-Sd-kci"/>
                 <outlet property="awayParticipantNameLabel" destination="rwv-VC-F8F" id="Zum-Ch-kdM"/>
+                <outlet property="awayResultCenterViewConstraint" destination="oIp-M4-OEm" id="SG3-Sx-gUk"/>
                 <outlet property="awayUpChangeOddValueImage" destination="Kfa-Lg-U8s" id="mci-Md-HVd"/>
                 <outlet property="backgroundImageView" destination="HO2-M2-haM" id="uD2-ZE-BEn"/>
                 <outlet property="baseView" destination="EHX-PA-4qK" id="RP6-aa-YWB"/>
@@ -754,12 +765,15 @@
                 <outlet property="homeBaseView" destination="3W6-fO-bs3" id="8Z3-gZ-lCr"/>
                 <outlet property="homeBoostedOddArrowView" destination="TxJ-Xv-aiD" id="aWL-FY-gsP"/>
                 <outlet property="homeBoostedOddValueBaseView" destination="6Eb-ZH-AaN" id="Q8D-tB-yfZ"/>
+                <outlet property="homeCenterViewConstraint" destination="GjL-gu-UQX" id="vFe-Z3-EJU"/>
                 <outlet property="homeDownChangeOddValueImage" destination="lQV-Me-9U0" id="Zs6-G9-35L"/>
                 <outlet property="homeNewBoostedOddValueLabel" destination="Rpd-wV-b4U" id="MqX-nx-6ta"/>
                 <outlet property="homeOddTitleLabel" destination="KED-Ji-mWw" id="ITU-W3-8pK"/>
                 <outlet property="homeOddValueLabel" destination="kPI-8c-DpA" id="1y9-EK-yIz"/>
                 <outlet property="homeOldBoostedOddValueLabel" destination="fZ9-QZ-7U9" id="BIh-fb-hUG"/>
                 <outlet property="homeParticipantNameLabel" destination="jak-MM-0V4" id="QTm-pu-lAd"/>
+                <outlet property="homeResultCenterViewConstraint" destination="TIr-Lx-HgP" id="glP-hY-zpE"/>
+                <outlet property="homeTrailingConstraint" destination="gh6-nU-IiK" id="LRN-cv-753"/>
                 <outlet property="homeUpChangeOddValueImage" destination="Sdg-bV-HK8" id="BrH-s1-Nfu"/>
                 <outlet property="leadingMarginSpaceConstraint" destination="4Ve-ok-zLQ" id="VnT-oc-VH7"/>
                 <outlet property="liveMatchDotBaseView" destination="USx-ge-MMc" id="2Rx-Ar-TBa"/>
