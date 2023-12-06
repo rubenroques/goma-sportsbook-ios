@@ -90,7 +90,7 @@ extension MakeYourBetTableViewCell {
 
     private static func createImageView() -> UIImageView {
         let view = UIImageView()
-        view.image = UIImage(named: "bet_swipe_banner_v2")
+        view.image = UIImage(named: "combi_express_banner")
         view.translatesAutoresizingMaskIntoConstraints = false
         view.contentMode = .scaleAspectFit
         view.backgroundColor = .clear
