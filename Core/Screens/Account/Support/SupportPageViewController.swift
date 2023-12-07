@@ -157,6 +157,10 @@ class SupportPageViewController: UIViewController {
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
+        
+        if self.isRootModal {
+            self.backButton.setImage(UIImage(named: "arrow_close_icon"), for: .normal)
+        }
     }
 
     // MARK: - Layout and Theme
@@ -378,7 +382,12 @@ class SupportPageViewController: UIViewController {
     // MARK: - Actions
     
     @objc func didTapBackButton() {
-        self.navigationController?.popViewController(animated: true)
+        if self.isRootModal {
+            self.presentingViewController?.dismiss(animated: true)
+        }
+        else {
+            self.navigationController?.popViewController(animated: true)
+        }
     }
 
     @objc func didTapHelpButton() {

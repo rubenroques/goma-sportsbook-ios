@@ -74,6 +74,15 @@ class PromotionsWebViewController: UIViewController {
         self.webView.load(URLRequest(url: self.url))
 
     }
+    
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        
+        if self.isRootModal {
+            self.backButton.setImage(UIImage(named: "arrow_close_icon"), for: .normal)
+        }
+        
+    }
 
     // MARK: - Layout and Theme
     override func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {
@@ -119,8 +128,12 @@ class PromotionsWebViewController: UIViewController {
             self.webView.goBack()
         }
         else {
-            self.navigationController?.popViewController(animated: true)
-        }
+            if self.isRootModal {
+                self.presentingViewController?.dismiss(animated: true)
+            }
+            else {
+                self.navigationController?.popViewController(animated: true)
+            }        }
     }
 }
 

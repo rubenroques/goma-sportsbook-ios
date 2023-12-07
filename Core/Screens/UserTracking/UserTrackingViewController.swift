@@ -76,6 +76,8 @@ class UserTrackingViewController: UIViewController {
         self.continueButton.addTarget(self, action: #selector(didTapContinueButton), for: .primaryActionTriggered)
         self.settingsButton.addTarget(self, action: #selector(didTapSettingsButton), for: .primaryActionTriggered)
         self.skipButton.addTarget(self, action: #selector(didTapSkipButton), for: .primaryActionTriggered)
+        
+        self.skipButton.isHidden = true
     }
 
     private func setupWithTheme() {
