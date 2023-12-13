@@ -567,7 +567,7 @@ class RootViewController: UIViewController {
     }
 
     func commonInit() {
-
+        
         // Top Bar
         if TargetVariables.shouldUseAlternateTopBar {
             self.topBarView.isHidden = true
@@ -577,27 +577,27 @@ class RootViewController: UIViewController {
             self.topBarView.isHidden = false
             self.topBarAlternateView.isHidden = true
         }
-
+        
         self.redrawButtonButtons()
         if let image = self.logoImageView.image {
-
+            
             let maxAllowedWidth = CGFloat(150)
             let defaultHeight = self.logoImageHeightConstraint.constant
             let ratio = image.size.height / image.size.width
             let newWidth = defaultHeight / ratio
-
+            
             if newWidth > maxAllowedWidth {
-                 let limitedHeight = maxAllowedWidth * ratio
-                 self.logoImageWidthConstraint.constant = maxAllowedWidth
-                 self.logoImageHeightConstraint.constant = limitedHeight
+                let limitedHeight = maxAllowedWidth * ratio
+                self.logoImageWidthConstraint.constant = maxAllowedWidth
+                self.logoImageHeightConstraint.constant = limitedHeight
             }
             else {
-                 self.logoImageWidthConstraint.constant = newWidth
-                 self.logoImageHeightConstraint.constant = defaultHeight
+                self.logoImageWidthConstraint.constant = newWidth
+                self.logoImageHeightConstraint.constant = defaultHeight
             }
             self.view.layoutIfNeeded()
         }
-
+        
         //
         self.homeTitleLabel.text = localized("home")
         self.sportsTitleLabel.text = localized("sports")
@@ -606,59 +606,59 @@ class RootViewController: UIViewController {
         self.sportsbookTitleLabel.text = localized("sportsbook")
         self.tipsTitleLabel.text = localized("tips")
         self.cashbackTitleLabel.text = localized("replay")
-
+        
         self.casinoBottomView.backgroundColor = UIColor.App.backgroundPrimary
-
+        
         self.casinoButtonBaseView.backgroundColor = UIColor.App.backgroundCards
         self.casinoButtonBaseView.layer.maskedCorners = [ .layerMinXMaxYCorner, .layerMinXMinYCorner]
-
+        
         self.sportsbookButtonBaseView.backgroundColor = UIColor.App.backgroundCards
         self.sportsbookButtonBaseView.layer.maskedCorners = [.layerMaxXMaxYCorner, .layerMaxXMinYCorner]
-
+        
         self.unlockAppButton.setTitle(localized("unlock_app"), for: .normal)
-
+        
         self.cancelUnlockAppButton.setTitle(localized("cancel_unlock_app"), for: .normal)
-
+        
         let homeTapGesture = UITapGestureRecognizer(target: self, action: #selector(didTapHomeTabItem))
         self.homeButtonBaseView.addGestureRecognizer(homeTapGesture)
-
+        
         let sportsTapGesture = UITapGestureRecognizer(target: self, action: #selector(didTapSportsTabItem))
         self.sportsButtonBaseView.addGestureRecognizer(sportsTapGesture)
-
+        
         let liveTapGesture = UITapGestureRecognizer(target: self, action: #selector(didTapLiveTabItem))
         self.liveButtonBaseView.addGestureRecognizer(liveTapGesture)
-
+        
         let tipsTapGesture = UITapGestureRecognizer(target: self, action: #selector(didTapTipsTabItem))
         self.tipsButtonBaseView.addGestureRecognizer(tipsTapGesture)
-
+        
         let cashbackTapgesture = UITapGestureRecognizer(target: self, action: #selector(didTapCashbackTabItem))
         self.cashbackButtonBaseView.addGestureRecognizer(cashbackTapgesture)
-
+        
         let casinoTapGesture = UITapGestureRecognizer(target: self, action: #selector(didTapCasinoTabItem))
         self.casinoButtonBaseView.addGestureRecognizer(casinoTapGesture)
-
+        
         let sportsbookTapGesture = UITapGestureRecognizer(target: self, action: #selector(didTapSportsbookIcon))
         self.sportsbookButtonBaseView.addGestureRecognizer(sportsbookTapGesture)
-
+        
         let profileTapGesture = UITapGestureRecognizer(target: self, action: #selector(didTapProfileButton))
         self.profilePictureBaseView.addGestureRecognizer(profileTapGesture)
-
+        
         let anonymousTapGesture = UITapGestureRecognizer(target: self, action: #selector(didTapAnonymousButton))
         self.anonymousUserMenuBaseView.addGestureRecognizer(anonymousTapGesture)
-
+        
         //
         self.accountValueLabel.text = localized("loading")
         self.accountValueLabel.font = AppFont.with(type: .bold, size: 12)
-
+        
         let accountValueTapGesture = UITapGestureRecognizer(target: self, action: #selector(didTapAccountValue))
         self.accountValueView.addGestureRecognizer(accountValueTapGesture)
-
+        
         //
         self.loginButton.setTitle(localized("login"), for: .normal)
         self.loginButton.titleLabel?.font = AppFont.with(type: AppFont.AppFontType.bold, size: 13)
-
+        
         self.notificationCounterLabel.font = AppFont.with(type: .semibold, size: 12)
-
+        
         //
         if TargetVariables.hasFeatureEnabled(feature: .casino) {
             self.casinoButtonBaseView.isHidden = false
@@ -666,7 +666,7 @@ class RootViewController: UIViewController {
         else {
             self.casinoButtonBaseView.isHidden = true
         }
-
+        
         //
         if TargetVariables.hasFeatureEnabled(feature: .tips) {
             self.tipsButtonBaseView.isHidden = false
@@ -674,46 +674,46 @@ class RootViewController: UIViewController {
         else {
             self.tipsButtonBaseView.isHidden = true
         }
-
+        
         if TargetVariables.hasFeatureEnabled(feature: .cashback) {
             self.cashbackButtonBaseView.isHidden = false
         }
         else {
             self.cashbackButtonBaseView.isHidden = true
-
+            
         }
-
+        
         //
         self.view.insertSubview(self.topGradientBackgroundView, belowSubview: self.topSafeAreaView)
-
+        
         self.mainContainerView.insertSubview(self.mainContainerGradientView, at: 0)
         self.mainContainerView.insertSubview(self.bottomBackgroundView, belowSubview: self.tabBarView)
-
+        
         NSLayoutConstraint.activate([
             self.topGradientBackgroundView.leadingAnchor.constraint(equalTo: self.view.leadingAnchor),
             self.topGradientBackgroundView.trailingAnchor.constraint(equalTo: self.view.trailingAnchor),
             self.topGradientBackgroundView.topAnchor.constraint(equalTo: self.topSafeAreaView.topAnchor),
             self.topGradientBackgroundView.bottomAnchor.constraint(equalTo: self.topBarView.bottomAnchor),
-
+            
             self.mainContainerGradientView.leadingAnchor.constraint(equalTo: self.mainContainerView.leadingAnchor),
             self.mainContainerGradientView.trailingAnchor.constraint(equalTo: self.mainContainerView.trailingAnchor),
             self.mainContainerGradientView.topAnchor.constraint(equalTo: self.mainContainerView.topAnchor),
             self.mainContainerGradientView.bottomAnchor.constraint(equalTo: self.view.bottomAnchor),
-
+            
             self.bottomBackgroundView.leadingAnchor.constraint(equalTo: self.bottomSafeAreaView.leadingAnchor),
             self.bottomBackgroundView.trailingAnchor.constraint(equalTo: self.bottomSafeAreaView.trailingAnchor),
             self.bottomBackgroundView.topAnchor.constraint(equalTo: self.tabBarView.topAnchor),
             self.bottomBackgroundView.bottomAnchor.constraint(equalTo: self.bottomSafeAreaView.bottomAnchor),
         ])
-
+        
         self.mainContainerGradientLayer.locations = [0.0, 1.0]
         self.mainContainerGradientView.backgroundColor = .white
         self.mainContainerGradientView.layer.insertSublayer(self.mainContainerGradientLayer, at: 0)
-
+        
         self.topBackgroundGradientLayer.locations = [0.0, 0.41, 1.0]
         self.topBackgroundGradientLayer.startPoint = CGPoint(x: 0.0, y: 0.5)
         self.topBackgroundGradientLayer.endPoint = CGPoint(x: 1.0, y: 0.4)
-
+        
         if TargetVariables.shouldUseGradientBackgrounds {
             self.topGradientBackgroundView.backgroundColor = .white
             self.topGradientBackgroundView.layer.insertSublayer(self.topBackgroundGradientLayer, at: 0)
@@ -721,18 +721,18 @@ class RootViewController: UIViewController {
         else {
             self.topGradientBackgroundView.backgroundColor = .clear
         }
-
+        
         //
         if TargetVariables.shouldUserBlurEffectTabBar {
-
+            
             self.bottomBackgroundView.backgroundColor = .clear
-
+            
             let blurEffect = UIBlurEffect(style: .regular)
             let blurEffectView = UIVisualEffectView(effect: blurEffect)
             blurEffectView.translatesAutoresizingMaskIntoConstraints = false
-
+            
             self.bottomBackgroundView.insertSubview(blurEffectView, at: 0)
-
+            
             NSLayoutConstraint.activate([
                 blurEffectView.leadingAnchor.constraint(equalTo: self.bottomBackgroundView.leadingAnchor),
                 blurEffectView.trailingAnchor.constraint(equalTo: self.bottomBackgroundView.trailingAnchor),
@@ -740,7 +740,7 @@ class RootViewController: UIViewController {
                 blurEffectView.bottomAnchor.constraint(equalTo: self.bottomBackgroundView.bottomAnchor),
             ])
         }
-
+         
     }
 
     func setupWithTheme() {
@@ -937,6 +937,185 @@ class RootViewController: UIViewController {
         let matchDetailsViewController = MatchDetailsViewController(viewModel: MatchDetailsViewModel(matchId: matchId))
 
         self.present(Router.navigationController(with: matchDetailsViewController), animated: true, completion: nil)
+    }
+    
+    func openCompetitionDetail(competitionId: String) {
+        
+        let sport = Sport(id: "", name: "Sport", alphaId: "", numericId: "", showEventCategory: false, liveEventsCount: 0)
+        let competitionDetailViewModel = CompetitionDetailsViewModel(competitionsIds: [competitionId], sport: sport)
+        
+        let competitionDetailViewController = CompetitionDetailsViewController(viewModel: competitionDetailViewModel)
+        
+        let navigationController = Router.navigationController(with: competitionDetailViewController)
+
+        self.present(navigationController, animated: true, completion: nil)
+    }
+    
+    func openContactSettings() {
+        
+        if Env.userSessionStore.isUserLogged() {
+            let contactSettingsViewModel = ContactSettingsViewModel()
+            
+            let contactSettingsViewController = ContactSettingsViewController(viewModel: contactSettingsViewModel)
+            
+            let navigationController = Router.navigationController(with: contactSettingsViewController)
+            
+            self.present(navigationController, animated: true, completion: nil)
+        }
+        else {
+            
+            let loginViewController = LoginViewController()
+            
+            let navigationViewController = Router.navigationController(with: loginViewController)
+            
+            loginViewController.hasPendingRedirect = true
+            
+            loginViewController.needsRedirect = { [weak self] in
+                self?.openContactSettings()
+            }
+            
+            self.present(navigationViewController, animated: true, completion: nil)
+        }
+    }
+    
+    func openBetswipe() {
+        
+        self.homeViewController.openBetSwipe()
+    }
+    
+    func openDeposit() {
+        // LOGGED NEEDED
+        if Env.userSessionStore.isUserLogged() {
+            let depositViewController = DepositViewController()
+            
+            depositViewController.shouldRefreshUserWallet = {
+                Env.userSessionStore.refreshUserWallet()
+            }
+            
+            let navigationController = Router.navigationController(with: depositViewController)
+            
+            self.present(navigationController, animated: true, completion: nil)
+        }
+        else {
+            
+            let loginViewController = LoginViewController()
+            
+            let navigationViewController = Router.navigationController(with: loginViewController)
+            
+            loginViewController.hasPendingRedirect = true
+            
+            loginViewController.needsRedirect = { [weak self] in
+                self?.openDeposit()
+            }
+            
+            self.present(navigationViewController, animated: true, completion: nil)
+        }
+    }
+    
+    func openBonus() {
+        if Env.userSessionStore.isUserLogged() {
+            let bonusRootViewController = BonusRootViewController(viewModel: BonusRootViewModel(startTabIndex: 0))
+            
+            let navigationController = Router.navigationController(with: bonusRootViewController)
+            
+            self.present(navigationController, animated: true, completion: nil)
+        }
+        else {
+            
+            let loginViewController = LoginViewController()
+            
+            let navigationViewController = Router.navigationController(with: loginViewController)
+            
+            loginViewController.hasPendingRedirect = true
+            
+            loginViewController.needsRedirect = { [weak self] in
+                self?.openBonus()
+            }
+            
+            self.present(navigationViewController, animated: true, completion: nil)
+        }
+    }
+    
+    func openDocuments() {
+        if Env.userSessionStore.isUserLogged() {
+            let documentsRootViewModel = DocumentsRootViewModel()
+            
+            let documentsRootViewController = DocumentsRootViewController(viewModel: documentsRootViewModel)
+            
+            let navigationController = Router.navigationController(with: documentsRootViewController)
+            
+            self.present(navigationController, animated: true, completion: nil)
+        }
+        else {
+            
+            let loginViewController = LoginViewController()
+            
+            let navigationViewController = Router.navigationController(with: loginViewController)
+            
+            loginViewController.hasPendingRedirect = true
+            
+            loginViewController.needsRedirect = { [weak self] in
+                self?.openDocuments()
+            }
+            
+            self.present(navigationViewController, animated: true, completion: nil)
+        }
+
+    }
+    
+    func openCustomerSupport() {
+        
+        let supportViewController = SupportPageViewController(viewModel: SupportPageViewModel())
+        
+        let navigationController = Router.navigationController(with: supportViewController)
+        
+        self.present(navigationController, animated: true, completion: nil)
+        
+    }
+    
+    func openFavorites() {
+
+        let myFavoritesViewController = MyFavoritesRootViewController()
+        
+        let navigationController = Router.navigationController(with: myFavoritesViewController)
+
+        self.present(navigationController, animated: true, completion: nil)
+
+    }
+    
+    func openPromotions() {
+        
+        let promotionsWebViewModel = PromotionsWebViewModel()
+
+        var gomaBaseUrl = TargetVariables.clientBaseUrl
+        let appLanguage = "fr"
+
+        let isDarkTheme = self.traitCollection.userInterfaceStyle == .dark ? true : false
+        let urlString = "\(gomaBaseUrl)/\(appLanguage)/in-app/promotions?dark=\(isDarkTheme)"
+
+        if let url = URL(string: urlString) {
+            
+            let promotionsWebViewController = PromotionsWebViewController(url: url, viewModel: promotionsWebViewModel)
+            
+            let navigationController = Router.navigationController(with: promotionsWebViewController)
+            
+            promotionsWebViewController.openHomeAction = { [weak self] in
+                self?.dismiss(animated: true)
+            }
+            
+            promotionsWebViewController.openBetSwipeAction = { [weak self] in
+                self?.dismiss(animated: true, completion: {
+                    self?.openBetswipe()
+                })
+            }
+            promotionsWebViewController.openRegisterAction = { [weak self] in
+                self?.dismiss(animated: true, completion: {
+                    self?.presentRegisterScreen()
+                })
+            }
+                        
+            self.present(navigationController, animated: true, completion: nil)
+        }
     }
 
     //

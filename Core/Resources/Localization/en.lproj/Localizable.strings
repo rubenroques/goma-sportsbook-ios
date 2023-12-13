@@ -1445,6 +1445,162 @@
 "void" = "Cancelled";
 "spent" = "Spent";
 
+/* Responsible Gaming*/
+
+"lorem_ipsum" = "LOREM IPSUM";
+
+"responsible_gaming_title" = "Savoir reconnaitre les signes avant-coureurs";
+"responsible_gaming_description" = "Le jeu responsable est un des principes fondamentaux de notre activité. Nous accordons la priorité au bien-être de nos joueurs et veillons à ce que chaque interaction avec nous reste agréable.
+
+En tant qu'opérateur qui prospère grâce à l’innovation et au divertissement, il est tout aussi crucial de veiller à ce que les expériences de jeu restent agréables, responsables et conscientes des risques.
+
+Cet engagement se traduit par la mise à disposition des joueurs des outils, des informations et des mécanismes de soutien qui leur permettent de prendre des décisions sur leurs activités de jeu. Avec ses initiatives en matière de jeu responsable, Betsson France répond aux préoccupations liées à la protection des joueurs, à la prévention du jeu des mineurs et à la maîtrise du jeu excessif.";
+
+"responsible_gaming_first_section_title" = "LE PLAISIR DOIT PRÉVALOIR DANS VOTRE EXPÉRIENCE DE JEU";
+"responsible_gaming_first_section_text" = "Betsson aborde la question du jeu responsable au sérieux et prend des mesures pour aider les joueurs à jouer de manière sûre et saine. En effet, il est crucial de reconnaître qu'il existe une différence entre le jeu récréatif et le jeu problématique.\n\nLe jeu récréatif est généralement considéré comme une activité de loisir occasionnelle qui peut être agréable et amusante, mais qui ne prend pas le dessus sur la vie de la personne. Les joueurs récréatifs sont prudents dans leurs mises et ne jouent pas de manière compulsive ou excessive.\n\nLe jeu problématique, quant à lui, peut affecter la vie quotidienne d'une personne de manière négative. Les joueurs pathologiques ont du mal à contrôler leur comportement de jeu et peuvent continuer à jouer malgré les conséquences négatives qui en résultent, telles que des problèmes financiers, des conflits familiaux ou professionnels, des problèmes de santé mentale ou physique, etc.\n\nIl est donc important de mettre en place des mesures pour aider à prévenir et à détecter le jeu excessif. Cela peut inclure des limites de dépôt et de mise, des conseils de jeu responsable, ainsi que des options pour s'auto-exclure du site pendant une période à définir.";
+
+"responsible_gaming_second_section_title" = "NOS RECOMMANDATIONS POUR GARDER LE CONTRÔLE";
+
+"responsible_gaming_second_section_text_1" = "Voici quelques conseils pour maintenir une approche récréative de votre jeu en ligne :";
+
+"responsible_gaming_second_section_list" = "\t1. Votre motivation : Jouez par plaisir et de manière récréative, ce n’est pas une source potentielle de revenus.
+    
+\t2. Établissez un budget : Définissez une limite budgétaire claire avant de commencer à parier. Assurez-vous que cet argent est quelque chose que vous pouvez vous permettre de perdre sans affecter votre vie quotidienne.
+
+\t3. Limitez le temps de jeu : Fixez-vous des limites de temps pour vos sessions de jeu. Cela peut vous aider à éviter de passer trop de temps à parier et à maintenir un équilibre sain entre le jeu et d'autres activités.
+
+\t4. Évitez de récupérer vos pertes : Ne tentez pas de récupérer l'argent que vous avez perdu en augmentant vos mises. Cela peut entraîner des pertes plus importantes et des comportements risqués.
+
+\t5. Utilisez des outils de gestion des comptes : Renseignez des limites raisonnables que vous pouvez vous permettre de perdre pour réguler vos dépenses et vos mises. Utilisez ces fonctionnalités pour rester en contrôle.
+
+\t6. Ne pariez pas sous l'influence : Évitez de parier lorsque vous êtes sous l'influence de l'alcool, de médicaments ou de toute autre substance. Cela peut altérer votre jugement et vous amener à prendre des décisions impulsives.
+
+\t7. Soyez conscient de vos émotions : Si vous commencez à ressentir des émotions négatives telles que le stress, la frustration ou l'anxiété liées au jeu, prenez une pause. Ne pariez pas lorsque vous êtes émotionnellement vulnérable.
+
+\t8. Maintenir un lien social : Ne cache pas ta pratique du jeu à tes proches. Reste conscient de ton rapport au jeu, de tes gains et pertes, et discutes-en avec ton entourage.
+
+\t9. Sécuriser votre compte : Ne partagez jamais vos identifiants avec des mineurs et assurez-vous de protéger vos accès pour éviter toute connexion non autorisée.";
+
+"responsible_gaming_second_section_text_2" = "En suivant ces conseils, vous pouvez contribuer à maintenir le plaisir dans vos paris sportifs tout en minimisant les risques associés au jeu excessif.
+
+Si vous pensez avoir des problèmes liés au jeu, n'hésitez pas à demander de l'aide. De nombreuses ressources sont à votre disposition pour aider les personnes confrontées à des problèmes de jeu compulsif tel que : SOS joueur";
+
+"responsible_gaming_third_section_title" = "AIDER UN PROCHE";
+
+"responsible_gaming_third_section_text_1" = "Si vous pensez qu'un de vos proches développe un problème de jeux, il est essentiel de l'encourager à demander de l'aide. Le jeu compulsif peut toucher des personnes de tous âges et de tous sexes. Comme toute autre dépendance, le trouble du jeu peut entraîner des difficultés considérables dans la vie d'une personne, affectant son travail, ses relations et son bien-être mental.
+
+
+Comment agir ?";
+
+"responsible_gaming_third_section_list" = "\t• leur parler
+
+\t• apportez votre soutien et non votre jugement
+
+\t• expliquer les conséquences
+
+\t• être patient avec eux
+
+\t• proposer des activités qui remplacent le jeu
+
+\t• suggérer des groupes de soutien
+
+\t• recommander une aide professionnelle";
+
+"responsible_gaming_third_section_text_2" = "Si le jeu excessif vous affecte ou affecte un de vos proches, nous vous suggérons de Consulter notre rubrique « Garder le contrôle », onglet « Besoin de soutien ». Cet onglet peut vous offrir une assistance ciblée sur le jeu responsable et fournir des conseils pour répondre aux préoccupations liées au jeu.";
+
+"responsible_gaming_fourth_section_title" = "PROTEGER LES MINEURS";
+
+"responsible_gaming_fourth_section_text" = "Les jeux en ligne sont interdits aux mineurs conformément à la législation en vigueur.
+
+Nos procédures de vérification de l'âge garantissent que les personnes n'ayant pas atteint l'âge légal ne sont pas autorisées à jouer sur notre plateforme. Nous vérifions les documents d'identité pour confirmer que le titulaire du compte est majeur. Si un mineur saisi une fausse date de naissance et serait identifié à postériori, ses avoirs seront confisqués. L’utilisateur sera exclu et son compte fermé.
+
+
+Nous investissons beaucoup de temps et de ressources pour empêcher les mineurs de jouer, et nous tenons à informer les parents et tuteurs que les mineurs, même avec leur consentement, ne sont pas autorisés à jouer sur notre site. Ne permettez pas que votre enfant joue avec votre compte en ligne.
+
+Il est conseillé d'installer un logiciel de contrôle parental pour empêcher les mineurs d'accéder aux jeux en ligne. Le lien suivant fournit des instructions d'installation : https://e-enfance.org/informer/controle-parental/";
+
+// Tips
+"tips_control_title" = "Garder le contrôle";
+"tips_control_description" = "Les paris doivent toujours être adaptés à votre situation financière et ne pas avoir d'impacts négatifs, que ce soit sur le plan financier ou social. Nous mettons à votre disposition les connaissances nécessaires pour vous guider, vous conseiller et encourager un jeu sûr. Consultez les liens ci-dessous pour accéder à nos conseils, outils et processus d'assistance.";
+
+"tips_control_first_section_title" = "RECONNAITRE UN PROBLEME DE JEU EXCESSIFS";
+
+"tips_control_first_section_text_1" = "Il peut être compliqué de reconnaître que le jeu cesse d'être un plaisir et commence à devenir un problème. Prenez conscience de votre situation en réalisant une auto-évaluation :";
+
+"tips_control_first_section_list" = "\t• Est-ce que le jeu occupe une place importante dans votre esprit ?
+
+\t• Est-ce que vous avez besoin d’augmenter le montant de vos mises pour ressentir plus d’excitation ?
+
+\t• Est-ce que vous rejouez dans l’espoir de récupérer l'argent perdu ?
+
+\t• Est-ce que vous vous sentez impatient ou nerveux lorsque vous ne pouvez pas parier ?
+
+\t• Est-ce que vous avez déjà rencontré des difficultés financières, psychologiques ou familiales suite à votre pratique de jeu ?
+\t• Est-ce que des personnes ont déjà critiqué vos habitudes de jeu ou vous ont dit que vous avez un problème dans votre rapport au jeu ?
+
+\t• Est-ce que vous avez déjà cherché à cacher vos pratiques de jeux ?";
+
+"tips_control_first_section_text_2" = "Si vous vous trouvez dans plusieurs de ces situations, il est possible que vous développiez une dépendance au jeu.
+
+Nous vous encourageons à effectuer un bilan sur Evalujeu, une plateforme d'évaluation fournissant des conseils personnalisés sur les habitudes de jeu.";
+
+"tips_control_second_section_title" = "LES MODERATEURS DE JEU";
+
+"tips_control_second_subsection_title_1" = "Les limites";
+
+"tips_control_second_section_text_1" = "Nous mettons à votre disposition des modérateurs de jeu afin de privilégier une pratique récréative en fixant des limites maximales :";
+
+"tips_control_second_section_list" = "\t• de dépôt fonctionnant sur 7 jours glissants ;
+
+\t• de mise fonctionnant sur 7 jours glissants ;";
+
+"tips_control_second_subsection_title_2" = "Auto-exclusion";
+
+"tips_control_second_section_text_2" = "Si vous craignez de développer un problème de jeu ou si vous en rencontrez actuellement un, nous vous recommandons d'envisager l'auto-exclusion. Cette fonction vous permet de restreindre vos activités de jeu de 24 heures à 1 an.
+
+Pendant la période d'auto-exclusion, votre compte sera temporairement désactivé et vous ne pourrez pas vous connecter. La réouverture d’un compte n'est pas possible pendant cette période.
+
+En plus de vous retirer de nos bases de données marketing durant cette période, nous vous recommandons de supprimer Betsson France de vos notifications, de supprimer/désinstaller toutes nos applications et téléchargements, et de bloquer/désactiver nos comptes de médias sociaux.";
+
+"tips_control_third_section_title" = "BESOIN DE SOUTIENS";
+
+"tips_control_third_section_text" = "Les conséquences négatives liées au jeu peuvent apparaitre sous diverses formes, partager cette expérience avec quelqu'un peut véritablement changer la donne.
+
+Rappelez-vous que vous n'êtes pas seul face à d'éventuels problèmes liés au jeu. Briser l'isolement en discutant de vos préoccupations avec vos proches constitue une première étape pour reprendre le contrôle.
+
+Des professionnels, des associations, des psychologues et des médecins sont également disponibles de manière gratuite pour vous écouter, vous accompagner, vous offrir un regard extérieur ainsi que des conseils personnalisés.
+
+Il peut être compliqué de reconnaître que le jeu cesse d'être un plaisir et commence à devenir un problème. Prenez conscience de votre situation en réalisant une auto-évaluation :";
+
+"tips_control_third_section_list" = "\t• https://sosjoueurs.org/
+
+\t• https://gamban.com/fr/
+
+\t• https://www.evalujeu.fr/ou-en-etes-vous-avec-les-jeux-dargent
+
+\t• https://play.google.com/store/apps/details?id=com.goozix.bettor_time&hl=fr_CA&gl=US&pli=1
+
+\t• https://www.chu-nimes.fr/actu-cht/addiction-aux-jeux--participez-a-letude-train-online.html
+
+\t• https://www.joueurs-info-service.fr/";
+
+"tips_control_fourth_section_title" = "INTERDICTION VOLONTAIRE DE JEU";
+
+"tips_control_fourth_section_text_1" = "Vous pouvez demander volontairement à être interdit de jeux, cela a pour conséquence de vous interdire :";
+
+"tips_control_fourth_section_list" = "\t• D’entrer dans un casino ou un club de jeux
+
+\t• D’accéder à un site de jeux en ligne agréé par l’ANJ (paris sportifs, paris hippiques et poker)
+
+\t• D’accéder aux jeux de la FDJ et du PMU réalisés avec un compte joueur";
+
+"tips_control_fourth_section_text_2" = "Cette inscription est valable pour une durée de trois ans minimums.
+
+Après cette durée, vous pouvez demander la levée de cette interdiction.
+
+Vous serez alors inscrit dans un fichier spécifique, qui est transmis aux différents organismes.
+
+Pour le faire, il faut s’adresser à l’Autorité Nationale des Jeux (ANJ).";
 /* Localizable.strings */
 "AF" = "Afghanistan";
 "AX" = "Aland Islands";

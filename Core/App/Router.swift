@@ -17,6 +17,15 @@ enum Route {
     case ticket(id: String)
     case chatMessage(id: String)
     case chatNotifications
+    case contactSettings
+    case betSwipe
+    case competition(id: String)
+    case deposit
+    case bonus
+    case documents
+    case customerSupport
+    case favorites
+    case promotions
     case none
 }
 
@@ -253,6 +262,24 @@ class Router {
             self.showChatDetails(withId: id)
         case .chatNotifications:
             self.showChatNotifications()
+        case .competition(let id):
+            self.showCompetitionDetailsScreen(competitionId: id)
+        case .contactSettings:
+            self.showContactSettings()
+        case .betSwipe:
+            self.showBetswipe()
+        case .deposit:
+            self.showDeposit()
+        case .bonus:
+            self.showBonus()
+        case .documents:
+            self.showDocuments()
+        case .customerSupport:
+            self.showCustomerSupport()
+        case .favorites:
+            self.showFavorites()
+        case .promotions:
+            self.showPromotions()
         case .none:
             ()
         }
@@ -342,8 +369,6 @@ class Router {
 
     func showMatchDetailScreen(matchId: String) {
 
-        var hasSentMatchId = false
-
         if self.rootViewController?.presentedViewController?.isModal == true {
             self.rootViewController?.presentedViewController?.dismiss(animated: true, completion: nil)
         }
@@ -361,7 +386,6 @@ class Router {
                         
                         currentViewController.openMatchDetail(matchId: matchId)
 
-                        hasSentMatchId = true
                     }
                 }
 
@@ -370,22 +394,19 @@ class Router {
                 Env.servicesProvider.eventsConnectionStatePublisher
                     .filter({ $0 == .connected })
                     .receive(on: DispatchQueue.main)
+                    .first()
                     .sink(receiveCompletion: { _ in
 
                     }, receiveValue: { [weak self] _ in
-                        if !hasSentMatchId {
-                            if let rootViewController = self?.mainRootViewController {
-
-                                rootViewController.openMatchDetail(matchId: matchId)
-
-                                hasSentMatchId = true
-                            }
-                            else {
-                                if let currentViewController = self?.rootViewController as? RootViewController {
-                                    currentViewController.openMatchDetail(matchId: matchId)
-
-                                    hasSentMatchId = true
-                                }
+                        if let rootViewController = self?.mainRootViewController {
+                            
+                            rootViewController.openMatchDetail(matchId: matchId)
+                            
+                        }
+                        else {
+                            if let currentViewController = self?.rootViewController as? RootViewController {
+                                currentViewController.openMatchDetail(matchId: matchId)
+                                
                             }
                         }
 
@@ -418,8 +439,6 @@ class Router {
 
     func showBetslipWithTicket(token: String) {
 
-        var hasSentBetId = false
-
         if self.rootViewController?.presentedViewController?.isModal == true {
             self.rootViewController?.presentedViewController?.dismiss(animated: true, completion: nil)
         }
@@ -431,13 +450,11 @@ class Router {
                 if let rootViewController = self.mainRootViewController {
                     
                     rootViewController.openBetslipModalWithShareData(ticketToken: token)
-                    hasSentBetId = true
                 }
                 
                 if let currentViewController = self.rootViewController as? RootViewController {
                     
                     currentViewController.openBetslipModalWithShareData(ticketToken: token)
-                    hasSentBetId = true
                 }
                 
 //                let betslipViewController = BetslipViewController(startScreen: .sharedBet(token))
@@ -449,21 +466,18 @@ class Router {
                 Env.servicesProvider.eventsConnectionStatePublisher
                     .filter({ $0 == .connected })
                     .receive(on: DispatchQueue.main)
+                    .first()
                     .sink(receiveCompletion: { _ in
-
+                        
                     }, receiveValue: { [weak self] _ in
-                        if !hasSentBetId {
-                            if let rootViewController = self?.mainRootViewController {
-
-                                rootViewController.openBetslipModalWithShareData(ticketToken: token)
-                                hasSentBetId = true
-                            }
+                        if let rootViewController = self?.mainRootViewController {
+                            
+                            rootViewController.openBetslipModalWithShareData(ticketToken: token)
                         }
                         else {
                             if let currentViewController = self?.rootViewController as? RootViewController {
                                 
                                 currentViewController.openBetslipModalWithShareData(ticketToken: token)
-                                hasSentBetId = true
                             }
                         }
 //                        let betslipViewController = BetslipViewController(startScreen: .sharedBet(token))
@@ -500,6 +514,258 @@ class Router {
                 let navigationController = presentedViewController as? UINavigationController,
                 navigationController.rootViewController is UserTrackingViewController {
             presentedViewController.dismiss(animated: true, completion: nil)
+        }
+    }
+    
+    func showCompetitionDetailsScreen(competitionId: String) {
+                
+        if self.rootViewController?.presentedViewController?.isModal == true {
+            self.rootViewController?.presentedViewController?.dismiss(animated: true, completion: nil)
+        }
+
+        if let appSharedState = self.appSharedState {
+            switch appSharedState {
+            case .inactiveApp:
+                
+                if let rootViewController = self.mainRootViewController {
+
+                    rootViewController.openCompetitionDetail(competitionId: competitionId)
+                }
+                else {
+                    if let currentViewController = self.rootViewController as? RootViewController {
+                        
+                        currentViewController.openCompetitionDetail(competitionId: competitionId)
+
+                    }
+                }
+
+            case .activeApp:
+
+                Env.servicesProvider.eventsConnectionStatePublisher
+                    .filter({ $0 == .connected })
+                    .receive(on: DispatchQueue.main)
+                    .first()
+                    .sink(receiveCompletion: { _ in
+                        
+                    }, receiveValue: { [weak self] _ in
+                        if let rootViewController = self?.mainRootViewController {
+                            
+                            rootViewController.openCompetitionDetail(competitionId: competitionId)
+                            
+                        }
+                        else {
+                            if let currentViewController = self?.rootViewController as? RootViewController {
+                                currentViewController.openCompetitionDetail(competitionId: competitionId)
+                                
+                            }
+                        }
+                    })
+                    .store(in: &cancellables)
+            }
+        }
+    }
+    
+    func showContactSettings() {
+                
+        if self.rootViewController?.presentedViewController?.isModal == true {
+            self.rootViewController?.presentedViewController?.dismiss(animated: true, completion: nil)
+        }
+
+        if let rootViewController = self.mainRootViewController {
+
+            rootViewController.openContactSettings()
+        }
+        else {
+            if let currentViewController = self.rootViewController as? RootViewController {
+                
+                currentViewController.openContactSettings()
+            }
+        }
+    }
+    
+    func showBetswipe() {
+                
+        if self.rootViewController?.presentedViewController?.isModal == true {
+            self.rootViewController?.presentedViewController?.dismiss(animated: true, completion: nil)
+        }
+
+        if let appSharedState = self.appSharedState {
+            switch appSharedState {
+            case .inactiveApp:
+                
+                if let rootViewController = self.mainRootViewController {
+
+                    rootViewController.openBetswipe()
+                }
+                else {
+                    if let currentViewController = self.rootViewController as? RootViewController {
+                        
+                        currentViewController.openBetswipe()
+                    }
+                }
+
+            case .activeApp:
+
+                Env.servicesProvider.eventsConnectionStatePublisher
+                    .filter({ $0 == .connected })
+                    .receive(on: DispatchQueue.main)
+                    .first()
+                    .sink(receiveCompletion: { _ in
+
+                    }, receiveValue: { [weak self] _ in
+                            if let rootViewController = self?.mainRootViewController {
+
+                                rootViewController.openBetswipe()
+
+                            }
+                            else {
+                                if let currentViewController = self?.rootViewController as? RootViewController {
+                                    currentViewController.openBetswipe()
+
+                                }
+                            }
+
+                    })
+                    .store(in: &cancellables)
+            }
+        }
+    }
+    
+    func showDeposit() {
+                
+        if self.rootViewController?.presentedViewController?.isModal == true {
+            self.rootViewController?.presentedViewController?.dismiss(animated: true, completion: nil)
+        }
+
+        if let rootViewController = self.mainRootViewController {
+
+            rootViewController.openDeposit()
+        }
+        else {
+            if let currentViewController = self.rootViewController as? RootViewController {
+                
+                currentViewController.openDeposit()
+            }
+        }
+    }
+    
+    func showBonus() {
+                
+        if self.rootViewController?.presentedViewController?.isModal == true {
+            self.rootViewController?.presentedViewController?.dismiss(animated: true, completion: nil)
+        }
+
+        if let rootViewController = self.mainRootViewController {
+
+            rootViewController.openBonus()
+        }
+        else {
+            if let currentViewController = self.rootViewController as? RootViewController {
+                
+                currentViewController.openBonus()
+            }
+        }
+    }
+    
+    func showDocuments() {
+                
+        if self.rootViewController?.presentedViewController?.isModal == true {
+            self.rootViewController?.presentedViewController?.dismiss(animated: true, completion: nil)
+        }
+
+        if let rootViewController = self.mainRootViewController {
+
+            rootViewController.openDocuments()
+        }
+        else {
+            if let currentViewController = self.rootViewController as? RootViewController {
+                
+                currentViewController.openDocuments()
+            }
+        }
+    }
+    
+    func showCustomerSupport() {
+                
+        if self.rootViewController?.presentedViewController?.isModal == true {
+            self.rootViewController?.presentedViewController?.dismiss(animated: true, completion: nil)
+        }
+
+        if let rootViewController = self.mainRootViewController {
+
+            rootViewController.openCustomerSupport()
+        }
+        else {
+            if let currentViewController = self.rootViewController as? RootViewController {
+                
+                currentViewController.openCustomerSupport()
+            }
+        }
+    }
+    
+    func showFavorites() {
+                
+        if self.rootViewController?.presentedViewController?.isModal == true {
+            self.rootViewController?.presentedViewController?.dismiss(animated: true, completion: nil)
+        }
+
+        if let appSharedState = self.appSharedState {
+            switch appSharedState {
+            case .inactiveApp:
+                
+                if let rootViewController = self.mainRootViewController {
+
+                    rootViewController.openFavorites()
+                }
+                else {
+                    if let currentViewController = self.rootViewController as? RootViewController {
+                        
+                        currentViewController.openFavorites()
+                    }
+                }
+
+            case .activeApp:
+
+                Env.servicesProvider.eventsConnectionStatePublisher
+                    .filter({ $0 == .connected })
+                    .receive(on: DispatchQueue.main)
+                    .first()
+                    .sink(receiveCompletion: { _ in
+
+                    }, receiveValue: { [weak self] _ in
+                            if let rootViewController = self?.mainRootViewController {
+
+                                rootViewController.openFavorites()
+
+                            }
+                            else {
+                                if let currentViewController = self?.rootViewController as? RootViewController {
+                                    currentViewController.openFavorites()
+
+                                }
+                            }
+
+                    })
+                    .store(in: &cancellables)
+            }
+        }
+    }
+    
+    func showPromotions() {
+                
+        if self.rootViewController?.presentedViewController?.isModal == true {
+            self.rootViewController?.presentedViewController?.dismiss(animated: true, completion: nil)
+        }
+        
+        if let rootViewController = self.mainRootViewController {
+            
+            rootViewController.openPromotions()
+        }
+        else {
+            if let currentViewController = self.rootViewController as? RootViewController {
+                
+                currentViewController.openPromotions()
+            }
         }
     }
 

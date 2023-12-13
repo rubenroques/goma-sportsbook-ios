@@ -50,6 +50,15 @@ class ContactSettingsViewController: UIViewController {
 
         self.backButton.addTarget(self, action: #selector(didTapBackButton), for: .touchUpInside)
     }
+    
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        
+        if self.isRootModal {
+            self.backButton.setImage(UIImage(named: "arrow_close_icon"), for: .normal)
+        }
+        
+    }
 
     // MARK: Layout and Theme
     override func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {
@@ -154,7 +163,13 @@ class ContactSettingsViewController: UIViewController {
     // MARK: Actions
     @objc private func didTapBackButton() {
         self.viewModel.updateTerms()
-        self.navigationController?.popViewController(animated: true)
+        
+        if self.isRootModal {
+            self.presentingViewController?.dismiss(animated: true)
+        }
+        else {
+            self.navigationController?.popViewController(animated: true)
+        }
     }
 
 }
@@ -232,7 +247,7 @@ extension ContactSettingsViewController {
         NSLayoutConstraint.activate([
             self.topView.leadingAnchor.constraint(equalTo: self.view.leadingAnchor),
             self.topView.trailingAnchor.constraint(equalTo: self.view.trailingAnchor),
-            self.topView.topAnchor.constraint(equalTo: self.view.topAnchor),
+            self.topView.topAnchor.constraint(equalTo: self.view.safeAreaLayoutGuide.topAnchor),
             self.topView.heightAnchor.constraint(equalToConstant: 44),
 
             self.backButton.leadingAnchor.constraint(equalTo: self.topView.leadingAnchor, constant: 0),

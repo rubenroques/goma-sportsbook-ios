@@ -291,7 +291,7 @@ class ProfileLimitsManagementViewModel: NSObject {
                         let limitErrorMessage = localized("limit_update_error_message").replacingFirstOccurrence(of: "{limitType}", with: localized("deposit"))
                         self?.limitOptionsErrorPublisher.send(limitErrorMessage)
 
-                        //self?.limitOptionsCheckPublisher.value.append("deposit")
+                        self?.limitOptionsCheckPublisher.value.append("deposit")
                         self?.isDepositLimitUpdated.send(true)
 
                         self?.isLoadingPublisher.send(false)
@@ -322,7 +322,7 @@ class ProfileLimitsManagementViewModel: NSObject {
                         let limitErrorMessage = localized("limit_update_error_message").replacingFirstOccurrence(of: "{limitType}", with: localized("betting"))
                         self?.limitOptionsErrorPublisher.send(limitErrorMessage)
 
-                        //self?.limitOptionsCheckPublisher.value.append("wagering")
+                        self?.limitOptionsCheckPublisher.value.append("wagering")
                         self?.isBettingLimitUpdated.send(true)
 
                         self?.isLoadingPublisher.send(false)
@@ -353,7 +353,7 @@ class ProfileLimitsManagementViewModel: NSObject {
                         let limitErrorMessage = localized("limit_update_error_message").replacingFirstOccurrence(of: "{limitType}", with: localized("auto_payout"))
                         self?.limitOptionsErrorPublisher.send(limitErrorMessage)
 
-                        //self?.limitOptionsCheckPublisher.value.append("loss")
+                        self?.limitOptionsCheckPublisher.value.append("loss")
                         self?.isAutoPayoutLimitUpdated.send(true)
 
                         self?.isLoadingPublisher.send(false)
@@ -460,6 +460,31 @@ class ProfileLimitsManagementViewModel: NSObject {
     func cleanLimitOptions() {
         self.limitOptionsSet = []
         self.limitOptionsCheckPublisher.value = []
+    }
+    
+    func refetchLimits() {
+        self.limitsLoadedPublisher.send(false)
+
+        self.canUpdateDeposit = false
+        self.canUpdateWagering = false
+        self.canUpdateLoss = false
+
+        self.depositLimit = nil
+        self.wageringLimit = nil
+        self.lossLimit = nil
+        self.autoPayoutLimit = nil
+
+        self.pendingDepositLimitMessage = nil
+        self.pendingWageringLimitMessage = nil
+        self.pendingLossLimitMessage = nil
+
+        self.personalDepositLimitLoaded.send(false)
+        self.limitsLoaded.send(false)
+        self.responsibleGamingLimitLoaded.send(false)
+        
+        self.limitOptionsErrorPublisher.send("")
+        
+        self.getLimits()
     }
 
 //    func checkLimitUpdatableStatus(limitType: String, limitAmount: String, limitPeriod: String, isLimitUpdatable: Bool) {

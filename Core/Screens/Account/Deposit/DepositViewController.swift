@@ -598,10 +598,12 @@ class DepositViewController: UIViewController {
 
         // Optimove success deposit
         if self.viewModel.isFirstDeposit {
-            Optimove.shared.reportScreenVisit(screenTitle: "firstDeposit")
+            Optimove.shared.reportScreenVisit(screenTitle: "first_deposit")
+            
         }
         else {
             Optimove.shared.reportScreenVisit(screenTitle: "purchase")
+            
         }
         
         let depositSuccessViewController = GenericAvatarSuccessViewController()

@@ -121,6 +121,11 @@ class BettingHistoryViewModel {
     }
 
     func refreshContent() {
+        self.resolvedPage = 0
+        self.openedPage = 0
+        self.wonPage = 0
+        self.cashoutPage = 0
+        
         self.ticketsHasNextPage = true
         self.calculateDate(filterApplied: filterApplied)
         self.initialContentLoad()

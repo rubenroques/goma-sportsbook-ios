@@ -450,43 +450,44 @@ extension SearchViewController: UITableViewDataSource, UITableViewDelegate {
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
 
         if !self.viewModel.isEmptySearch {
-            let cellInfo = self.viewModel.sportMatchesArrayPublisher.value[indexPath.section].matches[indexPath.row]
-
-            switch cellInfo {
-
-            case .match(let match):
-
-                if let cell = tableView.dequeueCellType(MatchLineTableViewCell.self) {
-
-                    let viewModel = MatchLineTableCellViewModel(match: match)
-                    cell.viewModel = viewModel
-
-                    cell.tappedMatchLineAction = { [weak self] match in
-                        self?.openMatchDetailsScreen(match: match)
-                    }
-
-                    cell.didTapFavoriteMatchAction = { [weak self] match in
-                        self?.didTapFavoriteMatchAction?(match)
-                    }
-                    cell.matchStatsViewModel = self.viewModel.matchStatsViewModel(forMatch: match)
-
-                    cell.didLongPressOdd = { [weak self] bettingTicket in
-                        self?.openQuickbet(bettingTicket)
-                    }
-
-                    return cell
-                }
-
-            case .competition(let competition):
-                if let cell = tableView.dequeueCellType(CompetitionSearchTableViewCell.self) {
-
-                    if let cellCompetition = competition.name, let cellVenueId = competition.venueId {
-                        cell.setCellValues(title: cellCompetition, flagCode: "", flagId: "")
-                        cell.tappedCompetitionCellAction = {
-                            self.openCompetitionDetailsScreen(competition: competition)
+            if let cellInfo = self.viewModel.sportMatchesArrayPublisher.value[safe: indexPath.section]?.matches[safe: indexPath.row] {
+                
+                switch cellInfo {
+                    
+                case .match(let match):
+                    
+                    if let cell = tableView.dequeueCellType(MatchLineTableViewCell.self) {
+                        
+                        let viewModel = MatchLineTableCellViewModel(match: match)
+                        cell.viewModel = viewModel
+                        
+                        cell.tappedMatchLineAction = { [weak self] match in
+                            self?.openMatchDetailsScreen(match: match)
                         }
+                        
+                        cell.didTapFavoriteMatchAction = { [weak self] match in
+                            self?.didTapFavoriteMatchAction?(match)
+                        }
+                        cell.matchStatsViewModel = self.viewModel.matchStatsViewModel(forMatch: match)
+                        
+                        cell.didLongPressOdd = { [weak self] bettingTicket in
+                            self?.openQuickbet(bettingTicket)
+                        }
+                        
+                        return cell
                     }
-                    return cell
+                    
+                case .competition(let competition):
+                    if let cell = tableView.dequeueCellType(CompetitionSearchTableViewCell.self) {
+                        
+                        if let cellCompetition = competition.name, let cellVenueId = competition.venueId {
+                            cell.setCellValues(title: cellCompetition, flagCode: "", flagId: "")
+                            cell.tappedCompetitionCellAction = {
+                                self.openCompetitionDetailsScreen(competition: competition)
+                            }
+                        }
+                        return cell
+                    }
                 }
             }
         }
@@ -527,7 +528,7 @@ extension SearchViewController: UITableViewDataSource, UITableViewDelegate {
                 return nil
             }
 
-            let searchEvent = self.viewModel.sportMatchesArrayPublisher.value[section].matches.first
+            let searchEvent = self.viewModel.sportMatchesArrayPublisher.value[safe: section]?.matches.first
 
             var eventName = ""
             var sportId = ""

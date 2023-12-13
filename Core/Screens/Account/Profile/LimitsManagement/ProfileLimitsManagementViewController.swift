@@ -337,13 +337,13 @@ class ProfileLimitsManagementViewController: UIViewController {
                 if let viewModel = self?.viewModel {
                     if limitOptions == viewModel.limitOptionsSet && viewModel.limitOptionsSet.isNotEmpty {
                         self?.viewModel.isLoadingPublisher.send(false)
-                        self?.showAlert(type: .success)
-                        self?.viewModel.getLimits()
+                        if viewModel.limitOptionsErrorPublisher.value == "" {
+                            self?.showAlert(type: .success)
+
+                        }
+                        self?.viewModel.refetchLimits()
                     }
-                    else if limitOptions != viewModel.limitOptionsSet && viewModel.limitOptionsSet.isNotEmpty && limitOptions.isNotEmpty {
-                        self?.viewModel.isLoadingPublisher.send(false)
-                        self?.viewModel.getLimits()
-                    }
+
                 }
             })
             .store(in: &cancellables)

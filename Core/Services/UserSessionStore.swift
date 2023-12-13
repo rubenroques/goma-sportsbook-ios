@@ -649,7 +649,30 @@ extension UserSessionStore {
     }
 
     func didSkippedTracking() {
-        self.acceptedTrackingPublisher.send(.skipped)
+        
+        if #available(iOS 14, *) {
+            ATTrackingManager.requestTrackingAuthorization { status in
+                switch status {
+                case .authorized:
+                    // Tracking authorization dialog was shown and we are authorized
+                    print("Authorized")
+                    // Now that we are authorized we can get the IDFA
+                    print(ASIdentifierManager.shared().advertisingIdentifier)
+                case .denied:
+                    print("Denied") // Tracking authorization dialog was shown and permission is denied
+                case .notDetermined:
+                    print("Not Determined") // Tracking authorization dialog has not been shown
+                case .restricted:
+                    print("Restricted")
+                @unknown default:
+                    print("Unknown")
+                }
+                self.acceptedTrackingPublisher.send(.skipped)
+            }
+        }
+        else {
+            self.acceptedTrackingPublisher.send(.skipped)
+        }
     }
 
     var hasAcceptedTracking: UserTrackingStatus {

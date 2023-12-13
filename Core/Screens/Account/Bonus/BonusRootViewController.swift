@@ -104,6 +104,10 @@ class BonusRootViewController: UIViewController {
 
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
+        
+        if self.isRootModal {
+            self.backButton.setImage(UIImage(named: "arrow_close_icon"), for: .normal)
+        }
 
         self.navigationController?.interactivePopGestureRecognizer?.delegate = self
     }
@@ -187,8 +191,13 @@ class BonusRootViewController: UIViewController {
     }
 
     @objc private func didTapBackButton() {
-        self.navigationController?.popViewController(animated: true)
-    }
+        
+        if self.isRootModal {
+            self.presentingViewController?.dismiss(animated: true)
+        }
+        else {
+            self.navigationController?.popViewController(animated: true)
+        }    }
 
     // MARK: - Convenience
     func showNoLoginView() {

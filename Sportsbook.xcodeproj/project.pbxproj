@@ -5097,11 +5097,25 @@
 		45FF105729D74721009AC196 /* UserTrackingSettingsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 45FF105229D74721009AC196 /* UserTrackingSettingsViewController.swift */; };
 		45FF105829D74721009AC196 /* UserTrackingSettingsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 45FF105229D74721009AC196 /* UserTrackingSettingsViewController.swift */; };
 		45FF105929D74721009AC196 /* UserTrackingSettingsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 45FF105229D74721009AC196 /* UserTrackingSettingsViewController.swift */; };
-		655B5A692B17AA5500C59000 /* Adjust in Frameworks */ = {isa = PBXBuildFile; productRef = 655B5A682B17AA5500C59000 /* Adjust */; };
-		655B5A6B2B17AA5500C59000 /* Criteo in Frameworks */ = {isa = PBXBuildFile; productRef = 655B5A6A2B17AA5500C59000 /* Criteo */; };
-		655B5A6D2B17AA5500C59000 /* Sociomantic in Frameworks */ = {isa = PBXBuildFile; productRef = 655B5A6C2B17AA5500C59000 /* Sociomantic */; };
-		655B5A6F2B17AA5500C59000 /* Trademob in Frameworks */ = {isa = PBXBuildFile; productRef = 655B5A6E2B17AA5500C59000 /* Trademob */; };
-		655B5A712B17AA5500C59000 /* WebBridge in Frameworks */ = {isa = PBXBuildFile; productRef = 655B5A702B17AA5500C59000 /* WebBridge */; };
+		655E1FFE2B21E8A500C95337 /* NotificationService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 655E1FFD2B21E8A500C95337 /* NotificationService.swift */; };
+		655E20022B21E8A500C95337 /* NotificationsService.appex in Embed Foundation Extensions */ = {isa = PBXBuildFile; fileRef = 655E1FFB2B21E8A500C95337 /* NotificationsService.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
+		655E20072B21E9E100C95337 /* OptimoveNotificationServiceExtension in Frameworks */ = {isa = PBXBuildFile; productRef = 655E20062B21E9E100C95337 /* OptimoveNotificationServiceExtension */; };
+		655E200A2B28A14700C95337 /* TextSectionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 655E20092B28A14700C95337 /* TextSectionView.swift */; };
+		655E200B2B28A14700C95337 /* TextSectionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 655E20092B28A14700C95337 /* TextSectionView.swift */; };
+		655E200C2B28A14700C95337 /* TextSectionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 655E20092B28A14700C95337 /* TextSectionView.swift */; };
+		655E200D2B28A14700C95337 /* TextSectionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 655E20092B28A14700C95337 /* TextSectionView.swift */; };
+		655E200E2B28A14700C95337 /* TextSectionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 655E20092B28A14700C95337 /* TextSectionView.swift */; };
+		655E200F2B28A14700C95337 /* TextSectionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 655E20092B28A14700C95337 /* TextSectionView.swift */; };
+		655E20102B28A14700C95337 /* TextSectionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 655E20092B28A14700C95337 /* TextSectionView.swift */; };
+		655E20112B28A14700C95337 /* TextSectionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 655E20092B28A14700C95337 /* TextSectionView.swift */; };
+		655E20132B29CB7E00C95337 /* TextSubsectionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 655E20122B29CB7E00C95337 /* TextSubsectionView.swift */; };
+		655E20142B29CB7E00C95337 /* TextSubsectionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 655E20122B29CB7E00C95337 /* TextSubsectionView.swift */; };
+		655E20152B29CB7E00C95337 /* TextSubsectionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 655E20122B29CB7E00C95337 /* TextSubsectionView.swift */; };
+		655E20162B29CB7E00C95337 /* TextSubsectionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 655E20122B29CB7E00C95337 /* TextSubsectionView.swift */; };
+		655E20172B29CB7E00C95337 /* TextSubsectionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 655E20122B29CB7E00C95337 /* TextSubsectionView.swift */; };
+		655E20182B29CB7E00C95337 /* TextSubsectionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 655E20122B29CB7E00C95337 /* TextSubsectionView.swift */; };
+		655E20192B29CB7E00C95337 /* TextSubsectionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 655E20122B29CB7E00C95337 /* TextSubsectionView.swift */; };
+		655E201A2B29CB7E00C95337 /* TextSubsectionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 655E20122B29CB7E00C95337 /* TextSubsectionView.swift */; };
 		A90229A228AFD41100972863 /* QuickBetViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A902299F28AFD41100972863 /* QuickBetViewController.swift */; };
 		A90229A328AFD41100972863 /* QuickBetViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A902299F28AFD41100972863 /* QuickBetViewController.swift */; };
 		A90229A428AFD41100972863 /* QuickBetViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A902299F28AFD41100972863 /* QuickBetViewController.swift */; };
@@ -6890,6 +6904,30 @@
 		F4DE47AC288F620000CF30AA /* FilterHistoryViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4DE47A6288F620000CF30AA /* FilterHistoryViewModel.swift */; };
 /* End PBXBuildFile section */
 
+/* Begin PBXContainerItemProxy section */
+		655E20002B21E8A500C95337 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 455A0C4826BD902C00EC572D /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 655E1FFA2B21E8A500C95337;
+			remoteInfo = NotificationsService;
+		};
+/* End PBXContainerItemProxy section */
+
+/* Begin PBXCopyFilesBuildPhase section */
+		655E1FF22B21E61100C95337 /* Embed Foundation Extensions */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "";
+			dstSubfolderSpec = 13;
+			files = (
+				655E20022B21E8A500C95337 /* NotificationsService.appex in Embed Foundation Extensions */,
+			);
+			name = "Embed Foundation Extensions";
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXCopyFilesBuildPhase section */
+
 /* Begin PBXFileReference section */
 		450088EF29CE244200DA4C30 /* FooterResponsibleGamingViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FooterResponsibleGamingViewCell.swift; sourceTree = "<group>"; };
 		4502BF362798712E00F5B0CD /* HomeAwayCardStatsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeAwayCardStatsView.swift; sourceTree = "<group>"; };
@@ -7361,6 +7399,12 @@
 		45F805952A05385B005296E0 /* dots-loading.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = "dots-loading.json"; sourceTree = "<group>"; };
 		45F8B156274BFF710087652B /* SystemBetResponse.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SystemBetResponse.swift; sourceTree = "<group>"; };
 		45FF105229D74721009AC196 /* UserTrackingSettingsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserTrackingSettingsViewController.swift; sourceTree = "<group>"; };
+		655E1FFB2B21E8A500C95337 /* NotificationsService.appex */ = {isa = PBXFileReference; explicitFileType = "wrapper.app-extension"; includeInIndex = 0; path = NotificationsService.appex; sourceTree = BUILT_PRODUCTS_DIR; };
+		655E1FFD2B21E8A500C95337 /* NotificationService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotificationService.swift; sourceTree = "<group>"; };
+		655E1FFF2B21E8A500C95337 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		655E20082B21EA0D00C95337 /* NotificationsService.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = NotificationsService.entitlements; sourceTree = "<group>"; };
+		655E20092B28A14700C95337 /* TextSectionView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TextSectionView.swift; sourceTree = "<group>"; };
+		655E20122B29CB7E00C95337 /* TextSubsectionView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TextSubsectionView.swift; sourceTree = "<group>"; };
 		A902299F28AFD41100972863 /* QuickBetViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QuickBetViewController.swift; sourceTree = "<group>"; };
 		A90229B028B6892300972863 /* QuickBetViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QuickBetViewModel.swift; sourceTree = "<group>"; };
 		A9059F192ABB5B1300796583 /* DocumentLevelStatus.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DocumentLevelStatus.swift; sourceTree = "<group>"; };
@@ -7929,12 +7973,9 @@
 				45A332B1298976BA008181E9 /* FirebaseMessaging in Frameworks */,
 				45A332B2298976BA008181E9 /* FirebaseDatabase in Frameworks */,
 				458C07512AD5B49A0096E0D4 /* OptimoveNotificationServiceExtension in Frameworks */,
-				655B5A712B17AA5500C59000 /* WebBridge in Frameworks */,
 				45A332B3298976BA008181E9 /* AdyenDropIn in Frameworks */,
 				45A332B4298976BA008181E9 /* DictionaryCoding in Frameworks */,
 				45F805932A05357E005296E0 /* Lottie in Frameworks */,
-				655B5A6F2B17AA5500C59000 /* Trademob in Frameworks */,
-				655B5A692B17AA5500C59000 /* Adjust in Frameworks */,
 				45A332B5298976BA008181E9 /* Reachability in Frameworks */,
 				45A332B6298976BA008181E9 /* AdyenComponents in Frameworks */,
 				45ECD74D2A8FFB2000492CB9 /* ZendeskChatSDK in Frameworks */,
@@ -7947,7 +7988,6 @@
 				45A332BB298976BA008181E9 /* Collections in Frameworks */,
 				45A332BC298976BA008181E9 /* AdyenEncryption in Frameworks */,
 				4566B95E2A6AEE8A00477046 /* IdensicMobileSDK in Frameworks */,
-				655B5A6D2B17AA5500C59000 /* Sociomantic in Frameworks */,
 				45A332BD298976BA008181E9 /* AdyenActions in Frameworks */,
 				45A332BE298976BA008181E9 /* CombineCocoa in Frameworks */,
 				45A332BF298976BA008181E9 /* SwiftyBeaver in Frameworks */,
@@ -7960,7 +8000,6 @@
 				45A332C5298976BA008181E9 /* FirebaseAnalytics in Frameworks */,
 				45A332C6298976BA008181E9 /* OrderedCollections in Frameworks */,
 				458C074F2AD5B4930096E0D4 /* OptimoveCore in Frameworks */,
-				655B5A6B2B17AA5500C59000 /* Criteo in Frameworks */,
 				45DB8DB02A6A9C7C0018C591 /* CountrySelectionFeature in Frameworks */,
 				459F410C2AF54C86006BAEE9 /* SwiftPrettyPrint in Frameworks */,
 				45A332C7298976BA008181E9 /* SweeterSwift in Frameworks */,
@@ -8042,6 +8081,14 @@
 				45F6BD9D2AB3732C00C81DE1 /* Theming in Frameworks */,
 				45F6BD9E2AB3732C00C81DE1 /* SharedModels in Frameworks */,
 				45F6BD9F2AB3732C00C81DE1 /* ServicesProvider in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		655E1FF82B21E8A500C95337 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				655E20072B21E9E100C95337 /* OptimoveNotificationServiceExtension in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -8439,6 +8486,7 @@
 				45BA77A0293CD35700B6ACA6 /* Extensions */,
 				455A0C5226BD902C00EC572D /* Core */,
 				455A0C9226BD906700EC572D /* Clients */,
+				655E1FFC2B21E8A500C95337 /* NotificationsService */,
 				455A0C5126BD902C00EC572D /* Products */,
 				455A0D2F26BDF61200EC572D /* Frameworks */,
 			);
@@ -8456,6 +8504,7 @@
 				A9C3437C28F9A74A0055360B /* GomaSportRadar.app */,
 				45A3334E298976BA008181E9 /* Betsson.app */,
 				45F6BE372AB3732C00C81DE1 /* Betsson UAT.app */,
+				655E1FFB2B21E8A500C95337 /* NotificationsService.appex */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -9186,6 +9235,8 @@
 				A9BA04172A30EA3B007880FC /* CardOptionRadioView.swift */,
 				A9527C1B2A98FA66006F4E37 /* SuggestedCompetitionsView.swift */,
 				A9527C2B2A9CEDC0006F4E37 /* InfoDialogView.swift */,
+				655E20092B28A14700C95337 /* TextSectionView.swift */,
+				655E20122B29CB7E00C95337 /* TextSubsectionView.swift */,
 			);
 			path = Views;
 			sourceTree = "<group>";
@@ -9885,6 +9936,16 @@
 				45F805952A05385B005296E0 /* dots-loading.json */,
 			);
 			path = Animations;
+			sourceTree = "<group>";
+		};
+		655E1FFC2B21E8A500C95337 /* NotificationsService */ = {
+			isa = PBXGroup;
+			children = (
+				655E20082B21EA0D00C95337 /* NotificationsService.entitlements */,
+				655E1FFD2B21E8A500C95337 /* NotificationService.swift */,
+				655E1FFF2B21E8A500C95337 /* Info.plist */,
+			);
+			path = NotificationsService;
 			sourceTree = "<group>";
 		};
 		A902299E28AFD3F400972863 /* Quickbet */ = {
@@ -11574,10 +11635,12 @@
 				45A332AF298976BA008181E9 /* Frameworks */,
 				45A332CC298976BA008181E9 /* Resources */,
 				45A3334A298976BA008181E9 /* ShellScript */,
+				655E1FF22B21E61100C95337 /* Embed Foundation Extensions */,
 			);
 			buildRules = (
 			);
 			dependencies = (
+				655E20012B21E8A500C95337 /* PBXTargetDependency */,
 			);
 			name = "Betsson PROD";
 			packageProductDependencies = (
@@ -11622,11 +11685,6 @@
 				458C07502AD5B49A0096E0D4 /* OptimoveNotificationServiceExtension */,
 				458C07522AD5B4A10096E0D4 /* OptimoveSDK */,
 				459F410B2AF54C86006BAEE9 /* SwiftPrettyPrint */,
-				655B5A682B17AA5500C59000 /* Adjust */,
-				655B5A6A2B17AA5500C59000 /* Criteo */,
-				655B5A6C2B17AA5500C59000 /* Sociomantic */,
-				655B5A6E2B17AA5500C59000 /* Trademob */,
-				655B5A702B17AA5500C59000 /* WebBridge */,
 			);
 			productName = Sportsbook;
 			productReference = 45A3334E298976BA008181E9 /* Betsson.app */;
@@ -11729,6 +11787,26 @@
 			productReference = 45F6BE372AB3732C00C81DE1 /* Betsson UAT.app */;
 			productType = "com.apple.product-type.application";
 		};
+		655E1FFA2B21E8A500C95337 /* NotificationsService */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 655E20032B21E8A500C95337 /* Build configuration list for PBXNativeTarget "NotificationsService" */;
+			buildPhases = (
+				655E1FF72B21E8A500C95337 /* Sources */,
+				655E1FF82B21E8A500C95337 /* Frameworks */,
+				655E1FF92B21E8A500C95337 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = NotificationsService;
+			packageProductDependencies = (
+				655E20062B21E9E100C95337 /* OptimoveNotificationServiceExtension */,
+			);
+			productName = NotificationsService;
+			productReference = 655E1FFB2B21E8A500C95337 /* NotificationsService.appex */;
+			productType = "com.apple.product-type.app-extension";
+		};
 		A9C3407E28F9A74A0055360B /* GomaSportRadar */ = {
 			isa = PBXNativeTarget;
 			buildConfigurationList = A9C3437928F9A74A0055360B /* Build configuration list for PBXNativeTarget "GomaSportRadar" */;
@@ -11771,12 +11849,15 @@
 			isa = PBXProject;
 			attributes = {
 				BuildIndependentTargetsInParallel = YES;
-				LastSwiftUpdateCheck = 1250;
+				LastSwiftUpdateCheck = 1500;
 				LastUpgradeCheck = 1430;
 				TargetAttributes = {
 					455A0C6526BD902F00EC572D = {
 						CreatedOnToolsVersion = 12.5.1;
 						TestTargetID = 455A0C4F26BD902C00EC572D;
+					};
+					655E1FFA2B21E8A500C95337 = {
+						CreatedOnToolsVersion = 15.0.1;
 					};
 				};
 			};
@@ -11811,7 +11892,6 @@
 				45ECD7512A8FFB8A00492CB9 /* XCRemoteSwiftPackageReference "support_sdk_ios" */,
 				A9C5AC1B2ACDB30000C3FD56 /* XCRemoteSwiftPackageReference "Optimove-SDK-iOS" */,
 				459F410A2AF54C86006BAEE9 /* XCRemoteSwiftPackageReference "SwiftPrettyPrint" */,
-				655B5A672B17AA5500C59000 /* XCRemoteSwiftPackageReference "ios_sdk" */,
 			);
 			productRefGroup = 455A0C5126BD902C00EC572D /* Products */;
 			projectDirPath = "";
@@ -11826,6 +11906,7 @@
 				457CB9C5282D27D000ED0F00 /* EveryMatrix */,
 				457CBC6C282D2CD100ED0F00 /* Crocobet */,
 				455A0C6526BD902F00EC572D /* SportsbookTests */,
+				655E1FFA2B21E8A500C95337 /* NotificationsService */,
 			);
 		};
 /* End PBXProject section */
@@ -12925,6 +13006,13 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		655E1FF92B21E8A500C95337 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		A9C342FB28F9A74A0055360B /* Resources */ = {
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
@@ -13249,6 +13337,7 @@
 				450B785528F58574009229E3 /* FilterSliderCollapseView.swift in Sources */,
 				450B785628F58574009229E3 /* FirebaseClientSettings.swift in Sources */,
 				450B785728F58574009229E3 /* CasinoGameDetailViewModel.swift in Sources */,
+				655E200C2B28A14700C95337 /* TextSectionView.swift in Sources */,
 				A9BA04072A308CCA007880FC /* ExtraDocsViewController.swift in Sources */,
 				450B785828F58574009229E3 /* PopUpPromotionView.swift in Sources */,
 				450B785928F58574009229E3 /* ModalTransitionModalTransitioningDelegate.swift in Sources */,
@@ -13604,6 +13693,7 @@
 				450B798B28F58574009229E3 /* LoadingSpinnerViewController.swift in Sources */,
 				A9BAFB4E2AB213E6002EDBA1 /* RegisterSuccessViewController.swift in Sources */,
 				450B798C28F58574009229E3 /* MatchWidgetCollectionViewCell.swift in Sources */,
+				655E20152B29CB7E00C95337 /* TextSubsectionView.swift in Sources */,
 				450B798D28F58574009229E3 /* UserBalance.swift in Sources */,
 				A9527C2D2A9CEDC1006F4E37 /* InfoDialogView.swift in Sources */,
 				450B798E28F58574009229E3 /* SearchEvent.swift in Sources */,
@@ -14407,6 +14497,7 @@
 				A91A64542A7965D9002A6984 /* MyGamesViewController.swift in Sources */,
 				457CBAEF282D27D000ED0F00 /* UserBalance.swift in Sources */,
 				45E8E29A28C88E1300A09B02 /* UserRankingPositionTableViewCell.swift in Sources */,
+				655E20192B29CB7E00C95337 /* TextSubsectionView.swift in Sources */,
 				457CBAF0282D27D000ED0F00 /* SearchEvent.swift in Sources */,
 				A90C372D29C37AB8007B8AEC /* IBANProofViewModel.swift in Sources */,
 				457CBAF2282D27D000ED0F00 /* MatchOddsContent.swift in Sources */,
@@ -14576,6 +14667,7 @@
 				457CBB6D282D27D000ED0F00 /* CompetitionDetailsViewController.swift in Sources */,
 				457CBB6E282D27D000ED0F00 /* MyFavoritesViewController.swift in Sources */,
 				457CBB70282D27D000ED0F00 /* PreSubmissionBetslipViewController.swift in Sources */,
+				655E20102B28A14700C95337 /* TextSectionView.swift in Sources */,
 				457CBB71282D27D000ED0F00 /* DropDownSelectionView.swift in Sources */,
 				45B9F98C2A1E564D00DA2B88 /* HomeTemplateParser.swift in Sources */,
 				A986D34728CB473700AF95D7 /* TipsCellViewModel.swift in Sources */,
@@ -15292,6 +15384,7 @@
 				A9BA04152A3099FA007880FC /* ManualUploadDocumentsViewController.swift in Sources */,
 				457CBE2D282D2CD100ED0F00 /* PreviewChatTableViewCell.swift in Sources */,
 				A90C372629C35FD0007B8AEC /* WithdrawSuccessViewController.swift in Sources */,
+				655E20112B28A14700C95337 /* TextSectionView.swift in Sources */,
 				45B6E22A283FD08C001B570C /* ChatTicketInMessageView.swift in Sources */,
 				457CBE2E282D2CD100ED0F00 /* CompetitionDetailsViewModel.swift in Sources */,
 				A98EC7E12889B0AA0044FC46 /* ConversationBetSelectionRootViewModel.swift in Sources */,
@@ -15352,6 +15445,7 @@
 				A9B331E1288FFFE000D097F0 /* MessagesViewModel.swift in Sources */,
 				F4A62A8C2850FAB5007B46C5 /* CasinoGameDetailViewController.swift in Sources */,
 				457CBE52282D2CD100ED0F00 /* NibIdentifiable.swift in Sources */,
+				655E201A2B29CB7E00C95337 /* TextSubsectionView.swift in Sources */,
 				A9DF8E3928E45D2E0083BF56 /* TipsSliderViewModel.swift in Sources */,
 				457CBE54282D2CD100ED0F00 /* GomaClientSettings.swift in Sources */,
 				457CBE55282D2CD100ED0F00 /* ConversationDetailViewController.swift in Sources */,
@@ -15404,6 +15498,7 @@
 				4589C782282024E400243547 /* FilterSliderCollapseView.swift in Sources */,
 				4589C783282024E400243547 /* FirebaseClientSettings.swift in Sources */,
 				F4A62A97285946AD007B46C5 /* CasinoGameDetailViewModel.swift in Sources */,
+				655E200D2B28A14700C95337 /* TextSectionView.swift in Sources */,
 				A9BA04082A308CCA007880FC /* ExtraDocsViewController.swift in Sources */,
 				4589C784282024E400243547 /* PopUpPromotionView.swift in Sources */,
 				45C10F4828772DA700037BBE /* ModalTransitionModalTransitioningDelegate.swift in Sources */,
@@ -15759,6 +15854,7 @@
 				4589C873282024E400243547 /* LoadingSpinnerViewController.swift in Sources */,
 				A9BAFB4F2AB213E6002EDBA1 /* RegisterSuccessViewController.swift in Sources */,
 				4589C874282024E400243547 /* MatchWidgetCollectionViewCell.swift in Sources */,
+				655E20162B29CB7E00C95337 /* TextSubsectionView.swift in Sources */,
 				4589C875282024E400243547 /* UserBalance.swift in Sources */,
 				A9527C2E2A9CEDC1006F4E37 /* InfoDialogView.swift in Sources */,
 				4589C876282024E400243547 /* SearchEvent.swift in Sources */,
@@ -16084,6 +16180,7 @@
 				45A33065298976BA008181E9 /* FilterSliderCollapseView.swift in Sources */,
 				45A33066298976BA008181E9 /* FirebaseClientSettings.swift in Sources */,
 				45A33067298976BA008181E9 /* CasinoGameDetailViewModel.swift in Sources */,
+				655E200A2B28A14700C95337 /* TextSectionView.swift in Sources */,
 				A9BA04062A308CCA007880FC /* ExtraDocsViewController.swift in Sources */,
 				45A33068298976BA008181E9 /* PopUpPromotionView.swift in Sources */,
 				45A33069298976BA008181E9 /* ModalTransitionModalTransitioningDelegate.swift in Sources */,
@@ -16439,6 +16536,7 @@
 				45A331A4298976BA008181E9 /* UserActionView.swift in Sources */,
 				A9BAFB4D2AB213E6002EDBA1 /* RegisterSuccessViewController.swift in Sources */,
 				45A331A5298976BA008181E9 /* LoadingSpinnerViewController.swift in Sources */,
+				655E20132B29CB7E00C95337 /* TextSubsectionView.swift in Sources */,
 				45A331A6298976BA008181E9 /* MatchWidgetCollectionViewCell.swift in Sources */,
 				A9527C2C2A9CEDC1006F4E37 /* InfoDialogView.swift in Sources */,
 				45A331A7298976BA008181E9 /* UserBalance.swift in Sources */,
@@ -16908,6 +17006,7 @@
 				45A6BC3228246A7500D9B416 /* ProfileLimitsManagementViewController.swift in Sources */,
 				4589B02E28CB47AB0043CE33 /* TipsSliderViewController.swift in Sources */,
 				45A6BC3428246A7500D9B416 /* UILabel+Extensions.swift in Sources */,
+				655E200F2B28A14700C95337 /* TextSectionView.swift in Sources */,
 				45C10F7928772DA700037BBE /* CGPoint+Shift.swift in Sources */,
 				45A6BC3528246A7500D9B416 /* WelcomeViewController.swift in Sources */,
 				45A6BC3728246A7500D9B416 /* UserSettings.swift in Sources */,
@@ -17086,6 +17185,7 @@
 				45A6BCB128246A7500D9B416 /* TabularBarView.swift in Sources */,
 				A90FB7DF29B0BCF000D08A7C /* SelfExclusionViewModel.swift in Sources */,
 				45A6BCB228246A7500D9B416 /* CGPoint+Extensions.swift in Sources */,
+				655E20182B29CB7E00C95337 /* TextSubsectionView.swift in Sources */,
 				A9A43C732A4B2A33008FB399 /* IdentificationDocsViewModel.swift in Sources */,
 				45A6BCB328246A7500D9B416 /* SimpleRegisterDetailsViewController.swift in Sources */,
 				A98708A528D3441800F27348 /* RankingCellViewModel.swift in Sources */,
@@ -17443,6 +17543,7 @@
 				45F6BAF32AB3732C00C81DE1 /* FilterSliderCollapseView.swift in Sources */,
 				45F6BAF42AB3732C00C81DE1 /* FirebaseClientSettings.swift in Sources */,
 				45F6BAF52AB3732C00C81DE1 /* CasinoGameDetailViewModel.swift in Sources */,
+				655E200B2B28A14700C95337 /* TextSectionView.swift in Sources */,
 				45F6BAF62AB3732C00C81DE1 /* ExtraDocsViewController.swift in Sources */,
 				45F6BAF72AB3732C00C81DE1 /* PopUpPromotionView.swift in Sources */,
 				45F6BAF82AB3732C00C81DE1 /* ModalTransitionModalTransitioningDelegate.swift in Sources */,
@@ -17798,6 +17899,7 @@
 				45F6BC522AB3732C00C81DE1 /* BetType.swift in Sources */,
 				45F6BC532AB3732C00C81DE1 /* UserActionView.swift in Sources */,
 				45F6BC542AB3732C00C81DE1 /* LoadingSpinnerViewController.swift in Sources */,
+				655E20142B29CB7E00C95337 /* TextSubsectionView.swift in Sources */,
 				45F6BC552AB3732C00C81DE1 /* MatchWidgetCollectionViewCell.swift in Sources */,
 				45F6BC562AB3732C00C81DE1 /* InfoDialogView.swift in Sources */,
 				45F6BC572AB3732C00C81DE1 /* UserBalance.swift in Sources */,
@@ -18096,6 +18198,14 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		655E1FF72B21E8A500C95337 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				655E1FFE2B21E8A500C95337 /* NotificationService.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		A9C3409D28F9A74A0055360B /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
@@ -18124,6 +18234,7 @@
 				A9C340AE28F9A74A0055360B /* BannerMatchCollectionViewCell.swift in Sources */,
 				A9C340AF28F9A74A0055360B /* FilterSliderCollapseView.swift in Sources */,
 				A99DE665299E825900AA24AA /* RecoverPasswordViewModel.swift in Sources */,
+				655E20172B29CB7E00C95337 /* TextSubsectionView.swift in Sources */,
 				A9C340B028F9A74A0055360B /* FirebaseClientSettings.swift in Sources */,
 				A9C340B128F9A74A0055360B /* CasinoGameDetailViewModel.swift in Sources */,
 				A93FE21A2A44A08C006A6907 /* CashbackRootViewController.swift in Sources */,
@@ -18325,6 +18436,7 @@
 				A9C3415528F9A74A0055360B /* BetSuggestedCollectionViewCell.swift in Sources */,
 				A9C3415628F9A74A0055360B /* EditGroupViewModel.swift in Sources */,
 				A9C3415728F9A74A0055360B /* ConversationBetSelectionRootViewController.swift in Sources */,
+				655E200E2B28A14700C95337 /* TextSectionView.swift in Sources */,
 				A9C3415828F9A74A0055360B /* MultipleBettingTicketTableViewCell.swift in Sources */,
 				45DB8D9F2A66D9480018C591 /* DebugUserDefaults.swift in Sources */,
 				A9C3415928F9A74A0055360B /* Throttler.swift in Sources */,
@@ -18772,6 +18884,14 @@
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXSourcesBuildPhase section */
+
+/* Begin PBXTargetDependency section */
+		655E20012B21E8A500C95337 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 655E1FFA2B21E8A500C95337 /* NotificationsService */;
+			targetProxy = 655E20002B21E8A500C95337 /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
 
 /* Begin PBXVariantGroup section */
 		450B7B2828F58625009229E3 /* LaunchScreen-SportRadar.storyboard */ = {
@@ -19239,12 +19359,13 @@
 		45A3334C298976BA008181E9 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				ASSETCATALOG_COMPILER_APPICON_NAME = "AppIcon-Betsson";
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_ENTITLEMENTS = "Clients/Betsson/Betsson-PROD.entitlements";
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Manual;
-				CURRENT_PROJECT_VERSION = 10701;
+				CURRENT_PROJECT_VERSION = 10807;
 				DEVELOPMENT_TEAM = QN2DYX5K4M;
 				INFOPLIST_FILE = "$(SRCROOT)/Clients/Betsson/Misc-PROD/Betsson-PROD-Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 13.0;
@@ -19252,7 +19373,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 1.0.7;
+				MARKETING_VERSION = 1.0.8;
 				OTHER_LDFLAGS = "$(inherited)";
 				PRODUCT_BUNDLE_IDENTIFIER = fr.betsson.ios.app;
 				PRODUCT_NAME = Betsson;
@@ -19268,12 +19389,13 @@
 		45A3334D298976BA008181E9 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				ASSETCATALOG_COMPILER_APPICON_NAME = "AppIcon-Betsson";
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_ENTITLEMENTS = "Clients/Betsson/Betsson-PROD.entitlements";
 				CODE_SIGN_IDENTITY = "Apple Distribution";
 				CODE_SIGN_STYLE = Manual;
-				CURRENT_PROJECT_VERSION = 10701;
+				CURRENT_PROJECT_VERSION = 10807;
 				DEVELOPMENT_TEAM = QN2DYX5K4M;
 				INFOPLIST_FILE = "$(SRCROOT)/Clients/Betsson/Misc-PROD/Betsson-PROD-Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 13.0;
@@ -19281,7 +19403,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 1.0.7;
+				MARKETING_VERSION = 1.0.8;
 				OTHER_LDFLAGS = "$(inherited)";
 				PRODUCT_BUNDLE_IDENTIFIER = fr.betsson.ios.app;
 				PRODUCT_NAME = Betsson;
@@ -19361,7 +19483,7 @@
 				CODE_SIGN_IDENTITY = "Apple Development";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				CODE_SIGN_STYLE = Manual;
-				CURRENT_PROJECT_VERSION = 10701;
+				CURRENT_PROJECT_VERSION = 10702;
 				DEVELOPMENT_TEAM = 422GNXXZJR;
 				INFOPLIST_FILE = "$(SRCROOT)/Clients/Betsson/Misc-UAT/Betsson-UAT-Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 13.0;
@@ -19391,7 +19513,7 @@
 				CODE_SIGN_IDENTITY = "Apple Distribution";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution";
 				CODE_SIGN_STYLE = Manual;
-				CURRENT_PROJECT_VERSION = 10701;
+				CURRENT_PROJECT_VERSION = 10702;
 				DEVELOPMENT_TEAM = 422GNXXZJR;
 				INFOPLIST_FILE = "$(SRCROOT)/Clients/Betsson/Misc-UAT/Betsson-UAT-Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 13.0;
@@ -19407,6 +19529,82 @@
 				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
 				SUPPORTS_MACCATALYST = NO;
 				SUPPORTS_MAC_DESIGNED_FOR_IPHONE_IPAD = NO;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Release;
+		};
+		655E20042B21E8A500C95337 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_GENERATE_SWIFT_ASSET_SYMBOL_EXTENSIONS = YES;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++20";
+				CODE_SIGN_ENTITLEMENTS = NotificationsService/NotificationsService.entitlements;
+				CODE_SIGN_IDENTITY = "Apple Development";
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				DEVELOPMENT_TEAM = QN2DYX5K4M;
+				ENABLE_USER_SCRIPT_SANDBOXING = YES;
+				EXCLUDED_ARCHS = "";
+				"EXCLUDED_ARCHS[sdk=iphonesimulator*]" = "";
+				GCC_C_LANGUAGE_STANDARD = gnu17;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = NotificationsService/Info.plist;
+				INFOPLIST_KEY_CFBundleDisplayName = NotificationsService;
+				INFOPLIST_KEY_NSHumanReadableCopyright = "";
+				IPHONEOS_DEPLOYMENT_TARGET = 13.0;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@executable_path/../../Frameworks",
+				);
+				LOCALIZATION_PREFERS_STRING_CATALOGS = YES;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = fr.betsson.ios.app.betssonNotificationsService;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE_SPECIFIER = "";
+				SKIP_INSTALL = YES;
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = "DEBUG $(inherited)";
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Debug;
+		};
+		655E20052B21E8A500C95337 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_GENERATE_SWIFT_ASSET_SYMBOL_EXTENSIONS = YES;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++20";
+				CODE_SIGN_ENTITLEMENTS = NotificationsService/NotificationsService.entitlements;
+				CODE_SIGN_IDENTITY = "Apple Development";
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = QN2DYX5K4M;
+				ENABLE_USER_SCRIPT_SANDBOXING = YES;
+				"EXCLUDED_ARCHS[sdk=iphonesimulator*]" = "";
+				GCC_C_LANGUAGE_STANDARD = gnu17;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = NotificationsService/Info.plist;
+				INFOPLIST_KEY_CFBundleDisplayName = NotificationsService;
+				INFOPLIST_KEY_NSHumanReadableCopyright = "";
+				IPHONEOS_DEPLOYMENT_TARGET = 13.0;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@executable_path/../../Frameworks",
+				);
+				LOCALIZATION_PREFERS_STRING_CATALOGS = YES;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = fr.betsson.ios.app.betssonNotificationsService;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SKIP_INSTALL = YES;
+				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};
@@ -19552,6 +19750,15 @@
 			buildConfigurations = (
 				45F6BE352AB3732C00C81DE1 /* Debug */,
 				45F6BE362AB3732C00C81DE1 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		655E20032B21E8A500C95337 /* Build configuration list for PBXNativeTarget "NotificationsService" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				655E20042B21E8A500C95337 /* Debug */,
+				655E20052B21E8A500C95337 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
@@ -20310,14 +20517,6 @@
 			requirement = {
 				kind = upToNextMajorVersion;
 				minimumVersion = 4.0.0;
-			};
-		};
-		655B5A672B17AA5500C59000 /* XCRemoteSwiftPackageReference "ios_sdk" */ = {
-			isa = XCRemoteSwiftPackageReference;
-			repositoryURL = "https://github.com/adjust/ios_sdk";
-			requirement = {
-				branch = master;
-				kind = branch;
 			};
 		};
 		A96FAEDF29829CCA00A0751F /* XCRemoteSwiftPackageReference "adyen-ios" */ = {
@@ -21279,30 +21478,10 @@
 			package = 45F805912A05357E005296E0 /* XCRemoteSwiftPackageReference "lottie-spm" */;
 			productName = Lottie;
 		};
-		655B5A682B17AA5500C59000 /* Adjust */ = {
+		655E20062B21E9E100C95337 /* OptimoveNotificationServiceExtension */ = {
 			isa = XCSwiftPackageProductDependency;
-			package = 655B5A672B17AA5500C59000 /* XCRemoteSwiftPackageReference "ios_sdk" */;
-			productName = Adjust;
-		};
-		655B5A6A2B17AA5500C59000 /* Criteo */ = {
-			isa = XCSwiftPackageProductDependency;
-			package = 655B5A672B17AA5500C59000 /* XCRemoteSwiftPackageReference "ios_sdk" */;
-			productName = Criteo;
-		};
-		655B5A6C2B17AA5500C59000 /* Sociomantic */ = {
-			isa = XCSwiftPackageProductDependency;
-			package = 655B5A672B17AA5500C59000 /* XCRemoteSwiftPackageReference "ios_sdk" */;
-			productName = Sociomantic;
-		};
-		655B5A6E2B17AA5500C59000 /* Trademob */ = {
-			isa = XCSwiftPackageProductDependency;
-			package = 655B5A672B17AA5500C59000 /* XCRemoteSwiftPackageReference "ios_sdk" */;
-			productName = Trademob;
-		};
-		655B5A702B17AA5500C59000 /* WebBridge */ = {
-			isa = XCSwiftPackageProductDependency;
-			package = 655B5A672B17AA5500C59000 /* XCRemoteSwiftPackageReference "ios_sdk" */;
-			productName = WebBridge;
+			package = A9C5AC1B2ACDB30000C3FD56 /* XCRemoteSwiftPackageReference "Optimove-SDK-iOS" */;
+			productName = OptimoveNotificationServiceExtension;
 		};
 		A96FAEE029829CCB00A0751F /* Adyen */ = {
 			isa = XCSwiftPackageProductDependency;

@@ -96,10 +96,71 @@ class AppDelegate: UIResponder, UIApplicationDelegate, MessagingDelegate {
         )
 
         let optimoveCredentials = "WzEsIjEzMGRjNGIwNTZiYzRhNmQ5NWI0ZWJjODczNGJlYmJhIiwibW9iaWxlLWNvbmZpZ3VyYXRpb24uMS4wLjAiXQ=="
-        let optimobileCredntials = "WzEsImV1LWNlbnRyYWwtMiIsImJkYzg1MTk5LTk4ODEtNGRhMy05NmYzLWI3ZGZkOWM3NzI0NCIsImpDNFMzODF4SDhCU2JSeS94aVlsQ25ubUVsT2ZTTEUxYUdhSyJd"
+        let optimobileCredentials = "WzEsImV1LWNlbnRyYWwtMiIsImJkYzg1MTk5LTk4ODEtNGRhMy05NmYzLWI3ZGZkOWM3NzI0NCIsImpDNFMzODF4SDhCU2JSeS94aVlsQ25ubUVsT2ZTTEUxYUdhSyJd"
 
         // Optimove
-        let config = OptimoveConfigBuilder(optimoveCredentials: optimoveCredentials, optimobileCredentials: optimobileCredntials).build()
+//        let config = OptimoveConfigBuilder(optimoveCredentials: optimoveCredentials, optimobileCredentials: optimobileCredentials).build()
+        
+        let config = OptimoveConfigBuilder(optimoveCredentials: optimoveCredentials, optimobileCredentials: optimobileCredentials)
+            .setPushOpenedHandler(pushOpenedHandlerBlock: { (notification: PushNotification) -> Void in
+                //- Inspect notification data and do work.
+                print("OPTIMOVE NOTIFICATION: \(notification)")
+                
+                if let action = notification.actionIdentifier {
+                    print("User pressed an action button.")
+                    print(action)
+                    print(notification.data)
+                } else {
+                    print("Just an open event.")
+                }
+                
+                var route: Route?
+                let application = UIApplication.shared
+
+                var routeId: String = ""
+                if let routeIdValue = notification.data["routeId"] as? String {
+                    print("ROUTE ID AS STRING")
+                    routeId = routeIdValue
+                }
+                else if let routeIdValue = notification.data["routeId"] as? Double {
+                    print("ROUTE ID AS DOUBLE")
+                    routeId = String(routeIdValue)
+                }          
+                
+                let routeLabel = notification.data["routeLabel"] as? String ?? ""
+                let routeType = notification.data["routeType"] as? String ?? ""
+
+                switch (routeType, routeLabel) {
+                case ("event", _):
+                    route = .event(id: routeId)
+                case ("competition", _):
+                    route = .competition(id: routeId)
+                case ("contact-settings", _):
+                    route = .contactSettings
+                case ("betswipe", _):
+                    route = .betSwipe
+                case ("deposit", _):
+                    route = .deposit
+                case ("bonus", _):
+                    route = .bonus
+                case ("documents", _):
+                    route = .documents
+                case ("customer-support", _):
+                    route = .customerSupport
+                case ("favorites", _):
+                    route = .favorites
+                case ("promotions", _):
+                    route = .promotions
+                default:
+                    ()
+                }
+
+                if let route = route {
+                    self.openRoute(route, onApplication: application)
+                }
+            })
+            .build()
+        
         Optimove.initialize(with: config)
 
         application.registerForRemoteNotifications()
@@ -159,6 +220,9 @@ class AppDelegate: UIResponder, UIApplicationDelegate, MessagingDelegate {
 
                 }
             }
+            else if urlSections.contains("contact-setting") {
+                self.openRoute(Route.contactSettings, onApplication: application)
+            }
         }
         return true
     }
@@ -173,6 +237,14 @@ class AppDelegate: UIResponder, UIApplicationDelegate, MessagingDelegate {
         Optimove.shared.pushRegister(deviceToken)
         Messaging.messaging().apnsToken = deviceToken
     }
+    
+    func application(_ application: UIApplication, didReceiveRemoteNotification userInfo: [AnyHashable: Any], fetchCompletionHandler completionHandler: @escaping (UIBackgroundFetchResult) -> Void) {
+            // userInfo["aps"]["content-available"] will be set to 1
+            // userInfo["custom"]["a"] will contain any additional data sent with the push
+            let userInfo = userInfo
+            
+            completionHandler(UIBackgroundFetchResult.noData)
+        }
 
 }
 
