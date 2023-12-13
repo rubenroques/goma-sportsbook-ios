@@ -248,21 +248,25 @@ class SearchViewModel: NSObject {
 
     func setHeaderSectionTitle(section: Int) -> String {
 
-        if self.sportMatchesArrayPublisher.value[section].matches.count > 1 {
-
-            let resultsCountTextRaw = localized("results_count")
-            let matchesCount = self.sportMatchesArrayPublisher.value[section].matches.count
-            let resultsCountText = resultsCountTextRaw.replacingOccurrences(of: "{num}", with: "\(matchesCount)")
-
-            return resultsCountText
-        }
-        else {
+        if let matches = self.sportMatchesArrayPublisher.value[safe: section]?.matches {
+            
+            if matches.count > 1 {
+                
+                let resultsCountTextRaw = localized("results_count")
+                let matchesCount = matches.count
+                let resultsCountText = resultsCountTextRaw.replacingOccurrences(of: "{num}", with: "\(matchesCount)")
+                
+                return resultsCountText
+            }
+            
             let resultsCountTextRaw = localized("results_count_singular")
-            let matchesCount = self.sportMatchesArrayPublisher.value[section].matches.count
+            let matchesCount = matches.count
             let resultsCountText = resultsCountTextRaw.replacingOccurrences(of: "{num}", with: "\(matchesCount)")
 
             return resultsCountText
         }
+        
+        return ""
 
     }
 }

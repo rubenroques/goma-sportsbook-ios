@@ -50,6 +50,9 @@ class LoginViewController: UIViewController {
     private let spinnerViewController = LoadingSpinnerViewController()
     
     private let dateFormatter = DateFormatter()
+    
+    var hasPendingRedirect: Bool = false
+    var needsRedirect: (() -> Void)?
 
     init(shouldPresentRegisterFlow: Bool = false) {
         self.shouldPresentRegisterFlow = shouldPresentRegisterFlow
@@ -669,7 +672,14 @@ class LoginViewController: UIViewController {
 
         AnalyticsClient.sendEvent(event: .userLogin)
         if self.isModal {
-            self.dismiss(animated: true, completion: nil)
+            if !self.hasPendingRedirect {
+                self.dismiss(animated: true, completion: nil)
+            }
+            else {
+                self.dismiss(animated: true, completion: {
+                    self.needsRedirect?()
+                })
+            }
         }
         else {
             self.navigationController?.popToRootViewController(animated: true)

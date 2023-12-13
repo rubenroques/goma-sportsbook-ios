@@ -220,6 +220,9 @@ class AppDelegate: UIResponder, UIApplicationDelegate, MessagingDelegate {
 
                 }
             }
+            else if urlSections.contains("contact-setting") {
+                self.openRoute(Route.contactSettings, onApplication: application)
+            }
         }
         return true
     }

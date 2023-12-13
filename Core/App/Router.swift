@@ -369,8 +369,6 @@ class Router {
 
     func showMatchDetailScreen(matchId: String) {
 
-        var hasSentMatchId = false
-
         if self.rootViewController?.presentedViewController?.isModal == true {
             self.rootViewController?.presentedViewController?.dismiss(animated: true, completion: nil)
         }
@@ -388,7 +386,6 @@ class Router {
                         
                         currentViewController.openMatchDetail(matchId: matchId)
 
-                        hasSentMatchId = true
                     }
                 }
 
@@ -397,22 +394,19 @@ class Router {
                 Env.servicesProvider.eventsConnectionStatePublisher
                     .filter({ $0 == .connected })
                     .receive(on: DispatchQueue.main)
+                    .first()
                     .sink(receiveCompletion: { _ in
 
                     }, receiveValue: { [weak self] _ in
-                        if !hasSentMatchId {
-                            if let rootViewController = self?.mainRootViewController {
-
-                                rootViewController.openMatchDetail(matchId: matchId)
-
-                                hasSentMatchId = true
-                            }
-                            else {
-                                if let currentViewController = self?.rootViewController as? RootViewController {
-                                    currentViewController.openMatchDetail(matchId: matchId)
-
-                                    hasSentMatchId = true
-                                }
+                        if let rootViewController = self?.mainRootViewController {
+                            
+                            rootViewController.openMatchDetail(matchId: matchId)
+                            
+                        }
+                        else {
+                            if let currentViewController = self?.rootViewController as? RootViewController {
+                                currentViewController.openMatchDetail(matchId: matchId)
+                                
                             }
                         }
 
@@ -445,8 +439,6 @@ class Router {
 
     func showBetslipWithTicket(token: String) {
 
-        var hasSentBetId = false
-
         if self.rootViewController?.presentedViewController?.isModal == true {
             self.rootViewController?.presentedViewController?.dismiss(animated: true, completion: nil)
         }
@@ -458,13 +450,11 @@ class Router {
                 if let rootViewController = self.mainRootViewController {
                     
                     rootViewController.openBetslipModalWithShareData(ticketToken: token)
-                    hasSentBetId = true
                 }
                 
                 if let currentViewController = self.rootViewController as? RootViewController {
                     
                     currentViewController.openBetslipModalWithShareData(ticketToken: token)
-                    hasSentBetId = true
                 }
                 
 //                let betslipViewController = BetslipViewController(startScreen: .sharedBet(token))
@@ -476,21 +466,18 @@ class Router {
                 Env.servicesProvider.eventsConnectionStatePublisher
                     .filter({ $0 == .connected })
                     .receive(on: DispatchQueue.main)
+                    .first()
                     .sink(receiveCompletion: { _ in
-
+                        
                     }, receiveValue: { [weak self] _ in
-                        if !hasSentBetId {
-                            if let rootViewController = self?.mainRootViewController {
-
-                                rootViewController.openBetslipModalWithShareData(ticketToken: token)
-                                hasSentBetId = true
-                            }
+                        if let rootViewController = self?.mainRootViewController {
+                            
+                            rootViewController.openBetslipModalWithShareData(ticketToken: token)
                         }
                         else {
                             if let currentViewController = self?.rootViewController as? RootViewController {
                                 
                                 currentViewController.openBetslipModalWithShareData(ticketToken: token)
-                                hasSentBetId = true
                             }
                         }
 //                        let betslipViewController = BetslipViewController(startScreen: .sharedBet(token))
@@ -531,9 +518,7 @@ class Router {
     }
     
     func showCompetitionDetailsScreen(competitionId: String) {
-        
-        var hasSentCompetitionId = false
-        
+                
         if self.rootViewController?.presentedViewController?.isModal == true {
             self.rootViewController?.presentedViewController?.dismiss(animated: true, completion: nil)
         }
@@ -551,7 +536,6 @@ class Router {
                         
                         currentViewController.openCompetitionDetail(competitionId: competitionId)
 
-                        hasSentCompetitionId = true
                     }
                 }
 
@@ -560,25 +544,21 @@ class Router {
                 Env.servicesProvider.eventsConnectionStatePublisher
                     .filter({ $0 == .connected })
                     .receive(on: DispatchQueue.main)
+                    .first()
                     .sink(receiveCompletion: { _ in
-
+                        
                     }, receiveValue: { [weak self] _ in
-                        if !hasSentCompetitionId {
-                            if let rootViewController = self?.mainRootViewController {
-
-                                rootViewController.openCompetitionDetail(competitionId: competitionId)
-
-                                hasSentCompetitionId = true
-                            }
-                            else {
-                                if let currentViewController = self?.rootViewController as? RootViewController {
-                                    currentViewController.openCompetitionDetail(competitionId: competitionId)
-
-                                    hasSentCompetitionId = true
-                                }
+                        if let rootViewController = self?.mainRootViewController {
+                            
+                            rootViewController.openCompetitionDetail(competitionId: competitionId)
+                            
+                        }
+                        else {
+                            if let currentViewController = self?.rootViewController as? RootViewController {
+                                currentViewController.openCompetitionDetail(competitionId: competitionId)
+                                
                             }
                         }
-
                     })
                     .store(in: &cancellables)
             }
@@ -591,43 +571,14 @@ class Router {
             self.rootViewController?.presentedViewController?.dismiss(animated: true, completion: nil)
         }
 
-        if let appSharedState = self.appSharedState {
-            switch appSharedState {
-            case .inactiveApp:
+        if let rootViewController = self.mainRootViewController {
+
+            rootViewController.openContactSettings()
+        }
+        else {
+            if let currentViewController = self.rootViewController as? RootViewController {
                 
-                if let rootViewController = self.mainRootViewController {
-
-                    rootViewController.openContactSettings()
-                }
-                else {
-                    if let currentViewController = self.rootViewController as? RootViewController {
-                        
-                        currentViewController.openContactSettings()
-                    }
-                }
-
-            case .activeApp:
-
-                Env.servicesProvider.eventsConnectionStatePublisher
-                    .filter({ $0 == .connected })
-                    .receive(on: DispatchQueue.main)
-                    .sink(receiveCompletion: { _ in
-
-                    }, receiveValue: { [weak self] _ in
-                            if let rootViewController = self?.mainRootViewController {
-
-                                rootViewController.openContactSettings()
-
-                            }
-                            else {
-                                if let currentViewController = self?.rootViewController as? RootViewController {
-                                    currentViewController.openContactSettings()
-
-                                }
-                            }
-
-                    })
-                    .store(in: &cancellables)
+                currentViewController.openContactSettings()
             }
         }
     }
@@ -658,6 +609,7 @@ class Router {
                 Env.servicesProvider.eventsConnectionStatePublisher
                     .filter({ $0 == .connected })
                     .receive(on: DispatchQueue.main)
+                    .first()
                     .sink(receiveCompletion: { _ in
 
                     }, receiveValue: { [weak self] _ in
@@ -685,43 +637,14 @@ class Router {
             self.rootViewController?.presentedViewController?.dismiss(animated: true, completion: nil)
         }
 
-        if let appSharedState = self.appSharedState {
-            switch appSharedState {
-            case .inactiveApp:
+        if let rootViewController = self.mainRootViewController {
+
+            rootViewController.openDeposit()
+        }
+        else {
+            if let currentViewController = self.rootViewController as? RootViewController {
                 
-                if let rootViewController = self.mainRootViewController {
-
-                    rootViewController.openDeposit()
-                }
-                else {
-                    if let currentViewController = self.rootViewController as? RootViewController {
-                        
-                        currentViewController.openDeposit()
-                    }
-                }
-
-            case .activeApp:
-
-                Env.servicesProvider.eventsConnectionStatePublisher
-                    .filter({ $0 == .connected })
-                    .receive(on: DispatchQueue.main)
-                    .sink(receiveCompletion: { _ in
-
-                    }, receiveValue: { [weak self] _ in
-                            if let rootViewController = self?.mainRootViewController {
-
-                                rootViewController.openDeposit()
-
-                            }
-                            else {
-                                if let currentViewController = self?.rootViewController as? RootViewController {
-                                    currentViewController.openDeposit()
-
-                                }
-                            }
-
-                    })
-                    .store(in: &cancellables)
+                currentViewController.openDeposit()
             }
         }
     }
@@ -732,43 +655,14 @@ class Router {
             self.rootViewController?.presentedViewController?.dismiss(animated: true, completion: nil)
         }
 
-        if let appSharedState = self.appSharedState {
-            switch appSharedState {
-            case .inactiveApp:
+        if let rootViewController = self.mainRootViewController {
+
+            rootViewController.openBonus()
+        }
+        else {
+            if let currentViewController = self.rootViewController as? RootViewController {
                 
-                if let rootViewController = self.mainRootViewController {
-
-                    rootViewController.openBonus()
-                }
-                else {
-                    if let currentViewController = self.rootViewController as? RootViewController {
-                        
-                        currentViewController.openBonus()
-                    }
-                }
-
-            case .activeApp:
-
-                Env.servicesProvider.eventsConnectionStatePublisher
-                    .filter({ $0 == .connected })
-                    .receive(on: DispatchQueue.main)
-                    .sink(receiveCompletion: { _ in
-
-                    }, receiveValue: { [weak self] _ in
-                            if let rootViewController = self?.mainRootViewController {
-
-                                rootViewController.openBonus()
-
-                            }
-                            else {
-                                if let currentViewController = self?.rootViewController as? RootViewController {
-                                    currentViewController.openBonus()
-
-                                }
-                            }
-
-                    })
-                    .store(in: &cancellables)
+                currentViewController.openBonus()
             }
         }
     }
@@ -779,43 +673,14 @@ class Router {
             self.rootViewController?.presentedViewController?.dismiss(animated: true, completion: nil)
         }
 
-        if let appSharedState = self.appSharedState {
-            switch appSharedState {
-            case .inactiveApp:
+        if let rootViewController = self.mainRootViewController {
+
+            rootViewController.openDocuments()
+        }
+        else {
+            if let currentViewController = self.rootViewController as? RootViewController {
                 
-                if let rootViewController = self.mainRootViewController {
-
-                    rootViewController.openDocuments()
-                }
-                else {
-                    if let currentViewController = self.rootViewController as? RootViewController {
-                        
-                        currentViewController.openDocuments()
-                    }
-                }
-
-            case .activeApp:
-
-                Env.servicesProvider.eventsConnectionStatePublisher
-                    .filter({ $0 == .connected })
-                    .receive(on: DispatchQueue.main)
-                    .sink(receiveCompletion: { _ in
-
-                    }, receiveValue: { [weak self] _ in
-                            if let rootViewController = self?.mainRootViewController {
-
-                                rootViewController.openDocuments()
-
-                            }
-                            else {
-                                if let currentViewController = self?.rootViewController as? RootViewController {
-                                    currentViewController.openDocuments()
-
-                                }
-                            }
-
-                    })
-                    .store(in: &cancellables)
+                currentViewController.openDocuments()
             }
         }
     }
@@ -826,43 +691,14 @@ class Router {
             self.rootViewController?.presentedViewController?.dismiss(animated: true, completion: nil)
         }
 
-        if let appSharedState = self.appSharedState {
-            switch appSharedState {
-            case .inactiveApp:
+        if let rootViewController = self.mainRootViewController {
+
+            rootViewController.openCustomerSupport()
+        }
+        else {
+            if let currentViewController = self.rootViewController as? RootViewController {
                 
-                if let rootViewController = self.mainRootViewController {
-
-                    rootViewController.openCustomerSupport()
-                }
-                else {
-                    if let currentViewController = self.rootViewController as? RootViewController {
-                        
-                        currentViewController.openCustomerSupport()
-                    }
-                }
-
-            case .activeApp:
-
-                Env.servicesProvider.eventsConnectionStatePublisher
-                    .filter({ $0 == .connected })
-                    .receive(on: DispatchQueue.main)
-                    .sink(receiveCompletion: { _ in
-
-                    }, receiveValue: { [weak self] _ in
-                            if let rootViewController = self?.mainRootViewController {
-
-                                rootViewController.openCustomerSupport()
-
-                            }
-                            else {
-                                if let currentViewController = self?.rootViewController as? RootViewController {
-                                    currentViewController.openCustomerSupport()
-
-                                }
-                            }
-
-                    })
-                    .store(in: &cancellables)
+                currentViewController.openCustomerSupport()
             }
         }
     }
@@ -893,6 +729,7 @@ class Router {
                 Env.servicesProvider.eventsConnectionStatePublisher
                     .filter({ $0 == .connected })
                     .receive(on: DispatchQueue.main)
+                    .first()
                     .sink(receiveCompletion: { _ in
 
                     }, receiveValue: { [weak self] _ in
@@ -919,44 +756,15 @@ class Router {
         if self.rootViewController?.presentedViewController?.isModal == true {
             self.rootViewController?.presentedViewController?.dismiss(animated: true, completion: nil)
         }
-
-        if let appSharedState = self.appSharedState {
-            switch appSharedState {
-            case .inactiveApp:
+        
+        if let rootViewController = self.mainRootViewController {
+            
+            rootViewController.openPromotions()
+        }
+        else {
+            if let currentViewController = self.rootViewController as? RootViewController {
                 
-                if let rootViewController = self.mainRootViewController {
-
-                    rootViewController.openPromotions()
-                }
-                else {
-                    if let currentViewController = self.rootViewController as? RootViewController {
-                        
-                        currentViewController.openPromotions()
-                    }
-                }
-
-            case .activeApp:
-
-                Env.servicesProvider.eventsConnectionStatePublisher
-                    .filter({ $0 == .connected })
-                    .receive(on: DispatchQueue.main)
-                    .sink(receiveCompletion: { _ in
-
-                    }, receiveValue: { [weak self] _ in
-                            if let rootViewController = self?.mainRootViewController {
-
-                                rootViewController.openPromotions()
-
-                            }
-                            else {
-                                if let currentViewController = self?.rootViewController as? RootViewController {
-                                    currentViewController.openPromotions()
-
-                                }
-                            }
-
-                    })
-                    .store(in: &cancellables)
+                currentViewController.openPromotions()
             }
         }
     }
