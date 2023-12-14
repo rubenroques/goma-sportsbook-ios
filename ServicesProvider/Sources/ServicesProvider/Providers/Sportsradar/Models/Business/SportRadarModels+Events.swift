@@ -482,14 +482,15 @@ extension SportRadarModels {
             
             self.isOverUnder = (try container.decodeIfPresent(Bool.self, forKey: .isOverUnder)) ?? false
             if self.isOverUnder {
-                for index in outcomes.indices {
-                    if (outcomes[index].orderValue ?? "").lowercased() == "h" {
-                        outcomes[index].orderValue = "a"
+                for index in self.outcomes.indices {
+                    if (self.outcomes[index].orderValue ?? "").lowercased() == "h" {
+                        self.outcomes[index].orderValue = "a"
                     }
-                    else if (outcomes[index].orderValue ?? "").lowercased() == "a" {
-                        outcomes[index].orderValue = "h"
+                    else if (self.outcomes[index].orderValue ?? "").lowercased() == "a" {
+                        self.outcomes[index].orderValue = "h"
                     }
                 }
+                self.outcomes = self.outcomes.reversed()
             }
             
 //            #if DEBUG
