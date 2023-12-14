@@ -120,10 +120,16 @@ class MyCompetitionsRootViewModel {
             .sink(receiveValue: { [weak self]  fetchedEventsSummmary in
 
                 if fetchedEventsSummmary.count == self?.favoriteEventsIds.count && fetchedEventsSummmary.isNotEmpty {
-
-                    self?.shouldUpdateContent?()
-                    self?.fetchedEventSummaryPublisher.value = []
-                    self?.isLoading = false
+                    
+                    if let favoriteCompetitions = self?.favoriteCompetitionsDataPublisher.value,
+                       favoriteCompetitions.isEmpty {
+                        self?.refetchTopCompetitions()
+                    }
+                    else {
+                        self?.shouldUpdateContent?()
+                        self?.fetchedEventSummaryPublisher.value = []
+                        self?.isLoading = false
+                    }
                 }
             })
             .store(in: &cancellables)
@@ -138,6 +144,18 @@ class MyCompetitionsRootViewModel {
             })
             .store(in: &cancellables)
 
+    }
+    
+    private func refetchTopCompetitions() {
+        self.clearData()
+        
+        Env.favoritesManager.showSuggestedCompetitionsPublisher.send(true)
+        
+        let popularCompetitionIds = Env.favoritesManager.topCompetitionIds
+        
+        self.isLoading = true
+        self.favoriteEventsIds = popularCompetitionIds
+        self.fetchFavoriteCompetitionMatches(customIds: popularCompetitionIds)
     }
 
     private func verifyEventsFetchedCompletion() {
@@ -209,11 +227,16 @@ class MyCompetitionsRootViewModel {
             }
             else {
                 self.fetchedEventSummaryPublisher.value.append(competitionInfo.id)
+//                if let marketGroup = competitionInfo.marketGroups.filter({
+//                    $0.name.lowercased().contains("outright")
+//                }).first {
+//                    self.subscribeCompetitionMatches(forMarketGroupId: marketGroup.id, competitionInfo: competitionInfo, isOutright: true)
+//                }
             }
         }
     }
 
-    func subscribeCompetitionMatches(forMarketGroupId marketGroupId: String, competitionInfo: SportCompetitionInfo) {
+    func subscribeCompetitionMatches(forMarketGroupId marketGroupId: String, competitionInfo: SportCompetitionInfo, isOutright: Bool = false) {
 
         Env.servicesProvider.subscribeCompetitionMatches(forMarketGroupId: marketGroupId)
         .sink { [weak self] (completion: Subscribers.Completion<ServiceProviderError>) in
@@ -229,7 +252,12 @@ class MyCompetitionsRootViewModel {
                 self?.subscriptions.insert(subscription)
             case .contentUpdate(let eventsGroups):
                 let matches = ServiceProviderModelMapper.matches(fromEventsGroups: eventsGroups)
-                self?.processCompetitionMatches(matches: matches, competitionInfo: competitionInfo)
+                if !isOutright {
+                    self?.processCompetitionMatches(matches: matches, competitionInfo: competitionInfo)
+                }
+                else {
+                    self?.processCompetitionOutrightMatches(matches: matches, competitionInfo: competitionInfo)
+                }
             case .disconnected:
                 ()
             }
@@ -252,9 +280,26 @@ class MyCompetitionsRootViewModel {
         self.fetchedEventSummaryPublisher.value.append(competitionInfo.id)
 
     }
+    
+    private func processCompetitionOutrightMatches(matches: [Match], competitionInfo: SportCompetitionInfo) {
+
+        let newCompetition = Competition(id: competitionInfo.id,
+                                         name: competitionInfo.name,
+                                         matches: matches,
+                                         venue: matches.first?.venue,
+                                         sport: nil,
+                                         numberOutrightMarkets: Int(competitionInfo.numberOutrightMarkets) ?? 0,
+        competitionInfo: competitionInfo)
+
+        //self.favoriteCompetitionsDataPublisher.value.append(newCompetition)
+        self.favoriteOutrightCompetitionsDataPublisher.value.append(newCompetition)
+
+        self.fetchedEventSummaryPublisher.value.append(competitionInfo.id)
+
+    }
 
     private func clearData() {
-
+        
         self.favoriteCompetitionsDataPublisher.value = []
         self.favoriteOutrightCompetitionsDataPublisher.value = []
         self.fetchedEventSummaryPublisher.value = []
