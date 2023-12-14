@@ -226,7 +226,6 @@ class TipsControlViewController: UIViewController {
         let link1Range = (localized("responsible_gaming_second_section_text_2") as NSString).range(of: "SOS joueur")
                 
         if sender.didTapAttributedTextInLabel(label: self.accordionSecondSectionDescriptionLabel2, inRange: link1Range, alignment: .left) {
-            print("TAPPED SECOND SECTION 1")
             if let url = URL(string: "https://sosjoueurs.org/") {
                 UIApplication.shared.open(url)
             }
