@@ -1283,8 +1283,7 @@ class MatchWidgetCollectionViewCell: UICollectionViewCell {
                     } receiveValue: { [weak self] market in
                         
                         if let firstCurrentOutcomeName = self?.viewModel?.match.markets.first?.outcomes[safe:0]?.typeName.lowercased(),
-                           let outcome = market.outcomes.first(where: { outcome in outcome.typeName.lowercased() == firstCurrentOutcomeName })
-                        {
+                           let outcome = market.outcomes.first(where: { outcome in outcome.typeName.lowercased() == firstCurrentOutcomeName }) {
                             let oddValue = OddFormatter.formatOdd(withValue: outcome.bettingOffer.decimalOdd)
                             let attributes = [NSAttributedString.Key.strikethroughStyle: NSUnderlineStyle.single.rawValue]
                             let attributedString = NSAttributedString(string: oddValue, attributes: attributes)
@@ -1294,9 +1293,8 @@ class MatchWidgetCollectionViewCell: UICollectionViewCell {
                             self?.homeOldBoostedOddValueLabel.text = "-"
                         }
                         
-                        if let secondCurrentOutcomeName = self?.viewModel?.match.markets.first?.outcomes[safe:1]?.typeName.lowercased(),
-                           let outcome = market.outcomes.first(where: { outcome in outcome.typeName.lowercased() == secondCurrentOutcomeName })
-                        {
+                        if let secondCurrentOutcomeName = self?.viewModel?.match.markets.first?.outcomes[safe: 1]?.typeName.lowercased(),
+                           let outcome = market.outcomes.first(where: { outcome in outcome.typeName.lowercased() == secondCurrentOutcomeName }) {
                             let oddValue = OddFormatter.formatOdd(withValue: outcome.bettingOffer.decimalOdd)
                             let attributes = [NSAttributedString.Key.strikethroughStyle: NSUnderlineStyle.single.rawValue]
                             let attributedString = NSAttributedString(string: oddValue, attributes: attributes)
@@ -1306,9 +1304,8 @@ class MatchWidgetCollectionViewCell: UICollectionViewCell {
                             self?.drawOldBoostedOddValueLabel.text = "-"
                         }
                         
-                        if let thirdCurrentOutcomeName = self?.viewModel?.match.markets.first?.outcomes[safe:2]?.typeName.lowercased(),
-                           let outcome = market.outcomes.first(where: { outcome in outcome.typeName.lowercased() == thirdCurrentOutcomeName })
-                         {
+                        if let thirdCurrentOutcomeName = self?.viewModel?.match.markets.first?.outcomes[safe: 2]?.typeName.lowercased(),
+                           let outcome = market.outcomes.first(where: { outcome in outcome.typeName.lowercased() == thirdCurrentOutcomeName }) {
                             let oddValue = OddFormatter.formatOdd(withValue: outcome.bettingOffer.decimalOdd)
                             let attributes = [NSAttributedString.Key.strikethroughStyle: NSUnderlineStyle.single.rawValue]
                             let attributedString = NSAttributedString(string: oddValue, attributes: attributes)
