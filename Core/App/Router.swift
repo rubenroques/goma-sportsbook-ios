@@ -247,6 +247,33 @@ class Router {
         self.appSharedState = .activeApp
         self.openRoute(route)
     }
+    
+    func openPushNotificationRoute(_ route: Route) {
+        print("OPENING PUSH NOTIFICATION START!")
+        
+        Publishers.CombineLatest(Env.servicesProvider.eventsConnectionStatePublisher, Env.userSessionStore.isLoadingUserSessionPublisher)
+            .filter({ connection, isLoading in
+                connection == .connected && isLoading == false
+            })
+            .receive(on: DispatchQueue.main)
+            .first()
+            .sink(receiveValue: { [weak self] _ in
+                print("OPENING PUSH NOTIFICATION!")
+                self?.appSharedState = .inactiveApp
+                self?.openRoute(route)
+            })
+            .store(in: &cancellables)
+//        Env.servicesProvider.eventsConnectionStatePublisher
+//            .filter({ $0 == .connected })
+//            .receive(on: DispatchQueue.main)
+//            .first()
+//            .sink(receiveValue: { [weak self] _ in
+//                print("OPENING PUSH NOTIFICATION!")
+//                self?.appSharedState = .inactiveApp
+//                self?.openRoute(route)
+//            })
+//            .store(in: &cancellables)
+    }
 
     func openRoute(_ route: Route) {
         switch route {

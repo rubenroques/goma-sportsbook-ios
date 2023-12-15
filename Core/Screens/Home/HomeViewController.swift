@@ -511,8 +511,25 @@ class HomeViewController: UIViewController {
     }
     
     private func openFavorites() {
-        let myFavoritesRootViewController = MyFavoritesRootViewController()
-        self.navigationController?.pushViewController(myFavoritesRootViewController, animated: true)
+        
+        if Env.userSessionStore.isUserLogged() {
+            let myFavoritesRootViewController = MyFavoritesRootViewController()
+            self.navigationController?.pushViewController(myFavoritesRootViewController, animated: true)
+        }
+        else {
+            
+            let loginViewController = LoginViewController()
+            
+            let navigationViewController = Router.navigationController(with: loginViewController)
+            
+            loginViewController.hasPendingRedirect = true
+            
+            loginViewController.needsRedirect = { [weak self] in
+                self?.openFavorites()
+            }
+            
+            self.present(navigationViewController, animated: true, completion: nil)
+        }
     }
 
     private func openQuickbet(_ bettingTicket: BettingTicket) {

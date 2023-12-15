@@ -198,16 +198,68 @@ class CasualGamblingViewController: UIViewController {
         }
     }
     
+    private func openSelfExclusion() {
+        
+        if Env.userSessionStore.isUserLogged() {
+            let selfExclusionViewModel = SelfExclusionViewModel()
+
+            let selfExclusionViewController = SelfExclusionViewController(viewModel: selfExclusionViewModel)
+            
+            self.navigationController?.pushViewController(selfExclusionViewController, animated: true)
+
+        }
+        else {
+            
+            let loginViewController = LoginViewController()
+            
+            let navigationViewController = Router.navigationController(with: loginViewController)
+            
+            loginViewController.hasPendingRedirect = true
+            
+            loginViewController.needsRedirect = { [weak self] in
+                self?.openSelfExclusion()
+            }
+            
+            self.present(navigationViewController, animated: true, completion: nil)
+        }
+    }
+    
+    private func openLimits() {
+        
+        if Env.userSessionStore.isUserLogged() {
+            let profileLimitsManagementViewController = ProfileLimitsManagementViewController()
+
+            self.navigationController?.pushViewController(profileLimitsManagementViewController, animated: true)
+
+        }
+        else {
+            
+            let loginViewController = LoginViewController()
+            
+            let navigationViewController = Router.navigationController(with: loginViewController)
+            
+            loginViewController.hasPendingRedirect = true
+            
+            loginViewController.needsRedirect = { [weak self] in
+                self?.openLimits()
+            }
+            
+            self.present(navigationViewController, animated: true, completion: nil)
+        }
+    }
+    
     @objc private func didTapFirstSectionLabel(_ sender: UITapGestureRecognizer) {
         let link1Range = (localized("responsible_gaming_first_section_text") as NSString).range(of: "limites de dépôt et de mise")
         
         let link2Range = (localized("responsible_gaming_first_section_text") as NSString).range(of: "s'auto-exclure")
         
         if sender.didTapAttributedTextInLabel(label: self.accordionFirstSectionDescriptionLabel, inRange: link1Range, alignment: .left) {
-            print("TAPPED FIRST SECTION 1")
+            
+            self.openLimits()
         }
         else if sender.didTapAttributedTextInLabel(label: self.accordionFirstSectionDescriptionLabel, inRange: link2Range, alignment: .left) {
-            print("TAPPED FIRST SECTION 2")
+            
+            self.openSelfExclusion()
         }
     }
     
@@ -215,7 +267,6 @@ class CasualGamblingViewController: UIViewController {
         let link1Range = (localized("responsible_gaming_second_section_text_2") as NSString).range(of: "SOS joueur")
                 
         if sender.didTapAttributedTextInLabel(label: self.accordionSecondSectionDescriptionLabel2, inRange: link1Range, alignment: .left) {
-            print("TAPPED SECOND SECTION 1")
             if let url = URL(string: "https://sosjoueurs.org/") {
                 UIApplication.shared.open(url)
             }
@@ -227,7 +278,6 @@ class CasualGamblingViewController: UIViewController {
         let link1Range = (localized("responsible_gaming_fourth_section_text") as NSString).range(of: "https://e-enfance.org/informer/controle-parental/")
                 
         if sender.didTapAttributedTextInLabel(label: self.accordionFourthSectionDescriptionLabel, inRange: link1Range, alignment: .left) {
-            print("TAPPED FOURTH SECTION 1")
             if let url = URL(string: "https://e-enfance.org/informer/controle-parental/") {
                 UIApplication.shared.open(url)
             }

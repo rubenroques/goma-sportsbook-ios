@@ -29,6 +29,8 @@ class FavoritesManager {
     var competitionListId: Int?
 
     var topCompetitionIds: [String] = []
+    
+    var showSuggestedCompetitionsPublisher: CurrentValueSubject<Bool, Never> = .init(false)
 
     // MARK: Lifetime and cycle
     init(eventsId: [String] = []) {
@@ -400,6 +402,7 @@ class FavoritesManager {
         self.fetchedMatchesListIds = [:]
         self.fetchedCompetitionsListsIds = [:]
         self.fetchedFavoriteEventIds = []
+        self.showSuggestedCompetitionsPublisher.value = false
     }
 
     func removeEmptyList(listId: Int) {

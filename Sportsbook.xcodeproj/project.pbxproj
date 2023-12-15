@@ -5116,6 +5116,12 @@
 		655E20182B29CB7E00C95337 /* TextSubsectionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 655E20122B29CB7E00C95337 /* TextSubsectionView.swift */; };
 		655E20192B29CB7E00C95337 /* TextSubsectionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 655E20122B29CB7E00C95337 /* TextSubsectionView.swift */; };
 		655E201A2B29CB7E00C95337 /* TextSubsectionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 655E20122B29CB7E00C95337 /* TextSubsectionView.swift */; };
+		659510EA2B2C7004001B2F2E /* Adjust in Frameworks */ = {isa = PBXBuildFile; productRef = 659510E92B2C7004001B2F2E /* Adjust */; };
+		659510EC2B2C7004001B2F2E /* Criteo in Frameworks */ = {isa = PBXBuildFile; productRef = 659510EB2B2C7004001B2F2E /* Criteo */; };
+		659510EE2B2C7004001B2F2E /* Sociomantic in Frameworks */ = {isa = PBXBuildFile; productRef = 659510ED2B2C7004001B2F2E /* Sociomantic */; };
+		659510F02B2C7004001B2F2E /* Trademob in Frameworks */ = {isa = PBXBuildFile; productRef = 659510EF2B2C7004001B2F2E /* Trademob */; };
+		659510F22B2C7004001B2F2E /* WebBridge in Frameworks */ = {isa = PBXBuildFile; productRef = 659510F12B2C7004001B2F2E /* WebBridge */; };
+		659510F42B2C7340001B2F2E /* Adjust in Frameworks */ = {isa = PBXBuildFile; productRef = 659510F32B2C7340001B2F2E /* Adjust */; };
 		A90229A228AFD41100972863 /* QuickBetViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A902299F28AFD41100972863 /* QuickBetViewController.swift */; };
 		A90229A328AFD41100972863 /* QuickBetViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A902299F28AFD41100972863 /* QuickBetViewController.swift */; };
 		A90229A428AFD41100972863 /* QuickBetViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A902299F28AFD41100972863 /* QuickBetViewController.swift */; };
@@ -7973,9 +7979,12 @@
 				45A332B1298976BA008181E9 /* FirebaseMessaging in Frameworks */,
 				45A332B2298976BA008181E9 /* FirebaseDatabase in Frameworks */,
 				458C07512AD5B49A0096E0D4 /* OptimoveNotificationServiceExtension in Frameworks */,
+				659510F22B2C7004001B2F2E /* WebBridge in Frameworks */,
 				45A332B3298976BA008181E9 /* AdyenDropIn in Frameworks */,
 				45A332B4298976BA008181E9 /* DictionaryCoding in Frameworks */,
 				45F805932A05357E005296E0 /* Lottie in Frameworks */,
+				659510F02B2C7004001B2F2E /* Trademob in Frameworks */,
+				659510EA2B2C7004001B2F2E /* Adjust in Frameworks */,
 				45A332B5298976BA008181E9 /* Reachability in Frameworks */,
 				45A332B6298976BA008181E9 /* AdyenComponents in Frameworks */,
 				45ECD74D2A8FFB2000492CB9 /* ZendeskChatSDK in Frameworks */,
@@ -7988,6 +7997,7 @@
 				45A332BB298976BA008181E9 /* Collections in Frameworks */,
 				45A332BC298976BA008181E9 /* AdyenEncryption in Frameworks */,
 				4566B95E2A6AEE8A00477046 /* IdensicMobileSDK in Frameworks */,
+				659510EE2B2C7004001B2F2E /* Sociomantic in Frameworks */,
 				45A332BD298976BA008181E9 /* AdyenActions in Frameworks */,
 				45A332BE298976BA008181E9 /* CombineCocoa in Frameworks */,
 				45A332BF298976BA008181E9 /* SwiftyBeaver in Frameworks */,
@@ -8000,6 +8010,7 @@
 				45A332C5298976BA008181E9 /* FirebaseAnalytics in Frameworks */,
 				45A332C6298976BA008181E9 /* OrderedCollections in Frameworks */,
 				458C074F2AD5B4930096E0D4 /* OptimoveCore in Frameworks */,
+				659510EC2B2C7004001B2F2E /* Criteo in Frameworks */,
 				45DB8DB02A6A9C7C0018C591 /* CountrySelectionFeature in Frameworks */,
 				459F410C2AF54C86006BAEE9 /* SwiftPrettyPrint in Frameworks */,
 				45A332C7298976BA008181E9 /* SweeterSwift in Frameworks */,
@@ -8047,6 +8058,7 @@
 				45F6BD7E2AB3732C00C81DE1 /* AdyenDropIn in Frameworks */,
 				45F6BD7F2AB3732C00C81DE1 /* DictionaryCoding in Frameworks */,
 				45F6BD802AB3732C00C81DE1 /* Lottie in Frameworks */,
+				659510F42B2C7340001B2F2E /* Adjust in Frameworks */,
 				45F6BD812AB3732C00C81DE1 /* Reachability in Frameworks */,
 				45F6BD822AB3732C00C81DE1 /* AdyenComponents in Frameworks */,
 				45F6BD832AB3732C00C81DE1 /* ZendeskChatSDK in Frameworks */,
@@ -11685,6 +11697,11 @@
 				458C07502AD5B49A0096E0D4 /* OptimoveNotificationServiceExtension */,
 				458C07522AD5B4A10096E0D4 /* OptimoveSDK */,
 				459F410B2AF54C86006BAEE9 /* SwiftPrettyPrint */,
+				659510E92B2C7004001B2F2E /* Adjust */,
+				659510EB2B2C7004001B2F2E /* Criteo */,
+				659510ED2B2C7004001B2F2E /* Sociomantic */,
+				659510EF2B2C7004001B2F2E /* Trademob */,
+				659510F12B2C7004001B2F2E /* WebBridge */,
 			);
 			productName = Sportsbook;
 			productReference = 45A3334E298976BA008181E9 /* Betsson.app */;
@@ -11782,6 +11799,7 @@
 				A9C5AC1E2ACDB30100C3FD56 /* OptimoveNotificationServiceExtension */,
 				A9C5AC202ACDB30100C3FD56 /* OptimoveSDK */,
 				459F410D2AF54D5E006BAEE9 /* SwiftPrettyPrint */,
+				659510F32B2C7340001B2F2E /* Adjust */,
 			);
 			productName = Sportsbook;
 			productReference = 45F6BE372AB3732C00C81DE1 /* Betsson UAT.app */;
@@ -11892,6 +11910,7 @@
 				45ECD7512A8FFB8A00492CB9 /* XCRemoteSwiftPackageReference "support_sdk_ios" */,
 				A9C5AC1B2ACDB30000C3FD56 /* XCRemoteSwiftPackageReference "Optimove-SDK-iOS" */,
 				459F410A2AF54C86006BAEE9 /* XCRemoteSwiftPackageReference "SwiftPrettyPrint" */,
+				659510E82B2C7004001B2F2E /* XCRemoteSwiftPackageReference "ios_sdk" */,
 			);
 			productRefGroup = 455A0C5126BD902C00EC572D /* Products */;
 			projectDirPath = "";
@@ -20526,6 +20545,14 @@
 				minimumVersion = 4.0.0;
 			};
 		};
+		659510E82B2C7004001B2F2E /* XCRemoteSwiftPackageReference "ios_sdk" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/adjust/ios_sdk";
+			requirement = {
+				branch = master;
+				kind = branch;
+			};
+		};
 		A96FAEDF29829CCA00A0751F /* XCRemoteSwiftPackageReference "adyen-ios" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/Adyen/adyen-ios";
@@ -21489,6 +21516,36 @@
 			isa = XCSwiftPackageProductDependency;
 			package = A9C5AC1B2ACDB30000C3FD56 /* XCRemoteSwiftPackageReference "Optimove-SDK-iOS" */;
 			productName = OptimoveNotificationServiceExtension;
+		};
+		659510E92B2C7004001B2F2E /* Adjust */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 659510E82B2C7004001B2F2E /* XCRemoteSwiftPackageReference "ios_sdk" */;
+			productName = Adjust;
+		};
+		659510EB2B2C7004001B2F2E /* Criteo */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 659510E82B2C7004001B2F2E /* XCRemoteSwiftPackageReference "ios_sdk" */;
+			productName = Criteo;
+		};
+		659510ED2B2C7004001B2F2E /* Sociomantic */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 659510E82B2C7004001B2F2E /* XCRemoteSwiftPackageReference "ios_sdk" */;
+			productName = Sociomantic;
+		};
+		659510EF2B2C7004001B2F2E /* Trademob */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 659510E82B2C7004001B2F2E /* XCRemoteSwiftPackageReference "ios_sdk" */;
+			productName = Trademob;
+		};
+		659510F12B2C7004001B2F2E /* WebBridge */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 659510E82B2C7004001B2F2E /* XCRemoteSwiftPackageReference "ios_sdk" */;
+			productName = WebBridge;
+		};
+		659510F32B2C7340001B2F2E /* Adjust */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 659510E82B2C7004001B2F2E /* XCRemoteSwiftPackageReference "ios_sdk" */;
+			productName = Adjust;
 		};
 		A96FAEE029829CCB00A0751F /* Adyen */ = {
 			isa = XCSwiftPackageProductDependency;
