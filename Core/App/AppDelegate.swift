@@ -14,6 +14,7 @@ import IQKeyboardManagerSwift
 import PhraseSDK
 import AdyenActions
 import OptimoveSDK
+import Adjust
 
 @main
 class AppDelegate: UIResponder, UIApplicationDelegate, MessagingDelegate {
@@ -99,20 +100,10 @@ class AppDelegate: UIResponder, UIApplicationDelegate, MessagingDelegate {
         let optimobileCredentials = "WzEsImV1LWNlbnRyYWwtMiIsImJkYzg1MTk5LTk4ODEtNGRhMy05NmYzLWI3ZGZkOWM3NzI0NCIsImpDNFMzODF4SDhCU2JSeS94aVlsQ25ubUVsT2ZTTEUxYUdhSyJd"
 
         // Optimove
-//        let config = OptimoveConfigBuilder(optimoveCredentials: optimoveCredentials, optimobileCredentials: optimobileCredentials).build()
         
         let config = OptimoveConfigBuilder(optimoveCredentials: optimoveCredentials, optimobileCredentials: optimobileCredentials)
             .setPushOpenedHandler(pushOpenedHandlerBlock: { (notification: PushNotification) -> Void in
                 //- Inspect notification data and do work.
-                print("OPTIMOVE NOTIFICATION: \(notification)")
-                
-                if let action = notification.actionIdentifier {
-                    print("User pressed an action button.")
-                    print(action)
-                    print(notification.data)
-                } else {
-                    print("Just an open event.")
-                }
                 
                 var route: Route?
                 let application = UIApplication.shared
@@ -164,6 +155,17 @@ class AppDelegate: UIResponder, UIApplicationDelegate, MessagingDelegate {
         Optimove.initialize(with: config)
 
         application.registerForRemoteNotifications()
+        
+        // Adjust
+        let appToken = "u9xpbb9chxj4"
+        let environment = ADJEnvironmentProduction
+        let adjustConfig = ADJConfig(
+            appToken: appToken,
+            environment: environment)
+        
+        adjustConfig?.logLevel = ADJLogLevelVerbose
+        
+        Adjust.appDidLaunch(adjustConfig)
         
         //
         self.window = UIWindow()
