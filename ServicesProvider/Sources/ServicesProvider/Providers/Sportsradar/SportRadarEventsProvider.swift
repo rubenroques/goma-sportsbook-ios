@@ -1280,7 +1280,7 @@ extension SportRadarEventsProvider {
                         })
 
                         // re-order the cleanedEvents based on the order of marketIds in headlineItems
-                        let orderedEvents = headlineItems.compactMap { eventDict[$0.marketId ?? ""] }
+                        let orderedEvents = headlineItems.compactMap { item in eventDict[item.marketId ?? ""] }
                         return orderedEvents
                     })
 
