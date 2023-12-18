@@ -73,19 +73,21 @@ public class LimitsOnRegisterViewModel {
             return Fail(error: LimitsOnRegisterError.autoPayoutFormatError).eraseToAnyPublisher()
         }
 
-        let depositPublisher = servicesProvider.updateWeeklyDepositLimits(newLimit: depositLimit)
+        let depositPublisher = /*servicesProvider.updateWeeklyDepositLimits(newLimit: depositLimit)*/
+        servicesProvider.updateResponsibleGamingLimits(newLimit: depositLimit, limitType: "deposit")
             .mapError { error in
                 print("Error \(error)")
                 return LimitsOnRegisterError.depositServerError
             }
 
-        let bettingPublisher = servicesProvider.updateWeeklyBettingLimits(newLimit: bettingLimit)
+        let bettingPublisher = /*servicesProvider.updateWeeklyBettingLimits(newLimit: bettingLimit)*/
+        servicesProvider.updateResponsibleGamingLimits(newLimit: depositLimit, limitType: "betting")
             .mapError { error in
                 print("Error \(error)")
                 return LimitsOnRegisterError.bettingServerError
             }
 
-        let autoPayoutPublisher = servicesProvider.updateResponsibleGamingLimits(newLimit: autoPayoutLimit)
+        let autoPayoutPublisher = servicesProvider.updateResponsibleGamingLimits(newLimit: autoPayoutLimit, limitType: "autoPayout")
             .mapError { error in
                 print("Error \(error)")
                 return LimitsOnRegisterError.autoPayoutServerError

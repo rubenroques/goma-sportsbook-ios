@@ -432,13 +432,28 @@ class SportRadarPrivilegedAccessManager: PrivilegedAccessManager {
         .eraseToAnyPublisher()
     }
 
-    func updateResponsibleGamingLimits(newLimit: Double) -> AnyPublisher<Bool, ServiceProviderError> {
-        let endpoint = OmegaAPIClient.updateResponsibleGamingLimits(newLimit: newLimit)
+    func updateResponsibleGamingLimits(newLimit: Double, limitType: String) -> AnyPublisher<Bool, ServiceProviderError> {
+        
+        var endpointLimitType = ""
+        var endpointLimitPeriod = "Weekly"
+        
+        if limitType == "deposit" {
+            endpointLimitType = "DEPOSIT_LIMIT"
+        }
+        else if limitType == "betting" {
+            endpointLimitType = "WAGER_LIMIT"
+
+        }
+        else if limitType == "autoPayout" {
+            endpointLimitType = "BALANCE_LIMIT"
+            endpointLimitPeriod = "Permanent"
+        }
+        
+        let endpoint = OmegaAPIClient.updateResponsibleGamingLimits(newLimit: newLimit, limitType: endpointLimitType, limitPeriod: endpointLimitPeriod)
         let publisher: AnyPublisher<SportRadarModels.StatusResponse, ServiceProviderError> = self.connector.request(endpoint)
 
 
         return publisher.flatMap({ statusResponse -> AnyPublisher<Bool, ServiceProviderError> in
-            print("AUTO_PAYOUT: \(statusResponse)")
             if statusResponse.status == "SUCCESS" {
                 return Just(true).setFailureType(to: ServiceProviderError.self).eraseToAnyPublisher()
             }

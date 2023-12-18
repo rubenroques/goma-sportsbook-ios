@@ -279,7 +279,8 @@ class ProfileLimitsManagementViewModel: NSObject {
     func updateDepositLimit(amount: String) {
 
         if let limit = Double(amount) {
-            Env.servicesProvider.updateWeeklyDepositLimits(newLimit: limit)
+//            Env.servicesProvider.updateWeeklyDepositLimits(newLimit: limit)
+            Env.servicesProvider.updateResponsibleGamingLimits(newLimit: limit, limitType: "deposit")
                 .receive(on: DispatchQueue.main)
                 .sink(receiveCompletion: { [weak self] completion in
 
@@ -310,7 +311,8 @@ class ProfileLimitsManagementViewModel: NSObject {
     func updateBettingLimit(amount: String) {
 
         if let limit = Double(amount) {
-            Env.servicesProvider.updateWeeklyBettingLimits(newLimit: limit)
+//            Env.servicesProvider.updateWeeklyBettingLimits(newLimit: limit)
+            Env.servicesProvider.updateResponsibleGamingLimits(newLimit: limit, limitType: "betting")
                 .receive(on: DispatchQueue.main)
                 .sink(receiveCompletion: { [weak self] completion in
 
@@ -341,7 +343,7 @@ class ProfileLimitsManagementViewModel: NSObject {
     func updateResponsibleGamingLimit(amount: String) {
 
         if let limit = Double(amount) {
-            Env.servicesProvider.updateResponsibleGamingLimits(newLimit: limit)
+            Env.servicesProvider.updateResponsibleGamingLimits(newLimit: limit, limitType: "autoPayout")
                 .receive(on: DispatchQueue.main)
                 .sink(receiveCompletion: { [weak self] completion in
 

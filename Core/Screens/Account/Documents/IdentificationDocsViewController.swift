@@ -291,7 +291,7 @@ class IdentificationDocsViewController: UIViewController {
     // MARK: Action
     @objc func didTapIdAddDoc() {
 
-        if self.totalIdentificationTriesCount <= 4 {
+        if self.totalIdentificationTriesCount <= 10 {
             self.viewModel.generateDocumentTypeToken(docType: "IDENTITY_CARD")
 
         }
@@ -311,7 +311,7 @@ class IdentificationDocsViewController: UIViewController {
 
     @objc func didTapProofAddDoc() {
 
-        if self.totalProofAddressTriesCount <= 4 {
+        if self.totalProofAddressTriesCount <= 10 {
 
             self.viewModel.generateDocumentTypeToken(docType: "POA_CARD")
 
@@ -513,11 +513,11 @@ class IdentificationDocsViewController: UIViewController {
             let canRetry = sumsubDoc.retry ?? true
             let moderationComment = sumsubDoc.moderationComment
 
-            if sumsubDoc.status == .rejected && moderationComment != nil && retries < 5 && hasApprovedIdentityDocuments {
+            if sumsubDoc.status == .rejected && moderationComment != nil && retries < 11 && hasApprovedIdentityDocuments {
                 self.idWarningView.setDescription(description: moderationComment ?? localized("error"))
                 self.showIdentityWarning = true
             }
-            else if retries > 4 {
+            else if retries > 10 {
                 if hasApprovedIdentityDocuments {
                     self.canAddIdentificationDocs = false
                     self.isProofOfAddressDisabled = false
@@ -632,7 +632,7 @@ class IdentificationDocsViewController: UIViewController {
                     }
 
                     if let totalRetries = proofFileInfo.totalRetries {
-                        if self.totalIdentificationTriesCount >= 5 {
+                        if self.totalIdentificationTriesCount >= 11 {
                             self.totalProofAddressTriesCount = self.totalIdentificationTriesCount
                         }
                         else {
@@ -650,11 +650,11 @@ class IdentificationDocsViewController: UIViewController {
                 let canRetry = sumsubDoc.retry ?? true
                 let moderationComment = sumsubDoc.moderationComment
 
-                if sumsubDoc.status == .rejected && moderationComment != nil && retries < 5 && hasApprovedProofDocuments {
+                if sumsubDoc.status == .rejected && moderationComment != nil && retries < 11 && hasApprovedProofDocuments {
                     self.proofWarningView.setDescription(description: moderationComment ?? localized("error"))
                     self.showProofWarning = true
                 }
-                else if retries > 4 {
+                else if retries > 10 {
                     if hasApprovedProofDocuments {
                         self.canAddProofDocs = false
                     }

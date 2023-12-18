@@ -193,6 +193,7 @@ class UserSessionStore {
 
         if !self.isUserLogged() {
             // There is no user logged in
+            self.isLoadingUserSessionPublisher.send(false)
             return
         }
         

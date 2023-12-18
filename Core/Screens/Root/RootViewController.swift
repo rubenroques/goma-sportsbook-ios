@@ -1130,7 +1130,7 @@ class RootViewController: UIViewController {
                     loginViewController.hasPendingRedirect = true
                     
                     loginViewController.needsRedirect = { [weak self] in
-                        self?.openDocuments()
+                        self?.openFavorites()
                     }
                     
                     self?.present(navigationViewController, animated: true, completion: nil)
