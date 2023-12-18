@@ -167,18 +167,18 @@ class MatchWidgetCollectionViewCell: UICollectionViewCell {
     @IBOutlet private weak var resultCenterConstraint: NSLayoutConstraint!
     @IBOutlet private weak var buttonsHeightConstraint: NSLayoutConstraint!
     
-    @IBOutlet weak var marketBottomConstraint: NSLayoutConstraint!
-    @IBOutlet weak var marketTopConstraint: NSLayoutConstraint!
-    @IBOutlet weak var marketHeightConstraint: NSLayoutConstraint!
-    @IBOutlet weak var participantsBottomConstraint: NSLayoutConstraint!
+    @IBOutlet private weak var marketBottomConstraint: NSLayoutConstraint!
+    @IBOutlet private weak var marketTopConstraint: NSLayoutConstraint!
+    @IBOutlet private weak var marketHeightConstraint: NSLayoutConstraint!
+    @IBOutlet private weak var participantsBottomConstraint: NSLayoutConstraint!
     
-    @IBOutlet weak var homeCenterViewConstraint: NSLayoutConstraint!
-    @IBOutlet weak var homeResultCenterViewConstraint: NSLayoutConstraint!
-    @IBOutlet weak var awayCenterViewConstraint: NSLayoutConstraint!
-    @IBOutlet weak var awayResultCenterViewConstraint: NSLayoutConstraint!
+    @IBOutlet private weak var homeCenterViewConstraint: NSLayoutConstraint!
+    @IBOutlet private weak var homeResultCenterViewConstraint: NSLayoutConstraint!
+    @IBOutlet private weak var awayCenterViewConstraint: NSLayoutConstraint!
+    @IBOutlet private weak var awayResultCenterViewConstraint: NSLayoutConstraint!
     
-    @IBOutlet weak var homeTrailingConstraint: NSLayoutConstraint!
-    @IBOutlet weak var awayLeadingConstraint: NSLayoutConstraint!
+    @IBOutlet private weak var homeTrailingConstraint: NSLayoutConstraint!
+    @IBOutlet private weak var awayLeadingConstraint: NSLayoutConstraint!
     
     private var cachedCardsStyle: CardsStyle?
     //
@@ -473,9 +473,9 @@ class MatchWidgetCollectionViewCell: UICollectionViewCell {
         self.awayNewBoostedOddValueLabel.font = AppFont.with(type: .bold, size: 13)
         self.awayOldBoostedOddValueLabel.font = AppFont.with(type: .semibold, size: 9)
 
-        self.homeOldBoostedOddValueLabel.text = "1.00"
-        self.drawOldBoostedOddValueLabel.text = "1.00"
-        self.awayOldBoostedOddValueLabel.text = "1.00"
+        self.homeOldBoostedOddValueLabel.text = "-"
+        self.drawOldBoostedOddValueLabel.text = "-"
+        self.awayOldBoostedOddValueLabel.text = "-"
 
         //
         //
@@ -1262,7 +1262,7 @@ class MatchWidgetCollectionViewCell: UICollectionViewCell {
         else {
             self.sportTypeImageView.image = UIImage(named: "sport_type_icon_default")
         }
-        //self.sportTypeImageView.setTintColor(color: UIColor.App.textPrimary)
+        // self.sportTypeImageView.setTintColor(color: UIColor.App.textPrimary)
 
         if let additionalImageURL = viewModel.promoImageURL {
             self.backgroundImageView.kf.setImage(with: additionalImageURL)
@@ -1280,24 +1280,39 @@ class MatchWidgetCollectionViewCell: UICollectionViewCell {
                     .map(ServiceProviderModelMapper.market(fromServiceProviderMarket:))
                     .sink { _ in
                         print("Env.servicesProvider.getMarketInfo(marketId: old boosted market completed")
-                    } receiveValue: { market in
-                        if let outcome = market.outcomes[safe: 0] {
+                    } receiveValue: { [weak self] market in
+                        
+                        if let firstCurrentOutcomeName = self?.viewModel?.match.markets.first?.outcomes[safe:0]?.typeName.lowercased(),
+                           let outcome = market.outcomes.first(where: { outcome in outcome.typeName.lowercased() == firstCurrentOutcomeName }) {
                             let oddValue = OddFormatter.formatOdd(withValue: outcome.bettingOffer.decimalOdd)
                             let attributes = [NSAttributedString.Key.strikethroughStyle: NSUnderlineStyle.single.rawValue]
                             let attributedString = NSAttributedString(string: oddValue, attributes: attributes)
-                            self.homeOldBoostedOddValueLabel.attributedText = attributedString
+                            self?.homeOldBoostedOddValueLabel.attributedText = attributedString
                         }
-                        if let outcome = market.outcomes[safe: 1] {
-                            let oddValue = OddFormatter.formatOdd(withValue: outcome.bettingOffer.decimalOdd)
-                            let attributes = [NSAttributedString.Key.strikethroughStyle: NSUnderlineStyle.single.rawValue]
-                            let attributedString = NSAttributedString(string: oddValue, attributes: attributes)
-                            self.drawOldBoostedOddValueLabel.attributedText = attributedString
+                        else {
+                            self?.homeOldBoostedOddValueLabel.text = "-"
                         }
-                        if let outcome = market.outcomes[safe: 2] {
+                        
+                        if let secondCurrentOutcomeName = self?.viewModel?.match.markets.first?.outcomes[safe: 1]?.typeName.lowercased(),
+                           let outcome = market.outcomes.first(where: { outcome in outcome.typeName.lowercased() == secondCurrentOutcomeName }) {
                             let oddValue = OddFormatter.formatOdd(withValue: outcome.bettingOffer.decimalOdd)
                             let attributes = [NSAttributedString.Key.strikethroughStyle: NSUnderlineStyle.single.rawValue]
                             let attributedString = NSAttributedString(string: oddValue, attributes: attributes)
-                            self.awayOldBoostedOddValueLabel.attributedText = attributedString
+                            self?.drawOldBoostedOddValueLabel.attributedText = attributedString
+                        }
+                        else {
+                            self?.drawOldBoostedOddValueLabel.text = "-"
+                        }
+                        
+                        if let thirdCurrentOutcomeName = self?.viewModel?.match.markets.first?.outcomes[safe: 2]?.typeName.lowercased(),
+                           let outcome = market.outcomes.first(where: { outcome in outcome.typeName.lowercased() == thirdCurrentOutcomeName }) {
+                            let oddValue = OddFormatter.formatOdd(withValue: outcome.bettingOffer.decimalOdd)
+                            let attributes = [NSAttributedString.Key.strikethroughStyle: NSUnderlineStyle.single.rawValue]
+                            let attributedString = NSAttributedString(string: oddValue, attributes: attributes)
+                            self?.awayOldBoostedOddValueLabel.attributedText = attributedString
+                        }
+                        else {
+                            self?.awayOldBoostedOddValueLabel.text = "-"
                         }
                     }
                     .store(in: &self.cancellables)
