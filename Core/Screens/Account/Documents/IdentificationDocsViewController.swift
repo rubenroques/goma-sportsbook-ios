@@ -296,7 +296,17 @@ class IdentificationDocsViewController: UIViewController {
 
         }
         else {
+            
+            let multipleFilesRequired = self.viewModel.requiredDocumentTypes.filter({
+                $0.documentTypeGroup == .identityCard ||
+                $0.documentTypeGroup == .passport ||
+                $0.documentTypeGroup == .drivingLicense ||
+                $0.documentTypeGroup == .residenceId
+            }).first?.multipleFileRequired
+            
             let manualUploadDocumentViewModel = ManualUploadsDocumentsViewModel(documentTypeCode: .identification)
+            
+            manualUploadDocumentViewModel.isMultipleFileRequired = multipleFilesRequired ?? false
 
             let manualUploadDocumentViewController = ManualUploadDocumentsViewController(viewModel: manualUploadDocumentViewModel)
 

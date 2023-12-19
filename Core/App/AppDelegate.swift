@@ -227,9 +227,6 @@ class AppDelegate: UIResponder, UIApplicationDelegate, MessagingDelegate {
             else if urlSections.contains("contact-settings") {
                 self.openSharedRoute(Route.contactSettings, onApplication: application)
             }
-            else if urlSections.contains("deposit") {
-                self.openSharedRoute(Route.deposit, onApplication: application)
-            }
             else if urlSections.contains("bonus") {
                 self.openSharedRoute(Route.bonus, onApplication: application)
             }
@@ -244,6 +241,10 @@ class AppDelegate: UIResponder, UIApplicationDelegate, MessagingDelegate {
             }
             else if urlSections.contains("promotions") {
                 self.openSharedRoute(Route.promotions, onApplication: application)
+            }
+            // Deposit does not exists in an url section
+            else if url.absoluteString.contains("deposit"){
+                self.openSharedRoute(Route.deposit, onApplication: application)
             }
         }
         return true

@@ -153,7 +153,8 @@ extension SportRadarModelMapper {
 
         let documentTypeGroup = DocumentTypeGroup.init(documentType: internalDocumentType.documentType)
 
-        return DocumentType(documentType: internalDocumentType.documentType, issueDateRequired: internalDocumentType.issueDateRequired, expiryDateRequired: internalDocumentType.expiryDateRequired, documentNumberRequired: internalDocumentType.documentNumberRequired, documentTypeGroup: documentTypeGroup)
+        return DocumentType(documentType: internalDocumentType.documentType, issueDateRequired: internalDocumentType.issueDateRequired, expiryDateRequired: internalDocumentType.expiryDateRequired, documentNumberRequired: internalDocumentType.documentNumberRequired, documentTypeGroup: documentTypeGroup,
+                            multipleFileRequired: internalDocumentType.multipleFileRequired)
     }
 
     static func userDocumentsResponse(fromUserDocumentsResponse internalUserDocumentsResponse: SportRadarModels.UserDocumentsResponse) -> UserDocumentsResponse {

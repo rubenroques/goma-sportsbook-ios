@@ -437,12 +437,14 @@ public struct DocumentType {
     public var expiryDateRequired: Bool?
     public var documentNumberRequired: Bool?
     public var documentTypeGroup: DocumentTypeGroup?
+    public var multipleFileRequired: Bool?
 
     enum CodingKeys: String, CodingKey {
         case documentType = "documentType"
         case expiryDateRequired = "expiryDateRequired"
         case documentNumberRequired = "documentNumberRequired"
         case issueDateRequired = "issueDateRequired"
+        case multipleFileRequired = "multipleFileRequired"
     }
 }
 
