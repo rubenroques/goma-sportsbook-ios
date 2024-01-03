@@ -498,8 +498,20 @@ class SportRadarPrivilegedAccessManager: PrivilegedAccessManager {
         .eraseToAnyPublisher()
     }
 
-    func getResponsibleGamingLimits() -> AnyPublisher<ResponsibleGamingLimitsResponse, ServiceProviderError> {
-        let endpoint = OmegaAPIClient.getResponsibleGamingLimits(limitType: "BALANCE_LIMIT", periodType: "PERMANENT")
+    func getResponsibleGamingLimits(periodTypes: String?, limitTypes: String?) -> AnyPublisher<ResponsibleGamingLimitsResponse, ServiceProviderError> {
+        
+        var limitType = "BALANCE_LIMIT"
+        var periodType = "PERMANENT"
+        
+        if let periodTypes {
+            periodType = periodTypes
+        }
+        
+        if let limitTypes {
+            limitType = limitTypes
+        }
+        
+        let endpoint = OmegaAPIClient.getResponsibleGamingLimits(limitType: limitType, periodType: periodType)
 
         let publisher: AnyPublisher<SportRadarModels.ResponsibleGamingLimitsResponse, ServiceProviderError> = self.connector.request(endpoint)
 
@@ -642,6 +654,21 @@ class SportRadarPrivilegedAccessManager: PrivilegedAccessManager {
         )
 
         if documentType == "IDENTITY_CARD" {
+            multipart.add(key: "issueDate", value: "2022-12-01")
+            multipart.add(key: "expiryDate", value: "2024-08-01")
+            multipart.add(key: "documentNumber", value: "123456789")
+        }
+        else if documentType == "RESIDENCE_ID" {
+            multipart.add(key: "issueDate", value: "2022-12-01")
+            multipart.add(key: "expiryDate", value: "2024-08-01")
+            multipart.add(key: "documentNumber", value: "123456789")
+        }
+        else if documentType == "DRIVING_LICENCE" {
+            multipart.add(key: "issueDate", value: "2022-12-01")
+            multipart.add(key: "expiryDate", value: "2024-08-01")
+            multipart.add(key: "documentNumber", value: "123456789")
+        }
+        else if documentType == "PASSPORT" {
             multipart.add(key: "issueDate", value: "2022-12-01")
             multipart.add(key: "expiryDate", value: "2024-08-01")
             multipart.add(key: "documentNumber", value: "123456789")

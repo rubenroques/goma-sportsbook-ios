@@ -21,10 +21,15 @@ class IBANProofViewController: UIViewController {
     private lazy var invalidIbanView: UIView = Self.createInvalidIbanView()
     private lazy var invalidIbanIconImageView: UIImageView = Self.createInvalidIbanIconImageView()
     private lazy var invalidIbanLabel: UILabel = Self.createInvalidIbanLabel()
+    private lazy var ibanNoteInfoLabel: UILabel = Self.createIbanNoteInfoLabel()
     private lazy var tableView: UITableView = Self.createTableView()
     private lazy var nextButton: UIButton = Self.createNextButton()
     private lazy var loadingBaseView: UIView = Self.createLoadingBaseView()
     private lazy var loadingActivityIndicatorView: UIActivityIndicatorView = Self.createLoadingActivityIndicatorView()
+    
+    // Constraints
+    private lazy var ibanNoteInputTopConstraint: NSLayoutConstraint = Self.createIbanNoteInputTopConstraint()
+    private lazy var ibanNoteInvalidViewTopConstraint: NSLayoutConstraint = Self.createIbanNoteInvalidViewTopConstraint()
 
     private var cancellables = Set<AnyCancellable>()
 
@@ -50,6 +55,10 @@ class IBANProofViewController: UIViewController {
     var showInvalidIban: Bool = false {
         didSet {
             self.invalidIbanView.isHidden = !showInvalidIban
+            
+            self.ibanNoteInputTopConstraint.isActive = !showInvalidIban
+            
+            self.ibanNoteInvalidViewTopConstraint.isActive = showInvalidIban
 
         }
     }
@@ -129,6 +138,8 @@ class IBANProofViewController: UIViewController {
         self.invalidIbanIconImageView.backgroundColor = .clear
 
         self.invalidIbanLabel.textColor = UIColor.App.inputError
+        
+        self.ibanNoteInfoLabel.textColor = UIColor.App.textPrimary
 
         self.tableView.backgroundColor = UIColor.App.backgroundPrimary
 
@@ -234,7 +245,8 @@ class IBANProofViewController: UIViewController {
 
     private func validateIBANFormat(ibanValue: String) {
 
-        let pattern = "^[A-Z]{2}[A-Z0-9]{14,29}$"
+//        let pattern = "^[A-Z]{2}[A-Z0-9]{14,29}$"
+        let pattern = "^[A-Z]{2}[A-Z0-9]{25}$"
         if let regex = try? NSRegularExpression(pattern: pattern) {
 
             let range = NSRange(location: 0, length: ibanValue.utf16.count)
@@ -551,6 +563,16 @@ extension IBANProofViewController {
         label.numberOfLines = 0
         return label
     }
+    
+    private static func createIbanNoteInfoLabel() -> UILabel {
+        let label = UILabel()
+        label.translatesAutoresizingMaskIntoConstraints = false
+        label.text = localized("iban_note")
+        label.font = AppFont.with(type: .semibold, size: 12)
+        label.textAlignment = .left
+        label.numberOfLines = 0
+        return label
+    }
 
     private static func createTableView() -> UITableView {
         let tableView = UITableView.init(frame: .zero, style: .plain)
@@ -582,6 +604,16 @@ extension IBANProofViewController {
         activityIndicatorView.stopAnimating()
         return activityIndicatorView
     }
+    
+    private static func createIbanNoteInputTopConstraint() -> NSLayoutConstraint {
+        let constraint = NSLayoutConstraint()
+        return constraint
+    }
+
+    private static func createIbanNoteInvalidViewTopConstraint() -> NSLayoutConstraint {
+        let constraint = NSLayoutConstraint()
+        return constraint
+    }
 
     private func setupSubviews() {
         self.view.addSubview(self.containerView)
@@ -599,6 +631,8 @@ extension IBANProofViewController {
 
         self.invalidIbanView.addSubview(self.invalidIbanIconImageView)
         self.invalidIbanView.addSubview(self.invalidIbanLabel)
+        
+        self.containerView.addSubview(self.ibanNoteInfoLabel)
 
         self.containerView.addSubview(self.tableView)
 
@@ -661,10 +695,13 @@ extension IBANProofViewController {
             self.invalidIbanLabel.topAnchor.constraint(equalTo: self.invalidIbanIconImageView.topAnchor),
             self.invalidIbanLabel.trailingAnchor.constraint(equalTo: self.invalidIbanView.trailingAnchor),
             self.invalidIbanLabel.bottomAnchor.constraint(equalTo: self.invalidIbanView.bottomAnchor, constant: -4),
+            
+            self.ibanNoteInfoLabel.leadingAnchor.constraint(equalTo: self.containerView.leadingAnchor, constant: 25),
+            self.ibanNoteInfoLabel.trailingAnchor.constraint(equalTo: self.containerView.trailingAnchor, constant: -25),
 
             self.tableView.leadingAnchor.constraint(equalTo: self.containerView.leadingAnchor, constant: 25),
             self.tableView.trailingAnchor.constraint(equalTo: self.containerView.trailingAnchor, constant: -25),
-            self.tableView.topAnchor.constraint(equalTo: self.ibanHeaderTextFieldView.bottomAnchor, constant: 30),
+            self.tableView.topAnchor.constraint(equalTo: self.ibanNoteInfoLabel.bottomAnchor, constant: 30),
             self.tableView.bottomAnchor.constraint(equalTo: self.nextButton.topAnchor, constant: -15),
 
             self.nextButton.leadingAnchor.constraint(equalTo: self.containerView.leadingAnchor, constant: 25),
@@ -684,7 +721,13 @@ extension IBANProofViewController {
             self.loadingActivityIndicatorView.centerYAnchor.constraint(equalTo: self.loadingBaseView.centerYAnchor),
             self.loadingActivityIndicatorView.centerXAnchor.constraint(equalTo: self.loadingBaseView.centerXAnchor)
         ])
+        
+        self.ibanNoteInputTopConstraint = self.ibanNoteInfoLabel.topAnchor.constraint(equalTo: self.ibanHeaderTextFieldView.bottomAnchor, constant: -5)
+        self.ibanNoteInputTopConstraint.isActive = true
 
+        self.ibanNoteInvalidViewTopConstraint = self.ibanNoteInfoLabel.topAnchor.constraint(equalTo: self.invalidIbanView.bottomAnchor, constant: 5)
+        self.ibanNoteInvalidViewTopConstraint.isActive = false
+        
     }
 
 }

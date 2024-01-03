@@ -206,12 +206,6 @@ class LoginViewController: UIViewController {
 
     }
 
-    @objc private func showDeposit() {
-        if let navigationController = self.navigationController {
-            self.showRegisterFeedbackViewController(onNavigationController: navigationController)
-        }
-    }
-
     func setupWithTheme() {
         
         self.view.backgroundColor = UIColor.App.backgroundPrimary

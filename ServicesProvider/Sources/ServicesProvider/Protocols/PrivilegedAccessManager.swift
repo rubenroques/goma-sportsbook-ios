@@ -50,7 +50,7 @@ protocol PrivilegedAccessManager {
     func updateResponsibleGamingLimits(newLimit: Double, limitType: String) -> AnyPublisher<Bool, ServiceProviderError>
     func getPersonalDepositLimits() -> AnyPublisher<PersonalDepositLimitResponse, ServiceProviderError>
     func getLimits() -> AnyPublisher<LimitsResponse, ServiceProviderError>
-    func getResponsibleGamingLimits() -> AnyPublisher<ResponsibleGamingLimitsResponse, ServiceProviderError>
+    func getResponsibleGamingLimits(periodTypes: String?, limitTypes: String?) -> AnyPublisher<ResponsibleGamingLimitsResponse, ServiceProviderError>
     func lockPlayer(isPermanent: Bool?, lockPeriodUnit: String?, lockPeriod: String?) -> AnyPublisher<BasicResponse, ServiceProviderError>
 
     func getUserBalance() -> AnyPublisher<UserWallet, ServiceProviderError>

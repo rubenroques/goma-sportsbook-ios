@@ -73,6 +73,7 @@ public class HeaderTextFieldView: NibView {
 
     public var isTipPermanent: Bool = false
     public var isSlidedUp: Bool = false
+    public var hasSeparatorSpace: Bool = false
 
     private var isCurrencyMode = false
     private var currencySymbol: String?
@@ -123,6 +124,8 @@ public class HeaderTextFieldView: NibView {
             }
         }
     }
+    
+    public var isAlphabetMode = false
 
     public var text: String {
         return self.textField.text ?? ""
@@ -166,7 +169,7 @@ public class HeaderTextFieldView: NibView {
         }
     }
 
-    var isDisabled: Bool = false {
+    public var isDisabled: Bool = false {
         didSet {
             if self.isDisabled {
                 self.textField.textColor = AppColor.inputText
@@ -600,6 +603,7 @@ extension HeaderTextFieldView: UITextFieldDelegate {
     public func textFieldShouldBeginEditing(_ textField: UITextField) -> Bool {
         let shouldBeginEditing = self.shouldBeginEditing?() ?? true
         self.isActive = shouldBeginEditing
+        
         return shouldBeginEditing
     }
 
@@ -622,6 +626,19 @@ extension HeaderTextFieldView: UITextFieldDelegate {
 
         self.isActive = false
 
+//        if isCurrencyMode {
+//            if hasSeparatorSpace {
+//                let currencyFormatter = CurrencyFormater()
+//                let amountFormatted = currencyFormatter.currencyTypeWithSeparatorFormatting(string: textField.text ?? "")
+//                textField.text = amountFormatted
+//            }
+//            else {
+//                let currencyFormatter = CurrencyFormater()
+//                let amountFormatted = currencyFormatter.currencyTypeFormatting(string: textField.text ?? "")
+//                textField.text = amountFormatted
+//            }
+//        }
+        
         self.didEndEditing()
     }
 
@@ -635,6 +652,14 @@ extension HeaderTextFieldView: UITextFieldDelegate {
             let decimals = CharacterSet(charactersIn: "0123456789.,")
             if string.rangeOfCharacter(from: decimals) == nil && string != "" {
                 return false
+            }
+        }
+        
+        if self.isAlphabetMode {
+            if !string.isEmpty {
+                let allowedCharacters = CharacterSet.letters
+                let characterSet = CharacterSet(charactersIn: string)
+                return allowedCharacters.isSuperset(of: characterSet)
             }
         }
         return true

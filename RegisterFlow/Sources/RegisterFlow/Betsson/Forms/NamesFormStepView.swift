@@ -87,7 +87,7 @@ class NamesFormStepView: FormStepView {
         ])
         
         self.titleLabel.text = self.viewModel.title
-
+        
         self.firstNameHeaderTextFieldView.setContextType(.givenName)
         self.lastNameHeaderTextFieldView.setContextType(.familyName)
 
@@ -96,12 +96,16 @@ class NamesFormStepView: FormStepView {
         self.firstNameHeaderTextFieldView.didTapReturn = { [weak self] in
             self?.lastNameHeaderTextFieldView.becomeFirstResponder()
         }
+        self.firstNameHeaderTextFieldView.keyboardType = .alphabet
+        self.firstNameHeaderTextFieldView.isAlphabetMode = true
         
         self.lastNameHeaderTextFieldView.setReturnKeyType(.continue)
         self.lastNameHeaderTextFieldView.setPlaceholderText(Localization.localized("last_name"))
         self.lastNameHeaderTextFieldView.didTapReturn = { [weak self] in
             self?.lastNameHeaderTextFieldView.resignFirstResponder()
         }
+        self.lastNameHeaderTextFieldView.keyboardType = .alphabet
+        self.lastNameHeaderTextFieldView.isAlphabetMode = true
         
         self.firstNameHeaderTextFieldView.setText(self.viewModel.firstName.value ?? "")
         self.lastNameHeaderTextFieldView.setText(self.viewModel.lastName.value ?? "")

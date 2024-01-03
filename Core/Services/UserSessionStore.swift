@@ -287,25 +287,45 @@ class UserSessionStore {
 
     }
 
-    func shouldRequestLimits() -> AnyPublisher<Bool, Never> {
-        return Publishers.CombineLatest(Env.servicesProvider.getPersonalDepositLimits(), Env.servicesProvider.getLimits())
-            .map {  [weak self] depositLimitResponse, bettingLimitsResponse in
+    func shouldRequestLimits() -> AnyPublisher<LimitsValidation, Never> {
+//        return Publishers.CombineLatest(Env.servicesProvider.getPersonalDepositLimits(), Env.servicesProvider.getLimits())
+//            .map {  [weak self] depositLimitResponse, bettingLimitsResponse in
+//
+//                if self?.shouldSkipLimitsScreen ?? false {
+//                    return false
+//                }
+//
+//                let hasLimitsDefined = depositLimitResponse.weeklyLimit != nil
+//                let hasBettingLimitsDefined = bettingLimitsResponse.wagerLimit != nil
+//
+//                if hasLimitsDefined && hasBettingLimitsDefined {
+//                    return false
+//                }
+//                else {
+//                    return true
+//                }
+//            }
+//            .replaceError(with: false) // if an error occour it shouldn't show the blocking screen
+//            .eraseToAnyPublisher()
+        
+        return Env.servicesProvider.getResponsibleGamingLimits(periodTypes: "Weekly,Permanent", limitTypes: "DEPOSIT_LIMIT,WAGER_LIMIT,BALANCE_LIMIT")
+            .map {  [weak self] limitsResponse in
 
                 if self?.shouldSkipLimitsScreen ?? false {
-                    return false
+                    return LimitsValidation(valid: false, limits: [])
                 }
+                
+                let allLimitTypes = ["DEPOSIT_LIMIT", "WAGER_LIMIT", "BALANCE_LIMIT"]
+                
+                let limitTypesDefined = limitsResponse.limits.compactMap { $0.limitType }
 
-                let hasLimitsDefined = depositLimitResponse.weeklyLimit != nil
-                let hasBettingLimitsDefined = bettingLimitsResponse.wagerLimit != nil
-
-                if hasLimitsDefined && hasBettingLimitsDefined {
-                    return false
-                }
-                else {
-                    return true
-                }
+                let allLimitsDefined = allLimitTypes.allSatisfy { limitTypesDefined.contains($0) }
+                
+                let limits = limitsResponse.limits
+                
+                return LimitsValidation(valid: allLimitsDefined, limits: [])
             }
-            .replaceError(with: false) // if an error occour it shouldn't show the blocking screen
+            .replaceError(with: LimitsValidation(valid: false, limits: [])) // if an error occour it shouldn't show the blocking screen
             .eraseToAnyPublisher()
     }
 
@@ -685,4 +705,10 @@ extension UserSessionStore {
         }
     }
 
+}
+
+
+struct LimitsValidation {
+    var valid: Bool
+    var limits: [ResponsibleGamingLimit]
 }

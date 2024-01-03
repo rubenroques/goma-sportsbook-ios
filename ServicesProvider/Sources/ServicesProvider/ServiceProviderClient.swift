@@ -779,14 +779,14 @@ extension ServicesProviderClient {
         return privilegedAccessManager.getLimits()
     }
 
-    public func getResponsibleGamingLimits() -> AnyPublisher<ResponsibleGamingLimitsResponse, ServiceProviderError> {
+    public func getResponsibleGamingLimits(periodTypes: String? = nil, limitTypes: String? = nil) -> AnyPublisher<ResponsibleGamingLimitsResponse, ServiceProviderError> {
 
         guard
             let privilegedAccessManager = self.privilegedAccessManager
         else {
             return Fail(error: ServiceProviderError.privilegedAccessManagerNotFound).eraseToAnyPublisher()
         }
-        return privilegedAccessManager.getResponsibleGamingLimits()
+        return privilegedAccessManager.getResponsibleGamingLimits(periodTypes: periodTypes, limitTypes: limitTypes)
     }
 
     public func lockPlayer(isPermanent: Bool? = nil, lockPeriodUnit: String? = nil, lockPeriod: String? = nil) -> AnyPublisher<BasicResponse, ServiceProviderError> {
