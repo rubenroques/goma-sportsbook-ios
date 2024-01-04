@@ -83,7 +83,7 @@ public class LimitsOnRegisterViewModel {
             }
 
         let bettingPublisher = /*servicesProvider.updateWeeklyBettingLimits(newLimit: bettingLimit)*/
-        servicesProvider.updateResponsibleGamingLimits(newLimit: depositLimit, limitType: "betting")
+        servicesProvider.updateResponsibleGamingLimits(newLimit: bettingLimit, limitType: "betting")
             .mapError { error in
                 print("Error \(error)")
                 return LimitsOnRegisterError.bettingServerError

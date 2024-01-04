@@ -121,23 +121,23 @@ class ProfileViewController: UIViewController {
         self.commonInit()
         self.setupWithTheme()
         
-        #if DEBUG
-        let debugLogoImageViewTap = UITapGestureRecognizer(target: self, action: #selector(testTap))
-        
-        debugLogoImageViewTap.numberOfTapsRequired = 3
-        self.profilePictureBaseView.addGestureRecognizer(debugLogoImageViewTap)
-        #endif
+//        #if DEBUG
+//        let debugLogoImageViewTap = UITapGestureRecognizer(target: self, action: #selector(testTap))
+//        
+//        debugLogoImageViewTap.numberOfTapsRequired = 3
+//        self.profilePictureBaseView.addGestureRecognizer(debugLogoImageViewTap)
+//        #endif
     }
     
-    @objc private func testTap() {
-        let ibanProofViewModel = IBANProofViewModel()
-
-        let ibanProofViewController = IBANProofViewController(viewModel: ibanProofViewModel)
-
-        let navigationViewController = Router.navigationController(with: ibanProofViewController)
-
-        self.present(navigationViewController, animated: true, completion: nil)
-    }
+//    @objc private func testTap() {
+//        let ibanProofViewModel = IBANProofViewModel()
+//
+//        let ibanProofViewController = IBANProofViewController(viewModel: ibanProofViewModel)
+//
+//        let navigationViewController = Router.navigationController(with: ibanProofViewController)
+//
+//        self.present(navigationViewController, animated: true, completion: nil)
+//    }
 
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
