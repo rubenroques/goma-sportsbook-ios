@@ -511,15 +511,29 @@ class RootViewController: UIViewController {
 
     func checkUserLimitsSet() {
 
-        Env.userSessionStore
-            .shouldRequestLimits()
+//        Env.userSessionStore
+//            .shouldRequestLimits()
+//            .receive(on: DispatchQueue.main)
+//            .sink { [weak self] limitsValidation in
+//                if !limitsValidation.valid {
+//                    
+////                    DispatchQueue.main.asyncAfter(deadline: .now() + 3) {
+////                        self?.showLimitsScreenOnRegister(limits: limitsValidation.limits)
+////                    }
+//                    self?.showLimitsScreenOnRegister(limits: limitsValidation.limits)
+//                }
+//            }
+//            .store(in: &self.cancellables)
+        
+        Publishers.CombineLatest(Env.userSessionStore.shouldRequestLimits(), Env.userSessionStore.loginFlowSuccess)
+            .filter({ [weak self] _, loginFlowSuccess in
+                loginFlowSuccess == true
+            })
+            .first()
             .receive(on: DispatchQueue.main)
-            .sink { [weak self] limitsValidation in
-                if !limitsValidation.valid {
+            .sink { [weak self] limitsValidation, loginFlowSuccess in
+                if !limitsValidation.valid && loginFlowSuccess {
                     
-                    //                    DispatchQueue.main.asyncAfter(deadline: .now() + 2) {
-                    //                        self?.showLimitsScreenOnRegister(limits: limitsValidation.limits)
-                    //                    }
                     self?.showLimitsScreenOnRegister(limits: limitsValidation.limits)
                 }
             }

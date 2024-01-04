@@ -256,7 +256,7 @@ public class LimitsOnRegisterViewController: UIViewController {
             }
             .store(in: &self.cancellables)
         
-        //self.setupLimits()
+        self.setupLimits()
 
     }
 

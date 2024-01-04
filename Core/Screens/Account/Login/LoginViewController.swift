@@ -673,6 +673,9 @@ class LoginViewController: UIViewController {
     private func showNextViewController() {
 
         AnalyticsClient.sendEvent(event: .userLogin)
+        
+        Env.userSessionStore.loginFlowSuccess.send(true)
+        
         if self.isModal {
             if !self.hasPendingRedirect {
                 self.dismiss(animated: true, completion: nil)

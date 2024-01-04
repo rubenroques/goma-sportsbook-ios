@@ -114,6 +114,8 @@ class UserSessionStore {
         // There is a cached session user
         return UserDefaults.standard.userSession
     }
+    
+    var loginFlowSuccess: CurrentValueSubject<Bool, Never> = .init(false)
 
     private var cancellables = Set<AnyCancellable>()
 
@@ -190,7 +192,9 @@ class UserSessionStore {
 
     //
     func logout() {
-
+        
+        Env.userSessionStore.loginFlowSuccess.send(false)
+        
         if !self.isUserLogged() {
             // There is no user logged in
             self.isLoadingUserSessionPublisher.send(false)
@@ -323,7 +327,7 @@ class UserSessionStore {
                 
                 let limits = limitsResponse.limits
                 
-                return LimitsValidation(valid: allLimitsDefined, limits: [])
+                return LimitsValidation(valid: allLimitsDefined, limits: limits)
             }
             .replaceError(with: LimitsValidation(valid: false, limits: [])) // if an error occour it shouldn't show the blocking screen
             .eraseToAnyPublisher()
@@ -556,6 +560,7 @@ extension UserSessionStore {
                     ()
                 }
                 self?.isLoadingUserSessionPublisher.send(false)
+                Env.userSessionStore.loginFlowSuccess.send(true)
             }, receiveValue: {
 
             })
