@@ -316,7 +316,7 @@ class UserSessionStore {
             .map {  [weak self] limitsResponse in
 
                 if self?.shouldSkipLimitsScreen ?? false {
-                    return LimitsValidation(valid: false, limits: [])
+                    return LimitsValidation(valid: true, limits: [])
                 }
                 
                 let allLimitTypes = ["DEPOSIT_LIMIT", "WAGER_LIMIT", "BALANCE_LIMIT"]
@@ -329,7 +329,7 @@ class UserSessionStore {
                 
                 return LimitsValidation(valid: allLimitsDefined, limits: limits)
             }
-            .replaceError(with: LimitsValidation(valid: false, limits: [])) // if an error occour it shouldn't show the blocking screen
+            .replaceError(with: LimitsValidation(valid: true, limits: [])) // if an error occour it shouldn't show the blocking screen
             .eraseToAnyPublisher()
     }
 

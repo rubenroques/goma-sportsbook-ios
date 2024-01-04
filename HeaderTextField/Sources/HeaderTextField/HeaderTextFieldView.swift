@@ -657,7 +657,8 @@ extension HeaderTextFieldView: UITextFieldDelegate {
         
         if self.isAlphabetMode {
             if !string.isEmpty {
-                let allowedCharacters = CharacterSet.letters
+//                let allowedCharacters = CharacterSet.letters
+                let allowedCharacters = CharacterSet.decimalDigits.inverted
                 let characterSet = CharacterSet(charactersIn: string)
                 return allowedCharacters.isSuperset(of: characterSet)
             }

@@ -321,23 +321,50 @@ public class LimitsOnRegisterViewController: UIViewController {
 
     @objc func didTapBeginnerButton() {
         self.selectedProfile = .beginner
-        self.depositLimitHeaderTextFieldView.setText("200")
-        self.bettingLimitHeaderTextFieldView.setText("500")
-        self.autoPayoutHeaderTextFieldView.setText("251")
+        
+        if !self.depositLimitHeaderTextFieldView.isDisabled {
+            self.depositLimitHeaderTextFieldView.setText("200")
+        }
+        
+        if !self.bettingLimitHeaderTextFieldView.isDisabled {
+            self.bettingLimitHeaderTextFieldView.setText("500")
+        }
+        
+        if !self.autoPayoutHeaderTextFieldView.isDisabled {
+            self.autoPayoutHeaderTextFieldView.setText("251")
+        }
     }
 
     @objc func didTapIntermediateButton() {
         self.selectedProfile = .intermediate
-        self.depositLimitHeaderTextFieldView.setText("500")
-        self.bettingLimitHeaderTextFieldView.setText("1000")
-        self.autoPayoutHeaderTextFieldView.setText("1001")
+        
+        if !self.depositLimitHeaderTextFieldView.isDisabled {
+            self.depositLimitHeaderTextFieldView.setText("500")
+        }
+        
+        if !self.bettingLimitHeaderTextFieldView.isDisabled {
+            self.bettingLimitHeaderTextFieldView.setText("1000")
+        }
+        
+        if !self.autoPayoutHeaderTextFieldView.isDisabled {
+            self.autoPayoutHeaderTextFieldView.setText("1001")
+        }
     }
 
     @objc func didTapAdvancedButton() {
         self.selectedProfile = .advanced
-        self.depositLimitHeaderTextFieldView.setText("5000")
-        self.bettingLimitHeaderTextFieldView.setText("10000")
-        self.autoPayoutHeaderTextFieldView.setText("10001")
+        
+        if !self.depositLimitHeaderTextFieldView.isDisabled {
+            self.depositLimitHeaderTextFieldView.setText("5000")
+        }
+        
+        if !self.bettingLimitHeaderTextFieldView.isDisabled {
+            self.bettingLimitHeaderTextFieldView.setText("10000")
+        }
+        
+        if !self.autoPayoutHeaderTextFieldView.isDisabled {
+            self.autoPayoutHeaderTextFieldView.setText("10001")
+        }
     }
     
     private func setupLimits() {
