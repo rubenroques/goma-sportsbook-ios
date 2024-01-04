@@ -672,7 +672,7 @@ class ManualUploadDocumentsViewController: UIViewController {
 
     private func validateIBANFormat(ibanValue: String) {
 
-        let pattern = "^[A-Z]{2}[A-Z0-9]{14,29}$"
+        let pattern = "^[A-Z]{2}[A-Z0-9]{25}$"
         if let regex = try? NSRegularExpression(pattern: pattern) {
 
             let range = NSRange(location: 0, length: ibanValue.utf16.count)
