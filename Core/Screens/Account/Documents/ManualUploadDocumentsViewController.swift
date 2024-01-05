@@ -31,6 +31,7 @@ class ManualUploadDocumentsViewController: UIViewController {
     private lazy var invalidIbanView: UIView = Self.createInvalidIbanView()
     private lazy var invalidIbanIconImageView: UIImageView = Self.createInvalidIbanIconImageView()
     private lazy var invalidIbanLabel: UILabel = Self.createInvalidIbanLabel()
+    private lazy var ibanNoteInfoLabel: UILabel = Self.createIbanNoteInfoLabel()
 
     private lazy var documentUploadsStackView: UIStackView = Self.createDocumentUploadsStackView()
 
@@ -164,6 +165,8 @@ class ManualUploadDocumentsViewController: UIViewController {
         self.invalidIbanIconImageView.backgroundColor = .clear
 
         self.invalidIbanLabel.textColor = UIColor.App.inputError
+        
+        self.ibanNoteInfoLabel.textColor = UIColor.App.textPrimary
 
         self.documentTypeBaseView.backgroundColor = UIColor.App.backgroundSecondary
 
@@ -1072,6 +1075,16 @@ extension ManualUploadDocumentsViewController {
         label.numberOfLines = 0
         return label
     }
+    
+    private static func createIbanNoteInfoLabel() -> UILabel {
+        let label = UILabel()
+        label.translatesAutoresizingMaskIntoConstraints = false
+        label.text = localized("iban_note")
+        label.font = AppFont.with(type: .semibold, size: 12)
+        label.textAlignment = .left
+        label.numberOfLines = 0
+        return label
+    }
 
     private static func createDocumentTypeBaseView() -> UIView {
         let view = UIView()
@@ -1170,6 +1183,8 @@ extension ManualUploadDocumentsViewController {
 
         self.invalidIbanView.addSubview(self.invalidIbanIconImageView)
         self.invalidIbanView.addSubview(self.invalidIbanLabel)
+        
+        self.ribInputStackView.addArrangedSubview(self.ibanNoteInfoLabel)
 
         self.contentBaseView.addSubview(self.documentUploadsStackView)
 
@@ -1261,6 +1276,9 @@ extension ManualUploadDocumentsViewController {
             self.invalidIbanLabel.topAnchor.constraint(equalTo: self.invalidIbanIconImageView.topAnchor),
             self.invalidIbanLabel.trailingAnchor.constraint(equalTo: self.invalidIbanView.trailingAnchor),
             self.invalidIbanLabel.bottomAnchor.constraint(equalTo: self.invalidIbanView.bottomAnchor, constant: -4),
+            
+            self.ibanNoteInfoLabel.leadingAnchor.constraint(equalTo: self.ribInputStackView.leadingAnchor),
+            self.ibanNoteInfoLabel.trailingAnchor.constraint(equalTo: self.ribInputStackView.trailingAnchor),
 
             self.documentTypeBaseView.leadingAnchor.constraint(equalTo: self.topSectionStackView.leadingAnchor),
             self.documentTypeBaseView.trailingAnchor.constraint(equalTo: self.topSectionStackView.trailingAnchor),
