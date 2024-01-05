@@ -73,7 +73,7 @@ class NotificationsViewController: UIViewController {
     private func setupTopStackView() {
         let deviceView = SettingsRowView()
         deviceView.setTitle(title: localized("device_settings"))
-        deviceView.hasSeparatorLineView = true
+        deviceView.hasSeparatorLineView = false
         deviceView.hasNavigationImageView = true
         let deviceTap = UITapGestureRecognizer(target: self, action: #selector(self.didTapDeviceView))
         deviceView.addGestureRecognizer(deviceTap)
@@ -92,8 +92,8 @@ class NotificationsViewController: UIViewController {
         bettingNotificationView.addGestureRecognizer(bettingNotificationTap)
 
         self.topStackView.addArrangedSubview(deviceView)
-        self.topStackView.addArrangedSubview(gamesNotificationView)
-        self.topStackView.addArrangedSubview(bettingNotificationView)
+//        self.topStackView.addArrangedSubview(gamesNotificationView)
+//        self.topStackView.addArrangedSubview(bettingNotificationView)
 
     }
 
