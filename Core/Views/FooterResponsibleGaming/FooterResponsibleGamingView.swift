@@ -147,6 +147,8 @@ class FooterResponsibleGamingView: UIView {
         self.aboutLabel.textColor = UIColor.App.textPrimary
         self.faqLabel.textColor = UIColor.App.textPrimary
         self.responsibleGamblingLabel.textColor = UIColor.App.textPrimary
+        self.nosPartenairesLabel.textColor = UIColor.App.textPrimary
+        self.bonusRulesLabel.textColor = UIColor.App.textPrimary
 
         self.facebookSocialButton.tintColor = UIColor.App.textPrimary
         self.youtubeSocialButton.tintColor = UIColor.App.textPrimary
