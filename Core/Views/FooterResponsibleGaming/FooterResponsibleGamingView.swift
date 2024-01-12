@@ -47,6 +47,11 @@ class FooterResponsibleGamingView: UIView {
     private lazy var interdictionTitleLabel: UILabel = Self.createInterdictionTitleLabel()
     private lazy var interdictionDetailsLabel: UILabel = Self.createInterdictionDetailsLabel()
     
+    private lazy var entitiesBaseView: UIView = Self.createEntitiesBaseView()
+    private lazy var logo1ImageView: UIImageView = Self.createLogo1ImageView()
+    private lazy var entitiesDescriptionLabel: UILabel = Self.createEntitiesDescriptionLabel()
+    private lazy var logo2ImageView: UIImageView = Self.createLogo2ImageView()
+    
     // MARK: - Lifetime and Cycle
     init() {
         super.init(frame: .zero)
@@ -122,6 +127,14 @@ class FooterResponsibleGamingView: UIView {
 
         self.addTapGestureRecognizer(to: self.interdictionTitleLabel, action: #selector(openInterdictionURL))
         self.addTapGestureRecognizer(to: self.interdictionDetailsLabel, action: #selector(openInterdictionURL))
+        
+        let logo1Gesture = UITapGestureRecognizer(target: self, action: #selector(self.didTapLogo1(_:)))
+        self.logo1ImageView.isUserInteractionEnabled = true
+        self.logo1ImageView.addGestureRecognizer(logo1Gesture)
+        
+        let logo2Gesture = UITapGestureRecognizer(target: self, action: #selector(self.didTapLogo2(_:)))
+        self.logo2ImageView.isUserInteractionEnabled = true
+        self.logo2ImageView.addGestureRecognizer(logo2Gesture)
         
         self.hideLinksView()
         self.hideSocialView()
@@ -256,6 +269,18 @@ class FooterResponsibleGamingView: UIView {
     @objc func openInterdictionURL() {
         let url = "https://anj.fr/ts"
         self.openURL(url)
+    }
+    
+    @objc private func didTapLogo1(_ sender: UITapGestureRecognizer) {
+        if let url = URL(string: "https://anj.fr/") {
+            UIApplication.shared.open(url)
+        }
+    }
+    
+    @objc private func didTapLogo2(_ sender: UITapGestureRecognizer) {
+        if let url = URL(string: "https://sosjoueurs.org/") {
+            UIApplication.shared.open(url)
+        }
     }
     
 }
@@ -447,6 +472,40 @@ extension FooterResponsibleGamingView {
         return label
     }
     
+    private static func createEntitiesBaseView() -> UIView {
+        let view = UIView()
+        view.translatesAutoresizingMaskIntoConstraints = false
+        view.clipsToBounds = true
+        return view
+    }
+    
+    private static func createLogo1ImageView() -> UIImageView {
+        let imageView = UIImageView()
+        imageView.translatesAutoresizingMaskIntoConstraints = false
+        imageView.image = UIImage(named: "anj_logo")
+        imageView.contentMode = .scaleAspectFit
+        return imageView
+    }
+    
+    private static func createEntitiesDescriptionLabel() -> UILabel {
+        let label = UILabel()
+        label.translatesAutoresizingMaskIntoConstraints = false
+        label.numberOfLines = 0
+        label.textAlignment = .left
+        label.text = localized("anj_authorization_text")
+        label.font = AppFont.with(type: .semibold, size: 10)
+        label.textColor = UIColor.App.textPrimary
+        return label
+    }
+    
+    private static func createLogo2ImageView() -> UIImageView {
+        let imageView = UIImageView()
+        imageView.translatesAutoresizingMaskIntoConstraints = false
+        imageView.image = UIImage(named: "sos_joueurs_expand_logo")
+        imageView.contentMode = .scaleAspectFit
+        return imageView
+    }
+    
     private func setupSubviews() {
 
         // Add subviews to self.view or each other
@@ -507,6 +566,12 @@ extension FooterResponsibleGamingView {
         self.interdictionBaseView.addSubview(self.interdictionDetailsLabel)
         
         self.baseStackView.addArrangedSubview(self.interdictionBaseView)
+        
+        self.baseStackView.addArrangedSubview(self.entitiesBaseView)
+        
+        self.entitiesBaseView.addSubview(self.logo1ImageView)
+        self.entitiesBaseView.addSubview(self.entitiesDescriptionLabel)
+        self.entitiesBaseView.addSubview(self.logo2ImageView)
         
         self.addSubview(self.baseStackView)
 
@@ -584,6 +649,21 @@ extension FooterResponsibleGamingView {
             self.interdictionDetailsLabel.leadingAnchor.constraint(equalTo: self.interdictionBaseView.leadingAnchor),
             self.interdictionDetailsLabel.trailingAnchor.constraint(equalTo: self.interdictionBaseView.trailingAnchor),
             self.interdictionDetailsLabel.bottomAnchor.constraint(equalTo: self.interdictionBaseView.bottomAnchor),
+            
+            self.logo1ImageView.leadingAnchor.constraint(equalTo: self.entitiesBaseView.leadingAnchor),
+            self.logo1ImageView.topAnchor.constraint(equalTo: self.entitiesBaseView.topAnchor, constant: 5),
+            self.logo1ImageView.widthAnchor.constraint(equalToConstant: 65),
+            self.logo1ImageView.heightAnchor.constraint(equalToConstant: 50),
+            
+            self.entitiesDescriptionLabel.leadingAnchor.constraint(equalTo: self.logo1ImageView.trailingAnchor, constant: 10),
+            self.entitiesDescriptionLabel.trailingAnchor.constraint(equalTo: self.entitiesBaseView.trailingAnchor, constant: -5),
+            self.entitiesDescriptionLabel.centerYAnchor.constraint(equalTo: self.logo1ImageView.centerYAnchor),
+            
+            self.logo2ImageView.leadingAnchor.constraint(equalTo: self.entitiesBaseView.leadingAnchor),
+            self.logo2ImageView.trailingAnchor.constraint(equalTo: self.entitiesBaseView.trailingAnchor),
+            self.logo2ImageView.heightAnchor.constraint(equalToConstant: 50),
+            self.logo2ImageView.topAnchor.constraint(equalTo: self.logo1ImageView.bottomAnchor, constant: 20),
+            self.logo2ImageView.bottomAnchor.constraint(equalTo: self.entitiesBaseView.bottomAnchor, constant: -5)
         ])
         
     }
