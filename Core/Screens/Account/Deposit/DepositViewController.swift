@@ -14,6 +14,7 @@ import AdyenComponents
 import Lottie
 import SafariServices
 import OptimoveSDK
+import Adjust
 
 class DepositViewController: UIViewController {
 
@@ -600,10 +601,14 @@ class DepositViewController: UIViewController {
         if self.viewModel.isFirstDeposit {
             Optimove.shared.reportScreenVisit(screenTitle: "first_deposit")
             
+            let event = ADJEvent(eventToken: "gvnieo")
+            Adjust.trackEvent(event)
         }
         else {
             Optimove.shared.reportScreenVisit(screenTitle: "purchase")
             
+            let event = ADJEvent(eventToken: "amh53g")
+            Adjust.trackEvent(event)
         }
         
         let depositSuccessViewController = GenericAvatarSuccessViewController()

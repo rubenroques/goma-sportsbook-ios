@@ -93,9 +93,15 @@ class MyCompetitionsViewController: UIViewController {
 
         self.emptyStateLoginButton.addTarget(self, action: #selector(didTapLoginButton), for: .touchUpInside)
 
-        Env.favoritesManager.favoriteCompetitionsIdPublisher
-            .sink(receiveValue: { [weak self] competitionIds in
-                self?.hasSuggested = competitionIds.isEmpty ? true : false
+//        Env.favoritesManager.favoriteCompetitionsIdPublisher
+//            .sink(receiveValue: { [weak self] competitionIds in
+//                self?.hasSuggested = competitionIds.isEmpty ? true : false
+//            })
+//            .store(in: &cancellables)
+        
+        Env.favoritesManager.showSuggestedCompetitionsPublisher
+            .sink(receiveValue: { [weak self] showSuggested in
+                self?.hasSuggested = showSuggested
             })
             .store(in: &cancellables)
 
@@ -171,7 +177,7 @@ class MyCompetitionsViewController: UIViewController {
                 case .noFavorites:
                     self?.setupEmptyStateView(emptyStateType: emptyStateType)
                 case .none:
-                    ()
+                    self?.isEmptyState = false
                 }
             })
             .store(in: &cancellables)
@@ -219,10 +225,10 @@ class MyCompetitionsViewController: UIViewController {
     // MARK: Actions
     @objc func didTapLoginButton() {
         let loginViewController = LoginViewController()
-
-        self.present(loginViewController, animated: true, completion: nil)
-
-        self.navigationController?.popViewController(animated: true)
+        
+        let navigationViewController = Router.navigationController(with: loginViewController)
+        
+        self.present(navigationViewController, animated: true, completion: nil)
     }
 
 }

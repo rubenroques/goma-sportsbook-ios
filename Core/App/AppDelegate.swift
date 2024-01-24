@@ -14,6 +14,7 @@ import IQKeyboardManagerSwift
 import PhraseSDK
 import AdyenActions
 import OptimoveSDK
+import Adjust
 
 @main
 class AppDelegate: UIResponder, UIApplicationDelegate, MessagingDelegate {
@@ -99,20 +100,10 @@ class AppDelegate: UIResponder, UIApplicationDelegate, MessagingDelegate {
         let optimobileCredentials = "WzEsImV1LWNlbnRyYWwtMiIsImJkYzg1MTk5LTk4ODEtNGRhMy05NmYzLWI3ZGZkOWM3NzI0NCIsImpDNFMzODF4SDhCU2JSeS94aVlsQ25ubUVsT2ZTTEUxYUdhSyJd"
 
         // Optimove
-//        let config = OptimoveConfigBuilder(optimoveCredentials: optimoveCredentials, optimobileCredentials: optimobileCredentials).build()
         
         let config = OptimoveConfigBuilder(optimoveCredentials: optimoveCredentials, optimobileCredentials: optimobileCredentials)
             .setPushOpenedHandler(pushOpenedHandlerBlock: { (notification: PushNotification) -> Void in
                 //- Inspect notification data and do work.
-                print("OPTIMOVE NOTIFICATION: \(notification)")
-                
-                if let action = notification.actionIdentifier {
-                    print("User pressed an action button.")
-                    print(action)
-                    print(notification.data)
-                } else {
-                    print("Just an open event.")
-                }
                 
                 var route: Route?
                 let application = UIApplication.shared
@@ -156,7 +147,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate, MessagingDelegate {
                 }
 
                 if let route = route {
-                    self.openRoute(route, onApplication: application)
+                    self.openPushNotificationRoute(route)
                 }
             })
             .build()
@@ -164,6 +155,17 @@ class AppDelegate: UIResponder, UIApplicationDelegate, MessagingDelegate {
         Optimove.initialize(with: config)
 
         application.registerForRemoteNotifications()
+        
+        // Adjust
+        let appToken = "u9xpbb9chxj4"
+        let environment = ADJEnvironmentProduction
+        let adjustConfig = ADJConfig(
+            appToken: appToken,
+            environment: environment)
+        
+        adjustConfig?.logLevel = ADJLogLevelVerbose
+        
+        Adjust.appDidLaunch(adjustConfig)
         
         //
         self.window = UIWindow()
@@ -204,21 +206,45 @@ class AppDelegate: UIResponder, UIApplicationDelegate, MessagingDelegate {
             }
 
             let urlSections = url.pathComponents
-            //if urlSections.contains("gamedetail") {
-            if urlSections.contains("competitions") || urlSections.contains("live") {
+            
+            if (urlSections.contains("competitions") || urlSections.contains("live")) && urlSections.count > 6 {
                 if let gameDetailId = urlSections.last {
                     self.openRoute(Route.event(id: gameDetailId), onApplication: application)
-//                    self.openSharedRoute(Route.event(id: gameDetailId), onApplication: application)
-
+                    
+                }
+            }
+            else if urlSections.contains("competitions") && urlSections.count <= 6 {
+                if let competitionDetailId = urlSections.last {
+                    self.openRoute(Route.competition(id: competitionDetailId), onApplication: application)
                 }
             }
             else if urlSections.contains("bet") {
                 if let ticketId = urlSections.last {
 
                     self.openRoute(Route.ticket(id: ticketId), onApplication: application)
-//                    self.openSharedRoute(Route.ticket(id: ticketId), onApplication: application)
 
                 }
+            }
+            else if urlSections.contains("contact-setting") {
+                self.openRoute(Route.contactSettings, onApplication: application)
+            }
+            else if urlSections.contains("deposit") {
+                self.openRoute(Route.deposit, onApplication: application)
+            }
+            else if urlSections.contains("bonus") {
+                self.openRoute(Route.bonus, onApplication: application)
+            }
+            else if urlSections.contains("documents") {
+                self.openRoute(Route.documents, onApplication: application)
+            }
+            else if urlSections.contains("support") {
+                self.openRoute(Route.customerSupport, onApplication: application)
+            }
+            else if urlSections.contains("favoris") {
+                self.openRoute(Route.favorites, onApplication: application)
+            }
+            else if urlSections.contains("promotions") {
+                self.openRoute(Route.promotions, onApplication: application)
             }
         }
         return true
@@ -329,14 +355,20 @@ extension AppDelegate: UNUserNotificationCenterDelegate {
     }
 
     private func openRoute(_ route: Route, onApplication application: UIApplication) {
-
+        
         if application.applicationState == .active {
+            print("APPLICATION STATE: ACTIVE")
+
             self.bootstrap.router.openedNotificationRouteWhileActive(route)
         }
         else if application.applicationState == .inactive {
+            print("APPLICATION STATE: INACTIVE")
+
             self.bootstrap.router.configureStartingRoute(route)
         }
         else if application.applicationState == .background {
+            print("APPLICATION STATE: BACKGROUND")
+
             self.bootstrap.router.configureStartingRoute(route)
         }
 
@@ -345,6 +377,10 @@ extension AppDelegate: UNUserNotificationCenterDelegate {
     private func openSharedRoute(_ route: Route, onApplication application: UIApplication) {
 
         self.bootstrap.router.openedNotificationRouteWhileActive(route)
+    }
+    
+    private func openPushNotificationRoute(_ route: Route) {
+        self.bootstrap.router.openPushNotificationRoute(route)
     }
 
 }

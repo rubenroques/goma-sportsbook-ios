@@ -233,12 +233,12 @@ class BonusActiveTableViewCell: UITableViewCell {
                                       message: localized("cancel_bonus_confirmation"),
                                       preferredStyle: .alert)
 
-        alert.addAction(UIAlertAction(title: localized("ok"), style: .default, handler: { [weak self] _ in
+        alert.addAction(UIAlertAction(title: localized("yes"), style: .default, handler: { [weak self] _ in
             self?.viewModel?.cancelBonus()
 
         }))
 
-        alert.addAction(UIAlertAction(title: localized("cancel"), style: .cancel, handler: nil))
+        alert.addAction(UIAlertAction(title: localized("back"), style: .cancel, handler: nil))
 
         self.viewController?.present(alert, animated: true, completion: nil)
 

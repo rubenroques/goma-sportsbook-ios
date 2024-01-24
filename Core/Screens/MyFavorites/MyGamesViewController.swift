@@ -194,10 +194,10 @@ class MyGamesViewController: UIViewController {
     // MARK: Actions
     @objc func didTapLoginButton() {
         let loginViewController = LoginViewController()
-
-        self.present(loginViewController, animated: true, completion: nil)
-
-        self.navigationController?.popViewController(animated: true)
+        
+        let navigationViewController = Router.navigationController(with: loginViewController)
+        
+        self.present(navigationViewController, animated: true, completion: nil)
     }
 }
 

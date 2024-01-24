@@ -367,9 +367,6 @@ class ProfileViewController: UIViewController {
 
         self.setupStackView()
 
-        let copyCodeTap = UITapGestureRecognizer(target: self, action: #selector(self.tapCopyCode))
-        self.userCodeStackView.addGestureRecognizer(copyCodeTap)
-
     }
 
     private func getOptInBonus() {

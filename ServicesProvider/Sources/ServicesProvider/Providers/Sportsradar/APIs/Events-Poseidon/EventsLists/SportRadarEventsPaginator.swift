@@ -367,6 +367,9 @@ extension SportRadarEventsPaginator: UnsubscriptionController {
     func unsubscribe(subscription: Subscription) {
         let endpoint = SportRadarRestAPIClient.unsubscribe(sessionToken: subscription.sessionToken, contentIdentifier: subscription.contentIdentifier)
         guard let request = endpoint.request() else { return }
+        
+        print("subscr deinit : \(dump(endpoint))")
+        
         let sessionDataTask = URLSession.shared.dataTask(with: request) { data, response, error in
             guard
                 error == nil,

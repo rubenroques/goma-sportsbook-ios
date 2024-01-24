@@ -88,6 +88,10 @@ class TopCompetitionDetailsViewController: UIViewController {
 
         self.floatingShortcutsView.resetAnimations()
         self.navigationController?.interactivePopGestureRecognizer?.delegate = self
+        
+        if self.isRootModal {
+            self.backButton.setImage(UIImage(named: "arrow_close_icon"), for: .normal)
+        }
     }
 
     override func viewWillDisappear(_ animated: Bool) {
@@ -213,7 +217,12 @@ class TopCompetitionDetailsViewController: UIViewController {
 
     // MARK: - Actions
     @objc func didTapBackButton() {
-        self.navigationController?.popViewController(animated: true)
+        if self.isRootModal {
+            self.presentingViewController?.dismiss(animated: true)
+        }
+        else {
+            self.navigationController?.popViewController(animated: true)
+        }
     }
 
     @objc func didTapBetslipView() {

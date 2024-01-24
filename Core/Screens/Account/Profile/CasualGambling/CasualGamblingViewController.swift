@@ -17,8 +17,43 @@ class CasualGamblingViewController: UIViewController {
     private lazy var scrollContainerView: UIView = Self.createScrollContainerView()
     private lazy var titleLabel: UILabel = Self.createTitleLabel()
     private lazy var textLabel: UILabel = Self.createTextLabel()
-    private lazy var tipButton: UIButton = Self.createTipButton()
+    private lazy var accordionView: UIView = Self.createAccordionView()
+    
+    private lazy var accordionFirstSectionBaseView: UIView = Self.createAccordionFirstSectionBaseView()
+    private lazy var accordionFirstTextSectionView: TextSectionView = Self.createAccordionFirstTextSectionView()
+    private lazy var accordionFirstSectionDescriptionView: UIView = Self.createAccordionFirstSectionDescriptionView()
+    private lazy var accordionFirstSectionDescriptionLabel: UILabel = Self.createAccordionFirstSectionDescriptionLabel()
+    
+    private lazy var accordionSecondSectionBaseView: UIView = Self.createAccordionSecondSectionBaseView()
+    private lazy var accordionSecondTextSectionView: TextSectionView = Self.createAccordionSecondTextSectionView()
+    private lazy var accordionSecondSectionDescriptionView: UIView = Self.createAccordionSecondSectionDescriptionView()
+    private lazy var accordionSecondSectionDescriptionLabel1: UILabel = Self.createAccordionSecondSectionDescriptionLabel1()
+    private lazy var accordionSecondSectionDescriptionListLabel: UILabel = Self.createAccordionSecondSectionDescriptionListLabel()
+    private lazy var accordionSecondSectionDescriptionLabel2: UILabel = Self.createAccordionSecondSectionDescriptionLabel2()
 
+    private lazy var accordionThirdSectionBaseView: UIView = Self.createAccordionThirdSectionBaseView()
+    private lazy var accordionThirdTextSectionView: TextSectionView = Self.createAccordionThirdTextSectionView()
+    private lazy var accordionThirdSectionDescriptionView: UIView = Self.createAccordionThirdSectionDescriptionView()
+    private lazy var accordionThirdSectionDescriptionLabel1: UILabel = Self.createAccordionThirdSectionDescriptionLabel1()
+    private lazy var accordionThirdSectionDescriptionListLabel: UILabel = Self.createAccordionThirdSectionDescriptionListLabel()
+    private lazy var accordionThirdSectionDescriptionLabel2: UILabel = Self.createAccordionThirdSectionDescriptionLabel2()
+    
+    private lazy var accordionFourthSectionBaseView: UIView = Self.createAccordionFourthSectionBaseView()
+    private lazy var accordionFourthTextSectionView: TextSectionView = Self.createAccordionFourthTextSectionView()
+    private lazy var accordionFourthSectionDescriptionView: UIView = Self.createAccordionFourthSectionDescriptionView()
+    private lazy var accordionFourthSectionDescriptionLabel: UILabel = Self.createAccordionFourthSectionDescriptionLabel()
+
+    //private lazy var tipButton: UIButton = Self.createTipButton()
+    private lazy var logo1ImageView: UIImageView = Self.createLogo1ImageView()
+    private lazy var logo2ImageView: UIImageView = Self.createLogo2ImageView()
+    private lazy var logo3ImageView: UIImageView = Self.createLogo3ImageView()
+    
+    // Constraints
+    private lazy var firstSectionDescriptionHeightConstraint: NSLayoutConstraint = Self.createFirstSectionDescriptionHeightConstraint()
+    private lazy var secondSectionDescriptionHeightConstraint: NSLayoutConstraint = Self.createSecondSectionDescriptionHeightConstraint()
+    private lazy var thirdSectionDescriptionHeightConstraint: NSLayoutConstraint = Self.createThirdSectionDescriptionHeightConstraint()
+    private lazy var fourthSectionDescriptionHeightConstraint: NSLayoutConstraint = Self.createFourthSectionDescriptionHeightConstraint()
+    
     // MARK: Lifetime and Cycle
     init() {
 
@@ -39,10 +74,25 @@ class CasualGamblingViewController: UIViewController {
 
         self.backButton.addTarget(self, action: #selector(didTapBackButton), for: .touchUpInside)
 
-        // swiftlint:disable line_length
-        self.textLabel.text = "Betsson aborde la question du jeu responsable au sérieux et prend des mesures pour aider les joueurs à jouer de manière sûre et saine. En effet, il est crucial de reconnaître qu'il existe une différence entre le jeu récréatif et le jeu problématique.\n\nLe jeu récréatif est généralement considéré comme une activité de loisir occasionnelle qui peut être agréable et amusante, mais qui ne prend pas le dessus sur la vie de la personne. Les joueurs récréatifs sont prudents dans leurs mises et ne jouent pas de manière compulsive ou excessive.\n\nLe jeu problématique, quant à lui, peut affecter la vie quotidienne d'une personne de manière négative. Les joueurs pathologiques ont du mal à contrôler leur comportement de jeu et peuvent continuer à jouer malgré les conséquences négatives qui en résultent, telles que des problèmes financiers, des conflits familiaux ou professionnels, des problèmes de santé mentale ou physique, etc.\n\nIl est donc important que les opérateurs de jeu en ligne tels que Betsson, mettent en place des mesures pour aider à prévenir et à détecter le jeu excessif. Cela peut inclure des limites de dépôt et de mise, des conseils de jeu responsable, ainsi que des options pour s'auto-exclure du site pendant une période de temps spécifiée.\n\nIl est également essentiel d'offrir un soutien et des ressources aux joueurs qui luttent contre le jeu problématique. Les joueurs peuvent bénéficier de programmes d'aide et de conseils en matière de jeu responsable, ainsi que d'un accès à des professionnels de la santé mentale pour les aider à surmonter leur dépendance.\n\nEn somme, la promotion d'un environnement de jeu sûr et sain est une responsabilité partagée entre les joueurs, les opérateurs de jeu en ligne et la société dans son ensemble.\n\nIl est parfois difficile de se rendre compte que le jeu n'est plus une source de plaisir mais commence à devenir un problème.\n\nNous t’invitons à faire un bilan sur Evalujeu, un site d'évaluation et de conseils personnalisés sur les pratiques de jeu."
+//        self.tipButton.addTarget(self, action: #selector(didTapTipButton), for: .touchUpInside)
+        
+        self.setupCallbacks()
+        
+        self.accordionFirstSectionDescriptionLabel.isUserInteractionEnabled = true
+        self.accordionFirstSectionDescriptionLabel.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(self.didTapFirstSectionLabel(_:))))
+        
+        self.accordionSecondSectionDescriptionLabel2.isUserInteractionEnabled = true
+        self.accordionSecondSectionDescriptionLabel2.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(self.didTapSecondSectionLabel(_:))))
+        
+        self.accordionFourthSectionDescriptionLabel.isUserInteractionEnabled = true
+        self.accordionFourthSectionDescriptionLabel.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(self.didTapFourthSectionLabel(_:))))
+    }
+    
+    override func viewDidLayoutSubviews() {
+        super.viewDidLayoutSubviews()
 
-        self.tipButton.addTarget(self, action: #selector(didTapTipButton), for: .touchUpInside)
+        self.accordionView.layer.cornerRadius = CornerRadius.view
+
     }
 
     // MARK: Layout and Theme
@@ -72,8 +122,167 @@ class CasualGamblingViewController: UIViewController {
 
         self.textLabel.textColor = UIColor.App.textPrimary
 
-        self.tipButton.backgroundColor = .clear
-        self.tipButton.setTitleColor(UIColor.App.textPrimary, for: .normal)
+        self.accordionView.backgroundColor = .clear
+        
+        self.accordionView.layer.borderColor = UIColor.App.textPrimary.cgColor
+        
+        self.accordionFirstSectionBaseView.backgroundColor = .clear
+        
+        self.accordionFirstSectionDescriptionView.backgroundColor = .clear
+                
+        self.accordionSecondSectionBaseView.backgroundColor = .clear
+        
+        self.accordionSecondSectionDescriptionView.backgroundColor = .clear
+        
+        self.accordionThirdSectionBaseView.backgroundColor = .clear
+        
+        self.accordionThirdSectionDescriptionView.backgroundColor = .clear
+        
+        self.accordionFourthSectionBaseView.backgroundColor = .clear
+        
+        self.accordionFourthSectionDescriptionView.backgroundColor = .clear
+        
+        self.logo1ImageView.backgroundColor = .clear
+        self.logo2ImageView.backgroundColor = .clear
+        self.logo3ImageView.backgroundColor = .clear
+        
+//        self.tipButton.backgroundColor = .clear
+//        self.tipButton.setTitleColor(UIColor.App.textPrimary, for: .normal)
+    }
+    
+    // MARK: Functions
+    private func setupCallbacks() {
+        
+        self.accordionFirstTextSectionView.didTappedArrow = { [weak self] isCollapsed in
+                        
+            UIView.animate(withDuration: 0.5) {
+                self?.firstSectionDescriptionHeightConstraint.isActive = isCollapsed ? false : true
+                
+                self?.view.setNeedsLayout()
+                self?.view.layoutIfNeeded()
+            }
+            
+        }
+        
+        self.accordionSecondTextSectionView.didTappedArrow = { [weak self] isCollapsed in
+                        
+            UIView.animate(withDuration: 0.5) {
+                self?.secondSectionDescriptionHeightConstraint.isActive = isCollapsed ? false : true
+
+                self?.view.setNeedsLayout()
+                self?.view.layoutIfNeeded()
+            }
+            
+        }
+        
+        self.accordionThirdTextSectionView.didTappedArrow = { [weak self] isCollapsed in
+                        
+            UIView.animate(withDuration: 0.5) {
+                self?.thirdSectionDescriptionHeightConstraint.isActive = isCollapsed ? false : true
+
+                self?.view.setNeedsLayout()
+                self?.view.layoutIfNeeded()
+            }
+            
+        }
+        
+        self.accordionFourthTextSectionView.didTappedArrow = { [weak self] isCollapsed in
+                        
+            UIView.animate(withDuration: 0.5) {
+                self?.fourthSectionDescriptionHeightConstraint.isActive = isCollapsed ? false : true
+
+                self?.view.setNeedsLayout()
+                self?.view.layoutIfNeeded()
+            }
+            
+        }
+    }
+    
+    private func openSelfExclusion() {
+        
+        if Env.userSessionStore.isUserLogged() {
+            let selfExclusionViewModel = SelfExclusionViewModel()
+
+            let selfExclusionViewController = SelfExclusionViewController(viewModel: selfExclusionViewModel)
+            
+            self.navigationController?.pushViewController(selfExclusionViewController, animated: true)
+
+        }
+        else {
+            
+            let loginViewController = LoginViewController()
+            
+            let navigationViewController = Router.navigationController(with: loginViewController)
+            
+            loginViewController.hasPendingRedirect = true
+            
+            loginViewController.needsRedirect = { [weak self] in
+                self?.openSelfExclusion()
+            }
+            
+            self.present(navigationViewController, animated: true, completion: nil)
+        }
+    }
+    
+    private func openLimits() {
+        
+        if Env.userSessionStore.isUserLogged() {
+            let profileLimitsManagementViewController = ProfileLimitsManagementViewController()
+
+            self.navigationController?.pushViewController(profileLimitsManagementViewController, animated: true)
+
+        }
+        else {
+            
+            let loginViewController = LoginViewController()
+            
+            let navigationViewController = Router.navigationController(with: loginViewController)
+            
+            loginViewController.hasPendingRedirect = true
+            
+            loginViewController.needsRedirect = { [weak self] in
+                self?.openLimits()
+            }
+            
+            self.present(navigationViewController, animated: true, completion: nil)
+        }
+    }
+    
+    @objc private func didTapFirstSectionLabel(_ sender: UITapGestureRecognizer) {
+        let link1Range = (localized("responsible_gaming_first_section_text") as NSString).range(of: "limites de dépôt et de mise")
+        
+        let link2Range = (localized("responsible_gaming_first_section_text") as NSString).range(of: "s'auto-exclure")
+        
+        if sender.didTapAttributedTextInLabel(label: self.accordionFirstSectionDescriptionLabel, inRange: link1Range, alignment: .left) {
+            
+            self.openLimits()
+        }
+        else if sender.didTapAttributedTextInLabel(label: self.accordionFirstSectionDescriptionLabel, inRange: link2Range, alignment: .left) {
+            
+            self.openSelfExclusion()
+        }
+    }
+    
+    @objc private func didTapSecondSectionLabel(_ sender: UITapGestureRecognizer) {
+        let link1Range = (localized("responsible_gaming_second_section_text_2") as NSString).range(of: "SOS joueur")
+                
+        if sender.didTapAttributedTextInLabel(label: self.accordionSecondSectionDescriptionLabel2, inRange: link1Range, alignment: .left) {
+            if let url = URL(string: "https://sosjoueurs.org/") {
+                UIApplication.shared.open(url)
+            }
+        }
+
+    }
+    
+    @objc private func didTapFourthSectionLabel(_ sender: UITapGestureRecognizer) {
+        let link1Range = (localized("responsible_gaming_fourth_section_text") as NSString).range(of: "https://e-enfance.org/informer/controle-parental/")
+                
+        if sender.didTapAttributedTextInLabel(label: self.accordionFourthSectionDescriptionLabel, inRange: link1Range, alignment: .left) {
+            if let url = URL(string: "https://e-enfance.org/informer/controle-parental/") {
+                UIApplication.shared.open(url)
+            }
+        }
+
     }
 }
 
@@ -137,8 +346,8 @@ extension CasualGamblingViewController {
     private static func createTitleLabel() -> UILabel {
         let label = UILabel()
         label.translatesAutoresizingMaskIntoConstraints = false
-        label.text = localized("casual_pathologic_question")
-        label.font = AppFont.with(type: .bold, size: 16)
+        label.text = localized("responsible_gaming_title")
+        label.font = AppFont.with(type: .bold, size: 18)
         label.textAlignment = .left
         label.numberOfLines = 0
         return label
@@ -147,13 +356,395 @@ extension CasualGamblingViewController {
     private static func createTextLabel() -> UILabel {
         let label = UILabel()
         label.translatesAutoresizingMaskIntoConstraints = false
-        label.text = ""
-        label.font = AppFont.with(type: .bold, size: 16)
+        label.text = localized("responsible_gaming_description")
+        label.font = AppFont.with(type: .semibold, size: 16)
         label.textAlignment = .left
         label.numberOfLines = 0
+        
+        let fullText = localized("responsible_gaming_description")
+        let attributedString = NSMutableAttributedString(string: fullText)
+        let fullRange = (fullText as NSString).range(of: localized("responsible_gaming_description"))
+        
+        let paragraphStyle = NSMutableParagraphStyle()
+
+        paragraphStyle.lineHeightMultiple = TextSpacing.subtitle
+        paragraphStyle.lineSpacing = 4
+        paragraphStyle.alignment = .left
+        
+        attributedString.addAttribute(.foregroundColor, value: UIColor.App.textPrimary, range: fullRange)
+        attributedString.addAttribute(.font, value: AppFont.with(type: .semibold, size: 16), range: fullRange)
+
+        attributedString.addAttribute(.paragraphStyle, value: paragraphStyle, range: NSRange(location: 0, length: attributedString.length))
+        
+        label.attributedText = attributedString
         return label
     }
+    
+    private static func createAccordionView() -> UIView {
+        let view = UIView()
+        view.translatesAutoresizingMaskIntoConstraints = false
+        view.layer.borderWidth = 1
+        return view
+    }
+    
+    private static func createAccordionFirstSectionBaseView() -> UIView {
+        let view = UIView()
+        view.translatesAutoresizingMaskIntoConstraints = false
+        return view
+    }
+    
+    private static func createAccordionFirstTextSectionView() -> TextSectionView {
+        let view = TextSectionView()
+        view.translatesAutoresizingMaskIntoConstraints = false
+        view.configure(title: localized("responsible_gaming_first_section_title"), icon: "roman_1_icon")
+        
+        return view
+    }
+    
+    private static func createAccordionFirstSectionDescriptionView() -> UIView {
+        let view = UIView()
+        view.translatesAutoresizingMaskIntoConstraints = false
+        return view
+    }
+    
+    private static func createAccordionFirstSectionDescriptionLabel() -> UILabel {
+        let label = UILabel()
+        label.translatesAutoresizingMaskIntoConstraints = false
+        label.numberOfLines = 0
+        
+        let fullText = localized("responsible_gaming_first_section_text")
+        let attributedString = NSMutableAttributedString(string: fullText)
+        let fullRange = (fullText as NSString).range(of: localized("responsible_gaming_first_section_text"))
+        let range1 = (fullText as NSString).range(of: "limites de dépôt et de mise")
+        let range2 = (fullText as NSString).range(of: "s'auto-exclure")
+        
+        let range3 = (fullText as NSString).range(of: "aider les joueurs")
+        let range4 = (fullText as NSString).range(of: "de manière sûre et saine")
+        let range5 = (fullText as NSString).range(of: "Le jeu récréatif")
+        let range6 = (fullText as NSString).range(of: "Le jeu problématique")
+        
+        let paragraphStyle = NSMutableParagraphStyle()
 
+        paragraphStyle.lineHeightMultiple = TextSpacing.subtitle
+        paragraphStyle.lineSpacing = 4
+        paragraphStyle.alignment = .left
+        
+        attributedString.addAttribute(.foregroundColor, value: UIColor.App.textPrimary, range: fullRange)
+        attributedString.addAttribute(.font, value: AppFont.with(type: .semibold, size: 14), range: fullRange)
+        
+        attributedString.addAttribute(.foregroundColor, value: UIColor.App.highlightPrimary, range: range1)
+        attributedString.addAttribute(.foregroundColor, value: UIColor.App.highlightPrimary, range: range2)
+        
+        attributedString.addAttribute(.font, value: AppFont.with(type: .bold, size: 14), range: range3)
+        attributedString.addAttribute(.font, value: AppFont.with(type: .bold, size: 14), range: range4)
+        attributedString.addAttribute(.font, value: AppFont.with(type: .bold, size: 14), range: range5)
+        attributedString.addAttribute(.font, value: AppFont.with(type: .bold, size: 14), range: range6)
+
+        attributedString.addAttribute(.paragraphStyle, value: paragraphStyle, range: NSRange(location: 0, length: attributedString.length))
+        
+        label.attributedText = attributedString
+        
+        return label
+    }
+    
+    private static func createAccordionSecondSectionBaseView() -> UIView {
+        let view = UIView()
+        view.translatesAutoresizingMaskIntoConstraints = false
+        return view
+    }
+    
+    private static func createAccordionSecondTextSectionView() -> TextSectionView {
+        let view = TextSectionView()
+        view.translatesAutoresizingMaskIntoConstraints = false
+        view.configure(title: localized("responsible_gaming_second_section_title"), icon: "roman_2_icon")
+        
+        return view
+    }
+    
+    private static func createAccordionSecondSectionDescriptionView() -> UIView {
+        let view = UIView()
+        view.translatesAutoresizingMaskIntoConstraints = false
+        return view
+    }
+    
+    private static func createAccordionSecondSectionDescriptionLabel1() -> UILabel {
+        let label = UILabel()
+        label.translatesAutoresizingMaskIntoConstraints = false
+        label.numberOfLines = 0
+        
+        let fullText = localized("responsible_gaming_second_section_text_1")
+        let attributedString = NSMutableAttributedString(string: fullText)
+        let fullRange = (fullText as NSString).range(of: localized("responsible_gaming_second_section_text_1"))
+        
+        let paragraphStyle = NSMutableParagraphStyle()
+
+        paragraphStyle.lineHeightMultiple = TextSpacing.subtitle
+        paragraphStyle.lineSpacing = 4
+        paragraphStyle.alignment = .left
+        
+        attributedString.addAttribute(.foregroundColor, value: UIColor.App.textPrimary, range: fullRange)
+        attributedString.addAttribute(.font, value: AppFont.with(type: .semibold, size: 14), range: fullRange)
+        
+        attributedString.addAttribute(.paragraphStyle, value: paragraphStyle, range: NSRange(location: 0, length: attributedString.length))
+        
+        label.attributedText = attributedString
+        return label
+    }
+    
+    private static func createAccordionSecondSectionDescriptionListLabel() -> UILabel {
+        let label = UILabel()
+        label.translatesAutoresizingMaskIntoConstraints = false
+        label.numberOfLines = 0
+        
+        let fullText = localized("responsible_gaming_second_section_list")
+        let attributedString = NSMutableAttributedString(string: fullText)
+        let fullRange = (fullText as NSString).range(of: localized("responsible_gaming_second_section_list"))
+        
+        let range1 = (fullText as NSString).range(of: "Votre motivation")
+        let range2 = (fullText as NSString).range(of: "Établissez un budget")
+        let range3 = (fullText as NSString).range(of: "Limitez le temps de jeu")
+        let range4 = (fullText as NSString).range(of: "Évitez de récupérer vos pertes")
+        let range5 = (fullText as NSString).range(of: "Utilisez des outils de gestion des comptes")
+        let range6 = (fullText as NSString).range(of: "Ne pariez pas sous l'influence")
+        let range7 = (fullText as NSString).range(of: "Soyez conscient de vos émotions")
+        let range8 = (fullText as NSString).range(of: "Maintenir un lien social")
+        let range9 = (fullText as NSString).range(of: "Sécuriser votre compte")
+        
+        let paragraphStyle = NSMutableParagraphStyle()
+
+        paragraphStyle.lineHeightMultiple = TextSpacing.subtitle
+        paragraphStyle.lineSpacing = 4
+        paragraphStyle.alignment = .left
+        paragraphStyle.headIndent = 15
+        paragraphStyle.tabStops = [NSTextTab(textAlignment: .left, location: 15)]
+        
+        attributedString.addAttribute(.foregroundColor, value: UIColor.App.textPrimary, range: fullRange)
+        attributedString.addAttribute(.font, value: AppFont.with(type: .semibold, size: 14), range: fullRange)
+        
+        attributedString.addAttribute(.font, value: AppFont.with(type: .bold, size: 14), range: range1)
+        attributedString.addAttribute(.font, value: AppFont.with(type: .bold, size: 14), range: range2)
+        attributedString.addAttribute(.font, value: AppFont.with(type: .bold, size: 14), range: range3)
+        attributedString.addAttribute(.font, value: AppFont.with(type: .bold, size: 14), range: range4)
+        attributedString.addAttribute(.font, value: AppFont.with(type: .bold, size: 14), range: range5)
+        attributedString.addAttribute(.font, value: AppFont.with(type: .bold, size: 14), range: range6)
+        attributedString.addAttribute(.font, value: AppFont.with(type: .bold, size: 14), range: range7)
+        attributedString.addAttribute(.font, value: AppFont.with(type: .bold, size: 14), range: range8)
+        attributedString.addAttribute(.font, value: AppFont.with(type: .bold, size: 14), range: range9)
+
+        attributedString.addAttribute(.paragraphStyle, value: paragraphStyle, range: NSRange(location: 0, length: attributedString.length))
+        
+        label.attributedText = attributedString
+        
+        return label
+    }
+    
+    private static func createAccordionSecondSectionDescriptionLabel2() -> UILabel {
+        let label = UILabel()
+        label.translatesAutoresizingMaskIntoConstraints = false
+        label.numberOfLines = 0
+        
+        let fullText = localized("responsible_gaming_second_section_text_2")
+        let attributedString = NSMutableAttributedString(string: fullText)
+        let fullRange = (fullText as NSString).range(of: localized("responsible_gaming_second_section_text_2"))
+        
+        let range1 = (fullText as NSString).range(of: "SOS joueur")
+        
+        let paragraphStyle = NSMutableParagraphStyle()
+
+        paragraphStyle.lineHeightMultiple = TextSpacing.subtitle
+        paragraphStyle.lineSpacing = 4
+        paragraphStyle.alignment = .left
+        
+        attributedString.addAttribute(.foregroundColor, value: UIColor.App.textPrimary, range: fullRange)
+        attributedString.addAttribute(.font, value: AppFont.with(type: .semibold, size: 14), range: fullRange)
+        
+        attributedString.addAttribute(.foregroundColor, value: UIColor.App.highlightPrimary, range: range1)
+
+        attributedString.addAttribute(.paragraphStyle, value: paragraphStyle, range: NSRange(location: 0, length: attributedString.length))
+        
+        label.attributedText = attributedString
+        
+        return label
+    }
+    
+    private static func createAccordionThirdSectionBaseView() -> UIView {
+        let view = UIView()
+        view.translatesAutoresizingMaskIntoConstraints = false
+        return view
+    }
+    
+    private static func createAccordionThirdTextSectionView() -> TextSectionView {
+        let view = TextSectionView()
+        view.translatesAutoresizingMaskIntoConstraints = false
+        view.configure(title: localized("responsible_gaming_third_section_title"), icon: "roman_3_icon")
+        
+        return view
+    }
+    
+    private static func createAccordionThirdSectionDescriptionView() -> UIView {
+        let view = UIView()
+        view.translatesAutoresizingMaskIntoConstraints = false
+        return view
+    }
+    
+    private static func createAccordionThirdSectionDescriptionLabel1() -> UILabel {
+        let label = UILabel()
+        label.translatesAutoresizingMaskIntoConstraints = false
+        label.numberOfLines = 0
+        
+        let fullText = localized("responsible_gaming_third_section_text_1")
+        let attributedString = NSMutableAttributedString(string: fullText)
+        let fullRange = (fullText as NSString).range(of: localized("responsible_gaming_third_section_text_1"))
+        let range1 = (fullText as NSString).range(of: "Comment agir ?")
+        
+        let paragraphStyle = NSMutableParagraphStyle()
+
+        paragraphStyle.lineHeightMultiple = TextSpacing.subtitle
+        paragraphStyle.lineSpacing = 4
+        paragraphStyle.alignment = .left
+        
+        attributedString.addAttribute(.foregroundColor, value: UIColor.App.textPrimary, range: fullRange)
+        attributedString.addAttribute(.font, value: AppFont.with(type: .semibold, size: 14), range: fullRange)
+        attributedString.addAttribute(.font, value: AppFont.with(type: .bold, size: 14), range: range1)
+
+        attributedString.addAttribute(.paragraphStyle, value: paragraphStyle, range: NSRange(location: 0, length: attributedString.length))
+        
+        label.attributedText = attributedString
+        return label
+    }
+    
+    private static func createAccordionThirdSectionDescriptionListLabel() -> UILabel {
+        let label = UILabel()
+        label.translatesAutoresizingMaskIntoConstraints = false
+        label.numberOfLines = 0
+        
+        let fullText = localized("responsible_gaming_third_section_list")
+        let attributedString = NSMutableAttributedString(string: fullText)
+        let fullRange = (fullText as NSString).range(of: localized("responsible_gaming_third_section_list"))
+        
+        let paragraphStyle = NSMutableParagraphStyle()
+
+        paragraphStyle.lineHeightMultiple = TextSpacing.subtitle
+        paragraphStyle.lineSpacing = 4
+        paragraphStyle.alignment = .left
+        paragraphStyle.headIndent = 15
+        paragraphStyle.tabStops = [NSTextTab(textAlignment: .left, location: 15)]
+        
+        attributedString.addAttribute(.foregroundColor, value: UIColor.App.textPrimary, range: fullRange)
+        attributedString.addAttribute(.font, value: AppFont.with(type: .semibold, size: 14), range: fullRange)
+
+        attributedString.addAttribute(.paragraphStyle, value: paragraphStyle, range: NSRange(location: 0, length: attributedString.length))
+        
+        label.attributedText = attributedString
+        
+        return label
+    }
+    
+    private static func createAccordionThirdSectionDescriptionLabel2() -> UILabel {
+        let label = UILabel()
+        label.translatesAutoresizingMaskIntoConstraints = false
+        label.numberOfLines = 0
+        
+        let fullText = localized("responsible_gaming_third_section_text_2")
+        let attributedString = NSMutableAttributedString(string: fullText)
+        let fullRange = (fullText as NSString).range(of: localized("responsible_gaming_third_section_text_2"))
+        
+        let paragraphStyle = NSMutableParagraphStyle()
+
+        paragraphStyle.lineHeightMultiple = TextSpacing.subtitle
+        paragraphStyle.lineSpacing = 4
+        paragraphStyle.alignment = .left
+        
+        attributedString.addAttribute(.foregroundColor, value: UIColor.App.textPrimary, range: fullRange)
+        attributedString.addAttribute(.font, value: AppFont.with(type: .semibold, size: 14), range: fullRange)
+        
+        attributedString.addAttribute(.paragraphStyle, value: paragraphStyle, range: NSRange(location: 0, length: attributedString.length))
+        
+        label.attributedText = attributedString
+        
+        return label
+    }
+    
+    private static func createAccordionFourthSectionBaseView() -> UIView {
+        let view = UIView()
+        view.translatesAutoresizingMaskIntoConstraints = false
+        return view
+    }
+    
+    private static func createAccordionFourthTextSectionView() -> TextSectionView {
+        let view = TextSectionView()
+        view.translatesAutoresizingMaskIntoConstraints = false
+        view.configure(title: localized("responsible_gaming_fourth_section_title"), icon: "roman_4_icon")
+        
+        return view
+    }
+    
+    private static func createAccordionFourthSectionDescriptionView() -> UIView {
+        let view = UIView()
+        view.translatesAutoresizingMaskIntoConstraints = false
+        return view
+    }
+    
+    private static func createAccordionFourthSectionDescriptionLabel() -> UILabel {
+        let label = UILabel()
+        label.translatesAutoresizingMaskIntoConstraints = false
+        label.numberOfLines = 0
+        
+        let fullText = localized("responsible_gaming_fourth_section_text")
+        let attributedString = NSMutableAttributedString(string: fullText)
+        let fullRange = (fullText as NSString).range(of: localized("responsible_gaming_fourth_section_text"))
+        
+        let range1 = (fullText as NSString).range(of: "interdits aux mineurs")
+        let range2 = (fullText as NSString).range(of: "L’utilisateur sera exclu et son compte fermé")
+        let range3 = (fullText as NSString).range(of: "Ne permettez pas que votre enfant joue avec votre compte en ligne")
+        let range4 = (fullText as NSString).range(of: "https://e-enfance.org/informer/controle-parental/")
+
+        let paragraphStyle = NSMutableParagraphStyle()
+
+        paragraphStyle.lineHeightMultiple = TextSpacing.subtitle
+        paragraphStyle.lineSpacing = 4
+        paragraphStyle.alignment = .left
+        
+        attributedString.addAttribute(.foregroundColor, value: UIColor.App.textPrimary, range: fullRange)
+        attributedString.addAttribute(.font, value: AppFont.with(type: .semibold, size: 14), range: fullRange)
+        
+        attributedString.addAttribute(.font, value: AppFont.with(type: .bold, size: 14), range: range1)
+        attributedString.addAttribute(.font, value: AppFont.with(type: .bold, size: 14), range: range2)
+        attributedString.addAttribute(.font, value: AppFont.with(type: .bold, size: 14), range: range3)
+        
+        attributedString.addAttribute(.foregroundColor, value: UIColor.App.highlightPrimary, range: range4)
+        
+        attributedString.addAttribute(.paragraphStyle, value: paragraphStyle, range: NSRange(location: 0, length: attributedString.length))
+        
+        label.attributedText = attributedString
+        
+        return label
+    }
+    
+    private static func createLogo1ImageView() -> UIImageView {
+        let imageView = UIImageView()
+        imageView.translatesAutoresizingMaskIntoConstraints = false
+        imageView.image = UIImage(named: "sos_logo")
+        imageView.contentMode = .scaleAspectFit
+        return imageView
+    }
+    
+    private static func createLogo2ImageView() -> UIImageView {
+        let imageView = UIImageView()
+        imageView.translatesAutoresizingMaskIntoConstraints = false
+        imageView.image = UIImage(named: "evalujeu_logo")
+        imageView.contentMode = .scaleAspectFit
+        return imageView
+    }
+    
+    private static func createLogo3ImageView() -> UIImageView {
+        let imageView = UIImageView()
+        imageView.translatesAutoresizingMaskIntoConstraints = false
+        imageView.image = UIImage(named: "anj_logo")
+        imageView.contentMode = .scaleAspectFit
+        return imageView
+    }
+    
     private static func createTipButton() -> UIButton {
         let button = UIButton()
         button.translatesAutoresizingMaskIntoConstraints = false
@@ -161,6 +752,27 @@ extension CasualGamblingViewController {
         button.imageEdgeInsets = UIEdgeInsets(top: 2, left: 4, bottom: 2, right: 4)
         button.contentMode = .scaleAspectFit
         return button
+    }
+    
+    // Constraints
+    private static func createFirstSectionDescriptionHeightConstraint() -> NSLayoutConstraint {
+        let constraint = NSLayoutConstraint()
+        return constraint
+    }
+    
+    private static func createSecondSectionDescriptionHeightConstraint() -> NSLayoutConstraint {
+        let constraint = NSLayoutConstraint()
+        return constraint
+    }
+    
+    private static func createThirdSectionDescriptionHeightConstraint() -> NSLayoutConstraint {
+        let constraint = NSLayoutConstraint()
+        return constraint
+    }
+    
+    private static func createFourthSectionDescriptionHeightConstraint() -> NSLayoutConstraint {
+        let constraint = NSLayoutConstraint()
+        return constraint
     }
 
     private func setupSubviews() {
@@ -175,7 +787,44 @@ extension CasualGamblingViewController {
 
         self.scrollContainerView.addSubview(self.titleLabel)
         self.scrollContainerView.addSubview(self.textLabel)
-        self.scrollContainerView.addSubview(self.tipButton)
+        self.scrollContainerView.addSubview(self.accordionView)
+        
+        self.accordionView.addSubview(self.accordionFirstSectionBaseView)
+        
+        self.accordionFirstSectionBaseView.addSubview(self.accordionFirstTextSectionView)
+        self.accordionFirstSectionBaseView.addSubview(self.accordionFirstSectionDescriptionView)
+        
+        self.accordionFirstSectionDescriptionView.addSubview(self.accordionFirstSectionDescriptionLabel)
+        
+        self.accordionView.addSubview(self.accordionSecondSectionBaseView)
+        
+        self.accordionSecondSectionBaseView.addSubview(self.accordionSecondTextSectionView)
+        self.accordionSecondSectionBaseView.addSubview(self.accordionSecondSectionDescriptionView)
+        
+        self.accordionSecondSectionDescriptionView.addSubview(self.accordionSecondSectionDescriptionLabel1)
+        self.accordionSecondSectionDescriptionView.addSubview(self.accordionSecondSectionDescriptionListLabel)
+        self.accordionSecondSectionDescriptionView.addSubview(self.accordionSecondSectionDescriptionLabel2)
+
+        self.accordionView.addSubview(self.accordionThirdSectionBaseView)
+        
+        self.accordionThirdSectionBaseView.addSubview(self.accordionThirdTextSectionView)
+        self.accordionThirdSectionBaseView.addSubview(self.accordionThirdSectionDescriptionView)
+        
+        self.accordionThirdSectionDescriptionView.addSubview(self.accordionThirdSectionDescriptionLabel1)
+        self.accordionThirdSectionDescriptionView.addSubview(self.accordionThirdSectionDescriptionListLabel)
+        self.accordionThirdSectionDescriptionView.addSubview(self.accordionThirdSectionDescriptionLabel2)
+        
+        self.accordionView.addSubview(self.accordionFourthSectionBaseView)
+        
+        self.accordionFourthSectionBaseView.addSubview(self.accordionFourthTextSectionView)
+        self.accordionFourthSectionBaseView.addSubview(self.accordionFourthSectionDescriptionView)
+        self.accordionFourthSectionDescriptionView.addSubview(self.accordionFourthSectionDescriptionLabel)
+
+        self.scrollContainerView.addSubview(self.logo1ImageView)
+        self.scrollContainerView.addSubview(self.logo2ImageView)
+        self.scrollContainerView.addSubview(self.logo3ImageView)
+        
+        //self.scrollContainerView.addSubview(self.tipButton)
 
         self.initConstraints()
     }
@@ -224,15 +873,176 @@ extension CasualGamblingViewController {
 
             self.textLabel.leadingAnchor.constraint(equalTo: self.scrollContainerView.leadingAnchor, constant: 20),
             self.textLabel.trailingAnchor.constraint(equalTo: self.scrollContainerView.trailingAnchor, constant: -20),
-            self.textLabel.topAnchor.constraint(equalTo: self.titleLabel.bottomAnchor, constant: 15),
-            //self.textLabel.bottomAnchor.constraint(equalTo: self.scrollContainerView.bottomAnchor, constant: -15),
+            self.textLabel.topAnchor.constraint(equalTo: self.titleLabel.bottomAnchor, constant: 15)
 
-            self.tipButton.widthAnchor.constraint(equalToConstant: 205),
-            self.tipButton.heightAnchor.constraint(equalToConstant: 50),
-            self.tipButton.centerXAnchor.constraint(equalTo: self.scrollContainerView.centerXAnchor),
-            self.tipButton.topAnchor.constraint(equalTo: self.textLabel.bottomAnchor, constant: 70),
-            self.tipButton.bottomAnchor.constraint(equalTo: self.scrollContainerView.bottomAnchor, constant: -20)
         ])
+        
+        // Accordion
+        NSLayoutConstraint.activate([
+        
+            self.accordionView.leadingAnchor.constraint(equalTo: self.scrollContainerView.leadingAnchor, constant: 20),
+            self.accordionView.trailingAnchor.constraint(equalTo: self.scrollContainerView.trailingAnchor, constant: -20),
+            self.accordionView.topAnchor.constraint(equalTo: self.textLabel.bottomAnchor, constant: 30),
+            
+            // First
+            self.accordionFirstSectionBaseView.leadingAnchor.constraint(equalTo: self.accordionView.leadingAnchor),
+            self.accordionFirstSectionBaseView.trailingAnchor.constraint(equalTo: self.accordionView.trailingAnchor),
+            self.accordionFirstSectionBaseView.topAnchor.constraint(equalTo: self.accordionView.topAnchor),
+            
+            self.accordionFirstTextSectionView.leadingAnchor.constraint(equalTo: self.accordionFirstSectionBaseView.leadingAnchor),
+            self.accordionFirstTextSectionView.trailingAnchor.constraint(equalTo: self.accordionFirstSectionBaseView.trailingAnchor),
+            self.accordionFirstTextSectionView.topAnchor.constraint(equalTo: self.accordionFirstSectionBaseView.topAnchor),
+            
+            self.accordionFirstSectionDescriptionView.leadingAnchor.constraint(equalTo: self.accordionFirstSectionBaseView.leadingAnchor),
+            self.accordionFirstSectionDescriptionView.trailingAnchor.constraint(equalTo: self.accordionFirstSectionBaseView.trailingAnchor),
+            self.accordionFirstSectionDescriptionView.topAnchor.constraint(equalTo: self.accordionFirstTextSectionView.bottomAnchor, constant: 5),
+            self.accordionFirstSectionDescriptionView.bottomAnchor.constraint(equalTo: self.accordionFirstSectionBaseView.bottomAnchor, constant: -5),
+            
+            self.accordionFirstSectionDescriptionLabel.leadingAnchor.constraint(equalTo: self.accordionFirstSectionDescriptionView.leadingAnchor, constant: 10),
+            self.accordionFirstSectionDescriptionLabel.trailingAnchor.constraint(equalTo: self.accordionFirstSectionDescriptionView.trailingAnchor, constant: -10),
+            self.accordionFirstSectionDescriptionLabel.topAnchor.constraint(equalTo: self.accordionFirstSectionDescriptionView.topAnchor, constant: 5),
+            self.accordionFirstSectionDescriptionLabel.bottomAnchor.constraint(equalTo: self.accordionFirstSectionDescriptionView.bottomAnchor, constant: -5),
+            
+            // Second
+            self.accordionSecondSectionBaseView.leadingAnchor.constraint(equalTo: self.accordionView.leadingAnchor),
+            self.accordionSecondSectionBaseView.trailingAnchor.constraint(equalTo: self.accordionView.trailingAnchor),
+            self.accordionSecondSectionBaseView.topAnchor.constraint(equalTo: self.accordionFirstSectionBaseView.bottomAnchor),
+            //self.accordionSecondSectionBaseView.bottomAnchor.constraint(equalTo: self.accordionView.bottomAnchor),
+            
+            self.accordionSecondTextSectionView.leadingAnchor.constraint(equalTo: self.accordionSecondSectionBaseView.leadingAnchor),
+            self.accordionSecondTextSectionView.trailingAnchor.constraint(equalTo: self.accordionSecondSectionBaseView.trailingAnchor),
+            self.accordionSecondTextSectionView.topAnchor.constraint(equalTo: self.accordionSecondSectionBaseView.topAnchor),
+            
+            self.accordionSecondSectionDescriptionView.leadingAnchor.constraint(equalTo: self.accordionSecondSectionBaseView.leadingAnchor),
+            self.accordionSecondSectionDescriptionView.trailingAnchor.constraint(equalTo: self.accordionSecondSectionBaseView.trailingAnchor),
+            self.accordionSecondSectionDescriptionView.topAnchor.constraint(equalTo: self.accordionSecondTextSectionView.bottomAnchor, constant: 10),
+            self.accordionSecondSectionDescriptionView.bottomAnchor.constraint(equalTo: self.accordionSecondSectionBaseView.bottomAnchor, constant: -10),
+            
+            self.accordionSecondSectionDescriptionLabel1.leadingAnchor.constraint(equalTo: self.accordionSecondSectionDescriptionView.leadingAnchor, constant: 10),
+            self.accordionSecondSectionDescriptionLabel1.trailingAnchor.constraint(equalTo: self.accordionSecondSectionDescriptionView.trailingAnchor, constant: -10),
+            self.accordionSecondSectionDescriptionLabel1.topAnchor.constraint(equalTo: self.accordionSecondSectionDescriptionView.topAnchor, constant: 5),
+            
+            self.accordionSecondSectionDescriptionListLabel.leadingAnchor.constraint(equalTo: self.accordionSecondSectionDescriptionView.leadingAnchor, constant: 10),
+            self.accordionSecondSectionDescriptionListLabel.trailingAnchor.constraint(equalTo: self.accordionSecondSectionDescriptionView.trailingAnchor, constant: -10),
+            self.accordionSecondSectionDescriptionListLabel.topAnchor.constraint(equalTo: self.accordionSecondSectionDescriptionLabel1.bottomAnchor, constant: 10),
+            
+            self.accordionSecondSectionDescriptionLabel2.leadingAnchor.constraint(equalTo: self.accordionSecondSectionDescriptionView.leadingAnchor, constant: 10),
+            self.accordionSecondSectionDescriptionLabel2.trailingAnchor.constraint(equalTo: self.accordionSecondSectionDescriptionView.trailingAnchor, constant: -10),
+            self.accordionSecondSectionDescriptionLabel2.topAnchor.constraint(equalTo: self.accordionSecondSectionDescriptionListLabel.bottomAnchor, constant: 20),
+            self.accordionSecondSectionDescriptionLabel2.bottomAnchor.constraint(equalTo: self.accordionSecondSectionDescriptionView.bottomAnchor, constant: -5),
+            
+            // Third
+            self.accordionThirdSectionBaseView.leadingAnchor.constraint(equalTo: self.accordionView.leadingAnchor),
+            self.accordionThirdSectionBaseView.trailingAnchor.constraint(equalTo: self.accordionView.trailingAnchor),
+            self.accordionThirdSectionBaseView.topAnchor.constraint(equalTo: self.accordionSecondSectionBaseView.bottomAnchor),
+            
+            self.accordionThirdTextSectionView.leadingAnchor.constraint(equalTo: self.accordionThirdSectionBaseView.leadingAnchor),
+            self.accordionThirdTextSectionView.trailingAnchor.constraint(equalTo: self.accordionThirdSectionBaseView.trailingAnchor),
+            self.accordionThirdTextSectionView.topAnchor.constraint(equalTo: self.accordionThirdSectionBaseView.topAnchor),
+            
+            self.accordionThirdSectionDescriptionView.leadingAnchor.constraint(equalTo: self.accordionThirdSectionBaseView.leadingAnchor),
+            self.accordionThirdSectionDescriptionView.trailingAnchor.constraint(equalTo: self.accordionThirdSectionBaseView.trailingAnchor),
+            self.accordionThirdSectionDescriptionView.topAnchor.constraint(equalTo: self.accordionThirdTextSectionView.bottomAnchor, constant: 5),
+            self.accordionThirdSectionDescriptionView.bottomAnchor.constraint(equalTo: self.accordionThirdSectionBaseView.bottomAnchor, constant: -5),
+            
+            self.accordionThirdSectionDescriptionLabel1.leadingAnchor.constraint(equalTo: self.accordionThirdSectionDescriptionView.leadingAnchor, constant: 10),
+            self.accordionThirdSectionDescriptionLabel1.trailingAnchor.constraint(equalTo: self.accordionThirdSectionDescriptionView.trailingAnchor, constant: -10),
+            self.accordionThirdSectionDescriptionLabel1.topAnchor.constraint(equalTo: self.accordionThirdSectionDescriptionView.topAnchor, constant: 5),
+            
+            self.accordionThirdSectionDescriptionListLabel.leadingAnchor.constraint(equalTo: self.accordionThirdSectionDescriptionView.leadingAnchor, constant: 10),
+            self.accordionThirdSectionDescriptionListLabel.trailingAnchor.constraint(equalTo: self.accordionThirdSectionDescriptionView.trailingAnchor, constant: -10),
+            self.accordionThirdSectionDescriptionListLabel.topAnchor.constraint(equalTo: self.accordionThirdSectionDescriptionLabel1.bottomAnchor, constant: 10),
+            
+            self.accordionThirdSectionDescriptionLabel2.leadingAnchor.constraint(equalTo: self.accordionThirdSectionDescriptionView.leadingAnchor, constant: 10),
+            self.accordionThirdSectionDescriptionLabel2.trailingAnchor.constraint(equalTo: self.accordionThirdSectionDescriptionView.trailingAnchor, constant: -10),
+            self.accordionThirdSectionDescriptionLabel2.topAnchor.constraint(equalTo: self.accordionThirdSectionDescriptionListLabel.bottomAnchor, constant: 20),
+            self.accordionThirdSectionDescriptionLabel2.bottomAnchor.constraint(equalTo: self.accordionThirdSectionDescriptionView.bottomAnchor, constant: -5),
+            
+            // Fourth
+            self.accordionFourthSectionBaseView.leadingAnchor.constraint(equalTo: self.accordionView.leadingAnchor),
+            self.accordionFourthSectionBaseView.trailingAnchor.constraint(equalTo: self.accordionView.trailingAnchor),
+            self.accordionFourthSectionBaseView.topAnchor.constraint(equalTo: self.accordionThirdSectionBaseView.bottomAnchor),
+            self.accordionFourthSectionBaseView.bottomAnchor.constraint(equalTo: self.accordionView.bottomAnchor),
+            
+            self.accordionFourthTextSectionView.leadingAnchor.constraint(equalTo: self.accordionFourthSectionBaseView.leadingAnchor),
+            self.accordionFourthTextSectionView.trailingAnchor.constraint(equalTo: self.accordionFourthSectionBaseView.trailingAnchor),
+            self.accordionFourthTextSectionView.topAnchor.constraint(equalTo: self.accordionFourthSectionBaseView.topAnchor),
+            
+            self.accordionFourthSectionDescriptionView.leadingAnchor.constraint(equalTo: self.accordionFourthSectionBaseView.leadingAnchor),
+            self.accordionFourthSectionDescriptionView.trailingAnchor.constraint(equalTo: self.accordionFourthSectionBaseView.trailingAnchor),
+            self.accordionFourthSectionDescriptionView.topAnchor.constraint(equalTo: self.accordionFourthTextSectionView.bottomAnchor, constant: 5),
+            self.accordionFourthSectionDescriptionView.bottomAnchor.constraint(equalTo: self.accordionFourthSectionBaseView.bottomAnchor, constant: -5),
+            
+            self.accordionFourthSectionDescriptionLabel.leadingAnchor.constraint(equalTo: self.accordionFourthSectionDescriptionView.leadingAnchor, constant: 10),
+            self.accordionFourthSectionDescriptionLabel.trailingAnchor.constraint(equalTo: self.accordionFourthSectionDescriptionView.trailingAnchor, constant: -10),
+            self.accordionFourthSectionDescriptionLabel.topAnchor.constraint(equalTo: self.accordionFourthSectionDescriptionView.topAnchor, constant: 5),
+            self.accordionFourthSectionDescriptionLabel.bottomAnchor.constraint(equalTo: self.accordionFourthSectionDescriptionView.bottomAnchor, constant: -5),
+        ])
+        
+        // Bottom icons
+        NSLayoutConstraint.activate([
+            
+            self.logo1ImageView.leadingAnchor.constraint(greaterThanOrEqualTo: self.scrollContainerView.leadingAnchor, constant: 15),
+            self.logo1ImageView.trailingAnchor.constraint(equalTo: self.scrollContainerView.centerXAnchor, constant: -10),
+            self.logo1ImageView.topAnchor.constraint(equalTo: self.accordionView.bottomAnchor, constant: 50),
+            self.logo1ImageView.heightAnchor.constraint(equalToConstant: 140),
+            
+            self.logo2ImageView.leadingAnchor.constraint(equalTo: self.scrollContainerView.centerXAnchor, constant: 10),
+            self.logo2ImageView.trailingAnchor.constraint(lessThanOrEqualTo: self.scrollContainerView.trailingAnchor, constant: -15),
+            self.logo2ImageView.centerYAnchor.constraint(equalTo: self.logo1ImageView.centerYAnchor),
+            self.logo2ImageView.heightAnchor.constraint(equalToConstant: 140),
+
+            self.logo3ImageView.centerXAnchor.constraint(equalTo: self.scrollContainerView.centerXAnchor),
+            self.logo3ImageView.heightAnchor.constraint(equalToConstant: 140),
+            self.logo3ImageView.topAnchor.constraint(equalTo: self.logo1ImageView.bottomAnchor, constant: 15),
+            self.logo3ImageView.bottomAnchor.constraint(equalTo: self.scrollContainerView.bottomAnchor, constant: -20)
+//            self.tipButton.widthAnchor.constraint(equalToConstant: 205),
+//            self.tipButton.heightAnchor.constraint(equalToConstant: 50),
+//            self.tipButton.centerXAnchor.constraint(equalTo: self.scrollContainerView.centerXAnchor),
+//            self.tipButton.topAnchor.constraint(equalTo: self.accordionView.bottomAnchor, constant: 70),
+//            self.tipButton.bottomAnchor.constraint(equalTo: self.scrollContainerView.bottomAnchor, constant: -20)
+        ])
+        
+        // Constraints
+        self.firstSectionDescriptionHeightConstraint =
+        NSLayoutConstraint(item: self.accordionFirstSectionDescriptionView,
+                           attribute: .height,
+                           relatedBy: .equal,
+                           toItem: nil,
+                           attribute: .notAnAttribute,
+                           multiplier: 1,
+                           constant: 0)
+        self.firstSectionDescriptionHeightConstraint.isActive = true
+        
+        self.secondSectionDescriptionHeightConstraint =
+        NSLayoutConstraint(item: self.accordionSecondSectionDescriptionView,
+                           attribute: .height,
+                           relatedBy: .equal,
+                           toItem: nil,
+                           attribute: .notAnAttribute,
+                           multiplier: 1,
+                           constant: 0)
+        self.secondSectionDescriptionHeightConstraint.isActive = true
+        
+        self.thirdSectionDescriptionHeightConstraint =
+        NSLayoutConstraint(item: self.accordionThirdSectionDescriptionView,
+                           attribute: .height,
+                           relatedBy: .equal,
+                           toItem: nil,
+                           attribute: .notAnAttribute,
+                           multiplier: 1,
+                           constant: 0)
+        self.thirdSectionDescriptionHeightConstraint.isActive = true
+        
+        self.fourthSectionDescriptionHeightConstraint =
+        NSLayoutConstraint(item: self.accordionFourthSectionDescriptionView,
+                           attribute: .height,
+                           relatedBy: .equal,
+                           toItem: nil,
+                           attribute: .notAnAttribute,
+                           multiplier: 1,
+                           constant: 0)
+        self.fourthSectionDescriptionHeightConstraint.isActive = true
     }
 
 }

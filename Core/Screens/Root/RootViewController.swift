@@ -942,24 +942,46 @@ class RootViewController: UIViewController {
     func openCompetitionDetail(competitionId: String) {
         
         let sport = Sport(id: "", name: "Sport", alphaId: "", numericId: "", showEventCategory: false, liveEventsCount: 0)
-        let competitionDetailViewModel = CompetitionDetailsViewModel(competitionsIds: [competitionId], sport: sport)
         
-        let competitionDetailViewController = CompetitionDetailsViewController(viewModel: competitionDetailViewModel)
+        let topCompetitionDetailsViewModel = TopCompetitionDetailsViewModel(competitionsIds: [competitionId], sport: sport)
+        let topCompetitionDetailsViewController = TopCompetitionDetailsViewController(viewModel: topCompetitionDetailsViewModel)
         
-        let navigationController = Router.navigationController(with: competitionDetailViewController)
+        let navigationController = Router.navigationController(with: topCompetitionDetailsViewController)
 
         self.present(navigationController, animated: true, completion: nil)
     }
     
     func openContactSettings() {
-        
-        let contactSettingsViewModel = ContactSettingsViewModel()
-
-        let contactSettingsViewController = ContactSettingsViewController(viewModel: contactSettingsViewModel)
-        
-        let navigationController = Router.navigationController(with: contactSettingsViewController)
-
-        self.present(navigationController, animated: true, completion: nil)
+        Env.userSessionStore.isLoadingUserSessionPublisher
+            .filter({ $0 == false })
+            .receive(on: DispatchQueue.main)
+            .first()
+            .sink(receiveValue: { [weak self] _ in
+                if Env.userSessionStore.isUserLogged() {
+                    let contactSettingsViewModel = ContactSettingsViewModel()
+                    
+                    let contactSettingsViewController = ContactSettingsViewController(viewModel: contactSettingsViewModel)
+                    
+                    let navigationController = Router.navigationController(with: contactSettingsViewController)
+                    
+                    self?.present(navigationController, animated: true, completion: nil)
+                }
+                else {
+                    
+                    let loginViewController = LoginViewController()
+                    
+                    let navigationViewController = Router.navigationController(with: loginViewController)
+                    
+                    loginViewController.hasPendingRedirect = true
+                    
+                    loginViewController.needsRedirect = { [weak self] in
+                        self?.openContactSettings()
+                    }
+                    
+                    self?.present(navigationViewController, animated: true, completion: nil)
+                }
+            })
+            .store(in: &cancellables)
     }
     
     func openBetswipe() {
@@ -968,52 +990,154 @@ class RootViewController: UIViewController {
     }
     
     func openDeposit() {
-        
-        let depositViewController = DepositViewController()
-
-        depositViewController.shouldRefreshUserWallet = {
-            Env.userSessionStore.refreshUserWallet()
-        }
-        
-        let navigationController = Router.navigationController(with: depositViewController)
-
-        self.present(navigationController, animated: true, completion: nil)
+        Env.userSessionStore.isLoadingUserSessionPublisher
+            .filter({ $0 == false })
+            .receive(on: DispatchQueue.main)
+            .first()
+            .sink(receiveValue: { [weak self] _ in
+                
+                if Env.userSessionStore.isUserLogged() {
+                    let depositViewController = DepositViewController()
+                    
+                    depositViewController.shouldRefreshUserWallet = {
+                        Env.userSessionStore.refreshUserWallet()
+                    }
+                    
+                    let navigationController = Router.navigationController(with: depositViewController)
+                    
+                    self?.present(navigationController, animated: true, completion: nil)
+                }
+                else {
+                    
+                    let loginViewController = LoginViewController()
+                    
+                    let navigationViewController = Router.navigationController(with: loginViewController)
+                    
+                    loginViewController.hasPendingRedirect = true
+                    
+                    loginViewController.needsRedirect = { [weak self] in
+                        self?.openDeposit()
+                    }
+                    
+                    self?.present(navigationViewController, animated: true, completion: nil)
+                }
+                
+            })
+            .store(in: &cancellables)
     }
     
     func openBonus() {
-        let bonusRootViewController = BonusRootViewController(viewModel: BonusRootViewModel(startTabIndex: 0))
-
-        let navigationController = Router.navigationController(with: bonusRootViewController)
-
-        self.present(navigationController, animated: true, completion: nil)
+        Env.userSessionStore.isLoadingUserSessionPublisher
+            .filter({ $0 == false })
+            .receive(on: DispatchQueue.main)
+            .first()
+            .sink(receiveValue: { [weak self] _ in
+                
+                if Env.userSessionStore.isUserLogged() {
+                    let bonusRootViewController = BonusRootViewController(viewModel: BonusRootViewModel(startTabIndex: 0))
+                    
+                    let navigationController = Router.navigationController(with: bonusRootViewController)
+                    
+                    self?.present(navigationController, animated: true, completion: nil)
+                }
+                else {
+                    
+                    let loginViewController = LoginViewController()
+                    
+                    let navigationViewController = Router.navigationController(with: loginViewController)
+                    
+                    loginViewController.hasPendingRedirect = true
+                    
+                    loginViewController.needsRedirect = { [weak self] in
+                        self?.openBonus()
+                    }
+                    
+                    self?.present(navigationViewController, animated: true, completion: nil)
+                }
+                
+            })
+            .store(in: &cancellables)
     }
     
     func openDocuments() {
-        let documentsRootViewModel = DocumentsRootViewModel()
-
-        let documentsRootViewController = DocumentsRootViewController(viewModel: documentsRootViewModel)
         
-        let navigationController = Router.navigationController(with: documentsRootViewController)
-
-        self.present(navigationController, animated: true, completion: nil)
+        Env.userSessionStore.isLoadingUserSessionPublisher
+            .filter({ $0 == false })
+            .receive(on: DispatchQueue.main)
+            .first()
+            .sink(receiveValue: { [weak self] _ in
+                
+                if Env.userSessionStore.isUserLogged() {
+                    let documentsRootViewModel = DocumentsRootViewModel()
+                    
+                    let documentsRootViewController = DocumentsRootViewController(viewModel: documentsRootViewModel)
+                    
+                    let navigationController = Router.navigationController(with: documentsRootViewController)
+                    
+                    self?.present(navigationController, animated: true, completion: nil)
+                }
+                else {
+                    
+                    let loginViewController = LoginViewController()
+                    
+                    let navigationViewController = Router.navigationController(with: loginViewController)
+                    
+                    loginViewController.hasPendingRedirect = true
+                    
+                    loginViewController.needsRedirect = { [weak self] in
+                        self?.openDocuments()
+                    }
+                    
+                    self?.present(navigationViewController, animated: true, completion: nil)
+                }
+                
+            })
+            .store(in: &cancellables)
 
     }
     
     func openCustomerSupport() {
+        
         let supportViewController = SupportPageViewController(viewModel: SupportPageViewModel())
         
         let navigationController = Router.navigationController(with: supportViewController)
-
+        
         self.present(navigationController, animated: true, completion: nil)
-
+        
     }
     
     func openFavorites() {
-        let myFavoritesViewController = MyFavoritesRootViewController()
         
-        let navigationController = Router.navigationController(with: myFavoritesViewController)
+        Env.userSessionStore.isLoadingUserSessionPublisher
+            .filter({ $0 == false })
+            .receive(on: DispatchQueue.main)
+            .first()
+            .sink(receiveValue: { [weak self] _ in
+                
+                if Env.userSessionStore.isUserLogged() {
+                    let myFavoritesViewController = MyFavoritesRootViewController()
+                    
+                    let navigationController = Router.navigationController(with: myFavoritesViewController)
 
-        self.present(navigationController, animated: true, completion: nil)
+                    self?.present(navigationController, animated: true, completion: nil)
+                }
+                else {
+                    
+                    let loginViewController = LoginViewController()
+                    
+                    let navigationViewController = Router.navigationController(with: loginViewController)
+                    
+                    loginViewController.hasPendingRedirect = true
+                    
+                    loginViewController.needsRedirect = { [weak self] in
+                        self?.openDocuments()
+                    }
+                    
+                    self?.present(navigationViewController, animated: true, completion: nil)
+                }
+                
+            })
+            .store(in: &cancellables)
 
     }
     
@@ -1021,7 +1145,7 @@ class RootViewController: UIViewController {
         
         let promotionsWebViewModel = PromotionsWebViewModel()
 
-        var gomaBaseUrl = TargetVariables.clientBaseUrl
+        let gomaBaseUrl = TargetVariables.clientBaseUrl
         let appLanguage = "fr"
 
         let isDarkTheme = self.traitCollection.userInterfaceStyle == .dark ? true : false
@@ -1037,8 +1161,17 @@ class RootViewController: UIViewController {
                 self?.dismiss(animated: true)
             }
             
-            promotionsWebViewController.openRegisterAction
-            
+            promotionsWebViewController.openBetSwipeAction = { [weak self] in
+                self?.dismiss(animated: true, completion: {
+                    self?.openBetswipe()
+                })
+            }
+            promotionsWebViewController.openRegisterAction = { [weak self] in
+                self?.dismiss(animated: true, completion: {
+                    self?.presentRegisterScreen()
+                })
+            }
+                        
             self.present(navigationController, animated: true, completion: nil)
         }
     }
