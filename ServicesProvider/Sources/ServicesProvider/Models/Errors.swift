@@ -29,6 +29,7 @@ public enum ServiceProviderError: Error {
     case userSessionNotFound
 
     case notPlacedBet(message: String)
+    case betNeedsUserConfirmation(betDetails: PlacedBetsResponse)
     
     case onSubscribe
     case resourceNotFound

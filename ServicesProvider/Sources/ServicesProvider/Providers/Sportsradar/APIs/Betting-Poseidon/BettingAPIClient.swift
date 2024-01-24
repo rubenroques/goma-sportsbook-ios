@@ -13,6 +13,10 @@ enum BettingAPIClient {
     case calculateReturns(betTicket: BetTicket)
     case getAllowedBetTypes(betTicketSelections: [BetTicketSelection])
     case placeBets(betTickets: [BetTicket], useFreebetBalance: Bool)
+    
+    case confirmBoostedBet(identifier: String)
+    case rejectBoostedBet(identifier: String)
+    
     case calculateCashout(betId: String, stakeValue: String?)
     case cashoutBet(betId: String, cashoutValue: Double, stakeValue: Double?)
     case getBetslipSettings
@@ -37,6 +41,12 @@ extension BettingAPIClient: Endpoint {
             return "/api/betting/fo/allowedBetTypesWithCalculation"
         case .placeBets:
             return "/api/betting/fo/betslip"
+            
+        case .confirmBoostedBet(let identifier):
+            return "/api/betting/fo/betslip/\(identifier)/confirm"
+        case .rejectBoostedBet(let identifier):
+            return "/api/betting/fo/betslip/\(identifier)/reject"
+            
         case .calculateCashout(let betId, _):
             return "/api/cashout/fo/cashout/\(betId)/calculate"
         case .cashoutBet(let betId, _, _):
@@ -107,6 +117,12 @@ extension BettingAPIClient: Endpoint {
             return nil
         case .placeBets:
             return nil
+        
+        case .confirmBoostedBet:
+            return nil
+        case .rejectBoostedBet:
+            return nil
+            
         case .calculateCashout:
             return nil
         case .cashoutBet:
@@ -247,6 +263,26 @@ extension BettingAPIClient: Endpoint {
             let data = body.data(using: String.Encoding.utf8)!
             return data
 
+        //
+        case .confirmBoostedBet:
+            let body = """
+                        {
+                            "betStatus": {
+                                "state": 1,
+                                "detailedState": 66,
+                                "statusCode": null,
+                                "statusText": null
+                            },
+                            "securityCode": ""
+                        }
+                       """
+            let data = body.data(using: String.Encoding.utf8)!
+            return data
+        case .rejectBoostedBet:
+            let data = "{}".data(using: String.Encoding.utf8)!
+            return data
+            
+        //
         case .calculateCashout(_, let stakeValue):
 
             if let stakeValue {
@@ -340,6 +376,10 @@ extension BettingAPIClient: Endpoint {
         case .calculateReturns: return .post
         case .getAllowedBetTypes: return .post
         case .placeBets: return .post
+            
+        case .confirmBoostedBet: return .put
+        case .rejectBoostedBet: return .post
+            
         case .calculateCashout: return .post
         case .cashoutBet: return .post
         case .getBetslipSettings: return .get
@@ -358,6 +398,10 @@ extension BettingAPIClient: Endpoint {
         case .calculateReturns: return false
         case .getAllowedBetTypes: return false
         case .placeBets: return true
+            
+        case .confirmBoostedBet: return true
+        case .rejectBoostedBet: return true
+            
         case .calculateCashout: return true
         case .cashoutBet: return true
         case .getBetslipSettings: return true
@@ -379,16 +423,25 @@ extension BettingAPIClient: Endpoint {
     }
     
     var headers: HTTP.Headers? {
-        let defaultHeaders = [
-            "Accept-Encoding": "gzip, deflate",
-            "Content-Type": "application/json; charset=UTF-8",
-            "Accept": "application/json",
-            "X-MGS-BusinessUnit": "3",
-            "app-origin": "ios",
-            "Accept-Languag": "\(SportRadarConfiguration.shared.socketLanguageCode)",
-            "X-MGS-Location": "\(SportRadarConfiguration.shared.socketLanguageCode)",
-        ]
-        return defaultHeaders
+        switch self {
+        case .confirmBoostedBet, .rejectBoostedBet:
+            return [
+                "Content-Type": "application/json",
+                "X-MGS-BusinessUnit": "3",
+                "X-MGS-Location": "\(SportRadarConfiguration.shared.socketLanguageCode)",
+                "Accept-Language": "\(SportRadarConfiguration.shared.socketLanguageCode)",
+            ]
+        default:
+            return [
+                "Accept-Encoding": "gzip, deflate",
+                "Content-Type": "application/json; charset=UTF-8",
+                "Accept": "application/json",
+                "X-MGS-BusinessUnit": "3",
+                "app-origin": "ios",
+                "Accept-Languag": "\(SportRadarConfiguration.shared.socketLanguageCode)",
+                "X-MGS-Location": "\(SportRadarConfiguration.shared.socketLanguageCode)",
+            ]
+        }
     }
     
     var cachePolicy: URLRequest.CachePolicy {
@@ -402,6 +455,10 @@ extension BettingAPIClient: Endpoint {
         case .calculateReturns: return TimeInterval(180)
         case .getAllowedBetTypes: return TimeInterval(180)
         case .placeBets: return TimeInterval(180)
+            
+        case .confirmBoostedBet: return TimeInterval(180)
+        case .rejectBoostedBet: return TimeInterval(180)
+            
         case .calculateCashout: return TimeInterval(180)
         case .cashoutBet: return TimeInterval(180)
         case .getBetslipSettings: return TimeInterval(180)

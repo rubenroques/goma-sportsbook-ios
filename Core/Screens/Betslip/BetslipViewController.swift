@@ -254,7 +254,9 @@ class BetslipViewController: UIViewController {
 
         Logger.log("Bet placed without erros. Will show feedback screen.")
 
-        let betSubmissionSuccessViewController = BetSubmissionSuccessViewController(betPlacedDetailsArray: betPlacedDetailsArray, cashbackResultValue: cashbackResultValue, usedCashback: usedCashback)
+        let betSubmissionSuccessViewController = BetSubmissionSuccessViewController(betPlacedDetailsArray: betPlacedDetailsArray,
+                                                                                    cashbackResultValue: cashbackResultValue,
+                                                                                    usedCashback: usedCashback)
         betSubmissionSuccessViewController.willDismissAction = self.willDismissAction
 
         self.navigationController?.pushViewController(betSubmissionSuccessViewController, animated: true)

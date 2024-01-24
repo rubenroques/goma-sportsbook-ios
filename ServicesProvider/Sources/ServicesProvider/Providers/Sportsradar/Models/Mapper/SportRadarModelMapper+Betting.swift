@@ -132,6 +132,7 @@ extension SportRadarModelMapper {
         return PlacedBetEntry(identifier: placedBetEntry.identifier,
                               potentialReturn: placedBetEntry.potentialReturn,
                               placeStake: placedBetEntry.placeStake,
+                              totalStake: placedBetEntry.totalAvailableStake,
                               betLegs: betLegs)
     }
 

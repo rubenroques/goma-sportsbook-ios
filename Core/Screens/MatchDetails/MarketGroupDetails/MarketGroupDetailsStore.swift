@@ -60,13 +60,22 @@ class MarketGroupDetailsStore {
 
             var similarMarketKey = "\(market.marketTypeId ?? "000")-\(match.homeParticipant.name )-\(match.awayParticipant.name)"
             
+            // ==================================
             // Avoid grouping markets with this id
             // add here if we need to ungroup more ids
-            if market.marketTypeId ?? "000" == "1492" ||
-                market.marketTypeId ?? "000" == "1730" ||
-                market.marketTypeId ?? "000" == "1731" {
+            let marketTypeId = market.marketTypeId ?? "000"
+            if Env.businessSettingsSocket.clientSettings.ungroupedMarkets.contains(marketTypeId) {
                 similarMarketKey = "\(market.id)-\(match.homeParticipant.name )-\(match.awayParticipant.name)"
             }
+            
+//            Previous hardcoded version
+//            if market.marketTypeId ?? "000" == "1492" ||
+//                market.marketTypeId ?? "000" == "1730" ||
+//                market.marketTypeId ?? "000" == "1731" {
+//                similarMarketKey = "\(market.id)-\(match.homeParticipant.name )-\(match.awayParticipant.name)"
+//            }
+            //
+            // ==================================
             
             //
             if self.firstMarketCache == nil {

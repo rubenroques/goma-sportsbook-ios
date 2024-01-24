@@ -167,18 +167,18 @@ class MatchWidgetCollectionViewCell: UICollectionViewCell {
     @IBOutlet private weak var resultCenterConstraint: NSLayoutConstraint!
     @IBOutlet private weak var buttonsHeightConstraint: NSLayoutConstraint!
     
-    @IBOutlet weak var marketBottomConstraint: NSLayoutConstraint!
-    @IBOutlet weak var marketTopConstraint: NSLayoutConstraint!
-    @IBOutlet weak var marketHeightConstraint: NSLayoutConstraint!
-    @IBOutlet weak var participantsBottomConstraint: NSLayoutConstraint!
+    @IBOutlet private weak var marketBottomConstraint: NSLayoutConstraint!
+    @IBOutlet private weak var marketTopConstraint: NSLayoutConstraint!
+    @IBOutlet private weak var marketHeightConstraint: NSLayoutConstraint!
+    @IBOutlet private weak var participantsBottomConstraint: NSLayoutConstraint!
     
-    @IBOutlet weak var homeCenterViewConstraint: NSLayoutConstraint!
-    @IBOutlet weak var homeResultCenterViewConstraint: NSLayoutConstraint!
-    @IBOutlet weak var awayCenterViewConstraint: NSLayoutConstraint!
-    @IBOutlet weak var awayResultCenterViewConstraint: NSLayoutConstraint!
+    @IBOutlet private weak var homeCenterViewConstraint: NSLayoutConstraint!
+    @IBOutlet private weak var homeResultCenterViewConstraint: NSLayoutConstraint!
+    @IBOutlet private weak var awayCenterViewConstraint: NSLayoutConstraint!
+    @IBOutlet private weak var awayResultCenterViewConstraint: NSLayoutConstraint!
     
-    @IBOutlet weak var homeTrailingConstraint: NSLayoutConstraint!
-    @IBOutlet weak var awayLeadingConstraint: NSLayoutConstraint!
+    @IBOutlet private weak var homeTrailingConstraint: NSLayoutConstraint!
+    @IBOutlet private weak var awayLeadingConstraint: NSLayoutConstraint!
     
     private var cachedCardsStyle: CardsStyle?
     //

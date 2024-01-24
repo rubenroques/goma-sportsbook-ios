@@ -239,13 +239,18 @@ public struct PlacedBetsResponse: Codable {
 
     public var identifier: String
     public var bets: [PlacedBetEntry]
-
-    public init(identifier: String, bets: [PlacedBetEntry]) {
-
+    public var requiredConfirmation: Bool
+    
+    public init(identifier: String, bets: [PlacedBetEntry], requiredConfirmation: Bool = false) {
         self.identifier = identifier
         self.bets = bets
+        self.requiredConfirmation = false
     }
 
+}
+
+public struct NoReply: Codable {
+    
 }
 
 public struct PlacedBetEntry: Codable {
@@ -253,6 +258,7 @@ public struct PlacedBetEntry: Codable {
     public var identifier: String
     public var potentialReturn: Double
     public var placeStake: Double
+    public var totalStake: Double
     public var betLegs: [PlacedBetLeg]
 
     enum CodingKeys: String, CodingKey {
@@ -260,12 +266,14 @@ public struct PlacedBetEntry: Codable {
         case betLegs = "betLegs"
         case potentialReturn = "potentialReturn"
         case placeStake = "placeStake"
+        case totalStake = "totalStake"
     }
 
-    public init(identifier: String, potentialReturn: Double, placeStake: Double, betLegs: [PlacedBetLeg]) {
+    public init(identifier: String, potentialReturn: Double, placeStake: Double, totalStake: Double, betLegs: [PlacedBetLeg]) {
         self.identifier = identifier
         self.potentialReturn = potentialReturn
         self.placeStake = placeStake
+        self.totalStake = totalStake
         self.betLegs = betLegs
     }
 }

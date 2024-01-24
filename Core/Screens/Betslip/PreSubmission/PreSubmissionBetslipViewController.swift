@@ -1850,26 +1850,26 @@ class PreSubmissionBetslipViewController: UIViewController {
                     return
                 }
                 
+                // ============================
+                // PLACE SINGLE
                 Env.betslipManager.placeSingleBets(amounts: singleBetTicketStakes, useFreebetBalance: isFreeBet)
                 .receive(on: DispatchQueue.main)
                 .sink { [weak self] completion in
                     switch completion {
                     case .failure(let error):
-                        var message = ""
                         switch error {
                         case .betPlacementDetailedError(let detailedMessage):
-                            message = detailedMessage
+                            self?.showErrorView(errorMessage: detailedMessage)
+                        case .betNeedsUserConfirmation(let betDetails):
+                            self?.requestUserConfirmationForBoostedBet(betDetails: betDetails)
                         default:
-                            message = localized("error_placing_bet")
+                            self?.showErrorView(errorMessage: localized("error_placing_bet"))
                         }
-                        self?.showErrorView(errorMessage: message)
                     default: ()
                     }
                     self?.isLoading = false
                 } receiveValue: { [weak self] betPlacedDetailsArray in
-
                     if let cashbackSelected = self?.isCashbackToggleOn.value {
-
                         if !cashbackSelected {
                             self?.betPlacedAction(betPlacedDetailsArray, nil, false)
                         }
@@ -1905,26 +1905,27 @@ class PreSubmissionBetslipViewController: UIViewController {
                 if self.isFreebetEnabled.value == true || self.isCashbackToggleOn.value == true {
                     isFreeBet = true
                 }
-
+                
+                // ============================
+                // PLACE MULTIPLE
                 Env.betslipManager.placeMultipleBet(withStake: self.realBetValue, useFreebetBalance: isFreeBet)
                     .receive(on: DispatchQueue.main)
                     .sink { [weak self] completion in
                         switch completion {
                         case .failure(let error):
-                            var message = ""
                             switch error {
                             case .betPlacementDetailedError(let detailedMessage):
-                                message = detailedMessage
+                                self?.showErrorView(errorMessage: detailedMessage)
+                            case .betNeedsUserConfirmation(let betDetails):
+                                self?.requestUserConfirmationForBoostedBet(betDetails: betDetails)
                             default:
-                                message = localized("error_placing_bet")
+                                self?.showErrorView(errorMessage: localized("error_placing_bet"))
                             }
-                            self?.showErrorView(errorMessage: message)
                         default: ()
                         }
                         self?.isLoading = false
                     } receiveValue: { [weak self] betPlacedDetails in
                         if let cashbackSelected = self?.isCashbackToggleOn.value {
-
                             if !cashbackSelected {
                                 self?.betPlacedAction(betPlacedDetails, self?.cashbackResultValuePublisher.value, false)
                             }
@@ -1961,6 +1962,8 @@ class PreSubmissionBetslipViewController: UIViewController {
                     isFreeBet = true
                 }
 
+                // ============================
+                // PLACE SYSTEM
                 Env.betslipManager.placeSystemBet(withStake: self.realBetValue,
                                                   systemBetType: selectedSystemBetType,
                                                   useFreebetBalance: isFreeBet)
@@ -1968,21 +1971,19 @@ class PreSubmissionBetslipViewController: UIViewController {
                     .sink { [weak self] completion in
                         switch completion {
                         case .failure(let error):
-                            var message = ""
                             switch error {
                             case .betPlacementDetailedError(let detailedMessage):
-                                message = detailedMessage
+                                self?.showErrorView(errorMessage: detailedMessage)
+                            case .betNeedsUserConfirmation(let betDetails):
+                                self?.requestUserConfirmationForBoostedBet(betDetails: betDetails)
                             default:
-                                message = localized("error_placing_bet")
+                                self?.showErrorView(errorMessage: localized("error_placing_bet"))
                             }
-                            self?.showErrorView(errorMessage: message)
                         default: ()
                         }
                         self?.isLoading = false
                     } receiveValue: { [weak self] betPlacedDetails in
-
                         if let cashbackSelected = self?.isCashbackToggleOn.value {
-
                             if !cashbackSelected {
                                 self?.betPlacedAction(betPlacedDetails, nil, false)
                             }
@@ -1993,7 +1994,6 @@ class PreSubmissionBetslipViewController: UIViewController {
                         else {
                             self?.betPlacedAction(betPlacedDetails, nil, false)
                         }
-                        // self?.betPlacedAction(betPlacedDetails, nil, false)
                     }
                     .store(in: &cancellables)
             }
@@ -2085,6 +2085,99 @@ class PreSubmissionBetslipViewController: UIViewController {
         self.addAmountValue(50.0)
     }
 
+}
+
+extension PreSubmissionBetslipViewController {
+    
+    func requestUserConfirmationForBoostedBet(betDetails: PlacedBetsResponse) {
+        
+        guard let window = UIApplication.shared.windows.filter({$0.isKeyWindow}).first else { return }
+
+        //
+        // Create and configure the background view
+        let backgroundView = UIView(frame: UIScreen.main.bounds)
+        backgroundView.backgroundColor = UIColor.black.withAlphaComponent(0.5)
+        
+        //
+        //
+        let boostedBetConfirmationView = BoostedBetConfirmationView(betDetails: betDetails)
+        boostedBetConfirmationView.translatesAutoresizingMaskIntoConstraints = false
+        
+        boostedBetConfirmationView.didTapAcceptBetAction = { [weak self] betDetails in
+            self?.confirmBoostedBet(betDetails: betDetails)
+            backgroundView.removeFromSuperview()
+        }
+        boostedBetConfirmationView.didTapRejectBetAction = { [weak self] betDetails in
+            self?.rejectBet(betDetails: betDetails)
+            backgroundView.removeFromSuperview()
+        }
+        boostedBetConfirmationView.didDisappearAction = { [weak self] betDetails in
+            backgroundView.removeFromSuperview()
+        }
+        
+        //
+        // Add
+        backgroundView.addSubview(boostedBetConfirmationView)
+        window.addSubview(backgroundView)
+
+        //
+        // Constraints for the background view
+        NSLayoutConstraint.activate([
+            boostedBetConfirmationView.centerXAnchor.constraint(equalTo: backgroundView.centerXAnchor),
+            boostedBetConfirmationView.centerYAnchor.constraint(equalTo: backgroundView.centerYAnchor),
+            boostedBetConfirmationView.leadingAnchor.constraint(equalTo: backgroundView.leadingAnchor, constant: 24),
+        ])
+        
+        boostedBetConfirmationView.startCountdown()
+    }
+    
+    func confirmBoostedBet(betDetails: PlacedBetsResponse) {
+        
+        Env.servicesProvider.confirmBoostedBet(identifier: betDetails.identifier)
+            .receive(on: DispatchQueue.main)
+            .sink { [weak self] completion in
+                switch completion {
+                case .failure(let error):
+                    self?.showErrorView(errorMessage: localized("error_placing_bet"))
+                default: ()
+                }
+            } receiveValue: { [weak self] requestSuccessful in
+                print("confirmBoostedBet response: ", requestSuccessful)
+                let betPlacedDetailsArray = ServiceProviderModelMapper.betPlacedDetailsArray(fromPlacedBetsResponse: betDetails)
+                if let cashbackSelected = self?.isCashbackToggleOn.value {
+                    if !cashbackSelected {
+                        self?.betPlacedAction(betPlacedDetailsArray, nil, false)
+                    }
+                    else {
+                        self?.betPlacedAction(betPlacedDetailsArray, nil, true)
+                    }
+                }
+                else {
+                    self?.betPlacedAction(betPlacedDetailsArray, nil, false)
+                }
+            }
+            .store(in: &self.cancellables)
+
+    }
+    
+    func rejectBet(betDetails: PlacedBetsResponse) {
+        
+        Env.servicesProvider.rejectBoostedBet(identifier: betDetails.identifier)
+            .receive(on: DispatchQueue.main)
+            .sink { [weak self] completion in
+                switch completion {
+                case .failure(let error):
+                    self?.showErrorView(errorMessage: localized("error_placing_bet"))
+                default: ()
+                }
+            } receiveValue: { [weak self] rejectedBetSucceeded in
+                print("rejectedBetSucceeded: ", rejectedBetSucceeded)
+            }
+            .store(in: &self.cancellables)
+        
+    }
+    
+    
 }
 
 extension PreSubmissionBetslipViewController: UITextFieldDelegate {

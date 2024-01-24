@@ -150,7 +150,7 @@ extension SportRadarSocketConnector: Starscream.WebSocketDelegate {
         switch event {
         case .connected(let headers):
             self.sendListeningStarted()
-            print("ServiceProvider - SportRadarSocketConnector websocket 🟢 is connected : \(headers)")
+            print("ServiceProvider - SportRadarSocketConnector websocket 🟢 is connected: \(headers)")
 
         case .disconnected(let reason, let code):
             self.isConnected = false

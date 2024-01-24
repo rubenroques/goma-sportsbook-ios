@@ -25,6 +25,7 @@ struct FirebaseClientSettings: Codable {
     let partialCashoutEnabled: Bool
 
     let replaySportsCodes: [String]
+    let ungroupedMarkets: [String]
 
     struct Locale: Codable {
         var currency: String
@@ -49,6 +50,7 @@ struct FirebaseClientSettings: Codable {
         case partialCashoutEnabled = "partial_cashout"
         case requiredPhoneVerification = "signup_2fa"
         case replaySportsCodes = "replay_sports"
+        case ungroupedMarkets = "ungrouped_markets"
     }
 
     init(from decoder: Decoder) throws {
@@ -90,6 +92,23 @@ struct FirebaseClientSettings: Codable {
         else {
             self.replaySportsCodes = []
         }
+        
+        if let ungroupedMarketsDictionary = try? container.decode([Int: Int].self, forKey: .ungroupedMarkets) {
+            self.ungroupedMarkets = ungroupedMarketsDictionary.map(\.value).map(String.init)
+        }
+        else if let ungroupedMarketsDictionary = try? container.decode([Int: String].self, forKey: .ungroupedMarkets) {
+            self.ungroupedMarkets = ungroupedMarketsDictionary.map(\.value)
+        }
+        else if let ungroupedMarketsArray = try? container.decode([Int].self, forKey: .ungroupedMarkets) {
+            self.ungroupedMarkets = ungroupedMarketsArray.map(String.init)
+        }
+        else if let ungroupedMarketsArray = try? container.decode([String].self, forKey: .ungroupedMarkets) {
+            self.ungroupedMarkets = ungroupedMarketsArray
+        }
+        else {
+            self.ungroupedMarkets = []
+        }
+        
     }
 
     init(showInformationPopUp: Bool,
@@ -101,7 +120,8 @@ struct FirebaseClientSettings: Codable {
          requiredPhoneVerification: Bool,
          locale: Locale?,
          partialCashoutEnabled: Bool,
-         replaySportsCodes: [String]) {
+         replaySportsCodes: [String],
+         ungroupedMarkets: [String]) {
 
         self.showInformationPopUp = showInformationPopUp
         self.currentAppVersion = currentAppVersion
@@ -113,7 +133,7 @@ struct FirebaseClientSettings: Codable {
         self.locale = locale
         self.partialCashoutEnabled = partialCashoutEnabled
         self.replaySportsCodes = replaySportsCodes
-
+        self.ungroupedMarkets = ungroupedMarkets
     }
 
 }
@@ -129,6 +149,7 @@ extension FirebaseClientSettings {
                                       requiredPhoneVerification: false,
                                       locale: nil,
                                       partialCashoutEnabled: false,
-                                      replaySportsCodes: [])
+                                      replaySportsCodes: [],
+                                      ungroupedMarkets: [])
     }
 }

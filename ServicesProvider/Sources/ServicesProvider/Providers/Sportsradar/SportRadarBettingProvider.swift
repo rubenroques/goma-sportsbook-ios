@@ -9,7 +9,7 @@ import Foundation
 import Combine
 
 class SportRadarBettingProvider: BettingProvider, Connector {
-
+    
     var sessionCoordinator: SportRadarSessionCoordinator
 
     private var connector: BettingConnector
@@ -127,6 +127,14 @@ class SportRadarBettingProvider: BettingProvider, Connector {
                     let placedBetsResponse = SportRadarModelMapper.placedBetsResponse(fromInternalPlacedBetsResponse: internalPlacedBetsResponse)
                     return Just( placedBetsResponse ).setFailureType(to: ServiceProviderError.self).eraseToAnyPublisher()
                 }
+                else if internalPlacedBetsResponse.responseCode == "1" && internalPlacedBetsResponse.detailedResponseCode == "66" {
+                    var placedBetsResponse = SportRadarModelMapper.placedBetsResponse(fromInternalPlacedBetsResponse: internalPlacedBetsResponse)
+                    placedBetsResponse.requiredConfirmation = true
+                    
+                    let notPlacedBetError = ServiceProviderError.betNeedsUserConfirmation(betDetails: placedBetsResponse)
+                    return Fail(outputType: PlacedBetsResponse.self, failure: notPlacedBetError)
+                        .eraseToAnyPublisher()
+                }
                 else {
                     
                     if internalPlacedBetsResponse.responseCode == "4",
@@ -146,6 +154,43 @@ class SportRadarBettingProvider: BettingProvider, Connector {
             .eraseToAnyPublisher()
     }
 
+    func confirmBoostedBet(identifier: String) -> AnyPublisher<Bool, ServiceProviderError> {
+        let endpoint = BettingAPIClient.confirmBoostedBet(identifier: identifier)
+        let publisher: AnyPublisher<SportRadarModels.ConfirmBetPlaceResponse, ServiceProviderError> = self.connector.request(endpoint)
+        return publisher
+            .mapError { error in
+                return ServiceProviderError.invalidResponse
+            }
+            .map({ confirmBetPlaceResponse -> Bool in
+                return confirmBetPlaceResponse.state == 2
+            })
+            .eraseToAnyPublisher()
+    }
+    
+    func rejectBoostedBet(identifier: String) -> AnyPublisher<Bool, ServiceProviderError> {
+        let endpoint = BettingAPIClient.rejectBoostedBet(identifier: identifier)
+        let publisher: AnyPublisher<NoReply, ServiceProviderError> = self.connector.request(endpoint)
+        return publisher
+            .tryCatch { error -> AnyPublisher<NoReply, ServiceProviderError> in
+                guard
+                    case .decodingError = error
+                else {
+                    throw ServiceProviderError.invalidResponse
+                }
+                
+                return Just( NoReply() )
+                    .setFailureType(to: ServiceProviderError.self)
+                    .eraseToAnyPublisher()
+            }
+            .mapError { _ in
+                return ServiceProviderError.invalidResponse
+            }
+            .map({ noReplay -> Bool in
+                return true
+            })
+            .eraseToAnyPublisher()
+    }
+    
     func getBetDetails(identifier: String) -> AnyPublisher<Bet, ServiceProviderError> {
 //        let endpoint = BettingAPIClient.betDetails(identifier: identifier)
 //        let publisher: AnyPublisher<SportRadarModels.Bet, ServiceProviderError> = self.connector.request(endpoint)

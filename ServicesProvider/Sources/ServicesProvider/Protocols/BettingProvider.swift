@@ -23,6 +23,9 @@ protocol BettingProvider: Connector {
 
     func placeBets(betTickets: [BetTicket], useFreebetBalance: Bool) -> AnyPublisher<PlacedBetsResponse, ServiceProviderError>
 
+    func confirmBoostedBet(identifier: String) -> AnyPublisher<Bool, ServiceProviderError>
+    func rejectBoostedBet(identifier: String) -> AnyPublisher<Bool, ServiceProviderError>
+    
     func calculateCashout(betId: String, stakeValue: String?) -> AnyPublisher<Cashout, ServiceProviderError>
 
     func cashoutBet(betId: String, cashoutValue: Double, stakeValue: Double?) -> AnyPublisher<CashoutResult, ServiceProviderError>
