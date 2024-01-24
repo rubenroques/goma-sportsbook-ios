@@ -2090,14 +2090,11 @@ class PreSubmissionBetslipViewController: UIViewController {
 extension PreSubmissionBetslipViewController {
     
     func requestUserConfirmationForBoostedBet(betDetails: PlacedBetsResponse) {
-        
         guard let window = UIApplication.shared.windows.filter({$0.isKeyWindow}).first else { return }
-
         //
         // Create and configure the background view
         let backgroundView = UIView(frame: UIScreen.main.bounds)
         backgroundView.backgroundColor = UIColor.black.withAlphaComponent(0.5)
-        
         //
         //
         let boostedBetConfirmationView = BoostedBetConfirmationView(betDetails: betDetails)
@@ -2114,12 +2111,10 @@ extension PreSubmissionBetslipViewController {
         boostedBetConfirmationView.didDisappearAction = { [weak self] betDetails in
             backgroundView.removeFromSuperview()
         }
-        
         //
         // Add
         backgroundView.addSubview(boostedBetConfirmationView)
         window.addSubview(backgroundView)
-
         //
         // Constraints for the background view
         NSLayoutConstraint.activate([
@@ -2127,12 +2122,10 @@ extension PreSubmissionBetslipViewController {
             boostedBetConfirmationView.centerYAnchor.constraint(equalTo: backgroundView.centerYAnchor),
             boostedBetConfirmationView.leadingAnchor.constraint(equalTo: backgroundView.leadingAnchor, constant: 24),
         ])
-        
         boostedBetConfirmationView.startCountdown()
     }
     
     func confirmBoostedBet(betDetails: PlacedBetsResponse) {
-        
         Env.servicesProvider.confirmBoostedBet(identifier: betDetails.identifier)
             .receive(on: DispatchQueue.main)
             .sink { [weak self] completion in
@@ -2157,7 +2150,6 @@ extension PreSubmissionBetslipViewController {
                 }
             }
             .store(in: &self.cancellables)
-
     }
     
     func rejectBet(betDetails: PlacedBetsResponse) {

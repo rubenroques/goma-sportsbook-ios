@@ -88,11 +88,11 @@ class BoostedBetConfirmationView: UIView {
             let potentialReturnString = String(format: "%.2f", firstBet.potentialReturn)
             self.possibleWinningValueLabel.text = "€" + potentialReturnString
             
-            let betAmountString = String(format: "%.2f", firstBet.totalStake)
+            let betAmountString = String(format: "%.2f", self.betDetails.totalStake)
             self.betAmountValueLabel.text = "€" + betAmountString
         }
-        else if let firstBet = self.betDetails.bets.first {
-            betStake = firstBet.totalStake
+        else {
+            betStake = self.betDetails.totalStake
             self.valuesStackView.isHidden = true
         }
         

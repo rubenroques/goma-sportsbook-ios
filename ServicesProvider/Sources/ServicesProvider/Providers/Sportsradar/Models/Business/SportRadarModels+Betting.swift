@@ -373,6 +373,7 @@ extension SportRadarModels {
         var responseCode: String
         var detailedResponseCode: String?
         var errorMessage: String?
+        var totalStake: Double
         var bets: [PlacedBetEntry]
 
         enum CodingKeys: String, CodingKey {
@@ -384,6 +385,8 @@ extension SportRadarModels {
             
             case responseCode = "state"
             case detailedResponseCode = "detailedState"
+            
+            case totalStake = "totalStake"
             
             case errorMessage = "statusText"
         }
@@ -403,6 +406,8 @@ extension SportRadarModels {
                 self.detailedResponseCode = "\(detailedResponseCodeInt)"
                 
                 self.errorMessage = try statusContainer?.decodeIfPresent(String.self, forKey: .errorMessage)
+            
+                self.totalStake = try container.decodeIfPresent(Double.self, forKey: .totalStake) ?? 0.0
         }
 
         func encode(to encoder: Encoder) throws {
