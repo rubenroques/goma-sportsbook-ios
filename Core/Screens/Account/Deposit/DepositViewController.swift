@@ -544,7 +544,7 @@ class DepositViewController: UIViewController {
 
         switch paymentStatus {
         case .authorised:
-            self.showPaymentFeedbackSuccess()
+            self.showPaymentFeedbackSuccess(paymentId: paymentId)
         case .refused:
             self.showPaymentFeedbackError()
         case .startedProcessing:
@@ -590,7 +590,7 @@ class DepositViewController: UIViewController {
         self.navigationController?.pushViewController(genericAvatarWarningViewController, animated: true)
     }
     
-    func showPaymentFeedbackSuccess() {
+    func showPaymentFeedbackSuccess(paymentId: String? = nil) {
         if let presentedViewController = self.presentedViewController {
             presentedViewController.dismiss(animated: false)
         }
@@ -599,12 +599,33 @@ class DepositViewController: UIViewController {
 
         // Optimove success deposit
         if self.viewModel.isFirstDeposit {
+            
+            Optimove.shared.reportEvent(
+                name: "first_deposit",
+                parameters: [
+                    "user_id": "\(Env.userSessionStore.userProfilePublisher.value?.userIdentifier ?? "")",
+                    "value": "\(self.viewModel.paymentsDropIn.depositAmount)",
+                    "currency": "\(Env.userSessionStore.userProfilePublisher.value?.currency ?? "€")"
+                ]
+            )
+            
             Optimove.shared.reportScreenVisit(screenTitle: "first_deposit")
             
             let event = ADJEvent(eventToken: "gvnieo")
             Adjust.trackEvent(event)
         }
         else {
+            
+            Optimove.shared.reportEvent(
+                name: "purchase",
+                parameters: [
+                    "user_id": "\(Env.userSessionStore.userProfilePublisher.value?.userIdentifier ?? "")",
+                    "value": "\(self.viewModel.paymentsDropIn.depositAmount)",
+                    "currency": "\(Env.userSessionStore.userProfilePublisher.value?.currency ?? "€")",
+                    "transaction_id": "\(paymentId ?? "")"
+                ]
+            )
+            
             Optimove.shared.reportScreenVisit(screenTitle: "purchase")
             
             let event = ADJEvent(eventToken: "amh53g")

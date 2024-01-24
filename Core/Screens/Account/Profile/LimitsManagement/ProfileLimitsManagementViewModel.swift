@@ -144,6 +144,25 @@ class ProfileLimitsManagementViewModel: NSObject {
             })
             .store(in: &cancellables)
     }
+    
+    private func getDateStringWithTimezone(dateString: String, hours: Int) -> String {
+        
+        let dateFormatter = DateFormatter()
+        dateFormatter.dateFormat = "MM-dd-yyyy HH:mm:ss"
+        
+        if let date = dateFormatter.date(from: dateString) {
+            if let updatedDate = Calendar.current.date(byAdding: .hour, value: hours, to: date) {
+                return dateFormatter.string(from: updatedDate)
+            }
+        }
+        
+        return dateString
+    }
+    
+    func getUTCHourDifference() -> Int {
+        let secondsFromGMT = TimeZone.current.secondsFromGMT()
+        return secondsFromGMT / 3600
+    }
 
     private func processDepositLimits(depositLimitResponse: PersonalDepositLimitResponse) {
 
@@ -154,7 +173,9 @@ class ProfileLimitsManagementViewModel: NSObject {
         if let hasPendingLimit = depositLimitResponse.hasPendingWeeklyLimit, hasPendingLimit == "true" {
 
             let pendingLimit = depositLimitResponse.pendingWeeklyLimit ?? ""
-            let pendingLimitDate = depositLimitResponse.pendingWeeklyLimitEffectiveDate ?? ""
+//            let pendingLimitDate = depositLimitResponse.pendingWeeklyLimitEffectiveDate ?? ""
+            let utcDifferenceHours = self.getUTCHourDifference()
+            let pendingLimitDate = self.getDateStringWithTimezone(dateString: depositLimitResponse.pendingWeeklyLimitEffectiveDate ?? "", hours: utcDifferenceHours)
             let currency = depositLimitResponse.currency
 
             self.pendingDepositLimitMessage = localized("pending_limit_info").replacingFirstOccurrence(of: "{pendingLimit}", with: pendingLimit)
@@ -180,7 +201,9 @@ class ProfileLimitsManagementViewModel: NSObject {
 
         if let pendingLimit = limitsResponse.pendingWagerLimit {
 
-            let pendingLimitDate = pendingLimit.effectiveDate
+//            let pendingLimitDate = pendingLimit.effectiveDate
+            let utcDifferenceHours = self.getUTCHourDifference()
+            let pendingLimitDate = self.getDateStringWithTimezone(dateString: pendingLimit.effectiveDate, hours: utcDifferenceHours)
             let currency = limitsResponse.currency
 
             self.pendingWageringLimitMessage = localized("pending_limit_info").replacingFirstOccurrence(of: "{pendingLimit}", with: "\(pendingLimit.limitNumber)")
@@ -219,7 +242,9 @@ class ProfileLimitsManagementViewModel: NSObject {
                let pendingLimit = responsibleGamingLimitsResponse.limits[safe: 1] {
 
                 let pendingLimitValue = pendingLimit.limit
-                let pendingLimitDate = pendingLimit.effectiveDate
+//                let pendingLimitDate = pendingLimit.effectiveDate
+                let utcDifferenceHours = self.getUTCHourDifference()
+                let pendingLimitDate = self.getDateStringWithTimezone(dateString: pendingLimit.effectiveDate, hours: utcDifferenceHours)
                 let currency = "EUR"
 
                 self.pendingLossLimitMessage = localized("pending_limit_info").replacingFirstOccurrence(of: "{pendingLimit}", with: "\(pendingLimitValue)")
@@ -279,7 +304,8 @@ class ProfileLimitsManagementViewModel: NSObject {
     func updateDepositLimit(amount: String) {
 
         if let limit = Double(amount) {
-            Env.servicesProvider.updateWeeklyDepositLimits(newLimit: limit)
+//            Env.servicesProvider.updateWeeklyDepositLimits(newLimit: limit)
+            Env.servicesProvider.updateResponsibleGamingLimits(newLimit: limit, limitType: "deposit")
                 .receive(on: DispatchQueue.main)
                 .sink(receiveCompletion: { [weak self] completion in
 
@@ -310,7 +336,8 @@ class ProfileLimitsManagementViewModel: NSObject {
     func updateBettingLimit(amount: String) {
 
         if let limit = Double(amount) {
-            Env.servicesProvider.updateWeeklyBettingLimits(newLimit: limit)
+//            Env.servicesProvider.updateWeeklyBettingLimits(newLimit: limit)
+            Env.servicesProvider.updateResponsibleGamingLimits(newLimit: limit, limitType: "betting")
                 .receive(on: DispatchQueue.main)
                 .sink(receiveCompletion: { [weak self] completion in
 
@@ -341,7 +368,7 @@ class ProfileLimitsManagementViewModel: NSObject {
     func updateResponsibleGamingLimit(amount: String) {
 
         if let limit = Double(amount) {
-            Env.servicesProvider.updateResponsibleGamingLimits(newLimit: limit)
+            Env.servicesProvider.updateResponsibleGamingLimits(newLimit: limit, limitType: "autoPayout")
                 .receive(on: DispatchQueue.main)
                 .sink(receiveCompletion: { [weak self] completion in
 

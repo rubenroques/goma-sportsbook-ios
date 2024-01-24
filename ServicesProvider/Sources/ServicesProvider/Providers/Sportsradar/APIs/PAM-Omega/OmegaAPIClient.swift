@@ -98,7 +98,7 @@ enum OmegaAPIClient {
 
     case updateWeeklyDepositLimits(newLimit: Double)
     case updateWeeklyBettingLimits(newLimit: Double)
-    case updateResponsibleGamingLimits(newLimit: Double)
+    case updateResponsibleGamingLimits(newLimit: Double, limitType: String, limitPeriod: String)
     case getPersonalDepositLimits
     case getLimits
     case getResponsibleGamingLimits(limitType: String, periodType: String)
@@ -518,10 +518,10 @@ extension OmegaAPIClient: Endpoint {
         case .updateWeeklyBettingLimits(let newLimit):
             let limitFormated = String(format: "%.2f", newLimit)
             return [URLQueryItem(name: "limit", value: limitFormated)]
-        case .updateResponsibleGamingLimits(let newLimit):
+        case .updateResponsibleGamingLimits(let newLimit, let limitType, let limitPeriod):
             let limitFormated = String(format: "%.2f", newLimit)
-            return [URLQueryItem(name: "limitType", value: "BALANCE_LIMIT"),
-                    URLQueryItem(name: "periodType", value: "PERMANENT"),
+            return [URLQueryItem(name: "limitType", value: limitType),
+                    URLQueryItem(name: "periodType", value: limitPeriod),
                     URLQueryItem(name: "limit", value: limitFormated)
             ]
         case .lockPlayer(let isPermanent, let lockPeriodUnit, let lockPeriod):

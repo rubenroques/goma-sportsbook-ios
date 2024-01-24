@@ -31,6 +31,7 @@ class ManualUploadDocumentsViewController: UIViewController {
     private lazy var invalidIbanView: UIView = Self.createInvalidIbanView()
     private lazy var invalidIbanIconImageView: UIImageView = Self.createInvalidIbanIconImageView()
     private lazy var invalidIbanLabel: UILabel = Self.createInvalidIbanLabel()
+    private lazy var ibanNoteInfoLabel: UILabel = Self.createIbanNoteInfoLabel()
 
     private lazy var documentUploadsStackView: UIStackView = Self.createDocumentUploadsStackView()
 
@@ -40,7 +41,7 @@ class ManualUploadDocumentsViewController: UIViewController {
     private var cancellables = Set<AnyCancellable>()
 
     private var cardOptionRadioViews = [CardOptionRadioView]()
-
+    
     var viewModel: ManualUploadsDocumentsViewModel
 
     var isLoading: Bool = false {
@@ -164,6 +165,8 @@ class ManualUploadDocumentsViewController: UIViewController {
         self.invalidIbanIconImageView.backgroundColor = .clear
 
         self.invalidIbanLabel.textColor = UIColor.App.inputError
+        
+        self.ibanNoteInfoLabel.textColor = UIColor.App.textPrimary
 
         self.documentTypeBaseView.backgroundColor = UIColor.App.backgroundSecondary
 
@@ -301,16 +304,17 @@ class ManualUploadDocumentsViewController: UIViewController {
             uploadDocumentsInformationView.layoutIfNeeded()
 
             self.documentUploadsStackView.addArrangedSubview(uploadDocumentsInformationView)
-
-            if documentTypeGroup == .identityCard ||
-                documentTypeGroup == .residenceId ||
-                documentTypeGroup == .drivingLicense ||
-                documentTypeGroup == .passport {
-                uploadDocumentsInformationView.isMultiUpload = true
-            }
-            else {
-                uploadDocumentsInformationView.isMultiUpload = false
-            }
+            
+//            if documentTypeGroup == .identityCard ||
+//                documentTypeGroup == .residenceId ||
+//                documentTypeGroup == .drivingLicense ||
+//                documentTypeGroup == .passport {
+//                uploadDocumentsInformationView.isMultiUpload = true
+//            }
+//            else {
+//                uploadDocumentsInformationView.isMultiUpload = false
+//            }
+            uploadDocumentsInformationView.isMultiUpload = self.viewModel.isMultipleFileRequired
 
             if self.viewModel.documentTypeCode == .identification {
                 if documentTypeGroup == documentTypeGroups.first {
@@ -397,11 +401,23 @@ class ManualUploadDocumentsViewController: UIViewController {
                 switch currentSelectedDocumentTypeGroup {
                 case .identityCard:
                     if let selectedDocs = self.selectedDocs[.identityCard] {
-                        if selectedDocs.count > 1 {
-                            self.canSendDocuments = true
+                        if self.viewModel.isMultipleFileRequired {
+                            if selectedDocs.count > 1 {
+                                self.canSendDocuments = true
+                            }
+                            else {
+                                self.canSendDocuments = false
+                            }
                         }
                         else {
-                            self.canSendDocuments = false
+                            if selectedDocs.contains(where: {
+                                $0.docSide == .front
+                            }) {
+                                self.canSendDocuments = true
+                            }
+                            else {
+                                self.canSendDocuments = false
+                            }
                         }
                     }
                     else {
@@ -409,11 +425,23 @@ class ManualUploadDocumentsViewController: UIViewController {
                     }
                 case .residenceId:
                     if let selectedDocs = self.selectedDocs[.residenceId] {
-                        if selectedDocs.count > 1 {
-                            self.canSendDocuments = true
+                        if self.viewModel.isMultipleFileRequired {
+                            if selectedDocs.count > 1 {
+                                self.canSendDocuments = true
+                            }
+                            else {
+                                self.canSendDocuments = false
+                            }
                         }
                         else {
-                            self.canSendDocuments = false
+                            if selectedDocs.contains(where: {
+                                $0.docSide == .front
+                            }) {
+                                self.canSendDocuments = true
+                            }
+                            else {
+                                self.canSendDocuments = false
+                            }
                         }
                     }
                     else {
@@ -421,11 +449,23 @@ class ManualUploadDocumentsViewController: UIViewController {
                     }
                 case .drivingLicense:
                     if let selectedDocs = self.selectedDocs[.drivingLicense] {
-                        if selectedDocs.count > 1 {
-                            self.canSendDocuments = true
+                        if self.viewModel.isMultipleFileRequired {
+                            if selectedDocs.count > 1 {
+                                self.canSendDocuments = true
+                            }
+                            else {
+                                self.canSendDocuments = false
+                            }
                         }
                         else {
-                            self.canSendDocuments = false
+                            if selectedDocs.contains(where: {
+                                $0.docSide == .front
+                            }) {
+                                self.canSendDocuments = true
+                            }
+                            else {
+                                self.canSendDocuments = false
+                            }
                         }
                     }
                     else {
@@ -433,11 +473,23 @@ class ManualUploadDocumentsViewController: UIViewController {
                     }
                 case .passport:
                     if let selectedDocs = self.selectedDocs[.passport] {
-                        if selectedDocs.count > 1 {
-                            self.canSendDocuments = true
+                        if self.viewModel.isMultipleFileRequired {
+                            if selectedDocs.count > 1 {
+                                self.canSendDocuments = true
+                            }
+                            else {
+                                self.canSendDocuments = false
+                            }
                         }
                         else {
-                            self.canSendDocuments = false
+                            if selectedDocs.contains(where: {
+                                $0.docSide == .front
+                            }) {
+                                self.canSendDocuments = true
+                            }
+                            else {
+                                self.canSendDocuments = false
+                            }
                         }
                     }
                     else {
@@ -448,15 +500,28 @@ class ManualUploadDocumentsViewController: UIViewController {
                 }
             }
         case .proofAddress:
-            if let selectedDocs = self.selectedDocs[.others] {
-                if selectedDocs.contains(where: {
-                    $0.docSide == .front
-                }) {
-                    self.canSendDocuments = true
+            if let selectedDocs = self.selectedDocs[.proofAddress] {
+                if self.viewModel.isMultipleFileRequired {
+                    if selectedDocs.count > 1 {
+                        self.canSendDocuments = true
+                    }
+                    else {
+                        self.canSendDocuments = false
+                    }
                 }
                 else {
-                    self.canSendDocuments = false
+                    if selectedDocs.contains(where: {
+                        $0.docSide == .front
+                    }) {
+                        self.canSendDocuments = true
+                    }
+                    else {
+                        self.canSendDocuments = false
+                    }
                 }
+            }
+            else {
+                self.canSendDocuments = false
             }
         case .ibanProof:
             if let selectedDocs = self.selectedDocs[.rib] {
@@ -471,14 +536,27 @@ class ManualUploadDocumentsViewController: UIViewController {
             }
         case .others:
             if let selectedDocs = self.selectedDocs[.others] {
-                if selectedDocs.contains(where: {
-                    $0.docSide == .front
-                }) {
-                    self.canSendDocuments = true
+                if self.viewModel.isMultipleFileRequired {
+                    if selectedDocs.count > 1 {
+                        self.canSendDocuments = true
+                    }
+                    else {
+                        self.canSendDocuments = false
+                    }
                 }
                 else {
-                    self.canSendDocuments = false
+                    if selectedDocs.contains(where: {
+                        $0.docSide == .front
+                    }) {
+                        self.canSendDocuments = true
+                    }
+                    else {
+                        self.canSendDocuments = false
+                    }
                 }
+            }
+            else {
+                self.canSendDocuments = false
             }
         }
     }
@@ -597,7 +675,7 @@ class ManualUploadDocumentsViewController: UIViewController {
 
     private func validateIBANFormat(ibanValue: String) {
 
-        let pattern = "^[A-Z]{2}[A-Z0-9]{14,29}$"
+        let pattern = "^[A-Z]{2}[A-Z0-9]{25}$"
         if let regex = try? NSRegularExpression(pattern: pattern) {
 
             let range = NSRange(location: 0, length: ibanValue.utf16.count)
@@ -703,6 +781,12 @@ class ManualUploadDocumentsViewController: UIViewController {
             .sink(receiveValue: { [weak self] isFileUploaded in
 
                 switch viewModel.documentTypeCode {
+                case .identification:
+                    if isFileUploaded {
+
+                        self?.showAlert(alertType: .success, text: localized("upload_complete_message"))
+
+                    }
                 case .proofAddress:
                     if isFileUploaded {
 
@@ -763,27 +847,77 @@ class ManualUploadDocumentsViewController: UIViewController {
                 for selectedDoc in selectedDocs {
                     files[selectedDoc.name] = selectedDoc.fileData
                 }
-
-                self.viewModel.uploadFiles(documentType: currentDocumentTypeGroup.code, files: files)
+                
+                if self.viewModel.isMultipleFileRequired {
+                    self.viewModel.uploadFiles(documentType: currentDocumentTypeGroup.code, files: files)
+                }
+                else {
+                    if let currentDoc = self.currentDoc,
+                       let selectedDoc = self.selectedDocs[currentDoc.documentTypeGroup]?.first {
+                        self.viewModel.uploadFile(documentType: currentDoc.documentTypeGroup.code, file: selectedDoc.fileData, fileName: selectedDoc.name)
+                    }
+                }
 
             }
         case .proofAddress:
-            if let currentDoc = self.currentDoc,
-               let selectedDoc = self.selectedDocs[currentDoc.documentTypeGroup]?.first {
-
-                self.viewModel.uploadFile(documentType: currentDoc.documentTypeGroup.code, file: selectedDoc.fileData, fileName: selectedDoc.name)
+            if self.viewModel.isMultipleFileRequired {
+                if let selectedDocs = self.selectedDocs[.proofAddress] {
+                    
+                    var files = [String: Data]()
+                    
+                    for selectedDoc in selectedDocs {
+                        files[selectedDoc.name] = selectedDoc.fileData
+                    }
+                    
+                    self.viewModel.uploadFiles(documentType: DocumentTypeGroup.proofAddress.code, files: files)
+                }
+            }
+            else {
+                if let currentDoc = self.currentDoc,
+                   let selectedDoc = self.selectedDocs[currentDoc.documentTypeGroup]?.first {
+                    
+                    self.viewModel.uploadFile(documentType: currentDoc.documentTypeGroup.code, file: selectedDoc.fileData, fileName: selectedDoc.name)
+                }
             }
         case .ibanProof:
-            if let currentDoc = self.currentDoc,
-               let selectedDoc = self.selectedDocs[currentDoc.documentTypeGroup]?.first {
-
-                self.viewModel.uploadFile(documentType: currentDoc.documentTypeGroup.code, file: selectedDoc.fileData, fileName: selectedDoc.name)
+            if self.viewModel.isMultipleFileRequired {
+                if let selectedDocs = self.selectedDocs[.rib] {
+                    
+                    var files = [String: Data]()
+                    
+                    for selectedDoc in selectedDocs {
+                        files[selectedDoc.name] = selectedDoc.fileData
+                    }
+                    
+                    self.viewModel.uploadFiles(documentType: DocumentTypeGroup.rib.code, files: files)
+                }
+            }
+            else {
+                if let currentDoc = self.currentDoc,
+                   let selectedDoc = self.selectedDocs[currentDoc.documentTypeGroup]?.first {
+                    
+                    self.viewModel.uploadFile(documentType: currentDoc.documentTypeGroup.code, file: selectedDoc.fileData, fileName: selectedDoc.name)
+                }
             }
         case .others:
-            if let currentDoc = self.currentDoc,
-               let selectedDoc = self.selectedDocs[currentDoc.documentTypeGroup]?.first {
-
-                self.viewModel.uploadFile(documentType: currentDoc.documentTypeGroup.code, file: selectedDoc.fileData, fileName: selectedDoc.name)
+            if self.viewModel.isMultipleFileRequired {
+                if let selectedDocs = self.selectedDocs[.others] {
+                    
+                    var files = [String: Data]()
+                    
+                    for selectedDoc in selectedDocs {
+                        files[selectedDoc.name] = selectedDoc.fileData
+                    }
+                    
+                    self.viewModel.uploadFiles(documentType: DocumentTypeGroup.others.code, files: files)
+                }
+            }
+            else {
+                if let currentDoc = self.currentDoc,
+                   let selectedDoc = self.selectedDocs[currentDoc.documentTypeGroup]?.first {
+                    
+                    self.viewModel.uploadFile(documentType: currentDoc.documentTypeGroup.code, file: selectedDoc.fileData, fileName: selectedDoc.name)
+                }
             }
         default:
             ()
@@ -941,6 +1075,16 @@ extension ManualUploadDocumentsViewController {
         label.numberOfLines = 0
         return label
     }
+    
+    private static func createIbanNoteInfoLabel() -> UILabel {
+        let label = UILabel()
+        label.translatesAutoresizingMaskIntoConstraints = false
+        label.text = localized("iban_note")
+        label.font = AppFont.with(type: .semibold, size: 12)
+        label.textAlignment = .left
+        label.numberOfLines = 0
+        return label
+    }
 
     private static func createDocumentTypeBaseView() -> UIView {
         let view = UIView()
@@ -1039,6 +1183,8 @@ extension ManualUploadDocumentsViewController {
 
         self.invalidIbanView.addSubview(self.invalidIbanIconImageView)
         self.invalidIbanView.addSubview(self.invalidIbanLabel)
+        
+        self.ribInputStackView.addArrangedSubview(self.ibanNoteInfoLabel)
 
         self.contentBaseView.addSubview(self.documentUploadsStackView)
 
@@ -1130,6 +1276,9 @@ extension ManualUploadDocumentsViewController {
             self.invalidIbanLabel.topAnchor.constraint(equalTo: self.invalidIbanIconImageView.topAnchor),
             self.invalidIbanLabel.trailingAnchor.constraint(equalTo: self.invalidIbanView.trailingAnchor),
             self.invalidIbanLabel.bottomAnchor.constraint(equalTo: self.invalidIbanView.bottomAnchor, constant: -4),
+            
+            self.ibanNoteInfoLabel.leadingAnchor.constraint(equalTo: self.ribInputStackView.leadingAnchor),
+            self.ibanNoteInfoLabel.trailingAnchor.constraint(equalTo: self.ribInputStackView.trailingAnchor),
 
             self.documentTypeBaseView.leadingAnchor.constraint(equalTo: self.topSectionStackView.leadingAnchor),
             self.documentTypeBaseView.trailingAnchor.constraint(equalTo: self.topSectionStackView.trailingAnchor),

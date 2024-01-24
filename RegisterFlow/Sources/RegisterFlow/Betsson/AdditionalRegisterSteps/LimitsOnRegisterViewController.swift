@@ -26,6 +26,7 @@ public class LimitsOnRegisterViewModel {
     }
 
     let servicesProvider: ServicesProviderClient
+    var limits: [ResponsibleGamingLimit] = []
 
     private var isLoadingSubject: CurrentValueSubject<Bool, Never> = .init(false)
     var isLoading: AnyPublisher<Bool, Never> {
@@ -34,8 +35,9 @@ public class LimitsOnRegisterViewModel {
 
     private var cancellables = Set<AnyCancellable>()
 
-    public init(servicesProvider: ServicesProviderClient) {
+    public init(servicesProvider: ServicesProviderClient, limits: [ResponsibleGamingLimit] = []) {
         self.servicesProvider = servicesProvider
+        self.limits = limits
     }
 
     public func updateLimits(depositLimitString: String?, bettingLimitString: String?, autoPayoutLimitString: String?)
@@ -73,19 +75,21 @@ public class LimitsOnRegisterViewModel {
             return Fail(error: LimitsOnRegisterError.autoPayoutFormatError).eraseToAnyPublisher()
         }
 
-        let depositPublisher = servicesProvider.updateWeeklyDepositLimits(newLimit: depositLimit)
+        let depositPublisher = /*servicesProvider.updateWeeklyDepositLimits(newLimit: depositLimit)*/
+        servicesProvider.updateResponsibleGamingLimits(newLimit: depositLimit, limitType: "deposit")
             .mapError { error in
                 print("Error \(error)")
                 return LimitsOnRegisterError.depositServerError
             }
 
-        let bettingPublisher = servicesProvider.updateWeeklyBettingLimits(newLimit: bettingLimit)
+        let bettingPublisher = /*servicesProvider.updateWeeklyBettingLimits(newLimit: bettingLimit)*/
+        servicesProvider.updateResponsibleGamingLimits(newLimit: bettingLimit, limitType: "betting")
             .mapError { error in
                 print("Error \(error)")
                 return LimitsOnRegisterError.bettingServerError
             }
 
-        let autoPayoutPublisher = servicesProvider.updateResponsibleGamingLimits(newLimit: autoPayoutLimit)
+        let autoPayoutPublisher = servicesProvider.updateResponsibleGamingLimits(newLimit: autoPayoutLimit, limitType: "autoPayout")
             .mapError { error in
                 print("Error \(error)")
                 return LimitsOnRegisterError.autoPayoutServerError
@@ -212,8 +216,13 @@ public class LimitsOnRegisterViewController: UIViewController {
         self.autoPayoutHeaderTextFieldView.setKeyboardType(.numbersAndPunctuation)
 
         self.depositLimitHeaderTextFieldView.setCurrencyMode(true, currencySymbol: "€")
+//        self.depositLimitHeaderTextFieldView.hasSeparatorSpace = true
+        
         self.bettingLimitHeaderTextFieldView.setCurrencyMode(true, currencySymbol: "€")
+//        self.bettingLimitHeaderTextFieldView.hasSeparatorSpace = true
+        
         self.autoPayoutHeaderTextFieldView.setCurrencyMode(true, currencySymbol: "€")
+//        self.autoPayoutHeaderTextFieldView.hasSeparatorSpace = true
 
         self.depositLimitHeaderTextFieldView.setReturnKeyType(.next)
         self.depositLimitHeaderTextFieldView.didTapReturn = { [weak self] in
@@ -246,6 +255,8 @@ public class LimitsOnRegisterViewController: UIViewController {
                 }
             }
             .store(in: &self.cancellables)
+        
+        self.setupLimits()
 
     }
 
@@ -310,23 +321,81 @@ public class LimitsOnRegisterViewController: UIViewController {
 
     @objc func didTapBeginnerButton() {
         self.selectedProfile = .beginner
-        self.depositLimitHeaderTextFieldView.setText("200")
-        self.bettingLimitHeaderTextFieldView.setText("500")
-        self.autoPayoutHeaderTextFieldView.setText("251")
+        
+        if !self.depositLimitHeaderTextFieldView.isDisabled {
+            self.depositLimitHeaderTextFieldView.setText("200")
+        }
+        
+        if !self.bettingLimitHeaderTextFieldView.isDisabled {
+            self.bettingLimitHeaderTextFieldView.setText("500")
+        }
+        
+        if !self.autoPayoutHeaderTextFieldView.isDisabled {
+            self.autoPayoutHeaderTextFieldView.setText("251")
+        }
     }
 
     @objc func didTapIntermediateButton() {
         self.selectedProfile = .intermediate
-        self.depositLimitHeaderTextFieldView.setText("500")
-        self.bettingLimitHeaderTextFieldView.setText("1000")
-        self.autoPayoutHeaderTextFieldView.setText("1001")
+        
+        if !self.depositLimitHeaderTextFieldView.isDisabled {
+            self.depositLimitHeaderTextFieldView.setText("500")
+        }
+        
+        if !self.bettingLimitHeaderTextFieldView.isDisabled {
+            self.bettingLimitHeaderTextFieldView.setText("1000")
+        }
+        
+        if !self.autoPayoutHeaderTextFieldView.isDisabled {
+            self.autoPayoutHeaderTextFieldView.setText("1001")
+        }
     }
 
     @objc func didTapAdvancedButton() {
         self.selectedProfile = .advanced
-        self.depositLimitHeaderTextFieldView.setText("5000")
-        self.bettingLimitHeaderTextFieldView.setText("10000")
-        self.autoPayoutHeaderTextFieldView.setText("10001")
+        
+        if !self.depositLimitHeaderTextFieldView.isDisabled {
+            self.depositLimitHeaderTextFieldView.setText("5000")
+        }
+        
+        if !self.bettingLimitHeaderTextFieldView.isDisabled {
+            self.bettingLimitHeaderTextFieldView.setText("10000")
+        }
+        
+        if !self.autoPayoutHeaderTextFieldView.isDisabled {
+            self.autoPayoutHeaderTextFieldView.setText("10001")
+        }
+    }
+    
+    private func setupLimits() {
+        
+        if !self.viewModel.limits.isEmpty {
+            let limits = viewModel.limits
+            
+            if let depositLimit = limits.filter({
+                $0.limitType == "DEPOSIT_LIMIT"
+            }).first {
+                
+                self.depositLimitHeaderTextFieldView.setText("\(depositLimit.limit)")
+                self.depositLimitHeaderTextFieldView.isDisabled = true
+            }
+            
+            if let bettingLimit = limits.filter({
+                $0.limitType == "WAGER_LIMIT"
+            }).first {
+                
+                self.bettingLimitHeaderTextFieldView.setText("\(bettingLimit.limit)")
+                self.bettingLimitHeaderTextFieldView.isDisabled = true
+            }
+            
+            if let autoPayoutLimit = limits.filter({
+                $0.limitType == "BALANCE_LIMIT"
+            }).first {
+                self.autoPayoutHeaderTextFieldView.setText("\(autoPayoutLimit.limit)")
+                self.autoPayoutHeaderTextFieldView.isDisabled = true
+            }
+            
+        }
     }
 
     private func updateSelectedProfileBorders() {

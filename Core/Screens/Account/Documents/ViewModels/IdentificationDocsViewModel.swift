@@ -27,6 +27,8 @@ class IdentificationDocsViewModel {
     var hasLoadedUserDocuments: CurrentValueSubject<Bool, Never> = .init(false)
     var isLoadingPublisher: CurrentValueSubject<Bool, Never> = .init(false)
     var hasDocumentsProcessed: CurrentValueSubject<Bool, Never> = .init(false)
+    
+    var multipleFilesRequired: Bool = false
 
     var sumsubAccessTokenPublisher: CurrentValueSubject<String, Never> = .init("")
 

@@ -36,6 +36,7 @@ class ManualUploadsDocumentsViewModel {
     var isFileUploaded: CurrentValueSubject<Bool, Never> = .init(false)
 
     var documentTypeCode: DocumentTypeCode
+    var isMultipleFileRequired: Bool = false
 
     var shouldShowAlert: ((AlertType, String) -> Void)?
     var shouldShowSuccessScreen: (() -> Void)?

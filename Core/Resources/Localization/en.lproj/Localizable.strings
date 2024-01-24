@@ -1445,6 +1445,8 @@
 "void" = "Cancelled";
 "spent" = "Spent";
 
+"iban_note" = "Note: si vous souhaitez utiliser un IBAN non français, veuillez contacter le service client";
+
 /* Responsible Gaming*/
 
 "lorem_ipsum" = "LOREM IPSUM";

@@ -86,6 +86,18 @@ class CasualGamblingViewController: UIViewController {
         
         self.accordionFourthSectionDescriptionLabel.isUserInteractionEnabled = true
         self.accordionFourthSectionDescriptionLabel.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(self.didTapFourthSectionLabel(_:))))
+        
+        let logo1Gesture = UITapGestureRecognizer(target: self, action: #selector(self.didTapLogo1(_:)))
+        self.logo1ImageView.isUserInteractionEnabled = true
+        self.logo1ImageView.addGestureRecognizer(logo1Gesture)
+        
+        let logo2Gesture = UITapGestureRecognizer(target: self, action: #selector(self.didTapLogo2(_:)))
+        self.logo2ImageView.isUserInteractionEnabled = true
+        self.logo2ImageView.addGestureRecognizer(logo2Gesture)
+        
+        let logo3Gesture = UITapGestureRecognizer(target: self, action: #selector(self.didTapLogo3(_:)))
+        self.logo3ImageView.isUserInteractionEnabled = true
+        self.logo3ImageView.addGestureRecognizer(logo3Gesture)
     }
     
     override func viewDidLayoutSubviews() {
@@ -283,6 +295,24 @@ class CasualGamblingViewController: UIViewController {
             }
         }
 
+    }
+    
+    @objc private func didTapLogo1(_ sender: UITapGestureRecognizer) {
+        if let url = URL(string: "https://sosjoueurs.org/") {
+            UIApplication.shared.open(url)
+        }
+    }
+    
+    @objc private func didTapLogo2(_ sender: UITapGestureRecognizer) {
+        if let url = URL(string: "https://www.evalujeu.fr/") {
+            UIApplication.shared.open(url)
+        }
+    }
+    
+    @objc private func didTapLogo3(_ sender: UITapGestureRecognizer) {
+        if let url = URL(string: "https://anj.fr/") {
+            UIApplication.shared.open(url)
+        }
     }
 }
 

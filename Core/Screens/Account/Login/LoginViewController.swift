@@ -206,12 +206,6 @@ class LoginViewController: UIViewController {
 
     }
 
-    @objc private func showDeposit() {
-        if let navigationController = self.navigationController {
-            self.showRegisterFeedbackViewController(onNavigationController: navigationController)
-        }
-    }
-
     func setupWithTheme() {
         
         self.view.backgroundColor = UIColor.App.backgroundPrimary
@@ -348,6 +342,13 @@ class LoginViewController: UIViewController {
         steppedRegistrationViewController.didRegisteredUserAction = { [weak self] registeredUser in
             if let nickname = registeredUser.nickname, let password = registeredUser.password {
                 // Optimove complete register
+                Optimove.shared.reportEvent(
+                    name: "sign_up",
+                    parameters: [
+                        "username": "\(nickname)"
+                    ]
+                )
+                
                 Optimove.shared.reportScreenVisit(screenTitle: "sign_up")
                 
                 // Adjust
@@ -359,7 +360,15 @@ class LoginViewController: UIViewController {
             }
         }
         
-        steppedRegistrationViewController.sendRegisterEventAction = { [weak self] in
+        steppedRegistrationViewController.sendRegisterEventAction = { [weak self] username in
+            
+            Optimove.shared.reportEvent(
+                name: "register_start",
+                parameters: [
+                    "username": "\(username)"
+                ]
+            )
+            
             Optimove.shared.reportScreenVisit(screenTitle: "register_start")
             
             let event = ADJEvent(eventToken: "x9jrel")
@@ -618,6 +627,7 @@ class LoginViewController: UIViewController {
 
     func triggerLoginAfterRegister(username: String, password: String, withUserConsents: Bool = false) {
         Env.userSessionStore.disableForcedLimitsScreen()
+        
         Env.userSessionStore.login(withUsername: username, password: password)
             .receive(on: DispatchQueue.main)
             .sink { [weak self] completion in
@@ -627,6 +637,14 @@ class LoginViewController: UIViewController {
                 print("triggerLoginAfterRegister ", success)
                 self?.setUserConsents(enabled: withUserConsents)
                 // self?.setTermsConsents()
+                
+                // Optimove
+//                Optimove.shared.reportEvent(
+//                    name: "sign_up",
+//                    parameters: [
+//                        "customer": "\(Env.userSessionStore.userSessionPublisher.value?.userId ?? "")"
+//                    ]
+//                )
             }
             .store(in: &cancellables)
     }
@@ -679,6 +697,9 @@ class LoginViewController: UIViewController {
     private func showNextViewController() {
 
         AnalyticsClient.sendEvent(event: .userLogin)
+        
+        Env.userSessionStore.loginFlowSuccess.send(true)
+        
         if self.isModal {
             if !self.hasPendingRedirect {
                 self.dismiss(animated: true, completion: nil)

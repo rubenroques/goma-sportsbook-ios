@@ -14,6 +14,7 @@ import Adyen
 import AdyenDropIn
 import AdyenComponents
 import OptimoveSDK
+import ServicesProvider
 
 class RootViewController: UIViewController {
 
@@ -510,12 +511,30 @@ class RootViewController: UIViewController {
 
     func checkUserLimitsSet() {
 
-        Env.userSessionStore
-            .shouldRequestLimits()
+//        Env.userSessionStore
+//            .shouldRequestLimits()
+//            .receive(on: DispatchQueue.main)
+//            .sink { [weak self] limitsValidation in
+//                if !limitsValidation.valid {
+//                    
+////                    DispatchQueue.main.asyncAfter(deadline: .now() + 3) {
+////                        self?.showLimitsScreenOnRegister(limits: limitsValidation.limits)
+////                    }
+//                    self?.showLimitsScreenOnRegister(limits: limitsValidation.limits)
+//                }
+//            }
+//            .store(in: &self.cancellables)
+        
+        Publishers.CombineLatest(Env.userSessionStore.shouldRequestLimits(), Env.userSessionStore.loginFlowSuccess)
+            .filter({ [weak self] _, loginFlowSuccess in
+                loginFlowSuccess == true
+            })
+            .first()
             .receive(on: DispatchQueue.main)
-            .sink { [weak self] shouldRequestLimits in
-                if shouldRequestLimits {
-                    self?.showLimitsScreenOnRegister()
+            .sink { [weak self] limitsValidation, loginFlowSuccess in
+                if !limitsValidation.valid && loginFlowSuccess {
+                    
+                    self?.showLimitsScreenOnRegister(limits: limitsValidation.limits)
                 }
             }
             .store(in: &self.cancellables)
@@ -1130,7 +1149,7 @@ class RootViewController: UIViewController {
                     loginViewController.hasPendingRedirect = true
                     
                     loginViewController.needsRedirect = { [weak self] in
-                        self?.openDocuments()
+                        self?.openFavorites()
                     }
                     
                     self?.present(navigationViewController, animated: true, completion: nil)
@@ -1179,12 +1198,13 @@ class RootViewController: UIViewController {
     //
     // Obrigatory Limits
     //
-    func showLimitsScreenOnRegister() {
+    func showLimitsScreenOnRegister(limits: [ResponsibleGamingLimit] = []) {
         if self.presentedViewController?.isModal == true {
             self.presentedViewController?.dismiss(animated: true, completion: nil)
         }
 
-        let limitsOnRegisterViewModel = LimitsOnRegisterViewModel(servicesProvider: Env.servicesProvider)
+        let limitsOnRegisterViewModel = LimitsOnRegisterViewModel(servicesProvider: Env.servicesProvider, limits: limits)
+        
         let limitsOnRegisterViewController = LimitsOnRegisterViewController.init(viewModel: limitsOnRegisterViewModel)
 
         limitsOnRegisterViewController.triggeredContinueAction = { [weak self] in

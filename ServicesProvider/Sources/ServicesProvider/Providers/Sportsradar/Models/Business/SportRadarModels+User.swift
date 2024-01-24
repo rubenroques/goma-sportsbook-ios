@@ -503,12 +503,14 @@ extension SportRadarModels {
         var issueDateRequired: Bool?
         var expiryDateRequired: Bool?
         var documentNumberRequired: Bool?
+        var multipleFileRequired: Bool?
 
         enum CodingKeys: String, CodingKey {
             case documentType = "documentType"
             case expiryDateRequired = "expiryDateRequired"
             case documentNumberRequired = "documentNumberRequired"
             case issueDateRequired = "issueDateRequired"
+            case multipleFileRequired = "multipleFileRequired"
         }
     }
 

@@ -107,7 +107,7 @@ extension RegisterSuccessViewController {
     private static func createAvatarImageView() -> UIImageView {
         let imageView = UIImageView()
         imageView.translatesAutoresizingMaskIntoConstraints = false
-        imageView.image = UIImage(named: "avatar_register_big_success")
+        imageView.image = UIImage(named: "avatar_register_big_success_2")
         imageView.contentMode = .scaleAspectFit
         return imageView
     }
