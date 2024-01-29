@@ -11,19 +11,15 @@ class MaintenanceViewController: UIViewController {
 
     @IBOutlet private var containerView: UIView!
     @IBOutlet private var maintenanceView: UIView!
+    @IBOutlet private var brandImageView: UIImageView!
     @IBOutlet private var logoImageView: UIImageView!
     @IBOutlet private var titleLabel: UILabel!
     @IBOutlet private var textLabel: UILabel!
-
-    // Variables
-    var imageGradient: UIImage = UIImage()
 
     override func viewDidLoad() {
         super.viewDidLoad()
 
         self.isModalInPresentation = true
-
-        self.imageGradient = UIImage().getGradientColorImage(red: 37, green: 40, blue: 50, alpha: 1.0, bounds: self.view.bounds)
 
         self.commonInit()
         self.setupWithTheme()
@@ -36,16 +32,19 @@ class MaintenanceViewController: UIViewController {
     }
 
     func setupWithTheme() {
-        self.view.backgroundColor = UIColor(patternImage: imageGradient)
-
-        containerView.backgroundColor = UIColor(patternImage: imageGradient)
-        maintenanceView.backgroundColor = UIColor(patternImage: imageGradient)
+        self.view.backgroundColor = UIColor.App.backgroundPrimary
+        
+        containerView.backgroundColor = UIColor.App.backgroundPrimary
+        maintenanceView.backgroundColor = UIColor.App.backgroundPrimary
         titleLabel.textColor = UIColor.App.textPrimary
         textLabel.textColor = UIColor.App.textPrimary
     }
 
     func commonInit() {
-        logoImageView.backgroundColor = UIColor(patternImage: imageGradient)
+        brandImageView.image = UIImage(named: "logo_horizontal_center")
+        brandImageView.contentMode = .scaleAspectFit
+        
+        logoImageView.backgroundColor = UIColor.App.backgroundPrimary
         logoImageView.image = UIImage(named: "maintenance_icon")
         logoImageView.contentMode = .scaleAspectFill
 

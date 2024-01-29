@@ -814,8 +814,8 @@ extension LoginViewController {
     @objc func didTapDebugFormFill() {
         
         if self.usernameHeaderTextFieldView.text.isEmpty || self.usernameHeaderTextFieldView.text == "ruben" {
-            self.usernameHeaderTextFieldView.setText("Gomatest") // ("pafeha4474@lance7.com") // ("gomafrontend") // ("ruben@gomadevelopment.pt")
-            self.passwordHeaderTextFieldView.setText("Testaccount!1") // ("iosGoma123") // ("Omega123") // ("ruben=GOMA=12345")
+            self.usernameHeaderTextFieldView.setText("ivotestsrna748") // ("pafeha4474@lance7.com") // ("gomafrontend") // ("ruben@gomadevelopment.pt")
+            self.passwordHeaderTextFieldView.setText("testesdoIvo1@") // ("iosGoma123") // ("Omega123") // ("ruben=GOMA=12345")
             self.loginButton.isEnabled = true
         }
         else if self.usernameHeaderTextFieldView.text == "rroques" {

@@ -2135,18 +2135,22 @@ extension PreSubmissionBetslipViewController {
                 default: ()
                 }
             } receiveValue: { [weak self] requestSuccessful in
-                print("confirmBoostedBet response: ", requestSuccessful)
-                let betPlacedDetailsArray = ServiceProviderModelMapper.betPlacedDetailsArray(fromPlacedBetsResponse: betDetails)
-                if let cashbackSelected = self?.isCashbackToggleOn.value {
-                    if !cashbackSelected {
-                        self?.betPlacedAction(betPlacedDetailsArray, nil, false)
+                if requestSuccessful {
+                    let betPlacedDetailsArray = ServiceProviderModelMapper.betPlacedDetailsArray(fromPlacedBetsResponse: betDetails)
+                    if let cashbackSelected = self?.isCashbackToggleOn.value {
+                        if !cashbackSelected {
+                            self?.betPlacedAction(betPlacedDetailsArray, nil, false)
+                        }
+                        else {
+                            self?.betPlacedAction(betPlacedDetailsArray, nil, true)
+                        }
                     }
                     else {
-                        self?.betPlacedAction(betPlacedDetailsArray, nil, true)
+                        self?.betPlacedAction(betPlacedDetailsArray, nil, false)
                     }
                 }
                 else {
-                    self?.betPlacedAction(betPlacedDetailsArray, nil, false)
+                    self?.showErrorView(errorMessage: localized("error_placing_bet"))
                 }
             }
             .store(in: &self.cancellables)
