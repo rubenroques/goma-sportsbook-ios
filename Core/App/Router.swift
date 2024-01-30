@@ -155,7 +155,7 @@ class Router {
                 }
 
                 if currentVersion.compare(serverRequiredVersion, options: .numeric) == .orderedAscending {
-                    //self.showRequiredUpdateScreen()
+                    self.showRequiredUpdateScreen()
                 }
                 else if currentVersion.compare(serverCurrentVersion, options: .numeric) == .orderedAscending {
                     self.showAvailableUpdateScreen()
