@@ -24,10 +24,6 @@ class Bootstrap {
 
         guard let environment = self.environment else { return }
 
-        self.router.makeKeyAndVisible()
-
-        self.router.setSupportedLanguages()
-        
         environment.businessSettingsSocket.connect()
 
         if TargetVariables.hasFeatureEnabled(feature: .getLocationLimits) {
@@ -75,5 +71,10 @@ class Bootstrap {
                 environment.favoritesManager.getUserFavorites()
             })
             .store(in: &self.cancellables)
+        
+        self.router.setSupportedLanguages()
+
+        self.router.makeKeyAndVisible()
+
     }
 }

@@ -131,15 +131,18 @@ class Router {
     func subscribeToUserActionBlockers() {
         Env.businessSettingsSocket.maintenanceModePublisher
             .receive(on: DispatchQueue.main)
-            .sink { message in
-                if let messageValue = message {
-                    self.showUnderMaintenanceScreen(withReason: messageValue)
-                }
-                else {
+            .sink { maintenanceMode in
+                
+                switch maintenanceMode {
+                case .on(let message):
+                    self.showUnderMaintenanceScreen(withReason: message)
+                case .off:
                     self.hideUnderMaintenanceScreen()
+                case .unknown:
+                    break
                 }
             }
-            .store(in: &cancellables)
+            .store(in: &self.cancellables)
 
         Env.businessSettingsSocket.requiredVersionPublisher
             .receive(on: DispatchQueue.main)
@@ -155,7 +158,7 @@ class Router {
                 }
 
                 if currentVersion.compare(serverRequiredVersion, options: .numeric) == .orderedAscending {
-                    //self.showRequiredUpdateScreen()
+                    self.showRequiredUpdateScreen()
                 }
                 else if currentVersion.compare(serverCurrentVersion, options: .numeric) == .orderedAscending {
                     self.showAvailableUpdateScreen()

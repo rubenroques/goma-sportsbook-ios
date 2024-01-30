@@ -11,9 +11,19 @@ import Combine
 
 class RealtimeSocketClient {
 
+    enum MaintenanceModeType: Equatable {
+        case on(message: String)
+        case off
+        case unknown
+    }
+    
     var databaseReference: DatabaseReference!
 
-    let maintenanceModePublisher = CurrentValueSubject<String?, Never>(nil)
+    var maintenanceModePublisher: AnyPublisher<MaintenanceModeType, Never> {
+        return self.maintenanceModeSubject.eraseToAnyPublisher()
+    }
+    private let maintenanceModeSubject = CurrentValueSubject<MaintenanceModeType, Never>(.unknown)
+    
     let requiredVersionPublisher = CurrentValueSubject<(required: String?, current: String?), Never>( (nil, nil) )
 
     var cancellables = Set<AnyCancellable>()
@@ -48,10 +58,10 @@ class RealtimeSocketClient {
             self?.clientSettingsPublisher.send(firebaseClientSettings)
 
             if firebaseClientSettings.isOnMaintenance {
-                self?.maintenanceModePublisher.send(firebaseClientSettings.maintenanceReason)
+                self?.maintenanceModeSubject.send(.on(message: firebaseClientSettings.maintenanceReason))
             }
             else {
-                self?.maintenanceModePublisher.send(nil)
+                self?.maintenanceModeSubject.send(.off)
             }
             
         }
