@@ -9,8 +9,7 @@ import UIKit
 import Combine
 import LinkPresentation
 
-class 
-MyTicketsViewController: UIViewController {
+class MyTicketsViewController: UIViewController {
 
     @IBOutlet private weak var ticketsTableView: UITableView!
 
