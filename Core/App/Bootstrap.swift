@@ -15,6 +15,8 @@ class Bootstrap {
     private var environment: Environment?
     private var cancellables = Set<AnyCancellable>()
 
+    private var bootTriggerCancelable: AnyCancellable?
+    
     init(router: Router) {
         self.router = router
     }
@@ -46,19 +48,6 @@ class Bootstrap {
             }
             .store(in: &self.cancellables)
 
-//        environment.servicesProvider.eventsConnectionStatePublisher
-//            .sink { connectorState in
-//                if connectorState == .disconnected && self.appInitiated == false {
-//                    environment.sportsStore.requestInitialSportsData()
-//                    self.appInitiated = true
-//                    environment.appInitWithoutSocket = true
-//                }
-//                else if connectorState == .connected {
-//                    environment.sportsStore.requestInitialSportsData()
-//                }
-//            }
-//            .store(in: &self.cancellables)
-
         // ConnectModules
         Publishers.CombineLatest(environment.servicesProvider.bettingConnectionStatePublisher,
                                  environment.userSessionStore.userProfilePublisher)
@@ -71,10 +60,23 @@ class Bootstrap {
                 environment.favoritesManager.getUserFavorites()
             })
             .store(in: &self.cancellables)
-        
+
+        // Prepare the router for boot
         self.router.setSupportedLanguages()
 
-        self.router.makeKeyAndVisible()
-
+        self.bootTriggerCancelable = environment.businessSettingsSocket.maintenanceModePublisher
+            .receive(on: DispatchQueue.main)
+            .sink(receiveValue: { [weak self] maintenanceModeType in
+                switch maintenanceModeType {
+                case .on:
+                    self?.router.showUnderMaintenanceScreenOnBoot()
+                case .off:
+                    self?.router.makeKeyAndVisible()
+                    self?.bootTriggerCancelable?.cancel()
+                case .unknown:
+                    break
+                }
+            })
+        
     }
 }

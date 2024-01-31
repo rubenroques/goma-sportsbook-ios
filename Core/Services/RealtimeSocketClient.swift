@@ -35,12 +35,12 @@ class RealtimeSocketClient {
     init() {
         let url = TargetVariables.firebaseDatabaseURL
         Database.database(url: url).isPersistenceEnabled = false
-        databaseReference = Database.database(url: url).reference()
+        self.databaseReference = Database.database(url: url).reference()
     }
 
     func connect() {
 
-        databaseReference.observe(.value) { [weak self] snapshot in
+        self.databaseReference.observe(.value) { [weak self] snapshot in
             guard
                 let value = snapshot.value,
                 !(value is NSNull),

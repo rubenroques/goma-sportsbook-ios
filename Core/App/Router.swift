@@ -317,8 +317,13 @@ class Router {
     }
 
     // MaintenanceScreen
+    func showUnderMaintenanceScreenOnBoot() {
+        let maintenanceViewController = MaintenanceViewController()
+        self.rootWindow.rootViewController = maintenanceViewController
+        self.rootWindow.makeKeyAndVisible()
+    }
+    
     func showUnderMaintenanceScreen(withReason reason: String) {
-
         if let presentedViewController = self.rootViewController?.presentedViewController {
             if !(presentedViewController is MaintenanceViewController) {
                 presentedViewController.dismiss(animated: false, completion: nil)
