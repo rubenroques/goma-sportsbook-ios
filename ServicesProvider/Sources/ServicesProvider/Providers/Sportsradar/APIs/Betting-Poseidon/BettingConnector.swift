@@ -62,18 +62,18 @@ class BettingConnector: Connector {
             return Fail<T, ServiceProviderError>(error: error).eraseToAnyPublisher()
         }
         
-        print("URL Request: \n", request.cURL(pretty: true), "\n==========================================")
+        print("Betting URL Request: \n", request.cURL(pretty: true), "\n==========================================")
         
         return self.session.dataTaskPublisher(for: request)
-            .handleEvents(receiveCompletion: { completion in
-                switch completion {
-                case .failure(let error):
-                    print("Betting-NetworkManager [[ requesting ]] ", dump(request),
-                          " [[ error completion ]] ", error)
-                case .finished:
-                    print("Betting-NetworkManager [[ requesting ]] ", dump(request), " [[ normal completion ]] ")
-                }
-            })
+//            .handleEvents(receiveCompletion: { completion in
+//                switch completion {
+//                case .failure(let error):
+//                    print("Betting-NetworkManager [[ requesting ]] ", dump(request),
+//                          " [[ error completion ]] ", error)
+//                case .finished:
+//                    print("Betting-NetworkManager [[ requesting ]] ", dump(request), " [[ normal completion ]] ")
+//                }
+//            })
             .tryMap { result -> Data in
                 if let httpResponse = result.response as? HTTPURLResponse, httpResponse.statusCode == 401 {
                     throw ServiceProviderError.unauthorized
@@ -89,13 +89,12 @@ class BettingConnector: Connector {
                 }
                 return result.data
             }
-
-            .handleEvents(receiveOutput: { data in
-                print("Betting-NetworkManager [[ requesting ]] ",
-                      request, " Body: ",
-                      String(data: request.httpBody ?? Data(), encoding: .utf8) ?? "" ,
-                      " [[ response ]] ", String(data: data, encoding: .utf8) ?? "!?" )
-            })
+//            .handleEvents(receiveOutput: { data in
+//                print("Betting-NetworkManager [[ requesting ]] ",
+//                      request, " Body: ",
+//                      String(data: request.httpBody ?? Data(), encoding: .utf8) ?? "" ,
+//                      " [[ response ]] ", String(data: data, encoding: .utf8) ?? "!?" )
+//            })
             .decode(type: T.self, decoder: self.decoder)
             .mapError({ error -> ServiceProviderError in
                 if let typedError = error as? ServiceProviderError {

@@ -110,11 +110,13 @@ class OmegaConnector: Connector {
             return Fail<T, ServiceProviderError>(error: error).eraseToAnyPublisher()
         }
         
+        print("Omega URL Request: \n", request.cURL(pretty: true), "\n==========================================")
+        
         return self.session.dataTaskPublisher(for: request)
-            .handleEvents(receiveOutput: { result in
-                print("ServiceProvider-OmegaConnector [[ requesting ]] ", request,
-                      " [[ response ]] ", String(data: result.data, encoding: .utf8) ?? "!?" )
-            })
+//            .handleEvents(receiveOutput: { result in
+//                print("ServiceProvider-OmegaConnector [[ requesting ]] ", request,
+//                      " [[ response ]] ", String(data: result.data, encoding: .utf8) ?? "!?" )
+//            })
             .tryMap { result -> Data in
                 if let httpResponse = result.response as? HTTPURLResponse, httpResponse.statusCode == 401 {
                     throw ServiceProviderError.unauthorized

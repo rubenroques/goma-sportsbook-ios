@@ -108,13 +108,9 @@ class Router {
 
         var bootRootViewController: UIViewController
         if Env.userSessionStore.isUserLogged() || UserSessionStore.didSkipLoginFlow() {
-
             let rootViewController = RootViewController(defaultSport: Env.sportsStore.defaultSport)
-
             self.mainRootViewController = rootViewController
-
             bootRootViewController = Router.mainScreenViewControllerFlow(rootViewController)
-            
         }
         else {
             bootRootViewController = Router.createLoginViewControllerFlow()
@@ -125,7 +121,6 @@ class Router {
         self.subscribeToNotificationsOpened()
 
         self.rootWindow.rootViewController = bootRootViewController
-
     }
 
     func subscribeToUserActionBlockers() {
