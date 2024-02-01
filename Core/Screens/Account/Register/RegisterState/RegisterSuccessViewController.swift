@@ -6,6 +6,7 @@
 //
 
 import UIKit
+import Kingfisher
 
 class RegisterSuccessViewController: UIViewController {
 
@@ -19,7 +20,14 @@ class RegisterSuccessViewController: UIViewController {
 
     var didTapContinueAction: (() -> Void)?
     var didTapCloseAction: (() -> Void)?
-
+    
+    var avatarHeight: CGFloat {
+        let screenHeight = UIScreen.main.bounds.height
+        let percentage: CGFloat = 0.6 // Adjust this value as needed (e.g., 0.2 for 20%)
+        let imageViewHeight = screenHeight * percentage
+        return imageViewHeight
+    }
+    
     init() {
 
         super.init(nibName: nil, bundle: nil)
@@ -44,6 +52,12 @@ class RegisterSuccessViewController: UIViewController {
         self.hasContinueFlow = false
 
         self.closeButton.isHidden = true
+        
+        // CAN'T FETCH FROM WEBSITE ATM
+//        if let avatarUrl = URL(string: "\(TargetVariables.clientBaseUrl)/public/assets/imgs/success-reg-portrait_2.png") {
+//            
+//            self.avatarImageView.kf.setImage(with: avatarUrl)
+//        }
     }
 
     override func viewDidLayoutSubviews() {
@@ -107,7 +121,7 @@ extension RegisterSuccessViewController {
     private static func createAvatarImageView() -> UIImageView {
         let imageView = UIImageView()
         imageView.translatesAutoresizingMaskIntoConstraints = false
-        imageView.image = UIImage(named: "avatar_register_big_success_2")
+        imageView.image = UIImage(named: "avatar_register_big_success_3")
         imageView.contentMode = .scaleAspectFit
         return imageView
     }
@@ -142,8 +156,8 @@ extension RegisterSuccessViewController {
 
             self.containerGradientView.leadingAnchor.constraint(equalTo: self.view.leadingAnchor),
             self.containerGradientView.trailingAnchor.constraint(equalTo: self.view.trailingAnchor),
-            self.containerGradientView.topAnchor.constraint(equalTo: self.view.topAnchor),
-            self.containerGradientView.bottomAnchor.constraint(equalTo: self.view.bottomAnchor),
+            self.containerGradientView.topAnchor.constraint(equalTo: self.view.safeAreaLayoutGuide.topAnchor),
+            self.containerGradientView.bottomAnchor.constraint(equalTo: self.view.safeAreaLayoutGuide.bottomAnchor),
 
             self.headerView.leadingAnchor.constraint(equalTo: self.containerGradientView.leadingAnchor),
             self.headerView.trailingAnchor.constraint(equalTo: self.containerGradientView.trailingAnchor),
@@ -154,15 +168,16 @@ extension RegisterSuccessViewController {
             self.closeButton.centerYAnchor.constraint(equalTo: self.headerView.centerYAnchor),
             self.closeButton.heightAnchor.constraint(equalToConstant: 40),
 
-            self.avatarImageView.topAnchor.constraint(equalTo: self.headerView.topAnchor),
+          self.avatarImageView.topAnchor.constraint(equalTo: self.headerView.bottomAnchor, constant: 40),
+            self.avatarImageView.heightAnchor.constraint(equalToConstant: self.avatarHeight),
             self.avatarImageView.bottomAnchor.constraint(equalTo: self.continueButton.topAnchor),
-            self.avatarImageView.leadingAnchor.constraint(equalTo: self.containerGradientView.leadingAnchor, constant: 30),
-            self.avatarImageView.trailingAnchor.constraint(equalTo: self.containerGradientView.trailingAnchor, constant: -30),
+            self.avatarImageView.leadingAnchor.constraint(equalTo: self.containerGradientView.leadingAnchor, constant: 15),
+            self.avatarImageView.trailingAnchor.constraint(equalTo: self.containerGradientView.trailingAnchor, constant: -15),
             //self.avatarImageView.centerXAnchor.constraint(equalTo: self.containerGradientView.centerXAnchor),
 
             self.continueButton.leadingAnchor.constraint(equalTo: self.containerGradientView.leadingAnchor, constant: 30),
             self.continueButton.trailingAnchor.constraint(equalTo: self.containerGradientView.trailingAnchor, constant: -30),
-            self.continueButton.bottomAnchor.constraint(equalTo: self.containerGradientView.bottomAnchor, constant: -50),
+            self.continueButton.bottomAnchor.constraint(lessThanOrEqualTo: self.containerGradientView.bottomAnchor, constant: -50),
             self.continueButton.heightAnchor.constraint(equalToConstant: 50)
         ])
 
