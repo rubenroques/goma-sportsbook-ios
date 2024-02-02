@@ -426,7 +426,7 @@ class HomeViewController: UIViewController {
         self.present(navigationViewController, animated: true, completion: nil)
     }
 
-    private func addBetToBetslip(withBetSwipeData betSwipeData: BetSwipeData) {
+    func addBetToBetslip(withBetSwipeData betSwipeData: BetSwipeData) {
         
         if let externalMarketId = betSwipeData.externalMarketId, let selectedOutcomeId = betSwipeData.externalOutcomeId {
             

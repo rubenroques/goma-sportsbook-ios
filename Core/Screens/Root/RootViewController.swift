@@ -1458,6 +1458,14 @@ extension RootViewController {
             })
         }
         
+        anonymousSideMenuViewController.didTapBetslipButtonAction = { [weak self] in
+            self?.openBetslipModal()
+        }
+        
+        anonymousSideMenuViewController.addBetToBetslipAction = { [weak self] betSwipeData in
+            self?.homeViewController.addBetToBetslip(withBetSwipeData: betSwipeData)
+        }
+        
         self.present(anonymousNavigationViewController, animated: true, completion: nil)
     }
 
