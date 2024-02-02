@@ -53,7 +53,9 @@ class AnonymousSideMenuViewController: UIViewController {
     // Debug screen tap
     private var tapCounter = 0
     private var lastTapTime: Date?
-
+    
+    var didTapBetslipButtonAction: (() -> Void)?
+    var addBetToBetslipAction: ((BetSwipeData) -> Void)?
 
     // MARK: - Lifetime and Cycle
     init(viewModel: AnonymousSideMenuViewModel) {
@@ -272,8 +274,33 @@ extension AnonymousSideMenuViewController {
     }
 
     @objc private func betSwipeViewTapped() {
-        let betSelectorViewConroller = InternalBrowserViewController(fileName: "TinderStyleBetBuilder", fileType: "html", fullscreen: true)
-        self.navigationController?.pushViewController(betSelectorViewConroller, animated: true)
+        
+//        let betSelectorViewConroller = InternalBrowserViewController(fileName: "TinderStyleBetBuilder", fileType: "html", fullscreen: true)
+//        self.navigationController?.pushViewController(betSelectorViewConroller, animated: true)
+        
+        let userId = Env.userSessionStore.loggedUserProfile?.userIdentifier ?? "0"
+        let iframeURL = URL(string: "\(TargetVariables.clientBaseUrl)/betswipe.html?user=\(userId)&mobile=true&language=fr")!
+        
+        let betSelectorViewConroller = BetslipProxyWebViewController(url: iframeURL)
+        let navigationViewController = Router.navigationController(with: betSelectorViewConroller)
+        navigationViewController.modalPresentationStyle = .fullScreen
+        
+        betSelectorViewConroller.showsBetslip = { [weak self] in
+            navigationViewController.dismiss(animated: true) {
+                self?.didTapBetslipButtonAction?()
+            }
+        }
+        
+        betSelectorViewConroller.closeBetSwipe = {
+            navigationViewController.dismiss(animated: true)
+        }
+        
+        betSelectorViewConroller.addToBetslip = { [weak self] betSwipeData in
+            //self?.addBetToBetslip(withBetSwipeData: betSwipeData)
+            self?.addBetToBetslipAction?(betSwipeData)
+        }
+        
+        self.present(navigationViewController, animated: true, completion: nil)
     }
 
 }
