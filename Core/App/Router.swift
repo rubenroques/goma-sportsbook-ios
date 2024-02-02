@@ -108,13 +108,9 @@ class Router {
 
         var bootRootViewController: UIViewController
         if Env.userSessionStore.isUserLogged() || UserSessionStore.didSkipLoginFlow() {
-
             let rootViewController = RootViewController(defaultSport: Env.sportsStore.defaultSport)
-
             self.mainRootViewController = rootViewController
-
             bootRootViewController = Router.mainScreenViewControllerFlow(rootViewController)
-            
         }
         else {
             bootRootViewController = Router.createLoginViewControllerFlow()
@@ -125,21 +121,23 @@ class Router {
         self.subscribeToNotificationsOpened()
 
         self.rootWindow.rootViewController = bootRootViewController
-
     }
 
     func subscribeToUserActionBlockers() {
         Env.businessSettingsSocket.maintenanceModePublisher
             .receive(on: DispatchQueue.main)
-            .sink { message in
-                if let messageValue = message {
-                    self.showUnderMaintenanceScreen(withReason: messageValue)
-                }
-                else {
+            .sink { maintenanceMode in
+                
+                switch maintenanceMode {
+                case .on(let message):
+                    self.showUnderMaintenanceScreen(withReason: message)
+                case .off:
                     self.hideUnderMaintenanceScreen()
+                case .unknown:
+                    break
                 }
             }
-            .store(in: &cancellables)
+            .store(in: &self.cancellables)
 
         Env.businessSettingsSocket.requiredVersionPublisher
             .receive(on: DispatchQueue.main)
@@ -314,8 +312,13 @@ class Router {
     }
 
     // MaintenanceScreen
+    func showUnderMaintenanceScreenOnBoot() {
+        let maintenanceViewController = MaintenanceViewController()
+        self.rootWindow.rootViewController = maintenanceViewController
+        self.rootWindow.makeKeyAndVisible()
+    }
+    
     func showUnderMaintenanceScreen(withReason reason: String) {
-
         if let presentedViewController = self.rootViewController?.presentedViewController {
             if !(presentedViewController is MaintenanceViewController) {
                 presentedViewController.dismiss(animated: false, completion: nil)

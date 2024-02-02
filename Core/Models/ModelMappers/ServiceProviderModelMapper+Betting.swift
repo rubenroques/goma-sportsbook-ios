@@ -9,44 +9,44 @@ import Foundation
 import ServicesProvider
 
 extension ServiceProviderModelMapper {
-
+    
     static func bettingHistory(fromServiceProviderBettingHistory bettingHistory: ServicesProvider.BettingHistory) -> BetHistoryResponse {
         let betList = bettingHistory.bets.map(Self.betHistoryEntry(fromServiceProviderBet:))
         return BetHistoryResponse(betList: betList)
     }
-
+    
     static func betHistoryEntry(fromServiceProviderBet bet: ServicesProvider.Bet) -> BetHistoryEntry {
         let selections = bet.selections.map(Self.betHistoryEntrySelection(fromServiceProviderBetSelection:))
         return BetHistoryEntry(betId: bet.identifier,
-                        selections: selections,
-                        type: bet.type,
-                        systemBetType: nil,
-                        amount: nil,
-                        totalBetAmount: bet.stake,
-                        freeBetAmount: nil,
-                        bonusBetAmount: nil,
-                        currency: nil,
-                        maxWinning: bet.potentialReturn,
-                        //totalPriceValue: selections.count > 1 ? bet.totalOdd : selections.first?.priceValue,
-                            totalPriceValue: bet.totalOdd,
-                        overallBetReturns: nil,
-                        numberOfSelections: selections.count,
-                        status: bet.globalState.rawValue,
-                        placedDate: bet.date,
-                        settledDate: nil,
-                        freeBet: bet.freebet,
-                        partialCashoutReturn: bet.partialCashoutReturn,
-                        partialCashoutStake: bet.partialCashoutStake,
-                        betShareToken: nil,
-                        betslipId: bet.betslipId,
-                        cashbackReturn: bet.cashbackReturn,
-                        freebetReturn: bet.freebetReturn,
-                        potentialCashbackReturn: bet.potentialCashbackReturn,
-                        potentialFreebetReturn: bet.potentialFreebetReturn)
+                               selections: selections,
+                               type: bet.type,
+                               systemBetType: nil,
+                               amount: nil,
+                               totalBetAmount: bet.stake,
+                               freeBetAmount: nil,
+                               bonusBetAmount: nil,
+                               currency: nil,
+                               maxWinning: bet.potentialReturn,
+                               //totalPriceValue: selections.count > 1 ? bet.totalOdd : selections.first?.priceValue,
+                               totalPriceValue: bet.totalOdd,
+                               overallBetReturns: nil,
+                               numberOfSelections: selections.count,
+                               status: bet.globalState.rawValue,
+                               placedDate: bet.date,
+                               settledDate: nil,
+                               freeBet: bet.freebet,
+                               partialCashoutReturn: bet.partialCashoutReturn,
+                               partialCashoutStake: bet.partialCashoutStake,
+                               betShareToken: nil,
+                               betslipId: bet.betslipId,
+                               cashbackReturn: bet.cashbackReturn,
+                               freebetReturn: bet.freebetReturn,
+                               potentialCashbackReturn: bet.potentialCashbackReturn,
+                               potentialFreebetReturn: bet.potentialFreebetReturn)
     }
-
+    
     static func betHistoryEntrySelection(fromServiceProviderBetSelection betSelection: ServicesProvider.BetSelection) -> BetHistoryEntrySelection {
-
+        
         let status: BetSelectionStatus
         switch betSelection.state {
         case .opened: status = .opened
@@ -60,7 +60,7 @@ extension ServiceProviderModelMapper {
         case .void: status = .void
         case .undefined: status = .undefined
         }
-
+        
         // betResult is global, betLegStatus is the selection real result
         let result: BetSelectionResult
         switch betSelection.state {
@@ -70,17 +70,17 @@ extension ServiceProviderModelMapper {
         case .void: result = .void
         default: result = .undefined
         }
-//        let result: BetSelectionResult
-//        switch betSelection.result {
-//        case .open: result = .open
-//        case .won: result = .won
-//        case .lost: result = .lost
-//        case .drawn: result = .drawn
-//        case .notSpecified: result = .undefined
-//        case .void: result = .undefined
-//        case .pending: result = .undefined
-//        }
-
+        //        let result: BetSelectionResult
+        //        switch betSelection.result {
+        //        case .open: result = .open
+        //        case .won: result = .won
+        //        case .lost: result = .lost
+        //        case .drawn: result = .drawn
+        //        case .notSpecified: result = .undefined
+        //        case .void: result = .undefined
+        //        case .pending: result = .undefined
+        //        }
+        
         var decimalOdd: Double
         switch betSelection.odd {
         case .fraction(let numerator, let denominator):
@@ -88,7 +88,7 @@ extension ServiceProviderModelMapper {
         case .decimal(let odd):
             decimalOdd = odd
         }
-
+        
         let betHistoryEntrySelection = BetHistoryEntrySelection(outcomeId: betSelection.identifier,
                                                                 status: status,
                                                                 result: result,
@@ -114,20 +114,20 @@ extension ServiceProviderModelMapper {
                                                                 awayParticipantScore: betSelection.awayResult,
                                                                 marketName: betSelection.marketName,
                                                                 betName: betSelection.outcomeName)
-
+        
         return betHistoryEntrySelection
     }
-
+    
     static func transactionHistory(fromServiceProviderTransactionDetail transactionDetail: ServicesProvider.TransactionDetail) -> TransactionHistory {
-
+        
         var valueType = TransactionValueType.neutral
-
+        
         var transactionType = Self.stringFromTransactionType(transactionType: transactionDetail.type)
-
+        
         if transactionDetail.type == .withdrawal && transactionDetail.reference != nil {
             transactionType = Self.stringFromTransactionType(transactionType: .automatedWithdrawal)
         }
-
+        
         if transactionDetail.amount < 0.0 {
             valueType = .loss
         }
@@ -137,27 +137,27 @@ extension ServiceProviderModelMapper {
         else {
             valueType = .neutral
         }
-
+        
         return TransactionHistory(transactionID: "\(transactionDetail.id)",
-                                                           time: transactionDetail.dateTime,
+                                  time: transactionDetail.dateTime,
                                   type: transactionType ?? "",
-                                                           valueType: valueType,
-                                                           debit: DebitCredit(currency: transactionDetail.currency,
-                                                                              amount: transactionDetail.amount,
-                                                                              name: "Debit"),
-                                                           credit: DebitCredit(currency: transactionDetail.currency,
-                                                                               amount: transactionDetail.amount,
-                                                                               name: "Credit"),
-                                                           fees: [],
-                                                           status: nil,
-                                                           transactionReference: nil,
-                                                           id: "\(transactionDetail.gameTranId ?? "")",
-                                                           isRallbackAllowed: nil,
-                                                           paymentId: transactionDetail.paymentId)
+                                  valueType: valueType,
+                                  debit: DebitCredit(currency: transactionDetail.currency,
+                                                     amount: transactionDetail.amount,
+                                                     name: "Debit"),
+                                  credit: DebitCredit(currency: transactionDetail.currency,
+                                                      amount: transactionDetail.amount,
+                                                      name: "Credit"),
+                                  fees: [],
+                                  status: nil,
+                                  transactionReference: nil,
+                                  id: "\(transactionDetail.gameTranId ?? "")",
+                                  isRallbackAllowed: nil,
+                                  paymentId: transactionDetail.paymentId)
     }
-
+    
     static func stringFromTransactionType(transactionType: TransactionType?) -> String? {
-
+        
         switch transactionType {
         case .deposit: return localized("deposit")
         case .withdrawal: return localized("withdrawal")
@@ -178,4 +178,18 @@ extension ServiceProviderModelMapper {
         default: return nil
         }
     }
+    
+
+    static func betPlacedDetailsArray(fromPlacedBetsResponse placedBetsResponse: PlacedBetsResponse) -> [BetPlacedDetails] {
+        let betPlacedDetailsArray: [BetPlacedDetails] = placedBetsResponse.bets.map { (placedBetEntry: PlacedBetEntry) -> BetPlacedDetails in
+            let totalPriceValue = placedBetEntry.betLegs.map(\.odd).reduce(1.0, *)
+            let response = BetslipPlaceBetResponse(betId: placedBetEntry.identifier,
+                                                   betSucceed: true,
+                                                   totalPriceValue: totalPriceValue,
+                                                   maxWinning: placedBetEntry.potentialReturn)
+            return BetPlacedDetails(response: response)
+        }
+        return betPlacedDetailsArray
+    }
+    
 }

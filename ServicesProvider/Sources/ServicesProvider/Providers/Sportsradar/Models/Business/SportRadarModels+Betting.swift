@@ -353,32 +353,61 @@ extension SportRadarModels {
         var tickets: [BetTicket]
     }
 
+    struct ConfirmBetPlaceResponse: Codable {
+        var state: Int
+        var detailedState: Int
+        var statusCode: String?
+        var statusText: String?
+
+        enum CodingKeys: String, CodingKey {
+            case state = "state"
+            case detailedState = "detailedState"
+            case statusCode = "statusCode"
+            case statusText = "statusText"
+        }
+    }
+
+    
     struct PlacedBetsResponse: Codable {
         var identifier: String
         var responseCode: String
+        var detailedResponseCode: String?
         var errorMessage: String?
+        var totalStake: Double
         var bets: [PlacedBetEntry]
 
         enum CodingKeys: String, CodingKey {
             case identifier = "idFOBetSlip"
             case bets = "bets"
+            
             case status = "status"
+            case betStatus = "betStatus"
+            
             case responseCode = "state"
+            case detailedResponseCode = "detailedState"
+            
+            case totalStake = "totalStake"
+            
             case errorMessage = "statusText"
         }
 
         init(from decoder: Decoder) throws {
             let container: KeyedDecodingContainer<SportRadarModels.PlacedBetsResponse.CodingKeys> = try decoder.container(keyedBy: CodingKeys.self)
 
-            let identifierInt = try container.decode(Int.self, forKey: .identifier)
-            self.identifier = "\(identifierInt)"
-            self.bets = try container.decode([SportRadarModels.PlacedBetEntry].self, forKey: .bets)
+                let identifierInt = try container.decode(Int.self, forKey: .identifier)
+                self.identifier = "\(identifierInt)"
+                self.bets = try container.decode([SportRadarModels.PlacedBetEntry].self, forKey: .bets)
 
-            let statusContainer = try? container.nestedContainer(keyedBy: CodingKeys.self, forKey: .status)
-            let statusCodeInt = (try? statusContainer?.decodeIfPresent(Int.self, forKey: .responseCode)) ?? 0
-            self.responseCode = "\(statusCodeInt)"
-
-            self.errorMessage = try statusContainer?.decodeIfPresent(String.self, forKey: .errorMessage)
+                let statusContainer = try? container.nestedContainer(keyedBy: CodingKeys.self, forKey: .status)
+                let statusCodeInt = (try? statusContainer?.decodeIfPresent(Int.self, forKey: .responseCode)) ?? 0
+                self.responseCode = "\(statusCodeInt)"
+                
+                let detailedResponseCodeInt = (try? statusContainer?.decodeIfPresent(Int.self, forKey: .detailedResponseCode)) ?? 0
+                self.detailedResponseCode = "\(detailedResponseCodeInt)"
+                
+                self.errorMessage = try statusContainer?.decodeIfPresent(String.self, forKey: .errorMessage)
+            
+                self.totalStake = try container.decodeIfPresent(Double.self, forKey: .totalStake) ?? 0.0
         }
 
         func encode(to encoder: Encoder) throws {
@@ -394,6 +423,7 @@ extension SportRadarModels {
         var identifier: String
         var potentialReturn: Double
         var placeStake: Double
+        var totalAvailableStake: Double
         var betLegs: [PlacedBetLeg]
 
         enum CodingKeys: String, CodingKey {
@@ -401,6 +431,7 @@ extension SportRadarModels {
             case betLegs = "betLegs"
             case potentialReturn = "potentialReturn"
             case placeStake = "placeStake"
+            case totalAvailableStake = "totalStake"
         }
 
         init(from decoder: Decoder) throws {
@@ -411,6 +442,7 @@ extension SportRadarModels {
             self.betLegs = try container.decode([SportRadarModels.PlacedBetLeg].self, forKey: SportRadarModels.PlacedBetEntry.CodingKeys.betLegs)
             self.potentialReturn = try container.decode(Double.self, forKey: SportRadarModels.PlacedBetEntry.CodingKeys.potentialReturn)
             self.placeStake = try container.decode(Double.self, forKey: SportRadarModels.PlacedBetEntry.CodingKeys.placeStake)
+            self.totalAvailableStake = try container.decodeIfPresent(Double.self, forKey: SportRadarModels.PlacedBetEntry.CodingKeys.totalAvailableStake) ?? 0.0
         }
     }
 

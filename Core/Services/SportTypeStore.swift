@@ -72,7 +72,12 @@ class SportTypeStore {
                     // Add missing alphaCodes to the sportsArray
                     for missingLiveSport in missingLiveSports {
                         if let liveSport = liveCountDict[missingLiveSport] {
-                            let newSport = Sport(id: liveSport.id, name: liveSport.name, alphaId: liveSport.id, numericId: nil, showEventCategory: false, liveEventsCount: liveSport.numberEvents)
+                            let newSport = Sport(id: liveSport.id,
+                                                 name: liveSport.name,
+                                                 alphaId: liveSport.id,
+                                                 numericId: nil,
+                                                 showEventCategory: false,
+                                                 liveEventsCount: liveSport.numberEvents)
                             
                             updatedSportsList.append(newSport)
                             print("Added new Sport for alphaCode: \(liveSport)")
@@ -90,25 +95,7 @@ class SportTypeStore {
     private var cancellables = Set<AnyCancellable>()
 
     init() {
-//        DispatchQueue.main.asyncAfter(deadline: .now() + 15) {
-//            let mappedSportTypes = [Sport(id: "63", name: "Table Tennis", alphaId: "TBT", numericId: nil, showEventCategory: false, liveEventsCount: 1, eventsCount: 1)]
-//            
-//            var sportLiveCount: [String: LiveSport] = [:]
-//            var currentLiveCount = self.liveSportsCountCurrentValueSubject.value
-//
-//            for sport in mappedSportTypes {
-//                let liveSport = LiveSport(id: sport.id, name: sport.name, numberEvents: sport.eventsCount, iconIdentifier: sport.id)
-//                sportLiveCount[sport.alphaId ?? sport.id] = liveSport
-//            }
-//            
-//            let mergedSports = currentLiveCount.merging(sportLiveCount) { (_, new) in new }
-//            
-//            let finalSports = mergedSports.filter { $0.value.numberEvents != 0 }
-//            
-//            print("UPDATED LIVE COUNT: \(finalSports)")
-//            Logger.log("UPDATED LIVE COUNT: \(finalSports)")
-//            self.liveSportsCountCurrentValueSubject.send(finalSports)
-//        }
+
     }
 
     deinit {

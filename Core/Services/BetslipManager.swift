@@ -402,7 +402,7 @@ extension BetslipManager {
                                                            betSucceed: true,
                                                            totalPriceValue: totalPriceValue,
                                                            maxWinning: placedBetEntry.potentialReturn)
-                    return BetPlacedDetails(response: response, tickets: [])
+                    return BetPlacedDetails(response: response)
                 }
                 return Just(betPlacedDetailsArray).setFailureType(to: BetslipErrorType.self).eraseToAnyPublisher()
             })
@@ -457,6 +457,10 @@ extension BetslipManager {
                     }
                     
                     return BetslipErrorType.betPlacementDetailedError(message: message)
+                    
+                case .betNeedsUserConfirmation(let betDetails):
+                    return BetslipErrorType.betNeedsUserConfirmation(betDetails: betDetails)
+                    
                 default:
                     return BetslipErrorType.betPlacementError
                 }
@@ -468,7 +472,7 @@ extension BetslipManager {
                                                            betSucceed: true,
                                                            totalPriceValue: totalPriceValue,
                                                            maxWinning: placedBetEntry.potentialReturn)
-                    return BetPlacedDetails(response: response, tickets: [])
+                    return BetPlacedDetails(response: response)
                 }
                 return Just(betPlacedDetailsArray).setFailureType(to: BetslipErrorType.self).eraseToAnyPublisher()
             })
@@ -531,12 +535,12 @@ extension BetslipManager {
                     
                     return BetslipErrorType.betPlacementDetailedError(message: message)
                 case .notPlacedBet(let message):
-                    
                     if message.contains("bet_error") {
                         return BetslipErrorType.betPlacementDetailedError(message: localized(message))
                     }
-                    
                     return BetslipErrorType.betPlacementDetailedError(message: message)
+                case .betNeedsUserConfirmation(let betDetails):
+                    return BetslipErrorType.betNeedsUserConfirmation(betDetails: betDetails)
                 default:
                     return BetslipErrorType.betPlacementError
                 }
@@ -548,7 +552,7 @@ extension BetslipManager {
                                                            betSucceed: true,
                                                            totalPriceValue: totalPriceValue,
                                                            maxWinning: placedBetEntry.potentialReturn)
-                    return BetPlacedDetails(response: response, tickets: [])
+                    return BetPlacedDetails(response: response)
                 }
                 return Just(betPlacedDetailsArray).setFailureType(to: BetslipErrorType.self).eraseToAnyPublisher()
             })
@@ -594,19 +598,17 @@ extension BetslipManager {
                 case .forbidden:
                     return BetslipErrorType.forbiddenRequest
                 case .errorMessage(let message):
-                    
                     if message.contains("bet_error") {
                         return BetslipErrorType.betPlacementDetailedError(message: localized(message))
                     }
-                    
                     return BetslipErrorType.betPlacementDetailedError(message: message)
                 case .notPlacedBet(let message):
-                    
                     if message.contains("bet_error") {
                         return BetslipErrorType.betPlacementDetailedError(message: localized(message))
                     }
-                    
                     return BetslipErrorType.betPlacementDetailedError(message: message)
+                case .betNeedsUserConfirmation(let betDetails):
+                    return BetslipErrorType.betNeedsUserConfirmation(betDetails: betDetails)
                 default:
                     return BetslipErrorType.betPlacementError
                 }
@@ -618,7 +620,7 @@ extension BetslipManager {
                                                            betSucceed: true,
                                                            totalPriceValue: totalPriceValue,
                                                            maxWinning: placedBetEntry.potentialReturn)
-                    return BetPlacedDetails(response: response, tickets: [])
+                    return BetPlacedDetails(response: response)
                 }
                 return Just(betPlacedDetailsArray).setFailureType(to: BetslipErrorType.self).eraseToAnyPublisher()
             })
@@ -802,6 +804,7 @@ enum BetslipErrorType: Error {
     case betPlacementError
     case potentialReturn
     case betPlacementDetailedError(message: String)
+    case betNeedsUserConfirmation(betDetails: PlacedBetsResponse)
     case forbiddenRequest
     case invalidStake
     case none
@@ -820,7 +823,6 @@ struct BetslipError {
 
 struct BetPlacedDetails {
     var response: BetslipPlaceBetResponse
-    var tickets: [BettingTicket]
 }
 
 struct BetPotencialReturn: Codable {

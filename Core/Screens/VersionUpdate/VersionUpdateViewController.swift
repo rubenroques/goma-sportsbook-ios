@@ -11,6 +11,7 @@ class VersionUpdateViewController: UIViewController {
 
     @IBOutlet private var containerView: UIView!
     @IBOutlet private var updateView: UIView!
+    @IBOutlet private var brandImageView: UIImageView!
     @IBOutlet private var logoImageView: UIImageView!
     @IBOutlet private var titleLabel: UILabel!
     @IBOutlet private var textLabel: UILabel!
@@ -20,12 +21,10 @@ class VersionUpdateViewController: UIViewController {
     var dismissCallback: (() -> Void)?
 
     // Variables
-    private var imageGradient: UIImage
     private var updateRequired: Bool
 
     init(updateRequired: Bool) {
         self.updateRequired = updateRequired
-        self.imageGradient = UIImage()
 
         super.init(nibName: "VersionUpdateViewController", bundle: nil)
     }
@@ -40,8 +39,6 @@ class VersionUpdateViewController: UIViewController {
 
         self.isModalInPresentation = self.updateRequired
 
-        self.imageGradient = UIImage().getGradientColorImage(red: 37, green: 40, blue: 50, alpha: 1.0, bounds: self.view.bounds)
-
         self.commonInit()
         self.setupWithTheme()
     }
@@ -53,24 +50,25 @@ class VersionUpdateViewController: UIViewController {
     }
 
     func setupWithTheme() {
-        self.view.backgroundColor = UIColor(patternImage: imageGradient)
-        containerView.backgroundColor = UIColor(patternImage: imageGradient)
-        updateView.backgroundColor = UIColor(patternImage: imageGradient)
-        titleLabel.textColor = UIColor.white
-        textLabel.textColor = UIColor.white
-
+        self.view.backgroundColor = UIColor.App.backgroundPrimary
+        containerView.backgroundColor = UIColor.App.backgroundPrimary
+        updateView.backgroundColor = UIColor.App.backgroundPrimary
+        titleLabel.textColor = UIColor.App.textPrimary
+        textLabel.textColor = UIColor.App.textPrimary
+        
         updateButton.setTitleColor(UIColor.App.buttonTextPrimary, for: .normal)
         updateButton.layer.borderColor = UIColor.App.highlightPrimary.cgColor
         updateButton.layer.backgroundColor = UIColor.App.highlightPrimary.cgColor
 
         dismissButton.setTitleColor(UIColor.App.buttonTextPrimary, for: .normal)
-        dismissButton.layer.borderColor = .none
-        dismissButton.layer.backgroundColor = UIColor.white.withAlphaComponent(0).cgColor
+        dismissButton.layer.borderWidth = 0 
     }
 
     func commonInit() {
-
-        logoImageView.backgroundColor = UIColor(patternImage: imageGradient)
+        brandImageView.image = UIImage(named: "logo_horizontal_center")
+        brandImageView.contentMode = .scaleAspectFit
+        
+        logoImageView.backgroundColor = UIColor.App.backgroundPrimary
         logoImageView.image = UIImage(named: "update_available_icon")
         logoImageView.contentMode = .scaleAspectFill
 
@@ -96,12 +94,15 @@ class VersionUpdateViewController: UIViewController {
             logoImageView.image = UIImage(named: "update_required_icon")
             titleLabel.text = localized("update_required_title")
             textLabel.text = localized("update_required_text")
+            
             dismissButton.isHidden = true
         }
         else {
             logoImageView.image = UIImage(named: "update_available_icon")
             titleLabel.text = localized("update_available_title")
             textLabel.text = localized("update_available_text")
+            
+            dismissButton.isHidden = false
         }
     }
 

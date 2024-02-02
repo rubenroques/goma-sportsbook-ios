@@ -36,22 +36,18 @@ extension Endpoint {
         request.httpMethod = self.method.value()
         request.timeoutInterval = self.timeout
         request.httpBody = self.body
+        
         if let headersValue = self.headers {
             for (key, value) in headersValue {
                 request.setValue(value, forHTTPHeaderField: key)
             }
         }
+        
         if let aditionalHeadersValue = aditionalHeaders {
             for (key, value) in aditionalHeadersValue {
                 request.setValue(value, forHTTPHeaderField: key)
             }
         }
-
-//        print("Endpoint request created: \n ",
-//              dump(request),
-//              "\n -- with body: \n",
-//              String(data: request.httpBody ?? Data(), encoding: .utf8) ?? "[no body]"
-//        )
 
         return request
     }
