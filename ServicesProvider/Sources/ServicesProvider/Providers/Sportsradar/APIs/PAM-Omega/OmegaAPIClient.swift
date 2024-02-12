@@ -409,6 +409,7 @@ extension OmegaAPIClient: Endpoint {
             let extraInfo = """
                             {
                             "avatar":"\(avatarName ?? "")",
+                            "device_os": "iOS",
                             "godfatherCode":"\(godfatherCode ?? "")"
                             }
                             """

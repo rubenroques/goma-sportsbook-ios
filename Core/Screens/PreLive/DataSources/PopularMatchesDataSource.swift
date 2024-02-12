@@ -288,8 +288,9 @@ extension PopularMatchesDataSource: UITableViewDataSource, UITableViewDelegate {
                     as? OutrightCompetitionLargeLineTableViewCell,
                 let competition = self.allOutrightCompetitionsSubject.value?[safe: indexPath.row]
             else {
-                fatalError()
+                return UITableViewCell()
             }
+            
             cell.configure(withViewModel: OutrightCompetitionLargeLineViewModel(competition: competition))
             cell.didSelectCompetitionAction = { [weak self] competition in
                 self?.didSelectCompetitionAction?(competition)
@@ -320,7 +321,7 @@ extension PopularMatchesDataSource: UITableViewDataSource, UITableViewDelegate {
                 return cell
             }
         default:
-            fatalError()
+            break
         }
         return UITableViewCell()
     }
