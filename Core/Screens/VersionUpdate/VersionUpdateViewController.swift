@@ -60,7 +60,7 @@ class VersionUpdateViewController: UIViewController {
         updateButton.layer.borderColor = UIColor.App.highlightPrimary.cgColor
         updateButton.layer.backgroundColor = UIColor.App.highlightPrimary.cgColor
 
-        dismissButton.setTitleColor(UIColor.App.buttonTextPrimary, for: .normal)
+        dismissButton.setTitleColor(UIColor.App.textSecondary, for: .normal)
         dismissButton.layer.borderWidth = 0 
     }
 
