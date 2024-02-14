@@ -6,6 +6,8 @@
 //
 
 import UIKit
+import OptimoveSDK
+import Adjust
 
 class CasualGamblingViewController: UIViewController {
 
@@ -280,6 +282,17 @@ class CasualGamblingViewController: UIViewController {
                 
         if sender.didTapAttributedTextInLabel(label: self.accordionSecondSectionDescriptionLabel2, inRange: link1Range, alignment: .left) {
             if let url = URL(string: "https://sosjoueurs.org/") {
+                
+                // Firebase Analytics
+                AnalyticsClient.sendEvent(event: .sosPlayers)
+                
+                // Optimove
+                Optimove.shared.reportEvent(name: "sos_joueur_click")
+                
+                // Adjust
+                let event = ADJEvent(eventToken: "9t3uav")
+                Adjust.trackEvent(event)
+                
                 UIApplication.shared.open(url)
             }
         }
@@ -299,12 +312,34 @@ class CasualGamblingViewController: UIViewController {
     
     @objc private func didTapLogo1(_ sender: UITapGestureRecognizer) {
         if let url = URL(string: "https://sosjoueurs.org/") {
+            
+            // Firebase Analytics
+            AnalyticsClient.sendEvent(event: .sosPlayers)
+
+            // Optimove
+            Optimove.shared.reportEvent(name: "sos_joueur_click")
+
+            // Adjust
+            let event = ADJEvent(eventToken: "9t3uav")
+            Adjust.trackEvent(event)
+            
             UIApplication.shared.open(url)
         }
     }
     
     @objc private func didTapLogo2(_ sender: UITapGestureRecognizer) {
         if let url = URL(string: "https://www.evalujeu.fr/") {
+            
+            // Firebase Analytics
+            AnalyticsClient.sendEvent(event: .evaluejeu)
+
+            // Optimove
+            Optimove.shared.reportEvent(name: "evalujeu_click")
+
+            // Adjust
+            let event = ADJEvent(eventToken: "43y8ai")
+            Adjust.trackEvent(event)
+            
             UIApplication.shared.open(url)
         }
     }

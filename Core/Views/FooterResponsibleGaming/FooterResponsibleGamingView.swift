@@ -7,6 +7,8 @@
 
 import Foundation
 import UIKit
+import OptimoveSDK
+import Adjust
 
 class FooterResponsibleGamingView: UIView {
 
@@ -192,6 +194,17 @@ class FooterResponsibleGamingView: UIView {
 
     @objc func didTapBaseView() {
         if let url = URL(string: "https://www.joueurs-info-service.fr/") {
+            
+            // Firebase Analytics
+            AnalyticsClient.sendEvent(event: .playersInfo)
+
+            // Optimove
+            Optimove.shared.reportEvent(name: "joueurs_info_service_click")
+
+            // Adjust
+            let event = ADJEvent(eventToken: "piroso")
+            Adjust.trackEvent(event)
+            
             UIApplication.shared.open(url)
         }
     }
@@ -279,6 +292,17 @@ class FooterResponsibleGamingView: UIView {
     
     @objc private func didTapLogo2(_ sender: UITapGestureRecognizer) {
         if let url = URL(string: "https://sosjoueurs.org/") {
+            
+            // Firebase Analytics
+            AnalyticsClient.sendEvent(event: .sosPlayers)
+            
+            // Optimove
+            Optimove.shared.reportEvent(name: "sos_joueur_click")
+            
+            // Adjust
+            let event = ADJEvent(eventToken: "9t3uav")
+            Adjust.trackEvent(event)
+            
             UIApplication.shared.open(url)
         }
     }

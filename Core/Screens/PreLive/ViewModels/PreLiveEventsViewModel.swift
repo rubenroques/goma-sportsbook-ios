@@ -48,7 +48,7 @@ class PreLiveEventsViewModel: NSObject {
         case competitions
     }
 
-    var matchListTypePublisher: CurrentValueSubject<MatchListType, Never> = .init(.popular)
+    var matchListTypePublisher: CurrentValueSubject<MatchListType, Never> = .init(.upcoming)
 
     var matchListType: MatchListType {
         return self.matchListTypePublisher.value
@@ -56,10 +56,10 @@ class PreLiveEventsViewModel: NSObject {
 
     var activeMatchListTypes: [MatchListType] {
         if self.hasTopCompetitions {
-            return [.popular, .upcoming, .topCompetitions, .competitions]
+            return [.upcoming, .popular, .topCompetitions, .competitions]
         }
         else {
-            return [.popular, .upcoming, .competitions]
+            return [.upcoming, .popular, .competitions]
         }
     }
     // ----

@@ -6,6 +6,8 @@
 //
 
 import UIKit
+import OptimoveSDK
+import Adjust
 
 class TipsControlViewController: UIViewController {
 
@@ -255,6 +257,16 @@ class TipsControlViewController: UIViewController {
         
         if sender.didTapAttributedTextInLabel(label: self.accordionThirdSectionDescriptionListLabel, inRange: link1Range, alignment: .left) {
             if let url = URL(string: "https://sosjoueurs.org/") {
+                // Firebase Analytics
+                AnalyticsClient.sendEvent(event: .sosPlayers)
+
+                // Optimove
+                Optimove.shared.reportEvent(name: "sos_joueur_click")
+
+                // Adjust
+                let event = ADJEvent(eventToken: "9t3uav")
+                Adjust.trackEvent(event)
+                
                 UIApplication.shared.open(url)
             }
         }
@@ -280,6 +292,17 @@ class TipsControlViewController: UIViewController {
         }
         else if sender.didTapAttributedTextInLabel(label: self.accordionThirdSectionDescriptionListLabel, inRange: link6Range, alignment: .left) {
             if let url = URL(string: "https://www.joueurs-info-service.fr/") {
+                
+                // Firebase Analytics
+                AnalyticsClient.sendEvent(event: .playersInfo)
+
+                // Optimove
+                Optimove.shared.reportEvent(name: "joueurs_info_service_click")
+
+                // Adjust
+                let event = ADJEvent(eventToken: "piroso")
+                Adjust.trackEvent(event)
+                
                 UIApplication.shared.open(url)
             }
         }
@@ -299,12 +322,34 @@ class TipsControlViewController: UIViewController {
     
     @objc private func didTapLogo1(_ sender: UITapGestureRecognizer) {
         if let url = URL(string: "https://sosjoueurs.org/") {
+            
+            // Firebase Analytics
+            AnalyticsClient.sendEvent(event: .sosPlayers)
+
+            // Optimove
+            Optimove.shared.reportEvent(name: "sos_joueur_click")
+
+            // Adjust
+            let event = ADJEvent(eventToken: "9t3uav")
+            Adjust.trackEvent(event)
+            
             UIApplication.shared.open(url)
         }
     }
     
     @objc private func didTapLogo2(_ sender: UITapGestureRecognizer) {
         if let url = URL(string: "https://www.evalujeu.fr/") {
+            
+            // Firebase Analytics
+            AnalyticsClient.sendEvent(event: .evaluejeu)
+
+            // Optimove
+            Optimove.shared.reportEvent(name: "evalujeu_click")
+
+            // Adjust
+            let event = ADJEvent(eventToken: "43y8ai")
+            Adjust.trackEvent(event)
+            
             UIApplication.shared.open(url)
         }
     }
