@@ -31,6 +31,11 @@ struct AnalyticsClient {
         case promoBannerClicked
         case infoDialogButtonClicked
         case addToBetslip
+        case firstDeposit(value: Double)
+        case purchase(value: Double)
+        case sosPlayers
+        case playersInfo
+        case evaluejeu
     }
 
     static func sendEvent(event: Event) {
@@ -104,6 +109,23 @@ struct AnalyticsClient {
             
         case .addToBetslip:
             eventTypeKey = "add_to_betslip"
+            
+        case .firstDeposit(let value):
+            eventTypeKey = "first_deposit"
+            parameters = ["value": "\(value)"]
+            
+        case .purchase(let value):
+            eventTypeKey = "purchase"
+            parameters = ["value": "\(value)"]
+            
+        case .sosPlayers:
+            eventTypeKey = "sos_joueur_click"
+            
+        case .playersInfo:
+            eventTypeKey = "joueurs_info_service_click"
+
+        case .evaluejeu:
+            eventTypeKey = "evalujeu_click"
         }
 
         Analytics.logEvent(eventTypeKey, parameters: parameters)

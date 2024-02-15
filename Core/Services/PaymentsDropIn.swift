@@ -325,9 +325,10 @@ extension PaymentsDropIn: AdyenSessionDelegate {
 
         print("PaymentsDropIn - ADYEN SESSION FAIL: \(error)")
 
-        if let paymentId = self.paymentId {
-            self.cancelDeposit(paymentId: paymentId)
-        }
+        // Remove cancel deposit
+//        if let paymentId = self.paymentId {
+//            self.cancelDeposit(paymentId: paymentId)
+//        }
 
         self.dropInComponent?.viewController.dismiss(animated: true)
     }
