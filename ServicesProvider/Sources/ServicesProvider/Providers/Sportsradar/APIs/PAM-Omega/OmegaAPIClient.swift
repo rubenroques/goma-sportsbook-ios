@@ -442,6 +442,7 @@ extension OmegaAPIClient: Endpoint {
             var query: [URLQueryItem] = []
             let extraInfo = """
                             {
+                                "device_os": "iOS",
                                 "device_token_ios": "\(deviceIdentifier)",
                                 "device_token_last" : "\(deviceIdentifier)"
                             }

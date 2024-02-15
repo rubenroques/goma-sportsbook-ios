@@ -409,11 +409,11 @@ extension ClientManagedHomeViewTemplateDataSource: HomeViewTemplateDataSource {
         case 3:
             return self.storiesLineViewModel == nil ? 0 : 1
         case 4:
+            return self.shouldShowOwnBetCallToAction ? 1 : 0
+        case 5:
             return self.highlightsVisualImageMatches.count +
             self.highlightsVisualImageOutrights.count +
             self.highlightsBoostedMatches.count
-        case 5:
-            return self.shouldShowOwnBetCallToAction ? 1 : 0
         case 6:
             return !self.topCompetitionsLineCellViewModel.isEmpty ? 1 : 0
         case 7:
@@ -432,7 +432,7 @@ extension ClientManagedHomeViewTemplateDataSource: HomeViewTemplateDataSource {
 
     func title(forSection section: Int) -> String? {
         switch section {
-        case 4:
+        case 5:
             return localized("highlights")
         case 6:
             return localized("top_competitions")
@@ -451,7 +451,7 @@ extension ClientManagedHomeViewTemplateDataSource: HomeViewTemplateDataSource {
     func iconName(forSection section: Int) -> String? {
         // return nil
         switch section {
-        case 4:
+        case 5:
             return "pin_icon"
         case 6:
             return "trophy_icon"
@@ -479,7 +479,7 @@ extension ClientManagedHomeViewTemplateDataSource: HomeViewTemplateDataSource {
 
     func shouldShowTitle(forSection section: Int) -> Bool {
         switch section {
-        case 4:
+        case 5:
             return true
         case 6:
             return !self.topCompetitionsLineCellViewModel.isEmpty
@@ -512,9 +512,9 @@ extension ClientManagedHomeViewTemplateDataSource: HomeViewTemplateDataSource {
         case 3:
             return .promotionalStories
         case 4:
-            return .highlightedMatches
-        case 5:
             return .makeOwnBetCallToAction
+        case 5:
+            return .highlightedMatches
         case 6:
             return .topCompetitionsShortcuts
         case 7:
