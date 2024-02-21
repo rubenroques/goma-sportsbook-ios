@@ -82,7 +82,7 @@ enum OmegaAPIClient {
     
     case updateExtraInfo(placeOfBirth: String?, address2: String?)
 
-    case updateDeviceIdentifier(deviceIdentifier: String)
+    case updateDeviceIdentifier(deviceIdentifier: String, appVersion: String)
     
     case resendVerificationCode(username: String)
     case signupConfirmation(email: String,
@@ -437,11 +437,12 @@ extension OmegaAPIClient: Endpoint {
             query.append(URLQueryItem(name: "extraInfo", value: extraInfo))
             return query
             
-        case .updateDeviceIdentifier(let deviceIdentifier):
+        case .updateDeviceIdentifier(let deviceIdentifier, let appVersion):
             
             var query: [URLQueryItem] = []
             let extraInfo = """
                             {
+                                "device_app_version": "\(appVersion)",
                                 "device_os": "iOS",
                                 "device_token_ios": "\(deviceIdentifier)",
                                 "device_token_last" : "\(deviceIdentifier)"

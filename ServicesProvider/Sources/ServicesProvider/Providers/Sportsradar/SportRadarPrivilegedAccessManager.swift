@@ -287,9 +287,9 @@ class SportRadarPrivilegedAccessManager: PrivilegedAccessManager {
         .eraseToAnyPublisher()
     }
 
-    func updateDeviceIdentifier(deviceIdentifier: String) -> AnyPublisher<BasicResponse, ServiceProviderError> {
+    func updateDeviceIdentifier(deviceIdentifier: String, appVersion: String) -> AnyPublisher<BasicResponse, ServiceProviderError> {
 
-        let endpoint = OmegaAPIClient.updateDeviceIdentifier(deviceIdentifier: deviceIdentifier)
+        let endpoint = OmegaAPIClient.updateDeviceIdentifier(deviceIdentifier: deviceIdentifier, appVersion: appVersion)
         let publisher: AnyPublisher<SportRadarModels.BasicResponse, ServiceProviderError> = self.connector.request(endpoint)
 
         return publisher.flatMap({ basicResponse -> AnyPublisher<BasicResponse, ServiceProviderError> in

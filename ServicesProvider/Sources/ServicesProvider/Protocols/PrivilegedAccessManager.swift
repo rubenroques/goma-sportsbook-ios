@@ -33,7 +33,7 @@ protocol PrivilegedAccessManager {
     func simpleSignUp(form: SimpleSignUpForm) -> AnyPublisher<Bool, ServiceProviderError>
     func signUp(form: SignUpForm) -> AnyPublisher<SignUpResponse, ServiceProviderError>
     func updateExtraInfo(placeOfBirth: String?, address2: String?) -> AnyPublisher<BasicResponse, ServiceProviderError>
-    func updateDeviceIdentifier(deviceIdentifier: String) -> AnyPublisher<BasicResponse, ServiceProviderError>
+    func updateDeviceIdentifier(deviceIdentifier: String, appVersion: String) -> AnyPublisher<BasicResponse, ServiceProviderError>
     
     func getAllCountries() -> AnyPublisher<[Country], ServiceProviderError>
     func getCountries() -> AnyPublisher<[Country], ServiceProviderError>

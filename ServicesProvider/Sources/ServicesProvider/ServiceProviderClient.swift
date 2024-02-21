@@ -668,13 +668,13 @@ extension ServicesProviderClient {
         return privilegedAccessManager.updateExtraInfo(placeOfBirth: placeOfBirth, address2: address2)
     }
     
-    public func updateDeviceIdentifier(deviceIdentifier: String) -> AnyPublisher<BasicResponse, ServiceProviderError> {
+    public func updateDeviceIdentifier(deviceIdentifier: String, appVersion: String) -> AnyPublisher<BasicResponse, ServiceProviderError> {
         guard
             let privilegedAccessManager = self.privilegedAccessManager
         else {
             return Fail(error: ServiceProviderError.privilegedAccessManagerNotFound).eraseToAnyPublisher()
         }
-        return privilegedAccessManager.updateDeviceIdentifier(deviceIdentifier: deviceIdentifier)
+        return privilegedAccessManager.updateDeviceIdentifier(deviceIdentifier: deviceIdentifier, appVersion: appVersion)
     }
 
 

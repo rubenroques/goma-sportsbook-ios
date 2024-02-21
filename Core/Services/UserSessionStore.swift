@@ -339,9 +339,14 @@ extension UserSessionStore {
     
     private func updateDeviceIdentifier() {
         
+        var versionCode = ""
+        if let buildNumber = Bundle.main.buildNumber {
+            versionCode = buildNumber
+        }
+        
         if Env.deviceFirebaseCloudMessagingToken.isNotEmpty {
             Env.servicesProvider
-                .updateDeviceIdentifier(deviceIdentifier: Env.deviceFirebaseCloudMessagingToken)
+                .updateDeviceIdentifier(deviceIdentifier: Env.deviceFirebaseCloudMessagingToken, appVersion: versionCode)
                 .receive(on: DispatchQueue.main)
                 .sink { completion in
                     print("UserSessionStore updateDeviceIdentifier completed: \(completion)")

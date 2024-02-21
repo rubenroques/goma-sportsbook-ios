@@ -465,12 +465,9 @@ extension ClientManagedHomeViewTemplateDataSource: HomeViewTemplateDataSource {
 
         // NOTE: ID's don't match from regular and promoted same sport
         if let promotedSport = self.promotedSports[safe: croppedSection] {
-
             let currentSport = activeSports.filter({
-                //$0.name == promotedSport.name
                 promotedSport.name.contains($0.name)
             }).first
-
             return currentSport?.id
         }
 
@@ -480,7 +477,10 @@ extension ClientManagedHomeViewTemplateDataSource: HomeViewTemplateDataSource {
     func shouldShowTitle(forSection section: Int) -> Bool {
         switch section {
         case 5:
-            return true
+            let highlightsTotal = self.highlightsVisualImageMatches.count +
+            self.highlightsVisualImageOutrights.count +
+            self.highlightsBoostedMatches.count
+            return highlightsTotal > 0
         case 6:
             return !self.topCompetitionsLineCellViewModel.isEmpty
         default:
