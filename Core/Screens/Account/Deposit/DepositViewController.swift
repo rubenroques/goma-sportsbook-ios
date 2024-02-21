@@ -604,7 +604,7 @@ class DepositViewController: UIViewController {
                 name: "first_deposit",
                 parameters: [
                     "user_id": "\(Env.userSessionStore.userProfilePublisher.value?.userIdentifier ?? "")",
-                    "value": "\(self.viewModel.paymentsDropIn.depositAmount)",
+                    "value": self.viewModel.paymentsDropIn.depositAmount,
                     "currency": "\(Env.userSessionStore.userProfilePublisher.value?.currency ?? "€")"
                 ]
             )
@@ -624,7 +624,7 @@ class DepositViewController: UIViewController {
                 name: "purchase",
                 parameters: [
                     "user_id": "\(Env.userSessionStore.userProfilePublisher.value?.userIdentifier ?? "")",
-                    "value": "\(self.viewModel.paymentsDropIn.depositAmount)",
+                    "value": self.viewModel.paymentsDropIn.depositAmount,
                     "currency": "\(Env.userSessionStore.userProfilePublisher.value?.currency ?? "€")",
                     "transaction_id": "\(paymentId ?? "")"
                 ]
