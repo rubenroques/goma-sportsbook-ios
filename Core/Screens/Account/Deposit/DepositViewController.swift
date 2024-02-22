@@ -596,6 +596,8 @@ class DepositViewController: UIViewController {
         }
         
         self.shouldRefreshUserWallet?()
+        
+        let currency = CurrencyType(rawValue: Env.userSessionStore.userProfilePublisher.value?.currency ?? "")
 
         // Optimove success deposit
         if self.viewModel.isFirstDeposit {
@@ -605,7 +607,7 @@ class DepositViewController: UIViewController {
                 parameters: [
                     "user_id": "\(Env.userSessionStore.userProfilePublisher.value?.userIdentifier ?? "")",
                     "value": self.viewModel.paymentsDropIn.depositAmount,
-                    "currency": "\(Env.userSessionStore.userProfilePublisher.value?.currency ?? "€")"
+                    "currency": "\(currency?.code ?? "EUR")"
                 ]
             )
             
@@ -625,7 +627,7 @@ class DepositViewController: UIViewController {
                 parameters: [
                     "user_id": "\(Env.userSessionStore.userProfilePublisher.value?.userIdentifier ?? "")",
                     "value": self.viewModel.paymentsDropIn.depositAmount,
-                    "currency": "\(Env.userSessionStore.userProfilePublisher.value?.currency ?? "€")",
+                    "currency": "\(currency?.code ?? "EUR")",
                     "transaction_id": "\(paymentId ?? "")"
                 ]
             )
