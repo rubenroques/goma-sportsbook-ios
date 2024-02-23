@@ -11299,16 +11299,16 @@
 		A9E7C68A27B526C500F784C9 /* MyFavorites */ = {
 			isa = PBXGroup;
 			children = (
+				A91A643E2A7801DF002A6984 /* MyFavoritesRootViewController.swift */,
 				A9E7C68B27B526EA00F784C9 /* MyFavoritesViewController.swift */,
 				A9E7C69627B581BD00F784C9 /* Cells */,
 				A9E7C69227B5636800F784C9 /* DataSources */,
 				A9E7C68E27B5404400F784C9 /* ViewModels */,
-				A91A643E2A7801DF002A6984 /* MyFavoritesRootViewController.swift */,
-				A91A64462A780E6A002A6984 /* MyCompetitionsViewController.swift */,
-				A91A644E2A7965D9002A6984 /* MyGamesViewController.swift */,
-				A91A64562A7A5CB3002A6984 /* MyGamesRootViewController.swift */,
-				A9C04C0A2A7BB0C90025A6DA /* FilterFavoritesViewController.swift */,
 				A9527C132A97A2F4006F4E37 /* MyCompetitionsRootViewController.swift */,
+				A91A64462A780E6A002A6984 /* MyCompetitionsViewController.swift */,
+				A91A64562A7A5CB3002A6984 /* MyGamesRootViewController.swift */,
+				A91A644E2A7965D9002A6984 /* MyGamesViewController.swift */,
+				A9C04C0A2A7BB0C90025A6DA /* FilterFavoritesViewController.swift */,
 			);
 			path = MyFavorites;
 			sourceTree = "<group>";

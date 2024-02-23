@@ -56,16 +56,17 @@ class MyGamesViewModel {
         self.myGamesTypeList = myGamesTypeList
 
         self.filterApplied = myGamesFilterType
-
+  
         Env.favoritesManager.favoriteMatchesIdPublisher
             .receive(on: DispatchQueue.main)
             .sink(receiveValue: { [weak self] favoriteEvents in
                 if Env.userSessionStore.isUserLogged() {
+                    
                     if self?.initialLoading == true {
-                     self?.isLoadingPublisher.send(true)
+                        self?.isLoadingPublisher.send(true)
                         self?.initialLoading = false
                     }
-
+                    
                     if favoriteEvents.isNotEmpty {
                         self?.favoriteEventsIds = favoriteEvents
                         self?.fetchFavoriteMatches()
@@ -73,7 +74,7 @@ class MyGamesViewModel {
                     else {
                         self?.clearData()
                     }
-
+                    
                 }
                 else {
                     self?.isLoadingPublisher.send(false)
