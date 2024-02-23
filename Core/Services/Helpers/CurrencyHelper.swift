@@ -92,4 +92,28 @@ enum CurrencyType: String {
     case eur = "€"
     case usd = "$"
     case gbp = "£"
+    
+    init?(rawValue: String) {
+        switch rawValue {
+        case "€":
+            self = .eur
+        case "$":
+            self = .usd
+        case "£":
+            self = .gbp
+        default:
+            self = .eur
+        }
+    }
+    
+    var code: String {
+        switch self {
+        case .eur:
+            return "EUR"
+        case .usd:
+            return "USD"
+        case .gbp:
+            return "GBP"
+        }
+    }
 }

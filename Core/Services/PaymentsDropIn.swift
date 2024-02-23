@@ -312,12 +312,12 @@ extension PaymentsDropIn: AdyenSessionDelegate {
 
         if result.resultCode == .refused {
             self.dropInComponent?.viewController.dismiss(animated: true)
-            self.showPaymentStatus?(.refused, nil)
+            self.showPaymentStatus?(.refused, self.paymentId)
         }
 
         if result.resultCode == .authorised {
             self.dropInComponent?.viewController.dismiss(animated: true)
-            self.showPaymentStatus?(.authorised, nil)
+            self.showPaymentStatus?(.authorised, self.paymentId)
         }
     }
 
