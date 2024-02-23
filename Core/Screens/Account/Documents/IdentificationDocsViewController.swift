@@ -542,6 +542,11 @@ class IdentificationDocsViewController: UIViewController {
                     self.canAddIdentificationDocs = true
                     self.isProofOfAddressDisabled = true
                 }
+                // If identity doc is not approved and retry is set to false
+                else if !canRetry && !hasApprovedIdentityDocuments {
+                    self.canAddIdentificationDocs = false
+                    self.isProofOfAddressDisabled = true
+                }
                 else {
                     self.canAddIdentificationDocs = false
                     self.isProofOfAddressDisabled = false
