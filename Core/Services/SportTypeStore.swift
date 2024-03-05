@@ -35,6 +35,7 @@ class SportTypeStore {
     private var liveSportsCountCurrentValueSubject: CurrentValueSubject<[String: LiveSport], ServiceProviderError> = .init([:])
     
     private var activeSportsCurrentValueSubject: CurrentValueSubject<LoadableContent<[Sport]>, ServiceProviderError> = .init(.idle)
+    
     var activeSportsPublisher: AnyPublisher<LoadableContent<[Sport]>, ServiceProviderError> {
         Publishers.CombineLatest(self.activeSportsCurrentValueSubject, self.liveSportsCountCurrentValueSubject)
             .map { sportsList, liveCountDict -> LoadableContent<[Sport]> in

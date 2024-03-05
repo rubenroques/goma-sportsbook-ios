@@ -49,6 +49,8 @@ extension Endpoint {
             }
         }
 
+        print("API Request:", request.cURL(pretty: true), "\n==========================================")
+
         return request
     }
 }

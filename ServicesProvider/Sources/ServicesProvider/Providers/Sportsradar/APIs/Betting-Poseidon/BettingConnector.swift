@@ -61,9 +61,7 @@ class BettingConnector: Connector {
             let error = ServiceProviderError.invalidRequestFormat
             return Fail<T, ServiceProviderError>(error: error).eraseToAnyPublisher()
         }
-        
-        print("Betting URL Request: \n", request.cURL(pretty: true), "\n==========================================")
-        
+                
         return self.session.dataTaskPublisher(for: request)
 //            .handleEvents(receiveCompletion: { completion in
 //                switch completion {
