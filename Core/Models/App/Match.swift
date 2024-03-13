@@ -378,7 +378,7 @@ extension Match {
         ]
 
         let markets = [Market(id: "", typeId: "", name: "3 Away", nameDigit1: nil, nameDigit2: nil, nameDigit3: nil, eventPartId: nil, bettingTypeId: nil,
-                              outcomes: outcomes)]
+                              outcomes: outcomes, outcomesOrder: .none)]
 
         return [
             Match(id: "A1", competitionId: "PL1", competitionName: "Primeira Liga",

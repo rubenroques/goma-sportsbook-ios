@@ -59,6 +59,14 @@ struct Participant: Equatable {
 }
 
 struct Market: Equatable {
+    
+    enum OutcomesOrder: Codable, Hashable {
+        case none
+        case odds // by odd
+        case name // by name
+        case setup // The original order that the server sends us
+    }
+    
     var id: String
     var typeId: String
     var name: String
@@ -85,6 +93,8 @@ struct Market: Equatable {
     
     var statsTypeId: String?
 
+    var outcomesOrder: OutcomesOrder
+    
     init(id: String,
          typeId: String,
          name: String,
@@ -103,7 +113,8 @@ struct Market: Equatable {
          homeParticipant: String? = nil,
          awayParticipant: String? = nil,
          eventId: String? = nil,
-         statsTypeId: String? = nil) {
+         statsTypeId: String? = nil,
+         outcomesOrder: OutcomesOrder) {
         
         self.id = id
         self.typeId = typeId
@@ -124,6 +135,7 @@ struct Market: Equatable {
         self.awayParticipant = awayParticipant
         self.eventId = eventId
         self.statsTypeId = statsTypeId
+        self.outcomesOrder = outcomesOrder
     }
 }
 

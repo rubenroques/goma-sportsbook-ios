@@ -187,6 +187,13 @@ public class Event: Codable, Equatable {
 
 public class Market: Codable, Equatable {
     
+    public enum OutcomesOrder: Codable, Hashable {
+        case none
+        case odds // by odd
+        case name // by name
+        case setup // The original order that the server sends us
+    }
+    
     public var id: String
     public var name: String
     public var outcomes: [Outcome]
@@ -201,6 +208,7 @@ public class Market: Codable, Equatable {
     public var awayParticipant: String?
     public var eventId: String?
     public var marketDigitLine: String?
+    public var outcomesOrder: OutcomesOrder
     
     enum CodingKeys: String, CodingKey {
         case id = "id"
@@ -217,6 +225,7 @@ public class Market: Codable, Equatable {
         case awayParticipant = "participantname_away"
         case eventId = "idfoevent"
         case marketDigitLine = "marketDigitLine"
+        case outcomesOrder = "outcomesOrder"
     }
 
     public init(id: String,
@@ -232,7 +241,8 @@ public class Market: Codable, Equatable {
                 homeParticipant: String?,
                 awayParticipant: String?,
                 eventId: String?,
-                marketDigitLine: String?) {
+                marketDigitLine: String?,
+                outcomesOrder: OutcomesOrder = .none) {
 
         self.id = id
         self.name = name
@@ -248,6 +258,7 @@ public class Market: Codable, Equatable {
         self.awayParticipant = awayParticipant
         self.eventId = eventId
         self.marketDigitLine = marketDigitLine
+        self.outcomesOrder = outcomesOrder
     }
 
     required public init(from decoder: Decoder) throws {
@@ -262,23 +273,25 @@ public class Market: Codable, Equatable {
         self.eventMarketCount = try container.decodeIfPresent(Int.self, forKey: .eventMarketCount)
         self.isTradable = (try? container.decode(Bool.self, forKey: .isTradable)) ?? true
         self.eventId = try container.decodeIfPresent(String.self, forKey: .eventId)
+        self.outcomesOrder = try container.decode(OutcomesOrder.self, forKey: .id)
     }
 
     public static func == (lhs: Market, rhs: Market) -> Bool {
         // Compare all properties for equality
         return lhs.id == rhs.id &&
-               lhs.name == rhs.name &&
-               lhs.outcomes == rhs.outcomes &&
-               lhs.marketTypeId == rhs.marketTypeId &&
-               lhs.eventMarketTypeId == rhs.eventMarketTypeId &&
-               lhs.eventName == rhs.eventName &&
-               lhs.isMainOutright == rhs.isMainOutright &&
-               lhs.eventMarketCount == rhs.eventMarketCount &&
-               lhs.isTradable == rhs.isTradable &&
-               lhs.startDate == rhs.startDate &&
-               lhs.homeParticipant == rhs.homeParticipant &&
-               lhs.awayParticipant == rhs.awayParticipant &&
-               lhs.eventId == rhs.eventId
+        lhs.name == rhs.name &&
+        lhs.outcomes == rhs.outcomes &&
+        lhs.marketTypeId == rhs.marketTypeId &&
+        lhs.eventMarketTypeId == rhs.eventMarketTypeId &&
+        lhs.eventName == rhs.eventName &&
+        lhs.isMainOutright == rhs.isMainOutright &&
+        lhs.eventMarketCount == rhs.eventMarketCount &&
+        lhs.isTradable == rhs.isTradable &&
+        lhs.startDate == rhs.startDate &&
+        lhs.homeParticipant == rhs.homeParticipant &&
+        lhs.awayParticipant == rhs.awayParticipant &&
+        lhs.eventId == rhs.eventId &&
+        lhs.outcomesOrder == rhs.outcomesOrder
     }
 }
 

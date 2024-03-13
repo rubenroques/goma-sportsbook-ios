@@ -97,6 +97,19 @@ extension ServiceProviderModelMapper {
     }
     
     static func market(fromServiceProviderMarket market: ServicesProvider.Market) -> Market {
+        
+        var outcomesOrder: Market.OutcomesOrder
+        switch market.outcomesOrder {
+        case .name:
+            outcomesOrder = .name
+        case .odds:
+            outcomesOrder = .odds
+        case .setup:
+            outcomesOrder = .setup
+        case.none:
+            outcomesOrder = .none
+        }
+        
         return Market(id: market.id,
                       typeId: market.name,
                       name: market.name,
@@ -114,7 +127,8 @@ extension ServiceProviderModelMapper {
                       startDate: market.startDate,
                       homeParticipant: market.homeParticipant,
                       awayParticipant: market.awayParticipant,
-                      eventId: market.eventId)
+                      eventId: market.eventId,
+                      outcomesOrder: outcomesOrder)
     }
 
     static func optionalMarkets(fromServiceProviderMarkets markets: [ServicesProvider.Market]?) -> [Market]? {

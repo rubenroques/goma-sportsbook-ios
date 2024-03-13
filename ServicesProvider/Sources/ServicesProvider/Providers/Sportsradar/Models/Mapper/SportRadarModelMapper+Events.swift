@@ -86,6 +86,19 @@ extension SportRadarModelMapper {
     
     static func market(fromInternalMarket internalMarket: SportRadarModels.Market) -> Market {
         let outcomes = internalMarket.outcomes.map(Self.outcome(fromInternalOutcome:))
+        
+        var outcomesOrder: Market.OutcomesOrder
+        switch internalMarket.outcomesOrder {
+        case .name:
+            outcomesOrder = .name
+        case .odds:
+            outcomesOrder = .odds
+        case .setup:
+            outcomesOrder = .setup
+        case.none:
+            outcomesOrder = .none
+        }
+    
         return Market(id: internalMarket.id,
                       name: internalMarket.name,
                       outcomes: outcomes,
@@ -94,12 +107,13 @@ extension SportRadarModelMapper {
                       eventName: internalMarket.eventName,
                       isMainOutright: false,
                       eventMarketCount: internalMarket.eventMarketCount,
-                      isTradable: internalMarket.isTradable ?? true,
+                      isTradable: internalMarket.isTradable,
                       startDate: internalMarket.startDate,
                       homeParticipant: internalMarket.homeParticipant,
                       awayParticipant: internalMarket.awayParticipant,
                       eventId: internalMarket.eventId,
-                      marketDigitLine: internalMarket.marketDigitLine)
+                      marketDigitLine: internalMarket.marketDigitLine,
+                      outcomesOrder: outcomesOrder)
     }
 
     static func outcome(fromInternalOutcome internalOutcome: SportRadarModels.Outcome) -> Outcome {

@@ -403,6 +403,13 @@ extension SportRadarModels {
     
     struct Market: Codable {
         
+        enum OutcomesOrder: Codable {
+            case none
+            case odds // by odd
+            case name // by name
+            case setup // The original order that the server sends us
+        }
+        
         var id: String
         var name: String
         var outcomes: [Outcome]
@@ -419,6 +426,7 @@ extension SportRadarModels {
 
         var isOverUnder: Bool
         var marketDigitLine: String?
+        var outcomesOrder: OutcomesOrder
         
         enum CodingKeys: String, CodingKey {
             case id = "idfomarket"
@@ -436,9 +444,10 @@ extension SportRadarModels {
             case eventId = "idfoevent"
             case isOverUnder = "isunderover"
             case marketDigitLine = "line"
+            case outcomesOrder = "idfoselectionorder"
         }
 
-        init(id: String, name: String, outcomes: [Outcome], marketTypeId: String? = nil, eventMarketTypeId: String? = nil, eventName: String? = nil, isMainOutright: Bool? = nil, eventMarketCount: Int? = nil, isTradable: Bool, startDate: String? = nil, homeParticipant: String? = nil, awayParticipant: String? = nil, eventId: String? = nil, isOverUnder: Bool = false, marketDigitLine: String?) {
+        init(id: String, name: String, outcomes: [Outcome], marketTypeId: String? = nil, eventMarketTypeId: String? = nil, eventName: String? = nil, isMainOutright: Bool? = nil, eventMarketCount: Int? = nil, isTradable: Bool, startDate: String? = nil, homeParticipant: String? = nil, awayParticipant: String? = nil, eventId: String? = nil, isOverUnder: Bool = false, marketDigitLine: String?, outcomesOrder: OutcomesOrder) {
             self.id = id
             self.name = name
             self.outcomes = outcomes
@@ -454,6 +463,7 @@ extension SportRadarModels {
             self.eventId = eventId
             self.isOverUnder = isOverUnder
             self.marketDigitLine = marketDigitLine
+            self.outcomesOrder = outcomesOrder
         }
 
         init(from decoder: Decoder) throws {
@@ -480,6 +490,23 @@ extension SportRadarModels {
                 self.marketDigitLine = String(marketDigitLineDouble)
             }
             
+            
+            self.outcomesOrder = .none
+            if let outcomesOrderString = (try container.decodeIfPresent(String.self, forKey: .outcomesOrder)) {
+                self.isOverUnder = false
+                
+                switch outcomesOrderString.lowercased() {
+                case "odds":
+                    self.outcomesOrder = .odds
+                case "name":
+                    self.outcomesOrder = .name
+                case "setup":
+                    self.outcomesOrder = .setup
+                default:
+                    self.outcomesOrder = .none
+                }
+            }
+            
             self.isOverUnder = (try container.decodeIfPresent(Bool.self, forKey: .isOverUnder)) ?? false
             if self.isOverUnder {
                 for index in self.outcomes.indices {
@@ -493,11 +520,8 @@ extension SportRadarModels {
                 self.outcomes = self.outcomes.reversed()
             }
             
-//            #if DEBUG
-//            self.name = self.id + " " + self.name
-//            #endif
-
         }
+        
         
     }
     

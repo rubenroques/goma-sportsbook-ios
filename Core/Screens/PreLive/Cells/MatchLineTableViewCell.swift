@@ -104,10 +104,7 @@ class MatchLineTableCellViewModel {
                     return false
                 }) {
                     for secundaryMarket in secundaryMarketsForSport.markets {
-                        print("secundaryMarket: ", secundaryMarket)
-                        
                         if var line = secundaryMarket.line {
-                            
                             // We have to make sure that when we get -1, 1, etc, the string to compare must be like '-1.0', '1.0' to found correct market
                             if let lineInt = Int(line) {
                                 line = "\(Double(lineInt))"
