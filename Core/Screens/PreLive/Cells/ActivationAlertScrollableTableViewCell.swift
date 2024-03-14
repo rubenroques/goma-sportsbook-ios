@@ -79,14 +79,19 @@ extension ActivationAlertScrollableTableViewCell: UICollectionViewDelegate, UICo
         else {
             fatalError()
         }
-        if let title = alertDataArray[safe: indexPath.row]?.title, let description = alertDataArray[safe: indexPath.row]?.description, let linkLabel = alertDataArray[safe: indexPath.row]?.linkLabel {
+        if let title = alertDataArray[safe: indexPath.row]?.title, 
+            let description = alertDataArray[safe: indexPath.row]?.description,
+            let linkLabel = alertDataArray[safe: indexPath.row]?.linkLabel,
+           let alertAction = self.alertDataArray[safe: indexPath.row]?.alertType {
+            
             cell.setText(title: title, info: description, linkText: linkLabel)
-            cell.linkLabelAction = {
-                if let alertAction = self.alertDataArray[safe: indexPath.row]?.alertType {
-                    self.activationAlertCollectionViewCellLinkLabelAction?(alertAction)
-                }
-
+            
+            cell.configure(alertType: alertAction)
+            
+            cell.linkLabelAction = { [weak self] in
+                self?.activationAlertCollectionViewCellLinkLabelAction?(alertAction)
             }
+
         }
 
         return cell

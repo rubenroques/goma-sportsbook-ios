@@ -311,6 +311,11 @@ enum KnowYourCustomerStatus: String, Codable {
     }
 }
 
+enum LockedStatus: String, Codable {
+    case locked
+    case notLocked
+}
+
 struct UserProfile: Codable {
     
     var userIdentifier: String
@@ -350,6 +355,9 @@ struct UserProfile: Codable {
     var isRegistrationCompleted: Bool
 
     var kycStatus: KnowYourCustomerStatus
+    var lockedStatus: LockedStatus
+    var hasMadeDeposit: Bool
+    var kycExpire: String?
 
     var currency: String?
     
@@ -358,7 +366,7 @@ struct UserProfile: Codable {
          address: String?, province: String?, city: String?, postalCode: String?, birthDepartment: String?, streetNumber: String?,
          phoneNumber: String?, mobilePhone: String?, mobileCountryCode: String?, mobileLocalNumber: String?, avatarName: String?,
          godfatherCode: String?, placeOfBirth: String?, additionalStreetLine: String?, isEmailVerified: Bool,
-         isRegistrationCompleted: Bool, kycStatus: KnowYourCustomerStatus, currency: String?) {
+         isRegistrationCompleted: Bool, kycStatus: KnowYourCustomerStatus, lockedStatus: LockedStatus, hasMadeDeposit: Bool, kycExpire: String?, currency: String?) {
 
         self.userIdentifier = userIdentifier
         self.sessionKey = sessionKey
@@ -391,6 +399,9 @@ struct UserProfile: Codable {
         self.isEmailVerified = isEmailVerified
         self.isRegistrationCompleted = isRegistrationCompleted
         self.kycStatus = kycStatus
+        self.lockedStatus = lockedStatus
+        self.hasMadeDeposit = hasMadeDeposit
+        self.kycExpire = kycExpire
         self.currency = currency
     }
     

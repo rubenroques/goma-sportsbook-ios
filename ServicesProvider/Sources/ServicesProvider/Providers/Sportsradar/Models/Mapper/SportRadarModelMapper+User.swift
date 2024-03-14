@@ -9,11 +9,13 @@ import Foundation
 
 extension SportRadarModelMapper {
 
-    static func userProfile(fromPlayerInfoResponse playerInfoResponse: SportRadarModels.PlayerInfoResponse) -> UserProfile? {
+    static func userProfile(fromPlayerInfoResponse playerInfoResponse: SportRadarModels.PlayerInfoResponse, withKycExpire kycExpire: String? = nil) -> UserProfile? {
 
         let userRegistrationStatus = UserRegistrationStatus(fromStringKey: playerInfoResponse.registrationStatus ?? "")
         let emailVerificationStatus = EmailVerificationStatus(fromStringKey:  playerInfoResponse.emailVerificationStatus)
         let knowYourCustomerStatus = KnowYourCustomerStatus(fromStringKey: playerInfoResponse.kycStatus ?? "")
+        let lockedStatus = LockedStatus(fromStringKey: playerInfoResponse.lockedStatus ?? "")
+        let hasMadeDeposit = playerInfoResponse.madeDeposit ?? false
 
         var avatarName: String?
         var godfatherCode: String?
@@ -73,6 +75,9 @@ extension SportRadarModelMapper {
                            emailVerificationStatus: emailVerificationStatus,
                            userRegistrationStatus: userRegistrationStatus,
                            kycStatus: knowYourCustomerStatus,
+                           lockedStatus: lockedStatus,
+                           hasMadeDeposit: hasMadeDeposit,
+                           kycExpiryDate: kycExpire,
                            currency: currency)
 
     }
@@ -587,6 +592,12 @@ extension SportRadarModelMapper {
 
             return ApplicantDataResponse(externalUserId: internalApplicantDataResponse.externalUserId, info: mappedInfo, reviewData: mappedReviewData, description: internalApplicantDataResponse.description)
         }
+        else if let reviewData = internalApplicantDataResponse.reviewData {
+            
+            let mappedReviewData = Self.applicantReviewData(fromInternalApplicantReviewData: reviewData)
+
+            return ApplicantDataResponse(externalUserId: internalApplicantDataResponse.externalUserId, info: nil, reviewData: mappedReviewData, description: internalApplicantDataResponse.description)
+        }
 
         return ApplicantDataResponse(externalUserId: internalApplicantDataResponse.externalUserId, info: nil, reviewData: nil, description: internalApplicantDataResponse.description)
     }
@@ -634,6 +645,33 @@ extension SportRadarModelMapper {
                                      moderationComment: internalApplicantReviewResult.moderationComment)
     }
 
+    static func referralResponse(fromInternalReferralResponse internalReferralResponse: SportRadarModels.ReferralResponse) -> ReferralResponse {
+        
+        let referralLinks = internalReferralResponse.referralLinks.map( {
+            Self.referralLink(fromInternalReferralLink: $0)
+        })
+        
+        return ReferralResponse(status: internalReferralResponse.status, referralLinks: referralLinks)
+    }
+    
+    static func referralLink(fromInternalReferralLink internalReferralLin: SportRadarModels.ReferralLink) -> ReferralLink {
+        
+        return ReferralLink(code: internalReferralLin.code, link: internalReferralLin.link)
+    }
+    
+    static func refereesResponse(fromInternalRefereesResponse internalRefereesResponse: SportRadarModels.RefereesResponse) -> RefereesResponse {
+        
+        let referees = internalRefereesResponse.referees.map( {
+            Self.referee(fromInternalReferee: $0)
+        })
+        
+        return RefereesResponse(status: internalRefereesResponse.status, referees: referees)
+    }
+    
+    static func referee(fromInternalReferee internalReferee: SportRadarModels.Referee) -> Referee {
+        
+        return Referee(id: internalReferee.id, username: internalReferee.username, registeredAt: internalReferee.registeredAt, kycStatus: internalReferee.kycStatus, depositPassed: internalReferee.depositPassed)
+    }
 }
 
 private extension UserRegistrationStatus {
@@ -671,6 +709,19 @@ private extension KnowYourCustomerStatus {
             self = .passConditional
         default:
             self = .request
+        }
+    }
+}
+
+private extension LockedStatus {
+    init(fromStringKey key: String) {
+        switch key.uppercased() {
+        case "NOT_LOCKED":
+            self = .notLocked
+        case "LOCKED":
+            self = .notLocked
+        default:
+            self = .notLocked
         }
     }
 }

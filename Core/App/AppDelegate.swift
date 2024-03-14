@@ -205,6 +205,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate, MessagingDelegate {
             }
 
             let urlSections = url.pathComponents
+            let urlComponents = URLComponents(url: url, resolvingAgainstBaseURL: false)
             
             if (urlSections.contains("competitions") || urlSections.contains("live")) && urlSections.count > 6 {
                 if let gameDetailId = urlSections.last {
@@ -243,8 +244,15 @@ class AppDelegate: UIResponder, UIApplicationDelegate, MessagingDelegate {
                 self.openSharedRoute(Route.promotions, onApplication: application)
             }
             // Deposit does not exists in an url section
-            else if url.absoluteString.contains("deposit"){
+            else if url.absoluteString.contains("deposit") {
                 self.openSharedRoute(Route.deposit, onApplication: application)
+            }
+            else if url.absoluteString.contains("register") {
+                if let code = urlComponents?.queryItems?.first(where: {
+                    $0.name == "referralCode"
+                })?.value {
+                    self.openSharedRoute(Route.referral(code: code), onApplication: application)
+                }
             }
         }
         return true

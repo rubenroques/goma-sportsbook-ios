@@ -1467,6 +1467,7 @@
 "referral_bonus_won" = "Tu as touché un bonus de 20€ pour ce filleul";
 "referral_account_pending" = "Pour toucher ton bonus, ton ami doit valider son compte";
 "referral_deposit_pending" = "Pour toucher ton bonus, ton ami doit effectuer un dépôt";
+"referral_bonus_pending" = "Pour toucher ton bonus, ton ami doit valider son compte et effectuer un dépôt";
 
 "account_validated" = "Compte validé";
 "account_not_validated" = "Compte non validé";
@@ -1666,6 +1667,12 @@ Après cette durée, vous pouvez demander la levée de cette interdiction.
 Vous serez alors inscrit dans un fichier spécifique, qui est transmis aux différents organismes.
 
 Pour le faire, il faut s’adresser à l’Autorité Nationale des Jeux (ANJ).";
+
+"no_referrals" = "Pas encore de filleuls.";
+"no_godfather" = "Pas de parrain.";
+"at_" = "à";
+
+"referral_no_friends" = "Toujours pas de filleuls ? Partagez votre code et recevez des bonus.";
 
 /* Localizable.strings */
 "AF" = "Afghanistan";

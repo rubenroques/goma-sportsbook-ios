@@ -1403,6 +1403,7 @@
 "referral_bonus_won" = "You received a €20 bonus for this referral";
 "referral_account_pending" = "To receive your bonus, your friend must validate his account";
 "referral_deposit_pending" = "To receive your bonus, your friend must make a deposit";
+"referral_bonus_pending" = "To receive your bonus, your friend must validate his account and make a deposit";
 
 "account_validated" = "Account validated";
 "account_not_validated" = "Compte non validé";
@@ -1603,6 +1604,13 @@ Après cette durée, vous pouvez demander la levée de cette interdiction.
 Vous serez alors inscrit dans un fichier spécifique, qui est transmis aux différents organismes.
 
 Pour le faire, il faut s’adresser à l’Autorité Nationale des Jeux (ANJ).";
+
+"no_referrals" = "No referrals yet.";
+"no_godfather" = "No godfather.";
+"at_" = "at";
+
+"referral_no_friends" = "Still no referrals? Share your code and receive bonuses.";
+
 /* Localizable.strings */
 "AF" = "Afghanistan";
 "AX" = "Aland Islands";

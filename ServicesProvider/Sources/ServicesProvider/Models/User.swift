@@ -37,6 +37,11 @@ public enum KnowYourCustomerStatus: String, Codable {
     case pass
 }
 
+public enum LockedStatus: String, Codable {
+    case locked
+    case notLocked
+}
+
 public struct UserOverview: Codable {
     
     public let sessionKey: String
@@ -107,6 +112,9 @@ public struct UserProfile: Codable {
     public let emailVerificationStatus: EmailVerificationStatus
     public let userRegistrationStatus: UserRegistrationStatus
     public let kycStatus: KnowYourCustomerStatus
+    public let lockedStatus: LockedStatus
+    public let hasMadeDeposit: Bool
+    public let kycExpiryDate: String?
 
     public let currency: String?
     
@@ -138,6 +146,9 @@ public struct UserProfile: Codable {
                 emailVerificationStatus: EmailVerificationStatus,
                 userRegistrationStatus: UserRegistrationStatus,
                 kycStatus: KnowYourCustomerStatus,
+                lockedStatus: LockedStatus,
+                hasMadeDeposit: Bool,
+                kycExpiryDate: String?,
                 currency: String?) {
         
         self.userIdentifier = userIdentifier
@@ -170,6 +181,9 @@ public struct UserProfile: Codable {
         self.emailVerificationStatus = emailVerificationStatus
         self.userRegistrationStatus = userRegistrationStatus
         self.kycStatus = kycStatus
+        self.lockedStatus = lockedStatus
+        self.hasMadeDeposit = hasMadeDeposit
+        self.kycExpiryDate = kycExpiryDate
         self.currency = currency
     }
 

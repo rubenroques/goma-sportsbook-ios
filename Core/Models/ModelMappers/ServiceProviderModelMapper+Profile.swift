@@ -36,6 +36,16 @@ extension ServiceProviderModelMapper {
         case .pass: localKYCStatus = .pass
         case .passConditional: localKYCStatus = .passConditional
         }
+        
+        var localLockedStatus = LockedStatus.notLocked
+        switch serviceProviderProfile.lockedStatus {
+        case .locked:
+            localLockedStatus = .locked
+        case .notLocked:
+            localLockedStatus = .notLocked
+        }
+        
+        var hasMadeDeposit = serviceProviderProfile.hasMadeDeposit
 
         return UserProfile(userIdentifier: serviceProviderProfile.userIdentifier,
                            sessionKey: serviceProviderProfile.sessionKey,
@@ -67,6 +77,9 @@ extension ServiceProviderModelMapper {
                            isEmailVerified: serviceProviderProfile.isEmailVerified,
                            isRegistrationCompleted: serviceProviderProfile.isRegistrationCompleted,
                            kycStatus: localKYCStatus,
+                           lockedStatus: localLockedStatus,
+                           hasMadeDeposit: hasMadeDeposit,
+                           kycExpire: serviceProviderProfile.kycExpiryDate,
                            currency: serviceProviderProfile.currency)
     }
     

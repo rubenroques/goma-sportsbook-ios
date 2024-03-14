@@ -251,38 +251,42 @@ class IdentificationDocsViewController: UIViewController {
             .sink(receiveValue: { [weak self] isProcessed in
 
                 if isProcessed {
-
-                        if let identificationDocuments = self?.viewModel.identificationDocuments {
-
-                            var hasUploadedDocuments = false
-
-                            for identificationDocument in identificationDocuments {
-                                if identificationDocument.uploadedFiles.isNotEmpty {
-                                    hasUploadedDocuments = true
-                                    break
-                                }
-                            }
-
-                            self?.identificationSubtitleLabel.isHidden = hasUploadedDocuments
-                        }
-
-                        if let proofAddressDocuments = self?.viewModel.proofAddressDocuments {
-
-                            var hasUploadedDocuments = false
-
-                            if let proofAddressDocument = proofAddressDocuments.first,
-                               proofAddressDocument.uploadedFiles.isNotEmpty {
+                    
+                    if let identificationDocuments = self?.viewModel.identificationDocuments {
+                        
+                        var hasUploadedDocuments = false
+                        
+                        for identificationDocument in identificationDocuments {
+                            if identificationDocument.uploadedFiles.isNotEmpty {
                                 hasUploadedDocuments = true
+                                break
                             }
-
-                            self?.proofAddressSubtitleLabel.isHidden = hasUploadedDocuments
-
                         }
-
-                        if let documents = self?.viewModel.documents {
-                            self?.setupDocumentStateViews(documentsInfo: documents)
-
+                        
+                        self?.identificationSubtitleLabel.isHidden = hasUploadedDocuments
+                    }
+                    
+                    if let proofAddressDocuments = self?.viewModel.proofAddressDocuments {
+                        
+                        var hasUploadedDocuments = false
+                        
+                        if let proofAddressDocument = proofAddressDocuments.first,
+                           proofAddressDocument.uploadedFiles.isNotEmpty {
+                            hasUploadedDocuments = true
                         }
+                        
+                        self?.proofAddressSubtitleLabel.isHidden = hasUploadedDocuments
+                        
+                    }
+                    
+                    if let documents = self?.viewModel.documents {
+                        self?.setupDocumentStateViews(documentsInfo: documents)
+                        
+                    }
+                    
+                    if viewModel.hasSanction {
+                        // TODO DISABLE IDENTITY SECTION
+                    }
                 }
             })
             .store(in: &cancellables)

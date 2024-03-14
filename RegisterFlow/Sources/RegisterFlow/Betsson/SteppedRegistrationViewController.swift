@@ -91,6 +91,8 @@ public class SteppedRegistrationViewModel {
     var showRegisterErrors: CurrentValueSubject<[RegisterError]?, Never> = .init(nil)
 
     var confirmationCodeFilled: String?
+    
+    public var hasReferralCode: Bool = false
 
     private var cancellables = Set<AnyCancellable>()
 
@@ -481,10 +483,16 @@ public class SteppedRegistrationViewController: UIViewController {
             let registerStepView = RegisterStepView(viewModel: registerStepViewModel)
 
             for formStep in registerStep.forms {
+                var hasReferralCode: Bool? = nil
+                
+                if formStep == .promoCodes {
+                    hasReferralCode = self.viewModel.hasReferralCode
+                }
+                
                 let formStepView = FormStepViewFactory.formStepView(forFormStep: formStep,
                                                                     serviceProvider: self.viewModel.serviceProvider,
                                                                     userRegisterEnvelop: self.viewModel.userRegisterEnvelop,
-                                                                    userRegisterEnvelopUpdater: self.viewModel.userRegisterEnvelopUpdater)
+                                                                    userRegisterEnvelopUpdater: self.viewModel.userRegisterEnvelopUpdater, hasReferralCode: hasReferralCode)
                 registerStepView.addFormView(formView: formStepView)
                 self.formStepViews.append(formStepView)
             }

@@ -730,7 +730,7 @@ public extension DepositOnRegisterViewController {
         animationView.translatesAutoresizingMaskIntoConstraints = false
         animationView.contentMode = .scaleAspectFit
 
-        let starAnimation = LottieAnimation.named("deposit_animation")
+        let starAnimation = LottieAnimation.named("first_deposit")
 
         animationView.animation = starAnimation
         animationView.loopMode = .loop

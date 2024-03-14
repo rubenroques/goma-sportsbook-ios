@@ -15,7 +15,8 @@ struct FormStepViewFactory {
     static func formStepView(forFormStep formStep: FormStep,
                              serviceProvider: ServicesProviderClient,
                              userRegisterEnvelop: UserRegisterEnvelop,
-                             userRegisterEnvelopUpdater: UserRegisterEnvelopUpdater) -> FormStepView {
+                             userRegisterEnvelopUpdater: UserRegisterEnvelopUpdater,
+                             hasReferralCode: Bool? = nil) -> FormStepView {
 
         let defaultCountryIso3Code = "FRA"
 
@@ -107,7 +108,7 @@ struct FormStepViewFactory {
             return PromoCodeFormStepView(viewModel: PromoCodeFormStepViewModel.init(title: Localization.localized("promo_code"),
                                                                                     promoCode: userRegisterEnvelop.promoCode,
                                                                                     godfatherCode: userRegisterEnvelop.godfatherCode,
-                                                                                    userRegisterEnvelopUpdater: userRegisterEnvelopUpdater))
+                                                                                    userRegisterEnvelopUpdater: userRegisterEnvelopUpdater, hasReferralCode: hasReferralCode))
             //
             //
         case .phoneConfirmation:

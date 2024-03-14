@@ -124,9 +124,11 @@ class UserReferralView: UIView {
         else if isKycValidated && !hasDeposit {
             self.subtitleLabel.text = localized("referral_deposit_pending")
         }
-        else if !isKycValidated {
+        else if !isKycValidated && hasDeposit {
             self.subtitleLabel.text = localized("referral_account_pending")
-
+        }
+        else if !isKycValidated && !hasDeposit {
+            self.subtitleLabel.text = localized("referral_bonus_pending")
         }
 
         if let subtitle = subtitle {
@@ -147,6 +149,7 @@ extension UserReferralView {
     private static func createIconBaseView() -> UIView {
         let view = UIView()
         view.translatesAutoresizingMaskIntoConstraints = false
+        view.clipsToBounds = true
         return view
     }
 

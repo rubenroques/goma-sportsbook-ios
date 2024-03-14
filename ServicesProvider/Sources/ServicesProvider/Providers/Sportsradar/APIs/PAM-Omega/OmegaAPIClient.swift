@@ -165,6 +165,9 @@ enum OmegaAPIClient {
 
     case getMobileVerificationCode(mobileNumber: String)
     case verifyMobileCode(code: String, requestId: String)
+    
+    case getReferralLink
+    case getReferees
 }
 
 extension OmegaAPIClient: Endpoint {
@@ -304,6 +307,11 @@ extension OmegaAPIClient: Endpoint {
             return "/ps/ips/verify"
         case .verifyMobileCode:
             return "/ps/ips/verify"
+            
+        case .getReferralLink:
+            return "/ps/ips/getReferralLinks"
+        case .getReferees:
+            return "/ps/ips/getReferees"
         }
     }
     
@@ -413,6 +421,10 @@ extension OmegaAPIClient: Endpoint {
                             }
                             """
             query.append(URLQueryItem(name: "extraInfo", value: extraInfo))
+            
+            if let godfatherCode {
+                query.append(URLQueryItem(name: "referralCode", value: "\(godfatherCode)"))
+            }
 
             for consentedId in consentedIds {
                 query.append(URLQueryItem(name: "consentedVersions[]", value: consentedId))
@@ -794,6 +806,10 @@ extension OmegaAPIClient: Endpoint {
                 URLQueryItem(name: "verificationCode", value: code)
             ]
 
+        case .getReferralLink:
+            return nil
+        case .getReferees:
+            return nil
         }
     }
     
@@ -871,6 +887,9 @@ extension OmegaAPIClient: Endpoint {
             
         case .getMobileVerificationCode: return .get
         case .verifyMobileCode: return .get
+            
+        case .getReferralLink: return .get
+        case .getReferees: return .get
         }
     }
     
@@ -1009,6 +1028,9 @@ extension OmegaAPIClient: Endpoint {
             
         case .getMobileVerificationCode: return false
         case .verifyMobileCode: return false
+            
+        case .getReferralLink: return true
+        case .getReferees: return true
         }
     }
     

@@ -75,7 +75,7 @@ class SportRadarPrivilegedAccessManager: PrivilegedAccessManager {
                 return Fail(outputType: UserProfile.self, failure: ServiceProviderError.quickSignUpIncomplete).eraseToAnyPublisher()
             }
             else if loginResponse.status == "SUCCESS" {
-                return self.getUserProfile()
+                return self.getUserProfile(withKycExpire: loginResponse.kycStatusDetails.expiryDate)
             }
             return Fail(outputType: UserProfile.self, failure: ServiceProviderError.invalidResponse).eraseToAnyPublisher()
         })
@@ -86,13 +86,14 @@ class SportRadarPrivilegedAccessManager: PrivilegedAccessManager {
         return self.connector.logout()
     }
 
-    func getUserProfile() -> AnyPublisher<UserProfile, ServiceProviderError> {
+    func getUserProfile(withKycExpire kycExpire: String?) -> AnyPublisher<UserProfile, ServiceProviderError> {
 
         let endpoint = OmegaAPIClient.playerInfo
         let publisher: AnyPublisher<SportRadarModels.PlayerInfoResponse, ServiceProviderError> = self.connector.request(endpoint)
 
         return publisher.flatMap({ playerInfoResponse -> AnyPublisher<UserProfile, ServiceProviderError> in
-            if playerInfoResponse.status == "SUCCESS", let userOverview = SportRadarModelMapper.userProfile(fromPlayerInfoResponse: playerInfoResponse) {
+            if playerInfoResponse.status == "SUCCESS", var userOverview = SportRadarModelMapper.userProfile(fromPlayerInfoResponse: playerInfoResponse, withKycExpire: kycExpire) {
+                
                 return Just(userOverview).setFailureType(to: ServiceProviderError.self).eraseToAnyPublisher()
             }
             return Fail(outputType: UserProfile.self, failure: ServiceProviderError.invalidResponse).eraseToAnyPublisher()
@@ -1394,6 +1395,51 @@ class SportRadarPrivilegedAccessManager: PrivilegedAccessManager {
         
     }
     
+    func getReferralLink() -> AnyPublisher<ReferralLink, ServiceProviderError> {
+
+        let endpoint = OmegaAPIClient.getReferralLink
+
+        let publisher: AnyPublisher<SportRadarModels.ReferralResponse, ServiceProviderError> = self.connector.request(endpoint)
+
+        return publisher.flatMap({ referralResponse -> AnyPublisher<ReferralLink, ServiceProviderError> in
+
+            if referralResponse.status == "SUCCESS" {
+
+                let mappedReferralResponse = SportRadarModelMapper.referralResponse(fromInternalReferralResponse: referralResponse)
+
+                if let referralLink = mappedReferralResponse.referralLinks.first {
+                    
+                    return Just(referralLink).setFailureType(to: ServiceProviderError.self).eraseToAnyPublisher()
+                }
+                
+                return Fail(outputType: ReferralLink.self, failure: ServiceProviderError.errorMessage(message: referralResponse.status)).eraseToAnyPublisher()
+            }
+            else {
+                return Fail(outputType: ReferralLink.self, failure: ServiceProviderError.errorMessage(message: referralResponse.status)).eraseToAnyPublisher()
+            }
+        }).eraseToAnyPublisher()
+    }
+    
+    func getReferees() -> AnyPublisher<[Referee], ServiceProviderError> {
+
+        let endpoint = OmegaAPIClient.getReferees
+
+        let publisher: AnyPublisher<SportRadarModels.RefereesResponse, ServiceProviderError> = self.connector.request(endpoint)
+
+        return publisher.flatMap({ refereesResponse -> AnyPublisher<[Referee], ServiceProviderError> in
+
+            if refereesResponse.status == "SUCCESS" {
+
+                let mappedRefereesResponse = SportRadarModelMapper.refereesResponse(fromInternalRefereesResponse: refereesResponse)
+                
+                return Just(mappedRefereesResponse.referees).setFailureType(to: ServiceProviderError.self).eraseToAnyPublisher()
+                
+            }
+            else {
+                return Fail(outputType: [Referee].self, failure: ServiceProviderError.errorMessage(message: refereesResponse.status)).eraseToAnyPublisher()
+            }
+        }).eraseToAnyPublisher()
+    }
 }
 
 extension SportRadarPrivilegedAccessManager: SportRadarSessionTokenUpdater {
