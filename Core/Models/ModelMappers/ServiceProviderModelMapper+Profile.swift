@@ -45,7 +45,7 @@ extension ServiceProviderModelMapper {
             localLockedStatus = .notLocked
         }
         
-        var hasMadeDeposit = serviceProviderProfile.hasMadeDeposit
+        let hasMadeDeposit = serviceProviderProfile.hasMadeDeposit
 
         return UserProfile(userIdentifier: serviceProviderProfile.userIdentifier,
                            sessionKey: serviceProviderProfile.sessionKey,

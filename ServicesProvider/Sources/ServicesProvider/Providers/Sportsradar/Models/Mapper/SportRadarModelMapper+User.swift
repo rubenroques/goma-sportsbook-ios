@@ -47,6 +47,8 @@ extension SportRadarModelMapper {
             currency = "€"
         }
 
+        let nationalityCode = playerInfoResponse.birthCoutryCode ?? playerInfoResponse.nationality
+        
         return UserProfile(userIdentifier: playerInfoResponse.partyId,
                            sessionKey: playerInfoResponse.sessionKey ?? "",
                            username: playerInfoResponse.userId,
@@ -55,7 +57,7 @@ extension SportRadarModelMapper {
                            lastName: playerInfoResponse.lastName,
                            birthDate: playerInfoResponse.birthDateFormatted,
                            gender: playerInfoResponse.gender,
-                           nationalityCode: playerInfoResponse.nationality,
+                           nationalityCode: nationalityCode,
                            countryCode: playerInfoResponse.country,
                            personalIdNumber: playerInfoResponse.idCardNumber,
                            address: playerInfoResponse.address,

@@ -106,7 +106,7 @@ class PersonalInfoViewController: UIViewController {
         lastNameHeaderTextFieldView.setPlaceholderText(localized("last_name"))
         lastNameHeaderTextFieldView.isDisabled = true
 
-        countryHeaderTextFieldView.setPlaceholderText(localized("nationality"))
+        countryHeaderTextFieldView.setPlaceholderText(localized("country_of_birth"))
         countryHeaderTextFieldView.setSelectionPicker(["---"], headerVisible: true)
         countryHeaderTextFieldView.setImageTextField(UIImage(named: "arrow_dropdown_icon")!)
         countryHeaderTextFieldView.setTextFieldFont(AppFont.with(type: .regular, size: 16))
@@ -545,7 +545,7 @@ class PersonalInfoViewController: UIViewController {
         self.firstNameHeaderTextFieldView.setText(profile.firstName ?? "-")
         self.lastNameHeaderTextFieldView.setText(profile.lastName ?? "-")
         
-        if let country = profile.country {
+        if let country = profile.nationality {
             self.countryHeaderTextFieldView.setText( self.formatIndicativeCountry(country, showName: true), slideUp: true)
         }
         
