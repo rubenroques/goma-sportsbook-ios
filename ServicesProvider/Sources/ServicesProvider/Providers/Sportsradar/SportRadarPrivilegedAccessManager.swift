@@ -75,7 +75,10 @@ class SportRadarPrivilegedAccessManager: PrivilegedAccessManager {
                 return Fail(outputType: UserProfile.self, failure: ServiceProviderError.quickSignUpIncomplete).eraseToAnyPublisher()
             }
             else if loginResponse.status == "SUCCESS" {
-                return self.getUserProfile(withKycExpire: loginResponse.kycStatusDetails.expiryDate)
+                if let kycExpire = loginResponse.kycStatusDetails?.expiryDate {
+                    return self.getUserProfile(withKycExpire: kycExpire)
+                }
+                return self.getUserProfile(withKycExpire: nil)
             }
             return Fail(outputType: UserProfile.self, failure: ServiceProviderError.invalidResponse).eraseToAnyPublisher()
         })

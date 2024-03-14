@@ -5157,7 +5157,6 @@
 		658A4CC42B9F6C7F00F73772 /* ServiceProviderModelMapper+Referrals.swift in Sources */ = {isa = PBXBuildFile; fileRef = 658A4CBE2B9F6C7F00F73772 /* ServiceProviderModelMapper+Referrals.swift */; };
 		658A4CC52B9F6C7F00F73772 /* ServiceProviderModelMapper+Referrals.swift in Sources */ = {isa = PBXBuildFile; fileRef = 658A4CBE2B9F6C7F00F73772 /* ServiceProviderModelMapper+Referrals.swift */; };
 		658A4CC62B9F6C7F00F73772 /* ServiceProviderModelMapper+Referrals.swift in Sources */ = {isa = PBXBuildFile; fileRef = 658A4CBE2B9F6C7F00F73772 /* ServiceProviderModelMapper+Referrals.swift */; };
-		658A4CC72B9F6E6400F73772 /* Referrals.swift in Sources */ = {isa = PBXBuildFile; fileRef = 658A4CB52B9F6C4800F73772 /* Referrals.swift */; };
 		659510EA2B2C7004001B2F2E /* Adjust in Frameworks */ = {isa = PBXBuildFile; productRef = 659510E92B2C7004001B2F2E /* Adjust */; };
 		659510EC2B2C7004001B2F2E /* Criteo in Frameworks */ = {isa = PBXBuildFile; productRef = 659510EB2B2C7004001B2F2E /* Criteo */; };
 		659510EE2B2C7004001B2F2E /* Sociomantic in Frameworks */ = {isa = PBXBuildFile; productRef = 659510ED2B2C7004001B2F2E /* Sociomantic */; };
@@ -18310,7 +18309,6 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				658A4CC72B9F6E6400F73772 /* Referrals.swift in Sources */,
 				655E1FFE2B21E8A500C95337 /* NotificationService.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
