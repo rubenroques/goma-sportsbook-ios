@@ -29,22 +29,22 @@ extension SportRadarModels {
         let securityVerificationRequiredFields: [String]?
         let message: String?
         let lockUntilDateFormatted: String?
-        let kycStatusDetails: KYCStatusDetail
+        let kycStatusDetails: KYCStatusDetail?
     }
     
     struct KYCStatusDetail: Codable {
-        let kycTypeStatus: [String]?
+//        let kycTypeStatus: [String]?
         let expiryDate: String?
         
         enum CodingKeys: String, CodingKey {
-            case kycTypeStatus = "kycTypeStatus"
+//            case kycTypeStatus = "kycTypeStatus"
             case expiryDate = "expiryDate"
         }
         
         public init(from decoder: Decoder) throws {
             let container = try decoder.container(keyedBy: CodingKeys.self)
 
-            self.kycTypeStatus = try container.decodeIfPresent([String].self, forKey: .kycTypeStatus)
+//            self.kycTypeStatus = try container.decodeIfPresent([String].self, forKey: .kycTypeStatus)
             self.expiryDate = try container.decodeIfPresent(String.self, forKey: .expiryDate)
         }
     }
