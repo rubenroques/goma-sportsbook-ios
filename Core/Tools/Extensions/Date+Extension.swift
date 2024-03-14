@@ -525,6 +525,20 @@ extension Date {
         let interval: TimeInterval = self.timeIntervalSinceReferenceDate - distanceToStartOfWeek + distanceToEndOfWeek
         return Date(timeIntervalSinceReferenceDate: interval).component(.day)!
     }
+    
+    func hours(from date: Date) -> Int {
+        return Calendar.current.dateComponents([.hour], from: date, to: self).hour ?? 0
+    }
+    
+    func days(from date: Date) -> Int {
+        return Calendar.current.dateComponents([.day], from: date, to: self).day ?? 0
+    }
+    
+    func format(_ format: String) -> String {
+        let dateFormatter = DateFormatter()
+        dateFormatter.dateFormat = format
+        return dateFormatter.string(from: self)
+    }
 
     // MARK: Internal Components
     internal static func componentFlags() -> Set<Calendar.Component> {

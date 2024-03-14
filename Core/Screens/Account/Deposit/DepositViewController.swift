@@ -219,26 +219,26 @@ class DepositViewController: UIViewController {
 
         self.isLoading = false
 
-        let animationView = LottieAnimationView()
-
-        animationView.translatesAutoresizingMaskIntoConstraints = false
-        animationView.contentMode = .scaleAspectFit
-
-        self.animationBaseView.addSubview(animationView)
-
-        let starAnimation = LottieAnimation.named("deposit_animation")
-
-        animationView.animation = starAnimation
-        animationView.loopMode = .loop
-
-        NSLayoutConstraint.activate([
-            animationView.leadingAnchor.constraint(equalTo: self.animationBaseView.leadingAnchor),
-            animationView.trailingAnchor.constraint(equalTo: self.animationBaseView.trailingAnchor),
-            animationView.topAnchor.constraint(equalTo: self.animationBaseView.topAnchor),
-            animationView.bottomAnchor.constraint(equalTo: self.animationBaseView.bottomAnchor)
-        ])
-
-        animationView.play()
+//        let animationView = LottieAnimationView()
+//
+//        animationView.translatesAutoresizingMaskIntoConstraints = false
+//        animationView.contentMode = .scaleAspectFit
+//
+//        self.animationBaseView.addSubview(animationView)
+//
+//        let starAnimation = LottieAnimation.named("deposit_animation")
+//
+//        animationView.animation = starAnimation
+//        animationView.loopMode = .loop
+//
+//        NSLayoutConstraint.activate([
+//            animationView.leadingAnchor.constraint(equalTo: self.animationBaseView.leadingAnchor),
+//            animationView.trailingAnchor.constraint(equalTo: self.animationBaseView.trailingAnchor),
+//            animationView.topAnchor.constraint(equalTo: self.animationBaseView.topAnchor),
+//            animationView.bottomAnchor.constraint(equalTo: self.animationBaseView.bottomAnchor)
+//        ])
+//
+//        animationView.play()
 
         self.titleLabel.text = localized("how_much_deposit")
 
@@ -410,6 +410,38 @@ class DepositViewController: UIViewController {
                 else {
                     self?.viewModel.bonusState = .declined
                 }
+            })
+            .store(in: &cancellables)
+        
+        viewModel.isFirstDeposit
+            .receive(on: DispatchQueue.main)
+            .sink(receiveValue: { [weak self] isFirstDeposit in
+                guard let self = self else { return }
+                
+                let animationView = LottieAnimationView()
+
+                animationView.translatesAutoresizingMaskIntoConstraints = false
+                animationView.contentMode = .scaleAspectFit
+
+                self.animationBaseView.addSubview(animationView)
+
+                var starAnimation = LottieAnimation.named("deposit_animation")
+                
+                if isFirstDeposit {
+                    starAnimation = LottieAnimation.named("first_deposit")
+                }
+
+                animationView.animation = starAnimation
+                animationView.loopMode = .loop
+
+                NSLayoutConstraint.activate([
+                    animationView.leadingAnchor.constraint(equalTo: self.animationBaseView.leadingAnchor),
+                    animationView.trailingAnchor.constraint(equalTo: self.animationBaseView.trailingAnchor),
+                    animationView.topAnchor.constraint(equalTo: self.animationBaseView.topAnchor),
+                    animationView.bottomAnchor.constraint(equalTo: self.animationBaseView.bottomAnchor)
+                ])
+
+                animationView.play()
             })
             .store(in: &cancellables)
     }
@@ -596,11 +628,12 @@ class DepositViewController: UIViewController {
         }
         
         self.shouldRefreshUserWallet?()
+        Env.userSessionStore.refreshMadeDepositStatus()
         
         let currency = CurrencyType(rawValue: Env.userSessionStore.userProfilePublisher.value?.currency ?? "")
 
         // Optimove success deposit
-        if self.viewModel.isFirstDeposit {
+        if self.viewModel.isFirstDeposit.value {
             
             Optimove.shared.reportEvent(
                 name: "first_deposit",

@@ -23,7 +23,7 @@ protocol PrivilegedAccessManager {
     
     func login(username: String, password: String) -> AnyPublisher<UserProfile, ServiceProviderError>
     
-    func getUserProfile() -> AnyPublisher<UserProfile, ServiceProviderError>
+    func getUserProfile(withKycExpire: String?) -> AnyPublisher<UserProfile, ServiceProviderError>
     func updateUserProfile(form: UpdateUserProfileForm) -> AnyPublisher<Bool, ServiceProviderError>
     
     func checkEmailRegistered(_ email: String) -> AnyPublisher<Bool, ServiceProviderError>
@@ -105,4 +105,6 @@ protocol PrivilegedAccessManager {
     func getMobileVerificationCode(forMobileNumber mobileNumber: String) -> AnyPublisher<MobileVerifyResponse, ServiceProviderError>
     func verifyMobileCode(code: String, requestId: String) -> AnyPublisher<MobileVerifyResponse, ServiceProviderError>
     
+    func getReferralLink() -> AnyPublisher<ReferralLink, ServiceProviderError>
+    func getReferees() -> AnyPublisher<[Referee], ServiceProviderError>
 }

@@ -37,6 +37,8 @@ class IdentificationDocsViewModel {
     var shouldReloadData: (() -> Void)?
 
     let dateFormatter = DateFormatter()
+    
+    var hasSanction: Bool = false
 
     init() {
         self.setupPublishers()
@@ -183,6 +185,12 @@ class IdentificationDocsViewModel {
 
                     self?.getUserDocuments()
 
+                }
+                else if let reviewData = applicantDataResponse.reviewData,
+                        reviewData.levelName == "pep-sanctions-screening" {
+                    // TODO WITH SACTIONS
+                    self?.hasSanction = true
+                    self?.reloadData()
                 }
                 else {
                     self?.reloadData()

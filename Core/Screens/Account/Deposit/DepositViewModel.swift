@@ -32,7 +32,9 @@ class DepositViewModel: NSObject {
 
     var bonusState: BonusState = .nonExistent
 
-    var isFirstDeposit: Bool = true
+//    var isFirstDeposit: Bool = true
+    var isFirstDeposit: CurrentValueSubject<Bool, Never> = .init(true)
+
 
     // MARK: Lifetime and Cycle
     override init() {
@@ -45,6 +47,7 @@ class DepositViewModel: NSObject {
         self.getOptInBonus()
 
         self.getDepositHistory()
+        
     }
 
     // MARK: Functions
@@ -118,43 +121,52 @@ class DepositViewModel: NSObject {
     }
 
     private func getDepositHistory() {
-
-        let endDate = Date()
-        var startDate = endDate
-
-        let calendar = Calendar.current
-        var oneYearAgoComponents = DateComponents()
-        oneYearAgoComponents.year = -1
-
-        if let startDateFinal = calendar.date(byAdding: oneYearAgoComponents, to: endDate) {
-            startDate = startDateFinal
-        } else {
-            print("There was an error calculating the date.")
+        
+        if let userProfile = Env.userSessionStore.userProfilePublisher.value {
+            
+            self.isFirstDeposit.send(!userProfile.hasMadeDeposit)
+            
         }
-
-        let startDateString = self.getDateString(date: startDate)
-
-        let endDateString = self.getDateString(date: endDate)
-
-        Env.servicesProvider.getTransactionsHistory(startDate: startDateString, endDate: endDateString, transactionTypes: [TransactionType.deposit], pageNumber: 1)
-            .receive(on: DispatchQueue.main)
-            .sink(receiveCompletion: { [weak self] completion in
-
-                switch completion {
-                case .finished:
-                    ()
-                case .failure(let error):
-                    print("TRANSACTIONS WITHDRAWALS ERROR: \(error)")
-
-                }
-            }, receiveValue: { [weak self] transactionsWithdrawals in
-
-                guard let self = self else { return }
-
-                self.isFirstDeposit = transactionsWithdrawals.isNotEmpty ? false : true
-
-            })
-            .store(in: &cancellables)
+        else {
+            self.isFirstDeposit.send(false)
+        }
+//        let endDate = Date()
+//        var startDate = endDate
+//
+//        let calendar = Calendar.current
+//        var oneYearAgoComponents = DateComponents()
+//        oneYearAgoComponents.year = -1
+//
+//        if let startDateFinal = calendar.date(byAdding: oneYearAgoComponents, to: endDate) {
+//            startDate = startDateFinal
+//        } else {
+//            print("There was an error calculating the date.")
+//        }
+//
+//        let startDateString = self.getDateString(date: startDate)
+//
+//        let endDateString = self.getDateString(date: endDate)
+//
+//        Env.servicesProvider.getTransactionsHistory(startDate: startDateString, endDate: endDateString, transactionTypes: [TransactionType.deposit], pageNumber: 1)
+//            .receive(on: DispatchQueue.main)
+//            .sink(receiveCompletion: { [weak self] completion in
+//
+//                switch completion {
+//                case .finished:
+//                    ()
+//                case .failure(let error):
+//                    print("TRANSACTIONS WITHDRAWALS ERROR: \(error)")
+//                    self?.isFirstDeposit.send(false)
+//
+//                }
+//            }, receiveValue: { [weak self] transactionsWithdrawals in
+//
+//                guard let self = self else { return }
+//
+//                self.isFirstDeposit.value = transactionsWithdrawals.isNotEmpty ? false : true
+//
+//            })
+//            .store(in: &cancellables)
     }
 
     private func getDateString(date: Date) -> String {

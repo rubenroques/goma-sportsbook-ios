@@ -521,6 +521,25 @@ extension UserSessionStore {
             })
             .store(in: &self.cancellables)
     }
+    
+    func refreshMadeDepositStatus() {
+        
+        Env.servicesProvider.getProfile()
+            .receive(on: DispatchQueue.main)
+            .sink(receiveCompletion: { [weak self] completion in
+                if case .failure = completion {
+                    print("USER PROFILE ERROR")
+                }
+            }, receiveValue: { [weak self] userProfile in
+                
+                var currentUserProfile = self?.userProfilePublisher.value
+                
+                currentUserProfile?.hasMadeDeposit = userProfile.hasMadeDeposit
+                
+                self?.userProfilePublisher.send(currentUserProfile)
+            })
+            .store(in: &self.cancellables)
+    }
 
 }
 

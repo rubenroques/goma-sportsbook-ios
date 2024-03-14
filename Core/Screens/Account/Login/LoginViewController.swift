@@ -54,8 +54,11 @@ class LoginViewController: UIViewController {
     
     var hasPendingRedirect: Bool = false
     var needsRedirect: (() -> Void)?
+    
+    var referralCode: String?
 
-    init(shouldPresentRegisterFlow: Bool = false) {
+    init(shouldPresentRegisterFlow: Bool = false, referralCode: String? = nil) {
+        self.referralCode = referralCode
         self.shouldPresentRegisterFlow = shouldPresentRegisterFlow
         super.init(nibName: "LoginViewController", bundle: nil)
     }
@@ -292,7 +295,11 @@ class LoginViewController: UIViewController {
 
     private func presentRegister(animated: Bool = true) {
 
-        let userRegisterEnvelopValue: UserRegisterEnvelop = UserDefaults.standard.startedUserRegisterInfo ?? UserRegisterEnvelop()
+        var userRegisterEnvelopValue: UserRegisterEnvelop = UserDefaults.standard.startedUserRegisterInfo ?? UserRegisterEnvelop()
+        
+        if let referralCode = self.referralCode {
+            userRegisterEnvelopValue.godfatherCode = referralCode
+        }
 
         let userRegisterEnvelopUpdater = UserRegisterEnvelopUpdater(userRegisterEnvelop: userRegisterEnvelopValue)
 
@@ -332,6 +339,8 @@ class LoginViewController: UIViewController {
                                                      userRegisterEnvelop: userRegisterEnvelopValue,
                                                      serviceProvider: Env.servicesProvider,
                                                      userRegisterEnvelopUpdater: userRegisterEnvelopUpdater)
+        
+        viewModel.hasReferralCode = self.referralCode != nil ? true : false
 
         let steppedRegistrationViewController = SteppedRegistrationViewController(viewModel: viewModel)
         steppedRegistrationViewController.isModalInPresentation = true

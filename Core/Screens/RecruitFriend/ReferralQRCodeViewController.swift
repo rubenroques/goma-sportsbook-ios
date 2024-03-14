@@ -18,9 +18,13 @@ class ReferralQRCodeViewController: UIViewController {
     private lazy var descriptionLabel: UILabel = Self.createDescriptionLabel()
     private lazy var qrCodeImageView: UIImageView = Self.createQRCodeImageView()
     private lazy var closeButton: UIButton = Self.createCloseButton()
+    
+    var referralLink: String
 
     // MARK: - Lifetime and Cycle
-    init() {
+    init(referralLink: String) {
+        self.referralLink = referralLink
+        
         super.init(nibName: nil, bundle: nil)
     }
 
@@ -38,7 +42,7 @@ class ReferralQRCodeViewController: UIViewController {
         self.closeButton.addTarget(self, action: #selector(didTapCloseButton), for: .primaryActionTriggered)
 
         // QR Code for url
-        if let url = URL(string: "\(TargetVariables.clientBaseUrl)") {
+        if let url = URL(string: "\(self.referralLink)") {
             if let qrCodeImage = generateQRCodeImageFromURL(for: url, size: CGSize(width: 200, height: 200)) {
 
                 self.qrCodeImageView.image = qrCodeImage

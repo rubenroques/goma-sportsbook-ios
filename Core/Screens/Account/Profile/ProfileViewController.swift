@@ -566,10 +566,10 @@ class ProfileViewController: UIViewController {
         let responsibleGamingTap = UITapGestureRecognizer(target: self, action: #selector(responsibleGamingViewTapped(sender:)))
         responsibleGamingView.addGestureRecognizer(responsibleGamingTap)
 
-//        let recruitFriendView = NavigationCardView()
-//        recruitFriendView.setupView(title: localized("referal_friend"), iconTitle: "recruit_icon")
-//        let recruitFriendTap = UITapGestureRecognizer(target: self, action: #selector(recruitFriendViewTapped(sender:)))
-//        recruitFriendView.addGestureRecognizer(recruitFriendTap)
+        let recruitFriendView = NavigationCardView()
+        recruitFriendView.setupView(title: localized("referal_friend"), iconTitle: "recruit_icon")
+        let recruitFriendTap = UITapGestureRecognizer(target: self, action: #selector(recruitFriendViewTapped(sender:)))
+        recruitFriendView.addGestureRecognizer(recruitFriendTap)
 
         let myFavoritesView = NavigationCardView()
         myFavoritesView.setupView(title: localized("my_favorites"), iconTitle: "favorite_profile_icon")
@@ -594,7 +594,7 @@ class ProfileViewController: UIViewController {
         self.stackView.addArrangedSubview(bonusView)
 
         self.stackView.addArrangedSubview(promotionsView)
-//        self.stackView.addArrangedSubview(recruitFriendView)
+        self.stackView.addArrangedSubview(recruitFriendView)
         self.stackView.addArrangedSubview(myFavoritesView)
         self.stackView.addArrangedSubview(settingsView)
         self.stackView.addArrangedSubview(supportView)
@@ -793,7 +793,10 @@ extension ProfileViewController {
     }
 
     @objc func recruitFriendViewTapped(sender: UITapGestureRecognizer) {
-        let recruitAFriendViewController = RecruitAFriendViewController()
+        
+        let recruitAFriendViewModel = RecruitAFriendViewModel()
+        
+        let recruitAFriendViewController = RecruitAFriendViewController(viewModel: recruitAFriendViewModel)
 
         self.navigationController?.pushViewController(recruitAFriendViewController, animated: true)
     }

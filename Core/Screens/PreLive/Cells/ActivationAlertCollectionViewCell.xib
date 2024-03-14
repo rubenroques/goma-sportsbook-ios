@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="21507" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="22155" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
     <device id="retina6_1" orientation="portrait" appearance="light"/>
     <dependencies>
         <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="21505"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="22131"/>
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
         <capability name="System colors in document resources" minToolsVersion="11.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
@@ -51,6 +51,24 @@
                                     <action selector="actionButtonTapped:" destination="gTV-IL-0wX" eventType="touchUpInside" id="9wB-CR-FHO"/>
                                 </connections>
                             </button>
+                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="wco-HR-doy">
+                                <rect key="frame" x="216" y="0.0" width="58" height="28"/>
+                                <subviews>
+                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="oBH-FQ-Mee">
+                                        <rect key="frame" x="8" y="4" width="42" height="20"/>
+                                        <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                        <nil key="textColor"/>
+                                        <nil key="highlightedColor"/>
+                                    </label>
+                                </subviews>
+                                <color key="backgroundColor" systemColor="systemBackgroundColor"/>
+                                <constraints>
+                                    <constraint firstItem="oBH-FQ-Mee" firstAttribute="leading" secondItem="wco-HR-doy" secondAttribute="leading" constant="8" id="1pc-2k-aka"/>
+                                    <constraint firstItem="oBH-FQ-Mee" firstAttribute="top" secondItem="wco-HR-doy" secondAttribute="top" constant="4" id="TSM-0M-PLu"/>
+                                    <constraint firstAttribute="bottom" secondItem="oBH-FQ-Mee" secondAttribute="bottom" constant="4" id="Wrr-ai-Kze"/>
+                                    <constraint firstAttribute="trailing" secondItem="oBH-FQ-Mee" secondAttribute="trailing" constant="8" id="xKC-cC-GwD"/>
+                                </constraints>
+                            </view>
                         </subviews>
                         <color key="backgroundColor" systemColor="systemBackgroundColor"/>
                         <constraints>
@@ -60,7 +78,9 @@
                             <constraint firstItem="ey1-sl-enB" firstAttribute="top" secondItem="ST7-n0-qvj" secondAttribute="top" id="CPG-cM-5XR"/>
                             <constraint firstAttribute="trailing" secondItem="fMz-9V-1fS" secondAttribute="trailing" constant="18" id="IZi-5O-qjm"/>
                             <constraint firstAttribute="bottom" secondItem="ey1-sl-enB" secondAttribute="bottom" id="JTr-7c-g08"/>
+                            <constraint firstAttribute="trailing" secondItem="wco-HR-doy" secondAttribute="trailing" constant="10" id="Nch-qH-CiV"/>
                             <constraint firstItem="V64-n4-GdH" firstAttribute="top" secondItem="DLP-f6-ESf" secondAttribute="bottom" constant="20" id="Peg-L4-pir"/>
+                            <constraint firstItem="wco-HR-doy" firstAttribute="top" secondItem="ST7-n0-qvj" secondAttribute="top" id="TgZ-2s-gRi"/>
                             <constraint firstAttribute="bottom" secondItem="V64-n4-GdH" secondAttribute="bottom" constant="20" id="WHl-Gz-HZ4"/>
                             <constraint firstItem="V64-n4-GdH" firstAttribute="leading" secondItem="ST7-n0-qvj" secondAttribute="leading" constant="18" id="XCk-BP-N0z"/>
                             <constraint firstAttribute="trailing" secondItem="OOE-8L-g9G" secondAttribute="trailing" id="c9S-88-lwY"/>
@@ -89,6 +109,8 @@
                 <outlet property="containerView" destination="ST7-n0-qvj" id="TTd-og-kW8"/>
                 <outlet property="descriptionLabel" destination="DLP-f6-ESf" id="VDZ-lW-g1g"/>
                 <outlet property="gradientView" destination="ey1-sl-enB" id="wiW-hk-iQb"/>
+                <outlet property="kycExpireLabel" destination="oBH-FQ-Mee" id="RyP-bv-eTh"/>
+                <outlet property="kycExpireView" destination="wco-HR-doy" id="qeZ-eb-eBS"/>
                 <outlet property="titleLabel" destination="fMz-9V-1fS" id="2qd-EI-6yv"/>
             </connections>
             <point key="canvasLocation" x="18.840579710144929" y="74.330357142857139"/>

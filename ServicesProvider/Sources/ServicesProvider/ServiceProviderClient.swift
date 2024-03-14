@@ -620,7 +620,7 @@ extension ServicesProviderClient {
         else {
             return Fail(error: ServiceProviderError.privilegedAccessManagerNotFound).eraseToAnyPublisher()
         }
-        return privilegedAccessManager.getUserProfile()
+        return privilegedAccessManager.getUserProfile(withKycExpire: nil)
     }
 
     public func hasSecurityQuestions() -> Bool {
@@ -1377,6 +1377,26 @@ extension ServicesProviderClient {
         }
 
         return privilegedAccessManager.checkDocumentationData()
+    }
+    
+    public func getReferralLink() -> AnyPublisher<ReferralLink, ServiceProviderError> {
+        guard
+            let privilegedAccessManager = self.privilegedAccessManager
+        else {
+            return Fail(error: ServiceProviderError.privilegedAccessManagerNotFound).eraseToAnyPublisher()
+        }
+
+        return privilegedAccessManager.getReferralLink()
+    }
+    
+    public func getReferees() -> AnyPublisher<[Referee], ServiceProviderError> {
+        guard
+            let privilegedAccessManager = self.privilegedAccessManager
+        else {
+            return Fail(error: ServiceProviderError.privilegedAccessManagerNotFound).eraseToAnyPublisher()
+        }
+
+        return privilegedAccessManager.getReferees()
     }
 }
 

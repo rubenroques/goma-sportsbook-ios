@@ -17,18 +17,21 @@ class PromoCodeFormStepViewModel {
     let title: String
     let promoCode: CurrentValueSubject<String?, Never>
     var godfatherCode: CurrentValueSubject<String?, Never>
-
+    var hasReferralCode: Bool?
+    
     private var userRegisterEnvelopUpdater: UserRegisterEnvelopUpdater
 
     init(title: String,
          promoCode: String?,
          godfatherCode: String?,
-         userRegisterEnvelopUpdater: UserRegisterEnvelopUpdater) {
+         userRegisterEnvelopUpdater: UserRegisterEnvelopUpdater,
+         hasReferralCode: Bool?) {
 
         self.title = title
         self.promoCode = .init(promoCode)
         self.godfatherCode = .init(godfatherCode)
         self.userRegisterEnvelopUpdater = userRegisterEnvelopUpdater
+        self.hasReferralCode = hasReferralCode
     }
 
     func setPromoCode(_ promoCode: String) {
@@ -100,6 +103,10 @@ class PromoCodeFormStepView: FormStepView {
                 self?.viewModel.setGodfatherCode(text)
             }
             .store(in: &self.cancellables)
+        
+        if let hasReferralCode = viewModel.hasReferralCode {
+            self.godfatherHeaderTextFieldView.isDisabled = hasReferralCode
+        }
 
     }
 

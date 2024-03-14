@@ -26,6 +26,7 @@ enum Route {
     case customerSupport
     case favorites
     case promotions
+    case referral(code: String)
     case none
 }
 
@@ -306,6 +307,8 @@ class Router {
             self.showFavorites()
         case .promotions:
             self.showPromotions()
+        case .referral(let code):
+            self.showRegisterWithCode(code: code)
         case .none:
             ()
         }
@@ -796,6 +799,24 @@ class Router {
             if let currentViewController = self.rootViewController as? RootViewController {
                 
                 currentViewController.openPromotions()
+            }
+        }
+    }
+    
+    func showRegisterWithCode(code: String) {
+                
+        if self.rootViewController?.presentedViewController?.isModal == true {
+            self.rootViewController?.presentedViewController?.dismiss(animated: true, completion: nil)
+        }
+
+        if let rootViewController = self.mainRootViewController {
+
+            rootViewController.openRegisterWithCode(code: code)
+        }
+        else {
+            if let currentViewController = self.rootViewController as? RootViewController {
+                
+                currentViewController.openRegisterWithCode(code: code)
             }
         }
     }

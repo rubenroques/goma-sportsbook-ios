@@ -269,7 +269,10 @@ extension AnonymousSideMenuViewController {
     }
 
     @objc private func recruitFriendViewTapped() {
-        let recruitAFriendViewController = RecruitAFriendViewController()
+        let recruitAFriendViewModel = RecruitAFriendViewModel()
+
+        let recruitAFriendViewController = RecruitAFriendViewController(viewModel: recruitAFriendViewModel)
+        
         self.navigationController?.pushViewController(recruitAFriendViewController, animated: true)
     }
 

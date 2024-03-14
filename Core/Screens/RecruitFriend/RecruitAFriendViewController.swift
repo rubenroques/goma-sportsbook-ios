@@ -6,6 +6,70 @@
 //
 
 import UIKit
+import ServicesProvider
+import Combine
+
+class RecruitAFriendViewModel {
+    
+    var referralLink: ReferralLink?
+    var referees: [Referee] = []
+    
+    private var cancellables = Set<AnyCancellable>()
+    
+    var shouldSetupReferees: PassthroughSubject<Void, Never> = .init()
+    
+    init() {
+        self.getReferralLink()
+        self.getReferees()
+    }
+    
+    private func getReferralLink() {
+        
+        Env.servicesProvider.getReferralLink()
+            .receive(on: DispatchQueue.main)
+            .sink(receiveCompletion: { [weak self] completion in
+                
+                switch completion {
+                case .finished:
+                    ()
+                case .failure(let error):
+                    print("GET REFERRAL LINK ERROR: \(error)")
+                }
+            }, receiveValue: { [weak self] referralLink in
+                
+                let mappedReferralLink = ServiceProviderModelMapper.referralLink(fromServiceProviderReferralLink: referralLink)
+                
+                self?.referralLink = mappedReferralLink
+            })
+            .store(in: &cancellables)
+    }
+    
+    private func getReferees() {
+        
+        Env.servicesProvider.getReferees()
+            .receive(on: DispatchQueue.main)
+            .sink(receiveCompletion: { [weak self] completion in
+                
+                switch completion {
+                case .finished:
+                    ()
+                case .failure(let error):
+                    print("GET REFEREES ERROR: \(error)")
+                }
+                
+                self?.shouldSetupReferees.send()
+
+            }, receiveValue: { [weak self] referees in
+                
+                let mappedReferees = referees.map( {
+                    ServiceProviderModelMapper.referee(fromServiceProviderReferee: $0)
+                })
+                
+                self?.referees = mappedReferees
+            })
+            .store(in: &cancellables)
+    }
+}
 
 class RecruitAFriendViewController: UIViewController {
 
@@ -57,7 +121,9 @@ class RecruitAFriendViewController: UIViewController {
     private lazy var referralsStackView: UIStackView = Self.createReferralsStackView()
     private lazy var referralsGodfatherBaseView: UIView = Self.createReferralsGodfatherBaseView()
     private lazy var referralsGodfatherTitleLabel: UILabel = Self.createReferralsGodfatherTitleLabel()
+    private lazy var referralsGodfatherStackView: UIStackView = Self.createReferralsGodfatherStackView()
     private lazy var referralsGodfatherView: UserGodfatherView = Self.createReferralsGodfatherView()
+    private lazy var referralsEmptyGodfatherView: EmptyReferralView = Self.createReferralsEmptyGodfatherView()
 
     private lazy var regulationsBaseView: UIView = Self.createRegulationsBaseView()
     private lazy var regulationsTitleLabel: UILabel = Self.createRegulationsTitleLabel()
@@ -70,13 +136,20 @@ class RecruitAFriendViewController: UIViewController {
     private lazy var referralsStackViewBottomGodfatherConstraint: NSLayoutConstraint = Self.createReferralsStackViewBottomGodfatherConstraint()
     private lazy var regulationReferralsTopConstraint: NSLayoutConstraint = Self.createRegulationReferralsTopConstraint()
     private lazy var regulationRecruitTopConstraint: NSLayoutConstraint = Self.createRegulationRecruitTopConstraint()
+    
+    private lazy var recruitMethodsBaseViewTopToStackConstraint: NSLayoutConstraint = Self.createRecruitMethodsBaseViewTopToStackConstraint()
+    private lazy var recruitMethodsBaseViewTopToBonusInfoConstraint: NSLayoutConstraint = Self.createRecruitMethodsBaseViewTopToBonusInfoConstraint()
+
 
     private var aspectRatio: CGFloat = 1.0
+    
+    private var viewModel: RecruitAFriendViewModel
 
     // MARK: Public Properties
     var hasGodfather: Bool = false {
         didSet {
-            self.referralsGodfatherView.isHidden = !hasGodfather
+            self.referralsGodfatherView.isHidden = true
+            self.referralsEmptyGodfatherView.isHidden = true
 
             self.referralsStackViewBottomBaseConstraint.isActive = !hasGodfather
 
@@ -89,19 +162,22 @@ class RecruitAFriendViewController: UIViewController {
 
             if isKYCVerified {
                 self.recruitInvalidDocumentsButton.setBackgroundColor(UIColor.App.alertSuccess, for: .normal)
+                self.recruitInvalidDocumentsButton.setBackgroundColor(UIColor.App.alertSuccess.withAlphaComponent(0.7), for: .disabled)
             }
             else {
                 self.recruitInvalidDocumentsButton.setBackgroundColor(UIColor.App.alertError, for: .normal)
+                self.recruitInvalidDocumentsButton.setBackgroundColor(UIColor.App.alertError.withAlphaComponent(0.7), for: .disabled)
 
             }
 
             self.recruitInvalidDocumentsButton.isUserInteractionEnabled = !isKYCVerified
+            self.recruitInvalidDocumentsButton.isEnabled = !isKYCVerified
 
-            self.regulationReferralsTopConstraint.isActive = isKYCVerified
-
-            self.regulationRecruitTopConstraint.isActive = !isKYCVerified
-
-            self.referralsBaseView.isHidden = !isKYCVerified
+//            self.regulationReferralsTopConstraint.isActive = isKYCVerified
+//
+//            self.regulationRecruitTopConstraint.isActive = !isKYCVerified
+//
+//            self.referralsBaseView.isHidden = !isKYCVerified
 
         }
     }
@@ -110,17 +186,33 @@ class RecruitAFriendViewController: UIViewController {
         didSet {
             if hasDeposit {
                 self.recruitInvalidDepositButton.setBackgroundColor(UIColor.App.alertSuccess, for: .normal)
+                self.recruitInvalidDepositButton.setBackgroundColor(UIColor.App.alertSuccess.withAlphaComponent(0.7), for: .disabled)
             }
             else {
                 self.recruitInvalidDepositButton.setBackgroundColor(UIColor.App.alertError, for: .normal)
+                self.recruitInvalidDepositButton.setBackgroundColor(UIColor.App.alertError.withAlphaComponent(0.7), for: .disabled)
 
             }
 
             self.recruitInvalidDepositButton.isUserInteractionEnabled = !hasDeposit
+            self.recruitInvalidDepositButton.isEnabled = !hasDeposit
         }
     }
+    
+    private var cancellables = Set<AnyCancellable>()
 
     // MARK: Lifetime and cycle
+    init(viewModel: RecruitAFriendViewModel) {
+        self.viewModel = viewModel
+        
+        super.init(nibName: nil, bundle: nil)
+    }
+    
+    @available(iOS, unavailable)
+    required init?(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
+    
     override func viewDidLoad() {
         super.viewDidLoad()
 
@@ -137,17 +229,43 @@ class RecruitAFriendViewController: UIViewController {
 
         self.recruitInvalidDepositButton.addTarget(self, action: #selector(didTapDeposit), for: .primaryActionTriggered)
 
-        if let isUserKycVerified = Env.userSessionStore.userKnowYourCustomerStatus, isUserKycVerified == .request {
-            self.isKYCVerified = false
-        }
-        else {
+        self.checkPlayerStatus()
+        
+        self.bind(toViewModel: self.viewModel)
+    }
+    
+    private func checkPlayerStatus() {
+        
+        if let isUserKycVerified = Env.userSessionStore.userKnowYourCustomerStatus, isUserKycVerified == .pass {
             self.isKYCVerified = true
         }
+        else {
+            self.isKYCVerified = false
+        }
+        
+        if let hasMadeDeposit = Env.userSessionStore.userProfilePublisher.value?.hasMadeDeposit {
+            self.hasDeposit = hasMadeDeposit
+        }
+        else {
+            self.hasDeposit = false
+        }
 
-        self.hasDeposit = true
-        self.hasGodfather = true
+        let isPlayerLocked = Env.userSessionStore.userProfilePublisher.value?.lockedStatus == .locked ? true : false
+//        let isPlayerLocked = true
 
-        if !isKYCVerified || !hasDeposit {
+        if !isKYCVerified || !hasDeposit || isPlayerLocked {
+            
+            self.regulationReferralsTopConstraint.isActive = false
+            
+            self.regulationRecruitTopConstraint.isActive = true
+            
+            self.recruitReferralStackView.isHidden = false
+            
+            self.recruitMethodsBaseViewTopToStackConstraint.isActive = true
+            
+            self.recruitMethodsBaseViewTopToBonusInfoConstraint.isActive = false
+            
+            self.referralsBaseView.isHidden = true
 
             self.recruitReferralBaseView.isHidden = true
 
@@ -157,7 +275,19 @@ class RecruitAFriendViewController: UIViewController {
 
             self.qrCodeButton.isEnabled = false
         }
-        else if isKYCVerified && hasDeposit {
+        else if isKYCVerified && hasDeposit && !isPlayerLocked {
+            
+            self.regulationReferralsTopConstraint.isActive = true
+            
+            self.regulationRecruitTopConstraint.isActive = false
+            
+            self.recruitReferralStackView.isHidden = true
+            
+            self.recruitMethodsBaseViewTopToStackConstraint.isActive = false
+            
+            self.recruitMethodsBaseViewTopToBonusInfoConstraint.isActive = true
+            
+            self.referralsBaseView.isHidden = false
 
             self.recruitReferralBaseView.isHidden = false
 
@@ -168,8 +298,9 @@ class RecruitAFriendViewController: UIViewController {
             self.qrCodeButton.isEnabled = true
         }
 
-        self.setupReferrals()
+        self.hasGodfather = false
 
+        //self.setupReferrals()
     }
 
     // MARK: Layout and Theme
@@ -231,15 +362,17 @@ class RecruitAFriendViewController: UIViewController {
 
         self.recruitInvalidDocumentsButton.setTitleColor(UIColor.App.buttonTextPrimary, for: .normal)
         self.recruitInvalidDocumentsButton.setTitleColor(UIColor.App.buttonTextPrimary.withAlphaComponent(0.7), for: .highlighted)
-        self.recruitInvalidDocumentsButton.setTitleColor(UIColor.App.buttonTextDisablePrimary, for: .disabled)
-        self.recruitInvalidDocumentsButton.setBackgroundColor(UIColor.App.alertSuccess, for: .normal)
-        self.recruitInvalidDocumentsButton.setBackgroundColor(UIColor.App.buttonBackgroundSecondary, for: .highlighted)
+        self.recruitInvalidDocumentsButton.setTitleColor(UIColor.App.buttonTextPrimary.withAlphaComponent(0.7), for: .disabled)
+        self.recruitInvalidDocumentsButton.setBackgroundColor(UIColor.App.alertError, for: .normal)
+        self.recruitInvalidDocumentsButton.setBackgroundColor(UIColor.App.alertError, for: .highlighted)
+        self.recruitInvalidDocumentsButton.setBackgroundColor(UIColor.App.alertError.withAlphaComponent(0.7), for: .disabled)
 
         self.recruitInvalidDepositButton.setTitleColor(UIColor.App.buttonTextPrimary, for: .normal)
         self.recruitInvalidDepositButton.setTitleColor(UIColor.App.buttonTextPrimary.withAlphaComponent(0.7), for: .highlighted)
-        self.recruitInvalidDepositButton.setTitleColor(UIColor.App.buttonTextDisablePrimary, for: .disabled)
+        self.recruitInvalidDepositButton.setTitleColor(UIColor.App.buttonTextPrimary.withAlphaComponent(0.7), for: .disabled)
         self.recruitInvalidDepositButton.setBackgroundColor(UIColor.App.alertError, for: .normal)
-        self.recruitInvalidDepositButton.setBackgroundColor(UIColor.App.buttonBackgroundSecondary, for: .highlighted)
+        self.recruitInvalidDepositButton.setBackgroundColor(UIColor.App.alertError, for: .highlighted)
+        self.recruitInvalidDepositButton.setBackgroundColor(UIColor.App.alertError, for: .disabled)
 
         self.recruitMethodsBaseView.backgroundColor = UIColor.App.backgroundCards
 
@@ -289,6 +422,16 @@ class RecruitAFriendViewController: UIViewController {
 
         self.regulationsDescriptionLabel.textColor = UIColor.App.textPrimary
     }
+    
+    // MARK: Binding
+    private func bind(toViewModel viewModel: RecruitAFriendViewModel) {
+        
+        viewModel.shouldSetupReferees
+            .sink(receiveValue: { [weak self] in
+                self?.setupReferrals()
+            })
+            .store(in: &cancellables)
+    }
 
     // MARK: Functions
     private func resizeBannerImageView() {
@@ -314,19 +457,33 @@ class RecruitAFriendViewController: UIViewController {
 
     private func setupReferrals() {
 
-        let referralView1 = UserReferralView()
-        referralView1.configure(title: "André", icon: "avatar1", isKycValidated: true, hasDeposit: true)
+        let referees = viewModel.referees
+        
+        if referees.isNotEmpty {
+            
+            for referee in referees {
+                let referralView = UserReferralView()
+                
+                let isKycValidated = referee.kycStatus == .request ? false : true
+                
+                referralView.configure(title: "\(referee.username)", icon: "referral_avatar", isKycValidated: isKycValidated, hasDeposit: referee.depositPassed)
+                
+                self.referralsStackView.addArrangedSubview(referralView)
 
-        let referralView2 = UserReferralView()
-        referralView2.configure(title: "Rúben", icon: "avatar2", isKycValidated: false, hasDeposit: false)
+            }
+            
+        }
+        else {
+            let emptyReferralView = EmptyReferralView()
+            emptyReferralView.configure(title: localized("referral_no_friends"))
+            
+            self.referralsStackView.addArrangedSubview(emptyReferralView)
+        }
 
-        let referralView3 = UserReferralView()
-        referralView3.configure(title: "Pedro", icon: "avatar3", isKycValidated: true, hasDeposit: false)
-
-        self.referralsStackView.addArrangedSubview(referralView1)
-        self.referralsStackView.addArrangedSubview(referralView2)
-        self.referralsStackView.addArrangedSubview(referralView3)
-
+        //self.referralsGodfatherView.configure(title: "User Godfather", icon: "godfather_avatar")
+        
+        self.referralsStackView.setNeedsLayout()
+        self.referralsStackView.layoutIfNeeded()
     }
 
     // MARK: Actions
@@ -335,27 +492,33 @@ class RecruitAFriendViewController: UIViewController {
     }
 
     @objc private func didTapShareButton() {
-
-        guard var url = URL(string: "\(TargetVariables.clientBaseUrl)") else { return }
-
-        let shareActivityViewController = UIActivityViewController(activityItems: [url], applicationActivities: nil)
-
-        if let popoverController = shareActivityViewController.popoverPresentationController {
-            popoverController.sourceView = self.view
-            popoverController.sourceRect = CGRect(x: self.view.bounds.midX, y: self.view.bounds.midY, width: 0, height: 0)
-            popoverController.permittedArrowDirections = []
+        
+        if let referralLink = viewModel.referralLink?.link {
+            
+            guard var url = URL(string: "\(referralLink)") else { return }
+            
+            let shareActivityViewController = UIActivityViewController(activityItems: [url], applicationActivities: nil)
+            
+            if let popoverController = shareActivityViewController.popoverPresentationController {
+                popoverController.sourceView = self.view
+                popoverController.sourceRect = CGRect(x: self.view.bounds.midX, y: self.view.bounds.midY, width: 0, height: 0)
+                popoverController.permittedArrowDirections = []
+            }
+            
+            self.present(shareActivityViewController, animated: true, completion: nil)
         }
-
-        self.present(shareActivityViewController, animated: true, completion: nil)
     }
 
     @objc private func didTapQRCode() {
-        let referralQRCodeViewController = ReferralQRCodeViewController()
-
-        referralQRCodeViewController.modalPresentationStyle = .overCurrentContext
-        referralQRCodeViewController.modalTransitionStyle = .crossDissolve
-
-        self.present(referralQRCodeViewController, animated: true)
+        if let referralLink = viewModel.referralLink?.link {
+            
+            let referralQRCodeViewController = ReferralQRCodeViewController(referralLink: referralLink)
+            
+            referralQRCodeViewController.modalPresentationStyle = .overCurrentContext
+            referralQRCodeViewController.modalTransitionStyle = .crossDissolve
+            
+            self.present(referralQRCodeViewController, animated: true)
+        }
     }
 
     @objc private func didTapDocuments() {
@@ -737,11 +900,27 @@ extension RecruitAFriendViewController {
         label.textAlignment = .left
         return label
     }
+    
+    private static func createReferralsGodfatherStackView() -> UIStackView {
+        let stackView = UIStackView()
+        stackView.translatesAutoresizingMaskIntoConstraints = false
+        stackView.distribution = .equalSpacing
+        stackView.axis = .vertical
+        stackView.spacing = 10
+        return stackView
+    }
 
     private static func createReferralsGodfatherView() -> UserGodfatherView {
         let view = UserGodfatherView()
         view.translatesAutoresizingMaskIntoConstraints = false
-        view.configure(title: "Godfather", icon: "avatar4")
+        view.configure(title: "Godfather", icon: "godfather_avatar")
+        return view
+    }
+    
+    private static func createReferralsEmptyGodfatherView() -> EmptyReferralView {
+        let view = EmptyReferralView()
+        view.translatesAutoresizingMaskIntoConstraints = false
+        view.configure(title: localized("no_godfather"))
         return view
     }
 
@@ -799,6 +978,16 @@ extension RecruitAFriendViewController {
     }
 
     private static func createRegulationRecruitTopConstraint() -> NSLayoutConstraint {
+        let constraint = NSLayoutConstraint()
+        return constraint
+    }
+    
+    private static func createRecruitMethodsBaseViewTopToStackConstraint() -> NSLayoutConstraint {
+        let constraint = NSLayoutConstraint()
+        return constraint
+    }
+    
+    private static func createRecruitMethodsBaseViewTopToBonusInfoConstraint() -> NSLayoutConstraint {
         let constraint = NSLayoutConstraint()
         return constraint
     }
@@ -867,7 +1056,9 @@ extension RecruitAFriendViewController {
         self.referralsBaseView.addSubview(self.referralsGodfatherBaseView)
 
         self.referralsGodfatherBaseView.addSubview(self.referralsGodfatherTitleLabel)
-        self.referralsGodfatherBaseView.addSubview(self.referralsGodfatherView)
+        self.referralsGodfatherBaseView.addSubview(self.referralsGodfatherStackView)
+        self.referralsGodfatherStackView.addArrangedSubview(self.referralsGodfatherView)
+        self.referralsGodfatherStackView.addArrangedSubview(self.referralsEmptyGodfatherView)
 
         self.containerView.addSubview(self.regulationsBaseView)
 
@@ -970,7 +1161,7 @@ extension RecruitAFriendViewController {
         NSLayoutConstraint.activate([
             self.recruitMethodsBaseView.leadingAnchor.constraint(equalTo: self.containerView.leadingAnchor, constant: 14),
             self.recruitMethodsBaseView.trailingAnchor.constraint(equalTo: self.containerView.trailingAnchor, constant: -14),
-            self.recruitMethodsBaseView.topAnchor.constraint(equalTo: self.recruitReferralStackView.bottomAnchor, constant: 15),
+//            self.recruitMethodsBaseView.topAnchor.constraint(equalTo: self.recruitReferralStackView.bottomAnchor, constant: 15),
 
             self.recruitMethodsTitleLabel.leadingAnchor.constraint(equalTo: self.recruitMethodsBaseView.leadingAnchor, constant: 16),
             self.recruitMethodsTitleLabel.trailingAnchor.constraint(equalTo: self.recruitMethodsBaseView.trailingAnchor, constant: -16),
@@ -1065,11 +1256,16 @@ extension RecruitAFriendViewController {
             self.referralsGodfatherTitleLabel.leadingAnchor.constraint(equalTo: self.referralsGodfatherBaseView.leadingAnchor),
             self.referralsGodfatherTitleLabel.trailingAnchor.constraint(equalTo: self.referralsGodfatherBaseView.trailingAnchor),
             self.referralsGodfatherTitleLabel.topAnchor.constraint(equalTo: self.referralsGodfatherBaseView.topAnchor),
-
-            self.referralsGodfatherView.leadingAnchor.constraint(equalTo: self.referralsGodfatherBaseView.leadingAnchor),
-            self.referralsGodfatherView.trailingAnchor.constraint(equalTo: self.referralsGodfatherBaseView.trailingAnchor),
-            self.referralsGodfatherView.topAnchor.constraint(equalTo: self.referralsGodfatherTitleLabel.bottomAnchor, constant: 15),
-            self.referralsGodfatherView.bottomAnchor.constraint(equalTo: self.referralsGodfatherBaseView.bottomAnchor)
+            
+            self.referralsGodfatherStackView.leadingAnchor.constraint(equalTo: self.referralsGodfatherBaseView.leadingAnchor),
+            self.referralsGodfatherStackView.trailingAnchor.constraint(equalTo: self.referralsGodfatherBaseView.trailingAnchor),
+            self.referralsGodfatherStackView.topAnchor.constraint(equalTo: self.referralsGodfatherTitleLabel.bottomAnchor, constant: 15),
+            self.referralsGodfatherStackView.bottomAnchor.constraint(equalTo: self.referralsGodfatherBaseView.bottomAnchor)
+            
+//            self.referralsGodfatherView.leadingAnchor.constraint(equalTo: self.referralsGodfatherBaseView.leadingAnchor),
+//            self.referralsGodfatherView.trailingAnchor.constraint(equalTo: self.referralsGodfatherBaseView.trailingAnchor),
+//            self.referralsGodfatherView.topAnchor.constraint(equalTo: self.referralsGodfatherTitleLabel.bottomAnchor, constant: 15),
+//            self.referralsGodfatherView.bottomAnchor.constraint(equalTo: self.referralsGodfatherBaseView.bottomAnchor)
 
         ])
 
@@ -1149,5 +1345,24 @@ extension RecruitAFriendViewController {
                            multiplier: 1,
                            constant: 15)
         self.regulationRecruitTopConstraint.isActive = false
+        
+        self.recruitMethodsBaseViewTopToStackConstraint = NSLayoutConstraint(item: self.recruitMethodsBaseView,
+                                                                             attribute: .top,
+                                                                             relatedBy: .equal,
+                                                                             toItem: self.recruitReferralStackView,
+                                                                             attribute: .bottom,
+                                                                             multiplier: 1,
+                                                                             constant: 15)
+        self.recruitMethodsBaseViewTopToStackConstraint.isActive = true
+        
+        self.recruitMethodsBaseViewTopToBonusInfoConstraint = NSLayoutConstraint(item: self.recruitMethodsBaseView,
+                                                                             attribute: .top,
+                                                                             relatedBy: .equal,
+                                                                             toItem: self.recruitBonusInfoBaseView,
+                                                                             attribute: .bottom,
+                                                                             multiplier: 1,
+                                                                             constant: 15)
+        self.recruitMethodsBaseViewTopToBonusInfoConstraint.isActive = false
+        
     }
 }

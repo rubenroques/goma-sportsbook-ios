@@ -1194,6 +1194,11 @@ class RootViewController: UIViewController {
             self.present(navigationController, animated: true, completion: nil)
         }
     }
+    
+    func openRegisterWithCode(code: String) {
+        
+        self.presentRegisterScreen(withReferralCode: code)
+    }
 
     //
     // Obrigatory Limits
@@ -1378,8 +1383,8 @@ extension RootViewController {
         self.present(loginViewController, animated: true, completion: nil)
     }
 
-    private func presentRegisterScreen() {
-        let loginViewController = Router.navigationController(with: LoginViewController(shouldPresentRegisterFlow: true))
+    private func presentRegisterScreen(withReferralCode: String? = nil) {
+        let loginViewController = Router.navigationController(with: LoginViewController(shouldPresentRegisterFlow: true, referralCode: withReferralCode))
         self.present(loginViewController, animated: true, completion: nil)
     }
 
