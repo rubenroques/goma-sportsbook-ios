@@ -198,7 +198,7 @@ public extension UserProfile {
     }
     var nationalityCountry: Country? {
         if let nationalityCode = self.nationalityCode {
-            return Country.init(isoCode: nationalityCode)
+            return Country.init(isoCode: nationalityCode.uppercased())
         }
         return nil
     }
