@@ -167,29 +167,12 @@ extension Outcome {
                 return "\(paramBoolean1)"
             }
             else if self.marketId != nil {
-                //let decimalCharacters = CharacterSet.decimalDigits
-
-//                if self.codeName.rangeOfCharacter(from: decimalCharacters) != nil {
-//                    return self.codeName.trimmingCharacters(in: CharacterSet(charactersIn: "0123456789. "))
-//                }
                 if let orderValue = self.orderValue {
                     return orderValue
                 }
-                if self.orderValue == nil && self.codeName == "other" {
+                if self.orderValue == nil && (self.codeName == "other" || self.codeName == "autre") {
                     return "D"
                 }
-//                if let externalReference = self.externalReference {
-//                    if externalReference == "1727" {
-//                        return "1724"
-//                    }
-//                    if externalReference == "1728" {
-//                        return "1725"
-//                    }
-//                    if externalReference == "1729" {
-//                        return "1726"
-//                    }
-//                    return externalReference
-//                }
                 return self.codeName
             }
         }

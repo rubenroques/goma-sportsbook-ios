@@ -98,18 +98,32 @@ extension ServiceProviderModelMapper {
     
     static func market(fromServiceProviderMarket market: ServicesProvider.Market) -> Market {
         
+        var mappedOutcomes = Self.outcomes(fromServiceProviderOutcomes: market.outcomes, marketName: market.name)
+        
         var outcomesOrder: Market.OutcomesOrder
         switch market.outcomesOrder {
         case .name:
             outcomesOrder = .name
+            mappedOutcomes = mappedOutcomes.sorted(by: \.translatedName)
         case .odds:
             outcomesOrder = .odds
+            mappedOutcomes = mappedOutcomes.sorted(by: \.bettingOffer.decimalOdd)
         case .setup:
             outcomesOrder = .setup
-        case.none:
+        case .none:
             outcomesOrder = .none
         }
         
+//        #if DEBUG
+//        var newMappedOutcomes = [Outcome]()
+//        for (index, outcome) in mappedOutcomes.enumerated() {
+//            var newOutcome = outcome
+//            newOutcome.translatedName = "\(index)-" + outcome.translatedName
+//            newMappedOutcomes.append(newOutcome)
+//        }
+//        mappedOutcomes = newMappedOutcomes
+//        #endif
+//        
         return Market(id: market.id,
                       typeId: market.name,
                       name: market.name,
@@ -118,7 +132,7 @@ extension ServiceProviderModelMapper {
                       nameDigit3: nil,
                       eventPartId: nil,
                       bettingTypeId: market.eventMarketTypeId,
-                      outcomes: Self.outcomes(fromServiceProviderOutcomes: market.outcomes, marketName: market.name),
+                      outcomes: mappedOutcomes,
                       marketTypeId: market.marketTypeId,
                       eventName: market.eventName,
                       isMainOutright: market.isMainOutright,
@@ -172,7 +186,6 @@ extension ServiceProviderModelMapper {
                               bettingOffer: bettingOffer,
                               orderValue: outcome.orderValue,
                               externalReference: outcome.externalReference)
-
         return mappedOutcome
     }
 

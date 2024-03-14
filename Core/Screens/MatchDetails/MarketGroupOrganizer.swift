@@ -33,13 +33,13 @@ struct ColumnListedMarketGroupOrganizer: MarketGroupOrganizer {
 
     var id: String
     var name: String
-    var outcomes: [String: [Outcome]]
+    var outcomes: OrderedDictionary<String, [Outcome]>
 
     private var sortedOutcomeKeys: [String]
     private var maxLineValue: Int
     private var sortedOutcomes: [String: [Outcome] ]
 
-    init(id: String, name: String, outcomes: [String: [Outcome]] ) {
+    init(id: String, name: String, outcomes: OrderedDictionary<String, [Outcome]> ) {
         
         var processedOutcomes = outcomes
 
@@ -73,9 +73,10 @@ struct ColumnListedMarketGroupOrganizer: MarketGroupOrganizer {
         // When there is H and A type outcomes, and a random third type
         if self.outcomes.keys.count == 3,
            !self.outcomes.keys.contains("D"),
-           let homeKey = self.outcomes["H"],
-           let awayKey = self.outcomes["A"] {
-            var tempOutcomes = [String: [Outcome]]()
+           self.outcomes.keys.contains("H"),
+           self.outcomes.keys.contains("A") {
+            
+            var tempOutcomes = OrderedDictionary<String, [Outcome]>()
             
             for (key, _) in self.outcomes {
                 if key != "A" && key != "H" {
@@ -88,61 +89,24 @@ struct ColumnListedMarketGroupOrganizer: MarketGroupOrganizer {
             
             self.outcomes = tempOutcomes
         }
-
+        
+        self.sortedOutcomeKeys = Array(self.outcomes.keys)
         self.sortedOutcomeKeys = self.outcomes.keys.sorted { out1Name, out2Name in
-            let out1Value = OddOutcomesSortingHelper.sortValueForOutcome(out1Name)
-            let out2Value = OddOutcomesSortingHelper.sortValueForOutcome(out2Name)
+            guard
+                let out1Value = OddOutcomesSortingHelper.sortValueForOutcomeIfPresent(out1Name),
+                let out2Value = OddOutcomesSortingHelper.sortValueForOutcomeIfPresent(out2Name)
+            else {
+                // we only sort if we have value, otherwise we kepp the original positions
+                return false
+            }
             return out1Value < out2Value
         }
 
         self.sortedOutcomes = [:]
 
-        for sortedOutcomeKey in sortedOutcomeKeys {
+        for sortedOutcomeKey in self.sortedOutcomeKeys {
             if let outcomesForKey = self.outcomes[sortedOutcomeKey] {
-
-                let sortedOutcomes = outcomesForKey.sorted { leftOutcome, rightOutcome in
-
-                    var leftNameDigit1 = leftOutcome.nameDigit1 ?? 0.0
-                    var rightNameDigit1 = rightOutcome.nameDigit1 ?? 0.0
-
-                    var leftNameDigit2 = leftOutcome.nameDigit2 ?? 0.0
-                    var rightNameDigit2 = rightOutcome.nameDigit2 ?? 0.0
-
-                    let leftNameDigit3 = leftOutcome.nameDigit3 ?? 0.0
-                    let rightNameDigit3 = rightOutcome.nameDigit3 ?? 0.0
-
-                    if (leftOutcome.codeName == "away" ||
-                        rightOutcome.codeName == "away" ||
-                        leftOutcome.codeName == "away_draw" ||
-                        rightOutcome.codeName == "away_draw")
-                        && (leftOutcome.nameDigit2 != nil && rightOutcome.nameDigit2 != nil) {
-                        
-                        leftNameDigit1 = leftOutcome.nameDigit2 ?? 0.0
-                        rightNameDigit1 = rightOutcome.nameDigit2 ?? 0.0
-
-                        leftNameDigit2 = leftOutcome.nameDigit1 ?? 0.0
-                        rightNameDigit2 = rightOutcome.nameDigit1 ?? 0.0
-                    }
-
-                    if leftNameDigit1 == rightNameDigit1 {
-                        if leftNameDigit2 == rightNameDigit2 {
-                            if leftNameDigit3 == rightNameDigit3 {
-                                return leftOutcome.translatedName < rightOutcome.translatedName
-                            }
-                            else {
-                                return leftNameDigit3 < rightNameDigit3
-                            }
-                        }
-                        else {
-                            return leftNameDigit2 < rightNameDigit2
-                        }
-                    }
-                    else {
-                        return leftNameDigit1 < rightNameDigit1
-                    }
-                }
-
-                self.sortedOutcomes[sortedOutcomeKey] = sortedOutcomes
+                self.sortedOutcomes[sortedOutcomeKey] = outcomesForKey
             }
         }
 
@@ -188,14 +152,15 @@ struct MarketLinesMarketGroupOrganizer: MarketGroupOrganizer {
 
     var id: String
     var name: String
-    var outcomes: [String: [Outcome]]
+    var outcomes: OrderedDictionary<String, [Outcome]>
     var markets: [Market]
 
     private var sortedOutcomeKeys: [String]
     private var maxLineValue: Int
+    private var maxColumnValue: Int
     private var sortedMarkets: [Market]
 
-    init(id: String, name: String, markets: [Market], outcomes: [String: [Outcome]]) {
+    init(id: String, name: String, markets: [Market], outcomes: OrderedDictionary<String, [Outcome]>) {
 
         self.id = id
         self.name = name
@@ -204,17 +169,15 @@ struct MarketLinesMarketGroupOrganizer: MarketGroupOrganizer {
 
         self.sortedOutcomeKeys = []
         self.sortedOutcomeKeys = self.outcomes.keys.sorted { out1Name, out2Name in
-            let out1Value = OddOutcomesSortingHelper.sortValueForOutcome(out1Name)
-            let out2Value = OddOutcomesSortingHelper.sortValueForOutcome(out2Name)
+            guard
+                let out1Value = OddOutcomesSortingHelper.sortValueForOutcomeIfPresent(out1Name),
+                let out2Value = OddOutcomesSortingHelper.sortValueForOutcomeIfPresent(out2Name)
+            else {
+                // we only sort if we have value, otherwise we kepp the original positions
+                return false
+            }
             return out1Value < out2Value
         }
-
-        // Inverse Under/Over to Over/Under
-//        if self.outcomes.values.contains(where: {
-//            (($0[safe: 0]?.codeName.contains("Over")) != nil || ($0[safe: 0]?.codeName.contains("Under")) != nil)
-//        }) {
-//            self.sortedOutcomeKeys = self.sortedOutcomeKeys.reversed()
-//        }
 
         self.markets = markets
         self.sortedMarkets = self.markets.sorted(by: { leftMarket, rigthMarket in
@@ -222,7 +185,12 @@ struct MarketLinesMarketGroupOrganizer: MarketGroupOrganizer {
         })
 
         self.maxLineValue = markets.count
-
+        
+        var maxColumnValue = 0
+        for market in self.markets {
+            maxColumnValue = max(maxColumnValue, market.outcomes.count)
+        }
+        self.maxColumnValue = maxColumnValue
     }
 
     var marketId: String {
@@ -234,7 +202,7 @@ struct MarketLinesMarketGroupOrganizer: MarketGroupOrganizer {
     }
 
     var numberOfColumns: Int {
-        return outcomes.keys.count
+        return self.maxColumnValue
     }
 
     var numberOfLines: Int {
@@ -242,6 +210,14 @@ struct MarketLinesMarketGroupOrganizer: MarketGroupOrganizer {
     }
 
     func outcomeFor(column: Int, line: Int) -> Outcome? {
+
+        if self.name.lowercased() == "buts du joueur" {
+            print("stop")
+        }
+        
+//        if let market = self.sortedMarkets[safe: line] {
+//            return market.outcomes[safe: column]
+//        }
 
         if let market = self.sortedMarkets[safe: line], let outcomeKey = self.sortedOutcomeKeys[safe: column] {
             for outcome in market.outcomes where outcome.headerCodeName == outcomeKey {
@@ -257,14 +233,14 @@ struct MarketColumnsMarketGroupOrganizer: MarketGroupOrganizer {
 
     var id: String
     var name: String
-    var outcomes: [String: [Outcome]]
+    var outcomes: OrderedDictionary<String, [Outcome]>
     var markets: [Market]
     var maxLineValue: Int
 
     private var sortedOutcomeKeys: [String]
     private var sortedOutcomes: [String: [Outcome] ]
 
-    init(id: String, name: String, markets: [Market], outcomes: [String: [Outcome]]) {
+    init(id: String, name: String, markets: [Market], outcomes: OrderedDictionary<String, [Outcome]>) {
 
         self.id = id
         self.name = name
@@ -273,8 +249,13 @@ struct MarketColumnsMarketGroupOrganizer: MarketGroupOrganizer {
 
         self.sortedOutcomeKeys = []
         self.sortedOutcomeKeys = self.outcomes.keys.sorted { out1Name, out2Name in
-            let out1Value = OddOutcomesSortingHelper.sortValueForOutcome(out1Name)
-            let out2Value = OddOutcomesSortingHelper.sortValueForOutcome(out2Name)
+            guard
+                let out1Value = OddOutcomesSortingHelper.sortValueForOutcomeIfPresent(out1Name),
+                let out2Value = OddOutcomesSortingHelper.sortValueForOutcomeIfPresent(out2Name)
+            else {
+                // we only sort if we have value, otherwise we kepp the original positions
+                return false
+            }
             return out1Value < out2Value
         }
 
@@ -282,37 +263,7 @@ struct MarketColumnsMarketGroupOrganizer: MarketGroupOrganizer {
 
         for sortedOutcomeKey in sortedOutcomeKeys {
             if let outcomesForKey = self.outcomes[sortedOutcomeKey] {
-
-                let sortedOutcomes = outcomesForKey.sorted { leftOutcome, rightOutcome in
-
-                    let leftNameDigit1 = leftOutcome.nameDigit1 ?? 0.0
-                    let rightNameDigit1 = rightOutcome.nameDigit1 ?? 0.0
-
-                    let leftNameDigit2 = leftOutcome.nameDigit2 ?? 0.0
-                    let rightNameDigit2 = rightOutcome.nameDigit2 ?? 0.0
-
-                    let leftNameDigit3 = leftOutcome.nameDigit3 ?? 0.0
-                    let rightNameDigit3 = rightOutcome.nameDigit3 ?? 0.0
-
-                    if leftNameDigit1 == rightNameDigit1 {
-                        if leftNameDigit2 == rightNameDigit2 {
-                            if leftNameDigit3 == rightNameDigit3 {
-                                return leftOutcome.translatedName < rightOutcome.translatedName
-                            }
-                            else {
-                                return leftNameDigit3 < rightNameDigit3
-                            }
-                        }
-                        else {
-                            return leftNameDigit2 < rightNameDigit2
-                        }
-                    }
-                    else {
-                        return leftNameDigit1 < rightNameDigit1
-                    }
-                }
-
-                self.sortedOutcomes[sortedOutcomeKey] = sortedOutcomes
+                self.sortedOutcomes[sortedOutcomeKey] = outcomesForKey
             }
         }
 
@@ -361,19 +312,14 @@ struct SequentialMarketGroupOrganizer: MarketGroupOrganizer {
 
     private var sortedOutcomes: [Outcome]
 
-    init(id: String, name: String, market: Market, sortedByOdd: Bool) {
+    init(id: String, name: String, market: Market) {
 
         self.id = id
         self.name = name
         self.market = market
 
-        if sortedByOdd {
-            self.sortedOutcomes = market.outcomes.sorted(by: \.bettingOffer.decimalOdd)
-        }
-        else {
-            self.sortedOutcomes = market.outcomes.sorted(by: \.translatedName)
-        }
-
+        self.sortedOutcomes = market.outcomes
+        
         self.maxColumnValue = 3
         if self.sortedOutcomes.count == 2 {
             self.maxColumnValue = 2
@@ -411,14 +357,14 @@ struct UndefinedGroupMarketGroupOrganizer: MarketGroupOrganizer {
 
     var id: String
     var name: String
-    var outcomes: [String: [Outcome]]
+    var outcomes: OrderedDictionary<String, [Outcome]>
 
     private var sortedOutcomes: [Outcome]
 
     private var maxColumnValue: Int
     private var maxLineValue: Double
 
-    init(id: String, name: String, outcomes: [String: [Outcome]]) {
+    init(id: String, name: String, outcomes:  OrderedDictionary<String, [Outcome]>) {
 
         self.id = id
         self.name = name
@@ -426,14 +372,12 @@ struct UndefinedGroupMarketGroupOrganizer: MarketGroupOrganizer {
 
         self.sortedOutcomes = []
 
-        for outcome in outcomes {
-            self.sortedOutcomes.append(contentsOf: outcome.value)
+        for key in outcomes.keys {
+            if let outcome = outcomes[key] {
+                self.sortedOutcomes.append(contentsOf: outcome)
+            }
         }
-
-        self.sortedOutcomes = self.sortedOutcomes.sorted(by: {
-            $0.bettingOffer.decimalOdd < $1.bettingOffer.decimalOdd
-        })
-
+        
         self.maxColumnValue = 3
         if self.sortedOutcomes.count == 2 || self.sortedOutcomes.count == 4 {
             self.maxColumnValue = 2
@@ -471,14 +415,14 @@ struct UnorderedGroupMarketGroupOrganizer: MarketGroupOrganizer {
 
     var id: String
     var name: String
-    var outcomes: [String: [Outcome]]
+    var outcomes: OrderedDictionary<String, [Outcome]>
 
     private var sortedOutcomes: [Outcome]
 
     private var maxColumnValue: Int
     private var maxLineValue: Double
 
-    init(id: String, name: String, outcomes: [String: [Outcome]]) {
+    init(id: String, name: String, outcomes: OrderedDictionary<String, [Outcome]>) {
 
         self.id = id
         self.name = name
@@ -486,20 +430,10 @@ struct UnorderedGroupMarketGroupOrganizer: MarketGroupOrganizer {
 
         self.sortedOutcomes = []
 
-        for outcome in outcomes {
-            self.sortedOutcomes.append(contentsOf: outcome.value)
-        }
-
-        if outcomes.keys.contains("A") || outcomes.keys.contains("D") || outcomes.keys.contains("H") {
-
-            self.sortedOutcomes = []
-
-            let sortedOutcomes = outcomes.sorted(by: { $0.0 > $1.0 })
-
-            for outcome in sortedOutcomes {
-                self.sortedOutcomes.append(contentsOf: outcome.value)
+        for key in outcomes.keys {
+            if let outcome = outcomes[key] {
+                self.sortedOutcomes.append(contentsOf: outcome)
             }
-
         }
 
         self.maxColumnValue = 3
@@ -540,14 +474,14 @@ struct SimpleListGroupMarketGroupOrganizer: MarketGroupOrganizer {
 
     var id: String
     var name: String
-    var outcomes: [String: [Outcome]]
+    var outcomes: OrderedDictionary<String, [Outcome]>
 
     private var sortedOutcomes: [Outcome]
 
     private var maxColumnValue: Int
     private var maxLineValue: Double
 
-    init(id: String, name: String, outcomes: [String: [Outcome]]) {
+    init(id: String, name: String, outcomes: OrderedDictionary<String, [Outcome]>) {
 
         self.id = id
         self.name = name
@@ -555,22 +489,12 @@ struct SimpleListGroupMarketGroupOrganizer: MarketGroupOrganizer {
 
         self.sortedOutcomes = []
 
-        for outcome in outcomes {
-            self.sortedOutcomes.append(contentsOf: outcome.value)
-        }
-
-        if outcomes.keys.contains("A") || outcomes.keys.contains("D") || outcomes.keys.contains("H") {
-
-            self.sortedOutcomes = []
-
-            let sortedOutcomes = outcomes.sorted(by: { $0.0 > $1.0 })
-
-            for outcome in sortedOutcomes {
-                self.sortedOutcomes.append(contentsOf: outcome.value)
+        for key in outcomes.keys {
+            if let outcome = outcomes[key] {
+                self.sortedOutcomes.append(contentsOf: outcome)
             }
-
         }
-
+        
         self.maxColumnValue = 1
         self.maxLineValue = Double(self.sortedOutcomes.count)
     }

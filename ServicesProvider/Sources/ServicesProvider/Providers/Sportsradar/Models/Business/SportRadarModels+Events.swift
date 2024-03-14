@@ -469,7 +469,12 @@ extension SportRadarModels {
         init(from decoder: Decoder) throws {
             let container = try decoder.container(keyedBy: SportRadarModels.Market.CodingKeys.self)
             self.id = try container.decode(String.self, forKey: .id)
-            self.name = try container.decode(String.self, forKey: .name)
+           
+            var nameValue = try container.decode(String.self, forKey: .name)
+            nameValue = nameValue.replacingOccurrences(of: "\n", with: "")
+            nameValue = nameValue.replacingOccurrences(of: "\r", with: "")
+            self.name = nameValue
+            
             self.marketTypeId = try container.decodeIfPresent(String.self, forKey: .marketTypeId)
             self.eventMarketTypeId = try container.decodeIfPresent(String.self, forKey: .eventMarketTypeId)
             self.eventName = try container.decodeIfPresent(String.self, forKey: .eventName)
@@ -489,7 +494,6 @@ extension SportRadarModels {
             else if let marketDigitLineDouble = try? container.decodeIfPresent(Double.self, forKey: .marketDigitLine) {
                 self.marketDigitLine = String(marketDigitLineDouble)
             }
-            
             
             self.outcomesOrder = .none
             if let outcomesOrderString = (try container.decodeIfPresent(String.self, forKey: .outcomesOrder)) {
