@@ -133,7 +133,7 @@ class ActivationAlertCollectionViewCell: UICollectionViewCell {
         
         if alertType == .documents {
             
-            if let kycExpireString = Env.userSessionStore.userProfilePublisher.value?.kycExpire {
+            if let kycExpireString = Env.userSessionStore.kycExpire {
                 
                 if let expireDateString = self.getExpireDateString(dateString: kycExpireString) {
                     self.kycExpireLabel.text = expireDateString

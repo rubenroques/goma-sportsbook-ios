@@ -83,6 +83,8 @@ class UserSessionStore {
             .map { $0?.kycStatus }
             .eraseToAnyPublisher()
     }
+    
+    var kycExpire: String? = nil
 
     var userWalletPublisher = CurrentValueSubject<UserWallet?, Never>(nil)
     var userCashbackBalance = CurrentValueSubject<Double?, Never>(nil)
@@ -220,6 +222,7 @@ class UserSessionStore {
         self.userSessionPublisher.send(nil)
         self.userWalletPublisher.send(nil)
         self.userCashbackBalance.send(nil)
+        self.kycExpire = nil
 
         Optimove.shared.signOutUser()
     }
@@ -253,6 +256,10 @@ class UserSessionStore {
                                           userId: userProfile.userIdentifier,
                                           birthDate: userProfile.birthDate.toString(),
                                           avatarName: userProfile.avatarName)
+                
+                if let kycExpire = userProfile.kycExpire {
+                    self.kycExpire = kycExpire
+                }
 
                 return (session, userProfile)
             }
