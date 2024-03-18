@@ -248,8 +248,9 @@ extension UserReferralView {
             self.iconBaseView.leadingAnchor.constraint(equalTo: self.containerView.leadingAnchor, constant: 15),
             self.iconBaseView.widthAnchor.constraint(equalToConstant: 50),
             self.iconBaseView.heightAnchor.constraint(equalTo: self.iconBaseView.widthAnchor),
-            self.iconBaseView.topAnchor.constraint(equalTo: self.containerView.topAnchor, constant: 10),
-            self.iconBaseView.bottomAnchor.constraint(equalTo: self.containerView.bottomAnchor, constant: -10),
+//            self.iconBaseView.topAnchor.constraint(equalTo: self.containerView.topAnchor, constant: 10),
+//            self.iconBaseView.bottomAnchor.constraint(equalTo: self.containerView.bottomAnchor, constant: -10),
+            self.iconBaseView.centerYAnchor.constraint(equalTo: self.containerView.centerYAnchor),
 
             self.iconInnerView.leadingAnchor.constraint(equalTo: self.iconBaseView.leadingAnchor, constant: 1),
             self.iconInnerView.trailingAnchor.constraint(equalTo: self.iconBaseView.trailingAnchor, constant: -1),
@@ -262,14 +263,12 @@ extension UserReferralView {
             self.iconImageView.bottomAnchor.constraint(equalTo: self.iconBaseView.bottomAnchor),
 
             self.titleLabel.leadingAnchor.constraint(equalTo: self.iconBaseView.trailingAnchor, constant: 10),
-            self.titleLabel.topAnchor.constraint(equalTo: self.iconBaseView.topAnchor, constant: 5),
+            self.titleLabel.trailingAnchor.constraint(equalTo: self.containerView.trailingAnchor, constant: -10),
+            self.titleLabel.topAnchor.constraint(equalTo: self.containerView.topAnchor, constant: 10),
 
-            self.subtitleLabel.leadingAnchor.constraint(equalTo: self.titleLabel.leadingAnchor),
-            self.subtitleLabel.trailingAnchor.constraint(equalTo: self.containerView.trailingAnchor, constant: -15),
-            self.subtitleLabel.topAnchor.constraint(equalTo: self.titleLabel.bottomAnchor, constant: 5),
-
-            self.kycStatusView.leadingAnchor.constraint(equalTo: self.titleLabel.trailingAnchor, constant: 8),
-            self.kycStatusView.centerYAnchor.constraint(equalTo: self.titleLabel.centerYAnchor),
+            self.kycStatusView.leadingAnchor.constraint(equalTo: self.iconBaseView.trailingAnchor, constant: 10),
+            self.kycStatusView.topAnchor.constraint(equalTo: self.titleLabel.bottomAnchor, constant: 5),
+//            self.kycStatusView.centerYAnchor.constraint(equalTo: self.titleLabel.centerYAnchor),
 
             self.kycStatusLabel.leadingAnchor.constraint(equalTo: self.kycStatusView.leadingAnchor, constant: 4),
             self.kycStatusLabel.trailingAnchor.constraint(equalTo: self.kycStatusView.trailingAnchor, constant: -4),
@@ -278,12 +277,17 @@ extension UserReferralView {
 
             self.depositView.leadingAnchor.constraint(equalTo: self.kycStatusView.trailingAnchor, constant: 8),
             self.depositView.trailingAnchor.constraint(lessThanOrEqualTo: self.containerView.trailingAnchor, constant: -10),
-            self.depositView.centerYAnchor.constraint(equalTo: self.titleLabel.centerYAnchor),
+            self.depositView.centerYAnchor.constraint(equalTo: self.kycStatusView.centerYAnchor),
 
             self.depositLabel.leadingAnchor.constraint(equalTo: self.depositView.leadingAnchor, constant: 4),
             self.depositLabel.trailingAnchor.constraint(equalTo: self.depositView.trailingAnchor, constant: -4),
             self.depositLabel.topAnchor.constraint(equalTo: self.depositView.topAnchor, constant: 2),
             self.depositLabel.bottomAnchor.constraint(equalTo: self.depositView.bottomAnchor, constant: -2),
+            
+            self.subtitleLabel.leadingAnchor.constraint(equalTo: self.titleLabel.leadingAnchor),
+            self.subtitleLabel.trailingAnchor.constraint(equalTo: self.containerView.trailingAnchor, constant: -15),
+            self.subtitleLabel.topAnchor.constraint(equalTo: self.kycStatusView.bottomAnchor, constant: 5),
+            self.subtitleLabel.bottomAnchor.constraint(equalTo: self.containerView.bottomAnchor, constant: -10)
 
         ])
 
