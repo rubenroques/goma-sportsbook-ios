@@ -106,7 +106,7 @@ class OutrightMarketDetailsViewModel {
                 }, receiveValue: { [weak self] competitionInfo in
                     self?.subscribeOutrightMarkets(competition: competition)
                 })
-                .store(in: &cancellables)
+                .store(in: &self.cancellables)
         }
 
     }
@@ -116,7 +116,8 @@ class OutrightMarketDetailsViewModel {
         if let outrightMarketGroup = competition.competitionInfo?.marketGroups.filter({
             $0.name == "Outright"
         }).first {
-            Env.servicesProvider.subscribeOutrightMarkets(forMarketGroupId: outrightMarketGroup.id)
+            
+            Env.servicesProvider.subscribeOutrightEvent(forMarketGroupId: outrightMarketGroup.id)
                 .sink { [weak self] (completion: Subscribers.Completion<ServiceProviderError>) in
                     switch completion {
                     case .finished:
@@ -124,22 +125,21 @@ class OutrightMarketDetailsViewModel {
                     case .failure:
                         print("SUBSCRIPTION COMPETITION OUTRIGHTS ERROR")
                     }
-                } receiveValue: { [weak self] (subscribableContent: SubscribableContent<[EventsGroup]>) in
+                } receiveValue: { [weak self] (subscribableContent: SubscribableContent<ServicesProvider.Event>) in
                     switch subscribableContent {
                     case .connected(let subscription):
                         self?.subscriptions.insert(subscription)
-                    case .contentUpdate(let eventsGroups):
-                        print("OUTRIGHTS EVENTS: \(eventsGroups)")
-                        if let event = eventsGroups.first?.events.first {
-                            let markets = ServiceProviderModelMapper.markets(fromServiceProviderMarkets: event.markets)
-                            self?.storeMarkets(markets: markets)
-                        }
+                    case .contentUpdate(let event):
+                        let markets = ServiceProviderModelMapper.markets(fromServiceProviderMarkets: event.markets)
+                        self?.storeMarkets(markets: markets)
                     case .disconnected:
                         ()
                     }
                 }
-                .store(in: &cancellables)
+                .store(in: &self.cancellables)
+            
         }
+        
     }
 
     private func storeMarkets(markets: [Market]) {

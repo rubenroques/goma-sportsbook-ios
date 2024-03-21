@@ -192,11 +192,7 @@ class MarketGroupDetailsStore {
                 if outcomesKeys.count > 3, outcomesKeys.contains("h") && outcomesKeys.contains("d") && outcomesKeys.contains("a") {
                     outcomesDictionary = ["all": allOutcomes] // To many headers for the columns systems
                 }
-                
-                if marketGroupName.lowercased().contains("buts du joueur") {
-                    print("stop")
-                }
-                
+
                 //
                 // Select the correct organizer
                 //

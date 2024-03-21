@@ -44,10 +44,8 @@ class SportRadarRestConnector {
             return AnyPublisher(Fail<T, ServiceProviderError>(error: error))
         }
 
-//        print("ServiceProvider - SportRadarRestConnector [[ requesting ]] ",
-//              dump(request),
-//              dump(String.init(data: request.httpBody ?? Data(), encoding: .utf8)) ?? "no body found")
-        
+        print("API Request:", request.cURL(pretty: true), "\n==========================================")
+
         return self.session.dataTaskPublisher(for: request)
             .tryMap { result in
                 if let httpResponse = result.response as? HTTPURLResponse, httpResponse.statusCode == 401 {

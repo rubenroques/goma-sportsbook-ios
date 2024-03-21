@@ -210,20 +210,14 @@ struct MarketLinesMarketGroupOrganizer: MarketGroupOrganizer {
     }
 
     func outcomeFor(column: Int, line: Int) -> Outcome? {
-
-        if self.name.lowercased() == "buts du joueur" {
-            print("stop")
+        if let market = self.sortedMarkets[safe: line] {
+            return market.outcomes[safe: column]
         }
-        
-//        if let market = self.sortedMarkets[safe: line] {
-//            return market.outcomes[safe: column]
+//        if let market = self.sortedMarkets[safe: line], let outcomeKey = self.sortedOutcomeKeys[safe: column] {
+//            for outcome in market.outcomes where outcome.headerCodeName == outcomeKey {
+//                return outcome
+//            }
 //        }
-
-        if let market = self.sortedMarkets[safe: line], let outcomeKey = self.sortedOutcomeKeys[safe: column] {
-            for outcome in market.outcomes where outcome.headerCodeName == outcomeKey {
-                return outcome
-            }
-        }
         return nil
 
     }

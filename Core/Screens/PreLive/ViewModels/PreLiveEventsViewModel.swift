@@ -466,7 +466,7 @@ class PreLiveEventsViewModel: NSObject {
         case .topCompetitions:
             self.topCompetitionsDataSource.fetchData(forSport: self.selectedSport, forceRefresh: forceRefresh)
         case .competitions:
-            self.fetchCompetitionsMatchesWithIds(lastCompetitionsMatchesRequested, forceRefresh: forceRefresh)
+            self.fetchCompetitionsMatchesWithIds(self.lastCompetitionsMatchesRequested, forceRefresh: forceRefresh)
         }
     }
 

@@ -676,6 +676,16 @@ extension SportRadarModels {
             case numberOutrightMarkets = "numoutrightmarkets"
             case parentId = "idfwbonavigation_parent"
         }
+        
+        init(from decoder: Decoder) throws {
+            let container: KeyedDecodingContainer<SportRadarModels.SportCompetitionInfo.CodingKeys> = try decoder.container(keyedBy: SportRadarModels.SportCompetitionInfo.CodingKeys.self)
+            self.id = try container.decode(String.self, forKey: SportRadarModels.SportCompetitionInfo.CodingKeys.id)
+            self.name = try container.decode(String.self, forKey: SportRadarModels.SportCompetitionInfo.CodingKeys.name)
+            self.marketGroups = try container.decode([SportRadarModels.SportCompetitionMarketGroup].self, forKey: SportRadarModels.SportCompetitionInfo.CodingKeys.marketGroups)
+            self.numberOutrightEvents = try container.decode(String.self, forKey: SportRadarModels.SportCompetitionInfo.CodingKeys.numberOutrightEvents)
+            self.numberOutrightMarkets = try container.decode(String.self, forKey: SportRadarModels.SportCompetitionInfo.CodingKeys.numberOutrightMarkets)
+            self.parentId = try container.decodeIfPresent(String.self, forKey: SportRadarModels.SportCompetitionInfo.CodingKeys.parentId)
+        }
     }
 
     struct SportCompetitionMarketGroup: Codable {
