@@ -69,6 +69,11 @@ class RecruitAFriendViewModel {
             })
             .store(in: &cancellables)
     }
+    
+    func refreshRecruitData() {
+        self.getReferralLink()
+        self.getReferees()
+    }
 }
 
 class RecruitAFriendViewController: UIViewController {
@@ -96,6 +101,7 @@ class RecruitAFriendViewController: UIViewController {
     private lazy var recruitInvalidDescriptionLabel: UILabel = Self.createRecruitInvalidDescriptionLabel()
     private lazy var recruitInvalidDocumentsButton: UIButton = Self.createRecruitInvalidDocumentsButton()
     private lazy var recruitInvalidDepositButton: UIButton = Self.createRecruitInvalidDepositButton()
+    private lazy var recruitInvalidLoginButton: UIButton = Self.createRecruitInvalidLoginButton()
 
     private lazy var recruitMethodsBaseView: UIView = Self.createRecruitMethodsBaseView()
     private lazy var recruitMethodsTitleLabel: UILabel = Self.createRecruitMethodsTitleLabel()
@@ -199,6 +205,8 @@ class RecruitAFriendViewController: UIViewController {
         }
     }
     
+    var fromAnonymousMenu: Bool = false
+    
     private var cancellables = Set<AnyCancellable>()
 
     // MARK: Lifetime and cycle
@@ -228,15 +236,41 @@ class RecruitAFriendViewController: UIViewController {
         self.recruitInvalidDocumentsButton.addTarget(self, action: #selector(didTapDocuments), for: .primaryActionTriggered)
 
         self.recruitInvalidDepositButton.addTarget(self, action: #selector(didTapDeposit), for: .primaryActionTriggered)
+        
+        self.recruitInvalidLoginButton.addTarget(self, action: #selector(didTapLogin), for: .primaryActionTriggered)
 
         self.checkPlayerStatus()
         
         self.bind(toViewModel: self.viewModel)
+        
+        Env.userSessionStore.userProfilePublisher
+            .receive(on: DispatchQueue.main)
+            .sink(receiveValue: { [weak self] userProfile in
+                
+                if let userProfile {
+                    self?.recruitInvalidDescriptionLabel.text = localized("rf_second_description_nv")
+                    
+                    self?.recruitInvalidDocumentsButton.isHidden = false
+                    self?.recruitInvalidDepositButton.isHidden = false
+                    self?.recruitInvalidLoginButton.isHidden = true
+                }
+                else {
+                    self?.recruitInvalidDescriptionLabel.text = localized("need_login")
+                    
+                    self?.recruitInvalidDocumentsButton.isHidden = true
+                    self?.recruitInvalidDepositButton.isHidden = true
+                    self?.recruitInvalidLoginButton.isHidden = false
+                }
+                
+                self?.viewModel.refreshRecruitData()
+                self?.checkPlayerStatus()
+            })
+            .store(in: &cancellables)
     }
     
     private func checkPlayerStatus() {
         
-        if let isUserKycVerified = Env.userSessionStore.userKnowYourCustomerStatus, isUserKycVerified == .pass {
+        if let isUserKycVerified = Env.userSessionStore.userProfilePublisher.value?.kycStatus, isUserKycVerified == .pass {
             self.isKYCVerified = true
         }
         else {
@@ -373,6 +407,13 @@ class RecruitAFriendViewController: UIViewController {
         self.recruitInvalidDepositButton.setBackgroundColor(UIColor.App.alertError, for: .normal)
         self.recruitInvalidDepositButton.setBackgroundColor(UIColor.App.alertError, for: .highlighted)
         self.recruitInvalidDepositButton.setBackgroundColor(UIColor.App.alertError, for: .disabled)
+        
+        self.recruitInvalidLoginButton.setTitleColor(UIColor.App.buttonTextPrimary, for: .normal)
+        self.recruitInvalidLoginButton.setTitleColor(UIColor.App.buttonTextPrimary.withAlphaComponent(0.7), for: .highlighted)
+        self.recruitInvalidLoginButton.setTitleColor(UIColor.App.buttonTextPrimary.withAlphaComponent(0.7), for: .disabled)
+        self.recruitInvalidLoginButton.setBackgroundColor(UIColor.App.highlightPrimary, for: .normal)
+        self.recruitInvalidLoginButton.setBackgroundColor(UIColor.App.highlightPrimary, for: .highlighted)
+        self.recruitInvalidLoginButton.setBackgroundColor(UIColor.App.highlightPrimary.withAlphaComponent(0.7), for: .disabled)
 
         self.recruitMethodsBaseView.backgroundColor = UIColor.App.backgroundCards
 
@@ -428,6 +469,7 @@ class RecruitAFriendViewController: UIViewController {
         
         viewModel.shouldSetupReferees
             .sink(receiveValue: { [weak self] in
+                self?.referralsStackView.removeAllArrangedSubviews()
                 self?.setupReferrals()
             })
             .store(in: &cancellables)
@@ -485,16 +527,23 @@ class RecruitAFriendViewController: UIViewController {
 
     // MARK: Actions
     @objc private func didTapBackButton() {
-        self.navigationController?.popViewController(animated: true)
+        if self.fromAnonymousMenu && Env.userSessionStore.isUserLogged() {
+            self.dismiss(animated: true)
+        }
+        else {
+            self.navigationController?.popViewController(animated: true)
+        }
     }
 
     @objc private func didTapShareButton() {
         
         if let referralLink = viewModel.referralLink?.link {
             
-            guard var url = URL(string: "\(referralLink)") else { return }
+            guard let url = URL(string: "\(referralLink)") else { return }
             
-            let shareActivityViewController = UIActivityViewController(activityItems: [url], applicationActivities: nil)
+            let description = localized("share_raf_link")
+            
+            let shareActivityViewController = UIActivityViewController(activityItems: [url, description], applicationActivities: nil)
             
             if let popoverController = shareActivityViewController.popoverPresentationController {
                 popoverController.sourceView = self.view
@@ -538,6 +587,12 @@ class RecruitAFriendViewController: UIViewController {
         }
 
         self.present(navigationViewController, animated: true)
+    }
+    
+    @objc private func didTapLogin() {
+        let loginViewController = Router.navigationController(with: LoginViewController())
+        
+        self.present(loginViewController, animated: true, completion: nil)
     }
 }
 
@@ -583,7 +638,7 @@ extension RecruitAFriendViewController {
     private static func createBannerImageView() -> UIImageView {
         let imageView = UIImageView()
         imageView.translatesAutoresizingMaskIntoConstraints = false
-        imageView.image = UIImage(named: "betsson_banner")
+        imageView.image = UIImage(named: "recruit_banner")
         imageView.contentMode = .scaleAspectFill
         return imageView
     }
@@ -717,6 +772,18 @@ extension RecruitAFriendViewController {
         button.layer.masksToBounds = true
         button.backgroundColor = .clear
         button.contentEdgeInsets = UIEdgeInsets(top: 10.0, left: 0, bottom: 10.0, right: 0)
+        return button
+    }
+    
+    private static func createRecruitInvalidLoginButton() -> UIButton {
+        let button = UIButton()
+        button.translatesAutoresizingMaskIntoConstraints = false
+        button.setTitle(localized("login"), for: .normal)
+        button.titleLabel?.font = AppFont.with(type: .bold, size: 14)
+        button.layer.cornerRadius = CornerRadius.button
+        button.layer.masksToBounds = true
+        button.backgroundColor = .clear
+        button.contentEdgeInsets = UIEdgeInsets(top: 10.0, left: 10.0, bottom: 10.0, right: 10.0)
         return button
     }
 
@@ -1019,6 +1086,7 @@ extension RecruitAFriendViewController {
         self.recruitInvalidBaseView.addSubview(self.recruitInvalidDescriptionLabel)
         self.recruitInvalidBaseView.addSubview(self.recruitInvalidDocumentsButton)
         self.recruitInvalidBaseView.addSubview(self.recruitInvalidDepositButton)
+        self.recruitInvalidBaseView.addSubview(self.recruitInvalidLoginButton)
 
         self.containerView.addSubview(self.recruitMethodsBaseView)
 
@@ -1151,7 +1219,11 @@ extension RecruitAFriendViewController {
 
             self.recruitInvalidDepositButton.leadingAnchor.constraint(equalTo: self.recruitInvalidBaseView.centerXAnchor, constant: 8),
             self.recruitInvalidDepositButton.trailingAnchor.constraint(equalTo: self.recruitInvalidTitleLabel.trailingAnchor),
-            self.recruitInvalidDepositButton.centerYAnchor.constraint(equalTo: self.recruitInvalidDocumentsButton.centerYAnchor)
+            self.recruitInvalidDepositButton.centerYAnchor.constraint(equalTo: self.recruitInvalidDocumentsButton.centerYAnchor),
+            
+            self.recruitInvalidLoginButton.centerXAnchor.constraint(equalTo: self.recruitInvalidBaseView.centerXAnchor),
+            self.recruitInvalidLoginButton.topAnchor.constraint(equalTo: self.recruitInvalidDescriptionLabel.bottomAnchor, constant: 16),
+            self.recruitInvalidLoginButton.bottomAnchor.constraint(equalTo: self.recruitInvalidBaseView.bottomAnchor, constant: -16)
         ])
 
         // Recruit methods Info

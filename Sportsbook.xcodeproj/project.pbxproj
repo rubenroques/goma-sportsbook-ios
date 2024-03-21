@@ -5133,14 +5133,6 @@
 		6584F9042BA0B84200E317EA /* EmptyReferralView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6584F8FD2BA0B84200E317EA /* EmptyReferralView.swift */; };
 		6584F9052BA0B84200E317EA /* EmptyReferralView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6584F8FD2BA0B84200E317EA /* EmptyReferralView.swift */; };
 		6584F9062BA0B84200E317EA /* EmptyReferralView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6584F8FD2BA0B84200E317EA /* EmptyReferralView.swift */; };
-		658A4CAD2B9F29A700F73772 /* first_deposit.json in Resources */ = {isa = PBXBuildFile; fileRef = 658A4CAC2B9F29A700F73772 /* first_deposit.json */; };
-		658A4CAE2B9F29A700F73772 /* first_deposit.json in Resources */ = {isa = PBXBuildFile; fileRef = 658A4CAC2B9F29A700F73772 /* first_deposit.json */; };
-		658A4CAF2B9F29A700F73772 /* first_deposit.json in Resources */ = {isa = PBXBuildFile; fileRef = 658A4CAC2B9F29A700F73772 /* first_deposit.json */; };
-		658A4CB02B9F29A700F73772 /* first_deposit.json in Resources */ = {isa = PBXBuildFile; fileRef = 658A4CAC2B9F29A700F73772 /* first_deposit.json */; };
-		658A4CB12B9F29A700F73772 /* first_deposit.json in Resources */ = {isa = PBXBuildFile; fileRef = 658A4CAC2B9F29A700F73772 /* first_deposit.json */; };
-		658A4CB22B9F29A700F73772 /* first_deposit.json in Resources */ = {isa = PBXBuildFile; fileRef = 658A4CAC2B9F29A700F73772 /* first_deposit.json */; };
-		658A4CB32B9F29A700F73772 /* first_deposit.json in Resources */ = {isa = PBXBuildFile; fileRef = 658A4CAC2B9F29A700F73772 /* first_deposit.json */; };
-		658A4CB42B9F29A700F73772 /* first_deposit.json in Resources */ = {isa = PBXBuildFile; fileRef = 658A4CAC2B9F29A700F73772 /* first_deposit.json */; };
 		658A4CB62B9F6C4800F73772 /* Referrals.swift in Sources */ = {isa = PBXBuildFile; fileRef = 658A4CB52B9F6C4800F73772 /* Referrals.swift */; };
 		658A4CB72B9F6C4800F73772 /* Referrals.swift in Sources */ = {isa = PBXBuildFile; fileRef = 658A4CB52B9F6C4800F73772 /* Referrals.swift */; };
 		658A4CB82B9F6C4800F73772 /* Referrals.swift in Sources */ = {isa = PBXBuildFile; fileRef = 658A4CB52B9F6C4800F73772 /* Referrals.swift */; };
@@ -5163,6 +5155,14 @@
 		659510F02B2C7004001B2F2E /* Trademob in Frameworks */ = {isa = PBXBuildFile; productRef = 659510EF2B2C7004001B2F2E /* Trademob */; };
 		659510F22B2C7004001B2F2E /* WebBridge in Frameworks */ = {isa = PBXBuildFile; productRef = 659510F12B2C7004001B2F2E /* WebBridge */; };
 		659510F42B2C7340001B2F2E /* Adjust in Frameworks */ = {isa = PBXBuildFile; productRef = 659510F32B2C7340001B2F2E /* Adjust */; };
+		65F819622BAC83DB004E27C3 /* first_deposit.json in Resources */ = {isa = PBXBuildFile; fileRef = 65F819612BAC83DA004E27C3 /* first_deposit.json */; };
+		65F819632BAC83DB004E27C3 /* first_deposit.json in Resources */ = {isa = PBXBuildFile; fileRef = 65F819612BAC83DA004E27C3 /* first_deposit.json */; };
+		65F819642BAC83DB004E27C3 /* first_deposit.json in Resources */ = {isa = PBXBuildFile; fileRef = 65F819612BAC83DA004E27C3 /* first_deposit.json */; };
+		65F819652BAC83DB004E27C3 /* first_deposit.json in Resources */ = {isa = PBXBuildFile; fileRef = 65F819612BAC83DA004E27C3 /* first_deposit.json */; };
+		65F819662BAC83DB004E27C3 /* first_deposit.json in Resources */ = {isa = PBXBuildFile; fileRef = 65F819612BAC83DA004E27C3 /* first_deposit.json */; };
+		65F819672BAC83DB004E27C3 /* first_deposit.json in Resources */ = {isa = PBXBuildFile; fileRef = 65F819612BAC83DA004E27C3 /* first_deposit.json */; };
+		65F819682BAC83DB004E27C3 /* first_deposit.json in Resources */ = {isa = PBXBuildFile; fileRef = 65F819612BAC83DA004E27C3 /* first_deposit.json */; };
+		65F819692BAC83DB004E27C3 /* first_deposit.json in Resources */ = {isa = PBXBuildFile; fileRef = 65F819612BAC83DA004E27C3 /* first_deposit.json */; };
 		A90229A228AFD41100972863 /* QuickBetViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A902299F28AFD41100972863 /* QuickBetViewController.swift */; };
 		A90229A328AFD41100972863 /* QuickBetViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A902299F28AFD41100972863 /* QuickBetViewController.swift */; };
 		A90229A428AFD41100972863 /* QuickBetViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A902299F28AFD41100972863 /* QuickBetViewController.swift */; };
@@ -7454,9 +7454,9 @@
 		655E20092B28A14700C95337 /* TextSectionView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TextSectionView.swift; sourceTree = "<group>"; };
 		655E20122B29CB7E00C95337 /* TextSubsectionView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TextSubsectionView.swift; sourceTree = "<group>"; };
 		6584F8FD2BA0B84200E317EA /* EmptyReferralView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EmptyReferralView.swift; sourceTree = "<group>"; };
-		658A4CAC2B9F29A700F73772 /* first_deposit.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = first_deposit.json; sourceTree = "<group>"; };
 		658A4CB52B9F6C4800F73772 /* Referrals.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Referrals.swift; sourceTree = "<group>"; };
 		658A4CBE2B9F6C7F00F73772 /* ServiceProviderModelMapper+Referrals.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "ServiceProviderModelMapper+Referrals.swift"; sourceTree = "<group>"; };
+		65F819612BAC83DA004E27C3 /* first_deposit.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = first_deposit.json; sourceTree = "<group>"; };
 		A902299F28AFD41100972863 /* QuickBetViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QuickBetViewController.swift; sourceTree = "<group>"; };
 		A90229B028B6892300972863 /* QuickBetViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QuickBetViewModel.swift; sourceTree = "<group>"; };
 		A9059F192ABB5B1300796583 /* DocumentLevelStatus.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DocumentLevelStatus.swift; sourceTree = "<group>"; };
@@ -9990,8 +9990,8 @@
 			children = (
 				452BA1532A902BB000D0AA48 /* SignUpAvatars */,
 				A92BDCF72A163D0100E9B045 /* success_thumbs_up.json */,
-				658A4CAC2B9F29A700F73772 /* first_deposit.json */,
 				455897F02A9CE5C300E39598 /* progress_end_animation.json */,
+				65F819612BAC83DA004E27C3 /* first_deposit.json */,
 				A9A1B2D82A128D8A00F7A8ED /* deposit_animation.json */,
 				455897F82A9CE5CE00E39598 /* progress_bar_fire_ball.json */,
 				45E46C162A08FEB900BB9B85 /* sports-loading.json */,
@@ -12000,6 +12000,7 @@
 				450B7AAB28F58574009229E3 /* TournamentTableViewHeader.xib in Resources */,
 				450B7AAC28F58574009229E3 /* BetSubmissionSuccessViewController.xib in Resources */,
 				45F6BA7E2AB1F2B600C81DE1 /* avatar2-light.json in Resources */,
+				65F819642BAC83DB004E27C3 /* first_deposit.json in Resources */,
 				450B7AAD28F58574009229E3 /* SplashViewController.xib in Resources */,
 				450B7AAE28F58574009229E3 /* HeaderTextFieldView.xib in Resources */,
 				450B7AAF28F58574009229E3 /* SingleBettingTicketTableViewCell.xib in Resources */,
@@ -12013,7 +12014,6 @@
 				450B7AB528F58574009229E3 /* Inconsolata-Medium.ttf in Resources */,
 				A9A1B2DA2A128D8B00F7A8ED /* deposit_animation.json in Resources */,
 				450B7AB628F58574009229E3 /* TitleTableViewHeader.xib in Resources */,
-				658A4CAF2B9F29A700F73772 /* first_deposit.json in Resources */,
 				452BA1922A902C4900D0AA48 /* avatar6-dark.json in Resources */,
 				450B7AB828F58574009229E3 /* MyTicketsViewController.xib in Resources */,
 				45F6BA8C2AB1F2B600C81DE1 /* avatar4-light.json in Resources */,
@@ -12164,6 +12164,7 @@
 				457CBC6B282D2AE800ED0F00 /* LaunchScreen-EveryMatrix.storyboard in Resources */,
 				457CBBD6282D27D000ED0F00 /* TournamentTableViewHeader.xib in Resources */,
 				45F6BA822AB1F2B600C81DE1 /* avatar2-light.json in Resources */,
+				65F819682BAC83DB004E27C3 /* first_deposit.json in Resources */,
 				457CBBD7282D27D000ED0F00 /* BetSubmissionSuccessViewController.xib in Resources */,
 				457CBBD8282D27D000ED0F00 /* SplashViewController.xib in Resources */,
 				457CBBD9282D27D000ED0F00 /* HeaderTextFieldView.xib in Resources */,
@@ -12177,7 +12178,6 @@
 				457CBBDF282D27D000ED0F00 /* PhonePrefixSelectorViewController.xib in Resources */,
 				A9A1B2DE2A128D8B00F7A8ED /* deposit_animation.json in Resources */,
 				457CBBE0282D27D000ED0F00 /* Inconsolata-Medium.ttf in Resources */,
-				658A4CB32B9F29A700F73772 /* first_deposit.json in Resources */,
 				452BA1962A902C4900D0AA48 /* avatar6-dark.json in Resources */,
 				457CBBE1282D27D000ED0F00 /* TitleTableViewHeader.xib in Resources */,
 				45F6BA902AB1F2B600C81DE1 /* avatar4-light.json in Resources */,
@@ -12320,6 +12320,7 @@
 				457CBE7E282D2CD100ED0F00 /* TournamentTableViewHeader.xib in Resources */,
 				4568B9692858CF4100FA99B3 /* CilinderSceneKitScene.scn in Resources */,
 				45F6BA832AB1F2B600C81DE1 /* avatar2-light.json in Resources */,
+				65F819692BAC83DB004E27C3 /* first_deposit.json in Resources */,
 				457CBE7F282D2CD100ED0F00 /* BetSubmissionSuccessViewController.xib in Resources */,
 				457CBE80282D2CD100ED0F00 /* SplashViewController.xib in Resources */,
 				457CBE81282D2CD100ED0F00 /* HeaderTextFieldView.xib in Resources */,
@@ -12333,7 +12334,6 @@
 				457CBE87282D2CD100ED0F00 /* PhonePrefixSelectorViewController.xib in Resources */,
 				A9A1B2DF2A128D8B00F7A8ED /* deposit_animation.json in Resources */,
 				457CBE88282D2CD100ED0F00 /* Inconsolata-Medium.ttf in Resources */,
-				658A4CB42B9F29A700F73772 /* first_deposit.json in Resources */,
 				452BA1972A902C4900D0AA48 /* avatar6-dark.json in Resources */,
 				457CBE89282D2CD100ED0F00 /* TitleTableViewHeader.xib in Resources */,
 				45F6BA912AB1F2B600C81DE1 /* avatar4-light.json in Resources */,
@@ -12476,6 +12476,7 @@
 				4589C954282024E400243547 /* TournamentTableViewHeader.xib in Resources */,
 				4589C955282024E400243547 /* BetSubmissionSuccessViewController.xib in Resources */,
 				45F6BA7F2AB1F2B600C81DE1 /* avatar2-light.json in Resources */,
+				65F819652BAC83DB004E27C3 /* first_deposit.json in Resources */,
 				4589C956282024E400243547 /* SplashViewController.xib in Resources */,
 				4589C957282024E400243547 /* HeaderTextFieldView.xib in Resources */,
 				4589C958282024E400243547 /* SingleBettingTicketTableViewCell.xib in Resources */,
@@ -12489,7 +12490,6 @@
 				4589C95E282024E400243547 /* Inconsolata-Medium.ttf in Resources */,
 				A9A1B2DB2A128D8B00F7A8ED /* deposit_animation.json in Resources */,
 				4589C95F282024E400243547 /* TitleTableViewHeader.xib in Resources */,
-				658A4CB02B9F29A700F73772 /* first_deposit.json in Resources */,
 				452BA1932A902C4900D0AA48 /* avatar6-dark.json in Resources */,
 				4589C961282024E400243547 /* MyTicketsViewController.xib in Resources */,
 				45F6BA8D2AB1F2B600C81DE1 /* avatar4-light.json in Resources */,
@@ -12640,7 +12640,6 @@
 				45A332DB298976BA008181E9 /* CompetitionsFiltersView.xib in Resources */,
 				45F6BA992AB1F2B600C81DE1 /* avatar1-light.json in Resources */,
 				45A33364298976E3008181E9 /* Colors.xcassets in Resources */,
-				658A4CAD2B9F29A700F73772 /* first_deposit.json in Resources */,
 				45A332DC298976BA008181E9 /* FilterCollapseView.xib in Resources */,
 				45A332DD298976BA008181E9 /* PhonePrefixSelectorViewController.xib in Resources */,
 				45B9F97F2A1E2BCE00DA2B88 /* home_template.js in Resources */,
@@ -12673,6 +12672,7 @@
 				45A332F5298976BA008181E9 /* PreSubmissionBetslipViewController.xib in Resources */,
 				45A332F6298976BA008181E9 /* BannerScrollTableViewCell.xib in Resources */,
 				45A332F7298976BA008181E9 /* BetslipViewController.xib in Resources */,
+				65F819622BAC83DB004E27C3 /* first_deposit.json in Resources */,
 				45A332F8298976BA008181E9 /* MatchFiltersViewController.xib in Resources */,
 				452BA1AD2A902C4A00D0AA48 /* avatar2-dark.json in Resources */,
 				45A332F9298976BA008181E9 /* WelcomeViewController.xib in Resources */,
@@ -12789,6 +12789,7 @@
 				45A6BDAD28246A7500D9B416 /* TournamentTableViewHeader.xib in Resources */,
 				45A6BDAE28246A7500D9B416 /* BetSubmissionSuccessViewController.xib in Resources */,
 				45F6BA812AB1F2B600C81DE1 /* avatar2-light.json in Resources */,
+				65F819672BAC83DB004E27C3 /* first_deposit.json in Resources */,
 				45A6BDAF28246A7500D9B416 /* SplashViewController.xib in Resources */,
 				45A6BDB028246A7500D9B416 /* HeaderTextFieldView.xib in Resources */,
 				45A6BDB128246A7500D9B416 /* SingleBettingTicketTableViewCell.xib in Resources */,
@@ -12802,7 +12803,6 @@
 				45A6BDB728246A7500D9B416 /* Inconsolata-Medium.ttf in Resources */,
 				A9A1B2DD2A128D8B00F7A8ED /* deposit_animation.json in Resources */,
 				45A6BDB828246A7500D9B416 /* TitleTableViewHeader.xib in Resources */,
-				658A4CB22B9F29A700F73772 /* first_deposit.json in Resources */,
 				452BA1952A902C4900D0AA48 /* avatar6-dark.json in Resources */,
 				45A6BDBA28246A7500D9B416 /* MyTicketsViewController.xib in Resources */,
 				45F6BA8F2AB1F2B600C81DE1 /* avatar4-light.json in Resources */,
@@ -12945,6 +12945,7 @@
 				45F6BDAC2AB3732C00C81DE1 /* BetSubmissionSuccessViewController.xib in Resources */,
 				45F6BDAD2AB3732C00C81DE1 /* SplashViewController.xib in Resources */,
 				45F6BDAE2AB3732C00C81DE1 /* avatar2-light.json in Resources */,
+				65F819632BAC83DB004E27C3 /* first_deposit.json in Resources */,
 				45F6BDAF2AB3732C00C81DE1 /* HeaderTextFieldView.xib in Resources */,
 				45F6BDB02AB3732C00C81DE1 /* SingleBettingTicketTableViewCell.xib in Resources */,
 				45F6BDB12AB3732C00C81DE1 /* EnabledAccessViewController.xib in Resources */,
@@ -12958,7 +12959,6 @@
 				45F6BDB92AB3732C00C81DE1 /* stats_widget_light.html in Resources */,
 				45F6BDBA2AB3732C00C81DE1 /* Inconsolata-Medium.ttf in Resources */,
 				45F6BDBB2AB3732C00C81DE1 /* TitleTableViewHeader.xib in Resources */,
-				658A4CAE2B9F29A700F73772 /* first_deposit.json in Resources */,
 				45F6BDBC2AB3732C00C81DE1 /* MyTicketsViewController.xib in Resources */,
 				45F6BDBD2AB3732C00C81DE1 /* LoginViewController.xib in Resources */,
 				45F6BDBE2AB3732C00C81DE1 /* avatar4-light.json in Resources */,
@@ -13108,6 +13108,7 @@
 				A9C3430428F9A74A0055360B /* BetSubmissionSuccessViewController.xib in Resources */,
 				A9C3430528F9A74A0055360B /* SplashViewController.xib in Resources */,
 				45F6BA802AB1F2B600C81DE1 /* avatar2-light.json in Resources */,
+				65F819662BAC83DB004E27C3 /* first_deposit.json in Resources */,
 				A9C3430628F9A74A0055360B /* HeaderTextFieldView.xib in Resources */,
 				A9C3430728F9A74A0055360B /* SingleBettingTicketTableViewCell.xib in Resources */,
 				A9C3430828F9A74A0055360B /* EnabledAccessViewController.xib in Resources */,
@@ -13121,7 +13122,6 @@
 				A9C3430D28F9A74A0055360B /* Inconsolata-Medium.ttf in Resources */,
 				A9C3430E28F9A74A0055360B /* TitleTableViewHeader.xib in Resources */,
 				A9C3431028F9A74A0055360B /* MyTicketsViewController.xib in Resources */,
-				658A4CB12B9F29A700F73772 /* first_deposit.json in Resources */,
 				A9C3431128F9A74A0055360B /* LoginViewController.xib in Resources */,
 				A9C3431228F9A74A0055360B /* ActivationAlertCollectionViewCell.xib in Resources */,
 				45F6BA8E2AB1F2B600C81DE1 /* avatar4-light.json in Resources */,
