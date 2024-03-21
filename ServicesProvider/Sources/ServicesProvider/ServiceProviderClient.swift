@@ -222,6 +222,18 @@ extension ServicesProviderClient {
         return eventsProvider.subscribeCompetitionMatches(forMarketGroupId: marketGroupId)
     }
 
+    
+    public func subscribeOutrightEvent(forMarketGroupId marketGroupId: String) -> AnyPublisher<SubscribableContent<Event>, ServiceProviderError> {
+
+        guard
+            let eventsProvider = self.eventsProvider
+        else {
+            return Fail(error: ServiceProviderError.eventsProviderNotFound).eraseToAnyPublisher()
+        }
+        return eventsProvider.subscribeOutrightEvent(forMarketGroupId: marketGroupId)
+    }
+
+    
     public func subscribeOutrightMarkets(forMarketGroupId marketGroupId: String) -> AnyPublisher<SubscribableContent<[EventsGroup]>, ServiceProviderError> {
 
         guard

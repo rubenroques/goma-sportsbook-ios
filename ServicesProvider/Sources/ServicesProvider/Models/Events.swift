@@ -545,6 +545,7 @@ public struct SportCompetitionInfo: Codable, Equatable {
         case numberOutrightEvents = "numoutrightevents"
         case numberOutrightMarkets = "numoutrightmarkets"
     }
+    
 }
 
 public struct SportCompetitionMarketGroup: Codable, Equatable {

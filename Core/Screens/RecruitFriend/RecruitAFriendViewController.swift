@@ -457,7 +457,7 @@ class RecruitAFriendViewController: UIViewController {
 
     private func setupReferrals() {
 
-        let referees = viewModel.referees
+        let referees = self.viewModel.referees
         
         if referees.isNotEmpty {
             
@@ -465,22 +465,19 @@ class RecruitAFriendViewController: UIViewController {
                 let referralView = UserReferralView()
                 
                 let isKycValidated = referee.kycStatus == .request ? false : true
-                
-                referralView.configure(title: "\(referee.username)", icon: "referral_avatar", isKycValidated: isKycValidated, hasDeposit: referee.depositPassed)
+                referralView.configure(title: "\(referee.username)",
+                                       icon: "referral_avatar",
+                                       isKycValidated: isKycValidated,
+                                       hasDeposit: referee.depositPassed)
                 
                 self.referralsStackView.addArrangedSubview(referralView)
-
             }
-            
         }
         else {
             let emptyReferralView = EmptyReferralView()
             emptyReferralView.configure(title: localized("referral_no_friends"))
-            
             self.referralsStackView.addArrangedSubview(emptyReferralView)
         }
-
-        //self.referralsGodfatherView.configure(title: "User Godfather", icon: "godfather_avatar")
         
         self.referralsStackView.setNeedsLayout()
         self.referralsStackView.layoutIfNeeded()

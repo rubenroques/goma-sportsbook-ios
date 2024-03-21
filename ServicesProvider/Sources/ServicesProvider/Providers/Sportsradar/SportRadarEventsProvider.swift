@@ -201,6 +201,7 @@ class SportRadarEventsProvider: EventsProvider {
     }
 
     func subscribeLiveMatches(forSportType sportType: SportType) -> AnyPublisher<SubscribableContent<[EventsGroup]>, ServiceProviderError> {
+        
         // Get the session
         guard
             let sessionToken = socketConnector.token
@@ -269,7 +270,7 @@ class SportRadarEventsProvider: EventsProvider {
 
         // Get the session
         guard
-            let sessionToken = socketConnector.token
+            let sessionToken = self.socketConnector.token
         else {
             return Fail(error: ServiceProviderError.userSessionNotFound).eraseToAnyPublisher()
         }
@@ -295,6 +296,8 @@ class SportRadarEventsProvider: EventsProvider {
             let bodyData = self.createPayloadData(with: sessionToken, contentType: contentType, contentRoute: contentRoute)
             let request = self.createSubscribeRequest(withHTTPBody: bodyData)
 
+            print("API Request:", request.cURL(pretty: true), "\n==========================================")
+            
             let sessionDataTask = URLSession.shared.dataTask(with: request) { data, response, error in
                 guard
                     (error == nil),
@@ -496,13 +499,23 @@ class SportRadarEventsProvider: EventsProvider {
         return publisher.eraseToAnyPublisher()
     }
 
+    func subscribeOutrightEvent(forMarketGroupId marketGroupId: String) -> AnyPublisher<SubscribableContent<Event>, ServiceProviderError> {
+        
+        return self.getEventsForMarketGroup(withId: marketGroupId)
+            .map { eventsGroup in
+                return eventsGroup.events.first?.id ?? ""
+            }
+            .flatMap { eventId in
+                self.subscribeEventDetails(eventId: eventId)
+            }
+            .eraseToAnyPublisher()
+        
+    }
+    
     func subscribeOutrightMarkets(forMarketGroupId marketGroupId: String) -> AnyPublisher<SubscribableContent<[EventsGroup]>, ServiceProviderError> {
-
-        //self.outrightDetailsPublisher = CurrentValueSubject<SubscribableContent<[EventsGroup]>, ServiceProviderError>.init(.disconnected)
 
         guard
             let sessionToken = socketConnector.token
-                //let publisher = self.outrightDetailsPublisher
         else {
             return Fail(error: ServiceProviderError.userSessionNotFound).eraseToAnyPublisher()
         }
@@ -641,6 +654,7 @@ class SportRadarEventsProvider: EventsProvider {
             self.addEventDetailsCoordinator(eventDetailsCoordinator, withKey: eventId)
             return eventDetailsCoordinator.eventDetailsPublisher
         }
+        
     }
 
     // Independent Live Data extended info
