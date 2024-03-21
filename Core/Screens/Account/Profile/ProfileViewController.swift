@@ -638,6 +638,14 @@ class ProfileViewController: UIViewController {
             })
             .store(in: &cancellables)
     }
+    
+    private func openRecruitScreen() {
+        let recruitAFriendViewModel = RecruitAFriendViewModel()
+        
+        let recruitAFriendViewController = RecruitAFriendViewController(viewModel: recruitAFriendViewModel)
+
+        self.navigationController?.pushViewController(recruitAFriendViewController, animated: true)
+    }
 
     // MARK: Actions
     @IBAction private func didTapDepositButton() {
@@ -782,6 +790,9 @@ extension ProfileViewController {
             }
             promotionsWebViewController.openHomeAction = { [weak self] in
                 self?.requestHomeAction()
+            }
+            promotionsWebViewController.openRecruitAction = { [weak self] in
+                self?.openRecruitScreen()
             }
             self.navigationController?.pushViewController(promotionsWebViewController, animated: true)
         }
