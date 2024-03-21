@@ -61,7 +61,8 @@ class DepositViewController: UIViewController {
     @IBOutlet private var activityIndicatorView: UIActivityIndicatorView!
 
     @IBOutlet private var bonusHeightConstraint: NSLayoutConstraint!
-
+    @IBOutlet private var animationViewHeightConstraint: NSLayoutConstraint!
+    
     private var isLoading: Bool = false {
         didSet {
             if isLoading {
@@ -440,8 +441,15 @@ class DepositViewController: UIViewController {
                     animationView.topAnchor.constraint(equalTo: self.animationBaseView.topAnchor),
                     animationView.bottomAnchor.constraint(equalTo: self.animationBaseView.bottomAnchor)
                 ])
+                
+                let intrinsicHeight = animationView.intrinsicContentSize.height
+                self.animationViewHeightConstraint.constant = isFirstDeposit ? intrinsicHeight : 150
+                
+                self.animationBaseView.setNeedsLayout()
+                self.animationBaseView.layoutIfNeeded()
 
                 animationView.play()
+                    
             })
             .store(in: &cancellables)
     }
@@ -806,6 +814,26 @@ class DepositViewController: UIViewController {
             self.disableAmountButtons = false
         }
     }
+    
+//    private func resizeAnimationImageView(animationView: LottieAnimationView) {
+//        
+//        let animationImage
+//        self.aspectRatio = animationView.size.width/animationView.size.height
+//        
+//        self.bannerImageViewFixedHeightConstraint.isActive = false
+//        
+//        self.bannerImageViewDynamicHeightConstraint =
+//        NSLayoutConstraint(item: self.bannerImageView,
+//                           attribute: .height,
+//                           relatedBy: .equal,
+//                           toItem: self.bannerImageView,
+//                           attribute: .width,
+//                           multiplier: 1/self.aspectRatio,
+//                           constant: 0)
+//        
+//        self.bannerImageViewDynamicHeightConstraint.isActive = true
+//        
+//    }
 
     func setDepositAmountButtonDesign(button: UIButton, title: String) {
 
