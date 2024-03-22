@@ -218,7 +218,7 @@ class RecruitAFriendViewController: UIViewController {
     var isTermsCollapsed = true {
         didSet {
             if isTermsCollapsed {
-                self.termsToggleButton.setImage(UIImage(named: "arrow_up_icon"), for: .normal)
+                self.termsToggleButton.setImage(UIImage(named: "arrow_down_icon"), for: .normal)
 
                 UIView.animate(withDuration: 0.2, delay: 0, options: .curveEaseIn, animations: {
                     self.termsDescriptionLabel.alpha = 0
@@ -230,7 +230,7 @@ class RecruitAFriendViewController: UIViewController {
 
             }
             else {
-                self.termsToggleButton.setImage(UIImage(named: "arrow_down_icon"), for: .normal)
+                self.termsToggleButton.setImage(UIImage(named: "arrow_up_icon"), for: .normal)
 
                 UIView.animate(withDuration: 0.2, delay: 0, options: .curveEaseIn, animations: {
                     if self.termsDescriptionLabel.alpha != self.enabledAlpha && self.termsDescriptionLabel.alpha != 0 {
@@ -1112,7 +1112,7 @@ extension RecruitAFriendViewController {
         let button = UIButton()
         button.translatesAutoresizingMaskIntoConstraints = false
         button.setTitle("", for: .normal)
-        button.setImage(UIImage(named: "arrow_up_icon"), for: .normal)
+        button.setImage(UIImage(named: "arrow_down_icon"), for: .normal)
         return button
     }
 
