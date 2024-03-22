@@ -134,6 +134,14 @@ class RecruitAFriendViewController: UIViewController {
     private lazy var regulationsBaseView: UIView = Self.createRegulationsBaseView()
     private lazy var regulationsTitleLabel: UILabel = Self.createRegulationsTitleLabel()
     private lazy var regulationsDescriptionLabel: UILabel = Self.createRegulationsDescriptionLabel()
+    
+    private lazy var separatorLineView: UIView = Self.createSeparatorLineView()
+
+    private lazy var termsContainerView: UIView = Self.createTermsContainerView()
+    private lazy var termsView: UIView = Self.createTermsView()
+    private lazy var termsTitleLabel: UILabel = Self.createTermsTitleLabel()
+    private lazy var termsToggleButton: UIButton = Self.createTermsToggleButton()
+    private lazy var termsDescriptionLabel: UILabel = Self.createTermsDescriptionLabel()
 
     // Constraints
     private lazy var bannerImageViewFixedHeightConstraint: NSLayoutConstraint = Self.createBannerImageViewFixedHeightConstraint()
@@ -145,7 +153,9 @@ class RecruitAFriendViewController: UIViewController {
     
     private lazy var recruitMethodsBaseViewTopToStackConstraint: NSLayoutConstraint = Self.createRecruitMethodsBaseViewTopToStackConstraint()
     private lazy var recruitMethodsBaseViewTopToBonusInfoConstraint: NSLayoutConstraint = Self.createRecruitMethodsBaseViewTopToBonusInfoConstraint()
-
+    
+    private lazy var termsViewBottomConstraint: NSLayoutConstraint = Self.createTermsViewBottomConstraint()
+    private lazy var termsDescriptionLabelBottomConstraint: NSLayoutConstraint = Self.createTermsDescriptionLabelBottomConstraint()
 
     private var aspectRatio: CGFloat = 1.0
     
@@ -205,6 +215,43 @@ class RecruitAFriendViewController: UIViewController {
         }
     }
     
+    var isTermsCollapsed = true {
+        didSet {
+            if isTermsCollapsed {
+                self.termsToggleButton.setImage(UIImage(named: "arrow_up_icon"), for: .normal)
+
+                UIView.animate(withDuration: 0.2, delay: 0, options: .curveEaseIn, animations: {
+                    self.termsDescriptionLabel.alpha = 0
+                }, completion: { _ in
+                    self.termsDescriptionLabel.isHidden = true
+                })
+                self.termsViewBottomConstraint.isActive = true
+                self.termsDescriptionLabelBottomConstraint.isActive = false
+
+            }
+            else {
+                self.termsToggleButton.setImage(UIImage(named: "arrow_down_icon"), for: .normal)
+
+                UIView.animate(withDuration: 0.2, delay: 0, options: .curveEaseIn, animations: {
+                    if self.termsDescriptionLabel.alpha != self.enabledAlpha && self.termsDescriptionLabel.alpha != 0 {
+                        self.termsDescriptionLabel.alpha = self.disabledAlpha
+                    }
+                    else {
+                        self.termsDescriptionLabel.alpha = self.enabledAlpha
+                    }
+                    self.termsDescriptionLabel.isHidden = false
+                }, completion: { _ in
+                })
+                self.termsViewBottomConstraint.isActive = false
+                self.termsDescriptionLabelBottomConstraint.isActive = true
+
+            }
+        }
+    }
+    
+    var disabledAlpha: CGFloat = 0.7
+    var enabledAlpha: CGFloat = 1.0
+    
     var fromAnonymousMenu: Bool = false
     
     private var cancellables = Set<AnyCancellable>()
@@ -238,6 +285,11 @@ class RecruitAFriendViewController: UIViewController {
         self.recruitInvalidDepositButton.addTarget(self, action: #selector(didTapDeposit), for: .primaryActionTriggered)
         
         self.recruitInvalidLoginButton.addTarget(self, action: #selector(didTapLogin), for: .primaryActionTriggered)
+
+        let termsToggleTap = UITapGestureRecognizer(target: self, action: #selector(didTapToggleButton))
+        self.termsView.addGestureRecognizer(termsToggleTap)
+        
+        self.isTermsCollapsed = true
 
         self.checkPlayerStatus()
         
@@ -462,6 +514,16 @@ class RecruitAFriendViewController: UIViewController {
         self.regulationsTitleLabel.textColor = UIColor.App.highlightPrimary
 
         self.regulationsDescriptionLabel.textColor = UIColor.App.textPrimary
+        
+        self.separatorLineView.backgroundColor = UIColor.App.separatorLine
+
+        self.termsContainerView.backgroundColor = .clear
+
+        self.termsView.backgroundColor = .clear
+
+        self.termsTitleLabel.textColor = UIColor.App.textSecondary
+
+        self.termsToggleButton.backgroundColor = .clear
     }
     
     // MARK: Binding
@@ -593,6 +655,10 @@ class RecruitAFriendViewController: UIViewController {
         let loginViewController = Router.navigationController(with: LoginViewController())
         
         self.present(loginViewController, animated: true, completion: nil)
+    }
+    
+    @objc private func didTapToggleButton() {
+        self.isTermsCollapsed = !self.isTermsCollapsed
     }
 }
 
@@ -1014,6 +1080,75 @@ extension RecruitAFriendViewController {
         label.addLineHeight(to: label, lineHeight: 18)
         return label
     }
+    
+    private static func createSeparatorLineView() -> UIView {
+        let view = UIView()
+        view.translatesAutoresizingMaskIntoConstraints = false
+        return view
+    }
+
+    private static func createTermsContainerView() -> UIView {
+        let view = UIView()
+        view.translatesAutoresizingMaskIntoConstraints = false
+        return view
+    }
+
+    private static func createTermsView() -> UIView {
+        let view = UIView()
+        view.translatesAutoresizingMaskIntoConstraints = false
+        return view
+    }
+
+    private static func createTermsTitleLabel() -> UILabel {
+        let label = UILabel()
+        label.translatesAutoresizingMaskIntoConstraints = false
+        label.font = AppFont.with(type: .bold, size: 13)
+        label.text = localized("terms_and_conditions")
+        label.textAlignment = .center
+        return label
+    }
+
+    private static func createTermsToggleButton() -> UIButton {
+        let button = UIButton()
+        button.translatesAutoresizingMaskIntoConstraints = false
+        button.setTitle("", for: .normal)
+        button.setImage(UIImage(named: "arrow_up_icon"), for: .normal)
+        return button
+    }
+
+    private static func createTermsDescriptionLabel() -> UILabel {
+        let label = UILabel()
+        label.translatesAutoresizingMaskIntoConstraints = false
+        label.font = AppFont.with(type: .bold, size: 14)
+        label.text = localized("promotions_raf_terms_and_conditions")
+        label.textAlignment = .left
+        label.numberOfLines = 0
+
+        let text = localized("promotions_raf_terms_and_conditions")
+        let attributedString = NSMutableAttributedString(string: text)
+        let fullRange = (text as NSString).range(of: localized("promotions_raf_terms_and_conditions"))
+        var range = (text as NSString).range(of: "•")
+
+        let paragraphStyle = NSMutableParagraphStyle()
+
+        paragraphStyle.lineHeightMultiple = TextSpacing.subtitle
+        paragraphStyle.lineSpacing = 2
+        paragraphStyle.alignment = .left
+
+        attributedString.addAttribute(.foregroundColor, value: UIColor.App.textPrimary, range: fullRange)
+        attributedString.addAttribute(.font, value: AppFont.with(type: .bold, size: 14), range: fullRange)
+
+        while range.location != NSNotFound {
+            attributedString.addAttribute(.foregroundColor, value: UIColor.App.highlightPrimary, range: range)
+            range = (text as NSString).range(of: "•", range: NSRange(location: range.location + 1, length: text.count - range.location - 1))
+        }
+
+        attributedString.addAttribute(.paragraphStyle, value: paragraphStyle, range: NSRange(location: 0, length: attributedString.length))
+
+        label.attributedText = attributedString
+
+        return label
+    }
 
     // Constraints
     private static func createBannerImageViewFixedHeightConstraint() -> NSLayoutConstraint {
@@ -1052,6 +1187,16 @@ extension RecruitAFriendViewController {
     }
     
     private static func createRecruitMethodsBaseViewTopToBonusInfoConstraint() -> NSLayoutConstraint {
+        let constraint = NSLayoutConstraint()
+        return constraint
+    }
+    
+    private static func createTermsViewBottomConstraint() -> NSLayoutConstraint {
+        let constraint = NSLayoutConstraint()
+        return constraint
+    }
+
+    private static func createTermsDescriptionLabelBottomConstraint() -> NSLayoutConstraint {
         let constraint = NSLayoutConstraint()
         return constraint
     }
@@ -1129,6 +1274,17 @@ extension RecruitAFriendViewController {
 
         self.regulationsBaseView.addSubview(self.regulationsTitleLabel)
         self.regulationsBaseView.addSubview(self.regulationsDescriptionLabel)
+        
+        self.containerView.addSubview(self.separatorLineView)
+
+        self.containerView.addSubview(self.termsContainerView)
+
+        self.termsContainerView.addSubview(self.termsView)
+
+        self.termsView.addSubview(self.termsTitleLabel)
+        self.termsView.addSubview(self.termsToggleButton)
+
+        self.termsContainerView.addSubview(self.termsDescriptionLabel)
 
         self.initConstraints()
 
@@ -1343,7 +1499,7 @@ extension RecruitAFriendViewController {
             self.regulationsBaseView.leadingAnchor.constraint(equalTo: self.containerView.leadingAnchor, constant: 14),
             self.regulationsBaseView.trailingAnchor.constraint(equalTo: self.containerView.trailingAnchor, constant: -14),
             //self.regulationsBaseView.topAnchor.constraint(equalTo: self.referralsBaseView.bottomAnchor, constant: 15),
-            self.regulationsBaseView.bottomAnchor.constraint(equalTo: self.containerView.bottomAnchor, constant: -20),
+//            self.regulationsBaseView.bottomAnchor.constraint(equalTo: self.containerView.bottomAnchor, constant: -20),
 
             self.regulationsTitleLabel.leadingAnchor.constraint(equalTo: self.regulationsBaseView.leadingAnchor, constant: 16),
             self.regulationsTitleLabel.trailingAnchor.constraint(equalTo: self.regulationsBaseView.trailingAnchor, constant: -16),
@@ -1353,6 +1509,36 @@ extension RecruitAFriendViewController {
             self.regulationsDescriptionLabel.trailingAnchor.constraint(equalTo: self.regulationsTitleLabel.trailingAnchor),
             self.regulationsDescriptionLabel.topAnchor.constraint(equalTo: self.regulationsTitleLabel.bottomAnchor, constant: 7),
             self.regulationsDescriptionLabel.bottomAnchor.constraint(equalTo: self.regulationsBaseView.bottomAnchor, constant: -16)
+        ])
+        
+        // Terms info
+        NSLayoutConstraint.activate([
+            self.separatorLineView.leadingAnchor.constraint(equalTo: self.containerView.leadingAnchor),
+            self.separatorLineView.trailingAnchor.constraint(equalTo: self.containerView.trailingAnchor),
+            self.separatorLineView.topAnchor.constraint(equalTo: self.regulationsBaseView.bottomAnchor, constant: 20),
+            self.separatorLineView.heightAnchor.constraint(equalToConstant: 1),
+
+            self.termsContainerView.leadingAnchor.constraint(equalTo: self.containerView.leadingAnchor, constant: 14),
+            self.termsContainerView.trailingAnchor.constraint(equalTo: self.containerView.trailingAnchor, constant: -14),
+            self.termsContainerView.topAnchor.constraint(equalTo: self.separatorLineView.bottomAnchor, constant: 20),
+            self.termsContainerView.bottomAnchor.constraint(equalTo: self.containerView.bottomAnchor, constant: -20),
+
+            self.termsView.topAnchor.constraint(equalTo: self.termsContainerView.topAnchor),
+            self.termsView.centerXAnchor.constraint(equalTo: self.termsContainerView.centerXAnchor),
+
+            self.termsTitleLabel.leadingAnchor.constraint(equalTo: self.termsView.leadingAnchor),
+            self.termsTitleLabel.topAnchor.constraint(equalTo: self.termsView.topAnchor, constant: 10),
+            self.termsTitleLabel.bottomAnchor.constraint(equalTo: self.termsView.bottomAnchor, constant: -10),
+
+            self.termsToggleButton.leadingAnchor.constraint(equalTo: self.termsTitleLabel.trailingAnchor, constant: 5),
+            self.termsToggleButton.trailingAnchor.constraint(equalTo: self.termsView.trailingAnchor),
+            self.termsToggleButton.heightAnchor.constraint(equalToConstant: 20),
+            self.termsToggleButton.centerYAnchor.constraint(equalTo: self.termsTitleLabel.centerYAnchor),
+
+            self.termsDescriptionLabel.leadingAnchor.constraint(equalTo: self.termsContainerView.leadingAnchor),
+            self.termsDescriptionLabel.trailingAnchor.constraint(equalTo: self.termsContainerView.trailingAnchor),
+            self.termsDescriptionLabel.topAnchor.constraint(equalTo: self.termsView.bottomAnchor, constant: 5)
+
         ])
 
         self.bannerImageViewFixedHeightConstraint =
@@ -1433,5 +1619,24 @@ extension RecruitAFriendViewController {
                                                                              constant: 15)
         self.recruitMethodsBaseViewTopToBonusInfoConstraint.isActive = false
         
+        self.termsViewBottomConstraint =
+        NSLayoutConstraint(item: self.termsView,
+                           attribute: .bottom,
+                           relatedBy: .equal,
+                           toItem: self.termsContainerView,
+                           attribute: .bottom,
+                           multiplier: 1,
+                           constant: 0)
+        self.termsViewBottomConstraint.isActive = true
+
+        self.termsDescriptionLabelBottomConstraint =
+        NSLayoutConstraint(item: self.termsDescriptionLabel,
+                           attribute: .bottom,
+                           relatedBy: .equal,
+                           toItem: self.termsContainerView,
+                           attribute: .bottom,
+                           multiplier: 1,
+                           constant: 0)
+        self.termsDescriptionLabelBottomConstraint.isActive = false
     }
 }
