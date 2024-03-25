@@ -231,9 +231,13 @@ class HomeViewController: UIViewController {
             .store(in: &self.cancellables)
 
         Env.userSessionStore.userKnowYourCustomerStatusPublisher
+            .removeDuplicates()
+            .withPrevious()
             .receive(on: DispatchQueue.main)
-            .sink { [weak self] _ in
-                self?.viewModel.refresh()
+            .sink { [weak self] oldUserKnowYourCustomerStatus, newUserKnowYourCustomerStatus in
+                if oldUserKnowYourCustomerStatus == nil, newUserKnowYourCustomerStatus != nil {
+                    self?.viewModel.refresh()
+                }
             }
             .store(in: &self.cancellables)
 

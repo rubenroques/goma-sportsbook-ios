@@ -109,7 +109,7 @@ class OmegaConnector: Connector {
             let error = ServiceProviderError.invalidRequestFormat
             return Fail<T, ServiceProviderError>(error: error).eraseToAnyPublisher()
         }
-                
+
         return self.session.dataTaskPublisher(for: request)
 //            .handleEvents(receiveOutput: { result in
 //                print("ServiceProvider-OmegaConnector [[ requesting ]] ", request,
@@ -192,7 +192,9 @@ class OmegaConnector: Connector {
         else {
             return Fail(error: .invalidRequestFormat).eraseToAnyPublisher()
         }
-        
+
+        print("NetworkLogs: ", request.cURL(pretty: true), "\nNetworkLogs: ==========================================")
+
         return self.session.dataTaskPublisher(for: request)
 //            .handleEvents(receiveOutput: { result in
 //                print("ServiceProvider-OmegaConnector login [[ requesting ]] ", request,

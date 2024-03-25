@@ -62,6 +62,7 @@ public struct AdresseFrancaiseClient {
         let session = URLSession.shared
 
         let decoder = JSONDecoder()
+
         return session.dataTaskPublisher(for: request)
             .map(\.data)
 //            .handleEvents(receiveOutput: { data in

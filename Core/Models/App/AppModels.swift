@@ -291,7 +291,7 @@ struct Country: Codable {
     var phonePrefix: String
 }
 
-enum KnowYourCustomerStatus: String, Codable {
+enum KnowYourCustomerStatus: String, Codable, Equatable {
     case request
     case passConditional
     case pass

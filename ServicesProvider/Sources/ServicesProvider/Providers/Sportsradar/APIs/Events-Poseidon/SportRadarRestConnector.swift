@@ -44,8 +44,6 @@ class SportRadarRestConnector {
             return AnyPublisher(Fail<T, ServiceProviderError>(error: error))
         }
 
-        print("API Request:", request.cURL(pretty: true), "\n==========================================")
-
         return self.session.dataTaskPublisher(for: request)
             .tryMap { result in
                 if let httpResponse = result.response as? HTTPURLResponse, httpResponse.statusCode == 401 {
@@ -63,12 +61,6 @@ class SportRadarRestConnector {
                 }
                 return result.data
             }
-            // Debug helper
-//            .handleEvents(receiveOutput: { data in
-//                let urlString = request.url?.absoluteString ?? ""
-//                let bodyString = String.init(data: request.httpBody ?? Data(), encoding: .utf8) ?? ""
-//                print("ServiceProvider-SportRadarRestConnector [[ requesting ]] [url: \(urlString) ] \n [body: \(bodyString) ] ")
-//            })
             .decode(type: T.self, decoder: self.decoder)
             .mapError { error in
                 // Debug helper

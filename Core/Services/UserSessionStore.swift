@@ -81,10 +81,11 @@ class UserSessionStore {
     var userKnowYourCustomerStatusPublisher: AnyPublisher<KnowYourCustomerStatus?, Never> {
         return self.userProfilePublisher
             .map { $0?.kycStatus }
+            .removeDuplicates()
             .eraseToAnyPublisher()
     }
     
-    var kycExpire: String? = nil
+    var kycExpire: String?
 
     var userWalletPublisher = CurrentValueSubject<UserWallet?, Never>(nil)
     var userCashbackBalance = CurrentValueSubject<Double?, Never>(nil)

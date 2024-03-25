@@ -831,6 +831,46 @@ extension SportRadarRestAPIClient: Endpoint {
         }
     }
 
+    var comment: String? {
+        switch self {
+        case .get(let contentIdentifier):
+            return "get-\(contentIdentifier.contentType)"
+        case .subscribe(_, let contentIdentifier):
+            return "subscribe-\(contentIdentifier.contentType)"
+        case .unsubscribe(_, let contentIdentifier):
+            return "unsubscribe-\(contentIdentifier.contentType)"
+        case .marketsFilter: return "marketsFilter"
+        case .fieldWidgetId: return "fieldWidgetId"
+        case .sportsBoNavigationList: return "sportsBoNavigationList"
+        case .sportsScheduledList: return "sportsScheduledList"
+        case .sportRegionsNavigationList: return "sportRegionsNavigationList"
+        case .regionCompetitions: return "regionCompetitions"
+        case .competitionMarketGroups(let competitionId): return "competitionMarketGroups \(competitionId)"
+        case .search: return "search"
+        case .getEventSummary(let eventId): return "getEventSummary \(eventId)"
+        case .getMarketInfo: return "getMarketInfo"
+        case .getEventDetails(let eventId): return "getEventDetails \(eventId)"
+        case .getEventsForMarketGroup(let marketGroupId): return "getEventsForMarketGroup \(marketGroupId)"
+        case .getEventForMarket(let marketId): return "getEventForMarket \(marketId)"
+        case .homeSliders: return "homeSliders"
+        case .promotionalTopBanners: return "promotionalTopBanners"
+        case .promotionalTopEvents: return "promotionalTopEvents"
+        case .promotionalTopStories: return "promotionalTopStories"
+        case .highlightsBoostedOddsEvents: return "highlightsBoostedOddsEvents"
+        case .highlightsImageVisualEvents: return "highlightsImageVisualEvents"
+        case .promotedSports: return "promotedSports"
+        case .favoritesList: return "favoritesList"
+        case .addFavoriteList: return "addFavoriteList"
+        case .addFavoriteToList: return "addFavoriteToList"
+        case .getFavoritesFromList: return "getFavoritesFromList"
+        case .deleteFavoriteList: return "deleteFavoriteList"
+        case .deleteFavoriteFromList: return "deleteFavoriteFromList"
+        case .getCashbackSuccessBanner: return "getCashbackSuccessBanner"
+        case .getTopCompetitions: return "getTopCompetitions PointersOnly"
+        case .getTopCompetitionCountry(let competitionId): return "getTopCompetitionCountry \(competitionId)"
+        }
+    }
+    
 }
 
 extension SportRadarRestAPIClient {

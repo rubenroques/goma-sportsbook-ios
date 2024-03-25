@@ -61,7 +61,7 @@ class BettingConnector: Connector {
             let error = ServiceProviderError.invalidRequestFormat
             return Fail<T, ServiceProviderError>(error: error).eraseToAnyPublisher()
         }
-                
+
         return self.session.dataTaskPublisher(for: request)
 //            .handleEvents(receiveCompletion: { completion in
 //                switch completion {
@@ -150,6 +150,7 @@ extension URLRequest {
             data = "--data '\(escaped)'"
         }
         cURL += method + url + header + data
+        cURL = cURL.replacingOccurrences(of: "\n", with: "")
         return cURL
     }
 }

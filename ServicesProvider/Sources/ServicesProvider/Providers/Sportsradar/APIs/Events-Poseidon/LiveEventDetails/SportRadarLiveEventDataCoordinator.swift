@@ -136,7 +136,6 @@ class SportRadarLiveEventDataCoordinator {
         else {
             return Fail(error: ServiceProviderError.invalidRequestFormat).eraseToAnyPublisher()
         }
-
         
         return self.session.dataTaskPublisher(for: request)
             .tryMap { data, response -> Data in

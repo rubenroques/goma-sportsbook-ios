@@ -17,6 +17,7 @@ protocol Endpoint {
     var body: Data? { get }
     var timeout: TimeInterval { get }
     var requireSessionKey: Bool { get }
+    var comment: String? { get }
 }
 
 extension Endpoint {
@@ -49,7 +50,10 @@ extension Endpoint {
             }
         }
 
-        print("API Request:", request.cURL(pretty: true), "\n==========================================")
+        print("NetworkLogs: [\(self.comment ?? "")]\n",
+              "NetworkLogs: ", request.cURL(pretty: true),
+              "\nNetworkLogs: =========================",
+              "\nNetworkLogs")
 
         return request
     }

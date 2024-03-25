@@ -470,6 +470,26 @@ extension BettingAPIClient: Endpoint {
         }
     }
     
+    var comment: String? {
+        switch self {
+        case .betHistory: return "betHistory"
+        case .betDetails: return "betDetails"
+        case .calculateReturns: return "calculateReturns"
+        case .getAllowedBetTypes: return "getAllowedBetTypes"
+        case .placeBets: return "placeBets"
+        case .confirmBoostedBet: return "confirmBoostedBet"
+        case .rejectBoostedBet: return "rejectBoostedBet"
+        case .calculateCashout: return "calculateCashout"
+        case .cashoutBet: return "cashoutBet"
+        case .getBetslipSettings: return "getBetslipSettings"
+        case .updateBetslipSettings: return "updateBetslipSettings"
+        case .getFreebetBalance: return "getFreebetBalance"
+        case .getSharedTicket: return "getSharedTicket"
+        case .getTicketSelection: return "getTicketSelection"
+        case .calculateCashback: return "calculateCashback"
+        }
+    }
+    
     // TODO: Check if we can use this in every endpoint
     private static func createBetJSONBody(fromBetTickets betTickets: [BetTicket]) -> Data {
         var betsArray: [String] = []

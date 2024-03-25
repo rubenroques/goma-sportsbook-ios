@@ -296,7 +296,7 @@ class SportRadarEventsProvider: EventsProvider {
             let bodyData = self.createPayloadData(with: sessionToken, contentType: contentType, contentRoute: contentRoute)
             let request = self.createSubscribeRequest(withHTTPBody: bodyData)
 
-            print("API Request:", request.cURL(pretty: true), "\n==========================================")
+            print("NetworkLogs: ", request.cURL(pretty: true), "\nNetworkLogs: ==========================================")
             
             let sessionDataTask = URLSession.shared.dataTask(with: request) { data, response, error in
                 guard
@@ -539,6 +539,8 @@ class SportRadarEventsProvider: EventsProvider {
             let bodyData = self.createPayloadData(with: sessionToken, contentType: contentType, contentRoute: contentRoute)
             let request = self.createSubscribeRequest(withHTTPBody: bodyData)
 
+            print("NetworkLogs: ", request.cURL(pretty: true), "\nNetworkLogs: ==========================================")
+
             let sessionDataTask = URLSession.shared.dataTask(with: request) { data, response, error in
                 guard
                     (error == nil),
@@ -580,6 +582,8 @@ class SportRadarEventsProvider: EventsProvider {
 
         let bodyData = self.createPayloadData(with: sessionToken, contentType: contentType, contentRoute: contentRoute)
         let request = self.createSubscribeRequest(withHTTPBody: bodyData)
+
+        print("NetworkLogs: ", request.cURL(pretty: true), "\nNetworkLogs: ==========================================")
 
         let sessionDataTask = URLSession.shared.dataTask(with: request) { data, response, error in
             guard
@@ -1219,6 +1223,8 @@ extension SportRadarEventsProvider {
                 })
                 let marketIds = headlineItems.map({ item in return item.marketId }).compactMap({ $0 })
 
+                print("NetworkLogs: getPromotionalSlidingTopEvents")
+                
                 let publishers = marketIds.map(self.getEventForMarket(withId:))
                 let finalPublisher = Publishers.MergeMany(publishers)
                     .collect()
@@ -1271,6 +1277,8 @@ extension SportRadarEventsProvider {
 
                 let marketIds = headlineItems.map({ item in return item.marketId }).compactMap({ $0 })
 
+                print("NetworkLogs: getHighlightedBoostedEvents")
+                
                 let publishers = marketIds.map(self.getEventForMarket(withId:))
                 let finalPublisher = Publishers.MergeMany(publishers)
                     .collect()
@@ -1343,6 +1351,8 @@ extension SportRadarEventsProvider {
 //                
 //                let marketIds = testIds
 
+                print("NetworkLogs: getHighlightedVisualImageEvents")
+                
                 let publishers = marketIds.map(self.getEventForMarket(withId:))
                 let finalPublisher = Publishers.MergeMany(publishers)
                     .collect()
@@ -1446,6 +1456,12 @@ extension SportRadarEventsProvider {
                     .map { topCompetitionPointer in
                         let competitionIdComponents = topCompetitionPointer.competitionId.components(separatedBy: "/")
                         let competitionId: String = (competitionIdComponents.last ?? "").lowercased()
+                        
+                        if !competitionId.hasSuffix(".1") {
+                            return Just(Optional<SportRadarModels.SportCompetitionInfo>.none)
+                                .setFailureType(to: ServiceProviderError.self)
+                                .eraseToAnyPublisher()
+                        }
                         
                         let endpoint = SportRadarRestAPIClient.competitionMarketGroups(competitionId: competitionId)
                         let requestPublisher: AnyPublisher<SportRadarModels.SportRadarResponse<SportRadarModels.SportCompetitionInfo>, ServiceProviderError> = self.restConnector.request(endpoint)
@@ -1598,7 +1614,7 @@ extension SportRadarEventsProvider {
     func getEventForMarket(withId marketId: String) -> AnyPublisher<Event?, Never> {
         let endpoint = SportRadarRestAPIClient.getEventForMarket(marketId: marketId)
         let requestPublisher: AnyPublisher<SportRadarModels.SportRadarResponse<SportRadarModels.Event>, ServiceProviderError> = self.restConnector.request(endpoint)
-
+        
         return requestPublisher.map( { sportRadarResponse -> Event in
             let event = sportRadarResponse.data
             let mappedEvent = SportRadarModelMapper.event(fromInternalEvent: event)
@@ -1607,7 +1623,6 @@ extension SportRadarEventsProvider {
         .replaceError(with: nil)
         .eraseToAnyPublisher()
     }
-
 
     //
     // MARK: - Favorites

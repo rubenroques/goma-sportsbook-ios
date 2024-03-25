@@ -30,6 +30,7 @@ class NetworkManager {
             let error = ServiceProviderError.invalidRequestFormat
             return AnyPublisher(Fail<T, ServiceProviderError>(error: error))
         }
+        
         return self.session.dataTaskPublisher(for: request)
             .tryMap { result in
                 if let httpResponse = result.response as? HTTPURLResponse, httpResponse.statusCode == 401 {
