@@ -211,6 +211,16 @@ class AnonymousSideMenuViewController: UIViewController {
         navigationController.modalPresentationStyle = .fullScreen
         self.present(navigationController, animated: true, completion: nil)
     }
+    
+    private func openRecruitScreen() {
+        let recruitAFriendViewModel = RecruitAFriendViewModel()
+        
+        let recruitAFriendViewController = RecruitAFriendViewController(viewModel: recruitAFriendViewModel)
+
+        recruitAFriendViewController.fromAnonymousMenu = true
+
+        self.navigationController?.pushViewController(recruitAFriendViewController, animated: true)
+    }
 
 }
 
@@ -243,6 +253,9 @@ extension AnonymousSideMenuViewController {
             }
             promotionsWebViewController.openHomeAction = { [weak self] in
                 self?.requestHomeAction()
+            }
+            promotionsWebViewController.openRecruitAction = { [weak self] in
+                self?.openRecruitScreen()
             }
             self.navigationController?.pushViewController(promotionsWebViewController, animated: true)
         }
