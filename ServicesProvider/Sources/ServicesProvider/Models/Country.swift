@@ -388,7 +388,13 @@ public extension SharedModels.Country {
         case "FO": return Country(name: "Faroe Islands", capital: "Tórshavn", region: "Europe", iso2Code: "FO", iso3Code: "FRO", numericCode: "234", phonePrefix: "+298", frenchName: "Îles Féroé")
         case "FR": return Country(name: "France", capital: "Paris", region: "Europe", iso2Code: "FR", iso3Code: "FRA", numericCode: "250", phonePrefix: "+33", frenchName: "France")
         case "GA": return Country(name: "Gabon", capital: "Libreville", region: "Africa", iso2Code: "GA", iso3Code: "GAB", numericCode: "266", phonePrefix: "+241", frenchName: "Gabon")
+        
         case "GB": return Country(name: "United Kingdom of Great Britain and Northern Ireland", capital: "London", region: "Europe", iso2Code: "GB", iso3Code: "GBR", numericCode: "826", phonePrefix: "+44", frenchName: "Royaume-Uni")
+        case "GB1": return Country(name: "United Kingdom of Great Britain and Northern Ireland", capital: "London", region: "Europe", iso2Code: "GB1", iso3Code: "GBR", numericCode: "826", phonePrefix: "+44", frenchName: "Royaume-Uni")
+        case "GB2": return Country(name: "United Kingdom of Great Britain and Northern Ireland", capital: "London", region: "Europe", iso2Code: "GB2", iso3Code: "GBR", numericCode: "826", phonePrefix: "+44", frenchName: "Royaume-Uni")
+        case "GB3": return Country(name: "United Kingdom of Great Britain and Northern Ireland", capital: "London", region: "Europe", iso2Code: "GB3", iso3Code: "GBR", numericCode: "826", phonePrefix: "+44", frenchName: "Royaume-Uni")
+        case "GB4": return Country(name: "United Kingdom of Great Britain and Northern Ireland", capital: "London", region: "Europe", iso2Code: "GB4", iso3Code: "GBR", numericCode: "826", phonePrefix: "+44", frenchName: "Royaume-Uni")
+        
         case "GD": return Country(name: "Grenada", capital: "St. George's", region: "Americas", iso2Code: "GD", iso3Code: "GRD", numericCode: "308", phonePrefix: "+1", frenchName: "Grenade")
         case "GE": return Country(name: "Georgia", capital: "Tbilisi", region: "Asia", iso2Code: "GE", iso3Code: "GEO", numericCode: "268", phonePrefix: "+995", frenchName: "Géorgie")
         case "GF": return Country(name: "French Guiana", capital: "Cayenne", region: "Americas", iso2Code: "GF", iso3Code: "GUF", numericCode: "254", phonePrefix: "+594", frenchName: "Guyane")
