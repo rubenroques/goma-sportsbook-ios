@@ -114,7 +114,7 @@ class OutrightMarketDetailsViewModel {
     private func subscribeOutrightMarkets(competition: Competition) {
 
         if let outrightMarketGroup = competition.competitionInfo?.marketGroups.filter({
-            $0.name == "Outright"
+            $0.name.lowercased().contains("outright")
         }).first {
             
             Env.servicesProvider.subscribeOutrightEvent(forMarketGroupId: outrightMarketGroup.id)

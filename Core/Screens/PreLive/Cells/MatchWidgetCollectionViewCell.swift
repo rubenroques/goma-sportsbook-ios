@@ -1372,7 +1372,18 @@ class MatchWidgetCollectionViewCell: UICollectionViewCell {
 
             if let outcome = market.outcomes[safe: 0] {
                 
-                self.homeOddTitleLabel.text = market.nameDigit1 != nil ? (outcome.typeName + " \(market.nameDigit1!)") : outcome.typeName
+                if let nameDigit1 = market.nameDigit1 {
+                    if outcome.typeName.contains("\(nameDigit1)") {
+                        self.homeOddTitleLabel.text = outcome.typeName
+                    }
+                    else {
+                        self.homeOddTitleLabel.text = "\(outcome.typeName) \(nameDigit1)"
+                    }
+                }
+                else {
+                    self.homeOddTitleLabel.text = outcome.typeName
+                }
+                    
                 self.leftOutcome = outcome
                 self.isLeftOutcomeButtonSelected = Env.betslipManager.hasBettingTicket(withId: outcome.bettingOffer.id)
 
@@ -1432,7 +1443,18 @@ class MatchWidgetCollectionViewCell: UICollectionViewCell {
             
             if let outcome = market.outcomes[safe: 1] {
                 
-                self.drawOddTitleLabel.text = market.nameDigit1 != nil ? (outcome.typeName + " \(market.nameDigit1!)") : outcome.typeName
+                if let nameDigit1 = market.nameDigit1 {
+                    if outcome.typeName.contains("\(nameDigit1)") {
+                        self.drawOddTitleLabel.text = outcome.typeName
+                    }
+                    else {
+                        self.drawOddTitleLabel.text = "\(outcome.typeName) \(nameDigit1)"
+                    }
+                }
+                else {
+                    self.drawOddTitleLabel.text = outcome.typeName
+                }
+                
                 self.middleOutcome = outcome
                 self.isMiddleOutcomeButtonSelected = Env.betslipManager.hasBettingTicket(withId: outcome.bettingOffer.id)
 
@@ -1491,7 +1513,18 @@ class MatchWidgetCollectionViewCell: UICollectionViewCell {
             
             if let outcome = market.outcomes[safe: 2] {
                 
-                self.awayOddTitleLabel.text = market.nameDigit1 != nil ? (outcome.typeName + " \(market.nameDigit1!)") : outcome.typeName
+                if let nameDigit1 = market.nameDigit1 {
+                    if outcome.typeName.contains("\(nameDigit1)") {
+                        self.awayOddTitleLabel.text = outcome.typeName
+                    }
+                    else {
+                        self.awayOddTitleLabel.text = "\(outcome.typeName) \(nameDigit1)"
+                    }
+                }
+                else {
+                    self.awayOddTitleLabel.text = outcome.typeName
+                }
+
                 self.rightOutcome = outcome
                 self.isRightOutcomeButtonSelected = Env.betslipManager.hasBettingTicket(withId: outcome.bettingOffer.id)
 

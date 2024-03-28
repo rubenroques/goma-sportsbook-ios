@@ -28,11 +28,7 @@ struct TargetVariables: SportsbookTarget {
     }
 
     static var firebaseDatabaseURL: String {
-        #if DEBUG
-        return "https://goma-sportsbook-ios-dev.europe-west1.firebasedatabase.app/"
-        #else
         return "https://goma-sportsbook.europe-west1.firebasedatabase.app/"
-        #endif
     }
 
     static var everyMatrixHost: String {

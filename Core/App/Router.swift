@@ -89,6 +89,7 @@ class Router {
 
         self.rootWindow.rootViewController = splashViewController
         
+        Logger.log("Router makeKeyAndVisible")
         self.rootWindow.makeKeyAndVisible()
     }
     
@@ -107,6 +108,8 @@ class Router {
 
     func showPostLoadingFlow() {
 
+        Logger.log("Router showPostLoadingFlow")
+        
         var bootRootViewController: UIViewController
         if Env.userSessionStore.isUserLogged() || UserSessionStore.didSkipLoginFlow() {
             let rootViewController = RootViewController(defaultSport: Env.sportsStore.defaultSport)
@@ -121,6 +124,8 @@ class Router {
         self.subscribeToURLRedirects()
         self.subscribeToNotificationsOpened()
 
+        Logger.log("Router set rootViewController")
+        
         self.rootWindow.rootViewController = bootRootViewController
     }
 

@@ -333,7 +333,7 @@ extension TopCompetitionDetailsViewController: UITableViewDelegate, UITableViewD
                 let viewModel = self.viewModel.matchLineTableCellViewModel(forMatch: match)
                 cell.viewModel = viewModel
 
-                cell.shouldShowCountryFlag(false)
+                cell.shouldShowCountryFlag(true)
                 cell.tappedMatchLineAction = { [weak self] match in
                     self?.openMatchDetails(match)
                 }

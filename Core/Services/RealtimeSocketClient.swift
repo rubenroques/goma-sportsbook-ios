@@ -20,7 +20,7 @@ class RealtimeSocketClient {
     var databaseReference: DatabaseReference!
 
     var maintenanceModePublisher: AnyPublisher<MaintenanceModeType, Never> {
-        return self.maintenanceModeSubject.eraseToAnyPublisher()
+        return self.maintenanceModeSubject.removeDuplicates().eraseToAnyPublisher()
     }
     private let maintenanceModeSubject = CurrentValueSubject<MaintenanceModeType, Never>(.unknown)
     

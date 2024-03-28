@@ -325,7 +325,7 @@ extension CompetitionDetailsViewController: UITableViewDelegate, UITableViewData
                 let viewModel = MatchLineTableCellViewModel(match: match)
                 cell.viewModel = viewModel
 
-                cell.shouldShowCountryFlag(false)
+                cell.shouldShowCountryFlag(true)
                 cell.tappedMatchLineAction = { [weak self] match in
                     self?.openMatchDetails(match)
                 }

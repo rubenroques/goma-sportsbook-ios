@@ -87,7 +87,6 @@ class SportTypeStore {
                     return .loaded(updatedSportsList)
                 }
             }
-            .prettyPrint("SportTypeStoreDebug combine", when: [.output, .completion], format: .singleline)
             .eraseToAnyPublisher()
     }
 
@@ -114,7 +113,6 @@ class SportTypeStore {
         Env.servicesProvider.subscribeLiveSportTypes()
             .retry(3)
             .receive(on: DispatchQueue.main)
-            .prettyPrint("SportTypeStoreDebug subscribeLiveSportTypes", format: .singleline)
             .sink(receiveCompletion: { [weak self] completion in
                 switch completion {
                 case .finished:
@@ -151,7 +149,6 @@ class SportTypeStore {
         Env.servicesProvider.subscribeAllSportTypes()
             .retry(3)
             .receive(on: DispatchQueue.main)
-            .prettyPrint("SportTypeStoreDebug subscribeAllSportTypes", format: .singleline)
             .sink(receiveCompletion: { [weak self] completion in
                 switch completion {
                 case .finished:

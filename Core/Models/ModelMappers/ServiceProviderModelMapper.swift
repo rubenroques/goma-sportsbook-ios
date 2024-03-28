@@ -107,7 +107,21 @@ extension ServiceProviderModelMapper {
             mappedOutcomes = mappedOutcomes.sorted(by: \.translatedName)
         case .odds:
             outcomesOrder = .odds
-            mappedOutcomes = mappedOutcomes.sorted(by: \.bettingOffer.decimalOdd)
+            mappedOutcomes = mappedOutcomes.sorted(by: { leftOutcome, rightOutcome in
+              
+                let leftDecimal = leftOutcome.bettingOffer.decimalOdd
+                let rightDecimal = rightOutcome.bettingOffer.decimalOdd
+                
+                if leftDecimal.isNaN {
+                    return false
+                } 
+                else if rightDecimal.isNaN {
+                    return true
+                } 
+                else {
+                    return leftDecimal < rightDecimal
+                }
+            })
         case .setup:
             outcomesOrder = .setup
         case .none:

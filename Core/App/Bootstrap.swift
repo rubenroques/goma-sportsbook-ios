@@ -63,7 +63,7 @@ class Bootstrap {
 
         // Prepare the router for boot
         self.router.setSupportedLanguages()
-
+        
         self.bootTriggerCancelable = environment.businessSettingsSocket.maintenanceModePublisher
             .receive(on: DispatchQueue.main)
             .sink(receiveValue: { [weak self] maintenanceModeType in

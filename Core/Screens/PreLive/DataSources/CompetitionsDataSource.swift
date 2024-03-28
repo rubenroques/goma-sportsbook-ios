@@ -390,7 +390,7 @@ extension CompetitionsDataSource: UITableViewDataSource, UITableViewDelegate {
                 let viewModel = MatchLineTableCellViewModel(match: match)
                 cell.viewModel = viewModel
 
-                cell.shouldShowCountryFlag(false)
+                cell.shouldShowCountryFlag(true)
                 cell.tappedMatchLineAction = { [weak self] match in
                     self?.didSelectMatchAction?(match)
                 }
@@ -409,7 +409,7 @@ extension CompetitionsDataSource: UITableViewDataSource, UITableViewDelegate {
             let viewModel = MatchLineTableCellViewModel(match: match)
             cell.viewModel = viewModel
 
-            cell.shouldShowCountryFlag(false)
+            cell.shouldShowCountryFlag(true)
             cell.tappedMatchLineAction = { [weak self] match in
                 self?.didSelectMatchAction?(match)
             }
