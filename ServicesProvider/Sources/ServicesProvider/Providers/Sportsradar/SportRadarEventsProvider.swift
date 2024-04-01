@@ -1925,7 +1925,7 @@ extension SportRadarEventsProvider {
         let days = timeRange.components(separatedBy: "-")
 
         if let initialDay = Int(days[safe: 0] ?? "0"),
-           let endDay = Int(days[safe: 1] ?? "365") {
+           let endDay = Int(days[safe: 1] ?? "90") {
             if let startDate = Calendar.current.date(byAdding: .day, value: initialDay, to: Date()),
                let endDate = Calendar.current.date(byAdding: .day, value: endDay, to: Date()) {
                 dates.append(startDate)

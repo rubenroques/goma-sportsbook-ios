@@ -16,7 +16,7 @@ class TodayMatchesDataSource: NSObject {
         let endDay: Int
 
         init?(startDay: Int, endDay: Int) {
-            guard startDay >= 0, endDay <= 365, startDay <= endDay else {
+            guard startDay >= 0, endDay <= 90, startDay <= endDay else {
                 return nil
             }
 
@@ -227,7 +227,7 @@ extension TodayMatchesDataSource {
             let startDay = filtersOptionsValue.lowerBoundTimeRange
             var endDay = filtersOptionsValue.highBoundTimeRange
             if endDay >= 6 {
-                endDay = 365
+                endDay = 90
             }
             daysRange = DaysRange(startDay: startDay, endDay: endDay)
         }

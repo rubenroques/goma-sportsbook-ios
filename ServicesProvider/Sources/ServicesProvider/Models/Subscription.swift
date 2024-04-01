@@ -320,7 +320,7 @@ struct ContentDateFormatter {
         dateFormatter.dateFormat = "yyyyMMdd"
 
         let startDateDefault: Date = startDate ?? Date()
-        let endDateDefault: Date = endDate ?? Calendar.current.date(byAdding: .day, value: 365, to: startDateDefault) ?? Date()
+        let endDateDefault: Date = endDate ?? Calendar.current.date(byAdding: .day, value: 90, to: startDateDefault) ?? Date()
 
         let startDateId = dateFormatter.string(from: startDateDefault)
         let endDateId = dateFormatter.string(from: endDateDefault)
