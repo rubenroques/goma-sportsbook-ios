@@ -87,15 +87,34 @@ class PreLiveEventsViewModel: NSObject {
             .map({ matchListType, combinedLoadings in
                 let (isLoadingPopular, isLoadingToday, isLoadingTopCompetitions, isLoadingCompetitions) = combinedLoadings
                 switch matchListType {
-                case .popular: return isLoadingPopular
-                case .upcoming: return isLoadingToday
+                case .popular: 
+                    if !isLoadingPopular {
+                        if self.popularMatchesDataSource.filteredMatches.isEmpty && ((self.popularMatchesDataSource.allOutrightCompetitionsSubject.value?.isEmpty) != nil) {
+                            self.screenStatePublisher.send(.emptyNoFilter)
+                        }
+                        else {
+                            self.screenStatePublisher.send(.noEmptyNoFilter)
+
+                        }
+                    }
+                    return isLoadingPopular
+                case .upcoming: 
+                    if !isLoadingToday {
+                        if self.todayMatchesDataSource.filteredMatches.isEmpty && ((self.todayMatchesDataSource.outrightCompetitions.value?.isEmpty) != nil) {
+                            self.screenStatePublisher.send(.emptyNoFilter)
+                        }
+                        else {
+                            self.screenStatePublisher.send(.noEmptyNoFilter)
+                        }
+                    }
+                    return isLoadingToday
                 case .topCompetitions: return isLoadingTopCompetitions
                 case .competitions: return isLoadingCompetitions
                 }
             })
             .eraseToAnyPublisher()
     }
-
+    
     //
     // Selected Sport
     //
