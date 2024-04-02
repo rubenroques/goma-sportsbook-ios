@@ -281,7 +281,7 @@ struct BannerInfo {
     var specialAction: BannerSpecialAction
 }
 
-struct Country: Codable {
+struct Country: Codable, Hashable {
     var name: String
     var capital: String?
     var region: String
@@ -291,7 +291,7 @@ struct Country: Codable {
     var phonePrefix: String
 }
 
-enum KnowYourCustomerStatus: String, Codable, Equatable {
+enum KnowYourCustomerStatus: String, Codable, Hashable {
     case request
     case passConditional
     case pass
@@ -306,12 +306,12 @@ enum KnowYourCustomerStatus: String, Codable, Equatable {
     }
 }
 
-enum LockedStatus: String, Codable {
+enum LockedStatus: String, Codable, Hashable {
     case locked
     case notLocked
 }
 
-struct UserProfile: Codable {
+struct UserProfile: Codable, Hashable {
     
     var userIdentifier: String
     var sessionKey: String

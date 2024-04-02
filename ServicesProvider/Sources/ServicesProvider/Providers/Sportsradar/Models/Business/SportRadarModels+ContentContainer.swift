@@ -168,6 +168,11 @@ extension SportRadarModels {
 
             let changeType: String = (try? container.decode(String.self, forKey: .changeType)) ?? ""
 
+            
+            let path: String = try container.decodeIfPresent(String.self, forKey: .path) ?? ""
+            print("ServiceProviderLogs: \(path)")
+            
+            
             switch changeType.lowercased() {
             case "refreshed":
                 self = try Self.parseRefreshed(container: container)
@@ -411,6 +416,7 @@ extension SportRadarModels {
                 // print("ContentContainer isTradable \(newIsTradable) market with id :: \(path) and associated change \(changeType)")
                 return .updateMarketTradability(contentIdentifier: contentIdentifier, marketId: marketId, isTradable: newIsTradable)
             }
+            
             // Updates on Events
             else if path.contains("idfoselection") {
                 // Updated a selection

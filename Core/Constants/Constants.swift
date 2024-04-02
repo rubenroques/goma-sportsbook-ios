@@ -77,7 +77,7 @@ enum CountryFlagHelper {
     }
 }
 
-enum UserTitle: String, Codable, CaseIterable {
+enum UserTitle: String, Codable, CaseIterable, Hashable {
     case mister = "Mr."
     case mizz = "Ms."
     case misses = "Mrs."
@@ -95,7 +95,7 @@ enum UserTitle: String, Codable, CaseIterable {
     }
 }
 
-enum UserGender: String, Codable, CaseIterable {
+enum UserGender: String, Codable, CaseIterable, Hashable {
     case male = "M"
     case female = "F"
 

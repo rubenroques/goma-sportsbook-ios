@@ -133,6 +133,15 @@ class ClientManagedHomeViewTemplateDataSource {
 
     init() {
         self.refreshData()
+        
+        Env.userSessionStore.userProfilePublisher
+            .removeDuplicates()
+            .receive(on: DispatchQueue.main)
+            .sink { [weak self] _ in
+                self?.fetchBanners()
+                self?.fetchAlerts()
+            }
+            .store(in: &cancellables)
     }
 
     func refreshData() {
