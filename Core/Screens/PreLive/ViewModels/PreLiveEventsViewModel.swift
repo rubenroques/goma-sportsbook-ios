@@ -89,8 +89,19 @@ class PreLiveEventsViewModel: NSObject {
                 switch matchListType {
                 case .popular: 
                     if !isLoadingPopular {
-                        if self.popularMatchesDataSource.filteredMatches.isEmpty && ((self.popularMatchesDataSource.allOutrightCompetitionsSubject.value?.isEmpty) != nil) {
-                            self.screenStatePublisher.send(.emptyNoFilter)
+                        if self.popularMatchesDataSource.filteredMatches.isEmpty {
+                            if let outrights = self.popularMatchesDataSource.allOutrightCompetitionsSubject.value {
+                                if outrights.isEmpty {
+                                    self.screenStatePublisher.send(.emptyNoFilter)
+                                }
+                                else {
+                                    self.screenStatePublisher.send(.noEmptyNoFilter)
+                                }
+                            }
+                            else {
+                                self.screenStatePublisher.send(.emptyNoFilter)
+
+                            }
                         }
                         else {
                             self.screenStatePublisher.send(.noEmptyNoFilter)
@@ -100,8 +111,19 @@ class PreLiveEventsViewModel: NSObject {
                     return isLoadingPopular
                 case .upcoming: 
                     if !isLoadingToday {
-                        if self.todayMatchesDataSource.filteredMatches.isEmpty && ((self.todayMatchesDataSource.outrightCompetitions.value?.isEmpty) != nil) {
-                            self.screenStatePublisher.send(.emptyNoFilter)
+                        if self.todayMatchesDataSource.filteredMatches.isEmpty {
+                            if let outrights = self.todayMatchesDataSource.outrightCompetitions.value {
+                                if outrights.isEmpty {
+                                    self.screenStatePublisher.send(.emptyNoFilter)
+                                }
+                                else {
+                                    self.screenStatePublisher.send(.noEmptyNoFilter)
+                                }
+                            }
+                            else {
+                                self.screenStatePublisher.send(.emptyNoFilter)
+
+                            }
                         }
                         else {
                             self.screenStatePublisher.send(.noEmptyNoFilter)
