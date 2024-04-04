@@ -130,8 +130,26 @@ class PreLiveEventsViewModel: NSObject {
                         }
                     }
                     return isLoadingToday
-                case .topCompetitions: return isLoadingTopCompetitions
-                case .competitions: return isLoadingCompetitions
+                case .topCompetitions: 
+                    if !isLoadingTopCompetitions {
+                        if self.topCompetitionsDataSource.filteredCompetitions.isEmpty {
+                            self.screenStatePublisher.send(.emptyNoFilter)
+                        }
+                        else {
+                            self.screenStatePublisher.send(.noEmptyNoFilter)
+                        }
+                    }
+                    return isLoadingTopCompetitions
+                case .competitions: 
+                    if !isLoadingCompetitions {
+                        if self.competitionsDataSource.filteredCompetitions.isEmpty {
+                            self.screenStatePublisher.send(.emptyNoFilter)
+                        }
+                        else {
+                            self.screenStatePublisher.send(.noEmptyNoFilter)
+                        }
+                    }
+                    return isLoadingCompetitions
                 }
             })
             .eraseToAnyPublisher()
