@@ -37,6 +37,8 @@ extension SportRadarModelMapper {
 
         let sport = SportRadarModelMapper.sportType(fromSportRadarSportType: sportRadarSportType)
 
+        let scores = Self.scoresDictionary(fromInternalScoresDictionary: internalEvent.scores)
+        
         return Event(id: internalEvent.id,
                      homeTeamName: internalEvent.homeName ?? "",
                      awayTeamName: internalEvent.awayName ?? "",
@@ -52,9 +54,31 @@ extension SportRadarModelMapper {
                      numberMarkets: internalEvent.numberMarkets,
                      name: internalEvent.name,
                      status: Self.eventStatus(fromInternalEvent: internalEvent.status),
-                     matchTime: internalEvent.matchTime)
+                     matchTime: internalEvent.matchTime,
+                     scores: scores)
     }
 
+    static func scoresDictionary(fromInternalScoresDictionary internalScores: [String: SportRadarModels.Score]) -> [String: Score] {
+        return internalScores.mapValues(Self.score(fromInternalScore:))
+    }
+    
+    static func scores(fromInternalScores internalScores: [SportRadarModels.Score]) -> [Score] {
+        return internalScores.map(Self.score(fromInternalScore:))
+    }
+    
+    static func score(fromInternalScore internalScore: SportRadarModels.Score) -> Score {
+        switch internalScore {
+            
+        case .set(index: let index, home: let home, away: let away):
+            return Score.set(index: index, home: home, away: away)
+        case .gamePart(home: let home, away: let away):
+            return Score.gamePart(home: home, away: away)
+        case .matchFull(home: let home, away: let away):
+            return Score.matchFull(home: home, away: away)
+        }
+        
+    }
+    
     static func eventStatus(fromInternalEvent internalEventStatus: SportRadarModels.EventStatus) -> EventStatus? {
         switch internalEventStatus {
         case .unknown:
@@ -75,11 +99,14 @@ extension SportRadarModelMapper {
             eventStatus = Self.eventStatus(fromInternalEvent: statusValue)
         }
         
+        let mappedScores = Self.scoresDictionary(fromInternalScoresDictionary: internalEventLiveData.scores)
+        
         return EventLiveData(id: internalEventLiveData.id,
                              homeScore: internalEventLiveData.homeScore,
                              awayScore: internalEventLiveData.awayScore,
                              matchTime: internalEventLiveData.matchTime,
-                             status: eventStatus)
+                             status: eventStatus,
+                             detailedScores: mappedScores)
     }
     
     

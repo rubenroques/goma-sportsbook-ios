@@ -45,6 +45,8 @@ extension ServiceProviderModelMapper {
 
         let sport = Self.sport(fromServiceProviderSportType: event.sport)
 
+        let mappedScores = Self.scoresDictionary(fromInternalScoresDictionary: event.scores)
+        
         let match = Match(id: event.id,
                           competitionId: event.competitionId,
                           competitionName: event.competitionName,
@@ -63,7 +65,8 @@ extension ServiceProviderModelMapper {
                           matchTime: event.matchTime,
                           promoImageURL: event.promoImageURL,
                           oldMainMarketId: event.oldMainMarketId,
-                          competitionOutright: Self.competition(fromEvent: event))
+                          competitionOutright: Self.competition(fromEvent: event),
+                          detailedScores: mappedScores)
         return match
     }
 

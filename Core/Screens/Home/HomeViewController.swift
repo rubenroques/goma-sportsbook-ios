@@ -993,7 +993,7 @@ extension HomeViewController: UITableViewDelegate, UITableViewDataSource {
             if let viewModel = self.viewModel.highlightedMatchViewModel(forIndex: indexPath.row) {
                 switch viewModel.matchWidgetType {
                 case .topImage, .topImageOutright:
-                    return 252
+                    return 262
                 default:
                     return 164
                 }
@@ -1063,7 +1063,7 @@ extension HomeViewController: UITableViewDelegate, UITableViewDataSource {
             if let viewModel = self.viewModel.highlightedMatchViewModel(forIndex: indexPath.row) {
                 switch viewModel.matchWidgetType {
                 case .topImage, .topImageOutright:
-                    return 252
+                    return 262
                 default:
                     return 164
                 }

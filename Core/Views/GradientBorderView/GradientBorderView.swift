@@ -29,9 +29,9 @@ class GradientBorderView: UIView {
         gradientLayer.startPoint = CGPoint(x: 0, y: 0.97) // Bottom Left
         gradientLayer.endPoint = CGPoint(x: 0.95, y: 0) // Top Right
         gradientLayer.locations = [0.0, 0.44, 1.0]
-        gradientLayer.colors = [UIColor.App.cardBorderLineGradient1.cgColor,
-                                UIColor.App.cardBorderLineGradient2.cgColor,
-                                UIColor.App.cardBorderLineGradient3.cgColor]
+        gradientLayer.colors = [UIColor.App.liveBorderGradient3.cgColor,
+                                UIColor.App.liveBorderGradient2.cgColor,
+                                UIColor.App.liveBorderGradient1.cgColor]
         return gradientLayer
     }
 

@@ -52,13 +52,8 @@ struct StyleHelper {
             return 8
         }
     }
-
 }
-
 
 extension Notification.Name {
-
     static let cardsStyleChanged = Notification.Name("CardsStyleChanged")
-
 }
-

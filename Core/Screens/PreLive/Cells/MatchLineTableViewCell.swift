@@ -509,10 +509,6 @@ extension MatchLineTableViewCell: UICollectionViewDelegate, UICollectionViewData
             else {
                 fatalError()
             }
-
-            if match.id == "3234891.1" {
-                print("TapBug stop 2 \(match.markets.map({ return "\($0.name) "}) ) ")
-            }
             
             let cellViewModel = MatchWidgetCellViewModel(match: match)
             cell.configure(withViewModel: cellViewModel)
@@ -527,6 +523,7 @@ extension MatchLineTableViewCell: UICollectionViewDelegate, UICollectionViewData
             cell.shouldShowCountryFlag(self.shouldShowCountryFlag)
 
             return cell
+            
         case 1:
             if match.markets.count > 1, let market = match.markets[safe: indexPath.row + 1] {
 

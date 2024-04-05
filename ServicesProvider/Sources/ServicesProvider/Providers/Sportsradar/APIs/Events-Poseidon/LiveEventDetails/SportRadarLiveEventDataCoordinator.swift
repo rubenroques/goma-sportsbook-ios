@@ -217,6 +217,25 @@ extension SportRadarLiveEventDataCoordinator {
         self.eventLiveData = event
     }
     
+    func updateEventDetailedScore(_ detailedScore: Score) {
+        guard var event = self.eventLiveData else { return }
+        
+        if var detailedScores = event.detailedScores {
+            detailedScores[detailedScore.key] = detailedScore
+            event.detailedScores = detailedScores
+        }
+        else {
+            event.detailedScores = [detailedScore.key: detailedScore]
+        }
+        
+        if case .matchFull(let newHomeScore, let newAwayScore) = detailedScore {
+            event.homeScore = newHomeScore
+            event.awayScore = newAwayScore
+        }
+        
+        self.eventLiveData = event
+    }
+    
     func updatedLiveData(eventLiveDataExtended: SportRadarModels.EventLiveDataExtended, forContentIdentifier contentIdentifier: ContentIdentifier) {
 
         guard

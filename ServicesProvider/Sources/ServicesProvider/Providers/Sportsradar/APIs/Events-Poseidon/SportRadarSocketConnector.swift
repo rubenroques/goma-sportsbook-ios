@@ -158,10 +158,10 @@ extension SportRadarSocketConnector: Starscream.WebSocketDelegate {
             print("ServiceProvider - SportRadarSocketConnector websocket is disconnected: \(reason) with code: \(code)")
 
         case .text(let string):
-            print("\n▶️ServiceProvider - SportRadarSocketConnector received text: \(string.prefix(800))◀️")
+            // print("\n▶️ServiceProvider - SportRadarSocketConnector received text: \(string.prefix(800))◀️")
             
             if string.contains("score") {
-                print("ServiceProviderLogs: Socres: \(string)")
+                print("ServiceProviderLogs: Scores: \(string)")
             }
             
             if let data = string.data(using: .utf8),
