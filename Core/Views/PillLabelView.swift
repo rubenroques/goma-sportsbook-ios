@@ -69,7 +69,7 @@ class PillLabelView: UIView {
             
             self.borderView.trailingAnchor.constraint(equalTo: self.lineView.leadingAnchor, constant: 0),
             
-            self.lineView.widthAnchor.constraint(equalToConstant: 14),
+            self.lineView.widthAnchor.constraint(equalToConstant: 19),
             self.lineView.heightAnchor.constraint(equalToConstant: 1),
             self.lineView.centerYAnchor.constraint(equalTo: self.borderView.centerYAnchor),
             self.lineView.trailingAnchor.constraint(equalTo: self.trailingAnchor),
@@ -80,8 +80,7 @@ class PillLabelView: UIView {
             self.textLabel.trailingAnchor.constraint(equalTo: self.borderView.trailingAnchor, constant: -6),
         ])
         
-        
-        self.textLabel.text = "Pill Label"
+        self.textLabel.text = ""
         
         self.borderView.layer.borderWidth = 1
         
@@ -99,4 +98,14 @@ class PillLabelView: UIView {
         super.layoutSubviews()
         self.borderView.layer.cornerRadius = self.borderView.bounds.height / 2
     }
+    
+    
+    func setupWithTheme() {
+        self.borderView.layer.borderColor = UIColor.App.separatorLineSecondary.cgColor
+        self.textLabel.textColor = UIColor.App.textSecondary
+        self.lineView.backgroundColor = UIColor.App.separatorLineSecondary
+        self.borderView.backgroundColor = .clear
+        self.textLabel.backgroundColor = .clear
+    }
+    
 }

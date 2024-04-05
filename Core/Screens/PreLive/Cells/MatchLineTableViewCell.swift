@@ -527,13 +527,19 @@ extension MatchLineTableViewCell: UICollectionViewDelegate, UICollectionViewData
         case 1:
             if match.markets.count > 1, let market = match.markets[safe: indexPath.row + 1] {
 
+                let cellViewModel = MatchWidgetCellViewModel(match: match)
+                
                 let teamsText = "\(match.homeParticipant.name) - \(match.awayParticipant.name)"
                 let countryIso = match.venue?.isoCode ?? ""
 
                 if market.outcomes.count == 2 {
                     if let cell = collectionView.dequeueCellType(OddDoubleCollectionViewCell.self, indexPath: indexPath) {
                         cell.matchStatsViewModel = self.matchStatsViewModel
-                        cell.setupWithMarket(market, match: match, teamsText: teamsText, countryIso: countryIso)
+                        cell.setupWithMarket(market, match: match,
+                                             teamsText: teamsText,
+                                             countryIso: countryIso,
+                                             isLive: cellViewModel.isLiveCard)
+                        
                         cell.tappedMatchWidgetAction = { [weak self] in
                             self?.tappedMatchLine()
                         }
@@ -548,7 +554,11 @@ extension MatchLineTableViewCell: UICollectionViewDelegate, UICollectionViewData
                 else {
                     if let cell = collectionView.dequeueCellType(OddTripleCollectionViewCell.self, indexPath: indexPath) {
                         cell.matchStatsViewModel = self.matchStatsViewModel
-                        cell.setupWithMarket(market, match: match, teamsText: teamsText, countryIso: countryIso)
+                        cell.setupWithMarket(market, match: match,
+                                             teamsText: teamsText,
+                                             countryIso: countryIso,
+                                             isLive: cellViewModel.isLiveCard)
+                        
                         cell.tappedMatchWidgetAction = {  [weak self] in
                             self?.tappedMatchLine()
                         }

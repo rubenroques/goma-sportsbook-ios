@@ -13,6 +13,12 @@ class GradientBorderView: UIView {
     var gradientBorderWidth: CGFloat = 10
     var gradientCornerRadius: CGFloat = 0
 
+    var gradientColors: [UIColor] = [UIColor.App.liveBorderGradient3, UIColor.App.liveBorderGradient2, UIColor.App.liveBorderGradient1] {
+        didSet {
+            self.setNeedsLayout()
+        }
+    }
+    
     override func layoutSubviews() {
         super.layoutSubviews()
 
@@ -29,9 +35,8 @@ class GradientBorderView: UIView {
         gradientLayer.startPoint = CGPoint(x: 0, y: 0.97) // Bottom Left
         gradientLayer.endPoint = CGPoint(x: 0.95, y: 0) // Top Right
         gradientLayer.locations = [0.0, 0.44, 1.0]
-        gradientLayer.colors = [UIColor.App.liveBorderGradient3.cgColor,
-                                UIColor.App.liveBorderGradient2.cgColor,
-                                UIColor.App.liveBorderGradient1.cgColor]
+        gradientLayer.colors = self.gradientColors.map { $0.cgColor }
+
         return gradientLayer
     }
 
@@ -47,8 +52,8 @@ class GradientBorderView: UIView {
     }
 
     private func addGradientBorder(to view: UIView, borderWidth: CGFloat, cornerRadius: CGFloat) {
-        let gradient = gradientLayer(bounds: view.bounds)
-        let mask = maskLayer(bounds: view.bounds, borderWidth: borderWidth, cornerRadius: cornerRadius)
+        let gradient = self.gradientLayer(bounds: view.bounds)
+        let mask = self.maskLayer(bounds: view.bounds, borderWidth: borderWidth, cornerRadius: cornerRadius)
         gradient.mask = mask
         view.layer.addSublayer(gradient)
     }

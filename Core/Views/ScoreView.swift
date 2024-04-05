@@ -12,9 +12,10 @@ class ScoreView: UIView {
     
     var cellsBaseStackView: UIStackView = {
         var stackView = UIStackView()
+        stackView.backgroundColor = .clear
         stackView.translatesAutoresizingMaskIntoConstraints = false
         stackView.axis = .horizontal
-        stackView.spacing = 6
+        stackView.spacing = 4
         stackView.distribution = .fill
         return stackView
     }()
@@ -59,6 +60,14 @@ class ScoreView: UIView {
             self.cellsBaseStackView.bottomAnchor.constraint(equalTo: self.bottomAnchor),
         ])
         
+    }
+    
+    func setupWithTheme() {
+        self.cellsBaseStackView.arrangedSubviews.forEach({ view in
+            if let cell = view as? ScoreCellView {
+                cell.setupWithTheme()
+            }
+        })
     }
     
     func updateScores(_ scores: [String: Score]) {
@@ -307,7 +316,6 @@ class ScoreCellView: UIView {
         }
     }
     
-    
     //
     init(homeScore: String, awayScore: String, style: Style = .simple) {
         super.init(frame: .zero)
@@ -372,6 +380,10 @@ class ScoreCellView: UIView {
         return self.backgroundColorView.intrinsicContentSize
     }
     
+    func setupWithTheme() {
+        self.redrawStyle()
+    }
+    
     func redrawStyle() {
         switch self.style {
         case .simple:
@@ -424,6 +436,7 @@ class ScoreCellView: UIView {
             self.awayScoreLabel.alpha = 1.0
         }
     }
+ 
     
 }
 

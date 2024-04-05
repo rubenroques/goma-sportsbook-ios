@@ -28,9 +28,27 @@ class MatchWidgetCollectionViewCell: UICollectionViewCell {
         gradientBorderView.translatesAutoresizingMaskIntoConstraints = false
         gradientBorderView.gradientBorderWidth = 1
         gradientBorderView.gradientCornerRadius = 9
+        
+        gradientBorderView.gradientColors = [UIColor.App.cardBorderLineGradient1,
+                                             UIColor.App.cardBorderLineGradient2,
+                                             UIColor.App.cardBorderLineGradient3]
+
         return gradientBorderView
     }()
 
+    lazy var liveGradientBorderView: GradientBorderView = {
+        var gradientBorderView = GradientBorderView()
+        gradientBorderView.translatesAutoresizingMaskIntoConstraints = false
+        gradientBorderView.gradientBorderWidth = 2
+        gradientBorderView.gradientCornerRadius = 9
+        
+        gradientBorderView.gradientColors = [UIColor.App.liveBorderGradient3,
+                                             UIColor.App.liveBorderGradient2,
+                                             UIColor.App.liveBorderGradient1]
+        
+        return gradientBorderView
+    }()
+    
     lazy var liveTipView: UIView = {
         var liveTipView = UIView()
         liveTipView.translatesAutoresizingMaskIntoConstraints = false
@@ -319,6 +337,7 @@ class MatchWidgetCollectionViewCell: UICollectionViewCell {
                 }
 
                 self.gradientBorderView.isHidden = false
+                self.liveGradientBorderView.isHidden = true
 
             case .topImage:
                 self.backgroundImageView.isHidden = true
@@ -342,6 +361,7 @@ class MatchWidgetCollectionViewCell: UICollectionViewCell {
                 self.topMarginSpaceConstraint.constant = 11
 
                 self.gradientBorderView.isHidden = true
+                self.liveGradientBorderView.isHidden = true
                 
             case .topImageOutright:
                 self.backgroundImageView.isHidden = true
@@ -370,6 +390,7 @@ class MatchWidgetCollectionViewCell: UICollectionViewCell {
                 self.topMarginSpaceConstraint.constant = 11
 
                 self.gradientBorderView.isHidden = true
+                self.liveGradientBorderView.isHidden = true
 
             case .boosted:
                 self.backgroundImageView.isHidden = true
@@ -394,7 +415,8 @@ class MatchWidgetCollectionViewCell: UICollectionViewCell {
                 self.setupBoostedOddsSubviews()
 
                 self.gradientBorderView.isHidden = false
-
+                self.liveGradientBorderView.isHidden = true
+                
             case .backgroundImage:
                 self.backgroundImageView.isHidden = false
 
@@ -415,9 +437,10 @@ class MatchWidgetCollectionViewCell: UICollectionViewCell {
                 self.bottomMarginSpaceConstraint.constant = 28
                 self.teamsHeightConstraint.constant = 47
                 self.topMarginSpaceConstraint.constant = 0
-
+                
                 self.gradientBorderView.isHidden = true
-
+                self.liveGradientBorderView.isHidden = true
+                
                 self.backgroundImageBorderGradientLayer.colors = [UIColor(hex: 0x404CFF).cgColor, UIColor(hex: 0x404CFF).withAlphaComponent(0.0).cgColor]
                 self.backgroundImageBorderGradientLayer.startPoint = CGPoint(x: 0.5, y: 0.0)
                 self.backgroundImageBorderGradientLayer.endPoint = CGPoint(x: 0.5, y: 1.0)
@@ -534,6 +557,8 @@ class MatchWidgetCollectionViewCell: UICollectionViewCell {
             self.boostedOddBottomLineView.bottomAnchor.constraint(equalTo: self.boostedOddBottomLineAnimatedGradientView.bottomAnchor),
         ])
 
+        self.suspendedBaseView.layer.borderWidth = 1
+        
         //
         // Create a gradient layer on top of the image
 
@@ -654,17 +679,26 @@ class MatchWidgetCollectionViewCell: UICollectionViewCell {
         // Live add ons to the base view
         // Gradient Border
         self.baseView.addSubview(self.gradientBorderView)
+        self.baseView.addSubview(self.liveGradientBorderView)
+        
+        self.baseView.sendSubviewToBack(self.liveGradientBorderView)
         self.baseView.sendSubviewToBack(self.gradientBorderView)
-
+        
         NSLayoutConstraint.activate([
-            self.baseView.leadingAnchor.constraint(equalTo: gradientBorderView.leadingAnchor),
-            self.baseView.trailingAnchor.constraint(equalTo: gradientBorderView.trailingAnchor),
-            self.baseView.topAnchor.constraint(equalTo: gradientBorderView.topAnchor),
-            self.baseView.bottomAnchor.constraint(equalTo: gradientBorderView.bottomAnchor),
+            self.baseView.leadingAnchor.constraint(equalTo: self.gradientBorderView.leadingAnchor),
+            self.baseView.trailingAnchor.constraint(equalTo: self.gradientBorderView.trailingAnchor),
+            self.baseView.topAnchor.constraint(equalTo: self.gradientBorderView.topAnchor),
+            self.baseView.bottomAnchor.constraint(equalTo: self.gradientBorderView.bottomAnchor),
+            
+            self.baseView.leadingAnchor.constraint(equalTo: self.liveGradientBorderView.leadingAnchor),
+            self.baseView.trailingAnchor.constraint(equalTo: self.liveGradientBorderView.trailingAnchor),
+            self.baseView.topAnchor.constraint(equalTo: self.liveGradientBorderView.topAnchor),
+            self.baseView.bottomAnchor.constraint(equalTo: self.liveGradientBorderView.bottomAnchor),
         ])
 
         self.gradientBorderView.isHidden = true
-
+        self.liveGradientBorderView.isHidden = true
+        
         // Live Tip
         self.baseView.addSubview(self.liveTipView)
         self.liveTipView.addSubview(self.liveTipLabel)
@@ -845,9 +879,7 @@ class MatchWidgetCollectionViewCell: UICollectionViewCell {
 
         self.marketNamePillLabelView.title = ""
         self.marketNamePillLabelView.isHidden = true
-        
-        self.gradientBorderView.gradientBorderWidth = 1
-        
+                
         //
         self.homeOddTitleLabel.text = "-"
         self.drawOddTitleLabel.text = "-"
@@ -908,7 +940,6 @@ class MatchWidgetCollectionViewCell: UICollectionViewCell {
     }
 
     func setupWithTheme() {
-
         self.baseView.backgroundColor = UIColor.App.backgroundCards
 
         self.liveMatchDotBaseView.backgroundColor = .clear
@@ -921,6 +952,8 @@ class MatchWidgetCollectionViewCell: UICollectionViewCell {
         self.awayBaseView.backgroundColor = UIColor.App.backgroundOdds
 
         self.suspendedBaseView.backgroundColor = UIColor.App.backgroundDisabledOdds
+        self.suspendedBaseView.layer.borderColor = UIColor.App.backgroundBorder.cgColor
+        
         self.suspendedLabel.textColor = UIColor.App.textDisablePrimary
 
         self.seeAllBaseView.backgroundColor = UIColor.App.backgroundDisabledOdds
@@ -1196,11 +1229,22 @@ class MatchWidgetCollectionViewCell: UICollectionViewCell {
             }
 
         }
-
+        
+        self.liveGradientBorderView.gradientColors = [UIColor.App.liveBorderGradient3,
+                                                  UIColor.App.liveBorderGradient2,
+                                                  UIColor.App.liveBorderGradient1]
+        
+        self.gradientBorderView.gradientColors = [UIColor.App.cardBorderLineGradient1,
+                                                      UIColor.App.cardBorderLineGradient2,
+                                                      UIColor.App.cardBorderLineGradient3]
+        
         self.contentRedesignBaseView.backgroundColor = self.baseView.backgroundColor
         self.dateNewLabel.textColor = self.dateLabel.textColor
         self.timeNewLabel.textColor = self.timeLabel.textColor
         self.matchTimeStatusNewLabel.textColor = self.matchTimeLabel.textColor
+        
+        self.detailedScoreView.setupWithTheme()
+        self.marketNamePillLabelView.setupWithTheme()
     }
     
     private func adjustMarketNameView(isShown: Bool) {
@@ -1367,10 +1411,10 @@ class MatchWidgetCollectionViewCell: UICollectionViewCell {
             self.matchTimeStatusNewLabel.isHidden = true
             
             if StyleHelper.cardsStyleActive() == .normal && self.matchWidgetType == .normal {
-                self.bottomMarginSpaceConstraint.constant = 16
+                self.bottomMarginSpaceConstraint.constant = 12
                 
-                self.homeContentRedesignTopConstraint.constant = 16
-                self.awayContentRedesignTopConstraint.constant = 38
+                self.homeContentRedesignTopConstraint.constant = 25
+                self.awayContentRedesignTopConstraint.constant = 45
             }
         }
 
@@ -1381,7 +1425,14 @@ class MatchWidgetCollectionViewCell: UICollectionViewCell {
             self.cashbackImageViewBaseTrailingConstraint.isActive = false
             self.cashbackImageViewLiveTrailingConstraint.isActive = true
             
-            self.gradientBorderView.gradientBorderWidth = 2
+            if self.matchWidgetType == .normal || self.matchWidgetType == .boosted {
+                self.gradientBorderView.isHidden = true
+                self.liveGradientBorderView.isHidden = false
+            }
+            else {
+                self.gradientBorderView.isHidden = true
+                self.liveGradientBorderView.isHidden = true
+            }
             
             switch StyleHelper.cardsStyleActive() {
             case .small:
@@ -1394,7 +1445,14 @@ class MatchWidgetCollectionViewCell: UICollectionViewCell {
             self.liveMatchDotBaseView.isHidden = true
             self.liveTipView.isHidden = true
 
-            self.gradientBorderView.gradientBorderWidth = 1
+            if self.matchWidgetType == .normal || self.matchWidgetType == .boosted {
+                self.gradientBorderView.isHidden = false
+                self.liveGradientBorderView.isHidden = true
+            }
+            else {
+                self.gradientBorderView.isHidden = true
+                self.liveGradientBorderView.isHidden = true
+            }
             
             self.cashbackImageViewBaseTrailingConstraint.isActive = true
             self.cashbackImageViewLiveTrailingConstraint.isActive = false
@@ -1525,7 +1583,25 @@ class MatchWidgetCollectionViewCell: UICollectionViewCell {
                 
                 self.matchTimeStatusNewLabel.text = liveDataViewModel.matchTimeDetails
                 
-                self.detailedScoreView.updateScores(updatedMatch.detailedScores ?? [:])
+                if let detailedScores = updatedMatch.detailedScores, detailedScores.isNotEmpty {
+                    self.dateNewLabel.isHidden = true
+                    self.timeNewLabel.isHidden = true
+                    
+                    self.detailedScoreView.isHidden = false
+                    self.detailedScoreView.updateScores(detailedScores)
+                }
+                else {
+                    self.detailedScoreView.isHidden = true
+                }
+                
+                if liveDataViewModel.isLiveCard {
+                    self.gradientBorderView.isHidden = true
+                    self.liveGradientBorderView.isHidden = false
+                }
+                else {
+                    self.gradientBorderView.isHidden = false
+                    self.liveGradientBorderView.isHidden = true
+                }
             })
         
         if let market = viewModel.match.markets.first {
@@ -1546,6 +1622,7 @@ class MatchWidgetCollectionViewCell: UICollectionViewCell {
                     else {
                         self?.showSuspendedView()
                     }
+                    
                 })
 
             if let outcome = market.outcomes[safe: 0] {
@@ -2295,7 +2372,7 @@ extension MatchWidgetCollectionViewCell {
             self.timeNewLabel.bottomAnchor.constraint(equalTo: self.awayNameLabel.bottomAnchor),
             
             self.matchTimeStatusNewLabel.trailingAnchor.constraint(equalTo: self.contentRedesignBaseView.trailingAnchor, constant: -12),
-            self.matchTimeStatusNewLabel.bottomAnchor.constraint(equalTo: self.contentRedesignBaseView.bottomAnchor, constant: -4),
+            self.matchTimeStatusNewLabel.bottomAnchor.constraint(equalTo: self.contentRedesignBaseView.bottomAnchor, constant: -6),
             
             self.marketNamePillLabelView.leadingAnchor.constraint(equalTo: self.contentRedesignBaseView.leadingAnchor, constant: 11),
             self.marketNamePillLabelView.bottomAnchor.constraint(equalTo: self.contentRedesignBaseView.bottomAnchor, constant: -4),

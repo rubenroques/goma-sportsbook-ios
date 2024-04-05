@@ -18,6 +18,24 @@ class OddTripleCollectionViewCell: UICollectionViewCell {
         gradientBorderView.translatesAutoresizingMaskIntoConstraints = false
         gradientBorderView.gradientBorderWidth = 1
         gradientBorderView.gradientCornerRadius = 9
+        
+        gradientBorderView.gradientColors = [UIColor.App.cardBorderLineGradient1,
+                                             UIColor.App.cardBorderLineGradient2,
+                                             UIColor.App.cardBorderLineGradient3]
+
+        return gradientBorderView
+    }()
+
+    lazy var liveGradientBorderView: GradientBorderView = {
+        var gradientBorderView = GradientBorderView()
+        gradientBorderView.translatesAutoresizingMaskIntoConstraints = false
+        gradientBorderView.gradientBorderWidth = 2
+        gradientBorderView.gradientCornerRadius = 9
+        
+        gradientBorderView.gradientColors = [UIColor.App.liveBorderGradient3,
+                                             UIColor.App.liveBorderGradient2,
+                                             UIColor.App.liveBorderGradient1]
+        
         return gradientBorderView
     }()
     
@@ -186,18 +204,28 @@ class OddTripleCollectionViewCell: UICollectionViewCell {
 
         let tapMatchView = UITapGestureRecognizer(target: self, action: #selector(didTapMatchView))
         self.addGestureRecognizer(tapMatchView)
-
         
         // Add gradient border
         self.baseView.addSubview(self.gradientBorderView)
+        self.baseView.addSubview(self.liveGradientBorderView)
+        
+        self.baseView.sendSubviewToBack(self.liveGradientBorderView)
         self.baseView.sendSubviewToBack(self.gradientBorderView)
 
         NSLayoutConstraint.activate([
-            self.baseView.leadingAnchor.constraint(equalTo: gradientBorderView.leadingAnchor),
-            self.baseView.trailingAnchor.constraint(equalTo: gradientBorderView.trailingAnchor),
-            self.baseView.topAnchor.constraint(equalTo: gradientBorderView.topAnchor),
-            self.baseView.bottomAnchor.constraint(equalTo: gradientBorderView.bottomAnchor),
+            self.baseView.leadingAnchor.constraint(equalTo: self.gradientBorderView.leadingAnchor),
+            self.baseView.trailingAnchor.constraint(equalTo: self.gradientBorderView.trailingAnchor),
+            self.baseView.topAnchor.constraint(equalTo: self.gradientBorderView.topAnchor),
+            self.baseView.bottomAnchor.constraint(equalTo: self.gradientBorderView.bottomAnchor),
+            
+            self.baseView.leadingAnchor.constraint(equalTo: self.liveGradientBorderView.leadingAnchor),
+            self.baseView.trailingAnchor.constraint(equalTo: self.liveGradientBorderView.trailingAnchor),
+            self.baseView.topAnchor.constraint(equalTo: self.liveGradientBorderView.topAnchor),
+            self.baseView.bottomAnchor.constraint(equalTo: self.liveGradientBorderView.bottomAnchor),
         ])
+        
+        self.gradientBorderView.isHidden = true
+        self.liveGradientBorderView.isHidden = true
         
         //
         self.adjustDesignToCardStyle()
@@ -363,6 +391,8 @@ class OddTripleCollectionViewCell: UICollectionViewCell {
             self.rightOddTitleLabel.textColor = UIColor.App.textPrimary
             self.rightOddValueLabel.textColor = UIColor.App.textPrimary
         }
+        
+        self.iconStatsImageView.setTintColor(color: UIColor.App.iconSecondary)
     }
 
     private func adjustDesignToCardStyle() {
@@ -414,8 +444,19 @@ class OddTripleCollectionViewCell: UICollectionViewCell {
         self.rightOddValueLabel.font = AppFont.with(type: .bold, size: 13)
     }
 
-    func setupWithMarket(_ market: Market, match: Match, teamsText: String, countryIso: String) {
+    func setupWithMarket(_ market: Market, match: Match, teamsText: String, countryIso: String, isLive: Bool) {
 
+        if isLive {
+            self.baseView.backgroundColor = UIColor.App.backgroundDrop
+            self.liveGradientBorderView.isHidden = false
+            self.gradientBorderView.isHidden = true
+        }
+        else {
+            self.baseView.backgroundColor = UIColor.App.backgroundCards
+            self.liveGradientBorderView.isHidden = true
+            self.gradientBorderView.isHidden = false
+        }
+        
         if let matchStatsViewModel = self.matchStatsViewModel,
            market.eventPartId != nil,
            market.bettingTypeId != nil {
@@ -936,7 +977,6 @@ extension OddTripleCollectionViewCell {
         
         self.marketStatsStackView.addArrangedSubview(baseView)
     }
-    
     
     private func setupStatsLine(withjson json: JSON) {
 

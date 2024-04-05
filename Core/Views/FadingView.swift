@@ -64,4 +64,9 @@ class FadingView: UIView {
         super.layoutSubviews()
         gradientLayer?.frame = self.bounds
     }
+    
+    func setupWithTheme() {
+        
+    }
+    
 }
