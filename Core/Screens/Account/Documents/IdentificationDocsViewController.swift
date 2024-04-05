@@ -18,6 +18,7 @@ class IdentificationDocsViewController: UIViewController {
     private lazy var contentBaseView: UIView = Self.createContentBaseView()
 
     private lazy var identificationBaseView: UIView = Self.createIdentificationBaseView()
+    private lazy var identificationDisabledView: UIView = Self.createIdentificationDisabledView()
     private lazy var identificationTopStackView: UIStackView = Self.createIdentificationTopStackView()
     private lazy var identificationTitleLabel: UILabel = Self.createIdentificationTitleLabel()
     private lazy var identificationSubtitleLabel: UILabel = Self.createIdentificationSubtitleLabel()
@@ -113,6 +114,13 @@ class IdentificationDocsViewController: UIViewController {
             self.proofAddressBaseView.layoutIfNeeded()
         }
     }
+    
+    var isIdentityDisabled: Bool = true {
+        didSet {
+            self.identificationDisabledView.isHidden = !isIdentityDisabled
+            self.identificationBaseView.isUserInteractionEnabled = !isIdentityDisabled
+        }
+    }
 
     var isProofOfAddressDisabled: Bool = true {
         didSet {
@@ -164,6 +172,8 @@ class IdentificationDocsViewController: UIViewController {
         super.viewDidLayoutSubviews()
 
         self.identificationBaseView.layer.cornerRadius = CornerRadius.card
+        
+        self.identificationDisabledView.layer.cornerRadius = CornerRadius.card
 
         self.proofAddressBaseView.layer.cornerRadius = CornerRadius.card
 
@@ -186,6 +196,8 @@ class IdentificationDocsViewController: UIViewController {
         self.contentBaseView.backgroundColor = .clear
 
         self.identificationBaseView.backgroundColor = UIColor.App.backgroundSecondary
+        
+        self.identificationDisabledView.backgroundColor = UIColor.App.backgroundSecondary.withAlphaComponent(0.7)
 
         self.identificationTopStackView.backgroundColor = .clear
 
@@ -285,7 +297,10 @@ class IdentificationDocsViewController: UIViewController {
                     }
                     
                     if viewModel.hasSanction {
-                        // TODO DISABLE IDENTITY SECTION
+                        self?.isIdentityDisabled = true
+                    }
+                    else {
+                        self?.isIdentityDisabled = false
                     }
                 }
             })
@@ -782,6 +797,12 @@ extension IdentificationDocsViewController {
         view.translatesAutoresizingMaskIntoConstraints = false
         return view
     }
+    
+    private static func createIdentificationDisabledView() -> UIView {
+        let view = UIView()
+        view.translatesAutoresizingMaskIntoConstraints = false
+        return view
+    }
 
     private static func createIdentificationTopStackView() -> UIStackView {
         let stackView = UIStackView()
@@ -1017,6 +1038,8 @@ extension IdentificationDocsViewController {
         self.idAddDocView.addSubview(self.idAddDocIconImageView)
 
         self.identificationBaseView.addSubview(self.idWarningView)
+        
+        self.identificationBaseView.addSubview(self.identificationDisabledView)
 
         self.contentBaseView.addSubview(self.proofAddressBaseView)
 
@@ -1070,6 +1093,11 @@ extension IdentificationDocsViewController {
             self.identificationBaseView.leadingAnchor.constraint(equalTo: self.contentBaseView.leadingAnchor, constant: 14),
             self.identificationBaseView.trailingAnchor.constraint(equalTo: self.contentBaseView.trailingAnchor, constant: -14),
             self.identificationBaseView.topAnchor.constraint(equalTo: self.contentBaseView.topAnchor, constant: 20),
+            
+            self.identificationDisabledView.leadingAnchor.constraint(equalTo: self.identificationBaseView.leadingAnchor),
+            self.identificationDisabledView.trailingAnchor.constraint(equalTo: self.identificationBaseView.trailingAnchor),
+            self.identificationDisabledView.topAnchor.constraint(equalTo: self.identificationBaseView.topAnchor),
+            self.identificationDisabledView.bottomAnchor.constraint(equalTo: self.identificationBaseView.bottomAnchor),
 
             self.identificationTopStackView.leadingAnchor.constraint(equalTo: self.identificationBaseView.leadingAnchor, constant: 14),
             self.identificationTopStackView.trailingAnchor.constraint(equalTo: self.identificationBaseView.trailingAnchor, constant: -14),
