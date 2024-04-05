@@ -182,14 +182,25 @@ class IdentificationDocsViewModel {
                         self?.currentDocumentLevelStatus = CurrentDocumentLevelStatus(status: documentStatus, levelName: documentLevelName)
 
                     }
+                    
+                    self?.hasSanction = false
 
                     self?.getUserDocuments()
 
                 }
                 else if let reviewData = applicantDataResponse.reviewData,
                         reviewData.levelName == "pep-sanctions-screening" {
-                    // TODO WITH SACTIONS
-                    self?.hasSanction = true
+                    
+                    if reviewData.reviewStatus != "completed" {
+                        self?.hasSanction = true
+                    }
+                    else if reviewData.reviewStatus == "completed" && reviewData.reviewResult?.reviewAnswer == "RED" {
+                        self?.hasSanction = true
+
+                    }
+                    else if reviewData.reviewStatus == "completed" && reviewData.reviewResult?.reviewAnswer == "GREEN" {
+                        self?.hasSanction = false
+                    }
                     self?.reloadData()
                 }
                 else {

@@ -97,6 +97,7 @@ class CompetitionsDataSource: NSObject {
         if competitionIds.isEmpty {
             self.competitionsMatchesSubscriptions = [:]
             self.allCompetitionsSubject.send([])
+            self.activeNetworkRequestCount = 0
             return
         }
 
