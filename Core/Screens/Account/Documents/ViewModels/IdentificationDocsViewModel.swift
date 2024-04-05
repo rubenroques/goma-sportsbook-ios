@@ -198,7 +198,7 @@ class IdentificationDocsViewModel {
                         self?.hasSanction = true
 
                     }
-                    else {
+                    else if reviewData.reviewStatus == "completed" && reviewData.reviewResult?.reviewAnswer == "GREEN" {
                         self?.hasSanction = false
                     }
                     self?.reloadData()
