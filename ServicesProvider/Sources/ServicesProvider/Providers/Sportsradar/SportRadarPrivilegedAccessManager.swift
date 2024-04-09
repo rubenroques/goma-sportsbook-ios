@@ -439,7 +439,7 @@ class SportRadarPrivilegedAccessManager: PrivilegedAccessManager {
     func updateResponsibleGamingLimits(newLimit: Double, limitType: String) -> AnyPublisher<Bool, ServiceProviderError> {
         
         var endpointLimitType = ""
-        var endpointLimitPeriod = "Weekly"
+        var endpointLimitPeriod = "RollingWeekly"
         
         if limitType == "deposit" {
             endpointLimitType = "DEPOSIT_LIMIT"

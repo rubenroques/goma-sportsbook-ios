@@ -84,65 +84,45 @@ class ProfileLimitsManagementViewModel: NSObject {
     }
 
     func getLimits() {
-
-        Env.servicesProvider.getPersonalDepositLimits()
+        
+        Env.servicesProvider.getResponsibleGamingLimits(periodTypes: "RollingWeekly,Permanent", limitTypes: "DEPOSIT_LIMIT,WAGER_LIMIT,BALANCE_LIMIT")
             .receive(on: DispatchQueue.main)
             .sink(receiveCompletion: { [weak self] completion in
                 switch completion {
                 case .finished:
                     ()
                 case .failure(let error):
-                    print("DEPOSIT LIMITS ERROR: \(error)")
+                    print("ALL LIMITS ERROR: \(error)")
                     self?.personalDepositLimitLoaded.send(true)
-                }
-
-            }, receiveValue: { [weak self] personalDepositLimitsResponse in
-
-                print("DEPOSIT LIMITS RESPONSE: \(personalDepositLimitsResponse)")
-
-                self?.processDepositLimits(depositLimitResponse: personalDepositLimitsResponse)
-
-            })
-            .store(in: &cancellables)
-
-        Env.servicesProvider.getLimits()
-            .receive(on: DispatchQueue.main)
-            .sink(receiveCompletion: { [weak self] completion in
-                switch completion {
-                case .finished:
-                    ()
-                case .failure(let error):
-                    print("LIMITS ERROR: \(error)")
                     self?.limitsLoaded.send(true)
-                }
-
-            }, receiveValue: { [weak self] limitsResponse in
-
-                print("LIMITS RESPONSE: \(limitsResponse)")
-
-                self?.processLimits(limitsResponse: limitsResponse)
-
-            })
-            .store(in: &cancellables)
-
-        Env.servicesProvider.getResponsibleGamingLimits()
-            .receive(on: DispatchQueue.main)
-            .sink(receiveCompletion: { [weak self] completion in
-                switch completion {
-                case .finished:
-                    ()
-                case .failure(let error):
-                    print("RESPONSIBLE LIMITS ERROR: \(error)")
                     self?.responsibleGamingLimitLoaded.send(true)
                 }
 
             }, receiveValue: { [weak self] responsibleGamingLimitsResponse in
 
-                print("RESPONSIBLE LIMITS RESPONSE: \(responsibleGamingLimitsResponse)")
+                print("ALL LIMITS RESPONSE: \(responsibleGamingLimitsResponse)")
+                
+                let depositLimits = responsibleGamingLimitsResponse.limits.filter({
+                    $0.limitType == "DEPOSIT_LIMIT"
+                }).sorted(by: { $0.id < $1.id })
+                
+                let wagerLimits = responsibleGamingLimitsResponse.limits.filter({
+                    $0.limitType == "WAGER_LIMIT"
+                }).sorted(by: { $0.id < $1.id })
+                
+                let responsibleGamingLimits = responsibleGamingLimitsResponse.limits.filter({
+                    $0.limitType == "BALANCE_LIMIT"
+                }).sorted(by: { $0.id < $1.id })
+                
+                self?.processDepositLimits(depositLimits: depositLimits)
+                
+                self?.processWagerLimits(wagerLimits: wagerLimits)
+                
+                self?.processResponsibleGamingLimits(responsibleGamingLimits: responsibleGamingLimits)
 
-                self?.processResponsibleGamingLimits(responsibleGamingLimitsResponse: responsibleGamingLimitsResponse)
             })
             .store(in: &cancellables)
+
     }
     
     private func getDateStringWithTimezone(dateString: String, hours: Int) -> String {
@@ -163,83 +143,83 @@ class ProfileLimitsManagementViewModel: NSObject {
         let secondsFromGMT = TimeZone.current.secondsFromGMT()
         return secondsFromGMT / 3600
     }
+    
+    private func processDepositLimits(depositLimits: [ResponsibleGamingLimit]) {
 
-    private func processDepositLimits(depositLimitResponse: PersonalDepositLimitResponse) {
+        if let responsibleGamingLimit = depositLimits.first {
 
-        let depositLimitInfo = LimitInfo(period: "weekly", currency: depositLimitResponse.currency, amount: Double(depositLimitResponse.weeklyLimit ?? "0") ?? 0)
+            let responsibleGamingLimitInfo = LimitInfo(period: "rollingweekly", currency: "EUR", amount: responsibleGamingLimit.limit)
 
-        var depositLimit = Limit(updatable: true, current: depositLimitInfo, queued: nil)
+            var responsibleGamingLimit = Limit(updatable: true, current: responsibleGamingLimitInfo, queued: nil)
 
-        if let hasPendingLimit = depositLimitResponse.hasPendingWeeklyLimit, hasPendingLimit == "true" {
+            if depositLimits.count > 1,
+               let pendingLimit = depositLimits[safe: 1] {
 
-            let pendingLimit = depositLimitResponse.pendingWeeklyLimit ?? ""
-//            let pendingLimitDate = depositLimitResponse.pendingWeeklyLimitEffectiveDate ?? ""
-            let utcDifferenceHours = self.getUTCHourDifference()
-            let pendingLimitDate = self.getDateStringWithTimezone(dateString: depositLimitResponse.pendingWeeklyLimitEffectiveDate ?? "", hours: utcDifferenceHours)
-            let currency = depositLimitResponse.currency
+                let pendingLimitValue = pendingLimit.limit
+//                let pendingLimitDate = pendingLimit.effectiveDate
+                let utcDifferenceHours = self.getUTCHourDifference()
+                let pendingLimitDate = self.getDateStringWithTimezone(dateString: pendingLimit.effectiveDate, hours: utcDifferenceHours)
+                let currency = "EUR"
 
-            self.pendingDepositLimitMessage = localized("pending_limit_info").replacingFirstOccurrence(of: "{pendingLimit}", with: pendingLimit)
-                .replacingFirstOccurrence(of: "{currency}", with: currency)
-                .replacingFirstOccurrence(of: "{pendingLimitDate}", with: pendingLimitDate)
+                self.pendingDepositLimitMessage = localized("pending_limit_info").replacingFirstOccurrence(of: "{pendingLimit}", with: "\(pendingLimitValue)")
+                    .replacingFirstOccurrence(of: "{currency}", with: currency)
+                    .replacingFirstOccurrence(of: "{pendingLimitDate}", with: pendingLimitDate)
 
-            let queuedDepositLimitInfo = LimitInfo(period: "weekly", currency: depositLimitResponse.currency, amount: Double(depositLimitResponse.pendingWeeklyLimit ?? "0") ?? 0)
+                let queuedResponsibleGamingLimitInfo = LimitInfo(period: "rollingweekly", currency: "EUR", amount: pendingLimit.limit)
 
-            depositLimit.queued = queuedDepositLimitInfo
-            depositLimit.updatable = false
+                responsibleGamingLimit.queued = queuedResponsibleGamingLimitInfo
+                responsibleGamingLimit.updatable = false
+            }
+
+            self.depositLimit = responsibleGamingLimit
         }
-
-        self.depositLimit = depositLimit
 
         self.personalDepositLimitLoaded.send(true)
     }
+    
+    private func processWagerLimits(wagerLimits: [ResponsibleGamingLimit]) {
 
-    private func processLimits(limitsResponse: LimitsResponse) {
+        if let responsibleGamingLimit = wagerLimits.first {
 
-        let wagerLimitInfo = LimitInfo(period: "weekly", currency: limitsResponse.currency, amount: Double(limitsResponse.wagerLimit ?? "0") ?? 0)
+            let responsibleGamingLimitInfo = LimitInfo(period: "rollingweekly", currency: "EUR", amount: responsibleGamingLimit.limit)
 
-        var wagerLimit = Limit(updatable: true, current: wagerLimitInfo, queued: nil)
+            var responsibleGamingLimit = Limit(updatable: true, current: responsibleGamingLimitInfo, queued: nil)
 
-        if let pendingLimit = limitsResponse.pendingWagerLimit {
+            if wagerLimits.count > 1,
+               let pendingLimit = wagerLimits[safe: 1] {
 
-//            let pendingLimitDate = pendingLimit.effectiveDate
-            let utcDifferenceHours = self.getUTCHourDifference()
-            let pendingLimitDate = self.getDateStringWithTimezone(dateString: pendingLimit.effectiveDate, hours: utcDifferenceHours)
-            let currency = limitsResponse.currency
+                let pendingLimitValue = pendingLimit.limit
+//                let pendingLimitDate = pendingLimit.effectiveDate
+                let utcDifferenceHours = self.getUTCHourDifference()
+                let pendingLimitDate = self.getDateStringWithTimezone(dateString: pendingLimit.effectiveDate, hours: utcDifferenceHours)
+                let currency = "EUR"
 
-            self.pendingWageringLimitMessage = localized("pending_limit_info").replacingFirstOccurrence(of: "{pendingLimit}", with: "\(pendingLimit.limitNumber)")
-                .replacingFirstOccurrence(of: "{currency}", with: currency)
-                .replacingFirstOccurrence(of: "{pendingLimitDate}", with: pendingLimitDate)
+                self.pendingWageringLimitMessage = localized("pending_limit_info").replacingFirstOccurrence(of: "{pendingLimit}", with: "\(pendingLimitValue)")
+                    .replacingFirstOccurrence(of: "{currency}", with: currency)
+                    .replacingFirstOccurrence(of: "{pendingLimitDate}", with: pendingLimitDate)
 
-            let queuedDepositLimitInfo = LimitInfo(period: "weekly", currency: currency, amount: pendingLimit.limitNumber)
+                let queuedResponsibleGamingLimitInfo = LimitInfo(period: "rollingweekly", currency: "EUR", amount: pendingLimit.limit)
 
-            wagerLimit.queued = queuedDepositLimitInfo
-            wagerLimit.updatable = false
+                responsibleGamingLimit.queued = queuedResponsibleGamingLimitInfo
+                responsibleGamingLimit.updatable = false
+            }
+
+            self.wageringLimit = responsibleGamingLimit
         }
 
-        self.wageringLimit = wagerLimit
-
-        // PAYOUT NOT YET IMPLEMENTED
-        //        let lossLimitInfo = LimitInfo(period: "weekly", currency: limitsResponse.currency, amount: limitsResponse.lossLimit ?? 0)
-//
-//        let lossLimit = Limit(updatable: true, current: lossLimitInfo)
-        //self.lossLimit = Limit(updatable: false, current: nil, queued: nil)
-
         self.limitsLoadedPublisher.send(true)
-
     }
 
-    private func processResponsibleGamingLimits(responsibleGamingLimitsResponse: ResponsibleGamingLimitsResponse) {
+    private func processResponsibleGamingLimits(responsibleGamingLimits: [ResponsibleGamingLimit]) {
 
-        if let responsibleGamingLimit = responsibleGamingLimitsResponse.limits.first(where: {
-            $0.periodType == "Permanent"
-        }) {
+        if let responsibleGamingLimit = responsibleGamingLimits.first {
 
             let responsibleGamingLimitInfo = LimitInfo(period: "permanent", currency: "EUR", amount: responsibleGamingLimit.limit)
 
             var responsibleGamingLimit = Limit(updatable: true, current: responsibleGamingLimitInfo, queued: nil)
 
-            if responsibleGamingLimitsResponse.limits.count > 1,
-               let pendingLimit = responsibleGamingLimitsResponse.limits[safe: 1] {
+            if responsibleGamingLimits.count > 1,
+               let pendingLimit = responsibleGamingLimits[safe: 1] {
 
                 let pendingLimitValue = pendingLimit.limit
 //                let pendingLimitDate = pendingLimit.effectiveDate
