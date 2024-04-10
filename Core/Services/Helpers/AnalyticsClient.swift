@@ -112,11 +112,11 @@ struct AnalyticsClient {
             
         case .firstDeposit(let value):
             eventTypeKey = "first_deposit"
-            parameters = ["value": "\(value)"]
+            parameters = ["VALUE": "\(value)", "CURRENCY": "EUR"]
             
         case .purchase(let value):
             eventTypeKey = "purchase"
-            parameters = ["value": "\(value)"]
+            parameters = ["VALUE": "\(value)", "CURRENCY": "EUR"]
             
         case .sosPlayers:
             eventTypeKey = "sos_joueur_click"
@@ -128,7 +128,8 @@ struct AnalyticsClient {
             eventTypeKey = "evalujeu_click"
         }
 
-        Analytics.logEvent(eventTypeKey, parameters: parameters)
+        Analytics.logEvent(eventTypeKey.uppercased(), parameters: parameters)
+        
         Logger.log(eventTypeKey)
     }
 }

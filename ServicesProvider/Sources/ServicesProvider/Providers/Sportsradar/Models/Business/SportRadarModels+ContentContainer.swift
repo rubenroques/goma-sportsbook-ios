@@ -638,6 +638,10 @@ extension SportRadarModels {
             else if path.contains("idfosporttype"), let newSport = try? container.decodeIfPresent(SportRadarModels.SportTypeDetails.self, forKey: .change) {
                 return .addSport(contentIdentifier: contentIdentifier, sportType: newSport.sportType)
             }
+            else if path.contains("status"), let eventId = SocketMessageParseHelper.extractEventId(path) {
+                let newStatus = try container.decode(String.self, forKey: .change)
+                return .updateEventState(contentIdentifier: contentIdentifier, eventId: eventId, state: newStatus)
+            }
             else if path.contains("scores"), let eventId = SocketMessageParseHelper.extractEventId(path) {
                 print("ServiceProviderLogs: path found for added scores \(path) ")
                 

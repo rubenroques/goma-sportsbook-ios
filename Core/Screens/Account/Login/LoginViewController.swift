@@ -417,53 +417,7 @@ class LoginViewController: UIViewController {
     }
     
     private func setTermsConsents() {
-        
-        Env.servicesProvider.getAllConsents()
-            .filter({ consents in
-                return consents.contains { consent in
-                    consent.key == "terms"
-                }
-            })
-            .map({ consents -> ConsentInfo? in
-                return consents.filter { consent in
-                    consent.key == "terms"
-                }
-                .first
-            })
-            .compactMap({ $0 })
-            .flatMap({ consent in
-                return Env.servicesProvider.setUserConsents(consentVersionIds: [consent.consentVersionId])
-                    .eraseToAnyPublisher()
-            })
-            .receive(on: DispatchQueue.main)
-            .sink(receiveCompletion: { completion in
-                switch completion {
-                case .finished:
-                    print("LoginViewController setTermsConsents finished")
-                case .failure(let error):
-                    print("LoginViewController setTermsConsents failure with error \(error)")
-                }
-
-            }, receiveValue: { _ in
-                print("LoginViewController setTermsConsents ok")
-            })
-            .store(in: &self.cancellables)
-        
-//        
-//        Env.servicesProvider.setUserConsents(consentVersionIds: types)
-//            .receive(on: DispatchQueue.main)
-//            .sink(receiveCompletion: { completion in
-//                switch completion {
-//                case .finished:
-//                    print("LoginViewController setTermsConsents finished")
-//                case .failure(let error):
-//                    print("LoginViewController setTermsConsents failure with error \(error)")
-//                }
-//
-//            }, receiveValue: { _ in
-//                print("LoginViewController setTermsConsents ok")
-//            })
-//            .store(in: &self.cancellables)
+        Env.userSessionStore.didAcceptedTermsUpdate()
     }
 
     private func showRegisterFeedbackViewController(onNavigationController navigationController: UINavigationController) {

@@ -12,7 +12,7 @@ extension SportRadarModels {
     struct UserConsent: Codable {
         var consentInfo: UserConsentInfo
         var consentStatus: String
-
+        
         enum CodingKeys: String, CodingKey {
             case consentInfo = "consent"
             case consentStatus = "consentStatus"

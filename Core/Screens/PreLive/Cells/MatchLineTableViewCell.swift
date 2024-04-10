@@ -195,7 +195,8 @@ class MatchLineTableViewCell: UITableViewCell {
 
     @IBOutlet private var debugLabel: UILabel!
     @IBOutlet private var backSliderView: UIView!
-
+    @IBOutlet private var backSliderIconImageView: UIImageView!
+    
     @IBOutlet private var collectionBaseView: UIView!
     @IBOutlet private var collectionView: UICollectionView!
 
@@ -373,7 +374,8 @@ class MatchLineTableViewCell: UITableViewCell {
         self.collectionView.backgroundColor = .clear
         self.collectionView.backgroundView?.backgroundColor = UIColor.App.backgroundCards
 
-        self.backSliderView.backgroundColor = UIColor.App.buttonBackgroundSecondary
+        self.backSliderView.backgroundColor = UIColor.App.backgroundOdds
+        self.backSliderIconImageView.setTintColor(color: UIColor.App.iconPrimary)
     }
 
     private func setupWithMatch(_ match: Match, liveMatch: Bool = false) {

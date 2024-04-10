@@ -28,7 +28,7 @@ class ScoreView: UIView {
         }
     }
     
-    init(sportCode: String, score: [String: Score]){
+    init(sportCode: String, score: [String: Score]) {
         self.score = score
         self.sportCode = sportCode
         
@@ -71,6 +71,9 @@ class ScoreView: UIView {
     }
     
     func updateScores(_ scores: [String: Score]) {
+        if self.score == scores {
+            return
+        }
         self.score = scores
     }
     

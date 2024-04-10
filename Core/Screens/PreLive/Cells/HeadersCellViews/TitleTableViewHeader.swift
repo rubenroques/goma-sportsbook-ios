@@ -58,9 +58,10 @@ class TitleTableViewHeader: UITableViewHeaderFooterView {
 
         self.sectionTitleLabel.textColor = UIColor.App.textPrimary
 
-        self.searchIconBaseView.backgroundColor = UIColor.App.buttonActiveHoverTertiary
+        self.searchIconBaseView.backgroundColor = UIColor.App.pillSettings
 
         self.searchIconImageView.backgroundColor = .clear
+        self.searchIconImageView.setTintColor(color: UIColor.App.iconPrimary)
     }
 
     func configureWithTitle(_ title: String) {

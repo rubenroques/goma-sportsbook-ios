@@ -36,3 +36,18 @@ enum Score: Codable, Hashable {
     }
     
 }
+
+extension Score: CustomDebugStringConvertible {
+    var debugDescription: String {
+        let scoreDetails: String
+        switch self {
+        case .set(let index, let home, let away):
+            scoreDetails = "Type: Set \(index) - [\(home ?? -1) - \(away ?? -1)]"
+        case .gamePart(let home, let away):
+            scoreDetails = "Type: Game Part - [\(home ?? -1) - \(away ?? -1)]"
+        case .matchFull(let home, let away):
+            scoreDetails = "Type: Match Full - [\(home ?? -1) - \(away ?? -1)]"
+        }
+        return scoreDetails
+    }
+}

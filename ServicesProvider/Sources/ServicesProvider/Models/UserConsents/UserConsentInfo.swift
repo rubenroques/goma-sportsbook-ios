@@ -14,26 +14,18 @@ public struct ConsentInfo: Codable {
     public var name: String
     public var consentVersionId: Int
 
-    enum CodingKeys: String, CodingKey {
-        case id = "id"
-        case key = "key"
-        case name = "name"
-        case consentVersionId = "consentVersionId"
-    }
+    public var status: String?
+    public var isMandatory: Bool?
+    
 }
 
 
-public struct UserConsentInfo: Codable {
+public struct UserConsentInfo: Codable, Hashable {
 
     public var id: Int
     public var key: String
     public var name: String
-    public var consentVersionId: Int
+    public var consentVersionId: Int    
+    public var isMandatory: Bool?
 
-    enum CodingKeys: String, CodingKey {
-        case id = "id"
-        case key = "key"
-        case name = "name"
-        case consentVersionId = "consentVersionId"
-    }
 }

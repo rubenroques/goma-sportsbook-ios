@@ -12,12 +12,12 @@ extension ServiceProviderModelMapper {
 
     static func userConsent(fromServiceProviderUserConsent userConsent: ServicesProvider.UserConsent) -> UserConsent {
 
-        return UserConsent(id: userConsent.consentInfo.id,
-                           consentVersionId: userConsent.consentInfo.consentVersionId,
-                           name: userConsent.consentInfo.name,
-                           key: userConsent.consentInfo.key,
-                           consentStatus: Self.userConsentStatus(fromServiceProviderUserConsentStatus: userConsent.consentStatus ?? .notConsented),
-                           consentType: Self.userConsentType(fromServiceProviderUserConsentType: userConsent.consentType ?? .sms))
+        return UserConsent(id: userConsent.info.id,
+                           consentVersionId: userConsent.info.consentVersionId,
+                           name: userConsent.info.name,
+                           key: userConsent.info.key,
+                           consentStatus: Self.userConsentStatus(fromServiceProviderUserConsentStatus: userConsent.status),
+                           consentType: Self.userConsentType(fromServiceProviderUserConsentType: userConsent.type))
     }
 
     static func userConsentStatus(fromServiceProviderUserConsentStatus userConsentStatus: ServicesProvider.UserConsentStatus) -> UserConsentStatus {
@@ -27,6 +27,8 @@ extension ServiceProviderModelMapper {
             return .notConsented
         case .consented:
             return .consented
+        case .unknown:
+            return .unknown
         }
     }
 
@@ -39,5 +41,7 @@ extension ServiceProviderModelMapper {
             return .email
         case .terms:
             return .terms
+        case .unknown:
+            return .unknown
         }
     }}

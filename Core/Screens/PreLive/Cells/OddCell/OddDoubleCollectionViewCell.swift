@@ -29,7 +29,7 @@ class OddDoubleCollectionViewCell: UICollectionViewCell {
     lazy var liveGradientBorderView: GradientBorderView = {
         var gradientBorderView = GradientBorderView()
         gradientBorderView.translatesAutoresizingMaskIntoConstraints = false
-        gradientBorderView.gradientBorderWidth = 2
+        gradientBorderView.gradientBorderWidth = 1
         gradientBorderView.gradientCornerRadius = 9
         
         gradientBorderView.gradientColors = [UIColor.App.liveBorderGradient3,
@@ -81,6 +81,8 @@ class OddDoubleCollectionViewCell: UICollectionViewCell {
     @IBOutlet private weak var headerHeightConstraint: NSLayoutConstraint!
     @IBOutlet private weak var buttonsHeightConstraint: NSLayoutConstraint!
 
+    var openStatsButton: OpenStatsButton?
+    
     private var cachedCardsStyle: CardsStyle?
     //
 
@@ -340,6 +342,7 @@ class OddDoubleCollectionViewCell: UICollectionViewCell {
         
         self.iconStatsImageView.setTintColor(color: UIColor.App.iconSecondary)
         
+        self.openStatsButton?.setupWithTheme()
     }
 
     private func adjustDesignToCardStyle() {
@@ -747,49 +750,13 @@ extension OddDoubleCollectionViewCell {
             }
         })
         
-        let baseView = UIView()
-        baseView.translatesAutoresizingMaskIntoConstraints = false
+        let openStatsButton = OpenStatsButton()
+        openStatsButton.openStatsWidgetFullscreenAction = { [weak self] in
+            self?.openStatsWidgetFullscreen()
+        }
+        self.openStatsButton = openStatsButton
+        self.marketStatsStackView.addArrangedSubview(openStatsButton)
         
-        let button = UIButton()
-        button.addTarget(self, action: #selector(self.openStatsWidgetFullscreen), for: .primaryActionTriggered)
-        button.translatesAutoresizingMaskIntoConstraints = false
-        button.setTitle(localized("view_stats"), for: .normal)
-        button.setTitleColor(UIColor.App.textPrimary, for: .normal)
-        let statsImage = UIImage(named: "open_stats_icon")?.withRenderingMode(.alwaysTemplate)
-        button.setImage(statsImage, for: .normal)
-        button.imageView?.setTintColor(color: UIColor.App.textPrimary)
-        button.tintColor = UIColor.App.textPrimary
-        button.titleLabel?.font = AppFont.with(type: .semibold, size: 11)
-        
-        button.layer.cornerRadius = CornerRadius.button
-        button.layer.masksToBounds = true
-        button.backgroundColor = .clear
-        
-        button.setBackgroundColor(UIColor.App.backgroundBorder, for: .normal)
-        button.setInsets(forContentPadding: UIEdgeInsets(top: 4, left: 8, bottom: 4, right: 8), imageTitlePadding: 4)
-
-        let shadowBackgroundView = UIView()
-        shadowBackgroundView.translatesAutoresizingMaskIntoConstraints = false
-        shadowBackgroundView.backgroundColor = UIColor.App.highlightPrimary
-        shadowBackgroundView.layer.cornerRadius = CornerRadius.button
-        shadowBackgroundView.layer.masksToBounds = true
-        
-        baseView.addSubview(shadowBackgroundView)
-        baseView.addSubview(button)
-        
-        NSLayoutConstraint.activate([
-            baseView.centerXAnchor.constraint(equalTo: button.centerXAnchor),
-            baseView.centerYAnchor.constraint(equalTo: button.centerYAnchor, constant: 3),
-            
-            button.heightAnchor.constraint(equalToConstant: 24),
-            
-            shadowBackgroundView.leadingAnchor.constraint(equalTo: button.leadingAnchor),
-            shadowBackgroundView.trailingAnchor.constraint(equalTo: button.trailingAnchor),
-            shadowBackgroundView.topAnchor.constraint(equalTo: button.topAnchor),
-            shadowBackgroundView.bottomAnchor.constraint(equalTo: button.bottomAnchor, constant: 2),
-        ])
-        
-        self.marketStatsStackView.addArrangedSubview(baseView)
     }
     
     private func setupStatsLine(withjson json: JSON) {
@@ -1047,5 +1014,89 @@ class StatsWebViewController: UIViewController, WKNavigationDelegate {
          }
      }
      
+    
+}
+
+class OpenStatsButton: UIView {
+    
+    var openStatsWidgetFullscreenAction: () -> () = { }
+    
+    private let shadowBackgroundView = UIView()
+    private let button = UIButton()
+    private let statsImage = UIImage(named: "open_stats_icon")?.withRenderingMode(.alwaysTemplate)
+    
+    init() {
+        super.init(frame: .zero)
+        self.setupSubviews()
+        
+        self.setupWithTheme()
+    }
+    
+    @available(iOS, unavailable)
+    override init(frame: CGRect) {
+        super.init(frame: frame)
+    }
+    
+    @available(iOS, unavailable)
+    required init?(coder: NSCoder) {
+        super.init(coder: coder)
+    }
+    
+    func setupSubviews() {
+        self.translatesAutoresizingMaskIntoConstraints = false
+        
+        
+        self.button.addTarget(self, action: #selector(self.openStatsWidgetFullscreen), for: .primaryActionTriggered)
+        self.button.translatesAutoresizingMaskIntoConstraints = false
+        self.button.setTitle(localized("view_stats"), for: .normal)
+        
+        self.button.setImage(self.statsImage, for: .normal)
+        
+        self.button.titleLabel?.font = AppFont.with(type: .semibold, size: 11)
+        
+        self.button.layer.cornerRadius = CornerRadius.button
+        self.button.layer.masksToBounds = true
+        
+        self.button.setInsets(forContentPadding: UIEdgeInsets(top: 4, left: 8, bottom: 4, right: 8), imageTitlePadding: 4)
+
+        self.shadowBackgroundView.translatesAutoresizingMaskIntoConstraints = false
+        
+        self.shadowBackgroundView.layer.cornerRadius = CornerRadius.button
+        self.shadowBackgroundView.layer.masksToBounds = true
+        
+        self.addSubview(self.shadowBackgroundView)
+        self.addSubview(self.button)
+        
+        NSLayoutConstraint.activate([
+            self.centerXAnchor.constraint(equalTo: self.button.centerXAnchor),
+            self.centerYAnchor.constraint(equalTo: self.button.centerYAnchor, constant: 3),
+            
+            self.button.heightAnchor.constraint(equalToConstant: 24),
+            
+            self.shadowBackgroundView.leadingAnchor.constraint(equalTo: self.button.leadingAnchor),
+            self.shadowBackgroundView.trailingAnchor.constraint(equalTo: self.button.trailingAnchor),
+            self.shadowBackgroundView.topAnchor.constraint(equalTo: self.button.topAnchor),
+            self.shadowBackgroundView.bottomAnchor.constraint(equalTo: self.button.bottomAnchor, constant: 2),
+        ])
+        
+        
+        
+    }
+    
+    @objc func openStatsWidgetFullscreen() {
+        self.openStatsWidgetFullscreenAction()
+    }
+    
+    func setupWithTheme() {
+        self.shadowBackgroundView.backgroundColor = UIColor.App.highlightPrimary
+        
+        self.button.imageView?.setTintColor(color: UIColor.App.textPrimary)
+        self.button.tintColor = UIColor.App.textPrimary
+        
+        self.button.setTitleColor(UIColor.App.textPrimary, for: .normal)
+        
+        self.button.setBackgroundColor(UIColor.App.backgroundBorder, for: .normal)
+        self.button.backgroundColor = .clear
+    }
     
 }

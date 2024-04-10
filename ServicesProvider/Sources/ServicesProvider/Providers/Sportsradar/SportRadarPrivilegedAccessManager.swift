@@ -1219,12 +1219,18 @@ class SportRadarPrivilegedAccessManager: PrivilegedAccessManager {
         return publisher.flatMap({ userConsentsResponse -> AnyPublisher<[ConsentInfo], ServiceProviderError> in
             if userConsentsResponse.status == "SUCCESS" {
                 let mappedConsents = userConsentsResponse.consents.map({ consent in
-                    return ConsentInfo(id: consent.id, key: consent.key, name: consent.name, consentVersionId: consent.consentVersionId)
+                    return ConsentInfo(id: consent.id,
+                                       key: consent.key,
+                                       name: consent.name,
+                                       consentVersionId: consent.consentVersionId,
+                                       status: consent.status,
+                                       isMandatory: consent.isMandatory )
                 })
                 return Just(mappedConsents).setFailureType(to: ServiceProviderError.self).eraseToAnyPublisher()
             }
             else {
-                return Fail(outputType: [ConsentInfo].self, failure: ServiceProviderError.invalidResponse).eraseToAnyPublisher()
+                return Fail(outputType: [ConsentInfo].self,
+                            failure: ServiceProviderError.invalidResponse).eraseToAnyPublisher()
             }
         }).eraseToAnyPublisher()
     }
@@ -1237,11 +1243,8 @@ class SportRadarPrivilegedAccessManager: PrivilegedAccessManager {
 
         return publisher.flatMap({ userConsentsResponse -> AnyPublisher<[UserConsent], ServiceProviderError> in
             if userConsentsResponse.status == "SUCCESS" {
-
                 let mappedUserConsentsResponse = SportRadarModelMapper.userConsentResponse(fromUserConsentsResponse: userConsentsResponse)
-
                 return Just(mappedUserConsentsResponse.userConsents).setFailureType(to: ServiceProviderError.self).eraseToAnyPublisher()
-
             }
             else {
                 return Fail(outputType: [UserConsent].self, failure: ServiceProviderError.errorMessage(message: userConsentsResponse.message ?? "Error")).eraseToAnyPublisher()

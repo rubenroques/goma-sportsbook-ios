@@ -462,9 +462,7 @@ class MatchWidgetCollectionViewCell: UICollectionViewCell {
     //
     var viewModel: MatchWidgetCellViewModel? {
         didSet {
-            if self.viewModel?.match.id == "3234891.1" {
-                print("TapBug stop 4 \(self.viewModel?.match.markets.map({ return "\($0.name) "}) )")
-            }
+            
         }
     }
 
@@ -982,12 +980,7 @@ class MatchWidgetCollectionViewCell: UICollectionViewCell {
         // Match Widget Type spec
         switch self.matchWidgetType {
         case .normal, .topImage:
-            if self.viewModel?.isLiveMatch ?? false {
-                self.baseView.backgroundColor = UIColor.App.backgroundDrop
-            }
-            else {
-                self.baseView.backgroundColor = UIColor.App.backgroundCards
-            }
+            self.baseView.backgroundColor = UIColor.App.backgroundCards
 
             self.eventNameLabel.textColor = UIColor.App.textSecondary
             self.homeParticipantNameLabel.textColor = UIColor.App.textPrimary
@@ -1378,86 +1371,101 @@ class MatchWidgetCollectionViewCell: UICollectionViewCell {
         self.awayOddValueLabel.font = AppFont.with(type: .bold, size: 13)
     }
 
-    func configure(withViewModel viewModel: MatchWidgetCellViewModel) {
+    func configureAsLiveCard() {
+        self.hasCashback = false // We need to make sure the cashback icon is not showing
+        
+        self.baseView.backgroundColor = UIColor.App.backgroundDrop
+        self.contentRedesignBaseView.backgroundColor = self.baseView.backgroundColor
 
-        if viewModel.match.id == "3234891.1" {
-            print("TapBug stop 3 \(viewModel.match.markets.map({ return "\($0.name) "}) ) ")
+        self.dateStackView.isHidden = true
+        self.dateNewLabel.isHidden = true
+        self.timeNewLabel.isHidden = true
+        
+        self.detailedScoreView.isHidden = false
+        
+        self.resultStackView.isHidden = false
+        self.matchTimeStatusNewLabel.isHidden = false
+        
+        self.liveMatchDotBaseView.isHidden = true
+        self.liveTipView.isHidden = false
+
+        self.cashbackImageViewBaseTrailingConstraint.isActive = false
+        self.cashbackImageViewLiveTrailingConstraint.isActive = true
+        
+        if self.matchWidgetType == .normal || self.matchWidgetType == .boosted {
+            self.gradientBorderView.isHidden = true
+            self.liveGradientBorderView.isHidden = false
         }
+        else {
+            self.gradientBorderView.isHidden = true
+            self.liveGradientBorderView.isHidden = true
+        }
+        
+        switch StyleHelper.cardsStyleActive() {
+        case .small:
+            self.adjustMarketNameView(isShown: false)
+        case .normal:
+            self.adjustMarketNameView(isShown: true)
+        }
+        
+        if StyleHelper.cardsStyleActive() == .normal && self.matchWidgetType == .normal {
+            self.bottomMarginSpaceConstraint.constant = 12
+            
+            self.homeContentRedesignTopConstraint.constant = 13
+            self.awayContentRedesignTopConstraint.constant = 33
+        }
+    }
+    
+    func configureAsNormalCard() {
+        self.baseView.backgroundColor = UIColor.App.backgroundCards
+        self.contentRedesignBaseView.backgroundColor = self.baseView.backgroundColor
+
+        self.dateStackView.isHidden = false
+        self.dateNewLabel.isHidden = false
+        self.timeNewLabel.isHidden = false
+        
+        self.detailedScoreView.isHidden = true
+        
+        self.resultStackView.isHidden = true
+        self.matchTimeStatusNewLabel.isHidden = true
+        
+        self.liveMatchDotBaseView.isHidden = true
+        self.liveTipView.isHidden = true
+
+        if self.matchWidgetType == .normal || self.matchWidgetType == .boosted {
+            self.gradientBorderView.isHidden = false
+            self.liveGradientBorderView.isHidden = true
+        }
+        else {
+            self.gradientBorderView.isHidden = true
+            self.liveGradientBorderView.isHidden = true
+        }
+        
+        self.cashbackImageViewBaseTrailingConstraint.isActive = true
+        self.cashbackImageViewLiveTrailingConstraint.isActive = false
+        
+        self.adjustMarketNameView(isShown: false)
+        
+        if StyleHelper.cardsStyleActive() == .normal && self.matchWidgetType == .normal {
+            self.bottomMarginSpaceConstraint.constant = 12
+            
+            self.homeContentRedesignTopConstraint.constant = 25
+            self.awayContentRedesignTopConstraint.constant = 45
+        }
+    }
+    
+    func configure(withViewModel viewModel: MatchWidgetCellViewModel) {
         
         self.viewModel = viewModel
         self.matchWidgetType = viewModel.matchWidgetType
 
+        self.hasCashback = viewModel.canHaveCashback
+        
         if viewModel.isLiveCard {
-            self.dateStackView.isHidden = true
-            self.dateNewLabel.isHidden = true
-            self.timeNewLabel.isHidden = true
-            
-            self.resultStackView.isHidden = false
-            self.matchTimeStatusNewLabel.isHidden = false
-             
-            if StyleHelper.cardsStyleActive() == .normal && self.matchWidgetType == .normal {
-                self.bottomMarginSpaceConstraint.constant = 12
-                
-                self.homeContentRedesignTopConstraint.constant = 13
-                self.awayContentRedesignTopConstraint.constant = 33
-            }
+            self.configureAsLiveCard()
         }
         else {
-            self.dateStackView.isHidden = false
-            self.dateNewLabel.isHidden = false
-            self.timeNewLabel.isHidden = false
-            
-            self.resultStackView.isHidden = true
-            self.matchTimeStatusNewLabel.isHidden = true
-            
-            if StyleHelper.cardsStyleActive() == .normal && self.matchWidgetType == .normal {
-                self.bottomMarginSpaceConstraint.constant = 12
-                
-                self.homeContentRedesignTopConstraint.constant = 25
-                self.awayContentRedesignTopConstraint.constant = 45
-            }
-        }
-
-        if viewModel.isLiveMatch {
-            self.liveMatchDotBaseView.isHidden = true
-            self.liveTipView.isHidden = false
-
-            self.cashbackImageViewBaseTrailingConstraint.isActive = false
-            self.cashbackImageViewLiveTrailingConstraint.isActive = true
-            
-            if self.matchWidgetType == .normal || self.matchWidgetType == .boosted {
-                self.gradientBorderView.isHidden = true
-                self.liveGradientBorderView.isHidden = false
-            }
-            else {
-                self.gradientBorderView.isHidden = true
-                self.liveGradientBorderView.isHidden = true
-            }
-            
-            switch StyleHelper.cardsStyleActive() {
-            case .small:
-                self.adjustMarketNameView(isShown: false)
-            case .normal:
-                self.adjustMarketNameView(isShown: true)
-            }
-        }
-        else {
-            self.liveMatchDotBaseView.isHidden = true
-            self.liveTipView.isHidden = true
-
-            if self.matchWidgetType == .normal || self.matchWidgetType == .boosted {
-                self.gradientBorderView.isHidden = false
-                self.liveGradientBorderView.isHidden = true
-            }
-            else {
-                self.gradientBorderView.isHidden = true
-                self.liveGradientBorderView.isHidden = true
-            }
-            
-            self.cashbackImageViewBaseTrailingConstraint.isActive = true
-            self.cashbackImageViewLiveTrailingConstraint.isActive = false
-            
-            self.adjustMarketNameView(isShown: false)
+            self.configureAsNormalCard()
         }
 
         self.liveMatchDotImageView.isHidden = true
@@ -1583,24 +1591,18 @@ class MatchWidgetCollectionViewCell: UICollectionViewCell {
                 
                 self.matchTimeStatusNewLabel.text = liveDataViewModel.matchTimeDetails
                 
-                if let detailedScores = updatedMatch.detailedScores, detailedScores.isNotEmpty {
-                    self.dateNewLabel.isHidden = true
-                    self.timeNewLabel.isHidden = true
-                    
-                    self.detailedScoreView.isHidden = false
+                if let detailedScores = updatedMatch.detailedScores {
                     self.detailedScoreView.updateScores(detailedScores)
-                }
-                else {
-                    self.detailedScoreView.isHidden = true
                 }
                 
                 if liveDataViewModel.isLiveCard {
-                    self.gradientBorderView.isHidden = true
-                    self.liveGradientBorderView.isHidden = false
+                    self.configureAsLiveCard()
                 }
+//                else if let detailedScoresValue = updatedMatch.detailedScores, detailedScoresValue.isNotEmpty {
+//                    self.configureAsLiveCard()
+//                }
                 else {
-                    self.gradientBorderView.isHidden = false
-                    self.liveGradientBorderView.isHidden = true
+                    self.configureAsNormalCard()
                 }
             })
         
@@ -1853,8 +1855,6 @@ class MatchWidgetCollectionViewCell: UICollectionViewCell {
 
         self.isFavorite = Env.favoritesManager.isEventFavorite(eventId: viewModel.match.id)
 
-        self.hasCashback = viewModel.canHaveCashback
-        
         if self.matchWidgetType == .topImageOutright {
             self.eventNameLabel.text = viewModel.match.venue?.name ?? viewModel.match.competitionName
             self.outrightNameLabel.text = viewModel.match.competitionOutright?.name
@@ -1960,6 +1960,7 @@ class MatchWidgetCollectionViewCell: UICollectionViewCell {
     }
 
     @IBAction private func didTapMatchView(_ sender: Any) {
+        
         if let viewModel = self.viewModel?.match {
             if self.matchWidgetType == .topImageOutright {
                 if let competition = viewModel.competitionOutright {
@@ -1970,6 +1971,7 @@ class MatchWidgetCollectionViewCell: UICollectionViewCell {
                 self.tappedMatchWidgetAction?(viewModel)
             }
         }
+        
     }
 
     //

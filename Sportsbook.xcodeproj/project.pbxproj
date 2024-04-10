@@ -735,6 +735,15 @@
 		450FC4122A2E268F000DB866 /* StoriesItemCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 450FC40D2A2E268F000DB866 /* StoriesItemCollectionViewCell.swift */; };
 		450FC4132A2E268F000DB866 /* StoriesItemCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 450FC40D2A2E268F000DB866 /* StoriesItemCollectionViewCell.swift */; };
 		450FC4142A2E268F000DB866 /* StoriesItemCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 450FC40D2A2E268F000DB866 /* StoriesItemCollectionViewCell.swift */; };
+		451135692BC54B6200124983 /* UpdatedTermsConditionsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 451135682BC54B6200124983 /* UpdatedTermsConditionsViewController.swift */; };
+		4511356A2BC54B6200124983 /* UpdatedTermsConditionsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 451135682BC54B6200124983 /* UpdatedTermsConditionsViewController.swift */; };
+		4511356B2BC54B6200124983 /* UpdatedTermsConditionsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 451135682BC54B6200124983 /* UpdatedTermsConditionsViewController.swift */; };
+		4511356C2BC54B6200124983 /* UpdatedTermsConditionsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 451135682BC54B6200124983 /* UpdatedTermsConditionsViewController.swift */; };
+		4511356D2BC54B6200124983 /* UpdatedTermsConditionsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 451135682BC54B6200124983 /* UpdatedTermsConditionsViewController.swift */; };
+		4511356E2BC54B6200124983 /* UpdatedTermsConditionsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 451135682BC54B6200124983 /* UpdatedTermsConditionsViewController.swift */; };
+		4511356F2BC54B6200124983 /* UpdatedTermsConditionsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 451135682BC54B6200124983 /* UpdatedTermsConditionsViewController.swift */; };
+		451135702BC54B6200124983 /* UpdatedTermsConditionsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 451135682BC54B6200124983 /* UpdatedTermsConditionsViewController.swift */; };
+		451135712BC54B6200124983 /* UpdatedTermsConditionsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 451135682BC54B6200124983 /* UpdatedTermsConditionsViewController.swift */; };
 		4516402A2A39FF80003C4276 /* PhraseSDK in Frameworks */ = {isa = PBXBuildFile; productRef = 451640292A39FF80003C4276 /* PhraseSDK */; };
 		451ABD6629CB3B1D0062641F /* Match.swift in Sources */ = {isa = PBXBuildFile; fileRef = 451ABD6529CB3B1D0062641F /* Match.swift */; };
 		451ABD6729CB3B1D0062641F /* Match.swift in Sources */ = {isa = PBXBuildFile; fileRef = 451ABD6529CB3B1D0062641F /* Match.swift */; };
@@ -7041,6 +7050,7 @@
 		450FC4052A2E1E33000DB866 /* StoriesLineTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StoriesLineTableViewCell.swift; sourceTree = "<group>"; };
 		450FC40D2A2E268F000DB866 /* StoriesItemCollectionViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StoriesItemCollectionViewCell.swift; sourceTree = "<group>"; };
 		45109A652799C83700E4AC2E /* MatchStatsViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MatchStatsViewModel.swift; sourceTree = "<group>"; };
+		451135682BC54B6200124983 /* UpdatedTermsConditionsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UpdatedTermsConditionsViewController.swift; sourceTree = "<group>"; };
 		4515635E26BE032E00690896 /* AnalyticsClient.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AnalyticsClient.swift; sourceTree = "<group>"; };
 		4515636A26BE949300690896 /* UserSettings.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserSettings.swift; sourceTree = "<group>"; };
 		4515636D26BE94F600690896 /* Theme.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Theme.swift; sourceTree = "<group>"; };
@@ -8289,6 +8299,14 @@
 			path = ViewModels;
 			sourceTree = "<group>";
 		};
+		451135722BC54B6D00124983 /* UpdatedTerms */ = {
+			isa = PBXGroup;
+			children = (
+				451135682BC54B6200124983 /* UpdatedTermsConditionsViewController.swift */,
+			);
+			path = UpdatedTerms;
+			sourceTree = "<group>";
+		};
 		45166CA926F3548D00E69D65 /* ExternalLibs */ = {
 			isa = PBXGroup;
 			children = (
@@ -9216,6 +9234,7 @@
 				A9A836AF26C6AC5D00508923 /* Maintenance */,
 				A9B8407926CA788000269B05 /* VersionUpdate */,
 				A9B8409426DE44BF00269B05 /* GeoLocation */,
+				451135722BC54B6D00124983 /* UpdatedTerms */,
 				4546A89B29D7083D00ABD562 /* UserTracking */,
 				451E1F6A2825634E000E957B /* InternalBrowser */,
 				45F6BA6E2AAF327D00C81DE1 /* BetslipProxyWebViewController */,
@@ -13772,6 +13791,7 @@
 				450B795928F58574009229E3 /* Localization.swift in Sources */,
 				450B795A28F58574009229E3 /* NewGroupViewController.swift in Sources */,
 				450B795D28F58574009229E3 /* ChatNotificationsViewController.swift in Sources */,
+				4511356B2BC54B6200124983 /* UpdatedTermsConditionsViewController.swift in Sources */,
 				450B795E28F58574009229E3 /* BetslipErrorView.swift in Sources */,
 				450B795F28F58574009229E3 /* CompetitionSearchTableViewCell.swift in Sources */,
 				450B796028F58574009229E3 /* CompetitionWidgetCollectionViewCell.swift in Sources */,
@@ -14157,6 +14177,7 @@
 				A907B6B329D10C7500AC4A17 /* PromotionsWebViewController.swift in Sources */,
 				A98708C128DA014800F27348 /* UserProfileViewController.swift in Sources */,
 				A90FB7C429AF67B000D08A7C /* AlertType.swift in Sources */,
+				451135712BC54B6200124983 /* UpdatedTermsConditionsViewController.swift in Sources */,
 				6584F9062BA0B84200E317EA /* EmptyReferralView.swift in Sources */,
 				A9B331D9288FFE6100D097F0 /* InAppMessageCellViewModel.swift in Sources */,
 				A9A292572A619A3E00A7C334 /* ReferralQRCodeViewController.swift in Sources */,
@@ -14631,6 +14652,7 @@
 				455AE1312A29EBC20045FDD3 /* QuickSwipeStackTableViewCell.swift in Sources */,
 				A9C2D52929C2286F00DB95BD /* IBANProofViewController.swift in Sources */,
 				457CBAE8282D27D000ED0F00 /* ChatMessageView.swift in Sources */,
+				4511356F2BC54B6200124983 /* UpdatedTermsConditionsViewController.swift in Sources */,
 				A9DF8E2F28E45CB50083BF56 /* FeaturedTipDetailsViewModel.swift in Sources */,
 				A9BDD4F7292E3F08001A7799 /* SportTypeStore.swift in Sources */,
 				45B6E200283E3F14001B570C /* EditContactViewController.swift in Sources */,
@@ -15226,6 +15248,7 @@
 				457CBD4F282D2CD100ED0F00 /* MarketGroupDetailsViewModel.swift in Sources */,
 				45B6E20B283E3FA7001B570C /* FriendProfileViewController.swift in Sources */,
 				457CBD50282D2CD100ED0F00 /* UIViewController+SwiftUI.swift in Sources */,
+				451135702BC54B6200124983 /* UpdatedTermsConditionsViewController.swift in Sources */,
 				45C10F5128772DA700037BBE /* ModalTransitionPresenting.swift in Sources */,
 				A986D36228CF4C5C00AF95D7 /* InviteContactTableViewCell.swift in Sources */,
 				45C10F2D28772DA700037BBE /* Animations.swift in Sources */,
@@ -15961,6 +15984,7 @@
 				4589C84E282024E400243547 /* NewGroupViewController.swift in Sources */,
 				4589C851282024E400243547 /* ChatNotificationsViewController.swift in Sources */,
 				4589C852282024E400243547 /* BetslipErrorView.swift in Sources */,
+				4511356C2BC54B6200124983 /* UpdatedTermsConditionsViewController.swift in Sources */,
 				4589C853282024E400243547 /* CompetitionSearchTableViewCell.swift in Sources */,
 				4589C854282024E400243547 /* CompetitionWidgetCollectionViewCell.swift in Sources */,
 				4589C855282024E400243547 /* XcodePreviewViewController.swift in Sources */,
@@ -16652,6 +16676,7 @@
 				45A33171298976BA008181E9 /* UserSettingsGoma.swift in Sources */,
 				45A33172298976BA008181E9 /* Localization.swift in Sources */,
 				45A33173298976BA008181E9 /* NewGroupViewController.swift in Sources */,
+				451135692BC54B6200124983 /* UpdatedTermsConditionsViewController.swift in Sources */,
 				45A33176298976BA008181E9 /* ChatNotificationsViewController.swift in Sources */,
 				45A33177298976BA008181E9 /* BetslipErrorView.swift in Sources */,
 				45A33178298976BA008181E9 /* CompetitionSearchTableViewCell.swift in Sources */,
@@ -17361,6 +17386,7 @@
 				45A6BCB128246A7500D9B416 /* TabularBarView.swift in Sources */,
 				A90FB7DF29B0BCF000D08A7C /* SelfExclusionViewModel.swift in Sources */,
 				45A6BCB228246A7500D9B416 /* CGPoint+Extensions.swift in Sources */,
+				4511356E2BC54B6200124983 /* UpdatedTermsConditionsViewController.swift in Sources */,
 				655E20182B29CB7E00C95337 /* TextSubsectionView.swift in Sources */,
 				A9A43C732A4B2A33008FB399 /* IdentificationDocsViewModel.swift in Sources */,
 				45A6BCB328246A7500D9B416 /* SimpleRegisterDetailsViewController.swift in Sources */,
@@ -18033,6 +18059,7 @@
 				45F6BC1C2AB3732C00C81DE1 /* ActivationAlertScrollableTableViewCell.swift in Sources */,
 				45F6BC1D2AB3732C00C81DE1 /* UserSettingsGoma.swift in Sources */,
 				45F6BC1E2AB3732C00C81DE1 /* Localization.swift in Sources */,
+				4511356A2BC54B6200124983 /* UpdatedTermsConditionsViewController.swift in Sources */,
 				45F6BC1F2AB3732C00C81DE1 /* NewGroupViewController.swift in Sources */,
 				45F6BC202AB3732C00C81DE1 /* ChatNotificationsViewController.swift in Sources */,
 				45F6BC212AB3732C00C81DE1 /* BetslipErrorView.swift in Sources */,
@@ -18442,6 +18469,7 @@
 				A91A64522A7965D9002A6984 /* MyGamesViewController.swift in Sources */,
 				A9C340B828F9A74A0055360B /* BonusHistoryDataSource.swift in Sources */,
 				A9C340B928F9A74A0055360B /* SimpleRegisterEmailCheckViewModel.swift in Sources */,
+				4511356D2BC54B6200124983 /* UpdatedTermsConditionsViewController.swift in Sources */,
 				A9C340BB28F9A74A0055360B /* SuggestedBetSummary.swift in Sources */,
 				A9C340BC28F9A74A0055360B /* Bundle+Extensions.swift in Sources */,
 				A9C340BD28F9A74A0055360B /* SportStatisticView.swift in Sources */,
@@ -19567,7 +19595,7 @@
 				CODE_SIGN_IDENTITY = "Apple Development";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				CODE_SIGN_STYLE = Manual;
-				CURRENT_PROJECT_VERSION = 10182;
+				CURRENT_PROJECT_VERSION = 10187;
 				DEVELOPMENT_TEAM = QN2DYX5K4M;
 				"DEVELOPMENT_TEAM[sdk=iphoneos*]" = QN2DYX5K4M;
 				INFOPLIST_FILE = "$(SRCROOT)/Clients/Betsson/Misc-PROD/Betsson-PROD-Info.plist";
@@ -19600,7 +19628,7 @@
 				CODE_SIGN_IDENTITY = "Apple Distribution";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution";
 				CODE_SIGN_STYLE = Manual;
-				CURRENT_PROJECT_VERSION = 10182;
+				CURRENT_PROJECT_VERSION = 10187;
 				DEVELOPMENT_TEAM = QN2DYX5K4M;
 				"DEVELOPMENT_TEAM[sdk=iphoneos*]" = QN2DYX5K4M;
 				INFOPLIST_FILE = "$(SRCROOT)/Clients/Betsson/Misc-PROD/Betsson-PROD-Info.plist";
@@ -19690,7 +19718,7 @@
 				CODE_SIGN_IDENTITY = "Apple Development";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				CODE_SIGN_STYLE = Manual;
-				CURRENT_PROJECT_VERSION = 10182;
+				CURRENT_PROJECT_VERSION = 10187;
 				DEVELOPMENT_TEAM = 422GNXXZJR;
 				"DEVELOPMENT_TEAM[sdk=iphoneos*]" = 422GNXXZJR;
 				INFOPLIST_FILE = "$(SRCROOT)/Clients/Betsson/Misc-UAT/Betsson-UAT-Info.plist";
@@ -19722,7 +19750,7 @@
 				CODE_SIGN_IDENTITY = "Apple Distribution";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution";
 				CODE_SIGN_STYLE = Manual;
-				CURRENT_PROJECT_VERSION = 10182;
+				CURRENT_PROJECT_VERSION = 10187;
 				DEVELOPMENT_TEAM = 422GNXXZJR;
 				"DEVELOPMENT_TEAM[sdk=iphoneos*]" = 422GNXXZJR;
 				INFOPLIST_FILE = "$(SRCROOT)/Clients/Betsson/Misc-UAT/Betsson-UAT-Info.plist";
@@ -19754,7 +19782,7 @@
 				CODE_SIGN_IDENTITY = "Apple Development";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "Apple Development";
 				CODE_SIGN_STYLE = Manual;
-				CURRENT_PROJECT_VERSION = 10182;
+				CURRENT_PROJECT_VERSION = 10187;
 				DEBUG_INFORMATION_FORMAT = dwarf;
 				DEVELOPMENT_TEAM = "";
 				"DEVELOPMENT_TEAM[sdk=iphoneos*]" = QN2DYX5K4M;
@@ -19799,7 +19827,7 @@
 				CODE_SIGN_IDENTITY = "Apple Distribution";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "Apple Distribution";
 				CODE_SIGN_STYLE = Manual;
-				CURRENT_PROJECT_VERSION = 10182;
+				CURRENT_PROJECT_VERSION = 10187;
 				DEVELOPMENT_TEAM = "";
 				"DEVELOPMENT_TEAM[sdk=iphoneos*]" = QN2DYX5K4M;
 				ENABLE_USER_SCRIPT_SANDBOXING = YES;

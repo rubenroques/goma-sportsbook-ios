@@ -194,7 +194,6 @@ public class SteppedRegistrationViewModel {
 
         self.isLoading.send(true)
         
-        
         self.serviceProvider.getAllConsents()
             .flatMap({ [weak self] (consentInfos: [ConsentInfo]) -> AnyPublisher<SignUpResponse, ServiceProviderError> in
 
