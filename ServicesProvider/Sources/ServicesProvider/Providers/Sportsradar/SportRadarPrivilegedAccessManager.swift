@@ -436,10 +436,14 @@ class SportRadarPrivilegedAccessManager: PrivilegedAccessManager {
         .eraseToAnyPublisher()
     }
 
-    func updateResponsibleGamingLimits(newLimit: Double, limitType: String) -> AnyPublisher<Bool, ServiceProviderError> {
+    func updateResponsibleGamingLimits(newLimit: Double, limitType: String, hasRollingWeeklyLimits: Bool) -> AnyPublisher<Bool, ServiceProviderError> {
         
         var endpointLimitType = ""
-        var endpointLimitPeriod = "RollingWeekly"
+        var endpointLimitPeriod = "Weekly"
+        
+        if hasRollingWeeklyLimits {
+            endpointLimitPeriod = "RollingWeekly"
+        }
         
         if limitType == "deposit" {
             endpointLimitType = "DEPOSIT_LIMIT"

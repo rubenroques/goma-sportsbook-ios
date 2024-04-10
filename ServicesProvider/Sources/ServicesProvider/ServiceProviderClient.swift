@@ -762,13 +762,13 @@ extension ServicesProviderClient {
         return privilegedAccessManager.updateWeeklyBettingLimits(newLimit: newLimit)
     }
 
-    public func updateResponsibleGamingLimits(newLimit: Double, limitType: String) -> AnyPublisher<Bool, ServiceProviderError> {
+    public func updateResponsibleGamingLimits(newLimit: Double, limitType: String, hasRollingWeeklyLimits: Bool) -> AnyPublisher<Bool, ServiceProviderError> {
         guard
             let privilegedAccessManager = self.privilegedAccessManager
         else {
             return Fail(error: ServiceProviderError.privilegedAccessManagerNotFound).eraseToAnyPublisher()
         }
-        return privilegedAccessManager.updateResponsibleGamingLimits(newLimit: newLimit, limitType: limitType)
+        return privilegedAccessManager.updateResponsibleGamingLimits(newLimit: newLimit, limitType: limitType, hasRollingWeeklyLimits: hasRollingWeeklyLimits)
     }
 
     public func getPersonalDepositLimits() -> AnyPublisher<PersonalDepositLimitResponse, ServiceProviderError> {

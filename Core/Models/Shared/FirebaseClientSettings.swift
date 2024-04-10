@@ -23,6 +23,8 @@ struct FirebaseClientSettings: Codable {
     let locale: Locale?
     
     let partialCashoutEnabled: Bool
+    
+    let hasRollingWeeklyLimits: Bool
 
     let replaySportsCodes: [String]
     let ungroupedMarkets: [String]
@@ -51,6 +53,7 @@ struct FirebaseClientSettings: Codable {
         case requiredPhoneVerification = "signup_2fa"
         case replaySportsCodes = "replay_sports"
         case ungroupedMarkets = "ungrouped_markets"
+        case hasRollingWeeklyLimits = "limit_type_rolling"
     }
 
     init(from decoder: Decoder) throws {
@@ -109,6 +112,8 @@ struct FirebaseClientSettings: Codable {
             self.ungroupedMarkets = []
         }
         
+        let hasRollingWeeklyLimitsInt = try container.decode(Int.self, forKey: .hasRollingWeeklyLimits)
+        self.hasRollingWeeklyLimits = hasRollingWeeklyLimitsInt == 1
     }
 
     init(showInformationPopUp: Bool,
@@ -121,7 +126,8 @@ struct FirebaseClientSettings: Codable {
          locale: Locale?,
          partialCashoutEnabled: Bool,
          replaySportsCodes: [String],
-         ungroupedMarkets: [String]) {
+         ungroupedMarkets: [String],
+         hasRollingWeeklyLimits: Bool) {
 
         self.showInformationPopUp = showInformationPopUp
         self.currentAppVersion = currentAppVersion
@@ -134,6 +140,7 @@ struct FirebaseClientSettings: Codable {
         self.partialCashoutEnabled = partialCashoutEnabled
         self.replaySportsCodes = replaySportsCodes
         self.ungroupedMarkets = ungroupedMarkets
+        self.hasRollingWeeklyLimits = hasRollingWeeklyLimits
     }
 
 }
@@ -150,6 +157,7 @@ extension FirebaseClientSettings {
                                       locale: nil,
                                       partialCashoutEnabled: false,
                                       replaySportsCodes: [],
-                                      ungroupedMarkets: [])
+                                      ungroupedMarkets: [],
+                                      hasRollingWeeklyLimits: false)
     }
 }

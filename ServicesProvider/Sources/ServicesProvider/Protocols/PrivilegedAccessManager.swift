@@ -47,7 +47,7 @@ protocol PrivilegedAccessManager {
 
     func updateWeeklyDepositLimits(newLimit: Double) -> AnyPublisher<Bool, ServiceProviderError>
     func updateWeeklyBettingLimits(newLimit: Double) -> AnyPublisher<Bool, ServiceProviderError>
-    func updateResponsibleGamingLimits(newLimit: Double, limitType: String) -> AnyPublisher<Bool, ServiceProviderError>
+    func updateResponsibleGamingLimits(newLimit: Double, limitType: String, hasRollingWeeklyLimits: Bool) -> AnyPublisher<Bool, ServiceProviderError>
     func getPersonalDepositLimits() -> AnyPublisher<PersonalDepositLimitResponse, ServiceProviderError>
     func getLimits() -> AnyPublisher<LimitsResponse, ServiceProviderError>
     func getResponsibleGamingLimits(periodTypes: String?, limitTypes: String?) -> AnyPublisher<ResponsibleGamingLimitsResponse, ServiceProviderError>

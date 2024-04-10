@@ -319,8 +319,9 @@ class UserSessionStore {
 //            }
 //            .replaceError(with: false) // if an error occour it shouldn't show the blocking screen
 //            .eraseToAnyPublisher()
+        let periodTypes = Env.businessSettingsSocket.clientSettings.hasRollingWeeklyLimits ? "RollingWeekly,Permanent" : "Weekly,Permanent"
         
-        return Env.servicesProvider.getResponsibleGamingLimits(periodTypes: "RollingWeekly,Permanent", limitTypes: "DEPOSIT_LIMIT,WAGER_LIMIT,BALANCE_LIMIT")
+        return Env.servicesProvider.getResponsibleGamingLimits(periodTypes: periodTypes, limitTypes: "DEPOSIT_LIMIT,WAGER_LIMIT,BALANCE_LIMIT")
             .map {  [weak self] limitsResponse in
 
                 if self?.shouldSkipLimitsScreen ?? false {

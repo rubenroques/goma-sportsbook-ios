@@ -84,8 +84,10 @@ class ProfileLimitsManagementViewModel: NSObject {
     }
 
     func getLimits() {
+
+        let periodTypes = Env.businessSettingsSocket.clientSettings.hasRollingWeeklyLimits ? "RollingWeekly,Permanent" : "Weekly,Permanent"
         
-        Env.servicesProvider.getResponsibleGamingLimits(periodTypes: "RollingWeekly,Permanent", limitTypes: "DEPOSIT_LIMIT,WAGER_LIMIT,BALANCE_LIMIT")
+        Env.servicesProvider.getResponsibleGamingLimits(periodTypes: periodTypes, limitTypes: "DEPOSIT_LIMIT,WAGER_LIMIT,BALANCE_LIMIT")
             .receive(on: DispatchQueue.main)
             .sink(receiveCompletion: { [weak self] completion in
                 switch completion {
@@ -284,8 +286,10 @@ class ProfileLimitsManagementViewModel: NSObject {
     func updateDepositLimit(amount: String) {
 
         if let limit = Double(amount) {
-//            Env.servicesProvider.updateWeeklyDepositLimits(newLimit: limit)
-            Env.servicesProvider.updateResponsibleGamingLimits(newLimit: limit, limitType: "deposit")
+            
+            let hasRollingWeeklyLimits = Env.businessSettingsSocket.clientSettings.hasRollingWeeklyLimits
+            
+            Env.servicesProvider.updateResponsibleGamingLimits(newLimit: limit, limitType: "deposit", hasRollingWeeklyLimits: hasRollingWeeklyLimits)
                 .receive(on: DispatchQueue.main)
                 .sink(receiveCompletion: { [weak self] completion in
 
@@ -316,8 +320,10 @@ class ProfileLimitsManagementViewModel: NSObject {
     func updateBettingLimit(amount: String) {
 
         if let limit = Double(amount) {
-//            Env.servicesProvider.updateWeeklyBettingLimits(newLimit: limit)
-            Env.servicesProvider.updateResponsibleGamingLimits(newLimit: limit, limitType: "betting")
+            
+            let hasRollingWeeklyLimits = Env.businessSettingsSocket.clientSettings.hasRollingWeeklyLimits
+            
+            Env.servicesProvider.updateResponsibleGamingLimits(newLimit: limit, limitType: "betting", hasRollingWeeklyLimits: hasRollingWeeklyLimits)
                 .receive(on: DispatchQueue.main)
                 .sink(receiveCompletion: { [weak self] completion in
 
@@ -348,7 +354,10 @@ class ProfileLimitsManagementViewModel: NSObject {
     func updateResponsibleGamingLimit(amount: String) {
 
         if let limit = Double(amount) {
-            Env.servicesProvider.updateResponsibleGamingLimits(newLimit: limit, limitType: "autoPayout")
+            
+            let hasRollingWeeklyLimits = Env.businessSettingsSocket.clientSettings.hasRollingWeeklyLimits
+
+            Env.servicesProvider.updateResponsibleGamingLimits(newLimit: limit, limitType: "autoPayout", hasRollingWeeklyLimits: hasRollingWeeklyLimits)
                 .receive(on: DispatchQueue.main)
                 .sink(receiveCompletion: { [weak self] completion in
 
