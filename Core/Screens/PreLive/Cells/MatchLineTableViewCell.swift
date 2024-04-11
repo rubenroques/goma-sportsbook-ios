@@ -47,6 +47,26 @@ class MatchLineTableCellViewModel {
     //
     private func loadEventDetails(fromId id: String) {
 
+        /*
+        New market secundary logic
+        
+         Env.servicesProvider.getEventSecundaryMarkets(eventId: id)
+            .map {
+                return ServiceProviderModelMapper.markets(fromServiceProviderMarkets: $0)
+            }
+            .receive(on: DispatchQueue.main)
+            .sink { completion in
+                
+            } receiveValue: { [weak self] secundaryMarkets in
+                if var oldMatch = self?.matchCurrentValueSubject.value {
+                        oldMatch.markets = secundaryMarkets
+                        self?.matchCurrentValueSubject.send(oldMatch)
+                }
+            }
+            .store(in: &self.cancellables)
+         */
+        
+        
         Env.servicesProvider.getEventDetails(eventId: id)
             .filter { eventSummary in
                 return eventSummary.type == .match
@@ -176,7 +196,8 @@ class MatchLineTableCellViewModel {
 
             }
             .store(in: &self.cancellables)
-
+         
+        
     }
 
 }

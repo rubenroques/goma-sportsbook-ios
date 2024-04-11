@@ -744,6 +744,15 @@
 		4511356F2BC54B6200124983 /* UpdatedTermsConditionsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 451135682BC54B6200124983 /* UpdatedTermsConditionsViewController.swift */; };
 		451135702BC54B6200124983 /* UpdatedTermsConditionsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 451135682BC54B6200124983 /* UpdatedTermsConditionsViewController.swift */; };
 		451135712BC54B6200124983 /* UpdatedTermsConditionsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 451135682BC54B6200124983 /* UpdatedTermsConditionsViewController.swift */; };
+		451135742BC7F81C00124983 /* PrivacyInfo.xcprivacy in Resources */ = {isa = PBXBuildFile; fileRef = 451135732BC7F81C00124983 /* PrivacyInfo.xcprivacy */; };
+		451135752BC7F81C00124983 /* PrivacyInfo.xcprivacy in Resources */ = {isa = PBXBuildFile; fileRef = 451135732BC7F81C00124983 /* PrivacyInfo.xcprivacy */; };
+		451135762BC7F81C00124983 /* PrivacyInfo.xcprivacy in Resources */ = {isa = PBXBuildFile; fileRef = 451135732BC7F81C00124983 /* PrivacyInfo.xcprivacy */; };
+		451135772BC7F81C00124983 /* PrivacyInfo.xcprivacy in Resources */ = {isa = PBXBuildFile; fileRef = 451135732BC7F81C00124983 /* PrivacyInfo.xcprivacy */; };
+		451135782BC7F81C00124983 /* PrivacyInfo.xcprivacy in Resources */ = {isa = PBXBuildFile; fileRef = 451135732BC7F81C00124983 /* PrivacyInfo.xcprivacy */; };
+		451135792BC7F81C00124983 /* PrivacyInfo.xcprivacy in Resources */ = {isa = PBXBuildFile; fileRef = 451135732BC7F81C00124983 /* PrivacyInfo.xcprivacy */; };
+		4511357A2BC7F81C00124983 /* PrivacyInfo.xcprivacy in Resources */ = {isa = PBXBuildFile; fileRef = 451135732BC7F81C00124983 /* PrivacyInfo.xcprivacy */; };
+		4511357B2BC7F81C00124983 /* PrivacyInfo.xcprivacy in Resources */ = {isa = PBXBuildFile; fileRef = 451135732BC7F81C00124983 /* PrivacyInfo.xcprivacy */; };
+		4511357C2BC7F81C00124983 /* PrivacyInfo.xcprivacy in Resources */ = {isa = PBXBuildFile; fileRef = 451135732BC7F81C00124983 /* PrivacyInfo.xcprivacy */; };
 		4516402A2A39FF80003C4276 /* PhraseSDK in Frameworks */ = {isa = PBXBuildFile; productRef = 451640292A39FF80003C4276 /* PhraseSDK */; };
 		451ABD6629CB3B1D0062641F /* Match.swift in Sources */ = {isa = PBXBuildFile; fileRef = 451ABD6529CB3B1D0062641F /* Match.swift */; };
 		451ABD6729CB3B1D0062641F /* Match.swift in Sources */ = {isa = PBXBuildFile; fileRef = 451ABD6529CB3B1D0062641F /* Match.swift */; };
@@ -7051,6 +7060,7 @@
 		450FC40D2A2E268F000DB866 /* StoriesItemCollectionViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StoriesItemCollectionViewCell.swift; sourceTree = "<group>"; };
 		45109A652799C83700E4AC2E /* MatchStatsViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MatchStatsViewModel.swift; sourceTree = "<group>"; };
 		451135682BC54B6200124983 /* UpdatedTermsConditionsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UpdatedTermsConditionsViewController.swift; sourceTree = "<group>"; };
+		451135732BC7F81C00124983 /* PrivacyInfo.xcprivacy */ = {isa = PBXFileReference; lastKnownFileType = text.xml; path = PrivacyInfo.xcprivacy; sourceTree = "<group>"; };
 		4515635E26BE032E00690896 /* AnalyticsClient.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AnalyticsClient.swift; sourceTree = "<group>"; };
 		4515636A26BE949300690896 /* UserSettings.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserSettings.swift; sourceTree = "<group>"; };
 		4515636D26BE94F600690896 /* Theme.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Theme.swift; sourceTree = "<group>"; };
@@ -9455,6 +9465,7 @@
 				45A33351298976E3008181E9 /* LaunchScreen */,
 				45A33356298976E3008181E9 /* Misc-UAT */,
 				45A3335B298976E3008181E9 /* Assets */,
+				451135732BC7F81C00124983 /* PrivacyInfo.xcprivacy */,
 			);
 			path = Betsson;
 			sourceTree = "<group>";
@@ -12073,6 +12084,7 @@
 				450B7AAD28F58574009229E3 /* SplashViewController.xib in Resources */,
 				450B7AAE28F58574009229E3 /* HeaderTextFieldView.xib in Resources */,
 				450B7AAF28F58574009229E3 /* SingleBettingTicketTableViewCell.xib in Resources */,
+				451135762BC7F81C00124983 /* PrivacyInfo.xcprivacy in Resources */,
 				450B7AB028F58574009229E3 /* EnabledAccessViewController.xib in Resources */,
 				450B7AB128F58574009229E3 /* VersionUpdateViewController.xib in Resources */,
 				45F6BA9A2AB1F2B600C81DE1 /* avatar1-light.json in Resources */,
@@ -12211,6 +12223,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				4511357C2BC7F81C00124983 /* PrivacyInfo.xcprivacy in Resources */,
 				A9A521882A03BD8D00C0F6C6 /* zendesk_support.html in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -12237,6 +12250,7 @@
 				457CBBD7282D27D000ED0F00 /* BetSubmissionSuccessViewController.xib in Resources */,
 				457CBBD8282D27D000ED0F00 /* SplashViewController.xib in Resources */,
 				457CBBD9282D27D000ED0F00 /* HeaderTextFieldView.xib in Resources */,
+				4511357A2BC7F81C00124983 /* PrivacyInfo.xcprivacy in Resources */,
 				457CBBDA282D27D000ED0F00 /* SingleBettingTicketTableViewCell.xib in Resources */,
 				457CBBDB282D27D000ED0F00 /* EnabledAccessViewController.xib in Resources */,
 				45F6BA9E2AB1F2B600C81DE1 /* avatar1-light.json in Resources */,
@@ -12393,6 +12407,7 @@
 				457CBE7F282D2CD100ED0F00 /* BetSubmissionSuccessViewController.xib in Resources */,
 				457CBE80282D2CD100ED0F00 /* SplashViewController.xib in Resources */,
 				457CBE81282D2CD100ED0F00 /* HeaderTextFieldView.xib in Resources */,
+				4511357B2BC7F81C00124983 /* PrivacyInfo.xcprivacy in Resources */,
 				457CBE82282D2CD100ED0F00 /* SingleBettingTicketTableViewCell.xib in Resources */,
 				457CBE83282D2CD100ED0F00 /* EnabledAccessViewController.xib in Resources */,
 				45F6BA9F2AB1F2B600C81DE1 /* avatar1-light.json in Resources */,
@@ -12549,6 +12564,7 @@
 				4589C956282024E400243547 /* SplashViewController.xib in Resources */,
 				4589C957282024E400243547 /* HeaderTextFieldView.xib in Resources */,
 				4589C958282024E400243547 /* SingleBettingTicketTableViewCell.xib in Resources */,
+				451135772BC7F81C00124983 /* PrivacyInfo.xcprivacy in Resources */,
 				4589C959282024E400243547 /* EnabledAccessViewController.xib in Resources */,
 				4589C95A282024E400243547 /* VersionUpdateViewController.xib in Resources */,
 				45F6BA9B2AB1F2B600C81DE1 /* avatar1-light.json in Resources */,
@@ -12712,6 +12728,7 @@
 				45A332DC298976BA008181E9 /* FilterCollapseView.xib in Resources */,
 				45A332DD298976BA008181E9 /* PhonePrefixSelectorViewController.xib in Resources */,
 				45B9F97F2A1E2BCE00DA2B88 /* home_template.js in Resources */,
+				451135742BC7F81C00124983 /* PrivacyInfo.xcprivacy in Resources */,
 				45A332DE298976BA008181E9 /* stats_widget_light.html in Resources */,
 				45A332DF298976BA008181E9 /* Inconsolata-Medium.ttf in Resources */,
 				45A332E0298976BA008181E9 /* TitleTableViewHeader.xib in Resources */,
@@ -12862,6 +12879,7 @@
 				45A6BDAF28246A7500D9B416 /* SplashViewController.xib in Resources */,
 				45A6BDB028246A7500D9B416 /* HeaderTextFieldView.xib in Resources */,
 				45A6BDB128246A7500D9B416 /* SingleBettingTicketTableViewCell.xib in Resources */,
+				451135792BC7F81C00124983 /* PrivacyInfo.xcprivacy in Resources */,
 				45A6BDB228246A7500D9B416 /* EnabledAccessViewController.xib in Resources */,
 				45A6BDB328246A7500D9B416 /* VersionUpdateViewController.xib in Resources */,
 				45F6BA9D2AB1F2B600C81DE1 /* avatar1-light.json in Resources */,
@@ -13018,6 +13036,7 @@
 				45F6BDAF2AB3732C00C81DE1 /* HeaderTextFieldView.xib in Resources */,
 				45F6BDB02AB3732C00C81DE1 /* SingleBettingTicketTableViewCell.xib in Resources */,
 				45F6BDB12AB3732C00C81DE1 /* EnabledAccessViewController.xib in Resources */,
+				451135752BC7F81C00124983 /* PrivacyInfo.xcprivacy in Resources */,
 				45F6BDB22AB3732C00C81DE1 /* VersionUpdateViewController.xib in Resources */,
 				45F6BDB32AB3732C00C81DE1 /* CompetitionsFiltersView.xib in Resources */,
 				45F6BDB42AB3732C00C81DE1 /* avatar1-light.json in Resources */,
@@ -13181,6 +13200,7 @@
 				A9C3430628F9A74A0055360B /* HeaderTextFieldView.xib in Resources */,
 				A9C3430728F9A74A0055360B /* SingleBettingTicketTableViewCell.xib in Resources */,
 				A9C3430828F9A74A0055360B /* EnabledAccessViewController.xib in Resources */,
+				451135782BC7F81C00124983 /* PrivacyInfo.xcprivacy in Resources */,
 				A9C3430928F9A74A0055360B /* VersionUpdateViewController.xib in Resources */,
 				A9C3430A28F9A74A0055360B /* CompetitionsFiltersView.xib in Resources */,
 				45F6BA9C2AB1F2B600C81DE1 /* avatar1-light.json in Resources */,

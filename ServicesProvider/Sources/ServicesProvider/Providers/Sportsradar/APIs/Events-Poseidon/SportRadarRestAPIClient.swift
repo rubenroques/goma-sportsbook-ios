@@ -27,6 +27,7 @@ enum SportRadarRestAPIClient {
     case getMarketInfo(marketId: String)
 
     case getEventDetails(eventId: String)
+    case getEventSecundaryMarkets(eventId: String)
 
     case getEventsForMarketGroup(marketGroupId: String)
     case getEventForMarket(marketId: String)
@@ -87,9 +88,12 @@ extension SportRadarRestAPIClient: Endpoint {
             return "/services/content/get"
         case .getMarketInfo:
             return "/services/content/get"
+        
         case .getEventDetails:
             return "/services/content/get"
-
+        case .getEventSecundaryMarkets:
+            return "/services/content/get"
+            
         case .getEventsForMarketGroup:
             return "/services/content/get"
         case .getEventForMarket:
@@ -154,8 +158,10 @@ extension SportRadarRestAPIClient: Endpoint {
         case .search: return nil
         case .getEventSummary: return nil
         case .getMarketInfo: return nil
+        
         case .getEventDetails:  return nil
-
+        case .getEventSecundaryMarkets: return nil
+            
         case .getEventsForMarketGroup: return nil
         case .getEventForMarket: return nil
 
@@ -198,7 +204,8 @@ extension SportRadarRestAPIClient: Endpoint {
 
         case .getEventSummary: return .post
         case .getMarketInfo: return .post
-        case .getEventDetails:  return .post
+        case .getEventDetails: return .post
+        case .getEventSecundaryMarkets: return .post
 
         case .getEventsForMarketGroup: return .post
         case .getEventForMarket: return .post
@@ -366,6 +373,22 @@ extension SportRadarRestAPIClient: Endpoint {
                         {
                             "contentId": {
                                 "type": "event",
+                                "id": "\(eventId)"
+                            },
+                            "clientContext": {
+                                "language": "\(SportRadarConfiguration.shared.socketLanguageCode)",
+                                "ipAddress": "127.0.0.1"
+                            }
+                        }
+                        """
+            return bodyString.data(using: String.Encoding.utf8) ?? Data()
+            
+        case .getEventSecundaryMarkets(let eventId):
+            let bodyString =
+                        """
+                        {
+                            "contentId": {
+                                "type": "eventWithBalancedMarkets",
                                 "id": "\(eventId)"
                             },
                             "clientContext": {
@@ -627,7 +650,7 @@ extension SportRadarRestAPIClient: Endpoint {
                         }
                         """
             return bodyString.data(using: String.Encoding.utf8) ?? Data()
-
+            
         default:
             return nil
         }
@@ -667,9 +690,12 @@ extension SportRadarRestAPIClient: Endpoint {
             return SportRadarConfiguration.shared.servicesRestHostname
         case .getMarketInfo:
             return SportRadarConfiguration.shared.servicesRestHostname
+        
         case .getEventDetails:
             return SportRadarConfiguration.shared.servicesRestHostname
-
+        case .getEventSecundaryMarkets:
+            return SportRadarConfiguration.shared.servicesRestHostname
+            
         case .getEventsForMarketGroup:
             return SportRadarConfiguration.shared.servicesRestHostname
         case .getEventForMarket:
@@ -756,7 +782,9 @@ extension SportRadarRestAPIClient: Endpoint {
             return defaultHeaders
         case .getEventDetails:
             return defaultHeaders
-
+        case .getEventSecundaryMarkets:
+            return defaultHeaders
+            
         case .getEventsForMarketGroup:
             return defaultHeaders
         case .getEventForMarket:
@@ -849,7 +877,10 @@ extension SportRadarRestAPIClient: Endpoint {
         case .search: return "search"
         case .getEventSummary(let eventId): return "getEventSummary \(eventId)"
         case .getMarketInfo: return "getMarketInfo"
+        
         case .getEventDetails(let eventId): return "getEventDetails \(eventId)"
+        case .getEventSecundaryMarkets(let eventId): return "getEventSecundaryMarkets \(eventId)"
+            
         case .getEventsForMarketGroup(let marketGroupId): return "getEventsForMarketGroup \(marketGroupId)"
         case .getEventForMarket(let marketId): return "getEventForMarket \(marketId)"
         case .homeSliders: return "homeSliders"
