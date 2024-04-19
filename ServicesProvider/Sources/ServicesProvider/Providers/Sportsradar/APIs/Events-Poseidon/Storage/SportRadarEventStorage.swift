@@ -11,6 +11,10 @@ import Combine
 
 class SportRadarEventStorage {
 
+    var eventPublisher: AnyPublisher<Event?, Never> {
+        self.eventSubject.eraseToAnyPublisher()
+    }
+    
     private var eventSubject: CurrentValueSubject<Event?, Never>
     private var marketsDictionary: OrderedDictionary<String, CurrentValueSubject<Market, Never>>
     private var outcomesDictionary: OrderedDictionary<String, CurrentValueSubject<Outcome, Never>>
@@ -47,14 +51,6 @@ class SportRadarEventStorage {
 }
 
 extension SportRadarEventStorage {
-
-//    func removedEvent(withId id: String) {
-//        guard let event = self.eventSubject.value else { return }
-//
-//        for market in event.markets {
-//            self.updateMarketTradability(withId: market.id, isTradable: false)
-//        }
-//    }
 
     // Odds updates
     func updateOutcomeOdd(withId id: String, newOddNumerator: String?, newOddDenominator: String?) {
@@ -95,12 +91,31 @@ extension SportRadarEventStorage {
             return
         }
         else {
-
+            for outcome in market.outcomes {
+                self.outcomesDictionary[outcome.id] = CurrentValueSubject(outcome)
+            }
+            
+            self.marketsDictionary[market.id] = CurrentValueSubject(market)
+            let updatedMarkets: [Market] = self.marketsDictionary.values.map(\.value)
+            
+            guard let event = self.eventSubject.value else { return }
+            event.markets = updatedMarkets
+            eventSubject.send(event)
         }
-
-
+        
     }
 
+    
+    func removeMarket(withId id: String) {
+        self.marketsDictionary.removeValue(forKey: id)
+        
+        let updatedMarkets: [Market] = self.marketsDictionary.values.map(\.value)
+        
+        guard let event = self.eventSubject.value else { return }
+        event.markets = updatedMarkets
+        eventSubject.send(event)
+    }
+    
     func updateMarketTradability(withId id: String, isTradable: Bool) {
         guard
             let marketSubject = self.marketsDictionary[id]
@@ -152,7 +167,7 @@ extension SportRadarEventStorage {
         
         eventSubject.send(event)
     }
-
+    
 }
 
 extension SportRadarEventStorage {

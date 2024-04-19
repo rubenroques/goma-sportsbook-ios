@@ -97,6 +97,47 @@ struct Match: Equatable {
         case notStarted
         case inProgress(String)
         case ended
+        
+        var isPreLive: Bool {
+            switch self {
+            case .unknown:
+                return false
+            case .notStarted:
+                return true
+            case .inProgress:
+                return false
+            case .ended:
+                return false
+            }
+        }
+        
+        var isLive: Bool {
+            switch self {
+            case .unknown:
+                return false
+            case .notStarted:
+                return false
+            case .inProgress:
+                return true
+            case .ended:
+                return false
+            }
+        }
+        
+        var isPostLive: Bool {
+            switch self {
+                
+            case .unknown:
+                return false
+            case .notStarted:
+                return false
+            case .inProgress:
+                return false
+            case .ended:
+                return true
+            }
+        }
+        
     }
 
     init(id: String,

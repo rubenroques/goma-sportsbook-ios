@@ -28,6 +28,8 @@ protocol SportRadarConnectorSubscriber: AnyObject {
 
     func marketDetails(forContentIdentifier identifier: ContentIdentifier, market: Market)
 
+    func updateEventSecundaryMarkets(forContentIdentifier identifier: ContentIdentifier, event: Event)
+    
     func didReceiveGenericUpdate(content: SportRadarModels.ContentContainer)
 }
 
@@ -158,7 +160,7 @@ extension SportRadarSocketConnector: Starscream.WebSocketDelegate {
             print("ServiceProvider - SportRadarSocketConnector websocket is disconnected: \(reason) with code: \(code)")
 
         case .text(let string):
-            // print("\n▶️ServiceProvider - SportRadarSocketConnector received text: \(string.prefix(800))◀️")
+            print("\n▶️ServiceProvider - SportRadarSocketConnector received text: \(string)◀️")
             if let data = string.data(using: .utf8),
                let sportRadarSocketResponse = try? decoder.decode(SportRadarModels.NotificationType.self, from: data) {
                 self.handleContentMessage(sportRadarSocketResponse, messageData: data)
@@ -260,6 +262,13 @@ extension SportRadarSocketConnector: Starscream.WebSocketDelegate {
                     if let subscriber = self.messageSubscriber, let eventLiveDataExtendedValue = eventLiveDataExtended {
                         subscriber.eventDetailsLiveData(contentIdentifier: contentIdentifier, eventLiveDataExtended: eventLiveDataExtendedValue)
                     }
+                    
+                case .updateEventSecundaryMarkets(let contentIdentifier, let event):
+                    if let subscriber = self.messageSubscriber, let eventValue = event  {
+                        let mappedEvent = SportRadarModelMapper.event(fromInternalEvent: eventValue)
+                        subscriber.updateEventSecundaryMarkets(forContentIdentifier: contentIdentifier, event: mappedEvent)
+                    }
+                    
                 case .unknown:
                     print("❓SportRadarSocketConnector handleContentMessage unknown: \(content)")
                     

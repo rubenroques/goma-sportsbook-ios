@@ -363,3 +363,4 @@ extension SportRadarMarketDetailsCoordinator: UnsubscriptionController {
     }
 
 }
+

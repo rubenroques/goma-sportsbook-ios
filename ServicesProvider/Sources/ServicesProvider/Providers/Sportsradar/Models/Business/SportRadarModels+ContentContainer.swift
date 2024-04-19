@@ -26,6 +26,8 @@ extension SportRadarModels {
         case eventSummary(contentIdentifier: ContentIdentifier, eventDetails: [SportRadarModels.Event])
 
         case marketDetails(contentIdentifier: ContentIdentifier, market: SportRadarModels.Market?)
+        case updateEventSecundaryMarkets(contentIdentifier: ContentIdentifier, event: SportRadarModels.Event?)
+        
         //
         case addEvent(contentIdentifier: ContentIdentifier, event: SportRadarModels.Event)
         case addMarket(contentIdentifier: ContentIdentifier, market: SportRadarModels.Market)
@@ -85,7 +87,10 @@ extension SportRadarModels {
                 return contentIdentifier
             case .marketDetails(let contentIdentifier, _):
                 return contentIdentifier
-
+                
+            case .updateEventSecundaryMarkets(let contentIdentifier, _):
+                return contentIdentifier
+                
             case .addEvent(let contentIdentifier, _):
                 return contentIdentifier
             case .removeEvent(let contentIdentifier, _):
@@ -177,7 +182,6 @@ extension SportRadarModels {
             let path: String = try container.decodeIfPresent(String.self, forKey: .path) ?? ""
             print("ServiceProviderLogs: \(path)")
             
-            
             switch changeType.lowercased() {
             case "refreshed":
                 self = try Self.parseRefreshed(container: container)
@@ -205,6 +209,10 @@ extension SportRadarModels {
             let contentType = try contentTypeContainer.decode(ContentType.self, forKey: .contentType)
             let contentIdentifier = try container.decode(ContentIdentifier.self, forKey: .content)
 
+            if contentType == .eventSecundaryMarkets {
+                print("eventWithBalancedMarkets found")
+            }
+            
             switch contentType {
             case .liveEvents:
                 let events: [FailableDecodable<SportRadarModels.Event>] = try container.decode([FailableDecodable<SportRadarModels.Event>].self, forKey: .change)
@@ -287,6 +295,15 @@ extension SportRadarModels {
                 else {
                     return .marketDetails(contentIdentifier: contentIdentifier, market: nil)
                 }
+            case .eventSecundaryMarkets:
+                if container.contains(.change) {
+                    let event: SportRadarModels.Event = try container.decode(SportRadarModels.Event.self, forKey: .change)
+                    return .updateEventSecundaryMarkets(contentIdentifier: contentIdentifier, event: event)
+                }
+                else {
+                    return .updateEventSecundaryMarkets(contentIdentifier: contentIdentifier, event: nil)
+                }
+                
             case .eventDetailsLiveData:
                 if container.contains(.change) {
                     let eventLiveData = try container.decodeIfPresent(SportRadarModels.EventLiveDataExtended.self, forKey: .change)
@@ -302,9 +319,16 @@ extension SportRadarModels {
 
             print("ContentContainer parseUpdated")
             
+            let contentTypeContainer = try container.nestedContainer(keyedBy: CodingKeys.self, forKey: .content)
+            let contentType = try contentTypeContainer.decode(ContentType.self, forKey: .contentType)
+            
             let contentIdentifier = try container.decode(ContentIdentifier.self, forKey: .content)
             let path: String = try container.decodeIfPresent(String.self, forKey: .path) ?? ""
 
+            if contentType == .eventSecundaryMarkets {
+                print("eventWithBalancedMarkets found")
+            }
+            
             if case let ContentRoute.eventDetailsLiveData(eventId) = contentIdentifier.contentRoute {
                 if let eventLiveData = (try? container.decode(SportRadarModels.EventLiveDataExtended.self, forKey: .change)) {
                     return .updateEventLiveDataExtended(contentIdentifier: contentIdentifier, eventId: eventId , eventLiveDataExtended: eventLiveData)
@@ -611,8 +635,15 @@ extension SportRadarModels {
 
         private static func parseAdded(container: KeyedDecodingContainer<CodingKeys>) throws -> ContentContainer {
             print("ContentContainer parseAdded")
+            let contentTypeContainer = try container.nestedContainer(keyedBy: CodingKeys.self, forKey: .content)
+            let contentType = try contentTypeContainer.decode(ContentType.self, forKey: .contentType)
+            
             let contentIdentifier = try container.decode(ContentIdentifier.self, forKey: .content)
             let path: String = try container.decodeIfPresent(String.self, forKey: .path) ?? ""
+            
+            if contentType == .eventSecundaryMarkets {
+                print("eventWithBalancedMarkets found")
+            }
             
             if case let ContentRoute.liveSports = contentIdentifier.contentRoute {
                 if path.contains("idfosporttype"),
@@ -666,16 +697,20 @@ extension SportRadarModels {
         private static func parseRemoved(container: KeyedDecodingContainer<CodingKeys>) throws -> ContentContainer {
 
             print("ContentContainer parseRemoved")
+            let contentTypeContainer = try container.nestedContainer(keyedBy: CodingKeys.self, forKey: .content)
+            let contentType = try contentTypeContainer.decode(ContentType.self, forKey: .contentType)
             
             let contentIdentifier = try container.decode(ContentIdentifier.self, forKey: .content)
             let path: String = try container.decodeIfPresent(String.self, forKey: .path) ?? ""
             
-            if case let ContentRoute.liveSports = contentIdentifier.contentRoute {
+            if contentType == .eventSecundaryMarkets {
+                print("eventWithBalancedMarkets found")
+            }
+            
+            if case ContentRoute.liveSports = contentIdentifier.contentRoute {
                 if path.contains("idfosporttype"),
                    let sportCode = SocketMessageParseHelper.extractSportCode(path) {
-                    
-                    print("REMOVING SPORT PARSE: \(sportCode)")
-                    
+                                        
                     let sportName = SportRadarModelMapper.sportTypeName(fromAlphaCode: sportCode)
                                         
                     let removedSport = SportType(name: sportName,
@@ -739,6 +774,9 @@ extension SportRadarModels.ContentContainer: CustomDebugStringConvertible {
         case .marketDetails(let contentIdentifier, let market):
             return "Market Details (Content ID: \(contentIdentifier)) - Market: \(String(describing: market))"
 
+        case .updateEventSecundaryMarkets(let contentIdentifier, let event):
+            return "Update Event Secundary Markets (Content ID: \(contentIdentifier)) - Event: \(event)"
+            
         case .addEvent(let contentIdentifier, let event):
             return "Add Event (Content ID: \(contentIdentifier)) - Event: \(event)"
         case .removeEvent(let contentIdentifier, let eventId):

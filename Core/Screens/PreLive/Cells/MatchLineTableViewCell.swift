@@ -20,7 +20,9 @@ class MatchLineTableCellViewModel {
 
     private let matchCurrentValueSubject = CurrentValueSubject<Match?, Never>.init(nil)
 
-    private var subscription: ServicesProvider.Subscription?
+    private var secundaryMarketsSubscription: ServicesProvider.Subscription?
+    private var secundaryMarketsPublisher: AnyCancellable?
+
     private var cancellables: Set<AnyCancellable> = []
 
     //
@@ -30,8 +32,8 @@ class MatchLineTableCellViewModel {
 
     init(match: Match, withFullMarkets fullMarkets: Bool = false) {
         if !fullMarkets {
-            self.loadEventDetails(fromId: match.id)
             self.matchCurrentValueSubject.send(match)
+            self.loadEventDetails(fromId: match.id)
         }
         else {
             self.matchCurrentValueSubject.send(match)
@@ -47,156 +49,63 @@ class MatchLineTableCellViewModel {
     //
     private func loadEventDetails(fromId id: String) {
 
-        /*
-        New market secundary logic
-        
-         Env.servicesProvider.getEventSecundaryMarkets(eventId: id)
-            .map {
-                return ServiceProviderModelMapper.markets(fromServiceProviderMarkets: $0)
-            }
-            .receive(on: DispatchQueue.main)
-            .sink { completion in
-                
-            } receiveValue: { [weak self] secundaryMarkets in
-                if var oldMatch = self?.matchCurrentValueSubject.value {
-                        oldMatch.markets = secundaryMarkets
-                        self?.matchCurrentValueSubject.send(oldMatch)
-                }
-            }
-            .store(in: &self.cancellables)
-         */
-        
-        
-        Env.servicesProvider.getEventDetails(eventId: id)
-            .filter { eventSummary in
-                return eventSummary.type == .match
-            }
-            .map(ServiceProviderModelMapper.match(fromEvent:))
-            .flatMap({ match -> AnyPublisher<(Match, SecundarySportMarkets), ServiceProviderError> in
-                return SecundaryMarketsService.fetchSecundaryMarkets()
-                    .map { secundaryMarkets in (match, secundaryMarkets) }
-                    .mapError { error in ServiceProviderError.errorMessage(message: error.localizedDescription) }
-                    .eraseToAnyPublisher()
-            })
-            .receive(on: DispatchQueue.main)
-            .sink { completion in
-                switch completion {
-                case .finished:
-                    break
-                case .failure:
-                    break
-                }
-            } receiveValue: { [weak self] updatedMatch, secundaryMarkets in
-                
-                //
-                // The fallback markets logic
-                var knownMarketGroups: Set<String> = []
-                var filteredMarkets = [Market]()
-                
-                for market in updatedMatch.markets.filter({ $0.outcomes.count == 3 || $0.outcomes.count == 2 }) {
-                    if let marketTypeId = market.marketTypeId, !knownMarketGroups.contains(marketTypeId) {
-                        knownMarketGroups.insert(marketTypeId)
-                        filteredMarkets.append(market)
-                    }
-                    
-                    if knownMarketGroups.count >= 5 {
+        if let match = self.match, match.status.isLive {
+            self.secundaryMarketsPublisher = Env.servicesProvider.subscribeEventSecundaryMarkets(eventId: id)
+                .removeDuplicates()
+                .receive(on: DispatchQueue.main)
+                .sink { completion in
+                    print("subscribeEventSecundaryMarkets completion \(completion)")
+                } receiveValue: { [weak self] subscribableContentMatch in
+                    switch subscribableContentMatch {
+                    case .connected(subscription: let subscription):
+                        self?.secundaryMarketsSubscription = subscription
+                    case .contentUpdate(content: let updatedEvent):
+                        print("subscribeEventSecundaryMarkets match with sec markets: \(updatedEvent)")
+                        let mappedMatch = ServiceProviderModelMapper.match(fromEvent: updatedEvent)
+                        if var oldMatch = self?.matchCurrentValueSubject.value {
+                            let firstMarket = oldMatch.markets.first // Capture the first market
+                            var newMarkets = mappedMatch.markets
+                            if let first = firstMarket {
+                                newMarkets = [first] + newMarkets.filter({ market in market.id == first.id })
+                            }
+                            oldMatch.markets = newMarkets
+                            self?.matchCurrentValueSubject.send(oldMatch)
+                        } else {
+                            self?.matchCurrentValueSubject.send(mappedMatch)
+                        }
+                        #if DEBUG
+                        let allMarketsName = mappedMatch.markets.map({ $0.name + "[" + ($0.nameDigit1.map { String($0) } ?? "") + "]" }).joined(separator: "; ")
+                        print("Debug-EventSecundaryMarkets \(id) - \(allMarketsName)")
+                        #endif
+                        
+                    case .disconnected:
                         break
                     }
                 }
-                
-                var fallbackSortedMarkets = filteredMarkets.sorted { leftMarket, rightMarket  in
-                    return (leftMarket.marketTypeId ?? "") < (rightMarket.marketTypeId ?? "")
-                }.prefix(5).map({ $0 })
-                //
-                
-                //
-                //
-                var sortedMarkets: [Market] = [] // the final list of markets
-                
-                
-                if let secundaryMarketsForSport = secundaryMarkets.first(where: { secundarySportMarket in
-                    if secundarySportMarket.sportId == (updatedMatch.sport.alphaId ?? "") {
-                        return true
-                    }
-                    if secundarySportMarket.sportId == (updatedMatch.sportIdCode ?? "") {
-                        return true
-                    }
-                    return false
-                }) {
-                    for secundaryMarket in secundaryMarketsForSport.markets {
-                        if var line = secundaryMarket.line {
-                            // We have to make sure that when we get -1, 1, etc, the string to compare must be like '-1.0', '1.0' to found correct market
-                            if let lineInt = Int(line) {
-                                line = "\(Double(lineInt))"
-                            }
-                            
-                            if var foundMarket = updatedMatch.markets.first(where: { market in
-                                (market.marketTypeId ?? "") == secundaryMarket.typeId &&
-                                line == String(market.nameDigit1 ?? -99.0)
-                            }) {
-                                foundMarket.statsTypeId = secundaryMarket.statsId
-                                sortedMarkets.append(foundMarket)
-                            }
-                        }
-                        else if var foundMarket = updatedMatch.markets.first(where: { market in
-                            (market.marketTypeId ?? "") == secundaryMarket.typeId
-                        }) {
-                            foundMarket.statsTypeId = secundaryMarket.statsId
-                            sortedMarkets.append(foundMarket)
-                        }
-                        
-                    }
-                    
-                    if sortedMarkets.count < 5 {
-                        // We join both markets lists, avoiding repeat market to make
-                        // sure the final list as 5 markets
-                        // eg. 3 secundary found markets + 5 fallback markets . prefix(5)
-                        var mergedMarkets = sortedMarkets
-                        for fallbackMarket in fallbackSortedMarkets {
-                            if !mergedMarkets.contains(where: { market in
-                                fallbackMarket.id == market.id
-                            }) {
-                                mergedMarkets.append(fallbackMarket)
-                            }
-                        }
-                        
-                        sortedMarkets = mergedMarkets
-                    }
+        }
+        else {
+            self.secundaryMarketsPublisher = nil
+            self.secundaryMarketsSubscription = nil
+            
+            Env.servicesProvider.getEventSecundaryMarkets(eventId: id)
+                .map {
+                    return ServiceProviderModelMapper.match(fromEvent: $0)
                 }
-                else {
-                    // We don't have details of secundary markets
-                    // for this event sport type, use all the fallbacks
-                    
-                    sortedMarkets = fallbackSortedMarkets
-                }
-                
-                if var oldMatch = self?.matchCurrentValueSubject.value {
-                    // We already have a match we only update/replace the markets
-                    
-                    if let firstMarket = oldMatch.markets.first { // Kepp the first market if it exists
-                        sortedMarkets.removeAll { $0.id == firstMarket.id }
-                        var concatenatedMarkets = [firstMarket]
-                        concatenatedMarkets.append(contentsOf: sortedMarkets)
-                        
-                        oldMatch.markets = Array(concatenatedMarkets.prefix(6))
+                .receive(on: DispatchQueue.main)
+                .sink { completion in
+                    print("getEventSecundaryMarkets completion \(completion)")
+                } receiveValue: { [weak self] eventWithSecundaryMarkets in
+                    if var oldMatch = self?.matchCurrentValueSubject.value {
+                        oldMatch.markets = eventWithSecundaryMarkets.markets
                         self?.matchCurrentValueSubject.send(oldMatch)
-                    } 
+                    }
                     else {
-                        oldMatch.markets = Array(sortedMarkets.prefix(6))
-                        self?.matchCurrentValueSubject.send(oldMatch)
+                        self?.matchCurrentValueSubject.send(eventWithSecundaryMarkets)
                     }
-                    
                 }
-                else {
-                    // We don't have a match yet, we need to use this one
-                    var newUpdatedMatch = updatedMatch
-                    newUpdatedMatch.markets = Array(sortedMarkets.prefix(6))
-                    self?.matchCurrentValueSubject.send(newUpdatedMatch)
-                }
+                .store(in: &self.cancellables)
+        }
 
-            }
-            .store(in: &self.cancellables)
-         
         
     }
 

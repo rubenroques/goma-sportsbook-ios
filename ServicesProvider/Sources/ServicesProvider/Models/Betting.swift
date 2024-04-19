@@ -170,7 +170,7 @@ public enum BetslipOddChangeSetting: String, Codable, Equatable, Hashable {
     case higher
 }
     
-public enum OddFormat: Codable, Equatable, Hashable {
+public enum OddFormat: Codable, Hashable {
     case fraction(numerator: Int, denominator: Int)
     case decimal(odd: Double)
 
