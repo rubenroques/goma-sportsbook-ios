@@ -12,6 +12,8 @@ import HeaderTextField
 class SelfExclusionViewController: UIViewController {
 
     // MARK: Private Properties
+    private lazy var scrollView: UIScrollView = Self.createScrollView()
+    private lazy var containerView: UIView = Self.createContainerView()
     private lazy var topView: UIView = Self.createTopView()
     private lazy var backButton: UIButton = Self.createBackButton()
     private lazy var topTitleLabel: UILabel = Self.createTopTitleLabel()
@@ -22,7 +24,6 @@ class SelfExclusionViewController: UIViewController {
     private lazy var periodValuesView: UIView = Self.createPeriodValuesView()
     private lazy var periodTypeSelectTextFieldView: DropDownSelectionView = Self.createPeriodTypeSelectTextFieldView()
     private lazy var periodValueHeaderTextFieldView: HeaderTextField.HeaderTextFieldView = Self.createPeriodValueHeaderTextFieldView()
-
     private lazy var footerResponsibleGamingView: FooterResponsibleGamingView = Self.createFooterResponsibleGamingView()
     
     private lazy var loadingBaseView: UIView = Self.createLoadingBaseView()
@@ -97,6 +98,10 @@ class SelfExclusionViewController: UIViewController {
 
     func setupWithTheme() {
         self.view.backgroundColor = UIColor.App.backgroundPrimary
+        
+        self.scrollView.backgroundColor = UIColor.App.backgroundPrimary
+        
+        self.containerView.backgroundColor = .clear
 
         self.topView.backgroundColor = UIColor.App.backgroundPrimary
 
@@ -123,6 +128,7 @@ class SelfExclusionViewController: UIViewController {
         self.periodValueHeaderTextFieldView.backgroundColor = UIColor.App.backgroundPrimary
         self.periodValueHeaderTextFieldView.setHeaderLabelColor(UIColor.App.inputTextTitle)
         self.periodValueHeaderTextFieldView.setTextFieldColor(UIColor.App.inputText)
+        
     }
 
     // MARK: Binding
@@ -365,6 +371,18 @@ extension SelfExclusionViewController {
 //
 extension SelfExclusionViewController {
 
+    private static func createScrollView() -> UIScrollView {
+        let scrollView = UIScrollView()
+        scrollView.translatesAutoresizingMaskIntoConstraints = false
+        return scrollView
+    }
+    
+    private static func createContainerView() -> UIView {
+        let view = UIView()
+        view.translatesAutoresizingMaskIntoConstraints = false
+        return view
+    }
+    
     private static func createTopView() -> UIView {
         let view = UIView()
         view.translatesAutoresizingMaskIntoConstraints = false
@@ -459,43 +477,6 @@ extension SelfExclusionViewController {
         activityIndicatorView.startAnimating()
         return activityIndicatorView
     }
-
-    
-    private static func createInterdictionTitleBaseView() -> UIView {
-        let view = UIView()
-        view.translatesAutoresizingMaskIntoConstraints = false
-        view.clipsToBounds = true
-        return view
-    }
-
-    private static func createInterdictionTitleLabel() -> UILabel {
-        let label = UILabel()
-        label.translatesAutoresizingMaskIntoConstraints = false
-        label.numberOfLines = 1
-        label.textAlignment = .left
-        label.text = localized("voluntary_gambling_ban_title")
-        label.font = AppFont.with(type: .semibold, size: 12)
-        label.textColor = UIColor.App.highlightPrimary
-        return label
-    }
-    
-    private static func createInterdictionDetailsBaseView() -> UIView {
-        let view = UIView()
-        view.translatesAutoresizingMaskIntoConstraints = false
-        view.clipsToBounds = true
-        return view
-    }
-
-    private static func createInterdictionDetailsLabel() -> UILabel {
-        let label = UILabel()
-        label.translatesAutoresizingMaskIntoConstraints = false
-        label.numberOfLines = 0
-        label.textAlignment = .left
-        label.text = localized("voluntary_gambling_ban_description")
-        label.font = AppFont.with(type: .semibold, size: 12)
-        label.textColor = UIColor.App.textPrimary
-        return label
-    }
     
     private static func createFooterResponsibleGamingView() -> FooterResponsibleGamingView {
         let view = FooterResponsibleGamingView()
@@ -511,18 +492,22 @@ extension SelfExclusionViewController {
         self.topView.addSubview(self.backButton)
         self.topView.addSubview(self.topTitleLabel)
         self.topView.addSubview(self.editButton)
+        
+        self.view.addSubview(self.scrollView)
+        
+        self.scrollView.addSubview(self.containerView)
 
-        self.view.addSubview(self.infoIconImageView)
-        self.view.addSubview(self.infoLabel)
+        self.containerView.addSubview(self.infoIconImageView)
+        self.containerView.addSubview(self.infoLabel)
 
-        self.view.addSubview(self.exclusionSelectTextFieldView)
+        self.containerView.addSubview(self.exclusionSelectTextFieldView)
 
-        self.view.addSubview(self.periodValuesView)
+        self.containerView.addSubview(self.periodValuesView)
 
         self.periodValuesView.addSubview(self.periodTypeSelectTextFieldView)
         self.periodValuesView.addSubview(self.periodValueHeaderTextFieldView)
 
-        self.view.addSubview(self.footerResponsibleGamingView)
+        self.containerView.addSubview(self.footerResponsibleGamingView)
         
         self.view.addSubview(self.loadingBaseView)
 
@@ -557,22 +542,32 @@ extension SelfExclusionViewController {
 
         // Main view
         NSLayoutConstraint.activate([
-
-            self.infoIconImageView.leadingAnchor.constraint(equalTo: self.view.leadingAnchor, constant: 20),
+            self.scrollView.leadingAnchor.constraint(equalTo: self.view.leadingAnchor),
+            self.scrollView.trailingAnchor.constraint(equalTo: self.view.trailingAnchor),
+            self.scrollView.topAnchor.constraint(equalTo: self.topView.bottomAnchor),
+            self.scrollView.bottomAnchor.constraint(equalTo: self.view.bottomAnchor),
+            
+            self.containerView.leadingAnchor.constraint(equalTo: self.scrollView.contentLayoutGuide.leadingAnchor),
+            self.containerView.topAnchor.constraint(equalTo: self.scrollView.contentLayoutGuide.topAnchor),
+            self.containerView.trailingAnchor.constraint(equalTo: self.scrollView.contentLayoutGuide.trailingAnchor),
+            self.containerView.bottomAnchor.constraint(equalTo: self.scrollView.contentLayoutGuide.bottomAnchor),
+            self.containerView.widthAnchor.constraint(equalTo: self.scrollView.frameLayoutGuide.widthAnchor),
+            
+            self.infoIconImageView.leadingAnchor.constraint(equalTo: self.containerView.leadingAnchor, constant: 20),
             self.infoIconImageView.widthAnchor.constraint(equalToConstant: 28),
             self.infoIconImageView.heightAnchor.constraint(equalTo: self.infoIconImageView.widthAnchor),
-            self.infoIconImageView.topAnchor.constraint(equalTo: self.topView.bottomAnchor, constant: 30),
+            self.infoIconImageView.topAnchor.constraint(equalTo: self.containerView.topAnchor, constant: 30),
 
             self.infoLabel.leadingAnchor.constraint(equalTo: self.infoIconImageView.trailingAnchor, constant: 11),
-            self.infoLabel.trailingAnchor.constraint(equalTo: self.view.trailingAnchor, constant: -20),
-            self.infoLabel.topAnchor.constraint(equalTo: self.topView.bottomAnchor, constant: 30),
+            self.infoLabel.trailingAnchor.constraint(equalTo: self.containerView.trailingAnchor, constant: -20),
+            self.infoLabel.topAnchor.constraint(equalTo: self.containerView.topAnchor, constant: 30),
 
-            self.exclusionSelectTextFieldView.leadingAnchor.constraint(equalTo: self.view.leadingAnchor, constant: 20),
-            self.exclusionSelectTextFieldView.trailingAnchor.constraint(equalTo: self.view.trailingAnchor, constant: -20),
+            self.exclusionSelectTextFieldView.leadingAnchor.constraint(equalTo: self.containerView.leadingAnchor, constant: 20),
+            self.exclusionSelectTextFieldView.trailingAnchor.constraint(equalTo: self.containerView.trailingAnchor, constant: -20),
             self.exclusionSelectTextFieldView.topAnchor.constraint(equalTo: self.infoLabel.bottomAnchor, constant: 33),
 
-            self.periodValuesView.leadingAnchor.constraint(equalTo: self.view.leadingAnchor, constant: 20),
-            self.periodValuesView.trailingAnchor.constraint(equalTo: self.view.trailingAnchor, constant: -20),
+            self.periodValuesView.leadingAnchor.constraint(equalTo: self.containerView.leadingAnchor, constant: 20),
+            self.periodValuesView.trailingAnchor.constraint(equalTo: self.containerView.trailingAnchor, constant: -20),
             self.periodValuesView.topAnchor.constraint(equalTo: self.exclusionSelectTextFieldView.bottomAnchor, constant: 10),
 
             self.periodTypeSelectTextFieldView.leadingAnchor.constraint(equalTo: self.periodValuesView.leadingAnchor),
@@ -601,8 +596,8 @@ extension SelfExclusionViewController {
         NSLayoutConstraint.activate([
             self.footerResponsibleGamingView.leadingAnchor.constraint(equalTo: self.exclusionSelectTextFieldView.leadingAnchor),
             self.footerResponsibleGamingView.trailingAnchor.constraint(equalTo: self.exclusionSelectTextFieldView.trailingAnchor),
-            
-            self.footerResponsibleGamingView.bottomAnchor.constraint(equalTo: self.view.safeAreaLayoutGuide.bottomAnchor, constant: -20),
+            self.footerResponsibleGamingView.topAnchor.constraint(greaterThanOrEqualTo: self.periodValuesView.bottomAnchor, constant: 60),
+            self.footerResponsibleGamingView.bottomAnchor.constraint(equalTo: self.containerView.bottomAnchor)
         ])
     }
 
