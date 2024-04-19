@@ -27,6 +27,8 @@ public class LimitsOnRegisterViewModel {
 
     let servicesProvider: ServicesProviderClient
     var limits: [ResponsibleGamingLimit] = []
+    
+    public var hasRollingWeeklyLimits: Bool = false
 
     private var isLoadingSubject: CurrentValueSubject<Bool, Never> = .init(false)
     var isLoading: AnyPublisher<Bool, Never> {
@@ -76,20 +78,20 @@ public class LimitsOnRegisterViewModel {
         }
 
         let depositPublisher = /*servicesProvider.updateWeeklyDepositLimits(newLimit: depositLimit)*/
-        servicesProvider.updateResponsibleGamingLimits(newLimit: depositLimit, limitType: "deposit")
+        servicesProvider.updateResponsibleGamingLimits(newLimit: depositLimit, limitType: "deposit", hasRollingWeeklyLimits: self.hasRollingWeeklyLimits)
             .mapError { error in
                 print("Error \(error)")
                 return LimitsOnRegisterError.depositServerError
             }
 
         let bettingPublisher = /*servicesProvider.updateWeeklyBettingLimits(newLimit: bettingLimit)*/
-        servicesProvider.updateResponsibleGamingLimits(newLimit: bettingLimit, limitType: "betting")
+        servicesProvider.updateResponsibleGamingLimits(newLimit: bettingLimit, limitType: "betting", hasRollingWeeklyLimits: self.hasRollingWeeklyLimits)
             .mapError { error in
                 print("Error \(error)")
                 return LimitsOnRegisterError.bettingServerError
             }
 
-        let autoPayoutPublisher = servicesProvider.updateResponsibleGamingLimits(newLimit: autoPayoutLimit, limitType: "autoPayout")
+        let autoPayoutPublisher = servicesProvider.updateResponsibleGamingLimits(newLimit: autoPayoutLimit, limitType: "autoPayout", hasRollingWeeklyLimits: self.hasRollingWeeklyLimits)
             .mapError { error in
                 print("Error \(error)")
                 return LimitsOnRegisterError.autoPayoutServerError

@@ -97,12 +97,14 @@ class MyCompetitionsRootViewModel {
                     if favoriteEvents.isNotEmpty {
                         self.isLoading = true
                         self.favoriteEventsIds = favoriteEvents
+                        Env.favoritesManager.showSuggestedCompetitionsPublisher.send(false)
                         self.fetchFavoriteCompetitionMatches()
                     }
                     else {
                         //let popularCompetitionIds = ["29494.1", "29519.1", "29531.1", "29534.1"]
                         let popularCompetitionIds = Env.favoritesManager.topCompetitionIds
-                        
+                        Env.favoritesManager.showSuggestedCompetitionsPublisher.send(true)
+
                         self.isLoading = true
                         self.favoriteEventsIds = popularCompetitionIds
                         self.fetchFavoriteCompetitionMatches(customIds: popularCompetitionIds)
@@ -134,15 +136,18 @@ class MyCompetitionsRootViewModel {
             })
             .store(in: &cancellables)
 
-        Publishers.CombineLatest(self.expectedCompetitionsPublisher, self.selectedCompetitionsInfoPublisher)
-            .receive(on: DispatchQueue.main)
-            .sink(receiveValue: { [weak self] expectedCompetitions, selectedCompetitionsInfo in
-
-                if selectedCompetitionsInfo.count == expectedCompetitions {
-                    self?.processCompetitionsInfo()
-                }
-            })
-            .store(in: &cancellables)
+//        Publishers.CombineLatest(self.expectedCompetitionsPublisher, self.selectedCompetitionsInfoPublisher)
+//            .receive(on: DispatchQueue.main)
+//            .sink(receiveValue: { [weak self] expectedCompetitions, selectedCompetitionsInfo in
+//                
+//                print("COUNT: \(selectedCompetitionsInfo.count)")
+//                print("SELECTED: \(selectedCompetitionsInfo)")
+//
+//                if selectedCompetitionsInfo.count == expectedCompetitions {
+//                    self?.processCompetitionsInfo()
+//                }
+//            })
+//            .store(in: &cancellables)
 
     }
     
@@ -190,25 +195,83 @@ class MyCompetitionsRootViewModel {
 
         self.selectedCompetitionsInfoPublisher.value = [:]
 
+//        for competitionId in ids {
+//            Env.servicesProvider.getCompetitionMarketGroups(competitionId: competitionId)
+//                .receive(on: DispatchQueue.main)
+//                .sink(receiveCompletion: { [weak self] completion in
+//                    switch completion {
+//                    case .finished:
+//                        ()
+//                    case .failure(let error):
+//                        print("COMPETITION INFO ERROR: \(error)")
+//                        self?.selectedCompetitionsInfoPublisher.value[competitionId] = nil
+//                        
+//                    }
+//
+//                }, receiveValue: { [weak self] competitionInfo in
+//
+//                    self?.selectedCompetitionsInfoPublisher.value[competitionInfo.id] = competitionInfo
+//                })
+//                .store(in: &cancellables)
+//        }
+        
+        // Define an array to hold the publishers
+        var publisherArray = [AnyPublisher<(String, SportCompetitionInfo?), Never>]()
+
+        // Create publishers for each competitionId
         for competitionId in ids {
-            Env.servicesProvider.getCompetitionMarketGroups(competitionId: competitionId)
-                .receive(on: DispatchQueue.main)
-                .sink(receiveCompletion: { [weak self] completion in
-                    switch completion {
-                    case .finished:
-                        ()
-                    case .failure(let error):
-                        print("COMPETITION INFO ERROR: \(error)")
-                        self?.selectedCompetitionsInfoPublisher.value[competitionId] = nil
-                    }
+            let publisher = Env.servicesProvider.getCompetitionMarketGroups(competitionId: competitionId)
+                .map { (competitionId, $0) } // Add competitionId to the emitted value
+                .catch { error -> AnyPublisher<(String, SportCompetitionInfo?), Never> in
+                    // Handle errors within each publisher
+                    print("COMPETITION INFO ERROR: \(error)")
+                    return Just((competitionId, nil))
+                        .eraseToAnyPublisher()
+                }
+                .eraseToAnyPublisher() // Erase the publisher type
 
-                }, receiveValue: { [weak self] competitionInfo in
-
-                    self?.selectedCompetitionsInfoPublisher.value[competitionInfo.id] = competitionInfo
-                })
-                .store(in: &cancellables)
+            publisherArray.append(publisher)
         }
 
+        // Merge all publishers into one
+        let mergedPublisher = Publishers.MergeMany(publisherArray)
+
+        // Collect all emitted values and errors into an array
+        let collectedPublisher = mergedPublisher.collect()
+
+        // Sink to the collected publisher
+        collectedPublisher
+            .sink(receiveCompletion: { completion in
+                switch completion {
+                case .finished:
+                    print("All publishers finished")
+                case .failure(let error):
+                    print("Error: \(error)")
+                }
+            }, receiveValue: { [weak self] competitionInfos in
+                var invalidCompetitionIds = [String]()
+
+                for (competitionId, competitionInfo) in competitionInfos {
+                    
+                    if let competitionInfo {
+                        print("Received competition info for ID \(competitionId): \(competitionInfo)")
+                        self?.selectedCompetitionsInfoPublisher.value[competitionInfo.id] = competitionInfo
+                    } else {
+                        print("Received nil competition info for ID \(competitionId)")
+                        self?.selectedCompetitionsInfoPublisher.value[competitionId] = nil
+                        
+                        invalidCompetitionIds.append(competitionId)
+
+                    }
+                }
+                
+                if invalidCompetitionIds.isNotEmpty {
+                    Env.favoritesManager.removeInvalidCompetition(competitionIds: invalidCompetitionIds)
+                }
+                
+                self?.processCompetitionsInfo()
+            })
+            .store(in: &cancellables)
     }
 
     func processCompetitionsInfo() {
@@ -216,7 +279,7 @@ class MyCompetitionsRootViewModel {
         let competitionInfos = self.selectedCompetitionsInfoPublisher.value.map({$0.value})
 
         self.favoriteCompetitionsDataPublisher.value = []
-
+        
         for competitionInfo in competitionInfos {
 
             if let marketGroup = competitionInfo.marketGroups.filter({
@@ -274,8 +337,10 @@ class MyCompetitionsRootViewModel {
                                          sport: nil,
                                          numberOutrightMarkets: Int(competitionInfo.numberOutrightMarkets) ?? 0,
         competitionInfo: competitionInfo)
-
-        self.favoriteCompetitionsDataPublisher.value.append(newCompetition)
+        
+        if !self.favoriteCompetitionsDataPublisher.value.contains(newCompetition) {
+            self.favoriteCompetitionsDataPublisher.value.append(newCompetition)
+        }
 
         self.fetchedEventSummaryPublisher.value.append(competitionInfo.id)
 
@@ -291,8 +356,9 @@ class MyCompetitionsRootViewModel {
                                          numberOutrightMarkets: Int(competitionInfo.numberOutrightMarkets) ?? 0,
         competitionInfo: competitionInfo)
 
-        //self.favoriteCompetitionsDataPublisher.value.append(newCompetition)
-        self.favoriteOutrightCompetitionsDataPublisher.value.append(newCompetition)
+        if !self.favoriteOutrightCompetitionsDataPublisher.value.contains(newCompetition) {
+            self.favoriteOutrightCompetitionsDataPublisher.value.append(newCompetition)
+        }
 
         self.fetchedEventSummaryPublisher.value.append(competitionInfo.id)
 

@@ -453,6 +453,9 @@ class LoginViewController: UIViewController {
 
     private func showLimitsOnRegisterViewController(onNavigationController navigationController: UINavigationController) {
         let viewModel = LimitsOnRegisterViewModel(servicesProvider: Env.servicesProvider)
+        
+        viewModel.hasRollingWeeklyLimits = Env.businessSettingsSocket.clientSettings.hasRollingWeeklyLimits
+
         let limitsOnRegisterViewController = LimitsOnRegisterViewController(viewModel: viewModel)
         limitsOnRegisterViewController.didTapBackButtonAction = {
             navigationController.popViewController(animated: true)

@@ -1210,6 +1210,8 @@ class RootViewController: UIViewController {
 
         let limitsOnRegisterViewModel = LimitsOnRegisterViewModel(servicesProvider: Env.servicesProvider, limits: limits)
         
+        limitsOnRegisterViewModel.hasRollingWeeklyLimits = Env.businessSettingsSocket.clientSettings.hasRollingWeeklyLimits
+        
         let limitsOnRegisterViewController = LimitsOnRegisterViewController.init(viewModel: limitsOnRegisterViewModel)
 
         limitsOnRegisterViewController.triggeredContinueAction = { [weak self] in
