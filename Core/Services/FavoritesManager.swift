@@ -314,6 +314,24 @@ class FavoritesManager {
             })
             .store(in: &cancellables)
     }
+    
+    func removeInvalidCompetition(competitionIds: [String]) {
+        var favoriteEventsId = self.favoriteEventsIdPublisher.value
+        
+        var favoriteCompetitionsId = self.favoriteCompetitionsIdPublisher.value
+        
+        favoriteCompetitionsId = favoriteCompetitionsId.filter { !competitionIds.contains($0) }
+        
+        favoriteEventsId = favoriteEventsId.filter { !competitionIds.contains($0) }
+
+        self.favoriteEventsIdPublisher.send(favoriteEventsId)
+        
+        self.favoriteCompetitionsIdPublisher.send(favoriteCompetitionsId)
+        
+        for competitionId in competitionIds {
+            self.postUserFavorites(favoriteEvents: favoriteEventsId, favoriteTypeChanged: .competition, eventId: competitionId, favoriteAction: .remove)
+        }
+    }
 
     private func postFavoritesToGoma(eventId: String, favoriteType: FavoriteType) {
 
