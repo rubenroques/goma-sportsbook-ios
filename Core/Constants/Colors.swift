@@ -162,6 +162,16 @@ extension UIColor {
         static var highlightTertiary: UIColor {
             return UIColor(named: "highlightTertiary") ?? Self.alertSuccess
         }
+        
+        static var liveBorderGradient1: UIColor {
+            return UIColor(named: "liveColor1") ?? Self.highlightPrimary
+        }
+        static var liveBorderGradient2: UIColor {
+            return UIColor(named: "liveColor2") ?? Self.highlightPrimary
+        }
+        static var liveBorderGradient3: UIColor {
+            return UIColor(named: "liveColor3") ?? Self.highlightPrimary
+        }
 
     }
 

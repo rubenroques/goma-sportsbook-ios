@@ -7,7 +7,8 @@
 
 import Foundation
 
-enum UserConsentStatus {
+enum UserConsentStatus: Hashable {
     case consented
     case notConsented
+    case unknown
 }

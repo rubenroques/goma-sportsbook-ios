@@ -7,8 +7,9 @@
 
 import Foundation
 
-public enum UserConsentType {
+public enum UserConsentType: Hashable {
     case sms
     case email
     case terms
+    case unknown
 }

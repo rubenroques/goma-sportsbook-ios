@@ -28,18 +28,44 @@ class MatchWidgetCollectionViewCell: UICollectionViewCell {
         gradientBorderView.translatesAutoresizingMaskIntoConstraints = false
         gradientBorderView.gradientBorderWidth = 1
         gradientBorderView.gradientCornerRadius = 9
+        
+        gradientBorderView.gradientColors = [UIColor.App.cardBorderLineGradient1,
+                                             UIColor.App.cardBorderLineGradient2,
+                                             UIColor.App.cardBorderLineGradient3]
+
         return gradientBorderView
     }()
 
+    lazy var liveGradientBorderView: GradientBorderView = {
+        var gradientBorderView = GradientBorderView()
+        gradientBorderView.translatesAutoresizingMaskIntoConstraints = false
+        gradientBorderView.gradientBorderWidth = 2
+        gradientBorderView.gradientCornerRadius = 9
+        
+        gradientBorderView.gradientColors = [UIColor.App.liveBorderGradient3,
+                                             UIColor.App.liveBorderGradient2,
+                                             UIColor.App.liveBorderGradient1]
+        
+        return gradientBorderView
+    }()
+    
     lazy var liveTipView: UIView = {
         var liveTipView = UIView()
         liveTipView.translatesAutoresizingMaskIntoConstraints = false
+        
+        // Shadow properties
+        liveTipView.layer.masksToBounds = false
+        liveTipView.layer.shadowColor = UIColor.App.highlightPrimary.cgColor
+        liveTipView.layer.shadowOpacity = 0.7
+        liveTipView.layer.shadowOffset = CGSize(width: -4, height: 2)
+        liveTipView.layer.shadowRadius = 5
+        
         return liveTipView
     }()
 
     lazy var liveTipLabel: UILabel = {
         var liveTipLabel = UILabel()
-        liveTipLabel.font = AppFont.with(type: .semibold, size: 9)
+        liveTipLabel.font = AppFont.with(type: .bold, size: 10)
         liveTipLabel.textAlignment = .left
         liveTipLabel.translatesAutoresizingMaskIntoConstraints = false
         liveTipLabel.setContentHuggingPriority(.defaultHigh, for: .horizontal)
@@ -69,8 +95,6 @@ class MatchWidgetCollectionViewCell: UICollectionViewCell {
     @IBOutlet private weak var baseStackView: UIStackView!
 
     @IBOutlet private weak var favoritesIconImageView: UIImageView!
-
-    @IBOutlet private weak var numberOfBetsLabels: UILabel!
     
     @IBOutlet private weak var eventNameLabel: UILabel!
     @IBOutlet private weak var locationFlagImageView: UIImageView!
@@ -196,6 +220,90 @@ class MatchWidgetCollectionViewCell: UICollectionViewCell {
     @IBOutlet private weak var boostedOddBottomLineView: UIView!
     private let boostedOddBottomLineAnimatedGradientView = GradientView()
 
+    //
+    // New card design elements
+    //
+    lazy var homeContentRedesignTopConstraint: NSLayoutConstraint = {
+        let constraint = NSLayoutConstraint()
+        return constraint
+    }()
+    
+    lazy var awayContentRedesignTopConstraint: NSLayoutConstraint = {
+        let constraint = NSLayoutConstraint()
+        return constraint
+    }()
+    
+    private var contentRedesignBaseView: UIView = {
+        var view = UIView()
+        view.backgroundColor = .blue
+        view.translatesAutoresizingMaskIntoConstraints = false
+        return view
+    }()
+
+    private var topSeparatorAlphaLineView: FadingView = {
+        let fadingView = FadingView()
+        fadingView.translatesAutoresizingMaskIntoConstraints = false
+        fadingView.colors = [.clear, .black, .black, .clear]
+        fadingView.startPoint = CGPoint(x: 0.0, y: 0.5)
+        fadingView.endPoint = CGPoint(x: 1.0, y: 0.5)
+        fadingView.fadeLocations = [0.0, 0.42, 0.58, 1.0]
+        return fadingView
+    }()
+    
+    private var detailedScoreView: ScoreView = {
+        var scoreView = ScoreView(sportCode: "", score: [:])
+        scoreView.translatesAutoresizingMaskIntoConstraints = false
+        return scoreView
+    }()
+    
+    private lazy var homeNameLabel: UILabel = {
+        var label = UILabel()
+        label.font = AppFont.with(type: .bold, size: 16)
+        label.textAlignment = .left
+        label.translatesAutoresizingMaskIntoConstraints = false
+        return label
+    }()
+    
+    private lazy var awayNameLabel: UILabel = {
+        var label = UILabel()
+        label.font = AppFont.with(type: .bold, size: 16)
+        label.textAlignment = .left
+        label.translatesAutoresizingMaskIntoConstraints = false
+        return label
+    }()
+    
+    lazy var dateNewLabel: UILabel = {
+        var label = UILabel()
+        label.font = AppFont.with(type: .bold, size: 11)
+        label.textAlignment = .left
+        label.translatesAutoresizingMaskIntoConstraints = false
+        return label
+    }()
+    
+    lazy var timeNewLabel: UILabel = {
+        var label = UILabel()
+        label.font = AppFont.with(type: .bold, size: 16)
+        label.textAlignment = .left
+        label.translatesAutoresizingMaskIntoConstraints = false
+        return label
+    }()
+    
+    lazy var matchTimeStatusNewLabel: UILabel = {
+        var label = UILabel()
+        label.font = AppFont.with(type: .bold, size: 11)
+        label.textAlignment = .left
+        label.translatesAutoresizingMaskIntoConstraints = false
+        return label
+    }()
+    
+    lazy var marketNamePillLabelView: PillLabelView = {
+        var marketNamePillLabelView = PillLabelView()
+        marketNamePillLabelView.translatesAutoresizingMaskIntoConstraints = false
+        return marketNamePillLabelView
+    }()
+    //
+    //
+    
     private var matchWidgetType: MatchWidgetType = .normal {
         didSet {
 
@@ -229,6 +337,7 @@ class MatchWidgetCollectionViewCell: UICollectionViewCell {
                 }
 
                 self.gradientBorderView.isHidden = false
+                self.liveGradientBorderView.isHidden = true
 
             case .topImage:
                 self.backgroundImageView.isHidden = true
@@ -252,6 +361,7 @@ class MatchWidgetCollectionViewCell: UICollectionViewCell {
                 self.topMarginSpaceConstraint.constant = 11
 
                 self.gradientBorderView.isHidden = true
+                self.liveGradientBorderView.isHidden = true
                 
             case .topImageOutright:
                 self.backgroundImageView.isHidden = true
@@ -280,6 +390,7 @@ class MatchWidgetCollectionViewCell: UICollectionViewCell {
                 self.topMarginSpaceConstraint.constant = 11
 
                 self.gradientBorderView.isHidden = true
+                self.liveGradientBorderView.isHidden = true
 
             case .boosted:
                 self.backgroundImageView.isHidden = true
@@ -304,7 +415,8 @@ class MatchWidgetCollectionViewCell: UICollectionViewCell {
                 self.setupBoostedOddsSubviews()
 
                 self.gradientBorderView.isHidden = false
-
+                self.liveGradientBorderView.isHidden = true
+                
             case .backgroundImage:
                 self.backgroundImageView.isHidden = false
 
@@ -325,9 +437,10 @@ class MatchWidgetCollectionViewCell: UICollectionViewCell {
                 self.bottomMarginSpaceConstraint.constant = 28
                 self.teamsHeightConstraint.constant = 47
                 self.topMarginSpaceConstraint.constant = 0
-
+                
                 self.gradientBorderView.isHidden = true
-
+                self.liveGradientBorderView.isHidden = true
+                
                 self.backgroundImageBorderGradientLayer.colors = [UIColor(hex: 0x404CFF).cgColor, UIColor(hex: 0x404CFF).withAlphaComponent(0.0).cgColor]
                 self.backgroundImageBorderGradientLayer.startPoint = CGPoint(x: 0.5, y: 0.0)
                 self.backgroundImageBorderGradientLayer.endPoint = CGPoint(x: 0.5, y: 1.0)
@@ -349,13 +462,11 @@ class MatchWidgetCollectionViewCell: UICollectionViewCell {
     //
     var viewModel: MatchWidgetCellViewModel? {
         didSet {
-            if self.viewModel?.match.id == "3234891.1" {
-                print("TapBug stop 4 \(self.viewModel?.match.markets.map({ return "\($0.name) "}) )")
-            }
+            
         }
     }
 
-    static var normalCellHeight: CGFloat = 156
+    static var normalCellHeight: CGFloat = 162
     static var smallCellHeight: CGFloat = 90
 
     var isFavorite: Bool = false {
@@ -444,6 +555,8 @@ class MatchWidgetCollectionViewCell: UICollectionViewCell {
             self.boostedOddBottomLineView.bottomAnchor.constraint(equalTo: self.boostedOddBottomLineAnimatedGradientView.bottomAnchor),
         ])
 
+        self.suspendedBaseView.layer.borderWidth = 1
+        
         //
         // Create a gradient layer on top of the image
 
@@ -491,8 +604,7 @@ class MatchWidgetCollectionViewCell: UICollectionViewCell {
         self.drawDownChangeOddValueImage.alpha = 0.0
         self.awayUpChangeOddValueImage.alpha = 0.0
         self.awayDownChangeOddValueImage.alpha = 0.0
-
-        self.numberOfBetsLabels.isHidden = true
+        
         self.favoritesButton.backgroundColor = .clear
         self.participantsBaseView.backgroundColor = .clear
         self.outrightNameBaseView.backgroundColor = .clear
@@ -517,16 +629,30 @@ class MatchWidgetCollectionViewCell: UICollectionViewCell {
         self.awayOddTitleLabel.text = "-"
 
         self.eventNameLabel.text = ""
+        
         self.homeParticipantNameLabel.text = ""
         self.awayParticipantNameLabel.text = ""
+        
+        self.homeNameLabel.text = ""
+        self.awayNameLabel.text = ""
+        
+        self.detailedScoreView.updateScores([:])
+        
         self.outrightNameLabel.text = ""
 
         self.matchTimeLabel.text = ""
         self.resultLabel.text = ""
+        
+        self.matchTimeStatusNewLabel.text = ""
 
         self.dateLabel.text = ""
         self.timeLabel.text = ""
-
+        
+        self.dateNewLabel.text = ""
+        self.timeNewLabel.text = ""
+        
+        self.matchTimeStatusNewLabel.isHidden = true
+        
         self.suspendedLabel.text = localized("suspended")
         
         self.locationFlagImageView.image = nil
@@ -545,37 +671,49 @@ class MatchWidgetCollectionViewCell: UICollectionViewCell {
         self.marketNameLabel.text = ""
         self.marketNameLabel.font = AppFont.with(type: .bold, size: 8)
 
+        self.marketNamePillLabelView.title = ""
+        self.marketNamePillLabelView.isHidden = true
+        
         // Live add ons to the base view
         // Gradient Border
         self.baseView.addSubview(self.gradientBorderView)
+        self.baseView.addSubview(self.liveGradientBorderView)
+        
+        self.baseView.sendSubviewToBack(self.liveGradientBorderView)
         self.baseView.sendSubviewToBack(self.gradientBorderView)
-
+        
         NSLayoutConstraint.activate([
-            self.baseView.leadingAnchor.constraint(equalTo: gradientBorderView.leadingAnchor),
-            self.baseView.trailingAnchor.constraint(equalTo: gradientBorderView.trailingAnchor),
-            self.baseView.topAnchor.constraint(equalTo: gradientBorderView.topAnchor),
-            self.baseView.bottomAnchor.constraint(equalTo: gradientBorderView.bottomAnchor),
+            self.baseView.leadingAnchor.constraint(equalTo: self.gradientBorderView.leadingAnchor),
+            self.baseView.trailingAnchor.constraint(equalTo: self.gradientBorderView.trailingAnchor),
+            self.baseView.topAnchor.constraint(equalTo: self.gradientBorderView.topAnchor),
+            self.baseView.bottomAnchor.constraint(equalTo: self.gradientBorderView.bottomAnchor),
+            
+            self.baseView.leadingAnchor.constraint(equalTo: self.liveGradientBorderView.leadingAnchor),
+            self.baseView.trailingAnchor.constraint(equalTo: self.liveGradientBorderView.trailingAnchor),
+            self.baseView.topAnchor.constraint(equalTo: self.liveGradientBorderView.topAnchor),
+            self.baseView.bottomAnchor.constraint(equalTo: self.liveGradientBorderView.bottomAnchor),
         ])
 
         self.gradientBorderView.isHidden = true
-
+        self.liveGradientBorderView.isHidden = true
+        
         // Live Tip
         self.baseView.addSubview(self.liveTipView)
         self.liveTipView.addSubview(self.liveTipLabel)
-        self.liveTipLabel.text = localized("live") + " ⦿"
+        self.liveTipLabel.text = localized("live").uppercased() + " ⦿"
 
-        self.liveTipView.layer.cornerRadius = 7
+        self.liveTipView.layer.cornerRadius = 9
 
         NSLayoutConstraint.activate([
-            self.liveTipView.heightAnchor.constraint(equalToConstant: 14),
+            self.liveTipView.heightAnchor.constraint(equalToConstant: 18),
 
-            self.liveTipView.leadingAnchor.constraint(equalTo: self.liveTipLabel.leadingAnchor, constant: -8),
-            self.liveTipView.trailingAnchor.constraint(equalTo: self.liveTipLabel.trailingAnchor, constant: 14),
+            self.liveTipView.leadingAnchor.constraint(equalTo: self.liveTipLabel.leadingAnchor, constant: -9),
+            self.liveTipView.trailingAnchor.constraint(equalTo: self.liveTipLabel.trailingAnchor, constant: 18),
             self.liveTipView.centerYAnchor.constraint(equalTo: self.liveTipLabel.centerYAnchor),
             self.liveTipView.topAnchor.constraint(equalTo: self.liveTipLabel.topAnchor, constant: 2),
 
             self.liveTipView.trailingAnchor.constraint(equalTo: self.baseView.trailingAnchor, constant: 8),
-            self.liveTipView.topAnchor.constraint(equalTo: self.baseView.topAnchor, constant: 12)
+            self.liveTipView.topAnchor.constraint(equalTo: self.baseView.topAnchor, constant: 10)
         ])
 
         // Cashback
@@ -640,10 +778,13 @@ class MatchWidgetCollectionViewCell: UICollectionViewCell {
         self.participantsBaseView.addGestureRecognizer(longPressGestureRecognizer)
 
         self.hasCashback = false
+        
+        //
+        self.createRedesignInterface()
 
+        //
         self.adjustDesignToCardStyle()
         self.setupWithTheme()
-
     }
 
     override func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {
@@ -704,24 +845,39 @@ class MatchWidgetCollectionViewCell: UICollectionViewCell {
         self.homeParticipantNameLabel.text = ""
         self.awayParticipantNameLabel.text = ""
         
+        self.homeNameLabel.text = ""
+        self.awayNameLabel.text = ""
+        
+        self.detailedScoreView.updateScores([:])
+        
         self.outrightNameLabel.text = ""
         //
         self.dateStackView.isHidden = false
         self.resultStackView.isHidden = true
 
         self.dateLabel.isHidden = false
-
+        self.timeLabel.isHidden = false
+        
         self.dateLabel.text = ""
         self.timeLabel.text = ""
 
+        self.dateNewLabel.text = ""
+        self.timeNewLabel.text = ""
+        
         self.liveMatchDotBaseView.isHidden = true
         self.liveTipView.isHidden = true
 
         self.matchTimeLabel.text = ""
         self.resultLabel.text = ""
         
+        self.matchTimeStatusNewLabel.isHidden = true
+        self.matchTimeStatusNewLabel.text = ""
+        
         self.marketNameLabel.text = ""
 
+        self.marketNamePillLabelView.title = ""
+        self.marketNamePillLabelView.isHidden = true
+                
         //
         self.homeOddTitleLabel.text = "-"
         self.drawOddTitleLabel.text = "-"
@@ -782,7 +938,6 @@ class MatchWidgetCollectionViewCell: UICollectionViewCell {
     }
 
     func setupWithTheme() {
-
         self.baseView.backgroundColor = UIColor.App.backgroundCards
 
         self.liveMatchDotBaseView.backgroundColor = .clear
@@ -795,6 +950,8 @@ class MatchWidgetCollectionViewCell: UICollectionViewCell {
         self.awayBaseView.backgroundColor = UIColor.App.backgroundOdds
 
         self.suspendedBaseView.backgroundColor = UIColor.App.backgroundDisabledOdds
+        self.suspendedBaseView.layer.borderColor = UIColor.App.backgroundBorder.cgColor
+        
         self.suspendedLabel.textColor = UIColor.App.textDisablePrimary
 
         self.seeAllBaseView.backgroundColor = UIColor.App.backgroundDisabledOdds
@@ -831,6 +988,7 @@ class MatchWidgetCollectionViewCell: UICollectionViewCell {
             self.matchTimeLabel.textColor = UIColor.App.buttonBackgroundPrimary
             self.resultLabel.textColor = UIColor.App.textPrimary
             self.liveTipLabel.textColor = UIColor.App.buttonTextPrimary
+            
             self.dateLabel.textColor = UIColor.App.textSecondary
             self.timeLabel.textColor = UIColor.App.textPrimary
 
@@ -1064,7 +1222,22 @@ class MatchWidgetCollectionViewCell: UICollectionViewCell {
             }
 
         }
-
+        
+        self.liveGradientBorderView.gradientColors = [UIColor.App.liveBorderGradient3,
+                                                  UIColor.App.liveBorderGradient2,
+                                                  UIColor.App.liveBorderGradient1]
+        
+        self.gradientBorderView.gradientColors = [UIColor.App.cardBorderLineGradient1,
+                                                      UIColor.App.cardBorderLineGradient2,
+                                                      UIColor.App.cardBorderLineGradient3]
+        
+        self.contentRedesignBaseView.backgroundColor = self.baseView.backgroundColor
+        self.dateNewLabel.textColor = self.dateLabel.textColor
+        self.timeNewLabel.textColor = self.timeLabel.textColor
+        self.matchTimeStatusNewLabel.textColor = self.matchTimeLabel.textColor
+        
+        self.detailedScoreView.setupWithTheme()
+        self.marketNamePillLabelView.setupWithTheme()
     }
     
     private func adjustMarketNameView(isShown: Bool) {
@@ -1077,6 +1250,9 @@ class MatchWidgetCollectionViewCell: UICollectionViewCell {
             //self.participantsBottomConstraint.isActive = false
             
             self.marketNameLabel.text = self.viewModel?.match.markets.first?.name
+            
+            self.marketNamePillLabelView.title = self.viewModel?.match.markets.first?.name ?? ""
+            self.marketNamePillLabelView.isHidden = false
             
             self.homeCenterViewConstraint.isActive = false
             self.homeResultCenterViewConstraint.isActive = true
@@ -1096,6 +1272,9 @@ class MatchWidgetCollectionViewCell: UICollectionViewCell {
             //self.participantsBottomConstraint.isActive = true
             
             self.marketNameLabel.text = ""
+            
+            self.marketNamePillLabelView.title = ""
+            self.marketNamePillLabelView.isHidden = true
             
             self.homeCenterViewConstraint.isActive = true
             self.homeResultCenterViewConstraint.isActive = false
@@ -1126,8 +1305,10 @@ class MatchWidgetCollectionViewCell: UICollectionViewCell {
 
         switch StyleHelper.cardsStyleActive() {
         case .small:
+            self.contentRedesignBaseView.isHidden = true
             self.adjustDesignToSmallCardStyle()
         case .normal:
+            self.contentRedesignBaseView.isHidden = false
             self.adjustDesignToNormalCardStyle()
         }
 
@@ -1190,48 +1371,101 @@ class MatchWidgetCollectionViewCell: UICollectionViewCell {
         self.awayOddValueLabel.font = AppFont.with(type: .bold, size: 13)
     }
 
-    func configure(withViewModel viewModel: MatchWidgetCellViewModel) {
+    func configureAsLiveCard() {
+        self.hasCashback = false // We need to make sure the cashback icon is not showing
+        
+        self.baseView.backgroundColor = UIColor.App.backgroundDrop
+        self.contentRedesignBaseView.backgroundColor = self.baseView.backgroundColor
 
-        if viewModel.match.id == "3234891.1" {
-            print("TapBug stop 3 \(viewModel.match.markets.map({ return "\($0.name) "}) ) ")
+        self.dateStackView.isHidden = true
+        self.dateNewLabel.isHidden = true
+        self.timeNewLabel.isHidden = true
+        
+        self.detailedScoreView.isHidden = false
+        
+        self.resultStackView.isHidden = false
+        self.matchTimeStatusNewLabel.isHidden = false
+        
+        self.liveMatchDotBaseView.isHidden = true
+        self.liveTipView.isHidden = false
+
+        self.cashbackImageViewBaseTrailingConstraint.isActive = false
+        self.cashbackImageViewLiveTrailingConstraint.isActive = true
+        
+        if self.matchWidgetType == .normal || self.matchWidgetType == .boosted {
+            self.gradientBorderView.isHidden = true
+            self.liveGradientBorderView.isHidden = false
         }
+        else {
+            self.gradientBorderView.isHidden = true
+            self.liveGradientBorderView.isHidden = true
+        }
+        
+        switch StyleHelper.cardsStyleActive() {
+        case .small:
+            self.adjustMarketNameView(isShown: false)
+        case .normal:
+            self.adjustMarketNameView(isShown: true)
+        }
+        
+        if StyleHelper.cardsStyleActive() == .normal && self.matchWidgetType == .normal {
+            self.bottomMarginSpaceConstraint.constant = 12
+            
+            self.homeContentRedesignTopConstraint.constant = 13
+            self.awayContentRedesignTopConstraint.constant = 33
+        }
+    }
+    
+    func configureAsNormalCard() {
+        self.baseView.backgroundColor = UIColor.App.backgroundCards
+        self.contentRedesignBaseView.backgroundColor = self.baseView.backgroundColor
+
+        self.dateStackView.isHidden = false
+        self.dateNewLabel.isHidden = false
+        self.timeNewLabel.isHidden = false
+        
+        self.detailedScoreView.isHidden = true
+        
+        self.resultStackView.isHidden = true
+        self.matchTimeStatusNewLabel.isHidden = true
+        
+        self.liveMatchDotBaseView.isHidden = true
+        self.liveTipView.isHidden = true
+
+        if self.matchWidgetType == .normal || self.matchWidgetType == .boosted {
+            self.gradientBorderView.isHidden = false
+            self.liveGradientBorderView.isHidden = true
+        }
+        else {
+            self.gradientBorderView.isHidden = true
+            self.liveGradientBorderView.isHidden = true
+        }
+        
+        self.cashbackImageViewBaseTrailingConstraint.isActive = true
+        self.cashbackImageViewLiveTrailingConstraint.isActive = false
+        
+        self.adjustMarketNameView(isShown: false)
+        
+        if StyleHelper.cardsStyleActive() == .normal && self.matchWidgetType == .normal {
+            self.bottomMarginSpaceConstraint.constant = 12
+            
+            self.homeContentRedesignTopConstraint.constant = 25
+            self.awayContentRedesignTopConstraint.constant = 45
+        }
+    }
+    
+    func configure(withViewModel viewModel: MatchWidgetCellViewModel) {
         
         self.viewModel = viewModel
         self.matchWidgetType = viewModel.matchWidgetType
 
+        self.hasCashback = viewModel.canHaveCashback
+        
         if viewModel.isLiveCard {
-            self.dateStackView.isHidden = true
-            self.resultStackView.isHidden = false
+            self.configureAsLiveCard()
         }
         else {
-            self.dateStackView.isHidden = false
-            self.resultStackView.isHidden = true
-        }
-
-        if viewModel.isLiveMatch {
-            self.liveMatchDotBaseView.isHidden = true
-            self.liveTipView.isHidden = false
-
-            self.cashbackImageViewBaseTrailingConstraint.isActive = false
-            self.cashbackImageViewLiveTrailingConstraint.isActive = true
-            
-            switch StyleHelper.cardsStyleActive() {
-            case .small:
-                self.adjustMarketNameView(isShown: false)
-            case .normal:
-                self.adjustMarketNameView(isShown: true)
-            }
-            
-        }
-        else {
-            self.liveMatchDotBaseView.isHidden = true
-            self.liveTipView.isHidden = true
-
-            self.cashbackImageViewBaseTrailingConstraint.isActive = true
-            self.cashbackImageViewLiveTrailingConstraint.isActive = false
-            
-            self.adjustMarketNameView(isShown: false)
-
+            self.configureAsNormalCard()
         }
 
         self.liveMatchDotImageView.isHidden = true
@@ -1241,11 +1475,19 @@ class MatchWidgetCollectionViewCell: UICollectionViewCell {
         self.homeParticipantNameLabel.text = "\(viewModel.homeTeamName)"
         self.awayParticipantNameLabel.text = "\(viewModel.awayTeamName)"
 
+        self.homeNameLabel.text = "\(viewModel.homeTeamName)"
+        self.awayNameLabel.text = "\(viewModel.awayTeamName)"
+        
         self.dateLabel.text = "\(viewModel.startDateString)"
         self.timeLabel.text = "\(viewModel.startTimeString)"
 
+        self.dateNewLabel.text = "\(viewModel.startDateString)"
+        self.timeNewLabel.text = "\(viewModel.startTimeString)"
+
         self.resultLabel.text = "\(viewModel.matchScore)"
         self.matchTimeLabel.text = viewModel.matchTimeDetails
+        
+        self.matchTimeStatusNewLabel.text = viewModel.matchTimeDetails
         
         if viewModel.countryISOCode != "" {
             self.locationFlagImageView.image = UIImage(named: Assets.flagName(withCountryCode: viewModel.countryISOCode))
@@ -1321,6 +1563,8 @@ class MatchWidgetCollectionViewCell: UICollectionViewCell {
 
         //
         //
+        self.detailedScoreView.sportCode = viewModel.match.sport.alphaId ?? ""
+        
         self.matchLiveDataSubscriber?.cancel()
         self.matchLiveDataSubscriber = nil
         
@@ -1339,14 +1583,26 @@ class MatchWidgetCollectionViewCell: UICollectionViewCell {
                 self.dateLabel.text = "\(liveDataViewModel.startDateString)"
                 self.timeLabel.text = "\(liveDataViewModel.startTimeString)"
 
+                self.dateNewLabel.text = "\(liveDataViewModel.startDateString)"
+                self.timeNewLabel.text = "\(liveDataViewModel.startTimeString)"
+
                 self.resultLabel.text = "\(liveDataViewModel.matchScore)"
                 self.matchTimeLabel.text = liveDataViewModel.matchTimeDetails
-
-                if liveDataViewModel.isLiveMatch {
-                    self.liveMatchDotBaseView.isHidden = true
+                
+                self.matchTimeStatusNewLabel.text = liveDataViewModel.matchTimeDetails
+                
+                if let detailedScores = updatedMatch.detailedScores {
+                    self.detailedScoreView.updateScores(detailedScores)
                 }
+                
+                if liveDataViewModel.isLiveCard {
+                    self.configureAsLiveCard()
+                }
+//                else if let detailedScoresValue = updatedMatch.detailedScores, detailedScoresValue.isNotEmpty {
+//                    self.configureAsLiveCard()
+//                }
                 else {
-                    self.liveMatchDotBaseView.isHidden = true
+                    self.configureAsNormalCard()
                 }
             })
         
@@ -1368,6 +1624,7 @@ class MatchWidgetCollectionViewCell: UICollectionViewCell {
                     else {
                         self?.showSuspendedView()
                     }
+                    
                 })
 
             if let outcome = market.outcomes[safe: 0] {
@@ -1598,8 +1855,6 @@ class MatchWidgetCollectionViewCell: UICollectionViewCell {
 
         self.isFavorite = Env.favoritesManager.isEventFavorite(eventId: viewModel.match.id)
 
-        self.hasCashback = viewModel.canHaveCashback
-        
         if self.matchWidgetType == .topImageOutright {
             self.eventNameLabel.text = viewModel.match.venue?.name ?? viewModel.match.competitionName
             self.outrightNameLabel.text = viewModel.match.competitionOutright?.name
@@ -1644,6 +1899,8 @@ class MatchWidgetCollectionViewCell: UICollectionViewCell {
         
         self.participantsBaseView.isHidden = true
         self.outrightNameBaseView.isHidden = false
+        
+        self.contentRedesignBaseView.isHidden = true
     }
 
     private func setHomeOddValueLabel(toText text: String) {
@@ -1703,6 +1960,7 @@ class MatchWidgetCollectionViewCell: UICollectionViewCell {
     }
 
     @IBAction private func didTapMatchView(_ sender: Any) {
+        
         if let viewModel = self.viewModel?.match {
             if self.matchWidgetType == .topImageOutright {
                 if let competition = viewModel.competitionOutright {
@@ -1713,6 +1971,7 @@ class MatchWidgetCollectionViewCell: UICollectionViewCell {
                 self.tappedMatchWidgetAction?(viewModel)
             }
         }
+        
     }
 
     //
@@ -2054,7 +2313,73 @@ extension MatchWidgetCollectionViewCell {
             self.boostedTopRightCornerBaseView.trailingAnchor.constraint(equalTo: self.baseView.trailingAnchor, constant: 0),
         ])
 
-
     }
 
+}
+
+extension MatchWidgetCollectionViewCell {
+    
+    func createRedesignInterface() {
+        
+        self.contentRedesignBaseView.backgroundColor = UIColor.App.backgroundCards
+                
+        self.topSeparatorAlphaLineView.backgroundColor = UIColor.App.highlightPrimary
+        
+        self.mainContentBaseView.addSubview(self.contentRedesignBaseView)
+        self.contentRedesignBaseView.addSubview(self.topSeparatorAlphaLineView)
+        
+        self.contentRedesignBaseView.addSubview(self.detailedScoreView)
+        
+        self.contentRedesignBaseView.addSubview(self.homeNameLabel)
+        self.contentRedesignBaseView.addSubview(self.awayNameLabel)
+        
+        self.contentRedesignBaseView.addSubview(self.dateNewLabel)
+        self.contentRedesignBaseView.addSubview(self.timeNewLabel)
+        
+        self.contentRedesignBaseView.addSubview(self.matchTimeStatusNewLabel)
+        
+        self.contentRedesignBaseView.addSubview(self.marketNamePillLabelView)
+        
+        self.homeContentRedesignTopConstraint = self.homeNameLabel.topAnchor.constraint(equalTo: self.contentRedesignBaseView.topAnchor, constant: 13)
+        self.awayContentRedesignTopConstraint = self.awayNameLabel.topAnchor.constraint(equalTo: self.contentRedesignBaseView.topAnchor, constant: 33)
+        
+        NSLayoutConstraint.activate([
+            self.contentRedesignBaseView.leadingAnchor.constraint(equalTo: self.mainContentBaseView.leadingAnchor, constant: 2),
+            self.contentRedesignBaseView.trailingAnchor.constraint(equalTo: self.mainContentBaseView.trailingAnchor, constant: -2),
+            self.contentRedesignBaseView.topAnchor.constraint(equalTo: self.headerLineStackView.bottomAnchor, constant: 3),
+            self.contentRedesignBaseView.bottomAnchor.constraint(equalTo: self.oddsStackView.topAnchor, constant: -1),
+            
+            self.topSeparatorAlphaLineView.leadingAnchor.constraint(equalTo: self.contentRedesignBaseView.leadingAnchor),
+            self.topSeparatorAlphaLineView.trailingAnchor.constraint(equalTo: self.contentRedesignBaseView.trailingAnchor),
+            self.topSeparatorAlphaLineView.heightAnchor.constraint(equalToConstant: 1),
+            self.topSeparatorAlphaLineView.topAnchor.constraint(equalTo: self.contentRedesignBaseView.topAnchor, constant: 4),
+            
+            self.detailedScoreView.trailingAnchor.constraint(equalTo: self.contentRedesignBaseView.trailingAnchor, constant: -12),
+            self.detailedScoreView.topAnchor.constraint(equalTo: self.contentRedesignBaseView.topAnchor, constant: 13),
+            
+            self.homeNameLabel.leadingAnchor.constraint(equalTo: self.contentRedesignBaseView.leadingAnchor, constant: 12),
+            self.homeNameLabel.trailingAnchor.constraint(equalTo: self.detailedScoreView.leadingAnchor, constant: -5),
+            self.homeContentRedesignTopConstraint,
+            self.homeNameLabel.heightAnchor.constraint(equalTo: self.detailedScoreView.heightAnchor, multiplier: 0.5, constant: 1),
+            
+            self.awayNameLabel.leadingAnchor.constraint(equalTo: self.contentRedesignBaseView.leadingAnchor, constant: 12),
+            self.awayNameLabel.trailingAnchor.constraint(equalTo: self.detailedScoreView.leadingAnchor, constant: -5),
+            self.awayContentRedesignTopConstraint,
+            self.awayNameLabel.heightAnchor.constraint(equalTo: self.detailedScoreView.heightAnchor, multiplier: 0.5, constant: 1),
+            
+            self.dateNewLabel.trailingAnchor.constraint(equalTo: self.contentRedesignBaseView.trailingAnchor, constant: -12),
+            self.dateNewLabel.topAnchor.constraint(equalTo: self.homeNameLabel.topAnchor),
+            
+            self.timeNewLabel.trailingAnchor.constraint(equalTo: self.contentRedesignBaseView.trailingAnchor, constant: -12),
+            self.timeNewLabel.bottomAnchor.constraint(equalTo: self.awayNameLabel.bottomAnchor),
+            
+            self.matchTimeStatusNewLabel.trailingAnchor.constraint(equalTo: self.contentRedesignBaseView.trailingAnchor, constant: -12),
+            self.matchTimeStatusNewLabel.bottomAnchor.constraint(equalTo: self.contentRedesignBaseView.bottomAnchor, constant: -6),
+            
+            self.marketNamePillLabelView.leadingAnchor.constraint(equalTo: self.contentRedesignBaseView.leadingAnchor, constant: 11),
+            self.marketNamePillLabelView.bottomAnchor.constraint(equalTo: self.contentRedesignBaseView.bottomAnchor, constant: -4),
+        ])
+        
+    }
+    
 }

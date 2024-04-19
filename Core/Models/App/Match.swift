@@ -68,6 +68,8 @@ struct Match: Equatable {
     
     var competitionOutright: Competition?
 
+    var detailedScores: [String: Score]?
+    
     var detailedStatus: String {
         switch self.status {
         case .unknown:
@@ -115,7 +117,8 @@ struct Match: Equatable {
          matchTime: String? = nil,
          promoImageURL: String? = nil,
          oldMainMarketId: String? = nil,
-         competitionOutright: Competition? = nil) {
+         competitionOutright: Competition? = nil,
+         detailedScores: [String: Score]? = nil) {
 
         self.id = id
         self.competitionId = competitionId
@@ -140,6 +143,7 @@ struct Match: Equatable {
         self.oldMainMarketId = oldMainMarketId
         
         self.competitionOutright = competitionOutright
+        self.detailedScores = detailedScores
     }
 
 }
@@ -387,35 +391,50 @@ extension Match {
                   sport: Sport.init(id: "1", name: "Football", alphaId: nil, numericId: nil, showEventCategory: false, liveEventsCount: 0, eventsCount: 0),
                   sportIdCode: "",
                   numberTotalOfMarkets: 0,
-                  markets: markets, rootPartId: "", status: .notStarted),
+                  markets: markets, rootPartId: "",
+                  status: .notStarted,
+                  detailedScores: [:]),
+            
             Match(id: "A2", competitionId: "PL2", competitionName: "Serie A",
                   homeParticipant: Participant(id: "P3", name: "Juventus"),
                   awayParticipant: Participant(id: "P4", name: "Inter Milan"), date: Date(timeIntervalSince1970: 1696620600),
                   sport: Sport.init(id: "1", name: "Football", alphaId: nil, numericId: nil, showEventCategory: false, liveEventsCount: 0, eventsCount: 0),
                   sportIdCode: "",
                   numberTotalOfMarkets: 0,
-                  markets: markets, rootPartId: "", status: .notStarted),
+                  markets: markets, rootPartId: "",
+                  status: .notStarted,
+                  detailedScores: [:]),
+            
             Match(id: "A3", competitionId: "PL3", competitionName: "La Liga",
                   homeParticipant: Participant(id: "P5", name: "Real Madrid"),
                   awayParticipant: Participant(id: "P6", name: "Barcelona"), date: Date(timeIntervalSince1970: 1696620600),
                   sport: Sport.init(id: "1", name: "Football", alphaId: nil, numericId: nil, showEventCategory: false, liveEventsCount: 0, eventsCount: 0),
                   sportIdCode: "",
                   numberTotalOfMarkets: 0,
-                  markets: markets, rootPartId: "", status: .notStarted),
+                  markets: markets, rootPartId: "",
+                  status: .notStarted,
+                  detailedScores: [:]),
+            
             Match(id: "A4", competitionId: "PL4", competitionName: "Bundesliga",
                   homeParticipant: Participant(id: "P7", name: "Bayern Munich"),
                   awayParticipant: Participant(id: "P8", name: "Dortmund"), date: Date(timeIntervalSince1970: 1696620600),
                   sport: Sport.init(id: "1", name: "Football", alphaId: nil, numericId: nil, showEventCategory: false, liveEventsCount: 0, eventsCount: 0),
                   sportIdCode: "",
                   numberTotalOfMarkets: 0,
-                  markets: markets, rootPartId: "", status: .notStarted),
+                  markets: markets, rootPartId: "",
+                  status: .notStarted,
+                  detailedScores: [:]),
+            
             Match(id: "A5", competitionId: "PL5", competitionName: "Premier League",
                   homeParticipant: Participant(id: "P9", name: "Manchester United"),
                   awayParticipant: Participant(id: "P10", name: "Manchester City"), date: Date(timeIntervalSince1970: 1696620600),
                   sport: Sport.init(id: "1", name: "Football", alphaId: nil, numericId: nil, showEventCategory: false, liveEventsCount: 0, eventsCount: 0),
                   sportIdCode: "",
                   numberTotalOfMarkets: 0,
-                  markets: markets, rootPartId: "", status: .notStarted)
+                  markets: markets, rootPartId: "",
+                  status: .notStarted,
+                  detailedScores: [:])
+            
 
         ]
 

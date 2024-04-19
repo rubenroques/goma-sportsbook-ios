@@ -223,7 +223,11 @@ extension SportRadarEventsGroupCoordinator {
             self.storage.updateEventTime(newTime: newTime)
         case .updateEventScore(_, _, let homeScore, let awayScore):
             self.storage.updateEventScore(newHomeScore: homeScore, newAwayScore: awayScore)
-
+        
+        case .updateEventDetailedScore(_, _, let detailedScore):
+            let mappedScore = SportRadarModelMapper.score(fromInternalScore: detailedScore)
+            self.storage.updateEventDetailedScore(mappedScore)
+            
         // Markets
         case .updateMarketTradability(_, let marketId, let isTradable):
             self.storage.updateMarketTradability(withId: marketId, isTradable: isTradable)

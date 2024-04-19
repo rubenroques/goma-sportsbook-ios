@@ -91,6 +91,8 @@ class UserSessionStore {
     var userCashbackBalance = CurrentValueSubject<Double?, Never>(nil)
     var acceptedTrackingPublisher = CurrentValueSubject<UserTrackingStatus, Never>(.unkown)
 
+    var shouldAcceptTermsUpdatePublisher = CurrentValueSubject<Bool?, Never>(nil)
+    
     var shouldRecordUserSession = true
     var shouldSkipLimitsScreen = false
 
@@ -140,6 +142,7 @@ class UserSessionStore {
                     self?.refreshUserWallet()
                     
                     self?.updateDeviceIdentifier()
+                    self?.checkAcceptedTermsUpdate()
 
                     self?.isUserProfileComplete = userProfile.isRegistrationCompleted
                     self?.isUserEmailVerified = userProfile.isEmailVerified
@@ -366,6 +369,69 @@ extension UserSessionStore {
 
         }
         
+    }
+    
+    private func checkAcceptedTermsUpdate() {
+        Env.servicesProvider.getUserConsents()
+            .receive(on: DispatchQueue.main)
+            .sink(receiveCompletion: { completion in
+                switch completion {
+                case .finished:
+                    print("LoginViewController setTermsConsents finished")
+                case .failure(let error):
+                    print("LoginViewController setTermsConsents failure with error \(error)")
+                }
+
+            }, receiveValue: { [weak self] userConsentsArray in
+                
+                if userConsentsArray.contains(where: { userConsent in
+                    userConsent.type == .terms &&
+                    userConsent.status != .consented &&
+                    (userConsent.info.isMandatory ?? false)
+                }) {
+                    self?.shouldAcceptTermsUpdatePublisher.send(true)
+                }
+                else {
+                    self?.shouldAcceptTermsUpdatePublisher.send(false)
+                }
+
+                print("LoginViewController setTermsConsents ok")
+            })
+            .store(in: &self.cancellables)
+    }
+    
+    func acceptTermsConsents() {
+        
+        Env.servicesProvider.getAllConsents()
+            .filter({ consents in
+                return consents.contains { consent in
+                    consent.key == "terms"
+                }
+            })
+            .map({ consents -> ConsentInfo? in
+                return consents.filter { consent in
+                    consent.key == "terms"
+                }
+                .first
+            })
+            .compactMap({ $0 })
+            .flatMap({ consent in
+                return Env.servicesProvider.setUserConsents(consentVersionIds: [consent.consentVersionId])
+                    .eraseToAnyPublisher()
+            })
+            .receive(on: DispatchQueue.main)
+            .sink(receiveCompletion: { completion in
+                switch completion {
+                case .finished:
+                    print("UserSessionStore setTermsConsents finished")
+                case .failure(let error):
+                    print("UserSessionStore setTermsConsents failure with error \(error)")
+                }
+
+            }, receiveValue: { _ in
+                print("UserSessionStore setTermsConsents ok")
+            })
+            .store(in: &self.cancellables)
     }
     
 }
@@ -673,6 +739,16 @@ extension UserSessionStore {
         return hasStoredUserSession && UserDefaults.standard.biometricAuthenticationEnabled 
     }
 
+}
+
+
+extension UserSessionStore {
+    
+    func didAcceptedTermsUpdate() {
+        self.acceptTermsConsents()
+        self.shouldAcceptTermsUpdatePublisher.send(true)
+    }
+    
 }
 
 extension UserSessionStore {

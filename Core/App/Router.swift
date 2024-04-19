@@ -171,6 +171,7 @@ class Router {
             .store(in: &cancellables)
 
         Env.userSessionStore.acceptedTrackingPublisher
+            .removeDuplicates()
             .receive(on: DispatchQueue.main)
             .sink { acceptedTrackingState in
 
@@ -185,6 +186,26 @@ class Router {
             }
             .store(in: &self.cancellables)
 
+        Env.userSessionStore.shouldAcceptTermsUpdatePublisher
+            .removeDuplicates()
+            .delay(for: 3.0, scheduler: DispatchQueue.main)
+            .receive(on: DispatchQueue.main)
+            .sink { shouldAcceptTermsUpdate in
+                switch shouldAcceptTermsUpdate {
+                case .none:
+                    self.hideUpdatedTermsConditionsViewController()
+                case .some(let value):
+                    switch value {
+                    case true:
+                        self.showUpdatedTermsConditionsViewController()
+                    case false:
+                        self.hideUpdatedTermsConditionsViewController()
+                    }
+                }
+                
+            }
+            .store(in: &self.cancellables)
+        
         Env.locationManager.locationStatus
             .receive(on: DispatchQueue.main)
             .sink { locationStatus in
@@ -556,6 +577,37 @@ class Router {
         }
     }
     
+    //
+    // Updated terms
+    func showUpdatedTermsConditionsViewController() {
+        if let presentedViewController = self.rootViewController?.presentedViewController {
+            if !(presentedViewController is UpdatedTermsConditionsViewController) {
+                presentedViewController.dismiss(animated: false, completion: nil)
+            }
+        }
+        let updatedTermsConditionsViewController = UpdatedTermsConditionsViewController()
+        let navigationController = Router.navigationController(with: updatedTermsConditionsViewController)
+        navigationController.isModalInPresentation = true
+        navigationController.modalPresentationStyle = .fullScreen
+        self.rootViewController?.present(navigationController, animated: true, completion: nil)
+    }
+
+    func hideUpdatedTermsConditionsViewController() {
+        if let presentedViewController = self.rootViewController?.presentedViewController,
+           presentedViewController is UpdatedTermsConditionsViewController {
+            presentedViewController.dismiss(animated: true, completion: nil)
+        }
+        else if let presentedViewController = self.rootViewController?.presentedViewController,
+                let navigationController = presentedViewController as? UINavigationController,
+                navigationController.rootViewController is UpdatedTermsConditionsViewController {
+            presentedViewController.dismiss(animated: true, completion: nil)
+        }
+    }
+    
+    
+    //
+    //
+    //
     func showCompetitionDetailsScreen(competitionId: String) {
                 
         if self.rootViewController?.presentedViewController?.isModal == true {

@@ -303,7 +303,16 @@ extension ServicesProviderClient {
         }
         return eventsProvider.getEventDetails(eventId: eventId)
     }
-
+    
+    public func getEventSecundaryMarkets(eventId: String) -> AnyPublisher<[Market], ServiceProviderError> {
+        guard
+            let eventsProvider = self.eventsProvider
+        else {
+            return Fail(error: ServiceProviderError.eventsProviderNotFound).eraseToAnyPublisher()
+        }
+        return eventsProvider.getEventSecundaryMarkets(eventId: eventId)
+    }
+    
 }
 
 extension ServicesProviderClient {

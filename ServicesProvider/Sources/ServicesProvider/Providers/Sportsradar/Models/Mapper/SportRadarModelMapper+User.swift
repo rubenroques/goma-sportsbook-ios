@@ -549,16 +549,19 @@ extension SportRadarModelMapper {
 
         let userConsentInfo = Self.userConsentInfo(fromUserConsentInfo: internalUserConsent.consentInfo)
 
-        var userConsentStatus: UserConsentStatus = .notConsented
+        var userConsentStatus: UserConsentStatus = .unknown
 
         if internalUserConsent.consentStatus == "NOT_CONSENTED" {
             userConsentStatus = .notConsented
         }
-        else {
+        else if internalUserConsent.consentStatus == "CONSENTED" {
             userConsentStatus = .consented
         }
+        else {
+            userConsentStatus = .unknown
+        }
 
-        var userConsentType: UserConsentType = .sms
+        var userConsentType: UserConsentType = .unknown
 
         if userConsentInfo.key == "sms_promotions" {
             userConsentType = .sms
@@ -570,12 +573,16 @@ extension SportRadarModelMapper {
             userConsentType = .terms
         }
 
-        return UserConsent(consentInfo: userConsentInfo, consentStatus: userConsentStatus, consentType: userConsentType)
+        return UserConsent(info: userConsentInfo, status: userConsentStatus, type: userConsentType)
     }
 
     static func userConsentInfo(fromUserConsentInfo internalUserConsentInfo: SportRadarModels.UserConsentInfo) -> UserConsentInfo {
 
-        return UserConsentInfo(id: internalUserConsentInfo.id, key: internalUserConsentInfo.key, name: internalUserConsentInfo.name, consentVersionId: internalUserConsentInfo.consentVersionId)
+        return UserConsentInfo(id: internalUserConsentInfo.id,
+                               key: internalUserConsentInfo.key,
+                               name: internalUserConsentInfo.name,
+                               consentVersionId: internalUserConsentInfo.consentVersionId,
+                               isMandatory: internalUserConsentInfo.isMandatory)
     }
 
     static func accessTokenResponse(fromInternalAccessTokenResponse internalAccessTokenResponse: SportRadarModels.AccessTokenResponse) -> AccessTokenResponse {

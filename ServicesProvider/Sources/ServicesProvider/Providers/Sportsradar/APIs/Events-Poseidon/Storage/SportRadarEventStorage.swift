@@ -136,6 +136,22 @@ extension SportRadarEventStorage {
         }
         eventSubject.send(event)
     }
+    
+    func updateEventDetailedScore(_ detailedScore: Score) {
+        guard let event = self.eventSubject.value else { return }
+        event.scores[detailedScore.key] = detailedScore
+        
+        if case .matchFull(let newHomeScore, let newAwayScore) = detailedScore {
+            if let newHomeScoreValue = newHomeScore {
+                event.homeTeamScore = newHomeScoreValue
+            }
+            if let newAwayScoreValue = newAwayScore {
+                event.awayTeamScore = newAwayScoreValue
+            }
+        }
+        
+        eventSubject.send(event)
+    }
 
 }
 

@@ -348,6 +348,8 @@ extension SportMatchSingleLineTableViewCell: UICollectionViewDelegate, UICollect
                 let teamsText = "\(match.homeParticipant.name) - \(match.awayParticipant.name)"
                 let countryIso = match.venue?.isoCode ?? ""
 
+                let cellViewModel = MatchWidgetCellViewModel(match: match)
+                
                 if market.outcomes.count == 2 {
                     if let cell = collectionView.dequeueCellType(OddDoubleCollectionViewCell.self, indexPath: indexPath) {
 
@@ -357,7 +359,8 @@ extension SportMatchSingleLineTableViewCell: UICollectionViewDelegate, UICollect
 
                         cell.setupWithMarket(market, match: match,
                                              teamsText: teamsText,
-                                             countryIso: countryIso)
+                                             countryIso: countryIso,
+                                             isLive: cellViewModel.isLiveCard)
                         cell.tappedMatchWidgetAction = { [weak self] in
                             self?.tappedMatchLineAction?(match)
                         }
@@ -378,7 +381,8 @@ extension SportMatchSingleLineTableViewCell: UICollectionViewDelegate, UICollect
 
                         cell.setupWithMarket(market, match: match,
                                              teamsText: teamsText,
-                                             countryIso: countryIso)
+                                             countryIso: countryIso,
+                                             isLive: cellViewModel.isLiveCard)
                         cell.tappedMatchWidgetAction = { [weak self] in
                             self?.tappedMatchLineAction?(match)
                         }

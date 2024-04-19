@@ -101,6 +101,8 @@ protocol EventsProvider: Connector {
 
     func getEventDetails(eventId: String) -> AnyPublisher<Event, ServiceProviderError>
 
+    func getEventSecundaryMarkets(eventId: String) -> AnyPublisher<[Market], ServiceProviderError>
+    
     //
     // Favorites
     func getFavoritesList() -> AnyPublisher<FavoritesListResponse, ServiceProviderError>

@@ -47,6 +47,26 @@ class MatchLineTableCellViewModel {
     //
     private func loadEventDetails(fromId id: String) {
 
+        /*
+        New market secundary logic
+        
+         Env.servicesProvider.getEventSecundaryMarkets(eventId: id)
+            .map {
+                return ServiceProviderModelMapper.markets(fromServiceProviderMarkets: $0)
+            }
+            .receive(on: DispatchQueue.main)
+            .sink { completion in
+                
+            } receiveValue: { [weak self] secundaryMarkets in
+                if var oldMatch = self?.matchCurrentValueSubject.value {
+                        oldMatch.markets = secundaryMarkets
+                        self?.matchCurrentValueSubject.send(oldMatch)
+                }
+            }
+            .store(in: &self.cancellables)
+         */
+        
+        
         Env.servicesProvider.getEventDetails(eventId: id)
             .filter { eventSummary in
                 return eventSummary.type == .match
@@ -176,7 +196,8 @@ class MatchLineTableCellViewModel {
 
             }
             .store(in: &self.cancellables)
-
+         
+        
     }
 
 }
@@ -195,7 +216,8 @@ class MatchLineTableViewCell: UITableViewCell {
 
     @IBOutlet private var debugLabel: UILabel!
     @IBOutlet private var backSliderView: UIView!
-
+    @IBOutlet private var backSliderIconImageView: UIImageView!
+    
     @IBOutlet private var collectionBaseView: UIView!
     @IBOutlet private var collectionView: UICollectionView!
 
@@ -373,7 +395,8 @@ class MatchLineTableViewCell: UITableViewCell {
         self.collectionView.backgroundColor = .clear
         self.collectionView.backgroundView?.backgroundColor = UIColor.App.backgroundCards
 
-        self.backSliderView.backgroundColor = UIColor.App.buttonBackgroundSecondary
+        self.backSliderView.backgroundColor = UIColor.App.backgroundOdds
+        self.backSliderIconImageView.setTintColor(color: UIColor.App.iconPrimary)
     }
 
     private func setupWithMatch(_ match: Match, liveMatch: Bool = false) {
@@ -509,10 +532,6 @@ extension MatchLineTableViewCell: UICollectionViewDelegate, UICollectionViewData
             else {
                 fatalError()
             }
-
-            if match.id == "3234891.1" {
-                print("TapBug stop 2 \(match.markets.map({ return "\($0.name) "}) ) ")
-            }
             
             let cellViewModel = MatchWidgetCellViewModel(match: match)
             cell.configure(withViewModel: cellViewModel)
@@ -527,16 +546,23 @@ extension MatchLineTableViewCell: UICollectionViewDelegate, UICollectionViewData
             cell.shouldShowCountryFlag(self.shouldShowCountryFlag)
 
             return cell
+            
         case 1:
             if match.markets.count > 1, let market = match.markets[safe: indexPath.row + 1] {
 
+                let cellViewModel = MatchWidgetCellViewModel(match: match)
+                
                 let teamsText = "\(match.homeParticipant.name) - \(match.awayParticipant.name)"
                 let countryIso = match.venue?.isoCode ?? ""
 
                 if market.outcomes.count == 2 {
                     if let cell = collectionView.dequeueCellType(OddDoubleCollectionViewCell.self, indexPath: indexPath) {
                         cell.matchStatsViewModel = self.matchStatsViewModel
-                        cell.setupWithMarket(market, match: match, teamsText: teamsText, countryIso: countryIso)
+                        cell.setupWithMarket(market, match: match,
+                                             teamsText: teamsText,
+                                             countryIso: countryIso,
+                                             isLive: cellViewModel.isLiveCard)
+                        
                         cell.tappedMatchWidgetAction = { [weak self] in
                             self?.tappedMatchLine()
                         }
@@ -551,7 +577,11 @@ extension MatchLineTableViewCell: UICollectionViewDelegate, UICollectionViewData
                 else {
                     if let cell = collectionView.dequeueCellType(OddTripleCollectionViewCell.self, indexPath: indexPath) {
                         cell.matchStatsViewModel = self.matchStatsViewModel
-                        cell.setupWithMarket(market, match: match, teamsText: teamsText, countryIso: countryIso)
+                        cell.setupWithMarket(market, match: match,
+                                             teamsText: teamsText,
+                                             countryIso: countryIso,
+                                             isLive: cellViewModel.isLiveCard)
+                        
                         cell.tappedMatchWidgetAction = {  [weak self] in
                             self?.tappedMatchLine()
                         }

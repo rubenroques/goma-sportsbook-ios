@@ -22,11 +22,16 @@ extension SportRadarModels {
         let name: String
         let consentVersionId: Int
         
+        let status: String?
+        let isMandatory: Bool?
+        
         enum CodingKeys: String, CodingKey {
             case id = "id"
             case key = "key"
             case name = "name"
             case consentVersionId = "consentVersionId"
+            case status = "consentStatus"
+            case isMandatory = "isMandatory"
         }
     }
 

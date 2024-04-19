@@ -15,12 +15,16 @@ extension SportRadarModels {
         var key: String
         var name: String
         var consentVersionId: Int
-
+        
+        var isMandatory: Bool?
+        
         enum CodingKeys: String, CodingKey {
             case id = "id"
             case key = "key"
             case name = "name"
             case consentVersionId = "consentVersionId"
+            
+            case isMandatory = "isMandatory"
         }
     }
 

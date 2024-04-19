@@ -7,10 +7,11 @@
 
 import Foundation
 
-enum UserConsentType {
+enum UserConsentType: Hashable {
     case sms
     case email
     case terms
+    case unknown
     
     var versionId: Int {
         switch self {
@@ -20,6 +21,8 @@ enum UserConsentType {
             return 2
         case .terms:
             return 3
+        case .unknown:
+            return -1
         }
     }
 }
