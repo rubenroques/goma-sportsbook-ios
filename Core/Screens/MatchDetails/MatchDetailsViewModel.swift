@@ -89,7 +89,7 @@ class MatchDetailsViewModel: NSObject {
         let details = [self.match?.matchTime, self.match?.detailedStatus]
         return details.compactMap({ $0 }).joined(separator: " - ")
     }
-
+    
     private var statsJSON: JSON?
     let matchStatsViewModel: MatchStatsViewModel
 
@@ -236,7 +236,6 @@ class MatchDetailsViewModel: NSObject {
                 self?.marketGroupsState.send(.loaded(marketGroups))
             }
             .store(in: &self.cancellables)
-        
         
     }
 

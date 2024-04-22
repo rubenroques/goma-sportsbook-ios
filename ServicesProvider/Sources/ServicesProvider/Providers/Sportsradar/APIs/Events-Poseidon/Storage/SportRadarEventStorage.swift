@@ -152,6 +152,14 @@ extension SportRadarEventStorage {
         
         eventSubject.send(event)
     }
+    
+    func updateEventFullDetailedScore(_ detailedScore: [String: Score]) {
+        guard let event = self.eventSubject.value else { return }
+        
+        event.scores = detailedScore
+        
+        eventSubject.send(event)
+    }
 
 }
 

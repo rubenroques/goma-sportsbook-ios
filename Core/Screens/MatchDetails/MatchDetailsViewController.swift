@@ -95,7 +95,19 @@ class MatchDetailsViewController: UIViewController {
     @IBOutlet private var awayRedCardsLabel: UILabel!
 
     @IBOutlet private var marketsStackView: UIStackView!
-
+    
+    // New top details view
+    @IBOutlet private weak var topSeparatorAlphaLineView: FadingView!
+    @IBOutlet private weak var matchDetailsContentView: UIView!
+    @IBOutlet private weak var homeTeamLabel: UILabel!
+    @IBOutlet private weak var awayTeamLabel: UILabel!
+    @IBOutlet private weak var liveTimeLabel: UILabel!
+    @IBOutlet private weak var preLiveDetailsView: UIView!
+    @IBOutlet private weak var preLiveDateLabel: UILabel!
+    @IBOutlet private weak var preLiveTimeLabel: UILabel!
+    @IBOutlet private weak var liveDetailsView: UIView!
+    @IBOutlet private weak var scoreView: ScoreView!
+    
     private lazy var floatingShortcutsView: FloatingShortcutsView = Self.createFloatingShortcutsView()
     private static func createFloatingShortcutsView() -> FloatingShortcutsView {
         let floatingShortcutsView = FloatingShortcutsView()
@@ -623,6 +635,33 @@ class MatchDetailsViewController: UIViewController {
 
         self.fieldExpandImageView.setImageColor(color: UIColor.App.textPrimary)
         self.fieldExpandImageView.tintColor = UIColor.App.textPrimary
+        
+        // New top details view
+        self.topSeparatorAlphaLineView.colors = [.clear, .black, .black, .clear]
+        self.topSeparatorAlphaLineView.startPoint = CGPoint(x: 0.0, y: 0.5)
+        self.topSeparatorAlphaLineView.endPoint = CGPoint(x: 1.0, y: 0.5)
+        self.topSeparatorAlphaLineView.fadeLocations = [0.0, 0.42, 0.58, 1.0]
+        self.topSeparatorAlphaLineView.backgroundColor = UIColor.App.highlightPrimary
+        
+        self.matchDetailsContentView.backgroundColor = .clear
+        
+        self.homeTeamLabel.textColor = UIColor.App.textPrimary
+        
+        self.awayTeamLabel.textColor = UIColor.App.textPrimary
+        
+        self.liveTimeLabel.textColor = UIColor.App.buttonBackgroundPrimary
+        
+        self.preLiveDetailsView.backgroundColor = .clear
+        
+        self.preLiveDateLabel.textColor = UIColor.App.textSecondary
+        
+        self.preLiveTimeLabel.textColor = UIColor.App.textPrimary
+        
+        self.liveDetailsView.backgroundColor = .clear
+
+        self.scoreView.backgroundColor = .clear
+        self.scoreView.setupWithTheme()
+
     }
     
     // MARK: - Bindings
@@ -816,6 +855,7 @@ class MatchDetailsViewController: UIViewController {
                 marketGroupViewController.scrollToTop()
             }
         }
+        
     }
     
     func reloadMarketsWithLiveMatch(match: Match) {
@@ -977,6 +1017,36 @@ class MatchDetailsViewController: UIViewController {
         }
 
         self.headerCompetitionSportImageView.setTintColor(color: UIColor.App.textPrimary)
+        
+        // New details view
+        self.homeTeamLabel.text = cellViewModel.homeTeamName
+        
+        self.awayTeamLabel.text = cellViewModel.awayTeamName
+        
+        if self.matchMode == .preLive {
+            self.preLiveDateLabel.text = cellViewModel.startDateString
+            
+            self.preLiveTimeLabel.text = cellViewModel.startTimeString
+            
+            self.liveTimeLabel.isHidden = true
+            
+            self.preLiveDetailsView.isHidden = false
+            self.liveDetailsView.isHidden = true
+        }
+        else {
+            self.liveTimeLabel.text = self.viewModel.matchTimeDetails
+            self.liveTimeLabel.isHidden = false
+
+            self.preLiveDetailsView.isHidden = true
+            self.liveDetailsView.isHidden = false
+            
+            if let matchScores = match.detailedScores {
+                self.scoreView.sportCode = match.sport.alphaId ?? ""
+                self.scoreView.updateScores(matchScores)
+            }
+            
+        }
+        
     }
 
     func expandLiveFieldIfNeeded() {

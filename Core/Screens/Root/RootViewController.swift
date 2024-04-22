@@ -1117,11 +1117,15 @@ class RootViewController: UIViewController {
     
     func openCustomerSupport() {
         
-        let supportViewController = SupportPageViewController(viewModel: SupportPageViewModel())
+//        let supportViewController = SupportPageViewController(viewModel: SupportPageViewModel())
+//        
+//        let navigationController = Router.navigationController(with: supportViewController)
+//        
+//        self.present(navigationController, animated: true, completion: nil)
         
-        let navigationController = Router.navigationController(with: supportViewController)
-        
-        self.present(navigationController, animated: true, completion: nil)
+        if let url = URL(string: "https://support.betsson.fr/hc/fr") {
+            UIApplication.shared.open(url)
+        }
         
     }
     

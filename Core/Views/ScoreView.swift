@@ -20,7 +20,7 @@ class ScoreView: UIView {
         return stackView
     }()
     
-    var sportCode: String
+    var sportCode: String = ""
     
     var score: [String: Score] = [:] {
         didSet {
@@ -44,8 +44,11 @@ class ScoreView: UIView {
     }
     
     @available(iOS, unavailable)
-    required init?(coder: NSCoder) {
-        fatalError()
+    required init?(coder aDecoder: NSCoder) {
+        super.init(coder: aDecoder)
+
+        self.setupView()
+        self.configureScores()
     }
     
     private func setupView() {
