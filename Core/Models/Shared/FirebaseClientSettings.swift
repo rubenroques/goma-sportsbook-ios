@@ -112,7 +112,7 @@ struct FirebaseClientSettings: Codable {
             self.ungroupedMarkets = []
         }
         
-        let hasRollingWeeklyLimitsInt = try container.decode(Int.self, forKey: .hasRollingWeeklyLimits)
+        let hasRollingWeeklyLimitsInt = (try? container.decode(Int.self, forKey: .hasRollingWeeklyLimits)) ?? 0
         self.hasRollingWeeklyLimits = hasRollingWeeklyLimitsInt == 1
     }
 

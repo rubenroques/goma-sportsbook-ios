@@ -49,35 +49,89 @@ class MatchLineTableCellViewModel {
     //
     private func loadEventDetails(fromId id: String) {
 
+        
         if let match = self.match, match.status.isLive {
-            self.secundaryMarketsPublisher = Env.servicesProvider.subscribeEventSecundaryMarkets(eventId: id)
-                .removeDuplicates()
+            
+            self.secundaryMarketsPublisher =
+            
+            Publishers.CombineLatest(
+                Env.servicesProvider.subscribeEventSecundaryMarkets(eventId: id)
+                    .removeDuplicates(),
+                SecundaryMarketsService.fetchSecundaryMarkets()
+                    .mapError { error in ServiceProviderError.errorMessage(message: error.localizedDescription) }
+            )
                 .receive(on: DispatchQueue.main)
                 .sink { completion in
                     print("subscribeEventSecundaryMarkets completion \(completion)")
-                } receiveValue: { [weak self] subscribableContentMatch in
+                } receiveValue: { [weak self] subscribableContentMatch, secundaryMarkets in
                     switch subscribableContentMatch {
                     case .connected(subscription: let subscription):
                         self?.secundaryMarketsSubscription = subscription
                     case .contentUpdate(content: let updatedEvent):
                         print("subscribeEventSecundaryMarkets match with sec markets: \(updatedEvent)")
                         let mappedMatch = ServiceProviderModelMapper.match(fromEvent: updatedEvent)
+                        
                         if var oldMatch = self?.matchCurrentValueSubject.value {
                             let firstMarket = oldMatch.markets.first // Capture the first market
-                            var newMarkets = mappedMatch.markets
-                            if let first = firstMarket {
-                                newMarkets = [first] + newMarkets.filter({ market in market.id == first.id })
+                            
+                            var newMarkets: [Market] = []
+                            var mergedMarkets: [Market] = []
+                            
+                            for market in  mappedMatch.markets {
+                                if market.id != firstMarket?.id {
+                                    newMarkets.append(market)
+                                }
                             }
-                            oldMatch.markets = newMarkets
+                            
+                            if let first = firstMarket {
+                                mergedMarkets = [first] + newMarkets
+                            }
+                            else {
+                                mergedMarkets = newMarkets
+                            }
+                            
+                            if let secundaryMarketsForSport = secundaryMarkets.first(where: { secundarySportMarket in
+                                if secundarySportMarket.sportId == (mappedMatch.sport.alphaId ?? "") {
+                                    return true
+                                }
+                                if secundarySportMarket.sportId == (mappedMatch.sportIdCode ?? "") {
+                                    return true
+                                }
+                                return false
+                            }) {
+                                
+                                for secundaryMarket in secundaryMarketsForSport.markets {
+                                    if var line = secundaryMarket.line {
+                                        // We have to make sure that when we get -1, 1, etc, the string to compare must be like '-1.0', '1.0' to found correct market
+                                        if let lineInt = Int(line) {
+                                            line = "\(Double(lineInt))"
+                                        }
+                                        
+                                        if var foundMarket = mergedMarkets.first(where: { market in
+                                            (market.marketTypeId ?? "") == secundaryMarket.typeId &&
+                                            line == String(market.nameDigit1 ?? -99.0)
+                                        }) {
+                                            foundMarket.statsTypeId = secundaryMarket.statsId
+                                            print("foundMarket updated \(foundMarket)")
+                                        }
+                                    }
+                                    else if var foundMarket = mergedMarkets.first(where: { market in
+                                        (market.marketTypeId ?? "") == secundaryMarket.typeId
+                                    }) {
+                                        foundMarket.statsTypeId = secundaryMarket.statsId
+                                        print("foundMarket updated \(foundMarket)")
+                                    }
+                                    
+                                }
+                                
+                            }
+                            
+                            oldMatch.markets = mergedMarkets
                             self?.matchCurrentValueSubject.send(oldMatch)
                         } else {
                             self?.matchCurrentValueSubject.send(mappedMatch)
                         }
-                        #if DEBUG
-                        let allMarketsName = mappedMatch.markets.map({ $0.name + "[" + ($0.nameDigit1.map { String($0) } ?? "") + "]" }).joined(separator: "; ")
-                        print("Debug-EventSecundaryMarkets \(id) - \(allMarketsName)")
-                        #endif
-                        
+ 
                     case .disconnected:
                         break
                     }
@@ -87,26 +141,28 @@ class MatchLineTableCellViewModel {
             self.secundaryMarketsPublisher = nil
             self.secundaryMarketsSubscription = nil
             
-            Env.servicesProvider.getEventSecundaryMarkets(eventId: id)
-                .map {
-                    return ServiceProviderModelMapper.match(fromEvent: $0)
+            Publishers.CombineLatest(
+                Env.servicesProvider.getEventSecundaryMarkets(eventId: id),
+                SecundaryMarketsService.fetchSecundaryMarkets()
+                    .mapError { error in ServiceProviderError.errorMessage(message: error.localizedDescription) }
+            )
+            .receive(on: DispatchQueue.main)
+            .sink { completion in
+                print("getEventSecundaryMarkets completion \(completion)")
+            } receiveValue: { [weak self] eventWithSecundaryMarkets, secundaryMarketsIds in
+                let mappedEvent = ServiceProviderModelMapper.match(fromEvent: eventWithSecundaryMarkets)
+                
+                if var oldMatch = self?.matchCurrentValueSubject.value {
+                    oldMatch.markets = mappedEvent.markets
+                    self?.matchCurrentValueSubject.send(oldMatch)
                 }
-                .receive(on: DispatchQueue.main)
-                .sink { completion in
-                    print("getEventSecundaryMarkets completion \(completion)")
-                } receiveValue: { [weak self] eventWithSecundaryMarkets in
-                    if var oldMatch = self?.matchCurrentValueSubject.value {
-                        oldMatch.markets = eventWithSecundaryMarkets.markets
-                        self?.matchCurrentValueSubject.send(oldMatch)
-                    }
-                    else {
-                        self?.matchCurrentValueSubject.send(eventWithSecundaryMarkets)
-                    }
+                else {
+                    self?.matchCurrentValueSubject.send(mappedEvent)
                 }
-                .store(in: &self.cancellables)
+            }
+            .store(in: &self.cancellables)
         }
 
-        
     }
 
 }
