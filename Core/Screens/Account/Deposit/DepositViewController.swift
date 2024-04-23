@@ -752,9 +752,12 @@ class DepositViewController: UIViewController {
             UIApplication.shared.open(url)
         }
         else if gesture.didTapAttributedTextInLabel(label: self.faqLabel, inRange: stringRange2, alignment: .left) {
-            let supportViewController = SupportPageViewController(viewModel: SupportPageViewModel())
-
-            self.navigationController?.pushViewController(supportViewController, animated: true)
+//            let supportViewController = SupportPageViewController(viewModel: SupportPageViewModel())
+//
+//            self.navigationController?.pushViewController(supportViewController, animated: true)
+            if let url = URL(string: "https://support.betsson.fr/hc/fr") {
+                UIApplication.shared.open(url)
+            }
         }
 
     }

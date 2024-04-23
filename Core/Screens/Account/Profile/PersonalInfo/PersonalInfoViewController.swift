@@ -349,11 +349,15 @@ class PersonalInfoViewController: UIViewController {
 
     @objc private func tapInfoView() {
 
-        let supportViewModel = SupportPageViewModel()
-
-        let supportViewController = SupportPageViewController(viewModel: supportViewModel)
-
-        self.navigationController?.pushViewController(supportViewController, animated: true)
+//        let supportViewModel = SupportPageViewModel()
+//
+//        let supportViewController = SupportPageViewController(viewModel: supportViewModel)
+//
+//        self.navigationController?.pushViewController(supportViewController, animated: true)
+        
+        if let url = URL(string: "https://support.betsson.fr/hc/fr") {
+            UIApplication.shared.open(url)
+        }
     }
 
     @IBAction private func didTapBackButton() {

@@ -89,7 +89,9 @@ class MatchDetailsViewModel: NSObject {
         let details = [self.match?.matchTime, self.match?.detailedStatus]
         return details.compactMap({ $0 }).joined(separator: " - ")
     }
-
+    
+    var matchDetailedScores: CurrentValueSubject<[String: [String: Score]], Never> = .init([:])
+    
     private var statsJSON: JSON?
     let matchStatsViewModel: MatchStatsViewModel
 
@@ -237,7 +239,24 @@ class MatchDetailsViewModel: NSObject {
             }
             .store(in: &self.cancellables)
         
-        
+        let liveDataUpdatesPublisher = Env.servicesProvider.subscribeToEventLiveDataUpdates(withId: self.matchId)
+            .receive(on: DispatchQueue.main)
+            .compactMap({ $0 })
+            .map(ServiceProviderModelMapper.match(fromEvent:))
+            .sink(receiveCompletion: { completion in
+                print("MatchWidgetCollectionViewCell matchSubscriber subscribeToEventLiveDataUpdates completion: \(completion)")
+            }, receiveValue: { [weak self] updatedMatch in
+                guard let self = self else { return }
+                
+                var updatedMatchDetailedScores = [String: [String: Score]]()
+                
+                if let detailedScores = updatedMatch.detailedScores,
+                   let alphaSportId = updatedMatch.sport.alphaId {
+                    updatedMatchDetailedScores[alphaSportId] = detailedScores
+                    self.matchDetailedScores.send(updatedMatchDetailedScores)
+                }
+            })
+            .store(in: &cancellables)
     }
 
     //

@@ -824,8 +824,11 @@ extension ProfileViewController {
     }
 
     @objc func supportViewTapped(sender: UITapGestureRecognizer) {
-        let supportViewController = SupportPageViewController(viewModel: SupportPageViewModel())
-        self.navigationController?.pushViewController(supportViewController, animated: true)
+//        let supportViewController = SupportPageViewController(viewModel: SupportPageViewModel())
+//        self.navigationController?.pushViewController(supportViewController, animated: true)
+        if let url = URL(string: "https://support.betsson.fr/hc/fr") {
+            UIApplication.shared.open(url)
+        }
     }
 
     @objc func cashbackViewTapped(sender: UITapGestureRecognizer) {

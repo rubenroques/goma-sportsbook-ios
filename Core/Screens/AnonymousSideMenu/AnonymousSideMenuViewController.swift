@@ -272,8 +272,12 @@ extension AnonymousSideMenuViewController {
     }
 
     @objc private func supportViewTapped() {
-        let supportViewController = SupportPageViewController(viewModel: SupportPageViewModel())
-        self.navigationController?.pushViewController(supportViewController, animated: true)
+//        let supportViewController = SupportPageViewController(viewModel: SupportPageViewModel())
+//        self.navigationController?.pushViewController(supportViewController, animated: true)
+        
+        if let url = URL(string: "https://support.betsson.fr/hc/fr") {
+            UIApplication.shared.open(url)
+        }
     }
 
     @objc private func replayViewTapped() {

@@ -242,6 +242,12 @@ extension SportRadarEventDetailsCoordinator {
         }
 
         self.storage.updateEventScore(newHomeScore: eventLiveDataExtended.homeScore, newAwayScore: eventLiveDataExtended.awayScore)
+        
+        if !eventLiveDataExtended.scores.isEmpty {
+            let mappedDetailedScores = SportRadarModelMapper.scoresDictionary(fromInternalScoresDictionary: eventLiveDataExtended.scores)
+            
+            self.storage.updateEventFullDetailedScore(mappedDetailedScores)
+        }
 
         if let storedEvent = self.storage.storedEvent() {
             self.eventDetailsCurrentValueSubject.send(.contentUpdate(content: storedEvent))

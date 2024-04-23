@@ -324,6 +324,8 @@ extension SportRadarModels {
             
             let contentIdentifier = try container.decode(ContentIdentifier.self, forKey: .content)
             let path: String = try container.decodeIfPresent(String.self, forKey: .path) ?? ""
+            
+            print("PARSE UPDATE PATH: \(path)")
 
             if contentType == .eventSecundaryMarkets {
                 print("eventWithBalancedMarkets found")
@@ -563,7 +565,6 @@ extension SportRadarModels {
                 else {
                     return .unknown
                 }
-                
                 return .updateEventDetailedScore(contentIdentifier: contentIdentifier, eventId: eventId, detailedScore: score)
             }
             else if path.contains("scores") && (path.contains("MATCH_SCORE") || path.contains("CURRENT_SCORE")), let eventId = SocketMessageParseHelper.extractEventId(path) {
