@@ -89,6 +89,8 @@ class SportRadarEventsProvider: EventsProvider {
     private var liveEventDetailsCoordinators: [String: SportRadarLiveEventDataCoordinator] = [:]
     private var marketUpdatesCoordinators: [String: SportRadarMarketDetailsCoordinator] = [:]
 
+    private var eventsSecundaryMarketsUpdatesCoordinators: [String: SportRadarEventSecundaryMarketsCoordinator] = [:]
+    
     private var competitionEventsPublisher: [ContentIdentifier: CurrentValueSubject<SubscribableContent<[EventsGroup]>, ServiceProviderError>] = [:]
     private var outrightDetailsPublisher: CurrentValueSubject<SubscribableContent<[EventsGroup]>, ServiceProviderError>?
     private var eventSummaryPublisher: CurrentValueSubject<SubscribableContent<[EventsGroup]>, ServiceProviderError>?
@@ -930,6 +932,13 @@ extension SportRadarEventsProvider: SportRadarConnectorSubscriber {
         }
         
     }
+    
+    func updateEventSecundaryMarkets(forContentIdentifier identifier: ContentIdentifier, event: Event) {
+        for eventDetailsCoordinator in self.getValidEventSecundaryMarketsCoordinators() {
+            eventDetailsCoordinator.updatedSecundaryMarkets(forContentIdentifier: identifier,
+                                                            onEvent: event)
+        }
+    }
 
     func didReceiveGenericUpdate(content: SportRadarModels.ContentContainer) {
         if let contentIdentifier = content.contentIdentifier,
@@ -947,6 +956,10 @@ extension SportRadarEventsProvider: SportRadarConnectorSubscriber {
         
         for marketUpdatesCoordinator in self.marketUpdatesCoordinators.values {
             marketUpdatesCoordinator.handleContentUpdate(content)
+        }
+        
+        for secundaryMarketsCoordinators in self.getValidEventSecundaryMarketsCoordinators() {
+            secundaryMarketsCoordinators.handleContentUpdate(content)
         }
     }
 
@@ -1730,18 +1743,40 @@ extension SportRadarEventsProvider {
         .eraseToAnyPublisher()
     }
     
-    func getEventSecundaryMarkets(eventId: String) -> AnyPublisher<[Market], ServiceProviderError> {
+    func getEventSecundaryMarkets(eventId: String) -> AnyPublisher<Event, ServiceProviderError> {
         let endpoint = SportRadarRestAPIClient.getEventSecundaryMarkets(eventId: eventId)
 
         let requestPublisher: AnyPublisher<SportRadarModels.SportRadarResponse<SportRadarModels.Event>, ServiceProviderError> = self.restConnector.request(endpoint)
 
-        return requestPublisher.map( { sportRadarResponse -> [Market] in
-            let mappedMarkets = sportRadarResponse.data.markets.map(SportRadarModelMapper.market(fromInternalMarket:))
-            return mappedMarkets
+        return requestPublisher.map( { sportRadarResponse -> Event in
+            return SportRadarModelMapper.event(fromInternalEvent: sportRadarResponse.data)
         })
         .eraseToAnyPublisher()
     }
 
+   
+    func subscribeEventSecundaryMarkets(eventId: String) -> AnyPublisher<SubscribableContent<Event>, ServiceProviderError> {
+
+        guard
+            let sessionToken = socketConnector.token
+        else {
+            return Fail(error: ServiceProviderError.userSessionNotFound).eraseToAnyPublisher()
+        }
+
+        if let eventDetailsCoordinator = self.getValidEventSecundaryMarketsCoordinator(forKey: eventId) {
+            return eventDetailsCoordinator.eventWithSecundaryMarketsPublisher
+        }
+        else {
+            let eventDetailsCoordinator = SportRadarEventSecundaryMarketsCoordinator(matchId: eventId,
+                                                                            sessionToken: sessionToken.hash,
+                                                                            storage: SportRadarEventStorage())
+            self.addEventSecundaryMarketsCoordinator(eventDetailsCoordinator, withKey: eventId)
+            eventDetailsCoordinator.start() // Triggers the subscription
+            return eventDetailsCoordinator.eventWithSecundaryMarketsPublisher
+        }
+        
+    }
+    
 }
 
 extension SportRadarEventsProvider: UnsubscriptionController {
@@ -1984,6 +2019,27 @@ extension SportRadarEventsProvider {
     func addLiveEventDetailsCoordinator(_ coordinator: SportRadarLiveEventDataCoordinator, withKey key: String) {
         self.liveEventDetailsCoordinators = self.liveEventDetailsCoordinators.filter({ $0.value.isActive })
         self.liveEventDetailsCoordinators[key] = coordinator
+    }
+
+}
+
+extension SportRadarEventsProvider {
+
+    func getValidEventSecundaryMarketsCoordinators() -> [SportRadarEventSecundaryMarketsCoordinator] {
+        self.eventsSecundaryMarketsUpdatesCoordinators = self.eventsSecundaryMarketsUpdatesCoordinators.filter({ coordinatorPair in
+            coordinatorPair.value.isActive
+        })
+        return Array(self.eventsSecundaryMarketsUpdatesCoordinators.values)
+    }
+
+    func getValidEventSecundaryMarketsCoordinator(forKey key: String) -> SportRadarEventSecundaryMarketsCoordinator? {
+        self.eventsSecundaryMarketsUpdatesCoordinators = self.eventsSecundaryMarketsUpdatesCoordinators.filter({ $0.value.isActive })
+        return self.eventsSecundaryMarketsUpdatesCoordinators[key]
+    }
+
+    func addEventSecundaryMarketsCoordinator(_ coordinator: SportRadarEventSecundaryMarketsCoordinator, withKey key: String) {
+        self.eventsSecundaryMarketsUpdatesCoordinators = self.eventsSecundaryMarketsUpdatesCoordinators.filter({ $0.value.isActive })
+        self.eventsSecundaryMarketsUpdatesCoordinators[key] = coordinator
     }
 
 }

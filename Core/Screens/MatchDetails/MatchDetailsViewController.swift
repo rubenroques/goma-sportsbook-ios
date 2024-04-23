@@ -834,6 +834,17 @@ class MatchDetailsViewController: UIViewController {
                   
             })
             .store(in: &cancellables)
+        
+        self.viewModel.matchDetailedScores
+            .receive(on: DispatchQueue.main)
+            .sink(receiveValue: { [weak self] detailedScoresList in
+                guard let self = self else { return }
+                if let matchScores = detailedScoresList.first {
+                    self.scoreView.sportCode = matchScores.key
+                    self.scoreView.updateScores(matchScores.value)
+                }
+            })
+            .store(in: &cancellables)
 
         self.viewModel.shouldRenderFieldWidget
             .receive(on: DispatchQueue.main)
@@ -1040,10 +1051,10 @@ class MatchDetailsViewController: UIViewController {
             self.preLiveDetailsView.isHidden = true
             self.liveDetailsView.isHidden = false
             
-            if let matchScores = match.detailedScores {
-                self.scoreView.sportCode = match.sport.alphaId ?? ""
-                self.scoreView.updateScores(matchScores)
-            }
+//            if let matchScores = match.detailedScores {
+//                self.scoreView.sportCode = match.sport.alphaId ?? ""
+//                self.scoreView.updateScores(matchScores)
+//            }
             
         }
         

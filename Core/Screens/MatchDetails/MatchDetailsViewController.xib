@@ -279,7 +279,7 @@
                                         <constraint firstAttribute="trailing" secondItem="nIe-Dn-yAE" secondAttribute="trailing" id="xdx-Dp-9hq"/>
                                     </constraints>
                                 </view>
-                                <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="lij-S3-MhM">
+                                <view hidden="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="lij-S3-MhM">
                                     <rect key="frame" x="355.5" y="14" width="340.5" height="42"/>
                                     <subviews>
                                         <view contentMode="scaleToFill" ambiguous="YES" translatesAutoresizingMaskIntoConstraints="NO" id="GYh-Zu-X5l" customClass="ScoreView" customModule="Betsson" customModuleProvider="target">

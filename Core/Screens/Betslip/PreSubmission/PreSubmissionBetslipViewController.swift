@@ -2255,12 +2255,27 @@ extension PreSubmissionBetslipViewController: UITextFieldDelegate {
 
     private func updateAmountDigit(_ newValue: String) {
         var internalValue = self.displayBetValue
+        
         if let insertedDigit = Int(newValue) {
-            internalValue = internalValue * 10 + insertedDigit
+            let (multipliedValue, overflow) = internalValue.multipliedReportingOverflow(by: 10)
+            if overflow {
+                // Handle overflow scenario, such as setting to max value or showing an error
+                internalValue = 0
+            } else {
+                let (newValue, additionOverflow) = multipliedValue.addingReportingOverflow(insertedDigit)
+                if additionOverflow {
+                    // Handle addition overflow
+                    internalValue = 0
+                } else {
+                    internalValue = newValue
+                }
+            }
         }
+        
         if newValue == "" {
             internalValue = internalValue / 10 // swiftlint:disable:this shorthand_operator
         }
+        
         let calculatedAmount = Double(internalValue/100) + Double(internalValue%100)/100
         self.amountTextfield.text = CurrencyFormater.defaultFormat.string(from: NSNumber(value: calculatedAmount))
         self.secondaryAmountTextfield.text = CurrencyFormater.defaultFormat.string(from: NSNumber(value: calculatedAmount))
