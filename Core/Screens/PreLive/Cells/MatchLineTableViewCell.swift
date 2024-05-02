@@ -51,9 +51,10 @@ class MatchLineTableCellViewModel {
 
         if let match = self.match, match.status.isLive {
             
-            self.secundaryMarketsPublisher =
+            self.secundaryMarketsPublisher?.cancel()
+            self.secundaryMarketsPublisher = nil
             
-            Publishers.CombineLatest(
+            self.secundaryMarketsPublisher = Publishers.CombineLatest(
                 Env.servicesProvider.subscribeEventSecundaryMarkets(eventId: id)
                     .removeDuplicates(),
                 SecundaryMarketsService.fetchSecundaryMarkets()
@@ -102,23 +103,7 @@ class MatchLineTableCellViewModel {
                             }) {
                                 
                                 for secundaryMarket in secundaryMarketsForSport.markets {
-                                    if var line = secundaryMarket.line {
-                                        // We have to make sure that when we get -1, 1, etc, the string to compare must be like '-1.0', '1.0' to found correct market
-                                        if let lineInt = Int(line) {
-                                            line = "\(Double(lineInt))"
-                                        }
-                                        
-                                        if var foundMarket = mergedMarkets.first(where: { market in
-                                            (market.marketTypeId ?? "") == secundaryMarket.typeId &&
-                                            line == String(market.nameDigit1 ?? -99.0)
-                                        }) {
-                                            foundMarket.statsTypeId = secundaryMarket.statsId
-                                            statsForMarket[foundMarket.id] = secundaryMarket.statsId
-                                            
-                                            print("foundMarket updated \(foundMarket)")
-                                        }
-                                    }
-                                    else if var foundMarket = mergedMarkets.first(where: { market in
+                                    if var foundMarket = mergedMarkets.first(where: { market in
                                         (market.marketTypeId ?? "") == secundaryMarket.typeId
                                     }) {
                                         foundMarket.statsTypeId = secundaryMarket.statsId
@@ -188,31 +173,14 @@ class MatchLineTableCellViewModel {
                     }) {
                         
                         for secundaryMarket in secundaryMarketsForSport.markets {
-                            if var line = secundaryMarket.line {
-                                // We have to make sure that when we get -1, 1, etc, the string to compare must be like '-1.0', '1.0' to found correct market
-                                if let lineInt = Int(line) {
-                                    line = "\(Double(lineInt))"
-                                }
-                                
-                                if var foundMarket = mergedMarkets.first(where: { market in
-                                    (market.marketTypeId ?? "") == secundaryMarket.typeId &&
-                                    line == String(market.nameDigit1 ?? -99.0)
-                                }) {
-                                    statsForMarket[foundMarket.id] = secundaryMarket.statsId
-                                    foundMarket.statsTypeId = secundaryMarket.statsId
-                                    print("foundMarket updated \(foundMarket)")
-                                }
-                            }
-                            else if var foundMarket = mergedMarkets.first(where: { market in
+                            if var foundMarket = mergedMarkets.first(where: { market in
                                 (market.marketTypeId ?? "") == secundaryMarket.typeId
                             }) {
                                 statsForMarket[foundMarket.id] = secundaryMarket.statsId
                                 foundMarket.statsTypeId = secundaryMarket.statsId
                                 print("foundMarket updated \(foundMarket)")
                             }
-                            
                         }
-                        
                     }
                     
                     var finalMarkets: [Market] = []
@@ -233,7 +201,6 @@ class MatchLineTableCellViewModel {
                     self?.matchCurrentValueSubject.send(oldMatch)
                 }
                 else {
-                    
                     var mergedMarkets: [Market] = mappedMatch.markets
                     var statsForMarket: [String: String?] = [:]
                     
@@ -246,33 +213,15 @@ class MatchLineTableCellViewModel {
                         }
                         return false
                     }) {
-                        
                         for secundaryMarket in secundaryMarketsForSport.markets {
-                            if var line = secundaryMarket.line {
-                                // We have to make sure that when we get -1, 1, etc, the string to compare must be like '-1.0', '1.0' to found correct market
-                                if let lineInt = Int(line) {
-                                    line = "\(Double(lineInt))"
-                                }
-                                
-                                if var foundMarket = mergedMarkets.first(where: { market in
-                                    (market.marketTypeId ?? "") == secundaryMarket.typeId &&
-                                    line == String(market.nameDigit1 ?? -99.0)
-                                }) {
-                                    foundMarket.statsTypeId = secundaryMarket.statsId
-                                    statsForMarket[foundMarket.id] = secundaryMarket.statsId
-                                    print("foundMarket updated \(foundMarket)")
-                                }
-                            }
-                            else if var foundMarket = mergedMarkets.first(where: { market in
+                            if var foundMarket = mergedMarkets.first(where: { market in
                                 (market.marketTypeId ?? "") == secundaryMarket.typeId
                             }) {
                                 foundMarket.statsTypeId = secundaryMarket.statsId
                                 statsForMarket[foundMarket.id] = secundaryMarket.statsId
                                 print("foundMarket updated \(foundMarket)")
                             }
-                            
                         }
-                        
                     }
                     
                     var finalMarkets: [Market] = []
@@ -288,7 +237,6 @@ class MatchLineTableCellViewModel {
                             finalMarkets.append(newMarket)
                         }
                     }
-                    
                     
                     mappedMatch.markets = finalMarkets
                     
