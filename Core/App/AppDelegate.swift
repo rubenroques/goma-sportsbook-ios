@@ -246,6 +246,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate, MessagingDelegate {
                 self.openSharedRoute(Route.deposit, onApplication: application)
             }
             else if url.absoluteString.contains("register") {
+                let queryItems = urlComponents?.queryItems
                 if let code = urlComponents?.queryItems?.first(where: {
                     $0.name == "referralCode"
                 })?.value {
