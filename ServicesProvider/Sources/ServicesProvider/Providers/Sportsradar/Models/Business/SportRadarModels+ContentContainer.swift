@@ -208,10 +208,6 @@ extension SportRadarModels {
             let contentTypeContainer = try container.nestedContainer(keyedBy: CodingKeys.self, forKey: .content)
             let contentType = try contentTypeContainer.decode(ContentType.self, forKey: .contentType)
             let contentIdentifier = try container.decode(ContentIdentifier.self, forKey: .content)
-
-            if contentType == .eventSecundaryMarkets {
-                print("eventWithBalancedMarkets found")
-            }
             
             switch contentType {
             case .liveEvents:
@@ -324,12 +320,6 @@ extension SportRadarModels {
             
             let contentIdentifier = try container.decode(ContentIdentifier.self, forKey: .content)
             let path: String = try container.decodeIfPresent(String.self, forKey: .path) ?? ""
-            
-            print("PARSE UPDATE PATH: \(path)")
-
-            if contentType == .eventSecundaryMarkets {
-                print("eventWithBalancedMarkets found")
-            }
             
             if case let ContentRoute.eventDetailsLiveData(eventId) = contentIdentifier.contentRoute {
                 if let eventLiveData = (try? container.decode(SportRadarModels.EventLiveDataExtended.self, forKey: .change)) {
@@ -642,9 +632,6 @@ extension SportRadarModels {
             let contentIdentifier = try container.decode(ContentIdentifier.self, forKey: .content)
             let path: String = try container.decodeIfPresent(String.self, forKey: .path) ?? ""
             
-            if contentType == .eventSecundaryMarkets {
-                print("eventWithBalancedMarkets found")
-            }
             
             if case let ContentRoute.liveSports = contentIdentifier.contentRoute {
                 if path.contains("idfosporttype"),
@@ -704,10 +691,7 @@ extension SportRadarModels {
             let contentIdentifier = try container.decode(ContentIdentifier.self, forKey: .content)
             let path: String = try container.decodeIfPresent(String.self, forKey: .path) ?? ""
             
-            if contentType == .eventSecundaryMarkets {
-                print("eventWithBalancedMarkets found")
-            }
-            
+
             if case ContentRoute.liveSports = contentIdentifier.contentRoute {
                 if path.contains("idfosporttype"),
                    let sportCode = SocketMessageParseHelper.extractSportCode(path) {

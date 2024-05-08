@@ -29,7 +29,7 @@ class SportRadarEventSecundaryMarketsCoordinator {
     }
 
     var eventWithSecundaryMarketsPublisher: AnyPublisher<SubscribableContent<Event>, ServiceProviderError> {
-        return eventWithSecundaryMarketsSubject
+        return self.eventWithSecundaryMarketsSubject
             .eraseToAnyPublisher()
     }
 

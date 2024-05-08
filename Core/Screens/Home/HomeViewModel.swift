@@ -34,6 +34,7 @@ class HomeViewModel {
         case topCompetitionsShortcuts
 
         case highlightedMatches
+        case highlightedLiveMatches
 
         case promotionalStories
         case promotedSportSection
@@ -55,7 +56,8 @@ class HomeViewModel {
             case .makeOwnBetCallToAction: return "makeOwnBetCallToAction"
             case .topCompetitionsShortcuts: return "topCompetitionsShortcuts"
             case .highlightedMatches: return "highlightedMatches"
-
+            case .highlightedLiveMatches: return "highlightedLiveMatches"
+                
             case .promotionalStories: return "promotionalStories"
             case .promotedSportSection: return "promotedSportSection"
 
@@ -177,12 +179,20 @@ extension HomeViewModel {
         return self.homeViewTemplateDataSource.supplementaryEventId(forSection: section, forIndex: index)
     }
 
+    func matchLineTableCellViewModel(forId identifier: String) -> MatchLineTableCellViewModel? {
+        return self.homeViewTemplateDataSource.matchLineTableCellViewModel(forId: identifier)
+    }
+    
     func matchLineTableCellViewModel(forSection section: Int, forIndex index: Int) -> MatchLineTableCellViewModel? {
         return self.homeViewTemplateDataSource.matchLineTableCellViewModel(forSection: section, forIndex: index)
     }
 
     func topCompetitionsLineCellViewModel(forSection section: Int) -> TopCompetitionsLineCellViewModel? {
         return self.homeViewTemplateDataSource.topCompetitionsLineCellViewModel(forSection: section)
+    }
+
+    func highlightedLiveMatchesId(forSection section: Int, forIndex index: Int) -> String? {
+        return self.homeViewTemplateDataSource.highlightedLiveMatchesId(forSection: section, forIndex: index)
     }
     
 }

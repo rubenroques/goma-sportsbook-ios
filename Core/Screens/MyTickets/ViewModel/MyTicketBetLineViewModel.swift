@@ -24,7 +24,7 @@ class MyTicketBetLineViewModel {
     }
 
     deinit {
-        print("MyTicketBetLineViewModel.deinit")
+        // print("MyTicketBetLineViewModel.deinit")
     }
     
     private func requestGoals(forMatchWithId id: String) {

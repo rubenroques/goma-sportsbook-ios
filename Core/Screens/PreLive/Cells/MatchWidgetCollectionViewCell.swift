@@ -527,7 +527,8 @@ class MatchWidgetCollectionViewCell: UICollectionViewCell {
     private var rightOutcomeDisabled: Bool = false
 
     private var liveMatchDetailsSubscription: ServicesProvider.Subscription?
-    
+    private var liveMatchDetailsCancellable: AnyCancellable?
+        
     private var cancellables: Set<AnyCancellable> = []
 
     override func awakeFromNib() {
@@ -1572,8 +1573,22 @@ class MatchWidgetCollectionViewCell: UICollectionViewCell {
             .receive(on: DispatchQueue.main)
             .compactMap({ $0 })
             .map(ServiceProviderModelMapper.match(fromEvent:))
-            .sink(receiveCompletion: { completion in
+            .sink(receiveCompletion: { [weak self] completion in
                 print("MatchWidgetCollectionViewCell matchSubscriber subscribeToEventLiveDataUpdates completion: \(completion)")
+                
+                // we need to try to get the live data info from independent subscribeToLiveDataUpdates
+                switch completion {
+                case .finished:
+                    ()
+                case .failure(let error):
+                    switch error {
+                    case .resourceNotFound:
+                        self?.subscribeToLiveDataUpdates(forMatch: viewModel.match)
+                    default:
+                        print("MatchDetailsViewModel getMatchDetails Error retrieving data! \(error)")
+                    }
+                }
+                
             }, receiveValue: { [weak self] updatedMatch in
                 guard let self = self else { return }
                 
@@ -1598,9 +1613,7 @@ class MatchWidgetCollectionViewCell: UICollectionViewCell {
                 if liveDataViewModel.isLiveCard {
                     self.configureAsLiveCard()
                 }
-//                else if let detailedScoresValue = updatedMatch.detailedScores, detailedScoresValue.isNotEmpty {
-//                    self.configureAsLiveCard()
-//                }
+
                 else {
                     self.configureAsNormalCard()
                 }
@@ -1863,6 +1876,84 @@ class MatchWidgetCollectionViewCell: UICollectionViewCell {
         }
     }
 
+    private func subscribeToLiveDataUpdates(forMatch match: Match) {
+        self.liveMatchDetailsSubscription = nil
+        
+        self.liveMatchDetailsCancellable?.cancel()
+        self.liveMatchDetailsCancellable = nil
+        
+        self.liveMatchDetailsCancellable = Env.servicesProvider.subscribeToLiveDataUpdates(forEventWithId: match.id)
+            .receive(on: DispatchQueue.main)
+            .sink(receiveCompletion: { [weak self] completion in
+                
+                switch completion {
+                case .finished:
+                    ()
+                case .failure(let error):
+                    switch error {
+                    case .resourceUnavailableOrDeleted:
+                        ()
+                    default:
+                        print("MatchDetailsViewModel getMatchDetails Error retrieving data! \(error)")
+                    }
+                }
+                
+                self?.liveMatchDetailsSubscription = nil
+                self?.liveMatchDetailsCancellable?.cancel()
+                
+            }, receiveValue: { [weak self] (eventSubscribableContent: SubscribableContent<ServicesProvider.EventLiveData>) in
+                
+                switch eventSubscribableContent {
+                case .connected(let subscription):
+                    self?.liveMatchDetailsSubscription = subscription
+                    break
+                case .contentUpdate(let eventLiveData):
+                    let matchLiveData = ServiceProviderModelMapper.matchLiveData(fromServiceProviderEventLiveData: eventLiveData)
+
+                    var updatedMatch = match
+                    if let matchLiveDataStatus = matchLiveData.status {
+                        updatedMatch.status = matchLiveDataStatus
+                    }
+                    updatedMatch.homeParticipantScore = matchLiveData.homeScore
+                    updatedMatch.awayParticipantScore = matchLiveData.awayScore
+                    updatedMatch.matchTime = matchLiveData.matchTime
+                    updatedMatch.detailedScores = matchLiveData.detailedScores
+                    
+                    
+                    // Temp live data viewModel
+                    let liveDataViewModel = MatchWidgetCellViewModel(match: updatedMatch)
+                    
+                    self?.dateLabel.text = "\(liveDataViewModel.startDateString)"
+                    self?.timeLabel.text = "\(liveDataViewModel.startTimeString)"
+
+                    self?.dateNewLabel.text = "\(liveDataViewModel.startDateString)"
+                    self?.timeNewLabel.text = "\(liveDataViewModel.startTimeString)"
+
+                    self?.resultLabel.text = "\(liveDataViewModel.matchScore)"
+                    self?.matchTimeLabel.text = liveDataViewModel.matchTimeDetails
+                    
+                    self?.matchTimeStatusNewLabel.text = liveDataViewModel.matchTimeDetails
+                    
+                    if let detailedScores = updatedMatch.detailedScores {
+                        self?.detailedScoreView.updateScores(detailedScores)
+                    }
+                    
+                    if liveDataViewModel.isLiveCard {
+                        self?.configureAsLiveCard()
+                    }
+
+                    else {
+                        self?.configureAsNormalCard()
+                    }
+                    
+                    
+                case .disconnected:
+                    break
+                }
+            })
+    
+    }
+    
     //
     //
     private func showMarketButtons() {

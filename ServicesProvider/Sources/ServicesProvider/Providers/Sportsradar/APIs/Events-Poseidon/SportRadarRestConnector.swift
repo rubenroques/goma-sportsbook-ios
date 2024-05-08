@@ -59,6 +59,14 @@ class SportRadarRestConnector {
                 else if let httpResponse = result.response as? HTTPURLResponse, httpResponse.statusCode != 200 {
                     throw ServiceProviderError.unknown
                 }
+                // is a 200OK but has an errorType with CONTENT_NOT_FOUND
+                // we only check this in small responses due to performance
+                else if result.data.count < 256,
+                   let dataString = String(data: result.data, encoding: .utf8),
+                   dataString.contains("errorType") && dataString.contains("CONTENT_NOT_FOUND") {
+                    throw ServiceProviderError.resourceUnavailableOrDeleted
+                }
+ 
                 return result.data
             }
             .decode(type: T.self, decoder: self.decoder)
@@ -68,6 +76,11 @@ class SportRadarRestConnector {
                 
                 if "\(error)" == "emptyData" {
                     return ServiceProviderError.emptyData
+                }
+                
+                if let typedError = error as? ServiceProviderError,
+                    case .resourceUnavailableOrDeleted = typedError {
+                    return typedError
                 }
 
                 return ServiceProviderError.invalidResponse

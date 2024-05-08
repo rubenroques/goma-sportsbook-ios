@@ -86,6 +86,9 @@ extension SportRadarEventStorage {
 
     // Market updates
     func addMarket(_ market: Market) {
+        
+        print("storage-eventWithBalancedMarkets - adding market: \(self.eventSubject.value?.homeTeamName ?? "") vs \(self.eventSubject.value?.awayTeamName ?? "") - \(market.name) \(market.outcomes.map(\.name).joined(separator: ";") )")
+        
         if self.marketsDictionary[market.id] != nil { // We already
             updateMarketTradability(withId: market.id, isTradable: market.isTradable)
             return
@@ -107,6 +110,12 @@ extension SportRadarEventStorage {
 
     
     func removeMarket(withId id: String) {
+        
+        if let marketSubject = self.marketsDictionary[id] {
+            let market = marketSubject.value
+            print("storage-eventWithBalancedMarkets - removeMarket market: \(self.eventSubject.value?.homeTeamName ?? "") vs \(self.eventSubject.value?.awayTeamName ?? "") - \(market.name) \(market.outcomes.map(\.name).joined(separator: ";") )")
+        }
+        
         self.marketsDictionary.removeValue(forKey: id)
         
         let updatedMarkets: [Market] = self.marketsDictionary.values.map(\.value)

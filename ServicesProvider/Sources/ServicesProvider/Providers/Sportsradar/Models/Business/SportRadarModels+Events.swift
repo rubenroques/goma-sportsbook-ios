@@ -664,6 +664,39 @@ extension SportRadarModels {
 
     }
     
+    struct HighlightedEventPointer : Codable {
+        var status: String
+        var sportId: String
+        var eventId: String
+        var eventType: String?
+        var countryId: String
+
+        enum CodingKeys: String, CodingKey {
+            case status = "status"
+            case sportId = "sport_id"
+            case eventId = "orako_event_id"
+            case eventType = "event_type"
+            case countryId = "country_id"
+        }
+        
+        init(status: String, sportId: String, eventId: String, eventType: String? = nil, countryId: String) {
+            self.status = status
+            self.sportId = sportId
+            self.eventId = eventId
+            self.eventType = eventType
+            self.countryId = countryId
+        }
+        
+        init(from decoder: Decoder) throws {
+            let container: KeyedDecodingContainer<SportRadarModels.HighlightedEventPointer.CodingKeys> = try decoder.container(keyedBy: SportRadarModels.HighlightedEventPointer.CodingKeys.self)
+            self.status = try container.decode(String.self, forKey: SportRadarModels.HighlightedEventPointer.CodingKeys.status)
+            self.sportId = try container.decode(String.self, forKey: SportRadarModels.HighlightedEventPointer.CodingKeys.sportId)
+            self.eventId = try container.decode(String.self, forKey: SportRadarModels.HighlightedEventPointer.CodingKeys.eventId)
+            self.eventType = try container.decodeIfPresent(String.self, forKey: SportRadarModels.HighlightedEventPointer.CodingKeys.eventType)
+            self.countryId = try container.decode(String.self, forKey: SportRadarModels.HighlightedEventPointer.CodingKeys.countryId)
+        }
+    }
+    
 }
 
 

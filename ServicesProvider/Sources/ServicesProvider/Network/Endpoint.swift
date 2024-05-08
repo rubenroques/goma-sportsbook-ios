@@ -31,6 +31,9 @@ extension Endpoint {
         fullQuery.append(contentsOf: aditionalQueryItems)
         urlComponents.queryItems = fullQuery
 
+        urlComponents.percentEncodedQuery = urlComponents.percentEncodedQuery?
+            .replacingOccurrences(of: "+", with: "%2B")
+        
         guard let completedURL = urlComponents.url else { return nil }
 
         var request = URLRequest(url: completedURL)

@@ -99,6 +99,24 @@ public struct SportRadarConfiguration {
             return "https://sportsbook-stage.gomagaming.com"
         }
     }
+    
+    
+    public var vaixHostname: String {
+        switch self.environment {
+        case .production: return "https://api.vaix.ai/api/"
+        default: return "https://staging-api.vaix.ai/api/"
+        }
+    }
+    
+    public var vaixAuthTokenValue: String {
+        switch self.environment {
+        case .production: return "db5d16b721e3176e9723554747c54b02f1a3eaf74b933865ef71ab4b604fc927"
+        default: return "a27724e2756e427d99db9e7f3d58c164ced4d6c941d2355feaefca14af0bcc02"
+            
+            
+        }
+    }
+    
 }
 
 

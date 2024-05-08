@@ -19,6 +19,7 @@ struct MatchLiveData: Equatable {
     var awayScore: Int?
     var matchTime: String?
     var status: Match.Status?
+    var detailedScores: [String: Score]?
     
     enum CodingKeys: String, CodingKey {
         case id = "id"
@@ -26,14 +27,16 @@ struct MatchLiveData: Equatable {
         case awayScore = "awayScore"
         case matchTime = "matchTime"
         case status = "status"
+        case detailedScores
     }
     
-    init(id: String, homeScore: Int?, awayScore: Int?, matchTime: String?, status: Match.Status?) {
+    init(id: String, homeScore: Int?, awayScore: Int?, matchTime: String?, status: Match.Status?, detailedScores: [String: Score]?) {
         self.id = id
         self.homeScore = homeScore
         self.awayScore = awayScore
         self.matchTime = matchTime
         self.status = status
+        self.detailedScores = detailedScores
     }
     
 }

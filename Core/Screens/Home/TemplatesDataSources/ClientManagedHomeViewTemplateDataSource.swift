@@ -11,7 +11,7 @@ import ServicesProvider
 
 class ClientManagedHomeViewTemplateDataSource {
 
-    private let fixedSection = 8
+    private let fixedSection = 9
     private var refreshPublisher = PassthroughSubject<Void, Never>.init()
 
     // User Alert
@@ -128,6 +128,8 @@ class ClientManagedHomeViewTemplateDataSource {
 
     private var topCompetitionsLineCellViewModel: TopCompetitionsLineCellViewModel = TopCompetitionsLineCellViewModel(topCompetitions: [])
     
+    private var highlightedLiveMatchesIds: [String] = []
+    
     //
     private var cancellables: Set<AnyCancellable> = []
 
@@ -145,6 +147,8 @@ class ClientManagedHomeViewTemplateDataSource {
     }
 
     func refreshData() {
+        self.matchLineTableCellViewModelCache = [:]
+        
         self.fetchAlerts()
         self.fetchQuickSwipeMatches()
         self.fetchBanners()
@@ -153,6 +157,7 @@ class ClientManagedHomeViewTemplateDataSource {
         self.fetchPromotionalStories()
         self.fetchSupplementaryEventsIds()
         self.fetchTopCompetitions()
+        self.fetchHighlightedLiveMatches()
     }
 
     // User alerts
@@ -386,6 +391,27 @@ class ClientManagedHomeViewTemplateDataSource {
 
     }
 
+    func fetchHighlightedLiveMatches() {
+        
+        self.highlightedLiveMatchesIds = []
+        
+        Env.servicesProvider.getHighlightedLiveEvents(eventCount: 4)
+            .receive(on: DispatchQueue.main)
+            .sink { completion in
+                switch completion {
+                case .finished:
+                    ()
+                case .failure(let error):
+                    print("fetchHighlightedLiveMatches getHighlightedLiveEvents error: \(error)")
+                }
+            } receiveValue: { [weak self] highlightedLiveEventsIds in
+                self?.highlightedLiveMatchesIds = highlightedLiveEventsIds
+                self?.refreshPublisher.send()
+            }
+            .store(in: &self.cancellables)
+
+    }
+    
 }
 
 extension ClientManagedHomeViewTemplateDataSource: HomeViewTemplateDataSource {
@@ -424,8 +450,10 @@ extension ClientManagedHomeViewTemplateDataSource: HomeViewTemplateDataSource {
             self.highlightsVisualImageOutrights.count +
             self.highlightsBoostedMatches.count
         case 6:
-            return !self.topCompetitionsLineCellViewModel.isEmpty ? 1 : 0
+            return self.highlightedLiveMatchesIds.count
         case 7:
+            return !self.topCompetitionsLineCellViewModel.isEmpty ? 1 : 0
+        case 8:
             return self.supplementaryEventIds.count
         default:
             ()
@@ -444,6 +472,8 @@ extension ClientManagedHomeViewTemplateDataSource: HomeViewTemplateDataSource {
         case 5:
             return localized("highlights")
         case 6:
+            return localized("live")
+        case 7:
             return localized("top_competitions")
         default:
             ()
@@ -463,6 +493,8 @@ extension ClientManagedHomeViewTemplateDataSource: HomeViewTemplateDataSource {
         case 5:
             return "pin_icon"
         case 6:
+            return "tabbar_live_icon"
+        case 7:
             return "trophy_icon"
         default:
             ()
@@ -491,6 +523,8 @@ extension ClientManagedHomeViewTemplateDataSource: HomeViewTemplateDataSource {
             self.highlightsBoostedMatches.count
             return highlightsTotal > 0
         case 6:
+            return !self.highlightedLiveMatchesIds.isEmpty
+        case 7:
             return !self.topCompetitionsLineCellViewModel.isEmpty
         default:
             ()
@@ -525,8 +559,10 @@ extension ClientManagedHomeViewTemplateDataSource: HomeViewTemplateDataSource {
         case 5:
             return .highlightedMatches
         case 6:
-            return .topCompetitionsShortcuts
+            return .highlightedLiveMatches
         case 7:
+            return .topCompetitionsShortcuts
+        case 8:
             return .supplementaryEvents
         default:
             ()
@@ -623,6 +659,23 @@ extension ClientManagedHomeViewTemplateDataSource: HomeViewTemplateDataSource {
         return self.supplementaryEventIds[safe: index]
     }
 
+    func highlightedLiveMatchesId(forSection section: Int, forIndex index: Int) -> String? {
+        return self.highlightedLiveMatchesIds[safe: index]
+    }
+    
+    func matchLineTableCellViewModel(forId identifier: String) -> MatchLineTableCellViewModel? {
+        
+        if let matchLineTableCellViewModel = self.matchLineTableCellViewModelCache[identifier] {
+            return matchLineTableCellViewModel
+        }
+        else {
+            let matchLineTableCellViewModel = MatchLineTableCellViewModel(matchId: identifier)
+            self.matchLineTableCellViewModelCache[identifier] = matchLineTableCellViewModel
+            return matchLineTableCellViewModel
+        }
+
+    }
+    
     func matchLineTableCellViewModel(forSection section: Int, forIndex index: Int) -> MatchLineTableCellViewModel? {
 
         guard
