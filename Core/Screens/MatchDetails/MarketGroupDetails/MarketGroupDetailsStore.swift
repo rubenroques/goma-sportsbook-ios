@@ -198,8 +198,9 @@ class MarketGroupDetailsStore {
                 //
                 if marketGroupName.contains("&") {
                     let simpleListGroupMarketGroupOrganizer = SimpleListGroupMarketGroupOrganizer(id: firstMarket.id,
-                                                                                             name: marketGroupName,
-                                                                                             outcomes: orderedOutcomesDictionary)
+                                                                                                  name: marketGroupName,
+                                                                                                  orderedOutcomes: orderedOutcomesDictionary,
+                                                                                                  unorederedOutcomes: allOutcomes)
                     marketGroupOrganizers.append(simpleListGroupMarketGroupOrganizer)
                 }
                 else if outcomesDictionary.keys.count == 1 && (outcomesDictionary.keys.first == "" 

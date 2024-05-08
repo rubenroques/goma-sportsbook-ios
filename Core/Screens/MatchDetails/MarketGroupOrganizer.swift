@@ -468,26 +468,29 @@ struct SimpleListGroupMarketGroupOrganizer: MarketGroupOrganizer {
 
     var id: String
     var name: String
-    var outcomes: OrderedDictionary<String, [Outcome]>
+    
+    var orderedOutcomesDictionary: OrderedDictionary<String, [Outcome]>
 
     private var sortedOutcomes: [Outcome]
 
     private var maxColumnValue: Int
     private var maxLineValue: Double
 
-    init(id: String, name: String, outcomes: OrderedDictionary<String, [Outcome]>) {
+    init(id: String, name: String, orderedOutcomes: OrderedDictionary<String, [Outcome]>, unorederedOutcomes: [Outcome]) {
 
         self.id = id
         self.name = name
-        self.outcomes = outcomes
+        self.orderedOutcomesDictionary = orderedOutcomes
 
         self.sortedOutcomes = []
 
-        for key in outcomes.keys {
-            if let outcome = outcomes[key] {
+        for key in self.orderedOutcomesDictionary.keys {
+            if let outcome = self.orderedOutcomesDictionary[key] {
                 self.sortedOutcomes.append(contentsOf: outcome)
             }
         }
+        
+        self.sortedOutcomes = unorederedOutcomes
         
         self.maxColumnValue = 1
         self.maxLineValue = Double(self.sortedOutcomes.count)
