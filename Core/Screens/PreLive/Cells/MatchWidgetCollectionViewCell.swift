@@ -11,14 +11,6 @@ import LinkPresentation
 import Combine
 import ServicesProvider
 
-enum MatchWidgetType: String, CaseIterable {
-    case normal
-    case topImage
-    case topImageOutright
-    case boosted
-    case backgroundImage
-}
-
 class MatchWidgetCollectionViewCell: UICollectionViewCell {
 
     @IBOutlet private weak var baseView: UIView!
@@ -1458,6 +1450,13 @@ class MatchWidgetCollectionViewCell: UICollectionViewCell {
     func configure(withViewModel viewModel: MatchWidgetCellViewModel) {
         
         self.viewModel = viewModel
+        
+        guard
+            let viewModel = self.viewModel
+        else {
+            return
+        }
+        
         self.matchWidgetType = viewModel.matchWidgetType
 
         self.hasCashback = viewModel.canHaveCashback
@@ -1468,7 +1467,28 @@ class MatchWidgetCollectionViewCell: UICollectionViewCell {
         else {
             self.configureAsNormalCard()
         }
-
+        
+        viewModel.$homeOldBoostedOddAttributedString
+            .receive(on: DispatchQueue.main)
+            .sink { [weak self] newValue in
+                self?.homeOldBoostedOddValueLabel.attributedText = newValue
+            }
+            .store(in: &self.cancellables)
+        
+        viewModel.$drawOldBoostedOddAttributedString
+            .receive(on: DispatchQueue.main)
+            .sink { [weak self] newValue in
+                self?.drawOldBoostedOddValueLabel.attributedText = newValue
+            }
+            .store(in: &self.cancellables)
+        
+        viewModel.$awayOldBoostedOddAttributedString
+            .receive(on: DispatchQueue.main)
+            .sink { [weak self] newValue in
+                self?.awayOldBoostedOddValueLabel.attributedText = newValue
+            }
+            .store(in: &self.cancellables)
+        
         self.liveMatchDotImageView.isHidden = true
         
         self.eventNameLabel.text = "\(viewModel.competitionName)"
@@ -1512,55 +1532,6 @@ class MatchWidgetCollectionViewCell: UICollectionViewCell {
             self.topImageView.kf.setImage(with: additionalImageURL)
         }
 
-        //
-        // Get boosted odd old market values
-        //
-        if self.matchWidgetType == .boosted {
-
-            if let originalMarketId = self.viewModel?.match.oldMainMarketId {
-                Env.servicesProvider.getMarketInfo(marketId: originalMarketId)
-                    .receive(on: DispatchQueue.main)
-                    .map(ServiceProviderModelMapper.market(fromServiceProviderMarket:))
-                    .sink { _ in
-                        print("Env.servicesProvider.getMarketInfo(marketId: old boosted market completed")
-                    } receiveValue: { [weak self] market in
-                        
-                        if let firstCurrentOutcomeName = self?.viewModel?.match.markets.first?.outcomes[safe:0]?.typeName.lowercased(),
-                           let outcome = market.outcomes.first(where: { outcome in outcome.typeName.lowercased() == firstCurrentOutcomeName }) {
-                            let oddValue = OddFormatter.formatOdd(withValue: outcome.bettingOffer.decimalOdd)
-                            let attributes = [NSAttributedString.Key.strikethroughStyle: NSUnderlineStyle.single.rawValue]
-                            let attributedString = NSAttributedString(string: oddValue, attributes: attributes)
-                            self?.homeOldBoostedOddValueLabel.attributedText = attributedString
-                        }
-                        else {
-                            self?.homeOldBoostedOddValueLabel.text = "-"
-                        }
-                        
-                        if let secondCurrentOutcomeName = self?.viewModel?.match.markets.first?.outcomes[safe: 1]?.typeName.lowercased(),
-                           let outcome = market.outcomes.first(where: { outcome in outcome.typeName.lowercased() == secondCurrentOutcomeName }) {
-                            let oddValue = OddFormatter.formatOdd(withValue: outcome.bettingOffer.decimalOdd)
-                            let attributes = [NSAttributedString.Key.strikethroughStyle: NSUnderlineStyle.single.rawValue]
-                            let attributedString = NSAttributedString(string: oddValue, attributes: attributes)
-                            self?.drawOldBoostedOddValueLabel.attributedText = attributedString
-                        }
-                        else {
-                            self?.drawOldBoostedOddValueLabel.text = "-"
-                        }
-                        
-                        if let thirdCurrentOutcomeName = self?.viewModel?.match.markets.first?.outcomes[safe: 2]?.typeName.lowercased(),
-                           let outcome = market.outcomes.first(where: { outcome in outcome.typeName.lowercased() == thirdCurrentOutcomeName }) {
-                            let oddValue = OddFormatter.formatOdd(withValue: outcome.bettingOffer.decimalOdd)
-                            let attributes = [NSAttributedString.Key.strikethroughStyle: NSUnderlineStyle.single.rawValue]
-                            let attributedString = NSAttributedString(string: oddValue, attributes: attributes)
-                            self?.awayOldBoostedOddValueLabel.attributedText = attributedString
-                        }
-                        else {
-                            self?.awayOldBoostedOddValueLabel.text = "-"
-                        }
-                    }
-                    .store(in: &self.cancellables)
-            }
-        }
 
         //
         //
@@ -1569,7 +1540,7 @@ class MatchWidgetCollectionViewCell: UICollectionViewCell {
         self.matchLiveDataSubscriber?.cancel()
         self.matchLiveDataSubscriber = nil
         
-        self.matchLiveDataSubscriber = Env.servicesProvider.subscribeToEventLiveDataUpdates(withId: viewModel.match.id)
+        self.matchLiveDataSubscriber = Env.servicesProvider.subscribeToEventOnListsLiveDataUpdates(withId: viewModel.match.id)
             .receive(on: DispatchQueue.main)
             .compactMap({ $0 })
             .map(ServiceProviderModelMapper.match(fromEvent:))
@@ -1588,7 +1559,6 @@ class MatchWidgetCollectionViewCell: UICollectionViewCell {
                         print("MatchDetailsViewModel getMatchDetails Error retrieving data! \(error)")
                     }
                 }
-                
             }, receiveValue: { [weak self] updatedMatch in
                 guard let self = self else { return }
                 
@@ -1621,7 +1591,7 @@ class MatchWidgetCollectionViewCell: UICollectionViewCell {
         
         if let market = viewModel.match.markets.first {
 
-            self.marketSubscriber = Env.servicesProvider.subscribeToEventMarketUpdates(withId: market.id)
+            self.marketSubscriber = Env.servicesProvider.subscribeToEventOnListsMarketUpdates(withId: market.id)
                 .compactMap({ $0 })
                 .map({ (serviceProviderMarket: ServicesProvider.Market) -> Market in
                     return ServiceProviderModelMapper.market(fromServiceProviderMarket: serviceProviderMarket)
@@ -1668,7 +1638,7 @@ class MatchWidgetCollectionViewCell: UICollectionViewCell {
                 }
 
                 self.leftOddButtonSubscriber = Env.servicesProvider
-                    .subscribeToEventOutcomeUpdates(withId: outcome.bettingOffer.id)
+                    .subscribeToEventOnListsOutcomeUpdates(withId: outcome.bettingOffer.id)
                     .compactMap({ $0 })
                     .map(ServiceProviderModelMapper.outcome(fromServiceProviderOutcome: ))
                     .handleEvents(receiveOutput: { [weak self] outcome in
@@ -1739,7 +1709,7 @@ class MatchWidgetCollectionViewCell: UICollectionViewCell {
                 }
 
                 self.middleOddButtonSubscriber = Env.servicesProvider
-                    .subscribeToEventOutcomeUpdates(withId: outcome.bettingOffer.id)
+                    .subscribeToEventOnListsOutcomeUpdates(withId: outcome.bettingOffer.id)
                     .compactMap({ $0 })
                     .map(ServiceProviderModelMapper.outcome(fromServiceProviderOutcome:))
                     .handleEvents(receiveOutput: { [weak self] outcome in
@@ -1809,7 +1779,7 @@ class MatchWidgetCollectionViewCell: UICollectionViewCell {
                 }
 
                 self.rightOddButtonSubscriber = Env.servicesProvider
-                    .subscribeToEventOutcomeUpdates(withId: outcome.bettingOffer.id)
+                    .subscribeToEventOnListsOutcomeUpdates(withId: outcome.bettingOffer.id)
                     .compactMap({ $0 })
                     .map(ServiceProviderModelMapper.outcome(fromServiceProviderOutcome:))
                     .handleEvents(receiveOutput: { [weak self] outcome in
@@ -1945,7 +1915,6 @@ class MatchWidgetCollectionViewCell: UICollectionViewCell {
                     else {
                         self?.configureAsNormalCard()
                     }
-                    
                     
                 case .disconnected:
                     break

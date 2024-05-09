@@ -10,13 +10,15 @@ import Combine
 import ServicesProvider
 
 class MatchLineTableCellViewModel {
-
+    
     var match: Match? {
         return self.matchCurrentValueSubject.value
     }
     var matchPublisher: AnyPublisher<Match?, Never> {
         return self.matchCurrentValueSubject.eraseToAnyPublisher()
     }
+    
+    var status: MatchWidgetStatus = .unknown
 
     private let matchCurrentValueSubject = CurrentValueSubject<Match?, Never>.init(nil)
 
@@ -26,7 +28,8 @@ class MatchLineTableCellViewModel {
     private var cancellables: Set<AnyCancellable> = []
 
     //
-    init(matchId: String) {
+    init(matchId: String, status: MatchWidgetStatus) {
+        self.status = status
         self.loadEventDetails(fromId: matchId)
     }
 
@@ -255,6 +258,9 @@ class MatchLineTableCellViewModel {
                 self.loadPreLiveEventDetails(matchId: match.id)
             }
         }
+        else if self.status == .live {
+            self.loadLiveEventDetails(matchId: id)
+        }
         else {
             // We only have the event Id, we need to check if it's live or prelive
             Env.servicesProvider.getEventLiveData(eventId: id)
@@ -314,8 +320,6 @@ class MatchLineTableViewCell: UITableViewCell {
     private var shouldShowCountryFlag: Bool = true
     private var showingBackSliderView: Bool = false
 
-    private var liveMatch: Bool = false
-
     private var matchInfoPublisher: AnyCancellable?
 
     var tappedMatchLineAction: ((Match) -> Void)?
@@ -363,7 +367,6 @@ class MatchLineTableViewCell: UITableViewCell {
         self.collectionView.dataSource = self
 
         self.collectionView.register(MatchWidgetCollectionViewCell.nib, forCellWithReuseIdentifier: MatchWidgetCollectionViewCell.identifier)
-        self.collectionView.register(LiveMatchWidgetCollectionViewCell.nib, forCellWithReuseIdentifier: LiveMatchWidgetCollectionViewCell.identifier)
         self.collectionView.register(OddDoubleCollectionViewCell.nib, forCellWithReuseIdentifier: OddDoubleCollectionViewCell.identifier)
         self.collectionView.register(OddTripleCollectionViewCell.nib, forCellWithReuseIdentifier: OddTripleCollectionViewCell.identifier)
         self.collectionView.register(SeeMoreMarketsCollectionViewCell.nib, forCellWithReuseIdentifier: SeeMoreMarketsCollectionViewCell.identifier)
@@ -411,7 +414,6 @@ class MatchLineTableViewCell: UITableViewCell {
         self.loadingView.stopAnimating()
 
         self.shouldShowCountryFlag = true
-        self.liveMatch = false
 
         self.backSliderView.alpha = 0.0
 
@@ -443,7 +445,10 @@ class MatchLineTableViewCell: UITableViewCell {
 
     private func configureWithViewModel(_ viewModel: MatchLineTableCellViewModel) {
 
+        self.loadingView.startAnimating()
+        
         if let match = viewModel.match {
+            self.loadingView.stopAnimating()
             self.setupWithMatch(match)
         }
 
@@ -479,11 +484,51 @@ class MatchLineTableViewCell: UITableViewCell {
         self.backSliderIconImageView.setTintColor(color: UIColor.App.iconPrimary)
     }
 
-    private func setupWithMatch(_ match: Match, liveMatch: Bool = false) {
-        self.match = match
-        self.liveMatch = liveMatch
+    private func setupWithMatch(_ match: Match) {
 
-        self.collectionView.reloadData()
+        guard 
+            let match = self.match
+        else {
+            self.match = match
+            self.collectionView.reloadData()
+            return
+        }
+
+        var indexPathsToUpdate: [IndexPath] = []
+
+        // if default market is different
+        if
+            let firstOldMarket = self.match?.markets.first,
+            let firstNewMarket = match.markets.first,
+            firstOldMarket != firstNewMarket {
+            indexPathsToUpdate.append(IndexPath(item: 0, section: 0)) // default market section - 0
+        }
+            
+
+        // secondary markets section - 1
+        for (index, newMarket) in match.markets.enumerated() {
+            if index == 0 {
+                continue
+            }
+            if let oldMarket = self.match?.markets[safe: index],
+               oldMarket != newMarket {
+                indexPathsToUpdate.append(IndexPath(item: index, section: 1))
+            }
+        }
+        
+        if !indexPathsToUpdate.isEmpty {
+            indexPathsToUpdate.append(IndexPath(item: 0, section: 2)) // see all section - 2
+        }
+        
+        self.match = match
+
+        if !indexPathsToUpdate.isEmpty {
+            self.collectionView.performBatchUpdates({
+                self.collectionView.reloadItems(at: indexPathsToUpdate)
+            }, completion: nil)
+        }
+        
+        // self.collectionView.reloadData()
     }
 
     func shouldShowCountryFlag(_ show: Bool) {
@@ -588,7 +633,9 @@ extension MatchLineTableViewCell: UICollectionViewDelegate, UICollectionViewData
     }
 
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
-
+        
+        let knownStatus = self.viewModel?.status ?? .unknown
+        
         guard
             let match = self.match
         else {
@@ -607,7 +654,7 @@ extension MatchLineTableViewCell: UICollectionViewDelegate, UICollectionViewData
                 fatalError()
             }
             
-            let cellViewModel = MatchWidgetCellViewModel(match: match)
+            let cellViewModel = MatchWidgetCellViewModel(match: match, matchWidgetStatus: knownStatus)
             cell.configure(withViewModel: cellViewModel)
 
             cell.tappedMatchWidgetAction = { [weak self] _ in
@@ -624,7 +671,7 @@ extension MatchLineTableViewCell: UICollectionViewDelegate, UICollectionViewData
         case 1:
             if match.markets.count > 1, let market = match.markets[safe: indexPath.row + 1] {
 
-                let cellViewModel = MatchWidgetCellViewModel(match: match)
+                let cellViewModel = MatchWidgetCellViewModel(match: match, matchWidgetStatus: knownStatus)
                 
                 let teamsText = "\(match.homeParticipant.name) - \(match.awayParticipant.name)"
                 let countryIso = match.venue?.isoCode ?? ""

@@ -265,31 +265,31 @@ extension ServicesProviderClient {
     //
     // Uses the publishers from the events list (prelive and live)
     //
-    public func subscribeToEventLiveDataUpdates(withId id: String) -> AnyPublisher<Event?, ServiceProviderError> {
+    public func subscribeToEventOnListsLiveDataUpdates(withId id: String) -> AnyPublisher<Event?, ServiceProviderError> {
         guard
             let eventsProvider = self.eventsProvider
         else {
             return Fail(error: ServiceProviderError.eventsProviderNotFound).eraseToAnyPublisher()
         }
-        return eventsProvider.subscribeToEventLiveDataUpdates(withId: id)
+        return eventsProvider.subscribeToEventOnListsLiveDataUpdates(withId: id)
     }
     
-    public func subscribeToEventMarketUpdates(withId id: String) -> AnyPublisher<Market?, ServiceProviderError> {
+    public func subscribeToEventOnListsMarketUpdates(withId id: String) -> AnyPublisher<Market?, ServiceProviderError> {
         guard
             let eventsProvider = self.eventsProvider
         else {
             return Fail(error: ServiceProviderError.eventsProviderNotFound).eraseToAnyPublisher()
         }
-        return eventsProvider.subscribeToEventMarketUpdates(withId: id)
+        return eventsProvider.subscribeToEventOnListsMarketUpdates(withId: id)
     }
 
-    public func subscribeToEventOutcomeUpdates(withId id: String) -> AnyPublisher<Outcome?, ServiceProviderError> {
+    public func subscribeToEventOnListsOutcomeUpdates(withId id: String) -> AnyPublisher<Outcome?, ServiceProviderError> {
         guard
             let eventsProvider = self.eventsProvider
         else {
             return Fail(error: ServiceProviderError.eventsProviderNotFound).eraseToAnyPublisher()
         }
-        return eventsProvider.subscribeToEventOutcomeUpdates(withId: id)
+        return eventsProvider.subscribeToEventOnListsOutcomeUpdates(withId: id)
     }
 
     //

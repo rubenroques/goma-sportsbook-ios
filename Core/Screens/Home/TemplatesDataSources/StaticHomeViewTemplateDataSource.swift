@@ -560,7 +560,7 @@ extension StaticHomeViewTemplateDataSource: HomeViewTemplateDataSource {
         return nil
     }
     
-    func matchLineTableCellViewModel(forId identifier: String) -> MatchLineTableCellViewModel? {
+    func highlightedLiveMatchLineTableCellViewModel(forId identifier: String) -> MatchLineTableCellViewModel? {
         return nil
     }
     

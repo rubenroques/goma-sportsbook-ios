@@ -607,7 +607,7 @@ class SportRadarEventsProvider: EventsProvider {
     //
     // MARK: - Subcribable Updates
     //
-//    public func subscribeToEventLiveDataUpdates(withId id: String) -> AnyPublisher<Event?, ServiceProviderError> {
+//    public func subscribeToEventOnListsLiveDataUpdates(withId id: String) -> AnyPublisher<Event?, ServiceProviderError> {
 //
 //        guard
 //            let sessionToken = socketConnector.token
@@ -617,7 +617,7 @@ class SportRadarEventsProvider: EventsProvider {
 //
 //        // events lists
 //        for paginator in self.eventsPaginators.values {
-//            if paginator.containsEvent(withid: id), let publisher = paginator.subscribeToEventLiveDataUpdates(withId: id) {
+//            if paginator.containsEvent(withid: id), let publisher = paginator.subscribeToEventOnListsLiveDataUpdates(withId: id) {
 //                return publisher.map(Optional.init).setFailureType(to: ServiceProviderError.self).eraseToAnyPublisher()
 //            }
 //        }
@@ -626,7 +626,7 @@ class SportRadarEventsProvider: EventsProvider {
 //        if let liveEventDetailsCoordinator = self.getValidLiveEventDetailsCoordinator(forKey: id),
 //           liveEventDetailsCoordinator.containsEvent(withid: id) {
 //
-//            let publisher = liveEventDetailsCoordinator.subscribeToEventLiveDataUpdates(withId: id)
+//            let publisher = liveEventDetailsCoordinator.subscribeToEventOnListsLiveDataUpdates(withId: id)
 //            return publisher.setFailureType(to: ServiceProviderError.self).eraseToAnyPublisher()
 //        }
 //        else {
@@ -636,7 +636,7 @@ class SportRadarEventsProvider: EventsProvider {
 //
 //            self.addEventDetailsCoordinator(liveEventDetailsCoordinator, withKey: id)
 //
-//            let publisher = eventDetailsCoordinator.subscribeToEventLiveDataUpdates(withId: id)
+//            let publisher = eventDetailsCoordinator.subscribeToEventOnListsLiveDataUpdates(withId: id)
 //            return publisher.setFailureType(to: ServiceProviderError.self).eraseToAnyPublisher()
 //        }
 //
@@ -688,7 +688,7 @@ class SportRadarEventsProvider: EventsProvider {
     }
     
     // live info associated with the paginator lists and event details
-    public func subscribeToEventLiveDataUpdates(withId id: String) -> AnyPublisher<Event?, ServiceProviderError> {
+    public func subscribeToEventOnListsLiveDataUpdates(withId id: String) -> AnyPublisher<Event?, ServiceProviderError> {
 
         guard
             let sessionToken = self.socketConnector.token
@@ -698,7 +698,7 @@ class SportRadarEventsProvider: EventsProvider {
 
         // events lists
         for paginator in self.eventsPaginators.values {
-            if paginator.containsEvent(withid: id), let publisher = paginator.subscribeToEventLiveDataUpdates(withId: id) {
+            if paginator.containsEvent(withid: id), let publisher = paginator.subscribeToEventOnListsLiveDataUpdates(withId: id) {
                 return publisher.map(Optional.init).setFailureType(to: ServiceProviderError.self).eraseToAnyPublisher()
             }
         }
@@ -706,7 +706,7 @@ class SportRadarEventsProvider: EventsProvider {
         // event details
         for eventDetailsCoordinator in self.getValidEventDetailsCoordinators() {
             if eventDetailsCoordinator.containsEvent(withid: id) {
-                let publisher = eventDetailsCoordinator.subscribeToEventLiveDataUpdates(withId: id)
+                let publisher = eventDetailsCoordinator.subscribeToEventOnListsLiveDataUpdates(withId: id)
                 return publisher.setFailureType(to: ServiceProviderError.self).eraseToAnyPublisher()
             }
         }
@@ -715,11 +715,11 @@ class SportRadarEventsProvider: EventsProvider {
     }
     
     
-    public func subscribeToEventMarketUpdates(withId id: String) -> AnyPublisher<Market?, ServiceProviderError> {
+    public func subscribeToEventOnListsMarketUpdates(withId id: String) -> AnyPublisher<Market?, ServiceProviderError> {
 
         // events lists
         for paginator in self.eventsPaginators.values {
-            if paginator.containsMarket(withid: id), let publisher = paginator.subscribeToEventMarketUpdates(withId: id) {
+            if paginator.containsMarket(withid: id), let publisher = paginator.subscribeToEventOnListsMarketUpdates(withId: id) {
                 return publisher.map(Optional.init).setFailureType(to: ServiceProviderError.self).eraseToAnyPublisher()
             }
         }
@@ -727,7 +727,7 @@ class SportRadarEventsProvider: EventsProvider {
         // event details
         for eventDetailsCoordinator in self.getValidEventDetailsCoordinators() {
             if eventDetailsCoordinator.containsMarket(withid: id),
-               let publisher = eventDetailsCoordinator.subscribeToEventMarketUpdates(withId: id) {
+               let publisher = eventDetailsCoordinator.subscribeToEventOnListsMarketUpdates(withId: id) {
                 return publisher.map(Optional.init).setFailureType(to: ServiceProviderError.self).eraseToAnyPublisher()
             }
         }
@@ -735,7 +735,7 @@ class SportRadarEventsProvider: EventsProvider {
         // Event secundary markets details
         for eventSecundaryMarketsCoordinator in self.getValidEventSecundaryMarketsCoordinators() {
             if eventSecundaryMarketsCoordinator.containsMarket(withid: id),
-               let publisher = eventSecundaryMarketsCoordinator.subscribeToEventMarketUpdates(withId: id) {
+               let publisher = eventSecundaryMarketsCoordinator.subscribeToEventOnListsMarketUpdates(withId: id) {
                 return publisher.map(Optional.init).setFailureType(to: ServiceProviderError.self).eraseToAnyPublisher()
             }
         }
@@ -743,11 +743,11 @@ class SportRadarEventsProvider: EventsProvider {
         return Just(nil).setFailureType(to: ServiceProviderError.self).eraseToAnyPublisher()
     }
 
-    public func subscribeToEventOutcomeUpdates(withId id: String) -> AnyPublisher<Outcome?, ServiceProviderError> {
+    public func subscribeToEventOnListsOutcomeUpdates(withId id: String) -> AnyPublisher<Outcome?, ServiceProviderError> {
 
         // events lists
         for paginator in self.eventsPaginators.values {
-            if paginator.containsOutcome(withid: id), let publisher = paginator.subscribeToEventOutcomeUpdates(withId: id) {
+            if paginator.containsOutcome(withid: id), let publisher = paginator.subscribeToEventOnListsOutcomeUpdates(withId: id) {
                 return publisher.map(Optional.init).setFailureType(to: ServiceProviderError.self).eraseToAnyPublisher()
             }
         }
@@ -755,7 +755,7 @@ class SportRadarEventsProvider: EventsProvider {
         // event details
         for eventDetailsCoordinator in self.getValidEventDetailsCoordinators() {
             if eventDetailsCoordinator.containsOutcome(withid: id),
-               let publisher = eventDetailsCoordinator.subscribeToEventOutcomeUpdates(withId: id) {
+               let publisher = eventDetailsCoordinator.subscribeToEventOnListsOutcomeUpdates(withId: id) {
                 return publisher.map(Optional.init).setFailureType(to: ServiceProviderError.self).eraseToAnyPublisher()
             }
         }
@@ -763,7 +763,7 @@ class SportRadarEventsProvider: EventsProvider {
         // Secundary Markets - event details
         for eventSecundaryMarketsCoordinator in self.getValidEventSecundaryMarketsCoordinators() {
             if eventSecundaryMarketsCoordinator.containsOutcome(withid: id),
-               let publisher = eventSecundaryMarketsCoordinator.subscribeToEventOutcomeUpdates(withId: id) {
+               let publisher = eventSecundaryMarketsCoordinator.subscribeToEventOnListsOutcomeUpdates(withId: id) {
                 return publisher.map(Optional.init).setFailureType(to: ServiceProviderError.self).eraseToAnyPublisher()
             }
         }

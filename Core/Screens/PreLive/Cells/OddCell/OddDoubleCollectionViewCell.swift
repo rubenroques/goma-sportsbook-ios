@@ -436,7 +436,7 @@ class OddDoubleCollectionViewCell: UICollectionViewCell {
 
         self.participantsCountryImageView.image = UIImage(named: "market_stats_icon")
 
-        self.marketSubscriber = Env.servicesProvider.subscribeToEventMarketUpdates(withId: market.id)
+        self.marketSubscriber = Env.servicesProvider.subscribeToEventOnListsMarketUpdates(withId: market.id)
             .compactMap({ $0 })
             .map({ (serviceProviderMarket: ServicesProvider.Market) -> Market in
                 return ServiceProviderModelMapper.market(fromServiceProviderMarket: serviceProviderMarket)
@@ -476,7 +476,7 @@ class OddDoubleCollectionViewCell: UICollectionViewCell {
             }
 
             self.leftOddButtonSubscriber = Env.servicesProvider
-                .subscribeToEventOutcomeUpdates(withId: outcome.bettingOffer.id)
+                .subscribeToEventOnListsOutcomeUpdates(withId: outcome.bettingOffer.id)
                 .compactMap({ $0 })
                 .map(ServiceProviderModelMapper.outcome(fromServiceProviderOutcome: ))
                 .map(\.bettingOffer)
@@ -534,7 +534,7 @@ class OddDoubleCollectionViewCell: UICollectionViewCell {
             }
 
             self.rightOddButtonSubscriber = Env.servicesProvider
-                .subscribeToEventOutcomeUpdates(withId: outcome.bettingOffer.id)
+                .subscribeToEventOnListsOutcomeUpdates(withId: outcome.bettingOffer.id)
                 .compactMap({ $0 })
                 .map(ServiceProviderModelMapper.outcome(fromServiceProviderOutcome: ))
                 .map(\.bettingOffer)

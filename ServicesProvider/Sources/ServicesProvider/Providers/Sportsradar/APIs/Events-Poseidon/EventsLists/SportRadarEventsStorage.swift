@@ -180,15 +180,15 @@ extension SportRadarEventsStorage {
 
 extension SportRadarEventsStorage {
 
-    func subscribeToEventLiveDataUpdates(withId id: String) -> AnyPublisher<Event, Never>? {
+    func subscribeToEventOnListsLiveDataUpdates(withId id: String) -> AnyPublisher<Event, Never>? {
         return self.eventsDictionary[id]?.eraseToAnyPublisher()
     }
 
-    func subscribeToEventMarketUpdates(withId id: String) -> AnyPublisher<Market, Never>? {
+    func subscribeToEventOnListsMarketUpdates(withId id: String) -> AnyPublisher<Market, Never>? {
         return self.marketsDictionary[id]?.eraseToAnyPublisher()
     }
 
-    func subscribeToEventOutcomeUpdates(withId id: String) -> AnyPublisher<Outcome, Never>? {
+    func subscribeToEventOnListsOutcomeUpdates(withId id: String) -> AnyPublisher<Outcome, Never>? {
         return self.outcomesDictionary[id]?.eraseToAnyPublisher()
     }
 

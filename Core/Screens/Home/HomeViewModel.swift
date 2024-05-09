@@ -179,8 +179,8 @@ extension HomeViewModel {
         return self.homeViewTemplateDataSource.supplementaryEventId(forSection: section, forIndex: index)
     }
 
-    func matchLineTableCellViewModel(forId identifier: String) -> MatchLineTableCellViewModel? {
-        return self.homeViewTemplateDataSource.matchLineTableCellViewModel(forId: identifier)
+    func highlightedLiveMatchLineTableCellViewModel(forId identifier: String) -> MatchLineTableCellViewModel? {
+        return self.homeViewTemplateDataSource.highlightedLiveMatchLineTableCellViewModel(forId: identifier)
     }
     
     func matchLineTableCellViewModel(forSection section: Int, forIndex index: Int) -> MatchLineTableCellViewModel? {

@@ -134,7 +134,7 @@ class OutcomeSelectionButtonView: NibView {
         if let marketId = outcome.marketId {
             
             self.marketStateCancellable?.cancel()
-            self.marketStateCancellable = Env.servicesProvider.subscribeToEventMarketUpdates(withId: marketId)
+            self.marketStateCancellable = Env.servicesProvider.subscribeToEventOnListsMarketUpdates(withId: marketId)
                 .compactMap({ $0 })
                 .map({ (serviceProviderMarket: ServicesProvider.Market) -> Market in
                     return ServiceProviderModelMapper.market(fromServiceProviderMarket: serviceProviderMarket)
@@ -173,7 +173,7 @@ class OutcomeSelectionButtonView: NibView {
         }
 
         self.oddUpdatesPublisher = Env.servicesProvider
-            .subscribeToEventOutcomeUpdates(withId: outcome.bettingOffer.id)
+            .subscribeToEventOnListsOutcomeUpdates(withId: outcome.bettingOffer.id)
             .compactMap({ $0 })
             .map(ServiceProviderModelMapper.outcome(fromServiceProviderOutcome:))
             .map(\.bettingOffer)

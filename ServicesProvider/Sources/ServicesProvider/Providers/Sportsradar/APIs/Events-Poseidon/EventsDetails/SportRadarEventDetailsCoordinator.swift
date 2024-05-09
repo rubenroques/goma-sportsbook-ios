@@ -333,16 +333,16 @@ extension SportRadarEventDetailsCoordinator {
 
 extension SportRadarEventDetailsCoordinator {
 
-    func subscribeToEventLiveDataUpdates(withId id: String) -> AnyPublisher<Event?, Never> {
-        return self.storage.subscribeToEventLiveDataUpdates(withId: id)
+    func subscribeToEventOnListsLiveDataUpdates(withId id: String) -> AnyPublisher<Event?, Never> {
+        return self.storage.subscribeToEventOnListsLiveDataUpdates(withId: id)
     }
 
-    func subscribeToEventMarketUpdates(withId id: String) -> AnyPublisher<Market, Never>? {
-        return self.storage.subscribeToEventMarketUpdates(withId: id)
+    func subscribeToEventOnListsMarketUpdates(withId id: String) -> AnyPublisher<Market, Never>? {
+        return self.storage.subscribeToEventOnListsMarketUpdates(withId: id)
     }
 
-    func subscribeToEventOutcomeUpdates(withId id: String) -> AnyPublisher<Outcome, Never>? {
-        return self.storage.subscribeToEventOutcomeUpdates(withId: id)
+    func subscribeToEventOnListsOutcomeUpdates(withId id: String) -> AnyPublisher<Outcome, Never>? {
+        return self.storage.subscribeToEventOnListsOutcomeUpdates(withId: id)
     }
 
     func containsEvent(withid id: String) -> Bool {

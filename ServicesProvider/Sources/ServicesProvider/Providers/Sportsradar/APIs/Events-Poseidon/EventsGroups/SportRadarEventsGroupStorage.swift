@@ -157,11 +157,11 @@ extension SportRadarEventsGroupStorage {
 
 extension SportRadarEventsGroupStorage {
 
-    func subscribeToEventLiveDataUpdates(withId id: String) -> AnyPublisher<Event?, Never> {
+    func subscribeToEventOnListsLiveDataUpdates(withId id: String) -> AnyPublisher<Event?, Never> {
         return self.eventSubject.eraseToAnyPublisher()
     }
 
-    func subscribeToEventMarketUpdates(withId id: String) -> AnyPublisher<Market, Never>? {
+    func subscribeToEventOnListsMarketUpdates(withId id: String) -> AnyPublisher<Market, Never>? {
         if let publisher = self.marketsDictionary[id] {
             return publisher.eraseToAnyPublisher()
         }
@@ -170,7 +170,7 @@ extension SportRadarEventsGroupStorage {
         }
     }
 
-    func subscribeToEventOutcomeUpdates(withId id: String) -> AnyPublisher<Outcome, Never>? {
+    func subscribeToEventOnListsOutcomeUpdates(withId id: String) -> AnyPublisher<Outcome, Never>? {
         return self.outcomesDictionary[id]?.eraseToAnyPublisher()
     }
 

@@ -239,7 +239,7 @@ class MatchDetailsViewModel: NSObject {
             }
             .store(in: &self.cancellables)
         
-        let liveDataUpdatesPublisher = Env.servicesProvider.subscribeToEventLiveDataUpdates(withId: self.matchId)
+        Env.servicesProvider.subscribeToEventOnListsLiveDataUpdates(withId: self.matchId)
             .receive(on: DispatchQueue.main)
             .compactMap({ $0 })
             .map(ServiceProviderModelMapper.match(fromEvent:))
@@ -256,7 +256,7 @@ class MatchDetailsViewModel: NSObject {
                     self.matchDetailedScores.send(updatedMatchDetailedScores)
                 }
             })
-            .store(in: &cancellables)
+            .store(in: &self.cancellables)
     }
 
     //

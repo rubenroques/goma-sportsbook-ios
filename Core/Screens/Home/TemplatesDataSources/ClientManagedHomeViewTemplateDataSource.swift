@@ -126,6 +126,8 @@ class ClientManagedHomeViewTemplateDataSource {
 
     var matchLineTableCellViewModelCache: [String: MatchLineTableCellViewModel] = [:]
 
+    var highlightedLiveMatchLineTableCellViewModelCache: [String: MatchLineTableCellViewModel] = [:]
+    
     private var topCompetitionsLineCellViewModel: TopCompetitionsLineCellViewModel = TopCompetitionsLineCellViewModel(topCompetitions: [])
     
     private var highlightedLiveMatchesIds: [String] = []
@@ -148,6 +150,7 @@ class ClientManagedHomeViewTemplateDataSource {
 
     func refreshData() {
         self.matchLineTableCellViewModelCache = [:]
+        self.highlightedLiveMatchLineTableCellViewModelCache = [:]
         
         self.fetchAlerts()
         self.fetchQuickSwipeMatches()
@@ -395,20 +398,20 @@ class ClientManagedHomeViewTemplateDataSource {
         
         self.highlightedLiveMatchesIds = []
         
-//        Env.servicesProvider.getHighlightedLiveEvents(eventCount: 4)
-//            .receive(on: DispatchQueue.main)
-//            .sink { completion in
-//                switch completion {
-//                case .finished:
-//                    ()
-//                case .failure(let error):
-//                    print("fetchHighlightedLiveMatches getHighlightedLiveEvents error: \(error)")
-//                }
-//            } receiveValue: { [weak self] highlightedLiveEventsIds in
-//                self?.highlightedLiveMatchesIds = highlightedLiveEventsIds
-//                self?.refreshPublisher.send()
-//            }
-//            .store(in: &self.cancellables)
+        Env.servicesProvider.getHighlightedLiveEvents(eventCount: 4)
+            .receive(on: DispatchQueue.main)
+            .sink { completion in
+                switch completion {
+                case .finished:
+                    ()
+                case .failure(let error):
+                    print("fetchHighlightedLiveMatches getHighlightedLiveEvents error: \(error)")
+                }
+            } receiveValue: { [weak self] highlightedLiveEventsIds in
+                self?.highlightedLiveMatchesIds = highlightedLiveEventsIds
+                self?.refreshPublisher.send()
+            }
+            .store(in: &self.cancellables)
 
     }
     
@@ -663,14 +666,14 @@ extension ClientManagedHomeViewTemplateDataSource: HomeViewTemplateDataSource {
         return self.highlightedLiveMatchesIds[safe: index]
     }
     
-    func matchLineTableCellViewModel(forId identifier: String) -> MatchLineTableCellViewModel? {
+    func highlightedLiveMatchLineTableCellViewModel(forId identifier: String) -> MatchLineTableCellViewModel? {
         
-        if let matchLineTableCellViewModel = self.matchLineTableCellViewModelCache[identifier] {
+        if let matchLineTableCellViewModel = self.highlightedLiveMatchLineTableCellViewModelCache[identifier] {
             return matchLineTableCellViewModel
         }
         else {
-            let matchLineTableCellViewModel = MatchLineTableCellViewModel(matchId: identifier)
-            self.matchLineTableCellViewModelCache[identifier] = matchLineTableCellViewModel
+            let matchLineTableCellViewModel = MatchLineTableCellViewModel(matchId: identifier, status: .live)
+            self.highlightedLiveMatchLineTableCellViewModelCache[identifier] = matchLineTableCellViewModel
             return matchLineTableCellViewModel
         }
 
@@ -689,7 +692,7 @@ extension ClientManagedHomeViewTemplateDataSource: HomeViewTemplateDataSource {
             return matchLineTableCellViewModel
         }
         else {
-            let matchLineTableCellViewModel = MatchLineTableCellViewModel(matchId: matchId)
+            let matchLineTableCellViewModel = MatchLineTableCellViewModel(matchId: matchId, status: .unknown)
             self.matchLineTableCellViewModelCache[matchId] = matchLineTableCellViewModel
             return matchLineTableCellViewModel
         }

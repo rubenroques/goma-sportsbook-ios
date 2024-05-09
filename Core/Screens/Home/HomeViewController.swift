@@ -940,7 +940,7 @@ extension HomeViewController: UITableViewDelegate, UITableViewDataSource {
             guard
                 let cell = tableView.dequeueReusableCell(withIdentifier: MatchLineTableViewCell.identifier) as? MatchLineTableViewCell,
                 let identifier = self.viewModel.highlightedLiveMatchesId(forSection: indexPath.section, forIndex: indexPath.row),
-                let matchLineViewModel = self.viewModel.matchLineTableCellViewModel(forId: identifier)
+                let matchLineViewModel = self.viewModel.highlightedLiveMatchLineTableCellViewModel(forId: identifier)
             else {
                 return UITableViewCell()
             }

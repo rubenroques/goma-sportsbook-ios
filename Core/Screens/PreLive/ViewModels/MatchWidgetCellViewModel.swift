@@ -6,9 +6,25 @@
 //
 
 import Foundation
+import Combine
+import UIKit
+
+enum MatchWidgetType: String, CaseIterable {
+    case normal
+    case topImage
+    case topImageOutright
+    case boosted
+    case backgroundImage
+}
+
+enum MatchWidgetStatus: String, CaseIterable {
+    case unknown
+    case live
+    case preLive
+}
 
 class MatchWidgetCellViewModel {
-
+    
     var homeTeamName: String
     var awayTeamName: String
     var countryISOCode: String
@@ -17,14 +33,27 @@ class MatchWidgetCellViewModel {
     var competitionName: String
     var isToday: Bool
     var countryId: String
-
-    var match: Match
-
+    
+    var match: Match {
+        return self.matchSubject.value
+    }
+    
+    var matchPublisher: AnyPublisher<Match, Never> {
+        return self.matchSubject.eraseToAnyPublisher()
+    }
+    
+    private var matchSubject: CurrentValueSubject<Match, Never>
+    
     var promoImageURL: URL? {
         return URL(string: self.match.promoImageURL ?? "")
     }
-
+    
     var isLiveCard: Bool {
+        
+        if self.matchWidgetStatus == .live {
+            return true
+        }
+        
         switch match.status {
         case .notStarted, .unknown:
             return false
@@ -32,7 +61,7 @@ class MatchWidgetCellViewModel {
             return true
         }
     }
-
+    
     var isLiveMatch: Bool {
         switch match.status {
         case .notStarted, .ended, .unknown:
@@ -41,22 +70,22 @@ class MatchWidgetCellViewModel {
             return true
         }
     }
-
+    
     var inProgressStatusString: String? {
-
+        
         switch match.status {
         case .ended, .notStarted, .unknown:
             return nil
         case .inProgress(let progress):
             return progress
         }
-
+        
     }
-
+    
     var canHaveCashback: Bool {
         return (self.matchWidgetType == .normal || self.matchWidgetType == .topImage) && RePlayFeatureHelper.shouldShowRePlay(forMatch: self.match)
     }
-
+    
     var matchScore: String {
         var homeScore = "0"
         var awayScore = "0"
@@ -68,19 +97,28 @@ class MatchWidgetCellViewModel {
         }
         return "\(homeScore) - \(awayScore)"
     }
-
+    
     var matchTimeDetails: String? {
         let details = [self.match.matchTime, self.match.detailedStatus]
         return details.compactMap({ $0 }).joined(separator: " - ")
     }
-
+    
+    @Published private(set) var homeOldBoostedOddAttributedString: NSAttributedString = NSAttributedString(string: "-")
+    @Published private(set) var drawOldBoostedOddAttributedString: NSAttributedString = NSAttributedString(string: "-")
+    @Published private(set) var awayOldBoostedOddAttributedString: NSAttributedString = NSAttributedString(string: "-")
+    
+    var matchWidgetStatus: MatchWidgetStatus = .unknown
     var matchWidgetType: MatchWidgetType = .normal
-
-    init(match: Match, matchWidgetType: MatchWidgetType = .normal) {
+    
+    private var cancellables: Set<AnyCancellable> = []
+    
+    init(match: Match, matchWidgetType: MatchWidgetType = .normal, matchWidgetStatus: MatchWidgetStatus = .unknown) {
+        
+        self.matchWidgetStatus = matchWidgetStatus
         
         self.matchWidgetType = matchWidgetType
         
-        self.match = match
+        self.matchSubject = .init(match)
         
         self.homeTeamName = match.homeParticipant.name
         self.awayTeamName = match.awayParticipant.name
@@ -115,7 +153,69 @@ class MatchWidgetCellViewModel {
         }
         
         self.competitionName = match.competitionName
+        
+        self.loadBoostedOddOldValue()
     }
+    
+}
+
+// Load Boosted Odds old value
+extension MatchWidgetCellViewModel {
+    
+    func loadBoostedOddOldValue() {
+        
+        guard
+            self.matchWidgetType == .boosted,
+                let originalMarketId = self.match.oldMainMarketId
+        else {
+            return
+        }
+        
+        Env.servicesProvider.getMarketInfo(marketId: originalMarketId)
+            .map(ServiceProviderModelMapper.market(fromServiceProviderMarket:))
+            .sink { _ in
+                print("Env.servicesProvider.getMarketInfo(marketId: old boosted market completed")
+            } receiveValue: { [weak self] market in
+                
+                if let firstCurrentOutcomeName = self?.match.markets.first?.outcomes[safe:0]?.typeName.lowercased(),
+                   let outcome = market.outcomes.first(where: { outcome in outcome.typeName.lowercased() == firstCurrentOutcomeName }) {
+                    let oddValue = OddFormatter.formatOdd(withValue: outcome.bettingOffer.decimalOdd)
+                    let attributes = [NSAttributedString.Key.strikethroughStyle: NSUnderlineStyle.single.rawValue]
+                    let attributedString = NSAttributedString(string: oddValue, attributes: attributes)
+                    self?.homeOldBoostedOddAttributedString = attributedString
+                }
+                else {
+                    self?.homeOldBoostedOddAttributedString = NSAttributedString(string: "-")
+                }
+                
+                if let secondCurrentOutcomeName = self?.match.markets.first?.outcomes[safe: 1]?.typeName.lowercased(),
+                   let outcome = market.outcomes.first(where: { outcome in outcome.typeName.lowercased() == secondCurrentOutcomeName }) {
+                    let oddValue = OddFormatter.formatOdd(withValue: outcome.bettingOffer.decimalOdd)
+                    let attributes = [NSAttributedString.Key.strikethroughStyle: NSUnderlineStyle.single.rawValue]
+                    let attributedString = NSAttributedString(string: oddValue, attributes: attributes)
+                    self?.drawOldBoostedOddAttributedString = attributedString
+                }
+                else {
+                    self?.drawOldBoostedOddAttributedString = NSAttributedString(string: "-")
+                }
+                
+                if let thirdCurrentOutcomeName = self?.match.markets.first?.outcomes[safe: 2]?.typeName.lowercased(),
+                   let outcome = market.outcomes.first(where: { outcome in outcome.typeName.lowercased() == thirdCurrentOutcomeName }) {
+                    let oddValue = OddFormatter.formatOdd(withValue: outcome.bettingOffer.decimalOdd)
+                    let attributes = [NSAttributedString.Key.strikethroughStyle: NSUnderlineStyle.single.rawValue]
+                    let attributedString = NSAttributedString(string: oddValue, attributes: attributes)
+                    self?.awayOldBoostedOddAttributedString = attributedString
+                }
+                else {
+                    self?.awayOldBoostedOddAttributedString = NSAttributedString(string: "-")
+                }
+            }
+            .store(in: &self.cancellables)
+    }
+}
+
+
+extension MatchWidgetCellViewModel {
     
     static var hourDateFormatter: DateFormatter = {
         var dateFormatter = DateFormatter()
