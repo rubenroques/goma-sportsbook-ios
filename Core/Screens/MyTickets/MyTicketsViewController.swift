@@ -60,7 +60,7 @@ class MyTicketsViewController: UIViewController {
     }
 
     deinit {
-        print("MyTicketsViewController.deinit")
+        // print("MyTicketsViewController.deinit")
     }
 
     override func viewDidLoad() {

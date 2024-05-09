@@ -935,6 +935,28 @@ extension HomeViewController: UITableViewDelegate, UITableViewDataSource {
             }
 
             return cell
+            
+        case .highlightedLiveMatches:
+            guard
+                let cell = tableView.dequeueReusableCell(withIdentifier: MatchLineTableViewCell.identifier) as? MatchLineTableViewCell,
+                let identifier = self.viewModel.highlightedLiveMatchesId(forSection: indexPath.section, forIndex: indexPath.row),
+                let matchLineViewModel = self.viewModel.matchLineTableCellViewModel(forId: identifier)
+            else {
+                return UITableViewCell()
+            }
+
+            cell.viewModel = matchLineViewModel
+
+            cell.tappedMatchLineAction = { [weak self] match in
+                self?.openMatchDetails(matchId: match.id)
+            }
+
+            cell.didLongPressOdd = { [weak self] bettingTicket in
+                self?.openQuickbet(bettingTicket)
+            }
+
+            return cell
+            
         }
 
     }
@@ -1004,6 +1026,8 @@ extension HomeViewController: UITableViewDelegate, UITableViewDataSource {
         case .promotedSportSection:
             return UITableView.automaticDimension
         case .supplementaryEvents:
+            return UITableView.automaticDimension
+        case .highlightedLiveMatches:
             return UITableView.automaticDimension
         }
 
@@ -1075,6 +1099,8 @@ extension HomeViewController: UITableViewDelegate, UITableViewDataSource {
             return StyleHelper.cardsStyleHeight() + 20
         case .supplementaryEvents:
             return StyleHelper.cardsStyleHeight() + 20
+        case .highlightedLiveMatches:
+            return StyleHelper.cardsStyleHeight() + 20
         }
     }
 
@@ -1135,6 +1161,7 @@ extension HomeViewController: UITableViewDelegate, UITableViewDataSource {
             }
             else if let sectionIconImage = UIImage(named: imageName) {
                 sportImageView.image = sectionIconImage
+                sportImageView.setTintColor(color: UIColor.App.highlightPrimary)
             }
             else {
                 sportImageView.image = UIImage(named: "sport_type_icon_default")
@@ -1221,6 +1248,8 @@ extension HomeViewController: UITableViewDataSourcePrefetching {
             case .promotedSportSection:
                 ()
             case .supplementaryEvents:
+                ()
+            case .highlightedLiveMatches:
                 ()
             }
         }

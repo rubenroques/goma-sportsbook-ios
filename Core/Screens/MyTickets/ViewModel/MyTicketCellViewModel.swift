@@ -93,7 +93,7 @@ class MyTicketCellViewModel {
     }
 
     deinit {
-        print("MyTicketCellViewModel.deinit")
+        // print("MyTicketCellViewModel.deinit")
     }
 
     func requestCashoutAvailability() {

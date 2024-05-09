@@ -252,7 +252,6 @@ extension ServicesProviderClient {
         }
         return eventsProvider.subscribeEventSummary(eventId: eventId)
     }
-
     
     public func subscribeToLiveDataUpdates(forEventWithId id: String) -> AnyPublisher<SubscribableContent<EventLiveData>, ServiceProviderError> {
         guard
@@ -311,6 +310,15 @@ extension ServicesProviderClient {
             return Fail(error: ServiceProviderError.eventsProviderNotFound).eraseToAnyPublisher()
         }
         return eventsProvider.getEventSecundaryMarkets(eventId: eventId)
+    }
+    
+    public func getEventLiveData(eventId : String) -> AnyPublisher<EventLiveData, ServiceProviderError> {
+        guard
+            let eventsProvider = self.eventsProvider
+        else {
+            return Fail(error: ServiceProviderError.eventsProviderNotFound).eraseToAnyPublisher()
+        }
+        return eventsProvider.getEventLiveData(eventId: eventId)
     }
     
     public func subscribeEventSecundaryMarkets(eventId: String) -> AnyPublisher<SubscribableContent<Event>, ServiceProviderError> {
@@ -627,6 +635,28 @@ extension ServicesProviderClient {
 
         return eventsProvider.deleteFavoriteFromList(eventId: eventId)
     }
+    
+    public func subscribeToEventAndSecondaryMarkets(withId id: String) -> AnyPublisher<SubscribableContent<Event>, ServiceProviderError> {
+        guard
+            let eventsProvider = self.eventsProvider
+        else {
+            return Fail(error: .eventsProviderNotFound).eraseToAnyPublisher()
+        }
+
+        return eventsProvider.subscribeToEventAndSecondaryMarkets(withId: id)
+    }
+    
+    public func getHighlightedLiveEvents(eventCount: Int) -> AnyPublisher<[String], ServiceProviderError> {
+        guard
+            let eventsProvider = self.eventsProvider
+        else {
+            return Fail(error: .eventsProviderNotFound).eraseToAnyPublisher()
+        }
+
+        return eventsProvider.getHighlightedLiveEvents(eventCount: eventCount)
+    }
+    
+    
 }
 
 

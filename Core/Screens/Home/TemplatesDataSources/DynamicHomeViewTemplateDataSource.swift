@@ -456,4 +456,12 @@ extension DynamicHomeViewTemplateDataSource: HomeViewTemplateDataSource {
         return nil
     }
     
+    func matchLineTableCellViewModel(forId identifier: String) -> MatchLineTableCellViewModel? {
+        return nil
+    }
+    
+    func highlightedLiveMatchesId(forSection section: Int, forIndex index: Int) -> String? {
+        return nil
+    }
+    
 }

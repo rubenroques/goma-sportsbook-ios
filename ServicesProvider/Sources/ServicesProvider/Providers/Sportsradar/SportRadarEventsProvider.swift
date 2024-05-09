@@ -662,12 +662,12 @@ class SportRadarEventsProvider: EventsProvider {
         }
         
     }
-
+    
     // Independent Live Data extended info
     public func subscribeToLiveDataUpdates(forEventWithId id: String) -> AnyPublisher<SubscribableContent<EventLiveData>, ServiceProviderError> {
 
         guard
-            let sessionToken = socketConnector.token
+            let sessionToken = self.socketConnector.token
         else {
             return Fail(error: ServiceProviderError.userSessionNotFound).eraseToAnyPublisher()
         }
@@ -687,11 +687,11 @@ class SportRadarEventsProvider: EventsProvider {
 
     }
     
-    // live info associated with the paginator
+    // live info associated with the paginator lists and event details
     public func subscribeToEventLiveDataUpdates(withId id: String) -> AnyPublisher<Event?, ServiceProviderError> {
 
         guard
-            let sessionToken = socketConnector.token
+            let sessionToken = self.socketConnector.token
         else {
             return Fail(error: ServiceProviderError.userSessionNotFound).eraseToAnyPublisher()
         }
@@ -731,6 +731,14 @@ class SportRadarEventsProvider: EventsProvider {
                 return publisher.map(Optional.init).setFailureType(to: ServiceProviderError.self).eraseToAnyPublisher()
             }
         }
+
+        // Event secundary markets details
+        for eventSecundaryMarketsCoordinator in self.getValidEventSecundaryMarketsCoordinators() {
+            if eventSecundaryMarketsCoordinator.containsMarket(withid: id),
+               let publisher = eventSecundaryMarketsCoordinator.subscribeToEventMarketUpdates(withId: id) {
+                return publisher.map(Optional.init).setFailureType(to: ServiceProviderError.self).eraseToAnyPublisher()
+            }
+        }
         
         return Just(nil).setFailureType(to: ServiceProviderError.self).eraseToAnyPublisher()
     }
@@ -748,6 +756,14 @@ class SportRadarEventsProvider: EventsProvider {
         for eventDetailsCoordinator in self.getValidEventDetailsCoordinators() {
             if eventDetailsCoordinator.containsOutcome(withid: id),
                let publisher = eventDetailsCoordinator.subscribeToEventOutcomeUpdates(withId: id) {
+                return publisher.map(Optional.init).setFailureType(to: ServiceProviderError.self).eraseToAnyPublisher()
+            }
+        }
+        
+        // Secundary Markets - event details
+        for eventSecundaryMarketsCoordinator in self.getValidEventSecundaryMarketsCoordinators() {
+            if eventSecundaryMarketsCoordinator.containsOutcome(withid: id),
+               let publisher = eventSecundaryMarketsCoordinator.subscribeToEventOutcomeUpdates(withId: id) {
                 return publisher.map(Optional.init).setFailureType(to: ServiceProviderError.self).eraseToAnyPublisher()
             }
         }
@@ -1743,6 +1759,24 @@ extension SportRadarEventsProvider {
         .eraseToAnyPublisher()
     }
     
+    
+    func getEventLiveData(eventId: String) -> AnyPublisher<EventLiveData, ServiceProviderError> {
+        
+        let liveDataContentType = ContentType.eventDetailsLiveData
+        let liveDataContentRoute = ContentRoute.eventDetailsLiveData(eventId: eventId)
+        let liveDataContentIdentifier = ContentIdentifier(contentType: liveDataContentType, contentRoute: liveDataContentRoute)
+        
+        let endpoint = SportRadarRestAPIClient.get(contentIdentifier: liveDataContentIdentifier)
+        
+        let requestPublisher: AnyPublisher<SportRadarModels.SportRadarResponse<SportRadarModels.EventLiveDataExtended>, ServiceProviderError> = self.restConnector.request(endpoint)
+        
+        return requestPublisher.map( { sportRadarResponse -> EventLiveData in
+            return SportRadarModelMapper.eventLiveData(fromInternalEventLiveData: sportRadarResponse.data)
+        })
+        .eraseToAnyPublisher()
+        
+    }
+    
     func getEventSecundaryMarkets(eventId: String) -> AnyPublisher<Event, ServiceProviderError> {
         let endpoint = SportRadarRestAPIClient.getEventSecundaryMarkets(eventId: eventId)
 
@@ -1775,6 +1809,29 @@ extension SportRadarEventsProvider {
             return eventDetailsCoordinator.eventWithSecundaryMarketsPublisher
         }
         
+    }
+    
+    func getHighlightedLiveEvents(eventCount: Int) -> AnyPublisher<[String], ServiceProviderError> {
+        let endpoint = VaixAPIClient.popularEvents(eventsCount: eventCount)
+        let requestPublisher: AnyPublisher<SportRadarModels.SportRadarResponse<[SportRadarModels.HighlightedEventPointer]>, ServiceProviderError> = self.restConnector.request(endpoint)
+
+        return requestPublisher.map( { highlightedEventPointerResponse -> [String] in
+            let eventsIds = highlightedEventPointerResponse.data
+                .compactMap { fullEvent in
+                    return fullEvent.eventId.split(separator: ":").last
+                }
+                .map(String.init)
+            return eventsIds
+        })
+        .mapError({ error in
+            return error
+        })
+        .eraseToAnyPublisher()
+        
+    }
+    
+    func subscribeToEventAndSecondaryMarkets(withId id: String) -> AnyPublisher<SubscribableContent<Event>, ServiceProviderError> {
+        return Fail(error: ServiceProviderError.userSessionNotFound).eraseToAnyPublisher()
     }
     
 }
