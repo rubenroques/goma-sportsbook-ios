@@ -395,20 +395,20 @@ class ClientManagedHomeViewTemplateDataSource {
         
         self.highlightedLiveMatchesIds = []
         
-        Env.servicesProvider.getHighlightedLiveEvents(eventCount: 4)
-            .receive(on: DispatchQueue.main)
-            .sink { completion in
-                switch completion {
-                case .finished:
-                    ()
-                case .failure(let error):
-                    print("fetchHighlightedLiveMatches getHighlightedLiveEvents error: \(error)")
-                }
-            } receiveValue: { [weak self] highlightedLiveEventsIds in
-                self?.highlightedLiveMatchesIds = highlightedLiveEventsIds
-                self?.refreshPublisher.send()
-            }
-            .store(in: &self.cancellables)
+//        Env.servicesProvider.getHighlightedLiveEvents(eventCount: 4)
+//            .receive(on: DispatchQueue.main)
+//            .sink { completion in
+//                switch completion {
+//                case .finished:
+//                    ()
+//                case .failure(let error):
+//                    print("fetchHighlightedLiveMatches getHighlightedLiveEvents error: \(error)")
+//                }
+//            } receiveValue: { [weak self] highlightedLiveEventsIds in
+//                self?.highlightedLiveMatchesIds = highlightedLiveEventsIds
+//                self?.refreshPublisher.send()
+//            }
+//            .store(in: &self.cancellables)
 
     }
     
