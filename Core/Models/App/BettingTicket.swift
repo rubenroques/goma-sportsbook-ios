@@ -23,11 +23,18 @@ struct BettingTicket: Equatable, Codable {
     var matchDescription: String
     var marketDescription: String
     var outcomeDescription: String
+    
+    var homeParticipantName: String?
+    var awayParticipantName: String?
 
     var odd: OddFormat
 
     var sport: Sport?
     var sportIdCode: String?
+    
+    var venue: Location?
+    var competition: String?
+    var date: Date?
 
     var decimalOdd: Double {
         switch self.odd {
@@ -60,8 +67,13 @@ struct BettingTicket: Equatable, Codable {
          matchDescription: String,
          marketDescription: String,
          outcomeDescription: String,
+         homeParticipantName: String?,
+         awayParticipantName: String?,
          sport: Sport?,
          sportIdCode: String?,
+         venue: Location?,
+         competition: String?,
+         date: Date?,
          odd: OddFormat) {
 
         self.id = id
@@ -72,9 +84,14 @@ struct BettingTicket: Equatable, Codable {
         self.matchDescription = matchDescription
         self.marketDescription = marketDescription
         self.outcomeDescription = outcomeDescription
+        self.homeParticipantName = homeParticipantName
+        self.awayParticipantName = awayParticipantName
         self.odd = odd
         self.sport = sport
         self.sportIdCode = sportIdCode
+        self.venue = venue
+        self.competition = competition
+        self.date = date
     }
 
     init(id: String,
@@ -86,8 +103,13 @@ struct BettingTicket: Equatable, Codable {
          matchDescription: String,
          marketDescription: String,
          outcomeDescription: String,
+         homeParticipantName: String?,
+         awayParticipantName: String?,
          sport: Sport? = nil,
-         sportIdCode: String?) {
+         sportIdCode: String?,
+         venue: Location? = nil,
+         competition: String? = nil,
+         date: Date? = nil) {
 
         self.id = id
         self.outcomeId = outcomeId
@@ -97,10 +119,18 @@ struct BettingTicket: Equatable, Codable {
         self.matchDescription = matchDescription
         self.marketDescription = marketDescription
         self.outcomeDescription = outcomeDescription
+        self.homeParticipantName = homeParticipantName
+        self.awayParticipantName = awayParticipantName
         self.odd = OddFormat.decimal(odd: decimalOdd)
 
         self.sport = sport
         self.sportIdCode = sportIdCode
+        
+        self.venue = venue
+        
+        self.competition = competition
+        
+        self.date = date
     }
 
 }
@@ -110,6 +140,10 @@ extension BettingTicket {
         let matchDescription = "\(match.homeParticipant.name) x \(match.awayParticipant.name)"
         let marketDescription = market.name
         let outcomeDescription = outcome.translatedName
+        
+        let venue = match.venue
+        
+        let date = match.date
 
         self.init(id: outcome.bettingOffer.id,
                   outcomeId: outcome.id,
@@ -119,8 +153,13 @@ extension BettingTicket {
                   matchDescription: matchDescription,
                   marketDescription: marketDescription,
                   outcomeDescription: outcomeDescription,
+                  homeParticipantName: match.homeParticipant.name,
+                  awayParticipantName: match.awayParticipant.name,
                   sport: match.sport,
                   sportIdCode: match.sportIdCode,
+                  venue: venue, 
+                  competition: match.competitionName,
+                  date: date,
                   odd: outcome.bettingOffer.odd)
     }
 
@@ -138,8 +177,13 @@ extension BettingTicket {
                   matchDescription: matchDescription,
                   marketDescription: marketDescription,
                   outcomeDescription: outcomeDescription,
+                  homeParticipantName: match.homeParticipant.name,
+                  awayParticipantName: match.awayParticipant.name,
                   sport: match.sport,
                   sportIdCode: match.sportIdCode,
+                  venue: match.venue,
+                  competition: match.competitionName,
+                  date: match.date,
                   odd: outcome.bettingOffer.odd)
     }
 

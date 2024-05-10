@@ -253,10 +253,14 @@ class BetslipViewController: UIViewController {
     func showBetPlacedScreen(withBetPlacedDetails betPlacedDetailsArray: [BetPlacedDetails], withCashbackResultValue cashbackResultValue: Double? = nil, usedCashback: Bool) {
 
         Logger.log("Bet placed without erros. Will show feedback screen.")
+        
+        let betTickets = Env.betslipManager.getBettingTickets()
 
         let betSubmissionSuccessViewController = BetSubmissionSuccessViewController(betPlacedDetailsArray: betPlacedDetailsArray,
                                                                                     cashbackResultValue: cashbackResultValue,
-                                                                                    usedCashback: usedCashback)
+                                                                                    usedCashback: usedCashback,
+        bettingTickets: betTickets)
+        
         betSubmissionSuccessViewController.willDismissAction = self.willDismissAction
 
         self.navigationController?.pushViewController(betSubmissionSuccessViewController, animated: true)

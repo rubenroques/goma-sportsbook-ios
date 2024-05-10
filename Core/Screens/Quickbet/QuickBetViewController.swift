@@ -92,6 +92,8 @@ class QuickBetViewController: UIViewController {
             self.suspendedOddBaseView.isHidden = isAvailableOdd
         }
     }
+    
+    var shouldShowBetSuccess: ((BettingTicket, [BetPlacedDetails]) -> Void)?
 
     // MARK: - Lifetime and Cycle
     init(viewModel: QuickBetViewModel) {
@@ -320,8 +322,8 @@ class QuickBetViewController: UIViewController {
             self?.showBetError(errorMesage: errorMessage)
         }
 
-        viewModel.shouldShowBetSuccess = { [weak self] in
-            self?.showBetSuccessScreen()
+        viewModel.shouldShowBetSuccess = { [weak self] betPlacedDetails in
+            self?.showBetSuccessScreen(betPlacedDetails: betPlacedDetails)
         }
     }
 
@@ -340,8 +342,11 @@ class QuickBetViewController: UIViewController {
         self.hasError = true
     }
 
-    private func showBetSuccessScreen() {
-        self.isSuccessBet = true
+    private func showBetSuccessScreen(betPlacedDetails: [BetPlacedDetails]) {
+//        self.isSuccessBet = true
+        
+        self.shouldShowBetSuccess?(self.viewModel.bettingTicket, betPlacedDetails)
+
     }
 
     private func updateOddStatus(oddStatusType: OddStatusType) {
@@ -440,25 +445,25 @@ class QuickBetViewController: UIViewController {
 
     @objc func keyboardWillShow(notification: NSNotification) {
 
-        if let keyboardSize = (notification.userInfo?[UIResponder.keyboardFrameEndUserInfoKey] as? NSValue)?.cgRectValue {
-            let keyboardHeight = (keyboardSize.height - self.bottomSafeAreaView.frame.height) + 15
-
-            self.containerBottomConstraint =
-            NSLayoutConstraint(item: self.containerStackView,
-                               attribute: .bottom,
-                               relatedBy: .equal,
-                               toItem: self.bottomSafeAreaView,
-                               attribute: .top,
-                               multiplier: 1,
-                               constant: -keyboardHeight)
-            self.containerCenterYConstraint.isActive = false
-            self.containerBottomConstraint.isActive = true
-            }
+//        if let keyboardSize = (notification.userInfo?[UIResponder.keyboardFrameEndUserInfoKey] as? NSValue)?.cgRectValue {
+//            let keyboardHeight = (keyboardSize.height - self.bottomSafeAreaView.frame.height) + 15
+//
+//            self.containerBottomConstraint =
+//            NSLayoutConstraint(item: self.containerStackView,
+//                               attribute: .bottom,
+//                               relatedBy: .equal,
+//                               toItem: self.bottomSafeAreaView,
+//                               attribute: .top,
+//                               multiplier: 1,
+//                               constant: -keyboardHeight)
+//            self.containerCenterYConstraint.isActive = false
+//            self.containerBottomConstraint.isActive = true
+//            }
     }
 
     @objc func keyboardWillHide(notification: NSNotification) {
-        self.containerBottomConstraint.isActive = false
-        self.containerCenterYConstraint.isActive = true
+//        self.containerBottomConstraint.isActive = false
+//        self.containerCenterYConstraint.isActive = true
     }
 }
 

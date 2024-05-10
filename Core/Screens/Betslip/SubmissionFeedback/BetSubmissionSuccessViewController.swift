@@ -50,6 +50,7 @@ class BetSubmissionSuccessViewController: UIViewController {
     private var locationsCodesDictionary: [String: String] = [:]
     private var cashbackResultValue: Double?
     private var usedCashback: Bool = false
+    private var bettingTickets: [BettingTicket]?
 
     private var cancellables = Set<AnyCancellable>()
 
@@ -60,8 +61,11 @@ class BetSubmissionSuccessViewController: UIViewController {
             self.loadingBaseView.isHidden = !isLoading
         }
     }
+    
 
-    init(betPlacedDetailsArray: [BetPlacedDetails], cashbackResultValue: Double? = nil, usedCashback: Bool = false) {
+    init(betPlacedDetailsArray: [BetPlacedDetails], cashbackResultValue: Double? = nil, usedCashback: Bool = false, bettingTickets: [BettingTicket]? = nil) {
+        
+        self.bettingTickets = bettingTickets
 
         self.betPlacedDetailsArray = betPlacedDetailsArray
 
@@ -115,7 +119,9 @@ class BetSubmissionSuccessViewController: UIViewController {
         let checkboxTap = UITapGestureRecognizer(target: self, action: #selector(didTapCheckbox))
         self.checkboxView.addGestureRecognizer(checkboxTap)
 
-        self.loadBetTickets()
+//        self.loadBetTickets()
+        
+        self.configureBetEntries()
 
         self.setupWithTheme()
 
@@ -191,6 +197,34 @@ class BetSubmissionSuccessViewController: UIViewController {
 
         self.backButton.backgroundColor = .clear
 
+    }
+    
+    private func configureBetEntries() {
+        
+        self.isLoading = true
+        var betHistoryEntries = [BetHistoryEntry]()
+        
+        if let bettingTickets = self.bettingTickets {
+            for betPlacedDetails in self.betPlacedDetailsArray {
+                if let betPlacedSelections = betPlacedDetails.response.selections {
+                    
+                    let selectionIds = Set(betPlacedSelections.map { $0.id })
+                    
+                    let filteredBettingTickets = bettingTickets.filter { selectionIds.contains($0.id) }
+
+                    let mappedBetHistoryEntrySelection = filteredBettingTickets.map( {
+                        ServiceProviderModelMapper.betHistoryEntrySelection(fromBettingTicket: $0)
+                    })
+                    
+                    let bettingTicketHistory = BetHistoryEntry(betId: betPlacedDetails.response.betId ?? "", selections: mappedBetHistoryEntrySelection, type: betPlacedDetails.response.type, systemBetType: betPlacedDetails.response.type, amount: betPlacedDetails.response.amount, totalBetAmount: betPlacedDetails.response.amount, freeBetAmount: nil, bonusBetAmount: nil, currency: "EUR", maxWinning: betPlacedDetails.response.maxWinning, totalPriceValue: betPlacedDetails.response.totalPriceValue, overallBetReturns: nil, numberOfSelections: mappedBetHistoryEntrySelection.count, status: "Open", placedDate: Date(), settledDate: nil, freeBet: nil, partialCashoutReturn: nil, partialCashoutStake: nil, betShareToken: nil, betslipId: nil, cashbackReturn: nil, freebetReturn: nil, potentialCashbackReturn: nil, potentialFreebetReturn: nil)
+                    
+                    betHistoryEntries.append(bettingTicketHistory)
+                }
+            }
+        }
+        
+        self.configureBetCards(withBetHistoryEntries: betHistoryEntries)
+        self.isLoading = false
     }
 
     private func getBackgroundImage() {

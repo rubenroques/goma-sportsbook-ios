@@ -265,6 +265,7 @@ public struct PlacedBetEntry: Codable {
     public var placeStake: Double
     public var totalStake: Double
     public var betLegs: [PlacedBetLeg]
+    public var type: String?
 
     enum CodingKeys: String, CodingKey {
         case identifier = "idFOBet"
@@ -272,14 +273,16 @@ public struct PlacedBetEntry: Codable {
         case potentialReturn = "potentialReturn"
         case placeStake = "placeStake"
         case totalStake = "totalStake"
+        case type = "idfoBetType"
     }
 
-    public init(identifier: String, potentialReturn: Double, placeStake: Double, totalStake: Double, betLegs: [PlacedBetLeg]) {
+    public init(identifier: String, potentialReturn: Double, placeStake: Double, totalStake: Double, betLegs: [PlacedBetLeg], type: String?) {
         self.identifier = identifier
         self.potentialReturn = potentialReturn
         self.placeStake = placeStake
         self.totalStake = totalStake
         self.betLegs = betLegs
+        self.type = type
     }
 }
 

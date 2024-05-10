@@ -44,7 +44,7 @@ public struct RegisterError {
     var associatedFormStep: FormStep? {
         switch field {
         case "gender": return .gender
-        case "firstName", "lastName": return .names
+        case "firstName", "lastName", "middleName": return .names
         case "username": return .nickname
         case "password": return .password
         case "email", "mobile": return .contacts

@@ -87,6 +87,7 @@ public struct UserProfile: Codable {
     public let username: String
     public let email: String
     public let firstName: String?
+    public let middleName: String?
     public let lastName: String?
     public let birthDate: Date
     public let gender: String?
@@ -123,6 +124,7 @@ public struct UserProfile: Codable {
                 username: String,
                 email: String,
                 firstName: String?,
+                middleName: String?,
                 lastName: String?,
                 birthDate: Date,
                 gender: String?,
@@ -156,6 +158,7 @@ public struct UserProfile: Codable {
         self.username = username
         self.email = email
         self.firstName = firstName
+        self.middleName = middleName
         self.lastName = lastName
         self.birthDate = birthDate
         self.gender = gender
@@ -246,6 +249,7 @@ public class SignUpForm {
 
     public var firstName: String
     public var lastName: String
+    public var middleName: String?
 
     public var gender: String
     public var address: String
@@ -273,7 +277,7 @@ public class SignUpForm {
 
     public init(email: String, username: String, password: String, birthDate: Date,
                 mobilePrefix: String, mobileNumber: String, nationalityIsoCode: String,
-                currencyCode: String, firstName: String, lastName: String,
+                currencyCode: String, firstName: String, lastName: String, middleName: String?,
                 gender: String, address: String, city: String,
                 countryIsoCode: String, bonusCode: String? = nil,
                 receiveMarketingEmails: Bool? = nil, avatarName: String? = nil,
@@ -292,6 +296,7 @@ public class SignUpForm {
         self.currencyCode = currencyCode
         self.firstName = firstName
         self.lastName = lastName
+        self.middleName = middleName
         self.gender = gender
         self.address = address
         self.city = city
@@ -335,6 +340,7 @@ public struct UpdateUserProfileForm {
     public var username: String?
     public var email: String?
     public var firstName: String?
+    public var middleName: String?
     public var lastName: String?
     public var birthDate: Date?
     public var gender: String?
@@ -349,7 +355,7 @@ public struct UpdateUserProfileForm {
     public var securityQuestion: String?
     public var securityAnswer: String?
     
-    public init(username: String? = nil, email: String? = nil, firstName: String? = nil,
+    public init(username: String? = nil, email: String? = nil, firstName: String? = nil, middleName: String? = nil,
                 lastName: String? = nil, birthDate: Date? = nil, gender: String? = nil,
                 address: String? = nil, province: String? = nil, city: String? = nil,
                 postalCode: String? = nil, country: Country? = nil, cardId: String? = nil,
@@ -357,6 +363,7 @@ public struct UpdateUserProfileForm {
         self.username = username
         self.email = email
         self.firstName = firstName
+        self.middleName = middleName
         self.lastName = lastName
         self.birthDate = birthDate
         self.gender = gender

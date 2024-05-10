@@ -64,6 +64,7 @@ public class HeaderTextFieldView: NibView {
     public var didSelectPickerIndex: ((Int) -> Void)?
     public var shouldBeginEditing: (() -> Bool)?
     public var didTapRemoveIcon: (() -> Void)?
+    public var didBeginEditing: (() -> Void)?
 
     //  Variables
     public let datePicker = UIDatePicker()
@@ -126,6 +127,8 @@ public class HeaderTextFieldView: NibView {
     }
     
     public var isAlphabetMode = false
+    
+    public var isMiddleNameMode = false
 
     public var text: String {
         return self.textField.text ?? ""
@@ -617,6 +620,8 @@ extension HeaderTextFieldView: UITextFieldDelegate {
         self.slideUp()
 
         self.isManualInput = true
+        
+        self.didBeginEditing?()
     }
 
     public func textFieldDidEndEditing(_ textField: UITextField) {
@@ -657,12 +662,36 @@ extension HeaderTextFieldView: UITextFieldDelegate {
         
         if self.isAlphabetMode {
             if !string.isEmpty {
-//                let allowedCharacters = CharacterSet.letters
                 let allowedCharacters = CharacterSet.decimalDigits.inverted
                 let characterSet = CharacterSet(charactersIn: string)
                 return allowedCharacters.isSuperset(of: characterSet)
             }
         }
+        
+        if self.isMiddleNameMode {
+            let currentText = textField.text ?? ""
+            let newText = (currentText as NSString).replacingCharacters(in: range, with: string)
+            
+            if newText.count > 50 {
+                return false
+            }
+            
+            let allowedCharacters = CharacterSet(charactersIn: "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ'- ")
+            
+            if string.rangeOfCharacter(from: allowedCharacters.inverted) != nil {
+                return false
+            }
+            
+            let spaceCount = newText.components(separatedBy: " ").count - 1
+            
+            if spaceCount > 3 {
+                return false 
+            }
+            
+            return true
+            
+        }
+        
         return true
     }
 

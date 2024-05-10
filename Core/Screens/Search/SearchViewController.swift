@@ -341,6 +341,14 @@ class SearchViewController: UIViewController {
 
             quickbetViewController.modalPresentationStyle = .overCurrentContext
             quickbetViewController.modalTransitionStyle = .crossDissolve
+            
+            quickbetViewController.shouldShowBetSuccess = { bettingTicket, betPlacedDetails in
+                
+                quickbetViewController.dismiss(animated: true, completion: {
+                    
+                    self.showBetSucess(bettingTicket: bettingTicket, betPlacedDetails: betPlacedDetails)
+                })
+            }
 
             self.present(quickbetViewController, animated: true)
         }
@@ -348,6 +356,16 @@ class SearchViewController: UIViewController {
             let loginViewController = Router.navigationController(with: LoginViewController())
             self.present(loginViewController, animated: true, completion: nil)
         }
+    }
+    
+    private func showBetSucess(bettingTicket: BettingTicket, betPlacedDetails: [BetPlacedDetails]) {
+        
+        let betSubmissionSuccessViewController = BetSubmissionSuccessViewController(betPlacedDetailsArray: betPlacedDetails,
+                                                                                    cashbackResultValue: nil,
+                                                                                    usedCashback: false,
+        bettingTickets: [bettingTicket])
+        
+        self.present(Router.navigationController(with: betSubmissionSuccessViewController), animated: true)
     }
 
     @IBAction private func didTapCancelButton() {

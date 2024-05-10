@@ -119,7 +119,7 @@ class SharedTicketBetLineView: UIView {
             self.locationImageView.image = image
         }
         else {
-            self.locationImageView.isHidden = true
+            self.locationImageView.image = UIImage(named: "country_flag_240")
         }
 
     }

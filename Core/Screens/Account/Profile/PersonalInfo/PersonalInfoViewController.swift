@@ -21,6 +21,7 @@ class PersonalInfoViewController: UIViewController {
 
     @IBOutlet private var titleHeaderTextFieldView: HeaderDropDownSelectionView!
     @IBOutlet private var firstNameHeaderTextFieldView: HeaderTextFieldView!
+    @IBOutlet private var middleNameHeaderTextFieldView: HeaderTextFieldView!
     @IBOutlet private var lastNameHeaderTextFieldView: HeaderTextFieldView!
     @IBOutlet private var countryHeaderTextFieldView: HeaderDropDownSelectionView!
     @IBOutlet private var birthDateHeaderTextFieldView: HeaderDropDownSelectionView!
@@ -102,6 +103,9 @@ class PersonalInfoViewController: UIViewController {
         firstNameHeaderTextFieldView.showTipWithoutIcon(text: localized("names_match_id"),
                                                         color: UIColor.App.inputTextTitle)
         firstNameHeaderTextFieldView.isDisabled = true
+        
+        middleNameHeaderTextFieldView.setPlaceholderText(localized("middle_name"))
+        middleNameHeaderTextFieldView.isDisabled = true
 
         lastNameHeaderTextFieldView.setPlaceholderText(localized("last_name"))
         lastNameHeaderTextFieldView.isDisabled = true
@@ -204,6 +208,10 @@ class PersonalInfoViewController: UIViewController {
         firstNameHeaderTextFieldView.backgroundColor = UIColor.App.backgroundPrimary
         firstNameHeaderTextFieldView.setHeaderLabelColor(UIColor.App.inputTextTitle)
         firstNameHeaderTextFieldView.setTextFieldColor(UIColor.App.inputText)
+        
+        middleNameHeaderTextFieldView.backgroundColor = UIColor.App.backgroundPrimary
+        middleNameHeaderTextFieldView.setHeaderLabelColor(UIColor.App.inputTextTitle)
+        middleNameHeaderTextFieldView.setTextFieldColor(UIColor.App.inputText)
 
         lastNameHeaderTextFieldView.backgroundColor = UIColor.App.backgroundPrimary
         lastNameHeaderTextFieldView.setHeaderLabelColor(UIColor.App.inputTextTitle)
@@ -280,6 +288,7 @@ class PersonalInfoViewController: UIViewController {
 
         Publishers.MergeMany(self.titleHeaderTextFieldView.textPublisher.eraseToAnyPublisher(),
                              self.firstNameHeaderTextFieldView.textPublisher.eraseToAnyPublisher(),
+                             self.middleNameHeaderTextFieldView.textPublisher.eraseToAnyPublisher(),
                              self.lastNameHeaderTextFieldView.textPublisher.eraseToAnyPublisher(),
                              self.countryHeaderTextFieldView.textPublisher.eraseToAnyPublisher(),
                              self.birthDateHeaderTextFieldView.textPublisher.eraseToAnyPublisher(),
@@ -331,6 +340,7 @@ class PersonalInfoViewController: UIViewController {
     func generateFormHash() -> String {
         return [self.titleHeaderTextFieldView.text,
                 self.firstNameHeaderTextFieldView.text,
+                self.middleNameHeaderTextFieldView.text,
                 self.lastNameHeaderTextFieldView.text,
                 self.countryHeaderTextFieldView.text,
                 self.birthDateHeaderTextFieldView.text,
@@ -374,6 +384,7 @@ class PersonalInfoViewController: UIViewController {
         let gender = titleHeaderTextFieldView.text == UserGender.male.rawValue ? "M" : "F"
 
         let firstName = firstNameHeaderTextFieldView.text
+        let middleName = middleNameHeaderTextFieldView.text
         let lastName = lastNameHeaderTextFieldView.text
         let birthDateString = birthDateHeaderTextFieldView.text
 //        let mobilePrefix = profile?.mobilePrefix ?? ""
@@ -432,6 +443,7 @@ class PersonalInfoViewController: UIViewController {
         let form = ServicesProvider.UpdateUserProfileForm.init(username: nil,
                                                               email: nil,
                                                               firstName: firstName,
+                                                              middleName: middleName,
                                                               lastName: lastName,
                                                               birthDate: date,
                                                               gender: gender,
@@ -515,6 +527,7 @@ class PersonalInfoViewController: UIViewController {
     @objc func didTapBackgroundView() {
         self.resignFirstResponder()
         self.firstNameHeaderTextFieldView.resignFirstResponder()
+        self.middleNameHeaderTextFieldView.resignFirstResponder()
         self.lastNameHeaderTextFieldView.resignFirstResponder()
         self.countryHeaderTextFieldView.resignFirstResponder()
         self.adress1HeaderTextFieldView.resignFirstResponder()
@@ -546,8 +559,11 @@ class PersonalInfoViewController: UIViewController {
         
         self.phoneNumberHeaderTextFieldView.setText(fullMobilePhone)
         
-        self.firstNameHeaderTextFieldView.setText(profile.firstName ?? "-")
-        self.lastNameHeaderTextFieldView.setText(profile.lastName ?? "-")
+        self.firstNameHeaderTextFieldView.setText(profile.firstName ?? "")
+        
+        self.middleNameHeaderTextFieldView.setText(profile.middleName ?? "")
+
+        self.lastNameHeaderTextFieldView.setText(profile.lastName ?? "")
         
         if let country = profile.nationality {
             self.countryHeaderTextFieldView.setText( self.formatIndicativeCountry(country, showName: true), slideUp: true)

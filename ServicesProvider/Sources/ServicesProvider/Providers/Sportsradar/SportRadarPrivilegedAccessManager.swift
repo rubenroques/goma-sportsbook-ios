@@ -214,6 +214,7 @@ class SportRadarPrivilegedAccessManager: PrivilegedAccessManager {
                                              currencyCode: form.currencyCode,
                                              firstName: form.firstName,
                                              lastName: form.lastName,
+                                             middleName: form.middleName,
                                              gender: form.gender,
                                              address: form.address,
                                              city: form.city,
