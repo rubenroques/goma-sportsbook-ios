@@ -299,7 +299,7 @@ extension LiveDetailsViewController: UITableViewDelegate, UITableViewDataSource 
             cell.matchStatsViewModel = self.viewModel.matchStatsViewModel(forMatch: match)
 
             let viewModel = MatchLineTableCellViewModel(match: match)
-            cell.viewModel = viewModel
+            cell.configure(withViewModel: viewModel)
 
             cell.shouldShowCountryFlag(true)
             cell.tappedMatchLineAction = { [weak self] match in

@@ -331,7 +331,7 @@ extension TopCompetitionDetailsViewController: UITableViewDelegate, UITableViewD
             if let cell = tableView.dequeueCellType(MatchLineTableViewCell.self) {
 
                 let viewModel = self.viewModel.matchLineTableCellViewModel(forMatch: match)
-                cell.viewModel = viewModel
+                cell.configure(withViewModel: viewModel)
 
                 cell.shouldShowCountryFlag(true)
                 cell.tappedMatchLineAction = { [weak self] match in

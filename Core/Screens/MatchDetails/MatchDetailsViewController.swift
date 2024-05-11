@@ -998,46 +998,57 @@ class MatchDetailsViewController: UIViewController {
     
     func setupHeaderDetails(withMatch match: Match) {
         let cellViewModel = MatchWidgetCellViewModel(match: match)
-        
-        if cellViewModel.countryISOCode != "" {
-            self.headerCompetitionImageView.image = UIImage(named: Assets.flagName(withCountryCode: cellViewModel.countryISOCode))
-        }
-        else {
-            self.headerCompetitionImageView.image = UIImage(named: Assets.flagName(withCountryCode: cellViewModel.countryId))
-        }
-        
-        self.headerCompetitionLabel.text = cellViewModel.competitionName
-        self.headerDetailHomeLabel.text = cellViewModel.homeTeamName
-        self.headerDetailAwayLabel.text = cellViewModel.awayTeamName
-        
-        if self.matchMode == .preLive {
-            self.headerDetailPreliveTopLabel.text = cellViewModel.startDateString
-            self.headerDetailPreliveBottomLabel.text = cellViewModel.startTimeString
-        }
-        else {
-            self.headerDetailLiveTopLabel.text = self.viewModel.matchScore
-            self.headerDetailLiveBottomLabel.text = self.viewModel.matchTimeDetails
-        }
 
-        let imageName = match.sport.id
-        if let sportIconImage = UIImage(named: "sport_type_icon_\(imageName)") {
-            self.headerCompetitionSportImageView.image = sportIconImage
-        }
-        else {
-            self.headerCompetitionSportImageView.image = UIImage(named: "sport_type_icon_default")
-        }
-
+        cellViewModel.homeTeamNamePublisher
+            .sink { [weak self] homeTeamName in
+                self?.headerDetailHomeLabel.text = homeTeamName
+                self?.homeTeamLabel.text = homeTeamName
+            }
+            .store(in: &self.cancellables)
+        
+        cellViewModel.awayTeamNamePublisher
+            .sink { [weak self] awayTeamName in
+                self?.headerDetailAwayLabel.text = awayTeamName
+                self?.awayTeamLabel.text = awayTeamName
+            }
+            .store(in: &self.cancellables)
+        
+        cellViewModel.competitionNamePublisher
+            .sink { [weak self] competitionName in
+                self?.headerCompetitionLabel.text = competitionName
+            }
+            .store(in: &self.cancellables)
+        
+        cellViewModel.countryFlagImagePublisher
+            .sink { [weak self] countryFlagImage in
+                self?.headerCompetitionImageView.image = countryFlagImage
+            }
+            .store(in: &self.cancellables)
+        
+        cellViewModel.sportIconImagePublisher
+            .sink { [weak self] sportIconImage in
+                self?.headerCompetitionSportImageView.image = sportIconImage
+            }
+            .store(in: &self.cancellables)
+        
         self.headerCompetitionSportImageView.setTintColor(color: UIColor.App.textPrimary)
         
-        // New details view
-        self.homeTeamLabel.text = cellViewModel.homeTeamName
-        
-        self.awayTeamLabel.text = cellViewModel.awayTeamName
-        
+        // With new details view
         if self.matchMode == .preLive {
-            self.preLiveDateLabel.text = cellViewModel.startDateString
+            cellViewModel.startDateStringPublisher
+                .sink { [weak self] startDate in
+                    self?.headerDetailPreliveTopLabel.text = startDate
+                    self?.preLiveDateLabel.text = startDate
+                }
+                .store(in: &self.cancellables)
             
-            self.preLiveTimeLabel.text = cellViewModel.startTimeString
+            cellViewModel.startTimeStringPublisher
+                .sink { [weak self] startTime in
+                    self?.headerDetailPreliveBottomLabel.text = startTime
+                    self?.preLiveTimeLabel.text = startTime
+                }
+                .store(in: &self.cancellables)
+            
             
             self.liveTimeLabel.isHidden = true
             
@@ -1045,17 +1056,14 @@ class MatchDetailsViewController: UIViewController {
             self.liveDetailsView.isHidden = true
         }
         else {
+            self.headerDetailLiveTopLabel.text = self.viewModel.matchScore
+            self.headerDetailLiveBottomLabel.text = self.viewModel.matchTimeDetails
+            
             self.liveTimeLabel.text = self.viewModel.matchTimeDetails
             self.liveTimeLabel.isHidden = false
 
             self.preLiveDetailsView.isHidden = true
             self.liveDetailsView.isHidden = false
-            
-//            if let matchScores = match.detailedScores {
-//                self.scoreView.sportCode = match.sport.alphaId ?? ""
-//                self.scoreView.updateScores(matchScores)
-//            }
-            
         }
         
     }

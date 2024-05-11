@@ -579,7 +579,7 @@ class LiveMatchesViewModelDataSource: NSObject, UITableViewDataSource, UITableVi
                 }
                 
                 let viewModel = MatchLineTableCellViewModel(match: match)
-                cell.viewModel = viewModel
+                cell.configure(withViewModel: viewModel)
                 
                 cell.tappedMatchLineAction = { [weak self] match in
                     self?.didSelectMatchAction?(match)
@@ -607,7 +607,7 @@ class LiveMatchesViewModelDataSource: NSObject, UITableViewDataSource, UITableVi
                 }
                 
                 let viewModel = MatchLineTableCellViewModel(match: match)
-                cell.viewModel = viewModel
+                cell.configure(withViewModel: viewModel)
                 
                 cell.tappedMatchLineAction = { [weak self] match in
                     self?.didSelectMatchAction?(match)

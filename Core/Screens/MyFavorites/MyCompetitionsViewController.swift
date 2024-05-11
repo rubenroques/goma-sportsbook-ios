@@ -296,7 +296,7 @@ extension MyCompetitionsViewController: UITableViewDataSource, UITableViewDelega
             if !self.viewModel.collapsedCompetitionsSections.contains(indexPath.section) {
 
                 let viewModel = MatchLineTableCellViewModel(match: match)
-                cell.viewModel = viewModel
+                cell.configure(withViewModel: viewModel)
 
                 // cell.shouldShowCountryFlag(false)
                 cell.tappedMatchLineAction = { [weak self] match in

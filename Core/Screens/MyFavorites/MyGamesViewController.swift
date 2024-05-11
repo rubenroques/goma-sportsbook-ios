@@ -236,7 +236,7 @@ extension MyGamesViewController: UITableViewDataSource, UITableViewDelegate {
                 }
 
                 let viewModel = MatchLineTableCellViewModel(match: match)
-                cell.viewModel = viewModel
+                cell.configure(withViewModel: viewModel)
 
                 cell.tappedMatchLineAction = { [weak self] match in
                     self?.viewModel.didSelectMatchAction?(match)
@@ -245,7 +245,7 @@ extension MyGamesViewController: UITableViewDataSource, UITableViewDelegate {
                     self?.viewModel.matchWentLiveAction?()
                 }
 
-                viewModel.matchPublisher
+                viewModel.$match
                     .dropFirst()
                     .sink(receiveValue: { [weak self] match in
                         guard let self = self else { return }

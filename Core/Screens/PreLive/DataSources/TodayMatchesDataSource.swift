@@ -341,7 +341,7 @@ extension TodayMatchesDataSource: UITableViewDataSource, UITableViewDelegate {
                 }
                 
                 let viewModel = self.matchLineTableCellViewModel(forMatch: match)
-                cell.viewModel = viewModel
+                cell.configure(withViewModel: viewModel)
                 
                 cell.tappedMatchLineAction = { [weak self] match in
                     self?.didSelectMatchAction?(match)

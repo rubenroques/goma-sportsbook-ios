@@ -360,7 +360,7 @@ extension SportMatchSingleLineTableViewCell: UICollectionViewDelegate, UICollect
                         cell.setupWithMarket(market, match: match,
                                              teamsText: teamsText,
                                              countryIso: countryIso,
-                                             isLive: cellViewModel.isLiveCard)
+                                             isLive: cellViewModel.matchWidgetStatus == .live)
                         cell.tappedMatchWidgetAction = { [weak self] in
                             self?.tappedMatchLineAction?(match)
                         }
@@ -382,7 +382,7 @@ extension SportMatchSingleLineTableViewCell: UICollectionViewDelegate, UICollect
                         cell.setupWithMarket(market, match: match,
                                              teamsText: teamsText,
                                              countryIso: countryIso,
-                                             isLive: cellViewModel.isLiveCard)
+                                             isLive: cellViewModel.matchWidgetStatus == .live)
                         cell.tappedMatchWidgetAction = { [weak self] in
                             self?.tappedMatchLineAction?(match)
                         }
@@ -541,7 +541,6 @@ extension SportMatchSingleLineTableViewCell {
                                            forCellWithReuseIdentifier: OutrightCompetitionLargeWidgetCollectionViewCell.identifier)
 
         self.collectionView.register(MatchWidgetCollectionViewCell.nib, forCellWithReuseIdentifier: MatchWidgetCollectionViewCell.identifier)
-        self.collectionView.register(LiveMatchWidgetCollectionViewCell.nib, forCellWithReuseIdentifier: LiveMatchWidgetCollectionViewCell.identifier)
         self.collectionView.register(OddDoubleCollectionViewCell.nib, forCellWithReuseIdentifier: OddDoubleCollectionViewCell.identifier)
         self.collectionView.register(OddTripleCollectionViewCell.nib, forCellWithReuseIdentifier: OddTripleCollectionViewCell.identifier)
         self.collectionView.register(SeeMoreMarketsCollectionViewCell.nib, forCellWithReuseIdentifier: SeeMoreMarketsCollectionViewCell.identifier)

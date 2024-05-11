@@ -124,6 +124,7 @@ class ClientManagedHomeViewTemplateDataSource {
 
     var supplementaryEventIds: [String] = []
 
+    var matchWidgetCellViewModelCache: [String: MatchWidgetCellViewModel] = [:]
     var matchLineTableCellViewModelCache: [String: MatchLineTableCellViewModel] = [:]
 
     var highlightedLiveMatchLineTableCellViewModelCache: [String: MatchLineTableCellViewModel] = [:]
@@ -149,6 +150,7 @@ class ClientManagedHomeViewTemplateDataSource {
     }
 
     func refreshData() {
+        self.matchWidgetCellViewModelCache = [:]
         self.matchLineTableCellViewModelCache = [:]
         self.highlightedLiveMatchLineTableCellViewModelCache = [:]
         
@@ -637,13 +639,34 @@ extension ClientManagedHomeViewTemplateDataSource: HomeViewTemplateDataSource {
         let highlightsOutrightsMatchesIndex = index-self.highlightsVisualImageMatches.count
         
         if let match = self.highlightsVisualImageMatches[safe: index] {
-            return MatchWidgetCellViewModel(match: match, matchWidgetType: .topImage)
+            if let matchWidgetCellViewModel = self.matchWidgetCellViewModelCache[match.id] {
+                return matchWidgetCellViewModel
+            }
+            else {
+                let matchWidgetCellViewModel = MatchWidgetCellViewModel(match: match, matchWidgetType: .topImage)
+                self.matchWidgetCellViewModelCache[match.id] = matchWidgetCellViewModel
+                return matchWidgetCellViewModel
+            }
         }
         else if let match = self.highlightsBoostedMatches[safe: boostedMatchesIndex] {
-            return MatchWidgetCellViewModel(match: match, matchWidgetType: .boosted)
+            if let matchWidgetCellViewModel = self.matchWidgetCellViewModelCache[match.id] {
+                return matchWidgetCellViewModel
+            }
+            else {
+                let matchWidgetCellViewModel = MatchWidgetCellViewModel(match: match, matchWidgetType: .boosted)
+                self.matchWidgetCellViewModelCache[match.id] = matchWidgetCellViewModel
+                return matchWidgetCellViewModel
+            }
         }
         else if let match = self.highlightsVisualImageOutrights[safe: highlightsOutrightsMatchesIndex] {
-            return MatchWidgetCellViewModel(match: match, matchWidgetType: .topImageOutright)
+            if let matchWidgetCellViewModel = self.matchWidgetCellViewModelCache[match.id] {
+                return matchWidgetCellViewModel
+            }
+            else {
+                let matchWidgetCellViewModel = MatchWidgetCellViewModel(match: match, matchWidgetType: .topImageOutright)
+                self.matchWidgetCellViewModelCache[match.id] = matchWidgetCellViewModel
+                return matchWidgetCellViewModel
+            }
         }
         return nil
     }
@@ -703,6 +726,29 @@ extension ClientManagedHomeViewTemplateDataSource: HomeViewTemplateDataSource {
         return self.topCompetitionsLineCellViewModel
     }
 
+}
+
+
+extension ClientManagedHomeViewTemplateDataSource {
+    func cachedMatchLineTableCellViewModel(forSection section: Int, forIndex index: Int) -> MatchLineTableCellViewModel? {
+
+        guard
+            let matchId = self.supplementaryEventId(forSection: section, forIndex: index),
+            section == 6
+        else {
+            return nil
+        }
+
+        if let matchLineTableCellViewModel = self.matchLineTableCellViewModelCache[matchId] {
+            return matchLineTableCellViewModel
+        }
+        else {
+            let matchLineTableCellViewModel = MatchLineTableCellViewModel(matchId: matchId, status: .unknown)
+            self.matchLineTableCellViewModelCache[matchId] = matchLineTableCellViewModel
+            return matchLineTableCellViewModel
+        }
+
+    }
 }
 
 extension ClientManagedHomeViewTemplateDataSource {

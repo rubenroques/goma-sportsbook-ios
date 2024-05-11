@@ -293,177 +293,17 @@ class MatchWidgetCollectionViewCell: UICollectionViewCell {
         marketNamePillLabelView.translatesAutoresizingMaskIntoConstraints = false
         return marketNamePillLabelView
     }()
-    //
-    //
-    
-    private var matchWidgetType: MatchWidgetType = .normal {
-        didSet {
-
-            switch self.matchWidgetType {
-            case .normal:
-                self.backgroundImageView.isHidden = true
-
-                self.topImageBaseView.isHidden = true
-                self.boostedOddBottomLineView.isHidden = true
-                self.boostedTopRightCornerBaseView.isHidden = true
-
-                self.mainContentBaseView.isHidden = false
-
-                self.baseView.layer.borderWidth = 0
-                self.baseView.layer.borderColor = nil
-                self.headerLineStackView.alpha = 1.0
-
-                self.homeBoostedOddValueBaseView.isHidden = true
-                self.drawBoostedOddValueBaseView.isHidden = true
-                self.awayBoostedOddValueBaseView.isHidden = true
-
-                switch StyleHelper.cardsStyleActive() {
-                case .small:
-                    self.bottomMarginSpaceConstraint.constant = 8
-                    self.teamsHeightConstraint.constant = 26
-                    self.topMarginSpaceConstraint.constant = 8
-                case .normal:
-                    self.bottomMarginSpaceConstraint.constant = 12
-                    self.teamsHeightConstraint.constant = 67
-                    self.topMarginSpaceConstraint.constant = 11
-                }
-
-                self.gradientBorderView.isHidden = false
-                self.liveGradientBorderView.isHidden = true
-
-            case .topImage:
-                self.backgroundImageView.isHidden = true
-
-                self.topImageBaseView.isHidden = false
-
-                self.boostedOddBottomLineView.isHidden = true
-                self.boostedTopRightCornerBaseView.isHidden = true
-
-                self.mainContentBaseView.isHidden = false
-
-                self.homeBoostedOddValueBaseView.isHidden = true
-                self.drawBoostedOddValueBaseView.isHidden = true
-                self.awayBoostedOddValueBaseView.isHidden = true
-
-                self.baseView.layer.borderWidth = 0
-                self.baseView.layer.borderColor = nil
-                self.headerLineStackView.alpha = 1.0
-                self.bottomMarginSpaceConstraint.constant = 12
-                self.teamsHeightConstraint.constant = 67
-                self.topMarginSpaceConstraint.constant = 11
-
-                self.gradientBorderView.isHidden = true
-                self.liveGradientBorderView.isHidden = true
-                
-            case .topImageOutright:
-                self.backgroundImageView.isHidden = true
-
-                self.topImageBaseView.isHidden = false
-
-                self.boostedOddBottomLineView.isHidden = true
-                self.boostedTopRightCornerBaseView.isHidden = true
-
-                self.mainContentBaseView.isHidden = false
-
-                self.homeBoostedOddValueBaseView.isHidden = true
-                self.drawBoostedOddValueBaseView.isHidden = true
-                self.awayBoostedOddValueBaseView.isHidden = true
-                
-                self.seeAllBaseView.isHidden = true
-                self.oddsStackView.isHidden = true
-                self.suspendedBaseView.isHidden = true
-                self.outrightBaseView.isHidden = false
-
-                self.baseView.layer.borderWidth = 0
-                self.baseView.layer.borderColor = nil
-                self.headerLineStackView.alpha = 1.0
-                self.bottomMarginSpaceConstraint.constant = 12
-                self.teamsHeightConstraint.constant = 67
-                self.topMarginSpaceConstraint.constant = 11
-
-                self.gradientBorderView.isHidden = true
-                self.liveGradientBorderView.isHidden = true
-
-            case .boosted:
-                self.backgroundImageView.isHidden = true
-
-                self.topImageBaseView.isHidden = true
-                self.boostedOddBottomLineView.isHidden = false
-                self.boostedTopRightCornerBaseView.isHidden = false
-
-                self.mainContentBaseView.isHidden = false
-
-                self.homeBoostedOddValueBaseView.isHidden = false
-                self.drawBoostedOddValueBaseView.isHidden = false
-                self.awayBoostedOddValueBaseView.isHidden = false
-
-//                self.baseView.layer.borderWidth = 2
-//                self.baseView.layer.borderColor = UIColor.App.separatorLine.cgColor
-                self.headerLineStackView.alpha = 1.0
-                self.bottomMarginSpaceConstraint.constant = 12
-                self.teamsHeightConstraint.constant = 67
-                self.topMarginSpaceConstraint.constant = 11
-
-                self.setupBoostedOddsSubviews()
-
-                self.gradientBorderView.isHidden = false
-                self.liveGradientBorderView.isHidden = true
-                
-            case .backgroundImage:
-                self.backgroundImageView.isHidden = false
-
-                self.topImageBaseView.isHidden = true
-                self.boostedOddBottomLineView.isHidden = true
-                self.boostedTopRightCornerBaseView.isHidden = true
-
-                self.mainContentBaseView.isHidden = false
-
-                self.homeBoostedOddValueBaseView.isHidden = true
-                self.drawBoostedOddValueBaseView.isHidden = true
-                self.awayBoostedOddValueBaseView.isHidden = true
-
-                self.baseView.layer.borderWidth = 0
-                self.baseView.layer.borderColor = nil
-                self.headerLineStackView.alpha = 0.0
-
-                self.bottomMarginSpaceConstraint.constant = 28
-                self.teamsHeightConstraint.constant = 47
-                self.topMarginSpaceConstraint.constant = 0
-                
-                self.gradientBorderView.isHidden = true
-                self.liveGradientBorderView.isHidden = true
-                
-                self.backgroundImageBorderGradientLayer.colors = [UIColor(hex: 0x404CFF).cgColor, UIColor(hex: 0x404CFF).withAlphaComponent(0.0).cgColor]
-                self.backgroundImageBorderGradientLayer.startPoint = CGPoint(x: 0.5, y: 0.0)
-                self.backgroundImageBorderGradientLayer.endPoint = CGPoint(x: 0.5, y: 1.0)
-
-                self.backgroundImageBorderShapeLayer.cornerRadius = 9
-                self.backgroundImageBorderShapeLayer.lineWidth = 2
-                self.backgroundImageBorderShapeLayer.strokeColor = UIColor.black.cgColor
-                self.backgroundImageBorderShapeLayer.fillColor = UIColor.clear.cgColor
-
-                self.backgroundImageBorderGradientLayer.mask = self.backgroundImageBorderShapeLayer
-                self.baseView.layer.addSublayer(self.backgroundImageBorderGradientLayer)
-            }
-
-            self.setupWithTheme()
-        }
-    }
 
     //
     //
-    var viewModel: MatchWidgetCellViewModel? {
-        didSet {
-            
-        }
-    }
+    var viewModel: MatchWidgetCellViewModel?
 
     static var normalCellHeight: CGFloat = 162
     static var smallCellHeight: CGFloat = 90
 
     var isFavorite: Bool = false {
         didSet {
-            if isFavorite {
+            if self.isFavorite {
                 self.favoritesIconImageView.image = UIImage(named: "selected_favorite_icon")
             }
             else {
@@ -517,10 +357,7 @@ class MatchWidgetCollectionViewCell: UICollectionViewCell {
     private var leftOutcomeDisabled: Bool = false
     private var middleOutcomeDisabled: Bool = false
     private var rightOutcomeDisabled: Bool = false
-
-    private var liveMatchDetailsSubscription: ServicesProvider.Subscription?
-    private var liveMatchDetailsCancellable: AnyCancellable?
-        
+ 
     private var cancellables: Set<AnyCancellable> = []
 
     override func awakeFromNib() {
@@ -656,6 +493,8 @@ class MatchWidgetCollectionViewCell: UICollectionViewCell {
         self.seeAllBaseView.isHidden = true
         self.outrightBaseView.isHidden = true
         
+        self.liveMatchDotImageView.isHidden = true
+        
         // Outright
         self.outrightSeeLabel.text = localized("view_competition_markets")
         self.outrightSeeLabel.font = AppFont.with(type: .semibold, size: 12)
@@ -776,14 +615,14 @@ class MatchWidgetCollectionViewCell: UICollectionViewCell {
         self.createRedesignInterface()
 
         //
-        self.adjustDesignToCardStyle()
+        self.adjustDesignToCardHeightStyle()
         self.setupWithTheme()
     }
 
     override func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {
         super.traitCollectionDidChange(previousTraitCollection)
 
-        self.adjustDesignToCardStyle()
+        self.adjustDesignToCardHeightStyle()
         self.setupWithTheme()
     }
 
@@ -802,7 +641,6 @@ class MatchWidgetCollectionViewCell: UICollectionViewCell {
         self.topImageView.roundCorners(corners: [.topRight, .topLeft], radius: 9)
         
         self.marketNameInnerView.layer.cornerRadius = self.marketNameInnerView.frame.size.height / 2
-
     }
 
     override func prepareForReuse() {
@@ -911,7 +749,7 @@ class MatchWidgetCollectionViewCell: UICollectionViewCell {
         self.seeAllBaseView.isHidden = true
         self.outrightBaseView.isHidden = true
 
-        self.adjustDesignToCardStyle()
+        self.adjustDesignToCardHeightStyle()
         self.setupWithTheme()
 
     }
@@ -969,12 +807,18 @@ class MatchWidgetCollectionViewCell: UICollectionViewCell {
         self.awayNewBoostedOddValueLabel.textColor = UIColor.App.buttonTextPrimary
         self.awayOldBoostedOddValueLabel.textColor = UIColor.App.buttonTextPrimary
 
+        self.liveGradientBorderView.gradientColors = [UIColor.App.liveBorderGradient3,
+                                                  UIColor.App.liveBorderGradient2,
+                                                  UIColor.App.liveBorderGradient1]
+        
+        self.gradientBorderView.gradientColors = [UIColor.App.cardBorderLineGradient1,
+                                                      UIColor.App.cardBorderLineGradient2,
+                                                      UIColor.App.cardBorderLineGradient3]
+        
         //
         // Match Widget Type spec
-        switch self.matchWidgetType {
+        switch self.viewModel?.matchWidgetType ?? .normal {
         case .normal, .topImage:
-            self.baseView.backgroundColor = UIColor.App.backgroundCards
-
             self.eventNameLabel.textColor = UIColor.App.textSecondary
             self.homeParticipantNameLabel.textColor = UIColor.App.textPrimary
             self.awayParticipantNameLabel.textColor = UIColor.App.textPrimary
@@ -985,6 +829,10 @@ class MatchWidgetCollectionViewCell: UICollectionViewCell {
             self.dateLabel.textColor = UIColor.App.textSecondary
             self.timeLabel.textColor = UIColor.App.textPrimary
 
+            self.dateNewLabel.textColor = UIColor.App.textSecondary
+            self.timeNewLabel.textColor = UIColor.App.textSecondary
+            self.matchTimeStatusNewLabel.textColor = UIColor.App.buttonBackgroundPrimary
+            
             if isLeftOutcomeButtonSelected {
                 self.homeBaseView.backgroundColor = UIColor.App.buttonBackgroundPrimary
                 self.homeOddTitleLabel.textColor = UIColor.App.buttonTextPrimary
@@ -1027,18 +875,21 @@ class MatchWidgetCollectionViewCell: UICollectionViewCell {
             self.awayBaseView.layer.borderWidth = 0
             
         case .topImageOutright:
-            self.baseView.backgroundColor = UIColor.App.backgroundCards
-
             self.eventNameLabel.textColor = UIColor.App.textSecondary
             self.homeParticipantNameLabel.textColor = UIColor.App.textPrimary
             self.awayParticipantNameLabel.textColor = UIColor.App.textPrimary
-            self.matchTimeLabel.textColor = UIColor.App.buttonBackgroundPrimary
             self.resultLabel.textColor = UIColor.App.textPrimary
             self.liveTipLabel.textColor = UIColor.App.buttonTextPrimary
-            self.dateLabel.textColor = UIColor.App.textSecondary
-            self.timeLabel.textColor = UIColor.App.textPrimary
             self.outrightNameLabel.textColor = UIColor.App.textPrimary
 
+            self.dateLabel.textColor = UIColor.App.textSecondary
+            self.timeLabel.textColor = UIColor.App.textPrimary
+            self.matchTimeLabel.textColor = UIColor.App.buttonBackgroundPrimary
+            
+            self.dateNewLabel.textColor = UIColor.App.textSecondary
+            self.timeNewLabel.textColor = UIColor.App.textPrimary
+            self.matchTimeStatusNewLabel.textColor = UIColor.App.buttonBackgroundPrimary
+            
             if isLeftOutcomeButtonSelected {
                 self.homeBaseView.backgroundColor = UIColor.App.buttonBackgroundPrimary
                 self.homeOddTitleLabel.textColor = UIColor.App.buttonTextPrimary
@@ -1080,17 +931,21 @@ class MatchWidgetCollectionViewCell: UICollectionViewCell {
             self.drawBaseView.layer.borderWidth = 0
             self.awayBaseView.layer.borderWidth = 0
         case .boosted:
-            self.baseView.backgroundColor = UIColor.App.backgroundCards
-
             self.eventNameLabel.textColor = UIColor.App.textSecondary
             self.homeParticipantNameLabel.textColor = UIColor.App.textPrimary
             self.awayParticipantNameLabel.textColor = UIColor.App.textPrimary
-            self.matchTimeLabel.textColor = UIColor.App.buttonBackgroundPrimary
+            
             self.resultLabel.textColor = UIColor.App.textPrimary
             self.liveTipLabel.textColor = UIColor.App.buttonTextPrimary
+            
             self.dateLabel.textColor = UIColor.App.textSecondary
             self.timeLabel.textColor = UIColor.App.textPrimary
-
+            self.matchTimeLabel.textColor = UIColor.App.buttonBackgroundPrimary
+            
+            self.dateNewLabel.textColor = UIColor.App.textSecondary
+            self.timeNewLabel.textColor = UIColor.App.textPrimary
+            self.matchTimeStatusNewLabel.textColor = UIColor.App.buttonBackgroundPrimary
+            
             if isLeftOutcomeButtonSelected {
                 self.homeBoostedOddValueBaseView.backgroundColor = UIColor.App.highlightPrimary
 
@@ -1154,41 +1009,23 @@ class MatchWidgetCollectionViewCell: UICollectionViewCell {
             self.boostedOddBottomLineAnimatedGradientView.startAnimations()
 
         case .backgroundImage:
-            self.baseView.backgroundColor = UIColor.App.backgroundCards
-
             self.eventNameLabel.textColor = UIColor.App.buttonTextPrimary
             self.homeParticipantNameLabel.textColor = UIColor.App.buttonTextPrimary
             self.awayParticipantNameLabel.textColor = UIColor.App.buttonTextPrimary
-            self.matchTimeLabel.textColor = UIColor.App.buttonTextPrimary
             self.resultLabel.textColor = UIColor.App.buttonTextPrimary
             self.liveTipLabel.textColor = UIColor.App.buttonTextPrimary
+            
             self.dateLabel.textColor = UIColor.App.textSecondary
             self.timeLabel.textColor = UIColor.App.textPrimary
+            self.matchTimeLabel.textColor = UIColor.App.buttonTextPrimary
+            
+            self.dateNewLabel.textColor = UIColor.App.textSecondary
+            self.timeNewLabel.textColor = UIColor.App.textPrimary
+            self.matchTimeStatusNewLabel.textColor = UIColor.App.buttonTextPrimary
             
             self.marketNameView.backgroundColor = .clear
-            
             self.marketNameInnerView.backgroundColor = UIColor.App.highlightPrimary
-            
             self.marketNameLabel.textColor = UIColor.App.buttonTextPrimary
-
-            self.homeBaseView.layer.borderColor = UIColor.App.buttonTextPrimary.cgColor
-            self.drawBaseView.layer.borderColor = UIColor.App.buttonTextPrimary.cgColor
-            self.awayBaseView.layer.borderColor = UIColor.App.buttonTextPrimary.cgColor
-
-            self.homeBaseView.layer.borderWidth = 2
-            self.drawBaseView.layer.borderWidth = 2
-            self.awayBaseView.layer.borderWidth = 2
-
-            self.homeBaseView.backgroundColor = UIColor.clear
-            self.drawBaseView.backgroundColor = UIColor.clear
-            self.awayBaseView.backgroundColor = UIColor.clear
-
-            self.homeOddTitleLabel.textColor = UIColor.App.buttonTextPrimary
-            self.homeOddValueLabel.textColor = UIColor.App.buttonTextPrimary
-            self.drawOddTitleLabel.textColor = UIColor.App.buttonTextPrimary
-            self.drawOddValueLabel.textColor = UIColor.App.buttonTextPrimary
-            self.awayOddTitleLabel.textColor = UIColor.App.buttonTextPrimary
-            self.awayOddValueLabel.textColor = UIColor.App.buttonTextPrimary
 
             if isLeftOutcomeButtonSelected {
                 self.homeBaseView.backgroundColor = UIColor.App.highlightPrimary
@@ -1213,21 +1050,39 @@ class MatchWidgetCollectionViewCell: UICollectionViewCell {
 
                 self.awayBaseView.layer.borderWidth = 0
             }
+            
+            self.homeBaseView.layer.borderColor = UIColor.App.buttonTextPrimary.cgColor
+            self.drawBaseView.layer.borderColor = UIColor.App.buttonTextPrimary.cgColor
+            self.awayBaseView.layer.borderColor = UIColor.App.buttonTextPrimary.cgColor
 
+            self.homeBaseView.layer.borderWidth = 2
+            self.drawBaseView.layer.borderWidth = 2
+            self.awayBaseView.layer.borderWidth = 2
+
+            self.homeBaseView.backgroundColor = UIColor.clear
+            self.drawBaseView.backgroundColor = UIColor.clear
+            self.awayBaseView.backgroundColor = UIColor.clear
+
+            self.homeOddTitleLabel.textColor = UIColor.App.buttonTextPrimary
+            self.homeOddValueLabel.textColor = UIColor.App.buttonTextPrimary
+            self.drawOddTitleLabel.textColor = UIColor.App.buttonTextPrimary
+            self.drawOddValueLabel.textColor = UIColor.App.buttonTextPrimary
+            self.awayOddTitleLabel.textColor = UIColor.App.buttonTextPrimary
+            self.awayOddValueLabel.textColor = UIColor.App.buttonTextPrimary
+            
         }
         
-        self.liveGradientBorderView.gradientColors = [UIColor.App.liveBorderGradient3,
-                                                  UIColor.App.liveBorderGradient2,
-                                                  UIColor.App.liveBorderGradient1]
-        
-        self.gradientBorderView.gradientColors = [UIColor.App.cardBorderLineGradient1,
-                                                      UIColor.App.cardBorderLineGradient2,
-                                                      UIColor.App.cardBorderLineGradient3]
-        
-        self.contentRedesignBaseView.backgroundColor = self.baseView.backgroundColor
-        self.dateNewLabel.textColor = self.dateLabel.textColor
-        self.timeNewLabel.textColor = self.timeLabel.textColor
-        self.matchTimeStatusNewLabel.textColor = self.matchTimeLabel.textColor
+        // Colors based of status
+        switch self.viewModel?.matchWidgetStatus ?? .unknown {
+        case .live:
+            // Live
+            self.baseView.backgroundColor = UIColor.App.backgroundDrop
+            self.contentRedesignBaseView.backgroundColor = self.baseView.backgroundColor
+        default:
+            self.baseView.backgroundColor = UIColor.App.backgroundCards
+            self.contentRedesignBaseView.backgroundColor = self.baseView.backgroundColor
+
+        }
         
         self.detailedScoreView.setupWithTheme()
         self.marketNamePillLabelView.setupWithTheme()
@@ -1242,9 +1097,6 @@ class MatchWidgetCollectionViewCell: UICollectionViewCell {
             self.marketHeightConstraint.constant = 15
             //self.participantsBottomConstraint.isActive = false
             
-            self.marketNameLabel.text = self.viewModel?.match.markets.first?.name
-            
-            self.marketNamePillLabelView.title = self.viewModel?.match.markets.first?.name ?? ""
             self.marketNamePillLabelView.isHidden = false
             
             self.homeCenterViewConstraint.isActive = false
@@ -1284,9 +1136,9 @@ class MatchWidgetCollectionViewCell: UICollectionViewCell {
         self.layoutIfNeeded()
     }
 
-    private func adjustDesignToCardStyle() {
+    private func adjustDesignToCardHeightStyle() {
 
-        if self.matchWidgetType != .normal {
+        if (self.viewModel?.matchWidgetType ?? .normal) != .normal {
             return
         }
 
@@ -1299,17 +1151,17 @@ class MatchWidgetCollectionViewCell: UICollectionViewCell {
         switch StyleHelper.cardsStyleActive() {
         case .small:
             self.contentRedesignBaseView.isHidden = true
-            self.adjustDesignToSmallCardStyle()
+            self.adjustDesignToSmallCardHeightStyle()
         case .normal:
             self.contentRedesignBaseView.isHidden = false
-            self.adjustDesignToNormalCardStyle()
+            self.adjustDesignToNormalCardHeightStyle()
         }
 
         self.setNeedsLayout()
         self.layoutIfNeeded()
     }
 
-    private func adjustDesignToSmallCardStyle() {
+    private func adjustDesignToSmallCardHeightStyle() {
         self.topMarginSpaceConstraint.constant = 8
         self.leadingMarginSpaceConstraint.constant = 8
         self.trailingMarginSpaceConstraint.constant = 8
@@ -1336,14 +1188,14 @@ class MatchWidgetCollectionViewCell: UICollectionViewCell {
         self.awayOddValueLabel.font = AppFont.with(type: .bold, size: 12)
     }
 
-    private func adjustDesignToNormalCardStyle() {
+    private func adjustDesignToNormalCardHeightStyle() {
         self.topMarginSpaceConstraint.constant = 11
         self.bottomMarginSpaceConstraint.constant = 12
         self.leadingMarginSpaceConstraint.constant = 12
         self.trailingMarginSpaceConstraint.constant = 12
 
         self.headerHeightConstraint.constant = 17
-        self.teamsHeightConstraint.constant = 67 // self.teamsHeightConstraint.constant = 26
+        self.teamsHeightConstraint.constant = 67
         self.resultCenterConstraint.constant = 0
         self.buttonsHeightConstraint.constant = 40
 
@@ -1364,12 +1216,9 @@ class MatchWidgetCollectionViewCell: UICollectionViewCell {
         self.awayOddValueLabel.font = AppFont.with(type: .bold, size: 13)
     }
 
-    func configureAsLiveCard() {
+    func drawAsLiveCard() {
         self.hasCashback = false // We need to make sure the cashback icon is not showing
         
-        self.baseView.backgroundColor = UIColor.App.backgroundDrop
-        self.contentRedesignBaseView.backgroundColor = self.baseView.backgroundColor
-
         self.dateStackView.isHidden = true
         self.dateNewLabel.isHidden = true
         self.timeNewLabel.isHidden = true
@@ -1385,7 +1234,7 @@ class MatchWidgetCollectionViewCell: UICollectionViewCell {
         self.cashbackImageViewBaseTrailingConstraint.isActive = false
         self.cashbackImageViewLiveTrailingConstraint.isActive = true
         
-        if self.matchWidgetType == .normal || self.matchWidgetType == .boosted {
+        if self.viewModel?.matchWidgetType == .normal || self.viewModel?.matchWidgetType == .boosted {
             self.gradientBorderView.isHidden = true
             self.liveGradientBorderView.isHidden = false
         }
@@ -1401,7 +1250,7 @@ class MatchWidgetCollectionViewCell: UICollectionViewCell {
             self.adjustMarketNameView(isShown: true)
         }
         
-        if StyleHelper.cardsStyleActive() == .normal && self.matchWidgetType == .normal {
+        if StyleHelper.cardsStyleActive() == .normal && self.viewModel?.matchWidgetType == .normal {
             self.bottomMarginSpaceConstraint.constant = 12
             
             self.homeContentRedesignTopConstraint.constant = 13
@@ -1409,10 +1258,8 @@ class MatchWidgetCollectionViewCell: UICollectionViewCell {
         }
     }
     
-    func configureAsNormalCard() {
-        self.baseView.backgroundColor = UIColor.App.backgroundCards
-        self.contentRedesignBaseView.backgroundColor = self.baseView.backgroundColor
-
+    func drawAsPreLiveCard() {
+        
         self.dateStackView.isHidden = false
         self.dateNewLabel.isHidden = false
         self.timeNewLabel.isHidden = false
@@ -1425,7 +1272,7 @@ class MatchWidgetCollectionViewCell: UICollectionViewCell {
         self.liveMatchDotBaseView.isHidden = true
         self.liveTipView.isHidden = true
 
-        if self.matchWidgetType == .normal || self.matchWidgetType == .boosted {
+        if self.viewModel?.matchWidgetType == .normal  || self.viewModel?.matchWidgetType == .boosted  {
             self.gradientBorderView.isHidden = false
             self.liveGradientBorderView.isHidden = true
         }
@@ -1439,12 +1286,161 @@ class MatchWidgetCollectionViewCell: UICollectionViewCell {
         
         self.adjustMarketNameView(isShown: false)
         
-        if StyleHelper.cardsStyleActive() == .normal && self.matchWidgetType == .normal {
+        if StyleHelper.cardsStyleActive() == .normal && self.viewModel?.matchWidgetType == .normal {
             self.bottomMarginSpaceConstraint.constant = 12
             
             self.homeContentRedesignTopConstraint.constant = 25
             self.awayContentRedesignTopConstraint.constant = 45
         }
+    }
+    
+    func drawForMatchWidgetType(_ matchWidgetType: MatchWidgetType) {
+        switch matchWidgetType {
+        case .normal:
+            self.backgroundImageView.isHidden = true
+
+            self.topImageBaseView.isHidden = true
+            self.boostedOddBottomLineView.isHidden = true
+            self.boostedTopRightCornerBaseView.isHidden = true
+
+            self.mainContentBaseView.isHidden = false
+
+            self.baseView.layer.borderWidth = 0
+            self.baseView.layer.borderColor = nil
+            self.headerLineStackView.alpha = 1.0
+
+            self.homeBoostedOddValueBaseView.isHidden = true
+            self.drawBoostedOddValueBaseView.isHidden = true
+            self.awayBoostedOddValueBaseView.isHidden = true
+
+            switch StyleHelper.cardsStyleActive() {
+            case .small:
+                self.bottomMarginSpaceConstraint.constant = 8
+                self.teamsHeightConstraint.constant = 26
+                self.topMarginSpaceConstraint.constant = 8
+            case .normal:
+                self.bottomMarginSpaceConstraint.constant = 12
+                self.teamsHeightConstraint.constant = 67
+                self.topMarginSpaceConstraint.constant = 11
+            }
+
+            self.gradientBorderView.isHidden = false
+            self.liveGradientBorderView.isHidden = true
+
+        case .topImage:
+            self.backgroundImageView.isHidden = true
+
+            self.topImageBaseView.isHidden = false
+
+            self.boostedOddBottomLineView.isHidden = true
+            self.boostedTopRightCornerBaseView.isHidden = true
+
+            self.mainContentBaseView.isHidden = false
+
+            self.homeBoostedOddValueBaseView.isHidden = true
+            self.drawBoostedOddValueBaseView.isHidden = true
+            self.awayBoostedOddValueBaseView.isHidden = true
+
+            self.baseView.layer.borderWidth = 0
+            self.baseView.layer.borderColor = nil
+            self.headerLineStackView.alpha = 1.0
+            self.bottomMarginSpaceConstraint.constant = 12
+            self.teamsHeightConstraint.constant = 67
+            self.topMarginSpaceConstraint.constant = 11
+
+            self.gradientBorderView.isHidden = true
+            self.liveGradientBorderView.isHidden = true
+            
+        case .topImageOutright:
+            self.backgroundImageView.isHidden = true
+
+            self.topImageBaseView.isHidden = false
+
+            self.boostedOddBottomLineView.isHidden = true
+            self.boostedTopRightCornerBaseView.isHidden = true
+
+            self.mainContentBaseView.isHidden = false
+
+            self.homeBoostedOddValueBaseView.isHidden = true
+            self.drawBoostedOddValueBaseView.isHidden = true
+            self.awayBoostedOddValueBaseView.isHidden = true
+            
+            self.seeAllBaseView.isHidden = true
+            self.oddsStackView.isHidden = true
+            self.suspendedBaseView.isHidden = true
+            self.outrightBaseView.isHidden = false
+
+            self.baseView.layer.borderWidth = 0
+            self.baseView.layer.borderColor = nil
+            self.headerLineStackView.alpha = 1.0
+            self.bottomMarginSpaceConstraint.constant = 12
+            self.teamsHeightConstraint.constant = 67
+            self.topMarginSpaceConstraint.constant = 11
+
+            self.gradientBorderView.isHidden = true
+            self.liveGradientBorderView.isHidden = true
+
+        case .boosted:
+            self.backgroundImageView.isHidden = true
+
+            self.topImageBaseView.isHidden = true
+            self.boostedOddBottomLineView.isHidden = false
+            self.boostedTopRightCornerBaseView.isHidden = false
+
+            self.mainContentBaseView.isHidden = false
+
+            self.homeBoostedOddValueBaseView.isHidden = false
+            self.drawBoostedOddValueBaseView.isHidden = false
+            self.awayBoostedOddValueBaseView.isHidden = false
+
+            self.headerLineStackView.alpha = 1.0
+            self.bottomMarginSpaceConstraint.constant = 12
+            self.teamsHeightConstraint.constant = 67
+            self.topMarginSpaceConstraint.constant = 11
+
+            self.setupBoostedOddsSubviews()
+
+            self.gradientBorderView.isHidden = false
+            self.liveGradientBorderView.isHidden = true
+            
+        case .backgroundImage:
+            self.backgroundImageView.isHidden = false
+
+            self.topImageBaseView.isHidden = true
+            self.boostedOddBottomLineView.isHidden = true
+            self.boostedTopRightCornerBaseView.isHidden = true
+
+            self.mainContentBaseView.isHidden = false
+
+            self.homeBoostedOddValueBaseView.isHidden = true
+            self.drawBoostedOddValueBaseView.isHidden = true
+            self.awayBoostedOddValueBaseView.isHidden = true
+
+            self.baseView.layer.borderWidth = 0
+            self.baseView.layer.borderColor = nil
+            self.headerLineStackView.alpha = 0.0
+
+            self.bottomMarginSpaceConstraint.constant = 28
+            self.teamsHeightConstraint.constant = 47
+            self.topMarginSpaceConstraint.constant = 0
+            
+            self.gradientBorderView.isHidden = true
+            self.liveGradientBorderView.isHidden = true
+            
+            self.backgroundImageBorderGradientLayer.colors = [UIColor(hex: 0x404CFF).cgColor, UIColor(hex: 0x404CFF).withAlphaComponent(0.0).cgColor]
+            self.backgroundImageBorderGradientLayer.startPoint = CGPoint(x: 0.5, y: 0.0)
+            self.backgroundImageBorderGradientLayer.endPoint = CGPoint(x: 0.5, y: 1.0)
+
+            self.backgroundImageBorderShapeLayer.cornerRadius = 9
+            self.backgroundImageBorderShapeLayer.lineWidth = 2
+            self.backgroundImageBorderShapeLayer.strokeColor = UIColor.black.cgColor
+            self.backgroundImageBorderShapeLayer.fillColor = UIColor.clear.cgColor
+
+            self.backgroundImageBorderGradientLayer.mask = self.backgroundImageBorderShapeLayer
+            self.baseView.layer.addSublayer(self.backgroundImageBorderGradientLayer)
+        }
+
+        self.setupWithTheme()
     }
     
     func configure(withViewModel viewModel: MatchWidgetCellViewModel) {
@@ -1457,16 +1453,75 @@ class MatchWidgetCollectionViewCell: UICollectionViewCell {
             return
         }
         
-        self.matchWidgetType = viewModel.matchWidgetType
-
-        self.hasCashback = viewModel.canHaveCashback
+        viewModel.$matchWidgetStatus
+            .removeDuplicates()
+            .receive(on: DispatchQueue.main)
+            .sink { [weak self] matchWidgetStatus in
+                switch matchWidgetStatus {
+                case .live:
+                    self?.drawAsLiveCard()
+                case .preLive, .unknown:
+                    self?.drawAsPreLiveCard()
+                }
+            }
+            .store(in: &self.cancellables)
+     
+        viewModel.$matchWidgetType
+            .removeDuplicates()
+            .receive(on: DispatchQueue.main)
+            .sink { [weak self] matchWidgetType in
+                                
+                self?.drawForMatchWidgetType(matchWidgetType)
+                
+                switch matchWidgetType {
+                case .normal:
+                    break
+                case .topImage:
+                    break
+                case .boosted:
+                    break
+                case .backgroundImage:
+                    break
+                case .topImageOutright:
+                    self?.showOutrightLayout()
+                }
+            }
+            .store(in: &self.cancellables)
         
-        if viewModel.isLiveCard {
-            self.configureAsLiveCard()
-        }
-        else {
-            self.configureAsNormalCard()
-        }
+        viewModel.homeTeamNamePublisher
+            .sink { [weak self] homeTeamName in
+                self?.homeParticipantNameLabel.text = homeTeamName
+                self?.homeNameLabel.text = homeTeamName
+            }
+            .store(in: &self.cancellables)
+
+        viewModel.awayTeamNamePublisher
+            .sink { [weak self] awayTeamName in
+                self?.awayNameLabel.text = awayTeamName
+                self?.awayParticipantNameLabel.text = awayTeamName
+            }
+            .store(in: &self.cancellables)
+
+        viewModel.mainMarketNamePublisher
+            .sink { [weak self] mainMarketName in
+                self?.marketNameLabel.text = mainMarketName
+                self?.marketNamePillLabelView.title = mainMarketName
+            }
+            .store(in: &self.cancellables)
+        
+        viewModel.startDateStringPublisher
+            .sink { [weak self] startDateString in
+                self?.dateLabel.text = startDateString
+                self?.dateNewLabel.text = startDateString
+            }
+            .store(in: &self.cancellables)
+
+        viewModel.startTimeStringPublisher
+            .sink { [weak self] startTimeString in
+                self?.timeLabel.text = startTimeString
+                self?.timeNewLabel.text = startTimeString
+            }
+            .store(in: &self.cancellables)
         
         viewModel.$homeOldBoostedOddAttributedString
             .receive(on: DispatchQueue.main)
@@ -1489,438 +1544,337 @@ class MatchWidgetCollectionViewCell: UICollectionViewCell {
             }
             .store(in: &self.cancellables)
         
-        self.liveMatchDotImageView.isHidden = true
+        viewModel.competitionNamePublisher
+            .sink { [weak self] competitionName in
+                self?.eventNameLabel.text = competitionName
+            }
+            .store(in: &self.cancellables)
+
+
+        // Scores
+        viewModel.matchScorePublisher
+            .sink { [weak self] matchScore in
+                self?.resultLabel.text = matchScore
+            }
+            .store(in: &self.cancellables)
         
-        self.eventNameLabel.text = "\(viewModel.competitionName)"
-
-        self.homeParticipantNameLabel.text = "\(viewModel.homeTeamName)"
-        self.awayParticipantNameLabel.text = "\(viewModel.awayTeamName)"
-
-        self.homeNameLabel.text = "\(viewModel.homeTeamName)"
-        self.awayNameLabel.text = "\(viewModel.awayTeamName)"
+        viewModel.detailedScoresPublisher
+            .sink { [weak self] (detailedScoresDict, sportAlphaId) in
+                self?.detailedScoreView.updateScores(detailedScoresDict)
+                self?.detailedScoreView.sportCode = sportAlphaId
+            }
+            .store(in: &self.cancellables)
         
-        self.dateLabel.text = "\(viewModel.startDateString)"
-        self.timeLabel.text = "\(viewModel.startTimeString)"
-
-        self.dateNewLabel.text = "\(viewModel.startDateString)"
-        self.timeNewLabel.text = "\(viewModel.startTimeString)"
-
-        self.resultLabel.text = "\(viewModel.matchScore)"
-        self.matchTimeLabel.text = viewModel.matchTimeDetails
+        // icon images
+        viewModel.countryFlagImagePublisher
+            .sink { [weak self] countryFlagImage in
+                self?.locationFlagImageView.image = countryFlagImage
+            }
+            .store(in: &self.cancellables)
         
-        self.matchTimeStatusNewLabel.text = viewModel.matchTimeDetails
+        viewModel.sportIconImagePublisher
+            .sink { [weak self] sportIconImage in
+                self?.sportTypeImageView.image = sportIconImage
+            }
+            .store(in: &self.cancellables)
         
-        if viewModel.countryISOCode != "" {
-            self.locationFlagImageView.image = UIImage(named: Assets.flagName(withCountryCode: viewModel.countryISOCode))
-        }
-        else {
-            self.locationFlagImageView.image = UIImage(named: Assets.flagName(withCountryCode: viewModel.countryId))
-        }
-
         //
-        let imageName = viewModel.match.sport.id
-        if let sportIconImage = UIImage(named: "sport_type_icon_\(imageName)") {
-            self.sportTypeImageView.image = sportIconImage
-        }
-        else {
-            self.sportTypeImageView.image = UIImage(named: "sport_type_icon_default")
-        }
-        // self.sportTypeImageView.setTintColor(color: UIColor.App.textPrimary)
+        viewModel.matchTimeDetailsPublisher
+            .sink { [weak self] matchTimeDetails in
+                self?.matchTimeLabel.text = matchTimeDetails
+                self?.matchTimeStatusNewLabel.text = matchTimeDetails
+            }
+            .store(in: &self.cancellables)
 
-        if let additionalImageURL = viewModel.promoImageURL {
-            self.backgroundImageView.kf.setImage(with: additionalImageURL)
-            self.topImageView.kf.setImage(with: additionalImageURL)
-        }
-
-
-        //
-        //
-        self.detailedScoreView.sportCode = viewModel.match.sport.alphaId ?? ""
-        
-        self.matchLiveDataSubscriber?.cancel()
-        self.matchLiveDataSubscriber = nil
-        
-        self.matchLiveDataSubscriber = Env.servicesProvider.subscribeToEventOnListsLiveDataUpdates(withId: viewModel.match.id)
-            .receive(on: DispatchQueue.main)
+        viewModel.promoImageURLPublisher
             .compactMap({ $0 })
-            .map(ServiceProviderModelMapper.match(fromEvent:))
-            .sink(receiveCompletion: { [weak self] completion in
-                print("MatchWidgetCollectionViewCell matchSubscriber subscribeToEventLiveDataUpdates completion: \(completion)")
-                
-                // we need to try to get the live data info from independent subscribeToLiveDataUpdates
-                switch completion {
-                case .finished:
-                    ()
-                case .failure(let error):
-                    switch error {
-                    case .resourceNotFound:
-                        self?.subscribeToLiveDataUpdates(forMatch: viewModel.match)
-                    default:
-                        print("MatchDetailsViewModel getMatchDetails Error retrieving data! \(error)")
-                    }
+            .sink { [weak self] promoImageURL in
+                self?.backgroundImageView.kf.setImage(with: promoImageURL)
+                self?.topImageView.kf.setImage(with: promoImageURL)
+            }
+            .store(in: &self.cancellables)
+        
+        // Outrights info
+        viewModel.eventNamePublisher
+            .sink { [weak self] eventName in
+                self?.eventNameLabel.text = eventName
+            }
+            .store(in: &self.cancellables)
+        viewModel.outrightNamePublisher
+            .sink { [weak self] outrightName in
+                self?.outrightNameLabel.text = outrightName
+            }
+            .store(in: &self.cancellables)
+        
+        viewModel.isFavoriteMatchPublisher
+            .sink { [weak self] isFavoriteMatch in
+                self?.isFavorite = isFavoriteMatch
+            }
+            .store(in: &self.cancellables)
+        
+        viewModel.canHaveCashbackPublisher
+            .removeDuplicates()
+            .receive(on: DispatchQueue.main)
+            .sink { [weak self] canHaveCashback in
+                self?.hasCashback = canHaveCashback
+            }
+            .store(in: &self.cancellables)
+        
+        // Setup outcomes
+        viewModel.defaultMarketPublisher
+            .sink { [weak self] defaultMarket in
+                if let market = defaultMarket {
+                    // Setup outcome buttons
+                    self?.configureOutcomes(withMarket: market)
                 }
-            }, receiveValue: { [weak self] updatedMatch in
-                guard let self = self else { return }
-                
-                // Temp live data viewModel
-                let liveDataViewModel = MatchWidgetCellViewModel(match: updatedMatch)
-                
-                self.dateLabel.text = "\(liveDataViewModel.startDateString)"
-                self.timeLabel.text = "\(liveDataViewModel.startTimeString)"
-
-                self.dateNewLabel.text = "\(liveDataViewModel.startDateString)"
-                self.timeNewLabel.text = "\(liveDataViewModel.startTimeString)"
-
-                self.resultLabel.text = "\(liveDataViewModel.matchScore)"
-                self.matchTimeLabel.text = liveDataViewModel.matchTimeDetails
-                
-                self.matchTimeStatusNewLabel.text = liveDataViewModel.matchTimeDetails
-                
-                if let detailedScores = updatedMatch.detailedScores {
-                    self.detailedScoreView.updateScores(detailedScores)
-                }
-                
-                if liveDataViewModel.isLiveCard {
-                    self.configureAsLiveCard()
-                }
-
                 else {
-                    self.configureAsNormalCard()
+                    // Hide outcome buttons if we don't have any market
+                    self?.oddsStackView.alpha = 0.2
+                    self?.showSeeAllView()
+                }
+            }
+            .store(in: &self.cancellables)
+        
+        //
+        // Default Market Availability
+        self.marketSubscriber = viewModel.isDefaultMarketAvailable
+            .sink(receiveValue: { [weak self] isAvailable in
+                if isAvailable {
+                    self?.showMarketButtons()
+                }
+                else {
+                    self?.showSuspendedView()
                 }
             })
         
-        if let market = viewModel.match.markets.first {
-
-            self.marketSubscriber = Env.servicesProvider.subscribeToEventOnListsMarketUpdates(withId: market.id)
-                .compactMap({ $0 })
-                .map({ (serviceProviderMarket: ServicesProvider.Market) -> Market in
-                    return ServiceProviderModelMapper.market(fromServiceProviderMarket: serviceProviderMarket)
-                })
-                .receive(on: DispatchQueue.main)
-                .sink(receiveCompletion: { completion in
-                    // print("marketSubscriber subscribeToEventMarketUpdates completion: \(completion)")
-                }, receiveValue: { [weak self] (marketUpdated: Market) in
-
-                    if marketUpdated.isAvailable {
-                        self?.showMarketButtons()
-                    }
-                    else {
-                        self?.showSuspendedView()
-                    }
-                    
-                })
-
-            if let outcome = market.outcomes[safe: 0] {
-                
-                if let nameDigit1 = market.nameDigit1 {
-                    if outcome.typeName.contains("\(nameDigit1)") {
-                        self.homeOddTitleLabel.text = outcome.typeName
-                    }
-                    else {
-                        self.homeOddTitleLabel.text = "\(outcome.typeName) \(nameDigit1)"
-                    }
-                }
-                else {
-                    self.homeOddTitleLabel.text = outcome.typeName
-                }
-                    
-                self.leftOutcome = outcome
-                self.isLeftOutcomeButtonSelected = Env.betslipManager.hasBettingTicket(withId: outcome.bettingOffer.id)
-
-                // Check for SportRadar invalid odd
-                if !outcome.bettingOffer.decimalOdd.isNaN {
-                    self.setHomeOddValueLabel(toText: OddFormatter.formatOdd(withValue: outcome.bettingOffer.decimalOdd))
-                }
-                else {
-                    self.homeBaseView.isUserInteractionEnabled = false
-                    self.homeBaseView.alpha = 0.5
-                        self.setHomeOddValueLabel(toText: "-")
-                }
-
-                self.leftOddButtonSubscriber = Env.servicesProvider
-                    .subscribeToEventOnListsOutcomeUpdates(withId: outcome.bettingOffer.id)
-                    .compactMap({ $0 })
-                    .map(ServiceProviderModelMapper.outcome(fromServiceProviderOutcome: ))
-                    .handleEvents(receiveOutput: { [weak self] outcome in
-                        self?.leftOutcome = outcome
-                    })
-                    .map(\.bettingOffer)
-                    .receive(on: DispatchQueue.main)
-                    .sink(receiveCompletion: { completion in
-                        // print("leftOddButtonSubscriber subscribeToOutcomeUpdates completion: \(completion)")
-                    }, receiveValue: { [weak self] bettingOffer in
-                        guard let weakSelf = self else { return }
-                        
-                        if !bettingOffer.isAvailable || bettingOffer.decimalOdd.isNaN {
-                            weakSelf.homeBaseView.isUserInteractionEnabled = false
-                            weakSelf.homeBaseView.alpha = 0.5
-                            weakSelf.setHomeOddValueLabel(toText: "-")
-                        }
-                        else {
-                            weakSelf.homeBaseView.isUserInteractionEnabled = true
-                            weakSelf.homeBaseView.alpha = 1.0
-
-                            let newOddValue = bettingOffer.decimalOdd
-
-                            if let currentOddValue = weakSelf.currentHomeOddValue {
-                                if newOddValue > currentOddValue {
-                                    weakSelf.highlightOddChangeUp(animated: true,
-                                                                  upChangeOddValueImage: weakSelf.homeUpChangeOddValueImage,
-                                                                  baseView: weakSelf.homeBaseView)
-                                }
-                                else if newOddValue < currentOddValue {
-                                    weakSelf.highlightOddChangeDown(animated: true,
-                                                                    downChangeOddValueImage: weakSelf.homeDownChangeOddValueImage,
-                                                                    baseView: weakSelf.homeBaseView)
-                                }
-                            }
-                            weakSelf.currentHomeOddValue = newOddValue
-                            weakSelf.setHomeOddValueLabel(toText: OddFormatter.formatOdd(withValue: newOddValue))
-                        }
-                    })
-                
-            }
-            
-            if let outcome = market.outcomes[safe: 1] {
-                
-                if let nameDigit1 = market.nameDigit1 {
-                    if outcome.typeName.contains("\(nameDigit1)") {
-                        self.drawOddTitleLabel.text = outcome.typeName
-                    }
-                    else {
-                        self.drawOddTitleLabel.text = "\(outcome.typeName) \(nameDigit1)"
-                    }
-                }
-                else {
-                    self.drawOddTitleLabel.text = outcome.typeName
-                }
-                
-                self.middleOutcome = outcome
-                self.isMiddleOutcomeButtonSelected = Env.betslipManager.hasBettingTicket(withId: outcome.bettingOffer.id)
-
-                // Check for SportRadar invalid odd
-                if !outcome.bettingOffer.decimalOdd.isNaN {
-                    self.setDrawOddValueLabel(toText: OddFormatter.formatOdd(withValue: outcome.bettingOffer.decimalOdd))
-                }
-                else {
-                    self.drawBaseView.isUserInteractionEnabled = false
-                    self.drawBaseView.alpha = 0.5
-                    self.setDrawOddValueLabel(toText: "-")
-                }
-
-                self.middleOddButtonSubscriber = Env.servicesProvider
-                    .subscribeToEventOnListsOutcomeUpdates(withId: outcome.bettingOffer.id)
-                    .compactMap({ $0 })
-                    .map(ServiceProviderModelMapper.outcome(fromServiceProviderOutcome:))
-                    .handleEvents(receiveOutput: { [weak self] outcome in
-                        self?.middleOutcome = outcome
-                    })
-                    .map(\.bettingOffer)
-                    .receive(on: DispatchQueue.main)
-                    .sink(receiveCompletion: { completion in
-                        // print("middleOddButtonSubscriber subscribeToOutcomeUpdates completion: \(completion)")
-                    }, receiveValue: { [weak self] bettingOffer in
-                        
-                        guard let weakSelf = self else { return }
-                        
-                        if !bettingOffer.isAvailable || bettingOffer.decimalOdd.isNaN {
-                            weakSelf.drawBaseView.isUserInteractionEnabled = false
-                            weakSelf.drawBaseView.alpha = 0.5
-                            weakSelf.setDrawOddValueLabel(toText: "-")
-                        }
-                        else {
-                            weakSelf.drawBaseView.isUserInteractionEnabled = true
-                            weakSelf.drawBaseView.alpha = 1.0
-                            
-                            let newOddValue = bettingOffer.decimalOdd
-                            if let currentOddValue = weakSelf.currentDrawOddValue {
-                                if newOddValue > currentOddValue {
-                                    weakSelf.highlightOddChangeUp(animated: true,
-                                                                  upChangeOddValueImage: weakSelf.drawUpChangeOddValueImage,
-                                                                  baseView: weakSelf.drawBaseView)
-                                }
-                                else if newOddValue < currentOddValue {
-                                    weakSelf.highlightOddChangeDown(animated: true,
-                                                                    downChangeOddValueImage: weakSelf.drawDownChangeOddValueImage,
-                                                                    baseView: weakSelf.drawBaseView)
-                                }
-                            }
-                            weakSelf.currentDrawOddValue = newOddValue
-                            weakSelf.setDrawOddValueLabel(toText: OddFormatter.formatOdd(withValue: newOddValue))
-                        }
-                    })
-            }
-            
-            if let outcome = market.outcomes[safe: 2] {
-                
-                if let nameDigit1 = market.nameDigit1 {
-                    if outcome.typeName.contains("\(nameDigit1)") {
-                        self.awayOddTitleLabel.text = outcome.typeName
-                    }
-                    else {
-                        self.awayOddTitleLabel.text = "\(outcome.typeName) \(nameDigit1)"
-                    }
-                }
-                else {
-                    self.awayOddTitleLabel.text = outcome.typeName
-                }
-
-                self.rightOutcome = outcome
-                self.isRightOutcomeButtonSelected = Env.betslipManager.hasBettingTicket(withId: outcome.bettingOffer.id)
-
-                // Check for SportRadar invalid odd
-                if !outcome.bettingOffer.decimalOdd.isNaN {
-                    self.setAwayOddValueLabel(toText: OddFormatter.formatOdd(withValue: outcome.bettingOffer.decimalOdd))
-                }
-                else {
-                    self.awayBaseView.isUserInteractionEnabled = false
-                    self.awayBaseView.alpha = 0.5
-                    self.setAwayOddValueLabel(toText: "-")
-                }
-
-                self.rightOddButtonSubscriber = Env.servicesProvider
-                    .subscribeToEventOnListsOutcomeUpdates(withId: outcome.bettingOffer.id)
-                    .compactMap({ $0 })
-                    .map(ServiceProviderModelMapper.outcome(fromServiceProviderOutcome:))
-                    .handleEvents(receiveOutput: { [weak self] outcome in
-                        self?.rightOutcome = outcome
-                    })
-                    .map(\.bettingOffer)
-                    .receive(on: DispatchQueue.main)
-                    .sink(receiveCompletion: { completion in
-                        // print("leftOddButtonSubscriber subscribeToOutcomeUpdates completion: \(completion)")
-                    }, receiveValue: { [weak self] bettingOffer in
-                        
-                        guard let weakSelf = self else { return }
-                        
-                        if !bettingOffer.isAvailable || bettingOffer.decimalOdd.isNaN {
-                            weakSelf.awayBaseView.isUserInteractionEnabled = false
-                            weakSelf.awayBaseView.alpha = 0.5
-                            weakSelf.setAwayOddValueLabel(toText: "-")
-                        }
-                        else {
-                            weakSelf.awayBaseView.isUserInteractionEnabled = true
-                            weakSelf.awayBaseView.alpha = 1.0
-                            
-                            let newOddValue = bettingOffer.decimalOdd
-                            if let currentOddValue = weakSelf.currentAwayOddValue {
-                                if newOddValue > currentOddValue {
-                                    weakSelf.highlightOddChangeUp(animated: true,
-                                                                  upChangeOddValueImage: weakSelf.awayUpChangeOddValueImage,
-                                                                  baseView: weakSelf.awayBaseView)
-                                }
-                                else if newOddValue < currentOddValue {
-                                    weakSelf.highlightOddChangeDown(animated: true,
-                                                                    downChangeOddValueImage: weakSelf.awayDownChangeOddValueImage,
-                                                                    baseView: weakSelf.awayBaseView)
-                                }
-                            }
-                            
-                            weakSelf.currentAwayOddValue = newOddValue
-                            weakSelf.setAwayOddValueLabel(toText: OddFormatter.formatOdd(withValue: newOddValue))
-                        }
-                    })
-                
-            }
-            
-            if market.outcomes.count == 2 {
-                awayBaseView.isHidden = true
-            }
-            else if market.outcomes.count == 1 {
-                awayBaseView.isHidden = true
-                drawBaseView.isHidden = true
-            }
-        }
-        else {
-            oddsStackView.alpha = 0.2
-            self.showSeeAllView()
-        }
-
-        self.isFavorite = Env.favoritesManager.isEventFavorite(eventId: viewModel.match.id)
-
-        if self.matchWidgetType == .topImageOutright {
-            self.eventNameLabel.text = viewModel.match.venue?.name ?? viewModel.match.competitionName
-            self.outrightNameLabel.text = viewModel.match.competitionOutright?.name
-            
-            self.showOutrightLayout()
-        }
     }
 
-    private func subscribeToLiveDataUpdates(forMatch match: Match) {
-        self.liveMatchDetailsSubscription = nil
-        
-        self.liveMatchDetailsCancellable?.cancel()
-        self.liveMatchDetailsCancellable = nil
-        
-        self.liveMatchDetailsCancellable = Env.servicesProvider.subscribeToLiveDataUpdates(forEventWithId: match.id)
-            .receive(on: DispatchQueue.main)
-            .sink(receiveCompletion: { [weak self] completion in
-                
-                switch completion {
-                case .finished:
-                    ()
-                case .failure(let error):
-                    switch error {
-                    case .resourceUnavailableOrDeleted:
-                        ()
-                    default:
-                        print("MatchDetailsViewModel getMatchDetails Error retrieving data! \(error)")
-                    }
+    private func configureOutcomes(withMarket market: Market) {
+        if let outcome = market.outcomes[safe: 0] {
+            
+            if let nameDigit1 = market.nameDigit1 {
+                if outcome.typeName.contains("\(nameDigit1)") {
+                    self.homeOddTitleLabel.text = outcome.typeName
                 }
+                else {
+                    self.homeOddTitleLabel.text = "\(outcome.typeName) \(nameDigit1)"
+                }
+            }
+            else {
+                self.homeOddTitleLabel.text = outcome.typeName
+            }
                 
-                self?.liveMatchDetailsSubscription = nil
-                self?.liveMatchDetailsCancellable?.cancel()
-                
-            }, receiveValue: { [weak self] (eventSubscribableContent: SubscribableContent<ServicesProvider.EventLiveData>) in
-                
-                switch eventSubscribableContent {
-                case .connected(let subscription):
-                    self?.liveMatchDetailsSubscription = subscription
-                    break
-                case .contentUpdate(let eventLiveData):
-                    let matchLiveData = ServiceProviderModelMapper.matchLiveData(fromServiceProviderEventLiveData: eventLiveData)
+            self.leftOutcome = outcome
+            self.isLeftOutcomeButtonSelected = Env.betslipManager.hasBettingTicket(withId: outcome.bettingOffer.id)
 
-                    var updatedMatch = match
-                    if let matchLiveDataStatus = matchLiveData.status {
-                        updatedMatch.status = matchLiveDataStatus
+            // Check for SportRadar invalid odd
+            if !outcome.bettingOffer.decimalOdd.isNaN {
+                self.setHomeOddValueLabel(toText: OddFormatter.formatOdd(withValue: outcome.bettingOffer.decimalOdd))
+            }
+            else {
+                self.homeBaseView.isUserInteractionEnabled = false
+                self.homeBaseView.alpha = 0.5
+                    self.setHomeOddValueLabel(toText: "-")
+            }
+
+            self.leftOddButtonSubscriber = Env.servicesProvider
+                .subscribeToEventOnListsOutcomeUpdates(withId: outcome.bettingOffer.id)
+                .compactMap({ $0 })
+                .map(ServiceProviderModelMapper.outcome(fromServiceProviderOutcome: ))
+                .handleEvents(receiveOutput: { [weak self] outcome in
+                    self?.leftOutcome = outcome
+                })
+                .map(\.bettingOffer)
+                .receive(on: DispatchQueue.main)
+                .sink(receiveCompletion: { completion in
+                    // print("leftOddButtonSubscriber subscribeToOutcomeUpdates completion: \(completion)")
+                }, receiveValue: { [weak self] bettingOffer in
+                    guard let weakSelf = self else { return }
+                    
+                    if !bettingOffer.isAvailable || bettingOffer.decimalOdd.isNaN {
+                        weakSelf.homeBaseView.isUserInteractionEnabled = false
+                        weakSelf.homeBaseView.alpha = 0.5
+                        weakSelf.setHomeOddValueLabel(toText: "-")
                     }
-                    updatedMatch.homeParticipantScore = matchLiveData.homeScore
-                    updatedMatch.awayParticipantScore = matchLiveData.awayScore
-                    updatedMatch.matchTime = matchLiveData.matchTime
-                    updatedMatch.detailedScores = matchLiveData.detailedScores
-                    
-                    
-                    // Temp live data viewModel
-                    let liveDataViewModel = MatchWidgetCellViewModel(match: updatedMatch)
-                    
-                    self?.dateLabel.text = "\(liveDataViewModel.startDateString)"
-                    self?.timeLabel.text = "\(liveDataViewModel.startTimeString)"
-
-                    self?.dateNewLabel.text = "\(liveDataViewModel.startDateString)"
-                    self?.timeNewLabel.text = "\(liveDataViewModel.startTimeString)"
-
-                    self?.resultLabel.text = "\(liveDataViewModel.matchScore)"
-                    self?.matchTimeLabel.text = liveDataViewModel.matchTimeDetails
-                    
-                    self?.matchTimeStatusNewLabel.text = liveDataViewModel.matchTimeDetails
-                    
-                    if let detailedScores = updatedMatch.detailedScores {
-                        self?.detailedScoreView.updateScores(detailedScores)
-                    }
-                    
-                    if liveDataViewModel.isLiveCard {
-                        self?.configureAsLiveCard()
-                    }
-
                     else {
-                        self?.configureAsNormalCard()
+                        weakSelf.homeBaseView.isUserInteractionEnabled = true
+                        weakSelf.homeBaseView.alpha = 1.0
+
+                        let newOddValue = bettingOffer.decimalOdd
+
+                        if let currentOddValue = weakSelf.currentHomeOddValue {
+                            if newOddValue > currentOddValue {
+                                weakSelf.highlightOddChangeUp(animated: true,
+                                                              upChangeOddValueImage: weakSelf.homeUpChangeOddValueImage,
+                                                              baseView: weakSelf.homeBaseView)
+                            }
+                            else if newOddValue < currentOddValue {
+                                weakSelf.highlightOddChangeDown(animated: true,
+                                                                downChangeOddValueImage: weakSelf.homeDownChangeOddValueImage,
+                                                                baseView: weakSelf.homeBaseView)
+                            }
+                        }
+                        weakSelf.currentHomeOddValue = newOddValue
+                        weakSelf.setHomeOddValueLabel(toText: OddFormatter.formatOdd(withValue: newOddValue))
                     }
-                    
-                case .disconnected:
-                    break
+                })
+            
+        }
+        
+        if let outcome = market.outcomes[safe: 1] {
+            
+            if let nameDigit1 = market.nameDigit1 {
+                if outcome.typeName.contains("\(nameDigit1)") {
+                    self.drawOddTitleLabel.text = outcome.typeName
                 }
-            })
-    
+                else {
+                    self.drawOddTitleLabel.text = "\(outcome.typeName) \(nameDigit1)"
+                }
+            }
+            else {
+                self.drawOddTitleLabel.text = outcome.typeName
+            }
+            
+            self.middleOutcome = outcome
+            self.isMiddleOutcomeButtonSelected = Env.betslipManager.hasBettingTicket(withId: outcome.bettingOffer.id)
+
+            // Check for SportRadar invalid odd
+            if !outcome.bettingOffer.decimalOdd.isNaN {
+                self.setDrawOddValueLabel(toText: OddFormatter.formatOdd(withValue: outcome.bettingOffer.decimalOdd))
+            }
+            else {
+                self.drawBaseView.isUserInteractionEnabled = false
+                self.drawBaseView.alpha = 0.5
+                self.setDrawOddValueLabel(toText: "-")
+            }
+
+            self.middleOddButtonSubscriber = Env.servicesProvider
+                .subscribeToEventOnListsOutcomeUpdates(withId: outcome.bettingOffer.id)
+                .compactMap({ $0 })
+                .map(ServiceProviderModelMapper.outcome(fromServiceProviderOutcome:))
+                .handleEvents(receiveOutput: { [weak self] outcome in
+                    self?.middleOutcome = outcome
+                })
+                .map(\.bettingOffer)
+                .receive(on: DispatchQueue.main)
+                .sink(receiveCompletion: { completion in
+                    // print("middleOddButtonSubscriber subscribeToOutcomeUpdates completion: \(completion)")
+                }, receiveValue: { [weak self] bettingOffer in
+                    
+                    guard let weakSelf = self else { return }
+                    
+                    if !bettingOffer.isAvailable || bettingOffer.decimalOdd.isNaN {
+                        weakSelf.drawBaseView.isUserInteractionEnabled = false
+                        weakSelf.drawBaseView.alpha = 0.5
+                        weakSelf.setDrawOddValueLabel(toText: "-")
+                    }
+                    else {
+                        weakSelf.drawBaseView.isUserInteractionEnabled = true
+                        weakSelf.drawBaseView.alpha = 1.0
+                        
+                        let newOddValue = bettingOffer.decimalOdd
+                        if let currentOddValue = weakSelf.currentDrawOddValue {
+                            if newOddValue > currentOddValue {
+                                weakSelf.highlightOddChangeUp(animated: true,
+                                                              upChangeOddValueImage: weakSelf.drawUpChangeOddValueImage,
+                                                              baseView: weakSelf.drawBaseView)
+                            }
+                            else if newOddValue < currentOddValue {
+                                weakSelf.highlightOddChangeDown(animated: true,
+                                                                downChangeOddValueImage: weakSelf.drawDownChangeOddValueImage,
+                                                                baseView: weakSelf.drawBaseView)
+                            }
+                        }
+                        weakSelf.currentDrawOddValue = newOddValue
+                        weakSelf.setDrawOddValueLabel(toText: OddFormatter.formatOdd(withValue: newOddValue))
+                    }
+                })
+        }
+        
+        if let outcome = market.outcomes[safe: 2] {
+            
+            if let nameDigit1 = market.nameDigit1 {
+                if outcome.typeName.contains("\(nameDigit1)") {
+                    self.awayOddTitleLabel.text = outcome.typeName
+                }
+                else {
+                    self.awayOddTitleLabel.text = "\(outcome.typeName) \(nameDigit1)"
+                }
+            }
+            else {
+                self.awayOddTitleLabel.text = outcome.typeName
+            }
+
+            self.rightOutcome = outcome
+            self.isRightOutcomeButtonSelected = Env.betslipManager.hasBettingTicket(withId: outcome.bettingOffer.id)
+
+            // Check for SportRadar invalid odd
+            if !outcome.bettingOffer.decimalOdd.isNaN {
+                self.setAwayOddValueLabel(toText: OddFormatter.formatOdd(withValue: outcome.bettingOffer.decimalOdd))
+            }
+            else {
+                self.awayBaseView.isUserInteractionEnabled = false
+                self.awayBaseView.alpha = 0.5
+                self.setAwayOddValueLabel(toText: "-")
+            }
+
+            self.rightOddButtonSubscriber = Env.servicesProvider
+                .subscribeToEventOnListsOutcomeUpdates(withId: outcome.bettingOffer.id)
+                .compactMap({ $0 })
+                .map(ServiceProviderModelMapper.outcome(fromServiceProviderOutcome:))
+                .handleEvents(receiveOutput: { [weak self] outcome in
+                    self?.rightOutcome = outcome
+                })
+                .map(\.bettingOffer)
+                .receive(on: DispatchQueue.main)
+                .sink(receiveCompletion: { completion in
+                    // print("leftOddButtonSubscriber subscribeToOutcomeUpdates completion: \(completion)")
+                }, receiveValue: { [weak self] bettingOffer in
+                    
+                    guard let weakSelf = self else { return }
+                    
+                    if !bettingOffer.isAvailable || bettingOffer.decimalOdd.isNaN {
+                        weakSelf.awayBaseView.isUserInteractionEnabled = false
+                        weakSelf.awayBaseView.alpha = 0.5
+                        weakSelf.setAwayOddValueLabel(toText: "-")
+                    }
+                    else {
+                        weakSelf.awayBaseView.isUserInteractionEnabled = true
+                        weakSelf.awayBaseView.alpha = 1.0
+                        
+                        let newOddValue = bettingOffer.decimalOdd
+                        if let currentOddValue = weakSelf.currentAwayOddValue {
+                            if newOddValue > currentOddValue {
+                                weakSelf.highlightOddChangeUp(animated: true,
+                                                              upChangeOddValueImage: weakSelf.awayUpChangeOddValueImage,
+                                                              baseView: weakSelf.awayBaseView)
+                            }
+                            else if newOddValue < currentOddValue {
+                                weakSelf.highlightOddChangeDown(animated: true,
+                                                                downChangeOddValueImage: weakSelf.awayDownChangeOddValueImage,
+                                                                baseView: weakSelf.awayBaseView)
+                            }
+                        }
+                        
+                        weakSelf.currentAwayOddValue = newOddValue
+                        weakSelf.setAwayOddValueLabel(toText: OddFormatter.formatOdd(withValue: newOddValue))
+                    }
+                })
+            
+        }
+        
+        if market.outcomes.count == 3 {
+            self.homeBaseView.isHidden = false
+            self.awayBaseView.isHidden = false
+            self.drawBaseView.isHidden = false
+        }
+        else if market.outcomes.count == 2 {
+            self.awayBaseView.isHidden = true
+        }
+        else if market.outcomes.count == 1 {
+            self.awayBaseView.isHidden = true
+            self.drawBaseView.isHidden = true
+        }
     }
     
     //
@@ -1985,7 +1939,7 @@ class MatchWidgetCollectionViewCell: UICollectionViewCell {
     }
 
     func markAsFavorite(match: Match) {
-        if self.matchWidgetType == .topImageOutright {
+        if self.viewModel?.matchWidgetType == .topImageOutright {
             if Env.favoritesManager.isEventFavorite(eventId: match.id) {
                 Env.favoritesManager.removeFavorite(eventId: match.id, favoriteType: .competition)
                 self.isFavorite = false
@@ -2021,14 +1975,14 @@ class MatchWidgetCollectionViewCell: UICollectionViewCell {
 
     @IBAction private func didTapMatchView(_ sender: Any) {
         
-        if let viewModel = self.viewModel?.match {
-            if self.matchWidgetType == .topImageOutright {
-                if let competition = viewModel.competitionOutright {
+        if let viewModel = self.viewModel, let match = viewModel.match {
+            if viewModel.matchWidgetType == .topImageOutright {
+                if let competition = match.competitionOutright {
                     self.tappedMatchOutrightWidgetAction?(competition)
                 }
             }
             else {
-                self.tappedMatchWidgetAction?(viewModel)
+                self.tappedMatchWidgetAction?(match)
             }
         }
         

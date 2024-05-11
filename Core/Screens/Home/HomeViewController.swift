@@ -630,8 +630,10 @@ extension HomeViewController: UITableViewDelegate, UITableViewDataSource {
             }
 
             cell.matchStatsViewModel = self.viewModel.matchStatsViewModel(forMatch: match)
+            
             let viewModel = MatchLineTableCellViewModel(match: match)
-            cell.viewModel = viewModel
+            cell.configure(withViewModel: viewModel)
+            
             cell.tappedMatchLineAction = { [weak self] match in
                 self?.openMatchDetails(matchId: match.id)
             }
@@ -904,7 +906,7 @@ extension HomeViewController: UITableViewDelegate, UITableViewDataSource {
             cell.matchStatsViewModel = self.viewModel.matchStatsViewModel(forMatch: match)
 
             let viewModel = MatchLineTableCellViewModel(match: match)
-            cell.viewModel = viewModel
+            cell.configure(withViewModel: viewModel)
 
             cell.tappedMatchLineAction = { [weak self] match in
                 self?.openMatchDetails(matchId: match.id)
@@ -919,12 +921,12 @@ extension HomeViewController: UITableViewDelegate, UITableViewDataSource {
         case .supplementaryEvents:
             guard
                 let cell = tableView.dequeueReusableCell(withIdentifier: MatchLineTableViewCell.identifier) as? MatchLineTableViewCell,
-                let matchLineViewModel = self.viewModel.matchLineTableCellViewModel(forSection: indexPath.section, forIndex: indexPath.row)
+                let viewModel = self.viewModel.matchLineTableCellViewModel(forSection: indexPath.section, forIndex: indexPath.row)
             else {
                 return UITableViewCell()
             }
 
-            cell.viewModel = matchLineViewModel
+            cell.configure(withViewModel: viewModel)
 
             cell.tappedMatchLineAction = { [weak self] match in
                 self?.openMatchDetails(matchId: match.id)
@@ -940,12 +942,12 @@ extension HomeViewController: UITableViewDelegate, UITableViewDataSource {
             guard
                 let cell = tableView.dequeueReusableCell(withIdentifier: MatchLineTableViewCell.identifier) as? MatchLineTableViewCell,
                 let identifier = self.viewModel.highlightedLiveMatchesId(forSection: indexPath.section, forIndex: indexPath.row),
-                let matchLineViewModel = self.viewModel.highlightedLiveMatchLineTableCellViewModel(forId: identifier)
+                let viewModel = self.viewModel.highlightedLiveMatchLineTableCellViewModel(forId: identifier)
             else {
                 return UITableViewCell()
             }
 
-            cell.viewModel = matchLineViewModel
+            cell.configure(withViewModel: viewModel)
 
             cell.tappedMatchLineAction = { [weak self] match in
                 self?.openMatchDetails(matchId: match.id)

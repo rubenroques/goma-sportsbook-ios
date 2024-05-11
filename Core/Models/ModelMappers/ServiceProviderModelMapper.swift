@@ -85,6 +85,19 @@ extension ServiceProviderModelMapper {
         }
     }
     
+    static func matchLiveData(fromServiceProviderEvent event: ServicesProvider.Event) -> MatchLiveData {
+        let mappeddStatus = Self.matchStatus(fromInternalEvent: event.status)
+        
+        let mappedScores = Self.scoresDictionary(fromInternalScoresDictionary: event.scores)
+        
+        return MatchLiveData(id: event.id,
+                             homeScore: event.homeTeamScore,
+                             awayScore: event.awayTeamScore,
+                             matchTime: event.matchTime,
+                             status: mappeddStatus,
+                             detailedScores: mappedScores)
+    }
+    
     static func matchLiveData(fromServiceProviderEventLiveData eventLiveData: ServicesProvider.EventLiveData) -> MatchLiveData {
         let mappeddStatus = Self.matchStatus(fromInternalEvent: eventLiveData.status)
         

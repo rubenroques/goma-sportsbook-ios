@@ -82,7 +82,7 @@ class MyFavoriteCompetitionsDataSource: NSObject, UITableViewDataSource, UITable
             if !collapsedCompetitionsSections.contains(indexPath.section) {
 
                 let viewModel = MatchLineTableCellViewModel(match: match)
-                cell.viewModel = viewModel
+                cell.configure(withViewModel: viewModel)
 
                 cell.shouldShowCountryFlag(false)
                 cell.tappedMatchLineAction = { [weak self] match in

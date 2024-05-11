@@ -500,7 +500,7 @@ extension TopCompetitionsDataSource: UITableViewDataSource, UITableViewDelegate 
                 }
 
                 let viewModel = MatchLineTableCellViewModel(match: match)
-                cell.viewModel = viewModel
+                cell.configure(withViewModel: viewModel)
 
                 cell.shouldShowCountryFlag(true)
                 cell.tappedMatchLineAction = { [weak self] match in
@@ -518,7 +518,7 @@ extension TopCompetitionsDataSource: UITableViewDataSource, UITableViewDelegate 
             }
 
             let viewModel = MatchLineTableCellViewModel(match: match)
-            cell.viewModel = viewModel
+            cell.configure(withViewModel: viewModel)
 
             cell.shouldShowCountryFlag(true)
             cell.tappedMatchLineAction = { [weak self] match in

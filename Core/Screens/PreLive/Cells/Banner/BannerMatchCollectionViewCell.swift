@@ -51,17 +51,7 @@ class BannerMatchCollectionViewCell: UICollectionViewCell {
     var matchViewModel: MatchWidgetCellViewModel? {
         didSet {
             if let matchViewModelValue = self.matchViewModel {
-
-                self.homeParticipantNameLabel.text = "\(matchViewModelValue.homeTeamName)"
-                self.awayParticipantNameLabel.text = "\(matchViewModelValue.awayTeamName)"
-                self.dateLabel.text = "\(matchViewModelValue.startDateString)"
-                self.timeLabel.text = "\(matchViewModelValue.startTimeString)"
-                if matchViewModelValue.isToday {
-                    self.dateLabel.isHidden = true
-                }
-
-                self.matchBaseView.isHidden = false
-                self.imageView.isHidden = false
+                self.setupWithMatchViewModel(matchWidgetCellViewModel: matchViewModelValue)
             }
         }
     }
@@ -360,30 +350,56 @@ class BannerMatchCollectionViewCell: UICollectionViewCell {
 
     }
 
+    func setupWithMatchViewModel(matchWidgetCellViewModel viewModel: MatchWidgetCellViewModel) {
+        
+        viewModel.homeTeamNamePublisher
+            .sink { [weak self] homeTeamName in
+                self?.homeParticipantNameLabel.text = homeTeamName
+            }
+            .store(in: &self.cancellables)
+
+        viewModel.awayTeamNamePublisher
+            .sink { [weak self] awayTeamName in
+                self?.awayParticipantNameLabel.text = awayTeamName
+            }
+            .store(in: &self.cancellables)
+        
+    
+        viewModel.startDateStringPublisher
+            .sink { [weak self] startDateString in
+                self?.dateLabel.text = startDateString
+            }
+            .store(in: &self.cancellables)
+
+        viewModel.startTimeStringPublisher
+            .sink { [weak self] startTimeString in
+                self?.timeLabel.text = startTimeString
+            }
+            .store(in: &self.cancellables)
+        
+        viewModel.isTodayPublisher
+            .sink { [weak self] isToday in
+                self?.dateLabel.isHidden = isToday
+            }
+            .store(in: &self.cancellables)
+        
+        self.matchBaseView.isHidden = false
+        self.imageView.isHidden = false
+    }
+    
     func setupWithMatch(_ match: Match) {
 
         // let viewModel = MatchWidgetCellViewModel(match: match)
-        guard let viewModel = self.matchViewModel else {
+        guard let matchViewModel = self.matchViewModel else {
             return
         }
 
-        guard let cellViewModel = self.viewModel else {
+        guard let viewModel = self.viewModel else {
             return
         }
 
-        // self.eventNameLabel.text = "\(viewModel.competitionName)"
-        self.homeParticipantNameLabel.text = "\(viewModel.homeTeamName)"
-        self.awayParticipantNameLabel.text = "\(viewModel.awayTeamName)"
-        self.dateLabel.text = "\(viewModel.startDateString)"
-        self.timeLabel.text = "\(viewModel.startTimeString)"
-
-       // self.sportTypeImageView.image = UIImage(named: Assets.flagName(withCountryCode: viewModel.countryISOCode))
-        // self.locationFlagImageView.image = UIImage(named: Assets.flagName(withCountryCode: viewModel.countryISOCode))
-
-        if viewModel.isToday {
-            self.dateLabel.isHidden = true
-        }
-
+        self.setupWithMatchViewModel(matchWidgetCellViewModel: matchViewModel)
+        
         if let market = match.markets.first {
 
             if market.outcomes.count == 2 {
@@ -401,29 +417,13 @@ class BannerMatchCollectionViewCell: UICollectionViewCell {
 
                 self.isLeftOutcomeButtonSelected = Env.betslipManager.hasBettingTicket(withId: outcome.bettingOffer.id)
 
-                self.leftOddButtonSubscriber = cellViewModel.oddPublisherForBettingOfferId(outcome.bettingOffer.id)?
+                self.leftOddButtonSubscriber = viewModel.oddPublisherForBettingOfferId(outcome.bettingOffer.id)?
                     .map(\.oddsValue)
                     .compactMap({ $0 })
                     .receive(on: DispatchQueue.main)
                     .sink(receiveValue: { [weak self] newOddValue in
-
                         guard let weakSelf = self else { return }
-
-//                        if let currentOddValue = weakSelf.currentHomeOddValue {
-//                            if newOddValue > currentOddValue {
-//                                weakSelf.highlightOddChangeUp(animated: true,
-//                                                           upChangeOddValueImage: weakSelf.homeUpChangeOddValueImage,
-//                                                           baseView: weakSelf.homeBaseView)
-//                            }
-//                            else if newOddValue < currentOddValue {
-//                                weakSelf.highlightOddChangeDown(animated: true,
-//                                                           downChangeOddValueImage: weakSelf.homeDownChangeOddValueImage,
-//                                                           baseView: weakSelf.homeBaseView)
-//                            }
-//                        }
-//                        weakSelf.currentHomeOddValue = newOddValue
                         weakSelf.homeOddValueLabel.text = OddFormatter.formatOdd(withValue: newOddValue)
-//                        weakSelf.homeOddValueLabel.text = OddConverter.stringForValue(newOddValue, format: UserDefaults.standard.userOddsFormat)
                     })
 
             }
@@ -435,63 +435,29 @@ class BannerMatchCollectionViewCell: UICollectionViewCell {
 
                 self.isMiddleOutcomeButtonSelected = Env.betslipManager.hasBettingTicket(withId: outcome.bettingOffer.id)
 
-                self.middleOddButtonSubscriber = cellViewModel.oddPublisherForBettingOfferId(outcome.bettingOffer.id)?
+                self.middleOddButtonSubscriber = viewModel.oddPublisherForBettingOfferId(outcome.bettingOffer.id)?
                     .map(\.oddsValue)
                     .compactMap({ $0 })
                     .receive(on: DispatchQueue.main)
                     .sink(receiveValue: { [weak self] newOddValue in
-
                         guard let weakSelf = self else { return }
-
-//                        if let currentOddValue = weakSelf.currentDrawOddValue {
-//                            if newOddValue > currentOddValue {
-//                                weakSelf.highlightOddChangeUp(animated: true,
-//                                                           upChangeOddValueImage: weakSelf.drawUpChangeOddValueImage,
-//                                                           baseView: weakSelf.drawBaseView)
-//                            }
-//                            else if newOddValue < currentOddValue {
-//                                weakSelf.highlightOddChangeDown(animated: true,
-//                                                           downChangeOddValueImage: weakSelf.drawDownChangeOddValueImage,
-//                                                           baseView: weakSelf.drawBaseView)
-//                            }
-//                        }
-//                        weakSelf.currentDrawOddValue = newOddValue
                         weakSelf.drawOddValueLabel.text = OddFormatter.formatOdd(withValue: newOddValue)
-//                        weakSelf.drawOddValueLabel.text = OddConverter.stringForValue(newOddValue, format: UserDefaults.standard.userOddsFormat)
                     })
             }
             if let outcome = market.outcomes[safe: 2] {
                 self.awayOddTitleLabel.text = outcome.translatedName.isNotEmpty ? outcome.translatedName : outcome.typeName
                 self.awayOddValueLabel.text = "\(Double(round(outcome.bettingOffer.decimalOdd * 100)/100))"
-                // self.currentAwayOddValue = outcome.bettingOffer.value
                 self.rightOutcome = outcome
 
                 self.isRightOutcomeButtonSelected = Env.betslipManager.hasBettingTicket(withId: outcome.bettingOffer.id)
 
-                self.rightOddButtonSubscriber = cellViewModel.oddPublisherForBettingOfferId(outcome.bettingOffer.id)?
+                self.rightOddButtonSubscriber = viewModel.oddPublisherForBettingOfferId(outcome.bettingOffer.id)?
                     .map(\.oddsValue)
                     .compactMap({ $0 })
                     .receive(on: DispatchQueue.main)
                     .sink(receiveValue: { [weak self] newOddValue in
-
                         guard let weakSelf = self else { return }
-
-//                        if let currentOddValue = weakSelf.currentAwayOddValue {
-//                            if newOddValue > currentOddValue {
-//                                weakSelf.highlightOddChangeUp(animated: true,
-//                                                           upChangeOddValueImage: weakSelf.awayUpChangeOddValueImage,
-//                                                           baseView: weakSelf.awayBaseView)
-//                            }
-//                            else if newOddValue < currentOddValue {
-//                                weakSelf.highlightOddChangeDown(animated: true,
-//                                                           downChangeOddValueImage: weakSelf.awayDownChangeOddValueImage,
-//                                                           baseView: weakSelf.awayBaseView)
-//                            }
-//                        }
-//
-//                        weakSelf.currentAwayOddValue = newOddValue
                         weakSelf.awayOddValueLabel.text = OddFormatter.formatOdd(withValue: newOddValue)
-//                        weakSelf.awayOddValueLabel.text = OddConverter.stringForValue(newOddValue, format: UserDefaults.standard.userOddsFormat)
                     })
             }
             
