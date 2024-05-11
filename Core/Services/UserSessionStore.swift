@@ -562,12 +562,17 @@ extension UserSessionStore {
             }, receiveValue: { [weak self] (userWallet: ServicesProvider.UserWallet) in
                 guard
                     let currency = userWallet.currency,
-                    let total = userWallet.total
+                    let withdrawable = userWallet.withdrawable,
+                    let bonus = userWallet.bonus
+                    
                 else {
                     self?.userWalletPublisher.send(nil)
                     return
                 }
-                let wallet = UserWallet(total: total,
+                
+                let totalBalance = withdrawable + bonus
+                
+                let wallet = UserWallet(total: totalBalance,
                                         bonus: userWallet.bonus,
                                         totalWithdrawable: userWallet.withdrawable,
                                         currency: currency)

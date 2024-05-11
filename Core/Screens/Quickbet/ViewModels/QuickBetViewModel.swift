@@ -11,10 +11,11 @@ import Combine
 class QuickBetViewModel {
 
     // MARK: Private Properties
-    private var bettingTicket: BettingTicket
     private var cancellables = Set<AnyCancellable>()
 
     // MARK: Public Properties
+    var bettingTicket: BettingTicket
+
     var oddValuePublisher: CurrentValueSubject<String, Never> = .init("")
     var currentAmountInteger: Int = 0 {
         didSet {
@@ -32,7 +33,7 @@ class QuickBetViewModel {
     var isAvailableOdd: CurrentValueSubject<Bool, Never> = .init(true)
 
     var shouldShowBetError: ((String) -> Void)?
-    var shouldShowBetSuccess: (() -> Void)?
+    var shouldShowBetSuccess: (([BetPlacedDetails]) -> Void)?
 
     init(bettingTicket: BettingTicket) {
         self.bettingTicket = bettingTicket
@@ -164,10 +165,7 @@ class QuickBetViewModel {
                     case .betPlacementDetailedError(let detailedMessage):
                         message = detailedMessage
                     default:
-                        message = """
-                        Something went wrong with your bet request.
-                        Make sure you have completed your profile and enought balance.
-                        """
+                        message = localized("error_placing_bet")
                     }
                     self?.shouldShowBetError?(message)
                 default: ()
@@ -175,10 +173,10 @@ class QuickBetViewModel {
                 self?.isLoadingPublisher.send(false)
             }, receiveValue: { [weak self] betPlacedDetails in
                 if betPlacedDetails.first?.response.betSucceed ?? false {
-                    self?.shouldShowBetSuccess?()
+                    self?.shouldShowBetSuccess?(betPlacedDetails)
                 }
                 else {
-                    let defaultError = "Sorry, we're unable to process your bet at this time"
+                    let defaultError = localized("error_placing_bet")
                     self?.shouldShowBetError?(defaultError)
                 }
                 Env.userSessionStore.refreshUserWallet()

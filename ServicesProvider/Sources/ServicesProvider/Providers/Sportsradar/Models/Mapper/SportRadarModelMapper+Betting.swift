@@ -134,7 +134,7 @@ extension SportRadarModelMapper {
                               potentialReturn: placedBetEntry.potentialReturn,
                               placeStake: placedBetEntry.placeStake,
                               totalStake: placedBetEntry.totalAvailableStake,
-                              betLegs: betLegs)
+                              betLegs: betLegs, type: placedBetEntry.type)
     }
 
     static func placedBetLeg(fromInternalPlacedBetLeg placedBetLeg: SportRadarModels.PlacedBetLeg) -> PlacedBetLeg {

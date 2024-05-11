@@ -256,8 +256,13 @@ class OutcomeSelectionButtonView: NibView {
                                           matchDescription: matchDescription,
                                           marketDescription: marketDescription,
                                           outcomeDescription: outcomeDescription,
+                                          homeParticipantName: match.homeParticipant.name,
+                                          awayParticipantName: match.awayParticipant.name,
                                           sport: match.sport,
                                           sportIdCode: match.sportIdCode,
+                                          venue: match.venue,
+                                          competition: match.competitionName,
+                                          date: match.date,
                                           odd: self.currentOdd ?? outcome.bettingOffer.odd)
         }
         else {
@@ -280,8 +285,13 @@ class OutcomeSelectionButtonView: NibView {
                                           matchDescription: matchDescription,
                                           marketDescription: marketDescription,
                                           outcomeDescription: outcomeDescription,
+                                          homeParticipantName: match?.homeParticipant.name,
+                                          awayParticipantName: match?.awayParticipant.name,
                                           sport: nil,
                                           sportIdCode: match?.sportIdCode,
+                                          venue: match?.venue,
+                                          competition: match?.competitionName,
+                                          date: match?.date,
                                           odd: self.currentOdd ?? outcome.bettingOffer.odd)
         }
 
@@ -337,8 +347,13 @@ class OutcomeSelectionButtonView: NibView {
                                               matchDescription: matchDescription,
                                               marketDescription: marketDescription,
                                               outcomeDescription: outcomeDescription,
+                                              homeParticipantName: match.homeParticipant.name,
+                                              awayParticipantName: match.awayParticipant.name,
                                               sport: match.sport,
                                               sportIdCode: match.sportIdCode,
+                                              venue: match.venue,
+                                              competition: match.competitionName,
+                                              date: match.date,
                                               odd: outcome.bettingOffer.odd)
             }
             else {
@@ -361,8 +376,13 @@ class OutcomeSelectionButtonView: NibView {
                                               matchDescription: matchDescription,
                                               marketDescription: marketDescription,
                                               outcomeDescription: outcomeDescription,
+                                              homeParticipantName: match?.homeParticipant.name,
+                                              awayParticipantName: match?.awayParticipant.name,
                                               sport: nil,
                                               sportIdCode: match?.sportIdCode,
+                                              venue: match?.venue,
+                                              competition: match?.competitionName,
+                                              date: match?.date,
                                               odd: outcome.bettingOffer.odd)
             }
 

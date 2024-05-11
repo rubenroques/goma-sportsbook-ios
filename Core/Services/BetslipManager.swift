@@ -16,6 +16,7 @@ class BetslipManager: NSObject {
     var allowedBetTypesPublisher = CurrentValueSubject< LoadableContent<[BetType]>, Never>.init( .idle )
     var systemTypesAvailablePublisher = CurrentValueSubject<LoadableContent<[SystemBetType]>, Never> .init(.idle)
 
+    var allBetTypes = [ServicesProvider.BetType]()
     var newBetsPlacedPublisher = PassthroughSubject<Void, Never>.init()
     var bettingTicketsPublisher: CurrentValueSubject<[BettingTicket], Never>
 
@@ -245,8 +246,13 @@ class BetslipManager: NSObject {
                                                       matchDescription: bettingTicket.matchDescription,
                                                       marketDescription: bettingTicket.marketDescription,
                                                       outcomeDescription: bettingTicket.outcomeDescription,
+                                                      homeParticipantName: bettingTicket.homeParticipantName,
+                                                      awayParticipantName: bettingTicket.awayParticipantName,
                                                       sport: bettingTicket.sport,
                                                       sportIdCode: bettingTicket.sportIdCode,
+                                                      venue: bettingTicket.venue,
+                                                      competition: bettingTicket.competition,
+                                                      date: bettingTicket.date,
                                                       odd: bettingTicket.odd)
 
             self.bettingTicketsDictionaryPublisher.value[bettingTicket.id] = newBettingTicket
@@ -267,8 +273,13 @@ class BetslipManager: NSObject {
                                                           matchDescription: bettingTicket.matchDescription,
                                                           marketDescription: bettingTicket.marketDescription,
                                                           outcomeDescription: bettingTicket.outcomeDescription,
+                                                          homeParticipantName: bettingTicket.homeParticipantName,
+                                                          awayParticipantName: bettingTicket.awayParticipantName,
                                                           sport: bettingTicket.sport,
-                                                          sportIdCode: bettingTicket.sportIdCode,
+                                                          sportIdCode: bettingTicket.sportIdCode, 
+                                                          venue: bettingTicket.venue,
+                                                          competition: bettingTicket.competition,
+                                                          date: bettingTicket.date,
                                                           odd: newOdd)
 
                 self.bettingTicketsDictionaryPublisher.value[bettingTicket.id] = newBettingTicket
@@ -282,6 +293,10 @@ class BetslipManager: NSObject {
             return bettingTicketPublisher.eraseToAnyPublisher()
         }
         return nil
+    }
+    
+    func getBettingTickets() -> [BettingTicket] {
+        return self.bettingTicketsPublisher.value
     }
 
 }
@@ -297,6 +312,7 @@ extension BetslipManager {
 
         self.allowedBetTypesPublisher.send(LoadableContent.loading)
         self.systemTypesAvailablePublisher.send(LoadableContent.loading)
+        self.allBetTypes = []
 
         let betTicketSelections: [ServicesProvider.BetTicketSelection] = bettingTickets.map { bettingTicket -> ServicesProvider.BetTicketSelection in
             let convertedOdd = ServiceProviderModelMapper.serviceProviderOddFormat(fromOddFormat: bettingTicket.odd)
@@ -326,11 +342,21 @@ extension BetslipManager {
 
             } receiveValue: { [weak self] allowedBetTypes in
                 let betTypes = allowedBetTypes.map { betType in
+                    
+                    if let allBetTypes = self?.allBetTypes {
+                        if !allBetTypes.contains(where: {
+                            $0.code == betType.code
+                        }) {
+                            self?.allBetTypes.append(betType)
+                        }
+                    }
+                    
                     switch betType.grouping {
                     case .single: return BetType.single(identifier: betType.code)
                     case .multiple: return BetType.multiple(identifier: betType.code)
                     case .system: return BetType.system(identifier: betType.code, name: betType.name)
                     }
+                    
                 }
                 self?.allowedBetTypesPublisher.send( LoadableContent.loaded(betTypes) )
 
@@ -398,10 +424,29 @@ extension BetslipManager {
             .flatMap({ (placedBetsResponse: PlacedBetsResponse) -> AnyPublisher<[BetPlacedDetails], BetslipErrorType> in
                 let betPlacedDetailsArray = placedBetsResponse.bets.map { (placedBetEntry: PlacedBetEntry) -> BetPlacedDetails in
                     let totalPriceValue = placedBetEntry.betLegs.map(\.odd).reduce(1.0, *)
+                    
+                    let betslipPlaceEntries = placedBetEntry.betLegs.map( {
+                        ServiceProviderModelMapper.betlipPlacedEntry(fromPlacedBetLeg: $0)
+                    })
+                    
+                    var betType = localized("single")
+                    
+                    if let type = placedBetEntry.type {
+                        let allowedBetTypes = self.allBetTypes
+                        
+                        if let betTypeFound = allowedBetTypes.filter({
+                            $0.code == type
+                        }).first {
+                            betType = betTypeFound.name
+                        }
+                    }
+                    
                     let response = BetslipPlaceBetResponse(betId: placedBetEntry.identifier,
                                                            betSucceed: true,
                                                            totalPriceValue: totalPriceValue,
-                                                           maxWinning: placedBetEntry.potentialReturn)
+                                                           amount: placedBetEntry.totalStake,
+                                                           type: betType,
+                                                           maxWinning: placedBetEntry.potentialReturn, selections: betslipPlaceEntries)
                     return BetPlacedDetails(response: response)
                 }
                 return Just(betPlacedDetailsArray).setFailureType(to: BetslipErrorType.self).eraseToAnyPublisher()
@@ -468,10 +513,30 @@ extension BetslipManager {
             .flatMap({ (placedBetsResponse: PlacedBetsResponse) -> AnyPublisher<[BetPlacedDetails], BetslipErrorType> in
                 let betPlacedDetailsArray = placedBetsResponse.bets.map { (placedBetEntry: PlacedBetEntry) -> BetPlacedDetails in
                     let totalPriceValue = placedBetEntry.betLegs.map(\.odd).reduce(1.0, *)
+                    
+                    let betslipPlaceEntries = placedBetEntry.betLegs.map( {
+                        ServiceProviderModelMapper.betlipPlacedEntry(fromPlacedBetLeg: $0)
+                    })
+                    
+                    var betType = "Single"
+                    
+                    if let type = placedBetEntry.type {
+                        let allowedBetTypes = self.allBetTypes
+                        
+                        if let betTypeFound = allowedBetTypes.filter({
+                            $0.code == type
+                        }).first {
+                            betType = betTypeFound.name
+                        }
+                    }
+                    
                     let response = BetslipPlaceBetResponse(betId: placedBetEntry.identifier,
                                                            betSucceed: true,
                                                            totalPriceValue: totalPriceValue,
-                                                           maxWinning: placedBetEntry.potentialReturn)
+                                                           amount: placedBetEntry.totalStake,
+                                                           type: betType,
+                                                           maxWinning: placedBetEntry.potentialReturn, selections: betslipPlaceEntries)
+                    
                     return BetPlacedDetails(response: response)
                 }
                 return Just(betPlacedDetailsArray).setFailureType(to: BetslipErrorType.self).eraseToAnyPublisher()
@@ -548,10 +613,31 @@ extension BetslipManager {
             .flatMap({ (placedBetsResponse: PlacedBetsResponse) -> AnyPublisher<[BetPlacedDetails], BetslipErrorType> in
                 let betPlacedDetailsArray = placedBetsResponse.bets.map { (placedBetEntry: PlacedBetEntry) -> BetPlacedDetails in
                     let totalPriceValue = placedBetEntry.betLegs.map(\.odd).reduce(1.0, *)
+                    
+                    let betslipPlaceEntries = placedBetEntry.betLegs.map( {
+                        ServiceProviderModelMapper.betlipPlacedEntry(fromPlacedBetLeg: $0)
+                    })
+                    
+                    var betType = "Multiple"
+                    
+                    if let type = placedBetEntry.type {
+                        let allowedBetTypes = self.allBetTypes
+                        
+                        if let betTypeFound = allowedBetTypes.filter({
+                            $0.code == type
+                        }).first {
+                            betType = betTypeFound.name
+                        }
+                    }
+                    
                     let response = BetslipPlaceBetResponse(betId: placedBetEntry.identifier,
                                                            betSucceed: true,
                                                            totalPriceValue: totalPriceValue,
-                                                           maxWinning: placedBetEntry.potentialReturn)
+                                                           amount: placedBetEntry.totalStake,
+                                                           type: betType,
+                                                           maxWinning: placedBetEntry.potentialReturn,
+                    selections: betslipPlaceEntries)
+                    
                     return BetPlacedDetails(response: response)
                 }
                 return Just(betPlacedDetailsArray).setFailureType(to: BetslipErrorType.self).eraseToAnyPublisher()
@@ -616,10 +702,29 @@ extension BetslipManager {
             .flatMap({ (placedBetsResponse: PlacedBetsResponse) -> AnyPublisher<[BetPlacedDetails], BetslipErrorType> in
                 let betPlacedDetailsArray = placedBetsResponse.bets.map { (placedBetEntry: PlacedBetEntry) -> BetPlacedDetails in
                     let totalPriceValue = placedBetEntry.betLegs.map(\.odd).reduce(1.0, *)
+                    
+                    let betslipPlaceEntries = placedBetEntry.betLegs.map( {
+                        ServiceProviderModelMapper.betlipPlacedEntry(fromPlacedBetLeg: $0)
+                    })
+                    
+                    var betType = "System"
+                    
+                    if let type = placedBetEntry.type {
+                        let allowedBetTypes = self.allBetTypes
+                        
+                        if let betTypeFound = allowedBetTypes.filter({
+                            $0.code == type
+                        }).first {
+                            betType = betTypeFound.name
+                        }
+                    }
+                    
                     let response = BetslipPlaceBetResponse(betId: placedBetEntry.identifier,
                                                            betSucceed: true,
                                                            totalPriceValue: totalPriceValue,
-                                                           maxWinning: placedBetEntry.potentialReturn)
+                                                           amount: placedBetEntry.totalStake,
+                                                           type: betType,
+                                                           maxWinning: placedBetEntry.potentialReturn, selections: betslipPlaceEntries)
                     return BetPlacedDetails(response: response)
                 }
                 return Just(betPlacedDetailsArray).setFailureType(to: BetslipErrorType.self).eraseToAnyPublisher()

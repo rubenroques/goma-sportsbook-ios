@@ -38,6 +38,7 @@ struct FormStepViewFactory {
         case .names:
             return NamesFormStepView(viewModel: NamesFormStepViewModel(title: Localization.localized("names"),
                                                                        firstName: userRegisterEnvelop.name,
+                                                                       middleName: userRegisterEnvelop.middleName,
                                                                        lastName: userRegisterEnvelop.surname,
                                                                        userRegisterEnvelopUpdater: userRegisterEnvelopUpdater))
             //

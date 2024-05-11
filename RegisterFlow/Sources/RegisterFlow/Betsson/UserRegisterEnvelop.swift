@@ -20,6 +20,7 @@ public struct UserRegisterEnvelop: Codable, Equatable {
     
     public var name: String?
     public var surname: String?
+    public var middleName: String?
     
     public var avatarName: String?
     public var nickname: String?
@@ -56,6 +57,7 @@ public struct UserRegisterEnvelop: Codable, Equatable {
         case gender
         case name
         case surname
+        case middleName
         case avatarName
         case nickname
         case dateOfBirth
@@ -83,6 +85,7 @@ public struct UserRegisterEnvelop: Codable, Equatable {
     public init(gender: Gender? = nil,
                 name: String? = nil,
                 surname: String? = nil,
+                middleName: String? = nil,
                 avatarName: String? = nil,
                 nickname: String? = nil,
                 dateOfBirth: Date? = nil,
@@ -110,6 +113,7 @@ public struct UserRegisterEnvelop: Codable, Equatable {
         self.gender = gender
         self.name = name
         self.surname = surname
+        self.middleName = middleName
         self.avatarName = avatarName
         self.nickname = nickname
         self.dateOfBirth = dateOfBirth
@@ -139,6 +143,7 @@ public struct UserRegisterEnvelop: Codable, Equatable {
         self.gender = try container.decodeIfPresent(UserRegisterEnvelop.Gender.self, forKey: .gender)
         self.name = try container.decodeIfPresent(String.self, forKey: .name)
         self.surname = try container.decodeIfPresent(String.self, forKey: .surname)
+        self.middleName = try container.decodeIfPresent(String.self, forKey: .middleName)
         self.avatarName = try container.decodeIfPresent(String.self, forKey: .avatarName)
         self.nickname = try container.decodeIfPresent(String.self, forKey: .nickname)
         self.dateOfBirth = try container.decodeIfPresent(Date.self, forKey: .dateOfBirth)
@@ -168,6 +173,7 @@ public struct UserRegisterEnvelop: Codable, Equatable {
         try container.encodeIfPresent(self.gender, forKey: .gender)
         try container.encodeIfPresent(self.name, forKey: .name)
         try container.encodeIfPresent(self.surname, forKey: .surname)
+        try container.encodeIfPresent(self.middleName, forKey: .middleName)
         try container.encodeIfPresent(self.avatarName, forKey: .avatarName)
         try container.encodeIfPresent(self.nickname, forKey: .nickname)
         try container.encodeIfPresent(self.dateOfBirth, forKey: .dateOfBirth)
@@ -196,6 +202,7 @@ public struct UserRegisterEnvelop: Codable, Equatable {
         return lhs.gender == rhs.gender &&
         lhs.name == rhs.name &&
         lhs.surname == rhs.surname &&
+        lhs.middleName == rhs.middleName &&
         lhs.avatarName == rhs.avatarName &&
         lhs.nickname == rhs.nickname &&
         lhs.dateOfBirth == rhs.dateOfBirth &&
@@ -222,7 +229,7 @@ public struct UserRegisterEnvelop: Codable, Equatable {
     
     func currentRegisterStep() -> Int {
         
-        if self.gender == nil || self.name.isEmptyOrNil || self.surname.isEmptyOrNil {
+        if self.gender == nil || self.name.isEmptyOrNil || self.surname.isEmptyOrNil || self.middleName.isEmptyOrNil {
             return 0
         }
         if self.avatarName == nil || self.nickname.isEmptyOrNil {
@@ -250,6 +257,7 @@ extension UserRegisterEnvelop: CustomStringConvertible {
             gender: \(String(describing: gender)),
             name: \(String(describing: name)),
             surname: \(String(describing: surname)),
+            middleName: \(String(describing: middleName)),
             avatarName: \(String(describing: avatarName)),
             nickname: \(String(describing: nickname)),
             dateOfBirth: \(String(describing: dateOfBirth)),
@@ -283,6 +291,7 @@ public extension UserRegisterEnvelop {
         return UserRegisterEnvelop(gender: Gender.male,
                                    name: "Ruben",
                                    surname: "Roques",
+                                   middleName: "Nome",
                                    avatarName: "avatar3",
                                    nickname: "rroques",
                                    dateOfBirth: Date.init(timeIntervalSince1970: 824848591),
@@ -346,6 +355,8 @@ public extension UserRegisterEnvelop {
             formattedPhoneNumber.removeFirst()
         }
         
+        var middleName = self.middleName
+        
         return ServicesProvider.SignUpForm.init(email: email,
                                                 username: username,
                                                 password: password,
@@ -355,7 +366,7 @@ public extension UserRegisterEnvelop {
                                                 nationalityIsoCode: countryBirthIsoCode,
                                                 currencyCode: "EUR",
                                                 firstName: firstName,
-                                                lastName: lastName,
+                                                lastName: lastName, middleName: middleName,
                                                 gender: genderString,
                                                 address: streetAddress,
                                                 city: placeAddress,

@@ -63,6 +63,7 @@ extension SportRadarModels {
         
         let firstName: String?
         let lastName: String?
+        let middleName: String?
         let nickname: String?
         let language: String?
         let phone: String?
@@ -129,6 +130,7 @@ extension SportRadarModels {
             case email = "email"
 
             case firstName = "firstName"
+            case middleName = "middleName"
             case lastName = "lastName"
             case nickname = "nickname"
             case language = "language"
@@ -207,13 +209,14 @@ extension SportRadarModels {
             }
         }
 
-        public init(status: String, partyId: String, userId: String, email: String, firstName: String?, lastName: String?, nickname: String?, language: String?, phone: String?, phoneCountryCode: String?, phoneLocalNumber: String?, phoneNeedsReview: Bool?, birthDate: String?, birthDateFormatted: Date, regDate: String?, regDateFormatted: Date?, mobilePhone: String?, mobileCountryCode: String?, mobileLocalNumber: String?, mobileNeedsReview: Bool?, currency: String?, lastLogin: String?, lastLoginFormatted: Date?, level: Int?, parentID: String?, userType: Int?, isAutopay: Bool?, registrationStatus: String?, sessionKey: String?, vipStatus: String?, kycStatus: String?, emailVerificationStatus: String, verificationStatus: String?, lockedStatus: String?, gender: String?, contactPreference: String?, verificationMethod: String?, docNumber: String?, readonlyFields: String?, accountNumber: String?, idCardNumber: String?, madeDeposit: Bool?, testPlayer: Bool?, address: String?, city: String?, province: String?, postalCode: String?, country: String?, nationality: String?, municipality: String?, streetNumber: String?, building: String?, unit: String?, floorNumber: String?, birthDepartment: String?, birthCity: String?, birthCoutryCode: String?) {
+        public init(status: String, partyId: String, userId: String, email: String, firstName: String?, middleName: String?, lastName: String?, nickname: String?, language: String?, phone: String?, phoneCountryCode: String?, phoneLocalNumber: String?, phoneNeedsReview: Bool?, birthDate: String?, birthDateFormatted: Date, regDate: String?, regDateFormatted: Date?, mobilePhone: String?, mobileCountryCode: String?, mobileLocalNumber: String?, mobileNeedsReview: Bool?, currency: String?, lastLogin: String?, lastLoginFormatted: Date?, level: Int?, parentID: String?, userType: Int?, isAutopay: Bool?, registrationStatus: String?, sessionKey: String?, vipStatus: String?, kycStatus: String?, emailVerificationStatus: String, verificationStatus: String?, lockedStatus: String?, gender: String?, contactPreference: String?, verificationMethod: String?, docNumber: String?, readonlyFields: String?, accountNumber: String?, idCardNumber: String?, madeDeposit: Bool?, testPlayer: Bool?, address: String?, city: String?, province: String?, postalCode: String?, country: String?, nationality: String?, municipality: String?, streetNumber: String?, building: String?, unit: String?, floorNumber: String?, birthDepartment: String?, birthCity: String?, birthCoutryCode: String?) {
 
             self.status = status
             self.partyId = partyId
             self.userId = userId
             self.email = email
             self.firstName = firstName
+            self.middleName = middleName
             self.lastName = lastName
             self.nickname = nickname
             self.language = language
@@ -277,6 +280,7 @@ extension SportRadarModels {
             self.userId = try container.decode(String.self, forKey: .userId)
             self.email = try container.decode(String.self, forKey: .email)
             self.firstName = try container.decodeIfPresent(String.self, forKey: .firstName)
+            self.middleName = try container.decodeIfPresent(String.self, forKey: .middleName)
             self.lastName = try container.decodeIfPresent(String.self, forKey: .lastName)
             self.nickname = try container.decodeIfPresent(String.self, forKey: .nickname)
             self.language = try container.decodeIfPresent(String.self, forKey: .language)

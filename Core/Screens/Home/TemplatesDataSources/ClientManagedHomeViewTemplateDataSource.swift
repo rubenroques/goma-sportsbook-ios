@@ -190,19 +190,38 @@ class ClientManagedHomeViewTemplateDataSource {
     // User alerts
     func fetchBanners() {
 
-        if Env.userSessionStore.isUserLogged() {
-            // Logged user has no banners
-            self.banners = []
-            self.refreshPublisher.send()
-            return
-        }
+//        if Env.userSessionStore.isUserLogged() {
+//            // Logged user has no banners
+//            self.banners = []
+//            self.refreshPublisher.send()
+//            return
+//        }
 
         Env.servicesProvider.getPromotionalTopBanners()
             .receive(on: DispatchQueue.main)
             .sink { completion in
                 print("ClientManagedHomeTemplate getPromotionalTopBanners completion \(completion)")
             } receiveValue: { [weak self] (promotionalBanners: [PromotionalBanner]) in
-                self?.banners = promotionalBanners.map({ promotionalBanner in
+                var displayBanners = promotionalBanners
+                
+                if Env.userSessionStore.isUserLogged() {
+                    let filteredBanners = displayBanners.filter( {
+                        $0.bannerDisplay == "LOGGEDIN"
+                    })
+                    
+                    displayBanners = filteredBanners
+                }
+                else {
+                    let filteredBanners = displayBanners.filter( {
+                        $0.bannerDisplay == "LOGGEDOFF"
+                    })
+                    
+                    displayBanners = filteredBanners
+                }
+                
+                print("DISPLAY BANNERS: \(displayBanners)")
+                
+                self?.banners = displayBanners.map({ promotionalBanner in
                     return BannerInfo(type: "",
                                       id: promotionalBanner.id,
                                       matchId: nil,

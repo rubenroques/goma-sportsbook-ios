@@ -54,6 +54,7 @@ extension SportRadarModelMapper {
                            username: playerInfoResponse.userId,
                            email: playerInfoResponse.email,
                            firstName: playerInfoResponse.firstName,
+                           middleName: playerInfoResponse.middleName,
                            lastName: playerInfoResponse.lastName,
                            birthDate: playerInfoResponse.birthDateFormatted,
                            gender: playerInfoResponse.gender,

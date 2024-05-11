@@ -47,7 +47,7 @@ struct Competition: Equatable {
     }
 }
 
-struct Location: Equatable {
+struct Location: Codable, Equatable {
     var id: String
     var name: String
     var isoCode: String
@@ -319,6 +319,7 @@ struct UserProfile: Codable, Hashable {
     var username: String
     var email: String
     var firstName: String?
+    var middleName: String?
     var lastName: String?
     var birthDate: Date
     
@@ -356,7 +357,7 @@ struct UserProfile: Codable, Hashable {
 
     var currency: String?
     
-    init(userIdentifier: String, sessionKey: String, username: String, email: String, firstName: String? = nil, lastName: String? = nil,
+    init(userIdentifier: String, sessionKey: String, username: String, email: String, firstName: String? = nil, middleName: String? = nil, lastName: String? = nil,
          birthDate: Date, nationality: Country?, country: Country?, gender: UserGender, title: UserTitle?, personalIdNumber: String?,
          address: String?, province: String?, city: String?, postalCode: String?, birthDepartment: String?, streetNumber: String?,
          phoneNumber: String?, mobilePhone: String?, mobileCountryCode: String?, mobileLocalNumber: String?, avatarName: String?,
@@ -368,6 +369,7 @@ struct UserProfile: Codable, Hashable {
         self.username = username
         self.email = email
         self.firstName = firstName
+        self.middleName = middleName
         self.lastName = lastName
         self.birthDate = birthDate
         self.nationality = nationality

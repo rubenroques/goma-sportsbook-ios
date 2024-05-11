@@ -425,6 +425,7 @@ extension SportRadarModels {
         var placeStake: Double
         var totalAvailableStake: Double
         var betLegs: [PlacedBetLeg]
+        var type: String?
 
         enum CodingKeys: String, CodingKey {
             case identifier = "idFoBet"
@@ -432,6 +433,7 @@ extension SportRadarModels {
             case potentialReturn = "potentialReturn"
             case placeStake = "placeStake"
             case totalAvailableStake = "totalStake"
+            case type = "idfoBetType"
         }
 
         init(from decoder: Decoder) throws {
@@ -443,6 +445,7 @@ extension SportRadarModels {
             self.potentialReturn = try container.decode(Double.self, forKey: SportRadarModels.PlacedBetEntry.CodingKeys.potentialReturn)
             self.placeStake = try container.decode(Double.self, forKey: SportRadarModels.PlacedBetEntry.CodingKeys.placeStake)
             self.totalAvailableStake = try container.decodeIfPresent(Double.self, forKey: SportRadarModels.PlacedBetEntry.CodingKeys.totalAvailableStake) ?? 0.0
+            self.type = try container.decodeIfPresent(String.self, forKey: .type)
         }
     }
 

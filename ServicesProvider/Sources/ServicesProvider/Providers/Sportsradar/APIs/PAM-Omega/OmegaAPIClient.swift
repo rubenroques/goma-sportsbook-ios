@@ -61,6 +61,7 @@ enum OmegaAPIClient {
                 currencyCode: String,
                 firstName: String,
                 lastName: String,
+                middleName: String?,
                 gender: String,
                 address: String,
                 city: String,
@@ -363,6 +364,7 @@ extension OmegaAPIClient: Endpoint {
                      let currencyCode,
                      let firstName,
                      let lastName,
+                     let middleName,
                      let gender,
                      let address,
                      let city,
@@ -394,6 +396,11 @@ extension OmegaAPIClient: Endpoint {
 
             query.append(URLQueryItem(name: "firstName", value: firstName))
             query.append(URLQueryItem(name: "lastName", value: lastName))
+            
+            if let middleName = middleName {
+                query.append(URLQueryItem(name: "middleName", value: middleName))
+            }
+            
             query.append(URLQueryItem(name: "gender", value: gender))
             query.append(URLQueryItem(name: "address", value: address))
 

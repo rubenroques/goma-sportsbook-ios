@@ -89,6 +89,13 @@ public class UserRegisterEnvelopUpdater {
         self.filledDataUpdated.send(newUserEnvelop)
         self.userRegisterEnvelop = newUserEnvelop
     }
+    
+    func setMiddleName(_ middleName: String?) {
+        var newUserEnvelop = self.userRegisterEnvelop
+        newUserEnvelop.middleName = middleName
+        self.filledDataUpdated.send(newUserEnvelop)
+        self.userRegisterEnvelop = newUserEnvelop
+    }
 
     func setAvatarName(_ avatarName: String) {
         var newUserEnvelop = self.userRegisterEnvelop
