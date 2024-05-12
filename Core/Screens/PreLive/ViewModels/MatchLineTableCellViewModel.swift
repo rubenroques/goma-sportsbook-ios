@@ -71,6 +71,7 @@ class MatchLineTableCellViewModel {
             }
         }
         else if self.status == .live {
+            // We only have the event Id but we know its live
             self.loadLiveEventDetails(matchId: id)
         }
         else {
@@ -152,7 +153,6 @@ extension MatchLineTableCellViewModel {
                         }
                         return false
                     }) {
-                        
                         for secundaryMarket in secundaryMarketsForSport.markets {
                             if var foundMarket = mergedMarkets.first(where: { market in
                                 (market.marketTypeId ?? "") == secundaryMarket.typeId
@@ -162,9 +162,7 @@ extension MatchLineTableCellViewModel {
                                 
                                 print("foundMarket updated \(foundMarket)")
                             }
-                            
                         }
-                        
                     }
                     
                     var finalMarkets: [Market] = []
@@ -298,6 +296,71 @@ extension MatchLineTableCellViewModel {
         .store(in: &self.cancellables)
     }
     
-    
+    func processMarkets(forMatch oldMatch: Match, newMarkets: [Market], marketsAdditionalInfo: [SecundarySportMarket], sportId: String) ->  [Market] {
+        var statsForMarket: [String: String?] = [:]
+        
+        let firstMarket = oldMatch.markets.first // Capture the first market
+        
+        var newMarkets: [Market] = []
+        var mergedMarkets: [Market] = []
+        
+        for market in newMarkets {
+            if market.id != firstMarket?.id {
+                newMarkets.append(market)
+            }
+        }
+        
+        if let first = firstMarket {
+            mergedMarkets = [first] + newMarkets
+        }
+        else {
+            mergedMarkets = newMarkets
+        }
+        
+        var marketsAdditionalInfoOrder: [String] = []
+        if let secundaryMarketsForSport = marketsAdditionalInfo.first(where: {
+            $0.sportId.lowercased() == sportId.lowercased()
+        }) {
+            for secundaryMarket in secundaryMarketsForSport.markets {
+                marketsAdditionalInfoOrder.append(secundaryMarket.typeId)
+                if var foundMarket = mergedMarkets.first(where: { market in
+                    (market.marketTypeId ?? "") == secundaryMarket.typeId
+                }) {
+                    foundMarket.statsTypeId = secundaryMarket.statsId
+                    statsForMarket[foundMarket.id] = secundaryMarket.statsId
+                    
+                    print("foundMarket updated \(foundMarket)")
+                }
+            }
+        }
+        
+        var finalMarkets: [Market] = []
+        
+        for market in mergedMarkets {
+            if let statsTypeId = statsForMarket[market.id] {
+                var newMarket = market
+                newMarket.statsTypeId = statsTypeId
+                finalMarkets.append(newMarket)
+            }
+            else {
+                var newMarket = market
+                finalMarkets.append(newMarket)
+            }
+        }
+        
+        // Sort the finalMarkets based on the order in marketsAdditionalInfoOrder
+        finalMarkets.sort { (market1, market2) -> Bool in
+            guard
+                let index1 = marketsAdditionalInfoOrder.firstIndex(of: market1.typeId),
+                let index2 = marketsAdditionalInfoOrder.firstIndex(of: market2.typeId)
+            else {
+                return false
+            }
+            return index1 < index2
+        }
+        
+        return finalMarkets
+        
+    }
 
 }
