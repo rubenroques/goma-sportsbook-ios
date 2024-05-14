@@ -151,21 +151,18 @@ class SearchViewModel: NSObject {
     }
 
     func processEvents(eventsGroup: EventsGroup) {
-        
         for event in eventsGroup.events {
-
-            let match = ServiceProviderModelMapper.match(fromEvent: event)
-
-            if self.searchMatchesPublisher.value[match.sport.name] != nil {
-                let searchMatch = SearchEvent.match(match)
-                self.searchMatchesPublisher.value[match.sport.name]?.append(searchMatch)
-            }
-            else {
-                let searchMatch = SearchEvent.match(match)
-                self.searchMatchesPublisher.value[match.sport.name] = [searchMatch]
+            if let match = ServiceProviderModelMapper.match(fromEvent: event) {
+                if self.searchMatchesPublisher.value[match.sport.name] != nil {
+                    let searchMatch = SearchEvent.match(match)
+                    self.searchMatchesPublisher.value[match.sport.name]?.append(searchMatch)
+                }
+                else {
+                    let searchMatch = SearchEvent.match(match)
+                    self.searchMatchesPublisher.value[match.sport.name] = [searchMatch]
+                }
             }
         }
-
         self.setSportMatchesArray()
     }
 

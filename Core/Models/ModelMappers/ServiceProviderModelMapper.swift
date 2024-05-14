@@ -16,13 +16,13 @@ extension ServiceProviderModelMapper {
     
     // Matches
     static func matches(fromEventsGroups eventsGroups: [EventsGroup]) -> [Match] {
-        var matches = [Match]()
+        var matches = [Match?]()
         for eventsGroup in eventsGroups {
             for event in eventsGroup.events {
                 matches.append(Self.match(fromEvent: event))
             }
         }
-        return matches
+        return matches.compactMap({ $0 })
     }
 
     static func match(fromEventGroup eventGroup: EventsGroup) -> Match? {
@@ -33,11 +33,13 @@ extension ServiceProviderModelMapper {
     }
 
     static func matches(fromEvents events: [ServicesProvider.Event]) -> [Match] {
-        return events.map(Self.match(fromEvent:))
+        return events.map(Self.match(fromEvent:)).compactMap({ $0 })
     }
 
-    static func match(fromEvent event: ServicesProvider.Event) -> Match {
+    static func match(fromEvent event: ServicesProvider.Event) -> Match? {
 
+        guard event.type == .match else { return nil } // ignore competitions
+        
         var venue: Location?
         if let venueCountry = event.venueCountry {
             venue = Location(id: venueCountry.iso2Code, name: venueCountry.name, isoCode: venueCountry.iso2Code)

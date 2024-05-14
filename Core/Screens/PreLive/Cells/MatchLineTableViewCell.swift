@@ -162,12 +162,14 @@ class MatchLineTableViewCell: UITableViewCell {
         self.viewModel = viewModel
         
         self.loadingView.startAnimating()
-        
+  
         if let match = viewModel.match {
             self.loadingView.stopAnimating()
             self.setupWithMatch(match)
         }
-
+        
+        self.matchInfoPublisher?.cancel()
+        
         self.matchInfoPublisher = viewModel.$match
             .receive(on: DispatchQueue.main)
             .sink { completion in
@@ -200,12 +202,13 @@ class MatchLineTableViewCell: UITableViewCell {
         self.backSliderIconImageView.setTintColor(color: UIColor.App.iconPrimary)
     }
 
-    private func setupWithMatch(_ match: Match) {
-
-        guard 
-            let match = self.match
+    private func setupWithMatch(_ newMatch: Match) {
+        /*
+        guard
+            let currentMatch = self.match
         else {
-            self.match = match
+            // If no self.match was found it should refresh all sections
+            self.match = newMatch
             self.collectionView.reloadData()
             return
         }
@@ -214,19 +217,18 @@ class MatchLineTableViewCell: UITableViewCell {
 
         // if default market is different
         if
-            let firstOldMarket = self.match?.markets.first,
-            let firstNewMarket = match.markets.first,
+            let firstOldMarket = currentMatch.markets.first,
+            let firstNewMarket = newMatch.markets.first,
             firstOldMarket != firstNewMarket {
             indexPathsToUpdate.append(IndexPath(item: 0, section: 0)) // default market section - 0
         }
             
-
         // secondary markets section - 1
-        for (index, newMarket) in match.markets.enumerated() {
+        for (index, newMarket) in newMatch.markets.enumerated() {
             if index == 0 {
                 continue
             }
-            if let oldMarket = self.match?.markets[safe: index],
+            if let oldMarket = currentMatch.markets[safe: index],
                oldMarket != newMarket {
                 indexPathsToUpdate.append(IndexPath(item: index, section: 1))
             }
@@ -236,15 +238,18 @@ class MatchLineTableViewCell: UITableViewCell {
             indexPathsToUpdate.append(IndexPath(item: 0, section: 2)) // see all section - 2
         }
         
-        self.match = match
+        self.match = newMatch
 
         if !indexPathsToUpdate.isEmpty {
             self.collectionView.performBatchUpdates({
                 self.collectionView.reloadItems(at: indexPathsToUpdate)
             }, completion: nil)
         }
+        */
         
-        // self.collectionView.reloadData()
+        // Legacy refresh
+        self.match = newMatch
+        self.collectionView.reloadData()
     }
 
     func shouldShowCountryFlag(_ show: Bool) {

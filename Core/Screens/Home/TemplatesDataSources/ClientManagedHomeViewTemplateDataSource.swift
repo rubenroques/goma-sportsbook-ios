@@ -131,7 +131,7 @@ class ClientManagedHomeViewTemplateDataSource {
     
     private var topCompetitionsLineCellViewModel: TopCompetitionsLineCellViewModel = TopCompetitionsLineCellViewModel(topCompetitions: [])
     
-    private var highlightedLiveMatchesIds: [String] = []
+    private var highlightedLiveMatches: [Match] = []
     
     //
     private var cancellables: Set<AnyCancellable> = []
@@ -150,8 +150,11 @@ class ClientManagedHomeViewTemplateDataSource {
     }
 
     func refreshData() {
+        
         self.matchWidgetCellViewModelCache = [:]
         self.matchLineTableCellViewModelCache = [:]
+        self.matchLineTableCellViewModelCache = [:]
+        
         self.highlightedLiveMatchLineTableCellViewModelCache = [:]
         
         self.fetchAlerts()
@@ -205,14 +208,14 @@ class ClientManagedHomeViewTemplateDataSource {
                 var displayBanners = promotionalBanners
                 
                 if Env.userSessionStore.isUserLogged() {
-                    let filteredBanners = displayBanners.filter( {
+                    let filteredBanners = displayBanners.filter({
                         $0.bannerDisplay == "LOGGEDIN"
                     })
                     
                     displayBanners = filteredBanners
                 }
                 else {
-                    let filteredBanners = displayBanners.filter( {
+                    let filteredBanners = displayBanners.filter({
                         $0.bannerDisplay == "LOGGEDOFF"
                     })
                     
@@ -343,15 +346,14 @@ class ClientManagedHomeViewTemplateDataSource {
             .sink { completion in
                 print("ClientManagedHomeTemplate fetchMatchesForPromotedSport completion \(completion)")
             } receiveValue: { [weak self] eventGroups in
-                let matches = eventGroups.flatMap(\.events).prefix(20).map(ServiceProviderModelMapper.match(fromEvent:))
+                let matches = eventGroups.flatMap(\.events).prefix(20).map(ServiceProviderModelMapper.match(fromEvent:)).compactMap({ $0 })
                 self?.promotedSportsMatches[promotedSport.id] = matches
                 self?.refreshPublisher.send()
             }
             .store(in: &self.cancellables)
 
     }
-    
-    
+
     private func fetchTopCompetitions() {
 
         Env.servicesProvider.getTopCompetitions()
@@ -417,9 +419,10 @@ class ClientManagedHomeViewTemplateDataSource {
 
     func fetchHighlightedLiveMatches() {
         
-        self.highlightedLiveMatchesIds = []
+        self.highlightedLiveMatches = []
         
         Env.servicesProvider.getHighlightedLiveEvents(eventCount: 4)
+            .map({ return $0.map(ServiceProviderModelMapper.match(fromEvent:)).compactMap({ $0 }) })
             .receive(on: DispatchQueue.main)
             .sink { completion in
                 switch completion {
@@ -428,14 +431,28 @@ class ClientManagedHomeViewTemplateDataSource {
                 case .failure(let error):
                     print("fetchHighlightedLiveMatches getHighlightedLiveEvents error: \(error)")
                 }
-            } receiveValue: { [weak self] highlightedLiveEventsIds in
-                self?.highlightedLiveMatchesIds = highlightedLiveEventsIds
+            } receiveValue: { [weak self] highlightedLiveEvents in
+                self?.highlightedLiveMatches = highlightedLiveEvents
                 self?.refreshPublisher.send()
             }
             .store(in: &self.cancellables)
 
     }
     
+    private func supplementaryEventId(forIndex index: Int) -> String? {
+        return self.supplementaryEventIds[safe: index]
+    }
+    
+    private func promotedMatch(forSection section: Int, forIndex index: Int) -> Match? {
+        let croppedSection = section - self.fixedSection
+        if let promotedSportId = self.promotedSports[safe: croppedSection]?.id,
+           let matchesForSport = self.promotedSportsMatches[promotedSportId],
+           let match = matchesForSport[safe: index] {
+            return match
+        }
+        return nil
+    }
+
 }
 
 extension ClientManagedHomeViewTemplateDataSource: HomeViewTemplateDataSource {
@@ -474,7 +491,7 @@ extension ClientManagedHomeViewTemplateDataSource: HomeViewTemplateDataSource {
             self.highlightsVisualImageOutrights.count +
             self.highlightsBoostedMatches.count
         case 6:
-            return self.highlightedLiveMatchesIds.count
+            return self.highlightedLiveMatches.count
         case 7:
             return !self.topCompetitionsLineCellViewModel.isEmpty ? 1 : 0
         case 8:
@@ -547,7 +564,7 @@ extension ClientManagedHomeViewTemplateDataSource: HomeViewTemplateDataSource {
             self.highlightsBoostedMatches.count
             return highlightsTotal > 0
         case 6:
-            return !self.highlightedLiveMatchesIds.isEmpty
+            return !self.highlightedLiveMatches.isEmpty
         case 7:
             return !self.topCompetitionsLineCellViewModel.isEmpty
         default:
@@ -654,88 +671,99 @@ extension ClientManagedHomeViewTemplateDataSource: HomeViewTemplateDataSource {
     func highlightedMatchViewModel(forIndex index: Int) -> MatchWidgetCellViewModel? {
         
         let boostedMatchesIndex = index-self.highlightsVisualImageMatches.count-self.highlightsVisualImageOutrights.count
-        
         let highlightsOutrightsMatchesIndex = index-self.highlightsVisualImageMatches.count
         
         if let match = self.highlightsVisualImageMatches[safe: index] {
-            if let matchWidgetCellViewModel = self.matchWidgetCellViewModelCache[match.id] {
+            let id = match.id + MatchWidgetType.topImage.rawValue
+            if let matchWidgetCellViewModel = self.matchWidgetCellViewModelCache[id] {
                 return matchWidgetCellViewModel
             }
             else {
                 let matchWidgetCellViewModel = MatchWidgetCellViewModel(match: match, matchWidgetType: .topImage)
-                self.matchWidgetCellViewModelCache[match.id] = matchWidgetCellViewModel
+                self.matchWidgetCellViewModelCache[id] = matchWidgetCellViewModel
                 return matchWidgetCellViewModel
             }
         }
         else if let match = self.highlightsBoostedMatches[safe: boostedMatchesIndex] {
-            if let matchWidgetCellViewModel = self.matchWidgetCellViewModelCache[match.id] {
+            let id = match.id + MatchWidgetType.boosted.rawValue
+            if let matchWidgetCellViewModel = self.matchWidgetCellViewModelCache[id] {
                 return matchWidgetCellViewModel
             }
             else {
                 let matchWidgetCellViewModel = MatchWidgetCellViewModel(match: match, matchWidgetType: .boosted)
-                self.matchWidgetCellViewModelCache[match.id] = matchWidgetCellViewModel
+                self.matchWidgetCellViewModelCache[id] = matchWidgetCellViewModel
                 return matchWidgetCellViewModel
             }
         }
         else if let match = self.highlightsVisualImageOutrights[safe: highlightsOutrightsMatchesIndex] {
-            if let matchWidgetCellViewModel = self.matchWidgetCellViewModelCache[match.id] {
+            let id = match.id + MatchWidgetType.topImageOutright.rawValue
+            if let matchWidgetCellViewModel = self.matchWidgetCellViewModelCache[id] {
                 return matchWidgetCellViewModel
             }
             else {
                 let matchWidgetCellViewModel = MatchWidgetCellViewModel(match: match, matchWidgetType: .topImageOutright)
-                self.matchWidgetCellViewModelCache[match.id] = matchWidgetCellViewModel
+                self.matchWidgetCellViewModelCache[id] = matchWidgetCellViewModel
                 return matchWidgetCellViewModel
             }
         }
         return nil
     }
-
-    func promotedMatch(forSection section: Int, forIndex index: Int) -> Match? {
-        let croppedSection = section - self.fixedSection
-        if let promotedSportId = self.promotedSports[safe: croppedSection]?.id,
-           let matchesForSport = self.promotedSportsMatches[promotedSportId],
-           let match = matchesForSport[safe: index] {
-            return match
-        }
-        return nil
-    }
-
-    func supplementaryEventId(forSection section: Int, forIndex index: Int) -> String? {
-        return self.supplementaryEventIds[safe: index]
-    }
-
-    func highlightedLiveMatchesId(forSection section: Int, forIndex index: Int) -> String? {
-        return self.highlightedLiveMatchesIds[safe: index]
-    }
     
-    func highlightedLiveMatchLineTableCellViewModel(forId identifier: String) -> MatchLineTableCellViewModel? {
+    func highlightedLiveMatchLineTableCellViewModel(forSection section: Int, forIndex index: Int) -> MatchLineTableCellViewModel? {
         
-        if let matchLineTableCellViewModel = self.highlightedLiveMatchLineTableCellViewModelCache[identifier] {
+        guard
+            let match = self.highlightedLiveMatches[safe: index]
+        else {
+            return nil
+        }
+        
+        if let matchLineTableCellViewModel = self.highlightedLiveMatchLineTableCellViewModelCache[match.id] {
             return matchLineTableCellViewModel
         }
         else {
-            let matchLineTableCellViewModel = MatchLineTableCellViewModel(matchId: identifier, status: .live)
-            self.highlightedLiveMatchLineTableCellViewModelCache[identifier] = matchLineTableCellViewModel
+            let matchLineTableCellViewModel = MatchLineTableCellViewModel(match: match, status: .live)
+            self.highlightedLiveMatchLineTableCellViewModelCache[match.id] = matchLineTableCellViewModel
             return matchLineTableCellViewModel
         }
 
     }
     
     func matchLineTableCellViewModel(forSection section: Int, forIndex index: Int) -> MatchLineTableCellViewModel? {
-
+        var matchId: String?
+        var match: Match?
+        
+        switch section {
+        case 0...7:
+            ()
+        case 8:
+            match = nil // we don't have a match, just the id
+            matchId = self.supplementaryEventId(forIndex: index)
+        default: // The remaining sections, each section for a promoted sport id
+            match = self.promotedMatch(forSection: section, forIndex: index)
+            matchId = match?.id
+        }
+        
         guard
-            let matchId = self.supplementaryEventId(forSection: section, forIndex: index),
-            section == 6
+            let matchIdValue = matchId
         else {
             return nil
         }
 
-        if let matchLineTableCellViewModel = self.matchLineTableCellViewModelCache[matchId] {
+        if matchIdValue == "3373683.1" {
+            print("break")
+        }
+        
+        if let matchLineTableCellViewModel = self.matchLineTableCellViewModelCache[matchIdValue] {
+            return matchLineTableCellViewModel
+        }
+        else if let matchValue = match {
+            let matchLineTableCellViewModel = MatchLineTableCellViewModel(match: matchValue, status: .unknown)
+            self.matchLineTableCellViewModelCache[matchIdValue] = matchLineTableCellViewModel
             return matchLineTableCellViewModel
         }
         else {
-            let matchLineTableCellViewModel = MatchLineTableCellViewModel(matchId: matchId, status: .unknown)
-            self.matchLineTableCellViewModelCache[matchId] = matchLineTableCellViewModel
+            let matchLineTableCellViewModel = MatchLineTableCellViewModel(matchId: matchIdValue, status: .unknown)
+            self.matchLineTableCellViewModelCache[matchIdValue] = matchLineTableCellViewModel
             return matchLineTableCellViewModel
         }
 
@@ -745,29 +773,6 @@ extension ClientManagedHomeViewTemplateDataSource: HomeViewTemplateDataSource {
         return self.topCompetitionsLineCellViewModel
     }
 
-}
-
-
-extension ClientManagedHomeViewTemplateDataSource {
-    func cachedMatchLineTableCellViewModel(forSection section: Int, forIndex index: Int) -> MatchLineTableCellViewModel? {
-
-        guard
-            let matchId = self.supplementaryEventId(forSection: section, forIndex: index),
-            section == 6
-        else {
-            return nil
-        }
-
-        if let matchLineTableCellViewModel = self.matchLineTableCellViewModelCache[matchId] {
-            return matchLineTableCellViewModel
-        }
-        else {
-            let matchLineTableCellViewModel = MatchLineTableCellViewModel(matchId: matchId, status: .unknown)
-            self.matchLineTableCellViewModelCache[matchId] = matchLineTableCellViewModel
-            return matchLineTableCellViewModel
-        }
-
-    }
 }
 
 extension ClientManagedHomeViewTemplateDataSource {

@@ -212,11 +212,35 @@ class BetSubmissionSuccessViewController: UIViewController {
                     
                     let filteredBettingTickets = bettingTickets.filter { selectionIds.contains($0.id) }
 
-                    let mappedBetHistoryEntrySelection = filteredBettingTickets.map( {
+                    let mappedBetHistoryEntrySelection = filteredBettingTickets.map {
                         ServiceProviderModelMapper.betHistoryEntrySelection(fromBettingTicket: $0)
-                    })
+                    }
                     
-                    let bettingTicketHistory = BetHistoryEntry(betId: betPlacedDetails.response.betId ?? "", selections: mappedBetHistoryEntrySelection, type: betPlacedDetails.response.type, systemBetType: betPlacedDetails.response.type, amount: betPlacedDetails.response.amount, totalBetAmount: betPlacedDetails.response.amount, freeBetAmount: nil, bonusBetAmount: nil, currency: "EUR", maxWinning: betPlacedDetails.response.maxWinning, totalPriceValue: betPlacedDetails.response.totalPriceValue, overallBetReturns: nil, numberOfSelections: mappedBetHistoryEntrySelection.count, status: "Open", placedDate: Date(), settledDate: nil, freeBet: nil, partialCashoutReturn: nil, partialCashoutStake: nil, betShareToken: nil, betslipId: nil, cashbackReturn: nil, freebetReturn: nil, potentialCashbackReturn: nil, potentialFreebetReturn: nil)
+                    let bettingTicketHistory = BetHistoryEntry(betId: betPlacedDetails.response.betId ?? "",
+                                                               selections: mappedBetHistoryEntrySelection,
+                                                               type: betPlacedDetails.response.type,
+                                                               systemBetType: betPlacedDetails.response.type,
+                                                               amount: betPlacedDetails.response.amount,
+                                                               totalBetAmount: betPlacedDetails.response.amount,
+                                                               freeBetAmount: nil,
+                                                               bonusBetAmount: nil,
+                                                               currency: "EUR",
+                                                               maxWinning: betPlacedDetails.response.maxWinning,
+                                                               totalPriceValue: betPlacedDetails.response.totalPriceValue,
+                                                               overallBetReturns: nil,
+                                                               numberOfSelections: mappedBetHistoryEntrySelection.count,
+                                                               status: "Open",
+                                                               placedDate: Date(),
+                                                               settledDate: nil,
+                                                               freeBet: nil,
+                                                               partialCashoutReturn: nil,
+                                                               partialCashoutStake: nil,
+                                                               betShareToken: nil,
+                                                               betslipId: nil,
+                                                               cashbackReturn: nil,
+                                                               freebetReturn: nil,
+                                                               potentialCashbackReturn: nil,
+                                                               potentialFreebetReturn: nil)
                     
                     betHistoryEntries.append(bettingTicketHistory)
                 }

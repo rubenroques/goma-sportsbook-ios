@@ -199,6 +199,30 @@ extension ServiceProviderModelMapper {
     
     static func betHistoryEntrySelection(fromBettingTicket bettingTicket: BettingTicket) -> BetHistoryEntrySelection {
         
-        return BetHistoryEntrySelection(outcomeId: bettingTicket.outcomeId, status: .opened, result: .open, priceValue: bettingTicket.decimalOdd, sportId: bettingTicket.sport?.id, sportName: bettingTicket.sport?.alphaId, venueId: bettingTicket.venue?.id, venueName: bettingTicket.venue?.isoCode, tournamentId: nil, tournamentName: bettingTicket.competition, eventId: bettingTicket.matchId, eventStatusId: nil, eventName: bettingTicket.matchDescription, eventResult: nil, eventDate: bettingTicket.date, bettingTypeId: bettingTicket.id, bettingTypeName: nil, bettingTypeEventPartId: nil, bettingTypeEventPartName: nil, homeParticipantName: bettingTicket.homeParticipantName, awayParticipantName: bettingTicket.awayParticipantName, homeParticipantScore: nil, awayParticipantScore: nil, marketName: bettingTicket.marketDescription, betName: bettingTicket.outcomeDescription)
+        return BetHistoryEntrySelection(outcomeId: bettingTicket.outcomeId,
+                                        status: .opened,
+                                        result: .open,
+                                        priceValue: bettingTicket.decimalOdd,
+                                        sportId: bettingTicket.sport?.id,
+                                        sportName: bettingTicket.sport?.alphaId,
+                                        venueId: bettingTicket.venue?.id,
+                                        venueName: bettingTicket.venue?.isoCode,
+                                        tournamentId: nil,
+                                        tournamentName: bettingTicket.competition,
+                                        eventId: bettingTicket.matchId,
+                                        eventStatusId: nil,
+                                        eventName: bettingTicket.matchDescription,
+                                        eventResult: nil,
+                                        eventDate: bettingTicket.date,
+                                        bettingTypeId: bettingTicket.id,
+                                        bettingTypeName: nil,
+                                        bettingTypeEventPartId: nil,
+                                        bettingTypeEventPartName: nil,
+                                        homeParticipantName: bettingTicket.homeParticipantName,
+                                        awayParticipantName: bettingTicket.awayParticipantName,
+                                        homeParticipantScore: nil,
+                                        awayParticipantScore: nil,
+                                        marketName: bettingTicket.marketDescription,
+                                        betName: bettingTicket.outcomeDescription)
     }
 }

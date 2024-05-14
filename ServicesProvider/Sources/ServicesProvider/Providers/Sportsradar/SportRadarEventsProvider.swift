@@ -1811,7 +1811,7 @@ extension SportRadarEventsProvider {
         
     }
     
-    func getHighlightedLiveEvents(eventCount: Int) -> AnyPublisher<[String], ServiceProviderError> {
+    func getHighlightedLiveEventsIds(eventCount: Int) -> AnyPublisher<[String], ServiceProviderError> {
         let endpoint = VaixAPIClient.popularEvents(eventsCount: eventCount)
         let requestPublisher: AnyPublisher<SportRadarModels.SportRadarResponse<[SportRadarModels.HighlightedEventPointer]>, ServiceProviderError> = self.restConnector.request(endpoint)
 
@@ -1828,6 +1828,39 @@ extension SportRadarEventsProvider {
         })
         .eraseToAnyPublisher()
         
+    }
+    
+    func getHighlightedLiveEvents(eventCount: Int) -> AnyPublisher<[Event], ServiceProviderError> {
+        
+        let publisher = self.getHighlightedLiveEventsIds(eventCount: eventCount) // Get the ids
+            .flatMap({ (eventPointers: [String]) -> AnyPublisher<[Event], ServiceProviderError> in
+                
+                let getEventSummaryRequests: [AnyPublisher<Event?, ServiceProviderError>] = eventPointers
+                    .map { (eventId: String) -> AnyPublisher<Event?, ServiceProviderError> in
+                        return self.getEventSummary(eventId: eventId) // Get the event summary for each id
+                            .map({ Optional<Event>.some($0) })
+                            // Replace the errors for nil so we can continue with other requests
+                            .catch({ (error: ServiceProviderError) -> AnyPublisher<Event?, ServiceProviderError> in
+                                return Just(Optional<Event>.none)
+                                    .setFailureType(to: ServiceProviderError.self)
+                                    .eraseToAnyPublisher()
+                            })
+                            .compactMap({ $0 })
+                            .eraseToAnyPublisher()
+                    }
+                
+                let mergedPublishers = Publishers.MergeMany(getEventSummaryRequests) // Combine the publishers
+                    .compactMap({ $0 }) //
+                    .collect()
+                    .map({ validEvents in
+                        print("getHighlightedLiveEvents: \(validEvents.count)")
+                        return validEvents
+                    })
+                return mergedPublishers.eraseToAnyPublisher()
+            })
+        
+        return publisher.eraseToAnyPublisher()
+ 
     }
     
     func subscribeToEventAndSecondaryMarkets(withId id: String) -> AnyPublisher<SubscribableContent<Event>, ServiceProviderError> {

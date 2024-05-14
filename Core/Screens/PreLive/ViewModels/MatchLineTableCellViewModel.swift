@@ -22,33 +22,38 @@ class MatchLineTableCellViewModel {
     private var cancellables: Set<AnyCancellable> = []
     
     //
-    init(matchId: String, status: MatchWidgetStatus) {
+    init(matchId: String, status: MatchWidgetStatus = .unknown) {
         self.status = status
         self.loadEventDetails(fromId: matchId)
         
-        self.observeMatch()
+        self.observeMatchValues()
     }
     
-    init(match: Match, withFullMarkets fullMarkets: Bool = false) {
-        if !fullMarkets {
-            self.match = match
-            self.loadEventDetails(fromId: match.id)
-        }
-        else {
-            self.match = match
-        }
-        self.observeMatch()
+    init(match: Match, status: MatchWidgetStatus = .unknown) {
+        self.status = status
+
+        self.match = match
+        self.loadEventDetails(fromId: match.id)
+        
+        self.observeMatchValues()
     }
     
-    private func observeMatch() {
+    private func observeMatchValues() {
         
         self.$match
             .compactMap({ $0 })
             .removeDuplicates(by: { oldMatch, newMatch in
-                return oldMatch.id == newMatch.id
+                let sameMatch = oldMatch.id == newMatch.id
+                let sameMarkets = oldMatch.markets.map(\.id) == newMatch.markets.map(\.id)
+                return sameMatch && sameMarkets
             })
             .sink { [weak self] match in
-                self?.matchWidgetCellViewModel = MatchWidgetCellViewModel(match: match, matchWidgetStatus: self?.status ?? .unknown)
+                if let matchWidgetCellViewModel = self?.matchWidgetCellViewModel {
+                    matchWidgetCellViewModel.updateWithMatch(match)
+                }
+                else {
+                    self?.matchWidgetCellViewModel = MatchWidgetCellViewModel(match: match, matchWidgetStatus: self?.status ?? .unknown)
+                }
             }
             .store(in: &self.cancellables)
             
@@ -64,6 +69,9 @@ class MatchLineTableCellViewModel {
         if let match = self.match {
             // We already have an event
             if match.status.isLive {
+                self.loadLiveEventDetails(matchId: match.id)
+            }
+            else if self.status == .live {
                 self.loadLiveEventDetails(matchId: match.id)
             }
             else {
@@ -103,7 +111,6 @@ class MatchLineTableCellViewModel {
 extension MatchLineTableCellViewModel {
     
     private func loadLiveEventDetails(matchId: String) {
-        
         self.secundaryMarketsPublisher?.cancel()
         self.secundaryMarketsPublisher = nil
         
@@ -114,75 +121,31 @@ extension MatchLineTableCellViewModel {
         )
         .receive(on: DispatchQueue.main)
         .sink { completion in
-            print("loadLiveEventDetails subscribeEventSecundaryMarkets completion \(matchId) \(completion)")
-        } receiveValue: { [weak self] subscribableContentMatch, secundaryMarkets in
+            print("loadLiveEventDetails \(matchId) completion  \(completion)")
+        } receiveValue: { [weak self] subscribableContentMatch, marketsAdditionalInfos in
             switch subscribableContentMatch {
             case .connected(subscription: let subscription):
                 self?.secundaryMarketsSubscription = subscription
             case .contentUpdate(content: let updatedEvent):
-                print("subscribeEventSecundaryMarkets match with sec markets: \(updatedEvent)")
-                let mappedMatch = ServiceProviderModelMapper.match(fromEvent: updatedEvent)
+                guard
+                    var newMatch = ServiceProviderModelMapper.match(fromEvent: updatedEvent)
+                else {
+                    return
+                }
                 
-                var statsForMarket: [String: String?] = [:]
+                let sportId = newMatch.sport.alphaId ?? (newMatch.sportIdCode ?? "")
                 
-                if var oldMatch = self?.match {
-                    let firstMarket = oldMatch.markets.first // Capture the first market
-                    
-                    var newMarkets: [Market] = []
-                    var mergedMarkets: [Market] = []
-                    
-                    for market in  mappedMatch.markets {
-                        if market.id != firstMarket?.id {
-                            newMarkets.append(market)
-                        }
-                    }
-                    
-                    if let first = firstMarket {
-                        mergedMarkets = [first] + newMarkets
-                    }
-                    else {
-                        mergedMarkets = newMarkets
-                    }
-                    
-                    if let secundaryMarketsForSport = secundaryMarkets.first(where: { secundarySportMarket in
-                        if secundarySportMarket.sportId == (mappedMatch.sport.alphaId ?? "") {
-                            return true
-                        }
-                        if secundarySportMarket.sportId == (mappedMatch.sportIdCode ?? "") {
-                            return true
-                        }
-                        return false
-                    }) {
-                        for secundaryMarket in secundaryMarketsForSport.markets {
-                            if var foundMarket = mergedMarkets.first(where: { market in
-                                (market.marketTypeId ?? "") == secundaryMarket.typeId
-                            }) {
-                                foundMarket.statsTypeId = secundaryMarket.statsId
-                                statsForMarket[foundMarket.id] = secundaryMarket.statsId
-                                
-                                print("foundMarket updated \(foundMarket)")
-                            }
-                        }
-                    }
-                    
-                    var finalMarkets: [Market] = []
-                    
-                    for market in mergedMarkets {
-                        if let statsTypeId = statsForMarket[market.id] {
-                            var newMarket = market
-                            newMarket.statsTypeId = statsTypeId
-                            finalMarkets.append(newMarket)
-                        }
-                        else {
-                            var newMarket = market
-                            finalMarkets.append(newMarket)
-                        }
-                    }
-                    
+                let finalMarkets = self?.processMarkets(forMatch: self?.match,
+                                                        newMarkets: newMatch.markets,
+                                                        marketsAdditionalInfo: marketsAdditionalInfos,
+                                                        sportId: sportId) ?? []
+                
+                if var oldMatch = self?.match, oldMatch.markets.isNotEmpty {
                     oldMatch.markets = finalMarkets
                     self?.match = oldMatch
                 } else {
-                    self?.match = mappedMatch
+                    newMatch.markets = finalMarkets
+                    self?.match = newMatch
                 }
                 
             case .disconnected:
@@ -192,139 +155,73 @@ extension MatchLineTableCellViewModel {
     }
     
     private func loadPreLiveEventDetails(matchId: String) {
+        self.secundaryMarketsPublisher?.cancel()
         self.secundaryMarketsPublisher = nil
-        self.secundaryMarketsSubscription = nil
         
-        Publishers.CombineLatest(
+        self.secundaryMarketsPublisher = Publishers.CombineLatest(
             Env.servicesProvider.getEventSecundaryMarkets(eventId: matchId),
             SecundaryMarketsService.fetchSecundaryMarkets()
                 .mapError { error in ServiceProviderError.errorMessage(message: error.localizedDescription) }
         )
         .receive(on: DispatchQueue.main)
         .sink { completion in
-            print("getEventSecundaryMarkets completion \(completion)")
-        } receiveValue: { [weak self] eventWithSecundaryMarkets, secundaryMarkets in
-            var mappedMatch = ServiceProviderModelMapper.match(fromEvent: eventWithSecundaryMarkets)
+            print("loadPreLiveEventDetails completion \(completion)")
+        } receiveValue: { [weak self] eventWithSecundaryMarkets, marketsAdditionalInfos in
+            guard
+                var newMatch = ServiceProviderModelMapper.match(fromEvent: eventWithSecundaryMarkets)
+            else {
+                return
+            }
             
-            if var oldMatch = self?.match {
-                
-                var mergedMarkets: [Market] = mappedMatch.markets
-                
-                var statsForMarket: [String: String?] = [:]
-                
-                if let secundaryMarketsForSport = secundaryMarkets.first(where: { secundarySportMarket in
-                    if secundarySportMarket.sportId == (mappedMatch.sport.alphaId ?? "") {
-                        return true
-                    }
-                    if secundarySportMarket.sportId == (mappedMatch.sportIdCode ?? "") {
-                        return true
-                    }
-                    return false
-                }) {
-                    
-                    for secundaryMarket in secundaryMarketsForSport.markets {
-                        if var foundMarket = mergedMarkets.first(where: { market in
-                            (market.marketTypeId ?? "") == secundaryMarket.typeId
-                        }) {
-                            statsForMarket[foundMarket.id] = secundaryMarket.statsId
-                            foundMarket.statsTypeId = secundaryMarket.statsId
-                            print("foundMarket updated \(foundMarket)")
-                        }
-                    }
-                }
-                
-                var finalMarkets: [Market] = []
-                
-                for market in mergedMarkets {
-                    if let statsTypeId = statsForMarket[market.id] {
-                        var newMarket = market
-                        newMarket.statsTypeId = statsTypeId
-                        finalMarkets.append(newMarket)
-                    }
-                    else {
-                        var newMarket = market
-                        finalMarkets.append(newMarket)
-                    }
-                }
-                
+            let sportId = newMatch.sport.alphaId ?? (newMatch.sportIdCode ?? "")
+            
+            let finalMarkets = self?.processMarkets(forMatch: self?.match,
+                                                    newMarkets: newMatch.markets,
+                                                    marketsAdditionalInfo: marketsAdditionalInfos,
+                                                    sportId: sportId) ?? []
+            
+            // If we got the event detail via EventSummary
+            // the event come has no markets.
+            if var oldMatch = self?.match, oldMatch.markets.isNotEmpty {
                 oldMatch.markets = finalMarkets
                 self?.match = oldMatch
             }
             else {
-                var mergedMarkets: [Market] = mappedMatch.markets
-                var statsForMarket: [String: String?] = [:]
-                
-                if let secundaryMarketsForSport = secundaryMarkets.first(where: { secundarySportMarket in
-                    if secundarySportMarket.sportId == (mappedMatch.sport.alphaId ?? "") {
-                        return true
-                    }
-                    if secundarySportMarket.sportId == (mappedMatch.sportIdCode ?? "") {
-                        return true
-                    }
-                    return false
-                }) {
-                    for secundaryMarket in secundaryMarketsForSport.markets {
-                        if var foundMarket = mergedMarkets.first(where: { market in
-                            (market.marketTypeId ?? "") == secundaryMarket.typeId
-                        }) {
-                            foundMarket.statsTypeId = secundaryMarket.statsId
-                            statsForMarket[foundMarket.id] = secundaryMarket.statsId
-                            print("foundMarket updated \(foundMarket)")
-                        }
-                    }
-                }
-                
-                var finalMarkets: [Market] = []
-                
-                for market in mergedMarkets {
-                    if let statsTypeId = statsForMarket[market.id] {
-                        var newMarket = market
-                        newMarket.statsTypeId = statsTypeId
-                        finalMarkets.append(newMarket)
-                    }
-                    else {
-                        var newMarket = market
-                        finalMarkets.append(newMarket)
-                    }
-                }
-                
-                mappedMatch.markets = finalMarkets
-                
-                self?.match = mappedMatch
+                newMatch.markets = finalMarkets
+                self?.match = newMatch
             }
         }
-        .store(in: &self.cancellables)
     }
     
-    func processMarkets(forMatch oldMatch: Match, newMarkets: [Market], marketsAdditionalInfo: [SecundarySportMarket], sportId: String) ->  [Market] {
+    private func processMarkets(forMatch oldMatch: Match?, newMarkets: [Market], marketsAdditionalInfo: [SecundarySportMarket], sportId: String) -> [Market] {
         var statsForMarket: [String: String?] = [:]
         
-        let firstMarket = oldMatch.markets.first // Capture the first market
+        let firstMarket = oldMatch?.markets.first // Capture the first market
         
-        var newMarkets: [Market] = []
+        var additionalMarkets: [Market] = []
         var mergedMarkets: [Market] = []
         
         for market in newMarkets {
             if market.id != firstMarket?.id {
-                newMarkets.append(market)
+                additionalMarkets.append(market)
             }
         }
         
         if let first = firstMarket {
-            mergedMarkets = [first] + newMarkets
+            mergedMarkets = [first] + additionalMarkets
         }
         else {
-            mergedMarkets = newMarkets
+            mergedMarkets = additionalMarkets
         }
         
-        var marketsAdditionalInfoOrder: [String] = []
+        var marketsAdditionalInfoOrder: [String: Int] = [:]
         if let secundaryMarketsForSport = marketsAdditionalInfo.first(where: {
             $0.sportId.lowercased() == sportId.lowercased()
         }) {
-            for secundaryMarket in secundaryMarketsForSport.markets {
-                marketsAdditionalInfoOrder.append(secundaryMarket.typeId)
+            for (index, secundaryMarket) in secundaryMarketsForSport.markets.enumerated() {
+                marketsAdditionalInfoOrder[secundaryMarket.marketTypeId] = index
                 if var foundMarket = mergedMarkets.first(where: { market in
-                    (market.marketTypeId ?? "") == secundaryMarket.typeId
+                    (market.marketTypeId ?? "") == secundaryMarket.marketTypeId
                 }) {
                     foundMarket.statsTypeId = secundaryMarket.statsId
                     statsForMarket[foundMarket.id] = secundaryMarket.statsId
@@ -343,19 +240,15 @@ extension MatchLineTableCellViewModel {
                 finalMarkets.append(newMarket)
             }
             else {
-                var newMarket = market
+                let newMarket = market
                 finalMarkets.append(newMarket)
             }
         }
         
         // Sort the finalMarkets based on the order in marketsAdditionalInfoOrder
-        finalMarkets.sort { (market1, market2) -> Bool in
-            guard
-                let index1 = marketsAdditionalInfoOrder.firstIndex(of: market1.typeId),
-                let index2 = marketsAdditionalInfoOrder.firstIndex(of: market2.typeId)
-            else {
-                return false
-            }
+        finalMarkets.sort { market1, market2 -> Bool in
+            let index1 = marketsAdditionalInfoOrder[market1.marketTypeId ?? ""] ?? 0
+            let index2 = marketsAdditionalInfoOrder[market2.marketTypeId ?? ""] ?? 0
             return index1 < index2
         }
         

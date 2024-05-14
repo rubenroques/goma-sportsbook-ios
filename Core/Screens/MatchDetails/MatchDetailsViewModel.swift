@@ -184,8 +184,12 @@ class MatchDetailsViewModel: NSObject {
                 case .connected(let subscription):
                     self?.subscription = subscription
                 case .contentUpdate(let serviceProviderEvent):
-                    guard let self = self else { return }
-                    let match = ServiceProviderModelMapper.match(fromEvent: serviceProviderEvent)
+                    guard
+                        let self = self,
+                        let match = ServiceProviderModelMapper.match(fromEvent: serviceProviderEvent)
+                    else {
+                        return
+                    }
                     self.matchCurrentValueSubject.send(.loaded(match))
                     
                 case .disconnected:
@@ -205,7 +209,7 @@ class MatchDetailsViewModel: NSObject {
                 return false
             }
             .first()
-            .map({ subscribableContent -> Optional<ServicesProvider.Event> in
+            .map({ subscribableContent -> ServicesProvider.Event? in
                 if case .contentUpdate(let event) = subscribableContent {
                     return event
                 }
@@ -239,45 +243,107 @@ class MatchDetailsViewModel: NSObject {
             }
             .store(in: &self.cancellables)
         
+        
+        self.matchCurrentValueSubject.compactMap { loadableContent -> Match? in
+            switch loadableContent {
+            case .idle, .loading, .failed:
+                return nil
+            case .loaded(let match):
+                return match
+            }
+        }
+        .sink { [weak self] match in
+            self?.subscribeMatchLiveDataOnLists(withId: match.id, sportAlphaCode: match.sport.alphaId ?? "")
+        }
+        .store(in: &self.cancellables)
+                
+        /*
         Env.servicesProvider.subscribeToEventOnListsLiveDataUpdates(withId: self.matchId)
             .receive(on: DispatchQueue.main)
             .compactMap({ $0 })
             .map(ServiceProviderModelMapper.match(fromEvent:))
+            .compactMap({ $0 })
             .sink(receiveCompletion: { completion in
                 print("MatchWidgetCollectionViewCell matchSubscriber subscribeToEventLiveDataUpdates completion: \(completion)")
             }, receiveValue: { [weak self] updatedMatch in
                 guard let self = self else { return }
-                
+
                 var updatedMatchDetailedScores = [String: [String: Score]]()
-                
                 if let detailedScores = updatedMatch.detailedScores,
                    let alphaSportId = updatedMatch.sport.alphaId {
-                    updatedMatchDetailedScores[alphaSportId] = detailedScores
+                    updatedMatchDetailedScores[matchDetailedScores] = detailedScores
                     self.matchDetailedScores.send(updatedMatchDetailedScores)
                 }
             })
             .store(in: &self.cancellables)
+        */
     }
 
-    //
-    //
-//    private func getMarketGroups(event: ServicesProvider.Event) {
-//
-//        self.marketGroupsState.send(.loading)
-//
-//        Env.servicesProvider.getMarketsFilters(event: event)
-//            .map(Self.convertMarketGroups(_:))
-//            .receive(on: DispatchQueue.main)
-//            .sink(receiveCompletion: { [weak self] completion in
-//                if case .failure = completion {
-//                    self?.marketGroupsState.send(.failed)
-//                }
-//            }, receiveValue: { [weak self] marketGroups in
-//                self?.marketGroupsState.send(.loaded(marketGroups))
-//            })
-//            .store(in: &cancellables)
-//    }
 
+    private func subscribeMatchLiveDataOnLists(withId matchId: String, sportAlphaCode: String) {
+        Env.servicesProvider.subscribeToEventOnListsLiveDataUpdates(withId: matchId)
+            .receive(on: DispatchQueue.main)
+            .compactMap({ $0 })
+            .map(ServiceProviderModelMapper.matchLiveData(fromServiceProviderEvent:))
+            .sink(receiveCompletion: { [weak self] completion in
+                print("MatchWidgetCellViewModel subscribeMatchLiveData completion: \(completion)")
+                switch completion {
+                case .finished:
+                    ()
+                case .failure(let error):
+                    switch error {
+                    case .resourceNotFound:
+                        self?.subscribeMatchLiveDataUpdates(withId: matchId, sportAlphaCode: sportAlphaCode)
+                        
+                    default:
+                        print("MatchDetailsViewModel getMatchDetails Error retrieving data! \(error)")
+                    }
+                }
+            }, receiveValue: { [weak self] matchLiveData in
+                if let detailedScores = matchLiveData.detailedScores {
+                    var updatedMatchDetailedScores = [sportAlphaCode: detailedScores]
+                    self?.matchDetailedScores.send(updatedMatchDetailedScores)
+                }
+            })
+            .store(in: &self.cancellables)
+    }
+    
+    private func subscribeMatchLiveDataUpdates(withId matchId: String, sportAlphaCode: String) {
+        Env.servicesProvider.subscribeToLiveDataUpdates(forEventWithId: matchId)
+            .receive(on: DispatchQueue.main)
+            .sink(receiveCompletion: { [weak self] completion in
+                switch completion {
+                case .finished:
+                    ()
+                case .failure(let error):
+                    switch error {
+                    case .resourceUnavailableOrDeleted:
+                        ()
+                    default:
+                        print("MatchDetailsViewModel getMatchDetails Error retrieving data! \(error)")
+                    }
+                }
+                self?.liveDataSubscription = nil
+            }, receiveValue: { [weak self] (eventSubscribableContent: SubscribableContent<ServicesProvider.EventLiveData>) in
+            
+                switch eventSubscribableContent {
+                case .connected(let subscription):
+                    self?.liveDataSubscription = subscription
+                case .contentUpdate(let eventLiveData):
+                    let matchLiveData = ServiceProviderModelMapper.matchLiveData(fromServiceProviderEventLiveData: eventLiveData)
+                    if let detailedScores = matchLiveData.detailedScores {
+                        var updatedMatchDetailedScores = [sportAlphaCode: detailedScores]
+                        self?.matchDetailedScores.send(updatedMatchDetailedScores)
+                    }
+                    
+                case .disconnected:
+                    break
+                }
+            })
+            .store(in: &self.cancellables)
+    
+    }
+    
     func getFieldWidget(isDarkTheme: Bool) {
 
         Env.servicesProvider.getFieldWidget(eventId: self.matchId, isDarkTheme: isDarkTheme)

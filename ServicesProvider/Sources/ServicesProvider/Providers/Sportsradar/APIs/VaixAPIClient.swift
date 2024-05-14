@@ -9,6 +9,7 @@ import Foundation
 
 enum VaixAPIClient {
     case popularEvents(eventsCount: Int)
+    case analyticsTrackEvent(event: VaixAnalyticsEvent)
 }
 
 extension VaixAPIClient: Endpoint {
@@ -20,6 +21,8 @@ extension VaixAPIClient: Endpoint {
         switch self {
         case .popularEvents:
             return "/api/sports/events/popular"
+        case .analyticsTrackEvent:
+            return "/api/tracker/events"
         }
     }
     
@@ -34,6 +37,8 @@ extension VaixAPIClient: Endpoint {
             query.append(URLQueryItem(name:"order_by", value:"-event_confidence,+begin"))
             query.append(URLQueryItem(name:"format", value:"orako"))
             query.append(URLQueryItem(name:"location", value:"liveevent-popular"))
+        case .analyticsTrackEvent:
+            break
         }
         return query
     }
@@ -44,12 +49,18 @@ extension VaixAPIClient: Endpoint {
             return [ "Authorization": "Bearer \(SportRadarConfiguration.shared.vaixAuthTokenValue)",
                      "origin": "null",
                      "x-vaix-client-id": "betsson_france"]
+        case .analyticsTrackEvent:
+            return ["Authorization": "Bearer \(SportRadarConfiguration.shared.vaixAuthTokenValue)",
+                    "origin": "null",
+                    "x-vaix-client-id": "betsson_france",
+                    "Content-Type": "application/json"]
         }
     }
     
     var method: HTTP.Method {
         switch self {
         case .popularEvents: return .get
+        case .analyticsTrackEvent: return .post
         }
     }
     
@@ -64,6 +75,7 @@ extension VaixAPIClient: Endpoint {
     var timeout: TimeInterval {
         switch self {
         case .popularEvents: return TimeInterval(20)
+        case .analyticsTrackEvent: return TimeInterval(5)
         }
     }
     
@@ -74,6 +86,7 @@ extension VaixAPIClient: Endpoint {
     var comment: String? {
         switch self {
         case .popularEvents: return "Vaix popularEvents"
+        case .analyticsTrackEvent: return "Vaix Track Event analytics"
         }
     }
     

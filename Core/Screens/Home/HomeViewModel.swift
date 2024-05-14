@@ -171,16 +171,8 @@ extension HomeViewModel {
         return self.homeViewTemplateDataSource.highlightedMatchViewModel(forIndex: index)
     }
 
-    func promotedMatch(forSection section: Int, forIndex index: Int) -> Match? {
-        return self.homeViewTemplateDataSource.promotedMatch(forSection: section, forIndex: index)
-    }
-
-    func supplementaryEventId(forSection section: Int, forIndex index: Int) -> String? {
-        return self.homeViewTemplateDataSource.supplementaryEventId(forSection: section, forIndex: index)
-    }
-
-    func highlightedLiveMatchLineTableCellViewModel(forId identifier: String) -> MatchLineTableCellViewModel? {
-        return self.homeViewTemplateDataSource.highlightedLiveMatchLineTableCellViewModel(forId: identifier)
+    func highlightedLiveMatchLineTableCellViewModel(forSection section: Int, forIndex index: Int) -> MatchLineTableCellViewModel? {
+        return self.homeViewTemplateDataSource.highlightedLiveMatchLineTableCellViewModel(forSection: section, forIndex: index)
     }
     
     func matchLineTableCellViewModel(forSection section: Int, forIndex index: Int) -> MatchLineTableCellViewModel? {
@@ -189,10 +181,6 @@ extension HomeViewModel {
 
     func topCompetitionsLineCellViewModel(forSection section: Int) -> TopCompetitionsLineCellViewModel? {
         return self.homeViewTemplateDataSource.topCompetitionsLineCellViewModel(forSection: section)
-    }
-
-    func highlightedLiveMatchesId(forSection section: Int, forIndex index: Int) -> String? {
-        return self.homeViewTemplateDataSource.highlightedLiveMatchesId(forSection: section, forIndex: index)
     }
     
 }

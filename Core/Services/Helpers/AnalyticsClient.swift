@@ -7,6 +7,7 @@
 
 import Foundation
 import FirebaseAnalytics
+import ServicesProvider
 
 struct AnalyticsClient {
 
@@ -36,6 +37,10 @@ struct AnalyticsClient {
         case sosPlayers
         case playersInfo
         case evaluejeu
+        
+        case eventsImpressions(eventsIds: [String])
+        case clickEvent(eventId: String)
+        case clickOutcome(eventId: String)
     }
 
     static func sendEvent(event: Event) {
@@ -126,6 +131,15 @@ struct AnalyticsClient {
 
         case .evaluejeu:
             eventTypeKey = "evalujeu_click"
+            
+        case .eventsImpressions:
+            eventTypeKey = "impressions:events"
+            
+        case .clickEvent:
+            eventTypeKey = "clicks:event"
+        
+        case .clickOutcome:
+            eventTypeKey = "clicks:outcome"
         }
 
         Analytics.logEvent(eventTypeKey.uppercased(), parameters: parameters)

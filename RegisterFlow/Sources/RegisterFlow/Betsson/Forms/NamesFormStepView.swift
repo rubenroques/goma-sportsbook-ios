@@ -328,7 +328,7 @@ extension NamesFormStepView {
     fileprivate static func createMiddleNameTipLabel() -> UILabel {
         let label = UILabel()
         label.translatesAutoresizingMaskIntoConstraints = false
-        label.text = Localization.localized("middle_name_infope")
+        label.text = Localization.localized("middle_name_info")
         label.font = AppFont.with(type: .regular, size: 11)
         label.numberOfLines = 0
         return label

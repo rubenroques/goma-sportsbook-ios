@@ -432,14 +432,6 @@ extension DynamicHomeViewTemplateDataSource: HomeViewTemplateDataSource {
         return nil
     }
 
-    func promotedMatch(forSection section: Int, forIndex index: Int) -> Match? {
-        return nil
-    }
-
-    func supplementaryEventId(forSection section: Int, forIndex index: Int) -> String? {
-        return nil
-    }
-
     func matchLineTableCellViewModel(forSection section: Int, forIndex index: Int) -> MatchLineTableCellViewModel? {
         return nil
     }
@@ -456,11 +448,7 @@ extension DynamicHomeViewTemplateDataSource: HomeViewTemplateDataSource {
         return nil
     }
     
-    func highlightedLiveMatchLineTableCellViewModel(forId identifier: String) -> MatchLineTableCellViewModel? {
-        return nil
-    }
-    
-    func highlightedLiveMatchesId(forSection section: Int, forIndex index: Int) -> String? {
+    func highlightedLiveMatchLineTableCellViewModel(forSection section: Int, forIndex index: Int) -> MatchLineTableCellViewModel? {
         return nil
     }
     

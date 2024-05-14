@@ -200,8 +200,9 @@ class MyGamesViewModel {
                     }, receiveValue: { [weak self] eventSummary in
                         guard let self = self else { return }
 
-                        if eventSummary.homeTeamName != "" || eventSummary.awayTeamName != "" {
-                            let match = ServiceProviderModelMapper.match(fromEvent: eventSummary)
+                        if (eventSummary.homeTeamName != "" || eventSummary.awayTeamName != ""),
+                           let match = ServiceProviderModelMapper.match(fromEvent: eventSummary)
+                        {
                             self.favoriteMatchesDataPublisher.value.append(match)
                         }
 

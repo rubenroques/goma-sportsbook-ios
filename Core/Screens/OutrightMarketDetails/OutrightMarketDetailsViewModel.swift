@@ -84,8 +84,9 @@ class OutrightMarketDetailsViewModel {
                     case .connected(let subscription):
                         print("Connected to ws")
                     case .contentUpdate(let serviceProviderEvent):
-                        let eventMapped = ServiceProviderModelMapper.match(fromEvent: serviceProviderEvent)
-                        self.storeMarkets(markets: eventMapped.markets)
+                        if let eventMapped = ServiceProviderModelMapper.match(fromEvent: serviceProviderEvent) {
+                            self.storeMarkets(markets: eventMapped.markets)
+                        }
                     case .disconnected:
                         print("getMatchDetails subscribeEventDetails disconnected")
                     }

@@ -253,19 +253,16 @@ class StaticHomeViewTemplateDataSource {
                         print("EVENT SUMMARY ERROR: \(error)")
                     }
                 }, receiveValue: { [weak self] eventSummary in
-
                     guard let self = self else {return}
-
                     if eventSummary.homeTeamName != "" || eventSummary.awayTeamName != "" {
-                        let match = ServiceProviderModelMapper.match(fromEvent: eventSummary)
-
-                        if !self.favoriteMatches.contains(where: {
-                            $0.id == match.id
-                        }), self.favoriteMatches.count < 2 {
-                            self.favoriteMatches.append(match)
+                        if let match = ServiceProviderModelMapper.match(fromEvent: eventSummary) {
+                            if !self.favoriteMatches.contains(where: {
+                                $0.id == match.id
+                            }), self.favoriteMatches.count < 2 {
+                                self.favoriteMatches.append(match)
+                            }
                         }
                     }
-
                 })
                 .store(in: &cancellables)
         }
@@ -536,14 +533,6 @@ extension StaticHomeViewTemplateDataSource: HomeViewTemplateDataSource {
         return nil
     }
 
-    func promotedMatch(forSection section: Int, forIndex index: Int) -> Match? {
-        return nil
-    }
-
-    func supplementaryEventId(forSection section: Int, forIndex index: Int) -> String? {
-        return nil
-    }
-
     func matchLineTableCellViewModel(forSection section: Int, forIndex index: Int) -> MatchLineTableCellViewModel? {
         return nil
     }
@@ -560,13 +549,10 @@ extension StaticHomeViewTemplateDataSource: HomeViewTemplateDataSource {
         return nil
     }
     
-    func highlightedLiveMatchLineTableCellViewModel(forId identifier: String) -> MatchLineTableCellViewModel? {
+    func highlightedLiveMatchLineTableCellViewModel(forSection section: Int, forIndex index: Int) -> MatchLineTableCellViewModel? {
         return nil
     }
     
-    func highlightedLiveMatchesId(forSection section: Int, forIndex index: Int) -> String? {
-        return nil
-    }
 }
 
 extension StaticHomeViewTemplateDataSource {

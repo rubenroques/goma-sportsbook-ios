@@ -439,7 +439,11 @@ class HomeViewController: UIViewController {
                 Env.servicesProvider.getMarketInfo(marketId: externalMarketId)
             )
             .map({ event, externalMarket -> BettingTicket? in
-                let match = ServiceProviderModelMapper.match(fromEvent: event)
+                guard
+                    let match = ServiceProviderModelMapper.match(fromEvent: event)
+                else {
+                    return nil
+                }
                 let market = ServiceProviderModelMapper.market(fromServiceProviderMarket: externalMarket)
                 let selectedOutcome = market.outcomes.first { outcome in
                     outcome.id == selectedOutcomeId
@@ -916,15 +920,13 @@ extension HomeViewController: UITableViewDelegate, UITableViewDataSource {
         case .promotedSportSection:
             guard
                 let cell = tableView.dequeueReusableCell(withIdentifier: MatchLineTableViewCell.identifier) as? MatchLineTableViewCell,
-                let match = self.viewModel.promotedMatch(forSection: indexPath.section, forIndex: indexPath.row)
+                let viewModel = self.viewModel.matchLineTableCellViewModel(forSection: indexPath.section, forIndex: indexPath.row)
             else {
                 return UITableViewCell()
             }
 
-            cell.matchStatsViewModel = self.viewModel.matchStatsViewModel(forMatch: match)
-
-            let viewModel = MatchLineTableCellViewModel(match: match)
             cell.configure(withViewModel: viewModel)
+            cell.matchStatsViewModel = nil
 
             cell.tappedMatchLineAction = { [weak self] match in
                 self?.openMatchDetails(matchId: match.id)
@@ -959,8 +961,7 @@ extension HomeViewController: UITableViewDelegate, UITableViewDataSource {
         case .highlightedLiveMatches:
             guard
                 let cell = tableView.dequeueReusableCell(withIdentifier: MatchLineTableViewCell.identifier) as? MatchLineTableViewCell,
-                let identifier = self.viewModel.highlightedLiveMatchesId(forSection: indexPath.section, forIndex: indexPath.row),
-                let viewModel = self.viewModel.highlightedLiveMatchLineTableCellViewModel(forId: identifier)
+                let viewModel = self.viewModel.highlightedLiveMatchLineTableCellViewModel(forSection: indexPath.section, forIndex: indexPath.row)
             else {
                 return UITableViewCell()
             }

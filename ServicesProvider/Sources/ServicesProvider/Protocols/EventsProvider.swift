@@ -111,7 +111,8 @@ protocol EventsProvider: Connector {
     // Event and markets updates
     func subscribeToEventAndSecondaryMarkets(withId id: String) -> AnyPublisher<SubscribableContent<Event>, ServiceProviderError>
     
-    func getHighlightedLiveEvents(eventCount: Int) -> AnyPublisher<[String], ServiceProviderError>
+    func getHighlightedLiveEventsIds(eventCount: Int) -> AnyPublisher<[String], ServiceProviderError>
+    func getHighlightedLiveEvents(eventCount: Int) -> AnyPublisher<[Event], ServiceProviderError>
     
     //
     // Favorites

@@ -21,8 +21,8 @@ public struct SecundaryMarketsService {
             return errorPublisher
         }
         
-        if !isRequestMade {
-            isRequestMade = true
+        if !self.isRequestMade {
+            self.isRequestMade = true
             
             var request = URLRequest(url: url, cachePolicy: .reloadRevalidatingCacheData, timeoutInterval: 5)
             request.httpMethod = "GET"
@@ -34,10 +34,11 @@ public struct SecundaryMarketsService {
                 .receive(on: DispatchQueue.main)
                 .sink(receiveCompletion: { completion in
                     if case .failure(let error) = completion {
-                        subject.send(completion: .failure(error))
+                        self.subject.send(completion: .failure(error))
+                        self.isRequestMade = false
                     }
                 }, receiveValue: { secundaryMarkets in
-                    subject.send(secundaryMarkets)
+                    self.subject.send(secundaryMarkets)
                 })
                 .store(in: &cancellables) // Make sure to have a Set<AnyCancellable> to store this subscription
         }

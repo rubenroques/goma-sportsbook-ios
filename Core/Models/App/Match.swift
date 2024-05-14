@@ -84,10 +84,6 @@ struct Match: Equatable {
         case .inProgress(let details):
             let translatedStatus = "live_status_" + details
             return localized(translatedStatus)
-//            if let sportAlphaId = self.sport.alphaId {
-//                return self.convertStatus(sportAlphaId, details)
-//            }
-//            return "\(details)"
         case .ended:
             let translatedStatus = localized("live_status_ended")
             return translatedStatus

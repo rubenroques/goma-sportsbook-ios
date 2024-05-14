@@ -431,7 +431,7 @@ extension PopularMatchesDataSource {
             return matchLineTableCellViewModel
         }
         else {
-            let matchLineTableCellViewModel = MatchLineTableCellViewModel(match: match, withFullMarkets: false)
+            let matchLineTableCellViewModel = MatchLineTableCellViewModel(match: match)
             self.matchLineTableCellViewModelCache[match.id] = matchLineTableCellViewModel
             return matchLineTableCellViewModel
         }

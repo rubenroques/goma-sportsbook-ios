@@ -363,8 +363,18 @@ class MatchWidgetCollectionViewCell: UICollectionViewCell {
     override func awakeFromNib() {
         super.awakeFromNib()
 
-        self.topImageBaseView.layer.masksToBounds = true
+        // hide non normaml widget style elements
+        self.backgroundImageView.isHidden = true
 
+        self.topImageBaseView.layer.masksToBounds = true
+        self.topImageBaseView.isHidden = true
+
+        self.boostedOddBottomLineView.isHidden = true
+        self.boostedTopRightCornerBaseView.isHidden = true
+
+        self.mainContentBaseView.isHidden = false
+        //
+        
         //
         // Add gradient to the bottom booster line
         self.boostedOddBottomLineAnimatedGradientView.translatesAutoresizingMaskIntoConstraints = false
@@ -530,6 +540,7 @@ class MatchWidgetCollectionViewCell: UICollectionViewCell {
         self.liveGradientBorderView.isHidden = true
         
         // Live Tip
+        self.liveTipView.isHidden = true
         self.baseView.addSubview(self.liveTipView)
         self.liveTipView.addSubview(self.liveTipLabel)
         self.liveTipLabel.text = localized("live").uppercased() + " ⦿"
@@ -751,7 +762,6 @@ class MatchWidgetCollectionViewCell: UICollectionViewCell {
 
         self.adjustDesignToCardHeightStyle()
         self.setupWithTheme()
-
     }
 
     func cellDidDisappear() {
@@ -1544,12 +1554,6 @@ class MatchWidgetCollectionViewCell: UICollectionViewCell {
             }
             .store(in: &self.cancellables)
         
-        viewModel.competitionNamePublisher
-            .sink { [weak self] competitionName in
-                self?.eventNameLabel.text = competitionName
-            }
-            .store(in: &self.cancellables)
-
 
         // Scores
         viewModel.matchScorePublisher
@@ -1559,7 +1563,7 @@ class MatchWidgetCollectionViewCell: UICollectionViewCell {
             .store(in: &self.cancellables)
         
         viewModel.detailedScoresPublisher
-            .sink { [weak self] (detailedScoresDict, sportAlphaId) in
+            .sink { [weak self] detailedScoresDict, sportAlphaId in
                 self?.detailedScoreView.updateScores(detailedScoresDict)
                 self?.detailedScoreView.sportCode = sportAlphaId
             }
@@ -1594,18 +1598,6 @@ class MatchWidgetCollectionViewCell: UICollectionViewCell {
             }
             .store(in: &self.cancellables)
         
-        // Outrights info
-        viewModel.eventNamePublisher
-            .sink { [weak self] eventName in
-                self?.eventNameLabel.text = eventName
-            }
-            .store(in: &self.cancellables)
-        viewModel.outrightNamePublisher
-            .sink { [weak self] outrightName in
-                self?.outrightNameLabel.text = outrightName
-            }
-            .store(in: &self.cancellables)
-        
         viewModel.isFavoriteMatchPublisher
             .sink { [weak self] isFavoriteMatch in
                 self?.isFavorite = isFavoriteMatch
@@ -1625,7 +1617,15 @@ class MatchWidgetCollectionViewCell: UICollectionViewCell {
             .sink { [weak self] defaultMarket in
                 if let market = defaultMarket {
                     // Setup outcome buttons
+                    self?.oddsStackView.alpha = 1.0
                     self?.configureOutcomes(withMarket: market)
+                    
+                    if market.isAvailable {
+                        self?.showMarketButtons()
+                    }
+                    else {
+                        self?.showSuspendedView()
+                    }
                 }
                 else {
                     // Hide outcome buttons if we don't have any market
@@ -1635,9 +1635,8 @@ class MatchWidgetCollectionViewCell: UICollectionViewCell {
             }
             .store(in: &self.cancellables)
         
-        //
         // Default Market Availability
-        self.marketSubscriber = viewModel.isDefaultMarketAvailable
+        self.marketSubscriber = viewModel.isDefaultMarketAvailablePublisher
             .sink(receiveValue: { [weak self] isAvailable in
                 if isAvailable {
                     self?.showMarketButtons()
@@ -1647,8 +1646,49 @@ class MatchWidgetCollectionViewCell: UICollectionViewCell {
                 }
             })
         
+//        Publishers.CombineLatest(viewModel.defaultMarketPublisher, viewModel.isDefaultMarketAvailablePublisher)
+//            .sink { [weak self] defaultMarket, isDefaultMarketAvailable in
+//                if let market = defaultMarket {
+//                    // Setup outcome buttons
+//                    self?.oddsStackView.alpha = 1.0
+//                    self?.configureOutcomes(withMarket: market)
+//                    
+//                    if isDefaultMarketAvailable {
+//                        self?.showMarketButtons()
+//                    }
+//                    else {
+//                        self?.showSuspendedView()
+//                    }
+//                }
+//                else {
+//                    // Hide outcome buttons if we don't have any market
+//                    self?.oddsStackView.alpha = 0.2
+//                    self?.showSeeAllView()
+//                }
+//            }
+//            .store(in: &self.cancellables)
+        
+        
+        
+        Publishers.CombineLatest3(viewModel.$matchWidgetType, viewModel.eventNamePublisher, viewModel.competitionNamePublisher)
+            .sink { [weak self] matchWidgetType, eventName, competitionName in
+                switch matchWidgetType {
+                case .topImageOutright:
+                    self?.eventNameLabel.text = eventName
+                default:
+                    self?.eventNameLabel.text = competitionName
+                }
+            }
+            .store(in: &self.cancellables)
+        
+        viewModel.outrightNamePublisher
+            .sink { [weak self] outrightName in
+                self?.outrightNameLabel.text = outrightName
+            }
+            .store(in: &self.cancellables)
+        
     }
-
+    
     private func configureOutcomes(withMarket market: Market) {
         if let outcome = market.outcomes[safe: 0] {
             
@@ -1674,7 +1714,7 @@ class MatchWidgetCollectionViewCell: UICollectionViewCell {
             else {
                 self.homeBaseView.isUserInteractionEnabled = false
                 self.homeBaseView.alpha = 0.5
-                    self.setHomeOddValueLabel(toText: "-")
+                self.setHomeOddValueLabel(toText: "-")
             }
 
             self.leftOddButtonSubscriber = Env.servicesProvider

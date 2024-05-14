@@ -33,20 +33,20 @@ public class SecundarySportMarket: Codable {
 
 // MARK: - Market
 public class MarketSpecs: Codable {
-    public var typeId: String
+    public var marketTypeId: String
     public var name: String
     public var statsId: String
     public var line: String?
 
     enum CodingKeys: String, CodingKey {
-        case typeId = "idefmarkettype"
+        case marketTypeId = "idefmarkettype"
         case name = "name"
         case statsId = "stats_id"
         case line = "line"
     }
 
-    public init(typeId: String, name: String, statsId: String, line: String?) {
-        self.typeId = typeId
+    public init(marketTypeId: String, name: String, statsId: String, line: String?) {
+        self.marketTypeId = marketTypeId
         self.name = name
         self.statsId = statsId
         self.line = line
@@ -54,7 +54,7 @@ public class MarketSpecs: Codable {
     
     required public init(from decoder: Decoder) throws {
         let container = try decoder.container(keyedBy: CodingKeys.self)
-        self.typeId = try container.decode(String.self, forKey: .typeId)
+        self.marketTypeId = try container.decode(String.self, forKey: .marketTypeId)
         self.name = try container.decode(String.self, forKey: .name)
         self.statsId = try container.decode(String.self, forKey: .statsId)
         self.line = try container.decodeIfPresent(String.self, forKey: .line)
