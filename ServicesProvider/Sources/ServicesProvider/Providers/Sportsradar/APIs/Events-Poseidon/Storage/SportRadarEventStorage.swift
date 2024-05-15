@@ -13,7 +13,7 @@ class SportRadarEventStorage {
 
     var eventPublisher: AnyPublisher<Event?, Never> {
         self.eventSubject
-            .debounce(for: .seconds(1.0), scheduler: RunLoop.main)
+            .throttle(for: .milliseconds(800), scheduler: DispatchQueue.main, latest: true)
             .eraseToAnyPublisher()
     }
     
