@@ -255,6 +255,7 @@ class OutrightMarketDetailsViewController: UIViewController {
             }.store(in: &cancellables)
 
         self.viewModel.isCompetitionBettingAvailablePublisher
+            .receive(on: DispatchQueue.main)
             .sink { [weak self] isCompetitionBettingAvailable in
                 if isCompetitionBettingAvailable {
                     self?.unavailableMarketsView.isHidden = true

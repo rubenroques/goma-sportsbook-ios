@@ -230,8 +230,8 @@ class CompetitionsDataSource: NSObject {
             case .connected(let subscription):
                 self?.competitionsMatchesSubscriptions[competitionId] = subscription
             case .contentUpdate(let eventsGroups):
-                if let outrightMatch = ServiceProviderModelMapper.matches(fromEventsGroups: eventsGroups).first {
-                    self?.processCompetitionOutrights(outrightMatch: outrightMatch, competitionInfo: competitionInfo)
+                if let outrightMatch = ServiceProviderModelMapper.competitions(fromEventsGroups: eventsGroups).first {
+                    self?.processCompetitionOutrights(outrightCompetition: outrightMatch, competitionInfo: competitionInfo)
                 }
                 self?.activeNetworkRequestCount -= 1
             case .disconnected:
@@ -241,7 +241,7 @@ class CompetitionsDataSource: NSObject {
         .store(in: &cancellables)
     }
 
-    private func processCompetitionOutrights(outrightMatch: Match, competitionInfo: SportCompetitionInfo) {
+    private func processCompetitionOutrights(outrightCompetition: Competition, competitionInfo: SportCompetitionInfo) {
 
         guard
             !self.allCompetitions.contains(where: { $0.id == competitionInfo.id })
@@ -254,7 +254,7 @@ class CompetitionsDataSource: NSObject {
         let newCompetition = Competition(id: competitionInfo.id,
                                          name: competitionInfo.name,
                                          matches: [],
-                                         venue: outrightMatch.venue,
+                                         venue: outrightCompetition.venue,
                                          sport: nil,
                                          numberOutrightMarkets: numberOutrightMarkets,
                                          competitionInfo: competitionInfo)

@@ -123,6 +123,8 @@ class MatchLineTableViewCell: UITableViewCell {
         self.viewModel = nil
         self.match = nil
 
+        self.cancellables.removeAll()
+        
         self.matchStatsViewModel = nil
 
         self.loadingView.hidesWhenStopped = true
@@ -162,11 +164,11 @@ class MatchLineTableViewCell: UITableViewCell {
         self.viewModel = viewModel
         
         self.loadingView.startAnimating()
-  
-        if let match = viewModel.match {
-            self.loadingView.stopAnimating()
-            self.setupWithMatch(match)
-        }
+//  
+//        if let match = viewModel.match {
+//            self.loadingView.stopAnimating()
+//            self.setupWithMatch(match)
+//        }
         
         self.matchInfoPublisher?.cancel()
         
@@ -203,7 +205,7 @@ class MatchLineTableViewCell: UITableViewCell {
     }
 
     private func setupWithMatch(_ newMatch: Match) {
-        /*
+        
         guard
             let currentMatch = self.match
         else {
@@ -213,43 +215,93 @@ class MatchLineTableViewCell: UITableViewCell {
             return
         }
 
-        var indexPathsToUpdate: [IndexPath] = []
-
+        /*
+         
+         
+        var oldMarketsList = currentMatch.markets
+        var newMarketsList = newMatch.markets
+        
+        var updated: [IndexPath] = []
+        var deletions: [IndexPath] = []
+        var insertions: [IndexPath] = []
+        
         // if default market is different
-        if
-            let firstOldMarket = currentMatch.markets.first,
-            let firstNewMarket = newMatch.markets.first,
-            firstOldMarket != firstNewMarket {
-            indexPathsToUpdate.append(IndexPath(item: 0, section: 0)) // default market section - 0
-        }
-            
-        // secondary markets section - 1
-        for (index, newMarket) in newMatch.markets.enumerated() {
-            if index == 0 {
-                continue
+        if let firstOldMarket = currentMatch.markets.first {
+            // Existe um current first market
+            if let firstNewMarket = newMatch.markets.first {
+                // Existe um new first market
+                if firstOldMarket != firstNewMarket {
+                    updated.append(IndexPath(item: 0, section: 0))
+                }
             }
-            if let oldMarket = currentMatch.markets[safe: index],
-               oldMarket != newMarket {
-                indexPathsToUpdate.append(IndexPath(item: index, section: 1))
+            else {
+                // Não existe um new first market
+                deletions.append(IndexPath(item: 0, section: 0))
+            }
+        }
+        else {
+            // Não existe um current first market
+            if newMatch.markets.first != nil {
+                // Existe um new first market
+                insertions.append(IndexPath(item: 0, section: 0))
+            }
+            else {
+                // Não existe um new first market
             }
         }
         
-        if !indexPathsToUpdate.isEmpty {
-            indexPathsToUpdate.append(IndexPath(item: 0, section: 2)) // see all section - 2
+        // First market index (section 0) is already processed
+        if oldMarketsList.count >= 1 {
+            oldMarketsList.removeFirst()
         }
+        if newMarketsList.count >= 1 {
+            newMarketsList.removeFirst()
+        }
+        
+        let diff = newMarketsList.difference(from: oldMarketsList)
+
+        insertions.append(contentsOf: diff.insertions.compactMap { change in
+            switch change {
+            case .insert(let offset, _, _):
+                return IndexPath(row: offset, section: 1)
+            default:
+                return nil
+            }
+        })
+
+        deletions.append(contentsOf: diff.removals.compactMap { change in
+            switch change {
+            case .remove(let offset, _, _):
+                return IndexPath(row: offset, section: 1)
+            default:
+                return nil
+            }
+        })
+            
+        // see all section - 2
+        // updated.append(IndexPath(item: 0, section: 2))
         
         self.match = newMatch
 
-        if !indexPathsToUpdate.isEmpty {
-            self.collectionView.performBatchUpdates({
-                self.collectionView.reloadItems(at: indexPathsToUpdate)
-            }, completion: nil)
-        }
+        self.collectionView.performBatchUpdates({
+            self.collectionView.insertItems(at: insertions)
+            self.collectionView.deleteItems(at: deletions)
+            self.collectionView.reloadItems(at: updated)
+        }, completion: nil)
         */
         
+        if currentMatch.id == newMatch.id && currentMatch.markets.first == newMatch.markets.first {
+            self.collectionView.reloadSections(IndexSet(integer: 1))
+        }
+        else {
+            // Legacy refresh
+            self.match = newMatch
+            self.collectionView.reloadData()
+        }
+        
         // Legacy refresh
-        self.match = newMatch
-        self.collectionView.reloadData()
+//        self.match = newMatch
+//        self.collectionView.reloadData()
     }
 
     func shouldShowCountryFlag(_ show: Bool) {

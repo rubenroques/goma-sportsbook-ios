@@ -222,7 +222,7 @@ class MatchWidgetCellViewModel {
             guard
                 let defaultMarketId = defaultMarket?.id
             else {
-                return Just(true).setFailureType(to: Never.self).eraseToAnyPublisher()
+                return Just(false).setFailureType(to: Never.self).eraseToAnyPublisher()
             }
             
             return Env.servicesProvider.subscribeToEventOnListsMarketUpdates(withId: defaultMarketId)
@@ -242,6 +242,7 @@ class MatchWidgetCellViewModel {
     
     var defaultMarketPublisher: AnyPublisher<Market?, Never> {
         return self.$match
+            // .map { match in return Optional<Market>.none }
             .map { $0?.markets.first }
             .receive(on: DispatchQueue.main)
             .eraseToAnyPublisher()
@@ -285,7 +286,7 @@ class MatchWidgetCellViewModel {
                 guard let matchValue = match else { return false }
                 
                 if RePlayFeatureHelper.shouldShowRePlay(forMatch: matchValue) {
-                    return self.matchWidgetType == .normal || self.matchWidgetType == .topImage
+                    return matchWidgetType == .normal || matchWidgetType == .topImage
                 }
                 return false
             }

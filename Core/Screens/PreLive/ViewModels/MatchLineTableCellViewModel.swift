@@ -45,7 +45,13 @@ class MatchLineTableCellViewModel {
             .removeDuplicates(by: { oldMatch, newMatch in
                 let sameMatch = oldMatch.id == newMatch.id
                 let sameMarkets = oldMatch.markets.map(\.id) == newMatch.markets.map(\.id)
-                return sameMatch && sameMarkets
+                if sameMatch && sameMarkets {
+                    return true
+                }
+                else {
+                    print("not the same match+markets")
+                    return false
+                }
             })
             .sink { [weak self] match in
                 if let matchWidgetCellViewModel = self?.matchWidgetCellViewModel {
@@ -193,7 +199,11 @@ extension MatchLineTableCellViewModel {
         }
     }
     
-    private func processMarkets(forMatch oldMatch: Match?, newMarkets: [Market], marketsAdditionalInfo: [SecundarySportMarket], sportId: String) -> [Market] {
+    private func processMarkets(forMatch oldMatch: Match?, 
+                                newMarkets: [Market],
+                                marketsAdditionalInfo: [SecundarySportMarket], 
+                                sportId: String) -> [Market]
+    {
         var statsForMarket: [String: String?] = [:]
         
         let firstMarket = oldMatch?.markets.first // Capture the first market
@@ -219,7 +229,11 @@ extension MatchLineTableCellViewModel {
             $0.sportId.lowercased() == sportId.lowercased()
         }) {
             for (index, secundaryMarket) in secundaryMarketsForSport.markets.enumerated() {
-                marketsAdditionalInfoOrder[secundaryMarket.marketTypeId] = index
+                
+                if marketsAdditionalInfoOrder[secundaryMarket.marketTypeId] == nil {
+                    marketsAdditionalInfoOrder[secundaryMarket.marketTypeId] = index
+                }
+                
                 if var foundMarket = mergedMarkets.first(where: { market in
                     (market.marketTypeId ?? "") == secundaryMarket.marketTypeId
                 }) {

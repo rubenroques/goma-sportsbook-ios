@@ -327,9 +327,6 @@ class MatchWidgetCollectionViewCell: UICollectionViewCell {
     private var middleOddButtonSubscriber: AnyCancellable?
     private var rightOddButtonSubscriber: AnyCancellable?
 
-    private var matchLiveDataSubscriber: AnyCancellable?
-    private var marketSubscriber: AnyCancellable?
-
     private var leftOutcome: Outcome?
     private var middleOutcome: Outcome?
     private var rightOutcome: Outcome?
@@ -464,9 +461,9 @@ class MatchWidgetCollectionViewCell: UICollectionViewCell {
         self.seeAllBaseView.layer.cornerRadius = 4.5
         self.outrightBaseView.layer.cornerRadius = 4.5
 
-        self.homeOddTitleLabel.text = "-"
-        self.drawOddTitleLabel.text = "-"
-        self.awayOddTitleLabel.text = "-"
+        self.homeOddTitleLabel.text = ""
+        self.drawOddTitleLabel.text = ""
+        self.awayOddTitleLabel.text = ""
 
         self.eventNameLabel.text = ""
         
@@ -671,9 +668,6 @@ class MatchWidgetCollectionViewCell: UICollectionViewCell {
 
         self.rightOddButtonSubscriber?.cancel()
         self.rightOddButtonSubscriber = nil
-
-        self.marketSubscriber?.cancel()
-        self.marketSubscriber = nil
         
         self.currentHomeOddValue = nil
         self.currentDrawOddValue = nil
@@ -709,6 +703,9 @@ class MatchWidgetCollectionViewCell: UICollectionViewCell {
         self.liveMatchDotBaseView.isHidden = true
         self.liveTipView.isHidden = true
 
+        self.gradientBorderView.isHidden = true
+        self.liveGradientBorderView.isHidden = true
+        
         self.matchTimeLabel.text = ""
         self.resultLabel.text = ""
         
@@ -721,9 +718,9 @@ class MatchWidgetCollectionViewCell: UICollectionViewCell {
         self.marketNamePillLabelView.isHidden = true
                 
         //
-        self.homeOddTitleLabel.text = "-"
-        self.drawOddTitleLabel.text = "-"
-        self.awayOddTitleLabel.text = "-"
+        self.homeOddTitleLabel.text = ""
+        self.drawOddTitleLabel.text = ""
+        self.awayOddTitleLabel.text = ""
         
         self.setHomeOddValueLabel(toText: "")
         self.setDrawOddValueLabel(toText: "")
@@ -760,6 +757,8 @@ class MatchWidgetCollectionViewCell: UICollectionViewCell {
         self.seeAllBaseView.isHidden = true
         self.outrightBaseView.isHidden = true
 
+        self.cancellables.removeAll()
+        
         self.adjustDesignToCardHeightStyle()
         self.setupWithTheme()
     }
@@ -773,9 +772,6 @@ class MatchWidgetCollectionViewCell: UICollectionViewCell {
 
         self.rightOddButtonSubscriber?.cancel()
         self.rightOddButtonSubscriber = nil
-
-        self.marketSubscriber?.cancel()
-        self.marketSubscriber = nil
     }
 
     func setupWithTheme() {
@@ -1244,15 +1240,6 @@ class MatchWidgetCollectionViewCell: UICollectionViewCell {
         self.cashbackImageViewBaseTrailingConstraint.isActive = false
         self.cashbackImageViewLiveTrailingConstraint.isActive = true
         
-        if self.viewModel?.matchWidgetType == .normal || self.viewModel?.matchWidgetType == .boosted {
-            self.gradientBorderView.isHidden = true
-            self.liveGradientBorderView.isHidden = false
-        }
-        else {
-            self.gradientBorderView.isHidden = true
-            self.liveGradientBorderView.isHidden = true
-        }
-        
         switch StyleHelper.cardsStyleActive() {
         case .small:
             self.adjustMarketNameView(isShown: false)
@@ -1282,15 +1269,6 @@ class MatchWidgetCollectionViewCell: UICollectionViewCell {
         self.liveMatchDotBaseView.isHidden = true
         self.liveTipView.isHidden = true
 
-        if self.viewModel?.matchWidgetType == .normal  || self.viewModel?.matchWidgetType == .boosted  {
-            self.gradientBorderView.isHidden = false
-            self.liveGradientBorderView.isHidden = true
-        }
-        else {
-            self.gradientBorderView.isHidden = true
-            self.liveGradientBorderView.isHidden = true
-        }
-        
         self.cashbackImageViewBaseTrailingConstraint.isActive = true
         self.cashbackImageViewLiveTrailingConstraint.isActive = false
         
@@ -1334,9 +1312,6 @@ class MatchWidgetCollectionViewCell: UICollectionViewCell {
                 self.topMarginSpaceConstraint.constant = 11
             }
 
-            self.gradientBorderView.isHidden = false
-            self.liveGradientBorderView.isHidden = true
-
         case .topImage:
             self.backgroundImageView.isHidden = true
 
@@ -1357,9 +1332,6 @@ class MatchWidgetCollectionViewCell: UICollectionViewCell {
             self.bottomMarginSpaceConstraint.constant = 12
             self.teamsHeightConstraint.constant = 67
             self.topMarginSpaceConstraint.constant = 11
-
-            self.gradientBorderView.isHidden = true
-            self.liveGradientBorderView.isHidden = true
             
         case .topImageOutright:
             self.backgroundImageView.isHidden = true
@@ -1387,9 +1359,6 @@ class MatchWidgetCollectionViewCell: UICollectionViewCell {
             self.teamsHeightConstraint.constant = 67
             self.topMarginSpaceConstraint.constant = 11
 
-            self.gradientBorderView.isHidden = true
-            self.liveGradientBorderView.isHidden = true
-
         case .boosted:
             self.backgroundImageView.isHidden = true
 
@@ -1409,9 +1378,6 @@ class MatchWidgetCollectionViewCell: UICollectionViewCell {
             self.topMarginSpaceConstraint.constant = 11
 
             self.setupBoostedOddsSubviews()
-
-            self.gradientBorderView.isHidden = false
-            self.liveGradientBorderView.isHidden = true
             
         case .backgroundImage:
             self.backgroundImageView.isHidden = false
@@ -1433,9 +1399,6 @@ class MatchWidgetCollectionViewCell: UICollectionViewCell {
             self.bottomMarginSpaceConstraint.constant = 28
             self.teamsHeightConstraint.constant = 47
             self.topMarginSpaceConstraint.constant = 0
-            
-            self.gradientBorderView.isHidden = true
-            self.liveGradientBorderView.isHidden = true
             
             self.backgroundImageBorderGradientLayer.colors = [UIColor(hex: 0x404CFF).cgColor, UIColor(hex: 0x404CFF).withAlphaComponent(0.0).cgColor]
             self.backgroundImageBorderGradientLayer.startPoint = CGPoint(x: 0.5, y: 0.0)
@@ -1462,6 +1425,26 @@ class MatchWidgetCollectionViewCell: UICollectionViewCell {
         else {
             return
         }
+        
+        Publishers.CombineLatest(viewModel.$matchWidgetStatus, viewModel.$matchWidgetType)
+            .receive(on: DispatchQueue.main)
+            .sink { [weak self] matchWidgetStatus, matchWidgetType in
+                switch matchWidgetType {
+                case .normal, .boosted:
+                    if matchWidgetStatus == .live {
+                        self?.gradientBorderView.isHidden = true
+                        self?.liveGradientBorderView.isHidden = false
+                    }
+                    else {
+                        self?.gradientBorderView.isHidden = false
+                        self?.liveGradientBorderView.isHidden = true
+                    }
+                case .topImage, .backgroundImage, .topImageOutright:
+                    self?.gradientBorderView.isHidden = true
+                    self?.liveGradientBorderView.isHidden = true
+                }
+            }
+            .store(in: &self.cancellables)
         
         viewModel.$matchWidgetStatus
             .removeDuplicates()
@@ -1619,13 +1602,6 @@ class MatchWidgetCollectionViewCell: UICollectionViewCell {
                     // Setup outcome buttons
                     self?.oddsStackView.alpha = 1.0
                     self?.configureOutcomes(withMarket: market)
-                    
-                    if market.isAvailable {
-                        self?.showMarketButtons()
-                    }
-                    else {
-                        self?.showSuspendedView()
-                    }
                 }
                 else {
                     // Hide outcome buttons if we don't have any market
@@ -1636,7 +1612,7 @@ class MatchWidgetCollectionViewCell: UICollectionViewCell {
             .store(in: &self.cancellables)
         
         // Default Market Availability
-        self.marketSubscriber = viewModel.isDefaultMarketAvailablePublisher
+        viewModel.isDefaultMarketAvailablePublisher
             .sink(receiveValue: { [weak self] isAvailable in
                 if isAvailable {
                     self?.showMarketButtons()
@@ -1645,31 +1621,9 @@ class MatchWidgetCollectionViewCell: UICollectionViewCell {
                     self?.showSuspendedView()
                 }
             })
-        
-//        Publishers.CombineLatest(viewModel.defaultMarketPublisher, viewModel.isDefaultMarketAvailablePublisher)
-//            .sink { [weak self] defaultMarket, isDefaultMarketAvailable in
-//                if let market = defaultMarket {
-//                    // Setup outcome buttons
-//                    self?.oddsStackView.alpha = 1.0
-//                    self?.configureOutcomes(withMarket: market)
-//                    
-//                    if isDefaultMarketAvailable {
-//                        self?.showMarketButtons()
-//                    }
-//                    else {
-//                        self?.showSuspendedView()
-//                    }
-//                }
-//                else {
-//                    // Hide outcome buttons if we don't have any market
-//                    self?.oddsStackView.alpha = 0.2
-//                    self?.showSeeAllView()
-//                }
-//            }
-//            .store(in: &self.cancellables)
-        
-        
-        
+            .store(in: &self.cancellables)
+                
+        // Outrights publishers
         Publishers.CombineLatest3(viewModel.$matchWidgetType, viewModel.eventNamePublisher, viewModel.competitionNamePublisher)
             .sink { [weak self] matchWidgetType, eventName, competitionName in
                 switch matchWidgetType {
