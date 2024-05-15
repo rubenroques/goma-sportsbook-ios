@@ -419,9 +419,11 @@ class ClientManagedHomeViewTemplateDataSource {
 
     func fetchHighlightedLiveMatches() {
         
+        let homeLiveEventsCount = Env.businessSettingsSocket.clientSettings.homeLiveEventsCount
+        
         self.highlightedLiveMatches = []
         
-        Env.servicesProvider.getHighlightedLiveEvents(eventCount: 4)
+        Env.servicesProvider.getHighlightedLiveEvents(eventCount: homeLiveEventsCount)
             .map({ return $0.map(ServiceProviderModelMapper.match(fromEvent:)).compactMap({ $0 }) })
             .receive(on: DispatchQueue.main)
             .sink { completion in

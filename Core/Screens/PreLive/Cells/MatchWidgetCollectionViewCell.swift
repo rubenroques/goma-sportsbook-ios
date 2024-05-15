@@ -464,7 +464,19 @@ class MatchWidgetCollectionViewCell: UICollectionViewCell {
         self.homeOddTitleLabel.text = ""
         self.drawOddTitleLabel.text = ""
         self.awayOddTitleLabel.text = ""
+        
+        self.setHomeOddValueLabel(toText: "")
+        self.setDrawOddValueLabel(toText: "")
+        self.setAwayOddValueLabel(toText: "")
 
+        self.homeBaseView.isUserInteractionEnabled = true
+        self.drawBaseView.isUserInteractionEnabled = true
+        self.awayBaseView.isUserInteractionEnabled = true
+
+        self.homeBaseView.alpha = 1.0
+        self.drawBaseView.alpha = 1.0
+        self.awayBaseView.alpha = 1.0
+        
         self.eventNameLabel.text = ""
         
         self.homeParticipantNameLabel.text = ""
@@ -1595,6 +1607,7 @@ class MatchWidgetCollectionViewCell: UICollectionViewCell {
             }
             .store(in: &self.cancellables)
         
+        /*
         // Setup outcomes
         viewModel.defaultMarketPublisher
             .sink { [weak self] defaultMarket in
@@ -1622,7 +1635,30 @@ class MatchWidgetCollectionViewCell: UICollectionViewCell {
                 }
             })
             .store(in: &self.cancellables)
-                
+        */
+
+        Publishers.CombineLatest(viewModel.defaultMarketPublisher, viewModel.isDefaultMarketAvailablePublisher)
+            .sink { [weak self] defaultMarket, isAvailable in
+                if let market = defaultMarket {
+                    // Setup outcome buttons
+                    self?.oddsStackView.alpha = 1.0
+                    self?.configureOutcomes(withMarket: market)
+                    
+                    if isAvailable {
+                        self?.showMarketButtons()
+                    }
+                    else {
+                        self?.showSuspendedView()
+                    }
+                }
+                else {
+                    // Hide outcome buttons if we don't have any market
+                    self?.oddsStackView.alpha = 0.2
+                    self?.showSeeAllView()
+                }
+            }
+            .store(in: &self.cancellables)
+
         // Outrights publishers
         Publishers.CombineLatest3(viewModel.$matchWidgetType, viewModel.eventNamePublisher, viewModel.competitionNamePublisher)
             .sink { [weak self] matchWidgetType, eventName, competitionName in

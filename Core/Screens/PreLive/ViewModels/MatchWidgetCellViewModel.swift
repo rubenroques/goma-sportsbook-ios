@@ -220,20 +220,24 @@ class MatchWidgetCellViewModel {
     var isDefaultMarketAvailablePublisher: AnyPublisher<Bool, Never> {
         return self.defaultMarketPublisher.flatMap { defaultMarket in
             guard
-                let defaultMarketId = defaultMarket?.id
+                let defaultMarketValue = defaultMarket
             else {
                 return Just(false).setFailureType(to: Never.self).eraseToAnyPublisher()
             }
             
-            return Env.servicesProvider.subscribeToEventOnListsMarketUpdates(withId: defaultMarketId)
-                .compactMap({ $0 })
-                .map({ (serviceProviderMarket: ServicesProvider.Market) -> Market in
-                    return ServiceProviderModelMapper.market(fromServiceProviderMarket: serviceProviderMarket)
+            let isMarketAvailable = defaultMarketValue.isAvailable
+            
+            // we try to subscribe to it on the lists 
+            return Env.servicesProvider.subscribeToEventOnListsMarketUpdates(withId: defaultMarketValue.id)
+                .map({ (serviceProviderMarket: ServicesProvider.Market?) -> Bool in
+                    if let serviceProviderMarketValue = serviceProviderMarket {
+                        return serviceProviderMarketValue.isTradable
+                    }
+                    else {
+                        return isMarketAvailable
+                    }
                 })
-                .map({ marketUpdated in
-                    return marketUpdated.isAvailable
-                })
-                .replaceError(with: false)
+                .replaceError(with: isMarketAvailable)
                 .eraseToAnyPublisher()
         }
         .receive(on: DispatchQueue.main)
@@ -242,7 +246,6 @@ class MatchWidgetCellViewModel {
     
     var defaultMarketPublisher: AnyPublisher<Market?, Never> {
         return self.$match
-            // .map { match in return Optional<Market>.none }
             .map { $0?.markets.first }
             .receive(on: DispatchQueue.main)
             .eraseToAnyPublisher()
@@ -330,25 +333,18 @@ class MatchWidgetCellViewModel {
         // with the match Live Data details
         Publishers.CombineLatest(self.matchMarketsSubject, self.matchLiveDataSubject)
             .map { match, matchLiveData -> Match? in
-                print("DebugPublishers 1 updatedMatch: ")
-
                 guard
                     var matchValue = match
                 else {
                     return nil
                 }
-
-                print("DebugPublishers 2 updatedMatch: \(matchValue.id) \(matchValue.status) ")
-
                 
                 guard
                     let matchLiveDataValue = matchLiveData
                 else {
                     return matchValue
                 }
-                
-                print("DebugPublishers 3 updatedMatch: \(matchValue.id) \(matchValue.status) -> \(matchLiveDataValue.status)")
-                      
+                                      
                 if let newStatus = matchLiveDataValue.status {
                     matchValue.status = newStatus
                 }
@@ -369,7 +365,7 @@ class MatchWidgetCellViewModel {
                 return matchValue
             }
             .sink { [weak self] (updatedMatch: Match?) in
-                print("DebugPublishers 4 updatedMatch: \(updatedMatch?.id) \(updatedMatch?.status)")
+                print("DebugPublishers widget updatedMatch: \(updatedMatch?.id) \(updatedMatch?.status)")
                 self?.match = updatedMatch
             }
             .store(in: &cancellables)

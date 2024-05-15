@@ -32,5 +32,14 @@ extension SportRadarModels {
             case linkUrl = "linkurl"
             case bodyText = "bodytext"
         }
+        
+        init(from decoder: Decoder) throws {
+            let container: KeyedDecodingContainer<SportRadarModels.PromotionalStory.CodingKeys> = try decoder.container(keyedBy: SportRadarModels.PromotionalStory.CodingKeys.self)
+            self.id = try container.decode(String.self, forKey: SportRadarModels.PromotionalStory.CodingKeys.id)
+            self.title = try container.decode(String.self, forKey: SportRadarModels.PromotionalStory.CodingKeys.title)
+            self.imageUrl = try container.decode(String.self, forKey: SportRadarModels.PromotionalStory.CodingKeys.imageUrl)
+            self.linkUrl = try container.decode(String.self, forKey: SportRadarModels.PromotionalStory.CodingKeys.linkUrl)
+            self.bodyText = (try? container.decode(String.self, forKey: SportRadarModels.PromotionalStory.CodingKeys.bodyText)) ?? ""
+        }
     }
 }

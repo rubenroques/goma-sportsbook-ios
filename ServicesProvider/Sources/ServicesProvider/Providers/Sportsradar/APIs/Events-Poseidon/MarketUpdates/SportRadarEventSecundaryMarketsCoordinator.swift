@@ -30,6 +30,7 @@ class SportRadarEventSecundaryMarketsCoordinator {
 
     var eventWithSecundaryMarketsPublisher: AnyPublisher<SubscribableContent<Event>, ServiceProviderError> {
         return self.eventWithSecundaryMarketsSubject
+            .debounce(for: .seconds(1.0), scheduler: RunLoop.main)
             .eraseToAnyPublisher()
     }
 

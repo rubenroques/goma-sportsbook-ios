@@ -25,6 +25,7 @@ struct FirebaseClientSettings: Codable {
     let partialCashoutEnabled: Bool
     
     let hasRollingWeeklyLimits: Bool
+    let homeLiveEventsCount: Int
 
     let replaySportsCodes: [String]
     let ungroupedMarkets: [String]
@@ -54,6 +55,7 @@ struct FirebaseClientSettings: Codable {
         case replaySportsCodes = "replay_sports"
         case ungroupedMarkets = "ungrouped_markets"
         case hasRollingWeeklyLimits = "limit_type_rolling"
+        case homeLiveEventsCount = "home_live_num_matches"
     }
 
     init(from decoder: Decoder) throws {
@@ -114,6 +116,10 @@ struct FirebaseClientSettings: Codable {
         
         let hasRollingWeeklyLimitsInt = (try? container.decode(Int.self, forKey: .hasRollingWeeklyLimits)) ?? 0
         self.hasRollingWeeklyLimits = hasRollingWeeklyLimitsInt == 1
+        
+        let homeLiveEventsCountInt = (try? container.decode(Int.self, forKey: .homeLiveEventsCount)) ?? 3
+        self.homeLiveEventsCount = homeLiveEventsCountInt
+        
     }
 
     init(showInformationPopUp: Bool,
@@ -127,7 +133,7 @@ struct FirebaseClientSettings: Codable {
          partialCashoutEnabled: Bool,
          replaySportsCodes: [String],
          ungroupedMarkets: [String],
-         hasRollingWeeklyLimits: Bool) {
+         hasRollingWeeklyLimits: Bool, homeLiveEventsCount: Int) {
 
         self.showInformationPopUp = showInformationPopUp
         self.currentAppVersion = currentAppVersion
@@ -141,6 +147,7 @@ struct FirebaseClientSettings: Codable {
         self.replaySportsCodes = replaySportsCodes
         self.ungroupedMarkets = ungroupedMarkets
         self.hasRollingWeeklyLimits = hasRollingWeeklyLimits
+        self.homeLiveEventsCount = homeLiveEventsCount
     }
 
 }
@@ -158,6 +165,7 @@ extension FirebaseClientSettings {
                                       partialCashoutEnabled: false,
                                       replaySportsCodes: [],
                                       ungroupedMarkets: [],
-                                      hasRollingWeeklyLimits: false)
+                                      hasRollingWeeklyLimits: false,
+                                      homeLiveEventsCount: 3)
     }
 }

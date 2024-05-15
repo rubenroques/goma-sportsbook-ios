@@ -190,6 +190,8 @@ struct Match: Equatable {
 
 extension Match {
 
+    
+    
     private func convertStatus(_ sport: String, _ statusCode: String) -> String {
         switch (sport, statusCode) {
         case ("FBL", "not_started"):

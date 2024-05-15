@@ -165,14 +165,29 @@ class MatchLineTableViewCell: UITableViewCell {
         
         self.loadingView.startAnimating()
 //  
-//        if let match = viewModel.match {
-//            self.loadingView.stopAnimating()
-//            self.setupWithMatch(match)
-//        }
+        if let match = viewModel.match {
+            self.loadingView.stopAnimating()
+            self.setupWithMatch(match)
+        }
         
         self.matchInfoPublisher?.cancel()
+        self.matchInfoPublisher = nil
         
         self.matchInfoPublisher = viewModel.$match
+            .removeDuplicates(by: { oldMatch, newMatch in
+                if oldMatch == nil && newMatch == nil {
+                    return true
+                }
+                if let oldMatchValue = oldMatch,
+                   let newMatchValue = newMatch {
+                    let visuallySimilar = Match.visuallySimilar(lhs: oldMatchValue, rhs: newMatchValue)
+                    if !visuallySimilar {
+                        print("stop")
+                    }
+                    return visuallySimilar
+                }
+                return false
+            })
             .receive(on: DispatchQueue.main)
             .sink { completion in
                 switch completion {
@@ -205,7 +220,7 @@ class MatchLineTableViewCell: UITableViewCell {
     }
 
     private func setupWithMatch(_ newMatch: Match) {
-        
+        /*
         guard
             let currentMatch = self.match
         else {
@@ -298,10 +313,10 @@ class MatchLineTableViewCell: UITableViewCell {
             self.match = newMatch
             self.collectionView.reloadData()
         }
-        
+        */
         // Legacy refresh
-//        self.match = newMatch
-//        self.collectionView.reloadData()
+        self.match = newMatch
+        self.collectionView.reloadData()
     }
 
     func shouldShowCountryFlag(_ show: Bool) {

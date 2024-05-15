@@ -12,7 +12,9 @@ import Combine
 class SportRadarEventStorage {
 
     var eventPublisher: AnyPublisher<Event?, Never> {
-        self.eventSubject.eraseToAnyPublisher()
+        self.eventSubject
+            .debounce(for: .seconds(1.0), scheduler: RunLoop.main)
+            .eraseToAnyPublisher()
     }
     
     private var eventSubject: CurrentValueSubject<Event?, Never>
@@ -87,7 +89,7 @@ extension SportRadarEventStorage {
     // Market updates
     func addMarket(_ market: Market) {
         
-        print("storage-eventWithBalancedMarkets - adding market: \(self.eventSubject.value?.homeTeamName ?? "") vs \(self.eventSubject.value?.awayTeamName ?? "") - \(market.name) \(market.outcomes.map(\.name).joined(separator: ";") )")
+        print("\(Date().timeIntervalSinceReferenceDate) storage-eventWithBalancedMarkets \(self.eventSubject.value?.id ?? "") - adding market: \(self.eventSubject.value?.homeTeamName ?? "") vs \(self.eventSubject.value?.awayTeamName ?? "") - \(market.name) [\(market.outcomes.map(\.name).joined(separator: ";"))]")
         
         if self.marketsDictionary[market.id] != nil { // We already
             updateMarketTradability(withId: market.id, isTradable: market.isTradable)
@@ -113,7 +115,7 @@ extension SportRadarEventStorage {
         
         if let marketSubject = self.marketsDictionary[id] {
             let market = marketSubject.value
-            print("storage-eventWithBalancedMarkets - removeMarket market: \(self.eventSubject.value?.homeTeamName ?? "") vs \(self.eventSubject.value?.awayTeamName ?? "") - \(market.name) \(market.outcomes.map(\.name).joined(separator: ";") )")
+            print("\(Date().timeIntervalSinceReferenceDate) storage-eventWithBalancedMarkets \(self.eventSubject.value?.id ?? "") - removeMarket market: \(self.eventSubject.value?.homeTeamName ?? "") vs \(self.eventSubject.value?.awayTeamName ?? "") - \(market.name) [\(market.outcomes.map(\.name).joined(separator: ";"))]")
         }
         
         self.marketsDictionary.removeValue(forKey: id)

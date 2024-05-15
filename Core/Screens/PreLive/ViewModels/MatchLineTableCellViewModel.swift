@@ -43,13 +43,11 @@ class MatchLineTableCellViewModel {
         self.$match
             .compactMap({ $0 })
             .removeDuplicates(by: { oldMatch, newMatch in
-                let sameMatch = oldMatch.id == newMatch.id
-                let sameMarkets = oldMatch.markets.map(\.id) == newMatch.markets.map(\.id)
-                if sameMatch && sameMarkets {
+                if Match.visuallySimilar(lhs: oldMatch, rhs: newMatch) {
                     return true
                 }
                 else {
-                    print("not the same match+markets")
+                    print("DebugPublishers line \(oldMatch.id)-\(newMatch.id); \(oldMatch.markets.count)-\(newMatch.markets.count)")
                     return false
                 }
             })
@@ -62,7 +60,6 @@ class MatchLineTableCellViewModel {
                 }
             }
             .store(in: &self.cancellables)
-            
     }
     
     deinit {
@@ -270,4 +267,58 @@ extension MatchLineTableCellViewModel {
         
     }
 
+}
+
+public protocol VisuallySimilar {
+    /// Returns a Boolean value indicating whether two values are visually similar.
+    ///
+    /// - Parameters:
+    ///   - lhs: A value to compare.
+    ///   - rhs: Another value to compare.
+    static func visuallySimilar(lhs: Self, rhs: Self) -> Bool
+}
+
+
+extension Match: VisuallySimilar {
+    static func visuallySimilar(lhs: Self, rhs: Self) -> Bool {
+        return lhs.id == rhs.id &&
+        lhs.status == rhs.status &&
+        lhs.homeParticipant.id == rhs.homeParticipant.id &&
+        lhs.awayParticipant.id == rhs.awayParticipant.id &&
+        Array.visuallySimilar(lhs: lhs.markets, rhs: rhs.markets)
+    }
+}
+
+extension Market: VisuallySimilar {
+    static func visuallySimilar(lhs: Self, rhs: Self) -> Bool {
+        return lhs.id == rhs.id &&
+        lhs.name == rhs.name &&
+        Array.visuallySimilar(lhs: lhs.outcomes, rhs: rhs.outcomes)
+    }
+}
+
+extension Outcome: VisuallySimilar {
+    static func visuallySimilar(lhs: Self, rhs: Self) -> Bool {
+        return lhs.id == rhs.id &&
+        lhs.translatedName == rhs.translatedName &&
+        BettingOffer.visuallySimilar(lhs: lhs.bettingOffer, rhs: rhs.bettingOffer)
+    }
+}
+
+extension BettingOffer: VisuallySimilar {
+    static func visuallySimilar(lhs: Self, rhs: BettingOffer) -> Bool {
+        return lhs.id == rhs.id
+    }
+}
+
+extension Array: VisuallySimilar where Element: VisuallySimilar {
+    public static func visuallySimilar(lhs: Array<Element>, rhs: Array<Element>) -> Bool {
+        guard lhs.count == rhs.count else { return false }
+        for (left, right) in zip(lhs, rhs) {
+            if !Element.visuallySimilar(lhs: left, rhs: right) {
+                return false
+            }
+        }
+        return true
+    }
 }
