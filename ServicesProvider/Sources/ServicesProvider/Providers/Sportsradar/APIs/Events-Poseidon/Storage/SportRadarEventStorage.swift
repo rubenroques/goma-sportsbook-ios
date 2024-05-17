@@ -37,12 +37,20 @@ class SportRadarEventStorage {
         self.marketsDictionary = [:]
         self.outcomesDictionary = [:]
 
+        var debugOutput = "OddDebug: Event - \(event.id)\n"
         for market in event.markets {
+            debugOutput = debugOutput + "   OddDebug: Market - \(market.id)\n"
             for outcome in market.outcomes {
-                outcomesDictionary[outcome.id] = CurrentValueSubject(outcome)
+                debugOutput = debugOutput + "      OddDebug: Outcome - \(outcome.id)\n"
+                self.outcomesDictionary[outcome.id] = CurrentValueSubject(outcome)
             }
-            marketsDictionary[market.id] = CurrentValueSubject(market)
+            self.marketsDictionary[market.id] = CurrentValueSubject(market)
         }
+        
+        if event.id == "3921509.1" {
+            print(debugOutput)
+        }
+        
         self.eventSubject.send(event)
     }
 

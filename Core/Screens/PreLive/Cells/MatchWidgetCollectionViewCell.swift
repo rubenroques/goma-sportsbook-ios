@@ -656,6 +656,7 @@ class MatchWidgetCollectionViewCell: UICollectionViewCell {
 //            debugLabel.centerYAnchor.constraint(equalTo: self.contentView.centerYAnchor, constant: 15),
 //        ])
 //#endif
+//        
         
     }
     
@@ -686,14 +687,16 @@ class MatchWidgetCollectionViewCell: UICollectionViewCell {
     override func prepareForReuse() {
         super.prepareForReuse()
         
-        print("BlinkDebug: cell \(self.debugUUID.self) prepareForReuse")
+        print("BlinkDebug: Cell \(self.debugUUID.self) prepareForReuse")
         
         if let viewModel = self.viewModel {
             let viewModelDesc = "[\(viewModel.match.id) \(viewModel.match.homeParticipant.name) vs \(viewModel.match.awayParticipant.name)]"
-            print("BlinkDebug: cell  \(self.debugUUID.self) old ViewModel: \(viewModelDesc)")
+            print("BlinkDebug: Cell  \(self.debugUUID.self) old ViewModel: \(viewModelDesc)")
         }
         
         self.viewModel = nil
+        
+        self.cancellables.removeAll()
         
         self.leftOutcome = nil
         self.middleOutcome = nil
@@ -716,6 +719,15 @@ class MatchWidgetCollectionViewCell: UICollectionViewCell {
         self.isMiddleOutcomeButtonSelected = false
         self.isRightOutcomeButtonSelected = false
         
+        self.oddsStackView.alpha = 1.0
+        self.oddsStackView.isHidden = false
+        
+        self.homeBaseView.alpha = 1.0
+        self.drawBaseView.alpha = 1.0
+        self.awayBaseView.alpha = 1.0
+        
+        return
+        
         self.eventNameLabel.text = ""
         self.homeParticipantNameLabel.text = ""
         self.awayParticipantNameLabel.text = ""
@@ -723,27 +735,24 @@ class MatchWidgetCollectionViewCell: UICollectionViewCell {
         self.homeNameLabel.text = ""
         self.awayNameLabel.text = ""
         
-        self.detailedScoreView.updateScores([:])
-        
-        self.outrightNameLabel.text = ""
-        //
-        self.dateStackView.isHidden = false
-        self.resultStackView.isHidden = true
-        
-        self.dateLabel.isHidden = false
-        self.timeLabel.isHidden = false
-        
         self.dateLabel.text = ""
         self.timeLabel.text = ""
         
         self.dateNewLabel.text = ""
         self.timeNewLabel.text = ""
         
-        self.liveMatchDotBaseView.isHidden = true
-        self.liveTipView.isHidden = true
+        self.homeOddTitleLabel.text = ""
+        self.drawOddTitleLabel.text = ""
+        self.awayOddTitleLabel.text = ""
         
-        self.gradientBorderView.isHidden = true
-        self.liveGradientBorderView.isHidden = true
+        self.setHomeOddValueLabel(toText: "")
+        self.setDrawOddValueLabel(toText: "")
+        self.setAwayOddValueLabel(toText: "")
+        
+        self.detailedScoreView.updateScores([:])
+        
+        self.outrightNameLabel.text = ""
+        
         
         self.matchTimeLabel.text = ""
         self.resultLabel.text = ""
@@ -753,33 +762,32 @@ class MatchWidgetCollectionViewCell: UICollectionViewCell {
         
         self.marketNameLabel.text = ""
         
+        //
+        self.dateStackView.isHidden = false
+        self.resultStackView.isHidden = true
+        
+        self.dateLabel.isHidden = false
+        self.timeLabel.isHidden = false
+        
+        
+        self.liveMatchDotBaseView.isHidden = true
+        self.liveTipView.isHidden = true
+        
+        self.gradientBorderView.isHidden = true
+        self.liveGradientBorderView.isHidden = true
+        
         self.marketNamePillLabelView.title = ""
         self.marketNamePillLabelView.isHidden = true
         
         //
-        self.homeOddTitleLabel.text = ""
-        self.drawOddTitleLabel.text = ""
-        self.awayOddTitleLabel.text = ""
-        
-        self.setHomeOddValueLabel(toText: "")
-        self.setDrawOddValueLabel(toText: "")
-        self.setAwayOddValueLabel(toText: "")
-        
         self.homeBaseView.isUserInteractionEnabled = true
         self.drawBaseView.isUserInteractionEnabled = true
         self.awayBaseView.isUserInteractionEnabled = true
-        
-        self.homeBaseView.alpha = 1.0
-        self.drawBaseView.alpha = 1.0
-        self.awayBaseView.alpha = 1.0
-        
+                
         self.locationFlagImageView.isHidden = false
         self.locationFlagImageView.image = nil
         
         self.sportTypeImageView.image = nil
-        
-        self.oddsStackView.alpha = 1.0
-        self.oddsStackView.isHidden = false
         
         // self.awayBaseView.isHidden = false
         // self.drawBaseView.isHidden = false
@@ -795,8 +803,6 @@ class MatchWidgetCollectionViewCell: UICollectionViewCell {
         self.suspendedBaseView.isHidden = true
         self.seeAllBaseView.isHidden = true
         self.outrightBaseView.isHidden = true
-        
-        self.cancellables.removeAll()
         
         self.adjustDesignToCardHeightStyle()
         self.setupWithTheme()
@@ -1713,6 +1719,10 @@ extension MatchWidgetCollectionViewCell {
     }
     
     private func configureOutcomes(withMarket market: Market) {
+        
+        let matchDesc = "[\(self.viewModel?.match.id ?? "") \(self.viewModel?.match.homeParticipant.name ?? "") vs ... ]"
+        print("OddDebug: configureOutcomes \(matchDesc)")
+        
         if let outcome = market.outcomes[safe: 0] {
             
             if let nameDigit1 = market.nameDigit1 {
@@ -1740,6 +1750,8 @@ extension MatchWidgetCollectionViewCell {
                 self.setHomeOddValueLabel(toText: "-")
             }
             
+            print("OddDebug: configureOutcomes left \(matchDesc) \(outcome.bettingOffer.id)")
+            
             self.leftOddButtonSubscriber = Env.servicesProvider
                 .subscribeToEventOnListsOutcomeUpdates(withId: outcome.bettingOffer.id)
                 .compactMap({ $0 })
@@ -1750,8 +1762,12 @@ extension MatchWidgetCollectionViewCell {
                 .map(\.bettingOffer)
                 .receive(on: DispatchQueue.main)
                 .sink(receiveCompletion: { completion in
-                    // print("leftOddButtonSubscriber subscribeToOutcomeUpdates completion: \(completion)")
+                    print("leftOddButtonSubscriber subscribeToOutcomeUpdates completion: \(completion)")
+                    print("OddDebug: configureOutcomes left finished \(matchDesc)")
                 }, receiveValue: { [weak self] bettingOffer in
+                    
+                    print("OddDebug: configureOutcomes left found \(matchDesc)")
+                    
                     guard let weakSelf = self else { return }
                     
                     if !bettingOffer.isAvailable || bettingOffer.decimalOdd.isNaN {
@@ -1821,7 +1837,7 @@ extension MatchWidgetCollectionViewCell {
                 .map(\.bettingOffer)
                 .receive(on: DispatchQueue.main)
                 .sink(receiveCompletion: { completion in
-                    // print("middleOddButtonSubscriber subscribeToOutcomeUpdates completion: \(completion)")
+                    print("middleOddButtonSubscriber subscribeToOutcomeUpdates completion: \(completion)")
                 }, receiveValue: { [weak self] bettingOffer in
                     
                     guard let weakSelf = self else { return }
@@ -1891,7 +1907,7 @@ extension MatchWidgetCollectionViewCell {
                 .map(\.bettingOffer)
                 .receive(on: DispatchQueue.main)
                 .sink(receiveCompletion: { completion in
-                    // print("leftOddButtonSubscriber subscribeToOutcomeUpdates completion: \(completion)")
+                    print("rightOddButtonSubscriber subscribeToOutcomeUpdates completion: \(completion)")
                 }, receiveValue: { [weak self] bettingOffer in
                     
                     guard let weakSelf = self else { return }

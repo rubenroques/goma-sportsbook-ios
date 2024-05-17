@@ -320,7 +320,8 @@ class LiveEventsViewModel: NSObject {
     //
 
     func fetchLiveMatches() {
-
+        self.liveMatchesViewModelDataSource.resetCaches()
+        
         self.liveMatchesHasMorePages = true
         self.liveMatchesSubscriber?.cancel()
 
@@ -406,7 +407,7 @@ class LiveEventsViewModel: NSObject {
                     self.outrightCompetitions = mappedOutrights ?? []
                     
                     let mappedMatches = ServiceProviderModelMapper.matches(fromEventsGroups: splittedEventGroups.matchesEventGroups)
-                    self.upcomingMatches = mappedMatches
+                    self.upcomingMatches = Array(mappedMatches.prefix(10))
 
                     self.isLoadingUpcomingSubject.send(false)
                 case .disconnected:
@@ -538,6 +539,9 @@ class LiveMatchesViewModelDataSource: NSObject, UITableViewDataSource, UITableVi
     
     var matchStatsViewModelForMatch: ((Match) -> MatchStatsViewModel?)?
         
+    private var liveViewModelsCache: [String: MatchLineTableCellViewModel] = [:]
+    private var upcomingViewModelsCache: [String: MatchLineTableCellViewModel] = [:]
+    
     var isEmpty: Bool {
         return self.liveMatches.isEmpty && self.upcomingMatches.isEmpty && self.outrightCompetitions.isEmpty
     }
@@ -573,7 +577,7 @@ class LiveMatchesViewModelDataSource: NSObject, UITableViewDataSource, UITableVi
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         switch indexPath.section {
         case 0:
-            if let cell = tableView.dequeueCellType(MatchLineTableViewCell.self),
+            if let cell = tableView.dequeueReusableCell(withIdentifier: MatchLineTableViewCell.identifier+"Live") as? MatchLineTableViewCell,
                let match = self.liveMatches[safe: indexPath.row] {
                 
                 if let matchStatsViewModel = self.matchStatsViewModelForMatch?(match) {
@@ -742,6 +746,23 @@ class LiveMatchesViewModelDataSource: NSObject, UITableViewDataSource, UITableVi
     }
     
     func tableView(_ tableView: UITableView, willDisplay cell: UITableViewCell, forRowAt indexPath: IndexPath) {
+        
+    }
+    
+}
+
+extension LiveMatchesViewModelDataSource {
+    
+    func resetCaches() {
+        self.liveViewModelsCache.removeAll()
+        self.upcomingViewModelsCache.removeAll()
+    }
+    
+    func liveViewModel(forMatchId matchId: String) {
+        
+    }
+    
+    func preLiveViewModel(forMatchId matchId: String) {
         
     }
     

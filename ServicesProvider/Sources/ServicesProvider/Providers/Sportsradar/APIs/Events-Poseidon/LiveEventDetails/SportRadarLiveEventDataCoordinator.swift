@@ -16,7 +16,8 @@ class SportRadarLiveEventDataCoordinator {
 
     let liveEventContentIdentifier: ContentIdentifier
 
-    weak var liveDataExtendedSubscription: Subscription?
+    // TODO: check why live highlights in home are losing the reference to this subscription
+    var liveDataExtendedSubscription: Subscription?
     var isActive: Bool {
         if self.waitingSubscription {
             // We haven't tried to subscribe or the
@@ -27,7 +28,8 @@ class SportRadarLiveEventDataCoordinator {
     }
 
     var eventLiveDataPublisher: AnyPublisher<SubscribableContent<EventLiveData>, ServiceProviderError> {
-        return liveEventCurrentValueSubject.eraseToAnyPublisher()
+        return liveEventCurrentValueSubject
+            .eraseToAnyPublisher()
     }
 
     private var liveEventCurrentValueSubject: CurrentValueSubject<SubscribableContent<EventLiveData>, ServiceProviderError> = .init(.disconnected)

@@ -364,9 +364,8 @@ extension SportRadarModels {
                 }
                 self.outcomes = self.outcomes.reversed()
             }
-            
+
         }
-        
         
     }
     

@@ -17,7 +17,9 @@ class SportRadarEventSecundaryMarketsCoordinator {
 
     let eventSecundaryMarketsIdentifier: ContentIdentifier
     
-    weak var subscription: Subscription?
+    // TODO: check why live highlights in home are losing the reference to this subscription.
+    // TODO: This vars needs to be weak for the auto unsubscribe to work
+    var subscription: Subscription?
     
     var isActive: Bool {
         if self.waitingSubscription {
@@ -25,6 +27,7 @@ class SportRadarEventSecundaryMarketsCoordinator {
             // subscribe request it's ongoing right now
             return true
         }
+        
         return self.subscription != nil
     }
 
@@ -84,7 +87,11 @@ class SportRadarEventSecundaryMarketsCoordinator {
     }
 
     deinit {
-        
+        let debugPrint = "OddDebug: SportRadarEventSecundaryMarketsCoordinator deinit \(self.eventSecundaryMarketsIdentifier)"
+        if debugPrint.contains("3921509.1") {
+            print("breakpoint")
+        }
+        print(debugPrint)
     }
     
     func start() {
@@ -172,11 +179,11 @@ class SportRadarEventSecundaryMarketsCoordinator {
 extension SportRadarEventSecundaryMarketsCoordinator {
 
     func updatedSecundaryMarkets(forContentIdentifier identifier: ContentIdentifier, onEvent event: Event) {
-                
+
         if self.eventSecundaryMarketsIdentifier != identifier {
             return
         }
-                
+
         self.storage.storeEvent(event)
     }
     

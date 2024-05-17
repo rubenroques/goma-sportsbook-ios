@@ -297,7 +297,7 @@ class MatchWidgetCellViewModel {
         self.match = match
         
         let viewModelDesc = "[\(match.id) \(match.homeParticipant.name) vs \(match.awayParticipant.name)]"
-        print("BlinkDebug: cellVM init \(viewModelDesc) \(matchWidgetType) \(matchWidgetStatus)")
+        print("BlinkDebug: CellVM init \(viewModelDesc) \(matchWidgetType) \(matchWidgetStatus)")
         
         switch matchWidgetStatus {
         case .live, .preLive:
@@ -356,11 +356,7 @@ class MatchWidgetCellViewModel {
                 if let newDetailedScores = matchLiveDataValue.detailedScores {
                     matchValue.detailedScores = newDetailedScores
                 }
-                
-                if matchValue.id == "3918263.1" {
-                    print("ResultDebug: \(String(describing: matchValue.detailedScores))")
-                }
-                
+
                 return matchValue
             }
             .sink { [weak self] updatedMatch in
@@ -369,24 +365,39 @@ class MatchWidgetCellViewModel {
             .store(in: &self.cancellables)
         
         // Keep our matchWidgetStatus updated with the match
-//        self.$match
-//            .map(\.status)
-//            .removeDuplicates()
-//            .sink { [weak self] matchStatus in
-//                if matchStatus.isLive || matchStatus.isPostLive {
-//                    self?.matchWidgetStatus = .live
-//                }
-//                else if matchStatus.isPreLive {
-//                    self?.matchWidgetStatus = .preLive
-//                }
-//                else {
-//                    self?.matchWidgetStatus = .unknown
-//                }
-//            }
-//            .store(in: &self.cancellables)
+        /*
+        self.$match
+            .map(\.status)
+            .removeDuplicates()
+            .withPrevious()
+            .sink { [weak self] previousMatchStatus, matchStatus in
+                if let previousMatchStatusValue = previousMatchStatus {
+                    if previousMatchStatusValue.isPreLive && matchStatus.isLive {
+                        self?.matchWidgetStatus = .live
+                    }
+                    
+                }
+                else {
+                    if matchStatus.isLive || matchStatus.isPostLive {
+                        self?.matchWidgetStatus = .live
+                    }
+                    else if matchStatus.isPreLive {
+                        self?.matchWidgetStatus = .preLive
+                    }
+                    else {
+                        self?.matchWidgetStatus = .unknown
+                    }
+                }
+            }
+            .store(in: &self.cancellables)
+        */
         
         self.loadBoostedOddOldValueIfNeeded()
 
+    }
+    
+    deinit {
+        
     }
 
     func updateWithMatch(_ match: Match) {
