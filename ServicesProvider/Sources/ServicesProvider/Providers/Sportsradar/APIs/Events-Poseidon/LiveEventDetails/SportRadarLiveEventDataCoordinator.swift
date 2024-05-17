@@ -16,14 +16,14 @@ class SportRadarLiveEventDataCoordinator {
 
     let liveEventContentIdentifier: ContentIdentifier
 
-    weak var subscription: Subscription?
+    weak var liveDataExtendedSubscription: Subscription?
     var isActive: Bool {
         if self.waitingSubscription {
             // We haven't tried to subscribe or the
             // subscribe request it's ongoing right now
             return true
         }
-        return self.subscription != nil
+        return self.liveDataExtendedSubscription != nil
     }
 
     var eventLiveDataPublisher: AnyPublisher<SubscribableContent<EventLiveData>, ServiceProviderError> {
@@ -55,10 +55,11 @@ class SportRadarLiveEventDataCoordinator {
     
     private var cancellables = Set<AnyCancellable>()
 
-    init(eventId: String, sessionToken: String, storage: SportRadarEventStorage) {
+    init(eventId: String, sessionToken: String, storage: SportRadarEventStorage, liveDataExtendedSubscription: Subscription? = nil) {
         print("LoadingBug ledc 1")
         self.eventIdObserved = eventId
         
+        self.liveDataExtendedSubscription = liveDataExtendedSubscription
         self.sessionToken = sessionToken
 
         let liveDataContentType = ContentType.eventDetailsLiveData
@@ -76,12 +77,16 @@ class SportRadarLiveEventDataCoordinator {
                     return Fail(error: ServiceProviderError.onSubscribe).eraseToAnyPublisher()
                 }
                 
-                let subscription = Subscription(contentIdentifier: self.liveEventContentIdentifier,
-                                                sessionToken: self.sessionToken,
-                                                unsubscriber: self)
-                self.liveEventCurrentValueSubject.send(.connected(subscription: subscription))
-                self.subscription = subscription
-                
+                if let liveDataExtendedSubscription = self.liveDataExtendedSubscription {
+                    self.liveEventCurrentValueSubject.send(.connected(subscription: liveDataExtendedSubscription))
+                }
+                else {
+                    let liveDataExtendedSubscription = Subscription(contentIdentifier: self.liveEventContentIdentifier,
+                                                    sessionToken: self.sessionToken,
+                                                    unsubscriber: self)
+                    self.liveEventCurrentValueSubject.send(.connected(subscription: liveDataExtendedSubscription))
+                    self.liveDataExtendedSubscription = liveDataExtendedSubscription
+                }
                 self.waitingSubscription = false
                 
                 return self.subscribeLiveEventDetails()

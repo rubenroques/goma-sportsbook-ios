@@ -644,19 +644,18 @@ class MatchWidgetCollectionViewCell: UICollectionViewCell {
         self.adjustDesignToCardHeightStyle()
         self.setupWithTheme()
         
-        
-#if DEBUG
-        let debugLabel = UILabel()
-        debugLabel.translatesAutoresizingMaskIntoConstraints = false
-        debugLabel.text = self.debugUUID.uuidString
-        debugLabel.font = UIFont.systemFont(ofSize: 13)
-        self.addSubview(debugLabel)
-        
-        NSLayoutConstraint.activate([
-            debugLabel.centerXAnchor.constraint(equalTo: self.contentView.centerXAnchor),
-            debugLabel.centerYAnchor.constraint(equalTo: self.contentView.centerYAnchor, constant: 15),
-        ])
-#endif
+//#if DEBUG
+//        let debugLabel = UILabel()
+//        debugLabel.translatesAutoresizingMaskIntoConstraints = false
+//        debugLabel.text = self.debugUUID.uuidString
+//        debugLabel.font = UIFont.systemFont(ofSize: 13)
+//        self.addSubview(debugLabel)
+//        
+//        NSLayoutConstraint.activate([
+//            debugLabel.centerXAnchor.constraint(equalTo: self.contentView.centerXAnchor),
+//            debugLabel.centerYAnchor.constraint(equalTo: self.contentView.centerYAnchor, constant: 15),
+//        ])
+//#endif
         
     }
     
@@ -782,8 +781,8 @@ class MatchWidgetCollectionViewCell: UICollectionViewCell {
         self.oddsStackView.alpha = 1.0
         self.oddsStackView.isHidden = false
         
-        self.awayBaseView.isHidden = false
-        self.drawBaseView.isHidden = false
+        // self.awayBaseView.isHidden = false
+        // self.drawBaseView.isHidden = false
         
         self.isFavorite = false
         
@@ -815,8 +814,6 @@ class MatchWidgetCollectionViewCell: UICollectionViewCell {
     }
     
     func setupWithTheme() {
-        self.baseView.backgroundColor = UIColor.App.backgroundCards
-        
         self.liveMatchDotBaseView.backgroundColor = .clear
         self.liveMatchDotImageView.backgroundColor = .clear
         
@@ -1121,13 +1118,13 @@ class MatchWidgetCollectionViewCell: UICollectionViewCell {
         // Colors based of status
         switch self.viewModel?.matchWidgetStatus ?? .unknown {
         case .live:
-            // Live
             self.baseView.backgroundColor = UIColor.App.backgroundDrop
             self.contentRedesignBaseView.backgroundColor = self.baseView.backgroundColor
-        default:
+        case .preLive:
             self.baseView.backgroundColor = UIColor.App.backgroundCards
             self.contentRedesignBaseView.backgroundColor = self.baseView.backgroundColor
-            
+        case .unknown:
+            break
         }
         
         self.detailedScoreView.setupWithTheme()
@@ -1488,15 +1485,22 @@ extension MatchWidgetCollectionViewCell {
             }
             .store(in: &self.cancellables)
         
-        viewModel.$matchWidgetStatus
-            .removeDuplicates()
+        Publishers.CombineLatest(viewModel.$matchWidgetStatus, viewModel.isLiveCardPublisher)
+            .removeDuplicates(by: { oldPair, newPair in
+                return oldPair.0 == newPair.0 && oldPair.1 == newPair.1
+            })
             .receive(on: DispatchQueue.main)
-            .sink { [weak self] matchWidgetStatus in
-                switch matchWidgetStatus {
-                case .live:
+            .sink { [weak self] matchWidgetStatus, isLiveCard in
+                if isLiveCard {
                     self?.drawAsLiveCard()
-                case .preLive, .unknown:
-                    self?.drawAsPreLiveCard()
+                }
+                else {
+                    switch matchWidgetStatus {
+                    case .live:
+                        self?.drawAsLiveCard()
+                    case .preLive, .unknown:
+                        self?.drawAsPreLiveCard()
+                    }
                 }
             }
             .store(in: &self.cancellables)
@@ -1924,15 +1928,18 @@ extension MatchWidgetCollectionViewCell {
         
         if market.outcomes.count == 3 {
             self.homeBaseView.isHidden = false
-            self.awayBaseView.isHidden = false
             self.drawBaseView.isHidden = false
+            self.awayBaseView.isHidden = false
         }
         else if market.outcomes.count == 2 {
+            self.homeBaseView.isHidden = false
+            self.drawBaseView.isHidden = false
             self.awayBaseView.isHidden = true
         }
         else if market.outcomes.count == 1 {
-            self.awayBaseView.isHidden = true
+            self.homeBaseView.isHidden = false
             self.drawBaseView.isHidden = true
+            self.awayBaseView.isHidden = true
         }
     }
     
@@ -2149,10 +2156,47 @@ extension MatchWidgetCollectionViewCell {
 
     //
     func selectMiddleOddButton() {
+        /*
+        switch self.viewModel?.matchWidgetType ?? .normal {
+        case .normal, .topImage, .topImageOutright:
+            self.homeBaseView.backgroundColor = UIColor.App.buttonBackgroundPrimary
+            self.homeOddTitleLabel.textColor = UIColor.App.buttonTextPrimary
+            self.homeOddValueLabel.textColor = UIColor.App.buttonTextPrimary
+        case .boosted:
+            self.homeBoostedOddValueBaseView.backgroundColor = UIColor.App.highlightPrimary
+            self.homeBaseView.backgroundColor = UIColor.App.highlightPrimary
+            self.homeOddTitleLabel.textColor = UIColor.App.buttonTextPrimary
+            self.homeOddValueLabel.textColor = UIColor.App.buttonTextPrimary
+            self.homeBoostedOddArrowView.highlightColor = .black
+        case .backgroundImage:
+            ()
+        }
+        */
+        
         self.setupWithTheme()
     }
 
     func deselectMiddleOddButton() {
+        
+        // TODO: avoid calling the entire setup with theme
+        
+        /*
+        switch self.viewModel?.matchWidgetType ?? .normal {
+        case .normal, .topImage, .topImageOutright:
+            self.homeBaseView.backgroundColor = UIColor.App.backgroundOdds
+            self.homeOddTitleLabel.textColor = UIColor.App.textPrimary
+            self.homeOddValueLabel.textColor = UIColor.App.textPrimary
+        case .boosted:
+            self.homeBoostedOddValueBaseView.backgroundColor = UIColor(hex: 0x03061B)
+            self.homeBaseView.backgroundColor = UIColor(hex: 0x03061B)
+            self.homeOddTitleLabel.textColor = UIColor.App.buttonTextPrimary
+            self.homeOddValueLabel.textColor = UIColor.App.buttonTextPrimary
+            self.homeBoostedOddArrowView.highlightColor = UIColor.App.highlightPrimary
+        case .backgroundImage:
+            ()
+        }
+        */
+        
         self.setupWithTheme()
     }
 

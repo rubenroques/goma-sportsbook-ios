@@ -172,7 +172,7 @@ class MatchLineTableViewCell: UITableViewCell {
             }
         }
         
-        // self.collectionView.reloadData()
+        self.collectionView.reloadData()
     }
 
     override func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {
@@ -184,57 +184,38 @@ class MatchLineTableViewCell: UITableViewCell {
     func configure(withViewModel viewModel: MatchLineTableCellViewModel) {
         self.viewModel = viewModel
         
-        if let matchValue = viewModel.match {
-            let matchDesc = "[\(matchValue.id) \(matchValue.homeParticipant.name) vs \(matchValue.awayParticipant.name)]"
-            print("BlinkDebug line (\(self.debugUUID.uuidString)) configure(withViewModel \(matchDesc)")
-        }
+        let matchDesc = "[\(viewModel.match.id) \(viewModel.match.homeParticipant.name) vs \(viewModel.match.awayParticipant.name)]"
+        print("BlinkDebug line (\(self.debugUUID.uuidString)) configure(withViewModel \(matchDesc)")
         
-        self.loadingView.startAnimating()
-        
-        if let match = viewModel.match {
-            self.loadingView.stopAnimating()
-            self.setupWithMatch(match)
-        }
+        self.loadingView.stopAnimating()
+        self.setupWithMatch(viewModel.match)
         
         self.matchInfoPublisher?.cancel()
         self.matchInfoPublisher = nil
         
         self.matchInfoPublisher = viewModel.$match
             .removeDuplicates(by: { [weak self] oldMatch, newMatch in
-                if oldMatch == nil && newMatch == nil {
+                let visuallySimilar = Match.visuallySimilar(lhs: oldMatch, rhs: newMatch)
+                if visuallySimilar.0 {
+                    print("BlinkDebug line (\(self?.debugUUID.uuidString ?? "")) ignoring")
                     return true
                 }
-                if let oldMatchValue = oldMatch,
-                   let newMatchValue = newMatch {
-                    let visuallySimilar = Match.visuallySimilar(lhs: oldMatchValue, rhs: newMatchValue)
-                    
-                    if visuallySimilar.0 {
-                        print("BlinkDebug line (\(self?.debugUUID.uuidString ?? "")) ignoring")
-                        return true
-                    }
-                    else {
-                        print("BlinkDebug line (\(self?.debugUUID.uuidString ?? "")) not ignoring:\(visuallySimilar.1 ?? "")")
-                        return false
-                    }
+                else {
+                    print("BlinkDebug line (\(self?.debugUUID.uuidString ?? "")) not ignoring:\(visuallySimilar.1 ?? "")")
+                    return false
                 }
-                return false
             })
             .receive(on: DispatchQueue.main)
-            .sink { [weak self] completion in
+            .sink { completion in
                 switch completion {
                 case .finished: ()
                 case .failure: ()
                 }
             } receiveValue: { [weak self] match in
-                if let matchValue = match {
-                    let matchDesc = "[\(matchValue.id) \(matchValue.homeParticipant.name) vs \(matchValue.awayParticipant.name)]"
-                    print("BlinkDebug line (\(self?.debugUUID.uuidString ?? "")) collectionView.reloadData requested \(matchDesc)")
-                    self?.setupWithMatch(matchValue)
-                    self?.loadingView.stopAnimating()
-                }
-                else {
-                    self?.loadingView.stopAnimating()
-                }
+                let matchDesc = "[\(match.id) \(match.homeParticipant.name) vs \(match.awayParticipant.name)]"
+                print("BlinkDebug line (\(self?.debugUUID.uuidString ?? "")) collectionView.reloadData requested \(matchDesc)")
+                self?.setupWithMatch(match)
+                self?.loadingView.stopAnimating()
             }
 
     }
@@ -253,12 +234,8 @@ class MatchLineTableViewCell: UITableViewCell {
     }
 
     private func setupWithMatch(_ newMatch: Match) {
-        
-        self.match = newMatch
-        self.collectionView.reloadData()
-        return
-        
-        //
+        // self.match = newMatch
+        // self.collectionView.reloadData()
         
         guard
             let currentMatch = self.match
@@ -268,118 +245,16 @@ class MatchLineTableViewCell: UITableViewCell {
             self.collectionView.reloadData()
             return
         }
-
-        /*
         
-         var oldMarketsList = currentMatch.markets
-        var newMarketsList = newMatch.markets
-        
-        var updated: [IndexPath] = []
-        var deletions: [IndexPath] = []
-        var insertions: [IndexPath] = []
-        
-        // if default market is different
-        if let firstOldMarket = currentMatch.markets.first {
-            // Existe um current first market
-            if let firstNewMarket = newMatch.markets.first {
-                // Existe um new first market
-                if firstOldMarket != firstNewMarket {
-                    updated.append(IndexPath(item: 0, section: 0))
-                }
-            }
-            else {
-                // Não existe um new first market
-                deletions.append(IndexPath(item: 0, section: 0))
-            }
+        // We have a match already
+        if Match.visuallySimilar(lhs: currentMatch, rhs: currentMatch).0 {
+            self.match = newMatch
+            self.collectionView.reloadSections(IndexSet(integer: 1)) // reload secundary markets
         }
         else {
-            // Não existe um current first market
-            if newMatch.markets.first != nil {
-                // Existe um new first market
-                insertions.append(IndexPath(item: 0, section: 0))
-            }
-            else {
-                // Não existe um new first market
-            }
-        }
-        
-        // First market index (section 0) is already processed
-        if oldMarketsList.count >= 1 {
-            oldMarketsList.removeFirst()
-        }
-        if newMarketsList.count >= 1 {
-            newMarketsList.removeFirst()
-        }
-        
-        let diff = newMarketsList.difference(from: oldMarketsList)
-
-        insertions.append(contentsOf: diff.insertions.compactMap { change in
-            switch change {
-            case .insert(let offset, _, _):
-                return IndexPath(row: offset, section: 1)
-            default:
-                return nil
-            }
-        })
-
-        deletions.append(contentsOf: diff.removals.compactMap { change in
-            switch change {
-            case .remove(let offset, _, _):
-                return IndexPath(row: offset, section: 1)
-            default:
-                return nil
-            }
-        })
-            
-        // see all section - 2
-        // updated.append(IndexPath(item: 0, section: 2))
-        
-        self.match = newMatch
-
-        self.collectionView.performBatchUpdates({
-            self.collectionView.insertItems(at: insertions)
-            self.collectionView.deleteItems(at: deletions)
-            self.collectionView.reloadItems(at: updated)
-        }, completion: nil)
-        */
-        
-        if currentMatch.id == newMatch.id && currentMatch.markets.first == newMatch.markets.first {
             self.match = newMatch
-            
-            let newMatchDesc = "[\(currentMatch.id) \(currentMatch.homeParticipant.name) vs \(currentMatch.awayParticipant.name)]"
-            let oldMatchDesc = "[\(newMatch.id) \(newMatch.homeParticipant.name) vs \(newMatch.awayParticipant.name)]"
-
-            print("BlinkDebug line (\(self.debugUUID.uuidString)) collectionView.reloadData keep first cell")
-            print("  | --BlinkDebug line (\(self.debugUUID.uuidString)) current: \(oldMatchDesc)")
-            print("  | --BlinkDebug line (\(self.debugUUID.uuidString)) new: \(newMatchDesc)")
-            self.collectionView.reloadSections(IndexSet(integer: 1))
-            // self.collectionView.reloadSections(IndexSet(integer: 2))
-        }
-        else {
-            
-            let newMatchDesc = "[\(currentMatch.id) \(currentMatch.homeParticipant.name) vs \(currentMatch.awayParticipant.name) - \(currentMatch.markets.first?.id)]"
-            let oldMatchDesc = "[\(newMatch.id) \(newMatch.homeParticipant.name) vs \(newMatch.awayParticipant.name) - \(newMatch.markets.first?.id)]"
-
-            print("BlinkDebug line (\(self.debugUUID.uuidString)) collectionView.reloadData refresh all")
-            print("  | --BlinkDebug line (\(self.debugUUID.uuidString)) current: \(oldMatchDesc)")
-            print("  | --BlinkDebug line (\(self.debugUUID.uuidString)) new: \(newMatchDesc)")
-            print("BlinkDebug line (\(self.debugUUID.uuidString)) collectionView.reloadData refresh all")
-            // Legacy refresh
-            self.match = newMatch
-            
             self.collectionView.reloadData()
-            
-             // self.collectionView.reloadSections(IndexSet(integer: 0))
-             // self.collectionView.reloadSections(IndexSet(integer: 1))
-             // self.collectionView.reloadSections(IndexSet(integer: 2))
         }
-        
-        
-        // Legacy refresh
-        // self.match = newMatch
-        // self.collectionView.reloadData()
-        
-        print("BlinkDebug line (\(self.debugUUID.uuidString)) collectionView.reloadData executed")
     }
 
     func shouldShowCountryFlag(_ show: Bool) {

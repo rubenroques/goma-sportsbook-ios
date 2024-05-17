@@ -11,8 +11,8 @@ import ServicesProvider
 
 class MatchLineTableCellViewModel {
     
-    @Published private(set) var match: Match?
-    @Published private(set) var matchWidgetCellViewModel: MatchWidgetCellViewModel?
+    @Published private(set) var match: Match
+    @Published private(set) var matchWidgetCellViewModel: MatchWidgetCellViewModel
     
     @Published private(set) var status: MatchWidgetStatus = .unknown
     
@@ -26,17 +26,14 @@ class MatchLineTableCellViewModel {
         self.status = status
 
         self.match = match
-        self.matchWidgetCellViewModel = MatchWidgetCellViewModel(match: match, matchWidgetStatus: self.status)
-        
-        self.loadEventDetails(fromId: match.id)
+        self.matchWidgetCellViewModel = MatchWidgetCellViewModel(match: match, matchWidgetStatus: status)
         
         self.observeMatchValues()
+        self.loadEventDetails()
     }
     
     private func observeMatchValues() {
-        
         self.$match
-            .compactMap({ $0 })
             .removeDuplicates(by: { oldMatch, newMatch in
                 let visuallySimilar = Match.visuallySimilar(lhs: oldMatch, rhs: newMatch)
                 if visuallySimilar.0 {
@@ -49,12 +46,7 @@ class MatchLineTableCellViewModel {
                 }
             })
             .sink { [weak self] match in
-                if let matchWidgetCellViewModel = self?.matchWidgetCellViewModel {
-                    matchWidgetCellViewModel.updateWithMatch(match)
-                }
-                else {
-                    self?.matchWidgetCellViewModel = MatchWidgetCellViewModel(match: match, matchWidgetStatus: self?.status ?? .unknown)
-                }
+                self?.matchWidgetCellViewModel.updateWithMatch(match)
             }
             .store(in: &self.cancellables)
     }
@@ -64,47 +56,16 @@ class MatchLineTableCellViewModel {
     }
     
     //
-    private func loadEventDetails(fromId id: String) {
-        
-        if let match = self.match {
-            // We already have an event
-            if match.status.isLive {
-                self.loadLiveEventDetails(matchId: match.id)
-            }
-            else if self.status == .live {
-                self.loadLiveEventDetails(matchId: match.id)
-            }
-            else {
-                self.loadPreLiveEventDetails(matchId: match.id)
-            }
+    private func loadEventDetails() {
+        if self.match.status.isLive {
+            self.loadLiveEventDetails(matchId: match.id)
         }
         else if self.status == .live {
-            // We only have the event Id but we know its live
-            self.loadLiveEventDetails(matchId: id)
+            self.loadLiveEventDetails(matchId: match.id)
         }
         else {
-            // We only have the event Id, we need to check if it's live or prelive
-            Env.servicesProvider.getEventLiveData(eventId: id)
-                .sink { [weak self] completion in
-                    switch completion {
-                    case .finished:
-                        print("getEventLiveData completed")
-                    case .failure(let error):
-                        switch error {
-                        case .resourceUnavailableOrDeleted:
-                            self?.loadPreLiveEventDetails(matchId: id)
-                        default:
-                            print("getEventLiveData other error:", dump(error))
-                        }
-                    }
-                } receiveValue: { [weak self] eventLiveData in
-                    // The event is live
-                    self?.loadLiveEventDetails(matchId: id)
-                }
-                .store(in: &self.cancellables)
-            
+            self.loadPreLiveEventDetails(matchId: match.id)
         }
-        
     }
 }
 

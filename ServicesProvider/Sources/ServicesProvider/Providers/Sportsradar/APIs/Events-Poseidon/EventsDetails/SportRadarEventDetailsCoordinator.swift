@@ -16,7 +16,7 @@ class SportRadarEventDetailsCoordinator {
     let eventDetailsIdentifier: ContentIdentifier
     let liveDataContentIdentifier: ContentIdentifier
     
-    weak var liveDataSubscription: Subscription?
+    weak var liveDataExtendedSubscription: Subscription?
     
     weak var marketsSubscription: Subscription?
     
@@ -42,10 +42,13 @@ class SportRadarEventDetailsCoordinator {
     
     private var cancellables = Set<AnyCancellable>()
 
-    init(matchId: String, sessionToken: String, storage: SportRadarEventStorage) {
+    init(matchId: String, sessionToken: String, storage: SportRadarEventStorage, liveDataExtendedSubscription: Subscription? = nil, marketsSubscription: Subscription? = nil) {
         self.sessionToken = sessionToken
         self.storage = storage
 
+        self.liveDataExtendedSubscription = liveDataExtendedSubscription
+        self.marketsSubscription = marketsSubscription
+    
         let eventDetailsType = ContentType.eventDetails
         let eventDetailsRoute = ContentRoute.eventDetails(eventId: matchId)
         let eventDetailsIdentifier = ContentIdentifier(contentType: eventDetailsType, contentRoute: eventDetailsRoute)
@@ -61,27 +64,34 @@ class SportRadarEventDetailsCoordinator {
         // Boot the coordinator
         self.checkEventDetailsAvailable()
             .flatMap { [weak self] _ -> AnyPublisher<Void, ServiceProviderError>  in
-                guard let self = self else {
+                guard let weakSelf = self else {
                     return Fail(error: ServiceProviderError.onSubscribe).eraseToAnyPublisher()
                 }
-                return self.subscribeEventDetails()
+                return weakSelf.subscribeEventDetails()
             }
             .sink { [weak self] completion in
-                guard let self = self else { return }
+                guard let weakSelf = self else { return }
+                
                 switch completion {
                 case .finished:
-                    let subscription = Subscription(contentIdentifier: self.eventDetailsIdentifier,
-                                                    sessionToken: self.sessionToken,
-                                                    unsubscriber: self)
-                    self.eventDetailsCurrentValueSubject.send(.connected(subscription: subscription))
-                    self.marketsSubscription = subscription
                     
-                    self.requestEventLiveData()
+                    if let marketsSubscription = weakSelf.marketsSubscription {
+                        weakSelf.eventDetailsCurrentValueSubject.send(.connected(subscription: marketsSubscription))
+                    }
+                    else {
+                        let subscription = Subscription(contentIdentifier: weakSelf.eventDetailsIdentifier,
+                                                        sessionToken: weakSelf.sessionToken,
+                                                        unsubscriber: weakSelf)
+                        weakSelf.eventDetailsCurrentValueSubject.send(.connected(subscription: subscription))
+                        weakSelf.marketsSubscription = subscription
+                    }
+                    
+                    weakSelf.requestEventLiveData()
                     
                 case .failure(let error):
-                    self.eventDetailsCurrentValueSubject.send(completion: .failure(error))
+                    weakSelf.eventDetailsCurrentValueSubject.send(completion: .failure(error))
                 }
-                self.waitingSubscription = false
+                weakSelf.waitingSubscription = false
             } receiveValue: { _ in
             }
             .store(in: &self.cancellables)
@@ -161,7 +171,7 @@ class SportRadarEventDetailsCoordinator {
         }
 
         print("LoadingBug requestEventLiveData")
-        let sessionDataTask = self.session.dataTask(with: request) { data, response, error in
+        let sessionDataTask = self.session.dataTask(with: request) { [weak self] data, response, error in
             guard
                 (error == nil),
                 let httpResponse = response as? HTTPURLResponse,
@@ -171,11 +181,16 @@ class SportRadarEventDetailsCoordinator {
                 print("LoadingBug requestEventLiveData not found")
                 return
             }
-            let subscription = Subscription(contentIdentifier: self.liveDataContentIdentifier,
-                                            sessionToken: self.sessionToken,
-                                            unsubscriber: self)
-            self.liveDataSubscription = subscription
-            self.marketsSubscription?.associateSubscription(subscription)
+            if let liveDataExtendedSubscription = self?.liveDataExtendedSubscription {
+                // the liveDataSubscription isn't managed by this class
+            }
+            else if let weakSelf = self {
+                let liveDataExtendedSubscription = Subscription(contentIdentifier: weakSelf.liveDataContentIdentifier,
+                                                sessionToken: weakSelf.sessionToken,
+                                                unsubscriber: weakSelf)
+                weakSelf.liveDataExtendedSubscription = liveDataExtendedSubscription
+                weakSelf.marketsSubscription?.associateSubscription(liveDataExtendedSubscription)
+            }
         }
 
         sessionDataTask.resume()

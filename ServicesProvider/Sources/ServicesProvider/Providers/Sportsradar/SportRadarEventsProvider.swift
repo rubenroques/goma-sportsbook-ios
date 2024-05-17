@@ -654,9 +654,17 @@ class SportRadarEventsProvider: EventsProvider {
             return eventDetailsCoordinator.eventDetailsPublisher
         }
         else {
+            // Check if we already have a subscription to
+            var liveDataExtendedSubscription: Subscription?
+            if let liveEventDetailsCoordinator = self.getValidLiveEventDetailsCoordinator(forKey: eventId) {
+                liveDataExtendedSubscription = liveEventDetailsCoordinator.liveDataExtendedSubscription
+            }
+            
             let eventDetailsCoordinator = SportRadarEventDetailsCoordinator(matchId: eventId,
                                                                             sessionToken: sessionToken.hash,
-                                                                            storage: SportRadarEventStorage())
+                                                                            storage: SportRadarEventStorage(),
+                                                                            liveDataExtendedSubscription: liveDataExtendedSubscription,
+                                                                            marketsSubscription: nil)
             self.addEventDetailsCoordinator(eventDetailsCoordinator, withKey: eventId)
             return eventDetailsCoordinator.eventDetailsPublisher
         }
@@ -678,12 +686,19 @@ class SportRadarEventsProvider: EventsProvider {
             return liveEventDetailsCoordinator.eventLiveDataPublisher
         }
         else {
+            // Check if we already have a subscription to
+            var liveDataExtendedSubscription: Subscription?
+            if let eventDetailsCoordinator = self.getValidEventDetailsCoordinator(forKey: id) {
+                liveDataExtendedSubscription = eventDetailsCoordinator.liveDataExtendedSubscription
+            }
+            
             let liveEventDetailsCoordinator = SportRadarLiveEventDataCoordinator(eventId: id,
-                                                                             sessionToken: sessionToken.hash,
-                                                                             storage: SportRadarEventStorage() )
+                                                                                 sessionToken: sessionToken.hash,
+                                                                                 storage: SportRadarEventStorage(),
+                                                                                 liveDataExtendedSubscription: liveDataExtendedSubscription)
             self.addLiveEventDetailsCoordinator(liveEventDetailsCoordinator, withKey: id)
             return liveEventDetailsCoordinator.eventLiveDataPublisher
-         }
+        }
 
     }
     

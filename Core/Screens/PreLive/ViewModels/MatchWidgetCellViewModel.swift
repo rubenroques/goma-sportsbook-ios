@@ -128,6 +128,7 @@ class MatchWidgetCellViewModel {
                 if matchWidgetStatus == .live {
                     return true
                 }
+                
                 switch match.status {
                 case .notStarted, .unknown:
                     return false
@@ -295,11 +296,25 @@ class MatchWidgetCellViewModel {
                       
         self.match = match
         
+        let viewModelDesc = "[\(match.id) \(match.homeParticipant.name) vs \(match.awayParticipant.name)]"
+        print("BlinkDebug: cellVM init \(viewModelDesc) \(matchWidgetType) \(matchWidgetStatus)")
+        
+        switch matchWidgetStatus {
+        case .live, .preLive:
+            self.matchWidgetStatus = matchWidgetStatus
+        case .unknown:
+            if match.status.isLive || match.status.isPostLive {
+                self.matchWidgetStatus = .live
+            }
+            else {
+                self.matchWidgetStatus = .preLive
+            }
+        }
+        
+        self.matchWidgetType = matchWidgetType
+        
         self.matchMarketsSubject = .init(match)
         self.matchLiveDataSubject = .init(nil)
-        
-        self.matchWidgetStatus = matchWidgetStatus
-        self.matchWidgetType = matchWidgetType
         
         var shouldRequestLiveDataFallback = false
         switch matchWidgetStatus {
@@ -353,22 +368,22 @@ class MatchWidgetCellViewModel {
             }
             .store(in: &self.cancellables)
         
-        // Make sure we keep our matchWidgetStatus updated with the match
-        self.$match
-            .map(\.status)
-            .removeDuplicates()
-            .sink { [weak self] matchStatus in
-                if matchStatus.isLive || matchStatus.isPostLive {
-                    self?.matchWidgetStatus = .live
-                }
-                else if matchStatus.isPreLive {
-                    self?.matchWidgetStatus = .preLive
-                }
-                else {
-                    self?.matchWidgetStatus = .unknown
-                }
-            }
-            .store(in: &self.cancellables)
+        // Keep our matchWidgetStatus updated with the match
+//        self.$match
+//            .map(\.status)
+//            .removeDuplicates()
+//            .sink { [weak self] matchStatus in
+//                if matchStatus.isLive || matchStatus.isPostLive {
+//                    self?.matchWidgetStatus = .live
+//                }
+//                else if matchStatus.isPreLive {
+//                    self?.matchWidgetStatus = .preLive
+//                }
+//                else {
+//                    self?.matchWidgetStatus = .unknown
+//                }
+//            }
+//            .store(in: &self.cancellables)
         
         self.loadBoostedOddOldValueIfNeeded()
 
@@ -385,10 +400,6 @@ class MatchWidgetCellViewModel {
 extension MatchWidgetCellViewModel {
     
     private func subscribeMatchLiveData(withId matchId: String, shouldRequestLiveDataFallback fallback: Bool) {
-        #if DEBUG
-        return
-        #endif
-        
         self.subscribeMatchLiveDataOnLists(withId: matchId, shouldRequestLiveDataFallback: fallback)
     }
     

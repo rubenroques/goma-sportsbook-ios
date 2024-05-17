@@ -101,7 +101,7 @@ class PillLabelView: UIView {
     
     
     func setupWithTheme() {
-        
+
         self.borderView.layer.borderColor = UIColor.App.separatorLineSecondary.cgColor
         self.textLabel.textColor = UIColor.App.textSecondary
         self.lineView.backgroundColor = UIColor.App.separatorLineSecondary

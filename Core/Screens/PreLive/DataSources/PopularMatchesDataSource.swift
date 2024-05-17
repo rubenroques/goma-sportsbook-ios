@@ -48,6 +48,7 @@ class PopularMatchesDataSource: NSObject {
             .eraseToAnyPublisher()
 
         return Publishers.Merge3(outrightsChangedArrayPublisher, matchesChangedArrayPublisher, self.forcedRefreshPassthroughSubject)
+            .debounce(for: .milliseconds(200), scheduler: DispatchQueue.main)
             .map({ _ in })
             .print("PopularMatchesDataSource dataChangedPublisher send")
             .eraseToAnyPublisher()
@@ -250,7 +251,6 @@ extension PopularMatchesDataSource {
         return filteredMatches
     }
 
-
 }
 
 extension PopularMatchesDataSource: UITableViewDataSource, UITableViewDelegate {
@@ -419,6 +419,8 @@ extension PopularMatchesDataSource: UITableViewDataSource, UITableViewDelegate {
             self.fetchPopularMatchesNextPage()
         }
     }
+    
+    
 
 }
 

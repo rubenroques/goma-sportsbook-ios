@@ -249,14 +249,10 @@ extension MyGamesViewController: UITableViewDataSource, UITableViewDelegate {
                     .dropFirst()
                     .sink(receiveValue: { [weak self] match in
                         guard let self = self else { return }
-
-                        if let match = match {
-
-                            if !self.viewModel.fetchedMatchesWithMarketsPublisher.value.contains(where: {
-                                $0.id == match.id
-                            }) {
-                                self.viewModel.fetchedMatchesWithMarketsPublisher.value.append(match)
-                            }
+                        if !self.viewModel.fetchedMatchesWithMarketsPublisher.value.contains(where: {
+                            $0.id == match.id
+                        }) {
+                            self.viewModel.fetchedMatchesWithMarketsPublisher.value.append(match)
                         }
                     })
                     .store(in: &cancellables)
