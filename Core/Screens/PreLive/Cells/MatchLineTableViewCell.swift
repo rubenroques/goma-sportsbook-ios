@@ -11,6 +11,10 @@ import ServicesProvider
 
 class MatchLineTableViewCell: UITableViewCell {
 
+    //
+    private var debugUUID = UUID()
+    //
+    
     private var viewModel: MatchLineTableCellViewModel?
 
     var matchStatsViewModel: MatchStatsViewModel?
@@ -63,6 +67,8 @@ class MatchLineTableViewCell: UITableViewCell {
     override func awakeFromNib() {
         super.awakeFromNib()
 
+        print("BlinkDebug: line awakeFromNib")
+        
         self.selectionStyle = .none
 
         self.loadingView.hidesWhenStopped = true
@@ -110,11 +116,26 @@ class MatchLineTableViewCell: UITableViewCell {
         self.collectionViewBottomMarginConstraint.constant = StyleHelper.cardsStyleMargin()
 
         self.setupWithTheme()
+//        
+//        #if DEBUG
+//        let debugLabel = UILabel()
+//        debugLabel.translatesAutoresizingMaskIntoConstraints = false
+//        debugLabel.text = self.debugUUID.uuidString
+//        self.addSubview(debugLabel)
+//        
+//        NSLayoutConstraint.activate([
+//            debugLabel.centerXAnchor.constraint(equalTo: self.contentView.centerXAnchor),
+//            debugLabel.topAnchor.constraint(equalTo: self.contentView.topAnchor),
+//        ])
+//        #endif
+
     }
 
     override func prepareForReuse() {
         super.prepareForReuse()
 
+        print("BlinkDebug line (\(self.debugUUID.uuidString)) prepareForReuse")
+        
         self.selectionStyle = .none
 
         self.matchInfoPublisher?.cancel()
@@ -150,8 +171,8 @@ class MatchLineTableViewCell: UITableViewCell {
                 self.layoutIfNeeded()
             }
         }
-
-        self.collectionView.reloadData()
+        
+        // self.collectionView.reloadData()
     }
 
     override func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {
@@ -163,8 +184,13 @@ class MatchLineTableViewCell: UITableViewCell {
     func configure(withViewModel viewModel: MatchLineTableCellViewModel) {
         self.viewModel = viewModel
         
+        if let matchValue = viewModel.match {
+            let matchDesc = "[\(matchValue.id) \(matchValue.homeParticipant.name) vs \(matchValue.awayParticipant.name)]"
+            print("BlinkDebug line (\(self.debugUUID.uuidString)) configure(withViewModel \(matchDesc)")
+        }
+        
         self.loadingView.startAnimating()
-//  
+        
         if let match = viewModel.match {
             self.loadingView.stopAnimating()
             self.setupWithMatch(match)
@@ -174,33 +200,40 @@ class MatchLineTableViewCell: UITableViewCell {
         self.matchInfoPublisher = nil
         
         self.matchInfoPublisher = viewModel.$match
-            .removeDuplicates(by: { oldMatch, newMatch in
+            .removeDuplicates(by: { [weak self] oldMatch, newMatch in
                 if oldMatch == nil && newMatch == nil {
                     return true
                 }
                 if let oldMatchValue = oldMatch,
                    let newMatchValue = newMatch {
                     let visuallySimilar = Match.visuallySimilar(lhs: oldMatchValue, rhs: newMatchValue)
-                    if !visuallySimilar {
-                        print("stop")
+                    
+                    if visuallySimilar.0 {
+                        print("BlinkDebug line (\(self?.debugUUID.uuidString ?? "")) ignoring")
+                        return true
                     }
-                    return visuallySimilar
+                    else {
+                        print("BlinkDebug line (\(self?.debugUUID.uuidString ?? "")) not ignoring:\(visuallySimilar.1 ?? "")")
+                        return false
+                    }
                 }
                 return false
             })
             .receive(on: DispatchQueue.main)
-            .sink { completion in
+            .sink { [weak self] completion in
                 switch completion {
                 case .finished: ()
                 case .failure: ()
                 }
-            } receiveValue: { match in
-                if let match = match {
-                    self.setupWithMatch(match)
-                    self.loadingView.stopAnimating()
+            } receiveValue: { [weak self] match in
+                if let matchValue = match {
+                    let matchDesc = "[\(matchValue.id) \(matchValue.homeParticipant.name) vs \(matchValue.awayParticipant.name)]"
+                    print("BlinkDebug line (\(self?.debugUUID.uuidString ?? "")) collectionView.reloadData requested \(matchDesc)")
+                    self?.setupWithMatch(matchValue)
+                    self?.loadingView.stopAnimating()
                 }
                 else {
-                    self.loadingView.stopAnimating()
+                    self?.loadingView.stopAnimating()
                 }
             }
 
@@ -220,7 +253,13 @@ class MatchLineTableViewCell: UITableViewCell {
     }
 
     private func setupWithMatch(_ newMatch: Match) {
-        /*
+        
+        self.match = newMatch
+        self.collectionView.reloadData()
+        return
+        
+        //
+        
         guard
             let currentMatch = self.match
         else {
@@ -231,9 +270,8 @@ class MatchLineTableViewCell: UITableViewCell {
         }
 
         /*
-         
-         
-        var oldMarketsList = currentMatch.markets
+        
+         var oldMarketsList = currentMatch.markets
         var newMarketsList = newMatch.markets
         
         var updated: [IndexPath] = []
@@ -306,17 +344,42 @@ class MatchLineTableViewCell: UITableViewCell {
         */
         
         if currentMatch.id == newMatch.id && currentMatch.markets.first == newMatch.markets.first {
+            self.match = newMatch
+            
+            let newMatchDesc = "[\(currentMatch.id) \(currentMatch.homeParticipant.name) vs \(currentMatch.awayParticipant.name)]"
+            let oldMatchDesc = "[\(newMatch.id) \(newMatch.homeParticipant.name) vs \(newMatch.awayParticipant.name)]"
+
+            print("BlinkDebug line (\(self.debugUUID.uuidString)) collectionView.reloadData keep first cell")
+            print("  | --BlinkDebug line (\(self.debugUUID.uuidString)) current: \(oldMatchDesc)")
+            print("  | --BlinkDebug line (\(self.debugUUID.uuidString)) new: \(newMatchDesc)")
             self.collectionView.reloadSections(IndexSet(integer: 1))
+            // self.collectionView.reloadSections(IndexSet(integer: 2))
         }
         else {
+            
+            let newMatchDesc = "[\(currentMatch.id) \(currentMatch.homeParticipant.name) vs \(currentMatch.awayParticipant.name) - \(currentMatch.markets.first?.id)]"
+            let oldMatchDesc = "[\(newMatch.id) \(newMatch.homeParticipant.name) vs \(newMatch.awayParticipant.name) - \(newMatch.markets.first?.id)]"
+
+            print("BlinkDebug line (\(self.debugUUID.uuidString)) collectionView.reloadData refresh all")
+            print("  | --BlinkDebug line (\(self.debugUUID.uuidString)) current: \(oldMatchDesc)")
+            print("  | --BlinkDebug line (\(self.debugUUID.uuidString)) new: \(newMatchDesc)")
+            print("BlinkDebug line (\(self.debugUUID.uuidString)) collectionView.reloadData refresh all")
             // Legacy refresh
             self.match = newMatch
+            
             self.collectionView.reloadData()
+            
+             // self.collectionView.reloadSections(IndexSet(integer: 0))
+             // self.collectionView.reloadSections(IndexSet(integer: 1))
+             // self.collectionView.reloadSections(IndexSet(integer: 2))
         }
-        */
+        
+        
         // Legacy refresh
-        self.match = newMatch
-        self.collectionView.reloadData()
+        // self.match = newMatch
+        // self.collectionView.reloadData()
+        
+        print("BlinkDebug line (\(self.debugUUID.uuidString)) collectionView.reloadData executed")
     }
 
     func shouldShowCountryFlag(_ show: Bool) {
@@ -443,9 +506,11 @@ extension MatchLineTableViewCell: UICollectionViewDelegate, UICollectionViewData
             }
             
             if let cellViewModel = self.viewModel?.matchWidgetCellViewModel {
+                print("BlinkDebug line (\(self.debugUUID.uuidString)) viewModel for cell found")
                 cell.configure(withViewModel: cellViewModel)
             }
             else {
+                print("BlinkDebug line (\(self.debugUUID.uuidString)) viewModel for cell not found!")
                 let cellViewModel = MatchWidgetCellViewModel(match: match, matchWidgetStatus: knownStatus)
                 cell.configure(withViewModel: cellViewModel)
             }

@@ -243,7 +243,7 @@ class MatchDetailsViewModel: NSObject {
             }
             .store(in: &self.cancellables)
         
-        
+        //
         self.matchCurrentValueSubject.compactMap { loadableContent -> Match? in
             switch loadableContent {
             case .idle, .loading, .failed:
@@ -252,31 +252,12 @@ class MatchDetailsViewModel: NSObject {
                 return match
             }
         }
+        .first()
         .sink { [weak self] match in
             self?.subscribeMatchLiveDataOnLists(withId: match.id, sportAlphaCode: match.sport.alphaId ?? "")
         }
         .store(in: &self.cancellables)
-                
-        /*
-        Env.servicesProvider.subscribeToEventOnListsLiveDataUpdates(withId: self.matchId)
-            .receive(on: DispatchQueue.main)
-            .compactMap({ $0 })
-            .map(ServiceProviderModelMapper.match(fromEvent:))
-            .compactMap({ $0 })
-            .sink(receiveCompletion: { completion in
-                print("MatchWidgetCollectionViewCell matchSubscriber subscribeToEventLiveDataUpdates completion: \(completion)")
-            }, receiveValue: { [weak self] updatedMatch in
-                guard let self = self else { return }
 
-                var updatedMatchDetailedScores = [String: [String: Score]]()
-                if let detailedScores = updatedMatch.detailedScores,
-                   let alphaSportId = updatedMatch.sport.alphaId {
-                    updatedMatchDetailedScores[matchDetailedScores] = detailedScores
-                    self.matchDetailedScores.send(updatedMatchDetailedScores)
-                }
-            })
-            .store(in: &self.cancellables)
-        */
     }
 
 
@@ -294,7 +275,6 @@ class MatchDetailsViewModel: NSObject {
                     switch error {
                     case .resourceNotFound:
                         self?.subscribeMatchLiveDataUpdates(withId: matchId, sportAlphaCode: sportAlphaCode)
-                        
                     default:
                         print("MatchDetailsViewModel getMatchDetails Error retrieving data! \(error)")
                     }

@@ -111,6 +111,8 @@ extension SportRadarModels {
             }
             
             self.scores = Dictionary(uniqueKeysWithValues: scoresArray.map { ($0.key, $0) })
+            
+            print("ResultDebug:  EventLiveDataExtended scores: \(self.scores)")
             //
             
             //

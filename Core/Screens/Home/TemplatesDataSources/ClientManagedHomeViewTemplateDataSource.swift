@@ -11,7 +11,7 @@ import ServicesProvider
 
 class ClientManagedHomeViewTemplateDataSource {
 
-    private let fixedSection = 9
+    private let fixedSection = 8
     private var refreshPublisher = PassthroughSubject<Void, Never>.init()
 
     // User Alert
@@ -122,8 +122,6 @@ class ClientManagedHomeViewTemplateDataSource {
     }
     var promotedSportsMatches: [String: [Match]] = [:]
 
-    var supplementaryEventIds: [String] = []
-
     var matchWidgetCellViewModelCache: [String: MatchWidgetCellViewModel] = [:]
     var matchLineTableCellViewModelCache: [String: MatchLineTableCellViewModel] = [:]
 
@@ -163,7 +161,6 @@ class ClientManagedHomeViewTemplateDataSource {
         self.fetchHighlightMatches()
         self.fetchPromotedSports()
         self.fetchPromotionalStories()
-        self.fetchSupplementaryEventsIds()
         self.fetchTopCompetitions()
         self.fetchHighlightedLiveMatches()
     }
@@ -255,11 +252,6 @@ class ClientManagedHomeViewTemplateDataSource {
                 self?.refreshPublisher.send()
             }
             .store(in: &self.cancellables)
-    }
-
-    func fetchSupplementaryEventsIds() {
-        self.supplementaryEventIds = []
-        self.refreshPublisher.send()
     }
 
     func fetchQuickSwipeMatches() {
@@ -419,7 +411,11 @@ class ClientManagedHomeViewTemplateDataSource {
 
     func fetchHighlightedLiveMatches() {
         
+        #if DEBUG
+        let homeLiveEventsCount = 20
+        #else
         let homeLiveEventsCount = Env.businessSettingsSocket.clientSettings.homeLiveEventsCount
+        #endif
         
         self.highlightedLiveMatches = []
         
@@ -439,10 +435,6 @@ class ClientManagedHomeViewTemplateDataSource {
             }
             .store(in: &self.cancellables)
 
-    }
-    
-    private func supplementaryEventId(forIndex index: Int) -> String? {
-        return self.supplementaryEventIds[safe: index]
     }
     
     private func promotedMatch(forSection section: Int, forIndex index: Int) -> Match? {
@@ -496,8 +488,6 @@ extension ClientManagedHomeViewTemplateDataSource: HomeViewTemplateDataSource {
             return self.highlightedLiveMatches.count
         case 7:
             return !self.topCompetitionsLineCellViewModel.isEmpty ? 1 : 0
-        case 8:
-            return self.supplementaryEventIds.count
         default:
             ()
         }
@@ -605,8 +595,6 @@ extension ClientManagedHomeViewTemplateDataSource: HomeViewTemplateDataSource {
             return .highlightedLiveMatches
         case 7:
             return .topCompetitionsShortcuts
-        case 8:
-            return .supplementaryEvents
         default:
             ()
         }
@@ -737,9 +725,6 @@ extension ClientManagedHomeViewTemplateDataSource: HomeViewTemplateDataSource {
         switch section {
         case 0...7:
             ()
-        case 8:
-            match = nil // we don't have a match, just the id
-            matchId = self.supplementaryEventId(forIndex: index)
         default: // The remaining sections, each section for a promoted sport id
             match = self.promotedMatch(forSection: section, forIndex: index)
             matchId = match?.id
@@ -750,10 +735,6 @@ extension ClientManagedHomeViewTemplateDataSource: HomeViewTemplateDataSource {
         else {
             return nil
         }
-
-        if matchIdValue == "3373683.1" {
-            print("break")
-        }
         
         if let matchLineTableCellViewModel = self.matchLineTableCellViewModelCache[matchIdValue] {
             return matchLineTableCellViewModel
@@ -763,12 +744,7 @@ extension ClientManagedHomeViewTemplateDataSource: HomeViewTemplateDataSource {
             self.matchLineTableCellViewModelCache[matchIdValue] = matchLineTableCellViewModel
             return matchLineTableCellViewModel
         }
-        else {
-            let matchLineTableCellViewModel = MatchLineTableCellViewModel(matchId: matchIdValue, status: .unknown)
-            self.matchLineTableCellViewModelCache[matchIdValue] = matchLineTableCellViewModel
-            return matchLineTableCellViewModel
-        }
-
+        return nil
     }
     
     func topCompetitionsLineCellViewModel(forSection section: Int) -> TopCompetitionsLineCellViewModel? {

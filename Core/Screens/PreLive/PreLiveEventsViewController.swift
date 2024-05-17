@@ -662,6 +662,7 @@ class PreLiveEventsViewController: UIViewController {
     }
 
     func reloadData() {
+        print("BlinkDebug prelive tableView.reloadData")
         self.tableView.reloadData()
     }
 

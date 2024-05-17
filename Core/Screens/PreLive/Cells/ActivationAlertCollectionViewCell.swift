@@ -172,9 +172,9 @@ class ActivationAlertCollectionViewCell: UICollectionViewCell {
             let hoursDifference = expirationDate.hours(from: currentDate)
             let daysDifference = expirationDate.days(from: currentDate)
             
-            var timeLeft: String? = nil
+            var timeLeft: String?
             
-            if (hoursDifference < 0) {
+            if hoursDifference < 0 {
                 timeLeft = nil
             }
             if hoursDifference < 24 {

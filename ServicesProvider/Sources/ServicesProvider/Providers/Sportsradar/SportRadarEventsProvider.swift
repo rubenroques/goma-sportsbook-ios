@@ -1821,7 +1821,11 @@ extension SportRadarEventsProvider {
                     return fullEvent.eventId.split(separator: ":").last
                 }
                 .map(String.init)
+            #if DEBUG
+            return eventsIds // ["3891500.1"] // DEBUG EVENTS FOR LIVE SECTION
+            #else
             return eventsIds
+            #endif
         })
         .mapError({ error in
             return error

@@ -12,9 +12,13 @@ import Combine
 import ServicesProvider
 
 class MatchWidgetCollectionViewCell: UICollectionViewCell {
-
+    
+    //
+    var debugUUID = UUID()
+    //
+    
     @IBOutlet private weak var baseView: UIView!
-
+    
     lazy var gradientBorderView: GradientBorderView = {
         var gradientBorderView = GradientBorderView()
         gradientBorderView.translatesAutoresizingMaskIntoConstraints = false
@@ -24,10 +28,10 @@ class MatchWidgetCollectionViewCell: UICollectionViewCell {
         gradientBorderView.gradientColors = [UIColor.App.cardBorderLineGradient1,
                                              UIColor.App.cardBorderLineGradient2,
                                              UIColor.App.cardBorderLineGradient3]
-
+        
         return gradientBorderView
     }()
-
+    
     lazy var liveGradientBorderView: GradientBorderView = {
         var gradientBorderView = GradientBorderView()
         gradientBorderView.translatesAutoresizingMaskIntoConstraints = false
@@ -54,7 +58,7 @@ class MatchWidgetCollectionViewCell: UICollectionViewCell {
         
         return liveTipView
     }()
-
+    
     lazy var liveTipLabel: UILabel = {
         var liveTipLabel = UILabel()
         liveTipLabel.font = AppFont.with(type: .bold, size: 10)
@@ -62,10 +66,10 @@ class MatchWidgetCollectionViewCell: UICollectionViewCell {
         liveTipLabel.translatesAutoresizingMaskIntoConstraints = false
         liveTipLabel.setContentHuggingPriority(.defaultHigh, for: .horizontal)
         liveTipLabel.setContentCompressionResistancePriority(.defaultHigh, for: .horizontal)
-
+        
         return liveTipLabel
     }()
-
+    
     lazy var cashbackIconImageView: UIImageView = {
         let imageView = UIImageView()
         imageView.translatesAutoresizingMaskIntoConstraints = false
@@ -73,57 +77,57 @@ class MatchWidgetCollectionViewCell: UICollectionViewCell {
         imageView.contentMode = .scaleAspectFit
         return imageView
     }()
-
+    
     lazy var cashbackImageViewBaseTrailingConstraint: NSLayoutConstraint = {
         let constraint = NSLayoutConstraint()
         return constraint
     }()
-
+    
     lazy var cashbackImageViewLiveTrailingConstraint: NSLayoutConstraint = {
         let constraint = NSLayoutConstraint()
         return constraint
     }()
-
+    
     @IBOutlet private weak var baseStackView: UIStackView!
-
+    
     @IBOutlet private weak var favoritesIconImageView: UIImageView!
     
     @IBOutlet private weak var eventNameLabel: UILabel!
     @IBOutlet private weak var locationFlagImageView: UIImageView!
-
+    
     @IBOutlet private weak var sportTypeImageView: UIImageView!
-
+    
     @IBOutlet private weak var favoritesButton: UIButton!
-
+    
     @IBOutlet private weak var participantsBaseView: UIView!
-
+    
     @IBOutlet private weak var homeParticipantNameLabel: UILabel!
     @IBOutlet private weak var awayParticipantNameLabel: UILabel!
     
     @IBOutlet private weak var outrightNameBaseView: UIView!
     @IBOutlet private weak var outrightNameLabel: UILabel!
-
+    
     @IBOutlet private weak var resultStackView: UIStackView!
     @IBOutlet private weak var resultLabel: UILabel!
     @IBOutlet private weak var matchTimeLabel: UILabel!
     @IBOutlet private weak var liveMatchDotBaseView: UIView!
     @IBOutlet private weak var liveMatchDotImageView: UIView!
-
+    
     @IBOutlet private weak var headerLineStackView: UIStackView!
     @IBOutlet private weak var dateStackView: UIStackView!
     @IBOutlet private weak var dateLabel: UILabel!
     @IBOutlet private weak var timeLabel: UILabel!
-
+    
     @IBOutlet private weak var oddsStackView: UIStackView!
-
+    
     @IBOutlet private weak var homeBaseView: UIView!
     @IBOutlet private weak var homeOddTitleLabel: UILabel!
     @IBOutlet private weak var homeOddValueLabel: UILabel!
-
+    
     @IBOutlet private weak var drawBaseView: UIView!
     @IBOutlet private weak var drawOddTitleLabel: UILabel!
     @IBOutlet private weak var drawOddValueLabel: UILabel!
-
+    
     @IBOutlet private weak var awayBaseView: UIView!
     @IBOutlet private weak var awayOddTitleLabel: UILabel!
     @IBOutlet private weak var awayOddValueLabel: UILabel!
@@ -145,17 +149,17 @@ class MatchWidgetCollectionViewCell: UICollectionViewCell {
     @IBOutlet private weak var homeNewBoostedOddValueLabel: UILabel!
     @IBOutlet private weak var homeBoostedOddArrowView: BoostedArrowView!
     @IBOutlet private weak var homeOldBoostedOddValueLabel: UILabel!
-
+    
     @IBOutlet private weak var drawBoostedOddValueBaseView: UIView!
     @IBOutlet private weak var drawNewBoostedOddValueLabel: UILabel!
     @IBOutlet private weak var drawBoostedOddArrowView: BoostedArrowView!
     @IBOutlet private weak var drawOldBoostedOddValueLabel: UILabel!
-
+    
     @IBOutlet private weak var awayBoostedOddValueBaseView: UIView!
     @IBOutlet private weak var awayNewBoostedOddValueLabel: UILabel!
     @IBOutlet private weak var awayBoostedOddArrowView: BoostedArrowView!
     @IBOutlet private weak var awayOldBoostedOddValueLabel: UILabel!
-
+    
     //
     // ---
     @IBOutlet private weak var homeUpChangeOddValueImage: UIImageView!
@@ -164,20 +168,20 @@ class MatchWidgetCollectionViewCell: UICollectionViewCell {
     @IBOutlet private weak var drawDownChangeOddValueImage: UIImageView!
     @IBOutlet private weak var awayUpChangeOddValueImage: UIImageView!
     @IBOutlet private weak var awayDownChangeOddValueImage: UIImageView!
-
+    
     @IBOutlet private weak var suspendedBaseView: UIView!
     @IBOutlet private weak var suspendedLabel: UILabel!
-
+    
     @IBOutlet private weak var seeAllBaseView: UIView!
     @IBOutlet private weak var seeAllLabel: UILabel!
-
+    
     //
     // Design Constraints
     @IBOutlet private weak var topMarginSpaceConstraint: NSLayoutConstraint!
     @IBOutlet private weak var bottomMarginSpaceConstraint: NSLayoutConstraint!
     @IBOutlet private weak var leadingMarginSpaceConstraint: NSLayoutConstraint!
     @IBOutlet private weak var trailingMarginSpaceConstraint: NSLayoutConstraint!
-
+    
     @IBOutlet private weak var headerHeightConstraint: NSLayoutConstraint!
     @IBOutlet private weak var teamsHeightConstraint: NSLayoutConstraint!
     @IBOutlet private weak var resultCenterConstraint: NSLayoutConstraint!
@@ -199,19 +203,19 @@ class MatchWidgetCollectionViewCell: UICollectionViewCell {
     private var cachedCardsStyle: CardsStyle?
     //
     @IBOutlet private weak var mainContentBaseView: UIView!
-
+    
     @IBOutlet private weak var backgroundImageView: UIImageView!
     private let backgroundImageGradientLayer = CAGradientLayer()
-
+    
     private let backgroundImageBorderGradientLayer = CAGradientLayer()
     private let backgroundImageBorderShapeLayer = CAShapeLayer()
-
+    
     @IBOutlet private weak var topImageBaseView: UIView!
     @IBOutlet private weak var topImageView: UIImageView!
-
+    
     @IBOutlet private weak var boostedOddBottomLineView: UIView!
     private let boostedOddBottomLineAnimatedGradientView = GradientView()
-
+    
     //
     // New card design elements
     //
@@ -231,7 +235,7 @@ class MatchWidgetCollectionViewCell: UICollectionViewCell {
         view.translatesAutoresizingMaskIntoConstraints = false
         return view
     }()
-
+    
     private var topSeparatorAlphaLineView: FadingView = {
         let fadingView = FadingView()
         fadingView.translatesAutoresizingMaskIntoConstraints = false
@@ -293,14 +297,14 @@ class MatchWidgetCollectionViewCell: UICollectionViewCell {
         marketNamePillLabelView.translatesAutoresizingMaskIntoConstraints = false
         return marketNamePillLabelView
     }()
-
+    
     //
     //
     var viewModel: MatchWidgetCellViewModel?
-
+    
     static var normalCellHeight: CGFloat = 162
     static var smallCellHeight: CGFloat = 90
-
+    
     var isFavorite: Bool = false {
         didSet {
             if self.isFavorite {
@@ -311,30 +315,30 @@ class MatchWidgetCollectionViewCell: UICollectionViewCell {
             }
         }
     }
-
+    
     var hasCashback: Bool = false {
         didSet {
             self.cashbackIconImageView.isHidden = !hasCashback
         }
     }
-
+    
     var tappedMatchWidgetAction: ((Match) -> Void)?
     var didTapFavoriteMatchAction: ((Match) -> Void)?
     var didLongPressOdd: ((BettingTicket) -> Void)?
     var tappedMatchOutrightWidgetAction: ((Competition) -> Void)?
-
+    
     private var leftOddButtonSubscriber: AnyCancellable?
     private var middleOddButtonSubscriber: AnyCancellable?
     private var rightOddButtonSubscriber: AnyCancellable?
-
+    
     private var leftOutcome: Outcome?
     private var middleOutcome: Outcome?
     private var rightOutcome: Outcome?
-
+    
     private var currentHomeOddValue: Double?
     private var currentDrawOddValue: Double?
     private var currentAwayOddValue: Double?
-
+    
     private var isLeftOutcomeButtonSelected: Bool = false {
         didSet {
             self.isLeftOutcomeButtonSelected ? self.selectLeftOddButton() : self.deselectLeftOddButton()
@@ -350,25 +354,27 @@ class MatchWidgetCollectionViewCell: UICollectionViewCell {
             self.isRightOutcomeButtonSelected ? self.selectRightOddButton() : self.deselectRightOddButton()
         }
     }
-
+    
     private var leftOutcomeDisabled: Bool = false
     private var middleOutcomeDisabled: Bool = false
     private var rightOutcomeDisabled: Bool = false
- 
+    
     private var cancellables: Set<AnyCancellable> = []
-
+    
     override func awakeFromNib() {
         super.awakeFromNib()
-
+        
+        print("BlinkDebug: cell awakeFromNib")
+        
         // hide non normaml widget style elements
         self.backgroundImageView.isHidden = true
-
+        
         self.topImageBaseView.layer.masksToBounds = true
         self.topImageBaseView.isHidden = true
-
+        
         self.boostedOddBottomLineView.isHidden = true
         self.boostedTopRightCornerBaseView.isHidden = true
-
+        
         self.mainContentBaseView.isHidden = false
         //
         
@@ -382,59 +388,59 @@ class MatchWidgetCollectionViewCell: UICollectionViewCell {
         self.boostedOddBottomLineAnimatedGradientView.startPoint = CGPoint(x: 0.0, y: 0.5)
         self.boostedOddBottomLineAnimatedGradientView.endPoint = CGPoint(x: 1.0, y: 0.5)
         self.boostedOddBottomLineAnimatedGradientView.startAnimations()
-
+        
         self.boostedOddBottomLineView.addSubview(self.boostedOddBottomLineAnimatedGradientView)
-
+        
         NSLayoutConstraint.activate([
             self.boostedOddBottomLineView.leadingAnchor.constraint(equalTo: self.boostedOddBottomLineAnimatedGradientView.leadingAnchor),
             self.boostedOddBottomLineView.trailingAnchor.constraint(equalTo: self.boostedOddBottomLineAnimatedGradientView.trailingAnchor),
             self.boostedOddBottomLineView.topAnchor.constraint(equalTo: self.boostedOddBottomLineAnimatedGradientView.topAnchor),
             self.boostedOddBottomLineView.bottomAnchor.constraint(equalTo: self.boostedOddBottomLineAnimatedGradientView.bottomAnchor),
         ])
-
+        
         self.suspendedBaseView.layer.borderWidth = 1
         
         //
         // Create a gradient layer on top of the image
-
-//        let finalColor = UIColor(hex: 0x3B3B3B, alpha: 0.50)
-//        let initialColor = UIColor(hex: 0x000000, alpha: 0.73)
-
+        
+        //        let finalColor = UIColor(hex: 0x3B3B3B, alpha: 0.50)
+        //        let initialColor = UIColor(hex: 0x000000, alpha: 0.73)
+        
         let finalColor = UIColor.App.highlightSecondaryContrast.withAlphaComponent(0.3)
         let initialColor = UIColor.App.highlightSecondaryContrast.withAlphaComponent(1.0)
-
+        
         self.backgroundImageGradientLayer.frame = self.backgroundImageView.bounds
         self.backgroundImageGradientLayer.colors = [initialColor.cgColor, finalColor.cgColor]
         self.backgroundImageGradientLayer.locations = [0.0, 1.0]
         self.backgroundImageGradientLayer.startPoint = CGPoint(x: 0.5, y: 1.0) // bottom
         self.backgroundImageGradientLayer.endPoint = CGPoint(x: 0.5, y: 0.0) // top
         self.backgroundImageView.layer.addSublayer(self.backgroundImageGradientLayer)
-
+        
         //
         // Hide boosted odds views
         self.homeBoostedOddValueBaseView.isHidden = true
         self.drawBoostedOddValueBaseView.isHidden = true
         self.awayBoostedOddValueBaseView.isHidden = true
-
+        
         self.homeNewBoostedOddValueLabel.font = AppFont.with(type: .bold, size: 13)
         self.homeOldBoostedOddValueLabel.font = AppFont.with(type: .semibold, size: 9)
         self.drawNewBoostedOddValueLabel.font = AppFont.with(type: .bold, size: 13)
         self.drawOldBoostedOddValueLabel.font = AppFont.with(type: .semibold, size: 9)
         self.awayNewBoostedOddValueLabel.font = AppFont.with(type: .bold, size: 13)
         self.awayOldBoostedOddValueLabel.font = AppFont.with(type: .semibold, size: 9)
-
+        
         self.homeOldBoostedOddValueLabel.text = "-"
         self.drawOldBoostedOddValueLabel.text = "-"
         self.awayOldBoostedOddValueLabel.text = "-"
-
+        
         //
         //
         self.backgroundView?.backgroundColor = .clear
         self.backgroundColor = .clear
-
+        
         self.baseView.clipsToBounds = true
         self.baseView.layer.cornerRadius = 9
-
+        
         self.homeUpChangeOddValueImage.alpha = 0.0
         self.homeDownChangeOddValueImage.alpha = 0.0
         self.drawUpChangeOddValueImage.alpha = 0.0
@@ -449,18 +455,18 @@ class MatchWidgetCollectionViewCell: UICollectionViewCell {
         self.homeBaseView.backgroundColor = .clear
         self.drawBaseView.backgroundColor = .clear
         self.awayBaseView.backgroundColor = .clear
-
+        
         self.awayBaseView.isHidden = false
         self.drawBaseView.isHidden = false
-
+        
         self.suspendedBaseView.layer.cornerRadius = 4.5
         self.homeBaseView.layer.cornerRadius = 4.5
         self.drawBaseView.layer.cornerRadius = 4.5
         self.awayBaseView.layer.cornerRadius = 4.5
-
+        
         self.seeAllBaseView.layer.cornerRadius = 4.5
         self.outrightBaseView.layer.cornerRadius = 4.5
-
+        
         self.homeOddTitleLabel.text = ""
         self.drawOddTitleLabel.text = ""
         self.awayOddTitleLabel.text = ""
@@ -468,11 +474,11 @@ class MatchWidgetCollectionViewCell: UICollectionViewCell {
         self.setHomeOddValueLabel(toText: "")
         self.setDrawOddValueLabel(toText: "")
         self.setAwayOddValueLabel(toText: "")
-
+        
         self.homeBaseView.isUserInteractionEnabled = true
         self.drawBaseView.isUserInteractionEnabled = true
         self.awayBaseView.isUserInteractionEnabled = true
-
+        
         self.homeBaseView.alpha = 1.0
         self.drawBaseView.alpha = 1.0
         self.awayBaseView.alpha = 1.0
@@ -488,12 +494,12 @@ class MatchWidgetCollectionViewCell: UICollectionViewCell {
         self.detailedScoreView.updateScores([:])
         
         self.outrightNameLabel.text = ""
-
+        
         self.matchTimeLabel.text = ""
         self.resultLabel.text = ""
         
         self.matchTimeStatusNewLabel.text = ""
-
+        
         self.dateLabel.text = ""
         self.timeLabel.text = ""
         
@@ -506,7 +512,7 @@ class MatchWidgetCollectionViewCell: UICollectionViewCell {
         
         self.locationFlagImageView.image = nil
         self.sportTypeImageView.image = nil
-
+        
         self.oddsStackView.isHidden = false
         self.suspendedBaseView.isHidden = true
         self.seeAllBaseView.isHidden = true
@@ -521,7 +527,7 @@ class MatchWidgetCollectionViewCell: UICollectionViewCell {
         // Market view and label
         self.marketNameLabel.text = ""
         self.marketNameLabel.font = AppFont.with(type: .bold, size: 8)
-
+        
         self.marketNamePillLabelView.title = ""
         self.marketNamePillLabelView.isHidden = true
         
@@ -544,7 +550,7 @@ class MatchWidgetCollectionViewCell: UICollectionViewCell {
             self.baseView.topAnchor.constraint(equalTo: self.liveGradientBorderView.topAnchor),
             self.baseView.bottomAnchor.constraint(equalTo: self.liveGradientBorderView.bottomAnchor),
         ])
-
+        
         self.gradientBorderView.isHidden = true
         self.liveGradientBorderView.isHidden = true
         
@@ -553,32 +559,32 @@ class MatchWidgetCollectionViewCell: UICollectionViewCell {
         self.baseView.addSubview(self.liveTipView)
         self.liveTipView.addSubview(self.liveTipLabel)
         self.liveTipLabel.text = localized("live").uppercased() + " ⦿"
-
+        
         self.liveTipView.layer.cornerRadius = 9
-
+        
         NSLayoutConstraint.activate([
             self.liveTipView.heightAnchor.constraint(equalToConstant: 18),
-
+            
             self.liveTipView.leadingAnchor.constraint(equalTo: self.liveTipLabel.leadingAnchor, constant: -9),
             self.liveTipView.trailingAnchor.constraint(equalTo: self.liveTipLabel.trailingAnchor, constant: 18),
             self.liveTipView.centerYAnchor.constraint(equalTo: self.liveTipLabel.centerYAnchor),
             self.liveTipView.topAnchor.constraint(equalTo: self.liveTipLabel.topAnchor, constant: 2),
-
+            
             self.liveTipView.trailingAnchor.constraint(equalTo: self.baseView.trailingAnchor, constant: 8),
             self.liveTipView.topAnchor.constraint(equalTo: self.baseView.topAnchor, constant: 10)
         ])
-
+        
         // Cashback
         self.baseView.addSubview(self.cashbackIconImageView)
-
+        
         NSLayoutConstraint.activate([
             self.cashbackIconImageView.widthAnchor.constraint(equalToConstant: 20),
             self.cashbackIconImageView.heightAnchor.constraint(equalTo: self.cashbackIconImageView.widthAnchor),
             self.cashbackIconImageView.centerYAnchor.constraint(equalTo: self.headerLineStackView.centerYAnchor),
-
+            
             self.headerLineStackView.trailingAnchor.constraint(greaterThanOrEqualTo: self.cashbackIconImageView.leadingAnchor, constant: 1),
         ])
-
+        
         self.cashbackImageViewBaseTrailingConstraint = NSLayoutConstraint(item: self.cashbackIconImageView,
                                                                           attribute: .trailing,
                                                                           relatedBy: .equal,
@@ -587,7 +593,7 @@ class MatchWidgetCollectionViewCell: UICollectionViewCell {
                                                                           multiplier: 1,
                                                                           constant: -8)
         self.cashbackImageViewBaseTrailingConstraint.isActive = true
-
+        
         self.cashbackImageViewLiveTrailingConstraint = NSLayoutConstraint(item: self.cashbackIconImageView,
                                                                           attribute: .trailing,
                                                                           relatedBy: .equal,
@@ -596,99 +602,121 @@ class MatchWidgetCollectionViewCell: UICollectionViewCell {
                                                                           multiplier: 1,
                                                                           constant: -4)
         self.cashbackImageViewLiveTrailingConstraint.isActive = false
-
+        
         NSLayoutConstraint.activate([
             self.headerLineStackView.trailingAnchor.constraint(lessThanOrEqualTo: self.cashbackIconImageView.leadingAnchor, constant: -5)
         ])
-
+        
         self.bringSubviewToFront(self.suspendedBaseView)
         self.bringSubviewToFront(self.seeAllBaseView)
         self.bringSubviewToFront(self.outrightBaseView)
-
+        
         let tapLeftOddButton = UITapGestureRecognizer(target: self, action: #selector(didTapLeftOddButton))
         self.homeBaseView.addGestureRecognizer(tapLeftOddButton)
-
+        
         let longPressLeftOddButton = UILongPressGestureRecognizer(target: self, action: #selector(didLongPressLeftOddButton))
         self.homeBaseView.addGestureRecognizer(longPressLeftOddButton)
-
+        
         let tapMiddleOddButton = UITapGestureRecognizer(target: self, action: #selector(didTapMiddleOddButton))
         self.drawBaseView.addGestureRecognizer(tapMiddleOddButton)
-
+        
         let longPressMiddleOddButton = UILongPressGestureRecognizer(target: self, action: #selector(didLongPressMiddleOddButton))
         self.drawBaseView.addGestureRecognizer(longPressMiddleOddButton)
-
+        
         let tapRightOddButton = UITapGestureRecognizer(target: self, action: #selector(didTapRightOddButton))
         self.awayBaseView.addGestureRecognizer(tapRightOddButton)
-
+        
         let longPressRightOddButton = UILongPressGestureRecognizer(target: self, action: #selector(didLongPressRightOddButton))
         self.awayBaseView.addGestureRecognizer(longPressRightOddButton)
-
+        
         let tapMatchView = UITapGestureRecognizer(target: self, action: #selector(didTapMatchView))
         self.addGestureRecognizer(tapMatchView)
-
+        
         let longPressGestureRecognizer = UILongPressGestureRecognizer(target: self, action: #selector(didLongPressCard))
         self.participantsBaseView.addGestureRecognizer(longPressGestureRecognizer)
-
+        
         self.hasCashback = false
         
         //
         self.createRedesignInterface()
-
+        
         //
         self.adjustDesignToCardHeightStyle()
         self.setupWithTheme()
+        
+        
+#if DEBUG
+        let debugLabel = UILabel()
+        debugLabel.translatesAutoresizingMaskIntoConstraints = false
+        debugLabel.text = self.debugUUID.uuidString
+        debugLabel.font = UIFont.systemFont(ofSize: 13)
+        self.addSubview(debugLabel)
+        
+        NSLayoutConstraint.activate([
+            debugLabel.centerXAnchor.constraint(equalTo: self.contentView.centerXAnchor),
+            debugLabel.centerYAnchor.constraint(equalTo: self.contentView.centerYAnchor, constant: 15),
+        ])
+#endif
+        
     }
-
+    
     override func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {
         super.traitCollectionDidChange(previousTraitCollection)
-
+        
         self.adjustDesignToCardHeightStyle()
         self.setupWithTheme()
     }
-
+    
     override func layoutSubviews() {
         super.layoutSubviews()
-
+        
         self.backgroundImageBorderGradientLayer.frame = self.baseView.bounds
         self.backgroundImageBorderShapeLayer.path = UIBezierPath(roundedRect: self.baseView.bounds,
                                                                  cornerRadius: 9).cgPath
-
+        
         self.backgroundImageGradientLayer.frame = self.backgroundImageView.bounds
         self.locationFlagImageView.layer.cornerRadius = self.locationFlagImageView.frame.size.width / 2
-
+        
         self.locationFlagImageView.layer.borderWidth = 0.5
-
+        
         self.topImageView.roundCorners(corners: [.topRight, .topLeft], radius: 9)
         
         self.marketNameInnerView.layer.cornerRadius = self.marketNameInnerView.frame.size.height / 2
     }
-
+    
     override func prepareForReuse() {
         super.prepareForReuse()
-
+        
+        print("BlinkDebug: cell \(self.debugUUID.self) prepareForReuse")
+        
+        if let viewModel = self.viewModel {
+            let viewModelDesc = "[\(viewModel.match.id) \(viewModel.match.homeParticipant.name) vs \(viewModel.match.awayParticipant.name)]"
+            print("BlinkDebug: cell  \(self.debugUUID.self) old ViewModel: \(viewModelDesc)")
+        }
+        
         self.viewModel = nil
-
+        
         self.leftOutcome = nil
         self.middleOutcome = nil
         self.rightOutcome = nil
-
+        
         self.leftOddButtonSubscriber?.cancel()
         self.leftOddButtonSubscriber = nil
-
+        
         self.middleOddButtonSubscriber?.cancel()
         self.middleOddButtonSubscriber = nil
-
+        
         self.rightOddButtonSubscriber?.cancel()
         self.rightOddButtonSubscriber = nil
         
         self.currentHomeOddValue = nil
         self.currentDrawOddValue = nil
         self.currentAwayOddValue = nil
-
+        
         self.isLeftOutcomeButtonSelected = false
         self.isMiddleOutcomeButtonSelected = false
         self.isRightOutcomeButtonSelected = false
-
+        
         self.eventNameLabel.text = ""
         self.homeParticipantNameLabel.text = ""
         self.awayParticipantNameLabel.text = ""
@@ -702,19 +730,19 @@ class MatchWidgetCollectionViewCell: UICollectionViewCell {
         //
         self.dateStackView.isHidden = false
         self.resultStackView.isHidden = true
-
+        
         self.dateLabel.isHidden = false
         self.timeLabel.isHidden = false
         
         self.dateLabel.text = ""
         self.timeLabel.text = ""
-
+        
         self.dateNewLabel.text = ""
         self.timeNewLabel.text = ""
         
         self.liveMatchDotBaseView.isHidden = true
         self.liveTipView.isHidden = true
-
+        
         self.gradientBorderView.isHidden = true
         self.liveGradientBorderView.isHidden = true
         
@@ -725,10 +753,10 @@ class MatchWidgetCollectionViewCell: UICollectionViewCell {
         self.matchTimeStatusNewLabel.text = ""
         
         self.marketNameLabel.text = ""
-
+        
         self.marketNamePillLabelView.title = ""
         self.marketNamePillLabelView.isHidden = true
-                
+        
         //
         self.homeOddTitleLabel.text = ""
         self.drawOddTitleLabel.text = ""
@@ -737,101 +765,101 @@ class MatchWidgetCollectionViewCell: UICollectionViewCell {
         self.setHomeOddValueLabel(toText: "")
         self.setDrawOddValueLabel(toText: "")
         self.setAwayOddValueLabel(toText: "")
-
+        
         self.homeBaseView.isUserInteractionEnabled = true
         self.drawBaseView.isUserInteractionEnabled = true
         self.awayBaseView.isUserInteractionEnabled = true
-
+        
         self.homeBaseView.alpha = 1.0
         self.drawBaseView.alpha = 1.0
         self.awayBaseView.alpha = 1.0
-
+        
         self.locationFlagImageView.isHidden = false
         self.locationFlagImageView.image = nil
-
+        
         self.sportTypeImageView.image = nil
-
+        
         self.oddsStackView.alpha = 1.0
         self.oddsStackView.isHidden = false
-
+        
         self.awayBaseView.isHidden = false
         self.drawBaseView.isHidden = false
-
+        
         self.isFavorite = false
-
+        
         self.hasCashback = false
-
+        
         self.leftOutcomeDisabled = false
         self.middleOutcomeDisabled = false
         self.rightOutcomeDisabled = false
-
+        
         self.suspendedBaseView.isHidden = true
         self.seeAllBaseView.isHidden = true
         self.outrightBaseView.isHidden = true
-
+        
         self.cancellables.removeAll()
         
         self.adjustDesignToCardHeightStyle()
         self.setupWithTheme()
     }
-
+    
     func cellDidDisappear() {
         self.leftOddButtonSubscriber?.cancel()
         self.leftOddButtonSubscriber = nil
-
+        
         self.middleOddButtonSubscriber?.cancel()
         self.middleOddButtonSubscriber = nil
-
+        
         self.rightOddButtonSubscriber?.cancel()
         self.rightOddButtonSubscriber = nil
     }
-
+    
     func setupWithTheme() {
         self.baseView.backgroundColor = UIColor.App.backgroundCards
-
+        
         self.liveMatchDotBaseView.backgroundColor = .clear
         self.liveMatchDotImageView.backgroundColor = .clear
-
+        
         self.liveTipView.backgroundColor = UIColor.App.highlightPrimary
-
+        
         self.homeBaseView.backgroundColor = UIColor.App.backgroundOdds
         self.drawBaseView.backgroundColor = UIColor.App.backgroundOdds
         self.awayBaseView.backgroundColor = UIColor.App.backgroundOdds
-
+        
         self.suspendedBaseView.backgroundColor = UIColor.App.backgroundDisabledOdds
         self.suspendedBaseView.layer.borderColor = UIColor.App.backgroundBorder.cgColor
         
         self.suspendedLabel.textColor = UIColor.App.textDisablePrimary
-
+        
         self.seeAllBaseView.backgroundColor = UIColor.App.backgroundDisabledOdds
         self.seeAllLabel.textColor = UIColor.App.textPrimary
         
         self.outrightBaseView.backgroundColor = UIColor.App.backgroundDisabledOdds
         self.outrightSeeLabel.textColor = UIColor.App.textPrimary
-
+        
         self.locationFlagImageView.layer.borderColor = UIColor.App.highlightPrimaryContrast.cgColor
-
+        
         // Boosted Odds
         self.boostedTopRightCornerLabel.textColor = UIColor.App.textPrimary
-
+        
         self.homeBoostedOddValueBaseView.backgroundColor = UIColor.App.buttonBackgroundPrimary
         self.drawBoostedOddValueBaseView.backgroundColor = UIColor.App.buttonBackgroundPrimary
         self.awayBoostedOddValueBaseView.backgroundColor = UIColor.App.buttonBackgroundPrimary
-
+        
         self.homeNewBoostedOddValueLabel.textColor = UIColor.App.buttonTextPrimary
         self.homeOldBoostedOddValueLabel.textColor = UIColor.App.buttonTextPrimary
         self.drawNewBoostedOddValueLabel.textColor = UIColor.App.buttonTextPrimary
         self.drawOldBoostedOddValueLabel.textColor = UIColor.App.buttonTextPrimary
         self.awayNewBoostedOddValueLabel.textColor = UIColor.App.buttonTextPrimary
         self.awayOldBoostedOddValueLabel.textColor = UIColor.App.buttonTextPrimary
-
+        
         self.liveGradientBorderView.gradientColors = [UIColor.App.liveBorderGradient3,
-                                                  UIColor.App.liveBorderGradient2,
-                                                  UIColor.App.liveBorderGradient1]
+                                                      UIColor.App.liveBorderGradient2,
+                                                      UIColor.App.liveBorderGradient1]
         
         self.gradientBorderView.gradientColors = [UIColor.App.cardBorderLineGradient1,
-                                                      UIColor.App.cardBorderLineGradient2,
-                                                      UIColor.App.cardBorderLineGradient3]
+                                                  UIColor.App.cardBorderLineGradient2,
+                                                  UIColor.App.cardBorderLineGradient3]
         
         //
         // Match Widget Type spec
@@ -846,7 +874,7 @@ class MatchWidgetCollectionViewCell: UICollectionViewCell {
             
             self.dateLabel.textColor = UIColor.App.textSecondary
             self.timeLabel.textColor = UIColor.App.textPrimary
-
+            
             self.dateNewLabel.textColor = UIColor.App.textSecondary
             self.timeNewLabel.textColor = UIColor.App.textSecondary
             self.matchTimeStatusNewLabel.textColor = UIColor.App.buttonBackgroundPrimary
@@ -861,7 +889,7 @@ class MatchWidgetCollectionViewCell: UICollectionViewCell {
                 self.homeOddTitleLabel.textColor = UIColor.App.textPrimary
                 self.homeOddValueLabel.textColor = UIColor.App.textPrimary
             }
-
+            
             if isMiddleOutcomeButtonSelected {
                 self.drawBaseView.backgroundColor = UIColor.App.buttonBackgroundPrimary
                 self.drawOddTitleLabel.textColor = UIColor.App.buttonTextPrimary
@@ -872,7 +900,7 @@ class MatchWidgetCollectionViewCell: UICollectionViewCell {
                 self.drawOddTitleLabel.textColor = UIColor.App.textPrimary
                 self.drawOddValueLabel.textColor = UIColor.App.textPrimary
             }
-
+            
             if isRightOutcomeButtonSelected {
                 self.awayBaseView.backgroundColor = UIColor.App.buttonBackgroundPrimary
                 self.awayOddTitleLabel.textColor = UIColor.App.buttonTextPrimary
@@ -883,11 +911,11 @@ class MatchWidgetCollectionViewCell: UICollectionViewCell {
                 self.awayOddTitleLabel.textColor = UIColor.App.textPrimary
                 self.awayOddValueLabel.textColor = UIColor.App.textPrimary
             }
-
+            
             self.homeBaseView.layer.borderColor = UIColor.clear.cgColor
             self.drawBaseView.layer.borderColor = UIColor.clear.cgColor
             self.awayBaseView.layer.borderColor = UIColor.clear.cgColor
-
+            
             self.homeBaseView.layer.borderWidth = 0
             self.drawBaseView.layer.borderWidth = 0
             self.awayBaseView.layer.borderWidth = 0
@@ -899,7 +927,7 @@ class MatchWidgetCollectionViewCell: UICollectionViewCell {
             self.resultLabel.textColor = UIColor.App.textPrimary
             self.liveTipLabel.textColor = UIColor.App.buttonTextPrimary
             self.outrightNameLabel.textColor = UIColor.App.textPrimary
-
+            
             self.dateLabel.textColor = UIColor.App.textSecondary
             self.timeLabel.textColor = UIColor.App.textPrimary
             self.matchTimeLabel.textColor = UIColor.App.buttonBackgroundPrimary
@@ -918,7 +946,7 @@ class MatchWidgetCollectionViewCell: UICollectionViewCell {
                 self.homeOddTitleLabel.textColor = UIColor.App.textPrimary
                 self.homeOddValueLabel.textColor = UIColor.App.textPrimary
             }
-
+            
             if isMiddleOutcomeButtonSelected {
                 self.drawBaseView.backgroundColor = UIColor.App.buttonBackgroundPrimary
                 self.drawOddTitleLabel.textColor = UIColor.App.buttonTextPrimary
@@ -929,7 +957,7 @@ class MatchWidgetCollectionViewCell: UICollectionViewCell {
                 self.drawOddTitleLabel.textColor = UIColor.App.textPrimary
                 self.drawOddValueLabel.textColor = UIColor.App.textPrimary
             }
-
+            
             if isRightOutcomeButtonSelected {
                 self.awayBaseView.backgroundColor = UIColor.App.buttonBackgroundPrimary
                 self.awayOddTitleLabel.textColor = UIColor.App.buttonTextPrimary
@@ -940,11 +968,11 @@ class MatchWidgetCollectionViewCell: UICollectionViewCell {
                 self.awayOddTitleLabel.textColor = UIColor.App.textPrimary
                 self.awayOddValueLabel.textColor = UIColor.App.textPrimary
             }
-
+            
             self.homeBaseView.layer.borderColor = UIColor.clear.cgColor
             self.drawBaseView.layer.borderColor = UIColor.clear.cgColor
             self.awayBaseView.layer.borderColor = UIColor.clear.cgColor
-
+            
             self.homeBaseView.layer.borderWidth = 0
             self.drawBaseView.layer.borderWidth = 0
             self.awayBaseView.layer.borderWidth = 0
@@ -966,11 +994,11 @@ class MatchWidgetCollectionViewCell: UICollectionViewCell {
             
             if isLeftOutcomeButtonSelected {
                 self.homeBoostedOddValueBaseView.backgroundColor = UIColor.App.highlightPrimary
-
+                
                 self.homeBaseView.backgroundColor = UIColor.App.highlightPrimary
                 self.homeOddTitleLabel.textColor = UIColor.App.buttonTextPrimary
                 self.homeOddValueLabel.textColor = UIColor.App.buttonTextPrimary
-
+                
                 self.homeBoostedOddArrowView.highlightColor = .black
             }
             else {
@@ -978,16 +1006,16 @@ class MatchWidgetCollectionViewCell: UICollectionViewCell {
                 self.homeBaseView.backgroundColor = UIColor(hex: 0x03061B)
                 self.homeOddTitleLabel.textColor = UIColor.App.buttonTextPrimary
                 self.homeOddValueLabel.textColor = UIColor.App.buttonTextPrimary
-
+                
                 self.homeBoostedOddArrowView.highlightColor = UIColor.App.highlightPrimary
             }
-
+            
             if isMiddleOutcomeButtonSelected {
                 self.drawBoostedOddValueBaseView.backgroundColor = UIColor.App.highlightPrimary
                 self.drawBaseView.backgroundColor = UIColor.App.highlightPrimary
                 self.drawOddTitleLabel.textColor = UIColor.App.buttonTextPrimary
                 self.drawOddValueLabel.textColor = UIColor.App.buttonTextPrimary
-
+                
                 self.drawBoostedOddArrowView.highlightColor = .black
             }
             else {
@@ -995,16 +1023,16 @@ class MatchWidgetCollectionViewCell: UICollectionViewCell {
                 self.drawBaseView.backgroundColor = UIColor(hex: 0x03061B)
                 self.drawOddTitleLabel.textColor = UIColor.App.buttonTextPrimary
                 self.drawOddValueLabel.textColor = UIColor.App.buttonTextPrimary
-
+                
                 self.drawBoostedOddArrowView.highlightColor = UIColor.App.highlightPrimary
             }
-
+            
             if isRightOutcomeButtonSelected {
                 self.awayBoostedOddValueBaseView.backgroundColor = UIColor.App.highlightPrimary
                 self.awayBaseView.backgroundColor = UIColor.App.highlightPrimary
                 self.awayOddTitleLabel.textColor = UIColor.App.buttonTextPrimary
                 self.awayOddValueLabel.textColor = UIColor.App.buttonTextPrimary
-
+                
                 self.awayBoostedOddArrowView.highlightColor = .black
             }
             else {
@@ -1012,20 +1040,20 @@ class MatchWidgetCollectionViewCell: UICollectionViewCell {
                 self.awayBaseView.backgroundColor = UIColor(hex: 0x03061B)
                 self.awayOddTitleLabel.textColor = UIColor.App.buttonTextPrimary
                 self.awayOddValueLabel.textColor = UIColor.App.buttonTextPrimary
-
+                
                 self.awayBoostedOddArrowView.highlightColor = UIColor.App.highlightPrimary
             }
-
+            
             self.homeBaseView.layer.borderColor = UIColor.clear.cgColor
             self.drawBaseView.layer.borderColor = UIColor.clear.cgColor
             self.awayBaseView.layer.borderColor = UIColor.clear.cgColor
-
+            
             self.homeBaseView.layer.borderWidth = 0
             self.drawBaseView.layer.borderWidth = 0
             self.awayBaseView.layer.borderWidth = 0
-
+            
             self.boostedOddBottomLineAnimatedGradientView.startAnimations()
-
+            
         case .backgroundImage:
             self.eventNameLabel.textColor = UIColor.App.buttonTextPrimary
             self.homeParticipantNameLabel.textColor = UIColor.App.buttonTextPrimary
@@ -1044,43 +1072,43 @@ class MatchWidgetCollectionViewCell: UICollectionViewCell {
             self.marketNameView.backgroundColor = .clear
             self.marketNameInnerView.backgroundColor = UIColor.App.highlightPrimary
             self.marketNameLabel.textColor = UIColor.App.buttonTextPrimary
-
+            
             if isLeftOutcomeButtonSelected {
                 self.homeBaseView.backgroundColor = UIColor.App.highlightPrimary
                 self.homeOddTitleLabel.textColor = UIColor.App.buttonTextPrimary
                 self.homeOddValueLabel.textColor = UIColor.App.buttonTextPrimary
-
+                
                 self.homeBaseView.layer.borderWidth = 0
             }
-
+            
             if isMiddleOutcomeButtonSelected {
                 self.drawBaseView.backgroundColor = UIColor.App.highlightPrimary
                 self.drawOddTitleLabel.textColor = UIColor.App.buttonTextPrimary
                 self.drawOddValueLabel.textColor = UIColor.App.buttonTextPrimary
-
+                
                 self.drawBaseView.layer.borderWidth = 0
             }
-
+            
             if isRightOutcomeButtonSelected {
                 self.awayBaseView.backgroundColor = UIColor.App.highlightPrimary
                 self.awayOddTitleLabel.textColor = UIColor.App.buttonTextPrimary
                 self.awayOddValueLabel.textColor = UIColor.App.buttonTextPrimary
-
+                
                 self.awayBaseView.layer.borderWidth = 0
             }
             
             self.homeBaseView.layer.borderColor = UIColor.App.buttonTextPrimary.cgColor
             self.drawBaseView.layer.borderColor = UIColor.App.buttonTextPrimary.cgColor
             self.awayBaseView.layer.borderColor = UIColor.App.buttonTextPrimary.cgColor
-
+            
             self.homeBaseView.layer.borderWidth = 2
             self.drawBaseView.layer.borderWidth = 2
             self.awayBaseView.layer.borderWidth = 2
-
+            
             self.homeBaseView.backgroundColor = UIColor.clear
             self.drawBaseView.backgroundColor = UIColor.clear
             self.awayBaseView.backgroundColor = UIColor.clear
-
+            
             self.homeOddTitleLabel.textColor = UIColor.App.buttonTextPrimary
             self.homeOddValueLabel.textColor = UIColor.App.buttonTextPrimary
             self.drawOddTitleLabel.textColor = UIColor.App.buttonTextPrimary
@@ -1099,7 +1127,7 @@ class MatchWidgetCollectionViewCell: UICollectionViewCell {
         default:
             self.baseView.backgroundColor = UIColor.App.backgroundCards
             self.contentRedesignBaseView.backgroundColor = self.baseView.backgroundColor
-
+            
         }
         
         self.detailedScoreView.setupWithTheme()
@@ -1113,7 +1141,6 @@ class MatchWidgetCollectionViewCell: UICollectionViewCell {
             self.marketTopConstraint.constant = 8
             self.marketBottomConstraint.constant = -10
             self.marketHeightConstraint.constant = 15
-            //self.participantsBottomConstraint.isActive = false
             
             self.marketNamePillLabelView.isHidden = false
             
@@ -1132,7 +1159,6 @@ class MatchWidgetCollectionViewCell: UICollectionViewCell {
             self.marketTopConstraint.constant = 0
             self.marketBottomConstraint.constant = 0
             self.marketHeightConstraint.constant = 0
-            //self.participantsBottomConstraint.isActive = true
             
             self.marketNameLabel.text = ""
             
@@ -1153,19 +1179,19 @@ class MatchWidgetCollectionViewCell: UICollectionViewCell {
         self.setNeedsLayout()
         self.layoutIfNeeded()
     }
-
+    
     private func adjustDesignToCardHeightStyle() {
-
+        
         if (self.viewModel?.matchWidgetType ?? .normal) != .normal {
             return
         }
-
+        
         if self.cachedCardsStyle == StyleHelper.cardsStyleActive() {
             return
         }
-
+        
         self.cachedCardsStyle = StyleHelper.cardsStyleActive()
-
+        
         switch StyleHelper.cardsStyleActive() {
         case .small:
             self.contentRedesignBaseView.isHidden = true
@@ -1174,53 +1200,53 @@ class MatchWidgetCollectionViewCell: UICollectionViewCell {
             self.contentRedesignBaseView.isHidden = false
             self.adjustDesignToNormalCardHeightStyle()
         }
-
+        
         self.setNeedsLayout()
         self.layoutIfNeeded()
     }
-
+    
     private func adjustDesignToSmallCardHeightStyle() {
         self.topMarginSpaceConstraint.constant = 8
         self.leadingMarginSpaceConstraint.constant = 8
         self.trailingMarginSpaceConstraint.constant = 8
         self.bottomMarginSpaceConstraint.constant = 8
-
+        
         self.headerHeightConstraint.constant = 12
         self.teamsHeightConstraint.constant = 26
         self.resultCenterConstraint.constant = -1
         self.buttonsHeightConstraint.constant = 27
-
+        
         self.eventNameLabel.font = AppFont.with(type: .semibold, size: 9)
         self.dateLabel.font = AppFont.with(type: .semibold, size: 10)
         self.timeLabel.font = AppFont.with(type: .bold, size: 13)
-
+        
         self.homeParticipantNameLabel.font = AppFont.with(type: .bold, size: 13)
         self.homeParticipantNameLabel.numberOfLines = 2
         self.awayParticipantNameLabel.font = AppFont.with(type: .bold, size: 13)
         self.awayParticipantNameLabel.numberOfLines = 2
         self.outrightNameLabel.font = AppFont.with(type: .bold, size: 13)
         self.outrightNameLabel.numberOfLines = 2
-
+        
         self.homeOddValueLabel.font = AppFont.with(type: .bold, size: 12)
         self.drawOddValueLabel.font = AppFont.with(type: .bold, size: 12)
         self.awayOddValueLabel.font = AppFont.with(type: .bold, size: 12)
     }
-
+    
     private func adjustDesignToNormalCardHeightStyle() {
         self.topMarginSpaceConstraint.constant = 11
         self.bottomMarginSpaceConstraint.constant = 12
         self.leadingMarginSpaceConstraint.constant = 12
         self.trailingMarginSpaceConstraint.constant = 12
-
+        
         self.headerHeightConstraint.constant = 17
         self.teamsHeightConstraint.constant = 67
         self.resultCenterConstraint.constant = 0
         self.buttonsHeightConstraint.constant = 40
-
+        
         self.eventNameLabel.font = AppFont.with(type: .semibold, size: 11)
         self.dateLabel.font = AppFont.with(type: .semibold, size: 12)
         self.timeLabel.font = AppFont.with(type: .bold, size: 16)
-
+        
         self.homeParticipantNameLabel.font = AppFont.with(type: .bold, size: 14)
         self.homeParticipantNameLabel.numberOfLines = 3
         self.awayParticipantNameLabel.font = AppFont.with(type: .bold, size: 14)
@@ -1228,15 +1254,13 @@ class MatchWidgetCollectionViewCell: UICollectionViewCell {
         
         self.outrightNameLabel.font = AppFont.with(type: .bold, size: 14)
         self.outrightNameLabel.numberOfLines = 3
-
+        
         self.homeOddValueLabel.font = AppFont.with(type: .bold, size: 13)
         self.drawOddValueLabel.font = AppFont.with(type: .bold, size: 13)
         self.awayOddValueLabel.font = AppFont.with(type: .bold, size: 13)
     }
-
+    
     func drawAsLiveCard() {
-        self.hasCashback = false // We need to make sure the cashback icon is not showing
-        
         self.dateStackView.isHidden = true
         self.dateNewLabel.isHidden = true
         self.timeNewLabel.isHidden = true
@@ -1248,7 +1272,7 @@ class MatchWidgetCollectionViewCell: UICollectionViewCell {
         
         self.liveMatchDotBaseView.isHidden = true
         self.liveTipView.isHidden = false
-
+        
         self.cashbackImageViewBaseTrailingConstraint.isActive = false
         self.cashbackImageViewLiveTrailingConstraint.isActive = true
         
@@ -1280,7 +1304,7 @@ class MatchWidgetCollectionViewCell: UICollectionViewCell {
         
         self.liveMatchDotBaseView.isHidden = true
         self.liveTipView.isHidden = true
-
+        
         self.cashbackImageViewBaseTrailingConstraint.isActive = true
         self.cashbackImageViewLiveTrailingConstraint.isActive = false
         
@@ -1298,21 +1322,21 @@ class MatchWidgetCollectionViewCell: UICollectionViewCell {
         switch matchWidgetType {
         case .normal:
             self.backgroundImageView.isHidden = true
-
+            
             self.topImageBaseView.isHidden = true
             self.boostedOddBottomLineView.isHidden = true
             self.boostedTopRightCornerBaseView.isHidden = true
-
+            
             self.mainContentBaseView.isHidden = false
-
+            
             self.baseView.layer.borderWidth = 0
             self.baseView.layer.borderColor = nil
             self.headerLineStackView.alpha = 1.0
-
+            
             self.homeBoostedOddValueBaseView.isHidden = true
             self.drawBoostedOddValueBaseView.isHidden = true
             self.awayBoostedOddValueBaseView.isHidden = true
-
+            
             switch StyleHelper.cardsStyleActive() {
             case .small:
                 self.bottomMarginSpaceConstraint.constant = 8
@@ -1323,21 +1347,21 @@ class MatchWidgetCollectionViewCell: UICollectionViewCell {
                 self.teamsHeightConstraint.constant = 67
                 self.topMarginSpaceConstraint.constant = 11
             }
-
+            
         case .topImage:
             self.backgroundImageView.isHidden = true
-
+            
             self.topImageBaseView.isHidden = false
-
+            
             self.boostedOddBottomLineView.isHidden = true
             self.boostedTopRightCornerBaseView.isHidden = true
-
+            
             self.mainContentBaseView.isHidden = false
-
+            
             self.homeBoostedOddValueBaseView.isHidden = true
             self.drawBoostedOddValueBaseView.isHidden = true
             self.awayBoostedOddValueBaseView.isHidden = true
-
+            
             self.baseView.layer.borderWidth = 0
             self.baseView.layer.borderColor = nil
             self.headerLineStackView.alpha = 1.0
@@ -1347,14 +1371,14 @@ class MatchWidgetCollectionViewCell: UICollectionViewCell {
             
         case .topImageOutright:
             self.backgroundImageView.isHidden = true
-
+            
             self.topImageBaseView.isHidden = false
-
+            
             self.boostedOddBottomLineView.isHidden = true
             self.boostedTopRightCornerBaseView.isHidden = true
-
+            
             self.mainContentBaseView.isHidden = false
-
+            
             self.homeBoostedOddValueBaseView.isHidden = true
             self.drawBoostedOddValueBaseView.isHidden = true
             self.awayBoostedOddValueBaseView.isHidden = true
@@ -1363,51 +1387,51 @@ class MatchWidgetCollectionViewCell: UICollectionViewCell {
             self.oddsStackView.isHidden = true
             self.suspendedBaseView.isHidden = true
             self.outrightBaseView.isHidden = false
-
+            
             self.baseView.layer.borderWidth = 0
             self.baseView.layer.borderColor = nil
             self.headerLineStackView.alpha = 1.0
             self.bottomMarginSpaceConstraint.constant = 12
             self.teamsHeightConstraint.constant = 67
             self.topMarginSpaceConstraint.constant = 11
-
+            
         case .boosted:
             self.backgroundImageView.isHidden = true
-
+            
             self.topImageBaseView.isHidden = true
             self.boostedOddBottomLineView.isHidden = false
             self.boostedTopRightCornerBaseView.isHidden = false
-
+            
             self.mainContentBaseView.isHidden = false
-
+            
             self.homeBoostedOddValueBaseView.isHidden = false
             self.drawBoostedOddValueBaseView.isHidden = false
             self.awayBoostedOddValueBaseView.isHidden = false
-
+            
             self.headerLineStackView.alpha = 1.0
             self.bottomMarginSpaceConstraint.constant = 12
             self.teamsHeightConstraint.constant = 67
             self.topMarginSpaceConstraint.constant = 11
-
+            
             self.setupBoostedOddsSubviews()
             
         case .backgroundImage:
             self.backgroundImageView.isHidden = false
-
+            
             self.topImageBaseView.isHidden = true
             self.boostedOddBottomLineView.isHidden = true
             self.boostedTopRightCornerBaseView.isHidden = true
-
+            
             self.mainContentBaseView.isHidden = false
-
+            
             self.homeBoostedOddValueBaseView.isHidden = true
             self.drawBoostedOddValueBaseView.isHidden = true
             self.awayBoostedOddValueBaseView.isHidden = true
-
+            
             self.baseView.layer.borderWidth = 0
             self.baseView.layer.borderColor = nil
             self.headerLineStackView.alpha = 0.0
-
+            
             self.bottomMarginSpaceConstraint.constant = 28
             self.teamsHeightConstraint.constant = 47
             self.topMarginSpaceConstraint.constant = 0
@@ -1415,18 +1439,21 @@ class MatchWidgetCollectionViewCell: UICollectionViewCell {
             self.backgroundImageBorderGradientLayer.colors = [UIColor(hex: 0x404CFF).cgColor, UIColor(hex: 0x404CFF).withAlphaComponent(0.0).cgColor]
             self.backgroundImageBorderGradientLayer.startPoint = CGPoint(x: 0.5, y: 0.0)
             self.backgroundImageBorderGradientLayer.endPoint = CGPoint(x: 0.5, y: 1.0)
-
+            
             self.backgroundImageBorderShapeLayer.cornerRadius = 9
             self.backgroundImageBorderShapeLayer.lineWidth = 2
             self.backgroundImageBorderShapeLayer.strokeColor = UIColor.black.cgColor
             self.backgroundImageBorderShapeLayer.fillColor = UIColor.clear.cgColor
-
+            
             self.backgroundImageBorderGradientLayer.mask = self.backgroundImageBorderShapeLayer
             self.baseView.layer.addSublayer(self.backgroundImageBorderGradientLayer)
         }
-
+        
         self.setupWithTheme()
     }
+}
+
+extension MatchWidgetCollectionViewCell {
     
     func configure(withViewModel viewModel: MatchWidgetCellViewModel) {
         
@@ -1437,6 +1464,9 @@ class MatchWidgetCollectionViewCell: UICollectionViewCell {
         else {
             return
         }
+        
+        let viewModelDesc = "[\(viewModel.match.id) \(viewModel.match.homeParticipant.name) vs \(viewModel.match.awayParticipant.name)]"
+        print("BlinkDebug: cell  \(self.debugUUID.self) configure(withViewModel \(viewModelDesc)")
         
         Publishers.CombineLatest(viewModel.$matchWidgetStatus, viewModel.$matchWidgetType)
             .receive(on: DispatchQueue.main)
@@ -1470,12 +1500,12 @@ class MatchWidgetCollectionViewCell: UICollectionViewCell {
                 }
             }
             .store(in: &self.cancellables)
-     
+        
         viewModel.$matchWidgetType
             .removeDuplicates()
             .receive(on: DispatchQueue.main)
             .sink { [weak self] matchWidgetType in
-                                
+                
                 self?.drawForMatchWidgetType(matchWidgetType)
                 
                 switch matchWidgetType {
@@ -1494,34 +1524,31 @@ class MatchWidgetCollectionViewCell: UICollectionViewCell {
             .store(in: &self.cancellables)
         
         viewModel.homeTeamNamePublisher
+            .receive(on: DispatchQueue.main)
             .sink { [weak self] homeTeamName in
                 self?.homeParticipantNameLabel.text = homeTeamName
                 self?.homeNameLabel.text = homeTeamName
             }
             .store(in: &self.cancellables)
-
+        
         viewModel.awayTeamNamePublisher
+            .receive(on: DispatchQueue.main)
             .sink { [weak self] awayTeamName in
                 self?.awayNameLabel.text = awayTeamName
                 self?.awayParticipantNameLabel.text = awayTeamName
             }
             .store(in: &self.cancellables)
-
-        viewModel.mainMarketNamePublisher
-            .sink { [weak self] mainMarketName in
-                self?.marketNameLabel.text = mainMarketName
-                self?.marketNamePillLabelView.title = mainMarketName
-            }
-            .store(in: &self.cancellables)
         
         viewModel.startDateStringPublisher
+            .receive(on: DispatchQueue.main)
             .sink { [weak self] startDateString in
                 self?.dateLabel.text = startDateString
                 self?.dateNewLabel.text = startDateString
             }
             .store(in: &self.cancellables)
-
+        
         viewModel.startTimeStringPublisher
+            .receive(on: DispatchQueue.main)
             .sink { [weak self] startTimeString in
                 self?.timeLabel.text = startTimeString
                 self?.timeNewLabel.text = startTimeString
@@ -1549,29 +1576,33 @@ class MatchWidgetCollectionViewCell: UICollectionViewCell {
             }
             .store(in: &self.cancellables)
         
-
+        
         // Scores
         viewModel.matchScorePublisher
+            .receive(on: DispatchQueue.main)
             .sink { [weak self] matchScore in
                 self?.resultLabel.text = matchScore
             }
             .store(in: &self.cancellables)
         
         viewModel.detailedScoresPublisher
+            .receive(on: DispatchQueue.main)
             .sink { [weak self] detailedScoresDict, sportAlphaId in
-                self?.detailedScoreView.updateScores(detailedScoresDict)
                 self?.detailedScoreView.sportCode = sportAlphaId
+                self?.detailedScoreView.updateScores(detailedScoresDict)
             }
             .store(in: &self.cancellables)
         
         // icon images
         viewModel.countryFlagImagePublisher
+            .receive(on: DispatchQueue.main)
             .sink { [weak self] countryFlagImage in
                 self?.locationFlagImageView.image = countryFlagImage
             }
             .store(in: &self.cancellables)
         
         viewModel.sportIconImagePublisher
+            .receive(on: DispatchQueue.main)
             .sink { [weak self] sportIconImage in
                 self?.sportTypeImageView.image = sportIconImage
             }
@@ -1579,14 +1610,16 @@ class MatchWidgetCollectionViewCell: UICollectionViewCell {
         
         //
         viewModel.matchTimeDetailsPublisher
+            .receive(on: DispatchQueue.main)
             .sink { [weak self] matchTimeDetails in
                 self?.matchTimeLabel.text = matchTimeDetails
                 self?.matchTimeStatusNewLabel.text = matchTimeDetails
             }
             .store(in: &self.cancellables)
-
+        
         viewModel.promoImageURLPublisher
             .compactMap({ $0 })
+            .receive(on: DispatchQueue.main)
             .sink { [weak self] promoImageURL in
                 self?.backgroundImageView.kf.setImage(with: promoImageURL)
                 self?.topImageView.kf.setImage(with: promoImageURL)
@@ -1594,6 +1627,7 @@ class MatchWidgetCollectionViewCell: UICollectionViewCell {
             .store(in: &self.cancellables)
         
         viewModel.isFavoriteMatchPublisher
+            .receive(on: DispatchQueue.main)
             .sink { [weak self] isFavoriteMatch in
                 self?.isFavorite = isFavoriteMatch
             }
@@ -1607,37 +1641,8 @@ class MatchWidgetCollectionViewCell: UICollectionViewCell {
             }
             .store(in: &self.cancellables)
         
-        /*
-        // Setup outcomes
-        viewModel.defaultMarketPublisher
-            .sink { [weak self] defaultMarket in
-                if let market = defaultMarket {
-                    // Setup outcome buttons
-                    self?.oddsStackView.alpha = 1.0
-                    self?.configureOutcomes(withMarket: market)
-                }
-                else {
-                    // Hide outcome buttons if we don't have any market
-                    self?.oddsStackView.alpha = 0.2
-                    self?.showSeeAllView()
-                }
-            }
-            .store(in: &self.cancellables)
-        
-        // Default Market Availability
-        viewModel.isDefaultMarketAvailablePublisher
-            .sink(receiveValue: { [weak self] isAvailable in
-                if isAvailable {
-                    self?.showMarketButtons()
-                }
-                else {
-                    self?.showSuspendedView()
-                }
-            })
-            .store(in: &self.cancellables)
-        */
-
         Publishers.CombineLatest(viewModel.defaultMarketPublisher, viewModel.isDefaultMarketAvailablePublisher)
+            .receive(on: DispatchQueue.main)
             .sink { [weak self] defaultMarket, isAvailable in
                 if let market = defaultMarket {
                     // Setup outcome buttons
@@ -1658,24 +1663,48 @@ class MatchWidgetCollectionViewCell: UICollectionViewCell {
                 }
             }
             .store(in: &self.cancellables)
-
-        // Outrights publishers
-        Publishers.CombineLatest3(viewModel.$matchWidgetType, viewModel.eventNamePublisher, viewModel.competitionNamePublisher)
-            .sink { [weak self] matchWidgetType, eventName, competitionName in
-                switch matchWidgetType {
-                case .topImageOutright:
-                    self?.eventNameLabel.text = eventName
-                default:
-                    self?.eventNameLabel.text = competitionName
-                }
+        
+        Publishers.CombineLatest4(viewModel.mainMarketNamePublisher,
+                                  viewModel.$matchWidgetType,
+                                  viewModel.$matchWidgetStatus,
+                                  viewModel.defaultMarketPublisher)
+        .receive(on: DispatchQueue.main)
+        .sink { [weak self] mainMarketName, matchWidgetType, matchWidgetStatus, defaultMarket in
+            self?.marketNameLabel.text = mainMarketName
+            self?.marketNamePillLabelView.title = mainMarketName
+            
+            if matchWidgetType == .normal && matchWidgetStatus == .live && defaultMarket != nil {
+                self?.marketNamePillLabelView.isHidden = false
             }
-            .store(in: &self.cancellables)
+            else {
+                self?.marketNamePillLabelView.isHidden = true
+            }
+        }
+        .store(in: &self.cancellables)
+        
+        // Outrights publishers
+        Publishers.CombineLatest3(viewModel.$matchWidgetType,
+                                  viewModel.eventNamePublisher,
+                                  viewModel.competitionNamePublisher)
+        .receive(on: DispatchQueue.main)
+        .sink { [weak self] matchWidgetType, eventName, competitionName in
+            switch matchWidgetType {
+            case .topImageOutright:
+                self?.eventNameLabel.text = eventName
+            default:
+                self?.eventNameLabel.text = competitionName
+            }
+        }
+        .store(in: &self.cancellables)
         
         viewModel.outrightNamePublisher
+            .receive(on: DispatchQueue.main)
             .sink { [weak self] outrightName in
                 self?.outrightNameLabel.text = outrightName
             }
             .store(in: &self.cancellables)
+        
+        
         
     }
     
@@ -1693,10 +1722,10 @@ class MatchWidgetCollectionViewCell: UICollectionViewCell {
             else {
                 self.homeOddTitleLabel.text = outcome.typeName
             }
-                
+            
             self.leftOutcome = outcome
             self.isLeftOutcomeButtonSelected = Env.betslipManager.hasBettingTicket(withId: outcome.bettingOffer.id)
-
+            
             // Check for SportRadar invalid odd
             if !outcome.bettingOffer.decimalOdd.isNaN {
                 self.setHomeOddValueLabel(toText: OddFormatter.formatOdd(withValue: outcome.bettingOffer.decimalOdd))
@@ -1706,7 +1735,7 @@ class MatchWidgetCollectionViewCell: UICollectionViewCell {
                 self.homeBaseView.alpha = 0.5
                 self.setHomeOddValueLabel(toText: "-")
             }
-
+            
             self.leftOddButtonSubscriber = Env.servicesProvider
                 .subscribeToEventOnListsOutcomeUpdates(withId: outcome.bettingOffer.id)
                 .compactMap({ $0 })
@@ -1729,9 +1758,9 @@ class MatchWidgetCollectionViewCell: UICollectionViewCell {
                     else {
                         weakSelf.homeBaseView.isUserInteractionEnabled = true
                         weakSelf.homeBaseView.alpha = 1.0
-
+                        
                         let newOddValue = bettingOffer.decimalOdd
-
+                        
                         if let currentOddValue = weakSelf.currentHomeOddValue {
                             if newOddValue > currentOddValue {
                                 weakSelf.highlightOddChangeUp(animated: true,
@@ -1767,7 +1796,7 @@ class MatchWidgetCollectionViewCell: UICollectionViewCell {
             
             self.middleOutcome = outcome
             self.isMiddleOutcomeButtonSelected = Env.betslipManager.hasBettingTicket(withId: outcome.bettingOffer.id)
-
+            
             // Check for SportRadar invalid odd
             if !outcome.bettingOffer.decimalOdd.isNaN {
                 self.setDrawOddValueLabel(toText: OddFormatter.formatOdd(withValue: outcome.bettingOffer.decimalOdd))
@@ -1777,7 +1806,7 @@ class MatchWidgetCollectionViewCell: UICollectionViewCell {
                 self.drawBaseView.alpha = 0.5
                 self.setDrawOddValueLabel(toText: "-")
             }
-
+            
             self.middleOddButtonSubscriber = Env.servicesProvider
                 .subscribeToEventOnListsOutcomeUpdates(withId: outcome.bettingOffer.id)
                 .compactMap({ $0 })
@@ -1834,10 +1863,10 @@ class MatchWidgetCollectionViewCell: UICollectionViewCell {
             else {
                 self.awayOddTitleLabel.text = outcome.typeName
             }
-
+            
             self.rightOutcome = outcome
             self.isRightOutcomeButtonSelected = Env.betslipManager.hasBettingTicket(withId: outcome.bettingOffer.id)
-
+            
             // Check for SportRadar invalid odd
             if !outcome.bettingOffer.decimalOdd.isNaN {
                 self.setAwayOddValueLabel(toText: OddFormatter.formatOdd(withValue: outcome.bettingOffer.decimalOdd))
@@ -1847,7 +1876,7 @@ class MatchWidgetCollectionViewCell: UICollectionViewCell {
                 self.awayBaseView.alpha = 0.5
                 self.setAwayOddValueLabel(toText: "-")
             }
-
+            
             self.rightOddButtonSubscriber = Env.servicesProvider
                 .subscribeToEventOnListsOutcomeUpdates(withId: outcome.bettingOffer.id)
                 .compactMap({ $0 })
@@ -1906,6 +1935,10 @@ class MatchWidgetCollectionViewCell: UICollectionViewCell {
             self.drawBaseView.isHidden = true
         }
     }
+    
+}
+
+extension MatchWidgetCollectionViewCell {
     
     //
     //
@@ -2005,7 +2038,8 @@ class MatchWidgetCollectionViewCell: UICollectionViewCell {
 
     @IBAction private func didTapMatchView(_ sender: Any) {
         
-        if let viewModel = self.viewModel, let match = viewModel.match {
+        if let viewModel = self.viewModel {
+            let match = viewModel.match
             if viewModel.matchWidgetType == .topImageOutright {
                 if let competition = match.competitionOutright {
                     self.tappedMatchOutrightWidgetAction?(competition)

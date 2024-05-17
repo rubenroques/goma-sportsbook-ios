@@ -997,59 +997,41 @@ class MatchDetailsViewController: UIViewController {
     }
     
     func setupHeaderDetails(withMatch match: Match) {
-        let cellViewModel = MatchWidgetCellViewModel(match: match)
-
-        cellViewModel.homeTeamNamePublisher
-            .sink { [weak self] homeTeamName in
-                self?.headerDetailHomeLabel.text = homeTeamName
-                self?.homeTeamLabel.text = homeTeamName
-            }
-            .store(in: &self.cancellables)
+        self.headerDetailHomeLabel.text = match.homeParticipant.name
+        self.homeTeamLabel.text = match.homeParticipant.name
+ 
+        self.headerDetailAwayLabel.text = match.awayParticipant.name
+        self.awayTeamLabel.text = match.awayParticipant.name
         
-        cellViewModel.awayTeamNamePublisher
-            .sink { [weak self] awayTeamName in
-                self?.headerDetailAwayLabel.text = awayTeamName
-                self?.awayTeamLabel.text = awayTeamName
-            }
-            .store(in: &self.cancellables)
+        self.headerCompetitionLabel.text = match.competitionName
         
-        cellViewModel.competitionNamePublisher
-            .sink { [weak self] competitionName in
-                self?.headerCompetitionLabel.text = competitionName
-            }
-            .store(in: &self.cancellables)
+        let assetName = Assets.flagName(withCountryCode: match.venue?.isoCode ?? match.venue?.id ?? "")
+        self.headerCompetitionImageView.image =  UIImage(named: assetName)
         
-        cellViewModel.countryFlagImagePublisher
-            .sink { [weak self] countryFlagImage in
-                self?.headerCompetitionImageView.image = countryFlagImage
-            }
-            .store(in: &self.cancellables)
-        
-        cellViewModel.sportIconImagePublisher
-            .sink { [weak self] sportIconImage in
-                self?.headerCompetitionSportImageView.image = sportIconImage
-            }
-            .store(in: &self.cancellables)
+        if let sportIconImage = UIImage(named: "sport_type_icon_\(match.sport.id)") {
+            self.headerCompetitionSportImageView.image =  sportIconImage
+        }
+        else if let defaultImage = UIImage(named: "sport_type_icon_default") {
+            self.headerCompetitionSportImageView.image = defaultImage
+        }
+        else {
+            self.headerCompetitionSportImageView.image = nil
+        }
         
         self.headerCompetitionSportImageView.setTintColor(color: UIColor.App.textPrimary)
         
         // With new details view
         if self.matchMode == .preLive {
-            cellViewModel.startDateStringPublisher
-                .sink { [weak self] startDate in
-                    self?.headerDetailPreliveTopLabel.text = startDate
-                    self?.preLiveDateLabel.text = startDate
-                }
-                .store(in: &self.cancellables)
-            
-            cellViewModel.startTimeStringPublisher
-                .sink { [weak self] startTime in
-                    self?.headerDetailPreliveBottomLabel.text = startTime
-                    self?.preLiveTimeLabel.text = startTime
-                }
-                .store(in: &self.cancellables)
-            
-            
+            if let date = match.date {
+                let startDateString = MatchWidgetCellViewModel.startDateString(fromDate: date)
+                self.headerDetailPreliveTopLabel.text = startDateString
+                self.preLiveDateLabel.text = startDateString
+                
+                let hourDateString = MatchWidgetCellViewModel.hourDateFormatter.string(from: date)
+                self.headerDetailPreliveBottomLabel.text = hourDateString
+                self.preLiveTimeLabel.text = hourDateString
+            }
+
             self.liveTimeLabel.isHidden = true
             
             self.preLiveDetailsView.isHidden = false

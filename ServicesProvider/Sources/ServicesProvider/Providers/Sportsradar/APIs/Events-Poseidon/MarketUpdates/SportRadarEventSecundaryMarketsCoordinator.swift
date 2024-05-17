@@ -143,13 +143,6 @@ class SportRadarEventSecundaryMarketsCoordinator {
             })
             .store(in: &self.cancellables)
     }
-   
-    func updateEventSecundaryMarkets(_ updatedEvent: Event, forContentIdentifier contentIdentifier: ContentIdentifier) {
-        if contentIdentifier == self.eventSecundaryMarketsIdentifier {
-            self.storage.storeEvent(updatedEvent)
-            self.eventWithSecundaryMarketsSubject.send(.contentUpdate(content: updatedEvent))
-        }
-    }
 
     func reconnect(withNewSessionToken newSessionToken: String) {
         self.sessionToken = newSessionToken

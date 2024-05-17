@@ -45,7 +45,7 @@ class TopCompetitionsDataSource: NSObject {
             .eraseToAnyPublisher()
 
         return Publishers.Merge(changedArrayPublisher, self.forcedRefreshPassthroughSubject)
-            // .debounce(for: .milliseconds(250), scheduler: DispatchQueue.main)
+            // .debounce(for: .milliseconds(500), scheduler: DispatchQueue.main)
             .map({ _ in })
             .eraseToAnyPublisher()
     }

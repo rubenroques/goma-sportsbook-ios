@@ -144,6 +144,7 @@ class LiveEventsViewModel: NSObject {
             .store(in: &self.cancellables)
         
         self.isLoading
+            .removeDuplicates()
             .receive(on: DispatchQueue.main)
             .sink { [weak self] isLoading in
                 if !isLoading {
@@ -309,6 +310,7 @@ class LiveEventsViewModel: NSObject {
             }
         }
         
+        print("BlinkDebug: Live dataDidChangedAction")
         self.dataDidChangedAction?()
     }
 

@@ -1304,6 +1304,9 @@ extension RootViewController {
             self.homeViewController.didTapUserProfileAction = { [weak self] userBasicInfo in
                 self?.openUserProfile(userBasicInfo: userBasicInfo)
             }
+            self.homeViewController.didTapSeeAllLiveButtonAction = { [weak self] in
+                self?.didTapLiveTabItem()
+            }
             homeViewControllerLoaded = true
 
         }

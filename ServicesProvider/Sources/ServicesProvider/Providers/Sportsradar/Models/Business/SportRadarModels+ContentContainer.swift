@@ -202,8 +202,6 @@ extension SportRadarModels {
         }
 
         private static func parseRefreshed(container: KeyedDecodingContainer<CodingKeys>) throws -> ContentContainer {
-
-            print("ContentContainer parseRefreshed")
             
             let contentTypeContainer = try container.nestedContainer(keyedBy: CodingKeys.self, forKey: .content)
             let contentType = try contentTypeContainer.decode(ContentType.self, forKey: .contentType)
@@ -312,8 +310,6 @@ extension SportRadarModels {
         }
 
         private static func parseUpdated(container: KeyedDecodingContainer<CodingKeys>) throws -> ContentContainer {
-
-            print("ContentContainer parseUpdated")
             
             let contentTypeContainer = try container.nestedContainer(keyedBy: CodingKeys.self, forKey: .content)
             let contentType = try contentTypeContainer.decode(ContentType.self, forKey: .contentType)
@@ -347,9 +343,7 @@ extension SportRadarModels {
                         let changeDictionary = try container.decodeIfPresent([String: [String: String]].self, forKey: .change),
                         let eventDictionary = changeDictionary["EVENT"],
                         let newStatusString = eventDictionary[""] {
-                        
-                    // {"version":1,"data":[{"contentId":{"type":"liveDataExtended","id":"3305392.1"},"path":"attributes|COMPLETE|STATUS","changeType":"updated","change":{"EVENT":{"":"paused"}},"version":443467966}],"notificationType":"CONTENT_CHANGES"}◀️
-
+        
                     let newStatus = EventStatus.init(value: newStatusString)
                     let eventLiveDataExtended = SportRadarModels.EventLiveDataExtended.init(id: eventId,
                                                                                             homeScore: nil,
@@ -420,6 +414,34 @@ extension SportRadarModels {
                     var scoresDict: [String: Score] = [:]
                     if let score = Score(stringValue: "GAME_SCORE", homeScore: homeScore, awayScore: awayScore) {
                         scoresDict[score.key] = score
+                    }
+                        
+                    let eventLiveDataExtended = SportRadarModels.EventLiveDataExtended.init(id: eventId,
+                                                                                            homeScore: scoreDictionary["home"],
+                                                                                            awayScore: scoreDictionary["away"],
+                                                                                            matchTime: nil,
+                                                                                            status: nil,
+                                                                                            scores: scoresDict)
+                    return .updateEventLiveDataExtended(contentIdentifier: contentIdentifier,
+                                                        eventId: eventId,
+                                                        eventLiveDataExtended: eventLiveDataExtended)
+                    
+                }
+                else if path.contains("COMPLETE"),
+                        let changeDictionary = try container.decodeIfPresent([String: [String: Int]].self, forKey: .change),
+                        let scoreDictionary = changeDictionary["COMPETITOR"]{
+                    
+                    let pathParts = path.split(separator: "|")
+                    
+                    let homeScore = scoreDictionary["home"]
+                    let awayScore = scoreDictionary["away"]
+                    
+                    var scoresDict: [String: Score] = [:]
+                    if let setScore = pathParts.last {
+                        let setScoreString = String(setScore)
+                        if let score = Score(stringValue: setScoreString, homeScore: homeScore, awayScore: awayScore) {
+                            scoresDict[score.key] = score
+                        }
                     }
                         
                     let eventLiveDataExtended = SportRadarModels.EventLiveDataExtended.init(id: eventId,
@@ -625,7 +647,6 @@ extension SportRadarModels {
         }
 
         private static func parseAdded(container: KeyedDecodingContainer<CodingKeys>) throws -> ContentContainer {
-            print("ContentContainer parseAdded")
             let contentTypeContainer = try container.nestedContainer(keyedBy: CodingKeys.self, forKey: .content)
             let contentType = try contentTypeContainer.decode(ContentType.self, forKey: .contentType)
             
@@ -760,7 +781,7 @@ extension SportRadarModels.ContentContainer: CustomDebugStringConvertible {
             return "Market Details (Content ID: \(contentIdentifier)) - Market: \(String(describing: market))"
 
         case .updateEventSecundaryMarkets(let contentIdentifier, let event):
-            return "Update Event Secundary Markets (Content ID: \(contentIdentifier)) - Event: \(event)"
+            return "Update Event Secundary Markets (Content ID: \(contentIdentifier)) - Event: \(String(describing: event))"
             
         case .addEvent(let contentIdentifier, let event):
             return "Add Event (Content ID: \(contentIdentifier)) - Event: \(event)"

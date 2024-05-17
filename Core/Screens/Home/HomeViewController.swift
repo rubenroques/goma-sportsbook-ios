@@ -13,6 +13,7 @@ class HomeViewController: UIViewController {
 
     // MARK: - Public Properties
     var didTapBetslipButtonAction: (() -> Void)?
+    var didTapSeeAllLiveButtonAction: (() -> Void)?
     var didTapExternalVideoAction: ((URL) -> Void) = { _ in }
 
     var didTapExternalLinkAction: ((URL) -> Void) = { _ in }
@@ -222,7 +223,7 @@ class HomeViewController: UIViewController {
             .store(in: &cancellables)
 
         viewModel.refreshPublisher
-            .debounce(for: .milliseconds(600), scheduler: DispatchQueue.main)
+            .debounce(for: .milliseconds(900), scheduler: DispatchQueue.main)
             .receive(on: DispatchQueue.main)
             .sink(receiveValue: { [weak self] in
                 self?.reloadData()
@@ -516,6 +517,10 @@ class HomeViewController: UIViewController {
     @objc private func didTapOpenFeaturedTips() {
         let tips = self.viewModel.featuredTipLineViewModel()?.featuredTips ?? []
         self.openFeaturedTipSlider(featuredTips: tips, atIndex: self.featuredTipsCenterIndex)
+    }
+    
+    @objc private func didTapSeeAllLiveButton() {
+        self.didTapSeeAllLiveButtonAction?()
     }
     
     private func openFavorites() {
@@ -1198,6 +1203,11 @@ extension HomeViewController: UITableViewDelegate, UITableViewDataSource {
         else if case .featuredTips = self.viewModel.contentType(forSection: section) {
             seeAllLabel.text = localized("expand")
             seeAllLabel.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(didTapOpenFeaturedTips)))
+        }
+        else if case .highlightedLiveMatches = self.viewModel.contentType(forSection: section) {
+            seeAllLabel.textColor = UIColor.App.highlightPrimary
+            seeAllLabel.text = localized("see_all")
+            seeAllLabel.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(didTapSeeAllLiveButton)))
         }
         else {
             seeAllLabel.isHidden = true

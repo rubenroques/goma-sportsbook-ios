@@ -274,7 +274,18 @@ extension SportRadarLiveEventDataCoordinator {
             if let newStatus = eventLiveDataExtended.status {
                 self.updateEventStatus(newStatus: newStatus.stringValue)
             }
+            
+            for score in eventLiveDataExtended.scores.values {
+                let mappedScore = SportRadarModelMapper.score(fromInternalScore: score)
+                self.updateEventDetailedScore(mappedScore)
+            }
+            
             self.updateEventScore(newHomeScore: eventLiveDataExtended.homeScore, newAwayScore: eventLiveDataExtended.awayScore)
+            
+        case .updateEventDetailedScore(_, _, let detailedScore):
+            let mappedScore = SportRadarModelMapper.score(fromInternalScore: detailedScore)
+            self.updateEventDetailedScore(mappedScore)
+            
         default:
             break // Ignore other cases
         }

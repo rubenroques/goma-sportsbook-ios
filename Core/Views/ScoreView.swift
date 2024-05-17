@@ -20,7 +20,11 @@ class ScoreView: UIView {
         return stackView
     }()
     
-    var sportCode: String = ""
+    var sportCode: String = "" {
+        didSet {
+            self.configureScores()
+        }
+    }
     
     var score: [String: Score] = [:] {
         didSet {
