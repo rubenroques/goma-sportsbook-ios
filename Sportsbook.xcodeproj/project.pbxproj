@@ -5207,6 +5207,14 @@
 		659510F02B2C7004001B2F2E /* Trademob in Frameworks */ = {isa = PBXBuildFile; productRef = 659510EF2B2C7004001B2F2E /* Trademob */; };
 		659510F22B2C7004001B2F2E /* WebBridge in Frameworks */ = {isa = PBXBuildFile; productRef = 659510F12B2C7004001B2F2E /* WebBridge */; };
 		659510F42B2C7340001B2F2E /* Adjust in Frameworks */ = {isa = PBXBuildFile; productRef = 659510F32B2C7340001B2F2E /* Adjust */; };
+		65A4B9FF2BFB938F00279143 /* ListBackgroundCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65A4B9FE2BFB938F00279143 /* ListBackgroundCollectionViewCell.swift */; };
+		65A4BA002BFB938F00279143 /* ListBackgroundCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65A4B9FE2BFB938F00279143 /* ListBackgroundCollectionViewCell.swift */; };
+		65A4BA012BFB938F00279143 /* ListBackgroundCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65A4B9FE2BFB938F00279143 /* ListBackgroundCollectionViewCell.swift */; };
+		65A4BA022BFB938F00279143 /* ListBackgroundCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65A4B9FE2BFB938F00279143 /* ListBackgroundCollectionViewCell.swift */; };
+		65A4BA032BFB938F00279143 /* ListBackgroundCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65A4B9FE2BFB938F00279143 /* ListBackgroundCollectionViewCell.swift */; };
+		65A4BA042BFB938F00279143 /* ListBackgroundCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65A4B9FE2BFB938F00279143 /* ListBackgroundCollectionViewCell.swift */; };
+		65A4BA052BFB938F00279143 /* ListBackgroundCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65A4B9FE2BFB938F00279143 /* ListBackgroundCollectionViewCell.swift */; };
+		65A4BA062BFB938F00279143 /* ListBackgroundCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65A4B9FE2BFB938F00279143 /* ListBackgroundCollectionViewCell.swift */; };
 		65F819622BAC83DB004E27C3 /* first_deposit.json in Resources */ = {isa = PBXBuildFile; fileRef = 65F819612BAC83DA004E27C3 /* first_deposit.json */; };
 		65F819632BAC83DB004E27C3 /* first_deposit.json in Resources */ = {isa = PBXBuildFile; fileRef = 65F819612BAC83DA004E27C3 /* first_deposit.json */; };
 		65F819642BAC83DB004E27C3 /* first_deposit.json in Resources */ = {isa = PBXBuildFile; fileRef = 65F819612BAC83DA004E27C3 /* first_deposit.json */; };
@@ -7512,6 +7520,7 @@
 		6584F8FD2BA0B84200E317EA /* EmptyReferralView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EmptyReferralView.swift; sourceTree = "<group>"; };
 		658A4CB52B9F6C4800F73772 /* Referrals.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Referrals.swift; sourceTree = "<group>"; };
 		658A4CBE2B9F6C7F00F73772 /* ServiceProviderModelMapper+Referrals.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "ServiceProviderModelMapper+Referrals.swift"; sourceTree = "<group>"; };
+		65A4B9FE2BFB938F00279143 /* ListBackgroundCollectionViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ListBackgroundCollectionViewCell.swift; sourceTree = "<group>"; };
 		65F819612BAC83DA004E27C3 /* first_deposit.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = first_deposit.json; sourceTree = "<group>"; };
 		A902299F28AFD41100972863 /* QuickBetViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QuickBetViewController.swift; sourceTree = "<group>"; };
 		A90229B028B6892300972863 /* QuickBetViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QuickBetViewModel.swift; sourceTree = "<group>"; };
@@ -11206,6 +11215,7 @@
 				45626E3F275544620069B89B /* OutcomeSelectionButtonView.xib */,
 				4589C742281A0CB700243547 /* MatchStatsCollectionViewCell.swift */,
 				4589C743281A0CB700243547 /* MatchStatsCollectionViewCell.xib */,
+				65A4B9FE2BFB938F00279143 /* ListBackgroundCollectionViewCell.swift */,
 			);
 			path = Cells;
 			sourceTree = "<group>";
@@ -13683,6 +13693,7 @@
 				450B790228F58574009229E3 /* LoginAccount.swift in Sources */,
 				450B790328F58574009229E3 /* PopularDetailsViewModel.swift in Sources */,
 				450B790428F58574009229E3 /* FeaturedTipDetailsViewController.swift in Sources */,
+				65A4BA012BFB938F00279143 /* ListBackgroundCollectionViewCell.swift in Sources */,
 				450B790528F58574009229E3 /* BonusHistoryTableViewCell.swift in Sources */,
 				450B790628F58574009229E3 /* BetSelectionStateTableViewCell.swift in Sources */,
 				450B790728F58574009229E3 /* CALayer+Shift.swift in Sources */,
@@ -14582,6 +14593,7 @@
 				457CBAB0282D27D000ED0F00 /* AggregatorRepository.swift in Sources */,
 				A90FB7CC29AF7C1700D08A7C /* ResponsibleGamingViewController.swift in Sources */,
 				A98708C728DA278F00F27348 /* UserProfileInfoViewController.swift in Sources */,
+				65A4BA052BFB938F00279143 /* ListBackgroundCollectionViewCell.swift in Sources */,
 				457CBAB1282D27D000ED0F00 /* LoadingMoreTableViewCell.swift in Sources */,
 				450FC4132A2E268F000DB866 /* StoriesItemCollectionViewCell.swift in Sources */,
 				457CBAB2282D27D000ED0F00 /* FavoriteGoma.swift in Sources */,
@@ -14974,6 +14986,7 @@
 				457CBC8E282D2CD100ED0F00 /* BetslipHistory.swift in Sources */,
 				457CBC8F282D2CD100ED0F00 /* AppSession.swift in Sources */,
 				457CBC90282D2CD100ED0F00 /* HeaderDropDownSelectionView.swift in Sources */,
+				65A4BA062BFB938F00279143 /* ListBackgroundCollectionViewCell.swift in Sources */,
 				A9DD89FA2A57144D00D3A5FE /* SubjectType.swift in Sources */,
 				457CBC91282D2CD100ED0F00 /* TabularViewDataSource.swift in Sources */,
 				457CBC92282D2CD100ED0F00 /* SwiftyJSON.swift in Sources */,
@@ -15876,6 +15889,7 @@
 				4589C80C282024E400243547 /* PopularDetailsViewModel.swift in Sources */,
 				A9B946C828C21C800091296E /* FeaturedTipDetailsViewController.swift in Sources */,
 				4589C80D282024E400243547 /* BonusHistoryTableViewCell.swift in Sources */,
+				65A4BA022BFB938F00279143 /* ListBackgroundCollectionViewCell.swift in Sources */,
 				A9863EBF286A09B900A4A1A2 /* BetSelectionStateTableViewCell.swift in Sources */,
 				45C10F6C28772DA700037BBE /* CALayer+Shift.swift in Sources */,
 				4589C80E282024E400243547 /* ChatNotificationsViewModel.swift in Sources */,
@@ -16568,6 +16582,7 @@
 				45A33117298976BA008181E9 /* PopularDetailsViewModel.swift in Sources */,
 				45A33118298976BA008181E9 /* FeaturedTipDetailsViewController.swift in Sources */,
 				45A33119298976BA008181E9 /* BonusHistoryTableViewCell.swift in Sources */,
+				65A4B9FF2BFB938F00279143 /* ListBackgroundCollectionViewCell.swift in Sources */,
 				45A3311A298976BA008181E9 /* BetSelectionStateTableViewCell.swift in Sources */,
 				45A3311B298976BA008181E9 /* CALayer+Shift.swift in Sources */,
 				45A3311C298976BA008181E9 /* ChatNotificationsViewModel.swift in Sources */,
@@ -17309,6 +17324,7 @@
 				45065D342922E46700E0A205 /* Loadable.swift in Sources */,
 				45A6BC7B28246A7500D9B416 /* DebugTableViewDescription.swift in Sources */,
 				45A6BC7C28246A7500D9B416 /* SimpleRegisterEmailSentViewController.swift in Sources */,
+				65A4BA042BFB938F00279143 /* ListBackgroundCollectionViewCell.swift in Sources */,
 				A9DF8E3728E45D2E0083BF56 /* TipsSliderViewModel.swift in Sources */,
 				A90FB7F329B0C53900D08A7C /* TipsControlViewController.swift in Sources */,
 				45A6BC7D28246A7500D9B416 /* CompetitionsDataSource.swift in Sources */,
@@ -17951,6 +17967,7 @@
 				45F6BBB42AB3732C00C81DE1 /* FeaturedTipDetailsViewController.swift in Sources */,
 				45F6BBB52AB3732C00C81DE1 /* BonusHistoryTableViewCell.swift in Sources */,
 				45F6BBB62AB3732C00C81DE1 /* BetSelectionStateTableViewCell.swift in Sources */,
+				65A4BA002BFB938F00279143 /* ListBackgroundCollectionViewCell.swift in Sources */,
 				45F6BBB72AB3732C00C81DE1 /* CALayer+Shift.swift in Sources */,
 				45F6BBB82AB3732C00C81DE1 /* ChatNotificationsViewModel.swift in Sources */,
 				45F6BBB92AB3732C00C81DE1 /* RequestLocationAccessViewController.swift in Sources */,
@@ -18759,6 +18776,7 @@
 				A9C341A928F9A74A0055360B /* MultiSlider.swift in Sources */,
 				45044AFD291022E90053311D /* ServiceProviderModelMapper+Profile.swift in Sources */,
 				A9C341AA28F9A74A0055360B /* UserLoginForm.swift in Sources */,
+				65A4BA032BFB938F00279143 /* ListBackgroundCollectionViewCell.swift in Sources */,
 				A9A43C8D2A4B2BE7008FB399 /* ManualUploadsDocumentsViewModel.swift in Sources */,
 				A9C341AB28F9A74A0055360B /* OutrightCompetitionWidgetCollectionViewCell.swift in Sources */,
 				A9C341AC28F9A74A0055360B /* Tournament.swift in Sources */,

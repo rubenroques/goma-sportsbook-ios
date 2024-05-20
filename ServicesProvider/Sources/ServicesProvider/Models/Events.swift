@@ -247,6 +247,7 @@ public class Market: Codable, Equatable {
     public var eventId: String?
     public var marketDigitLine: String?
     public var outcomesOrder: OutcomesOrder
+    public var customBetAvailable: Bool?
     
     enum CodingKeys: String, CodingKey {
         case id = "id"
@@ -264,6 +265,7 @@ public class Market: Codable, Equatable {
         case eventId = "idfoevent"
         case marketDigitLine = "marketDigitLine"
         case outcomesOrder = "outcomesOrder"
+        case customBetAvailable = "custombetavailable"
     }
 
     public init(id: String,
@@ -280,7 +282,8 @@ public class Market: Codable, Equatable {
                 awayParticipant: String?,
                 eventId: String?,
                 marketDigitLine: String?,
-                outcomesOrder: OutcomesOrder = .none) {
+                outcomesOrder: OutcomesOrder = .none,
+                customBetAvailable: Bool?) {
 
         self.id = id
         self.name = name
@@ -297,6 +300,7 @@ public class Market: Codable, Equatable {
         self.eventId = eventId
         self.marketDigitLine = marketDigitLine
         self.outcomesOrder = outcomesOrder
+        self.customBetAvailable = customBetAvailable
     }
 
     required public init(from decoder: Decoder) throws {
@@ -312,6 +316,8 @@ public class Market: Codable, Equatable {
         self.isTradable = (try? container.decode(Bool.self, forKey: .isTradable)) ?? true
         self.eventId = try container.decodeIfPresent(String.self, forKey: .eventId)
         self.outcomesOrder = try container.decode(OutcomesOrder.self, forKey: .id)
+        self.customBetAvailable = try container.decodeIfPresent(Bool.self, forKey: .customBetAvailable)
+
     }
 
     public static func == (lhs: Market, rhs: Market) -> Bool {
@@ -329,7 +335,8 @@ public class Market: Codable, Equatable {
         lhs.homeParticipant == rhs.homeParticipant &&
         lhs.awayParticipant == rhs.awayParticipant &&
         lhs.eventId == rhs.eventId &&
-        lhs.outcomesOrder == rhs.outcomesOrder
+        lhs.outcomesOrder == rhs.outcomesOrder &&
+        lhs.customBetAvailable == rhs.customBetAvailable
     }
 }
 

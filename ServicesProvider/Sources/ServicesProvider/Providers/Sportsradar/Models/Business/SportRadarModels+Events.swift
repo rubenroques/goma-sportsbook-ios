@@ -269,6 +269,8 @@ extension SportRadarModels {
         var marketDigitLine: String?
         var outcomesOrder: OutcomesOrder
         
+        var customBetAvailable: Bool?
+        
         enum CodingKeys: String, CodingKey {
             case id = "idfomarket"
             case name = "name"
@@ -286,9 +288,10 @@ extension SportRadarModels {
             case isOverUnder = "isunderover"
             case marketDigitLine = "line"
             case outcomesOrder = "idfoselectionorder"
+            case customBetAvailable = "custombetavailable"
         }
 
-        init(id: String, name: String, outcomes: [Outcome], marketTypeId: String? = nil, eventMarketTypeId: String? = nil, eventName: String? = nil, isMainOutright: Bool? = nil, eventMarketCount: Int? = nil, isTradable: Bool, startDate: String? = nil, homeParticipant: String? = nil, awayParticipant: String? = nil, eventId: String? = nil, isOverUnder: Bool = false, marketDigitLine: String?, outcomesOrder: OutcomesOrder) {
+        init(id: String, name: String, outcomes: [Outcome], marketTypeId: String? = nil, eventMarketTypeId: String? = nil, eventName: String? = nil, isMainOutright: Bool? = nil, eventMarketCount: Int? = nil, isTradable: Bool, startDate: String? = nil, homeParticipant: String? = nil, awayParticipant: String? = nil, eventId: String? = nil, isOverUnder: Bool = false, marketDigitLine: String?, outcomesOrder: OutcomesOrder, customBetAvailable: Bool?) {
             self.id = id
             self.name = name
             self.outcomes = outcomes
@@ -305,6 +308,7 @@ extension SportRadarModels {
             self.isOverUnder = isOverUnder
             self.marketDigitLine = marketDigitLine
             self.outcomesOrder = outcomesOrder
+            self.customBetAvailable = customBetAvailable
         }
 
         init(from decoder: Decoder) throws {
@@ -364,6 +368,8 @@ extension SportRadarModels {
                 }
                 self.outcomes = self.outcomes.reversed()
             }
+            
+            self.customBetAvailable = try container.decodeIfPresent(Bool.self, forKey: .customBetAvailable)
 
         }
         

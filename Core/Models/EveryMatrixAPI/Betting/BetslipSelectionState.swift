@@ -141,6 +141,7 @@ struct BetslipPlaceBetResponse: Decodable {
     var possibleProfit: Double?
     var freeBet: Bool?
     var maxWinning: Double?
+    var betslipId: String?
 
     var selections: [BetslipPlaceEntry]?
 
@@ -172,6 +173,7 @@ struct BetslipPlaceBetResponse: Decodable {
         case maxWinning = "maxWinning"
 
         case selections = "selections"
+        case betslipId = "betslipId"
     }
 
     init(betId: String? = nil, betSucceed: Bool? = nil, errorCode: String? = nil, errorMessage: String? = nil, totalPriceValue: Double? = nil,
@@ -179,7 +181,8 @@ struct BetslipPlaceBetResponse: Decodable {
          amount: Double? = nil, maxWinningTax: Double? = nil, terminalType: String? = nil, freeBetAmount: Double? = nil, minStake: Double? = nil,
          numberOfSelections: Int? = nil, bonusBetAmount: Double? = nil, maxStake: Double? = nil, type: String? = nil, totalStakeNetto: Double? = nil,
          eachWay: Bool? = nil, baseWinning: Double? = nil, possibleProfit: Double? = nil, freeBet: Bool? = nil, maxWinning: Double? = nil,
-         selections: [BetslipPlaceEntry]? = nil) {
+         selections: [BetslipPlaceEntry]? = nil,
+         betslipId: String? = nil) {
 
         self.betId = betId
         self.betSucceed = betSucceed
@@ -206,6 +209,7 @@ struct BetslipPlaceBetResponse: Decodable {
         self.freeBet = freeBet
         self.maxWinning = maxWinning
         self.selections = selections
+        self.betslipId = betslipId
     }
 
     init(betId: String) {
@@ -234,6 +238,7 @@ struct BetslipPlaceBetResponse: Decodable {
         self.freeBet = nil
         self.maxWinning = nil
         self.selections = nil
+        self.betslipId = nil
     }
     
 }

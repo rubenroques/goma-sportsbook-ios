@@ -140,7 +140,8 @@ extension SportRadarModelMapper {
                       awayParticipant: internalMarket.awayParticipant,
                       eventId: internalMarket.eventId,
                       marketDigitLine: internalMarket.marketDigitLine,
-                      outcomesOrder: outcomesOrder)
+                      outcomesOrder: outcomesOrder,
+                      customBetAvailable: internalMarket.customBetAvailable)
     }
 
     static func outcome(fromInternalOutcome internalOutcome: SportRadarModels.Outcome) -> Outcome {

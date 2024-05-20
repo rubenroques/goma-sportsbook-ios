@@ -405,6 +405,9 @@ class MatchDetailsViewController: UIViewController {
         self.marketTypesCollectionView.alwaysBounceHorizontal = true
         self.marketTypesCollectionView.register(ListTypeCollectionViewCell.nib,
                                                 forCellWithReuseIdentifier: ListTypeCollectionViewCell.identifier)
+        self.marketTypesCollectionView.register(ListBackgroundCollectionViewCell.self,
+                                       forCellWithReuseIdentifier: ListBackgroundCollectionViewCell.identifier)
+        
         self.marketTypesCollectionView.delegate = self.viewModel
         self.marketTypesCollectionView.dataSource = self.viewModel
         

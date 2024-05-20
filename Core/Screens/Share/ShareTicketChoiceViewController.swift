@@ -302,7 +302,7 @@ class ShareTicketChoiceViewController: UIViewController {
 
         if let gameSnapshot = self.viewModel.clickedShareTicketInfo?.snapshot, let betStatus = self.viewModel.clickedShareTicketInfo?.betStatus {
 
-            if betStatus.lowercased() == "opened",
+            if betStatus.lowercased() == "opened" || betStatus.lowercased() == "open",
                let betToken = self.viewModel.clickedShareTicketInfo?.betToken {
                 let userLocale = Locale.current.languageCode != "fr" ? "en" : Locale.current.languageCode
                 //let matchUrl = URL(string: "\(urlMobile)/bet/\(betToken)")
@@ -319,7 +319,7 @@ class ShareTicketChoiceViewController: UIViewController {
 
         let metadataItemSource = LinkPresentationItemSource(metaData: metadata)
 
-        if let betStatus = self.viewModel.clickedShareTicketInfo?.betStatus, betStatus.lowercased() == "opened" {
+        if let betStatus = self.viewModel.clickedShareTicketInfo?.betStatus, betStatus.lowercased() == "opened" || betStatus.lowercased() == "open" {
 
             let sharedText = localized("look_bet_made")
 

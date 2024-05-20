@@ -380,10 +380,11 @@ extension MatchDetailsViewModel {
                         position: rawMarketGroup.position)
 
         }
-        let sortedMarketGroups = marketGroups.sorted(by: {
-            $0.position ?? 0 < $1.position ?? 99
-        })
-        return sortedMarketGroups
+        // NOTE: Is already sorted before convertion, so no needed
+//        let sortedMarketGroups = marketGroups.sorted(by: {
+//            $0.position ?? 0 < $1.position ?? 99
+//        })
+        return marketGroups
     }
 
 }
@@ -399,32 +400,71 @@ extension MatchDetailsViewModel: UICollectionViewDataSource, UICollectionViewDel
     }
 
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
-        guard
-            let cell = collectionView.dequeueCellType(ListTypeCollectionViewCell.self, indexPath: indexPath),
-            let item = self.marketGroup(forIndex: indexPath.row)
+        
+        if let item = self.marketGroup(forIndex: indexPath.row),
+           item.id == "99" && item.type == "MixMatch" {
+            
+            guard
+                let cell = collectionView.dequeueCellType(ListBackgroundCollectionViewCell.self, indexPath: indexPath)
+            else {
+                fatalError()
+            }
+            
+            cell.isCustomDesign = true
+            
+            let marketTranslatedName = item.translatedName ?? localized("market")
+            
+            let normalizedTranslatedName = marketTranslatedName.replacingOccurrences(of: "[^a-zA-Z0-9]", with: "_", options: .regularExpression).lowercased()
+            
+            let marketKey = "market_group_\(normalizedTranslatedName)"
+            
+            var marketName = "\(localized("mix_match_mix_string"))\(localized("mix_match_match_string"))"
+            
+            cell.setupInfo(title: marketName, iconName: "mix_match_icon", backgroundName: "mix_match_background_pill")
+            
+            if let index = self.selectedMarketTypeIndexPublisher.value, index == indexPath.row {
+                cell.setSelectedType(true)
+            }
+            else {
+                cell.setSelectedType(false)
+            }
+            
+            return cell
+        }
         else {
-            fatalError()
+            guard
+                let cell = collectionView.dequeueCellType(ListTypeCollectionViewCell.self, indexPath: indexPath),
+                let item = self.marketGroup(forIndex: indexPath.row)
+            else {
+                fatalError()
+            }
+            
+            let marketTranslatedName = item.translatedName ?? localized("market")
+            
+            //let normalizedTranslatedName = marketTranslatedName.replacingOccurrences(of: " ", with: "_").replacingOccurrences(of: "/", with: "_").lowercased()
+            let normalizedTranslatedName = marketTranslatedName.replacingOccurrences(of: "[^a-zA-Z0-9]", with: "_", options: .regularExpression).lowercased()
+            
+            let marketKey = "market_group_\(normalizedTranslatedName)"
+            
+            var marketName = localized(marketKey)
+            
+            if normalizedTranslatedName == "mixmatch" {
+                marketName = "\(localized("mix_match_mix_string"))\(localized("mix_match_match_string"))"
+            }
+            
+            cell.isCustomDesign = true
+            
+            cell.setupWithTitle(marketName)
+            
+            if let index = self.selectedMarketTypeIndexPublisher.value, index == indexPath.row {
+                cell.setSelectedType(true)
+            }
+            else {
+                cell.setSelectedType(false)
+            }
+            
+            return cell
         }
-
-        let marketTranslatedName = item.translatedName ?? localized("market")
-
-        //let normalizedTranslatedName = marketTranslatedName.replacingOccurrences(of: " ", with: "_").replacingOccurrences(of: "/", with: "_").lowercased()
-        let normalizedTranslatedName = marketTranslatedName.replacingOccurrences(of: "[^a-zA-Z0-9]", with: "_", options: .regularExpression).lowercased()
-
-        let marketKey = "market_group_\(normalizedTranslatedName)"
-
-        let marketName = localized(marketKey)
-
-        cell.setupWithTitle(marketName)
-
-        if let index = self.selectedMarketTypeIndexPublisher.value, index == indexPath.row {
-            cell.setSelectedType(true)
-        }
-        else {
-            cell.setSelectedType(false)
-        }
-
-        return cell
     }
 
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {

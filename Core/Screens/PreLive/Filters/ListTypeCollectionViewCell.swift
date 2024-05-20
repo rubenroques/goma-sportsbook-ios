@@ -18,6 +18,8 @@ class ListTypeCollectionViewCell: UICollectionViewCell {
 
     var selectedType: Bool = false
 
+    var isCustomDesign: Bool = false
+    
     override func layoutSubviews() {
         super.layoutSubviews()
 
@@ -58,6 +60,20 @@ class ListTypeCollectionViewCell: UICollectionViewCell {
 
     func setupWithTitle(_ title: String) {
         self.titleLabel.text = title
+        
+        if self.isCustomDesign {
+            let text = title
+            let attributedString = NSMutableAttributedString(string: text)
+            let fullRange = (text as NSString).range(of: title)
+            var range = (text as NSString).range(of: localized("mix_match_mix_string"))
+            
+            attributedString.addAttribute(.foregroundColor, value: UIColor.App.textPrimary, range: fullRange)
+            attributedString.addAttribute(.font, value: AppFont.with(type: .semibold, size: 14), range: fullRange)
+            
+            attributedString.addAttribute(.foregroundColor, value: UIColor.App.highlightPrimary, range: range)
+            
+            self.titleLabel.attributedText = attributedString
+        }
     }
 
     func setSelectedType(_ selected: Bool) {
