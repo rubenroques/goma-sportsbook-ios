@@ -216,6 +216,12 @@ class BetSubmissionSuccessViewController: UIViewController {
                         ServiceProviderModelMapper.betHistoryEntrySelection(fromBettingTicket: $0)
                     }
                     
+                    var betslipId: Int? = nil
+                    
+                    if let placedBetslipId = betPlacedDetails.response.betslipId {
+                        betslipId = Int(placedBetslipId)
+                    }
+                    
                     let bettingTicketHistory = BetHistoryEntry(betId: betPlacedDetails.response.betId ?? "",
                                                                selections: mappedBetHistoryEntrySelection,
                                                                type: betPlacedDetails.response.type,
@@ -236,7 +242,7 @@ class BetSubmissionSuccessViewController: UIViewController {
                                                                partialCashoutReturn: nil,
                                                                partialCashoutStake: nil,
                                                                betShareToken: nil,
-                                                               betslipId: nil,
+                                                               betslipId: betslipId,
                                                                cashbackReturn: nil,
                                                                freebetReturn: nil,
                                                                potentialCashbackReturn: nil,
