@@ -665,6 +665,7 @@ class MatchWidgetCollectionViewCell: UICollectionViewCell {
         
         self.adjustDesignToCardHeightStyle()
         self.setupWithTheme()
+
     }
     
     override func layoutSubviews() {
@@ -830,7 +831,8 @@ class MatchWidgetCollectionViewCell: UICollectionViewCell {
         self.awayBaseView.backgroundColor = UIColor.App.backgroundOdds
         
         self.suspendedBaseView.backgroundColor = UIColor.App.backgroundDisabledOdds
-        self.suspendedBaseView.layer.borderColor = UIColor.App.backgroundBorder.cgColor
+        
+        self.suspendedBaseView.layer.borderColor = UIColor.App.backgroundBorder.resolvedColor(with: self.traitCollection).cgColor
         
         self.suspendedLabel.textColor = UIColor.App.textDisablePrimary
         
@@ -1135,6 +1137,7 @@ class MatchWidgetCollectionViewCell: UICollectionViewCell {
         
         self.detailedScoreView.setupWithTheme()
         self.marketNamePillLabelView.setupWithTheme()
+
     }
     
     private func adjustMarketNameView(isShown: Bool) {

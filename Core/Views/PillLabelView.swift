@@ -52,6 +52,13 @@ class PillLabelView: UIView {
         fatalError("init(coder:) has not been implemented")
     }
     
+    override func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {
+        super.traitCollectionDidChange(previousTraitCollection)
+        
+        self.setupWithTheme()
+
+    }
+    
     private func setupView() {
         self.backgroundColor = .clear
         self.translatesAutoresizingMaskIntoConstraints = false
@@ -102,7 +109,7 @@ class PillLabelView: UIView {
     
     func setupWithTheme() {
 
-        self.borderView.layer.borderColor = UIColor.App.separatorLineSecondary.cgColor
+        self.borderView.layer.borderColor = UIColor.App.separatorLineSecondary.resolvedColor(with: self.traitCollection).cgColor
         self.textLabel.textColor = UIColor.App.textSecondary
         self.lineView.backgroundColor = UIColor.App.separatorLineSecondary
         self.borderView.backgroundColor = .clear

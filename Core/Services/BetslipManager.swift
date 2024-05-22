@@ -446,7 +446,9 @@ extension BetslipManager {
                                                            totalPriceValue: totalPriceValue,
                                                            amount: placedBetEntry.totalStake,
                                                            type: betType,
-                                                           maxWinning: placedBetEntry.potentialReturn, selections: betslipPlaceEntries)
+                                                           maxWinning: placedBetEntry.potentialReturn, selections: betslipPlaceEntries,
+                                                           betslipId: placedBetsResponse.identifier)
+                    
                     return BetPlacedDetails(response: response)
                 }
                 return Just(betPlacedDetailsArray).setFailureType(to: BetslipErrorType.self).eraseToAnyPublisher()
@@ -535,7 +537,8 @@ extension BetslipManager {
                                                            totalPriceValue: totalPriceValue,
                                                            amount: placedBetEntry.totalStake,
                                                            type: betType,
-                                                           maxWinning: placedBetEntry.potentialReturn, selections: betslipPlaceEntries)
+                                                           maxWinning: placedBetEntry.potentialReturn, selections: betslipPlaceEntries,
+                                                           betslipId: placedBetsResponse.identifier)
                     
                     return BetPlacedDetails(response: response)
                 }
@@ -636,7 +639,7 @@ extension BetslipManager {
                                                            amount: placedBetEntry.totalStake,
                                                            type: betType,
                                                            maxWinning: placedBetEntry.potentialReturn,
-                    selections: betslipPlaceEntries)
+                                                           selections: betslipPlaceEntries, betslipId: placedBetsResponse.identifier)
                     
                     return BetPlacedDetails(response: response)
                 }
@@ -724,7 +727,9 @@ extension BetslipManager {
                                                            totalPriceValue: totalPriceValue,
                                                            amount: placedBetEntry.totalStake,
                                                            type: betType,
-                                                           maxWinning: placedBetEntry.potentialReturn, selections: betslipPlaceEntries)
+                                                           maxWinning: placedBetEntry.potentialReturn, selections: betslipPlaceEntries,
+                                                           betslipId: placedBetsResponse.identifier)
+                    
                     return BetPlacedDetails(response: response)
                 }
                 return Just(betPlacedDetailsArray).setFailureType(to: BetslipErrorType.self).eraseToAnyPublisher()
