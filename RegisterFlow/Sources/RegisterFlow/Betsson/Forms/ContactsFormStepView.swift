@@ -469,8 +469,8 @@ class ContactsFormStepView: FormStepView {
     override func setupWithTheme() {
         super.setupWithTheme()
 
-        self.prefixContainerView.layer.borderColor = AppColor.backgroundBorder.cgColor
-
+        self.prefixContainerView.layer.borderColor = AppColor.backgroundBorder.resolvedColor(with: self.traitCollection).cgColor
+        
         self.prefixLabel.textColor = AppColor.inputTextTitle
 
         self.prefixDownIconImageView.tintColor = AppColor.textPrimary

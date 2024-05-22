@@ -175,8 +175,8 @@ class GenderFormStepView: FormStepView {
         self.maleButton.imageView?.tintColor = AppColor.textSecondary
         self.femaleButton.imageView?.tintColor = AppColor.textSecondary
 
-        self.maleButton.layer.borderColor = AppColor.highlightPrimary.cgColor
-        self.femaleButton.layer.borderColor = AppColor.highlightPrimary.cgColor
+        self.maleButton.layer.borderColor = AppColor.highlightPrimary.resolvedColor(with: self.traitCollection).cgColor
+        self.femaleButton.layer.borderColor = AppColor.highlightPrimary.resolvedColor(with: self.traitCollection).cgColor
 
         self.maleButton.setTitleColor(AppColor.textPrimary, for: .selected)
         self.femaleButton.setTitleColor(AppColor.textPrimary, for: .selected)

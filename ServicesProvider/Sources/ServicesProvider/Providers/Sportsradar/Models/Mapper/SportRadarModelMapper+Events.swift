@@ -25,14 +25,14 @@ extension SportRadarModelMapper {
 
         let country: Country? = Country.country(withName: internalEvent.tournamentCountryName ?? "")
 
-        let eventMarkets = internalEvent.markets ?? []
+        let eventMarkets = internalEvent.markets
         let markets = eventMarkets.map(Self.market(fromInternalMarket:))
-
+        
         let sportRadarSportType = SportRadarModels.SportType(name: internalEvent.sportTypeName ?? "",
-                                               alphaId: internalEvent.sportTypeCode,
-                                               numberEvents: 0,
-                                               numberOutrightEvents: 0,
-                                               numberOutrightMarkets: 0,
+                                                             alphaId: internalEvent.sportTypeCode,
+                                                             numberEvents: 0,
+                                                             numberOutrightEvents: 0,
+                                                             numberOutrightMarkets: 0,
                                                              numberLiveEvents: 0)
 
         let sport = SportRadarModelMapper.sportType(fromSportRadarSportType: sportRadarSportType)
@@ -112,6 +112,22 @@ extension SportRadarModelMapper {
     
     
     static func market(fromInternalMarket internalMarket: SportRadarModels.Market) -> Market {
+        var country: Country?
+        if let tournamentCountryName = internalMarket.tournamentCountryName {
+           country = Country.country(withName: tournamentCountryName)
+        }
+        
+        var mappedSport: SportType?
+        if  let sportTypeCode = internalMarket.sportTypeCode {
+            let sportRadarSportType = SportRadarModels.SportType(name: internalMarket.sportTypeName ?? "",
+                                                                 alphaId: sportTypeCode,
+                                                                 numberEvents: 0,
+                                                                 numberOutrightEvents: 0,
+                                                                 numberOutrightMarkets: 0,
+                                                                 numberLiveEvents: 0)
+            mappedSport = SportRadarModelMapper.sportType(fromSportRadarSportType: sportRadarSportType)
+        }
+        
         let outcomes = internalMarket.outcomes.map(Self.outcome(fromInternalOutcome:))
         
         var outcomesOrder: Market.OutcomesOrder
@@ -140,7 +156,12 @@ extension SportRadarModelMapper {
                       awayParticipant: internalMarket.awayParticipant,
                       eventId: internalMarket.eventId,
                       marketDigitLine: internalMarket.marketDigitLine,
-                      outcomesOrder: outcomesOrder)
+                      outcomesOrder: outcomesOrder, 
+                      // event related properties
+                      competitionId: internalMarket.competitionId,
+                      competitionName: internalMarket.competitionName,
+                      sport: mappedSport,
+                      venueCountry: country)
     }
 
     static func outcome(fromInternalOutcome internalOutcome: SportRadarModels.Outcome) -> Outcome {

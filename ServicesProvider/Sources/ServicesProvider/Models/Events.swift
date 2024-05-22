@@ -248,6 +248,12 @@ public class Market: Codable, Equatable {
     public var marketDigitLine: String?
     public var outcomesOrder: OutcomesOrder
     
+    // Event related properties
+    public var competitionId: String?
+    public var competitionName: String?
+    public var sport: SportType?
+    public var venueCountry: Country?
+
     enum CodingKeys: String, CodingKey {
         case id = "id"
         case name = "name"
@@ -280,7 +286,13 @@ public class Market: Codable, Equatable {
                 awayParticipant: String?,
                 eventId: String?,
                 marketDigitLine: String?,
-                outcomesOrder: OutcomesOrder = .none) {
+                outcomesOrder: OutcomesOrder = .none,
+                
+                // Event related properties
+                competitionId: String? = nil,
+                competitionName: String? = nil,
+                sport: SportType? = nil,
+                venueCountry: Country? = nil) {
 
         self.id = id
         self.name = name
@@ -297,6 +309,12 @@ public class Market: Codable, Equatable {
         self.eventId = eventId
         self.marketDigitLine = marketDigitLine
         self.outcomesOrder = outcomesOrder
+        
+        // Event related properties
+        self.competitionId = competitionId
+        self.competitionName = competitionName
+        self.sport = sport
+        self.venueCountry = venueCountry
     }
 
     required public init(from decoder: Decoder) throws {

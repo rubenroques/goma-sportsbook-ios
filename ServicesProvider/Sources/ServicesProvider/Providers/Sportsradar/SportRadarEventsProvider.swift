@@ -503,13 +503,13 @@ class SportRadarEventsProvider: EventsProvider {
 
     func subscribeOutrightEvent(forMarketGroupId marketGroupId: String) -> AnyPublisher<SubscribableContent<Event>, ServiceProviderError> {
         
-        return self.getEventsForMarketGroup(withId: marketGroupId)
-            .map { eventsGroup in
-                return eventsGroup.events.first?.id ?? ""
-            }
-            .flatMap { eventId in
-                self.subscribeEventDetails(eventId: eventId)
-            }
+        return self.getEventForMarketGroup(withId: marketGroupId)
+            .map({ event in
+                return SubscribableContent.contentUpdate(content: event)
+            })
+//            .flatMap { event in
+//                self.subscribeEventDetails(eventId: event.id)
+//            }
             .eraseToAnyPublisher()
         
     }
@@ -1644,9 +1644,56 @@ extension SportRadarEventsProvider {
         .eraseToAnyPublisher()
     }
 
-    func getEventsForMarketGroup(withId marketGroupId: String) -> AnyPublisher<EventsGroup, ServiceProviderError> {
+    func getEventForMarketGroup(withId marketGroupId: String) -> AnyPublisher<Event, ServiceProviderError> {
+        
+        let endpoint = SportRadarRestAPIClient.getEventForMarketGroup(marketGroupId: marketGroupId)
+        
+        let requestPublisher: AnyPublisher<SportRadarModels.SportRadarResponse<SportRadarModels.MarketGroup>, ServiceProviderError> = self.restConnector.request(endpoint)
+        
+        return requestPublisher.tryMap( { sportRadarResponse -> Event in
+            
+            let mappedMarkets = sportRadarResponse.data.markets.map(SportRadarModelMapper.market(fromInternalMarket: ))
+            
+            guard
+                let firstMarket = mappedMarkets.first,
+                let eventId = firstMarket.eventId,
+                let competitionId = firstMarket.competitionId,
+                let competitionName = firstMarket.competitionName,
+                let sport = firstMarket.sport
+            else {
+                throw ServiceProviderError.errorMessage(message: "No market found for marketGroup")
+            }
+            
+            let event = Event(id: eventId,
+                              homeTeamName: "",
+                              awayTeamName: "",
+                              homeTeamScore: nil,
+                              awayTeamScore: nil,
+                              competitionId: competitionId,
+                              competitionName: competitionName,
+                              sport: sport,
+                              sportIdCode: nil,
+                              startDate: Date(),
+                              markets: mappedMarkets,
+                              venueCountry: firstMarket.venueCountry,
+                              status: nil,
+                              matchTime: nil,
+                              scores: [:])
+            return event
+        })
+        .mapError { error -> ServiceProviderError in
+            if let serviceProviderError = error as? ServiceProviderError {
+                return serviceProviderError
+            } else {
+                return ServiceProviderError.errorMessage(message: error.localizedDescription)
+            }
+        }
+        .eraseToAnyPublisher()
+    }
 
-        let endpoint = SportRadarRestAPIClient.getEventsForMarketGroup(marketGroupId: marketGroupId)
+    public func getEventsForEventGroup(withId eventGroupId: String) -> AnyPublisher<EventsGroup, ServiceProviderError> {
+        
+        let endpoint = SportRadarRestAPIClient.getEventsForEventGroup(eventGroupId: eventGroupId)
 
         let requestPublisher: AnyPublisher<SportRadarModels.SportRadarResponse<SportRadarModels.EventsGroup>, ServiceProviderError> = self.restConnector.request(endpoint)
 
@@ -1663,7 +1710,7 @@ extension SportRadarEventsProvider {
         })
         .eraseToAnyPublisher()
     }
-
+    
     func getEventForMarket(withId marketId: String) -> AnyPublisher<Event?, Never> {
         let endpoint = SportRadarRestAPIClient.getEventForMarket(marketId: marketId)
         let requestPublisher: AnyPublisher<SportRadarModels.SportRadarResponse<SportRadarModels.Event>, ServiceProviderError> = self.restConnector.request(endpoint)

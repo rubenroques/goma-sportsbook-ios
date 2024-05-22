@@ -29,7 +29,8 @@ enum SportRadarRestAPIClient {
     case getEventDetails(eventId: String)
     case getEventSecundaryMarkets(eventId: String)
 
-    case getEventsForMarketGroup(marketGroupId: String)
+    case getEventForMarketGroup(marketGroupId: String)
+    case getEventsForEventGroup(eventGroupId: String)
     case getEventForMarket(marketId: String)
 
     case homeSliders
@@ -67,7 +68,7 @@ extension SportRadarRestAPIClient: Endpoint {
             return "/services/content/unsubscribe"
         //
         case .marketsFilter:
-            //return "/sportradar/sportsbook/config/marketsFilter_v2.json" // new: "/sportsbook/config/marketsFilter_v2.json"
+            // return "/sportradar/sportsbook/config/marketsFilter_v2.json" // new: "/sportsbook/config/marketsFilter_v2.json"
             return "/sportsbook/config/marketsFilter_v2.json"
         //
         case .fieldWidgetId:
@@ -93,8 +94,10 @@ extension SportRadarRestAPIClient: Endpoint {
             return "/services/content/get"
         case .getEventSecundaryMarkets:
             return "/services/content/get"
-            
-        case .getEventsForMarketGroup:
+        
+        case .getEventForMarketGroup:
+            return "/services/content/get"
+        case .getEventsForEventGroup:
             return "/services/content/get"
         case .getEventForMarket:
             return "/services/content/get"
@@ -162,7 +165,8 @@ extension SportRadarRestAPIClient: Endpoint {
         case .getEventDetails:  return nil
         case .getEventSecundaryMarkets: return nil
             
-        case .getEventsForMarketGroup: return nil
+        case .getEventForMarketGroup: return nil
+        case .getEventsForEventGroup: return nil
         case .getEventForMarket: return nil
 
         case .homeSliders: return nil
@@ -207,7 +211,8 @@ extension SportRadarRestAPIClient: Endpoint {
         case .getEventDetails: return .post
         case .getEventSecundaryMarkets: return .post
 
-        case .getEventsForMarketGroup: return .post
+        case .getEventForMarketGroup: return .post
+        case .getEventsForEventGroup: return .post
         case .getEventForMarket: return .post
 
         case .homeSliders: return .post
@@ -556,13 +561,13 @@ extension SportRadarRestAPIClient: Endpoint {
                         """
             return bodyString.data(using: String.Encoding.utf8) ?? Data()
 
-        case .getEventsForMarketGroup(let marketGroupId):
+        case .getEventsForEventGroup(let eventGroupId):
             let bodyString =
                         """
                         {
                             "contentId": {
                                 "type": "eventGroup",
-                                "id": "\(marketGroupId)"
+                                "id": "\(eventGroupId)"
                             },
                             "clientContext": {
                                 "language": "\(SportRadarConfiguration.shared.socketLanguageCode)",
@@ -572,6 +577,22 @@ extension SportRadarRestAPIClient: Endpoint {
                         """
             return bodyString.data(using: String.Encoding.utf8) ?? Data()
 
+        case .getEventForMarketGroup(let marketGroupId):
+            let bodyString =
+                        """
+                        {
+                            "contentId": {
+                                "type": "marketGroup",
+                                "id": "\(marketGroupId)"
+                            },
+                            "clientContext": {
+                                "language": "\(SportRadarConfiguration.shared.socketLanguageCode)",
+                                "ipAddress": "127.0.0.1"
+                            }
+                        }
+                        """
+            return bodyString.data(using: String.Encoding.utf8) ?? Data()
+            
         case .getEventForMarket(let marketId):
             let bodyString =
                         """
@@ -696,7 +717,9 @@ extension SportRadarRestAPIClient: Endpoint {
         case .getEventSecundaryMarkets:
             return SportRadarConfiguration.shared.servicesRestHostname
             
-        case .getEventsForMarketGroup:
+        case .getEventForMarketGroup:
+            return SportRadarConfiguration.shared.servicesRestHostname
+        case .getEventsForEventGroup:
             return SportRadarConfiguration.shared.servicesRestHostname
         case .getEventForMarket:
             return SportRadarConfiguration.shared.servicesRestHostname
@@ -785,7 +808,9 @@ extension SportRadarRestAPIClient: Endpoint {
         case .getEventSecundaryMarkets:
             return defaultHeaders
             
-        case .getEventsForMarketGroup:
+        case .getEventForMarketGroup:
+            return defaultHeaders
+        case .getEventsForEventGroup:
             return defaultHeaders
         case .getEventForMarket:
             return defaultHeaders
@@ -881,7 +906,8 @@ extension SportRadarRestAPIClient: Endpoint {
         case .getEventDetails(let eventId): return "getEventDetails \(eventId)"
         case .getEventSecundaryMarkets(let eventId): return "getEventSecundaryMarkets \(eventId)"
             
-        case .getEventsForMarketGroup(let marketGroupId): return "getEventsForMarketGroup \(marketGroupId)"
+        case .getEventForMarketGroup(let marektGroupid): return "getEventForMarketGroup \(marektGroupid)"
+        case .getEventsForEventGroup(let eventGroupId): return "getEventsForEventGroup \(eventGroupId)"
         case .getEventForMarket(let marketId): return "getEventForMarket \(marketId)"
         case .homeSliders: return "homeSliders"
         case .promotionalTopBanners: return "promotionalTopBanners"

@@ -35,6 +35,21 @@ extension SportRadarModels {
         }
     }
 
+    struct MarketGroup: Codable {
+        var markets: [Market]
+        var marketGroupId: String?
+
+        enum CodingKeys: String, CodingKey {
+            case markets = "markets"
+            case marketGroupId = "idfwmarketgroup"
+        }
+
+        init(events: [Market], marketGroupId: String?) {
+            self.markets = events
+            self.marketGroupId = marketGroupId
+        }
+    }
+    
     enum EventStatus {
         case unknown
         case notStarted
@@ -268,6 +283,13 @@ extension SportRadarModels {
         var isOverUnder: Bool
         var marketDigitLine: String?
         var outcomesOrder: OutcomesOrder
+    
+        var competitionId: String?
+        var competitionName: String?
+        var sportTypeName: String?
+        var sportTypeCode: String?
+        var sportIdCode: String?
+        var tournamentCountryName: String?
         
         enum CodingKeys: String, CodingKey {
             case id = "idfomarket"
@@ -275,20 +297,51 @@ extension SportRadarModels {
             case outcomes = "selections"
             case marketTypeId = "idefmarkettype"
             case eventMarketTypeId = "idfomarkettype"
-            case eventName = "eventname"
+            
             case isMainOutright = "ismainoutright"
             case eventMarketCount = "eventMarketCount"
             case isTradable = "istradable"
             case startDate = "tsstart"
             case homeParticipant = "participantname_home"
             case awayParticipant = "participantname_away"
-            case eventId = "idfoevent"
+            
             case isOverUnder = "isunderover"
             case marketDigitLine = "line"
             case outcomesOrder = "idfoselectionorder"
+            
+            case eventId = "idfoevent"
+            case eventName = "eventname"
+            case competitionId = "idfotournament"
+            case competitionName = "tournamentname"
+            case tournamentCountryName = "tournamentcountryname"
+            case sportTypeName = "sportname"
+            case sportTypeCode = "idfosporttype"
+            case sportIdCode = "idfosport"
         }
 
-        init(id: String, name: String, outcomes: [Outcome], marketTypeId: String? = nil, eventMarketTypeId: String? = nil, eventName: String? = nil, isMainOutright: Bool? = nil, eventMarketCount: Int? = nil, isTradable: Bool, startDate: String? = nil, homeParticipant: String? = nil, awayParticipant: String? = nil, eventId: String? = nil, isOverUnder: Bool = false, marketDigitLine: String?, outcomesOrder: OutcomesOrder) {
+        init(id: String, name: String,
+             outcomes: [Outcome],
+             marketTypeId: String? = nil,
+             eventMarketTypeId: String? = nil,
+             eventName: String? = nil,
+             isMainOutright: Bool? = nil,
+             eventMarketCount: Int? = nil,
+             isTradable: Bool,
+             startDate: String? = nil,
+             homeParticipant: String? = nil,
+             awayParticipant: String? = nil,
+             eventId: String? = nil,
+             isOverUnder: Bool = false,
+             marketDigitLine: String?,
+             outcomesOrder: OutcomesOrder,
+             //
+             competitionId: String? = nil,
+             competitionName: String? = nil,
+             sportTypeName: String? = nil,
+             sportTypeCode: String? = nil,
+             sportIdCode: String? = nil,
+             tournamentCountryName: String? = nil
+        ) {
             self.id = id
             self.name = name
             self.outcomes = outcomes
@@ -305,6 +358,13 @@ extension SportRadarModels {
             self.isOverUnder = isOverUnder
             self.marketDigitLine = marketDigitLine
             self.outcomesOrder = outcomesOrder
+            //
+            self.competitionId = competitionId
+            self.competitionName = competitionName
+            self.sportTypeName = sportTypeName
+            self.sportTypeCode = sportTypeCode
+            self.sportIdCode = sportIdCode
+            self.tournamentCountryName = tournamentCountryName
         }
 
         init(from decoder: Decoder) throws {
@@ -365,6 +425,18 @@ extension SportRadarModels {
                 self.outcomes = self.outcomes.reversed()
             }
 
+            self.competitionId = try container.decodeIfPresent(String.self, forKey: .competitionId)
+            self.competitionName = try container.decodeIfPresent(String.self, forKey: .competitionName)
+            
+            self.sportTypeName = try container.decodeIfPresent(String.self, forKey: .sportTypeName)
+            self.sportTypeCode = try container.decodeIfPresent(String.self, forKey: .sportTypeCode)
+            self.sportIdCode = try container.decodeIfPresent(String.self, forKey: .sportIdCode)
+            self.tournamentCountryName = try container.decodeIfPresent(String.self, forKey: .tournamentCountryName)
+
+        }
+        
+        func encode(to encoder: Encoder) throws {
+            //
         }
         
     }

@@ -330,7 +330,7 @@ class ClientManagedHomeViewTemplateDataSource {
 
     func fetchMatchesForPromotedSport(_ promotedSport: PromotedSport) {
 
-        let publishers = promotedSport.marketGroups.map({ Env.servicesProvider.getEventsForMarketGroup(withId: $0.id) })
+        let publishers = promotedSport.marketGroups.map({ Env.servicesProvider.getEventsForEventGroup(withId: $0.id) })
 
         Publishers.MergeMany(publishers)
             .collect()

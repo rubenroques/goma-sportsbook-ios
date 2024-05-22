@@ -11,14 +11,14 @@ import ServicesProvider
 
 class MatchLineTableCellViewModel {
     
-    var match2: Match {
-        return match2Subject.value
-    }
-    
-    private var match2Subject: CurrentValueSubject<Match, Never>
-    private var match2Publisher: AnyPublisher<Match, Never> {
-        return match2Subject.eraseToAnyPublisher()
-    }
+//    var match2: Match {
+//        return match2Subject.value
+//    }
+//    
+//    private var match2Subject: CurrentValueSubject<Match, Never>
+//    private var match2Publisher: AnyPublisher<Match, Never> {
+//        return match2Subject.eraseToAnyPublisher()
+//    }
     
     @Published private(set) var match: Match
     @Published private(set) var matchWidgetCellViewModel: MatchWidgetCellViewModel
@@ -33,8 +33,6 @@ class MatchLineTableCellViewModel {
     //
     init(match: Match, status: MatchWidgetStatus = .unknown) {
         self.status = status
-
-        self.match2Subject = .init(match)
         
         self.match = match
         self.matchWidgetCellViewModel = MatchWidgetCellViewModel(match: match, matchWidgetStatus: status)
@@ -44,30 +42,7 @@ class MatchLineTableCellViewModel {
     }
     
     private func observeMatchValues() {
-        
-        self.match2Publisher
-            .removeDuplicates(by: { oldMatch, newMatch in
-                
-                let oldMatchDesc = "[\(oldMatch.id) \(oldMatch.homeParticipant.name) vs \(oldMatch.awayParticipant.name)]"
-                let newMatchDesc = "[\(newMatch.id) \(newMatch.homeParticipant.name) vs \(newMatch.awayParticipant.name)]"
-                
-                print("BlinkDebug >LineVC - comparing \(oldMatchDesc) to \(newMatchDesc)")
-                      
-                let visuallySimilar = Match.visuallySimilar(lhs: oldMatch, rhs: newMatch)
-                if visuallySimilar.0 {
-                    print("BlinkDebug >LineVC - ignoring")
-                    return true
-                }
-                else {
-                    print("BlinkDebug >LineVC - not ignoring due to diff:\(visuallySimilar.1 ?? "")")
-                    return false
-                }
-            })
-            .sink { [weak self] match in
-                self?.matchWidgetCellViewModel.updateWithMatch(match)
-            }
-            .store(in: &self.cancellables)
-        
+
         self.$match
             .removeDuplicates(by: { oldMatch, newMatch in
                 
@@ -145,11 +120,9 @@ extension MatchLineTableCellViewModel {
                 if var oldMatch = self?.match, oldMatch.markets.isNotEmpty {
                     oldMatch.markets = finalMarkets
                     self?.match = oldMatch
-                    self?.match2Subject.send(oldMatch)
                 } else {
                     newMatch.markets = finalMarkets
                     self?.match = newMatch
-                    self?.match2Subject.send(newMatch)
                 }
                 
             case .disconnected:
@@ -189,12 +162,10 @@ extension MatchLineTableCellViewModel {
             if var oldMatch = self?.match, oldMatch.markets.isNotEmpty {
                 oldMatch.markets = finalMarkets
                 self?.match = oldMatch
-                self?.match2Subject.send(oldMatch)
             }
             else {
                 newMatch.markets = finalMarkets
                 self?.match = newMatch
-                self?.match2Subject.send(newMatch)
             }
         }
     }
@@ -205,25 +176,17 @@ extension MatchLineTableCellViewModel {
                                 sportId: String) -> [Market]
     {
         var statsForMarket: [String: String?] = [:]
-        
         let firstMarket = oldMatch?.markets.first // Capture the first market
-        
         var additionalMarkets: [Market] = []
-        var mergedMarkets: [Market] = []
         
+        // Ignore the current market
         for market in newMarkets {
             if market.id != firstMarket?.id {
                 additionalMarkets.append(market)
             }
         }
-        
-        if let first = firstMarket {
-            mergedMarkets = [first] + additionalMarkets
-        }
-        else {
-            mergedMarkets = additionalMarkets
-        }
-        
+
+        // Get the position for each market and it's stats id
         var marketsAdditionalInfoOrder: [String: Int] = [:]
         if let secundaryMarketsForSport = marketsAdditionalInfo.first(where: {
             $0.sportId.lowercased() == sportId.lowercased()
@@ -234,7 +197,7 @@ extension MatchLineTableCellViewModel {
                     marketsAdditionalInfoOrder[secundaryMarket.marketTypeId] = index
                 }
                 
-                if var foundMarket = mergedMarkets.first(where: { market in
+                if var foundMarket = additionalMarkets.first(where: { market in
                     (market.marketTypeId ?? "") == secundaryMarket.marketTypeId
                 }) {
                     foundMarket.statsTypeId = secundaryMarket.statsId
@@ -245,7 +208,7 @@ extension MatchLineTableCellViewModel {
         
         var finalMarkets: [Market] = []
         
-        for market in mergedMarkets {
+        for market in additionalMarkets {
             if let statsTypeId = statsForMarket[market.id] {
                 var newMarket = market
                 newMarket.statsTypeId = statsTypeId
@@ -264,8 +227,16 @@ extension MatchLineTableCellViewModel {
             return index1 < index2
         }
         
-        return finalMarkets
+        let mergedMarkets: [Market]
+
+        if let first = firstMarket {
+            mergedMarkets = [first] + finalMarkets
+        }
+        else {
+            mergedMarkets = finalMarkets
+        }
         
+        return mergedMarkets
     }
 
 }

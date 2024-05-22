@@ -97,8 +97,10 @@ protocol EventsProvider: Connector {
 
     func getTopCompetitions() -> AnyPublisher<[TopCompetition], ServiceProviderError>
 
-    func getEventsForMarketGroup(withId marketGroupId: String) -> AnyPublisher<EventsGroup, ServiceProviderError>
+    func getEventsForEventGroup(withId eventGroupId: String) -> AnyPublisher<EventsGroup, ServiceProviderError>
 
+    func getEventForMarketGroup(withId marketGroupId: String) -> AnyPublisher<Event, ServiceProviderError>
+    
     func getEventDetails(eventId: String) -> AnyPublisher<Event, ServiceProviderError>
 
     func getEventSecundaryMarkets(eventId: String) -> AnyPublisher<Event, ServiceProviderError>

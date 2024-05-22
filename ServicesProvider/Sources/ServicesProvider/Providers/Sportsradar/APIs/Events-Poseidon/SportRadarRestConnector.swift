@@ -67,6 +67,11 @@ class SportRadarRestConnector {
                     throw ServiceProviderError.resourceUnavailableOrDeleted
                 }
  
+                #if DEBUG
+                let response = String(data: result.data, encoding: .utf8)
+                print("NetworkLogs: restConnector.request.Response: \(response)")
+                #endif
+                
                 return result.data
             }
             .decode(type: T.self, decoder: self.decoder)

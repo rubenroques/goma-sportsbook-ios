@@ -533,16 +533,27 @@ extension ServicesProviderClient {
         return eventsProvider.getTopCompetitions()
     }
 
-    public func getEventsForMarketGroup(withId marketGroupId: String) -> AnyPublisher<EventsGroup, ServiceProviderError> {
+    public func getEventForMarketGroup(withId marketGroupId: String) -> AnyPublisher<Event, ServiceProviderError> {
         guard
             let eventsProvider = self.eventsProvider
         else {
             return Fail(error: .eventsProviderNotFound).eraseToAnyPublisher()
         }
 
-        return eventsProvider.getEventsForMarketGroup(withId: marketGroupId)
+        return eventsProvider.getEventForMarketGroup(withId: marketGroupId)
     }
 
+    
+    public func getEventsForEventGroup(withId eventGroupId: String) -> AnyPublisher<EventsGroup, ServiceProviderError> {
+        guard
+            let eventsProvider = self.eventsProvider
+        else {
+            return Fail(error: .eventsProviderNotFound).eraseToAnyPublisher()
+        }
+
+        return eventsProvider.getEventsForEventGroup(withId: eventGroupId)
+    }
+    
     //
     //
     public func getEventSummary(eventId: String) -> AnyPublisher<Event, ServiceProviderError> {
