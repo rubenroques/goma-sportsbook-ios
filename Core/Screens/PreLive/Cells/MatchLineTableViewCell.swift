@@ -241,15 +241,17 @@ class MatchLineTableViewCell: UITableViewCell {
 
 
     private func setupWithMatch(_ newMatch: Match) {
-        
-        self.match = newMatch
-        self.collectionView.reloadData()
-        return
+
+//
+//        self.match = newMatch
+//        self.collectionView.reloadData()
+//        return
+//        
         
         // TODO: Implement diffable updates
         // currently some cells appear with old data from previous VM
         //
-        /*
+        
         guard
             let currentMatch = self.match
         else {
@@ -286,8 +288,7 @@ class MatchLineTableViewCell: UITableViewCell {
             self.match = newMatch
             self.collectionView.reloadData()
         }
-        */
-        
+    
     }
 
     func shouldShowCountryFlag(_ show: Bool) {
