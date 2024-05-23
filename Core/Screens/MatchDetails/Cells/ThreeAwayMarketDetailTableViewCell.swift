@@ -28,7 +28,8 @@ class ThreeAwayMarketDetailTableViewCell: UITableViewCell {
 
     @IBOutlet private var expandAllBaseView: UIView!
     @IBOutlet private var expandAllArrowImageView: UIImageView!
-    @IBOutlet private weak var cashbackIconImageView: UIImageView!
+    @IBOutlet private var cashbackIconImageView: UIImageView!
+    @IBOutlet private var customBetIconImageView: UIImageView!
     
     lazy var gradientBorderView: GradientBorderView = {
         var gradientBorderView = GradientBorderView()
@@ -75,6 +76,12 @@ class ThreeAwayMarketDetailTableViewCell: UITableViewCell {
             self.cashbackIconImageView.isHidden = !hasCashback
         }
     }
+    
+    var customBetAvailable: Bool = false {
+        didSet {
+            self.customBetIconImageView.isHidden = !customBetAvailable
+        }
+    }
 
     var didExpandCellAction: ((String) -> Void)?
     var didColapseCellAction: ((String) -> Void)?
@@ -105,6 +112,11 @@ class ThreeAwayMarketDetailTableViewCell: UITableViewCell {
         
         self.hasCashback = false
         
+        self.customBetIconImageView.image = UIImage(named: "mix_match_icon")
+        self.customBetIconImageView.contentMode = .scaleAspectFit
+        
+        self.customBetAvailable = false
+        
         self.containerView.addSubview(gradientBorderView)
         self.containerView.sendSubviewToBack(gradientBorderView)
 
@@ -131,6 +143,7 @@ class ThreeAwayMarketDetailTableViewCell: UITableViewCell {
         self.seeAllOutcomes = false
         self.isAllExpanded = true
         self.hasCashback = false
+        self.customBetAvailable = false
 
         self.leftColumnsStackView.removeAllArrangedSubviews()
         self.middleColumnsStackView.removeAllArrangedSubviews()
@@ -228,7 +241,19 @@ class ThreeAwayMarketDetailTableViewCell: UITableViewCell {
         
         if let match = self.match {
             self.hasCashback = RePlayFeatureHelper.shouldShowRePlay(forMatch: match)
+            
+            if let market = match.markets.filter({
+                $0.id == marketGroupOrganizer.marketId
+            }).first {
+                if let customBetAvailable = market.customBetAvailable {
+                    self.customBetAvailable = customBetAvailable ? true : false
+                }
+                else {
+                    self.customBetAvailable = false
+                }
+            }
         }
+        
     }
 
     @objc func didTapExpandBaseView() {

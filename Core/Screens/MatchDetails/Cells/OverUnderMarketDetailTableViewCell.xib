@@ -28,6 +28,13 @@
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="U61-bE-P6Z">
                                 <rect key="frame" x="0.0" y="6.5" width="373" height="45"/>
                                 <subviews>
+                                    <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="s0d-4S-p3e">
+                                        <rect key="frame" x="15" y="12.5" width="20" height="20"/>
+                                        <constraints>
+                                            <constraint firstAttribute="height" constant="20" id="9T6-cc-4mK"/>
+                                            <constraint firstAttribute="width" constant="20" id="JSe-VF-E8I"/>
+                                        </constraints>
+                                    </imageView>
                                     <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="arrow_down_icon" translatesAutoresizingMaskIntoConstraints="NO" id="Bbb-t9-7GA">
                                         <rect key="frame" x="343" y="15" width="15" height="15"/>
                                         <constraints>
@@ -49,6 +56,7 @@
                                     <constraint firstAttribute="height" constant="45" id="K92-UC-yhc"/>
                                     <constraint firstAttribute="trailing" secondItem="Bbb-t9-7GA" secondAttribute="trailing" constant="15" id="NKT-If-5Us"/>
                                     <constraint firstItem="Bbb-t9-7GA" firstAttribute="leading" secondItem="Zo4-T1-F0F" secondAttribute="trailing" constant="5" id="Opq-78-Ocv"/>
+                                    <constraint firstItem="s0d-4S-p3e" firstAttribute="leading" secondItem="U61-bE-P6Z" secondAttribute="leading" constant="15" id="WXh-Vi-3dW"/>
                                     <constraint firstAttribute="trailing" secondItem="Bbb-t9-7GA" secondAttribute="trailing" constant="15" id="con-OE-ROe"/>
                                 </constraints>
                             </view>
@@ -157,6 +165,7 @@
                             <constraint firstItem="U61-bE-P6Z" firstAttribute="leading" secondItem="iYJ-UL-FZt" secondAttribute="leading" id="L6y-9Y-VHQ"/>
                             <constraint firstAttribute="trailing" secondItem="U61-bE-P6Z" secondAttribute="trailing" constant="2" id="XOD-3E-F3Q"/>
                             <constraint firstItem="OlA-UR-Bn9" firstAttribute="centerX" secondItem="iYJ-UL-FZt" secondAttribute="centerX" id="ZBB-yC-OwS"/>
+                            <constraint firstItem="s0d-4S-p3e" firstAttribute="centerY" secondItem="OlA-UR-Bn9" secondAttribute="centerY" id="cYe-WA-9z3"/>
                             <constraint firstAttribute="bottom" relation="greaterThanOrEqual" secondItem="JbR-Wf-e1d" secondAttribute="bottom" constant="6" id="kAb-WF-FcN"/>
                             <constraint firstItem="JbR-Wf-e1d" firstAttribute="leading" secondItem="iYJ-UL-FZt" secondAttribute="leading" constant="12" id="oU5-gu-vhq"/>
                         </constraints>
@@ -174,6 +183,7 @@
                 <outlet property="cashbackIconImageView" destination="Zo4-T1-F0F" id="7mH-G8-6fu"/>
                 <outlet property="columnsBaseView" destination="SJ5-z4-6Bk" id="ucf-rv-q9b"/>
                 <outlet property="containerView" destination="iYJ-UL-FZt" id="HtN-aA-Tjk"/>
+                <outlet property="customBetIconImageView" destination="s0d-4S-p3e" id="BqK-GN-XjS"/>
                 <outlet property="expandAllArrowImageView" destination="Bbb-t9-7GA" id="zZ1-NB-FX9"/>
                 <outlet property="expandAllBaseView" destination="U61-bE-P6Z" id="6U5-d2-njg"/>
                 <outlet property="expandArrowImageView" destination="sDY-fB-YPJ" id="WMl-nK-pgO"/>

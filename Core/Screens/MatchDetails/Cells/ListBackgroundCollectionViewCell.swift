@@ -194,12 +194,12 @@ extension ListBackgroundCollectionViewCell {
             self.backgroundImageView.topAnchor.constraint(equalTo: self.contentView.topAnchor),
             self.backgroundImageView.bottomAnchor.constraint(equalTo: self.contentView.bottomAnchor),
 
-            self.iconImageView.widthAnchor.constraint(equalToConstant: 16),
-            self.iconImageView.heightAnchor.constraint(equalTo: self.iconImageView.widthAnchor),
+            self.iconImageView.widthAnchor.constraint(equalToConstant: 25),
+            self.iconImageView.heightAnchor.constraint(equalToConstant: 34),
             self.iconImageView.leadingAnchor.constraint(equalTo: self.containerView.leadingAnchor, constant: 16),
             self.iconImageView.centerYAnchor.constraint(equalTo: self.containerView.centerYAnchor),
 
-            self.titleLabel.leadingAnchor.constraint(equalTo: self.iconImageView.trailingAnchor, constant: 8),
+            self.titleLabel.leadingAnchor.constraint(equalTo: self.iconImageView.trailingAnchor, constant: 4),
             self.titleLabel.trailingAnchor.constraint(equalTo: self.containerView.trailingAnchor, constant: -16),
             self.titleLabel.centerYAnchor.constraint(equalTo: self.containerView.centerYAnchor)
 

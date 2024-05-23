@@ -141,6 +141,15 @@ class MatchDetailsViewController: UIViewController {
         }
     }
     
+    // Tooltip views
+    lazy var mixMatchInfoDialogView: InfoDialogView = {
+        let view = InfoDialogView()
+        view.translatesAutoresizingMaskIntoConstraints = false
+        view.configure(title: localized("mix_match_tooltip_description"))
+        return view
+    }()
+    
+    var didShowMixMatchTooltip: Bool = false
     // =========================================================================
     // Header bar and buttons logic
     // =========================================================================
@@ -521,6 +530,19 @@ class MatchDetailsViewController: UIViewController {
         //
         self.view.bringSubviewToFront(self.matchNotAvailableView)
         
+        // Tooltip
+        self.view.addSubview(self.mixMatchInfoDialogView)
+
+        NSLayoutConstraint.activate([
+
+            self.mixMatchInfoDialogView.bottomAnchor.constraint(equalTo: self.marketTypesCollectionView.topAnchor, constant: 5),
+            self.mixMatchInfoDialogView.leadingAnchor.constraint(equalTo: self.view.leadingAnchor, constant: 30),
+            self.mixMatchInfoDialogView.trailingAnchor.constraint(equalTo: self.view.centerXAnchor, constant: 20),
+            self.mixMatchInfoDialogView.widthAnchor.constraint(lessThanOrEqualToConstant: 200)
+        ])
+
+        self.mixMatchInfoDialogView.alpha = 0
+        
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -868,6 +890,28 @@ class MatchDetailsViewController: UIViewController {
 
                 marketGroupViewController.scrollToTop()
             }
+        }
+        
+        self.viewModel.shouldShowTabTooltip = { [weak self] in
+            
+            if let didShowMixMatchTooltip = self?.didShowMixMatchTooltip,
+               !didShowMixMatchTooltip {
+                
+                UIView.animate(withDuration: 0.5, animations: {
+                    self?.mixMatchInfoDialogView.alpha = 1
+                    self?.didShowMixMatchTooltip = true
+                }) { (completed) in
+                    if completed {
+                        DispatchQueue.main.asyncAfter(deadline: .now() + 5.0) {
+                            UIView.animate(withDuration: 0.5) {
+                                self?.mixMatchInfoDialogView.alpha = 0
+                            }
+                        }
+                    }
+                }
+                
+            }
+            
         }
         
     }

@@ -26,7 +26,8 @@ class OverUnderMarketDetailTableViewCell: UITableViewCell {
 
     @IBOutlet private var expandAllBaseView: UIView!
     @IBOutlet private var expandAllArrowImageView: UIImageView!
-    @IBOutlet private weak var cashbackIconImageView: UIImageView!
+    @IBOutlet private var cashbackIconImageView: UIImageView!
+    @IBOutlet private var customBetIconImageView: UIImageView!
     
     lazy var gradientBorderView: GradientBorderView = {
         var gradientBorderView = GradientBorderView()
@@ -74,6 +75,12 @@ class OverUnderMarketDetailTableViewCell: UITableViewCell {
             self.cashbackIconImageView.isHidden = !hasCashback
         }
     }
+    
+    var customBetAvailable: Bool = false {
+        didSet {
+            self.customBetIconImageView.isHidden = !customBetAvailable
+        }
+    }
 
     var didExpandCellAction: ((String) -> Void)?
     var didColapseCellAction: ((String) -> Void)?
@@ -103,6 +110,11 @@ class OverUnderMarketDetailTableViewCell: UITableViewCell {
         self.cashbackIconImageView.contentMode = .scaleAspectFit
         
         self.hasCashback = false
+        
+        self.customBetIconImageView.image = UIImage(named: "mix_match_icon")
+        self.customBetIconImageView.contentMode = .scaleAspectFit
+        
+        self.customBetAvailable = false
 
         self.containerView.addSubview(gradientBorderView)
         self.containerView.sendSubviewToBack(gradientBorderView)
@@ -130,6 +142,7 @@ class OverUnderMarketDetailTableViewCell: UITableViewCell {
         self.seeAllOutcomes = false
         self.isAllExpanded = true
         self.hasCashback = false
+        self.customBetAvailable = false
 
         self.leftColumnsStackView.removeAllArrangedSubviews()
         self.rightColumnsStackView.removeAllArrangedSubviews()
@@ -229,6 +242,17 @@ class OverUnderMarketDetailTableViewCell: UITableViewCell {
         
         if let match = self.match {
             self.hasCashback = RePlayFeatureHelper.shouldShowRePlay(forMatch: match)
+            
+            if let market = match.markets.filter({
+                $0.id == marketGroupOrganizer.marketId
+            }).first {
+                if let customBetAvailable = market.customBetAvailable {
+                    self.customBetAvailable = customBetAvailable ? true : false
+                }
+                else {
+                    self.customBetAvailable = false
+                }
+            }
         }
     }
 

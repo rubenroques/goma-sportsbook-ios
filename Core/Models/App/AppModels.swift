@@ -95,6 +95,8 @@ struct Market: Equatable {
 
     var outcomesOrder: OutcomesOrder
     
+    var customBetAvailable: Bool?
+    
     init(id: String,
          typeId: String,
          name: String,
@@ -114,7 +116,8 @@ struct Market: Equatable {
          awayParticipant: String? = nil,
          eventId: String? = nil,
          statsTypeId: String? = nil,
-         outcomesOrder: OutcomesOrder) {
+         outcomesOrder: OutcomesOrder,
+         customBetAvailable: Bool? = nil) {
         
         self.id = id
         self.typeId = typeId
@@ -136,6 +139,7 @@ struct Market: Equatable {
         self.eventId = eventId
         self.statsTypeId = statsTypeId
         self.outcomesOrder = outcomesOrder
+        self.customBetAvailable = customBetAvailable
     }
 }
 

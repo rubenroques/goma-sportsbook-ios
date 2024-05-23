@@ -28,6 +28,13 @@
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="dzu-nK-RZi">
                                 <rect key="frame" x="0.0" y="4.5" width="373" height="45"/>
                                 <subviews>
+                                    <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="B37-8f-tid">
+                                        <rect key="frame" x="15" y="12.5" width="20" height="20"/>
+                                        <constraints>
+                                            <constraint firstAttribute="height" constant="20" id="LP3-4Y-GCF"/>
+                                            <constraint firstAttribute="width" constant="20" id="Tdk-D3-PXS"/>
+                                        </constraints>
+                                    </imageView>
                                     <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="arrow_down_icon" translatesAutoresizingMaskIntoConstraints="NO" id="uiS-wo-jur">
                                         <rect key="frame" x="343" y="15" width="15" height="15"/>
                                         <constraints>
@@ -46,6 +53,7 @@
                                 <constraints>
                                     <constraint firstItem="uiS-wo-jur" firstAttribute="leading" secondItem="yjb-f6-AG6" secondAttribute="trailing" constant="5" id="2Uv-az-WI6"/>
                                     <constraint firstItem="uiS-wo-jur" firstAttribute="centerY" secondItem="dzu-nK-RZi" secondAttribute="centerY" id="IWJ-Xs-Hgt"/>
+                                    <constraint firstItem="B37-8f-tid" firstAttribute="leading" secondItem="dzu-nK-RZi" secondAttribute="leading" constant="15" id="Od1-43-DTC"/>
                                     <constraint firstAttribute="trailing" secondItem="uiS-wo-jur" secondAttribute="trailing" constant="15" id="VYh-rk-lq5"/>
                                     <constraint firstItem="yjb-f6-AG6" firstAttribute="centerY" secondItem="dzu-nK-RZi" secondAttribute="centerY" id="bf6-uh-UTg"/>
                                     <constraint firstAttribute="height" constant="45" id="kTZ-b4-ehj"/>
@@ -168,6 +176,7 @@
                             <constraint firstItem="OlA-UR-Bn9" firstAttribute="top" secondItem="iYJ-UL-FZt" secondAttribute="top" constant="12" id="6VC-1c-xvd"/>
                             <constraint firstItem="dzu-nK-RZi" firstAttribute="centerY" secondItem="OlA-UR-Bn9" secondAttribute="centerY" id="ANg-FZ-k8N"/>
                             <constraint firstAttribute="bottom" relation="greaterThanOrEqual" secondItem="iEO-LQ-Muf" secondAttribute="bottom" constant="6" id="CNU-ge-XBx"/>
+                            <constraint firstItem="B37-8f-tid" firstAttribute="centerY" secondItem="OlA-UR-Bn9" secondAttribute="centerY" id="HKq-Rb-4EP"/>
                             <constraint firstAttribute="trailing" secondItem="iEO-LQ-Muf" secondAttribute="trailing" constant="12" id="NvI-9b-Chg"/>
                             <constraint firstItem="dzu-nK-RZi" firstAttribute="leading" secondItem="iYJ-UL-FZt" secondAttribute="leading" id="QM8-3D-Vqt"/>
                             <constraint firstAttribute="trailing" secondItem="dzu-nK-RZi" secondAttribute="trailing" constant="2" id="eh2-ac-SIb"/>
@@ -190,6 +199,7 @@
                 <outlet property="cashbackIconImageView" destination="yjb-f6-AG6" id="A4g-X9-mJR"/>
                 <outlet property="columnsBaseView" destination="SJ5-z4-6Bk" id="ucf-rv-q9b"/>
                 <outlet property="containerView" destination="iYJ-UL-FZt" id="HtN-aA-Tjk"/>
+                <outlet property="customBetIconImageView" destination="B37-8f-tid" id="uVd-W6-54k"/>
                 <outlet property="expandAllArrowImageView" destination="uiS-wo-jur" id="0iC-Cf-DTW"/>
                 <outlet property="expandAllBaseView" destination="dzu-nK-RZi" id="HTv-Es-2bA"/>
                 <outlet property="expandArrowImageView" destination="0yS-Ip-2Jm" id="Huw-8U-JPe"/>

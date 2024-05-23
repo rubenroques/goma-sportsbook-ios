@@ -298,6 +298,53 @@ class MatchWidgetCollectionViewCell: UICollectionViewCell {
         return marketNamePillLabelView
     }()
     
+    lazy var mixMatchBaseView: UIView = {
+        let view = UIView()
+        view.translatesAutoresizingMaskIntoConstraints = false
+        view.layer.cornerRadius = CornerRadius.view
+        view.clipsToBounds = true
+        return view
+    }()
+    
+    lazy var mixMatchBackgroundImageView: UIImageView = {
+        let imageView = UIImageView()
+        imageView.translatesAutoresizingMaskIntoConstraints = false
+        imageView.image = UIImage(named: "mix_match_highlight")
+        imageView.contentMode = .scaleAspectFill
+        return imageView
+    }()
+    
+    lazy var mixMatchIconImageView: UIImageView = {
+        let imageView = UIImageView()
+        imageView.translatesAutoresizingMaskIntoConstraints = false
+        imageView.image = UIImage(named: "mix_match_icon")
+        imageView.contentMode = .scaleAspectFit
+        return imageView
+    }()
+    
+    lazy var mixMatchLabel: UILabel = {
+        let label = UILabel()
+        label.translatesAutoresizingMaskIntoConstraints = false
+        label.text = "\(localized("mix_match_or_bet_with_string")) \(localized("mix_match_mix_string"))\("mix_match_match_string")"
+        label.font = AppFont.with(type: .bold, size: 14)
+        label.textAlignment = .center
+        
+        let text = "\(localized("mix_match_or_bet_with_string")) \(localized("mix_match_mix_string"))\(localized("mix_match_match_string"))"
+        
+        let attributedString = NSMutableAttributedString(string: text)
+        let fullRange = (text as NSString).range(of: text)
+        var range = (text as NSString).range(of: localized("mix_match_mix_string"))
+        
+        attributedString.addAttribute(.foregroundColor, value: UIColor.App.textPrimary, range: fullRange)
+        attributedString.addAttribute(.font, value: AppFont.with(type: .bold, size: 14), range: fullRange)
+        
+        attributedString.addAttribute(.foregroundColor, value: UIColor.App.highlightPrimary, range: range)
+        
+        label.attributedText = attributedString
+        
+        return label
+    }()
+    
     //
     //
     var viewModel: MatchWidgetCellViewModel?
@@ -374,6 +421,8 @@ class MatchWidgetCollectionViewCell: UICollectionViewCell {
         
         self.boostedOddBottomLineView.isHidden = true
         self.boostedTopRightCornerBaseView.isHidden = true
+        
+        self.mixMatchBaseView.isHidden = true
         
         self.mainContentBaseView.isHidden = false
         //
@@ -605,6 +654,28 @@ class MatchWidgetCollectionViewCell: UICollectionViewCell {
         
         NSLayoutConstraint.activate([
             self.headerLineStackView.trailingAnchor.constraint(lessThanOrEqualTo: self.cashbackIconImageView.leadingAnchor, constant: -5)
+        ])
+        
+        // MixMatch
+        self.baseStackView.addArrangedSubview(self.mixMatchBaseView)
+        self.mixMatchBaseView.addSubview(self.mixMatchBackgroundImageView)
+        self.mixMatchBaseView.addSubview(self.mixMatchIconImageView)
+        self.mixMatchBaseView.addSubview(self.mixMatchLabel)
+        
+        NSLayoutConstraint.activate([
+            self.mixMatchBaseView.heightAnchor.constraint(equalToConstant: 27),
+            
+            self.mixMatchBackgroundImageView.leadingAnchor.constraint(equalTo: self.mixMatchBaseView.leadingAnchor),
+            self.mixMatchBackgroundImageView.trailingAnchor.constraint(equalTo: self.mixMatchBaseView.trailingAnchor),
+            self.mixMatchBackgroundImageView.topAnchor.constraint(equalTo: self.mixMatchBaseView.topAnchor),
+            self.mixMatchBackgroundImageView.bottomAnchor.constraint(equalTo: self.mixMatchBaseView.bottomAnchor),
+        
+            self.mixMatchLabel.centerXAnchor.constraint(equalTo: self.mixMatchBaseView.centerXAnchor),
+            self.mixMatchLabel.centerYAnchor.constraint(equalTo: self.mixMatchBaseView.centerYAnchor),
+            
+            self.mixMatchIconImageView.widthAnchor.constraint(equalToConstant: 21),
+            self.mixMatchIconImageView.heightAnchor.constraint(equalToConstant: 25),
+            self.mixMatchIconImageView.trailingAnchor.constraint(equalTo: self.mixMatchLabel.leadingAnchor, constant: -2)
         ])
         
         self.bringSubviewToFront(self.suspendedBaseView)
@@ -1329,7 +1400,7 @@ class MatchWidgetCollectionViewCell: UICollectionViewCell {
             self.topImageBaseView.isHidden = true
             self.boostedOddBottomLineView.isHidden = true
             self.boostedTopRightCornerBaseView.isHidden = true
-            
+                        
             self.mainContentBaseView.isHidden = false
             
             self.baseView.layer.borderWidth = 0
@@ -1664,6 +1735,16 @@ extension MatchWidgetCollectionViewCell {
                     }
                     else {
                         self?.showSuspendedView()
+                    }
+                    
+                    if viewModel.matchWidgetType == .topImage {
+                        if let customBetAvailable = market.customBetAvailable,
+                           !customBetAvailable {
+                            self?.mixMatchBaseView.isHidden = false
+                        }
+                        else {
+                            self?.mixMatchBaseView.isHidden = true
+                        }
                     }
                 }
                 else {

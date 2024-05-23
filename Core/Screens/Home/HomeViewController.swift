@@ -1044,6 +1044,11 @@ extension HomeViewController: UITableViewDelegate, UITableViewDataSource {
             if let viewModel = self.viewModel.highlightedMatchViewModel(forIndex: indexPath.row) {
                 switch viewModel.matchWidgetType {
                 case .topImage, .topImageOutright:
+                    if let defaultMarket = viewModel.match.markets.first,
+                       let customBetAvailable = defaultMarket.customBetAvailable,
+                       !customBetAvailable {
+                        return 290
+                    }
                     return 262
                 default:
                     return 164

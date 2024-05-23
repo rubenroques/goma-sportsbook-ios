@@ -103,6 +103,7 @@ class MatchDetailsViewModel: NSObject {
     var isFromLiveCard: Bool = false
 
     var scrollToTopAction: ((Int) -> Void)?
+    var shouldShowTabTooltip: (() -> Void)?
 
     init(matchMode: MatchMode = .preLive, match: Match) {
         self.matchId = match.id
@@ -424,6 +425,7 @@ extension MatchDetailsViewModel: UICollectionViewDataSource, UICollectionViewDel
             
             if let index = self.selectedMarketTypeIndexPublisher.value, index == indexPath.row {
                 cell.setSelectedType(true)
+                self.shouldShowTabTooltip?()
             }
             else {
                 cell.setSelectedType(false)
