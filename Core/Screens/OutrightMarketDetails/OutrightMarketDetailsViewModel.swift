@@ -23,6 +23,8 @@ class OutrightMarketDetailsViewModel {
 
     private var store: OutrightMarketDetailsStore
 
+    private var eventDetailsSubscription: ServicesProvider.Subscription?
+
     private static let groupKey = "Main"
 
     private var cancellables = Set<AnyCancellable>()
@@ -68,6 +70,7 @@ class OutrightMarketDetailsViewModel {
         self.isLoadingPublisher.send(true)
 
         if competition.competitionInfo == nil {
+            self.eventDetailsSubscription = nil
             Env.servicesProvider.subscribeEventDetails(eventId: competition.id)
                 .receive(on: DispatchQueue.main)
                 .sink(receiveCompletion: { [weak self] completion in
@@ -78,15 +81,21 @@ class OutrightMarketDetailsViewModel {
                     case .failure(let error):
                         print("OUTRIGHTS DETAILS ERROR: \(error)")
                     }
-                }, receiveValue: { (subscribableContent: SubscribableContent<ServicesProvider.Event>) in
+                }, receiveValue: { [weak self] (subscribableContent: SubscribableContent<ServicesProvider.Event>) in
                     print("Env.servicesProvider.subscribeEventDetails value \(subscribableContent)")
                     switch subscribableContent {
                     case .connected(let subscription):
-                        print("Connected to ws")
+                        self?.eventDetailsSubscription = subscription
                     case .contentUpdate(let serviceProviderEvent):
-                        if let eventMapped = ServiceProviderModelMapper.match(fromEvent: serviceProviderEvent) {
-                            self.storeMarkets(markets: eventMapped.markets)
+                        
+                        let competitionMapped = ServiceProviderModelMapper.competition(fromEvent: serviceProviderEvent)
+                        if let outrightMarkets = competitionMapped.outrightMarkets {
+                            self?.storeMarkets(markets: outrightMarkets)
                         }
+//                        
+//                        if let eventMapped = ServiceProviderModelMapper.match(fromEvent: serviceProviderEvent) {
+//                            self?.storeMarkets(markets: eventMapped.markets)
+//                        }
                     case .disconnected:
                         print("getMatchDetails subscribeEventDetails disconnected")
                     }
