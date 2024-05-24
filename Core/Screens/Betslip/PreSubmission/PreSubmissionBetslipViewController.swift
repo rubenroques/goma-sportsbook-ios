@@ -431,7 +431,7 @@ class PreSubmissionBetslipViewController: UIViewController {
         self.secondarySystemOddsTitleLabel.text = localized("total_bet_amount")
         self.secondarySystemOddsValueLabel.text = localized("no_value")
 
-        self.emptyBetsImageView.image = UIImage(named: "avatar_empty")
+        self.emptyBetsImageView.image = UIImage(named: "avatar_euro_empty")
 
         self.emptyBetslipLabel.text = localized("empty_betslip_info_title")
         self.emptyBetslipLabel.textAlignment = .center
@@ -1401,28 +1401,34 @@ class PreSubmissionBetslipViewController: UIViewController {
             .store(in: &self.cancellables)
 
         self.cashbackInfoMultipleView.didTapInfoAction = { [weak self] in
-            guard let self = self else { return }
-            UIView.animate(withDuration: 0.5, animations: {
-                self.learnMoreBaseView.alpha = 1
-            }, completion: { _ in
-                UIView.animate(withDuration: 0.5, delay: 5.0) {
-                    self.learnMoreBaseView.alpha = 0
-                }
+            
+            UIView.animate(withDuration: 0.5, delay: 0, options: [.allowUserInteraction], animations: {
+                self?.learnMoreBaseView.alpha = 1
             })
+            
+            DispatchQueue.main.asyncAfter(deadline: .now() + 5.5) {
+                UIView.animate(withDuration: 0.5, delay: 0, options: [.allowUserInteraction], animations: {
+                    self?.learnMoreBaseView.alpha = 0
+                })
+            }
+            
         }
 
         self.cashbackInfoSingleView.didTapInfoAction = { [weak self] in
-            guard let self = self else { return }
-            UIView.animate(withDuration: 0.5, animations: {
-                self.learnMoreBaseView.alpha = 1
-            }, completion: { _ in
-                UIView.animate(withDuration: 0.5, delay: 5.0) {
-                    self.learnMoreBaseView.alpha = 0
-                }
+            
+            UIView.animate(withDuration: 0.5, delay: 0, options: [.allowUserInteraction], animations: {
+                self?.learnMoreBaseView.alpha = 1
             })
+            
+            DispatchQueue.main.asyncAfter(deadline: .now() + 5.5) {
+                UIView.animate(withDuration: 0.5, delay: 0, options: [.allowUserInteraction], animations: {
+                    self?.learnMoreBaseView.alpha = 0
+                })
+            }
         }
 
-        self.placeBetBaseView.addSubview(self.learnMoreBaseView)
+        self.view.addSubview(self.learnMoreBaseView)
+        self.view.bringSubviewToFront(self.learnMoreBaseView)
 
         NSLayoutConstraint.activate([
             self.learnMoreBaseView.bottomAnchor.constraint(equalTo: self.winningsTypeBaseView.topAnchor, constant: -1),
@@ -1434,7 +1440,7 @@ class PreSubmissionBetslipViewController: UIViewController {
             let cashbackInfoViewController = CashbackInfoViewController()
             self?.navigationController?.pushViewController(cashbackInfoViewController, animated: true)
         }
-
+        
         self.learnMoreBaseView.alpha = 0
 
         self.isCashbackToggleOn

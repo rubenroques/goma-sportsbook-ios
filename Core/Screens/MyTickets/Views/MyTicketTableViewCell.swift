@@ -206,15 +206,24 @@ class MyTicketTableViewCell: UITableViewCell {
         self.usedCashback = false
 
         self.cashbackInfoView.didTapInfoAction = { [weak self] in
-            UIView.animate(withDuration: 0.5, animations: { [weak self] in
+//            UIView.animate(withDuration: 0.5, animations: { [weak self] in
+//                self?.learnMoreBaseView.alpha = 1
+//            }, completion: { [weak self] completed in
+//                if completed {
+//                    UIView.animate(withDuration: 0.5, delay: 5.0, animations: {
+//                        self?.learnMoreBaseView.alpha = 0
+//                    })
+//                }
+//            })
+            UIView.animate(withDuration: 0.5, delay: 0, options: [.allowUserInteraction], animations: {
                 self?.learnMoreBaseView.alpha = 1
-            }, completion: { [weak self] completed in
-                if completed {
-                    UIView.animate(withDuration: 0.5, delay: 5.0, animations: {
-                        self?.learnMoreBaseView.alpha = 0
-                    })
-                }
             })
+            
+            DispatchQueue.main.asyncAfter(deadline: .now() + 5.5) {
+                UIView.animate(withDuration: 0.5, delay: 0, options: [.allowUserInteraction], animations: {
+                    self?.learnMoreBaseView.alpha = 0
+                })
+            }
         }
 
         self.baseView.addSubview(self.learnMoreBaseView)

@@ -704,7 +704,7 @@ extension RecruitAFriendViewController {
     private static func createBannerImageView() -> UIImageView {
         let imageView = UIImageView()
         imageView.translatesAutoresizingMaskIntoConstraints = false
-        imageView.image = UIImage(named: "recruit_banner")
+        imageView.image = UIImage(named: "recruit_euro_banner")
         imageView.contentMode = .scaleAspectFill
         return imageView
     }

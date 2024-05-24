@@ -83,17 +83,16 @@ class SharedTicketCardView: UIView {
 
         self.cashbackInfoView.didTapInfoAction = { [weak self] in
 
-            UIView.animate(withDuration: 0.5, animations: {
+            UIView.animate(withDuration: 0.5, delay: 0, options: [.allowUserInteraction], animations: {
                 self?.learnMoreBaseView.alpha = 1
-            }) { (completed) in
-                if completed {
-                    DispatchQueue.main.asyncAfter(deadline: .now() + 5.0) {
-                        UIView.animate(withDuration: 0.5) {
-                            self?.learnMoreBaseView.alpha = 0
-                        }
-                    }
-                }
+            })
+            
+            DispatchQueue.main.asyncAfter(deadline: .now() + 5.5) {
+                UIView.animate(withDuration: 0.5, delay: 0, options: [.allowUserInteraction], animations: {
+                    self?.learnMoreBaseView.alpha = 0
+                })
             }
+            
         }
 
         self.learnMoreBaseView.didTapLearnMoreAction = { [weak self] in
@@ -530,8 +529,8 @@ extension SharedTicketCardView {
         NSLayoutConstraint.activate([
 
             self.learnMoreBaseView.bottomAnchor.constraint(equalTo: self.cashbackInfoView.topAnchor, constant: -10),
-            self.learnMoreBaseView.trailingAnchor.constraint(equalTo: self.cashbackInfoView.trailingAnchor, constant: 10)
-
+            self.learnMoreBaseView.trailingAnchor.constraint(equalTo: self.cashbackInfoView.trailingAnchor, constant: 10),
+            self.learnMoreBaseView.widthAnchor.constraint(equalToConstant: 220)
         ])
 
     }

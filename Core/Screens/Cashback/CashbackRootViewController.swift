@@ -248,7 +248,7 @@ extension CashbackRootViewController {
     private static func createBannerImageView() -> UIImageView {
         let imageView = UIImageView()
         imageView.translatesAutoresizingMaskIntoConstraints = false
-        imageView.image = UIImage(named: "replay_big_banner")
+        imageView.image = UIImage(named: "replay_big_euro_banner")
         imageView.contentMode = .scaleAspectFill
         return imageView
     }
