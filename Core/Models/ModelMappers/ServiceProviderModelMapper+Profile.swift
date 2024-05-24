@@ -52,6 +52,7 @@ extension ServiceProviderModelMapper {
                            username: serviceProviderProfile.username,
                            email: serviceProviderProfile.email,
                            firstName: serviceProviderProfile.firstName,
+                           middleName: serviceProviderProfile.middleName,
                            lastName: serviceProviderProfile.lastName,
                            birthDate: serviceProviderProfile.birthDate,
                            nationality: nationalityCountry,
