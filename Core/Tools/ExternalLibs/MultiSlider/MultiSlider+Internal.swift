@@ -33,7 +33,7 @@ extension MultiSlider {
         for edge: NSLayoutConstraint.Attribute in [.top, .bottom, .left, .right] {
             constrain(panGestureView, at: edge, diff: -edge.inwardSign * margin)
         }
-        let panGesture = UIPanGestureRecognizer(target: self, action: #selector(didDrag(_:)))
+        let panGesture = MultiSliderCustomPanGestureRecognizer(target: self, action: #selector(didDrag(_:)))
         panGesture.delegate = self
         panGestureView.addGestureRecognizer(panGesture)
     }
@@ -161,6 +161,15 @@ extension MultiSlider {
         thumbView.layer.shadowOpacity = 0.25
         thumbView.layer.shadowOffset = CGSize(width: 0, height: 4)
         thumbView.layer.shadowRadius = 0.5
+        
+        if let thumbViewImage = thumbView.image,
+           thumbViewImage.size.width < 40,
+           thumbViewImage.size.height < 40 {
+            thumbView.widthAnchor.constraint(equalToConstant: 40).isActive = true
+            thumbView.heightAnchor.constraint(equalToConstant: 40).isActive = true
+            thumbView.contentMode = .center
+        }
+        
         thumbViews.append(thumbView)
         slideView.addConstrainedSubview(thumbView, constrain: NSLayoutConstraint.Attribute.center(in: orientation).perpendicularCenter)
         positionThumbView(i)

@@ -65,8 +65,8 @@ public class TabularViewController: UIViewController {
         }
     }
 
-    private var baseScrollView: UIScrollView = {
-        var scrollView = UIScrollView()
+    private var baseScrollView: TabularScrollView = {
+        var scrollView = TabularScrollView()
         scrollView.translatesAutoresizingMaskIntoConstraints = false
         scrollView.showsVerticalScrollIndicator = false
         scrollView.showsHorizontalScrollIndicator = false

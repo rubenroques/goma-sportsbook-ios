@@ -831,6 +831,22 @@
 		45372F5F29D1FD04002FB894 /* OddOutcomesSortingHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 45372F5A29D1FD04002FB894 /* OddOutcomesSortingHelper.swift */; };
 		45372F6029D1FD04002FB894 /* OddOutcomesSortingHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 45372F5A29D1FD04002FB894 /* OddOutcomesSortingHelper.swift */; };
 		45372F6129D1FD04002FB894 /* OddOutcomesSortingHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 45372F5A29D1FD04002FB894 /* OddOutcomesSortingHelper.swift */; };
+		4542DFDF2C009E340033BFB8 /* TabularScrollView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4542DFDE2C009E340033BFB8 /* TabularScrollView.swift */; };
+		4542DFE02C009E340033BFB8 /* TabularScrollView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4542DFDE2C009E340033BFB8 /* TabularScrollView.swift */; };
+		4542DFE12C009E340033BFB8 /* TabularScrollView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4542DFDE2C009E340033BFB8 /* TabularScrollView.swift */; };
+		4542DFE22C009E340033BFB8 /* TabularScrollView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4542DFDE2C009E340033BFB8 /* TabularScrollView.swift */; };
+		4542DFE32C009E340033BFB8 /* TabularScrollView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4542DFDE2C009E340033BFB8 /* TabularScrollView.swift */; };
+		4542DFE42C009E340033BFB8 /* TabularScrollView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4542DFDE2C009E340033BFB8 /* TabularScrollView.swift */; };
+		4542DFE52C009E340033BFB8 /* TabularScrollView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4542DFDE2C009E340033BFB8 /* TabularScrollView.swift */; };
+		4542DFE62C009E340033BFB8 /* TabularScrollView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4542DFDE2C009E340033BFB8 /* TabularScrollView.swift */; };
+		4542DFE82C009E9B0033BFB8 /* MultiSliderCustomPanGestureRecognizer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4542DFE72C009E9B0033BFB8 /* MultiSliderCustomPanGestureRecognizer.swift */; };
+		4542DFE92C009E9B0033BFB8 /* MultiSliderCustomPanGestureRecognizer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4542DFE72C009E9B0033BFB8 /* MultiSliderCustomPanGestureRecognizer.swift */; };
+		4542DFEA2C009E9B0033BFB8 /* MultiSliderCustomPanGestureRecognizer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4542DFE72C009E9B0033BFB8 /* MultiSliderCustomPanGestureRecognizer.swift */; };
+		4542DFEB2C009E9B0033BFB8 /* MultiSliderCustomPanGestureRecognizer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4542DFE72C009E9B0033BFB8 /* MultiSliderCustomPanGestureRecognizer.swift */; };
+		4542DFEC2C009E9B0033BFB8 /* MultiSliderCustomPanGestureRecognizer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4542DFE72C009E9B0033BFB8 /* MultiSliderCustomPanGestureRecognizer.swift */; };
+		4542DFED2C009E9B0033BFB8 /* MultiSliderCustomPanGestureRecognizer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4542DFE72C009E9B0033BFB8 /* MultiSliderCustomPanGestureRecognizer.swift */; };
+		4542DFEE2C009E9B0033BFB8 /* MultiSliderCustomPanGestureRecognizer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4542DFE72C009E9B0033BFB8 /* MultiSliderCustomPanGestureRecognizer.swift */; };
+		4542DFEF2C009E9B0033BFB8 /* MultiSliderCustomPanGestureRecognizer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4542DFE72C009E9B0033BFB8 /* MultiSliderCustomPanGestureRecognizer.swift */; };
 		45452BEC290B55BD00C4D94E /* ServiceProviderModelMapper+Country.swift in Sources */ = {isa = PBXBuildFile; fileRef = 45452BE9290B55BD00C4D94E /* ServiceProviderModelMapper+Country.swift */; };
 		45452BED290B55BD00C4D94E /* ServiceProviderModelMapper+Country.swift in Sources */ = {isa = PBXBuildFile; fileRef = 45452BE9290B55BD00C4D94E /* ServiceProviderModelMapper+Country.swift */; };
 		45452BEE290B55BD00C4D94E /* ServiceProviderModelMapper+Country.swift in Sources */ = {isa = PBXBuildFile; fileRef = 45452BE9290B55BD00C4D94E /* ServiceProviderModelMapper+Country.swift */; };
@@ -7084,6 +7100,8 @@
 		45322141280F01530092CCB4 /* BettingHistoryViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BettingHistoryViewModel.swift; sourceTree = "<group>"; };
 		45372F5A29D1FD04002FB894 /* OddOutcomesSortingHelper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OddOutcomesSortingHelper.swift; sourceTree = "<group>"; };
 		4540ED2D27BC15CB00A14BB0 /* SuggestedBetLineTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SuggestedBetLineTableViewCell.swift; sourceTree = "<group>"; };
+		4542DFDE2C009E340033BFB8 /* TabularScrollView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TabularScrollView.swift; sourceTree = "<group>"; };
+		4542DFE72C009E9B0033BFB8 /* MultiSliderCustomPanGestureRecognizer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MultiSliderCustomPanGestureRecognizer.swift; sourceTree = "<group>"; };
 		45452BE9290B55BD00C4D94E /* ServiceProviderModelMapper+Country.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "ServiceProviderModelMapper+Country.swift"; sourceTree = "<group>"; };
 		4546A89329D64C4D00ABD562 /* FooterResponsibleGamingView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FooterResponsibleGamingView.swift; sourceTree = "<group>"; };
 		4546A89C29D7089200ABD562 /* UserTrackingViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserTrackingViewController.swift; sourceTree = "<group>"; };
@@ -8517,8 +8535,8 @@
 				454E0AA82732C58D00794E0C /* TabularBarDelegate.swift */,
 				454E0AA92732C58D00794E0C /* TabularBarView.swift */,
 				454E0AAA2732C58D00794E0C /* TabularBarButton.swift */,
-				454E0AAB2732C58D00794E0C /* TabularViewDataSource.swift */,
 				454E0AAC2732C58D00794E0C /* TabularViewDelegate.swift */,
+				4542DFDE2C009E340033BFB8 /* TabularScrollView.swift */,
 				454E0AAD2732C58D00794E0C /* TabularViewController.swift */,
 			);
 			path = Tabular;
@@ -8527,6 +8545,7 @@
 		454E0ABC2732C76800794E0C /* Datasources */ = {
 			isa = PBXGroup;
 			children = (
+				454E0AAB2732C58D00794E0C /* TabularViewDataSource.swift */,
 				454E0ABD2732C78300794E0C /* TitleTabularDataSource.swift */,
 			);
 			path = Datasources;
@@ -11557,6 +11576,7 @@
 				F4CE683D2742CD8A003413AE /* MultiSlider+Drag.swift */,
 				F4CE683F2742CD8A003413AE /* MultiSlider+Internal.swift */,
 				F4CE68402742CD8A003413AE /* MultiSliderExtensions.swift */,
+				4542DFE72C009E9B0033BFB8 /* MultiSliderCustomPanGestureRecognizer.swift */,
 			);
 			path = MultiSlider;
 			sourceTree = "<group>";
@@ -13486,6 +13506,7 @@
 				450B785428F58574009229E3 /* BannerMatchCollectionViewCell.swift in Sources */,
 				450B785528F58574009229E3 /* FilterSliderCollapseView.swift in Sources */,
 				450B785628F58574009229E3 /* FirebaseClientSettings.swift in Sources */,
+				4542DFE12C009E340033BFB8 /* TabularScrollView.swift in Sources */,
 				450B785728F58574009229E3 /* CasinoGameDetailViewModel.swift in Sources */,
 				655E200C2B28A14700C95337 /* TextSectionView.swift in Sources */,
 				A9BA04072A308CCA007880FC /* ExtraDocsViewController.swift in Sources */,
@@ -14076,6 +14097,7 @@
 				A9527C152A97A2F4006F4E37 /* MyCompetitionsRootViewController.swift in Sources */,
 				450B7A5328F58574009229E3 /* TransactionsHistoryRootViewController.swift in Sources */,
 				450B7A5428F58574009229E3 /* FavoritesManager.swift in Sources */,
+				4542DFEA2C009E9B0033BFB8 /* MultiSliderCustomPanGestureRecognizer.swift in Sources */,
 				A9A7B52729DDBED900FB22A8 /* BonusTypeMapper.swift in Sources */,
 				450B7A5528F58574009229E3 /* MyTicketsRootViewController.swift in Sources */,
 				450B7A5628F58574009229E3 /* Throwable.swift in Sources */,
@@ -14340,6 +14362,7 @@
 				457CBA11282D27D000ED0F00 /* BonusProgressViewModel.swift in Sources */,
 				457CBA12282D27D000ED0F00 /* SportSelectionViewController.swift in Sources */,
 				457CBA13282D27D000ED0F00 /* SportMatchDoubleLineTableViewCell.swift in Sources */,
+				4542DFEE2C009E9B0033BFB8 /* MultiSliderCustomPanGestureRecognizer.swift in Sources */,
 				457CBA14282D27D000ED0F00 /* RadioButton.swift in Sources */,
 				457CBA16282D27D000ED0F00 /* Constants.swift in Sources */,
 				A9C1C09B2873455000E9D6AC /* SocialAppItemCollectionViewCell.swift in Sources */,
@@ -14389,6 +14412,7 @@
 				457CBA32282D27D000ED0F00 /* Date+Extension.swift in Sources */,
 				457CBA33282D27D000ED0F00 /* LiveDetailsViewController.swift in Sources */,
 				457CBA34282D27D000ED0F00 /* GomaGamingServiceClient.swift in Sources */,
+				4542DFE52C009E340033BFB8 /* TabularScrollView.swift in Sources */,
 				457CBA35282D27D000ED0F00 /* ContainerViewController.swift in Sources */,
 				A9C04C182A7BBAE40025A6DA /* FilterFavoritesValue.swift in Sources */,
 				A9B946AA28BE67770091296E /* FeaturedTipLineTableViewCell.swift in Sources */,
@@ -15276,6 +15300,7 @@
 				457CBD62282D2CD100ED0F00 /* MultiSlider.swift in Sources */,
 				A9A43CAC2A4C9368008FB399 /* CompetitionHistoryCollectionViewCell.swift in Sources */,
 				457CBD63282D2CD100ED0F00 /* UserLoginForm.swift in Sources */,
+				4542DFEF2C009E9B0033BFB8 /* MultiSliderCustomPanGestureRecognizer.swift in Sources */,
 				457CBD64282D2CD100ED0F00 /* OutrightCompetitionWidgetCollectionViewCell.swift in Sources */,
 				457CBD65282D2CD100ED0F00 /* Tournament.swift in Sources */,
 				A92548202A2A26A30056F832 /* DocumentStateView.swift in Sources */,
@@ -15603,6 +15628,7 @@
 				A9BA041E2A30EA3B007880FC /* CardOptionRadioView.swift in Sources */,
 				457CBE42282D2CD100ED0F00 /* Debounce.swift in Sources */,
 				457CBE43282D2CD100ED0F00 /* UITapGestureRecognizer+Extensions.swift in Sources */,
+				4542DFE62C009E340033BFB8 /* TabularScrollView.swift in Sources */,
 				45B6E234284151E5001B570C /* EditGroupAddUserViewController.swift in Sources */,
 				457CBE44282D2CD100ED0F00 /* ConversationsViewController.swift in Sources */,
 				457CBE45282D2CD100ED0F00 /* WithdrawResponse.swift in Sources */,
@@ -15679,6 +15705,7 @@
 				4589C781282024E400243547 /* BannerMatchCollectionViewCell.swift in Sources */,
 				4589C782282024E400243547 /* FilterSliderCollapseView.swift in Sources */,
 				4589C783282024E400243547 /* FirebaseClientSettings.swift in Sources */,
+				4542DFE22C009E340033BFB8 /* TabularScrollView.swift in Sources */,
 				F4A62A97285946AD007B46C5 /* CasinoGameDetailViewModel.swift in Sources */,
 				655E200D2B28A14700C95337 /* TextSectionView.swift in Sources */,
 				A9BA04082A308CCA007880FC /* ExtraDocsViewController.swift in Sources */,
@@ -16269,6 +16296,7 @@
 				A9527C162A97A2F4006F4E37 /* MyCompetitionsRootViewController.swift in Sources */,
 				4589C90F282024E400243547 /* FavoritesManager.swift in Sources */,
 				4589C910282024E400243547 /* MyTicketsRootViewController.swift in Sources */,
+				4542DFEB2C009E9B0033BFB8 /* MultiSliderCustomPanGestureRecognizer.swift in Sources */,
 				A9A7B52829DDBED900FB22A8 /* BonusTypeMapper.swift in Sources */,
 				4589C911282024E400243547 /* Throwable.swift in Sources */,
 				4589C913282024E400243547 /* NotificationsViewController.swift in Sources */,
@@ -16371,6 +16399,7 @@
 				45A33064298976BA008181E9 /* BannerMatchCollectionViewCell.swift in Sources */,
 				45A33065298976BA008181E9 /* FilterSliderCollapseView.swift in Sources */,
 				45A33066298976BA008181E9 /* FirebaseClientSettings.swift in Sources */,
+				4542DFDF2C009E340033BFB8 /* TabularScrollView.swift in Sources */,
 				45A33067298976BA008181E9 /* CasinoGameDetailViewModel.swift in Sources */,
 				655E200A2B28A14700C95337 /* TextSectionView.swift in Sources */,
 				A9BA04062A308CCA007880FC /* ExtraDocsViewController.swift in Sources */,
@@ -16961,6 +16990,7 @@
 				45A33273298976BA008181E9 /* LogViewerViewController.swift in Sources */,
 				A9527C142A97A2F4006F4E37 /* MyCompetitionsRootViewController.swift in Sources */,
 				45A33274298976BA008181E9 /* TransactionsHistoryRootViewController.swift in Sources */,
+				4542DFE82C009E9B0033BFB8 /* MultiSliderCustomPanGestureRecognizer.swift in Sources */,
 				45A33275298976BA008181E9 /* FavoritesManager.swift in Sources */,
 				A9A7B52629DDBED900FB22A8 /* BonusTypeMapper.swift in Sources */,
 				45A33276298976BA008181E9 /* MyTicketsRootViewController.swift in Sources */,
@@ -17134,6 +17164,7 @@
 				45A6BBF828246A7500D9B416 /* LoadableContent.swift in Sources */,
 				45A6BBF928246A7500D9B416 /* CollapsibleView.swift in Sources */,
 				45A6BBFA28246A7500D9B416 /* OutrightCompetitionLargeWidgetCollectionViewCell.swift in Sources */,
+				4542DFE42C009E340033BFB8 /* TabularScrollView.swift in Sources */,
 				45A6BBFB28246A7500D9B416 /* CompetitionSectionViewModel.swift in Sources */,
 				45A6BBFC28246A7500D9B416 /* ResultsHeaderFooterView.swift in Sources */,
 				45A6BBFD28246A7500D9B416 /* EMMatch.swift in Sources */,
@@ -17446,6 +17477,7 @@
 				45A6BCD728246A7500D9B416 /* UserDefaults.swift in Sources */,
 				45A6BCD828246A7500D9B416 /* SportSelectionCollectionViewCellViewModel.swift in Sources */,
 				45A6BCD928246A7500D9B416 /* ActivationAlertView.swift in Sources */,
+				4542DFED2C009E9B0033BFB8 /* MultiSliderCustomPanGestureRecognizer.swift in Sources */,
 				45A6BCDA28246A7500D9B416 /* Internationalization.swift in Sources */,
 				45A6BCDB28246A7500D9B416 /* CasinoWebViewController.swift in Sources */,
 				45DB8DA02A66D9480018C591 /* DebugUserDefaults.swift in Sources */,
@@ -17754,6 +17786,7 @@
 				45F6BAF22AB3732C00C81DE1 /* BannerMatchCollectionViewCell.swift in Sources */,
 				45F6BAF32AB3732C00C81DE1 /* FilterSliderCollapseView.swift in Sources */,
 				45F6BAF42AB3732C00C81DE1 /* FirebaseClientSettings.swift in Sources */,
+				4542DFE02C009E340033BFB8 /* TabularScrollView.swift in Sources */,
 				45F6BAF52AB3732C00C81DE1 /* CasinoGameDetailViewModel.swift in Sources */,
 				655E200B2B28A14700C95337 /* TextSectionView.swift in Sources */,
 				45F6BAF62AB3732C00C81DE1 /* ExtraDocsViewController.swift in Sources */,
@@ -18344,6 +18377,7 @@
 				45F6BD302AB3732C00C81DE1 /* LogViewerViewController.swift in Sources */,
 				45F6BD312AB3732C00C81DE1 /* MyCompetitionsRootViewController.swift in Sources */,
 				45F6BD322AB3732C00C81DE1 /* TransactionsHistoryRootViewController.swift in Sources */,
+				4542DFE92C009E9B0033BFB8 /* MultiSliderCustomPanGestureRecognizer.swift in Sources */,
 				45F6BD332AB3732C00C81DE1 /* FavoritesManager.swift in Sources */,
 				45F6BD342AB3732C00C81DE1 /* BonusTypeMapper.swift in Sources */,
 				45F6BD352AB3732C00C81DE1 /* MyTicketsRootViewController.swift in Sources */,
@@ -18497,6 +18531,7 @@
 				A9C340CD28F9A74A0055360B /* SocialItemCollectionViewCell.swift in Sources */,
 				A9C340CE28F9A74A0055360B /* FadeInCenterHorizontalFlowLayout.swift in Sources */,
 				A9C04C1E2A7D03580025A6DA /* MyGamesViewModel.swift in Sources */,
+				4542DFE32C009E340033BFB8 /* TabularScrollView.swift in Sources */,
 				A9C340CF28F9A74A0055360B /* AuthToken.swift in Sources */,
 				A9C340D028F9A74A0055360B /* MatchInfo.swift in Sources */,
 				A9C340D128F9A74A0055360B /* MultiSlider+Drag.swift in Sources */,
@@ -18683,6 +18718,7 @@
 				A90C372329C35FD0007B8AEC /* WithdrawSuccessViewController.swift in Sources */,
 				459EF2982BC01AD20098A7F6 /* ScoreView.swift in Sources */,
 				A9C3416628F9A74A0055360B /* SeeMoreMarketsCollectionViewCell.swift in Sources */,
+				4542DFEC2C009E9B0033BFB8 /* MultiSliderCustomPanGestureRecognizer.swift in Sources */,
 				A9C3416728F9A74A0055360B /* SportMatchLineViewModel.swift in Sources */,
 				A9C3416828F9A74A0055360B /* SimpleListMarketDetailTableViewCell.swift in Sources */,
 				A9C3416928F9A74A0055360B /* PopUpDetails.swift in Sources */,
