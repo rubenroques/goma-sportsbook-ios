@@ -1,18 +1,3 @@
-# This file contains the fastlane.tools configuration
-# You can find the documentation at https://docs.fastlane.tools
-#
-# For a list of all available actions, check out
-#
-#     https://docs.fastlane.tools/actions
-#
-# For a list of all available plugins, check out
-#
-#     https://docs.fastlane.tools/plugins/available-plugins
-#
-
-# Uncomment the line if you want fastlane to automatically update itself
-# update_fastlane
-
 require 'dotenv'
 Dotenv.load
 
@@ -22,101 +7,66 @@ ENV["FASTLANE_XCODEBUILD_SETTINGS_TIMEOUT"] = "120"
 default_platform(:ios)
 
 lane :test do
-  puts "GITHUB_API_TOKEN: #{ENV['GITHUB_API_TOKEN']}"                  
-  
-  puts "DISCORD_WEBHOOK_URL: #{ENV['DISCORD_WEBHOOK_URL']}"
-  
   puts "FIREBASE_CLI_TOKEN: #{ENV['FIREBASE_CLI_TOKEN']}"
 end
 
+firebase_app_ids = {
+  "Betsson UAT" => "1:844144342615:ios:9d61f3eb24c40f4f8a9512",
+  "Betsson PROD" => "1:519365540506:ios:15a46886b359a568defd23"
+}
+
 platform :ios do
-  lane :create_github_release do
-    version = get_version_number
-    build_number = get_build_number
-    tag_name = "#{version}-#{build_number}"
-
-    set_github_release(
-      repository_name: "YourGitHubUsername/YourRepoName",
-      api_token: ENV["GITHUB_API_TOKEN"],
-      name: "Release #{version}",
-      tag_name: tag_name,
-      description: "Release notes for version #{version}",
-      commitish: "main"
-    )
-  end
-
-  lane :send_discord_notification do
-    version = get_version_number
-    build_number = get_build_number
-
-    post_to_discord(
-      webhook_url: ENV["DISCORD_WEBHOOK_URL"],
-      title: "New build is ready!",
-      description: "Version #{version} (#{build_number}) is now available.",
-      success: true
-    )
-  end
 
   lane :certificates do
-    
-    register_devices(    
-      devices_file: "./fastlane/devices.txt"
-    )
-    
+    register_devices(devices_file: "./fastlane/devices.txt")
+
     match(
       type: "adhoc",
       force_for_new_devices: true,
       readonly: false
     )
-
   end
 
   lane :distribute_to_firebase do |options|
+    app_scheme = options[:app_scheme]
+
+    # Validate scheme
+    unless firebase_app_ids.key?(app_scheme)
+      UI.user_error!("Invalid scheme: #{app_scheme}. Please provide one of: #{firebase_app_ids.keys.join(', ')}")
+    end
+
+    firebase_app_id = firebase_app_ids[app_scheme]
 
     build_ios_app(
-      scheme: options[:app_scheme],
+      scheme: app_scheme,
       clean: true,
       silent: true,
       suppress_xcode_output: true,
       export_method: "ad-hoc", # Use ad hoc provisioning profile
       export_options: {
-          compileBitcode: false,
-          uploadBitcode: false,
-          uploadSymbols: true,
-          manageAppVersionAndBuildNumber: false
-        }
+        compileBitcode: false,
+        uploadBitcode: false,
+        uploadSymbols: true,
+        manageAppVersionAndBuildNumber: false
+      }
     )
 
     firebase_app_distribution(
-      app: "1:844144342615:ios:9d61f3eb24c40f4f8a9512", # Replace with your actual Firebase App ID
+      app: firebase_app_id,
       firebase_cli_token: ENV["FIREBASE_CLI_TOKEN"],
-      groups: "ios-internal", # "ios-internal", " ios-dev " # Replace with your desired distribution group(s)
+      groups: "ios-internal", # Replace with your desired distribution group(s)
       debug: true
     )
-
   end
 
-
-  lane :increment_specific_target_build_number do |options|
-    target = options[:app_scheme]
-
-    # Get the path to the target's Info.plist file
-    plist_path = "./Clients/#{target}/Misc/#{target}-Info.plist"
-
-    # Read the current build number
-    current_build_number = get_info_plist_value(path: plist_path, key: "CFBundleVersion")
-
-    # Increment the build number
-    new_build_number = current_build_number.to_i + 1
-
-    # Update the build number in the Info.plist file
-    set_info_plist_value(path: plist_path, key: "CFBundleVersion", value: new_build_number.to_s)
+  lane :betsson_uat do
+    desc "Distribute Betsson via UAT version to Firebase"
+    distribute_to_firebase(app_scheme: "Betsson UAT")
   end
 
-  lane :beta do |options|
-    desc "Distribute Beta version to Firebase"
-    # increment_specific_target_build_number(app_scheme: options[:client])
-    distribute_to_firebase(app_scheme: options[:client])
+  lane :betsson_prod do
+    desc "Distribute Betsson Prod Beta version to Firebase"
+    distribute_to_firebase(app_scheme: "Betsson PROD")
   end
-
+  
 end

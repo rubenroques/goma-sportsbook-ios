@@ -753,7 +753,7 @@ class MyTicketTableViewCell: UITableViewCell {
         }
 
         //let minCashout = maxSliderStake/10
-        let minCashout = 0.01
+        let minCashout = 0.50
         let minValue: CGFloat = minCashout
         let maxValue: CGFloat = maxSliderStake
         let values: [CGFloat] = [minValue, maxValue]
