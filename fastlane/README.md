@@ -26,18 +26,10 @@ For _fastlane_ installation instructions, see [Installing _fastlane_](https://do
 
 ## iOS
 
-### ios create_github_release
+### ios update_version
 
 ```sh
-[bundle exec] fastlane ios create_github_release
-```
-
-
-
-### ios send_discord_notification
-
-```sh
-[bundle exec] fastlane ios send_discord_notification
+[bundle exec] fastlane ios update_version
 ```
 
 
@@ -58,18 +50,18 @@ For _fastlane_ installation instructions, see [Installing _fastlane_](https://do
 
 
 
-### ios increment_specific_target_build_number
+### ios betsson_uat
 
 ```sh
-[bundle exec] fastlane ios increment_specific_target_build_number
+[bundle exec] fastlane ios betsson_uat
 ```
 
 
 
-### ios beta
+### ios betsson_prod
 
 ```sh
-[bundle exec] fastlane ios beta
+[bundle exec] fastlane ios betsson_prod
 ```
 
 

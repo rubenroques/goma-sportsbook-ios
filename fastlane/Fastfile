@@ -15,15 +15,51 @@ firebase_app_ids = {
   "Betsson PROD" => "1:519365540506:ios:15a46886b359a568defd23"
 }
 
+apple_ids = {
+  "Betsson UAT" => "ruben@gomadevelopment.pt",
+  "Betsson PROD" => "ruben@gomadevelopment.pt"
+}
+
+app_ids = {
+  "Betsson UAT" => "com.gomagaming.betsson",
+  "Betsson PROD" => "fr.betsson.ios.app"
+}
+
+team_ids = {
+  "Betsson UAT" => "422GNXXZJR",
+  "Betsson PROD" => "QN2DYX5K4M"
+}
+
 platform :ios do
 
-  lane :certificates do
+  lane :update_version do
+    current_version = get_version_number(xcodeproj: "Sportsbook.xcodeproj")
+    current_build = get_build_number(xcodeproj: "Sportsbook.xcodeproj")
+    
+    new_version = prompt(text: "Current version is #{current_version}. Enter new version number:")
+    new_build = prompt(text: "Current build number is #{current_build}. Enter new build number:")
+
+    increment_version_number(version_number: new_version)
+    increment_build_number(build_number: new_build)
+  end
+
+  lane :certificates do |options|
+    app_scheme = options[:app_scheme]
+
+    # Set apple_id and team_id based on app_scheme
+    apple_id = apple_ids[app_scheme]
+    app_id = app_ids[app_scheme]
+    team_id = team_ids[app_scheme]
+
     register_devices(devices_file: "./fastlane/devices.txt")
 
     match(
       type: "adhoc",
       force_for_new_devices: true,
-      readonly: false
+      readonly: true,
+      app_identifier: app_id,  # Ensure you have the right app identifier
+      username: apple_id,
+      team_id: team_id
     )
   end
 
@@ -37,11 +73,15 @@ platform :ios do
 
     firebase_app_id = firebase_app_ids[app_scheme]
 
+    # Call certificates lane with app_scheme
+    certificates(app_scheme: app_scheme)
+
     build_ios_app(
       scheme: app_scheme,
       clean: true,
       silent: true,
       suppress_xcode_output: true,
+      skip_profile_detection: true, # default if true, o not try to build a profile mapping from the xcodeproj. Match or a manually provided mapping should be used
       export_method: "ad-hoc", # Use ad hoc provisioning profile
       export_options: {
         compileBitcode: false,
@@ -64,9 +104,9 @@ platform :ios do
     distribute_to_firebase(app_scheme: "Betsson UAT")
   end
 
-  lane :betsson_prod do
-    desc "Distribute Betsson Prod Beta version to Firebase"
-    distribute_to_firebase(app_scheme: "Betsson PROD")
-  end
-  
+ # lane :betsson_prod do
+ #   desc "Distribute Betsson Prod Beta version to Firebase"
+ #   distribute_to_firebase(app_scheme: "Betsson PROD")
+ # end
+
 end

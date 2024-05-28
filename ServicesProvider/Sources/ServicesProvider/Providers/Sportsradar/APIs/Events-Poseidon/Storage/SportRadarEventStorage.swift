@@ -13,7 +13,6 @@ class SportRadarEventStorage {
 
     var eventPublisher: AnyPublisher<Event?, Never> {
         self.eventSubject
-            .throttle(for: .milliseconds(800), scheduler: DispatchQueue.main, latest: true)
             .eraseToAnyPublisher()
     }
     
@@ -188,11 +187,9 @@ extension SportRadarEventStorage {
     }
     
     func updateEventFullDetailedScore(_ detailedScore: [String: Score]) {
-        guard let event = self.eventSubject.value else { return }
-        
-        event.scores = detailedScore
-        
-        eventSubject.send(event)
+        for value in detailedScore.values {
+            self.updateEventDetailedScore(value)
+        }
     }
 
 }

@@ -752,14 +752,16 @@ class MyTicketTableViewCell: UITableViewCell {
             maxSliderStake = totalStake - partialCashoutStake
         }
 
-        //let minCashout = maxSliderStake/10
-        let minCashout = 0.50
-        let minValue: CGFloat = minCashout
-        let maxValue: CGFloat = maxSliderStake
-        let values: [CGFloat] = [minValue, maxValue]
+        var minCashoutStep = 0.01
+        
+        var minValue: CGFloat = minCashoutStep
+        var maxValue: CGFloat = maxSliderStake
+        var middleValue: CGFloat = maxValue/2 // Default slider place
+        
+        var values: [CGFloat] = [minValue, maxValue]
 
         //Minimum and maximum labels
-        self.minimumCashoutValueLabel.text = CurrencyFormater.defaultFormat.string(from: NSNumber(value: minCashout)) ?? ""
+        self.minimumCashoutValueLabel.text = CurrencyFormater.defaultFormat.string(from: NSNumber(value: minCashoutStep)) ?? ""
 
         self.maximumCashoutValueLabel.text = CurrencyFormater.defaultFormat.string(from: NSNumber(value: maxSliderStake)) ?? ""
 
@@ -770,7 +772,7 @@ class MyTicketTableViewCell: UITableViewCell {
         partialCashoutMultiSlider?.maximumValue = maxValue
         partialCashoutMultiSlider?.value = values
         partialCashoutMultiSlider?.outerTrackColor = UIColor.App.separatorLine
-        partialCashoutMultiSlider?.snapStepSize = minCashout
+        partialCashoutMultiSlider?.snapStepSize = minCashoutStep
         partialCashoutMultiSlider?.thumbImage = UIImage(named: "slider_thumb_orange_icon")
         partialCashoutMultiSlider?.tintColor = UIColor.App.highlightPrimary
         partialCashoutMultiSlider?.trackWidth = 6
@@ -783,7 +785,7 @@ class MyTicketTableViewCell: UITableViewCell {
         partialCashoutMultiSlider?.extraLabelInfoSingular = localized("€")
         partialCashoutMultiSlider?.extraLabelInfoPlural = localized("€")
         partialCashoutMultiSlider?.thumbCount = 1
-        partialCashoutMultiSlider?.value[0] = maxValue/2
+        partialCashoutMultiSlider?.value[0] = middleValue
 
         if let partialCashoutMultiSlider = partialCashoutMultiSlider {
 

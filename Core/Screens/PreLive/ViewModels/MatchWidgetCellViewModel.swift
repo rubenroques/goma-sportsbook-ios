@@ -297,7 +297,7 @@ class MatchWidgetCellViewModel {
         self.match = match
         
         let viewModelDesc = "[\(match.id) \(match.homeParticipant.name) vs \(match.awayParticipant.name)]"
-        print("BlinkDebug: CellVM init \(viewModelDesc) \(matchWidgetType) \(matchWidgetStatus)")
+        // print("BlinkDebug: CellVM init \(viewModelDesc) \(matchWidgetType) \(matchWidgetStatus)")
         
         switch matchWidgetStatus {
         case .live, .preLive:

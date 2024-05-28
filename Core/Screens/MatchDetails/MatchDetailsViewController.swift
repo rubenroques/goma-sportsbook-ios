@@ -840,7 +840,9 @@ class MatchDetailsViewController: UIViewController {
             .sink(receiveValue: { [weak self] detailedScoresList in
                 guard let self = self else { return }
                 if let matchScores = detailedScoresList.first {
-                    self.scoreView.sportCode = matchScores.key
+                    if self.scoreView.sportCode != matchScores.key {
+                        self.scoreView.sportCode = matchScores.key
+                    }
                     self.scoreView.updateScores(matchScores.value)
                 }
             })
@@ -1368,6 +1370,7 @@ extension MatchDetailsViewController: UIPageViewControllerDelegate, UIPageViewCo
             self.selectMarketType(atIndex: 0)
         }
     }
+    
 }
 
 extension MatchDetailsViewController: WKNavigationDelegate {

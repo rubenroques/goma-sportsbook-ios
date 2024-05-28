@@ -364,7 +364,7 @@ class MatchWidgetCollectionViewCell: UICollectionViewCell {
     override func awakeFromNib() {
         super.awakeFromNib()
         
-        print("BlinkDebug: cell awakeFromNib")
+        // print("BlinkDebug: cell awakeFromNib")
         
         // hide non normaml widget style elements
         self.backgroundImageView.isHidden = true
@@ -688,11 +688,11 @@ class MatchWidgetCollectionViewCell: UICollectionViewCell {
     override func prepareForReuse() {
         super.prepareForReuse()
         
-        print("BlinkDebug: Cell \(self.debugUUID.self) prepareForReuse")
+        // print("BlinkDebug: Cell \(self.debugUUID.self) prepareForReuse")
         
         if let viewModel = self.viewModel {
             let viewModelDesc = "[\(viewModel.match.id) \(viewModel.match.homeParticipant.name) vs \(viewModel.match.awayParticipant.name)]"
-            print("BlinkDebug: Cell  \(self.debugUUID.self) old ViewModel: \(viewModelDesc)")
+            // print("BlinkDebug: Cell  \(self.debugUUID.self) old ViewModel: \(viewModelDesc)")
         }
         
         self.viewModel = nil
@@ -1472,7 +1472,7 @@ extension MatchWidgetCollectionViewCell {
         }
         
         let viewModelDesc = "[\(viewModel.match.id) \(viewModel.match.homeParticipant.name) vs \(viewModel.match.awayParticipant.name)]"
-        print("BlinkDebug: cell  \(self.debugUUID.self) configure(withViewModel \(viewModelDesc)")
+        // print("BlinkDebug: cell  \(self.debugUUID.self) configure(withViewModel \(viewModelDesc)")
         
         Publishers.CombineLatest(viewModel.$matchWidgetStatus, viewModel.$matchWidgetType)
             .receive(on: DispatchQueue.main)
@@ -1723,9 +1723,7 @@ extension MatchWidgetCollectionViewCell {
     
     private func configureOutcomes(withMarket market: Market) {
         
-        let matchDesc = "[\(self.viewModel?.match.id ?? "") \(self.viewModel?.match.homeParticipant.name ?? "") vs ... ]"
-        print("OddDebug: configureOutcomes \(matchDesc)")
-        
+    
         if let outcome = market.outcomes[safe: 0] {
             
             if let nameDigit1 = market.nameDigit1 {
@@ -1753,8 +1751,7 @@ extension MatchWidgetCollectionViewCell {
                 self.setHomeOddValueLabel(toText: "-")
             }
             
-            print("OddDebug: configureOutcomes left \(matchDesc) \(outcome.bettingOffer.id)")
-            
+
             self.leftOddButtonSubscriber = Env.servicesProvider
                 .subscribeToEventOnListsOutcomeUpdates(withId: outcome.bettingOffer.id)
                 .compactMap({ $0 })
@@ -1766,10 +1763,10 @@ extension MatchWidgetCollectionViewCell {
                 .receive(on: DispatchQueue.main)
                 .sink(receiveCompletion: { completion in
                     print("leftOddButtonSubscriber subscribeToOutcomeUpdates completion: \(completion)")
-                    print("OddDebug: configureOutcomes left finished \(matchDesc)")
+
                 }, receiveValue: { [weak self] bettingOffer in
                     
-                    print("OddDebug: configureOutcomes left found \(matchDesc)")
+
                     
                     guard let weakSelf = self else { return }
                     

@@ -49,15 +49,15 @@ class MatchLineTableCellViewModel {
                 let oldMatchDesc = "[\(oldMatch.id) \(oldMatch.homeParticipant.name) vs \(oldMatch.awayParticipant.name)]"
                 let newMatchDesc = "[\(newMatch.id) \(newMatch.homeParticipant.name) vs \(newMatch.awayParticipant.name)]"
                 
-                print("BlinkDebug >LineVC - comparing \(oldMatchDesc) to \(newMatchDesc)")
+                // print("BlinkDebug >LineVC - comparing \(oldMatchDesc) to \(newMatchDesc)")
                       
                 let visuallySimilar = Match.visuallySimilar(lhs: oldMatch, rhs: newMatch)
                 if visuallySimilar.0 {
-                    print("BlinkDebug >LineVC - ignoring")
+                    // print("BlinkDebug >LineVC - ignoring")
                     return true
                 }
                 else {
-                    print("BlinkDebug >LineVC - not ignoring due to diff:\(visuallySimilar.1 ?? "")")
+                    // print("BlinkDebug >LineVC - not ignoring due to diff:\(visuallySimilar.1 ?? "")")
                     return false
                 }
             })

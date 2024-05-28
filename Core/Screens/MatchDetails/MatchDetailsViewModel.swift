@@ -280,9 +280,17 @@ class MatchDetailsViewModel: NSObject {
                     }
                 }
             }, receiveValue: { [weak self] matchLiveData in
-                if let detailedScores = matchLiveData.detailedScores {
-                    var updatedMatchDetailedScores = [sportAlphaCode: detailedScores]
-                    self?.matchDetailedScores.send(updatedMatchDetailedScores)
+                if let detailedScoresValue = matchLiveData.detailedScores {
+                    
+                    if let currentScoreForSport = self?.matchDetailedScores.value[sportAlphaCode] {
+                        let mergeResult = currentScoreForSport.merging(detailedScoresValue) { (_, new) in new }
+                        var updatedMatchDetailedScores = [sportAlphaCode: mergeResult]
+                        self?.matchDetailedScores.send(updatedMatchDetailedScores)
+                    }
+                    else {
+                        var matchDetailedScoresForSport = [sportAlphaCode: detailedScoresValue]
+                        self?.matchDetailedScores.send(matchDetailedScoresForSport)
+                    }
                 }
             })
             .store(in: &self.cancellables)

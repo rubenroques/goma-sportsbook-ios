@@ -410,7 +410,12 @@ class ClientManagedHomeViewTemplateDataSource {
     }
 
     func fetchHighlightedLiveMatches() {
+        #if DEBUG
+        let homeLiveEventsCount = 10
+        #else
         let homeLiveEventsCount = Env.businessSettingsSocket.clientSettings.homeLiveEventsCount
+        #endif
+        
         self.highlightedLiveMatches = []
         
         Env.servicesProvider.getHighlightedLiveEvents(eventCount: homeLiveEventsCount)

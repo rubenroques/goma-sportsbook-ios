@@ -776,21 +776,13 @@ class SportRadarEventsProvider: EventsProvider {
         }
         
         // Secundary Markets - event details
-        print("OddDebug: getValidEventSecundaryMarketsCoordinators \(id)")
-        
-        if id == "273363368.1" || id == "273363369.1" || id == "273367405.1" || id == "273367406.1" {
-            print("break")
-        }
         
         for eventSecundaryMarketsCoordinator in self.getValidEventSecundaryMarketsCoordinators() {
-            print("OddDebug: getValidEventSecundaryMarketsCoordinators checking \(eventSecundaryMarketsCoordinator.eventSecundaryMarketsIdentifier)")
             if eventSecundaryMarketsCoordinator.containsOutcome(withid: id),
                let publisher = eventSecundaryMarketsCoordinator.subscribeToEventOnListsOutcomeUpdates(withId: id) {
-                print("OddDebug: getValidEventSecundaryMarketsCoordinators \(id) found")
                 return publisher.map(Optional.init).setFailureType(to: ServiceProviderError.self).eraseToAnyPublisher()
             }
         }
-        print("OddDebug: getValidEventSecundaryMarketsCoordinators \(id) not found")
         
         return Just(nil).setFailureType(to: ServiceProviderError.self).eraseToAnyPublisher()
     }
@@ -1869,11 +1861,9 @@ extension SportRadarEventsProvider {
         }
 
         if let eventDetailsCoordinator = self.getValidEventSecundaryMarketsCoordinator(forKey: eventId) {
-            print("OddDebug: SportRadarEventSecundaryMarketsCoordinator exists \(eventId)")
             return eventDetailsCoordinator.eventWithSecundaryMarketsPublisher
         }
         else {
-            print("OddDebug: SportRadarEventSecundaryMarketsCoordinator created \(eventId)")
             let eventDetailsCoordinator = SportRadarEventSecundaryMarketsCoordinator(matchId: eventId,
                                                                             sessionToken: sessionToken.hash,
                                                                             storage: SportRadarEventStorage())

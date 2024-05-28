@@ -310,7 +310,7 @@ class LiveEventsViewModel: NSObject {
             }
         }
         
-        print("BlinkDebug: Live dataDidChangedAction")
+        // print("BlinkDebug: Live dataDidChangedAction")
         self.dataDidChangedAction?()
     }
 
