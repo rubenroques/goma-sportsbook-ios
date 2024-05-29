@@ -28,8 +28,8 @@
                                     <constraint firstAttribute="width" constant="20" id="gFy-H5-3db"/>
                                 </constraints>
                             </imageView>
-                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" horizontalCompressionResistancePriority="1000" verticalCompressionResistancePriority="1000" text="Label" textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="2" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="iC8-cf-KmV">
-                                <rect key="frame" x="55" y="12" width="178" height="26"/>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" horizontalCompressionResistancePriority="1000" verticalCompressionResistancePriority="1000" text="Label" lineBreakMode="tailTruncation" numberOfLines="2" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="iC8-cf-KmV">
+                                <rect key="frame" x="17" y="12" width="171" height="26"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                 <nil key="textColor"/>
                                 <nil key="highlightedColor"/>
@@ -58,8 +58,8 @@
                         <color key="backgroundColor" systemColor="systemBackgroundColor"/>
                         <constraints>
                             <constraint firstItem="kGI-kj-0wZ" firstAttribute="centerY" secondItem="iC8-cf-KmV" secondAttribute="centerY" id="40q-6G-3K7"/>
-                            <constraint firstAttribute="trailing" secondItem="iC8-cf-KmV" secondAttribute="trailing" constant="55" id="FvT-qM-d5h"/>
-                            <constraint firstItem="iC8-cf-KmV" firstAttribute="leading" secondItem="gzC-Wx-rsw" secondAttribute="leading" constant="55" id="LjH-ZQ-KWh"/>
+                            <constraint firstAttribute="trailing" secondItem="iC8-cf-KmV" secondAttribute="trailing" constant="100" id="FvT-qM-d5h"/>
+                            <constraint firstItem="iC8-cf-KmV" firstAttribute="leading" secondItem="gzC-Wx-rsw" secondAttribute="leading" constant="17" id="LjH-ZQ-KWh"/>
                             <constraint firstAttribute="trailing" secondItem="t2W-Ve-ZMA" secondAttribute="trailing" constant="12" id="Mlu-cJ-K8T"/>
                             <constraint firstItem="nwS-hf-L6O" firstAttribute="centerY" secondItem="iC8-cf-KmV" secondAttribute="centerY" id="O1D-XR-5QV"/>
                             <constraint firstItem="t2W-Ve-ZMA" firstAttribute="leading" secondItem="gzC-Wx-rsw" secondAttribute="leading" constant="12" id="ZgK-BC-4hy"/>

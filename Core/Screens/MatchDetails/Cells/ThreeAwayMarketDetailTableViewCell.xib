@@ -59,8 +59,8 @@
                                     <constraint firstAttribute="height" constant="45" id="kTZ-b4-ehj"/>
                                 </constraints>
                             </view>
-                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" horizontalCompressionResistancePriority="1000" verticalCompressionResistancePriority="1000" text="Label" textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="2" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="OlA-UR-Bn9">
-                                <rect key="frame" x="80" y="12" width="215" height="30"/>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" horizontalCompressionResistancePriority="1000" verticalCompressionResistancePriority="1000" text="Label" lineBreakMode="tailTruncation" numberOfLines="2" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="OlA-UR-Bn9">
+                                <rect key="frame" x="17" y="12" width="268" height="30"/>
                                 <constraints>
                                     <constraint firstAttribute="height" relation="greaterThanOrEqual" constant="30" id="rfZ-ik-AjJ"/>
                                 </constraints>
@@ -174,6 +174,7 @@
                         </subviews>
                         <constraints>
                             <constraint firstItem="OlA-UR-Bn9" firstAttribute="top" secondItem="iYJ-UL-FZt" secondAttribute="top" constant="12" id="6VC-1c-xvd"/>
+                            <constraint firstAttribute="trailing" secondItem="OlA-UR-Bn9" secondAttribute="trailing" constant="90" id="7Oi-Mx-30Z"/>
                             <constraint firstItem="dzu-nK-RZi" firstAttribute="centerY" secondItem="OlA-UR-Bn9" secondAttribute="centerY" id="ANg-FZ-k8N"/>
                             <constraint firstAttribute="bottom" relation="greaterThanOrEqual" secondItem="iEO-LQ-Muf" secondAttribute="bottom" constant="6" id="CNU-ge-XBx"/>
                             <constraint firstItem="B37-8f-tid" firstAttribute="centerY" secondItem="OlA-UR-Bn9" secondAttribute="centerY" id="HKq-Rb-4EP"/>
@@ -181,9 +182,8 @@
                             <constraint firstItem="dzu-nK-RZi" firstAttribute="leading" secondItem="iYJ-UL-FZt" secondAttribute="leading" id="QM8-3D-Vqt"/>
                             <constraint firstAttribute="trailing" secondItem="dzu-nK-RZi" secondAttribute="trailing" constant="2" id="eh2-ac-SIb"/>
                             <constraint firstItem="iEO-LQ-Muf" firstAttribute="leading" secondItem="iYJ-UL-FZt" secondAttribute="leading" constant="12" id="emx-Oi-hKR"/>
-                            <constraint firstItem="OlA-UR-Bn9" firstAttribute="leading" secondItem="iYJ-UL-FZt" secondAttribute="leading" constant="80" id="ilt-uG-A7F"/>
+                            <constraint firstItem="OlA-UR-Bn9" firstAttribute="leading" secondItem="iYJ-UL-FZt" secondAttribute="leading" constant="17" id="ilt-uG-A7F"/>
                             <constraint firstItem="iEO-LQ-Muf" firstAttribute="top" secondItem="OlA-UR-Bn9" secondAttribute="bottom" constant="8" symbolic="YES" id="nTR-Wy-l6T"/>
-                            <constraint firstItem="OlA-UR-Bn9" firstAttribute="centerX" secondItem="iYJ-UL-FZt" secondAttribute="centerX" id="xRK-vi-bUc"/>
                         </constraints>
                     </view>
                 </subviews>

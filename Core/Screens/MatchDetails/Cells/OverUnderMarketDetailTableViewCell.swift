@@ -179,8 +179,23 @@ class OverUnderMarketDetailTableViewCell: UITableViewCell {
 
         self.titleLabel.text = marketGroupOrganizer.marketName
 
+        if let match = self.match {
+            self.hasCashback = RePlayFeatureHelper.shouldShowRePlay(forMatch: match)
+            
+            if let market = match.markets.filter({
+                $0.id == marketGroupOrganizer.marketId
+            }).first {
+                if let customBetAvailable = market.customBetAvailable {
+                    self.customBetAvailable = customBetAvailable ? true : false
+                }
+                else {
+                    self.customBetAvailable = false
+                }
+            }
+        }
+        
         if !self.isAllExpanded {
-            // if all collapsed we only setup the title
+            // if all collapsed we only setup the title and icons
             self.expandBaseView.isHidden = true
             return
         }
@@ -240,20 +255,6 @@ class OverUnderMarketDetailTableViewCell: UITableViewCell {
             }
         }
         
-        if let match = self.match {
-            self.hasCashback = RePlayFeatureHelper.shouldShowRePlay(forMatch: match)
-            
-            if let market = match.markets.filter({
-                $0.id == marketGroupOrganizer.marketId
-            }).first {
-                if let customBetAvailable = market.customBetAvailable {
-                    self.customBetAvailable = customBetAvailable ? true : false
-                }
-                else {
-                    self.customBetAvailable = false
-                }
-            }
-        }
     }
 
     @objc func didTapExpandBaseView() {

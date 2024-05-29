@@ -60,8 +60,8 @@
                                     <constraint firstItem="s0d-4S-p3e" firstAttribute="trailing" secondItem="Zo4-T1-F0F" secondAttribute="leading" constant="-5" id="k22-Fp-joB"/>
                                 </constraints>
                             </view>
-                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" horizontalCompressionResistancePriority="1000" verticalCompressionResistancePriority="1000" text="Label Label Label Label Label Label Label Label " textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="2" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="OlA-UR-Bn9">
-                                <rect key="frame" x="80" y="12" width="215" height="34"/>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" horizontalCompressionResistancePriority="1000" verticalCompressionResistancePriority="1000" text="Label Label Label Label Label Label Label Label " lineBreakMode="tailTruncation" numberOfLines="2" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="OlA-UR-Bn9">
+                                <rect key="frame" x="17" y="12" width="258" height="34"/>
                                 <constraints>
                                     <constraint firstAttribute="height" relation="greaterThanOrEqual" constant="30" id="ok5-2C-3kM"/>
                                 </constraints>
@@ -159,12 +159,12 @@
                         <constraints>
                             <constraint firstItem="U61-bE-P6Z" firstAttribute="centerY" secondItem="OlA-UR-Bn9" secondAttribute="centerY" id="1T3-9y-Rfj"/>
                             <constraint firstAttribute="trailing" secondItem="JbR-Wf-e1d" secondAttribute="trailing" constant="12" id="1VX-mG-x2n"/>
-                            <constraint firstItem="OlA-UR-Bn9" firstAttribute="leading" secondItem="iYJ-UL-FZt" secondAttribute="leading" constant="80" id="5WO-nj-f6S"/>
+                            <constraint firstItem="OlA-UR-Bn9" firstAttribute="leading" secondItem="iYJ-UL-FZt" secondAttribute="leading" constant="17" id="5WO-nj-f6S"/>
                             <constraint firstItem="OlA-UR-Bn9" firstAttribute="top" secondItem="iYJ-UL-FZt" secondAttribute="top" constant="12" id="6VC-1c-xvd"/>
+                            <constraint firstAttribute="trailing" secondItem="OlA-UR-Bn9" secondAttribute="trailing" constant="100" id="A5A-co-KG2"/>
                             <constraint firstItem="JbR-Wf-e1d" firstAttribute="top" secondItem="OlA-UR-Bn9" secondAttribute="bottom" constant="8" symbolic="YES" id="BF1-wg-2iJ"/>
                             <constraint firstItem="U61-bE-P6Z" firstAttribute="leading" secondItem="iYJ-UL-FZt" secondAttribute="leading" id="L6y-9Y-VHQ"/>
                             <constraint firstAttribute="trailing" secondItem="U61-bE-P6Z" secondAttribute="trailing" constant="2" id="XOD-3E-F3Q"/>
-                            <constraint firstItem="OlA-UR-Bn9" firstAttribute="centerX" secondItem="iYJ-UL-FZt" secondAttribute="centerX" id="ZBB-yC-OwS"/>
                             <constraint firstItem="s0d-4S-p3e" firstAttribute="centerY" secondItem="OlA-UR-Bn9" secondAttribute="centerY" id="cYe-WA-9z3"/>
                             <constraint firstAttribute="bottom" relation="greaterThanOrEqual" secondItem="JbR-Wf-e1d" secondAttribute="bottom" constant="6" id="kAb-WF-FcN"/>
                             <constraint firstItem="JbR-Wf-e1d" firstAttribute="leading" secondItem="iYJ-UL-FZt" secondAttribute="leading" constant="12" id="oU5-gu-vhq"/>
