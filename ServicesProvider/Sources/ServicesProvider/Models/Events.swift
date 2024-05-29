@@ -23,7 +23,7 @@ public enum EventType: String, Equatable {
     case competition
 }
 
-public enum EventStatus: Equatable, Hashable {
+public enum EventStatus: Hashable {
     case unknown
     case notStarted
     case inProgress(String)
@@ -595,7 +595,7 @@ public struct SportCompetition: Codable {
     }
 }
 
-public struct SportCompetitionInfo: Codable, Equatable {
+public struct SportCompetitionInfo: Codable, Hashable {
     public var id: String
     public var name: String
     public var marketGroups: [SportCompetitionMarketGroup]
@@ -612,7 +612,7 @@ public struct SportCompetitionInfo: Codable, Equatable {
     
 }
 
-public struct SportCompetitionMarketGroup: Codable, Equatable {
+public struct SportCompetitionMarketGroup: Codable, Hashable {
     public var id: String
     public var name: String
 

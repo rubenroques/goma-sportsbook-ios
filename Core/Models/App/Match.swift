@@ -41,7 +41,7 @@ struct MatchLiveData: Equatable {
     
 }
 
-struct Match: Equatable {
+struct Match: Hashable {
 
     var id: String
     var competitionId: String
@@ -91,7 +91,7 @@ struct Match: Equatable {
 
     }
 
-    enum Status: Equatable {
+    enum Status: Hashable {
         case unknown
         case notStarted
         case inProgress(String)

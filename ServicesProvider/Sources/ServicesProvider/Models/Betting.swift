@@ -164,7 +164,7 @@ public struct BetTicket: Codable {
     }
 }
 
-public enum BetslipOddChangeSetting: String, Codable, Equatable, Hashable {
+public enum BetslipOddChangeSetting: String, Codable, Hashable {
     case none
     // case any
     case higher

@@ -403,6 +403,28 @@ class HomeViewController: UIViewController {
         }
     }
     
+    private func trackEventClick(_ eventId: String) {
+        guard
+            let userIdentifier = Env.userSessionStore.loggedUserProfile?.userIdentifier
+        else {
+            return
+        }
+        
+        Env.servicesProvider.trackEvent(.clickEvent(id: eventId), userIdentifer: userIdentifier)
+            .sink { completion in
+                switch completion {
+                case .finished:
+                    ()
+                case .failure(let error):
+                    print("trackEvent clickEvent error: \(error)")
+                }
+            } receiveValue: {
+                print("trackEvent clickEvent called ok")
+            }
+            .store(in: &self.cancellables)
+        
+    }
+    
     private func presentRegisterScreen() {
         let loginViewController = Router.navigationController(with: LoginViewController(shouldPresentRegisterFlow: true))
         
@@ -977,6 +999,7 @@ extension HomeViewController: UITableViewDelegate, UITableViewDataSource {
             cell.configure(withViewModel: viewModel)
 
             cell.tappedMatchLineAction = { [weak self] match in
+                self?.trackEventClick(match.id)
                 self?.openMatchDetails(matchId: match.id)
             }
 

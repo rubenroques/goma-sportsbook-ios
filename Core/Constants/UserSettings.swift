@@ -266,7 +266,7 @@ enum CardsStyle: Int {
     case normal = 5
 }
 
-public enum BetslipOddChangeSetting: String, Codable, Equatable, Hashable, CaseIterable {
+public enum BetslipOddChangeSetting: String, Codable, Hashable, CaseIterable {
     case none
     // case any // remover
     case higher
