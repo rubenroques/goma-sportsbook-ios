@@ -104,6 +104,8 @@ class MatchDetailsViewModel: NSObject {
 
     var scrollToTopAction: ((Int) -> Void)?
     var shouldShowTabTooltip: (() -> Void)?
+    
+    var showMixMatchDefault: Bool = false
 
     init(matchMode: MatchMode = .preLive, match: Match) {
         self.matchId = match.id
@@ -143,7 +145,13 @@ class MatchDetailsViewModel: NSObject {
                 return marketGroups.firstIndex(where: { $0.isDefault ?? false }) ?? 0
             }
             .sink { [weak self] defaultSelectedIndex in
-                self?.selectedMarketTypeIndexPublisher.send(defaultSelectedIndex)
+                if let showMixMatchDefault = self?.showMixMatchDefault,
+                showMixMatchDefault {
+                    self?.selectedMarketTypeIndexPublisher.send(1)
+                }
+                else {
+                    self?.selectedMarketTypeIndexPublisher.send(defaultSelectedIndex)
+                }
             }
             .store(in: &cancellables)
 
@@ -474,12 +482,10 @@ extension MatchDetailsViewModel: UICollectionViewDataSource, UICollectionViewDel
         let previousSelectionValue = self.selectedMarketTypeIndexPublisher.value ?? -1
 
         if indexPath.row != previousSelectionValue {
-            print("CHANGING TAB!")
             self.selectedMarketTypeIndexPublisher.send(indexPath.row)
             collectionView.scrollToItem(at: indexPath, at: .centeredHorizontally, animated: true)
         }
         else {
-            print("CURRENT TAB!")
             self.scrollToTopAction?(indexPath.row)
         }
     }

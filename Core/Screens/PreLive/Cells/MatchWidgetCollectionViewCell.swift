@@ -298,6 +298,13 @@ class MatchWidgetCollectionViewCell: UICollectionViewCell {
         return marketNamePillLabelView
     }()
     
+    lazy var mixMatchContainerView: UIView = {
+        let view = UIView()
+        view.translatesAutoresizingMaskIntoConstraints = false
+        view.clipsToBounds = true
+        return view
+    }()
+    
     lazy var mixMatchBaseView: UIView = {
         let view = UIView()
         view.translatesAutoresizingMaskIntoConstraints = false
@@ -345,6 +352,14 @@ class MatchWidgetCollectionViewCell: UICollectionViewCell {
         return label
     }()
     
+    lazy var mixMatchNavigationIconImageView: UIImageView = {
+        let imageView = UIImageView()
+        imageView.translatesAutoresizingMaskIntoConstraints = false
+        imageView.image = UIImage(named: "arrow_right_icon")
+        imageView.contentMode = .scaleAspectFit
+        return imageView
+    }()
+    
     //
     //
     var viewModel: MatchWidgetCellViewModel?
@@ -373,6 +388,7 @@ class MatchWidgetCollectionViewCell: UICollectionViewCell {
     var didTapFavoriteMatchAction: ((Match) -> Void)?
     var didLongPressOdd: ((BettingTicket) -> Void)?
     var tappedMatchOutrightWidgetAction: ((Competition) -> Void)?
+    var tappedMixMatchAction: ((Match) -> Void)?
     
     private var leftOddButtonSubscriber: AnyCancellable?
     private var middleOddButtonSubscriber: AnyCancellable?
@@ -422,7 +438,7 @@ class MatchWidgetCollectionViewCell: UICollectionViewCell {
         self.boostedOddBottomLineView.isHidden = true
         self.boostedTopRightCornerBaseView.isHidden = true
         
-        self.mixMatchBaseView.isHidden = true
+        self.mixMatchContainerView.isHidden = true
         
         self.mainContentBaseView.isHidden = false
         //
@@ -657,13 +673,20 @@ class MatchWidgetCollectionViewCell: UICollectionViewCell {
         ])
         
         // MixMatch
-        self.baseStackView.addArrangedSubview(self.mixMatchBaseView)
+        self.baseStackView.addArrangedSubview(self.mixMatchContainerView)
+        self.mixMatchContainerView.addSubview(self.mixMatchBaseView)
         self.mixMatchBaseView.addSubview(self.mixMatchBackgroundImageView)
         self.mixMatchBaseView.addSubview(self.mixMatchIconImageView)
         self.mixMatchBaseView.addSubview(self.mixMatchLabel)
-        
+        self.mixMatchBaseView.addSubview(self.mixMatchNavigationIconImageView)
+
         NSLayoutConstraint.activate([
+            self.mixMatchContainerView.heightAnchor.constraint(equalToConstant: 34),
+            
             self.mixMatchBaseView.heightAnchor.constraint(equalToConstant: 27),
+            self.mixMatchBaseView.leadingAnchor.constraint(equalTo: self.mixMatchContainerView.leadingAnchor, constant: 12),
+            self.mixMatchBaseView.trailingAnchor.constraint(equalTo: self.mixMatchContainerView.trailingAnchor, constant: -12),
+            self.mixMatchBaseView.topAnchor.constraint(equalTo: self.mixMatchContainerView.topAnchor),
             
             self.mixMatchBackgroundImageView.leadingAnchor.constraint(equalTo: self.mixMatchBaseView.leadingAnchor),
             self.mixMatchBackgroundImageView.trailingAnchor.constraint(equalTo: self.mixMatchBaseView.trailingAnchor),
@@ -675,7 +698,14 @@ class MatchWidgetCollectionViewCell: UICollectionViewCell {
             
             self.mixMatchIconImageView.widthAnchor.constraint(equalToConstant: 21),
             self.mixMatchIconImageView.heightAnchor.constraint(equalToConstant: 25),
-            self.mixMatchIconImageView.trailingAnchor.constraint(equalTo: self.mixMatchLabel.leadingAnchor, constant: -2)
+            self.mixMatchIconImageView.trailingAnchor.constraint(equalTo: self.mixMatchLabel.leadingAnchor, constant: -2),
+            self.mixMatchIconImageView.centerYAnchor.constraint(equalTo: self.mixMatchLabel.centerYAnchor),
+            
+            self.mixMatchNavigationIconImageView.widthAnchor.constraint(equalToConstant: 11),
+            self.mixMatchNavigationIconImageView.heightAnchor.constraint(equalToConstant: 13),
+            self.mixMatchNavigationIconImageView.leadingAnchor.constraint(equalTo: self.mixMatchLabel.trailingAnchor, constant: 6),
+            self.mixMatchNavigationIconImageView.centerYAnchor.constraint(equalTo: self.mixMatchLabel.centerYAnchor),
+
         ])
         
         self.bringSubviewToFront(self.suspendedBaseView)
@@ -705,6 +735,9 @@ class MatchWidgetCollectionViewCell: UICollectionViewCell {
         
         let longPressGestureRecognizer = UILongPressGestureRecognizer(target: self, action: #selector(didLongPressCard))
         self.participantsBaseView.addGestureRecognizer(longPressGestureRecognizer)
+        
+        let tapMixMatchView = UITapGestureRecognizer(target: self, action: #selector(didTapMixMatch))
+        self.mixMatchContainerView.addGestureRecognizer(tapMixMatchView)
         
         self.hasCashback = false
         
@@ -1739,11 +1772,11 @@ extension MatchWidgetCollectionViewCell {
                     
                     if viewModel.matchWidgetType == .topImage {
                         if let customBetAvailable = market.customBetAvailable,
-                           !customBetAvailable {
-                            self?.mixMatchBaseView.isHidden = false
+                           customBetAvailable {
+                            self?.mixMatchContainerView.isHidden = false
                         }
                         else {
-                            self?.mixMatchBaseView.isHidden = true
+                            self?.mixMatchContainerView.isHidden = true
                         }
                     }
                 }
@@ -2154,6 +2187,13 @@ extension MatchWidgetCollectionViewCell {
             }
         }
         
+    }
+    
+    @objc private func didTapMixMatch() {
+        if let viewModel = self.viewModel {
+            let match = viewModel.match
+            self.tappedMixMatchAction?(match)
+        }
     }
 
     //

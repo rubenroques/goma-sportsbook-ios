@@ -29,7 +29,7 @@
                                 <rect key="frame" x="0.0" y="6.5" width="373" height="45"/>
                                 <subviews>
                                     <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="s0d-4S-p3e">
-                                        <rect key="frame" x="15" y="12.5" width="20" height="20"/>
+                                        <rect key="frame" x="293" y="12.5" width="20" height="20"/>
                                         <constraints>
                                             <constraint firstAttribute="height" constant="20" id="9T6-cc-4mK"/>
                                             <constraint firstAttribute="width" constant="20" id="JSe-VF-E8I"/>
@@ -56,12 +56,12 @@
                                     <constraint firstAttribute="height" constant="45" id="K92-UC-yhc"/>
                                     <constraint firstAttribute="trailing" secondItem="Bbb-t9-7GA" secondAttribute="trailing" constant="15" id="NKT-If-5Us"/>
                                     <constraint firstItem="Bbb-t9-7GA" firstAttribute="leading" secondItem="Zo4-T1-F0F" secondAttribute="trailing" constant="5" id="Opq-78-Ocv"/>
-                                    <constraint firstItem="s0d-4S-p3e" firstAttribute="leading" secondItem="U61-bE-P6Z" secondAttribute="leading" constant="15" id="WXh-Vi-3dW"/>
                                     <constraint firstAttribute="trailing" secondItem="Bbb-t9-7GA" secondAttribute="trailing" constant="15" id="con-OE-ROe"/>
+                                    <constraint firstItem="s0d-4S-p3e" firstAttribute="trailing" secondItem="Zo4-T1-F0F" secondAttribute="leading" constant="-5" id="k22-Fp-joB"/>
                                 </constraints>
                             </view>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" horizontalCompressionResistancePriority="1000" verticalCompressionResistancePriority="1000" text="Label Label Label Label Label Label Label Label " textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="2" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="OlA-UR-Bn9">
-                                <rect key="frame" x="57" y="12" width="261" height="34"/>
+                                <rect key="frame" x="80" y="12" width="215" height="34"/>
                                 <constraints>
                                     <constraint firstAttribute="height" relation="greaterThanOrEqual" constant="30" id="ok5-2C-3kM"/>
                                 </constraints>
@@ -159,7 +159,7 @@
                         <constraints>
                             <constraint firstItem="U61-bE-P6Z" firstAttribute="centerY" secondItem="OlA-UR-Bn9" secondAttribute="centerY" id="1T3-9y-Rfj"/>
                             <constraint firstAttribute="trailing" secondItem="JbR-Wf-e1d" secondAttribute="trailing" constant="12" id="1VX-mG-x2n"/>
-                            <constraint firstItem="OlA-UR-Bn9" firstAttribute="leading" secondItem="iYJ-UL-FZt" secondAttribute="leading" constant="57" id="5WO-nj-f6S"/>
+                            <constraint firstItem="OlA-UR-Bn9" firstAttribute="leading" secondItem="iYJ-UL-FZt" secondAttribute="leading" constant="80" id="5WO-nj-f6S"/>
                             <constraint firstItem="OlA-UR-Bn9" firstAttribute="top" secondItem="iYJ-UL-FZt" secondAttribute="top" constant="12" id="6VC-1c-xvd"/>
                             <constraint firstItem="JbR-Wf-e1d" firstAttribute="top" secondItem="OlA-UR-Bn9" secondAttribute="bottom" constant="8" symbolic="YES" id="BF1-wg-2iJ"/>
                             <constraint firstItem="U61-bE-P6Z" firstAttribute="leading" secondItem="iYJ-UL-FZt" secondAttribute="leading" id="L6y-9Y-VHQ"/>

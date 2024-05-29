@@ -44,6 +44,10 @@ class ListBackgroundCollectionViewCell: UICollectionViewCell {
         self.containerView.clipsToBounds = true
         
         self.backgroundImageView.layer.cornerRadius = self.backgroundImageView.frame.height / 2
+        
+        self.contentView.setNeedsLayout()
+        self.contentView.layoutIfNeeded()
+        
     }
 
     override func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {
@@ -152,7 +156,7 @@ extension ListBackgroundCollectionViewCell {
         let imageView = UIImageView()
         imageView.translatesAutoresizingMaskIntoConstraints = false
         imageView.contentMode = .scaleAspectFill
-        imageView.image = UIImage(named: "filter_funnel_icon")
+        imageView.image = UIImage(named: "mix_match_icon")
         return imageView
     }
 
@@ -167,22 +171,21 @@ extension ListBackgroundCollectionViewCell {
         self.containerView.addSubview(self.titleLabel)
 
         self.initConstraints()
+        
+        self.contentView.setNeedsLayout()
+        self.contentView.layoutIfNeeded()
 
-        self.setNeedsLayout()
-        self.layoutIfNeeded()
-
-        self.containerView.setNeedsLayout()
-        self.containerView.layoutIfNeeded()
     }
 
     private func initConstraints() {
 
         NSLayoutConstraint.activate([
+            self.contentView.heightAnchor.constraint(equalToConstant: 42),
+            
             self.selectionHighlightView.leadingAnchor.constraint(equalTo: self.contentView.leadingAnchor, constant: 1),
             self.selectionHighlightView.trailingAnchor.constraint(equalTo: self.contentView.trailingAnchor, constant: -1),
             self.selectionHighlightView.topAnchor.constraint(equalTo: self.contentView.topAnchor, constant: 1),
             self.selectionHighlightView.bottomAnchor.constraint(equalTo: self.contentView.bottomAnchor, constant: -1),
-            self.selectionHighlightView.heightAnchor.constraint(equalToConstant: 40),
 
             self.containerView.leadingAnchor.constraint(equalTo: self.selectionHighlightView.leadingAnchor, constant: 2),
             self.containerView.trailingAnchor.constraint(equalTo: self.selectionHighlightView.trailingAnchor, constant: -2),

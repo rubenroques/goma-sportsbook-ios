@@ -306,6 +306,8 @@ class MatchDetailsViewController: UIViewController {
     
     private var cancellables = Set<AnyCancellable>()
     
+    var showMixMatchDefault: Bool = false
+    
     // MARK: - Lifetime and Cycle
     init(viewModel: MatchDetailsViewModel) {
         self.viewModel = viewModel
@@ -543,6 +545,9 @@ class MatchDetailsViewController: UIViewController {
 
         self.mixMatchInfoDialogView.alpha = 0
         
+        if self.showMixMatchDefault {
+            self.currentPageViewControllerIndex = 1
+        }
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -951,11 +956,21 @@ class MatchDetailsViewController: UIViewController {
             }
         }
         
-        if let firstViewController = self.marketGroupsViewControllers.first {
-            self.marketGroupsPagedViewController.setViewControllers([firstViewController],
-                                                                    direction: .forward,
-                                                                    animated: false,
-                                                                    completion: nil)
+        if self.showMixMatchDefault {
+            if let firstViewController = self.marketGroupsViewControllers[safe: 1] {
+                self.marketGroupsPagedViewController.setViewControllers([firstViewController],
+                                                                        direction: .forward,
+                                                                        animated: false,
+                                                                        completion: nil)
+            }
+        }
+        else {
+            if let firstViewController = self.marketGroupsViewControllers.first {
+                self.marketGroupsPagedViewController.setViewControllers([firstViewController],
+                                                                        direction: .forward,
+                                                                        animated: false,
+                                                                        completion: nil)
+            }
         }
 
     }
