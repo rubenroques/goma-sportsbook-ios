@@ -7,7 +7,7 @@
 
 import Foundation
 
-struct Sport: Codable, Equatable {
+struct Sport: Codable, Hashable {
 
     var id: String
     var name: String

@@ -6,6 +6,7 @@
 //
 
 import Foundation
+import Combine
 
 protocol AnalyticsEvent {
     var type: String { get }
@@ -13,5 +14,5 @@ protocol AnalyticsEvent {
 }
 
 protocol AnalyticsProvider {
-    func trackEvent(_ event: AnalyticsEvent, userIdentifer: String?)
+    func trackEvent(_ event: AnalyticsEvent, userIdentifer: String?) -> AnyPublisher<Void, ServiceProviderError>
 }

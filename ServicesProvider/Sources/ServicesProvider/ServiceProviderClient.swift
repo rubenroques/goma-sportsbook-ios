@@ -25,6 +25,8 @@ public class ServicesProviderClient {
     private var bettingProvider: (any BettingProvider)?
     private var eventsProvider: (any EventsProvider)?
 
+    private var analyticsProvider: (any AnalyticsProvider)?
+    
     private var cancellables = Set<AnyCancellable>()
 
     public var sumsubDataProvider: SumsubDataProvider?
@@ -93,6 +95,8 @@ public class ServicesProviderClient {
             self.bettingConnectionStatePublisher = self.bettingProvider!.connectionStatePublisher
 
             self.sumsubDataProvider = SumsubDataProvider()
+            
+            self.analyticsProvider = SportRadarAnalyticsProvider()
         }
     }
 
@@ -1478,6 +1482,24 @@ extension ServicesProviderClient {
 
         return privilegedAccessManager.getReferees()
     }
+}
+
+// AnalyticsProvider
+extension ServicesProviderClient {
+    
+    public func trackEvent(_ event: AnalyticsTrackedEvent, userIdentifer: String?) -> AnyPublisher<Void, ServiceProviderError> {
+        guard
+            let analyticsProvider = self.analyticsProvider
+        else {
+            return Fail(error: ServiceProviderError.privilegedAccessManagerNotFound).eraseToAnyPublisher()
+        }
+        
+        let vaixAnalyticsEvent = SportRadarModelMapper.vaixAnalyticsEvent(fromAnalyticsTrackedEvent: event)
+        
+        return analyticsProvider.trackEvent(vaixAnalyticsEvent, userIdentifer: userIdentifer).eraseToAnyPublisher()
+        
+    }
+    
 }
 
 // Utilities

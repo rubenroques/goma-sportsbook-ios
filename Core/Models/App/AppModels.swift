@@ -22,7 +22,7 @@ struct CompetitionGroup {
     }
 }
 
-struct Competition: Equatable {
+struct Competition: Hashable {
     var id: String
     var name: String
     var matches: [Match]
@@ -47,18 +47,18 @@ struct Competition: Equatable {
     }
 }
 
-struct Location: Codable, Equatable {
+struct Location: Codable, Hashable {
     var id: String
     var name: String
     var isoCode: String
 }
 
-struct Participant: Equatable {
+struct Participant: Hashable {
     var id: String
     var name: String
 }
 
-struct Market: Equatable {
+struct Market: Hashable {
     
     enum OutcomesOrder: Codable, Hashable {
         case none
@@ -139,7 +139,7 @@ struct Market: Equatable {
     }
 }
 
-struct Outcome: Equatable {
+struct Outcome: Hashable {
     var id: String
     var codeName: String
     var typeName: String
@@ -209,7 +209,7 @@ enum OddFormat: Codable, Hashable, CustomStringConvertible, Equatable {
     }
 }
 
-struct BettingOffer: Equatable {
+struct BettingOffer: Hashable {
 
     var id: String
 

@@ -9,7 +9,7 @@ import Foundation
 
 enum VaixAPIClient {
     case popularEvents(eventsCount: Int)
-    case analyticsTrackEvent(event: VaixAnalyticsEvent)
+    case analyticsTrackEvent(event: VaixAnalyticsEvent, userId: String)
 }
 
 extension VaixAPIClient: Endpoint {
@@ -65,7 +65,31 @@ extension VaixAPIClient: Endpoint {
     }
     
     var body: Data? {
-        return nil
+        switch self {
+        case .popularEvents:
+            return nil
+        case .analyticsTrackEvent(let event, let userId):
+            
+            
+            if let data = event.data,
+               let jsonData = try? JSONSerialization.data(withJSONObject: data, options: .prettyPrinted),
+               let dataString = String(data: jsonData, encoding: .utf8) {
+                
+                let body = """
+                            {
+                                "event_type": "\(event.type)",
+                                "user_id": \(userId),
+                                "data": \(dataString)
+                            }
+                            """
+                
+                let data = body.data(using: String.Encoding.utf8)!
+                return data
+            }
+            else {
+                return nil
+            }
+        }
     }
     
     var cachePolicy: URLRequest.CachePolicy {

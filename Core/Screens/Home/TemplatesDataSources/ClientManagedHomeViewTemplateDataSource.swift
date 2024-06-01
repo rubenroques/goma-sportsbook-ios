@@ -132,6 +132,7 @@ class ClientManagedHomeViewTemplateDataSource {
     private var highlightedLiveMatches: [Match] = []
     
     //
+    private var pendingUserTrackRequest: AnyCancellable?
     private var cancellables: Set<AnyCancellable> = []
 
     init() {
@@ -410,16 +411,15 @@ class ClientManagedHomeViewTemplateDataSource {
     }
 
     func fetchHighlightedLiveMatches() {
-        #if DEBUG
-        let homeLiveEventsCount = 10
-        #else
+        
         let homeLiveEventsCount = Env.businessSettingsSocket.clientSettings.homeLiveEventsCount
-        #endif
         
         self.highlightedLiveMatches = []
         
         Env.servicesProvider.getHighlightedLiveEvents(eventCount: homeLiveEventsCount)
-            .map({ return $0.map(ServiceProviderModelMapper.match(fromEvent:)).compactMap({ $0 }) })
+            .map { highlightedLiveEvents in
+                return highlightedLiveEvents.compactMap(ServiceProviderModelMapper.match(fromEvent:))
+            }
             .receive(on: DispatchQueue.main)
             .sink { completion in
                 switch completion {
@@ -428,12 +428,39 @@ class ClientManagedHomeViewTemplateDataSource {
                 case .failure(let error):
                     print("fetchHighlightedLiveMatches getHighlightedLiveEvents error: \(error)")
                 }
-            } receiveValue: { [weak self] highlightedLiveEvents in
-                self?.highlightedLiveMatches = highlightedLiveEvents
+            } receiveValue: { [weak self] liveEvents in
+                self?.highlightedLiveMatches = liveEvents
                 self?.refreshPublisher.send()
+                
+                let eventsIds = liveEvents.map({ return $0.id })
+                self?.waitUserToTrackImpressionForEvents(eventsIds: eventsIds)
             }
             .store(in: &self.cancellables)
 
+    }
+    
+    private func waitUserToTrackImpressionForEvents(eventsIds: [String]) {
+        self.pendingUserTrackRequest?.cancel()
+        
+        self.pendingUserTrackRequest = Env.userSessionStore.userProfilePublisher
+            .compactMap({ $0?.userIdentifier })
+            .first()
+            .sink { [weak self] userIdentifier in
+                self?.trackImpressionForEvents(eventsIds: eventsIds, userId: userIdentifier)
+            }
+        
+    }
+    
+    private func trackImpressionForEvents(eventsIds: [String], userId: String) {
+        
+        Env.servicesProvider.trackEvent(.impressionsEvents(eventsIds: eventsIds), userIdentifer: userId)
+            .sink { _ in
+                //
+            } receiveValue: {
+                print("trackEvent impressionsEvents called ok")
+            }
+            .store(in: &self.cancellables)
+        
     }
     
     private func promotedMatch(forSection section: Int, forIndex index: Int) -> Match? {

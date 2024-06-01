@@ -7,13 +7,13 @@
 
 import Foundation
 
-enum VaixAnalyticsEvent: AnalyticsEvent {
+public enum VaixAnalyticsEvent: AnalyticsEvent {
     
     case impressionsEvents(eventsIds: [String])
     case clickEvent(id: String)
     case clickOutcome(id: String)
     
-    var type: String {
+    public var type: String {
         switch self {
         case .impressionsEvents:
             return "impressions:events"
@@ -23,8 +23,8 @@ enum VaixAnalyticsEvent: AnalyticsEvent {
             return "clicks:outcome"
         }
     }
-    
-    var data: [String : Any]? {
+
+    public var data: [String : Any]? {
         switch self {
             
         case .impressionsEvents(let eventsIds):
