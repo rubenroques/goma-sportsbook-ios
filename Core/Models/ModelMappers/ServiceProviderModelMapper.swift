@@ -64,6 +64,7 @@ extension ServiceProviderModelMapper {
                           markets: Self.markets(fromServiceProviderMarkets: event.markets),
                           rootPartId: "",
                           status: Self.matchStatus(fromInternalEvent: event.status),
+                          trackableReference: event.trackableReference,
                           matchTime: event.matchTime,
                           promoImageURL: event.promoImageURL,
                           oldMainMarketId: event.oldMainMarketId,

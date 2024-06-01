@@ -69,6 +69,8 @@ struct Match: Equatable {
     var promoImageURL: String?
     var oldMainMarketId: String?
     
+    var trackableReference: String?
+    
     var competitionOutright: Competition?
 
     var detailedScores: [String: Score]?
@@ -154,6 +156,7 @@ struct Match: Equatable {
          markets: [Market],
          rootPartId: String,
          status: Status,
+         trackableReference: String? = nil,
          matchTime: String? = nil,
          promoImageURL: String? = nil,
          oldMainMarketId: String? = nil,
@@ -171,6 +174,8 @@ struct Match: Equatable {
 
         self.sport = sport
         self.sportIdCode = sportIdCode
+        
+        self.trackableReference = trackableReference
         
         self.venue = venue
         self.numberTotalOfMarkets = numberTotalOfMarkets

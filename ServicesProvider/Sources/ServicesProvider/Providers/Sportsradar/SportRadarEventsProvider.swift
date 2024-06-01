@@ -1668,6 +1668,7 @@ extension SportRadarEventsProvider {
                               startDate: Date(),
                               markets: mappedMarkets,
                               venueCountry: firstMarket.venueCountry,
+                              trackableReference: nil,
                               status: nil,
                               matchTime: nil,
                               scores: [:])

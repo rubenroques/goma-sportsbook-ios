@@ -53,6 +53,7 @@ extension SportRadarModelMapper {
                      venueCountry: country,
                      numberMarkets: internalEvent.numberMarkets,
                      name: internalEvent.name,
+                     trackableReference: internalEvent.trackableReference,
                      status: Self.eventStatus(fromInternalEvent: internalEvent.status),
                      matchTime: internalEvent.matchTime,
                      scores: scores)

@@ -102,6 +102,8 @@ extension SportRadarModels {
 
         var scores: [String: Score]
 
+        var trackableReference: String?
+        
         enum CodingKeys: String, CodingKey {
             case id = "idfoevent"
             case homeName = "participantname_home"
@@ -125,6 +127,8 @@ extension SportRadarModels {
             case awayScore = "away"
             case eventStatus = "status"
             case matchTime = "matchTime"
+            
+            case trackableReference = "externalreference"
         }
 
         init(from decoder: Decoder) throws {
@@ -160,6 +164,8 @@ extension SportRadarModels {
 
             self.sportIdCode = try container.decodeIfPresent(String.self, forKey: .sportIdCode)
 
+            self.trackableReference = try container.decodeIfPresent(String.self, forKey: .trackableReference)
+            
 //            #if DEBUG
 //            self.homeName = self.id + " " + (self.homeName ?? "")
 //            self.awayName = (self.markets.first?.id ?? "") + " " + (self.awayName ?? "")

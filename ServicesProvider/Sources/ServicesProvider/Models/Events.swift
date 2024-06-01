@@ -97,6 +97,8 @@ public class Event: Codable, Equatable {
     public var promoImageURL: String?
     public var oldMainMarketId: String?
 
+    public var trackableReference: String?
+    
     public var type: EventType {
         if self.homeTeamName.isEmpty && self.awayTeamName.isEmpty {
             return .competition
@@ -121,6 +123,7 @@ public class Event: Codable, Equatable {
         case venueCountry = "venueCountry"
         case numberMarkets = "numMarkets"
         case scores = "scores"
+        case trackableReference = "trackableReference"
     }
 
     public init(id: String,
@@ -137,6 +140,7 @@ public class Event: Codable, Equatable {
                 venueCountry: Country? = nil,
                 numberMarkets: Int? = nil,
                 name: String? = nil,
+                trackableReference: String?,
                 status: EventStatus?,
                 matchTime: String?,
                 scores: [String: Score]) {
@@ -152,9 +156,10 @@ public class Event: Codable, Equatable {
         self.competitionName = competitionName
 
         self.sport = sport
-
         self.sportIdCode = sportIdCode
 
+        self.trackableReference = trackableReference
+        
         self.startDate = startDate
         self.markets = markets
         self.venueCountry = venueCountry
@@ -183,6 +188,7 @@ public class Event: Codable, Equatable {
         self.venueCountry = try container.decodeIfPresent(Country.self, forKey: .venueCountry)
         self.numberMarkets = try container.decodeIfPresent(Int.self, forKey: .numberMarkets)
         self.sportIdCode = try container.decodeIfPresent(String.self, forKey: .sportIdCode)
+        self.trackableReference = try container.decodeIfPresent(String.self, forKey: .trackableReference)
         self.scores = (try? container.decode([String: Score].self, forKey: .scores)) ?? [:]
     }
 
@@ -199,6 +205,7 @@ public class Event: Codable, Equatable {
         try container.encodeIfPresent(self.venueCountry, forKey: .venueCountry)
         try container.encodeIfPresent(self.numberMarkets, forKey: .numberMarkets)
         try container.encodeIfPresent(self.sportIdCode, forKey: .sportIdCode)
+        try container.encodeIfPresent(self.trackableReference, forKey: .trackableReference)
     }
 
     public static func == (lhs: Event, rhs: Event) -> Bool {
@@ -218,6 +225,7 @@ public class Event: Codable, Equatable {
         lhs.name == rhs.name &&
         lhs.status == rhs.status &&
         lhs.matchTime == rhs.matchTime &&
+        lhs.trackableReference == rhs.trackableReference &&
         lhs.scores == rhs.scores
     }
 }
