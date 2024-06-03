@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="21507" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="22155" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
     <device id="retina6_1" orientation="portrait" appearance="light"/>
     <dependencies>
         <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="21505"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="22131"/>
         <capability name="Named colors" minToolsVersion="9.0"/>
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
         <capability name="System colors in document resources" minToolsVersion="11.0"/>
@@ -31,8 +31,11 @@
                 <outlet property="safeAreaBottomView" destination="rwT-YU-CvN" id="tVx-lc-Z2z"/>
                 <outlet property="scrollContentView" destination="JvP-Ps-E7u" id="L63-xm-LPd"/>
                 <outlet property="scrollView" destination="32G-Lw-sfI" id="hhT-Ya-0vJ"/>
+                <outlet property="scrollViewTopConstraint" destination="J0O-f0-7wd" id="teD-lQ-fkv"/>
                 <outlet property="shapeView" destination="iNY-Wg-gVn" id="aZ2-d5-p5C"/>
                 <outlet property="topBackgroundView" destination="sBg-dD-VIe" id="HSZ-JE-atB"/>
+                <outlet property="topGradientViewCenterConstraint" destination="qmS-GW-TXN" id="8wo-vf-3bB"/>
+                <outlet property="topGradientViewHeightConstraint" destination="2rQ-zL-owc" id="Ypt-7U-May"/>
                 <outlet property="topImageView" destination="Gdz-qu-LeO" id="vwx-Gj-3OB"/>
                 <outlet property="view" destination="i5M-Pr-FkT" id="sfx-zR-JGt"/>
             </connections>
@@ -46,13 +49,13 @@
                     <rect key="frame" x="0.0" y="0.0" width="470" height="738"/>
                     <subviews>
                         <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="sBg-dD-VIe" customClass="GradientView" customModule="Betsson" customModuleProvider="target">
-                            <rect key="frame" x="0.0" y="0.0" width="470" height="369"/>
+                            <rect key="frame" x="0.0" y="0.0" width="470" height="210"/>
                             <subviews>
                                 <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="Gdz-qu-LeO">
-                                    <rect key="frame" x="0.0" y="0.0" width="470" height="369"/>
+                                    <rect key="frame" x="0.0" y="0.0" width="470" height="210"/>
                                 </imageView>
                                 <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="iNY-Wg-gVn">
-                                    <rect key="frame" x="0.0" y="329" width="470" height="40"/>
+                                    <rect key="frame" x="0.0" y="170" width="470" height="40"/>
                                     <color key="backgroundColor" systemColor="systemBackgroundColor"/>
                                     <constraints>
                                         <constraint firstAttribute="height" constant="40" id="NNv-l0-mN6"/>
@@ -61,6 +64,7 @@
                             </subviews>
                             <color key="backgroundColor" systemColor="systemBackgroundColor"/>
                             <constraints>
+                                <constraint firstAttribute="height" constant="210" id="2rQ-zL-owc"/>
                                 <constraint firstAttribute="bottom" secondItem="iNY-Wg-gVn" secondAttribute="bottom" id="4ut-0y-ewb"/>
                                 <constraint firstItem="iNY-Wg-gVn" firstAttribute="leading" secondItem="sBg-dD-VIe" secondAttribute="leading" id="BER-qK-S4N"/>
                                 <constraint firstItem="Gdz-qu-LeO" firstAttribute="leading" secondItem="sBg-dD-VIe" secondAttribute="leading" id="ETN-Ik-EUj"/>
@@ -71,7 +75,7 @@
                             </constraints>
                         </view>
                         <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="M6N-ft-lUY">
-                            <rect key="frame" x="0.0" y="369" width="470" height="369"/>
+                            <rect key="frame" x="0.0" y="210" width="470" height="528"/>
                             <color key="backgroundColor" systemColor="systemBackgroundColor"/>
                         </view>
                         <scrollView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" ambiguous="YES" translatesAutoresizingMaskIntoConstraints="NO" id="32G-Lw-sfI">
@@ -250,7 +254,7 @@
     <resources>
         <image name="arrow_back_icon" width="9" height="15"/>
         <namedColor name="backgroundPrimary">
-            <color red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+            <color red="0.043137254901960784" green="0.043137254901960784" blue="0.043137254901960784" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
         </namedColor>
         <systemColor name="systemBackgroundColor">
             <color white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
