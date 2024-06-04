@@ -36,6 +36,24 @@ class BetSubmissionSuccessViewController: UIViewController {
 
     @IBOutlet private weak var navigationView: UIView!
     @IBOutlet private weak var backButton: UIButton!
+    
+    // Constraints
+    @IBOutlet weak var topGradientViewCenterConstraint: NSLayoutConstraint!
+    @IBOutlet weak var topGradientViewHeightConstraint: NSLayoutConstraint!
+    @IBOutlet weak var scrollViewTopConstraint: NSLayoutConstraint!
+    
+    lazy var betSuccessAnimationView: LottieAnimationView = {
+        let animationView = LottieAnimationView()
+        animationView.translatesAutoresizingMaskIntoConstraints = false
+        animationView.contentMode = .scaleAspectFit
+
+        let startAnimation = LottieAnimation.named("replay_sucess")
+
+        animationView.animation = startAnimation
+        animationView.loopMode = .playOnce
+        
+        return animationView
+    }()
 
     private var totalOddsValue: String
     private var possibleEarningsValue: String
@@ -51,6 +69,8 @@ class BetSubmissionSuccessViewController: UIViewController {
     private var cashbackResultValue: Double?
     private var usedCashback: Bool = false
     private var bettingTickets: [BettingTicket]?
+
+    private var aspectRatio: CGFloat = 1.0
 
     private var cancellables = Set<AnyCancellable>()
 
@@ -131,6 +151,58 @@ class BetSubmissionSuccessViewController: UIViewController {
 
         self.backButton.setTitle("", for: .normal)
         self.backButton.setImage(UIImage(named: "arrow_back_icon"), for: .normal)
+    
+        self.topBackgroundView.addSubview(self.betSuccessAnimationView)
+
+        NSLayoutConstraint.activate([
+            self.betSuccessAnimationView.leadingAnchor.constraint(equalTo: self.topBackgroundView.leadingAnchor),
+            self.betSuccessAnimationView.trailingAnchor.constraint(equalTo: self.topBackgroundView.trailingAnchor),
+            self.betSuccessAnimationView.topAnchor.constraint(equalTo: self.topBackgroundView.topAnchor),
+            self.betSuccessAnimationView.bottomAnchor.constraint(equalTo: self.topBackgroundView.bottomAnchor, constant: 20)
+
+        ])
+        
+        self.topBackgroundView.bringSubviewToFront(self.shapeView)
+        
+        if self.usedCashback {
+            self.resizeTopViewAndAnimate()
+        }
+        else {
+            self.topImageView.isHidden = false
+            self.betSuccessAnimationView.isHidden = true
+            
+            self.topGradientViewHeightConstraint.isActive = false
+            self.topGradientViewCenterConstraint.isActive = true
+        }
+
+    }
+    
+    private func resizeTopViewAndAnimate() {
+
+        self.topImageView.isHidden = true
+        self.betSuccessAnimationView.isHidden = false
+        
+        if let animationView = self.betSuccessAnimationView.animation?.size {
+
+            self.aspectRatio = animationView.width/animationView.height
+
+            self.topGradientViewHeightConstraint =
+            NSLayoutConstraint(item: self.topBackgroundView,
+                               attribute: .height,
+                               relatedBy: .equal,
+                               toItem: self.topBackgroundView,
+                               attribute: .width,
+                               multiplier: 1/self.aspectRatio,
+                               constant: -20)
+
+            self.topGradientViewHeightConstraint.isActive = true
+            self.topGradientViewCenterConstraint.isActive = false
+            
+            self.scrollViewTopConstraint.constant = 0
+        }
+        
+        self.betSuccessAnimationView.play()
+
     }
 
     override func viewDidLayoutSubviews() {
@@ -197,6 +269,7 @@ class BetSubmissionSuccessViewController: UIViewController {
 
         self.backButton.backgroundColor = .clear
 
+        self.betSuccessAnimationView.backgroundColor = .clear
     }
     
     private func configureBetEntries() {

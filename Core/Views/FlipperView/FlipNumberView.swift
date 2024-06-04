@@ -31,7 +31,12 @@ class FlipNumberView: UIView {
     private var previousNumberAsIntsArray: [Int] = []
     
     private var stripsDictionary = [Int: FlipNumberStripView]()
-    init() {
+    
+    private var hasCommaSeparator: Bool = false
+    
+    init(hasCommaSeparator: Bool = false) {
+        self.hasCommaSeparator = hasCommaSeparator
+        
         super.init(frame: .zero)
         self.commonInit()
     }
@@ -69,10 +74,12 @@ class FlipNumberView: UIView {
             flipNumberStripView.alpha = 0.0
         }
         
+        var separatorText = self.hasCommaSeparator ? "," : "."
+        
         let label = UILabel()
         label.translatesAutoresizingMaskIntoConstraints = false
         label.textAlignment = .center
-        label.text = "."
+        label.text = separatorText
         label.font = AppFont.with(type: .bold, size: 15)
         label.textColor = UIColor.App.buttonTextPrimary
         
@@ -351,7 +358,8 @@ class FlipNumberStripCellView: UITableViewCell {
     private lazy var numberLabel: UILabel = {
         var numberLabel = UILabel()
         numberLabel.translatesAutoresizingMaskIntoConstraints = false
-        numberLabel.font = UIFont.systemFont(ofSize: 14, weight: .bold)
+//        numberLabel.font = UIFont.systemFont(ofSize: 14, weight: .bold)
+        numberLabel.font = AppFont.with(type: .bold, size: 14)
         numberLabel.textAlignment = .center
         return numberLabel
     }()

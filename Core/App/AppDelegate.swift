@@ -155,6 +155,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate, MessagingDelegate {
         application.registerForRemoteNotifications()
         
         // Adjust
+        // Sandbox ENV = ADJEnvironmentSandbox
         let appToken = "u9xpbb9chxj4"
         let environment = ADJEnvironmentProduction
         let adjustConfig = ADJConfig(appToken: appToken, environment: environment)

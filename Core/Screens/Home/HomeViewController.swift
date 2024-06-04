@@ -1162,7 +1162,7 @@ extension HomeViewController: UITableViewDelegate, UITableViewDataSource {
         case .quickSwipeStack:
             return 180
         case .makeOwnBetCallToAction:
-            return 75
+            return 110
         case .topCompetitionsShortcuts:
             return 124
         case .highlightedMatches:

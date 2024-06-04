@@ -367,6 +367,16 @@ class ProfileViewController: UIViewController {
 
         self.setupStackView()
 
+        let testTap = UITapGestureRecognizer(target: self, action: #selector(self.testTap))
+        self.profilePictureBaseView.addGestureRecognizer(testTap)
+        
+    }
+    
+    @objc private func testTap() {
+        
+        let vc = BetSubmissionSuccessViewController(betPlacedDetailsArray: [])
+        
+        self.present(vc, animated: true)
     }
 
     private func getOptInBonus() {

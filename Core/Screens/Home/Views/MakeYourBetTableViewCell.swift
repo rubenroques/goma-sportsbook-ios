@@ -12,7 +12,8 @@ class MakeYourBetTableViewCell: UITableViewCell {
 
     var didTapCellAction: (() -> Void) = { }
 
-    private let cellHeight: CGFloat = 75.0
+    private let cellHeight: CGFloat = 130.0
+    private var aspectRatio: CGFloat = 1.0
 
     private lazy var baseView: UIView = Self.createBaseView()
     private lazy var swipeImageView: UIImageView = Self.createImageView()
@@ -50,6 +51,7 @@ class MakeYourBetTableViewCell: UITableViewCell {
 //        self.baseView.layer.borderColor = UIColor.App.highlightSecondary.cgColor
 
         self.baseView.backgroundColor = .clear
+        self.swipeImageView.backgroundColor = .clear
         // self.titleLabel.textColor = UIColor.App.textPrimary
     }
 
@@ -105,25 +107,31 @@ extension MakeYourBetTableViewCell {
 
         self.baseView.addSubview(self.swipeImageView)
 
+        if let swipeImage = self.swipeImageView.image {
+            self.aspectRatio = swipeImage.size.width / swipeImage.size.height
+        }
+        
         // Initialize constraints
         self.initConstraints()
     }
 
     private func initConstraints() {
         NSLayoutConstraint.activate([
-            // self.baseView.heightAnchor.constraint(equalToConstant: self.cellHeight),
-            self.baseView.leadingAnchor.constraint(equalTo: self.contentView.leadingAnchor),
-            self.baseView.topAnchor.constraint(equalTo: self.contentView.topAnchor, constant: 16),
-            self.baseView.centerXAnchor.constraint(equalTo: self.contentView.centerXAnchor),
-            self.baseView.centerYAnchor.constraint(equalTo: self.contentView.centerYAnchor),
+             self.baseView.heightAnchor.constraint(equalToConstant: self.cellHeight),
+            self.baseView.leadingAnchor.constraint(equalTo: self.contentView.leadingAnchor, constant: 0),
+            self.baseView.trailingAnchor.constraint(equalTo: self.contentView.trailingAnchor, constant: 0),
+            self.baseView.topAnchor.constraint(equalTo: self.contentView.topAnchor, constant: 0),
+            self.baseView.bottomAnchor.constraint(equalTo: self.contentView.bottomAnchor, constant: 0),
+//            self.baseView.centerXAnchor.constraint(equalTo: self.contentView.centerXAnchor),
+//            self.baseView.centerYAnchor.constraint(equalTo: self.contentView.centerYAnchor),
 
             // Apply the aspect ratio constraint here (1056:216 = 4.8888)
-            self.swipeImageView.widthAnchor.constraint(equalTo: self.swipeImageView.heightAnchor, multiplier: 4.89),
+            self.swipeImageView.widthAnchor.constraint(equalTo: self.swipeImageView.heightAnchor, multiplier: self.aspectRatio),
 
-            self.swipeImageView.topAnchor.constraint(equalTo: self.baseView.topAnchor),
+            self.swipeImageView.topAnchor.constraint(equalTo: self.baseView.topAnchor, constant: 20),
+             self.swipeImageView.bottomAnchor.constraint(equalTo: self.baseView.bottomAnchor, constant: -20),
             self.swipeImageView.centerXAnchor.constraint(equalTo: self.baseView.centerXAnchor),
-            self.swipeImageView.leadingAnchor.constraint(equalTo: self.baseView.leadingAnchor, constant: 17),
-            self.swipeImageView.centerYAnchor.constraint(equalTo: self.baseView.centerYAnchor),
+            self.swipeImageView.leadingAnchor.constraint(equalTo: self.baseView.leadingAnchor, constant: 10),
         ])
     }
 

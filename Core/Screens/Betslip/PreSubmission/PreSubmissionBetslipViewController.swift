@@ -9,6 +9,7 @@ import UIKit
 import Combine
 import OrderedCollections
 import ServicesProvider
+import Lottie
 
 class PreSubmissionBetslipViewController: UIViewController {
   
@@ -130,7 +131,7 @@ class PreSubmissionBetslipViewController: UIViewController {
     @IBOutlet private weak var cashbackInfoMultipleBaseView: UIView!
     @IBOutlet private weak var cashbackInfoMultipleView: CashbackInfoView!
     @IBOutlet private weak var cashbackInfoMultipleValueLabel: UILabel!
-
+    
     @IBOutlet private weak var loadingBaseView: UIView!
     @IBOutlet private weak var loadingView: UIActivityIndicatorView!
     private let loadingSpinnerViewController = LoadingSpinnerViewController()
@@ -141,6 +142,36 @@ class PreSubmissionBetslipViewController: UIViewController {
         view.translatesAutoresizingMaskIntoConstraints = false
         return view
     }()
+    
+    lazy var cashbackCoinAnimationView: LottieAnimationView = {
+        let animationView = LottieAnimationView()
+        animationView.translatesAutoresizingMaskIntoConstraints = false
+        animationView.contentMode = .scaleAspectFit
+
+        let startAnimation = LottieAnimation.named("replay_coin")
+
+        animationView.animation = startAnimation
+        animationView.loopMode = .playOnce
+        
+        animationView.alpha = 0
+        return animationView
+    }()
+    
+    lazy var flipNumberView: FlipNumberView = {
+        let view = FlipNumberView(hasCommaSeparator: true)
+        view.setNumber(0.00, animated: false)
+        view.translatesAutoresizingMaskIntoConstraints = false
+        return view
+    }()
+    
+    lazy var currencyTypeLabel: UILabel = {
+        let label = UILabel()
+        label.translatesAutoresizingMaskIntoConstraints = false
+        label.text = Env.userSessionStore.userProfilePublisher.value?.currency
+        label.font = AppFont.with(type: .bold, size: 14)
+        return label
+    }()
+
 
     @IBOutlet private weak var secondPlaceBetBaseViewConstraint: NSLayoutConstraint!
 
@@ -1364,6 +1395,7 @@ class PreSubmissionBetslipViewController: UIViewController {
         self.cashbackInfoMultipleBaseView.backgroundColor = .clear
         self.cashbackInfoMultipleValueLabel.textColor = UIColor.App.textPrimary
 
+        self.cashbackCoinAnimationView.backgroundColor = .clear
     }
 
     private func setupCashback() {
@@ -1442,7 +1474,37 @@ class PreSubmissionBetslipViewController: UIViewController {
         }
         
         self.learnMoreBaseView.alpha = 0
+        
+        self.view.addSubview(self.cashbackCoinAnimationView)
+        self.view.bringSubviewToFront(self.cashbackCoinAnimationView)
 
+        NSLayoutConstraint.activate([
+            self.cashbackCoinAnimationView.widthAnchor.constraint(equalToConstant: 100),
+            self.cashbackCoinAnimationView.heightAnchor.constraint(equalToConstant: 50),
+            self.cashbackCoinAnimationView.bottomAnchor.constraint(equalTo: self.cashbackInfoMultipleBaseView.bottomAnchor),
+            self.cashbackCoinAnimationView.centerXAnchor.constraint(equalTo: self.cashbackInfoMultipleValueLabel.centerXAnchor)
+            
+        ])
+        
+        self.cashbackInfoMultipleBaseView.addSubview(self.currencyTypeLabel)
+        self.cashbackInfoMultipleBaseView.addSubview(self.flipNumberView)
+
+        NSLayoutConstraint.activate([
+            self.currencyTypeLabel.leadingAnchor.constraint(equalTo: self.flipNumberView.trailingAnchor),
+            self.currencyTypeLabel.trailingAnchor.constraint(equalTo: self.cashbackInfoMultipleBaseView.trailingAnchor, constant: -2),
+            self.currencyTypeLabel.topAnchor.constraint(equalTo: self.cashbackInfoMultipleBaseView.topAnchor, constant: 5),
+            self.currencyTypeLabel.bottomAnchor.constraint(equalTo: self.cashbackInfoMultipleBaseView.bottomAnchor, constant: -3)
+            
+        ])
+
+        NSLayoutConstraint.activate([
+            self.flipNumberView.leadingAnchor.constraint(equalTo: self.cashbackInfoMultipleView.trailingAnchor, constant: 5),
+//            self.flipNumberView.trailingAnchor.constraint(equalTo: self.cashbackInfoMultipleBaseView.trailingAnchor, constant: -2),
+            self.flipNumberView.topAnchor.constraint(equalTo: self.cashbackInfoMultipleBaseView.topAnchor, constant: 5),
+            self.flipNumberView.bottomAnchor.constraint(equalTo: self.cashbackInfoMultipleBaseView.bottomAnchor, constant: -3)
+            
+        ])
+        
         self.isCashbackToggleOn
             .receive(on: DispatchQueue.main)
             .sink { [weak self] isCashbackToggleOn in
@@ -1506,9 +1568,20 @@ class PreSubmissionBetslipViewController: UIViewController {
                 if let cashbackResultValue = cashbackResultValue {
                     let cashbackString = CurrencyFormater.defaultFormat.string(from: NSNumber(value: cashbackResultValue)) ?? localized("no_value")
                     self?.cashbackInfoMultipleValueLabel.text = cashbackString
+                    
+//                    self?.cashbackCoinAnimationView.alpha = 1
+//                    
+//                    self?.cashbackCoinAnimationView.play(completion: { _ in
+//                        self?.cashbackCoinAnimationView.alpha = 0
+//                        self?.cashbackCoinAnimationView.stop()
+//
+//                    })
+//                    
+//                    self?.flipNumberView.setNumber(cashbackResultValue, animated: true)
                 }
                 else {
                     self?.cashbackInfoMultipleValueLabel.text = localized("no_value")
+//                    self?.flipNumberView.setNumber(0.00, animated: true)
                 }
             }
             .store(in: &self.cancellables)
@@ -1538,6 +1611,29 @@ class PreSubmissionBetslipViewController: UIViewController {
                 self?.showCashbackValues = validMatchesList
             }
             .store(in: &self.cancellables)
+                
+        Publishers.CombineLatest(self.cashbackResultValuePublisher, self.isKeyboardShowingPublisher)
+            .receive(on: DispatchQueue.main)
+            .sink(receiveValue: { [weak self] cashbackValue, isKeyboardShowing in
+                
+                if !isKeyboardShowing {
+                    if let cashbackValue {
+                        self?.cashbackCoinAnimationView.alpha = 1
+                        
+                        self?.cashbackCoinAnimationView.play(completion: { _ in
+                            self?.cashbackCoinAnimationView.alpha = 0
+                            self?.cashbackCoinAnimationView.stop()
+                            
+                        })
+                        
+                        self?.flipNumberView.setNumber(cashbackValue, animated: true)
+                    }
+                    else {
+                        self?.flipNumberView.setNumber(0.00, animated: true)
+                    }
+                }
+            })
+            .store(in: &cancellables)
 
     }
 

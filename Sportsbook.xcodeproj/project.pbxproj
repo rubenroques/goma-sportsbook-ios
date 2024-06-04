@@ -5173,6 +5173,22 @@
 		45FF105729D74721009AC196 /* UserTrackingSettingsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 45FF105229D74721009AC196 /* UserTrackingSettingsViewController.swift */; };
 		45FF105829D74721009AC196 /* UserTrackingSettingsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 45FF105229D74721009AC196 /* UserTrackingSettingsViewController.swift */; };
 		45FF105929D74721009AC196 /* UserTrackingSettingsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 45FF105229D74721009AC196 /* UserTrackingSettingsViewController.swift */; };
+		6531BB8E2C0A295B002C696D /* replay_coin.json in Resources */ = {isa = PBXBuildFile; fileRef = 6531BB8D2C0A295B002C696D /* replay_coin.json */; };
+		6531BB8F2C0A295B002C696D /* replay_coin.json in Resources */ = {isa = PBXBuildFile; fileRef = 6531BB8D2C0A295B002C696D /* replay_coin.json */; };
+		6531BB902C0A295B002C696D /* replay_coin.json in Resources */ = {isa = PBXBuildFile; fileRef = 6531BB8D2C0A295B002C696D /* replay_coin.json */; };
+		6531BB912C0A295B002C696D /* replay_coin.json in Resources */ = {isa = PBXBuildFile; fileRef = 6531BB8D2C0A295B002C696D /* replay_coin.json */; };
+		6531BB922C0A295B002C696D /* replay_coin.json in Resources */ = {isa = PBXBuildFile; fileRef = 6531BB8D2C0A295B002C696D /* replay_coin.json */; };
+		6531BB932C0A295B002C696D /* replay_coin.json in Resources */ = {isa = PBXBuildFile; fileRef = 6531BB8D2C0A295B002C696D /* replay_coin.json */; };
+		6531BB942C0A295B002C696D /* replay_coin.json in Resources */ = {isa = PBXBuildFile; fileRef = 6531BB8D2C0A295B002C696D /* replay_coin.json */; };
+		6531BB952C0A295B002C696D /* replay_coin.json in Resources */ = {isa = PBXBuildFile; fileRef = 6531BB8D2C0A295B002C696D /* replay_coin.json */; };
+		6531BB972C0E077C002C696D /* replay_sucess.json in Resources */ = {isa = PBXBuildFile; fileRef = 6531BB962C0E077C002C696D /* replay_sucess.json */; };
+		6531BB982C0E077C002C696D /* replay_sucess.json in Resources */ = {isa = PBXBuildFile; fileRef = 6531BB962C0E077C002C696D /* replay_sucess.json */; };
+		6531BB992C0E077C002C696D /* replay_sucess.json in Resources */ = {isa = PBXBuildFile; fileRef = 6531BB962C0E077C002C696D /* replay_sucess.json */; };
+		6531BB9A2C0E077C002C696D /* replay_sucess.json in Resources */ = {isa = PBXBuildFile; fileRef = 6531BB962C0E077C002C696D /* replay_sucess.json */; };
+		6531BB9B2C0E077C002C696D /* replay_sucess.json in Resources */ = {isa = PBXBuildFile; fileRef = 6531BB962C0E077C002C696D /* replay_sucess.json */; };
+		6531BB9C2C0E077C002C696D /* replay_sucess.json in Resources */ = {isa = PBXBuildFile; fileRef = 6531BB962C0E077C002C696D /* replay_sucess.json */; };
+		6531BB9D2C0E077C002C696D /* replay_sucess.json in Resources */ = {isa = PBXBuildFile; fileRef = 6531BB962C0E077C002C696D /* replay_sucess.json */; };
+		6531BB9E2C0E077C002C696D /* replay_sucess.json in Resources */ = {isa = PBXBuildFile; fileRef = 6531BB962C0E077C002C696D /* replay_sucess.json */; };
 		655E1FFE2B21E8A500C95337 /* NotificationService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 655E1FFD2B21E8A500C95337 /* NotificationService.swift */; };
 		655E20022B21E8A500C95337 /* NotificationsService.appex in Embed Foundation Extensions */ = {isa = PBXBuildFile; fileRef = 655E1FFB2B21E8A500C95337 /* NotificationsService.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
 		655E20072B21E9E100C95337 /* OptimoveNotificationServiceExtension in Frameworks */ = {isa = PBXBuildFile; productRef = 655E20062B21E9E100C95337 /* OptimoveNotificationServiceExtension */; };
@@ -5223,6 +5239,8 @@
 		659510F02B2C7004001B2F2E /* Trademob in Frameworks */ = {isa = PBXBuildFile; productRef = 659510EF2B2C7004001B2F2E /* Trademob */; };
 		659510F22B2C7004001B2F2E /* WebBridge in Frameworks */ = {isa = PBXBuildFile; productRef = 659510F12B2C7004001B2F2E /* WebBridge */; };
 		659510F42B2C7340001B2F2E /* Adjust in Frameworks */ = {isa = PBXBuildFile; productRef = 659510F32B2C7340001B2F2E /* Adjust */; };
+		65A4BA082C09E54700279143 /* AdServices.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 65A4BA072C09E54700279143 /* AdServices.framework */; };
+		65A4BA092C09E58B00279143 /* AdServices.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 65A4BA072C09E54700279143 /* AdServices.framework */; };
 		65F819622BAC83DB004E27C3 /* first_deposit.json in Resources */ = {isa = PBXBuildFile; fileRef = 65F819612BAC83DA004E27C3 /* first_deposit.json */; };
 		65F819632BAC83DB004E27C3 /* first_deposit.json in Resources */ = {isa = PBXBuildFile; fileRef = 65F819612BAC83DA004E27C3 /* first_deposit.json */; };
 		65F819642BAC83DB004E27C3 /* first_deposit.json in Resources */ = {isa = PBXBuildFile; fileRef = 65F819612BAC83DA004E27C3 /* first_deposit.json */; };
@@ -7521,6 +7539,8 @@
 		45F805952A05385B005296E0 /* dots-loading.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = "dots-loading.json"; sourceTree = "<group>"; };
 		45F8B156274BFF710087652B /* SystemBetResponse.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SystemBetResponse.swift; sourceTree = "<group>"; };
 		45FF105229D74721009AC196 /* UserTrackingSettingsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserTrackingSettingsViewController.swift; sourceTree = "<group>"; };
+		6531BB8D2C0A295B002C696D /* replay_coin.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = replay_coin.json; sourceTree = "<group>"; };
+		6531BB962C0E077C002C696D /* replay_sucess.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = replay_sucess.json; sourceTree = "<group>"; };
 		655E1FFB2B21E8A500C95337 /* NotificationsService.appex */ = {isa = PBXFileReference; explicitFileType = "wrapper.app-extension"; includeInIndex = 0; path = NotificationsService.appex; sourceTree = BUILT_PRODUCTS_DIR; };
 		655E1FFD2B21E8A500C95337 /* NotificationService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotificationService.swift; sourceTree = "<group>"; };
 		655E1FFF2B21E8A500C95337 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
@@ -7530,6 +7550,7 @@
 		6584F8FD2BA0B84200E317EA /* EmptyReferralView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EmptyReferralView.swift; sourceTree = "<group>"; };
 		658A4CB52B9F6C4800F73772 /* Referrals.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Referrals.swift; sourceTree = "<group>"; };
 		658A4CBE2B9F6C7F00F73772 /* ServiceProviderModelMapper+Referrals.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "ServiceProviderModelMapper+Referrals.swift"; sourceTree = "<group>"; };
+		65A4BA072C09E54700279143 /* AdServices.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AdServices.framework; path = System/Library/Frameworks/AdServices.framework; sourceTree = SDKROOT; };
 		65F819612BAC83DA004E27C3 /* first_deposit.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = first_deposit.json; sourceTree = "<group>"; };
 		A902299F28AFD41100972863 /* QuickBetViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QuickBetViewController.swift; sourceTree = "<group>"; };
 		A90229B028B6892300972863 /* QuickBetViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QuickBetViewModel.swift; sourceTree = "<group>"; };
@@ -8095,6 +8116,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				65A4BA092C09E58B00279143 /* AdServices.framework in Frameworks */,
 				45A332B0298976BA008181E9 /* RegisterFlow in Frameworks */,
 				45A332B1298976BA008181E9 /* FirebaseMessaging in Frameworks */,
 				45A332B2298976BA008181E9 /* FirebaseDatabase in Frameworks */,
@@ -8171,6 +8193,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				65A4BA082C09E54700279143 /* AdServices.framework in Frameworks */,
 				45F6BD7B2AB3732C00C81DE1 /* RegisterFlow in Frameworks */,
 				45F6BD7C2AB3732C00C81DE1 /* FirebaseMessaging in Frameworks */,
 				45F6BD7D2AB3732C00C81DE1 /* FirebaseDatabase in Frameworks */,
@@ -8833,6 +8856,7 @@
 		455A0D2F26BDF61200EC572D /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				65A4BA072C09E54700279143 /* AdServices.framework */,
 			);
 			name = Frameworks;
 			sourceTree = "<group>";
@@ -10080,6 +10104,8 @@
 				452BA1532A902BB000D0AA48 /* SignUpAvatars */,
 				A92BDCF72A163D0100E9B045 /* success_thumbs_up.json */,
 				455897F02A9CE5C300E39598 /* progress_end_animation.json */,
+				6531BB8D2C0A295B002C696D /* replay_coin.json */,
+				6531BB962C0E077C002C696D /* replay_sucess.json */,
 				65F819612BAC83DA004E27C3 /* first_deposit.json */,
 				A9A1B2D82A128D8A00F7A8ED /* deposit_animation.json */,
 				455897F82A9CE5CE00E39598 /* progress_bar_fire_ball.json */,
@@ -12137,6 +12163,7 @@
 				452BA1AE2A902C4A00D0AA48 /* avatar2-dark.json in Resources */,
 				450B7AD028F58574009229E3 /* WelcomeViewController.xib in Resources */,
 				450B7AD128F58574009229E3 /* UploadView.xib in Resources */,
+				6531BB902C0A295B002C696D /* replay_coin.json in Resources */,
 				450B7AD228F58574009229E3 /* MyTicketTableViewCell.xib in Resources */,
 				450B7AD328F58574009229E3 /* HeadToHeadCardStatsView.xib in Resources */,
 				450B7AD428F58574009229E3 /* Gilroy-Regular.ttf in Resources */,
@@ -12203,6 +12230,7 @@
 				450B7B0B28F58574009229E3 /* PolicyLinkView.xib in Resources */,
 				450B7B0C28F58574009229E3 /* Gilroy-Thin.ttf in Resources */,
 				450B7B0E28F58574009229E3 /* Gilroy-Heavy.ttf in Resources */,
+				6531BB992C0E077C002C696D /* replay_sucess.json in Resources */,
 				450B7B0F28F58574009229E3 /* EditAlertView.xib in Resources */,
 				450B7B1028F58574009229E3 /* SharedAssets.xcassets in Resources */,
 				45B9F9802A1E2BCE00DA2B88 /* home_template.js in Resources */,
@@ -12302,6 +12330,7 @@
 				452BA1B22A902C4A00D0AA48 /* avatar2-dark.json in Resources */,
 				457CBBF8282D27D000ED0F00 /* BetslipViewController.xib in Resources */,
 				457CBBFA282D27D000ED0F00 /* MatchFiltersViewController.xib in Resources */,
+				6531BB942C0A295B002C696D /* replay_coin.json in Resources */,
 				457CBBFB282D27D000ED0F00 /* WelcomeViewController.xib in Resources */,
 				457CBBFC282D27D000ED0F00 /* UploadView.xib in Resources */,
 				457CBBFD282D27D000ED0F00 /* MyTicketTableViewCell.xib in Resources */,
@@ -12368,6 +12397,7 @@
 				457CBC33282D27D000ED0F00 /* Inconsolata-Light.ttf in Resources */,
 				457CBC35282D27D000ED0F00 /* PolicyLinkView.xib in Resources */,
 				457CBC36282D27D000ED0F00 /* Gilroy-Thin.ttf in Resources */,
+				6531BB9D2C0E077C002C696D /* replay_sucess.json in Resources */,
 				457CBC38282D27D000ED0F00 /* Gilroy-Heavy.ttf in Resources */,
 				457CBC39282D27D000ED0F00 /* EditAlertView.xib in Resources */,
 				45B9F9842A1E2BCE00DA2B88 /* home_template.js in Resources */,
@@ -12458,6 +12488,7 @@
 				452BA1B32A902C4A00D0AA48 /* avatar2-dark.json in Resources */,
 				457CBEA2282D2CD100ED0F00 /* MatchFiltersViewController.xib in Resources */,
 				457CBEA3282D2CD100ED0F00 /* WelcomeViewController.xib in Resources */,
+				6531BB952C0A295B002C696D /* replay_coin.json in Resources */,
 				457CBEA4282D2CD100ED0F00 /* UploadView.xib in Resources */,
 				457CBEA5282D2CD100ED0F00 /* MyTicketTableViewCell.xib in Resources */,
 				457CBEA6282D2CD100ED0F00 /* HeadToHeadCardStatsView.xib in Resources */,
@@ -12524,6 +12555,7 @@
 				457CBEDC282D2CD100ED0F00 /* PolicyLinkView.xib in Resources */,
 				457CBEDD282D2CD100ED0F00 /* Gilroy-Thin.ttf in Resources */,
 				457CBEDF282D2CD100ED0F00 /* Gilroy-Heavy.ttf in Resources */,
+				6531BB9E2C0E077C002C696D /* replay_sucess.json in Resources */,
 				457CBEE0282D2CD100ED0F00 /* EditAlertView.xib in Resources */,
 				457CBEE1282D2CD100ED0F00 /* SharedAssets.xcassets in Resources */,
 				45B9F9852A1E2BCE00DA2B88 /* home_template.js in Resources */,
@@ -12614,6 +12646,7 @@
 				452BA1AF2A902C4A00D0AA48 /* avatar2-dark.json in Resources */,
 				4589C978282024E400243547 /* MatchFiltersViewController.xib in Resources */,
 				4589C979282024E400243547 /* WelcomeViewController.xib in Resources */,
+				6531BB912C0A295B002C696D /* replay_coin.json in Resources */,
 				4589C97A282024E400243547 /* UploadView.xib in Resources */,
 				4589C97B282024E400243547 /* MyTicketTableViewCell.xib in Resources */,
 				4589C97C282024E400243547 /* HeadToHeadCardStatsView.xib in Resources */,
@@ -12680,6 +12713,7 @@
 				4589C9B0282024E400243547 /* LiveEventsViewController.xib in Resources */,
 				4589C9B2282024E400243547 /* Inconsolata-Light.ttf in Resources */,
 				4589C9B4282024E400243547 /* PolicyLinkView.xib in Resources */,
+				6531BB9A2C0E077C002C696D /* replay_sucess.json in Resources */,
 				4589C9B5282024E400243547 /* Gilroy-Thin.ttf in Resources */,
 				4589C9B7282024E400243547 /* Gilroy-Heavy.ttf in Resources */,
 				45B9F9812A1E2BCE00DA2B88 /* home_template.js in Resources */,
@@ -12716,6 +12750,7 @@
 				45A332CF298976BA008181E9 /* BetslipErrorView.xib in Resources */,
 				45A332D0298976BA008181E9 /* SimpleRegisterDetailsViewController.xib in Resources */,
 				45A332D1298976BA008181E9 /* DebugViewController.xib in Resources */,
+				6531BB8E2C0A295B002C696D /* replay_coin.json in Resources */,
 				45A332D2298976BA008181E9 /* CountryFlags.xcassets in Resources */,
 				45A332D3298976BA008181E9 /* FilterSliderCollapseView.xib in Resources */,
 				45A332D4298976BA008181E9 /* TournamentTableViewHeader.xib in Resources */,
@@ -12760,6 +12795,7 @@
 				45A332F2298976BA008181E9 /* BannerMatchCollectionViewCell.xib in Resources */,
 				45A332F3298976BA008181E9 /* PopUpPromotionView.xib in Resources */,
 				45F805962A05385B005296E0 /* dots-loading.json in Resources */,
+				6531BB972C0E077C002C696D /* replay_sucess.json in Resources */,
 				45A332F4298976BA008181E9 /* Gilroy-Light.ttf in Resources */,
 				45A332F5298976BA008181E9 /* PreSubmissionBetslipViewController.xib in Resources */,
 				45A332F6298976BA008181E9 /* BannerScrollTableViewCell.xib in Resources */,
@@ -12927,6 +12963,7 @@
 				452BA1B12A902C4A00D0AA48 /* avatar2-dark.json in Resources */,
 				45A6BDD228246A7500D9B416 /* WelcomeViewController.xib in Resources */,
 				45A6BDD328246A7500D9B416 /* UploadView.xib in Resources */,
+				6531BB932C0A295B002C696D /* replay_coin.json in Resources */,
 				45A6BDD428246A7500D9B416 /* MyTicketTableViewCell.xib in Resources */,
 				45A6BDD528246A7500D9B416 /* HeadToHeadCardStatsView.xib in Resources */,
 				45A6BDD628246A7500D9B416 /* Gilroy-Regular.ttf in Resources */,
@@ -12993,6 +13030,7 @@
 				45A6BE0928246A7500D9B416 /* LiveEventsViewController.xib in Resources */,
 				45A6BE0B28246A7500D9B416 /* Inconsolata-Light.ttf in Resources */,
 				45A6BE0D28246A7500D9B416 /* PolicyLinkView.xib in Resources */,
+				6531BB9C2C0E077C002C696D /* replay_sucess.json in Resources */,
 				45A6BE0E28246A7500D9B416 /* Gilroy-Thin.ttf in Resources */,
 				45A6BE1028246A7500D9B416 /* Gilroy-Heavy.ttf in Resources */,
 				45B9F9832A1E2BCE00DA2B88 /* home_template.js in Resources */,
@@ -13083,6 +13121,7 @@
 				45F6BDD92AB3732C00C81DE1 /* avatar3-dark.json in Resources */,
 				45F6BDDA2AB3732C00C81DE1 /* zendesk_support.html in Resources */,
 				45F6BDDB2AB3732C00C81DE1 /* UploadView.xib in Resources */,
+				6531BB8F2C0A295B002C696D /* replay_coin.json in Resources */,
 				45F6BDDC2AB3732C00C81DE1 /* MyTicketTableViewCell.xib in Resources */,
 				45F6BDDD2AB3732C00C81DE1 /* HeadToHeadCardStatsView.xib in Resources */,
 				45F6BDDE2AB3732C00C81DE1 /* success_thumbs_up.json in Resources */,
@@ -13149,6 +13188,7 @@
 				45F6BE1A2AB3732C00C81DE1 /* stats_widget_dark.html in Resources */,
 				45F6BE1B2AB3732C00C81DE1 /* Inconsolata-Light.ttf in Resources */,
 				45F6BE1D2AB3732C00C81DE1 /* PolicyLinkView.xib in Resources */,
+				6531BB982C0E077C002C696D /* replay_sucess.json in Resources */,
 				45F6BE1E2AB3732C00C81DE1 /* Gilroy-Thin.ttf in Resources */,
 				45F6BE1F2AB3732C00C81DE1 /* Gilroy-Heavy.ttf in Resources */,
 				45F6BE202AB3732C00C81DE1 /* EditAlertView.xib in Resources */,
@@ -13246,6 +13286,7 @@
 				452BA18D2A902C4900D0AA48 /* avatar3-dark.json in Resources */,
 				A9A521842A03BD8D00C0F6C6 /* zendesk_support.html in Resources */,
 				A9C3432928F9A74A0055360B /* UploadView.xib in Resources */,
+				6531BB922C0A295B002C696D /* replay_coin.json in Resources */,
 				A9C3432A28F9A74A0055360B /* MyTicketTableViewCell.xib in Resources */,
 				A9C3432B28F9A74A0055360B /* HeadToHeadCardStatsView.xib in Resources */,
 				A92BDCFB2A163D0200E9B045 /* success_thumbs_up.json in Resources */,
@@ -13312,6 +13353,7 @@
 				A9C3436128F9A74A0055360B /* Inconsolata-Light.ttf in Resources */,
 				A9C3436328F9A74A0055360B /* PolicyLinkView.xib in Resources */,
 				A9C3436428F9A74A0055360B /* Gilroy-Thin.ttf in Resources */,
+				6531BB9B2C0E077C002C696D /* replay_sucess.json in Resources */,
 				A9C3436628F9A74A0055360B /* Gilroy-Heavy.ttf in Resources */,
 				A9C3436728F9A74A0055360B /* EditAlertView.xib in Resources */,
 				A9C3436828F9A74A0055360B /* SharedAssets.xcassets in Resources */,
