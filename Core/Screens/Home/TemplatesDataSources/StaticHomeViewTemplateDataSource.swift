@@ -167,9 +167,6 @@ class StaticHomeViewTemplateDataSource {
         let allSports = Env.sportsStore.getActiveSports()
         let prefixSports = allSports.filter({ $0.alphaId != nil }).prefix(10)
 
-        // TODO: REMOVE THIS DEBUG CODE
-        // self.sportsToFetch = [] // Array(prefixSports)
-
         self.sportsToFetch = Array(prefixSports)
 
         self.refreshPublisher.send()

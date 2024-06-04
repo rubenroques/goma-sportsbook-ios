@@ -224,6 +224,10 @@ extension SportRadarEventsGroupCoordinator {
         case .updateEventScore(_, _, let homeScore, let awayScore):
             self.storage.updateEventScore(newHomeScore: homeScore, newAwayScore: awayScore)
         
+        case .updateActivePlayer(_, _, let serving):
+            let mappedServing = SportRadarModelMapper.activePlayerServe(fromInternalActivePlayerServe: serving)
+            self.storage.updateActivePlayer(mappedServing)
+            
         case .updateEventDetailedScore(_, _, let detailedScore):
             let mappedScore = SportRadarModelMapper.score(fromInternalScore: detailedScore)
             self.storage.updateEventDetailedScore(mappedScore)

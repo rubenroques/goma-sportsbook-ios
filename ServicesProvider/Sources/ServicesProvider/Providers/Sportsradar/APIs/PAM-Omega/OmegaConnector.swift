@@ -193,7 +193,7 @@ class OmegaConnector: Connector {
             return Fail(error: .invalidRequestFormat).eraseToAnyPublisher()
         }
 
-        print("NetworkLogs: ", request.cURL(pretty: true), "\nNetworkLogs: ==========================================")
+        // print("NetworkLogs: ", request.cURL(pretty: true), "\nNetworkLogs: ==========================================")
 
         return self.session.dataTaskPublisher(for: request)
 //            .handleEvents(receiveOutput: { result in

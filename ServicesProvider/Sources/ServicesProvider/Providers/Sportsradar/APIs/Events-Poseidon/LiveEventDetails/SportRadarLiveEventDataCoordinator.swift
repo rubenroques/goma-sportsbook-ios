@@ -108,6 +108,10 @@ class SportRadarLiveEventDataCoordinator {
             .store(in: &self.cancellables)
 
     }
+    
+    deinit {
+        print("SportRadarLiveEventDataCoordinator - deinit \(self.liveEventContentIdentifier) ")
+    }
 
     private func checkLiveEventDetailsAvailable() -> AnyPublisher<Void, ServiceProviderError> {
         let endpoint = SportRadarRestAPIClient.get(contentIdentifier: self.liveEventContentIdentifier)
@@ -142,7 +146,7 @@ class SportRadarLiveEventDataCoordinator {
             let request = endpoint.request()
         else {
             return Fail(error: ServiceProviderError.invalidRequestFormat).eraseToAnyPublisher()
-        }
+        }    
         
         return self.session.dataTaskPublisher(for: request)
             .tryMap { data, response -> Data in
@@ -201,6 +205,80 @@ class SportRadarLiveEventDataCoordinator {
 
 extension SportRadarLiveEventDataCoordinator {
 
+    func updatedLiveData(eventLiveDataExtended: SportRadarModels.EventLiveDataExtended, forContentIdentifier contentIdentifier: ContentIdentifier) {
+
+        guard
+            contentIdentifier == self.liveEventContentIdentifier
+        else {
+            return
+        }
+
+        if let newStatus = eventLiveDataExtended.status?.stringValue {
+            self.updateEventStatus(newStatus: newStatus)
+        }
+        if let newTime = eventLiveDataExtended.matchTime {
+            self.updateEventTime(newTime: newTime)
+        }
+
+        self.updateEventScore(newHomeScore: eventLiveDataExtended.homeScore, newAwayScore: eventLiveDataExtended.awayScore)
+
+        let mappedEventLiveData = SportRadarModelMapper.eventLiveData(fromInternalEventLiveData: eventLiveDataExtended)
+        
+        self.eventLiveData = mappedEventLiveData
+    }
+
+    func handleContentUpdate(_ content: SportRadarModels.ContentContainer) {
+
+        guard
+            let updatedContentIdentifier = content.contentIdentifier,
+            self.liveEventContentIdentifier == updatedContentIdentifier
+        else {
+            return
+        }
+
+        switch content {
+        case .updateEventLiveDataExtended(_, _, let eventLiveDataExtended):
+            if let newTime = eventLiveDataExtended.matchTime {
+                self.updateEventTime(newTime: newTime)
+            }
+            if let newStatus = eventLiveDataExtended.status {
+                self.updateEventStatus(newStatus: newStatus.stringValue)
+            }
+            
+            for score in eventLiveDataExtended.scores.values {
+                let mappedScore = SportRadarModelMapper.score(fromInternalScore: score)
+                self.updateEventDetailedScore(mappedScore)
+            }
+            
+            self.updateEventScore(newHomeScore: eventLiveDataExtended.homeScore, newAwayScore: eventLiveDataExtended.awayScore)
+            
+        case .updateEventDetailedScore(_, _, let detailedScore):
+            let mappedScore = SportRadarModelMapper.score(fromInternalScore: detailedScore)
+            self.updateEventDetailedScore(mappedScore)
+        
+        case .updateActivePlayer(_, _, let serving):
+            let mappedServing = SportRadarModelMapper.activePlayerServe(fromInternalActivePlayerServe: serving)
+            self.updateActivePlayer(mappedServing)
+            
+        default:
+            break // Ignore other cases
+        }
+    }
+    
+    func containsEvent(withid id: String) -> Bool {
+        return self.eventIdObserved == id
+    }
+    
+}
+
+extension SportRadarLiveEventDataCoordinator {
+    
+    func updateActivePlayer(_ activePlayerServing: ActivePlayerServe?) {
+        guard var event = self.eventLiveData else { return }
+        event.activePlayerServing = activePlayerServing
+        self.eventLiveData = event
+    }
+    
     func updateEventStatus(newStatus: String) {
         guard var event = self.eventLiveData else { return }
         event.status = EventStatus(value: newStatus)
@@ -241,65 +319,6 @@ extension SportRadarLiveEventDataCoordinator {
         }
         
         self.eventLiveData = event
-    }
-    
-    func updatedLiveData(eventLiveDataExtended: SportRadarModels.EventLiveDataExtended, forContentIdentifier contentIdentifier: ContentIdentifier) {
-
-        guard
-            contentIdentifier == self.liveEventContentIdentifier
-        else {
-            return
-        }
-
-        if let newStatus = eventLiveDataExtended.status?.stringValue {
-            self.updateEventStatus(newStatus: newStatus)
-        }
-        if let newTime = eventLiveDataExtended.matchTime {
-            self.updateEventTime(newTime: newTime)
-        }
-
-        self.updateEventScore(newHomeScore: eventLiveDataExtended.homeScore, newAwayScore: eventLiveDataExtended.awayScore)
-
-        let mappedEventLiveData = SportRadarModelMapper.eventLiveData(fromInternalEventLiveData: eventLiveDataExtended)
-        self.eventLiveData = mappedEventLiveData
-    }
-
-    func handleContentUpdate(_ content: SportRadarModels.ContentContainer) {
-
-        guard
-            let updatedContentIdentifier = content.contentIdentifier,
-            self.liveEventContentIdentifier == updatedContentIdentifier
-        else {
-            return
-        }
-
-        switch content {
-        case .updateEventLiveDataExtended(_, _, let eventLiveDataExtended):
-            if let newTime = eventLiveDataExtended.matchTime {
-                self.updateEventTime(newTime: newTime)
-            }
-            if let newStatus = eventLiveDataExtended.status {
-                self.updateEventStatus(newStatus: newStatus.stringValue)
-            }
-            
-            for score in eventLiveDataExtended.scores.values {
-                let mappedScore = SportRadarModelMapper.score(fromInternalScore: score)
-                self.updateEventDetailedScore(mappedScore)
-            }
-            
-            self.updateEventScore(newHomeScore: eventLiveDataExtended.homeScore, newAwayScore: eventLiveDataExtended.awayScore)
-            
-        case .updateEventDetailedScore(_, _, let detailedScore):
-            let mappedScore = SportRadarModelMapper.score(fromInternalScore: detailedScore)
-            self.updateEventDetailedScore(mappedScore)
-            
-        default:
-            break // Ignore other cases
-        }
-    }
-    
-    func containsEvent(withid id: String) -> Bool {
-        return self.eventIdObserved == id
     }
     
 }

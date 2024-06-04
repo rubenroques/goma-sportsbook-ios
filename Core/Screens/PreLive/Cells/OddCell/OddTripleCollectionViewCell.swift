@@ -503,11 +503,9 @@ class OddTripleCollectionViewCell: UICollectionViewCell {
 
                 if marketUpdated.isAvailable {
                     self?.showMarketButtons()
-                    print("subscribeToEventMarketUpdates market \(marketUpdated.id)-\(marketUpdated.isAvailable) will show \n")
                 }
                 else {
                     self?.showSuspendedView()
-                    print("subscribeToEventMarketUpdates market \(marketUpdated.id)-\(marketUpdated.isAvailable) will hide \n")
                 }
             })
 

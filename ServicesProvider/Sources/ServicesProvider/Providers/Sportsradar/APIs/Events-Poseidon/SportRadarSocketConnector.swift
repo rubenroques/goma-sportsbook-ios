@@ -152,15 +152,15 @@ extension SportRadarSocketConnector: Starscream.WebSocketDelegate {
         switch event {
         case .connected(let headers):
             self.sendListeningStarted()
-            print("ServiceProvider - SportRadarSocketConnector websocket 🟢 is connected: \(headers)")
+            print("ServiceProvider - ↔️ SportRadarSocketConnector websocket 🟢 is connected: \(headers)")
 
         case .disconnected(let reason, let code):
             self.isConnected = false
             self.refreshConnection()
-            print("ServiceProvider - SportRadarSocketConnector websocket is disconnected: \(reason) with code: \(code)")
+            print("ServiceProvider - ↔️ SportRadarSocketConnector websocket is disconnected: \(reason) with code: \(code)")
 
         case .text(let string):
-            print("\n▶️ServiceProvider - SportRadarSocketConnector received text: \(string)◀️")
+            // print("\n▶️ServiceProvider - ↔️ SportRadarSocketConnector received text: \(string)◀️\n")
             if let data = string.data(using: .utf8),
                let sportRadarSocketResponse = try? decoder.decode(SportRadarModels.NotificationType.self, from: data) {
                 self.handleContentMessage(sportRadarSocketResponse, messageData: data)
@@ -172,27 +172,27 @@ extension SportRadarSocketConnector: Starscream.WebSocketDelegate {
             }
 
         case .ping(_):
-            print("ServiceProvider - SportRadarSocketConnector ping")
+            print("ServiceProvider - ↔️ SportRadarSocketConnector ping")
             break
         case .pong(_):
-            print("ServiceProvider - SportRadarSocketConnector pong")
+            print("ServiceProvider - ↔️ SportRadarSocketConnector pong")
             break
         case .viabilityChanged(_):
-            print("ServiceProvider - SportRadarSocketConnector viabilityChanged")
+            print("ServiceProvider - ↔️ SportRadarSocketConnector viabilityChanged")
             break
         case .reconnectSuggested(_):
             self.refreshConnection()
-            print("ServiceProvider - SportRadarSocketConnector reconnectSuggested")
+            print("ServiceProvider - ↔️ SportRadarSocketConnector reconnectSuggested")
         case .cancelled:
             self.isConnected = false
-            print("ServiceProvider - SportRadarSocketConnector cancelled")
+            print("ServiceProvider - ↔️ SportRadarSocketConnector cancelled")
         case .error(let error):
             self.isConnected = false
-            print("ServiceProvider - SportRadarSocketConnector websocket ❌ Error \(error.debugDescription)")
+            print("ServiceProvider - ↔️ SportRadarSocketConnector websocket ❌ Error \(error.debugDescription)")
             self.refreshConnection()
         case .peerClosed:
             self.isConnected = false
-            print("ServiceProvider - SportRadarSocketConnector peerClosed")
+            print("ServiceProvider - ↔️ SportRadarSocketConnector peerClosed")
         }
         
     }
@@ -270,11 +270,10 @@ extension SportRadarSocketConnector: Starscream.WebSocketDelegate {
                     }
                     
                 case .unknown:
-                    print("❓SportRadarSocketConnector handleContentMessage unknown: \(content)")
+                    print("❓SportRadarSocketConnector handleContentMessage unknown")
                     
                 default:
                     if let subscriber = self.messageSubscriber {
-                        // print("*️⃣SportRadarSocketConnector handleContentMessage didReceiveGenericUpdate: \n  - \(content)")
                         subscriber.didReceiveGenericUpdate(content: content)
                     }
                 }

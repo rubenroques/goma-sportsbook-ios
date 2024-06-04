@@ -20,12 +20,15 @@ extension SportRadarModels {
         
         var scores: [String: Score]
         
+        var activePlayerServing: ActivePlayerServe?
+        
         enum CodingKeys: String, CodingKey {
             case targetEventId = "targetEventId"
             case attributedContainer = "attributes"
             case completeContainer = "COMPLETE"
             case currentScoreContainer = "CURRENT_SCORE"
             case competitorContainer = "COMPETITOR"
+            case servingContainer = "SERVE"
             case statusContainer = "STATUS"
             case eventContainer = "EVENT"
             case emptyContainer = ""
@@ -36,13 +39,21 @@ extension SportRadarModels {
             case matchTime = "matchTime"
         }
         
-        init(id: String, homeScore: Int?, awayScore: Int?, matchTime: String?, status: EventStatus?, scores: [String: Score]) {
+        init(id: String,
+             homeScore: Int?,
+             awayScore: Int?,
+             matchTime: String?,
+             status: EventStatus?,
+             scores: [String: Score],
+             activePlayerServing: ActivePlayerServe?
+        ) {
             self.id = id
             self.homeScore = homeScore
             self.awayScore = awayScore
             self.matchTime = matchTime
             self.status = status
             self.scores = scores
+            self.activePlayerServing = activePlayerServing
         }
         
         init(from decoder: Decoder) throws {
@@ -56,6 +67,7 @@ extension SportRadarModels {
                 self.matchTime = minutesPart
             }
             
+            //
             // Status
             self.status = nil
             if let attributesContainer = try? container.nestedContainer(keyedBy: CodingKeys.self, forKey: .attributedContainer),
@@ -66,11 +78,43 @@ extension SportRadarModels {
                 self.status = EventStatus.init(value: statusValue)
             }
             
+            //
             // Scores
             self.homeScore = nil
             self.awayScore = nil
             
             self.scores = [:]
+            
+            //
+            // Serving Player
+            self.activePlayerServing = nil
+            if let attributesContainer = try? container.nestedContainer(keyedBy: CodingKeys.self, forKey: .attributedContainer),
+               let completeContainer = try? attributesContainer.nestedContainer(keyedBy: CodingKeys.self, forKey: .completeContainer),
+               let servingContainer = try? completeContainer.nestedContainer(keyedBy: CodingKeys.self, forKey: .servingContainer),
+               let eventContainer = try? servingContainer.nestedContainer(keyedBy: CodingKeys.self, forKey: .eventContainer)
+            {
+                if let activePlayerServingInt =  try? eventContainer.decode(Int.self, forKey: .emptyContainer) {
+                    if activePlayerServingInt == 1 {
+                        self.activePlayerServing = .home
+                    }
+                    else if activePlayerServingInt == 2 {
+                        self.activePlayerServing = .away
+                    }
+                }
+                else if let activePlayerServingString =  try? eventContainer.decode(String.self, forKey: .emptyContainer) {
+                    if activePlayerServingString == "1" {
+                        self.activePlayerServing = .home
+                    }
+                    else if activePlayerServingString == "2" {
+                        self.activePlayerServing = .away
+                    }
+                }
+                else {
+                    self.activePlayerServing = nil
+                    print("break")
+                }
+            }
+            
             
             // ----------------------------------------------------------------------------------------------------------------
             // Legacy scores
@@ -105,18 +149,17 @@ extension SportRadarModels {
             let attributesContainer = try container.nestedContainer(keyedBy: CodingKeys.self, forKey: .attributedContainer)
             let completeContainer = try attributesContainer.nestedContainer(keyedBy: ScoreCodingKeys.self, forKey: .completeContainer)
             
-            var scoresArray = try completeContainer.allKeys.compactMap { key -> Score? in
+            let scoresArray = try completeContainer.allKeys.compactMap { key -> Score? in
                 let container = try completeContainer.nestedContainer(keyedBy: Score.CompetitorCodingKeys.self, forKey: key)
                 return try Score(from: container, key: key)
             }
             
             self.scores = Dictionary(uniqueKeysWithValues: scoresArray.map { ($0.key, $0) })
             
-            print("ResultDebug:  EventLiveDataExtended scores: \(self.scores)")
             //
-            
-            //
-            if self.matchTime == nil, self.status == nil, self.homeScore == nil, self.awayScore == nil {
+            if self.matchTime == nil, self.status == nil, self.homeScore == nil,
+               self.awayScore == nil, self.scores.isEmpty, self.activePlayerServing == nil
+            {
                 let context = DecodingError.Context(codingPath: [CodingKeys.attributedContainer], debugDescription: "No parsed content found on EventLiveDataExtended")
                 throw DecodingError.valueNotFound(ContentRoute.self, context)
             }

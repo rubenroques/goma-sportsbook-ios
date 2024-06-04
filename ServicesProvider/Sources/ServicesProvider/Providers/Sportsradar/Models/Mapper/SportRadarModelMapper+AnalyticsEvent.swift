@@ -15,8 +15,8 @@ extension SportRadarModelMapper {
             return VaixAnalyticsEvent.impressionsEvents(eventsIds: eventsIds)
         case .clickEvent(let id):
             return VaixAnalyticsEvent.clickEvent(id: id)
-        case .clickOutcome(let id):
-            return VaixAnalyticsEvent.clickOutcome(id: id)
+        case .clickOutcome(let eventId, let outcomeId):
+            return VaixAnalyticsEvent.clickOutcome(eventId: eventId, outcomeId: outcomeId)
         }
     }
 }

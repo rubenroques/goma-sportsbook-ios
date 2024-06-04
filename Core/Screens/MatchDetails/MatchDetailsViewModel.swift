@@ -92,6 +92,8 @@ class MatchDetailsViewModel: NSObject {
     
     var matchDetailedScores: CurrentValueSubject<[String: [String: Score]], Never> = .init([:])
     
+    var activePlayerServePublisher: CurrentValueSubject<Match.ActivePlayerServe?, Never> = .init(nil)
+    
     private var statsJSON: JSON?
     let matchStatsViewModel: MatchStatsViewModel
 
@@ -281,17 +283,11 @@ class MatchDetailsViewModel: NSObject {
                 }
             }, receiveValue: { [weak self] matchLiveData in
                 if let detailedScoresValue = matchLiveData.detailedScores {
-                    
-                    if let currentScoreForSport = self?.matchDetailedScores.value[sportAlphaCode] {
-                        let mergeResult = currentScoreForSport.merging(detailedScoresValue) { (_, new) in new }
-                        var updatedMatchDetailedScores = [sportAlphaCode: mergeResult]
-                        self?.matchDetailedScores.send(updatedMatchDetailedScores)
-                    }
-                    else {
-                        var matchDetailedScoresForSport = [sportAlphaCode: detailedScoresValue]
-                        self?.matchDetailedScores.send(matchDetailedScoresForSport)
-                    }
+                    var matchDetailedScoresForSport = [sportAlphaCode: detailedScoresValue]
+                    self?.matchDetailedScores.send(matchDetailedScoresForSport)
                 }
+
+                self?.activePlayerServePublisher.send(matchLiveData.activePlayerServing)
             })
             .store(in: &self.cancellables)
     }
@@ -323,7 +319,7 @@ class MatchDetailsViewModel: NSObject {
                         var updatedMatchDetailedScores = [sportAlphaCode: detailedScores]
                         self?.matchDetailedScores.send(updatedMatchDetailedScores)
                     }
-                    
+                    self?.activePlayerServePublisher.send(matchLiveData.activePlayerServing)
                 case .disconnected:
                     break
                 }

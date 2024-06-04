@@ -403,6 +403,27 @@ class HomeViewController: UIViewController {
         }
     }
     
+    private func trackOutcomeClick(matchId: String, outcomeId: String) {
+        guard
+            let userIdentifier = Env.userSessionStore.loggedUserProfile?.userIdentifier
+        else {
+            return
+        }
+        
+        Env.servicesProvider.trackEvent(.clickOutcome(eventId: matchId, outcomeId: outcomeId), userIdentifer: userIdentifier)
+            .sink { completion in
+                switch completion {
+                case .finished:
+                    ()
+                case .failure(let error):
+                    print("trackEvent clickEvent error: \(error)")
+                }
+            } receiveValue: {
+                print("trackEvent clickEvent called ok")
+            }
+            .store(in: &self.cancellables)
+    }
+    
     private func trackEventClick(_ eventId: String) {
         guard
             let userIdentifier = Env.userSessionStore.loggedUserProfile?.userIdentifier
@@ -999,8 +1020,17 @@ extension HomeViewController: UITableViewDelegate, UITableViewDataSource {
             cell.configure(withViewModel: viewModel)
 
             cell.tappedMatchLineAction = { [weak self] match in
-                self?.trackEventClick(match.id)
+                if let trackableReference = match.trackableReference {
+                    self?.trackEventClick(trackableReference)
+                }
                 self?.openMatchDetails(matchId: match.id)
+            }
+            
+            cell.selectedOutcome = { [weak self] match, market, outcome in
+                if let matchTrackableReference = match.trackableReference,
+                   let outcomeTrackableReference = outcome.externalReference {
+                    self?.trackOutcomeClick(matchId: matchTrackableReference, outcomeId: outcomeTrackableReference)
+                }
             }
 
             cell.didLongPressOdd = { [weak self] bettingTicket in

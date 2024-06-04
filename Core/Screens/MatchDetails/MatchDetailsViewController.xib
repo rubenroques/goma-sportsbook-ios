@@ -29,6 +29,7 @@
                 <outlet property="accountValueView" destination="xvA-vM-kST" id="hQR-VN-Ueh"/>
                 <outlet property="awayRedCardImage" destination="Fdh-3H-uFA" id="HG7-mu-jzt"/>
                 <outlet property="awayRedCardsLabel" destination="kDe-Eo-iMY" id="EmH-Qp-qkf"/>
+                <outlet property="awayServingIndicatorView" destination="mIT-bf-hxh" id="Ec3-Sj-eyF"/>
                 <outlet property="awayTeamLabel" destination="0VL-lj-BYR" id="JRq-2J-XdE"/>
                 <outlet property="backButton" destination="Teg-lJ-kC3" id="wvg-8t-U5J"/>
                 <outlet property="fieldExpandImageView" destination="WDJ-gu-M8j" id="T0r-E9-XLo"/>
@@ -57,6 +58,7 @@
                 <outlet property="headerStatsButtonBaseView" destination="qHL-GH-Zh2" id="d3h-4Q-Ad9"/>
                 <outlet property="homeRedCardImage" destination="Ung-4R-Vep" id="mdf-YH-IOC"/>
                 <outlet property="homeRedCardLabel" destination="thd-rN-8zA" id="D3a-fG-aPL"/>
+                <outlet property="homeServingIndicatorView" destination="A0C-Sp-Zc8" id="Z5A-hZ-XgW"/>
                 <outlet property="homeTeamLabel" destination="Sue-gp-elT" id="3EL-XI-Y7V"/>
                 <outlet property="liveButtonImageView" destination="qh9-PB-Fnd" id="OGn-XP-GzH"/>
                 <outlet property="liveButtonLabel" destination="OMg-Uv-KyY" id="XFR-iL-Hhd"/>
@@ -244,13 +246,13 @@
                             <rect key="frame" x="0.0" y="45" width="711" height="85"/>
                             <subviews>
                                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Sue-gp-elT">
-                                    <rect key="frame" x="15" y="14" width="340.5" height="16"/>
+                                    <rect key="frame" x="15" y="14" width="41" height="16"/>
                                     <fontDescription key="fontDescription" name="Gilroy-Bold" family="Gilroy" pointSize="16"/>
                                     <nil key="textColor"/>
                                     <nil key="highlightedColor"/>
                                 </label>
                                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="0VL-lj-BYR">
-                                    <rect key="frame" x="15" y="40" width="340.5" height="16"/>
+                                    <rect key="frame" x="15" y="40" width="41" height="16"/>
                                     <fontDescription key="fontDescription" name="Gilroy-Bold" family="Gilroy" pointSize="16"/>
                                     <nil key="textColor"/>
                                     <nil key="highlightedColor"/>
@@ -301,6 +303,22 @@
                                     <nil key="textColor"/>
                                     <nil key="highlightedColor"/>
                                 </label>
+                                <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="mIT-bf-hxh">
+                                    <rect key="frame" x="61" y="43.5" width="9" height="9"/>
+                                    <color key="backgroundColor" systemColor="systemBackgroundColor"/>
+                                    <constraints>
+                                        <constraint firstAttribute="height" constant="9" id="qDH-F9-oe1"/>
+                                        <constraint firstAttribute="width" constant="9" id="utK-TF-iZL"/>
+                                    </constraints>
+                                </view>
+                                <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="A0C-Sp-Zc8">
+                                    <rect key="frame" x="61" y="17.5" width="9" height="9"/>
+                                    <color key="backgroundColor" systemColor="systemBackgroundColor"/>
+                                    <constraints>
+                                        <constraint firstAttribute="height" constant="9" id="70M-rY-Gbc"/>
+                                        <constraint firstAttribute="width" constant="9" id="ncS-z0-rCi"/>
+                                    </constraints>
+                                </view>
                             </subviews>
                             <color key="backgroundColor" systemColor="systemBackgroundColor"/>
                             <constraints>
@@ -308,19 +326,21 @@
                                 <constraint firstItem="KIC-K7-6hl" firstAttribute="bottom" secondItem="0VL-lj-BYR" secondAttribute="bottom" id="63F-XI-Xeq"/>
                                 <constraint firstItem="Wh0-1s-CDa" firstAttribute="trailing" secondItem="KIC-K7-6hl" secondAttribute="trailing" id="6Gj-DP-4u4"/>
                                 <constraint firstAttribute="trailing" secondItem="lij-S3-MhM" secondAttribute="trailing" constant="15" id="6Vb-AG-E4d"/>
+                                <constraint firstItem="A0C-Sp-Zc8" firstAttribute="centerY" secondItem="Sue-gp-elT" secondAttribute="centerY" id="9i8-MV-nR3"/>
                                 <constraint firstItem="nIe-Dn-yAE" firstAttribute="centerY" secondItem="Sue-gp-elT" secondAttribute="centerY" id="GL4-kz-LiS"/>
                                 <constraint firstItem="KIC-K7-6hl" firstAttribute="leading" secondItem="3qf-yS-Jbk" secondAttribute="centerX" id="GuQ-ha-SV5"/>
                                 <constraint firstItem="lij-S3-MhM" firstAttribute="leading" secondItem="3qf-yS-Jbk" secondAttribute="centerX" id="Ngg-m2-29x"/>
                                 <constraint firstItem="0VL-lj-BYR" firstAttribute="leading" secondItem="3qf-yS-Jbk" secondAttribute="leading" constant="15" id="Q30-ch-dMM"/>
-                                <constraint firstAttribute="centerX" secondItem="0VL-lj-BYR" secondAttribute="trailing" id="SCU-fc-u0M"/>
                                 <constraint firstItem="KIC-K7-6hl" firstAttribute="top" secondItem="Sue-gp-elT" secondAttribute="top" id="XUy-wM-mQr"/>
                                 <constraint firstItem="J4V-ew-SmM" firstAttribute="centerY" secondItem="0VL-lj-BYR" secondAttribute="centerY" id="YiQ-ob-GTw"/>
-                                <constraint firstAttribute="centerX" secondItem="Sue-gp-elT" secondAttribute="trailing" id="bd0-bj-WLg"/>
+                                <constraint firstItem="mIT-bf-hxh" firstAttribute="centerY" secondItem="0VL-lj-BYR" secondAttribute="centerY" id="Yta-rc-Gx6"/>
                                 <constraint firstItem="Sue-gp-elT" firstAttribute="top" secondItem="3qf-yS-Jbk" secondAttribute="top" constant="14" id="bwN-0L-tHe"/>
                                 <constraint firstItem="Wh0-1s-CDa" firstAttribute="top" secondItem="KIC-K7-6hl" secondAttribute="bottom" constant="8" id="cue-mv-hLO"/>
                                 <constraint firstItem="0VL-lj-BYR" firstAttribute="top" secondItem="Sue-gp-elT" secondAttribute="bottom" constant="10" id="dev-V9-Tod"/>
                                 <constraint firstItem="Sue-gp-elT" firstAttribute="leading" secondItem="3qf-yS-Jbk" secondAttribute="leading" constant="15" id="eh7-Uh-Rwd"/>
                                 <constraint firstItem="lij-S3-MhM" firstAttribute="bottom" secondItem="0VL-lj-BYR" secondAttribute="bottom" id="h3X-gd-pYX"/>
+                                <constraint firstItem="mIT-bf-hxh" firstAttribute="leading" secondItem="0VL-lj-BYR" secondAttribute="trailing" constant="5" id="kHI-32-4Ef"/>
+                                <constraint firstItem="A0C-Sp-Zc8" firstAttribute="leading" secondItem="Sue-gp-elT" secondAttribute="trailing" constant="5" id="qG1-8p-CkF"/>
                                 <constraint firstAttribute="trailing" secondItem="KIC-K7-6hl" secondAttribute="trailing" constant="15" id="tzn-Jr-kdf"/>
                                 <constraint firstItem="lij-S3-MhM" firstAttribute="top" secondItem="Sue-gp-elT" secondAttribute="top" id="uMH-Sq-9V2"/>
                             </constraints>
@@ -807,7 +827,7 @@
                 <constraint firstItem="56R-Yf-D3H" firstAttribute="top" secondItem="8LV-6W-WLu" secondAttribute="top" id="zfv-Hj-pU7"/>
             </constraints>
             <freeformSimulatedSizeMetrics key="simulatedDestinationMetrics"/>
-            <point key="canvasLocation" x="365.94202898550725" y="48.549107142857139"/>
+            <point key="canvasLocation" x="364.49275362318843" y="48.549107142857139"/>
         </view>
         <tapGestureRecognizer id="Pcg-xO-JoO">
             <connections>
@@ -830,25 +850,25 @@
         <image name="red_card_image" width="9" height="14"/>
         <image name="tabbar_live_icon" width="25" height="23"/>
         <namedColor name="buttonBackgroundPrimary">
-            <color red="0.0" green="0.6470588235294118" blue="0.85882352941176465" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+            <color red="1" green="0.14901960784313725" blue="0.0" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
         </namedColor>
         <systemColor name="systemBackgroundColor">
             <color white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
         </systemColor>
         <systemColor name="systemGray2Color">
-            <color red="0.68235294117647061" green="0.68235294117647061" blue="0.69803921568627447" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+            <color red="0.68235294120000001" green="0.68235294120000001" blue="0.69803921570000005" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
         </systemColor>
         <systemColor name="systemGrayColor">
-            <color red="0.55686274509803924" green="0.55686274509803924" blue="0.57647058823529407" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+            <color red="0.5568627451" green="0.5568627451" blue="0.57647058819999997" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
         </systemColor>
         <systemColor name="systemGreenColor">
-            <color red="0.20392156862745098" green="0.7803921568627451" blue="0.34901960784313724" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+            <color red="0.20392156859999999" green="0.78039215689999997" blue="0.34901960780000002" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
         </systemColor>
         <systemColor name="systemPinkColor">
-            <color red="1" green="0.17647058823529413" blue="0.33333333333333331" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+            <color red="1" green="0.1764705882" blue="0.33333333329999998" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
         </systemColor>
         <systemColor name="systemRedColor">
-            <color red="1" green="0.23137254901960785" blue="0.18823529411764706" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+            <color red="1" green="0.23137254900000001" blue="0.18823529410000001" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
         </systemColor>
     </resources>
 </document>

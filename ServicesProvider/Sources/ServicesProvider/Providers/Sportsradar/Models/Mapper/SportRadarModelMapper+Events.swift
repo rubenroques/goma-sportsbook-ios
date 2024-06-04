@@ -39,6 +39,11 @@ extension SportRadarModelMapper {
 
         let scores = Self.scoresDictionary(fromInternalScoresDictionary: internalEvent.scores)
         
+        var mappedActivePlayerServing: ActivePlayerServe?
+        if let internalActivePlayerServing = internalEvent.activePlayerServing {
+            mappedActivePlayerServing = Self.activePlayerServe(fromInternalActivePlayerServe: internalActivePlayerServing)
+        }
+        
         return Event(id: internalEvent.id,
                      homeTeamName: internalEvent.homeName ?? "",
                      awayTeamName: internalEvent.awayName ?? "",
@@ -56,6 +61,7 @@ extension SportRadarModelMapper {
                      trackableReference: internalEvent.trackableReference,
                      status: Self.eventStatus(fromInternalEvent: internalEvent.status),
                      matchTime: internalEvent.matchTime,
+                     activePlayerServing: mappedActivePlayerServing,
                      scores: scores)
     }
 
@@ -102,12 +108,18 @@ extension SportRadarModelMapper {
         
         let mappedScores = Self.scoresDictionary(fromInternalScoresDictionary: internalEventLiveData.scores)
         
+        var mappedActivePlayerServing: ActivePlayerServe?
+        if let internalActivePlayerServing = internalEventLiveData.activePlayerServing {
+            mappedActivePlayerServing = Self.activePlayerServe(fromInternalActivePlayerServe: internalActivePlayerServing)
+        }
+        
         return EventLiveData(id: internalEventLiveData.id,
                              homeScore: internalEventLiveData.homeScore,
                              awayScore: internalEventLiveData.awayScore,
                              matchTime: internalEventLiveData.matchTime,
                              status: eventStatus,
-                             detailedScores: mappedScores)
+                             detailedScores: mappedScores,
+                             activePlayerServing: mappedActivePlayerServing)
     }
     
     
@@ -284,4 +296,11 @@ extension SportRadarModelMapper {
                                      competitionId: internalTopCompetition.competitionId)
     }
 
+    static func activePlayerServe(fromInternalActivePlayerServe internalActivePlayerServe: SportRadarModels.ActivePlayerServe) -> ActivePlayerServe {
+        switch internalActivePlayerServe {
+        case .home: return .home
+        case .away: return .home
+        }
+    }
+    
 }

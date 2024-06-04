@@ -11,7 +11,7 @@ public enum VaixAnalyticsEvent: AnalyticsEvent {
     
     case impressionsEvents(eventsIds: [String])
     case clickEvent(id: String)
-    case clickOutcome(id: String)
+    case clickOutcome(eventId: String, outcomeId: String)
     
     public var type: String {
         switch self {
@@ -41,12 +41,13 @@ public enum VaixAnalyticsEvent: AnalyticsEvent {
                 "channel": "ios",
                 "event_id": id
             ]
-        case .clickOutcome(let id):
+        case .clickOutcome(let eventId, let outcomeId):
             return [
                  "position": 0,
                  "location": "liveevent-popular",
                  "channel": "ios",
-                 "event_id": id
+                 "event_id": eventId,
+                 "outcome_id": outcomeId
              ]
         }
     }

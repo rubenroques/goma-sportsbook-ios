@@ -153,6 +153,12 @@ extension SportRadarEventsGroupStorage {
         eventSubject.send(event)
     }
 
+    func updateActivePlayer(_ activePlayerServing: ActivePlayerServe?) {
+        guard let event = self.eventSubject.value else { return }
+        event.activePlayerServing = activePlayerServing
+        self.eventSubject.send(event)
+    }
+    
 }
 
 extension SportRadarEventsGroupStorage {

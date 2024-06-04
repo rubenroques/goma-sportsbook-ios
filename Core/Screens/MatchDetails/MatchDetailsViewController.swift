@@ -30,6 +30,9 @@ class MatchDetailsViewController: UIViewController {
     @IBOutlet private var headerDetailAwayView: UIView!
     @IBOutlet private var headerDetailAwayLabel: UILabel!
     
+    @IBOutlet private var homeServingIndicatorView: UIView!
+    @IBOutlet private var awayServingIndicatorView: UIView!
+    
     @IBOutlet private var headerDetailMiddleView: UIView!
     @IBOutlet private var headerDetailMiddleStackView: UIStackView!
     
@@ -348,6 +351,9 @@ class MatchDetailsViewController: UIViewController {
         self.isLiveFieldReady = false
         self.shouldShowLiveFieldWebView = false
         
+        self.homeServingIndicatorView.isHidden = true
+        self.awayServingIndicatorView.isHidden = true
+        
         //
         self.backButton.setImage(UIImage(named: "arrow_back_icon"), for: .normal)
         
@@ -563,8 +569,14 @@ class MatchDetailsViewController: UIViewController {
         self.setupWithTheme()
     }
     
+    override func viewDidLayoutSubviews() {
+        super.viewDidLayoutSubviews()
+    
+        self.awayServingIndicatorView.layer.cornerRadius = self.awayServingIndicatorView.frame.size.width / 2
+        self.homeServingIndicatorView.layer.cornerRadius = self.homeServingIndicatorView.frame.size.width / 2
+    }
+    
     func setupWithTheme() {
-        
         self.view.backgroundColor = UIColor.App.backgroundPrimary
 
         self.topView.backgroundColor = UIColor.App.gameHeader
@@ -583,6 +595,10 @@ class MatchDetailsViewController: UIViewController {
         self.headerDetailHomeLabel.textColor = UIColor.App.textPrimary
         self.headerDetailAwayView.backgroundColor = .clear
         self.headerDetailAwayLabel.textColor = UIColor.App.textPrimary
+        
+        self.awayServingIndicatorView.backgroundColor = UIColor.App.highlightPrimary
+        self.homeServingIndicatorView.backgroundColor = UIColor.App.highlightPrimary
+        
         self.headerDetailMiddleView.backgroundColor = .clear
         self.headerDetailMiddleStackView.backgroundColor = .clear
         self.headerDetailPreliveView.backgroundColor = .clear
@@ -677,7 +693,7 @@ class MatchDetailsViewController: UIViewController {
                     self?.accountValueView.isHidden = true
                 }
             }
-            .store(in: &cancellables)
+            .store(in: &self.cancellables)
         
         Env.userSessionStore.userWalletPublisher
             .receive(on: DispatchQueue.main)
@@ -690,7 +706,7 @@ class MatchDetailsViewController: UIViewController {
                     self?.accountValueLabel.text = "-.--€"
                 }
             }
-            .store(in: &cancellables)
+            .store(in: &self.cancellables)
         
         self.viewModel.marketGroupsState
             .removeDuplicates()
@@ -708,8 +724,8 @@ class MatchDetailsViewController: UIViewController {
                 }
                 self?.reloadCollectionView()
             }
-            .store(in: &cancellables)
-//        
+            .store(in: &self.cancellables)
+//
         self.viewModel.selectedMarketTypeIndexPublisher
             .removeDuplicates()
             .receive(on: DispatchQueue.main)
@@ -719,7 +735,7 @@ class MatchDetailsViewController: UIViewController {
                     self?.scrollToMarketDetailViewController(atIndex: newIndex)
                 }
             }
-            .store(in: &cancellables)
+            .store(in: &self.cancellables)
 
         self.viewModel.matchPublisher
             .receive(on: DispatchQueue.main)
@@ -752,7 +768,7 @@ class MatchDetailsViewController: UIViewController {
                     self?.showMatchNotAvailableView()
                 }
             })
-            .store(in: &cancellables)
+            .store(in: &self.cancellables)
 
 //        
 //        Publishers.CombineLatest(
@@ -802,7 +818,7 @@ class MatchDetailsViewController: UIViewController {
             .sink(receiveValue: { [weak self] in
                 self?.reloadStatsCollectionView()
             })
-            .store(in: &cancellables)
+            .store(in: &self.cancellables)
         
         self.viewModel.homeRedCardsScorePublisher
             .receive(on: DispatchQueue.main)
@@ -817,7 +833,7 @@ class MatchDetailsViewController: UIViewController {
                     self?.homeRedCardLabel.isHidden = true
                 }
             })
-            .store(in: &cancellables)
+            .store(in: &self.cancellables)
         
         self.viewModel.awayRedCardsScorePublisher
             .receive(on: DispatchQueue.main)
@@ -833,7 +849,7 @@ class MatchDetailsViewController: UIViewController {
                 }
                   
             })
-            .store(in: &cancellables)
+            .store(in: &self.cancellables)
         
         self.viewModel.matchDetailedScores
             .receive(on: DispatchQueue.main)
@@ -846,8 +862,27 @@ class MatchDetailsViewController: UIViewController {
                     self.scoreView.updateScores(matchScores.value)
                 }
             })
-            .store(in: &cancellables)
+            .store(in: &self.cancellables)
 
+        self.viewModel.activePlayerServePublisher
+            .receive(on: DispatchQueue.main)
+            .sink { [weak self] activePlayerServe in
+                guard let self = self else { return }
+                
+                switch activePlayerServe {
+                case .home:
+                    self.homeServingIndicatorView.isHidden = false
+                    self.awayServingIndicatorView.isHidden = true
+                case .away:
+                    self.homeServingIndicatorView.isHidden = true
+                    self.awayServingIndicatorView.isHidden = false
+                case .none:
+                    self.homeServingIndicatorView.isHidden = true
+                    self.awayServingIndicatorView.isHidden = true
+                }
+            }
+            .store(in: &self.cancellables)
+        
         self.viewModel.shouldRenderFieldWidget
             .receive(on: DispatchQueue.main)
             .sink(receiveValue: { [weak self] shouldRender in
@@ -859,7 +894,7 @@ class MatchDetailsViewController: UIViewController {
                     self?.headerButtonsBaseView.isHidden = true
                 }
             })
-            .store(in: &cancellables)
+            .store(in: &self.cancellables)
 
         self.viewModel.scrollToTopAction = { [weak self] indexRow in
 

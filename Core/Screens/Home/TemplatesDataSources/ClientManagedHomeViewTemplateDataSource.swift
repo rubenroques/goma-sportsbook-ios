@@ -156,6 +156,12 @@ class ClientManagedHomeViewTemplateDataSource {
         
         self.highlightedLiveMatchLineTableCellViewModelCache = [:]
         
+#if DEBUG
+        
+        self.fetchHighlightedLiveMatches()
+        
+#else
+                
         self.fetchAlerts()
         self.fetchQuickSwipeMatches()
         self.fetchBanners()
@@ -164,6 +170,8 @@ class ClientManagedHomeViewTemplateDataSource {
         self.fetchPromotionalStories()
         self.fetchTopCompetitions()
         self.fetchHighlightedLiveMatches()
+        
+#endif
     }
 
     // User alerts
@@ -271,10 +279,12 @@ class ClientManagedHomeViewTemplateDataSource {
     func fetchHighlightMatches() {
 
         let imageMatches = Env.servicesProvider.getHighlightedVisualImageEvents()
+            .receive(on: DispatchQueue.main)
             .map(ServiceProviderModelMapper.matches(fromEvents:))
             .replaceError(with: [])
         
         let boostedMatches = Env.servicesProvider.getHighlightedBoostedEvents()
+            .receive(on: DispatchQueue.main)
             .map(ServiceProviderModelMapper.matches(fromEvents:))
             .replaceError(with: [])
 
@@ -432,7 +442,7 @@ class ClientManagedHomeViewTemplateDataSource {
                 self?.highlightedLiveMatches = liveEvents
                 self?.refreshPublisher.send()
                 
-                let eventsIds = liveEvents.map({ return $0.id })
+                let eventsIds = liveEvents.compactMap({ return $0.trackableReference })
                 self?.waitUserToTrackImpressionForEvents(eventsIds: eventsIds)
             }
             .store(in: &self.cancellables)

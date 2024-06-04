@@ -20,6 +20,7 @@ struct MatchLiveData: Equatable {
     var matchTime: String?
     var status: Match.Status?
     var detailedScores: [String: Score]?
+    var activePlayerServing: Match.ActivePlayerServe?
     
     enum CodingKeys: String, CodingKey {
         case id = "id"
@@ -30,13 +31,21 @@ struct MatchLiveData: Equatable {
         case detailedScores
     }
     
-    init(id: String, homeScore: Int?, awayScore: Int?, matchTime: String?, status: Match.Status?, detailedScores: [String: Score]?) {
+    init(id: String,
+         homeScore: Int?,
+         awayScore: Int?,
+         matchTime: String?,
+         status: Match.Status?,
+         detailedScores: [String: Score]?,
+         activePlayerServing: Match.ActivePlayerServe?)
+    {
         self.id = id
         self.homeScore = homeScore
         self.awayScore = awayScore
         self.matchTime = matchTime
         self.status = status
         self.detailedScores = detailedScores
+        self.activePlayerServing = activePlayerServing
     }
     
 }
@@ -74,6 +83,8 @@ struct Match: Hashable {
     var competitionOutright: Competition?
 
     var detailedScores: [String: Score]?
+    
+    var activePlayerServe: ActivePlayerServe?
     
     var detailedStatus: String {
         switch self.status {
@@ -140,6 +151,12 @@ struct Match: Hashable {
         }
         
     }
+    
+    enum ActivePlayerServe: String, Codable, Hashable {
+        case home
+        case away
+    }
+    
 
     init(id: String,
          competitionId: String,
@@ -161,6 +178,7 @@ struct Match: Hashable {
          promoImageURL: String? = nil,
          oldMainMarketId: String? = nil,
          competitionOutright: Competition? = nil,
+         activePlayerServe: ActivePlayerServe? = nil,
          detailedScores: [String: Score]? = nil) {
 
         self.id = id
@@ -440,6 +458,7 @@ extension Match {
                   numberTotalOfMarkets: 0,
                   markets: markets, rootPartId: "",
                   status: .notStarted,
+                  activePlayerServe: nil,
                   detailedScores: [:]),
             
             Match(id: "A2", competitionId: "PL2", competitionName: "Serie A",
@@ -450,6 +469,7 @@ extension Match {
                   numberTotalOfMarkets: 0,
                   markets: markets, rootPartId: "",
                   status: .notStarted,
+                  activePlayerServe: nil,
                   detailedScores: [:]),
             
             Match(id: "A3", competitionId: "PL3", competitionName: "La Liga",
@@ -460,6 +480,7 @@ extension Match {
                   numberTotalOfMarkets: 0,
                   markets: markets, rootPartId: "",
                   status: .notStarted,
+                  activePlayerServe: nil,
                   detailedScores: [:]),
             
             Match(id: "A4", competitionId: "PL4", competitionName: "Bundesliga",
@@ -470,6 +491,7 @@ extension Match {
                   numberTotalOfMarkets: 0,
                   markets: markets, rootPartId: "",
                   status: .notStarted,
+                  activePlayerServe: nil,
                   detailedScores: [:]),
             
             Match(id: "A5", competitionId: "PL5", competitionName: "Premier League",
@@ -480,6 +502,7 @@ extension Match {
                   numberTotalOfMarkets: 0,
                   markets: markets, rootPartId: "",
                   status: .notStarted,
+                  activePlayerServe: nil,
                   detailedScores: [:])
             
 

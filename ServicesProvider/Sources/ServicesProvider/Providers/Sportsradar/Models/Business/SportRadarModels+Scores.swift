@@ -159,3 +159,11 @@ extension SportRadarModels {
         }
     }
 }
+
+
+extension SportRadarModels {
+    enum ActivePlayerServe: String, Codable {
+        case home
+        case away
+    }
+}

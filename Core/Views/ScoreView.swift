@@ -58,6 +58,12 @@ class ScoreView: UIView {
     private func setupView() {
         self.translatesAutoresizingMaskIntoConstraints = false
         
+        self.setContentHuggingPriority(.required, for: .horizontal)
+        self.setContentHuggingPriority(.required, for: .vertical)
+        
+        self.cellsBaseStackView.setContentHuggingPriority(.required, for: .horizontal)
+        self.cellsBaseStackView.setContentHuggingPriority(.required, for: .vertical)
+        
         self.addSubview(self.cellsBaseStackView)
         
         NSLayoutConstraint.activate([
@@ -255,8 +261,14 @@ class ScoreView: UIView {
         // Add the game part (15, 30, 40)
         switch gamePartsFirst {
         case .gamePart(let home, let away):
-            let homeString: String = (home ?? 0) == 50 ? "A" : "\(home ?? 0)"
-            let awayString: String = (away ?? 0) == 50 ? "A" : "\(away ?? 0)"
+            var homeString: String = (home ?? 0) == 50 ? "A" : "\(home ?? 0)"
+            var awayString: String = (away ?? 0) == 50 ? "A" : "\(away ?? 0)"
+            
+            if !Env.userSessionStore.isUserLogged() {
+                homeString = "-"
+                awayString = "-"
+            }
+            
             let scoreCellView = ScoreCellView(homeScore: homeString,
                                           awayScore: awayString,
                                           style: .background)

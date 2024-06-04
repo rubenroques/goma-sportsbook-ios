@@ -50,6 +50,8 @@ extension SportRadarModels {
         case updateEventTime(contentIdentifier: ContentIdentifier, eventId: String, newTime: String)
         case updateEventScore(contentIdentifier: ContentIdentifier, eventId: String, homeScore: Int?, awayScore: Int?)
 
+        case updateActivePlayer(contentIdentifier: ContentIdentifier, eventId: String, serving: SportRadarModels.ActivePlayerServe)
+        
         case updateEventDetailedScore(contentIdentifier: ContentIdentifier, eventId: String, detailedScore: SportRadarModels.Score)
         
         case updateMarketTradability(contentIdentifier: ContentIdentifier, marketId: String, isTradable: Bool)
@@ -132,6 +134,8 @@ extension SportRadarModels {
                 return contentIdentifier
             case .updateEventScore(let contentIdentifier, _, _, _):
                 return contentIdentifier
+            case .updateActivePlayer(let contentIdentifier, _, _):
+                return contentIdentifier
             case .updateEventMarketCount(let contentIdentifier, _, _):
                 return contentIdentifier
             case .updateMarketTradability(let contentIdentifier, _, _):
@@ -179,8 +183,8 @@ extension SportRadarModels {
             let changeType: String = (try? container.decode(String.self, forKey: .changeType)) ?? ""
 
             
-            let path: String = try container.decodeIfPresent(String.self, forKey: .path) ?? ""
-            print("ServiceProviderLogs: \(path)")
+            // let path: String = try container.decodeIfPresent(String.self, forKey: .path) ?? ""
+            // print("ServiceProviderLogs: path:\(path)")
             
             switch changeType.lowercased() {
             case "refreshed":
@@ -317,21 +321,27 @@ extension SportRadarModels {
             let contentIdentifier = try container.decode(ContentIdentifier.self, forKey: .content)
             let path: String = try container.decodeIfPresent(String.self, forKey: .path) ?? ""
             
+            if path.lowercased().contains("serve") {
+                print("break")
+            }
+            
             if case let ContentRoute.eventDetailsLiveData(eventId) = contentIdentifier.contentRoute {
-                if let eventLiveData = (try? container.decode(SportRadarModels.EventLiveDataExtended.self, forKey: .change)) {
+                
+                if let eventLiveData = try? container.decode(SportRadarModels.EventLiveDataExtended.self, forKey: .change) {
                     return .updateEventLiveDataExtended(contentIdentifier: contentIdentifier, eventId: eventId , eventLiveDataExtended: eventLiveData)
                 }
                 else if path.contains("matchTime"),
-                     let matchTime = try container.decodeIfPresent(String.self, forKey: .change),
-                     let minutesPart = SocketMessageParseHelper.extractMatchMinutes(from: matchTime) {
+                        let matchTime = try container.decodeIfPresent(String.self, forKey: .change),
+                        let minutesPart = SocketMessageParseHelper.extractMatchMinutes(from: matchTime) {
                     
-                    // {"version":1,"data":[{"contentId":{"type":"liveDataExtended","id":"3305392.1"},"path":"matchTime","changeType":"updated","change":"45:00 +7:49","version":443461723},{"contentId":{"type":"liveDataExtended","id":"3305392.1"},"path":"tsMatchTime","changeType":"updated","change":"2023-10-24T00:22:54.359Z","version":443461723}],"notificationType":"CONTENT_CHANGES"}
-
                     let eventLiveDataExtended = SportRadarModels.EventLiveDataExtended.init(id: eventId,
                                                                                             homeScore: nil,
                                                                                             awayScore: nil,
                                                                                             matchTime: minutesPart,
-                                                                                            status: nil, scores: [:])
+                                                                                            status: nil,
+                                                                                            scores: [:],
+                                                                                            activePlayerServing: nil)
+                    
                     
                     return .updateEventLiveDataExtended(contentIdentifier: contentIdentifier,
                                                         eventId: eventId,
@@ -343,13 +353,15 @@ extension SportRadarModels {
                         let changeDictionary = try container.decodeIfPresent([String: [String: String]].self, forKey: .change),
                         let eventDictionary = changeDictionary["EVENT"],
                         let newStatusString = eventDictionary[""] {
-        
+                    
                     let newStatus = EventStatus.init(value: newStatusString)
                     let eventLiveDataExtended = SportRadarModels.EventLiveDataExtended.init(id: eventId,
                                                                                             homeScore: nil,
                                                                                             awayScore: nil,
                                                                                             matchTime: nil,
-                                                                                            status: newStatus, scores: [:])
+                                                                                            status: newStatus,
+                                                                                            scores: [:],
+                                                                                            activePlayerServing: nil)
                     return .updateEventLiveDataExtended(contentIdentifier: contentIdentifier,
                                                         eventId: eventId,
                                                         eventLiveDataExtended: eventLiveDataExtended)
@@ -362,7 +374,7 @@ extension SportRadarModels {
                     
                     let homeScore = scoreDictionary["home"]
                     let awayScore = scoreDictionary["away"]
-                                        
+                    
                     var scoresDict: [String: Score] = [:]
                     if let score = Score(stringValue: "MATCH_SCORE", homeScore: homeScore, awayScore: awayScore) {
                         scoresDict[score.key] = score
@@ -373,7 +385,8 @@ extension SportRadarModels {
                                                                                             awayScore: scoreDictionary["away"],
                                                                                             matchTime: nil,
                                                                                             status: nil,
-                                                                                            scores: scoresDict)
+                                                                                            scores: scoresDict,
+                                                                                            activePlayerServing: nil)
                     return .updateEventLiveDataExtended(contentIdentifier: contentIdentifier,
                                                         eventId: eventId,
                                                         eventLiveDataExtended: eventLiveDataExtended)
@@ -397,7 +410,8 @@ extension SportRadarModels {
                                                                                             awayScore: scoreDictionary["away"],
                                                                                             matchTime: nil,
                                                                                             status: nil,
-                                                                                            scores: scoresDict)
+                                                                                            scores: scoresDict,
+                                                                                            activePlayerServing: nil)
                     return .updateEventLiveDataExtended(contentIdentifier: contentIdentifier,
                                                         eventId: eventId,
                                                         eventLiveDataExtended: eventLiveDataExtended)
@@ -415,13 +429,14 @@ extension SportRadarModels {
                     if let score = Score(stringValue: "GAME_SCORE", homeScore: homeScore, awayScore: awayScore) {
                         scoresDict[score.key] = score
                     }
-                        
+                    
                     let eventLiveDataExtended = SportRadarModels.EventLiveDataExtended.init(id: eventId,
                                                                                             homeScore: scoreDictionary["home"],
                                                                                             awayScore: scoreDictionary["away"],
                                                                                             matchTime: nil,
                                                                                             status: nil,
-                                                                                            scores: scoresDict)
+                                                                                            scores: scoresDict,
+                                                                                            activePlayerServing: nil)
                     return .updateEventLiveDataExtended(contentIdentifier: contentIdentifier,
                                                         eventId: eventId,
                                                         eventLiveDataExtended: eventLiveDataExtended)
@@ -443,30 +458,66 @@ extension SportRadarModels {
                             scoresDict[score.key] = score
                         }
                     }
-                        
+                    
                     let eventLiveDataExtended = SportRadarModels.EventLiveDataExtended.init(id: eventId,
                                                                                             homeScore: scoreDictionary["home"],
                                                                                             awayScore: scoreDictionary["away"],
                                                                                             matchTime: nil,
                                                                                             status: nil,
-                                                                                            scores: scoresDict)
+                                                                                            scores: scoresDict,
+                                                                                            activePlayerServing: nil)
                     return .updateEventLiveDataExtended(contentIdentifier: contentIdentifier,
                                                         eventId: eventId,
                                                         eventLiveDataExtended: eventLiveDataExtended)
                     
                 }
-                else if path.contains("COMPLETE"),
-                        let changeDictionary = try container.decodeIfPresent([String: [String: Int]].self, forKey: .change),
-                        let scoreDictionary = changeDictionary["COMPETITOR"]{
-                
-                    let homeScore = scoreDictionary["home"]
-                    let awayScore = scoreDictionary["away"]
-                    
-                    print("ServiceProviderLogs: Score Path found-\(path)")
-                    
-                    return .unknown
+                else if path.contains("SERVE"), let eventId = SocketMessageParseHelper.extractEventId(path),
+                        let serveInt = try? container.decode(Int.self, forKey: .change) {
+                    // Updated tennis serve player information
+                    if serveInt == 1 {
+                        return .updateActivePlayer(contentIdentifier: contentIdentifier,
+                                                   eventId: eventId,
+                                                   serving: .home)
+                    }
+                    else if serveInt == 2 {
+                        return .updateActivePlayer(contentIdentifier: contentIdentifier,
+                                                   eventId: eventId,
+                                                   serving: .away)
+                    }
                 }
-                
+                else if path.contains("SERVE"), let eventId = SocketMessageParseHelper.extractEventId(path),
+                        let serveString = try? container.decode(String.self, forKey: .change) {
+                    // Updated tennis serve player information
+                    if serveString == "1" {
+                        return .updateActivePlayer(contentIdentifier: contentIdentifier,
+                                                   eventId: eventId,
+                                                   serving: .home)
+                    }
+                    else if serveString == "2" {
+                        return .updateActivePlayer(contentIdentifier: contentIdentifier,
+                                                   eventId: eventId,
+                                                   serving: .away)
+                    }
+                }
+                else if 
+                    path.contains("SERVE"),
+                    let eventId = SocketMessageParseHelper.extractEventId(path),
+                    let serveDictionary: [String: [String: Int]] = try container.decodeIfPresent([String: [String: Int]].self, forKey: .change)
+                {
+                    if let emptyDict = serveDictionary["EVENT"], let serveInt = emptyDict[""] {
+                        // Updated tennis serve player information
+                        if serveInt == 1 {
+                            return .updateActivePlayer(contentIdentifier: contentIdentifier,
+                                                       eventId: eventId,
+                                                       serving: .home)
+                        }
+                        else if serveInt == 2 {
+                            return .updateActivePlayer(contentIdentifier: contentIdentifier,
+                                                       eventId: eventId,
+                                                       serving: .away)
+                        }
+                    }
+                }                
                 return .unknown
             }
             
@@ -476,37 +527,37 @@ extension SportRadarModels {
                     if path.contains("numEvents") {
                         
                         print("UPDATING SPORT PARSE: \(sportCode)")
-
+                        
                         let liveEventsCount = try container.decode(Int.self, forKey: .change)
                         
                         let sportType = SportType(name: sportCode,
-                                    alphaId: sportCode, numberEvents: liveEventsCount, numberOutrightEvents: 0, numberOutrightMarkets: 0, numberLiveEvents: liveEventsCount)
+                                                  alphaId: sportCode, numberEvents: liveEventsCount, numberOutrightEvents: 0, numberOutrightMarkets: 0, numberLiveEvents: liveEventsCount)
                         
                         return .liveSports(sportsTypes: [sportType])
                     }
                 }
             }
-
+            
             if path.contains("bonavigationnodes") {
                 if let sportId = SocketMessageParseHelper.extractNodeId(path) {
-
+                    
                     if path.contains("numinplayevents") {
-
+                        
                         let liveEventsCount = try container.decode(String.self, forKey: .change)
-
+                        
                         return .updateAllSportsLiveCount(ContentIdentifier: contentIdentifier, nodeId: sportId, eventCount: Int(liveEventsCount) ?? 0)
                     }
-
+                    
                     if path.contains("numevents") {
-
+                        
                         let eventsCount = try container.decode(String.self, forKey: .change)
-
+                        
                         return .updateAllSportsEventCount(ContentIdentifier: contentIdentifier, nodeId: sportId, eventCount: Int(eventsCount) ?? 0)
                     }
                 }
-
+                
             }
-
+            
             if path.contains("idfomarket") && path.contains("istradable"), let marketId = SocketMessageParseHelper.extractMarketId(path) {
                 // removed a Market
                 let newIsTradable = try container.decode(Bool.self, forKey: .change)
@@ -518,12 +569,12 @@ extension SportRadarModels {
             else if path.contains("idfoselection") {
                 // Updated a selection
                 let changeContainer = try container.nestedContainer(keyedBy: SelectionUpdateCodingKeys.self, forKey: .change)
-
+                
                 let oddNumerator = try changeContainer.decodeIfPresent(String.self, forKey: .oddNumerator)
                 let oddDenominator = try changeContainer.decodeIfPresent(String.self, forKey: .oddDenominator)
-
+                
                 let selectionId = try changeContainer.decode(String.self, forKey: .selectionId)
-
+                
                 if oddNumerator == nil && oddDenominator == nil {
                     if changeContainer.contains(.suspensionType) {
                         if let selectionSuspentionType = try changeContainer.decodeIfPresent(String.self, forKey: .suspensionType),
@@ -554,18 +605,17 @@ extension SportRadarModels {
             else if path.contains("attributes") && path.contains("COMPLETE") && path.contains("CURRENT_SCORE") {
                 let changeContainer = try container.nestedContainer(keyedBy: ScoreUpdateCodingKeys.self, forKey: .change)
                 let competitorContainer = try changeContainer.nestedContainer(keyedBy: ScoreUpdateCodingKeys.self, forKey: .competitor)
-
+                
                 let homeScore = try competitorContainer.decodeIfPresent(Int.self, forKey: .home)
                 let awayScore = try competitorContainer.decodeIfPresent(Int.self, forKey: .away)
-
+                
                 let eventIdContainer = try container.nestedContainer(keyedBy: CodingKeys.self, forKey: .content)
-
+                
                 let eventId = try eventIdContainer.decode(String.self, forKey: .contentId)
-
+                
                 return .updateEventScore(contentIdentifier: contentIdentifier, eventId: eventId, homeScore: homeScore, awayScore: awayScore)
             }
             else if path.contains("scores"), let eventId = SocketMessageParseHelper.extractEventId(path) {
-                print("ServiceProviderLogs: path found for updated scores \(path) ")
                 
                 let components = path.components(separatedBy: "|")
                 guard
@@ -577,6 +627,7 @@ extension SportRadarModels {
                 else {
                     return .unknown
                 }
+                
                 return .updateEventDetailedScore(contentIdentifier: contentIdentifier, eventId: eventId, detailedScore: score)
             }
             else if path.contains("scores") && (path.contains("MATCH_SCORE") || path.contains("CURRENT_SCORE")), let eventId = SocketMessageParseHelper.extractEventId(path) {
@@ -585,6 +636,34 @@ extension SportRadarModels {
                 let homeScore = try changeContainer.decodeIfPresent(Int.self, forKey: .home)
                 let awayScore = try changeContainer.decodeIfPresent(Int.self, forKey: .away)
                 return .updateEventScore(contentIdentifier: contentIdentifier, eventId: eventId, homeScore: homeScore, awayScore: awayScore)
+            }
+            else if path.contains("serve"), let eventId = SocketMessageParseHelper.extractEventId(path) {
+                if let newIsTradableString = try? container.decode(String.self, forKey: .change) {
+                    // Updated tennis serve player information
+                    if newIsTradableString == "1" {
+                        return .updateActivePlayer(contentIdentifier: contentIdentifier,
+                                                   eventId: eventId,
+                                                   serving: .home)
+                    }
+                    else if newIsTradableString == "2" {
+                        return .updateActivePlayer(contentIdentifier: contentIdentifier,
+                                                   eventId: eventId,
+                                                   serving: .away)
+                    }
+                }
+                else if let newIsTradable = try? container.decode(Int.self, forKey: .change) {
+                    // Updated tennis serve player information
+                    if newIsTradable == 1 {
+                        return .updateActivePlayer(contentIdentifier: contentIdentifier,
+                                                   eventId: eventId,
+                                                   serving: .home)
+                    }
+                    else if newIsTradable == 2 {
+                        return .updateActivePlayer(contentIdentifier: contentIdentifier,
+                                                   eventId: eventId,
+                                                   serving: .away)
+                    }
+                }
             }
             else if path.contains("matchTime"), let eventId = SocketMessageParseHelper.extractEventId(path) {
                 // Match time
@@ -602,7 +681,7 @@ extension SportRadarModels {
                    let oddNumerator = try changeContainer.decodeIfPresent(String.self, forKey: .oddNumerator),
                    let oddDenominator = try changeContainer.decodeIfPresent(String.self, forKey: .oddDenominator),
                    let selectionId = try? changeContainer.decode(String.self, forKey: .selectionId) {
-
+                    
                     return .updateOutcomeOdd(contentIdentifier: contentIdentifier,
                                              selectionId: selectionId,
                                              newOddNumerator: oddNumerator,
@@ -638,11 +717,11 @@ extension SportRadarModels {
                     path == "istradable", // the path is istradable
                     case .market(let marketId) = contentIdentifier.contentRoute, // extract the marketId
                     let newIsTradable = try? container.decode(Bool.self, forKey: .change) {
-
+                
                 return .updateMarketTradability(contentIdentifier: contentIdentifier, marketId: marketId, isTradable: newIsTradable)
             }
-
-            print("ContentContainer ignored update for \(path) and associated change: Updated")
+            
+            // print("ContentContainer ignored update for \(path) and associated change: Updated")
             return .unknown
         }
 
@@ -657,9 +736,6 @@ extension SportRadarModels {
             if case let ContentRoute.liveSports = contentIdentifier.contentRoute {
                 if path.contains("idfosporttype"),
                    let newSport = try? container.decodeIfPresent(SportRadarModels.SportTypeDetails.self, forKey: .change) {
-                    
-                    print("ADDING SPORT PARSE: \(newSport)")
-                    
                     let newSportType = SportType(name: newSport.sportName,
                                                  alphaId: newSport.sportType.alphaId,
                                                  numberEvents: newSport.eventsCount, numberOutrightEvents: 0, numberOutrightMarkets: 0, numberLiveEvents: newSport.eventsCount)
@@ -682,9 +758,7 @@ extension SportRadarModels {
                 let newStatus = try container.decode(String.self, forKey: .change)
                 return .updateEventState(contentIdentifier: contentIdentifier, eventId: eventId, state: newStatus)
             }
-            else if path.contains("scores"), let eventId = SocketMessageParseHelper.extractEventId(path) {
-                print("ServiceProviderLogs: path found for added scores \(path) ")
-                
+            else if path.contains("scores"), let eventId = SocketMessageParseHelper.extractEventId(path) {                
                 let components = path.components(separatedBy: "|")
                 guard
                     let lastComponent = components.last,
@@ -699,13 +773,12 @@ extension SportRadarModels {
                 return .updateEventDetailedScore(contentIdentifier: contentIdentifier, eventId: eventId, detailedScore: score)
             }
             
-            print("ContentContainer ignored update for \(path) and associated change: Added")
+            // print("ContentContainer ignored update for \(path) and associated change: Added")
             return .unknown
         }
 
         private static func parseRemoved(container: KeyedDecodingContainer<CodingKeys>) throws -> ContentContainer {
 
-            print("ContentContainer parseRemoved")
             let contentTypeContainer = try container.nestedContainer(keyedBy: CodingKeys.self, forKey: .content)
             let contentType = try contentTypeContainer.decode(ContentType.self, forKey: .contentType)
             
@@ -744,7 +817,7 @@ extension SportRadarModels {
                 return .removeSport(ContentIdentifier: contentIdentifier, sportCode: sportCode)
             }
 
-            print("ContentContainer ignored update for \(path) and associated change: Removed")
+            // print("ContentContainer ignored update for \(path) and associated change: Removed")
             return .unknown
         }
 
@@ -818,6 +891,9 @@ extension SportRadarModels.ContentContainer: CustomDebugStringConvertible {
             return "Update Event Time (Content ID: \(contentIdentifier)) - Event ID: \(eventId) - New Time: \(newTime)"
         case .updateEventScore(let contentIdentifier, let eventId, let homeScore, let awayScore):
             return "Update Event Score (Content ID: \(contentIdentifier)) - Event ID: \(eventId) - Home Score: \(String(describing: homeScore)) - Away Score: \(String(describing: awayScore))"
+        case .updateActivePlayer(let contentIdentifier, let eventId, let serving):
+            return "Update ActivePlayer serve (Content ID: \(contentIdentifier)) - Event ID: \(eventId) - Serve: \(serving)"
+            
         case .updateEventMarketCount(let contentIdentifier, let eventId, let newMarketCount):
             return "Update Event Market Count (Content ID: \(contentIdentifier)) - Event ID: \(eventId) - New Market Count: \(newMarketCount)"
 

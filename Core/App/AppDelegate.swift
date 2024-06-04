@@ -43,8 +43,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate, MessagingDelegate {
 
         do {
             try Phrase.shared.updateTranslation { updatedResult in
-                print("PhraseSDK updateTranslation \(dump(updatedResult))")
-
+                print("PhraseSDK updateTranslation")
                 let translation = localized("phrase.test")
                 print("PhraseSDK NSLocalizedString via bundle proxy: ", translation)
             }

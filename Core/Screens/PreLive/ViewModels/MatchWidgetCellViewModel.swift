@@ -49,6 +49,13 @@ class MatchWidgetCellViewModel {
             .eraseToAnyPublisher()
     }
     
+    var activePlayerServePublisher: AnyPublisher<Match.ActivePlayerServe?, Never> {
+        return self.$match
+            .map { $0.activePlayerServe }
+            .removeDuplicates()
+            .eraseToAnyPublisher()
+    }
+    
     var mainMarketNamePublisher: AnyPublisher<String, Never> {
         return self.$match
             .map { $0.markets.first?.name ?? ""}
@@ -296,7 +303,7 @@ class MatchWidgetCellViewModel {
                       
         self.match = match
         
-        let viewModelDesc = "[\(match.id) \(match.homeParticipant.name) vs \(match.awayParticipant.name)]"
+        // let viewModelDesc = "[\(match.id) \(match.homeParticipant.name) vs \(match.awayParticipant.name)]"
         // print("BlinkDebug: CellVM init \(viewModelDesc) \(matchWidgetType) \(matchWidgetStatus)")
         
         switch matchWidgetStatus {
@@ -323,8 +330,6 @@ class MatchWidgetCellViewModel {
         case .preLive, .unknown:
             shouldRequestLiveDataFallback = false
         }
-        
-        self.subscribeMatchLiveData(withId: match.id, shouldRequestLiveDataFallback: shouldRequestLiveDataFallback)
         
         // Our match published property is the result of joining
         // the match markets and infos in the matchMarketsSubject
@@ -356,7 +361,9 @@ class MatchWidgetCellViewModel {
                 if let newDetailedScores = matchLiveDataValue.detailedScores {
                     matchValue.detailedScores = newDetailedScores
                 }
-
+                
+                matchValue.activePlayerServe = matchLiveDataValue.activePlayerServing
+                
                 return matchValue
             }
             .sink { [weak self] updatedMatch in
@@ -364,36 +371,13 @@ class MatchWidgetCellViewModel {
             }
             .store(in: &self.cancellables)
         
+        // TODO:
         // Keep our matchWidgetStatus updated with the match
-        /*
-        self.$match
-            .map(\.status)
-            .removeDuplicates()
-            .withPrevious()
-            .sink { [weak self] previousMatchStatus, matchStatus in
-                if let previousMatchStatusValue = previousMatchStatus {
-                    if previousMatchStatusValue.isPreLive && matchStatus.isLive {
-                        self?.matchWidgetStatus = .live
-                    }
-                    
-                }
-                else {
-                    if matchStatus.isLive || matchStatus.isPostLive {
-                        self?.matchWidgetStatus = .live
-                    }
-                    else if matchStatus.isPreLive {
-                        self?.matchWidgetStatus = .preLive
-                    }
-                    else {
-                        self?.matchWidgetStatus = .unknown
-                    }
-                }
-            }
-            .store(in: &self.cancellables)
-        */
+        // mainly from notStarted -> live
         
+        // Request the updated content
+        self.subscribeMatchLiveData(withId: match.id, shouldRequestLiveDataFallback: shouldRequestLiveDataFallback)
         self.loadBoostedOddOldValueIfNeeded()
-
     }
     
     deinit {
@@ -420,18 +404,18 @@ extension MatchWidgetCellViewModel {
             .compactMap({ $0 })
             .map(ServiceProviderModelMapper.matchLiveData(fromServiceProviderEvent:))
             .sink(receiveCompletion: { [weak self] completion in
-                print("MatchWidgetCellViewModel subscribeMatchLiveData completion: \(completion)")
                 switch completion {
                 case .finished:
-                    ()
+                    print("MatchWidgetCellViewModel subscribeMatchLiveDataOnLists finished")
                 case .failure(let error):
                     switch error {
                     case .resourceNotFound:
+                        print("MatchWidgetCellViewModel subscribeMatchLiveDataOnLists resourceNotFound should fallback: \(shouldRequestLiveDataFallback)")
                         if shouldRequestLiveDataFallback {
                             self?.subscribeMatchLiveDataUpdates(withId: matchId)
                         }
                     default:
-                        print("MatchDetailsViewModel getMatchDetails Error retrieving data! \(error)")
+                        print("MatchWidgetCellViewModel subscribeMatchLiveDataOnLists Error retrieving data! \(error)")
                     }
                 }
             }, receiveValue: { [weak self] matchLiveData in
@@ -445,27 +429,19 @@ extension MatchWidgetCellViewModel {
             .sink(receiveCompletion: { [weak self] completion in
                 switch completion {
                 case .finished:
-                    ()
+                    print("MatchWidgetCellViewModel subscribeMatchLiveDataUpdates finished")
                 case .failure(let error):
-                    switch error {
-                    case .resourceUnavailableOrDeleted:
-                        ()
-                    default:
-                        print("MatchDetailsViewModel getMatchDetails Error retrieving data! \(error)")
-                    }
+                    print("MatchWidgetCellViewModel subscribeMatchLiveDataUpdates error \(error)")
                 }
                 self?.liveMatchDetailsSubscription = nil
             }, receiveValue: { [weak self] (eventSubscribableContent: SubscribableContent<ServicesProvider.EventLiveData>) in
                 switch eventSubscribableContent {
                 case .connected(let subscription):
                     self?.liveMatchDetailsSubscription = subscription
-                    print("ResultDebug: update subscription")
                 case .contentUpdate(let eventLiveData):
                     let matchLiveData = ServiceProviderModelMapper.matchLiveData(fromServiceProviderEventLiveData: eventLiveData)
                     self?.matchLiveDataSubject.send(matchLiveData)
-                    print("ResultDebug: update content")
                 case .disconnected:
-                    print("ResultDebug: update disconnect")
                     break
                 }
             })
@@ -497,7 +473,7 @@ extension MatchWidgetCellViewModel {
             print("Env.servicesProvider.getMarketInfo(marketId: old boosted market completed")
         } receiveValue: { [weak self] market, match in
 
-            if let firstCurrentOutcomeName = match.markets.first?.outcomes[safe:0]?.typeName.lowercased(),
+            if let firstCurrentOutcomeName = match.markets.first?.outcomes[safe: 0]?.typeName.lowercased(),
                let outcome = market.outcomes.first(where: { outcome in outcome.typeName.lowercased() == firstCurrentOutcomeName }) {
                 let oddValue = OddFormatter.formatOdd(withValue: outcome.bettingOffer.decimalOdd)
                 let attributes = [NSAttributedString.Key.strikethroughStyle: NSUnderlineStyle.single.rawValue]

@@ -66,12 +66,6 @@ class SportRadarRestConnector {
                    dataString.contains("errorType") && dataString.contains("CONTENT_NOT_FOUND") {
                     throw ServiceProviderError.resourceUnavailableOrDeleted
                 }
- 
-                #if DEBUG
-                let response = String(data: result.data, encoding: .utf8)
-                print("NetworkLogs: restConnector.request.Response: \(response)")
-                #endif
-                
                 return result.data
             }
             .decode(type: T.self, decoder: self.decoder)

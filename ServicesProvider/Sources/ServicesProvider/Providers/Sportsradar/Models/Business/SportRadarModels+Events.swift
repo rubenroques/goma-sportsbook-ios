@@ -101,6 +101,7 @@ extension SportRadarModels {
         var status: EventStatus
 
         var scores: [String: Score]
+        var activePlayerServing: ActivePlayerServe?
 
         var trackableReference: String?
         
@@ -127,6 +128,7 @@ extension SportRadarModels {
             case awayScore = "away"
             case eventStatus = "status"
             case matchTime = "matchTime"
+            case activePlayerServing = "serve"
             
             case trackableReference = "externalreference"
         }
@@ -148,7 +150,8 @@ extension SportRadarModels {
             if let markets = try container.decodeIfPresent([SportRadarModels.Market].self, forKey: .markets) {
                 self.markets = markets
             }
-            else if let market = try? Market(from: decoder) { // Check if we can parse a flatten event + market
+            else if let market = try? Market(from: decoder) {
+                // Check if we can parse a flatten event + market
                 self.markets = [market]
             }
             else {
@@ -234,12 +237,31 @@ extension SportRadarModels {
                 
                 let completeContainer = try liveDataInfoContainer.nestedContainer(keyedBy: ScoreCodingKeys.self, forKey: .scoresContainer)
                 
-                var scoresArray = try completeContainer.allKeys.compactMap { key -> Score? in
+                let scoresArray = try completeContainer.allKeys.compactMap { key -> Score? in
                     let container = try completeContainer.nestedContainer(keyedBy: Score.CompetitorCodingKeys.self, forKey: key)
                     return try Score(from: container, key: key)
                 }
                 self.scores = Dictionary(uniqueKeysWithValues: scoresArray.map { ($0.key, $0) })
                 //
+                
+                //
+                // Serving player
+                if let activePlayerServingString = try? liveDataInfoContainer.decodeIfPresent(String.self, forKey: .activePlayerServing) {
+                   if activePlayerServingString == "1" {
+                       self.activePlayerServing = .home
+                   }
+                   else if activePlayerServingString == "2" {
+                       self.activePlayerServing = .away
+                   }
+               }
+                else if let activePlayerServingInt = try? liveDataInfoContainer.decodeIfPresent(Int.self, forKey: .activePlayerServing) {
+                    if activePlayerServingInt == 1 {
+                        self.activePlayerServing = .home
+                    }
+                    else if activePlayerServingInt == 2 {
+                        self.activePlayerServing = .away
+                    }
+                }
                 
             }
             else {
@@ -249,6 +271,7 @@ extension SportRadarModels {
                 self.awayScore = 0
                 
                 self.scores = [:]
+                self.activePlayerServing = nil
             }
         }
 

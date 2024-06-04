@@ -53,10 +53,12 @@ extension Endpoint {
             }
         }
 
-        print("NetworkLogs: [\(self.comment ?? "")]\n",
-              "NetworkLogs: ", request.cURL(pretty: true),
-              "\nNetworkLogs: =========================",
-              "\nNetworkLogs")
+        
+        // print("NetworkLogs: [\(self.comment ?? "")]\n",
+        //      "NetworkLogs: ", request.cURL(pretty: true),
+        //     "\nNetworkLogs: =========================",
+        //      "\nNetworkLogs")
+        
 
         return request
     }

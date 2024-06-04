@@ -308,6 +308,10 @@ extension SportRadarEventsPaginator {
         case .updateEventScore(_, let eventId, let homeScore, let awayScore):
             self.storage.updateEventScore(withId: eventId, newHomeScore: homeScore, newAwayScore: awayScore)
 
+        case .updateActivePlayer(_, let eventId, let serving):
+            let mappedServing = SportRadarModelMapper.activePlayerServe(fromInternalActivePlayerServe: serving)
+            self.storage.updateActivePlayer(withId: eventId, activePlayerServing: mappedServing)
+            
         case .updateEventDetailedScore(_, let eventId, let detailedScore):
             let mappedScore = SportRadarModelMapper.score(fromInternalScore: detailedScore)
             self.storage.updateEventDetailedScore(withId: eventId, detailedScore: mappedScore)

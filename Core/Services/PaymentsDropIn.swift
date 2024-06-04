@@ -162,9 +162,6 @@ class PaymentsDropIn {
                 }
             }, receiveValue: { [weak self] processDepositResponse in
 
-                print("processDepositResponse: \(processDepositResponse)")
-//                print(dump(processDepositResponse))
-                
                 self?.clientKey = processDepositResponse.clientKey
                 self?.paymentId = processDepositResponse.paymentId
                 self?.sessionId = processDepositResponse.sessionId
@@ -191,10 +188,6 @@ class PaymentsDropIn {
                     self?.isLoadingPublisher.send(false)
                 }
             }, receiveValue: { [weak self] paymentsResponse in
-                
-//                print("getPaymentMethods: ")
-//                print(dump(paymentsResponse))
-                
                 self?.paymentMethodsResponse = paymentsResponse
                 self?.hasPaymentOptions.send(true)
             })
@@ -374,9 +367,9 @@ extension PaymentsDropIn: DropInComponentDelegate {
                                                returnUrl: nil)
             .receive(on: DispatchQueue.main)
             .sink { completion in
-                print("updatePayment completion: \(dump(completion))")
+                print("updatePayment completion: \(completion)")
             } receiveValue: { updatePaymentResponse in
-                print("updatePayment: \(dump(updatePaymentResponse))")
+                print("updatePayment: \(updatePaymentResponse)")
                 
                 if let redirectURL = URL(string: updatePaymentResponse.action.url) {
                     self.presentSafariViewController(onURL: redirectURL)
@@ -454,4 +447,5 @@ extension PaymentsDropIn {
             }
         }
     }
+    
 }

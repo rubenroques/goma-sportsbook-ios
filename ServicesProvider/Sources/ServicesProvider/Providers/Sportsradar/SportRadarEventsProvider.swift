@@ -298,7 +298,7 @@ class SportRadarEventsProvider: EventsProvider {
             let bodyData = self.createPayloadData(with: sessionToken, contentType: contentType, contentRoute: contentRoute)
             let request = self.createSubscribeRequest(withHTTPBody: bodyData)
 
-            print("NetworkLogs: ", request.cURL(pretty: true), "\nNetworkLogs: ==========================================")
+            // print("NetworkLogs: ", request.cURL(pretty: true), "\nNetworkLogs: ==========================================")
             
             let sessionDataTask = URLSession.shared.dataTask(with: request) { data, response, error in
                 guard
@@ -541,7 +541,7 @@ class SportRadarEventsProvider: EventsProvider {
             let bodyData = self.createPayloadData(with: sessionToken, contentType: contentType, contentRoute: contentRoute)
             let request = self.createSubscribeRequest(withHTTPBody: bodyData)
 
-            print("NetworkLogs: ", request.cURL(pretty: true), "\nNetworkLogs: ==========================================")
+            // print("NetworkLogs: ", request.cURL(pretty: true), "\nNetworkLogs: ==========================================")
 
             let sessionDataTask = URLSession.shared.dataTask(with: request) { data, response, error in
                 guard
@@ -585,7 +585,7 @@ class SportRadarEventsProvider: EventsProvider {
         let bodyData = self.createPayloadData(with: sessionToken, contentType: contentType, contentRoute: contentRoute)
         let request = self.createSubscribeRequest(withHTTPBody: bodyData)
 
-        print("NetworkLogs: ", request.cURL(pretty: true), "\nNetworkLogs: ==========================================")
+        // print("NetworkLogs: ", request.cURL(pretty: true), "\nNetworkLogs: ==========================================")
 
         let sessionDataTask = URLSession.shared.dataTask(with: request) { data, response, error in
             guard
@@ -603,44 +603,6 @@ class SportRadarEventsProvider: EventsProvider {
         sessionDataTask.resume()
         return publisher.eraseToAnyPublisher()
     }
-
-    //
-    // MARK: - Subcribable Updates
-    //
-//    public func subscribeToEventOnListsLiveDataUpdates(withId id: String) -> AnyPublisher<Event?, ServiceProviderError> {
-//
-//        guard
-//            let sessionToken = socketConnector.token
-//        else {
-//            return Fail(error: ServiceProviderError.userSessionNotFound).eraseToAnyPublisher()
-//        }
-//
-//        // events lists
-//        for paginator in self.eventsPaginators.values {
-//            if paginator.containsEvent(withid: id), let publisher = paginator.subscribeToEventOnListsLiveDataUpdates(withId: id) {
-//                return publisher.map(Optional.init).setFailureType(to: ServiceProviderError.self).eraseToAnyPublisher()
-//            }
-//        }
-//
-//        // event details
-//        if let liveEventDetailsCoordinator = self.getValidLiveEventDetailsCoordinator(forKey: id),
-//           liveEventDetailsCoordinator.containsEvent(withid: id) {
-//
-//            let publisher = liveEventDetailsCoordinator.subscribeToEventOnListsLiveDataUpdates(withId: id)
-//            return publisher.setFailureType(to: ServiceProviderError.self).eraseToAnyPublisher()
-//        }
-//        else {
-//            let liveEventDetailsCoordinator = SportRadarLiveEventDetailsCoordinator(eventId: id,
-//                                                                             sessionToken: sessionToken.hash,
-//                                                                             storage: SportRadarEventStorage() )
-//
-//            self.addEventDetailsCoordinator(liveEventDetailsCoordinator, withKey: id)
-//
-//            let publisher = eventDetailsCoordinator.subscribeToEventOnListsLiveDataUpdates(withId: id)
-//            return publisher.setFailureType(to: ServiceProviderError.self).eraseToAnyPublisher()
-//        }
-//
-//    }
 
     func subscribeEventDetails(eventId: String) -> AnyPublisher<SubscribableContent<Event>, ServiceProviderError> {
 
@@ -956,9 +918,11 @@ extension SportRadarEventsProvider: SportRadarConnectorSubscriber {
     }
 
     func eventDetailsLiveData(contentIdentifier: ContentIdentifier, eventLiveDataExtended: SportRadarModels.EventLiveDataExtended) {
+        
         for eventDetailsCoordinator in self.getValidEventDetailsCoordinators() {
             eventDetailsCoordinator.updatedLiveData(eventLiveDataExtended: eventLiveDataExtended, forContentIdentifier: contentIdentifier)
         }
+        
         for liveEventDetailsCoordinator in self.getValidLiveEventDetailsCoordinators() {
             liveEventDetailsCoordinator.updatedLiveData(eventLiveDataExtended: eventLiveDataExtended, forContentIdentifier: contentIdentifier)
         }
@@ -1267,8 +1231,6 @@ extension SportRadarEventsProvider {
                     }
                 })
                 let marketIds = headlineItems.map({ item in return item.marketId }).compactMap({ $0 })
-
-                print("NetworkLogs: getPromotionalSlidingTopEvents")
                 
                 let publishers = marketIds.map(self.getEventForMarket(withId:))
                 let finalPublisher = Publishers.MergeMany(publishers)
@@ -1321,8 +1283,6 @@ extension SportRadarEventsProvider {
                 })
 
                 let marketIds = headlineItems.map({ item in return item.marketId }).compactMap({ $0 })
-
-                print("NetworkLogs: getHighlightedBoostedEvents")
                 
                 let publishers = marketIds.map(self.getEventForMarket(withId:))
                 let finalPublisher = Publishers.MergeMany(publishers)
@@ -1377,27 +1337,7 @@ extension SportRadarEventsProvider {
                     }
                 })
                 let marketIds = headlineItems.map({ item in return item.marketId }).compactMap({ $0 })
-                
-                // TEST
-//                let testIds = ["48526055.1", "45934912.1"]
-//                let testHeadlineItems = Array(headlineItems.prefix(2))
-//                var finalTestHeadlineItems = [SportRadarModels.HeadlineItem]()
-//                
-//                for (index, headItem) in testHeadlineItems.enumerated() {
-//                    var newItem = headItem
-//                    newItem.marketId = testIds[index]
-//                    finalTestHeadlineItems.append(newItem)
-//                }
-//                var testHeadlineItemsImages: [String: String] = [:]
-                
-//                for (index, testItem) in testHeadlineItems.enumerated() {
-//                    testHeadlineItemsImages[testIds[index]] = testItem.imageURL ?? ""
-//                }
-//                
-//                let marketIds = testIds
-
-                print("NetworkLogs: getHighlightedVisualImageEvents")
-                
+                              
                 let publishers = marketIds.map(self.getEventForMarket(withId:))
                 let finalPublisher = Publishers.MergeMany(publishers)
                     .collect()
@@ -1408,7 +1348,6 @@ extension SportRadarEventsProvider {
                         for event in events {
                             let firstMarketId = event.markets.first?.id ?? ""
                             event.promoImageURL =  headlineItemsImages[firstMarketId]
-//                            event.promoImageURL =  testHeadlineItemsImages[firstMarketId]
                         }
 
                         let cleanedEvents = events.compactMap({ $0 })
@@ -1422,7 +1361,6 @@ extension SportRadarEventsProvider {
 
                         // re-order the cleanedEvents based on the order of marketIds in headlineItems
                         let orderedEvents = headlineItems.compactMap { eventDict[$0.marketId ?? ""] }
-//                        let orderedEvents = finalTestHeadlineItems.compactMap { eventDict[$0.marketId ?? ""] }
                         return orderedEvents
                     })
                     .eraseToAnyPublisher()
@@ -1671,6 +1609,7 @@ extension SportRadarEventsProvider {
                               trackableReference: nil,
                               status: nil,
                               matchTime: nil,
+                              activePlayerServing: nil,
                               scores: [:])
             return event
         })
@@ -2189,10 +2128,6 @@ extension SportRadarEventsProvider {
         let newValidList = oldList.filter({ coordinatorPair in
             coordinatorPair.value.isActive
         })
-        
-        if oldList.count != newValidList.count {
-            print("breakpoint")
-        }
         
         self.eventsSecundaryMarketsUpdatesCoordinators = newValidList
         

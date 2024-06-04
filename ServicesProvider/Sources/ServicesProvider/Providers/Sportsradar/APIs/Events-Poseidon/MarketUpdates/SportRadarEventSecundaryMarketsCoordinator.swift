@@ -137,7 +137,6 @@ class SportRadarEventSecundaryMarketsCoordinator {
                 }
                 self?.waitingSubscription = false
             }, receiveValue: { [weak self] in
-                print("subscribeEventSecundaryMarkets done")
                 
                 if let self = self {
                     let subscription = Subscription(contentIdentifier: self.eventSecundaryMarketsIdentifier,

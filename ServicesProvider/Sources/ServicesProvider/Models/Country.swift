@@ -582,7 +582,7 @@ public extension SharedModels.Country {
         else if let iso = Self.frenchhCountryCode(withName: simplifiedName) {
             return Self.country(withISOCode: iso)
         }
-        print("ServiceProviderLogs| Country not found: \(name)")
+        print("ServiceProviderLogs: Country not found: \(name)")
         return Country(name: "International", capital: "", region: "", iso2Code: "", iso3Code: "", numericCode: "", phonePrefix: "", frenchName: "")
     }
     

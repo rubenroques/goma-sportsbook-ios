@@ -42,6 +42,9 @@ class MatchLineTableViewCell: UITableViewCell {
     private var matchInfoPublisher: AnyCancellable?
 
     var tappedMatchLineAction: ((Match) -> Void)?
+    var selectedOutcome: ((Match, Market, Outcome) -> Void)?
+    var unselectedOutcome: ((Match, Market, Outcome) -> Void)?
+    
     var matchWentLive: (() -> Void)?
     var didTapFavoriteMatchAction: ((Match) -> Void)?
     var didLongPressOdd: ((BettingTicket) -> Void)?
@@ -197,7 +200,7 @@ class MatchLineTableViewCell: UITableViewCell {
     func configure(withViewModel viewModel: MatchLineTableCellViewModel) {
         self.viewModel = viewModel
         
-        let matchDesc = "[\(viewModel.match.id) \(viewModel.match.homeParticipant.name) vs \(viewModel.match.awayParticipant.name)]"
+        // let matchDesc = "[\(viewModel.match.id) \(viewModel.match.homeParticipant.name) vs \(viewModel.match.awayParticipant.name)]"
         // print("BlinkDebug line (\(self.debugUUID.uuidString)) configure(withViewModel \(matchDesc)")
         
 //        self.loadingView.stopAnimating()
@@ -209,9 +212,8 @@ class MatchLineTableViewCell: UITableViewCell {
         self.matchInfoPublisher = viewModel.$match
             .removeDuplicates(by: { [weak self] oldMatch, newMatch in
                 
-                let oldMatchDesc = "[\(oldMatch.id) \(oldMatch.homeParticipant.name) vs \(oldMatch.awayParticipant.name)]"
-                let newMatchDesc = "[\(newMatch.id) \(newMatch.homeParticipant.name) vs \(newMatch.awayParticipant.name)]"
-                
+                // let oldMatchDesc = "[\(oldMatch.id) \(oldMatch.homeParticipant.name) vs \(oldMatch.awayParticipant.name)]"
+                // let newMatchDesc = "[\(newMatch.id) \(newMatch.homeParticipant.name) vs \(newMatch.awayParticipant.name)]"
                 // print("BlinkDebug Line comparing \(oldMatchDesc) <> \(newMatchDesc)")
                 
                 let visuallySimilar = Match.visuallySimilar(lhs: oldMatch, rhs: newMatch)
@@ -231,7 +233,7 @@ class MatchLineTableViewCell: UITableViewCell {
                 case .failure: ()
                 }
             } receiveValue: { [weak self] match in
-                let matchDesc = "[\(match.id) \(match.homeParticipant.name) vs \(match.awayParticipant.name)]"
+                // let matchDesc = "[\(match.id) \(match.homeParticipant.name) vs \(match.awayParticipant.name)]"
                 // print("BlinkDebug Line (\(self?.debugUUID.uuidString ?? "")) collectionView.reloadData requested \(matchDesc)")
                 self?.setupWithMatch(match)
                 self?.loadingView.stopAnimating()
@@ -427,6 +429,8 @@ extension MatchLineTableViewCell: UICollectionViewDelegate, UICollectionViewData
             cell.tappedMatchWidgetAction = { [weak self] _ in
                 self?.tappedMatchLine()
             }
+            cell.selectedOutcome = self.selectedOutcome
+            cell.unselectedOutcome = self.unselectedOutcome
 
             cell.didLongPressOdd = { [weak self] bettingTicket in
                 self?.didLongPressOdd?(bettingTicket)

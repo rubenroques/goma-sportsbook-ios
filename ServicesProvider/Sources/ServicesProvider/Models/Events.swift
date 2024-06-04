@@ -38,36 +38,6 @@ public enum EventStatus: Hashable {
     }
 }
 
-public enum Score: Codable, Hashable {
-    
-    case set(index: Int, home: Int?, away: Int?)
-    case gamePart(home: Int?, away: Int?)
-    case matchFull(home: Int?, away: Int?)
-    
-    public var sortValue: Int {
-        switch self {
-        case .set(let index, _, _):
-            return index
-        case .gamePart:
-            return 100
-        case .matchFull:
-            return 200
-        }
-    }
-    
-    public var key: String {
-        switch self {
-        case .set(let index, _, _):
-            return "set\(index)"
-        case .gamePart:
-            return "gamePart"
-        case .matchFull:
-            return "matchFull"
-        }
-    }
-    
-}
-
 public class Event: Codable, Equatable {
 
     public var id: String
@@ -99,6 +69,8 @@ public class Event: Codable, Equatable {
 
     public var trackableReference: String?
     
+    public var activePlayerServing: ActivePlayerServe?
+    
     public var type: EventType {
         if self.homeTeamName.isEmpty && self.awayTeamName.isEmpty {
             return .competition
@@ -124,6 +96,7 @@ public class Event: Codable, Equatable {
         case numberMarkets = "numMarkets"
         case scores = "scores"
         case trackableReference = "trackableReference"
+        case activePlayerServing = "activePlayerServing"
     }
 
     public init(id: String,
@@ -143,6 +116,7 @@ public class Event: Codable, Equatable {
                 trackableReference: String?,
                 status: EventStatus?,
                 matchTime: String?,
+                activePlayerServing: ActivePlayerServe?,
                 scores: [String: Score]) {
 
         self.id = id
@@ -172,6 +146,8 @@ public class Event: Codable, Equatable {
         self.promoImageURL = nil
         self.oldMainMarketId = nil
         
+        self.activePlayerServing = activePlayerServing
+        
         self.scores = scores
     }
 
@@ -189,6 +165,7 @@ public class Event: Codable, Equatable {
         self.numberMarkets = try container.decodeIfPresent(Int.self, forKey: .numberMarkets)
         self.sportIdCode = try container.decodeIfPresent(String.self, forKey: .sportIdCode)
         self.trackableReference = try container.decodeIfPresent(String.self, forKey: .trackableReference)
+        self.activePlayerServing = try container.decodeIfPresent(ActivePlayerServe.self, forKey: .activePlayerServing)
         self.scores = (try? container.decode([String: Score].self, forKey: .scores)) ?? [:]
     }
 
@@ -206,6 +183,7 @@ public class Event: Codable, Equatable {
         try container.encodeIfPresent(self.numberMarkets, forKey: .numberMarkets)
         try container.encodeIfPresent(self.sportIdCode, forKey: .sportIdCode)
         try container.encodeIfPresent(self.trackableReference, forKey: .trackableReference)
+        try container.encodeIfPresent(self.activePlayerServing, forKey: .activePlayerServing)
     }
 
     public static func == (lhs: Event, rhs: Event) -> Bool {
@@ -226,7 +204,8 @@ public class Event: Codable, Equatable {
         lhs.status == rhs.status &&
         lhs.matchTime == rhs.matchTime &&
         lhs.trackableReference == rhs.trackableReference &&
-        lhs.scores == rhs.scores
+        lhs.scores == rhs.scores &&
+        lhs.activePlayerServing == rhs.activePlayerServing
     }
 }
 
@@ -427,8 +406,8 @@ public struct EventLiveData: Equatable {
     public var awayScore: Int?
     public var matchTime: String?
     public var status: EventStatus?
-    
     public var detailedScores: [String: Score]?
+    public var activePlayerServing: ActivePlayerServe?
     
     enum CodingKeys: String, CodingKey {
         case id = "id"
@@ -437,15 +416,24 @@ public struct EventLiveData: Equatable {
         case matchTime = "matchTime"
         case status = "status"
         case detailedScores = "detailedScores"
+        case activePlayerServing = "activePlayerServing"
     }
     
-    public init(id: String, homeScore: Int?, awayScore: Int?, matchTime: String?, status: EventStatus?, detailedScores: [String: Score]?) {
+    public init(id: String,
+                homeScore: Int?,
+                awayScore: Int?,
+                matchTime: String?,
+                status: EventStatus?,
+                detailedScores: [String: Score]?,
+                activePlayerServing: ActivePlayerServe?)
+    {
         self.id = id
         self.homeScore = homeScore
         self.awayScore = awayScore
         self.matchTime = matchTime
         self.status = status
         self.detailedScores = detailedScores
+        self.activePlayerServing = activePlayerServing
     }
     
     public init(from decoder: Decoder) throws {
@@ -460,6 +448,7 @@ public struct EventLiveData: Equatable {
         status = EventStatus(value: statusValue)
         
         detailedScores = try container.decodeIfPresent([String: Score].self, forKey: .detailedScores)
+        activePlayerServing = try container.decodeIfPresent(ActivePlayerServe.self, forKey: .activePlayerServing)
     }
     
     public func encode(to encoder: Encoder) throws {
@@ -470,6 +459,7 @@ public struct EventLiveData: Equatable {
         try container.encodeIfPresent(awayScore, forKey: .awayScore)
         try container.encodeIfPresent(matchTime, forKey: .matchTime)
         try container.encodeIfPresent(detailedScores, forKey: .detailedScores)
+        try container.encodeIfPresent(activePlayerServing, forKey: .activePlayerServing)
         
         if let status = self.status {
             switch status {
@@ -747,3 +737,41 @@ public struct HighlightedEventPointer : Codable {
         case countryId = "country_id"
     }
 }
+
+
+public enum Score: Codable, Hashable {
+    
+    case set(index: Int, home: Int?, away: Int?)
+    case gamePart(home: Int?, away: Int?)
+    case matchFull(home: Int?, away: Int?)
+    
+    public var sortValue: Int {
+        switch self {
+        case .set(let index, _, _):
+            return index
+        case .gamePart:
+            return 100
+        case .matchFull:
+            return 200
+        }
+    }
+    
+    public var key: String {
+        switch self {
+        case .set(let index, _, _):
+            return "set\(index)"
+        case .gamePart:
+            return "gamePart"
+        case .matchFull:
+            return "matchFull"
+        }
+    }
+    
+}
+
+
+public enum ActivePlayerServe: String, Codable {
+    case home
+    case away
+}
+

@@ -268,6 +268,20 @@ class MatchWidgetCollectionViewCell: UICollectionViewCell {
         return label
     }()
     
+    private var homeServingIndicatorView: UIView = {
+        var view = UIView()
+        view.backgroundColor = .white
+        view.translatesAutoresizingMaskIntoConstraints = false
+        return view
+    }()
+    
+    private var awayServingIndicatorView: UIView = {
+        var view = UIView()
+        view.backgroundColor = .white
+        view.translatesAutoresizingMaskIntoConstraints = false
+        return view
+    }()
+    
     lazy var dateNewLabel: UILabel = {
         var label = UILabel()
         label.font = AppFont.with(type: .bold, size: 11)
@@ -323,6 +337,10 @@ class MatchWidgetCollectionViewCell: UICollectionViewCell {
     }
     
     var tappedMatchWidgetAction: ((Match) -> Void)?
+    
+    var selectedOutcome: ((Match, Market, Outcome) -> Void)?
+    var unselectedOutcome: ((Match, Market, Outcome) -> Void)?
+    
     var didTapFavoriteMatchAction: ((Match) -> Void)?
     var didLongPressOdd: ((BettingTicket) -> Void)?
     var tappedMatchOutrightWidgetAction: ((Competition) -> Void)?
@@ -490,6 +508,9 @@ class MatchWidgetCollectionViewCell: UICollectionViewCell {
         
         self.homeNameLabel.text = ""
         self.awayNameLabel.text = ""
+        
+        self.homeServingIndicatorView.isHidden = true
+        self.awayServingIndicatorView.isHidden = true
         
         self.detailedScoreView.updateScores([:])
         
@@ -678,6 +699,9 @@ class MatchWidgetCollectionViewCell: UICollectionViewCell {
         self.backgroundImageGradientLayer.frame = self.backgroundImageView.bounds
         self.locationFlagImageView.layer.cornerRadius = self.locationFlagImageView.frame.size.width / 2
         
+        self.awayServingIndicatorView.layer.cornerRadius = self.awayServingIndicatorView.frame.size.width / 2
+        self.homeServingIndicatorView.layer.cornerRadius = self.homeServingIndicatorView.frame.size.width / 2
+        
         self.locationFlagImageView.layer.borderWidth = 0.5
         
         self.topImageView.roundCorners(corners: [.topRight, .topLeft], radius: 9)
@@ -726,6 +750,9 @@ class MatchWidgetCollectionViewCell: UICollectionViewCell {
         self.homeBaseView.alpha = 1.0
         self.drawBaseView.alpha = 1.0
         self.awayBaseView.alpha = 1.0
+        
+        self.homeServingIndicatorView.isHidden = true
+        self.awayServingIndicatorView.isHidden = true
         
         return
         
@@ -843,6 +870,9 @@ class MatchWidgetCollectionViewCell: UICollectionViewCell {
         self.outrightSeeLabel.textColor = UIColor.App.textPrimary
         
         self.locationFlagImageView.layer.borderColor = UIColor.App.highlightPrimaryContrast.cgColor
+        
+        self.homeServingIndicatorView.backgroundColor = UIColor.App.highlightPrimary
+        self.awayServingIndicatorView.backgroundColor = UIColor.App.highlightPrimary
         
         // Boosted Odds
         self.boostedTopRightCornerLabel.textColor = UIColor.App.textPrimary
@@ -1137,7 +1167,6 @@ class MatchWidgetCollectionViewCell: UICollectionViewCell {
         
         self.detailedScoreView.setupWithTheme()
         self.marketNamePillLabelView.setupWithTheme()
-
     }
     
     private func adjustMarketNameView(isShown: Bool) {
@@ -1552,6 +1581,23 @@ extension MatchWidgetCollectionViewCell {
             }
             .store(in: &self.cancellables)
         
+        viewModel.activePlayerServePublisher
+            .receive(on: DispatchQueue.main)
+            .sink { [weak self] activePlayerServing in
+                switch activePlayerServing {
+                case .home:
+                    self?.homeServingIndicatorView.isHidden = false
+                    self?.awayServingIndicatorView.isHidden = true
+                case .away:
+                    self?.homeServingIndicatorView.isHidden = true
+                    self?.awayServingIndicatorView.isHidden = false
+                case .none:
+                    self?.homeServingIndicatorView.isHidden = true
+                    self?.awayServingIndicatorView.isHidden = true
+                }
+            }
+            .store(in: &self.cancellables)
+        
         viewModel.startDateStringPublisher
             .receive(on: DispatchQueue.main)
             .sink { [weak self] startDateString in
@@ -1589,7 +1635,7 @@ extension MatchWidgetCollectionViewCell {
             }
             .store(in: &self.cancellables)
         
-        
+        //
         // Scores
         viewModel.matchScorePublisher
             .receive(on: DispatchQueue.main)
@@ -1723,7 +1769,6 @@ extension MatchWidgetCollectionViewCell {
     
     private func configureOutcomes(withMarket market: Market) {
         
-    
         if let outcome = market.outcomes[safe: 0] {
             
             if let nameDigit1 = market.nameDigit1 {
@@ -1751,7 +1796,6 @@ extension MatchWidgetCollectionViewCell {
                 self.setHomeOddValueLabel(toText: "-")
             }
             
-
             self.leftOddButtonSubscriber = Env.servicesProvider
                 .subscribeToEventOnListsOutcomeUpdates(withId: outcome.bettingOffer.id)
                 .compactMap({ $0 })
@@ -1765,8 +1809,6 @@ extension MatchWidgetCollectionViewCell {
                     print("leftOddButtonSubscriber subscribeToOutcomeUpdates completion: \(completion)")
 
                 }, receiveValue: { [weak self] bettingOffer in
-                    
-
                     
                     guard let weakSelf = self else { return }
                     
@@ -2139,14 +2181,17 @@ extension MatchWidgetCollectionViewCell {
         if Env.betslipManager.hasBettingTicket(bettingTicket) {
             Env.betslipManager.removeBettingTicket(bettingTicket)
             self.isLeftOutcomeButtonSelected = false
+            
+            self.unselectedOutcome?(match, market, outcome)
         }
         else {
             Env.betslipManager.addBettingTicket(bettingTicket)
 
             let generator = UINotificationFeedbackGenerator()
             generator.notificationOccurred(.success)
-
             self.isLeftOutcomeButtonSelected = true
+            
+            self.selectedOutcome?(match, market, outcome)
         }
 
     }
@@ -2468,8 +2513,36 @@ extension MatchWidgetCollectionViewCell {
         
         self.contentRedesignBaseView.addSubview(self.detailedScoreView)
         
-        self.contentRedesignBaseView.addSubview(self.homeNameLabel)
-        self.contentRedesignBaseView.addSubview(self.awayNameLabel)
+        let homeElementsStackView = UIStackView()
+        homeElementsStackView.translatesAutoresizingMaskIntoConstraints = false
+        homeElementsStackView.axis = .horizontal
+        homeElementsStackView.distribution = .fill
+        homeElementsStackView.alignment = .center
+        homeElementsStackView.spacing = 4
+        
+        homeElementsStackView.addArrangedSubview(self.homeNameLabel)
+        homeElementsStackView.addArrangedSubview(self.homeServingIndicatorView)
+        
+        self.contentRedesignBaseView.addSubview(homeElementsStackView)
+        
+        
+        let awayElementsStackView = UIStackView()
+        awayElementsStackView.translatesAutoresizingMaskIntoConstraints = false
+        awayElementsStackView.axis = .horizontal
+        awayElementsStackView.distribution = .fill
+        awayElementsStackView.alignment = .center
+        awayElementsStackView.spacing = 4
+        
+        awayElementsStackView.addArrangedSubview(self.awayNameLabel)
+        awayElementsStackView.addArrangedSubview(self.awayServingIndicatorView)
+        
+        self.contentRedesignBaseView.addSubview(awayElementsStackView)
+        
+        // self.contentRedesignBaseView.addSubview(self.homeNameLabel)
+        // self.contentRedesignBaseView.addSubview(self.awayNameLabel)
+        
+        // self.contentRedesignBaseView.addSubview()
+        // self.contentRedesignBaseView.addSubview(self.awayServingIndicatorView)
         
         self.contentRedesignBaseView.addSubview(self.dateNewLabel)
         self.contentRedesignBaseView.addSubview(self.timeNewLabel)
@@ -2478,8 +2551,8 @@ extension MatchWidgetCollectionViewCell {
         
         self.contentRedesignBaseView.addSubview(self.marketNamePillLabelView)
         
-        self.homeContentRedesignTopConstraint = self.homeNameLabel.topAnchor.constraint(equalTo: self.contentRedesignBaseView.topAnchor, constant: 13)
-        self.awayContentRedesignTopConstraint = self.awayNameLabel.topAnchor.constraint(equalTo: self.contentRedesignBaseView.topAnchor, constant: 33)
+        self.homeContentRedesignTopConstraint = homeElementsStackView.topAnchor.constraint(equalTo: self.contentRedesignBaseView.topAnchor, constant: 13)
+        self.awayContentRedesignTopConstraint = awayElementsStackView.topAnchor.constraint(equalTo: self.contentRedesignBaseView.topAnchor, constant: 33)
         
         NSLayoutConstraint.activate([
             self.contentRedesignBaseView.leadingAnchor.constraint(equalTo: self.mainContentBaseView.leadingAnchor, constant: 2),
@@ -2495,16 +2568,35 @@ extension MatchWidgetCollectionViewCell {
             self.detailedScoreView.trailingAnchor.constraint(equalTo: self.contentRedesignBaseView.trailingAnchor, constant: -12),
             self.detailedScoreView.topAnchor.constraint(equalTo: self.contentRedesignBaseView.topAnchor, constant: 13),
             
-            self.homeNameLabel.leadingAnchor.constraint(equalTo: self.contentRedesignBaseView.leadingAnchor, constant: 12),
-            self.homeNameLabel.trailingAnchor.constraint(equalTo: self.detailedScoreView.leadingAnchor, constant: -5),
+            
+            self.detailedScoreView.leadingAnchor.constraint(greaterThanOrEqualTo: homeElementsStackView.trailingAnchor, constant: 5),
+            // self.homeNameLabel.leadingAnchor.constraint(equalTo: self.contentRedesignBaseView.leadingAnchor, constant: 12),
+            // self.homeNameLabel.trailingAnchor.constraint(equalTo: self.detailedScoreView.leadingAnchor, constant: -5),
             self.homeContentRedesignTopConstraint,
             self.homeNameLabel.heightAnchor.constraint(equalTo: self.detailedScoreView.heightAnchor, multiplier: 0.5, constant: 1),
             
-            self.awayNameLabel.leadingAnchor.constraint(equalTo: self.contentRedesignBaseView.leadingAnchor, constant: 12),
-            self.awayNameLabel.trailingAnchor.constraint(equalTo: self.detailedScoreView.leadingAnchor, constant: -5),
+            self.detailedScoreView.leadingAnchor.constraint(greaterThanOrEqualTo: awayElementsStackView.trailingAnchor, constant: 5),
+            // self.awayNameLabel.leadingAnchor.constraint(equalTo: self.contentRedesignBaseView.leadingAnchor, constant: 12),
+            // self.awayNameLabel.trailingAnchor.constraint(equalTo: self.detailedScoreView.leadingAnchor, constant: -5),
             self.awayContentRedesignTopConstraint,
             self.awayNameLabel.heightAnchor.constraint(equalTo: self.detailedScoreView.heightAnchor, multiplier: 0.5, constant: 1),
             
+            //
+            homeElementsStackView.leadingAnchor.constraint(equalTo: self.contentRedesignBaseView.leadingAnchor, constant: 12),
+            awayElementsStackView.leadingAnchor.constraint(equalTo: self.contentRedesignBaseView.leadingAnchor, constant: 12),
+            
+            // self.timeNewLabel.leadingAnchor.constraint(greaterThanOrEqualTo: homeElementsStackView.trailingAnchor, constant: 5),
+            // self.dateNewLabel.leadingAnchor.constraint(greaterThanOrEqualTo: awayElementsStackView.trailingAnchor, constant: 5),
+            
+            //
+            self.homeServingIndicatorView.widthAnchor.constraint(equalTo: self.homeServingIndicatorView.heightAnchor),
+            self.homeServingIndicatorView.widthAnchor.constraint(equalToConstant: 9),
+            
+            self.awayServingIndicatorView.widthAnchor.constraint(equalTo: self.awayServingIndicatorView.heightAnchor),
+            self.awayServingIndicatorView.widthAnchor.constraint(equalToConstant: 9),
+            
+            
+            //
             self.dateNewLabel.trailingAnchor.constraint(equalTo: self.contentRedesignBaseView.trailingAnchor, constant: -12),
             self.dateNewLabel.topAnchor.constraint(equalTo: self.homeNameLabel.topAnchor),
             
@@ -2517,7 +2609,16 @@ extension MatchWidgetCollectionViewCell {
             self.marketNamePillLabelView.leadingAnchor.constraint(equalTo: self.contentRedesignBaseView.leadingAnchor, constant: 11),
             self.marketNamePillLabelView.bottomAnchor.constraint(equalTo: self.contentRedesignBaseView.bottomAnchor, constant: -4),
         ])
-        
+
+        self.homeNameLabel.setContentHuggingPriority(UILayoutPriority(990), for: .horizontal)
+        self.awayNameLabel.setContentHuggingPriority(UILayoutPriority(990), for: .horizontal)
     }
     
+}
+
+extension NSLayoutConstraint {
+    func withPriority(_ priority: UILayoutPriority) -> NSLayoutConstraint {
+        self.priority = priority
+        return self
+    }
 }

@@ -12,7 +12,7 @@ public enum AnalyticsTrackedEvent {
     
     case impressionsEvents(eventsIds: [String])
     case clickEvent(id: String)
-    case clickOutcome(id: String)
+    case clickOutcome(eventId: String, outcomeId: String)
  
 }
 

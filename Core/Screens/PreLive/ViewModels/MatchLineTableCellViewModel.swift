@@ -46,9 +46,8 @@ class MatchLineTableCellViewModel {
         self.$match
             .removeDuplicates(by: { oldMatch, newMatch in
                 
-                let oldMatchDesc = "[\(oldMatch.id) \(oldMatch.homeParticipant.name) vs \(oldMatch.awayParticipant.name)]"
-                let newMatchDesc = "[\(newMatch.id) \(newMatch.homeParticipant.name) vs \(newMatch.awayParticipant.name)]"
-                
+                // let oldMatchDesc = "[\(oldMatch.id) \(oldMatch.homeParticipant.name) vs \(oldMatch.awayParticipant.name)]"
+                // let newMatchDesc = "[\(newMatch.id) \(newMatch.homeParticipant.name) vs \(newMatch.awayParticipant.name)]"
                 // print("BlinkDebug >LineVC - comparing \(oldMatchDesc) to \(newMatchDesc)")
                       
                 let visuallySimilar = Match.visuallySimilar(lhs: oldMatch, rhs: newMatch)

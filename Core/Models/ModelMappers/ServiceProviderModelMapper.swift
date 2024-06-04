@@ -49,6 +49,16 @@ extension ServiceProviderModelMapper {
 
         let mappedScores = Self.scoresDictionary(fromInternalScoresDictionary: event.scores)
         
+        var mappedActivePlayerServe: Match.ActivePlayerServe?
+        switch event.activePlayerServing {
+        case .home:
+            mappedActivePlayerServe = .home
+        case .away:
+            mappedActivePlayerServe = .away
+        case .none:
+            mappedActivePlayerServe = nil
+        }
+        
         let match = Match(id: event.id,
                           competitionId: event.competitionId,
                           competitionName: event.competitionName,
@@ -69,6 +79,7 @@ extension ServiceProviderModelMapper {
                           promoImageURL: event.promoImageURL,
                           oldMainMarketId: event.oldMainMarketId,
                           competitionOutright: Self.competition(fromEvent: event),
+                          activePlayerServe: mappedActivePlayerServe,
                           detailedScores: mappedScores)
         return match
     }
@@ -93,12 +104,23 @@ extension ServiceProviderModelMapper {
         
         let mappedScores = Self.scoresDictionary(fromInternalScoresDictionary: event.scores)
         
+        var mappedActivePlayerServe: Match.ActivePlayerServe?
+        switch event.activePlayerServing {
+        case .home:
+            mappedActivePlayerServe = .home
+        case .away:
+            mappedActivePlayerServe = .away
+        case .none:
+            mappedActivePlayerServe = nil
+        }
+        
         return MatchLiveData(id: event.id,
                              homeScore: event.homeTeamScore,
                              awayScore: event.awayTeamScore,
                              matchTime: event.matchTime,
                              status: mappeddStatus,
-                             detailedScores: mappedScores)
+                             detailedScores: mappedScores,
+                             activePlayerServing: mappedActivePlayerServe)
     }
     
     static func matchLiveData(fromServiceProviderEventLiveData eventLiveData: ServicesProvider.EventLiveData) -> MatchLiveData {
@@ -106,12 +128,24 @@ extension ServiceProviderModelMapper {
         
         let mappedScores = Self.scoresDictionary(fromInternalScoresDictionary: eventLiveData.detailedScores ?? [:])
         
+        var mappedActivePlayerServe: Match.ActivePlayerServe?
+        switch eventLiveData.activePlayerServing {
+        case .home:
+            mappedActivePlayerServe = .home
+        case .away:
+            mappedActivePlayerServe = .away
+        case .none:
+            mappedActivePlayerServe = nil
+        }
+        
+        
         return MatchLiveData(id: eventLiveData.id,
                              homeScore: eventLiveData.homeScore,
                              awayScore: eventLiveData.awayScore,
                              matchTime: eventLiveData.matchTime,
                              status: mappeddStatus,
-                             detailedScores: mappedScores)
+                             detailedScores: mappedScores,
+                             activePlayerServing: mappedActivePlayerServe)
     }
 
     // Market
