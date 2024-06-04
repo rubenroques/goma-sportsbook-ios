@@ -80,7 +80,7 @@ class StoriesLineTableViewCell: UITableViewCell, UICollectionViewDataSource, UIC
             self.collectionView.leadingAnchor.constraint(equalTo: self.contentView.leadingAnchor),
             self.collectionView.trailingAnchor.constraint(equalTo: self.contentView.trailingAnchor),
             self.collectionView.topAnchor.constraint(equalTo: self.contentView.topAnchor),
-            self.collectionView.bottomAnchor.constraint(equalTo: self.contentView.bottomAnchor, constant: -26)
+            self.collectionView.bottomAnchor.constraint(equalTo: self.contentView.bottomAnchor)
         ])
     }
 
