@@ -471,67 +471,50 @@ extension SportRadarModels {
                                                         eventLiveDataExtended: eventLiveDataExtended)
                     
                 }
-                else if path.contains("SERVE"), let eventId = SocketMessageParseHelper.extractEventId(path),
-                        let serveInt = try? container.decode(Int.self, forKey: .change) {
-                    // Updated tennis serve player information
-                    if serveInt == 1 {
+                // SERVE TEAM / PLAYER
+                else if path.split(separator: "|").last?.lowercased() == "serve" {
+                    var serveCodeString: String = ""
+                    
+                    // Simple as Int
+                    if let serveInt = try? container.decode(Int.self, forKey: .change) {
+                        serveCodeString = "\(serveInt)"
+                    }
+                    // Simple as String
+                    else if let serveString = try? container.decode(String.self, forKey: .change) {
+                        serveCodeString = serveString
+                    }
+                    // Inside an ["Event": "": 1] struct
+                    else if let serveDictionary = try container.decodeIfPresent([String: [String: Int]].self, forKey: .change),
+                            let emptyDict = serveDictionary["EVENT"], let serveInt = emptyDict[""] {
+                        serveCodeString = "\(serveInt)"
+                    }
+                                
+                    if serveCodeString == "1" {
                         return .updateActivePlayer(contentIdentifier: contentIdentifier,
                                                    eventId: eventId,
                                                    serving: .home)
                     }
-                    else if serveInt == 2 {
+                    else if serveCodeString == "2" {
                         return .updateActivePlayer(contentIdentifier: contentIdentifier,
                                                    eventId: eventId,
                                                    serving: .away)
                     }
                 }
-                else if path.contains("SERVE"), let eventId = SocketMessageParseHelper.extractEventId(path),
-                        let serveString = try? container.decode(String.self, forKey: .change) {
-                    // Updated tennis serve player information
-                    if serveString == "1" {
-                        return .updateActivePlayer(contentIdentifier: contentIdentifier,
-                                                   eventId: eventId,
-                                                   serving: .home)
-                    }
-                    else if serveString == "2" {
-                        return .updateActivePlayer(contentIdentifier: contentIdentifier,
-                                                   eventId: eventId,
-                                                   serving: .away)
-                    }
-                }
-                else if 
-                    path.contains("SERVE"),
-                    let eventId = SocketMessageParseHelper.extractEventId(path),
-                    let serveDictionary: [String: [String: Int]] = try container.decodeIfPresent([String: [String: Int]].self, forKey: .change)
-                {
-                    if let emptyDict = serveDictionary["EVENT"], let serveInt = emptyDict[""] {
-                        // Updated tennis serve player information
-                        if serveInt == 1 {
-                            return .updateActivePlayer(contentIdentifier: contentIdentifier,
-                                                       eventId: eventId,
-                                                       serving: .home)
-                        }
-                        else if serveInt == 2 {
-                            return .updateActivePlayer(contentIdentifier: contentIdentifier,
-                                                       eventId: eventId,
-                                                       serving: .away)
-                        }
-                    }
-                }                
+                               
                 return .unknown
             }
-            
+
+            // ===========================
             if path.contains("idfosporttype") {
                 if let sportCode = SocketMessageParseHelper.extractSportCode(path) {
-                    
                     if path.contains("numEvents") {
-                        
-                        print("UPDATING SPORT PARSE: \(sportCode)")
-                        
                         let liveEventsCount = try container.decode(Int.self, forKey: .change)
-                        
                         let sportType = SportType(name: sportCode,
-                                                  alphaId: sportCode, numberEvents: liveEventsCount, numberOutrightEvents: 0, numberOutrightMarkets: 0, numberLiveEvents: liveEventsCount)
+                                                  alphaId: sportCode,
+                                                  numberEvents: liveEventsCount,
+                                                  numberOutrightEvents: 0,
+                                                  numberOutrightMarkets: 0,
+                                                  numberLiveEvents: liveEventsCount)
                         
                         return .liveSports(sportsTypes: [sportType])
                     }
@@ -540,19 +523,17 @@ extension SportRadarModels {
             
             if path.contains("bonavigationnodes") {
                 if let sportId = SocketMessageParseHelper.extractNodeId(path) {
-                    
                     if path.contains("numinplayevents") {
-                        
                         let liveEventsCount = try container.decode(String.self, forKey: .change)
-                        
-                        return .updateAllSportsLiveCount(ContentIdentifier: contentIdentifier, nodeId: sportId, eventCount: Int(liveEventsCount) ?? 0)
+                        return .updateAllSportsLiveCount(ContentIdentifier: contentIdentifier,
+                                                         nodeId: sportId,
+                                                         eventCount: Int(liveEventsCount) ?? 0)
                     }
-                    
                     if path.contains("numevents") {
-                        
                         let eventsCount = try container.decode(String.self, forKey: .change)
-                        
-                        return .updateAllSportsEventCount(ContentIdentifier: contentIdentifier, nodeId: sportId, eventCount: Int(eventsCount) ?? 0)
+                        return .updateAllSportsEventCount(ContentIdentifier: contentIdentifier,
+                                                          nodeId: sportId,
+                                                          eventCount: Int(eventsCount) ?? 0)
                     }
                 }
                 

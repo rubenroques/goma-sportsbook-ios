@@ -38,9 +38,9 @@ class BetSubmissionSuccessViewController: UIViewController {
     @IBOutlet private weak var backButton: UIButton!
     
     // Constraints
-    @IBOutlet weak var topGradientViewCenterConstraint: NSLayoutConstraint!
-    @IBOutlet weak var topGradientViewHeightConstraint: NSLayoutConstraint!
-    @IBOutlet weak var scrollViewTopConstraint: NSLayoutConstraint!
+    @IBOutlet private weak var topGradientViewCenterConstraint: NSLayoutConstraint!
+    @IBOutlet private weak var topGradientViewHeightConstraint: NSLayoutConstraint!
+    @IBOutlet private weak var scrollViewTopConstraint: NSLayoutConstraint!
     
     lazy var betSuccessAnimationView: LottieAnimationView = {
         let animationView = LottieAnimationView()

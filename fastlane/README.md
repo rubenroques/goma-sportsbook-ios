@@ -58,14 +58,6 @@ For _fastlane_ installation instructions, see [Installing _fastlane_](https://do
 
 
 
-### ios betsson_prod
-
-```sh
-[bundle exec] fastlane ios betsson_prod
-```
-
-
-
 ----
 
 This README.md is auto-generated and will be re-generated every time [_fastlane_](https://fastlane.tools) is run.

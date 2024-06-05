@@ -155,13 +155,7 @@ class ClientManagedHomeViewTemplateDataSource {
         self.matchLineTableCellViewModelCache = [:]
         
         self.highlightedLiveMatchLineTableCellViewModelCache = [:]
-        
-#if DEBUG
-        
-        self.fetchHighlightedLiveMatches()
-        
-#else
-                
+             
         self.fetchAlerts()
         self.fetchQuickSwipeMatches()
         self.fetchBanners()
@@ -171,7 +165,7 @@ class ClientManagedHomeViewTemplateDataSource {
         self.fetchTopCompetitions()
         self.fetchHighlightedLiveMatches()
         
-#endif
+
     }
 
     // User alerts

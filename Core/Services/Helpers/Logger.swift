@@ -74,7 +74,7 @@ class LoggerService {
             prefix = "ERRO "
         }
 
-        printToConsole(prefix + logMessage)
+        printToConsole("▫️" + prefix + logMessage)
         printToDestination(prefix + logMessage)
 
     }

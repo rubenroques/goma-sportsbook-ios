@@ -299,7 +299,7 @@ extension SportRadarModelMapper {
     static func activePlayerServe(fromInternalActivePlayerServe internalActivePlayerServe: SportRadarModels.ActivePlayerServe) -> ActivePlayerServe {
         switch internalActivePlayerServe {
         case .home: return .home
-        case .away: return .home
+        case .away: return .away
         }
     }
     
