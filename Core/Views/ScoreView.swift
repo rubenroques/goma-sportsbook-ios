@@ -5,8 +5,8 @@
 //  Created by Ruben Roques on 05/04/2024.
 //
 
-import Foundation
 import UIKit
+import Combine
 
 class ScoreView: UIView {
     
@@ -32,12 +32,15 @@ class ScoreView: UIView {
         }
     }
     
+    private var cancellables: Set<AnyCancellable> = []
+    
     init(sportCode: String, score: [String: Score]) {
         self.score = score
         self.sportCode = sportCode
         
         super.init(frame: .zero)
         
+        self.setupSubscriptions()
         self.setupView()
         self.configureScores()
     }
@@ -51,8 +54,19 @@ class ScoreView: UIView {
     required init?(coder aDecoder: NSCoder) {
         super.init(coder: aDecoder)
 
+        self.setupSubscriptions()
         self.setupView()
         self.configureScores()
+    }
+    
+    private func setupSubscriptions() {
+        Env.userSessionStore.userProfilePublisher
+            .removeDuplicates()
+            .receive(on: DispatchQueue.main)
+            .sink { [weak self] userProfile in
+                self?.configureScores()
+            }
+            .store(in: &self.cancellables)
     }
     
     private func setupView() {

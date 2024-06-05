@@ -86,10 +86,10 @@ class SportRadarSocketConnector: NSObject, Connector {
     
     private func sendListeningStarted() {
         
-        // TODO: ipAddress is empty, and language is hardcoded
         var body: String = ""
         
         if let previousSessionId = self.token {
+            print("ServiceProvider - ↔️ SportRadarSocketConnector using previous subscriberId \(previousSessionId)")
             body = """
                    {
                      "subscriberId": "\(previousSessionId.hash)",
@@ -102,6 +102,8 @@ class SportRadarSocketConnector: NSObject, Connector {
                    """
         }
         else {
+            print("ServiceProvider - ↔️ SportRadarSocketConnector empty subscriberId")
+
             body = """
                    {
                      "subscriberId": null,
@@ -160,7 +162,7 @@ extension SportRadarSocketConnector: Starscream.WebSocketDelegate {
             print("ServiceProvider - ↔️ SportRadarSocketConnector websocket is disconnected: \(reason) with code: \(code)")
 
         case .text(let string):
-            print("\n▶️ServiceProvider - ↔️ SportRadarSocketConnector received text: \(string)◀️\n")
+            // print("\n▶️ServiceProvider - ↔️ SportRadarSocketConnector received text: \(string)◀️\n")
             if let data = string.data(using: .utf8),
                let sportRadarSocketResponse = try? decoder.decode(SportRadarModels.NotificationType.self, from: data) {
                 self.handleContentMessage(sportRadarSocketResponse, messageData: data)
@@ -294,16 +296,3 @@ extension SportRadarSocketConnector: Starscream.WebSocketDelegate {
     }
     
 }
-
-//
-//class LargeNativeEngine: Starscream.NativeEngine {
-//    
-//    override func start(request: URLRequest) {
-//        super.start(request: request)
-//        
-//        let maximumMessageSize: Int = 250 * 1024 * 1024 // 25 MB in bytes
-//        self.task?.maximumMessageSize = maximumMessageSize
-//        
-//    }
-//    
-//}

@@ -316,8 +316,14 @@ class MatchDetailsViewController: UIViewController {
         fatalError("init(coder:) has not been implemented")
     }
     
+    deinit {
+        NotificationCenter.default.removeObserver(self)
+    }
+    
     override func viewDidLoad() {
         super.viewDidLoad()
+        
+        self.setupNotifications()
         
         self.view.transitionId = "SeeMoreToMatchDetails"
         
@@ -561,6 +567,14 @@ class MatchDetailsViewController: UIViewController {
         super.viewWillDisappear(animated)
         
         self.navigationController?.interactivePopGestureRecognizer?.delegate = nil
+    }
+    
+    private func setupNotifications() {
+        NotificationCenter.default.publisher(for: UIApplication.willEnterForegroundNotification)
+            .sink { [weak self] _ in
+                self?.refreshViewModel()
+            }
+            .store(in: &self.cancellables)
     }
     
     override func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {
@@ -906,12 +920,14 @@ class MatchDetailsViewController: UIViewController {
         
     }
     
+    
+    private func refreshViewModel() {
+        self.viewModel.forceRefreshData()
+    }
+    
     func reloadMarketsWithLiveMatch(match: Match) {
-        
         for viewController in marketGroupsViewControllers {
-            
             if let marketGroupViewController = viewController as? MarketGroupDetailsViewController {
-                
                 marketGroupViewController.setUpdatedMatch(match: match)
             }
         }

@@ -97,8 +97,13 @@ class MatchDetailsViewModel: NSObject {
     private var statsJSON: JSON?
     let matchStatsViewModel: MatchStatsViewModel
 
+    private var serviceProviderStateCancellable: AnyCancellable?
+    private var matchDetailsCancellable: AnyCancellable?
+    private var matchGroupsCancellable: AnyCancellable?
+    private var liveMatchDataCancellable: AnyCancellable?
+    
     private var cancellables = Set<AnyCancellable>()
-    private var subscription: ServicesProvider.Subscription?
+    private var matchDetailsSubscription: ServicesProvider.Subscription?
 
     private var liveDataSubscription: ServicesProvider.Subscription?
     
@@ -127,8 +132,23 @@ class MatchDetailsViewModel: NSObject {
         self.connectPublishers()
         self.getMatchDetails()
     }
-
-    func connectPublishers() {
+    
+    func forceRefreshData() {
+        self.serviceProviderStateCancellable = Env.servicesProvider.eventsConnectionStatePublisher
+            .sink(receiveCompletion: { completion in
+                
+            }, receiveValue: { state in
+                switch state {
+                case .connected:
+                    print("MatchDetailsViewModel forceRefreshData eventsConnectionStatePublisher connected")
+                    self.getMatchDetails()
+                case .disconnected:
+                    print("MatchDetailsViewModel forceRefreshData eventsConnectionStatePublisher disconnected")
+                }
+            })
+    }
+ 
+    private func connectPublishers() {
 
         self.marketGroupsState
             .receive(on: DispatchQueue.main)
@@ -146,7 +166,7 @@ class MatchDetailsViewModel: NSObject {
             .sink { [weak self] defaultSelectedIndex in
                 self?.selectedMarketTypeIndexPublisher.send(defaultSelectedIndex)
             }
-            .store(in: &cancellables)
+            .store(in: &self.cancellables)
 
         self.matchStatsViewModel.statsTypePublisher
             .receive(on: DispatchQueue.main)
@@ -154,16 +174,29 @@ class MatchDetailsViewModel: NSObject {
                 self?.statsJSON = statsJSON
                 self?.matchStatsUpdatedPublisher.send()
             }
-            .store(in: &cancellables)
+            .store(in: &self.cancellables)
 
     }
 
-    func getMatchDetails() {
+    private func getMatchDetails() {
+        print("MatchDetailsViewModel forceRefreshData")
+        
+        self.matchDetailsSubscription = nil
+        self.liveDataSubscription = nil
+        
+        self.matchDetailsCancellable?.cancel()
+        self.matchDetailsCancellable = nil
+        
+        self.matchGroupsCancellable?.cancel()
+        self.matchGroupsCancellable = nil
+        
+        self.liveMatchDataCancellable?.cancel()
+        self.liveMatchDataCancellable = nil
         
         let eventDetailsPublisher = Env.servicesProvider.subscribeEventDetails(eventId: self.matchId)
 
         // Subscribe to the content of the event details
-        eventDetailsPublisher
+        self.matchDetailsCancellable = eventDetailsPublisher
             .receive(on: DispatchQueue.main)
             .sink(receiveCompletion: { [weak self] completion in
                 switch completion {
@@ -184,7 +217,7 @@ class MatchDetailsViewModel: NSObject {
             }, receiveValue: { [weak self] (subscribableContent: SubscribableContent<ServicesProvider.Event>) in
                 switch subscribableContent {
                 case .connected(let subscription):
-                    self?.subscription = subscription
+                    self?.matchDetailsSubscription = subscription
                 case .contentUpdate(let serviceProviderEvent):
                     guard
                         let self = self,
@@ -198,7 +231,6 @@ class MatchDetailsViewModel: NSObject {
                     print("MatchDetailsViewModel getMatchDetails subscribeEventDetails disconnected")
                 }
             })
-            .store(in: &self.cancellables)
 
         // The first published value of the full
         // match should trigger the match market groups flow
@@ -229,8 +261,9 @@ class MatchDetailsViewModel: NSObject {
         }
         .store(in: &self.cancellables)
 
+        
         // Request the remaining marketGroups details
-        matchDetailsReceivedPublisher
+        self.matchGroupsCancellable = matchDetailsReceivedPublisher
             .flatMap({ (event: ServicesProvider.Event) -> AnyPublisher<[MarketGroup], Never> in
                 return Env.servicesProvider.getMarketsFilters(event: event)
                         .map(Self.convertMarketGroups(_:))
@@ -243,10 +276,10 @@ class MatchDetailsViewModel: NSObject {
             } receiveValue: { [weak self] marketGroups in
                 self?.marketGroupsState.send(.loaded(marketGroups))
             }
-            .store(in: &self.cancellables)
-        
+
         //
-        self.matchCurrentValueSubject.compactMap { loadableContent -> Match? in
+        //
+        self.liveMatchDataCancellable = self.matchCurrentValueSubject.compactMap { loadableContent -> Match? in
             switch loadableContent {
             case .idle, .loading, .failed:
                 return nil
@@ -258,7 +291,6 @@ class MatchDetailsViewModel: NSObject {
         .sink { [weak self] match in
             self?.subscribeMatchLiveDataOnLists(withId: match.id, sportAlphaCode: match.sport.alphaId ?? "")
         }
-        .store(in: &self.cancellables)
 
     }
 
