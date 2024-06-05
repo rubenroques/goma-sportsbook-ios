@@ -158,7 +158,7 @@ class PreSubmissionBetslipViewController: UIViewController {
     }()
     
     lazy var flipNumberView: FlipNumberView = {
-        let view = FlipNumberView(hasCommaSeparator: true)
+        let view = FlipNumberView(hasCommaSeparator: true, hasMultipleThemes: true)
         view.setNumber(0.00, animated: false)
         view.translatesAutoresizingMaskIntoConstraints = false
         return view
@@ -1475,8 +1475,11 @@ class PreSubmissionBetslipViewController: UIViewController {
         
         self.learnMoreBaseView.alpha = 0
         
-        self.view.addSubview(self.cashbackCoinAnimationView)
-        self.view.bringSubviewToFront(self.cashbackCoinAnimationView)
+        self.cashbackInfoMultipleBaseView.addSubview(self.currencyTypeLabel)
+        self.cashbackInfoMultipleBaseView.addSubview(self.flipNumberView)
+        
+        self.cashbackInfoMultipleBaseView.addSubview(self.cashbackCoinAnimationView)
+        self.cashbackInfoMultipleBaseView.bringSubviewToFront(self.cashbackCoinAnimationView)
 
         NSLayoutConstraint.activate([
             self.cashbackCoinAnimationView.widthAnchor.constraint(equalToConstant: 100),
@@ -1485,9 +1488,6 @@ class PreSubmissionBetslipViewController: UIViewController {
             self.cashbackCoinAnimationView.centerXAnchor.constraint(equalTo: self.cashbackInfoMultipleValueLabel.centerXAnchor)
             
         ])
-        
-        self.cashbackInfoMultipleBaseView.addSubview(self.currencyTypeLabel)
-        self.cashbackInfoMultipleBaseView.addSubview(self.flipNumberView)
 
         NSLayoutConstraint.activate([
             self.currencyTypeLabel.leadingAnchor.constraint(equalTo: self.flipNumberView.trailingAnchor),
