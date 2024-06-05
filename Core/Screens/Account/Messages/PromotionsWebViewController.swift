@@ -19,7 +19,8 @@ class PromotionsWebViewController: UIViewController {
     var openBetSwipeAction: () -> Void = { }
     var openHomeAction: () -> Void = { }
     var openRecruitAction: () -> Void = { }
-    
+    var openLiveAction: () -> Void = { }
+
     // MARK: - Private Properties
     private lazy var topSafeAreaView: UIView = Self.createTopSafeAreaView()
     private lazy var navigationView: UIView = Self.createNavigationView()
@@ -186,6 +187,8 @@ extension PromotionsWebViewController: WKScriptMessageHandler {
                     self.openBetSwipeAction()
                 case "goHome":
                     self.openHomeAction()
+                case "goLive":
+                    self.openLiveAction()
                 case "openRAF":
                     self.navigationController?.popViewController(animated: true)
                     self.openRecruitAction()
