@@ -159,6 +159,7 @@ class PreSubmissionBetslipViewController: UIViewController {
     
     lazy var flipNumberView: FlipNumberView = {
         let view = FlipNumberView(hasCommaSeparator: true, hasMultipleThemes: true)
+        view.setNumber(0.01, animated: false)
         view.setNumber(0.00, animated: false)
         view.translatesAutoresizingMaskIntoConstraints = false
         return view
@@ -1505,6 +1506,7 @@ class PreSubmissionBetslipViewController: UIViewController {
             
         ])
         
+        
         self.isCashbackToggleOn
             .receive(on: DispatchQueue.main)
             .sink { [weak self] isCashbackToggleOn in
@@ -1569,19 +1571,9 @@ class PreSubmissionBetslipViewController: UIViewController {
                     let cashbackString = CurrencyFormater.defaultFormat.string(from: NSNumber(value: cashbackResultValue)) ?? localized("no_value")
                     self?.cashbackInfoMultipleValueLabel.text = cashbackString
                     
-//                    self?.cashbackCoinAnimationView.alpha = 1
-//                    
-//                    self?.cashbackCoinAnimationView.play(completion: { _ in
-//                        self?.cashbackCoinAnimationView.alpha = 0
-//                        self?.cashbackCoinAnimationView.stop()
-//
-//                    })
-//                    
-//                    self?.flipNumberView.setNumber(cashbackResultValue, animated: true)
                 }
                 else {
                     self?.cashbackInfoMultipleValueLabel.text = localized("no_value")
-//                    self?.flipNumberView.setNumber(0.00, animated: true)
                 }
             }
             .store(in: &self.cancellables)
