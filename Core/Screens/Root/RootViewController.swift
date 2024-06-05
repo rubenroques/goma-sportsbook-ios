@@ -1184,6 +1184,11 @@ class RootViewController: UIViewController {
                 self?.dismiss(animated: true)
             }
             
+            promotionsWebViewController.openLiveAction = { [weak self] in
+                self?.dismiss(animated: true)
+                self?.selectLiveTabBarItem()
+            }
+            
             promotionsWebViewController.openBetSwipeAction = { [weak self] in
                 self?.dismiss(animated: true, completion: {
                     self?.openBetswipe()
@@ -1427,6 +1432,12 @@ extension RootViewController {
                 })
             }
             
+            profileViewController.requestLiveAction = { [weak self] in
+                navigationViewController.dismiss(animated: true, completion: {
+                    self?.didTapLiveTabItem()
+                })
+            }
+            
             profileViewController.requestBetSwipeAction = { [weak self] in
                 navigationViewController.dismiss(animated: true, completion: {
                     self?.didTapHomeTabItem()
@@ -1462,6 +1473,12 @@ extension RootViewController {
         anonymousSideMenuViewController.requestHomeAction = { [weak self] in
             anonymousNavigationViewController.dismiss(animated: true, completion: {
                 self?.didTapHomeTabItem()
+            })
+        }
+        
+        anonymousSideMenuViewController.requestLiveAction = { [weak self] in
+            anonymousNavigationViewController.dismiss(animated: true, completion: {
+                self?.didTapLiveTabItem()
             })
         }
         

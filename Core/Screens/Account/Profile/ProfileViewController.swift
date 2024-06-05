@@ -16,6 +16,7 @@ class ProfileViewController: UIViewController {
     public var requestBetSwipeAction: () -> Void = { }
     public var requestHomeAction: () -> Void = { }
     public var requestRegisterAction: () -> Void = { }
+    public var requestLiveAction: () -> Void = { }
 
     // Outlets
     @IBOutlet private weak var safeAreaTopView: UIView!
@@ -800,6 +801,9 @@ extension ProfileViewController {
             }
             promotionsWebViewController.openHomeAction = { [weak self] in
                 self?.requestHomeAction()
+            }
+            promotionsWebViewController.openLiveAction = { [weak self] in
+                self?.requestLiveAction()
             }
             promotionsWebViewController.openRecruitAction = { [weak self] in
                 self?.openRecruitScreen()

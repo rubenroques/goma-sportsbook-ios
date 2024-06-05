@@ -33,9 +33,11 @@ class FlipNumberView: UIView {
     private var stripsDictionary = [Int: FlipNumberStripView]()
     
     private var hasCommaSeparator: Bool = false
-    
-    init(hasCommaSeparator: Bool = false) {
+    private var hasMultipleThemes: Bool = false
+
+    init(hasCommaSeparator: Bool = false, hasMultipleThemes: Bool = false) {
         self.hasCommaSeparator = hasCommaSeparator
+        self.hasMultipleThemes = hasMultipleThemes
         
         super.init(frame: .zero)
         self.commonInit()
@@ -62,7 +64,7 @@ class FlipNumberView: UIView {
         ])
         
         for i in 0...8 {
-            let flipNumberStripView = FlipNumberStripView()
+            let flipNumberStripView = FlipNumberStripView(hasMultipleThemes: self.hasMultipleThemes)
             NSLayoutConstraint.activate([
                 flipNumberStripView.widthAnchor.constraint(equalToConstant: 10)
             ])
@@ -82,6 +84,10 @@ class FlipNumberView: UIView {
         label.text = separatorText
         label.font = AppFont.with(type: .bold, size: 15)
         label.textColor = UIColor.App.buttonTextPrimary
+        
+        if self.hasMultipleThemes {
+            label.textColor = UIColor.App.textPrimary
+        }
         
         NSLayoutConstraint.activate([
             label.widthAnchor.constraint(equalToConstant: 4.5)
@@ -206,7 +212,12 @@ class FlipNumberStripView: UIView, UITableViewDelegate, UITableViewDataSource {
     
     static let slideAnimationDuration: CGFloat = 1.2
     
-    init() {
+    private var hasMultipleThemes: Bool = false
+    
+    init(hasMultipleThemes: Bool = false) {
+        
+        self.hasMultipleThemes = hasMultipleThemes
+        
         super.init(frame: .zero)
         self.commonInit()
     }
@@ -343,7 +354,7 @@ class FlipNumberStripView: UIView, UITableViewDelegate, UITableViewDataSource {
         else {
             fatalError()
         }
-        cell.setup(withNumber: "\(itemToShow)")
+        cell.setup(withNumber: "\(itemToShow)", hasMultipleThemes: self.hasMultipleThemes)
         return cell
     }
     
@@ -396,8 +407,12 @@ class FlipNumberStripCellView: UITableViewCell {
         ])
     }
     
-    func setup(withNumber number: String) {
+    func setup(withNumber number: String, hasMultipleThemes: Bool = false) {
         self.numberLabel.text = number
+        
+        if hasMultipleThemes {
+            self.numberLabel.textColor = UIColor.App.textPrimary
+        }
     }
     
 }
