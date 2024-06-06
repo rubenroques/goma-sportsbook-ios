@@ -1,0 +1,23 @@
+{
+  "images" : [
+    {
+      "filename" : "Apple_Pay_Mark_RGB_041619 Copy 3.png",
+      "idiom" : "universal",
+      "scale" : "1x"
+    },
+    {
+      "filename" : "Apple_Pay_Mark_RGB_041619 Copy 3@2x.png",
+      "idiom" : "universal",
+      "scale" : "2x"
+    },
+    {
+      "filename" : "Apple_Pay_Mark_RGB_041619 Copy 3@3x.png",
+      "idiom" : "universal",
+      "scale" : "3x"
+    }
+  ],
+  "info" : {
+    "author" : "xcode",
+    "version" : 1
+  }
+}

@@ -20,6 +20,7 @@ class PromotionsWebViewController: UIViewController {
     var openHomeAction: () -> Void = { }
     var openRecruitAction: () -> Void = { }
     var openLiveAction: () -> Void = { }
+    var openContactSettingsAction: () -> Void = { }
 
     // MARK: - Private Properties
     private lazy var topSafeAreaView: UIView = Self.createTopSafeAreaView()
@@ -192,6 +193,8 @@ extension PromotionsWebViewController: WKScriptMessageHandler {
                 case "openRAF":
                     self.navigationController?.popViewController(animated: true)
                     self.openRecruitAction()
+                case "goNotifications":
+                    self.openContactSettingsAction()
                 default:
                     break
                 }

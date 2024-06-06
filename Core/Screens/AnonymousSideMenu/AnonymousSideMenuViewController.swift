@@ -18,6 +18,7 @@ class AnonymousSideMenuViewController: UIViewController {
     var requestBetSwipeAction: () -> Void = { }
     var requestHomeAction: () -> Void = { }
     var requestLiveAction: () -> Void = { }
+    var requestContactSettingsAction: () -> Void = { }
 
     var requestRegisterAction: () -> Void = { }
     var requestLoginAction: () -> Void = { }
@@ -260,6 +261,9 @@ extension AnonymousSideMenuViewController {
             }
             promotionsWebViewController.openLiveAction = { [weak self] in
                 self?.requestLiveAction()
+            }
+            promotionsWebViewController.openContactSettingsAction = { [weak self] in
+                self?.requestContactSettingsAction()
             }
             self.navigationController?.pushViewController(promotionsWebViewController, animated: true)
         }

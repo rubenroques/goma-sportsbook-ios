@@ -47,7 +47,7 @@ class BetSubmissionSuccessViewController: UIViewController {
         animationView.translatesAutoresizingMaskIntoConstraints = false
         animationView.contentMode = .scaleAspectFit
 
-        let startAnimation = LottieAnimation.named("replay_sucess")
+        let startAnimation = LottieAnimation.named("replay_sucess_2")
 
         animationView.animation = startAnimation
         animationView.loopMode = .playOnce
@@ -158,7 +158,7 @@ class BetSubmissionSuccessViewController: UIViewController {
             self.betSuccessAnimationView.leadingAnchor.constraint(equalTo: self.topBackgroundView.leadingAnchor),
             self.betSuccessAnimationView.trailingAnchor.constraint(equalTo: self.topBackgroundView.trailingAnchor),
             self.betSuccessAnimationView.topAnchor.constraint(equalTo: self.topBackgroundView.topAnchor),
-            self.betSuccessAnimationView.bottomAnchor.constraint(equalTo: self.topBackgroundView.bottomAnchor, constant: 20)
+            self.betSuccessAnimationView.bottomAnchor.constraint(equalTo: self.topBackgroundView.bottomAnchor, constant: 0)
 
         ])
         
@@ -193,7 +193,7 @@ class BetSubmissionSuccessViewController: UIViewController {
                                toItem: self.topBackgroundView,
                                attribute: .width,
                                multiplier: 1/self.aspectRatio,
-                               constant: -20)
+                               constant: 0)
 
             self.topGradientViewHeightConstraint.isActive = true
             self.topGradientViewCenterConstraint.isActive = false
@@ -260,6 +260,10 @@ class BetSubmissionSuccessViewController: UIViewController {
         // Background views
 
         self.topBackgroundView.colors = [(UIColor.App.backgroundHeaderGradient1, NSNumber(0.0)), (UIColor.App.backgroundHeaderGradient2, NSNumber(1.0))]
+        
+        if self.usedCashback {
+            self.topBackgroundView.colors = [(UIColor.App.backgroundHeaderGradient1, NSNumber(0.0)), (UIColor.App.backgroundHeaderGradient1, NSNumber(1.0))]
+        }
 
         self.bottomBackgroundView.backgroundColor = UIColor.App.backgroundPrimary
 

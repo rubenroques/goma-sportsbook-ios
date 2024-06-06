@@ -52,6 +52,7 @@ class DepositViewController: UIViewController {
     @IBOutlet private var nextButton: UIButton!
     @IBOutlet private var paymentsLabel: UILabel!
     @IBOutlet private var paymentsLogosStackView: UIStackView!
+    @IBOutlet private var paymentsLogosSecondStackView: UIStackView!
     @IBOutlet private var readAboutLabel: UILabel!
     @IBOutlet private var responsibleGamingLabel: UILabel!
     @IBOutlet private var questionPaymentLabel: UILabel!
@@ -331,6 +332,7 @@ class DepositViewController: UIViewController {
         self.paymentsLabel.textColor = UIColor.App.textSecondary
 
         self.paymentsLogosStackView.backgroundColor = .clear
+        self.paymentsLogosSecondStackView.backgroundColor = .clear
 
         self.loadingBaseView.backgroundColor = UIColor.App.backgroundPrimary.withAlphaComponent(0.7)
 
@@ -494,13 +496,20 @@ class DepositViewController: UIViewController {
         sepaImageView.image = UIImage(named: "payment_sepa_icon")
         sepaImageView.contentMode = .scaleAspectFit
         sepaImageView.layer.masksToBounds = true
+        
+        let applePayImageView = UIImageView()
+        applePayImageView.image = UIImage(named: "payment_apple_pay_icon")
+        applePayImageView.contentMode = .scaleAspectFit
+        applePayImageView.layer.masksToBounds = true
 
         self.paymentsLogosStackView.addArrangedSubview(visaImageView)
         self.paymentsLogosStackView.addArrangedSubview(masterCardImageView)
         self.paymentsLogosStackView.addArrangedSubview(carteBancaireImageView)
         self.paymentsLogosStackView.addArrangedSubview(paypalImageView)
-        self.paymentsLogosStackView.addArrangedSubview(paysafeImageView)
-        self.paymentsLogosStackView.addArrangedSubview(sepaImageView)
+        
+        self.paymentsLogosSecondStackView.addArrangedSubview(paysafeImageView)
+        self.paymentsLogosSecondStackView.addArrangedSubview(sepaImageView)
+        self.paymentsLogosSecondStackView.addArrangedSubview(applePayImageView)
 
     }
 
