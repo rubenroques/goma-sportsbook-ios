@@ -41,7 +41,6 @@ public class UserRegisterEnvelopUpdater {
                     while formattedPhoneNumber.hasPrefix("0") {
                         formattedPhoneNumber.removeFirst()
                     }
-                    
                     let fullPhoneNumber = "\(prefix)\(formattedPhoneNumber)"
                     return fullPhoneNumber.lowercased()
                 }
@@ -54,7 +53,7 @@ public class UserRegisterEnvelopUpdater {
 
     public var isPhoneNumberVerified: Bool {
         if let phonePrefix = self.userRegisterEnvelop.phonePrefixCountry?.phonePrefix,
-            let phoneNumber = self.userRegisterEnvelop.phoneNumber,
+           let phoneNumber = self.userRegisterEnvelop.phoneNumber,
            let verifiedPhoneNumber = self.userRegisterEnvelop.verifiedPhoneNumber {
             return "\(phonePrefix)\(phoneNumber)" == verifiedPhoneNumber
         }

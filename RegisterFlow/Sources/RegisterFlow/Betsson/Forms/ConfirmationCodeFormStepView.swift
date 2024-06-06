@@ -143,6 +143,12 @@ class ConfirmationCodeFormStepViewModel {
             formattedPhoneNumber.removeFirst()
         }
         
+        formattedPhoneNumber = formattedPhoneNumber.replacingOccurrences(of: "+", with: "")
+        formattedPhoneNumber = formattedPhoneNumber.replacingOccurrences(of: "*", with: "")
+        formattedPhoneNumber = formattedPhoneNumber.replacingOccurrences(of: "#", with: "")
+        formattedPhoneNumber = formattedPhoneNumber.replacingOccurrences(of: ",", with: "")
+        formattedPhoneNumber = formattedPhoneNumber.replacingOccurrences(of: ".", with: "")
+        
         return self.serviceProvider.getMobileVerificationCode(forMobileNumber: formattedPhoneNumber)
             .map { response -> PhoneVerificationResponse in
                 return PhoneVerificationResponse(id: response.requestId,

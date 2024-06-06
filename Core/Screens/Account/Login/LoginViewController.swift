@@ -330,7 +330,7 @@ class LoginViewController: UIViewController {
                         RegisterStep(forms: [.ageCountry]),
                         RegisterStep(forms: [.address]),
                         RegisterStep(forms: [.contacts]),
-                        RegisterStep(forms: [.password]),
+                        RegisterStep(forms: [.password]), 
                         RegisterStep(forms: [.terms, .promoCodes])
                     ]
         }

@@ -79,7 +79,8 @@ enum OmegaAPIClient {
 
                 streetNumber: String,
                 consentedIds: [String],
-                unconsentedIds: [String] )
+                unconsentedIds: [String],
+                mobileVerificationRequestId: String?)
     
     case updateExtraInfo(placeOfBirth: String?, address2: String?)
 
@@ -379,7 +380,8 @@ extension OmegaAPIClient: Endpoint {
                      let birthCountry,
                      let streetNumber,
                      let consentedIds,
-                     let unconsentedIds):
+                     let unconsentedIds,
+                     let mobileVerificationRequestId):
 
             let phoneNumber = "\(mobilePrefix)\(mobileNumber)".replacingOccurrences(of: "+", with: "")
 
@@ -421,6 +423,10 @@ extension OmegaAPIClient: Endpoint {
                 query.append(URLQueryItem(name: "receiveEmail", value: receiveMarketingEmails ? "true" : "false"))
             }
 
+            if let mobileVerificationRequestIdValue = mobileVerificationRequestId {
+                query.append(URLQueryItem(name: "verificationRequestId", value: mobileVerificationRequestIdValue))
+            }
+            
             let extraInfo = """
                             {
                             "avatar":"\(avatarName ?? "")",
@@ -428,6 +434,7 @@ extension OmegaAPIClient: Endpoint {
                             "godfatherCode":"\(godfatherCode ?? "")"
                             }
                             """
+            
             query.append(URLQueryItem(name: "extraInfo", value: extraInfo))
             
             if let godfatherCode {

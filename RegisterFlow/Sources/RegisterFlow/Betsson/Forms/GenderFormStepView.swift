@@ -39,7 +39,8 @@ class GenderFormStepViewModel {
 
     init(title: String,
          selectedGender: Gender?,
-         userRegisterEnvelopUpdater: UserRegisterEnvelopUpdater) {
+         userRegisterEnvelopUpdater: UserRegisterEnvelopUpdater) 
+    {
 
         self.title = title
         self.userRegisterEnvelopUpdater = userRegisterEnvelopUpdater
