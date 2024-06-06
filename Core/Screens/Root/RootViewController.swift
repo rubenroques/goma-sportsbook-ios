@@ -1199,6 +1199,12 @@ class RootViewController: UIViewController {
                     self?.presentRegisterScreen()
                 })
             }
+            
+            promotionsWebViewController.openContactSettingsAction = { [weak self] in
+                self?.dismiss(animated: true, completion: {
+                    self?.openContactSettings()
+                })
+            }
                         
             self.present(navigationController, animated: true, completion: nil)
         }
@@ -1445,6 +1451,12 @@ extension RootViewController {
                 })
             }
             
+            profileViewController.requestContactSettingsAction = { [weak self] in
+                navigationViewController.dismiss(animated: true, completion: {
+                    self?.openContactSettings()
+                })
+            }
+            
             self.present(navigationViewController, animated: true, completion: nil)
         }
     }
@@ -1479,6 +1491,12 @@ extension RootViewController {
         anonymousSideMenuViewController.requestLiveAction = { [weak self] in
             anonymousNavigationViewController.dismiss(animated: true, completion: {
                 self?.didTapLiveTabItem()
+            })
+        }
+        
+        anonymousSideMenuViewController.requestContactSettingsAction = { [weak self] in
+            anonymousNavigationViewController.dismiss(animated: true, completion: {
+                self?.openContactSettings()
             })
         }
         

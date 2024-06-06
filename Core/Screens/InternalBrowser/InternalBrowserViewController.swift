@@ -44,6 +44,7 @@ class InternalBrowserViewController: UIViewController {
     var requestHomeAction: (() -> Void)?
     var requestBetswipeAction: (() -> Void)?
     var requestLiveAction: (() -> Void)?
+    var requestContactSettingsAction: (() -> Void)?
 
     init(url: URL, fullscreen: Bool) {
         self.url = url
@@ -192,6 +193,8 @@ extension InternalBrowserViewController: WKScriptMessageHandler {
                 case "goLive":
                     print("OPEN LIVE!")
                     self.requestLiveAction?()
+                case "goNotifications":
+                    self.requestContactSettingsAction?()
                 default:
                     break
                 }

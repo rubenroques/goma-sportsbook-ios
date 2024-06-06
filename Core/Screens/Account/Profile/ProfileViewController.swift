@@ -17,6 +17,7 @@ class ProfileViewController: UIViewController {
     public var requestHomeAction: () -> Void = { }
     public var requestRegisterAction: () -> Void = { }
     public var requestLiveAction: () -> Void = { }
+    public var requestContactSettingsAction: () -> Void = { }
 
     // Outlets
     @IBOutlet private weak var safeAreaTopView: UIView!
@@ -368,17 +369,17 @@ class ProfileViewController: UIViewController {
 
         self.setupStackView()
 
-        let testTap = UITapGestureRecognizer(target: self, action: #selector(self.testTap))
-        self.profilePictureBaseView.addGestureRecognizer(testTap)
+//        let testTap = UITapGestureRecognizer(target: self, action: #selector(self.testTap))
+//        self.profilePictureBaseView.addGestureRecognizer(testTap)
         
     }
     
-    @objc private func testTap() {
-        
-        let vc = BetSubmissionSuccessViewController(betPlacedDetailsArray: [])
-        
-        self.present(vc, animated: true)
-    }
+//    @objc private func testTap() {
+//        
+//        let vc = BetSubmissionSuccessViewController(betPlacedDetailsArray: [], usedCashback: false)
+//        
+//        self.present(vc, animated: true)
+//    }
 
     private func getOptInBonus() {
 
@@ -807,6 +808,9 @@ extension ProfileViewController {
             }
             promotionsWebViewController.openRecruitAction = { [weak self] in
                 self?.openRecruitScreen()
+            }
+            promotionsWebViewController.openContactSettingsAction = { [weak self] in
+                self?.requestContactSettingsAction()
             }
             self.navigationController?.pushViewController(promotionsWebViewController, animated: true)
         }

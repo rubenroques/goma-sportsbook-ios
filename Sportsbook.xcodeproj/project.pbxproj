@@ -5173,6 +5173,14 @@
 		45FF105729D74721009AC196 /* UserTrackingSettingsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 45FF105229D74721009AC196 /* UserTrackingSettingsViewController.swift */; };
 		45FF105829D74721009AC196 /* UserTrackingSettingsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 45FF105229D74721009AC196 /* UserTrackingSettingsViewController.swift */; };
 		45FF105929D74721009AC196 /* UserTrackingSettingsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 45FF105229D74721009AC196 /* UserTrackingSettingsViewController.swift */; };
+		651BF0792C11BEE4001AF8F4 /* replay_sucess_2.json in Resources */ = {isa = PBXBuildFile; fileRef = 651BF0782C11BEE4001AF8F4 /* replay_sucess_2.json */; };
+		651BF07A2C11BEE4001AF8F4 /* replay_sucess_2.json in Resources */ = {isa = PBXBuildFile; fileRef = 651BF0782C11BEE4001AF8F4 /* replay_sucess_2.json */; };
+		651BF07B2C11BEE4001AF8F4 /* replay_sucess_2.json in Resources */ = {isa = PBXBuildFile; fileRef = 651BF0782C11BEE4001AF8F4 /* replay_sucess_2.json */; };
+		651BF07C2C11BEE4001AF8F4 /* replay_sucess_2.json in Resources */ = {isa = PBXBuildFile; fileRef = 651BF0782C11BEE4001AF8F4 /* replay_sucess_2.json */; };
+		651BF07D2C11BEE4001AF8F4 /* replay_sucess_2.json in Resources */ = {isa = PBXBuildFile; fileRef = 651BF0782C11BEE4001AF8F4 /* replay_sucess_2.json */; };
+		651BF07E2C11BEE4001AF8F4 /* replay_sucess_2.json in Resources */ = {isa = PBXBuildFile; fileRef = 651BF0782C11BEE4001AF8F4 /* replay_sucess_2.json */; };
+		651BF07F2C11BEE4001AF8F4 /* replay_sucess_2.json in Resources */ = {isa = PBXBuildFile; fileRef = 651BF0782C11BEE4001AF8F4 /* replay_sucess_2.json */; };
+		651BF0802C11BEE4001AF8F4 /* replay_sucess_2.json in Resources */ = {isa = PBXBuildFile; fileRef = 651BF0782C11BEE4001AF8F4 /* replay_sucess_2.json */; };
 		6531BB8E2C0A295B002C696D /* replay_coin.json in Resources */ = {isa = PBXBuildFile; fileRef = 6531BB8D2C0A295B002C696D /* replay_coin.json */; };
 		6531BB8F2C0A295B002C696D /* replay_coin.json in Resources */ = {isa = PBXBuildFile; fileRef = 6531BB8D2C0A295B002C696D /* replay_coin.json */; };
 		6531BB902C0A295B002C696D /* replay_coin.json in Resources */ = {isa = PBXBuildFile; fileRef = 6531BB8D2C0A295B002C696D /* replay_coin.json */; };
@@ -7539,6 +7547,7 @@
 		45F805952A05385B005296E0 /* dots-loading.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = "dots-loading.json"; sourceTree = "<group>"; };
 		45F8B156274BFF710087652B /* SystemBetResponse.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SystemBetResponse.swift; sourceTree = "<group>"; };
 		45FF105229D74721009AC196 /* UserTrackingSettingsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserTrackingSettingsViewController.swift; sourceTree = "<group>"; };
+		651BF0782C11BEE4001AF8F4 /* replay_sucess_2.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = replay_sucess_2.json; sourceTree = "<group>"; };
 		6531BB8D2C0A295B002C696D /* replay_coin.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = replay_coin.json; sourceTree = "<group>"; };
 		6531BB962C0E077C002C696D /* replay_sucess.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = replay_sucess.json; sourceTree = "<group>"; };
 		655E1FFB2B21E8A500C95337 /* NotificationsService.appex */ = {isa = PBXFileReference; explicitFileType = "wrapper.app-extension"; includeInIndex = 0; path = NotificationsService.appex; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -10106,6 +10115,7 @@
 				455897F02A9CE5C300E39598 /* progress_end_animation.json */,
 				6531BB8D2C0A295B002C696D /* replay_coin.json */,
 				6531BB962C0E077C002C696D /* replay_sucess.json */,
+				651BF0782C11BEE4001AF8F4 /* replay_sucess_2.json */,
 				65F819612BAC83DA004E27C3 /* first_deposit.json */,
 				A9A1B2D82A128D8A00F7A8ED /* deposit_animation.json */,
 				455897F82A9CE5CE00E39598 /* progress_bar_fire_ball.json */,
@@ -12183,6 +12193,7 @@
 				450B7AE028F58574009229E3 /* MaintenanceViewController.xib in Resources */,
 				450B7AE228F58574009229E3 /* Gilroy-Bold.ttf in Resources */,
 				450B7AE328F58574009229E3 /* SimpleRegisterEmailSentViewController.xib in Resources */,
+				651BF07B2C11BEE4001AF8F4 /* replay_sucess_2.json in Resources */,
 				450B7AE428F58574009229E3 /* Gilroy-SemiBold.ttf in Resources */,
 				450B7AE528F58574009229E3 /* CountrySelectorTableViewCell.xib in Resources */,
 				450B7AE628F58574009229E3 /* SimpleRegisterSendEmailCodeViewController.xib in Resources */,
@@ -12350,6 +12361,7 @@
 				457CBC08282D27D000ED0F00 /* WithdrawWebViewController.xib in Resources */,
 				457CBC09282D27D000ED0F00 /* DocumentPickerView.xib in Resources */,
 				457CBC0A282D27D000ED0F00 /* MaintenanceViewController.xib in Resources */,
+				651BF07F2C11BEE4001AF8F4 /* replay_sucess_2.json in Resources */,
 				457CBC0C282D27D000ED0F00 /* Gilroy-Bold.ttf in Resources */,
 				457CBC0D282D27D000ED0F00 /* SimpleRegisterEmailSentViewController.xib in Resources */,
 				457CBC0E282D27D000ED0F00 /* Gilroy-SemiBold.ttf in Resources */,
@@ -12508,6 +12520,7 @@
 				457CBEB2282D2CD100ED0F00 /* MaintenanceViewController.xib in Resources */,
 				457CBEB4282D2CD100ED0F00 /* Gilroy-Bold.ttf in Resources */,
 				457CBEB5282D2CD100ED0F00 /* SimpleRegisterEmailSentViewController.xib in Resources */,
+				651BF0802C11BEE4001AF8F4 /* replay_sucess_2.json in Resources */,
 				457CBEB6282D2CD100ED0F00 /* Gilroy-SemiBold.ttf in Resources */,
 				457CBEB7282D2CD100ED0F00 /* CountrySelectorTableViewCell.xib in Resources */,
 				457CBEB8282D2CD100ED0F00 /* SimpleRegisterSendEmailCodeViewController.xib in Resources */,
@@ -12666,6 +12679,7 @@
 				4589C988282024E400243547 /* DocumentPickerView.xib in Resources */,
 				4589C989282024E400243547 /* MaintenanceViewController.xib in Resources */,
 				45A6BB7A28202E6B00D9B416 /* LaunchScreen-GOMA.storyboard in Resources */,
+				651BF07C2C11BEE4001AF8F4 /* replay_sucess_2.json in Resources */,
 				4589C98A282024E400243547 /* Gilroy-Bold.ttf in Resources */,
 				4589C98B282024E400243547 /* SimpleRegisterEmailSentViewController.xib in Resources */,
 				4589C98C282024E400243547 /* Gilroy-SemiBold.ttf in Resources */,
@@ -12750,6 +12764,7 @@
 				45A332CF298976BA008181E9 /* BetslipErrorView.xib in Resources */,
 				45A332D0298976BA008181E9 /* SimpleRegisterDetailsViewController.xib in Resources */,
 				45A332D1298976BA008181E9 /* DebugViewController.xib in Resources */,
+				651BF0792C11BEE4001AF8F4 /* replay_sucess_2.json in Resources */,
 				6531BB8E2C0A295B002C696D /* replay_coin.json in Resources */,
 				45A332D2298976BA008181E9 /* CountryFlags.xcassets in Resources */,
 				45A332D3298976BA008181E9 /* FilterSliderCollapseView.xib in Resources */,
@@ -12983,6 +12998,7 @@
 				45A6BDE028246A7500D9B416 /* WithdrawWebViewController.xib in Resources */,
 				45A6BDE128246A7500D9B416 /* DocumentPickerView.xib in Resources */,
 				45A6BDE228246A7500D9B416 /* MaintenanceViewController.xib in Resources */,
+				651BF07E2C11BEE4001AF8F4 /* replay_sucess_2.json in Resources */,
 				45A6BDE328246A7500D9B416 /* Gilroy-Bold.ttf in Resources */,
 				45A6BDE428246A7500D9B416 /* SimpleRegisterEmailSentViewController.xib in Resources */,
 				45A6BDE528246A7500D9B416 /* Gilroy-SemiBold.ttf in Resources */,
@@ -13141,6 +13157,7 @@
 				45F6BDEC2AB3732C00C81DE1 /* MaintenanceViewController.xib in Resources */,
 				45F6BDED2AB3732C00C81DE1 /* Gilroy-Bold.ttf in Resources */,
 				45F6BDEE2AB3732C00C81DE1 /* SimpleRegisterEmailSentViewController.xib in Resources */,
+				651BF07A2C11BEE4001AF8F4 /* replay_sucess_2.json in Resources */,
 				45F6BDEF2AB3732C00C81DE1 /* Gilroy-SemiBold.ttf in Resources */,
 				45F6BDF02AB3732C00C81DE1 /* CountrySelectorTableViewCell.xib in Resources */,
 				45F6BDF12AB3732C00C81DE1 /* SimpleRegisterSendEmailCodeViewController.xib in Resources */,
@@ -13306,6 +13323,7 @@
 				A9C3433828F9A74A0055360B /* MaintenanceViewController.xib in Resources */,
 				A9C3433A28F9A74A0055360B /* Gilroy-Bold.ttf in Resources */,
 				A9C3433B28F9A74A0055360B /* SimpleRegisterEmailSentViewController.xib in Resources */,
+				651BF07D2C11BEE4001AF8F4 /* replay_sucess_2.json in Resources */,
 				A9C3433C28F9A74A0055360B /* Gilroy-SemiBold.ttf in Resources */,
 				A9C3433D28F9A74A0055360B /* CountrySelectorTableViewCell.xib in Resources */,
 				A9C3433E28F9A74A0055360B /* SimpleRegisterSendEmailCodeViewController.xib in Resources */,
