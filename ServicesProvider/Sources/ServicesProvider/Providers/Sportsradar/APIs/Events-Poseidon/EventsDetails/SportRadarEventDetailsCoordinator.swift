@@ -268,6 +268,11 @@ extension SportRadarEventDetailsCoordinator {
             self.eventDetailsCurrentValueSubject.send(.contentUpdate(content: storedEvent))
         }
         
+        if let serving = eventLiveDataExtended.activePlayerServing {
+            let mappedServing = SportRadarModelMapper.activePlayerServe(fromInternalActivePlayerServe: serving)
+            self.storage.updateActivePlayer(mappedServing)
+        }
+        
     }
     
     func updatedLiveData(eventLiveDataExtended: SportRadarModels.EventLiveDataExtended, forContentIdentifier contentIdentifier: ContentIdentifier) {

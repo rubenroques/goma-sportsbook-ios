@@ -156,9 +156,10 @@ class ClientManagedHomeViewTemplateDataSource {
         
         self.highlightedLiveMatchLineTableCellViewModelCache = [:]
 
-        #if DEBUG
+    #if DEBUG
+        self.fetchHighlightedLiveMatches()
         
-        #else
+    #else
         self.fetchAlerts()
         self.fetchQuickSwipeMatches()
         self.fetchBanners()
@@ -167,7 +168,7 @@ class ClientManagedHomeViewTemplateDataSource {
         self.fetchPromotionalStories()
         self.fetchTopCompetitions()
         self.fetchHighlightedLiveMatches()
-        #endif
+    #endif
 
     }
 
@@ -419,7 +420,11 @@ class ClientManagedHomeViewTemplateDataSource {
 
     func fetchHighlightedLiveMatches() {
         
+        #if DEBUG
+        let homeLiveEventsCount = 20
+        #else
         let homeLiveEventsCount = Env.businessSettingsSocket.clientSettings.homeLiveEventsCount
+        #endif
         
         self.highlightedLiveMatches = []
         
