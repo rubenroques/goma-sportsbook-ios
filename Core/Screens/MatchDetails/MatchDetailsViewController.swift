@@ -920,7 +920,6 @@ class MatchDetailsViewController: UIViewController {
         
     }
     
-    
     private func refreshViewModel() {
         self.viewModel.forceRefreshData()
     }

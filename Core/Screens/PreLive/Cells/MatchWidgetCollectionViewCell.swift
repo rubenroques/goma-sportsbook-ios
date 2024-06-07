@@ -229,6 +229,18 @@ class MatchWidgetCollectionViewCell: UICollectionViewCell {
         return constraint
     }()
     
+    lazy var homeToRightConstraint: NSLayoutConstraint = {
+        let constraint = NSLayoutConstraint()
+        return constraint
+    }()
+    
+    lazy var awayToRightConstraint: NSLayoutConstraint = {
+        let constraint = NSLayoutConstraint()
+        return constraint
+    }()
+    
+    //
+    
     private var contentRedesignBaseView: UIView = {
         var view = UIView()
         view.backgroundColor = .blue
@@ -1300,6 +1312,9 @@ class MatchWidgetCollectionViewCell: UICollectionViewCell {
         self.dateNewLabel.isHidden = true
         self.timeNewLabel.isHidden = true
         
+        self.homeToRightConstraint.isActive = false
+        self.awayToRightConstraint.isActive = false
+        
         self.detailedScoreView.isHidden = false
         
         self.resultStackView.isHidden = false
@@ -1331,6 +1346,9 @@ class MatchWidgetCollectionViewCell: UICollectionViewCell {
         self.dateStackView.isHidden = false
         self.dateNewLabel.isHidden = false
         self.timeNewLabel.isHidden = false
+        
+        self.homeToRightConstraint.isActive = true
+        self.awayToRightConstraint.isActive = true
         
         self.detailedScoreView.isHidden = true
         
@@ -2554,6 +2572,9 @@ extension MatchWidgetCollectionViewCell {
         self.homeContentRedesignTopConstraint = homeElementsStackView.topAnchor.constraint(equalTo: self.contentRedesignBaseView.topAnchor, constant: 13)
         self.awayContentRedesignTopConstraint = awayElementsStackView.topAnchor.constraint(equalTo: self.contentRedesignBaseView.topAnchor, constant: 33)
         
+        self.homeToRightConstraint = self.dateNewLabel.leadingAnchor.constraint(greaterThanOrEqualTo: homeElementsStackView.trailingAnchor, constant: 5)
+        self.awayToRightConstraint = self.timeNewLabel.leadingAnchor.constraint(greaterThanOrEqualTo: awayElementsStackView.trailingAnchor, constant: 5)
+        
         NSLayoutConstraint.activate([
             self.contentRedesignBaseView.leadingAnchor.constraint(equalTo: self.mainContentBaseView.leadingAnchor, constant: 2),
             self.contentRedesignBaseView.trailingAnchor.constraint(equalTo: self.mainContentBaseView.trailingAnchor, constant: -2),
@@ -2595,20 +2616,28 @@ extension MatchWidgetCollectionViewCell {
             self.awayServingIndicatorView.widthAnchor.constraint(equalTo: self.awayServingIndicatorView.heightAnchor),
             self.awayServingIndicatorView.widthAnchor.constraint(equalToConstant: 9),
             
+            
             //
             self.dateNewLabel.trailingAnchor.constraint(equalTo: self.contentRedesignBaseView.trailingAnchor, constant: -12),
             self.dateNewLabel.topAnchor.constraint(equalTo: self.homeNameLabel.topAnchor),
+            self.homeToRightConstraint,
             
             self.timeNewLabel.trailingAnchor.constraint(equalTo: self.contentRedesignBaseView.trailingAnchor, constant: -12),
             self.timeNewLabel.bottomAnchor.constraint(equalTo: self.awayNameLabel.bottomAnchor),
+            self.awayToRightConstraint,
             
             self.matchTimeStatusNewLabel.trailingAnchor.constraint(equalTo: self.contentRedesignBaseView.trailingAnchor, constant: -12),
             self.matchTimeStatusNewLabel.bottomAnchor.constraint(equalTo: self.contentRedesignBaseView.bottomAnchor, constant: -6),
             
             self.marketNamePillLabelView.leadingAnchor.constraint(equalTo: self.contentRedesignBaseView.leadingAnchor, constant: 11),
             self.marketNamePillLabelView.bottomAnchor.constraint(equalTo: self.contentRedesignBaseView.bottomAnchor, constant: -4),
+            
+            self.matchTimeStatusNewLabel.leadingAnchor.constraint(greaterThanOrEqualTo: self.marketNamePillLabelView.trailingAnchor, constant: 5),
         ])
 
+        self.marketNamePillLabelView.setContentCompressionResistancePriority(UILayoutPriority(990), for: .horizontal)
+        self.matchTimeStatusNewLabel.setContentCompressionResistancePriority(.required, for: .horizontal)
+        
         self.homeNameLabel.setContentHuggingPriority(UILayoutPriority(990), for: .horizontal)
         self.awayNameLabel.setContentHuggingPriority(UILayoutPriority(990), for: .horizontal)
     }
