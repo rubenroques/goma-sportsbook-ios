@@ -47,7 +47,7 @@ class BetSubmissionSuccessViewController: UIViewController {
         animationView.translatesAutoresizingMaskIntoConstraints = false
         animationView.contentMode = .scaleAspectFit
 
-        let startAnimation = LottieAnimation.named("replay_sucess_2")
+        let startAnimation = LottieAnimation.named("replay_sucess_3")
 
         animationView.animation = startAnimation
         animationView.loopMode = .playOnce

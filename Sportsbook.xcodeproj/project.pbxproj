@@ -5181,6 +5181,14 @@
 		651BF07E2C11BEE4001AF8F4 /* replay_sucess_2.json in Resources */ = {isa = PBXBuildFile; fileRef = 651BF0782C11BEE4001AF8F4 /* replay_sucess_2.json */; };
 		651BF07F2C11BEE4001AF8F4 /* replay_sucess_2.json in Resources */ = {isa = PBXBuildFile; fileRef = 651BF0782C11BEE4001AF8F4 /* replay_sucess_2.json */; };
 		651BF0802C11BEE4001AF8F4 /* replay_sucess_2.json in Resources */ = {isa = PBXBuildFile; fileRef = 651BF0782C11BEE4001AF8F4 /* replay_sucess_2.json */; };
+		651BF0822C133FB5001AF8F4 /* replay_sucess_3.json in Resources */ = {isa = PBXBuildFile; fileRef = 651BF0812C133FB4001AF8F4 /* replay_sucess_3.json */; };
+		651BF0832C133FB5001AF8F4 /* replay_sucess_3.json in Resources */ = {isa = PBXBuildFile; fileRef = 651BF0812C133FB4001AF8F4 /* replay_sucess_3.json */; };
+		651BF0842C133FB5001AF8F4 /* replay_sucess_3.json in Resources */ = {isa = PBXBuildFile; fileRef = 651BF0812C133FB4001AF8F4 /* replay_sucess_3.json */; };
+		651BF0852C133FB5001AF8F4 /* replay_sucess_3.json in Resources */ = {isa = PBXBuildFile; fileRef = 651BF0812C133FB4001AF8F4 /* replay_sucess_3.json */; };
+		651BF0862C133FB5001AF8F4 /* replay_sucess_3.json in Resources */ = {isa = PBXBuildFile; fileRef = 651BF0812C133FB4001AF8F4 /* replay_sucess_3.json */; };
+		651BF0872C133FB5001AF8F4 /* replay_sucess_3.json in Resources */ = {isa = PBXBuildFile; fileRef = 651BF0812C133FB4001AF8F4 /* replay_sucess_3.json */; };
+		651BF0882C133FB5001AF8F4 /* replay_sucess_3.json in Resources */ = {isa = PBXBuildFile; fileRef = 651BF0812C133FB4001AF8F4 /* replay_sucess_3.json */; };
+		651BF0892C133FB5001AF8F4 /* replay_sucess_3.json in Resources */ = {isa = PBXBuildFile; fileRef = 651BF0812C133FB4001AF8F4 /* replay_sucess_3.json */; };
 		6531BB8E2C0A295B002C696D /* replay_coin.json in Resources */ = {isa = PBXBuildFile; fileRef = 6531BB8D2C0A295B002C696D /* replay_coin.json */; };
 		6531BB8F2C0A295B002C696D /* replay_coin.json in Resources */ = {isa = PBXBuildFile; fileRef = 6531BB8D2C0A295B002C696D /* replay_coin.json */; };
 		6531BB902C0A295B002C696D /* replay_coin.json in Resources */ = {isa = PBXBuildFile; fileRef = 6531BB8D2C0A295B002C696D /* replay_coin.json */; };
@@ -7548,6 +7556,7 @@
 		45F8B156274BFF710087652B /* SystemBetResponse.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SystemBetResponse.swift; sourceTree = "<group>"; };
 		45FF105229D74721009AC196 /* UserTrackingSettingsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserTrackingSettingsViewController.swift; sourceTree = "<group>"; };
 		651BF0782C11BEE4001AF8F4 /* replay_sucess_2.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = replay_sucess_2.json; sourceTree = "<group>"; };
+		651BF0812C133FB4001AF8F4 /* replay_sucess_3.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = replay_sucess_3.json; sourceTree = "<group>"; };
 		6531BB8D2C0A295B002C696D /* replay_coin.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = replay_coin.json; sourceTree = "<group>"; };
 		6531BB962C0E077C002C696D /* replay_sucess.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = replay_sucess.json; sourceTree = "<group>"; };
 		655E1FFB2B21E8A500C95337 /* NotificationsService.appex */ = {isa = PBXFileReference; explicitFileType = "wrapper.app-extension"; includeInIndex = 0; path = NotificationsService.appex; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -10116,6 +10125,7 @@
 				6531BB8D2C0A295B002C696D /* replay_coin.json */,
 				6531BB962C0E077C002C696D /* replay_sucess.json */,
 				651BF0782C11BEE4001AF8F4 /* replay_sucess_2.json */,
+				651BF0812C133FB4001AF8F4 /* replay_sucess_3.json */,
 				65F819612BAC83DA004E27C3 /* first_deposit.json */,
 				A9A1B2D82A128D8A00F7A8ED /* deposit_animation.json */,
 				455897F82A9CE5CE00E39598 /* progress_bar_fire_ball.json */,
@@ -12252,6 +12262,7 @@
 				A9A521822A03BD8D00C0F6C6 /* zendesk_support.html in Resources */,
 				450B7B1428F58574009229E3 /* DepositWebViewController.xib in Resources */,
 				450B7B1528F58574009229E3 /* .swiftlint.yml in Resources */,
+				651BF0842C133FB5001AF8F4 /* replay_sucess_3.json in Resources */,
 				450B7B1628F58574009229E3 /* RecentSearchTableViewCell.xib in Resources */,
 				450B7B1728F58574009229E3 /* OutcomeSelectionButtonView.xib in Resources */,
 				450B7B3A28F58625009229E3 /* Colors.xcassets in Resources */,
@@ -12420,6 +12431,7 @@
 				A9A521862A03BD8D00C0F6C6 /* zendesk_support.html in Resources */,
 				457CBC3D282D27D000ED0F00 /* Gilroy-ExtraBold.ttf in Resources */,
 				457CBC3E282D27D000ED0F00 /* DepositWebViewController.xib in Resources */,
+				651BF0882C133FB5001AF8F4 /* replay_sucess_3.json in Resources */,
 				457CBC3F282D27D000ED0F00 /* .swiftlint.yml in Resources */,
 				457CBC40282D27D000ED0F00 /* RecentSearchTableViewCell.xib in Resources */,
 				457CBC41282D27D000ED0F00 /* OutcomeSelectionButtonView.xib in Resources */,
@@ -12579,6 +12591,7 @@
 				A9A521872A03BD8D00C0F6C6 /* zendesk_support.html in Resources */,
 				457CBEE4282D2CD100ED0F00 /* Gilroy-ExtraBold.ttf in Resources */,
 				457CBEE5282D2CD100ED0F00 /* DepositWebViewController.xib in Resources */,
+				651BF0892C133FB5001AF8F4 /* replay_sucess_3.json in Resources */,
 				457CBEE6282D2CD100ED0F00 /* .swiftlint.yml in Resources */,
 				457CBEE7282D2CD100ED0F00 /* RecentSearchTableViewCell.xib in Resources */,
 				457CBEE8282D2CD100ED0F00 /* OutcomeSelectionButtonView.xib in Resources */,
@@ -12738,6 +12751,7 @@
 				A9A521832A03BD8D00C0F6C6 /* zendesk_support.html in Resources */,
 				4589C9BB282024E400243547 /* CompetitionSearchTableViewCell.xib in Resources */,
 				4589C9BC282024E400243547 /* Gilroy-ExtraBold.ttf in Resources */,
+				651BF0852C133FB5001AF8F4 /* replay_sucess_3.json in Resources */,
 				4589C9BD282024E400243547 /* DepositWebViewController.xib in Resources */,
 				4589C9BE282024E400243547 /* .swiftlint.yml in Resources */,
 				4589C9BF282024E400243547 /* RecentSearchTableViewCell.xib in Resources */,
@@ -12863,6 +12877,7 @@
 				45A3331C298976BA008181E9 /* MatchDetailsViewController.xib in Resources */,
 				45A3331E298976BA008181E9 /* PersonalInfoViewController.xib in Resources */,
 				45A3331F298976BA008181E9 /* FullRegisterAddressCountryViewController.xib in Resources */,
+				651BF0822C133FB5001AF8F4 /* replay_sucess_3.json in Resources */,
 				45A33320298976BA008181E9 /* FullRegisterPersonalInfoViewController.xib in Resources */,
 				45A33321298976BA008181E9 /* HomeAwayCardStatsView.xib in Resources */,
 				45F6BA922AB1F2B600C81DE1 /* avatar5-light.json in Resources */,
@@ -13057,6 +13072,7 @@
 				A9A521852A03BD8D00C0F6C6 /* zendesk_support.html in Resources */,
 				45A6BE1428246A7500D9B416 /* CompetitionSearchTableViewCell.xib in Resources */,
 				45A6BE1528246A7500D9B416 /* Gilroy-ExtraBold.ttf in Resources */,
+				651BF0872C133FB5001AF8F4 /* replay_sucess_3.json in Resources */,
 				45A6BE1628246A7500D9B416 /* DepositWebViewController.xib in Resources */,
 				45A6BE1728246A7500D9B416 /* .swiftlint.yml in Resources */,
 				45A6BE1828246A7500D9B416 /* RecentSearchTableViewCell.xib in Resources */,
@@ -13216,6 +13232,7 @@
 				45F6BE242AB3732C00C81DE1 /* Gilroy-ExtraBold.ttf in Resources */,
 				45F6BE252AB3732C00C81DE1 /* LaunchScreen-Betsson.storyboard in Resources */,
 				45F6BE262AB3732C00C81DE1 /* DepositWebViewController.xib in Resources */,
+				651BF0832C133FB5001AF8F4 /* replay_sucess_3.json in Resources */,
 				45F6BE272AB3732C00C81DE1 /* deposit_animation.json in Resources */,
 				45F6BE282AB3732C00C81DE1 /* .swiftlint.yml in Resources */,
 				45F6BE292AB3732C00C81DE1 /* RecentSearchTableViewCell.xib in Resources */,
@@ -13382,6 +13399,7 @@
 				A9C3436C28F9A74A0055360B /* DepositWebViewController.xib in Resources */,
 				A9C3436D28F9A74A0055360B /* .swiftlint.yml in Resources */,
 				A9C3436E28F9A74A0055360B /* RecentSearchTableViewCell.xib in Resources */,
+				651BF0862C133FB5001AF8F4 /* replay_sucess_3.json in Resources */,
 				A9A1B2DC2A128D8B00F7A8ED /* deposit_animation.json in Resources */,
 				A9C3436F28F9A74A0055360B /* OutcomeSelectionButtonView.xib in Resources */,
 				A9C3437028F9A74A0055360B /* TitleTextFieldView.xib in Resources */,
