@@ -45,8 +45,8 @@ extension SportRadarModelMapper {
         }
         
         return Event(id: internalEvent.id,
-                     homeTeamName: internalEvent.homeName ?? "",
-                     awayTeamName: internalEvent.awayName ?? "",
+                     homeTeamName: (internalEvent.homeName ?? "") + (internalEvent.homeName ?? "") + (internalEvent.homeName ?? ""),
+                     awayTeamName: (internalEvent.awayName ?? "") + (internalEvent.awayName ?? "") + (internalEvent.awayName ?? ""),
                      homeTeamScore: internalEvent.homeScore,
                      awayTeamScore: internalEvent.awayScore,
                      competitionId: internalEvent.competitionId ?? "",

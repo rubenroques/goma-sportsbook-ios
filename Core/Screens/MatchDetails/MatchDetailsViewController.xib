@@ -260,14 +260,14 @@
                                 <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="KIC-K7-6hl">
                                     <rect key="frame" x="355.5" y="14" width="340.5" height="42"/>
                                     <subviews>
-                                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="" textAlignment="right" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="nIe-Dn-yAE">
-                                            <rect key="frame" x="0.0" y="8" width="340.5" height="0.0"/>
+                                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" horizontalCompressionResistancePriority="752" verticalCompressionResistancePriority="752" text="" textAlignment="right" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="nIe-Dn-yAE">
+                                            <rect key="frame" x="340.5" y="8" width="0.0" height="0.0"/>
                                             <fontDescription key="fontDescription" name="Gilroy-Semibold" family="Gilroy" pointSize="14"/>
                                             <nil key="textColor"/>
                                             <nil key="highlightedColor"/>
                                         </label>
-                                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="" textAlignment="right" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="J4V-ew-SmM">
-                                            <rect key="frame" x="0.0" y="34" width="340.5" height="0.0"/>
+                                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" horizontalCompressionResistancePriority="753" verticalCompressionResistancePriority="753" text="" textAlignment="right" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="J4V-ew-SmM">
+                                            <rect key="frame" x="340.5" y="34" width="0.0" height="0.0"/>
                                             <fontDescription key="fontDescription" name="Gilroy-Bold" family="Gilroy" pointSize="16"/>
                                             <nil key="textColor"/>
                                             <nil key="highlightedColor"/>
@@ -276,8 +276,6 @@
                                     <color key="backgroundColor" systemColor="systemBackgroundColor"/>
                                     <constraints>
                                         <constraint firstAttribute="trailing" secondItem="J4V-ew-SmM" secondAttribute="trailing" id="FMW-xh-OfK"/>
-                                        <constraint firstItem="nIe-Dn-yAE" firstAttribute="leading" secondItem="KIC-K7-6hl" secondAttribute="leading" id="Wcm-ZQ-Chh"/>
-                                        <constraint firstItem="J4V-ew-SmM" firstAttribute="leading" secondItem="KIC-K7-6hl" secondAttribute="leading" id="XM8-Ey-yS2"/>
                                         <constraint firstAttribute="trailing" secondItem="nIe-Dn-yAE" secondAttribute="trailing" id="xdx-Dp-9hq"/>
                                     </constraints>
                                 </view>
@@ -326,6 +324,8 @@
                                 <constraint firstItem="KIC-K7-6hl" firstAttribute="bottom" secondItem="0VL-lj-BYR" secondAttribute="bottom" id="63F-XI-Xeq"/>
                                 <constraint firstItem="Wh0-1s-CDa" firstAttribute="trailing" secondItem="KIC-K7-6hl" secondAttribute="trailing" id="6Gj-DP-4u4"/>
                                 <constraint firstAttribute="trailing" secondItem="lij-S3-MhM" secondAttribute="trailing" constant="15" id="6Vb-AG-E4d"/>
+                                <constraint firstItem="J4V-ew-SmM" firstAttribute="leading" relation="greaterThanOrEqual" secondItem="0VL-lj-BYR" secondAttribute="trailing" constant="8" id="6h1-JJ-xVc"/>
+                                <constraint firstItem="nIe-Dn-yAE" firstAttribute="leading" relation="greaterThanOrEqual" secondItem="Sue-gp-elT" secondAttribute="trailing" constant="8" id="7vx-CS-g19"/>
                                 <constraint firstItem="A0C-Sp-Zc8" firstAttribute="centerY" secondItem="Sue-gp-elT" secondAttribute="centerY" id="9i8-MV-nR3"/>
                                 <constraint firstItem="nIe-Dn-yAE" firstAttribute="centerY" secondItem="Sue-gp-elT" secondAttribute="centerY" id="GL4-kz-LiS"/>
                                 <constraint firstItem="KIC-K7-6hl" firstAttribute="leading" secondItem="3qf-yS-Jbk" secondAttribute="centerX" id="GuQ-ha-SV5"/>
@@ -334,6 +334,7 @@
                                 <constraint firstItem="KIC-K7-6hl" firstAttribute="top" secondItem="Sue-gp-elT" secondAttribute="top" id="XUy-wM-mQr"/>
                                 <constraint firstItem="J4V-ew-SmM" firstAttribute="centerY" secondItem="0VL-lj-BYR" secondAttribute="centerY" id="YiQ-ob-GTw"/>
                                 <constraint firstItem="mIT-bf-hxh" firstAttribute="centerY" secondItem="0VL-lj-BYR" secondAttribute="centerY" id="Yta-rc-Gx6"/>
+                                <constraint firstItem="GYh-Zu-X5l" firstAttribute="leading" relation="greaterThanOrEqual" secondItem="0VL-lj-BYR" secondAttribute="trailing" constant="30" id="a9L-by-NxN"/>
                                 <constraint firstItem="Sue-gp-elT" firstAttribute="top" secondItem="3qf-yS-Jbk" secondAttribute="top" constant="14" id="bwN-0L-tHe"/>
                                 <constraint firstItem="Wh0-1s-CDa" firstAttribute="top" secondItem="KIC-K7-6hl" secondAttribute="bottom" constant="8" id="cue-mv-hLO"/>
                                 <constraint firstItem="0VL-lj-BYR" firstAttribute="top" secondItem="Sue-gp-elT" secondAttribute="bottom" constant="10" id="dev-V9-Tod"/>
@@ -343,6 +344,7 @@
                                 <constraint firstItem="A0C-Sp-Zc8" firstAttribute="leading" secondItem="Sue-gp-elT" secondAttribute="trailing" constant="5" id="qG1-8p-CkF"/>
                                 <constraint firstAttribute="trailing" secondItem="KIC-K7-6hl" secondAttribute="trailing" constant="15" id="tzn-Jr-kdf"/>
                                 <constraint firstItem="lij-S3-MhM" firstAttribute="top" secondItem="Sue-gp-elT" secondAttribute="top" id="uMH-Sq-9V2"/>
+                                <constraint firstItem="GYh-Zu-X5l" firstAttribute="leading" relation="greaterThanOrEqual" secondItem="Sue-gp-elT" secondAttribute="trailing" constant="30" id="vMI-8T-iJi"/>
                             </constraints>
                         </view>
                         <stackView opaque="NO" contentMode="scaleAspectFill" distribution="fillEqually" spacing="4" translatesAutoresizingMaskIntoConstraints="NO" id="j7O-NU-JjV">

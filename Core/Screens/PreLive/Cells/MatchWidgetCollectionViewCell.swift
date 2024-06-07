@@ -2595,7 +2595,6 @@ extension MatchWidgetCollectionViewCell {
             self.awayServingIndicatorView.widthAnchor.constraint(equalTo: self.awayServingIndicatorView.heightAnchor),
             self.awayServingIndicatorView.widthAnchor.constraint(equalToConstant: 9),
             
-            
             //
             self.dateNewLabel.trailingAnchor.constraint(equalTo: self.contentRedesignBaseView.trailingAnchor, constant: -12),
             self.dateNewLabel.topAnchor.constraint(equalTo: self.homeNameLabel.topAnchor),
