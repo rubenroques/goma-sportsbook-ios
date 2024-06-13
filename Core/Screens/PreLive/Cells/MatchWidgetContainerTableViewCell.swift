@@ -15,7 +15,7 @@ class MatchWidgetContainerTableViewCell: UITableViewCell {
     var didTapFavoriteMatchAction: ((Match) -> Void) = { _ in }
     var didLongPressOdd: ((BettingTicket) -> Void) = { _ in }
     var tappedMatchOutrightLineAction: ((Competition) -> Void) = { _ in }
-
+    var tappedMixMatchAction: ((Match) -> Void)?
 
     private lazy var baseView: UIView = Self.createBaseView()
     private lazy var collectionView: UICollectionView = Self.createCell()
@@ -117,6 +117,10 @@ extension MatchWidgetContainerTableViewCell: UICollectionViewDelegate, UICollect
 
         cell.didLongPressOdd = { bettingTicket in
             self.didLongPressOdd(bettingTicket)
+        }
+        
+        cell.tappedMixMatchAction = { [weak self] match in
+            self?.tappedMixMatchAction?(match)
         }
 
         cell.shouldShowCountryFlag(true)

@@ -1613,6 +1613,11 @@ Pour le faire, il faut s’adresser à l’Autorité Nationale des Jeux (ANJ).";
 
 "share_raf_link" = "Check out this fresh sportsbook, sign up using this referral link, and receive a bonus!";
 
+"mix_match_mix_string" = "Mix";
+"mix_match_match_string" = "Match";
+"mix_match_tooltip_description" = "MixMatch - allows you to customise your bet by adding multiple markets from a match into a single bet";
+"mix_match_or_bet_with_string" = "Or bet with";
+
 /* Localizable.strings */
 "AF" = "Afghanistan";
 "AX" = "Aland Islands";

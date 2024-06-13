@@ -814,6 +814,14 @@
 		452B9D2C2C1890CA0032363F /* BetBuilderBettingTicketDataSource.swift in Sources */ = {isa = PBXBuildFile; fileRef = 452B9D262C1890CA0032363F /* BetBuilderBettingTicketDataSource.swift */; };
 		452B9D2D2C1890CA0032363F /* BetBuilderBettingTicketDataSource.swift in Sources */ = {isa = PBXBuildFile; fileRef = 452B9D262C1890CA0032363F /* BetBuilderBettingTicketDataSource.swift */; };
 		452B9D2E2C1890CA0032363F /* BetBuilderBettingTicketDataSource.swift in Sources */ = {isa = PBXBuildFile; fileRef = 452B9D262C1890CA0032363F /* BetBuilderBettingTicketDataSource.swift */; };
+		452B9D302C1B54860032363F /* ListBackgroundCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 452B9D2F2C1B54860032363F /* ListBackgroundCollectionViewCell.swift */; };
+		452B9D312C1B54860032363F /* ListBackgroundCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 452B9D2F2C1B54860032363F /* ListBackgroundCollectionViewCell.swift */; };
+		452B9D322C1B54860032363F /* ListBackgroundCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 452B9D2F2C1B54860032363F /* ListBackgroundCollectionViewCell.swift */; };
+		452B9D332C1B54870032363F /* ListBackgroundCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 452B9D2F2C1B54860032363F /* ListBackgroundCollectionViewCell.swift */; };
+		452B9D342C1B54870032363F /* ListBackgroundCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 452B9D2F2C1B54860032363F /* ListBackgroundCollectionViewCell.swift */; };
+		452B9D352C1B54870032363F /* ListBackgroundCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 452B9D2F2C1B54860032363F /* ListBackgroundCollectionViewCell.swift */; };
+		452B9D362C1B54870032363F /* ListBackgroundCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 452B9D2F2C1B54860032363F /* ListBackgroundCollectionViewCell.swift */; };
+		452B9D372C1B54870032363F /* ListBackgroundCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 452B9D2F2C1B54860032363F /* ListBackgroundCollectionViewCell.swift */; };
 		452BA18A2A902C4900D0AA48 /* avatar3-dark.json in Resources */ = {isa = PBXBuildFile; fileRef = 452BA1842A902C4800D0AA48 /* avatar3-dark.json */; };
 		452BA18B2A902C4900D0AA48 /* avatar3-dark.json in Resources */ = {isa = PBXBuildFile; fileRef = 452BA1842A902C4800D0AA48 /* avatar3-dark.json */; };
 		452BA18C2A902C4900D0AA48 /* avatar3-dark.json in Resources */ = {isa = PBXBuildFile; fileRef = 452BA1842A902C4800D0AA48 /* avatar3-dark.json */; };
@@ -7157,6 +7165,7 @@
 		452B9D142C188FEF0032363F /* MultipleBettingTicketDataSource.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MultipleBettingTicketDataSource.swift; sourceTree = "<group>"; };
 		452B9D1D2C1890160032363F /* SystemBettingTicketDataSource.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SystemBettingTicketDataSource.swift; sourceTree = "<group>"; };
 		452B9D262C1890CA0032363F /* BetBuilderBettingTicketDataSource.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BetBuilderBettingTicketDataSource.swift; sourceTree = "<group>"; };
+		452B9D2F2C1B54860032363F /* ListBackgroundCollectionViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ListBackgroundCollectionViewCell.swift; sourceTree = "<group>"; };
 		452BA1842A902C4800D0AA48 /* avatar3-dark.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = "avatar3-dark.json"; sourceTree = "<group>"; };
 		452BA1852A902C4800D0AA48 /* avatar6-dark.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = "avatar6-dark.json"; sourceTree = "<group>"; };
 		452BA1862A902C4900D0AA48 /* avatar1-dark.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = "avatar1-dark.json"; sourceTree = "<group>"; };
@@ -11307,6 +11316,7 @@
 		A9BCF43A274FB589006DD528 /* Cells */ = {
 			isa = PBXGroup;
 			children = (
+				452B9D2F2C1B54860032363F /* ListBackgroundCollectionViewCell.swift */,
 				45626E36275541790069B89B /* ThreeAwayMarketDetailTableViewCell.swift */,
 				45626E37275541790069B89B /* ThreeAwayMarketDetailTableViewCell.xib */,
 				45626E422755599D0069B89B /* OverUnderMarketDetailTableViewCell.swift */,
@@ -14164,6 +14174,7 @@
 				45372F5C29D1FD04002FB894 /* OddOutcomesSortingHelper.swift in Sources */,
 				450B7A1D28F58574009229E3 /* SearchTitleSectionHeaderView.swift in Sources */,
 				A9BDD4F2292E3F08001A7799 /* SportTypeStore.swift in Sources */,
+				452B9D322C1B54860032363F /* ListBackgroundCollectionViewCell.swift in Sources */,
 				450B7A1E28F58574009229E3 /* EmptyCardTableViewCell.swift in Sources */,
 				450B7A2028F58574009229E3 /* AddFriendViewController.swift in Sources */,
 				45F6BA712AAF32A100C81DE1 /* BetslipProxyWebViewController.swift in Sources */,
@@ -14790,6 +14801,7 @@
 				457CBAD9282D27D000ED0F00 /* UIAlertController+Extensions.swift in Sources */,
 				457CBADA282D27D000ED0F00 /* CGPoint+Extensions.swift in Sources */,
 				45C10FAA28772DA700037BBE /* ViewState.swift in Sources */,
+				452B9D362C1B54870032363F /* ListBackgroundCollectionViewCell.swift in Sources */,
 				457CBADB282D27D000ED0F00 /* MyTicketsViewModel.swift in Sources */,
 				457CBADC282D27D000ED0F00 /* EventPartScore.swift in Sources */,
 				457CBADD282D27D000ED0F00 /* PreLiveEventsViewController.swift in Sources */,
@@ -15137,6 +15149,7 @@
 				457CBC92282D2CD100ED0F00 /* SwiftyJSON.swift in Sources */,
 				45B9F98D2A1E564D00DA2B88 /* HomeTemplateParser.swift in Sources */,
 				457CBC93282D2CD100ED0F00 /* RoundButton.swift in Sources */,
+				452B9D372C1B54870032363F /* ListBackgroundCollectionViewCell.swift in Sources */,
 				45C10F8128772DA700037BBE /* NSObject+Shift.swift in Sources */,
 				457CBC94282D2CD100ED0F00 /* HomeAwayCardStatsView.swift in Sources */,
 				45ECD7632A90012600492CB9 /* SuggestedBetLineTableViewCell.swift in Sources */,
@@ -16375,6 +16388,7 @@
 				45372F5D29D1FD04002FB894 /* OddOutcomesSortingHelper.swift in Sources */,
 				4589C8E2282024E400243547 /* EmptyCardTableViewCell.swift in Sources */,
 				A9BDD4F1292E3F08001A7799 /* SportTypeStore.swift in Sources */,
+				452B9D332C1B54870032363F /* ListBackgroundCollectionViewCell.swift in Sources */,
 				4589C8E4282024E400243547 /* AddFriendViewController.swift in Sources */,
 				4589C8E5282024E400243547 /* GroupUserManagementCellViewModel.swift in Sources */,
 				45F6BA722AAF32A100C81DE1 /* BetslipProxyWebViewController.swift in Sources */,
@@ -17073,6 +17087,7 @@
 				45372F5B29D1FD04002FB894 /* OddOutcomesSortingHelper.swift in Sources */,
 				45A3323C298976BA008181E9 /* SearchTitleSectionHeaderView.swift in Sources */,
 				45A3323D298976BA008181E9 /* SportTypeStore.swift in Sources */,
+				452B9D302C1B54860032363F /* ListBackgroundCollectionViewCell.swift in Sources */,
 				45A3323E298976BA008181E9 /* EmptyCardTableViewCell.swift in Sources */,
 				45A33240298976BA008181E9 /* AddFriendViewController.swift in Sources */,
 				455E86B92AC464B20031AF26 /* TargetVariables-PROD.swift in Sources */,
@@ -17420,6 +17435,7 @@
 				45A6BC4C28246A7500D9B416 /* URLSchemaManager.swift in Sources */,
 				45A6BC4D28246A7500D9B416 /* TransactionsHistoryViewModel.swift in Sources */,
 				45A6BC4E28246A7500D9B416 /* NetworkError.swift in Sources */,
+				452B9D352C1B54870032363F /* ListBackgroundCollectionViewCell.swift in Sources */,
 				45A6BC5028246A7500D9B416 /* FullRegisterAddressCountryViewController.swift in Sources */,
 				A9C04C0F2A7BB0C90025A6DA /* FilterFavoritesViewController.swift in Sources */,
 				A9C2D52829C2286F00DB95BD /* IBANProofViewController.swift in Sources */,
@@ -18468,6 +18484,7 @@
 				45F6BCF32AB3732C00C81DE1 /* ServiceProviderModelMapper.swift in Sources */,
 				45F6BCF42AB3732C00C81DE1 /* OddOutcomesSortingHelper.swift in Sources */,
 				45F6BCF52AB3732C00C81DE1 /* SearchTitleSectionHeaderView.swift in Sources */,
+				452B9D312C1B54860032363F /* ListBackgroundCollectionViewCell.swift in Sources */,
 				45F6BCF62AB3732C00C81DE1 /* SportTypeStore.swift in Sources */,
 				45F6BCF72AB3732C00C81DE1 /* EmptyCardTableViewCell.swift in Sources */,
 				45F6BCF82AB3732C00C81DE1 /* AddFriendViewController.swift in Sources */,
@@ -18943,6 +18960,7 @@
 				A90FB7FC29B0CB4400D08A7C /* TipInfoView.swift in Sources */,
 				A9BB462D2AB366400003741E /* RegisterErrorViewController.swift in Sources */,
 				A9C341A428F9A74A0055360B /* UserProfileInfoViewController.swift in Sources */,
+				452B9D342C1B54870032363F /* ListBackgroundCollectionViewCell.swift in Sources */,
 				A9C341A628F9A74A0055360B /* NotEmpty.swift in Sources */,
 				A9C341A728F9A74A0055360B /* VersionUpdateViewController.swift in Sources */,
 				A9C341A828F9A74A0055360B /* SportSelectionCollectionViewCell.swift in Sources */,

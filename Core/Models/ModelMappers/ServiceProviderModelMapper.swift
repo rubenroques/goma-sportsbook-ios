@@ -213,7 +213,8 @@ extension ServiceProviderModelMapper {
                       homeParticipant: market.homeParticipant,
                       awayParticipant: market.awayParticipant,
                       eventId: market.eventId,
-                      outcomesOrder: outcomesOrder)
+                      outcomesOrder: outcomesOrder,
+                      customBetAvailable: market.customBetAvailable)
     }
 
     static func optionalMarkets(fromServiceProviderMarkets markets: [ServicesProvider.Market]?) -> [Market]? {

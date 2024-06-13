@@ -2055,9 +2055,27 @@ extension SportRadarEventsProvider {
 
         let marketGroupsArray = Array(marketGroups.values)
 
-        let sortedMarketGroupsArray = marketGroupsArray.sorted(by: {
+        var sortedMarketGroupsArray = marketGroupsArray.sorted(by: {
             $0.position ?? 0 < $1.position ?? 99
         })
+        
+        // Verify for BetBuilder markets
+        var betBuilderMarkets = matchMarkets.filter( {
+            $0.customBetAvailable ?? false
+        })
+        
+        var betBuilderMarketGroup = MarketGroup(type: "MixMatch",
+                                                id: "99",
+                                                groupKey: "99",
+                                                translatedName: "MixMatch",
+                                                position: 99,
+                                                isDefault: false,
+                                                numberOfMarkets: betBuilderMarkets.count,
+                                                markets: betBuilderMarkets)
+        
+        if sortedMarketGroupsArray.count >= 1 && !betBuilderMarkets.isEmpty {
+            sortedMarketGroupsArray.insert(betBuilderMarketGroup, at: 1)
+        }
 
         //self.marketGroupsPublisher.send(sortedMarketGroupsArray)
         return sortedMarketGroupsArray

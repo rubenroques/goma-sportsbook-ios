@@ -296,9 +296,21 @@ class HomeViewController: UIViewController {
         self.navigationController?.pushViewController(outrightMarketDetailsViewController, animated: true)
     }
 
-    private func openMatchDetails(matchId: String) {
-        let matchDetailsViewController = MatchDetailsViewController(viewModel: MatchDetailsViewModel(matchId: matchId))
-        self.navigationController?.pushViewController(matchDetailsViewController, animated: true)
+    private func openMatchDetails(matchId: String, isMixMatch: Bool = false) {
+        if isMixMatch {
+            let matchDetailsViewModel = MatchDetailsViewModel(matchId: matchId)
+            
+            let matchDetailsViewController = MatchDetailsViewController(viewModel: matchDetailsViewModel)
+            
+            matchDetailsViewController.showMixMatchDefault = true
+            matchDetailsViewModel.showMixMatchDefault = true
+            
+            self.navigationController?.pushViewController(matchDetailsViewController, animated: true)
+        }
+        else {
+            let matchDetailsViewController = MatchDetailsViewController(viewModel: MatchDetailsViewModel(matchId: matchId))
+            self.navigationController?.pushViewController(matchDetailsViewController, animated: true)
+        }
     }
     
     private func openOutrightDetails(competition: Competition) {
@@ -714,6 +726,10 @@ extension HomeViewController: UITableViewDelegate, UITableViewDataSource {
             cell.didLongPressOdd = { [weak self] bettingTicket in
                 self?.openQuickbet(bettingTicket)
             }
+            
+            cell.tappedMixMatchAction = { [weak self] match in
+                self?.openMatchDetails(matchId: match.id, isMixMatch: true)
+            }
 
             return cell
         case .featuredTips:
@@ -950,6 +966,11 @@ extension HomeViewController: UITableViewDelegate, UITableViewDataSource {
             cell.didLongPressOdd = { [weak self] bettingTicket in
                 self?.openQuickbet(bettingTicket)
             }
+            
+            cell.tappedMixMatchAction = { [weak self] match in
+                self?.openMatchDetails(matchId: match.id, isMixMatch: true)
+            }
+            
             return cell
 
         case .promotionalStories:
@@ -1097,6 +1118,11 @@ extension HomeViewController: UITableViewDelegate, UITableViewDataSource {
             if let viewModel = self.viewModel.highlightedMatchViewModel(forIndex: indexPath.row) {
                 switch viewModel.matchWidgetType {
                 case .topImage, .topImageOutright:
+                    if let defaultMarket = viewModel.match.markets.first,
+                       let customBetAvailable = defaultMarket.customBetAvailable,
+                       customBetAvailable {
+                        return 300
+                    }
                     return 262
                 default:
                     return 164
@@ -1169,6 +1195,11 @@ extension HomeViewController: UITableViewDelegate, UITableViewDataSource {
             if let viewModel = self.viewModel.highlightedMatchViewModel(forIndex: indexPath.row) {
                 switch viewModel.matchWidgetType {
                 case .topImage, .topImageOutright:
+                    if let defaultMarket = viewModel.match.markets.first,
+                       let customBetAvailable = defaultMarket.customBetAvailable,
+                       customBetAvailable {
+                        return 300
+                    }
                     return 262
                 default:
                     return 164

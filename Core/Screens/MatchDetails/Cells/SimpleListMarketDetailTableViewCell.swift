@@ -13,7 +13,8 @@ class SimpleListMarketDetailTableViewCell: UITableViewCell {
     @IBOutlet private var titleLabel: UILabel!
     @IBOutlet private var collectionView: UICollectionView!
     @IBOutlet private var collectionViewHeightContraint: NSLayoutConstraint!
-    @IBOutlet private weak var cashbackIconImageView: UIImageView!
+    @IBOutlet private var cashbackIconImageView: UIImageView!
+    @IBOutlet private var customBetIconImageView: UIImageView!
     
     lazy var gradientBorderView: GradientBorderView = {
         var gradientBorderView = GradientBorderView()
@@ -41,6 +42,12 @@ class SimpleListMarketDetailTableViewCell: UITableViewCell {
             self.cashbackIconImageView.isHidden = !hasCashback
         }
     }
+    
+    var customBetAvailable: Bool = false {
+        didSet {
+            self.customBetIconImageView.isHidden = !customBetAvailable
+        }
+    }
 
     var didLongPressOdd: ((BettingTicket) -> Void)?
 
@@ -58,6 +65,11 @@ class SimpleListMarketDetailTableViewCell: UITableViewCell {
         self.cashbackIconImageView.contentMode = .scaleAspectFit
         
         self.hasCashback = false
+        
+        self.customBetIconImageView.image = UIImage(named: "mix_match_icon")
+        self.customBetIconImageView.contentMode = .scaleAspectFit
+        
+        self.customBetAvailable = false
 
         self.collectionView.delegate = self
         self.collectionView.dataSource = self
@@ -91,7 +103,8 @@ class SimpleListMarketDetailTableViewCell: UITableViewCell {
         self.market = nil
         self.competitionName = nil
         self.hasCashback = false
-        
+        self.customBetAvailable = false
+
         self.betBuilderGrayoutsState = BetBuilderGrayoutsState.defaultState
     }
 
@@ -150,12 +163,12 @@ class SimpleListMarketDetailTableViewCell: UITableViewCell {
         self.collectionView.reloadData()
     }
 
-    func configure(withMarketGroupOrganizer market: MarketGroupOrganizer) {
+    func configure(withMarketGroupOrganizer marketGroupOrganizer: MarketGroupOrganizer) {
 
-        self.titleLabel.text = market.marketName
+        self.titleLabel.text = marketGroupOrganizer.marketName
 
         // calculate number of lines
-        let outcomes = market.numberOfColumns
+        let outcomes = marketGroupOrganizer.numberOfColumns
 
         let useTriple = outcomes % 3 == 0
 
@@ -173,6 +186,17 @@ class SimpleListMarketDetailTableViewCell: UITableViewCell {
         
         if let match = self.match {
             self.hasCashback = RePlayFeatureHelper.shouldShowRePlay(forMatch: match)
+            
+            if let market = match.markets.filter({
+                $0.id == marketGroupOrganizer.marketId
+            }).first {
+                if let customBetAvailable = market.customBetAvailable {
+                    self.customBetAvailable = customBetAvailable ? true : false
+                }
+                else {
+                    self.customBetAvailable = false
+                }
+            }
         }
 
         // each line is 50 including space

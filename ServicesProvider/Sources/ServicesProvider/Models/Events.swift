@@ -234,6 +234,7 @@ public class Market: Codable, Equatable {
     public var eventId: String?
     public var marketDigitLine: String?
     public var outcomesOrder: OutcomesOrder
+    public var customBetAvailable: Bool?
     
     // Event related properties
     public var competitionId: String?
@@ -257,6 +258,7 @@ public class Market: Codable, Equatable {
         case eventId = "idfoevent"
         case marketDigitLine = "marketDigitLine"
         case outcomesOrder = "outcomesOrder"
+        case customBetAvailable = "custombetavailable"
     }
 
     public init(id: String,
@@ -274,12 +276,11 @@ public class Market: Codable, Equatable {
                 eventId: String?,
                 marketDigitLine: String?,
                 outcomesOrder: OutcomesOrder = .none,
-                
-                // Event related properties
                 competitionId: String? = nil,
                 competitionName: String? = nil,
                 sport: SportType? = nil,
-                venueCountry: Country? = nil) {
+                venueCountry: Country? = nil,
+                customBetAvailable: Bool?) {
 
         self.id = id
         self.name = name
@@ -302,6 +303,8 @@ public class Market: Codable, Equatable {
         self.competitionName = competitionName
         self.sport = sport
         self.venueCountry = venueCountry
+        
+        self.customBetAvailable = customBetAvailable
     }
 
     required public init(from decoder: Decoder) throws {
@@ -317,6 +320,8 @@ public class Market: Codable, Equatable {
         self.isTradable = (try? container.decode(Bool.self, forKey: .isTradable)) ?? true
         self.eventId = try container.decodeIfPresent(String.self, forKey: .eventId)
         self.outcomesOrder = try container.decode(OutcomesOrder.self, forKey: .id)
+        self.customBetAvailable = try container.decodeIfPresent(Bool.self, forKey: .customBetAvailable)
+
     }
 
     public static func == (lhs: Market, rhs: Market) -> Bool {
@@ -334,7 +339,8 @@ public class Market: Codable, Equatable {
         lhs.homeParticipant == rhs.homeParticipant &&
         lhs.awayParticipant == rhs.awayParticipant &&
         lhs.eventId == rhs.eventId &&
-        lhs.outcomesOrder == rhs.outcomesOrder
+        lhs.outcomesOrder == rhs.outcomesOrder &&
+        lhs.customBetAvailable == rhs.customBetAvailable
     }
 }
 

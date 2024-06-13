@@ -320,6 +320,8 @@ extension SportRadarModels {
         var sportIdCode: String?
         var tournamentCountryName: String?
         
+        var customBetAvailable: Bool?
+        
         enum CodingKeys: String, CodingKey {
             case id = "idfomarket"
             case name = "name"
@@ -337,7 +339,8 @@ extension SportRadarModels {
             case isOverUnder = "isunderover"
             case marketDigitLine = "line"
             case outcomesOrder = "idfoselectionorder"
-            
+            case customBetAvailable = "custombetavailable"
+       
             case eventId = "idfoevent"
             case eventName = "eventname"
             case competitionId = "idfotournament"
@@ -369,7 +372,9 @@ extension SportRadarModels {
              sportTypeName: String? = nil,
              sportTypeCode: String? = nil,
              sportIdCode: String? = nil,
-             tournamentCountryName: String? = nil
+             tournamentCountryName: String? = nil,
+
+             customBetAvailable: Bool?
         ) {
             self.id = id
             self.name = name
@@ -394,6 +399,8 @@ extension SportRadarModels {
             self.sportTypeCode = sportTypeCode
             self.sportIdCode = sportIdCode
             self.tournamentCountryName = tournamentCountryName
+            
+            self.customBetAvailable = customBetAvailable
         }
 
         init(from decoder: Decoder) throws {
@@ -453,6 +460,8 @@ extension SportRadarModels {
                 }
                 self.outcomes = self.outcomes.reversed()
             }
+            
+            self.customBetAvailable = try container.decodeIfPresent(Bool.self, forKey: .customBetAvailable)
 
             self.competitionId = try container.decodeIfPresent(String.self, forKey: .competitionId)
             self.competitionName = try container.decodeIfPresent(String.self, forKey: .competitionName)

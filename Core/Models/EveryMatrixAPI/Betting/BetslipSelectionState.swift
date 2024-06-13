@@ -174,7 +174,6 @@ struct BetslipPlaceBetResponse: Decodable {
         case maxWinning = "maxWinning"
 
         case selections = "selections"
-        
         case betslipId = "betslipId"
     }
 

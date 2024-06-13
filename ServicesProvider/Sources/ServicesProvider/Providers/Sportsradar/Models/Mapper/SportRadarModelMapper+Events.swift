@@ -174,7 +174,8 @@ extension SportRadarModelMapper {
                       competitionId: internalMarket.competitionId,
                       competitionName: internalMarket.competitionName,
                       sport: mappedSport,
-                      venueCountry: country)
+                      venueCountry: country,
+                      customBetAvailable: internalMarket.customBetAvailable)
     }
 
     static func outcome(fromInternalOutcome internalOutcome: SportRadarModels.Outcome) -> Outcome {

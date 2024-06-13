@@ -653,7 +653,8 @@ extension BetslipManager {
                                                            amount: placedBetEntry.totalStake,
                                                            type: betType,
                                                            maxWinning: placedBetEntry.potentialReturn,
-                                                           selections: betslipPlaceEntries, betslipId: placedBetsResponse.identifier)
+                                                           selections: betslipPlaceEntries, 
+                                                           betslipId: placedBetsResponse.identifier)
                     
                     return BetPlacedDetails(response: response)
                 }

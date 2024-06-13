@@ -731,6 +731,7 @@
                 <outlet property="awayResultCenterViewConstraint" destination="oIp-M4-OEm" id="SG3-Sx-gUk"/>
                 <outlet property="awayUpChangeOddValueImage" destination="Kfa-Lg-U8s" id="mci-Md-HVd"/>
                 <outlet property="backgroundImageView" destination="HO2-M2-haM" id="uD2-ZE-BEn"/>
+                <outlet property="baseStackView" destination="bYZ-iV-ZlD" id="Kmf-8n-a49"/>
                 <outlet property="baseView" destination="EHX-PA-4qK" id="RP6-aa-YWB"/>
                 <outlet property="boostedOddBottomLineView" destination="q88-WX-WNe" id="ivT-e7-CiH"/>
                 <outlet property="bottomMarginSpaceConstraint" destination="jPE-gz-w4d" id="EGE-mc-Tip"/>
