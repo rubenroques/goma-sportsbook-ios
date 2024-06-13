@@ -1016,6 +1016,24 @@ extension ServicesProviderClient {
         return bettingProvider.rejectBoostedBet(identifier: identifier)
     }
     
+    public func calculateBetBuilderPotentialReturn(forBetTicket betTicket: BetTicket) -> AnyPublisher<BetBuilderPotentialReturn, ServiceProviderError> {
+        guard
+            let bettingProvider = self.bettingProvider
+        else {
+            return Fail(error: ServiceProviderError.bettingProviderNotFound).eraseToAnyPublisher()
+        }
+        return bettingProvider.calculateBetBuilderPotentialReturn(forBetTicket: betTicket)
+    }
+
+    public func placeBetBuilderBet(betTicket: BetTicket, calculatedOdd: Double) -> AnyPublisher<PlacedBetsResponse, ServiceProviderError> {
+        guard
+            let bettingProvider = self.bettingProvider
+        else {
+            return Fail(error: ServiceProviderError.bettingProviderNotFound).eraseToAnyPublisher()
+        }
+        return bettingProvider.placeBetBuilderBet(betTicket: betTicket, calculatedOdd: calculatedOdd)
+    }
+    
     //
     // My Bets
     //

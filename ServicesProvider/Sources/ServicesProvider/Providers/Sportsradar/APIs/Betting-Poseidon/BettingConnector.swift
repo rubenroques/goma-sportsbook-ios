@@ -62,10 +62,18 @@ class BettingConnector: Connector {
             return Fail<T, ServiceProviderError>(error: error).eraseToAnyPublisher()
         }
 
+        print("Betting-NetworkManager: URL Request: \n", request.cURL(pretty: true), "\n==========================================")
+        
         return self.session.dataTaskPublisher(for: request)
             .tryMap { result -> Data in
                 if let httpResponse = result.response as? HTTPURLResponse, httpResponse.statusCode == 401 {
                     throw ServiceProviderError.unauthorized
+                }
+                else if let httpResponse = result.response as? HTTPURLResponse, httpResponse.statusCode == 404 {
+                    throw ServiceProviderError.pageNotFound
+                }
+                else if let httpResponse = result.response as? HTTPURLResponse, httpResponse.statusCode == 400 {
+                    throw ServiceProviderError.badRequest
                 }
                 else if let httpResponse = result.response as? HTTPURLResponse, httpResponse.statusCode == 403 {
                     throw ServiceProviderError.forbidden
@@ -78,6 +86,13 @@ class BettingConnector: Connector {
                 }
                 return result.data
             }
+            .handleEvents(receiveOutput: { data in
+                print("Betting-NetworkManager [[ requesting ]] ",
+                      request, " Body: ",
+                      String(data: request.httpBody ?? Data(), encoding: .utf8) ?? "" ,
+                      " [[ response ]] ", String(data: data, encoding: .utf8) ?? "!?" )
+            })
+        
             .decode(type: T.self, decoder: self.decoder)
             .mapError({ error -> ServiceProviderError in
                 if let typedError = error as? ServiceProviderError {

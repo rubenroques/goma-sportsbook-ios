@@ -543,7 +543,7 @@ class IdentificationDocsViewController: UIViewController {
             let moderationComment = sumsubDoc.moderationComment
 
             if sumsubDoc.status == .rejected && moderationComment != nil && retries < 11 && hasApprovedIdentityDocuments {
-                self.idWarningView.setDescription(description: moderationComment ?? localized("error"))
+                self.idWarningView.setDescription(moderationComment ?? localized("error"))
                 self.showIdentityWarning = true
             }
             else if retries > 10 {
@@ -685,7 +685,7 @@ class IdentificationDocsViewController: UIViewController {
                 let moderationComment = sumsubDoc.moderationComment
 
                 if sumsubDoc.status == .rejected && moderationComment != nil && retries < 11 && hasApprovedProofDocuments {
-                    self.proofWarningView.setDescription(description: moderationComment ?? localized("error"))
+                    self.proofWarningView.setDescription(moderationComment ?? localized("error"))
                     self.showProofWarning = true
                 }
                 else if retries > 10 {
@@ -871,7 +871,7 @@ extension IdentificationDocsViewController {
     private static func createIdWarningView() -> BetslipErrorView {
         let errorView = BetslipErrorView()
         errorView.translatesAutoresizingMaskIntoConstraints = false
-        errorView.setDescription(description: localized("error"))
+        errorView.setDescription(localized("error"))
         errorView.isHidden = true
         return errorView
     }
@@ -955,7 +955,7 @@ extension IdentificationDocsViewController {
     private static func createProofWarningView() -> BetslipErrorView {
         let errorView = BetslipErrorView()
         errorView.translatesAutoresizingMaskIntoConstraints = false
-        errorView.setDescription(description: localized("error"))
+        errorView.setDescription(localized("error"))
         errorView.isHidden = true
         return errorView
     }

@@ -40,11 +40,16 @@ class SegmentControlView: UIView {
     var didSelectItemAtIndexAction: (Int) -> Void = { _ in }
     var selectedItemIndex = 0
     
+    var customItemAttributedString: (Int) -> NSAttributedString? = { _ in return nil }
+    
+    var customItemLeftAccessoryImage: (Int) -> UIImage? = { _ in return nil }
+    
     private lazy var containerView: UIView = Self.createContainerView()
     private lazy var stackView: UIStackView = Self.createStackView()
 
     private lazy var sliderView: UIView = Self.createSliderView()
-
+    private lazy var customSliderViews: [Int: UIView] = [:]
+    
     private var sliderLeadingConstraint: NSLayoutConstraint?
     private var sliderTrailingConstraint: NSLayoutConstraint?
 
@@ -52,9 +57,20 @@ class SegmentControlView: UIView {
     private var itemsViews: [SegmentControlItemView] = []
 
     // MARK: Lifetime and Cycle
-    init(options: [String]) {
+    init(options: [String],
+         customItemAttributedString: ((Int) -> NSAttributedString?)? = nil,
+         customItemLeftAccessoryImage: ((Int) -> UIImage?)? = nil)
+    {
         super.init(frame: .zero)
 
+        if let customItemAttributedStringValue = customItemAttributedString {
+            self.customItemAttributedString = customItemAttributedStringValue
+        }
+        
+        if let customItemLeftAccessoryImageValue = customItemLeftAccessoryImage {
+            self.customItemLeftAccessoryImage = customItemLeftAccessoryImageValue
+        }
+        
         self.options = options
         self.commonInit()
     }
@@ -80,11 +96,33 @@ class SegmentControlView: UIView {
             segmentControlItemView.didTapItemViewAction = { [weak self] in
                 self?.setSelectedItem(atIndex: index, animated: true)
             }
+            
+            segmentControlItemView.customAttributedString = { [weak self] _ -> NSAttributedString? in
+                return self?.customItemAttributedString(index)
+            }
+            
+            segmentControlItemView.customLeftAccessoryImage = { [weak self] _ -> UIImage? in
+                if let customImage = self?.customItemLeftAccessoryImage(index) {
+                    let customSliderView = GradientView() // Self.createCustomSliderView()
+                    customSliderView.translatesAutoresizingMaskIntoConstraints = false
+                    customSliderView.colors = [
+                        (UIColor(hex: 0x399504, alpha: 1.0), 0.0),
+                        (UIColor(hex: 0x003E01, alpha: 1.0), 1.0),
+                    ]
+                    customSliderView.startPoint = CGPoint(x: 0.0, y: 0.5)
+                    customSliderView.endPoint = CGPoint(x: 1.0, y: 0.5)
+                    self?.customSliderViews[index] = customSliderView
+                    return customImage
+                }
+                else {
+                    return nil
+                }
+            }
 
             self.itemsViews.append(segmentControlItemView)
             self.stackView.addArrangedSubview(segmentControlItemView)
         }
-
+    
         self.setupSubviews()
         self.setupWithTheme()
 
@@ -111,7 +149,6 @@ class SegmentControlView: UIView {
         self.containerView.layer.cornerRadius = self.containerView.frame.height / 2
         self.sliderView.layer.cornerRadius = self.containerView.frame.height / 2
     }
-
 
     func setSelectedItem(atIndex index: Int, animated: Bool = true) {
         guard
@@ -141,6 +178,12 @@ class SegmentControlView: UIView {
         ])
 
         UIView.animate(withDuration: 0.25) {
+            if let customSliderViewForIndex = self.customSliderViews[index] {
+                customSliderViewForIndex.alpha = 1.0
+            }
+            let otherCustomSliderViews = self.customSliderViews.filter { $0.key != index }.map { $0.value }
+            otherCustomSliderViews.forEach({ $0.alpha = 0.0 })
+            
             self.setNeedsLayout()
             self.layoutIfNeeded()
         }
@@ -156,6 +199,18 @@ class SegmentControlView: UIView {
 
         itemView.isEnabled = isEnabled
     }
+    
+    func disableAll() {
+        for itemIndex in self.itemsViews.indices {
+            self.setEnabledItem(atIndex: itemIndex, isEnabled: false)
+        }
+    }
+    
+    func enableAll() {
+        for itemIndex in self.itemsViews.indices {
+            self.setEnabledItem(atIndex: itemIndex, isEnabled: true)
+        }
+    }
 
 }
 
@@ -168,6 +223,13 @@ extension SegmentControlView {
     }
 
     private static func createSliderView() -> UIView {
+        let view = UIView()
+        view.translatesAutoresizingMaskIntoConstraints = false
+        view.clipsToBounds = true
+        return view
+    }
+    
+    private static func createCustomSliderView() -> UIView {
         let view = UIView()
         view.translatesAutoresizingMaskIntoConstraints = false
         return view
@@ -186,6 +248,10 @@ extension SegmentControlView {
     private func setupSubviews() {
         self.addSubview(self.containerView)
 
+        for customSliderView in self.customSliderViews.values {
+            self.sliderView.addSubview(customSliderView)
+        }
+        
         self.containerView.addSubview(self.sliderView)
         self.containerView.addSubview(self.stackView)
 
@@ -211,6 +277,15 @@ extension SegmentControlView {
             self.sliderTrailingConstraint!,
         ])
 
+        for customSliderView in self.customSliderViews.values {
+            NSLayoutConstraint.activate([
+                customSliderView.leadingAnchor.constraint(equalTo: self.sliderView.leadingAnchor),
+                customSliderView.trailingAnchor.constraint(equalTo: self.sliderView.trailingAnchor),
+                customSliderView.topAnchor.constraint(equalTo: self.sliderView.topAnchor),
+                customSliderView.bottomAnchor.constraint(equalTo: self.sliderView.bottomAnchor),
+            ])
+        }
+        
         NSLayoutConstraint.activate([
             self.containerView.topAnchor.constraint(equalTo: self.stackView.topAnchor),
             self.containerView.bottomAnchor.constraint(equalTo: self.stackView.bottomAnchor),

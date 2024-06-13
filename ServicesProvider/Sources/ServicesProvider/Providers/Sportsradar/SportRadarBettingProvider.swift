@@ -314,5 +314,56 @@ class SportRadarBettingProvider: BettingProvider, Connector {
 
     }
 
+    func calculateBetBuilderPotentialReturn(forBetTicket betTicket: BetTicket)  -> AnyPublisher<BetBuilderPotentialReturn, ServiceProviderError> {
+        let endpoint = BettingAPIClient.calculateBetBuilderReturn(betTicket: betTicket)
+        let publisher: AnyPublisher<SportRadarModels.BetBuilderPotentialReturn, ServiceProviderError> = self.connector.request(endpoint)
+        return publisher
+            .map { (betslipPotentialReturn: SportRadarModels.BetBuilderPotentialReturn) -> BetBuilderPotentialReturn in
+                return BetBuilderPotentialReturn(potentialReturn: betslipPotentialReturn.potentialReturn,
+                                                 calculatedOdds: betslipPotentialReturn.calculatedOdds)
+            }
+            .mapError({ serviceProviderError in
+                print("calculateBetBuilderPotentialReturn error: \(serviceProviderError)")
+                return serviceProviderError
+            })
+            .eraseToAnyPublisher()
+    }
+
+    func placeBetBuilderBet(betTicket: BetTicket, calculatedOdd: Double) -> AnyPublisher<PlacedBetsResponse, ServiceProviderError> {
+        let endpoint = BettingAPIClient.placeBetBuilderBet(betTicket: betTicket, calculatedOdd: calculatedOdd)
+        let publisher: AnyPublisher<SportRadarModels.PlacedBetsResponse, ServiceProviderError> = self.connector.request(endpoint)
+
+        return publisher
+            .flatMap { (internalPlacedBetsResponse: SportRadarModels.PlacedBetsResponse) -> AnyPublisher<PlacedBetsResponse, ServiceProviderError> in
+                if internalPlacedBetsResponse.responseCode == "2" {
+                    let placedBetsResponse = SportRadarModelMapper.placedBetsResponse(fromInternalPlacedBetsResponse: internalPlacedBetsResponse)
+                    return Just( placedBetsResponse ).setFailureType(to: ServiceProviderError.self).eraseToAnyPublisher()
+                }
+                else if internalPlacedBetsResponse.responseCode == "1" && internalPlacedBetsResponse.detailedResponseCode == "66" {
+                    var placedBetsResponse = SportRadarModelMapper.placedBetsResponse(fromInternalPlacedBetsResponse: internalPlacedBetsResponse)
+                    placedBetsResponse.requiredConfirmation = true
+                    
+                    let notPlacedBetError = ServiceProviderError.betNeedsUserConfirmation(betDetails: placedBetsResponse)
+                    return Fail(outputType: PlacedBetsResponse.self, failure: notPlacedBetError)
+                        .eraseToAnyPublisher()
+                }
+                else {
+                    
+                    if internalPlacedBetsResponse.responseCode == "4",
+                       let message = internalPlacedBetsResponse.errorMessage,
+                       message.contains("wager limit") {
+                        
+                        let notPlacedBetError = ServiceProviderError.notPlacedBet(message: "bet_error_wager_limit")
+                        return Fail(outputType: PlacedBetsResponse.self, failure: notPlacedBetError)
+                            .eraseToAnyPublisher()
+                    }
+                    
+                    let notPlacedBetError = ServiceProviderError.notPlacedBet(message: internalPlacedBetsResponse.errorMessage ?? "")
+                    return Fail(outputType: PlacedBetsResponse.self, failure: notPlacedBetError)
+                        .eraseToAnyPublisher()
+                }
+            }
+            .eraseToAnyPublisher()
+    }
 }
 

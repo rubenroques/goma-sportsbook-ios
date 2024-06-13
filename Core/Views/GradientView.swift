@@ -43,11 +43,14 @@ class GradientView: UIView {
     }
 
     private func commonInit() {
+        self.translatesAutoresizingMaskIntoConstraints = false
         self.backgroundColor = .white
+        
         self.gradientLayer.startPoint = self.startPoint
         self.gradientLayer.endPoint = self.endPoint
         self.gradientLayer.colors = self.colors.map(\.color).map(\.cgColor)
         self.gradientLayer.locations = self.colors.map(\.location)
+        
         self.layer.insertSublayer(self.gradientLayer, at: 0)
     }
 

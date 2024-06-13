@@ -13,11 +13,20 @@ class BetslipErrorView: NibView {
     @IBOutlet private var logoImageView: UIImageView!
     @IBOutlet private var descriptionLabel: UILabel!
 
+    private enum Mode {
+        case warning
+        case alertError
+    }
+    
+    private var mode: Mode = .warning
+    
     override init(frame: CGRect) {
         super.init(frame: frame)
 
         self.commonInit()
         self.setupWithTheme()
+        
+        self.setWarningMode()
     }
 
     required init?(coder aDecoder: NSCoder) {
@@ -25,13 +34,18 @@ class BetslipErrorView: NibView {
 
         self.commonInit()
         self.setupWithTheme()
+        
+        self.setWarningMode()
     }
 
     override func commonInit() {
         self.descriptionLabel.text = localized("error")
         self.descriptionLabel.numberOfLines = 0
-
+        self.descriptionLabel.font = AppFont.with(type: .semibold, size: 14)
+        
         self.logoImageView.image = UIImage(named: "warning_alert_icon")
+        self.logoImageView.setTintColor(color: UIColor.App.textPrimary)
+        
         self.logoImageView.contentMode = .scaleAspectFit
     }
 
@@ -49,15 +63,26 @@ class BetslipErrorView: NibView {
         self.descriptionLabel.textColor = UIColor.App.textPrimary
     }
 
-    func setDescription(description: String) {
+    func setDescription(_ description: String) {
         self.descriptionLabel.text = description
     }
 
-    func setAlertLayout() {
-        self.containerView.layer.borderColor = UIColor.App.alertWarning.cgColor
-
+    func setAlertMode() {
+        self.mode = .alertError
+        
         self.logoImageView.image = UIImage(named: "info_alert_icon")
-
+        self.logoImageView.setTintColor(color: UIColor.App.alertError)
+        
+        self.containerView.layer.borderColor = UIColor.App.alertError.cgColor
+    }
+    
+    func setWarningMode() {
+        self.mode = .warning
+        
+        self.logoImageView.image = UIImage(named: "warning_alert_icon")
+        self.logoImageView.setTintColor(color: UIColor.App.textPrimary)
+        
+        self.containerView.layer.borderColor = UIColor.App.alertWarning.cgColor
     }
 
     override var intrinsicContentSize: CGSize {

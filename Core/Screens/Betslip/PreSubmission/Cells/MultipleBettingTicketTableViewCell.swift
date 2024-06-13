@@ -27,6 +27,8 @@ class MultipleBettingTicketTableViewCell: UITableViewCell {
     @IBOutlet private weak var bottomBaseView: UIView!
     @IBOutlet private weak var marketNameLabel: UILabel!
     @IBOutlet private weak var matchDetailLabel: UILabel!
+    
+    @IBOutlet private weak var mixMatchIconImageView: UIImageView!
     @IBOutlet private weak var cashbackIconImageView: UIImageView!
 
     @IBOutlet private weak var stackView: UIStackView!
@@ -40,6 +42,8 @@ class MultipleBettingTicketTableViewCell: UITableViewCell {
     @IBOutlet private weak var errorLateralTopView: UIView!
     @IBOutlet private weak var errorLateralBottomView: UIView!
 
+    @IBOutlet private weak var invalidTicketView: UIView!
+    
     var currentOddValue: Double?
     var bettingTicket: BettingTicket?
 
@@ -63,10 +67,13 @@ class MultipleBettingTicketTableViewCell: UITableViewCell {
         // Initialization code
 
         self.suspendedBettingOfferView.isHidden = true
+        self.mixMatchIconImageView.isHidden = true
         
         self.upChangeOddValueImage.alpha = 0.0
         self.downChangeOddValueImage.alpha = 0.0
 
+        self.invalidTicketView.isHidden = true
+        
         self.setupWithTheme()
 
         self.stackView.layer.cornerRadius = CornerRadius.view
@@ -146,6 +153,7 @@ class MultipleBettingTicketTableViewCell: UITableViewCell {
         self.oddBaseView.backgroundColor = UIColor.App.backgroundPrimary
         self.oddValueLabel.backgroundColor = UIColor.App.backgroundPrimary
         self.oddValueLabel.textColor = UIColor.App.textPrimary
+        
     }
 
     func highlightOddChangeUp(animated: Bool = true) {
@@ -182,8 +190,25 @@ class MultipleBettingTicketTableViewCell: UITableViewCell {
         }, completion: nil)
     }
 
-    func configureWithBettingTicket(_ bettingTicket: BettingTicket, errorBetting: String? = nil) {
+    func configureWithBettingTicket(_ bettingTicket: BettingTicket, 
+                                    errorBetting: String? = nil,
+                                    showInvalidView: Bool = false,
+                                    mixMatchMode: Bool = false) {
 
+        if showInvalidView {
+            self.invalidTicketView.isHidden = false
+        }
+        else {
+            self.invalidTicketView.isHidden = true
+        }
+        
+        if mixMatchMode {
+            self.mixMatchIconImageView.isHidden = false
+        }
+        else {
+            self.mixMatchIconImageView.isHidden = true
+        }
+        
         self.bettingTicket = bettingTicket
 
         self.outcomeNameLabel.text = bettingTicket.outcomeDescription

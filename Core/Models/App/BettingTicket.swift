@@ -7,7 +7,7 @@
 
 import Foundation
 
-struct BettingTicket: Equatable, Codable {
+struct BettingTicket: Equatable, Codable, Hashable {
 
     var id: String
 

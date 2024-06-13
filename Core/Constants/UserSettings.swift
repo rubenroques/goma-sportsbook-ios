@@ -17,6 +17,8 @@ enum UserDefaultsKey: String {
     case cardsStyle = "cardsStyleKey"
     case cachedBetslipTickets = "cachedBetslipTickets"
     
+    case cachedBetBuilderState = "betBuilderState"
+    
     case bettingUserSettings = "bettingUserSettings"
     case notificationsUserSettings = "notificationsUserSettings"
 
@@ -93,7 +95,26 @@ extension UserDefaults {
         }
         
     }
-
+    
+    var cachedBetBuilderProcessor: BetBuilderProcessor {
+        get {
+            let defaultValue = BetBuilderProcessor()
+            let betBuilderProcessor: BetBuilderProcessor? = self.codable(forKey: UserDefaultsKey.cachedBetBuilderState.key)
+            if let betBuilderProcessorValue = betBuilderProcessor {
+                return betBuilderProcessorValue
+            }
+            
+            self.set(codable: defaultValue, forKey: UserDefaultsKey.cachedBetBuilderState.key)
+            self.synchronize()
+            return defaultValue
+        }
+        set {
+            self.set(codable: newValue, forKey: UserDefaultsKey.cachedBetBuilderState.key)
+            self.synchronize()
+        }
+        
+    }
+    
     var userOddsFormat: OddsFormat {
         get {
             return OddsFormat(rawValue: integer(forKey: UserDefaultsKey.userOddsFormat.key)) ?? .europe

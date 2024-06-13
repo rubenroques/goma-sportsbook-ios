@@ -238,8 +238,8 @@ extension SuggestedBetsListViewController {
     private static func createEmptySharedBetView() -> BetslipErrorView {
         let view = BetslipErrorView()
         view.translatesAutoresizingMaskIntoConstraints = false
-        view.setDescription(description: localized("shared_bet_unavailable"))
-        view.setAlertLayout()
+        view.setDescription(localized("shared_bet_unavailable"))
+        view.setAlertMode()
         return view
     }
 

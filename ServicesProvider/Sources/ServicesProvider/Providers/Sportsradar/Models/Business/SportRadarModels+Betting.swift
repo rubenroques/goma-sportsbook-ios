@@ -186,8 +186,8 @@ extension SportRadarModels {
 
             self.attemptedDate = try container.decode(Date.self, forKey: .attemptedDate)
 
-            self.oddNumerator = try container.decode(Double.self, forKey: .oddNumerator)
-            self.oddDenominator = try container.decode(Double.self, forKey: .oddDenominator)
+            self.oddNumerator = (try? container.decode(Double.self, forKey: .oddNumerator)) ?? 1.0
+            self.oddDenominator = (try? container.decode(Double.self, forKey: .oddDenominator)) ?? 1.0
 
             self.order = (try? container.decode(Int.self, forKey: .order)) ?? 999
 
@@ -330,6 +330,19 @@ extension SportRadarModels {
         }
         
     }
+    
+    struct BetBuilderPotentialReturn: Codable {
+
+        var potentialReturn: Double
+        var calculatedOdds: Double
+
+        enum CodingKeys: String, CodingKey {
+            case potentialReturn = "potentialReturn"
+            case calculatedOdds = "calculatedOdds"
+        }
+        
+    }
+    
 
     struct BetType: Codable {
 
@@ -443,8 +456,16 @@ extension SportRadarModels {
 
             self.betLegs = try container.decode([SportRadarModels.PlacedBetLeg].self, forKey: SportRadarModels.PlacedBetEntry.CodingKeys.betLegs)
             self.potentialReturn = try container.decode(Double.self, forKey: SportRadarModels.PlacedBetEntry.CodingKeys.potentialReturn)
-            self.placeStake = try container.decode(Double.self, forKey: SportRadarModels.PlacedBetEntry.CodingKeys.placeStake)
+            
             self.totalAvailableStake = try container.decodeIfPresent(Double.self, forKey: SportRadarModels.PlacedBetEntry.CodingKeys.totalAvailableStake) ?? 0.0
+            
+            if let placeStake = try? container.decode(Double.self, forKey: SportRadarModels.PlacedBetEntry.CodingKeys.placeStake) {
+                self.placeStake = placeStake
+            }
+            else {
+                self.placeStake = self.totalAvailableStake
+            }
+            
             self.type = try container.decodeIfPresent(String.self, forKey: .type)
         }
     }

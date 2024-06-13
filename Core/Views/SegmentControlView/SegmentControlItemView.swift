@@ -11,10 +11,10 @@ class SegmentControlItemView: UIView {
 
     var text: String {
         didSet {
-            self.titleLabel.text = text
+            self.setupTextLabel()
         }
     }
-
+    
     var isEnabled: Bool = true {
         didSet {
             if self.isEnabled {
@@ -30,36 +30,41 @@ class SegmentControlItemView: UIView {
 
     var textColor: UIColor = UIColor.gray {
         didSet {
-            if isSelected {
-                self.titleLabel.textColor = textColor
-            }
+            self.setupSelectedState()
         }
     }
 
     var textIdleColor: UIColor = UIColor.gray {
         didSet {
-            if !isSelected {
-                self.titleLabel.textColor = textIdleColor
-            }
+            self.setupSelectedState()
         }
     }
 
     var didTapItemViewAction: () -> Void = {}
     var isSelected: Bool = false {
         didSet {
-            if self.isSelected {
-                self.titleLabel.textColor = textColor
-            }
-            else {
-                self.titleLabel.textColor = textIdleColor
-            }
+            self.setupSelectedState()
+        }
+    }
+    
+    var customAttributedString: (SegmentControlItemView) -> NSAttributedString? = { _ in return nil } {
+        didSet {
+            self.setupTextLabel()
+        }
+    }
+    var customLeftAccessoryImage: (SegmentControlItemView) -> UIImage? = { _ in return nil } {
+        didSet {
+            self.setupLeftAccessoryView()
         }
     }
 
     private lazy var titleLabel: UILabel = Self.createTitleLabel()
+    private lazy var leftAccessoryImageView: UIImageView = Self.createLeftAccessoryImageView()
+    
     private lazy var containerView: UIView = Self.createContainerView()
-
-    private let horizontalMargin: CGFloat = 16
+    private lazy var containerStackView: UIStackView = Self.createContainerStackView()
+    
+    private let horizontalMargin: CGFloat = 14
     private let verticalMargin: CGFloat = 7
 
     // MARK: Lifetime and Cycle
@@ -68,9 +73,8 @@ class SegmentControlItemView: UIView {
         self.isEnabled = isEnabled
 
         super.init(frame: .zero)
-
+        
         self.commonInit()
-
     }
 
     @available(iOS, unavailable)
@@ -89,19 +93,59 @@ class SegmentControlItemView: UIView {
 
         self.setupSubviews()
         self.setupWithTheme()
+                
+        self.setupTextLabel()
+        self.setupLeftAccessoryView()
+    }
+    
+    private func setupTextLabel() {
+        if let attributedText = self.customAttributedString(self) {
+            self.titleLabel.text = nil
+            self.titleLabel.attributedText = attributedText
+        }
+        else {
+            self.titleLabel.attributedText = nil
+            self.titleLabel.text = self.text
+        }
+    }
+    
+    private func setupLeftAccessoryView() {
+        if let leftAccessoryImage = self.customLeftAccessoryImage(self) {
+            
+            self.leftAccessoryImageView.isHidden = false
+            
+            let scale: CGFloat = 1.15  // Adjust the scale factor as needed
+            self.leftAccessoryImageView.transform = CGAffineTransform(scaleX: scale, y: scale)
 
-        self.titleLabel.text = self.text
+            self.leftAccessoryImageView.image = leftAccessoryImage
+        }
+        else {
+            self.leftAccessoryImageView.isHidden = true
+            self.leftAccessoryImageView.image = nil
+        }
     }
 
     func setupWithTheme() {
         self.backgroundColor = .clear
 
         self.containerView.backgroundColor = .clear
-        if isSelected {
-            self.titleLabel.textColor = textColor
+        
+        self.setupSelectedState()
+    }
+    
+    func setupSelectedState() {
+        if let attributedText = self.customAttributedString(self) {
+            
         }
         else {
-            self.titleLabel.textColor = textIdleColor
+            if isSelected {
+                self.titleLabel.textColor = textColor
+                self.leftAccessoryImageView.alpha = 1.0
+            }
+            else {
+                self.titleLabel.textColor = textIdleColor
+                self.leftAccessoryImageView.alpha = 0.7
+            }
         }
     }
 
@@ -120,43 +164,67 @@ extension SegmentControlItemView {
         return view
     }
 
+    private static func createContainerStackView() -> UIStackView {
+        let view = UIStackView()
+        view.translatesAutoresizingMaskIntoConstraints = false
+        view.axis = .horizontal
+        view.distribution = .fill
+        view.alignment = .center
+        view.spacing = 9
+        return view
+    }
+    
+    private static func createLeftAccessoryImageView() -> UIImageView {
+        let imageView = UIImageView()
+        imageView.translatesAutoresizingMaskIntoConstraints = false
+        imageView.contentMode = .scaleAspectFill
+        imageView.clipsToBounds = false
+        imageView.isHidden = true
+        return imageView
+    }
+    
     private static func createTitleLabel() -> UILabel {
         let label = UILabel()
         label.translatesAutoresizingMaskIntoConstraints = false
         label.numberOfLines = 1
-        label.font = AppFont.with(type: .bold, size: 14)
+        label.font = AppFont.with(type: .semibold, size: 13)
         return label
     }
 
     private func setupSubviews() {
         self.addSubview(self.containerView)
 
-        self.containerView.addSubview(self.titleLabel)
+        self.containerStackView.addArrangedSubview(self.leftAccessoryImageView)
+        self.containerStackView.addArrangedSubview(self.titleLabel)
+        
+        self.containerView.addSubview(self.containerStackView)
 
         self.initConstraints()
     }
 
     private func initConstraints() {
-
+        
+        NSLayoutConstraint.activate([
+            self.titleLabel.heightAnchor.constraint(equalToConstant: 16)
+        ])
+        
+        NSLayoutConstraint.activate([
+            self.leftAccessoryImageView.widthAnchor.constraint(equalTo: self.leftAccessoryImageView.heightAnchor),
+            self.leftAccessoryImageView.widthAnchor.constraint(equalToConstant: 14),
+        ])
+        
         NSLayoutConstraint.activate([
             self.topAnchor.constraint(equalTo: self.containerView.topAnchor),
             self.bottomAnchor.constraint(equalTo: self.containerView.bottomAnchor),
             self.leadingAnchor.constraint(equalTo: self.containerView.leadingAnchor),
             self.trailingAnchor.constraint(equalTo: self.containerView.trailingAnchor),
         ])
-
+        
         NSLayoutConstraint.activate([
-            self.titleLabel.topAnchor.constraint(equalTo: self.containerView.topAnchor, constant: verticalMargin),
-            self.titleLabel.bottomAnchor.constraint(equalTo: self.containerView.bottomAnchor, constant: -verticalMargin),
-            self.titleLabel.leadingAnchor.constraint(equalTo: self.containerView.leadingAnchor, constant: horizontalMargin),
-            self.titleLabel.trailingAnchor.constraint(equalTo: self.containerView.trailingAnchor, constant: -horizontalMargin),
+            self.containerView.topAnchor.constraint(equalTo: self.containerStackView.topAnchor, constant: -verticalMargin),
+            self.containerView.bottomAnchor.constraint(equalTo: self.containerStackView.bottomAnchor, constant: verticalMargin),
+            self.containerView.leadingAnchor.constraint(equalTo: self.containerStackView.leadingAnchor, constant: -horizontalMargin),
+            self.containerView.trailingAnchor.constraint(equalTo: self.containerStackView.trailingAnchor, constant: horizontalMargin),
         ])
-
     }
-
-    override var intrinsicContentSize: CGSize {
-        return CGSize(width: self.titleLabel.intrinsicContentSize.width + (horizontalMargin * 2),
-                      height: self.titleLabel.intrinsicContentSize.height + (verticalMargin * 2))
-    }
-
 }

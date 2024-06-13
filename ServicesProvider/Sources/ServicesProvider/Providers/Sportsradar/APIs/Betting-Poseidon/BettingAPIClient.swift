@@ -14,6 +14,9 @@ enum BettingAPIClient {
     case getAllowedBetTypes(betTicketSelections: [BetTicketSelection])
     case placeBets(betTickets: [BetTicket], useFreebetBalance: Bool)
     
+    case calculateBetBuilderReturn(betTicket: BetTicket)
+    case placeBetBuilderBet(betTicket: BetTicket, calculatedOdd: Double)
+    
     case confirmBoostedBet(identifier: String)
     case rejectBoostedBet(identifier: String)
     
@@ -41,6 +44,11 @@ extension BettingAPIClient: Endpoint {
             return "/api/betting/fo/allowedBetTypesWithCalculation"
         case .placeBets:
             return "/api/betting/fo/betslip"
+            
+        case .calculateBetBuilderReturn:
+            return "/api/custom-bet/v1/calculate"
+        case .placeBetBuilderBet:
+            return "/api/custom-bet/v1/placecustombet"
             
         case .confirmBoostedBet(let identifier):
             return "/api/betting/fo/betslip/\(identifier)/confirm"
@@ -116,6 +124,11 @@ extension BettingAPIClient: Endpoint {
         case .getAllowedBetTypes:
             return nil
         case .placeBets:
+            return nil
+            
+        case .calculateBetBuilderReturn:
+            return nil
+        case .placeBetBuilderBet:
             return nil
         
         case .confirmBoostedBet:
@@ -263,7 +276,37 @@ extension BettingAPIClient: Endpoint {
             let data = body.data(using: String.Encoding.utf8)!
             return data
 
+            //
+        // BetBuidler
         //
+        case .calculateBetBuilderReturn(let betTicket):
+            let betAmount = (betTicket.globalStake ?? 0.0)
+            let betTicketSelectionsIds = betTicket.tickets.map({ "\"" + $0.identifier + "\"" }).joined(separator: ",")
+            let body = """
+                       {
+                         "idFOSelections": [\(betTicketSelectionsIds)],
+                         "stakeAmount": \(betAmount)
+                       }
+                       """
+            let data = body.data(using: String.Encoding.utf8)!
+            return data
+            
+        case .placeBetBuilderBet(let betTicket, let odd):
+            let betAmount = (betTicket.globalStake ?? 0.0)
+            let betTicketSelectionsIds = betTicket.tickets.map({ "\"" + $0.identifier + "\"" }).joined(separator: ",")
+            let body = """
+                       {
+                         "idFOSelections": [\(betTicketSelectionsIds)],
+                         "stakeAmount": \(betAmount),
+                         "free" : 0,
+                         "useAutoAcceptance" : true,
+                         "calculatedOdds" : \(odd)
+                       }
+                       """
+            let data = body.data(using: String.Encoding.utf8)!
+            return data
+            
+            
         case .confirmBoostedBet:
             let body = """
                         {
@@ -377,6 +420,9 @@ extension BettingAPIClient: Endpoint {
         case .getAllowedBetTypes: return .post
         case .placeBets: return .post
             
+        case .calculateBetBuilderReturn: return .post
+        case .placeBetBuilderBet: return .post
+            
         case .confirmBoostedBet: return .put
         case .rejectBoostedBet: return .post
             
@@ -398,6 +444,9 @@ extension BettingAPIClient: Endpoint {
         case .calculateReturns: return false
         case .getAllowedBetTypes: return false
         case .placeBets: return true
+         
+        case .calculateBetBuilderReturn: return false
+        case .placeBetBuilderBet: return true
             
         case .confirmBoostedBet: return true
         case .rejectBoostedBet: return true
@@ -456,6 +505,9 @@ extension BettingAPIClient: Endpoint {
         case .getAllowedBetTypes: return TimeInterval(180)
         case .placeBets: return TimeInterval(180)
             
+        case .calculateBetBuilderReturn: return TimeInterval(180)
+        case .placeBetBuilderBet: return TimeInterval(180)
+            
         case .confirmBoostedBet: return TimeInterval(180)
         case .rejectBoostedBet: return TimeInterval(180)
             
@@ -477,6 +529,8 @@ extension BettingAPIClient: Endpoint {
         case .calculateReturns: return "calculateReturns"
         case .getAllowedBetTypes: return "getAllowedBetTypes"
         case .placeBets: return "placeBets"
+        case .calculateBetBuilderReturn: return "calculateBetBuilderReturn"
+        case .placeBetBuilderBet: return "placeBetBuilderBet"
         case .confirmBoostedBet: return "confirmBoostedBet"
         case .rejectBoostedBet: return "rejectBoostedBet"
         case .calculateCashout: return "calculateCashout"

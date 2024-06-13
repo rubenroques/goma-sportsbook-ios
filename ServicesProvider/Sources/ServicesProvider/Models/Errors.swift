@@ -36,6 +36,8 @@ public enum ServiceProviderError: Error {
 
     case resourceUnavailableOrDeleted
 
+    case badRequest
+    case pageNotFound
     case invalidRequestFormat
     case internalServerError
     case request
@@ -43,7 +45,7 @@ public enum ServiceProviderError: Error {
     case forbidden
     case invalidResponse
     case emptyData
-
+    
     case decodingError(message: String)
     case errorMessage(message: String)
     

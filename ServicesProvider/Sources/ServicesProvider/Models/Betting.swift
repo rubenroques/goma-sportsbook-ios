@@ -152,6 +152,12 @@ public struct BetslipPotentialReturn: Codable {
     public var totalOdd: Double
 }
 
+public struct BetBuilderPotentialReturn: Codable {
+    public var potentialReturn: Double
+    public var calculatedOdds: Double
+}
+
+
 public struct BetTicket: Codable {
     public var tickets: [BetTicketSelection]
     public var globalStake: Double?
