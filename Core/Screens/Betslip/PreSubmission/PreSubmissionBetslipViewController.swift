@@ -1086,6 +1086,10 @@ class PreSubmissionBetslipViewController: UIViewController {
                     self?.secondaryPlaceBetBaseView.isHidden = false
                     self?.secondaryMultipleWinningsBaseView.isHidden = true
                     self?.secondarySystemWinningsBaseView.isHidden = false
+                case (.betBuilder, true):
+                    self?.secondaryPlaceBetBaseView.isHidden = false
+                    self?.secondaryMultipleWinningsBaseView.isHidden = false
+                    self?.secondarySystemWinningsBaseView.isHidden = true
                 default:
                     self?.secondaryPlaceBetBaseView.isHidden = true
                 }
