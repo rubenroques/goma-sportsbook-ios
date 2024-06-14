@@ -88,7 +88,7 @@ class BannerTournamentTableViewHeader: UITableViewHeaderFooterView {
 
         self.favoriteLeagueBaseView.backgroundColor = UIColor.App.backgroundSecondary
 
-        self.nameTitleLabel.textColor = UIColor.App.textPrimary
+        self.nameTitleLabel.textColor = UIColor.App.buttonTextPrimary
 
         self.countryFlagImageView.backgroundColor = .clear
         self.countryFlagImageView.layer.borderColor = UIColor.App.highlightPrimaryContrast.cgColor

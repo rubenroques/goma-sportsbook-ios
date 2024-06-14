@@ -18,7 +18,8 @@ class FeaturedCompetitionDetailRootViewController: UIViewController {
     private lazy var floatingShortcutsView: FloatingShortcutsView = Self.createFloatingShortcutsView()
     
     private lazy var loadingBaseView: UIView = Self.createLoadingBaseView()
-    private lazy var loadingActivityIndicatorView: UIActivityIndicatorView = Self.createLoadingActivityIndicatorView()
+    private let loadingSpinnerViewController = LoadingSpinnerViewController()
+
     
     private var collapsedCompetitionsSections: Set<Int> = []
     private var matchStatsViewModelForMatch: ((Match) -> MatchStatsViewModel?)?
@@ -45,6 +46,8 @@ class FeaturedCompetitionDetailRootViewController: UIViewController {
         self.setupSubviews()
         self.setupWithTheme()
 
+        self.addChildViewController(self.loadingSpinnerViewController, toView: self.loadingBaseView)
+        
         self.tableView.delegate = self
         self.tableView.dataSource = self
 
@@ -163,12 +166,12 @@ class FeaturedCompetitionDetailRootViewController: UIViewController {
 
     private func showLoading() {
         self.loadingBaseView.isHidden = false
-        self.loadingActivityIndicatorView.startAnimating()
+        self.loadingSpinnerViewController.startAnimating()
     }
 
     private func hideLoading() {
         self.loadingBaseView.isHidden = true
-        self.loadingActivityIndicatorView.stopAnimating()
+        self.loadingSpinnerViewController.stopAnimating()
     }
     
     func scrollToTop() {
@@ -363,14 +366,6 @@ extension FeaturedCompetitionDetailRootViewController {
         return view
     }
 
-    private static func createLoadingActivityIndicatorView() -> UIActivityIndicatorView {
-        let activityIndicatorView = UIActivityIndicatorView.init(style: .large)
-        activityIndicatorView.translatesAutoresizingMaskIntoConstraints = false
-        activityIndicatorView.hidesWhenStopped = true
-        activityIndicatorView.stopAnimating()
-        return activityIndicatorView
-    }
-
     private static func createAccountValueView() -> UIView {
         let view = UIView()
         view.translatesAutoresizingMaskIntoConstraints = false
@@ -419,6 +414,7 @@ extension FeaturedCompetitionDetailRootViewController {
             }
         }
         imageView.contentMode = .scaleAspectFill
+        imageView.clipsToBounds = true
         return imageView
     }
 
@@ -431,8 +427,7 @@ extension FeaturedCompetitionDetailRootViewController {
         self.view.addSubview(self.floatingShortcutsView)
 
         self.view.addSubview(self.loadingBaseView)
-        self.loadingBaseView.addSubview(self.loadingActivityIndicatorView)
-
+        
         self.initConstraints()
 
         self.view.setNeedsLayout()
@@ -456,15 +451,10 @@ extension FeaturedCompetitionDetailRootViewController {
         ])
 
         NSLayoutConstraint.activate([
-            self.loadingActivityIndicatorView.centerYAnchor.constraint(equalTo: self.loadingBaseView.centerYAnchor),
-            self.loadingActivityIndicatorView.centerXAnchor.constraint(equalTo: self.loadingBaseView.centerXAnchor),
-        ])
-
-        NSLayoutConstraint.activate([
-            self.loadingBaseView.centerYAnchor.constraint(equalTo: self.view.centerYAnchor),
-            self.loadingBaseView.centerXAnchor.constraint(equalTo: self.view.centerXAnchor),
-            self.view.leadingAnchor.constraint(equalTo: self.loadingBaseView.leadingAnchor),
-            self.view.bottomAnchor.constraint(equalTo: self.loadingBaseView.topAnchor)
+            self.loadingBaseView.leadingAnchor.constraint(equalTo: self.view.leadingAnchor),
+            self.loadingBaseView.trailingAnchor.constraint(equalTo: self.view.trailingAnchor),
+            self.loadingBaseView.topAnchor.constraint(equalTo: self.view.topAnchor),
+            self.loadingBaseView.bottomAnchor.constraint(equalTo: self.view.bottomAnchor)
         ])
 
         NSLayoutConstraint.activate([

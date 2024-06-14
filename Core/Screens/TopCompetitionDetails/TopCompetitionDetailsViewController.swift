@@ -28,7 +28,8 @@ class TopCompetitionDetailsViewController: UIViewController {
     private lazy var floatingShortcutsView: FloatingShortcutsView = Self.createFloatingShortcutsView()
     
     private lazy var loadingBaseView: UIView = Self.createLoadingBaseView()
-    private lazy var loadingActivityIndicatorView: UIActivityIndicatorView = Self.createLoadingActivityIndicatorView()
+//    private lazy var loadingActivityIndicatorView: UIActivityIndicatorView = Self.createLoadingActivityIndicatorView()
+    private let loadingSpinnerViewController = LoadingSpinnerViewController()
 
     private lazy var accountValueView: UIView = Self.createAccountValueView()
     private lazy var accountPlusView: UIView = Self.createAccountPlusView()
@@ -80,6 +81,8 @@ class TopCompetitionDetailsViewController: UIViewController {
 
         self.setupSubviews()
         self.setupWithTheme()
+        
+        self.addChildViewController(self.loadingSpinnerViewController, toView: self.loadingBaseView)
 
         self.tableView.delegate = self
         self.tableView.dataSource = self
@@ -342,12 +345,14 @@ class TopCompetitionDetailsViewController: UIViewController {
 
     private func showLoading() {
         self.loadingBaseView.isHidden = false
-        self.loadingActivityIndicatorView.startAnimating()
+//        self.loadingActivityIndicatorView.startAnimating()
+        self.loadingSpinnerViewController.startAnimating()
     }
 
     private func hideLoading() {
         self.loadingBaseView.isHidden = true
-        self.loadingActivityIndicatorView.stopAnimating()
+//        self.loadingActivityIndicatorView.stopAnimating()
+        self.loadingSpinnerViewController.stopAnimating()
     }
     
     private func resizeBannerImageView(width: CGFloat, height: CGFloat) {
@@ -706,6 +711,7 @@ extension TopCompetitionDetailsViewController {
         }
         imageView.contentMode = .scaleAspectFill
         imageView.isHidden = true
+        imageView.clipsToBounds = true
         return imageView
     }
     
@@ -761,7 +767,7 @@ extension TopCompetitionDetailsViewController {
         self.view.addSubview(self.floatingShortcutsView)
 
         self.view.addSubview(self.loadingBaseView)
-        self.loadingBaseView.addSubview(self.loadingActivityIndicatorView)
+//        self.loadingBaseView.addSubview(self.loadingActivityIndicatorView)
 
         self.initConstraints()
 
@@ -824,16 +830,16 @@ extension TopCompetitionDetailsViewController {
             self.tableView.bottomAnchor.constraint(equalTo: self.view.bottomAnchor)
         ])
 
-        NSLayoutConstraint.activate([
-            self.loadingActivityIndicatorView.centerYAnchor.constraint(equalTo: self.loadingBaseView.centerYAnchor),
-            self.loadingActivityIndicatorView.centerXAnchor.constraint(equalTo: self.loadingBaseView.centerXAnchor),
-        ])
+//        NSLayoutConstraint.activate([
+//            self.loadingActivityIndicatorView.centerYAnchor.constraint(equalTo: self.loadingBaseView.centerYAnchor),
+//            self.loadingActivityIndicatorView.centerXAnchor.constraint(equalTo: self.loadingBaseView.centerXAnchor),
+//        ])
 
         NSLayoutConstraint.activate([
-            self.loadingBaseView.centerYAnchor.constraint(equalTo: self.view.centerYAnchor),
-            self.loadingBaseView.centerXAnchor.constraint(equalTo: self.view.centerXAnchor),
-            self.view.leadingAnchor.constraint(equalTo: self.loadingBaseView.leadingAnchor),
-            self.navigationView.bottomAnchor.constraint(equalTo: self.loadingBaseView.topAnchor)
+            self.loadingBaseView.leadingAnchor.constraint(equalTo: self.view.leadingAnchor),
+            self.loadingBaseView.trailingAnchor.constraint(equalTo: self.view.trailingAnchor),
+            self.loadingBaseView.topAnchor.constraint(equalTo: self.navigationView.bottomAnchor),
+            self.loadingBaseView.bottomAnchor.constraint(equalTo: self.view.bottomAnchor)
         ])
 
         NSLayoutConstraint.activate([
