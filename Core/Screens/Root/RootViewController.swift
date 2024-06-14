@@ -58,7 +58,8 @@ class RootViewController: UIViewController {
     @IBOutlet private var tipsBaseView: UIView!
     @IBOutlet private var cashbackBaseView: UIView!
     @IBOutlet private var casinoBaseView: UIView!
-
+    @IBOutlet private var featuredCompetitionBaseView: UIView!
+    
     @IBOutlet private var tabBarView: UIView!
     @IBOutlet private var bottomSafeAreaView: UIView!
     @IBOutlet private var casinoBottomView: UIView!
@@ -82,6 +83,10 @@ class RootViewController: UIViewController {
     @IBOutlet private var cashbackButtonBaseView: UIView!
     @IBOutlet private var cashbackIconImageView: UIImageView!
     @IBOutlet private var cashbackTitleLabel: UILabel!
+    
+    @IBOutlet private var featuredCompetitionButtonBaseView: UIView!
+    @IBOutlet private var featuredCompetitionIconImageView: UIImageView!
+    @IBOutlet private var featuredCompetitionTitleLabel: UILabel!
 
     @IBOutlet private var casinoButtonBaseView: UIView!
     @IBOutlet private var casinoIconImageView: UIImageView!
@@ -220,6 +225,20 @@ class RootViewController: UIViewController {
     lazy var tipsRootViewController = TipsRootViewController()
     lazy var cashbackViewController = CashbackRootViewController()
     lazy var casinoViewController = CasinoWebViewController()
+    lazy var featuredCompetitionViewController: FeaturedCompetitionDetailRootViewController? = {
+        let sport = Sport(id: "", name: "", alphaId: "", numericId: "", showEventCategory: false, liveEventsCount: 0)
+        
+        if let competitionId = Env.businessSettingsSocket.clientSettings.featuredCompetition?.id {
+            
+            let topCompetitionDetailsViewModel = TopCompetitionDetailsViewModel(competitionsIds: [competitionId], sport: sport)
+            
+            let featuredCompetitionDetailRootViewController = FeaturedCompetitionDetailRootViewController(viewModel: topCompetitionDetailsViewModel)
+                        
+            return featuredCompetitionDetailRootViewController
+        }
+        
+        return nil
+    }()
 
     // Loaded view controllers
     var homeViewControllerLoaded = false
@@ -227,6 +246,7 @@ class RootViewController: UIViewController {
     var liveEventsViewControllerLoaded = false
     var tipsRootViewControllerLoaded = false
     var cashbackViewControllerLoaded = false
+    var featuredCompetitionViewControllerLoaded = false
     var casinoViewControllerLoaded = false
 
     var currentSport: Sport
@@ -245,6 +265,7 @@ class RootViewController: UIViewController {
         case live
         case tips
         case cashback
+        case featuredCompetition
         case casino
     }
     var selectedTabItem: TabItem {
@@ -260,6 +281,8 @@ class RootViewController: UIViewController {
                 self.selectTipsTabBarItem()
             case .cashback:
                 self.selectCashbackTabBarItem()
+            case .featuredCompetition:
+                self.selectFeaturedCompetitionTabBarItem()
             case .casino:
                 self.selectCasinoTabBarItem()
             }
@@ -653,6 +676,9 @@ class RootViewController: UIViewController {
         let cashbackTapgesture = UITapGestureRecognizer(target: self, action: #selector(didTapCashbackTabItem))
         self.cashbackButtonBaseView.addGestureRecognizer(cashbackTapgesture)
         
+        let featuredCompetitionTapGesture = UITapGestureRecognizer(target: self, action: #selector(didTapFeaturedCompetitionTabItem))
+        self.featuredCompetitionButtonBaseView.addGestureRecognizer(featuredCompetitionTapGesture)
+        
         let casinoTapGesture = UITapGestureRecognizer(target: self, action: #selector(didTapCasinoTabItem))
         self.casinoButtonBaseView.addGestureRecognizer(casinoTapGesture)
         
@@ -700,6 +726,26 @@ class RootViewController: UIViewController {
         else {
             self.cashbackButtonBaseView.isHidden = true
             
+        }
+        
+        if let featuredCompetition = Env.businessSettingsSocket.clientSettings.featuredCompetition {
+            self.featuredCompetitionButtonBaseView.isHidden = false
+            
+            // Set bottom banner icon
+            if let bottomBarIcon = featuredCompetition.bottomBarIcon,
+               let url = URL(string: "\(bottomBarIcon)") {
+                
+                self.featuredCompetitionIconImageView.kf.setImage(with: url)
+                
+            }
+            
+            // Set bottom banner name
+            if let bottomBarName = featuredCompetition.bottomBarName {
+                self.featuredCompetitionTitleLabel.text = bottomBarName
+            }
+        }
+        else {
+            self.featuredCompetitionButtonBaseView.isHidden = true
         }
         
         //
@@ -827,6 +873,7 @@ class RootViewController: UIViewController {
         self.liveButtonBaseView.backgroundColor = .clear // UIColor.App.backgroundPrimary
         self.tipsButtonBaseView.backgroundColor = .clear // UIColor.App.backgroundPrimary
         self.cashbackButtonBaseView.backgroundColor = .clear
+        self.featuredCompetitionButtonBaseView.backgroundColor = .clear
 
         self.profilePictureBaseView.backgroundColor = UIColor.App.highlightPrimary
 
@@ -1376,6 +1423,18 @@ extension RootViewController {
 
             cashbackViewControllerLoaded = true
         }
+        
+        if case .featuredCompetition = tab, !featuredCompetitionViewControllerLoaded {
+            
+            if let featuredCompetitionViewController = self.featuredCompetitionViewController {
+                self.addChildViewController(featuredCompetitionViewController, toView: self.featuredCompetitionBaseView)
+                
+                // Cashback Callbacks if needed
+                
+                featuredCompetitionViewControllerLoaded = true
+            }
+            
+        }
 
         if case .casino = tab, !casinoViewControllerLoaded {
             self.searchButton.isHidden = true
@@ -1677,6 +1736,16 @@ extension RootViewController {
 
         self.selectedTabItem = .cashback
     }
+    
+    @objc private func didTapFeaturedCompetitionTabItem() {
+        self.flipToSportsbookIfNeeded()
+
+        if self.selectedTabItem == .featuredCompetition {
+            self.featuredCompetitionViewController?.scrollToTop()
+        }
+
+        self.selectedTabItem = .featuredCompetition
+    }
 
     @objc private func didTapCasinoTabItem() {
         self.flipToCasinoIfNeeded()
@@ -1701,6 +1770,7 @@ extension RootViewController {
         self.liveBaseView.isHidden = true
         self.tipsBaseView.isHidden = true
         self.cashbackBaseView.isHidden = true
+        self.featuredCompetitionBaseView.isHidden = true
 
         self.redrawButtonButtons()
     }
@@ -1713,6 +1783,7 @@ extension RootViewController {
         self.liveBaseView.isHidden = true
         self.tipsBaseView.isHidden = true
         self.cashbackBaseView.isHidden = true
+        self.featuredCompetitionBaseView.isHidden = true
 
         self.redrawButtonButtons()
     }
@@ -1725,6 +1796,7 @@ extension RootViewController {
         self.liveBaseView.isHidden = false
         self.tipsBaseView.isHidden = true
         self.cashbackBaseView.isHidden = true
+        self.featuredCompetitionBaseView.isHidden = true
 
         self.redrawButtonButtons()
     }
@@ -1737,6 +1809,7 @@ extension RootViewController {
         self.liveBaseView.isHidden = true
         self.tipsBaseView.isHidden = false
         self.cashbackBaseView.isHidden = true
+        self.featuredCompetitionBaseView.isHidden = true
 
         self.redrawButtonButtons()
     }
@@ -1749,6 +1822,19 @@ extension RootViewController {
         self.liveBaseView.isHidden = true
         self.tipsBaseView.isHidden = true
         self.cashbackBaseView.isHidden = false
+        self.featuredCompetitionBaseView.isHidden = true
+        self.redrawButtonButtons()
+    }
+    
+    func selectFeaturedCompetitionTabBarItem() {
+        self.loadChildViewControllerIfNeeded(tab: .featuredCompetition)
+
+        self.homeBaseView.isHidden = true
+        self.preLiveBaseView.isHidden = true
+        self.liveBaseView.isHidden = true
+        self.tipsBaseView.isHidden = true
+        self.cashbackBaseView.isHidden = true
+        self.featuredCompetitionBaseView.isHidden = false
         self.redrawButtonButtons()
     }
 
@@ -1773,6 +1859,8 @@ extension RootViewController {
             tipsIconImageView.setImageColor(color: UIColor.App.iconSecondary)
             cashbackTitleLabel.textColor = UIColor.App.iconSecondary
             cashbackIconImageView.setImageColor(color: UIColor.App.iconSecondary)
+            featuredCompetitionTitleLabel.textColor = UIColor.App.iconSecondary
+//            featuredCompetitionIconImageView.setImageColor(color: UIColor.App.iconSecondary)
         case .preLive:
             sportsButtonBaseView.alpha = self.activeButtonAlpha
             homeTitleLabel.textColor = UIColor.App.iconSecondary
@@ -1785,6 +1873,8 @@ extension RootViewController {
             tipsIconImageView.setImageColor(color: UIColor.App.iconSecondary)
             cashbackTitleLabel.textColor = UIColor.App.iconSecondary
             cashbackIconImageView.setImageColor(color: UIColor.App.iconSecondary)
+            featuredCompetitionTitleLabel.textColor = UIColor.App.iconSecondary
+//            featuredCompetitionIconImageView.setImageColor(color: UIColor.App.iconSecondary)
         case .live:
             liveButtonBaseView.alpha = self.activeButtonAlpha
             homeTitleLabel.textColor = UIColor.App.iconSecondary
@@ -1797,6 +1887,8 @@ extension RootViewController {
             tipsIconImageView.setImageColor(color: UIColor.App.iconSecondary)
             cashbackTitleLabel.textColor = UIColor.App.iconSecondary
             cashbackIconImageView.setImageColor(color: UIColor.App.iconSecondary)
+            featuredCompetitionTitleLabel.textColor = UIColor.App.iconSecondary
+//            featuredCompetitionIconImageView.setImageColor(color: UIColor.App.iconSecondary)
         case .tips:
             tipsButtonBaseView.alpha = self.activeButtonAlpha
             homeTitleLabel.textColor = UIColor.App.iconSecondary
@@ -1809,6 +1901,8 @@ extension RootViewController {
             tipsIconImageView.setImageColor(color: UIColor.App.highlightPrimary)
             cashbackTitleLabel.textColor = UIColor.App.iconSecondary
             cashbackIconImageView.setImageColor(color: UIColor.App.iconSecondary)
+            featuredCompetitionTitleLabel.textColor = UIColor.App.iconSecondary
+//            featuredCompetitionIconImageView.setImageColor(color: UIColor.App.iconSecondary)
         case .cashback:
             cashbackButtonBaseView.alpha = self.activeButtonAlpha
             homeTitleLabel.textColor = UIColor.App.iconSecondary
@@ -1821,6 +1915,24 @@ extension RootViewController {
             tipsIconImageView.setImageColor(color: UIColor.App.iconSecondary)
             cashbackTitleLabel.textColor = UIColor.App.highlightPrimary
             cashbackIconImageView.setImageColor(color: UIColor.App.highlightPrimary)
+            featuredCompetitionTitleLabel.textColor = UIColor.App.iconSecondary
+//            featuredCompetitionIconImageView.setImageColor(color: UIColor.App.iconSecondary)
+        case .featuredCompetition:
+            featuredCompetitionButtonBaseView.alpha = self.activeButtonAlpha
+            
+            homeTitleLabel.textColor = UIColor.App.iconSecondary
+            homeIconImageView.setImageColor(color: UIColor.App.iconSecondary)
+            sportsTitleLabel.textColor = UIColor.App.iconSecondary
+            sportsIconImageView.setImageColor(color: UIColor.App.iconSecondary)
+            liveTitleLabel.textColor = UIColor.App.iconSecondary
+            liveIconImageView.setImageColor(color: UIColor.App.iconSecondary)
+            tipsTitleLabel.textColor = UIColor.App.iconSecondary
+            tipsIconImageView.setImageColor(color: UIColor.App.iconSecondary)
+            cashbackTitleLabel.textColor = UIColor.App.iconSecondary
+            cashbackIconImageView.setImageColor(color: UIColor.App.iconSecondary)
+            
+            featuredCompetitionTitleLabel.textColor = UIColor.App.highlightPrimary
+//            featuredCompetitionIconImageView.setImageColor(color: UIColor.App.highlightPrimary)
         case .casino:
             homeTitleLabel.textColor = UIColor.App.iconSecondary
             homeIconImageView.setImageColor(color: UIColor.App.iconSecondary)

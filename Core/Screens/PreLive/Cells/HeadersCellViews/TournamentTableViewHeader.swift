@@ -121,7 +121,6 @@ class TournamentTableViewHeader: UITableViewHeaderFooterView {
 
     func markAsFavorite(competition: Competition) {
         
-        
         var isFavorite = false
         for competitionId in Env.favoritesManager.favoriteEventsIdPublisher.value where competitionId == competition.id {
             isFavorite = true

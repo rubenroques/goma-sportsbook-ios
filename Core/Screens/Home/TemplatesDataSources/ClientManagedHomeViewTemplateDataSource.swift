@@ -155,11 +155,7 @@ class ClientManagedHomeViewTemplateDataSource {
         self.matchLineTableCellViewModelCache = [:]
         
         self.highlightedLiveMatchLineTableCellViewModelCache = [:]
-
-    #if DEBUG
-        self.fetchHighlightedLiveMatches()
         
-    #else
         self.fetchAlerts()
         self.fetchQuickSwipeMatches()
         self.fetchBanners()
@@ -168,7 +164,6 @@ class ClientManagedHomeViewTemplateDataSource {
         self.fetchPromotionalStories()
         self.fetchTopCompetitions()
         self.fetchHighlightedLiveMatches()
-    #endif
 
     }
 
@@ -372,8 +367,27 @@ class ClientManagedHomeViewTemplateDataSource {
 
                 let topCompetitionIds = convertedCompetitions.map { $0.id }
                 Env.favoritesManager.topCompetitionIds = topCompetitionIds
+                
+                if let featuredCompetitionId = Env.businessSettingsSocket.clientSettings.featuredCompetition?.id {
+                    
+                    if convertedCompetitions.contains(where: {
+                        $0.id == featuredCompetitionId
+                    }) {
+                        let filteredConvertedCOmpetitions = convertedCompetitions.filter( {
+                            $0.id != featuredCompetitionId
+                        })
+                        
+                        self?.topCompetitionsLineCellViewModel = TopCompetitionsLineCellViewModel(topCompetitions: filteredConvertedCOmpetitions)
+                    }
+                    else {
+                        self?.topCompetitionsLineCellViewModel = TopCompetitionsLineCellViewModel(topCompetitions: convertedCompetitions)
+                    }
+                }
+                else {
+                    self?.topCompetitionsLineCellViewModel = TopCompetitionsLineCellViewModel(topCompetitions: convertedCompetitions)
+                }
 
-                self?.topCompetitionsLineCellViewModel = TopCompetitionsLineCellViewModel(topCompetitions: convertedCompetitions)
+                
                 self?.refreshPublisher.send()
             })
             .store(in: &cancellables)
@@ -420,11 +434,7 @@ class ClientManagedHomeViewTemplateDataSource {
 
     func fetchHighlightedLiveMatches() {
         
-        #if DEBUG
-        let homeLiveEventsCount = 20
-        #else
         let homeLiveEventsCount = Env.businessSettingsSocket.clientSettings.homeLiveEventsCount
-        #endif
         
         self.highlightedLiveMatches = []
         
@@ -525,7 +535,12 @@ extension ClientManagedHomeViewTemplateDataSource: HomeViewTemplateDataSource {
         case 6:
             return self.highlightedLiveMatches.count
         case 7:
-            return !self.topCompetitionsLineCellViewModel.isEmpty ? 1 : 0
+            if let featuredPromotion = Env.businessSettingsSocket.clientSettings.featuredCompetition {
+                return !self.topCompetitionsLineCellViewModel.isEmpty ? 2 : 1
+            }
+            else {
+                return !self.topCompetitionsLineCellViewModel.isEmpty ? 1 : 0
+            }
         default:
             ()
         }
