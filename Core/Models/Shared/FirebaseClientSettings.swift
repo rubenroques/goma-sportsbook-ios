@@ -177,22 +177,3 @@ extension FirebaseClientSettings {
         featuredCompetition: nil)
     }
 }
-
-struct FeaturedCompetition: Codable {
-    
-    var id: String?
-    var homeBanner: String?
-    var bottomBarIcon: String?
-    var bottomBarName: String?
-    var pageDetailBanner: String?
-    var pageDetailBackground: String?
-    
-    enum CodingKeys: String, CodingKey {
-        case id = "id"
-        case homeBanner = "home_banner"
-        case bottomBarIcon = "bottom_bar_icon"
-        case bottomBarName = "bottom_bar_name"
-        case pageDetailBanner = "page_detail_banner"
-        case pageDetailBackground = "page_detail_bg"
-    }
-}

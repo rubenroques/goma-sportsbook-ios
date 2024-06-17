@@ -5189,6 +5189,14 @@
 		651BF0872C133FB5001AF8F4 /* replay_sucess_3.json in Resources */ = {isa = PBXBuildFile; fileRef = 651BF0812C133FB4001AF8F4 /* replay_sucess_3.json */; };
 		651BF0882C133FB5001AF8F4 /* replay_sucess_3.json in Resources */ = {isa = PBXBuildFile; fileRef = 651BF0812C133FB4001AF8F4 /* replay_sucess_3.json */; };
 		651BF0892C133FB5001AF8F4 /* replay_sucess_3.json in Resources */ = {isa = PBXBuildFile; fileRef = 651BF0812C133FB4001AF8F4 /* replay_sucess_3.json */; };
+		65238E002C206C77005703C2 /* FeaturedCompetition.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65238DFF2C206C77005703C2 /* FeaturedCompetition.swift */; };
+		65238E012C206C77005703C2 /* FeaturedCompetition.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65238DFF2C206C77005703C2 /* FeaturedCompetition.swift */; };
+		65238E022C206C77005703C2 /* FeaturedCompetition.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65238DFF2C206C77005703C2 /* FeaturedCompetition.swift */; };
+		65238E032C206C77005703C2 /* FeaturedCompetition.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65238DFF2C206C77005703C2 /* FeaturedCompetition.swift */; };
+		65238E042C206C77005703C2 /* FeaturedCompetition.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65238DFF2C206C77005703C2 /* FeaturedCompetition.swift */; };
+		65238E052C206C77005703C2 /* FeaturedCompetition.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65238DFF2C206C77005703C2 /* FeaturedCompetition.swift */; };
+		65238E062C206C77005703C2 /* FeaturedCompetition.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65238DFF2C206C77005703C2 /* FeaturedCompetition.swift */; };
+		65238E072C206C77005703C2 /* FeaturedCompetition.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65238DFF2C206C77005703C2 /* FeaturedCompetition.swift */; };
 		6531BB8E2C0A295B002C696D /* replay_coin.json in Resources */ = {isa = PBXBuildFile; fileRef = 6531BB8D2C0A295B002C696D /* replay_coin.json */; };
 		6531BB8F2C0A295B002C696D /* replay_coin.json in Resources */ = {isa = PBXBuildFile; fileRef = 6531BB8D2C0A295B002C696D /* replay_coin.json */; };
 		6531BB902C0A295B002C696D /* replay_coin.json in Resources */ = {isa = PBXBuildFile; fileRef = 6531BB8D2C0A295B002C696D /* replay_coin.json */; };
@@ -7581,6 +7589,7 @@
 		45FF105229D74721009AC196 /* UserTrackingSettingsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserTrackingSettingsViewController.swift; sourceTree = "<group>"; };
 		651BF0782C11BEE4001AF8F4 /* replay_sucess_2.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = replay_sucess_2.json; sourceTree = "<group>"; };
 		651BF0812C133FB4001AF8F4 /* replay_sucess_3.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = replay_sucess_3.json; sourceTree = "<group>"; };
+		65238DFF2C206C77005703C2 /* FeaturedCompetition.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FeaturedCompetition.swift; sourceTree = "<group>"; };
 		6531BB8D2C0A295B002C696D /* replay_coin.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = replay_coin.json; sourceTree = "<group>"; };
 		6531BB962C0E077C002C696D /* replay_sucess.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = replay_sucess.json; sourceTree = "<group>"; };
 		655E1FFB2B21E8A500C95337 /* NotificationsService.appex */ = {isa = PBXFileReference; explicitFileType = "wrapper.app-extension"; includeInIndex = 0; path = NotificationsService.appex; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -9756,6 +9765,7 @@
 				A9C04C122A7BBAE40025A6DA /* FilterFavoritesValue.swift */,
 				A9059F192ABB5B1300796583 /* DocumentLevelStatus.swift */,
 				658A4CB52B9F6C4800F73772 /* Referrals.swift */,
+				65238DFF2C206C77005703C2 /* FeaturedCompetition.swift */,
 			);
 			path = Shared;
 			sourceTree = "<group>";
@@ -13720,6 +13730,7 @@
 				450B78A228F58574009229E3 /* Router.swift in Sources */,
 				A9A2923F2A61597C00A7C334 /* UserGodfatherView.swift in Sources */,
 				A9BA04102A3099FA007880FC /* ManualUploadDocumentsViewController.swift in Sources */,
+				65238E022C206C77005703C2 /* FeaturedCompetition.swift in Sources */,
 				450B78A328F58574009229E3 /* Date+Extension.swift in Sources */,
 				450B78A428F58574009229E3 /* LiveDetailsViewController.swift in Sources */,
 				450B78A528F58574009229E3 /* GomaGamingServiceClient.swift in Sources */,
@@ -14889,6 +14900,7 @@
 				457CBB2C282D27D000ED0F00 /* FavoriteCompetitionsDataSource.swift in Sources */,
 				4568B9712858E45F00FA99B3 /* FlipNumberView.swift in Sources */,
 				A98708B628D3455300F27348 /* RankingsListViewModel.swift in Sources */,
+				65238E062C206C77005703C2 /* FeaturedCompetition.swift in Sources */,
 				457CBB2D282D27D000ED0F00 /* TabularBarDataSource.swift in Sources */,
 				457CBB2E282D27D000ED0F00 /* SportSectionHeaderView.swift in Sources */,
 				457CBB2F282D27D000ED0F00 /* MyTicketBetLineViewModel.swift in Sources */,
@@ -15578,6 +15590,7 @@
 				457CBDCE282D2CD100ED0F00 /* HistoryRootViewController.swift in Sources */,
 				457CBDCF282D2CD100ED0F00 /* TransactionHistory.swift in Sources */,
 				457CBDD0282D2CD100ED0F00 /* EnvironmentType.swift in Sources */,
+				65238E072C206C77005703C2 /* FeaturedCompetition.swift in Sources */,
 				A9B946BB28BFAA3E0091296E /* FeaturedTipView.swift in Sources */,
 				457CBDD1282D2CD100ED0F00 /* CountrySelectorTableViewCell.swift in Sources */,
 				A9DF8E6328E751F10083BF56 /* ListTitleHeaderFooterView.swift in Sources */,
@@ -15928,6 +15941,7 @@
 				4589C7BC282024E400243547 /* Router.swift in Sources */,
 				A9A292402A61597C00A7C334 /* UserGodfatherView.swift in Sources */,
 				A9BA04112A3099FA007880FC /* ManualUploadDocumentsViewController.swift in Sources */,
+				65238E032C206C77005703C2 /* FeaturedCompetition.swift in Sources */,
 				4589C7BD282024E400243547 /* Date+Extension.swift in Sources */,
 				4589C7BE282024E400243547 /* LiveDetailsViewController.swift in Sources */,
 				4589C7BF282024E400243547 /* GomaGamingServiceClient.swift in Sources */,
@@ -16625,6 +16639,7 @@
 				45A330B4298976BA008181E9 /* Router.swift in Sources */,
 				A9A2923E2A61597C00A7C334 /* UserGodfatherView.swift in Sources */,
 				A9BA040F2A3099FA007880FC /* ManualUploadDocumentsViewController.swift in Sources */,
+				65238E002C206C77005703C2 /* FeaturedCompetition.swift in Sources */,
 				45A330B5298976BA008181E9 /* Date+Extension.swift in Sources */,
 				45A330B6298976BA008181E9 /* LiveDetailsViewController.swift in Sources */,
 				45A330B7298976BA008181E9 /* GomaGamingServiceClient.swift in Sources */,
@@ -17734,6 +17749,7 @@
 				45A6BD3128246A7500D9B416 /* WithdrawViewModel.swift in Sources */,
 				A9A2924B2A61670100A7C334 /* UserReferralView.swift in Sources */,
 				A9A521732A02B98A00C0F6C6 /* CardsStyleViewController.swift in Sources */,
+				65238E052C206C77005703C2 /* FeaturedCompetition.swift in Sources */,
 				45F5C5162ABAE7F5001AD544 /* PaymentsBrowserViewController.swift in Sources */,
 				45A6BD3228246A7500D9B416 /* String+Extensions.swift in Sources */,
 				45D1ED5E28A150C2001E18E5 /* BusinessModules.swift in Sources */,
@@ -18018,6 +18034,7 @@
 				45F6BB512AB3732C00C81DE1 /* Router.swift in Sources */,
 				45F6BB522AB3732C00C81DE1 /* UserGodfatherView.swift in Sources */,
 				45F6BB532AB3732C00C81DE1 /* ManualUploadDocumentsViewController.swift in Sources */,
+				65238E012C206C77005703C2 /* FeaturedCompetition.swift in Sources */,
 				45F6BB542AB3732C00C81DE1 /* Date+Extension.swift in Sources */,
 				45F6BB552AB3732C00C81DE1 /* LiveDetailsViewController.swift in Sources */,
 				45F6BB562AB3732C00C81DE1 /* GomaGamingServiceClient.swift in Sources */,
@@ -19257,6 +19274,7 @@
 				A96FAEDA2981912100A0751F /* UploadDocuments.swift in Sources */,
 				A9C342CC28F9A74A0055360B /* BonusSwitchView.swift in Sources */,
 				A9C342CD28F9A74A0055360B /* ReceivedMessageTableViewCell.swift in Sources */,
+				65238E042C206C77005703C2 /* FeaturedCompetition.swift in Sources */,
 				A9C342CE28F9A74A0055360B /* RecentSearchHeaderView.swift in Sources */,
 				A9BDD4F3292E3F08001A7799 /* SportTypeStore.swift in Sources */,
 				A9C342CF28F9A74A0055360B /* SharedGameCardView.swift in Sources */,
@@ -19773,7 +19791,7 @@
 				CODE_SIGN_IDENTITY = "Apple Development";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				CODE_SIGN_STYLE = Manual;
-				CURRENT_PROJECT_VERSION = 102303;
+				CURRENT_PROJECT_VERSION = 102304;
 				DEVELOPMENT_TEAM = QN2DYX5K4M;
 				"DEVELOPMENT_TEAM[sdk=iphoneos*]" = QN2DYX5K4M;
 				INFOPLIST_FILE = "$(SRCROOT)/Clients/Betsson/Misc-PROD/Betsson-PROD-Info.plist";
@@ -19806,7 +19824,7 @@
 				CODE_SIGN_IDENTITY = "Apple Distribution";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution";
 				CODE_SIGN_STYLE = Manual;
-				CURRENT_PROJECT_VERSION = 102303;
+				CURRENT_PROJECT_VERSION = 102304;
 				DEVELOPMENT_TEAM = QN2DYX5K4M;
 				"DEVELOPMENT_TEAM[sdk=iphoneos*]" = QN2DYX5K4M;
 				INFOPLIST_FILE = "$(SRCROOT)/Clients/Betsson/Misc-PROD/Betsson-PROD-Info.plist";
@@ -19896,7 +19914,7 @@
 				CODE_SIGN_IDENTITY = "Apple Development";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				CODE_SIGN_STYLE = Manual;
-				CURRENT_PROJECT_VERSION = 102303;
+				CURRENT_PROJECT_VERSION = 102304;
 				DEVELOPMENT_TEAM = 422GNXXZJR;
 				"DEVELOPMENT_TEAM[sdk=iphoneos*]" = 422GNXXZJR;
 				INFOPLIST_FILE = "$(SRCROOT)/Clients/Betsson/Misc-UAT/Betsson-UAT-Info.plist";
@@ -19928,7 +19946,7 @@
 				CODE_SIGN_IDENTITY = "Apple Distribution";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution";
 				CODE_SIGN_STYLE = Manual;
-				CURRENT_PROJECT_VERSION = 102303;
+				CURRENT_PROJECT_VERSION = 102304;
 				DEVELOPMENT_TEAM = 422GNXXZJR;
 				"DEVELOPMENT_TEAM[sdk=iphoneos*]" = 422GNXXZJR;
 				INFOPLIST_FILE = "$(SRCROOT)/Clients/Betsson/Misc-UAT/Betsson-UAT-Info.plist";
@@ -19960,7 +19978,7 @@
 				CODE_SIGN_IDENTITY = "Apple Development";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "Apple Development";
 				CODE_SIGN_STYLE = Manual;
-				CURRENT_PROJECT_VERSION = 102303;
+				CURRENT_PROJECT_VERSION = 102304;
 				DEBUG_INFORMATION_FORMAT = dwarf;
 				DEVELOPMENT_TEAM = "";
 				"DEVELOPMENT_TEAM[sdk=iphoneos*]" = QN2DYX5K4M;
@@ -20005,7 +20023,7 @@
 				CODE_SIGN_IDENTITY = "Apple Distribution";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "Apple Distribution";
 				CODE_SIGN_STYLE = Manual;
-				CURRENT_PROJECT_VERSION = 102303;
+				CURRENT_PROJECT_VERSION = 102304;
 				DEVELOPMENT_TEAM = "";
 				"DEVELOPMENT_TEAM[sdk=iphoneos*]" = QN2DYX5K4M;
 				ENABLE_USER_SCRIPT_SANDBOXING = YES;
