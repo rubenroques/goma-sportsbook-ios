@@ -202,7 +202,8 @@ class MultipleBettingTicketTableViewCell: UITableViewCell {
             self.invalidTicketView.isHidden = true
         }
         
-        if mixMatchMode {
+        if mixMatchMode { // No cashback
+            self.hasCashback = false
             self.mixMatchIconImageView.isHidden = false
         }
         else {
@@ -268,26 +269,28 @@ class MultipleBettingTicketTableViewCell: UITableViewCell {
             self.errorLateralTopView.backgroundColor = UIColor.App.backgroundSecondary
             self.errorLateralBottomView.backgroundColor = UIColor.App.backgroundSecondary
         }
-
-        //
-        self.liveTicketCancellable = Env.betslipManager.liveTicketsPublisher
-            .receive(on: DispatchQueue.main)
-            .sink { [weak self] liveTicketsDictionary in
-                guard let self = self else { return }
-                if let isLiveTicket = liveTicketsDictionary[self.bettingTicket?.matchId ?? ""] {
-                    if isLiveTicket {
-                        self.hasCashback = false
-                    }
-                    else {
-                        if let sport = self.bettingTicket?.sport {
-                            self.hasCashback = RePlayFeatureHelper.shouldShowRePlay(forSport: sport)
+        
+        if !mixMatchMode {
+            //
+            self.liveTicketCancellable = Env.betslipManager.liveTicketsPublisher
+                .receive(on: DispatchQueue.main)
+                .sink { [weak self] liveTicketsDictionary in
+                    guard let self = self else { return }
+                    if let isLiveTicket = liveTicketsDictionary[self.bettingTicket?.matchId ?? ""] {
+                        if isLiveTicket {
+                            self.hasCashback = false
+                        }
+                        else {
+                            if let sport = self.bettingTicket?.sport {
+                                self.hasCashback = RePlayFeatureHelper.shouldShowRePlay(forSport: sport)
+                            }
                         }
                     }
+                    else if let sport = self.bettingTicket?.sport {
+                        self.hasCashback = RePlayFeatureHelper.shouldShowRePlay(forSport: sport)
+                    }
                 }
-                else if let sport = self.bettingTicket?.sport {
-                    self.hasCashback = RePlayFeatureHelper.shouldShowRePlay(forSport: sport)
-                }
-            }
+        }
         
     }
 
