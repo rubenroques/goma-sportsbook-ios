@@ -258,10 +258,11 @@ extension FeaturedCompetitionDetailRootViewController: UITableViewDelegate, UITa
     }
 
     func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
-        UITableView.automaticDimension    }
+        UITableView.automaticDimension
+    }
 
     func tableView(_ tableView: UITableView, estimatedHeightForHeaderInSection section: Int) -> CGFloat {
-        return 280
+        return 300
     }
 
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {

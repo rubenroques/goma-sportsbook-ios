@@ -294,7 +294,7 @@ extension BannerTournamentTableViewHeader {
                            toItem: nil,
                            attribute: .notAnAttribute,
                            multiplier: 1,
-                           constant: 180)
+                           constant: 190)
         self.bannerImageViewFixedHeightConstraint.isActive = true
 
         self.bannerImageViewDynamicHeightConstraint =
