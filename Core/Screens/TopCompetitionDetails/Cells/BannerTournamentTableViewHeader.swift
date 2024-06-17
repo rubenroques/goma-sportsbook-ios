@@ -253,6 +253,9 @@ extension BannerTournamentTableViewHeader {
         self.favoriteLeagueBaseView.addSubview(self.favoriteLeagueImageView)
         
         self.initConstraints()
+        
+        self.contentView.setNeedsLayout()
+        self.contentView.layoutIfNeeded()
     }
 
     private func initConstraints() {
