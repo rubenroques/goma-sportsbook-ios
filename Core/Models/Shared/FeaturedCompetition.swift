@@ -28,7 +28,8 @@ struct FeaturedCompetition: Codable {
     init(from decoder: Decoder) throws {
         let container = try decoder.container(keyedBy: CodingKeys.self)
         
-        if let idString = try? container.decodeIfPresent(String.self, forKey: .id) {
+        if let idString = try? container.decodeIfPresent(String.self, forKey: .id),
+           idString.isNotEmpty {
             self.id = idString
         }
         else if let idDouble = try? container.decodeIfPresent(Double.self, forKey: .id) {

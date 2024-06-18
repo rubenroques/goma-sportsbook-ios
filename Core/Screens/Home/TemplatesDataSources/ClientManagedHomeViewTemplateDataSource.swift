@@ -535,7 +535,7 @@ extension ClientManagedHomeViewTemplateDataSource: HomeViewTemplateDataSource {
         case 6:
             return self.highlightedLiveMatches.count
         case 7:
-            if let featuredPromotion = Env.businessSettingsSocket.clientSettings.featuredCompetition {
+            if let featuredCompetitionId = Env.businessSettingsSocket.clientSettings.featuredCompetition?.id {
                 return !self.topCompetitionsLineCellViewModel.isEmpty ? 2 : 1
             }
             else {

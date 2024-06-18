@@ -907,7 +907,7 @@ extension HomeViewController: UITableViewDelegate, UITableViewDataSource {
             return cell
 
         case .topCompetitionsShortcuts:
-            if let featuredPromotion = Env.businessSettingsSocket.clientSettings.featuredCompetition {
+            if let featuredCompetitionId = Env.businessSettingsSocket.clientSettings.featuredCompetition?.id {
                 
                 if indexPath.row == 0 {
                     guard
@@ -1132,7 +1132,7 @@ extension HomeViewController: UITableViewDelegate, UITableViewDataSource {
         case .makeOwnBetCallToAction:
             return UITableView.automaticDimension
         case .topCompetitionsShortcuts:
-            if let featuredCompetition = Env.businessSettingsSocket.clientSettings.featuredCompetition {
+            if let featuredCompetitionId = Env.businessSettingsSocket.clientSettings.featuredCompetition?.id {
                 
                 if indexPath.row == 0 {
                     return 115

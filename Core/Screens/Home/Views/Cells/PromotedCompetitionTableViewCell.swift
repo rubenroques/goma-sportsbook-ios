@@ -66,6 +66,7 @@ class PromotedCompetitionTableViewCell: UITableViewCell {
     // MARK: Functions
     func configure() {
         if let featuredCompetition = Env.businessSettingsSocket.clientSettings.featuredCompetition,
+           let featuredCompetitionId = featuredCompetition.id,
            let homeBanner = featuredCompetition.homeBanner,
            let url = URL(string: "\(homeBanner)") {
             

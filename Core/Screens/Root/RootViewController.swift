@@ -728,7 +728,8 @@ class RootViewController: UIViewController {
             
         }
         
-        if let featuredCompetition = Env.businessSettingsSocket.clientSettings.featuredCompetition {
+        if let featuredCompetition = Env.businessSettingsSocket.clientSettings.featuredCompetition,
+           let featuredCompetitionId = featuredCompetition.id {
             self.featuredCompetitionButtonBaseView.isHidden = false
             
             // Set bottom banner icon
