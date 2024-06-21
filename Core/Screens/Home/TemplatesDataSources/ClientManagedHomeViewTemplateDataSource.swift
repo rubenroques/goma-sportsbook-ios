@@ -138,14 +138,14 @@ class ClientManagedHomeViewTemplateDataSource {
     init() {
         self.refreshData()
         
-        Env.userSessionStore.userProfilePublisher
-            .removeDuplicates()
-            .receive(on: DispatchQueue.main)
-            .sink { [weak self] _ in
-                self?.fetchBanners()
-                self?.fetchAlerts()
-            }
-            .store(in: &cancellables)
+//        Env.userSessionStore.userProfilePublisher
+//            .removeDuplicates()
+//            .receive(on: DispatchQueue.main)
+//            .sink { [weak self] _ in
+//                self?.fetchBanners()
+//                self?.fetchAlerts()
+//            }
+//            .store(in: &cancellables)
     }
 
     func refreshData() {
@@ -438,7 +438,13 @@ class ClientManagedHomeViewTemplateDataSource {
         
         self.highlightedLiveMatches = []
         
-        Env.servicesProvider.getHighlightedLiveEvents(eventCount: homeLiveEventsCount)
+        var userId: String? = nil
+        
+        if let loggedUserId = Env.userSessionStore.userProfilePublisher.value?.userIdentifier {
+            userId = loggedUserId
+        }
+        
+        Env.servicesProvider.getHighlightedLiveEvents(eventCount: homeLiveEventsCount, userId: userId)
             .map { highlightedLiveEvents in
                 return highlightedLiveEvents.compactMap(ServiceProviderModelMapper.match(fromEvent:))
             }

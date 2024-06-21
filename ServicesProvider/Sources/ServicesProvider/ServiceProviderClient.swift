@@ -661,24 +661,24 @@ extension ServicesProviderClient {
         return eventsProvider.subscribeToEventAndSecondaryMarkets(withId: id)
     }
     
-    public func getHighlightedLiveEventsIds(eventCount: Int) -> AnyPublisher<[String], ServiceProviderError> {
+    public func getHighlightedLiveEventsIds(eventCount: Int, userId: String?) -> AnyPublisher<[String], ServiceProviderError> {
         guard
             let eventsProvider = self.eventsProvider
         else {
             return Fail(error: .eventsProviderNotFound).eraseToAnyPublisher()
         }
 
-        return eventsProvider.getHighlightedLiveEventsIds(eventCount: eventCount)
+        return eventsProvider.getHighlightedLiveEventsIds(eventCount: eventCount, userId: userId)
     }
     
-    public func getHighlightedLiveEvents(eventCount: Int) -> AnyPublisher<[Event], ServiceProviderError> {
+    public func getHighlightedLiveEvents(eventCount: Int, userId: String?) -> AnyPublisher<[Event], ServiceProviderError> {
         guard
             let eventsProvider = self.eventsProvider
         else {
             return Fail(error: .eventsProviderNotFound).eraseToAnyPublisher()
         }
 
-        return eventsProvider.getHighlightedLiveEvents(eventCount: eventCount)
+        return eventsProvider.getHighlightedLiveEvents(eventCount: eventCount, userId: userId)
     }
     
 }

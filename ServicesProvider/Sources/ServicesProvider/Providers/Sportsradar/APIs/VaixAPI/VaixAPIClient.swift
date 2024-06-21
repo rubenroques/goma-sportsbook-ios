@@ -8,7 +8,7 @@
 import Foundation
 
 enum VaixAPIClient {
-    case popularEvents(eventsCount: Int)
+    case popularEvents(eventsCount: Int, userId: String?)
     case analyticsTrackEvent(event: VaixAnalyticsEvent, userId: String)
 }
 
@@ -29,8 +29,16 @@ extension VaixAPIClient: Endpoint {
     var query: [URLQueryItem]? {
         var query: [URLQueryItem] = []
         switch self {
-        case .popularEvents(let eventsCount):
-            query.append(URLQueryItem(name:"user", value:"0"))
+        case .popularEvents(let eventsCount, let userId):
+            if let userId {
+                let userIdFormat = "om\(userId)-eur"
+                query.append(URLQueryItem(name:"user", value:userIdFormat))
+
+            }
+            else {
+                query.append(URLQueryItem(name:"user", value:"0"))
+            }
+            
             query.append(URLQueryItem(name:"from_offset", value:"-5h"))
             query.append(URLQueryItem(name:"filters", value:"status:eq:live"))
             query.append(URLQueryItem(name:"count", value:"\(eventsCount)"))
