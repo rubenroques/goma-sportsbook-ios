@@ -833,7 +833,7 @@ extension OmegaAPIClient: Endpoint {
     
     var method: HTTP.Method {
         switch self {
-        case .login: return .get
+        case .login: return .post
         case .openSession: return .get
         case .logout: return .get
         case .playerInfo: return .get
