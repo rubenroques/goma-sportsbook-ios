@@ -320,8 +320,9 @@ extension OmegaAPIClient: Endpoint {
     var query: [URLQueryItem]? {
         switch self {
         case .login(let username, let password):
-            return [URLQueryItem(name: "username", value: username),
-                    URLQueryItem(name: "password", value: password)]
+//            return [URLQueryItem(name: "username", value: username),
+//                    URLQueryItem(name: "password", value: password)]
+            return nil
         case .openSession:
             return [URLQueryItem(name: "productCode", value: "SPORT_RADAR"),
                     URLQueryItem(name: "gameId", value: "SPORTSBOOK")]
@@ -912,6 +913,17 @@ extension OmegaAPIClient: Endpoint {
     
     var body: Data? {
         switch self {
+        case .login(let username, let password):
+
+            let parameters = [
+                "username": username,
+                "password": password
+            ]
+            
+            let bodyString = parameters.map { "\($0.key)=\($0.value.addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed) ?? "")" }
+                .joined(separator: "&")
+            
+            return bodyString.data(using: String.Encoding.utf8) ?? Data()
         case .uploadUserDocument( _, _, let body, _):
             return body
 //        case .processDeposit(let sessionKey, let paymentMethod, let amount, let option):
@@ -1069,6 +1081,14 @@ extension OmegaAPIClient: Endpoint {
     
     var headers: HTTP.Headers? {
         switch self {
+        case .login:
+            let headers = [
+                "Accept-Encoding": "gzip, deflate",
+                "Content-Type": "application/x-www-form-urlencoded",
+                "Accept": "*/*",
+                "app-origin": "ios",
+            ]
+            return headers
         case .uploadUserDocument( _, _, _, let header):
             let customHeaders = [
                 "Content-Type": header,
