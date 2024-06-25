@@ -23,6 +23,12 @@ class HomeViewController: UIViewController {
     var didSelectActivationAlertAction: ((ActivationAlertType) -> Void)?
 
     var didTapUserProfileAction: ((UserBasicInfo) -> Void)?
+    
+    var requestBetSwipeAction: () -> Void = { }
+    var requestHomeAction: () -> Void = { }
+    var requestRegisterAction: () -> Void = { }
+    var requestLiveAction: () -> Void = { }
+    var requestContactSettingsAction: () -> Void = { }
 
     // MARK: - Private Properties
     // Sub Views
@@ -344,12 +350,58 @@ class HomeViewController: UIViewController {
 
             if let url = URL(string: urlString) {
                 let promotionsWebViewController = PromotionsWebViewController(url: url, viewModel: promotionsWebViewModel)
-                promotionsWebViewController.openHomeAction = { [weak self] in
-                    self?.navigationController?.popViewController(animated: true)
+                
+                let navigationViewController = Router.navigationController(with: promotionsWebViewController)
+
+                promotionsWebViewController.openBetSwipeAction = { [weak self] in
+                    
+                    navigationViewController.dismiss(animated: true, completion: {
+                        self?.openBetSwipe()
+                    })
                 }
-                self.navigationController?.pushViewController(promotionsWebViewController, animated: true)
+                
+                promotionsWebViewController.openRegisterAction = { [weak self] in
+                    navigationViewController.dismiss(animated: true, completion: {
+                        self?.requestRegisterAction()
+                    })
+                    
+                }
+                
+                promotionsWebViewController.openHomeAction = { [weak self] in
+                    navigationViewController.dismiss(animated: true)
+                }
+                
+                promotionsWebViewController.openLiveAction = { [weak self] in
+                    navigationViewController.dismiss(animated: true, completion: {
+                        self?.requestLiveAction()
+                    })
+                }
+                
+                promotionsWebViewController.openRecruitAction = { [weak self] in
+                    navigationViewController.dismiss(animated: true, completion: {
+                        self?.openRecruitScreen()
+                    })
+                }
+                
+                promotionsWebViewController.openContactSettingsAction = { [weak self] in
+                    navigationViewController.dismiss(animated: true, completion: {
+                        self?.requestContactSettingsAction()
+                    })
+                }
+                
+                self.present(navigationViewController, animated: true, completion: nil)
+
+//                self.navigationController?.pushViewController(promotionsWebViewController, animated: true)
             }
         }
+    }
+    
+    private func openRecruitScreen() {
+        let recruitAFriendViewModel = RecruitAFriendViewModel()
+        
+        let recruitAFriendViewController = RecruitAFriendViewController(viewModel: recruitAFriendViewModel)
+
+        self.navigationController?.pushViewController(recruitAFriendViewController, animated: true)
     }
 
     private func openFeaturedTipSlider(featuredTips: [FeaturedTip], atIndex index: Int = 0) {

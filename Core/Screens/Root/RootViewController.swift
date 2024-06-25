@@ -1366,6 +1366,19 @@ extension RootViewController {
             self.homeViewController.didTapSeeAllLiveButtonAction = { [weak self] in
                 self?.didTapLiveTabItem()
             }
+            
+            self.homeViewController.requestRegisterAction = { [weak self] in
+                self?.presentRegisterScreen()
+            }
+            
+            self.homeViewController.requestLiveAction = { [weak self] in
+                self?.didTapLiveTabItem()
+            }
+            
+            self.homeViewController.requestContactSettingsAction = { [weak self] in
+                self?.openContactSettings()
+            }
+            
             homeViewControllerLoaded = true
 
         }

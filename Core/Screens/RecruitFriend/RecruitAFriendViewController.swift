@@ -1297,7 +1297,7 @@ extension RecruitAFriendViewController {
         NSLayoutConstraint.activate([
             self.navigationView.leadingAnchor.constraint(equalTo: self.view.leadingAnchor),
             self.navigationView.trailingAnchor.constraint(equalTo: self.view.trailingAnchor),
-            self.navigationView.topAnchor.constraint(equalTo: self.view.topAnchor),
+            self.navigationView.topAnchor.constraint(equalTo: self.view.safeAreaLayoutGuide.topAnchor),
             self.navigationView.heightAnchor.constraint(equalToConstant: 44),
 
             self.backButton.leadingAnchor.constraint(equalTo: self.navigationView.leadingAnchor),
