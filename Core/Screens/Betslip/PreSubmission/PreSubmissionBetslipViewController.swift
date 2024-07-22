@@ -2377,17 +2377,7 @@ extension PreSubmissionBetslipViewController {
                 }
                 self?.isLoading = false
             } receiveValue: { [weak self] betPlacedDetails in
-                if let cashbackSelected = self?.isCashbackToggleOn.value {
-                    if !cashbackSelected {
-                        self?.betPlacedAction(betPlacedDetails, self?.cashbackResultValuePublisher.value, false)
-                    }
-                    else {
-                        self?.betPlacedAction(betPlacedDetails, nil, true)
-                    }
-                }
-                else {
-                    self?.betPlacedAction(betPlacedDetails, nil, false)
-                }
+                self?.betPlacedAction(betPlacedDetails, nil, false)
             }
             .store(in: &cancellables)
     }
