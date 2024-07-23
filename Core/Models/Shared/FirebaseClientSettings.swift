@@ -29,6 +29,8 @@ struct FirebaseClientSettings: Codable {
 
     let replaySportsCodes: [String]
     let ungroupedMarkets: [String]
+    
+    let featuredCompetition: FeaturedCompetition?
 
     struct Locale: Codable {
         var currency: String
@@ -56,6 +58,7 @@ struct FirebaseClientSettings: Codable {
         case ungroupedMarkets = "ungrouped_markets"
         case hasRollingWeeklyLimits = "limit_type_rolling"
         case homeLiveEventsCount = "home_live_num_matches"
+        case featuredCompetition = "feature_competition"
     }
 
     init(from decoder: Decoder) throws {
@@ -120,6 +123,8 @@ struct FirebaseClientSettings: Codable {
         let homeLiveEventsCountInt = (try? container.decode(Int.self, forKey: .homeLiveEventsCount)) ?? 3
         self.homeLiveEventsCount = homeLiveEventsCountInt
         
+        let featuredCompetition = try container.decodeIfPresent(FeaturedCompetition.self, forKey: .featuredCompetition)
+        self.featuredCompetition = featuredCompetition
     }
 
     init(showInformationPopUp: Bool,
@@ -133,7 +138,8 @@ struct FirebaseClientSettings: Codable {
          partialCashoutEnabled: Bool,
          replaySportsCodes: [String],
          ungroupedMarkets: [String],
-         hasRollingWeeklyLimits: Bool, homeLiveEventsCount: Int) {
+         hasRollingWeeklyLimits: Bool, homeLiveEventsCount: Int,
+         featuredCompetition: FeaturedCompetition?) {
 
         self.showInformationPopUp = showInformationPopUp
         self.currentAppVersion = currentAppVersion
@@ -148,6 +154,7 @@ struct FirebaseClientSettings: Codable {
         self.ungroupedMarkets = ungroupedMarkets
         self.hasRollingWeeklyLimits = hasRollingWeeklyLimits
         self.homeLiveEventsCount = homeLiveEventsCount
+        self.featuredCompetition = featuredCompetition
     }
 
 }
@@ -166,6 +173,7 @@ extension FirebaseClientSettings {
                                       replaySportsCodes: [],
                                       ungroupedMarkets: [],
                                       hasRollingWeeklyLimits: false,
-                                      homeLiveEventsCount: 3)
+                                      homeLiveEventsCount: 3,
+        featuredCompetition: nil)
     }
 }

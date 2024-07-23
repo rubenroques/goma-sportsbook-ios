@@ -178,6 +178,9 @@ extension SportRadarModels {
                 if let date = Self.dateFormatter.date(from: startDateString) {
                     self.startDate = date
                 }
+                else if let date = Self.fallbackDateFormatter.date(from: startDateString) {
+                    self.startDate = date
+                }
                 else {
                     let context = DecodingError.Context(codingPath: [CodingKeys.startDate], debugDescription: "Start date with wrong format.")
                     throw DecodingError.typeMismatch(Self.self, context)
@@ -282,6 +285,14 @@ extension SportRadarModels {
         private static var dateFormatter: DateFormatter {
             let formatter = DateFormatter()
             formatter.dateFormat =  "yyyy-MM-dd'T'HH:mm:ss.SSSZ"
+            return formatter
+        }
+        
+        private static var fallbackDateFormatter: DateFormatter {
+            let formatter = DateFormatter()
+            formatter.dateFormat = "yyyy-MM-dd'T'HH:mm:ssXXXXX"
+            formatter.locale = Locale(identifier: "en_US_POSIX")
+            formatter.timeZone = TimeZone(secondsFromGMT: 0)
             return formatter
         }
     }

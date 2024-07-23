@@ -1814,8 +1814,8 @@ extension SportRadarEventsProvider {
         
     }
     
-    func getHighlightedLiveEventsIds(eventCount: Int) -> AnyPublisher<[String], ServiceProviderError> {
-        let endpoint = VaixAPIClient.popularEvents(eventsCount: eventCount)
+    func getHighlightedLiveEventsIds(eventCount: Int, userId: String?) -> AnyPublisher<[String], ServiceProviderError> {
+        let endpoint = VaixAPIClient.popularEvents(eventsCount: eventCount, userId: userId)
         let requestPublisher: AnyPublisher<SportRadarModels.SportRadarResponse<[SportRadarModels.HighlightedEventPointer]>, ServiceProviderError> = self.restConnector.request(endpoint)
 
         return requestPublisher.map( { highlightedEventPointerResponse -> [String] in
@@ -1837,9 +1837,9 @@ extension SportRadarEventsProvider {
         
     }
     
-    func getHighlightedLiveEvents(eventCount: Int) -> AnyPublisher<[Event], ServiceProviderError> {
+    func getHighlightedLiveEvents(eventCount: Int, userId: String?) -> AnyPublisher<[Event], ServiceProviderError> {
         
-        let publisher = self.getHighlightedLiveEventsIds(eventCount: eventCount) // Get the ids
+        let publisher = self.getHighlightedLiveEventsIds(eventCount: eventCount, userId: userId) // Get the ids
             .flatMap({ (eventPointers: [String]) -> AnyPublisher<[Event], ServiceProviderError> in
                 
                 let getEventSummaryRequests: [AnyPublisher<Event?, ServiceProviderError>] = eventPointers

@@ -23,6 +23,12 @@ class HomeViewController: UIViewController {
     var didSelectActivationAlertAction: ((ActivationAlertType) -> Void)?
 
     var didTapUserProfileAction: ((UserBasicInfo) -> Void)?
+    
+    var requestBetSwipeAction: () -> Void = { }
+    var requestHomeAction: () -> Void = { }
+    var requestRegisterAction: () -> Void = { }
+    var requestLiveAction: () -> Void = { }
+    var requestContactSettingsAction: () -> Void = { }
 
     // MARK: - Private Properties
     // Sub Views
@@ -84,6 +90,7 @@ class HomeViewController: UIViewController {
         self.tableView.register(MatchWidgetContainerTableViewCell.self, forCellReuseIdentifier: MatchWidgetContainerTableViewCell.identifier)
         self.tableView.register(StoriesLineTableViewCell.self, forCellReuseIdentifier: StoriesLineTableViewCell.identifier)
         self.tableView.register(TopCompetitionsLineTableViewCell.self, forCellReuseIdentifier: TopCompetitionsLineTableViewCell.identifier)
+        self.tableView.register(PromotedCompetitionTableViewCell.self, forCellReuseIdentifier: PromotedCompetitionTableViewCell.identifier)
 
         // Register cell based on the MatchWidgetType
         for matchWidgetType in MatchWidgetType.allCases {
@@ -284,9 +291,10 @@ class HomeViewController: UIViewController {
         self.navigationController?.pushViewController(competitionDetailsViewController, animated: true)
     }
 
-    private func openTopCompetitionsDetails(competitionsIds: [String], sport: Sport) {
+    private func openTopCompetitionsDetails(competitionsIds: [String], sport: Sport, isFeaturedCompetition: Bool = false) {
         let topCompetitionDetailsViewModel = TopCompetitionDetailsViewModel(competitionsIds: competitionsIds, sport: sport)
-        let topCompetitionDetailsViewController = TopCompetitionDetailsViewController(viewModel: topCompetitionDetailsViewModel)
+        let topCompetitionDetailsViewController = TopCompetitionDetailsViewController(viewModel: topCompetitionDetailsViewModel, isFeaturedCompetition: isFeaturedCompetition)
+                
         self.navigationController?.pushViewController(topCompetitionDetailsViewController, animated: true)
     }
 
@@ -354,12 +362,58 @@ class HomeViewController: UIViewController {
 
             if let url = URL(string: urlString) {
                 let promotionsWebViewController = PromotionsWebViewController(url: url, viewModel: promotionsWebViewModel)
-                promotionsWebViewController.openHomeAction = { [weak self] in
-                    self?.navigationController?.popViewController(animated: true)
+                
+                let navigationViewController = Router.navigationController(with: promotionsWebViewController)
+
+                promotionsWebViewController.openBetSwipeAction = { [weak self] in
+                    
+                    navigationViewController.dismiss(animated: true, completion: {
+                        self?.openBetSwipe()
+                    })
                 }
-                self.navigationController?.pushViewController(promotionsWebViewController, animated: true)
+                
+                promotionsWebViewController.openRegisterAction = { [weak self] in
+                    navigationViewController.dismiss(animated: true, completion: {
+                        self?.requestRegisterAction()
+                    })
+                    
+                }
+                
+                promotionsWebViewController.openHomeAction = { [weak self] in
+                    navigationViewController.dismiss(animated: true)
+                }
+                
+                promotionsWebViewController.openLiveAction = { [weak self] in
+                    navigationViewController.dismiss(animated: true, completion: {
+                        self?.requestLiveAction()
+                    })
+                }
+                
+                promotionsWebViewController.openRecruitAction = { [weak self] in
+                    navigationViewController.dismiss(animated: true, completion: {
+                        self?.openRecruitScreen()
+                    })
+                }
+                
+                promotionsWebViewController.openContactSettingsAction = { [weak self] in
+                    navigationViewController.dismiss(animated: true, completion: {
+                        self?.requestContactSettingsAction()
+                    })
+                }
+                
+                self.present(navigationViewController, animated: true, completion: nil)
+
+//                self.navigationController?.pushViewController(promotionsWebViewController, animated: true)
             }
         }
+    }
+    
+    private func openRecruitScreen() {
+        let recruitAFriendViewModel = RecruitAFriendViewModel()
+        
+        let recruitAFriendViewController = RecruitAFriendViewController(viewModel: recruitAFriendViewModel)
+
+        self.navigationController?.pushViewController(recruitAFriendViewController, animated: true)
     }
 
     private func openFeaturedTipSlider(featuredTips: [FeaturedTip], atIndex index: Int = 0) {
@@ -921,20 +975,58 @@ extension HomeViewController: UITableViewDelegate, UITableViewDataSource {
             return cell
 
         case .topCompetitionsShortcuts:
-            guard
-                let cell = tableView.dequeueReusableCell(withIdentifier: TopCompetitionsLineTableViewCell.identifier) as? TopCompetitionsLineTableViewCell,
-                let viewModel = self.viewModel.topCompetitionsLineCellViewModel(forSection: indexPath.section)
+            if let featuredCompetitionId = Env.businessSettingsSocket.clientSettings.featuredCompetition?.id {
+                
+                if indexPath.row == 0 {
+                    guard
+                        let cell = tableView.dequeueReusableCell(withIdentifier: PromotedCompetitionTableViewCell.identifier) as? PromotedCompetitionTableViewCell
+                    else {
+                        return UITableViewCell()
+                    }
+                    
+                    cell.configure()
+                    
+                    cell.didTapPromotedCompetition = { [weak self] competitionId in
+                        let sport = Sport(id: "", name: "", alphaId: "", numericId: "", showEventCategory: false, liveEventsCount: 0)
+                        
+                        self?.openTopCompetitionsDetails(competitionsIds: [competitionId], sport: sport, isFeaturedCompetition: true)
+                    }
+                    
+                    return cell
+                }
+                else {
+                    guard
+                        let cell = tableView.dequeueReusableCell(withIdentifier: TopCompetitionsLineTableViewCell.identifier) as? TopCompetitionsLineTableViewCell,
+                        let viewModel = self.viewModel.topCompetitionsLineCellViewModel(forSection: indexPath.section)
+                    else {
+                        return UITableViewCell()
+                    }
+                    
+                    cell.configure(withViewModel: viewModel)
+                    
+                    cell.selectedItemAction = { [weak self] competitionId in
+                        let sport = Sport(id: "", name: "", alphaId: "", numericId: "", showEventCategory: false, liveEventsCount: 0)
+                        self?.openTopCompetitionsDetails(competitionsIds: [competitionId], sport: sport)
+                    }
+                    return cell
+                }
+            }
             else {
-                return UITableViewCell()
+                guard
+                    let cell = tableView.dequeueReusableCell(withIdentifier: TopCompetitionsLineTableViewCell.identifier) as? TopCompetitionsLineTableViewCell,
+                    let viewModel = self.viewModel.topCompetitionsLineCellViewModel(forSection: indexPath.section)
+                else {
+                    return UITableViewCell()
+                }
+                
+                cell.configure(withViewModel: viewModel)
+                
+                cell.selectedItemAction = { [weak self] competitionId in
+                    let sport = Sport(id: "", name: "", alphaId: "", numericId: "", showEventCategory: false, liveEventsCount: 0)
+                    self?.openTopCompetitionsDetails(competitionsIds: [competitionId], sport: sport)
+                }
+                return cell
             }
-
-            cell.configure(withViewModel: viewModel)
-
-            cell.selectedItemAction = { [weak self] competitionId in
-                let sport = Sport(id: "", name: "", alphaId: "", numericId: "", showEventCategory: false, liveEventsCount: 0)
-                self?.openTopCompetitionsDetails(competitionsIds: [competitionId], sport: sport)
-            }
-            return cell
 
         case .highlightedMatches:
 
@@ -1113,6 +1205,16 @@ extension HomeViewController: UITableViewDelegate, UITableViewDataSource {
         case .makeOwnBetCallToAction:
             return UITableView.automaticDimension
         case .topCompetitionsShortcuts:
+            if let featuredCompetitionId = Env.businessSettingsSocket.clientSettings.featuredCompetition?.id {
+                
+                if indexPath.row == 0 {
+                    return 115
+                }
+                else {
+                    return UITableView.automaticDimension
+                }
+            }
+            
             return UITableView.automaticDimension
         case .highlightedMatches:
             if let viewModel = self.viewModel.highlightedMatchViewModel(forIndex: indexPath.row) {

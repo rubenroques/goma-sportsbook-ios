@@ -17,6 +17,9 @@ class TopCompetitionDetailsViewController: UIViewController {
     private lazy var topSafeAreaView: UIView = Self.createTopSafeAreaView()
     private lazy var navigationView: UIView = Self.createNavigationView()
     private lazy var backgroundGradientView: GradientView = Self.createBackgroundGradientView()
+    private lazy var backgroundImageView: UIImageView = Self.createBackgroundImageView()
+    
+    private lazy var topBannerImageView: UIImageView = Self.createTopBannerImageView()
 
     private lazy var titleLabel: UILabel = Self.createTitleLabel()
     private lazy var backButton: UIButton = Self.createBackButton()
@@ -25,22 +28,46 @@ class TopCompetitionDetailsViewController: UIViewController {
     private lazy var floatingShortcutsView: FloatingShortcutsView = Self.createFloatingShortcutsView()
     
     private lazy var loadingBaseView: UIView = Self.createLoadingBaseView()
-    private lazy var loadingActivityIndicatorView: UIActivityIndicatorView = Self.createLoadingActivityIndicatorView()
+//    private lazy var loadingActivityIndicatorView: UIActivityIndicatorView = Self.createLoadingActivityIndicatorView()
+    private let loadingSpinnerViewController = LoadingSpinnerViewController()
 
     private lazy var accountValueView: UIView = Self.createAccountValueView()
     private lazy var accountPlusView: UIView = Self.createAccountPlusView()
     private lazy var accountPlusImageView: UIImageView = Self.createAccountPlusImageView()
     private lazy var accountValueLabel: UILabel = Self.createAccountValueLabel()
+    
+    // Constraints
+    private lazy var tableTopNavigationConstraint: NSLayoutConstraint = Self.createTableTopNavigationConstraint()
+    private lazy var tableTopBannerConstraint: NSLayoutConstraint = Self.createTableTopBannerConstraint()
+    private lazy var bannerImageViewFixedHeightConstraint: NSLayoutConstraint = Self.createBannerImageViewFixedHeightConstraint()
+    private lazy var bannerImageViewDynamicHeightConstraint: NSLayoutConstraint = Self.createBannerImageViewDynamicHeightConstraint()
 
     private var collapsedCompetitionsSections: Set<Int> = []
     private var matchStatsViewModelForMatch: ((Match) -> MatchStatsViewModel?)?
 
     private var viewModel: TopCompetitionDetailsViewModel
     private var cancellables = Set<AnyCancellable>()
+    
+    var isFeaturedCompetition: Bool = false {
+        didSet {
+            self.backgroundGradientView.isHidden = isFeaturedCompetition
+            self.backgroundImageView.isHidden = !isFeaturedCompetition
+            
+//            self.topBannerImageView.isHidden = !isFeaturedCompetition
+//            
+//            self.tableTopNavigationConstraint.isActive = !isFeaturedCompetition
+//            self.tableTopBannerConstraint.isActive = isFeaturedCompetition
+        }
+    }
+    
+    private var aspectRatio: CGFloat = 1.0
 
     // MARK: - Lifetime and Cycle
-    init(viewModel: TopCompetitionDetailsViewModel) {
+    init(viewModel: TopCompetitionDetailsViewModel, isFeaturedCompetition: Bool = false) {
+        
         self.viewModel = viewModel
+        self.isFeaturedCompetition = isFeaturedCompetition
+        
         super.init(nibName: nil, bundle: nil)
     }
 
@@ -54,6 +81,8 @@ class TopCompetitionDetailsViewController: UIViewController {
 
         self.setupSubviews()
         self.setupWithTheme()
+        
+        self.addChildViewController(self.loadingSpinnerViewController, toView: self.loadingBaseView)
 
         self.tableView.delegate = self
         self.tableView.dataSource = self
@@ -64,6 +93,7 @@ class TopCompetitionDetailsViewController: UIViewController {
         self.tableView.register(OutrightCompetitionLargeLineTableViewCell.self, forCellReuseIdentifier: OutrightCompetitionLargeLineTableViewCell.identifier)
 
         self.tableView.register(TournamentTableViewHeader.nib, forHeaderFooterViewReuseIdentifier: TournamentTableViewHeader.identifier)
+        self.tableView.register(BannerTournamentTableViewHeader.self, forHeaderFooterViewReuseIdentifier: BannerTournamentTableViewHeader.identifier)
 
         self.backButton.addTarget(self, action: #selector(didTapBackButton), for: .primaryActionTriggered)
 
@@ -81,6 +111,32 @@ class TopCompetitionDetailsViewController: UIViewController {
         self.showLoading()
 
         self.bind(toViewModel: self.viewModel)
+        
+        let isFeaturedCompetition = self.isFeaturedCompetition
+        self.isFeaturedCompetition = isFeaturedCompetition
+        
+        if isFeaturedCompetition {
+            if let featuredCompetitionTopBanner = Env.businessSettingsSocket.clientSettings.featuredCompetition?.pageDetailBanner {
+                if let url = URL(string: featuredCompetitionTopBanner) {
+                    self.topBannerImageView.kf.setImage(
+                        with: url,
+                        placeholder: nil,
+                        options: [
+                        ])
+                    {
+                        result in
+                        switch result {
+                        case .success(let value):
+                            print("Task done for: \(value.source.url?.absoluteString ?? "")")
+                            self.resizeBannerImageView(width: value.image.size.width, height: value.image.size.height)
+                        case .failure(let error):
+                            print("Job failed: \(error.localizedDescription)")
+                        }
+                    }
+                }
+            }
+        }
+        
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -134,6 +190,9 @@ class TopCompetitionDetailsViewController: UIViewController {
             self.backgroundGradientView.backgroundColor = UIColor.App.backgroundPrimary
         }
         
+        self.topBannerImageView.backgroundColor = .clear
+        
+        self.backgroundImageView.backgroundColor = .clear
     }
 
 
@@ -286,12 +345,32 @@ class TopCompetitionDetailsViewController: UIViewController {
 
     private func showLoading() {
         self.loadingBaseView.isHidden = false
-        self.loadingActivityIndicatorView.startAnimating()
+//        self.loadingActivityIndicatorView.startAnimating()
+        self.loadingSpinnerViewController.startAnimating()
     }
 
     private func hideLoading() {
         self.loadingBaseView.isHidden = true
-        self.loadingActivityIndicatorView.stopAnimating()
+//        self.loadingActivityIndicatorView.stopAnimating()
+        self.loadingSpinnerViewController.stopAnimating()
+    }
+    
+    private func resizeBannerImageView(width: CGFloat, height: CGFloat) {
+        
+        self.aspectRatio = width/height
+        
+        self.bannerImageViewFixedHeightConstraint.isActive = false
+        
+        self.bannerImageViewDynamicHeightConstraint =
+        NSLayoutConstraint(item: self.topBannerImageView,
+                           attribute: .height,
+                           relatedBy: .equal,
+                           toItem: self.topBannerImageView,
+                           attribute: .width,
+                           multiplier: 1/self.aspectRatio,
+                           constant: 0)
+        
+        self.bannerImageViewDynamicHeightConstraint.isActive = true
     }
 
 }
@@ -344,6 +423,32 @@ extension TopCompetitionDetailsViewController: UITableViewDelegate, UITableViewD
     }
 
     func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
+        if self.isFeaturedCompetition {
+            guard
+                let headerView = tableView.dequeueReusableHeaderFooterView(withIdentifier: BannerTournamentTableViewHeader.identifier)
+                    as? BannerTournamentTableViewHeader,
+                let competition = self.viewModel.competitionForSection(forSection: section)
+            else {
+                fatalError()
+            }
+            
+            headerView.configure(competition: competition)
+            
+            headerView.didTapFavoriteCompetitionAction = { [weak self] competition in
+                
+                if !Env.userSessionStore.isUserLogged() {
+                    self?.presentLoginViewController()
+                }
+                else {
+                    self?.viewModel.markCompetitionAsFavorite(competition: competition)
+                    tableView.reloadData()
+                }
+                
+            }
+        
+            return headerView
+        }
+        
         guard
             let headerView = tableView.dequeueReusableHeaderFooterView(withIdentifier: TournamentTableViewHeader.identifier)
                 as? TournamentTableViewHeader,
@@ -392,10 +497,16 @@ extension TopCompetitionDetailsViewController: UITableViewDelegate, UITableViewD
     }
 
     func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
+        if self.isFeaturedCompetition {
+            return UITableView.automaticDimension
+        }
         return 54
     }
 
     func tableView(_ tableView: UITableView, estimatedHeightForHeaderInSection section: Int) -> CGFloat {
+        if self.isFeaturedCompetition {
+            return 280
+        }
         return 54
     }
 
@@ -589,13 +700,58 @@ extension TopCompetitionDetailsViewController {
         view.translatesAutoresizingMaskIntoConstraints = false
         return view
     }
+    
+    private static func createBackgroundImageView() -> UIImageView {
+        let imageView = UIImageView()
+        imageView.translatesAutoresizingMaskIntoConstraints = false
+        if let featuredCompetitionBackground = Env.businessSettingsSocket.clientSettings.featuredCompetition?.pageDetailBackground {
+            if let url = URL(string: featuredCompetitionBackground) {
+                imageView.kf.setImage(with: url)
+            }
+        }
+        imageView.contentMode = .scaleAspectFill
+        imageView.isHidden = true
+        imageView.clipsToBounds = true
+        return imageView
+    }
+    
+    private static func createTopBannerImageView() -> UIImageView {
+        let imageView = UIImageView()
+        imageView.translatesAutoresizingMaskIntoConstraints = false
+        imageView.image = nil
+        imageView.contentMode = .scaleAspectFit
+        imageView.isHidden = true
+        return imageView
+    }
+    
+    // Constraints
+    private static func createTableTopNavigationConstraint() -> NSLayoutConstraint {
+        let constraint = NSLayoutConstraint()
+        return constraint
+    }
+    
+    private static func createTableTopBannerConstraint() -> NSLayoutConstraint {
+        let constraint = NSLayoutConstraint()
+        return constraint
+    }
+    
+    private static func createBannerImageViewFixedHeightConstraint() -> NSLayoutConstraint {
+        let constraint = NSLayoutConstraint()
+        return constraint
+    }
+
+    private static func createBannerImageViewDynamicHeightConstraint() -> NSLayoutConstraint {
+        let constraint = NSLayoutConstraint()
+        return constraint
+    }
 
     private func setupSubviews() {
 
         self.view.addSubview(self.topSafeAreaView)
         self.view.addSubview(self.navigationView)
         self.view.addSubview(self.backgroundGradientView)
-
+        self.view.addSubview(self.backgroundImageView)
+        
         self.navigationView.addSubview(self.backButton)
         self.navigationView.addSubview(self.titleLabel)
 
@@ -604,12 +760,14 @@ extension TopCompetitionDetailsViewController {
         self.accountValueView.addSubview(self.accountValueLabel)
         self.navigationView.addSubview(self.accountValueView)
 
+        self.view.addSubview(self.topBannerImageView)
+
         self.view.addSubview(self.tableView)
 
         self.view.addSubview(self.floatingShortcutsView)
 
         self.view.addSubview(self.loadingBaseView)
-        self.loadingBaseView.addSubview(self.loadingActivityIndicatorView)
+//        self.loadingBaseView.addSubview(self.loadingActivityIndicatorView)
 
         self.initConstraints()
 
@@ -672,22 +830,59 @@ extension TopCompetitionDetailsViewController {
             self.tableView.bottomAnchor.constraint(equalTo: self.view.bottomAnchor)
         ])
 
-        NSLayoutConstraint.activate([
-            self.loadingActivityIndicatorView.centerYAnchor.constraint(equalTo: self.loadingBaseView.centerYAnchor),
-            self.loadingActivityIndicatorView.centerXAnchor.constraint(equalTo: self.loadingBaseView.centerXAnchor),
-        ])
+//        NSLayoutConstraint.activate([
+//            self.loadingActivityIndicatorView.centerYAnchor.constraint(equalTo: self.loadingBaseView.centerYAnchor),
+//            self.loadingActivityIndicatorView.centerXAnchor.constraint(equalTo: self.loadingBaseView.centerXAnchor),
+//        ])
 
         NSLayoutConstraint.activate([
-            self.loadingBaseView.centerYAnchor.constraint(equalTo: self.view.centerYAnchor),
-            self.loadingBaseView.centerXAnchor.constraint(equalTo: self.view.centerXAnchor),
-            self.view.leadingAnchor.constraint(equalTo: self.loadingBaseView.leadingAnchor),
-            self.navigationView.bottomAnchor.constraint(equalTo: self.loadingBaseView.topAnchor)
+            self.loadingBaseView.leadingAnchor.constraint(equalTo: self.view.leadingAnchor),
+            self.loadingBaseView.trailingAnchor.constraint(equalTo: self.view.trailingAnchor),
+            self.loadingBaseView.topAnchor.constraint(equalTo: self.navigationView.bottomAnchor),
+            self.loadingBaseView.bottomAnchor.constraint(equalTo: self.view.bottomAnchor)
         ])
 
         NSLayoutConstraint.activate([
             self.floatingShortcutsView.trailingAnchor.constraint(equalTo: self.view.trailingAnchor, constant: -12),
             self.floatingShortcutsView.bottomAnchor.constraint(equalTo: self.view.safeAreaLayoutGuide.bottomAnchor, constant: -12),
         ])
+        
+        NSLayoutConstraint.activate([
+            self.backgroundImageView.leadingAnchor.constraint(equalTo: self.view.leadingAnchor),
+            self.backgroundImageView.trailingAnchor.constraint(equalTo: self.view.trailingAnchor),
+            self.backgroundImageView.topAnchor.constraint(equalTo: self.navigationView.bottomAnchor),
+            self.backgroundImageView.bottomAnchor.constraint(equalTo: self.view.bottomAnchor),
+            
+            self.topBannerImageView.leadingAnchor.constraint(equalTo: self.view.leadingAnchor, constant: 15),
+            self.topBannerImageView.trailingAnchor.constraint(equalTo: self.view.trailingAnchor, constant: -15),
+            self.topBannerImageView.topAnchor.constraint(equalTo: self.navigationView.bottomAnchor, constant: 20),
+            self.topBannerImageView.heightAnchor.constraint(equalToConstant: 180)
+        ])
 
+//        self.tableTopNavigationConstraint = self.tableView.topAnchor.constraint(equalTo: self.navigationView.bottomAnchor)
+//        self.tableTopNavigationConstraint.isActive = true
+//        
+//        self.tableTopBannerConstraint = self.tableView.topAnchor.constraint(equalTo: self.topBannerImageView.bottomAnchor, constant: 15)
+//        self.tableTopBannerConstraint.isActive = false
+//        
+//        self.bannerImageViewFixedHeightConstraint =
+//        NSLayoutConstraint(item: self.topBannerImageView,
+//                           attribute: .height,
+//                           relatedBy: .equal,
+//                           toItem: nil,
+//                           attribute: .notAnAttribute,
+//                           multiplier: 1,
+//                           constant: 180)
+//        self.bannerImageViewFixedHeightConstraint.isActive = true
+//
+//        self.bannerImageViewDynamicHeightConstraint =
+//        NSLayoutConstraint(item: self.topBannerImageView,
+//                           attribute: .height,
+//                           relatedBy: .equal,
+//                           toItem: self.topBannerImageView,
+//                           attribute: .width,
+//                           multiplier: 1/self.aspectRatio,
+//                           constant: 0)
+//        self.bannerImageViewDynamicHeightConstraint.isActive = false
     }
 }
