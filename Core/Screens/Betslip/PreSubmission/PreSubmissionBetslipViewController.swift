@@ -710,6 +710,9 @@ class PreSubmissionBetslipViewController: UIViewController {
             })
             .receive(on: DispatchQueue.main)
             .sink { [weak self] (betTickets: [BettingTicket], betTypes: [BetType]) in
+                let ticketsMatches = betTickets.map(\.matchId)
+                let sameMatchBets = ticketsMatches.count != Set(ticketsMatches).count
+                
                 let oldSegmentIndex = self?.betTypeSegmentControlView?.selectedItemIndex
                 let userDidSelectedSystemBet = self?.userSelectedSystemBet ?? false
 
@@ -734,6 +737,9 @@ class PreSubmissionBetslipViewController: UIViewController {
 
                 if betTickets.count == 1, containsSingle {
                     self?.betTypeSegmentControlView?.setSelectedItem(atIndex: 0, animated: true)
+                }
+                else if betTickets.count > 1, sameMatchBets {
+                    self?.betTypeSegmentControlView?.setSelectedItem(atIndex: 3, animated: true)
                 }
                 else if containsMultiple, betTickets.count > 1, !userDidSelectedSystemBet {
                     self?.betTypeSegmentControlView?.setSelectedItem(atIndex: 1, animated: true)
@@ -963,8 +969,10 @@ class PreSubmissionBetslipViewController: UIViewController {
                 }
             })
             .store(in: &self.cancellables)
-
-        Publishers.CombineLatest(self.realBetValuePublisher, self.listTypePublisher)
+        
+        let debounceRealValuePublisher = self.realBetValuePublisher.debounce(for: .milliseconds(400), scheduler: DispatchQueue.main)
+        
+        Publishers.CombineLatest(debounceRealValuePublisher, self.listTypePublisher)
             .filter({ _, listTypePublisher -> Bool in
                 return (listTypePublisher == .multiple || listTypePublisher == .system)
             })
@@ -973,7 +981,7 @@ class PreSubmissionBetslipViewController: UIViewController {
             })
             .receive(on: DispatchQueue.main)
             .sink(receiveValue: { [weak self] hasValidBettingValue in
-
+                
                 if hasValidBettingValue {
                     self?.requestSystemBetInfo()
                     self?.requestMultipleBetReturn()
@@ -983,12 +991,12 @@ class PreSubmissionBetslipViewController: UIViewController {
                     self?.multipleWinningsValueLabel.text = localized("no_value")
                     self?.secondaryMultipleWinningsValueLabel.text = localized("no_value")
                 }
-
+                
                 self?.placeBetButton.isEnabled = hasValidBettingValue
             })
             .store(in: &self.cancellables)
-
-        Publishers.CombineLatest(self.realBetValuePublisher, self.listTypePublisher)
+        
+        Publishers.CombineLatest(debounceRealValuePublisher, self.listTypePublisher)
             .filter({ _, listTypePublisher -> Bool in
                 return listTypePublisher == .betBuilder
             })
@@ -997,7 +1005,7 @@ class PreSubmissionBetslipViewController: UIViewController {
             })
             .receive(on: DispatchQueue.main)
             .sink(receiveValue: { [weak self] hasValidBettingValue in
-
+                
                 if hasValidBettingValue {
                     self?.refreshBetBuilderExpectedReturn()
                     self?.requestCashbackResult()
@@ -1006,7 +1014,7 @@ class PreSubmissionBetslipViewController: UIViewController {
                     self?.multipleWinningsValueLabel.text = localized("no_value")
                     self?.secondaryMultipleWinningsValueLabel.text = localized("no_value")
                 }
-
+                
                 self?.placeBetButton.isEnabled = hasValidBettingValue
             })
             .store(in: &self.cancellables)
@@ -2314,6 +2322,7 @@ extension PreSubmissionBetslipViewController {
                 }
                 
             }, receiveValue: { [weak self] betBuilderCalculateResponse in
+                
                 self?.configureWithBetBuilderExpectedReturn(betBuilderCalculateResponse)
             })
             .store(in: &self.cancellables)
@@ -2324,6 +2333,8 @@ extension PreSubmissionBetslipViewController {
         
         switch betBuilderCalculateResponse {
         case .valid(let potentialReturn, _):
+            print("DebugMixMatch: response valid \(dump(potentialReturn))")
+            
             // Hide error view
             self.betBuilderWarningView.alpha = 0.0
             
@@ -2335,6 +2346,8 @@ extension PreSubmissionBetslipViewController {
             self.secondaryMultipleOddsValueLabel.text = OddFormatter.formatOdd(withValue: potentialReturn.totalOdd)
             
         case .invalid:
+            print("DebugMixMatch: response invalid")
+            
             // Show error view
             self.betBuilderWarningView.setDescription(localized("mix_match_compatible_selections_warning"))
             self.betBuilderWarningView.alpha = 1.0
