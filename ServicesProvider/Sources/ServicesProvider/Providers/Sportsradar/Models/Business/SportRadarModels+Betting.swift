@@ -184,16 +184,45 @@ extension SportRadarModels {
             self.totalOdd = try container.decode(Double.self, forKey: .totalOdd)
             self.totalStake = try container.decode(Double.self, forKey: .totalStake)
 
-            self.attemptedDate = try container.decode(Date.self, forKey: .attemptedDate)
-
             self.oddNumerator = try container.decode(Double.self, forKey: .oddNumerator)
             self.oddDenominator = try container.decode(Double.self, forKey: .oddDenominator)
 
             self.order = (try? container.decode(Int.self, forKey: .order)) ?? 999
 
             self.eventId = try container.decode(Double.self, forKey: .eventId)
-            self.eventDate = try? container.decode(Date.self, forKey: .eventDate)
 
+            if let date = try? container.decode(Date.self, forKey: .attemptedDate) {
+                self.attemptedDate = date
+            }
+            else if let startDateString = try container.decodeIfPresent(String.self, forKey: .attemptedDate) {
+                if let date = Self.dateFormatter.date(from: startDateString) {
+                    self.attemptedDate = date
+                }
+                else if let date = Self.fallbackDateFormatter.date(from: startDateString) {
+                    self.attemptedDate = date
+                }
+                else {
+                    let context = DecodingError.Context(codingPath: [CodingKeys.attemptedDate], debugDescription: "Start date with wrong format.")
+                    throw DecodingError.typeMismatch(Self.self, context)
+                }
+            }
+            else {
+                let context = DecodingError.Context(codingPath: [CodingKeys.attemptedDate], debugDescription: "Not start date found.")
+                throw DecodingError.valueNotFound(Self.self, context)
+            }
+            
+            if let date = try? container.decode(Date.self, forKey: .eventDate) {
+                self.eventDate = date
+            }
+            else if let startDateString = try container.decodeIfPresent(String.self, forKey: .eventDate) {
+                if let date = Self.dateFormatter.date(from: startDateString) {
+                    self.eventDate = date
+                }
+                else if let date = Self.fallbackDateFormatter.date(from: startDateString) {
+                    self.eventDate = date
+                }
+            }
+            
             self.tournamentCountryName = try container.decodeIfPresent(String.self, forKey: .tournamentCountryName)
 
             self.tournamentName = try container.decodeIfPresent(String.self, forKey: .tournamentName)
@@ -269,6 +298,18 @@ extension SportRadarModels {
             try container.encodeIfPresent(self.partialCashoutStake, forKey: CodingKeys.partialCashoutStake)
 
             try container.encodeIfPresent(self.betslipId, forKey: CodingKeys.betslipId)
+        }
+        
+        private static var dateFormatter: DateFormatter {
+            let formatter = DateFormatter()
+            formatter.dateFormat =  "yyyy-MM-dd'T'HH:mm:ss.SSSZ"
+            return formatter
+        }
+        
+        private static var fallbackDateFormatter: DateFormatter {
+            let formatter = DateFormatter()
+            formatter.dateFormat =  "yyyy-MM-dd'T'HH:mm:ssZ"
+            return formatter
         }
 
     }
