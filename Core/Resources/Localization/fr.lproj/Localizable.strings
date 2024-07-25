@@ -813,7 +813,7 @@
 "shared_bet_unavailable_plural" = "Les paris partagés ne sont plus disponibles, consultez quelques nouvelles suggestions de paris.";
 "shared_tickets_to" = "Vous avez partagé des billets pour";
 "show" = "Afficher";
-"show_full_tip" = "";
+"show_full_tip" = "Show full tip";
 "show_less" = "Afficher moins";
 "signup" = "S'inscrire";
 "single" = "Simple";

@@ -143,8 +143,7 @@ extension FeaturedTipLineTableViewCell: UICollectionViewDelegate, UICollectionVi
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         guard
             let cell = collectionView.dequeueCellType(FeaturedTipCollectionViewCell.self, indexPath: indexPath),
-            let cellViewModel = self.viewModel?.viewModel(forIndex: indexPath.row),
-            let viewModel = self.viewModel
+            let cellViewModel = self.viewModel?.viewModel(forIndex: indexPath.row)
         else {
             fatalError()
         }
@@ -171,7 +170,7 @@ extension FeaturedTipLineTableViewCell: UICollectionViewDelegate, UICollectionVi
     func collectionView(_ collectionView: UICollectionView,
                         layout collectionViewLayout: UICollectionViewLayout,
                         sizeForItemAt indexPath: IndexPath) -> CGSize {
-        return CGSize(width: Double(collectionView.frame.size.width)*0.85, height: 400)
+        return CGSize(width: Double(collectionView.frame.size.width)*0.85, height: 354)
     }
 
 }

@@ -22,8 +22,6 @@ class BetSuggestedCollectionViewCell: UICollectionViewCell {
     @IBOutlet private weak var totalOddValueLabel: UILabel!
     @IBOutlet private weak var betNowButton: UIButton!
 
-    var betslipTickets: [BettingTicket] = []
-
     var betNowCallbackAction: (() -> Void)?
 
     var viewModel: SuggestedBetViewModel?
@@ -38,11 +36,10 @@ class BetSuggestedCollectionViewCell: UICollectionViewCell {
 
         self.setupWithTheme()
 
+        self.betNowButton.setTitle(localized("bet_now"), for: .normal)
+        
         self.betNowButton.layer.cornerRadius = 5
         self.layer.cornerRadius = 9
-
-        // EM TEMP SHUTDOWN
-        self.betNowButton.isEnabled = false
     }
 
     override func prepareForReuse() {
@@ -54,16 +51,8 @@ class BetSuggestedCollectionViewCell: UICollectionViewCell {
 
         self.viewModel = nil
 
-        // EM TEMP SHUTDOWN
-        self.betNowButton.isEnabled = false
-
     }
 
-    func setReloadedState(reloaded: Bool) {
-        if let viewModel = self.viewModel {
-            viewModel.reloadedState = reloaded
-        }
-    }
 
     func setupWithViewModel(viewModel: SuggestedBetViewModel) {
         self.viewModel = viewModel
@@ -105,7 +94,7 @@ class BetSuggestedCollectionViewCell: UICollectionViewCell {
     }
 
     func setupStackBetView() {
-        betsStackView.removeAllArrangedSubviews()
+        self.betsStackView.removeAllArrangedSubviews()
 
         if let viewModel = self.viewModel {
 
@@ -114,36 +103,25 @@ class BetSuggestedCollectionViewCell: UICollectionViewCell {
             }
 
             self.setupInfoBetValues(totalOdd: viewModel.totalOdd, numberOfSelection: viewModel.numberOfSelection)
-
-            self.betslipTickets = viewModel.betslipTickets
-
-            if !viewModel.reloadedState {
-                self.needsReload.send()
-            }
-
         }
     }
     
     func setupInfoBetValues(totalOdd: Double, numberOfSelection: Int) {
-//        let formatedOdd = OddConverter.stringForValue(totalOdd, format: UserDefaults.standard.userOddsFormat)
         let formatedOdd = OddFormatter.formatOdd(withValue: totalOdd)
-        totalOddValueLabel.text = "\(formatedOdd)"
-        numberOfSelectionsValueLabel.text = "\(numberOfSelection)"
+        self.totalOddValueLabel.text = "\(formatedOdd)"
+        self.numberOfSelectionsValueLabel.text = "\(numberOfSelection)"
      }
 
-    func addOutcomeToTicketArray(match: Match, market: Market, outcome: Outcome) {
-        let bettingTicket = BettingTicket(match: match, market: market, outcome: outcome)
-        self.betslipTickets.append(bettingTicket)
-    }
-
     @IBAction private func betNowAction() {
+        guard let viewModel = self.viewModel else {
+            return
+        }
 
-        for ticket in self.betslipTickets {
+        for ticket in viewModel.betslipTickets {
             Env.betslipManager.addBettingTicket(ticket)
         }
 
         self.betNowCallbackAction?()
-
     }
 
 }

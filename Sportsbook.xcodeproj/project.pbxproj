@@ -4204,11 +4204,6 @@
 		45ECD75A2A90012600492CB9 /* TopCompetitionItemCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 45ECD7542A90012600492CB9 /* TopCompetitionItemCollectionViewCell.swift */; };
 		45ECD75B2A90012600492CB9 /* TopCompetitionItemCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 45ECD7542A90012600492CB9 /* TopCompetitionItemCollectionViewCell.swift */; };
 		45ECD75C2A90012600492CB9 /* TopCompetitionItemCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 45ECD7542A90012600492CB9 /* TopCompetitionItemCollectionViewCell.swift */; };
-		45ECD75D2A90012600492CB9 /* SuggestedBetLineTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 45ECD7552A90012600492CB9 /* SuggestedBetLineTableViewCell.swift */; };
-		45ECD75E2A90012600492CB9 /* SuggestedBetLineTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 45ECD7552A90012600492CB9 /* SuggestedBetLineTableViewCell.swift */; };
-		45ECD75F2A90012600492CB9 /* SuggestedBetLineTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 45ECD7552A90012600492CB9 /* SuggestedBetLineTableViewCell.swift */; };
-		45ECD7622A90012600492CB9 /* SuggestedBetLineTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 45ECD7552A90012600492CB9 /* SuggestedBetLineTableViewCell.swift */; };
-		45ECD7632A90012600492CB9 /* SuggestedBetLineTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 45ECD7552A90012600492CB9 /* SuggestedBetLineTableViewCell.swift */; };
 		45ECD7652A90013C00492CB9 /* TopCompetitionsLineTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 45ECD7642A90013C00492CB9 /* TopCompetitionsLineTableViewCell.swift */; };
 		45ECD7662A90013C00492CB9 /* TopCompetitionsLineTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 45ECD7642A90013C00492CB9 /* TopCompetitionsLineTableViewCell.swift */; };
 		45ECD7672A90013C00492CB9 /* TopCompetitionsLineTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 45ECD7642A90013C00492CB9 /* TopCompetitionsLineTableViewCell.swift */; };
@@ -4244,6 +4239,14 @@
 		45ED1AEA2A37781100770CEF /* TinderStyleBetBuilder.html in Resources */ = {isa = PBXBuildFile; fileRef = 45ED1AE52A37781100770CEF /* TinderStyleBetBuilder.html */; };
 		45ED1AEB2A37781100770CEF /* TinderStyleBetBuilder.html in Resources */ = {isa = PBXBuildFile; fileRef = 45ED1AE52A37781100770CEF /* TinderStyleBetBuilder.html */; };
 		45ED1AEC2A37781100770CEF /* TinderStyleBetBuilder.html in Resources */ = {isa = PBXBuildFile; fileRef = 45ED1AE52A37781100770CEF /* TinderStyleBetBuilder.html */; };
+		45F253082C526FB000060F6B /* SuggestedBetLineTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 45F253072C526FAF00060F6B /* SuggestedBetLineTableViewCell.swift */; };
+		45F253092C526FB000060F6B /* SuggestedBetLineTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 45F253072C526FAF00060F6B /* SuggestedBetLineTableViewCell.swift */; };
+		45F2530A2C526FB000060F6B /* SuggestedBetLineTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 45F253072C526FAF00060F6B /* SuggestedBetLineTableViewCell.swift */; };
+		45F2530B2C526FB000060F6B /* SuggestedBetLineTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 45F253072C526FAF00060F6B /* SuggestedBetLineTableViewCell.swift */; };
+		45F2530C2C526FB000060F6B /* SuggestedBetLineTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 45F253072C526FAF00060F6B /* SuggestedBetLineTableViewCell.swift */; };
+		45F2530D2C526FB000060F6B /* SuggestedBetLineTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 45F253072C526FAF00060F6B /* SuggestedBetLineTableViewCell.swift */; };
+		45F2530E2C526FB000060F6B /* SuggestedBetLineTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 45F253072C526FAF00060F6B /* SuggestedBetLineTableViewCell.swift */; };
+		45F2530F2C526FB000060F6B /* SuggestedBetLineTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 45F253072C526FAF00060F6B /* SuggestedBetLineTableViewCell.swift */; };
 		45F2F9A9298C067C0075AF02 /* StaticColors.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 45F2F9A8298C067C0075AF02 /* StaticColors.xcassets */; };
 		45F2F9AA298C067C0075AF02 /* StaticColors.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 45F2F9A8298C067C0075AF02 /* StaticColors.xcassets */; };
 		45F2F9AB298C067C0075AF02 /* StaticColors.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 45F2F9A8298C067C0075AF02 /* StaticColors.xcassets */; };
@@ -4349,7 +4352,6 @@
 		45F6BB052AB3732C00C81DE1 /* ChatTicketSelectionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9A207E0283BDFCB00499DBC /* ChatTicketSelectionView.swift */; };
 		45F6BB062AB3732C00C81DE1 /* VideoPreviewCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 45A6BB9A2823D1B300D9B416 /* VideoPreviewCollectionViewCell.swift */; };
 		45F6BB072AB3732C00C81DE1 /* PopUpStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = 45EF54092709E81C00D1E13E /* PopUpStore.swift */; };
-		45F6BB082AB3732C00C81DE1 /* SuggestedBetLineTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 45ECD7552A90012600492CB9 /* SuggestedBetLineTableViewCell.swift */; };
 		45F6BB092AB3732C00C81DE1 /* StoriesLineTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 450FC4052A2E1E33000DB866 /* StoriesLineTableViewCell.swift */; };
 		45F6BB0A2AB3732C00C81DE1 /* MyTicketsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 458BAC67276B65D5006C4BC7 /* MyTicketsViewController.swift */; };
 		45F6BB0B2AB3732C00C81DE1 /* SuggestedBetsListViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 45505F4328045C8700D4B53E /* SuggestedBetsListViewController.swift */; };
@@ -7562,7 +7564,6 @@
 		45E8E29528C88E1300A09B02 /* UserRankingPositionTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserRankingPositionTableViewCell.swift; sourceTree = "<group>"; };
 		45E8E29C28C8A79C00A09B02 /* RankingTypeTableHeaderView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RankingTypeTableHeaderView.swift; sourceTree = "<group>"; };
 		45ECD7542A90012600492CB9 /* TopCompetitionItemCollectionViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TopCompetitionItemCollectionViewCell.swift; sourceTree = "<group>"; };
-		45ECD7552A90012600492CB9 /* SuggestedBetLineTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SuggestedBetLineTableViewCell.swift; sourceTree = "<group>"; };
 		45ECD7642A90013C00492CB9 /* TopCompetitionsLineTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TopCompetitionsLineTableViewCell.swift; sourceTree = "<group>"; };
 		45ECD76C2A90016400492CB9 /* PromotedCompetitionLineTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PromotedCompetitionLineTableViewCell.swift; sourceTree = "<group>"; };
 		45ECD7752A9001E200492CB9 /* TopCompetitionDetailsViewModel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TopCompetitionDetailsViewModel.swift; sourceTree = "<group>"; };
@@ -7572,6 +7573,7 @@
 		45EF5434270C603D00D1E13E /* MatchFiltersViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MatchFiltersViewController.swift; sourceTree = "<group>"; };
 		45EF5435270C603D00D1E13E /* MatchFiltersViewController.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = MatchFiltersViewController.xib; sourceTree = "<group>"; };
 		45EF543A270C664100D1E13E /* CollapsibleView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CollapsibleView.swift; sourceTree = "<group>"; };
+		45F253072C526FAF00060F6B /* SuggestedBetLineTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SuggestedBetLineTableViewCell.swift; sourceTree = "<group>"; };
 		45F2F9A8298C067C0075AF02 /* StaticColors.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = StaticColors.xcassets; sourceTree = "<group>"; };
 		45F5C5152ABAE7F5001AD544 /* PaymentsBrowserViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PaymentsBrowserViewController.swift; sourceTree = "<group>"; };
 		45F6BA6F2AAF32A100C81DE1 /* BetslipProxyWebViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BetslipProxyWebViewController.swift; sourceTree = "<group>"; };
@@ -10035,15 +10037,14 @@
 				A9B946AC28BE6D210091296E /* Cells */,
 				45AA91C927C16AE400F8BFDD /* SportMatchDoubleLineTableViewCell.swift */,
 				45AA91CC27C16AF800F8BFDD /* SportMatchSingleLineTableViewCell.swift */,
-				4540ED2D27BC15CB00A14BB0 /* SuggestedBetLineTableViewCell.swift */,
 				45628E7F27BFBE4900AAB160 /* CompetitionWidgetCollectionViewCell.swift */,
 				45ECD76C2A90016400492CB9 /* PromotedCompetitionLineTableViewCell.swift */,
+				45F253072C526FAF00060F6B /* SuggestedBetLineTableViewCell.swift */,
 				45A6BB962822FF4200D9B416 /* VideoPreviewLineTableViewCell.swift */,
 				45A6BB9A2823D1B300D9B416 /* VideoPreviewCollectionViewCell.swift */,
 				A9B946A528BE67770091296E /* FeaturedTipLineTableViewCell.swift */,
 				455AE12B2A29EBC20045FDD3 /* QuickSwipeStackTableViewCell.swift */,
 				455AE1332A2A16E00045FDD3 /* MakeYourBetTableViewCell.swift */,
-				45ECD7552A90012600492CB9 /* SuggestedBetLineTableViewCell.swift */,
 				450FC4052A2E1E33000DB866 /* StoriesLineTableViewCell.swift */,
 				450FC40D2A2E268F000DB866 /* StoriesItemCollectionViewCell.swift */,
 				45CE91482A2F3B4B00BB3AB7 /* StoriesFullScreenViewController.swift */,
@@ -13653,7 +13654,6 @@
 				450B786528F58574009229E3 /* ChatTicketSelectionView.swift in Sources */,
 				450B786628F58574009229E3 /* VideoPreviewCollectionViewCell.swift in Sources */,
 				450B786728F58574009229E3 /* PopUpStore.swift in Sources */,
-				45ECD75E2A90012600492CB9 /* SuggestedBetLineTableViewCell.swift in Sources */,
 				450FC4072A2E1E33000DB866 /* StoriesLineTableViewCell.swift in Sources */,
 				450B786828F58574009229E3 /* MyTicketsViewController.swift in Sources */,
 				450B786928F58574009229E3 /* SuggestedBetsListViewController.swift in Sources */,
@@ -13741,6 +13741,7 @@
 				450B7B4228F637FA009229E3 /* ServiceProviderModelMapper+Sports.swift in Sources */,
 				A9059F1C2ABB5B1300796583 /* DocumentLevelStatus.swift in Sources */,
 				450B78AA28F58574009229E3 /* TipsSettingsViewController.swift in Sources */,
+				45F2530A2C526FB000060F6B /* SuggestedBetLineTableViewCell.swift in Sources */,
 				45ECD7572A90012600492CB9 /* TopCompetitionItemCollectionViewCell.swift in Sources */,
 				450B78AB28F58574009229E3 /* RankingTypeTableHeaderView.swift in Sources */,
 				450B78AD28F58574009229E3 /* CollapsibleGroupView.swift in Sources */,
@@ -14475,7 +14476,6 @@
 				45C10F3E28772DA700037BBE /* NavControllerTrasntitionPresenting.swift in Sources */,
 				457CBA05282D27D000ED0F00 /* BettingNotificationsViewController.swift in Sources */,
 				457CBA06282D27D000ED0F00 /* GeoLocationManager.swift in Sources */,
-				45ECD7622A90012600492CB9 /* SuggestedBetLineTableViewCell.swift in Sources */,
 				457CBA08282D27D000ED0F00 /* PersonalInfoViewController.swift in Sources */,
 				457CBA09282D27D000ED0F00 /* SharedBetData.swift in Sources */,
 				45B6E231284151DF001B570C /* EditGroupViewController.swift in Sources */,
@@ -14860,6 +14860,7 @@
 				457CBB0C282D27D000ED0F00 /* FavoriteMatchesDataSource.swift in Sources */,
 				457CBB0D282D27D000ED0F00 /* MyTicketBetLineView.swift in Sources */,
 				A90FB7D629AF9DF800D08A7C /* SelfExclusionViewController.swift in Sources */,
+				45F2530E2C526FB000060F6B /* SuggestedBetLineTableViewCell.swift in Sources */,
 				A925481F2A2A26A30056F832 /* DocumentStateView.swift in Sources */,
 				457CBB0E282D27D000ED0F00 /* HomeViewController.swift in Sources */,
 				457CBB0F282D27D000ED0F00 /* NewGroupManagementViewModel.swift in Sources */,
@@ -15139,7 +15140,6 @@
 				457CBC93282D2CD100ED0F00 /* RoundButton.swift in Sources */,
 				45C10F8128772DA700037BBE /* NSObject+Shift.swift in Sources */,
 				457CBC94282D2CD100ED0F00 /* HomeAwayCardStatsView.swift in Sources */,
-				45ECD7632A90012600492CB9 /* SuggestedBetLineTableViewCell.swift in Sources */,
 				457CBC95282D2CD100ED0F00 /* MarketGroupOrganizer.swift in Sources */,
 				451B0A3D286AFD7300005FA5 /* SupportPageViewController.swift in Sources */,
 				457CBC97282D2CD100ED0F00 /* UIApplication+Extensions.swift in Sources */,
@@ -15298,6 +15298,7 @@
 				457CBCFE282D2CD100ED0F00 /* Color+Extensions.swift in Sources */,
 				457CBCFF282D2CD100ED0F00 /* ProfileLimitsManagementViewController.swift in Sources */,
 				45C10F7B28772DA700037BBE /* CGPoint+Shift.swift in Sources */,
+				45F2530F2C526FB000060F6B /* SuggestedBetLineTableViewCell.swift in Sources */,
 				457CBD01282D2CD100ED0F00 /* UILabel+Extensions.swift in Sources */,
 				450B782228F56BA5009229E3 /* ServiceProviderModelMapper.swift in Sources */,
 				457CBD02282D2CD100ED0F00 /* WelcomeViewController.swift in Sources */,
@@ -15864,7 +15865,6 @@
 				A9A207E3283BDFCB00499DBC /* ChatTicketSelectionView.swift in Sources */,
 				45A6BB9D2823D1B400D9B416 /* VideoPreviewCollectionViewCell.swift in Sources */,
 				4589C78E282024E400243547 /* PopUpStore.swift in Sources */,
-				45ECD75F2A90012600492CB9 /* SuggestedBetLineTableViewCell.swift in Sources */,
 				450FC4082A2E1E33000DB866 /* StoriesLineTableViewCell.swift in Sources */,
 				4589C78F282024E400243547 /* MyTicketsViewController.swift in Sources */,
 				4589C790282024E400243547 /* SuggestedBetsListViewController.swift in Sources */,
@@ -15952,6 +15952,7 @@
 				450B7B4128F637FA009229E3 /* ServiceProviderModelMapper+Sports.swift in Sources */,
 				A9059F1D2ABB5B1300796583 /* DocumentLevelStatus.swift in Sources */,
 				A9DF8E3F28E5A5D80083BF56 /* TipsSettingsViewController.swift in Sources */,
+				45F2530B2C526FB000060F6B /* SuggestedBetLineTableViewCell.swift in Sources */,
 				45ECD7582A90012600492CB9 /* TopCompetitionItemCollectionViewCell.swift in Sources */,
 				45E8E29F28C8A79C00A09B02 /* RankingTypeTableHeaderView.swift in Sources */,
 				4589C7C3282024E400243547 /* CollapsibleGroupView.swift in Sources */,
@@ -16562,7 +16563,6 @@
 				45A33076298976BA008181E9 /* ChatTicketSelectionView.swift in Sources */,
 				45A33077298976BA008181E9 /* VideoPreviewCollectionViewCell.swift in Sources */,
 				45A33078298976BA008181E9 /* PopUpStore.swift in Sources */,
-				45ECD75D2A90012600492CB9 /* SuggestedBetLineTableViewCell.swift in Sources */,
 				450FC4062A2E1E33000DB866 /* StoriesLineTableViewCell.swift in Sources */,
 				45A33079298976BA008181E9 /* MyTicketsViewController.swift in Sources */,
 				45A3307A298976BA008181E9 /* SuggestedBetsListViewController.swift in Sources */,
@@ -16650,6 +16650,7 @@
 				45A330BC298976BA008181E9 /* ServiceProviderModelMapper+Sports.swift in Sources */,
 				A9059F1A2ABB5B1300796583 /* DocumentLevelStatus.swift in Sources */,
 				45A330BD298976BA008181E9 /* TipsSettingsViewController.swift in Sources */,
+				45F253082C526FB000060F6B /* SuggestedBetLineTableViewCell.swift in Sources */,
 				45ECD7562A90012600492CB9 /* TopCompetitionItemCollectionViewCell.swift in Sources */,
 				45A330BE298976BA008181E9 /* RankingTypeTableHeaderView.swift in Sources */,
 				45A330C0298976BA008181E9 /* CollapsibleGroupView.swift in Sources */,
@@ -17347,6 +17348,7 @@
 				45A6BC1228246A7500D9B416 /* BetOutcome.swift in Sources */,
 				45A6BC1328246A7500D9B416 /* UIImageView+Extensions.swift in Sources */,
 				A9A292422A61597C00A7C334 /* UserGodfatherView.swift in Sources */,
+				45F2530D2C526FB000060F6B /* SuggestedBetLineTableViewCell.swift in Sources */,
 				459EF2902BC00C610098A7F6 /* PillLabelView.swift in Sources */,
 				A98708BE28DA014800F27348 /* UserProfileViewController.swift in Sources */,
 				45A6BC1428246A7500D9B416 /* EnabledAccessViewController.swift in Sources */,
@@ -17957,7 +17959,6 @@
 				45F6BB052AB3732C00C81DE1 /* ChatTicketSelectionView.swift in Sources */,
 				45F6BB062AB3732C00C81DE1 /* VideoPreviewCollectionViewCell.swift in Sources */,
 				45F6BB072AB3732C00C81DE1 /* PopUpStore.swift in Sources */,
-				45F6BB082AB3732C00C81DE1 /* SuggestedBetLineTableViewCell.swift in Sources */,
 				45F6BB092AB3732C00C81DE1 /* StoriesLineTableViewCell.swift in Sources */,
 				45F6BB0A2AB3732C00C81DE1 /* MyTicketsViewController.swift in Sources */,
 				45F6BB0B2AB3732C00C81DE1 /* SuggestedBetsListViewController.swift in Sources */,
@@ -18045,6 +18046,7 @@
 				45F6BB5B2AB3732C00C81DE1 /* ServiceProviderModelMapper+Sports.swift in Sources */,
 				A9059F1B2ABB5B1300796583 /* DocumentLevelStatus.swift in Sources */,
 				45F6BB5C2AB3732C00C81DE1 /* TipsSettingsViewController.swift in Sources */,
+				45F253092C526FB000060F6B /* SuggestedBetLineTableViewCell.swift in Sources */,
 				45F6BB5D2AB3732C00C81DE1 /* TopCompetitionItemCollectionViewCell.swift in Sources */,
 				45F6BB5E2AB3732C00C81DE1 /* RankingTypeTableHeaderView.swift in Sources */,
 				45F6BB5F2AB3732C00C81DE1 /* CollapsibleGroupView.swift in Sources */,
@@ -18790,6 +18792,7 @@
 				A9C3411E28F9A74A0055360B /* BonusActiveTableViewCell.swift in Sources */,
 				A93FE2102A445434006A6907 /* GenericErrorViewController.swift in Sources */,
 				A9C3411F28F9A74A0055360B /* GomaGamingService.swift in Sources */,
+				45F2530C2C526FB000060F6B /* SuggestedBetLineTableViewCell.swift in Sources */,
 				A9C3412028F9A74A0055360B /* DateUserLocation.swift in Sources */,
 				A9C3412128F9A74A0055360B /* AppDelegate.swift in Sources */,
 				A9C3412228F9A74A0055360B /* LiveEventsViewController.swift in Sources */,

@@ -10,6 +10,7 @@ import Foundation
 enum VaixAPIClient {
     case popularEvents(eventsCount: Int, userId: String?)
     case analyticsTrackEvent(event: VaixAnalyticsEvent, userId: String)
+    case popularBets
 }
 
 extension VaixAPIClient: Endpoint {
@@ -23,6 +24,8 @@ extension VaixAPIClient: Endpoint {
             return "/api/sports/events/popular"
         case .analyticsTrackEvent:
             return "/api/tracker/events"
+        case .popularBets:
+            return "/api/sports/betslips/popular"
         }
     }
     
@@ -47,6 +50,8 @@ extension VaixAPIClient: Endpoint {
             query.append(URLQueryItem(name:"location", value:"liveevent-popular"))
         case .analyticsTrackEvent:
             break
+        case .popularBets:
+            query.append(URLQueryItem(name:"format", value:"orako"))
         }
         return query
     }
@@ -62,6 +67,11 @@ extension VaixAPIClient: Endpoint {
                     "origin": "null",
                     "x-vaix-client-id": "betsson_france",
                     "Content-Type": "application/json"]
+        case .popularBets:
+            return ["Authorization": "Bearer \(SportRadarConfiguration.shared.vaixAuthTokenValue)",
+                    "origin": "null",
+                    "x-vaix-client-id": "betsson_france",
+                    "Content-Type": "application/json"]
         }
     }
     
@@ -69,6 +79,7 @@ extension VaixAPIClient: Endpoint {
         switch self {
         case .popularEvents: return .get
         case .analyticsTrackEvent: return .post
+        case .popularBets: return .get
         }
     }
     
@@ -97,6 +108,8 @@ extension VaixAPIClient: Endpoint {
             else {
                 return nil
             }
+        case .popularBets:
+            return nil
         }
     }
     
@@ -108,6 +121,7 @@ extension VaixAPIClient: Endpoint {
         switch self {
         case .popularEvents: return TimeInterval(20)
         case .analyticsTrackEvent: return TimeInterval(5)
+        case .popularBets: return TimeInterval(10)
         }
     }
     
@@ -119,6 +133,7 @@ extension VaixAPIClient: Endpoint {
         switch self {
         case .popularEvents: return "Vaix popularEvents"
         case .analyticsTrackEvent: return "Vaix Track Event analytics"
+        case .popularBets: return "Vaix Track Popular Bets (aka Suggested Bets)"
         }
     }
     

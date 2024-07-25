@@ -31,6 +31,7 @@ class FeaturedTipCollectionViewCell: UICollectionViewCell {
     private lazy var selectionsValueLabel: UILabel = Self.createSelectionsValueLabel()
     private lazy var betButton: UIButton = Self.createBetButton()
 
+    private var topContainerHeightConstraint: NSLayoutConstraint?
     private var topContainerForCenteredConstraint: NSLayoutConstraint?
     private var topContainerForFixedConstraint: NSLayoutConstraint?
     
@@ -54,6 +55,8 @@ class FeaturedTipCollectionViewCell: UICollectionViewCell {
         }
     }
 
+    var socialFeaturesEnabled: Bool = false
+    
     var viewModel: FeaturedTipCollectionViewModel?
 
     var openFeaturedTipDetailAction: ((FeaturedTip) -> Void)?
@@ -82,8 +85,6 @@ class FeaturedTipCollectionViewCell: UICollectionViewCell {
         let userTapGesture = UITapGestureRecognizer(target: self, action: #selector(didTapUser))
         self.topInfoStackView.addGestureRecognizer(userTapGesture)
 
-        // EM TEMP SHUTDOWN
-        self.betButton.isEnabled = false
     }
 
     required init?(coder aDecoder: NSCoder) {
@@ -95,6 +96,8 @@ class FeaturedTipCollectionViewCell: UICollectionViewCell {
 
         self.viewModel = nil
         
+        self.socialFeaturesEnabled = false
+        
         self.usernameLabel.text = ""
         self.totalOddsValueLabel.text = ""
         self.selectionsValueLabel.text = ""
@@ -104,8 +107,7 @@ class FeaturedTipCollectionViewCell: UICollectionViewCell {
         self.hasCounter = false
         self.showFullTipButton = false
 
-        // EM TEMP SHUTDOWN
-        self.betButton.isEnabled = false
+        self.betButton.isEnabled = true
     }
 
     // MARK: - Theme and Layout
@@ -178,31 +180,48 @@ class FeaturedTipCollectionViewCell: UICollectionViewCell {
 
     // MARK: Function
 
-    func configure(viewModel: FeaturedTipCollectionViewModel, hasCounter: Bool, followingUsers: [Follower]) {
+    func configure(viewModel: FeaturedTipCollectionViewModel, socialFeaturesEnabled: Bool = false, hasCounter: Bool, followingUsers: [Follower]) {
 
         self.viewModel = viewModel
 
-        self.hasCounter = hasCounter
-
-        let tipUserId = viewModel.getUserId()
-
-        let followUserId = followingUsers.filter({
-            "\($0.id)" == tipUserId
-        })
-
-        if let loggedUserId = Env.gomaNetworkClient.getCurrentToken()?.userId {
-
-            if followUserId.isNotEmpty || tipUserId == "\(loggedUserId)" {
-                self.hasFollow = false
+        self.socialFeaturesEnabled = socialFeaturesEnabled
+        
+        if socialFeaturesEnabled {
+            self.topContainerHeightConstraint?.constant = 40
+            self.usernameLabel.isHidden = false
+            self.usernameLabel.text = viewModel.getUsername()
+            
+            self.hasCounter = hasCounter
+            
+            let tipUserId = viewModel.getUserId()
+            
+            let followUserId = followingUsers.filter({
+                "\($0.id)" == tipUserId
+            })
+            
+            if let loggedUserId = Env.gomaNetworkClient.getCurrentToken()?.userId {
+                
+                if followUserId.isNotEmpty || tipUserId == "\(loggedUserId)" {
+                    self.hasFollow = false
+                }
+                else {
+                    self.hasFollow = true
+                }
             }
             else {
-                self.hasFollow = true
+                self.hasFollow = false
             }
         }
         else {
+            self.topContainerHeightConstraint?.constant = 0
+            self.usernameLabel.isHidden = true
+            self.hasCounter = false
             self.hasFollow = false
+            self.followButton.isHidden = true
+            self.unfollowButton.isHidden = true
         }
 
+        
         let tipsArray = viewModel.featuredTip.selections ?? []
         
         for (i, featuredTipSelection) in tipsArray.enumerated() {
@@ -218,8 +237,7 @@ class FeaturedTipCollectionViewCell: UICollectionViewCell {
                 self.showFullTipButton = false
             }
         }
-
-        self.usernameLabel.text = viewModel.getUsername()
+        
         self.totalOddsValueLabel.text = viewModel.getTotalOdds()
         self.selectionsValueLabel.text = viewModel.getNumberSelections()
         
@@ -254,15 +272,12 @@ class FeaturedTipCollectionViewCell: UICollectionViewCell {
     @objc func didTapUnfollowButton() {
         if let viewModel = self.viewModel,
            let userId = viewModel.getUserId() {
-
             viewModel.unfollowUser(userId: userId)
-
         }
     }
 
     @objc func didTapBetButton() {
-        // EM TEMP SHUTDOWN
-        //self.viewModel?.createBetslipTicket()
+        self.viewModel?.createBetslipTicket()
     }
 
     @objc func didTapCellContentView() {
@@ -302,6 +317,7 @@ extension FeaturedTipCollectionViewCell {
 
     private static func createTopInfoStackView() -> UIStackView {
         let stackView = UIStackView()
+        stackView.clipsToBounds = true
         stackView.translatesAutoresizingMaskIntoConstraints = false
         stackView.axis = .horizontal
         stackView.spacing = 9
@@ -400,12 +416,14 @@ extension FeaturedTipCollectionViewCell {
         button.setTitle(localized("show_full_tip"), for: .normal)
         button.setImage(UIImage(named: "arrow_right_gray_icon"), for: .normal)
         button.titleLabel?.font = AppFont.with(type: .bold, size: 12)
+        
         // Transform
         button.transform = CGAffineTransform(scaleX: -1.0, y: 1.0)
         button.titleLabel?.transform = CGAffineTransform(scaleX: -1.0, y: 1.0)
         button.imageView?.transform = CGAffineTransform(scaleX: -1.0, y: 1.0)
         button.contentEdgeInsets = UIEdgeInsets(top: 0, left: 10, bottom: 0, right: 0)
         button.imageEdgeInsets = UIEdgeInsets(top: 0, left: -10, bottom: 0, right: 0)
+        
         return button
     }
 
@@ -497,6 +515,7 @@ extension FeaturedTipCollectionViewCell {
 
     private func initConstraints() {
 
+        self.topContainerHeightConstraint = self.topInfoStackView.heightAnchor.constraint(equalToConstant: 40)
         self.topContainerForCenteredConstraint = self.containerView.topAnchor.constraint(greaterThanOrEqualTo: self.contentView.topAnchor, constant: 1)
         self.topContainerForFixedConstraint = self.containerView.topAnchor.constraint(equalTo: self.contentView.topAnchor)
         
@@ -511,7 +530,7 @@ extension FeaturedTipCollectionViewCell {
         NSLayoutConstraint.activate([
             self.topInfoStackView.leadingAnchor.constraint(equalTo: self.containerView.leadingAnchor, constant: 10),
             self.topInfoStackView.topAnchor.constraint(equalTo: self.containerView.topAnchor, constant: 5),
-            self.topInfoStackView.heightAnchor.constraint(equalToConstant: 40),
+            self.topContainerHeightConstraint!,
             self.topInfoStackView.trailingAnchor.constraint(equalTo: self.containerView.trailingAnchor, constant: -60),
 
             self.counterView.leadingAnchor.constraint(equalTo: self.counterBaseView.leadingAnchor),

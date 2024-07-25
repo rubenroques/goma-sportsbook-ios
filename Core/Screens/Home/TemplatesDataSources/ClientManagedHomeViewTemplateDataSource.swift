@@ -11,7 +11,23 @@ import ServicesProvider
 
 class ClientManagedHomeViewTemplateDataSource {
 
-    private let fixedSection = 8
+    // Define the array mapping sections to content types
+    private let contentTypes: [HomeViewModel.Content] = [
+        .userProfile,
+        .bannerLine,
+        .quickSwipeStack,
+        .promotionalStories,
+        .makeOwnBetCallToAction,
+        .highlightedMatches,
+        .highlightedLiveMatches,
+        .topCompetitionsShortcuts,
+        .featuredTips
+    ]
+    
+    private var fixedSections: Int {
+        return self.contentTypes.count
+    }
+    
     private var refreshPublisher = PassthroughSubject<Void, Never>.init()
 
     // User Alert
@@ -52,6 +68,14 @@ class ClientManagedHomeViewTemplateDataSource {
         }
     }
 
+    //
+    private var featuredTips: [FeaturedTip] = []
+    private var cachedFeaturedTipLineViewModel: FeaturedTipLineViewModel? {
+        didSet {
+            self.refreshPublisher.send()
+        }
+    }
+    
     //
     private var promotionalStories: [PromotionalStory] = [] {
         didSet {
@@ -157,11 +181,15 @@ class ClientManagedHomeViewTemplateDataSource {
         self.matchLineTableCellViewModelCache = [:]
         self.matchLineTableCellViewModelCache = [:]
         
+        self.featuredTips = []
+        self.cachedFeaturedTipLineViewModel = nil
+        
         self.highlightedLiveMatchLineTableCellViewModelCache = [:]
         
         self.fetchQuickSwipeMatches()
         self.fetchHighlightMatches()
         self.fetchPromotedSports()
+        self.fetchSuggestedBets()
         self.fetchPromotionalStories()
         self.fetchTopCompetitions()
         self.fetchHighlightedLiveMatches()
@@ -493,7 +521,7 @@ class ClientManagedHomeViewTemplateDataSource {
     }
     
     private func promotedMatch(forSection section: Int, forIndex index: Int) -> Match? {
-        let croppedSection = section - self.fixedSection
+        let croppedSection = section - self.fixedSections
         if let promotedSportId = self.promotedSports[safe: croppedSection]?.id,
            let matchesForSport = self.promotedSportsMatches[promotedSportId],
            let match = matchesForSport[safe: index] {
@@ -502,6 +530,212 @@ class ClientManagedHomeViewTemplateDataSource {
         return nil
     }
 
+    // ALERT: The data comes from Suggested bets
+    // but the UI shown to the user is from old FeaturedTips
+    func fetchSuggestedBets() {
+       
+        self.featuredTips = self.mockFeaturedTips
+        
+    }
+    
+    let mockFeaturedTips: [FeaturedTip] = [
+        FeaturedTip(
+            betId: "bet001",
+            selections: [
+                FeaturedTipSelection(
+                    outcomeId: "outcome001",
+                    status: "active",
+                    sportId: "1",
+                    sportName: "Football",
+                    sportParentName: "Competition name",
+                    venueId: "venue001",
+                    venueName: "Stadium A",
+                    eventId: "event001",
+                    eventName: "Match 1",
+                    bettingTypeId: "type001",
+                    bettingTypeName: "Full Time Result",
+                    betName: "Team A to Win",
+                    odds: "1.5",
+                    extraSelectionInfo: ExtraSelectionInfo(
+                        bettingOfferId: 101,
+                        marketName: "Full Time Result",
+                        outcomeEntity: OutcomeEntity(id: 1, statusId: 1)
+                    ),
+                    oddValue: .decimal(odd: 1.5)
+                ),
+                FeaturedTipSelection(
+                    outcomeId: "outcome002",
+                    status: "active",
+                    sportId: "1",
+                    sportName: "Football",
+                    sportParentName: "Competition name",
+                    venueId: "venue002",
+                    venueName: "Stadium B",
+                    eventId: "event002",
+                    eventName: "Match 2",
+                    bettingTypeId: "type002",
+                    bettingTypeName: "Over/Under",
+                    betName: "Over 2.5 Goals",
+                    odds: "2.0",
+                    extraSelectionInfo: ExtraSelectionInfo(
+                        bettingOfferId: 102,
+                        marketName: "Over/Under",
+                        outcomeEntity: OutcomeEntity(id: 2, statusId: 1)
+                    ),
+                    oddValue: .decimal(odd: 2.0)
+                ),
+                FeaturedTipSelection(
+                    outcomeId: "outcome003",
+                    status: "active",
+                    sportId: "1",
+                    sportName: "Football",
+                    sportParentName: "Competition name",
+                    venueId: "venue003",
+                    venueName: "Stadium C",
+                    eventId: "event003",
+                    eventName: "Match 3",
+                    bettingTypeId: "type003",
+                    bettingTypeName: "Both Teams to Score",
+                    betName: "Yes",
+                    odds: "1.8",
+                    extraSelectionInfo: ExtraSelectionInfo(
+                        bettingOfferId: 103,
+                        marketName: "Both Teams to Score",
+                        outcomeEntity: OutcomeEntity(id: 3, statusId: 1)
+                    ),
+                    oddValue: .decimal(odd: 1.8)
+                ),
+                FeaturedTipSelection(
+                    outcomeId: "outcome004",
+                    status: "active",
+                    sportId: "1",
+                    sportName: "Football",
+                    sportParentName: "Competition name",
+                    venueId: "venue004",
+                    venueName: "Stadium D",
+                    eventId: "event004",
+                    eventName: "Match 4",
+                    bettingTypeId: "type004",
+                    bettingTypeName: "Correct Score",
+                    betName: "2-1",
+                    odds: "9.0",
+                    extraSelectionInfo: ExtraSelectionInfo(
+                        bettingOfferId: 104,
+                        marketName: "Correct Score",
+                        outcomeEntity: OutcomeEntity(id: 4, statusId: 1)
+                    ),
+                    oddValue: .decimal(odd: 9.0)
+                )
+            ],
+            type: "single",
+            systemBetType: nil,
+            status: "open",
+            statusLabel: "Open",
+            placedDate: "2023-07-20",
+            userId: nil,
+            username: "",
+            totalOdds: "3.5"
+        ),
+        FeaturedTip(
+            betId: "bet002",
+            selections: [
+                FeaturedTipSelection(
+                    outcomeId: "outcome005",
+                    status: "active",
+                    sportId: "1",
+                    sportName: "Football",
+                    sportParentName: "Competition name",
+                    venueId: "venue005",
+                    venueName: "Stadium E",
+                    eventId: "event005",
+                    eventName: "Match 5",
+                    bettingTypeId: "type005",
+                    bettingTypeName: "Double Chance",
+                    betName: "Team E or Draw",
+                    odds: "1.25",
+                    extraSelectionInfo: ExtraSelectionInfo(
+                        bettingOfferId: 105,
+                        marketName: "Double Chance",
+                        outcomeEntity: OutcomeEntity(id: 5, statusId: 1)
+                    ),
+                    oddValue: .decimal(odd: 1.25)
+                ),
+                FeaturedTipSelection(
+                    outcomeId: "outcome006",
+                    status: "active",
+                    sportId: "1",
+                    sportName: "Football",
+                    sportParentName: "Competition name",
+                    venueId: "venue006",
+                    venueName: "Stadium F",
+                    eventId: "event006",
+                    eventName: "Match 6",
+                    bettingTypeId: "type006",
+                    bettingTypeName: "Asian Handicap",
+                    betName: "Team F -1.5",
+                    odds: "2.1",
+                    extraSelectionInfo: ExtraSelectionInfo(
+                        bettingOfferId: 106,
+                        marketName: "Asian Handicap",
+                        outcomeEntity: OutcomeEntity(id: 6, statusId: 1)
+                    ),
+                    oddValue: .decimal(odd: 2.1)
+                ),
+                FeaturedTipSelection(
+                    outcomeId: "outcome007",
+                    status: "active",
+                    sportId: "1",
+                    sportName: "Football",
+                    sportParentName: "Competition name",
+                    venueId: "venue007",
+                    venueName: "Stadium G",
+                    eventId: "event007",
+                    eventName: "Match 7",
+                    bettingTypeId: "type007",
+                    bettingTypeName: "First Goal Scorer",
+                    betName: "Player X",
+                    odds: "5.0",
+                    extraSelectionInfo: ExtraSelectionInfo(
+                        bettingOfferId: 107,
+                        marketName: "First Goal Scorer",
+                        outcomeEntity: OutcomeEntity(id: 7, statusId: 1)
+                    ),
+                    oddValue: .decimal(odd: 5.0)
+                ),
+                FeaturedTipSelection(
+                    outcomeId: "outcome008",
+                    status: "active",
+                    sportId: "1",
+                    sportName: "Football",
+                    sportParentName: "Competition name",
+                    venueId: "venue008",
+                    venueName: "Stadium H",
+                    eventId: "event008",
+                    eventName: "Match 8",
+                    bettingTypeId: "type008",
+                    bettingTypeName: "Full Time Result",
+                    betName: "Team H to Win",
+                    odds: "1.75",
+                    extraSelectionInfo: ExtraSelectionInfo(
+                        bettingOfferId: 108,
+                        marketName: "Full Time Result",
+                        outcomeEntity: OutcomeEntity(id: 8, statusId: 1)
+                    ),
+                    oddValue: .decimal(odd: 1.75)
+                )
+            ],
+            type: "accumulator",
+            systemBetType: "treble",
+            status: "open",
+            statusLabel: "Open",
+            placedDate: "2023-07-21",
+            userId: "user002",
+            username: "userB",
+            totalOdds: "10.5"
+        )
+    ]
+
+    
 }
 
 extension ClientManagedHomeViewTemplateDataSource: HomeViewTemplateDataSource {
@@ -517,149 +751,148 @@ extension ClientManagedHomeViewTemplateDataSource: HomeViewTemplateDataSource {
     }
 
     func numberOfSections() -> Int {
-        var sections = self.fixedSection
+        var sections = self.fixedSections
         sections += self.promotedSports.count
         return sections
     }
 
     func numberOfRows(forSectionIndex section: Int) -> Int {
+        guard let contentType = contentType(forSection: section) else {
+            return 0
+        }
 
-        switch section {
-        case 0:
+        switch contentType {
+        case .userProfile:
             return self.alertsArray.isEmpty ? 0 : 1
-        case 1:
+        case .bannerLine:
             return self.bannersLineViewModel == nil ? 0 : 1
-        case 2:
+        case .quickSwipeStack:
             return self.quickSwipeStackMatches.isEmpty ? 0 : 1
-        case 3:
+        case .promotionalStories:
             return self.storiesLineViewModel == nil ? 0 : 1
-        case 4:
+        case .makeOwnBetCallToAction:
             return self.shouldShowOwnBetCallToAction ? 1 : 0
-        case 5:
+        case .highlightedMatches:
             return self.highlightsVisualImageMatches.count +
-            self.highlightsVisualImageOutrights.count +
-            self.highlightsBoostedMatches.count
-        case 6:
+                   self.highlightsVisualImageOutrights.count +
+                   self.highlightsBoostedMatches.count
+        case .highlightedLiveMatches:
             return self.highlightedLiveMatches.count
-        case 7:
+        case .featuredTips:
+            return self.featuredTips.isEmpty ? 0 : 1
+        case .topCompetitionsShortcuts:
             if let featuredCompetitionId = Env.businessSettingsSocket.clientSettings.featuredCompetition?.id {
                 return !self.topCompetitionsLineCellViewModel.isEmpty ? 2 : 1
-            }
-            else {
+            } else {
                 return !self.topCompetitionsLineCellViewModel.isEmpty ? 1 : 0
             }
+        case .promotedSportSection:
+            let croppedSection = section - self.fixedSections
+            if let promotedSportId = self.promotedSports[safe: croppedSection]?.id,
+               let matchesForSport = self.promotedSportsMatches[promotedSportId] {
+                return matchesForSport.count
+            }
+            return 0
         default:
-            ()
+            return 0
         }
-
-        let croppedSection = section - self.fixedSection
-        if let promotedSportId = self.promotedSports[safe: croppedSection]?.id, let matchesForSport = self.promotedSportsMatches[promotedSportId] {
-            return matchesForSport.count
-        }
-
-        return 0
     }
 
     func title(forSection section: Int) -> String? {
-        switch section {
-        case 5:
+        guard let contentType = contentType(forSection: section) else {
+            return nil
+        }
+
+        switch contentType {
+        case .highlightedMatches:
             return localized("highlights")
-        case 6:
+        case .highlightedLiveMatches:
             return localized("live")
-        case 7:
+        case .featuredTips:
+            return self.featuredTips.isNotEmpty ? "Suggested_Bets" : nil
+        case .topCompetitionsShortcuts:
             return localized("top_competitions")
+        case .promotedSportSection:
+            let croppedSection = section - self.fixedSections
+            if let promotedSportName = self.promotedSports[safe: croppedSection]?.name {
+                return promotedSportName
+            }
+            return nil
         default:
-            ()
+            return nil
         }
-
-        let croppedSection = section - self.fixedSection
-        if let promotedSportName = self.promotedSports[safe: croppedSection]?.name {
-            return promotedSportName
-        }
-
-        return nil
     }
 
+
     func iconName(forSection section: Int) -> String? {
-        // return nil
-        switch section {
-        case 5:
+        guard let contentType = contentType(forSection: section) else {
+            return nil
+        }
+
+        switch contentType {
+        case .highlightedMatches:
             return "pin_icon"
-        case 6:
+        case .highlightedLiveMatches:
             return "tabbar_live_icon"
-        case 7:
+        case .topCompetitionsShortcuts:
             return "trophy_icon"
+        case .promotedSportSection:
+            let activeSports = Env.sportsStore.getActiveSports()
+            let croppedSection = section - self.fixedSections
+
+            // NOTE: IDs don't match from regular and promoted same sport
+            if let promotedSport = self.promotedSports[safe: croppedSection] {
+                let currentSport = activeSports.first { promotedSport.name.contains($0.name) }
+                return currentSport?.id
+            }
+            return nil
         default:
-            ()
+            return nil
         }
-
-        let activeSports = Env.sportsStore.getActiveSports()
-
-        let croppedSection = section - self.fixedSection
-
-        // NOTE: ID's don't match from regular and promoted same sport
-        if let promotedSport = self.promotedSports[safe: croppedSection] {
-            let currentSport = activeSports.filter({
-                promotedSport.name.contains($0.name)
-            }).first
-            return currentSport?.id
-        }
-
-        return nil
     }
 
     func shouldShowTitle(forSection section: Int) -> Bool {
-        switch section {
-        case 5:
+        guard let contentType = contentType(forSection: section) else {
+            return false
+        }
+
+        switch contentType {
+        case .highlightedMatches:
             let highlightsTotal = self.highlightsVisualImageMatches.count +
-            self.highlightsVisualImageOutrights.count +
-            self.highlightsBoostedMatches.count
+                                  self.highlightsVisualImageOutrights.count +
+                                  self.highlightsBoostedMatches.count
             return highlightsTotal > 0
-        case 6:
-            return !self.highlightedLiveMatches.isEmpty
-        case 7:
+            
+        case .highlightedLiveMatches:
+            return self.highlightedLiveMatches.isNotEmpty
+        case .featuredTips:
+            return self.featuredTips.isNotEmpty
+        case .topCompetitionsShortcuts:
             return !self.topCompetitionsLineCellViewModel.isEmpty
+        case .promotedSportSection:
+            let croppedSection = section - self.fixedSections
+            if let promotedSportId = self.promotedSports[safe: croppedSection]?.id,
+               let matchesForSport = self.promotedSportsMatches[promotedSportId] {
+                return matchesForSport.isNotEmpty
+            }
+            return false
         default:
-            ()
+            return false
         }
-
-        let croppedSection = section - self.fixedSection
-        if let promotedSportId = self.promotedSports[safe: croppedSection]?.id, let matchesForSport = self.promotedSportsMatches[promotedSportId] {
-            return matchesForSport.isNotEmpty
-        }
-
-        return false
     }
 
     func shouldShowFooter(forSection section: Int) -> Bool {
         return false
     }
 
-    // Detail each content type for the section
     func contentType(forSection section: Int) -> HomeViewModel.Content? {
-
-        switch section {
-        case 0:
-            return .userProfile
-        case 1:
-            return .bannerLine
-        case 2:
-            return .quickSwipeStack
-        case 3:
-            return .promotionalStories
-        case 4:
-            return .makeOwnBetCallToAction
-        case 5:
-            return .highlightedMatches
-        case 6:
-            return .highlightedLiveMatches
-        case 7:
-            return .topCompetitionsShortcuts
-        default:
-            ()
+        
+        // Check if the section index is within the bounds of the array
+        if section < self.contentTypes.count {
+            return self.contentTypes[section]
         }
 
-        let croppedSection = section - self.fixedSection
+        let croppedSection = section - self.fixedSections
         if let promotedSportId = self.promotedSports[safe: croppedSection]?.id,
            let matchesForSport = self.promotedSportsMatches[promotedSportId],
            matchesForSport.isNotEmpty {
@@ -668,6 +901,7 @@ extension ClientManagedHomeViewTemplateDataSource: HomeViewTemplateDataSource {
 
         return nil
     }
+
 
     // Content type ViewModels methods
     func alertsArrayViewModel() -> [ActivationAlert] {
@@ -695,11 +929,22 @@ extension ClientManagedHomeViewTemplateDataSource: HomeViewTemplateDataSource {
     }
 
     func featuredTipLineViewModel() -> FeaturedTipLineViewModel? {
-        return nil
+        if self.featuredTips.isEmpty {
+            return nil
+        }
+
+        if let featuredTipLineViewModel = self.cachedFeaturedTipLineViewModel {
+            return featuredTipLineViewModel
+        }
+        else {
+            self.cachedFeaturedTipLineViewModel = FeaturedTipLineViewModel(featuredTips: self.featuredTips)
+            return self.cachedFeaturedTipLineViewModel
+        }
+
     }
 
     func suggestedBetLineViewModel() -> SuggestedBetLineViewModel? {
-        return nil
+        nil
     }
 
     func matchStatsViewModel(forMatch match: Match) -> MatchStatsViewModel? {

@@ -207,6 +207,17 @@ enum OddFormat: Codable, Hashable, CustomStringConvertible, Equatable {
         }
 
     }
+    
+    var decimalValue: Double {
+        switch self {
+        case .fraction(let numerator, let denominator):
+            let decimal = (Double(numerator)/Double(denominator)) + 1.0
+            return decimal
+        case .decimal(let odd):
+            return odd
+        }
+
+    }
 }
 
 struct BettingOffer: Hashable {

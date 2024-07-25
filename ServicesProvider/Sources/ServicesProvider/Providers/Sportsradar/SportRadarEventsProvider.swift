@@ -1876,6 +1876,14 @@ extension SportRadarEventsProvider {
     
 }
 
+//
+//extension SportRadarEventsProvider: UnsubscriptionController {
+//    func getSuggestedBets() -> {
+//        
+//    }
+//}
+//
+
 extension SportRadarEventsProvider: UnsubscriptionController {
 
     func unsubscribe(subscription: Subscription) {

@@ -115,12 +115,11 @@ class SuggestedBetTableViewCell: UITableViewCell {
                     self?.loadingIndicatorView.startAnimating()
                 }
             })
-            .store(in: &cancellables)
+            .store(in: &self.cancellables)
 
     }
 
     func setupStackBetView() {
-
         guard let viewModel = self.viewModel else {
             return
         }
@@ -133,31 +132,24 @@ class SuggestedBetTableViewCell: UITableViewCell {
 
         self.setupInfoBetValues(totalOdd: viewModel.totalOdd, numberOfSelection: viewModel.numberOfSelection)
 
-        if !viewModel.reloadedState {
-            self.needsReloadCallbackAction?()
-        }
     }
 
     func setupInfoBetValues(totalOdd: Double, numberOfSelection: Int) {
-//        let formatedOdd = OddConverter.stringForValue(totalOdd, format: UserDefaults.standard.userOddsFormat)
         let formatedOdd = OddFormatter.formatOdd(withValue: totalOdd)
-        totalOddValueLabel.text = "\(formatedOdd)"
-        numberOfSelectionsValueLabel.text = "\(numberOfSelection)"
+        self.totalOddValueLabel.text = "\(formatedOdd)"
+        self.numberOfSelectionsValueLabel.text = "\(numberOfSelection)"
      }
 
     @objc private func didTapPlaceBetButton() {
+        guard let viewModel = self.viewModel else {
+            return
+        }
 
-        // EM TEMP SHUTDOWN
+        for ticket in viewModel.betslipTickets {
+            Env.betslipManager.addBettingTicket(ticket)
+        }
 
-//        guard let viewModel = self.viewModel else {
-//            return
-//        }
-//
-//        for ticket in viewModel.betslipTickets {
-//            Env.betslipManager.addBettingTicket(ticket)
-//        }
-//
-//        self.betNowCallbackAction?()
+        self.betNowCallbackAction?()
     }
 
 }

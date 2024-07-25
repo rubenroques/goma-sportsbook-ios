@@ -73,6 +73,7 @@ class StaticHomeViewTemplateDataSource {
             self.refreshPublisher.send()
         }
     }
+
     //
     private var suggestedBets: [SuggestedBetCardSummary] = []
     private var cachedSuggestedBetLineViewModel: SuggestedBetLineViewModel? {
@@ -152,6 +153,7 @@ class StaticHomeViewTemplateDataSource {
     func refresh() {
         self.cachedMatchStatsViewModels = [:]
         self.cachedSuggestedBetLineViewModel = nil
+       
         self.sportGroupViewModelCache = [:]
         self.cachedFeaturedTipLineViewModel = nil
 

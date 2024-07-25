@@ -1150,7 +1150,7 @@ extension HomeViewController: UITableViewDelegate, UITableViewDataSource {
         case .userFavorites:
             return UITableView.automaticDimension
         case .featuredTips:
-            return 420
+            return 376
         case .suggestedBets:
             return 336
         case .sportGroup:
@@ -1232,7 +1232,7 @@ extension HomeViewController: UITableViewDelegate, UITableViewDataSource {
         case .userFavorites:
             return StyleHelper.cardsStyleHeight() + 20
         case .featuredTips:
-            return 420
+            return 376
         case .suggestedBets:
             return 336
         case .sportGroup:
