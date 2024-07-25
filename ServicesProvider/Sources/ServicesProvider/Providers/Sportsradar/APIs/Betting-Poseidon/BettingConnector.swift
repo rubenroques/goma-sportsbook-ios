@@ -81,6 +81,9 @@ class BettingConnector: Connector {
                 else if let httpResponse = result.response as? HTTPURLResponse, httpResponse.statusCode == 500 {
                     throw ServiceProviderError.internalServerError
                 }
+                else if let httpResponse = result.response as? HTTPURLResponse, httpResponse.statusCode == 503 {
+                    throw ServiceProviderError.internalServerError
+                }
                 else if let httpResponse = result.response as? HTTPURLResponse, httpResponse.statusCode != 200 {
                     throw ServiceProviderError.unknown
                 }
