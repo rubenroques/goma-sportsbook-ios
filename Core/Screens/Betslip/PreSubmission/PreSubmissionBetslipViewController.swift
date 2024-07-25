@@ -674,6 +674,11 @@ class PreSubmissionBetslipViewController: UIViewController {
                 
                 self?.simpleOddsValueLabel.text = "\(tickets.count)"
 
+                if tickets.isEmpty {
+                    self?.betBuilderWarningView.setDescription("")
+                    self?.betBuilderWarningView.alpha = 0.0
+                }
+                
                 self?.tableView.reloadData()
             }
             .store(in: &cancellables)
@@ -996,23 +1001,30 @@ class PreSubmissionBetslipViewController: UIViewController {
             })
             .store(in: &self.cancellables)
         
-        Publishers.CombineLatest(debounceRealValuePublisher, self.listTypePublisher)
-            .filter({ _, listTypePublisher -> Bool in
+        Publishers.CombineLatest3(debounceRealValuePublisher, self.listTypePublisher, Env.betslipManager.bettingTicketsPublisher)
+            .filter({ _, listTypePublisher, _ -> Bool in
                 return listTypePublisher == .betBuilder
             })
-            .map({ bettingValue, _ -> Bool in
-                return bettingValue > 0
-            })
             .receive(on: DispatchQueue.main)
-            .sink(receiveValue: { [weak self] hasValidBettingValue in
+            .sink(receiveValue: { [weak self] bettingValue, listTypePublisher, bettingTickets in
                 
+                let ticketsMatches = bettingTickets.map(\.matchId)
+                let allBetsSameMatch = Set(ticketsMatches).count == 1
+                
+                let hasValidBettingValue = bettingValue > 0.0 && allBetsSameMatch
                 if hasValidBettingValue {
                     self?.refreshBetBuilderExpectedReturn()
                     self?.requestCashbackResult()
                 }
                 else {
-                    self?.multipleWinningsValueLabel.text = localized("no_value")
-                    self?.secondaryMultipleWinningsValueLabel.text = localized("no_value")
+                    if !allBetsSameMatch {
+                        self?.betBuilderWarningView.setDescription(localized("mix_match_selections_different_events_error"))
+                        self?.betBuilderWarningView.alpha = 1.0
+                    }
+                    else {
+                        self?.multipleWinningsValueLabel.text = localized("no_value")
+                        self?.secondaryMultipleWinningsValueLabel.text = localized("no_value")
+                    }
                 }
                 
                 self?.placeBetButton.isEnabled = hasValidBettingValue
@@ -2315,14 +2327,19 @@ extension PreSubmissionBetslipViewController {
                 case .finished:
                     break
                 case .failure(let error):
-                    if case BetslipErrorType.insufficientSelections = error {
+                    switch error {
+                    case .insufficientSelections:
                         self?.betBuilderWarningView.setDescription(localized("mix_match_min_compatible_selections"))
                         self?.betBuilderWarningView.alpha = 1.0
+                    case .emptyBetslip:
+                        self?.betBuilderWarningView.setDescription("")
+                        self?.betBuilderWarningView.alpha = 0.0
+                    default:
+                        ()
                     }
                 }
                 
             }, receiveValue: { [weak self] betBuilderCalculateResponse in
-                
                 self?.configureWithBetBuilderExpectedReturn(betBuilderCalculateResponse)
             })
             .store(in: &self.cancellables)

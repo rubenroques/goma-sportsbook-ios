@@ -955,6 +955,13 @@ extension BetslipManager {
         let tickets = self.bettingTicketsPublisher.value.filter { !ticketsToIgnore.contains($0) }
         
         guard
+            tickets.isNotEmpty
+        else  {
+            return Fail(error: BetslipErrorType.emptyBetslip)
+                .eraseToAnyPublisher()
+        }
+        
+        guard
             tickets.count >  1
         else  {
             return Fail(error: BetslipErrorType.insufficientSelections)
