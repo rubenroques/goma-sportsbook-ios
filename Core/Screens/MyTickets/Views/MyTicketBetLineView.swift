@@ -152,7 +152,12 @@ class MyTicketBetLineView: NibView {
         self.oddTitleLabel.text = localized("odd")
 
         if let oddValue = self.betHistoryEntrySelection.priceValue {
-            self.oddValueLabel.text = OddFormatter.formatOdd(withValue: oddValue)
+            if oddValue.isNaN {
+                self.oddValueLabel.text = "-"
+            }
+            else {
+                self.oddValueLabel.text = OddFormatter.formatOdd(withValue: oddValue)
+            }
         }
 
         self.indicatorBaseView.isHidden = true

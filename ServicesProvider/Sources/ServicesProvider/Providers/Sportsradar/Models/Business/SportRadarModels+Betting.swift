@@ -184,8 +184,8 @@ extension SportRadarModels {
             self.totalOdd = try container.decode(Double.self, forKey: .totalOdd)
             self.totalStake = try container.decode(Double.self, forKey: .totalStake)
 
-            self.oddNumerator = try container.decode(Double.self, forKey: .oddNumerator)
-            self.oddDenominator = try container.decode(Double.self, forKey: .oddDenominator)
+            self.oddNumerator = (try? container.decode(Double.self, forKey: .oddNumerator)) ?? 0.0
+            self.oddDenominator = (try? container.decode(Double.self, forKey: .oddDenominator)) ?? 0.0
 
             self.order = (try? container.decode(Int.self, forKey: .order)) ?? 999
 
