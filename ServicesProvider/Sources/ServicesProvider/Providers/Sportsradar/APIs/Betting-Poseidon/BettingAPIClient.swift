@@ -206,7 +206,6 @@ extension BettingAPIClient: Endpoint {
                             \(betLegs.joined(separator: ","))
                          ],
                          "idFOBetType": "",
-                         "placeStake": "",
                          "winStake": 0,
                          "isPool": false
                        }
@@ -257,8 +256,6 @@ extension BettingAPIClient: Endpoint {
                         "betLegs": [ \(legsString) ],
                         "idFOBetType": "\(ticket.betGroupingType.identifier)",
                         "pool": false,
-                        "placeStake": 0,
-                        "showStake": 0,
                         "winStake": \(ticket.globalStake ?? 0.0)
                     }
                     """)
@@ -587,8 +584,6 @@ extension BettingAPIClient: Endpoint {
                     "betLegs": [ \(legsString) ],
                     "idFOBetType": "\(ticket.betGroupingType.identifier)",
                     "pool": false,
-                    "placeStake": 0,
-                    "showStake": 0,
                     "winStake": \(ticket.globalStake ?? 0.0)
                 }
                 """)
@@ -647,8 +642,6 @@ extension BettingAPIClient: Endpoint {
                     "betLegs": [ \(legsString) ],
                     "idFOBetType": "\(betTicket.betGroupingType.identifier)",
                     "pool": false,
-                    "placeStake": 0,
-                    "showStake": 0,
                     "winStake": \(betTicket.globalStake ?? 0.0)
                 }
                 """
