@@ -8,6 +8,7 @@
 import Foundation
 import Combine
 import ServicesProvider
+import OptimoveSDK
 
 class WithdrawViewModel: NSObject {
     // MARK: Private Properties
@@ -121,6 +122,7 @@ class WithdrawViewModel: NSObject {
                             self?.isLoadingPublisher.send(false)
                         }
                     }, receiveValue: { [weak self] processWithdrawalResponse in
+                        self?.sendWithdrawProcessedEvent(amount: withdrawalAmount)
                         self?.showWithdrawalStatus?()
                         self?.isLoadingPublisher.send(false)
                     })
@@ -161,5 +163,20 @@ class WithdrawViewModel: NSObject {
 
             })
             .store(in: &cancellables)
+    }
+    
+    func sendWithdrawProcessedEvent(amount: Double) {
+        
+        Optimove.shared.reportEvent(
+            name: "withdrawal_processed",
+            parameters: [
+                "partyId": "\(Env.userSessionStore.userProfilePublisher.value?.userIdentifier ?? "")",
+                "withdrawal_amount": amount
+            ]
+        )
+        
+        Optimove.shared.reportScreenVisit(screenTitle: "withdrawal_processed")
+        
+        AnalyticsClient.sendEvent(event: .withdrawalProcessed(value: amount))
     }
 }

@@ -1749,7 +1749,10 @@ class PreSubmissionBetslipViewController: UIViewController {
                     .map(RePlayFeatureHelper.shouldShowRePlay(forSport:))
                     .allSatisfy { $0 }
 
-                return (cashbackValue ?? 0.0) > 0.0 && !isCashbackOn && bettingValue > 0 && allSportsPresent && validMatchesList && !hasLiveTickets
+//                return (cashbackValue ?? 0.0) > 0.0 && !isCashbackOn && bettingValue > 0 && allSportsPresent && validMatchesList && !hasLiveTickets
+                
+                // NOTE: Live games will have cashback aswell, but still hasLiveTickets publisher has data after live tickets are removed
+                return (cashbackValue ?? 0.0) > 0.0 && !isCashbackOn && bettingValue > 0 && allSportsPresent && validMatchesList
             }
         
         // Check list mode
