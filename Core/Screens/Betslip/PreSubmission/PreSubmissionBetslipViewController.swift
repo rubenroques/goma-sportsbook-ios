@@ -1423,8 +1423,11 @@ class PreSubmissionBetslipViewController: UIViewController {
         //
         
         Publishers.CombineLatest(Env.userSessionStore.userCashbackBalance, self.listTypePublisher)
-            .filter({ _, listTypePublisher in
-                return listTypePublisher != .betBuilder
+            .filter({ _, listTypePublisher -> Bool in
+                switch listTypePublisher {
+                case .simple, .multiple, .system:
+                    return true
+                }
             })
             .map({ userCashbackBalance, _ in
                 return userCashbackBalance
