@@ -1602,7 +1602,7 @@ class PreSubmissionBetslipViewController: UIViewController {
 
         //
         // Check all the conditions for the cashback value and tooltip visibility
-        let cashbackLogicPublishers = Publishers.CombineLatest4(self.cashbackResultValuePublisher,
+        Publishers.CombineLatest4(self.cashbackResultValuePublisher,
                                                                 self.isCashbackToggleOn,
                                                                 self.realBetValuePublisher,
                                                                 Env.betslipManager.bettingTicketsPublisher.removeDuplicates())
