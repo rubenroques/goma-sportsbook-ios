@@ -546,47 +546,70 @@ extension SportRadarModels {
 
 
     struct BetslipSettings: Codable {
-        var oddChange: BetslipOddChangeSetting
-
+        
+        var oddChangeLegacy: BetslipOddChangeSetting?
+        var oddChangeRunningOrPreMatch: BetslipOddChangeSetting?
+        
         enum CodingKeys: String, CodingKey {
             case name = "name"
             case value = "value"
-            case acceptingAnyReoffer = "acceptingReoffer"
+            case acceptingReofferLegacy = "acceptingReofferLegacy"
+            case acceptingReofferBoth = "acceptingReofferBoth"
         }
 
         init(from decoder: Decoder) throws {
             let container = try decoder.singleValueContainer()
             let settings = try container.decode([Settings].self)
-            guard
+            
+            if let acceptingReofferRunSetting = settings.first(where: { $0.id ?? 0 == 667 }),
+               let acceptingReofferPreSetting = settings.first(where: { $0.id ?? 0 == 668 }),
+               let runningValue = acceptingReofferRunSetting.value,
+               acceptingReofferPreSetting.value != nil {
+                
+                switch runningValue {
+                case "none":
+                    self.oddChangeRunningOrPreMatch = BetslipOddChangeSetting.none
+                case "higher":
+                    self.oddChangeRunningOrPreMatch = BetslipOddChangeSetting.higher
+                default:
+                    self.oddChangeRunningOrPreMatch = BetslipOddChangeSetting.none
+                }
+                
+                //
+                self.oddChangeLegacy = nil
+            }
+            else if 
                 let acceptingReofferSetting = settings.first(where: { $0.name == "OddsChange" }),
                 let value = acceptingReofferSetting.value
-            else {
-                self.oddChange = .none
-                return
-            }
-
-            switch value {
-            case "none":
-                self.oddChange = .none
-//            case "any":
-//                self.oddChange = .any
-            case "higher":
-                self.oddChange = .higher
+            {
+                switch value {
+                case "none":
+                    self.oddChangeLegacy = BetslipOddChangeSetting.none
+                case "higher":
+                    self.oddChangeLegacy = BetslipOddChangeSetting.higher
+                default:
+                    self.oddChangeLegacy = BetslipOddChangeSetting.none
+                }
                 
-            default:
-                self.oddChange = .none
+                //
+                self.oddChangeRunningOrPreMatch = nil
             }
-            
+            else {
+                self.oddChangeRunningOrPreMatch = BetslipOddChangeSetting.none
+                self.oddChangeLegacy = nil
+            }
         }
 
         private struct Settings: Codable {
-            var name: String
+            var name: String?
             var value: String?
+            var id: Int?
         }
 
         func encode(to encoder: Encoder) throws {
             var container = encoder.container(keyedBy: SportRadarModels.BetslipSettings.CodingKeys.self)
-            try container.encode(self.oddChange, forKey: .acceptingAnyReoffer)
+            try container.encode(self.oddChangeLegacy, forKey: .acceptingReofferLegacy)
+            try container.encode(self.oddChangeRunningOrPreMatch, forKey: .acceptingReofferBoth)
         }
 
     }

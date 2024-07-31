@@ -287,6 +287,12 @@ enum CardsStyle: Int {
     case normal = 5
 }
 
+
+public enum BetslipOddChangeSettingMode {
+    case legacy
+    case bothGameStatus
+}
+
 public enum BetslipOddChangeSetting: String, Codable, Hashable, CaseIterable {
     case none
     // case any // remover

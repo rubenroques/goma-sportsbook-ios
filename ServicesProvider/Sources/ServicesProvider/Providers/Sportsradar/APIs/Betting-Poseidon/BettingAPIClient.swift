@@ -23,7 +23,11 @@ enum BettingAPIClient {
     case calculateCashout(betId: String, stakeValue: String?)
     case cashoutBet(betId: String, cashoutValue: Double, stakeValue: Double?)
     case getBetslipSettings
+    
     case updateBetslipSettings(oddChange: BetslipOddChangeSetting)
+    case updateBetslipSettingsPreMatch(oddChange: BetslipOddChangeSetting)
+    case updateBetslipSettingsRunning(oddChange: BetslipOddChangeSetting)
+    
     case getFreebetBalance
     case getSharedTicket(betslipId: String)
     case getTicketSelection(ticketSelectionId: String)
@@ -63,6 +67,11 @@ extension BettingAPIClient: Endpoint {
             return "/api/betting/fo/attribute/getAll"
         case .updateBetslipSettings:
             return "/api/betting/fo/attribute/update"
+        case .updateBetslipSettingsRunning:
+            return "/api/betting/fo/attribute/update"
+        case .updateBetslipSettingsPreMatch:
+            return "/api/betting/fo/attribute/update"
+            
         case .getFreebetBalance:
             return "/api/betting/fo/freeBalance"
         case .getSharedTicket(let betslipId):
@@ -144,6 +153,12 @@ extension BettingAPIClient: Endpoint {
             return nil
         case .updateBetslipSettings:
             return nil
+        
+        case .updateBetslipSettingsRunning:
+            return nil
+        case .updateBetslipSettingsPreMatch:
+            return nil
+            
         case .getFreebetBalance:
             return nil
         case .getSharedTicket:
@@ -366,10 +381,6 @@ extension BettingAPIClient: Endpoint {
             switch oddChange {
             case .none:
                 acceptingReofferStringValue = "none"
-
-//            case .any:
-//                acceptingReofferStringValue = "any"
-                
             case .higher:
                 acceptingReofferStringValue = "higher"
             }
@@ -383,6 +394,43 @@ extension BettingAPIClient: Endpoint {
             let data = body.data(using: String.Encoding.utf8)!
             return data
 
+        case .updateBetslipSettingsRunning(let oddChange):
+
+            var acceptingReofferStringValue = "none"
+            switch oddChange {
+            case .none:
+                acceptingReofferStringValue = "none"
+            case .higher:
+                acceptingReofferStringValue = "higher"
+            }
+            
+            let body = """
+                       {
+                       "id": 668,
+                       "name": "oddsChangePreMatch",
+                       "value": "\(acceptingReofferStringValue)"}
+                       """
+            let data = body.data(using: String.Encoding.utf8)!
+            return data
+        case .updateBetslipSettingsPreMatch(let oddChange):
+
+            var acceptingReofferStringValue = "none"
+            switch oddChange {
+            case .none:
+                acceptingReofferStringValue = "none"
+            case .higher:
+                acceptingReofferStringValue = "higher"
+            }
+            
+            let body = """
+                       {
+                       "id": 667,
+                       "name": "oddsChangeInRunning",
+                       "value": "\(acceptingReofferStringValue)"}
+                       """
+            let data = body.data(using: String.Encoding.utf8)!
+            return data
+            
         case .getFreebetBalance:
             return nil
         case .getSharedTicket:
@@ -427,6 +475,8 @@ extension BettingAPIClient: Endpoint {
         case .cashoutBet: return .post
         case .getBetslipSettings: return .get
         case .updateBetslipSettings: return .post
+        case .updateBetslipSettingsRunning: return .post
+        case .updateBetslipSettingsPreMatch: return .post
         case .getFreebetBalance: return .get
         case .getSharedTicket: return .get
         case .getTicketSelection: return .post
@@ -450,8 +500,12 @@ extension BettingAPIClient: Endpoint {
             
         case .calculateCashout: return true
         case .cashoutBet: return true
+        
         case .getBetslipSettings: return true
         case .updateBetslipSettings: return true
+        case .updateBetslipSettingsRunning: return true
+        case .updateBetslipSettingsPreMatch: return true
+            
         case .getFreebetBalance: return true
         case .getSharedTicket: return false
         case .getTicketSelection: return false
@@ -510,8 +564,12 @@ extension BettingAPIClient: Endpoint {
             
         case .calculateCashout: return TimeInterval(180)
         case .cashoutBet: return TimeInterval(180)
+            
         case .getBetslipSettings: return TimeInterval(180)
         case .updateBetslipSettings: return TimeInterval(180)
+        case .updateBetslipSettingsRunning: return TimeInterval(180)
+        case .updateBetslipSettingsPreMatch: return TimeInterval(180)
+            
         case .getFreebetBalance: return TimeInterval(180)
         case .getSharedTicket: return TimeInterval(180)
         case .getTicketSelection: return TimeInterval(180)
@@ -532,8 +590,12 @@ extension BettingAPIClient: Endpoint {
         case .rejectBoostedBet: return "rejectBoostedBet"
         case .calculateCashout: return "calculateCashout"
         case .cashoutBet: return "cashoutBet"
+        
         case .getBetslipSettings: return "getBetslipSettings"
         case .updateBetslipSettings: return "updateBetslipSettings"
+        case .updateBetslipSettingsRunning: return "updateBetslipSettingsRunning"
+        case .updateBetslipSettingsPreMatch: return "updateBetslipSettingsPreMatch"
+            
         case .getFreebetBalance: return "getFreebetBalance"
         case .getSharedTicket: return "getSharedTicket"
         case .getTicketSelection: return "getTicketSelection"
