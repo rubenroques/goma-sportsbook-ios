@@ -1593,12 +1593,9 @@ class PreSubmissionBetslipViewController: UIViewController {
                 if let cashbackResultValue = cashbackResultValue {
                     let cashbackString = CurrencyFormater.defaultFormat.string(from: NSNumber(value: cashbackResultValue)) ?? localized("no_value")
                     self?.cashbackInfoMultipleValueLabel.text = cashbackString
-                    
-                    print("CASHBACK-DEBUG: value = \(cashbackString)")
                 }
                 else {
                     self?.cashbackInfoMultipleValueLabel.text = localized("no_value")
-                    print("CASHBACK-DEBUG: value = no-value")
                 }
             }
             .store(in: &self.cancellables)
@@ -1617,17 +1614,12 @@ class PreSubmissionBetslipViewController: UIViewController {
                     .compactMap({ $0 })
                     .map(RePlayFeatureHelper.shouldShowRePlay(forSport:))
                     .allSatisfy { $0 }
-
-//                return (cashbackValue ?? 0.0) > 0.0 && !isCashbackOn && bettingValue > 0 && allSportsPresent && validMatchesList && !hasLiveTickets
                 
-                // NOTE: Live games will have cashback aswell, but still hasLiveTickets publisher has data after live tickets are removed
                 let validCashbackValueValid = (cashbackValue ?? 0.0) > 0.0
                 let isCashbackTurnOff = !isCashbackOn
                 let validBettingValue = bettingValue > 0
                 
                 let valuesJoined = validCashbackValueValid && isCashbackTurnOff && validBettingValue && allSportsPresent && validMatchesList
-                
-                print("CASHBACK-DEBUG: conditions: \(validCashbackValueValid) \(isCashbackTurnOff) \(validBettingValue) \(allSportsPresent) \(validMatchesList)")
                 
                 return valuesJoined
             }
