@@ -25,22 +25,6 @@ class BetslipManager: NSObject {
     
     private var serviceProviderSubscriptions: [String: ServicesProvider.Subscription] = [:]
     private var bettingTicketsCancellables: [String: AnyCancellable] = [:]
-    
-    var liveTicketsPublisher: AnyPublisher<[String: Bool], Never> {
-        return self.liveTicketsSubject.eraseToAnyPublisher()
-    }
-    var hasLiveTicketsPublisher: AnyPublisher<Bool, Never> {
-        return self.liveTicketsSubject
-            .map({ $0.values.contains(true) })
-            .eraseToAnyPublisher()
-    }
-    
-    private var liveTicketsSubject = CurrentValueSubject<[String: Bool], Never>.init([:])
-    private var liveTicketsServiceProviderSubscriptions: [String: ServicesProvider.Subscription] = [:]
-    
-    // BetBuilder
-    var betBuilderProcessor: BetBuilderProcessor = BetBuilderProcessor()
-    
     private var cancellables: Set<AnyCancellable> = []
     
     override init() {
@@ -52,16 +36,6 @@ class BetslipManager: NSObject {
     }
     
     func start() {
-        
-        if UserDefaults.standard.object(forKey: UserDefaultsKey.cachedBetBuilderState.key) == nil {
-            // To avoid betbuilder to be out of sync with previous betslip tickets
-            // we clear the betslip ticket the first time we detect cachedBetBuilderState is nil
-            
-            UserDefaults.standard.cachedBetslipTickets = []
-        }
-        
-        self.betBuilderProcessor = UserDefaults.standard.cachedBetBuilderProcessor
-        
         var cachedBetslipTicketsDictionary: OrderedDictionary<String, BettingTicket> = [:]
         for ticket in UserDefaults.standard.cachedBetslipTickets {
             cachedBetslipTicketsDictionary[ticket.id] = ticket
@@ -123,62 +97,7 @@ class BetslipManager: NSObject {
                 self?.requestAllowedBetTypes(withBettingTickets: bettingTickets)
             })
             .store(in: &self.cancellables)
-        
-        // -
-        Publishers.CombineLatest(Env.servicesProvider.eventsConnectionStatePublisher.removeDuplicates(),
-                                 self.bettingTicketsPublisher.removeDuplicates())
-        .filter({ state, _ in
-            return state == .connected
-        })
-        .sink(receiveValue: { [weak self] _, tickets in
-            
-            let allMatchIds = tickets.map(\.matchId)
-            let knownMatchIds = Array((self?.liveTicketsServiceProviderSubscriptions ?? [:]).keys)
-            
-            // The ones we are not subcribed already
-            let nonKnownMatchIds = allMatchIds.filter { !knownMatchIds.contains($0) }
-            // The ones we don't need anymore
-            let removedMatchIds = knownMatchIds.filter { !allMatchIds.contains($0) }
-            
-            //
-            for removedMatchId in removedMatchIds {
-                self?.liveTicketsServiceProviderSubscriptions[removedMatchId] = nil
-                self?.liveTicketsSubject.value.removeValue(forKey: removedMatchId)
-            }
-            
-            //
-            guard let selfValue = self else { return }
-            
-            for nonKnownMatchId in nonKnownMatchIds {
-                
-                Env.servicesProvider.subscribeToLiveDataUpdates(forEventWithId: nonKnownMatchId)
-                    .receive(on: DispatchQueue.main)
-                    .sink(receiveCompletion: { completion in
-                        print("Env.servicesProvider.subscribeEventDetails completed \(completion)")
-                    }, receiveValue: { [weak self] (subscribableContent: SubscribableContent<ServicesProvider.EventLiveData>) in
-                        switch subscribableContent {
-                        case .connected(let subscription):
-                            self?.liveTicketsSubject.value[nonKnownMatchId] = false
-                            self?.liveTicketsServiceProviderSubscriptions[nonKnownMatchId] = subscription
-                            
-                        case .contentUpdate(let eventLiveData):
-                            switch eventLiveData.status {
-                            case .notStarted, .ended, .unknown, .none:
-                                self?.liveTicketsSubject.value[nonKnownMatchId] = false
-                            case .inProgress:
-                                self?.liveTicketsSubject.value[nonKnownMatchId] = true
-                            }
-                            
-                        case .disconnected:
-                            self?.liveTicketsSubject.value[nonKnownMatchId] = false
-                            self?.liveTicketsServiceProviderSubscriptions[nonKnownMatchId] = nil
-                        }
-                    })
-                    .store(in: &selfValue.cancellables)
-            }
-        })
-        .store(in: &self.cancellables)
-        
+
     }
     
     func addBettingTicket(_ bettingTicket: BettingTicket) {

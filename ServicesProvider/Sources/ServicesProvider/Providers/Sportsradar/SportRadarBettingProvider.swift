@@ -339,8 +339,11 @@ class SportRadarBettingProvider: BettingProvider, Connector {
         let publisher: AnyPublisher<[SportRadarModels.CashbackResult], ServiceProviderError> = self.connector.request(endpoint)
 
         return publisher
+            .mapError({ error in
+                print("CASHBACK ERROR: \(error)")
+                return error
+            })
             .flatMap { (cashbackResultResponse: [SportRadarModels.CashbackResult]) -> AnyPublisher<CashbackResult, ServiceProviderError> in
-                print("CASHBACK RESULT: \(cashbackResultResponse)")
                 if let cashbackResult = cashbackResultResponse.first {
                     let mappedCashbackResult = SportRadarModelMapper.cashbackResult(fromInternalCashbackResult: cashbackResult)
                     return Just(mappedCashbackResult).setFailureType(to: ServiceProviderError.self).eraseToAnyPublisher()
