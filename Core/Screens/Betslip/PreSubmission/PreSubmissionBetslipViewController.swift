@@ -1743,7 +1743,7 @@ class PreSubmissionBetslipViewController: UIViewController {
 
         //
         // Check all the conditions for the cashback value and tooltip visibility
-        Publishers.CombineLatest4(self.cashbackResultValuePublisher,
+        let cashbackLogicPublishers = Publishers.CombineLatest4(self.cashbackResultValuePublisher,
                                   self.isCashbackToggleOn,
                                   self.realBetValuePublisher,
                                   Env.betslipManager.bettingTicketsPublisher.removeDuplicates())
@@ -1765,7 +1765,7 @@ class PreSubmissionBetslipViewController: UIViewController {
                 return valuesJoined
             }
         
-        // Check list mode
+        // Check bettint type mode
         Publishers.CombineLatest(cashbackLogicPublishers, self.listTypePublisher)
             .receive(on: DispatchQueue.main)
             .sink {  [weak self] cashbackLogic, listType in

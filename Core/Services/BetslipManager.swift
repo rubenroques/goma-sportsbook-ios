@@ -8,7 +8,6 @@
 import UIKit
 import Combine
 import OrderedCollections
-import nanopb
 import ServicesProvider
 
 class BetslipManager: NSObject {
@@ -25,6 +24,10 @@ class BetslipManager: NSObject {
     
     private var serviceProviderSubscriptions: [String: ServicesProvider.Subscription] = [:]
     private var bettingTicketsCancellables: [String: AnyCancellable] = [:]
+    
+    // BetBuilder
+    var betBuilderProcessor: BetBuilderProcessor = BetBuilderProcessor()
+    
     private var cancellables: Set<AnyCancellable> = []
     
     override init() {
