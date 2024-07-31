@@ -641,7 +641,9 @@ extension OmegaAPIClient: Endpoint {
                 URLQueryItem(name: "amount", value: "\(amount)"),
                 URLQueryItem(name: "option", value: option),
                 URLQueryItem(name: "locale", value: locale),
-                URLQueryItem(name: "requestedBonusPlanId", value: "NONE")
+                URLQueryItem(name: "requestedBonusPlanId", value: "NONE"),
+                URLQueryItem(name: "channel", value: "iOS"),
+                URLQueryItem(name: "threeDSNative", value: "true")
             ]
 
         case .processWithdrawal(let withdrawalMethod, let amount):
