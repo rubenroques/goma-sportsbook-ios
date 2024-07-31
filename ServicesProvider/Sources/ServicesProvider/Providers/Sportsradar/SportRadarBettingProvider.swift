@@ -246,26 +246,47 @@ class SportRadarBettingProvider: BettingProvider, Connector {
 
         return publisher
             .map({ internalBetslipSettings in
-                return BetslipSettings(oddChange: internalBetslipSettings.oddChange)
+                return BetslipSettings(oddChangeLegacy: internalBetslipSettings.oddChangeLegacy,
+                                       oddChangeRunningOrPreMatch: internalBetslipSettings.oddChangeRunningOrPreMatch)
             })
             .replaceError(with: nil)
             .eraseToAnyPublisher()
     }
 
     func updateBetslipSettings(_ betslipSettings: BetslipSettings) -> AnyPublisher<Bool, Never> {
+ 
+        if let oddChangeRunningOrPreMatch = betslipSettings.oddChangeRunningOrPreMatch {
+            let endpointPreMatch = BettingAPIClient.updateBetslipSettingsPreMatch(oddChange: oddChangeRunningOrPreMatch)
+            let publisherPreMatch: AnyPublisher<String, ServiceProviderError> = self.connector.request(endpointPreMatch)
+            
+            let endpointRunning = BettingAPIClient.updateBetslipSettingsRunning(oddChange: oddChangeRunningOrPreMatch)
+            let publisherRunning: AnyPublisher<String, ServiceProviderError> = self.connector.request(endpointRunning)
+            
+            return Publishers.CombineLatest(publisherPreMatch, publisherRunning)
+                .map({ publisherPreMatchResponse, publisherRunningResponse -> Bool in
+                    return true
+                })
+                .replaceError(with: false)
+                .eraseToAnyPublisher()
+        }
+        else if let oddChangeLegacy = betslipSettings.oddChangeLegacy {
+            let endpointLegacy = BettingAPIClient.updateBetslipSettings(oddChange: oddChangeLegacy)
+            let publisherLegacy: AnyPublisher<String, ServiceProviderError> = self.connector.request(endpointLegacy)
+            return publisherLegacy
+                .mapError({ error in
+                    return error
+                })
+                .map({ internlBetslipSettings -> Bool in
+                    return true
+                })
+                .replaceError(with: false)
+                .eraseToAnyPublisher()
+        }
+        else {
+            return Just(false).eraseToAnyPublisher()
+        }
 
-        let endpoint = BettingAPIClient.updateBetslipSettings(oddChange: betslipSettings.oddChange)
-        let publisher: AnyPublisher<String, ServiceProviderError> = self.connector.request(endpoint)
-
-        return publisher
-            .mapError({ error in
-                return error
-            })
-            .map({ internlBetslipSettings -> Bool in
-                return true
-            })
-            .replaceError(with: false)
-            .eraseToAnyPublisher()
+       
     }
 
     func getFreebet() -> AnyPublisher<FreebetBalance, ServiceProviderError> {

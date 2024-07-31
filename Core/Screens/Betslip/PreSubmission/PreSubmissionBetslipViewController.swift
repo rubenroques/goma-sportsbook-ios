@@ -351,6 +351,7 @@ class PreSubmissionBetslipViewController: UIViewController {
 
     var betPlacedAction: (([BetPlacedDetails], Double?, Bool) -> Void) = { _, _, _  in }
 
+    var betslipOddChangeSettingMode: BetslipOddChangeSettingMode = .bothGameStatus
     var betslipOddChangeSetting: BetslipOddChangeSetting = .none
 
     // Publishers
@@ -556,14 +557,22 @@ class PreSubmissionBetslipViewController: UIViewController {
             .receive(on: DispatchQueue.main)
             .sink(receiveValue: { [weak self] betslipSettings in
                 if let betslipSettingsValue = betslipSettings {
-                     
-                    switch betslipSettingsValue.oddChange {
+                    
+                    var changeSetting: ServicesProvider.BetslipOddChangeSetting = .none
+                    
+                    if let oddChangeRunningOrPreMatch = betslipSettingsValue.oddChangeRunningOrPreMatch {
+                        changeSetting  = oddChangeRunningOrPreMatch
+                        self?.betslipOddChangeSettingMode = .bothGameStatus
+                    }
+                    else if let oddChangeLegacy = betslipSettingsValue.oddChangeLegacy {
+                        changeSetting  = oddChangeLegacy
+                        self?.betslipOddChangeSettingMode = .legacy
+                    }
+                        
+                    switch changeSetting {
                     case .none:
                         self?.betslipOddChangeSetting = .none
                         self?.settingsPickerView.selectRow(0, inComponent: 0, animated: false)
-//                    case .any:
-//                        self?.betslipOddChangeSetting = .any
-//                        self?.settingsPickerView.selectRow(1, inComponent: 0, animated: false)
                     case .higher:
                         self?.betslipOddChangeSetting = .higher
                         self?.settingsPickerView.selectRow(1, inComponent: 0, animated: false)
@@ -1635,13 +1644,20 @@ class PreSubmissionBetslipViewController: UIViewController {
         switch self.betslipOddChangeSetting {
         case .none:
             externalSetting = .none
-//        case .any:
-//            externalSetting = .any
         case .higher:
             externalSetting = .higher
         }
         
-        let betslipSettings = ServicesProvider.BetslipSettings.init(oddChange: externalSetting)
+        var betslipSettings: ServicesProvider.BetslipSettings
+        switch self.betslipOddChangeSettingMode {
+        case .bothGameStatus:
+            betslipSettings = ServicesProvider.BetslipSettings(oddChangeLegacy: nil,
+                                                               oddChangeRunningOrPreMatch: externalSetting)
+        case .legacy:
+            betslipSettings = ServicesProvider.BetslipSettings(oddChangeLegacy: externalSetting,
+                                                               oddChangeRunningOrPreMatch: nil)
+        }
+        
         Env.servicesProvider
             .updateBetslipSettings(betslipSettings)
             .sink { completed in
