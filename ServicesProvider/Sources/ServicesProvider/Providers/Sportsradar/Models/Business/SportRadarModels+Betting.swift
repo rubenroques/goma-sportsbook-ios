@@ -184,8 +184,8 @@ extension SportRadarModels {
             self.totalOdd = try container.decode(Double.self, forKey: .totalOdd)
             self.totalStake = try container.decode(Double.self, forKey: .totalStake)
 
-            self.oddNumerator = (try? container.decode(Double.self, forKey: .oddNumerator)) ?? 1.0
-            self.oddDenominator = (try? container.decode(Double.self, forKey: .oddDenominator)) ?? 1.0
+            self.oddNumerator = (try? container.decode(Double.self, forKey: .oddNumerator)) ?? 0.0
+            self.oddDenominator = (try? container.decode(Double.self, forKey: .oddDenominator)) ?? 0.0
 
             self.order = (try? container.decode(Int.self, forKey: .order)) ?? 999
 
@@ -537,8 +537,8 @@ extension SportRadarModels {
             let identifierDouble = try container.decode(Double.self, forKey: SportRadarModels.PlacedBetLeg.CodingKeys.identifier)
             self.identifier = String(format: "%.1f", identifierDouble)
 
-            self.priceNumerator = try container.decode(Int.self, forKey: SportRadarModels.PlacedBetLeg.CodingKeys.priceNumerator)
-            self.priceDenominator = try container.decode(Int.self, forKey: SportRadarModels.PlacedBetLeg.CodingKeys.priceDenominator)
+            self.priceNumerator = (try? container.decode(Int.self, forKey: SportRadarModels.PlacedBetLeg.CodingKeys.priceNumerator)) ?? 0
+            self.priceDenominator = (try? container.decode(Int.self, forKey: SportRadarModels.PlacedBetLeg.CodingKeys.priceDenominator)) ?? 0
             self.priceType = try container.decode(String.self, forKey: SportRadarModels.PlacedBetLeg.CodingKeys.priceType)
         }
 

@@ -66,13 +66,16 @@ class MyTicketCellViewModel {
         }
 
         if ticket.type?.lowercased() == "single" {
-            self.title = localized("single")+" - \(ticket.localizedBetStatus)"
+            self.title = localized("single")+" - \(ticket.localizedBetStatus.capitalized)"
         }
         else if ticket.type?.lowercased() == "multiple" {
-            self.title = localized("multiple")+" - \(ticket.localizedBetStatus)"
+            self.title = localized("multiple")+" - \(ticket.localizedBetStatus.capitalized)"
         }
         else if ticket.type?.lowercased() == "system" {
-            self.title = localized("system")+" - \(ticket.systemBetType?.capitalized ?? "") - \(ticket.localizedBetStatus)"
+            self.title = localized("system")+" - \(ticket.systemBetType?.capitalized ?? "") - \(ticket.localizedBetStatus.capitalized)"
+        }
+        else if ticket.type?.lowercased() == "accumulator" {
+            self.title = localized("accumulator")+" - \(ticket.localizedBetStatus.capitalized)"
         }
         else {
             self.title = String([ticket.type, ticket.localizedBetStatus]

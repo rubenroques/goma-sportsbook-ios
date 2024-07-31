@@ -140,14 +140,17 @@ class BetSelectionStateTableViewCell: UITableViewCell {
             .store(in: &cancellables)
 
         if viewModel.ticket.type == "SINGLE" {
-            self.titleLabel.text = localized("single")+" - \(betStatusText(forCode: viewModel.ticket.status?.uppercased() ?? "-"))"
+            self.titleLabel.text = localized("single")+" - \(betStatusText(forCode: viewModel.ticket.status?.uppercased() ?? "-").capitalized)"
         }
         else if viewModel.ticket.type == "MULTIPLE" {
-            self.titleLabel.text = localized("multiple")+" - \(betStatusText(forCode: viewModel.ticket.status?.uppercased() ?? "-"))"
+            self.titleLabel.text = localized("multiple")+" - \(betStatusText(forCode: viewModel.ticket.status?.uppercased() ?? "-").capitalized)"
         }
         else if viewModel.ticket.type == "SYSTEM" {
             self.titleLabel.text = localized("system") +
-            " - \(viewModel.ticket.systemBetType?.capitalized ?? "") - \(betStatusText(forCode: viewModel.ticket.status?.uppercased() ?? "-"))"
+            " - \(viewModel.ticket.systemBetType?.capitalized ?? "") - \(betStatusText(forCode: viewModel.ticket.status?.uppercased() ?? "-").capitalized)"
+        }
+        else if viewModel.ticket.type?.uppercased() == "ACCUMULATOR" {
+            self.titleLabel.text = localized("accumulator")+" - \(viewModel.ticket.localizedBetStatus.capitalized)"
         }
         else {
             self.titleLabel.text = String([viewModel.ticket.type, viewModel.ticket.localizedBetStatus]

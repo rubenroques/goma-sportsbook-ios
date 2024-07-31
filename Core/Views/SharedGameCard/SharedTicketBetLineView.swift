@@ -91,11 +91,12 @@ class SharedTicketBetLineView: UIView {
         // Odds
         self.oddsTitleLabel.text = localized("odd")
 
-        if let oddValue = self.betHistoryEntrySelection.priceValue {
-//            let oddString = OddConverter.stringForValue(oddValue, format: UserDefaults.standard.userOddsFormat)
+        if let oddValue = self.betHistoryEntrySelection.priceValue, !oddValue.isNaN {
             let oddString = OddFormatter.formatOdd(withValue: oddValue)
-
             self.oddsValueLabel.text = oddString
+        }
+        else {
+            self.oddsValueLabel.text = " - "
         }
 
         // Sport Icon

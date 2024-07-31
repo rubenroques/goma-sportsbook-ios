@@ -68,8 +68,6 @@ class BetslipManager: NSObject {
         }
         self.bettingTicketsDictionaryPublisher.send(cachedBetslipTicketsDictionary)
         
-        
-        
         Env.servicesProvider.eventsConnectionStatePublisher
             .filter({ $0 == .connected })
             .receive(on: DispatchQueue.main)
@@ -78,7 +76,7 @@ class BetslipManager: NSObject {
             }, receiveValue: { [weak self] _ in
                 self?.reconnectBettingTicketsUpdates()
             })
-            .store(in: &cancellables)
+            .store(in: &self.cancellables)
         
         self.bettingTicketsDictionaryPublisher
             .map({ dictionary -> [BettingTicket] in
@@ -87,15 +85,36 @@ class BetslipManager: NSObject {
             .sink { [weak self] tickets in
                 self?.bettingTicketsPublisher.send(tickets)
             }
-            .store(in: &cancellables)
+            .store(in: &self.cancellables)
+        
+        self.bettingTicketsPublisher
+            .removeDuplicates()
+            .sink { tickets in
+                UserDefaults.standard.cachedBetslipTickets = tickets
+            }
+            .store(in: &self.cancellables)
         
         self.bettingTicketsPublisher
             .removeDuplicates()
             .sink { [weak self] tickets in
-                UserDefaults.standard.cachedBetslipTickets = tickets
                 self?.refreshBetBuilderPotentialReturn()
             }
             .store(in: &cancellables)
+
+//        self.bettingTicketsPublisher
+//            .removeDuplicates()
+//            .withPrevious([])
+//            .sink { [weak self] previousTickets, currentTickets  in
+//                if previousTickets.count > currentTickets.count {
+//                    // Is removing
+//                    print("MixMatchDebug: is removing tickets")
+//                }
+//                else if previousTickets.count < currentTickets.count {
+//                    print("MixMatchDebug: is adding tickets")
+//                    self?.refreshBetBuilderPotentialReturn()
+//                }
+//            }
+//            .store(in: &self.cancellables)
         
         self.bettingTicketsPublisher
             .removeDuplicates()
@@ -103,7 +122,7 @@ class BetslipManager: NSObject {
             .sink(receiveValue: { [weak self] bettingTickets in
                 self?.requestAllowedBetTypes(withBettingTickets: bettingTickets)
             })
-            .store(in: &cancellables)
+            .store(in: &self.cancellables)
         
         // -
         Publishers.CombineLatest(Env.servicesProvider.eventsConnectionStatePublisher.removeDuplicates(),
@@ -388,7 +407,7 @@ extension BetslipManager {
                 self?.systemTypesAvailablePublisher.send(.loaded(systemBetTypes))
                 
             }
-            .store(in: &cancellables)
+            .store(in: &self.cancellables)
     }
     
     func placeMultipleBet(withBettingTickets bettingTickets: [BettingTicket]) {
@@ -1101,12 +1120,11 @@ extension BetslipManager {
                         ServiceProviderModelMapper.betlipPlacedEntry(fromPlacedBetLeg: $0)
                     })
                     
-                    
                     let response = BetslipPlaceBetResponse(betId: placedBetEntry.identifier,
                                                            betSucceed: true,
                                                            totalPriceValue: totalPriceValue,
                                                            amount: placedBetEntry.totalStake,
-                                                           type: "",
+                                                           type: placedBetEntry.type ?? "",
                                                            maxWinning: placedBetEntry.potentialReturn,
                                                            selections: betslipPlaceEntries, betslipId: placedBetsResponse.identifier)
                     
@@ -1126,125 +1144,4 @@ extension BetslipManager {
     }
     
     
-}
-
-enum BetslipErrorType: Error {
-    case emptyBetslip
-    case betPlacementError
-    case potentialReturn
-    case betPlacementDetailedError(message: String)
-    case betNeedsUserConfirmation(betDetails: PlacedBetsResponse)
-    case forbiddenRequest
-    case invalidStake
-    case insufficientSelections
-    case noValidSelectionsFound
-    case none
-}
-
-struct BetslipError {
-    var errorMessage: String
-    var errorType: BetslipErrorType
-    
-    init(errorMessage: String = "", errorType: BetslipErrorType = .none) {
-        self.errorMessage = errorMessage
-        self.errorType = errorType
-    }
-    
-}
-
-struct BetPlacedDetails {
-    var response: BetslipPlaceBetResponse
-}
-
-struct BetPotencialReturn: Codable {
-    var potentialReturn: Double
-    var totalStake: Double
-    var numberOfBets: Int
-    var totalOdd: Double
-}
-
-enum BetBuilderCalculateResponse {
-    case valid(potentialReturn: BetPotencialReturn, tickets: [BettingTicket])
-    case invalid(tickets: [BettingTicket])
-}
-
-class BetBuilderProcessor: Codable {
-    
-    private var invalidTicketsSubject: CurrentValueSubject<[BettingTicket], Never> = .init([])
-    
-    var calculatedOddForValidTickets: Double = 0.0
-    
-    var validTickets: [BettingTicket] = []
-    var ignoredTickets: [BettingTicket] = []
-    
-    var invalidTicketsPublisher: AnyPublisher<[BettingTicket], Never> {
-        return self.invalidTicketsSubject.eraseToAnyPublisher()
-    }
-    
-    var ticketsToIgnore: [BettingTicket] {
-        return self.invalidTicketsSubject.value
-    }
-    
-    var exposedValidTickets: [BettingTicket] {
-        return validTickets
-    }
-    
-    var hasValidTickets: Bool {
-        return self.validTickets.isNotEmpty
-    }
-    
-    
-    enum CodingKeys: String, CodingKey {
-        case calculatedOddForValidTickets
-        case validTickets
-        case ignoredTickets
-        case invalidTicketsSubjectValue
-    }
-    
-    init() {
-        
-    }
-    
-    required init(from decoder: Decoder) throws {
-        let container = try decoder.container(keyedBy: CodingKeys.self)
-        self.calculatedOddForValidTickets = try container.decode(Double.self, forKey: .calculatedOddForValidTickets)
-        self.validTickets = try container.decode([BettingTicket].self, forKey: .validTickets)
-        self.ignoredTickets = try container.decode([BettingTicket].self, forKey: .ignoredTickets)
-        let invalidTickets = try container.decode([BettingTicket].self, forKey: .invalidTicketsSubjectValue)
-        self.invalidTicketsSubject = CurrentValueSubject<[BettingTicket], Never>(invalidTickets)
-    }
-    
-    func encode(to encoder: Encoder) throws {
-        var container = encoder.container(keyedBy: CodingKeys.self)
-        try container.encode(self.calculatedOddForValidTickets, forKey: .calculatedOddForValidTickets)
-        try container.encode(self.validTickets, forKey: .validTickets)
-        try container.encode(self.ignoredTickets, forKey: .ignoredTickets)
-        try container.encode(self.invalidTicketsSubject.value, forKey: .invalidTicketsSubjectValue)
-    }
-    
-    func resetProcessor() {
-        self.calculatedOddForValidTickets = 0.0
-        self.validTickets = []
-        self.invalidTicketsSubject.send([])
-        self.ignoredTickets = []
-    }
-    
-    func processValidTickets(_ tickets: [BettingTicket]) {
-        self.validTickets = tickets
-        self.processDifferences()
-    }
-    
-    func processInvalidTickets(_ tickets: [BettingTicket]) {
-        // Filter out any tickets that are in validTickets
-        self.invalidTicketsSubject.send( tickets.filter { !validTickets.contains($0) } )
-        self.processDifferences()
-    }
-    
-    private func processDifferences() {
-        let validTicketSet = Set(self.validTickets)
-        let invalidTicketSet = Set(self.invalidTicketsSubject.value)
-        
-        // Tickets that are in invalidTickets but not in validTickets should be ignored
-        self.ignoredTickets = invalidTicketSet.subtracting(validTicketSet).sorted(by: { $0.id < $1.id })
-    }
 }

@@ -4206,6 +4206,22 @@
 		45D64AF62B6002F70092DA8E /* BoostedBetConfirmationView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 45D64AF02B6002F70092DA8E /* BoostedBetConfirmationView.swift */; };
 		45D64AF72B6002F70092DA8E /* BoostedBetConfirmationView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 45D64AF02B6002F70092DA8E /* BoostedBetConfirmationView.swift */; };
 		45D64AF82B6002F70092DA8E /* BoostedBetConfirmationView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 45D64AF02B6002F70092DA8E /* BoostedBetConfirmationView.swift */; };
+		45D881EA2C5A4A4C003E1360 /* BetBuilder.swift in Sources */ = {isa = PBXBuildFile; fileRef = 45D881E92C5A4A4C003E1360 /* BetBuilder.swift */; };
+		45D881EB2C5A4A4C003E1360 /* BetBuilder.swift in Sources */ = {isa = PBXBuildFile; fileRef = 45D881E92C5A4A4C003E1360 /* BetBuilder.swift */; };
+		45D881EC2C5A4A4C003E1360 /* BetBuilder.swift in Sources */ = {isa = PBXBuildFile; fileRef = 45D881E92C5A4A4C003E1360 /* BetBuilder.swift */; };
+		45D881ED2C5A4A4C003E1360 /* BetBuilder.swift in Sources */ = {isa = PBXBuildFile; fileRef = 45D881E92C5A4A4C003E1360 /* BetBuilder.swift */; };
+		45D881EE2C5A4A4C003E1360 /* BetBuilder.swift in Sources */ = {isa = PBXBuildFile; fileRef = 45D881E92C5A4A4C003E1360 /* BetBuilder.swift */; };
+		45D881EF2C5A4A4C003E1360 /* BetBuilder.swift in Sources */ = {isa = PBXBuildFile; fileRef = 45D881E92C5A4A4C003E1360 /* BetBuilder.swift */; };
+		45D881F02C5A4A4C003E1360 /* BetBuilder.swift in Sources */ = {isa = PBXBuildFile; fileRef = 45D881E92C5A4A4C003E1360 /* BetBuilder.swift */; };
+		45D881F12C5A4A4C003E1360 /* BetBuilder.swift in Sources */ = {isa = PBXBuildFile; fileRef = 45D881E92C5A4A4C003E1360 /* BetBuilder.swift */; };
+		45D881F32C5A4A6F003E1360 /* BetslipModels.swift in Sources */ = {isa = PBXBuildFile; fileRef = 45D881F22C5A4A6F003E1360 /* BetslipModels.swift */; };
+		45D881F42C5A4A6F003E1360 /* BetslipModels.swift in Sources */ = {isa = PBXBuildFile; fileRef = 45D881F22C5A4A6F003E1360 /* BetslipModels.swift */; };
+		45D881F52C5A4A6F003E1360 /* BetslipModels.swift in Sources */ = {isa = PBXBuildFile; fileRef = 45D881F22C5A4A6F003E1360 /* BetslipModels.swift */; };
+		45D881F62C5A4A6F003E1360 /* BetslipModels.swift in Sources */ = {isa = PBXBuildFile; fileRef = 45D881F22C5A4A6F003E1360 /* BetslipModels.swift */; };
+		45D881F72C5A4A6F003E1360 /* BetslipModels.swift in Sources */ = {isa = PBXBuildFile; fileRef = 45D881F22C5A4A6F003E1360 /* BetslipModels.swift */; };
+		45D881F82C5A4A6F003E1360 /* BetslipModels.swift in Sources */ = {isa = PBXBuildFile; fileRef = 45D881F22C5A4A6F003E1360 /* BetslipModels.swift */; };
+		45D881F92C5A4A6F003E1360 /* BetslipModels.swift in Sources */ = {isa = PBXBuildFile; fileRef = 45D881F22C5A4A6F003E1360 /* BetslipModels.swift */; };
+		45D881FA2C5A4A6F003E1360 /* BetslipModels.swift in Sources */ = {isa = PBXBuildFile; fileRef = 45D881F22C5A4A6F003E1360 /* BetslipModels.swift */; };
 		45DB8D9C2A66D9480018C591 /* DebugUserDefaults.swift in Sources */ = {isa = PBXBuildFile; fileRef = 45DB8D9B2A66D9480018C591 /* DebugUserDefaults.swift */; };
 		45DB8D9D2A66D9480018C591 /* DebugUserDefaults.swift in Sources */ = {isa = PBXBuildFile; fileRef = 45DB8D9B2A66D9480018C591 /* DebugUserDefaults.swift */; };
 		45DB8D9E2A66D9480018C591 /* DebugUserDefaults.swift in Sources */ = {isa = PBXBuildFile; fileRef = 45DB8D9B2A66D9480018C591 /* DebugUserDefaults.swift */; };
@@ -7587,6 +7603,8 @@
 		45D728D62715F6DC00EFE04D /* AppModels.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppModels.swift; sourceTree = "<group>"; };
 		45D871BD270F5B5500F5B87B /* Aggregator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Aggregator.swift; sourceTree = "<group>"; };
 		45D871CB27108F5900F5B87B /* CountryFlags.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = CountryFlags.xcassets; sourceTree = "<group>"; };
+		45D881E92C5A4A4C003E1360 /* BetBuilder.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BetBuilder.swift; sourceTree = "<group>"; };
+		45D881F22C5A4A6F003E1360 /* BetslipModels.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BetslipModels.swift; sourceTree = "<group>"; };
 		45D9CBDD270F34D800B8C321 /* EveryMatrixModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EveryMatrixModel.swift; sourceTree = "<group>"; };
 		45D9CBE0270F3C8400B8C321 /* AppSession.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppSession.swift; sourceTree = "<group>"; };
 		45DB8D9B2A66D9480018C591 /* DebugUserDefaults.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DebugUserDefaults.swift; sourceTree = "<group>"; };
@@ -10037,6 +10055,8 @@
 			children = (
 				45D728D62715F6DC00EFE04D /* AppModels.swift */,
 				454E0AD32735709E00794E0C /* BettingTicket.swift */,
+				45D881E92C5A4A4C003E1360 /* BetBuilder.swift */,
+				45D881F22C5A4A6F003E1360 /* BetslipModels.swift */,
 				45711906294B9A27000395F0 /* BetType.swift */,
 				451ABD6529CB3B1D0062641F /* Match.swift */,
 				459EF2782BBD9FA60098A7F6 /* Scores.swift */,
@@ -14255,6 +14275,7 @@
 				459874B92A28D272008C0ADE /* CardsCollectionViewLayout.swift in Sources */,
 				455897EA2A97FCAD00E39598 /* RePlayFeatureHelper.swift in Sources */,
 				450B7A3928F58574009229E3 /* BonusActiveCellViewModel.swift in Sources */,
+				45D881EC2C5A4A4C003E1360 /* BetBuilder.swift in Sources */,
 				658A4CB82B9F6C4800F73772 /* Referrals.swift in Sources */,
 				450B7A3A28F58574009229E3 /* CompetitionFilterHeaderView.swift in Sources */,
 				450B7A3B28F58574009229E3 /* CashoutSubmission.swift in Sources */,
@@ -14279,6 +14300,7 @@
 				450B7A4B28F58574009229E3 /* CompetitionDetailsViewModel.swift in Sources */,
 				A9D533FA2A49E4FB0013ACF5 /* CashbackLearnMoreView.swift in Sources */,
 				450B7A4C28F58574009229E3 /* SportsbookTarget.swift in Sources */,
+				45D881F52C5A4A6F003E1360 /* BetslipModels.swift in Sources */,
 				A92548242A2A466E0056F832 /* RibDocsViewController.swift in Sources */,
 				450B7A4D28F58574009229E3 /* FailableDecodable.swift in Sources */,
 				450B7A4E28F58574009229E3 /* UserProfileInfoViewModel.swift in Sources */,
@@ -14618,6 +14640,7 @@
 				A9DF8E4128E5A5D80083BF56 /* TipsSettingsViewController.swift in Sources */,
 				45E8E2A128C8A79C00A09B02 /* RankingTypeTableHeaderView.swift in Sources */,
 				457CBA38282D27D000ED0F00 /* CollapsibleGroupView.swift in Sources */,
+				45D881F92C5A4A6F003E1360 /* BetslipModels.swift in Sources */,
 				457CBA39282D27D000ED0F00 /* BetOutcome.swift in Sources */,
 				45B74AD5292BFE3500F2076C /* ServiceProviderType.swift in Sources */,
 				457CBA3A282D27D000ED0F00 /* UIImageView+Extensions.swift in Sources */,
@@ -14830,6 +14853,7 @@
 				457CBAC4282D27D000ED0F00 /* NewGroupViewController.swift in Sources */,
 				457CBAC7282D27D000ED0F00 /* ChatNotificationsViewController.swift in Sources */,
 				A9C1C0AB28747FC600E9D6AC /* SelectChatroomTableViewCell.swift in Sources */,
+				45D881F02C5A4A4C003E1360 /* BetBuilder.swift in Sources */,
 				457CBAC8282D27D000ED0F00 /* BetslipErrorView.swift in Sources */,
 				457CBAC9282D27D000ED0F00 /* CompetitionSearchTableViewCell.swift in Sources */,
 				457CBACA282D27D000ED0F00 /* CompetitionWidgetCollectionViewCell.swift in Sources */,
@@ -15599,6 +15623,7 @@
 				457CBDA2282D2CD100ED0F00 /* MaintenanceViewController.swift in Sources */,
 				457CBDA3282D2CD100ED0F00 /* FriendStatusCellViewModel.swift in Sources */,
 				45C10F7528772DA700037BBE /* UIView+Shift.swift in Sources */,
+				45D881F12C5A4A4C003E1360 /* BetBuilder.swift in Sources */,
 				A9A1B2E72A14EC3300F7A8ED /* DepositSuccessViewController.swift in Sources */,
 				4566339C29DDD44C00C4F1A9 /* AnonymousSideMenuViewController.swift in Sources */,
 				457CBDA4282D2CD100ED0F00 /* FriendStatusTableViewCell.swift in Sources */,
@@ -15796,6 +15821,7 @@
 				459EF2892BBF39610098A7F6 /* FadingView.swift in Sources */,
 				457CBE2C282D2CD100ED0F00 /* CompetitionsFiltersView.swift in Sources */,
 				A9BA04152A3099FA007880FC /* ManualUploadDocumentsViewController.swift in Sources */,
+				45D881FA2C5A4A6F003E1360 /* BetslipModels.swift in Sources */,
 				457CBE2D282D2CD100ED0F00 /* PreviewChatTableViewCell.swift in Sources */,
 				A90C372629C35FD0007B8AEC /* WithdrawSuccessViewController.swift in Sources */,
 				655E20112B28A14700C95337 /* TextSectionView.swift in Sources */,
@@ -16481,6 +16507,7 @@
 				459874BA2A28D272008C0ADE /* CardsCollectionViewLayout.swift in Sources */,
 				455897EB2A97FCAD00E39598 /* RePlayFeatureHelper.swift in Sources */,
 				4589C8FA282024E400243547 /* CompetitionFilterHeaderView.swift in Sources */,
+				45D881ED2C5A4A4C003E1360 /* BetBuilder.swift in Sources */,
 				658A4CB92B9F6C4800F73772 /* Referrals.swift in Sources */,
 				4589C8FB282024E400243547 /* CashoutSubmission.swift in Sources */,
 				4589C8FC282024E400243547 /* ProfileLimitsManagementViewModel.swift in Sources */,
@@ -16505,6 +16532,7 @@
 				4589C908282024E400243547 /* SportsbookTarget.swift in Sources */,
 				A9D533FB2A49E4FB0013ACF5 /* CashbackLearnMoreView.swift in Sources */,
 				4589C909282024E400243547 /* FailableDecodable.swift in Sources */,
+				45D881F62C5A4A6F003E1360 /* BetslipModels.swift in Sources */,
 				A92548252A2A466E0056F832 /* RibDocsViewController.swift in Sources */,
 				A9DF8E2428E45C300083BF56 /* UserProfileInfoViewModel.swift in Sources */,
 				4589C90A282024E400243547 /* FilterLineView.swift in Sources */,
@@ -17184,6 +17212,7 @@
 				45A33258298976BA008181E9 /* OutrightMarketDetailsViewModel.swift in Sources */,
 				459874B82A28D272008C0ADE /* CardsCollectionViewLayout.swift in Sources */,
 				455897E92A97FCAD00E39598 /* RePlayFeatureHelper.swift in Sources */,
+				45D881EA2C5A4A4C003E1360 /* BetBuilder.swift in Sources */,
 				658A4CB62B9F6C4800F73772 /* Referrals.swift in Sources */,
 				45A33259298976BA008181E9 /* BonusActiveCellViewModel.swift in Sources */,
 				45A3325A298976BA008181E9 /* CompetitionFilterHeaderView.swift in Sources */,
@@ -17208,6 +17237,7 @@
 				45A3326A298976BA008181E9 /* UserNotificationTableViewCell.swift in Sources */,
 				45A3326B298976BA008181E9 /* CompetitionDetailsViewModel.swift in Sources */,
 				A9D533F92A49E4FB0013ACF5 /* CashbackLearnMoreView.swift in Sources */,
+				45D881F32C5A4A6F003E1360 /* BetslipModels.swift in Sources */,
 				45A3326C298976BA008181E9 /* SportsbookTarget.swift in Sources */,
 				A92548232A2A466E0056F832 /* RibDocsViewController.swift in Sources */,
 				45A3326D298976BA008181E9 /* FailableDecodable.swift in Sources */,
@@ -17309,6 +17339,7 @@
 				A9A7B52A29DDBED900FB22A8 /* BonusTypeMapper.swift in Sources */,
 				45A6BBC328246A7400D9B416 /* TabularViewDataSource.swift in Sources */,
 				A9D533FD2A49E4FB0013ACF5 /* CashbackLearnMoreView.swift in Sources */,
+				45D881F82C5A4A6F003E1360 /* BetslipModels.swift in Sources */,
 				A925480B2A28E0AA0056F832 /* ListTypeIconCollectionViewCell.swift in Sources */,
 				45A6BBC428246A7400D9B416 /* SwiftyJSON.swift in Sources */,
 				45C10F7F28772DA700037BBE /* NSObject+Shift.swift in Sources */,
@@ -17512,6 +17543,7 @@
 				45A6BC5328246A7500D9B416 /* MatchWidgetCellViewModel.swift in Sources */,
 				45A6BC5428246A7500D9B416 /* BetSuggestedCollectionViewCell.swift in Sources */,
 				A9A43CAA2A4C9368008FB399 /* CompetitionHistoryCollectionViewCell.swift in Sources */,
+				45D881EF2C5A4A4C003E1360 /* BetBuilder.swift in Sources */,
 				45B6E1F9283E3EEF001B570C /* EditGroupViewModel.swift in Sources */,
 				A9C18AA328661975009F0063 /* ConversationBetSelectionRootViewController.swift in Sources */,
 				45A6BC5528246A7500D9B416 /* MultipleBettingTicketTableViewCell.swift in Sources */,
@@ -18589,6 +18621,7 @@
 				45F6BD0F2AB3732C00C81DE1 /* OutrightMarketDetailsViewModel.swift in Sources */,
 				45F6BD102AB3732C00C81DE1 /* CardsCollectionViewLayout.swift in Sources */,
 				45F6BD112AB3732C00C81DE1 /* RePlayFeatureHelper.swift in Sources */,
+				45D881EB2C5A4A4C003E1360 /* BetBuilder.swift in Sources */,
 				658A4CB72B9F6C4800F73772 /* Referrals.swift in Sources */,
 				45F6BD122AB3732C00C81DE1 /* BonusActiveCellViewModel.swift in Sources */,
 				45F6BD132AB3732C00C81DE1 /* CompetitionFilterHeaderView.swift in Sources */,
@@ -18613,6 +18646,7 @@
 				45F6BD252AB3732C00C81DE1 /* UserNotificationTableViewCell.swift in Sources */,
 				45F6BD262AB3732C00C81DE1 /* CompetitionDetailsViewModel.swift in Sources */,
 				45F6BD272AB3732C00C81DE1 /* CashbackLearnMoreView.swift in Sources */,
+				45D881F42C5A4A6F003E1360 /* BetslipModels.swift in Sources */,
 				45F6BD282AB3732C00C81DE1 /* SportsbookTarget.swift in Sources */,
 				45F6BD292AB3732C00C81DE1 /* RibDocsViewController.swift in Sources */,
 				45F6BD2A2AB3732C00C81DE1 /* FailableDecodable.swift in Sources */,
@@ -19197,6 +19231,7 @@
 				A9A43CA02A4B36D0008FB399 /* DocumentsRootViewModel.swift in Sources */,
 				A9C3423628F9A74A0055360B /* RankingsListViewModel.swift in Sources */,
 				A9C3423728F9A74A0055360B /* TabularBarDataSource.swift in Sources */,
+				45D881F72C5A4A6F003E1360 /* BetslipModels.swift in Sources */,
 				A9C3423828F9A74A0055360B /* SportSectionHeaderView.swift in Sources */,
 				A9958C7A2970641D001474E2 /* UploadDocumentTableViewCell.swift in Sources */,
 				452B9D222C1890160032363F /* SystemBettingTicketDataSource.swift in Sources */,
@@ -19393,6 +19428,7 @@
 				A9C342DC28F9A74A0055360B /* OutrightMarketDetailsStore.swift in Sources */,
 				A9C342DD28F9A74A0055360B /* RecentSearchTableViewCell.swift in Sources */,
 				454F73B8299152C100437460 /* GradientView.swift in Sources */,
+				45D881EE2C5A4A4C003E1360 /* BetBuilder.swift in Sources */,
 				A96FAEF82982A06B00A0751F /* PaymentsViewController.swift in Sources */,
 				A9C342DE28F9A74A0055360B /* TestsViewController.swift in Sources */,
 				A9C342E028F9A74A0055360B /* Odd.swift in Sources */,
@@ -19889,7 +19925,7 @@
 				CODE_SIGN_IDENTITY = "Apple Development";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				CODE_SIGN_STYLE = Manual;
-				CURRENT_PROJECT_VERSION = 102401;
+				CURRENT_PROJECT_VERSION = 102402;
 				DEVELOPMENT_TEAM = QN2DYX5K4M;
 				"DEVELOPMENT_TEAM[sdk=iphoneos*]" = QN2DYX5K4M;
 				INFOPLIST_FILE = "$(SRCROOT)/Clients/Betsson/Misc-PROD/Betsson-PROD-Info.plist";
@@ -19922,7 +19958,7 @@
 				CODE_SIGN_IDENTITY = "Apple Distribution";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution";
 				CODE_SIGN_STYLE = Manual;
-				CURRENT_PROJECT_VERSION = 102401;
+				CURRENT_PROJECT_VERSION = 102402;
 				DEVELOPMENT_TEAM = QN2DYX5K4M;
 				"DEVELOPMENT_TEAM[sdk=iphoneos*]" = QN2DYX5K4M;
 				INFOPLIST_FILE = "$(SRCROOT)/Clients/Betsson/Misc-PROD/Betsson-PROD-Info.plist";
@@ -20012,7 +20048,7 @@
 				CODE_SIGN_IDENTITY = "Apple Development";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				CODE_SIGN_STYLE = Manual;
-				CURRENT_PROJECT_VERSION = 102500;
+				CURRENT_PROJECT_VERSION = 102501;
 				DEVELOPMENT_TEAM = 422GNXXZJR;
 				"DEVELOPMENT_TEAM[sdk=iphoneos*]" = 422GNXXZJR;
 				INFOPLIST_FILE = "$(SRCROOT)/Clients/Betsson/Misc-UAT/Betsson-UAT-Info.plist";
@@ -20044,7 +20080,7 @@
 				CODE_SIGN_IDENTITY = "Apple Distribution";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution";
 				CODE_SIGN_STYLE = Manual;
-				CURRENT_PROJECT_VERSION = 102500;
+				CURRENT_PROJECT_VERSION = 102501;
 				DEVELOPMENT_TEAM = 422GNXXZJR;
 				"DEVELOPMENT_TEAM[sdk=iphoneos*]" = 422GNXXZJR;
 				INFOPLIST_FILE = "$(SRCROOT)/Clients/Betsson/Misc-UAT/Betsson-UAT-Info.plist";

@@ -138,8 +138,6 @@ class BetSubmissionSuccessViewController: UIViewController {
 
         let checkboxTap = UITapGestureRecognizer(target: self, action: #selector(didTapCheckbox))
         self.checkboxView.addGestureRecognizer(checkboxTap)
-
-//        self.loadBetTickets()
         
         self.configureBetEntries()
 
@@ -289,20 +287,32 @@ class BetSubmissionSuccessViewController: UIViewController {
                     
                     let filteredBettingTickets = bettingTickets.filter { selectionIds.contains($0.id) }
 
-                    let mappedBetHistoryEntrySelection = filteredBettingTickets.map {
-                        ServiceProviderModelMapper.betHistoryEntrySelection(fromBettingTicket: $0)
+                    let mappedBetHistoryEntrySelection = filteredBettingTickets.map { localTicket in
+                        var betHistoryEntrySelection = ServiceProviderModelMapper.betHistoryEntrySelection(fromBettingTicket: localTicket)
+                        if let matchingServerSelection = betPlacedSelections.first(where: { betslipPlaceEntry in
+                            betslipPlaceEntry.id == localTicket.id
+                        }) {
+                            betHistoryEntrySelection.priceValue = matchingServerSelection.priceValue
+                        }
+                        // We need to use the odd that the server return for each selection in the ticket
+                        return betHistoryEntrySelection
                     }
                     
-                    var betslipId: Int? = nil
+                    var betslipId: Int?
                     
                     if let placedBetslipId = betPlacedDetails.response.betslipId {
                         betslipId = Int(placedBetslipId)
                     }
                     
+                    var betType = betPlacedDetails.response.type ?? ""
+                    if betType.uppercased() == "A" {
+                        betType = "accumulator"
+                    }
+                    
                     let bettingTicketHistory = BetHistoryEntry(betId: betPlacedDetails.response.betId ?? "",
                                                                selections: mappedBetHistoryEntrySelection,
-                                                               type: betPlacedDetails.response.type,
-                                                               systemBetType: betPlacedDetails.response.type,
+                                                               type: betType,
+                                                               systemBetType: betType,
                                                                amount: betPlacedDetails.response.amount,
                                                                totalBetAmount: betPlacedDetails.response.amount,
                                                                freeBetAmount: nil,
@@ -393,36 +403,6 @@ class BetSubmissionSuccessViewController: UIViewController {
             .map { (bet: ServicesProvider.Bet) -> BetHistoryEntry in
                 return ServiceProviderModelMapper.betHistoryEntry(fromServiceProviderBet: bet)
             }.eraseToAnyPublisher()
-    }
-
-    private func loadBetTickets() {
-
-        self.isLoading = true
-
-        Env.servicesProvider.getOpenBetsHistory(pageIndex: 0)
-            .map(ServiceProviderModelMapper.bettingHistory(fromServiceProviderBettingHistory:))
-            .map({ [weak self] betHistoryResponse -> [BetHistoryEntry] in
-                var betHistoryEntriesToShow: [BetHistoryEntry] = []
-
-                let submitedBetsIds: [String] = (self?.betPlacedDetailsArray ?? []).compactMap(\.response.betId)
-                let openBetsArray: [BetHistoryEntry] = betHistoryResponse.betList ?? []
-                for openBet in openBetsArray {
-                    if submitedBetsIds.contains(openBet.betId) {
-                        betHistoryEntriesToShow.append(openBet)
-                    }
-                }
-
-                return betHistoryEntriesToShow
-            })
-            .receive(on: DispatchQueue.main)
-            .sink { _ in
-
-            } receiveValue: { [weak self] betHistoryEntries in
-                self?.configureBetCards(withBetHistoryEntries: betHistoryEntries)
-                self?.isLoading = false
-            }
-            .store(in: &self.cancellables)
-
     }
 
     private func configureBetCards(withBetHistoryEntries betHistoryEntries: [BetHistoryEntry]) {

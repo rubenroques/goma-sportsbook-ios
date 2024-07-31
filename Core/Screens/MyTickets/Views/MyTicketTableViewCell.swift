@@ -480,13 +480,16 @@ class MyTicketTableViewCell: UITableViewCell {
 
         //
         if betHistoryEntry.type?.lowercased() == "single" {
-            self.titleLabel.text = localized("single")+" - \(betHistoryEntry.localizedBetStatus)"
+            self.titleLabel.text = localized("single")+" - \(betHistoryEntry.localizedBetStatus.capitalized)"
         }
         else if betHistoryEntry.type?.lowercased() == "multiple" {
-            self.titleLabel.text = localized("multiple")+" - \(betHistoryEntry.localizedBetStatus)"
+            self.titleLabel.text = localized("multiple")+" - \(betHistoryEntry.localizedBetStatus.capitalized)"
         }
         else if betHistoryEntry.type?.lowercased() == "system" {
-            self.titleLabel.text = localized("system")+" - \(betHistoryEntry.systemBetType?.capitalized ?? "") - \(betHistoryEntry.localizedBetStatus)"
+            self.titleLabel.text = localized("system")+" - \(betHistoryEntry.systemBetType?.capitalized ?? "") - \(betHistoryEntry.localizedBetStatus.capitalized)"
+        }
+        else if betHistoryEntry.type?.lowercased() == "accumulator" {
+            self.titleLabel.text = localized("accumulator")+" - \(betHistoryEntry.localizedBetStatus.capitalized)"
         }
         else {
             self.titleLabel.text = String([betHistoryEntry.type, betHistoryEntry.localizedBetStatus]

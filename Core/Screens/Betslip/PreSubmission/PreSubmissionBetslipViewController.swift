@@ -580,6 +580,10 @@ class PreSubmissionBetslipViewController: UIViewController {
         self.betTypeSegmentControlView?.disableAll()
         
         //
+        // Default cashback/replay bar base view
+        self.cashbackBaseView.isHidden = true
+        
+        //
         //  Single bet cell amount sync
         //
         singleBettingTicketDataSource.didUpdateBettingValueAction = { [weak self] id, value in
@@ -1551,10 +1555,14 @@ class PreSubmissionBetslipViewController: UIViewController {
             .sink { completion in
                 print("userSessionStore userCashbackBalance completion: \(completion)")
             } receiveValue: { [weak self] value in
-                if let cashbackValue = value,
-                   let formattedCashbackString = CurrencyFormater.defaultFormat.string(from: NSNumber(value: cashbackValue)) {
+                var isBetBuilderActive = self?.listTypePublisher.value == .betBuilder
+                
+                if
+                    isBetBuilderActive,
+                    let cashbackValue = value,
+                    let formattedCashbackString = CurrencyFormater.defaultFormat.string(from: NSNumber(value: cashbackValue)) 
+                {
                     self?.cashbackValueLabel.text = formattedCashbackString
-
                     if cashbackValue <= 0 {
                         self?.cashbackBaseView.isHidden = true
                     }

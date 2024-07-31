@@ -94,13 +94,16 @@ class BetSelectionTableViewCell: UITableViewCell {
         self.viewModel = viewModel
 
         if viewModel.ticket.type?.uppercased() == "SINGLE" {
-            self.titleLabel.text = localized("single")+" - \(viewModel.ticket.localizedBetStatus)"
+            self.titleLabel.text = localized("single")+" - \(viewModel.ticket.localizedBetStatus.capitalized)"
         }
         else if viewModel.ticket.type?.uppercased() == "MULTIPLE" {
-            self.titleLabel.text = localized("multiple")+" - \(viewModel.ticket.localizedBetStatus)"
+            self.titleLabel.text = localized("multiple")+" - \(viewModel.ticket.localizedBetStatus.capitalized)"
         }
         else if viewModel.ticket.type?.uppercased() == "SYSTEM" {
-            self.titleLabel.text = localized("system") + " - \(viewModel.ticket.systemBetType?.capitalized ?? "") - \(viewModel.ticket.localizedBetStatus)"
+            self.titleLabel.text = localized("system") + " - \(viewModel.ticket.systemBetType?.capitalized ?? "") - \(viewModel.ticket.localizedBetStatus.capitalized)"
+        }
+        else if viewModel.ticket.type?.uppercased() == "ACCUMULATOR" {
+            self.titleLabel.text = localized("accumulator")+" - \(viewModel.ticket.localizedBetStatus.capitalized)"
         }
         else {
             self.titleLabel.text = String([viewModel.ticket.type, viewModel.ticket.localizedBetStatus]

@@ -113,34 +113,34 @@ enum BetSelectionResult: String, Codable, CaseIterable {
 }
 
 struct BetHistoryEntrySelection: Codable {
-    let outcomeId: String
-    let status: BetSelectionStatus
-    let result: BetSelectionResult
-    let priceValue: Double?
-    let sportId: String?
-    let sportName: String?
-    let venueId: String?
-    let venueName: String?
-    let tournamentId: String?
-    let tournamentName: String?
-    let eventId: String?
-    let eventStatusId: String?
-    let eventName: String?
-    let eventResult: String?
-    let eventDate: Date?
-    let bettingTypeId: String?
-    let bettingTypeName: String?
-    let bettingTypeEventPartId: String?
-    let bettingTypeEventPartName: String?
+    var outcomeId: String
+    var status: BetSelectionStatus
+    var result: BetSelectionResult
+    var priceValue: Double?
+    var sportId: String?
+    var sportName: String?
+    var venueId: String?
+    var venueName: String?
+    var tournamentId: String?
+    var tournamentName: String?
+    var eventId: String?
+    var eventStatusId: String?
+    var eventName: String?
+    var eventResult: String?
+    var eventDate: Date?
+    var bettingTypeId: String?
+    var bettingTypeName: String?
+    var bettingTypeEventPartId: String?
+    var bettingTypeEventPartName: String?
 
-    let homeParticipantName: String?
-    let awayParticipantName: String?
+    var homeParticipantName: String?
+    var awayParticipantName: String?
 
-    let homeParticipantScore: String?
-    let awayParticipantScore: String?
+    var homeParticipantScore: String?
+    var awayParticipantScore: String?
 
-    let marketName: String?
-    let betName: String?
+    var marketName: String?
+    var betName: String?
 
     enum CodingKeys: String, CodingKey {
         case outcomeId = "outcomeId"

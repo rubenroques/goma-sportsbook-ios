@@ -7,7 +7,7 @@
 
 import Foundation
 
-struct BettingTicket: Equatable, Codable, Hashable {
+struct BettingTicket: Codable, Hashable {
 
     var id: String
 
@@ -36,6 +36,9 @@ struct BettingTicket: Equatable, Codable, Hashable {
     var competition: String?
     var date: Date?
 
+    var isBetBuilderMarket: Bool?
+    var compatibleForBetBuilderGroup: Bool?
+    
     var decimalOdd: Double {
         switch self.odd {
         case .fraction(let numerator, let denominator):
