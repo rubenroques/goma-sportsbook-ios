@@ -36,7 +36,7 @@ struct BettingTicket: Codable, Hashable {
     var competition: String?
     var date: Date?
 
-    var isBetBuilderMarket: Bool?
+    var isFromBetBuilderMarket: Bool?
     var compatibleForBetBuilderGroup: Bool?
     
     var decimalOdd: Double {
@@ -77,7 +77,8 @@ struct BettingTicket: Codable, Hashable {
          venue: Location?,
          competition: String?,
          date: Date?,
-         odd: OddFormat) {
+         odd: OddFormat,
+         isFromBetBuilderMarket: Bool?) {
 
         self.id = id
         self.outcomeId = outcomeId
@@ -95,6 +96,7 @@ struct BettingTicket: Codable, Hashable {
         self.venue = venue
         self.competition = competition
         self.date = date
+        self.isFromBetBuilderMarket = isFromBetBuilderMarket
     }
 
     init(id: String,
@@ -163,7 +165,8 @@ extension BettingTicket {
                   venue: venue, 
                   competition: match.competitionName,
                   date: date,
-                  odd: outcome.bettingOffer.odd)
+                  odd: outcome.bettingOffer.odd,
+                  isFromBetBuilderMarket: outcome.customBetAvailableMarket)
     }
 
     init(match: Match, marketId: String, outcome: Outcome) {
@@ -187,7 +190,8 @@ extension BettingTicket {
                   venue: match.venue,
                   competition: match.competitionName,
                   date: match.date,
-                  odd: outcome.bettingOffer.odd)
+                  odd: outcome.bettingOffer.odd,
+                  isFromBetBuilderMarket: outcome.customBetAvailableMarket)
     }
 
 }

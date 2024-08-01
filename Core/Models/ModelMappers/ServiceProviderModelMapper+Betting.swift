@@ -17,6 +17,7 @@ extension ServiceProviderModelMapper {
     
     static func betHistoryEntry(fromServiceProviderBet bet: ServicesProvider.Bet) -> BetHistoryEntry {
         let selections = bet.selections.map(Self.betHistoryEntrySelection(fromServiceProviderBetSelection:))
+        
         return BetHistoryEntry(betId: bet.identifier,
                                selections: selections,
                                type: bet.type,
@@ -27,7 +28,6 @@ extension ServiceProviderModelMapper {
                                bonusBetAmount: nil,
                                currency: nil,
                                maxWinning: bet.potentialReturn,
-                               //totalPriceValue: selections.count > 1 ? bet.totalOdd : selections.first?.priceValue,
                                totalPriceValue: bet.totalOdd,
                                overallBetReturns: nil,
                                numberOfSelections: selections.count,

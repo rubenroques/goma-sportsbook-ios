@@ -28,6 +28,8 @@ class BetslipManager: NSObject {
     // BetBuilder
     var betBuilderProcessor: BetBuilderProcessor = BetBuilderProcessor()
     
+    var betBuilderTransformer: BetBuilderTransformer = BetBuilderTransformer()
+    
     private var cancellables: Set<AnyCancellable> = []
     
     override init() {
@@ -75,6 +77,7 @@ class BetslipManager: NSObject {
             .removeDuplicates()
             .sink { [weak self] tickets in
                 self?.refreshBetBuilderPotentialReturn()
+                // self?.betBuilderTransformer.updateBettingTickets(tickets)
             }
             .store(in: &cancellables)
 
@@ -208,7 +211,8 @@ class BetslipManager: NSObject {
                                                       venue: bettingTicket.venue,
                                                       competition: bettingTicket.competition,
                                                       date: bettingTicket.date,
-                                                      odd: bettingTicket.odd)
+                                                      odd: bettingTicket.odd,
+                                                      isFromBetBuilderMarket: bettingTicket.isFromBetBuilderMarket)
             
             self.bettingTicketsDictionaryPublisher.value[bettingTicket.id] = newBettingTicket
             self.bettingTicketPublisher[bettingTicket.id]?.send(newBettingTicket)
@@ -235,7 +239,8 @@ class BetslipManager: NSObject {
                                                           venue: bettingTicket.venue,
                                                           competition: bettingTicket.competition,
                                                           date: bettingTicket.date,
-                                                          odd: newOdd)
+                                                          odd: newOdd,
+                                                          isFromBetBuilderMarket: bettingTicket.isFromBetBuilderMarket)
                 
                 self.bettingTicketsDictionaryPublisher.value[bettingTicket.id] = newBettingTicket
                 self.bettingTicketPublisher[bettingTicket.id]?.send(newBettingTicket)

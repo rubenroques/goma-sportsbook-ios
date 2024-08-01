@@ -480,6 +480,12 @@ extension SportRadarModels {
             self.sportIdCode = try container.decodeIfPresent(String.self, forKey: .sportIdCode)
             self.tournamentCountryName = try container.decodeIfPresent(String.self, forKey: .tournamentCountryName)
 
+            //Apply custom bet available from market to outcome
+            if let customBetAvailable {
+                for index in self.outcomes.indices {
+                    self.outcomes[index].customBetAvailableMarket = customBetAvailable
+                }
+            }
         }
         
         func encode(to encoder: Encoder) throws {
@@ -504,6 +510,8 @@ extension SportRadarModels {
 
         var isTradable: Bool?
         var isOverUnder: Bool
+
+        var customBetAvailableMarket: Bool?
         
         enum CodingKeys: String, CodingKey {
             case id = "idfoselection"
@@ -516,6 +524,7 @@ extension SportRadarModels {
             case externalReference = "externalreference"
             case isTradable = "istradable"
             case isOverUnder = "isunderover"
+            case customBetAvailableMarket = "customBetAvailableMarket"
         }
 
         init(from decoder: Decoder) throws {
@@ -544,6 +553,8 @@ extension SportRadarModels {
                     self.orderValue = "h"
                 }
             }
+            
+            self.customBetAvailableMarket = nil
             
 //            #if DEBUG
 //            self.name = self.id + " " + self.name

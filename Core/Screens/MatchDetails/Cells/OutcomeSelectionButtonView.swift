@@ -263,7 +263,8 @@ class OutcomeSelectionButtonView: NibView {
                                           venue: match.venue,
                                           competition: match.competitionName,
                                           date: match.date,
-                                          odd: self.currentOdd ?? outcome.bettingOffer.odd)
+                                          odd: self.currentOdd ?? outcome.bettingOffer.odd,
+                                          isFromBetBuilderMarket: outcome.customBetAvailableMarket)
         }
         else {
             let marketName = outcome.marketName ?? ""
@@ -292,7 +293,8 @@ class OutcomeSelectionButtonView: NibView {
                                           venue: match?.venue,
                                           competition: match?.competitionName,
                                           date: match?.date,
-                                          odd: self.currentOdd ?? outcome.bettingOffer.odd)
+                                          odd: self.currentOdd ?? outcome.bettingOffer.odd,
+                                          isFromBetBuilderMarket: outcome.customBetAvailableMarket)
         }
 
         if Env.betslipManager.hasBettingTicket(bettingTicket) {
@@ -354,7 +356,8 @@ class OutcomeSelectionButtonView: NibView {
                                               venue: match.venue,
                                               competition: match.competitionName,
                                               date: match.date,
-                                              odd: outcome.bettingOffer.odd)
+                                              odd: outcome.bettingOffer.odd,
+                                              isFromBetBuilderMarket: outcome.customBetAvailableMarket)
             }
             else {
                 let marketName = outcome.marketName ?? ""
@@ -383,7 +386,8 @@ class OutcomeSelectionButtonView: NibView {
                                               venue: match?.venue,
                                               competition: match?.competitionName,
                                               date: match?.date,
-                                              odd: outcome.bettingOffer.odd)
+                                              odd: outcome.bettingOffer.odd,
+                                              isFromBetBuilderMarket: outcome.customBetAvailableMarket)
             }
 
             self.didLongPressOdd?(bettingTicket)

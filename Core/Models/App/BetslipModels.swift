@@ -16,6 +16,7 @@ enum BetslipErrorType: Error {
     case betNeedsUserConfirmation(betDetails: PlacedBetsResponse)
     case forbiddenRequest
     case invalidStake
+    case invalidBetBuilderSelections
     case insufficientSelections
     case noValidSelectionsFound
     case none

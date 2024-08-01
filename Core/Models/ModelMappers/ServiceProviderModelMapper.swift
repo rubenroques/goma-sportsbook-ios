@@ -248,16 +248,17 @@ extension ServiceProviderModelMapper {
                                         statusId: "",
                                         isLive: true,
                                         isAvailable: outcome.isTradable)
-
+        
         let mappedOutcome = Outcome(id: outcome.id,
-                              codeName: outcome.name,
-                              typeName: outcome.name,
-                              translatedName: outcome.name,
+                                    codeName: outcome.name,
+                                    typeName: outcome.name,
+                                    translatedName: outcome.name,
                                     marketName: marketName,
-                              marketId: outcome.marketId, 
-                              bettingOffer: bettingOffer,
-                              orderValue: outcome.orderValue,
-                              externalReference: outcome.externalReference)
+                                    marketId: outcome.marketId,
+                                    bettingOffer: bettingOffer,
+                                    orderValue: outcome.orderValue,
+                                    externalReference: outcome.externalReference,
+                                    customBetAvailableMarket: outcome.customBetAvailableMarket)
         return mappedOutcome
     }
 

@@ -355,6 +355,8 @@ public class Outcome: Codable, Equatable {
     public var externalReference: String?
     public var isTradable: Bool
 
+    public var customBetAvailableMarket: Bool?
+    
     enum CodingKeys: String, CodingKey {
         case id = "id"
         case name = "name"
@@ -363,16 +365,18 @@ public class Outcome: Codable, Equatable {
         case orderValue = "orderValue"
         case externalReference = "externalReference"
         case isTradable = "isTradable"
+        case customBetAvailableMarket = "customBetAvailableMarket"
     }
 
     public init(id: String,
-         name: String,
-         odd: OddFormat,
-         marketId: String?,
-         orderValue: String?,
-         externalReference: String?,
-         isTradable: Bool) {
-
+                name: String,
+                odd: OddFormat,
+                marketId: String?,
+                orderValue: String?,
+                externalReference: String?,
+                isTradable: Bool,
+                customBetAvailableMarket: Bool?) {
+        
         self.id = id
         self.name = name
         self.odd = odd
@@ -380,6 +384,7 @@ public class Outcome: Codable, Equatable {
         self.orderValue = orderValue
         self.externalReference = externalReference
         self.isTradable = isTradable
+        self.customBetAvailableMarket = customBetAvailableMarket
     }
 
     required public init(from decoder: Decoder) throws {
@@ -391,17 +396,19 @@ public class Outcome: Codable, Equatable {
         self.orderValue = try container.decodeIfPresent(String.self, forKey: .orderValue)
         self.externalReference = try container.decodeIfPresent(String.self, forKey: .externalReference)
         self.isTradable = (try? container.decode(Bool.self, forKey: .isTradable)) ?? false
+        self.customBetAvailableMarket = try container.decodeIfPresent(Bool.self, forKey: .customBetAvailableMarket)
     }
 
     public static func == (lhs: Outcome, rhs: Outcome) -> Bool {
         // Compare all properties for equality
         return lhs.id == rhs.id &&
-               lhs.name == rhs.name &&
-               lhs.odd == rhs.odd &&
-               lhs.marketId == rhs.marketId &&
-               lhs.orderValue == rhs.orderValue &&
-               lhs.externalReference == rhs.externalReference &&
-               lhs.isTradable == rhs.isTradable
+        lhs.name == rhs.name &&
+        lhs.odd == rhs.odd &&
+        lhs.marketId == rhs.marketId &&
+        lhs.orderValue == rhs.orderValue &&
+        lhs.externalReference == rhs.externalReference &&
+        lhs.isTradable == rhs.isTradable &&
+        lhs.customBetAvailableMarket == rhs.customBetAvailableMarket
     }
 }
 

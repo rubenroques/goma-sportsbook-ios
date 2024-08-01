@@ -158,6 +158,7 @@ struct Outcome: Hashable {
     var bettingOffer: BettingOffer
     var orderValue: String?
     var externalReference: String?
+    var customBetAvailableMarket: Bool?
 }
 
 extension Outcome {

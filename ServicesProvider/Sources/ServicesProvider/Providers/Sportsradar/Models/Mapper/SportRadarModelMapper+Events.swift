@@ -185,7 +185,8 @@ extension SportRadarModelMapper {
                        marketId: internalOutcome.marketId,
                        orderValue: internalOutcome.orderValue,
                        externalReference: internalOutcome.externalReference,
-                       isTradable: internalOutcome.isTradable ?? true)
+                       isTradable: internalOutcome.isTradable ?? true,
+                       customBetAvailableMarket: internalOutcome.customBetAvailableMarket)
     }
 
     static func bannerResponse(fromInternalBannerResponse internalBannerResponse: SportRadarModels.BannerResponse) -> BannerResponse {
