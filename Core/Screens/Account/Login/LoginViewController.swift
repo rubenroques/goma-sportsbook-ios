@@ -350,19 +350,6 @@ class LoginViewController: UIViewController {
         
         steppedRegistrationViewController.didRegisteredUserAction = { [weak self] registeredUser in
             if let nickname = registeredUser.nickname, let password = registeredUser.password {
-//                // Optimove complete register
-//                Optimove.shared.reportEvent(
-//                    name: "sign_up",
-//                    parameters: [
-//                        "username": "\(nickname)"
-//                    ]
-//                )
-//                
-//                Optimove.shared.reportScreenVisit(screenTitle: "sign_up")
-//                
-//                // Adjust
-//                let event = ADJEvent(eventToken: "p6p4xw")
-//                Adjust.trackEvent(event)
                 
                 self?.triggerLoginAfterRegister(username: nickname, password: password, withUserConsents: registeredUser.acceptedMarketing)
                 self?.showRegisterFeedbackViewController(onNavigationController: registerNavigationController)

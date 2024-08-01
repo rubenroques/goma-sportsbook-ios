@@ -13,6 +13,7 @@ import Combine
 import ServicesProvider
 import AdyenComponents
 import AdyenActions
+import OptimoveSDK
 
 class PaymentsDropIn {
 
@@ -39,6 +40,9 @@ class PaymentsDropIn {
     var sessionData: String?
     var adyenSession: AdyenSession?
     var adyenEnvironment = Adyen.Environment.liveEurope
+    
+    var bonusAvailable: Bool = false
+    var bonusAccepted: Bool = false
     
     var payment: Payment?
     var paymentMethodsResponse: SimplePaymentMethodsResponse?
@@ -289,6 +293,11 @@ class PaymentsDropIn {
             })
             .store(in: &cancellables)
     }
+    
+    func setupBonusInfo(bonusAvailable: Bool, bonusAccepted: Bool) {
+        self.bonusAvailable = bonusAvailable
+        self.bonusAccepted = bonusAccepted
+    }
 }
 
 extension PaymentsDropIn: PresentationDelegate {
@@ -322,6 +331,20 @@ extension PaymentsDropIn: AdyenSessionDelegate {
 //        if let paymentId = self.paymentId {
 //            self.cancelDeposit(paymentId: paymentId)
 //        }
+        
+        Optimove.shared.reportEvent(
+            name: "deposit_cancelled",
+            parameters: [
+                "partyId": "\(Env.userSessionStore.userProfilePublisher.value?.userIdentifier ?? "")",
+                "amount": self.depositAmount,
+                "bonus_available": self.bonusAvailable,
+                "bonus_accepted": self.bonusAccepted
+            ]
+        )
+        
+        Optimove.shared.reportScreenVisit(screenTitle: "deposit_cancelled")
+        
+        AnalyticsClient.sendEvent(event: .depositCancelled(value: self.depositAmount))
 
         self.dropInComponent?.viewController.dismiss(animated: true)
     }

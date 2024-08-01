@@ -317,10 +317,12 @@ public struct PlacedBetLeg: Codable {
 
 public struct BetslipSettings: Codable {
 
-    public var oddChange: BetslipOddChangeSetting
-
-    public init(oddChange: BetslipOddChangeSetting) {
-        self.oddChange = oddChange
+    public var oddChangeLegacy: BetslipOddChangeSetting?
+    public var oddChangeRunningOrPreMatch: BetslipOddChangeSetting?
+    
+    public init(oddChangeLegacy: BetslipOddChangeSetting?, oddChangeRunningOrPreMatch: BetslipOddChangeSetting?) {
+        self.oddChangeLegacy = oddChangeLegacy
+        self.oddChangeRunningOrPreMatch = oddChangeRunningOrPreMatch
     }
     
 }

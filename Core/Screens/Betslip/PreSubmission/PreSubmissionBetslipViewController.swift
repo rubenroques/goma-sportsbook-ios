@@ -351,6 +351,7 @@ class PreSubmissionBetslipViewController: UIViewController {
 
     var betPlacedAction: (([BetPlacedDetails], Double?, Bool) -> Void) = { _, _, _  in }
 
+    var betslipOddChangeSettingMode: BetslipOddChangeSettingMode = .bothGameStatus
     var betslipOddChangeSetting: BetslipOddChangeSetting = .none
 
     // Publishers
@@ -386,9 +387,12 @@ class PreSubmissionBetslipViewController: UIViewController {
 
         self.freeBetBaseView.isHidden = true
         self.cashbackBaseView.isHidden = true
-        self.cashbackInfoSingleBaseView.isHidden = true
+        
+        self.cashbackInfoSingleBaseView.isHidden = true // Singles don't have cashback anymore
         self.cashbackInfoMultipleBaseView.isHidden = true
 
+        self.showCashbackValues = false
+        
         self.simpleWinningsBaseView.isHidden = false
         self.multipleWinningsBaseView.isHidden = true
         self.systemWinningsBaseView.isHidden = true
@@ -556,14 +560,22 @@ class PreSubmissionBetslipViewController: UIViewController {
             .receive(on: DispatchQueue.main)
             .sink(receiveValue: { [weak self] betslipSettings in
                 if let betslipSettingsValue = betslipSettings {
-                     
-                    switch betslipSettingsValue.oddChange {
+                    
+                    var changeSetting: ServicesProvider.BetslipOddChangeSetting = .none
+                    
+                    if let oddChangeRunningOrPreMatch = betslipSettingsValue.oddChangeRunningOrPreMatch {
+                        changeSetting  = oddChangeRunningOrPreMatch
+                        self?.betslipOddChangeSettingMode = .bothGameStatus
+                    }
+                    else if let oddChangeLegacy = betslipSettingsValue.oddChangeLegacy {
+                        changeSetting  = oddChangeLegacy
+                        self?.betslipOddChangeSettingMode = .legacy
+                    }
+                        
+                    switch changeSetting {
                     case .none:
                         self?.betslipOddChangeSetting = .none
                         self?.settingsPickerView.selectRow(0, inComponent: 0, animated: false)
-//                    case .any:
-//                        self?.betslipOddChangeSetting = .any
-//                        self?.settingsPickerView.selectRow(1, inComponent: 0, animated: false)
                     case .higher:
                         self?.betslipOddChangeSetting = .higher
                         self?.settingsPickerView.selectRow(1, inComponent: 0, animated: false)
@@ -1406,17 +1418,28 @@ class PreSubmissionBetslipViewController: UIViewController {
         self.cashbackSwitch.setOn(false, animated: false)
         self.isCashbackToggleOn.send(false)
 
-        self.cashbackInfoMultipleBaseView.isHidden = true  // Singles don't have cashback
-        self.cashbackInfoSingleBaseView.isHidden = true // Singles don't have cashback
-
+        self.showCashbackValues = false
+        
         //
-        Env.userSessionStore.userCashbackBalance
+        
+        Publishers.CombineLatest(Env.userSessionStore.userCashbackBalance, self.listTypePublisher)
+            .filter({ _, listTypePublisher -> Bool in
+                switch listTypePublisher {
+                case .simple, .multiple, .system:
+                    return true
+                }
+            })
+            .map({ userCashbackBalance, _ in
+                return userCashbackBalance
+            })
             .receive(on: DispatchQueue.main)
             .sink { completion in
                 print("userSessionStore userCashbackBalance completion: \(completion)")
             } receiveValue: { [weak self] value in
+                
                 if let cashbackValue = value,
-                   let formattedCashbackString = CurrencyFormater.defaultFormat.string(from: NSNumber(value: cashbackValue)) {
+                    let formattedCashbackString = CurrencyFormater.defaultFormat.string(from: NSNumber(value: cashbackValue)) {
+                    
                     self?.cashbackValueLabel.text = formattedCashbackString
 
                     if cashbackValue <= 0 {
@@ -1570,7 +1593,6 @@ class PreSubmissionBetslipViewController: UIViewController {
                 if let cashbackResultValue = cashbackResultValue {
                     let cashbackString = CurrencyFormater.defaultFormat.string(from: NSNumber(value: cashbackResultValue)) ?? localized("no_value")
                     self?.cashbackInfoMultipleValueLabel.text = cashbackString
-                    
                 }
                 else {
                     self?.cashbackInfoMultipleValueLabel.text = localized("no_value")
@@ -1580,14 +1602,11 @@ class PreSubmissionBetslipViewController: UIViewController {
 
         //
         // Check all the conditions for the cashback value and tooltip visibility
-        let cashbackPublishers = Publishers.CombineLatest(self.cashbackResultValuePublisher, self.isCashbackToggleOn)
-        Publishers.CombineLatest4(cashbackPublishers,
-                                  self.realBetValuePublisher,
-                                  Env.betslipManager.bettingTicketsPublisher.removeDuplicates(),
-                                 Env.betslipManager.hasLiveTicketsPublisher.removeDuplicates())
-            .map { cashbackPublishers, bettingValue, bettingTickets, hasLiveTickets -> Bool in
-
-                let (cashbackValue, isCashbackOn) = cashbackPublishers
+        Publishers.CombineLatest4(self.cashbackResultValuePublisher,
+                                                                self.isCashbackToggleOn,
+                                                                self.realBetValuePublisher,
+                                                                Env.betslipManager.bettingTicketsPublisher.removeDuplicates())
+            .map { cashbackValue, isCashbackOn, bettingValue, bettingTickets -> Bool in
 
                 let bettingTicketsSports = bettingTickets.map(\.sport)
                 let allSportsPresent = !bettingTicketsSports.contains(nil)
@@ -1595,8 +1614,14 @@ class PreSubmissionBetslipViewController: UIViewController {
                     .compactMap({ $0 })
                     .map(RePlayFeatureHelper.shouldShowRePlay(forSport:))
                     .allSatisfy { $0 }
-
-                return (cashbackValue ?? 0.0) > 0.0 && !isCashbackOn && bettingValue > 0 && allSportsPresent && validMatchesList && !hasLiveTickets
+                
+                let validCashbackValueValid = (cashbackValue ?? 0.0) > 0.0
+                let isCashbackTurnOff = !isCashbackOn
+                let validBettingValue = bettingValue > 0
+                
+                let valuesJoined = validCashbackValueValid && isCashbackTurnOff && validBettingValue && allSportsPresent && validMatchesList
+                
+                return valuesJoined
             }
             .receive(on: DispatchQueue.main)
             .sink {  [weak self] validMatchesList in
@@ -1635,13 +1660,20 @@ class PreSubmissionBetslipViewController: UIViewController {
         switch self.betslipOddChangeSetting {
         case .none:
             externalSetting = .none
-//        case .any:
-//            externalSetting = .any
         case .higher:
             externalSetting = .higher
         }
         
-        let betslipSettings = ServicesProvider.BetslipSettings.init(oddChange: externalSetting)
+        var betslipSettings: ServicesProvider.BetslipSettings
+        switch self.betslipOddChangeSettingMode {
+        case .bothGameStatus:
+            betslipSettings = ServicesProvider.BetslipSettings(oddChangeLegacy: nil,
+                                                               oddChangeRunningOrPreMatch: externalSetting)
+        case .legacy:
+            betslipSettings = ServicesProvider.BetslipSettings(oddChangeLegacy: externalSetting,
+                                                               oddChangeRunningOrPreMatch: nil)
+        }
+        
         Env.servicesProvider
             .updateBetslipSettings(betslipSettings)
             .sink { completed in

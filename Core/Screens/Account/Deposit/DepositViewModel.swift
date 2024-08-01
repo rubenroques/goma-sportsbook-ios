@@ -8,6 +8,7 @@
 import Foundation
 import Combine
 import ServicesProvider
+import OptimoveSDK
 
 class DepositViewModel: NSObject {
     // MARK: Private Properties
@@ -89,6 +90,27 @@ class DepositViewModel: NSObject {
             }
         }
         else {
+            // Send Event with no bonus
+            let bonusAvailable = self.availableBonuses.value.isEmpty ? "no" : "yes"
+            
+            let amountDouble = self.getAmountAsDouble(amountText: amountText)
+            
+            Optimove.shared.reportEvent(
+                name: "deposit_started",
+                parameters: [
+                    "partyId": "\(Env.userSessionStore.userProfilePublisher.value?.userIdentifier ?? "")",
+                    "amount": amountDouble,
+                    "bonus_available": bonusAvailable,
+                    "bonus_accepted": "no"
+                ]
+            )
+            
+            Optimove.shared.reportScreenVisit(screenTitle: "deposit_started")
+            
+            AnalyticsClient.sendEvent(event: .depositStarted(value: amountDouble, bonusAvailable: bonusAvailable, bonusAccepted: "no"))
+            
+            self.paymentsDropIn.setupBonusInfo(bonusAvailable: bonusAvailable == "yes" ? true : false, bonusAccepted: false)
+            
             self.paymentsDropIn.getDepositInfo(amountText: amountText)
         }
 
@@ -210,6 +232,25 @@ class DepositViewModel: NSObject {
 
                     print("REDEEM CODE SUCCESS: \(redeemAvailableBonusResponse)")
 
+                    // Send Event with bonus
+                    let amountDouble = self?.getAmountAsDouble(amountText: amountText) ?? 0.0
+                    
+                    Optimove.shared.reportEvent(
+                        name: "deposit_started",
+                        parameters: [
+                            "partyId": partyId,
+                            "amount": amountDouble,
+                            "bonus_available": "yes",
+                            "bonus_accepted": "yes"
+                        ]
+                    )
+                    
+                    Optimove.shared.reportScreenVisit(screenTitle: "deposit_started")
+                    
+                    AnalyticsClient.sendEvent(event: .depositStarted(value: amountDouble, bonusAvailable: "yes", bonusAccepted: "yes"))
+                    
+                    self?.paymentsDropIn.setupBonusInfo(bonusAvailable: true, bonusAccepted: true)
+
                     self?.paymentsDropIn.getDepositInfo(amountText: amountText)
 
                 })
@@ -217,4 +258,13 @@ class DepositViewModel: NSObject {
         }
     }
     
+    private func getAmountAsDouble(amountText: String) -> Double {
+        if amountText.contains(",") {
+            let amount = amountText.replacingOccurrences(of: ",", with: ".")
+            return Double(amount) ?? 0.0
+        }
+        else {
+            return Double(amountText) ?? 0.0
+        }
+    }
 }

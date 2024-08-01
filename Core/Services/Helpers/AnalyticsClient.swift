@@ -37,7 +37,9 @@ struct AnalyticsClient {
         case sosPlayers
         case playersInfo
         case evaluejeu
-        
+        case depositStarted(value: Double, bonusAvailable: String, bonusAccepted: String)
+        case depositCancelled(value: Double)
+        case withdrawalProcessed(value: Double)
     }
 
     static func sendEvent(event: Event) {
@@ -129,6 +131,20 @@ struct AnalyticsClient {
         case .evaluejeu:
             eventTypeKey = "evalujeu_click"
             
+        case .depositStarted(let value, let bonusAvailable, let bonusAccepted):
+            eventTypeKey = "deposit_started"
+            parameters = ["VALUE": "\(value)",
+                          "BONUS_AVAILABLE": "\(bonusAvailable)",
+                          "BONUS_ACCEPTED": "\(bonusAccepted)"]
+            
+        case .depositCancelled(let value):
+            eventTypeKey = "deposit_cancelled"
+            parameters = ["VALUE": "\(value)"]
+        
+        case .withdrawalProcessed(let value):
+            eventTypeKey = "withdrawal_processed"
+            parameters = ["VALUE": "\(value)"]
+
         }
 
         Analytics.logEvent(eventTypeKey.uppercased(), parameters: parameters)

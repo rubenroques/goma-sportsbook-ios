@@ -49,20 +49,28 @@ class SportRadarBettingProvider: BettingProvider, Connector {
 
     func getBetHistory(pageIndex: Int) -> AnyPublisher<BettingHistory, ServiceProviderError> {
         let endpoint = BettingAPIClient.betHistory(page: pageIndex, startDate: nil, endDate: nil, betState: nil, betResult: nil, pageSize: 10)
-        let publisher: AnyPublisher<[SportRadarModels.Bet], ServiceProviderError> = self.connector.request(endpoint)
+        let publisher: AnyPublisher<[FailableDecodable<SportRadarModels.Bet>], ServiceProviderError> = self.connector.request(endpoint)
+        
         return publisher
-            .map { bets in
-                return SportRadarModels.BettingHistory(bets: bets)
+            .map { failableBets in
+                // Filter out any nil contents (failed decodes)
+                let validBets = failableBets.compactMap { $0.content }
+                return SportRadarModels.BettingHistory(bets: validBets)
             }
-            .map(SportRadarModelMapper.bettingHistory(fromInternalBettingHistory:)).eraseToAnyPublisher()
+            .map(SportRadarModelMapper.bettingHistory(fromInternalBettingHistory:))
+            .eraseToAnyPublisher()
     }
 
     func getOpenBetsHistory(pageIndex: Int, startDate: String?, endDate: String?) -> AnyPublisher<BettingHistory, ServiceProviderError> {
         let endpoint = BettingAPIClient.betHistory(page: pageIndex, startDate: startDate, endDate: endDate, betState: [SportRadarModels.BetState.opened], betResult: [SportRadarModels.BetResult.notSpecified], pageSize: 20)
-        let publisher: AnyPublisher<[SportRadarModels.Bet], ServiceProviderError> = self.connector.request(endpoint)
+        
+        let publisher: AnyPublisher<[FailableDecodable<SportRadarModels.Bet>], ServiceProviderError> = self.connector.request(endpoint)
+        
         return publisher
-            .map { bets in
-                return SportRadarModels.BettingHistory(bets: bets)
+            .map { failableBets in
+                // Filter out any nil contents (failed decodes)
+                let validBets = failableBets.compactMap { $0.content }
+                return SportRadarModels.BettingHistory(bets: validBets)
             }
             .map(SportRadarModelMapper.bettingHistory(fromInternalBettingHistory:))
             .eraseToAnyPublisher()
@@ -70,23 +78,30 @@ class SportRadarBettingProvider: BettingProvider, Connector {
 
     func getResolvedBetsHistory(pageIndex: Int, startDate: String?, endDate: String?) -> AnyPublisher<BettingHistory, ServiceProviderError> {
         let endpoint = BettingAPIClient.betHistory(page: pageIndex, startDate: startDate, endDate: endDate, betState: [SportRadarModels.BetState.settled, SportRadarModels.BetState.closed, SportRadarModels.BetState.cancelled], betResult: [SportRadarModels.BetResult.notSpecified], pageSize: 20)
-        let publisher: AnyPublisher<[SportRadarModels.Bet], ServiceProviderError> = self.connector.request(endpoint)
+        let publisher: AnyPublisher<[FailableDecodable<SportRadarModels.Bet>], ServiceProviderError> = self.connector.request(endpoint)
+        
         return publisher
-            .map { bets in
-                let bets = bets
-                return SportRadarModels.BettingHistory(bets: bets)
+            .map { failableBets in
+                // Filter out any nil contents (failed decodes)
+                let validBets = failableBets.compactMap { $0.content }
+                return SportRadarModels.BettingHistory(bets: validBets)
             }
-            .map(SportRadarModelMapper.bettingHistory(fromInternalBettingHistory:)).eraseToAnyPublisher()
+            .map(SportRadarModelMapper.bettingHistory(fromInternalBettingHistory:))
+            .eraseToAnyPublisher()
     }
 
     func getWonBetsHistory(pageIndex: Int, startDate: String?, endDate: String?) -> AnyPublisher<BettingHistory, ServiceProviderError> {
         let endpoint = BettingAPIClient.betHistory(page: pageIndex, startDate: startDate, endDate: endDate, betState: [SportRadarModels.BetState.settled, SportRadarModels.BetState.closed, SportRadarModels.BetState.cancelled], betResult: [SportRadarModels.BetResult.notSpecified], pageSize: 20)
-        let publisher: AnyPublisher<[SportRadarModels.Bet], ServiceProviderError> = self.connector.request(endpoint)
+        let publisher: AnyPublisher<[FailableDecodable<SportRadarModels.Bet>], ServiceProviderError> = self.connector.request(endpoint)
+        
         return publisher
-            .map { bets in
-                return SportRadarModels.BettingHistory(bets: bets)
+            .map { failableBets in
+                // Filter out any nil contents (failed decodes)
+                let validBets = failableBets.compactMap { $0.content }
+                return SportRadarModels.BettingHistory(bets: validBets)
             }
-            .map(SportRadarModelMapper.bettingHistory(fromInternalBettingHistory:)).eraseToAnyPublisher()
+            .map(SportRadarModelMapper.bettingHistory(fromInternalBettingHistory:))
+            .eraseToAnyPublisher()
     }
 
     func getAllowedBetTypes(withBetTicketSelections betTicketSelections: [BetTicketSelection]) -> AnyPublisher<[BetType], ServiceProviderError> {
@@ -231,26 +246,47 @@ class SportRadarBettingProvider: BettingProvider, Connector {
 
         return publisher
             .map({ internalBetslipSettings in
-                return BetslipSettings(oddChange: internalBetslipSettings.oddChange)
+                return BetslipSettings(oddChangeLegacy: internalBetslipSettings.oddChangeLegacy,
+                                       oddChangeRunningOrPreMatch: internalBetslipSettings.oddChangeRunningOrPreMatch)
             })
             .replaceError(with: nil)
             .eraseToAnyPublisher()
     }
 
     func updateBetslipSettings(_ betslipSettings: BetslipSettings) -> AnyPublisher<Bool, Never> {
+ 
+        if let oddChangeRunningOrPreMatch = betslipSettings.oddChangeRunningOrPreMatch {
+            let endpointPreMatch = BettingAPIClient.updateBetslipSettingsPreMatch(oddChange: oddChangeRunningOrPreMatch)
+            let publisherPreMatch: AnyPublisher<String, ServiceProviderError> = self.connector.request(endpointPreMatch)
+            
+            let endpointRunning = BettingAPIClient.updateBetslipSettingsRunning(oddChange: oddChangeRunningOrPreMatch)
+            let publisherRunning: AnyPublisher<String, ServiceProviderError> = self.connector.request(endpointRunning)
+            
+            return Publishers.CombineLatest(publisherPreMatch, publisherRunning)
+                .map({ publisherPreMatchResponse, publisherRunningResponse -> Bool in
+                    return true
+                })
+                .replaceError(with: false)
+                .eraseToAnyPublisher()
+        }
+        else if let oddChangeLegacy = betslipSettings.oddChangeLegacy {
+            let endpointLegacy = BettingAPIClient.updateBetslipSettings(oddChange: oddChangeLegacy)
+            let publisherLegacy: AnyPublisher<String, ServiceProviderError> = self.connector.request(endpointLegacy)
+            return publisherLegacy
+                .mapError({ error in
+                    return error
+                })
+                .map({ internlBetslipSettings -> Bool in
+                    return true
+                })
+                .replaceError(with: false)
+                .eraseToAnyPublisher()
+        }
+        else {
+            return Just(false).eraseToAnyPublisher()
+        }
 
-        let endpoint = BettingAPIClient.updateBetslipSettings(oddChange: betslipSettings.oddChange)
-        let publisher: AnyPublisher<String, ServiceProviderError> = self.connector.request(endpoint)
-
-        return publisher
-            .mapError({ error in
-                return error
-            })
-            .map({ internlBetslipSettings -> Bool in
-                return true
-            })
-            .replaceError(with: false)
-            .eraseToAnyPublisher()
+       
     }
 
     func getFreebet() -> AnyPublisher<FreebetBalance, ServiceProviderError> {
@@ -303,6 +339,10 @@ class SportRadarBettingProvider: BettingProvider, Connector {
         let publisher: AnyPublisher<[SportRadarModels.CashbackResult], ServiceProviderError> = self.connector.request(endpoint)
 
         return publisher
+            .mapError({ error in
+                print("CASHBACK ERROR: \(error)")
+                return error
+            })
             .flatMap { (cashbackResultResponse: [SportRadarModels.CashbackResult]) -> AnyPublisher<CashbackResult, ServiceProviderError> in
                 if let cashbackResult = cashbackResultResponse.first {
                     let mappedCashbackResult = SportRadarModelMapper.cashbackResult(fromInternalCashbackResult: cashbackResult)
