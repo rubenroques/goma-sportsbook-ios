@@ -397,11 +397,11 @@ class FeaturedTipSelection: Decodable {
 
 struct ExtraSelectionInfo: Decodable {
 
-    var bettingOfferId: Int
+    var bettingOfferId: String
     var marketName: String
     var outcomeEntity: OutcomeEntity
 
-    init(bettingOfferId: Int, marketName: String, outcomeEntity: OutcomeEntity) {
+    init(bettingOfferId: String, marketName: String, outcomeEntity: OutcomeEntity) {
         self.bettingOfferId = bettingOfferId
         self.marketName = marketName
         self.outcomeEntity = outcomeEntity
@@ -416,10 +416,10 @@ struct ExtraSelectionInfo: Decodable {
 
 struct OutcomeEntity: Decodable {
 
-    var id: Int
+    var id: String
     var statusId: Int
     
-    init(id: Int, statusId: Int) {
+    init(id: String, statusId: Int) {
         self.id = id
         self.statusId = statusId
     }

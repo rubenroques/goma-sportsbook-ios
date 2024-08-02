@@ -84,39 +84,13 @@ class FeaturedTipCollectionViewModel {
         }
     }
 
+    
     func followUser(userId: String) {
 
-        Env.gomaNetworkClient.followUser(deviceId: Env.deviceId, userId: userId)
-            .receive(on: DispatchQueue.main)
-            .sink(receiveCompletion: { [weak self] completion in
-                switch completion {
-                case .failure(let error):
-                    print("FOLLOW USER ERROR: \(error)")
-                case .finished:
-                    ()
-                }
-            }, receiveValue: { [weak self] response in
-                print("FOLLOW USER RESPONSE: \(response)")
-                Env.gomaSocialClient.getFollowingUsers()
-            })
-            .store(in: &cancellables)
     }
 
     func unfollowUser(userId: String) {
 
-        Env.gomaNetworkClient.deleteFollowUser(deviceId: Env.deviceId, userId: userId)
-            .receive(on: DispatchQueue.main)
-            .sink(receiveCompletion: { [weak self] completion in
-                switch completion {
-                case .failure(let error):
-                    print("UNFOLLOW USER ERROR: \(error)")
-                case .finished:
-                    ()
-                }
-            }, receiveValue: { [weak self] response in
-                print("UNFOLLOW USER RESPONSE: \(response)")
-                Env.gomaSocialClient.getFollowingUsers()
-            })
-            .store(in: &cancellables)
     }
+
 }

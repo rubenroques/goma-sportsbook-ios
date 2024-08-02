@@ -10,37 +10,63 @@ import Combine
 
 class FeaturedTipLineViewModel {
 
-    var featuredTips: [FeaturedTip] = []
+    enum DataType {
+        case featureTips([FeaturedTip])
+        case suggestedBetslips([SuggestedBetslip])
+    }
+    
     var featuredTipCollectionCacheViewModel: [String: FeaturedTipCollectionViewModel] = [:]
 
+    private var dataType: DataType
+    
     private var cancellables = Set<AnyCancellable>()
 
     init(featuredTips: [FeaturedTip]) {
-        self.featuredTips = featuredTips
-
+        self.dataType = .featureTips(featuredTips)
+    }
+    
+    init(suggestedBetslip: [SuggestedBetslip]) {
+        self.dataType = .suggestedBetslips(suggestedBetslip)
     }
 
     func numberOfItems() -> Int {
-        return featuredTips.count
+        switch dataType {
+        case .featureTips(let featureTips):
+            featureTips.count
+        case .suggestedBetslips(let suggestedBetslips):
+            suggestedBetslips.count
+        }
     }
 
-    func viewModel(forIndex index: Int) -> FeaturedTipCollectionViewModel? {
-        guard
-            let featuredTip = self.featuredTips[safe: index]
-        else {
+    func cellViewModel(forIndex index: Int) -> FeaturedTipCollectionViewModel? {
+        switch dataType {
+        case .featureTips(let featureTips):
+            guard
+                let featuredTip = featureTips[safe: index]
+            else {
+                return nil
+            }
+
+            let tipId = featuredTip.betId
+
+            if let featuredTipCollectionViewModel = featuredTipCollectionCacheViewModel[tipId] {
+                return featuredTipCollectionViewModel
+            }
+            else {
+                let featuredTipCollectionViewModel = FeaturedTipCollectionViewModel(featuredTip: featuredTip, sizeType: .small)
+                self.featuredTipCollectionCacheViewModel[tipId] = featuredTipCollectionViewModel
+                return featuredTipCollectionViewModel
+            }
+        case .suggestedBetslips(let suggestedBetslips):
+            guard
+                let suggestedBetslip = suggestedBetslips[safe: index]
+            else {
+                return nil
+            }
+
             return nil
         }
-
-        let tipId = featuredTip.betId
-
-        if let featuredTipCollectionViewModel = featuredTipCollectionCacheViewModel[tipId] {
-            return featuredTipCollectionViewModel
-        }
-        else {
-            let featuredTipCollectionViewModel = FeaturedTipCollectionViewModel(featuredTip: featuredTip, sizeType: .small)
-            self.featuredTipCollectionCacheViewModel[tipId] = featuredTipCollectionViewModel
-            return featuredTipCollectionViewModel
-        }
+        
     }
 }
 
@@ -101,13 +127,6 @@ class FeaturedTipLineTableViewCell: UITableViewCell {
 
         self.viewModel = viewModel
 
-        Env.gomaSocialClient.followingUsersPublisher
-            .receive(on: DispatchQueue.main)
-            .sink(receiveValue: { [weak self] _ in
-                self?.reloadCollections()
-            })
-            .store(in: &cancellables)
-
         self.reloadCollections()
     }
 
@@ -143,7 +162,7 @@ extension FeaturedTipLineTableViewCell: UICollectionViewDelegate, UICollectionVi
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         guard
             let cell = collectionView.dequeueCellType(FeaturedTipCollectionViewCell.self, indexPath: indexPath),
-            let cellViewModel = self.viewModel?.viewModel(forIndex: indexPath.row)
+            let cellViewModel = self.viewModel?.cellViewModel(forIndex: indexPath.row)
         else {
             fatalError()
         }

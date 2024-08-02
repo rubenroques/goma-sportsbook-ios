@@ -615,8 +615,9 @@ class HomeViewController: UIViewController {
     }
 
     @objc private func didTapOpenFeaturedTips() {
-        let tips = self.viewModel.featuredTipLineViewModel()?.featuredTips ?? []
-        self.openFeaturedTipSlider(featuredTips: tips, atIndex: self.featuredTipsCenterIndex)
+        fatalError("Missing didTapOpenFeaturedTips")
+//        let tips = self.viewModel.featuredTipLineViewModel()?.featuredTips ?? []
+//        self.openFeaturedTipSlider(featuredTips: tips, atIndex: self.featuredTipsCenterIndex)
     }
     
     @objc private func didTapSeeAllLiveButton() {
@@ -779,12 +780,13 @@ extension HomeViewController: UITableViewDelegate, UITableViewDataSource {
             }
 
             cell.openFeaturedTipDetailAction = { [weak self] featuredTip in
-                let firstIndex = featuredBetLineViewModel.featuredTips.firstIndex(where: { tipIterator in
-                    tipIterator.betId == featuredTip.betId
-                })
-                let firstIndexValue: Int = Int(firstIndex ?? 0)
-                
-                self?.openFeaturedTipSlider(featuredTips: featuredBetLineViewModel.featuredTips, atIndex: firstIndexValue)
+                fatalError("Missing implementation openFeaturedTipDetailAction")
+//                let firstIndex = featuredBetLineViewModel.featuredTips.firstIndex(where: { tipIterator in
+//                    tipIterator.betId == featuredTip.betId
+//                })
+//                let firstIndexValue: Int = Int(firstIndex ?? 0)
+//                
+//                self?.openFeaturedTipSlider(featuredTips: featuredBetLineViewModel.featuredTips, atIndex: firstIndexValue)
             }
 
             cell.currentIndexChangedAction = { [weak self] newIndex in

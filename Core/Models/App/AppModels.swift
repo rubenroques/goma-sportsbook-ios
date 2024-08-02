@@ -53,7 +53,7 @@ struct Location: Codable, Hashable {
     var isoCode: String
 }
 
-struct Participant: Hashable {
+struct Participant: Codable, Hashable {
     var id: String
     var name: String
 }

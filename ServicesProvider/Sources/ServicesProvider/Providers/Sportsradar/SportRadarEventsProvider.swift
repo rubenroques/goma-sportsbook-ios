@@ -1814,6 +1814,22 @@ extension SportRadarEventsProvider {
         
     }
     
+    func getPromotedBetslips(userId: String?) -> AnyPublisher<[PromotedBetslip], ServiceProviderError> {
+        let endpoint = VaixAPIClient.promotedBetslips(userId: userId)
+        
+        let requestPublisher: AnyPublisher<SportRadarModels.PromotedBetslipsBatchResponse, ServiceProviderError> = self.restConnector.request(endpoint)
+
+        return requestPublisher
+            .mapError({ error in
+                return error
+            })
+            .map { response in
+                let promotedBetslipsBatchResponse = SportRadarModelMapper.promotedBetslipsBatchResponse(fromInternalPromotedBetslipsBatchResponse: response)
+                return promotedBetslipsBatchResponse.promotedBetslips
+            }
+            .eraseToAnyPublisher()
+    }
+    
     func getHighlightedLiveEventsIds(eventCount: Int, userId: String?) -> AnyPublisher<[String], ServiceProviderError> {
         let endpoint = VaixAPIClient.popularEvents(eventsCount: eventCount, userId: userId)
         let requestPublisher: AnyPublisher<SportRadarModels.SportRadarResponse<[SportRadarModels.HighlightedEventPointer]>, ServiceProviderError> = self.restConnector.request(endpoint)

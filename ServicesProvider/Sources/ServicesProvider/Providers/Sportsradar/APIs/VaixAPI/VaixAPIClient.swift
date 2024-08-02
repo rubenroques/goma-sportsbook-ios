@@ -10,7 +10,7 @@ import Foundation
 enum VaixAPIClient {
     case popularEvents(eventsCount: Int, userId: String?)
     case analyticsTrackEvent(event: VaixAnalyticsEvent, userId: String)
-    case popularBets
+    case promotedBetslips(userId: String?)
 }
 
 extension VaixAPIClient: Endpoint {
@@ -24,8 +24,8 @@ extension VaixAPIClient: Endpoint {
             return "/api/sports/events/popular"
         case .analyticsTrackEvent:
             return "/api/tracker/events"
-        case .popularBets:
-            return "/api/sports/betslips/popular"
+        case .promotedBetslips:
+            return "/api/batch"
         }
     }
     
@@ -36,7 +36,6 @@ extension VaixAPIClient: Endpoint {
             if let userId {
                 let userIdFormat = "om\(userId)-eur"
                 query.append(URLQueryItem(name:"user", value:userIdFormat))
-
             }
             else {
                 query.append(URLQueryItem(name:"user", value:"0"))
@@ -50,8 +49,8 @@ extension VaixAPIClient: Endpoint {
             query.append(URLQueryItem(name:"location", value:"liveevent-popular"))
         case .analyticsTrackEvent:
             break
-        case .popularBets:
-            query.append(URLQueryItem(name:"format", value:"orako"))
+        case .promotedBetslips:
+            break
         }
         return query
     }
@@ -67,7 +66,7 @@ extension VaixAPIClient: Endpoint {
                     "origin": "null",
                     "x-vaix-client-id": "betsson_france",
                     "Content-Type": "application/json"]
-        case .popularBets:
+        case .promotedBetslips:
             return ["Authorization": "Bearer \(SportRadarConfiguration.shared.vaixAuthTokenValue)",
                     "origin": "null",
                     "x-vaix-client-id": "betsson_france",
@@ -79,7 +78,7 @@ extension VaixAPIClient: Endpoint {
         switch self {
         case .popularEvents: return .get
         case .analyticsTrackEvent: return .post
-        case .popularBets: return .get
+        case .promotedBetslips: return .post
         }
     }
     
@@ -108,8 +107,44 @@ extension VaixAPIClient: Endpoint {
             else {
                 return nil
             }
-        case .popularBets:
-            return nil
+        case .promotedBetslips(let userId):
+            let userIdFormat = userId != nil ? "om\(userId!)-eur" : "0"
+            let body = """
+                        {
+                          "requests": [
+                            {
+                              "operation_id": "get_popular_betslips",
+                              "name": "multigame_acca_1",
+                              "params": {
+                                "format": "orako",
+                                "location": "multigame_acca_1",
+                                "user": "\(userIdFormat)"
+                              }
+                            },
+                            {
+                              "operation_id": "get_popular_betslips",
+                              "name": "multigame_acca_2",
+                              "params": {
+                                "format": "orako",
+                                "location": "multigame_acca_2",
+                                "user": "\(userIdFormat)"
+                              }
+                            },
+                            {
+                              "operation_id": "get_popular_betslips",
+                              "name": "multigame_acca_3",
+                              "params": {
+                                "format": "orako",
+                                "location": "multigame_acca_3",
+                                "user": "\(userIdFormat)"
+                              }
+                            }
+                          ]
+                        }
+                        """
+            
+            let data = body.data(using: String.Encoding.utf8)!
+            return data
         }
     }
     
@@ -121,7 +156,7 @@ extension VaixAPIClient: Endpoint {
         switch self {
         case .popularEvents: return TimeInterval(20)
         case .analyticsTrackEvent: return TimeInterval(5)
-        case .popularBets: return TimeInterval(10)
+        case .promotedBetslips: return TimeInterval(60)
         }
     }
     
@@ -133,7 +168,7 @@ extension VaixAPIClient: Endpoint {
         switch self {
         case .popularEvents: return "Vaix popularEvents"
         case .analyticsTrackEvent: return "Vaix Track Event analytics"
-        case .popularBets: return "Vaix Track Popular Bets (aka Suggested Bets)"
+        case .promotedBetslips: return "Vaix Track Popular Bets (aka Suggested Bets)"
         }
     }
     

@@ -116,6 +116,8 @@ protocol EventsProvider: Connector {
     func getHighlightedLiveEventsIds(eventCount: Int, userId: String?) -> AnyPublisher<[String], ServiceProviderError>
     func getHighlightedLiveEvents(eventCount: Int, userId: String?) -> AnyPublisher<[Event], ServiceProviderError>
     
+    func getPromotedBetslips(userId: String?) -> AnyPublisher<[PromotedBetslip], ServiceProviderError>
+    
     //
     // Favorites
     func getFavoritesList() -> AnyPublisher<FavoritesListResponse, ServiceProviderError>

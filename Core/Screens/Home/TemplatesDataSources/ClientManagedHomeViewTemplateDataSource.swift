@@ -69,7 +69,7 @@ class ClientManagedHomeViewTemplateDataSource {
     }
 
     //
-    private var featuredTips: [FeaturedTip] = []
+    private var suggestedBetslips: [SuggestedBetslip] = []
     private var cachedFeaturedTipLineViewModel: FeaturedTipLineViewModel? {
         didSet {
             self.refreshPublisher.send()
@@ -181,7 +181,7 @@ class ClientManagedHomeViewTemplateDataSource {
         self.matchLineTableCellViewModelCache = [:]
         self.matchLineTableCellViewModelCache = [:]
         
-        self.featuredTips = []
+        self.suggestedBetslips = []
         self.cachedFeaturedTipLineViewModel = nil
         
         self.highlightedLiveMatchLineTableCellViewModelCache = [:]
@@ -189,7 +189,7 @@ class ClientManagedHomeViewTemplateDataSource {
         self.fetchQuickSwipeMatches()
         self.fetchHighlightMatches()
         self.fetchPromotedSports()
-        self.fetchSuggestedBets()
+        self.fetchPromotedBetslips()
         self.fetchPromotionalStories()
         self.fetchTopCompetitions()
         self.fetchHighlightedLiveMatches()
@@ -532,209 +532,22 @@ class ClientManagedHomeViewTemplateDataSource {
 
     // ALERT: The data comes from Suggested bets
     // but the UI shown to the user is from old FeaturedTips
-    func fetchSuggestedBets() {
-       
-        self.featuredTips = self.mockFeaturedTips
+    func fetchPromotedBetslips() {
+               
+        let userIdentifier = Env.userSessionStore.userProfilePublisher.value?.userIdentifier
+        
+        Env.servicesProvider.getPromotedBetslips(userId: userIdentifier)
+            .map(ServiceProviderModelMapper.suggestedBetslips(fromPromotedBetslips:))
+            .receive(on: DispatchQueue.main)
+            .sink { completion in
+                print("ClientManagedHomeTemplate getPromotedSports completion \(completion)")
+            } receiveValue: { [weak self] featuredTips in
+                self?.suggestedBetslips = featuredTips
+                self?.refreshPublisher.send()
+            }
+            .store(in: &self.cancellables)
         
     }
-    
-    let mockFeaturedTips: [FeaturedTip] = [
-        FeaturedTip(
-            betId: "bet001",
-            selections: [
-                FeaturedTipSelection(
-                    outcomeId: "outcome001",
-                    status: "active",
-                    sportId: "1",
-                    sportName: "Football",
-                    sportParentName: "Competition name",
-                    venueId: "venue001",
-                    venueName: "Stadium A",
-                    eventId: "event001",
-                    eventName: "Match 1",
-                    bettingTypeId: "type001",
-                    bettingTypeName: "Full Time Result",
-                    betName: "Team A to Win",
-                    odds: "1.5",
-                    extraSelectionInfo: ExtraSelectionInfo(
-                        bettingOfferId: 101,
-                        marketName: "Full Time Result",
-                        outcomeEntity: OutcomeEntity(id: 1, statusId: 1)
-                    ),
-                    oddValue: .decimal(odd: 1.5)
-                ),
-                FeaturedTipSelection(
-                    outcomeId: "outcome002",
-                    status: "active",
-                    sportId: "1",
-                    sportName: "Football",
-                    sportParentName: "Competition name",
-                    venueId: "venue002",
-                    venueName: "Stadium B",
-                    eventId: "event002",
-                    eventName: "Match 2",
-                    bettingTypeId: "type002",
-                    bettingTypeName: "Over/Under",
-                    betName: "Over 2.5 Goals",
-                    odds: "2.0",
-                    extraSelectionInfo: ExtraSelectionInfo(
-                        bettingOfferId: 102,
-                        marketName: "Over/Under",
-                        outcomeEntity: OutcomeEntity(id: 2, statusId: 1)
-                    ),
-                    oddValue: .decimal(odd: 2.0)
-                ),
-                FeaturedTipSelection(
-                    outcomeId: "outcome003",
-                    status: "active",
-                    sportId: "1",
-                    sportName: "Football",
-                    sportParentName: "Competition name",
-                    venueId: "venue003",
-                    venueName: "Stadium C",
-                    eventId: "event003",
-                    eventName: "Match 3",
-                    bettingTypeId: "type003",
-                    bettingTypeName: "Both Teams to Score",
-                    betName: "Yes",
-                    odds: "1.8",
-                    extraSelectionInfo: ExtraSelectionInfo(
-                        bettingOfferId: 103,
-                        marketName: "Both Teams to Score",
-                        outcomeEntity: OutcomeEntity(id: 3, statusId: 1)
-                    ),
-                    oddValue: .decimal(odd: 1.8)
-                ),
-                FeaturedTipSelection(
-                    outcomeId: "outcome004",
-                    status: "active",
-                    sportId: "1",
-                    sportName: "Football",
-                    sportParentName: "Competition name",
-                    venueId: "venue004",
-                    venueName: "Stadium D",
-                    eventId: "event004",
-                    eventName: "Match 4",
-                    bettingTypeId: "type004",
-                    bettingTypeName: "Correct Score",
-                    betName: "2-1",
-                    odds: "9.0",
-                    extraSelectionInfo: ExtraSelectionInfo(
-                        bettingOfferId: 104,
-                        marketName: "Correct Score",
-                        outcomeEntity: OutcomeEntity(id: 4, statusId: 1)
-                    ),
-                    oddValue: .decimal(odd: 9.0)
-                )
-            ],
-            type: "single",
-            systemBetType: nil,
-            status: "open",
-            statusLabel: "Open",
-            placedDate: "2023-07-20",
-            userId: nil,
-            username: "",
-            totalOdds: "3.5"
-        ),
-        FeaturedTip(
-            betId: "bet002",
-            selections: [
-                FeaturedTipSelection(
-                    outcomeId: "outcome005",
-                    status: "active",
-                    sportId: "1",
-                    sportName: "Football",
-                    sportParentName: "Competition name",
-                    venueId: "venue005",
-                    venueName: "Stadium E",
-                    eventId: "event005",
-                    eventName: "Match 5",
-                    bettingTypeId: "type005",
-                    bettingTypeName: "Double Chance",
-                    betName: "Team E or Draw",
-                    odds: "1.25",
-                    extraSelectionInfo: ExtraSelectionInfo(
-                        bettingOfferId: 105,
-                        marketName: "Double Chance",
-                        outcomeEntity: OutcomeEntity(id: 5, statusId: 1)
-                    ),
-                    oddValue: .decimal(odd: 1.25)
-                ),
-                FeaturedTipSelection(
-                    outcomeId: "outcome006",
-                    status: "active",
-                    sportId: "1",
-                    sportName: "Football",
-                    sportParentName: "Competition name",
-                    venueId: "venue006",
-                    venueName: "Stadium F",
-                    eventId: "event006",
-                    eventName: "Match 6",
-                    bettingTypeId: "type006",
-                    bettingTypeName: "Asian Handicap",
-                    betName: "Team F -1.5",
-                    odds: "2.1",
-                    extraSelectionInfo: ExtraSelectionInfo(
-                        bettingOfferId: 106,
-                        marketName: "Asian Handicap",
-                        outcomeEntity: OutcomeEntity(id: 6, statusId: 1)
-                    ),
-                    oddValue: .decimal(odd: 2.1)
-                ),
-                FeaturedTipSelection(
-                    outcomeId: "outcome007",
-                    status: "active",
-                    sportId: "1",
-                    sportName: "Football",
-                    sportParentName: "Competition name",
-                    venueId: "venue007",
-                    venueName: "Stadium G",
-                    eventId: "event007",
-                    eventName: "Match 7",
-                    bettingTypeId: "type007",
-                    bettingTypeName: "First Goal Scorer",
-                    betName: "Player X",
-                    odds: "5.0",
-                    extraSelectionInfo: ExtraSelectionInfo(
-                        bettingOfferId: 107,
-                        marketName: "First Goal Scorer",
-                        outcomeEntity: OutcomeEntity(id: 7, statusId: 1)
-                    ),
-                    oddValue: .decimal(odd: 5.0)
-                ),
-                FeaturedTipSelection(
-                    outcomeId: "outcome008",
-                    status: "active",
-                    sportId: "1",
-                    sportName: "Football",
-                    sportParentName: "Competition name",
-                    venueId: "venue008",
-                    venueName: "Stadium H",
-                    eventId: "event008",
-                    eventName: "Match 8",
-                    bettingTypeId: "type008",
-                    bettingTypeName: "Full Time Result",
-                    betName: "Team H to Win",
-                    odds: "1.75",
-                    extraSelectionInfo: ExtraSelectionInfo(
-                        bettingOfferId: 108,
-                        marketName: "Full Time Result",
-                        outcomeEntity: OutcomeEntity(id: 8, statusId: 1)
-                    ),
-                    oddValue: .decimal(odd: 1.75)
-                )
-            ],
-            type: "accumulator",
-            systemBetType: "treble",
-            status: "open",
-            statusLabel: "Open",
-            placedDate: "2023-07-21",
-            userId: "user002",
-            username: "userB",
-            totalOdds: "10.5"
-        )
-    ]
-
     
 }
 
@@ -779,7 +592,7 @@ extension ClientManagedHomeViewTemplateDataSource: HomeViewTemplateDataSource {
         case .highlightedLiveMatches:
             return self.highlightedLiveMatches.count
         case .featuredTips:
-            return self.featuredTips.isEmpty ? 0 : 1
+            return self.suggestedBetslips.isEmpty ? 0 : 1
         case .topCompetitionsShortcuts:
             if let featuredCompetitionId = Env.businessSettingsSocket.clientSettings.featuredCompetition?.id {
                 return !self.topCompetitionsLineCellViewModel.isEmpty ? 2 : 1
@@ -809,7 +622,7 @@ extension ClientManagedHomeViewTemplateDataSource: HomeViewTemplateDataSource {
         case .highlightedLiveMatches:
             return localized("live")
         case .featuredTips:
-            return self.featuredTips.isNotEmpty ? "Suggested_Bets" : nil
+            return self.suggestedBetslips.isNotEmpty ? "Suggested_Bets" : nil
         case .topCompetitionsShortcuts:
             return localized("top_competitions")
         case .promotedSportSection:
@@ -866,7 +679,7 @@ extension ClientManagedHomeViewTemplateDataSource: HomeViewTemplateDataSource {
         case .highlightedLiveMatches:
             return self.highlightedLiveMatches.isNotEmpty
         case .featuredTips:
-            return self.featuredTips.isNotEmpty
+            return self.suggestedBetslips.isNotEmpty
         case .topCompetitionsShortcuts:
             return !self.topCompetitionsLineCellViewModel.isEmpty
         case .promotedSportSection:
@@ -929,7 +742,7 @@ extension ClientManagedHomeViewTemplateDataSource: HomeViewTemplateDataSource {
     }
 
     func featuredTipLineViewModel() -> FeaturedTipLineViewModel? {
-        if self.featuredTips.isEmpty {
+        if self.suggestedBetslips.isEmpty {
             return nil
         }
 
@@ -937,7 +750,7 @@ extension ClientManagedHomeViewTemplateDataSource: HomeViewTemplateDataSource {
             return featuredTipLineViewModel
         }
         else {
-            self.cachedFeaturedTipLineViewModel = FeaturedTipLineViewModel(featuredTips: self.featuredTips)
+            self.cachedFeaturedTipLineViewModel = FeaturedTipLineViewModel(suggestedBetslip: self.suggestedBetslips)
             return self.cachedFeaturedTipLineViewModel
         }
 

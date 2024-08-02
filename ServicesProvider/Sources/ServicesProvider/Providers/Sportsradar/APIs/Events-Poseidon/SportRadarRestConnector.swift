@@ -44,8 +44,11 @@ class SportRadarRestConnector {
             return AnyPublisher(Fail<T, ServiceProviderError>(error: error))
         }
 
+        print("Request:", request.cURL(pretty: true))
+        
         return self.session.dataTaskPublisher(for: request)
             .tryMap { result in
+
                 if let httpResponse = result.response as? HTTPURLResponse, httpResponse.statusCode == 401 {
                     throw ServiceProviderError.unauthorized
                 }
@@ -76,12 +79,10 @@ class SportRadarRestConnector {
                 if "\(error)" == "emptyData" {
                     return ServiceProviderError.emptyData
                 }
-                
                 if let typedError = error as? ServiceProviderError,
                     case .resourceUnavailableOrDeleted = typedError {
                     return typedError
                 }
-
                 return ServiceProviderError.invalidResponse
             }
             .eraseToAnyPublisher()

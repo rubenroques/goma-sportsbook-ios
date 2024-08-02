@@ -183,7 +183,6 @@ class FeaturedTipCollectionViewCell: UICollectionViewCell {
     func configure(viewModel: FeaturedTipCollectionViewModel, socialFeaturesEnabled: Bool = false, hasCounter: Bool, followingUsers: [Follower]) {
 
         self.viewModel = viewModel
-
         self.socialFeaturesEnabled = socialFeaturesEnabled
         
         if socialFeaturesEnabled {

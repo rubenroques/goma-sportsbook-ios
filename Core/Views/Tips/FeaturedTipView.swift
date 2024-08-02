@@ -68,10 +68,9 @@ class FeaturedTipView: UIView {
 
         self.matchLabel.text = featuredTipSelection.eventName
 
-        let matchSportId = featuredTipSelection.sportId
-        self.sportIconImageView.image = UIImage(named: "sport_type_icon_\(matchSportId)")
+        self.sportIconImageView.image = UIImage(named: "sport_type_icon_\(featuredTipSelection.sportId)")
 
-        // self.setCountryFlag(isoCode: countryIsoCode, countryId: matchLocation.id)
+        self.setCountryFlag(isoCode: featuredTipSelection.venueName, countryId: featuredTipSelection.venueId)
         self.tournamentLabel.text = featuredTipSelection.sportParentName
     }
 
