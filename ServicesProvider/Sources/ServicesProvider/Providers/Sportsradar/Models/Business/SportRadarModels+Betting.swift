@@ -251,17 +251,14 @@ extension SportRadarModels {
             }
 
             self.partialCashoutReturn = try container.decodeIfPresent(Double.self, forKey: .partialCashoutReturn)
-
             self.partialCashoutStake = try container.decodeIfPresent(Double.self, forKey: .partialCashoutStake)
 
             self.betslipId = try container.decodeIfPresent(Int.self, forKey: .betslipId)
 
             self.cashbackReturn = try container.decodeIfPresent(Double.self, forKey: .cashbackReturn)
-
             self.freebetReturn = try container.decodeIfPresent(Double.self, forKey: .freebetReturn)
 
             self.potentialCashbackReturn = try container.decodeIfPresent(Double.self, forKey: .potentialCashbackReturn)
-
             self.potentialFreebetReturn = try container.decodeIfPresent(Double.self, forKey: .potentialFreebetReturn)
 
         }
