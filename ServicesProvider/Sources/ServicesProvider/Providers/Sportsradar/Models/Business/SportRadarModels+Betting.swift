@@ -318,7 +318,6 @@ extension SportRadarModels {
     struct BetTicket: Codable {
         var selections: [BetTicketSelection]
         var betTypeCode: String
-        var placeStake: String
         var winStake: String
         var potentialReturn: Double?
         var pool: Bool
@@ -326,7 +325,6 @@ extension SportRadarModels {
         enum CodingKeys: String, CodingKey {
             case selections = "betLegs"
             case betTypeCode = "idFOBetType"
-            case placeStake = "placeStake"
             case winStake = "winStake"
             case potentialReturn = "potentialReturn"
             case pool = "pool"
@@ -473,7 +471,6 @@ extension SportRadarModels {
     struct PlacedBetEntry: Codable {
         var identifier: String
         var potentialReturn: Double
-        var placeStake: Double
         var totalAvailableStake: Double
         var betLegs: [PlacedBetLeg]
         var type: String?
@@ -482,7 +479,6 @@ extension SportRadarModels {
             case identifier = "idFoBet"
             case betLegs = "betLegs"
             case potentialReturn = "potentialReturn"
-            case placeStake = "placeStake"
             case totalAvailableStake = "totalStake"
             case type = "idfoBetType"
         }
@@ -496,13 +492,7 @@ extension SportRadarModels {
             self.potentialReturn = try container.decode(Double.self, forKey: SportRadarModels.PlacedBetEntry.CodingKeys.potentialReturn)
             
             self.totalAvailableStake = try container.decodeIfPresent(Double.self, forKey: SportRadarModels.PlacedBetEntry.CodingKeys.totalAvailableStake) ?? 0.0
-            
-            if let placeStake = try? container.decode(Double.self, forKey: SportRadarModels.PlacedBetEntry.CodingKeys.placeStake) {
-                self.placeStake = placeStake
-            }
-            else {
-                self.placeStake = self.totalAvailableStake
-            }
+
             
             self.type = try container.decodeIfPresent(String.self, forKey: .type)
         }
