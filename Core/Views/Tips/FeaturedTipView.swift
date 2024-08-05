@@ -73,7 +73,21 @@ class FeaturedTipView: UIView {
         self.setCountryFlag(isoCode: featuredTipSelection.venueName, countryId: featuredTipSelection.venueId)
         self.tournamentLabel.text = featuredTipSelection.sportParentName
     }
+    
+    func configure(withFeaturedTipSelectionViewModel viewModel: FeaturedTipSelectionViewModel) {
+        
+        self.outcomeLabel.text = viewModel.outcomeName
 
+        self.matchLabel.text = viewModel.matchName
+
+        self.sportIconImageView.image = UIImage(named: viewModel.sportIconImageName)
+
+        self.countryIconImageView.image = UIImage(named: viewModel.countryFlagImageName)
+        
+        self.tournamentLabel.text = viewModel.tournamentName
+  
+    }
+    
     func setCountryFlag(isoCode: String, countryId: String) {
 
         if isoCode != "" {
@@ -89,7 +103,6 @@ class FeaturedTipView: UIView {
         else {
             let gameFlag = Assets.flagName(withCountryCode: countryId)
             self.countryIconImageView.image = UIImage(named: gameFlag)
-
         }
     }
 }
