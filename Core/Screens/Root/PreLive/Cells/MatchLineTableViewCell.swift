@@ -173,9 +173,9 @@ class MatchLineTableViewCell: UITableViewCell {
 
         self.store = store
 
-        UIView.performWithoutAnimation {
-            self.collectionView.reloadSections(IndexSet(integer: 0))
-        }
+//        UIView.performWithoutAnimation {
+//            self.collectionView.reloadSections(IndexSet(integer: 0))
+//        }
     }
 
     func setupFavoriteMatchInfoPublisher(match: Match) {
@@ -276,7 +276,7 @@ extension MatchLineTableViewCell: UICollectionViewDelegate, UICollectionViewData
             return match.markets.count
         }
 
-        return 1
+        return 0
     }
 
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {

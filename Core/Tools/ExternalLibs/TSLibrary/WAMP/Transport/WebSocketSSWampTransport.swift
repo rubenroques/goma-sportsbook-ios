@@ -10,7 +10,7 @@ import Foundation
 import Starscream
 
 class WebSocketSSWampTransport: SSWampTransport, WebSocketDelegate {
-
+    
     enum WebsocketMode {
         case binary, text
     }
@@ -89,7 +89,7 @@ class WebSocketSSWampTransport: SSWampTransport, WebSocketDelegate {
         delegate?.ssWampTransportReceivedData(data)
     }
 
-    func didReceive(event: WebSocketEvent, client: WebSocket) {
+    func didReceive(event: Starscream.WebSocketEvent, client: Starscream.WebSocketClient) {
 
         switch event {
         case .connected:
@@ -122,6 +122,8 @@ class WebSocketSSWampTransport: SSWampTransport, WebSocketDelegate {
             isConnected = false
             
         case .pong, .ping, .viabilityChanged:
+            ()
+        case .peerClosed:
             ()
         }
 
