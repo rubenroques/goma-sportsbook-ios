@@ -11,7 +11,7 @@ import ServicesProvider
 
 class ClientManagedHomeViewTemplateDataSource {
 
-    private let fixedSection = 8
+    private let fixedSection = 9
     private var refreshPublisher = PassthroughSubject<Void, Never>.init()
 
     // User Alert
@@ -108,6 +108,10 @@ class ClientManagedHomeViewTemplateDataSource {
     private var highlightsBoostedMatches: [Match] = []
 
     //
+    
+    //Hero card
+    private var heroMatches: [Match]  = []
+
 
     // Make your own bet call to action
     var shouldShowOwnBetCallToAction: Bool = true
@@ -165,6 +169,8 @@ class ClientManagedHomeViewTemplateDataSource {
         self.fetchPromotionalStories()
         self.fetchTopCompetitions()
         self.fetchHighlightedLiveMatches()
+        
+        self.fetchHeroMatches()
 
     }
 
@@ -312,6 +318,43 @@ class ClientManagedHomeViewTemplateDataSource {
             })
             
             self?.highlightsBoostedMatches = boostedMatches
+
+            self?.refreshPublisher.send()
+        })
+        .store(in: &self.cancellables)
+
+    }
+    
+    func fetchHeroMatches() {
+
+        let imageMatches = Env.servicesProvider.getHighlightedVisualImageEvents()
+            .receive(on: DispatchQueue.main)
+            .map(ServiceProviderModelMapper.matches(fromEvents:))
+            .replaceError(with: [])
+        
+
+        imageMatches.map { heroEvents -> [HighlightedMatchType] in
+            var events: [HighlightedMatchType] = heroEvents.map({ HighlightedMatchType.visualImageMatch($0) })
+            return events
+        }
+        .receive(on: DispatchQueue.main)
+        .sink(receiveCompletion: { completion in
+            print("ClientManagedHomeTemplate fetchHeroMatches completion \(completion)")
+        }, receiveValue: { [weak self] highlightedMatchTypes in
+            var imageMatches: [Match] = [ ]
+            var boostedMatches: [Match] = []
+            for highlightedMatchType in highlightedMatchTypes {
+                switch highlightedMatchType {
+                case .visualImageMatch(let match):
+                    imageMatches.append(match)
+                case .boostedOddsMatch(let match):
+                    boostedMatches.append(match)
+                }
+            }
+
+            self?.heroMatches = imageMatches.filter({
+                $0.homeParticipant.name != "" && $0.awayParticipant.name != ""
+            })
 
             self?.refreshPublisher.send()
         })
@@ -530,18 +573,20 @@ extension ClientManagedHomeViewTemplateDataSource: HomeViewTemplateDataSource {
         case 1:
             return self.bannersLineViewModel == nil ? 0 : 1
         case 2:
-            return self.quickSwipeStackMatches.isEmpty ? 0 : 1
+            return self.heroMatches == nil ? 0 : 1
         case 3:
-            return self.storiesLineViewModel == nil ? 0 : 1
+            return self.quickSwipeStackMatches.isEmpty ? 0 : 1
         case 4:
-            return self.shouldShowOwnBetCallToAction ? 1 : 0
+            return self.storiesLineViewModel == nil ? 0 : 1
         case 5:
+            return self.shouldShowOwnBetCallToAction ? 1 : 0
+        case 6:
             return self.highlightsVisualImageMatches.count +
             self.highlightsVisualImageOutrights.count +
             self.highlightsBoostedMatches.count
-        case 6:
-            return self.highlightedLiveMatches.count
         case 7:
+            return self.highlightedLiveMatches.count
+        case 8:
             if let featuredCompetitionId = Env.businessSettingsSocket.clientSettings.featuredCompetition?.id {
                 return !self.topCompetitionsLineCellViewModel.isEmpty ? 2 : 1
             }
@@ -562,11 +607,11 @@ extension ClientManagedHomeViewTemplateDataSource: HomeViewTemplateDataSource {
 
     func title(forSection section: Int) -> String? {
         switch section {
-        case 5:
-            return localized("highlights")
         case 6:
-            return localized("live")
+            return localized("highlights")
         case 7:
+            return localized("live")
+        case 8:
             return localized("top_competitions")
         default:
             ()
@@ -583,11 +628,11 @@ extension ClientManagedHomeViewTemplateDataSource: HomeViewTemplateDataSource {
     func iconName(forSection section: Int) -> String? {
         // return nil
         switch section {
-        case 5:
-            return "pin_icon"
         case 6:
-            return "tabbar_live_icon"
+            return "pin_icon"
         case 7:
+            return "tabbar_live_icon"
+        case 8:
             return "trophy_icon"
         default:
             ()
@@ -610,14 +655,14 @@ extension ClientManagedHomeViewTemplateDataSource: HomeViewTemplateDataSource {
 
     func shouldShowTitle(forSection section: Int) -> Bool {
         switch section {
-        case 5:
+        case 6:
             let highlightsTotal = self.highlightsVisualImageMatches.count +
             self.highlightsVisualImageOutrights.count +
             self.highlightsBoostedMatches.count
             return highlightsTotal > 0
-        case 6:
-            return !self.highlightedLiveMatches.isEmpty
         case 7:
+            return !self.highlightedLiveMatches.isEmpty
+        case 8:
             return !self.topCompetitionsLineCellViewModel.isEmpty
         default:
             ()
@@ -644,16 +689,18 @@ extension ClientManagedHomeViewTemplateDataSource: HomeViewTemplateDataSource {
         case 1:
             return .bannerLine
         case 2:
-            return .quickSwipeStack
+            return .heroCard
         case 3:
-            return .promotionalStories
+            return .quickSwipeStack
         case 4:
-            return .makeOwnBetCallToAction
+            return .promotionalStories
         case 5:
-            return .highlightedMatches
+            return .makeOwnBetCallToAction
         case 6:
-            return .highlightedLiveMatches
+            return .highlightedMatches
         case 7:
+            return .highlightedLiveMatches
+        case 8:
             return .topCompetitionsShortcuts
         default:
             ()
@@ -716,6 +763,23 @@ extension ClientManagedHomeViewTemplateDataSource: HomeViewTemplateDataSource {
             return self.quickSwipeStackCellViewModel!
         }
 
+    }
+    
+    // TODO: HERO CARD CELL VIEW MODEL
+    func heroCardMatchViewModel(forIndex index: Int) -> MatchWidgetCellViewModel? {
+                
+        if let match = self.heroMatches[safe: index] {
+            let id = match.id + MatchWidgetType.topImage.rawValue
+            if let matchWidgetCellViewModel = self.matchWidgetCellViewModelCache[id] {
+                return matchWidgetCellViewModel
+            }
+            else {
+                let matchWidgetCellViewModel = MatchWidgetCellViewModel(match: match, matchWidgetType: .topImage)
+                self.matchWidgetCellViewModelCache[id] = matchWidgetCellViewModel
+                return matchWidgetCellViewModel
+            }
+        }
+        return nil
     }
 
     func highlightedMatchViewModel(forIndex index: Int) -> MatchWidgetCellViewModel? {

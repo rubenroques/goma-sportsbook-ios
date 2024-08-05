@@ -5232,6 +5232,22 @@
 		655E20182B29CB7E00C95337 /* TextSubsectionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 655E20122B29CB7E00C95337 /* TextSubsectionView.swift */; };
 		655E20192B29CB7E00C95337 /* TextSubsectionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 655E20122B29CB7E00C95337 /* TextSubsectionView.swift */; };
 		655E201A2B29CB7E00C95337 /* TextSubsectionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 655E20122B29CB7E00C95337 /* TextSubsectionView.swift */; };
+		6561B6102C5BDC70008883EC /* HeroCardTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6561B60F2C5BDC70008883EC /* HeroCardTableViewCell.swift */; };
+		6561B6112C5BDC70008883EC /* HeroCardTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6561B60F2C5BDC70008883EC /* HeroCardTableViewCell.swift */; };
+		6561B6122C5BDC70008883EC /* HeroCardTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6561B60F2C5BDC70008883EC /* HeroCardTableViewCell.swift */; };
+		6561B6132C5BDC70008883EC /* HeroCardTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6561B60F2C5BDC70008883EC /* HeroCardTableViewCell.swift */; };
+		6561B6142C5BDC70008883EC /* HeroCardTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6561B60F2C5BDC70008883EC /* HeroCardTableViewCell.swift */; };
+		6561B6152C5BDC70008883EC /* HeroCardTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6561B60F2C5BDC70008883EC /* HeroCardTableViewCell.swift */; };
+		6561B6162C5BDC70008883EC /* HeroCardTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6561B60F2C5BDC70008883EC /* HeroCardTableViewCell.swift */; };
+		6561B6172C5BDC70008883EC /* HeroCardTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6561B60F2C5BDC70008883EC /* HeroCardTableViewCell.swift */; };
+		6561B6192C5D2D3D008883EC /* HeroCardMarketCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6561B6182C5D2D3D008883EC /* HeroCardMarketCollectionViewCell.swift */; };
+		6561B61A2C5D2D3D008883EC /* HeroCardMarketCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6561B6182C5D2D3D008883EC /* HeroCardMarketCollectionViewCell.swift */; };
+		6561B61B2C5D2D3D008883EC /* HeroCardMarketCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6561B6182C5D2D3D008883EC /* HeroCardMarketCollectionViewCell.swift */; };
+		6561B61C2C5D2D3D008883EC /* HeroCardMarketCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6561B6182C5D2D3D008883EC /* HeroCardMarketCollectionViewCell.swift */; };
+		6561B61D2C5D2D3D008883EC /* HeroCardMarketCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6561B6182C5D2D3D008883EC /* HeroCardMarketCollectionViewCell.swift */; };
+		6561B61E2C5D2D3D008883EC /* HeroCardMarketCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6561B6182C5D2D3D008883EC /* HeroCardMarketCollectionViewCell.swift */; };
+		6561B61F2C5D2D3D008883EC /* HeroCardMarketCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6561B6182C5D2D3D008883EC /* HeroCardMarketCollectionViewCell.swift */; };
+		6561B6202C5D2D3D008883EC /* HeroCardMarketCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6561B6182C5D2D3D008883EC /* HeroCardMarketCollectionViewCell.swift */; };
 		6584F8FE2BA0B84200E317EA /* EmptyReferralView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6584F8FD2BA0B84200E317EA /* EmptyReferralView.swift */; };
 		6584F8FF2BA0B84200E317EA /* EmptyReferralView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6584F8FD2BA0B84200E317EA /* EmptyReferralView.swift */; };
 		6584F9002BA0B84200E317EA /* EmptyReferralView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6584F8FD2BA0B84200E317EA /* EmptyReferralView.swift */; };
@@ -7598,6 +7614,8 @@
 		655E20082B21EA0D00C95337 /* NotificationsService.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = NotificationsService.entitlements; sourceTree = "<group>"; };
 		655E20092B28A14700C95337 /* TextSectionView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TextSectionView.swift; sourceTree = "<group>"; };
 		655E20122B29CB7E00C95337 /* TextSubsectionView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TextSubsectionView.swift; sourceTree = "<group>"; };
+		6561B60F2C5BDC70008883EC /* HeroCardTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HeroCardTableViewCell.swift; sourceTree = "<group>"; };
+		6561B6182C5D2D3D008883EC /* HeroCardMarketCollectionViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HeroCardMarketCollectionViewCell.swift; sourceTree = "<group>"; };
 		6584F8FD2BA0B84200E317EA /* EmptyReferralView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EmptyReferralView.swift; sourceTree = "<group>"; };
 		658A4CB52B9F6C4800F73772 /* Referrals.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Referrals.swift; sourceTree = "<group>"; };
 		658A4CBE2B9F6C7F00F73772 /* ServiceProviderModelMapper+Referrals.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "ServiceProviderModelMapper+Referrals.swift"; sourceTree = "<group>"; };
@@ -10050,6 +10068,8 @@
 				45CE91502A2F40E100BB3AB7 /* StoriesFullScreenItemView.swift */,
 				45ECD7642A90013C00492CB9 /* TopCompetitionsLineTableViewCell.swift */,
 				45ECD7542A90012600492CB9 /* TopCompetitionItemCollectionViewCell.swift */,
+				6561B60F2C5BDC70008883EC /* HeroCardTableViewCell.swift */,
+				6561B6182C5D2D3D008883EC /* HeroCardMarketCollectionViewCell.swift */,
 			);
 			path = Views;
 			sourceTree = "<group>";
@@ -13614,6 +13634,7 @@
 				450B784528F58574009229E3 /* BetslipHistory.swift in Sources */,
 				450B784628F58574009229E3 /* ReceivedTicketMessageTableViewCell.swift in Sources */,
 				450B784728F58574009229E3 /* AppSession.swift in Sources */,
+				6561B6122C5BDC70008883EC /* HeroCardTableViewCell.swift in Sources */,
 				450B784828F58574009229E3 /* HeaderDropDownSelectionView.swift in Sources */,
 				450B784928F58574009229E3 /* TabularViewDataSource.swift in Sources */,
 				A9C9C3A22AA5E13D00DD3A03 /* SearchSportHeaderView.swift in Sources */,
@@ -13661,6 +13682,7 @@
 				A90C373929C38EB9007B8AEC /* ServicesProviderModelMapper+Bonus.swift in Sources */,
 				450B786B28F58574009229E3 /* PreLiveEventsViewModel.swift in Sources */,
 				450B786C28F58574009229E3 /* BettingNotificationsViewController.swift in Sources */,
+				6561B61B2C5D2D3D008883EC /* HeroCardMarketCollectionViewCell.swift in Sources */,
 				A9DD89F52A57144D00D3A5FE /* SubjectType.swift in Sources */,
 				450B786D28F58574009229E3 /* NewMessageViewModel.swift in Sources */,
 				A96FAED92981912100A0751F /* UploadDocuments.swift in Sources */,
@@ -14489,6 +14511,7 @@
 				457CBA0E282D27D000ED0F00 /* MultiSlider+Drag.swift in Sources */,
 				457CBA10282D27D000ED0F00 /* OddsViewModel.swift in Sources */,
 				459EF2762BBD9F640098A7F6 /* ServiceProviderModelMapper+Scores.swift in Sources */,
+				6561B6162C5BDC70008883EC /* HeroCardTableViewCell.swift in Sources */,
 				457CBA11282D27D000ED0F00 /* BonusProgressViewModel.swift in Sources */,
 				457CBA12282D27D000ED0F00 /* SportSelectionViewController.swift in Sources */,
 				457CBA13282D27D000ED0F00 /* SportMatchDoubleLineTableViewCell.swift in Sources */,
@@ -14505,6 +14528,7 @@
 				457CBA1B282D27D000ED0F00 /* BettingHistoryRootViewController.swift in Sources */,
 				6584F9042BA0B84200E317EA /* EmptyReferralView.swift in Sources */,
 				45CE4DD42B04DDB8005C2414 /* SecundaryMarketDetails.swift in Sources */,
+				6561B61F2C5D2D3D008883EC /* HeroCardMarketCollectionViewCell.swift in Sources */,
 				457CBA1C282D27D000ED0F00 /* DepositViewModel.swift in Sources */,
 				457CBA1D282D27D000ED0F00 /* UserSession.swift in Sources */,
 				457CBA1E282D27D000ED0F00 /* LoadableContent.swift in Sources */,
@@ -15519,6 +15543,7 @@
 				457CBD9C282D2CD100ED0F00 /* BetSubmissionSuccessViewController.swift in Sources */,
 				457CBD9D282D2CD100ED0F00 /* ActivationAlertCollectionViewCell.swift in Sources */,
 				457CBD9E282D2CD100ED0F00 /* NibView.swift in Sources */,
+				6561B6202C5D2D3D008883EC /* HeroCardMarketCollectionViewCell.swift in Sources */,
 				457CBD9F282D2CD100ED0F00 /* BonusHistoryCellViewModel.swift in Sources */,
 				457CBDA0282D2CD100ED0F00 /* BonusProgressView.swift in Sources */,
 				A9C18A97285CDF0B009F0063 /* ToastCustom.swift in Sources */,
@@ -15687,6 +15712,7 @@
 				A93FE2302A49D0DF006A6907 /* CashbackInfoView.swift in Sources */,
 				457CBE10282D2CD100ED0F00 /* NewGroupViewModel.swift in Sources */,
 				A98708A728D3441800F27348 /* RankingCellViewModel.swift in Sources */,
+				6561B6172C5BDC70008883EC /* HeroCardTableViewCell.swift in Sources */,
 				457CBE11282D2CD100ED0F00 /* SegmentControlItemView.swift in Sources */,
 				45C10F8728772DA700037BBE /* UIViewController+Shift.swift in Sources */,
 				457CBE12282D2CD100ED0F00 /* AppearanceViewController.swift in Sources */,
@@ -15825,6 +15851,7 @@
 				4589C776282024E400243547 /* BetslipHistory.swift in Sources */,
 				45B6E220283FCFDC001B570C /* ReceivedTicketMessageTableViewCell.swift in Sources */,
 				4589C777282024E400243547 /* AppSession.swift in Sources */,
+				6561B6132C5BDC70008883EC /* HeroCardTableViewCell.swift in Sources */,
 				4589C778282024E400243547 /* HeaderDropDownSelectionView.swift in Sources */,
 				4589C779282024E400243547 /* TabularViewDataSource.swift in Sources */,
 				A9C9C3A32AA5E13D00DD3A03 /* SearchSportHeaderView.swift in Sources */,
@@ -15872,6 +15899,7 @@
 				A90C373A29C38EB9007B8AEC /* ServicesProviderModelMapper+Bonus.swift in Sources */,
 				4589C791282024E400243547 /* PreLiveEventsViewModel.swift in Sources */,
 				4589C792282024E400243547 /* BettingNotificationsViewController.swift in Sources */,
+				6561B61C2C5D2D3D008883EC /* HeroCardMarketCollectionViewCell.swift in Sources */,
 				A9DD89F62A57144D00D3A5FE /* SubjectType.swift in Sources */,
 				45B6E1FE283E3EFD001B570C /* NewMessageViewModel.swift in Sources */,
 				A96FAED82981912100A0751F /* UploadDocuments.swift in Sources */,
@@ -16523,6 +16551,7 @@
 				45A33055298976BA008181E9 /* BetslipHistory.swift in Sources */,
 				45A33056298976BA008181E9 /* ReceivedTicketMessageTableViewCell.swift in Sources */,
 				45A33057298976BA008181E9 /* AppSession.swift in Sources */,
+				6561B6102C5BDC70008883EC /* HeroCardTableViewCell.swift in Sources */,
 				45A33058298976BA008181E9 /* HeaderDropDownSelectionView.swift in Sources */,
 				45A33059298976BA008181E9 /* TabularViewDataSource.swift in Sources */,
 				A9C9C3A12AA5E13D00DD3A03 /* SearchSportHeaderView.swift in Sources */,
@@ -16570,6 +16599,7 @@
 				A90C373829C38EB9007B8AEC /* ServicesProviderModelMapper+Bonus.swift in Sources */,
 				45A3307C298976BA008181E9 /* PreLiveEventsViewModel.swift in Sources */,
 				45A3307D298976BA008181E9 /* BettingNotificationsViewController.swift in Sources */,
+				6561B6192C5D2D3D008883EC /* HeroCardMarketCollectionViewCell.swift in Sources */,
 				A9DD89F42A57144D00D3A5FE /* SubjectType.swift in Sources */,
 				45A3307E298976BA008181E9 /* NewMessageViewModel.swift in Sources */,
 				45A3307F298976BA008181E9 /* UploadDocuments.swift in Sources */,
@@ -17414,6 +17444,7 @@
 				45A6BC4828246A7500D9B416 /* FilterHistoryViewController.swift in Sources */,
 				45A6BC4928246A7500D9B416 /* MatchStatsViewModel.swift in Sources */,
 				A90FB7D529AF9DF800D08A7C /* SelfExclusionViewController.swift in Sources */,
+				6561B6152C5BDC70008883EC /* HeroCardTableViewCell.swift in Sources */,
 				65F8841A2C1B081E00A56983 /* PromotedCompetitionTableViewCell.swift in Sources */,
 				45A6BC4A28246A7500D9B416 /* BettingTicket.swift in Sources */,
 				45A6BC4C28246A7500D9B416 /* URLSchemaManager.swift in Sources */,
@@ -17603,6 +17634,7 @@
 				45E8E29928C88E1300A09B02 /* UserRankingPositionTableViewCell.swift in Sources */,
 				4587353A2AA76FCD003CF0CD /* EmptyLiveMessageBannerTableViewCell.swift in Sources */,
 				45A6BCC928246A7500D9B416 /* SearchEvent.swift in Sources */,
+				6561B61E2C5D2D3D008883EC /* HeroCardMarketCollectionViewCell.swift in Sources */,
 				45A6BCCB28246A7500D9B416 /* MatchOddsContent.swift in Sources */,
 				45A6BCCD28246A7500D9B416 /* BetSubmissionSuccessViewController.swift in Sources */,
 				45A6BCCE28246A7500D9B416 /* ActivationAlertCollectionViewCell.swift in Sources */,
@@ -17918,6 +17950,7 @@
 				45F6BAE02AB3732C00C81DE1 /* BetslipHistory.swift in Sources */,
 				45F6BAE12AB3732C00C81DE1 /* ReceivedTicketMessageTableViewCell.swift in Sources */,
 				45F6BAE22AB3732C00C81DE1 /* AppSession.swift in Sources */,
+				6561B6112C5BDC70008883EC /* HeroCardTableViewCell.swift in Sources */,
 				45F6BAE32AB3732C00C81DE1 /* HeaderDropDownSelectionView.swift in Sources */,
 				45F6BAE42AB3732C00C81DE1 /* TabularViewDataSource.swift in Sources */,
 				45F6BAE52AB3732C00C81DE1 /* SearchSportHeaderView.swift in Sources */,
@@ -17965,6 +17998,7 @@
 				45F6BB0D2AB3732C00C81DE1 /* ServicesProviderModelMapper+Bonus.swift in Sources */,
 				45F6BB0E2AB3732C00C81DE1 /* PreLiveEventsViewModel.swift in Sources */,
 				45F6BB0F2AB3732C00C81DE1 /* BettingNotificationsViewController.swift in Sources */,
+				6561B61A2C5D2D3D008883EC /* HeroCardMarketCollectionViewCell.swift in Sources */,
 				45F6BB102AB3732C00C81DE1 /* SubjectType.swift in Sources */,
 				45F6BB112AB3732C00C81DE1 /* NewMessageViewModel.swift in Sources */,
 				45F6BB122AB3732C00C81DE1 /* UploadDocuments.swift in Sources */,
@@ -18645,6 +18679,7 @@
 				A9C340AF28F9A74A0055360B /* FilterSliderCollapseView.swift in Sources */,
 				A99DE665299E825900AA24AA /* RecoverPasswordViewModel.swift in Sources */,
 				655E20172B29CB7E00C95337 /* TextSubsectionView.swift in Sources */,
+				6561B6142C5BDC70008883EC /* HeroCardTableViewCell.swift in Sources */,
 				A9C340B028F9A74A0055360B /* FirebaseClientSettings.swift in Sources */,
 				A9C340B128F9A74A0055360B /* CasinoGameDetailViewModel.swift in Sources */,
 				A93FE21A2A44A08C006A6907 /* CashbackRootViewController.swift in Sources */,
@@ -19102,6 +19137,7 @@
 				A9A43CA02A4B36D0008FB399 /* DocumentsRootViewModel.swift in Sources */,
 				A9C3423628F9A74A0055360B /* RankingsListViewModel.swift in Sources */,
 				A9C3423728F9A74A0055360B /* TabularBarDataSource.swift in Sources */,
+				6561B61D2C5D2D3D008883EC /* HeroCardMarketCollectionViewCell.swift in Sources */,
 				A9C3423828F9A74A0055360B /* SportSectionHeaderView.swift in Sources */,
 				A9958C7A2970641D001474E2 /* UploadDocumentTableViewCell.swift in Sources */,
 				A9C3423928F9A74A0055360B /* MyTicketBetLineViewModel.swift in Sources */,
