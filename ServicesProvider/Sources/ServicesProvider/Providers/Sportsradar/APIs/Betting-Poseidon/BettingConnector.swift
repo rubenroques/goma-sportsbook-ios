@@ -62,6 +62,8 @@ class BettingConnector: Connector {
             return Fail<T, ServiceProviderError>(error: error).eraseToAnyPublisher()
         }
 
+        print("Betting request: \(request.cURL(pretty: true))")
+        
         return self.session.dataTaskPublisher(for: request)
             .tryMap { result -> Data in
                 if let httpResponse = result.response as? HTTPURLResponse, httpResponse.statusCode == 401 {

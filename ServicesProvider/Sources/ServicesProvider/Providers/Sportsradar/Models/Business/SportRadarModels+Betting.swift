@@ -251,17 +251,14 @@ extension SportRadarModels {
             }
 
             self.partialCashoutReturn = try container.decodeIfPresent(Double.self, forKey: .partialCashoutReturn)
-
             self.partialCashoutStake = try container.decodeIfPresent(Double.self, forKey: .partialCashoutStake)
 
             self.betslipId = try container.decodeIfPresent(Int.self, forKey: .betslipId)
 
             self.cashbackReturn = try container.decodeIfPresent(Double.self, forKey: .cashbackReturn)
-
             self.freebetReturn = try container.decodeIfPresent(Double.self, forKey: .freebetReturn)
 
             self.potentialCashbackReturn = try container.decodeIfPresent(Double.self, forKey: .potentialCashbackReturn)
-
             self.potentialFreebetReturn = try container.decodeIfPresent(Double.self, forKey: .potentialFreebetReturn)
 
         }
@@ -321,7 +318,6 @@ extension SportRadarModels {
     struct BetTicket: Codable {
         var selections: [BetTicketSelection]
         var betTypeCode: String
-        var placeStake: String
         var winStake: String
         var potentialReturn: Double?
         var pool: Bool
@@ -329,7 +325,6 @@ extension SportRadarModels {
         enum CodingKeys: String, CodingKey {
             case selections = "betLegs"
             case betTypeCode = "idFOBetType"
-            case placeStake = "placeStake"
             case winStake = "winStake"
             case potentialReturn = "potentialReturn"
             case pool = "pool"
@@ -463,7 +458,6 @@ extension SportRadarModels {
     struct PlacedBetEntry: Codable {
         var identifier: String
         var potentialReturn: Double
-        var placeStake: Double
         var totalAvailableStake: Double
         var betLegs: [PlacedBetLeg]
         var type: String?
@@ -472,7 +466,6 @@ extension SportRadarModels {
             case identifier = "idFoBet"
             case betLegs = "betLegs"
             case potentialReturn = "potentialReturn"
-            case placeStake = "placeStake"
             case totalAvailableStake = "totalStake"
             case type = "idfoBetType"
         }
@@ -484,7 +477,6 @@ extension SportRadarModels {
 
             self.betLegs = try container.decode([SportRadarModels.PlacedBetLeg].self, forKey: SportRadarModels.PlacedBetEntry.CodingKeys.betLegs)
             self.potentialReturn = try container.decode(Double.self, forKey: SportRadarModels.PlacedBetEntry.CodingKeys.potentialReturn)
-            self.placeStake = try container.decode(Double.self, forKey: SportRadarModels.PlacedBetEntry.CodingKeys.placeStake)
             self.totalAvailableStake = try container.decodeIfPresent(Double.self, forKey: SportRadarModels.PlacedBetEntry.CodingKeys.totalAvailableStake) ?? 0.0
             self.type = try container.decodeIfPresent(String.self, forKey: .type)
         }
