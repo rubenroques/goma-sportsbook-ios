@@ -13,6 +13,7 @@ class HeroCardTableViewCell: UITableViewCell {
     private lazy var outerView: UIView = Self.createOuterView()
     private lazy var baseView: UIView = Self.createBaseView()
     private lazy var topImageView: UIImageView = Self.createTopImageView()
+    private lazy var topInfoBaseView: UIView = Self.createTopInfoBaseView()
     private lazy var gradientView: GradientView = Self.createGradientView()
     private lazy var bottomInfoBaseView: UIView = Self.createBottomInfoBaseView()
     private lazy var favoriteButton: UIButton = Self.createFavoriteButton()
@@ -92,6 +93,8 @@ class HeroCardTableViewCell: UITableViewCell {
         self.baseView.backgroundColor = .clear
         
         self.topImageView.backgroundColor = .clear
+        
+        self.topInfoBaseView.backgroundColor = UIColor.black.withAlphaComponent(0.55)
         
         self.gradientView.backgroundColor = .clear
         
@@ -305,6 +308,12 @@ extension HeroCardTableViewCell {
         return imageView
     }
     
+    private static func createTopInfoBaseView() -> UIView {
+        let view = UIView()
+        view.translatesAutoresizingMaskIntoConstraints = false
+        return view
+    }
+    
     private static func createGradientView() -> GradientView {
         let gradientView = GradientView()
         gradientView.translatesAutoresizingMaskIntoConstraints = false
@@ -400,23 +409,25 @@ extension HeroCardTableViewCell {
         
         self.baseView.addSubview(self.topImageView)
         
+        self.baseView.addSubview(self.topInfoBaseView)
+        
+        self.topInfoBaseView.addSubview(self.favoriteButton)
+        self.topInfoBaseView.addSubview(self.favoriteIconImageView)
+                
+        self.topInfoBaseView.addSubview(self.sportIconImageView)
+        
+        self.topInfoBaseView.addSubview(self.locationIconImageView)
+        
+        self.topInfoBaseView.addSubview(self.competitionLabel)
+        
+        self.baseView.bringSubviewToFront(self.favoriteButton)
+
+        self.baseView.addSubview(self.topSeparatorAlphaLineView)
+
         self.baseView.addSubview(self.gradientView)
                 
         self.baseView.addSubview(self.bottomInfoBaseView)
-        
-        self.bottomInfoBaseView.addSubview(self.favoriteButton)
-        self.bottomInfoBaseView.addSubview(self.favoriteIconImageView)
-                
-        self.bottomInfoBaseView.addSubview(self.sportIconImageView)
-        
-        self.bottomInfoBaseView.addSubview(self.locationIconImageView)
-        
-        self.bottomInfoBaseView.addSubview(self.competitionLabel)
-        
-        self.baseView.bringSubviewToFront(self.favoriteButton)
-        
-        self.bottomInfoBaseView.addSubview(self.topSeparatorAlphaLineView)
-        
+                        
         self.bottomInfoBaseView.addSubview(self.collectionView)
         
         self.bottomInfoBaseView.addSubview(self.pageControl)
@@ -444,28 +455,20 @@ extension HeroCardTableViewCell {
             self.topImageView.topAnchor.constraint(equalTo: self.baseView.topAnchor),
             self.topImageView.leadingAnchor.constraint(equalTo: self.baseView.leadingAnchor),
             self.topImageView.trailingAnchor.constraint(equalTo: self.baseView.trailingAnchor),
-            self.topImageView.bottomAnchor.constraint(equalTo: self.baseView.bottomAnchor)
-        ])
-        
-        // Bottom info
-        NSLayoutConstraint.activate([
-            self.bottomInfoBaseView.leadingAnchor.constraint(equalTo: self.baseView.leadingAnchor),
-            self.bottomInfoBaseView.trailingAnchor.constraint(equalTo: self.baseView.trailingAnchor),
-            self.bottomInfoBaseView.bottomAnchor.constraint(equalTo: self.baseView.bottomAnchor),
-//            self.bottomInfoBaseView.heightAnchor.constraint(equalToConstant: self.cellInfoHeight),
+            self.topImageView.bottomAnchor.constraint(equalTo: self.baseView.bottomAnchor),
             
-            self.gradientView.leadingAnchor.constraint(equalTo: self.baseView.leadingAnchor),
-            self.gradientView.trailingAnchor.constraint(equalTo: self.baseView.trailingAnchor),
-            self.gradientView.bottomAnchor.constraint(equalTo: self.bottomInfoBaseView.topAnchor),
-            self.gradientView.heightAnchor.constraint(equalToConstant: 100),
+            self.topInfoBaseView.leadingAnchor.constraint(equalTo: self.baseView.leadingAnchor),
+            self.topInfoBaseView.trailingAnchor.constraint(equalTo: self.baseView.trailingAnchor),
+            self.topInfoBaseView.topAnchor.constraint(equalTo: self.baseView.topAnchor),
+            self.topInfoBaseView.heightAnchor.constraint(equalToConstant: 31),
             
-            self.favoriteButton.leadingAnchor.constraint(equalTo: self.bottomInfoBaseView.leadingAnchor),
-            self.favoriteButton.topAnchor.constraint(equalTo: self.bottomInfoBaseView.topAnchor),
+            self.favoriteButton.leadingAnchor.constraint(equalTo: self.topInfoBaseView.leadingAnchor),
+            self.favoriteButton.topAnchor.constraint(equalTo: self.topInfoBaseView.topAnchor),
             self.favoriteButton.widthAnchor.constraint(equalToConstant: 40),
             self.favoriteButton.heightAnchor.constraint(equalTo: self.favoriteButton.widthAnchor),
             
-            self.favoriteIconImageView.leadingAnchor.constraint(equalTo: self.bottomInfoBaseView.leadingAnchor, constant: 12),
-            self.favoriteIconImageView.topAnchor.constraint(equalTo: self.bottomInfoBaseView.topAnchor, constant: 12),
+            self.favoriteIconImageView.leadingAnchor.constraint(equalTo: self.topInfoBaseView.leadingAnchor, constant: 12),
+            self.favoriteIconImageView.topAnchor.constraint(equalTo: self.topInfoBaseView.topAnchor, constant: 12),
             self.favoriteIconImageView.widthAnchor.constraint(equalToConstant: 15),
             self.favoriteIconImageView.heightAnchor.constraint(equalTo: self.favoriteIconImageView.widthAnchor),
             
@@ -480,13 +483,26 @@ extension HeroCardTableViewCell {
             self.locationIconImageView.heightAnchor.constraint(equalTo: self.locationIconImageView.widthAnchor),
             
             self.competitionLabel.leadingAnchor.constraint(equalTo: self.locationIconImageView.trailingAnchor, constant: 7),
-            self.competitionLabel.trailingAnchor.constraint(equalTo: self.bottomInfoBaseView.trailingAnchor, constant: -12),
+            self.competitionLabel.trailingAnchor.constraint(equalTo: self.topInfoBaseView.trailingAnchor, constant: -12),
             self.competitionLabel.centerYAnchor.constraint(equalTo: self.favoriteIconImageView.centerYAnchor),
             
-            self.topSeparatorAlphaLineView.leadingAnchor.constraint(equalTo: self.bottomInfoBaseView.leadingAnchor),
-            self.topSeparatorAlphaLineView.trailingAnchor.constraint(equalTo: self.bottomInfoBaseView.trailingAnchor),
+            self.topSeparatorAlphaLineView.leadingAnchor.constraint(equalTo: self.baseView.leadingAnchor),
+            self.topSeparatorAlphaLineView.trailingAnchor.constraint(equalTo: self.baseView.trailingAnchor),
             self.topSeparatorAlphaLineView.heightAnchor.constraint(equalToConstant: 1),
-            self.topSeparatorAlphaLineView.topAnchor.constraint(equalTo: self.favoriteIconImageView.bottomAnchor, constant: 10),
+            self.topSeparatorAlphaLineView.topAnchor.constraint(equalTo: self.topInfoBaseView.bottomAnchor),
+        ])
+        
+        // Bottom info
+        NSLayoutConstraint.activate([
+            self.bottomInfoBaseView.leadingAnchor.constraint(equalTo: self.baseView.leadingAnchor),
+            self.bottomInfoBaseView.trailingAnchor.constraint(equalTo: self.baseView.trailingAnchor),
+            self.bottomInfoBaseView.bottomAnchor.constraint(equalTo: self.baseView.bottomAnchor),
+//            self.bottomInfoBaseView.heightAnchor.constraint(equalToConstant: self.cellInfoHeight),
+            
+            self.gradientView.leadingAnchor.constraint(equalTo: self.baseView.leadingAnchor),
+            self.gradientView.trailingAnchor.constraint(equalTo: self.baseView.trailingAnchor),
+            self.gradientView.bottomAnchor.constraint(equalTo: self.bottomInfoBaseView.topAnchor),
+            self.gradientView.heightAnchor.constraint(equalToConstant: 100),
             
             self.collectionView.leadingAnchor.constraint(equalTo: self.baseView.leadingAnchor, constant: 0),
             self.collectionView.trailingAnchor.constraint(equalTo: self.baseView.trailingAnchor, constant: 0),
