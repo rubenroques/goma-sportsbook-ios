@@ -132,7 +132,6 @@ extension SportRadarModelMapper {
         let betLegs = placedBetEntry.betLegs.map(Self.placedBetLeg(fromInternalPlacedBetLeg:))
         return PlacedBetEntry(identifier: placedBetEntry.identifier,
                               potentialReturn: placedBetEntry.potentialReturn,
-                              placeStake: placedBetEntry.placeStake,
                               totalStake: placedBetEntry.totalAvailableStake,
                               betLegs: betLegs, type: placedBetEntry.type)
     }
