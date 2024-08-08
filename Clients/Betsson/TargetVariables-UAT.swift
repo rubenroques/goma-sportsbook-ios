@@ -94,4 +94,9 @@ struct TargetVariables: SportsbookTarget {
     static var secundaryMarketSpecsUrl: String? {
         return "https://goma-uat.betsson.fr/secondary_markets_config.json"
     }
+    
+    static var expandableSuggestedBetsWidget: Bool {
+        return false
+    }
+    
 }

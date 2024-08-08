@@ -84,4 +84,8 @@ struct TargetVariables: SportsbookTarget {
         return nil
     }
     
+    static var expandableSuggestedBetsWidget: Bool {
+        return true
+    }
+    
 }
