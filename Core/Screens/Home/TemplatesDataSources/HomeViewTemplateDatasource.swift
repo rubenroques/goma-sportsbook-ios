@@ -43,4 +43,6 @@ protocol HomeViewTemplateDataSource {
     
     func setStoryLineViewModel(viewModel: StoriesLineCellViewModel)
     
+    func heroCardMatchViewModel(forIndex index: Int) -> MatchWidgetCellViewModel?
+
 }

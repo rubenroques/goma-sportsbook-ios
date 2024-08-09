@@ -287,6 +287,8 @@ class MatchWidgetCellViewModel {
             .eraseToAnyPublisher()
     }
     
+    var currentCollectionPage: CurrentValueSubject<Int, Never> = .init(0)
+    
     //
     @Published private(set) var homeOldBoostedOddAttributedString: NSAttributedString = NSAttributedString(string: "-")
     @Published private(set) var drawOldBoostedOddAttributedString: NSAttributedString = NSAttributedString(string: "-")

@@ -91,6 +91,7 @@ class HomeViewController: UIViewController {
         self.tableView.register(StoriesLineTableViewCell.self, forCellReuseIdentifier: StoriesLineTableViewCell.identifier)
         self.tableView.register(TopCompetitionsLineTableViewCell.self, forCellReuseIdentifier: TopCompetitionsLineTableViewCell.identifier)
         self.tableView.register(PromotedCompetitionTableViewCell.self, forCellReuseIdentifier: PromotedCompetitionTableViewCell.identifier)
+        self.tableView.register(HeroCardTableViewCell.self, forCellReuseIdentifier: HeroCardTableViewCell.identifier)
 
         // Register cell based on the MatchWidgetType
         for matchWidgetType in MatchWidgetType.allCases {
@@ -1133,8 +1134,43 @@ extension HomeViewController: UITableViewDelegate, UITableViewDataSource {
 
             return cell
             
+        case .heroCard:
+
+            guard
+                let viewModel = self.viewModel.heroCardMatchViewModel(forIndex: indexPath.row)
+            else {
+                return UITableViewCell()
+            }
+
+            guard
+                let cell = tableView.dequeueReusableCell(withIdentifier: HeroCardTableViewCell.identifier, for: indexPath) as? HeroCardTableViewCell
+            else {
+                return UITableViewCell()
+            }
+
+            cell.configure(withViewModel: viewModel)
+            
+            return cell
         }
 
+    }
+    
+    func tableView(_ tableView: UITableView, didEndDisplaying cell: UITableViewCell, forRowAt indexPath: IndexPath) {
+        guard
+            let contentType = self.viewModel.contentType(forSection: indexPath.section)
+        else {
+            return
+        }
+
+        switch contentType {
+        case .heroCard:
+            
+            if let cell = cell as? HeroCardTableViewCell {
+                cell.stopTimer()
+            }
+        default:
+            ()
+        }
     }
 
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
@@ -1215,6 +1251,16 @@ extension HomeViewController: UITableViewDelegate, UITableViewDataSource {
             return UITableView.automaticDimension
         case .highlightedLiveMatches:
             return UITableView.automaticDimension
+        case .heroCard:
+//            if let viewModel = self.viewModel.heroCardMatchViewModel(forIndex: indexPath.row) {
+//                switch viewModel.matchWidgetType {
+//                case .topImage, .topImageOutright:
+//                    return 262
+//                default:
+//                    return 164
+//                }
+//            }
+            return UITableView.automaticDimension
         }
 
     }
@@ -1287,6 +1333,16 @@ extension HomeViewController: UITableViewDelegate, UITableViewDataSource {
             return StyleHelper.cardsStyleHeight() + 20
         case .highlightedLiveMatches:
             return StyleHelper.cardsStyleHeight() + 20
+        case .heroCard:
+//            if let viewModel = self.viewModel.heroCardMatchViewModel(forIndex: indexPath.row) {
+//                switch viewModel.matchWidgetType {
+//                case .topImage, .topImageOutright:
+//                    return 262
+//                default:
+//                    return 164
+//                }
+//            }
+            return 679
         }
     }
 
@@ -1442,6 +1498,8 @@ extension HomeViewController: UITableViewDataSourcePrefetching {
             case .supplementaryEvents:
                 ()
             case .highlightedLiveMatches:
+                ()
+            case .heroCard:
                 ()
             }
         }

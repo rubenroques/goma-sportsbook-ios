@@ -40,6 +40,7 @@ class HomeViewModel {
         case promotedSportSection
 
         case supplementaryEvents
+        case heroCard
 
         var identifier: String {
             switch self {
@@ -62,6 +63,8 @@ class HomeViewModel {
             case .promotedSportSection: return "promotedSportSection"
 
             case .supplementaryEvents: return "supplementaryEvents"
+                
+            case .heroCard: return "heroCard"
             }
         }
     }
@@ -181,6 +184,10 @@ extension HomeViewModel {
 
     func topCompetitionsLineCellViewModel(forSection section: Int) -> TopCompetitionsLineCellViewModel? {
         return self.homeViewTemplateDataSource.topCompetitionsLineCellViewModel(forSection: section)
+    }
+    
+    func heroCardMatchViewModel(forIndex index: Int) -> MatchWidgetCellViewModel? {
+        return self.homeViewTemplateDataSource.heroCardMatchViewModel(forIndex: index)
     }
     
 }

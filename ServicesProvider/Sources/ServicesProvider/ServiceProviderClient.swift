@@ -494,6 +494,15 @@ extension ServicesProviderClient {
         return eventsProvider.getHighlightedVisualImageEvents()
     }
 
+    public func getHeroGameEvent() -> AnyPublisher<Event, ServiceProviderError> {
+        guard
+            let eventsProvider = self.eventsProvider
+        else {
+            return Fail(error: .eventsProviderNotFound).eraseToAnyPublisher()
+        }
+
+        return eventsProvider.getHeroGameEvent()
+    }
 
     //
     //

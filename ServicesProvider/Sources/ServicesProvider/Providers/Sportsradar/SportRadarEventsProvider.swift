@@ -1392,6 +1392,45 @@ extension SportRadarEventsProvider {
         .eraseToAnyPublisher()
     }
 
+    func getHeroGameEvent() -> AnyPublisher<Event, ServiceProviderError> {
+        let endpoint = SportRadarRestAPIClient.getHeroGameCard
+        let requestPublisher: AnyPublisher<SportRadarModels.SportRadarResponse<SportRadarModels.HeadlineResponse>, ServiceProviderError> = self.restConnector.request(endpoint)
+
+        return requestPublisher
+            .map(\.data)
+            .flatMap({ headlineResponse -> AnyPublisher<Event, ServiceProviderError> in
+
+                let headlineItems = headlineResponse.headlineItems ?? []
+                var headlineItemImage: String?
+                
+                headlineItems.forEach({ item in
+                    if let id = item.marketGroupId, let imageURL = item.imageURL {
+                        headlineItemImage = imageURL
+                    }
+                })
+                
+                let marketGroupId = headlineItems.map({ item in return item.marketGroupId }).compactMap({ $0 }).first
+                              
+                return self.getEventForMarketGroup(withId: marketGroupId ?? "")
+                    .map({ event -> Event in
+                        
+                        let firstMarket = event.markets.first
+                        
+                        event.promoImageURL =  headlineItemImage
+                        event.homeTeamName = firstMarket?.homeParticipant ?? ""
+                        event.awayTeamName = firstMarket?.awayParticipant ?? ""
+                        event.name = firstMarket?.eventName ?? ""
+
+                        return event
+                    })
+                    .eraseToAnyPublisher()
+
+//                return publisher
+//                    .setFailureType(to: ServiceProviderError.self)
+//                    .eraseToAnyPublisher()
+            })
+            .eraseToAnyPublisher()
+    }
 
     public func getPromotedSports() -> AnyPublisher<[PromotedSport], ServiceProviderError> {
         let endpoint = SportRadarRestAPIClient.promotedSports
