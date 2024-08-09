@@ -232,22 +232,17 @@ class TipsTableViewCell: UITableViewCell {
     }
 
     @objc func didTapBetButton() {
-        // EM TEMP SHUTDOWN
-//        if let viewModel = self.viewModel {
-//            let betId = viewModel.getBetId()
-//
-//            viewModel.createBetslipTicket()
-//        }
+        if let viewModel = self.viewModel {
+            let betId = viewModel.getBetId()
+            viewModel.createBetslipTicket()
+        }
     }
 
     @objc func didTapUser() {
         if let userId = self.viewModel?.getUserId() {
-            
             let userBasicInfo = UserBasicInfo(userId: userId, username: self.viewModel?.getUsername() ?? "")
-
             self.shouldShowUserProfile?(userBasicInfo)
         }
-
     }
 
 }

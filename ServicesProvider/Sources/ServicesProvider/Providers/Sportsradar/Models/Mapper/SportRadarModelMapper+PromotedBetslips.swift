@@ -36,19 +36,19 @@ extension SportRadarModelMapper {
                               numberOutrightMarkets: 0,
                               numberLiveEvents: 0)
         
-        return PromotedBetslipSelection(
-            id: internalSelection.id,
-            countryName: internalSelection.country ?? "international",
-            league: internalSelection.league,
-            marketType: internalSelection.marketType,
-            eventId: internalSelection.orakoEventId,
-            marketId: internalSelection.orakoMarketId,
-            outcomeId: internalSelection.orakoSelectionId,
-            participantIds: internalSelection.participantIds,
-            participants: internalSelection.participants,
-            sport: sport,
-            odd: internalSelection.quote
-        )
+        return PromotedBetslipSelection(id: internalSelection.id,
+                                        countryName: internalSelection.country ?? "international",
+                                        competitionName: internalSelection.league,
+                                        eventId: internalSelection.orakoEventId,
+                                        marketId: String(internalSelection.marketId ?? 0),
+                                        outcomeId: internalSelection.orakoSelectionId,
+                                        marketName: internalSelection.marketType,
+                                        outcomeType: internalSelection.outcomeType,
+                                        participantIds: internalSelection.participantIds,
+                                        participants: internalSelection.participants,
+                                        sport: sport,
+                                        odd: internalSelection.quote)
+        
     }
     
 }

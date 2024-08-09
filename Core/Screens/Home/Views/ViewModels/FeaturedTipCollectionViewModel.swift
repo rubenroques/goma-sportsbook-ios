@@ -50,7 +50,7 @@ class FeaturedTipSelectionViewModel {
         case .featuredTipSelection(let featuredTipSelection):
             countryIdentifier = featuredTipSelection.venueName ?? featuredTipSelection.venueId
         case .suggestedBetslipSelection(let suggestedBetslipSelection):
-            countryIdentifier = countryIdentifiersuggestedBetslipSelection.location?.id
+            countryIdentifier = suggestedBetslipSelection.location?.id
         }
         
         if let countryIdentifierValue = countryIdentifier {
@@ -68,6 +68,15 @@ class FeaturedTipSelectionViewModel {
             return featuredTipSelection.sportParentName
         case .suggestedBetslipSelection(let suggestedBetslipSelection):
             return suggestedBetslipSelection.competitionName
+        }
+    }
+    
+    var marketNameName: String {
+        switch dataType {
+        case .featuredTipSelection(let featuredTipSelection):
+            return featuredTipSelection.extraSelectionInfo.marketName
+        case .suggestedBetslipSelection(let suggestedBetslipSelection):
+            return suggestedBetslipSelection.marketName
         }
         
     }
@@ -103,17 +112,31 @@ class FeaturedTipCollectionViewModel {
         case fullscreen
     }
     
+    var selectionViewModels: [FeaturedTipSelectionViewModel] = []
+    
     private var dataType: DataType
     var sizeType: SizeType
 
+    
     init(featuredTip: FeaturedTip, sizeType: SizeType) {
         self.dataType = .featuredTip(featuredTip)
         self.sizeType = sizeType
+        self.generateSelectionViewModels()
     }
 
     init(suggestedBetslip: SuggestedBetslip, sizeType: SizeType) {
         self.dataType = .suggestedBetslip(suggestedBetslip)
         self.sizeType = sizeType
+        self.generateSelectionViewModels()
+    }
+    
+    private func generateSelectionViewModels() {
+        switch self.dataType {
+        case .featuredTip(let featuredTip):
+            self.selectionViewModels = (featuredTip.selections ?? []).map(FeaturedTipSelectionViewModel.init(featuredTipSelection:))
+        case .suggestedBetslip(let suggestedBetslip):
+            self.selectionViewModels = suggestedBetslip.selections.map(FeaturedTipSelectionViewModel.init(suggestedBetslipSelection:))
+        }
     }
     
     var shouldCropList: Bool {
@@ -123,14 +146,14 @@ class FeaturedTipCollectionViewModel {
     func getUsername() -> String? {
         switch self.dataType {
         case .featuredTip(let featuredTip):
-            return self.featuredTip.username
+            return featuredTip.username
         case .suggestedBetslip(let suggestedBetslip):
             return nil
         }
         
     }
 
-    func getTotalOdds() -> String {
+    func getTotalOdds() -> String? {
         
         switch self.dataType {
         case .featuredTip(let featuredTip):
@@ -139,10 +162,12 @@ class FeaturedTipCollectionViewModel {
                 return "\(oddFormatted)"
             }
         case .suggestedBetslip(let suggestedBetslip):
-            fatalError("getTotalOdds")
+            let totalOdd = suggestedBetslip.selections.map(\.odd).reduce(1, *)
+            let oddFormatted = OddFormatter.formatOdd(withValue: totalOdd)
+            return "\(oddFormatted)"
         }
         
-        return ""
+        return nil
     }
 
     func getNumberSelections() -> String? {
@@ -153,12 +178,9 @@ class FeaturedTipCollectionViewModel {
                 return "\(numberSelections)"
             }
         case .suggestedBetslip(let suggestedBetslip):
-            fatalError("getNumberSelections")
+            return nil
         }
-        
-        
-
-        return ""
+        return nil
     }
 
     func getUserId() -> String? {
@@ -166,14 +188,23 @@ class FeaturedTipCollectionViewModel {
         case .featuredTip(let featuredTip):
             return featuredTip.userId
         case .suggestedBetslip(let suggestedBetslip):
-            fatalError("getUserId")
+            return nil
         }
         
     }
+    
+    func addTicketBetslip() {
+        switch self.dataType {
+        case .featuredTip(let featuredTip):
+            self.addTicketBetslip(forFeaturedTip: featuredTip)
+        case .suggestedBetslip(let suggestedBetslip):
+            self.addTicketBetslip(forSuggestedBetslip: suggestedBetslip)
+        }
+    }
 
-    func createBetslipTicket() {
+    private func addTicketBetslip(forFeaturedTip featuredTip: FeaturedTip) {
 
-        guard let selections = self.featuredTip.selections else {return}
+        guard let selections = featuredTip.selections else {return}
 
         for selection in selections {
             let bettingOfferId = "\(selection.extraSelectionInfo.bettingOfferId)"
@@ -199,7 +230,30 @@ class FeaturedTipCollectionViewModel {
 
         }
     }
+    
+    private func addTicketBetslip(forSuggestedBetslip suggestedBetslip: SuggestedBetslip) {
+        for selection in suggestedBetslip.selections {
+            
+            let ticket = BettingTicket(id: selection.outcomeId,
+                                       outcomeId: selection.outcomeId,
+                                       marketId: selection.marketId,
+                                       matchId: selection.eventId,
+                                       decimalOdd: selection.odd,
+                                       isAvailable: true,
+                                       matchDescription: selection.eventName,
+                                       marketDescription: selection.marketName,
+                                       outcomeDescription: selection.outcomeName,
+                                       homeParticipantName: nil,
+                                       awayParticipantName: nil,
+                                       sportIdCode: selection.sport?.id)
 
+            if !Env.betslipManager.hasBettingTicket(withId: selection.outcomeId) {
+                Env.betslipManager.addBettingTicket(ticket)
+                self.shouldShowBetslip?()
+            }
+
+        }
+    }
     
     func followUser(userId: String) {
 

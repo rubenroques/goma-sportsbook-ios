@@ -53,7 +53,8 @@ class FeaturedTipLineViewModel {
                 return featuredTipCollectionViewModel
             }
             else {
-                let featuredTipCollectionViewModel = FeaturedTipCollectionViewModel(featuredTip: featuredTip, sizeType: .small)
+                let featuredTipCollectionViewModel = FeaturedTipCollectionViewModel(featuredTip: featuredTip,
+                                                                                    sizeType: .small)
                 self.featuredTipCollectionCacheViewModel[tipId] = featuredTipCollectionViewModel
                 return featuredTipCollectionViewModel
             }
@@ -64,7 +65,15 @@ class FeaturedTipLineViewModel {
                 return nil
             }
 
-            return nil
+            if let featuredTipCollectionViewModel = featuredTipCollectionCacheViewModel[suggestedBetslip.id] {
+                return featuredTipCollectionViewModel
+            }
+            else {
+                let featuredTipCollectionViewModel = FeaturedTipCollectionViewModel(suggestedBetslip: suggestedBetslip,
+                                                                                    sizeType: .small)
+                self.featuredTipCollectionCacheViewModel[suggestedBetslip.id] = featuredTipCollectionViewModel
+                return featuredTipCollectionViewModel
+            }
         }
         
     }
@@ -189,7 +198,7 @@ extension FeaturedTipLineTableViewCell: UICollectionViewDelegate, UICollectionVi
     func collectionView(_ collectionView: UICollectionView,
                         layout collectionViewLayout: UICollectionViewLayout,
                         sizeForItemAt indexPath: IndexPath) -> CGSize {
-        return CGSize(width: Double(collectionView.frame.size.width)*0.85, height: 354)
+        return CGSize(width: Double(collectionView.frame.size.width)*0.85, height: 456)
     }
 
 }

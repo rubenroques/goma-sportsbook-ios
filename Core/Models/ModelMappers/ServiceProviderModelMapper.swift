@@ -399,7 +399,7 @@ extension ServiceProviderModelMapper {
             venue = Location(id: venueCountry.iso2Code, name: venueCountry.name, isoCode: venueCountry.iso2Code)
         }
         
-        return SuggestedBetslipSelection(id: promotedSelection.id,
+        let suggestedBetslipSelection = SuggestedBetslipSelection(id: promotedSelection.id,
                                          location: venue,
                                          competitionName: promotedSelection.competitionName,
                                          participants: participants,
@@ -408,9 +408,11 @@ extension ServiceProviderModelMapper {
                                          eventId: promotedSelection.eventId,
                                          marketId: promotedSelection.marketId,
                                          outcomeId: promotedSelection.outcomeId,
-                                         marketName: promotedSelection.marketType,
-                                         outcomeName: promotedSelection.outcomeName,
-                                         eventName: promotedSelection.eventName)
+                                         eventName: promotedSelection.eventName,
+                                         marketName: promotedSelection.marketName,
+                                         outcomeName: promotedSelection.outcomeName)
+        
+        return suggestedBetslipSelection
     }
     
 }

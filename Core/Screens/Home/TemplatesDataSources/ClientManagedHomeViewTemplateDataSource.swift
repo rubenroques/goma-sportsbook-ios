@@ -541,8 +541,21 @@ class ClientManagedHomeViewTemplateDataSource {
             .receive(on: DispatchQueue.main)
             .sink { completion in
                 print("ClientManagedHomeTemplate getPromotedSports completion \(completion)")
-            } receiveValue: { [weak self] featuredTips in
-                self?.suggestedBetslips = featuredTips
+            } receiveValue: { [weak self] suggestedBetslips in
+                
+                if !TargetVariables.expandableSuggestedBetsWidget {
+                    var suggestedBetslipsCropped: [SuggestedBetslip] = []
+                    for suggestedBetslip in suggestedBetslips {
+                        let croppedSelections = Array(suggestedBetslip.selections.prefix(4))
+                        
+                        suggestedBetslipsCropped.append(SuggestedBetslip(id: suggestedBetslip.id,
+                                                                         selections: croppedSelections))
+                    }
+                    self?.suggestedBetslips = suggestedBetslipsCropped
+                }
+                else {
+                    self?.suggestedBetslips = suggestedBetslips
+                }
                 self?.refreshPublisher.send()
             }
             .store(in: &self.cancellables)
@@ -649,6 +662,8 @@ extension ClientManagedHomeViewTemplateDataSource: HomeViewTemplateDataSource {
             return "tabbar_live_icon"
         case .topCompetitionsShortcuts:
             return "trophy_icon"
+        case .featuredTips:
+            return "suggested_bet_icon"
         case .promotedSportSection:
             let activeSports = Env.sportsStore.getActiveSports()
             let croppedSection = section - self.fixedSections

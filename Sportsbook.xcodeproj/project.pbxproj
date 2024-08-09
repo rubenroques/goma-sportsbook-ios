@@ -2663,7 +2663,6 @@
 		459EF29A2BC01AD20098A7F6 /* ScoreView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 459EF2932BC01AD20098A7F6 /* ScoreView.swift */; };
 		459EF29B2BC01AD20098A7F6 /* ScoreView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 459EF2932BC01AD20098A7F6 /* ScoreView.swift */; };
 		459F410C2AF54C86006BAEE9 /* SwiftPrettyPrint in Frameworks */ = {isa = PBXBuildFile; productRef = 459F410B2AF54C86006BAEE9 /* SwiftPrettyPrint */; };
-		459F410E2AF54D5E006BAEE9 /* SwiftPrettyPrint in Frameworks */ = {isa = PBXBuildFile; productRef = 459F410D2AF54D5E006BAEE9 /* SwiftPrettyPrint */; };
 		45A3301C298935F6008181E9 /* Adyen in Frameworks */ = {isa = PBXBuildFile; productRef = 45A3301B298935F6008181E9 /* Adyen */; };
 		45A3301E298935F6008181E9 /* AdyenActions in Frameworks */ = {isa = PBXBuildFile; productRef = 45A3301D298935F6008181E9 /* AdyenActions */; };
 		45A33020298935F6008181E9 /* AdyenCard in Frameworks */ = {isa = PBXBuildFile; productRef = 45A3301F298935F6008181E9 /* AdyenCard */; };
@@ -4028,27 +4027,120 @@
 		45C10E2128759FEF00037BBE /* KDCircularProgress.swift in Sources */ = {isa = PBXBuildFile; fileRef = 45C10E1D28759FEF00037BBE /* KDCircularProgress.swift */; };
 		45C10E2228759FEF00037BBE /* KDCircularProgress.swift in Sources */ = {isa = PBXBuildFile; fileRef = 45C10E1D28759FEF00037BBE /* KDCircularProgress.swift */; };
 		45C10E2328759FEF00037BBE /* KDCircularProgress.swift in Sources */ = {isa = PBXBuildFile; fileRef = 45C10E1D28759FEF00037BBE /* KDCircularProgress.swift */; };
+		45C10EEC2C652AC500D187A1 /* AdServices.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 65A4BA072C09E54700279143 /* AdServices.framework */; };
+		45C10EED2C652AC500D187A1 /* (null) in Frameworks */ = {isa = PBXBuildFile; };
+		45C10EEE2C652AC500D187A1 /* (null) in Frameworks */ = {isa = PBXBuildFile; };
+		45C10EEF2C652AC500D187A1 /* (null) in Frameworks */ = {isa = PBXBuildFile; };
+		45C10EF02C652AC500D187A1 /* (null) in Frameworks */ = {isa = PBXBuildFile; };
+		45C10EF12C652AC500D187A1 /* (null) in Frameworks */ = {isa = PBXBuildFile; };
+		45C10EF22C652AC500D187A1 /* (null) in Frameworks */ = {isa = PBXBuildFile; };
+		45C10EF32C652AC500D187A1 /* (null) in Frameworks */ = {isa = PBXBuildFile; };
+		45C10EF42C652AC500D187A1 /* (null) in Frameworks */ = {isa = PBXBuildFile; };
+		45C10EF52C652AC500D187A1 /* (null) in Frameworks */ = {isa = PBXBuildFile; };
+		45C10EF62C652AC500D187A1 /* (null) in Frameworks */ = {isa = PBXBuildFile; };
+		45C10EF72C652AC500D187A1 /* (null) in Frameworks */ = {isa = PBXBuildFile; };
+		45C10EF82C652AC500D187A1 /* (null) in Frameworks */ = {isa = PBXBuildFile; };
+		45C10EF92C652AC500D187A1 /* (null) in Frameworks */ = {isa = PBXBuildFile; };
+		45C10EFA2C652AC500D187A1 /* (null) in Frameworks */ = {isa = PBXBuildFile; };
+		45C10EFB2C652AC500D187A1 /* (null) in Frameworks */ = {isa = PBXBuildFile; };
+		45C10EFC2C652AC500D187A1 /* (null) in Frameworks */ = {isa = PBXBuildFile; };
+		45C10EFD2C652AC500D187A1 /* (null) in Frameworks */ = {isa = PBXBuildFile; };
+		45C10EFE2C652AC500D187A1 /* (null) in Frameworks */ = {isa = PBXBuildFile; };
+		45C10EFF2C652AC500D187A1 /* (null) in Frameworks */ = {isa = PBXBuildFile; };
+		45C10F002C652AC500D187A1 /* (null) in Frameworks */ = {isa = PBXBuildFile; };
+		45C10F012C652AC500D187A1 /* (null) in Frameworks */ = {isa = PBXBuildFile; };
+		45C10F022C652AC500D187A1 /* (null) in Frameworks */ = {isa = PBXBuildFile; };
+		45C10F032C652AC500D187A1 /* (null) in Frameworks */ = {isa = PBXBuildFile; };
+		45C10F042C652AC500D187A1 /* (null) in Frameworks */ = {isa = PBXBuildFile; };
+		45C10F052C652AC500D187A1 /* (null) in Frameworks */ = {isa = PBXBuildFile; };
+		45C10F062C652AC500D187A1 /* (null) in Frameworks */ = {isa = PBXBuildFile; };
+		45C10F072C652AC500D187A1 /* (null) in Frameworks */ = {isa = PBXBuildFile; };
+		45C10F082C652AC500D187A1 /* (null) in Frameworks */ = {isa = PBXBuildFile; };
+		45C10F092C652AC500D187A1 /* (null) in Frameworks */ = {isa = PBXBuildFile; };
+		45C10F0A2C652AC500D187A1 /* (null) in Frameworks */ = {isa = PBXBuildFile; };
+		45C10F0B2C652AC500D187A1 /* (null) in Frameworks */ = {isa = PBXBuildFile; };
+		45C10F0C2C652AC500D187A1 /* (null) in Frameworks */ = {isa = PBXBuildFile; };
+		45C10F0D2C652AC500D187A1 /* (null) in Frameworks */ = {isa = PBXBuildFile; };
+		45C10F0E2C652AC500D187A1 /* (null) in Frameworks */ = {isa = PBXBuildFile; };
+		45C10F0F2C652AC500D187A1 /* (null) in Frameworks */ = {isa = PBXBuildFile; };
+		45C10F102C652AC500D187A1 /* (null) in Frameworks */ = {isa = PBXBuildFile; };
+		45C10F112C652AC500D187A1 /* (null) in Frameworks */ = {isa = PBXBuildFile; };
+		45C10F122C652AC500D187A1 /* (null) in Frameworks */ = {isa = PBXBuildFile; };
+		45C10F132C652AC500D187A1 /* (null) in Frameworks */ = {isa = PBXBuildFile; };
+		45C10F142C652AC500D187A1 /* (null) in Frameworks */ = {isa = PBXBuildFile; };
+		45C10F152C652AC500D187A1 /* (null) in Frameworks */ = {isa = PBXBuildFile; };
+		45C10F162C652AC500D187A1 /* (null) in Frameworks */ = {isa = PBXBuildFile; };
+		45C10F172C652AC500D187A1 /* (null) in Frameworks */ = {isa = PBXBuildFile; };
+		45C10F182C652AC500D187A1 /* (null) in Frameworks */ = {isa = PBXBuildFile; };
+		45C10F192C652AC500D187A1 /* (null) in Frameworks */ = {isa = PBXBuildFile; };
+		45C10F1A2C652AC500D187A1 /* (null) in Frameworks */ = {isa = PBXBuildFile; };
+		45C10F1B2C652AC500D187A1 /* Reachability in Frameworks */ = {isa = PBXBuildFile; productRef = 45A3302C298976BA008181E9 /* Reachability */; };
+		45C10F1C2C652AC500D187A1 /* DictionaryCoding in Frameworks */ = {isa = PBXBuildFile; productRef = 45A3302E298976BA008181E9 /* DictionaryCoding */; };
+		45C10F1D2C652AC500D187A1 /* Starscream in Frameworks */ = {isa = PBXBuildFile; productRef = 45A33030298976BA008181E9 /* Starscream */; };
+		45C10F1E2C652AC500D187A1 /* CombineCocoa in Frameworks */ = {isa = PBXBuildFile; productRef = 45A33032298976BA008181E9 /* CombineCocoa */; };
+		45C10F1F2C652AC500D187A1 /* Kingfisher in Frameworks */ = {isa = PBXBuildFile; productRef = 45A33034298976BA008181E9 /* Kingfisher */; };
+		45C10F202C652AC500D187A1 /* FirebaseAnalytics in Frameworks */ = {isa = PBXBuildFile; productRef = 45A33036298976BA008181E9 /* FirebaseAnalytics */; };
+		45C10F212C652AC500D187A1 /* FirebaseAuth in Frameworks */ = {isa = PBXBuildFile; productRef = 45A33038298976BA008181E9 /* FirebaseAuth */; };
+		45C10F222C652AC500D187A1 /* FirebaseCrashlytics in Frameworks */ = {isa = PBXBuildFile; productRef = 45A33039298976BA008181E9 /* FirebaseCrashlytics */; };
+		45C10F232C652AC500D187A1 /* FirebaseDatabase in Frameworks */ = {isa = PBXBuildFile; productRef = 45A3303A298976BA008181E9 /* FirebaseDatabase */; };
+		45C10F242C652AC500D187A1 /* Collections in Frameworks */ = {isa = PBXBuildFile; productRef = 45A3303B298976BA008181E9 /* Collections */; };
+		45C10F252C652AC500D187A1 /* OrderedCollections in Frameworks */ = {isa = PBXBuildFile; productRef = 45A3303D298976BA008181E9 /* OrderedCollections */; };
+		45C10F262C652AC500D187A1 /* SweeterSwift in Frameworks */ = {isa = PBXBuildFile; productRef = 45A3303E298976BA008181E9 /* SweeterSwift */; };
+		45C10F272C652AC500D187A1 /* FirebaseMessaging in Frameworks */ = {isa = PBXBuildFile; productRef = 45A33040298976BA008181E9 /* FirebaseMessaging */; };
+		45C10F282C652AC500D187A1 /* SwiftyBeaver in Frameworks */ = {isa = PBXBuildFile; productRef = 45A33041298976BA008181E9 /* SwiftyBeaver */; };
+		45C10F292C652AC500D187A1 /* SocketIO in Frameworks */ = {isa = PBXBuildFile; productRef = 45A33043298976BA008181E9 /* SocketIO */; };
 		45C10F2A28772DA700037BBE /* Animations.swift in Sources */ = {isa = PBXBuildFile; fileRef = 45C10F0E28772DA600037BBE /* Animations.swift */; };
+		45C10F2A2C652AC500D187A1 /* ServicesProvider in Frameworks */ = {isa = PBXBuildFile; productRef = 45A33044298976BA008181E9 /* ServicesProvider */; };
 		45C10F2B28772DA700037BBE /* Animations.swift in Sources */ = {isa = PBXBuildFile; fileRef = 45C10F0E28772DA600037BBE /* Animations.swift */; };
+		45C10F2B2C652AC500D187A1 /* RegisterFlow in Frameworks */ = {isa = PBXBuildFile; productRef = 45A33045298976BA008181E9 /* RegisterFlow */; };
 		45C10F2C28772DA700037BBE /* Animations.swift in Sources */ = {isa = PBXBuildFile; fileRef = 45C10F0E28772DA600037BBE /* Animations.swift */; };
+		45C10F2C2C652AC500D187A1 /* IQKeyboardManagerSwift in Frameworks */ = {isa = PBXBuildFile; productRef = 45A33046298976BA008181E9 /* IQKeyboardManagerSwift */; };
 		45C10F2D28772DA700037BBE /* Animations.swift in Sources */ = {isa = PBXBuildFile; fileRef = 45C10F0E28772DA600037BBE /* Animations.swift */; };
+		45C10F2D2C652AC500D187A1 /* SharedModels in Frameworks */ = {isa = PBXBuildFile; productRef = 45A33048298976BA008181E9 /* SharedModels */; };
+		45C10F2E2C652AC500D187A1 /* AdyenDropIn in Frameworks */ = {isa = PBXBuildFile; productRef = 45A33049298976BA008181E9 /* AdyenDropIn */; };
+		45C10F2F2C652AC500D187A1 /* Adyen in Frameworks */ = {isa = PBXBuildFile; productRef = 45A3304B298976BA008181E9 /* Adyen */; };
 		45C10F3028772DA700037BBE /* NavControllerTrasntitionDismissing.swift in Sources */ = {isa = PBXBuildFile; fileRef = 45C10F1128772DA600037BBE /* NavControllerTrasntitionDismissing.swift */; };
+		45C10F302C652AC500D187A1 /* AdyenActions in Frameworks */ = {isa = PBXBuildFile; productRef = 45A3304C298976BA008181E9 /* AdyenActions */; };
 		45C10F3128772DA700037BBE /* NavControllerTrasntitionDismissing.swift in Sources */ = {isa = PBXBuildFile; fileRef = 45C10F1128772DA600037BBE /* NavControllerTrasntitionDismissing.swift */; };
+		45C10F312C652AC500D187A1 /* AdyenCard in Frameworks */ = {isa = PBXBuildFile; productRef = 45A3304D298976BA008181E9 /* AdyenCard */; };
 		45C10F3228772DA700037BBE /* NavControllerTrasntitionDismissing.swift in Sources */ = {isa = PBXBuildFile; fileRef = 45C10F1128772DA600037BBE /* NavControllerTrasntitionDismissing.swift */; };
+		45C10F322C652AC500D187A1 /* AdyenComponents in Frameworks */ = {isa = PBXBuildFile; productRef = 45A3304E298976BA008181E9 /* AdyenComponents */; };
 		45C10F3328772DA700037BBE /* NavControllerTrasntitionDismissing.swift in Sources */ = {isa = PBXBuildFile; fileRef = 45C10F1128772DA600037BBE /* NavControllerTrasntitionDismissing.swift */; };
+		45C10F332C652AC500D187A1 /* AdyenEncryption in Frameworks */ = {isa = PBXBuildFile; productRef = 45A3304F298976BA008181E9 /* AdyenEncryption */; };
+		45C10F342C652AC500D187A1 /* AdyenSession in Frameworks */ = {isa = PBXBuildFile; productRef = 45A33050298976BA008181E9 /* AdyenSession */; };
+		45C10F352C652AC500D187A1 /* AdyenSwiftUI in Frameworks */ = {isa = PBXBuildFile; productRef = 45A33051298976BA008181E9 /* AdyenSwiftUI */; };
 		45C10F3628772DA700037BBE /* NavControllerTransitionCoordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 45C10F1228772DA600037BBE /* NavControllerTransitionCoordinator.swift */; };
+		45C10F362C652AC500D187A1 /* AdyenWeChatPay in Frameworks */ = {isa = PBXBuildFile; productRef = 45A33052298976BA008181E9 /* AdyenWeChatPay */; };
 		45C10F3728772DA700037BBE /* NavControllerTransitionCoordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 45C10F1228772DA600037BBE /* NavControllerTransitionCoordinator.swift */; };
+		45C10F372C652AC500D187A1 /* HeaderTextField in Frameworks */ = {isa = PBXBuildFile; productRef = 45C8ECB829CC7AE4006A35DC /* HeaderTextField */; };
 		45C10F3828772DA700037BBE /* NavControllerTransitionCoordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 45C10F1228772DA600037BBE /* NavControllerTransitionCoordinator.swift */; };
+		45C10F382C652AC500D187A1 /* Lottie in Frameworks */ = {isa = PBXBuildFile; productRef = 45F805922A05357E005296E0 /* Lottie */; };
 		45C10F3928772DA700037BBE /* NavControllerTransitionCoordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 45C10F1228772DA600037BBE /* NavControllerTransitionCoordinator.swift */; };
+		45C10F392C652AC500D187A1 /* PhraseSDK in Frameworks */ = {isa = PBXBuildFile; productRef = 451640292A39FF80003C4276 /* PhraseSDK */; };
+		45C10F3A2C652AC500D187A1 /* Theming in Frameworks */ = {isa = PBXBuildFile; productRef = 45DB8DAD2A6A906C0018C591 /* Theming */; };
+		45C10F3B2C652AC500D187A1 /* CountrySelectionFeature in Frameworks */ = {isa = PBXBuildFile; productRef = 45DB8DAF2A6A9C7C0018C591 /* CountrySelectionFeature */; };
 		45C10F3C28772DA700037BBE /* NavControllerTrasntitionPresenting.swift in Sources */ = {isa = PBXBuildFile; fileRef = 45C10F1328772DA600037BBE /* NavControllerTrasntitionPresenting.swift */; };
+		45C10F3C2C652AC500D187A1 /* IdensicMobileSDK in Frameworks */ = {isa = PBXBuildFile; productRef = 4566B95D2A6AEE8A00477046 /* IdensicMobileSDK */; };
 		45C10F3D28772DA700037BBE /* NavControllerTrasntitionPresenting.swift in Sources */ = {isa = PBXBuildFile; fileRef = 45C10F1328772DA600037BBE /* NavControllerTrasntitionPresenting.swift */; };
+		45C10F3D2C652AC500D187A1 /* ZendeskChatSDK in Frameworks */ = {isa = PBXBuildFile; productRef = 45ECD74C2A8FFB2000492CB9 /* ZendeskChatSDK */; };
 		45C10F3E28772DA700037BBE /* NavControllerTrasntitionPresenting.swift in Sources */ = {isa = PBXBuildFile; fileRef = 45C10F1328772DA600037BBE /* NavControllerTrasntitionPresenting.swift */; };
+		45C10F3E2C652AC500D187A1 /* ZendeskAnswerBotSDK in Frameworks */ = {isa = PBXBuildFile; productRef = 45ECD74F2A8FFB5200492CB9 /* ZendeskAnswerBotSDK */; };
 		45C10F3F28772DA700037BBE /* NavControllerTrasntitionPresenting.swift in Sources */ = {isa = PBXBuildFile; fileRef = 45C10F1328772DA600037BBE /* NavControllerTrasntitionPresenting.swift */; };
+		45C10F3F2C652AC500D187A1 /* ZendeskSupportSDK in Frameworks */ = {isa = PBXBuildFile; productRef = 45ECD7522A8FFB8A00492CB9 /* ZendeskSupportSDK */; };
+		45C10F402C652AC500D187A1 /* OptimoveCore in Frameworks */ = {isa = PBXBuildFile; productRef = 458C074E2AD5B4930096E0D4 /* OptimoveCore */; };
+		45C10F412C652AC500D187A1 /* OptimoveNotificationServiceExtension in Frameworks */ = {isa = PBXBuildFile; productRef = 458C07502AD5B49A0096E0D4 /* OptimoveNotificationServiceExtension */; };
 		45C10F4228772DA700037BBE /* ModalTransitionDismissing.swift in Sources */ = {isa = PBXBuildFile; fileRef = 45C10F1528772DA600037BBE /* ModalTransitionDismissing.swift */; };
+		45C10F422C652AC500D187A1 /* OptimoveSDK in Frameworks */ = {isa = PBXBuildFile; productRef = 458C07522AD5B4A10096E0D4 /* OptimoveSDK */; };
 		45C10F4328772DA700037BBE /* ModalTransitionDismissing.swift in Sources */ = {isa = PBXBuildFile; fileRef = 45C10F1528772DA600037BBE /* ModalTransitionDismissing.swift */; };
+		45C10F432C652AC500D187A1 /* SwiftPrettyPrint in Frameworks */ = {isa = PBXBuildFile; productRef = 459F410B2AF54C86006BAEE9 /* SwiftPrettyPrint */; };
 		45C10F4428772DA700037BBE /* ModalTransitionDismissing.swift in Sources */ = {isa = PBXBuildFile; fileRef = 45C10F1528772DA600037BBE /* ModalTransitionDismissing.swift */; };
+		45C10F442C652AC500D187A1 /* Adjust in Frameworks */ = {isa = PBXBuildFile; productRef = 659510E92B2C7004001B2F2E /* Adjust */; };
 		45C10F4528772DA700037BBE /* ModalTransitionDismissing.swift in Sources */ = {isa = PBXBuildFile; fileRef = 45C10F1528772DA600037BBE /* ModalTransitionDismissing.swift */; };
+		45C10F452C652AC500D187A1 /* Criteo in Frameworks */ = {isa = PBXBuildFile; productRef = 659510EB2B2C7004001B2F2E /* Criteo */; };
+		45C10F462C652AC500D187A1 /* Sociomantic in Frameworks */ = {isa = PBXBuildFile; productRef = 659510ED2B2C7004001B2F2E /* Sociomantic */; };
+		45C10F472C652AC500D187A1 /* Trademob in Frameworks */ = {isa = PBXBuildFile; productRef = 659510EF2B2C7004001B2F2E /* Trademob */; };
 		45C10F4828772DA700037BBE /* ModalTransitionModalTransitioningDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 45C10F1628772DA600037BBE /* ModalTransitionModalTransitioningDelegate.swift */; };
+		45C10F482C652AC500D187A1 /* WebBridge in Frameworks */ = {isa = PBXBuildFile; productRef = 659510F12B2C7004001B2F2E /* WebBridge */; };
 		45C10F4928772DA700037BBE /* ModalTransitionModalTransitioningDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 45C10F1628772DA600037BBE /* ModalTransitionModalTransitioningDelegate.swift */; };
 		45C10F4A28772DA700037BBE /* ModalTransitionModalTransitioningDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 45C10F1628772DA600037BBE /* ModalTransitionModalTransitioningDelegate.swift */; };
 		45C10F4B28772DA700037BBE /* ModalTransitionModalTransitioningDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 45C10F1628772DA600037BBE /* ModalTransitionModalTransitioningDelegate.swift */; };
@@ -4984,43 +5076,6 @@
 		45F6BD772AB3732C00C81DE1 /* BettingOffer.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9B841B726E91BBC00269B05 /* BettingOffer.swift */; };
 		45F6BD782AB3732C00C81DE1 /* SmoothProgressBarView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 45CE91612A2F803B00BB3AB7 /* SmoothProgressBarView.swift */; };
 		45F6BD792AB3732C00C81DE1 /* MyGamesTypeList.swift in Sources */ = {isa = PBXBuildFile; fileRef = A91A645E2A7A66B5002A6984 /* MyGamesTypeList.swift */; };
-		45F6BD7B2AB3732C00C81DE1 /* RegisterFlow in Frameworks */ = {isa = PBXBuildFile; productRef = 45F6BAC12AB3732C00C81DE1 /* RegisterFlow */; };
-		45F6BD7C2AB3732C00C81DE1 /* FirebaseMessaging in Frameworks */ = {isa = PBXBuildFile; productRef = 45F6BABC2AB3732C00C81DE1 /* FirebaseMessaging */; };
-		45F6BD7D2AB3732C00C81DE1 /* FirebaseDatabase in Frameworks */ = {isa = PBXBuildFile; productRef = 45F6BAB62AB3732C00C81DE1 /* FirebaseDatabase */; };
-		45F6BD7E2AB3732C00C81DE1 /* AdyenDropIn in Frameworks */ = {isa = PBXBuildFile; productRef = 45F6BAC52AB3732C00C81DE1 /* AdyenDropIn */; };
-		45F6BD7F2AB3732C00C81DE1 /* DictionaryCoding in Frameworks */ = {isa = PBXBuildFile; productRef = 45F6BAAA2AB3732C00C81DE1 /* DictionaryCoding */; };
-		45F6BD802AB3732C00C81DE1 /* Lottie in Frameworks */ = {isa = PBXBuildFile; productRef = 45F6BAD02AB3732C00C81DE1 /* Lottie */; };
-		45F6BD812AB3732C00C81DE1 /* Reachability in Frameworks */ = {isa = PBXBuildFile; productRef = 45F6BAA82AB3732C00C81DE1 /* Reachability */; };
-		45F6BD822AB3732C00C81DE1 /* AdyenComponents in Frameworks */ = {isa = PBXBuildFile; productRef = 45F6BACA2AB3732C00C81DE1 /* AdyenComponents */; };
-		45F6BD832AB3732C00C81DE1 /* ZendeskChatSDK in Frameworks */ = {isa = PBXBuildFile; productRef = 45F6BAD82AB3732C00C81DE1 /* ZendeskChatSDK */; };
-		45F6BD842AB3732C00C81DE1 /* IQKeyboardManagerSwift in Frameworks */ = {isa = PBXBuildFile; productRef = 45F6BAC22AB3732C00C81DE1 /* IQKeyboardManagerSwift */; };
-		45F6BD852AB3732C00C81DE1 /* PhraseSDK in Frameworks */ = {isa = PBXBuildFile; productRef = 45F6BAD22AB3732C00C81DE1 /* PhraseSDK */; };
-		45F6BD862AB3732C00C81DE1 /* Kingfisher in Frameworks */ = {isa = PBXBuildFile; productRef = 45F6BAB02AB3732C00C81DE1 /* Kingfisher */; };
-		45F6BD872AB3732C00C81DE1 /* FirebaseAuth in Frameworks */ = {isa = PBXBuildFile; productRef = 45F6BAB42AB3732C00C81DE1 /* FirebaseAuth */; };
-		45F6BD882AB3732C00C81DE1 /* AdyenCard in Frameworks */ = {isa = PBXBuildFile; productRef = 45F6BAC92AB3732C00C81DE1 /* AdyenCard */; };
-		45F6BD892AB3732C00C81DE1 /* ZendeskAnswerBotSDK in Frameworks */ = {isa = PBXBuildFile; productRef = 45F6BADA2AB3732C00C81DE1 /* ZendeskAnswerBotSDK */; };
-		45F6BD8A2AB3732C00C81DE1 /* Collections in Frameworks */ = {isa = PBXBuildFile; productRef = 45F6BAB72AB3732C00C81DE1 /* Collections */; };
-		45F6BD8B2AB3732C00C81DE1 /* AdyenEncryption in Frameworks */ = {isa = PBXBuildFile; productRef = 45F6BACB2AB3732C00C81DE1 /* AdyenEncryption */; };
-		45F6BD8C2AB3732C00C81DE1 /* IdensicMobileSDK in Frameworks */ = {isa = PBXBuildFile; productRef = 45F6BAD62AB3732C00C81DE1 /* IdensicMobileSDK */; };
-		45F6BD8D2AB3732C00C81DE1 /* AdyenActions in Frameworks */ = {isa = PBXBuildFile; productRef = 45F6BAC82AB3732C00C81DE1 /* AdyenActions */; };
-		45F6BD8E2AB3732C00C81DE1 /* CombineCocoa in Frameworks */ = {isa = PBXBuildFile; productRef = 45F6BAAE2AB3732C00C81DE1 /* CombineCocoa */; };
-		45F6BD8F2AB3732C00C81DE1 /* SwiftyBeaver in Frameworks */ = {isa = PBXBuildFile; productRef = 45F6BABD2AB3732C00C81DE1 /* SwiftyBeaver */; };
-		45F6BD902AB3732C00C81DE1 /* AdyenSwiftUI in Frameworks */ = {isa = PBXBuildFile; productRef = 45F6BACD2AB3732C00C81DE1 /* AdyenSwiftUI */; };
-		45F6BD912AB3732C00C81DE1 /* AdyenWeChatPay in Frameworks */ = {isa = PBXBuildFile; productRef = 45F6BACE2AB3732C00C81DE1 /* AdyenWeChatPay */; };
-		45F6BD922AB3732C00C81DE1 /* Adyen in Frameworks */ = {isa = PBXBuildFile; productRef = 45F6BAC72AB3732C00C81DE1 /* Adyen */; };
-		45F6BD932AB3732C00C81DE1 /* AdyenSession in Frameworks */ = {isa = PBXBuildFile; productRef = 45F6BACC2AB3732C00C81DE1 /* AdyenSession */; };
-		45F6BD942AB3732C00C81DE1 /* FirebaseCrashlytics in Frameworks */ = {isa = PBXBuildFile; productRef = 45F6BAB52AB3732C00C81DE1 /* FirebaseCrashlytics */; };
-		45F6BD952AB3732C00C81DE1 /* FirebaseAnalytics in Frameworks */ = {isa = PBXBuildFile; productRef = 45F6BAB22AB3732C00C81DE1 /* FirebaseAnalytics */; };
-		45F6BD962AB3732C00C81DE1 /* OrderedCollections in Frameworks */ = {isa = PBXBuildFile; productRef = 45F6BAB92AB3732C00C81DE1 /* OrderedCollections */; };
-		45F6BD972AB3732C00C81DE1 /* CountrySelectionFeature in Frameworks */ = {isa = PBXBuildFile; productRef = 45F6BAD52AB3732C00C81DE1 /* CountrySelectionFeature */; };
-		45F6BD982AB3732C00C81DE1 /* SweeterSwift in Frameworks */ = {isa = PBXBuildFile; productRef = 45F6BABA2AB3732C00C81DE1 /* SweeterSwift */; };
-		45F6BD992AB3732C00C81DE1 /* Starscream in Frameworks */ = {isa = PBXBuildFile; productRef = 45F6BAAC2AB3732C00C81DE1 /* Starscream */; };
-		45F6BD9A2AB3732C00C81DE1 /* HeaderTextField in Frameworks */ = {isa = PBXBuildFile; productRef = 45F6BACF2AB3732C00C81DE1 /* HeaderTextField */; };
-		45F6BD9B2AB3732C00C81DE1 /* SocketIO in Frameworks */ = {isa = PBXBuildFile; productRef = 45F6BABF2AB3732C00C81DE1 /* SocketIO */; };
-		45F6BD9C2AB3732C00C81DE1 /* ZendeskSupportSDK in Frameworks */ = {isa = PBXBuildFile; productRef = 45F6BADC2AB3732C00C81DE1 /* ZendeskSupportSDK */; };
-		45F6BD9D2AB3732C00C81DE1 /* Theming in Frameworks */ = {isa = PBXBuildFile; productRef = 45F6BAD42AB3732C00C81DE1 /* Theming */; };
-		45F6BD9E2AB3732C00C81DE1 /* SharedModels in Frameworks */ = {isa = PBXBuildFile; productRef = 45F6BAC42AB3732C00C81DE1 /* SharedModels */; };
-		45F6BD9F2AB3732C00C81DE1 /* ServicesProvider in Frameworks */ = {isa = PBXBuildFile; productRef = 45F6BAC02AB3732C00C81DE1 /* ServicesProvider */; };
 		45F6BDA12AB3732C00C81DE1 /* WithdrawViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = A90D8AF4277200C400DF88EB /* WithdrawViewController.xib */; };
 		45F6BDA22AB3732C00C81DE1 /* avatar3-light.json in Resources */ = {isa = PBXBuildFile; fileRef = 45F6BA782AB1F2B500C81DE1 /* avatar3-light.json */; };
 		45F6BDA32AB3732C00C81DE1 /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = A9BAFB412AB0B46D002EDBA1 /* Localizable.strings */; };
@@ -5176,7 +5231,6 @@
 		45F8059A2A05385B005296E0 /* dots-loading.json in Resources */ = {isa = PBXBuildFile; fileRef = 45F805952A05385B005296E0 /* dots-loading.json */; };
 		45F8059B2A05385B005296E0 /* dots-loading.json in Resources */ = {isa = PBXBuildFile; fileRef = 45F805952A05385B005296E0 /* dots-loading.json */; };
 		45F8059C2A05385B005296E0 /* dots-loading.json in Resources */ = {isa = PBXBuildFile; fileRef = 45F805952A05385B005296E0 /* dots-loading.json */; };
-		45FE7BAF2C612314009F97FF /* AdjustSdk in Frameworks */ = {isa = PBXBuildFile; productRef = 45FE7BAE2C612314009F97FF /* AdjustSdk */; };
 		45FF105329D74721009AC196 /* UserTrackingSettingsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 45FF105229D74721009AC196 /* UserTrackingSettingsViewController.swift */; };
 		45FF105429D74721009AC196 /* UserTrackingSettingsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 45FF105229D74721009AC196 /* UserTrackingSettingsViewController.swift */; };
 		45FF105529D74721009AC196 /* UserTrackingSettingsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 45FF105229D74721009AC196 /* UserTrackingSettingsViewController.swift */; };
@@ -5273,7 +5327,6 @@
 		659510EE2B2C7004001B2F2E /* Sociomantic in Frameworks */ = {isa = PBXBuildFile; productRef = 659510ED2B2C7004001B2F2E /* Sociomantic */; };
 		659510F02B2C7004001B2F2E /* Trademob in Frameworks */ = {isa = PBXBuildFile; productRef = 659510EF2B2C7004001B2F2E /* Trademob */; };
 		659510F22B2C7004001B2F2E /* WebBridge in Frameworks */ = {isa = PBXBuildFile; productRef = 659510F12B2C7004001B2F2E /* WebBridge */; };
-		65A4BA082C09E54700279143 /* AdServices.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 65A4BA072C09E54700279143 /* AdServices.framework */; };
 		65A4BA092C09E58B00279143 /* AdServices.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 65A4BA072C09E54700279143 /* AdServices.framework */; };
 		65F819622BAC83DB004E27C3 /* first_deposit.json in Resources */ = {isa = PBXBuildFile; fileRef = 65F819612BAC83DA004E27C3 /* first_deposit.json */; };
 		65F819632BAC83DB004E27C3 /* first_deposit.json in Resources */ = {isa = PBXBuildFile; fileRef = 65F819612BAC83DA004E27C3 /* first_deposit.json */; };
@@ -6884,9 +6937,6 @@
 		A9C3439228F9A7DC0055360B /* TargetVariables.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9C3438928F9A7DC0055360B /* TargetVariables.swift */; };
 		A9C3439428F9A7DC0055360B /* Colors.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = A9C3438C28F9A7DC0055360B /* Colors.xcassets */; };
 		A9C3439528F9A7DC0055360B /* ClientVariables.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9C3438D28F9A7DC0055360B /* ClientVariables.swift */; };
-		A9C5AC1D2ACDB30100C3FD56 /* OptimoveCore in Frameworks */ = {isa = PBXBuildFile; productRef = A9C5AC1C2ACDB30100C3FD56 /* OptimoveCore */; };
-		A9C5AC1F2ACDB30100C3FD56 /* OptimoveNotificationServiceExtension in Frameworks */ = {isa = PBXBuildFile; productRef = A9C5AC1E2ACDB30100C3FD56 /* OptimoveNotificationServiceExtension */; settings = {ATTRIBUTES = (Required, ); }; };
-		A9C5AC212ACDB30100C3FD56 /* OptimoveSDK in Frameworks */ = {isa = PBXBuildFile; productRef = A9C5AC202ACDB30100C3FD56 /* OptimoveSDK */; };
 		A9C719112A5EEA88005EB891 /* RecruitAFriendViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9C719102A5EEA88005EB891 /* RecruitAFriendViewController.swift */; };
 		A9C719122A5EEA88005EB891 /* RecruitAFriendViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9C719102A5EEA88005EB891 /* RecruitAFriendViewController.swift */; };
 		A9C719132A5EEA88005EB891 /* RecruitAFriendViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9C719102A5EEA88005EB891 /* RecruitAFriendViewController.swift */; };
@@ -8258,53 +8308,99 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				65A4BA092C09E58B00279143 /* AdServices.framework in Frameworks */,
-				45A332B0298976BA008181E9 /* RegisterFlow in Frameworks */,
-				45A332B1298976BA008181E9 /* FirebaseMessaging in Frameworks */,
-				45A332B2298976BA008181E9 /* FirebaseDatabase in Frameworks */,
-				458C07512AD5B49A0096E0D4 /* OptimoveNotificationServiceExtension in Frameworks */,
-				659510F22B2C7004001B2F2E /* WebBridge in Frameworks */,
-				45A332B3298976BA008181E9 /* AdyenDropIn in Frameworks */,
-				45A332B4298976BA008181E9 /* DictionaryCoding in Frameworks */,
-				45F805932A05357E005296E0 /* Lottie in Frameworks */,
-				659510F02B2C7004001B2F2E /* Trademob in Frameworks */,
-				659510EA2B2C7004001B2F2E /* Adjust in Frameworks */,
-				45A332B5298976BA008181E9 /* Reachability in Frameworks */,
-				45A332B6298976BA008181E9 /* AdyenComponents in Frameworks */,
-				45ECD74D2A8FFB2000492CB9 /* ZendeskChatSDK in Frameworks */,
-				45A332B7298976BA008181E9 /* IQKeyboardManagerSwift in Frameworks */,
-				4516402A2A39FF80003C4276 /* PhraseSDK in Frameworks */,
-				45A332B8298976BA008181E9 /* Kingfisher in Frameworks */,
-				45A332B9298976BA008181E9 /* FirebaseAuth in Frameworks */,
-				45A332BA298976BA008181E9 /* AdyenCard in Frameworks */,
-				45ECD7502A8FFB5200492CB9 /* ZendeskAnswerBotSDK in Frameworks */,
-				45A332BB298976BA008181E9 /* Collections in Frameworks */,
-				45A332BC298976BA008181E9 /* AdyenEncryption in Frameworks */,
-				4566B95E2A6AEE8A00477046 /* IdensicMobileSDK in Frameworks */,
-				659510EE2B2C7004001B2F2E /* Sociomantic in Frameworks */,
-				45A332BD298976BA008181E9 /* AdyenActions in Frameworks */,
-				45A332BE298976BA008181E9 /* CombineCocoa in Frameworks */,
-				45A332BF298976BA008181E9 /* SwiftyBeaver in Frameworks */,
-				45A332C0298976BA008181E9 /* AdyenSwiftUI in Frameworks */,
-				45A332C1298976BA008181E9 /* AdyenWeChatPay in Frameworks */,
-				458C07532AD5B4A10096E0D4 /* OptimoveSDK in Frameworks */,
-				45A332C2298976BA008181E9 /* Adyen in Frameworks */,
-				45A332C3298976BA008181E9 /* AdyenSession in Frameworks */,
-				45A332C4298976BA008181E9 /* FirebaseCrashlytics in Frameworks */,
-				45A332C5298976BA008181E9 /* FirebaseAnalytics in Frameworks */,
-				45A332C6298976BA008181E9 /* OrderedCollections in Frameworks */,
-				458C074F2AD5B4930096E0D4 /* OptimoveCore in Frameworks */,
-				659510EC2B2C7004001B2F2E /* Criteo in Frameworks */,
-				45DB8DB02A6A9C7C0018C591 /* CountrySelectionFeature in Frameworks */,
-				459F410C2AF54C86006BAEE9 /* SwiftPrettyPrint in Frameworks */,
-				45A332C7298976BA008181E9 /* SweeterSwift in Frameworks */,
-				45A332C8298976BA008181E9 /* Starscream in Frameworks */,
-				45C8ECB929CC7AE4006A35DC /* HeaderTextField in Frameworks */,
-				45A332C9298976BA008181E9 /* SocketIO in Frameworks */,
-				45ECD7532A8FFB8A00492CB9 /* ZendeskSupportSDK in Frameworks */,
-				45DB8DAE2A6A906C0018C591 /* Theming in Frameworks */,
-				45A332CA298976BA008181E9 /* SharedModels in Frameworks */,
-				45A332CB298976BA008181E9 /* ServicesProvider in Frameworks */,
+				45C10F482C652AC500D187A1 /* WebBridge in Frameworks */,
+				45C10EEC2C652AC500D187A1 /* AdServices.framework in Frameworks */,
+				45C10EED2C652AC500D187A1 /* (null) in Frameworks */,
+				45C10F2F2C652AC500D187A1 /* Adyen in Frameworks */,
+				45C10EEE2C652AC500D187A1 /* (null) in Frameworks */,
+				45C10EEF2C652AC500D187A1 /* (null) in Frameworks */,
+				45C10F2E2C652AC500D187A1 /* AdyenDropIn in Frameworks */,
+				45C10F252C652AC500D187A1 /* OrderedCollections in Frameworks */,
+				45C10EF02C652AC500D187A1 /* (null) in Frameworks */,
+				45C10F262C652AC500D187A1 /* SweeterSwift in Frameworks */,
+				45C10EF12C652AC500D187A1 /* (null) in Frameworks */,
+				45C10F452C652AC500D187A1 /* Criteo in Frameworks */,
+				45C10F242C652AC500D187A1 /* Collections in Frameworks */,
+				45C10F342C652AC500D187A1 /* AdyenSession in Frameworks */,
+				45C10F352C652AC500D187A1 /* AdyenSwiftUI in Frameworks */,
+				45C10EF22C652AC500D187A1 /* (null) in Frameworks */,
+				45C10EF32C652AC500D187A1 /* (null) in Frameworks */,
+				45C10F1F2C652AC500D187A1 /* Kingfisher in Frameworks */,
+				45C10F272C652AC500D187A1 /* FirebaseMessaging in Frameworks */,
+				45C10F472C652AC500D187A1 /* Trademob in Frameworks */,
+				45C10EF42C652AC500D187A1 /* (null) in Frameworks */,
+				45C10EF52C652AC500D187A1 /* (null) in Frameworks */,
+				45C10EF62C652AC500D187A1 /* (null) in Frameworks */,
+				45C10F412C652AC500D187A1 /* OptimoveNotificationServiceExtension in Frameworks */,
+				45C10F312C652AC500D187A1 /* AdyenCard in Frameworks */,
+				45C10F3E2C652AC500D187A1 /* ZendeskAnswerBotSDK in Frameworks */,
+				45C10EF72C652AC500D187A1 /* (null) in Frameworks */,
+				45C10EF82C652AC500D187A1 /* (null) in Frameworks */,
+				45C10F1E2C652AC500D187A1 /* CombineCocoa in Frameworks */,
+				45C10F1B2C652AC500D187A1 /* Reachability in Frameworks */,
+				45C10EF92C652AC500D187A1 /* (null) in Frameworks */,
+				45C10EFA2C652AC500D187A1 /* (null) in Frameworks */,
+				45C10EFB2C652AC500D187A1 /* (null) in Frameworks */,
+				45C10EFC2C652AC500D187A1 /* (null) in Frameworks */,
+				45C10F282C652AC500D187A1 /* SwiftyBeaver in Frameworks */,
+				45C10F422C652AC500D187A1 /* OptimoveSDK in Frameworks */,
+				45C10EFD2C652AC500D187A1 /* (null) in Frameworks */,
+				45C10EFE2C652AC500D187A1 /* (null) in Frameworks */,
+				45C10EFF2C652AC500D187A1 /* (null) in Frameworks */,
+				45C10F002C652AC500D187A1 /* (null) in Frameworks */,
+				45C10F012C652AC500D187A1 /* (null) in Frameworks */,
+				45C10F1D2C652AC500D187A1 /* Starscream in Frameworks */,
+				45C10F392C652AC500D187A1 /* PhraseSDK in Frameworks */,
+				45C10F022C652AC500D187A1 /* (null) in Frameworks */,
+				45C10F222C652AC500D187A1 /* FirebaseCrashlytics in Frameworks */,
+				45C10F292C652AC500D187A1 /* SocketIO in Frameworks */,
+				45C10F442C652AC500D187A1 /* Adjust in Frameworks */,
+				45C10F402C652AC500D187A1 /* OptimoveCore in Frameworks */,
+				45C10F032C652AC500D187A1 /* (null) in Frameworks */,
+				45C10F2C2C652AC500D187A1 /* IQKeyboardManagerSwift in Frameworks */,
+				45C10F2A2C652AC500D187A1 /* ServicesProvider in Frameworks */,
+				45C10F042C652AC500D187A1 /* (null) in Frameworks */,
+				45C10F302C652AC500D187A1 /* AdyenActions in Frameworks */,
+				45C10F052C652AC500D187A1 /* (null) in Frameworks */,
+				45C10F332C652AC500D187A1 /* AdyenEncryption in Frameworks */,
+				45C10F062C652AC500D187A1 /* (null) in Frameworks */,
+				45C10F072C652AC500D187A1 /* (null) in Frameworks */,
+				45C10F082C652AC500D187A1 /* (null) in Frameworks */,
+				45C10F2B2C652AC500D187A1 /* RegisterFlow in Frameworks */,
+				45C10F382C652AC500D187A1 /* Lottie in Frameworks */,
+				45C10F2D2C652AC500D187A1 /* SharedModels in Frameworks */,
+				45C10F092C652AC500D187A1 /* (null) in Frameworks */,
+				45C10F0A2C652AC500D187A1 /* (null) in Frameworks */,
+				45C10F372C652AC500D187A1 /* HeaderTextField in Frameworks */,
+				45C10F0B2C652AC500D187A1 /* (null) in Frameworks */,
+				45C10F3A2C652AC500D187A1 /* Theming in Frameworks */,
+				45C10F462C652AC500D187A1 /* Sociomantic in Frameworks */,
+				45C10F1C2C652AC500D187A1 /* DictionaryCoding in Frameworks */,
+				45C10F0C2C652AC500D187A1 /* (null) in Frameworks */,
+				45C10F0D2C652AC500D187A1 /* (null) in Frameworks */,
+				45C10F3B2C652AC500D187A1 /* CountrySelectionFeature in Frameworks */,
+				45C10F432C652AC500D187A1 /* SwiftPrettyPrint in Frameworks */,
+				45C10F3D2C652AC500D187A1 /* ZendeskChatSDK in Frameworks */,
+				45C10F0E2C652AC500D187A1 /* (null) in Frameworks */,
+				45C10F0F2C652AC500D187A1 /* (null) in Frameworks */,
+				45C10F102C652AC500D187A1 /* (null) in Frameworks */,
+				45C10F112C652AC500D187A1 /* (null) in Frameworks */,
+				45C10F122C652AC500D187A1 /* (null) in Frameworks */,
+				45C10F132C652AC500D187A1 /* (null) in Frameworks */,
+				45C10F142C652AC500D187A1 /* (null) in Frameworks */,
+				45C10F152C652AC500D187A1 /* (null) in Frameworks */,
+				45C10F3F2C652AC500D187A1 /* ZendeskSupportSDK in Frameworks */,
+				45C10F362C652AC500D187A1 /* AdyenWeChatPay in Frameworks */,
+				45C10F162C652AC500D187A1 /* (null) in Frameworks */,
+				45C10F172C652AC500D187A1 /* (null) in Frameworks */,
+				45C10F212C652AC500D187A1 /* FirebaseAuth in Frameworks */,
+				45C10F182C652AC500D187A1 /* (null) in Frameworks */,
+				45C10F192C652AC500D187A1 /* (null) in Frameworks */,
+				45C10F1A2C652AC500D187A1 /* (null) in Frameworks */,
+				45C10F322C652AC500D187A1 /* AdyenComponents in Frameworks */,
+				45C10F232C652AC500D187A1 /* FirebaseDatabase in Frameworks */,
+				45C10F3C2C652AC500D187A1 /* IdensicMobileSDK in Frameworks */,
+				45C10F202C652AC500D187A1 /* FirebaseAnalytics in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -12017,48 +12113,52 @@
 			);
 			name = "Betsson UAT";
 			packageProductDependencies = (
-				45F6BAA82AB3732C00C81DE1 /* Reachability */,
-				45F6BAAA2AB3732C00C81DE1 /* DictionaryCoding */,
-				45F6BAAC2AB3732C00C81DE1 /* Starscream */,
-				45F6BAAE2AB3732C00C81DE1 /* CombineCocoa */,
-				45F6BAB02AB3732C00C81DE1 /* Kingfisher */,
-				45F6BAB22AB3732C00C81DE1 /* FirebaseAnalytics */,
-				45F6BAB42AB3732C00C81DE1 /* FirebaseAuth */,
-				45F6BAB52AB3732C00C81DE1 /* FirebaseCrashlytics */,
-				45F6BAB62AB3732C00C81DE1 /* FirebaseDatabase */,
-				45F6BAB72AB3732C00C81DE1 /* Collections */,
-				45F6BAB92AB3732C00C81DE1 /* OrderedCollections */,
-				45F6BABA2AB3732C00C81DE1 /* SweeterSwift */,
-				45F6BABC2AB3732C00C81DE1 /* FirebaseMessaging */,
-				45F6BABD2AB3732C00C81DE1 /* SwiftyBeaver */,
-				45F6BABF2AB3732C00C81DE1 /* SocketIO */,
-				45F6BAC02AB3732C00C81DE1 /* ServicesProvider */,
-				45F6BAC12AB3732C00C81DE1 /* RegisterFlow */,
-				45F6BAC22AB3732C00C81DE1 /* IQKeyboardManagerSwift */,
-				45F6BAC42AB3732C00C81DE1 /* SharedModels */,
-				45F6BAC52AB3732C00C81DE1 /* AdyenDropIn */,
-				45F6BAC72AB3732C00C81DE1 /* Adyen */,
-				45F6BAC82AB3732C00C81DE1 /* AdyenActions */,
-				45F6BAC92AB3732C00C81DE1 /* AdyenCard */,
-				45F6BACA2AB3732C00C81DE1 /* AdyenComponents */,
-				45F6BACB2AB3732C00C81DE1 /* AdyenEncryption */,
-				45F6BACC2AB3732C00C81DE1 /* AdyenSession */,
-				45F6BACD2AB3732C00C81DE1 /* AdyenSwiftUI */,
-				45F6BACE2AB3732C00C81DE1 /* AdyenWeChatPay */,
-				45F6BACF2AB3732C00C81DE1 /* HeaderTextField */,
-				45F6BAD02AB3732C00C81DE1 /* Lottie */,
-				45F6BAD22AB3732C00C81DE1 /* PhraseSDK */,
-				45F6BAD42AB3732C00C81DE1 /* Theming */,
-				45F6BAD52AB3732C00C81DE1 /* CountrySelectionFeature */,
-				45F6BAD62AB3732C00C81DE1 /* IdensicMobileSDK */,
-				45F6BAD82AB3732C00C81DE1 /* ZendeskChatSDK */,
-				45F6BADA2AB3732C00C81DE1 /* ZendeskAnswerBotSDK */,
-				45F6BADC2AB3732C00C81DE1 /* ZendeskSupportSDK */,
-				A9C5AC1C2ACDB30100C3FD56 /* OptimoveCore */,
-				A9C5AC1E2ACDB30100C3FD56 /* OptimoveNotificationServiceExtension */,
-				A9C5AC202ACDB30100C3FD56 /* OptimoveSDK */,
-				459F410D2AF54D5E006BAEE9 /* SwiftPrettyPrint */,
-				45FE7BAE2C612314009F97FF /* AdjustSdk */,
+				45A3302C298976BA008181E9 /* Reachability */,
+				45A3302E298976BA008181E9 /* DictionaryCoding */,
+				45A33030298976BA008181E9 /* Starscream */,
+				45A33032298976BA008181E9 /* CombineCocoa */,
+				45A33034298976BA008181E9 /* Kingfisher */,
+				45A33036298976BA008181E9 /* FirebaseAnalytics */,
+				45A33038298976BA008181E9 /* FirebaseAuth */,
+				45A33039298976BA008181E9 /* FirebaseCrashlytics */,
+				45A3303A298976BA008181E9 /* FirebaseDatabase */,
+				45A3303B298976BA008181E9 /* Collections */,
+				45A3303D298976BA008181E9 /* OrderedCollections */,
+				45A3303E298976BA008181E9 /* SweeterSwift */,
+				45A33040298976BA008181E9 /* FirebaseMessaging */,
+				45A33041298976BA008181E9 /* SwiftyBeaver */,
+				45A33043298976BA008181E9 /* SocketIO */,
+				45A33044298976BA008181E9 /* ServicesProvider */,
+				45A33045298976BA008181E9 /* RegisterFlow */,
+				45A33046298976BA008181E9 /* IQKeyboardManagerSwift */,
+				45A33048298976BA008181E9 /* SharedModels */,
+				45A33049298976BA008181E9 /* AdyenDropIn */,
+				45A3304B298976BA008181E9 /* Adyen */,
+				45A3304C298976BA008181E9 /* AdyenActions */,
+				45A3304D298976BA008181E9 /* AdyenCard */,
+				45A3304E298976BA008181E9 /* AdyenComponents */,
+				45A3304F298976BA008181E9 /* AdyenEncryption */,
+				45A33050298976BA008181E9 /* AdyenSession */,
+				45A33051298976BA008181E9 /* AdyenSwiftUI */,
+				45A33052298976BA008181E9 /* AdyenWeChatPay */,
+				45C8ECB829CC7AE4006A35DC /* HeaderTextField */,
+				45F805922A05357E005296E0 /* Lottie */,
+				451640292A39FF80003C4276 /* PhraseSDK */,
+				45DB8DAD2A6A906C0018C591 /* Theming */,
+				45DB8DAF2A6A9C7C0018C591 /* CountrySelectionFeature */,
+				4566B95D2A6AEE8A00477046 /* IdensicMobileSDK */,
+				45ECD74C2A8FFB2000492CB9 /* ZendeskChatSDK */,
+				45ECD74F2A8FFB5200492CB9 /* ZendeskAnswerBotSDK */,
+				45ECD7522A8FFB8A00492CB9 /* ZendeskSupportSDK */,
+				458C074E2AD5B4930096E0D4 /* OptimoveCore */,
+				458C07502AD5B49A0096E0D4 /* OptimoveNotificationServiceExtension */,
+				458C07522AD5B4A10096E0D4 /* OptimoveSDK */,
+				459F410B2AF54C86006BAEE9 /* SwiftPrettyPrint */,
+				659510E92B2C7004001B2F2E /* Adjust */,
+				659510EB2B2C7004001B2F2E /* Criteo */,
+				659510ED2B2C7004001B2F2E /* Sociomantic */,
+				659510EF2B2C7004001B2F2E /* Trademob */,
+				659510F12B2C7004001B2F2E /* WebBridge */,
 			);
 			productName = Sportsbook;
 			productReference = 45F6BE372AB3732C00C81DE1 /* Betsson UAT.app */;
@@ -20851,142 +20951,6 @@
 				minimumVersion = 4.0.0;
 			};
 		};
-		45F6BAA92AB3732C00C81DE1 /* XCRemoteSwiftPackageReference "Reachability" */ = {
-			isa = XCRemoteSwiftPackageReference;
-			repositoryURL = "https://github.com/ashleymills/Reachability.swift";
-			requirement = {
-				kind = upToNextMajorVersion;
-				minimumVersion = 5.1.0;
-			};
-		};
-		45F6BAAB2AB3732C00C81DE1 /* XCRemoteSwiftPackageReference "DictionaryCoding" */ = {
-			isa = XCRemoteSwiftPackageReference;
-			repositoryURL = "https://github.com/elegantchaos/DictionaryCoding.git";
-			requirement = {
-				kind = upToNextMajorVersion;
-				minimumVersion = 1.0.9;
-			};
-		};
-		45F6BAAD2AB3732C00C81DE1 /* XCRemoteSwiftPackageReference "Starscream" */ = {
-			isa = XCRemoteSwiftPackageReference;
-			repositoryURL = "https://github.com/daltoniam/Starscream.git";
-			requirement = {
-				kind = upToNextMinorVersion;
-				minimumVersion = 3.1.1;
-			};
-		};
-		45F6BAAF2AB3732C00C81DE1 /* XCRemoteSwiftPackageReference "CombineCocoa" */ = {
-			isa = XCRemoteSwiftPackageReference;
-			repositoryURL = "https://github.com/CombineCommunity/CombineCocoa.git";
-			requirement = {
-				kind = upToNextMajorVersion;
-				minimumVersion = 0.3.0;
-			};
-		};
-		45F6BAB12AB3732C00C81DE1 /* XCRemoteSwiftPackageReference "Kingfisher" */ = {
-			isa = XCRemoteSwiftPackageReference;
-			repositoryURL = "https://github.com/onevcat/Kingfisher";
-			requirement = {
-				kind = upToNextMajorVersion;
-				minimumVersion = 7.0.0;
-			};
-		};
-		45F6BAB32AB3732C00C81DE1 /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */ = {
-			isa = XCRemoteSwiftPackageReference;
-			repositoryURL = "https://github.com/firebase/firebase-ios-sdk.git";
-			requirement = {
-				kind = upToNextMajorVersion;
-				minimumVersion = 7.0.0;
-			};
-		};
-		45F6BAB82AB3732C00C81DE1 /* XCRemoteSwiftPackageReference "swift-collections" */ = {
-			isa = XCRemoteSwiftPackageReference;
-			repositoryURL = "https://github.com/apple/swift-collections.git";
-			requirement = {
-				kind = upToNextMajorVersion;
-				minimumVersion = 1.0.0;
-			};
-		};
-		45F6BABB2AB3732C00C81DE1 /* XCRemoteSwiftPackageReference "SweeterSwift" */ = {
-			isa = XCRemoteSwiftPackageReference;
-			repositoryURL = "https://github.com/yonat/SweeterSwift";
-			requirement = {
-				kind = upToNextMajorVersion;
-				minimumVersion = 1.0.0;
-			};
-		};
-		45F6BABE2AB3732C00C81DE1 /* XCRemoteSwiftPackageReference "SwiftyBeaver" */ = {
-			isa = XCRemoteSwiftPackageReference;
-			repositoryURL = "https://github.com/SwiftyBeaver/SwiftyBeaver.git";
-			requirement = {
-				kind = upToNextMajorVersion;
-				minimumVersion = 1.0.0;
-			};
-		};
-		45F6BAC32AB3732C00C81DE1 /* XCRemoteSwiftPackageReference "IQKeyboardManager" */ = {
-			isa = XCRemoteSwiftPackageReference;
-			repositoryURL = "https://github.com/hackiftekhar/IQKeyboardManager.git";
-			requirement = {
-				kind = upToNextMajorVersion;
-				minimumVersion = 6.0.0;
-			};
-		};
-		45F6BAC62AB3732C00C81DE1 /* XCRemoteSwiftPackageReference "adyen-ios" */ = {
-			isa = XCRemoteSwiftPackageReference;
-			repositoryURL = "https://github.com/Adyen/adyen-ios";
-			requirement = {
-				kind = upToNextMajorVersion;
-				minimumVersion = 5.0.0;
-			};
-		};
-		45F6BAD12AB3732C00C81DE1 /* XCRemoteSwiftPackageReference "lottie-spm" */ = {
-			isa = XCRemoteSwiftPackageReference;
-			repositoryURL = "https://github.com/airbnb/lottie-spm.git";
-			requirement = {
-				kind = upToNextMajorVersion;
-				minimumVersion = 4.0.0;
-			};
-		};
-		45F6BAD32AB3732C00C81DE1 /* XCRemoteSwiftPackageReference "ios-sdk" */ = {
-			isa = XCRemoteSwiftPackageReference;
-			repositoryURL = "https://github.com/phrase/ios-sdk/";
-			requirement = {
-				kind = upToNextMajorVersion;
-				minimumVersion = 4.0.0;
-			};
-		};
-		45F6BAD72AB3732C00C81DE1 /* XCRemoteSwiftPackageReference "IdensicMobileSDK-iOS" */ = {
-			isa = XCRemoteSwiftPackageReference;
-			repositoryURL = "https://github.com/SumSubstance/IdensicMobileSDK-iOS.git";
-			requirement = {
-				kind = upToNextMajorVersion;
-				minimumVersion = 1.0.0;
-			};
-		};
-		45F6BAD92AB3732C00C81DE1 /* XCRemoteSwiftPackageReference "chat_sdk_ios" */ = {
-			isa = XCRemoteSwiftPackageReference;
-			repositoryURL = "https://github.com/zendesk/chat_sdk_ios";
-			requirement = {
-				kind = upToNextMajorVersion;
-				minimumVersion = 4.0.0;
-			};
-		};
-		45F6BADB2AB3732C00C81DE1 /* XCRemoteSwiftPackageReference "answer_bot_sdk_ios" */ = {
-			isa = XCRemoteSwiftPackageReference;
-			repositoryURL = "https://github.com/zendesk/answer_bot_sdk_ios";
-			requirement = {
-				kind = upToNextMajorVersion;
-				minimumVersion = 4.0.0;
-			};
-		};
-		45F6BADD2AB3732C00C81DE1 /* XCRemoteSwiftPackageReference "support_sdk_ios" */ = {
-			isa = XCRemoteSwiftPackageReference;
-			repositoryURL = "https://github.com/zendesk/support_sdk_ios";
-			requirement = {
-				kind = upToNextMajorVersion;
-				minimumVersion = 7.0.0;
-			};
-		};
 		45F805912A05357E005296E0 /* XCRemoteSwiftPackageReference "lottie-spm" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/airbnb/lottie-spm.git";
@@ -21443,11 +21407,6 @@
 			package = 459F410A2AF54C86006BAEE9 /* XCRemoteSwiftPackageReference "SwiftPrettyPrint" */;
 			productName = SwiftPrettyPrint;
 		};
-		459F410D2AF54D5E006BAEE9 /* SwiftPrettyPrint */ = {
-			isa = XCSwiftPackageProductDependency;
-			package = 459F410A2AF54C86006BAEE9 /* XCRemoteSwiftPackageReference "SwiftPrettyPrint" */;
-			productName = SwiftPrettyPrint;
-		};
 		45A3301B298935F6008181E9 /* Adyen */ = {
 			isa = XCSwiftPackageProductDependency;
 			package = A96FAEDF29829CCA00A0751F /* XCRemoteSwiftPackageReference "adyen-ios" */;
@@ -21779,193 +21738,10 @@
 			package = 45ECD7512A8FFB8A00492CB9 /* XCRemoteSwiftPackageReference "support_sdk_ios" */;
 			productName = ZendeskSupportSDK;
 		};
-		45F6BAA82AB3732C00C81DE1 /* Reachability */ = {
-			isa = XCSwiftPackageProductDependency;
-			package = 45F6BAA92AB3732C00C81DE1 /* XCRemoteSwiftPackageReference "Reachability" */;
-			productName = Reachability;
-		};
-		45F6BAAA2AB3732C00C81DE1 /* DictionaryCoding */ = {
-			isa = XCSwiftPackageProductDependency;
-			package = 45F6BAAB2AB3732C00C81DE1 /* XCRemoteSwiftPackageReference "DictionaryCoding" */;
-			productName = DictionaryCoding;
-		};
-		45F6BAAC2AB3732C00C81DE1 /* Starscream */ = {
-			isa = XCSwiftPackageProductDependency;
-			package = 45F6BAAD2AB3732C00C81DE1 /* XCRemoteSwiftPackageReference "Starscream" */;
-			productName = Starscream;
-		};
-		45F6BAAE2AB3732C00C81DE1 /* CombineCocoa */ = {
-			isa = XCSwiftPackageProductDependency;
-			package = 45F6BAAF2AB3732C00C81DE1 /* XCRemoteSwiftPackageReference "CombineCocoa" */;
-			productName = CombineCocoa;
-		};
-		45F6BAB02AB3732C00C81DE1 /* Kingfisher */ = {
-			isa = XCSwiftPackageProductDependency;
-			package = 45F6BAB12AB3732C00C81DE1 /* XCRemoteSwiftPackageReference "Kingfisher" */;
-			productName = Kingfisher;
-		};
-		45F6BAB22AB3732C00C81DE1 /* FirebaseAnalytics */ = {
-			isa = XCSwiftPackageProductDependency;
-			package = 45F6BAB32AB3732C00C81DE1 /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */;
-			productName = FirebaseAnalytics;
-		};
-		45F6BAB42AB3732C00C81DE1 /* FirebaseAuth */ = {
-			isa = XCSwiftPackageProductDependency;
-			package = 45F6BAB32AB3732C00C81DE1 /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */;
-			productName = FirebaseAuth;
-		};
-		45F6BAB52AB3732C00C81DE1 /* FirebaseCrashlytics */ = {
-			isa = XCSwiftPackageProductDependency;
-			package = 45F6BAB32AB3732C00C81DE1 /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */;
-			productName = FirebaseCrashlytics;
-		};
-		45F6BAB62AB3732C00C81DE1 /* FirebaseDatabase */ = {
-			isa = XCSwiftPackageProductDependency;
-			package = 45F6BAB32AB3732C00C81DE1 /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */;
-			productName = FirebaseDatabase;
-		};
-		45F6BAB72AB3732C00C81DE1 /* Collections */ = {
-			isa = XCSwiftPackageProductDependency;
-			package = 45F6BAB82AB3732C00C81DE1 /* XCRemoteSwiftPackageReference "swift-collections" */;
-			productName = Collections;
-		};
-		45F6BAB92AB3732C00C81DE1 /* OrderedCollections */ = {
-			isa = XCSwiftPackageProductDependency;
-			package = 45F6BAB82AB3732C00C81DE1 /* XCRemoteSwiftPackageReference "swift-collections" */;
-			productName = OrderedCollections;
-		};
-		45F6BABA2AB3732C00C81DE1 /* SweeterSwift */ = {
-			isa = XCSwiftPackageProductDependency;
-			package = 45F6BABB2AB3732C00C81DE1 /* XCRemoteSwiftPackageReference "SweeterSwift" */;
-			productName = SweeterSwift;
-		};
-		45F6BABC2AB3732C00C81DE1 /* FirebaseMessaging */ = {
-			isa = XCSwiftPackageProductDependency;
-			package = 45F6BAB32AB3732C00C81DE1 /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */;
-			productName = FirebaseMessaging;
-		};
-		45F6BABD2AB3732C00C81DE1 /* SwiftyBeaver */ = {
-			isa = XCSwiftPackageProductDependency;
-			package = 45F6BABE2AB3732C00C81DE1 /* XCRemoteSwiftPackageReference "SwiftyBeaver" */;
-			productName = SwiftyBeaver;
-		};
-		45F6BABF2AB3732C00C81DE1 /* SocketIO */ = {
-			isa = XCSwiftPackageProductDependency;
-			productName = SocketIO;
-		};
-		45F6BAC02AB3732C00C81DE1 /* ServicesProvider */ = {
-			isa = XCSwiftPackageProductDependency;
-			productName = ServicesProvider;
-		};
-		45F6BAC12AB3732C00C81DE1 /* RegisterFlow */ = {
-			isa = XCSwiftPackageProductDependency;
-			productName = RegisterFlow;
-		};
-		45F6BAC22AB3732C00C81DE1 /* IQKeyboardManagerSwift */ = {
-			isa = XCSwiftPackageProductDependency;
-			package = 45F6BAC32AB3732C00C81DE1 /* XCRemoteSwiftPackageReference "IQKeyboardManager" */;
-			productName = IQKeyboardManagerSwift;
-		};
-		45F6BAC42AB3732C00C81DE1 /* SharedModels */ = {
-			isa = XCSwiftPackageProductDependency;
-			productName = SharedModels;
-		};
-		45F6BAC52AB3732C00C81DE1 /* AdyenDropIn */ = {
-			isa = XCSwiftPackageProductDependency;
-			package = 45F6BAC62AB3732C00C81DE1 /* XCRemoteSwiftPackageReference "adyen-ios" */;
-			productName = AdyenDropIn;
-		};
-		45F6BAC72AB3732C00C81DE1 /* Adyen */ = {
-			isa = XCSwiftPackageProductDependency;
-			package = 45F6BAC62AB3732C00C81DE1 /* XCRemoteSwiftPackageReference "adyen-ios" */;
-			productName = Adyen;
-		};
-		45F6BAC82AB3732C00C81DE1 /* AdyenActions */ = {
-			isa = XCSwiftPackageProductDependency;
-			package = 45F6BAC62AB3732C00C81DE1 /* XCRemoteSwiftPackageReference "adyen-ios" */;
-			productName = AdyenActions;
-		};
-		45F6BAC92AB3732C00C81DE1 /* AdyenCard */ = {
-			isa = XCSwiftPackageProductDependency;
-			package = 45F6BAC62AB3732C00C81DE1 /* XCRemoteSwiftPackageReference "adyen-ios" */;
-			productName = AdyenCard;
-		};
-		45F6BACA2AB3732C00C81DE1 /* AdyenComponents */ = {
-			isa = XCSwiftPackageProductDependency;
-			package = 45F6BAC62AB3732C00C81DE1 /* XCRemoteSwiftPackageReference "adyen-ios" */;
-			productName = AdyenComponents;
-		};
-		45F6BACB2AB3732C00C81DE1 /* AdyenEncryption */ = {
-			isa = XCSwiftPackageProductDependency;
-			package = 45F6BAC62AB3732C00C81DE1 /* XCRemoteSwiftPackageReference "adyen-ios" */;
-			productName = AdyenEncryption;
-		};
-		45F6BACC2AB3732C00C81DE1 /* AdyenSession */ = {
-			isa = XCSwiftPackageProductDependency;
-			package = 45F6BAC62AB3732C00C81DE1 /* XCRemoteSwiftPackageReference "adyen-ios" */;
-			productName = AdyenSession;
-		};
-		45F6BACD2AB3732C00C81DE1 /* AdyenSwiftUI */ = {
-			isa = XCSwiftPackageProductDependency;
-			package = 45F6BAC62AB3732C00C81DE1 /* XCRemoteSwiftPackageReference "adyen-ios" */;
-			productName = AdyenSwiftUI;
-		};
-		45F6BACE2AB3732C00C81DE1 /* AdyenWeChatPay */ = {
-			isa = XCSwiftPackageProductDependency;
-			package = 45F6BAC62AB3732C00C81DE1 /* XCRemoteSwiftPackageReference "adyen-ios" */;
-			productName = AdyenWeChatPay;
-		};
-		45F6BACF2AB3732C00C81DE1 /* HeaderTextField */ = {
-			isa = XCSwiftPackageProductDependency;
-			productName = HeaderTextField;
-		};
-		45F6BAD02AB3732C00C81DE1 /* Lottie */ = {
-			isa = XCSwiftPackageProductDependency;
-			package = 45F6BAD12AB3732C00C81DE1 /* XCRemoteSwiftPackageReference "lottie-spm" */;
-			productName = Lottie;
-		};
-		45F6BAD22AB3732C00C81DE1 /* PhraseSDK */ = {
-			isa = XCSwiftPackageProductDependency;
-			package = 45F6BAD32AB3732C00C81DE1 /* XCRemoteSwiftPackageReference "ios-sdk" */;
-			productName = PhraseSDK;
-		};
-		45F6BAD42AB3732C00C81DE1 /* Theming */ = {
-			isa = XCSwiftPackageProductDependency;
-			productName = Theming;
-		};
-		45F6BAD52AB3732C00C81DE1 /* CountrySelectionFeature */ = {
-			isa = XCSwiftPackageProductDependency;
-			productName = CountrySelectionFeature;
-		};
-		45F6BAD62AB3732C00C81DE1 /* IdensicMobileSDK */ = {
-			isa = XCSwiftPackageProductDependency;
-			package = 45F6BAD72AB3732C00C81DE1 /* XCRemoteSwiftPackageReference "IdensicMobileSDK-iOS" */;
-			productName = IdensicMobileSDK;
-		};
-		45F6BAD82AB3732C00C81DE1 /* ZendeskChatSDK */ = {
-			isa = XCSwiftPackageProductDependency;
-			package = 45F6BAD92AB3732C00C81DE1 /* XCRemoteSwiftPackageReference "chat_sdk_ios" */;
-			productName = ZendeskChatSDK;
-		};
-		45F6BADA2AB3732C00C81DE1 /* ZendeskAnswerBotSDK */ = {
-			isa = XCSwiftPackageProductDependency;
-			package = 45F6BADB2AB3732C00C81DE1 /* XCRemoteSwiftPackageReference "answer_bot_sdk_ios" */;
-			productName = ZendeskAnswerBotSDK;
-		};
-		45F6BADC2AB3732C00C81DE1 /* ZendeskSupportSDK */ = {
-			isa = XCSwiftPackageProductDependency;
-			package = 45F6BADD2AB3732C00C81DE1 /* XCRemoteSwiftPackageReference "support_sdk_ios" */;
-			productName = ZendeskSupportSDK;
-		};
 		45F805922A05357E005296E0 /* Lottie */ = {
 			isa = XCSwiftPackageProductDependency;
 			package = 45F805912A05357E005296E0 /* XCRemoteSwiftPackageReference "lottie-spm" */;
 			productName = Lottie;
-		};
-		45FE7BAE2C612314009F97FF /* AdjustSdk */ = {
-			isa = XCSwiftPackageProductDependency;
-			package = 659510E82B2C7004001B2F2E /* XCRemoteSwiftPackageReference "ios_sdk" */;
-			productName = AdjustSdk;
 		};
 		655E20062B21E9E100C95337 /* OptimoveNotificationServiceExtension */ = {
 			isa = XCSwiftPackageProductDependency;
@@ -22120,21 +21896,6 @@
 		A9C3409C28F9A74A0055360B /* SocketIO */ = {
 			isa = XCSwiftPackageProductDependency;
 			productName = SocketIO;
-		};
-		A9C5AC1C2ACDB30100C3FD56 /* OptimoveCore */ = {
-			isa = XCSwiftPackageProductDependency;
-			package = A9C5AC1B2ACDB30000C3FD56 /* XCRemoteSwiftPackageReference "Optimove-SDK-iOS" */;
-			productName = OptimoveCore;
-		};
-		A9C5AC1E2ACDB30100C3FD56 /* OptimoveNotificationServiceExtension */ = {
-			isa = XCSwiftPackageProductDependency;
-			package = A9C5AC1B2ACDB30000C3FD56 /* XCRemoteSwiftPackageReference "Optimove-SDK-iOS" */;
-			productName = OptimoveNotificationServiceExtension;
-		};
-		A9C5AC202ACDB30100C3FD56 /* OptimoveSDK */ = {
-			isa = XCSwiftPackageProductDependency;
-			package = A9C5AC1B2ACDB30000C3FD56 /* XCRemoteSwiftPackageReference "Optimove-SDK-iOS" */;
-			productName = OptimoveSDK;
 		};
 /* End XCSwiftPackageProductDependency section */
 	};

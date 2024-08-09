@@ -14,6 +14,10 @@ class FeaturedTipView: UIView {
     private lazy var sportIconImageView: UIImageView = Self.createSportIconImageView()
     private lazy var countryIconImageView: UIImageView = Self.createCountryIconImageView()
     private lazy var tournamentLabel: UILabel = Self.createTournamentLabel()
+    
+    private lazy var separatorView: UIView = Self.createSeparatorView()
+    
+    private lazy var marketLabel: UILabel = Self.createMarketLabel()
     private lazy var outcomeLabel: UILabel = Self.createOutcomeLabel()
     private lazy var matchLabel: UILabel = Self.createMatchLabel()
 
@@ -41,6 +45,7 @@ class FeaturedTipView: UIView {
     override func layoutSubviews() {
         super.layoutSubviews()
 
+        self.containerView.layer.borderWidth = 2
         self.containerView.layer.cornerRadius = CornerRadius.button
 
         self.sportIconImageView.layer.cornerRadius = self.sportIconImageView.frame.height / 2
@@ -48,17 +53,21 @@ class FeaturedTipView: UIView {
     }
 
     func setupWithTheme() {
-        self.containerView.backgroundColor = UIColor.App.backgroundTertiary
+        self.containerView.layer.borderColor = UIColor.App.borderDrop.resolvedColor(with: self.traitCollection).cgColor
+        self.containerView.backgroundColor = UIColor.App.backgroundSecondary
 
         self.sportIconImageView.backgroundColor = .clear
-
         self.countryIconImageView.backgroundColor = .clear
-
+        
         self.tournamentLabel.textColor = UIColor.App.textSecondary
 
-        self.outcomeLabel.textColor = UIColor.App.textPrimary
+        self.separatorView.backgroundColor = UIColor.App.separatorLineSecondary
+        self.outcomeLabel.textColor = UIColor.App.highlightPrimary
 
+        
+        self.marketLabel.textColor = UIColor.App.textPrimary
         self.matchLabel.textColor = UIColor.App.textSecondary
+        
     }
 
     // MARK: Functions
@@ -142,23 +151,37 @@ extension FeaturedTipView {
         let label = UILabel()
         label.translatesAutoresizingMaskIntoConstraints = false
         label.text = localized("tournament")
-        label.font = AppFont.with(type: .semibold, size: 11)
+        label.font = AppFont.with(type: .medium, size: 11)
         return label
     }
 
+    private static func createSeparatorView() -> UIView {
+        let view = UIView()
+        view.translatesAutoresizingMaskIntoConstraints = false
+        return view
+    }
+    
     private static func createOutcomeLabel() -> UILabel {
         let label = UILabel()
         label.translatesAutoresizingMaskIntoConstraints = false
         label.text = localized("outcome")
-        label.font = AppFont.with(type: .bold, size: 14)
+        label.font = AppFont.with(type: .semibold, size: 14)
         return label
     }
 
+    private static func createMarketLabel() -> UILabel {
+        let label = UILabel()
+        label.translatesAutoresizingMaskIntoConstraints = false
+        label.text = "Three away"
+        label.font = AppFont.with(type: .semibold, size: 12)
+        return label
+    }
+    
     private static func createMatchLabel() -> UILabel {
         let label = UILabel()
         label.translatesAutoresizingMaskIntoConstraints = false
         label.text = "Match Home x Match Away"
-        label.font = AppFont.with(type: .semibold, size: 12)
+        label.font = AppFont.with(type: .semibold, size: 11)
         return label
     }
 
@@ -169,7 +192,11 @@ extension FeaturedTipView {
         self.containerView.addSubview(self.sportIconImageView)
         self.containerView.addSubview(self.countryIconImageView)
         self.containerView.addSubview(self.tournamentLabel)
+        
+        self.containerView.addSubview(self.separatorView)
+        
         self.containerView.addSubview(self.outcomeLabel)
+        self.containerView.addSubview(self.marketLabel)
         self.containerView.addSubview(self.matchLabel)
 
         self.initConstraints()
@@ -186,11 +213,11 @@ extension FeaturedTipView {
             self.containerView.bottomAnchor.constraint(equalTo: self.bottomAnchor),
 
             self.sportIconImageView.leadingAnchor.constraint(equalTo: self.containerView.leadingAnchor, constant: 8),
-            self.sportIconImageView.topAnchor.constraint(equalTo: self.containerView.topAnchor, constant: 8),
+            self.sportIconImageView.topAnchor.constraint(equalTo: self.containerView.topAnchor, constant: 6.7),
             self.sportIconImageView.widthAnchor.constraint(equalToConstant: 16),
             self.sportIconImageView.heightAnchor.constraint(equalTo: self.sportIconImageView.widthAnchor),
 
-            self.countryIconImageView.leadingAnchor.constraint(equalTo: self.sportIconImageView.trailingAnchor, constant: 6),
+            self.countryIconImageView.leadingAnchor.constraint(equalTo: self.sportIconImageView.trailingAnchor, constant: 4),
             self.countryIconImageView.centerYAnchor.constraint(equalTo: self.sportIconImageView.centerYAnchor),
             self.countryIconImageView.widthAnchor.constraint(equalToConstant: 16),
             self.countryIconImageView.heightAnchor.constraint(equalTo: self.countryIconImageView.widthAnchor),
@@ -200,12 +227,22 @@ extension FeaturedTipView {
             self.tournamentLabel.centerYAnchor.constraint(equalTo: self.countryIconImageView.centerYAnchor),
 
             self.outcomeLabel.leadingAnchor.constraint(equalTo: self.containerView.leadingAnchor, constant: 8),
-            self.outcomeLabel.trailingAnchor.constraint(equalTo: self.containerView.trailingAnchor, constant: -8),
-            self.outcomeLabel.topAnchor.constraint(equalTo: self.sportIconImageView.bottomAnchor, constant: 9),
+            self.outcomeLabel.trailingAnchor.constraint(equalTo: self.containerView.trailingAnchor, constant: -9),
+            self.outcomeLabel.topAnchor.constraint(equalTo: self.sportIconImageView.bottomAnchor, constant: 4),
+            self.outcomeLabel.heightAnchor.constraint(equalToConstant: 18),
+            
+            self.separatorView.leadingAnchor.constraint(equalTo: self.outcomeLabel.leadingAnchor, constant: 0),
+            self.separatorView.trailingAnchor.constraint(equalTo: self.outcomeLabel.trailingAnchor, constant: 0),
+            self.separatorView.topAnchor.constraint(equalTo: self.outcomeLabel.bottomAnchor, constant: 5.5),
+            self.separatorView.heightAnchor.constraint(equalToConstant: 1),
 
+            self.marketLabel.leadingAnchor.constraint(equalTo: self.outcomeLabel.leadingAnchor, constant: 0),
+            self.marketLabel.trailingAnchor.constraint(equalTo: self.outcomeLabel.trailingAnchor, constant: 0),
+            self.marketLabel.topAnchor.constraint(equalTo: self.separatorView.bottomAnchor, constant: 6.6),
+            
             self.matchLabel.leadingAnchor.constraint(equalTo: self.containerView.leadingAnchor, constant: 8),
             self.matchLabel.trailingAnchor.constraint(equalTo: self.containerView.trailingAnchor, constant: -8),
-            self.matchLabel.topAnchor.constraint(equalTo: self.outcomeLabel.bottomAnchor, constant: 9),
+            self.matchLabel.topAnchor.constraint(equalTo: self.marketLabel.bottomAnchor, constant: 6),
             self.matchLabel.bottomAnchor.constraint(equalTo: self.containerView.bottomAnchor, constant: -8)
 
         ])

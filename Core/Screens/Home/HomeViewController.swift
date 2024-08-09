@@ -1152,7 +1152,7 @@ extension HomeViewController: UITableViewDelegate, UITableViewDataSource {
         case .userFavorites:
             return UITableView.automaticDimension
         case .featuredTips:
-            return 376
+            return 480
         case .suggestedBets:
             return 336
         case .sportGroup:
@@ -1234,7 +1234,7 @@ extension HomeViewController: UITableViewDelegate, UITableViewDataSource {
         case .userFavorites:
             return StyleHelper.cardsStyleHeight() + 20
         case .featuredTips:
-            return 376
+            return 480
         case .suggestedBets:
             return 336
         case .sportGroup:
@@ -1347,7 +1347,7 @@ extension HomeViewController: UITableViewDelegate, UITableViewDataSource {
             }
             else if let sectionIconImage = UIImage(named: imageName) {
                 sportImageView.image = sectionIconImage
-                sportImageView.setTintColor(color: UIColor.App.highlightPrimary)
+                sportImageView.setTintColor(color: UIColor.App.iconPrimary)
             }
             else {
                 sportImageView.image = UIImage(named: "sport_type_icon_default")
@@ -1361,8 +1361,9 @@ extension HomeViewController: UITableViewDelegate, UITableViewDataSource {
             seeAllLabel.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(didTapOpenFavorites)))
         }
         else if case .featuredTips = self.viewModel.contentType(forSection: section) {
-            seeAllLabel.text = localized("expand")
-            seeAllLabel.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(didTapOpenFeaturedTips)))
+            seeAllLabel.isHidden = true
+            // seeAllLabel.text = localized("expand")
+            // seeAllLabel.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(didTapOpenFeaturedTips)))
         }
         else if case .highlightedLiveMatches = self.viewModel.contentType(forSection: section) {
             seeAllLabel.textColor = UIColor.App.highlightPrimary

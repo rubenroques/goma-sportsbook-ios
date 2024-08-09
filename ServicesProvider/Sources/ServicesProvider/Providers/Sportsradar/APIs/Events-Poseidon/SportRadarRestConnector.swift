@@ -69,6 +69,13 @@ class SportRadarRestConnector {
                    dataString.contains("errorType") && dataString.contains("CONTENT_NOT_FOUND") {
                     throw ServiceProviderError.resourceUnavailableOrDeleted
                 }
+                
+                #if DEBUG
+                if endpoint.endpoint == "/api/batch" {
+                    return PromotedBetslipsBatchResponse.dummyData
+                }
+                #endif
+                
                 return result.data
             }
             .decode(type: T.self, decoder: self.decoder)
