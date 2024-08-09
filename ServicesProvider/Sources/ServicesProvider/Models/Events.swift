@@ -775,3 +775,7 @@ public enum ActivePlayerServe: String, Codable {
     case away
 }
 
+public struct HeroGameEvent: Codable {
+    public var event: Event
+    public var image: String
+}

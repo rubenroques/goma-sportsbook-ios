@@ -1152,6 +1152,24 @@ extension HomeViewController: UITableViewDelegate, UITableViewDataSource {
         }
 
     }
+    
+    func tableView(_ tableView: UITableView, didEndDisplaying cell: UITableViewCell, forRowAt indexPath: IndexPath) {
+        guard
+            let contentType = self.viewModel.contentType(forSection: indexPath.section)
+        else {
+            return
+        }
+
+        switch contentType {
+        case .heroCard:
+            
+            if let cell = cell as? HeroCardTableViewCell {
+                cell.stopTimer()
+            }
+        default:
+            ()
+        }
+    }
 
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
         guard

@@ -1,22 +1,20 @@
 //
-//  HeroCardMarketCollectionViewCell.swift
+//  HeroCardSecondaryMarketCollectionViewCell.swift
 //  Sportsbook
 //
-//  Created by André Lascas on 02/08/2024.
+//  Created by André Lascas on 07/08/2024.
 //
 
 import UIKit
 import Combine
 import ServicesProvider
 
-class HeroCardMarketCollectionViewCell: UICollectionViewCell {
+class HeroCardSecondaryMarketCollectionViewCell: UICollectionViewCell {
     
     private lazy var baseView: UIView = Self.createBaseView()
-    private lazy var homeTeamLabel: UILabel = Self.createHomeTeamLabel()
-    private lazy var awayTeamLabel: UILabel = Self.createAwayTeamLabel()
-    private lazy var dateLabel: UILabel = Self.createDateLabel()
-    private lazy var timeLabel: UILabel = Self.createTimeLabel()
-    private lazy var marketNamePillLabelView: PillLabelView = Self.createMarketPillLabelView()
+    private lazy var matchNameLabel: UILabel = Self.createMatchNameLabel()
+    private lazy var topSeparatorAlphaLineView: FadingView = Self.createTopSeparatorAlphaLineView()
+    private lazy var marketNameLabel: UILabel = Self.createMarketNameLabel()
     private lazy var oddsStackView: UIStackView = Self.createOddsStackView()
     private lazy var homeBaseView: UIView = Self.createHomeBaseView()
     private lazy var homeOddBaseView: UIView = Self.createHomeOddBaseView()
@@ -37,7 +35,7 @@ class HeroCardMarketCollectionViewCell: UICollectionViewCell {
     private lazy var drawDownChangeOddValueImageView: UIImageView = Self.createDrawDownChangeOddValueImageView()
     private lazy var awayUpChangeOddValueImageView: UIImageView = Self.createAwayUpChangeOddValueImageView()
     private lazy var awayDownChangeOddValueImageView: UIImageView = Self.createAwayDownChangeOddValueImageView()
-    
+
     private var match: Match? = nil
     private var market: Market? = nil
     
@@ -88,7 +86,7 @@ class HeroCardMarketCollectionViewCell: UICollectionViewCell {
 
         self.commonInit()
     }
-
+    
     override func prepareForReuse() {
         super.prepareForReuse()
 
@@ -164,15 +162,11 @@ class HeroCardMarketCollectionViewCell: UICollectionViewCell {
         
         self.baseView.backgroundColor = .clear
 
-        self.homeTeamLabel.textColor = UIColor.App.textPrimary
+        self.matchNameLabel.textColor = UIColor.App.textPrimary
         
-        self.awayTeamLabel.textColor = UIColor.App.textPrimary
-        
-        self.dateLabel.textColor = UIColor.App.textSecondary
-        
-        self.timeLabel.textColor = UIColor.App.textSecondary
-        
-        self.marketNamePillLabelView.setupWithTheme(withBorderColor: UIColor.App.highlightPrimary, withTextColor: UIColor.App.buttonTextPrimary)
+        self.topSeparatorAlphaLineView.backgroundColor = UIColor.App.highlightPrimary
+
+        self.marketNameLabel.textColor = UIColor.App.textPrimary
 
         self.oddsStackView.backgroundColor = .clear
         
@@ -222,17 +216,9 @@ class HeroCardMarketCollectionViewCell: UICollectionViewCell {
         self.match = match
         self.market = market
         
-        self.homeTeamLabel.text = market.homeParticipant ?? ""
+        self.matchNameLabel.text = "\(match.homeParticipant.name) vs \(match.awayParticipant.name)"
         
-        self.awayTeamLabel.text = market.awayParticipant ?? ""
-        
-        if let date = match.date {
-            self.dateLabel.text = MatchWidgetCellViewModel.startDateString(fromDate: date)
-            
-            self.timeLabel.text = MatchWidgetCellViewModel.hourDateFormatter.string(from: date)
-        }
-        
-        self.marketNamePillLabelView.title = market.name
+        self.marketNameLabel.text = market.name
         
         self.configureOutcomes(withMarket: market)
     }
@@ -706,7 +692,7 @@ class HeroCardMarketCollectionViewCell: UICollectionViewCell {
     }
 }
 
-extension HeroCardMarketCollectionViewCell {
+extension HeroCardSecondaryMarketCollectionViewCell {
     
     private static func createBaseView() -> UIView {
         let view = UIView()
@@ -714,42 +700,30 @@ extension HeroCardMarketCollectionViewCell {
         return view
     }
     
-    private static func createHomeTeamLabel() -> UILabel {
-        let label = UILabel()
-        label.translatesAutoresizingMaskIntoConstraints = false
-        label.font = AppFont.with(type: .bold, size: 16)
-        label.textAlignment = .left
-        return label
-    }
-    
-    private static func createAwayTeamLabel() -> UILabel {
-        let label = UILabel()
-        label.translatesAutoresizingMaskIntoConstraints = false
-        label.font = AppFont.with(type: .bold, size: 16)
-        label.textAlignment = .left
-        return label
-    }
-    
-    private static func createDateLabel() -> UILabel {
+    private static func createMatchNameLabel() -> UILabel {
         let label = UILabel()
         label.translatesAutoresizingMaskIntoConstraints = false
         label.font = AppFont.with(type: .semibold, size: 11)
-        label.textAlignment = .right
+        label.textAlignment = .center
         return label
     }
     
-    private static func createTimeLabel() -> UILabel {
+    private static func createTopSeparatorAlphaLineView() -> FadingView {
+        let fadingView = FadingView()
+        fadingView.translatesAutoresizingMaskIntoConstraints = false
+        fadingView.colors = [.clear, .black, .black, .clear]
+        fadingView.startPoint = CGPoint(x: 0.0, y: 0.5)
+        fadingView.endPoint = CGPoint(x: 1.0, y: 0.5)
+        fadingView.fadeLocations = [0.0, 0.42, 0.58, 1.0]
+        return fadingView
+    }
+    
+    private static func createMarketNameLabel() -> UILabel {
         let label = UILabel()
         label.translatesAutoresizingMaskIntoConstraints = false
-        label.font = AppFont.with(type: .bold, size: 16)
-        label.textAlignment = .right
+        label.font = AppFont.with(type: .bold, size: 14)
+        label.textAlignment = .center
         return label
-    }
-    
-    private static func createMarketPillLabelView() -> PillLabelView {
-        var marketNamePillLabelView = PillLabelView()
-        marketNamePillLabelView.translatesAutoresizingMaskIntoConstraints = false
-        return marketNamePillLabelView
     }
     
     private static func createOddsStackView() -> UIStackView {
@@ -909,13 +883,9 @@ extension HeroCardMarketCollectionViewCell {
 
         self.contentView.addSubview(self.baseView)
         
-        self.baseView.addSubview(self.homeTeamLabel)
-        self.baseView.addSubview(self.awayTeamLabel)
-        
-        self.baseView.addSubview(self.dateLabel)
-        self.baseView.addSubview(self.timeLabel)
-        
-        self.baseView.addSubview(self.marketNamePillLabelView)
+        self.baseView.addSubview(self.matchNameLabel)
+        self.baseView.addSubview(self.topSeparatorAlphaLineView)
+        self.baseView.addSubview(self.marketNameLabel)
         
         self.baseView.addSubview(self.oddsStackView)
 
@@ -962,26 +932,22 @@ extension HeroCardMarketCollectionViewCell {
             self.baseView.bottomAnchor.constraint(equalTo: self.contentView.bottomAnchor),
             self.baseView.heightAnchor.constraint(equalToConstant: 110),
             
-            self.homeTeamLabel.leadingAnchor.constraint(equalTo: self.baseView.leadingAnchor, constant: 2),
-            self.homeTeamLabel.topAnchor.constraint(equalTo: self.baseView.topAnchor, constant: 10),
-            self.homeTeamLabel.trailingAnchor.constraint(equalTo: self.baseView.trailingAnchor, constant: -50),
+            self.matchNameLabel.leadingAnchor.constraint(equalTo: self.baseView.leadingAnchor, constant: 2),
+            self.matchNameLabel.topAnchor.constraint(equalTo: self.baseView.topAnchor, constant: 10),
+            self.matchNameLabel.trailingAnchor.constraint(equalTo: self.baseView.trailingAnchor, constant: -2),
             
-            self.awayTeamLabel.leadingAnchor.constraint(equalTo: self.baseView.leadingAnchor, constant: 2),
-            self.awayTeamLabel.topAnchor.constraint(equalTo: self.homeTeamLabel.bottomAnchor, constant: 5),
-            self.awayTeamLabel.trailingAnchor.constraint(equalTo: self.baseView.trailingAnchor, constant: -50),
+            self.topSeparatorAlphaLineView.leadingAnchor.constraint(equalTo: self.baseView.leadingAnchor),
+            self.topSeparatorAlphaLineView.trailingAnchor.constraint(equalTo: self.baseView.trailingAnchor),
+            self.topSeparatorAlphaLineView.heightAnchor.constraint(equalToConstant: 1),
+            self.topSeparatorAlphaLineView.topAnchor.constraint(equalTo: self.matchNameLabel.bottomAnchor, constant: 6),
             
-            self.dateLabel.trailingAnchor.constraint(equalTo: self.baseView.trailingAnchor, constant: -2),
-            self.dateLabel.topAnchor.constraint(equalTo: self.baseView.topAnchor, constant: 10),
-            
-            self.timeLabel.trailingAnchor.constraint(equalTo: self.baseView.trailingAnchor, constant: -2),
-            self.timeLabel.topAnchor.constraint(equalTo: self.dateLabel.bottomAnchor, constant: 5),
-            
-            self.marketNamePillLabelView.leadingAnchor.constraint(equalTo: self.baseView.leadingAnchor, constant: 2),
-            self.marketNamePillLabelView.topAnchor.constraint(equalTo: self.awayTeamLabel.bottomAnchor, constant: 5),
+            self.marketNameLabel.leadingAnchor.constraint(equalTo: self.baseView.leadingAnchor, constant: 2),
+            self.marketNameLabel.trailingAnchor.constraint(equalTo: self.baseView.trailingAnchor, constant: -2),
+            self.marketNameLabel.topAnchor.constraint(equalTo: self.topSeparatorAlphaLineView.bottomAnchor, constant: 18),
             
             self.oddsStackView.leadingAnchor.constraint(equalTo: self.baseView.leadingAnchor, constant: 2),
             self.oddsStackView.trailingAnchor.constraint(equalTo: self.baseView.trailingAnchor, constant: -2),
-            self.oddsStackView.topAnchor.constraint(greaterThanOrEqualTo: self.marketNamePillLabelView.bottomAnchor, constant: 10),
+            self.oddsStackView.topAnchor.constraint(greaterThanOrEqualTo: self.marketNameLabel.bottomAnchor, constant: 18),
             self.oddsStackView.heightAnchor.constraint(equalToConstant: 40),
             self.oddsStackView.bottomAnchor.constraint(equalTo: self.baseView.bottomAnchor, constant: -5),
             

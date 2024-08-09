@@ -41,6 +41,8 @@ enum SportRadarRestAPIClient {
     case highlightsBoostedOddsEvents
     case highlightsImageVisualEvents
 
+    case getHeroGameCard
+
     case promotedSports
 
     case favoritesList
@@ -117,6 +119,9 @@ extension SportRadarRestAPIClient: Endpoint {
             return "/services/content/get"
         case .highlightsImageVisualEvents:
             return "/services/content/get"
+            
+        case .getHeroGameCard:
+            return "/services/content/get"
 
         case .promotedSports:
             return "/services/content/get"
@@ -177,6 +182,8 @@ extension SportRadarRestAPIClient: Endpoint {
         case .highlightsBoostedOddsEvents: return nil
         case .highlightsImageVisualEvents: return nil
 
+        case .getHeroGameCard: return nil
+            
         case .promotedSports: return nil
 
         case .favoritesList: return nil
@@ -223,6 +230,8 @@ extension SportRadarRestAPIClient: Endpoint {
         case .highlightsBoostedOddsEvents: return .post
         case .highlightsImageVisualEvents: return .post
 
+        case .getHeroGameCard: return .post
+            
         case .promotedSports: return .post
 
         case .favoritesList: return .get
@@ -499,7 +508,21 @@ extension SportRadarRestAPIClient: Endpoint {
                         }
                         """
             return bodyString.data(using: String.Encoding.utf8) ?? Data()
-
+        case .getHeroGameCard:
+            let bodyString =
+                        """
+                        {
+                            "contentId": {
+                                "type": "headline",
+                                "id": "\(SportRadarConfiguration.shared.frontEndCode)/20/HeroGameCard"
+                            },
+                            "clientContext": {
+                                "language": "\(SportRadarConfiguration.shared.socketLanguageCode)",
+                                "ipAddress": "127.0.0.1"
+                            }
+                        }
+                        """
+            return bodyString.data(using: String.Encoding.utf8) ?? Data()
         case .addFavoriteList(let name):
             let bodyString =
                         """
@@ -736,7 +759,9 @@ extension SportRadarRestAPIClient: Endpoint {
             return SportRadarConfiguration.shared.servicesRestHostname
         case .highlightsImageVisualEvents:
             return SportRadarConfiguration.shared.servicesRestHostname
-
+        case .getHeroGameCard:
+            return SportRadarConfiguration.shared.servicesRestHostname
+        
         case .promotedSports:
             return SportRadarConfiguration.shared.servicesRestHostname
 
@@ -837,6 +862,8 @@ extension SportRadarRestAPIClient: Endpoint {
             return defaultHeaders
         case .getTopCompetitionCountry:
             return defaultHeaders
+        case .getHeroGameCard:
+            return defaultHeaders
             
         case .favoritesList, .addFavoriteList, .addFavoriteToList, .getFavoritesFromList, .deleteFavoriteList, .deleteFavoriteFromList:
             return [
@@ -915,6 +942,7 @@ extension SportRadarRestAPIClient: Endpoint {
         case .promotionalTopStories: return "promotionalTopStories"
         case .highlightsBoostedOddsEvents: return "highlightsBoostedOddsEvents"
         case .highlightsImageVisualEvents: return "highlightsImageVisualEvents"
+        case .getHeroGameCard: return "getHeroGameCard"
         case .promotedSports: return "promotedSports"
         case .favoritesList: return "favoritesList"
         case .addFavoriteList: return "addFavoriteList"

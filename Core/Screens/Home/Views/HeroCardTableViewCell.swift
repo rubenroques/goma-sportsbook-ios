@@ -23,12 +23,13 @@ class HeroCardTableViewCell: UITableViewCell {
     private lazy var competitionLabel: UILabel = Self.createCompetitionLabel()
     private lazy var topSeparatorAlphaLineView: FadingView = Self.createTopSeparatorAlphaLineView()
     private lazy var collectionView: UICollectionView = Self.createCollectionView()
-    private lazy var pageControl = Self.createPageControl()
+//    private lazy var pageControl = Self.createPageControl()
+    private lazy var pageControlBaseView: UIView = Self.createPageControlBaseView()
+    private lazy var pageControl: CustomPageControl = Self.createPageControl()
 
     private weak var timer: Timer?
     
-    private let cellHeight: CGFloat = 579.0
-    private let cellInfoHeight: CGFloat = 234.0
+    private let cellHeight: CGFloat = 500.0
     
     private var cancellables = Set<AnyCancellable>()
     
@@ -57,6 +58,8 @@ class HeroCardTableViewCell: UITableViewCell {
         self.collectionView.dataSource = self
 
         self.collectionView.register(HeroCardMarketCollectionViewCell.self, forCellWithReuseIdentifier: HeroCardMarketCollectionViewCell.identifier)
+        self.collectionView.register(HeroCardSecondaryMarketCollectionViewCell.self, forCellWithReuseIdentifier: HeroCardSecondaryMarketCollectionViewCell.identifier)
+        
     }
 
     required init?(coder aDecoder: NSCoder) {
@@ -88,7 +91,7 @@ class HeroCardTableViewCell: UITableViewCell {
         self.backgroundView?.backgroundColor = .clear
         self.contentView.backgroundColor = .clear
 
-        self.outerView.backgroundColor = .blue
+        self.outerView.backgroundColor = UIColor.App.highlightPrimary
         
         self.baseView.backgroundColor = .clear
         
@@ -98,7 +101,7 @@ class HeroCardTableViewCell: UITableViewCell {
         
         self.gradientView.backgroundColor = .clear
         
-        self.bottomInfoBaseView.backgroundColor = UIColor.App.backgroundPrimary
+        self.bottomInfoBaseView.backgroundColor = UIColor.black.withAlphaComponent(0.8)
         
         self.favoriteButton.backgroundColor = .clear
         self.favoriteIconImageView.backgroundColor = .clear
@@ -114,9 +117,9 @@ class HeroCardTableViewCell: UITableViewCell {
         self.collectionView.backgroundView?.backgroundColor = .clear
         self.collectionView.backgroundColor = .clear
 
+        self.pageControlBaseView.backgroundColor = .clear
+        
         self.pageControl.backgroundColor = .clear
-        self.pageControl.pageIndicatorTintColor = .gray
-        self.pageControl.currentPageIndicatorTintColor = UIColor.App.highlightPrimary
 
     }
     
@@ -161,7 +164,7 @@ class HeroCardTableViewCell: UITableViewCell {
             .store(in: &self.cancellables)
         
         self.pageControl.numberOfPages = viewModel.match.markets.count
-        self.pageControl.currentPage = 0
+        self.pageControl.currentPage = self.viewModel?.currentCollectionPage.value ?? 0
 
         if viewModel.match.markets.count > 1 {
             self.pageControl.isHidden = false
@@ -170,18 +173,53 @@ class HeroCardTableViewCell: UITableViewCell {
         else {
             self.pageControl.isHidden = true
         }
+        
+        self.pageControl.didTapIndicator = { [weak self] page in
+            let indexPath = IndexPath(item: page, section: 0)
+            
+            self?.collectionView.scrollToItem(at: indexPath, at: .centeredHorizontally, animated: true)
+        }
+        
+        for recognizer in collectionView.gestureRecognizers ?? [] {
+            if recognizer is UIPanGestureRecognizer {
+                collectionView.removeGestureRecognizer(recognizer)
+            }
+        }
+        
+        let panGestureRecognizer = UIPanGestureRecognizer(target: self, action: #selector(handlePanGesture(_:)))
+        self.collectionView.addGestureRecognizer(panGestureRecognizer)
+    }
+    
+    func stopTimer() {
+        self.timer?.invalidate()
+        self.timer = nil
+    }
+    
+    @objc func handlePanGesture(_ gestureRecognizer: UIPanGestureRecognizer) {
+        
+        if gestureRecognizer.state == .ended {
+            let velocity = gestureRecognizer.velocity(in: collectionView)
+            
+            if abs(velocity.x) > abs(velocity.y) {
+                if velocity.x > 0 {
+                    // Swiped right
+                    self.getCollectionViewPage(isPrevious: true)
+                } else {
+                    // Swiped left
+                    self.getCollectionViewPage()
+                }
+            }
+        }
     }
     
     func markAsFavorite(match: Match) {
         
         if Env.favoritesManager.isEventFavorite(eventId: match.id) {
-//            Env.favoritesManager.removeFavorite(eventId: match.id, favoriteType: .match)
-            print("NOT FAVORITE")
+            Env.favoritesManager.removeFavorite(eventId: match.id, favoriteType: .match)
             self.isFavorite = false
         }
         else {
-//            Env.favoritesManager.addFavorite(eventId: match.id, favoriteType: .match)
-            print("FAVORITE")
+            Env.favoritesManager.addFavorite(eventId: match.id, favoriteType: .match)
             self.isFavorite = true
         }
         
@@ -200,7 +238,32 @@ class HeroCardTableViewCell: UITableViewCell {
         self.timer?.invalidate()
         self.timer = nil
 
-        self.timer = Timer.scheduledTimer(timeInterval: 6.0, target: self, selector: #selector(self.autoScrollCollectionView), userInfo: nil, repeats: true)
+        self.timer = Timer.scheduledTimer(timeInterval: 5.0, target: self, selector: #selector(self.autoScrollCollectionView), userInfo: nil, repeats: true)
+    }
+    
+    private func getCollectionViewPage(isPrevious: Bool = false) {
+        
+        let bannersCount = self.viewModel?.match.markets.count ?? 0
+
+        guard bannersCount != 0 else {
+            return
+        }
+        
+        let visibleRect = CGRect(origin: collectionView.contentOffset, size: collectionView.bounds.size)
+        let visiblePoint = CGPoint(x: visibleRect.midX, y: visibleRect.midY)
+        guard let visibleIndexPath = collectionView.indexPathForItem(at: visiblePoint) else { return }
+        
+        let currentItem = visibleIndexPath.item
+        
+        let desiredItem = isPrevious ? currentItem - 1 : currentItem + 1
+        
+        if desiredItem < bannersCount {
+            let nextIndexPath = IndexPath(item: desiredItem, section: visibleIndexPath.section)
+            collectionView.scrollToItem(at: nextIndexPath, at: .centeredHorizontally, animated: true)
+        } else {
+            let firstIndexPath = IndexPath(item: 0, section: visibleIndexPath.section)
+            collectionView.scrollToItem(at: firstIndexPath, at: .centeredHorizontally, animated: true)
+        }
     }
     
     // MARK: Actions
@@ -238,6 +301,7 @@ class HeroCardTableViewCell: UITableViewCell {
         }
 
     }
+    
 }
 
 extension HeroCardTableViewCell: UICollectionViewDelegate, UICollectionViewDataSource, UICollectionViewDelegateFlowLayout {
@@ -251,9 +315,22 @@ extension HeroCardTableViewCell: UICollectionViewDelegate, UICollectionViewDataS
     }
 
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
-
+        if indexPath.row == 0 {
+            guard
+                let cell = collectionView.dequeueCellType(HeroCardMarketCollectionViewCell.self, indexPath: indexPath),
+                let match = self.viewModel?.match,
+                let market = self.viewModel?.match.markets[safe: indexPath.row]
+            else {
+                fatalError()
+            }
+            
+            cell.configure(market: market, match: match)
+            
+            return cell
+        }
+        
         guard
-            let cell = collectionView.dequeueCellType(HeroCardMarketCollectionViewCell.self, indexPath: indexPath),
+            let cell = collectionView.dequeueCellType(HeroCardSecondaryMarketCollectionViewCell.self, indexPath: indexPath),
             let match = self.viewModel?.match,
             let market = self.viewModel?.match.markets[safe: indexPath.row]
         else {
@@ -276,7 +353,8 @@ extension HeroCardTableViewCell: UICollectionViewDelegate, UICollectionViewDataS
     func collectionView(_ collectionView: UICollectionView, willDisplay cell: UICollectionViewCell, forItemAt indexPath: IndexPath) {
         
         self.pageControl.currentPage = indexPath.row
-
+        self.viewModel?.currentCollectionPage.send(indexPath.row)
+        print("SHOWING PAGE: \(indexPath.row)")
         self.resetTime()
     }
 
@@ -318,7 +396,7 @@ extension HeroCardTableViewCell {
         let gradientView = GradientView()
         gradientView.translatesAutoresizingMaskIntoConstraints = false
         gradientView.colors = [(.clear, NSNumber(0.0)),
-                               (UIColor.App.backgroundPrimary, NSNumber(1.0))]
+                               (UIColor.black.withAlphaComponent(0.8), NSNumber(1.0))]
         gradientView.startPoint = CGPoint(x: 0.0, y: 0.0)
         gradientView.endPoint = CGPoint(x: 0.0, y: 1.0)
         return gradientView
@@ -360,6 +438,8 @@ extension HeroCardTableViewCell {
         imageView.translatesAutoresizingMaskIntoConstraints = false
         imageView.image = UIImage(named: "country_flag_240")
         imageView.contentMode = .scaleAspectFit
+        imageView.layer.borderWidth = 1
+        imageView.layer.borderColor = UIColor.App.buttonTextPrimary.cgColor
         imageView.clipsToBounds = true
         return imageView
     }
@@ -392,13 +472,25 @@ extension HeroCardTableViewCell {
         collectionView.showsHorizontalScrollIndicator = false
         collectionView.alwaysBounceHorizontal = true
         collectionView.contentInset = UIEdgeInsets(top: 0, left: 10, bottom: 0, right: 10)
+//        collectionView.isPagingEnabled = true
         return collectionView
     }
     
-    private static func createPageControl() -> UIPageControl {
-        let pageControl = UIPageControl()
-        pageControl.translatesAutoresizingMaskIntoConstraints = false
-        return pageControl
+//    private static func createPageControl() -> UIPageControl {
+//        let pageControl = UIPageControl()
+//        pageControl.translatesAutoresizingMaskIntoConstraints = false
+//        return pageControl
+//    }
+    private static func createPageControlBaseView() -> UIView {
+        let view = UIView()
+        view.translatesAutoresizingMaskIntoConstraints = false
+        return view
+    }
+    
+    private static func createPageControl() -> CustomPageControl {
+        let customPageControl = CustomPageControl()
+        customPageControl.translatesAutoresizingMaskIntoConstraints = false
+        return customPageControl
     }
     
     private func setupSubviews() {
@@ -430,7 +522,9 @@ extension HeroCardTableViewCell {
                         
         self.bottomInfoBaseView.addSubview(self.collectionView)
         
-        self.bottomInfoBaseView.addSubview(self.pageControl)
+        self.bottomInfoBaseView.addSubview(self.pageControlBaseView)
+        
+        self.pageControlBaseView.addSubview(self.pageControl)
 
         self.initConstraints()
         
@@ -442,15 +536,15 @@ extension HeroCardTableViewCell {
         NSLayoutConstraint.activate([
             self.outerView.heightAnchor.constraint(equalToConstant: self.cellHeight),
             
-            self.outerView.leadingAnchor.constraint(equalTo: self.contentView.leadingAnchor),
-            self.outerView.trailingAnchor.constraint(equalTo: self.contentView.trailingAnchor),
-            self.outerView.topAnchor.constraint(equalTo: self.contentView.topAnchor),
-            self.outerView.bottomAnchor.constraint(equalTo: self.contentView.bottomAnchor),
+            self.outerView.leadingAnchor.constraint(equalTo: self.contentView.leadingAnchor, constant: 15),
+            self.outerView.trailingAnchor.constraint(equalTo: self.contentView.trailingAnchor, constant: -15),
+            self.outerView.topAnchor.constraint(equalTo: self.contentView.topAnchor, constant: 5),
+            self.outerView.bottomAnchor.constraint(equalTo: self.contentView.bottomAnchor, constant: -5),
             
-            self.baseView.leadingAnchor.constraint(equalTo: self.contentView.leadingAnchor, constant: 1),
-            self.baseView.trailingAnchor.constraint(equalTo: self.contentView.trailingAnchor, constant: -1),
-            self.baseView.topAnchor.constraint(equalTo: self.contentView.topAnchor, constant: 1),
-            self.baseView.bottomAnchor.constraint(equalTo: self.contentView.bottomAnchor, constant: -1),
+            self.baseView.leadingAnchor.constraint(equalTo: self.outerView.leadingAnchor, constant: 1),
+            self.baseView.trailingAnchor.constraint(equalTo: self.outerView.trailingAnchor, constant: -1),
+            self.baseView.topAnchor.constraint(equalTo: self.outerView.topAnchor, constant: 1),
+            self.baseView.bottomAnchor.constraint(equalTo: self.outerView.bottomAnchor, constant: -1),
             
             self.topImageView.topAnchor.constraint(equalTo: self.baseView.topAnchor),
             self.topImageView.leadingAnchor.constraint(equalTo: self.baseView.leadingAnchor),
@@ -467,23 +561,23 @@ extension HeroCardTableViewCell {
             self.favoriteButton.widthAnchor.constraint(equalToConstant: 40),
             self.favoriteButton.heightAnchor.constraint(equalTo: self.favoriteButton.widthAnchor),
             
-            self.favoriteIconImageView.leadingAnchor.constraint(equalTo: self.topInfoBaseView.leadingAnchor, constant: 12),
-            self.favoriteIconImageView.topAnchor.constraint(equalTo: self.topInfoBaseView.topAnchor, constant: 12),
-            self.favoriteIconImageView.widthAnchor.constraint(equalToConstant: 15),
+            self.favoriteIconImageView.leadingAnchor.constraint(equalTo: self.topInfoBaseView.leadingAnchor, constant: 9),
+            self.favoriteIconImageView.topAnchor.constraint(equalTo: self.topInfoBaseView.topAnchor, constant: 9),
+            self.favoriteIconImageView.widthAnchor.constraint(equalToConstant: 12),
             self.favoriteIconImageView.heightAnchor.constraint(equalTo: self.favoriteIconImageView.widthAnchor),
             
             self.sportIconImageView.leadingAnchor.constraint(equalTo: self.favoriteIconImageView.trailingAnchor, constant: 7),
             self.sportIconImageView.centerYAnchor.constraint(equalTo: self.favoriteIconImageView.centerYAnchor),
-            self.sportIconImageView.widthAnchor.constraint(equalToConstant: 15),
+            self.sportIconImageView.widthAnchor.constraint(equalToConstant: 12),
             self.sportIconImageView.heightAnchor.constraint(equalTo: self.sportIconImageView.widthAnchor),
             
             self.locationIconImageView.leadingAnchor.constraint(equalTo: self.sportIconImageView.trailingAnchor, constant: 7),
             self.locationIconImageView.centerYAnchor.constraint(equalTo: self.favoriteIconImageView.centerYAnchor),
-            self.locationIconImageView.widthAnchor.constraint(equalToConstant: 15),
+            self.locationIconImageView.widthAnchor.constraint(equalToConstant: 12),
             self.locationIconImageView.heightAnchor.constraint(equalTo: self.locationIconImageView.widthAnchor),
             
             self.competitionLabel.leadingAnchor.constraint(equalTo: self.locationIconImageView.trailingAnchor, constant: 7),
-            self.competitionLabel.trailingAnchor.constraint(equalTo: self.topInfoBaseView.trailingAnchor, constant: -12),
+            self.competitionLabel.trailingAnchor.constraint(equalTo: self.topInfoBaseView.trailingAnchor, constant: -9),
             self.competitionLabel.centerYAnchor.constraint(equalTo: self.favoriteIconImageView.centerYAnchor),
             
             self.topSeparatorAlphaLineView.leadingAnchor.constraint(equalTo: self.baseView.leadingAnchor),
@@ -497,7 +591,6 @@ extension HeroCardTableViewCell {
             self.bottomInfoBaseView.leadingAnchor.constraint(equalTo: self.baseView.leadingAnchor),
             self.bottomInfoBaseView.trailingAnchor.constraint(equalTo: self.baseView.trailingAnchor),
             self.bottomInfoBaseView.bottomAnchor.constraint(equalTo: self.baseView.bottomAnchor),
-//            self.bottomInfoBaseView.heightAnchor.constraint(equalToConstant: self.cellInfoHeight),
             
             self.gradientView.leadingAnchor.constraint(equalTo: self.baseView.leadingAnchor),
             self.gradientView.trailingAnchor.constraint(equalTo: self.baseView.trailingAnchor),
@@ -506,12 +599,19 @@ extension HeroCardTableViewCell {
             
             self.collectionView.leadingAnchor.constraint(equalTo: self.baseView.leadingAnchor, constant: 0),
             self.collectionView.trailingAnchor.constraint(equalTo: self.baseView.trailingAnchor, constant: 0),
-            self.collectionView.topAnchor.constraint(equalTo: self.topSeparatorAlphaLineView.bottomAnchor, constant: 10),
-            self.collectionView.heightAnchor.constraint(equalToConstant: 100),
+            self.collectionView.topAnchor.constraint(equalTo: self.bottomInfoBaseView.topAnchor, constant: 10),
+            self.collectionView.heightAnchor.constraint(equalToConstant: 120),
             
-            self.pageControl.centerXAnchor.constraint(equalTo: self.baseView.centerXAnchor),
-            self.pageControl.topAnchor.constraint(equalTo: self.collectionView.bottomAnchor, constant: -5),
-            self.pageControl.bottomAnchor.constraint(equalTo: self.baseView.bottomAnchor, constant: 0),
+            self.pageControlBaseView.leadingAnchor.constraint(equalTo: self.bottomInfoBaseView.leadingAnchor),
+            self.pageControlBaseView.trailingAnchor.constraint(equalTo: self.bottomInfoBaseView.trailingAnchor),
+            self.pageControlBaseView.topAnchor.constraint(equalTo: self.collectionView.bottomAnchor),
+            self.pageControlBaseView.bottomAnchor.constraint(equalTo: self.bottomInfoBaseView.bottomAnchor),
+            self.pageControlBaseView.heightAnchor.constraint(equalToConstant: 30),
+            
+            self.pageControl.centerXAnchor.constraint(equalTo: self.pageControlBaseView.centerXAnchor),
+//            self.pageControl.topAnchor.constraint(equalTo: self.collectionView.bottomAnchor, constant: 0),
+//            self.pageControl.bottomAnchor.constraint(equalTo: self.baseView.bottomAnchor, constant: 0),
+            self.pageControl.centerYAnchor.constraint(equalTo: self.pageControlBaseView.centerYAnchor)
         ])
     }
 }

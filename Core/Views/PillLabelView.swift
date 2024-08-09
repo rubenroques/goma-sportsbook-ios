@@ -107,13 +107,22 @@ class PillLabelView: UIView {
     }
     
     
-    func setupWithTheme() {
+    func setupWithTheme(withBorderColor borderColor: UIColor? = nil, withTextColor textColor: UIColor? = nil) {
 
         self.borderView.layer.borderColor = UIColor.App.separatorLineSecondary.resolvedColor(with: self.traitCollection).cgColor
         self.textLabel.textColor = UIColor.App.textSecondary
         self.lineView.backgroundColor = UIColor.App.separatorLineSecondary
         self.borderView.backgroundColor = .clear
         self.textLabel.backgroundColor = .clear
+        
+        if let borderColor {
+            self.borderView.layer.borderColor = borderColor.resolvedColor(with: self.traitCollection).cgColor
+            self.lineView.backgroundColor = borderColor
+        }
+        
+        if let textColor {
+            self.textLabel.textColor = textColor
+        }
         
     }
     

@@ -128,6 +128,7 @@ class ClientManagedHomeViewTemplateDataSource {
 
     var matchWidgetCellViewModelCache: [String: MatchWidgetCellViewModel] = [:]
     var matchLineTableCellViewModelCache: [String: MatchLineTableCellViewModel] = [:]
+    var heroCardWidgetCellViewModelCache: [String: MatchWidgetCellViewModel] = [:]
 
     var highlightedLiveMatchLineTableCellViewModelCache: [String: MatchLineTableCellViewModel] = [:]
     
@@ -326,39 +327,67 @@ class ClientManagedHomeViewTemplateDataSource {
     }
     
     func fetchHeroMatches() {
-
-        let imageMatches = Env.servicesProvider.getHighlightedVisualImageEvents()
-            .receive(on: DispatchQueue.main)
-            .map(ServiceProviderModelMapper.matches(fromEvents:))
-            .replaceError(with: [])
         
-
-        imageMatches.map { heroEvents -> [HighlightedMatchType] in
-            var events: [HighlightedMatchType] = heroEvents.map({ HighlightedMatchType.visualImageMatch($0) })
-            return events
-        }
-        .receive(on: DispatchQueue.main)
-        .sink(receiveCompletion: { completion in
-            print("ClientManagedHomeTemplate fetchHeroMatches completion \(completion)")
-        }, receiveValue: { [weak self] highlightedMatchTypes in
-            var imageMatches: [Match] = [ ]
-            var boostedMatches: [Match] = []
-            for highlightedMatchType in highlightedMatchTypes {
-                switch highlightedMatchType {
-                case .visualImageMatch(let match):
-                    imageMatches.append(match)
-                case .boostedOddsMatch(let match):
-                    boostedMatches.append(match)
+        Env.servicesProvider.getHeroGameEvent()
+            .receive(on: DispatchQueue.main)
+            .map(ServiceProviderModelMapper.match(fromEvent:))
+            .sink(receiveCompletion: { completion in
+                    print("ClientManagedHomeTemplate getHeroGameEvent completion \(completion)")
+            }, receiveValue: { [weak self] heroMatch in
+                var heroMatches: [Match] = []
+                
+                if let heroMatch {
+                    heroMatches.append(heroMatch)
                 }
-            }
-
-            self?.heroMatches = imageMatches.filter({
-                $0.homeParticipant.name != "" && $0.awayParticipant.name != ""
+                
+                self?.heroMatches = heroMatches
+                
+                self?.refreshPublisher.send()
             })
+            .store(in: &cancellables)
 
-            self?.refreshPublisher.send()
-        })
-        .store(in: &self.cancellables)
+//        let imageMatches = Env.servicesProvider.getHighlightedVisualImageEvents()
+//            .receive(on: DispatchQueue.main)
+//            .map(ServiceProviderModelMapper.matches(fromEvents:))
+//            .replaceError(with: [])
+//        
+//
+//        imageMatches.map { heroEvents -> [HighlightedMatchType] in
+//            var events: [HighlightedMatchType] = heroEvents.map({ HighlightedMatchType.visualImageMatch($0) })
+//            return events
+//        }
+//        .receive(on: DispatchQueue.main)
+//        .sink(receiveCompletion: { completion in
+//            print("ClientManagedHomeTemplate fetchHeroMatches completion \(completion)")
+//        }, receiveValue: { [weak self] highlightedMatchTypes in
+//            var imageMatches: [Match] = []
+//            var boostedMatches: [Match] = []
+//            for highlightedMatchType in highlightedMatchTypes {
+//                switch highlightedMatchType {
+//                case .visualImageMatch(let match):
+//                    imageMatches.append(match)
+//                case .boostedOddsMatch(let match):
+//                    boostedMatches.append(match)
+//                }
+//            }
+//            
+//            var testMatches: [Match] = []
+//            
+//            for match in imageMatches {
+//                var markets = match.markets
+//                let newMarkets = markets.flatMap { [$0, $0] }
+//                var newMatch = match
+//                newMatch.markets = newMarkets
+//                testMatches.append(newMatch)
+//            }
+//
+//            self?.heroMatches = testMatches.filter({
+//                $0.homeParticipant.name != "" && $0.awayParticipant.name != ""
+//            })
+//
+//            self?.refreshPublisher.send()
+//        })
+//        .store(in: &self.cancellables)
 
     }
 
@@ -770,12 +799,12 @@ extension ClientManagedHomeViewTemplateDataSource: HomeViewTemplateDataSource {
                 
         if let match = self.heroMatches[safe: index] {
             let id = match.id + MatchWidgetType.topImage.rawValue
-            if let matchWidgetCellViewModel = self.matchWidgetCellViewModelCache[id] {
+            if let matchWidgetCellViewModel = self.heroCardWidgetCellViewModelCache[id] {
                 return matchWidgetCellViewModel
             }
             else {
                 let matchWidgetCellViewModel = MatchWidgetCellViewModel(match: match, matchWidgetType: .topImage)
-                self.matchWidgetCellViewModelCache[id] = matchWidgetCellViewModel
+                self.heroCardWidgetCellViewModelCache[id] = matchWidgetCellViewModel
                 return matchWidgetCellViewModel
             }
         }
