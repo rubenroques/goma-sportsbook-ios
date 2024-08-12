@@ -52,8 +52,6 @@ protocol SportsbookTarget {
     
     static var secundaryMarketSpecsUrl: String? { get }
     
-    static var expandableSuggestedBetsWidget: Bool { get }
-    
 }
 
 enum SportsbookTargetFeatures: CaseIterable {

@@ -90,9 +90,6 @@ struct TargetVariables: SportsbookTarget {
     static var secundaryMarketSpecsUrl: String? {
         return nil
     }
-    
-    static var expandableSuggestedBetsWidget: Bool {
-        return true
-    }
+
     
 }

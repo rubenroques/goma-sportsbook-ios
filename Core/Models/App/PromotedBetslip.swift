@@ -53,7 +53,8 @@ struct SuggestedBetslipSelection: Codable, Hashable {
          outcomeId: String,
          eventName: String,
          marketName: String,
-         outcomeName: String) {
+         outcomeName: String)
+    {
         self.id = id
         self.location = location
         self.competitionName = competitionName

@@ -282,13 +282,13 @@ extension SportRadarModels {
 
         }
 
-        private static var dateFormatter: DateFormatter {
+        static var dateFormatter: DateFormatter {
             let formatter = DateFormatter()
             formatter.dateFormat =  "yyyy-MM-dd'T'HH:mm:ss.SSSZ"
             return formatter
         }
         
-        private static var fallbackDateFormatter: DateFormatter {
+        static var fallbackDateFormatter: DateFormatter {
             let formatter = DateFormatter()
             formatter.dateFormat =  "yyyy-MM-dd'T'HH:mm:ssZ"
             return formatter
@@ -313,7 +313,7 @@ extension SportRadarModels {
         var isMainOutright: Bool?
         var eventMarketCount: Int?
         var isTradable: Bool
-        var startDate: String?
+        var startDate: Date?
         var homeParticipant: String?
         var awayParticipant: String?
         var eventId: String?
@@ -365,7 +365,7 @@ extension SportRadarModels {
              isMainOutright: Bool? = nil,
              eventMarketCount: Int? = nil,
              isTradable: Bool,
-             startDate: String? = nil,
+             startDate: Date? = nil,
              homeParticipant: String? = nil,
              awayParticipant: String? = nil,
              eventId: String? = nil,
@@ -421,10 +421,27 @@ extension SportRadarModels {
             self.eventMarketCount = try container.decodeIfPresent(Int.self, forKey: .eventMarketCount)
             self.isTradable = try container.decodeIfPresent(Bool.self, forKey: .isTradable) ?? true
             self.outcomes = try container.decode([SportRadarModels.Outcome].self, forKey: .outcomes)
-            self.startDate = try container.decodeIfPresent(String.self, forKey: .startDate)
+            
             self.homeParticipant = try container.decodeIfPresent(String.self, forKey: .homeParticipant)
             self.awayParticipant = try container.decodeIfPresent(String.self, forKey: .awayParticipant)
             self.eventId = try container.decodeIfPresent(String.self, forKey: .eventId)
+            
+            
+            
+            if let startDateString = try container.decodeIfPresent(String.self, forKey: .startDate) {
+                if let date = Event.dateFormatter.date(from: startDateString) {
+                    self.startDate = date
+                }
+                else if let date = Event.fallbackDateFormatter.date(from: startDateString) {
+                    self.startDate = date
+                }
+                else {
+                    self.startDate = nil
+                }
+            }
+            else {
+                self.startDate = nil
+            }
             
             self.marketDigitLine = nil
             if let marketDigitLineString = try? container.decodeIfPresent(String.self, forKey: .marketDigitLine) {

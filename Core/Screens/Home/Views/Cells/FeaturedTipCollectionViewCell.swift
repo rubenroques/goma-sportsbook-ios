@@ -229,7 +229,7 @@ class FeaturedTipCollectionViewCell: UICollectionViewCell {
         
         for (i, featuredTipSelection) in tipsArray.enumerated() {
             if i > 3 && (self.viewModel?.shouldCropList ?? true) {
-                self.showFullTipButton = TargetVariables.expandableSuggestedBetsWidget
+                self.showFullTipButton = true
                 break
             }
             else {

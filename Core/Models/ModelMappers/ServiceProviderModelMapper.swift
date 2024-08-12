@@ -196,6 +196,7 @@ extension ServiceProviderModelMapper {
         //        mappedOutcomes = newMappedOutcomes
         //        #endif
         //
+        
         return Market(id: market.id,
                       typeId: market.name,
                       name: market.name,

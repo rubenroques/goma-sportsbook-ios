@@ -40,7 +40,7 @@ extension SportRadarModelMapper {
                                         countryName: internalSelection.country ?? "international",
                                         competitionName: internalSelection.league,
                                         eventId: internalSelection.orakoEventId,
-                                        marketId: String(internalSelection.marketId ?? 0),
+                                        marketId: internalSelection.orakoMarketId,
                                         outcomeId: internalSelection.orakoSelectionId,
                                         marketName: internalSelection.marketType,
                                         outcomeType: internalSelection.outcomeType,

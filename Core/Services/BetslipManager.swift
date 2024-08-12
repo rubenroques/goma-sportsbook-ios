@@ -193,6 +193,7 @@ class BetslipManager: NSObject {
     }
 
     private func updateBettingTickets(ofMarket market: Market) {
+        
         for outcome in market.outcomes {
             if let bettingTicket = self.bettingTicketsDictionaryPublisher.value[outcome.id] {
                 let newAvailablity = market.isAvailable
@@ -202,16 +203,16 @@ class BetslipManager: NSObject {
                                                           marketId: bettingTicket.marketId,
                                                           matchId: bettingTicket.matchId,
                                                           isAvailable: newAvailablity,
-                                                          matchDescription: bettingTicket.matchDescription,
-                                                          marketDescription: bettingTicket.marketDescription,
-                                                          outcomeDescription: bettingTicket.outcomeDescription,
-                                                          homeParticipantName: bettingTicket.homeParticipantName,
-                                                          awayParticipantName: bettingTicket.awayParticipantName,
+                                                          matchDescription: market.eventName ?? bettingTicket.matchDescription,
+                                                          marketDescription: outcome.marketName ?? bettingTicket.marketDescription,
+                                                          outcomeDescription: outcome.translatedName,
+                                                          homeParticipantName: market.homeParticipant ?? bettingTicket.homeParticipantName,
+                                                          awayParticipantName: market.awayParticipant ?? bettingTicket.awayParticipantName,
                                                           sport: bettingTicket.sport,
                                                           sportIdCode: bettingTicket.sportIdCode, 
                                                           venue: bettingTicket.venue,
                                                           competition: bettingTicket.competition,
-                                                          date: bettingTicket.date,
+                                                          date: market.startDate ?? bettingTicket.date,
                                                           odd: newOdd)
 
                 self.bettingTicketsDictionaryPublisher.value[bettingTicket.id] = newBettingTicket

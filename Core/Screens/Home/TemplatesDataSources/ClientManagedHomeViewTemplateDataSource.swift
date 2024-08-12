@@ -616,23 +616,15 @@ class ClientManagedHomeViewTemplateDataSource {
                 print("ClientManagedHomeTemplate getPromotedSports completion \(completion)")
             } receiveValue: { [weak self] suggestedBetslips in
                 
-                if !TargetVariables.expandableSuggestedBetsWidget {
-                    var suggestedBetslipsCropped: [SuggestedBetslip] = []
-                    for suggestedBetslip in suggestedBetslips {
-                        let croppedSelections = Array(suggestedBetslip.selections.prefix(4))
-                        
-                        suggestedBetslipsCropped.append(SuggestedBetslip(id: suggestedBetslip.id,
-                                                                         selections: croppedSelections))
-                    }
-                    self?.suggestedBetslips = suggestedBetslipsCropped
-                }
-                else {
-                    self?.suggestedBetslips = suggestedBetslips
-                }
+                #if DEBUG
+                self?.suggestedBetslips = suggestedBetslips + suggestedBetslips
+                #else
+                self?.suggestedBetslips = suggestedBetslips
+                #endif
+                
                 self?.refreshPublisher.send()
             }
             .store(in: &self.cancellables)
-        
     }
     
 }

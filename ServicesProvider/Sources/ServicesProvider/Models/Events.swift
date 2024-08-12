@@ -228,7 +228,7 @@ public class Market: Codable, Equatable {
     public var isMainOutright: Bool?
     public var eventMarketCount: Int?
     public var isTradable: Bool
-    public var startDate: String?
+    public var startDate: Date?
     public var homeParticipant: String?
     public var awayParticipant: String?
     public var eventId: String?
@@ -268,7 +268,7 @@ public class Market: Codable, Equatable {
                 isMainOutright: Bool?,
                 eventMarketCount: Int?,
                 isTradable: Bool,
-                startDate: String?,
+                startDate: Date?,
                 homeParticipant: String?,
                 awayParticipant: String?,
                 eventId: String?,

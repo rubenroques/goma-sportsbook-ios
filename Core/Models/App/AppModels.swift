@@ -85,7 +85,7 @@ struct Market: Hashable {
     var eventMarketCount: Int?
     var isAvailable: Bool
 
-    var startDate: String?
+    var startDate: Date?
     var homeParticipant: String?
     var awayParticipant: String?
 
@@ -109,7 +109,7 @@ struct Market: Hashable {
          isMainOutright: Bool? = nil,
          eventMarketCount: Int? = nil,
          isAvailable: Bool = true,
-         startDate: String? = nil,
+         startDate: Date? = nil,
          homeParticipant: String? = nil,
          awayParticipant: String? = nil,
          eventId: String? = nil,

@@ -91,8 +91,4 @@ struct TargetVariables: SportsbookTarget {
         return "https://betsson.fr/secondary_markets_config.json"
     }
 
-    static var expandableSuggestedBetsWidget: Bool {
-        return false
-    }
-
 }
