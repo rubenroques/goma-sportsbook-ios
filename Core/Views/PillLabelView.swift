@@ -43,6 +43,9 @@ class PillLabelView: UIView {
         }
     }
     
+    var borderColor: UIColor?
+    var textColor: UIColor?
+    
     override init(frame: CGRect) {
         super.init(frame: frame)
         setupView()
@@ -55,7 +58,7 @@ class PillLabelView: UIView {
     override func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {
         super.traitCollectionDidChange(previousTraitCollection)
         
-        self.setupWithTheme()
+        self.setupWithTheme(withBorderColor: self.borderColor, withTextColor: self.textColor)
 
     }
     
@@ -108,6 +111,9 @@ class PillLabelView: UIView {
     
     
     func setupWithTheme(withBorderColor borderColor: UIColor? = nil, withTextColor textColor: UIColor? = nil) {
+        
+        self.borderColor = borderColor
+        self.textColor = textColor
 
         self.borderView.layer.borderColor = UIColor.App.separatorLineSecondary.resolvedColor(with: self.traitCollection).cgColor
         self.textLabel.textColor = UIColor.App.textSecondary
@@ -115,12 +121,12 @@ class PillLabelView: UIView {
         self.borderView.backgroundColor = .clear
         self.textLabel.backgroundColor = .clear
         
-        if let borderColor {
+        if let borderColor = self.borderColor {
             self.borderView.layer.borderColor = borderColor.resolvedColor(with: self.traitCollection).cgColor
             self.lineView.backgroundColor = borderColor
         }
         
-        if let textColor {
+        if let textColor = self.textColor {
             self.textLabel.textColor = textColor
         }
         
