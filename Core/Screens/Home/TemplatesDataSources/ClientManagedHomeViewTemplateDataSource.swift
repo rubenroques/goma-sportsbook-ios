@@ -658,7 +658,7 @@ extension ClientManagedHomeViewTemplateDataSource: HomeViewTemplateDataSource {
         case .bannerLine:
             return self.bannersLineViewModel == nil ? 0 : 1
         case .heroCard:
-            return self.heroMatches == nil ? 0 : 1
+            return self.heroMatches.isEmpty ? 0 : 1
         case .quickSwipeStack:
             return self.quickSwipeStackMatches.isEmpty ? 0 : 1
         case .promotionalStories:
