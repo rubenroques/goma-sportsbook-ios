@@ -14,6 +14,8 @@ class HeroCardTableViewCell: UITableViewCell {
     private lazy var baseView: UIView = Self.createBaseView()
     private lazy var topImageView: UIImageView = Self.createTopImageView()
     private lazy var topInfoBaseView: UIView = Self.createTopInfoBaseView()
+    private lazy var gradientPatternView: UIView = Self.createGradientPatternView()
+    private lazy var imageGradientPatternView: UIImageView = Self.createImageGradientPatternView()
     private lazy var gradientView: GradientView = Self.createGradientView()
     private lazy var bottomInfoBaseView: UIView = Self.createBottomInfoBaseView()
     private lazy var favoriteButton: UIButton = Self.createFavoriteButton()
@@ -101,8 +103,12 @@ class HeroCardTableViewCell: UITableViewCell {
         
         self.gradientView.backgroundColor = .clear
         
-        self.bottomInfoBaseView.backgroundColor = UIColor.black.withAlphaComponent(0.8)
+        self.bottomInfoBaseView.backgroundColor = .clear
         
+        self.imageGradientPatternView.backgroundColor = .clear
+        
+        self.gradientPatternView.backgroundColor = UIColor.black.withAlphaComponent(0.8)
+                
         self.favoriteButton.backgroundColor = .clear
         self.favoriteIconImageView.backgroundColor = .clear
         
@@ -394,6 +400,20 @@ extension HeroCardTableViewCell {
         return view
     }
     
+    private static func createImageGradientPatternView() -> UIImageView {
+        let imageView = UIImageView()
+        imageView.translatesAutoresizingMaskIntoConstraints = false
+        imageView.image = UIImage(named: "gradient_pattern")
+        imageView.contentMode = .scaleAspectFill
+        return imageView
+    }
+    
+    private static func createGradientPatternView() -> UIView {
+        let view = UIView()
+        view.translatesAutoresizingMaskIntoConstraints = false
+        return view
+    }
+    
     private static func createGradientView() -> GradientView {
         let gradientView = GradientView()
         gradientView.translatesAutoresizingMaskIntoConstraints = false
@@ -519,7 +539,11 @@ extension HeroCardTableViewCell {
         self.baseView.addSubview(self.topSeparatorAlphaLineView)
 
         self.baseView.addSubview(self.gradientView)
-                
+        
+        self.baseView.addSubview(self.gradientPatternView)
+        
+        self.baseView.addSubview(self.imageGradientPatternView)
+        
         self.baseView.addSubview(self.bottomInfoBaseView)
                         
         self.bottomInfoBaseView.addSubview(self.collectionView)
@@ -598,6 +622,16 @@ extension HeroCardTableViewCell {
             self.gradientView.trailingAnchor.constraint(equalTo: self.baseView.trailingAnchor),
             self.gradientView.bottomAnchor.constraint(equalTo: self.bottomInfoBaseView.topAnchor),
             self.gradientView.heightAnchor.constraint(equalToConstant: 100),
+            
+            self.gradientPatternView.leadingAnchor.constraint(equalTo: self.baseView.leadingAnchor),
+            self.gradientPatternView.trailingAnchor.constraint(equalTo: self.baseView.trailingAnchor),
+            self.gradientPatternView.bottomAnchor.constraint(equalTo: self.baseView.bottomAnchor),
+            self.gradientPatternView.topAnchor.constraint(equalTo: self.bottomInfoBaseView.topAnchor),
+            
+            self.imageGradientPatternView.leadingAnchor.constraint(equalTo: self.baseView.leadingAnchor),
+            self.imageGradientPatternView.trailingAnchor.constraint(equalTo: self.baseView.trailingAnchor),
+            self.imageGradientPatternView.bottomAnchor.constraint(equalTo: self.baseView.bottomAnchor),
+            self.imageGradientPatternView.topAnchor.constraint(equalTo: self.gradientView.topAnchor),
             
             self.collectionView.leadingAnchor.constraint(equalTo: self.baseView.leadingAnchor, constant: 0),
             self.collectionView.trailingAnchor.constraint(equalTo: self.baseView.trailingAnchor, constant: 0),
