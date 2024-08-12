@@ -172,6 +172,24 @@ extension UIColor {
         static var liveBorderGradient3: UIColor {
             return UIColor(named: "liveColor3") ?? Self.highlightPrimary
         }
+        
+        static var textHeroCard: UIColor {
+            return UIColor(named: "textHeroCard") ?? Self.textHeroCard
+        }
+        
+        static var textSecondaryHeroCard: UIColor {
+            return UIColor(named: "textSecondaryHeroCard") ?? Self.textSecondaryHeroCard
+        }
+        
+        static var backgroundOddsHeroCard: UIColor {
+            return UIColor(named: "backgroundOddsHeroCard") ?? Self.backgroundOddsHeroCard
+        }
+        
+        static var iconSportsHeroCard: UIColor {
+            return UIColor(named: "iconSportsHeroCard") ?? Self.iconSportsHeroCard
+        }
+        
+        
 
     }
 

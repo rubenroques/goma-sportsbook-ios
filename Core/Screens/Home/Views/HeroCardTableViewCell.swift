@@ -110,7 +110,7 @@ class HeroCardTableViewCell: UITableViewCell {
         
         self.locationIconImageView.backgroundColor = .clear
         
-        self.competitionLabel.textColor = UIColor.App.textSecondary
+        self.competitionLabel.textColor = UIColor.App.textHeroCard
         
         self.topSeparatorAlphaLineView.backgroundColor = UIColor.App.highlightPrimary
         
@@ -145,7 +145,9 @@ class HeroCardTableViewCell: UITableViewCell {
         viewModel.sportIconImagePublisher
             .receive(on: DispatchQueue.main)
             .sink { [weak self] sportIconImage in
-                self?.sportIconImageView.image = sportIconImage
+                self?.sportIconImageView.image = sportIconImage.withRenderingMode(.alwaysTemplate)
+                self?.sportIconImageView.tintColor = UIColor.App.iconSportsHeroCard
+
             }
             .store(in: &self.cancellables)
         
