@@ -95,7 +95,7 @@ class HeroCardTableViewCell: UITableViewCell {
 
         self.outerView.backgroundColor = UIColor.App.highlightPrimary
         
-        self.baseView.backgroundColor = .clear
+        self.baseView.backgroundColor = UIColor.App.backgroundPrimary
         
         self.topImageView.backgroundColor = .clear
         
