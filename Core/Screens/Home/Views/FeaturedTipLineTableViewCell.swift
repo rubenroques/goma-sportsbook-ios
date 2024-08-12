@@ -10,39 +10,59 @@ import Combine
 
 class FeaturedTipLineViewModel {
 
+    static let maxTicketsBeforeExpand = 4
+    
     enum DataType {
-        case featureTips([FeaturedTip])
+        case featuredTips([FeaturedTip])
         case suggestedBetslips([SuggestedBetslip])
     }
     
     var featuredTipCollectionCacheViewModel: [String: FeaturedTipCollectionViewModel] = [:]
 
-    private var dataType: DataType
+    var dataType: DataType
     
     private var cancellables = Set<AnyCancellable>()
 
     init(featuredTips: [FeaturedTip]) {
-        self.dataType = .featureTips(featuredTips)
+        self.dataType = .featuredTips(featuredTips)
     }
     
     init(suggestedBetslip: [SuggestedBetslip]) {
         self.dataType = .suggestedBetslips(suggestedBetslip)
     }
+    
+    func indexForItem(withId id: String) -> Int? {
+        switch self.dataType {
+        case .featuredTips(let featuredTips):
+            return featuredTips.firstIndex(where: { $0.betId == id })
+        case .suggestedBetslips(let suggestedBetslips):
+            return suggestedBetslips.firstIndex(where: { $0.id == id })
+        }
+    }
 
     func numberOfItems() -> Int {
-        switch dataType {
-        case .featureTips(let featureTips):
-            featureTips.count
+        switch self.dataType {
+        case .featuredTips(let featuredTips):
+            featuredTips.count
         case .suggestedBetslips(let suggestedBetslips):
             suggestedBetslips.count
+        }
+    }
+    
+    func maxTicketsCount() -> Int {
+        switch dataType {
+        case .featuredTips(let featuredTips):
+            featuredTips.map({ ($0.selections ?? []).count }).max() ?? 0
+        case .suggestedBetslips(let suggestedBetslips):
+            suggestedBetslips.map({ ($0.selections ?? []).count }).max() ?? 0
         }
     }
 
     func cellViewModel(forIndex index: Int) -> FeaturedTipCollectionViewModel? {
         switch dataType {
-        case .featureTips(let featureTips):
+        case .featuredTips(let featuredTips):
             guard
-                let featuredTip = featureTips[safe: index]
+                let featuredTip = featuredTips[safe: index]
             else {
                 return nil
             }
@@ -81,12 +101,16 @@ class FeaturedTipLineViewModel {
 
 class FeaturedTipLineTableViewCell: UITableViewCell {
 
+    static var estimatedHeight: CGFloat = 480
+    
     private lazy var collectionView: UICollectionView = Self.createCollectionView()
+
+    private var collectionViewHeightConstraint: NSLayoutConstraint?
 
     private var viewModel: FeaturedTipLineViewModel?
     private var cancellables: Set<AnyCancellable> = []
 
-    var openFeaturedTipDetailAction: ((FeaturedTip) -> Void)?
+    var openFeaturedTipDetailAction: ((FeaturedTipCollectionViewModel) -> Void)?
     
     var shouldShowBetslip: (() -> Void)?
     var shouldShowUserProfile: ((UserBasicInfo) -> Void)?
@@ -136,6 +160,13 @@ class FeaturedTipLineTableViewCell: UITableViewCell {
 
         self.viewModel = viewModel
 
+        if viewModel.maxTicketsCount() > FeaturedTipLineViewModel.maxTicketsBeforeExpand {
+            self.collectionViewHeightConstraint?.constant = 476
+        }
+        else {
+            self.collectionViewHeightConstraint?.constant = 456
+        }
+                
         self.reloadCollections()
     }
 
@@ -198,7 +229,7 @@ extension FeaturedTipLineTableViewCell: UICollectionViewDelegate, UICollectionVi
     func collectionView(_ collectionView: UICollectionView,
                         layout collectionViewLayout: UICollectionViewLayout,
                         sizeForItemAt indexPath: IndexPath) -> CGSize {
-        return CGSize(width: Double(collectionView.frame.size.width)*0.85, height: 456)
+        return CGSize(width: Double(collectionView.frame.size.width)*0.85, height: collectionView.frame.size.height - 2.0)
     }
 
 }
@@ -247,11 +278,15 @@ extension FeaturedTipLineTableViewCell {
     }
 
     private func initConstraints() {
+        self.collectionViewHeightConstraint = self.collectionView.heightAnchor.constraint(equalToConstant: 464)
+        
         NSLayoutConstraint.activate([
             self.collectionView.leadingAnchor.constraint(equalTo: self.contentView.leadingAnchor, constant: 0),
             self.collectionView.trailingAnchor.constraint(equalTo: self.contentView.trailingAnchor, constant: 0),
             self.collectionView.topAnchor.constraint(equalTo: self.contentView.topAnchor, constant: 8),
             self.collectionView.bottomAnchor.constraint(equalTo: self.contentView.bottomAnchor, constant: -8),
+            
+            self.collectionViewHeightConstraint!
      ])
     }
 }

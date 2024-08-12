@@ -61,7 +61,7 @@ class FeaturedTipCollectionViewCell: UICollectionViewCell {
     
     var viewModel: FeaturedTipCollectionViewModel?
 
-    var openFeaturedTipDetailAction: ((FeaturedTip) -> Void)?
+    var openFeaturedTipDetailAction: ((FeaturedTipCollectionViewModel) -> Void) = { _ in }
     var shouldReloadData: (() -> Void)?
     var shouldShowBetslip: (() -> Void)?
     var shouldShowUserProfile: ((UserBasicInfo) -> Void)?
@@ -168,8 +168,9 @@ class FeaturedTipCollectionViewCell: UICollectionViewCell {
         self.tipsStackView.backgroundColor = .clear
 
         self.fullTipButton.backgroundColor = .clear
-        self.fullTipButton.setTitleColor(UIColor.App.textSecondary, for: .normal)
-
+        self.fullTipButton.setTitleColor(UIColor.App.highlightTertiary, for: .normal)
+        self.fullTipButton.imageView?.setTintColor(color: UIColor.App.highlightTertiary)
+        
         self.separatorLineView.backgroundColor = UIColor.App.separatorLine
 
         self.totalOddsLabel.textColor = UIColor.App.textPrimary
@@ -178,6 +179,7 @@ class FeaturedTipCollectionViewCell: UICollectionViewCell {
         self.selectionsLabel.textColor = UIColor.App.textPrimary
         self.selectionsValueLabel.textColor = UIColor.App.textPrimary
 
+        
         StyleHelper.styleButton(button: self.betButton)
         
         self.betButton.setInsets(forContentPadding: UIEdgeInsets(top: 0, left: 10, bottom: 0, right: 10), imageTitlePadding: CGFloat(0))
@@ -228,7 +230,7 @@ class FeaturedTipCollectionViewCell: UICollectionViewCell {
         let tipsArray = viewModel.selectionViewModels
         
         for (i, featuredTipSelection) in tipsArray.enumerated() {
-            if i > 3 && (self.viewModel?.shouldCropList ?? true) {
+            if i >= FeaturedTipLineViewModel.maxTicketsBeforeExpand && (self.viewModel?.shouldCropList ?? true) {
                 self.showFullTipButton = true
                 break
             }
@@ -265,11 +267,8 @@ class FeaturedTipCollectionViewCell: UICollectionViewCell {
     @objc func didTapFollowButton() {
         if let viewModel = self.viewModel,
            let userId = viewModel.getUserId() {
-
             viewModel.followUser(userId: userId)
-
         }
-
     }
 
     @objc func didTapUnfollowButton() {
@@ -288,10 +287,10 @@ class FeaturedTipCollectionViewCell: UICollectionViewCell {
     }
     
     @objc func didTapShowFullTipButton() {
-        print("didTapShowFullTipButton not implemented")
-//        if let featuredTip = self.viewModel?.featuredTip {
-//            self.openFeaturedTipDetailAction?(featuredTip)
-//        }
+        
+        if let viewModel = self.viewModel {
+            self.openFeaturedTipDetailAction(viewModel)
+        }
     }
 
     @objc func didTapUser() {
@@ -569,7 +568,6 @@ extension FeaturedTipCollectionViewCell {
             self.containerBackgroundImageView.trailingAnchor.constraint(equalTo: self.containerView.trailingAnchor),
             self.containerBackgroundImageView.topAnchor.constraint(equalTo: self.containerView.topAnchor),
             self.containerBackgroundImageView.bottomAnchor.constraint(equalTo: self.containerView.bottomAnchor),
-            
         ])
 
         // Top Info stackview
@@ -633,9 +631,9 @@ extension FeaturedTipCollectionViewCell {
             self.tipsStackView.topAnchor.constraint(equalTo: self.tipsContainerView.topAnchor),
             self.tipsStackView.bottomAnchor.constraint(equalTo: self.tipsContainerView.bottomAnchor),
 
-//            self.fullTipButton.bottomAnchor.constraint(equalTo: self.separatorLineView.topAnchor, constant: 0),
-//            self.fullTipButton.heightAnchor.constraint(equalToConstant: 25),
-//            self.fullTipButton.centerXAnchor.constraint(equalTo: self.separatorLineView.centerXAnchor)
+            self.fullTipButton.bottomAnchor.constraint(equalTo: self.betButton.topAnchor, constant: -2),
+            self.fullTipButton.heightAnchor.constraint(equalToConstant: 25),
+            self.fullTipButton.centerXAnchor.constraint(equalTo: self.containerView.centerXAnchor)
         ])
 
         // Bottom info

@@ -10,6 +10,7 @@ import UIKit
 import Combine
 
 class FeaturedTipView: UIView {
+    
     private lazy var containerView: UIView = Self.createContainerView()
     private lazy var sportIconImageView: UIImageView = Self.createSportIconImageView()
     private lazy var countryIconImageView: UIImageView = Self.createCountryIconImageView()

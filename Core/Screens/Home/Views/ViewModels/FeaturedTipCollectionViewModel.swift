@@ -139,6 +139,15 @@ class FeaturedTipCollectionViewModel {
         }
     }
     
+    var identifier: String {
+        switch self.dataType {
+        case .featuredTip(let featuredTip):
+            return featuredTip.betId
+        case .suggestedBetslip(let suggestedBetslip):
+            return suggestedBetslip.id
+        }
+    }
+    
     var shouldCropList: Bool {
         return self.sizeType == .small
     }
@@ -147,7 +156,7 @@ class FeaturedTipCollectionViewModel {
         switch self.dataType {
         case .featuredTip(let featuredTip):
             return featuredTip.username
-        case .suggestedBetslip(let suggestedBetslip):
+        case .suggestedBetslip:
             return nil
         }
         
@@ -177,7 +186,7 @@ class FeaturedTipCollectionViewModel {
             if let numberSelections = featuredTip.selections?.count {
                 return "\(numberSelections)"
             }
-        case .suggestedBetslip(let suggestedBetslip):
+        case .suggestedBetslip:
             return nil
         }
         return nil
@@ -187,7 +196,7 @@ class FeaturedTipCollectionViewModel {
         switch self.dataType {
         case .featuredTip(let featuredTip):
             return featuredTip.userId
-        case .suggestedBetslip(let suggestedBetslip):
+        case .suggestedBetslip:
             return nil
         }
         

@@ -413,6 +413,15 @@ class HomeViewController: UIViewController {
         }
         self.present(tipsSliderViewController, animated: true)
     }
+    
+    private func openFeaturedTipSlider(suggestedBetslips: [SuggestedBetslip], atIndex index: Int = 0) {
+        let tipsSliderViewController = TipsSliderViewController(viewModel: TipsSliderViewModel(suggestedBetslip: suggestedBetslips, startIndex: index))
+        tipsSliderViewController.shift.enable()
+        tipsSliderViewController.shouldShowBetslip = { [weak self] in
+            self?.didTapBetslipButtonAction?()
+        }
+        self.present(tipsSliderViewController, animated: true)
+    }
 
     private func openStoriesFullScreen(withId id: String) {
         if let storyLineViewModel = self.viewModel.storyLineViewModel() {
@@ -616,9 +625,7 @@ class HomeViewController: UIViewController {
     }
 
     @objc private func didTapOpenFeaturedTips() {
-        fatalError("Missing didTapOpenFeaturedTips")
-//        let tips = self.viewModel.featuredTipLineViewModel()?.featuredTips ?? []
-//        self.openFeaturedTipSlider(featuredTips: tips, atIndex: self.featuredTipsCenterIndex)
+        // Not used
     }
     
     @objc private func didTapSeeAllLiveButton() {
@@ -780,14 +787,16 @@ extension HomeViewController: UITableViewDelegate, UITableViewDataSource {
                 return UITableViewCell()
             }
 
-            cell.openFeaturedTipDetailAction = { [weak self] featuredTip in
-                fatalError("Missing implementation openFeaturedTipDetailAction")
-//                let firstIndex = featuredBetLineViewModel.featuredTips.firstIndex(where: { tipIterator in
-//                    tipIterator.betId == featuredTip.betId
-//                })
-//                let firstIndexValue: Int = Int(firstIndex ?? 0)
-//                
-//                self?.openFeaturedTipSlider(featuredTips: featuredBetLineViewModel.featuredTips, atIndex: firstIndexValue)
+            
+            cell.openFeaturedTipDetailAction = { [weak self] featuredTipCollectionViewModel in
+                let index = featuredBetLineViewModel.indexForItem(withId: featuredTipCollectionViewModel.identifier) ?? 0
+
+                switch featuredBetLineViewModel.dataType {
+                case .featuredTips(let featuredTips):
+                    self?.openFeaturedTipSlider(featuredTips: featuredTips, atIndex: index)
+                case .suggestedBetslips(let suggestedBetslips):
+                    self?.openFeaturedTipSlider(suggestedBetslips: suggestedBetslips, atIndex: index)
+                }
             }
 
             cell.currentIndexChangedAction = { [weak self] newIndex in
@@ -1188,7 +1197,7 @@ extension HomeViewController: UITableViewDelegate, UITableViewDataSource {
         case .userFavorites:
             return UITableView.automaticDimension
         case .featuredTips:
-            return 480
+            return UITableView.automaticDimension
         case .suggestedBets:
             return 336
         case .sportGroup:
@@ -1280,7 +1289,7 @@ extension HomeViewController: UITableViewDelegate, UITableViewDataSource {
         case .userFavorites:
             return StyleHelper.cardsStyleHeight() + 20
         case .featuredTips:
-            return 480
+            return FeaturedTipLineTableViewCell.estimatedHeight
         case .suggestedBets:
             return 336
         case .sportGroup:
@@ -1418,8 +1427,6 @@ extension HomeViewController: UITableViewDelegate, UITableViewDataSource {
         }
         else if case .featuredTips = self.viewModel.contentType(forSection: section) {
             seeAllLabel.isHidden = true
-            // seeAllLabel.text = localized("expand")
-            // seeAllLabel.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(didTapOpenFeaturedTips)))
         }
         else if case .highlightedLiveMatches = self.viewModel.contentType(forSection: section) {
             seeAllLabel.textColor = UIColor.App.highlightPrimary

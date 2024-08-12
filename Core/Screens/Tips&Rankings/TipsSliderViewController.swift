@@ -76,7 +76,7 @@ class TipsSliderViewController: UIViewController {
         
         self.collectionView.reloadData()
         self.collectionView.layoutIfNeeded()
-        self.collectionView.scrollToItem(at: IndexPath(row: self.viewModel.initialIndex(), section: 0),
+        self.collectionView.scrollToItem(at: IndexPath(row: self.viewModel.initialIndex, section: 0),
                                          at: .centeredHorizontally,
                                          animated: false)
     }
@@ -149,7 +149,7 @@ extension TipsSliderViewController: UICollectionViewDelegate, UICollectionViewDa
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         guard
             let cell = collectionView.dequeueCellType(FeaturedTipCollectionViewCell.self, indexPath: indexPath),
-            let cellViewModel = self.viewModel.viewModel(forIndex: indexPath.row)
+            let cellViewModel = self.viewModel.cellViewModel(forIndex: indexPath.row)
         else {
             fatalError()
         }

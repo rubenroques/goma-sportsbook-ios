@@ -69,7 +69,7 @@ class SportRadarRestConnector {
                    dataString.contains("errorType") && dataString.contains("CONTENT_NOT_FOUND") {
                     throw ServiceProviderError.resourceUnavailableOrDeleted
                 }
-                                
+
                 return result.data
             }
             .decode(type: T.self, decoder: self.decoder)
