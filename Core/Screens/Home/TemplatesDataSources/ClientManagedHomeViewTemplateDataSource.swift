@@ -606,22 +606,14 @@ class ClientManagedHomeViewTemplateDataSource {
     // ALERT: The data comes from Suggested bets
     // but the UI shown to the user is from old FeaturedTips
     func fetchPromotedBetslips() {
-               
         let userIdentifier = Env.userSessionStore.userProfilePublisher.value?.userIdentifier
-        
         Env.servicesProvider.getPromotedBetslips(userId: userIdentifier)
             .map(ServiceProviderModelMapper.suggestedBetslips(fromPromotedBetslips:))
             .receive(on: DispatchQueue.main)
             .sink { completion in
                 print("ClientManagedHomeTemplate getPromotedSports completion \(completion)")
             } receiveValue: { [weak self] suggestedBetslips in
-                
-                #if DEBUG
-                self?.suggestedBetslips = suggestedBetslips + suggestedBetslips
-                #else
                 self?.suggestedBetslips = suggestedBetslips
-                #endif
-                
                 self?.refreshPublisher.send()
             }
             .store(in: &self.cancellables)
