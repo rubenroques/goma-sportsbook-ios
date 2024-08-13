@@ -99,14 +99,54 @@ platform :ios do
     )
   end
 
+  lane :version_bump do
+    # Get current build number
+    current_build = get_build_number(xcodeproj: "Sportsbook.xcodeproj")
+    puts "Current build number (CURRENT_PROJECT_VERSION): #{current_build}"
+    
+    # Prompt for new build number
+    new_build = prompt(text: "Enter new build number (CURRENT_PROJECT_VERSION):")
+    
+    # Update build number
+    increment_build_number(
+      build_number: new_build,
+      xcodeproj: "Sportsbook.xcodeproj"
+    )
+    
+    puts "Build number updated to: #{new_build}"
+  end
+
+  lane :marketing_version_bump do
+    # Get current version
+    current_version = get_version_number(xcodeproj: "Sportsbook.xcodeproj")
+    puts "Current version (MARKETING_VERSION): #{current_version}"
+    
+    # Prompt for new version
+    new_version = prompt(text: "Enter new version number (MARKETING_VERSION):")
+    
+    # Update version
+    increment_version_number(
+      version_number: new_version,
+      xcodeproj: "Sportsbook.xcodeproj"
+    )
+    
+    puts "Version updated to: #{new_version}"
+  end
+
   lane :betsson_uat do
     desc "Distribute Betsson via UAT version to Firebase"
     distribute_to_firebase(app_scheme: "Betsson UAT")
   end
 
- # lane :betsson_prod do
- #   desc "Distribute Betsson Prod Beta version to Firebase"
- #   distribute_to_firebase(app_scheme: "Betsson PROD")
- # end
+  lane :betsson_prod do
+    desc "Distribute Betsson Prod Beta version to Firebase"
+    distribute_to_firebase(app_scheme: "Betsson PROD")
+  end
+
+  lane :betsson do
+    desc "Distribute both Betsson UAT and Betsson PROD versions to Firebase"
+    betsson_uat
+    betsson_prod
+  end
 
 end
