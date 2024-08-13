@@ -787,7 +787,6 @@ extension HomeViewController: UITableViewDelegate, UITableViewDataSource {
                 return UITableViewCell()
             }
 
-            
             cell.openFeaturedTipDetailAction = { [weak self] featuredTipCollectionViewModel in
                 let index = featuredBetLineViewModel.indexForItem(withId: featuredTipCollectionViewModel.identifier) ?? 0
 
