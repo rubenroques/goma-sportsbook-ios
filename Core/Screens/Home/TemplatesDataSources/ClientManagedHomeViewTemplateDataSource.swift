@@ -694,7 +694,7 @@ extension ClientManagedHomeViewTemplateDataSource: HomeViewTemplateDataSource {
         case .highlightedLiveMatches:
             return localized("live")
         case .featuredTips:
-            return self.suggestedBetslips.isNotEmpty ? "Suggested_Bets" : nil
+            return self.suggestedBetslips.isNotEmpty ? localized("suggested_bets") : nil
         case .topCompetitionsShortcuts:
             return localized("top_competitions")
         case .promotedSportSection:

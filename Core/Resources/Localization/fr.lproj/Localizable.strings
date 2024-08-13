@@ -884,7 +884,8 @@
 "to" = "Pour";
 "today" = "Aujourd'hui";
 "tomorrow" = "Demain";
-"top_competitions" = "Top Competitions";
+"top_competitions" = "Paris suggérés";
+"suggested_bets" = "Suggested bets";
 "top_tips" = "";
 "top_tipsters" = "";
 "total" = "Total";
