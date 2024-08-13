@@ -170,9 +170,9 @@ class HeroCardSecondaryMarketCollectionViewCell: UICollectionViewCell {
 
         self.oddsStackView.backgroundColor = .clear
         
-        self.homeBaseView.backgroundColor = UIColor.App.backgroundOddsHeroCard
-        self.drawBaseView.backgroundColor = UIColor.App.backgroundOddsHeroCard
-        self.awayBaseView.backgroundColor = UIColor.App.backgroundOddsHeroCard
+        self.homeBaseView.backgroundColor = UIColor.App.backgroundOdds
+        self.drawBaseView.backgroundColor = UIColor.App.backgroundOdds
+        self.awayBaseView.backgroundColor = UIColor.App.backgroundOdds
         
         self.homeOddBaseView.backgroundColor = .clear
         self.drawOddBaseView.backgroundColor = .clear
@@ -184,9 +184,9 @@ class HeroCardSecondaryMarketCollectionViewCell: UICollectionViewCell {
             self.homeOddValueLabel.textColor = UIColor.App.buttonTextPrimary
         }
         else {
-            self.homeBaseView.backgroundColor = UIColor.App.backgroundOddsHeroCard
-            self.homeOddTitleLabel.textColor = UIColor.App.textHeroCard
-            self.homeOddValueLabel.textColor = UIColor.App.textHeroCard
+            self.homeBaseView.backgroundColor = UIColor.App.backgroundOdds
+            self.homeOddTitleLabel.textColor = UIColor.App.textPrimary
+            self.homeOddValueLabel.textColor = UIColor.App.textPrimary
         }
         
         if isMiddleOutcomeButtonSelected {
@@ -195,9 +195,9 @@ class HeroCardSecondaryMarketCollectionViewCell: UICollectionViewCell {
             self.drawOddValueLabel.textColor = UIColor.App.buttonTextPrimary
         }
         else {
-            self.drawBaseView.backgroundColor = UIColor.App.backgroundOddsHeroCard
-            self.drawOddTitleLabel.textColor = UIColor.App.textHeroCard
-            self.drawOddValueLabel.textColor = UIColor.App.textHeroCard
+            self.drawBaseView.backgroundColor = UIColor.App.backgroundOdds
+            self.drawOddTitleLabel.textColor = UIColor.App.textPrimary
+            self.drawOddValueLabel.textColor = UIColor.App.textPrimary
         }
         
         if isRightOutcomeButtonSelected {
@@ -206,9 +206,9 @@ class HeroCardSecondaryMarketCollectionViewCell: UICollectionViewCell {
             self.awayOddValueLabel.textColor = UIColor.App.buttonTextPrimary
         }
         else {
-            self.awayBaseView.backgroundColor = UIColor.App.backgroundOddsHeroCard
-            self.awayOddTitleLabel.textColor = UIColor.App.textHeroCard
-            self.awayOddValueLabel.textColor = UIColor.App.textHeroCard
+            self.awayBaseView.backgroundColor = UIColor.App.backgroundOdds
+            self.awayOddTitleLabel.textColor = UIColor.App.textPrimary
+            self.awayOddValueLabel.textColor = UIColor.App.textPrimary
         }
     }
     

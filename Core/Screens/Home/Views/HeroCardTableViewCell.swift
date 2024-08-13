@@ -195,7 +195,8 @@ class HeroCardTableViewCell: UITableViewCell {
         }
         
         let panGestureRecognizer = UIPanGestureRecognizer(target: self, action: #selector(handlePanGesture(_:)))
-        self.collectionView.addGestureRecognizer(panGestureRecognizer)
+        panGestureRecognizer.delegate = self
+        self.baseView.addGestureRecognizer(panGestureRecognizer)
     }
     
     func stopTimer() {
@@ -203,12 +204,29 @@ class HeroCardTableViewCell: UITableViewCell {
         self.timer = nil
     }
     
+//    @objc func handlePanGesture(_ gestureRecognizer: UIPanGestureRecognizer) {
+//        
+//        if gestureRecognizer.state == .ended {
+//            let velocity = gestureRecognizer.velocity(in: collectionView)
+//            
+//            if abs(velocity.x) > abs(velocity.y) {
+//                if velocity.x > 0 {
+//                    // Swiped right
+//                    self.getCollectionViewPage(isPrevious: true)
+//                } else {
+//                    // Swiped left
+//                    self.getCollectionViewPage()
+//                }
+//            }
+//        }
+//    }
     @objc func handlePanGesture(_ gestureRecognizer: UIPanGestureRecognizer) {
-        
-        if gestureRecognizer.state == .ended {
-            let velocity = gestureRecognizer.velocity(in: collectionView)
-            
-            if abs(velocity.x) > abs(velocity.y) {
+        let translation = gestureRecognizer.translation(in: collectionView)
+
+        if abs(translation.x) > abs(translation.y) {
+            if gestureRecognizer.state == .ended {
+                let velocity = gestureRecognizer.velocity(in: collectionView)
+                
                 if velocity.x > 0 {
                     // Swiped right
                     self.getCollectionViewPage(isPrevious: true)
@@ -217,6 +235,8 @@ class HeroCardTableViewCell: UITableViewCell {
                     self.getCollectionViewPage()
                 }
             }
+        } else {
+            return
         }
     }
     
@@ -310,6 +330,12 @@ class HeroCardTableViewCell: UITableViewCell {
 
     }
     
+}
+
+extension HeroCardTableViewCell {
+    override func gestureRecognizer(_ gestureRecognizer: UIGestureRecognizer, shouldRecognizeSimultaneouslyWith otherGestureRecognizer: UIGestureRecognizer) -> Bool {
+        return true
+    }
 }
 
 extension HeroCardTableViewCell: UICollectionViewDelegate, UICollectionViewDataSource, UICollectionViewDelegateFlowLayout {
