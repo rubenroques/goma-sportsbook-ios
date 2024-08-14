@@ -14,15 +14,15 @@ class ClientManagedHomeViewTemplateDataSource {
     // Define the array mapping sections to content types
     private let contentTypes: [HomeViewModel.Content] = [
         .userProfile,
-        .bannerLine,
-        .heroCard,
-        .quickSwipeStack,
-        .promotionalStories,
-        .makeOwnBetCallToAction,
-        .highlightedMatches,
-        .highlightedLiveMatches,
-        .topCompetitionsShortcuts,
-        .featuredTips,
+        .bannerLine, // PromotionBanners
+        .quickSwipeStack, // MatchBanners
+        .promotionalStories, // PromotionStories
+        .makeOwnBetCallToAction, // MakeYourOwnBet
+        .heroCard, // HeroBanner
+        .featuredTips, // SuggestedBets
+        .highlightedMatches, // Highlights
+        .topCompetitionsShortcuts, // TopCompetitionsMobile
+        .highlightedLiveMatches, // LiveGamesHome
     ]
     
     private var fixedSections: Int {

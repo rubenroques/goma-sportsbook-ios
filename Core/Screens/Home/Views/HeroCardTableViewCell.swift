@@ -10,6 +10,8 @@ import Combine
 
 class HeroCardTableViewCell: UITableViewCell {
 
+    var tappedMatchLineAction: ((Match) -> Void) = { _ in }
+    
     private lazy var outerView: UIView = Self.createOuterView()
     private lazy var baseView: UIView = Self.createBaseView()
     private lazy var topImageView: UIImageView = Self.createTopImageView()
@@ -35,7 +37,7 @@ class HeroCardTableViewCell: UITableViewCell {
     
     private var cancellables = Set<AnyCancellable>()
     
-    private var viewModel: MatchWidgetCellViewModel? = nil
+    private var viewModel: MatchWidgetCellViewModel?
     
     var isFavorite: Bool = false {
         didSet {
@@ -62,6 +64,8 @@ class HeroCardTableViewCell: UITableViewCell {
         self.collectionView.register(HeroCardMarketCollectionViewCell.self, forCellWithReuseIdentifier: HeroCardMarketCollectionViewCell.identifier)
         self.collectionView.register(HeroCardSecondaryMarketCollectionViewCell.self, forCellWithReuseIdentifier: HeroCardSecondaryMarketCollectionViewCell.identifier)
         
+        let tapMatchView = UITapGestureRecognizer(target: self, action: #selector(didTapMatchView))
+        self.addGestureRecognizer(tapMatchView)
     }
 
     required init?(coder aDecoder: NSCoder) {
@@ -328,6 +332,14 @@ class HeroCardTableViewCell: UITableViewCell {
             collectionView.scrollToItem(at: firstIndexPath, at: .centeredHorizontally, animated: true)
         }
 
+    }
+    
+    @IBAction private func didTapMatchView() {
+        
+        if let viewModel = self.viewModel {
+            self.tappedMatchLineAction(viewModel.match)
+        }
+        
     }
     
 }

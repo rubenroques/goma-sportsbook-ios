@@ -1177,6 +1177,9 @@ extension HomeViewController: UITableViewDelegate, UITableViewDataSource {
                 return UITableViewCell()
             }
 
+            cell.tappedMatchLineAction = { [weak self] match in
+                self?.openMatchDetails(matchId: match.id)
+            }
             cell.configure(withViewModel: viewModel)
             
             return cell
