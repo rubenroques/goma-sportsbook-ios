@@ -90,5 +90,6 @@ struct TargetVariables: SportsbookTarget {
     static var secundaryMarketSpecsUrl: String? {
         return nil
     }
+
     
 }

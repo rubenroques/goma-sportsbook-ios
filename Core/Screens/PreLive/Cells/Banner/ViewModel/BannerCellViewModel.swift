@@ -164,17 +164,12 @@ class BannerCellViewModel {
 
     private func setupMarketInfo(market: Market, matchId: String) {
         
-        //        if self.completeMatch.value == nil {
-
-        dateFormatter.dateFormat = "yyyy-MM-dd'T'HH:mm:ss.SSSz"
-        let matchDate = dateFormatter.date(from: market.startDate ?? "")
-
         let match = Match(id: matchId,
                           competitionId: "",
                           competitionName: "",
                           homeParticipant: Participant(id: "", name: market.homeParticipant ?? ""),
                           awayParticipant: Participant(id: "", name: market.awayParticipant ?? ""),
-                          date: matchDate,
+                          date: market.startDate,
                           sport: Sport(id: "1", name: "", alphaId: "", numericId: "", showEventCategory: false, liveEventsCount: 0, eventsCount: 0),
                           sportIdCode: "",
                           numberTotalOfMarkets: 1,
@@ -185,8 +180,8 @@ class BannerCellViewModel {
         if self.match.value.noValue {
             self.match.send(match)
         }
+        
         self.completeMatch.send(match)
-        //        }
     }
     
 }

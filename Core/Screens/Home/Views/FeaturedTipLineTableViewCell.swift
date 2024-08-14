@@ -10,48 +10,107 @@ import Combine
 
 class FeaturedTipLineViewModel {
 
-    var featuredTips: [FeaturedTip] = []
+    static let maxTicketsBeforeExpand = 4
+    
+    enum DataType {
+        case featuredTips([FeaturedTip])
+        case suggestedBetslips([SuggestedBetslip])
+    }
+    
     var featuredTipCollectionCacheViewModel: [String: FeaturedTipCollectionViewModel] = [:]
 
+    var dataType: DataType
+    
     private var cancellables = Set<AnyCancellable>()
 
     init(featuredTips: [FeaturedTip]) {
-        self.featuredTips = featuredTips
-
+        self.dataType = .featuredTips(featuredTips)
+    }
+    
+    init(suggestedBetslip: [SuggestedBetslip]) {
+        self.dataType = .suggestedBetslips(suggestedBetslip)
+    }
+    
+    func indexForItem(withId id: String) -> Int? {
+        switch self.dataType {
+        case .featuredTips(let featuredTips):
+            return featuredTips.firstIndex(where: { $0.betId == id })
+        case .suggestedBetslips(let suggestedBetslips):
+            return suggestedBetslips.firstIndex(where: { $0.id == id })
+        }
     }
 
     func numberOfItems() -> Int {
-        return featuredTips.count
+        switch self.dataType {
+        case .featuredTips(let featuredTips):
+            featuredTips.count
+        case .suggestedBetslips(let suggestedBetslips):
+            suggestedBetslips.count
+        }
+    }
+    
+    func maxTicketsCount() -> Int {
+        switch dataType {
+        case .featuredTips(let featuredTips):
+            featuredTips.map({ ($0.selections ?? []).count }).max() ?? 0
+        case .suggestedBetslips(let suggestedBetslips):
+            suggestedBetslips.map({ ($0.selections ?? []).count }).max() ?? 0
+        }
     }
 
-    func viewModel(forIndex index: Int) -> FeaturedTipCollectionViewModel? {
-        guard
-            let featuredTip = self.featuredTips[safe: index]
-        else {
-            return nil
-        }
+    func cellViewModel(forIndex index: Int) -> FeaturedTipCollectionViewModel? {
+        switch dataType {
+        case .featuredTips(let featuredTips):
+            guard
+                let featuredTip = featuredTips[safe: index]
+            else {
+                return nil
+            }
 
-        let tipId = featuredTip.betId
+            let tipId = featuredTip.betId
 
-        if let featuredTipCollectionViewModel = featuredTipCollectionCacheViewModel[tipId] {
-            return featuredTipCollectionViewModel
+            if let featuredTipCollectionViewModel = featuredTipCollectionCacheViewModel[tipId] {
+                return featuredTipCollectionViewModel
+            }
+            else {
+                let featuredTipCollectionViewModel = FeaturedTipCollectionViewModel(featuredTip: featuredTip,
+                                                                                    sizeType: .small)
+                self.featuredTipCollectionCacheViewModel[tipId] = featuredTipCollectionViewModel
+                return featuredTipCollectionViewModel
+            }
+        case .suggestedBetslips(let suggestedBetslips):
+            guard
+                let suggestedBetslip = suggestedBetslips[safe: index]
+            else {
+                return nil
+            }
+
+            if let featuredTipCollectionViewModel = featuredTipCollectionCacheViewModel[suggestedBetslip.id] {
+                return featuredTipCollectionViewModel
+            }
+            else {
+                let featuredTipCollectionViewModel = FeaturedTipCollectionViewModel(suggestedBetslip: suggestedBetslip,
+                                                                                    sizeType: .small)
+                self.featuredTipCollectionCacheViewModel[suggestedBetslip.id] = featuredTipCollectionViewModel
+                return featuredTipCollectionViewModel
+            }
         }
-        else {
-            let featuredTipCollectionViewModel = FeaturedTipCollectionViewModel(featuredTip: featuredTip, sizeType: .small)
-            self.featuredTipCollectionCacheViewModel[tipId] = featuredTipCollectionViewModel
-            return featuredTipCollectionViewModel
-        }
+        
     }
 }
 
 class FeaturedTipLineTableViewCell: UITableViewCell {
 
+    static var estimatedHeight: CGFloat = 480
+    
     private lazy var collectionView: UICollectionView = Self.createCollectionView()
+
+    private var collectionViewHeightConstraint: NSLayoutConstraint?
 
     private var viewModel: FeaturedTipLineViewModel?
     private var cancellables: Set<AnyCancellable> = []
 
-    var openFeaturedTipDetailAction: ((FeaturedTip) -> Void)?
+    var openFeaturedTipDetailAction: ((FeaturedTipCollectionViewModel) -> Void)?
     
     var shouldShowBetslip: (() -> Void)?
     var shouldShowUserProfile: ((UserBasicInfo) -> Void)?
@@ -101,13 +160,13 @@ class FeaturedTipLineTableViewCell: UITableViewCell {
 
         self.viewModel = viewModel
 
-        Env.gomaSocialClient.followingUsersPublisher
-            .receive(on: DispatchQueue.main)
-            .sink(receiveValue: { [weak self] _ in
-                self?.reloadCollections()
-            })
-            .store(in: &cancellables)
-
+        if viewModel.maxTicketsCount() > FeaturedTipLineViewModel.maxTicketsBeforeExpand {
+            self.collectionViewHeightConstraint?.constant = 476
+        }
+        else {
+            self.collectionViewHeightConstraint?.constant = 456
+        }
+                
         self.reloadCollections()
     }
 
@@ -143,8 +202,7 @@ extension FeaturedTipLineTableViewCell: UICollectionViewDelegate, UICollectionVi
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         guard
             let cell = collectionView.dequeueCellType(FeaturedTipCollectionViewCell.self, indexPath: indexPath),
-            let cellViewModel = self.viewModel?.viewModel(forIndex: indexPath.row),
-            let viewModel = self.viewModel
+            let cellViewModel = self.viewModel?.cellViewModel(forIndex: indexPath.row)
         else {
             fatalError()
         }
@@ -171,7 +229,7 @@ extension FeaturedTipLineTableViewCell: UICollectionViewDelegate, UICollectionVi
     func collectionView(_ collectionView: UICollectionView,
                         layout collectionViewLayout: UICollectionViewLayout,
                         sizeForItemAt indexPath: IndexPath) -> CGSize {
-        return CGSize(width: Double(collectionView.frame.size.width)*0.85, height: 400)
+        return CGSize(width: Double(collectionView.frame.size.width)*0.85, height: collectionView.frame.size.height - 2.0)
     }
 
 }
@@ -220,11 +278,15 @@ extension FeaturedTipLineTableViewCell {
     }
 
     private func initConstraints() {
+        self.collectionViewHeightConstraint = self.collectionView.heightAnchor.constraint(equalToConstant: 464)
+        
         NSLayoutConstraint.activate([
             self.collectionView.leadingAnchor.constraint(equalTo: self.contentView.leadingAnchor, constant: 0),
             self.collectionView.trailingAnchor.constraint(equalTo: self.contentView.trailingAnchor, constant: 0),
             self.collectionView.topAnchor.constraint(equalTo: self.contentView.topAnchor, constant: 8),
             self.collectionView.bottomAnchor.constraint(equalTo: self.contentView.bottomAnchor, constant: -8),
+            
+            self.collectionViewHeightConstraint!
      ])
     }
 }

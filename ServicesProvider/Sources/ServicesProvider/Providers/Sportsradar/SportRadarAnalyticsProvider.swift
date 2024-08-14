@@ -58,6 +58,11 @@ struct SportRadarAnalyticsProvider: AnalyticsProvider {
                     case .resourceUnavailableOrDeleted = typedError {
                     return typedError
                 }
+                
+                if let decodingError = error as? DecodingError {
+                    let errorMessage = "\(decodingError)"
+                    return ServiceProviderError.decodingError(message: errorMessage)
+                }
 
                 return ServiceProviderError.invalidResponse
             }

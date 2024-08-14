@@ -7,6 +7,7 @@
 
 import Foundation
 import ServicesProvider
+import SharedModels
 
 enum ServiceProviderModelMapper {
     
@@ -24,29 +25,29 @@ extension ServiceProviderModelMapper {
         }
         return matches.compactMap({ $0 })
     }
-
+    
     static func match(fromEventGroup eventGroup: EventsGroup) -> Match? {
         if let event = eventGroup.events[safe: 0] {
             return Self.match(fromEvent: event)
         }
         return nil
     }
-
+    
     static func matches(fromEvents events: [ServicesProvider.Event]) -> [Match] {
         return events.map(Self.match(fromEvent:)).compactMap({ $0 })
     }
-
+    
     static func match(fromEvent event: ServicesProvider.Event) -> Match? {
-
+        
         guard event.type == .match else { return nil } // ignore competitions
         
         var venue: Location?
         if let venueCountry = event.venueCountry {
             venue = Location(id: venueCountry.iso2Code, name: venueCountry.name, isoCode: venueCountry.iso2Code)
         }
-
+        
         let sport = Self.sport(fromServiceProviderSportType: event.sport)
-
+        
         let mappedScores = Self.scoresDictionary(fromInternalScoresDictionary: event.scores)
         
         var mappedActivePlayerServe: Match.ActivePlayerServe?
@@ -83,10 +84,10 @@ extension ServiceProviderModelMapper {
                           detailedScores: mappedScores)
         return match
     }
-
+    
     static func matchStatus(fromInternalEvent internalEventStatus: ServicesProvider.EventStatus?) -> Match.Status {
         guard let internalEventStatus else { return Match.Status.notStarted }
-
+        
         switch internalEventStatus {
         case .unknown:
             return Match.Status.unknown
@@ -147,7 +148,7 @@ extension ServiceProviderModelMapper {
                              detailedScores: mappedScores,
                              activePlayerServing: mappedActivePlayerServe)
     }
-
+    
     // Market
     static func markets(fromServiceProviderMarkets markets: [ServicesProvider.Market]) -> [Market] {
         return markets.map(Self.market(fromServiceProviderMarket:))
@@ -165,16 +166,16 @@ extension ServiceProviderModelMapper {
         case .odds:
             outcomesOrder = .odds
             mappedOutcomes = mappedOutcomes.sorted(by: { leftOutcome, rightOutcome in
-              
+                
                 let leftDecimal = leftOutcome.bettingOffer.decimalOdd
                 let rightDecimal = rightOutcome.bettingOffer.decimalOdd
                 
                 if leftDecimal.isNaN {
                     return false
-                } 
+                }
                 else if rightDecimal.isNaN {
                     return true
-                } 
+                }
                 else {
                     return leftDecimal < rightDecimal
                 }
@@ -185,16 +186,17 @@ extension ServiceProviderModelMapper {
             outcomesOrder = .none
         }
         
-//        #if DEBUG
-//        var newMappedOutcomes = [Outcome]()
-//        for (index, outcome) in mappedOutcomes.enumerated() {
-//            var newOutcome = outcome
-//            newOutcome.translatedName = "\(index)-" + outcome.translatedName
-//            newMappedOutcomes.append(newOutcome)
-//        }
-//        mappedOutcomes = newMappedOutcomes
-//        #endif
-//        
+        //        #if DEBUG
+        //        var newMappedOutcomes = [Outcome]()
+        //        for (index, outcome) in mappedOutcomes.enumerated() {
+        //            var newOutcome = outcome
+        //            newOutcome.translatedName = "\(index)-" + outcome.translatedName
+        //            newMappedOutcomes.append(newOutcome)
+        //        }
+        //        mappedOutcomes = newMappedOutcomes
+        //        #endif
+        //
+        
         return Market(id: market.id,
                       typeId: market.name,
                       name: market.name,
@@ -216,7 +218,7 @@ extension ServiceProviderModelMapper {
                       outcomesOrder: outcomesOrder,
                       customBetAvailable: market.customBetAvailable)
     }
-
+    
     static func optionalMarkets(fromServiceProviderMarkets markets: [ServicesProvider.Market]?) -> [Market]? {
         if let markets = markets {
             return markets.map(Self.market(fromServiceProviderMarket:))
@@ -230,17 +232,17 @@ extension ServiceProviderModelMapper {
             return Self.outcome(fromServiceProviderOutcome: outcome, marketName: marketName)
         }
     }
-
+    
     static func outcomes(fromServiceProviderOutcomes outcomes: [ServicesProvider.Outcome]) -> [Outcome] {
         return outcomes.map { outcome in
             return Self.outcome(fromServiceProviderOutcome: outcome, marketName: nil)
         }
     }
-
+    
     static func outcome(fromServiceProviderOutcome outcome: ServicesProvider.Outcome) -> Outcome {
         return Self.outcome(fromServiceProviderOutcome: outcome, marketName: nil)
     }
-
+    
     static func outcome(fromServiceProviderOutcome outcome: ServicesProvider.Outcome, marketName: String?) -> Outcome {
         let oddFormat: OddFormat = Self.oddFormat(fromServiceProviderOddFormat: outcome.odd)
         let bettingOffer = BettingOffer(id: outcome.id,
@@ -261,7 +263,7 @@ extension ServiceProviderModelMapper {
                                     customBetAvailableMarket: outcome.customBetAvailableMarket)
         return mappedOutcome
     }
-
+    
     static func oddFormat(fromServiceProviderOddFormat oddFormat: ServicesProvider.OddFormat) -> OddFormat {
         switch oddFormat {
         case .decimal(let odd):
@@ -270,7 +272,7 @@ extension ServiceProviderModelMapper {
             return .fraction(numerator: numerator, denominator: denominator)
         }
     }
-
+    
     static func serviceProviderOddFormat(fromOddFormat oddFormat: OddFormat) -> ServicesProvider.OddFormat {
         switch oddFormat {
         case .decimal(let odd):
@@ -293,10 +295,10 @@ extension ServiceProviderModelMapper {
         
         return competition
     }
-
+    
     static func competitions(fromEventsGroups eventsGroups: [EventsGroup]) -> [Competition] {
         var competitions = [Competition]()
-
+        
         if let firstEvent = eventsGroups.first {
             firstEvent.events.forEach { event in
                 let sport = Self.sport(fromServiceProviderSportType: event.sport)
@@ -310,12 +312,12 @@ extension ServiceProviderModelMapper {
                 competitions.append(competition)
             }
         }
-
+        
         return competitions
     }
-
+    
     static func competitionGroups(fromSportRegions sportRegions: [SportRegion]) -> [CompetitionGroup] {
-
+        
         let competitionGroups = sportRegions.map({ sportRegion in
             let competitionGroup = CompetitionGroup(id: sportRegion.id,
                                                     name: sportRegion.name ?? "",
@@ -323,36 +325,36 @@ extension ServiceProviderModelMapper {
                                                     competitions: [])
             return competitionGroup
         })
-
+        
         return competitionGroups
     }
-
+    
     static func competitionGroups(fromSportRegions sportRegions: [SportRegion], withRegionCompetitions regionCompetitions: [String: [SportCompetition]]) -> [CompetitionGroup] {
-
+        
         let competitionGroups = sportRegions.map({ sportRegion in
-
+            
             if let regionCompetitions = regionCompetitions[sportRegion.id] {
                 var competitionGroup = CompetitionGroup(id: sportRegion.id,
                                                         name: sportRegion.name ?? "",
                                                         aggregationType: .region,
                                                         competitions: self.competitions(fromSportCompetitions: regionCompetitions))
-
+                
                 if let country = sportRegion.country {
                     competitionGroup.country = Self.country(fromServiceProviderCountry: country)
                 }
                 
                 return competitionGroup
             }
-
+            
             let competitionGroup = CompetitionGroup(id: sportRegion.id, name: sportRegion.name ?? "", aggregationType: .region, competitions: [])
             return competitionGroup
         })
-
+        
         return competitionGroups
     }
-
+    
     static func competitions(fromSportCompetitions sportCompetitions: [SportCompetition]) -> [Competition] {
-
+        
         let competitions = sportCompetitions.map({ sportCompetition in
             let competition = Competition(id: sportCompetition.id,
                                           name: sportCompetition.name,
@@ -361,12 +363,59 @@ extension ServiceProviderModelMapper {
                                           outrightMarkets: [])
             return competition
         })
-
+        
         return competitions
     }
-
+    
     static func promotionalStory(fromPromotionalStory promotionalStory: ServicesProvider.PromotionalStory) -> PromotionalStory {
-
+        
         return PromotionalStory(id: promotionalStory.id, title: promotionalStory.title, imageUrl: promotionalStory.imageUrl, linkUrl: promotionalStory.linkUrl, bodyText: promotionalStory.bodyText )
     }
+    
+
+    static func suggestedBetslips(fromPromotedBetslips promotedBetslips: [PromotedBetslip]) -> [SuggestedBetslip] {
+        return promotedBetslips.map(Self.suggestedBetslip(fromPromotedBetslip:))
+    }
+    
+    static func suggestedBetslip(fromPromotedBetslip promotedBetslip: PromotedBetslip) -> SuggestedBetslip {
+        let suggestedSelections = promotedBetslip.selections.map(suggestedBetslipSelection)
+        return SuggestedBetslip(selections: suggestedSelections)
+    }
+    
+    static func suggestedBetslipSelection(fromPromotedBetslipSelection promotedSelection: PromotedBetslipSelection) -> SuggestedBetslipSelection {
+        
+        var participants: [Participant] = []
+        for participantIndex in promotedSelection.participants.indices {
+            if let participantName = promotedSelection.participants[safe: participantIndex],
+               let participantId = promotedSelection.participantIds[safe: participantIndex] {
+                participants.append(Participant(id: participantId, name: participantName))
+            }
+        }
+        
+        var mappedSport: Sport?
+        if let sport = promotedSelection.sport {
+            mappedSport = Self.sport(fromServiceProviderSportType: sport)
+        }
+        
+        var venue: Location?
+        if let venueCountry = promotedSelection.country {
+            venue = Location(id: venueCountry.iso2Code, name: venueCountry.name, isoCode: venueCountry.iso2Code)
+        }
+        
+        let suggestedBetslipSelection = SuggestedBetslipSelection(id: promotedSelection.id,
+                                         location: venue,
+                                         competitionName: promotedSelection.competitionName,
+                                         participants: participants,
+                                         sport: mappedSport,
+                                         odd: promotedSelection.odd,
+                                         eventId: promotedSelection.eventId,
+                                         marketId: promotedSelection.marketId,
+                                         outcomeId: promotedSelection.outcomeId,
+                                         eventName: promotedSelection.eventName,
+                                         marketName: promotedSelection.marketName,
+                                         outcomeName: promotedSelection.outcomeName)
+        
+        return suggestedBetslipSelection
+    }
+    
 }

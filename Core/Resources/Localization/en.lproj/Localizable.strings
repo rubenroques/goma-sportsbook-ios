@@ -880,7 +880,8 @@
 "to" = "To";
 "today" = "Today"; // UNUSED
 "tomorrow" = "Tomorrow";
-"top_competitions" = "Top Competitions"; // UNUSED
+"top_competitions" = "Top Competitions";
+"suggested_bets" = "Suggested bets";
 "top_tips" = "Top Tips";
 "top_tipsters" = "Top Tipsters";
 "total" = "Total";

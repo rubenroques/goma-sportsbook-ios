@@ -11,7 +11,24 @@ import ServicesProvider
 
 class ClientManagedHomeViewTemplateDataSource {
 
-    private let fixedSection = 8
+    // Define the array mapping sections to content types
+    private let contentTypes: [HomeViewModel.Content] = [
+        .userProfile,
+        .bannerLine,
+        .heroCard,
+        .quickSwipeStack,
+        .promotionalStories,
+        .makeOwnBetCallToAction,
+        .highlightedMatches,
+        .highlightedLiveMatches,
+        .topCompetitionsShortcuts,
+        .featuredTips,
+    ]
+    
+    private var fixedSections: Int {
+        return self.contentTypes.count
+    }
+    
     private var refreshPublisher = PassthroughSubject<Void, Never>.init()
 
     // User Alert
@@ -52,6 +69,14 @@ class ClientManagedHomeViewTemplateDataSource {
         }
     }
 
+    //
+    private var suggestedBetslips: [SuggestedBetslip] = []
+    private var cachedFeaturedTipLineViewModel: FeaturedTipLineViewModel? {
+        didSet {
+            self.refreshPublisher.send()
+        }
+    }
+    
     //
     private var promotionalStories: [PromotionalStory] = [] {
         didSet {
@@ -108,6 +133,10 @@ class ClientManagedHomeViewTemplateDataSource {
     private var highlightsBoostedMatches: [Match] = []
 
     //
+    
+    //Hero card
+    private var heroMatches: [Match]  = []
+
 
     // Make your own bet call to action
     var shouldShowOwnBetCallToAction: Bool = true
@@ -124,6 +153,7 @@ class ClientManagedHomeViewTemplateDataSource {
 
     var matchWidgetCellViewModelCache: [String: MatchWidgetCellViewModel] = [:]
     var matchLineTableCellViewModelCache: [String: MatchLineTableCellViewModel] = [:]
+    var heroCardWidgetCellViewModelCache: [String: MatchWidgetCellViewModel] = [:]
 
     var highlightedLiveMatchLineTableCellViewModelCache: [String: MatchLineTableCellViewModel] = [:]
     
@@ -157,14 +187,20 @@ class ClientManagedHomeViewTemplateDataSource {
         self.matchLineTableCellViewModelCache = [:]
         self.matchLineTableCellViewModelCache = [:]
         
+        self.suggestedBetslips = []
+        self.cachedFeaturedTipLineViewModel = nil
+        
         self.highlightedLiveMatchLineTableCellViewModelCache = [:]
         
         self.fetchQuickSwipeMatches()
         self.fetchHighlightMatches()
         self.fetchPromotedSports()
+        self.fetchPromotedBetslips()
         self.fetchPromotionalStories()
         self.fetchTopCompetitions()
         self.fetchHighlightedLiveMatches()
+        
+        self.fetchHeroMatches()
 
     }
 
@@ -316,6 +352,71 @@ class ClientManagedHomeViewTemplateDataSource {
             self?.refreshPublisher.send()
         })
         .store(in: &self.cancellables)
+
+    }
+    
+    func fetchHeroMatches() {
+        
+        Env.servicesProvider.getHeroGameEvent()
+            .receive(on: DispatchQueue.main)
+            .map(ServiceProviderModelMapper.match(fromEvent:))
+            .sink(receiveCompletion: { completion in
+                    print("ClientManagedHomeTemplate getHeroGameEvent completion \(completion)")
+            }, receiveValue: { [weak self] heroMatch in
+                var heroMatches: [Match] = []
+                
+                if let heroMatch {
+                    heroMatches.append(heroMatch)
+                }
+                
+                self?.heroMatches = heroMatches
+                
+                self?.refreshPublisher.send()
+            })
+            .store(in: &cancellables)
+
+//        let imageMatches = Env.servicesProvider.getHighlightedVisualImageEvents()
+//            .receive(on: DispatchQueue.main)
+//            .map(ServiceProviderModelMapper.matches(fromEvents:))
+//            .replaceError(with: [])
+//        
+//
+//        imageMatches.map { heroEvents -> [HighlightedMatchType] in
+//            var events: [HighlightedMatchType] = heroEvents.map({ HighlightedMatchType.visualImageMatch($0) })
+//            return events
+//        }
+//        .receive(on: DispatchQueue.main)
+//        .sink(receiveCompletion: { completion in
+//            print("ClientManagedHomeTemplate fetchHeroMatches completion \(completion)")
+//        }, receiveValue: { [weak self] highlightedMatchTypes in
+//            var imageMatches: [Match] = []
+//            var boostedMatches: [Match] = []
+//            for highlightedMatchType in highlightedMatchTypes {
+//                switch highlightedMatchType {
+//                case .visualImageMatch(let match):
+//                    imageMatches.append(match)
+//                case .boostedOddsMatch(let match):
+//                    boostedMatches.append(match)
+//                }
+//            }
+//            
+//            var testMatches: [Match] = []
+//            
+//            for match in imageMatches {
+//                var markets = match.markets
+//                let newMarkets = markets.flatMap { [$0, $0] }
+//                var newMatch = match
+//                newMatch.markets = newMarkets
+//                testMatches.append(newMatch)
+//            }
+//
+//            self?.heroMatches = testMatches.filter({
+//                $0.homeParticipant.name != "" && $0.awayParticipant.name != ""
+//            })
+//
+//            self?.refreshPublisher.send()
+//        })
+//        .store(in: &self.cancellables)
 
     }
 
@@ -493,7 +594,7 @@ class ClientManagedHomeViewTemplateDataSource {
     }
     
     private func promotedMatch(forSection section: Int, forIndex index: Int) -> Match? {
-        let croppedSection = section - self.fixedSection
+        let croppedSection = section - self.fixedSections
         if let promotedSportId = self.promotedSports[safe: croppedSection]?.id,
            let matchesForSport = self.promotedSportsMatches[promotedSportId],
            let match = matchesForSport[safe: index] {
@@ -502,6 +603,22 @@ class ClientManagedHomeViewTemplateDataSource {
         return nil
     }
 
+    // ALERT: The data comes from Suggested bets
+    // but the UI shown to the user is from old FeaturedTips
+    func fetchPromotedBetslips() {
+        let userIdentifier = Env.userSessionStore.userProfilePublisher.value?.userIdentifier
+        Env.servicesProvider.getPromotedBetslips(userId: userIdentifier)
+            .map(ServiceProviderModelMapper.suggestedBetslips(fromPromotedBetslips:))
+            .receive(on: DispatchQueue.main)
+            .sink { completion in
+                print("ClientManagedHomeTemplate getPromotedSports completion \(completion)")
+            } receiveValue: { [weak self] suggestedBetslips in
+                self?.suggestedBetslips = suggestedBetslips
+                self?.refreshPublisher.send()
+            }
+            .store(in: &self.cancellables)
+    }
+    
 }
 
 extension ClientManagedHomeViewTemplateDataSource: HomeViewTemplateDataSource {
@@ -517,149 +634,152 @@ extension ClientManagedHomeViewTemplateDataSource: HomeViewTemplateDataSource {
     }
 
     func numberOfSections() -> Int {
-        var sections = self.fixedSection
+        var sections = self.fixedSections
         sections += self.promotedSports.count
         return sections
     }
 
     func numberOfRows(forSectionIndex section: Int) -> Int {
+        guard let contentType = contentType(forSection: section) else {
+            return 0
+        }
 
-        switch section {
-        case 0:
+        switch contentType {
+        case .userProfile:
             return self.alertsArray.isEmpty ? 0 : 1
-        case 1:
+        case .bannerLine:
             return self.bannersLineViewModel == nil ? 0 : 1
-        case 2:
+        case .heroCard:
+            return self.heroMatches.isEmpty ? 0 : 1
+        case .quickSwipeStack:
             return self.quickSwipeStackMatches.isEmpty ? 0 : 1
-        case 3:
+        case .promotionalStories:
             return self.storiesLineViewModel == nil ? 0 : 1
-        case 4:
+        case .makeOwnBetCallToAction:
             return self.shouldShowOwnBetCallToAction ? 1 : 0
-        case 5:
+        case .highlightedMatches:
             return self.highlightsVisualImageMatches.count +
-            self.highlightsVisualImageOutrights.count +
-            self.highlightsBoostedMatches.count
-        case 6:
+                   self.highlightsVisualImageOutrights.count +
+                   self.highlightsBoostedMatches.count
+        case .highlightedLiveMatches:
             return self.highlightedLiveMatches.count
-        case 7:
+        case .featuredTips:
+            return self.suggestedBetslips.isEmpty ? 0 : 1
+        case .topCompetitionsShortcuts:
             if let featuredCompetitionId = Env.businessSettingsSocket.clientSettings.featuredCompetition?.id {
                 return !self.topCompetitionsLineCellViewModel.isEmpty ? 2 : 1
-            }
-            else {
+            } else {
                 return !self.topCompetitionsLineCellViewModel.isEmpty ? 1 : 0
             }
+        case .promotedSportSection:
+            let croppedSection = section - self.fixedSections
+            if let promotedSportId = self.promotedSports[safe: croppedSection]?.id,
+               let matchesForSport = self.promotedSportsMatches[promotedSportId] {
+                return matchesForSport.count
+            }
+            return 0
         default:
-            ()
+            return 0
         }
-
-        let croppedSection = section - self.fixedSection
-        if let promotedSportId = self.promotedSports[safe: croppedSection]?.id, let matchesForSport = self.promotedSportsMatches[promotedSportId] {
-            return matchesForSport.count
-        }
-
-        return 0
     }
 
     func title(forSection section: Int) -> String? {
-        switch section {
-        case 5:
+        guard let contentType = contentType(forSection: section) else {
+            return nil
+        }
+
+        switch contentType {
+        case .highlightedMatches:
             return localized("highlights")
-        case 6:
+        case .highlightedLiveMatches:
             return localized("live")
-        case 7:
+        case .featuredTips:
+            return self.suggestedBetslips.isNotEmpty ? localized("suggested_bets") : nil
+        case .topCompetitionsShortcuts:
             return localized("top_competitions")
+        case .promotedSportSection:
+            let croppedSection = section - self.fixedSections
+            if let promotedSportName = self.promotedSports[safe: croppedSection]?.name {
+                return promotedSportName
+            }
+            return nil
         default:
-            ()
+            return nil
         }
-
-        let croppedSection = section - self.fixedSection
-        if let promotedSportName = self.promotedSports[safe: croppedSection]?.name {
-            return promotedSportName
-        }
-
-        return nil
     }
 
+
     func iconName(forSection section: Int) -> String? {
-        // return nil
-        switch section {
-        case 5:
+        guard let contentType = contentType(forSection: section) else {
+            return nil
+        }
+
+        switch contentType {
+        case .highlightedMatches:
             return "pin_icon"
-        case 6:
+        case .highlightedLiveMatches:
             return "tabbar_live_icon"
-        case 7:
+        case .topCompetitionsShortcuts:
             return "trophy_icon"
+        case .featuredTips:
+            return "suggested_bet_icon"
+        case .promotedSportSection:
+            let activeSports = Env.sportsStore.getActiveSports()
+            let croppedSection = section - self.fixedSections
+
+            // NOTE: IDs don't match from regular and promoted same sport
+            if let promotedSport = self.promotedSports[safe: croppedSection] {
+                let currentSport = activeSports.first { promotedSport.name.contains($0.name) }
+                return currentSport?.id
+            }
+            return nil
         default:
-            ()
+            return nil
         }
-
-        let activeSports = Env.sportsStore.getActiveSports()
-
-        let croppedSection = section - self.fixedSection
-
-        // NOTE: ID's don't match from regular and promoted same sport
-        if let promotedSport = self.promotedSports[safe: croppedSection] {
-            let currentSport = activeSports.filter({
-                promotedSport.name.contains($0.name)
-            }).first
-            return currentSport?.id
-        }
-
-        return nil
     }
 
     func shouldShowTitle(forSection section: Int) -> Bool {
-        switch section {
-        case 5:
+        guard let contentType = contentType(forSection: section) else {
+            return false
+        }
+
+        switch contentType {
+        case .highlightedMatches:
             let highlightsTotal = self.highlightsVisualImageMatches.count +
-            self.highlightsVisualImageOutrights.count +
-            self.highlightsBoostedMatches.count
+                                  self.highlightsVisualImageOutrights.count +
+                                  self.highlightsBoostedMatches.count
             return highlightsTotal > 0
-        case 6:
-            return !self.highlightedLiveMatches.isEmpty
-        case 7:
+            
+        case .highlightedLiveMatches:
+            return self.highlightedLiveMatches.isNotEmpty
+        case .featuredTips:
+            return self.suggestedBetslips.isNotEmpty
+        case .topCompetitionsShortcuts:
             return !self.topCompetitionsLineCellViewModel.isEmpty
+        case .promotedSportSection:
+            let croppedSection = section - self.fixedSections
+            if let promotedSportId = self.promotedSports[safe: croppedSection]?.id,
+               let matchesForSport = self.promotedSportsMatches[promotedSportId] {
+                return matchesForSport.isNotEmpty
+            }
+            return false
         default:
-            ()
+            return false
         }
-
-        let croppedSection = section - self.fixedSection
-        if let promotedSportId = self.promotedSports[safe: croppedSection]?.id, let matchesForSport = self.promotedSportsMatches[promotedSportId] {
-            return matchesForSport.isNotEmpty
-        }
-
-        return false
     }
 
     func shouldShowFooter(forSection section: Int) -> Bool {
         return false
     }
 
-    // Detail each content type for the section
     func contentType(forSection section: Int) -> HomeViewModel.Content? {
-
-        switch section {
-        case 0:
-            return .userProfile
-        case 1:
-            return .bannerLine
-        case 2:
-            return .quickSwipeStack
-        case 3:
-            return .promotionalStories
-        case 4:
-            return .makeOwnBetCallToAction
-        case 5:
-            return .highlightedMatches
-        case 6:
-            return .highlightedLiveMatches
-        case 7:
-            return .topCompetitionsShortcuts
-        default:
-            ()
+        
+        // Check if the section index is within the bounds of the array
+        if section < self.contentTypes.count {
+            return self.contentTypes[section]
         }
 
-        let croppedSection = section - self.fixedSection
+        let croppedSection = section - self.fixedSections
         if let promotedSportId = self.promotedSports[safe: croppedSection]?.id,
            let matchesForSport = self.promotedSportsMatches[promotedSportId],
            matchesForSport.isNotEmpty {
@@ -668,6 +788,7 @@ extension ClientManagedHomeViewTemplateDataSource: HomeViewTemplateDataSource {
 
         return nil
     }
+
 
     // Content type ViewModels methods
     func alertsArrayViewModel() -> [ActivationAlert] {
@@ -695,11 +816,22 @@ extension ClientManagedHomeViewTemplateDataSource: HomeViewTemplateDataSource {
     }
 
     func featuredTipLineViewModel() -> FeaturedTipLineViewModel? {
-        return nil
+        if self.suggestedBetslips.isEmpty {
+            return nil
+        }
+
+        if let featuredTipLineViewModel = self.cachedFeaturedTipLineViewModel {
+            return featuredTipLineViewModel
+        }
+        else {
+            self.cachedFeaturedTipLineViewModel = FeaturedTipLineViewModel(suggestedBetslip: self.suggestedBetslips)
+            return self.cachedFeaturedTipLineViewModel
+        }
+
     }
 
     func suggestedBetLineViewModel() -> SuggestedBetLineViewModel? {
-        return nil
+        nil
     }
 
     func matchStatsViewModel(forMatch match: Match) -> MatchStatsViewModel? {
@@ -716,6 +848,23 @@ extension ClientManagedHomeViewTemplateDataSource: HomeViewTemplateDataSource {
             return self.quickSwipeStackCellViewModel!
         }
 
+    }
+    
+    // TODO: HERO CARD CELL VIEW MODEL
+    func heroCardMatchViewModel(forIndex index: Int) -> MatchWidgetCellViewModel? {
+                
+        if let match = self.heroMatches[safe: index] {
+            let id = match.id + MatchWidgetType.topImage.rawValue
+            if let matchWidgetCellViewModel = self.heroCardWidgetCellViewModelCache[id] {
+                return matchWidgetCellViewModel
+            }
+            else {
+                let matchWidgetCellViewModel = MatchWidgetCellViewModel(match: match, matchWidgetType: .topImage)
+                self.heroCardWidgetCellViewModelCache[id] = matchWidgetCellViewModel
+                return matchWidgetCellViewModel
+            }
+        }
+        return nil
     }
 
     func highlightedMatchViewModel(forIndex index: Int) -> MatchWidgetCellViewModel? {

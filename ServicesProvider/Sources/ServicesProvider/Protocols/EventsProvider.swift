@@ -88,6 +88,8 @@ protocol EventsProvider: Connector {
 
     func getHighlightedBoostedEvents() -> AnyPublisher<[Event], ServiceProviderError>
     func getHighlightedVisualImageEvents() -> AnyPublisher<[Event], ServiceProviderError>
+    
+    func getHeroGameEvent() -> AnyPublisher<Event, ServiceProviderError>
 
     func getPromotedSports() -> AnyPublisher<[PromotedSport], ServiceProviderError>
 
@@ -115,6 +117,8 @@ protocol EventsProvider: Connector {
     
     func getHighlightedLiveEventsIds(eventCount: Int, userId: String?) -> AnyPublisher<[String], ServiceProviderError>
     func getHighlightedLiveEvents(eventCount: Int, userId: String?) -> AnyPublisher<[Event], ServiceProviderError>
+    
+    func getPromotedBetslips(userId: String?) -> AnyPublisher<[PromotedBetslip], ServiceProviderError>
     
     //
     // Favorites

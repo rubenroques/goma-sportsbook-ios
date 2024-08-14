@@ -134,5 +134,32 @@ extension SportRadarModelMapper {
 
         return sportCompetitionMarketGroup
     }
-
+    
+    static func sportAlphaId(fromVaixSportId sportId: String) -> String? {
+        switch sportId.lowercased() {
+        case "sr:sport:1": return "1"
+        case "sr:sport:2": return "8"
+        case "sr:sport:4": return "6"
+        case "sr:sport:5": return "3"
+        case "sr:sport:16": return "5"
+        case "sr:sport:6": return "7"
+        case "sr:sport:23": return "20"
+        case "sr:sport:34": return "64"
+        case "sr:sport:20": return "63"
+        case "sr:sport:31": return nil
+        case "sr:sport:12": return "39"
+        case "sr:sport:3": return "9"
+        case "sr:sport:21": return "26"
+        case "sr:sport:22": return "45"
+        case "sr:sport:29": return "49"
+        case "sr:sport:19": return "36"
+        case "sr:sport:40": return "929"
+        case "sr:sport:37": return nil
+        case "sr:sport:138": return "155"
+        case "sr:sport:71": return nil
+        case "sr:sport:137": return nil
+        default: return nil
+        }
+    }
+    
 }

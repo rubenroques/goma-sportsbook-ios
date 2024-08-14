@@ -8,56 +8,212 @@
 import Foundation
 import Combine
 
+class FeaturedTipSelectionViewModel {
+    
+    var outcomeName: String {
+        switch dataType {
+        case .featuredTipSelection(let featuredTipSelection):
+            return "\(featuredTipSelection.betName) (\(featuredTipSelection.bettingTypeName))"
+        case .suggestedBetslipSelection(let suggestedBetslipSelection):
+            return suggestedBetslipSelection.outcomeName
+        }
+        
+    }
+    
+    var matchName: String {
+        switch dataType {
+        case .featuredTipSelection(let featuredTipSelection):
+            return featuredTipSelection.eventName
+        case .suggestedBetslipSelection(let suggestedBetslipSelection):
+            return suggestedBetslipSelection.eventName
+        }
+    }
+    
+    
+    var sportIconImageName: String {
+        switch dataType {
+        case .featuredTipSelection(let featuredTipSelection):
+            return "sport_type_icon_\(featuredTipSelection.sportId)"
+        case .suggestedBetslipSelection(let suggestedBetslipSelection):
+            if let sportId = suggestedBetslipSelection.sport?.id {
+                return "sport_type_icon_\(sportId)"
+            }
+            else {
+                return "sport_type_icon_default"
+            }
+        }
+    }
+    
+    var countryFlagImageName: String {
+        var countryIdentifier: String?
+        switch dataType {
+        case .featuredTipSelection(let featuredTipSelection):
+            countryIdentifier = featuredTipSelection.venueName ?? featuredTipSelection.venueId
+        case .suggestedBetslipSelection(let suggestedBetslipSelection):
+            countryIdentifier = suggestedBetslipSelection.location?.id
+        }
+        
+        if let countryIdentifierValue = countryIdentifier {
+            return Assets.flagName(withCountryCode: countryIdentifierValue)
+        }
+        else {
+            return "country_flag_240"
+        }
+        
+    }
+
+    var tournamentName: String {
+        switch dataType {
+        case .featuredTipSelection(let featuredTipSelection):
+            return featuredTipSelection.sportParentName
+        case .suggestedBetslipSelection(let suggestedBetslipSelection):
+            return suggestedBetslipSelection.competitionName
+        }
+    }
+    
+    var marketNameName: String {
+        switch dataType {
+        case .featuredTipSelection(let featuredTipSelection):
+            return featuredTipSelection.extraSelectionInfo.marketName
+        case .suggestedBetslipSelection(let suggestedBetslipSelection):
+            return suggestedBetslipSelection.marketName
+        }
+        
+    }
+    
+    private  enum DataType {
+        case featuredTipSelection(FeaturedTipSelection)
+        case suggestedBetslipSelection(SuggestedBetslipSelection)
+    }
+    
+    private var dataType: DataType
+    
+    init(featuredTipSelection: FeaturedTipSelection) {
+        self.dataType = .featuredTipSelection(featuredTipSelection)
+    }
+    
+    init(suggestedBetslipSelection: SuggestedBetslipSelection) {
+        self.dataType = .suggestedBetslipSelection(suggestedBetslipSelection)
+    }
+    
+}
+
 class FeaturedTipCollectionViewModel {
 
-    var featuredTip: FeaturedTip
-    var cancellables = Set<AnyCancellable>()
-
     var shouldShowBetslip: (() -> Void)?
+    
+    private enum DataType {
+        case featuredTip(FeaturedTip)
+        case suggestedBetslip(SuggestedBetslip)
+    }
     
     enum SizeType {
         case small
         case fullscreen
     }
     
+    var selectionViewModels: [FeaturedTipSelectionViewModel] = []
+    
+    private var dataType: DataType
     var sizeType: SizeType
 
+    
     init(featuredTip: FeaturedTip, sizeType: SizeType) {
-        self.featuredTip = featuredTip
+        self.dataType = .featuredTip(featuredTip)
         self.sizeType = sizeType
+        self.generateSelectionViewModels()
     }
 
+    init(suggestedBetslip: SuggestedBetslip, sizeType: SizeType) {
+        self.dataType = .suggestedBetslip(suggestedBetslip)
+        self.sizeType = sizeType
+        self.generateSelectionViewModels()
+    }
+    
+    private func generateSelectionViewModels() {
+        switch self.dataType {
+        case .featuredTip(let featuredTip):
+            self.selectionViewModels = (featuredTip.selections ?? []).map(FeaturedTipSelectionViewModel.init(featuredTipSelection:))
+        case .suggestedBetslip(let suggestedBetslip):
+            self.selectionViewModels = suggestedBetslip.selections.map(FeaturedTipSelectionViewModel.init(suggestedBetslipSelection:))
+        }
+    }
+    
+    var identifier: String {
+        switch self.dataType {
+        case .featuredTip(let featuredTip):
+            return featuredTip.betId
+        case .suggestedBetslip(let suggestedBetslip):
+            return suggestedBetslip.id
+        }
+    }
+    
     var shouldCropList: Bool {
         return self.sizeType == .small
     }
     
-    func getUsername() -> String {
-        return self.featuredTip.username
+    func getUsername() -> String? {
+        switch self.dataType {
+        case .featuredTip(let featuredTip):
+            return featuredTip.username
+        case .suggestedBetslip:
+            return nil
+        }
+        
     }
 
-    func getTotalOdds() -> String {
-        if let oddsDouble = Double(self.featuredTip.totalOdds) {
-            let oddFormatted = OddFormatter.formatOdd(withValue: oddsDouble)
+    func getTotalOdds() -> String? {
+        
+        switch self.dataType {
+        case .featuredTip(let featuredTip):
+            if let oddsDouble = Double(featuredTip.totalOdds) {
+                let oddFormatted = OddFormatter.formatOdd(withValue: oddsDouble)
+                return "\(oddFormatted)"
+            }
+        case .suggestedBetslip(let suggestedBetslip):
+            let totalOdd = suggestedBetslip.selections.map(\.odd).reduce(1, *)
+            let oddFormatted = OddFormatter.formatOdd(withValue: totalOdd)
             return "\(oddFormatted)"
         }
-        return ""
+        
+        return nil
     }
 
-    func getNumberSelections() -> String {
-        if let numberSelections = self.featuredTip.selections?.count {
-            return "\(numberSelections)"
+    func getNumberSelections() -> String? {
+        
+        switch self.dataType {
+        case .featuredTip(let featuredTip):
+            if let numberSelections = featuredTip.selections?.count {
+                return "\(numberSelections)"
+            }
+        case .suggestedBetslip:
+            return nil
         }
-
-        return ""
+        return nil
     }
 
     func getUserId() -> String? {
-        return self.featuredTip.userId
+        switch self.dataType {
+        case .featuredTip(let featuredTip):
+            return featuredTip.userId
+        case .suggestedBetslip:
+            return nil
+        }
+        
+    }
+    
+    func addTicketBetslip() {
+        switch self.dataType {
+        case .featuredTip(let featuredTip):
+            self.addTicketBetslip(forFeaturedTip: featuredTip)
+        case .suggestedBetslip(let suggestedBetslip):
+            self.addTicketBetslip(forSuggestedBetslip: suggestedBetslip)
+        }
     }
 
-    func createBetslipTicket() {
+    private func addTicketBetslip(forFeaturedTip featuredTip: FeaturedTip) {
 
-        guard let selections = self.featuredTip.selections else {return}
+        guard let selections = featuredTip.selections else {return}
 
         for selection in selections {
             let bettingOfferId = "\(selection.extraSelectionInfo.bettingOfferId)"
@@ -83,40 +239,37 @@ class FeaturedTipCollectionViewModel {
 
         }
     }
+    
+    private func addTicketBetslip(forSuggestedBetslip suggestedBetslip: SuggestedBetslip) {
+        for selection in suggestedBetslip.selections {
+            
+            let ticket = BettingTicket(id: selection.outcomeId,
+                                       outcomeId: selection.outcomeId,
+                                       marketId: selection.marketId,
+                                       matchId: selection.eventId,
+                                       decimalOdd: selection.odd,
+                                       isAvailable: true,
+                                       matchDescription: selection.eventName,
+                                       marketDescription: selection.marketName,
+                                       outcomeDescription: selection.outcomeName,
+                                       homeParticipantName: nil,
+                                       awayParticipantName: nil,
+                                       sportIdCode: selection.sport?.id)
 
+            if !Env.betslipManager.hasBettingTicket(withId: selection.outcomeId) {
+                Env.betslipManager.addBettingTicket(ticket)
+                self.shouldShowBetslip?()
+            }
+
+        }
+    }
+    
     func followUser(userId: String) {
 
-        Env.gomaNetworkClient.followUser(deviceId: Env.deviceId, userId: userId)
-            .receive(on: DispatchQueue.main)
-            .sink(receiveCompletion: { [weak self] completion in
-                switch completion {
-                case .failure(let error):
-                    print("FOLLOW USER ERROR: \(error)")
-                case .finished:
-                    ()
-                }
-            }, receiveValue: { [weak self] response in
-                print("FOLLOW USER RESPONSE: \(response)")
-                Env.gomaSocialClient.getFollowingUsers()
-            })
-            .store(in: &cancellables)
     }
 
     func unfollowUser(userId: String) {
 
-        Env.gomaNetworkClient.deleteFollowUser(deviceId: Env.deviceId, userId: userId)
-            .receive(on: DispatchQueue.main)
-            .sink(receiveCompletion: { [weak self] completion in
-                switch completion {
-                case .failure(let error):
-                    print("UNFOLLOW USER ERROR: \(error)")
-                case .finished:
-                    ()
-                }
-            }, receiveValue: { [weak self] response in
-                print("UNFOLLOW USER RESPONSE: \(response)")
-                Env.gomaSocialClient.getFollowingUsers()
-            })
-            .store(in: &cancellables)
     }
+
 }

@@ -574,9 +574,12 @@ public extension SharedModels.Country {
     }
 
     static func country(withName name: String) -> Country? {
-        var simplifiedName = Self.removeAccents(fromString: name)
+        let simplifiedName = Self.removeAccents(fromString: name)
         
-        if let isoCode = Self.englishCountryCode(withName: simplifiedName) {
+        if simplifiedName.lowercased() == "international" {
+            return Country(name: "International", capital: "", region: "", iso2Code: "", iso3Code: "", numericCode: "", phonePrefix: "", frenchName: "")
+        }
+        else if let isoCode = Self.englishCountryCode(withName: simplifiedName) {
             return Self.country(withISOCode: isoCode)
         }
         else if let iso = Self.frenchhCountryCode(withName: simplifiedName) {

@@ -452,4 +452,8 @@ extension DynamicHomeViewTemplateDataSource: HomeViewTemplateDataSource {
         return nil
     }
     
+    func heroCardMatchViewModel(forIndex index: Int) -> MatchWidgetCellViewModel? {
+        return nil
+    }
+    
 }

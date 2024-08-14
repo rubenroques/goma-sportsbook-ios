@@ -53,7 +53,7 @@ struct Location: Codable, Hashable {
     var isoCode: String
 }
 
-struct Participant: Hashable {
+struct Participant: Codable, Hashable {
     var id: String
     var name: String
 }
@@ -85,7 +85,7 @@ struct Market: Hashable {
     var eventMarketCount: Int?
     var isAvailable: Bool
 
-    var startDate: String?
+    var startDate: Date?
     var homeParticipant: String?
     var awayParticipant: String?
 
@@ -111,7 +111,7 @@ struct Market: Hashable {
          isMainOutright: Bool? = nil,
          eventMarketCount: Int? = nil,
          isAvailable: Bool = true,
-         startDate: String? = nil,
+         startDate: Date? = nil,
          homeParticipant: String? = nil,
          awayParticipant: String? = nil,
          eventId: String? = nil,
@@ -209,6 +209,17 @@ enum OddFormat: Codable, Hashable, CustomStringConvertible, Equatable {
             return "OddFormat \(decimal) [\(numerator)/\(denominator)]"
         case .decimal(let odd):
             return "OddFormat \(odd)"
+        }
+
+    }
+    
+    var decimalValue: Double {
+        switch self {
+        case .fraction(let numerator, let denominator):
+            let decimal = (Double(numerator)/Double(denominator)) + 1.0
+            return decimal
+        case .decimal(let odd):
+            return odd
         }
 
     }

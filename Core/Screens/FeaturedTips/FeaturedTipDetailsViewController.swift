@@ -79,9 +79,6 @@ class FeaturedTipDetailsViewController: UIViewController {
         self.followButton.addTarget(self, action: #selector(didTapFollowButton), for: .primaryActionTriggered)
 
         self.betButton.addTarget(self, action: #selector(didTapBetButton), for: .primaryActionTriggered)
-
-        // EM TEMP SHUTDOWN
-        self.betButton.isEnabled = false
     }
 
     override func viewDidLayoutSubviews() {

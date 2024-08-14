@@ -50,10 +50,42 @@ For _fastlane_ installation instructions, see [Installing _fastlane_](https://do
 
 
 
+### ios version_bump
+
+```sh
+[bundle exec] fastlane ios version_bump
+```
+
+
+
+### ios marketing_version_bump
+
+```sh
+[bundle exec] fastlane ios marketing_version_bump
+```
+
+
+
 ### ios betsson_uat
 
 ```sh
 [bundle exec] fastlane ios betsson_uat
+```
+
+
+
+### ios betsson_prod
+
+```sh
+[bundle exec] fastlane ios betsson_prod
+```
+
+
+
+### ios betsson
+
+```sh
+[bundle exec] fastlane ios betsson
 ```
 
 

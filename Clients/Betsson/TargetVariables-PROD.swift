@@ -82,7 +82,7 @@ struct TargetVariables: SportsbookTarget {
     static var clientBaseUrl: String {
         return "https://betsson.fr"
     }
-    
+
     static var appStoreUrl: String? {
         return "https://apps.apple.com/fr/app/betsson/id6463237718"
     }
@@ -90,4 +90,5 @@ struct TargetVariables: SportsbookTarget {
     static var secundaryMarketSpecsUrl: String? {
         return "https://betsson.fr/secondary_markets_config.json"
     }
+
 }

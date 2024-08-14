@@ -91,6 +91,7 @@ class HomeViewController: UIViewController {
         self.tableView.register(StoriesLineTableViewCell.self, forCellReuseIdentifier: StoriesLineTableViewCell.identifier)
         self.tableView.register(TopCompetitionsLineTableViewCell.self, forCellReuseIdentifier: TopCompetitionsLineTableViewCell.identifier)
         self.tableView.register(PromotedCompetitionTableViewCell.self, forCellReuseIdentifier: PromotedCompetitionTableViewCell.identifier)
+        self.tableView.register(HeroCardTableViewCell.self, forCellReuseIdentifier: HeroCardTableViewCell.identifier)
 
         // Register cell based on the MatchWidgetType
         for matchWidgetType in MatchWidgetType.allCases {
@@ -424,6 +425,15 @@ class HomeViewController: UIViewController {
         }
         self.present(tipsSliderViewController, animated: true)
     }
+    
+    private func openFeaturedTipSlider(suggestedBetslips: [SuggestedBetslip], atIndex index: Int = 0) {
+        let tipsSliderViewController = TipsSliderViewController(viewModel: TipsSliderViewModel(suggestedBetslip: suggestedBetslips, startIndex: index))
+        tipsSliderViewController.shift.enable()
+        tipsSliderViewController.shouldShowBetslip = { [weak self] in
+            self?.didTapBetslipButtonAction?()
+        }
+        self.present(tipsSliderViewController, animated: true)
+    }
 
     private func openStoriesFullScreen(withId id: String) {
         if let storyLineViewModel = self.viewModel.storyLineViewModel() {
@@ -627,8 +637,7 @@ class HomeViewController: UIViewController {
     }
 
     @objc private func didTapOpenFeaturedTips() {
-        let tips = self.viewModel.featuredTipLineViewModel()?.featuredTips ?? []
-        self.openFeaturedTipSlider(featuredTips: tips, atIndex: self.featuredTipsCenterIndex)
+        // Not used
     }
     
     @objc private func didTapSeeAllLiveButton() {
@@ -794,13 +803,15 @@ extension HomeViewController: UITableViewDelegate, UITableViewDataSource {
                 return UITableViewCell()
             }
 
-            cell.openFeaturedTipDetailAction = { [weak self] featuredTip in
-                let firstIndex = featuredBetLineViewModel.featuredTips.firstIndex(where: { tipIterator in
-                    tipIterator.betId == featuredTip.betId
-                })
-                let firstIndexValue: Int = Int(firstIndex ?? 0)
-                
-                self?.openFeaturedTipSlider(featuredTips: featuredBetLineViewModel.featuredTips, atIndex: firstIndexValue)
+            cell.openFeaturedTipDetailAction = { [weak self] featuredTipCollectionViewModel in
+                let index = featuredBetLineViewModel.indexForItem(withId: featuredTipCollectionViewModel.identifier) ?? 0
+
+                switch featuredBetLineViewModel.dataType {
+                case .featuredTips(let featuredTips):
+                    self?.openFeaturedTipSlider(featuredTips: featuredTips, atIndex: index)
+                case .suggestedBetslips(let suggestedBetslips):
+                    self?.openFeaturedTipSlider(suggestedBetslips: suggestedBetslips, atIndex: index)
+                }
             }
 
             cell.currentIndexChangedAction = { [weak self] newIndex in
@@ -1152,8 +1163,43 @@ extension HomeViewController: UITableViewDelegate, UITableViewDataSource {
 
             return cell
             
+        case .heroCard:
+
+            guard
+                let viewModel = self.viewModel.heroCardMatchViewModel(forIndex: indexPath.row)
+            else {
+                return UITableViewCell()
+            }
+
+            guard
+                let cell = tableView.dequeueReusableCell(withIdentifier: HeroCardTableViewCell.identifier, for: indexPath) as? HeroCardTableViewCell
+            else {
+                return UITableViewCell()
+            }
+
+            cell.configure(withViewModel: viewModel)
+            
+            return cell
         }
 
+    }
+    
+    func tableView(_ tableView: UITableView, didEndDisplaying cell: UITableViewCell, forRowAt indexPath: IndexPath) {
+        guard
+            let contentType = self.viewModel.contentType(forSection: indexPath.section)
+        else {
+            return
+        }
+
+        switch contentType {
+        case .heroCard:
+            
+            if let cell = cell as? HeroCardTableViewCell {
+                cell.stopTimer()
+            }
+        default:
+            ()
+        }
     }
 
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
@@ -1171,7 +1217,7 @@ extension HomeViewController: UITableViewDelegate, UITableViewDataSource {
         case .userFavorites:
             return UITableView.automaticDimension
         case .featuredTips:
-            return 420
+            return UITableView.automaticDimension
         case .suggestedBets:
             return 336
         case .sportGroup:
@@ -1239,6 +1285,16 @@ extension HomeViewController: UITableViewDelegate, UITableViewDataSource {
             return UITableView.automaticDimension
         case .highlightedLiveMatches:
             return UITableView.automaticDimension
+        case .heroCard:
+//            if let viewModel = self.viewModel.heroCardMatchViewModel(forIndex: indexPath.row) {
+//                switch viewModel.matchWidgetType {
+//                case .topImage, .topImageOutright:
+//                    return 262
+//                default:
+//                    return 164
+//                }
+//            }
+            return UITableView.automaticDimension
         }
 
     }
@@ -1258,7 +1314,7 @@ extension HomeViewController: UITableViewDelegate, UITableViewDataSource {
         case .userFavorites:
             return StyleHelper.cardsStyleHeight() + 20
         case .featuredTips:
-            return 420
+            return FeaturedTipLineTableViewCell.estimatedHeight
         case .suggestedBets:
             return 336
         case .sportGroup:
@@ -1316,6 +1372,16 @@ extension HomeViewController: UITableViewDelegate, UITableViewDataSource {
             return StyleHelper.cardsStyleHeight() + 20
         case .highlightedLiveMatches:
             return StyleHelper.cardsStyleHeight() + 20
+        case .heroCard:
+//            if let viewModel = self.viewModel.heroCardMatchViewModel(forIndex: indexPath.row) {
+//                switch viewModel.matchWidgetType {
+//                case .topImage, .topImageOutright:
+//                    return 262
+//                default:
+//                    return 164
+//                }
+//            }
+            return 679
         }
     }
 
@@ -1376,7 +1442,7 @@ extension HomeViewController: UITableViewDelegate, UITableViewDataSource {
             }
             else if let sectionIconImage = UIImage(named: imageName) {
                 sportImageView.image = sectionIconImage
-                sportImageView.setTintColor(color: UIColor.App.highlightPrimary)
+                sportImageView.setTintColor(color: UIColor.App.iconPrimary)
             }
             else {
                 sportImageView.image = UIImage(named: "sport_type_icon_default")
@@ -1390,8 +1456,7 @@ extension HomeViewController: UITableViewDelegate, UITableViewDataSource {
             seeAllLabel.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(didTapOpenFavorites)))
         }
         else if case .featuredTips = self.viewModel.contentType(forSection: section) {
-            seeAllLabel.text = localized("expand")
-            seeAllLabel.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(didTapOpenFeaturedTips)))
+            seeAllLabel.isHidden = true
         }
         else if case .highlightedLiveMatches = self.viewModel.contentType(forSection: section) {
             seeAllLabel.textColor = UIColor.App.highlightPrimary
@@ -1470,6 +1535,8 @@ extension HomeViewController: UITableViewDataSourcePrefetching {
             case .supplementaryEvents:
                 ()
             case .highlightedLiveMatches:
+                ()
+            case .heroCard:
                 ()
             }
         }

@@ -287,6 +287,29 @@ struct FeaturedTip: Decodable {
     var username: String
     var totalOdds: String
 
+    init(betId: String,
+         selections: [FeaturedTipSelection]? = nil,
+         type: String,
+         systemBetType: String? = nil,
+         status: String,
+         statusLabel: String,
+         placedDate: String? = nil,
+         userId: String? = nil,
+         username: String,
+         totalOdds: String)
+    {
+        self.betId = betId
+        self.selections = selections
+        self.type = type
+        self.systemBetType = systemBetType
+        self.status = status
+        self.statusLabel = statusLabel
+        self.placedDate = placedDate
+        self.userId = userId
+        self.username = username
+        self.totalOdds = totalOdds
+    }
+    
     enum CodingKeys: String, CodingKey {
 
         case betId = "betId"
@@ -305,77 +328,102 @@ struct FeaturedTip: Decodable {
 class FeaturedTipSelection: Decodable {
     var outcomeId: String
     var status: String
-    //var statusLabel: String
     var sportId: String
     var sportName: String
-    //var sportParentId: String
     var sportParentName: String
     var venueId: String
     var venueName: String
     var eventId: String
     var eventName: String
-    //var homeParticipantId: String
-    //var awayParticipantId: String
     var bettingTypeId: String
     var bettingTypeName: String
     var betName: String
     var odds: String
-    //var eventPartId: String
     var extraSelectionInfo: ExtraSelectionInfo
-
-//    var odds: Double?
-
+    
+    var oddValue: OddFormat
+    
+    init(outcomeId: String,
+         status: String,
+         sportId: String,
+         sportName: String,
+         sportParentName: String,
+         venueId: String,
+         venueName: String,
+         eventId: String,
+         eventName: String,
+         bettingTypeId: String,
+         bettingTypeName: String,
+         betName: String,
+         odds: String,
+         extraSelectionInfo: ExtraSelectionInfo,
+         oddValue: OddFormat) 
+    {
+        self.outcomeId = outcomeId
+        self.status = status
+        self.sportId = sportId
+        self.sportName = sportName
+        self.sportParentName = sportParentName
+        self.venueId = venueId
+        self.venueName = venueName
+        self.eventId = eventId
+        self.eventName = eventName
+        self.bettingTypeId = bettingTypeId
+        self.bettingTypeName = bettingTypeName
+        self.betName = betName
+        self.odds = odds
+        self.extraSelectionInfo = extraSelectionInfo
+        self.oddValue = oddValue
+    }
+    
     enum CodingKeys: String, CodingKey {
         case outcomeId = "outcomeId"
         case status = "status"
-        //case statusLabel = "statusLabel"
         case sportId = "sportId"
         case sportName = "sportName"
-        //case sportParentId = "sportParentId"
         case sportParentName = "sportParentName"
         case venueId = "venueId"
         case venueName = "venueName"
         case eventId = "eventId"
         case eventName = "eventName"
-        //case homeParticipantId = "homeParticipantId"
-        //case awayParticipantId = "awayParticipantId"
         case bettingTypeId = "bettingTypeId"
         case bettingTypeName = "bettingTypeName"
         case betName = "betName"
         case odds = "odds"
-        //case eventPartId = "eventPartId"
         case extraSelectionInfo = "extraSelectionInfo"
-
-//        case odds = "odds"
+        case oddValue = "oddValue"
     }
 }
 
 struct ExtraSelectionInfo: Decodable {
 
-    var bettingOfferId: Int
-//    var eventTypeId: Int
+    var bettingOfferId: String
     var marketName: String
     var outcomeEntity: OutcomeEntity
-//    var categoryId: Int
-//    var categoryName: String
-//    var creationTime: Int
 
+    init(bettingOfferId: String, marketName: String, outcomeEntity: OutcomeEntity) {
+        self.bettingOfferId = bettingOfferId
+        self.marketName = marketName
+        self.outcomeEntity = outcomeEntity
+    }
+    
     enum CodingKeys: String, CodingKey {
         case bettingOfferId = "bettingOfferId"
-//        case eventTypeId = "eventTypeId"
         case marketName = "marketName"
         case outcomeEntity = "outcomeEntity"
-//        case categoryId = "categoryId"
-//        case categoryName = "categoryName"
-//        case creationTime = "creationTime"
     }
 }
 
 struct OutcomeEntity: Decodable {
 
-    var id: Int
+    var id: String
     var statusId: Int
-
+    
+    init(id: String, statusId: Int) {
+        self.id = id
+        self.statusId = statusId
+    }
+    
     enum CodingKeys: String, CodingKey {
         case id = "id"
         case statusId = "statusId"
