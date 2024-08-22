@@ -966,7 +966,7 @@ extension SportRadarEventsProvider: SportRadarConnectorSubscriber {
 //
 extension SportRadarEventsProvider {
     
-    func getMarketsFilters(event: Event) -> AnyPublisher<[MarketGroup], Never> {
+    func getMarketGroups(forEvent event: Event) -> AnyPublisher<[MarketGroup], Never> {
         
         let defaultMarketGroups = [MarketGroup.init(type: "0",
                                                     id: "0",

@@ -17,12 +17,12 @@ class ClientManagedHomeViewTemplateDataSource {
         .bannerLine, // PromotionBanners
         .quickSwipeStack, // MatchBanners
         .promotionalStories, // PromotionStories
-        .makeOwnBetCallToAction, // MakeYourOwnBet
         .heroCard, // HeroBanner
-        .featuredTips, // SuggestedBets
-        .highlightedMatches, // Highlights
-        .topCompetitionsShortcuts, // TopCompetitionsMobile
         .highlightedLiveMatches, // LiveGamesHome
+        .makeOwnBetCallToAction, // MakeYourOwnBet
+        .highlightedMatches, // Highlights
+        .featuredTips, // SuggestedBets
+        .topCompetitionsShortcuts, // TopCompetitionsMobile
     ]
     
     private var fixedSections: Int {

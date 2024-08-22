@@ -270,11 +270,11 @@ class MatchDetailsViewModel: NSObject {
         }
         .store(in: &self.cancellables)
 
-        
+        //
         // Request the remaining marketGroups details
         self.matchGroupsCancellable = matchDetailsReceivedPublisher
             .flatMap({ (event: ServicesProvider.Event) -> AnyPublisher<[MarketGroup], Never> in
-                return Env.servicesProvider.getMarketsFilters(event: event)
+                return Env.servicesProvider.getMarketGroups(forEvent: event)
                         .map(Self.convertMarketGroups(_:))
                         .eraseToAnyPublisher()
             })

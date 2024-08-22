@@ -58,7 +58,7 @@ protocol EventsProvider: Connector {
     //
     func getAvailableSportTypes(initialDate: Date?, endDate: Date?) -> AnyPublisher<[SportType], ServiceProviderError>
 
-    func getMarketsFilters(event: Event) -> AnyPublisher<[MarketGroup], Never>
+    func getMarketGroups(forEvent: Event) -> AnyPublisher<[MarketGroup], Never>
     
     func getFieldWidgetId(eventId: String) -> AnyPublisher<FieldWidget, ServiceProviderError>
     

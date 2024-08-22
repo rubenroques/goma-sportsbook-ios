@@ -369,24 +369,20 @@ extension HeroCardTableViewCell: UICollectionViewDelegate, UICollectionViewDataS
             else {
                 fatalError()
             }
-            
             cell.configure(market: market, match: match)
-            
             return cell
         }
-        
-        guard
-            let cell = collectionView.dequeueCellType(HeroCardSecondaryMarketCollectionViewCell.self, indexPath: indexPath),
-            let match = self.viewModel?.match,
-            let market = self.viewModel?.match.markets[safe: indexPath.row]
         else {
-            fatalError()
+            guard
+                let cell = collectionView.dequeueCellType(HeroCardSecondaryMarketCollectionViewCell.self, indexPath: indexPath),
+                let match = self.viewModel?.match,
+                let market = self.viewModel?.match.markets[safe: indexPath.row]
+            else {
+                fatalError()
+            }
+            cell.configure(market: market, match: match)
+            return cell
         }
-        
-        cell.configure(market: market, match: match)
-        
-        return cell
-
     }
 
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
@@ -397,10 +393,8 @@ extension HeroCardTableViewCell: UICollectionViewDelegate, UICollectionViewDataS
     }
 
     func collectionView(_ collectionView: UICollectionView, willDisplay cell: UICollectionViewCell, forItemAt indexPath: IndexPath) {
-        
         self.pageControl.currentPage = indexPath.row
         self.viewModel?.currentCollectionPage.send(indexPath.row)
-        print("SHOWING PAGE: \(indexPath.row)")
         self.resetTime()
     }
 

@@ -337,7 +337,7 @@ extension ServicesProviderClient {
 }
 
 extension ServicesProviderClient {
-    public func getMarketsFilters(event: Event) -> AnyPublisher<[MarketGroup], Never> {
+    public func getMarketGroups(forEvent event: Event) -> AnyPublisher<[MarketGroup], Never> {
         guard
             let eventsProvider = self.eventsProvider
         else {
@@ -351,7 +351,7 @@ extension ServicesProviderClient {
                                                        markets: event.markets)]
             return Just(defaultMarketGroup).eraseToAnyPublisher()
         }
-        return eventsProvider.getMarketsFilters(event: event)
+        return eventsProvider.getMarketGroups(forEvent: event)
     }
 
     public func getFieldWidgetId(eventId: String) -> AnyPublisher<FieldWidget, ServiceProviderError> {
