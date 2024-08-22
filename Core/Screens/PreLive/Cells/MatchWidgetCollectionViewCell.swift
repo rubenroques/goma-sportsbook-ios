@@ -973,16 +973,16 @@ class MatchWidgetCollectionViewCell: UICollectionViewCell {
         self.drawBaseView.backgroundColor = UIColor.App.backgroundOdds
         self.awayBaseView.backgroundColor = UIColor.App.backgroundOdds
         
-        self.suspendedBaseView.backgroundColor = UIColor.App.backgroundDisabledOdds
+        self.suspendedBaseView.backgroundColor = UIColor.App.backgroundOdds
         
         self.suspendedBaseView.layer.borderColor = UIColor.App.backgroundBorder.resolvedColor(with: self.traitCollection).cgColor
         
         self.suspendedLabel.textColor = UIColor.App.textDisablePrimary
         
-        self.seeAllBaseView.backgroundColor = UIColor.App.backgroundDisabledOdds
+        self.seeAllBaseView.backgroundColor = UIColor.App.backgroundOdds
         self.seeAllLabel.textColor = UIColor.App.textPrimary
         
-        self.outrightBaseView.backgroundColor = UIColor.App.backgroundDisabledOdds
+        self.outrightBaseView.backgroundColor = UIColor.App.backgroundOdds
         self.outrightSeeLabel.textColor = UIColor.App.textPrimary
         
         self.locationFlagImageView.layer.borderColor = UIColor.App.highlightPrimaryContrast.cgColor

@@ -311,8 +311,8 @@ class BetSubmissionSuccessViewController: UIViewController {
                     
                     let bettingTicketHistory = BetHistoryEntry(betId: betPlacedDetails.response.betId ?? "",
                                                                selections: mappedBetHistoryEntrySelection,
-                                                               type: betType,
-                                                               systemBetType: betType,
+                                                               type: betType.lowercased(),
+                                                               systemBetType: betType.lowercased(),
                                                                amount: betPlacedDetails.response.amount,
                                                                totalBetAmount: betPlacedDetails.response.amount,
                                                                freeBetAmount: nil,

@@ -63,7 +63,7 @@ public class Event: Codable, Equatable {
     public var status: EventStatus?
 
     public var matchTime: String?
-
+    
     public var promoImageURL: String?
     public var oldMainMarketId: String?
 
@@ -142,7 +142,7 @@ public class Event: Codable, Equatable {
         self.name = name
         self.status = status
         self.matchTime = matchTime
-
+        
         self.promoImageURL = nil
         self.oldMainMarketId = nil
         
@@ -167,6 +167,7 @@ public class Event: Codable, Equatable {
         self.trackableReference = try container.decodeIfPresent(String.self, forKey: .trackableReference)
         self.activePlayerServing = try container.decodeIfPresent(ActivePlayerServe.self, forKey: .activePlayerServing)
         self.scores = (try? container.decode([String: Score].self, forKey: .scores)) ?? [:]
+        
     }
 
     public func encode(to encoder: Encoder) throws {
@@ -184,6 +185,7 @@ public class Event: Codable, Equatable {
         try container.encodeIfPresent(self.sportIdCode, forKey: .sportIdCode)
         try container.encodeIfPresent(self.trackableReference, forKey: .trackableReference)
         try container.encodeIfPresent(self.activePlayerServing, forKey: .activePlayerServing)
+        
     }
 
     public static func == (lhs: Event, rhs: Event) -> Bool {

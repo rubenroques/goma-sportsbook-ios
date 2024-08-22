@@ -179,7 +179,7 @@ class SharedTicketCardView: UIView {
             self.subtitleLabel.text = MyTicketBetLineView.dateFormatter.string(from: date)
         }
 
-        if let oddValue = betHistoryEntry.totalPriceValue, betHistoryEntry.type != "SYSTEM" {
+        if let oddValue = betHistoryEntry.totalPriceValue, betHistoryEntry.type?.uppercased() != "SYSTEM" {
 //            self.totalOddSubtitleLabel.text = OddConverter.stringForValue(oddValue, format: UserDefaults.standard.userOddsFormat)
             if oddValue.isNaN {
                 self.totalOddSubtitleLabel.text = "-"
