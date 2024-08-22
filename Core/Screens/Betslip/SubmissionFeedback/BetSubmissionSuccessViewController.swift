@@ -304,11 +304,17 @@ class BetSubmissionSuccessViewController: UIViewController {
                         betslipId = Int(placedBetslipId)
                     }
                     
+                    let uniqueEventIds = Set(mappedBetHistoryEntrySelection.map(\.eventId).compactMap({ $0 }))
+                    
                     var betType = betPlacedDetails.response.type ?? ""
-                    if betType.uppercased() == "A" {
+                    if betType == "A" {
                         betType = "accumulator"
                     }
                     
+                    if mappedBetHistoryEntrySelection.count >= 2, betType == "accumulator", uniqueEventIds.count == 1 {
+                        betType = "mix_match"
+                    }
+
                     let bettingTicketHistory = BetHistoryEntry(betId: betPlacedDetails.response.betId ?? "",
                                                                selections: mappedBetHistoryEntrySelection,
                                                                type: betType.lowercased(),

@@ -23,8 +23,14 @@ extension SportRadarModelMapper {
             let potentialReturn: Double = internalBets.first?.potentialReturn ?? 0.0
             let totalReturn: Double = internalBets.first?.totalReturn ?? 0.0
 
+            let uniqueEventIds = Set(betSelections.map(\.eventId))
+            var betType = (firstBet?.type ?? "").lowercased()
+            if betSelections.count >= 2, betType == "accumulator", uniqueEventIds.count == 1 {
+                betType = "mix_match"
+            }
+            
             return Bet(identifier: identifier,
-                       type: firstBet?.type ?? "",
+                       type: betType,
                        state: firstConvertedBet?.state ?? .undefined,
                        result: firstConvertedBet?.result ?? .notSpecified,
                        globalState: firstConvertedBet?.globalState ?? .undefined,

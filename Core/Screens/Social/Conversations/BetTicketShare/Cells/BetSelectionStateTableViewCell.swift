@@ -149,8 +149,8 @@ class BetSelectionStateTableViewCell: UITableViewCell {
             self.titleLabel.text = localized("system") +
             " - \(viewModel.ticket.systemBetType?.capitalized ?? "") - \(betStatusText(forCode: viewModel.ticket.status?.uppercased() ?? "-").capitalized)"
         }
-        else if viewModel.ticket.type?.uppercased() == "ACCUMULATOR" {
-            self.titleLabel.text = localized("accumulator")+" - \(viewModel.ticket.localizedBetStatus.capitalized)"
+        else if viewModel.ticket.type?.lowercased() == "mix_match" {
+            self.titleLabel.text = localized("mix-match")+" - \(viewModel.ticket.localizedBetStatus.capitalized)"
         }
         else {
             self.titleLabel.text = String([viewModel.ticket.type, viewModel.ticket.localizedBetStatus]
