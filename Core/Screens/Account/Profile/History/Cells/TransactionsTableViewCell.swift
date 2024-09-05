@@ -134,8 +134,7 @@ class TransactionsTableViewCell: UITableViewCell {
             let dateFormatter = Self.dateFormatter
             dateFormatter.dateFormat = "dd-MM-yyyy HH:mm"
 
-            self.transactionDateLabel.text =
-            dateFormatter.string(from: date)
+            self.transactionDateLabel.text = dateFormatter.string(from: date)
         }
 
         self.transactionIdValueLabel.text = transactionHistoryEntry.transactionID

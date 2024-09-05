@@ -1267,14 +1267,12 @@ extension HomeViewController: UITableViewDelegate, UITableViewDataSource {
             return UITableView.automaticDimension
         case .highlightedMatches:
             if let viewModel = self.viewModel.highlightedMatchViewModel(forIndex: indexPath.row) {
-                switch viewModel.matchWidgetType {
+                let matchWidgetType = viewModel.matchWidgetType
+                switch matchWidgetType {
                 case .topImage, .topImageOutright:
-                    if let defaultMarket = viewModel.match.markets.first,
-                       let customBetAvailable = defaultMarket.customBetAvailable,
-                       customBetAvailable {
-                        return 300
-                    }
                     return 262
+                case .topImageWithMixMatch:
+                    return 300
                 default:
                     return 164
                 }
@@ -1354,14 +1352,12 @@ extension HomeViewController: UITableViewDelegate, UITableViewDataSource {
             return 124
         case .highlightedMatches:
             if let viewModel = self.viewModel.highlightedMatchViewModel(forIndex: indexPath.row) {
-                switch viewModel.matchWidgetType {
+                let matchWidgetType = viewModel.matchWidgetType
+                switch matchWidgetType {
                 case .topImage, .topImageOutright:
-                    if let defaultMarket = viewModel.match.markets.first,
-                       let customBetAvailable = defaultMarket.customBetAvailable,
-                       customBetAvailable {
-                        return 300
-                    }
                     return 262
+                case .topImageWithMixMatch:
+                    return 300
                 default:
                     return 164
                 }

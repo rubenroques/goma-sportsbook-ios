@@ -767,9 +767,11 @@ class SportRadarEventsProvider: EventsProvider {
         let contentIdentifier = ContentIdentifier(contentType: contentType, contentRoute: contentRoute)
 
         if let coordinators = self.marketUpdatesCoordinators[marketId], coordinators.isActive {
+            print("DebugSgt: marketUpdatesCoordinators \(marketId) isActive")
             return coordinators.marketPublisher
         }
         else {
+            print("DebugSgt: marketUpdatesCoordinators \(marketId) not active")
             let coordinator = SportRadarMarketDetailsCoordinator.init(marketId: marketId,
                                                                       eventId: eventId,
                                                                       sessionToken: sessionToken.hash,

@@ -705,7 +705,12 @@ class MatchWidgetCollectionViewCell: UICollectionViewCell {
             self.headerLineStackView.trailingAnchor.constraint(lessThanOrEqualTo: self.cashbackIconImageView.leadingAnchor, constant: -5)
         ])
         
+        //
+        
+        
         // MixMatch
+        self.mixMatchContainerView.isHidden = true
+        
         self.baseStackView.addArrangedSubview(self.mixMatchContainerView)
         self.mixMatchContainerView.addSubview(self.mixMatchBaseView)
         self.mixMatchBaseView.addSubview(self.mixMatchBackgroundImageView)
@@ -827,15 +832,10 @@ class MatchWidgetCollectionViewCell: UICollectionViewCell {
     
     override func prepareForReuse() {
         super.prepareForReuse()
-        
-        // print("BlinkDebug: Cell \(self.debugUUID.self) prepareForReuse")
-        
-        if let viewModel = self.viewModel {
-            let viewModelDesc = "[\(viewModel.match.id) \(viewModel.match.homeParticipant.name) vs \(viewModel.match.awayParticipant.name)]"
-            // print("BlinkDebug: Cell  \(self.debugUUID.self) old ViewModel: \(viewModelDesc)")
-        }
-        
+
         self.viewModel = nil
+        
+        self.mixMatchContainerView.isHidden = true
         
         self.cancellables.removeAll()
         
@@ -973,16 +973,15 @@ class MatchWidgetCollectionViewCell: UICollectionViewCell {
         self.drawBaseView.backgroundColor = UIColor.App.backgroundOdds
         self.awayBaseView.backgroundColor = UIColor.App.backgroundOdds
         
-        self.suspendedBaseView.backgroundColor = UIColor.App.backgroundOdds
-        
+        self.suspendedBaseView.backgroundColor = UIColor.App.backgroundDisabledOdds
         self.suspendedBaseView.layer.borderColor = UIColor.App.backgroundBorder.resolvedColor(with: self.traitCollection).cgColor
         
         self.suspendedLabel.textColor = UIColor.App.textDisablePrimary
         
-        self.seeAllBaseView.backgroundColor = UIColor.App.backgroundOdds
+        self.seeAllBaseView.backgroundColor = UIColor.App.backgroundDisabledOdds
         self.seeAllLabel.textColor = UIColor.App.textPrimary
         
-        self.outrightBaseView.backgroundColor = UIColor.App.backgroundOdds
+        self.outrightBaseView.backgroundColor = UIColor.App.backgroundDisabledOdds
         self.outrightSeeLabel.textColor = UIColor.App.textPrimary
         
         self.locationFlagImageView.layer.borderColor = UIColor.App.highlightPrimaryContrast.cgColor
@@ -1015,7 +1014,7 @@ class MatchWidgetCollectionViewCell: UICollectionViewCell {
         //
         // Match Widget Type spec
         switch self.viewModel?.matchWidgetType ?? .normal {
-        case .normal, .topImage:
+        case .normal, .topImage, .topImageWithMixMatch:
             self.eventNameLabel.textColor = UIColor.App.textSecondary
             self.homeParticipantNameLabel.textColor = UIColor.App.textPrimary
             self.awayParticipantNameLabel.textColor = UIColor.App.textPrimary
@@ -1505,7 +1504,7 @@ class MatchWidgetCollectionViewCell: UICollectionViewCell {
                 self.topMarginSpaceConstraint.constant = 11
             }
             
-        case .topImage:
+        case .topImage, .topImageWithMixMatch:
             self.backgroundImageView.isHidden = true
             
             self.topImageBaseView.isHidden = false
@@ -1638,7 +1637,7 @@ extension MatchWidgetCollectionViewCell {
                         self?.gradientBorderView.isHidden = false
                         self?.liveGradientBorderView.isHidden = true
                     }
-                case .topImage, .backgroundImage, .topImageOutright:
+                case .topImage, .topImageWithMixMatch, .backgroundImage, .topImageOutright:
                     self?.gradientBorderView.isHidden = true
                     self?.liveGradientBorderView.isHidden = true
                 }
@@ -1675,7 +1674,7 @@ extension MatchWidgetCollectionViewCell {
                 switch matchWidgetType {
                 case .normal:
                     break
-                case .topImage:
+                case .topImage, .topImageWithMixMatch:
                     break
                 case .boosted:
                     break
@@ -1837,7 +1836,7 @@ extension MatchWidgetCollectionViewCell {
                         self?.showSuspendedView()
                     }
                     
-                    if viewModel.matchWidgetType == .topImage {
+                    if viewModel.matchWidgetType == .topImageWithMixMatch {
                         if let customBetAvailable = market.customBetAvailable,
                            customBetAvailable {
                             self?.mixMatchContainerView.isHidden = false

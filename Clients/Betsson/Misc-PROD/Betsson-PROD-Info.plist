@@ -23,7 +23,7 @@
 	<key>CFBundleShortVersionString</key>
 	<string>$(MARKETING_VERSION)</string>
 	<key>CFBundleVersion</key>
-	<string>12610</string>
+	<string>102612</string>
 	<key>ITSAppUsesNonExemptEncryption</key>
 	<false/>
 	<key>LSApplicationCategoryType</key>
@@ -82,10 +82,8 @@
 		<string>fetch</string>
 		<string>remote-notification</string>
 	</array>
-	
-    <key>UILaunchStoryboardName</key>
+	<key>UILaunchStoryboardName</key>
 	<string>LaunchScreen-Betsson</string>
-    
 	<key>UIRequiredDeviceCapabilities</key>
 	<array>
 		<string>armv7</string>

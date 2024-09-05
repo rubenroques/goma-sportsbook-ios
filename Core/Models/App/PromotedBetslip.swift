@@ -33,15 +33,15 @@ struct SuggestedBetslipSelection: Codable, Hashable {
     var participants: [Participant]
     var sport: Sport?
     var odd: Double
-    
+
     var eventId: String
     var marketId: String
     var outcomeId: String
-    
+
     var eventName: String
     var marketName: String
     var outcomeName: String
-    
+
     init(id: String,
          location: Location? = nil,
          competitionName: String,

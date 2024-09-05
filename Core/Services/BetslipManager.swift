@@ -599,7 +599,7 @@ extension BetslipManager {
                                                            betSucceed: true,
                                                            totalPriceValue: totalPriceValue,
                                                            amount: placedBetEntry.totalStake,
-                                                           type: "multiple",
+                                                           type: betType,
                                                            maxWinning: placedBetEntry.potentialReturn,
                                                            selections: betslipPlaceEntries, 
                                                            betslipId: placedBetsResponse.identifier)

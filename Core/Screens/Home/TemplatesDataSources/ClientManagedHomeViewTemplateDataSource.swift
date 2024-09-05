@@ -822,12 +822,19 @@ extension ClientManagedHomeViewTemplateDataSource: HomeViewTemplateDataSource {
         let highlightsOutrightsMatchesIndex = index-self.highlightsVisualImageMatches.count
         
         if let match = self.highlightsVisualImageMatches[safe: index] {
-            let id = match.id + MatchWidgetType.topImage.rawValue
+            var type = MatchWidgetType.topImage
+            
+            if match.markets.first?.customBetAvailable ?? false {
+                type = .topImageWithMixMatch
+            }
+            
+            let id = match.id + type.rawValue
+            
             if let matchWidgetCellViewModel = self.matchWidgetCellViewModelCache[id] {
                 return matchWidgetCellViewModel
             }
             else {
-                let matchWidgetCellViewModel = MatchWidgetCellViewModel(match: match, matchWidgetType: .topImage)
+                let matchWidgetCellViewModel = MatchWidgetCellViewModel(match: match, matchWidgetType: type)
                 self.matchWidgetCellViewModelCache[id] = matchWidgetCellViewModel
                 return matchWidgetCellViewModel
             }

@@ -58,8 +58,8 @@
       <EnvironmentVariables>
          <EnvironmentVariable
             key = "TZ"
-            value = "CET"
-            isEnabled = "YES">
+            value = "Europe/Paris"
+            isEnabled = "NO">
          </EnvironmentVariable>
       </EnvironmentVariables>
    </LaunchAction>

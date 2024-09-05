@@ -921,11 +921,23 @@ extension OmegaAPIClient: Endpoint {
                 "username": username,
                 "password": password
             ]
+                        
+            let allowedCharacterSet = CharacterSet(charactersIn: "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789.-_")
+
+            let formBodyString = parameters.map { key, value in
+                let encodedKey = key.addingPercentEncoding(withAllowedCharacters: allowedCharacterSet) ?? key
+                let encodedValue = value.addingPercentEncoding(withAllowedCharacters: allowedCharacterSet) ?? value
+                return "\(encodedKey)=\(encodedValue)"
+            }.joined(separator: "&")
+            return formBodyString.data(using: String.Encoding.utf8)
             
-            let bodyString = parameters.map { "\($0.key)=\($0.value.addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed) ?? "")" }
-                .joined(separator: "&")
+//            let bodyString = 
+//            """
+//                {"username":"\(username)","password":"\(password)"}
+//            """
+//            
+//            return bodyString.data(using: String.Encoding.utf8) ?? Data()
             
-            return bodyString.data(using: String.Encoding.utf8) ?? Data()
         case .uploadUserDocument( _, _, let body, _):
             return body
 //        case .processDeposit(let sessionKey, let paymentMethod, let amount, let option):
@@ -976,14 +988,6 @@ extension OmegaAPIClient: Endpoint {
         default:
             return nil
         }
-        //return nil
-        /*
-         let body = """
-         {"type": "\(type)","text": "\(message)"}
-         """
-         let data = body.data(using: String.Encoding.utf8)!
-         return data
-         */
     }
     
     var requireSessionKey: Bool {
