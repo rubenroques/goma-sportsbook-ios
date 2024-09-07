@@ -291,9 +291,9 @@ class MatchWidgetCellViewModel {
     var currentCollectionPage: CurrentValueSubject<Int, Never> = .init(0)
     
     //
-    @Published private(set) var homeOldBoostedOddAttributedString: NSAttributedString = NSAttributedString(string: "-")
-    @Published private(set) var drawOldBoostedOddAttributedString: NSAttributedString = NSAttributedString(string: "-")
-    @Published private(set) var awayOldBoostedOddAttributedString: NSAttributedString = NSAttributedString(string: "-")
+    @Published private(set) var homeOldBoostedOddAttributedString: (String, NSAttributedString) = ("", NSAttributedString(string: "-"))
+    @Published private(set) var drawOldBoostedOddAttributedString: (String, NSAttributedString) = ("", NSAttributedString(string: "-"))
+    @Published private(set) var awayOldBoostedOddAttributedString: (String, NSAttributedString) = ("", NSAttributedString(string: "-"))
     
     @Published private(set) var matchWidgetStatus: MatchWidgetStatus = .unknown
     @Published private(set) var matchWidgetType: MatchWidgetType = .normal
@@ -477,36 +477,39 @@ extension MatchWidgetCellViewModel {
         } receiveValue: { [weak self] market, match in
 
             if let firstCurrentOutcomeName = match.markets.first?.outcomes[safe: 0]?.typeName.lowercased(),
-               let outcome = market.outcomes.first(where: { outcome in outcome.typeName.lowercased() == firstCurrentOutcomeName }) {
+               let outcome = market.outcomes.first(where: { outcome in outcome.typeName.lowercased() == firstCurrentOutcomeName }) 
+            {
                 let oddValue = OddFormatter.formatOdd(withValue: outcome.bettingOffer.decimalOdd)
                 let attributes = [NSAttributedString.Key.strikethroughStyle: NSUnderlineStyle.single.rawValue]
                 let attributedString = NSAttributedString(string: oddValue, attributes: attributes)
-                self?.homeOldBoostedOddAttributedString = attributedString
+                self?.homeOldBoostedOddAttributedString = (firstCurrentOutcomeName, attributedString)
             }
             else {
-                self?.homeOldBoostedOddAttributedString = NSAttributedString(string: "-")
+                self?.homeOldBoostedOddAttributedString = ("", NSAttributedString(string: "-"))
             }
             
             if let secondCurrentOutcomeName = match.markets.first?.outcomes[safe: 1]?.typeName.lowercased(),
-               let outcome = market.outcomes.first(where: { outcome in outcome.typeName.lowercased() == secondCurrentOutcomeName }) {
+               let outcome = market.outcomes.first(where: { outcome in outcome.typeName.lowercased() == secondCurrentOutcomeName }) 
+            {
                 let oddValue = OddFormatter.formatOdd(withValue: outcome.bettingOffer.decimalOdd)
                 let attributes = [NSAttributedString.Key.strikethroughStyle: NSUnderlineStyle.single.rawValue]
                 let attributedString = NSAttributedString(string: oddValue, attributes: attributes)
-                self?.drawOldBoostedOddAttributedString = attributedString
+                self?.drawOldBoostedOddAttributedString = (secondCurrentOutcomeName, attributedString)
             }
             else {
-                self?.drawOldBoostedOddAttributedString = NSAttributedString(string: "-")
+                self?.drawOldBoostedOddAttributedString = ("", NSAttributedString(string: "-"))
             }
             
             if let thirdCurrentOutcomeName = match.markets.first?.outcomes[safe: 2]?.typeName.lowercased(),
-               let outcome = market.outcomes.first(where: { outcome in outcome.typeName.lowercased() == thirdCurrentOutcomeName }) {
+               let outcome = market.outcomes.first(where: { outcome in outcome.typeName.lowercased() == thirdCurrentOutcomeName }) 
+            {
                 let oddValue = OddFormatter.formatOdd(withValue: outcome.bettingOffer.decimalOdd)
                 let attributes = [NSAttributedString.Key.strikethroughStyle: NSUnderlineStyle.single.rawValue]
                 let attributedString = NSAttributedString(string: oddValue, attributes: attributes)
-                self?.awayOldBoostedOddAttributedString = attributedString
+                self?.awayOldBoostedOddAttributedString = (thirdCurrentOutcomeName, attributedString)
             }
             else {
-                self?.awayOldBoostedOddAttributedString = NSAttributedString(string: "-")
+                self?.awayOldBoostedOddAttributedString = ("", NSAttributedString(string: "-"))
             }
         }
         .store(in: &self.cancellables)

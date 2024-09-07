@@ -47,6 +47,8 @@ extension UIColor {
 
         static let inputBackground = UIColor(named: "inputBackground")!
         static let inputBorderActive = UIColor(named: "inputBorderActive")!
+        static let inputBorderDisabled = UIColor(named: "inputBorderDisabled")!
+        static let inputBackgroundSecondary = UIColor(named: "inputBackgroundSecondary")!
         static let inputTextTitle = UIColor(named: "inputTextTitle")!
         static let inputText = UIColor(named: "inputText")!
         static let inputError = UIColor(named: "inputError")!

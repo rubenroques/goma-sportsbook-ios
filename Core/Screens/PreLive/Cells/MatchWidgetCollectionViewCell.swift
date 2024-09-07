@@ -22,7 +22,7 @@ class MatchWidgetCollectionViewCell: UICollectionViewCell {
     lazy var gradientBorderView: GradientBorderView = {
         var gradientBorderView = GradientBorderView()
         gradientBorderView.translatesAutoresizingMaskIntoConstraints = false
-        gradientBorderView.gradientBorderWidth = 1
+        gradientBorderView.gradientBorderWidth = 1.2
         gradientBorderView.gradientCornerRadius = 9
         
         gradientBorderView.gradientColors = [UIColor.App.cardBorderLineGradient1,
@@ -33,16 +33,16 @@ class MatchWidgetCollectionViewCell: UICollectionViewCell {
     }()
     
     lazy var liveGradientBorderView: GradientBorderView = {
-        var gradientBorderView = GradientBorderView()
-        gradientBorderView.translatesAutoresizingMaskIntoConstraints = false
-        gradientBorderView.gradientBorderWidth = 2
-        gradientBorderView.gradientCornerRadius = 9
+        var liveGradientBorderView = GradientBorderView()
+        liveGradientBorderView.translatesAutoresizingMaskIntoConstraints = false
+        liveGradientBorderView.gradientBorderWidth = 2.1
+        liveGradientBorderView.gradientCornerRadius = 9
         
-        gradientBorderView.gradientColors = [UIColor.App.liveBorderGradient3,
+        liveGradientBorderView.gradientColors = [UIColor.App.liveBorderGradient3,
                                              UIColor.App.liveBorderGradient2,
                                              UIColor.App.liveBorderGradient1]
         
-        return gradientBorderView
+        return liveGradientBorderView
     }()
     
     lazy var liveTipView: UIView = {
@@ -139,12 +139,128 @@ class MatchWidgetCollectionViewCell: UICollectionViewCell {
     // Boosted odds View
     private var boostedTopRightCornerBaseView = UIView()
     private var boostedTopRightCornerLabel = UILabel()
+    private var boostedTopRightCornerImageView = UIImageView()
+    private let boostedBackgroungImageView = UIImageView()
     
     // Market name view
     @IBOutlet private weak var marketNameView: UIView!
     @IBOutlet private weak var marketNameInnerView: UIView!
     @IBOutlet private weak var marketNameLabel: UILabel!
     
+    private var boostedOddBarView: UIView = {
+        var boostedOddBarView = UIView()
+        boostedOddBarView.backgroundColor = .clear
+        boostedOddBarView.translatesAutoresizingMaskIntoConstraints = false
+        return boostedOddBarView
+    }()
+    
+    private var boostedOddBarStackView: UIStackView = {
+        var boostedOddBarStackView = UIStackView()
+        boostedOddBarStackView.axis = .horizontal
+        boostedOddBarStackView.spacing = 8
+        boostedOddBarStackView.translatesAutoresizingMaskIntoConstraints = false
+        return boostedOddBarStackView
+    }()
+    
+    private var oldValueBoostedButtonContainerView: UIView = {
+        var oldValueBoostedButtonContainerView = UIView()
+        oldValueBoostedButtonContainerView.backgroundColor = .clear
+        oldValueBoostedButtonContainerView.translatesAutoresizingMaskIntoConstraints = false
+        return oldValueBoostedButtonContainerView
+    }()
+    
+    private var oldValueBoostedButtonView: UIView = {
+        var oldValueBoostedButtonView = UIView()
+        oldValueBoostedButtonView.backgroundColor = UIColor.App.inputBorderDisabled
+        oldValueBoostedButtonView.layer.borderColor = UIColor.App.inputBackgroundSecondary.cgColor
+        oldValueBoostedButtonView.layer.borderWidth = 1.2
+        oldValueBoostedButtonView.layer.cornerRadius = 4.5
+        oldValueBoostedButtonView.translatesAutoresizingMaskIntoConstraints = false
+        return oldValueBoostedButtonView
+    }()
+    
+    private var oldTitleBoostedOddLabel: UILabel = {
+        var label = UILabel()
+        label.font = AppFont.with(type: .bold, size: 8)
+        label.textAlignment = .center
+        label.translatesAutoresizingMaskIntoConstraints = false
+        label.textColor = UIColor.App.textSecondary
+        label.text = "Label"
+        return label
+    }()
+    
+    private var oldValueBoostedOddLabel: UILabel = {
+        var label = UILabel()
+        label.font = AppFont.with(type: .bold, size: 14)
+        label.textAlignment = .center
+        label.translatesAutoresizingMaskIntoConstraints = false
+        label.textColor = UIColor.App.textSecondary
+        label.text = "Label"
+        return label
+    }()
+    
+    private var arrowSpacerView: UIView = {
+        var arrowSpacerView = UIView()
+        arrowSpacerView.backgroundColor = .clear
+        arrowSpacerView.translatesAutoresizingMaskIntoConstraints = false
+        
+        let imageView = UIImageView(image: UIImage(named: "boosted_arrow_right"))
+        imageView.contentMode = .scaleAspectFit
+        imageView.translatesAutoresizingMaskIntoConstraints = false
+        
+        arrowSpacerView.addSubview(imageView)
+        
+        NSLayoutConstraint.activate([
+            imageView.centerXAnchor.constraint(equalTo: arrowSpacerView.centerXAnchor),
+            imageView.centerYAnchor.constraint(equalTo: arrowSpacerView.centerYAnchor),
+            imageView.widthAnchor.constraint(equalTo: arrowSpacerView.heightAnchor),
+            imageView.widthAnchor.constraint(equalToConstant: 19),
+        ])
+        return arrowSpacerView
+    }()
+    
+    private var newValueBoostedButtonContainerView: UIView = {
+        var newValueBoostedButtonContainerView = UIView()
+        newValueBoostedButtonContainerView.backgroundColor = .clear
+        newValueBoostedButtonContainerView.translatesAutoresizingMaskIntoConstraints = false
+        return newValueBoostedButtonContainerView
+    }()
+    
+    private var newValueBoostedButtonView: UIView = {
+        var newValueBoostedButtonView = UIView()
+        newValueBoostedButtonView.backgroundColor = UIColor.App.inputBackground
+        newValueBoostedButtonView.layer.borderColor = UIColor.App.highlightPrimary.cgColor
+        newValueBoostedButtonView.layer.borderWidth = 1.3
+        newValueBoostedButtonView.layer.cornerRadius = 4.5
+        newValueBoostedButtonView.translatesAutoresizingMaskIntoConstraints = false
+        return newValueBoostedButtonView
+    }()
+    
+    private var newTitleBoostedOddLabel: UILabel = {
+        var label = UILabel()
+        label.font = AppFont.with(type: .bold, size: 8)
+        label.textAlignment = .center
+        label.translatesAutoresizingMaskIntoConstraints = false
+        label.textColor = UIColor.App.textPrimary
+        label.text = "Label"
+        return label
+    }()
+    
+    private var newValueBoostedOddLabel: UILabel = {
+        var label = UILabel()
+        label.font = AppFont.with(type: .bold, size: 14)
+        label.textAlignment = .center
+        label.translatesAutoresizingMaskIntoConstraints = false
+        label.textColor = UIColor.App.textPrimary
+        label.text = "Label"
+        return label
+    }()
+    //
+    //
+
+    //
+    // =============================
+    //
     @IBOutlet private weak var homeBoostedOddValueBaseView: UIView!
     @IBOutlet private weak var homeNewBoostedOddValueLabel: UILabel!
     @IBOutlet private weak var homeBoostedOddArrowView: BoostedArrowView!
@@ -546,6 +662,7 @@ class MatchWidgetCollectionViewCell: UICollectionViewCell {
         self.favoritesButton.backgroundColor = .clear
         self.participantsBaseView.backgroundColor = .clear
         self.outrightNameBaseView.backgroundColor = .clear
+        
         self.oddsStackView.backgroundColor = .clear
         self.homeBaseView.backgroundColor = .clear
         self.drawBaseView.backgroundColor = .clear
@@ -782,6 +899,8 @@ class MatchWidgetCollectionViewCell: UICollectionViewCell {
         //
         self.createRedesignInterface()
         
+        self.setupBoostedOddBarView()
+        
         //
         self.adjustDesignToCardHeightStyle()
         self.setupWithTheme()
@@ -870,6 +989,12 @@ class MatchWidgetCollectionViewCell: UICollectionViewCell {
         self.homeServingIndicatorView.isHidden = true
         self.awayServingIndicatorView.isHidden = true
         
+        self.outrightNameBaseView.isHidden = true
+
+        // Old style for teams and scores
+        self.participantsBaseView.isHidden = true
+        self.marketNameView.isHidden = true
+
         return
         
         self.eventNameLabel.text = ""
@@ -897,7 +1022,6 @@ class MatchWidgetCollectionViewCell: UICollectionViewCell {
         
         self.outrightNameLabel.text = ""
         
-        
         self.matchTimeLabel.text = ""
         self.resultLabel.text = ""
         
@@ -912,7 +1036,6 @@ class MatchWidgetCollectionViewCell: UICollectionViewCell {
         
         self.dateLabel.isHidden = false
         self.timeLabel.isHidden = false
-        
         
         self.liveMatchDotBaseView.isHidden = true
         self.liveTipView.isHidden = true
@@ -1011,6 +1134,8 @@ class MatchWidgetCollectionViewCell: UICollectionViewCell {
                                                   UIColor.App.cardBorderLineGradient2,
                                                   UIColor.App.cardBorderLineGradient3]
         
+        self.contentRedesignBaseView.backgroundColor = .clear
+        
         //
         // Match Widget Type spec
         switch self.viewModel?.matchWidgetType ?? .normal {
@@ -1028,6 +1153,11 @@ class MatchWidgetCollectionViewCell: UICollectionViewCell {
             self.dateNewLabel.textColor = UIColor.App.textSecondary
             self.timeNewLabel.textColor = UIColor.App.textSecondary
             self.matchTimeStatusNewLabel.textColor = UIColor.App.buttonBackgroundPrimary
+            
+            self.topSeparatorAlphaLineView.isHidden = false
+            
+            self.oddsStackView.isHidden = false
+            self.boostedOddBarView.isHidden = true
             
             if isLeftOutcomeButtonSelected {
                 self.homeBaseView.backgroundColor = UIColor.App.buttonBackgroundPrimary
@@ -1086,6 +1216,11 @@ class MatchWidgetCollectionViewCell: UICollectionViewCell {
             self.timeNewLabel.textColor = UIColor.App.textPrimary
             self.matchTimeStatusNewLabel.textColor = UIColor.App.buttonBackgroundPrimary
             
+            self.topSeparatorAlphaLineView.isHidden = false
+            
+            self.oddsStackView.isHidden = false
+            self.boostedOddBarView.isHidden = true
+            
             if isLeftOutcomeButtonSelected {
                 self.homeBaseView.backgroundColor = UIColor.App.buttonBackgroundPrimary
                 self.homeOddTitleLabel.textColor = UIColor.App.buttonTextPrimary
@@ -1141,6 +1276,11 @@ class MatchWidgetCollectionViewCell: UICollectionViewCell {
             self.dateNewLabel.textColor = UIColor.App.textSecondary
             self.timeNewLabel.textColor = UIColor.App.textPrimary
             self.matchTimeStatusNewLabel.textColor = UIColor.App.buttonBackgroundPrimary
+            
+            self.topSeparatorAlphaLineView.isHidden = false
+            
+            self.oddsStackView.isHidden = true
+            self.boostedOddBarView.isHidden = false
             
             if isLeftOutcomeButtonSelected {
                 self.homeBoostedOddValueBaseView.backgroundColor = UIColor.App.highlightPrimary
@@ -1221,7 +1361,13 @@ class MatchWidgetCollectionViewCell: UICollectionViewCell {
             
             self.marketNameView.backgroundColor = .clear
             self.marketNameInnerView.backgroundColor = UIColor.App.highlightPrimary
-            self.marketNameLabel.textColor = UIColor.App.buttonTextPrimary
+            
+            self.topSeparatorAlphaLineView.isHidden = true
+            
+            self.contentRedesignBaseView.backgroundColor = .clear
+            
+            self.oddsStackView.isHidden = false
+            self.boostedOddBarView.isHidden = true
             
             if isLeftOutcomeButtonSelected {
                 self.homeBaseView.backgroundColor = UIColor.App.highlightPrimary
@@ -1265,17 +1411,16 @@ class MatchWidgetCollectionViewCell: UICollectionViewCell {
             self.drawOddValueLabel.textColor = UIColor.App.buttonTextPrimary
             self.awayOddTitleLabel.textColor = UIColor.App.buttonTextPrimary
             self.awayOddValueLabel.textColor = UIColor.App.buttonTextPrimary
-            
         }
         
         // Colors based of status
         switch self.viewModel?.matchWidgetStatus ?? .unknown {
         case .live:
             self.baseView.backgroundColor = UIColor.App.backgroundDrop
-            self.contentRedesignBaseView.backgroundColor = self.baseView.backgroundColor
+            // self.contentRedesignBaseView.backgroundColor = self.baseView.backgroundColor
         case .preLive:
             self.baseView.backgroundColor = UIColor.App.backgroundCards
-            self.contentRedesignBaseView.backgroundColor = self.baseView.backgroundColor
+            // self.contentRedesignBaseView.backgroundColor = self.baseView.backgroundColor
         case .unknown:
             break
         }
@@ -1287,7 +1432,7 @@ class MatchWidgetCollectionViewCell: UICollectionViewCell {
     private func adjustMarketNameView(isShown: Bool) {
         
         if isShown {
-            self.marketNameView.isHidden = false
+            // self.marketNameView.isHidden = false
             self.marketTopConstraint.constant = 8
             self.marketBottomConstraint.constant = -10
             self.marketHeightConstraint.constant = 15
@@ -1305,7 +1450,7 @@ class MatchWidgetCollectionViewCell: UICollectionViewCell {
             self.awayLeadingConstraint.constant = 20
         }
         else {
-            self.marketNameView.isHidden = true
+            // self.marketNameView.isHidden = true
             self.marketTopConstraint.constant = 0
             self.marketBottomConstraint.constant = 0
             self.marketHeightConstraint.constant = 0
@@ -1345,9 +1490,15 @@ class MatchWidgetCollectionViewCell: UICollectionViewCell {
         switch StyleHelper.cardsStyleActive() {
         case .small:
             self.contentRedesignBaseView.isHidden = true
+            self.participantsBaseView.isHidden = false
+            self.marketNameView.isHidden = false
+
             self.adjustDesignToSmallCardHeightStyle()
         case .normal:
             self.contentRedesignBaseView.isHidden = false
+            self.participantsBaseView.isHidden = true
+            self.marketNameView.isHidden = true
+            
             self.adjustDesignToNormalCardHeightStyle()
         }
         
@@ -1484,7 +1635,9 @@ class MatchWidgetCollectionViewCell: UICollectionViewCell {
             self.boostedTopRightCornerBaseView.isHidden = true
                         
             self.mainContentBaseView.isHidden = false
-            
+
+            self.outrightNameBaseView.isHidden = true
+
             self.baseView.layer.borderWidth = 0
             self.baseView.layer.borderColor = nil
             self.headerLineStackView.alpha = 1.0
@@ -1513,7 +1666,9 @@ class MatchWidgetCollectionViewCell: UICollectionViewCell {
             self.boostedTopRightCornerBaseView.isHidden = true
             
             self.mainContentBaseView.isHidden = false
-            
+
+            self.outrightNameBaseView.isHidden = true
+
             self.homeBoostedOddValueBaseView.isHidden = true
             self.drawBoostedOddValueBaseView.isHidden = true
             self.awayBoostedOddValueBaseView.isHidden = true
@@ -1559,7 +1714,9 @@ class MatchWidgetCollectionViewCell: UICollectionViewCell {
             self.boostedTopRightCornerBaseView.isHidden = false
             
             self.mainContentBaseView.isHidden = false
-            
+
+            self.outrightNameBaseView.isHidden = true
+
             self.homeBoostedOddValueBaseView.isHidden = false
             self.drawBoostedOddValueBaseView.isHidden = false
             self.awayBoostedOddValueBaseView.isHidden = false
@@ -1579,6 +1736,8 @@ class MatchWidgetCollectionViewCell: UICollectionViewCell {
             self.boostedTopRightCornerBaseView.isHidden = true
             
             self.mainContentBaseView.isHidden = false
+            
+            self.outrightNameBaseView.isHidden = true
             
             self.homeBoostedOddValueBaseView.isHidden = true
             self.drawBoostedOddValueBaseView.isHidden = true
@@ -1628,7 +1787,7 @@ extension MatchWidgetCollectionViewCell {
             .receive(on: DispatchQueue.main)
             .sink { [weak self] matchWidgetStatus, matchWidgetType in
                 switch matchWidgetType {
-                case .normal, .boosted:
+                case .normal, .boosted, .topImage, .topImageWithMixMatch:
                     if matchWidgetStatus == .live {
                         self?.gradientBorderView.isHidden = true
                         self?.liveGradientBorderView.isHidden = false
@@ -1637,7 +1796,7 @@ extension MatchWidgetCollectionViewCell {
                         self?.gradientBorderView.isHidden = false
                         self?.liveGradientBorderView.isHidden = true
                     }
-                case .topImage, .topImageWithMixMatch, .backgroundImage, .topImageOutright:
+                case .backgroundImage, .topImageOutright:
                     self?.gradientBorderView.isHidden = true
                     self?.liveGradientBorderView.isHidden = true
                 }
@@ -1734,25 +1893,51 @@ extension MatchWidgetCollectionViewCell {
                 self?.timeNewLabel.text = startTimeString
             }
             .store(in: &self.cancellables)
-        
-        viewModel.$homeOldBoostedOddAttributedString
+
+        Publishers.CombineLatest4(
+            viewModel.$homeOldBoostedOddAttributedString,
+            viewModel.$drawOldBoostedOddAttributedString,
+            viewModel.$drawOldBoostedOddAttributedString,
+            viewModel.defaultMarketPublisher)
             .receive(on: DispatchQueue.main)
-            .sink { [weak self] newValue in
-                self?.homeOldBoostedOddValueLabel.attributedText = newValue
-            }
-            .store(in: &self.cancellables)
-        
-        viewModel.$drawOldBoostedOddAttributedString
-            .receive(on: DispatchQueue.main)
-            .sink { [weak self] newValue in
-                self?.drawOldBoostedOddValueLabel.attributedText = newValue
-            }
-            .store(in: &self.cancellables)
-        
-        viewModel.$awayOldBoostedOddAttributedString
-            .receive(on: DispatchQueue.main)
-            .sink { [weak self] newValue in
-                self?.awayOldBoostedOddValueLabel.attributedText = newValue
+            .sink { [weak self] homeArgs, drawArgs, awayArgs, defaultMarketPublisher in
+                
+                let (homeType, homeOldValue) = homeArgs
+                let (drawType, drawOldValue) = drawArgs
+                let (awayType, awayOldValue) = awayArgs
+                                 
+                self?.homeOldBoostedOddValueLabel.attributedText = homeOldValue
+                self?.drawOldBoostedOddValueLabel.attributedText = drawOldValue
+                self?.awayOldBoostedOddValueLabel.attributedText = awayOldValue
+                
+                var outcomeType = "" // We need to get the type of the boosted outcome (it should be just one)
+                var oldValueString = NSAttributedString(string: "")
+                
+                if homeType != "" {
+                    outcomeType = homeType
+                    oldValueString = homeOldValue
+                } else if drawType != "" {
+                    outcomeType = drawType
+                    oldValueString = drawOldValue
+                } else if awayType != "" {
+                    outcomeType = awayType
+                    oldValueString = awayOldValue
+                }
+                
+                var newValueString = ""
+                var buttonsTitle = ""
+                
+                for outcome in defaultMarketPublisher?.outcomes ?? [] {
+                    if outcome.typeName.lowercased() == outcomeType {
+                        buttonsTitle = outcome.typeName
+                        newValueString = OddFormatter.formatOdd(withValue: outcome.bettingOffer.decimalOdd)
+                    }
+                }
+                
+                self?.oldTitleBoostedOddLabel.text = buttonsTitle // same title for both old and new
+                self?.newTitleBoostedOddLabel.text = buttonsTitle //
+                self?.oldValueBoostedOddLabel.attributedText = oldValueString // The new odd, from the market outcome
+                self?.newValueBoostedOddLabel.text = newValueString // The old odd from the old market subscriber
             }
             .store(in: &self.cancellables)
         
@@ -1827,7 +2012,13 @@ extension MatchWidgetCollectionViewCell {
                 if let market = defaultMarket {
                     // Setup outcome buttons
                     self?.oddsStackView.alpha = 1.0
-                    self?.configureOutcomes(withMarket: market)
+                    
+                    if viewModel.matchWidgetType == .boosted {
+                        self?.configureBoostedOutcome(withMarket: market)
+                    }
+                    else {
+                        self?.configureOutcomes(withMarket: market)
+                    }
                     
                     if isAvailable {
                         self?.showMarketButtons()
@@ -1866,6 +2057,9 @@ extension MatchWidgetCollectionViewCell {
             if matchWidgetType == .normal && matchWidgetStatus == .live && defaultMarket != nil {
                 self?.marketNamePillLabelView.isHidden = false
             }
+            else if matchWidgetType == .boosted {
+                self?.marketNamePillLabelView.isHidden = false
+            }
             else {
                 self?.marketNamePillLabelView.isHidden = true
             }
@@ -1894,7 +2088,15 @@ extension MatchWidgetCollectionViewCell {
             }
             .store(in: &self.cancellables)
         
+    }
+    
+    private func configureBoostedOutcome(withMarket market: Market) {
         
+        self.boostedOddBarView.isHidden = false
+        
+        self.homeBaseView.isHidden = true
+        self.drawBaseView.isHidden = true
+        self.awayBaseView.isHidden = true
         
     }
     
@@ -2112,9 +2314,13 @@ extension MatchWidgetCollectionViewCell {
                         weakSelf.setAwayOddValueLabel(toText: OddFormatter.formatOdd(withValue: newOddValue))
                     }
                 })
-            
         }
         
+        // boostedOdds uses a different style of outcome buttons
+        // old_odd >> new_odd
+        self.boostedOddBarView.isHidden = true
+        
+        //
         if market.outcomes.count == 3 {
             self.homeBaseView.isHidden = false
             self.drawBaseView.isHidden = false
@@ -2338,7 +2544,6 @@ extension MatchWidgetCollectionViewCell {
 
         // Triggers function only once instead of rapid fire event
         if sender.state == .began {
-
             guard
                 let match = self.viewModel?.match,
                 let market = match.markets.first,
@@ -2346,9 +2551,7 @@ extension MatchWidgetCollectionViewCell {
             else {
                 return
             }
-
             let bettingTicket = BettingTicket(match: match, market: market, outcome: outcome)
-
             self.didLongPressOdd?(bettingTicket)
         }
     }
@@ -2597,41 +2800,46 @@ extension MatchWidgetCollectionViewCell {
         self.boostedTopRightCornerBaseView.translatesAutoresizingMaskIntoConstraints = false
         self.boostedTopRightCornerBaseView.backgroundColor = .clear
 
-        self.boostedTopRightCornerLabel.translatesAutoresizingMaskIntoConstraints = false
-        self.boostedTopRightCornerLabel.backgroundColor = .clear
-//        self.boostedTopRightCornerLabel.text = "BOOSTED\nODDS"
-        self.boostedTopRightCornerLabel.text = "COTE\nBOOSTÉE"
-        self.boostedTopRightCornerLabel.font = AppFont.with(type: .bold, size: 10)
+        self.boostedTopRightCornerImageView.image = UIImage(named: "cote_boosteed_icon")
+        self.boostedTopRightCornerImageView.contentMode = .scaleAspectFit
+        self.boostedTopRightCornerImageView.translatesAutoresizingMaskIntoConstraints = false
         
-        self.boostedTopRightCornerLabel.adjustsFontSizeToFitWidth = true
-        self.boostedTopRightCornerLabel.textAlignment = .left
-        self.boostedTopRightCornerLabel.numberOfLines = 2
-        self.boostedTopRightCornerLabel.textColor = UIColor.App.textPrimary
-
-        let boostedTitleArrowView = BoostedArrowView()
-        boostedTitleArrowView.translatesAutoresizingMaskIntoConstraints = false
-        boostedTitleArrowView.isReversed = true
-
-        self.boostedTopRightCornerBaseView.addSubview(self.boostedTopRightCornerLabel)
-        self.boostedTopRightCornerBaseView.addSubview(boostedTitleArrowView)
-
+        self.boostedTopRightCornerBaseView.addSubview(self.boostedTopRightCornerImageView)
         self.baseView.addSubview(self.boostedTopRightCornerBaseView)
 
+        self.boostedBackgroungImageView.translatesAutoresizingMaskIntoConstraints = false
+        self.boostedBackgroungImageView.backgroundColor = .green
+        self.boostedBackgroungImageView.contentMode = .scaleAspectFill
+        self.boostedBackgroungImageView.image = UIImage(named: "boosted_card_background")
+        
+        self.baseView.insertSubview(self.boostedBackgroungImageView, at: 0)
+        
         NSLayoutConstraint.activate([
-            boostedTitleArrowView.widthAnchor.constraint(equalToConstant: 21),
-            boostedTitleArrowView.heightAnchor.constraint(equalToConstant: 18),
-            boostedTitleArrowView.leadingAnchor.constraint(equalTo: self.boostedTopRightCornerBaseView.leadingAnchor),
-            boostedTitleArrowView.topAnchor.constraint(equalTo: self.boostedTopRightCornerBaseView.topAnchor, constant: 2),
-            boostedTitleArrowView.bottomAnchor.constraint(equalTo: self.boostedTopRightCornerBaseView.bottomAnchor, constant: -2),
+//            boostedTitleArrowView.widthAnchor.constraint(equalToConstant: 21),
+//            boostedTitleArrowView.heightAnchor.constraint(equalToConstant: 18),
+//            boostedTitleArrowView.leadingAnchor.constraint(equalTo: self.boostedTopRightCornerBaseView.leadingAnchor),
+//            boostedTitleArrowView.topAnchor.constraint(equalTo: self.boostedTopRightCornerBaseView.topAnchor, constant: 2),
+//            boostedTitleArrowView.bottomAnchor.constraint(equalTo: self.boostedTopRightCornerBaseView.bottomAnchor, constant: -2),
+//
+//            self.boostedTopRightCornerLabel.leadingAnchor.constraint(equalTo: boostedTitleArrowView.trailingAnchor, constant: 2),
+//            self.boostedTopRightCornerLabel.trailingAnchor.constraint(equalTo: self.boostedTopRightCornerBaseView.trailingAnchor),
+//            self.boostedTopRightCornerLabel.topAnchor.constraint(equalTo: self.boostedTopRightCornerBaseView.topAnchor),
+//            self.boostedTopRightCornerLabel.bottomAnchor.constraint(equalTo: self.boostedTopRightCornerBaseView.bottomAnchor),
+//            self.boostedTopRightCornerLabel.widthAnchor.constraint(equalToConstant: 56),
 
-            self.boostedTopRightCornerLabel.leadingAnchor.constraint(equalTo: boostedTitleArrowView.trailingAnchor, constant: 2),
-            self.boostedTopRightCornerLabel.trailingAnchor.constraint(equalTo: self.boostedTopRightCornerBaseView.trailingAnchor),
-            self.boostedTopRightCornerLabel.topAnchor.constraint(equalTo: self.boostedTopRightCornerBaseView.topAnchor),
-            self.boostedTopRightCornerLabel.bottomAnchor.constraint(equalTo: self.boostedTopRightCornerBaseView.bottomAnchor),
-            self.boostedTopRightCornerLabel.widthAnchor.constraint(equalToConstant: 56),
-
-            self.boostedTopRightCornerBaseView.topAnchor.constraint(equalTo: self.baseView.topAnchor, constant: 8),
-            self.boostedTopRightCornerBaseView.trailingAnchor.constraint(equalTo: self.baseView.trailingAnchor, constant: 0),
+            self.boostedTopRightCornerImageView.topAnchor.constraint(equalTo: self.boostedTopRightCornerBaseView.topAnchor),
+            self.boostedTopRightCornerImageView.trailingAnchor.constraint(equalTo: self.boostedTopRightCornerBaseView.trailingAnchor),
+            self.boostedTopRightCornerImageView.widthAnchor.constraint(equalTo: self.boostedTopRightCornerImageView.heightAnchor, multiplier: (134.0/34.0) ),
+            
+            self.boostedTopRightCornerImageView.heightAnchor.constraint(equalToConstant: 24),
+            
+            self.boostedBackgroungImageView.leadingAnchor.constraint(equalTo: self.baseView.leadingAnchor),
+            self.boostedBackgroungImageView.trailingAnchor.constraint(equalTo: self.baseView.trailingAnchor),
+            self.boostedBackgroungImageView.topAnchor.constraint(equalTo: self.baseView.topAnchor),
+            self.boostedBackgroungImageView.bottomAnchor.constraint(equalTo: self.baseView.bottomAnchor),
+            
+            self.boostedTopRightCornerBaseView.topAnchor.constraint(equalTo: self.baseView.topAnchor, constant: 6),
+            self.boostedTopRightCornerBaseView.trailingAnchor.constraint(equalTo: self.baseView.trailingAnchor, constant: -7),
         ])
 
     }
@@ -2640,8 +2848,75 @@ extension MatchWidgetCollectionViewCell {
 
 extension MatchWidgetCollectionViewCell {
     
-    func createRedesignInterface() {
+    func setupBoostedOddBarView() {
         
+        self.oldValueBoostedButtonView.addSubview(self.oldValueBoostedOddLabel)
+        self.oldValueBoostedButtonView.addSubview(self.oldTitleBoostedOddLabel)
+
+        self.oldValueBoostedButtonContainerView.addSubview(self.oldValueBoostedButtonView)
+        
+        self.newValueBoostedButtonView.addSubview(self.newValueBoostedOddLabel)
+        self.newValueBoostedButtonView.addSubview(self.newTitleBoostedOddLabel)
+
+        self.newValueBoostedButtonContainerView.addSubview(self.newValueBoostedButtonView)
+        
+        self.boostedOddBarStackView.addArrangedSubview(self.oldValueBoostedButtonContainerView)
+        self.boostedOddBarStackView.addArrangedSubview(self.arrowSpacerView)
+        self.boostedOddBarStackView.addArrangedSubview(self.newValueBoostedButtonContainerView)
+        
+        self.boostedOddBarView.addSubview(self.boostedOddBarStackView)
+        
+        self.mainContentBaseView.addSubview(self.boostedOddBarView)
+        
+        NSLayoutConstraint.activate([
+            
+            self.oldTitleBoostedOddLabel.leadingAnchor.constraint(equalTo: self.oldValueBoostedButtonView.leadingAnchor, constant: 3),
+            self.oldTitleBoostedOddLabel.trailingAnchor.constraint(equalTo: self.oldValueBoostedButtonView.trailingAnchor, constant: -3),
+            self.oldTitleBoostedOddLabel.topAnchor.constraint(equalTo: self.oldValueBoostedButtonView.topAnchor, constant: 6),
+            self.oldTitleBoostedOddLabel.heightAnchor.constraint(equalToConstant: 9),
+            
+            self.oldValueBoostedOddLabel.leadingAnchor.constraint(equalTo: self.oldValueBoostedButtonView.leadingAnchor, constant: 3),
+            self.oldValueBoostedOddLabel.trailingAnchor.constraint(equalTo: self.oldValueBoostedButtonView.trailingAnchor, constant: 3),
+            self.oldValueBoostedOddLabel.bottomAnchor.constraint(equalTo: self.oldValueBoostedButtonView.bottomAnchor, constant: -6),
+            self.oldValueBoostedOddLabel.heightAnchor.constraint(equalToConstant: 15),
+            
+            self.oldValueBoostedButtonView.leadingAnchor.constraint(equalTo: self.oldValueBoostedButtonContainerView.leadingAnchor),
+            self.oldValueBoostedButtonView.trailingAnchor.constraint(equalTo: self.oldValueBoostedButtonContainerView.trailingAnchor),
+            self.oldValueBoostedButtonView.topAnchor.constraint(equalTo: self.oldValueBoostedButtonContainerView.topAnchor),
+            self.oldValueBoostedButtonView.bottomAnchor.constraint(equalTo: self.oldValueBoostedButtonContainerView.bottomAnchor),
+            
+            self.newTitleBoostedOddLabel.leadingAnchor.constraint(equalTo: self.newValueBoostedButtonView.leadingAnchor, constant: 3),
+            self.newTitleBoostedOddLabel.trailingAnchor.constraint(equalTo: self.newValueBoostedButtonView.trailingAnchor, constant: -3),
+            self.newTitleBoostedOddLabel.topAnchor.constraint(equalTo: self.newValueBoostedButtonView.topAnchor, constant: 6),
+            self.newTitleBoostedOddLabel.heightAnchor.constraint(equalToConstant: 9),
+            
+            self.newValueBoostedOddLabel.leadingAnchor.constraint(equalTo: self.newValueBoostedButtonView.leadingAnchor, constant: 3),
+            self.newValueBoostedOddLabel.trailingAnchor.constraint(equalTo: self.newValueBoostedButtonView.trailingAnchor, constant: 3),
+            self.newValueBoostedOddLabel.bottomAnchor.constraint(equalTo: self.newValueBoostedButtonView.bottomAnchor, constant: -6),
+            self.newValueBoostedOddLabel.heightAnchor.constraint(equalToConstant: 15),
+            
+            self.newValueBoostedButtonView.leadingAnchor.constraint(equalTo: self.newValueBoostedButtonContainerView.leadingAnchor),
+            self.newValueBoostedButtonView.trailingAnchor.constraint(equalTo: self.newValueBoostedButtonContainerView.trailingAnchor),
+            self.newValueBoostedButtonView.topAnchor.constraint(equalTo: self.newValueBoostedButtonContainerView.topAnchor),
+            self.newValueBoostedButtonView.bottomAnchor.constraint(equalTo: self.newValueBoostedButtonContainerView.bottomAnchor),
+            
+            self.boostedOddBarView.leadingAnchor.constraint(equalTo: self.oddsStackView.leadingAnchor),
+            self.boostedOddBarView.trailingAnchor.constraint(equalTo: self.oddsStackView.trailingAnchor),
+            self.boostedOddBarView.topAnchor.constraint(equalTo: self.oddsStackView.topAnchor),
+            self.boostedOddBarView.bottomAnchor.constraint(equalTo: self.oddsStackView.bottomAnchor),
+            
+            self.arrowSpacerView.widthAnchor.constraint(equalTo: self.boostedOddBarStackView.heightAnchor),
+            
+            self.oldValueBoostedButtonContainerView.widthAnchor.constraint(equalTo: self.newValueBoostedButtonContainerView.widthAnchor),
+            
+            self.boostedOddBarStackView.leadingAnchor.constraint(equalTo: self.boostedOddBarView.leadingAnchor),
+            self.boostedOddBarStackView.trailingAnchor.constraint(equalTo: self.boostedOddBarView.trailingAnchor),
+            self.boostedOddBarStackView.topAnchor.constraint(equalTo: self.boostedOddBarView.topAnchor),
+            self.boostedOddBarStackView.bottomAnchor.constraint(equalTo: self.boostedOddBarView.bottomAnchor),
+        ])
+    }
+    
+    func createRedesignInterface() {
         self.contentRedesignBaseView.backgroundColor = UIColor.App.backgroundCards
                 
         self.topSeparatorAlphaLineView.backgroundColor = UIColor.App.highlightPrimary

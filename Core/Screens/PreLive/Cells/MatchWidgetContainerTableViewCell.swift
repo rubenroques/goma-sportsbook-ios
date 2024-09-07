@@ -8,6 +8,65 @@
 import Foundation
 import UIKit
 
+class MatchWidgetContainerTableViewModel {
+    
+    static let topMargin: CGFloat = 10.0
+    static let leftMargin: CGFloat = 18.0
+    
+    var cardsViewModels: [MatchWidgetCellViewModel] = []
+    
+    init(cardsViewModels: [MatchWidgetCellViewModel]) {
+        self.cardsViewModels = cardsViewModels
+    }
+    
+    init(singleCardsViewModel: MatchWidgetCellViewModel) {
+        self.cardsViewModels = [singleCardsViewModel]
+    }
+    
+    var matchWidgetType: MatchWidgetType {
+        return cardsViewModels.first?.matchWidgetType ?? MatchWidgetType.normal
+    }
+    
+    var numberOfCells: Int {
+        return self.cardsViewModels.count
+    }
+    
+    var isScrollEnabled: Bool {
+        return self.numberOfCells > 1
+    }
+    
+    func maxHeightForInnerCards() -> CGFloat {
+        var maxHeight = 0.0
+        for type in cardsViewModels.map(\.matchWidgetType) {
+            maxHeight = self.heightFor(matchWidgetType: type)
+        }
+        return CGFloat(maxHeight)
+    }
+    
+    func heightForItem(atIndex index: Int) -> CGFloat {
+        guard 
+            let type = self.cardsViewModels[safe: index]?.matchWidgetType
+        else {
+            return 0.0
+        }
+        return self.heightFor(matchWidgetType: type) - (Self.topMargin * 2)
+    }
+    
+    private func heightFor(matchWidgetType type: MatchWidgetType) -> CGFloat {
+        switch type {
+        case .normal, .backgroundImage:
+            return 152.0
+        case .topImage, .topImageOutright:
+            return 270.0
+        case .topImageWithMixMatch:
+            return 300.0
+        case .boosted:
+            return 190.0
+        }
+    }
+    
+}
+
 class MatchWidgetContainerTableViewCell: UITableViewCell {
 
     var tappedMatchLineAction: ((Match) -> Void) = { _ in }
@@ -22,7 +81,7 @@ class MatchWidgetContainerTableViewCell: UITableViewCell {
 
     private var collectionViewHeightConstraint: NSLayoutConstraint?
 
-    private var viewModel: MatchWidgetCellViewModel?
+    private var viewModel: MatchWidgetContainerTableViewModel?
 
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
@@ -61,21 +120,13 @@ class MatchWidgetContainerTableViewCell: UITableViewCell {
         self.baseView.backgroundColor = .clear
     }
 
-    func setupWithViewModel(_ viewModel: MatchWidgetCellViewModel) {
+    func setupWithViewModel(_ viewModel: MatchWidgetContainerTableViewModel) {
 
         self.viewModel = viewModel
         
-        switch viewModel.matchWidgetType {
-        case .normal, .backgroundImage:
-            self.collectionViewHeightConstraint?.constant = 145
-        case .topImage, .topImageOutright:
-            self.collectionViewHeightConstraint?.constant = 254
-        case .topImageWithMixMatch:
-            self.collectionViewHeightConstraint?.constant = 310
-        case .boosted:
-            self.collectionViewHeightConstraint?.constant = 160
-        }
-      
+        self.collectionViewHeightConstraint?.constant = viewModel.maxHeightForInnerCards()
+        self.collectionView.isScrollEnabled = viewModel.isScrollEnabled
+        
         self.setNeedsLayout()
         self.collectionView.reloadData()
     }
@@ -89,8 +140,8 @@ extension MatchWidgetContainerTableViewCell: UICollectionViewDelegate, UICollect
     }
 
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        guard self.viewModel != nil else { return 0 }
-        return 1
+        guard let viewModel = self.viewModel else { return 0 }
+        return viewModel.numberOfCells
     }
 
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
@@ -100,15 +151,16 @@ extension MatchWidgetContainerTableViewCell: UICollectionViewDelegate, UICollect
         }
 
         // Create the identifier based on the cell type
-        let cellIdentifier = MatchWidgetCollectionViewCell.identifier+viewModel.matchWidgetType.rawValue
+        let cellIdentifier = MatchWidgetCollectionViewCell.identifier + viewModel.matchWidgetType.rawValue
 
         guard
-            let cell = collectionView.dequeueReusableCell(withReuseIdentifier: cellIdentifier, for: indexPath) as? MatchWidgetCollectionViewCell
+            let cell = collectionView.dequeueReusableCell(withReuseIdentifier: cellIdentifier, for: indexPath) as? MatchWidgetCollectionViewCell,
+            let cardsViewModel = viewModel.cardsViewModels[safe: indexPath.row]
         else {
             fatalError()
         }
 
-        cell.configure(withViewModel: viewModel)
+        cell.configure(withViewModel: cardsViewModel)
 
         cell.tappedMatchWidgetAction = { match in
             self.tappedMatchLineAction(match)
@@ -133,16 +185,20 @@ extension MatchWidgetContainerTableViewCell: UICollectionViewDelegate, UICollect
     func collectionView(_ collectionView: UICollectionView,
                         layout collectionViewLayout: UICollectionViewLayout,
                         sizeForItemAt indexPath: IndexPath) -> CGSize {
-        let topMargin: CGFloat = 10.0
-        let leftMargin: CGFloat = 18.0
-        return CGSize(width: collectionView.frame.size.width - (leftMargin * 2.0),
-                      height: collectionView.frame.size.height - (topMargin * 2.0))
+
+        let heightForitem = self.viewModel?.heightForItem(atIndex: indexPath.row) ?? 0.0
+        
+        return CGSize(width: collectionView.frame.size.width - (MatchWidgetContainerTableViewModel.leftMargin * 2.0),
+                      height: heightForitem)
     }
 
     func collectionView(_ collectionView: UICollectionView,
                         layout collectionViewLayout: UICollectionViewLayout,
                         insetForSectionAt section: Int) -> UIEdgeInsets {
-        return UIEdgeInsets(top: 10, left: 18, bottom: 10, right: 18)
+        return UIEdgeInsets(top: MatchWidgetContainerTableViewModel.topMargin,
+                            left: MatchWidgetContainerTableViewModel.leftMargin,
+                            bottom: MatchWidgetContainerTableViewModel.topMargin,
+                            right: MatchWidgetContainerTableViewModel.leftMargin)
     }
 
 }
@@ -165,11 +221,13 @@ extension MatchWidgetContainerTableViewCell {
         collectionView.isScrollEnabled = false
         collectionView.translatesAutoresizingMaskIntoConstraints = false
 
-        collectionView.register(MatchWidgetCollectionViewCell.nib, forCellWithReuseIdentifier: MatchWidgetCollectionViewCell.identifier)
+        collectionView.register(MatchWidgetCollectionViewCell.nib, 
+                                forCellWithReuseIdentifier: MatchWidgetCollectionViewCell.identifier)
 
         for matchWidgetType in MatchWidgetType.allCases {
             // Register a cell for each cell type to avoid glitches in the redrawing
-            collectionView.register(MatchWidgetCollectionViewCell.nib, forCellWithReuseIdentifier: MatchWidgetCollectionViewCell.identifier+matchWidgetType.rawValue)
+            collectionView.register(MatchWidgetCollectionViewCell.nib, 
+                                    forCellWithReuseIdentifier: MatchWidgetCollectionViewCell.identifier+matchWidgetType.rawValue)
         }
 
         return collectionView

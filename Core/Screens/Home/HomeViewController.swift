@@ -1042,7 +1042,7 @@ extension HomeViewController: UITableViewDelegate, UITableViewDataSource {
         case .highlightedMatches:
 
             guard
-                let viewModel = self.viewModel.highlightedMatchViewModel(forIndex: indexPath.row)
+                let viewModel = self.viewModel.highlightedMatchViewModel(forSection: indexPath.section, forIndex: indexPath.row)
             else {
                 return UITableViewCell()
             }
@@ -1266,16 +1266,8 @@ extension HomeViewController: UITableViewDelegate, UITableViewDataSource {
             
             return UITableView.automaticDimension
         case .highlightedMatches:
-            if let viewModel = self.viewModel.highlightedMatchViewModel(forIndex: indexPath.row) {
-                let matchWidgetType = viewModel.matchWidgetType
-                switch matchWidgetType {
-                case .topImage, .topImageOutright:
-                    return 262
-                case .topImageWithMixMatch:
-                    return 300
-                default:
-                    return 164
-                }
+            if let viewModel = self.viewModel.highlightedMatchViewModel(forSection: indexPath.section, forIndex: indexPath.row) {
+                return viewModel.maxHeightForInnerCards()
             }
             return UITableView.automaticDimension
         case .promotionalStories:
@@ -1351,16 +1343,8 @@ extension HomeViewController: UITableViewDelegate, UITableViewDataSource {
         case .topCompetitionsShortcuts:
             return 124
         case .highlightedMatches:
-            if let viewModel = self.viewModel.highlightedMatchViewModel(forIndex: indexPath.row) {
-                let matchWidgetType = viewModel.matchWidgetType
-                switch matchWidgetType {
-                case .topImage, .topImageOutright:
-                    return 262
-                case .topImageWithMixMatch:
-                    return 300
-                default:
-                    return 164
-                }
+            if let viewModel = self.viewModel.highlightedMatchViewModel(forSection: indexPath.section, forIndex: indexPath.row) {
+                return viewModel.maxHeightForInnerCards()
             }
             return 234
         case .promotionalStories:

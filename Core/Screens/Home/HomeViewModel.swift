@@ -170,8 +170,8 @@ extension HomeViewModel {
         return self.homeViewTemplateDataSource.quickSwipeStackViewModel()
     }
 
-    func highlightedMatchViewModel(forIndex index: Int) -> MatchWidgetCellViewModel? {
-        return self.homeViewTemplateDataSource.highlightedMatchViewModel(forIndex: index)
+    func highlightedMatchViewModel(forSection section: Int, forIndex index: Int) -> MatchWidgetContainerTableViewModel? {
+        return self.homeViewTemplateDataSource.highlightedMatchViewModel(forSection: section, forIndex: index)
     }
 
     func highlightedLiveMatchLineTableCellViewModel(forSection section: Int, forIndex index: Int) -> MatchLineTableCellViewModel? {
