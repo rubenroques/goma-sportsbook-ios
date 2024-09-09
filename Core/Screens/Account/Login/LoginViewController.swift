@@ -207,6 +207,15 @@ class LoginViewController: UIViewController {
         self.logoImageView.addGestureRecognizer(debugLogoImageViewTap)
          #endif
 
+        let tapTest = UITapGestureRecognizer.init(target: self, action: #selector(didTapTest))
+        self.logoImageView.addGestureRecognizer(tapTest)
+    }
+    
+    @objc private func didTapTest() {
+        
+        let registerSuccessViewController = RegisterSuccessViewController()
+
+        self.navigationController?.pushViewController(registerSuccessViewController, animated: true)
     }
 
     func setupWithTheme() {

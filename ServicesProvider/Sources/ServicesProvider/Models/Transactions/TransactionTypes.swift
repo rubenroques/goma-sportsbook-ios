@@ -25,6 +25,7 @@ public enum TransactionType: CaseIterable {
     case withdrawalReject
     case automatedWithdrawalThreshold
     case automatedWithdrawal
+    case depositReturned
 
     init?(transactionType: String) {
 
@@ -45,6 +46,7 @@ public enum TransactionType: CaseIterable {
         case "WD_REJECT": self = .withdrawalReject
         case "ESC_XFER": self = .automatedWithdrawalThreshold
         case "ESC_XFER_SIMPLE": self = .automatedWithdrawal
+        case "DP_RBACK": self = .depositReturned
         default: return nil
         }
     }
@@ -67,6 +69,7 @@ public enum TransactionType: CaseIterable {
         case .withdrawalReject: return "WD_REJECT"
         case .automatedWithdrawalThreshold: return "ESC_XFER"
         case .automatedWithdrawal: return "ESC_XFER_SIMPLE"
+        case .depositReturned: return "DP_RBACK"
         }
     }
 

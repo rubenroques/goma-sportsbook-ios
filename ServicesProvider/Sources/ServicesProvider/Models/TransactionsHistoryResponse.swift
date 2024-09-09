@@ -36,8 +36,11 @@ public struct TransactionDetail {
     public var paymentId: Int?
     public var gameTranId: String?
     public var reference: String?
+    public var escrowTranType: String?
+    public var escrowTranSubType: String?
+    public var escrowType: String?
 
-    public init(id: Int, dateTime: String, type: TransactionType? = nil, amount: Double, postBalance: Double, amountBonus: Double, postBalanceBonus: Double, currency: String, paymentId: Int?, gameTranId: String?, reference: String?) {
+    public init(id: Int, dateTime: String, type: TransactionType? = nil, amount: Double, postBalance: Double, amountBonus: Double, postBalanceBonus: Double, currency: String, paymentId: Int?, gameTranId: String?, reference: String?, escrowTranType: String?, escrowTranSubType: String?, escrowType: String?) {
         self.id = id
         self.dateTime = dateTime
         self.type = type
@@ -49,6 +52,9 @@ public struct TransactionDetail {
         self.paymentId = paymentId
         self.gameTranId = gameTranId
         self.reference = reference
+        self.escrowTranType = escrowTranType
+        self.escrowTranSubType = escrowTranSubType
+        self.escrowType = escrowType
     }
 }
 
@@ -56,6 +62,7 @@ public struct TransactionHistory {
     public let transactionID: String
     public let time: String
     public let type: String
+    public let transactionType: TransactionType?
     public let valueType: TransactionValueType
     public let debit: DebitCredit
     public let credit: DebitCredit
@@ -65,11 +72,16 @@ public struct TransactionHistory {
     public let id: String?
     public let isRallbackAllowed: Bool?
     public let paymentId: Int?
+    public let reference: String?
+    public let escrowTranType: String?
+    public let escrowTranSubType: String?
+    public let escrowType: String?
 
-    public init(transactionID: String, time: String, type: String, valueType: TransactionValueType, debit: DebitCredit, credit: DebitCredit, fees: [Fees], status: String?, transactionReference: String?, id: String?, isRallbackAllowed: Bool?, paymentId: Int?) {
+    public init(transactionID: String, time: String, type: String, transactionType: TransactionType?, valueType: TransactionValueType, debit: DebitCredit, credit: DebitCredit, fees: [Fees], status: String?, transactionReference: String?, id: String?, isRallbackAllowed: Bool?, paymentId: Int?, reference: String?, escrowTranType: String?, escrowTranSubType: String?, escrowType: String?) {
         self.transactionID = transactionID
         self.time = time
         self.type = type
+        self.transactionType = transactionType
         self.valueType = valueType
         self.debit = debit
         self.credit = credit
@@ -79,6 +91,10 @@ public struct TransactionHistory {
         self.id = id
         self.isRallbackAllowed = isRallbackAllowed
         self.paymentId = paymentId
+        self.reference = reference
+        self.escrowTranType = escrowTranType
+        self.escrowTranSubType = escrowTranSubType
+        self.escrowType = escrowType
     }
 }
 

@@ -463,7 +463,10 @@ extension SportRadarModelMapper {
                                  currency: internalTransactionDetail.currency,
                                  paymentId: internalTransactionDetail.paymentId,
                                  gameTranId: internalTransactionDetail.gameTranId,
-                                 reference: internalTransactionDetail.reference)
+                                 reference: internalTransactionDetail.reference,
+                                 escrowTranType: internalTransactionDetail.escrowTranType,
+                                 escrowTranSubType: internalTransactionDetail.escrowTranSubType,
+                                 escrowType: internalTransactionDetail.escrowType)
     }
 
     static func grantedBonusesResponse(fromGrantedBonusesResponse internalGrantedBonusesResponse: SportRadarModels.GrantedBonusResponse) -> GrantedBonusResponse {
