@@ -260,17 +260,23 @@ extension SportRadarModelMapper {
 
         })
 
-        return WithdrawalMethodsResponse(status: internalWithdrawalMethodsResponse.status, withdrawalMethods: withdrawalMethods)
+        return WithdrawalMethodsResponse(status: internalWithdrawalMethodsResponse.status,
+                                         withdrawalMethods: withdrawalMethods)
     }
 
     static func withdrawalMethod(fromWithdrawalMethod internalWithdrawalMethod: SportRadarModels.WithdrawalMethod) -> WithdrawalMethod {
 
-        return WithdrawalMethod(code: internalWithdrawalMethod.code, paymentMethod: internalWithdrawalMethod.paymentMethod, minimumWithdrawal: internalWithdrawalMethod.minimumWithdrawal, maximumWithdrawal: internalWithdrawalMethod.maximumWithdrawal)
+        return WithdrawalMethod(code: internalWithdrawalMethod.code,
+                                paymentMethod: internalWithdrawalMethod.paymentMethod,
+                                minimumWithdrawal: internalWithdrawalMethod.minimumWithdrawal,
+                                maximumWithdrawal: internalWithdrawalMethod.maximumWithdrawal)
     }
 
     static func processWithdrawalResponse(fromProcessWithdrawalResponse internalProcessWithdrawalResponse: SportRadarModels.ProcessWithdrawalResponse) -> ProcessWithdrawalResponse {
 
-        return ProcessWithdrawalResponse(status: internalProcessWithdrawalResponse.status, paymentId: internalProcessWithdrawalResponse.paymentId, message: internalProcessWithdrawalResponse.message)
+        return ProcessWithdrawalResponse(status: internalProcessWithdrawalResponse.status,
+                                         paymentId: internalProcessWithdrawalResponse.paymentId,
+                                         message: internalProcessWithdrawalResponse.message)
     }
 
     static func pendingWithdrawalResponse(fromPendingWithdrawalResponse internalPendingWithdrawalResponse: SportRadarModels.PendingWithdrawalResponse) -> PendingWithdrawalResponse {
@@ -288,17 +294,24 @@ extension SportRadarModelMapper {
 
     static func pendingWithdrawal(fromPendingWithdrawal internalPendingWithdrawal: SportRadarModels.PendingWithdrawal) -> PendingWithdrawal {
 
-        return PendingWithdrawal(status: internalPendingWithdrawal.status, paymentId: internalPendingWithdrawal.paymentId, amount: internalPendingWithdrawal.amount)
+        return PendingWithdrawal(status: internalPendingWithdrawal.status,
+                                 paymentId: internalPendingWithdrawal.paymentId,
+                                 amount: internalPendingWithdrawal.amount)
     }
 
     static func cancelWithdrawalResponse(fromCancelWithdrawalResponse internalCancelWithdrawalResponse: SportRadarModels.CancelWithdrawalResponse) -> CancelWithdrawalResponse {
 
-        return CancelWithdrawalResponse(status: internalCancelWithdrawalResponse.status, amount: internalCancelWithdrawalResponse.amount, currency: internalCancelWithdrawalResponse.currency)
+        return CancelWithdrawalResponse(status: internalCancelWithdrawalResponse.status,
+                                        amount: internalCancelWithdrawalResponse.amount,
+                                        currency: internalCancelWithdrawalResponse.currency)
     }
 
     static func updatePaymentAction(fromUpdatePaymentAction internalUpdatePaymentAction: SportRadarModels.UpdatePaymentAction) -> UpdatePaymentAction {
 
-        return UpdatePaymentAction(paymentMethodType: internalUpdatePaymentAction.paymentMethodType, url: internalUpdatePaymentAction.url, method: internalUpdatePaymentAction.method, type: internalUpdatePaymentAction.type)
+        return UpdatePaymentAction(paymentMethodType: internalUpdatePaymentAction.paymentMethodType,
+                                   url: internalUpdatePaymentAction.url,
+                                   method: internalUpdatePaymentAction.method,
+                                   type: internalUpdatePaymentAction.type)
     }
 
     static func paymentInformation(fromPaymentInformation internalPaymentInformation: SportRadarModels.PaymentInformation) -> PaymentInformation {
@@ -310,7 +323,8 @@ extension SportRadarModelMapper {
 
         })
 
-        return PaymentInformation(status: internalPaymentInformation.status, data: bankPaymentInfo)
+        return PaymentInformation(status: internalPaymentInformation.status,
+                                  data: bankPaymentInfo)
     }
 
     static func bankPaymentInfo(fromBankPaymentInfo internalBankPaymentInfo: SportRadarModels.BankPaymentInfo) -> BankPaymentInfo {
@@ -453,8 +467,10 @@ extension SportRadarModelMapper {
 //
 //        }
 
+        let date: Date = OmegaAPIClient.parseOmegaDateString(internalTransactionDetail.dateTime) ?? Date(timeIntervalSinceReferenceDate: 0)
+                
         return TransactionDetail(id: internalTransactionDetail.id,
-                                 dateTime: internalTransactionDetail.dateTime,
+                                 date: date,
                                  type: transactionType,
                                  amount: internalTransactionDetail.amount,
                                  postBalance: internalTransactionDetail.postBalance,
@@ -480,7 +496,17 @@ extension SportRadarModelMapper {
 
     static func grantedBonus(fromInternalGrantedBonus internalGrantedBonus: SportRadarModels.GrantedBonus) -> GrantedBonus {
 
-        return GrantedBonus(id: internalGrantedBonus.id, name: internalGrantedBonus.name, status: internalGrantedBonus.status, amount: internalGrantedBonus.amount, triggerDate: internalGrantedBonus.triggerDate, expiryDate: internalGrantedBonus.expiryDate, wagerRequirement: internalGrantedBonus.wagerRequirement, amountWagered: internalGrantedBonus.amountWagered)
+        let triggerDate: Date? = OmegaAPIClient.parseOmegaDateString(internalGrantedBonus.triggerDate)
+        let expiryDate: Date? = OmegaAPIClient.parseOmegaDateString(internalGrantedBonus.expiryDate)
+        
+        return GrantedBonus(id: internalGrantedBonus.id,
+                            name: internalGrantedBonus.name,
+                            status: internalGrantedBonus.status,
+                            amount: internalGrantedBonus.amount,
+                            triggerDate: triggerDate,
+                            expiryDate: expiryDate,
+                            wagerRequirement: internalGrantedBonus.wagerRequirement,
+                            amountWagered: internalGrantedBonus.amountWagered)
     }
 
     static func availableBonusesResponse(fromAvailableBonusesResponse internalAvailableBonusesResponse: SportRadarModels.AvailableBonusResponse) -> AvailableBonusResponse {
@@ -497,16 +523,18 @@ extension SportRadarModelMapper {
 
     static func availableBonus(fromInternAlavailableBonus internalAvailableBonus: SportRadarModels.AvailableBonus) -> AvailableBonus {
 
+        let triggerDate: Date? = OmegaAPIClient.parseOmegaDateString(internalAvailableBonus.triggerDate)
+        let expiryDate: Date? = OmegaAPIClient.parseOmegaDateString(internalAvailableBonus.expiryDate)
+
         return AvailableBonus(id: internalAvailableBonus.id,
                               bonusPlanId: internalAvailableBonus.bonusPlanId,
                               name: internalAvailableBonus.name,
                               description: internalAvailableBonus.description,
                               type: internalAvailableBonus.type,
                               amount: internalAvailableBonus.amount,
-                              triggerDate: internalAvailableBonus.triggerDate,
-                              expiryDate: internalAvailableBonus.expiryDate,
+                              triggerDate: triggerDate,
+                              expiryDate: expiryDate,
                               wagerRequirement: internalAvailableBonus.wagerRequirement,
-
                               imageUrl: internalAvailableBonus.imageUrl)
     }
 
@@ -523,12 +551,15 @@ extension SportRadarModelMapper {
     }
 
     static func redeemBonus(fromRedeemBonus internalRedeemBonus: SportRadarModels.RedeemBonus) -> RedeemBonus {
+       
+        let triggerDate: Date? = OmegaAPIClient.parseOmegaDateString(internalRedeemBonus.triggerDate)
+        let expiryDate: Date? = OmegaAPIClient.parseOmegaDateString(internalRedeemBonus.expiryDate)
 
         return RedeemBonus(id: internalRedeemBonus.id,
                            name: internalRedeemBonus.name,
                            status: internalRedeemBonus.status,
-                           triggerDate: internalRedeemBonus.triggerDate,
-                           expiryDate: internalRedeemBonus.expiryDate,
+                           triggerDate: triggerDate,
+                           expiryDate: expiryDate,
                            amount: internalRedeemBonus.amount,
                            wagerRequired: internalRedeemBonus.wagerRequired,
                            amountWagered: internalRedeemBonus.amountWagered)

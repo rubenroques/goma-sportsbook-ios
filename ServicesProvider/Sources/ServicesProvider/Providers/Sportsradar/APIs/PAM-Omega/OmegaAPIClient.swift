@@ -922,23 +922,17 @@ extension OmegaAPIClient: Endpoint {
                 "password": password
             ]
             
-            let bodyString = parameters.map { "\($0.key)=\($0.value.addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed) ?? "")" }
-                .joined(separator: "&")
-            
-            return bodyString.data(using: String.Encoding.utf8) ?? Data()
+            let allowedCharacterSet = CharacterSet(charactersIn: "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789.-_")
+
+            let formBodyString = parameters.map { key, value in
+                let encodedKey = key.addingPercentEncoding(withAllowedCharacters: allowedCharacterSet) ?? key
+                let encodedValue = value.addingPercentEncoding(withAllowedCharacters: allowedCharacterSet) ?? value
+                return "\(encodedKey)=\(encodedValue)"
+            }.joined(separator: "&")
+            return formBodyString.data(using: String.Encoding.utf8)
+
         case .uploadUserDocument( _, _, let body, _):
             return body
-//        case .processDeposit(let sessionKey, let paymentMethod, let amount, let option):
-//            let bodyString =
-//                        """
-//                        {
-//                            "sessionKey": "\(sessionKey)",
-//                            "paymentMethod": "\(paymentMethod)",
-//                            "amount": \(amount),
-//                            "option": "\(option)"
-//                        }
-//                        """
-//            return bodyString.data(using: String.Encoding.utf8) ?? Data()
         case .uploadMultipleUserDocuments( _, _, let body, _):
             return body
         case .contactSupport(let userIdentifier, let firstName, let lastName, let email, let subject, let subjectType, let message, _):
@@ -976,14 +970,6 @@ extension OmegaAPIClient: Endpoint {
         default:
             return nil
         }
-        //return nil
-        /*
-         let body = """
-         {"type": "\(type)","text": "\(message)"}
-         """
-         let data = body.data(using: String.Encoding.utf8)!
-         return data
-         */
     }
     
     var requireSessionKey: Bool {
@@ -1218,5 +1204,23 @@ extension OmegaAPIClient: Endpoint {
         case .getReferralLink: return "getReferralLink"
         case .getReferees: return "getReferees"
         }
+    }
+}
+
+extension OmegaAPIClient {
+    static func parseOmegaDateString(_ dateString: String) -> Date? {
+        
+        let dateFormatter = DateFormatter()
+        
+        dateFormatter.dateFormat = "yyyy-MM-dd'T'HH:mm:ss.SSS"
+        
+        if let date = dateFormatter.date(from: dateString) {
+            return date
+        }
+        
+        dateFormatter.dateFormat = "dd-MM-yyyy HH:mm:ss"
+        dateFormatter.timeZone = TimeZone(secondsFromGMT: 0) // UTC+00
+        
+        return dateFormatter.date(from: dateString)
     }
 }

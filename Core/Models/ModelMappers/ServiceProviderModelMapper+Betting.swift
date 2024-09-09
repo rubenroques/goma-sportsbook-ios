@@ -139,7 +139,7 @@ extension ServiceProviderModelMapper {
         }
         
         return TransactionHistory(transactionID: "\(transactionDetail.id)",
-                                  time: transactionDetail.dateTime,
+                                  date: transactionDetail.date,
                                   type: transactionType ?? "",
                                   valueType: valueType,
                                   debit: DebitCredit(currency: transactionDetail.currency,

@@ -14,8 +14,8 @@ public struct AvailableBonus: Codable {
     public var description: String?
     public var type: String
     public var amount: Double
-    public var triggerDate: String
-    public var expiryDate: String
+    public var triggerDate: Date?
+    public var expiryDate: Date?
     public var wagerRequirement: Double?
     public var imageUrl: String?
 

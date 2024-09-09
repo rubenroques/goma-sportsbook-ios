@@ -532,7 +532,7 @@ class OddTripleCollectionViewCell: UICollectionViewCell {
                 .map(\.bettingOffer)
                 .receive(on: DispatchQueue.main)
                 .sink(receiveCompletion: { completion in
-                    print("leftOddButtonSubscriber subscribeToOutcomeUpdates completion: \(completion)")
+                    
                 }, receiveValue: { [weak self] bettingOffer in
 
                     guard let weakSelf = self else { return }
@@ -588,7 +588,7 @@ class OddTripleCollectionViewCell: UICollectionViewCell {
                 .map(\.bettingOffer)
                 .receive(on: DispatchQueue.main)
                 .sink(receiveCompletion: { completion in
-                    print("leftOddButtonSubscriber subscribeToOutcomeUpdates completion: \(completion)")
+                    
                 }, receiveValue: { [weak self] bettingOffer in
 
                     guard let weakSelf = self else { return }
@@ -646,7 +646,6 @@ class OddTripleCollectionViewCell: UICollectionViewCell {
 //                .map(\.bettingOffer)
 //                .receive(on: DispatchQueue.main)
 //                .sink(receiveCompletion: { completion in
-//                    print("leftOddButtonSubscriber subscribeToOutcomeUpdates completion: \(completion)")
 //                }, receiveValue: { [weak self] bettingOffer in
 //
 //                    guard let weakSelf = self else { return }

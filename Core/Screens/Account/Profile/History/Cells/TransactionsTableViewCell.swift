@@ -126,17 +126,10 @@ class TransactionsTableViewCell: UITableViewCell {
                    transactionType: TransactionsHistoryViewModel.TransactionsType) {
         self.transactionHistoryEntry = transactionHistoryEntry
 
-        if let date = DateFormatter.init(format: "yyyy-MM-dd'T'HH:mm:ss.SSS").date(from: transactionHistoryEntry.time) {
-            self.transactionDateLabel.text = TransactionsTableViewCell.dateFormatter.string(from: date)
-        }
-        else if let date = DateFormatter.init(format: "dd-MM-yyyy HH:mm:ss").date(from: transactionHistoryEntry.time) {
-
-            let dateFormatter = Self.dateFormatter
-            dateFormatter.dateFormat = "dd-MM-yyyy HH:mm"
-
-            self.transactionDateLabel.text =
-            dateFormatter.string(from: date)
-        }
+        var dateFormatter = DateFormatter()
+        dateFormatter.dateFormat = "dd-MM-yyyy HH:mm"
+        
+        self.transactionDateLabel.text = dateFormatter.string(from: transactionHistoryEntry.date)
 
         self.transactionIdValueLabel.text = transactionHistoryEntry.transactionID
 
@@ -213,15 +206,6 @@ class TransactionsTableViewCell: UITableViewCell {
         }
     }
 
-}
-
-extension TransactionsTableViewCell {
-    static var dateFormatter: DateFormatter = {
-        var dateFormatter = DateFormatter()
-        dateFormatter.timeStyle = .medium
-        dateFormatter.dateStyle = .medium
-        return dateFormatter
-    }()
 }
 
 //

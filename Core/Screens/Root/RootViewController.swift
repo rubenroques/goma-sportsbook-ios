@@ -1495,6 +1495,7 @@ extension RootViewController {
     }
 
     private func presentProfileViewController() {
+
         if let loggedUser = Env.userSessionStore.loggedUserProfile {
             let profileViewController = ProfileViewController(userProfile: loggedUser)
             let navigationViewController = Router.navigationController(with: profileViewController)
@@ -1532,6 +1533,25 @@ extension RootViewController {
             
             self.present(navigationViewController, animated: true, completion: nil)
         }
+         
+    }
+    
+    private func showLimitsOnRegisterViewController() {
+        let viewModel = LimitsOnRegisterViewModel(servicesProvider: Env.servicesProvider)
+        
+        viewModel.hasRollingWeeklyLimits = Env.businessSettingsSocket.clientSettings.hasRollingWeeklyLimits
+
+        let limitsOnRegisterViewController = LimitsOnRegisterViewController(viewModel: viewModel)
+        limitsOnRegisterViewController.didTapBackButtonAction = {
+            // navigationController.popViewController(animated: true)
+        }
+        limitsOnRegisterViewController.didTapCancelButtonAction = { [weak self] in
+            // self?.closeLoginRegisterFlow()
+        }
+        limitsOnRegisterViewController.triggeredContinueAction = { [weak self] in
+            // self?.showDepositViewController(onNavigationController: navigationController)
+        }
+        self.present(limitsOnRegisterViewController, animated: true)
     }
 
     @objc private func didTapAnonymousButton() {

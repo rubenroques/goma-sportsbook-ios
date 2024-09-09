@@ -26,7 +26,7 @@ public struct TransactionsHistoryResponse {
 public struct TransactionDetail {
 
     public var id: Int
-    public var dateTime: String
+    public var date: Date
     public var type: TransactionType?
     public var amount: Double
     public var postBalance: Double
@@ -37,9 +37,9 @@ public struct TransactionDetail {
     public var gameTranId: String?
     public var reference: String?
 
-    public init(id: Int, dateTime: String, type: TransactionType? = nil, amount: Double, postBalance: Double, amountBonus: Double, postBalanceBonus: Double, currency: String, paymentId: Int?, gameTranId: String?, reference: String?) {
+    public init(id: Int, date: Date, type: TransactionType? = nil, amount: Double, postBalance: Double, amountBonus: Double, postBalanceBonus: Double, currency: String, paymentId: Int?, gameTranId: String?, reference: String?) {
         self.id = id
-        self.dateTime = dateTime
+        self.date = date
         self.type = type
         self.amount = amount
         self.postBalance = postBalance
@@ -54,7 +54,7 @@ public struct TransactionDetail {
 
 public struct TransactionHistory {
     public let transactionID: String
-    public let time: String
+    public let date: Date
     public let type: String
     public let valueType: TransactionValueType
     public let debit: DebitCredit
@@ -66,9 +66,9 @@ public struct TransactionHistory {
     public let isRallbackAllowed: Bool?
     public let paymentId: Int?
 
-    public init(transactionID: String, time: String, type: String, valueType: TransactionValueType, debit: DebitCredit, credit: DebitCredit, fees: [Fees], status: String?, transactionReference: String?, id: String?, isRallbackAllowed: Bool?, paymentId: Int?) {
+    public init(transactionID: String, date: Date, type: String, valueType: TransactionValueType, debit: DebitCredit, credit: DebitCredit, fees: [Fees], status: String?, transactionReference: String?, id: String?, isRallbackAllowed: Bool?, paymentId: Int?) {
         self.transactionID = transactionID
-        self.time = time
+        self.date = date
         self.type = type
         self.valueType = valueType
         self.debit = debit

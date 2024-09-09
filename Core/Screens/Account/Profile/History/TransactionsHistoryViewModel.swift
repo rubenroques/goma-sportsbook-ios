@@ -477,12 +477,9 @@ class TransactionsHistoryViewModel {
 
     private func getDateString(date: Date) -> String {
         self.dateFormatter.dateFormat = "yyyy-MM-dd'T'HH:mm:ss"
-
         let dateString = self.dateFormatter.string(from: date).appending("Z")
-
         return dateString
     }
-
 }
 
 extension TransactionsHistoryViewModel {

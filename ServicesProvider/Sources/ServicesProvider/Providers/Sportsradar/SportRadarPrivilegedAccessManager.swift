@@ -462,12 +462,12 @@ class SportRadarPrivilegedAccessManager: PrivilegedAccessManager {
         let endpoint = OmegaAPIClient.updateResponsibleGamingLimits(newLimit: newLimit, limitType: endpointLimitType, limitPeriod: endpointLimitPeriod)
         let publisher: AnyPublisher<SportRadarModels.StatusResponse, ServiceProviderError> = self.connector.request(endpoint)
 
-
+        print("LimitDebug-\(limitType): \(endpointLimitType):\(endpointLimitPeriod) > \(newLimit)")
+        
         return publisher.flatMap({ statusResponse -> AnyPublisher<Bool, ServiceProviderError> in
-            if statusResponse.status == "SUCCESS" {
+            if statusResponse.status.lowercased() == "success" {
                 return Just(true).setFailureType(to: ServiceProviderError.self).eraseToAnyPublisher()
             }
-
             return Fail(outputType: Bool.self, failure: ServiceProviderError.invalidResponse).eraseToAnyPublisher()
         })
         .eraseToAnyPublisher()

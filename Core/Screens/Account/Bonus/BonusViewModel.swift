@@ -153,7 +153,6 @@ class BonusViewModel {
                 let bonusAvailableCellViewModel = BonusAvailableCellViewModel(bonus: bonus)
                 self.bonusAvailableCellViewModels.append(bonusAvailableCellViewModel)
             }
-
         }
 
         self.isBonusApplicableLoading.send(false)
@@ -196,9 +195,6 @@ class BonusViewModel {
                 self.bonusActive.append(bonus)
                 let bonusActiveCellViewModel = BonusActiveCellViewModel(bonus: bonus)
 
-//                bonusActiveCellViewModel.shouldReloadData = { [weak self] in
-//                    self?.shouldReloadAllBonusData.send()
-//                }
                 bonusActiveCellViewModel.shouldShowAlert = { [weak self] alertType in
 
                     self?.shouldShowAlert?(alertType)
@@ -231,9 +227,6 @@ class BonusViewModel {
         else {
             self.isBonusQueuedEmptyPublisher.send(false)
         }
-//        else {
-//            self.hasQueuedBonus.send(true)
-//        }
 
         if self.bonusHistory.isEmpty {
             self.isBonusHistoryEmptyPublisher.send(true)

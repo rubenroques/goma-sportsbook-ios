@@ -172,4 +172,56 @@ struct BetHistoryEntrySelection: Codable {
         case marketName = "marketName"
         case betName = "betName"
     }
+    
+    init(outcomeId: String,
+         status: BetSelectionStatus,
+         result: BetSelectionResult,
+         priceValue: Double? = nil,
+         sportId: String? = nil,
+         sportName: String? = nil,
+         venueId: String? = nil,
+         venueName: String? = nil,
+         tournamentId: String? = nil,
+         tournamentName: String? = nil,
+         eventId: String? = nil,
+         eventStatusId: String? = nil,
+         eventName: String? = nil,
+         eventResult: String? = nil,
+         eventDate: Date? = nil,
+         bettingTypeId: String? = nil,
+         bettingTypeName: String? = nil,
+         bettingTypeEventPartId: String? = nil,
+         bettingTypeEventPartName: String? = nil,
+         homeParticipantName: String? = nil,
+         awayParticipantName: String? = nil,
+         homeParticipantScore: String? = nil,
+         awayParticipantScore: String? = nil,
+         marketName: String? = nil,
+         betName: String? = nil) {
+        self.outcomeId = outcomeId
+        self.status = status
+        self.result = result
+        self.priceValue = priceValue
+        self.sportId = sportId
+        self.sportName = sportName
+        self.venueId = venueId
+        self.venueName = venueName
+        self.tournamentId = tournamentId
+        self.tournamentName = tournamentName
+        self.eventId = eventId
+        self.eventStatusId = eventStatusId
+        self.eventName = eventName
+        self.eventResult = eventResult
+        self.eventDate = eventDate
+        self.bettingTypeId = bettingTypeId
+        self.bettingTypeName = bettingTypeName
+        self.bettingTypeEventPartId = bettingTypeEventPartId
+        self.bettingTypeEventPartName = bettingTypeEventPartName
+        self.homeParticipantName = homeParticipantName
+        self.awayParticipantName = awayParticipantName
+        self.homeParticipantScore = homeParticipantScore
+        self.awayParticipantScore = awayParticipantScore
+        self.marketName = marketName
+        self.betName = betName
+    }
 }

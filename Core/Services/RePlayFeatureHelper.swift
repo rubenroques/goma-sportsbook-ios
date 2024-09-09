@@ -12,7 +12,6 @@ struct RePlayFeatureHelper {
     static func shouldShowRePlay(forMatch match: Match) -> Bool {
             let matchSport = match.sport.alphaId ?? ""
             return TargetVariables.hasFeatureEnabled(feature: .cashback) &&
-            match.status == .notStarted &&
             Env.businessSettingsSocket.clientSettings.replaySportsCodes.contains(matchSport)
     }
 

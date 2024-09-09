@@ -34,9 +34,10 @@ class BonusActiveCellViewModel: NSObject {
 
     private func setupPublishers(bonus: GrantedBonus) {
 
-        self.titlePublisher.value = bonus.name ?? ""
+        self.titlePublisher.value = bonus.name
 
-        let formattedDate = getDateFormatted(dateString: bonus.expiryDate ?? "")
+        let expiryDate: Date = bonus.expiryDate ?? Date()
+        let formattedDate = self.getDateFormatted(date: expiryDate)
 
         if formattedDate != "" {
             self.dateStringPublisher.value = formattedDate
@@ -68,6 +69,12 @@ class BonusActiveCellViewModel: NSObject {
         }
 
         return ""
+    }
+    
+    private func getDateFormatted(date: Date) -> String {
+        let dateFormatterPrint = DateFormatter()
+        dateFormatterPrint.dateFormat = "yyyy-MM-dd HH:mm"
+        return dateFormatterPrint.string(from: date)
     }
 
     func cancelBonus() {

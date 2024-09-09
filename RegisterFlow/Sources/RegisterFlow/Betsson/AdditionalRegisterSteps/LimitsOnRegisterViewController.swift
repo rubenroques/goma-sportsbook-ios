@@ -79,6 +79,7 @@ public class LimitsOnRegisterViewModel {
 
         let depositPublisher = /*servicesProvider.updateWeeklyDepositLimits(newLimit: depositLimit)*/
         servicesProvider.updateResponsibleGamingLimits(newLimit: depositLimit, limitType: "deposit", hasRollingWeeklyLimits: self.hasRollingWeeklyLimits)
+            .print("LimitDebug deposit")
             .mapError { error in
                 print("Error \(error)")
                 return LimitsOnRegisterError.depositServerError
@@ -86,18 +87,20 @@ public class LimitsOnRegisterViewModel {
 
         let bettingPublisher = /*servicesProvider.updateWeeklyBettingLimits(newLimit: bettingLimit)*/
         servicesProvider.updateResponsibleGamingLimits(newLimit: bettingLimit, limitType: "betting", hasRollingWeeklyLimits: self.hasRollingWeeklyLimits)
+            .print("LimitDebug")
             .mapError { error in
                 print("Error \(error)")
                 return LimitsOnRegisterError.bettingServerError
             }
 
         let autoPayoutPublisher = servicesProvider.updateResponsibleGamingLimits(newLimit: autoPayoutLimit, limitType: "autoPayout", hasRollingWeeklyLimits: self.hasRollingWeeklyLimits)
+            .print("LimitDebug")
             .mapError { error in
                 print("Error \(error)")
                 return LimitsOnRegisterError.autoPayoutServerError
             }
 
-        return Publishers.Zip3(depositPublisher, bettingPublisher, autoPayoutPublisher)
+        return Publishers.CombineLatest3(depositPublisher, bettingPublisher, autoPayoutPublisher)
             .map { (depositSuccess, bettingSuccess, autoPayoutSuccess) in
                 return depositSuccess && bettingSuccess && autoPayoutSuccess
             }
