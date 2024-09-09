@@ -6,6 +6,7 @@
 //
 
 import UIKit
+import Combine
 
 class FeaturedTipCollectionViewCell: UICollectionViewCell {
 
@@ -66,6 +67,10 @@ class FeaturedTipCollectionViewCell: UICollectionViewCell {
     var shouldShowBetslip: (() -> Void)?
     var shouldShowUserProfile: ((UserBasicInfo) -> Void)?
 
+    private var oddCancelable: AnyCancellable?
+
+    private var cancellables = Set<AnyCancellable>()
+    
     // MARK: - Lifetime and Cycle
     override init(frame: CGRect) {
         super.init(frame: frame)
@@ -226,10 +231,13 @@ class FeaturedTipCollectionViewCell: UICollectionViewCell {
             self.followButton.isHidden = true
             self.unfollowButton.isHidden = true
         }
-
-        let tipsArray = viewModel.selectionViewModels
         
-        for (i, featuredTipSelection) in tipsArray.enumerated() {
+        
+        self.totalOddsValueLabel.text = "-"
+        self.selectionsValueLabel.text = viewModel.getNumberSelections()
+        
+        //
+        for (i, featuredTipSelection) in viewModel.selectionViewModels.enumerated() {
             if i >= FeaturedTipLineViewModel.maxTicketsBeforeExpand && (self.viewModel?.shouldCropList ?? true) {
                 self.showFullTipButton = true
                 break
@@ -243,8 +251,11 @@ class FeaturedTipCollectionViewCell: UICollectionViewCell {
             }
         }
         
-        self.totalOddsValueLabel.text = viewModel.getTotalOdds()
-        self.selectionsValueLabel.text = viewModel.getNumberSelections()
+        self.oddCancelable = viewModel.totalOddPulisher
+            .receive(on: DispatchQueue.main)
+            .sink(receiveValue: { [weak self] newOddString in
+                self?.totalOddsValueLabel.text = newOddString
+            })
         
         if viewModel.sizeType == .small {
             self.topContainerForFixedConstraint?.isActive = true
@@ -472,7 +483,7 @@ extension FeaturedTipCollectionViewCell {
     private static func createTotalOddsValueLabel() -> UILabel {
         let label = UILabel()
         label.translatesAutoresizingMaskIntoConstraints = false
-        label.text = localized("0.0")
+        label.text = localized("--")
         label.font = AppFont.with(type: .bold, size: 16)
         return label
     }

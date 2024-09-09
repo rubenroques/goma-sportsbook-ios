@@ -350,6 +350,8 @@ class TransactionsHistoryViewModel {
 
                 let filteredTransactions = transactionsWithdrawals.filter({
                     $0.type != .automatedWithdrawal
+                }).filter({
+                    $0.type != .automatedWithdrawalThreshold && $0.escrowType != "ESC_AML"
                 })
 
                 if transactionsWithdrawals.count < self.recordsPerPage {
@@ -364,62 +366,178 @@ class TransactionsHistoryViewModel {
     }
 
     func processTransactions(transactions: [TransactionDetail], transactionType: TransactionsType) {
-
-        let transactionsHistory = transactions.map { transactionDetail -> TransactionHistory in
+        
+        var transactionsHistory = transactions.map { transactionDetail -> TransactionHistory in
 
             let transactionHistory = ServiceProviderModelMapper.transactionHistory(fromServiceProviderTransactionDetail: transactionDetail)
 
             return transactionHistory
         }
 
-//        if transactions.count < self.recordsPerPage {
-//            self.transactionsHasNextPage = false
-//        }
-
         switch transactionType {
         case .all:
             if self.allTransactions.value.isEmpty {
-                self.allTransactions.send(transactionsHistory)
-                self.transactionsPublisher.send(transactionsHistory)
+                
+                let verifiedTransactionHistory = self.verifyTransactionsHistory(transactionsHistory: transactionsHistory)
+                
+                self.allTransactions.send(verifiedTransactionHistory)
+                self.transactionsPublisher.send(verifiedTransactionHistory)
             }
             else {
                 var nextTransactions = self.allTransactions.value
                 nextTransactions.append(contentsOf: transactionsHistory)
-                self.allTransactions.send(nextTransactions)
-                self.transactionsPublisher.send(nextTransactions)
+                
+                let verifiedTransactionHistory = self.verifyTransactionsHistory(transactionsHistory: nextTransactions)
+                
+                self.allTransactions.send(verifiedTransactionHistory)
+                self.transactionsPublisher.send(verifiedTransactionHistory)
             }
 
             self.getPendingWithdrawals()
 
         case .deposit:
             if self.depositTransactions.value.isEmpty {
+                
+                let verifiedTransactionHistory = self.verifyTransactionsHistory(transactionsHistory: transactionsHistory)
+                
                 self.depositTransactions.send(transactionsHistory)
                 self.transactionsPublisher.send(transactionsHistory)
             }
             else {
                 var nextTransactions = self.depositTransactions.value
                 nextTransactions.append(contentsOf: transactionsHistory)
-                self.depositTransactions.send(nextTransactions)
-                self.transactionsPublisher.send(nextTransactions)
+                
+                let verifiedTransactionHistory = self.verifyTransactionsHistory(transactionsHistory: nextTransactions)
+                
+                self.depositTransactions.send(verifiedTransactionHistory)
+                self.transactionsPublisher.send(verifiedTransactionHistory)
             }
 
             self.hasLoadedPendingWithdrawals.send(true)
         case .withdraw:
             if self.withdrawTransactions.value.isEmpty {
-                self.withdrawTransactions.send(transactionsHistory)
-                self.transactionsPublisher.send(transactionsHistory)
+                
+                let verifiedTransactionHistory = self.verifyTransactionsHistory(transactionsHistory: transactionsHistory)
+                
+                self.withdrawTransactions.send(verifiedTransactionHistory)
+                self.transactionsPublisher.send(verifiedTransactionHistory)
             }
             else {
                 var nextTransactions = self.withdrawTransactions.value
                 nextTransactions.append(contentsOf: transactionsHistory)
-                self.withdrawTransactions.send(nextTransactions)
-                self.transactionsPublisher.send(nextTransactions)
+                
+                let verifiedTransactionHistory = self.verifyTransactionsHistory(transactionsHistory: nextTransactions)
+                
+                self.withdrawTransactions.send(verifiedTransactionHistory)
+                self.transactionsPublisher.send(verifiedTransactionHistory)
             }
 
             self.getPendingWithdrawals()
 
         }
 
+    }
+    
+//    func verifyTransactionsDetail(transactionsDetail: [TransactionDetail]) -> [TransactionDetail] {
+//        // Initial setup
+//        var skipNextTwo = false
+//        var matchCount = 0
+//        
+//        var transactionsList = [TransactionDetail]()
+//
+//        transactionsDetail.enumerated().forEach { index, element in
+//                // Early return if skipNextTwo is active
+//                if skipNextTwo {
+//                    skipNextTwo = matchCount > 0
+//                    matchCount -= 1
+//                    return
+//                }
+//
+//            // Check if element.tranType is 'DP_RBACK'
+//            if element.type == .depositReturned {
+//                    // Safely get the next and third elements
+//                    let nextElement = transactionsDetail[safe: index + 1]
+//                    let thirdElement = transactionsDetail[safe: index + 2]
+//
+//                    // Check conditions for nextElement and thirdElement
+//                    if let nextElement = nextElement,
+//                       nextElement.reference == nil,
+//                       nextElement.escrowTranType == "TRANSFER",
+//                       nextElement.escrowTranSubType == "TO_ACCOUNT",
+//                       nextElement.escrowType == "ESC_AML",
+//                       let thirdElement = thirdElement,
+//                       thirdElement.reference == "ESC_AML",
+//                       thirdElement.escrowTranType == "TRANSFER",
+//                       thirdElement.escrowTranSubType == "FROM_ACCOUNT",
+//                       thirdElement.escrowType == "ESC_AML" {
+//
+//                        // Modify the tranType
+//                        let newElement = TransactionDetail(id: element.id, dateTime: element.dateTime, type: .depositCancel, amount: element.amount, postBalance: element.postBalance, amountBonus: element.amountBonus, postBalanceBonus: element.postBalanceBonus, currency: element.currency, paymentId: element.paymentId, gameTranId: element.gameTranId, reference: element.reference, escrowTranType: element.escrowTranType, escrowTranSubType: element.escrowTranSubType, escrowType: element.escrowType)
+//
+//                        // Add to transactionsList and adjust flags
+//                        transactionsList.append(newElement)
+//                        skipNextTwo = true
+//                        matchCount = 1
+//                        return
+//                    }
+//                }
+//
+//                // Add element to transactionsList
+//                transactionsList.append(element)
+//            }
+//        
+//        return transactionsList
+//    }
+    
+    func verifyTransactionsHistory(transactionsHistory: [TransactionHistory]) -> [TransactionHistory] {
+        // Initial setup
+        var skipNextTwo = false
+        var matchCount = 0
+        
+        var transactionsList = [TransactionHistory]()
+
+        transactionsHistory.enumerated().forEach { index, element in
+                // Early return if skipNextTwo is active
+                if skipNextTwo {
+                    skipNextTwo = matchCount > 0
+                    matchCount -= 1
+                    return
+                }
+
+            // Check if element.tranType is 'DP_RBACK'
+            if element.transactionType == .depositReturned {
+                    // Safely get the next and third elements
+                    let nextElement = transactionsHistory[safe: index + 1]
+                    let thirdElement = transactionsHistory[safe: index + 2]
+
+                    // Check conditions for nextElement and thirdElement
+                    if let nextElement = nextElement,
+                       nextElement.reference == nil,
+                       nextElement.escrowTranType == "TRANSFER",
+                       nextElement.escrowTranSubType == "TO_ACCOUNT",
+                       nextElement.escrowType == "ESC_AML",
+                       let thirdElement = thirdElement,
+                       thirdElement.reference == "ESC_AML",
+                       thirdElement.escrowTranType == "TRANSFER",
+                       thirdElement.escrowTranSubType == "FROM_ACCOUNT",
+                       thirdElement.escrowType == "ESC_AML" {
+
+                        // Modify the tranType
+                        let newElement = TransactionHistory(transactionID: element.transactionID, time: element.time, type: localized("deposit_cancel"), transactionType: .depositCancel, valueType: element.valueType, debit: element.debit, credit: element.credit, fees: element.fees, status: element.status, transactionReference: element.transactionReference, id: element.id, isRallbackAllowed: element.isRallbackAllowed, paymentId: element.paymentId, reference: element.reference, escrowTranType: element.escrowTranType, escrowTranSubType: element.escrowTranSubType, escrowType: element.escrowType)
+
+                        // Add to transactionsList and adjust flags
+                        transactionsList.append(newElement)
+                        skipNextTwo = true
+                        matchCount = 1
+                        return
+                    }
+                }
+
+                // Add element to transactionsList
+                transactionsList.append(element)
+            }
+        
+        return transactionsList
     }
 
     func cancelPendingTransaction(paymentId: Int) {

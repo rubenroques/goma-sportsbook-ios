@@ -32,6 +32,7 @@ class MatchWidgetContainerTableViewCell: UITableViewCell {
         self.setupSubviews()
         self.setupWithTheme()
 
+        self.collectionView.tag = 17
         self.collectionView.delegate = self
         self.collectionView.dataSource = self
     }
@@ -69,6 +70,8 @@ class MatchWidgetContainerTableViewCell: UITableViewCell {
             self.collectionViewHeightConstraint?.constant = 145
         case .topImage, .topImageOutright:
             self.collectionViewHeightConstraint?.constant = 254
+        case .topImageWithMixMatch:
+            self.collectionViewHeightConstraint?.constant = 310
         case .boosted:
             self.collectionViewHeightConstraint?.constant = 160
         }

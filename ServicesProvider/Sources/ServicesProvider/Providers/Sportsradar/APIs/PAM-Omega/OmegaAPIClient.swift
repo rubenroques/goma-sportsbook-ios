@@ -921,7 +921,7 @@ extension OmegaAPIClient: Endpoint {
                 "username": username,
                 "password": password
             ]
-            
+
             let allowedCharacterSet = CharacterSet(charactersIn: "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789.-_")
 
             let formBodyString = parameters.map { key, value in

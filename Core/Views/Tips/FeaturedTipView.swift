@@ -22,17 +22,20 @@ class FeaturedTipView: UIView {
     private lazy var outcomeLabel: UILabel = Self.createOutcomeLabel()
     private lazy var matchLabel: UILabel = Self.createMatchLabel()
 
+    private var marketNameCancellable: AnyCancellable?
+    private var outcomeNameCancellable: AnyCancellable?
+
+    private var cancellables = Set<AnyCancellable>()
+    
     // MARK: - Lifetime and Cycle
     override init(frame: CGRect) {
         super.init(frame: frame)
-
         self.commonInit()
         self.setupWithTheme()
     }
 
     required init?(coder aDecoder: NSCoder) {
         super.init(coder: aDecoder)
-
         self.commonInit()
         self.setupWithTheme()
     }
@@ -65,10 +68,8 @@ class FeaturedTipView: UIView {
         self.separatorView.backgroundColor = UIColor.App.separatorLineSecondary
         self.outcomeLabel.textColor = UIColor.App.highlightPrimary
 
-        
         self.marketLabel.textColor = UIColor.App.textPrimary
         self.matchLabel.textColor = UIColor.App.textSecondary
-        
     }
 
     // MARK: Functions
@@ -86,8 +87,6 @@ class FeaturedTipView: UIView {
     
     func configure(withFeaturedTipSelectionViewModel viewModel: FeaturedTipSelectionViewModel) {
         
-        self.outcomeLabel.text = viewModel.outcomeName
-
         self.matchLabel.text = viewModel.matchName
 
         self.sportIconImageView.image = UIImage(named: viewModel.sportIconImageName)
@@ -96,6 +95,32 @@ class FeaturedTipView: UIView {
         
         self.tournamentLabel.text = viewModel.tournamentName
   
+        self.marketNameCancellable?.cancel()
+        self.marketNameCancellable = nil
+        
+        self.marketNameCancellable = viewModel.marketNamePublisher
+             .removeDuplicates()
+             .receive(on: DispatchQueue.main)
+             .sink { [weak self] marketName in
+                 guard let self = self else {
+                     return
+                 }
+                 self.marketLabel.text = marketName
+             }
+        
+        self.outcomeNameCancellable?.cancel()
+        self.outcomeNameCancellable = nil
+        
+        self.outcomeNameCancellable = viewModel.outcomeNamePublisher
+             .removeDuplicates()
+             .receive(on: DispatchQueue.main)
+             .sink { [weak self] marketName in
+                 guard let self = self else {
+                     return
+                 }
+                 self.outcomeLabel.text = marketName
+             }
+        
     }
     
     func setCountryFlag(isoCode: String, countryId: String) {

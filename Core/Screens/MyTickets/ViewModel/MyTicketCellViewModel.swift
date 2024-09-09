@@ -74,8 +74,8 @@ class MyTicketCellViewModel {
         else if ticket.type?.lowercased() == "system" {
             self.title = localized("system")+" - \(ticket.systemBetType?.capitalized ?? "") - \(ticket.localizedBetStatus.capitalized)"
         }
-        else if ticket.type?.lowercased() == "accumulator" {
-            self.title = localized("accumulator")+" - \(ticket.localizedBetStatus.capitalized)"
+        else if ticket.type?.lowercased() == "mix_match" {
+            self.title = localized("mix-match")+" - \(ticket.localizedBetStatus.capitalized)"
         }
         else {
             self.title = String([ticket.type, ticket.localizedBetStatus]

@@ -228,7 +228,6 @@ class HeroCardMarketCollectionViewCell: UICollectionViewCell {
         
         if let date = match.date {
             self.dateLabel.text = MatchWidgetCellViewModel.startDateString(fromDate: date)
-            
             self.timeLabel.text = MatchWidgetCellViewModel.hourDateFormatter.string(from: date)
         }
         
@@ -1054,4 +1053,19 @@ extension HeroCardMarketCollectionViewCell {
             self.awayDownChangeOddValueImageView.trailingAnchor.constraint(equalTo: self.awayBaseView.trailingAnchor, constant: -5)
         ])
     }
+    
+    static var hourDateFormatter: DateFormatter = {
+           var dateFormatter = DateFormatter()
+           dateFormatter.timeStyle = .short
+           dateFormatter.dateStyle = .none
+           return dateFormatter
+       }()
+    
+    static var dayDateFormatter: DateFormatter = {
+        var dateFormatter = DateFormatter()
+        dateFormatter.dateFormat = "dd.MM.yyyy"
+        return dateFormatter
+    }()
+    
 }
+

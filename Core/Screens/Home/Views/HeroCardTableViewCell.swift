@@ -61,8 +61,14 @@ class HeroCardTableViewCell: UITableViewCell {
         self.collectionView.delegate = self
         self.collectionView.dataSource = self
 
-        self.collectionView.register(HeroCardMarketCollectionViewCell.self, forCellWithReuseIdentifier: HeroCardMarketCollectionViewCell.identifier)
-        self.collectionView.register(HeroCardSecondaryMarketCollectionViewCell.self, forCellWithReuseIdentifier: HeroCardSecondaryMarketCollectionViewCell.identifier)
+        self.collectionView.register(
+            HeroCardMarketCollectionViewCell.self,
+            forCellWithReuseIdentifier: HeroCardMarketCollectionViewCell.identifier
+        )
+        self.collectionView.register(
+            HeroCardSecondaryMarketCollectionViewCell.self,
+            forCellWithReuseIdentifier: HeroCardSecondaryMarketCollectionViewCell.identifier
+        )
         
         let tapMatchView = UITapGestureRecognizer(target: self, action: #selector(didTapMatchView))
         self.addGestureRecognizer(tapMatchView)

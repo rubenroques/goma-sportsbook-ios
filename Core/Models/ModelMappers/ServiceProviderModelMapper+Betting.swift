@@ -141,6 +141,7 @@ extension ServiceProviderModelMapper {
         return TransactionHistory(transactionID: "\(transactionDetail.id)",
                                   date: transactionDetail.date,
                                   type: transactionType ?? "",
+                                  transactionType: transactionDetail.type,
                                   valueType: valueType,
                                   debit: DebitCredit(currency: transactionDetail.currency,
                                                      amount: transactionDetail.amount,
@@ -153,7 +154,7 @@ extension ServiceProviderModelMapper {
                                   transactionReference: nil,
                                   id: "\(transactionDetail.gameTranId ?? "")",
                                   isRallbackAllowed: nil,
-                                  paymentId: transactionDetail.paymentId)
+                                  paymentId: transactionDetail.paymentId, reference: transactionDetail.reference, escrowTranType: transactionDetail.escrowTranType, escrowTranSubType: transactionDetail.escrowTranSubType, escrowType: transactionDetail.escrowType)
     }
     
     static func stringFromTransactionType(transactionType: TransactionType?) -> String? {
@@ -175,6 +176,8 @@ extension ServiceProviderModelMapper {
         case .withdrawalReject: return localized("withdrawal_reject")
         case .automatedWithdrawalThreshold: return localized("automated_withdrawal_threshold")
         case .automatedWithdrawal: return localized("automated_withdrawal")
+        case .depositReturned:
+            return localized("deposit_cancel")
         default: return nil
         }
     }

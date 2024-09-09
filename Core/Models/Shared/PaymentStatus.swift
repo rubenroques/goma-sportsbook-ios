@@ -11,6 +11,7 @@ enum PaymentStatus {
     case authorised
     case refused
     case startedProcessing
+    case paypalError
 }
 
 enum BalanceErrorType {

@@ -86,8 +86,8 @@ class ChatTicketStateInMessageView: UIView {
         else if self.betSelectionCellViewModel.ticket.type == "MULTIPLE" {
             self.titleLabel.text = localized("multiple")+" - \(betStatusText(forCode: self.betSelectionCellViewModel.ticket.status?.uppercased() ?? "-"))"
         }
-        else if self.betSelectionCellViewModel.ticket.type == "ACCUMULATOR" {
-            self.titleLabel.text = localized("accumulator")+" - \(betStatusText(forCode: self.betSelectionCellViewModel.ticket.status?.uppercased() ?? "-"))"
+        else if self.betSelectionCellViewModel.ticket.type?.lowercased() == "mix_match" {
+            self.titleLabel.text = localized("mix-match")+" - \(betStatusText(forCode: self.betSelectionCellViewModel.ticket.status?.uppercased() ?? "-"))"
         }
         else if self.betSelectionCellViewModel.ticket.type == "SYSTEM" {
             self.titleLabel.text = localized("system") +

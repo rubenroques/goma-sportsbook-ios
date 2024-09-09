@@ -25,7 +25,7 @@ extension VaixAPIClient: Endpoint {
         case .analyticsTrackEvent:
             return "/api/tracker/events"
         case .promotedBetslips:
-            return "/api/batch"
+            return "/api/sports/betslips/popular"
         }
     }
     
@@ -50,7 +50,9 @@ extension VaixAPIClient: Endpoint {
         case .analyticsTrackEvent:
             break
         case .promotedBetslips:
-            break
+            query.append(URLQueryItem(name:"format", value:"orako"))
+            query.append(URLQueryItem(name:"count", value:"5"))
+            query.append(URLQueryItem(name:"location", value:"multigame_acca"))
         }
         return query
     }
@@ -69,8 +71,7 @@ extension VaixAPIClient: Endpoint {
         case .promotedBetslips:
             return ["Authorization": "Bearer \(SportRadarConfiguration.shared.vaixAuthTokenValue)",
                     "origin": "null",
-                    "x-vaix-client-id": "betsson_france",
-                    "Content-Type": "application/json"]
+                    "x-vaix-client-id": "betsson_france"]
         }
     }
     
@@ -78,7 +79,7 @@ extension VaixAPIClient: Endpoint {
         switch self {
         case .popularEvents: return .get
         case .analyticsTrackEvent: return .post
-        case .promotedBetslips: return .post
+        case .promotedBetslips: return .get
         }
     }
     
@@ -107,44 +108,8 @@ extension VaixAPIClient: Endpoint {
             else {
                 return nil
             }
-        case .promotedBetslips(let userId):
-            let userIdFormat = userId != nil ? "om\(userId!)-eur" : "0"
-            let body = """
-                        {
-                          "requests": [
-                            {
-                              "operation_id": "get_popular_betslips",
-                              "name": "multigame_acca_1",
-                              "params": {
-                                "format": "orako",
-                                "location": "multigame_acca_1",
-                                "user": "\(userIdFormat)"
-                              }
-                            },
-                            {
-                              "operation_id": "get_popular_betslips",
-                              "name": "multigame_acca_2",
-                              "params": {
-                                "format": "orako",
-                                "location": "multigame_acca_2",
-                                "user": "\(userIdFormat)"
-                              }
-                            },
-                            {
-                              "operation_id": "get_popular_betslips",
-                              "name": "multigame_acca_3",
-                              "params": {
-                                "format": "orako",
-                                "location": "multigame_acca_3",
-                                "user": "\(userIdFormat)"
-                              }
-                            }
-                          ]
-                        }
-                        """
-            
-            let data = body.data(using: String.Encoding.utf8)!
-            return data
+        case .promotedBetslips:
+            return nil
         }
     }
     

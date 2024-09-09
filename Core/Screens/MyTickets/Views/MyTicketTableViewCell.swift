@@ -488,8 +488,8 @@ class MyTicketTableViewCell: UITableViewCell {
         else if betHistoryEntry.type?.lowercased() == "system" {
             self.titleLabel.text = localized("system")+" - \(betHistoryEntry.systemBetType?.capitalized ?? "") - \(betHistoryEntry.localizedBetStatus.capitalized)"
         }
-        else if betHistoryEntry.type?.lowercased() == "accumulator" {
-            self.titleLabel.text = localized("accumulator")+" - \(betHistoryEntry.localizedBetStatus.capitalized)"
+        else if betHistoryEntry.type?.lowercased() == "mix_match" {
+            self.titleLabel.text = localized("mix-match")+" - \(betHistoryEntry.localizedBetStatus.capitalized)"
         }
         else {
             self.titleLabel.text = String([betHistoryEntry.type, betHistoryEntry.localizedBetStatus]
