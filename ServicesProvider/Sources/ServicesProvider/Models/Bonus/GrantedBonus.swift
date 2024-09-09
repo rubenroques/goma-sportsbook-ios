@@ -12,8 +12,8 @@ public struct GrantedBonus: Codable {
     public var name: String
     public var status: String
     public var amount: String
-    public var triggerDate: String
-    public var expiryDate: String
+    public var triggerDate: Date?
+    public var expiryDate: Date?
     public var wagerRequirement: String?
     public var amountWagered: String?
 
@@ -26,6 +26,24 @@ public struct GrantedBonus: Codable {
         case expiryDate = "expiryDate"
         case wagerRequirement = "wagerRequirement"
         case amountWagered = "amountWagered"
+    }
+    
+    init(id: Int,
+         name: String,
+         status: String,
+         amount: String,
+         triggerDate: Date?,
+         expiryDate: Date?,
+         wagerRequirement: String? = nil,
+         amountWagered: String? = nil) {
+        self.id = id
+        self.name = name
+        self.status = status
+        self.amount = amount
+        self.triggerDate = triggerDate
+        self.expiryDate = expiryDate
+        self.wagerRequirement = wagerRequirement
+        self.amountWagered = amountWagered
     }
 }
 

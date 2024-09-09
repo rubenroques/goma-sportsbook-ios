@@ -47,6 +47,8 @@ class PaymentsDropIn {
     var payment: Payment?
     var paymentMethodsResponse: SimplePaymentMethodsResponse?
     var dropInComponent: DropInComponent?
+        
+    var isPaypalDeposit: Bool = false
 
     // MARK: Lifetime and Cycle
     init() {
@@ -383,10 +385,34 @@ extension PaymentsDropIn: AdyenSessionPaymentsHandler, AdyenSessionPaymentDetail
 extension PaymentsDropIn: DropInComponentDelegate {
     
     func didSubmit(_ data: PaymentComponentData, from component: PaymentComponent, in dropInComponent: AnyDropInComponent) {
+        
         if (data.paymentMethod as? InstantPaymentDetails)?.type == .other("paysafecard") {
+            
+            self.isPaypalDeposit = false
+
             Env.servicesProvider.updatePayment(amount: self.depositAmount,
                                                paymentId: self.paymentId ?? "",
                                                type: "paysafecard",
+                                               returnUrl: nil)
+            .receive(on: DispatchQueue.main)
+            .sink { completion in
+                print("updatePayment completion: \(completion)")
+            } receiveValue: { updatePaymentResponse in
+                print("updatePayment: \(updatePaymentResponse)")
+                
+                if let redirectURL = URL(string: updatePaymentResponse.action.url) {
+                    self.presentSafariViewController(onURL: redirectURL)
+                }
+            }
+            .store(in: &self.cancellables)
+        }
+        else if (data.paymentMethod as? InstantPaymentDetails)?.type == .payPal {
+            
+            self.isPaypalDeposit = true
+            
+            Env.servicesProvider.updatePayment(amount: self.depositAmount,
+                                               paymentId: self.paymentId ?? "",
+                                               type: "paypal",
                                                returnUrl: nil)
             .receive(on: DispatchQueue.main)
             .sink { completion in
@@ -463,12 +489,13 @@ extension PaymentsDropIn {
     }
     
     func checkSuccessOnRedirectURL(_ url: URL) {
+        
         if url.absoluteString.contains("deposit-results.html") && url.absoluteString.contains("resultCode=authorised") {
             self.dropInComponent?.viewController.dismiss(animated: true)
             if let paymentId = self.paymentId {
                 self.showPaymentStatus?(.startedProcessing, paymentId)
             }
         }
+        
     }
-    
 }

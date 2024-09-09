@@ -33,6 +33,9 @@ extension SportRadarModels {
         var paymentId: Int?
         var gameTranId: String?
         var reference: String?
+        var escrowTranType: String?
+        var escrowTranSubType: String?
+        var escrowType: String?
 
         enum CodingKeys: String, CodingKey {
             case id = "id"
@@ -46,6 +49,9 @@ extension SportRadarModels {
             case paymentId = "paymentId"
             case gameTranId = "gameTranId"
             case reference = "reference"
+            case escrowTranType = "escrowTranType"
+            case escrowTranSubType = "escrowTranSubType"
+            case escrowType = "escrowType"
         }
     }
 }

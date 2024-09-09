@@ -103,6 +103,8 @@ class DepositViewController: UIViewController {
 
         }
     }
+    
+    private let dateFormatter = DateFormatter()
 
     // MARK: Lifetime and Cycle
     init() {
@@ -600,11 +602,25 @@ class DepositViewController: UIViewController {
             if let paymentIdValue = paymentId {
                 self.showPaymentFeedbackLoading(paymentId: paymentIdValue)
             }
+        case .paypalError:
+            self.showPaymentFeedbackError(title: localized("error"), message: localized("deposit_error_paypal_account_already_in_use"))
         }
 
     }
 
-    func showPaymentFeedbackError() {
+    func showPaymentFeedbackError(title: String? = nil, message: String? = nil, withForceClose: Bool = false) {
+        
+        var titleFinal = "\(localized("oh_no"))!"
+        var messageFinal = localized("deposit_error_message")
+        
+        if let title {
+            titleFinal = title
+        }
+        
+        if let message {
+            messageFinal = message
+        }
+        
         if let presentedViewController = self.presentedViewController {
             presentedViewController.dismiss(animated: false)
         }
@@ -612,12 +628,17 @@ class DepositViewController: UIViewController {
         self.shouldRefreshUserWallet?()
         
         let genericAvatarErrorViewController = GenericAvatarErrorViewController()
-        genericAvatarErrorViewController.setTextInfo(title: "\(localized("oh_no"))!", subtitle: localized("deposit_error_message"))
+        genericAvatarErrorViewController.setTextInfo(title: titleFinal, subtitle: messageFinal)
         genericAvatarErrorViewController.didTapCloseAction = { [weak self] in
             self?.shouldDismiss()
         }
-        genericAvatarErrorViewController.didTapBackAction = {
-            genericAvatarErrorViewController.navigationController?.popViewController(animated: true)
+        genericAvatarErrorViewController.didTapBackAction = { [weak self] in
+            if withForceClose {
+                self?.shouldDismiss()
+            }
+            else {
+                genericAvatarErrorViewController.navigationController?.popViewController(animated: true)
+            }
         }
         self.navigationController?.pushViewController(genericAvatarErrorViewController, animated: true)
     }
@@ -630,7 +651,13 @@ class DepositViewController: UIViewController {
         let genericAvatarWarningViewController = GenericAvatarWarningViewController(paymentId: paymentId)
         genericAvatarWarningViewController.continueWithPaymentStatusOk = { [weak self] isPaymentStatusOk in
             if isPaymentStatusOk {
-                self?.showPaymentFeedbackSuccess()
+                if let isPaypalDeposit =  self?.viewModel.paymentsDropIn.isPaypalDeposit,
+                   isPaypalDeposit {
+                    self?.checkTransactions(paymentId: paymentId)
+                }
+                else {
+                    self?.showPaymentFeedbackSuccess()
+                }
             }
             else {
                 self?.showPaymentFeedbackError()
@@ -702,6 +729,62 @@ class DepositViewController: UIViewController {
         }
         depositSuccessViewController.setTextInfo(title: "\(localized("success"))!", subtitle: localized("deposit_success_message"))
         self.navigationController?.pushViewController(depositSuccessViewController, animated: true)
+    }
+    
+    func checkTransactions(paymentId: String) {
+        
+        let currentDate = Date()
+
+        let startOfDay = Calendar.current.startOfDay(for: currentDate)
+        
+        let endOfDay = Calendar.current.date(byAdding: DateComponents(hour: 23, minute: 59), to: startOfDay) ?? Date()
+        
+        let startDate = self.getDateString(date: startOfDay)
+        
+        let endDate = self.getDateString(date: endOfDay)
+        
+        Env.servicesProvider.getTransactionsHistory(startDate: startDate, endDate: endDate, transactionTypes: [TransactionType.deposit, TransactionType.automatedWithdrawalThreshold], pageNumber: 1)
+            .receive(on: DispatchQueue.main)
+            .sink(receiveCompletion: { [weak self] completion in
+                switch completion {
+                case .finished:
+                    ()
+                case .failure(let error):
+                    print("TRANSACTIONS DROPIN ERROR: \(error)")
+                    self?.showPaymentFeedbackError(withForceClose: true)
+                }
+            }, receiveValue: { [weak self] transactionsDeposits in
+
+                guard let self = self else { return }
+
+                if let depositTransaction = transactionsDeposits.filter({
+                    $0.type == .deposit && "\($0.paymentId ?? 0)" == paymentId
+                }).first {
+                   
+                    let escXferTransaction = transactionsDeposits.filter( {
+                       $0.type == .automatedWithdrawalThreshold && $0.dateTime == depositTransaction.dateTime
+                   }).first
+                    
+                    if escXferTransaction != nil {
+                        self.showPaymentFeedbackError(title: localized("error"), message: localized("deposit_error_paypal_account_already_in_use"), withForceClose: true)                    }
+                    else {
+                        self.showPaymentFeedbackSuccess()
+                    }
+                }
+                else {
+                    self.showPaymentFeedbackError(withForceClose: true)
+                }
+
+            })
+            .store(in: &cancellables)
+    }
+    
+    private func getDateString(date: Date) -> String {
+        self.dateFormatter.dateFormat = "yyyy-MM-dd'T'HH:mm:ss"
+
+        let dateString = self.dateFormatter.string(from: date).appending("Z")
+
+        return dateString
     }
 
     @IBAction private func tapResponsabibleGamingUnderlineLabel(gesture: UITapGestureRecognizer) {

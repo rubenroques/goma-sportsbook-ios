@@ -67,11 +67,12 @@ class BettingConnector: Connector {
         return self.session.dataTaskPublisher(for: request)
             .tryMap { result -> Data in
                 if let httpResponse = result.response as? HTTPURLResponse, httpResponse.statusCode == 401 {
-                    
+
+                    // Betslip mixmatch error
                     if (request.url?.absoluteString ?? "").contains("/custom-bet/v1/calculate") {
                         throw ServiceProviderError.badRequest
                     }
-                    
+
                     throw ServiceProviderError.unauthorized
                 }
                 else if let httpResponse = result.response as? HTTPURLResponse, httpResponse.statusCode == 404 {

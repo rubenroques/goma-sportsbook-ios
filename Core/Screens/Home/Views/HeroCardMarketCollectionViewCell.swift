@@ -275,7 +275,6 @@ class HeroCardMarketCollectionViewCell: UICollectionViewCell {
 //                .map(\.bettingOffer)
                 .receive(on: DispatchQueue.main)
                 .sink(receiveCompletion: { completion in
-                    print("leftOddButtonSubscriber subscribeToOutcomeUpdates completion: \(completion)")
 
                 }, receiveValue: { [weak self] serviceProviderOutcome in
                     
@@ -354,7 +353,7 @@ class HeroCardMarketCollectionViewCell: UICollectionViewCell {
 //                .map(\.bettingOffer)
                 .receive(on: DispatchQueue.main)
                 .sink(receiveCompletion: { completion in
-                    print("middleOddButtonSubscriber subscribeToOutcomeUpdates completion: \(completion)")
+                    
                 }, receiveValue: { [weak self] serviceProviderOutcome in
                     
                     guard let weakSelf = self,
@@ -430,7 +429,7 @@ class HeroCardMarketCollectionViewCell: UICollectionViewCell {
 //                .map(\.bettingOffer)
                 .receive(on: DispatchQueue.main)
                 .sink(receiveCompletion: { completion in
-                    print("rightOddButtonSubscriber subscribeToOutcomeUpdates completion: \(completion)")
+                    
                 }, receiveValue: { [weak self] serviceProviderOutcome in
                     
                     guard let weakSelf = self,

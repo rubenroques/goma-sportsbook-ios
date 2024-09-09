@@ -18,15 +18,26 @@ struct GrantedBonus: Codable {
     let currency: String?
     let amount: Double?
     let remainingAmount: Double?
-    let expiryDate: String?
-    let grantedDate: String?
+    let expiryDate: Date?
+    let grantedDate: Date?
     let initialWagerRequirementAmount: Double?
     let remainingWagerRequirementAmount: Double?
 
-    init(id: String, name: String, status: String, type: String? = nil, localizedType: String? = nil, description: String? = nil,
-         vendor: String? = nil, currency: String? = nil, amount: Double? = nil,
-         remainingAmount: Double? = nil, expiryDate: String? = nil, grantedDate: String? = nil,
-         initialWagerRequirementAmount: Double? = nil, remainingWagerRequirementAmount: Double? = nil) {
+    init(id: String,
+         name: String,
+         status: String,
+         type: String? = nil,
+         localizedType: String? = nil,
+         description: String? = nil,
+         vendor: String? = nil,
+         currency: String? = nil,
+         amount: Double? = nil,
+         remainingAmount: Double? = nil,
+         expiryDate: Date? = nil,
+         grantedDate: Date? = nil,
+         initialWagerRequirementAmount: Double? = nil,
+         remainingWagerRequirementAmount: Double? = nil) 
+    {
         self.id = id
         self.name = name
         self.status = status

@@ -31,9 +31,11 @@ class BonusHistoryCellViewModel: NSObject {
 
         self.titlePublisher.value = bonus.name
 
-        self.startDateStringPublisher.value = getDateFormatted(dateString: bonus.grantedDate ?? "")
+        let grantedDate: Date = bonus.grantedDate ?? Date()
+        self.startDateStringPublisher.value = self.getDateFormatted(date: grantedDate)
 
-        self.endDateStringPublisher.value = getDateFormatted(dateString: bonus.expiryDate ?? "")
+        let expiryDate: Date = bonus.expiryDate ?? Date()
+        self.endDateStringPublisher.value = self.getDateFormatted(date: expiryDate)
 
         self.bonusValuePublisher.value = "\(bonus.amount ?? 0.0)"
 
@@ -60,6 +62,12 @@ class BonusHistoryCellViewModel: NSObject {
         }
 
         return ""
+    }
+    
+    private func getDateFormatted(date: Date) -> String {
+        let dateFormatterPrint = DateFormatter()
+        dateFormatterPrint.dateFormat = "dd-MM-yyyy HH:mm"
+        return dateFormatterPrint.string(from: date)
     }
 
 }

@@ -11,8 +11,8 @@ public struct RedeemBonus: Codable {
     public var id: Int
     public var name: String
     public var status: String
-    public var triggerDate: String
-    public var expiryDate: String
+    public var triggerDate: Date?
+    public var expiryDate: Date?
     public var amount: String
     public var wagerRequired: String
     public var amountWagered: String

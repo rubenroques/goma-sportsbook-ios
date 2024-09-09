@@ -2139,7 +2139,6 @@ extension MatchWidgetCollectionViewCell {
                 .map(\.bettingOffer)
                 .receive(on: DispatchQueue.main)
                 .sink(receiveCompletion: { completion in
-                    print("leftOddButtonSubscriber subscribeToOutcomeUpdates completion: \(completion)")
 
                 }, receiveValue: { [weak self] bettingOffer in
                     
@@ -2212,7 +2211,6 @@ extension MatchWidgetCollectionViewCell {
                 .map(\.bettingOffer)
                 .receive(on: DispatchQueue.main)
                 .sink(receiveCompletion: { completion in
-                    print("middleOddButtonSubscriber subscribeToOutcomeUpdates completion: \(completion)")
                 }, receiveValue: { [weak self] bettingOffer in
                     
                     guard let weakSelf = self else { return }
@@ -2282,7 +2280,6 @@ extension MatchWidgetCollectionViewCell {
                 .map(\.bettingOffer)
                 .receive(on: DispatchQueue.main)
                 .sink(receiveCompletion: { completion in
-                    print("rightOddButtonSubscriber subscribeToOutcomeUpdates completion: \(completion)")
                 }, receiveValue: { [weak self] bettingOffer in
                     
                     guard let weakSelf = self else { return }

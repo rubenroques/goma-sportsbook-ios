@@ -292,7 +292,9 @@ class BetSubmissionSuccessViewController: UIViewController {
                         if let matchingServerSelection = betPlacedSelections.first(where: { betslipPlaceEntry in
                             betslipPlaceEntry.id == localTicket.id
                         }) {
-                            betHistoryEntrySelection.priceValue = matchingServerSelection.priceValue
+                            if let newValue = matchingServerSelection.priceValue {
+                                betHistoryEntrySelection.priceValue = newValue
+                            }
                         }
                         // We need to use the odd that the server return for each selection in the ticket
                         return betHistoryEntrySelection
