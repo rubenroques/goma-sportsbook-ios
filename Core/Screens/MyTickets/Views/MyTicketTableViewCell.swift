@@ -177,12 +177,24 @@ class MyTicketTableViewCell: UITableViewCell {
         self.betIdLabel.text = ""
         
         self.totalOddTitleLabel.text = localized("total_odd")
+        self.totalOddTitleLabel.font = AppFont.with(type: .semibold, size: 12)
+        
         self.betAmountTitleLabel.text = localized("bet_amount")
+        self.betAmountTitleLabel.font = AppFont.with(type: .semibold, size: 12)
+
         self.winningsTitleLabel.text = localized("return_text")
+        self.winningsTitleLabel.font = AppFont.with(type: .semibold, size: 12)
 
         self.totalOddSubtitleLabel.text = "-"
+        self.totalOddSubtitleLabel.font = AppFont.with(type: .semibold, size: 16)
+
         self.betAmountSubtitleLabel.text = "-"
+        self.betAmountSubtitleLabel.font = AppFont.with(type: .semibold, size: 16)
+
         self.winningsSubtitleLabel.text = "-"
+        self.winningsSubtitleLabel.font = AppFont.with(type: .semibold, size: 16)
+        
+        self.cashbackValueLabel.font = AppFont.with(type: .semibold, size: 16)
 
         self.freebetLabel.text = localized("Freebet")
         self.freebetLabel.font = AppFont.with(type: .bold, size: 9.0)
