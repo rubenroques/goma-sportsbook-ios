@@ -379,11 +379,6 @@ extension ServiceProviderModelMapper {
     
     static func suggestedBetslip(fromPromotedBetslip promotedBetslip: PromotedBetslip) -> SuggestedBetslip {
         var suggestedSelections = promotedBetslip.selections.map(suggestedBetslipSelection)
-        
-        #if DEBUG
-        return SuggestedBetslip(selections: (suggestedSelections + [suggestedSelections.first!]))
-        #endif
-        
         return SuggestedBetslip(selections: suggestedSelections)
     }
     

@@ -23,10 +23,8 @@ extension SportRadarModels {
             
             self.status = try container.decode(String.self, forKey: .status)
             
-            let dataArray = try container.decode([PromotedBetslipsInternalRequest].self, forKey: .data)
-            self.promotedBetslips = dataArray.flatMap { internalRequest in
-                internalRequest.body.data.promotedBetslip
-            }
+            let batchData = try container.decode(VaixBatchData.self, forKey: .data)
+            self.promotedBetslips = batchData.promotedBetslips
         }
         
         func encode(to encoder: Encoder) throws {
@@ -73,17 +71,17 @@ extension SportRadarModels {
     }
     
     private struct VaixBatchData: Codable {
-        var promotedBetslip: [PromotedBetslip]
+        var promotedBetslips: [PromotedBetslip]
         var count: Int
         
         enum CodingKeys: String, CodingKey {
-            case promotedBetslip = "betslips"
+            case promotedBetslips = "betslips"
             case count = "count"
         }
         
         init(from decoder: Decoder) throws {
             let container: KeyedDecodingContainer<SportRadarModels.VaixBatchData.CodingKeys> = try decoder.container(keyedBy: SportRadarModels.VaixBatchData.CodingKeys.self)
-            self.promotedBetslip = try container.decode([SportRadarModels.PromotedBetslip].self, forKey: SportRadarModels.VaixBatchData.CodingKeys.promotedBetslip)
+            self.promotedBetslips = try container.decode([SportRadarModels.PromotedBetslip].self, forKey: SportRadarModels.VaixBatchData.CodingKeys.promotedBetslips)
             self.count = try container.decode(Int.self, forKey: SportRadarModels.VaixBatchData.CodingKeys.count)
         }
     }

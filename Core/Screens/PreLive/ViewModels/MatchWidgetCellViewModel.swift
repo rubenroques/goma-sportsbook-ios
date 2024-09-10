@@ -13,6 +13,7 @@ import UIKit
 enum MatchWidgetType: String, CaseIterable {
     case normal
     case topImage
+    case topImageWithMixMatch
     case topImageOutright
     case boosted
     case backgroundImage
@@ -279,7 +280,7 @@ class MatchWidgetCellViewModel {
         return Publishers.CombineLatest(self.$match, self.$matchWidgetType)
             .map { match, matchWidgetType in
                 if RePlayFeatureHelper.shouldShowRePlay(forMatch: match) {
-                    return matchWidgetType == .normal || matchWidgetType == .topImage
+                    return matchWidgetType == .normal || matchWidgetType == .topImage || matchWidgetType == .topImageWithMixMatch
                 }
                 return false
             }

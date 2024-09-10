@@ -531,7 +531,7 @@ class PreSubmissionBetslipViewController: UIViewController {
         self.secondarySystemOddsTitleLabel.text = localized("total_bet_amount")
         self.secondarySystemOddsValueLabel.text = localized("no_value")
 
-        self.emptyBetsImageView.image = UIImage(named: "avatar_euro_empty")
+        self.emptyBetsImageView.image = UIImage(named: "empty_betslip_icon")
 
         self.emptyBetslipLabel.text = localized("empty_betslip_info_title")
         self.emptyBetslipLabel.textAlignment = .center

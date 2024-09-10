@@ -359,64 +359,15 @@ class ClientManagedHomeViewTemplateDataSource {
         
         Env.servicesProvider.getHeroGameEvent()
             .receive(on: DispatchQueue.main)
-            .map(ServiceProviderModelMapper.match(fromEvent:))
+            .map(ServiceProviderModelMapper.matches(fromEvents:))
+            .compactMap({ $0 })
             .sink(receiveCompletion: { completion in
                     print("ClientManagedHomeTemplate getHeroGameEvent completion \(completion)")
-            }, receiveValue: { [weak self] heroMatch in
-                var heroMatches: [Match] = []
-                
-                if let heroMatch {
-                    heroMatches.append(heroMatch)
-                }
-                
+            }, receiveValue: { [weak self] heroMatches in
                 self?.heroMatches = heroMatches
-                
                 self?.refreshPublisher.send()
             })
             .store(in: &cancellables)
-
-//        let imageMatches = Env.servicesProvider.getHighlightedVisualImageEvents()
-//            .receive(on: DispatchQueue.main)
-//            .map(ServiceProviderModelMapper.matches(fromEvents:))
-//            .replaceError(with: [])
-//        
-//
-//        imageMatches.map { heroEvents -> [HighlightedMatchType] in
-//            var events: [HighlightedMatchType] = heroEvents.map({ HighlightedMatchType.visualImageMatch($0) })
-//            return events
-//        }
-//        .receive(on: DispatchQueue.main)
-//        .sink(receiveCompletion: { completion in
-//            print("ClientManagedHomeTemplate fetchHeroMatches completion \(completion)")
-//        }, receiveValue: { [weak self] highlightedMatchTypes in
-//            var imageMatches: [Match] = []
-//            var boostedMatches: [Match] = []
-//            for highlightedMatchType in highlightedMatchTypes {
-//                switch highlightedMatchType {
-//                case .visualImageMatch(let match):
-//                    imageMatches.append(match)
-//                case .boostedOddsMatch(let match):
-//                    boostedMatches.append(match)
-//                }
-//            }
-//            
-//            var testMatches: [Match] = []
-//            
-//            for match in imageMatches {
-//                var markets = match.markets
-//                let newMarkets = markets.flatMap { [$0, $0] }
-//                var newMatch = match
-//                newMatch.markets = newMarkets
-//                testMatches.append(newMatch)
-//            }
-//
-//            self?.heroMatches = testMatches.filter({
-//                $0.homeParticipant.name != "" && $0.awayParticipant.name != ""
-//            })
-//
-//            self?.refreshPublisher.send()
-//        })
-//        .store(in: &self.cancellables)
 
     }
 
@@ -488,8 +439,6 @@ class ClientManagedHomeViewTemplateDataSource {
                 else {
                     self?.topCompetitionsLineCellViewModel = TopCompetitionsLineCellViewModel(topCompetitions: convertedCompetitions)
                 }
-
-                
                 self?.refreshPublisher.send()
             })
             .store(in: &cancellables)
@@ -650,7 +599,7 @@ extension ClientManagedHomeViewTemplateDataSource: HomeViewTemplateDataSource {
         case .bannerLine:
             return self.bannersLineViewModel == nil ? 0 : 1
         case .heroCard:
-            return self.heroMatches.isEmpty ? 0 : 1
+            return self.heroMatches.count
         case .quickSwipeStack:
             return self.quickSwipeStackMatches.isEmpty ? 0 : 1
         case .promotionalStories:
@@ -873,12 +822,19 @@ extension ClientManagedHomeViewTemplateDataSource: HomeViewTemplateDataSource {
         let highlightsOutrightsMatchesIndex = index-self.highlightsVisualImageMatches.count
         
         if let match = self.highlightsVisualImageMatches[safe: index] {
-            let id = match.id + MatchWidgetType.topImage.rawValue
+            var type = MatchWidgetType.topImage
+            
+            if match.markets.first?.customBetAvailable ?? false {
+                type = .topImageWithMixMatch
+            }
+            
+            let id = match.id + type.rawValue
+            
             if let matchWidgetCellViewModel = self.matchWidgetCellViewModelCache[id] {
                 return matchWidgetCellViewModel
             }
             else {
-                let matchWidgetCellViewModel = MatchWidgetCellViewModel(match: match, matchWidgetType: .topImage)
+                let matchWidgetCellViewModel = MatchWidgetCellViewModel(match: match, matchWidgetType: type)
                 self.matchWidgetCellViewModelCache[id] = matchWidgetCellViewModel
                 return matchWidgetCellViewModel
             }

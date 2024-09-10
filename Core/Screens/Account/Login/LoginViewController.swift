@@ -774,12 +774,12 @@ extension LoginViewController {
         // gomaTest
         // Testaccount!1
         if self.usernameHeaderTextFieldView.text.isEmpty || self.usernameHeaderTextFieldView.text == "ruben" {
-            self.usernameHeaderTextFieldView.setText("ivolrs") // ("gomaTest") // ("pafeha4474@lance7.com") // ("gomafrontend") // ("ruben@gomadevelopment.pt")
+            self.usernameHeaderTextFieldView.setText("ivotestsrna947") // ("gomaTest") // ("pafeha4474@lance7.com") // ("gomafrontend") // ("ruben@gomadevelopment.pt")
             self.passwordHeaderTextFieldView.setText("testesdoIvo1@") //("Testaccount!1") // ("iosGoma123") // ("Omega123") // ("ruben=GOMA=12345")
             self.loginButton.isEnabled = true
         }
         else if self.usernameHeaderTextFieldView.text == "ivolrs" {
-            self.usernameHeaderTextFieldView.setText("ivotestsrna931")
+            self.usernameHeaderTextFieldView.setText("ivogoma")
             self.passwordHeaderTextFieldView.setText("testesdoIvo1@")
             self.loginButton.isEnabled = true
         }

@@ -10,7 +10,7 @@ import Combine
 
 class FeaturedTipLineViewModel {
 
-    static let maxTicketsBeforeExpand = 4
+    static let maxTicketsBeforeExpand = 3
     
     enum DataType {
         case featuredTips([FeaturedTip])
@@ -101,7 +101,7 @@ class FeaturedTipLineViewModel {
 
 class FeaturedTipLineTableViewCell: UITableViewCell {
 
-    static var estimatedHeight: CGFloat = 480
+    static var estimatedHeight: CGFloat = 378
     
     private lazy var collectionView: UICollectionView = Self.createCollectionView()
 
@@ -161,10 +161,10 @@ class FeaturedTipLineTableViewCell: UITableViewCell {
         self.viewModel = viewModel
 
         if viewModel.maxTicketsCount() > FeaturedTipLineViewModel.maxTicketsBeforeExpand {
-            self.collectionViewHeightConstraint?.constant = 476
+            self.collectionViewHeightConstraint?.constant = Self.estimatedHeight
         }
         else {
-            self.collectionViewHeightConstraint?.constant = 456
+            self.collectionViewHeightConstraint?.constant = Self.estimatedHeight - 20
         }
                 
         self.reloadCollections()
@@ -278,13 +278,15 @@ extension FeaturedTipLineTableViewCell {
     }
 
     private func initConstraints() {
-        self.collectionViewHeightConstraint = self.collectionView.heightAnchor.constraint(equalToConstant: 464)
+        
+        let spacing: CGFloat = 16
+        self.collectionViewHeightConstraint = self.collectionView.heightAnchor.constraint(equalToConstant: Self.estimatedHeight - spacing)
         
         NSLayoutConstraint.activate([
             self.collectionView.leadingAnchor.constraint(equalTo: self.contentView.leadingAnchor, constant: 0),
             self.collectionView.trailingAnchor.constraint(equalTo: self.contentView.trailingAnchor, constant: 0),
-            self.collectionView.topAnchor.constraint(equalTo: self.contentView.topAnchor, constant: 8),
-            self.collectionView.bottomAnchor.constraint(equalTo: self.contentView.bottomAnchor, constant: -8),
+            self.collectionView.topAnchor.constraint(equalTo: self.contentView.topAnchor, constant: spacing/2),
+            self.collectionView.bottomAnchor.constraint(equalTo: self.contentView.bottomAnchor, constant: -(spacing/2)),
             
             self.collectionViewHeightConstraint!
      ])

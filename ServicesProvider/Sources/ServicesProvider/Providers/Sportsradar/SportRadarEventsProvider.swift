@@ -767,9 +767,11 @@ class SportRadarEventsProvider: EventsProvider {
         let contentIdentifier = ContentIdentifier(contentType: contentType, contentRoute: contentRoute)
 
         if let coordinators = self.marketUpdatesCoordinators[marketId], coordinators.isActive {
+            print("DebugSgt: marketUpdatesCoordinators \(marketId) isActive")
             return coordinators.marketPublisher
         }
         else {
+            print("DebugSgt: marketUpdatesCoordinators \(marketId) not active")
             let coordinator = SportRadarMarketDetailsCoordinator.init(marketId: marketId,
                                                                       eventId: eventId,
                                                                       sessionToken: sessionToken.hash,
@@ -1392,42 +1394,72 @@ extension SportRadarEventsProvider {
         .eraseToAnyPublisher()
     }
 
-    func getHeroGameEvent() -> AnyPublisher<Event, ServiceProviderError> {
+    func getHeroGameEvent() -> AnyPublisher<[Event], ServiceProviderError> {
         let endpoint = SportRadarRestAPIClient.getHeroGameCard
         let requestPublisher: AnyPublisher<SportRadarModels.SportRadarResponse<SportRadarModels.HeadlineResponse>, ServiceProviderError> = self.restConnector.request(endpoint)
 
+        var eventMarketGroupRelations: [String: String] = [:]
+        var uniqueMarketGroupIds: [String] = []
+        
         return requestPublisher
             .map(\.data)
-            .flatMap({ headlineResponse -> AnyPublisher<Event, ServiceProviderError> in
+            .flatMap({ headlineResponse -> AnyPublisher<[Event], ServiceProviderError> in
 
                 let headlineItems = headlineResponse.headlineItems ?? []
-                var headlineItemImage: String?
+                var headlineItemImage = [String: String]()
+                
                 
                 headlineItems.forEach({ item in
                     if let id = item.marketGroupId, let imageURL = item.imageURL {
-                        headlineItemImage = imageURL
+                        headlineItemImage[id] = imageURL
                     }
                 })
                 
-                let marketGroupId = headlineItems.map({ item in return item.marketGroupId }).compactMap({ $0 }).first
-                              
-                return self.getEventForMarketGroup(withId: marketGroupId ?? "")
-                    .map({ event -> Event in
-                        
-                        let firstMarket = event.markets.first
-                        
-                        event.promoImageURL =  headlineItemImage
-                        event.homeTeamName = firstMarket?.homeParticipant ?? ""
-                        event.awayTeamName = firstMarket?.awayParticipant ?? ""
-                        event.name = firstMarket?.eventName ?? ""
+                let marketGroupIds = headlineItems.map { $0.marketGroupId }.compactMap { $0 }
 
-                        return event
-                    })
+                var seen = Set<String>() // Adjust the type according to the type of `marketGroupId`
+                
+                uniqueMarketGroupIds = marketGroupIds.filter { marketGroupId in
+                    guard !seen.contains(marketGroupId) else { return false }
+                    seen.insert(marketGroupId)
+                    return true
+                }
+                
+                // Support multiple events
+                let publishers = uniqueMarketGroupIds.map { marketGroupId in
+                    self.getEventForMarketGroup(withId: marketGroupId)
+                        .map({ event -> Event in
+                            
+                            eventMarketGroupRelations[event.id] = marketGroupId
+                            
+                            event.promoImageURL = headlineItemImage[marketGroupId] ?? ""
+    
+                            let firstMarket = event.markets.first
+                            event.homeTeamName = firstMarket?.homeParticipant ?? ""
+                            event.awayTeamName = firstMarket?.awayParticipant ?? ""
+                            event.name = firstMarket?.eventName ?? ""
+                            return event
+                        })
+                        .eraseToAnyPublisher()
+                }
+
+                // Combine all the publishers into a single one that emits an array of events
+                return Publishers.MergeMany(publishers)
+                    .collect()
+                    // Restore the original order of events
+                    .map { events in
+                        return events.sorted { leftEvent, rightEvent in
+                            let leftEventMarketGroupId = eventMarketGroupRelations[leftEvent.id] ?? ""
+                            let rightEventMarketGroupId = eventMarketGroupRelations[rightEvent.id] ?? ""
+
+                            let leftPosition = uniqueMarketGroupIds.firstIndex(of: leftEventMarketGroupId) ?? 100
+                            let rightPosition = uniqueMarketGroupIds.firstIndex(of: rightEventMarketGroupId) ?? 101
+
+                            return leftPosition < rightPosition
+                        }
+                    }
                     .eraseToAnyPublisher()
-
-//                return publisher
-//                    .setFailureType(to: ServiceProviderError.self)
-//                    .eraseToAnyPublisher()
+                
             })
             .eraseToAnyPublisher()
     }
@@ -1642,7 +1674,7 @@ extension SportRadarEventsProvider {
                               competitionName: competitionName,
                               sport: sport,
                               sportIdCode: nil,
-                              startDate: Date(),
+                              startDate: firstMarket.startDate ?? Date(timeIntervalSince1970: 0),
                               markets: mappedMarkets,
                               venueCountry: firstMarket.venueCountry,
                               trackableReference: nil,
