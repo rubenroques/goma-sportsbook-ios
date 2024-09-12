@@ -188,6 +188,9 @@ class TransactionsTableViewCell: UITableViewCell {
         else if transactionHistoryEntry.type == localized("automated_withdrawal_threshold") {
             self.transactionIcon.image = UIImage(named: "automated_withdraw_threshold_icon")
         }
+        else if transactionHistoryEntry.transactionType == .depositReturned {
+            self.transactionIcon.image = UIImage(named: "canceled_transaction_icon")
+        }
 
         self.hasPendingTransaction = false
 

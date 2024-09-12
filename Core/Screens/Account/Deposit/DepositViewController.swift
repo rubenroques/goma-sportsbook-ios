@@ -602,10 +602,7 @@ class DepositViewController: UIViewController {
             if let paymentIdValue = paymentId {
                 self.showPaymentFeedbackLoading(paymentId: paymentIdValue)
             }
-        case .paypalError:
-            self.showPaymentFeedbackError(title: localized("error"), message: localized("deposit_error_paypal_account_already_in_use"))
         }
-
     }
 
     func showPaymentFeedbackError(title: String? = nil, message: String? = nil, withForceClose: Bool = false) {

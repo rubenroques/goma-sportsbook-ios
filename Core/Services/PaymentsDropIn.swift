@@ -398,7 +398,6 @@ extension PaymentsDropIn: DropInComponentDelegate {
             .sink { completion in
                 print("updatePayment completion: \(completion)")
             } receiveValue: { updatePaymentResponse in
-                print("updatePayment: \(updatePaymentResponse)")
                 
                 if let redirectURL = URL(string: updatePaymentResponse.action.url) {
                     self.presentSafariViewController(onURL: redirectURL)
@@ -418,7 +417,6 @@ extension PaymentsDropIn: DropInComponentDelegate {
             .sink { completion in
                 print("updatePayment completion: \(completion)")
             } receiveValue: { updatePaymentResponse in
-                print("updatePayment: \(updatePaymentResponse)")
                 
                 if let redirectURL = URL(string: updatePaymentResponse.action.url) {
                     self.presentSafariViewController(onURL: redirectURL)
