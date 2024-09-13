@@ -22,11 +22,15 @@ class Bootstrap {
     }
 
     func boot() {
+        print("DebugRouter boot ")
+
         self.environment = Env
 
         guard let environment = self.environment else { return }
 
-        environment.businessSettingsSocket.connect()
+        print("DebugRouter environment set")
+
+        environment.businessSettingsSocket.connectAfterAuth()
 
         if TargetVariables.hasFeatureEnabled(feature: .getLocationLimits) {
             if environment.locationManager.isLocationServicesEnabled() {
@@ -69,11 +73,16 @@ class Bootstrap {
             .sink(receiveValue: { [weak self] maintenanceModeType in
                 switch maintenanceModeType {
                 case .on:
+                    print("DebugRouter maintenanceModePublisher on")
                     self?.router.showUnderMaintenanceScreenOnBoot()
                 case .off:
+                    print("DebugRouter maintenanceModePublisher off")
+
                     self?.router.makeKeyAndVisible()
                     self?.bootTriggerCancelable?.cancel()
                 case .unknown:
+                    print("DebugRouter maintenanceModePublisher unknown")
+
                     break
                 }
             })

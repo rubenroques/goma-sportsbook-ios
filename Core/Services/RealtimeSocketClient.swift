@@ -7,6 +7,7 @@
 
 import Foundation
 import FirebaseDatabase
+import FirebaseAuth
 import Combine
 
 class RealtimeSocketClient {
@@ -17,7 +18,7 @@ class RealtimeSocketClient {
         case unknown
     }
     
-    var databaseReference: DatabaseReference!
+    var databaseReference: DatabaseReference?
 
     var maintenanceModePublisher: AnyPublisher<MaintenanceModeType, Never> {
         return self.maintenanceModeSubject.removeDuplicates().eraseToAnyPublisher()
@@ -32,38 +33,87 @@ class RealtimeSocketClient {
 
     var clientSettings: FirebaseClientSettings = .defaultSettings
 
+    var databaseHandle: FirebaseDatabase.DatabaseHandle?
+    
+    private var isObservingDatabase = false
+    
+    private static let url = TargetVariables.firebaseDatabaseURL
+
     init() {
-        let url = TargetVariables.firebaseDatabaseURL
-        Database.database(url: url).isPersistenceEnabled = false
-        self.databaseReference = Database.database(url: url).reference()
+        print("DebugRouter RealtimeSocketClient init")
+        Database.database(url: Self.url).isPersistenceEnabled = false
     }
 
-    func connect() {
+    func connectAfterAuth() {
+        print("DebugRouter RealtimeSocketClient databaseReference.observe called")
 
-        self.databaseReference.observe(.value) { [weak self] snapshot in
-            guard
-                let value = snapshot.value,
-                !(value is NSNull),
-                let data = try? JSONSerialization.data(withJSONObject: value),
-                let firebaseClientSettings = try? JSONDecoder().decode(FirebaseClientSettings.self, from: data)
-            else {
-                return
+        // We can only connect to the ea
+        Auth.auth().addStateDidChangeListener { [weak self] auth, user in 
+            if user != nil {
+                self?.connect()
             }
+        }
 
-            let versions = (required: firebaseClientSettings.requiredAppVersion, current: firebaseClientSettings.currentAppVersion)
-            self?.requiredVersionPublisher.send(versions)
+//        self.databaseReference.getData {  [weak self] error, snapshot in
+//            if let errorValue = error {
+//                print("DebugRouter databaseReference.getData error:", dump(errorValue))
+//            }
+//            else {
+//                self?.parseSnapshot(snapshot)
+//            }
+//        }
 
-            self?.clientSettings = firebaseClientSettings
+//        self.databaseHandle = self.databaseReference.observe(.value, with: { [weak self] snapshot in
+//            self?.isObservingDatabase = true
+//            self?.parseSnapshot(snapshot)
+//        })
+        
+        // Timeout handling
+//        DispatchQueue.main.asyncAfter(deadline: .now() + 3) { [weak self] in
+//            if !(self?.isObservingDatabase ?? false) {
+//                print("DebugRouter Timeout: No data received from Firebase within 3 seconds")
+//                self?.connect()
+//            }
+//        }
+        
+    }
+    
+    private func connect() {
+        
+        self.databaseReference = Database.database(url: Self.url).reference()
 
-            self?.clientSettingsPublisher.send(firebaseClientSettings)
+        self.databaseHandle = self.databaseReference?.observe(.value, with: { [weak self] snapshot in
+            self?.isObservingDatabase = true
+            self?.parseSnapshot(snapshot)
+        })
+    }
+    
+    private func parseSnapshot(_ dataSnapshot: FirebaseDatabase.DataSnapshot) {
+        guard
+            let value = dataSnapshot.value,
+            !(value is NSNull),
+            let data = try? JSONSerialization.data(withJSONObject: value),
+            let firebaseClientSettings = try? JSONDecoder().decode(FirebaseClientSettings.self, from: data)
+        else {
+            print("DebugRouter RealtimeSocketClient connect failed")
+            return
+        }
+                    
+        print("DebugRouter firebaseClientSettings \(firebaseClientSettings)")
 
-            if firebaseClientSettings.isOnMaintenance {
-                self?.maintenanceModeSubject.send(.on(message: firebaseClientSettings.maintenanceReason))
-            }
-            else {
-                self?.maintenanceModeSubject.send(.off)
-            }
-            
+        let versions = (required: firebaseClientSettings.requiredAppVersion, current: firebaseClientSettings.currentAppVersion)
+        self.requiredVersionPublisher.send(versions)
+
+        self.clientSettings = firebaseClientSettings
+
+        self.clientSettingsPublisher.send(firebaseClientSettings)
+
+        if firebaseClientSettings.isOnMaintenance {
+            self.maintenanceModeSubject.send(.on(message: firebaseClientSettings.maintenanceReason))
+        }
+        else {
+            self.maintenanceModeSubject.send(.off)
         }
     }
+    
 }
