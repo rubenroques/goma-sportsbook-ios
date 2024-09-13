@@ -662,29 +662,46 @@ class SportRadarPrivilegedAccessManager: PrivilegedAccessManager {
             fileMimeType: mimeType,
             fileData: file
         )
+        
+        let currentDate = Date()
+
+        var issuedDateComponent = DateComponents()
+        issuedDateComponent.year = -1
+        let issuedDate = Calendar.current.date(byAdding: issuedDateComponent, to: currentDate) ?? currentDate
+
+        var expiryDateComponent = DateComponents()
+        expiryDateComponent.year = 3
+        let expiryDate = Calendar.current.date(byAdding: expiryDateComponent, to: currentDate) ?? currentDate
+
+        // Create a date formatter
+        let dateFormatter = DateFormatter()
+        dateFormatter.dateFormat = "yyyy-MM-dd"
+
+        let expiryDateString = dateFormatter.string(from: expiryDate)
+        let issuedDateString = dateFormatter.string(from: issuedDate)
 
         if documentType == "IDENTITY_CARD" {
-            multipart.add(key: "issueDate", value: "2022-12-01")
-            multipart.add(key: "expiryDate", value: "2024-08-01")
+            multipart.add(key: "issueDate", value: issuedDateString)
+            multipart.add(key: "expiryDate", value: expiryDateString)
             multipart.add(key: "documentNumber", value: "123456789")
         }
         else if documentType == "RESIDENCE_ID" {
-            multipart.add(key: "issueDate", value: "2022-12-01")
-            multipart.add(key: "expiryDate", value: "2024-08-01")
+            multipart.add(key: "issueDate", value: issuedDateString)
+            multipart.add(key: "expiryDate", value: expiryDateString)
             multipart.add(key: "documentNumber", value: "123456789")
         }
         else if documentType == "DRIVING_LICENCE" {
-            multipart.add(key: "issueDate", value: "2022-12-01")
-            multipart.add(key: "expiryDate", value: "2024-08-01")
+            multipart.add(key: "issueDate", value: issuedDateString)
+            multipart.add(key: "expiryDate", value: expiryDateString)
             multipart.add(key: "documentNumber", value: "123456789")
         }
         else if documentType == "PASSPORT" {
-            multipart.add(key: "issueDate", value: "2022-12-01")
-            multipart.add(key: "expiryDate", value: "2024-08-01")
+            multipart.add(key: "issueDate", value: issuedDateString)
+            multipart.add(key: "expiryDate", value: expiryDateString)
             multipart.add(key: "documentNumber", value: "123456789")
         }
         else if documentType == "OTHERS" {
-            multipart.add(key: "expiryDate", value: "2024-08-01")
+            multipart.add(key: "expiryDate", value: expiryDateString)
             multipart.add(key: "documentNumber", value: "120123128")
         }
 
