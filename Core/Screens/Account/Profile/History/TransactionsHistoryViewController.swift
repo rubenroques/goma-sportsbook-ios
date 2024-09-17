@@ -74,6 +74,7 @@ class TransactionsHistoryViewController: UIViewController {
                 case .loading:
                     self?.showLoading()
                     self?.emptyStateBaseView.isHidden = true
+                    self?.tableView.isHidden = false
                 case .empty:
                     self?.hideLoading()
                     self?.emptyStateBaseView.isHidden = false
@@ -87,6 +88,7 @@ class TransactionsHistoryViewController: UIViewController {
                 case .loaded:
                     self?.hideLoading()
                     self?.emptyStateBaseView.isHidden = true
+                    self?.tableView.isHidden = false
                     self?.tableView.reloadData()
                 }
 
@@ -273,6 +275,7 @@ extension TransactionsHistoryViewController: UITableViewDelegate, UITableViewDat
             else {
                 return UITableViewCell()
             }
+            
             cell.configure(withTransactionHistoryEntry: transaction, transactionType: viewModel.transactionsType)
 
             if self.viewModel.pendingWithdrawals.contains(where: {
