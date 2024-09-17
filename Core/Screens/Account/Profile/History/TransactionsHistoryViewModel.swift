@@ -559,7 +559,7 @@ class TransactionsHistoryViewModel {
                        thirdElement.escrowType == "ESC_AML" {
 
                         // Modify the tranType
-                        let newElement = TransactionHistory(transactionID: element.transactionID, time: element.time, type: localized("deposit_cancel"), transactionType: .depositReturned, valueType: element.valueType, debit: element.debit, credit: element.credit, fees: element.fees, status: element.status, transactionReference: element.transactionReference, id: element.id, isRallbackAllowed: element.isRallbackAllowed, paymentId: element.paymentId, reference: element.reference, escrowTranType: element.escrowTranType, escrowTranSubType: element.escrowTranSubType, escrowType: element.escrowType)
+                        let newElement = TransactionHistory(transactionID: element.transactionID, time: element.time, type: localized("deposit_refunded"), transactionType: .depositReturned, valueType: element.valueType, debit: element.debit, credit: element.credit, fees: element.fees, status: element.status, transactionReference: element.transactionReference, id: element.id, isRallbackAllowed: element.isRallbackAllowed, paymentId: element.paymentId, reference: element.reference, escrowTranType: element.escrowTranType, escrowTranSubType: element.escrowTranSubType, escrowType: element.escrowType)
 
                         // Add to transactionsList and adjust flags
                         transactionsList.append(newElement)
