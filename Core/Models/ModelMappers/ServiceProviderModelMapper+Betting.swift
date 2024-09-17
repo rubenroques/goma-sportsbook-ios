@@ -181,7 +181,7 @@ extension ServiceProviderModelMapper {
         case .automatedWithdrawalThreshold: return localized("automated_withdrawal_threshold")
         case .automatedWithdrawal: return localized("automated_withdrawal")
         case .depositReturned:
-            return localized("deposit_cancel")
+            return localized("deposit_refunded")
         default: return nil
         }
     }

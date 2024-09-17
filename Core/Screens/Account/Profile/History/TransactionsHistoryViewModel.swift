@@ -561,7 +561,7 @@ class TransactionsHistoryViewModel {
                         // Modify the tranType
                         let newElement = TransactionHistory(transactionID: element.transactionID,
                                                             date: element.date,
-                                                            type: localized("deposit_cancel"),
+                                                            type: localized("deposit_refunded"),
                                                             transactionType: .depositReturned,
                                                             valueType: element.valueType,
                                                             debit: element.debit,

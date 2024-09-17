@@ -1685,6 +1685,7 @@ Pour le faire, il faut s’adresser à l’Autorité Nationale des Jeux (ANJ).";
 "mix_match_or_bet_with_string" = "Or bet with";
 
 "deposit_error_paypal_account_already_in_use" = "Le compte Paypal que vous venez d'utiliser est déjà associé à un autre compte utilisateur. La transaction a été rejetée.";
+"deposit_refunded" = "Dépôt remboursé";
 
 /* Localizable.strings */
 "AF" = "Afghanistan";
