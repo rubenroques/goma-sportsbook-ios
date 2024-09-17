@@ -665,12 +665,13 @@ class SportRadarPrivilegedAccessManager: PrivilegedAccessManager {
         
         let currentDate = Date()
 
-        var issuedDateComponent = DateComponents()
-        issuedDateComponent.year = -1
-        let issuedDate = Calendar.current.date(byAdding: issuedDateComponent, to: currentDate) ?? currentDate
+//        var issuedDateComponent = DateComponents()
+//        issuedDateComponent.year = -1
+//        let issuedDate = Calendar.current.date(byAdding: issuedDateComponent, to: currentDate) ?? currentDate
+        let issuedDate = currentDate
 
         var expiryDateComponent = DateComponents()
-        expiryDateComponent.year = 3
+        expiryDateComponent.year = 1
         let expiryDate = Calendar.current.date(byAdding: expiryDateComponent, to: currentDate) ?? currentDate
 
         // Create a date formatter
@@ -702,7 +703,7 @@ class SportRadarPrivilegedAccessManager: PrivilegedAccessManager {
         }
         else if documentType == "OTHERS" {
             multipart.add(key: "expiryDate", value: expiryDateString)
-            multipart.add(key: "documentNumber", value: "120123128")
+            multipart.add(key: "documentNumber", value: "123456789")
         }
 
         let endpoint = OmegaAPIClient.uploadUserDocument(documentType: documentType, file: file, body: multipart.httpBody, header: multipart.httpContentTypeHeaderValue)
@@ -743,12 +744,13 @@ class SportRadarPrivilegedAccessManager: PrivilegedAccessManager {
 
         let currentDate = Date()
 
-        var issuedDateComponent = DateComponents()
-        issuedDateComponent.year = -1
-        let issuedDate = Calendar.current.date(byAdding: issuedDateComponent, to: currentDate) ?? currentDate
+//        var issuedDateComponent = DateComponents()
+//        issuedDateComponent.year = -1
+//        let issuedDate = Calendar.current.date(byAdding: issuedDateComponent, to: currentDate) ?? currentDate
+        let issuedDate = currentDate
 
         var expiryDateComponent = DateComponents()
-        expiryDateComponent.year = 3
+        expiryDateComponent.year = 1
         let expiryDate = Calendar.current.date(byAdding: expiryDateComponent, to: currentDate) ?? currentDate
 
         // Create a date formatter
@@ -780,7 +782,7 @@ class SportRadarPrivilegedAccessManager: PrivilegedAccessManager {
         }
         else if documentType == "OTHERS" {
             multipart.add(key: "expiryDate", value: expiryDateString)
-            multipart.add(key: "documentNumber", value: "120123128")
+            multipart.add(key: "documentNumber", value: "123456789")
         }
 
         let endpoint = OmegaAPIClient.uploadMultipleUserDocuments(documentType: documentType, files: files, body: multipart.httpBody, header: multipart.httpContentTypeHeaderValue)

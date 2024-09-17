@@ -97,7 +97,7 @@ class ListBackgroundCollectionViewCell: UICollectionViewCell {
             let fullRange = (text as NSString).range(of: title)
             var range = (text as NSString).range(of: localized("mix_match_mix_string"))
             
-            attributedString.addAttribute(.foregroundColor, value: UIColor.App.textPrimary, range: fullRange)
+            attributedString.addAttribute(.foregroundColor, value: UIColor.App.buttonTextPrimary, range: fullRange)
             attributedString.addAttribute(.font, value: AppFont.with(type: .semibold, size: 14), range: fullRange)
             
             attributedString.addAttribute(.foregroundColor, value: UIColor.App.highlightPrimary, range: range)
