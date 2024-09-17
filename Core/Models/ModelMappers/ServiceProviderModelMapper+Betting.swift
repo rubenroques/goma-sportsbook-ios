@@ -154,7 +154,11 @@ extension ServiceProviderModelMapper {
                                   transactionReference: nil,
                                   id: "\(transactionDetail.gameTranId ?? "")",
                                   isRallbackAllowed: nil,
-                                  paymentId: transactionDetail.paymentId, reference: transactionDetail.reference, escrowTranType: transactionDetail.escrowTranType, escrowTranSubType: transactionDetail.escrowTranSubType, escrowType: transactionDetail.escrowType)
+                                  paymentId: transactionDetail.paymentId,
+                                  reference: transactionDetail.reference,
+                                  escrowTranType: transactionDetail.escrowTranType,
+                                  escrowTranSubType: transactionDetail.escrowTranSubType,
+                                  escrowType: transactionDetail.escrowType)
     }
     
     static func stringFromTransactionType(transactionType: TransactionType?) -> String? {

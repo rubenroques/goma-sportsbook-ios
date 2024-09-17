@@ -34,6 +34,8 @@ class HomeViewModel {
         case topCompetitionsShortcuts
 
         case highlightedMatches
+        case highlightedBoostedOddsMatches
+        
         case highlightedLiveMatches
 
         case promotionalStories
@@ -56,7 +58,10 @@ class HomeViewModel {
             case .quickSwipeStack: return "quickSwipeStack"
             case .makeOwnBetCallToAction: return "makeOwnBetCallToAction"
             case .topCompetitionsShortcuts: return "topCompetitionsShortcuts"
+                
             case .highlightedMatches: return "highlightedMatches"
+            case .highlightedBoostedOddsMatches: return "highlightedBoostedOddsMatches"
+                
             case .highlightedLiveMatches: return "highlightedLiveMatches"
                 
             case .promotionalStories: return "promotionalStories"

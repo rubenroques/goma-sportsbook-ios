@@ -1039,7 +1039,7 @@ extension HomeViewController: UITableViewDelegate, UITableViewDataSource {
                 return cell
             }
 
-        case .highlightedMatches:
+        case .highlightedMatches, .highlightedBoostedOddsMatches:
 
             guard
                 let viewModel = self.viewModel.highlightedMatchViewModel(forSection: indexPath.section, forIndex: indexPath.row)
@@ -1270,6 +1270,11 @@ extension HomeViewController: UITableViewDelegate, UITableViewDataSource {
                 return viewModel.maxHeightForInnerCards()
             }
             return UITableView.automaticDimension
+        case .highlightedBoostedOddsMatches:
+            if let viewModel = self.viewModel.highlightedMatchViewModel(forSection: indexPath.section, forIndex: indexPath.row) {
+                return viewModel.maxHeightForInnerCards()
+            }
+            return UITableView.automaticDimension
         case .promotionalStories:
             return UITableView.automaticDimension
         case .promotedSportSection:
@@ -1343,6 +1348,11 @@ extension HomeViewController: UITableViewDelegate, UITableViewDataSource {
         case .topCompetitionsShortcuts:
             return 124
         case .highlightedMatches:
+            if let viewModel = self.viewModel.highlightedMatchViewModel(forSection: indexPath.section, forIndex: indexPath.row) {
+                return viewModel.maxHeightForInnerCards()
+            }
+            return 234
+        case .highlightedBoostedOddsMatches:
             if let viewModel = self.viewModel.highlightedMatchViewModel(forSection: indexPath.section, forIndex: indexPath.row) {
                 return viewModel.maxHeightForInnerCards()
             }
@@ -1509,7 +1519,7 @@ extension HomeViewController: UITableViewDataSourcePrefetching {
                 ()
             case .topCompetitionsShortcuts:
                 ()
-            case .highlightedMatches:
+            case .highlightedMatches, .highlightedBoostedOddsMatches:
                 ()
             case .promotionalStories:
                 ()

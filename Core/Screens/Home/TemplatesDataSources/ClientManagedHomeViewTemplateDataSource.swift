@@ -20,7 +20,8 @@ class ClientManagedHomeViewTemplateDataSource {
         .heroCard, // HeroBanner
         .highlightedLiveMatches, // LiveGamesHome
         .makeOwnBetCallToAction, // MakeYourOwnBet
-        .highlightedMatches, // Highlights
+        .highlightedMatches, // Highlights image cards
+        .highlightedBoostedOddsMatches, // Boosted Odds
         .featuredTips, // SuggestedBets
         .topCompetitionsShortcuts, // TopCompetitionsMobile
     ]
@@ -318,13 +319,20 @@ class ClientManagedHomeViewTemplateDataSource {
         switch self.highlightsPresentationMode {
         case .onePerLine:
             return self.highlightsVisualImageMatches.count +
-                self.highlightsVisualImageOutrights.count +
-                self.highlightsBoostedMatches.count
+                self.highlightsVisualImageOutrights.count
             
         case .multiplesPerLineByType:
             return (self.highlightsVisualImageMatches.isNotEmpty ? 1 : 0) +
-                (self.highlightsVisualImageOutrights.isNotEmpty ? 1 : 0) +
-                (self.highlightsBoostedMatches.isNotEmpty ? 1 : 0)
+                (self.highlightsVisualImageOutrights.isNotEmpty ? 1 : 0)
+        }
+    }
+    
+    func highlightsBoostedOddsMatchesNumberOfRows() -> Int {
+        switch self.highlightsPresentationMode {
+        case .onePerLine:
+            return self.highlightsBoostedMatches.count
+        case .multiplesPerLineByType:
+            return self.highlightsBoostedMatches.isNotEmpty ? 1 : 0
         }
     }
     
@@ -636,6 +644,8 @@ extension ClientManagedHomeViewTemplateDataSource: HomeViewTemplateDataSource {
             return self.shouldShowOwnBetCallToAction ? 1 : 0
         case .highlightedMatches:
             return self.highlightsMatchesNumberOfRows()
+        case .highlightedBoostedOddsMatches:
+            return self.highlightsBoostedOddsMatchesNumberOfRows()
         case .highlightedLiveMatches:
             return self.highlightedLiveMatches.count
         case .featuredTips:
@@ -666,6 +676,8 @@ extension ClientManagedHomeViewTemplateDataSource: HomeViewTemplateDataSource {
         switch contentType {
         case .highlightedMatches:
             return localized("highlights")
+        case .highlightedBoostedOddsMatches:
+            return localized("boosted_section_header")
         case .highlightedLiveMatches:
             return localized("live")
         case .featuredTips:
@@ -692,6 +704,8 @@ extension ClientManagedHomeViewTemplateDataSource: HomeViewTemplateDataSource {
         switch contentType {
         case .highlightedMatches:
             return "pin_icon"
+        case .highlightedBoostedOddsMatches:
+            return "boosted_odd_icon"
         case .highlightedLiveMatches:
             return "tabbar_live_icon"
         case .topCompetitionsShortcuts:
@@ -721,6 +735,8 @@ extension ClientManagedHomeViewTemplateDataSource: HomeViewTemplateDataSource {
         switch contentType {
         case .highlightedMatches:
             return self.highlightsMatchesNumberOfRows() > 0
+        case .highlightedBoostedOddsMatches:
+            return self.highlightsBoostedOddsMatchesNumberOfRows() > 0
         case .highlightedLiveMatches:
             return self.highlightedLiveMatches.isNotEmpty
         case .featuredTips:
@@ -853,60 +869,77 @@ extension ClientManagedHomeViewTemplateDataSource: HomeViewTemplateDataSource {
     
     private func highlightedMatchViewModelVertical(forSection section: Int, forIndex index: Int) -> MatchWidgetContainerTableViewModel? {
         // Each highlight match has it's own line
-        
-        let boostedMatchesIndex = index-self.highlightsVisualImageMatches.count-self.highlightsVisualImageOutrights.count
+        guard
+            let contentType = self.contentType(forSection: section)
+        else {
+            return nil
+        }
         let highlightsOutrightsMatchesIndex = index-self.highlightsVisualImageMatches.count
         
-        if let match = self.highlightsVisualImageMatches[safe: index] {
-            var type = MatchWidgetType.topImage
-            
-            if match.markets.first?.customBetAvailable ?? false {
-                type = .topImageWithMixMatch
+        switch contentType {
+        case .highlightedMatches:
+            if let match = self.highlightsVisualImageMatches[safe: index] {
+                var type = MatchWidgetType.topImage
+                
+                if match.markets.first?.customBetAvailable ?? false {
+                    type = .topImageWithMixMatch
+                }
+                
+                let id = match.id + type.rawValue
+                
+                if let matchWidgetContainerTableViewModel = self.matchWidgetContainerTableViewModelCache[id] {
+                    return matchWidgetContainerTableViewModel
+                }
+                else {
+                    let matchWidgetContainerTableViewModel = MatchWidgetContainerTableViewModel.init(singleCardsViewModel: MatchWidgetCellViewModel(match: match, matchWidgetType: type))
+                    self.matchWidgetContainerTableViewModelCache[id] = matchWidgetContainerTableViewModel
+                    return matchWidgetContainerTableViewModel
+                }
+            }
+            else if let match = self.highlightsVisualImageOutrights[safe: highlightsOutrightsMatchesIndex] {
+                let id = match.id + MatchWidgetType.topImageOutright.rawValue
+                if let matchWidgetContainerTableViewModel = self.matchWidgetContainerTableViewModelCache[id] {
+                    return matchWidgetContainerTableViewModel
+                }
+                else {
+                    let matchWidgetContainerTableViewModel = MatchWidgetContainerTableViewModel.init(singleCardsViewModel: MatchWidgetCellViewModel(match: match, matchWidgetType: .topImageOutright))
+                    self.matchWidgetContainerTableViewModelCache[id] = matchWidgetContainerTableViewModel
+                    return matchWidgetContainerTableViewModel
+                }
             }
             
-            let id = match.id + type.rawValue
-            
-            if let matchWidgetContainerTableViewModel = self.matchWidgetContainerTableViewModelCache[id] {
-                return matchWidgetContainerTableViewModel
+        case .highlightedBoostedOddsMatches:
+            if let match = self.highlightsBoostedMatches[safe: index] {
+                let id = match.id + MatchWidgetType.boosted.rawValue
+                if let matchWidgetContainerTableViewModel = self.matchWidgetContainerTableViewModelCache[id] {
+                    return matchWidgetContainerTableViewModel
+                }
+                else {
+                    let matchWidgetContainerTableViewModel = MatchWidgetContainerTableViewModel.init(singleCardsViewModel: MatchWidgetCellViewModel(match: match, matchWidgetType: .boosted))
+                    self.matchWidgetContainerTableViewModelCache[id] = matchWidgetContainerTableViewModel
+                    return matchWidgetContainerTableViewModel
+                }
             }
-            else {
-                let matchWidgetContainerTableViewModel = MatchWidgetContainerTableViewModel.init(singleCardsViewModel: MatchWidgetCellViewModel(match: match, matchWidgetType: type))
-                self.matchWidgetContainerTableViewModelCache[id] = matchWidgetContainerTableViewModel
-                return matchWidgetContainerTableViewModel
-            }
+        default:
+            return nil
         }
-        else if let match = self.highlightsBoostedMatches[safe: boostedMatchesIndex] {
-            let id = match.id + MatchWidgetType.boosted.rawValue
-            if let matchWidgetContainerTableViewModel = self.matchWidgetContainerTableViewModelCache[id] {
-                return matchWidgetContainerTableViewModel
-            }
-            else {
-                let matchWidgetContainerTableViewModel = MatchWidgetContainerTableViewModel.init(singleCardsViewModel: MatchWidgetCellViewModel(match: match, matchWidgetType: .boosted))
-                self.matchWidgetContainerTableViewModelCache[id] = matchWidgetContainerTableViewModel
-                return matchWidgetContainerTableViewModel
-            }
-        }
-        else if let match = self.highlightsVisualImageOutrights[safe: highlightsOutrightsMatchesIndex] {
-            let id = match.id + MatchWidgetType.topImageOutright.rawValue
-            if let matchWidgetContainerTableViewModel = self.matchWidgetContainerTableViewModelCache[id] {
-                return matchWidgetContainerTableViewModel
-            }
-            else {
-                let matchWidgetContainerTableViewModel = MatchWidgetContainerTableViewModel.init(singleCardsViewModel: MatchWidgetCellViewModel(match: match, matchWidgetType: .topImageOutright))
-                self.matchWidgetContainerTableViewModelCache[id] = matchWidgetContainerTableViewModel
-                return matchWidgetContainerTableViewModel
-            }
-        }
+        
         return nil
     }
     
     private func highlightedMatchViewModelHorizontal(forSection section: Int, forIndex index: Int) -> MatchWidgetContainerTableViewModel? {
         // There is a line for each highlight type (image, boosted, outrightImage)
         // Each match card for each type will show as a horizontal scroll
+        guard
+            let contentType = self.contentType(forSection: section)
+        else {
+            return nil
+        }
+        
         var ids = ""
         var viewModels: [MatchWidgetCellViewModel] = []
-        switch index {
-        case 0:
+        switch (index, contentType) {
+        case (0, .highlightedMatches):
             ids = self.highlightsVisualImageMatches.map { match in
                 var type = MatchWidgetType.topImage
                 if match.markets.first?.customBetAvailable ?? false {
@@ -922,17 +955,18 @@ extension ClientManagedHomeViewTemplateDataSource: HomeViewTemplateDataSource {
                 }
                 return MatchWidgetCellViewModel(match: match, matchWidgetType: type)
             }
-        case 1:
-            var type = MatchWidgetType.boosted
-            ids = self.highlightsBoostedMatches.map { $0.id + type.rawValue }.joined(separator: "-")
-            viewModels = self.highlightsBoostedMatches.map { match in
-                return MatchWidgetCellViewModel(match: match, matchWidgetType: type)
-            }
-        case 2:
+        
+        case (1, .highlightedMatches):
             var type = MatchWidgetType.topImageOutright
             ids = self.highlightsVisualImageOutrights.map { $0.id + type.rawValue }.joined(separator: "-")
             viewModels = self.highlightsVisualImageOutrights.map { match in
                 
+                return MatchWidgetCellViewModel(match: match, matchWidgetType: type)
+            }
+        case (0, .highlightedBoostedOddsMatches):
+            var type = MatchWidgetType.boosted
+            ids = self.highlightsBoostedMatches.map { $0.id + type.rawValue }.joined(separator: "-")
+            viewModels = self.highlightsBoostedMatches.map { match in
                 return MatchWidgetCellViewModel(match: match, matchWidgetType: type)
             }
         default:
@@ -976,7 +1010,7 @@ extension ClientManagedHomeViewTemplateDataSource: HomeViewTemplateDataSource {
         var match: Match?
         
         switch section {
-        case 0...7:
+        case 0...self.fixedSections:
             ()
         default: // The remaining sections, each section for a promoted sport id
             match = self.promotedMatch(forSection: section, forIndex: index)

@@ -759,7 +759,7 @@ class DepositViewController: UIViewController {
                 }).first {
                    
                     let escXferTransaction = transactionsDeposits.filter( {
-                       $0.type == .automatedWithdrawalThreshold && $0.dateTime == depositTransaction.dateTime
+                        $0.type == .automatedWithdrawalThreshold && $0.date == depositTransaction.date
                    }).first
                     
                     if escXferTransaction != nil {

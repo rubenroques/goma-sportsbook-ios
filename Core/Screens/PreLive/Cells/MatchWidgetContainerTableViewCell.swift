@@ -38,7 +38,7 @@ class MatchWidgetContainerTableViewModel {
     func maxHeightForInnerCards() -> CGFloat {
         var maxHeight = 0.0
         for type in cardsViewModels.map(\.matchWidgetType) {
-            var newHeight = self.heightFor(matchWidgetType: type)
+            let newHeight = self.heightFor(matchWidgetType: type)
             if newHeight > maxHeight {
                 maxHeight = newHeight
             }

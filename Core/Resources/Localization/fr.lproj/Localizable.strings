@@ -1989,3 +1989,4 @@ Pour le faire, il faut s’adresser à l’Autorité Nationale des Jeux (ANJ).";
 "mix_match_min_compatible_selections" = "Pick at least 2 selections compatible between each others.";
 "mix_match_compatible_selections_warning" = "Some of the selections are not compatible with each others. You can still submit the bet with the available ones.";
 "mix_match_invalid_selection" = "Invalid selection";
+"boosted_section_header" = "Cotes Boostées";
