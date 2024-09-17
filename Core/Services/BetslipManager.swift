@@ -778,8 +778,12 @@ extension BetslipManager {
             }
         }
         
+        var processedStake = stake
+        if stake == 0.0 {
+            processedStake = 1.0
+        }
         let betTicket = BetTicket.init(tickets: betTicketSelections,
-                                       stake: stake,
+                                       stake: processedStake,
                                        betGroupingType: BetGroupingType.multiple(identifier: multipleBetIdentifier))
         
         return Env.servicesProvider.calculatePotentialReturn(forBetTicket: betTicket)
@@ -789,7 +793,7 @@ extension BetslipManager {
                                           numberOfBets: betslipPotentialReturn.numberOfBets,
                                           totalOdd: 1)
             })
-            .mapError({ _ in
+            .mapError({ error in
                 return BetslipErrorType.potentialReturn
             })
             .eraseToAnyPublisher()
@@ -811,8 +815,13 @@ extension BetslipManager {
             return betTicketSelection
         }
         
+        var processedStake = stake
+        if stake == 0.0 {
+            processedStake = 1.0
+        }
+        
         let betTicket = BetTicket.init(tickets: betTicketSelections,
-                                       stake: stake,
+                                       stake: processedStake,
                                        betGroupingType: BetGroupingType.system(identifier: systemBetType.id, name: systemBetType.name ?? ""))
         
         return Env.servicesProvider.calculatePotentialReturn(forBetTicket: betTicket)

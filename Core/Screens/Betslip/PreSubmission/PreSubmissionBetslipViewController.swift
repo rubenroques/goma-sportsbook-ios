@@ -66,6 +66,13 @@ class PreSubmissionBetslipViewController: UIViewController {
     @IBOutlet private weak var systemOddsTitleLabel: UILabel!
     @IBOutlet private weak var systemOddsValueLabel: UILabel!
 
+    @IBOutlet private weak var mixMatchWinningsBaseView: UIView!
+    @IBOutlet private weak var mixMatchWinningsSeparatorView: UIView!
+    @IBOutlet private weak var mixMatchWinningsTitleLabel: UILabel!
+    @IBOutlet private weak var mixMatchWinningsValueLabel: UILabel!
+    @IBOutlet private weak var mixMatchOddsTitleLabel: UILabel!
+    @IBOutlet private weak var mixMatchOddsValueLabel: UILabel!
+    
     @IBOutlet private weak var freeBetBaseView: UIView!
     @IBOutlet private weak var freeBetInternalView: UIView!
     @IBOutlet private weak var freeBetImageView: UIImageView!
@@ -120,6 +127,13 @@ class PreSubmissionBetslipViewController: UIViewController {
     @IBOutlet private weak var secondarySystemOddsValueLabel: UILabel!
     @IBOutlet private weak var secondarySystemWinningsSeparatorView: UIView!
 
+    @IBOutlet private weak var secondaryMixMatchWinningsBaseView: UIView!
+    @IBOutlet private weak var secondaryMixMatchWinningsValueLabel: UILabel!
+    @IBOutlet private weak var secondaryMixMatchOddsTitleLabel: UILabel!
+    @IBOutlet private weak var secondaryMixMatchWinningsTitleLabel: UILabel!
+    @IBOutlet private weak var secondaryMixMatchOddsValueLabel: UILabel!
+    @IBOutlet private weak var secondaryMixMatchWinningsSeparatorView: UIView!
+    
     @IBOutlet private weak var emptyBetsBaseView: UIView!
     @IBOutlet private weak var emptyBetsImageView: UIImageView!
     @IBOutlet private weak var emptyBetslipLabel: UILabel!
@@ -415,7 +429,8 @@ class PreSubmissionBetslipViewController: UIViewController {
         self.simpleWinningsBaseView.isHidden = false
         self.multipleWinningsBaseView.isHidden = true
         self.systemWinningsBaseView.isHidden = true
-
+        self.mixMatchWinningsBaseView.isHidden = true
+        
         self.loadingView.alpha = 0.0
         self.loadingView.stopAnimating()
         self.loadingBaseView.isHidden = true
@@ -524,6 +539,16 @@ class PreSubmissionBetslipViewController: UIViewController {
         
         self.systemBetTypeTitleLabel.text = localized("system_options")
         
+        //
+        self.mixMatchWinningsValueLabel.text = localized("no_value")
+        self.mixMatchOddsTitleLabel.text = localized("total_bet_amount")
+        self.mixMatchOddsValueLabel.text = localized("no_value")
+        
+        self.secondaryMixMatchWinningsValueLabel.text = localized("no_value")
+        self.secondaryMixMatchOddsTitleLabel.text = localized("total_bet_amount")
+        self.secondaryMixMatchOddsValueLabel.text = localized("no_value")
+        //
+        
         self.selectSystemBetTypeButton.setTitle(localized("select"), for: .normal)
         self.settingsPickerButton.setTitle(localized("select"), for: .normal)
         
@@ -531,6 +556,17 @@ class PreSubmissionBetslipViewController: UIViewController {
         self.secondarySystemOddsTitleLabel.text = localized("total_bet_amount")
         self.secondarySystemOddsValueLabel.text = localized("no_value")
 
+        // Possible winnings title
+        self.simpleWinningsTitleLabel.text = localized("possible_winnings")
+        self.systemWinningsTitleLabel.text = localized("possible_winnings")
+        self.multipleWinningsTitleLabel.text = localized("possible_winnings")
+        self.mixMatchWinningsTitleLabel.text = localized("possible_winnings")
+        
+        self.secondaryMultipleWinningsTitleLabel.text = localized("possible_winnings")
+        self.secondarySystemWinningsTitleLabel.text = localized("possible_winnings")
+        self.secondaryMixMatchWinningsTitleLabel.text = localized("possible_winnings")
+        //
+        
         self.emptyBetsImageView.image = UIImage(named: "empty_betslip_icon")
 
         self.emptyBetslipLabel.text = localized("empty_betslip_info_title")
@@ -928,7 +964,8 @@ class PreSubmissionBetslipViewController: UIViewController {
                     self?.simpleWinningsBaseView.isHidden = false
                     self?.multipleWinningsBaseView.isHidden = true
                     self?.systemWinningsBaseView.isHidden = true
-
+                    self?.mixMatchWinningsBaseView.isHidden = true
+                    
                     self?.betBuilderWarningView.isHidden = true
                     
                     if let cashbackEnabled = self?.isCashbackEnabled,
@@ -947,7 +984,8 @@ class PreSubmissionBetslipViewController: UIViewController {
                     self?.simpleWinningsBaseView.isHidden = true
                     self?.multipleWinningsBaseView.isHidden = false
                     self?.systemWinningsBaseView.isHidden = true
-
+                    self?.mixMatchWinningsBaseView.isHidden = true
+                    
                     self?.betBuilderWarningView.isHidden = true
                     
                     if let cashbackEnabled = self?.isCashbackEnabled,
@@ -965,7 +1003,8 @@ class PreSubmissionBetslipViewController: UIViewController {
                     self?.simpleWinningsBaseView.isHidden = true
                     self?.multipleWinningsBaseView.isHidden = true
                     self?.systemWinningsBaseView.isHidden = false
-
+                    self?.mixMatchWinningsBaseView.isHidden = true
+                    
                     self?.betBuilderWarningView.isHidden = true
                     
                     if let cashbackEnabled = self?.isCashbackEnabled,
@@ -982,9 +1021,11 @@ class PreSubmissionBetslipViewController: UIViewController {
                 
                 case .betBuilder:
                     self?.simpleWinningsBaseView.isHidden = true
-                    self?.multipleWinningsBaseView.isHidden = false
+                    self?.multipleWinningsBaseView.isHidden = true
                     self?.systemWinningsBaseView.isHidden = true
                     self?.cashbackBaseView.isHidden = true
+                    
+                    self?.mixMatchWinningsBaseView.isHidden = false
                     
                     self?.betBuilderWarningView.isHidden = false
                 }
@@ -1118,14 +1159,17 @@ class PreSubmissionBetslipViewController: UIViewController {
                     self?.secondaryPlaceBetBaseView.isHidden = false
                     self?.secondaryMultipleWinningsBaseView.isHidden = false
                     self?.secondarySystemWinningsBaseView.isHidden = true
+                    self?.secondaryMixMatchWinningsBaseView.isHidden = true
                 case (.system, true):
                     self?.secondaryPlaceBetBaseView.isHidden = false
                     self?.secondaryMultipleWinningsBaseView.isHidden = true
                     self?.secondarySystemWinningsBaseView.isHidden = false
+                    self?.secondaryMixMatchWinningsBaseView.isHidden = true
                 case (.betBuilder, true):
                     self?.secondaryPlaceBetBaseView.isHidden = false
-                    self?.secondaryMultipleWinningsBaseView.isHidden = false
+                    self?.secondaryMultipleWinningsBaseView.isHidden = true
                     self?.secondarySystemWinningsBaseView.isHidden = true
+                    self?.secondaryMixMatchWinningsBaseView.isHidden = false
                 default:
                     self?.secondaryPlaceBetBaseView.isHidden = true
                 }
@@ -1476,16 +1520,13 @@ class PreSubmissionBetslipViewController: UIViewController {
         self.multipleWinningsSeparatorView.backgroundColor = UIColor.App.separatorLine
         self.secondaryMultipleWinningsSeparatorView.backgroundColor = UIColor.App.separatorLine
         self.systemWinningsSeparatorView.backgroundColor = UIColor.App.separatorLine
+        
+        self.secondaryMultipleWinningsSeparatorView.backgroundColor = UIColor.App.separatorLine
         self.secondarySystemWinningsSeparatorView.backgroundColor = UIColor.App.separatorLine
-
+        self.secondaryMixMatchWinningsSeparatorView.backgroundColor = UIColor.App.separatorLine
+        
         self.simpleWinningsBaseView.backgroundColor = UIColor.App.backgroundPrimary
         self.simpleWinningsTitleLabel.textColor = UIColor.App.textSecondary
-        
-        self.simpleWinningsTitleLabel.text = localized("possible_winnings")
-        self.systemWinningsTitleLabel.text = localized("possible_winnings")
-        self.multipleWinningsTitleLabel.text = localized("possible_winnings")
-        self.secondaryMultipleWinningsTitleLabel.text = localized("possible_winnings")
-        self.secondarySystemWinningsTitleLabel.text = localized("possible_winnings")
         
         self.simpleWinningsValueLabel.textColor = UIColor.App.textPrimary
         self.simpleOddsTitleLabel.textColor = UIColor.App.textSecondary
@@ -1498,7 +1539,6 @@ class PreSubmissionBetslipViewController: UIViewController {
         self.secondaryMultipleWinningsBaseView.backgroundColor = UIColor.App.backgroundPrimary
         self.secondaryMultipleWinningsTitleLabel.textColor = UIColor.App.textSecondary
         self.secondaryMultipleWinningsValueLabel.textColor = UIColor.App.textPrimary
-
         self.secondaryMultipleOddsTitleLabel.textColor = UIColor.App.textDisablePrimary
         self.secondaryMultipleOddsValueLabel.textColor = UIColor.App.textPrimary
 
@@ -1516,6 +1556,18 @@ class PreSubmissionBetslipViewController: UIViewController {
         self.secondarySystemWinningsValueLabel.textColor = UIColor.App.textPrimary
         self.secondarySystemOddsTitleLabel.textColor = UIColor.App.textDisablePrimary
         self.secondarySystemOddsValueLabel.textColor = UIColor.App.textPrimary
+        
+        self.mixMatchWinningsBaseView.backgroundColor = UIColor.App.backgroundPrimary
+        self.mixMatchWinningsTitleLabel.textColor = UIColor.App.textSecondary
+        self.mixMatchWinningsValueLabel.textColor = UIColor.App.textPrimary
+        self.mixMatchOddsTitleLabel.textColor = UIColor.App.textSecondary
+        self.mixMatchOddsValueLabel.textColor = UIColor.App.textPrimary
+        
+        self.secondaryMixMatchWinningsBaseView.backgroundColor = UIColor.App.backgroundPrimary
+        self.secondaryMixMatchWinningsTitleLabel.textColor = UIColor.App.textDisablePrimary
+        self.secondaryMixMatchWinningsValueLabel.textColor = UIColor.App.textPrimary
+        self.secondaryMixMatchOddsTitleLabel.textColor = UIColor.App.textDisablePrimary
+        self.secondaryMixMatchOddsValueLabel.textColor = UIColor.App.textPrimary
 
         self.selectSystemBetTypeButton.backgroundColor = UIColor.App.highlightPrimary
         
@@ -1943,17 +1995,12 @@ class PreSubmissionBetslipViewController: UIViewController {
     func configureWithMultiplePotencialReturn(_ betPotencialReturn: BetPotencialReturn) {
 
         let multiTicketsOdd = Env.betslipManager.bettingTicketsPublisher.value.map(\.decimalOdd).reduce(1.0, *)
-        self.configureWithMultipleTotalOdd(multiTicketsOdd)
-
+        self.multipleOddsValueLabel.text = OddFormatter.formatOdd(withValue: multiTicketsOdd)
+        self.secondaryMultipleOddsValueLabel.text = OddFormatter.formatOdd(withValue: multiTicketsOdd)
+        
         let possibleWinningsString = CurrencyFormater.defaultFormat.string(from: NSNumber(value: betPotencialReturn.potentialReturn)) ?? localized("no_value")
         self.multipleWinningsValueLabel.text = possibleWinningsString
         self.secondaryMultipleWinningsValueLabel.text = possibleWinningsString
-
-    }
-
-    func configureWithMultipleTotalOdd(_ totalOdd: Double) {
-        self.multipleOddsValueLabel.text = OddFormatter.formatOdd(withValue: totalOdd)
-        self.secondaryMultipleOddsValueLabel.text = OddFormatter.formatOdd(withValue: totalOdd)
     }
 
     func requestSystemBetInfo() {
@@ -2029,6 +2076,10 @@ class PreSubmissionBetslipViewController: UIViewController {
 
     func requestCashbackResult() {
 
+        if !Env.userSessionStore.isUserLogged() {
+            return
+        }
+        
         let stake = self.realBetValue
 
         if self.isCashbackToggleOn.value || stake <= 0.0 {
@@ -2393,11 +2444,12 @@ extension PreSubmissionBetslipViewController {
             self.betBuilderWarningView.alpha = 0.0
             
             let possibleWinningsString = CurrencyFormater.defaultFormat.string(from: NSNumber(value: potentialReturn.potentialReturn)) ?? localized("no_value")
-            self.multipleWinningsValueLabel.text = possibleWinningsString
-            self.secondaryMultipleWinningsValueLabel.text = possibleWinningsString
             
-            self.multipleOddsValueLabel.text = OddFormatter.formatOdd(withValue: potentialReturn.totalOdd)
-            self.secondaryMultipleOddsValueLabel.text = OddFormatter.formatOdd(withValue: potentialReturn.totalOdd)
+            self.mixMatchWinningsValueLabel.text = possibleWinningsString
+            self.secondaryMixMatchWinningsValueLabel.text = possibleWinningsString
+            
+            self.mixMatchOddsValueLabel.text = OddFormatter.formatOdd(withValue: potentialReturn.totalOdd)
+            self.secondaryMixMatchOddsValueLabel.text = OddFormatter.formatOdd(withValue: potentialReturn.totalOdd)
             
         case .invalid:
             print("DebugMixMatch: response invalid")

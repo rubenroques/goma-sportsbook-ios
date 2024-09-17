@@ -97,7 +97,10 @@ class MyTicketBetLineView: NibView {
         self.oddValueLabel.text = " - "
 
         self.homeTeamScoreLabel.text = ""
+        self.homeTeamScoreLabel.font = AppFont.with(type: .semibold, size: 14)
+        
         self.awayTeamScoreLabel.text = ""
+        self.awayTeamScoreLabel.font = AppFont.with(type: .semibold, size: 14)
 
         self.liveIconImage.isHidden = true
         
@@ -117,7 +120,10 @@ class MyTicketBetLineView: NibView {
         }
 
         self.homeTeamNameLabel.text = self.betHistoryEntrySelection.homeParticipantName ?? ""
+        self.homeTeamNameLabel.font = AppFont.with(type: .semibold, size: 14)
+        
         self.awayTeamNameLabel.text = self.betHistoryEntrySelection.awayParticipantName ?? ""
+        self.awayTeamNameLabel.font = AppFont.with(type: .semibold, size: 14)
 
         if let sportCode = self.betHistoryEntrySelection.sportName {
 
