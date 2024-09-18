@@ -135,7 +135,7 @@ class SegmentControlItemView: UIView {
     
     func setupSelectedState() {
         if let attributedText = self.customAttributedString(self) {
-            
+            self.setupCustomStringWithState(attributedString: attributedText)
         }
         else {
             if isSelected {
@@ -146,6 +146,38 @@ class SegmentControlItemView: UIView {
                 self.titleLabel.textColor = textIdleColor
                 self.leftAccessoryImageView.alpha = 0.7
             }
+        }
+    }
+    
+    func setupCustomStringWithState(attributedString: NSAttributedString) {
+        
+        if attributedString.string == "\(localized("mix_match_mix_string"))\(localized("mix_match_match_string"))" {
+            
+            let mixString = localized("mix_match_mix_string")
+            let matchString = localized("mix_match_match_string")
+            let fullString = mixString + matchString
+            
+            let attributedString = NSMutableAttributedString(string: fullString)
+            
+            let mixAttributes: [NSAttributedString.Key: Any] = [
+                .foregroundColor: UIColor.App.highlightPrimary
+            ]
+            
+            var matchAttributes: [NSAttributedString.Key: Any] = [
+                .foregroundColor: UIColor.App.textPrimary
+            ]
+            
+            if self.isSelected {
+                matchAttributes = [
+                    .foregroundColor: UIColor.App.buttonTextPrimary
+                ]
+            }
+            
+            attributedString.addAttributes(mixAttributes, range: NSRange(location: 0, length: mixString.count))
+            attributedString.addAttributes(matchAttributes, range: NSRange(location: mixString.count, length: matchString.count))
+            
+            self.titleLabel.text = nil
+            self.titleLabel.attributedText = attributedString
         }
     }
 
