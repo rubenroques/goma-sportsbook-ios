@@ -922,8 +922,16 @@ extension OddTripleCollectionViewCell {
     
     private func showStatsButton() {
         
-        self.marketStatsStackView.distribution = .fillEqually
-        self.marketStatsStackView.spacing = 2
+        switch StyleHelper.cardsStyleActive() {
+        case .normal:
+            self.marketStatsStackView.distribution = .fillEqually
+            self.marketStatsStackView.spacing = 2
+            self.marketStatsStackView.axis = .vertical
+        case .small:
+            self.marketStatsStackView.distribution = .fillEqually
+            self.marketStatsStackView.spacing = 6
+            self.marketStatsStackView.axis = .horizontal
+        }
         
         let stackSubviews = self.marketStatsStackView.arrangedSubviews
         stackSubviews.forEach({

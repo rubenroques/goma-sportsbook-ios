@@ -146,7 +146,7 @@ class FeaturedTipCollectionViewCell: UICollectionViewCell {
 
         self.contentView.backgroundColor = .clear
 
-        self.containerView.backgroundColor = UIColor.App.backgroundSecondary
+        self.containerView.backgroundColor = .clear
 
         self.containerBackgroundImageView.backgroundColor = UIColor.App.backgroundSecondary
         

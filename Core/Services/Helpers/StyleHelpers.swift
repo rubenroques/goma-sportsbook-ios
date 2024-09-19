@@ -6,9 +6,30 @@
 //
 
 import UIKit
+import Combine
 
-struct StyleHelper {
+class StyleHelper {
 
+    // Singleton instance
+    static let shared = StyleHelper()
+
+    // Published property to react to changes in cardsStyle
+    @Published private(set) var cardsStyleActive: CardsStyle
+
+    private var cancellables = Set<AnyCancellable>()
+
+    private init() {
+        // Set initial value when the singleton is created
+        self.cardsStyleActive = UserDefaults.standard.cardsStyle
+        
+        // Subscribe to changes in UserDefaults
+        NotificationCenter.default.publisher(for: .cardsStyleChanged)
+            .sink { [weak self] _ in
+                self?.cardsStyleActive = UserDefaults.standard.cardsStyle
+            }
+            .store(in: &cancellables)
+    }
+    
     static func styleButton(button: UIButton) {
         button.setTitleColor(UIColor.App.buttonTextPrimary, for: .normal)
         button.setTitleColor(UIColor.App.buttonTextPrimary.withAlphaComponent(0.7), for: .highlighted)
@@ -52,6 +73,7 @@ struct StyleHelper {
             return 8
         }
     }
+
 }
 
 extension Notification.Name {

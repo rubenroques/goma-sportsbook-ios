@@ -105,7 +105,6 @@ class CardsStyleViewController: UIViewController {
             normalCardView.isChecked = true
 
             NotificationCenter.default.post(name: .cardsStyleChanged, object: nil)
-
         }
 
         smallCardView.didTapView = { [weak self] _ in

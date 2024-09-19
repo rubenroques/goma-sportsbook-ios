@@ -1435,7 +1435,7 @@ extension HomeViewController: UITableViewDelegate, UITableViewDataSource {
             }
             else if let sectionIconImage = UIImage(named: imageName) {
                 sportImageView.image = sectionIconImage
-                sportImageView.setTintColor(color: UIColor.App.iconPrimary)
+                sportImageView.setTintColor(color: UIColor.App.highlightPrimary)
             }
             else {
                 sportImageView.image = UIImage(named: "sport_type_icon_default")
@@ -1459,7 +1459,6 @@ extension HomeViewController: UITableViewDelegate, UITableViewDataSource {
         else {
             seeAllLabel.isHidden = true
         }
-
         return titleView
     }
 

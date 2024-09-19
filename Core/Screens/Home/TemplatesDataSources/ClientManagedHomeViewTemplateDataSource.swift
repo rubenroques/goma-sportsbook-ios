@@ -380,8 +380,10 @@ class ClientManagedHomeViewTemplateDataSource {
             self?.highlightsBoostedMatches = boostedMatches
 
             #if DEBUG
+            self?.highlightsBoostedMatches = boostedMatches + boostedMatches + boostedMatches + boostedMatches
+
             if boostedMatches.isEmpty {
-                self?.highlightsBoostedMatches = imageMatches
+                self?.highlightsBoostedMatches = imageMatches + imageMatches + imageMatches
             }
             #endif
             
@@ -625,7 +627,7 @@ extension ClientManagedHomeViewTemplateDataSource: HomeViewTemplateDataSource {
     }
 
     func numberOfRows(forSectionIndex section: Int) -> Int {
-        guard let contentType = contentType(forSection: section) else {
+        guard let contentType = self.contentType(forSection: section) else {
             return 0
         }
 
@@ -762,8 +764,8 @@ extension ClientManagedHomeViewTemplateDataSource: HomeViewTemplateDataSource {
     func contentType(forSection section: Int) -> HomeViewModel.Content? {
         
         // Check if the section index is within the bounds of the array
-        if section < self.contentTypes.count {
-            return self.contentTypes[section]
+        if let sectionType = self.contentTypes[safe: section] {
+            return sectionType
         }
 
         let croppedSection = section - self.fixedSections
@@ -1010,7 +1012,7 @@ extension ClientManagedHomeViewTemplateDataSource: HomeViewTemplateDataSource {
         var match: Match?
         
         switch section {
-        case 0...self.fixedSections:
+        case 0..<self.fixedSections:
             ()
         default: // The remaining sections, each section for a promoted sport id
             match = self.promotedMatch(forSection: section, forIndex: index)

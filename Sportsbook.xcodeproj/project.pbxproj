@@ -966,6 +966,14 @@
 		455AE13A2A2A16E00045FDD3 /* MakeYourBetTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 455AE1332A2A16E00045FDD3 /* MakeYourBetTableViewCell.swift */; };
 		455E86B92AC464B20031AF26 /* TargetVariables-PROD.swift in Sources */ = {isa = PBXBuildFile; fileRef = 455E86B82AC464920031AF26 /* TargetVariables-PROD.swift */; };
 		456237D9297EE5F600B3FA3A /* SharedModels in Frameworks */ = {isa = PBXBuildFile; productRef = 456237D8297EE5F600B3FA3A /* SharedModels */; };
+		45644F9F2C9B5C22001C6464 /* OpenStatsButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 45644F9E2C9B5C20001C6464 /* OpenStatsButton.swift */; };
+		45644FA02C9B5C22001C6464 /* OpenStatsButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 45644F9E2C9B5C20001C6464 /* OpenStatsButton.swift */; };
+		45644FA12C9B5C22001C6464 /* OpenStatsButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 45644F9E2C9B5C20001C6464 /* OpenStatsButton.swift */; };
+		45644FA22C9B5C22001C6464 /* OpenStatsButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 45644F9E2C9B5C20001C6464 /* OpenStatsButton.swift */; };
+		45644FA32C9B5C22001C6464 /* OpenStatsButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 45644F9E2C9B5C20001C6464 /* OpenStatsButton.swift */; };
+		45644FA42C9B5C22001C6464 /* OpenStatsButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 45644F9E2C9B5C20001C6464 /* OpenStatsButton.swift */; };
+		45644FA52C9B5C22001C6464 /* OpenStatsButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 45644F9E2C9B5C20001C6464 /* OpenStatsButton.swift */; };
+		45644FA62C9B5C22001C6464 /* OpenStatsButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 45644F9E2C9B5C20001C6464 /* OpenStatsButton.swift */; };
 		4566339629DDD44C00C4F1A9 /* AnonymousSideMenuViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4566339529DDD44C00C4F1A9 /* AnonymousSideMenuViewController.swift */; };
 		4566339729DDD44C00C4F1A9 /* AnonymousSideMenuViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4566339529DDD44C00C4F1A9 /* AnonymousSideMenuViewController.swift */; };
 		4566339829DDD44C00C4F1A9 /* AnonymousSideMenuViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4566339529DDD44C00C4F1A9 /* AnonymousSideMenuViewController.swift */; };
@@ -7450,6 +7458,7 @@
 		45626E432755599E0069B89B /* OverUnderMarketDetailTableViewCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = OverUnderMarketDetailTableViewCell.xib; sourceTree = "<group>"; };
 		45628E7C27BEE02400AAB160 /* SuggestedBetLineViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SuggestedBetLineViewModel.swift; sourceTree = "<group>"; };
 		45628E7F27BFBE4900AAB160 /* CompetitionWidgetCollectionViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CompetitionWidgetCollectionViewCell.swift; sourceTree = "<group>"; };
+		45644F9E2C9B5C20001C6464 /* OpenStatsButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OpenStatsButton.swift; sourceTree = "<group>"; };
 		4566339529DDD44C00C4F1A9 /* AnonymousSideMenuViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AnonymousSideMenuViewController.swift; sourceTree = "<group>"; };
 		4568B9632858CF4100FA99B3 /* CilinderSceneKitScene.scn */ = {isa = PBXFileReference; lastKnownFileType = file.bplist; path = CilinderSceneKitScene.scn; sourceTree = "<group>"; };
 		4568B96C2858E45F00FA99B3 /* FlipNumberView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FlipNumberView.swift; sourceTree = "<group>"; };
@@ -9192,6 +9201,14 @@
 			path = Account;
 			sourceTree = "<group>";
 		};
+		45644F9D2C9B5C16001C6464 /* OpenStatsButton */ = {
+			isa = PBXGroup;
+			children = (
+				45644F9E2C9B5C20001C6464 /* OpenStatsButton.swift */,
+			);
+			path = OpenStatsButton;
+			sourceTree = "<group>";
+		};
 		4566339429DDD42F00C4F1A9 /* AnonymousSideMenu */ = {
 			isa = PBXGroup;
 			children = (
@@ -9637,6 +9654,7 @@
 		4589F40726BF01B4005DF543 /* Views */ = {
 			isa = PBXGroup;
 			children = (
+				45644F9D2C9B5C16001C6464 /* OpenStatsButton */,
 				6547C87E2C63DBCE0041409C /* HeroCard */,
 				45D64AF02B6002F70092DA8E /* BoostedBetConfirmationView.swift */,
 				A9A2923C2A61594500A7C334 /* Referrals */,
@@ -14525,6 +14543,7 @@
 				450B7A6628F58574009229E3 /* ActivationAlert.swift in Sources */,
 				450B7A6728F58574009229E3 /* AddFriendCellViewModel.swift in Sources */,
 				450B7A6828F58574009229E3 /* Debounce.swift in Sources */,
+				45644F9F2C9B5C22001C6464 /* OpenStatsButton.swift in Sources */,
 				450B7A6928F58574009229E3 /* UITapGestureRecognizer+Extensions.swift in Sources */,
 				450B7A6B28F58574009229E3 /* ConversationsViewController.swift in Sources */,
 				450B7A6C28F58574009229E3 /* WithdrawResponse.swift in Sources */,
@@ -15393,6 +15412,7 @@
 				457CBBAF282D27D000ED0F00 /* Endpoint.swift in Sources */,
 				457CBBB0282D27D000ED0F00 /* OutrightMarketDetailsStore.swift in Sources */,
 				457CBBB1282D27D000ED0F00 /* RecentSearchTableViewCell.swift in Sources */,
+				45644FA62C9B5C22001C6464 /* OpenStatsButton.swift in Sources */,
 				457CBBB2282D27D000ED0F00 /* TestsViewController.swift in Sources */,
 				457CBBB4282D27D000ED0F00 /* Odd.swift in Sources */,
 				457CBBB5282D27D000ED0F00 /* NetworkSession.swift in Sources */,
@@ -15674,6 +15694,7 @@
 				457CBD3D282D2CD100ED0F00 /* SuggestedBetTableViewCell.swift in Sources */,
 				457CBD3E282D2CD100ED0F00 /* Optional+Extensions.swift in Sources */,
 				45C10F5D28772DA700037BBE /* CATransform3D+Shift.swift in Sources */,
+				45644FA22C9B5C22001C6464 /* OpenStatsButton.swift in Sources */,
 				A986D35A28CB48F100AF95D7 /* TipsListViewModel.swift in Sources */,
 				45DB8DA22A66D9480018C591 /* DebugUserDefaults.swift in Sources */,
 				457CBD3F282D2CD100ED0F00 /* OutcomeSelectionButtonView.swift in Sources */,
@@ -16775,6 +16796,7 @@
 				4589C91A282024E400243547 /* AddFriendCellViewModel.swift in Sources */,
 				4589C91B282024E400243547 /* Debounce.swift in Sources */,
 				4589C91C282024E400243547 /* UITapGestureRecognizer+Extensions.swift in Sources */,
+				45644FA12C9B5C22001C6464 /* OpenStatsButton.swift in Sources */,
 				4589C9DF2820279500243547 /* TargetVariables.swift in Sources */,
 				4589C91D282024E400243547 /* ConversationsViewController.swift in Sources */,
 				4589C91E282024E400243547 /* WithdrawResponse.swift in Sources */,
@@ -17486,6 +17508,7 @@
 				45A33287298976BA008181E9 /* ActivationAlert.swift in Sources */,
 				45A33288298976BA008181E9 /* AddFriendCellViewModel.swift in Sources */,
 				45A33289298976BA008181E9 /* Debounce.swift in Sources */,
+				45644FA52C9B5C22001C6464 /* OpenStatsButton.swift in Sources */,
 				45A3328A298976BA008181E9 /* UITapGestureRecognizer+Extensions.swift in Sources */,
 				45A3328B298976BA008181E9 /* ConversationsViewController.swift in Sources */,
 				45A3328C298976BA008181E9 /* WithdrawResponse.swift in Sources */,
@@ -18197,6 +18220,7 @@
 				45A6BD7128246A7500D9B416 /* AddFriendCellViewModel.swift in Sources */,
 				45A6BD7228246A7500D9B416 /* FriendsListViewModel.swift in Sources */,
 				45A6BD7328246A7500D9B416 /* Debounce.swift in Sources */,
+				45644FA42C9B5C22001C6464 /* OpenStatsButton.swift in Sources */,
 				45A6BD7428246A7500D9B416 /* UITapGestureRecognizer+Extensions.swift in Sources */,
 				45A6BD7528246A7500D9B416 /* ConversationsViewController.swift in Sources */,
 				459874BC2A28D272008C0ADE /* CardsCollectionViewLayout.swift in Sources */,
@@ -18908,6 +18932,7 @@
 				45F6BD482AB3732C00C81DE1 /* ActivationAlert.swift in Sources */,
 				45F6BD492AB3732C00C81DE1 /* AddFriendCellViewModel.swift in Sources */,
 				45F6BD4A2AB3732C00C81DE1 /* Debounce.swift in Sources */,
+				45644FA02C9B5C22001C6464 /* OpenStatsButton.swift in Sources */,
 				45F6BD4B2AB3732C00C81DE1 /* UITapGestureRecognizer+Extensions.swift in Sources */,
 				45F6BD4C2AB3732C00C81DE1 /* ConversationsViewController.swift in Sources */,
 				45F6BD4D2AB3732C00C81DE1 /* WithdrawResponse.swift in Sources */,
@@ -19233,6 +19258,7 @@
 				A9C3416728F9A74A0055360B /* SportMatchLineViewModel.swift in Sources */,
 				A9C3416828F9A74A0055360B /* SimpleListMarketDetailTableViewCell.swift in Sources */,
 				A9C3416928F9A74A0055360B /* PopUpDetails.swift in Sources */,
+				45644FA32C9B5C22001C6464 /* OpenStatsButton.swift in Sources */,
 				A9C3416A28F9A74A0055360B /* RunningPlatform.swift in Sources */,
 				A9C3416B28F9A74A0055360B /* AppModels.swift in Sources */,
 				A9C3416C28F9A74A0055360B /* AddUnregisteredFriendCellViewModel.swift in Sources */,
@@ -20157,7 +20183,7 @@
 				CODE_SIGN_IDENTITY = "Apple Development";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				CODE_SIGN_STYLE = Manual;
-				CURRENT_PROJECT_VERSION = 102800;
+				CURRENT_PROJECT_VERSION = 102803;
 				DEVELOPMENT_TEAM = QN2DYX5K4M;
 				"DEVELOPMENT_TEAM[sdk=iphoneos*]" = QN2DYX5K4M;
 				INFOPLIST_FILE = "./Clients/Betsson/Misc-PROD/Betsson-PROD-Info.plist";
@@ -20166,7 +20192,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 1.0.27;
+				MARKETING_VERSION = 1.0.28;
 				OTHER_LDFLAGS = "$(inherited)";
 				PRODUCT_BUNDLE_IDENTIFIER = fr.betsson.ios.app;
 				PRODUCT_NAME = Betsson;
@@ -20190,7 +20216,7 @@
 				CODE_SIGN_IDENTITY = "Apple Distribution";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution";
 				CODE_SIGN_STYLE = Manual;
-				CURRENT_PROJECT_VERSION = 102800;
+				CURRENT_PROJECT_VERSION = 102803;
 				DEVELOPMENT_TEAM = QN2DYX5K4M;
 				"DEVELOPMENT_TEAM[sdk=iphoneos*]" = QN2DYX5K4M;
 				INFOPLIST_FILE = "./Clients/Betsson/Misc-PROD/Betsson-PROD-Info.plist";
@@ -20199,7 +20225,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 1.0.27;
+				MARKETING_VERSION = 1.0.28;
 				OTHER_LDFLAGS = "$(inherited)";
 				PRODUCT_BUNDLE_IDENTIFIER = fr.betsson.ios.app;
 				PRODUCT_NAME = Betsson;
@@ -20280,7 +20306,7 @@
 				CODE_SIGN_IDENTITY = "Apple Development";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				CODE_SIGN_STYLE = Manual;
-				CURRENT_PROJECT_VERSION = 102800;
+				CURRENT_PROJECT_VERSION = 102803;
 				DEVELOPMENT_TEAM = 422GNXXZJR;
 				"DEVELOPMENT_TEAM[sdk=iphoneos*]" = 422GNXXZJR;
 				INFOPLIST_FILE = "./Clients/Betsson/Misc-UAT/Betsson-UAT-Info.plist";
@@ -20289,7 +20315,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 1.0.27;
+				MARKETING_VERSION = 1.0.28;
 				OTHER_LDFLAGS = "$(inherited)";
 				PRODUCT_BUNDLE_IDENTIFIER = com.gomagaming.betsson;
 				PRODUCT_NAME = "$(TARGET_NAME)";
@@ -20312,7 +20338,7 @@
 				CODE_SIGN_IDENTITY = "Apple Distribution";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution";
 				CODE_SIGN_STYLE = Manual;
-				CURRENT_PROJECT_VERSION = 102800;
+				CURRENT_PROJECT_VERSION = 102803;
 				DEVELOPMENT_TEAM = 422GNXXZJR;
 				"DEVELOPMENT_TEAM[sdk=iphoneos*]" = 422GNXXZJR;
 				INFOPLIST_FILE = "./Clients/Betsson/Misc-UAT/Betsson-UAT-Info.plist";
@@ -20321,7 +20347,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 1.0.27;
+				MARKETING_VERSION = 1.0.28;
 				OTHER_LDFLAGS = "$(inherited)";
 				PRODUCT_BUNDLE_IDENTIFIER = com.gomagaming.betsson;
 				PRODUCT_NAME = "$(TARGET_NAME)";

@@ -59,9 +59,9 @@ class MatchWidgetContainerTableViewModel {
         switch type {
         case .normal, .backgroundImage:
             return 152.0
-        case .topImage, .topImageOutright:
+        case .topImageOutright:
             return 270.0
-        case .topImageWithMixMatch:
+        case .topImage, .topImageWithMixMatch:
             return 300.0
         case .boosted:
             return 190.0
