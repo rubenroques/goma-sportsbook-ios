@@ -110,7 +110,8 @@ platform :ios do
     # Update build number
     increment_build_number(
       build_number: new_build,
-      xcodeproj: "Sportsbook.xcodeproj"
+      xcodeproj: "Sportsbook.xcodeproj",
+      skip_info_plist: true
     )
     
     puts "Build number updated to: #{new_build}"

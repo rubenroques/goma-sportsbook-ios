@@ -45,6 +45,8 @@ class ListBackgroundCollectionViewCell: UICollectionViewCell {
         
         self.backgroundImageView.layer.cornerRadius = self.backgroundImageView.frame.height / 2
         
+        self.iconImageView.backgroundColor = .clear
+        
         self.contentView.setNeedsLayout()
         self.contentView.layoutIfNeeded()
         
@@ -62,26 +64,14 @@ class ListBackgroundCollectionViewCell: UICollectionViewCell {
         self.setupWithTheme()
         self.setSelectedType(false)
         self.isCustomDesign = false
-
     }
 
     func setupWithTheme() {
-
         self.normalColor = UIColor.App.pillBackground
-
         self.selectedColor = UIColor.App.highlightPrimary
 
-        self.selectionHighlightView.backgroundColor = UIColor.App.highlightPrimary
-
         self.containerView.backgroundColor = UIColor.App.pillNavigation
-
         self.setupWithSelection(self.selectedType)
-
-        self.iconImageView.backgroundColor = .clear
-        self.iconImageView.setImageColor(color: UIColor.App.textPrimary)
-
-        self.titleLabel.textColor = UIColor.App.textPrimary
-
     }
 
     func setupInfo(title: String, iconName: String, backgroundName: String) {

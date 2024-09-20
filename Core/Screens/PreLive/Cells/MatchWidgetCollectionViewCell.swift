@@ -461,7 +461,7 @@ class MatchWidgetCollectionViewCell: UICollectionViewCell {
         let view = UIView()
         view.translatesAutoresizingMaskIntoConstraints = false
         view.layer.cornerRadius = CornerRadius.view
-        view.backgroundColor = UIColor.App.buttonBackgroundSecondary
+        view.backgroundColor = UIColor.App.backgroundSecondary
         view.clipsToBounds = true
         return view
     }()
@@ -484,6 +484,7 @@ class MatchWidgetCollectionViewCell: UICollectionViewCell {
         imageView.contentMode = .scaleAspectFit
         return imageView
     }()
+    
     
     // Mix match bottom bar
     lazy var mixMatchContainerView: UIView = {
@@ -1204,6 +1205,13 @@ class MatchWidgetCollectionViewCell: UICollectionViewCell {
         self.homeServingIndicatorView.backgroundColor = UIColor.App.highlightPrimary
         self.awayServingIndicatorView.backgroundColor = UIColor.App.highlightPrimary
         
+        //
+        //
+        self.bottomSeeAllMarketsBaseView.backgroundColor = UIColor.App.backgroundSecondary
+        self.bottomSeeAllMarketsLabel.textColor = UIColor.App.textSecondary
+        self.bottomSeeAllMarketsArrowIconImageView.setTintColor(color: UIColor.App.iconSecondary)
+        
+        //
         // Boosted Odds
         self.boostedTopRightCornerLabel.textColor = UIColor.App.textPrimary
         

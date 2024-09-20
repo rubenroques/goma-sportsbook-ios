@@ -2,8 +2,6 @@
 <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
 <plist version="1.0">
 <dict>
-	<key>NSPhotoLibraryAddUsageDescription</key>
-	<string>The app needs permission to use your photo library.</string>
 	<key>CFBundleDevelopmentRegion</key>
 	<string>$(DEVELOPMENT_LANGUAGE)</string>
 	<key>CFBundleDisplayName</key>
@@ -27,7 +25,7 @@
 	<key>CFBundleShortVersionString</key>
 	<string>$(MARKETING_VERSION)</string>
 	<key>CFBundleVersion</key>
-	<string>102800</string>
+	<string>$(CURRENT_PROJECT_VERSION)</string>
 	<key>LSApplicationCategoryType</key>
 	<string></string>
 	<key>LSApplicationQueriesSchemes</key>
@@ -55,6 +53,8 @@
 	<string>The app needs your permission to use your location</string>
 	<key>NSLocationWhenInUseUsageDescription</key>
 	<string>The app needs localization permission when in use</string>
+	<key>NSPhotoLibraryAddUsageDescription</key>
+	<string>The app needs permission to use your photo library.</string>
 	<key>UIAppFonts</key>
 	<array>
 		<string>Gilroy-Bold.ttf</string>

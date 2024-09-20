@@ -23,11 +23,13 @@
 	<key>CFBundleShortVersionString</key>
 	<string>$(MARKETING_VERSION)</string>
 	<key>CFBundleVersion</key>
-	<string>102800</string>
+	<string>$(CURRENT_PROJECT_VERSION)</string>
 	<key>LSRequiresIPhoneOS</key>
 	<true/>
 	<key>NSContactsUsageDescription</key>
 	<string>The app needs permission to use your contacs</string>
+	<key>NSFaceIDUsageDescription</key>
+	<string>User Authentication</string>
 	<key>NSLocationAlwaysAndWhenInUseUsageDescription</key>
 	<string>The app needs permission to use your location</string>
 	<key>NSLocationAlwaysUsageDescription</key>
@@ -76,7 +78,5 @@
 	</array>
 	<key>UIViewControllerBasedStatusBarAppearance</key>
 	<false/>
-    <key>NSFaceIDUsageDescription</key>
-    <string>User Authentication</string>
 </dict>
 </plist>
