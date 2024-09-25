@@ -91,6 +91,8 @@ struct Market: Hashable {
 
     var eventId: String?
     
+    var competitionName: String?
+    
     var statsTypeId: String?
 
     var outcomesOrder: OutcomesOrder
@@ -117,7 +119,8 @@ struct Market: Hashable {
          eventId: String? = nil,
          statsTypeId: String? = nil,
          outcomesOrder: OutcomesOrder,
-         customBetAvailable: Bool? = nil) {
+         customBetAvailable: Bool? = nil,
+         competitionName: String? = nil) {
         
         self.id = id
         self.typeId = typeId
@@ -140,6 +143,7 @@ struct Market: Hashable {
         self.statsTypeId = statsTypeId
         self.outcomesOrder = outcomesOrder
         self.customBetAvailable = customBetAvailable
+        self.competitionName = competitionName
     }
 }
 

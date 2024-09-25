@@ -191,10 +191,8 @@ class TransactionsTableViewCell: UITableViewCell {
         if let gameTranId = transactionHistoryEntry.id,
            let gameId = gameTranId.components(separatedBy: "_")[safe: 1] {
 
-//            self.gameTransactionIdLabel.text = "\(localized("bet_id")): \(gameId)"
             self.gameTransactionIdValueLabel.text = gameId
             self.hasGameTranId = true
-
         }
         else {
             self.hasGameTranId = false

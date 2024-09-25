@@ -22,8 +22,8 @@ class ClientManagedHomeViewTemplateDataSource {
         .makeOwnBetCallToAction, // MakeYourOwnBet
         .highlightedMatches, // Highlights image cards
         .highlightedBoostedOddsMatches, // Boosted Odds
-        .featuredTips, // SuggestedBets
         .topCompetitionsShortcuts, // TopCompetitionsMobile
+        .featuredTips, // SuggestedBets
     ]
     
     private var fixedSections: Int {
@@ -361,11 +361,23 @@ class ClientManagedHomeViewTemplateDataSource {
             var imageMatches: [Match] = [ ]
             var boostedMatches: [Match] = []
             for highlightedMatchType in highlightedMatchTypes {
+                // We can only show 1 match per market
+                // So ignore duplicated matches that have the same markets
                 switch highlightedMatchType {
                 case .visualImageMatch(let match):
-                    imageMatches.append(match)
+                    if !imageMatches.contains(where: { arrayMatch in
+                        arrayMatch.id == match.id &&
+                        arrayMatch.markets.map(\.id) == match.markets.map(\.id)
+                    }) {
+                        imageMatches.append(match)
+                    }
                 case .boostedOddsMatch(let match):
-                    boostedMatches.append(match)
+                    if !boostedMatches.contains(where: { arrayMatch in
+                        arrayMatch.id == match.id &&
+                        arrayMatch.markets.map(\.id) == match.markets.map(\.id)
+                    }) {
+                        boostedMatches.append(match)
+                    }
                 }
             }
      
@@ -378,14 +390,6 @@ class ClientManagedHomeViewTemplateDataSource {
             })
             
             self?.highlightsBoostedMatches = boostedMatches
-
-            #if DEBUG
-            self?.highlightsBoostedMatches = boostedMatches + boostedMatches + boostedMatches + boostedMatches
-
-            if boostedMatches.isEmpty {
-                self?.highlightsBoostedMatches = imageMatches + imageMatches + imageMatches
-            }
-            #endif
             
             self?.refreshPublisher.send()
         })

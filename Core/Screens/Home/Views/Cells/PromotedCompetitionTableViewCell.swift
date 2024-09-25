@@ -34,17 +34,13 @@ class PromotedCompetitionTableViewCell: UITableViewCell {
         super.prepareForReuse()
 
 //        self.promoImageView.kf.cancelDownloadTask()
-
     }
     
     // MARK: - Theme and Layout
     override func layoutSubviews() {
         super.layoutSubviews()
-
         self.contentView.layoutIfNeeded()
-        
         self.containerView.layer.cornerRadius = CornerRadius.view
-        
     }
     
     override func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {
@@ -59,7 +55,6 @@ class PromotedCompetitionTableViewCell: UITableViewCell {
         self.contentView.backgroundColor = .clear
 
         self.containerView.backgroundColor = .clear
-
         self.promoImageView.backgroundColor = .clear
     }
     
@@ -69,11 +64,8 @@ class PromotedCompetitionTableViewCell: UITableViewCell {
            let featuredCompetitionId = featuredCompetition.id,
            let homeBanner = featuredCompetition.homeBanner,
            let url = URL(string: "\(homeBanner)") {
-            
             self.promoImageView.kf.setImage(with: url)
-            
         }
-        
     }
     
     // MARK: Actions
@@ -119,9 +111,9 @@ extension PromotedCompetitionTableViewCell {
         NSLayoutConstraint.activate([
             self.containerView.leadingAnchor.constraint(equalTo: self.contentView.leadingAnchor, constant: 15),
             self.containerView.trailingAnchor.constraint(equalTo: self.contentView.trailingAnchor, constant: -15),
-            self.containerView.topAnchor.constraint(equalTo: self.contentView.topAnchor, constant: 15),
-            self.containerView.bottomAnchor.constraint(equalTo: self.contentView.bottomAnchor),
-            self.containerView.heightAnchor.constraint(equalToConstant: 100),
+            self.containerView.topAnchor.constraint(equalTo: self.contentView.topAnchor, constant: 2),
+            self.containerView.bottomAnchor.constraint(equalTo: self.contentView.bottomAnchor, constant: -2),
+            // self.containerView.heightAnchor.constraint(equalToConstant: 100),
             
             self.promoImageView.leadingAnchor.constraint(equalTo: self.containerView.leadingAnchor),
             self.promoImageView.trailingAnchor.constraint(equalTo: self.containerView.trailingAnchor),

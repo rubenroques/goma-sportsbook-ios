@@ -290,10 +290,27 @@ class MatchWidgetCellViewModel {
     
     var currentCollectionPage: CurrentValueSubject<Int, Never> = .init(0)
     
+    
     //
-    @Published private(set) var homeOldBoostedOddAttributedString: (String, NSAttributedString) = ("", NSAttributedString(string: "-"))
-    @Published private(set) var drawOldBoostedOddAttributedString: (String, NSAttributedString) = ("", NSAttributedString(string: "-"))
-    @Published private(set) var awayOldBoostedOddAttributedString: (String, NSAttributedString) = ("", NSAttributedString(string: "-"))
+    struct BoostedOutcome {
+        var type: String
+        var name: String
+        var valueAttributedString: NSAttributedString
+        
+        init(type: String, name: String, valueAttributedString: NSAttributedString) {
+            self.type = type
+            self.name = name
+            self.valueAttributedString = valueAttributedString
+        }
+        
+        init() {
+            self.type = "home"
+            self.name = ""
+            self.valueAttributedString = NSAttributedString(string: "-")
+        }
+    }
+    
+    @Published private(set) var oldBoostedOddOutcome: BoostedOutcome? = nil
     
     @Published private(set) var matchWidgetStatus: MatchWidgetStatus = .unknown
     @Published private(set) var matchWidgetType: MatchWidgetType = .normal
@@ -482,34 +499,26 @@ extension MatchWidgetCellViewModel {
                 let oddValue = OddFormatter.formatOdd(withValue: outcome.bettingOffer.decimalOdd)
                 let attributes = [NSAttributedString.Key.strikethroughStyle: NSUnderlineStyle.single.rawValue]
                 let attributedString = NSAttributedString(string: oddValue, attributes: attributes)
-                self?.homeOldBoostedOddAttributedString = (firstCurrentOutcomeName, attributedString)
+                self?.oldBoostedOddOutcome = BoostedOutcome(type: "home", name: firstCurrentOutcomeName, valueAttributedString: attributedString)
             }
-            else {
-                self?.homeOldBoostedOddAttributedString = ("", NSAttributedString(string: "-"))
-            }
-            
-            if let secondCurrentOutcomeName = match.markets.first?.outcomes[safe: 1]?.typeName.lowercased(),
-               let outcome = market.outcomes.first(where: { outcome in outcome.typeName.lowercased() == secondCurrentOutcomeName }) 
+            else if let secondCurrentOutcomeName = match.markets.first?.outcomes[safe: 1]?.typeName.lowercased(),
+               let outcome = market.outcomes.first(where: { outcome in outcome.typeName.lowercased() == secondCurrentOutcomeName })
             {
                 let oddValue = OddFormatter.formatOdd(withValue: outcome.bettingOffer.decimalOdd)
                 let attributes = [NSAttributedString.Key.strikethroughStyle: NSUnderlineStyle.single.rawValue]
                 let attributedString = NSAttributedString(string: oddValue, attributes: attributes)
-                self?.drawOldBoostedOddAttributedString = (secondCurrentOutcomeName, attributedString)
+                self?.oldBoostedOddOutcome = BoostedOutcome(type: "draw", name: secondCurrentOutcomeName, valueAttributedString: attributedString)
             }
-            else {
-                self?.drawOldBoostedOddAttributedString = ("", NSAttributedString(string: "-"))
-            }
-            
-            if let thirdCurrentOutcomeName = match.markets.first?.outcomes[safe: 2]?.typeName.lowercased(),
+            else if let thirdCurrentOutcomeName = match.markets.first?.outcomes[safe: 2]?.typeName.lowercased(),
                let outcome = market.outcomes.first(where: { outcome in outcome.typeName.lowercased() == thirdCurrentOutcomeName }) 
             {
                 let oddValue = OddFormatter.formatOdd(withValue: outcome.bettingOffer.decimalOdd)
                 let attributes = [NSAttributedString.Key.strikethroughStyle: NSUnderlineStyle.single.rawValue]
                 let attributedString = NSAttributedString(string: oddValue, attributes: attributes)
-                self?.awayOldBoostedOddAttributedString = (thirdCurrentOutcomeName, attributedString)
+                self?.oldBoostedOddOutcome = BoostedOutcome(type: "away", name: thirdCurrentOutcomeName, valueAttributedString: attributedString)
             }
             else {
-                self?.awayOldBoostedOddAttributedString = ("", NSAttributedString(string: "-"))
+                self?.oldBoostedOddOutcome = BoostedOutcome()
             }
         }
         .store(in: &self.cancellables)

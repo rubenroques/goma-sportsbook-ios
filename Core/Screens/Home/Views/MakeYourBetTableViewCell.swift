@@ -96,7 +96,7 @@ extension MakeYourBetTableViewCell {
         view.translatesAutoresizingMaskIntoConstraints = false
         view.contentMode = .scaleAspectFit
         view.backgroundColor = .clear
-        view.layer.cornerRadius = 6
+        view.layer.cornerRadius = 7
         view.layer.masksToBounds = true
         return view
     }
@@ -117,21 +117,16 @@ extension MakeYourBetTableViewCell {
 
     private func initConstraints() {
         NSLayoutConstraint.activate([
-             self.baseView.heightAnchor.constraint(equalToConstant: self.cellHeight),
+             
             self.baseView.leadingAnchor.constraint(equalTo: self.contentView.leadingAnchor, constant: 0),
             self.baseView.trailingAnchor.constraint(equalTo: self.contentView.trailingAnchor, constant: 0),
             self.baseView.topAnchor.constraint(equalTo: self.contentView.topAnchor, constant: 0),
             self.baseView.bottomAnchor.constraint(equalTo: self.contentView.bottomAnchor, constant: 0),
-//            self.baseView.centerXAnchor.constraint(equalTo: self.contentView.centerXAnchor),
-//            self.baseView.centerYAnchor.constraint(equalTo: self.contentView.centerYAnchor),
-
-            // Apply the aspect ratio constraint here (1056:216 = 4.8888)
-            self.swipeImageView.widthAnchor.constraint(equalTo: self.swipeImageView.heightAnchor, multiplier: self.aspectRatio),
 
             self.swipeImageView.topAnchor.constraint(equalTo: self.baseView.topAnchor, constant: 20),
-             self.swipeImageView.bottomAnchor.constraint(equalTo: self.baseView.bottomAnchor, constant: -20),
+            self.swipeImageView.bottomAnchor.constraint(equalTo: self.baseView.bottomAnchor, constant: -20),
             self.swipeImageView.centerXAnchor.constraint(equalTo: self.baseView.centerXAnchor),
-            self.swipeImageView.leadingAnchor.constraint(equalTo: self.baseView.leadingAnchor, constant: 10),
+            self.swipeImageView.leadingAnchor.constraint(equalTo: self.baseView.leadingAnchor, constant: 18),
         ])
     }
 

@@ -261,12 +261,7 @@ class MatchWidgetCollectionViewCell: UICollectionViewCell {
         return label
     }()
     
-    private var boostedMarket: Market?
-    private var boostedOutcome: Outcome?
-    
     //
-    //
-
     //
     // =============================
     //
@@ -1067,10 +1062,7 @@ class MatchWidgetCollectionViewCell: UICollectionViewCell {
         self.isRightOutcomeButtonSelected = false
         
         self.isBoostedOutcomeButtonSelected = false
-        
-        self.boostedMarket = nil
-        self.boostedOutcome = nil
-        
+                
         self.oddsStackView.alpha = 1.0
         self.oddsStackView.isHidden = false
         
@@ -1978,71 +1970,49 @@ extension MatchWidgetCollectionViewCell {
                 self?.timeNewLabel.text = startTimeString
             }
             .store(in: &self.cancellables)
-
-        Publishers.CombineLatest4(
-            viewModel.$homeOldBoostedOddAttributedString,
-            viewModel.$drawOldBoostedOddAttributedString,
-            viewModel.$drawOldBoostedOddAttributedString,
-            viewModel.defaultMarketPublisher)
-            .receive(on: DispatchQueue.main)
-            .sink { [weak self] homeArgs, drawArgs, awayArgs, defaultMarketPublisher in
-                
-                guard
-                    let defaultMarket = defaultMarketPublisher
-                else {
-                    self?.oldTitleBoostedOddLabel.text = "-"
-                    self?.newTitleBoostedOddLabel.text = "-"
-                    self?.oldValueBoostedOddLabel.text = "-"
-                    self?.newValueBoostedOddLabel.text = "-"
-                    return
-                }
-                
-                let (homeType, homeOldValue) = homeArgs
-                let (drawType, drawOldValue) = drawArgs
-                let (awayType, awayOldValue) = awayArgs
-                                 
-                self?.homeOldBoostedOddValueLabel.attributedText = homeOldValue
-                self?.drawOldBoostedOddValueLabel.attributedText = drawOldValue
-                self?.awayOldBoostedOddValueLabel.attributedText = awayOldValue
-                
-                var outcomeType = "" // We need to get the type of the boosted outcome (it should be just one)
-                var oldValueString = NSAttributedString(string: "")
-                
-                if homeType != "" {
-                    outcomeType = homeType
-                    oldValueString = homeOldValue
-                }
-                else if drawType != "" {
-                    outcomeType = drawType
-                    oldValueString = drawOldValue
-                }
-                else if awayType != "" {
-                    outcomeType = awayType
-                    oldValueString = awayOldValue
-                }
-                
-                var newValueString = ""
-                var buttonsTitle = ""
-                
-                var boostedOutcome: Outcome?
-                for outcome in defaultMarket.outcomes {
-                    if outcome.typeName.lowercased() == outcomeType {
-                        buttonsTitle = outcome.typeName
-                        newValueString = OddFormatter.formatOdd(withValue: outcome.bettingOffer.decimalOdd)
-                        
-                        boostedOutcome = outcome
-                        break
-                    }
-                }
-                
-                self?.oldTitleBoostedOddLabel.text = buttonsTitle // same title for both old and new
-                self?.newTitleBoostedOddLabel.text = buttonsTitle //
-                self?.oldValueBoostedOddLabel.attributedText = oldValueString // The new odd, from the market outcome
-                self?.newValueBoostedOddLabel.text = newValueString // The old odd from the old market subscriber
-                
-                self?.configureBoostedOutcome(withMarket: defaultMarket, outcome: boostedOutcome)
+        
+        Publishers.CombineLatest(
+            viewModel.$match,
+            viewModel.$oldBoostedOddOutcome
+        )
+        .receive(on: DispatchQueue.main)
+        .sink { [weak self] match, oldBoostedOddOutcome in
+            
+            self?.oldTitleBoostedOddLabel.text = "" // same title for both old and new
+            self?.oldValueBoostedOddLabel.text = "-" // The new odd, from the market outcome
+            
+            self?.newTitleBoostedOddLabel.text = "" // same title for both old and new
+            self?.newValueBoostedOddLabel.text = "-" // The old odd from the old market subscriber
+            
+            guard
+                let newMarket = match.markets.first,
+                let newOutcome = newMarket.outcomes.first
+            else {
+                // No "new" market found
+                return
             }
-            .store(in: &self.cancellables)
+        
+            // We have enought data to show the new odd value and title
+            self?.newTitleBoostedOddLabel.text = newOutcome.typeName // same title for both old and new
+            
+            var newValueString = OddFormatter.formatOdd(withValue: newOutcome.bettingOffer.decimalOdd)
+            self?.newValueBoostedOddLabel.text = newValueString // The old odd from the old market subscriber
+            
+            guard
+                let oldBoostedOddOutcomeValue = oldBoostedOddOutcome
+            else {
+                // No old value found
+                // we need to configure the new market and new outcome
+                self?.configureBoostedOutcome()
+                return
+            }
+
+            self?.oldValueBoostedOddLabel.attributedText = oldBoostedOddOutcomeValue.valueAttributedString // The old odd, from the old market outcome
+            self?.oldTitleBoostedOddLabel.text = newOutcome.typeName // same title for both old and new
+            
+            self?.configureBoostedOutcome()
+        }
+        .store(in: &self.cancellables)
         
         //
         // Scores
@@ -2117,7 +2087,7 @@ extension MatchWidgetCollectionViewCell {
                     self?.oddsStackView.alpha = 1.0
                     
                     if viewModel.matchWidgetType == .boosted {
-                        self?.configureBoostedOutcome(withMarket: market, outcome: nil)
+                        self?.configureBoostedOutcome()
                     }
                     else {
                         self?.configureOutcomes(withMarket: market)
@@ -2199,7 +2169,7 @@ extension MatchWidgetCollectionViewCell {
         
     }
     
-    private func configureBoostedOutcome(withMarket market: Market, outcome: Outcome?) {
+    private func configureBoostedOutcome() {
         
         if self.viewModel?.matchWidgetType != .boosted {
             return
@@ -2211,10 +2181,7 @@ extension MatchWidgetCollectionViewCell {
         self.drawBaseView.isHidden = true
         self.awayBaseView.isHidden = true
         
-        guard let outcome else { return }
-        
-        self.boostedMarket = market
-        self.boostedOutcome = outcome
+        guard let market = self.viewModel?.match.markets.first, let outcome = market.outcomes.first else { return }
         
         self.isBoostedOutcomeButtonSelected = Env.betslipManager.hasBettingTicket(withId: outcome.bettingOffer.id)
 
@@ -2835,8 +2802,8 @@ extension MatchWidgetCollectionViewCell {
     @objc func didTapBoostedOddButton() {
         guard
             let match = self.viewModel?.match,
-            let market = self.boostedMarket,
-            let outcome = self.boostedOutcome
+            let market = match.markets.first,
+            let outcome = market.outcomes.first
         else {
             return
         }

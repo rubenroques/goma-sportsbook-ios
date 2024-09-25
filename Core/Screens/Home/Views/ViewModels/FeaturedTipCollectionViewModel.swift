@@ -272,7 +272,7 @@ class FeaturedTipSelectionViewModel {
         
     }
 
-    var tournamentName: String {
+    var competitiontName: String {
         switch dataType {
         case .featuredTipSelection(let featuredTipSelection):
             return featuredTipSelection.sportParentName
@@ -316,6 +316,11 @@ class FeaturedTipSelectionViewModel {
         return self.oddSubject.removeDuplicates().eraseToAnyPublisher()
     }
     private var oddSubject: CurrentValueSubject<Double, Never> = .init(1.0)
+
+    var competitionNamePublisher: AnyPublisher<String?, Never> {
+        return self.competitionNameSubject.removeDuplicates().eraseToAnyPublisher()
+    }
+    private var competitionNameSubject: CurrentValueSubject<String?, Never> = .init(nil)
     
     var marketNamePublisher: AnyPublisher<String, Never> {
         return self.marketNameSubject.removeDuplicates().eraseToAnyPublisher()
@@ -360,6 +365,8 @@ class FeaturedTipSelectionViewModel {
                         self?.outcomeNameSubject.send(outcome.translatedName)
                     }
                 }
+                
+                self?.competitionNameSubject.send(market.competitionName)
                 self?.marketNameSubject.send(market.name)
             }
             .store(in: &self.cancellables)

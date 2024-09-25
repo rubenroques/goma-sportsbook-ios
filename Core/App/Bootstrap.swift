@@ -82,8 +82,6 @@ class Bootstrap {
                     self?.bootTriggerCancelable?.cancel()
                 case .unknown:
                     print("DebugRouter maintenanceModePublisher unknown")
-
-                    break
                 }
             })
         

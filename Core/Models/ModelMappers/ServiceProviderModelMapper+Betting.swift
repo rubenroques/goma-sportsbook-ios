@@ -138,6 +138,8 @@ extension ServiceProviderModelMapper {
             valueType = .neutral
         }
         
+         print("DebugTransaction: ", transactionType, transactionDetail.amount)
+        
         return TransactionHistory(transactionID: "\(transactionDetail.id)",
                                   date: transactionDetail.date,
                                   type: transactionType ?? "",

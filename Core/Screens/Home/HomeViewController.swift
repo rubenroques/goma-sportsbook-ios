@@ -1254,16 +1254,9 @@ extension HomeViewController: UITableViewDelegate, UITableViewDataSource {
         case .makeOwnBetCallToAction:
             return UITableView.automaticDimension
         case .topCompetitionsShortcuts:
-            if let featuredCompetitionId = Env.businessSettingsSocket.clientSettings.featuredCompetition?.id {
-                
-                if indexPath.row == 0 {
-                    return 115
-                }
-                else {
-                    return UITableView.automaticDimension
-                }
-            }
-            
+//            if Env.businessSettingsSocket.clientSettings.featuredCompetition?.id != nil && indexPath.row == 0 {
+//                return 130
+//            }
             return UITableView.automaticDimension
         case .highlightedMatches:
             if let viewModel = self.viewModel.highlightedMatchViewModel(forSection: indexPath.section, forIndex: indexPath.row) {
@@ -1346,7 +1339,7 @@ extension HomeViewController: UITableViewDelegate, UITableViewDataSource {
         case .makeOwnBetCallToAction:
             return 110
         case .topCompetitionsShortcuts:
-            return 124
+            return 130
         case .highlightedMatches:
             if let viewModel = self.viewModel.highlightedMatchViewModel(forSection: indexPath.section, forIndex: indexPath.row) {
                 return viewModel.maxHeightForInnerCards()

@@ -22,6 +22,7 @@ class FeaturedTipView: UIView {
     private lazy var outcomeLabel: UILabel = Self.createOutcomeLabel()
     private lazy var matchLabel: UILabel = Self.createMatchLabel()
 
+    private var tournamentNameCancellable: AnyCancellable?
     private var marketNameCancellable: AnyCancellable?
     private var outcomeNameCancellable: AnyCancellable?
 
@@ -93,8 +94,22 @@ class FeaturedTipView: UIView {
 
         self.countryIconImageView.image = UIImage(named: viewModel.countryFlagImageName)
         
-        self.tournamentLabel.text = viewModel.tournamentName
+        self.tournamentLabel.text = viewModel.competitiontName
   
+        self.tournamentNameCancellable?.cancel()
+        self.tournamentNameCancellable = nil
+        
+        self.tournamentNameCancellable = viewModel.competitionNamePublisher
+            .compactMap({ $0 })
+            .removeDuplicates()
+            .receive(on: DispatchQueue.main)
+            .sink { [weak self] marketName in
+                guard let self = self else {
+                    return
+                }
+                self.tournamentLabel.text = marketName
+            }
+        
         self.marketNameCancellable?.cancel()
         self.marketNameCancellable = nil
         

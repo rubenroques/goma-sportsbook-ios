@@ -229,7 +229,7 @@ extension FeaturedTipLineTableViewCell: UICollectionViewDelegate, UICollectionVi
     func collectionView(_ collectionView: UICollectionView,
                         layout collectionViewLayout: UICollectionViewLayout,
                         sizeForItemAt indexPath: IndexPath) -> CGSize {
-        return CGSize(width: Double(collectionView.frame.size.width)*0.85, height: collectionView.frame.size.height - 2.0)
+        return CGSize(width: Double(collectionView.frame.size.width)*0.87, height: collectionView.frame.size.height - 2.0)
     }
 
 }
