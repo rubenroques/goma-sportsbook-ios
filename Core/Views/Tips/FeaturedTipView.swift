@@ -26,6 +26,8 @@ class FeaturedTipView: UIView {
     private var marketNameCancellable: AnyCancellable?
     private var outcomeNameCancellable: AnyCancellable?
 
+    private var eventNameCancellable: AnyCancellable?
+    
     private var cancellables = Set<AnyCancellable>()
     
     // MARK: - Lifetime and Cycle
@@ -96,9 +98,9 @@ class FeaturedTipView: UIView {
         
         self.tournamentLabel.text = viewModel.competitiontName
   
+        //
         self.tournamentNameCancellable?.cancel()
         self.tournamentNameCancellable = nil
-        
         self.tournamentNameCancellable = viewModel.competitionNamePublisher
             .compactMap({ $0 })
             .removeDuplicates()
@@ -110,9 +112,9 @@ class FeaturedTipView: UIView {
                 self.tournamentLabel.text = marketName
             }
         
+        //
         self.marketNameCancellable?.cancel()
         self.marketNameCancellable = nil
-        
         self.marketNameCancellable = viewModel.marketNamePublisher
              .removeDuplicates()
              .receive(on: DispatchQueue.main)
@@ -123,9 +125,9 @@ class FeaturedTipView: UIView {
                  self.marketLabel.text = marketName
              }
         
+        //
         self.outcomeNameCancellable?.cancel()
         self.outcomeNameCancellable = nil
-        
         self.outcomeNameCancellable = viewModel.outcomeNamePublisher
              .removeDuplicates()
              .receive(on: DispatchQueue.main)
@@ -136,6 +138,18 @@ class FeaturedTipView: UIView {
                  self.outcomeLabel.text = marketName
              }
         
+        //
+        self.eventNameCancellable?.cancel()
+        self.eventNameCancellable = nil
+        self.eventNameCancellable = viewModel.eventNamePublisher
+             .removeDuplicates()
+             .receive(on: DispatchQueue.main)
+             .sink { [weak self] eventName in
+                 guard let self = self else {
+                     return
+                 }
+                 self.matchLabel.text = eventName
+             }
     }
     
     func setCountryFlag(isoCode: String, countryId: String) {

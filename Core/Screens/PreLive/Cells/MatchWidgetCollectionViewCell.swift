@@ -2139,6 +2139,9 @@ extension MatchWidgetCollectionViewCell {
             else if matchWidgetType == .boosted {
                 self?.marketNamePillLabelView.isHidden = false
             }
+//            else if matchWidgetType == .topImageOutright || matchWidgetType == .topImage || matchWidgetType == .topImageWithMixMatch {
+//                self?.marketNamePillLabelView.isHidden = false
+//            }
             else {
                 self?.marketNamePillLabelView.isHidden = true
             }

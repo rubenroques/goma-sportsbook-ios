@@ -333,6 +333,11 @@ class FeaturedTipSelectionViewModel {
     }
     private var outcomeNameSubject: CurrentValueSubject<String, Never> = .init("-")
     
+    var eventNamePublisher: AnyPublisher<String, Never> {
+        return self.eventNameSubject.removeDuplicates().eraseToAnyPublisher()
+    }
+    private var eventNameSubject: CurrentValueSubject<String, Never> = .init("-")
+    
     init(featuredTipSelection: FeaturedTipSelection) {
         self.dataType = .featuredTipSelection(featuredTipSelection)
     }
@@ -368,6 +373,9 @@ class FeaturedTipSelectionViewModel {
                 
                 self?.competitionNameSubject.send(market.competitionName)
                 self?.marketNameSubject.send(market.name)
+                
+                let eventName = [market.homeParticipant, market.awayParticipant].compactMap({ $0 }).joined(separator: " x ")
+                self?.eventNameSubject.send(eventName)
             }
             .store(in: &self.cancellables)
         
