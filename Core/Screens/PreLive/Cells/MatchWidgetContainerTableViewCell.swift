@@ -103,6 +103,11 @@ class MatchWidgetContainerTableViewCell: UITableViewCell {
         self.collectionView.delegate = self
         self.collectionView.dataSource = self
         
+        let centerCellCollectionViewFlowLayout = CenterCellCollectionViewFlowLayout(rightOffset: 0.0)
+        centerCellCollectionViewFlowLayout.scrollDirection = .horizontal
+        
+        self.collectionView.collectionViewLayout = centerCellCollectionViewFlowLayout
+        
         self.backSliderView.alpha = 0.0
         
         self.backSliderView.layer.cornerRadius = 6
