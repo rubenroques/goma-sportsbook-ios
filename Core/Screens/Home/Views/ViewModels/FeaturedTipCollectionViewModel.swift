@@ -198,6 +198,7 @@ class FeaturedTipCollectionViewModel {
                                        outcomeDescription: selection.outcomeName,
                                        homeParticipantName: nil,
                                        awayParticipantName: nil,
+                                       sport: selection.sport,
                                        sportIdCode: selection.sport?.id)
 
             if !Env.betslipManager.hasBettingTicket(withId: selection.outcomeId) {

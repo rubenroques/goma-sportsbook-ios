@@ -24,12 +24,14 @@ extension SportRadarModelMapper {
     
     static func promotedBetslipSelection(fromInternalPromotedBetslipSelection internalSelection: SportRadarModels.PromotedBetslipSelection) -> PromotedBetslipSelection {
         
-        let mappedSportId = Self.sportAlphaId(fromVaixSportId: internalSelection.sportId) ?? ""
-        
+        let numericSportId = Self.sportNumericId(fromVaixSportId: internalSelection.sportId) ?? ""
+
+        let alphaSportId = Self.sportAlphaId(fromVaixSportId: internalSelection.sportId) ?? ""
+
         let sport = SportType(name: internalSelection.sport,
-                              numericId: mappedSportId,
-                              alphaId: mappedSportId,
-                              iconId: mappedSportId,
+                              numericId: numericSportId,
+                              alphaId: alphaSportId,
+                              iconId: numericSportId,
                               showEventCategory: false,
                               numberEvents: 0,
                               numberOutrightEvents: 0,

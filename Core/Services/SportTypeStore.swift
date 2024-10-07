@@ -170,6 +170,8 @@ class SportTypeStore {
                 
                 self?.activeSportsCurrentValueSubject.send(.loaded(filteredSports))
 
+                print(sportTypes.map({ return "Sport: \($0.name) \($0.iconId) \($0.numericId) \($0.alphaId);" }))
+                
             case .disconnected:
                 break
             }

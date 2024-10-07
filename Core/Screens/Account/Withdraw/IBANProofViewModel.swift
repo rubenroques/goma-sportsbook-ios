@@ -149,44 +149,4 @@ class IBANProofViewModel {
             .store(in: &cancellables)
     }
 
-//    func processWithdraw() {
-//        let amountText = self.withdrawAmount
-//        var amount = ""
-//
-//        if amountText.contains(",") {
-//            amount = amountText.replacingOccurrences(of: ",", with: ".")
-//        }
-//        else {
-//            amount = amountText
-//        }
-//
-//        if let withdrawalAmount = Double(amount) {
-//
-//            Env.servicesProvider.processWithdrawal(paymentMethod: "ADYEN_BANK_TRANSFER", amount: withdrawalAmount)
-//                .receive(on: DispatchQueue.main)
-//                .sink(receiveCompletion: { [weak self] completion in
-//
-//                    switch completion {
-//                    case .finished:
-//                        ()
-//                    case .failure(let error):
-//                        print("PROCESS WITHDRAWAL ERROR: \(error)")
-//                        switch error {
-//                        case .errorMessage(let message):
-//                            self?.showErrorAlertTypePublisher.send(.error(message: message))
-//                        default:
-//                            ()
-//                        }
-//                        self?.isLoadingPublisher.send(false)
-//                    }
-//
-//                }, receiveValue: { [weak self] processWithdrawalResponse in
-//
-//                    self?.showWithdrawalStatus?()
-//
-//                    self?.isLoadingPublisher.send(false)
-//                })
-//                .store(in: &cancellables)
-//        }
-//    }
 }

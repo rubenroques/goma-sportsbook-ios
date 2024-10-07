@@ -13,6 +13,7 @@ public struct PromotedBetslipsBatchResponse: Codable {
 }
 
 public struct PromotedBetslip: Codable {
+    
     public var selections: [PromotedBetslipSelection]
     public var betslipCount: Int
     

@@ -135,7 +135,7 @@ extension SportRadarModelMapper {
         return sportCompetitionMarketGroup
     }
     
-    static func sportAlphaId(fromVaixSportId sportId: String) -> String? {
+    static func sportNumericId(fromVaixSportId sportId: String) -> String? {
         switch sportId.lowercased() {
         case "sr:sport:1": return "1"
         case "sr:sport:2": return "8"
@@ -154,6 +154,33 @@ extension SportRadarModelMapper {
         case "sr:sport:29": return "49"
         case "sr:sport:19": return "36"
         case "sr:sport:40": return "929"
+        case "sr:sport:37": return nil
+        case "sr:sport:138": return "155"
+        case "sr:sport:71": return nil
+        case "sr:sport:137": return nil
+        default: return nil
+        }
+    }
+    
+    static func sportAlphaId(fromVaixSportId sportId: String) -> String? {
+        switch sportId.lowercased() {
+        case "sr:sport:1": return "FBL"
+        case "sr:sport:2": return "BKB"
+        case "sr:sport:4": return "HKY"
+        case "sr:sport:5": return "TNS"
+        case "sr:sport:16": return "UFB"
+        case "sr:sport:6": return "HBL"
+        case "sr:sport:23": return "VBL"
+        case "sr:sport:34": return "BVB"
+        case "sr:sport:20": return "TBT"
+        case "sr:sport:31": return nil
+        case "sr:sport:12": return "39"
+        case "sr:sport:3": return "BSB"
+        case "sr:sport:21": return "26"
+        case "sr:sport:22": return "45"
+        case "sr:sport:29": return "49"
+        case "sr:sport:19": return "36"
+        case "sr:sport:40": return "FO1"
         case "sr:sport:37": return nil
         case "sr:sport:138": return "155"
         case "sr:sport:71": return nil
