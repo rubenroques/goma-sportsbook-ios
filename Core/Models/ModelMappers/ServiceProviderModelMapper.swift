@@ -186,6 +186,13 @@ extension ServiceProviderModelMapper {
             outcomesOrder = .none
         }
         
+        let sport: Sport?
+        if let marketSport = market.sport {
+            sport = Self.sport(fromServiceProviderSportType: marketSport)
+        } else {
+            sport = nil
+        }
+
         //        #if DEBUG
         //        var newMappedOutcomes = [Outcome]()
         //        for (index, outcome) in mappedOutcomes.enumerated() {
@@ -217,7 +224,9 @@ extension ServiceProviderModelMapper {
                       eventId: market.eventId,
                       outcomesOrder: outcomesOrder,
                       customBetAvailable: market.customBetAvailable,
-                      competitionName: market.competitionName)
+                      competitionName: market.competitionName,
+                      sport: sport,
+                      sportIdCode: market.sportIdCode)
     }
     
     static func optionalMarkets(fromServiceProviderMarkets markets: [ServicesProvider.Market]?) -> [Market]? {

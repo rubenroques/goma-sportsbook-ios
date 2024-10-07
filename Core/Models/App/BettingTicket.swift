@@ -79,8 +79,6 @@ struct BettingTicket: Codable, Hashable {
          date: Date?,
          odd: OddFormat,
          isFromBetBuilderMarket: Bool?) {
-
-        var processedSportIdCode = sportIdCode ?? sport?.alphaId ?? sport?.id
         
         self.id = id
         self.outcomeId = outcomeId
@@ -94,7 +92,7 @@ struct BettingTicket: Codable, Hashable {
         self.awayParticipantName = awayParticipantName
         self.odd = odd
         self.sport = sport
-        self.sportIdCode = processedSportIdCode
+        self.sportIdCode = sportIdCode
         self.venue = venue
         self.competition = competition
         self.date = date

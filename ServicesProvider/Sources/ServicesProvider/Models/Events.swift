@@ -242,6 +242,8 @@ public class Market: Codable, Equatable {
     public var competitionId: String?
     public var competitionName: String?
     public var sport: SportType?
+    public var sportIdCode: String?
+
     public var venueCountry: Country?
 
     enum CodingKeys: String, CodingKey {
@@ -261,6 +263,9 @@ public class Market: Codable, Equatable {
         case marketDigitLine = "marketDigitLine"
         case outcomesOrder = "outcomesOrder"
         case customBetAvailable = "custombetavailable"
+        case sport = "sport"
+        case sportIdCode = "sportIdCode"
+        case venueCountry = "venueCountry"
     }
 
     public init(id: String,
@@ -281,6 +286,7 @@ public class Market: Codable, Equatable {
                 competitionId: String? = nil,
                 competitionName: String? = nil,
                 sport: SportType? = nil,
+                sportIdCode: String?,
                 venueCountry: Country? = nil,
                 customBetAvailable: Bool?) {
 
@@ -303,27 +309,13 @@ public class Market: Codable, Equatable {
         // Event related properties
         self.competitionId = competitionId
         self.competitionName = competitionName
+        
         self.sport = sport
+        self.sportIdCode = sportIdCode
+        
         self.venueCountry = venueCountry
         
         self.customBetAvailable = customBetAvailable
-    }
-
-    required public init(from decoder: Decoder) throws {
-        let container = try decoder.container(keyedBy: CodingKeys.self)
-        self.id = try container.decode(String.self, forKey: .id)
-        self.name = try container.decode(String.self, forKey: .name)
-        self.outcomes = try container.decode([Outcome].self, forKey: .outcomes)
-        self.marketTypeId = try container.decodeIfPresent(String.self, forKey: .marketTypeId)
-        self.eventMarketTypeId = try container.decodeIfPresent(String.self, forKey: .eventMarketTypeId)
-        self.eventName = try container.decodeIfPresent(String.self, forKey: .eventName)
-        self.isMainOutright = try container.decodeIfPresent(Bool.self, forKey: .isMainOutright)
-        self.eventMarketCount = try container.decodeIfPresent(Int.self, forKey: .eventMarketCount)
-        self.isTradable = (try? container.decode(Bool.self, forKey: .isTradable)) ?? true
-        self.eventId = try container.decodeIfPresent(String.self, forKey: .eventId)
-        self.outcomesOrder = try container.decode(OutcomesOrder.self, forKey: .id)
-        self.customBetAvailable = try container.decodeIfPresent(Bool.self, forKey: .customBetAvailable)
-
     }
 
     public static func == (lhs: Market, rhs: Market) -> Bool {
