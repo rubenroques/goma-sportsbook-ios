@@ -10,6 +10,7 @@ import Combine
 import OrderedCollections
 import ServicesProvider
 import Lottie
+import Extensions
 
 class PreSubmissionBetslipViewController: UIViewController {
   
@@ -2589,7 +2590,6 @@ extension PreSubmissionBetslipViewController {
         
     }
     
-    
 }
 
 extension PreSubmissionBetslipViewController: UITextFieldDelegate {
@@ -2647,9 +2647,9 @@ extension PreSubmissionBetslipViewController: UITextFieldDelegate {
     }
 
     func textField(_ textField: UITextField, shouldChangeCharactersIn range: NSRange, replacementString string: String) -> Bool {
-        self.updateAmountDigit(string)
+         self.updateAmountDigit(string)
       
-        return false
+         return false
     }
 
     private  func addAmountValue(_ value: Double, isMax: Bool = false) {

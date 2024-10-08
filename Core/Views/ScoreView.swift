@@ -105,9 +105,11 @@ class ScoreView: UIView {
     }
     
     private func configureScores() {
-        
-        if self.sportCode.lowercased().hasPrefix("tns") || self.sportCode.lowercased().contains("tns") {
-            self.configureTennisDetailedScores()
+        if self.sportCode.lowercased().hasPrefix("tns") || self.sportCode.lowercased().contains("tns") || // tennis
+            self.sportCode.lowercased().hasPrefix("bad") || self.sportCode.lowercased().contains("bad") || // badminton
+            self.sportCode.lowercased().hasPrefix("bvb") || self.sportCode.lowercased().contains("bvb") || // beach volley
+            self.sportCode.lowercased().hasPrefix("tbt") || self.sportCode.lowercased().contains("tbt") { // ping pong
+            self.configureSetsDetailedScores()
         }
         else if self.sportCode.lowercased().hasPrefix("bkb") || self.sportCode.lowercased().contains("bkb") ||
                     self.sportCode.lowercased().hasPrefix("vbl") || self.sportCode.lowercased().contains("vbl") ||
@@ -211,7 +213,7 @@ class ScoreView: UIView {
         
     }
     
-    private func configureTennisDetailedScores() {
+    private func configureSetsDetailedScores() {
         
         self.cellsBaseStackView.arrangedSubviews.forEach({ $0.removeFromSuperview() })
         
@@ -275,8 +277,22 @@ class ScoreView: UIView {
         // Add the game part (15, 30, 40)
         switch gamePartsFirst {
         case .gamePart(let home, let away):
-            var homeString: String = (home ?? 0) == 50 ? "A" : "\(home ?? 0)"
-            var awayString: String = (away ?? 0) == 50 ? "A" : "\(away ?? 0)"
+//            var homeString: String = (home ?? 0) == 50 ? "A" : "\(home ?? 0)"
+//            var awayString: String = (away ?? 0) == 50 ? "A" : "\(away ?? 0)"
+//
+            let homeValue = home ?? 0
+            let awayValue = away ?? 0
+
+            var homeString: String
+            var awayString: String
+
+            if self.sportCode.lowercased() == "tns" {
+                homeString = homeValue == 50 ? "A" : "\(homeValue)"
+                awayString = awayValue == 50 ? "A" : "\(awayValue)"
+            } else {
+                homeString = "\(homeValue)"
+                awayString = "\(awayValue)"
+            }
             
             if !Env.userSessionStore.isUserLogged() {
                 homeString = "-"

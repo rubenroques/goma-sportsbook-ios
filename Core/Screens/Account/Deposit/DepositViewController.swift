@@ -193,10 +193,10 @@ class DepositViewController: UIViewController {
         depositTipLabel.font = AppFont.with(type: .semibold, size: 12)
         depositTipLabel.isHidden = false
 
-        self.setDepositAmountButtonDesign(button: self.amount10Button, title: "20€")
+        self.setDepositAmountButtonDesign(button: self.amount10Button, title: "25€")
         self.setDepositAmountButtonDesign(button: self.amount20Button, title: "50€")
         self.setDepositAmountButtonDesign(button: self.amount50Button, title: "100€")
-        self.setDepositAmountButtonDesign(button: self.amount100Button, title: "200€")
+        self.setDepositAmountButtonDesign(button: self.amount100Button, title: "300€")
 
         self.nextButton.setTitle(localized("next"), for: .normal)
         self.nextButton.isEnabled = false
@@ -859,7 +859,7 @@ class DepositViewController: UIViewController {
             self.nextButton.isEnabled = true
             self.checkForHighlightedAmountButton()
 
-            if depositHeaderTextFieldView.text == "20" {
+            if depositHeaderTextFieldView.text == "25" {
                 self.amount10Button.setBackgroundColor(UIColor.App.buttonBackgroundPrimary, for: .normal)
                 self.amount10Button.layer.borderColor = UIColor.App.buttonBackgroundPrimary.cgColor
                 currentSelectedButton = self.amount10Button
@@ -874,7 +874,7 @@ class DepositViewController: UIViewController {
                 self.amount50Button.layer.borderColor = UIColor.App.buttonBackgroundPrimary.cgColor
                 currentSelectedButton = self.amount50Button
             }
-            else if depositHeaderTextFieldView.text == "200" {
+            else if depositHeaderTextFieldView.text == "300" {
                 self.amount100Button.setBackgroundColor(UIColor.App.buttonBackgroundPrimary, for: .normal)
                 self.amount100Button.layer.borderColor = UIColor.App.buttonBackgroundPrimary.cgColor
                 currentSelectedButton = self.amount100Button
@@ -972,7 +972,7 @@ class DepositViewController: UIViewController {
 
         self.currentSelectedButton = self.amount10Button
 
-        self.depositHeaderTextFieldView.setText("20")
+        self.depositHeaderTextFieldView.setText("25")
         self.nextButton.isEnabled = true
         self.showRightLabelCustom()
     }
@@ -1017,7 +1017,7 @@ class DepositViewController: UIViewController {
 
         self.currentSelectedButton = self.amount100Button
 
-        self.depositHeaderTextFieldView.setText("200")
+        self.depositHeaderTextFieldView.setText("300")
         self.nextButton.isEnabled = true
         self.showRightLabelCustom()
     }
