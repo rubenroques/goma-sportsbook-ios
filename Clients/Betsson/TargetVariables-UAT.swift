@@ -95,4 +95,10 @@ struct TargetVariables: SportsbookTarget {
         return "https://goma-uat.betsson.fr/secondary_markets_config.json"
     }
     
+    static var knowYourClientLevels: [KnowYourCustomerLevel: String] {
+        return [.identification: "kyc-level-1-id-verification-UAT",
+                .proofOfAddress: "kyc-level-2-poa-verification-UAT",
+                .bankAccountIdentification: "RIB Verification"]
+    }
+
 }

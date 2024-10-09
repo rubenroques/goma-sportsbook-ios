@@ -90,5 +90,11 @@ struct TargetVariables: SportsbookTarget {
     static var secundaryMarketSpecsUrl: String? {
         return "https://betsson.fr/secondary_markets_config.json"
     }
+    
+    static var knowYourClientLevels: [KnowYourCustomerLevel: String] {
+        return [.identification: "kyc-level-1-id-verification",
+                .proofOfAddress: "kyc-level-2-poa-verification",
+                .bankAccountIdentification: "RIB Verification"]
+    }
 
 }

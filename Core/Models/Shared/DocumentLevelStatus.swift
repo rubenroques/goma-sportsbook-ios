@@ -55,9 +55,9 @@ enum DocumentLevelName {
     init(levelName: String) {
 
         switch levelName {
-        case "kyc-level-1-id-verification":
+        case "kyc-level-1-id-verification", "kyc-level-1-id-verification-UAT":
             self = .identificationLevel
-        case "kyc-level-2-poa-verification":
+        case "kyc-level-2-poa-verification", "kyc-level-2-poa-verification-UAT":
             self = .poaLevel
         default:
             self = .none

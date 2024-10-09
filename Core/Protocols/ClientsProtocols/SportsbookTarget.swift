@@ -52,6 +52,8 @@ protocol SportsbookTarget {
     
     static var secundaryMarketSpecsUrl: String? { get }
     
+    static var knowYourClientLevels: [KnowYourCustomerLevel: String] { get }
+    
 }
 
 enum SportsbookTargetFeatures: CaseIterable {
@@ -89,6 +91,12 @@ enum SportsbookSupportedLanguage: String, CaseIterable {
     }
 }
 
+enum KnowYourCustomerLevel: Int, CaseIterable {
+    case identification = 1
+    case proofOfAddress = 2
+    case bankAccountIdentification = 3
+}
+
 extension SportsbookTarget {
 
     static func hasFeatureEnabled(feature: SportsbookTargetFeatures) -> Bool {
@@ -112,4 +120,7 @@ extension SportsbookTarget {
         return SportsbookSupportedLanguage.allCases
     }
     
+    static var knowYourClientLevels: [KnowYourCustomerLevel: String] {
+        return [:]
+    }
 }

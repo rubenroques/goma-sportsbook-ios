@@ -214,17 +214,17 @@ enum DocumentTypeGroup {
     var levelName: String {
         switch self {
         case .identityCard:
-            return "kyc-level-1-id-verification"
+            return TargetVariables.knowYourClientLevels[.identification] ?? "" // "kyc-level-1-id-verification"
         case .residenceId:
-            return "kyc-level-1-id-verification"
+            return TargetVariables.knowYourClientLevels[.identification] ?? "" // "kyc-level-1-id-verification"
         case .drivingLicense:
-            return "kyc-level-1-id-verification"
+            return TargetVariables.knowYourClientLevels[.identification] ?? "" // "kyc-level-1-id-verification"
         case .passport:
-            return "kyc-level-1-id-verification"
+            return TargetVariables.knowYourClientLevels[.identification] ?? "" // "kyc-level-1-id-verification"
         case .proofAddress:
-            return "kyc-level-2-poa-verification"
+            return TargetVariables.knowYourClientLevels[.proofOfAddress] ?? "" //  "kyc-level-2-poa-verification"
         case .rib:
-            return "RIB Verification"
+            return TargetVariables.knowYourClientLevels[.bankAccountIdentification] ?? "" // "RIB Verification"
         case .others:
             return "Others Verification"
         case .none:
