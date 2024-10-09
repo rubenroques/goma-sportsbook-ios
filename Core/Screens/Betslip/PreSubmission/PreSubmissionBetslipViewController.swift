@@ -601,6 +601,14 @@ class PreSubmissionBetslipViewController: UIViewController {
         self.secondaryPlusFiveButtonView.setTitle("+20", for: .normal)
         self.secondaryMaxButtonView.setTitle("+50", for: .normal)
 
+        let buttonFont = AppFont.with(type: .bold, size: 16)
+        self.plusOneButtonView.titleLabel?.font = buttonFont
+        self.plusFiveButtonView.titleLabel?.font = buttonFont
+        self.maxValueButtonView.titleLabel?.font = buttonFont
+        self.secondaryPlusOneButtonView.titleLabel?.font = buttonFont
+        self.secondaryPlusFiveButtonView.titleLabel?.font = buttonFont
+        self.secondaryMaxButtonView.titleLabel?.font = buttonFont
+
         // Disable settings until loaded
         self.settingsButton.isEnabled = false
         self.settingsButton.isUserInteractionEnabled = false

@@ -105,14 +105,14 @@ class ScoreView: UIView {
     }
     
     private func configureScores() {
-        if self.sportCode.lowercased().hasPrefix("tns") || self.sportCode.lowercased().contains("tns") || // tennis
-            self.sportCode.lowercased().hasPrefix("bad") || self.sportCode.lowercased().contains("bad") || // badminton
-            self.sportCode.lowercased().hasPrefix("bvb") || self.sportCode.lowercased().contains("bvb") || // beach volley
-            self.sportCode.lowercased().hasPrefix("tbt") || self.sportCode.lowercased().contains("tbt") { // ping pong
+        if self.sportCode.lowercased().hasPrefix("tns") || self.sportCode.lowercased().contains("tns") {
             self.configureSetsDetailedScores()
         }
         else if self.sportCode.lowercased().hasPrefix("bkb") || self.sportCode.lowercased().contains("bkb") ||
                     self.sportCode.lowercased().hasPrefix("vbl") || self.sportCode.lowercased().contains("vbl") ||
+                    self.sportCode.lowercased().hasPrefix("bad") || self.sportCode.lowercased().contains("bad") || // badminton
+                    self.sportCode.lowercased().hasPrefix("bvb") || self.sportCode.lowercased().contains("bvb") || // beach volley
+                    self.sportCode.lowercased().hasPrefix("tbt") || self.sportCode.lowercased().contains("tbt") ||
                     self.sportCode.lowercased().hasPrefix("hky") || self.sportCode.lowercased().contains("hky") {
             self.configureDetailedScores()
         }

@@ -39,6 +39,8 @@ extension SportRadarModels {
             case .setScore(let index):
                 self = .set(index: index, home: homeScore, away: awayScore)
             }
+
+            print("ParsedScore: \(dump(self))")
         }
         
         init(from container: KeyedDecodingContainer<CompetitorCodingKeys>, key: ScoreCodingKeys) throws {
@@ -62,6 +64,8 @@ extension SportRadarModels {
             case .periodScore(let index), .setScore(let index):
                 self = .set(index: index, home: homeScoreValue, away: awayScoreValue)
             }
+
+            print("ParsedScore: \(dump(self))")
         }
         
         var sortValue: Int {
