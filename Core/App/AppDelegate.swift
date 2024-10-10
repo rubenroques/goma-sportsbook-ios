@@ -163,7 +163,10 @@ class AppDelegate: UIResponder, UIApplicationDelegate, MessagingDelegate {
         adjustConfig?.logLevel = ADJLogLevelVerbose
         
         Adjust.appDidLaunch(adjustConfig)
-        
+
+        print("Print Fonts")
+        AppFont.printFonts()
+
         //
         self.window = UIWindow()
 

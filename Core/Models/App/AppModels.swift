@@ -99,6 +99,9 @@ struct Market: Hashable {
     
     var customBetAvailable: Bool?
     
+    var sport: Sport?
+    var sportIdCode: String?
+    
     init(id: String,
          typeId: String,
          name: String,
@@ -120,7 +123,10 @@ struct Market: Hashable {
          statsTypeId: String? = nil,
          outcomesOrder: OutcomesOrder,
          customBetAvailable: Bool? = nil,
-         competitionName: String? = nil) {
+         competitionName: String? = nil,
+         sport: Sport? = nil,
+         sportIdCode: String? = nil
+    ) {
         
         self.id = id
         self.typeId = typeId
@@ -144,6 +150,8 @@ struct Market: Hashable {
         self.outcomesOrder = outcomesOrder
         self.customBetAvailable = customBetAvailable
         self.competitionName = competitionName
+        self.sport = sport
+        self.sportIdCode = sportIdCode
     }
 }
 

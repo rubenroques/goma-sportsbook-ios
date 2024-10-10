@@ -62,7 +62,7 @@ class MatchWidgetContainerTableViewModel {
         case .topImageOutright:
             return 270.0
         case .topImage, .topImageWithMixMatch:
-            return 310.0
+            return 293.0
         case .boosted:
             return 186.0
         }

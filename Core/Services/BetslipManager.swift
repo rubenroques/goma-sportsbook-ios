@@ -235,14 +235,13 @@ class BetslipManager: NSObject {
                                                           outcomeDescription: outcome.translatedName,
                                                           homeParticipantName: market.homeParticipant ?? bettingTicket.homeParticipantName,
                                                           awayParticipantName: market.awayParticipant ?? bettingTicket.awayParticipantName,
-                                                          sport: bettingTicket.sport,
-                                                          sportIdCode: bettingTicket.sportIdCode,
+                                                          sport: market.sport ?? bettingTicket.sport,
+                                                          sportIdCode: market.sportIdCode ?? bettingTicket.sportIdCode,
                                                           venue: bettingTicket.venue,
                                                           competition: bettingTicket.competition,
                                                           date: market.startDate ?? bettingTicket.date,
                                                           odd: newOdd,
                                                           isFromBetBuilderMarket: bettingTicket.isFromBetBuilderMarket)
-
 
                 self.bettingTicketsDictionaryPublisher.value[bettingTicket.id] = newBettingTicket
                 self.bettingTicketPublisher[bettingTicket.id]?.send(newBettingTicket)

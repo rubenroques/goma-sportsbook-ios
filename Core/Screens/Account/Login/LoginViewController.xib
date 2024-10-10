@@ -12,8 +12,8 @@
         <array key="CircularStd-Bold.ttf">
             <string>CircularStd-Bold</string>
         </array>
-        <array key="Gilroy-Bold.ttf">
-            <string>Gilroy-Bold</string>
+        <array key="Roboto-Black.ttf">
+            <string>Roboto-Black</string>
         </array>
     </customFonts>
     <objects>
@@ -155,7 +155,7 @@
                                                             <constraints>
                                                                 <constraint firstAttribute="height" constant="50" id="DIb-VJ-Wny"/>
                                                             </constraints>
-                                                            <fontDescription key="fontDescription" name="Gilroy-Bold" family="Gilroy" pointSize="18"/>
+                                                            <fontDescription key="fontDescription" name="Roboto-Black" family="Roboto" pointSize="18"/>
                                                             <state key="normal" title="Login"/>
                                                         </button>
                                                     </subviews>
@@ -235,7 +235,7 @@
                                     <constraints>
                                         <constraint firstAttribute="height" constant="50" id="KLH-zx-ZEg"/>
                                     </constraints>
-                                    <fontDescription key="fontDescription" name="Gilroy-Bold" family="Gilroy" pointSize="18"/>
+                                    <fontDescription key="fontDescription" name="Roboto-Black" family="Roboto" pointSize="18"/>
                                     <state key="normal" title="Register"/>
                                 </button>
                                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="or" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="HKq-qe-QUt">

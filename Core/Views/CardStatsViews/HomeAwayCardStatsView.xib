@@ -8,8 +8,8 @@
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
     <customFonts key="customFonts">
-        <array key="Gilroy-Medium.ttf">
-            <string>Gilroy-Medium</string>
+        <array key="Roboto-Medium.ttf">
+            <string>Roboto-Medium</string>
         </array>
     </customFonts>
     <objects>
@@ -77,13 +77,13 @@
                                             <constraints>
                                                 <constraint firstAttribute="height" constant="12" id="vy3-BA-2oP"/>
                                             </constraints>
-                                            <fontDescription key="fontDescription" name="Gilroy-Medium" family="Gilroy" pointSize="11"/>
+                                            <fontDescription key="fontDescription" name="Roboto-Medium" family="Roboto" pointSize="11"/>
                                             <nil key="textColor"/>
                                             <nil key="highlightedColor"/>
                                         </label>
                                         <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label Label" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="tQf-8e-QlF">
                                             <rect key="frame" x="0.0" y="12" width="59" height="12"/>
-                                            <fontDescription key="fontDescription" name="Gilroy-Medium" family="Gilroy" pointSize="11"/>
+                                            <fontDescription key="fontDescription" name="Roboto-Medium" family="Roboto" pointSize="11"/>
                                             <nil key="textColor"/>
                                             <nil key="highlightedColor"/>
                                         </label>
@@ -105,7 +105,7 @@
                     <constraints>
                         <constraint firstAttribute="height" constant="8" id="q2c-YD-O3i"/>
                     </constraints>
-                    <fontDescription key="fontDescription" name="Gilroy-Medium" family="Gilroy" pointSize="9"/>
+                    <fontDescription key="fontDescription" name="Roboto-Medium" family="Roboto" pointSize="9"/>
                     <nil key="textColor"/>
                     <nil key="highlightedColor"/>
                 </label>

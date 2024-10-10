@@ -174,6 +174,7 @@ extension SportRadarModelMapper {
                       competitionId: internalMarket.competitionId,
                       competitionName: internalMarket.competitionName,
                       sport: mappedSport,
+                      sportIdCode: internalMarket.sportIdCode,
                       venueCountry: country,
                       customBetAvailable: internalMarket.customBetAvailable)
     }

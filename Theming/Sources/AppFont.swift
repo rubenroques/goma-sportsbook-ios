@@ -12,7 +12,7 @@ public struct AppFont {
         case heavy = "Heavy"
 
         private var familyName: String {
-            "Gilroy"
+            "Roboto"
         }
 
         fileprivate var fullFontName: String {

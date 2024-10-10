@@ -59,15 +59,18 @@
 	<string>This information will be used to deliver personalized ads to you.</string>
 	<key>UIAppFonts</key>
 	<array>
-		<string>Gilroy-Bold.ttf</string>
-		<string>Gilroy-ExtraBold.ttf</string>
-		<string>Gilroy-Black.ttf</string>
-		<string>Gilroy-Heavy.ttf</string>
-		<string>Gilroy-Light.ttf</string>
-		<string>Gilroy-Medium.ttf</string>
-		<string>Gilroy-Regular.ttf</string>
-		<string>Gilroy-SemiBold.ttf</string>
-		<string>Gilroy-Thin.ttf</string>
+        <string>Roboto-Black.ttf</string>
+        <string>Roboto-BlackItalic.ttf</string>
+        <string>Roboto-Bold.ttf</string>
+        <string>Roboto-BoldItalic.ttf</string>
+        <string>Roboto-Italic.ttf</string>
+        <string>Roboto-Light.ttf</string>
+        <string>Roboto-LightItalic.ttf</string>
+        <string>Roboto-Medium.ttf</string>
+        <string>Roboto-MediumItalic.ttf</string>
+        <string>Roboto-Regular.ttf</string>
+        <string>Roboto-Thin.ttf</string>
+        <string>Roboto-ThinItalic.ttf</string>
 	</array>
 	<key>UIApplicationSupportsIndirectInputEvents</key>
 	<true/>
