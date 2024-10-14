@@ -21,5 +21,18 @@ extension SportRadarModels {
             case message = "message"
         }
     }
+    
+    struct PrepareWithdrawalResponse: Codable {
+
+        var status: String
+        var conversionId: String?
+        var message: String?
+
+        enum CodingKeys: String, CodingKey {
+            case status = "status"
+            case conversionId = "conversionId"
+            case message = "message"
+        }
+    }
 
 }

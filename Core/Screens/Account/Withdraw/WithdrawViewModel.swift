@@ -26,6 +26,9 @@ class WithdrawViewModel: NSObject {
 
     var ibanPaymentDetails: BankPaymentDetail?
     var shouldShowIbanScreen: (() -> Void)?
+    
+//    var withdrawalMethod: String = "ADYEN_BANK_TRANSFER"
+    var withdrawalMethod: String = "ADYEN_BP_BANKTRF"
 
     // MARK: Lifetime and Cycle
     override init() {
@@ -101,32 +104,17 @@ class WithdrawViewModel: NSObject {
             }
 
             if let withdrawalAmount = Double(amount),
-               let withdrawalMethod = self.withdrawalMethods.first?.paymentMethod {
+               let withdrawalMethod = self.withdrawalMethods.first{
+                
+                let paymentMethod = withdrawalMethod.paymentMethod
+                
+                if !withdrawalMethod.conversionRequired {
+                    self.processWithdrawal(withdrawalAmount: withdrawalAmount, paymentMethod: paymentMethod)
+                }
+                else {
+                    self.prepareWithdrawal(withdrawalAmount: withdrawalAmount, paymentMethod: paymentMethod)
+                }
 
-                Env.servicesProvider.processWithdrawal(paymentMethod: withdrawalMethod, amount: withdrawalAmount)
-                    .receive(on: DispatchQueue.main)
-                    .sink(receiveCompletion: { [weak self] completion in
-                        switch completion {
-                        case .finished:
-                            ()
-                        case .failure(let error):
-                            print("PROCESS WITHDRAWAL ERROR: \(error)")
-                            switch error {
-                            case .errorMessage(let message):
-                                let messageLocalized = localized(message)
-
-                                self?.showErrorAlertTypePublisher.send(.error(message: messageLocalized))
-                            default:
-                                ()
-                            }
-                            self?.isLoadingPublisher.send(false)
-                        }
-                    }, receiveValue: { [weak self] processWithdrawalResponse in
-                        self?.sendWithdrawProcessedEvent(amount: withdrawalAmount)
-                        self?.showWithdrawalStatus?()
-                        self?.isLoadingPublisher.send(false)
-                    })
-                    .store(in: &cancellables)
             }
 //        }
 
@@ -150,7 +138,7 @@ class WithdrawViewModel: NSObject {
 
                 // Bank transfer only
                 let methods = withdrawalMethods.filter({
-                    $0.code == "ADYEN_BANK_TRANSFER"
+                    $0.code == self?.withdrawalMethod
                 })
 
                 self?.withdrawalMethods = methods
@@ -161,6 +149,67 @@ class WithdrawViewModel: NSObject {
                     self?.maximumValue.send(method.maximumWithdrawal.replacingFirstOccurrence(of: ",", with: ""))
                 }
 
+            })
+            .store(in: &cancellables)
+    }
+    
+    private func processWithdrawal(withdrawalAmount: Double, paymentMethod: String, conversionId: String? = nil) {
+        
+        Env.servicesProvider.processWithdrawal(paymentMethod: paymentMethod, amount: withdrawalAmount, conversionId: conversionId)
+            .receive(on: DispatchQueue.main)
+            .sink(receiveCompletion: { [weak self] completion in
+                switch completion {
+                case .finished:
+                    ()
+                case .failure(let error):
+                    print("PROCESS WITHDRAWAL ERROR: \(error)")
+                    switch error {
+                    case .errorMessage(let message):
+                        let messageLocalized = localized(message)
+                        
+                        self?.showErrorAlertTypePublisher.send(.error(message: messageLocalized))
+                    default:
+                        ()
+                    }
+                    self?.isLoadingPublisher.send(false)
+                }
+            }, receiveValue: { [weak self] processWithdrawalResponse in
+                self?.sendWithdrawProcessedEvent(amount: withdrawalAmount)
+                self?.showWithdrawalStatus?()
+                self?.isLoadingPublisher.send(false)
+            })
+            .store(in: &cancellables)
+    }
+    
+    private func prepareWithdrawal(withdrawalAmount: Double, paymentMethod: String) {
+        
+        Env.servicesProvider.prepareWithdrawal(paymentMethod: paymentMethod)
+            .receive(on: DispatchQueue.main)
+            .sink(receiveCompletion: { [weak self] completion in
+                switch completion {
+                case .finished:
+                    ()
+                case .failure(let error):
+                    print("PREPARE WITHDRAWAL ERROR: \(error)")
+                    switch error {
+                    case .errorMessage(let message):
+                        let messageLocalized = localized(message)
+                        
+                        self?.showErrorAlertTypePublisher.send(.error(message: messageLocalized))
+                    default:
+                        ()
+                    }
+                    self?.isLoadingPublisher.send(false)
+                }
+            }, receiveValue: { [weak self] prepareWithdrawalResponse in
+                
+                if let conversionId = prepareWithdrawalResponse.conversionId {
+                    self?.processWithdrawal(withdrawalAmount: withdrawalAmount, paymentMethod: paymentMethod, conversionId: conversionId)
+                }
+                else {
+                    self?.showErrorAlertTypePublisher.send(.error(message: localized("error")))
+                    self?.isLoadingPublisher.send(false)
+                }
             })
             .store(in: &cancellables)
     }

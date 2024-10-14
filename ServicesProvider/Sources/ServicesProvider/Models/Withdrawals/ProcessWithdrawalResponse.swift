@@ -19,3 +19,16 @@ public struct ProcessWithdrawalResponse: Codable {
         case message = "message"
     }
 }
+
+public struct PrepareWithdrawalResponse: Codable {
+
+    public var status: String
+    public var conversionId: String?
+    public var message: String?
+
+    enum CodingKeys: String, CodingKey {
+        case status = "status"
+        case conversionId = "conversionId"
+        case message = "message"
+    }
+}

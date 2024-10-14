@@ -1232,14 +1232,24 @@ extension ServicesProviderClient {
         return privilegedAccessManager.getWithdrawalMethods()
     }
 
-    public func processWithdrawal(paymentMethod: String, amount: Double) -> AnyPublisher<ProcessWithdrawalResponse, ServiceProviderError> {
+    public func processWithdrawal(paymentMethod: String, amount: Double, conversionId: String? = nil) -> AnyPublisher<ProcessWithdrawalResponse, ServiceProviderError> {
         guard
             let privilegedAccessManager = self.privilegedAccessManager
         else {
             return Fail(error: ServiceProviderError.privilegedAccessManagerNotFound).eraseToAnyPublisher()
         }
 
-        return privilegedAccessManager.processWithdrawal(paymentMethod: paymentMethod, amount: amount)
+        return privilegedAccessManager.processWithdrawal(paymentMethod: paymentMethod, amount: amount, conversionId: conversionId)
+    }
+    
+    public func prepareWithdrawal(paymentMethod: String) -> AnyPublisher<PrepareWithdrawalResponse, ServiceProviderError> {
+        guard
+            let privilegedAccessManager = self.privilegedAccessManager
+        else {
+            return Fail(error: ServiceProviderError.privilegedAccessManagerNotFound).eraseToAnyPublisher()
+        }
+
+        return privilegedAccessManager.prepareWithdrawal(paymentMethod: paymentMethod)
     }
 
     public func getPendingWithdrawals() -> AnyPublisher<[PendingWithdrawal], ServiceProviderError> {

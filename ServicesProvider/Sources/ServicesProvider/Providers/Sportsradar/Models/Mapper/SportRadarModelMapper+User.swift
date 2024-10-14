@@ -269,7 +269,8 @@ extension SportRadarModelMapper {
         return WithdrawalMethod(code: internalWithdrawalMethod.code,
                                 paymentMethod: internalWithdrawalMethod.paymentMethod,
                                 minimumWithdrawal: internalWithdrawalMethod.minimumWithdrawal,
-                                maximumWithdrawal: internalWithdrawalMethod.maximumWithdrawal)
+                                maximumWithdrawal: internalWithdrawalMethod.maximumWithdrawal,
+                                conversionRequired: internalWithdrawalMethod.conversionRequired)
     }
 
     static func processWithdrawalResponse(fromProcessWithdrawalResponse internalProcessWithdrawalResponse: SportRadarModels.ProcessWithdrawalResponse) -> ProcessWithdrawalResponse {
@@ -277,6 +278,11 @@ extension SportRadarModelMapper {
         return ProcessWithdrawalResponse(status: internalProcessWithdrawalResponse.status,
                                          paymentId: internalProcessWithdrawalResponse.paymentId,
                                          message: internalProcessWithdrawalResponse.message)
+    }
+    
+    static func prepareWithdrawalResponse(fromPrepareWithdrawalResponse internalPrepareWithdrawalResponse: SportRadarModels.PrepareWithdrawalResponse) -> PrepareWithdrawalResponse {
+
+        return PrepareWithdrawalResponse(status: internalPrepareWithdrawalResponse.status, conversionId: internalPrepareWithdrawalResponse.conversionId, message: internalPrepareWithdrawalResponse.message)
     }
 
     static func pendingWithdrawalResponse(fromPendingWithdrawalResponse internalPendingWithdrawalResponse: SportRadarModels.PendingWithdrawalResponse) -> PendingWithdrawalResponse {

@@ -70,7 +70,9 @@ protocol PrivilegedAccessManager {
     func checkPaymentStatus(paymentMethod: String, paymentId: String) -> AnyPublisher<PaymentStatusResponse, ServiceProviderError>
     
     func getWithdrawalMethods() -> AnyPublisher<[WithdrawalMethod], ServiceProviderError>
-    func processWithdrawal(paymentMethod: String, amount: Double) -> AnyPublisher<ProcessWithdrawalResponse, ServiceProviderError>
+    func processWithdrawal(paymentMethod: String, amount: Double, conversionId: String?) -> AnyPublisher<ProcessWithdrawalResponse, ServiceProviderError>
+    func prepareWithdrawal(paymentMethod: String) -> AnyPublisher<PrepareWithdrawalResponse, ServiceProviderError>
+
     func getPendingWithdrawals() -> AnyPublisher<[PendingWithdrawal], ServiceProviderError>
     func cancelWithdrawal(paymentId: Int) -> AnyPublisher<CancelWithdrawalResponse, ServiceProviderError>
     func getPaymentInformation() -> AnyPublisher<PaymentInformation, ServiceProviderError>

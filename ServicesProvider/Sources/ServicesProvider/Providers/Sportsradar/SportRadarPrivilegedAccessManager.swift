@@ -942,9 +942,9 @@ class SportRadarPrivilegedAccessManager: PrivilegedAccessManager {
         }).eraseToAnyPublisher()
     }
 
-    func processWithdrawal(paymentMethod: String, amount: Double) -> AnyPublisher<ProcessWithdrawalResponse, ServiceProviderError> {
+    func processWithdrawal(paymentMethod: String, amount: Double, conversionId: String?) -> AnyPublisher<ProcessWithdrawalResponse, ServiceProviderError> {
 
-        let endpoint = OmegaAPIClient.processWithdrawal(withdrawalMethod: paymentMethod, amount: amount)
+        let endpoint = OmegaAPIClient.processWithdrawal(withdrawalMethod: paymentMethod, amount: amount, conversionId: conversionId)
         let publisher: AnyPublisher<SportRadarModels.ProcessWithdrawalResponse, ServiceProviderError> = self.connector.request(endpoint)
 
         return publisher.flatMap({ processWithdrawalResponse -> AnyPublisher<ProcessWithdrawalResponse, ServiceProviderError> in
@@ -958,6 +958,26 @@ class SportRadarPrivilegedAccessManager: PrivilegedAccessManager {
                 let messageKeyError = self.localizeOmegaErrorMessage(status: processWithdrawalResponse.status)
 
                 return Fail(outputType: ProcessWithdrawalResponse.self, failure: ServiceProviderError.errorMessage(message: messageKeyError)).eraseToAnyPublisher()
+            }
+        }).eraseToAnyPublisher()
+    }
+    
+    func prepareWithdrawal(paymentMethod: String) -> AnyPublisher<PrepareWithdrawalResponse, ServiceProviderError> {
+
+        let endpoint = OmegaAPIClient.prepareWithdrawal(withdrawalMethod: paymentMethod)
+        let publisher: AnyPublisher<SportRadarModels.PrepareWithdrawalResponse, ServiceProviderError> = self.connector.request(endpoint)
+
+        return publisher.flatMap({ prepareWithdrawalResponse -> AnyPublisher<PrepareWithdrawalResponse, ServiceProviderError> in
+            if prepareWithdrawalResponse.status == "SUCCESS" {
+
+                let prepareWithdrawalResponse = SportRadarModelMapper.prepareWithdrawalResponse(fromPrepareWithdrawalResponse: prepareWithdrawalResponse)
+
+                return Just(prepareWithdrawalResponse).setFailureType(to: ServiceProviderError.self).eraseToAnyPublisher()
+            }
+            else {
+                let messageKeyError = self.localizeOmegaErrorMessage(status: prepareWithdrawalResponse.status)
+
+                return Fail(outputType: PrepareWithdrawalResponse.self, failure: ServiceProviderError.errorMessage(message: messageKeyError)).eraseToAnyPublisher()
             }
         }).eraseToAnyPublisher()
     }
