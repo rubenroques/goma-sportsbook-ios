@@ -103,6 +103,7 @@ extension FormStepView {
         label.textAlignment = .left
         label.font = AppFont.with(type: .bold, size: 30)
         label.translatesAutoresizingMaskIntoConstraints = false
+        label.numberOfLines = 2
         return label
     }
 
@@ -142,7 +143,7 @@ extension FormStepView {
             self.contentView.bottomAnchor.constraint(equalTo: self.bottomAnchor),
 
             self.headerView.topAnchor.constraint(equalTo: self.contentView.topAnchor),
-            self.headerView.heightAnchor.constraint(equalToConstant: Self.headerHeight),
+            self.headerView.heightAnchor.constraint(greaterThanOrEqualToConstant: Self.headerHeight),
             self.headerView.leadingAnchor.constraint(equalTo: self.contentView.leadingAnchor),
             self.headerView.trailingAnchor.constraint(equalTo: self.contentView.trailingAnchor),
 

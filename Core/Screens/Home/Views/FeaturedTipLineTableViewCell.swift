@@ -101,8 +101,8 @@ class FeaturedTipLineViewModel {
 
 class FeaturedTipLineTableViewCell: UITableViewCell {
 
-    static var estimatedHeight: CGFloat = 378
-    
+    static var estimatedHeight: CGFloat = 394
+
     private lazy var collectionView: UICollectionView = Self.createCollectionView()
 
     private var collectionViewHeightConstraint: NSLayoutConstraint?
