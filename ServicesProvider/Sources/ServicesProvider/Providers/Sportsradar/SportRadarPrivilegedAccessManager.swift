@@ -866,9 +866,9 @@ class SportRadarPrivilegedAccessManager: PrivilegedAccessManager {
         }).eraseToAnyPublisher()
     }
 
-    func updatePayment(amount: Double, paymentId: String, type: String, returnUrl: String?) -> AnyPublisher<UpdatePaymentResponse, ServiceProviderError> {
+    func updatePayment(amount: Double, paymentId: String, type: String, returnUrl: String?, nameOnCard: String?, encryptedExpiryYear: String?, encryptedExpiryMonth: String?, encryptedSecurityCode: String?, encryptedCardNumber: String?) -> AnyPublisher<UpdatePaymentResponse, ServiceProviderError> {
 
-        let endpoint = OmegaAPIClient.updatePayment(amount: amount, paymentId: paymentId, type: type, returnUrl: returnUrl)
+        let endpoint = OmegaAPIClient.updatePayment(amount: amount, paymentId: paymentId, type: type, returnUrl: returnUrl, nameOnCard: nameOnCard, encryptedExpiryYear: encryptedExpiryYear, encryptedExpiryMonth: encryptedExpiryMonth, encryptedSecurityCode: encryptedSecurityCode, encryptedCardNumber: encryptedCardNumber)
         
         let publisher: AnyPublisher<SportRadarModels.UpdatePaymentResponse, ServiceProviderError> = self.connector.request(endpoint)
 
@@ -878,6 +878,9 @@ class SportRadarPrivilegedAccessManager: PrivilegedAccessManager {
 
                 let updatePaymentResponse = SportRadarModelMapper.updatePaymentResponse(fromUpdatePaymentResponse: updatePaymentResponse)
                 return Just(updatePaymentResponse).setFailureType(to: ServiceProviderError.self).eraseToAnyPublisher()
+            }
+            else if updatePaymentResponse.resultCode == "Authorised" && updatePaymentResponse.action == nil {
+                return Just(UpdatePaymentResponse(resultCode: updatePaymentResponse.resultCode)).setFailureType(to: ServiceProviderError.self).eraseToAnyPublisher()
             }
             else {
                 return Fail(outputType: UpdatePaymentResponse.self, failure: ServiceProviderError.errorMessage(message: "Update Payment Error")).eraseToAnyPublisher()

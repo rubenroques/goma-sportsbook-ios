@@ -609,7 +609,7 @@ public struct ProcessDepositResponse: Codable {
 
 public struct UpdatePaymentResponse: Codable {
     public var resultCode: String
-    public var action: UpdatePaymentAction
+    public var action: UpdatePaymentAction?
 
     enum CodingKeys: String, CodingKey {
         case resultCode = "resultCode"

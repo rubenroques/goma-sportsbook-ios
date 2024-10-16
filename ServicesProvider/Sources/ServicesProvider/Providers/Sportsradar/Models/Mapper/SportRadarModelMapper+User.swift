@@ -248,7 +248,11 @@ extension SportRadarModelMapper {
 
     static func updatePaymentResponse(fromUpdatePaymentResponse internalUpdatePaymentResponse: SportRadarModels.UpdatePaymentResponse) -> UpdatePaymentResponse {
 
-        return UpdatePaymentResponse(resultCode: internalUpdatePaymentResponse.resultCode, action: Self.updatePaymentAction(fromUpdatePaymentAction: internalUpdatePaymentResponse.action))
+        var action: UpdatePaymentAction? = nil
+        if let internalAction = internalUpdatePaymentResponse.action {
+            action = Self.updatePaymentAction(fromUpdatePaymentAction: internalAction)
+        }
+        return UpdatePaymentResponse(resultCode: internalUpdatePaymentResponse.resultCode, action: action)
     }
 
     static func withdrawalMethodsResponse(fromWithdrawalMethodsResponse internalWithdrawalMethodsResponse: SportRadarModels.WithdrawalMethodsResponse) -> WithdrawalMethodsResponse {

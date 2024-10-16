@@ -128,10 +128,10 @@ enum OmegaAPIClient {
     case uploadUserDocument(documentType: String, file: Data, body: Data, header: String)
     case uploadMultipleUserDocuments(documentType: String,
                                      files: [String: Data], body: Data, header: String)
-
+    
     case getPayments
     case processDeposit(paymentMethod: String, amount: Double, option: String)
-    case updatePayment(amount: Double, paymentId: String, type: String, returnUrl: String?)
+    case updatePayment(amount: Double, paymentId: String, type: String, returnUrl: String?, nameOnCard: String?, encryptedExpiryYear: String?, encryptedExpiryMonth: String?, encryptedSecurityCode: String?, encryptedCardNumber: String?)
     case cancelDeposit(paymentId: String)
     case checkPaymentStatus(paymentMethod: String, paymentId: String)
 
@@ -673,8 +673,7 @@ extension OmegaAPIClient: Endpoint {
             return [
                 URLQueryItem(name: "paymentId", value: "\(paymentId)")
             ]
-        
-        case .updatePayment(let amount, let paymentId, let type, let returnUrl):
+        case .updatePayment(let amount, let paymentId, let type, let returnUrl, let nameOnCard, let encryptedExpiryYear, let encryptedExpiryMonth, let encryptedSecurityCode, let encryptedCardNumber):
             var query = [
                 URLQueryItem(name: "amount", value: "\(amount)"),
                 URLQueryItem(name: "paymentId", value: paymentId),
@@ -683,6 +682,21 @@ extension OmegaAPIClient: Endpoint {
             
             if let returnUrlValue = returnUrl {
                 query.append(URLQueryItem(name: "returnUrl", value: returnUrlValue))
+            }
+            if let nameOnCardValue = nameOnCard {
+                query.append(URLQueryItem(name: "nameOnCard", value: nameOnCardValue))
+            }
+            if let encryptedExpiryYearValue = encryptedExpiryYear {
+                query.append(URLQueryItem(name: "encryptedExpiryYear", value: encryptedExpiryYearValue))
+            }
+            if let encryptedExpiryMonthValue = encryptedExpiryMonth {
+                query.append(URLQueryItem(name: "encryptedExpiryMonth", value: encryptedExpiryMonthValue))
+            }
+            if let encryptedSecurityCodeValue = encryptedSecurityCode {
+                query.append(URLQueryItem(name: "encryptedSecurityCode", value: encryptedSecurityCodeValue))
+            }
+            if let encryptedCardNumberValue = encryptedCardNumber {
+                query.append(URLQueryItem(name: "encryptedCardNumber", value: encryptedCardNumberValue))
             }
             return query
 
