@@ -1222,7 +1222,7 @@ extension HomeViewController: UITableViewDelegate, UITableViewDataSource {
         case .featuredTips:
             return UITableView.automaticDimension
         case .suggestedBets:
-            return 336
+            return 346
         case .sportGroup:
             guard
                 let sportGroupViewModel = self.viewModel.sportGroupViewModel(forSection: indexPath.section),

@@ -40,16 +40,6 @@
 	<string>The app needs localization permission when in use</string>
 	<key>UIAppFonts</key>
 	<array>
-		<string>Gilroy-Bold.ttf</string>
-		<string>Gilroy-ExtraBold.ttf</string>
-		<string>Gilroy-Black.ttf</string>
-		<string>Gilroy-Heavy.ttf</string>
-		<string>Gilroy-Light.ttf</string>
-		<string>Gilroy-Medium.ttf</string>
-		<string>Gilroy-Regular.ttf</string>
-		<string>Gilroy-SemiBold.ttf</string>
-		<string>Gilroy-Thin.ttf</string>
-
         <string>Roboto-Black.ttf</string>
         <string>Roboto-BlackItalic.ttf</string>
         <string>Roboto-Bold.ttf</string>

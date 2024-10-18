@@ -24,7 +24,7 @@ struct AppFont {
         }
 
         private var familyName: String {
-            return "Roboto" // "Gilroy"
+            return "Roboto"
         }
 
         fileprivate var fullFontName: String {
