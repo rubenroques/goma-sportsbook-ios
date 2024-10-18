@@ -67,9 +67,6 @@ class OpenStatsButton: UIView {
             self.shadowBackgroundView.topAnchor.constraint(equalTo: self.button.topAnchor),
             self.shadowBackgroundView.bottomAnchor.constraint(equalTo: self.button.bottomAnchor, constant: 2),
         ])
-        
-        
-        
     }
     
     @objc func openStatsWidgetFullscreen() {

@@ -190,8 +190,6 @@ extension UIColor {
         static var iconSportsHeroCard: UIColor {
             return UIColor(named: "iconSportsHeroCard") ?? Self.iconSportsHeroCard
         }
-        
-        
 
     }
 
