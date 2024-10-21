@@ -489,8 +489,16 @@ extension ServicesProviderClient {
         else {
             return Fail(error: .eventsProviderNotFound).eraseToAnyPublisher()
         }
-
         return eventsProvider.getHighlightedVisualImageEvents()
+    }
+
+    public func getHighlightedMarkets() -> AnyPublisher<[HighlightMarket], ServiceProviderError> {
+        guard
+            let eventsProvider = self.eventsProvider
+        else {
+            return Fail(error: .eventsProviderNotFound).eraseToAnyPublisher()
+        }
+        return eventsProvider.getHighlightedMarkets()
     }
 
     public func getHeroGameEvent() -> AnyPublisher<[Event], ServiceProviderError> {
@@ -499,7 +507,6 @@ extension ServicesProviderClient {
         else {
             return Fail(error: .eventsProviderNotFound).eraseToAnyPublisher()
         }
-
         return eventsProvider.getHeroGameEvent()
     }
 

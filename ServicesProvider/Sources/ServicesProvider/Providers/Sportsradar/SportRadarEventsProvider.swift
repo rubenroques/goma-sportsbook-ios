@@ -1374,6 +1374,60 @@ extension SportRadarEventsProvider {
             .eraseToAnyPublisher()
     }
 
+    public func getHighlightedMarkets() -> AnyPublisher<[HighlightMarket], ServiceProviderError> {
+        let endpoint = SportRadarRestAPIClient.highlightsMarkets
+        let requestPublisher: AnyPublisher<SportRadarModels.SportRadarResponse<SportRadarModels.HeadlineResponse>, ServiceProviderError> = self.restConnector.request(endpoint)
+
+        return requestPublisher
+            .map(\.data)
+            .flatMap { headlineResponse -> AnyPublisher<[HighlightMarket], ServiceProviderError> in
+                let headlineItems = headlineResponse.headlineItems ?? []
+                var headlineItemsImages: [String: String] = [:]
+                var headlineItemsPresentedSelection: [String: String] = [:]
+
+                headlineItems.forEach { item in
+                    if let id = item.marketId, let imageURL = item.imageURL {
+                        headlineItemsImages[id] = imageURL
+                        headlineItemsPresentedSelection[id] = item.numofselections
+                    }
+                }
+
+                let marketIds = headlineItems.compactMap { $0.marketId }
+                let publishers = marketIds.map({ id in
+                    return self.getMarketInfo(marketId: id)
+                        .map({ market in
+                            return Optional(market)
+                        })
+                        .replaceError(with: nil)
+                })
+                let finalPublisher = Publishers.MergeMany(publishers)
+                    .collect()
+                    .map({ (markets: [Market?]) -> [HighlightMarket] in
+                        let marketValue = markets.compactMap { $0 }
+                        var highlightMarkets = [HighlightMarket]()
+                        for market in marketValue {
+                            let enableSelections = headlineItemsPresentedSelection[market.id] ?? "0"
+                            let enabledSelectionsCount = Int(enableSelections) ?? 0
+                            let imageURL = headlineItemsImages[market.id]
+
+                            let highlightMarket = HighlightMarket(
+                                market: market,
+                                enabledSelectionsCount: enabledSelectionsCount,
+                                promotionImageURl: imageURL
+                            )
+                            highlightMarkets.append(highlightMarket)
+                        }
+                        return highlightMarkets
+                    })
+                    .eraseToAnyPublisher()
+
+                return finalPublisher
+                    .setFailureType(to: ServiceProviderError.self)
+                    .eraseToAnyPublisher()
+            }
+            .eraseToAnyPublisher()
+    }
+
 
     public func getPromotionalTopStories() -> AnyPublisher<[PromotionalStory], ServiceProviderError> {
 

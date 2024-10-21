@@ -7,6 +7,12 @@
 
 import Foundation
 
+struct HighlightedContent<T> {
+    var content: T
+    var promotionalImageURL: String?
+    var promotedDetailsCount: Int
+}
+
 enum HighlightedMatchType {
     case boostedOddsMatch(Match)
     case visualImageMatch(Match)

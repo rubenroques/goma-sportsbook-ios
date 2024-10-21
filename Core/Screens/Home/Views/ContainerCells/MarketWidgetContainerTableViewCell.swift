@@ -1,83 +1,17 @@
 //
-//  MatchWidgetContainerTableViewCell.swift
+//  MarketWidgetContainerTableViewCell.swift
 //  Sportsbook
 //
-//  Created by Ruben Roques on 02/06/2023.
+//  Created by Ruben Roques on 20/10/2024.
 //
-
-import Foundation
 import UIKit
 
-class MatchWidgetContainerTableViewModel {
-    
-    static let topMargin: CGFloat = 10.0
-    static let leftMargin: CGFloat = 18.0
-    
-    var cardsViewModels: [MatchWidgetCellViewModel] = []
-    
-    init(cardsViewModels: [MatchWidgetCellViewModel]) {
-        self.cardsViewModels = cardsViewModels
-    }
-    
-    init(singleCardsViewModel: MatchWidgetCellViewModel) {
-        self.cardsViewModels = [singleCardsViewModel]
-    }
-    
-    var matchWidgetType: MatchWidgetType {
-        return cardsViewModels.first?.matchWidgetType ?? MatchWidgetType.normal
-    }
-    
-    var numberOfCells: Int {
-        return self.cardsViewModels.count
-    }
-    
-    var isScrollEnabled: Bool {
-        return self.numberOfCells > 1
-    }
+class MarketWidgetContainerTableViewCell: UITableViewCell {
 
-    func maxHeightForInnerCards() -> CGFloat {
-        var maxHeight = 0.0
-        for type in cardsViewModels.map(\.matchWidgetType) {
-            let newHeight = self.heightFor(matchWidgetType: type)
-            if newHeight > maxHeight {
-                maxHeight = newHeight
-            }
-        }
-        return CGFloat(maxHeight)
-    }
-
-    func heightForItem(atIndex index: Int) -> CGFloat {
-        guard
-            let type = self.cardsViewModels[safe: index]?.matchWidgetType
-        else {
-            return 0.0
-        }
-        return self.heightFor(matchWidgetType: type) - (Self.topMargin * 2)
-    }
-
-    private func heightFor(matchWidgetType type: MatchWidgetType) -> CGFloat {
-        switch type {
-        case .normal, .backgroundImage:
-            return 152.0
-        case .topImageOutright:
-            return 270.0
-        case .topImage, .topImageWithMixMatch:
-            return 293.0
-        case .boosted:
-            return 186.0
-        }
-    }
-
-}
-
-class MatchWidgetContainerTableViewCell: UITableViewCell {
-
-    var tappedMatchLineAction: ((Match) -> Void) = { _ in }
-    var matchWentLive: ((Match) -> Void) = { _ in }
+    var tappedMatchIdAction: ((String) -> Void) = { _ in }
     var didTapFavoriteMatchAction: ((Match) -> Void) = { _ in }
     var didLongPressOdd: ((BettingTicket) -> Void) = { _ in }
-    var tappedMatchOutrightLineAction: ((Competition) -> Void) = { _ in }
-    var tappedMixMatchAction: ((Match) -> Void)?
+    var tappedMixMatchIdAction: ((String) -> Void)?
 
     private lazy var backSliderView: UIView = Self.createBackSliderView()
     private lazy var backSliderIconImageView: UIImageView = Self.createBackSliderIconImageView()
@@ -89,7 +23,7 @@ class MatchWidgetContainerTableViewCell: UITableViewCell {
 
     private var showingBackSliderView: Bool = false
 
-    private var viewModel: MatchWidgetContainerTableViewModel?
+    private var viewModel: MarketWidgetContainerTableViewModel?
 
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
@@ -99,10 +33,12 @@ class MatchWidgetContainerTableViewCell: UITableViewCell {
         self.setupSubviews()
         self.setupWithTheme()
 
-        self.collectionView.tag = 17
+        self.collectionView.tag = 18
         self.collectionView.delegate = self
         self.collectionView.dataSource = self
-        
+        self.collectionView.register(ProChoiceHighlightCollectionViewCell.self,
+                                     forCellWithReuseIdentifier: ProChoiceHighlightCollectionViewCell.identifier)
+
         let centerCellCollectionViewFlowLayout = CenterCellCollectionViewFlowLayout(rightOffset: 0.0)
         centerCellCollectionViewFlowLayout.scrollDirection = .horizontal
         
@@ -143,7 +79,7 @@ class MatchWidgetContainerTableViewCell: UITableViewCell {
         self.backSliderIconImageView.setTintColor(color: UIColor.App.iconPrimary)
     }
 
-    func setupWithViewModel(_ viewModel: MatchWidgetContainerTableViewModel) {
+    func setupWithViewModel(_ viewModel: MarketWidgetContainerTableViewModel) {
 
         self.viewModel = viewModel
         
@@ -161,7 +97,7 @@ class MatchWidgetContainerTableViewCell: UITableViewCell {
 }
 
 
-extension MatchWidgetContainerTableViewCell: UIScrollViewDelegate {
+extension MarketWidgetContainerTableViewCell: UIScrollViewDelegate {
     func scrollViewDidScroll(_ scrollView: UIScrollView) {
 
         let screenWidth = UIScreen.main.bounds.size.width
@@ -186,7 +122,7 @@ extension MatchWidgetContainerTableViewCell: UIScrollViewDelegate {
     }
 }
 
-extension MatchWidgetContainerTableViewCell: UICollectionViewDelegate, UICollectionViewDataSource, UICollectionViewDelegateFlowLayout {
+extension MarketWidgetContainerTableViewCell: UICollectionViewDelegate, UICollectionViewDataSource, UICollectionViewDelegateFlowLayout {
 
     func numberOfSections(in collectionView: UICollectionView) -> Int {
         return 1
@@ -204,34 +140,15 @@ extension MatchWidgetContainerTableViewCell: UICollectionViewDelegate, UICollect
         }
 
         // Create the identifier based on the cell type
-        let cellIdentifier = MatchWidgetCollectionViewCell.identifier + viewModel.matchWidgetType.rawValue
+        let cellIdentifier = ProChoiceHighlightCollectionViewCell.identifier
 
         guard
-            let cell = collectionView.dequeueReusableCell(withReuseIdentifier: cellIdentifier, for: indexPath) as? MatchWidgetCollectionViewCell,
+            let cell = collectionView.dequeueCellType(ProChoiceHighlightCollectionViewCell.self, indexPath: indexPath),
             let cardsViewModel = viewModel.cardsViewModels[safe: indexPath.row]
         else {
             fatalError()
         }
 
-        cell.configure(withViewModel: cardsViewModel)
-
-        cell.tappedMatchWidgetAction = { match in
-            self.tappedMatchLineAction(match)
-        }
-        
-        cell.tappedMatchOutrightWidgetAction = { competition in
-            self.tappedMatchOutrightLineAction(competition)
-        }
-
-        cell.didLongPressOdd = { bettingTicket in
-            self.didLongPressOdd(bettingTicket)
-        }
-        
-        cell.tappedMixMatchAction = { [weak self] match in
-            self?.tappedMixMatchAction?(match)
-        }
-
-        cell.shouldShowCountryFlag(true)
         return cell
     }
 
@@ -254,15 +171,15 @@ extension MatchWidgetContainerTableViewCell: UICollectionViewDelegate, UICollect
     func collectionView(_ collectionView: UICollectionView,
                         layout collectionViewLayout: UICollectionViewLayout,
                         insetForSectionAt section: Int) -> UIEdgeInsets {
-        return UIEdgeInsets(top: MatchWidgetContainerTableViewModel.topMargin,
-                            left: MatchWidgetContainerTableViewModel.leftMargin,
-                            bottom: MatchWidgetContainerTableViewModel.topMargin,
-                            right: MatchWidgetContainerTableViewModel.leftMargin)
+        return UIEdgeInsets(top: MarketWidgetContainerTableViewModel.topMargin,
+                            left: MarketWidgetContainerTableViewModel.leftMargin,
+                            bottom: MarketWidgetContainerTableViewModel.topMargin,
+                            right: MarketWidgetContainerTableViewModel.leftMargin)
     }
 
 }
 
-extension MatchWidgetContainerTableViewCell {
+extension MarketWidgetContainerTableViewCell {
 
     private static func createBaseView() -> UIView {
         let view = UIView()
@@ -280,26 +197,17 @@ extension MatchWidgetContainerTableViewCell {
         collectionView.isScrollEnabled = false
         collectionView.translatesAutoresizingMaskIntoConstraints = false
 
-        collectionView.register(MatchWidgetCollectionViewCell.nib, 
-                                forCellWithReuseIdentifier: MatchWidgetCollectionViewCell.identifier)
-
-        for matchWidgetType in MatchWidgetType.allCases {
-            // Register a cell for each cell type to avoid glitches in the redrawing
-            collectionView.register(MatchWidgetCollectionViewCell.nib, 
-                                    forCellWithReuseIdentifier: MatchWidgetCollectionViewCell.identifier+matchWidgetType.rawValue)
-        }
-
         return collectionView
     }
 
     private static func createBackSliderView() -> UIView {
-        var backSliderView = UIView()
+        let backSliderView = UIView()
         backSliderView.translatesAutoresizingMaskIntoConstraints = false
         return backSliderView
     }
     
     private static func createBackSliderIconImageView() -> UIImageView {
-        var backSliderIconImageView: UIImageView = UIImageView()
+        let backSliderIconImageView = UIImageView()
         backSliderIconImageView.image = UIImage(named: "arrow_circle_left_icon")
         backSliderIconImageView.translatesAutoresizingMaskIntoConstraints = false
         backSliderIconImageView.contentMode = .scaleAspectFit

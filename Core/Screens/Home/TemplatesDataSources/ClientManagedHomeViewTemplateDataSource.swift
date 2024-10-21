@@ -21,6 +21,7 @@ class ClientManagedHomeViewTemplateDataSource {
         .highlightedLiveMatches, // LiveGamesHome
         .makeOwnBetCallToAction, // MakeYourOwnBet
         .highlightedMatches, // Highlights image cards
+        .highlightedMarketProChoices, // Pro Choices Markets
         .highlightedBoostedOddsMatches, // Boosted Odds
         .topCompetitionsShortcuts, // TopCompetitionsMobile
         .featuredTips, // SuggestedBets
@@ -164,11 +165,17 @@ class ClientManagedHomeViewTemplateDataSource {
     var heroCardWidgetCellViewModelCache: [String: MatchWidgetCellViewModel] = [:]
 
     var highlightedLiveMatchLineTableCellViewModelCache: [String: MatchLineTableCellViewModel] = [:]
-    
+
+    var marketWidgetContainerTableViewModelCache: [String: MarketWidgetContainerTableViewModel] = [:]
+
+    //
+    //
     private var topCompetitionsLineCellViewModel: TopCompetitionsLineCellViewModel = TopCompetitionsLineCellViewModel(topCompetitions: [])
     
     private var highlightedLiveMatches: [Match] = []
-    
+
+    private var highlightedMarkets: [HighlightedContent<Market>] = []
+
     //
     private var pendingUserTrackRequest: AnyCancellable?
     private var cancellables: Set<AnyCancellable> = []
@@ -190,18 +197,24 @@ class ClientManagedHomeViewTemplateDataSource {
     }
 
     func refreshData() {
+
         self.matchWidgetContainerTableViewModelCache = [:]
         self.matchWidgetCellViewModelCache = [:]
         self.matchLineTableCellViewModelCache = [:]
         self.matchLineTableCellViewModelCache = [:]
-        
+        self.marketWidgetContainerTableViewModelCache = [:]
+
         self.suggestedBetslips = []
+        self.highlightedMarkets = []
+
         self.cachedFeaturedTipLineViewModel = nil
         
         self.highlightedLiveMatchLineTableCellViewModelCache = [:]
         
         self.fetchQuickSwipeMatches()
         self.fetchHighlightMatches()
+        self.fetchHighlightMarkets()
+
         self.fetchPromotedSports()
         self.fetchPromotedBetslips()
         self.fetchPromotionalStories()
@@ -335,7 +348,16 @@ class ClientManagedHomeViewTemplateDataSource {
             return self.highlightsBoostedMatches.isNotEmpty ? 1 : 0
         }
     }
-    
+
+    func highlightedMarketProChoicesNumberOfRows() -> Int {
+        switch self.highlightsPresentationMode {
+        case .onePerLine:
+            return self.highlightedMarkets.count
+        case .multiplesPerLineByType:
+            return self.highlightedMarkets.isNotEmpty ? 1 : 0
+        }
+    }
+
     func fetchHighlightMatches() {
 
         let imageMatches = Env.servicesProvider.getHighlightedVisualImageEvents()
@@ -396,7 +418,35 @@ class ClientManagedHomeViewTemplateDataSource {
         .store(in: &self.cancellables)
 
     }
-    
+
+    func fetchHighlightMarkets() {
+        Env.servicesProvider.getHighlightedMarkets()
+            .receive(on: DispatchQueue.main)
+            .sink { completion in
+
+            } receiveValue: { [weak self] highlightMarkets in
+                print("getHighlightedMarkets \(highlightMarkets)")
+                let markets = highlightMarkets.map(\.market)
+                let mappedMarkets = ServiceProviderModelMapper.markets(fromServiceProviderMarkets: markets)
+
+                var mappedHighlightMarket: [HighlightedContent<Market>] = []
+
+                for highlightMarket in highlightMarkets {
+                    let mappedMarket = ServiceProviderModelMapper.market(fromServiceProviderMarket: highlightMarket.market)
+
+                    mappedHighlightMarket.append(HighlightedContent<Market>.init(content: mappedMarket,
+                                                promotionalImageURL: highlightMarket.promotionImageURl,
+                                                promotedDetailsCount: highlightMarket.enabledSelectionsCount))
+                }
+
+                self?.highlightedMarkets = mappedHighlightMarket
+
+                self?.refreshPublisher.send()
+            }
+            .store(in: &self.cancellables)
+
+    }
+
     func fetchHeroMatches() {
         
         Env.servicesProvider.getHeroGameEvent()
@@ -654,6 +704,8 @@ extension ClientManagedHomeViewTemplateDataSource: HomeViewTemplateDataSource {
             return self.highlightsBoostedOddsMatchesNumberOfRows()
         case .highlightedLiveMatches:
             return self.highlightedLiveMatches.count
+        case .highlightedMarketProChoices:
+            return self.highlightedMarketProChoicesNumberOfRows()
         case .featuredTips:
             return self.suggestedBetslips.isEmpty ? 0 : 1
         case .topCompetitionsShortcuts:
@@ -686,6 +738,8 @@ extension ClientManagedHomeViewTemplateDataSource: HomeViewTemplateDataSource {
             return localized("boosted_section_header")
         case .highlightedLiveMatches:
             return localized("live")
+        case .highlightedMarketProChoices:
+            return localized("highlights_pro_choices_section_header")
         case .featuredTips:
             return self.suggestedBetslips.isNotEmpty ? localized("suggested_bets") : nil
         case .topCompetitionsShortcuts:
@@ -713,6 +767,8 @@ extension ClientManagedHomeViewTemplateDataSource: HomeViewTemplateDataSource {
         case .highlightedBoostedOddsMatches:
             return "boosted_odd_icon"
         case .highlightedLiveMatches:
+            return "tabbar_live_icon"
+        case .highlightedMarketProChoices:
             return "tabbar_live_icon"
         case .topCompetitionsShortcuts:
             return "trophy_icon"
@@ -743,6 +799,8 @@ extension ClientManagedHomeViewTemplateDataSource: HomeViewTemplateDataSource {
             return self.highlightsMatchesNumberOfRows() > 0
         case .highlightedBoostedOddsMatches:
             return self.highlightsBoostedOddsMatchesNumberOfRows() > 0
+        case .highlightedMarketProChoices:
+            return self.highlightedMarketProChoicesNumberOfRows() > 0
         case .highlightedLiveMatches:
             return self.highlightedLiveMatches.isNotEmpty
         case .featuredTips:
@@ -863,14 +921,12 @@ extension ClientManagedHomeViewTemplateDataSource: HomeViewTemplateDataSource {
     // Highlights
     //
     func highlightedMatchViewModel(forSection section: Int, forIndex index: Int) -> MatchWidgetContainerTableViewModel? {
-        
         switch self.highlightsPresentationMode {
         case .onePerLine:
             return self.highlightedMatchViewModelVertical(forSection: section, forIndex: index)
         case .multiplesPerLineByType:
             return self.highlightedMatchViewModelHorizontal(forSection: section, forIndex: index)
         }
-        
     }
     
     private func highlightedMatchViewModelVertical(forSection section: Int, forIndex index: Int) -> MatchWidgetContainerTableViewModel? {
@@ -989,7 +1045,43 @@ extension ClientManagedHomeViewTemplateDataSource: HomeViewTemplateDataSource {
         }
         
     }
-    
+
+    //
+    // Highlighted markets (aka Pro choices)
+    func highlightedMarket(forIndex index: Int) -> MarketWidgetContainerTableViewModel? {
+
+        switch self.highlightsPresentationMode {
+        case .onePerLine:
+            // Each highlight market has it's own line
+            guard let market = self.highlightedMarkets[safe: index] else { return nil }
+            let id = market.content.id
+            if let marketWidgetContainerTableViewModel = self.marketWidgetContainerTableViewModelCache[id] {
+                return marketWidgetContainerTableViewModel
+            }
+            else {
+                let marketWidgetCellViewModel = MarketWidgetCellViewModel(highlightedMarket: market)
+                let marketWidgetContainerTableViewModel = MarketWidgetContainerTableViewModel(singleCardsViewModel: marketWidgetCellViewModel)
+                self.marketWidgetContainerTableViewModelCache[id] = marketWidgetContainerTableViewModel
+                return marketWidgetContainerTableViewModel
+            }
+
+        case .multiplesPerLineByType:
+            // There is a line for each highlight type (markets only has one at the moment)
+            // Each market card type will show all card of that type in a horizontal scroll
+            let ids = self.highlightedMarkets.map(\.content.id).joined(separator: "-")
+            let viewModels = self.highlightedMarkets.map({ MarketWidgetCellViewModel(highlightedMarket: $0) })
+
+            if let marketWidgetContainerTableViewModel = self.marketWidgetContainerTableViewModelCache[ids] {
+                return marketWidgetContainerTableViewModel
+            }
+            else {
+                let marketWidgetContainerTableViewModel = MarketWidgetContainerTableViewModel(cardsViewModels: viewModels)
+                self.marketWidgetContainerTableViewModelCache[ids] = marketWidgetContainerTableViewModel
+                return marketWidgetContainerTableViewModel
+            }
+        }
+    }
+
     //
     // Live match
     func highlightedLiveMatchLineTableCellViewModel(forSection section: Int, forIndex index: Int) -> MatchLineTableCellViewModel? {

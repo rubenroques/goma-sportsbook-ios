@@ -207,7 +207,7 @@ class StaticHomeViewTemplateDataSource {
 
         Env.servicesProvider.getHomeSliders()
             .receive(on: DispatchQueue.main)
-            .sink(receiveCompletion: { [weak self] completion in
+            .sink(receiveCompletion: { completion in
                 switch completion {
                 case .finished:
                     ()
@@ -244,7 +244,7 @@ class StaticHomeViewTemplateDataSource {
 
             Env.servicesProvider.getEventSummary(eventId: eventId)
                 .receive(on: DispatchQueue.main)
-                .sink(receiveCompletion: { [weak self] completion in
+                .sink(receiveCompletion: { completion in
                     switch completion {
                     case .finished:
                         ()
@@ -555,7 +555,11 @@ extension StaticHomeViewTemplateDataSource: HomeViewTemplateDataSource {
     func heroCardMatchViewModel(forIndex index: Int) -> MatchWidgetCellViewModel? {
         return nil
     }
-    
+
+    func highlightedMarket(forIndex index: Int) -> MarketWidgetContainerTableViewModel? {
+        return nil
+    }
+
 }
 
 extension StaticHomeViewTemplateDataSource {
@@ -578,5 +582,3 @@ extension StaticHomeViewTemplateDataSource {
     }
 
 }
-
-

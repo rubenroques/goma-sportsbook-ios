@@ -93,6 +93,8 @@ class HomeViewController: UIViewController {
         self.tableView.register(PromotedCompetitionTableViewCell.self, forCellReuseIdentifier: PromotedCompetitionTableViewCell.identifier)
         self.tableView.register(HeroCardTableViewCell.self, forCellReuseIdentifier: HeroCardTableViewCell.identifier)
 
+        self.tableView.register(MarketWidgetContainerTableViewCell.self, forCellReuseIdentifier: MarketWidgetContainerTableViewCell.identifier)
+
         // Register cell based on the MatchWidgetType
         for matchWidgetType in MatchWidgetType.allCases {
             // Register a cell for each cell type to avoid glitches in the redrawing
@@ -1183,6 +1185,34 @@ extension HomeViewController: UITableViewDelegate, UITableViewDataSource {
             cell.configure(withViewModel: viewModel)
             
             return cell
+        case .highlightedMarketProChoices:
+            guard
+                let viewModel = self.viewModel.highlightedMarket(forIndex: indexPath.row)
+            else {
+                return UITableViewCell()
+            }
+
+            guard
+                let cell = tableView.dequeueCellType(MarketWidgetContainerTableViewCell.self)
+            else {
+                return UITableViewCell()
+            }
+
+            cell.setupWithViewModel(viewModel)
+
+            cell.tappedMatchIdAction = { [weak self] matchId in
+                self?.openMatchDetails(matchId: matchId)
+            }
+
+            cell.didLongPressOdd = { [weak self] bettingTicket in
+                self?.openQuickbet(bettingTicket)
+            }
+
+            cell.tappedMixMatchIdAction = { [weak self] matchId in
+                self?.openMatchDetails(matchId: matchId, isMixMatch: true)
+            }
+
+            return cell
         }
 
     }
@@ -1268,6 +1298,11 @@ extension HomeViewController: UITableViewDelegate, UITableViewDataSource {
                 return viewModel.maxHeightForInnerCards()
             }
             return UITableView.automaticDimension
+        case .highlightedMarketProChoices:
+            if let viewModel = self.viewModel.highlightedMarket(forIndex: indexPath.row) {
+                return viewModel.maxHeightForInnerCards()
+            }
+            return UITableView.automaticDimension
         case .promotionalStories:
             return UITableView.automaticDimension
         case .promotedSportSection:
@@ -1350,6 +1385,11 @@ extension HomeViewController: UITableViewDelegate, UITableViewDataSource {
                 return viewModel.maxHeightForInnerCards()
             }
             return 234
+        case .highlightedMarketProChoices:
+            if let viewModel = self.viewModel.highlightedMarket(forIndex: indexPath.row) {
+                return viewModel.maxHeightForInnerCards()
+            }
+            return MarketWidgetContainerTableViewModel.defaultCardHeight
         case .promotionalStories:
             return 115
         case .promotedSportSection:
@@ -1512,7 +1552,9 @@ extension HomeViewController: UITableViewDataSourcePrefetching {
             case .topCompetitionsShortcuts:
                 ()
             case .highlightedMatches, .highlightedBoostedOddsMatches:
-                ()
+                _ = self.viewModel.highlightedMatchViewModel(forSection: indexPath.section, forIndex: indexPath.row)
+            case .highlightedMarketProChoices:
+                _ = self.viewModel.highlightedMarket(forIndex: indexPath.row)
             case .promotionalStories:
                 ()
             case .promotedSportSection:

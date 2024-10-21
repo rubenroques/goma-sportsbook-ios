@@ -36,7 +36,9 @@ protocol HomeViewTemplateDataSource {
 
     func quickSwipeStackViewModel() -> QuickSwipeStackCellViewModel?
     func highlightedMatchViewModel(forSection section: Int, forIndex index: Int) -> MatchWidgetContainerTableViewModel?
-    
+
+    func highlightedMarket(forIndex index: Int) -> MarketWidgetContainerTableViewModel?
+
     func highlightedLiveMatchLineTableCellViewModel(forSection section: Int, forIndex index: Int) -> MatchLineTableCellViewModel?
     func matchLineTableCellViewModel(forSection section: Int, forIndex index: Int) -> MatchLineTableCellViewModel?
     func topCompetitionsLineCellViewModel(forSection section: Int) -> TopCompetitionsLineCellViewModel?

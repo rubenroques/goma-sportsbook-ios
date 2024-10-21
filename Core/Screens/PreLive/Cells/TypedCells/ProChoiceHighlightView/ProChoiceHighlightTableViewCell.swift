@@ -1,5 +1,5 @@
 //
-//  ProChoiceHighlightTableViewCell.swift
+//  ProChoiceHighlightCollectionViewCell.swift
 //  GomaUI
 //
 //  Created by Ruben Roques on 15/10/2024.
@@ -7,10 +7,12 @@
 import UIKit
 import Kingfisher
 
-class ProChoiceHighlightTableViewCell: UITableViewCell {
-    
+class ProChoiceHighlightCollectionViewCell: UICollectionViewCell {
+
     // MARK: - UI Components
     private lazy var containerView: UIView = self.createContainerView()
+
+    private lazy var gradientBorderView: GradientBorderView = self.createGradientBorderView()
 
     private lazy var containerStackView: UIStackView = self.createContainerStackView()
 
@@ -44,29 +46,29 @@ class ProChoiceHighlightTableViewCell: UITableViewCell {
     private lazy var homeOutcomeValueLabel: UILabel = self.createOutcomeValueLabel()
 
     private lazy var drawButton: UIView = self.createOutcomeBaseView()
+    private lazy var drawOutcomeNameLabel: UILabel = self.createOutcomeNameLabel()
+    private lazy var drawOutcomeValueLabel: UILabel = self.createOutcomeValueLabel()
+
     private lazy var awayButton: UIView = self.createOutcomeBaseView()
+    private lazy var awayOutcomeNameLabel: UILabel = self.createOutcomeNameLabel()
+    private lazy var awayOutcomeValueLabel: UILabel = self.createOutcomeValueLabel()
 
     private lazy var bottomButtonsContainerStackView: UIStackView = self.createBottomButtonsContainerStackView()
     private lazy var seeAllMarketsButton: UIButton = self.createSeeAllMarketsButton()
 
-    private var viewModel: ProChoiceHighlightViewModel = .empty
+    private var viewModel: MarketWidgetCellViewModel?
 
     // MARK: - Initialization
-    override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
-        super.init(style: style, reuseIdentifier: reuseIdentifier)
-
+    override init(frame: CGRect) {
+        super.init(frame: frame)
         self.setupSubviews()
         self.setupWithTheme()
 
-#if DEBUG
-        self.homeButton.backgroundColor = .darkGray
-        self.containerView.backgroundColor = .white
-        self.eventInfoContainerView.backgroundColor = .blue
-        self.teamPillContainerView.backgroundColor = .brown
-#endif
+        self.eventImageView.image = UIImage(named: "soccer_banner_dummy")
+        self.favoriteImageView.image = UIImage(named: "selected_favorite_icon")
     }
-    
-    required init?(coder: NSCoder) {
+
+    required init?(coder aDecoder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
 
@@ -74,7 +76,14 @@ class ProChoiceHighlightTableViewCell: UITableViewCell {
     override func prepareForReuse() {
         super.prepareForReuse()
 
-        self.viewModel = .empty
+        self.eventImageView.image = UIImage(named: "soccer_banner_dummy")
+        self.favoriteImageView.image = UIImage(named: "selected_favorite_icon")
+
+        self.viewModel = nil
+
+        self.homeButton.isHidden = false
+        self.drawButton.isHidden = false
+        self.awayButton.isHidden = false
     }
 
     // MARK: - Configuration
@@ -84,28 +93,21 @@ class ProChoiceHighlightTableViewCell: UITableViewCell {
 
         self.containerView.backgroundColor = UIColor.App.backgroundPrimary
 
+        self.gradientBorderView.gradientColors = [UIColor.App.cardBorderLineGradient1,
+                                                  UIColor.App.cardBorderLineGradient2,
+                                                  UIColor.App.cardBorderLineGradient3]
+
+        self.topSeparatorAlphaLineView.backgroundColor = UIColor.App.highlightPrimary
+
         self.leagueNameLabel.textColor = UIColor.App.textPrimary
         self.eventDateLabel.textColor = UIColor.App.textPrimary
         self.eventTimeLabel.textColor = UIColor.App.textPrimary
         self.teamsLabel.textColor = UIColor.App.textPrimary
     }
 
-    func configure(with viewModel: ProChoiceHighlightViewModel) {
+    func configure(with viewModel: MarketWidgetCellViewModel) {
         self.viewModel = viewModel
-        
-        // New configuration
-        self.leagueNameLabel.text = viewModel.leagueName
-        self.eventDateLabel.text = viewModel.matchDate
-        self.eventTimeLabel.text = viewModel.matchTime
-        self.teamsLabel.text = viewModel.teamsName
-        
-        // Configure odds buttons
-        self.configureOddsButtons(home: viewModel.homeOdds, draw: viewModel.drawOdds, away: viewModel.awayOdds)
 
-        self.leagueNameLabel.text = viewModel.leagueName
-
-        self.eventImageView.image = UIImage(named: "dummyPlaceholder")
-        self.favoriteImageView.image = UIImage(named: "selected_favorite_icon")
     }
     
     private func configureOddsButtons(home: String?, draw: String?, away: String?) {
@@ -125,13 +127,17 @@ class ProChoiceHighlightTableViewCell: UITableViewCell {
 
 }
 
-extension ProChoiceHighlightTableViewCell {
-    
+extension ProChoiceHighlightCollectionViewCell {
+
     // MARK: - UI Setup
     private func setupSubviews() {
         self.contentView.addSubview(self.containerView)
+        self.containerView.addSubview(self.gradientBorderView)
+
         self.containerView.addSubview(self.containerStackView)
 
+        self.containerView.addSubview(self.topSeparatorAlphaLineView)
+        
         self.containerStackView.addArrangedSubview(self.eventImageView)
 
         self.containerStackView.addArrangedSubview(self.leagueInfoContainerView)
@@ -145,14 +151,9 @@ extension ProChoiceHighlightTableViewCell {
         self.leagueInfoStackView.addArrangedSubview(self.leagueNameLabel)
         self.leagueInfoContainerView.addSubview(self.cashbackImageView)
 
-        self.containerStackView.addArrangedSubview(self.topSeparatorAlphaLineView)
+
         self.containerStackView.addArrangedSubview(self.eventInfoContainerView)
-
         self.containerStackView.addArrangedSubview(self.oddsStackView)
-        self.oddsStackView.addArrangedSubview(self.homeButton)
-        self.oddsStackView.addArrangedSubview(self.drawButton)
-        self.oddsStackView.addArrangedSubview(self.awayButton)
-
 
         self.containerStackView.addArrangedSubview(self.bottomButtonsContainerStackView)
         self.bottomButtonsContainerStackView.addArrangedSubview(self.seeAllMarketsButton)
@@ -165,13 +166,20 @@ extension ProChoiceHighlightTableViewCell {
 
         self.homeButton.addSubview(self.homeOutcomeNameLabel)
         self.homeButton.addSubview(self.homeOutcomeValueLabel)
+        self.drawButton.addSubview(self.drawOutcomeNameLabel)
+        self.drawButton.addSubview(self.drawOutcomeValueLabel)
+        self.awayButton.addSubview(self.awayOutcomeNameLabel)
+        self.awayButton.addSubview(self.awayOutcomeValueLabel)
+        self.oddsStackView.addArrangedSubview(self.homeButton)
+        self.oddsStackView.addArrangedSubview(self.drawButton)
+        self.oddsStackView.addArrangedSubview(self.awayButton)
 
         //
 
         self.oddsStackView.layoutMargins = UIEdgeInsets(top: 8, left: 16, bottom: 8, right: 16)
 
         self.bottomButtonsContainerStackView.isLayoutMarginsRelativeArrangement = true
-        self.bottomButtonsContainerStackView.layoutMargins = UIEdgeInsets(top: 8, left: 16, bottom: 8, right: 16)
+        self.bottomButtonsContainerStackView.layoutMargins = UIEdgeInsets(top: 8, left: 16, bottom: 2, right: 16)
         //
 
         self.initConstraints()
@@ -179,10 +187,15 @@ extension ProChoiceHighlightTableViewCell {
     
     private func initConstraints() {
         NSLayoutConstraint.activate([
-            self.containerView.topAnchor.constraint(equalTo: self.contentView.topAnchor, constant: 8),
-            self.containerView.leadingAnchor.constraint(equalTo: self.contentView.leadingAnchor, constant: 16),
-            self.containerView.trailingAnchor.constraint(equalTo: self.contentView.trailingAnchor, constant: -16),
-            self.containerView.bottomAnchor.constraint(equalTo: self.contentView.bottomAnchor, constant: -8),
+            self.containerView.topAnchor.constraint(equalTo: self.contentView.topAnchor, constant: 0),
+            self.containerView.leadingAnchor.constraint(equalTo: self.contentView.leadingAnchor, constant: 0),
+            self.containerView.trailingAnchor.constraint(equalTo: self.contentView.trailingAnchor, constant: 0),
+            self.containerView.bottomAnchor.constraint(equalTo: self.contentView.bottomAnchor, constant: 0),
+
+            self.containerView.leadingAnchor.constraint(equalTo: self.gradientBorderView.leadingAnchor),
+            self.containerView.trailingAnchor.constraint(equalTo: self.gradientBorderView.trailingAnchor),
+            self.containerView.topAnchor.constraint(equalTo: self.gradientBorderView.topAnchor),
+            self.containerView.bottomAnchor.constraint(equalTo: self.gradientBorderView.bottomAnchor),
 
             self.containerStackView.topAnchor.constraint(equalTo: self.containerView.topAnchor),
             self.containerStackView.leadingAnchor.constraint(equalTo: self.containerView.leadingAnchor),
@@ -196,6 +209,11 @@ extension ProChoiceHighlightTableViewCell {
             self.leagueInfoStackView.trailingAnchor.constraint(equalTo: self.leagueInfoContainerView.trailingAnchor, constant: -16),
             self.leagueInfoStackView.topAnchor.constraint(equalTo: self.leagueInfoContainerView.topAnchor, constant: 8),
             self.leagueInfoStackView.bottomAnchor.constraint(equalTo: self.leagueInfoContainerView.bottomAnchor, constant: -8),
+
+            self.topSeparatorAlphaLineView.leadingAnchor.constraint(equalTo: self.containerView.leadingAnchor, constant: 15),
+            self.topSeparatorAlphaLineView.trailingAnchor.constraint(equalTo: self.containerView.trailingAnchor, constant: -15),
+            self.topSeparatorAlphaLineView.heightAnchor.constraint(equalToConstant: 1),
+            self.topSeparatorAlphaLineView.bottomAnchor.constraint(equalTo: self.eventInfoContainerView.topAnchor, constant: 2),
 
             self.favoriteImageView.widthAnchor.constraint(equalTo: self.favoriteImageView.heightAnchor),
             self.sportImageView.widthAnchor.constraint(equalTo: self.sportImageView.heightAnchor),
@@ -235,9 +253,18 @@ extension ProChoiceHighlightTableViewCell {
         NSLayoutConstraint.activate([
             self.homeOutcomeNameLabel.centerXAnchor.constraint(equalTo: self.homeButton.centerXAnchor),
             self.homeOutcomeNameLabel.topAnchor.constraint(equalTo: self.homeButton.topAnchor, constant: 5),
-
             self.homeOutcomeValueLabel.centerXAnchor.constraint(equalTo: self.homeButton.centerXAnchor),
             self.homeOutcomeValueLabel.bottomAnchor.constraint(equalTo: self.homeButton.bottomAnchor, constant: -5),
+
+            self.drawOutcomeNameLabel.centerXAnchor.constraint(equalTo: self.drawButton.centerXAnchor),
+            self.drawOutcomeNameLabel.topAnchor.constraint(equalTo: self.drawButton.topAnchor, constant: 5),
+            self.drawOutcomeValueLabel.centerXAnchor.constraint(equalTo: self.drawButton.centerXAnchor),
+            self.drawOutcomeValueLabel.bottomAnchor.constraint(equalTo: self.drawButton.bottomAnchor, constant: -5),
+
+            self.awayOutcomeNameLabel.centerXAnchor.constraint(equalTo: self.awayButton.centerXAnchor),
+            self.awayOutcomeNameLabel.topAnchor.constraint(equalTo: self.awayButton.topAnchor, constant: 5),
+            self.awayOutcomeValueLabel.centerXAnchor.constraint(equalTo: self.awayButton.centerXAnchor),
+            self.awayOutcomeValueLabel.bottomAnchor.constraint(equalTo: self.awayButton.bottomAnchor, constant: -5),
         ])
     }
 
@@ -249,6 +276,20 @@ extension ProChoiceHighlightTableViewCell {
         view.translatesAutoresizingMaskIntoConstraints = false
         view.clipsToBounds = true
         return view
+    }
+
+
+    private func createGradientBorderView() -> GradientBorderView {
+        var gradientBorderView = GradientBorderView()
+        gradientBorderView.translatesAutoresizingMaskIntoConstraints = false
+        gradientBorderView.gradientBorderWidth = 1.2
+        gradientBorderView.gradientCornerRadius = 9
+
+        gradientBorderView.gradientColors = [UIColor.App.cardBorderLineGradient1,
+                                             UIColor.App.cardBorderLineGradient2,
+                                             UIColor.App.cardBorderLineGradient3]
+
+        return gradientBorderView
     }
 
     private func createContainerStackView() -> UIStackView {
@@ -302,6 +343,7 @@ extension ProChoiceHighlightTableViewCell {
         label.font = AppFont.with(type: .medium, size: 11)
         label.textColor = UIColor.App.textPrimary
         label.translatesAutoresizingMaskIntoConstraints = false
+        label.text = "createLeagueNameLabel"
         return label
     }
     
@@ -310,6 +352,8 @@ extension ProChoiceHighlightTableViewCell {
         label.font = AppFont.with(type: .medium, size: 14)
         label.textColor = UIColor.App.textPrimary
         label.translatesAutoresizingMaskIntoConstraints = false
+        label.text = "createEventDateLabel"
+
         return label
     }
     
@@ -318,6 +362,8 @@ extension ProChoiceHighlightTableViewCell {
         label.font = AppFont.with(type: .medium, size: 14)
         label.textColor = UIColor.App.textPrimary
         label.translatesAutoresizingMaskIntoConstraints = false
+        label.text = "createEventTimeLabel"
+
         return label
     }
 
@@ -344,6 +390,8 @@ extension ProChoiceHighlightTableViewCell {
         label.textColor = UIColor.App.textPrimary
         label.textAlignment = .center
         label.translatesAutoresizingMaskIntoConstraints = false
+        label.text = "createTeamsLabel"
+
         return label
     }
     
@@ -376,7 +424,7 @@ extension ProChoiceHighlightTableViewCell {
     private func createOutcomeValueLabel() -> UILabel {
         let outcomeValueLabel = UILabel()
         outcomeValueLabel.translatesAutoresizingMaskIntoConstraints = false
-        outcomeValueLabel.text = "1,29"
+        outcomeValueLabel.text = "1.29"
         outcomeValueLabel.textAlignment = .center
         outcomeValueLabel.font = AppFont.with(type: .bold, size: 14)
         return outcomeValueLabel
@@ -399,7 +447,7 @@ extension ProChoiceHighlightTableViewCell {
         button.backgroundColor = UIColor.App.buttonBackgroundPrimary
         button.setTitle("See other markets", for: .normal)
         button.titleLabel?.font = AppFont.with(type: .bold, size: 16)
-        button.layer.cornerRadius = 8
+        button.layer.cornerRadius = CornerRadius.view
         button.translatesAutoresizingMaskIntoConstraints = false
         return button
     }
@@ -416,52 +464,9 @@ extension ProChoiceHighlightTableViewCell {
 
 }
 
-
-
-// Create a UITableViewController for preview
-private class PreviewTableViewController: UITableViewController {
-
-    override func viewDidLoad() {
-        super.viewDidLoad()
-
-        // Register the cell
-        tableView.register(ProChoiceHighlightTableViewCell.self, forCellReuseIdentifier: "ProChoiceHighlightCell")
-
-        // Enable dynamic height
-        tableView.estimatedRowHeight = 100
-        tableView.rowHeight = UITableView.automaticDimension
-    }
-
-    // MARK: - Table view data source
-
-    override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return 1 // Number of preview cells
-    }
-
-    override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        guard let cell = tableView.dequeueReusableCell(withIdentifier: "ProChoiceHighlightCell", for: indexPath) as? ProChoiceHighlightTableViewCell else {
-            return UITableViewCell()
-        }
-
-        // Configure the cell with sample data
-        cell.configure(with: ProChoiceHighlightViewModel(
-            title: "Sample Title \(indexPath.row + 1)",
-            description: "This is a sample description to demonstrate dynamic height in the cell preview. It can span multiple lines based on the content.",
-            leagueName: "League Name \(indexPath.row + 1)",
-            matchDate: "06.10.2024",
-            matchTime: "18:00",
-            teamsName: "Team A vs Team B",
-            homeOdds: "1.5",
-            drawOdds: "3.2",
-            awayOdds: "2.8")
-        )
-
-        return cell
-    }
-}
-
-@available(iOS 17, *)
-#Preview("ProChoiceHighlightTableViewCell Preview") {
-    let vc = PreviewTableViewController()
-    return vc
-}
+//
+//@available(iOS 17, *)
+//#Preview("ProChoiceHighlightCollectionViewCell Preview") {
+//    let vc = PreviewTableViewController()
+//    return vc
+//}

@@ -84,18 +84,18 @@ class Router {
             self.rootWindow.overrideUserInterfaceStyle = UIUserInterfaceStyle.unspecified
         }
 
-        #if DEBUG
-        let testVC = GenericCellTestViewController(
-            cellClass: ProChoiceHighlightTableViewCell.self,
-            configureCell: { cell, index in
-                cell.configure(with: ProChoiceHighlightViewModel.empty)
-            },
-            numberOfRows: 10
-        )
-        self.rootWindow.rootViewController = testVC
-        self.rootWindow.makeKeyAndVisible()
-
-        #else
+//        #if DEBUG
+//        let testVC = GenericCellTestViewController(
+//            cellClass: ProChoiceHighlightTableViewCell.self,
+//            configureCell: { cell, index in
+//                cell.configure(with: ProChoiceHighlightViewModel.empty)
+//            },
+//            numberOfRows: 10
+//        )
+//        self.rootWindow.rootViewController = testVC
+//        self.rootWindow.makeKeyAndVisible()
+//
+//        #else
         let splashViewController = SplashViewController(loadingCompleted: {
             self.showPostLoadingFlow()
         })
@@ -106,7 +106,7 @@ class Router {
         
         print("DebugRouter makeKeyAndVisible")
         self.rootWindow.makeKeyAndVisible()
-        #endif
+//        #endif
     }
     
     func setSupportedLanguages() {

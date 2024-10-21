@@ -44,6 +44,8 @@ class HomeViewModel {
         case supplementaryEvents
         case heroCard
 
+        case highlightedMarketProChoices
+
         var identifier: String {
             switch self {
             case .userMessage: return "userMessage"
@@ -70,6 +72,7 @@ class HomeViewModel {
             case .supplementaryEvents: return "supplementaryEvents"
                 
             case .heroCard: return "heroCard"
+            case .highlightedMarketProChoices: return "highlightedMarketProChoices"
             }
         }
     }
@@ -194,5 +197,8 @@ extension HomeViewModel {
     func heroCardMatchViewModel(forIndex index: Int) -> MatchWidgetCellViewModel? {
         return self.homeViewTemplateDataSource.heroCardMatchViewModel(forIndex: index)
     }
-    
+
+    func highlightedMarket(forIndex index: Int) -> MarketWidgetContainerTableViewModel? {
+        return self.homeViewTemplateDataSource.highlightedMarket(forIndex: index)
+    }
 }
