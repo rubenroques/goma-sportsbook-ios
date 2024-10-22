@@ -158,8 +158,8 @@ class ScoreView: UIView {
             case .gamePart: return false
             case .matchFull: return false
             }
-        })
-        
+        }).suffix(6)
+
         let matchFullScores = orderedScores.filter({ score in
             switch score {
             case .set: return false
@@ -228,7 +228,7 @@ class ScoreView: UIView {
             case .gamePart: return false
             case .matchFull: return false
             }
-        })
+        }).suffix(6)
         
         let gamePartsScores = orderedScores.filter({ score in
             switch score {
