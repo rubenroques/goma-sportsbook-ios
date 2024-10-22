@@ -330,7 +330,8 @@ extension SportRadarModels {
         var tournamentCountryName: String?
         
         var customBetAvailable: Bool?
-        
+        var isMainMarket: Bool
+
         enum CodingKeys: String, CodingKey {
             case id = "idfomarket"
             case name = "name"
@@ -358,6 +359,8 @@ extension SportRadarModels {
             case sportTypeName = "sportname"
             case sportTypeCode = "idfosporttype"
             case sportIdCode = "idfosport"
+
+            case isMainMarket = "isMainMarket"
         }
 
         init(id: String, name: String,
@@ -383,7 +386,8 @@ extension SportRadarModels {
              sportIdCode: String? = nil,
              tournamentCountryName: String? = nil,
 
-             customBetAvailable: Bool?
+             customBetAvailable: Bool?,
+             isMainMarket: Bool
         ) {
             self.id = id
             self.name = name
@@ -410,6 +414,7 @@ extension SportRadarModels {
             self.tournamentCountryName = tournamentCountryName
             
             self.customBetAvailable = customBetAvailable
+            self.isMainMarket = isMainMarket
         }
 
         init(from decoder: Decoder) throws {
@@ -433,8 +438,8 @@ extension SportRadarModels {
             self.awayParticipant = try container.decodeIfPresent(String.self, forKey: .awayParticipant)
             self.eventId = try container.decodeIfPresent(String.self, forKey: .eventId)
             
-            
-            
+            self.isMainMarket = false
+
             if let startDateString = try container.decodeIfPresent(String.self, forKey: .startDate) {
                 if let date = Event.dateFormatter.date(from: startDateString) {
                     self.startDate = date

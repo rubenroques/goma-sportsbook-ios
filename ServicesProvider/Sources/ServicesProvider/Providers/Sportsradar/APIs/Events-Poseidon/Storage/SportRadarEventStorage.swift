@@ -15,7 +15,9 @@ class SportRadarEventStorage {
         self.eventSubject
             .eraseToAnyPublisher()
     }
-    
+
+    private var removedMainMarketId: String? = nil
+
     private var eventSubject: CurrentValueSubject<Event?, Never>
     private var marketsDictionary: OrderedDictionary<String, CurrentValueSubject<Market, Never>>
     private var outcomesDictionary: OrderedDictionary<String, CurrentValueSubject<Outcome, Never>>
@@ -32,24 +34,28 @@ class SportRadarEventStorage {
         self.outcomesDictionary = [:]
     }
 
+    func storeMainMarket(_ mainMarket: Market) {
+        #if DEBUG
+        mainMarket.name = "INITIAL " + mainMarket.name
+        #endif
+        mainMarket.isMainMarket = true
+        for outcome in mainMarket.outcomes {
+            self.outcomesDictionary[outcome.id] = CurrentValueSubject(outcome)
+        }
+        self.marketsDictionary[mainMarket.id] = CurrentValueSubject(mainMarket)
+    }
+
     func storeEvent(_ event: Event) {
         self.marketsDictionary = [:]
         self.outcomesDictionary = [:]
 
-        var debugOutput = "OddDebug: Event - \(event.id)\n"
         for market in event.markets {
-            debugOutput = debugOutput + "   OddDebug: Market - \(market.id)\n"
             for outcome in market.outcomes {
-                debugOutput = debugOutput + "      OddDebug: Outcome - \(outcome.id)\n"
                 self.outcomesDictionary[outcome.id] = CurrentValueSubject(outcome)
             }
             self.marketsDictionary[market.id] = CurrentValueSubject(market)
         }
-        
-        if event.id == "3921509.1" {
-            print(debugOutput)
-        }
-        
+
         self.eventSubject.send(event)
     }
 
@@ -92,12 +98,55 @@ extension SportRadarEventStorage {
         outcomeSubject.send(outcome)
     }
     
+    //
+    // Main Market updates
+    func addMainMarket(_ market: Market) {
+        guard let removedMainMarketId = self.removedMainMarketId else { return }
 
+        market.isMainMarket = true
+
+//        #if DEBUG
+//        market.name = "MAIN! " + market.name
+//
+//        guard
+//            let oldMarketSubject = self.marketsDictionary[removedMainMarketId]
+//        else {
+//            return
+//        }
+//
+//        let oldMarket = oldMarketSubject.value
+//        oldMarket.isTradable = false
+//        oldMarket.name = "REMOVED " + oldMarket.name
+//        oldMarket.isMainMarket = false
+//        #else
+
+        // remove old main market
+        self.marketsDictionary[removedMainMarketId] = nil
+
+//        #endif
+        
+        self.removedMainMarketId = nil
+        self.addMarket(market)
+    }
+
+    func removeMainMarket(withId id: String) {
+        guard
+            self.marketsDictionary[id] != nil
+        else {
+            return
+        }
+
+        self.updateMarketTradability(withId: id, isTradable: false)
+
+        self.removedMainMarketId = id
+    }
+
+    //
     // Market updates
     func addMarket(_ market: Market) {
         
         if self.marketsDictionary[market.id] != nil { // We already
-            updateMarketTradability(withId: market.id, isTradable: market.isTradable)
+            self.updateMarketTradability(withId: market.id, isTradable: market.isTradable)
             return
         }
         else {
@@ -115,7 +164,7 @@ extension SportRadarEventStorage {
         
     }
 
-    
+
     func removeMarket(withId id: String) {        
         self.marketsDictionary.removeValue(forKey: id)
         
@@ -125,7 +174,7 @@ extension SportRadarEventStorage {
         event.markets = updatedMarkets
         eventSubject.send(event)
     }
-    
+
     func updateMarketTradability(withId id: String, isTradable: Bool) {
         guard
             let marketSubject = self.marketsDictionary[id]

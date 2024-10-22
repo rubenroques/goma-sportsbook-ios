@@ -257,7 +257,9 @@ public class Market: Codable, Equatable {
     public var marketDigitLine: String?
     public var outcomesOrder: OutcomesOrder
     public var customBetAvailable: Bool?
-    
+
+    public var isMainMarket: Bool
+
     // Event related properties
     public var competitionId: String?
     public var competitionName: String?
@@ -286,6 +288,7 @@ public class Market: Codable, Equatable {
         case sport = "sport"
         case sportIdCode = "sportIdCode"
         case venueCountry = "venueCountry"
+        case isMainMarket = "isMainMarket"
     }
 
     public init(id: String,
@@ -308,7 +311,8 @@ public class Market: Codable, Equatable {
                 sport: SportType? = nil,
                 sportIdCode: String?,
                 venueCountry: Country? = nil,
-                customBetAvailable: Bool?) {
+                customBetAvailable: Bool?,
+                isMainMarket: Bool) {
 
         self.id = id
         self.name = name
@@ -336,6 +340,7 @@ public class Market: Codable, Equatable {
         self.venueCountry = venueCountry
         
         self.customBetAvailable = customBetAvailable
+        self.isMainMarket = isMainMarket
     }
 
     public static func == (lhs: Market, rhs: Market) -> Bool {
@@ -354,7 +359,8 @@ public class Market: Codable, Equatable {
         lhs.awayParticipant == rhs.awayParticipant &&
         lhs.eventId == rhs.eventId &&
         lhs.outcomesOrder == rhs.outcomesOrder &&
-        lhs.customBetAvailable == rhs.customBetAvailable
+        lhs.customBetAvailable == rhs.customBetAvailable &&
+        lhs.isMainMarket == rhs.isMainMarket
     }
 }
 

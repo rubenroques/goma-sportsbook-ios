@@ -324,13 +324,13 @@ extension ServicesProviderClient {
         return eventsProvider.getEventLiveData(eventId: eventId)
     }
     
-    public func subscribeEventSecundaryMarkets(eventId: String) -> AnyPublisher<SubscribableContent<Event>, ServiceProviderError> {
+    public func subscribeEventMarkets(eventId: String) -> AnyPublisher<SubscribableContent<Event>, ServiceProviderError> {
         guard
             let eventsProvider = self.eventsProvider
         else {
             return Fail(error: ServiceProviderError.eventsProviderNotFound).eraseToAnyPublisher()
         }
-        return eventsProvider.subscribeEventSecundaryMarkets(eventId: eventId)
+        return eventsProvider.subscribeEventMarkets(eventId: eventId)
     }
     
 }

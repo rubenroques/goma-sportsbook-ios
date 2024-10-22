@@ -38,9 +38,9 @@ extension SportRadarModels {
                 self = .set(index: index, home: homeScore, away: awayScore)
             case .setScore(let index):
                 self = .set(index: index, home: homeScore, away: awayScore)
+            case .frameScore(let index):
+                self = .set(index: index, home: homeScore, away: awayScore)
             }
-
-            print("ParsedScore: \(dump(self))")
         }
         
         init(from container: KeyedDecodingContainer<CompetitorCodingKeys>, key: ScoreCodingKeys) throws {
@@ -61,11 +61,9 @@ extension SportRadarModels {
                 self = .matchFull(home: homeScoreValue, away: awayScoreValue)
             case .gameScore:
                 self = .gamePart(home: homeScoreValue, away: awayScoreValue)
-            case .periodScore(let index), .setScore(let index):
+            case .periodScore(let index), .setScore(let index), .frameScore(let index):
                 self = .set(index: index, home: homeScoreValue, away: awayScoreValue)
             }
-
-            print("ParsedScore: \(dump(self))")
         }
         
         var sortValue: Int {
@@ -99,6 +97,7 @@ extension SportRadarModels {
         case matchScore
         case periodScore(Int)
         case setScore(Int)
+        case frameScore(Int)
         
         init?(stringValue: String) {
             switch stringValue {
@@ -113,6 +112,8 @@ extension SportRadarModels {
                     self = .periodScore(number)
                 } else if let number = Self.extractNumber(from: stringValue, pattern: "SET(\\d+)_SCORE") {
                     self = .setScore(number)
+                } else if let number = Self.extractNumber(from: stringValue, pattern: "FRAME(\\d+)_SCORE") {
+                    self = .frameScore(number)
                 } else {
                     return nil
                 }
@@ -135,12 +136,14 @@ extension SportRadarModels {
                 return "PERIOD\(number)_SCORE"
             case .setScore(let number):
                 return "SET\(number)_SCORE"
+            case .frameScore(let number):
+                return "FRAME\(number)_SCORE"
             }
         }
         
         var intValue: Int? {
             switch self {
-            case .periodScore(let number), .setScore(let number):
+            case .periodScore(let number), .setScore(let number), .frameScore(let number):
                 return number
             default:
                 return nil

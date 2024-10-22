@@ -91,7 +91,7 @@ extension MatchLineTableCellViewModel {
         self.secundaryMarketsPublisher = nil
         
         self.secundaryMarketsPublisher = Publishers.CombineLatest(
-            Env.servicesProvider.subscribeEventSecundaryMarkets(eventId: matchId),
+            Env.servicesProvider.subscribeEventMarkets(eventId: matchId),
             SecundaryMarketsService.fetchSecundaryMarkets()
                 .mapError { error in ServiceProviderError.errorMessage(message: error.localizedDescription) }
         )
@@ -175,12 +175,16 @@ extension MatchLineTableCellViewModel {
                                 sportId: String) -> [Market]
     {
         var statsForMarket: [String: String?] = [:]
-        let firstMarket = oldMatch?.markets.first // Capture the first market
+        var firstMarket = oldMatch?.markets.first // Capture the first market
         var additionalMarkets: [Market] = []
-        
+
+        var newMainMarket: Market? = newMarkets.first { newMarket in
+            newMarket.isMainMarket == true
+        }
+
         // Ignore the current market
         for market in newMarkets {
-            if market.id != firstMarket?.id {
+            if market.id != firstMarket?.id && market.id != (newMainMarket?.id ?? "") {
                 additionalMarkets.append(market)
             }
         }
@@ -228,6 +232,16 @@ extension MatchLineTableCellViewModel {
         
         let mergedMarkets: [Market]
 
+        // replace new first market in the array with a the main market
+        if let newMainMarketValue = newMainMarket {
+
+
+            print("Replacing main market for \(oldMatch?.homeParticipant.name) \(newMainMarketValue.name) \(newMainMarket?.name ?? "---")")
+
+            firstMarket = newMainMarketValue
+        }
+
+        // arrange the final list of markets
         if let first = firstMarket {
             mergedMarkets = [first] + finalMarkets
         }

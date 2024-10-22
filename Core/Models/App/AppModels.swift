@@ -70,6 +70,8 @@ struct Market: Hashable {
     var id: String
     var typeId: String
     var name: String
+    var isMainMarket: Bool
+
     var nameDigit1: Double?
     var nameDigit2: Double?
     var nameDigit3: Double?
@@ -105,6 +107,7 @@ struct Market: Hashable {
     init(id: String,
          typeId: String,
          name: String,
+         isMainMarket: Bool = false,
          nameDigit1: Double?,
          nameDigit2: Double?,
          nameDigit3: Double?,
@@ -131,6 +134,7 @@ struct Market: Hashable {
         self.id = id
         self.typeId = typeId
         self.name = name
+        self.isMainMarket = isMainMarket
         self.nameDigit1 = nameDigit1
         self.nameDigit2 = nameDigit2
         self.nameDigit3 = nameDigit3

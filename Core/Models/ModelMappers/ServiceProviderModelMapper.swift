@@ -138,8 +138,7 @@ extension ServiceProviderModelMapper {
         case .none:
             mappedActivePlayerServe = nil
         }
-        
-        
+
         return MatchLiveData(id: eventLiveData.id,
                              homeScore: eventLiveData.homeScore,
                              awayScore: eventLiveData.awayScore,
@@ -207,6 +206,7 @@ extension ServiceProviderModelMapper {
         return Market(id: market.id,
                       typeId: market.name,
                       name: market.name,
+                      isMainMarket: market.isMainMarket,
                       nameDigit1: Double(market.marketDigitLine ?? ""),
                       nameDigit2: nil,
                       nameDigit3: nil,

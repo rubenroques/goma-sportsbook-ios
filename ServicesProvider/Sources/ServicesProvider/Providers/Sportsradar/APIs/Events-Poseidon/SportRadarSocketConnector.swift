@@ -29,7 +29,8 @@ protocol SportRadarConnectorSubscriber: AnyObject {
     func marketDetails(forContentIdentifier identifier: ContentIdentifier, market: Market)
 
     func updateEventSecundaryMarkets(forContentIdentifier identifier: ContentIdentifier, event: Event)
-    
+    func updateEventMainMarket(forContentIdentifier identifier: ContentIdentifier, event: Event)
+
     func didReceiveGenericUpdate(content: SportRadarModels.ContentContainer)
 }
 
@@ -162,7 +163,7 @@ extension SportRadarSocketConnector: Starscream.WebSocketDelegate {
             print("ServiceProvider - ↔️ SportRadarSocketConnector websocket is disconnected: \(reason) with code: \(code)")
 
         case .text(let string):
-            // print("\n▶️ServiceProvider - ↔️ SportRadarSocketConnector received text: \(string)◀️\n")
+            print("\n▶️ServiceProvider - ↔️ Ⓜ️ SportRadarSocketConnector received text: \(string)◀️\n")
             if let data = string.data(using: .utf8),
                let sportRadarSocketResponse = try? decoder.decode(SportRadarModels.NotificationType.self, from: data) {
                 self.handleContentMessage(sportRadarSocketResponse, messageData: data)
@@ -270,10 +271,15 @@ extension SportRadarSocketConnector: Starscream.WebSocketDelegate {
                         let mappedEvent = SportRadarModelMapper.event(fromInternalEvent: eventValue)
                         subscriber.updateEventSecundaryMarkets(forContentIdentifier: contentIdentifier, event: mappedEvent)
                     }
-                    
+                case .updateEventMainMarket(let contentIdentifier, let event):
+                    if let subscriber = self.messageSubscriber, let eventValue = event  {
+                        let mappedEvent = SportRadarModelMapper.event(fromInternalEvent: eventValue)
+                        subscriber.updateEventMainMarket(forContentIdentifier: contentIdentifier, event: mappedEvent)
+                    }
+
                 case .unknown:
-                    print("❓SportRadarSocketConnector handleContentMessage unknown")
-                    
+                    print("❓SportRadarSocketConnector handleContentMessage unknown: \( String(data: messageData, encoding: .utf8) ?? "" )")
+
                 default:
                     if let subscriber = self.messageSubscriber {
                         subscriber.didReceiveGenericUpdate(content: content)
