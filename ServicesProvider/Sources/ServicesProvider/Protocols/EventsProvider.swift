@@ -111,8 +111,8 @@ protocol EventsProvider: Connector {
     
     func getEventLiveData(eventId: String) -> AnyPublisher<EventLiveData, ServiceProviderError>
     
-    // Only the markets updates
-    func subscribeEventSecundaryMarkets(eventId: String) -> AnyPublisher<SubscribableContent<Event>, ServiceProviderError>
+    // Only the secundary markets updates
+    func subscribeEventMarkets(eventId: String) -> AnyPublisher<SubscribableContent<Event>, ServiceProviderError>
     
     // Event and markets updates
     func subscribeToEventAndSecondaryMarkets(withId id: String) -> AnyPublisher<SubscribableContent<Event>, ServiceProviderError>

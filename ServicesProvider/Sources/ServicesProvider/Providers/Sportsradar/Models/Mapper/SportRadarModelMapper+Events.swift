@@ -176,7 +176,8 @@ extension SportRadarModelMapper {
                       sport: mappedSport,
                       sportIdCode: internalMarket.sportIdCode,
                       venueCountry: country,
-                      customBetAvailable: internalMarket.customBetAvailable)
+                      customBetAvailable: internalMarket.customBetAvailable,
+                      isMainMarket: internalMarket.isMainMarket)
     }
 
     static func outcome(fromInternalOutcome internalOutcome: SportRadarModels.Outcome) -> Outcome {

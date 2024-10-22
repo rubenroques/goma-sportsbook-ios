@@ -577,8 +577,8 @@ class ClientManagedHomeViewTemplateDataSource {
 
     func fetchHighlightedLiveMatches() {
         
-        let homeLiveEventsCount = Env.businessSettingsSocket.clientSettings.homeLiveEventsCount
-        
+        var homeLiveEventsCount = Env.businessSettingsSocket.clientSettings.homeLiveEventsCount
+
         self.highlightedLiveMatches = []
         
         var userId: String? = nil
@@ -586,7 +586,11 @@ class ClientManagedHomeViewTemplateDataSource {
         if let loggedUserId = Env.userSessionStore.userProfilePublisher.value?.userIdentifier {
             userId = loggedUserId
         }
-        
+
+        #if DEBUG
+        homeLiveEventsCount = 20
+        #endif
+
         Env.servicesProvider.getHighlightedLiveEvents(eventCount: homeLiveEventsCount, userId: userId)
             .map { highlightedLiveEvents in
                 return highlightedLiveEvents.compactMap(ServiceProviderModelMapper.match(fromEvent:))

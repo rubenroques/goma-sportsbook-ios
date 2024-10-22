@@ -92,7 +92,8 @@ public enum ContentType: String, Codable {
     case eventSummary = "eventSummary"
 
     case market = "market"
-    
+
+    case eventMainMarket = "liveDataSummaryEventSummary"
     case eventSecundaryMarkets = "eventWithBalancedMarkets"
 }
 
@@ -112,8 +113,9 @@ public enum ContentRoute {
 
     case market(marketId: String)
 
+    case eventMainMarket(eventId: String)
     case eventSecundaryMarkets(eventId: String)
-    
+
     var fullRoute: String {
         switch self {
         case .liveEvents(let sportAlphaId, let pageIndex):
@@ -140,7 +142,9 @@ public enum ContentRoute {
             return eventId
         case .market(let marketId):
             return marketId
-            
+
+        case .eventMainMarket(let eventId):
+            return eventId
         case .eventSecundaryMarkets(let eventId):
             return eventId
         }
@@ -169,7 +173,9 @@ public enum ContentRoute {
             return eventId
         case .market(let marketId):
             return marketId
-            
+
+        case .eventMainMarket(let eventId):
+            return eventId
         case .eventSecundaryMarkets(let eventId):
             return eventId
         }
@@ -197,7 +203,9 @@ public enum ContentRoute {
             return nil
         case .market:
             return nil
-            
+
+        case .eventMainMarket:
+            return nil
         case .eventSecundaryMarkets:
             return nil
         }
@@ -295,6 +303,8 @@ public class ContentIdentifier: Decodable, Identifiable {
             self.contentRoute = ContentRoute.eventSummary(eventId: contentRouteRawString)
         case .market:
             self.contentRoute = ContentRoute.market(marketId: contentRouteRawString)
+        case .eventMainMarket:
+            self.contentRoute = ContentRoute.eventMainMarket(eventId: contentRouteRawString)
         case .eventSecundaryMarkets:
             self.contentRoute = ContentRoute.eventSecundaryMarkets(eventId: contentRouteRawString)
         }

@@ -27,7 +27,8 @@ extension SportRadarModels {
 
         case marketDetails(contentIdentifier: ContentIdentifier, market: SportRadarModels.Market?)
         case updateEventSecundaryMarkets(contentIdentifier: ContentIdentifier, event: SportRadarModels.Event?)
-        
+        case updateEventMainMarket(contentIdentifier: ContentIdentifier, event: SportRadarModels.Event?)
+
         //
         case addEvent(contentIdentifier: ContentIdentifier, event: SportRadarModels.Event)
         case addMarket(contentIdentifier: ContentIdentifier, market: SportRadarModels.Market)
@@ -91,6 +92,8 @@ extension SportRadarModels {
                 return contentIdentifier
                 
             case .updateEventSecundaryMarkets(let contentIdentifier, _):
+                return contentIdentifier
+            case .updateEventMainMarket(let contentIdentifier, _):
                 return contentIdentifier
                 
             case .addEvent(let contentIdentifier, _):
@@ -310,6 +313,14 @@ extension SportRadarModels {
                 else {
                     return ContentContainer.eventDetailsLiveData(contentIdentifier: contentIdentifier, eventLiveDataExtended: nil)
                 }
+            case .eventMainMarket:
+                if container.contains(.change) {
+                    let event: SportRadarModels.Event = try container.decode(SportRadarModels.Event.self, forKey: .change)
+                    return .updateEventMainMarket(contentIdentifier: contentIdentifier, event: event)
+                }
+                else {
+                    return .updateEventMainMarket(contentIdentifier: contentIdentifier, event: nil)
+                }
             }
         }
 
@@ -321,10 +332,17 @@ extension SportRadarModels {
             let contentIdentifier = try container.decode(ContentIdentifier.self, forKey: .content)
             let path: String = try container.decodeIfPresent(String.self, forKey: .path) ?? ""
             
-            if path.lowercased().contains("serve") {
-                print("break")
+            if contentType == .eventMainMarket && path.lowercased().contains("idfomarket") {
+                print("parseUpdated break")
             }
-            
+
+
+            if case let ContentRoute.eventMainMarket(eventId) = contentIdentifier.contentRoute {
+                if let event = try? container.decode(SportRadarModels.Event.self, forKey: .change) {
+                    return .updateEventMainMarket(contentIdentifier: contentIdentifier, event: event)
+                }
+            }
+
             if case let ContentRoute.eventDetailsLiveData(eventId) = contentIdentifier.contentRoute {
                 
                 if let eventLiveData = try? container.decode(SportRadarModels.EventLiveDataExtended.self, forKey: .change) {
@@ -536,9 +554,10 @@ extension SportRadarModels {
                                                           eventCount: Int(eventsCount) ?? 0)
                     }
                 }
-                
             }
-            
+
+
+
             if path.contains("idfomarket") && path.contains("istradable"), let marketId = SocketMessageParseHelper.extractMarketId(path) {
                 // removed a Market
                 let newIsTradable = try container.decode(Bool.self, forKey: .change)
@@ -713,7 +732,10 @@ extension SportRadarModels {
             let contentIdentifier = try container.decode(ContentIdentifier.self, forKey: .content)
             let path: String = try container.decodeIfPresent(String.self, forKey: .path) ?? ""
             
-            
+            if contentType == .eventMainMarket && path.lowercased().contains("idfomarket") {
+                print("parseAdded break")
+            }
+
             if case let ContentRoute.liveSports = contentIdentifier.contentRoute {
                 if path.contains("idfosporttype"),
                    let newSport = try? container.decodeIfPresent(SportRadarModels.SportTypeDetails.self, forKey: .change) {
@@ -765,7 +787,10 @@ extension SportRadarModels {
             
             let contentIdentifier = try container.decode(ContentIdentifier.self, forKey: .content)
             let path: String = try container.decodeIfPresent(String.self, forKey: .path) ?? ""
-            
+
+            if contentType == .eventMainMarket && path.lowercased().contains("idfomarket") {
+                print("parseRemoved break")
+            }
 
             if case ContentRoute.liveSports = contentIdentifier.contentRoute {
                 if path.contains("idfosporttype"),
@@ -834,6 +859,8 @@ extension SportRadarModels.ContentContainer: CustomDebugStringConvertible {
         case .marketDetails(let contentIdentifier, let market):
             return "Market Details (Content ID: \(contentIdentifier)) - Market: \(String(describing: market))"
 
+        case .updateEventMainMarket(let contentIdentifier, let event):
+            return "Update Event Main Market (Content ID: \(contentIdentifier)) - Event: \(String(describing: event))"
         case .updateEventSecundaryMarkets(let contentIdentifier, let event):
             return "Update Event Secundary Markets (Content ID: \(contentIdentifier)) - Event: \(String(describing: event))"
             

@@ -111,7 +111,6 @@ extension SportRadarModels {
                 }
                 else {
                     self.activePlayerServing = nil
-                    print("break")
                 }
             }
             

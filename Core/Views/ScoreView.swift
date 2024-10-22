@@ -113,6 +113,7 @@ class ScoreView: UIView {
                     self.sportCode.lowercased().hasPrefix("bad") || self.sportCode.lowercased().contains("bad") || // badminton
                     self.sportCode.lowercased().hasPrefix("bvb") || self.sportCode.lowercased().contains("bvb") || // beach volley
                     self.sportCode.lowercased().hasPrefix("tbt") || self.sportCode.lowercased().contains("tbt") ||
+                    self.sportCode.lowercased().hasPrefix("snk") || self.sportCode.lowercased().contains("snk") ||
                     self.sportCode.lowercased().hasPrefix("hky") || self.sportCode.lowercased().contains("hky") {
             self.configureDetailedScores()
         }
@@ -157,8 +158,8 @@ class ScoreView: UIView {
             case .gamePart: return false
             case .matchFull: return false
             }
-        })
-        
+        }).suffix(6)
+
         let matchFullScores = orderedScores.filter({ score in
             switch score {
             case .set: return false
@@ -227,7 +228,7 @@ class ScoreView: UIView {
             case .gamePart: return false
             case .matchFull: return false
             }
-        })
+        }).suffix(6)
         
         let gamePartsScores = orderedScores.filter({ score in
             switch score {
