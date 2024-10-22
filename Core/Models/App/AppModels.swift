@@ -102,6 +102,8 @@ struct Market: Hashable {
     var sport: Sport?
     var sportIdCode: String?
     
+    var venueCountry: Country?
+    
     init(id: String,
          typeId: String,
          name: String,
@@ -125,7 +127,8 @@ struct Market: Hashable {
          customBetAvailable: Bool? = nil,
          competitionName: String? = nil,
          sport: Sport? = nil,
-         sportIdCode: String? = nil
+         sportIdCode: String? = nil,
+         venueCountry: Country? = nil
     ) {
         
         self.id = id
@@ -152,6 +155,7 @@ struct Market: Hashable {
         self.competitionName = competitionName
         self.sport = sport
         self.sportIdCode = sportIdCode
+        self.venueCountry = venueCountry
     }
 }
 

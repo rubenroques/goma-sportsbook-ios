@@ -192,6 +192,14 @@ extension ServiceProviderModelMapper {
         } else {
             sport = nil
         }
+        
+        let venueCountry: Country?
+        if let marketVenueCountry = market.venueCountry {
+            venueCountry = Self.country(fromServiceProviderCountry: marketVenueCountry)
+        }
+        else {
+            venueCountry = nil
+        }
 
         //        #if DEBUG
         //        var newMappedOutcomes = [Outcome]()
@@ -226,7 +234,8 @@ extension ServiceProviderModelMapper {
                       customBetAvailable: market.customBetAvailable,
                       competitionName: market.competitionName,
                       sport: sport,
-                      sportIdCode: market.sportIdCode)
+                      sportIdCode: market.sportIdCode,
+                      venueCountry: venueCountry)
     }
     
     static func optionalMarkets(fromServiceProviderMarkets markets: [ServicesProvider.Market]?) -> [Market]? {

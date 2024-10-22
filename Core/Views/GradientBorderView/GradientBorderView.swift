@@ -19,6 +19,19 @@ class GradientBorderView: UIView {
         }
     }
     
+    // Customizable startPoint and endPoint
+        var gradientStartPoint: CGPoint = CGPoint(x: 0, y: 0.97) {
+            didSet {
+                self.setNeedsLayout()
+            }
+        }
+
+        var gradientEndPoint: CGPoint = CGPoint(x: 0.95, y: 0) {
+            didSet {
+                self.setNeedsLayout()
+            }
+        }
+    
     override func layoutSubviews() {
         super.layoutSubviews()
 
@@ -32,8 +45,10 @@ class GradientBorderView: UIView {
     private func gradientLayer(bounds: CGRect) -> CAGradientLayer {
         let gradientLayer = CAGradientLayer()
         gradientLayer.frame = bounds
-        gradientLayer.startPoint = CGPoint(x: 0, y: 0.97) // Bottom Left
-        gradientLayer.endPoint = CGPoint(x: 0.95, y: 0) // Top Right
+//        gradientLayer.startPoint = CGPoint(x: 0, y: 0.97) // Bottom Left
+        gradientLayer.startPoint = self.gradientStartPoint
+//        gradientLayer.endPoint = CGPoint(x: 0.95, y: 0) // Top Right
+        gradientLayer.endPoint = self.gradientEndPoint
         gradientLayer.locations = [0.0, 0.44, 1.0]
         gradientLayer.colors = self.gradientColors.map { $0.cgColor }
 

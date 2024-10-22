@@ -6,6 +6,7 @@
 //
 import UIKit
 import Kingfisher
+import Combine
 
 class ProChoiceHighlightCollectionViewCell: UICollectionViewCell {
 
@@ -22,41 +23,97 @@ class ProChoiceHighlightCollectionViewCell: UICollectionViewCell {
     private lazy var leagueInfoContainerView: UIView = self.createLeagueInfoContainerView()
     private lazy var leagueInfoStackView: UIStackView = self.createLeagueInfoStackView()
 
+    private lazy var favoriteButton: UIButton = self.createFavoriteButton()
     private lazy var favoriteImageView: UIImageView = self.createIconImageView()
     private lazy var sportImageView: UIImageView = self.createIconImageView()
-    private lazy var countryImageView: UIImageView = self.createIconImageView()
+    private lazy var countryImageView: UIImageView = self.createCountryIconImageView()
     private lazy var leagueNameLabel: UILabel = self.createLeagueNameLabel()
     private lazy var cashbackImageView: UIImageView = self.createIconImageView()
 
     private lazy var topSeparatorAlphaLineView: FadingView = self.createTopSeparatorAlphaLineView()
 
-    private lazy var eventInfoContainerView: UIView = self.createLeagueInfoContainerView()
+    private lazy var eventInfoContainerView: UIView = self.createEventInfoContainerView()
+    private lazy var eventInfoImageView: UIImageView = self.createEventInfoImageView()
 
     private lazy var eventDateLabel: UILabel = self.createEventDateLabel()
     private lazy var eventTimeLabel: UILabel = self.createEventTimeLabel()
     private lazy var marketNameLabel: UILabel = self.createMarketNameLabel()
 
-    private lazy var teamPillContainerView: UIView = self.createTeamPillContainerView()
+    private lazy var teamPillContainerView: GradientBorderView = self.createTeamPillContainerView()
     private lazy var teamsLabel: UILabel = self.createTeamsLabel()
 
     private lazy var oddsStackView: UIStackView = self.createOddsStackView()
 
     private lazy var homeButton: UIView = self.createOutcomeBaseView()
+    private lazy var homeOutcomeBaseView: UIView = self.createOutcomeContainerBaseView()
     private lazy var homeOutcomeNameLabel: UILabel = self.createOutcomeNameLabel()
     private lazy var homeOutcomeValueLabel: UILabel = self.createOutcomeValueLabel()
 
     private lazy var drawButton: UIView = self.createOutcomeBaseView()
+    private lazy var drawOutcomeBaseView: UIView = self.createOutcomeContainerBaseView()
     private lazy var drawOutcomeNameLabel: UILabel = self.createOutcomeNameLabel()
     private lazy var drawOutcomeValueLabel: UILabel = self.createOutcomeValueLabel()
 
     private lazy var awayButton: UIView = self.createOutcomeBaseView()
+    private lazy var awayOutcomeBaseView: UIView = self.createOutcomeContainerBaseView()
     private lazy var awayOutcomeNameLabel: UILabel = self.createOutcomeNameLabel()
     private lazy var awayOutcomeValueLabel: UILabel = self.createOutcomeValueLabel()
 
     private lazy var bottomButtonsContainerStackView: UIStackView = self.createBottomButtonsContainerStackView()
     private lazy var seeAllMarketsButton: UIButton = self.createSeeAllMarketsButton()
+    
+    private lazy var homeUpChangeOddValueImageView: UIImageView = self.createHomeUpChangeOddValueImageView()
+    private lazy var homeDownChangeOddValueImageView: UIImageView = self.createHomeDownChangeOddValueImageView()
+    private lazy var drawUpChangeOddValueImageView: UIImageView = self.createDrawUpChangeOddValueImageView()
+    private lazy var drawDownChangeOddValueImageView: UIImageView = self.createDrawDownChangeOddValueImageView()
+    private lazy var awayUpChangeOddValueImageView: UIImageView = self.createAwayUpChangeOddValueImageView()
+    private lazy var awayDownChangeOddValueImageView: UIImageView = self.createAwayDownChangeOddValueImageView()
 
     private var viewModel: MarketWidgetCellViewModel?
+
+    private var cancellables = Set<AnyCancellable>()
+    
+    private var leftOutcome: Outcome?
+    private var middleOutcome: Outcome?
+    private var rightOutcome: Outcome?
+    
+    private var currentHomeOddValue: Double?
+    private var currentDrawOddValue: Double?
+    private var currentAwayOddValue: Double?
+    
+    private var leftOddButtonSubscriber: AnyCancellable?
+    private var middleOddButtonSubscriber: AnyCancellable?
+    private var rightOddButtonSubscriber: AnyCancellable?
+
+    private var isLeftOutcomeButtonSelected: Bool = false {
+        didSet {
+            self.isLeftOutcomeButtonSelected ? self.selectLeftOddButton() : self.deselectLeftOddButton()
+        }
+    }
+    private var isMiddleOutcomeButtonSelected: Bool = false {
+        didSet {
+            self.isMiddleOutcomeButtonSelected ? self.selectMiddleOddButton() : self.deselectMiddleOddButton()
+        }
+    }
+    private var isRightOutcomeButtonSelected: Bool = false {
+        didSet {
+            self.isRightOutcomeButtonSelected ? self.selectRightOddButton() : self.deselectRightOddButton()
+        }
+    }
+    
+    var isFavorite: Bool = false {
+        didSet {
+            if self.isFavorite {
+                self.favoriteImageView.image = UIImage(named: "selected_favorite_icon")
+            }
+            else {
+                self.favoriteImageView.image = UIImage(named: "unselected_favorite_icon")
+            }
+        }
+    }
+    
+    var tappedMatchIdAction: ((String) -> Void) = { _ in }
+    var didLongPressOdd: ((BettingTicket) -> Void) = { _ in }
 
     // MARK: - Initialization
     override init(frame: CGRect) {
@@ -64,8 +121,40 @@ class ProChoiceHighlightCollectionViewCell: UICollectionViewCell {
         self.setupSubviews()
         self.setupWithTheme()
 
-        self.eventImageView.image = UIImage(named: "soccer_banner_dummy")
-        self.favoriteImageView.image = UIImage(named: "selected_favorite_icon")
+        self.homeButton.isUserInteractionEnabled = true
+        self.drawButton.isUserInteractionEnabled = true
+        self.awayButton.isUserInteractionEnabled = true
+        
+        self.favoriteButton.addTarget(self, action: #selector(self.didTapFavoriteIcon), for: .primaryActionTriggered)
+        
+        let tapLeftOddButton = UITapGestureRecognizer(target: self, action: #selector(didTapLeftOddButton))
+        self.homeButton.addGestureRecognizer(tapLeftOddButton)
+        
+        let longPressLeftOddButton = UILongPressGestureRecognizer(target: self, action: #selector(didLongPressLeftOddButton))
+        self.homeButton.addGestureRecognizer(longPressLeftOddButton)
+        
+        let tapMiddleOddButton = UITapGestureRecognizer(target: self, action: #selector(didTapMiddleOddButton))
+        self.drawButton.addGestureRecognizer(tapMiddleOddButton)
+        
+        let longPressMiddleOddButton = UILongPressGestureRecognizer(target: self, action: #selector(didLongPressMiddleOddButton))
+        self.drawButton.addGestureRecognizer(longPressMiddleOddButton)
+        
+        let tapRightOddButton = UITapGestureRecognizer(target: self, action: #selector(didTapRightOddButton))
+        self.awayButton.addGestureRecognizer(tapRightOddButton)
+        
+        let longPressRightOddButton = UILongPressGestureRecognizer(target: self, action: #selector(didLongPressRightOddButton))
+        self.awayButton.addGestureRecognizer(longPressRightOddButton)
+        
+        let tapMatchView = UITapGestureRecognizer(target: self, action: #selector(didTapMatchView))
+        self.addGestureRecognizer(tapMatchView)
+        
+        self.seeAllMarketsButton.addTarget(self, action: #selector(self.didTapMatchView), for: .primaryActionTriggered)
+        
+//        let longPressGestureRecognizer = UILongPressGestureRecognizer(target: self, action: #selector(didLongPressCard))
+//        self.participantsBaseView.addGestureRecognizer(longPressGestureRecognizer)
+        
+//        let tapMixMatchView = UITapGestureRecognizer(target: self, action: #selector(didTapMixMatch))
+//        self.mixMatchContainerView.addGestureRecognizer(tapMixMatchView)
     }
 
     required init?(coder aDecoder: NSCoder) {
@@ -76,14 +165,28 @@ class ProChoiceHighlightCollectionViewCell: UICollectionViewCell {
     override func prepareForReuse() {
         super.prepareForReuse()
 
-        self.eventImageView.image = UIImage(named: "soccer_banner_dummy")
-        self.favoriteImageView.image = UIImage(named: "selected_favorite_icon")
+        self.favoriteImageView.image = UIImage(named: "unselected_favorite_icon")
 
         self.viewModel = nil
 
         self.homeButton.isHidden = false
         self.drawButton.isHidden = false
         self.awayButton.isHidden = false
+        
+        self.leftOutcome = nil
+        self.middleOutcome = nil
+        self.rightOutcome = nil
+        
+        self.isFavorite = false
+        
+        self.leftOddButtonSubscriber?.cancel()
+        self.leftOddButtonSubscriber = nil
+        
+        self.middleOddButtonSubscriber?.cancel()
+        self.middleOddButtonSubscriber = nil
+        
+        self.rightOddButtonSubscriber?.cancel()
+        self.rightOddButtonSubscriber = nil
     }
 
     // MARK: - Configuration
@@ -98,22 +201,598 @@ class ProChoiceHighlightCollectionViewCell: UICollectionViewCell {
                                                   UIColor.App.cardBorderLineGradient3]
 
         self.topSeparatorAlphaLineView.backgroundColor = UIColor.App.highlightPrimary
+        
+        self.containerStackView.backgroundColor = .clear
 
+        self.leagueInfoStackView.backgroundColor = .clear
+        
+        self.favoriteButton.backgroundColor = .clear
+        self.favoriteImageView.backgroundColor = .clear
+        
         self.leagueNameLabel.textColor = UIColor.App.textPrimary
-        self.eventDateLabel.textColor = UIColor.App.textPrimary
-        self.eventTimeLabel.textColor = UIColor.App.textPrimary
-        self.teamsLabel.textColor = UIColor.App.textPrimary
+        self.eventDateLabel.textColor = UIColor.App.textSecondary
+        self.eventTimeLabel.textColor = UIColor.App.textSecondary
+        self.teamsLabel.textColor = UIColor.App.highlightPrimary
+        
+        self.bottomButtonsContainerStackView.backgroundColor = .clear
+        
+        self.seeAllMarketsButton.backgroundColor = UIColor.App.backgroundSecondary
+        self.seeAllMarketsButton.tintColor = UIColor.App.textSecondary
+        self.seeAllMarketsButton.titleLabel?.textColor = UIColor.App.textSecondary
+        
+        self.homeOutcomeBaseView.backgroundColor = .clear
+        self.drawOutcomeBaseView.backgroundColor = .clear
+        self.awayOutcomeBaseView.backgroundColor = .clear
+
+        self.homeButton.backgroundColor = UIColor.App.backgroundOdds
+        self.drawButton.backgroundColor = UIColor.App.backgroundOdds
+        self.awayButton.backgroundColor = UIColor.App.backgroundOdds
+        
+        if isLeftOutcomeButtonSelected {
+            self.homeButton.backgroundColor = UIColor.App.buttonBackgroundPrimary
+            self.homeOutcomeNameLabel.textColor = UIColor.App.buttonTextPrimary
+            self.homeOutcomeValueLabel.textColor = UIColor.App.buttonTextPrimary
+        }
+        else {
+            self.homeButton.backgroundColor = UIColor.App.backgroundOdds
+            self.homeOutcomeNameLabel.textColor = UIColor.App.textPrimary
+            self.homeOutcomeValueLabel.textColor = UIColor.App.textPrimary
+        }
+        
+        if isMiddleOutcomeButtonSelected {
+            self.drawButton.backgroundColor = UIColor.App.buttonBackgroundPrimary
+            self.drawOutcomeNameLabel.textColor = UIColor.App.buttonTextPrimary
+            self.drawOutcomeValueLabel.textColor = UIColor.App.buttonTextPrimary
+        }
+        else {
+            self.drawButton.backgroundColor = UIColor.App.backgroundOdds
+            self.drawOutcomeNameLabel.textColor = UIColor.App.textPrimary
+            self.drawOutcomeValueLabel.textColor = UIColor.App.textPrimary
+        }
+        
+        if isRightOutcomeButtonSelected {
+            self.awayButton.backgroundColor = UIColor.App.buttonBackgroundPrimary
+            self.awayOutcomeNameLabel.textColor = UIColor.App.buttonTextPrimary
+            self.awayOutcomeValueLabel.textColor = UIColor.App.buttonTextPrimary
+        }
+        else {
+            self.awayButton.backgroundColor = UIColor.App.backgroundOdds
+            self.awayOutcomeNameLabel.textColor = UIColor.App.textPrimary
+            self.awayOutcomeValueLabel.textColor = UIColor.App.textPrimary
+        }
     }
 
     func configure(with viewModel: MarketWidgetCellViewModel) {
         self.viewModel = viewModel
+        
+        viewModel.eventImagePublisher
+            .receive(on: DispatchQueue.main)
+            .sink { [weak self] sportIconImage in
+                if let imageUrl = URL(string: sportIconImage) {
+                    self?.eventImageView.kf.setImage(with: imageUrl)
 
+                }
+            }
+            .store(in: &self.cancellables)
+
+        viewModel.sportIconImagePublisher
+            .receive(on: DispatchQueue.main)
+            .sink { [weak self] sportIconImage in
+                self?.sportImageView.image = sportIconImage
+            }
+            .store(in: &self.cancellables)
+        
+        viewModel.countryFlagImagePublisher
+            .receive(on: DispatchQueue.main)
+            .sink { [weak self] countryFlagImage in
+                self?.countryImageView.image = countryFlagImage
+            }
+            .store(in: &self.cancellables)
+        
+        viewModel.competitionName
+            .receive(on: DispatchQueue.main)
+            .sink { [weak self] competitionName in
+                self?.leagueNameLabel.text = competitionName
+            }
+            .store(in: &self.cancellables)
+        
+        viewModel.eventName
+            .receive(on: DispatchQueue.main)
+            .sink { [weak self] eventName in
+                self?.teamsLabel.text = eventName
+            }
+            .store(in: &self.cancellables)
+        
+        viewModel.marketName
+            .receive(on: DispatchQueue.main)
+            .sink { [weak self] marketName in
+                self?.marketNameLabel.text = marketName
+            }
+            .store(in: &self.cancellables)
+        
+        viewModel.startDateStringPublisher
+            .receive(on: DispatchQueue.main)
+            .sink { [weak self] startDateString in
+                self?.eventDateLabel.text = startDateString
+            }
+            .store(in: &self.cancellables)
+        
+        viewModel.startTimeStringPublisher
+            .receive(on: DispatchQueue.main)
+            .sink { [weak self] startTimeString in
+                self?.eventTimeLabel.text = startTimeString
+            }
+            .store(in: &self.cancellables)
+        
+        viewModel.isFavoriteMatchPublisher
+            .receive(on: DispatchQueue.main)
+            .sink { [weak self] isFavoriteMatch in
+                self?.isFavorite = isFavoriteMatch
+            }
+            .store(in: &self.cancellables)
+        
+        let homeOutcome = self.viewModel?.highlightedMarket.content.outcomes[safe: 0]?.typeName ?? nil
+        let drawOutcome = self.viewModel?.highlightedMarket.content.outcomes[safe: 1]?.typeName ?? nil
+        let awayOutcome = self.viewModel?.highlightedMarket.content.outcomes[safe: 2]?.typeName ?? nil
+        
+        self.configureOddsButtons(home: homeOutcome, draw: drawOutcome, away: awayOutcome)
+        
     }
     
     private func configureOddsButtons(home: String?, draw: String?, away: String?) {
         self.homeButton.isHidden = home == nil
         self.drawButton.isHidden = draw == nil
         self.awayButton.isHidden = away == nil
+        
+        if let outcome = self.viewModel?.highlightedMarket.content.outcomes[safe: 0] {
+            
+            if let nameDigit1 = self.viewModel?.highlightedMarket.content.nameDigit1 {
+                if outcome.typeName.contains("\(nameDigit1)") {
+                    self.homeOutcomeNameLabel.text = outcome.typeName
+                }
+                else {
+                    self.homeOutcomeNameLabel.text = "\(outcome.typeName) \(nameDigit1)"
+                }
+            }
+            else {
+                self.homeOutcomeNameLabel.text = outcome.typeName
+            }
+            
+            self.leftOutcome = outcome
+            self.isLeftOutcomeButtonSelected = Env.betslipManager.hasBettingTicket(withId: outcome.bettingOffer.id)
+            
+            // Check for SportRadar invalid odd
+            if !outcome.bettingOffer.decimalOdd.isNaN {
+                self.setHomeOddValueLabel(toText: OddFormatter.formatOdd(withValue: outcome.bettingOffer.decimalOdd))
+            }
+            else {
+                self.homeButton.isUserInteractionEnabled = false
+                self.homeButton.alpha = 0.5
+                self.setHomeOddValueLabel(toText: "-")
+            }
+            
+            self.leftOddButtonSubscriber = Env.servicesProvider
+                .subscribeToEventOnListsOutcomeUpdates(withId: outcome.bettingOffer.id)
+                .receive(on: DispatchQueue.main)
+                .sink(receiveCompletion: { completion in
+
+                }, receiveValue: { [weak self] serviceProviderOutcome in
+                    
+                    guard let weakSelf = self,
+                    let serviceProviderOutcome = serviceProviderOutcome
+                    else { return }
+                    
+                    let outcome = ServiceProviderModelMapper.outcome(fromServiceProviderOutcome: serviceProviderOutcome)
+                    
+                    let bettingOffer = outcome.bettingOffer
+                    
+                    if !bettingOffer.isAvailable || bettingOffer.decimalOdd.isNaN {
+                        weakSelf.homeButton.isUserInteractionEnabled = false
+                        weakSelf.homeButton.alpha = 0.5
+                        weakSelf.setHomeOddValueLabel(toText: "-")
+                    }
+                    else {
+                        weakSelf.homeButton.isUserInteractionEnabled = true
+                        weakSelf.homeButton.alpha = 1.0
+                        
+                        let newOddValue = bettingOffer.decimalOdd
+                        
+                        if let currentOddValue = weakSelf.currentHomeOddValue {
+                            if newOddValue > currentOddValue {
+                                weakSelf.highlightOddChangeUp(animated: true,
+                                                              upChangeOddValueImage: weakSelf.homeUpChangeOddValueImageView,
+                                                              baseView: weakSelf.homeButton)
+                            }
+                            else if newOddValue < currentOddValue {
+                                weakSelf.highlightOddChangeDown(animated: true,
+                                                                downChangeOddValueImage: weakSelf.homeDownChangeOddValueImageView,
+                                                                baseView: weakSelf.homeButton)
+                            }
+                        }
+                        weakSelf.currentHomeOddValue = newOddValue
+                        weakSelf.setHomeOddValueLabel(toText: OddFormatter.formatOdd(withValue: newOddValue))
+                    }
+                })
+        }
+        
+        if let outcome = self.viewModel?.highlightedMarket.content.outcomes[safe: 1] {
+            
+            if let nameDigit1 = self.viewModel?.highlightedMarket.content.nameDigit1 {
+                if outcome.typeName.contains("\(nameDigit1)") {
+                    self.drawOutcomeNameLabel.text = outcome.typeName
+                }
+                else {
+                    self.drawOutcomeNameLabel.text = "\(outcome.typeName) \(nameDigit1)"
+                }
+            }
+            else {
+                self.drawOutcomeNameLabel.text = outcome.typeName
+            }
+            
+            self.middleOutcome = outcome
+            self.isMiddleOutcomeButtonSelected = Env.betslipManager.hasBettingTicket(withId: outcome.bettingOffer.id)
+            
+            // Check for SportRadar invalid odd
+            if !outcome.bettingOffer.decimalOdd.isNaN {
+                self.setDrawOddValueLabel(toText: OddFormatter.formatOdd(withValue: outcome.bettingOffer.decimalOdd))
+            }
+            else {
+                self.drawButton.isUserInteractionEnabled = false
+                self.drawButton.alpha = 0.5
+                self.setDrawOddValueLabel(toText: "-")
+            }
+            
+            self.middleOddButtonSubscriber = Env.servicesProvider
+                .subscribeToEventOnListsOutcomeUpdates(withId: outcome.bettingOffer.id)
+                .receive(on: DispatchQueue.main)
+                .sink(receiveCompletion: { completion in
+                    
+                }, receiveValue: { [weak self] serviceProviderOutcome in
+                    
+                    guard let weakSelf = self,
+                    let serviceProviderOutcome = serviceProviderOutcome
+                    else { return }
+                    
+                    let outcome = ServiceProviderModelMapper.outcome(fromServiceProviderOutcome: serviceProviderOutcome)
+                    
+                    let bettingOffer = outcome.bettingOffer
+                    
+                    if !bettingOffer.isAvailable || bettingOffer.decimalOdd.isNaN {
+                        weakSelf.drawButton.isUserInteractionEnabled = false
+                        weakSelf.drawButton.alpha = 0.5
+                        weakSelf.setDrawOddValueLabel(toText: "-")
+                    }
+                    else {
+                        weakSelf.drawButton.isUserInteractionEnabled = true
+                        weakSelf.drawButton.alpha = 1.0
+                        
+                        let newOddValue = bettingOffer.decimalOdd
+                        if let currentOddValue = weakSelf.currentDrawOddValue {
+                            if newOddValue > currentOddValue {
+                                weakSelf.highlightOddChangeUp(animated: true,
+                                                              upChangeOddValueImage: weakSelf.drawUpChangeOddValueImageView,
+                                                              baseView: weakSelf.drawButton)
+                            }
+                            else if newOddValue < currentOddValue {
+                                weakSelf.highlightOddChangeDown(animated: true,
+                                                                downChangeOddValueImage: weakSelf.drawDownChangeOddValueImageView,
+                                                                baseView: weakSelf.drawButton)
+                            }
+                        }
+                        weakSelf.currentDrawOddValue = newOddValue
+                        weakSelf.setDrawOddValueLabel(toText: OddFormatter.formatOdd(withValue: newOddValue))
+                    }
+                })
+        }
+        
+        if let outcome = self.viewModel?.highlightedMarket.content.outcomes[safe: 2] {
+            
+            if let nameDigit1 = self.viewModel?.highlightedMarket.content.nameDigit1 {
+                if outcome.typeName.contains("\(nameDigit1)") {
+                    self.awayOutcomeNameLabel.text = outcome.typeName
+                }
+                else {
+                    self.awayOutcomeNameLabel.text = "\(outcome.typeName) \(nameDigit1)"
+                }
+            }
+            else {
+                self.awayOutcomeNameLabel.text = outcome.typeName
+            }
+            
+            self.rightOutcome = outcome
+            self.isRightOutcomeButtonSelected = Env.betslipManager.hasBettingTicket(withId: outcome.bettingOffer.id)
+            
+            // Check for SportRadar invalid odd
+            if !outcome.bettingOffer.decimalOdd.isNaN {
+                self.setAwayOddValueLabel(toText: OddFormatter.formatOdd(withValue: outcome.bettingOffer.decimalOdd))
+            }
+            else {
+                self.awayButton.isUserInteractionEnabled = false
+                self.awayButton.alpha = 0.5
+                self.setAwayOddValueLabel(toText: "-")
+            }
+            
+            self.rightOddButtonSubscriber = Env.servicesProvider
+                .subscribeToEventOnListsOutcomeUpdates(withId: outcome.bettingOffer.id)
+                .receive(on: DispatchQueue.main)
+                .sink(receiveCompletion: { completion in
+                    
+                }, receiveValue: { [weak self] serviceProviderOutcome in
+                    
+                    guard let weakSelf = self,
+                    let serviceProviderOutcome = serviceProviderOutcome
+                    else { return }
+                    
+                    let outcome = ServiceProviderModelMapper.outcome(fromServiceProviderOutcome: serviceProviderOutcome)
+                    
+                    let bettingOffer = outcome.bettingOffer
+                    
+                    if !bettingOffer.isAvailable || bettingOffer.decimalOdd.isNaN {
+                        weakSelf.awayButton.isUserInteractionEnabled = false
+                        weakSelf.awayButton.alpha = 0.5
+                        weakSelf.setAwayOddValueLabel(toText: "-")
+                    }
+                    else {
+                        weakSelf.awayButton.isUserInteractionEnabled = true
+                        weakSelf.awayButton.alpha = 1.0
+                        
+                        let newOddValue = bettingOffer.decimalOdd
+                        if let currentOddValue = weakSelf.currentAwayOddValue {
+                            if newOddValue > currentOddValue {
+                                weakSelf.highlightOddChangeUp(animated: true,
+                                                              upChangeOddValueImage: weakSelf.awayUpChangeOddValueImageView,
+                                                              baseView: weakSelf.awayButton)
+                            }
+                            else if newOddValue < currentOddValue {
+                                weakSelf.highlightOddChangeDown(animated: true,
+                                                                downChangeOddValueImage: weakSelf.awayDownChangeOddValueImageView,
+                                                                baseView: weakSelf.awayButton)
+                            }
+                        }
+                        
+                        weakSelf.currentAwayOddValue = newOddValue
+                        weakSelf.setAwayOddValueLabel(toText: OddFormatter.formatOdd(withValue: newOddValue))
+                    }
+                })
+        }
+    }
+    
+    func selectLeftOddButton() {
+        self.setupWithTheme()
+    }
+
+    func deselectLeftOddButton() {
+        self.setupWithTheme()
+    }
+    
+    @objc func didTapLeftOddButton() {
+
+        guard
+            let market = self.viewModel?.highlightedMarket.content,
+            let outcome = self.leftOutcome
+        else {
+            return
+        }
+
+        let bettingTicket = BettingTicket(id: outcome.bettingOffer.id, outcomeId: outcome.id, marketId: market.id, matchId: market.eventId ?? "", decimalOdd: outcome.bettingOffer.decimalOdd, isAvailable: true, matchDescription: market.eventName ?? "", marketDescription: market.name, outcomeDescription: outcome.typeName, homeParticipantName: market.homeParticipant, awayParticipantName: market.awayParticipant, sportIdCode: market.sport?.id)
+        
+        if Env.betslipManager.hasBettingTicket(bettingTicket) {
+            Env.betslipManager.removeBettingTicket(bettingTicket)
+            self.isLeftOutcomeButtonSelected = false
+            
+        }
+        else {
+            Env.betslipManager.addBettingTicket(bettingTicket)
+
+            let generator = UINotificationFeedbackGenerator()
+            generator.notificationOccurred(.success)
+            self.isLeftOutcomeButtonSelected = true
+            
+        }
+
+    }
+
+    @objc func didLongPressLeftOddButton(_ sender: UILongPressGestureRecognizer) {
+
+        // Triggers function only once instead of rapid fire event
+        if sender.state == .began {
+            guard
+                let market = self.viewModel?.highlightedMarket.content,
+                let outcome = self.leftOutcome
+            else {
+                return
+            }
+            
+            let bettingTicket = BettingTicket(id: outcome.bettingOffer.id, outcomeId: outcome.id, marketId: market.id, matchId: market.eventId ?? "", decimalOdd: outcome.bettingOffer.decimalOdd, isAvailable: true, matchDescription: market.eventName ?? "", marketDescription: market.name, outcomeDescription: outcome.typeName, homeParticipantName: market.homeParticipant, awayParticipantName: market.awayParticipant, sportIdCode: market.sport?.id)
+            
+            self.didLongPressOdd(bettingTicket)
+        }
+    }
+
+    //
+    func selectMiddleOddButton() {
+        self.setupWithTheme()
+    }
+
+    func deselectMiddleOddButton() {
+        self.setupWithTheme()
+    }
+
+    @objc func didTapMiddleOddButton() {
+        guard
+            let market = self.viewModel?.highlightedMarket.content,
+            let outcome = self.middleOutcome
+        else {
+            return
+        }
+
+        let bettingTicket = BettingTicket(id: outcome.bettingOffer.id, outcomeId: outcome.id, marketId: market.id, matchId: market.eventId ?? "", decimalOdd: outcome.bettingOffer.decimalOdd, isAvailable: true, matchDescription: market.eventName ?? "", marketDescription: market.name, outcomeDescription: outcome.typeName, homeParticipantName: market.homeParticipant, awayParticipantName: market.awayParticipant, sportIdCode: market.sport?.id)
+
+        if Env.betslipManager.hasBettingTicket(bettingTicket) {
+            Env.betslipManager.removeBettingTicket(bettingTicket)
+            self.isMiddleOutcomeButtonSelected = false
+        }
+        else {
+            Env.betslipManager.addBettingTicket(bettingTicket)
+
+            let generator = UINotificationFeedbackGenerator()
+            generator.notificationOccurred(.success)
+
+            self.isMiddleOutcomeButtonSelected = true
+        }
+    }
+
+    @objc func didLongPressMiddleOddButton(_ sender: UILongPressGestureRecognizer) {
+
+        // Triggers function only once instead of rapid fire event
+        if sender.state == .began {
+
+            guard
+                let market = self.viewModel?.highlightedMarket.content,
+                let outcome = self.middleOutcome
+            else {
+                return
+            }
+
+            let bettingTicket = BettingTicket(id: outcome.bettingOffer.id, outcomeId: outcome.id, marketId: market.id, matchId: market.eventId ?? "", decimalOdd: outcome.bettingOffer.decimalOdd, isAvailable: true, matchDescription: market.eventName ?? "", marketDescription: market.name, outcomeDescription: outcome.typeName, homeParticipantName: market.homeParticipant, awayParticipantName: market.awayParticipant, sportIdCode: market.sport?.id)
+            
+            self.didLongPressOdd(bettingTicket)
+
+        }
+    }
+    
+    @objc private func didTapMatchView() {
+        
+        if let viewModel = self.viewModel,
+           let matchId = viewModel.highlightedMarket.content.eventId {
+            self.tappedMatchIdAction(matchId)
+        }
+        
+    }
+
+    //
+    func selectRightOddButton() {
+        self.setupWithTheme()
+    }
+
+    func deselectRightOddButton() {
+        self.setupWithTheme()
+    }
+
+    @objc func didTapRightOddButton() {
+        guard
+            let market = self.viewModel?.highlightedMarket.content,
+            let outcome = self.rightOutcome
+        else {
+            return
+        }
+
+        let bettingTicket = BettingTicket(id: outcome.bettingOffer.id, outcomeId: outcome.id, marketId: market.id, matchId: market.eventId ?? "", decimalOdd: outcome.bettingOffer.decimalOdd, isAvailable: true, matchDescription: market.eventName ?? "", marketDescription: market.name, outcomeDescription: outcome.typeName, homeParticipantName: market.homeParticipant, awayParticipantName: market.awayParticipant, sportIdCode: market.sport?.id)
+        
+        if Env.betslipManager.hasBettingTicket(bettingTicket) {
+            Env.betslipManager.removeBettingTicket(bettingTicket)
+            self.isRightOutcomeButtonSelected = false
+        }
+        else {
+            Env.betslipManager.addBettingTicket(bettingTicket)
+
+            let generator = UINotificationFeedbackGenerator()
+            generator.notificationOccurred(.success)
+            
+            self.isRightOutcomeButtonSelected = true
+        }
+    }
+
+    @objc func didLongPressRightOddButton(_ sender: UILongPressGestureRecognizer) {
+
+        // Triggers function only once instead of rapid fire event
+        if sender.state == .began {
+
+            guard
+                let market = self.viewModel?.highlightedMarket.content,
+                let outcome = self.rightOutcome
+            else {
+                return
+            }
+
+            let bettingTicket = BettingTicket(id: outcome.bettingOffer.id, outcomeId: outcome.id, marketId: market.id, matchId: market.eventId ?? "", decimalOdd: outcome.bettingOffer.decimalOdd, isAvailable: true, matchDescription: market.eventName ?? "", marketDescription: market.name, outcomeDescription: outcome.typeName, homeParticipantName: market.homeParticipant, awayParticipantName: market.awayParticipant, sportIdCode: market.sport?.id)
+            
+            self.didLongPressOdd(bettingTicket)
+
+        }
+    }
+    
+    @objc func didTapFavoriteIcon() {
+        if Env.userSessionStore.isUserLogged() {
+            if let matchId = self.viewModel?.highlightedMarket.content.eventId {
+                self.markAsFavorite(matchId: matchId)
+            }
+        }
+        else {
+            let loginViewController = Router.navigationController(with: LoginViewController())
+            self.viewController?.present(loginViewController, animated: true, completion: nil)
+        }
+    }
+    
+    func markAsFavorite(matchId: String) {
+        
+        if Env.favoritesManager.isEventFavorite(eventId: matchId) {
+            Env.favoritesManager.removeFavorite(eventId: matchId, favoriteType: .match)
+            self.isFavorite = false
+        }
+        else {
+            Env.favoritesManager.addFavorite(eventId: matchId, favoriteType: .match)
+            self.isFavorite = true
+        }
+        
+    }
+    
+    private func setHomeOddValueLabel(toText text: String) {
+        self.homeOutcomeValueLabel.text = text
+    }
+
+    private func setDrawOddValueLabel(toText text: String) {
+        self.drawOutcomeValueLabel.text = text
+    }
+
+    private func setAwayOddValueLabel(toText text: String) {
+        self.awayOutcomeValueLabel.text = text
+    }
+    
+    func highlightOddChangeUp(animated: Bool = true, upChangeOddValueImage: UIImageView, baseView: UIView) {
+        baseView.layer.borderWidth = 1.5
+        UIView.animate(withDuration: animated ? 0.4 : 0.0, delay: 0.0, options: .curveEaseIn, animations: {
+            upChangeOddValueImage.alpha = 1.0
+            self.animateBorderColor(view: baseView, color: UIColor.App.alertSuccess, duration: animated ? 0.4 : 0.0)
+        }, completion: nil)
+
+        UIView.animate(withDuration: animated ? 0.4 : 0.0, delay: 3.0, options: [.curveEaseIn, .allowUserInteraction], animations: {
+            upChangeOddValueImage.alpha = 0.0
+            self.animateBorderColor(view: baseView, color: UIColor.clear, duration: animated ? 0.4 : 0.0)
+        }, completion: nil)
+    }
+
+    func highlightOddChangeDown(animated: Bool = true, downChangeOddValueImage: UIImageView, baseView: UIView) {
+        baseView.layer.borderWidth = 1.5
+        UIView.animate(withDuration: animated ? 0.4 : 0.0, delay: 0.0, options: .curveEaseIn, animations: {
+            downChangeOddValueImage.alpha = 1.0
+            self.animateBorderColor(view: baseView, color: UIColor.App.alertError, duration: animated ? 0.4 : 0.0)
+        }, completion: nil)
+
+        UIView.animate(withDuration: animated ? 0.4 : 0.0, delay: 3.0, options: [.curveEaseIn, .allowUserInteraction], animations: {
+            downChangeOddValueImage.alpha = 0.0
+            self.animateBorderColor(view: baseView, color: UIColor.clear, duration: animated ? 0.4 : 0.0)
+        }, completion: nil)
+
+    }
+    
+    private func animateBorderColor(view: UIView, color: UIColor, duration: Double) {
+        let animation = CABasicAnimation(keyPath: "borderColor")
+        animation.fromValue = layer.borderColor
+        animation.toValue = color.cgColor
+        animation.duration = duration
+        view.layer.add(animation, forKey: "borderColor")
+        view.layer.borderColor = color.cgColor
     }
     
     // MARK: - Layout
@@ -123,6 +802,7 @@ class ProChoiceHighlightCollectionViewCell: UICollectionViewCell {
         self.teamPillContainerView.layer.cornerRadius = self.teamPillContainerView.frame.height/2
         self.sportImageView.layer.cornerRadius = self.sportImageView.frame.height/2
         self.countryImageView.layer.cornerRadius = self.countryImageView.frame.height/2
+        
     }
 
 }
@@ -133,6 +813,8 @@ extension ProChoiceHighlightCollectionViewCell {
     private func setupSubviews() {
         self.contentView.addSubview(self.containerView)
         self.containerView.addSubview(self.gradientBorderView)
+        
+        self.gradientBorderView.addSubview(self.eventInfoImageView)
 
         self.containerView.addSubview(self.containerStackView)
 
@@ -151,8 +833,13 @@ extension ProChoiceHighlightCollectionViewCell {
         self.leagueInfoStackView.addArrangedSubview(self.leagueNameLabel)
         self.leagueInfoContainerView.addSubview(self.cashbackImageView)
 
+        self.containerView.addSubview(self.favoriteButton)
+        self.containerView.bringSubviewToFront(self.favoriteButton)
 
         self.containerStackView.addArrangedSubview(self.eventInfoContainerView)
+        
+//        self.eventInfoContainerView.addSubview(self.eventInfoImageView)
+        
         self.containerStackView.addArrangedSubview(self.oddsStackView)
 
         self.containerStackView.addArrangedSubview(self.bottomButtonsContainerStackView)
@@ -164,12 +851,27 @@ extension ProChoiceHighlightCollectionViewCell {
         self.eventInfoContainerView.addSubview(self.eventDateLabel)
         self.eventInfoContainerView.addSubview(self.eventTimeLabel)
 
-        self.homeButton.addSubview(self.homeOutcomeNameLabel)
-        self.homeButton.addSubview(self.homeOutcomeValueLabel)
-        self.drawButton.addSubview(self.drawOutcomeNameLabel)
-        self.drawButton.addSubview(self.drawOutcomeValueLabel)
-        self.awayButton.addSubview(self.awayOutcomeNameLabel)
-        self.awayButton.addSubview(self.awayOutcomeValueLabel)
+        self.homeButton.addSubview(self.homeOutcomeBaseView)
+        self.homeOutcomeBaseView.addSubview(self.homeOutcomeNameLabel)
+        self.homeOutcomeBaseView.addSubview(self.homeOutcomeValueLabel)
+        
+        self.homeButton.addSubview(self.homeUpChangeOddValueImageView)
+        self.homeButton.addSubview(self.homeDownChangeOddValueImageView)
+        
+        self.drawButton.addSubview(self.drawOutcomeBaseView)
+        self.drawOutcomeBaseView.addSubview(self.drawOutcomeNameLabel)
+        self.drawOutcomeBaseView.addSubview(self.drawOutcomeValueLabel)
+        
+        self.drawButton.addSubview(self.drawUpChangeOddValueImageView)
+        self.drawButton.addSubview(self.drawDownChangeOddValueImageView)
+        
+        self.awayButton.addSubview(self.awayOutcomeBaseView)
+        self.awayOutcomeBaseView.addSubview(self.awayOutcomeNameLabel)
+        self.awayOutcomeBaseView.addSubview(self.awayOutcomeValueLabel)
+        
+        self.awayButton.addSubview(self.awayUpChangeOddValueImageView)
+        self.awayButton.addSubview(self.awayDownChangeOddValueImageView)
+        
         self.oddsStackView.addArrangedSubview(self.homeButton)
         self.oddsStackView.addArrangedSubview(self.drawButton)
         self.oddsStackView.addArrangedSubview(self.awayButton)
@@ -181,7 +883,7 @@ extension ProChoiceHighlightCollectionViewCell {
         self.bottomButtonsContainerStackView.isLayoutMarginsRelativeArrangement = true
         self.bottomButtonsContainerStackView.layoutMargins = UIEdgeInsets(top: 8, left: 16, bottom: 2, right: 16)
         //
-
+        
         self.initConstraints()
     }
     
@@ -223,8 +925,18 @@ extension ProChoiceHighlightCollectionViewCell {
             self.cashbackImageView.trailingAnchor.constraint(equalTo: self.leagueInfoContainerView.trailingAnchor),
             self.cashbackImageView.widthAnchor.constraint(equalToConstant: 14),
             self.cashbackImageView.widthAnchor.constraint(equalTo: self.cashbackImageView.heightAnchor),
+            
+            self.favoriteButton.centerXAnchor.constraint(equalTo: self.favoriteImageView.centerXAnchor),
+            self.favoriteButton.centerYAnchor.constraint(equalTo: self.favoriteImageView.centerYAnchor),
+            self.favoriteButton.widthAnchor.constraint(equalToConstant: 40),
+            self.favoriteButton.heightAnchor.constraint(equalTo: self.favoriteButton.widthAnchor),
 
             self.eventInfoContainerView.heightAnchor.constraint(equalToConstant: 70),
+            
+            self.eventInfoImageView.leadingAnchor.constraint(equalTo: self.containerView.leadingAnchor, constant: 1.2),
+            self.eventInfoImageView.trailingAnchor.constraint(equalTo: self.containerView.trailingAnchor, constant: -1.2),
+            self.eventInfoImageView.topAnchor.constraint(equalTo: self.eventImageView.bottomAnchor, constant: 1.2),
+            self.eventInfoImageView.bottomAnchor.constraint(equalTo: self.containerView.bottomAnchor, constant: -1.2),
 
             self.marketNameLabel.leadingAnchor.constraint(equalTo: self.eventInfoContainerView.leadingAnchor, constant: 16),
             self.marketNameLabel.topAnchor.constraint(equalTo: self.eventInfoContainerView.topAnchor, constant: 8),
@@ -237,10 +949,10 @@ extension ProChoiceHighlightCollectionViewCell {
             self.teamsLabel.leadingAnchor.constraint(equalTo: self.eventInfoContainerView.leadingAnchor, constant: 16),
             self.teamPillContainerView.bottomAnchor.constraint(equalTo: self.eventInfoContainerView.bottomAnchor, constant: -8),
 
-            self.eventDateLabel .lastBaselineAnchor.constraint(equalTo: self.marketNameLabel.firstBaselineAnchor),
+            self.eventDateLabel.centerYAnchor.constraint(equalTo: self.marketNameLabel.centerYAnchor),
             self.eventDateLabel.trailingAnchor.constraint(equalTo: self.eventInfoContainerView.trailingAnchor, constant: -16),
 
-            self.eventTimeLabel.lastBaselineAnchor.constraint(equalTo: self.teamsLabel.firstBaselineAnchor),
+            self.eventTimeLabel.topAnchor.constraint(equalTo: self.teamPillContainerView.topAnchor),
             self.eventTimeLabel.trailingAnchor.constraint(equalTo: self.eventInfoContainerView.trailingAnchor, constant: -16),
 
             self.homeButton.heightAnchor.constraint(equalToConstant: 38),
@@ -251,20 +963,68 @@ extension ProChoiceHighlightCollectionViewCell {
         ])
 
         NSLayoutConstraint.activate([
-            self.homeOutcomeNameLabel.centerXAnchor.constraint(equalTo: self.homeButton.centerXAnchor),
-            self.homeOutcomeNameLabel.topAnchor.constraint(equalTo: self.homeButton.topAnchor, constant: 5),
-            self.homeOutcomeValueLabel.centerXAnchor.constraint(equalTo: self.homeButton.centerXAnchor),
-            self.homeOutcomeValueLabel.bottomAnchor.constraint(equalTo: self.homeButton.bottomAnchor, constant: -5),
+            self.homeOutcomeBaseView.leadingAnchor.constraint(equalTo: self.homeButton.leadingAnchor, constant: 2),
+            self.homeOutcomeBaseView.trailingAnchor.constraint(equalTo: self.homeButton.trailingAnchor, constant: -2),
+            self.homeOutcomeBaseView.centerYAnchor.constraint(equalTo: self.homeButton.centerYAnchor),
+            
+            self.homeOutcomeNameLabel.centerXAnchor.constraint(equalTo: self.homeOutcomeBaseView.centerXAnchor),
+            self.homeOutcomeNameLabel.topAnchor.constraint(equalTo: self.homeOutcomeBaseView.topAnchor, constant: 1),
+            
+            self.homeOutcomeValueLabel.topAnchor.constraint(equalTo: self.homeOutcomeNameLabel.bottomAnchor, constant: 4),
+            self.homeOutcomeValueLabel.centerXAnchor.constraint(equalTo: self.homeOutcomeBaseView.centerXAnchor),
+            self.homeOutcomeValueLabel.bottomAnchor.constraint(equalTo: self.homeOutcomeBaseView.bottomAnchor, constant: -1),
+            
+            self.homeUpChangeOddValueImageView.widthAnchor.constraint(equalToConstant: 11),
+            self.homeUpChangeOddValueImageView.heightAnchor.constraint(equalToConstant: 9),
+            self.homeUpChangeOddValueImageView.centerYAnchor.constraint(equalTo: self.homeButton.centerYAnchor),
+            self.homeUpChangeOddValueImageView.trailingAnchor.constraint(equalTo: self.homeButton.trailingAnchor, constant: -5),
+            
+            self.homeDownChangeOddValueImageView.widthAnchor.constraint(equalToConstant: 11),
+            self.homeDownChangeOddValueImageView.heightAnchor.constraint(equalToConstant: 9),
+            self.homeDownChangeOddValueImageView.centerYAnchor.constraint(equalTo: self.homeButton.centerYAnchor),
+            self.homeDownChangeOddValueImageView.trailingAnchor.constraint(equalTo: self.homeButton.trailingAnchor, constant: -5),
+            
+            self.drawOutcomeBaseView.leadingAnchor.constraint(equalTo: self.drawButton.leadingAnchor, constant: 2),
+            self.drawOutcomeBaseView.trailingAnchor.constraint(equalTo: self.drawButton.trailingAnchor, constant: -2),
+            self.drawOutcomeBaseView.centerYAnchor.constraint(equalTo: self.drawButton.centerYAnchor),
 
-            self.drawOutcomeNameLabel.centerXAnchor.constraint(equalTo: self.drawButton.centerXAnchor),
-            self.drawOutcomeNameLabel.topAnchor.constraint(equalTo: self.drawButton.topAnchor, constant: 5),
-            self.drawOutcomeValueLabel.centerXAnchor.constraint(equalTo: self.drawButton.centerXAnchor),
-            self.drawOutcomeValueLabel.bottomAnchor.constraint(equalTo: self.drawButton.bottomAnchor, constant: -5),
+            self.drawOutcomeNameLabel.centerXAnchor.constraint(equalTo: self.drawOutcomeBaseView.centerXAnchor),
+            self.drawOutcomeNameLabel.topAnchor.constraint(equalTo: self.drawOutcomeBaseView.topAnchor, constant: 1),
+            
+            self.drawOutcomeValueLabel.topAnchor.constraint(equalTo: self.drawOutcomeNameLabel.bottomAnchor, constant: 4),
+            self.drawOutcomeValueLabel.centerXAnchor.constraint(equalTo: self.drawOutcomeBaseView.centerXAnchor),
+            self.drawOutcomeValueLabel.bottomAnchor.constraint(equalTo: self.drawOutcomeBaseView.bottomAnchor, constant: -1),
+            
+            self.drawUpChangeOddValueImageView.widthAnchor.constraint(equalToConstant: 11),
+            self.drawUpChangeOddValueImageView.heightAnchor.constraint(equalToConstant: 9),
+            self.drawUpChangeOddValueImageView.centerYAnchor.constraint(equalTo: self.drawButton.centerYAnchor),
+            self.drawUpChangeOddValueImageView.trailingAnchor.constraint(equalTo: self.drawButton.trailingAnchor, constant: -5),
+            
+            self.drawDownChangeOddValueImageView.widthAnchor.constraint(equalToConstant: 11),
+            self.drawDownChangeOddValueImageView.heightAnchor.constraint(equalToConstant: 9),
+            self.drawDownChangeOddValueImageView.centerYAnchor.constraint(equalTo: self.drawButton.centerYAnchor),
+            self.drawDownChangeOddValueImageView.trailingAnchor.constraint(equalTo: self.drawButton.trailingAnchor, constant: -5),
 
-            self.awayOutcomeNameLabel.centerXAnchor.constraint(equalTo: self.awayButton.centerXAnchor),
-            self.awayOutcomeNameLabel.topAnchor.constraint(equalTo: self.awayButton.topAnchor, constant: 5),
-            self.awayOutcomeValueLabel.centerXAnchor.constraint(equalTo: self.awayButton.centerXAnchor),
-            self.awayOutcomeValueLabel.bottomAnchor.constraint(equalTo: self.awayButton.bottomAnchor, constant: -5),
+            self.awayOutcomeBaseView.leadingAnchor.constraint(equalTo: self.awayButton.leadingAnchor, constant: 2),
+            self.awayOutcomeBaseView.trailingAnchor.constraint(equalTo: self.awayButton.trailingAnchor, constant: -2),
+            self.awayOutcomeBaseView.centerYAnchor.constraint(equalTo: self.awayButton.centerYAnchor),
+            
+            self.awayOutcomeNameLabel.centerXAnchor.constraint(equalTo: self.awayOutcomeBaseView.centerXAnchor),
+            self.awayOutcomeNameLabel.topAnchor.constraint(equalTo: self.awayOutcomeBaseView.topAnchor, constant: 1),
+            
+            self.awayOutcomeValueLabel.topAnchor.constraint(equalTo: self.awayOutcomeNameLabel.bottomAnchor, constant: 4),
+            self.awayOutcomeValueLabel.centerXAnchor.constraint(equalTo: self.awayOutcomeBaseView.centerXAnchor),
+            self.awayOutcomeValueLabel.bottomAnchor.constraint(equalTo: self.awayOutcomeBaseView.bottomAnchor, constant: -1),
+            
+            self.awayUpChangeOddValueImageView.widthAnchor.constraint(equalToConstant: 11),
+            self.awayUpChangeOddValueImageView.heightAnchor.constraint(equalToConstant: 9),
+            self.awayUpChangeOddValueImageView.centerYAnchor.constraint(equalTo: self.awayButton.centerYAnchor),
+            self.awayUpChangeOddValueImageView.trailingAnchor.constraint(equalTo: self.awayButton.trailingAnchor, constant: -5),
+            
+            self.awayDownChangeOddValueImageView.widthAnchor.constraint(equalToConstant: 11),
+            self.awayDownChangeOddValueImageView.heightAnchor.constraint(equalToConstant: 9),
+            self.awayDownChangeOddValueImageView.centerYAnchor.constraint(equalTo: self.awayButton.centerYAnchor),
+            self.awayDownChangeOddValueImageView.trailingAnchor.constraint(equalTo: self.awayButton.trailingAnchor, constant: -5)
         ])
     }
 
@@ -288,7 +1048,7 @@ extension ProChoiceHighlightCollectionViewCell {
         gradientBorderView.gradientColors = [UIColor.App.cardBorderLineGradient1,
                                              UIColor.App.cardBorderLineGradient2,
                                              UIColor.App.cardBorderLineGradient3]
-
+        gradientBorderView.clipsToBounds = true
         return gradientBorderView
     }
 
@@ -329,6 +1089,14 @@ extension ProChoiceHighlightCollectionViewCell {
 
         return stackView
     }
+    
+    private func createFavoriteButton() -> UIButton {
+        let button = UIButton()
+        button.translatesAutoresizingMaskIntoConstraints = false
+        button.setTitle("", for: .normal)
+        button.setImage(nil, for: .normal)
+        return button
+    }
 
     private func createIconImageView() -> UIImageView {
         let imageView = UIImageView()
@@ -337,20 +1105,41 @@ extension ProChoiceHighlightCollectionViewCell {
         imageView.translatesAutoresizingMaskIntoConstraints = false
         return imageView
     }
+    
+    private func createCountryIconImageView() -> UIImageView {
+        let imageView = UIImageView()
+        imageView.contentMode = .scaleAspectFill
+        imageView.clipsToBounds = true
+        imageView.translatesAutoresizingMaskIntoConstraints = false
+        return imageView
+    }
 
     private func createLeagueNameLabel() -> UILabel {
         let label = UILabel()
-        label.font = AppFont.with(type: .medium, size: 11)
-        label.textColor = UIColor.App.textPrimary
+        label.font = AppFont.with(type: .semibold, size: 11)
         label.translatesAutoresizingMaskIntoConstraints = false
         label.text = "createLeagueNameLabel"
         return label
     }
     
+    private func createEventInfoContainerView() -> UIView {
+        let view = UIView()
+        view.translatesAutoresizingMaskIntoConstraints = false
+        return view
+    }
+    
+    private func createEventInfoImageView() -> UIImageView {
+        let imageView = UIImageView()
+        imageView.translatesAutoresizingMaskIntoConstraints = false
+        imageView.image = UIImage(named: "pro_choices_background")
+        imageView.contentMode = .scaleAspectFill
+        imageView.clipsToBounds = true
+        return imageView
+    }
+    
     private func createEventDateLabel() -> UILabel {
         let label = UILabel()
-        label.font = AppFont.with(type: .medium, size: 14)
-        label.textColor = UIColor.App.textPrimary
+        label.font = AppFont.with(type: .semibold, size: 11)
         label.translatesAutoresizingMaskIntoConstraints = false
         label.text = "createEventDateLabel"
 
@@ -359,8 +1148,7 @@ extension ProChoiceHighlightCollectionViewCell {
     
     private func createEventTimeLabel() -> UILabel {
         let label = UILabel()
-        label.font = AppFont.with(type: .medium, size: 14)
-        label.textColor = UIColor.App.textPrimary
+        label.font = AppFont.with(type: .semibold, size: 11)
         label.translatesAutoresizingMaskIntoConstraints = false
         label.text = "createEventTimeLabel"
 
@@ -371,23 +1159,29 @@ extension ProChoiceHighlightCollectionViewCell {
         let label = UILabel()
         label.translatesAutoresizingMaskIntoConstraints = false
         label.font = AppFont.with(type: .bold, size: 16)
-        label.textColor = UIColor.App.textPrimary
         label.textAlignment = .center
         label.text = "Market Name Label"
         return label
     }
+    
+    private func createTeamPillContainerView() -> GradientBorderView {
+        var gradientBorderView = GradientBorderView()
+        gradientBorderView.translatesAutoresizingMaskIntoConstraints = false
+        gradientBorderView.gradientBorderWidth = 1
+        gradientBorderView.gradientCornerRadius = 8
+        
+        gradientBorderView.gradientColors = [UIColor.App.highlightSecondary,
+                                             UIColor.App.highlightPrimary]
+        
+        gradientBorderView.gradientStartPoint = CGPoint(x: 0, y: 0.5)
+        gradientBorderView.gradientEndPoint = CGPoint(x: 2, y: 0.5)
 
-    private func createTeamPillContainerView() -> UIView {
-        let view = UIView()
-        view.clipsToBounds = true
-        view.translatesAutoresizingMaskIntoConstraints = false
-        return view
+        return gradientBorderView
     }
 
     private func createTeamsLabel() -> UILabel {
         let label = UILabel()
-        label.font = AppFont.with(type: .bold, size: 11)
-        label.textColor = UIColor.App.textPrimary
+        label.font = AppFont.with(type: .semibold, size: 11)
         label.textAlignment = .center
         label.translatesAutoresizingMaskIntoConstraints = false
         label.text = "createTeamsLabel"
@@ -408,16 +1202,22 @@ extension ProChoiceHighlightCollectionViewCell {
     private func createOutcomeBaseView() -> UIView {
         let outcomeBaseView = UIView()
         outcomeBaseView.translatesAutoresizingMaskIntoConstraints = false
-        outcomeBaseView.layer.cornerRadius = 8
+        outcomeBaseView.layer.cornerRadius = 4.5
+        return outcomeBaseView
+    }
+    
+    private func createOutcomeContainerBaseView() -> UIView {
+        let outcomeBaseView = UIView()
+        outcomeBaseView.translatesAutoresizingMaskIntoConstraints = false
         return outcomeBaseView
     }
 
     private func createOutcomeNameLabel() -> UILabel {
         let outcomeNameLabel = UILabel()
         outcomeNameLabel.translatesAutoresizingMaskIntoConstraints = false
-        outcomeNameLabel.text = "Atlético Madrid"
+        outcomeNameLabel.text = "Outcome"
         outcomeNameLabel.textAlignment = .center
-        outcomeNameLabel.font = AppFont.with(type: .medium, size: 8)
+        outcomeNameLabel.font = AppFont.with(type: .medium, size: 10)
         return outcomeNameLabel
     }
 
@@ -445,8 +1245,8 @@ extension ProChoiceHighlightCollectionViewCell {
     private func createSeeAllMarketsButton() -> UIButton {
         let button = UIButton(type: .system)
         button.backgroundColor = UIColor.App.buttonBackgroundPrimary
-        button.setTitle("See other markets", for: .normal)
-        button.titleLabel?.font = AppFont.with(type: .bold, size: 16)
+        button.setTitle(localized("see_all"), for: .normal)
+        button.titleLabel?.font = AppFont.with(type: .semibold, size: 14)
         button.layer.cornerRadius = CornerRadius.view
         button.translatesAutoresizingMaskIntoConstraints = false
         return button
@@ -460,6 +1260,60 @@ extension ProChoiceHighlightCollectionViewCell {
         fadingView.endPoint = CGPoint(x: 1.0, y: 0.5)
         fadingView.fadeLocations = [0.0, 0.42, 0.58, 1.0]
         return fadingView
+    }
+    
+    private func createHomeUpChangeOddValueImageView() -> UIImageView {
+        let imageView = UIImageView()
+        imageView.translatesAutoresizingMaskIntoConstraints = false
+        imageView.contentMode = .scaleAspectFit
+        imageView.image = UIImage(named: "odd_up_icon")
+        imageView.alpha = 0
+        return imageView
+    }
+    
+    private func createHomeDownChangeOddValueImageView() -> UIImageView {
+        let imageView = UIImageView()
+        imageView.translatesAutoresizingMaskIntoConstraints = false
+        imageView.contentMode = .scaleAspectFit
+        imageView.image = UIImage(named: "odd_down_icon")
+        imageView.alpha = 0
+        return imageView
+    }
+    
+    private func createDrawUpChangeOddValueImageView() -> UIImageView {
+        let imageView = UIImageView()
+        imageView.translatesAutoresizingMaskIntoConstraints = false
+        imageView.contentMode = .scaleAspectFit
+        imageView.image = UIImage(named: "odd_up_icon")
+        imageView.alpha = 0
+        return imageView
+    }
+    
+    private func createDrawDownChangeOddValueImageView() -> UIImageView {
+        let imageView = UIImageView()
+        imageView.translatesAutoresizingMaskIntoConstraints = false
+        imageView.contentMode = .scaleAspectFit
+        imageView.image = UIImage(named: "odd_down_icon")
+        imageView.alpha = 0
+        return imageView
+    }
+    
+    private func createAwayUpChangeOddValueImageView() -> UIImageView {
+        let imageView = UIImageView()
+        imageView.translatesAutoresizingMaskIntoConstraints = false
+        imageView.contentMode = .scaleAspectFit
+        imageView.image = UIImage(named: "odd_up_icon")
+        imageView.alpha = 0
+        return imageView
+    }
+    
+    private func createAwayDownChangeOddValueImageView() -> UIImageView {
+        let imageView = UIImageView()
+        imageView.translatesAutoresizingMaskIntoConstraints = false
+        imageView.contentMode = .scaleAspectFit
+        imageView.image = UIImage(named: "odd_down_icon")
+        imageView.alpha = 0
+        return imageView
     }
 
 }

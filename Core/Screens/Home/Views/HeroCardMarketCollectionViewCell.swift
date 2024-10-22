@@ -1017,7 +1017,7 @@ extension HeroCardMarketCollectionViewCell {
             self.drawOddValueLabel.leadingAnchor.constraint(equalTo: self.drawOddBaseView.leadingAnchor, constant: 5),
             self.drawOddValueLabel.trailingAnchor.constraint(equalTo: self.drawOddBaseView.trailingAnchor, constant: -5),
             self.drawOddValueLabel.topAnchor.constraint(equalTo: self.drawOddTitleLabel.bottomAnchor, constant: 5),
-            self.drawOddValueLabel.bottomAnchor.constraint(equalTo: self.homeOddBaseView.bottomAnchor, constant: 0),
+            self.drawOddValueLabel.bottomAnchor.constraint(equalTo: self.drawOddBaseView.bottomAnchor, constant: 0),
             
             self.drawUpChangeOddValueImageView.widthAnchor.constraint(equalToConstant: 11),
             self.drawUpChangeOddValueImageView.heightAnchor.constraint(equalToConstant: 9),

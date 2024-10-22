@@ -148,6 +148,16 @@ extension MarketWidgetContainerTableViewCell: UICollectionViewDelegate, UICollec
         else {
             fatalError()
         }
+        
+        cell.configure(with: cardsViewModel)
+        
+        cell.tappedMatchIdAction = { [weak self] matchId in
+            self?.tappedMatchIdAction(matchId)
+        }
+        
+        cell.didLongPressOdd = { [weak self] bettingTicket in
+            self?.didLongPressOdd(bettingTicket)
+        }
 
         return cell
     }
