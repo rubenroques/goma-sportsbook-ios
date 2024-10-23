@@ -68,6 +68,19 @@ class ProChoiceHighlightCollectionViewCell: UICollectionViewCell {
     private lazy var drawDownChangeOddValueImageView: UIImageView = self.createDrawDownChangeOddValueImageView()
     private lazy var awayUpChangeOddValueImageView: UIImageView = self.createAwayUpChangeOddValueImageView()
     private lazy var awayDownChangeOddValueImageView: UIImageView = self.createAwayDownChangeOddValueImageView()
+    
+    // Mix match bottom bar
+    private lazy var mixMatchContainerView: UIView = self.createMixMatchContainerView()
+    
+    private lazy var mixMatchBaseView: UIView = self.createMixMatchBaseView()
+    
+    private lazy var mixMatchBackgroundImageView: UIImageView = self.createMixMatchBackgroundImageView()
+    
+    private lazy var mixMatchIconImageView: UIImageView = self.createMixMatchIconImageView()
+    
+    lazy var mixMatchLabel: UILabel = self.createMixMatchLabel()
+    
+    lazy var mixMatchNavigationIconImageView: UIImageView = self.createMixMatchNavigationIconImageView()
 
     private var viewModel: MarketWidgetCellViewModel?
 
@@ -114,6 +127,7 @@ class ProChoiceHighlightCollectionViewCell: UICollectionViewCell {
     
     var tappedMatchIdAction: ((String) -> Void) = { _ in }
     var didLongPressOdd: ((BettingTicket) -> Void) = { _ in }
+    var tappedMixMatchAction: ((String) -> Void) = { _ in }
 
     // MARK: - Initialization
     override init(frame: CGRect) {
@@ -150,11 +164,11 @@ class ProChoiceHighlightCollectionViewCell: UICollectionViewCell {
         
         self.seeAllMarketsButton.addTarget(self, action: #selector(self.didTapMatchView), for: .primaryActionTriggered)
         
-//        let longPressGestureRecognizer = UILongPressGestureRecognizer(target: self, action: #selector(didLongPressCard))
-//        self.participantsBaseView.addGestureRecognizer(longPressGestureRecognizer)
+        let tapMixMatchView = UITapGestureRecognizer(target: self, action: #selector(didTapMixMatch))
+        self.mixMatchContainerView.addGestureRecognizer(tapMixMatchView)
         
-//        let tapMixMatchView = UITapGestureRecognizer(target: self, action: #selector(didTapMixMatch))
-//        self.mixMatchContainerView.addGestureRecognizer(tapMixMatchView)
+        self.mixMatchContainerView.isHidden = true
+
     }
 
     required init?(coder aDecoder: NSCoder) {
@@ -187,6 +201,8 @@ class ProChoiceHighlightCollectionViewCell: UICollectionViewCell {
         
         self.rightOddButtonSubscriber?.cancel()
         self.rightOddButtonSubscriber = nil
+        
+        self.mixMatchContainerView.isHidden = true
     }
 
     // MARK: - Configuration
@@ -264,6 +280,16 @@ class ProChoiceHighlightCollectionViewCell: UICollectionViewCell {
 
     func configure(with viewModel: MarketWidgetCellViewModel) {
         self.viewModel = viewModel
+        
+        if let customBetAvailable = viewModel.highlightedMarket.content.customBetAvailable,
+           customBetAvailable {
+            self.mixMatchContainerView.isHidden = false
+            self.seeAllMarketsButton.isHidden = true
+        }
+        else {
+            self.mixMatchContainerView.isHidden = true
+            self.seeAllMarketsButton.isHidden = false
+        }
         
         viewModel.eventImagePublisher
             .receive(on: DispatchQueue.main)
@@ -825,6 +851,13 @@ class ProChoiceHighlightCollectionViewCell: UICollectionViewCell {
         self.awayOutcomeValueLabel.text = text
     }
     
+    @objc private func didTapMixMatch() {
+        if let viewModel = self.viewModel,
+           let matchId = viewModel.highlightedMarket.content.eventId {
+            self.tappedMixMatchAction(matchId)
+        }
+    }
+    
     func highlightOddChangeUp(animated: Bool = true, upChangeOddValueImage: UIImageView, baseView: UIView) {
         baseView.layer.borderWidth = 1.5
         UIView.animate(withDuration: animated ? 0.4 : 0.0, delay: 0.0, options: .curveEaseIn, animations: {
@@ -903,13 +936,18 @@ extension ProChoiceHighlightCollectionViewCell {
         self.containerView.bringSubviewToFront(self.favoriteButton)
 
         self.containerStackView.addArrangedSubview(self.eventInfoContainerView)
-        
-//        self.eventInfoContainerView.addSubview(self.eventInfoImageView)
-        
+                
         self.containerStackView.addArrangedSubview(self.oddsStackView)
 
         self.containerStackView.addArrangedSubview(self.bottomButtonsContainerStackView)
         self.bottomButtonsContainerStackView.addArrangedSubview(self.seeAllMarketsButton)
+        
+        self.bottomButtonsContainerStackView.addArrangedSubview(self.mixMatchContainerView)
+        self.mixMatchContainerView.addSubview(self.mixMatchBaseView)
+        self.mixMatchBaseView.addSubview(self.mixMatchBackgroundImageView)
+        self.mixMatchBaseView.addSubview(self.mixMatchIconImageView)
+        self.mixMatchBaseView.addSubview(self.mixMatchLabel)
+        self.mixMatchBaseView.addSubview(self.mixMatchNavigationIconImageView)
 
         self.teamPillContainerView.addSubview(self.teamsLabel)
         self.eventInfoContainerView.addSubview(self.teamPillContainerView)
@@ -951,6 +989,12 @@ extension ProChoiceHighlightCollectionViewCell {
         //
         
         self.initConstraints()
+        
+        self.leagueInfoStackView.setNeedsLayout()
+        self.leagueInfoStackView.layoutIfNeeded()
+        
+        self.setNeedsLayout()
+        self.layoutIfNeeded()
     }
     
     private func initConstraints() {
@@ -1091,6 +1135,34 @@ extension ProChoiceHighlightCollectionViewCell {
             self.awayDownChangeOddValueImageView.heightAnchor.constraint(equalToConstant: 9),
             self.awayDownChangeOddValueImageView.centerYAnchor.constraint(equalTo: self.awayButton.centerYAnchor),
             self.awayDownChangeOddValueImageView.trailingAnchor.constraint(equalTo: self.awayButton.trailingAnchor, constant: -5)
+        ])
+        
+        NSLayoutConstraint.activate([
+            self.mixMatchContainerView.heightAnchor.constraint(equalToConstant: 32),
+            
+            self.mixMatchBaseView.heightAnchor.constraint(equalToConstant: 32),
+            self.mixMatchBaseView.leadingAnchor.constraint(equalTo: self.mixMatchContainerView.leadingAnchor, constant: 0),
+            self.mixMatchBaseView.trailingAnchor.constraint(equalTo: self.mixMatchContainerView.trailingAnchor, constant: 0),
+            self.mixMatchBaseView.topAnchor.constraint(equalTo: self.mixMatchContainerView.topAnchor),
+            
+            self.mixMatchBackgroundImageView.leadingAnchor.constraint(equalTo: self.mixMatchBaseView.leadingAnchor),
+            self.mixMatchBackgroundImageView.trailingAnchor.constraint(equalTo: self.mixMatchBaseView.trailingAnchor),
+            self.mixMatchBackgroundImageView.topAnchor.constraint(equalTo: self.mixMatchBaseView.topAnchor),
+            self.mixMatchBackgroundImageView.bottomAnchor.constraint(equalTo: self.mixMatchBaseView.bottomAnchor),
+        
+            self.mixMatchLabel.centerXAnchor.constraint(equalTo: self.mixMatchBaseView.centerXAnchor),
+            self.mixMatchLabel.centerYAnchor.constraint(equalTo: self.mixMatchBaseView.centerYAnchor),
+            
+            self.mixMatchIconImageView.widthAnchor.constraint(equalToConstant: 21),
+            self.mixMatchIconImageView.heightAnchor.constraint(equalToConstant: 25),
+            self.mixMatchIconImageView.trailingAnchor.constraint(equalTo: self.mixMatchLabel.leadingAnchor, constant: -2),
+            self.mixMatchIconImageView.centerYAnchor.constraint(equalTo: self.mixMatchLabel.centerYAnchor),
+            
+            self.mixMatchNavigationIconImageView.widthAnchor.constraint(equalToConstant: 11),
+            self.mixMatchNavigationIconImageView.heightAnchor.constraint(equalToConstant: 13),
+            self.mixMatchNavigationIconImageView.leadingAnchor.constraint(equalTo: self.mixMatchLabel.trailingAnchor, constant: 6),
+            self.mixMatchNavigationIconImageView.centerYAnchor.constraint(equalTo: self.mixMatchLabel.centerYAnchor),
+
         ])
     }
 
@@ -1311,9 +1383,18 @@ extension ProChoiceHighlightCollectionViewCell {
     private func createSeeAllMarketsButton() -> UIButton {
         let button = UIButton(type: .system)
         button.backgroundColor = UIColor.App.buttonBackgroundPrimary
-        button.setTitle(localized("see_all"), for: .normal)
+        button.setTitle(localized("see_game_details"), for: .normal)
         button.titleLabel?.font = AppFont.with(type: .semibold, size: 14)
         button.layer.cornerRadius = CornerRadius.view
+        button.setImage(UIImage(named: "arrow_right_icon"), for: .normal)
+        
+//        button.setInsets(forContentPadding: UIEdgeInsets(top: 0, left: 5, bottom: 0, right: 5), imageTitlePadding: 5)
+        button.transform = CGAffineTransform(scaleX: -1.0, y: 1.0)
+        button.titleLabel?.transform = CGAffineTransform(scaleX: -1.0, y: 1.0)
+        button.imageView?.transform = CGAffineTransform(scaleX: -1.0, y: 1.0)
+        button.contentEdgeInsets = UIEdgeInsets(top: 0, left: 10, bottom: 0, right: 0)
+        button.imageEdgeInsets = UIEdgeInsets(top: 2, left: -10, bottom: 0, right: 0)
+
         button.translatesAutoresizingMaskIntoConstraints = false
         return button
     }
@@ -1381,7 +1462,68 @@ extension ProChoiceHighlightCollectionViewCell {
         imageView.alpha = 0
         return imageView
     }
+    
+    private func createMixMatchContainerView() -> UIView {
+        let view = UIView()
+        view.translatesAutoresizingMaskIntoConstraints = false
+        view.clipsToBounds = true
+        return view
+    }
+    
+    private func createMixMatchBaseView() -> UIView {
+        let view = UIView()
+        view.translatesAutoresizingMaskIntoConstraints = false
+        view.layer.cornerRadius = CornerRadius.view
+        view.clipsToBounds = true
+        return view
+    }
 
+    private func createMixMatchBackgroundImageView() -> UIImageView {
+        let imageView = UIImageView()
+        imageView.translatesAutoresizingMaskIntoConstraints = false
+        imageView.image = UIImage(named: "mix_match_highlight")
+        imageView.contentMode = .scaleAspectFill
+        return imageView
+    }
+    
+    private func createMixMatchIconImageView() -> UIImageView {
+        let imageView = UIImageView()
+        imageView.translatesAutoresizingMaskIntoConstraints = false
+        imageView.image = UIImage(named: "mix_match_icon")
+        imageView.contentMode = .scaleAspectFit
+        return imageView
+    }
+    
+    private func createMixMatchLabel() -> UILabel {
+        let label = UILabel()
+        label.translatesAutoresizingMaskIntoConstraints = false
+        label.text = "\(localized("mix_match_or_bet_with_string")) \(localized("mix_match_mix_string"))\("mix_match_match_string")"
+        label.font = AppFont.with(type: .bold, size: 14)
+        label.textAlignment = .center
+        
+        let text = "\(localized("mix_match_or_bet_with_string")) \(localized("mix_match_mix_string"))\(localized("mix_match_match_string"))"
+        
+        let attributedString = NSMutableAttributedString(string: text)
+        let fullRange = (text as NSString).range(of: text)
+        var range = (text as NSString).range(of: localized("mix_match_mix_string"))
+        
+        attributedString.addAttribute(.foregroundColor, value: UIColor.App.buttonTextPrimary, range: fullRange)
+        attributedString.addAttribute(.font, value: AppFont.with(type: .bold, size: 14), range: fullRange)
+        
+        attributedString.addAttribute(.foregroundColor, value: UIColor.App.highlightPrimary, range: range)
+        
+        label.attributedText = attributedString
+        
+        return label
+    }
+    
+    private func createMixMatchNavigationIconImageView() -> UIImageView {
+        let imageView = UIImageView()
+        imageView.translatesAutoresizingMaskIntoConstraints = false
+        imageView.image = UIImage(named: "arrow_right_icon")
+        imageView.contentMode = .scaleAspectFit
+        return imageView
+    }
 }
 
 //
