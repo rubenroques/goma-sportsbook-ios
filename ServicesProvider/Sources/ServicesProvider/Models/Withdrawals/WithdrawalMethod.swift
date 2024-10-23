@@ -12,11 +12,13 @@ public struct WithdrawalMethod: Codable {
     public var paymentMethod: String
     public var minimumWithdrawal: String
     public var maximumWithdrawal: String
+    public var conversionRequired: Bool
 
     enum CodingKeys: String, CodingKey {
         case code = "code"
         case paymentMethod = "paymentMethod"
         case minimumWithdrawal = "minimumWithdrawal"
         case maximumWithdrawal = "maximumWithdrawal"
+        case conversionRequired = "conversionRequired"
     }
 }

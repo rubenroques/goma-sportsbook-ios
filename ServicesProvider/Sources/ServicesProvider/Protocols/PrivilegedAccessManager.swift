@@ -65,12 +65,14 @@ protocol PrivilegedAccessManager {
 
     func getPayments() -> AnyPublisher<SimplePaymentMethodsResponse, ServiceProviderError>
     func processDeposit(paymentMethod: String, amount: Double, option: String) -> AnyPublisher<ProcessDepositResponse, ServiceProviderError>
-    func updatePayment(amount: Double, paymentId: String, type: String, returnUrl: String?) -> AnyPublisher<UpdatePaymentResponse, ServiceProviderError>
+    func updatePayment(amount: Double, paymentId: String, type: String, returnUrl: String?, nameOnCard: String?, encryptedExpiryYear: String?, encryptedExpiryMonth: String?, encryptedSecurityCode: String?, encryptedCardNumber: String?) -> AnyPublisher<UpdatePaymentResponse, ServiceProviderError>
     func cancelDeposit(paymentId: String) -> AnyPublisher<BasicResponse, ServiceProviderError>
     func checkPaymentStatus(paymentMethod: String, paymentId: String) -> AnyPublisher<PaymentStatusResponse, ServiceProviderError>
     
     func getWithdrawalMethods() -> AnyPublisher<[WithdrawalMethod], ServiceProviderError>
-    func processWithdrawal(paymentMethod: String, amount: Double) -> AnyPublisher<ProcessWithdrawalResponse, ServiceProviderError>
+    func processWithdrawal(paymentMethod: String, amount: Double, conversionId: String?) -> AnyPublisher<ProcessWithdrawalResponse, ServiceProviderError>
+    func prepareWithdrawal(paymentMethod: String) -> AnyPublisher<PrepareWithdrawalResponse, ServiceProviderError>
+
     func getPendingWithdrawals() -> AnyPublisher<[PendingWithdrawal], ServiceProviderError>
     func cancelWithdrawal(paymentId: Int) -> AnyPublisher<CancelWithdrawalResponse, ServiceProviderError>
     func getPaymentInformation() -> AnyPublisher<PaymentInformation, ServiceProviderError>

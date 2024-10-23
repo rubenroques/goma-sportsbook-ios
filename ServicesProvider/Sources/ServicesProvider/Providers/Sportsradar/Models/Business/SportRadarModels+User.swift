@@ -640,7 +640,7 @@ extension SportRadarModels {
 
     struct UpdatePaymentResponse: Codable {
         var resultCode: String
-        var action: UpdatePaymentAction
+        var action: UpdatePaymentAction?
 
         enum CodingKeys: String, CodingKey {
             case resultCode = "resultCode"

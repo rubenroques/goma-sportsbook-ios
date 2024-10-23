@@ -1197,14 +1197,14 @@ extension ServicesProviderClient {
         return privilegedAccessManager.processDeposit(paymentMethod: paymentMethod, amount: amount, option: option)
     }
 
-    public func updatePayment(amount: Double, paymentId: String, type: String, returnUrl: String?) -> AnyPublisher<UpdatePaymentResponse, ServiceProviderError> {
+    public func updatePayment(amount: Double, paymentId: String, type: String, returnUrl: String?, nameOnCard: String? = nil, encryptedExpiryYear: String? = nil, encryptedExpiryMonth: String? = nil, encryptedSecurityCode: String? = nil, encryptedCardNumber: String? = nil) -> AnyPublisher<UpdatePaymentResponse, ServiceProviderError> {
         guard
             let privilegedAccessManager = self.privilegedAccessManager
         else {
             return Fail(error: ServiceProviderError.privilegedAccessManagerNotFound).eraseToAnyPublisher()
         }
 
-        return privilegedAccessManager.updatePayment(amount: amount, paymentId: paymentId, type: type, returnUrl: returnUrl)
+        return privilegedAccessManager.updatePayment(amount: amount, paymentId: paymentId, type: type, returnUrl: returnUrl, nameOnCard: nameOnCard, encryptedExpiryYear: encryptedExpiryYear, encryptedExpiryMonth: encryptedExpiryMonth, encryptedSecurityCode: encryptedSecurityCode, encryptedCardNumber: encryptedCardNumber)
     }
 
     public func cancelDeposit(paymentId: String) -> AnyPublisher<BasicResponse, ServiceProviderError> {
@@ -1238,14 +1238,24 @@ extension ServicesProviderClient {
         return privilegedAccessManager.getWithdrawalMethods()
     }
 
-    public func processWithdrawal(paymentMethod: String, amount: Double) -> AnyPublisher<ProcessWithdrawalResponse, ServiceProviderError> {
+    public func processWithdrawal(paymentMethod: String, amount: Double, conversionId: String? = nil) -> AnyPublisher<ProcessWithdrawalResponse, ServiceProviderError> {
         guard
             let privilegedAccessManager = self.privilegedAccessManager
         else {
             return Fail(error: ServiceProviderError.privilegedAccessManagerNotFound).eraseToAnyPublisher()
         }
 
-        return privilegedAccessManager.processWithdrawal(paymentMethod: paymentMethod, amount: amount)
+        return privilegedAccessManager.processWithdrawal(paymentMethod: paymentMethod, amount: amount, conversionId: conversionId)
+    }
+    
+    public func prepareWithdrawal(paymentMethod: String) -> AnyPublisher<PrepareWithdrawalResponse, ServiceProviderError> {
+        guard
+            let privilegedAccessManager = self.privilegedAccessManager
+        else {
+            return Fail(error: ServiceProviderError.privilegedAccessManagerNotFound).eraseToAnyPublisher()
+        }
+
+        return privilegedAccessManager.prepareWithdrawal(paymentMethod: paymentMethod)
     }
 
     public func getPendingWithdrawals() -> AnyPublisher<[PendingWithdrawal], ServiceProviderError> {

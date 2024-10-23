@@ -14,6 +14,7 @@ import ServicesProvider
 import AdyenComponents
 import AdyenActions
 import OptimoveSDK
+import AdyenCard
 
 class PaymentsDropIn {
 
@@ -261,7 +262,7 @@ class PaymentsDropIn {
         let payment = Payment(amount: Amount(value: Int(self.dropInDepositAmount) ?? 0, currencyCode: "EUR"), countryCode: "FR")
         let dropInConfiguration = DropInComponent.Configuration()
         
-        dropInConfiguration.card = DropInComponent.Card(showsStorePaymentMethodField: false)
+        dropInConfiguration.card = DropInComponent.Card( showsHolderNameField: true, showsStorePaymentMethodField: false)
         
         if let applePayPayment = try? ApplePayPayment(payment: payment, brand: "Betsson France") {
             dropInConfiguration.applePay = ApplePayComponent.Configuration.init(payment: applePayPayment, 
@@ -368,6 +369,30 @@ extension PaymentsDropIn: AdyenSessionDelegate {
 extension PaymentsDropIn: AdyenSessionPaymentsHandler, AdyenSessionPaymentDetailsHandler {
  
     func didSubmit(_ paymentComponentData: PaymentComponentData, from component: Component, dropInComponent: AnyDropInComponent?, session: AdyenSession) {
+        // Update Omega payment with card info
+        if let cardDetails = paymentComponentData.paymentMethod as? AdyenCard.CardDetails {
+            
+            Env.servicesProvider.updatePayment(amount: self.depositAmount,
+                                               paymentId: self.paymentId ?? "",
+                                               type: "scheme",
+                                               returnUrl: nil,
+                                               nameOnCard: cardDetails.holderName,
+                                               encryptedExpiryYear: cardDetails.encryptedExpiryYear,
+                                               encryptedExpiryMonth: cardDetails.encryptedExpiryMonth,
+                                               encryptedSecurityCode: cardDetails.encryptedSecurityCode,
+                                               encryptedCardNumber: cardDetails.encryptedCardNumber)
+            .receive(on: DispatchQueue.main)
+            .sink { completion in
+                print("updatePayment card completion: \(completion)")
+                
+            } receiveValue: { updatePaymentResponse in
+                
+                print("UPDATE PAYMENT CARD: \(updatePaymentResponse)")
+                
+            }
+            .store(in: &self.cancellables)
+        }
+        
         self.adyenSession?.didSubmit(paymentComponentData,
                                      from: component,
                                      dropInComponent: dropInComponent,
@@ -399,7 +424,8 @@ extension PaymentsDropIn: DropInComponentDelegate {
                 print("updatePayment completion: \(completion)")
             } receiveValue: { updatePaymentResponse in
                 
-                if let redirectURL = URL(string: updatePaymentResponse.action.url) {
+                if let actionUrl = updatePaymentResponse.action?.url,
+                   let redirectURL = URL(string: actionUrl) {
                     self.presentSafariViewController(onURL: redirectURL)
                 }
             }
@@ -418,7 +444,8 @@ extension PaymentsDropIn: DropInComponentDelegate {
                 print("updatePayment completion: \(completion)")
             } receiveValue: { updatePaymentResponse in
                 
-                if let redirectURL = URL(string: updatePaymentResponse.action.url) {
+                if let actionUrl = updatePaymentResponse.action?.url,
+                   let redirectURL = URL(string: actionUrl) {
                     self.presentSafariViewController(onURL: redirectURL)
                 }
             }

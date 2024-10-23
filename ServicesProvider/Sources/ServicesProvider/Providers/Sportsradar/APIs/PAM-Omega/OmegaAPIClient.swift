@@ -128,15 +128,16 @@ enum OmegaAPIClient {
     case uploadUserDocument(documentType: String, file: Data, body: Data, header: String)
     case uploadMultipleUserDocuments(documentType: String,
                                      files: [String: Data], body: Data, header: String)
-
+    
     case getPayments
     case processDeposit(paymentMethod: String, amount: Double, option: String)
-    case updatePayment(amount: Double, paymentId: String, type: String, returnUrl: String?)
+    case updatePayment(amount: Double, paymentId: String, type: String, returnUrl: String?, nameOnCard: String?, encryptedExpiryYear: String?, encryptedExpiryMonth: String?, encryptedSecurityCode: String?, encryptedCardNumber: String?)
     case cancelDeposit(paymentId: String)
     case checkPaymentStatus(paymentMethod: String, paymentId: String)
 
     case getWithdrawalsMethods
-    case processWithdrawal(withdrawalMethod: String, amount: Double)
+    case processWithdrawal(withdrawalMethod: String, amount: Double, conversionId: String?)
+    case prepareWithdrawal(withdrawalMethod: String)
     case getPendingWithdrawals
     case cancelWithdrawal(paymentId: Int)
     case getPaymentInformation
@@ -256,6 +257,8 @@ extension OmegaAPIClient: Endpoint {
             return "/ps/ips/getWithdrawalMethods"
         case .processWithdrawal:
             return "/ps/ips/processWithdrawal"
+        case .prepareWithdrawal:
+            return "/ps/ips/prepareWithdrawal"
         case .getPendingWithdrawals:
             return "/ps/ips/getPendingWithdrawals"
         case .cancelWithdrawal:
@@ -646,11 +649,23 @@ extension OmegaAPIClient: Endpoint {
                 URLQueryItem(name: "threeDSNative", value: "true")
             ]
 
-        case .processWithdrawal(let withdrawalMethod, let amount):
+        case .processWithdrawal(let withdrawalMethod, let amount, let conversionId):
+            var query = [
+                
+                URLQueryItem(name: "paymentMethod", value: withdrawalMethod),
+                URLQueryItem(name: "amount", value: "\(amount)")
+            ]
+            
+            if let conversionId {
+                query.append(URLQueryItem(name: "conversionId", value: conversionId))
+            }
+            
+            return query
+        case .prepareWithdrawal(let withdrawalMethod):
             return [
 
                 URLQueryItem(name: "paymentMethod", value: withdrawalMethod),
-                URLQueryItem(name: "amount", value: "\(amount)")
+                URLQueryItem(name: "action", value: "GET_EXCHANGE_INFO")
             ]
         case .getPendingWithdrawals:
             return nil
@@ -658,8 +673,7 @@ extension OmegaAPIClient: Endpoint {
             return [
                 URLQueryItem(name: "paymentId", value: "\(paymentId)")
             ]
-        
-        case .updatePayment(let amount, let paymentId, let type, let returnUrl):
+        case .updatePayment(let amount, let paymentId, let type, let returnUrl, let nameOnCard, let encryptedExpiryYear, let encryptedExpiryMonth, let encryptedSecurityCode, let encryptedCardNumber):
             var query = [
                 URLQueryItem(name: "amount", value: "\(amount)"),
                 URLQueryItem(name: "paymentId", value: paymentId),
@@ -668,6 +682,21 @@ extension OmegaAPIClient: Endpoint {
             
             if let returnUrlValue = returnUrl {
                 query.append(URLQueryItem(name: "returnUrl", value: returnUrlValue))
+            }
+            if let nameOnCardValue = nameOnCard {
+                query.append(URLQueryItem(name: "nameOnCard", value: nameOnCardValue))
+            }
+            if let encryptedExpiryYearValue = encryptedExpiryYear {
+                query.append(URLQueryItem(name: "encryptedExpiryYear", value: encryptedExpiryYearValue))
+            }
+            if let encryptedExpiryMonthValue = encryptedExpiryMonth {
+                query.append(URLQueryItem(name: "encryptedExpiryMonth", value: encryptedExpiryMonthValue))
+            }
+            if let encryptedSecurityCodeValue = encryptedSecurityCode {
+                query.append(URLQueryItem(name: "encryptedSecurityCode", value: encryptedSecurityCodeValue))
+            }
+            if let encryptedCardNumberValue = encryptedCardNumber {
+                query.append(URLQueryItem(name: "encryptedCardNumber", value: encryptedCardNumberValue))
             }
             return query
 
@@ -879,6 +908,7 @@ extension OmegaAPIClient: Endpoint {
             
         case .getWithdrawalsMethods: return .get
         case .processWithdrawal: return .post
+        case .prepareWithdrawal: return .post
         case .getPendingWithdrawals: return .get
         case .cancelWithdrawal: return .post
         case .getPaymentInformation: return .get
@@ -1016,6 +1046,7 @@ extension OmegaAPIClient: Endpoint {
             
         case .getWithdrawalsMethods: return true
         case .processWithdrawal: return true
+        case .prepareWithdrawal: return true
         case .getPendingWithdrawals: return true
         case .cancelWithdrawal: return true
         case .getPaymentInformation: return true
@@ -1179,6 +1210,7 @@ extension OmegaAPIClient: Endpoint {
         case .checkPaymentStatus: return "checkPaymentStatus"
         case .getWithdrawalsMethods: return "getWithdrawalsMethods"
         case .processWithdrawal: return "processWithdrawal"
+        case .prepareWithdrawal: return "prepareWithdrawal"
         case .getPendingWithdrawals: return "getPendingWithdrawals"
         case .cancelWithdrawal: return "cancelWithdrawal"
         case .getPaymentInformation: return "getPaymentInformation"

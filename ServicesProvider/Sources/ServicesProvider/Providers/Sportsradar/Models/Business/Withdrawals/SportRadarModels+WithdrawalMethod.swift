@@ -14,12 +14,14 @@ extension SportRadarModels {
         var paymentMethod: String
         var minimumWithdrawal: String
         var maximumWithdrawal: String
+        var conversionRequired: Bool
 
         enum CodingKeys: String, CodingKey {
             case code = "code"
             case paymentMethod = "paymentMethod"
             case minimumWithdrawal = "minimumWithdrawal"
             case maximumWithdrawal = "maximumWithdrawal"
+            case conversionRequired = "conversionRequired"
         }
     }
 }
