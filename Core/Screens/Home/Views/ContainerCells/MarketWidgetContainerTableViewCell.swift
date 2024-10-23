@@ -11,7 +11,7 @@ class MarketWidgetContainerTableViewCell: UITableViewCell {
     var tappedMatchIdAction: ((String) -> Void) = { _ in }
     var didTapFavoriteMatchAction: ((Match) -> Void) = { _ in }
     var didLongPressOdd: ((BettingTicket) -> Void) = { _ in }
-    var tappedMixMatchIdAction: ((String) -> Void)?
+    var tappedMixMatchIdAction: ((String) -> Void) = { _ in }
 
     private lazy var backSliderView: UIView = Self.createBackSliderView()
     private lazy var backSliderIconImageView: UIImageView = Self.createBackSliderIconImageView()
@@ -157,6 +157,10 @@ extension MarketWidgetContainerTableViewCell: UICollectionViewDelegate, UICollec
         
         cell.didLongPressOdd = { [weak self] bettingTicket in
             self?.didLongPressOdd(bettingTicket)
+        }
+        
+        cell.tappedMixMatchAction = { [weak self] matchId in
+            self?.tappedMixMatchIdAction(matchId)
         }
 
         return cell
