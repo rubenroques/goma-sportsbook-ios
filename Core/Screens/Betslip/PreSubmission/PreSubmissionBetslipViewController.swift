@@ -2664,9 +2664,6 @@ extension PreSubmissionBetslipViewController: UITextFieldDelegate {
     }
 
     func textField(_ textField: UITextField, shouldChangeCharactersIn range: NSRange, replacementString string: String) -> Bool {
-        //self.updateAmountDigit(string)
-        //return false
-
         //
         // Define the valid character set (numbers and decimal separator)
         let allowedCharacters = CharacterSet(charactersIn: "0123456789.,")

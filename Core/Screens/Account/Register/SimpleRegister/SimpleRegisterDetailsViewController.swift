@@ -330,7 +330,7 @@ class SimpleRegisterDetailsViewController: UIViewController {
             passwordHeaderTextView.showErrorOnField(text: localized("password_not_match"), color: UIColor.App.alertError)
             return
         }
-        else if password.count < 8 {
+        else if password.count < 9 {
             passwordHeaderTextView.showTip(text: localized("password_too_weak"))
             return
         }

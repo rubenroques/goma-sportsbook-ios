@@ -574,8 +574,19 @@ class ProChoiceHighlightCollectionViewCell: UICollectionViewCell {
             return
         }
 
-        let bettingTicket = BettingTicket(id: outcome.bettingOffer.id, outcomeId: outcome.id, marketId: market.id, matchId: market.eventId ?? "", decimalOdd: outcome.bettingOffer.decimalOdd, isAvailable: true, matchDescription: market.eventName ?? "", marketDescription: market.name, outcomeDescription: outcome.typeName, homeParticipantName: market.homeParticipant, awayParticipantName: market.awayParticipant, sportIdCode: market.sport?.id)
-        
+        let bettingTicket = BettingTicket(id: outcome.bettingOffer.id,
+                                          outcomeId: outcome.id,
+                                          marketId: market.id,
+                                          matchId: market.eventId ?? "",
+                                          decimalOdd: outcome.bettingOffer.decimalOdd,
+                                          isAvailable: true,
+                                          matchDescription: market.eventName ?? "",
+                                          marketDescription: market.name,
+                                          outcomeDescription: outcome.typeName,
+                                          homeParticipantName: market.homeParticipant,
+                                          awayParticipantName: market.awayParticipant,
+                                          sportIdCode: market.sport?.id)
+
         if Env.betslipManager.hasBettingTicket(bettingTicket) {
             Env.betslipManager.removeBettingTicket(bettingTicket)
             self.isLeftOutcomeButtonSelected = false
@@ -603,8 +614,19 @@ class ProChoiceHighlightCollectionViewCell: UICollectionViewCell {
                 return
             }
             
-            let bettingTicket = BettingTicket(id: outcome.bettingOffer.id, outcomeId: outcome.id, marketId: market.id, matchId: market.eventId ?? "", decimalOdd: outcome.bettingOffer.decimalOdd, isAvailable: true, matchDescription: market.eventName ?? "", marketDescription: market.name, outcomeDescription: outcome.typeName, homeParticipantName: market.homeParticipant, awayParticipantName: market.awayParticipant, sportIdCode: market.sport?.id)
-            
+            let bettingTicket = BettingTicket(id: outcome.bettingOffer.id,
+                                              outcomeId: outcome.id,
+                                              marketId: market.id,
+                                              matchId: market.eventId ?? "",
+                                              decimalOdd: outcome.bettingOffer.decimalOdd,
+                                              isAvailable: true,
+                                              matchDescription: market.eventName ?? "",
+                                              marketDescription: market.name,
+                                              outcomeDescription: outcome.typeName,
+                                              homeParticipantName: market.homeParticipant,
+                                              awayParticipantName: market.awayParticipant,
+                                              sportIdCode: market.sport?.id)
+
             self.didLongPressOdd(bettingTicket)
         }
     }
@@ -626,7 +648,18 @@ class ProChoiceHighlightCollectionViewCell: UICollectionViewCell {
             return
         }
 
-        let bettingTicket = BettingTicket(id: outcome.bettingOffer.id, outcomeId: outcome.id, marketId: market.id, matchId: market.eventId ?? "", decimalOdd: outcome.bettingOffer.decimalOdd, isAvailable: true, matchDescription: market.eventName ?? "", marketDescription: market.name, outcomeDescription: outcome.typeName, homeParticipantName: market.homeParticipant, awayParticipantName: market.awayParticipant, sportIdCode: market.sport?.id)
+        let bettingTicket = BettingTicket(id: outcome.bettingOffer.id,
+                                          outcomeId: outcome.id,
+                                          marketId: market.id,
+                                          matchId: market.eventId ?? "",
+                                          decimalOdd: outcome.bettingOffer.decimalOdd,
+                                          isAvailable: true,
+                                          matchDescription: market.eventName ?? "",
+                                          marketDescription: market.name,
+                                          outcomeDescription: outcome.typeName,
+                                          homeParticipantName: market.homeParticipant,
+                                          awayParticipantName: market.awayParticipant,
+                                          sportIdCode: market.sport?.id)
 
         if Env.betslipManager.hasBettingTicket(bettingTicket) {
             Env.betslipManager.removeBettingTicket(bettingTicket)
@@ -654,8 +687,19 @@ class ProChoiceHighlightCollectionViewCell: UICollectionViewCell {
                 return
             }
 
-            let bettingTicket = BettingTicket(id: outcome.bettingOffer.id, outcomeId: outcome.id, marketId: market.id, matchId: market.eventId ?? "", decimalOdd: outcome.bettingOffer.decimalOdd, isAvailable: true, matchDescription: market.eventName ?? "", marketDescription: market.name, outcomeDescription: outcome.typeName, homeParticipantName: market.homeParticipant, awayParticipantName: market.awayParticipant, sportIdCode: market.sport?.id)
-            
+            let bettingTicket = BettingTicket(id: outcome.bettingOffer.id,
+                                              outcomeId: outcome.id,
+                                              marketId: market.id,
+                                              matchId: market.eventId ?? "",
+                                              decimalOdd: outcome.bettingOffer.decimalOdd,
+                                              isAvailable: true,
+                                              matchDescription: market.eventName ?? "",
+                                              marketDescription: market.name,
+                                              outcomeDescription: outcome.typeName,
+                                              homeParticipantName: market.homeParticipant,
+                                              awayParticipantName: market.awayParticipant,
+                                              sportIdCode: market.sport?.id)
+
             self.didLongPressOdd(bettingTicket)
 
         }
@@ -687,8 +731,19 @@ class ProChoiceHighlightCollectionViewCell: UICollectionViewCell {
             return
         }
 
-        let bettingTicket = BettingTicket(id: outcome.bettingOffer.id, outcomeId: outcome.id, marketId: market.id, matchId: market.eventId ?? "", decimalOdd: outcome.bettingOffer.decimalOdd, isAvailable: true, matchDescription: market.eventName ?? "", marketDescription: market.name, outcomeDescription: outcome.typeName, homeParticipantName: market.homeParticipant, awayParticipantName: market.awayParticipant, sportIdCode: market.sport?.id)
-        
+        let bettingTicket = BettingTicket(id: outcome.bettingOffer.id,
+                                          outcomeId: outcome.id,
+                                          marketId: market.id,
+                                          matchId: market.eventId ?? "",
+                                          decimalOdd: outcome.bettingOffer.decimalOdd,
+                                          isAvailable: true,
+                                          matchDescription: market.eventName ?? "",
+                                          marketDescription: market.name,
+                                          outcomeDescription: outcome.typeName,
+                                          homeParticipantName: market.homeParticipant,
+                                          awayParticipantName: market.awayParticipant,
+                                          sportIdCode: market.sport?.id)
+
         if Env.betslipManager.hasBettingTicket(bettingTicket) {
             Env.betslipManager.removeBettingTicket(bettingTicket)
             self.isRightOutcomeButtonSelected = false
@@ -715,8 +770,19 @@ class ProChoiceHighlightCollectionViewCell: UICollectionViewCell {
                 return
             }
 
-            let bettingTicket = BettingTicket(id: outcome.bettingOffer.id, outcomeId: outcome.id, marketId: market.id, matchId: market.eventId ?? "", decimalOdd: outcome.bettingOffer.decimalOdd, isAvailable: true, matchDescription: market.eventName ?? "", marketDescription: market.name, outcomeDescription: outcome.typeName, homeParticipantName: market.homeParticipant, awayParticipantName: market.awayParticipant, sportIdCode: market.sport?.id)
-            
+            let bettingTicket = BettingTicket(id: outcome.bettingOffer.id,
+                                              outcomeId: outcome.id,
+                                              marketId: market.id,
+                                              matchId: market.eventId ?? "",
+                                              decimalOdd: outcome.bettingOffer.decimalOdd,
+                                              isAvailable: true,
+                                              matchDescription: market.eventName ?? "",
+                                              marketDescription: market.name,
+                                              outcomeDescription: outcome.typeName,
+                                              homeParticipantName: market.homeParticipant,
+                                              awayParticipantName: market.awayParticipant,
+                                              sportIdCode: market.sport?.id)
+
             self.didLongPressOdd(bettingTicket)
 
         }

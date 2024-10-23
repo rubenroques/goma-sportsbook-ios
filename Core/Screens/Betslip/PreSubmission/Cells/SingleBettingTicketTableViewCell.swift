@@ -118,21 +118,16 @@ class SingleBettingTicketTableViewCell: UITableViewCell {
         }
     }
 
-    var currentValue: Int = 0 {
+    var betValue: Double = 0.0 {
         didSet {
             if let bettingTicket = bettingTicket {
-                self.didUpdateBettingValueAction?(bettingTicket.id, self.realBetValue)
+                self.didUpdateBettingValueAction?(bettingTicket.id, self.betValue)
             }
+            self.refreshPossibleWinnings()
         }
     }
-    var realBetValue: Double {
-        if currentValue == 0 {
-            return 0
-        }
-        else {
-            return Double(currentValue)/Double(100)
-        }
-    }
+
+    private var cancellables = Set<AnyCancellable>()
 
     var didUpdateBettingValueAction: ((String, Double) -> Void)?
 
@@ -142,6 +137,8 @@ class SingleBettingTicketTableViewCell: UITableViewCell {
     
     override func awakeFromNib() {
         super.awakeFromNib()
+
+        self.amountTextfield.keyboardType = .decimalPad
 
         self.suspendedBettingOfferView.isHidden = true
 
@@ -178,6 +175,19 @@ class SingleBettingTicketTableViewCell: UITableViewCell {
 
         self.suspendedBettingOfferLabel.text = localized("suspended")
         self.setupSubviews()
+
+        self.amountTextfield.textPublisher
+            .receive(on: DispatchQueue.main)
+            .removeDuplicates()
+            .sink { [weak self] amountValue in
+                if let amountValue, let doubleValue = Double(amountValue.replacingOccurrences(of: ",", with: ".")) {
+                    self?.betValue = doubleValue
+                }
+                else {
+                    self?.betValue = 0
+                }
+            }
+            .store(in: &self.cancellables)
     }
 
     override func layoutSubviews() {
@@ -222,7 +232,7 @@ class SingleBettingTicketTableViewCell: UITableViewCell {
         
         self.didUpdateBettingValueAction = nil
         
-        self.currentValue = 0
+        self.betValue = 0
 
         self.outcomeNameLabel.text = ""
         self.oddValueLabel.text = ""
@@ -370,7 +380,7 @@ class SingleBettingTicketTableViewCell: UITableViewCell {
         self.currentOddValue = bettingTicket.decimalOdd
 
         if let previousBettingAmount = previousBettingAmount {
-            self.currentValue = 0
+            self.betValue = 0
             self.addAmountValue(previousBettingAmount)
         }
 
@@ -414,7 +424,7 @@ class SingleBettingTicketTableViewCell: UITableViewCell {
                 if let currentBoostedOddPercentage = self?.currentBoostedOddPercentage, currentBoostedOddPercentage != 0 {
                     let boostedValue = newOddValue + (newOddValue * currentBoostedOddPercentage)
 
-                    let possibleWinnings = boostedValue * (self?.realBetValue ?? 0)
+                    let possibleWinnings = boostedValue * (self?.betValue ?? 0)
                     let possibleWinningsString = CurrencyFormater.defaultFormat.string(from: NSNumber(value: possibleWinnings)) ?? "-.--€"
                     self?.returnsValueLabel.text = possibleWinningsString
 
@@ -485,13 +495,13 @@ class SingleBettingTicketTableViewCell: UITableViewCell {
 
         self.freeBetView.didTappedSwitch = { [weak self] isSwitchOn in
             if isSwitchOn {
-                self?.currentValue = Int(freeBet.freeBetAmount * 100.0)
+                self?.betValue = freeBet.freeBetAmount
                 self?.amountTextfield.text = CurrencyFormater.defaultFormat.string(from: NSNumber(value: freeBet.freeBetAmount))
                 self?.buttonsBaseView.isUserInteractionEnabled = false
                 self?.isFreeBetSelected?(true)
             }
             else {
-                self?.currentValue = 0
+                self?.betValue = 0
                 self?.amountTextfield.text = CurrencyFormater.defaultFormat.string(from: NSNumber(value: 0))
                 self?.buttonsBaseView.isUserInteractionEnabled = true
                 self?.isFreeBetSelected?(false)
@@ -577,7 +587,7 @@ class SingleBettingTicketTableViewCell: UITableViewCell {
 
             let boostedValue = currentOddValue * (1 + self.currentBoostedOddPercentage)
 
-            let possibleWinnings = boostedValue * self.realBetValue
+            let possibleWinnings = boostedValue * self.betValue
             let possibleWinningsString = CurrencyFormater.defaultFormat.string(from: NSNumber(value: possibleWinnings)) ?? "-.--€"
             self.returnsValueLabel.text = possibleWinningsString
         }
@@ -623,42 +633,53 @@ extension SingleBettingTicketTableViewCell: UITextFieldDelegate {
     }
 
     func textField(_ textField: UITextField, shouldChangeCharactersIn range: NSRange, replacementString string: String) -> Bool {
-        self.updateAmountValue(string)
-        return false
+        // Define the valid character set (numbers and decimal separator)
+        let allowedCharacters = CharacterSet(charactersIn: "0123456789.,")
+        let decimalSeparator = Locale.current.decimalSeparator ?? "."
+
+        // Ensure the replacement string contains only allowed characters
+        if string.rangeOfCharacter(from: allowedCharacters.inverted) != nil {
+            return false
+        }
+
+        // Get the current text in the text field
+        let currentText = textField.text ?? ""
+        let newText = (currentText as NSString).replacingCharacters(in: range, with: string)
+
+        // Check if there is more than one decimal separator
+        let decimalCount = newText.components(separatedBy: decimalSeparator).count - 1
+        if decimalCount > 1 {
+            return false
+        }
+
+        // Limit decimal places to two
+        if let decimalIndex = newText.firstIndex(of: Character(decimalSeparator)) {
+            let decimalPart = newText[decimalIndex...]
+            if decimalPart.count > 3 {
+                return false // Only two decimal places allowed
+            }
+        }
+
+        return true
     }
 
     func addAmountValue(_ value: Double, isMax: Bool = false) {
-        var internalValue = self.currentValue
+        var internalValue = self.betValue
 
         if !isMax {
-            internalValue = internalValue + Int(value * 100) // swiftlint:disable:this shorthand_operator
+            internalValue = internalValue + value // swiftlint:disable:this shorthand_operator
         }
         else {
-            internalValue = Int(value * 100)
+            internalValue = value
         }
 
-        let calculatedAmount = Double(internalValue/100) + Double(internalValue%100)/100
-        self.amountTextfield.text = CurrencyFormater.defaultFormat.string(from: NSNumber(value: calculatedAmount))
-        self.currentValue = internalValue
-        
+        let valueString = String(format: "%.2f", internalValue)
+        self.amountTextfield.text = valueString //
+
+        self.betValue = internalValue
+
         self.refreshPossibleWinnings()
     }
-
-    func updateAmountValue(_ newValue: String) {
-        var internalValue = self.currentValue
-        if let insertedDigit = Int(newValue) {
-            internalValue = internalValue * 10 + insertedDigit
-        }
-        if newValue == "" {
-            internalValue = internalValue / 10 // swiftlint:disable:this shorthand_operator
-        }
-        let calculatedAmount = Double(internalValue/100) + Double(internalValue%100)/100
-        self.amountTextfield.text = CurrencyFormater.defaultFormat.string(from: NSNumber(value: calculatedAmount))
-        self.currentValue = internalValue
-        
-        self.refreshPossibleWinnings()
-    }
-
 }
 
 extension SingleBettingTicketTableViewCell {

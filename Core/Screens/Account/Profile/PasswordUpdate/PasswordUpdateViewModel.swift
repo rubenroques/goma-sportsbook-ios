@@ -42,7 +42,7 @@ class PasswordUpdateViewModel: NSObject {
                 guard let password else { return [PasswordState.empty] }
 
                 if password.isEmpty { passwordStates.append(PasswordState.empty) }
-                if password.count < 8 { passwordStates.append(PasswordState.short) }
+                if password.count < 9 { passwordStates.append(PasswordState.short) }
                 if password.count > 16 { passwordStates.append(PasswordState.long) }
 
                 let numbersCharacterSet: NSCharacterSet = NSCharacterSet(charactersIn: "0123456789")

@@ -137,8 +137,6 @@ class PasswordUpdateViewController: UIViewController {
 
         self.securityAnswerHeaderTextFieldView.setPlaceholderText(localized("security_answer"))
 
-
-
     }
 
     func setupWithTheme() {
