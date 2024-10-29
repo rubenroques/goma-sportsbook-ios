@@ -234,10 +234,7 @@ extension MatchLineTableCellViewModel {
 
         // replace new first market in the array with a the main market
         if let newMainMarketValue = newMainMarket {
-
-
-            print("Replacing main market for \(oldMatch?.homeParticipant.name) \(newMainMarketValue.name) \(newMainMarket?.name ?? "---")")
-
+            print("Replacing main market for \(oldMatch?.homeParticipant.name) \(firstMarket?.name) -> \(newMainMarket?.name ?? "---")")
             firstMarket = newMainMarketValue
         }
 
@@ -248,7 +245,6 @@ extension MatchLineTableCellViewModel {
         else {
             mergedMarkets = finalMarkets
         }
-        
         return mergedMarkets
     }
 
@@ -262,7 +258,6 @@ public protocol VisuallySimilar {
     ///   - rhs: Another value to compare.
     static func visuallySimilar(lhs: Self, rhs: Self) -> (Bool, String?)
 }
-
 
 extension Match: VisuallySimilar {
     static func visuallySimilar(lhs: Self, rhs: Self) -> (Bool, String?) {

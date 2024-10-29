@@ -379,7 +379,7 @@ class ScoreCellView: UIView {
         
         self.homeScoreLabel.text = homeScore
         self.awayScoreLabel.text = awayScore
-        
+
         self.style = style
         
         self.redrawStyle()
@@ -402,7 +402,7 @@ class ScoreCellView: UIView {
     private func setupView() {
         self.translatesAutoresizingMaskIntoConstraints = false
         
-        self.widthContraint = self.backgroundColorView.widthAnchor.constraint(equalToConstant: 28)
+        self.widthContraint = self.backgroundColorView.widthAnchor.constraint(greaterThanOrEqualToConstant: 28)
         self.addSubview(self.backgroundColorView)
         
         self.addSubview(self.homeScoreLabel)
@@ -417,15 +417,15 @@ class ScoreCellView: UIView {
             self.backgroundColorView.heightAnchor.constraint(equalToConstant: 42),
             self.widthContraint!,
             
-            self.homeScoreLabel.leadingAnchor.constraint(equalTo: self.leadingAnchor),
-            self.homeScoreLabel.trailingAnchor.constraint(equalTo: self.trailingAnchor),
+            self.homeScoreLabel.leadingAnchor.constraint(equalTo: self.leadingAnchor, constant: 1),
+            self.homeScoreLabel.trailingAnchor.constraint(equalTo: self.trailingAnchor, constant: -1),
             self.homeScoreLabel.topAnchor.constraint(equalTo: self.topAnchor, constant: 1),
-            self.homeScoreLabel.heightAnchor.constraint(equalToConstant: 20),
-            
-            self.awayScoreLabel.leadingAnchor.constraint(equalTo: self.leadingAnchor),
-            self.awayScoreLabel.trailingAnchor.constraint(equalTo: self.trailingAnchor),
+            self.homeScoreLabel.heightAnchor.constraint(greaterThanOrEqualToConstant: 20),
+
+            self.awayScoreLabel.leadingAnchor.constraint(equalTo: self.leadingAnchor, constant: 1),
+            self.awayScoreLabel.trailingAnchor.constraint(equalTo: self.trailingAnchor, constant: -1),
             self.awayScoreLabel.bottomAnchor.constraint(equalTo: self.bottomAnchor, constant: -1),
-            self.awayScoreLabel.heightAnchor.constraint(equalToConstant: 20),
+            self.awayScoreLabel.heightAnchor.constraint(greaterThanOrEqualToConstant: 20),
         ])
     }
     

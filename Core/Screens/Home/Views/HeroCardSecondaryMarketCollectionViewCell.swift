@@ -224,9 +224,13 @@ class HeroCardSecondaryMarketCollectionViewCell: UICollectionViewCell {
     }
     
     private func configureOutcomes(withMarket market: Market) {
-        
-        if let outcome = market.outcomes[safe: 0] {
-            
+
+        let filteredOutcomes = market.outcomes.filter { outcome in
+            return (!outcome.bettingOffer.decimalOdd.isNaN && outcome.bettingOffer.isAvailable)
+        }
+
+        if let outcome = filteredOutcomes[safe: 0] {
+
             if let nameDigit1 = market.nameDigit1 {
                 if outcome.typeName.contains("\(nameDigit1)") {
                     self.homeOddTitleLabel.text = outcome.typeName
@@ -243,7 +247,7 @@ class HeroCardSecondaryMarketCollectionViewCell: UICollectionViewCell {
             self.isLeftOutcomeButtonSelected = Env.betslipManager.hasBettingTicket(withId: outcome.bettingOffer.id)
             
             // Check for SportRadar invalid odd
-            if !outcome.bettingOffer.decimalOdd.isNaN {
+            if !outcome.bettingOffer.decimalOdd.isNaN && outcome.bettingOffer.isAvailable {
                 self.setHomeOddValueLabel(toText: OddFormatter.formatOdd(withValue: outcome.bettingOffer.decimalOdd))
             }
             else {
@@ -303,8 +307,8 @@ class HeroCardSecondaryMarketCollectionViewCell: UICollectionViewCell {
             
         }
         
-        if let outcome = market.outcomes[safe: 1] {
-            
+        if let outcome = filteredOutcomes[safe: 1] {
+
             if let nameDigit1 = market.nameDigit1 {
                 if outcome.typeName.contains("\(nameDigit1)") {
                     self.drawOddTitleLabel.text = outcome.typeName
@@ -321,7 +325,7 @@ class HeroCardSecondaryMarketCollectionViewCell: UICollectionViewCell {
             self.isMiddleOutcomeButtonSelected = Env.betslipManager.hasBettingTicket(withId: outcome.bettingOffer.id)
             
             // Check for SportRadar invalid odd
-            if !outcome.bettingOffer.decimalOdd.isNaN {
+            if !outcome.bettingOffer.decimalOdd.isNaN && outcome.bettingOffer.isAvailable {
                 self.setDrawOddValueLabel(toText: OddFormatter.formatOdd(withValue: outcome.bettingOffer.decimalOdd))
             }
             else {
@@ -378,8 +382,8 @@ class HeroCardSecondaryMarketCollectionViewCell: UICollectionViewCell {
                 })
         }
         
-        if let outcome = market.outcomes[safe: 2] {
-            
+        if let outcome = filteredOutcomes[safe: 2] {
+
             if let nameDigit1 = market.nameDigit1 {
                 if outcome.typeName.contains("\(nameDigit1)") {
                     self.awayOddTitleLabel.text = outcome.typeName
@@ -396,7 +400,7 @@ class HeroCardSecondaryMarketCollectionViewCell: UICollectionViewCell {
             self.isRightOutcomeButtonSelected = Env.betslipManager.hasBettingTicket(withId: outcome.bettingOffer.id)
             
             // Check for SportRadar invalid odd
-            if !outcome.bettingOffer.decimalOdd.isNaN {
+            if !outcome.bettingOffer.decimalOdd.isNaN && outcome.bettingOffer.isAvailable {
                 self.setAwayOddValueLabel(toText: OddFormatter.formatOdd(withValue: outcome.bettingOffer.decimalOdd))
             }
             else {
@@ -455,17 +459,17 @@ class HeroCardSecondaryMarketCollectionViewCell: UICollectionViewCell {
             
         }
         
-        if market.outcomes.count == 3 {
+        if filteredOutcomes.count == 3 {
             self.homeBaseView.isHidden = false
             self.drawBaseView.isHidden = false
             self.awayBaseView.isHidden = false
         }
-        else if market.outcomes.count == 2 {
+        else if filteredOutcomes.count == 2 {
             self.homeBaseView.isHidden = false
             self.drawBaseView.isHidden = false
             self.awayBaseView.isHidden = true
         }
-        else if market.outcomes.count == 1 {
+        else if filteredOutcomes.count == 1 {
             self.homeBaseView.isHidden = false
             self.drawBaseView.isHidden = true
             self.awayBaseView.isHidden = true

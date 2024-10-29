@@ -356,23 +356,23 @@ class ProChoiceHighlightCollectionViewCell: UICollectionViewCell {
                 self?.isFavorite = isFavoriteMatch
             }
             .store(in: &self.cancellables)
-        
-        let homeOutcome = self.viewModel?.highlightedMarket.content.outcomes[safe: 0]?.typeName ?? nil
-        let drawOutcome = self.viewModel?.highlightedMarket.content.outcomes[safe: 1]?.typeName ?? nil
-        let awayOutcome = self.viewModel?.highlightedMarket.content.outcomes[safe: 2]?.typeName ?? nil
-        
-        self.configureOddsButtons(home: homeOutcome, draw: drawOutcome, away: awayOutcome)
+
+        self.configureOddsButtons()
         
     }
     
-    private func configureOddsButtons(home: String?, draw: String?, away: String?) {
-        self.homeButton.isHidden = home == nil
-        self.drawButton.isHidden = draw == nil
-        self.awayButton.isHidden = away == nil
-        
-        if let outcome = self.viewModel?.highlightedMarket.content.outcomes[safe: 0] {
-            
-            if let nameDigit1 = self.viewModel?.highlightedMarket.content.nameDigit1 {
+    private func configureOddsButtons() {
+
+        self.homeButton.isHidden = true
+        self.drawButton.isHidden = true
+        self.awayButton.isHidden = true
+
+        let availableOutcomes = self.viewModel?.availableOutcomes ?? []
+        let market = self.viewModel?.highlightedMarket.content
+
+        if let outcome = availableOutcomes[safe: 0] {
+
+            if let nameDigit1 = market?.nameDigit1 {
                 if outcome.typeName.contains("\(nameDigit1)") {
                     self.homeOutcomeNameLabel.text = outcome.typeName
                 }
@@ -383,12 +383,14 @@ class ProChoiceHighlightCollectionViewCell: UICollectionViewCell {
             else {
                 self.homeOutcomeNameLabel.text = outcome.typeName
             }
-            
+
+            self.homeButton.isHidden = false
+
             self.leftOutcome = outcome
             self.isLeftOutcomeButtonSelected = Env.betslipManager.hasBettingTicket(withId: outcome.bettingOffer.id)
             
             // Check for SportRadar invalid odd
-            if !outcome.bettingOffer.decimalOdd.isNaN {
+            if !outcome.bettingOffer.decimalOdd.isNaN && outcome.bettingOffer.isAvailable {
                 self.setHomeOddValueLabel(toText: OddFormatter.formatOdd(withValue: outcome.bettingOffer.decimalOdd))
             }
             else {
@@ -441,9 +443,9 @@ class ProChoiceHighlightCollectionViewCell: UICollectionViewCell {
                 })
         }
         
-        if let outcome = self.viewModel?.highlightedMarket.content.outcomes[safe: 1] {
-            
-            if let nameDigit1 = self.viewModel?.highlightedMarket.content.nameDigit1 {
+        if let outcome = availableOutcomes[safe: 1] {
+
+            if let nameDigit1 = market?.nameDigit1 {
                 if outcome.typeName.contains("\(nameDigit1)") {
                     self.drawOutcomeNameLabel.text = outcome.typeName
                 }
@@ -454,12 +456,14 @@ class ProChoiceHighlightCollectionViewCell: UICollectionViewCell {
             else {
                 self.drawOutcomeNameLabel.text = outcome.typeName
             }
-            
+
+            self.drawButton.isHidden = false
+
             self.middleOutcome = outcome
             self.isMiddleOutcomeButtonSelected = Env.betslipManager.hasBettingTicket(withId: outcome.bettingOffer.id)
             
             // Check for SportRadar invalid odd
-            if !outcome.bettingOffer.decimalOdd.isNaN {
+            if !outcome.bettingOffer.decimalOdd.isNaN && outcome.bettingOffer.isAvailable {
                 self.setDrawOddValueLabel(toText: OddFormatter.formatOdd(withValue: outcome.bettingOffer.decimalOdd))
             }
             else {
@@ -511,9 +515,9 @@ class ProChoiceHighlightCollectionViewCell: UICollectionViewCell {
                 })
         }
         
-        if let outcome = self.viewModel?.highlightedMarket.content.outcomes[safe: 2] {
-            
-            if let nameDigit1 = self.viewModel?.highlightedMarket.content.nameDigit1 {
+        if let outcome = availableOutcomes[safe: 2] {
+
+            if let nameDigit1 = market?.nameDigit1 {
                 if outcome.typeName.contains("\(nameDigit1)") {
                     self.awayOutcomeNameLabel.text = outcome.typeName
                 }
@@ -524,12 +528,14 @@ class ProChoiceHighlightCollectionViewCell: UICollectionViewCell {
             else {
                 self.awayOutcomeNameLabel.text = outcome.typeName
             }
-            
+
+            self.awayButton.isHidden = true
+
             self.rightOutcome = outcome
             self.isRightOutcomeButtonSelected = Env.betslipManager.hasBettingTicket(withId: outcome.bettingOffer.id)
             
             // Check for SportRadar invalid odd
-            if !outcome.bettingOffer.decimalOdd.isNaN {
+            if !outcome.bettingOffer.decimalOdd.isNaN && outcome.bettingOffer.isAvailable {
                 self.setAwayOddValueLabel(toText: OddFormatter.formatOdd(withValue: outcome.bettingOffer.decimalOdd))
             }
             else {

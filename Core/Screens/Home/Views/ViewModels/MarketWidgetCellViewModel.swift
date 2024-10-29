@@ -16,6 +16,21 @@ class MarketWidgetCellViewModel {
     
     @Published private(set) var highlightedMarket: HighlightedContent<Market>
 
+    var availableOutcomes: [Outcome] {
+        let highlightedMarket = self.highlightedMarket.content
+        let validOutcomesCount = self.highlightedMarket.promotedDetailsCount
+        let processedOutcomes = highlightedMarket.outcomes.filter { outcome in
+            if outcome.bettingOffer.decimalOdd.isNaN {
+                return false
+            }
+            return true
+        }
+        .sorted(by: \.bettingOffer.decimalOdd)
+        .prefix(validOutcomesCount)
+
+        return Array(processedOutcomes)
+    }
+
     var eventImagePublisher: AnyPublisher<String, Never> {
         return self.$highlightedMarket
             .map { highlightedMarket in

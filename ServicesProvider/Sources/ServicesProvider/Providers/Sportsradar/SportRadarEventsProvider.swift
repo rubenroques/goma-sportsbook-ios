@@ -1309,7 +1309,7 @@ extension SportRadarEventsProvider {
                         let cleanedEvents = events.compactMap({ $0 })
 
                         // create a dictionary from cleanedEvents using marketId as a key
-                        var eventDict: [String: Event] = [:] // Dictionary(uniqueKeysWithValues: cleanedEvents.map { ($0.markets.first?.id ?? "", $0) })
+                        var eventDict: [String: Event] = [:]
                         cleanedEvents.forEach({ event in
                             let firstMarketId = event.markets.first?.id ?? ""
                             eventDict[firstMarketId] = event
@@ -1362,7 +1362,7 @@ extension SportRadarEventsProvider {
                         let cleanedEvents = events.compactMap({ $0 })
 
                         // create a dictionary from cleanedEvents using marketId as a key
-                        var eventDict: [String: Event] = [:] // Dictionary(uniqueKeysWithValues: cleanedEvents.map { ($0.markets.first?.id ?? "", $0) })
+                        var eventDict: [String: Event] = [:]
                         cleanedEvents.forEach({ event in
                             let firstMarketId = event.markets.first?.id ?? ""
                             eventDict[firstMarketId] = event
@@ -1399,19 +1399,24 @@ extension SportRadarEventsProvider {
                     }
                 }
 
+                // Mapeia `marketIds` com índices para preservar a ordem original
                 let marketIds = headlineItems.compactMap { $0.marketId }
-                let publishers = marketIds.map({ id in
+                let marketIdIndexMap = Dictionary(uniqueKeysWithValues: marketIds.enumerated().map { ($1, $0) })
+
+                let publishers = marketIds.map { id in
                     return self.getMarketInfo(marketId: id)
-                        .map({ market in
+                        .map { market in
                             return Optional(market)
-                        })
+                        }
                         .replaceError(with: nil)
-                })
+                }
+
                 let finalPublisher = Publishers.MergeMany(publishers)
                     .collect()
-                    .map({ (markets: [Market?]) -> [HighlightMarket] in
+                    .map { (markets: [Market?]) -> [HighlightMarket] in
                         let marketValue = markets.compactMap { $0 }
                         var highlightMarkets = [HighlightMarket]()
+
                         for market in marketValue {
                             let enableSelections = headlineItemsPresentedSelection[market.id] ?? "0"
                             let enabledSelectionsCount = Int(enableSelections) ?? 0
@@ -1424,8 +1429,15 @@ extension SportRadarEventsProvider {
                             )
                             highlightMarkets.append(highlightMarket)
                         }
-                        return highlightMarkets
-                    })
+
+                        // Ordena `highlightMarkets` com base na posição original em `marketIdIndexMap`
+                        return highlightMarkets.sorted {
+                            guard let index1 = marketIdIndexMap[$0.market.id],
+                                  let index2 = marketIdIndexMap[$1.market.id]
+                            else { return false }
+                            return index1 < index2
+                        }
+                    }
                     .eraseToAnyPublisher()
 
                 return finalPublisher
@@ -2013,9 +2025,7 @@ extension SportRadarEventsProvider {
                     })
                 return mergedPublishers.eraseToAnyPublisher()
             })
-        
         return publisher.eraseToAnyPublisher()
- 
     }
     
     func subscribeToEventAndSecondaryMarkets(withId id: String) -> AnyPublisher<SubscribableContent<Event>, ServiceProviderError> {

@@ -22,10 +22,29 @@ class SportRadarEventStorage {
     private var marketsDictionary: OrderedDictionary<String, CurrentValueSubject<Market, Never>>
     private var outcomesDictionary: OrderedDictionary<String, CurrentValueSubject<Outcome, Never>>
 
+    #if DEBUG
+    private var removedMarkets: [String: Market] = [:]
+    #endif
+
+    private var cancellables = Set<AnyCancellable>()
+
     init() {
         self.eventSubject = .init(nil)
         self.marketsDictionary = [:]
         self.outcomesDictionary = [:]
+
+//
+//        #if DEBUG
+//        self.eventSubject
+//            .compactMap({ $0 })
+//            .sink { [weak self] (event: Event) in
+//                let marketsS: String? = event.markets.map({ return "\($0.isMainMarket)-\($0.name)" }).joined(separator: ",")
+//                let removedmarketsS: String? = self?.removedMarkets.values.map({ "[\($0.isMainMarket)-\($0.name)]" }).joined(separator: ",")
+//
+//                print("DebugMainMarket: \(event.homeTeamName): [\(marketsS ?? "")] {\(removedmarketsS ?? "")}")
+//            }
+//            .store(in: &self.cancellables)
+//        #endif
     }
 
     func reset() {
@@ -34,20 +53,13 @@ class SportRadarEventStorage {
         self.outcomesDictionary = [:]
     }
 
-    func storeMainMarket(_ mainMarket: Market) {
-        #if DEBUG
-        mainMarket.name = "INITIAL " + mainMarket.name
-        #endif
-        mainMarket.isMainMarket = true
-        for outcome in mainMarket.outcomes {
-            self.outcomesDictionary[outcome.id] = CurrentValueSubject(outcome)
-        }
-        self.marketsDictionary[mainMarket.id] = CurrentValueSubject(mainMarket)
-    }
-
-    func storeEvent(_ event: Event) {
+    func storeEvent(_ event: Event, withMainMarket: Bool = false) {
         self.marketsDictionary = [:]
         self.outcomesDictionary = [:]
+
+        if withMainMarket {
+            event.markets.first?.isMainMarket = withMainMarket
+        }
 
         for market in event.markets {
             for outcome in market.outcomes {
@@ -56,6 +68,28 @@ class SportRadarEventStorage {
             self.marketsDictionary[market.id] = CurrentValueSubject(market)
         }
 
+        self.eventSubject.send(event)
+    }
+
+    func storeSecundaryMarkets(_ secundaryMarkets: [Market]) {
+        guard let event = self.eventSubject.value else { return }
+
+        for market in secundaryMarkets {
+
+            // Check if there's an existing market with this ID and if it's marked as main
+            if let existingMarket = self.marketsDictionary[market.id]?.value,
+               existingMarket.isMainMarket {
+                continue // Skip this secondary market
+            }
+
+            //
+            for outcome in market.outcomes {
+                self.outcomesDictionary[outcome.id] = CurrentValueSubject(outcome)
+            }
+            self.marketsDictionary[market.id] = CurrentValueSubject(market)
+        }
+
+        event.markets = self.marketsDictionary.values.map(\.value)
         self.eventSubject.send(event)
     }
 
@@ -106,25 +140,14 @@ extension SportRadarEventStorage {
         market.isMainMarket = true
 
 //        #if DEBUG
-//        market.name = "MAIN! " + market.name
-//
-//        guard
-//            let oldMarketSubject = self.marketsDictionary[removedMainMarketId]
-//        else {
-//            return
+//        if let removedMarket = self.marketsDictionary[removedMainMarketId] {
+//            self.removedMarkets[removedMainMarketId] = removedMarket.value
 //        }
-//
-//        let oldMarket = oldMarketSubject.value
-//        oldMarket.isTradable = false
-//        oldMarket.name = "REMOVED " + oldMarket.name
-//        oldMarket.isMainMarket = false
-//        #else
+//        #endif
 
         // remove old main market
-        self.marketsDictionary[removedMainMarketId] = nil
+        self.marketsDictionary.removeValue(forKey: removedMainMarketId)
 
-//        #endif
-        
         self.removedMainMarketId = nil
         self.addMarket(market)
     }
@@ -165,7 +188,14 @@ extension SportRadarEventStorage {
     }
 
 
-    func removeMarket(withId id: String) {        
+    func removeMarket(withId id: String) {
+
+//        #if DEBUG
+//        if let removedMarket = self.marketsDictionary[id] {
+//            self.removedMarkets[id] = removedMarket.value
+//        }
+//        #endif
+
         self.marketsDictionary.removeValue(forKey: id)
         
         let updatedMarkets: [Market] = self.marketsDictionary.values.map(\.value)

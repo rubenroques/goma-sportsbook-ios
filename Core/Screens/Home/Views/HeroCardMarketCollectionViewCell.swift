@@ -256,7 +256,7 @@ class HeroCardMarketCollectionViewCell: UICollectionViewCell {
             self.isLeftOutcomeButtonSelected = Env.betslipManager.hasBettingTicket(withId: outcome.bettingOffer.id)
             
             // Check for SportRadar invalid odd
-            if !outcome.bettingOffer.decimalOdd.isNaN {
+            if !outcome.bettingOffer.decimalOdd.isNaN && outcome.bettingOffer.isAvailable {
                 self.setHomeOddValueLabel(toText: OddFormatter.formatOdd(withValue: outcome.bettingOffer.decimalOdd))
             }
             else {
@@ -334,7 +334,7 @@ class HeroCardMarketCollectionViewCell: UICollectionViewCell {
             self.isMiddleOutcomeButtonSelected = Env.betslipManager.hasBettingTicket(withId: outcome.bettingOffer.id)
             
             // Check for SportRadar invalid odd
-            if !outcome.bettingOffer.decimalOdd.isNaN {
+            if !outcome.bettingOffer.decimalOdd.isNaN && outcome.bettingOffer.isAvailable {
                 self.setDrawOddValueLabel(toText: OddFormatter.formatOdd(withValue: outcome.bettingOffer.decimalOdd))
             }
             else {
@@ -410,7 +410,7 @@ class HeroCardMarketCollectionViewCell: UICollectionViewCell {
             self.isRightOutcomeButtonSelected = Env.betslipManager.hasBettingTicket(withId: outcome.bettingOffer.id)
             
             // Check for SportRadar invalid odd
-            if !outcome.bettingOffer.decimalOdd.isNaN {
+            if !outcome.bettingOffer.decimalOdd.isNaN && outcome.bettingOffer.isAvailable {
                 self.setAwayOddValueLabel(toText: OddFormatter.formatOdd(withValue: outcome.bettingOffer.decimalOdd))
             }
             else {

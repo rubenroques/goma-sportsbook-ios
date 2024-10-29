@@ -96,10 +96,7 @@ class SportRadarEventMarketsCoordinator {
     }
 
     deinit {
-        let debugPrint = "OddDebug: SportRadarEventMarketsCoordinator deinit \(self.eventSecundaryMarketsIdentifier)"
-        if debugPrint.contains("3921509.1") {
-            print("breakpoint")
-        }
+        let debugPrint = "SportRadarEventMarketsCoordinator deinit \(self.eventSecundaryMarketsIdentifier)"
         print(debugPrint)
     }
     
@@ -253,9 +250,7 @@ extension SportRadarEventMarketsCoordinator {
             return
         }
 
-        if let mainMarket = event.markets.first {
-            self.storage.storeMainMarket(mainMarket)
-        }
+        self.storage.storeEvent(event, withMainMarket: true)
     }
 
     func updatedSecundaryMarkets(forContentIdentifier identifier: ContentIdentifier, onEvent event: Event) {
@@ -264,7 +259,7 @@ extension SportRadarEventMarketsCoordinator {
             return
         }
 
-        self.storage.storeEvent(event)
+        self.storage.storeSecundaryMarkets(event.markets)
     }
     
     func handleContentUpdate(_ content: SportRadarModels.ContentContainer) {

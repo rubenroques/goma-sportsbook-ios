@@ -547,6 +547,7 @@ extension SportRadarModels {
             case isTradable = "istradable"
             case isOverUnder = "isunderover"
             case customBetAvailableMarket = "customBetAvailableMarket"
+            case suspensiontype = "idfoselectionsuspensiontype"
         }
 
         init(from decoder: Decoder) throws {
@@ -577,11 +578,20 @@ extension SportRadarModels {
             }
             
             self.customBetAvailableMarket = nil
-            
+
+            let suspensiontype: String = (try? container.decode(String.self, forKey: SportRadarModels.Outcome.CodingKeys.suspensiontype)) ?? ""
+            if suspensiontype.lowercased() == "n/o" {
+                self.isTradable = false
+            }
+
 //            #if DEBUG
 //            self.name = self.id + " " + self.name
 //            #endif
 
+        }
+
+        func encode(to encoder: any Encoder) throws {
+            
         }
 
     }

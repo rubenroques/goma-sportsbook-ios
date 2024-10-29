@@ -633,9 +633,8 @@ extension SingleBettingTicketTableViewCell: UITextFieldDelegate {
     }
 
     func textField(_ textField: UITextField, shouldChangeCharactersIn range: NSRange, replacementString string: String) -> Bool {
-        // Define the valid character set (numbers and decimal separator)
+        // Define the valid character set (numbers and both decimal separators)
         let allowedCharacters = CharacterSet(charactersIn: "0123456789.,")
-        let decimalSeparator = Locale.current.decimalSeparator ?? "."
 
         // Ensure the replacement string contains only allowed characters
         if string.rangeOfCharacter(from: allowedCharacters.inverted) != nil {
@@ -646,17 +645,33 @@ extension SingleBettingTicketTableViewCell: UITextFieldDelegate {
         let currentText = textField.text ?? ""
         let newText = (currentText as NSString).replacingCharacters(in: range, with: string)
 
-        // Check if there is more than one decimal separator
-        let decimalCount = newText.components(separatedBy: decimalSeparator).count - 1
-        if decimalCount > 1 {
+        // Check for multiple decimal separators (both . and ,)
+        let dotCount = newText.components(separatedBy: ".").count - 1
+        let commaCount = newText.components(separatedBy: ",").count - 1
+
+        // Don't allow mixing of different decimal separators
+        if dotCount > 0 && commaCount > 0 {
             return false
         }
 
-        // Limit decimal places to two
-        if let decimalIndex = newText.firstIndex(of: Character(decimalSeparator)) {
-            let decimalPart = newText[decimalIndex...]
-            if decimalPart.count > 3 {
-                return false // Only two decimal places allowed
+        // Don't allow more than one of either separator
+        if dotCount > 1 || commaCount > 1 {
+            return false
+        }
+
+        // Check decimal places limit for dot
+        if let dotIndex = newText.firstIndex(of: ".") {
+            let decimalPart = newText[dotIndex...].dropFirst()
+            if decimalPart.count > 2 {
+                return false
+            }
+        }
+
+        // Check decimal places limit for comma
+        if let commaIndex = newText.firstIndex(of: ",") {
+            let decimalPart = newText[commaIndex...].dropFirst()
+            if decimalPart.count > 2 {
+                return false
             }
         }
 
