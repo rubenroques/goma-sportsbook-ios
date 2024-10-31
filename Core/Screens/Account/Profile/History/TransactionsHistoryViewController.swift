@@ -280,12 +280,17 @@ extension TransactionsHistoryViewController: UITableViewDelegate, UITableViewDat
 
             if self.viewModel.pendingWithdrawals.contains(where: {
                 $0.paymentId == transaction.paymentId
-            }) {
-                cell.hasPendingTransaction = true
-
-                cell.shouldCancelPendingTransaction = { [weak self] paymentId in
-
-                    self?.showCancelConfirmationAlert(paymentId: paymentId)
+            }){
+                if transaction.reference == "Escrow Auto Withdrawal" {
+                    cell.hasPendingTransaction = false
+                }
+                else {
+                    cell.hasPendingTransaction = true
+                    
+                    cell.shouldCancelPendingTransaction = { [weak self] paymentId in
+                        
+                        self?.showCancelConfirmationAlert(paymentId: paymentId)
+                    }
                 }
             }
             
