@@ -280,9 +280,7 @@ class HeroCardTableViewCell: UITableViewCell {
     }
     
     private func getCollectionViewPage(isPrevious: Bool = false) {
-        
         let bannersCount = self.viewModel?.match.markets.count ?? 0
-
         guard bannersCount != 0 else {
             return
         }
@@ -303,7 +301,7 @@ class HeroCardTableViewCell: UITableViewCell {
             collectionView.scrollToItem(at: firstIndexPath, at: .centeredHorizontally, animated: true)
         }
     }
-    
+
     // MARK: Actions
     @objc func didTapFavoriteIcon() {
         if Env.userSessionStore.isUserLogged() {
@@ -316,7 +314,7 @@ class HeroCardTableViewCell: UITableViewCell {
             self.viewController?.present(loginViewController, animated: true, completion: nil)
         }
     }
-    
+
     @objc func autoScrollCollectionView(_ timer1: Timer) {
 
         let bannersCount = self.viewModel?.match.markets.count ?? 0

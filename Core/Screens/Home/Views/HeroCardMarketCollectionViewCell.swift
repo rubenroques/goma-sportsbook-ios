@@ -237,9 +237,20 @@ class HeroCardMarketCollectionViewCell: UICollectionViewCell {
     }
     
     private func configureOutcomes(withMarket market: Market) {
-        
-        if let outcome = market.outcomes[safe: 0] {
-            
+
+        var filteredOutcomes = market.outcomes.filter { outcome in
+            return (!outcome.bettingOffer.decimalOdd.isNaN && outcome.bettingOffer.isAvailable)
+        }
+
+        if filteredOutcomes.count > 3 {
+            filteredOutcomes = filteredOutcomes.sorted { outcomeLeft, outcomeRight in
+                return outcomeLeft.bettingOffer.decimalOdd < outcomeRight.bettingOffer.decimalOdd
+            }
+        }
+
+        //
+        if let outcome = filteredOutcomes[safe: 0] {
+
             if let nameDigit1 = market.nameDigit1 {
                 if outcome.typeName.contains("\(nameDigit1)") {
                     self.homeOddTitleLabel.text = outcome.typeName
@@ -316,8 +327,8 @@ class HeroCardMarketCollectionViewCell: UICollectionViewCell {
             
         }
         
-        if let outcome = market.outcomes[safe: 1] {
-            
+        if let outcome = filteredOutcomes[safe: 1] {
+
             if let nameDigit1 = market.nameDigit1 {
                 if outcome.typeName.contains("\(nameDigit1)") {
                     self.drawOddTitleLabel.text = outcome.typeName
@@ -392,8 +403,8 @@ class HeroCardMarketCollectionViewCell: UICollectionViewCell {
                 })
         }
         
-        if let outcome = market.outcomes[safe: 2] {
-            
+        if let outcome = filteredOutcomes[safe: 2] {
+
             if let nameDigit1 = market.nameDigit1 {
                 if outcome.typeName.contains("\(nameDigit1)") {
                     self.awayOddTitleLabel.text = outcome.typeName

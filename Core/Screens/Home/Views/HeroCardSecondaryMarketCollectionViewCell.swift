@@ -225,8 +225,14 @@ class HeroCardSecondaryMarketCollectionViewCell: UICollectionViewCell {
     
     private func configureOutcomes(withMarket market: Market) {
 
-        let filteredOutcomes = market.outcomes.filter { outcome in
+        var filteredOutcomes = market.outcomes.filter { outcome in
             return (!outcome.bettingOffer.decimalOdd.isNaN && outcome.bettingOffer.isAvailable)
+        }
+
+        if filteredOutcomes.count > 3 {
+            filteredOutcomes = filteredOutcomes.sorted { outcomeLeft, outcomeRight in
+                return outcomeLeft.bettingOffer.decimalOdd < outcomeRight.bettingOffer.decimalOdd
+            }
         }
 
         if let outcome = filteredOutcomes[safe: 0] {

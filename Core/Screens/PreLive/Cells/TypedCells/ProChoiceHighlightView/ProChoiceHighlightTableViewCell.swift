@@ -367,7 +367,14 @@ class ProChoiceHighlightCollectionViewCell: UICollectionViewCell {
         self.drawButton.isHidden = true
         self.awayButton.isHidden = true
 
-        let availableOutcomes = self.viewModel?.availableOutcomes ?? []
+        var availableOutcomes = (self.viewModel?.availableOutcomes ?? [])
+
+        if availableOutcomes.count > 3 {
+            availableOutcomes = availableOutcomes.sorted { outcomeLeft, outcomeRight in
+                return outcomeLeft.bettingOffer.decimalOdd < outcomeRight.bettingOffer.decimalOdd
+            }
+        }
+
         let market = self.viewModel?.highlightedMarket.content
 
         if let outcome = availableOutcomes[safe: 0] {
