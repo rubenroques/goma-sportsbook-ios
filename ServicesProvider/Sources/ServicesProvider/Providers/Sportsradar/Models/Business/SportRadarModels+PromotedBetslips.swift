@@ -103,35 +103,34 @@ extension SportRadarModels {
     }
     
     struct PromotedBetslipSelection: Codable {
-        var id: String
-        var beginDate: String
+        var id: String?
+        var beginDate: String?
         var betOfferId: Int?
         var country: String?
         var countryId: String?
         var eventId: String?
         var eventType: String?
-        var league: String
+        var league: String?
         var leagueId: String?
         var market: String?
         var marketId: Int?
-        var marketType: String
+        var marketType: String?
         var marketTypeId: Int?
         var orakoEventId: String
         var orakoMarketId: String
         var orakoSelectionId: String
-        var outcomeType: String
+        var outcomeType: String?
         var outcomeId: Int?
-        var participantIds: [String]
-        var participants: [String]
+        var participantIds: [String]?
+        var participants: [String]?
         var period: String?
         var periodId: Int?
-        var quote: Double
+        var quote: Double?
         var quoteGroup: String?
-        var sport: String
-        var sportId: String
-        var status: String
-        
-        
+        var sport: String?
+        var sportId: String?
+        var status: String?
+
         enum CodingKeys: String, CodingKey {
             case id = "selection_id"
             case beginDate = "begin"
@@ -164,33 +163,39 @@ extension SportRadarModels {
         
         init(from decoder: Decoder) throws {
             let container: KeyedDecodingContainer<SportRadarModels.PromotedBetslipSelection.CodingKeys> = try decoder.container(keyedBy: SportRadarModels.PromotedBetslipSelection.CodingKeys.self)
-            self.id = try container.decode(String.self, forKey: SportRadarModels.PromotedBetslipSelection.CodingKeys.id)
-            self.beginDate = try container.decode(String.self, forKey: SportRadarModels.PromotedBetslipSelection.CodingKeys.beginDate)
+
+            // Required props
+            self.orakoEventId = try container.decode(String.self, forKey: SportRadarModels.PromotedBetslipSelection.CodingKeys.orakoEventId)
+            self.orakoMarketId = try container.decode(String.self, forKey: SportRadarModels.PromotedBetslipSelection.CodingKeys.orakoMarketId)
+            self.orakoSelectionId = try container.decode(String.self, forKey: SportRadarModels.PromotedBetslipSelection.CodingKeys.orakoSelectionId)
+
+            // Optional props
+            self.id = try container.decodeIfPresent(String.self, forKey: SportRadarModels.PromotedBetslipSelection.CodingKeys.id)
+            self.quote = try container.decodeIfPresent(Double.self, forKey: SportRadarModels.PromotedBetslipSelection.CodingKeys.quote)
+            self.beginDate = try container.decodeIfPresent(String.self, forKey: SportRadarModels.PromotedBetslipSelection.CodingKeys.beginDate)
+            self.league = try container.decodeIfPresent(String.self, forKey: SportRadarModels.PromotedBetslipSelection.CodingKeys.league)
+            self.marketType = try container.decodeIfPresent(String.self, forKey: SportRadarModels.PromotedBetslipSelection.CodingKeys.marketType)
+            self.participantIds = try container.decodeIfPresent([String].self, forKey: SportRadarModels.PromotedBetslipSelection.CodingKeys.participantIds)
+            self.participants = try container.decodeIfPresent([String].self, forKey: SportRadarModels.PromotedBetslipSelection.CodingKeys.participants)
+            self.sport = try container.decodeIfPresent(String.self, forKey: SportRadarModels.PromotedBetslipSelection.CodingKeys.sport)
+            self.sportId = try container.decodeIfPresent(String.self, forKey: SportRadarModels.PromotedBetslipSelection.CodingKeys.sportId)
+            self.status = try container.decodeIfPresent(String.self, forKey: SportRadarModels.PromotedBetslipSelection.CodingKeys.status)
+            self.outcomeType = try container.decodeIfPresent(String.self, forKey: SportRadarModels.PromotedBetslipSelection.CodingKeys.outcomeType)
+
             self.betOfferId = try container.decodeIfPresent(Int.self, forKey: SportRadarModels.PromotedBetslipSelection.CodingKeys.betOfferId)
             self.country = try container.decodeIfPresent(String.self, forKey: SportRadarModels.PromotedBetslipSelection.CodingKeys.country)
             self.countryId = try container.decodeIfPresent(String.self, forKey: SportRadarModels.PromotedBetslipSelection.CodingKeys.countryId)
             self.eventId = try container.decodeIfPresent(String.self, forKey: SportRadarModels.PromotedBetslipSelection.CodingKeys.eventId)
             self.eventType = try container.decodeIfPresent(String.self, forKey: SportRadarModels.PromotedBetslipSelection.CodingKeys.eventType)
-            self.league = try container.decode(String.self, forKey: SportRadarModels.PromotedBetslipSelection.CodingKeys.league)
             self.leagueId = try container.decodeIfPresent(String.self, forKey: SportRadarModels.PromotedBetslipSelection.CodingKeys.leagueId)
             self.market = try container.decodeIfPresent(String.self, forKey: SportRadarModels.PromotedBetslipSelection.CodingKeys.market)
             self.marketId = try container.decodeIfPresent(Int.self, forKey: SportRadarModels.PromotedBetslipSelection.CodingKeys.marketId)
-            self.marketType = try container.decode(String.self, forKey: SportRadarModels.PromotedBetslipSelection.CodingKeys.marketType)
             self.marketTypeId = try container.decodeIfPresent(Int.self, forKey: SportRadarModels.PromotedBetslipSelection.CodingKeys.marketTypeId)
-            self.orakoEventId = try container.decode(String.self, forKey: SportRadarModels.PromotedBetslipSelection.CodingKeys.orakoEventId)
-            self.orakoMarketId = try container.decode(String.self, forKey: SportRadarModels.PromotedBetslipSelection.CodingKeys.orakoMarketId)
-            self.orakoSelectionId = try container.decode(String.self, forKey: SportRadarModels.PromotedBetslipSelection.CodingKeys.orakoSelectionId)
-            self.outcomeType = try container.decode(String.self, forKey: SportRadarModels.PromotedBetslipSelection.CodingKeys.outcomeType)
             self.outcomeId = try container.decodeIfPresent(Int.self, forKey: SportRadarModels.PromotedBetslipSelection.CodingKeys.outcomeId)
-            self.participantIds = try container.decode([String].self, forKey: SportRadarModels.PromotedBetslipSelection.CodingKeys.participantIds)
-            self.participants = try container.decode([String].self, forKey: SportRadarModels.PromotedBetslipSelection.CodingKeys.participants)
             self.period = try container.decodeIfPresent(String.self, forKey: SportRadarModels.PromotedBetslipSelection.CodingKeys.period)
             self.periodId = try container.decodeIfPresent(Int.self, forKey: SportRadarModels.PromotedBetslipSelection.CodingKeys.periodId)
-            self.quote = try container.decode(Double.self, forKey: SportRadarModels.PromotedBetslipSelection.CodingKeys.quote)
             self.quoteGroup = try container.decodeIfPresent(String.self, forKey: SportRadarModels.PromotedBetslipSelection.CodingKeys.quoteGroup)
-            self.sport = try container.decode(String.self, forKey: SportRadarModels.PromotedBetslipSelection.CodingKeys.sport)
-            self.sportId = try container.decode(String.self, forKey: SportRadarModels.PromotedBetslipSelection.CodingKeys.sportId)
-            self.status = try container.decode(String.self, forKey: SportRadarModels.PromotedBetslipSelection.CodingKeys.status)
+
         }
     }
 }

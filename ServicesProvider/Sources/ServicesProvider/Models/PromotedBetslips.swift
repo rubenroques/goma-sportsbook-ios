@@ -35,7 +35,7 @@ public struct PromotedBetslipSelection: Codable {
     public var outcomeId: String
     
     public var marketName: String
-    public var outcomeName: String
+    public var outcomeName: String?
         
     public var participantIds: [String]
     public var participants: [String]
@@ -65,7 +65,7 @@ public struct PromotedBetslipSelection: Codable {
         case "away":
             self.outcomeName = (participants.last ?? "")
         default:
-            self.outcomeName = ""
+            self.outcomeName = "-"
         }
         
         self.participantIds = participantIds

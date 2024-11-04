@@ -432,7 +432,7 @@ extension ServiceProviderModelMapper {
                                          outcomeId: promotedSelection.outcomeId,
                                          eventName: promotedSelection.eventName,
                                          marketName: promotedSelection.marketName,
-                                         outcomeName: promotedSelection.outcomeName)
+                                         outcomeName: promotedSelection.outcomeName ?? "")
         
         return suggestedBetslipSelection
     }
