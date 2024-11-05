@@ -18,6 +18,7 @@ class ProChoiceHighlightCollectionViewCell: UICollectionViewCell {
     private lazy var containerStackView: UIStackView = self.createContainerStackView()
 
     // New UI components
+    private lazy var eventImageBaseView: UIView = self.createEventImageBaseView()
     private lazy var eventImageView: UIImageView = self.createEventImageView()
 
     private lazy var leagueInfoContainerView: UIView = self.createLeagueInfoContainerView()
@@ -33,7 +34,7 @@ class ProChoiceHighlightCollectionViewCell: UICollectionViewCell {
     private lazy var topSeparatorAlphaLineView: FadingView = self.createTopSeparatorAlphaLineView()
 
     private lazy var eventInfoContainerView: UIView = self.createEventInfoContainerView()
-    private lazy var eventInfoImageView: UIImageView = self.createEventInfoImageView()
+    private lazy var backgroundImageView: UIImageView = self.createBackgroundImageView()
 
     private lazy var eventDateLabel: UILabel = self.createEventDateLabel()
     private lazy var eventTimeLabel: UILabel = self.createEventTimeLabel()
@@ -134,6 +135,8 @@ class ProChoiceHighlightCollectionViewCell: UICollectionViewCell {
         super.init(frame: frame)
         self.setupSubviews()
         self.setupWithTheme()
+
+        self.eventImageView.contentMode = .scaleAspectFill
 
         self.homeButton.isUserInteractionEnabled = true
         self.drawButton.isUserInteractionEnabled = true
@@ -924,15 +927,15 @@ extension ProChoiceHighlightCollectionViewCell {
     // MARK: - UI Setup
     private func setupSubviews() {
         self.contentView.addSubview(self.containerView)
-        self.containerView.addSubview(self.gradientBorderView)
-        
-        self.gradientBorderView.addSubview(self.eventInfoImageView)
 
+        self.containerView.addSubview(self.backgroundImageView)
         self.containerView.addSubview(self.containerStackView)
-
+        self.containerView.addSubview(self.gradientBorderView)
         self.containerView.addSubview(self.topSeparatorAlphaLineView)
-        
-        self.containerStackView.addArrangedSubview(self.eventImageView)
+
+        self.containerStackView.addArrangedSubview(self.eventImageBaseView)
+
+        self.eventImageBaseView.addSubview(self.eventImageView)
 
         self.containerStackView.addArrangedSubview(self.leagueInfoContainerView)
         self.leagueInfoContainerView.addSubview(self.leagueInfoStackView)
@@ -1027,7 +1030,12 @@ extension ProChoiceHighlightCollectionViewCell {
             self.containerStackView.trailingAnchor.constraint(equalTo: self.containerView.trailingAnchor),
             self.containerStackView.bottomAnchor.constraint(equalTo: self.containerView.bottomAnchor, constant: -8),
 
-            self.eventImageView.heightAnchor.constraint(equalToConstant: 100),
+
+            self.eventImageBaseView.heightAnchor.constraint(equalToConstant: 100),
+            self.eventImageView.leadingAnchor.constraint(equalTo: self.eventImageBaseView.leadingAnchor),
+            self.eventImageView.trailingAnchor.constraint(equalTo: self.eventImageBaseView.trailingAnchor),
+            self.eventImageView.topAnchor.constraint(equalTo: self.eventImageBaseView.topAnchor),
+            self.eventImageView.bottomAnchor.constraint(equalTo: self.containerView.bottomAnchor),
 
             self.leagueInfoStackView.heightAnchor.constraint(equalToConstant: 14),
             self.leagueInfoStackView.leadingAnchor.constraint(equalTo: self.leagueInfoContainerView.leadingAnchor, constant: 16),
@@ -1056,10 +1064,10 @@ extension ProChoiceHighlightCollectionViewCell {
 
             self.eventInfoContainerView.heightAnchor.constraint(equalToConstant: 70),
             
-            self.eventInfoImageView.leadingAnchor.constraint(equalTo: self.containerView.leadingAnchor, constant: 1.2),
-            self.eventInfoImageView.trailingAnchor.constraint(equalTo: self.containerView.trailingAnchor, constant: -1.2),
-            self.eventInfoImageView.topAnchor.constraint(equalTo: self.eventImageView.bottomAnchor, constant: 1.2),
-            self.eventInfoImageView.bottomAnchor.constraint(equalTo: self.containerView.bottomAnchor, constant: -1.2),
+            self.backgroundImageView.leadingAnchor.constraint(equalTo: self.containerView.leadingAnchor),
+            self.backgroundImageView.trailingAnchor.constraint(equalTo: self.containerView.trailingAnchor),
+            self.backgroundImageView.topAnchor.constraint(equalTo: self.eventImageBaseView.bottomAnchor),
+            self.backgroundImageView.bottomAnchor.constraint(equalTo: self.containerView.bottomAnchor),
 
             self.marketNameLabel.leadingAnchor.constraint(equalTo: self.eventInfoContainerView.leadingAnchor, constant: 16),
             self.marketNameLabel.topAnchor.constraint(equalTo: self.eventInfoContainerView.topAnchor, constant: 8),
@@ -1082,7 +1090,7 @@ extension ProChoiceHighlightCollectionViewCell {
             self.drawButton.heightAnchor.constraint(equalTo: self.homeButton.heightAnchor),
             self.awayButton.heightAnchor.constraint(equalTo: self.homeButton.heightAnchor),
 
-            self.seeAllMarketsButton.heightAnchor.constraint(equalToConstant: 32)
+            self.seeAllMarketsButton.heightAnchor.constraint(equalToConstant: 27)
         ])
 
         NSLayoutConstraint.activate([
@@ -1215,6 +1223,12 @@ extension ProChoiceHighlightCollectionViewCell {
         return stackView
     }
 
+    private func createEventImageBaseView() -> UIView {
+        let view = UIView()
+        view.translatesAutoresizingMaskIntoConstraints = false
+        return view
+    }
+
     private func createEventImageView() -> UIImageView {
         let imageView = UIImageView()
         imageView.contentMode = .scaleAspectFill
@@ -1279,7 +1293,7 @@ extension ProChoiceHighlightCollectionViewCell {
         return view
     }
     
-    private func createEventInfoImageView() -> UIImageView {
+    private func createBackgroundImageView() -> UIImageView {
         let imageView = UIImageView()
         imageView.translatesAutoresizingMaskIntoConstraints = false
         imageView.image = UIImage(named: "pro_choices_background")

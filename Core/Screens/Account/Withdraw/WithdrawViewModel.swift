@@ -114,10 +114,8 @@ class WithdrawViewModel: NSObject {
                 else {
                     self.prepareWithdrawal(withdrawalAmount: withdrawalAmount, paymentMethod: paymentMethod)
                 }
-
             }
 //        }
-
     }
 
     private func getWithdrawalMethods() {
