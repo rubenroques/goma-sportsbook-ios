@@ -928,12 +928,11 @@ extension ProChoiceHighlightCollectionViewCell {
     private func setupSubviews() {
         self.contentView.addSubview(self.containerView)
 
+        self.containerView.addSubview(self.eventImageBaseView)
         self.containerView.addSubview(self.backgroundImageView)
         self.containerView.addSubview(self.containerStackView)
         self.containerView.addSubview(self.gradientBorderView)
         self.containerView.addSubview(self.topSeparatorAlphaLineView)
-
-        self.containerStackView.addArrangedSubview(self.eventImageBaseView)
 
         self.eventImageBaseView.addSubview(self.eventImageView)
 
@@ -1025,17 +1024,20 @@ extension ProChoiceHighlightCollectionViewCell {
             self.containerView.topAnchor.constraint(equalTo: self.gradientBorderView.topAnchor),
             self.containerView.bottomAnchor.constraint(equalTo: self.gradientBorderView.bottomAnchor),
 
-            self.containerStackView.topAnchor.constraint(equalTo: self.containerView.topAnchor),
-            self.containerStackView.leadingAnchor.constraint(equalTo: self.containerView.leadingAnchor),
-            self.containerStackView.trailingAnchor.constraint(equalTo: self.containerView.trailingAnchor),
-            self.containerStackView.bottomAnchor.constraint(equalTo: self.containerView.bottomAnchor, constant: -8),
-
-
+            self.eventImageBaseView.topAnchor.constraint(equalTo: self.containerView.topAnchor),
+            self.eventImageBaseView.leadingAnchor.constraint(equalTo: self.containerView.leadingAnchor),
+            self.eventImageBaseView.trailingAnchor.constraint(equalTo: self.containerView.trailingAnchor),
             self.eventImageBaseView.heightAnchor.constraint(equalToConstant: 100),
+
             self.eventImageView.leadingAnchor.constraint(equalTo: self.eventImageBaseView.leadingAnchor),
             self.eventImageView.trailingAnchor.constraint(equalTo: self.eventImageBaseView.trailingAnchor),
             self.eventImageView.topAnchor.constraint(equalTo: self.eventImageBaseView.topAnchor),
             self.eventImageView.bottomAnchor.constraint(equalTo: self.containerView.bottomAnchor),
+
+            self.containerStackView.topAnchor.constraint(equalTo: self.eventImageBaseView.bottomAnchor),
+            self.containerStackView.leadingAnchor.constraint(equalTo: self.containerView.leadingAnchor),
+            self.containerStackView.trailingAnchor.constraint(equalTo: self.containerView.trailingAnchor),
+            self.containerStackView.bottomAnchor.constraint(equalTo: self.containerView.bottomAnchor, constant: -8),
 
             self.leagueInfoStackView.heightAnchor.constraint(equalToConstant: 14),
             self.leagueInfoStackView.leadingAnchor.constraint(equalTo: self.leagueInfoContainerView.leadingAnchor, constant: 16),
@@ -1225,6 +1227,7 @@ extension ProChoiceHighlightCollectionViewCell {
 
     private func createEventImageBaseView() -> UIView {
         let view = UIView()
+        view.clipsToBounds = true
         view.translatesAutoresizingMaskIntoConstraints = false
         return view
     }
