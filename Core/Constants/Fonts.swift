@@ -13,18 +13,18 @@ struct AppFont {
 
         private var sizeName: String {
             switch self {
-            case .thin: return "Thin" // Roboto-Thin
+            case .thin: return "Light" // Roboto-Thin
             case .light: return "Light" // Roboto-Light
-            case .regular: return "Regular" // Roboto-Regular
-            case .medium: return "Medium" // Roboto-Medium
-            case .semibold: return "Bold" // Roboto not supported semi bold
-            case .bold: return "Black" // Roboto-Bold
-            case .heavy: return "Black" // Roboto-Black
+            case .regular: return "Light" // Roboto-Regular
+            case .medium: return "Regular" // Roboto-Medium
+            case .semibold: return "Medium" // Roboto not supported semi bold
+            case .bold: return "Bold" // Roboto-Bold
+            case .heavy: return "Bold" // Roboto-Black
             }
         }
 
         private var familyName: String {
-            return "Roboto"
+            return "Ubuntu" // "Roboto"
         }
 
         fileprivate var fullFontName: String {

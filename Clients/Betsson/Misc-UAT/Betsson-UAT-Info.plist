@@ -75,6 +75,26 @@
         <string>Roboto-Regular.ttf</string>
         <string>Roboto-Thin.ttf</string>
         <string>Roboto-ThinItalic.ttf</string>
+
+        <string>AnekBangla-Bold.ttf</string>
+        <string>AnekBangla-ExtraBold.ttf</string>
+        <string>AnekBangla-ExtraLight.ttf</string>
+        <string>AnekBangla-Light.ttf</string>
+        <string>AnekBangla-Medium.ttf</string>
+        <string>AnekBangla-Regular.ttf</string>
+        <string>AnekBangla-SemiBold.ttf</string>
+        <string>AnekBangla-Thin.ttf</string>
+
+        <string>Baloo2-Bold.ttf</string>
+        <string>Baloo2-ExtraBold.ttf</string>
+        <string>Baloo2-Medium.ttf</string>
+        <string>Baloo2-Regular.ttf</string>
+        <string>Baloo2-SemiBold.ttf</string>
+
+        <string>Ubuntu-Bold.ttf</string>
+        <string>Ubuntu-Light.ttf</string>
+        <string>Ubuntu-Medium.ttf</string>
+        <string>Ubuntu-Regular.ttf</string>
 	</array>
 	<key>UIApplicationSupportsIndirectInputEvents</key>
 	<true/>

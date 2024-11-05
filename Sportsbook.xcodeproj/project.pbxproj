@@ -1073,6 +1073,142 @@
 		455AE13A2A2A16E00045FDD3 /* MakeYourBetTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 455AE1332A2A16E00045FDD3 /* MakeYourBetTableViewCell.swift */; };
 		455E86B92AC464B20031AF26 /* TargetVariables-PROD.swift in Sources */ = {isa = PBXBuildFile; fileRef = 455E86B82AC464920031AF26 /* TargetVariables-PROD.swift */; };
 		456237D9297EE5F600B3FA3A /* SharedModels in Frameworks */ = {isa = PBXBuildFile; productRef = 456237D8297EE5F600B3FA3A /* SharedModels */; };
+		45634B182CD9430200F8D27D /* AnekBangla-SemiBold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 45634B062CD9430200F8D27D /* AnekBangla-SemiBold.ttf */; };
+		45634B1A2CD9430200F8D27D /* AnekBangla-Light.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 45634B032CD9430200F8D27D /* AnekBangla-Light.ttf */; };
+		45634B1B2CD9430200F8D27D /* Ubuntu-Medium.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 45634B142CD9430200F8D27D /* Ubuntu-Medium.ttf */; };
+		45634B1E2CD9430200F8D27D /* Baloo2-SemiBold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 45634B0D2CD9430200F8D27D /* Baloo2-SemiBold.ttf */; };
+		45634B1F2CD9430200F8D27D /* AnekBangla-Regular.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 45634B052CD9430200F8D27D /* AnekBangla-Regular.ttf */; };
+		45634B212CD9430200F8D27D /* AnekBangla-ExtraBold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 45634B012CD9430200F8D27D /* AnekBangla-ExtraBold.ttf */; };
+		45634B222CD9430200F8D27D /* Baloo2-Regular.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 45634B0C2CD9430200F8D27D /* Baloo2-Regular.ttf */; };
+		45634B232CD9430200F8D27D /* AnekBangla-Bold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 45634B002CD9430200F8D27D /* AnekBangla-Bold.ttf */; };
+		45634B242CD9430200F8D27D /* AnekBangla-Thin.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 45634B072CD9430200F8D27D /* AnekBangla-Thin.ttf */; };
+		45634B252CD9430200F8D27D /* Ubuntu-Light.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 45634B122CD9430200F8D27D /* Ubuntu-Light.ttf */; };
+		45634B262CD9430200F8D27D /* Baloo2-Medium.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 45634B0B2CD9430200F8D27D /* Baloo2-Medium.ttf */; };
+		45634B272CD9430200F8D27D /* AnekBangla-Medium.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 45634B042CD9430200F8D27D /* AnekBangla-Medium.ttf */; };
+		45634B282CD9430200F8D27D /* AnekBangla-ExtraLight.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 45634B022CD9430200F8D27D /* AnekBangla-ExtraLight.ttf */; };
+		45634B292CD9430200F8D27D /* Baloo2-Bold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 45634B092CD9430200F8D27D /* Baloo2-Bold.ttf */; };
+		45634B2A2CD9430200F8D27D /* Ubuntu-Regular.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 45634B162CD9430200F8D27D /* Ubuntu-Regular.ttf */; };
+		45634B2B2CD9430200F8D27D /* Baloo2-ExtraBold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 45634B0A2CD9430200F8D27D /* Baloo2-ExtraBold.ttf */; };
+		45634B2C2CD9430200F8D27D /* Ubuntu-Bold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 45634B0F2CD9430200F8D27D /* Ubuntu-Bold.ttf */; };
+		45634B2D2CD9430200F8D27D /* AnekBangla-SemiBold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 45634B062CD9430200F8D27D /* AnekBangla-SemiBold.ttf */; };
+		45634B2F2CD9430200F8D27D /* AnekBangla-Light.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 45634B032CD9430200F8D27D /* AnekBangla-Light.ttf */; };
+		45634B302CD9430200F8D27D /* Ubuntu-Medium.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 45634B142CD9430200F8D27D /* Ubuntu-Medium.ttf */; };
+		45634B332CD9430200F8D27D /* Baloo2-SemiBold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 45634B0D2CD9430200F8D27D /* Baloo2-SemiBold.ttf */; };
+		45634B342CD9430200F8D27D /* AnekBangla-Regular.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 45634B052CD9430200F8D27D /* AnekBangla-Regular.ttf */; };
+		45634B362CD9430200F8D27D /* AnekBangla-ExtraBold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 45634B012CD9430200F8D27D /* AnekBangla-ExtraBold.ttf */; };
+		45634B372CD9430200F8D27D /* Baloo2-Regular.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 45634B0C2CD9430200F8D27D /* Baloo2-Regular.ttf */; };
+		45634B382CD9430200F8D27D /* AnekBangla-Bold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 45634B002CD9430200F8D27D /* AnekBangla-Bold.ttf */; };
+		45634B392CD9430200F8D27D /* AnekBangla-Thin.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 45634B072CD9430200F8D27D /* AnekBangla-Thin.ttf */; };
+		45634B3A2CD9430200F8D27D /* Ubuntu-Light.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 45634B122CD9430200F8D27D /* Ubuntu-Light.ttf */; };
+		45634B3B2CD9430200F8D27D /* Baloo2-Medium.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 45634B0B2CD9430200F8D27D /* Baloo2-Medium.ttf */; };
+		45634B3C2CD9430200F8D27D /* AnekBangla-Medium.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 45634B042CD9430200F8D27D /* AnekBangla-Medium.ttf */; };
+		45634B3D2CD9430200F8D27D /* AnekBangla-ExtraLight.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 45634B022CD9430200F8D27D /* AnekBangla-ExtraLight.ttf */; };
+		45634B3E2CD9430200F8D27D /* Baloo2-Bold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 45634B092CD9430200F8D27D /* Baloo2-Bold.ttf */; };
+		45634B3F2CD9430200F8D27D /* Ubuntu-Regular.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 45634B162CD9430200F8D27D /* Ubuntu-Regular.ttf */; };
+		45634B402CD9430200F8D27D /* Baloo2-ExtraBold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 45634B0A2CD9430200F8D27D /* Baloo2-ExtraBold.ttf */; };
+		45634B412CD9430200F8D27D /* Ubuntu-Bold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 45634B0F2CD9430200F8D27D /* Ubuntu-Bold.ttf */; };
+		45634B422CD9430200F8D27D /* AnekBangla-SemiBold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 45634B062CD9430200F8D27D /* AnekBangla-SemiBold.ttf */; };
+		45634B442CD9430200F8D27D /* AnekBangla-Light.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 45634B032CD9430200F8D27D /* AnekBangla-Light.ttf */; };
+		45634B452CD9430200F8D27D /* Ubuntu-Medium.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 45634B142CD9430200F8D27D /* Ubuntu-Medium.ttf */; };
+		45634B482CD9430200F8D27D /* Baloo2-SemiBold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 45634B0D2CD9430200F8D27D /* Baloo2-SemiBold.ttf */; };
+		45634B492CD9430200F8D27D /* AnekBangla-Regular.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 45634B052CD9430200F8D27D /* AnekBangla-Regular.ttf */; };
+		45634B4B2CD9430200F8D27D /* AnekBangla-ExtraBold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 45634B012CD9430200F8D27D /* AnekBangla-ExtraBold.ttf */; };
+		45634B4C2CD9430200F8D27D /* Baloo2-Regular.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 45634B0C2CD9430200F8D27D /* Baloo2-Regular.ttf */; };
+		45634B4D2CD9430200F8D27D /* AnekBangla-Bold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 45634B002CD9430200F8D27D /* AnekBangla-Bold.ttf */; };
+		45634B4E2CD9430200F8D27D /* AnekBangla-Thin.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 45634B072CD9430200F8D27D /* AnekBangla-Thin.ttf */; };
+		45634B4F2CD9430200F8D27D /* Ubuntu-Light.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 45634B122CD9430200F8D27D /* Ubuntu-Light.ttf */; };
+		45634B502CD9430200F8D27D /* Baloo2-Medium.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 45634B0B2CD9430200F8D27D /* Baloo2-Medium.ttf */; };
+		45634B512CD9430200F8D27D /* AnekBangla-Medium.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 45634B042CD9430200F8D27D /* AnekBangla-Medium.ttf */; };
+		45634B522CD9430200F8D27D /* AnekBangla-ExtraLight.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 45634B022CD9430200F8D27D /* AnekBangla-ExtraLight.ttf */; };
+		45634B532CD9430200F8D27D /* Baloo2-Bold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 45634B092CD9430200F8D27D /* Baloo2-Bold.ttf */; };
+		45634B542CD9430200F8D27D /* Ubuntu-Regular.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 45634B162CD9430200F8D27D /* Ubuntu-Regular.ttf */; };
+		45634B552CD9430200F8D27D /* Baloo2-ExtraBold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 45634B0A2CD9430200F8D27D /* Baloo2-ExtraBold.ttf */; };
+		45634B562CD9430200F8D27D /* Ubuntu-Bold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 45634B0F2CD9430200F8D27D /* Ubuntu-Bold.ttf */; };
+		45634B572CD9430200F8D27D /* AnekBangla-SemiBold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 45634B062CD9430200F8D27D /* AnekBangla-SemiBold.ttf */; };
+		45634B592CD9430200F8D27D /* AnekBangla-Light.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 45634B032CD9430200F8D27D /* AnekBangla-Light.ttf */; };
+		45634B5A2CD9430200F8D27D /* Ubuntu-Medium.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 45634B142CD9430200F8D27D /* Ubuntu-Medium.ttf */; };
+		45634B5D2CD9430200F8D27D /* Baloo2-SemiBold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 45634B0D2CD9430200F8D27D /* Baloo2-SemiBold.ttf */; };
+		45634B5E2CD9430200F8D27D /* AnekBangla-Regular.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 45634B052CD9430200F8D27D /* AnekBangla-Regular.ttf */; };
+		45634B602CD9430200F8D27D /* AnekBangla-ExtraBold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 45634B012CD9430200F8D27D /* AnekBangla-ExtraBold.ttf */; };
+		45634B612CD9430200F8D27D /* Baloo2-Regular.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 45634B0C2CD9430200F8D27D /* Baloo2-Regular.ttf */; };
+		45634B622CD9430200F8D27D /* AnekBangla-Bold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 45634B002CD9430200F8D27D /* AnekBangla-Bold.ttf */; };
+		45634B632CD9430200F8D27D /* AnekBangla-Thin.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 45634B072CD9430200F8D27D /* AnekBangla-Thin.ttf */; };
+		45634B642CD9430200F8D27D /* Ubuntu-Light.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 45634B122CD9430200F8D27D /* Ubuntu-Light.ttf */; };
+		45634B652CD9430200F8D27D /* Baloo2-Medium.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 45634B0B2CD9430200F8D27D /* Baloo2-Medium.ttf */; };
+		45634B662CD9430200F8D27D /* AnekBangla-Medium.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 45634B042CD9430200F8D27D /* AnekBangla-Medium.ttf */; };
+		45634B672CD9430200F8D27D /* AnekBangla-ExtraLight.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 45634B022CD9430200F8D27D /* AnekBangla-ExtraLight.ttf */; };
+		45634B682CD9430200F8D27D /* Baloo2-Bold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 45634B092CD9430200F8D27D /* Baloo2-Bold.ttf */; };
+		45634B692CD9430200F8D27D /* Ubuntu-Regular.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 45634B162CD9430200F8D27D /* Ubuntu-Regular.ttf */; };
+		45634B6A2CD9430200F8D27D /* Baloo2-ExtraBold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 45634B0A2CD9430200F8D27D /* Baloo2-ExtraBold.ttf */; };
+		45634B6B2CD9430200F8D27D /* Ubuntu-Bold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 45634B0F2CD9430200F8D27D /* Ubuntu-Bold.ttf */; };
+		45634B6C2CD9430200F8D27D /* AnekBangla-SemiBold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 45634B062CD9430200F8D27D /* AnekBangla-SemiBold.ttf */; };
+		45634B6E2CD9430200F8D27D /* AnekBangla-Light.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 45634B032CD9430200F8D27D /* AnekBangla-Light.ttf */; };
+		45634B6F2CD9430200F8D27D /* Ubuntu-Medium.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 45634B142CD9430200F8D27D /* Ubuntu-Medium.ttf */; };
+		45634B722CD9430200F8D27D /* Baloo2-SemiBold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 45634B0D2CD9430200F8D27D /* Baloo2-SemiBold.ttf */; };
+		45634B732CD9430200F8D27D /* AnekBangla-Regular.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 45634B052CD9430200F8D27D /* AnekBangla-Regular.ttf */; };
+		45634B752CD9430200F8D27D /* AnekBangla-ExtraBold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 45634B012CD9430200F8D27D /* AnekBangla-ExtraBold.ttf */; };
+		45634B762CD9430200F8D27D /* Baloo2-Regular.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 45634B0C2CD9430200F8D27D /* Baloo2-Regular.ttf */; };
+		45634B772CD9430200F8D27D /* AnekBangla-Bold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 45634B002CD9430200F8D27D /* AnekBangla-Bold.ttf */; };
+		45634B782CD9430200F8D27D /* AnekBangla-Thin.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 45634B072CD9430200F8D27D /* AnekBangla-Thin.ttf */; };
+		45634B792CD9430200F8D27D /* Ubuntu-Light.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 45634B122CD9430200F8D27D /* Ubuntu-Light.ttf */; };
+		45634B7A2CD9430200F8D27D /* Baloo2-Medium.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 45634B0B2CD9430200F8D27D /* Baloo2-Medium.ttf */; };
+		45634B7B2CD9430200F8D27D /* AnekBangla-Medium.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 45634B042CD9430200F8D27D /* AnekBangla-Medium.ttf */; };
+		45634B7C2CD9430200F8D27D /* AnekBangla-ExtraLight.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 45634B022CD9430200F8D27D /* AnekBangla-ExtraLight.ttf */; };
+		45634B7D2CD9430200F8D27D /* Baloo2-Bold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 45634B092CD9430200F8D27D /* Baloo2-Bold.ttf */; };
+		45634B7E2CD9430200F8D27D /* Ubuntu-Regular.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 45634B162CD9430200F8D27D /* Ubuntu-Regular.ttf */; };
+		45634B7F2CD9430200F8D27D /* Baloo2-ExtraBold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 45634B0A2CD9430200F8D27D /* Baloo2-ExtraBold.ttf */; };
+		45634B802CD9430200F8D27D /* Ubuntu-Bold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 45634B0F2CD9430200F8D27D /* Ubuntu-Bold.ttf */; };
+		45634B812CD9430200F8D27D /* AnekBangla-SemiBold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 45634B062CD9430200F8D27D /* AnekBangla-SemiBold.ttf */; };
+		45634B832CD9430200F8D27D /* AnekBangla-Light.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 45634B032CD9430200F8D27D /* AnekBangla-Light.ttf */; };
+		45634B842CD9430200F8D27D /* Ubuntu-Medium.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 45634B142CD9430200F8D27D /* Ubuntu-Medium.ttf */; };
+		45634B872CD9430200F8D27D /* Baloo2-SemiBold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 45634B0D2CD9430200F8D27D /* Baloo2-SemiBold.ttf */; };
+		45634B882CD9430200F8D27D /* AnekBangla-Regular.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 45634B052CD9430200F8D27D /* AnekBangla-Regular.ttf */; };
+		45634B8A2CD9430200F8D27D /* AnekBangla-ExtraBold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 45634B012CD9430200F8D27D /* AnekBangla-ExtraBold.ttf */; };
+		45634B8B2CD9430200F8D27D /* Baloo2-Regular.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 45634B0C2CD9430200F8D27D /* Baloo2-Regular.ttf */; };
+		45634B8C2CD9430200F8D27D /* AnekBangla-Bold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 45634B002CD9430200F8D27D /* AnekBangla-Bold.ttf */; };
+		45634B8D2CD9430200F8D27D /* AnekBangla-Thin.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 45634B072CD9430200F8D27D /* AnekBangla-Thin.ttf */; };
+		45634B8E2CD9430200F8D27D /* Ubuntu-Light.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 45634B122CD9430200F8D27D /* Ubuntu-Light.ttf */; };
+		45634B8F2CD9430200F8D27D /* Baloo2-Medium.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 45634B0B2CD9430200F8D27D /* Baloo2-Medium.ttf */; };
+		45634B902CD9430200F8D27D /* AnekBangla-Medium.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 45634B042CD9430200F8D27D /* AnekBangla-Medium.ttf */; };
+		45634B912CD9430200F8D27D /* AnekBangla-ExtraLight.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 45634B022CD9430200F8D27D /* AnekBangla-ExtraLight.ttf */; };
+		45634B922CD9430200F8D27D /* Baloo2-Bold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 45634B092CD9430200F8D27D /* Baloo2-Bold.ttf */; };
+		45634B932CD9430200F8D27D /* Ubuntu-Regular.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 45634B162CD9430200F8D27D /* Ubuntu-Regular.ttf */; };
+		45634B942CD9430200F8D27D /* Baloo2-ExtraBold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 45634B0A2CD9430200F8D27D /* Baloo2-ExtraBold.ttf */; };
+		45634B952CD9430200F8D27D /* Ubuntu-Bold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 45634B0F2CD9430200F8D27D /* Ubuntu-Bold.ttf */; };
+		45634B962CD9430200F8D27D /* AnekBangla-SemiBold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 45634B062CD9430200F8D27D /* AnekBangla-SemiBold.ttf */; };
+		45634B982CD9430200F8D27D /* AnekBangla-Light.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 45634B032CD9430200F8D27D /* AnekBangla-Light.ttf */; };
+		45634B992CD9430200F8D27D /* Ubuntu-Medium.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 45634B142CD9430200F8D27D /* Ubuntu-Medium.ttf */; };
+		45634B9C2CD9430200F8D27D /* Baloo2-SemiBold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 45634B0D2CD9430200F8D27D /* Baloo2-SemiBold.ttf */; };
+		45634B9D2CD9430200F8D27D /* AnekBangla-Regular.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 45634B052CD9430200F8D27D /* AnekBangla-Regular.ttf */; };
+		45634B9F2CD9430200F8D27D /* AnekBangla-ExtraBold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 45634B012CD9430200F8D27D /* AnekBangla-ExtraBold.ttf */; };
+		45634BA02CD9430200F8D27D /* Baloo2-Regular.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 45634B0C2CD9430200F8D27D /* Baloo2-Regular.ttf */; };
+		45634BA12CD9430200F8D27D /* AnekBangla-Bold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 45634B002CD9430200F8D27D /* AnekBangla-Bold.ttf */; };
+		45634BA22CD9430200F8D27D /* AnekBangla-Thin.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 45634B072CD9430200F8D27D /* AnekBangla-Thin.ttf */; };
+		45634BA32CD9430200F8D27D /* Ubuntu-Light.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 45634B122CD9430200F8D27D /* Ubuntu-Light.ttf */; };
+		45634BA42CD9430200F8D27D /* Baloo2-Medium.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 45634B0B2CD9430200F8D27D /* Baloo2-Medium.ttf */; };
+		45634BA52CD9430200F8D27D /* AnekBangla-Medium.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 45634B042CD9430200F8D27D /* AnekBangla-Medium.ttf */; };
+		45634BA62CD9430200F8D27D /* AnekBangla-ExtraLight.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 45634B022CD9430200F8D27D /* AnekBangla-ExtraLight.ttf */; };
+		45634BA72CD9430200F8D27D /* Baloo2-Bold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 45634B092CD9430200F8D27D /* Baloo2-Bold.ttf */; };
+		45634BA82CD9430200F8D27D /* Ubuntu-Regular.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 45634B162CD9430200F8D27D /* Ubuntu-Regular.ttf */; };
+		45634BA92CD9430200F8D27D /* Baloo2-ExtraBold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 45634B0A2CD9430200F8D27D /* Baloo2-ExtraBold.ttf */; };
+		45634BAA2CD9430200F8D27D /* Ubuntu-Bold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 45634B0F2CD9430200F8D27D /* Ubuntu-Bold.ttf */; };
+		45634BAB2CD9430200F8D27D /* AnekBangla-SemiBold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 45634B062CD9430200F8D27D /* AnekBangla-SemiBold.ttf */; };
+		45634BAD2CD9430200F8D27D /* AnekBangla-Light.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 45634B032CD9430200F8D27D /* AnekBangla-Light.ttf */; };
+		45634BAE2CD9430200F8D27D /* Ubuntu-Medium.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 45634B142CD9430200F8D27D /* Ubuntu-Medium.ttf */; };
+		45634BB12CD9430200F8D27D /* Baloo2-SemiBold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 45634B0D2CD9430200F8D27D /* Baloo2-SemiBold.ttf */; };
+		45634BB22CD9430200F8D27D /* AnekBangla-Regular.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 45634B052CD9430200F8D27D /* AnekBangla-Regular.ttf */; };
+		45634BB42CD9430200F8D27D /* AnekBangla-ExtraBold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 45634B012CD9430200F8D27D /* AnekBangla-ExtraBold.ttf */; };
+		45634BB52CD9430200F8D27D /* Baloo2-Regular.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 45634B0C2CD9430200F8D27D /* Baloo2-Regular.ttf */; };
+		45634BB62CD9430200F8D27D /* AnekBangla-Bold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 45634B002CD9430200F8D27D /* AnekBangla-Bold.ttf */; };
+		45634BB72CD9430200F8D27D /* AnekBangla-Thin.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 45634B072CD9430200F8D27D /* AnekBangla-Thin.ttf */; };
+		45634BB82CD9430200F8D27D /* Ubuntu-Light.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 45634B122CD9430200F8D27D /* Ubuntu-Light.ttf */; };
+		45634BB92CD9430200F8D27D /* Baloo2-Medium.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 45634B0B2CD9430200F8D27D /* Baloo2-Medium.ttf */; };
+		45634BBA2CD9430200F8D27D /* AnekBangla-Medium.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 45634B042CD9430200F8D27D /* AnekBangla-Medium.ttf */; };
+		45634BBB2CD9430200F8D27D /* AnekBangla-ExtraLight.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 45634B022CD9430200F8D27D /* AnekBangla-ExtraLight.ttf */; };
+		45634BBC2CD9430200F8D27D /* Baloo2-Bold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 45634B092CD9430200F8D27D /* Baloo2-Bold.ttf */; };
+		45634BBD2CD9430200F8D27D /* Ubuntu-Regular.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 45634B162CD9430200F8D27D /* Ubuntu-Regular.ttf */; };
+		45634BBE2CD9430200F8D27D /* Baloo2-ExtraBold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 45634B0A2CD9430200F8D27D /* Baloo2-ExtraBold.ttf */; };
+		45634BBF2CD9430200F8D27D /* Ubuntu-Bold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 45634B0F2CD9430200F8D27D /* Ubuntu-Bold.ttf */; };
 		45644F9F2C9B5C22001C6464 /* OpenStatsButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 45644F9E2C9B5C20001C6464 /* OpenStatsButton.swift */; };
 		45644FA02C9B5C22001C6464 /* OpenStatsButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 45644F9E2C9B5C20001C6464 /* OpenStatsButton.swift */; };
 		45644FA12C9B5C22001C6464 /* OpenStatsButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 45644F9E2C9B5C20001C6464 /* OpenStatsButton.swift */; };
@@ -7504,6 +7640,23 @@
 		45626E432755599E0069B89B /* OverUnderMarketDetailTableViewCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = OverUnderMarketDetailTableViewCell.xib; sourceTree = "<group>"; };
 		45628E7C27BEE02400AAB160 /* SuggestedBetLineViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SuggestedBetLineViewModel.swift; sourceTree = "<group>"; };
 		45628E7F27BFBE4900AAB160 /* CompetitionWidgetCollectionViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CompetitionWidgetCollectionViewCell.swift; sourceTree = "<group>"; };
+		45634B002CD9430200F8D27D /* AnekBangla-Bold.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "AnekBangla-Bold.ttf"; sourceTree = "<group>"; };
+		45634B012CD9430200F8D27D /* AnekBangla-ExtraBold.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "AnekBangla-ExtraBold.ttf"; sourceTree = "<group>"; };
+		45634B022CD9430200F8D27D /* AnekBangla-ExtraLight.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "AnekBangla-ExtraLight.ttf"; sourceTree = "<group>"; };
+		45634B032CD9430200F8D27D /* AnekBangla-Light.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "AnekBangla-Light.ttf"; sourceTree = "<group>"; };
+		45634B042CD9430200F8D27D /* AnekBangla-Medium.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "AnekBangla-Medium.ttf"; sourceTree = "<group>"; };
+		45634B052CD9430200F8D27D /* AnekBangla-Regular.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "AnekBangla-Regular.ttf"; sourceTree = "<group>"; };
+		45634B062CD9430200F8D27D /* AnekBangla-SemiBold.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "AnekBangla-SemiBold.ttf"; sourceTree = "<group>"; };
+		45634B072CD9430200F8D27D /* AnekBangla-Thin.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "AnekBangla-Thin.ttf"; sourceTree = "<group>"; };
+		45634B092CD9430200F8D27D /* Baloo2-Bold.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Baloo2-Bold.ttf"; sourceTree = "<group>"; };
+		45634B0A2CD9430200F8D27D /* Baloo2-ExtraBold.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Baloo2-ExtraBold.ttf"; sourceTree = "<group>"; };
+		45634B0B2CD9430200F8D27D /* Baloo2-Medium.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Baloo2-Medium.ttf"; sourceTree = "<group>"; };
+		45634B0C2CD9430200F8D27D /* Baloo2-Regular.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Baloo2-Regular.ttf"; sourceTree = "<group>"; };
+		45634B0D2CD9430200F8D27D /* Baloo2-SemiBold.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Baloo2-SemiBold.ttf"; sourceTree = "<group>"; };
+		45634B0F2CD9430200F8D27D /* Ubuntu-Bold.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Ubuntu-Bold.ttf"; sourceTree = "<group>"; };
+		45634B122CD9430200F8D27D /* Ubuntu-Light.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Ubuntu-Light.ttf"; sourceTree = "<group>"; };
+		45634B142CD9430200F8D27D /* Ubuntu-Medium.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Ubuntu-Medium.ttf"; sourceTree = "<group>"; };
+		45634B162CD9430200F8D27D /* Ubuntu-Regular.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Ubuntu-Regular.ttf"; sourceTree = "<group>"; };
 		45644F9E2C9B5C20001C6464 /* OpenStatsButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OpenStatsButton.swift; sourceTree = "<group>"; };
 		45644FA72C9C6627001C6464 /* .env */ = {isa = PBXFileReference; lastKnownFileType = text; path = .env; sourceTree = "<group>"; };
 		45644FA82C9C6627001C6464 /* Appfile */ = {isa = PBXFileReference; lastKnownFileType = text; path = Appfile; sourceTree = "<group>"; };
@@ -9263,6 +9416,44 @@
 			path = Account;
 			sourceTree = "<group>";
 		};
+		45634B082CD9430200F8D27D /* AnekBangla */ = {
+			isa = PBXGroup;
+			children = (
+				45634B002CD9430200F8D27D /* AnekBangla-Bold.ttf */,
+				45634B012CD9430200F8D27D /* AnekBangla-ExtraBold.ttf */,
+				45634B022CD9430200F8D27D /* AnekBangla-ExtraLight.ttf */,
+				45634B032CD9430200F8D27D /* AnekBangla-Light.ttf */,
+				45634B042CD9430200F8D27D /* AnekBangla-Medium.ttf */,
+				45634B052CD9430200F8D27D /* AnekBangla-Regular.ttf */,
+				45634B062CD9430200F8D27D /* AnekBangla-SemiBold.ttf */,
+				45634B072CD9430200F8D27D /* AnekBangla-Thin.ttf */,
+			);
+			path = AnekBangla;
+			sourceTree = "<group>";
+		};
+		45634B0E2CD9430200F8D27D /* Baloo2 */ = {
+			isa = PBXGroup;
+			children = (
+				45634B092CD9430200F8D27D /* Baloo2-Bold.ttf */,
+				45634B0A2CD9430200F8D27D /* Baloo2-ExtraBold.ttf */,
+				45634B0B2CD9430200F8D27D /* Baloo2-Medium.ttf */,
+				45634B0C2CD9430200F8D27D /* Baloo2-Regular.ttf */,
+				45634B0D2CD9430200F8D27D /* Baloo2-SemiBold.ttf */,
+			);
+			path = Baloo2;
+			sourceTree = "<group>";
+		};
+		45634B172CD9430200F8D27D /* Ubuntu */ = {
+			isa = PBXGroup;
+			children = (
+				45634B0F2CD9430200F8D27D /* Ubuntu-Bold.ttf */,
+				45634B122CD9430200F8D27D /* Ubuntu-Light.ttf */,
+				45634B142CD9430200F8D27D /* Ubuntu-Medium.ttf */,
+				45634B162CD9430200F8D27D /* Ubuntu-Regular.ttf */,
+			);
+			path = Ubuntu;
+			sourceTree = "<group>";
+		};
 		45644F9D2C9B5C16001C6464 /* OpenStatsButton */ = {
 			isa = PBXGroup;
 			children = (
@@ -9415,6 +9606,9 @@
 		456B343126C2817F009D7D27 /* Fonts */ = {
 			isa = PBXGroup;
 			children = (
+				45634B082CD9430200F8D27D /* AnekBangla */,
+				45634B0E2CD9430200F8D27D /* Baloo2 */,
+				45634B172CD9430200F8D27D /* Ubuntu */,
 				452909F52CB6AAFC00D69021 /* Roboto */,
 			);
 			path = Fonts;
@@ -12540,6 +12734,23 @@
 				450B7AA528F58574009229E3 /* SportsTypes.xcassets in Resources */,
 				450B7AA628F58574009229E3 /* BetslipErrorView.xib in Resources */,
 				450B7AA728F58574009229E3 /* SimpleRegisterDetailsViewController.xib in Resources */,
+				45634B2D2CD9430200F8D27D /* AnekBangla-SemiBold.ttf in Resources */,
+				45634B2F2CD9430200F8D27D /* AnekBangla-Light.ttf in Resources */,
+				45634B302CD9430200F8D27D /* Ubuntu-Medium.ttf in Resources */,
+				45634B332CD9430200F8D27D /* Baloo2-SemiBold.ttf in Resources */,
+				45634B342CD9430200F8D27D /* AnekBangla-Regular.ttf in Resources */,
+				45634B362CD9430200F8D27D /* AnekBangla-ExtraBold.ttf in Resources */,
+				45634B372CD9430200F8D27D /* Baloo2-Regular.ttf in Resources */,
+				45634B382CD9430200F8D27D /* AnekBangla-Bold.ttf in Resources */,
+				45634B392CD9430200F8D27D /* AnekBangla-Thin.ttf in Resources */,
+				45634B3A2CD9430200F8D27D /* Ubuntu-Light.ttf in Resources */,
+				45634B3B2CD9430200F8D27D /* Baloo2-Medium.ttf in Resources */,
+				45634B3C2CD9430200F8D27D /* AnekBangla-Medium.ttf in Resources */,
+				45634B3D2CD9430200F8D27D /* AnekBangla-ExtraLight.ttf in Resources */,
+				45634B3E2CD9430200F8D27D /* Baloo2-Bold.ttf in Resources */,
+				45634B3F2CD9430200F8D27D /* Ubuntu-Regular.ttf in Resources */,
+				45634B402CD9430200F8D27D /* Baloo2-ExtraBold.ttf in Resources */,
+				45634B412CD9430200F8D27D /* Ubuntu-Bold.ttf in Resources */,
 				450B7AA828F58574009229E3 /* DebugViewController.xib in Resources */,
 				45F2F9AA298C067C0075AF02 /* StaticColors.xcassets in Resources */,
 				450B7AA928F58574009229E3 /* CountryFlags.xcassets in Resources */,
@@ -12708,6 +12919,23 @@
 				457CBBD0282D27D000ED0F00 /* SportsTypes.xcassets in Resources */,
 				457CBBD1282D27D000ED0F00 /* BetslipErrorView.xib in Resources */,
 				457CBBD2282D27D000ED0F00 /* SimpleRegisterDetailsViewController.xib in Resources */,
+				45634B422CD9430200F8D27D /* AnekBangla-SemiBold.ttf in Resources */,
+				45634B442CD9430200F8D27D /* AnekBangla-Light.ttf in Resources */,
+				45634B452CD9430200F8D27D /* Ubuntu-Medium.ttf in Resources */,
+				45634B482CD9430200F8D27D /* Baloo2-SemiBold.ttf in Resources */,
+				45634B492CD9430200F8D27D /* AnekBangla-Regular.ttf in Resources */,
+				45634B4B2CD9430200F8D27D /* AnekBangla-ExtraBold.ttf in Resources */,
+				45634B4C2CD9430200F8D27D /* Baloo2-Regular.ttf in Resources */,
+				45634B4D2CD9430200F8D27D /* AnekBangla-Bold.ttf in Resources */,
+				45634B4E2CD9430200F8D27D /* AnekBangla-Thin.ttf in Resources */,
+				45634B4F2CD9430200F8D27D /* Ubuntu-Light.ttf in Resources */,
+				45634B502CD9430200F8D27D /* Baloo2-Medium.ttf in Resources */,
+				45634B512CD9430200F8D27D /* AnekBangla-Medium.ttf in Resources */,
+				45634B522CD9430200F8D27D /* AnekBangla-ExtraLight.ttf in Resources */,
+				45634B532CD9430200F8D27D /* Baloo2-Bold.ttf in Resources */,
+				45634B542CD9430200F8D27D /* Ubuntu-Regular.ttf in Resources */,
+				45634B552CD9430200F8D27D /* Baloo2-ExtraBold.ttf in Resources */,
+				45634B562CD9430200F8D27D /* Ubuntu-Bold.ttf in Resources */,
 				457CBBD3282D27D000ED0F00 /* DebugViewController.xib in Resources */,
 				45F2F9AE298C067C0075AF02 /* StaticColors.xcassets in Resources */,
 				457CBBD4282D27D000ED0F00 /* CountryFlags.xcassets in Resources */,
@@ -12867,6 +13095,23 @@
 				457CBE77282D2CD100ED0F00 /* SportsTypes.xcassets in Resources */,
 				457CBE78282D2CD100ED0F00 /* BetslipErrorView.xib in Resources */,
 				457CBE79282D2CD100ED0F00 /* SimpleRegisterDetailsViewController.xib in Resources */,
+				45634B6C2CD9430200F8D27D /* AnekBangla-SemiBold.ttf in Resources */,
+				45634B6E2CD9430200F8D27D /* AnekBangla-Light.ttf in Resources */,
+				45634B6F2CD9430200F8D27D /* Ubuntu-Medium.ttf in Resources */,
+				45634B722CD9430200F8D27D /* Baloo2-SemiBold.ttf in Resources */,
+				45634B732CD9430200F8D27D /* AnekBangla-Regular.ttf in Resources */,
+				45634B752CD9430200F8D27D /* AnekBangla-ExtraBold.ttf in Resources */,
+				45634B762CD9430200F8D27D /* Baloo2-Regular.ttf in Resources */,
+				45634B772CD9430200F8D27D /* AnekBangla-Bold.ttf in Resources */,
+				45634B782CD9430200F8D27D /* AnekBangla-Thin.ttf in Resources */,
+				45634B792CD9430200F8D27D /* Ubuntu-Light.ttf in Resources */,
+				45634B7A2CD9430200F8D27D /* Baloo2-Medium.ttf in Resources */,
+				45634B7B2CD9430200F8D27D /* AnekBangla-Medium.ttf in Resources */,
+				45634B7C2CD9430200F8D27D /* AnekBangla-ExtraLight.ttf in Resources */,
+				45634B7D2CD9430200F8D27D /* Baloo2-Bold.ttf in Resources */,
+				45634B7E2CD9430200F8D27D /* Ubuntu-Regular.ttf in Resources */,
+				45634B7F2CD9430200F8D27D /* Baloo2-ExtraBold.ttf in Resources */,
+				45634B802CD9430200F8D27D /* Ubuntu-Bold.ttf in Resources */,
 				457CBE7A282D2CD100ED0F00 /* DebugViewController.xib in Resources */,
 				45F2F9AF298C067C0075AF02 /* StaticColors.xcassets in Resources */,
 				457CBE7B282D2CD100ED0F00 /* CountryFlags.xcassets in Resources */,
@@ -13026,6 +13271,23 @@
 				4589C94E282024E400243547 /* SportsTypes.xcassets in Resources */,
 				4589C94F282024E400243547 /* BetslipErrorView.xib in Resources */,
 				4589C950282024E400243547 /* SimpleRegisterDetailsViewController.xib in Resources */,
+				45634B812CD9430200F8D27D /* AnekBangla-SemiBold.ttf in Resources */,
+				45634B832CD9430200F8D27D /* AnekBangla-Light.ttf in Resources */,
+				45634B842CD9430200F8D27D /* Ubuntu-Medium.ttf in Resources */,
+				45634B872CD9430200F8D27D /* Baloo2-SemiBold.ttf in Resources */,
+				45634B882CD9430200F8D27D /* AnekBangla-Regular.ttf in Resources */,
+				45634B8A2CD9430200F8D27D /* AnekBangla-ExtraBold.ttf in Resources */,
+				45634B8B2CD9430200F8D27D /* Baloo2-Regular.ttf in Resources */,
+				45634B8C2CD9430200F8D27D /* AnekBangla-Bold.ttf in Resources */,
+				45634B8D2CD9430200F8D27D /* AnekBangla-Thin.ttf in Resources */,
+				45634B8E2CD9430200F8D27D /* Ubuntu-Light.ttf in Resources */,
+				45634B8F2CD9430200F8D27D /* Baloo2-Medium.ttf in Resources */,
+				45634B902CD9430200F8D27D /* AnekBangla-Medium.ttf in Resources */,
+				45634B912CD9430200F8D27D /* AnekBangla-ExtraLight.ttf in Resources */,
+				45634B922CD9430200F8D27D /* Baloo2-Bold.ttf in Resources */,
+				45634B932CD9430200F8D27D /* Ubuntu-Regular.ttf in Resources */,
+				45634B942CD9430200F8D27D /* Baloo2-ExtraBold.ttf in Resources */,
+				45634B952CD9430200F8D27D /* Ubuntu-Bold.ttf in Resources */,
 				4589C951282024E400243547 /* DebugViewController.xib in Resources */,
 				45F2F9AB298C067C0075AF02 /* StaticColors.xcassets in Resources */,
 				4589C952282024E400243547 /* CountryFlags.xcassets in Resources */,
@@ -13198,6 +13460,23 @@
 				45A332D6298976BA008181E9 /* SplashViewController.xib in Resources */,
 				45F6BA7D2AB1F2B600C81DE1 /* avatar2-light.json in Resources */,
 				45A332D7298976BA008181E9 /* HeaderTextFieldView.xib in Resources */,
+				45634B182CD9430200F8D27D /* AnekBangla-SemiBold.ttf in Resources */,
+				45634B1A2CD9430200F8D27D /* AnekBangla-Light.ttf in Resources */,
+				45634B1B2CD9430200F8D27D /* Ubuntu-Medium.ttf in Resources */,
+				45634B1E2CD9430200F8D27D /* Baloo2-SemiBold.ttf in Resources */,
+				45634B1F2CD9430200F8D27D /* AnekBangla-Regular.ttf in Resources */,
+				45634B212CD9430200F8D27D /* AnekBangla-ExtraBold.ttf in Resources */,
+				45634B222CD9430200F8D27D /* Baloo2-Regular.ttf in Resources */,
+				45634B232CD9430200F8D27D /* AnekBangla-Bold.ttf in Resources */,
+				45634B242CD9430200F8D27D /* AnekBangla-Thin.ttf in Resources */,
+				45634B252CD9430200F8D27D /* Ubuntu-Light.ttf in Resources */,
+				45634B262CD9430200F8D27D /* Baloo2-Medium.ttf in Resources */,
+				45634B272CD9430200F8D27D /* AnekBangla-Medium.ttf in Resources */,
+				45634B282CD9430200F8D27D /* AnekBangla-ExtraLight.ttf in Resources */,
+				45634B292CD9430200F8D27D /* Baloo2-Bold.ttf in Resources */,
+				45634B2A2CD9430200F8D27D /* Ubuntu-Regular.ttf in Resources */,
+				45634B2B2CD9430200F8D27D /* Baloo2-ExtraBold.ttf in Resources */,
+				45634B2C2CD9430200F8D27D /* Ubuntu-Bold.ttf in Resources */,
 				45A332D8298976BA008181E9 /* SingleBettingTicketTableViewCell.xib in Resources */,
 				45A332D9298976BA008181E9 /* EnabledAccessViewController.xib in Resources */,
 				45A332DA298976BA008181E9 /* VersionUpdateViewController.xib in Resources */,
@@ -13345,6 +13624,23 @@
 				45A6BDA728246A7500D9B416 /* SportsTypes.xcassets in Resources */,
 				45A6BDA828246A7500D9B416 /* BetslipErrorView.xib in Resources */,
 				45A6BDA928246A7500D9B416 /* SimpleRegisterDetailsViewController.xib in Resources */,
+				45634B572CD9430200F8D27D /* AnekBangla-SemiBold.ttf in Resources */,
+				45634B592CD9430200F8D27D /* AnekBangla-Light.ttf in Resources */,
+				45634B5A2CD9430200F8D27D /* Ubuntu-Medium.ttf in Resources */,
+				45634B5D2CD9430200F8D27D /* Baloo2-SemiBold.ttf in Resources */,
+				45634B5E2CD9430200F8D27D /* AnekBangla-Regular.ttf in Resources */,
+				45634B602CD9430200F8D27D /* AnekBangla-ExtraBold.ttf in Resources */,
+				45634B612CD9430200F8D27D /* Baloo2-Regular.ttf in Resources */,
+				45634B622CD9430200F8D27D /* AnekBangla-Bold.ttf in Resources */,
+				45634B632CD9430200F8D27D /* AnekBangla-Thin.ttf in Resources */,
+				45634B642CD9430200F8D27D /* Ubuntu-Light.ttf in Resources */,
+				45634B652CD9430200F8D27D /* Baloo2-Medium.ttf in Resources */,
+				45634B662CD9430200F8D27D /* AnekBangla-Medium.ttf in Resources */,
+				45634B672CD9430200F8D27D /* AnekBangla-ExtraLight.ttf in Resources */,
+				45634B682CD9430200F8D27D /* Baloo2-Bold.ttf in Resources */,
+				45634B692CD9430200F8D27D /* Ubuntu-Regular.ttf in Resources */,
+				45634B6A2CD9430200F8D27D /* Baloo2-ExtraBold.ttf in Resources */,
+				45634B6B2CD9430200F8D27D /* Ubuntu-Bold.ttf in Resources */,
 				45A6BDAA28246A7500D9B416 /* DebugViewController.xib in Resources */,
 				45F2F9AD298C067C0075AF02 /* StaticColors.xcassets in Resources */,
 				45A6BDAB28246A7500D9B416 /* CountryFlags.xcassets in Resources */,
@@ -13504,6 +13800,23 @@
 				45F6BDA32AB3732C00C81DE1 /* Localizable.strings in Resources */,
 				45F6BDA42AB3732C00C81DE1 /* SportsTypes.xcassets in Resources */,
 				45F6BDA52AB3732C00C81DE1 /* BetslipErrorView.xib in Resources */,
+				45634B962CD9430200F8D27D /* AnekBangla-SemiBold.ttf in Resources */,
+				45634B982CD9430200F8D27D /* AnekBangla-Light.ttf in Resources */,
+				45634B992CD9430200F8D27D /* Ubuntu-Medium.ttf in Resources */,
+				45634B9C2CD9430200F8D27D /* Baloo2-SemiBold.ttf in Resources */,
+				45634B9D2CD9430200F8D27D /* AnekBangla-Regular.ttf in Resources */,
+				45634B9F2CD9430200F8D27D /* AnekBangla-ExtraBold.ttf in Resources */,
+				45634BA02CD9430200F8D27D /* Baloo2-Regular.ttf in Resources */,
+				45634BA12CD9430200F8D27D /* AnekBangla-Bold.ttf in Resources */,
+				45634BA22CD9430200F8D27D /* AnekBangla-Thin.ttf in Resources */,
+				45634BA32CD9430200F8D27D /* Ubuntu-Light.ttf in Resources */,
+				45634BA42CD9430200F8D27D /* Baloo2-Medium.ttf in Resources */,
+				45634BA52CD9430200F8D27D /* AnekBangla-Medium.ttf in Resources */,
+				45634BA62CD9430200F8D27D /* AnekBangla-ExtraLight.ttf in Resources */,
+				45634BA72CD9430200F8D27D /* Baloo2-Bold.ttf in Resources */,
+				45634BA82CD9430200F8D27D /* Ubuntu-Regular.ttf in Resources */,
+				45634BA92CD9430200F8D27D /* Baloo2-ExtraBold.ttf in Resources */,
+				45634BAA2CD9430200F8D27D /* Ubuntu-Bold.ttf in Resources */,
 				45F6BDA62AB3732C00C81DE1 /* SimpleRegisterDetailsViewController.xib in Resources */,
 				45F6BDA72AB3732C00C81DE1 /* DebugViewController.xib in Resources */,
 				45F6BDA82AB3732C00C81DE1 /* CountryFlags.xcassets in Resources */,
@@ -13670,6 +13983,23 @@
 				A9BAFB462AB0B46D002EDBA1 /* Localizable.strings in Resources */,
 				A9C342FD28F9A74A0055360B /* SportsTypes.xcassets in Resources */,
 				A9C342FE28F9A74A0055360B /* BetslipErrorView.xib in Resources */,
+				45634BAB2CD9430200F8D27D /* AnekBangla-SemiBold.ttf in Resources */,
+				45634BAD2CD9430200F8D27D /* AnekBangla-Light.ttf in Resources */,
+				45634BAE2CD9430200F8D27D /* Ubuntu-Medium.ttf in Resources */,
+				45634BB12CD9430200F8D27D /* Baloo2-SemiBold.ttf in Resources */,
+				45634BB22CD9430200F8D27D /* AnekBangla-Regular.ttf in Resources */,
+				45634BB42CD9430200F8D27D /* AnekBangla-ExtraBold.ttf in Resources */,
+				45634BB52CD9430200F8D27D /* Baloo2-Regular.ttf in Resources */,
+				45634BB62CD9430200F8D27D /* AnekBangla-Bold.ttf in Resources */,
+				45634BB72CD9430200F8D27D /* AnekBangla-Thin.ttf in Resources */,
+				45634BB82CD9430200F8D27D /* Ubuntu-Light.ttf in Resources */,
+				45634BB92CD9430200F8D27D /* Baloo2-Medium.ttf in Resources */,
+				45634BBA2CD9430200F8D27D /* AnekBangla-Medium.ttf in Resources */,
+				45634BBB2CD9430200F8D27D /* AnekBangla-ExtraLight.ttf in Resources */,
+				45634BBC2CD9430200F8D27D /* Baloo2-Bold.ttf in Resources */,
+				45634BBD2CD9430200F8D27D /* Ubuntu-Regular.ttf in Resources */,
+				45634BBE2CD9430200F8D27D /* Baloo2-ExtraBold.ttf in Resources */,
+				45634BBF2CD9430200F8D27D /* Ubuntu-Bold.ttf in Resources */,
 				A9C342FF28F9A74A0055360B /* SimpleRegisterDetailsViewController.xib in Resources */,
 				A9C3430028F9A74A0055360B /* DebugViewController.xib in Resources */,
 				A9C3430128F9A74A0055360B /* CountryFlags.xcassets in Resources */,
@@ -20302,7 +20632,7 @@
 				CODE_SIGN_IDENTITY = "Apple Development";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				CODE_SIGN_STYLE = Manual;
-				CURRENT_PROJECT_VERSION = 103008;
+				CURRENT_PROJECT_VERSION = 103103;
 				DEVELOPMENT_TEAM = QN2DYX5K4M;
 				"DEVELOPMENT_TEAM[sdk=iphoneos*]" = QN2DYX5K4M;
 				INFOPLIST_FILE = "./Clients/Betsson/Misc-PROD/Betsson-PROD-Info.plist";
@@ -20311,7 +20641,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 1.0.30;
+				MARKETING_VERSION = 1.0.31;
 				OTHER_LDFLAGS = "$(inherited)";
 				PRODUCT_BUNDLE_IDENTIFIER = fr.betsson.ios.app;
 				PRODUCT_NAME = Betsson;
@@ -20335,7 +20665,7 @@
 				CODE_SIGN_IDENTITY = "Apple Distribution";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution";
 				CODE_SIGN_STYLE = Manual;
-				CURRENT_PROJECT_VERSION = 103008;
+				CURRENT_PROJECT_VERSION = 103103;
 				DEVELOPMENT_TEAM = QN2DYX5K4M;
 				"DEVELOPMENT_TEAM[sdk=iphoneos*]" = QN2DYX5K4M;
 				INFOPLIST_FILE = "./Clients/Betsson/Misc-PROD/Betsson-PROD-Info.plist";
@@ -20344,7 +20674,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 1.0.30;
+				MARKETING_VERSION = 1.0.31;
 				OTHER_LDFLAGS = "$(inherited)";
 				PRODUCT_BUNDLE_IDENTIFIER = fr.betsson.ios.app;
 				PRODUCT_NAME = Betsson;
@@ -20425,7 +20755,7 @@
 				CODE_SIGN_IDENTITY = "Apple Development";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				CODE_SIGN_STYLE = Manual;
-				CURRENT_PROJECT_VERSION = 103008;
+				CURRENT_PROJECT_VERSION = 103103;
 				DEVELOPMENT_TEAM = 422GNXXZJR;
 				"DEVELOPMENT_TEAM[sdk=iphoneos*]" = 422GNXXZJR;
 				INFOPLIST_FILE = "./Clients/Betsson/Misc-UAT/Betsson-UAT-Info.plist";
@@ -20434,7 +20764,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 1.0.30;
+				MARKETING_VERSION = 1.0.31;
 				OTHER_LDFLAGS = "$(inherited)";
 				PRODUCT_BUNDLE_IDENTIFIER = com.gomagaming.betsson;
 				PRODUCT_NAME = "$(TARGET_NAME)";
@@ -20457,7 +20787,7 @@
 				CODE_SIGN_IDENTITY = "Apple Distribution";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution";
 				CODE_SIGN_STYLE = Manual;
-				CURRENT_PROJECT_VERSION = 103008;
+				CURRENT_PROJECT_VERSION = 103103;
 				DEVELOPMENT_TEAM = 422GNXXZJR;
 				"DEVELOPMENT_TEAM[sdk=iphoneos*]" = 422GNXXZJR;
 				INFOPLIST_FILE = "./Clients/Betsson/Misc-UAT/Betsson-UAT-Info.plist";
@@ -20466,7 +20796,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 1.0.30;
+				MARKETING_VERSION = 1.0.31;
 				OTHER_LDFLAGS = "$(inherited)";
 				PRODUCT_BUNDLE_IDENTIFIER = com.gomagaming.betsson;
 				PRODUCT_NAME = "$(TARGET_NAME)";
@@ -20489,7 +20819,7 @@
 				CODE_SIGN_IDENTITY = "Apple Development";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "Apple Development";
 				CODE_SIGN_STYLE = Manual;
-				CURRENT_PROJECT_VERSION = 103008;
+				CURRENT_PROJECT_VERSION = 103103;
 				DEBUG_INFORMATION_FORMAT = dwarf;
 				DEVELOPMENT_TEAM = "";
 				"DEVELOPMENT_TEAM[sdk=iphoneos*]" = QN2DYX5K4M;
@@ -20512,7 +20842,7 @@
 					"@executable_path/../../Frameworks",
 				);
 				LOCALIZATION_PREFERS_STRING_CATALOGS = YES;
-				MARKETING_VERSION = 1.0.30;
+				MARKETING_VERSION = 1.0.31;
 				PRODUCT_BUNDLE_IDENTIFIER = fr.betsson.ios.app.betssonNotificationsService;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "Betsson Notif Ext - Development";
@@ -20534,7 +20864,7 @@
 				CODE_SIGN_IDENTITY = "Apple Distribution";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution";
 				CODE_SIGN_STYLE = Manual;
-				CURRENT_PROJECT_VERSION = 103008;
+				CURRENT_PROJECT_VERSION = 103103;
 				DEVELOPMENT_TEAM = "";
 				"DEVELOPMENT_TEAM[sdk=iphoneos*]" = QN2DYX5K4M;
 				ENABLE_USER_SCRIPT_SANDBOXING = YES;
@@ -20551,7 +20881,7 @@
 					"@executable_path/../../Frameworks",
 				);
 				LOCALIZATION_PREFERS_STRING_CATALOGS = YES;
-				MARKETING_VERSION = 1.0.30;
+				MARKETING_VERSION = 1.0.31;
 				PRODUCT_BUNDLE_IDENTIFIER = fr.betsson.ios.app.betssonNotificationsService;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "Betsson Notif Ext - Distribution - App Store";
