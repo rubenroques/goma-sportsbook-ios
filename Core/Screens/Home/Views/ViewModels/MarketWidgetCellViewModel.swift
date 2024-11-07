@@ -20,7 +20,7 @@ class MarketWidgetCellViewModel {
         let highlightedMarket = self.highlightedMarket.content
         let validOutcomesCount = self.highlightedMarket.promotedDetailsCount
         let processedOutcomes = highlightedMarket.outcomes.filter { outcome in
-            if outcome.bettingOffer.decimalOdd.isNaN {
+            if !outcome.bettingOffer.isAvailable || outcome.bettingOffer.decimalOdd.isNaN {
                 return false
             }
             return true

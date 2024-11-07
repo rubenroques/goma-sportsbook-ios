@@ -228,7 +228,7 @@ class ProChoiceHighlightCollectionViewCell: UICollectionViewCell {
         self.favoriteButton.backgroundColor = .clear
         self.favoriteImageView.backgroundColor = .clear
         
-        self.leagueNameLabel.textColor = UIColor.App.textPrimary
+        self.leagueNameLabel.textColor = UIColor.App.textSecondary
         self.eventDateLabel.textColor = UIColor.App.textSecondary
         self.eventTimeLabel.textColor = UIColor.App.textSecondary
         self.teamsLabel.textColor = UIColor.App.highlightPrimary
@@ -293,7 +293,7 @@ class ProChoiceHighlightCollectionViewCell: UICollectionViewCell {
             self.mixMatchContainerView.isHidden = true
             self.seeAllMarketsButton.isHidden = false
         }
-        
+
         viewModel.eventImagePublisher
             .receive(on: DispatchQueue.main)
             .sink { [weak self] sportIconImage in
@@ -539,7 +539,7 @@ class ProChoiceHighlightCollectionViewCell: UICollectionViewCell {
                 self.awayOutcomeNameLabel.text = outcome.typeName
             }
 
-            self.awayButton.isHidden = true
+            self.awayButton.isHidden = false
 
             self.rightOutcome = outcome
             self.isRightOutcomeButtonSelected = Env.betslipManager.hasBettingTicket(withId: outcome.bettingOffer.id)
@@ -930,9 +930,9 @@ extension ProChoiceHighlightCollectionViewCell {
 
         self.containerView.addSubview(self.eventImageBaseView)
         self.containerView.addSubview(self.backgroundImageView)
-        self.containerView.addSubview(self.containerStackView)
         self.containerView.addSubview(self.gradientBorderView)
         self.containerView.addSubview(self.topSeparatorAlphaLineView)
+        self.containerView.addSubview(self.containerStackView)
 
         self.eventImageBaseView.addSubview(self.eventImageView)
 
@@ -997,10 +997,10 @@ extension ProChoiceHighlightCollectionViewCell {
 
         //
 
-        self.oddsStackView.layoutMargins = UIEdgeInsets(top: 8, left: 16, bottom: 8, right: 16)
+        self.oddsStackView.layoutMargins = UIEdgeInsets(top: 6, left: 16, bottom: 6, right: 16)
 
         self.bottomButtonsContainerStackView.isLayoutMarginsRelativeArrangement = true
-        self.bottomButtonsContainerStackView.layoutMargins = UIEdgeInsets(top: 8, left: 16, bottom: 2, right: 16)
+        self.bottomButtonsContainerStackView.layoutMargins = UIEdgeInsets(top: 7, left: 16, bottom: 2, right: 16)
         //
         
         self.initConstraints()
@@ -1013,6 +1013,8 @@ extension ProChoiceHighlightCollectionViewCell {
     }
     
     private func initConstraints() {
+
+
         NSLayoutConstraint.activate([
             self.containerView.topAnchor.constraint(equalTo: self.contentView.topAnchor, constant: 0),
             self.containerView.leadingAnchor.constraint(equalTo: self.contentView.leadingAnchor, constant: 0),
@@ -1039,14 +1041,14 @@ extension ProChoiceHighlightCollectionViewCell {
             self.containerStackView.trailingAnchor.constraint(equalTo: self.containerView.trailingAnchor),
             self.containerStackView.bottomAnchor.constraint(equalTo: self.containerView.bottomAnchor, constant: -8),
 
-            self.leagueInfoStackView.heightAnchor.constraint(equalToConstant: 14),
+            self.leagueInfoStackView.heightAnchor.constraint(equalToConstant: 13),
             self.leagueInfoStackView.leadingAnchor.constraint(equalTo: self.leagueInfoContainerView.leadingAnchor, constant: 16),
             self.leagueInfoStackView.trailingAnchor.constraint(equalTo: self.leagueInfoContainerView.trailingAnchor, constant: -16),
             self.leagueInfoStackView.topAnchor.constraint(equalTo: self.leagueInfoContainerView.topAnchor, constant: 8),
             self.leagueInfoStackView.bottomAnchor.constraint(equalTo: self.leagueInfoContainerView.bottomAnchor, constant: -8),
 
-            self.topSeparatorAlphaLineView.leadingAnchor.constraint(equalTo: self.containerView.leadingAnchor, constant: 15),
-            self.topSeparatorAlphaLineView.trailingAnchor.constraint(equalTo: self.containerView.trailingAnchor, constant: -15),
+            self.topSeparatorAlphaLineView.leadingAnchor.constraint(equalTo: self.containerView.leadingAnchor, constant: 0),
+            self.topSeparatorAlphaLineView.trailingAnchor.constraint(equalTo: self.containerView.trailingAnchor, constant: 0),
             self.topSeparatorAlphaLineView.heightAnchor.constraint(equalToConstant: 1),
             self.topSeparatorAlphaLineView.bottomAnchor.constraint(equalTo: self.eventInfoContainerView.topAnchor, constant: 2),
 
@@ -1064,15 +1066,15 @@ extension ProChoiceHighlightCollectionViewCell {
             self.favoriteButton.widthAnchor.constraint(equalToConstant: 40),
             self.favoriteButton.heightAnchor.constraint(equalTo: self.favoriteButton.widthAnchor),
 
-            self.eventInfoContainerView.heightAnchor.constraint(equalToConstant: 70),
-            
+            self.eventInfoContainerView.heightAnchor.constraint(equalToConstant: 60),
+
             self.backgroundImageView.leadingAnchor.constraint(equalTo: self.containerView.leadingAnchor),
             self.backgroundImageView.trailingAnchor.constraint(equalTo: self.containerView.trailingAnchor),
             self.backgroundImageView.topAnchor.constraint(equalTo: self.eventImageBaseView.bottomAnchor),
             self.backgroundImageView.bottomAnchor.constraint(equalTo: self.containerView.bottomAnchor),
 
             self.marketNameLabel.leadingAnchor.constraint(equalTo: self.eventInfoContainerView.leadingAnchor, constant: 16),
-            self.marketNameLabel.topAnchor.constraint(equalTo: self.eventInfoContainerView.topAnchor, constant: 8),
+            self.marketNameLabel.topAnchor.constraint(equalTo: self.eventInfoContainerView.topAnchor, constant: 6),
 
             self.teamsLabel.topAnchor.constraint(equalTo: self.teamPillContainerView.topAnchor, constant: 5),
             self.teamsLabel.bottomAnchor.constraint(equalTo: self.teamPillContainerView.bottomAnchor, constant: -5),
@@ -1080,7 +1082,7 @@ extension ProChoiceHighlightCollectionViewCell {
             self.teamsLabel.leadingAnchor.constraint(equalTo: self.teamPillContainerView.leadingAnchor, constant: 40),
 
             self.teamsLabel.leadingAnchor.constraint(equalTo: self.eventInfoContainerView.leadingAnchor, constant: 16),
-            self.teamPillContainerView.bottomAnchor.constraint(equalTo: self.eventInfoContainerView.bottomAnchor, constant: -8),
+            self.teamPillContainerView.bottomAnchor.constraint(equalTo: self.eventInfoContainerView.bottomAnchor, constant: -6),
 
             self.eventDateLabel.centerYAnchor.constraint(equalTo: self.marketNameLabel.centerYAnchor),
             self.eventDateLabel.trailingAnchor.constraint(equalTo: self.eventInfoContainerView.trailingAnchor, constant: -16),
@@ -1088,11 +1090,13 @@ extension ProChoiceHighlightCollectionViewCell {
             self.eventTimeLabel.topAnchor.constraint(equalTo: self.teamPillContainerView.topAnchor),
             self.eventTimeLabel.trailingAnchor.constraint(equalTo: self.eventInfoContainerView.trailingAnchor, constant: -16),
 
-            self.homeButton.heightAnchor.constraint(equalToConstant: 38),
+            self.homeButton.heightAnchor.constraint(equalToConstant: 40),
             self.drawButton.heightAnchor.constraint(equalTo: self.homeButton.heightAnchor),
             self.awayButton.heightAnchor.constraint(equalTo: self.homeButton.heightAnchor),
 
-            self.seeAllMarketsButton.heightAnchor.constraint(equalToConstant: 27)
+            self.seeAllMarketsButton.heightAnchor.constraint(equalToConstant: 27),
+
+            self.oddsStackView.heightAnchor.constraint(equalToConstant: 52),
         ])
 
         NSLayoutConstraint.activate([
@@ -1161,9 +1165,9 @@ extension ProChoiceHighlightCollectionViewCell {
         ])
         
         NSLayoutConstraint.activate([
-            self.mixMatchContainerView.heightAnchor.constraint(equalToConstant: 32),
-            
-            self.mixMatchBaseView.heightAnchor.constraint(equalToConstant: 32),
+            self.mixMatchContainerView.heightAnchor.constraint(equalToConstant: 27),
+
+            self.mixMatchBaseView.heightAnchor.constraint(equalToConstant: 27),
             self.mixMatchBaseView.leadingAnchor.constraint(equalTo: self.mixMatchContainerView.leadingAnchor, constant: 0),
             self.mixMatchBaseView.trailingAnchor.constraint(equalTo: self.mixMatchContainerView.trailingAnchor, constant: 0),
             self.mixMatchBaseView.topAnchor.constraint(equalTo: self.mixMatchContainerView.topAnchor),
@@ -1250,7 +1254,7 @@ extension ProChoiceHighlightCollectionViewCell {
         let stackView = UIStackView()
         stackView.axis = .horizontal
         stackView.distribution = .fill
-        stackView.spacing = 6
+        stackView.spacing = 8
         stackView.translatesAutoresizingMaskIntoConstraints = false
 
         stackView.backgroundColor = .red
@@ -1307,7 +1311,7 @@ extension ProChoiceHighlightCollectionViewCell {
     
     private func createEventDateLabel() -> UILabel {
         let label = UILabel()
-        label.font = AppFont.with(type: .semibold, size: 11)
+        label.font = AppFont.with(type: .bold, size: 11)
         label.translatesAutoresizingMaskIntoConstraints = false
         label.text = "createEventDateLabel"
 
@@ -1316,7 +1320,7 @@ extension ProChoiceHighlightCollectionViewCell {
     
     private func createEventTimeLabel() -> UILabel {
         let label = UILabel()
-        label.font = AppFont.with(type: .semibold, size: 11)
+        label.font = AppFont.with(type: .bold, size: 11)
         label.translatesAutoresizingMaskIntoConstraints = false
         label.text = "createEventTimeLabel"
 
