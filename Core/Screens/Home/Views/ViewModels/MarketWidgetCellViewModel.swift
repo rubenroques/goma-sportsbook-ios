@@ -143,6 +143,15 @@ class MarketWidgetCellViewModel {
             .eraseToAnyPublisher()
     }
 
+    var canHaveCashbackPublisher: AnyPublisher<Bool, Never> {
+        return self.$highlightedMarket
+            .map { highlightedMarket in
+                return RePlayFeatureHelper.shouldShowRePlay(forMarket: highlightedMarket.content)
+            }
+            .removeDuplicates()
+            .eraseToAnyPublisher()
+    }
+
     init(highlightedMarket: HighlightedContent<Market>) {
         self.highlightedMarket = highlightedMarket
     }

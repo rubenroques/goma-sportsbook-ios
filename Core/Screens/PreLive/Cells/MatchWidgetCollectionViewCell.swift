@@ -848,8 +848,8 @@ class MatchWidgetCollectionViewCell: UICollectionViewCell {
         // Cashback
         self.baseView.addSubview(self.cashbackIconImageView)
         
-        self.cashbackIconImageViewHeightConstraint = self.cashbackIconImageView.widthAnchor.constraint(equalToConstant: 20)
-        
+        self.cashbackIconImageViewHeightConstraint = self.cashbackIconImageView.widthAnchor.constraint(equalToConstant: 18)
+
         NSLayoutConstraint.activate([
             self.cashbackIconImageViewHeightConstraint,
             self.cashbackIconImageView.heightAnchor.constraint(equalTo: self.cashbackIconImageView.widthAnchor),
@@ -1617,7 +1617,7 @@ class MatchWidgetCollectionViewCell: UICollectionViewCell {
         self.resultCenterConstraint.constant = 0
         self.buttonsHeightConstraint.constant = 40
         
-        self.cashbackIconImageViewHeightConstraint.constant = 20
+        self.cashbackIconImageViewHeightConstraint.constant = 18
         
         self.eventNameLabel.font = AppFont.with(type: .semibold, size: 11)
         self.dateLabel.font = AppFont.with(type: .semibold, size: 12)

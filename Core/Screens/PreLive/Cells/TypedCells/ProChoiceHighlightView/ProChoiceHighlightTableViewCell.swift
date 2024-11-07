@@ -83,6 +83,8 @@ class ProChoiceHighlightCollectionViewCell: UICollectionViewCell {
     
     lazy var mixMatchNavigationIconImageView: UIImageView = self.createMixMatchNavigationIconImageView()
 
+    lazy var cashbackIconImageView: UIImageView = self.createCashbackIconImageView()
+
     private var viewModel: MarketWidgetCellViewModel?
 
     private var cancellables = Set<AnyCancellable>()
@@ -125,7 +127,13 @@ class ProChoiceHighlightCollectionViewCell: UICollectionViewCell {
             }
         }
     }
-    
+
+    var hasCashback: Bool = false {
+        didSet {
+            self.cashbackIconImageView.isHidden = !hasCashback
+        }
+    }
+
     var tappedMatchIdAction: ((String) -> Void) = { _ in }
     var didLongPressOdd: ((BettingTicket) -> Void) = { _ in }
     var tappedMixMatchAction: ((String) -> Void) = { _ in }
@@ -172,6 +180,7 @@ class ProChoiceHighlightCollectionViewCell: UICollectionViewCell {
         
         self.mixMatchContainerView.isHidden = true
 
+        self.hasCashback = false
     }
 
     required init?(coder aDecoder: NSCoder) {
@@ -206,6 +215,8 @@ class ProChoiceHighlightCollectionViewCell: UICollectionViewCell {
         self.rightOddButtonSubscriber = nil
         
         self.mixMatchContainerView.isHidden = true
+
+        self.hasCashback = false
     }
 
     // MARK: - Configuration
@@ -360,6 +371,14 @@ class ProChoiceHighlightCollectionViewCell: UICollectionViewCell {
             }
             .store(in: &self.cancellables)
 
+        viewModel.canHaveCashbackPublisher
+            .removeDuplicates()
+            .receive(on: DispatchQueue.main)
+            .sink { [weak self] canHaveCashback in
+                self?.hasCashback = canHaveCashback
+            }
+            .store(in: &self.cancellables)
+        
         self.configureOddsButtons()
         
     }
@@ -933,6 +952,7 @@ extension ProChoiceHighlightCollectionViewCell {
         self.containerView.addSubview(self.gradientBorderView)
         self.containerView.addSubview(self.topSeparatorAlphaLineView)
         self.containerView.addSubview(self.containerStackView)
+        self.containerView.addSubview(self.cashbackIconImageView)
 
         self.eventImageBaseView.addSubview(self.eventImageView)
 
@@ -1046,6 +1066,11 @@ extension ProChoiceHighlightCollectionViewCell {
             self.leagueInfoStackView.trailingAnchor.constraint(equalTo: self.leagueInfoContainerView.trailingAnchor, constant: -16),
             self.leagueInfoStackView.topAnchor.constraint(equalTo: self.leagueInfoContainerView.topAnchor, constant: 8),
             self.leagueInfoStackView.bottomAnchor.constraint(equalTo: self.leagueInfoContainerView.bottomAnchor, constant: -8),
+
+            self.cashbackIconImageView.widthAnchor.constraint(equalToConstant: 18),
+            self.cashbackIconImageView.heightAnchor.constraint(equalTo: self.cashbackIconImageView.widthAnchor),
+            self.cashbackIconImageView.centerYAnchor.constraint(equalTo: self.leagueInfoStackView.centerYAnchor),
+            self.cashbackIconImageView.trailingAnchor.constraint(equalTo: self.leagueInfoStackView.trailingAnchor, constant: -4),
 
             self.topSeparatorAlphaLineView.leadingAnchor.constraint(equalTo: self.containerView.leadingAnchor, constant: 0),
             self.topSeparatorAlphaLineView.trailingAnchor.constraint(equalTo: self.containerView.trailingAnchor, constant: 0),
@@ -1555,6 +1580,14 @@ extension ProChoiceHighlightCollectionViewCell {
         let imageView = UIImageView()
         imageView.translatesAutoresizingMaskIntoConstraints = false
         imageView.image = UIImage(named: "arrow_right_icon")
+        imageView.contentMode = .scaleAspectFit
+        return imageView
+    }
+
+    private func createCashbackIconImageView() -> UIImageView {
+        let imageView = UIImageView()
+        imageView.translatesAutoresizingMaskIntoConstraints = false
+        imageView.image = UIImage(named: "cashback_small_blue_icon")
         imageView.contentMode = .scaleAspectFit
         return imageView
     }

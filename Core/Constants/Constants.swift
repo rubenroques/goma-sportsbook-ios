@@ -27,7 +27,7 @@ enum TextSpacing {
 
 enum Assets {
     static func flagName(withCountryCode code: String) -> String {
-        if code.isEmpty {
+        if code.isEmpty || code.lowercased() == "international" {
             return "country_flag_240"
         }
         return "country_flag_\(code.lowercased())"
