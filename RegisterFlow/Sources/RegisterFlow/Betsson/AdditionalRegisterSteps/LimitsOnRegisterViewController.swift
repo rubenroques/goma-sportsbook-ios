@@ -45,8 +45,6 @@ public class LimitsOnRegisterViewModel {
     public func updateLimits(depositLimitString: String?, bettingLimitString: String?, autoPayoutLimitString: String?)
     -> AnyPublisher<Bool, LimitsOnRegisterError> {
 
-        self.isLoadingSubject.send(true)
-
         var clearDepositLimitString = (depositLimitString ?? "").replacingOccurrences(of: "€", with: "")
         clearDepositLimitString = clearDepositLimitString.replacingOccurrences(of: "$", with: "")
 
@@ -77,39 +75,60 @@ public class LimitsOnRegisterViewModel {
             return Fail(error: LimitsOnRegisterError.autoPayoutFormatError).eraseToAnyPublisher()
         }
 
-        let depositPublisher = /*servicesProvider.updateWeeklyDepositLimits(newLimit: depositLimit)*/
-        servicesProvider.updateResponsibleGamingLimits(newLimit: depositLimit, limitType: "deposit", hasRollingWeeklyLimits: self.hasRollingWeeklyLimits)
+        return self.servicesProvider.updateResponsibleGamingLimits(newLimit: depositLimit, limitType: "deposit", hasRollingWeeklyLimits: self.hasRollingWeeklyLimits)
             .print("LimitDebug deposit")
             .mapError { error in
                 print("Error \(error)")
                 return LimitsOnRegisterError.depositServerError
             }
+            .flatMap { [weak self] depositSuccess -> AnyPublisher<(Bool, Bool), LimitsOnRegisterError> in
+                guard let self = self else {
+                    return Fail(error: LimitsOnRegisterError.depositServerError).eraseToAnyPublisher()
+                }
+                guard depositSuccess else {
+                    return Fail(error: LimitsOnRegisterError.depositServerError).eraseToAnyPublisher()
+                }
 
-        let bettingPublisher = /*servicesProvider.updateWeeklyBettingLimits(newLimit: bettingLimit)*/
-        servicesProvider.updateResponsibleGamingLimits(newLimit: bettingLimit, limitType: "betting", hasRollingWeeklyLimits: self.hasRollingWeeklyLimits)
-            .print("LimitDebug")
-            .mapError { error in
-                print("Error \(error)")
-                return LimitsOnRegisterError.bettingServerError
+                return self.servicesProvider.updateResponsibleGamingLimits(newLimit: bettingLimit, limitType: "betting", hasRollingWeeklyLimits: self.hasRollingWeeklyLimits)
+                    .print("LimitDebug betting")
+                    .mapError { error in
+                        print("Error \(error)")
+                        return LimitsOnRegisterError.bettingServerError
+                    }
+                    .map { bettingSuccess in
+                        return (depositSuccess, bettingSuccess)
+                    }
+                    .eraseToAnyPublisher()
             }
+            .flatMap { [weak self] (depositSuccess, bettingSuccess) -> AnyPublisher<Bool, LimitsOnRegisterError> in
+                guard let self = self else {
+                    return Fail(error: LimitsOnRegisterError.autoPayoutServerError).eraseToAnyPublisher()
+                }
+                guard bettingSuccess else {
+                    return Fail(error: LimitsOnRegisterError.bettingServerError).eraseToAnyPublisher()
+                }
 
-        let autoPayoutPublisher = servicesProvider.updateResponsibleGamingLimits(newLimit: autoPayoutLimit, limitType: "autoPayout", hasRollingWeeklyLimits: self.hasRollingWeeklyLimits)
-            .print("LimitDebug")
-            .mapError { error in
-                print("Error \(error)")
-                return LimitsOnRegisterError.autoPayoutServerError
+                return self.servicesProvider.updateResponsibleGamingLimits(newLimit: autoPayoutLimit, limitType: "autoPayout", hasRollingWeeklyLimits: self.hasRollingWeeklyLimits)
+                    .print("LimitDebug autoPayout")
+                    .mapError { error in
+                        print("Error \(error)")
+                        return LimitsOnRegisterError.autoPayoutServerError
+                    }
+                    .map { autoPayoutSuccess in
+                        return depositSuccess && bettingSuccess && autoPayoutSuccess
+                    }
+                    .eraseToAnyPublisher()
             }
-
-        return Publishers.CombineLatest3(depositPublisher, bettingPublisher, autoPayoutPublisher)
-            .map { (depositSuccess, bettingSuccess, autoPayoutSuccess) in
-                return depositSuccess && bettingSuccess && autoPayoutSuccess
-            }
-            .handleEvents(receiveCompletion: { [weak self] _ in
-                self?.isLoadingSubject.send(false)
-            })
+            .handleEvents(
+                receiveSubscription: { [weak self] _ in
+                    self?.isLoadingSubject.send(true)
+                },
+                receiveCompletion: { [weak self] _ in
+                    self?.isLoadingSubject.send(false)
+                }
+            )
             .eraseToAnyPublisher()
     }
-
 }
 
 public class LimitsOnRegisterViewController: UIViewController {

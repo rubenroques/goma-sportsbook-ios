@@ -773,7 +773,7 @@ extension ClientManagedHomeViewTemplateDataSource: HomeViewTemplateDataSource {
         case .highlightedLiveMatches:
             return "tabbar_live_icon"
         case .highlightedMarketProChoices:
-            return "tabbar_live_icon"
+            return "pro_choices_icon"
         case .topCompetitionsShortcuts:
             return "trophy_icon"
         case .featuredTips:
