@@ -397,8 +397,12 @@ extension PaymentsDropIn: AdyenSessionPaymentsHandler, AdyenSessionPaymentDetail
     func didSubmit(_ paymentComponentData: PaymentComponentData, from component: Component, dropInComponent: AnyDropInComponent?, session: AdyenSession) {
         
         if let cardComponentDetails = paymentComponentData.paymentMethod as? AdyenCard.CardDetails {
-            let cardDetails = CardDetails(nameOnCard: cardComponentDetails.holderName, encryptedExpiryYear: cardComponentDetails.encryptedExpiryYear, encryptedExpiryMonth: cardComponentDetails.encryptedExpiryMonth, encryptedSecurityCode: cardComponentDetails.encryptedSecurityCode, encryptedCardNumber: cardComponentDetails.encryptedCardNumber)
-            
+            let cardDetails = CardDetails(nameOnCard: cardComponentDetails.holderName,
+                                          encryptedExpiryYear: cardComponentDetails.encryptedExpiryYear,
+                                          encryptedExpiryMonth: cardComponentDetails.encryptedExpiryMonth,
+                                          encryptedSecurityCode: cardComponentDetails.encryptedSecurityCode,
+                                          encryptedCardNumber: cardComponentDetails.encryptedCardNumber)
+
             self.cardDetails = cardDetails
         }
         
