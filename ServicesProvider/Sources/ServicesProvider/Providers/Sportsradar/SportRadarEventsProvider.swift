@@ -2135,7 +2135,11 @@ extension SportRadarEventsProvider {
                     }
                 }
             }
-            let eventMarket = EventMarket(id: "\(marketFilter.displayOrder)", name: marketFilter.translations?.english ?? "", marketIds: selectedMarketIds)
+            let id = marketFilter.translations?.english ??  "\(marketFilter.displayOrder)"
+            let eventMarket = EventMarket(id: id,
+                                          name: marketFilter.translations?.english ?? "",
+                                          marketIds: selectedMarketIds,
+                                          order: marketFilter.displayOrder)
             eventMarkets.append(eventMarket)
         }
 
@@ -2150,13 +2154,17 @@ extension SportRadarEventsProvider {
                     if eventMarket.marketIds.contains(marketTypeId) {
 
                         if availableMarkets[eventMarket.name] == nil {
-                            let availableMarket = AvailableMarket(marketId: matchMarket.id, marketGroupId: eventMarket.id,
-                                                                  market: matchMarket)
+                            let availableMarket = AvailableMarket(marketId: matchMarket.id,
+                                                                  marketGroupId: eventMarket.id,
+                                                                  market: matchMarket,
+                                                                  orderGroupOrder: eventMarket.order)
                             availableMarkets[eventMarket.name] = [availableMarket]
                         }
                         else {
-                            let availableMarket = AvailableMarket(marketId: matchMarket.id, marketGroupId: eventMarket.id,
-                                                                  market: matchMarket)
+                            let availableMarket = AvailableMarket(marketId: matchMarket.id,
+                                                                  marketGroupId: eventMarket.id,
+                                                                  market: matchMarket,
+                                                                  orderGroupOrder: eventMarket.order)
                             availableMarkets[eventMarket.name]?.append(availableMarket)
                         }
 
@@ -2166,37 +2174,45 @@ extension SportRadarEventsProvider {
 
                 // Add to All Market aswell
                 let allEventMarket = eventMarkets.filter({
-                    $0.id == "1"
+                    $0.name.lowercased() == "all markets"
                 })
 
                 let eventMarket = allEventMarket[0]
 
                 if availableMarkets[eventMarket.name] == nil {
-                    let availableMarket = AvailableMarket(marketId: matchMarket.id, marketGroupId: eventMarket.id,
-                                                          market: matchMarket)
+                    let availableMarket = AvailableMarket(marketId: matchMarket.id,
+                                                          marketGroupId: eventMarket.id,
+                                                          market: matchMarket,
+                                                          orderGroupOrder: eventMarket.order)
                     availableMarkets[eventMarket.name] = [availableMarket]
                 }
                 else {
-                    let availableMarket = AvailableMarket(marketId: matchMarket.id, marketGroupId: eventMarket.id,
-                                                          market: matchMarket)
+                    let availableMarket = AvailableMarket(marketId: matchMarket.id,
+                                                          marketGroupId: eventMarket.id,
+                                                          market: matchMarket,
+                                                          orderGroupOrder: eventMarket.order)
                     availableMarkets[eventMarket.name]?.append(availableMarket)
                 }
 
             }
             else {
                 let allEventMarket = eventMarkets.filter({
-                    $0.id == "1"
+                    $0.name.lowercased() == "all markets"
                 })
 
                 let eventMarket = allEventMarket[0]
                 if availableMarkets[eventMarket.name] == nil {
-                    let availableMarket = AvailableMarket(marketId: matchMarket.id, marketGroupId: eventMarket.id,
-                                                          market: matchMarket)
+                    let availableMarket = AvailableMarket(marketId: matchMarket.id,
+                                                          marketGroupId: eventMarket.id,
+                                                          market: matchMarket,
+                                                          orderGroupOrder: eventMarket.order)
                     availableMarkets[eventMarket.name] = [availableMarket]
                 }
                 else {
-                    let availableMarket = AvailableMarket(marketId: matchMarket.id, marketGroupId: eventMarket.id,
-                                                          market: matchMarket)
+                    let availableMarket = AvailableMarket(marketId: matchMarket.id,
+                                                          marketGroupId: eventMarket.id,
+                                                          market: matchMarket,
+                                                          orderGroupOrder: eventMarket.order)
                     availableMarkets[eventMarket.name]?.append(availableMarket)
                 }
 
@@ -2211,7 +2227,7 @@ extension SportRadarEventsProvider {
                                           id: availableMarket.value.first?.marketGroupId ?? "0",
                                           groupKey: "\(availableMarket.value.first?.marketGroupId ?? "0")",
                                           translatedName: availableMarket.key.capitalized,
-                                          position: Int(availableMarket.value.first?.marketGroupId ?? "0") ?? 0,
+                                          position: availableMarket.value.first?.orderGroupOrder ?? 120,
                                           isDefault: availableMarket.key == "All Markets" ? true : false,
                                           numberOfMarkets: availableMarket.value.count,
                                           markets: availableMarket.value.map(\.market))
@@ -2219,18 +2235,40 @@ extension SportRadarEventsProvider {
             marketGroups[availableMarket.key] = marketGroup
         }
 
-        let marketGroupsArray = Array(marketGroups.values)
+        var marketGroupsArray = Array(marketGroups.values)
+        var sortedMarketGroupsArray: [MarketGroup]
 
-        var sortedMarketGroupsArray = marketGroupsArray.sorted(by: {
-            $0.position ?? 0 < $1.position ?? 99
-        })
-        
+        // Make sure all markets is first
+        if let allMarketsIndex = marketGroupsArray.firstIndex(where: { $0.id.lowercased() == "all markets" }) {
+            // Remove "All Markets" from the array
+            let allMarketsItem = marketGroupsArray.remove(at: allMarketsIndex)
+
+            // Sort the remaining items
+            let remainingItems = marketGroupsArray.sorted(by: {
+                if ($0.position ?? 0) == ($1.position ?? 0) {
+                    return ($0.groupKey ?? "") < ($1.groupKey ?? "")
+                }
+                return ($0.position ?? 0) < ($1.position ?? 999)
+            })
+
+            // Insert "All Markets" at the start of the sorted array
+            sortedMarketGroupsArray = [allMarketsItem] + remainingItems
+        } else {
+            // If "All Markets" is not found, just sort the array as usual
+            sortedMarketGroupsArray = marketGroupsArray.sorted(by: {
+                if ($0.position ?? 0) == ($1.position ?? 0) {
+                    return ($0.groupKey ?? "") < ($1.groupKey ?? "")
+                }
+                return ($0.position ?? 0) < ($1.position ?? 999)
+            })
+        }
+
         // Verify for BetBuilder markets
-        var betBuilderMarkets = matchMarkets.filter( {
+        let betBuilderMarkets = matchMarkets.filter( {
             $0.customBetAvailable ?? false
         })
         
-        var betBuilderMarketGroup = MarketGroup(type: "MixMatch",
+        let betBuilderMarketGroup = MarketGroup(type: "MixMatch",
                                                 id: "99",
                                                 groupKey: "99",
                                                 translatedName: "MixMatch",

@@ -9,7 +9,7 @@ import UIKit
 
 class MarketWidgetContainerTableViewModel {
 
-    static let defaultCardHeight: CGFloat = 328.0
+    static let defaultCardHeight: CGFloat = 304.0
     static let topMargin: CGFloat = 10.0
     static let leftMargin: CGFloat = 18.0
 

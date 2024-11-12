@@ -20,7 +20,7 @@ class MarketWidgetCellViewModel {
         let highlightedMarket = self.highlightedMarket.content
         let validOutcomesCount = self.highlightedMarket.promotedDetailsCount
         let processedOutcomes = highlightedMarket.outcomes.filter { outcome in
-            if outcome.bettingOffer.decimalOdd.isNaN {
+            if !outcome.bettingOffer.isAvailable || outcome.bettingOffer.decimalOdd.isNaN {
                 return false
             }
             return true
@@ -138,6 +138,15 @@ class MarketWidgetCellViewModel {
         return self.$highlightedMarket
             .map { highlightedMarket in
                 return Env.favoritesManager.isEventFavorite(eventId: highlightedMarket.content.eventId ?? "")
+            }
+            .removeDuplicates()
+            .eraseToAnyPublisher()
+    }
+
+    var canHaveCashbackPublisher: AnyPublisher<Bool, Never> {
+        return self.$highlightedMarket
+            .map { highlightedMarket in
+                return RePlayFeatureHelper.shouldShowRePlay(forMarket: highlightedMarket.content)
             }
             .removeDuplicates()
             .eraseToAnyPublisher()

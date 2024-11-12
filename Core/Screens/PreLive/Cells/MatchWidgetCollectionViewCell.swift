@@ -638,7 +638,9 @@ class MatchWidgetCollectionViewCell: UICollectionViewCell {
         
         self.mainContentBaseView.isHidden = false
         //
-        
+
+        self.topImageView.contentMode = .scaleAspectFill
+
         //
         // Add gradient to the bottom booster line
         self.boostedOddBottomLineAnimatedGradientView.translatesAutoresizingMaskIntoConstraints = false
@@ -664,8 +666,8 @@ class MatchWidgetCollectionViewCell: UICollectionViewCell {
         //
         // Create a gradient layer on top of the image
         
-        //        let finalColor = UIColor(hex: 0x3B3B3B, alpha: 0.50)
-        //        let initialColor = UIColor(hex: 0x000000, alpha: 0.73)
+        // let finalColor = UIColor(hex: 0x3B3B3B, alpha: 0.50)
+        // let initialColor = UIColor(hex: 0x000000, alpha: 0.73)
         
         let finalColor = UIColor.App.highlightSecondaryContrast.withAlphaComponent(0.3)
         let initialColor = UIColor.App.highlightSecondaryContrast.withAlphaComponent(1.0)
@@ -846,8 +848,8 @@ class MatchWidgetCollectionViewCell: UICollectionViewCell {
         // Cashback
         self.baseView.addSubview(self.cashbackIconImageView)
         
-        self.cashbackIconImageViewHeightConstraint = self.cashbackIconImageView.widthAnchor.constraint(equalToConstant: 20)
-        
+        self.cashbackIconImageViewHeightConstraint = self.cashbackIconImageView.widthAnchor.constraint(equalToConstant: 18)
+
         NSLayoutConstraint.activate([
             self.cashbackIconImageViewHeightConstraint,
             self.cashbackIconImageView.heightAnchor.constraint(equalTo: self.cashbackIconImageView.widthAnchor),
@@ -1615,7 +1617,7 @@ class MatchWidgetCollectionViewCell: UICollectionViewCell {
         self.resultCenterConstraint.constant = 0
         self.buttonsHeightConstraint.constant = 40
         
-        self.cashbackIconImageViewHeightConstraint.constant = 20
+        self.cashbackIconImageViewHeightConstraint.constant = 18
         
         self.eventNameLabel.font = AppFont.with(type: .semibold, size: 11)
         self.dateLabel.font = AppFont.with(type: .semibold, size: 12)

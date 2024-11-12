@@ -13,6 +13,13 @@ struct RePlayFeatureHelper {
         return Self.shouldShowRePlay(forSport: match.sport)
     }
 
+    static func shouldShowRePlay(forMarket market: Market) -> Bool {
+        if let sport = market.sport {
+            return Self.shouldShowRePlay(forSport: sport)
+        }
+        return false
+    }
+
     static func shouldShowRePlay(forSport sport: Sport) -> Bool {
         let matchSport = sport.alphaId ?? ""
         return TargetVariables.hasFeatureEnabled(feature: .cashback) &&

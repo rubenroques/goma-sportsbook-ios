@@ -59,7 +59,15 @@ struct BettingTicket: Codable, Hashable {
     }
 
     static func == (lhs: BettingTicket, rhs: BettingTicket) -> Bool {
-        return lhs.bettingId == rhs.bettingId
+        return lhs.bettingId == rhs.bettingId &&
+            lhs.matchDescription == rhs.matchDescription &&
+            lhs.marketDescription == rhs.marketDescription &&
+            lhs.outcomeDescription == rhs.outcomeDescription &&
+            lhs.outcomeId == rhs.marketId &&
+            lhs.marketId == rhs.marketId &&
+            lhs.matchId == rhs.matchId &&
+            lhs.homeParticipantName == rhs.homeParticipantName &&
+            lhs.awayParticipantName == rhs.awayParticipantName 
     }
 
     init(id: String,

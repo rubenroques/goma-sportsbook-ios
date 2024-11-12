@@ -524,13 +524,14 @@ public struct EventMarket {
     public var id: String
     public var name: String
     public var marketIds: [String]
-
+    public var order: Int
 }
 
 public struct AvailableMarket {
     public var marketId: String
     public var marketGroupId: String
     public var market: Market
+    public var orderGroupOrder: Int
 }
 
 public struct MarketGroup {
