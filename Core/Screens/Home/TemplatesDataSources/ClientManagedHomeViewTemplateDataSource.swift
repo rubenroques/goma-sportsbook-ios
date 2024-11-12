@@ -178,19 +178,22 @@ class ClientManagedHomeViewTemplateDataSource {
 
     //
     private var pendingUserTrackRequest: AnyCancellable?
+
+    private let cancellablesLock = NSLock()
     private var cancellables: Set<AnyCancellable> = []
 
     init() {
         self.refreshData()
         
         // Banners are associated with profile publisher
-        Env.userSessionStore.userProfilePublisher
+        let profileCancellable = Env.userSessionStore.userProfilePublisher
             .removeDuplicates()
             .receive(on: DispatchQueue.main)
             .sink { [weak self] _ in
                 self?.fetchBanners()
             }
-            .store(in: &cancellables)
+    
+        self.addCancellable(profileCancellable)
         
         // Alerts are associated with KYC publisher
         self.fetchAlerts()
@@ -224,10 +227,11 @@ class ClientManagedHomeViewTemplateDataSource {
         self.fetchHeroMatches()
     }
 
+
     // User alerts
     func fetchAlerts() {
 
-        Env.userSessionStore.userKnowYourCustomerStatusPublisher
+        let alertsCancellable = Env.userSessionStore.userKnowYourCustomerStatusPublisher
             .receive(on: DispatchQueue.main)
             .sink(receiveValue: { [weak self] kycStatus in
                 if kycStatus == .request {
@@ -242,63 +246,53 @@ class ClientManagedHomeViewTemplateDataSource {
                 }
                 self?.refreshPublisher.send()
             })
-            .store(in: &cancellables)
+            
+        self.addCancellable(alertsCancellable)
 
     }
 
     // User alerts
     func fetchBanners() {
-
-//        if Env.userSessionStore.isUserLogged() {
-//            // Logged user has no banners
-//            self.banners = []
-//            self.refreshPublisher.send()
-//            return
-//        }
-
-        Env.servicesProvider.getPromotionalTopBanners()
+        let cancellable = Env.servicesProvider.getPromotionalTopBanners()
             .receive(on: DispatchQueue.main)
-            .sink { completion in
+            .sink { [weak self] completion in
                 print("ClientManagedHomeTemplate getPromotionalTopBanners completion \(completion)")
+                // Optionally handle completion (e.g., handle errors)
             } receiveValue: { [weak self] (promotionalBanners: [PromotionalBanner]) in
+                guard let self = self else { return }
+                
                 var displayBanners = promotionalBanners
                 
                 if Env.userSessionStore.isUserLogged() {
-                    let filteredBanners = displayBanners.filter({
-                        $0.bannerDisplay == "LOGGEDIN"
-                    })
-                    
-                    displayBanners = filteredBanners
-                }
-                else {
-                    let filteredBanners = displayBanners.filter({
-                        $0.bannerDisplay == "LOGGEDOFF"
-                    })
-                    
-                    displayBanners = filteredBanners
+                    displayBanners = displayBanners.filter { $0.bannerDisplay == "LOGGEDIN" }
+                } else {
+                    displayBanners = displayBanners.filter { $0.bannerDisplay == "LOGGEDOFF" }
                 }
                 
                 print("DISPLAY BANNERS: \(displayBanners)")
                 
-                self?.banners = displayBanners.map({ promotionalBanner in
-                    return BannerInfo(type: "",
-                                      id: promotionalBanner.id,
-                                      matchId: nil,
-                                      imageURL: promotionalBanner.imageURL,
-                                      priorityOrder: nil,
-                                      marketId: nil,
-                                      location: promotionalBanner.location,
-                                      specialAction: promotionalBanner.specialAction)
-                })
-                self?.refreshPublisher.send()
+                self.banners = displayBanners.map { promotionalBanner in
+                    BannerInfo(
+                        type: "",
+                        id: promotionalBanner.id,
+                        matchId: nil,
+                        imageURL: promotionalBanner.imageURL,
+                        priorityOrder: nil,
+                        marketId: nil,
+                        location: promotionalBanner.location,
+                        specialAction: promotionalBanner.specialAction
+                    )
+                }
+                self.refreshPublisher.send()
             }
-            .store(in: &self.cancellables)
-
+        
+        // Store the cancellable in a thread-safe manner
+        self.addCancellable(cancellable)
     }
 
     func fetchPromotionalStories() {
 
-        Env.servicesProvider.getPromotionalTopStories()
+        let cancellable = Env.servicesProvider.getPromotionalTopStories()
             .receive(on: DispatchQueue.main)
             .sink { completion in
                 print("ClientManagedHomeTemplate getPromotionalTopStories Promotional stories completion \(completion)")
@@ -310,11 +304,12 @@ class ClientManagedHomeViewTemplateDataSource {
                 self?.promotionalStories = mappedPromotionalStories
                 self?.refreshPublisher.send()
             }
-            .store(in: &self.cancellables)
+        
+        self.addCancellable(cancellable)
     }
 
     func fetchQuickSwipeMatches() {
-        Env.servicesProvider.getPromotionalSlidingTopEvents()
+        let cancellable = Env.servicesProvider.getPromotionalSlidingTopEvents()
             .map(ServiceProviderModelMapper.matches(fromEvents:))
             .receive(on: DispatchQueue.main)
             .sink(receiveCompletion: { completion in
@@ -323,7 +318,8 @@ class ClientManagedHomeViewTemplateDataSource {
                 self?.quickSwipeStackMatches = matches
                 self?.refreshPublisher.send()
             })
-            .store(in: &self.cancellables)
+        
+        self.addCancellable(cancellable)
     }
 
     //
@@ -370,7 +366,7 @@ class ClientManagedHomeViewTemplateDataSource {
             .map(ServiceProviderModelMapper.matches(fromEvents:))
             .replaceError(with: [])
 
-        Publishers.CombineLatest(imageMatches, boostedMatches)
+        let combinedCancellable = Publishers.CombineLatest(imageMatches, boostedMatches)
         .map { highlightedVisualImageEvents, highlightedBoostedEvents -> [HighlightedMatchType] in
             var events: [HighlightedMatchType] = highlightedVisualImageEvents.map({ HighlightedMatchType.visualImageMatch($0) })
             events.append(contentsOf: highlightedBoostedEvents.map({ HighlightedMatchType.boostedOddsMatch($0) }))
@@ -415,12 +411,12 @@ class ClientManagedHomeViewTemplateDataSource {
             
             self?.refreshPublisher.send()
         })
-        .store(in: &self.cancellables)
 
+        self.addCancellable(combinedCancellable)
     }
 
     func fetchHighlightMarkets() {
-        Env.servicesProvider.getHighlightedMarkets()
+        let cancellable = Env.servicesProvider.getHighlightedMarkets()
             .receive(on: DispatchQueue.main)
             .sink { completion in
 
@@ -443,13 +439,14 @@ class ClientManagedHomeViewTemplateDataSource {
 
                 self?.refreshPublisher.send()
             }
-            .store(in: &self.cancellables)
+
+        self.addCancellable(cancellable)
 
     }
 
     func fetchHeroMatches() {
         
-        Env.servicesProvider.getHeroGameEvent()
+        let cancellable = Env.servicesProvider.getHeroGameEvent()
             .receive(on: DispatchQueue.main)
             .map(ServiceProviderModelMapper.matches(fromEvents:))
             .compactMap({ $0 })
@@ -459,13 +456,14 @@ class ClientManagedHomeViewTemplateDataSource {
                 self?.heroMatches = heroMatches
                 self?.refreshPublisher.send()
             })
-            .store(in: &cancellables)
+
+        self.addCancellable(cancellable)
 
     }
 
     func fetchPromotedSports() {
 
-        Env.servicesProvider.getPromotedSports()
+        let cancellable = Env.servicesProvider.getPromotedSports()
             .receive(on: DispatchQueue.main)
             .sink { completion in
                 print("ClientManagedHomeTemplate getPromotedSports completion \(completion)")
@@ -473,7 +471,8 @@ class ClientManagedHomeViewTemplateDataSource {
                 self?.promotedSports = promotedSports
                 self?.refreshPublisher.send()
             }
-            .store(in: &self.cancellables)
+
+        self.addCancellable(cancellable)
 
     }
 
@@ -481,7 +480,7 @@ class ClientManagedHomeViewTemplateDataSource {
 
         let publishers = promotedSport.marketGroups.map({ Env.servicesProvider.getEventsForEventGroup(withId: $0.id) })
 
-        Publishers.MergeMany(publishers)
+        let mergeManyCancellable = Publishers.MergeMany(publishers)
             .collect()
             .receive(on: DispatchQueue.main)
             .sink { completion in
@@ -491,13 +490,14 @@ class ClientManagedHomeViewTemplateDataSource {
                 self?.promotedSportsMatches[promotedSport.id] = matches
                 self?.refreshPublisher.send()
             }
-            .store(in: &self.cancellables)
+
+        self.addCancellable(mergeManyCancellable)
 
     }
 
     private func fetchTopCompetitions() {
 
-        Env.servicesProvider.getTopCompetitions()
+        let cancellable = Env.servicesProvider.getTopCompetitions()
             .removeDuplicates()
             .receive(on: DispatchQueue.main)
             .sink(receiveCompletion: { completion in
@@ -533,7 +533,8 @@ class ClientManagedHomeViewTemplateDataSource {
                 }
                 self?.refreshPublisher.send()
             })
-            .store(in: &cancellables)
+
+        self.addCancellable(cancellable)
 
     }
 
@@ -591,7 +592,7 @@ class ClientManagedHomeViewTemplateDataSource {
         homeLiveEventsCount = 20
         #endif
 
-        Env.servicesProvider.getHighlightedLiveEvents(eventCount: homeLiveEventsCount, userId: userId)
+        let cancellable = Env.servicesProvider.getHighlightedLiveEvents(eventCount: homeLiveEventsCount, userId: userId)
             .map { highlightedLiveEvents in
                 return highlightedLiveEvents.compactMap(ServiceProviderModelMapper.match(fromEvent:))
             }
@@ -610,7 +611,8 @@ class ClientManagedHomeViewTemplateDataSource {
                 let eventsIds = liveEvents.compactMap({ return $0.trackableReference })
                 self?.waitUserToTrackImpressionForEvents(eventsIds: eventsIds)
             }
-            .store(in: &self.cancellables)
+
+        self.addCancellable(cancellable)
 
     }
     
@@ -652,7 +654,7 @@ class ClientManagedHomeViewTemplateDataSource {
     // but the UI shown to the user is from old FeaturedTips
     func fetchPromotedBetslips() {
         let userIdentifier = Env.userSessionStore.userProfilePublisher.value?.userIdentifier
-        Env.servicesProvider.getPromotedBetslips(userId: userIdentifier)
+        let cancellable = Env.servicesProvider.getPromotedBetslips(userId: userIdentifier)
             .map(ServiceProviderModelMapper.suggestedBetslips(fromPromotedBetslips:))
             .receive(on: DispatchQueue.main)
             .sink { completion in
@@ -661,9 +663,25 @@ class ClientManagedHomeViewTemplateDataSource {
                 self?.suggestedBetslips = suggestedBetslips
                 self?.refreshPublisher.send()
             }
-            .store(in: &self.cancellables)
+
+        self.addCancellable(cancellable)
     }
     
+}
+
+extension ClientManagedHomeViewTemplateDataSource {
+
+    private func addCancellable(_ cancellable: AnyCancellable) {
+        self.cancellablesLock.lock()
+        self.cancellables.insert(cancellable)
+        self.cancellablesLock.unlock()
+    }
+
+    private func removeCancellable(_ cancellable: AnyCancellable) {
+        self.cancellablesLock.lock()
+        self.cancellables.remove(cancellable)
+        self.cancellablesLock.unlock()
+    }
 }
 
 extension ClientManagedHomeViewTemplateDataSource: HomeViewTemplateDataSource {
