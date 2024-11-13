@@ -92,6 +92,11 @@ class TopCompetitionItemCollectionViewCell: UICollectionViewCell {
     override func prepareForReuse() {
         super.prepareForReuse()
 
+        self.nameLabel.text = ""
+        self.sportImageView.image = nil
+        self.countryImageView.image = nil
+
+        self.setNeedsLayout()
     }
 
     private func commonInit() {
@@ -101,6 +106,9 @@ class TopCompetitionItemCollectionViewCell: UICollectionViewCell {
 
         self.setupViews()
         self.setupWithTheme()
+
+        self.setNeedsLayout()
+        self.layoutIfNeeded()
     }
 
     override func layoutSubviews() {

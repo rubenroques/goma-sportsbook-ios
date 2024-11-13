@@ -25,7 +25,6 @@ class MarketWidgetCellViewModel {
             }
             return true
         }
-        .sorted(by: \.bettingOffer.decimalOdd)
         .prefix(validOutcomesCount)
 
         return Array(processedOutcomes)

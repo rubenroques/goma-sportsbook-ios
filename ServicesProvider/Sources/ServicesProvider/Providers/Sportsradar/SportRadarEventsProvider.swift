@@ -1401,7 +1401,15 @@ extension SportRadarEventsProvider {
 
                 // Mapeia `marketIds` com índices para preservar a ordem original
                 let marketIds = headlineItems.compactMap { $0.marketId }
-                let marketIdIndexMap = Dictionary(uniqueKeysWithValues: marketIds.enumerated().map { ($1, $0) })
+
+                var uniqueMarketIds = [String]()
+                for id in marketIds {
+                    if !uniqueMarketIds.contains(id) {
+                        uniqueMarketIds.append(id)
+                    }
+                }
+
+                let marketIdIndexMap = Dictionary(uniqueKeysWithValues: uniqueMarketIds.enumerated().map { ($1, $0) })
 
                 let publishers = marketIds.map { id in
                     return self.getMarketInfo(marketId: id)
