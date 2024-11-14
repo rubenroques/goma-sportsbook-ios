@@ -317,8 +317,7 @@ extension PaymentsDropIn: AdyenSessionDelegate {
             self.dropInComponent?.viewController.dismiss(animated: true)
             self.showPaymentStatus?(.refused, self.paymentId)
         }
-
-        if result.resultCode == .authorised {
+        else if result.resultCode == .authorised {
             self.dropInComponent?.viewController.dismiss(animated: true)
             self.showPaymentStatus?(.authorised, self.paymentId)
         }
@@ -489,7 +488,7 @@ extension PaymentsDropIn {
     
     func checkSuccessOnRedirectURL(_ url: URL) {
         
-        if url.absoluteString.contains("deposit-results.html") && url.absoluteString.contains("resultCode=authorised") {
+        if url.absoluteString.contains("deposit-results") { // && url.absoluteString.contains("resultCode=authorised") {
             self.dropInComponent?.viewController.dismiss(animated: true)
             if let paymentId = self.paymentId {
                 self.showPaymentStatus?(.startedProcessing, paymentId)
