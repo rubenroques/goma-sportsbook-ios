@@ -79,7 +79,7 @@ class MarketGroupDetailsViewController: UIViewController {
 
         // Set constraints
         NSLayoutConstraint.activate([
-            self.expandCollapseButton.widthAnchor.constraint(equalToConstant: 60),
+            self.expandCollapseButton.widthAnchor.constraint(equalToConstant: 120),
             self.expandCollapseButton.trailingAnchor.constraint(equalTo: headerView.trailingAnchor, constant: -16),
             self.expandCollapseButton.topAnchor.constraint(equalTo: headerView.topAnchor, constant: 8),
             self.expandCollapseButton.bottomAnchor.constraint(equalTo: headerView.bottomAnchor, constant: 1),

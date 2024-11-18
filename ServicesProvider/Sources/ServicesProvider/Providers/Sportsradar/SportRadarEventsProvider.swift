@@ -2231,7 +2231,7 @@ extension SportRadarEventsProvider {
                                           groupKey: "\(availableMarket.value.first?.marketGroupId ?? "0")",
                                           translatedName: availableMarket.key.capitalized,
                                           position: availableMarket.value.first?.orderGroupOrder ?? 120,
-                                          isDefault: availableMarket.key == "All Markets" ? true : false,
+                                          isDefault: false,
                                           numberOfMarkets: availableMarket.value.count,
                                           markets: availableMarket.value.map(\.market))
 
@@ -2255,10 +2255,10 @@ extension SportRadarEventsProvider {
             })
 
             // Insert "All Markets" at the start of the sorted array
-            sortedMarketGroupsArray = [allMarketsItem] + remainingItems
+            // sortedMarketGroupsArray = [allMarketsItem] + remainingItems
             
             // Now AllMarkets group tab should be in the end
-            // sortedMarketGroupsArray = remainingItems + [allMarketsItem]
+            sortedMarketGroupsArray = remainingItems + [allMarketsItem]
             
         } else {
             // If "All Markets" is not found, just sort the array as usual

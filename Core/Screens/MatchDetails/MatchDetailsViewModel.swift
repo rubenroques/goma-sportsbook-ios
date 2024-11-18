@@ -460,10 +460,8 @@ extension MatchDetailsViewModel: UICollectionViewDataSource, UICollectionViewDel
             let marketTranslatedName = item.translatedName ?? localized("market")
             
             let normalizedTranslatedName = marketTranslatedName.replacingOccurrences(of: "[^a-zA-Z0-9]", with: "_", options: .regularExpression).lowercased()
-            
-            let marketKey = "market_group_\(normalizedTranslatedName)"
-            
-            var marketName = "\(localized("mix_match_mix_string"))\(localized("mix_match_match_string"))"
+                        
+            let marketName = "\(localized("mix_match_mix_string"))\(localized("mix_match_match_string"))"
             
             cell.setupInfo(title: marketName, iconName: "mix_match_icon", backgroundName: "mix_match_background_pill")
             

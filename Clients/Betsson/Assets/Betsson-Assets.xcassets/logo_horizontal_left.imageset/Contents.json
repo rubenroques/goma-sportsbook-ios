@@ -1,7 +1,7 @@
 {
   "images" : [
     {
-      "filename" : "header logo light mode.png",
+      "filename" : "befr-white_1 1.png",
       "idiom" : "universal",
       "scale" : "1x"
     },
@@ -12,12 +12,12 @@
           "value" : "dark"
         }
       ],
-      "filename" : "header logo dark mode.png",
+      "filename" : "befr-mixed 1.png",
       "idiom" : "universal",
       "scale" : "1x"
     },
     {
-      "filename" : "header logo light mode@2x.png",
+      "filename" : "befr-white_1 1@2x.png",
       "idiom" : "universal",
       "scale" : "2x"
     },
@@ -28,12 +28,12 @@
           "value" : "dark"
         }
       ],
-      "filename" : "header logo dark mode@2x.png",
+      "filename" : "befr-mixed 1@2x 1.png",
       "idiom" : "universal",
       "scale" : "2x"
     },
     {
-      "filename" : "header logo light mode@3x.png",
+      "filename" : "befr-white_1 1@2x 1.png",
       "idiom" : "universal",
       "scale" : "3x"
     },
@@ -44,7 +44,7 @@
           "value" : "dark"
         }
       ],
-      "filename" : "header logo dark mode@3x.png",
+      "filename" : "befr-mixed 1@2x.png",
       "idiom" : "universal",
       "scale" : "3x"
     }
