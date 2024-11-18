@@ -439,7 +439,7 @@ extension HeroCardTableViewCell {
     private static func createImageGradientPatternView() -> UIImageView {
         let imageView = UIImageView()
         imageView.translatesAutoresizingMaskIntoConstraints = false
-        imageView.image = UIImage(named: "gradient_pattern")
+        imageView.image = nil // UIImage(named: "gradient_pattern")
         imageView.contentMode = .scaleAspectFill
         return imageView
     }

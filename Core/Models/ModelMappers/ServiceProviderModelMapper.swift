@@ -279,7 +279,8 @@ extension ServiceProviderModelMapper {
                                     bettingOffer: bettingOffer,
                                     orderValue: outcome.orderValue,
                                     externalReference: outcome.externalReference,
-                                    customBetAvailableMarket: outcome.customBetAvailableMarket)
+                                    customBetAvailableMarket: outcome.customBetAvailableMarket,
+                                    isTerminated: outcome.isTerminated)
         return mappedOutcome
     }
     

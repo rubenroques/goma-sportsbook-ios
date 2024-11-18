@@ -5330,7 +5330,6 @@
 		45F6BE312AB3732C00C81DE1 /* MyTicketBetLineView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 458BAC802770EF53006C4BC7 /* MyTicketBetLineView.xib */; };
 		45F6BE322AB3732C00C81DE1 /* OddTripleCollectionViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 45CD7B4D2716F5CB003044C5 /* OddTripleCollectionViewCell.xib */; };
 		45F6BE3F2AB3739F00C81DE1 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 45F6BE3C2AB3739F00C81DE1 /* GoogleService-Info.plist */; };
-		45F6BE402AB3739F00C81DE1 /* Betsson-PROD-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 45F6BE3E2AB3739F00C81DE1 /* Betsson-PROD-Info.plist */; };
 		45F805932A05357E005296E0 /* Lottie in Frameworks */ = {isa = PBXBuildFile; productRef = 45F805922A05357E005296E0 /* Lottie */; };
 		45F805962A05385B005296E0 /* dots-loading.json in Resources */ = {isa = PBXBuildFile; fileRef = 45F805952A05385B005296E0 /* dots-loading.json */; };
 		45F805972A05385B005296E0 /* dots-loading.json in Resources */ = {isa = PBXBuildFile; fileRef = 45F805952A05385B005296E0 /* dots-loading.json */; };
@@ -12466,7 +12465,7 @@
 			attributes = {
 				BuildIndependentTargetsInParallel = YES;
 				LastSwiftUpdateCheck = 1500;
-				LastUpgradeCheck = 1430;
+				LastUpgradeCheck = 1610;
 				TargetAttributes = {
 					455A0C6526BD902F00EC572D = {
 						CreatedOnToolsVersion = 12.5.1;
@@ -13191,7 +13190,6 @@
 				45A332D3298976BA008181E9 /* FilterSliderCollapseView.xib in Resources */,
 				45A332D4298976BA008181E9 /* TournamentTableViewHeader.xib in Resources */,
 				452BA1A62A902C4900D0AA48 /* avatar5-dark.json in Resources */,
-				45F6BE402AB3739F00C81DE1 /* Betsson-PROD-Info.plist in Resources */,
 				45A332D5298976BA008181E9 /* BetSubmissionSuccessViewController.xib in Resources */,
 				45A332D6298976BA008181E9 /* SplashViewController.xib in Resources */,
 				45F6BA7D2AB1F2B600C81DE1 /* avatar2-light.json in Resources */,
@@ -20073,7 +20071,6 @@
 		455A0C7E26BD903000EC572D /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				BUNDLE_LOADER = "$(TEST_HOST)";
 				"CODE_SIGN_IDENTITY[sdk=macosx*]" = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
@@ -20096,7 +20093,6 @@
 		455A0C7F26BD903000EC572D /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				BUNDLE_LOADER = "$(TEST_HOST)";
 				"CODE_SIGN_IDENTITY[sdk=macosx*]" = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
@@ -20293,7 +20289,6 @@
 		45A3334C298976BA008181E9 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				ASSETCATALOG_COMPILER_APPICON_NAME = "AppIcon-Betsson";
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_ENTITLEMENTS = "Clients/Betsson/Betsson-PROD.entitlements";
@@ -20326,7 +20321,6 @@
 		45A3334D298976BA008181E9 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				ASSETCATALOG_COMPILER_APPICON_NAME = "AppIcon-Betsson";
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_ENTITLEMENTS = "Clients/Betsson/Betsson-PROD.entitlements";

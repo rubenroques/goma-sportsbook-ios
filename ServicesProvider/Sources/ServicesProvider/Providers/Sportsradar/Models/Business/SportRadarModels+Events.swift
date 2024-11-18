@@ -531,6 +531,8 @@ extension SportRadarModels {
         private var priceDenominator: String?
 
         var isTradable: Bool?
+        var isTerminated: Bool?
+        
         var isOverUnder: Bool
 
         var customBetAvailableMarket: Bool?
@@ -578,16 +580,13 @@ extension SportRadarModels {
             }
             
             self.customBetAvailableMarket = nil
-
+            self.isTerminated = false
+            
             let suspensiontype: String = (try? container.decode(String.self, forKey: SportRadarModels.Outcome.CodingKeys.suspensiontype)) ?? ""
             if suspensiontype.lowercased() == "n/o" {
                 self.isTradable = false
+                self.isTerminated = true
             }
-
-//            #if DEBUG
-//            self.name = self.id + " " + self.name
-//            #endif
-
         }
 
         func encode(to encoder: any Encoder) throws {

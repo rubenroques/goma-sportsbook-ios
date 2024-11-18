@@ -82,8 +82,10 @@ class MarketGroupDetailsStore {
                 self.firstMarketCache = market
             }
 
-            let outcomes = market.outcomes
+            // Filter out terminated outcomes
+            let outcomes = market.outcomes.filter({ !($0.isTerminated ?? false) })
 
+            //
             var sortedOutcomes: [Outcome] = []
 
             sortedOutcomes = outcomes.sorted { out1, out2 in

@@ -456,7 +456,7 @@ extension SportRadarModelMapper {
 
     static func transactionDetail(fromInternalTransactionDetail internalTransactionDetail: SportRadarModels.TransactionDetail) -> TransactionDetail {
 
-        var transactionType = TransactionType.init(transactionType: internalTransactionDetail.type)
+        var transactionType = TransactionType.init(transactionType: internalTransactionDetail.type, escrowType: internalTransactionDetail.escrowType)
 
         if transactionType == .automatedWithdrawalThreshold {
             let transactionReference = internalTransactionDetail.reference
@@ -466,16 +466,6 @@ extension SportRadarModelMapper {
                 transactionType = .automatedWithdrawal
             }
         }
-
-//        if transactionType == .withdrawal {
-//            let transactionReference = internalTransactionDetail.reference
-//
-//            if transactionReference == "Escrow Auto Withdrawal"
-//            {
-//                transactionType = .automatedWithdrawal
-//            }
-//
-//        }
 
         let date: Date = OmegaAPIClient.parseOmegaDateString(internalTransactionDetail.dateTime) ?? Date(timeIntervalSinceReferenceDate: 0)
                 

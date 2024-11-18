@@ -9,6 +9,24 @@ import Foundation
 
 public enum TransactionType: CaseIterable {
 
+    public enum EscrowType: String {
+        case ESC_AML
+        case ESC_AN_WIN
+        case ESC_REVIEW
+        case ESC_RG_DEF
+        
+        public init?(rawValue: String) {
+            switch rawValue {
+            case "ESC_AML": self = .ESC_AML
+            case "ESC_AN_WIN": self = .ESC_AN_WIN
+            case "ESC_REVIEW": self = .ESC_REVIEW
+            case "ESC_RG_DEF": self = .ESC_RG_DEF
+            default: return nil
+            }
+        }
+        
+    }
+    
     case deposit
     case withdrawal
     case bonusCredited
@@ -27,7 +45,7 @@ public enum TransactionType: CaseIterable {
     case automatedWithdrawal
     case depositReturned
 
-    init?(transactionType: String) {
+    init?(transactionType: String, escrowType: String?) {
 
         switch transactionType {
         case "DEPOSIT": self = .deposit

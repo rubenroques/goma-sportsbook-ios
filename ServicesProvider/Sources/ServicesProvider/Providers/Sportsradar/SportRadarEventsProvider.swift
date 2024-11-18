@@ -2123,8 +2123,6 @@ extension SportRadarEventsProvider {
         var marketGroups: OrderedDictionary<String, MarketGroup> = [:]
         var availableMarkets: [String: [AvailableMarket]] = [:]
 
-        var availableMarketGroups: [String: [AvailableMarket]] = [:]
-
         // NEW PARSE
         for marketFilter in marketFilter.marketFilters {
             // SPECIFIC MARKET IDS
@@ -2227,9 +2225,6 @@ extension SportRadarEventsProvider {
             }
         }
 
-
-        availableMarketGroups = availableMarkets
-
         for availableMarket in availableMarkets {
             let marketGroup = MarketGroup(type: availableMarket.key,
                                           id: availableMarket.value.first?.marketGroupId ?? "0",
@@ -2261,6 +2256,10 @@ extension SportRadarEventsProvider {
 
             // Insert "All Markets" at the start of the sorted array
             sortedMarketGroupsArray = [allMarketsItem] + remainingItems
+            
+            // Now AllMarkets group tab should be in the end
+            // sortedMarketGroupsArray = remainingItems + [allMarketsItem]
+            
         } else {
             // If "All Markets" is not found, just sort the array as usual
             sortedMarketGroupsArray = marketGroupsArray.sorted(by: {
