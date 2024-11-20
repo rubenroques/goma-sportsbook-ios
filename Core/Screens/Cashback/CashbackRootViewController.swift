@@ -106,7 +106,9 @@ class CashbackRootViewController: UIViewController {
         self.termsView.addGestureRecognizer(termsToggleTap)
 
         // Initialize AVPlayer
-        if let videoURL = Bundle.main.url(forResource: "cashbackVideo", withExtension: "mp4") {
+        // local old video:  Bundle.main.url(forResource: "cashbackVideo", withExtension: "mp4")
+        let videoURLString = localized("cashback_video_url")
+        if let videoURL = URL(string: videoURLString) {
             self.player = AVPlayer(url: videoURL)
             self.player?.play() // Autoplay
             self.player?.isMuted = true
