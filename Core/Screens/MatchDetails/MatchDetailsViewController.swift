@@ -514,7 +514,6 @@ class MatchDetailsViewController: UIViewController {
         self.marketTypesCollectionView.reloadData()
 
         //
-        //
         // Add loading view controller
         self.loadingSpinnerViewController.willMove(toParent: self)
         self.addChild(self.loadingSpinnerViewController)
@@ -534,7 +533,6 @@ class MatchDetailsViewController: UIViewController {
         // Start loading
         self.loadingSpinnerViewController.startAnimating()
         self.loadingSpinnerViewController.view.isHidden = false
-        //
         //
         //
         

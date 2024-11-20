@@ -1624,7 +1624,7 @@ class PreSubmissionBetslipViewController: UIViewController {
     private func setupCashback() {
         self.cashbackSwitch.addTarget(self, action: #selector(cashbackSwitchValueChanged(_:)), for: .valueChanged)
 
-        self.cashbackTitleLabel.text = localized("replay_balance")
+        self.cashbackTitleLabel.text = localized("cashback")
         self.cashbackSwitch.setOn(false, animated: false)
         self.isCashbackToggleOn.send(false)
 
@@ -2164,7 +2164,7 @@ class PreSubmissionBetslipViewController: UIViewController {
 
                 if self.isCashbackToggleOn.value, let cashbackValue = Env.userSessionStore.userCashbackBalance.value {
                     if totalValue > cashbackValue {
-                        let errorMessage = localized("betslip_replay_error")
+                        let errorMessage = localized("betslip_cashback_error")
                         self.showErrorView(errorMessage: errorMessage)
                         self.isLoading = false
                         return
@@ -2214,7 +2214,7 @@ class PreSubmissionBetslipViewController: UIViewController {
 
                 if self.isCashbackToggleOn.value, let cashbackValue = Env.userSessionStore.userCashbackBalance.value {
                     if self.betValueSubject.value > cashbackValue {
-                        let errorMessage = localized("betslip_replay_error")
+                        let errorMessage = localized("betslip_cashback_error")
                         self.showErrorView(errorMessage: errorMessage)
                         self.isLoading = false
                         return
@@ -2270,7 +2270,7 @@ class PreSubmissionBetslipViewController: UIViewController {
 
                 if self.isCashbackToggleOn.value, let cashbackValue = Env.userSessionStore.userCashbackBalance.value {
                     if self.betValueSubject.value > cashbackValue {
-                        let errorMessage = localized("betslip_replay_error")
+                        let errorMessage = localized("betslip_cashback_error")
                         self.showErrorView(errorMessage: errorMessage)
                         self.isLoading = false
                         return
@@ -2482,7 +2482,7 @@ extension PreSubmissionBetslipViewController {
     private func placeBetBuilderBet() {
         if self.isCashbackToggleOn.value, let cashbackValue = Env.userSessionStore.userCashbackBalance.value {
             if self.betValueSubject.value > cashbackValue {
-                let errorMessage = localized("betslip_replay_error")
+                let errorMessage = localized("betslip_cashback_error")
                 self.showErrorView(errorMessage: errorMessage)
                 self.isLoading = false
                 return

@@ -6,12 +6,13 @@
 //
 
 import UIKit
+import AVKit
 
 class CashbackRootViewController: UIViewController {
 
     private lazy var scrollView: UIScrollView = Self.createScrollView()
     private lazy var containerView: UIView = Self.createContainerView()
-    private lazy var bannerImageView: UIImageView = Self.createBannerImageView()
+    private lazy var bannerImageView: ScaleAspectFitImageView = Self.createBannerImageView()
 
     private lazy var cashbackInfoBaseView: UIView = Self.createCashbackInfoBaseView()
     private lazy var cashbackInfoTitleLabel: UILabel = Self.createCashbackInfoTitleLabel()
@@ -22,6 +23,10 @@ class CashbackRootViewController: UIViewController {
     private lazy var cashbackBetDescriptionLabel: UILabel = Self.createCashbackBetDescriptionLabel()
     private lazy var cashbackBetIconImageView: UIImageView = Self.createCashbackBetIconImageView()
 
+    private lazy var videoPlayerView: UIView = Self.createVideoPlayerView()
+    private lazy var controlsView: UIView = Self.createControlsView()
+    private lazy var muteButton: UIButton = Self.createMuteButton()
+    
     private lazy var cashbackBalanceBaseView: UIView = Self.createCashbackBalanceBaseView()
     private lazy var cashbackBalanceTitleLabel: UILabel = Self.createCashbackBalanceTitleLabel()
     private lazy var cashbackBalanceDescriptionLabel: UILabel = Self.createCashbackBalanceDescriptionLabel()
@@ -34,7 +39,7 @@ class CashbackRootViewController: UIViewController {
     private lazy var cashbackUsedExampleView: UIView = Self.createCashbackUsedExampleView()
     private lazy var cashbackUsedExampleTitleLabel: UILabel = Self.createCashbackUsedExampleTitleLabel()
 
-    private lazy var bottomBannerImageView: UIImageView = Self.createBottomBannerImageView()
+    private lazy var bottomBannerImageView: ScaleAspectFitImageView = Self.createBottomBannerImageView()
 
     private lazy var separatorLineView: UIView = Self.createSeparatorLineView()
 
@@ -44,14 +49,11 @@ class CashbackRootViewController: UIViewController {
     private lazy var termsToggleButton: UIButton = Self.createTermsToggleButton()
     private lazy var termsDescriptionLabel: UILabel = Self.createTermsDescriptionLabel()
 
-    private lazy var bannerImageViewFixedHeightConstraint: NSLayoutConstraint = Self.createBannerImageViewFixedHeightConstraint()
-    private lazy var bannerImageViewDynamicHeightConstraint: NSLayoutConstraint = Self.createBannerImageViewDynamicHeightConstraint()
-
-    private lazy var bottomBannerImageViewFixedHeightConstraint: NSLayoutConstraint = Self.createBottomBannerImageViewFixedHeightConstraint()
-    private lazy var bottomBannerImageViewDynamicHeightConstraint: NSLayoutConstraint = Self.createBottomBannerImageViewDynamicHeightConstraint()
-
     private lazy var termsViewBottomConstraint: NSLayoutConstraint = Self.createTermsViewBottomConstraint()
     private lazy var termsDescriptionLabelBottomConstraint: NSLayoutConstraint = Self.createTermsDescriptionLabelBottomConstraint()
+    
+    private var player: AVPlayer?
+    private var playerLayer: AVPlayerLayer?
 
     private var aspectRatio: CGFloat = 1.0
 
@@ -103,24 +105,63 @@ class CashbackRootViewController: UIViewController {
         let termsToggleTap = UITapGestureRecognizer(target: self, action: #selector(didTapToggleButton))
         self.termsView.addGestureRecognizer(termsToggleTap)
 
+        // Initialize AVPlayer
+        if let videoURL = Bundle.main.url(forResource: "cashbackVideo", withExtension: "mp4") {
+            self.player = AVPlayer(url: videoURL)
+            self.player?.play() // Autoplay
+            self.player?.isMuted = true
+            
+            self.playerLayer = AVPlayerLayer(player: self.player)
+            self.playerLayer?.videoGravity = .resizeAspect
+            self.videoPlayerView.layer.addSublayer(self.playerLayer!)
+        }
+
+        self.cashbackBalanceExampleView.setupValueLabel(value: "15,00€")
+        
+        let tapGesture = UITapGestureRecognizer(target: self, action: #selector(didTapVideo))
+        self.controlsView.addGestureRecognizer(tapGesture)
+        
+        let config = UIImage.SymbolConfiguration(pointSize: 18, weight: .medium)
+        let imageName = "speaker.slash.fill"
+        let image = UIImage(systemName: imageName, withConfiguration: config)
+        self.muteButton.setImage(image, for: .normal)
+        self.muteButton.addTarget(self, action: #selector(didTapMute), for: .touchUpInside)
+        
+        NotificationCenter.default.addObserver(self, selector: #selector(playerDidFinishPlaying), name: .AVPlayerItemDidPlayToEndTime, object: player?.currentItem)
     }
 
+    deinit {
+       NotificationCenter.default.removeObserver(self)
+    }
+
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        
+        self.view.setNeedsLayout()
+        self.view.layoutIfNeeded()
+    }
+    
+    override func viewDidAppear(_ animated: Bool) {
+        super.viewDidAppear(animated)
+        
+    }
+    
+    override func viewDidDisappear(_ animated: Bool) {
+        super.viewDidDisappear(animated)
+        
+        self.didBecomeInactive()
+    }
+    
     override func viewDidLayoutSubviews() {
         super.viewDidLayoutSubviews()
 
         self.cashbackInfoBaseView.layer.cornerRadius = CornerRadius.card
-
         self.cashbackBetBaseView.layer.cornerRadius = CornerRadius.card
-
         self.cashbackBalanceBaseView.layer.cornerRadius = CornerRadius.card
-
         self.cashbackUsedBaseView.layer.cornerRadius = CornerRadius.card
-
         self.cashbackUsedExampleView.layer.cornerRadius = CornerRadius.headerInput
-
-        self.resizeBannerImageView()
-
-        self.resizeBottomBannerImageView()
+        
+        self.playerLayer?.frame = self.videoPlayerView.bounds
     }
 
     private func setupWithTheme() {
@@ -171,53 +212,13 @@ class CashbackRootViewController: UIViewController {
 
     }
 
-    private func resizeBannerImageView() {
-
-        if let bannerImage = self.bannerImageView.image {
-
-            self.aspectRatio = bannerImage.size.width/bannerImage.size.height
-
-            self.bannerImageViewFixedHeightConstraint.isActive = false
-
-            self.bannerImageViewDynamicHeightConstraint =
-            NSLayoutConstraint(item: self.bannerImageView,
-                               attribute: .height,
-                               relatedBy: .equal,
-                               toItem: self.bannerImageView,
-                               attribute: .width,
-                               multiplier: 1/self.aspectRatio,
-                               constant: 0)
-
-            self.bannerImageViewDynamicHeightConstraint.isActive = true
-        }
+    func didBecomeInactive() {
+        self.player?.pause()
     }
-
-    private func resizeBottomBannerImageView() {
-
-        if let bannerImage = self.bannerImageView.image {
-
-            self.aspectRatio = bannerImage.size.width/bannerImage.size.height
-
-            self.bottomBannerImageViewFixedHeightConstraint.isActive = false
-
-            self.bottomBannerImageViewDynamicHeightConstraint =
-            NSLayoutConstraint(item: self.bottomBannerImageView,
-                               attribute: .height,
-                               relatedBy: .equal,
-                               toItem: self.bottomBannerImageView,
-                               attribute: .width,
-                               multiplier: 1/self.aspectRatio,
-                               constant: 0)
-
-            self.bottomBannerImageViewDynamicHeightConstraint.isActive = true
-        }
-    }
-
+    
     func scrollToTop() {
-
         let topOffset = CGPoint(x: 0, y: -self.scrollView.contentInset.top)
         self.scrollView.setContentOffset(topOffset, animated: true)
-
     }
 
     @objc private func didTapBackButton() {
@@ -225,8 +226,30 @@ class CashbackRootViewController: UIViewController {
     }
 
     @objc private func didTapToggleButton() {
-
         self.isTermsCollapsed = !self.isTermsCollapsed
+    }
+    
+    @objc private func didTapVideo() {
+        if player?.currentItem?.currentTime() == player?.currentItem?.duration {
+            player?.seek(to: .zero)
+            player?.play()
+        } else if player?.timeControlStatus == .playing {
+            player?.pause()
+        } else {
+            player?.play()
+        }
+    }
+
+    @objc private func didTapMute() {
+        player?.isMuted.toggle()
+        let config = UIImage.SymbolConfiguration(pointSize: 18, weight: .medium)
+        let imageName = player?.isMuted == true ? "speaker.slash.fill" : "speaker.wave.2.fill"
+        let image = UIImage(systemName: imageName, withConfiguration: config)
+        muteButton.setImage(image, for: .normal)
+    }
+
+    @objc private func playerDidFinishPlaying() {
+        // player?.seek(to: .zero)
     }
 }
 
@@ -236,7 +259,6 @@ extension CashbackRootViewController {
         let scrollView = UIScrollView()
         scrollView.translatesAutoresizingMaskIntoConstraints = false
         return scrollView
-
     }
 
     private static func createContainerView() -> UIView {
@@ -245,11 +267,10 @@ extension CashbackRootViewController {
         return view
     }
 
-    private static func createBannerImageView() -> UIImageView {
-        let imageView = UIImageView()
+    private static func createBannerImageView() -> ScaleAspectFitImageView {
+        let imageView = ScaleAspectFitImageView()
         imageView.translatesAutoresizingMaskIntoConstraints = false
-        imageView.image = UIImage(named: "replay_big_euro_banner")
-        imageView.contentMode = .scaleAspectFill
+        imageView.image = UIImage(named: "replay_big_banner")
         return imageView
     }
 
@@ -263,7 +284,7 @@ extension CashbackRootViewController {
         let label = UILabel()
         label.translatesAutoresizingMaskIntoConstraints = false
         label.font = AppFont.with(type: .bold, size: 18)
-        label.text = localized("replay_page_section_1_title")
+        label.text = localized("cashback_page_section_1_title")
         label.textAlignment = .left
         return label
     }
@@ -272,7 +293,7 @@ extension CashbackRootViewController {
         let label = UILabel()
         label.translatesAutoresizingMaskIntoConstraints = false
         label.font = AppFont.with(type: .regular, size: 14)
-        label.text = localized("replay_page_section_1_description")
+        label.text = localized("cashback_page_section_1_description")
         label.textAlignment = .left
         label.numberOfLines = 0
         label.addLineHeight(to: label, lineHeight: 18)
@@ -289,7 +310,7 @@ extension CashbackRootViewController {
         let label = UILabel()
         label.translatesAutoresizingMaskIntoConstraints = false
         label.font = AppFont.with(type: .bold, size: 18)
-        label.text = localized("replay_page_section_2_title")
+        label.text = localized("cashback_page_section_2_title")
         label.textAlignment = .left
         return label
     }
@@ -298,7 +319,7 @@ extension CashbackRootViewController {
         let label = UILabel()
         label.translatesAutoresizingMaskIntoConstraints = false
         label.font = AppFont.with(type: .regular, size: 14)
-        label.text = localized("replay_page_section_2_description")
+        label.text = localized("cashback_page_section_2_description")
         label.textAlignment = .left
         label.numberOfLines = 0
         label.addLineHeight(to: label, lineHeight: 18)
@@ -313,6 +334,13 @@ extension CashbackRootViewController {
         return imageView
     }
 
+    private static func createVideoPlayerView() -> UIView {
+        let view = UIView()
+        view.translatesAutoresizingMaskIntoConstraints = false
+        view.backgroundColor = .clear
+        return view
+    }
+    
     private static func createCashbackBalanceBaseView() -> UIView {
         let view = UIView()
         view.translatesAutoresizingMaskIntoConstraints = false
@@ -323,7 +351,7 @@ extension CashbackRootViewController {
         let label = UILabel()
         label.translatesAutoresizingMaskIntoConstraints = false
         label.font = AppFont.with(type: .bold, size: 18)
-        label.text = localized("replay_page_section_3_title")
+        label.text = localized("cashback_page_section_3_title")
         label.textAlignment = .left
         return label
     }
@@ -332,7 +360,7 @@ extension CashbackRootViewController {
         let label = UILabel()
         label.translatesAutoresizingMaskIntoConstraints = false
         label.font = AppFont.with(type: .regular, size: 14)
-        label.text = localized("replay_page_section_3_description_1")
+        label.text = localized("cashback_page_section_3_description_1")
         label.textAlignment = .left
         label.numberOfLines = 0
         label.addLineHeight(to: label, lineHeight: 18)
@@ -351,7 +379,7 @@ extension CashbackRootViewController {
         let label = UILabel()
         label.translatesAutoresizingMaskIntoConstraints = false
         label.font = AppFont.with(type: .regular, size: 14)
-        label.text = localized("replay_page_section_3_description_2")
+        label.text = localized("cashback_page_section_3_description_2")
         label.textAlignment = .left
         label.numberOfLines = 0
         label.addLineHeight(to: label, lineHeight: 18)
@@ -368,7 +396,7 @@ extension CashbackRootViewController {
         let label = UILabel()
         label.translatesAutoresizingMaskIntoConstraints = false
         label.font = AppFont.with(type: .bold, size: 18)
-        label.text = localized("replay_page_section_4_title")
+        label.text = localized("cashback_page_section_4_title")
         label.textAlignment = .left
         label.numberOfLines = 0
         return label
@@ -378,7 +406,7 @@ extension CashbackRootViewController {
         let label = UILabel()
         label.translatesAutoresizingMaskIntoConstraints = false
         label.font = AppFont.with(type: .regular, size: 14)
-        label.text = localized("replay_page_section_4_description")
+        label.text = localized("cashback_page_section_4_description")
         label.textAlignment = .left
         label.numberOfLines = 0
         label.addLineHeight(to: label, lineHeight: 18)
@@ -395,16 +423,15 @@ extension CashbackRootViewController {
         let label = UILabel()
         label.translatesAutoresizingMaskIntoConstraints = false
         label.font = AppFont.with(type: .bold, size: 13)
-        label.text = localized("used_replay").uppercased()
+        label.text = localized("used_cashback").uppercased()
         label.textAlignment = .left
         return label
     }
 
-    private static func createBottomBannerImageView() -> UIImageView {
-        let imageView = UIImageView()
+    private static func createBottomBannerImageView() -> ScaleAspectFitImageView {
+        let imageView = ScaleAspectFitImageView()
         imageView.translatesAutoresizingMaskIntoConstraints = false
         imageView.image = UIImage(named: "replay_bottom_banner")
-        imageView.contentMode = .scaleAspectFill
         return imageView
     }
 
@@ -447,13 +474,13 @@ extension CashbackRootViewController {
         let label = UILabel()
         label.translatesAutoresizingMaskIntoConstraints = false
         label.font = AppFont.with(type: .bold, size: 14)
-        label.text = localized("promotions_replay_terms_and_conditions")
+        label.text = localized("promotions_cashback_terms_and_conditions")
         label.textAlignment = .left
         label.numberOfLines = 0
 
-        let text = localized("promotions_replay_terms_and_conditions")
+        let text = localized("promotions_cashback_terms_and_conditions")
         let attributedString = NSMutableAttributedString(string: text)
-        let fullRange = (text as NSString).range(of: localized("promotions_replay_terms_and_conditions"))
+        let fullRange = (text as NSString).range(of: localized("promotions_cashback_terms_and_conditions"))
         var range = (text as NSString).range(of: "•")
 
         let paragraphStyle = NSMutableParagraphStyle()
@@ -489,11 +516,13 @@ extension CashbackRootViewController {
     }
 
     private static func createBottomBannerImageViewFixedHeightConstraint() -> NSLayoutConstraint {
+        // Removed dynamic height constraint setup
         let constraint = NSLayoutConstraint()
         return constraint
     }
 
     private static func createBottomBannerImageViewDynamicHeightConstraint() -> NSLayoutConstraint {
+        // Removed dynamic height constraint setup
         let constraint = NSLayoutConstraint()
         return constraint
     }
@@ -507,7 +536,24 @@ extension CashbackRootViewController {
         let constraint = NSLayoutConstraint()
         return constraint
     }
+    
+    private static func createControlsView() -> UIView {
+        let view = UIView()
+        view.translatesAutoresizingMaskIntoConstraints = false
+        view.backgroundColor = .clear
+        return view
+    }
 
+    private static func createMuteButton() -> UIButton {
+        let button = UIButton()
+        button.translatesAutoresizingMaskIntoConstraints = false
+        let config = UIImage.SymbolConfiguration(pointSize: 18, weight: .medium)
+        let image = UIImage(systemName: "speaker.wave.2.fill", withConfiguration: config)
+        button.setImage(image, for: .normal)
+        button.tintColor = .white
+        return button
+    }
+    
     private func setupSubviews() {
 
         self.view.addSubview(self.scrollView)
@@ -521,6 +567,10 @@ extension CashbackRootViewController {
         self.cashbackInfoBaseView.addSubview(self.cashbackInfoTitleLabel)
         self.cashbackInfoBaseView.addSubview(self.cashbackInfoDescriptionLabel)
 
+        self.containerView.addSubview(self.videoPlayerView)
+        self.containerView.addSubview(self.controlsView)
+        self.controlsView.addSubview(self.muteButton)
+        
         self.containerView.addSubview(self.cashbackBetBaseView)
 
         self.cashbackBetBaseView.addSubview(self.cashbackBetTitleLabel)
@@ -556,7 +606,6 @@ extension CashbackRootViewController {
         self.termsContainerView.addSubview(self.termsDescriptionLabel)
 
         self.initConstraints()
-
     }
 
     private func initConstraints() {
@@ -594,12 +643,25 @@ extension CashbackRootViewController {
             self.cashbackInfoDescriptionLabel.topAnchor.constraint(equalTo: self.cashbackInfoTitleLabel.bottomAnchor, constant: 7),
             self.cashbackInfoDescriptionLabel.bottomAnchor.constraint(equalTo: self.cashbackInfoBaseView.bottomAnchor, constant: -16)
         ])
+        
+        // yes.. it look dumb, but the constraint do not work in a tabbat base vc for the width
+        // it has been rendering huge
+        let containerWidth = min(UIScreen.main.bounds.width, 500)
+    
+        NSLayoutConstraint.activate([
+            self.videoPlayerView.leadingAnchor.constraint(equalTo: self.containerView.leadingAnchor),
+            //self.videoPlayerView.trailingAnchor.constraint(equalTo: self.containerView.trailingAnchor),
+            //self.videoPlayerView.widthAnchor.constraint(equalTo: self.scrollView.widthAnchor),
+            self.videoPlayerView.widthAnchor.constraint(equalToConstant: containerWidth),
+            self.videoPlayerView.topAnchor.constraint(equalTo: self.cashbackInfoBaseView.bottomAnchor, constant: 20),
+            self.videoPlayerView.heightAnchor.constraint(equalTo: self.videoPlayerView.widthAnchor, multiplier: 16.0/9.0),
+        ])
 
         // Cashback bet
         NSLayoutConstraint.activate([
             self.cashbackBetBaseView.leadingAnchor.constraint(equalTo: self.containerView.leadingAnchor, constant: 14),
             self.cashbackBetBaseView.trailingAnchor.constraint(equalTo: self.containerView.trailingAnchor, constant: -14),
-            self.cashbackBetBaseView.topAnchor.constraint(equalTo: self.cashbackInfoBaseView.bottomAnchor, constant: 16),
+            self.cashbackBetBaseView.topAnchor.constraint(equalTo: self.videoPlayerView.bottomAnchor, constant: 16),
 
             self.cashbackBetTitleLabel.leadingAnchor.constraint(equalTo: self.cashbackBetBaseView.leadingAnchor, constant: 16),
             self.cashbackBetTitleLabel.trailingAnchor.constraint(equalTo: self.cashbackBetBaseView.trailingAnchor, constant: -16),
@@ -615,7 +677,15 @@ extension CashbackRootViewController {
             self.cashbackBetIconImageView.bottomAnchor.constraint(equalTo: self.cashbackBetBaseView.bottomAnchor, constant: -16),
             self.cashbackBetIconImageView.centerXAnchor.constraint(equalTo: self.cashbackBetBaseView.centerXAnchor)
         ])
-
+        
+        // Bottom banner
+        NSLayoutConstraint.activate([
+            self.bottomBannerImageView.leadingAnchor.constraint(equalTo: self.containerView.leadingAnchor),
+            self.bottomBannerImageView.trailingAnchor.constraint(equalTo: self.containerView.trailingAnchor),
+            self.bottomBannerImageView.topAnchor.constraint(equalTo: self.cashbackBetBaseView.bottomAnchor, constant: 20),
+            // Removed height constraints
+        ])
+        
         // Cashback Balance
         NSLayoutConstraint.activate([
             self.cashbackBalanceBaseView.leadingAnchor.constraint(equalTo: self.containerView.leadingAnchor, constant: 14),
@@ -667,12 +737,6 @@ extension CashbackRootViewController {
 
         ])
 
-        // Bottom banner
-        NSLayoutConstraint.activate([
-            self.bottomBannerImageView.leadingAnchor.constraint(equalTo: self.containerView.leadingAnchor),
-            self.bottomBannerImageView.trailingAnchor.constraint(equalTo: self.containerView.trailingAnchor),
-            self.bottomBannerImageView.topAnchor.constraint(equalTo: self.cashbackBetBaseView.bottomAnchor, constant: 20)
-        ])
 
         // Terms info
         NSLayoutConstraint.activate([
@@ -704,45 +768,17 @@ extension CashbackRootViewController {
 
         ])
 
-        self.bannerImageViewFixedHeightConstraint =
-        NSLayoutConstraint(item: self.bannerImageView,
-                           attribute: .height,
-                           relatedBy: .equal,
-                           toItem: nil,
-                           attribute: .notAnAttribute,
-                           multiplier: 1,
-                           constant: 165)
-        self.bannerImageViewFixedHeightConstraint.isActive = true
-
-        self.bannerImageViewDynamicHeightConstraint =
-        NSLayoutConstraint(item: self.bannerImageView,
-                           attribute: .height,
-                           relatedBy: .equal,
-                           toItem: self.bannerImageView,
-                           attribute: .width,
-                           multiplier: 1/self.aspectRatio,
-                           constant: 0)
-        self.bannerImageViewDynamicHeightConstraint.isActive = false
-
-        self.bottomBannerImageViewFixedHeightConstraint =
-        NSLayoutConstraint(item: self.bottomBannerImageView,
-                           attribute: .height,
-                           relatedBy: .equal,
-                           toItem: nil,
-                           attribute: .notAnAttribute,
-                           multiplier: 1,
-                           constant: 165)
-        self.bottomBannerImageViewFixedHeightConstraint.isActive = true
-
-        self.bottomBannerImageViewDynamicHeightConstraint =
-        NSLayoutConstraint(item: self.bottomBannerImageView,
-                           attribute: .height,
-                           relatedBy: .equal,
-                           toItem: self.bottomBannerImageView,
-                           attribute: .width,
-                           multiplier: 1/self.aspectRatio,
-                           constant: 0)
-        self.bottomBannerImageViewDynamicHeightConstraint.isActive = false
+        NSLayoutConstraint.activate([
+            self.controlsView.leadingAnchor.constraint(equalTo: self.videoPlayerView.leadingAnchor),
+            self.controlsView.trailingAnchor.constraint(equalTo: self.videoPlayerView.trailingAnchor),
+            self.controlsView.topAnchor.constraint(equalTo: self.videoPlayerView.topAnchor),
+            self.controlsView.bottomAnchor.constraint(equalTo: self.videoPlayerView.bottomAnchor),
+            
+            self.muteButton.topAnchor.constraint(equalTo: self.controlsView.topAnchor, constant: 16),
+            self.muteButton.trailingAnchor.constraint(equalTo: self.controlsView.trailingAnchor, constant: -16),
+            self.muteButton.widthAnchor.constraint(equalToConstant: 24),
+            self.muteButton.heightAnchor.constraint(equalToConstant: 24)
+        ])
 
         self.termsViewBottomConstraint =
         NSLayoutConstraint(item: self.termsView,
@@ -763,5 +799,7 @@ extension CashbackRootViewController {
                            multiplier: 1,
                            constant: 0)
         self.termsDescriptionLabelBottomConstraint.isActive = false
+
     }
+
 }

@@ -102,7 +102,7 @@ extension TextSectionView {
     private static func createTitleLabel() -> UILabel {
         let label = UILabel()
         label.translatesAutoresizingMaskIntoConstraints = false
-        label.text = localized("lorem_ipsum")
+        label.text = ""
         label.font = AppFont.with(type: .bold, size: 16)
         label.numberOfLines = 0
         return label

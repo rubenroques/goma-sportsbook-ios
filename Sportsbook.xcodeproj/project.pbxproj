@@ -7259,6 +7259,22 @@
 		A9FB6D6928C65EF100E3FE58 /* RankingsListViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9FB6D6228C65EF100E3FE58 /* RankingsListViewController.swift */; };
 		A9FEF5752AB8630600CB638F /* RegisterSuccessViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9BAFB4C2AB213E5002EDBA1 /* RegisterSuccessViewController.swift */; };
 		A9FEF5762AB8630B00CB638F /* RegisterErrorViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9BB46292AB366400003741E /* RegisterErrorViewController.swift */; };
+		CE21C3512CEB96490012CABA /* cashbackVideo.mp4 in Resources */ = {isa = PBXBuildFile; fileRef = CE21C3502CEB96490012CABA /* cashbackVideo.mp4 */; };
+		CE21C3522CEB96490012CABA /* cashbackVideo.mp4 in Resources */ = {isa = PBXBuildFile; fileRef = CE21C3502CEB96490012CABA /* cashbackVideo.mp4 */; };
+		CE21C3532CEB96490012CABA /* cashbackVideo.mp4 in Resources */ = {isa = PBXBuildFile; fileRef = CE21C3502CEB96490012CABA /* cashbackVideo.mp4 */; };
+		CE21C3542CEB96490012CABA /* cashbackVideo.mp4 in Resources */ = {isa = PBXBuildFile; fileRef = CE21C3502CEB96490012CABA /* cashbackVideo.mp4 */; };
+		CE21C3552CEB96490012CABA /* cashbackVideo.mp4 in Resources */ = {isa = PBXBuildFile; fileRef = CE21C3502CEB96490012CABA /* cashbackVideo.mp4 */; };
+		CE21C3562CEB96490012CABA /* cashbackVideo.mp4 in Resources */ = {isa = PBXBuildFile; fileRef = CE21C3502CEB96490012CABA /* cashbackVideo.mp4 */; };
+		CE21C3572CEB96490012CABA /* cashbackVideo.mp4 in Resources */ = {isa = PBXBuildFile; fileRef = CE21C3502CEB96490012CABA /* cashbackVideo.mp4 */; };
+		CE21C3582CEB96490012CABA /* cashbackVideo.mp4 in Resources */ = {isa = PBXBuildFile; fileRef = CE21C3502CEB96490012CABA /* cashbackVideo.mp4 */; };
+		CEB24B9F2CED274D0031F470 /* ScaleAspectFitImageView.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEB24B9E2CED274D0031F470 /* ScaleAspectFitImageView.swift */; };
+		CEB24BA02CED274D0031F470 /* ScaleAspectFitImageView.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEB24B9E2CED274D0031F470 /* ScaleAspectFitImageView.swift */; };
+		CEB24BA12CED274D0031F470 /* ScaleAspectFitImageView.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEB24B9E2CED274D0031F470 /* ScaleAspectFitImageView.swift */; };
+		CEB24BA22CED274D0031F470 /* ScaleAspectFitImageView.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEB24B9E2CED274D0031F470 /* ScaleAspectFitImageView.swift */; };
+		CEB24BA32CED274D0031F470 /* ScaleAspectFitImageView.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEB24B9E2CED274D0031F470 /* ScaleAspectFitImageView.swift */; };
+		CEB24BA42CED274D0031F470 /* ScaleAspectFitImageView.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEB24B9E2CED274D0031F470 /* ScaleAspectFitImageView.swift */; };
+		CEB24BA52CED274D0031F470 /* ScaleAspectFitImageView.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEB24B9E2CED274D0031F470 /* ScaleAspectFitImageView.swift */; };
+		CEB24BA62CED274D0031F470 /* ScaleAspectFitImageView.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEB24B9E2CED274D0031F470 /* ScaleAspectFitImageView.swift */; };
 		F4A62A892850FAB5007B46C5 /* CasinoGameDetailViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4A62A862850FAB5007B46C5 /* CasinoGameDetailViewController.swift */; };
 		F4A62A8A2850FAB5007B46C5 /* CasinoGameDetailViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4A62A862850FAB5007B46C5 /* CasinoGameDetailViewController.swift */; };
 		F4A62A8B2850FAB5007B46C5 /* CasinoGameDetailViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4A62A862850FAB5007B46C5 /* CasinoGameDetailViewController.swift */; };
@@ -8237,6 +8253,8 @@
 		A9FB6D5128C645C800E3FE58 /* RankingsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RankingsViewController.swift; sourceTree = "<group>"; };
 		A9FB6D5A28C657CE00E3FE58 /* TipsListViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TipsListViewController.swift; sourceTree = "<group>"; };
 		A9FB6D6228C65EF100E3FE58 /* RankingsListViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RankingsListViewController.swift; sourceTree = "<group>"; };
+		CE21C3502CEB96490012CABA /* cashbackVideo.mp4 */ = {isa = PBXFileReference; lastKnownFileType = file; path = cashbackVideo.mp4; sourceTree = "<group>"; };
+		CEB24B9E2CED274D0031F470 /* ScaleAspectFitImageView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScaleAspectFitImageView.swift; sourceTree = "<group>"; };
 		F410E62827BC4FAB005C1964 /* TransactionsTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TransactionsTableViewCell.swift; sourceTree = "<group>"; };
 		F47BB79E27B2D0EF003FA2BC /* DropDownSelectionView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DropDownSelectionView.swift; sourceTree = "<group>"; };
 		F47BF2622763953900648440 /* GameSuggestedView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GameSuggestedView.swift; sourceTree = "<group>"; };
@@ -9086,6 +9104,7 @@
 		455A0C9E26BD958600EC572D /* Resources */ = {
 			isa = PBXGroup;
 			children = (
+				CE21C34F2CEB963D0012CABA /* Videos */,
 				45644FAF2C9C6627001C6464 /* fastlane */,
 				45F805942A053841005296E0 /* Animations */,
 				A9B63068291AB5F800BB850E /* Widgets */,
@@ -9727,6 +9746,7 @@
 		4589F40726BF01B4005DF543 /* Views */ = {
 			isa = PBXGroup;
 			children = (
+				CEB24B9E2CED274D0031F470 /* ScaleAspectFitImageView.swift */,
 				45644F9D2C9B5C16001C6464 /* OpenStatsButton */,
 				6547C87E2C63DBCE0041409C /* HeroCard */,
 				45D64AF02B6002F70092DA8E /* BoostedBetConfirmationView.swift */,
@@ -11987,6 +12007,14 @@
 			path = Tips;
 			sourceTree = "<group>";
 		};
+		CE21C34F2CEB963D0012CABA /* Videos */ = {
+			isa = PBXGroup;
+			children = (
+				CE21C3502CEB96490012CABA /* cashbackVideo.mp4 */,
+			);
+			path = Videos;
+			sourceTree = "<group>";
+		};
 		F410E62727BC4F78005C1964 /* Cells */ = {
 			isa = PBXGroup;
 			children = (
@@ -12661,6 +12689,7 @@
 				450B7B0728F58574009229E3 /* BannerTopCollectionViewCell.xib in Resources */,
 				450B7B0828F58574009229E3 /* LiveEventsViewController.xib in Resources */,
 				A9B63086291BE10900BB850E /* stats_widget_dark.html in Resources */,
+				CE21C3562CEB96490012CABA /* cashbackVideo.mp4 in Resources */,
 				450B7B0B28F58574009229E3 /* PolicyLinkView.xib in Resources */,
 				6531BB992C0E077C002C696D /* replay_sucess.json in Resources */,
 				450B7B0F28F58574009229E3 /* EditAlertView.xib in Resources */,
@@ -12829,6 +12858,7 @@
 				457CBC2F282D27D000ED0F00 /* ProfileViewController.xib in Resources */,
 				457CBC31282D27D000ED0F00 /* BannerTopCollectionViewCell.xib in Resources */,
 				A9B6308B291BE10900BB850E /* stats_widget_dark.html in Resources */,
+				CE21C3512CEB96490012CABA /* cashbackVideo.mp4 in Resources */,
 				457CBC32282D27D000ED0F00 /* LiveEventsViewController.xib in Resources */,
 				457CBC35282D27D000ED0F00 /* PolicyLinkView.xib in Resources */,
 				6531BB9D2C0E077C002C696D /* replay_sucess.json in Resources */,
@@ -12988,6 +13018,7 @@
 				457CBED8282D2CD100ED0F00 /* BannerTopCollectionViewCell.xib in Resources */,
 				457CBED9282D2CD100ED0F00 /* LiveEventsViewController.xib in Resources */,
 				A9B6308C291BE10900BB850E /* stats_widget_dark.html in Resources */,
+				CE21C3542CEB96490012CABA /* cashbackVideo.mp4 in Resources */,
 				457CBEDC282D2CD100ED0F00 /* PolicyLinkView.xib in Resources */,
 				6531BB9E2C0E077C002C696D /* replay_sucess.json in Resources */,
 				457CBEE0282D2CD100ED0F00 /* EditAlertView.xib in Resources */,
@@ -13147,6 +13178,7 @@
 				4589C9AE282024E400243547 /* ProfileViewController.xib in Resources */,
 				4589C9E2282027A100243547 /* GOMASports-Assets.xcassets in Resources */,
 				A9B63085291BE10900BB850E /* stats_widget_dark.html in Resources */,
+				CE21C3572CEB96490012CABA /* cashbackVideo.mp4 in Resources */,
 				4589C9AF282024E400243547 /* BannerTopCollectionViewCell.xib in Resources */,
 				4589C9B0282024E400243547 /* LiveEventsViewController.xib in Resources */,
 				4589C9B4282024E400243547 /* PolicyLinkView.xib in Resources */,
@@ -13306,6 +13338,7 @@
 				45A3332E298976BA008181E9 /* ProfileViewController.xib in Resources */,
 				452BA19F2A902C4900D0AA48 /* avatar4-dark.json in Resources */,
 				45A3332F298976BA008181E9 /* BannerTopCollectionViewCell.xib in Resources */,
+				CE21C3522CEB96490012CABA /* cashbackVideo.mp4 in Resources */,
 				452BA1912A902C4900D0AA48 /* avatar6-dark.json in Resources */,
 				45A33330298976BA008181E9 /* LiveEventsViewController.xib in Resources */,
 				45A33331298976BA008181E9 /* stats_widget_dark.html in Resources */,
@@ -13465,6 +13498,7 @@
 				45A6BE0628246A7500D9B416 /* MatchStatsCollectionViewCell.xib in Resources */,
 				45A6BE0728246A7500D9B416 /* ProfileViewController.xib in Resources */,
 				A9B6308A291BE10900BB850E /* stats_widget_dark.html in Resources */,
+				CE21C3552CEB96490012CABA /* cashbackVideo.mp4 in Resources */,
 				45A6BE0828246A7500D9B416 /* BannerTopCollectionViewCell.xib in Resources */,
 				45A6BE0928246A7500D9B416 /* LiveEventsViewController.xib in Resources */,
 				45A6BE0D28246A7500D9B416 /* PolicyLinkView.xib in Resources */,
@@ -13624,6 +13658,7 @@
 				45F6BE162AB3732C00C81DE1 /* avatar4-dark.json in Resources */,
 				45F6BE172AB3732C00C81DE1 /* BannerTopCollectionViewCell.xib in Resources */,
 				45F6BE182AB3732C00C81DE1 /* avatar6-dark.json in Resources */,
+				CE21C3532CEB96490012CABA /* cashbackVideo.mp4 in Resources */,
 				45F6BE192AB3732C00C81DE1 /* LiveEventsViewController.xib in Resources */,
 				45F6BE1A2AB3732C00C81DE1 /* stats_widget_dark.html in Resources */,
 				45F6BE1D2AB3732C00C81DE1 /* PolicyLinkView.xib in Resources */,
@@ -13790,6 +13825,7 @@
 				452BA1A22A902C4900D0AA48 /* avatar4-dark.json in Resources */,
 				A9C3435F28F9A74A0055360B /* BannerTopCollectionViewCell.xib in Resources */,
 				452BA1942A902C4900D0AA48 /* avatar6-dark.json in Resources */,
+				CE21C3582CEB96490012CABA /* cashbackVideo.mp4 in Resources */,
 				A9C3436028F9A74A0055360B /* LiveEventsViewController.xib in Resources */,
 				A9C3436328F9A74A0055360B /* PolicyLinkView.xib in Resources */,
 				6531BB9B2C0E077C002C696D /* replay_sucess.json in Resources */,
@@ -14317,6 +14353,7 @@
 				450B796528F58574009229E3 /* ConversationsViewModel.swift in Sources */,
 				450B796728F58574009229E3 /* ConversationBetSelectionViewController.swift in Sources */,
 				450B796828F58574009229E3 /* DepositViewController.swift in Sources */,
+				CEB24BA62CED274D0031F470 /* ScaleAspectFitImageView.swift in Sources */,
 				450B796928F58574009229E3 /* PopularMatchesDataSource.swift in Sources */,
 				450B796A28F58574009229E3 /* BonusAvailableCellViewModel.swift in Sources */,
 				45CE915B2A2F6C6700BB3AB7 /* CubicScrollView.swift in Sources */,
@@ -15205,6 +15242,7 @@
 				A91A64542A7965D9002A6984 /* MyGamesViewController.swift in Sources */,
 				457CBAEF282D27D000ED0F00 /* UserBalance.swift in Sources */,
 				45E8E29A28C88E1300A09B02 /* UserRankingPositionTableViewCell.swift in Sources */,
+				CEB24BA52CED274D0031F470 /* ScaleAspectFitImageView.swift in Sources */,
 				655E20192B29CB7E00C95337 /* TextSubsectionView.swift in Sources */,
 				457CBAF0282D27D000ED0F00 /* SearchEvent.swift in Sources */,
 				A90C372D29C37AB8007B8AEC /* IBANProofViewModel.swift in Sources */,
@@ -15666,6 +15704,7 @@
 				457CBCEC282D2CD100ED0F00 /* Authenticator.swift in Sources */,
 				457CBCED282D2CD100ED0F00 /* ChatSettingsViewController.swift in Sources */,
 				45B6E22B284151D1001B570C /* UserInfoView.swift in Sources */,
+				CEB24BA22CED274D0031F470 /* ScaleAspectFitImageView.swift in Sources */,
 				457CBCEE282D2CD100ED0F00 /* Changeable.swift in Sources */,
 				A9D5BB85290A9CEC001B0E13 /* EmailVerificationCodeViewController.swift in Sources */,
 				457CBCEF282D2CD100ED0F00 /* HomeFilterViewController.swift in Sources */,
@@ -16585,6 +16624,7 @@
 				A9829599283B94D00014066A /* ConversationBetSelectionViewController.swift in Sources */,
 				4589C859282024E400243547 /* DepositViewController.swift in Sources */,
 				4589C85A282024E400243547 /* PopularMatchesDataSource.swift in Sources */,
+				CEB24BA02CED274D0031F470 /* ScaleAspectFitImageView.swift in Sources */,
 				4589C85B282024E400243547 /* BonusAvailableCellViewModel.swift in Sources */,
 				4589C85C282024E400243547 /* ActivationAlertScrollableView.swift in Sources */,
 				45CE915C2A2F6C6700BB3AB7 /* CubicScrollView.swift in Sources */,
@@ -17302,6 +17342,7 @@
 				45A3317D298976BA008181E9 /* UIColor+Extensions.swift in Sources */,
 				45A3317E298976BA008181E9 /* ConversationsViewModel.swift in Sources */,
 				45A33180298976BA008181E9 /* ConversationBetSelectionViewController.swift in Sources */,
+				CEB24BA12CED274D0031F470 /* ScaleAspectFitImageView.swift in Sources */,
 				45A33181298976BA008181E9 /* DepositViewController.swift in Sources */,
 				45A33182298976BA008181E9 /* PopularMatchesDataSource.swift in Sources */,
 				45CE915A2A2F6C6700BB3AB7 /* CubicScrollView.swift in Sources */,
@@ -18019,6 +18060,7 @@
 				45A6BCAC28246A7500D9B416 /* BonusAvailableCellViewModel.swift in Sources */,
 				45A6BCAD28246A7500D9B416 /* VideoPreviewLineTableViewCell.swift in Sources */,
 				45A6BCAE28246A7500D9B416 /* ActivationAlertScrollableView.swift in Sources */,
+				CEB24BA42CED274D0031F470 /* ScaleAspectFitImageView.swift in Sources */,
 				45A6BCAF28246A7500D9B416 /* SuggestedBetLineTableViewCell.swift in Sources */,
 				45A6BCB028246A7500D9B416 /* NewGroupManagementViewController.swift in Sources */,
 				45A6BCB128246A7500D9B416 /* TabularBarView.swift in Sources */,
@@ -18736,6 +18778,7 @@
 				45F6BC282AB3732C00C81DE1 /* MyCompetitionsViewController.swift in Sources */,
 				45F6BC292AB3732C00C81DE1 /* UIColor+Extensions.swift in Sources */,
 				45F6BC2A2AB3732C00C81DE1 /* ConversationsViewModel.swift in Sources */,
+				CEB24BA32CED274D0031F470 /* ScaleAspectFitImageView.swift in Sources */,
 				45F6BC2B2AB3732C00C81DE1 /* ConversationBetSelectionViewController.swift in Sources */,
 				45F6BC2C2AB3732C00C81DE1 /* DepositViewController.swift in Sources */,
 				45F6BC2D2AB3732C00C81DE1 /* PopularMatchesDataSource.swift in Sources */,
@@ -19255,6 +19298,7 @@
 				A9C3410D28F9A74A0055360B /* TitleView.swift in Sources */,
 				A9B6305729102BF900BB850E /* RecoverPasswordViewController.swift in Sources */,
 				A90FB7D429AF9DF800D08A7C /* SelfExclusionViewController.swift in Sources */,
+				CEB24B9F2CED274D0031F470 /* ScaleAspectFitImageView.swift in Sources */,
 				A9C3410E28F9A74A0055360B /* PasswordUpdateViewController.swift in Sources */,
 				A9C3410F28F9A74A0055360B /* SearchV2Response.swift in Sources */,
 				A9C3411028F9A74A0055360B /* MultiSlider+Internal.swift in Sources */,
@@ -20295,7 +20339,7 @@
 				CODE_SIGN_IDENTITY = "Apple Development";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				CODE_SIGN_STYLE = Manual;
-				CURRENT_PROJECT_VERSION = 103302;
+				CURRENT_PROJECT_VERSION = 103400;
 				DEVELOPMENT_TEAM = QN2DYX5K4M;
 				"DEVELOPMENT_TEAM[sdk=iphoneos*]" = QN2DYX5K4M;
 				INFOPLIST_FILE = "./Clients/Betsson/Misc-PROD/Betsson-PROD-Info.plist";
@@ -20304,7 +20348,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 1.0.33;
+				MARKETING_VERSION = 1.0.34;
 				OTHER_LDFLAGS = "$(inherited)";
 				PRODUCT_BUNDLE_IDENTIFIER = fr.betsson.ios.app;
 				PRODUCT_NAME = Betsson;
@@ -20327,7 +20371,7 @@
 				CODE_SIGN_IDENTITY = "Apple Distribution";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution";
 				CODE_SIGN_STYLE = Manual;
-				CURRENT_PROJECT_VERSION = 103302;
+				CURRENT_PROJECT_VERSION = 103400;
 				DEVELOPMENT_TEAM = QN2DYX5K4M;
 				"DEVELOPMENT_TEAM[sdk=iphoneos*]" = QN2DYX5K4M;
 				INFOPLIST_FILE = "./Clients/Betsson/Misc-PROD/Betsson-PROD-Info.plist";
@@ -20336,7 +20380,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 1.0.33;
+				MARKETING_VERSION = 1.0.34;
 				OTHER_LDFLAGS = "$(inherited)";
 				PRODUCT_BUNDLE_IDENTIFIER = fr.betsson.ios.app;
 				PRODUCT_NAME = Betsson;
@@ -20417,7 +20461,7 @@
 				CODE_SIGN_IDENTITY = "Apple Development";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				CODE_SIGN_STYLE = Manual;
-				CURRENT_PROJECT_VERSION = 103302;
+				CURRENT_PROJECT_VERSION = 103400;
 				DEVELOPMENT_TEAM = 422GNXXZJR;
 				"DEVELOPMENT_TEAM[sdk=iphoneos*]" = 422GNXXZJR;
 				INFOPLIST_FILE = "./Clients/Betsson/Misc-UAT/Betsson-UAT-Info.plist";
@@ -20426,7 +20470,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 1.0.33;
+				MARKETING_VERSION = 1.0.34;
 				OTHER_LDFLAGS = "$(inherited)";
 				PRODUCT_BUNDLE_IDENTIFIER = com.gomagaming.betsson;
 				PRODUCT_NAME = "$(TARGET_NAME)";
@@ -20449,7 +20493,7 @@
 				CODE_SIGN_IDENTITY = "Apple Distribution";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution";
 				CODE_SIGN_STYLE = Manual;
-				CURRENT_PROJECT_VERSION = 103302;
+				CURRENT_PROJECT_VERSION = 103400;
 				DEVELOPMENT_TEAM = 422GNXXZJR;
 				"DEVELOPMENT_TEAM[sdk=iphoneos*]" = 422GNXXZJR;
 				INFOPLIST_FILE = "./Clients/Betsson/Misc-UAT/Betsson-UAT-Info.plist";
@@ -20458,7 +20502,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 1.0.33;
+				MARKETING_VERSION = 1.0.34;
 				OTHER_LDFLAGS = "$(inherited)";
 				PRODUCT_BUNDLE_IDENTIFIER = com.gomagaming.betsson;
 				PRODUCT_NAME = "$(TARGET_NAME)";
@@ -20481,7 +20525,7 @@
 				CODE_SIGN_IDENTITY = "Apple Development";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "Apple Development";
 				CODE_SIGN_STYLE = Manual;
-				CURRENT_PROJECT_VERSION = 103302;
+				CURRENT_PROJECT_VERSION = 103400;
 				DEBUG_INFORMATION_FORMAT = dwarf;
 				DEVELOPMENT_TEAM = "";
 				"DEVELOPMENT_TEAM[sdk=iphoneos*]" = QN2DYX5K4M;
@@ -20504,7 +20548,7 @@
 					"@executable_path/../../Frameworks",
 				);
 				LOCALIZATION_PREFERS_STRING_CATALOGS = YES;
-				MARKETING_VERSION = 1.0.33;
+				MARKETING_VERSION = 1.0.34;
 				PRODUCT_BUNDLE_IDENTIFIER = fr.betsson.ios.app.betssonNotificationsService;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "Betsson Notif Ext - Development";
@@ -20526,7 +20570,7 @@
 				CODE_SIGN_IDENTITY = "Apple Distribution";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution";
 				CODE_SIGN_STYLE = Manual;
-				CURRENT_PROJECT_VERSION = 103302;
+				CURRENT_PROJECT_VERSION = 103400;
 				DEVELOPMENT_TEAM = "";
 				"DEVELOPMENT_TEAM[sdk=iphoneos*]" = QN2DYX5K4M;
 				ENABLE_USER_SCRIPT_SANDBOXING = YES;
@@ -20543,7 +20587,7 @@
 					"@executable_path/../../Frameworks",
 				);
 				LOCALIZATION_PREFERS_STRING_CATALOGS = YES;
-				MARKETING_VERSION = 1.0.33;
+				MARKETING_VERSION = 1.0.34;
 				PRODUCT_BUNDLE_IDENTIFIER = fr.betsson.ios.app.betssonNotificationsService;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "Betsson Notif Ext - Distribution - App Store";

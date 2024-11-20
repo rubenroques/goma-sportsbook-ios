@@ -269,8 +269,13 @@ class RootViewController: UIViewController {
         case casino
     }
     var selectedTabItem: TabItem {
+        willSet {
+            if self.selectedTabItem == .cashback && newValue != .cashback {
+                self.cashbackViewController.didBecomeInactive()
+            }
+        }
         didSet {
-            switch selectedTabItem {
+            switch self.selectedTabItem {
             case .home:
                 self.selectHomeTabBarItem()
             case .preLive:
@@ -647,7 +652,7 @@ class RootViewController: UIViewController {
         self.casinoTitleLabel.text = localized("casino")
         self.sportsbookTitleLabel.text = localized("sportsbook")
         self.tipsTitleLabel.text = localized("tips")
-        self.cashbackTitleLabel.text = localized("replay")
+        self.cashbackTitleLabel.text = localized("cashback")
         
         self.casinoBottomView.backgroundColor = UIColor.App.backgroundPrimary
         
