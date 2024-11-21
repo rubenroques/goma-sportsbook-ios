@@ -2056,8 +2056,8 @@ Pour le faire, il faut s’adresser à l’Autorité Nationale des Jeux (ANJ).";
 "used_cashback" = "Solde Cashback utilisé";
 
 
-"theme_short_light" = "Light";
-"theme_short_system" = "System";
-"theme_short_dark" = "Dark";
+"theme_short_light" = "Clair";
+"theme_short_system" = "Système";
+"theme_short_dark" = "Sombre";
 
 "cashback_video_url" = "/promotions/cashbackVideo.mp4";

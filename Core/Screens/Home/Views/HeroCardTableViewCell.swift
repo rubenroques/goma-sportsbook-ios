@@ -56,6 +56,10 @@ class HeroCardTableViewCell: UITableViewCell {
         self.setupSubviews()
         self.setupWithTheme()
         
+        let panGestureRecognizer = UIPanGestureRecognizer(target: self, action: #selector(handlePanGesture(_:)))
+        panGestureRecognizer.delegate = self
+        self.baseView.addGestureRecognizer(panGestureRecognizer)
+        
         self.favoriteButton.addTarget(self, action: #selector(self.didTapFavoriteIcon), for: .primaryActionTriggered)
         
         self.collectionView.delegate = self
@@ -197,16 +201,7 @@ class HeroCardTableViewCell: UITableViewCell {
             
             self?.collectionView.scrollToItem(at: indexPath, at: .centeredHorizontally, animated: true)
         }
-        
-        for recognizer in collectionView.gestureRecognizers ?? [] {
-            if recognizer is UIPanGestureRecognizer {
-                collectionView.removeGestureRecognizer(recognizer)
-            }
-        }
-        
-        let panGestureRecognizer = UIPanGestureRecognizer(target: self, action: #selector(handlePanGesture(_:)))
-        panGestureRecognizer.delegate = self
-        self.baseView.addGestureRecognizer(panGestureRecognizer)
+   
     }
 
     func stopTimer() {

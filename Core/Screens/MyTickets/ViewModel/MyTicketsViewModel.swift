@@ -55,6 +55,9 @@ class MyTicketsViewModel: NSObject {
     private var wonMyTickets: CurrentValueSubject<[BetHistoryEntry], Never> = .init([])
 
     var isLoadingTickets: CurrentValueSubject<Bool, Never> = .init(true)
+    
+    var allowedCashoutBetIds: [String] = []
+                                           
     private var locationsCodesDictionary: [String: String] = [:]
     
     private let recordsPerPage = 20
@@ -249,15 +252,27 @@ class MyTicketsViewModel: NSObject {
             }
             .store(in: &cancellables)
     }
-
+    
+    
+    // Get alowed bets first
     func loadOpenedTickets(page: Int, isNextPage: Bool = false) {
-
+        Env.servicesProvider.allowedCashoutBetIds()
+            .receive(on: DispatchQueue.main)
+            .sink { [weak self] completion in
+                self?.loadOpenedTicketsContent(page: page, isNextPage: isNextPage)
+            } receiveValue: { [weak self] betIds in
+                self?.allowedCashoutBetIds = betIds
+            }
+            .store(in: &self.cancellables)
+    }
+        
+    func loadOpenedTicketsContent(page: Int, isNextPage: Bool = false) {
         if !isNextPage {
             self.isLoadingTickets.send(true)
         }
         
         let calendar = Calendar.current
-        var currentDate = Date()
+        let currentDate = Date()
         
         var startDate = ""
         var endDate = ""
@@ -271,7 +286,8 @@ class MyTicketsViewModel: NSObject {
         } else {
             print("Error calculating one year ago")
         }
-        
+  
+
         Env.servicesProvider.getOpenBetsHistory(pageIndex: page, startDate: startDate, endDate: endDate)
             .receive(on: DispatchQueue.main)
             .sink { [weak self] completion in
@@ -474,7 +490,8 @@ class MyTicketsViewModel: NSObject {
             return viewModel
         }
         else {
-            let viewModel = MyTicketCellViewModel(ticket: ticket)
+            let allowedCashback = self.allowedCashoutBetIds.contains(ticket.betId)
+            let viewModel = MyTicketCellViewModel(ticket: ticket, allowedCashback: allowedCashback)
             viewModel.requestDataRefreshAction = { [weak self] in
                 Env.userSessionStore.refreshUserWalletAfterDelay()
                 self?.refresh()

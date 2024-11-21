@@ -50,7 +50,7 @@ class BetSubmissionSuccessViewController: UIViewController {
         let startAnimation = LottieAnimation.named("replay_sucess_4")
 
         animationView.animation = startAnimation
-        animationView.loopMode = .playOnce
+        animationView.loopMode = .loop
         
         return animationView
     }()
@@ -429,7 +429,7 @@ class BetSubmissionSuccessViewController: UIViewController {
 
         let sharedTicketCardView = SharedTicketCardView()
 
-        let betCardViewModel = MyTicketCellViewModel(ticket: betHistory)
+        let betCardViewModel = MyTicketCellViewModel(ticket: betHistory, allowedCashback: false)
 
         sharedTicketCardView.configure(withBetHistoryEntry: betHistory,
                                        countryCodes: [],

@@ -38,7 +38,8 @@ class MyTicketCellViewModel {
     var hasSetupPartialCashoutSlider: Bool = false
 
     private var cashoutSubscription: AnyCancellable?
-
+    
+    var allowedCashback: Bool = false
     var hasRedraw: Bool = false
 
     private var cancellables = Set<AnyCancellable>()
@@ -58,7 +59,8 @@ class MyTicketCellViewModel {
         }
     }
 
-    init(ticket: BetHistoryEntry) {
+    init(ticket: BetHistoryEntry, allowedCashback: Bool) {
+        self.allowedCashback = allowedCashback
         self.ticket = ticket
 
         for selection in self.ticket.selections ?? [] {
@@ -84,13 +86,15 @@ class MyTicketCellViewModel {
                 .joined(separator: " - "))
         }
 
-        if let isFreeBet = ticket.freeBet {
-            if !isFreeBet {
+        if allowedCashback {
+            if let isFreeBet = ticket.freeBet {
+                if !isFreeBet {
+                    self.requestCashoutAvailability()
+                }
+            }
+            else {
                 self.requestCashoutAvailability()
             }
-        }
-        else {
-            self.requestCashoutAvailability()
         }
 
     }
@@ -101,7 +105,6 @@ class MyTicketCellViewModel {
 
     func requestCashoutAvailability() {
         let ticket = self.ticket
-        
         let stake = String(format: "%.2f", ticket.totalBetAmount ?? 0.0)
 
         Env.servicesProvider.calculateCashout(betId: ticket.betId, stakeValue: stake)
@@ -187,7 +190,7 @@ class MyTicketCellViewModel {
                     else if cashoutResult.cashoutResult == 1 {
                         if let cashoutReoffer = cashoutResult.cashoutReoffer,
                            let ticket = self?.ticket {
-                            //self?.requestCashoutAvailability()
+                            // self?.requestCashoutAvailability()
                             self?.requestAlertAction?("\(cashoutReoffer)", ticket.betId)
                             self?.isLoadingCellData.send(false)
                         }
@@ -241,7 +244,7 @@ class MyTicketCellViewModel {
                     else if cashoutResult.cashoutResult == 1 {
                         if let cashoutReoffer = cashoutResult.cashoutReoffer,
                            let ticket = self?.ticket {
-                            //self?.requestPartialCashoutAvailability(ticket: ticket, stakeValue: "\(stakeValue)")
+                            // self?.requestPartialCashoutAvailability(ticket: ticket, stakeValue: "\(stakeValue)")
                             self?.cashoutReoffer = cashoutReoffer
                             self?.requestPartialAlertAction?("\(cashoutReoffer)", ticket.betId)
                             self?.isLoadingCellData.send(false)

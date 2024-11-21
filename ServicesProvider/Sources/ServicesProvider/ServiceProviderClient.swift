@@ -1399,6 +1399,16 @@ extension ServicesProviderClient {
         return bettingProvider.calculateCashout(betId: betId, stakeValue: stakeValue)
     }
 
+    public func allowedCashoutBetIds() -> AnyPublisher<[String], ServiceProviderError> {
+        guard
+            let bettingProvider = self.bettingProvider
+        else {
+            return Fail(error: ServiceProviderError.bettingProviderNotFound).eraseToAnyPublisher()
+        }
+
+        return bettingProvider.allowedCashoutBetIds()
+    }
+    
     public func cashoutBet(betId: String, cashoutValue: Double, stakeValue: Double? = nil) -> AnyPublisher<CashoutResult, ServiceProviderError> {
         guard
             let bettingProvider = self.bettingProvider

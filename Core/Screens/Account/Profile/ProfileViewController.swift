@@ -128,14 +128,6 @@ class ProfileViewController: UIViewController {
 
         self.commonInit()
         self.setupWithTheme()
-        
-        self.usernameLabel.font = AppFont.with(type: .heavy, size: 22)
-        self.userIdLabel.font = AppFont.with(type: .bold, size: 11)
-        self.infoLabel.font = AppFont.with(type: .medium, size: 12)
-        self.totalBalanceTitleLabel.font = AppFont.with(type: .heavy, size: 18)
-        self.totalBalanceLabel.font = AppFont.with(type: .heavy, size: 24)
-        self.currentBalanceTitleLabel.font = AppFont.with(type: .heavy, size: 18)
-        self.currentBalanceLabel.font = AppFont.with(type: .heavy, size: 24)
     }
 
     override func viewWillAppear(_ animated: Bool) {
@@ -285,7 +277,16 @@ class ProfileViewController: UIViewController {
     }
 
     func commonInit() {
-
+        
+        // Default label setup
+        self.usernameLabel.font = AppFont.with(type: .heavy, size: 22)
+        self.userIdLabel.font = AppFont.with(type: .bold, size: 11)
+        self.infoLabel.font = AppFont.with(type: .medium, size: 12)
+        self.totalBalanceTitleLabel.font = AppFont.with(type: .heavy, size: 18)
+        self.totalBalanceLabel.font = AppFont.with(type: .heavy, size: 24)
+        self.currentBalanceTitleLabel.font = AppFont.with(type: .heavy, size: 18)
+        self.currentBalanceLabel.font = AppFont.with(type: .heavy, size: 24)
+        
         self.footerResponsibleGamingView.translatesAutoresizingMaskIntoConstraints = false
 
         self.footerResponsibleGamingView.showLinksView()

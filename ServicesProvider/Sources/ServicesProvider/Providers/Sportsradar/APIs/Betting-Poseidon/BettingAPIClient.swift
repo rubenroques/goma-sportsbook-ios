@@ -22,6 +22,9 @@ enum BettingAPIClient {
     
     case calculateCashout(betId: String, stakeValue: String?)
     case cashoutBet(betId: String, cashoutValue: Double, stakeValue: Double?)
+    
+    case getAllowedCashoutBetIds
+    
     case getBetslipSettings
     
     case updateBetslipSettings(oddChange: BetslipOddChangeSetting)
@@ -63,6 +66,9 @@ extension BettingAPIClient: Endpoint {
             return "/api/cashout/fo/cashout/\(betId)/calculate"
         case .cashoutBet(let betId, _, _):
             return "/api/cashout/fo/cashout/\(betId)"
+        case .getAllowedCashoutBetIds:
+            return "/api/cashout/fo/cashout/allowedBetIds"
+            
         case .getBetslipSettings:
             return "/api/betting/fo/attribute/getAll"
         case .updateBetslipSettings:
@@ -139,7 +145,7 @@ extension BettingAPIClient: Endpoint {
             return nil
         case .placeBetBuilderBet:
             return nil
-        
+            
         case .confirmBoostedBet:
             return nil
         case .rejectBoostedBet:
@@ -149,6 +155,9 @@ extension BettingAPIClient: Endpoint {
             return nil
         case .cashoutBet:
             return nil
+        case .getAllowedCashoutBetIds:
+            return nil
+            
         case .getBetslipSettings:
             return nil
         case .updateBetslipSettings:
@@ -352,6 +361,9 @@ extension BettingAPIClient: Endpoint {
             else {
                 return nil
             }
+            
+        case .getAllowedCashoutBetIds:
+            return nil
 
         case .cashoutBet( _, let cashoutValue, let stakeValue):
             if let stakeValue {
@@ -473,6 +485,8 @@ extension BettingAPIClient: Endpoint {
             
         case .calculateCashout: return .post
         case .cashoutBet: return .post
+        case .getAllowedCashoutBetIds: return .get
+            
         case .getBetslipSettings: return .get
         case .updateBetslipSettings: return .post
         case .updateBetslipSettingsRunning: return .post
@@ -500,7 +514,8 @@ extension BettingAPIClient: Endpoint {
             
         case .calculateCashout: return true
         case .cashoutBet: return true
-        
+        case .getAllowedCashoutBetIds: return true
+            
         case .getBetslipSettings: return true
         case .updateBetslipSettings: return true
         case .updateBetslipSettingsRunning: return true
@@ -564,6 +579,7 @@ extension BettingAPIClient: Endpoint {
             
         case .calculateCashout: return TimeInterval(180)
         case .cashoutBet: return TimeInterval(180)
+        case .getAllowedCashoutBetIds: return TimeInterval(20)
             
         case .getBetslipSettings: return TimeInterval(180)
         case .updateBetslipSettings: return TimeInterval(180)
@@ -588,9 +604,11 @@ extension BettingAPIClient: Endpoint {
         case .placeBetBuilderBet: return "placeBetBuilderBet"
         case .confirmBoostedBet: return "confirmBoostedBet"
         case .rejectBoostedBet: return "rejectBoostedBet"
+        
         case .calculateCashout: return "calculateCashout"
         case .cashoutBet: return "cashoutBet"
-        
+        case .getAllowedCashoutBetIds: return "getAllowedCashoutBetIds"
+            
         case .getBetslipSettings: return "getBetslipSettings"
         case .updateBetslipSettings: return "updateBetslipSettings"
         case .updateBetslipSettingsRunning: return "updateBetslipSettingsRunning"
