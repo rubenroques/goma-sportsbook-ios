@@ -92,7 +92,19 @@ class MyTicketBetLineView: NibView {
     }
 
     override func commonInit() {
-
+        // Setup fonts
+        self.tournamentNameLabel.font = AppFont.with(type: .bold, size: 10)
+        self.dateLabel.font = AppFont.with(type: .bold, size: 10)
+        self.homeTeamNameLabel.font = AppFont.with(type: .bold, size: 14)
+        self.homeTeamScoreLabel.font = AppFont.with(type: .bold, size: 14)
+        self.awayTeamNameLabel.font = AppFont.with(type: .bold, size: 14)
+        self.awayTeamScoreLabel.font = AppFont.with(type: .bold, size: 14)
+        self.marketLabel.font = AppFont.with(type: .bold, size: 12)
+        self.outcomeLabel.font = AppFont.with(type: .bold, size: 12)
+        self.oddTitleLabel.font = AppFont.with(type: .bold, size: 12)
+        self.oddValueLabel.font = AppFont.with(type: .bold, size: 12)
+        self.indicatorLabel.font = AppFont.with(type: .bold, size: 11)
+        
         self.marketLabel.text = ""
         self.oddValueLabel.text = " - "
 

@@ -107,7 +107,7 @@ class CashbackRootViewController: UIViewController {
 
         // Initialize AVPlayer
         // local old video:  Bundle.main.url(forResource: "cashbackVideo", withExtension: "mp4")
-        let videoURLString = localized("cashback_video_url")
+        let videoURLString = TargetVariables.clientBaseUrl + localized("cashback_video_url")
         if let videoURL = URL(string: videoURLString) {
             self.player = AVPlayer(url: videoURL)
             self.player?.play() // Autoplay
@@ -118,7 +118,9 @@ class CashbackRootViewController: UIViewController {
             self.videoPlayerView.layer.addSublayer(self.playerLayer!)
         }
 
-        self.cashbackBalanceExampleView.setupValueLabel(value: "15,00€")
+        self.videoPlayerView.backgroundColor = UIColor.black.withAlphaComponent(0.1)
+        
+        self.cashbackBalanceExampleView.setupValueLabel(value: "50,00€")
         
         let tapGesture = UITapGestureRecognizer(target: self, action: #selector(didTapVideo))
         self.controlsView.addGestureRecognizer(tapGesture)

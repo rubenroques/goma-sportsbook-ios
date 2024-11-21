@@ -141,6 +141,26 @@ class OddTripleCollectionViewCell: UICollectionViewCell {
     override func awakeFromNib() {
         super.awakeFromNib()
 
+        //
+        // Setup fonts
+        self.suspendedLabel.font = AppFont.with(type: .heavy, size: 13)
+        self.participantsNameLabel.font = AppFont.with(type: .bold, size: 10)
+        // Odd value labels
+        self.leftOddValueLabel.font = AppFont.with(type: .heavy, size: 13)
+        self.middleOddValueLabel.font = AppFont.with(type: .heavy, size: 13)
+        self.rightOddValueLabel.font = AppFont.with(type: .heavy, size: 13)
+        // Odd title labels
+        self.leftOddTitleLabel.font = AppFont.with(type: .medium, size: 10)
+        self.middleOddTitleLabel.font = AppFont.with(type: .medium, size: 10)
+        self.rightOddTitleLabel.font = AppFont.with(type: .medium, size: 10)
+        // Market and caption labels
+        self.marketNameLabel.font = AppFont.with(type: .heavy, size: 12)
+        self.homeNameCaptionLabel.font = AppFont.with(type: .medium, size: 9)
+        self.awayNameCaptionLabel.font = AppFont.with(type: .medium, size: 9)
+        //
+
+        //
+        //
         self.backgroundView?.backgroundColor = .clear
         self.backgroundColor = .clear
 

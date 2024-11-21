@@ -29,6 +29,9 @@ class ListTypeCollectionViewCell: UICollectionViewCell {
 
     override func awakeFromNib() {
         super.awakeFromNib()
+        
+        // Setup fonts
+        self.titleLabel.font = AppFont.with(type: .bold, size: 14)
 
         self.setupWithTheme()
     }

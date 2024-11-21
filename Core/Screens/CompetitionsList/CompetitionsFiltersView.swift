@@ -187,6 +187,9 @@ class CompetitionsFiltersView: UIView, NibLoadable {
         self.closeButton.setTitle(localized("close"), for: .normal)
         self.clearButton.setTitle(localized("clear_all"), for: .normal)
 
+        self.titleLabel.font = AppFont.with(type: .heavy, size: 16)
+        self.smallTitleLabel.font = AppFont.with(type: .heavy, size: 8)
+        
         self.loadingView.hidesWhenStopped = true
         self.loadingView.stopAnimating()
 

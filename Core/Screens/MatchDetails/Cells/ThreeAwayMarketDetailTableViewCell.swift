@@ -94,6 +94,8 @@ class ThreeAwayMarketDetailTableViewCell: UITableViewCell {
     override func awakeFromNib() {
         super.awakeFromNib()
 
+        self.expandLabel.font = AppFont.with(type: .bold, size: 11)
+
         self.containerView.layer.cornerRadius = 9
 
         self.titleLabel.text = localized("market")

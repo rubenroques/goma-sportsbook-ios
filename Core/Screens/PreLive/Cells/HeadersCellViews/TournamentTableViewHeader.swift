@@ -54,6 +54,9 @@ class TournamentTableViewHeader: UITableViewHeaderFooterView {
     override func awakeFromNib() {
         super.awakeFromNib()
 
+        // Setup fonts
+        self.nameTitleLabel.font = AppFont.with(type: .heavy, size: 16)
+            
         self.favoriteLeagueBaseView.layer.cornerRadius = 4
         self.collapseBaseView.layer.cornerRadius = 4
 

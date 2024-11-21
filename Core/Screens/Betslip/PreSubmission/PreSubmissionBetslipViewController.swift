@@ -482,6 +482,8 @@ class PreSubmissionBetslipViewController: UIViewController {
             self.betBuilderWarningView.trailingAnchor.constraint(equalTo: self.view.safeAreaLayoutGuide.trailingAnchor),
             self.betBuilderWarningView.bottomAnchor.constraint(equalTo: self.placeBetBaseView.safeAreaLayoutGuide.topAnchor, constant: -10)
         ])
+        //
+        self.setupFonts()
 
         //
         if let suggestedBetsListViewController = self.suggestedBetsListViewController {
@@ -1621,6 +1623,58 @@ class PreSubmissionBetslipViewController: UIViewController {
         self.cashbackCoinAnimationView.backgroundColor = .clear
     }
 
+    private func setupFonts() {
+        // Font size 17
+        self.cashbackValueLabel.font = AppFont.with(type: .bold, size: 17)
+        
+        // Font size 16
+        let size16Labels: [UILabel] = [
+            self.systemBetTypeTitleLabel,
+            self.systemBetTypeLabel,
+            self.systemWinningsTitleLabel,
+            self.systemWinningsValueLabel,
+            self.mixMatchWinningsTitleLabel,
+            self.mixMatchWinningsValueLabel,
+            self.multipleWinningsTitleLabel,
+            self.multipleWinningsValueLabel,
+            self.simpleWinningsTitleLabel,
+            self.simpleWinningsValueLabel,
+            self.secondarySystemWinningsTitleLabel,
+            self.secondarySystemWinningsValueLabel,
+            self.secondaryMultipleWinningsTitleLabel,
+            self.secondaryMultipleWinningsValueLabel,
+            self.secondaryMixMatchWinningsTitleLabel,
+            self.secondaryMixMatchWinningsValueLabel
+        ]
+        size16Labels.forEach { $0.font = AppFont.with(type: .bold, size: 16) }
+        
+        // Font size 14
+        let size14Labels: [UILabel] = [
+            self.cashbackTitleLabel,
+            self.cashbackInfoMultipleValueLabel,
+            self.cashbackInfoSingleValueLabel
+        ]
+        size14Labels.forEach { $0.font = AppFont.with(type: .bold, size: 14) }
+        
+        // Font size 11
+        let size11Labels: [UILabel] = [
+            self.systemOddsTitleLabel,
+            self.systemOddsValueLabel,
+            self.mixMatchOddsTitleLabel,
+            self.mixMatchOddsValueLabel,
+            self.multipleOddsTitleLabel,
+            self.multipleOddsValueLabel,
+            self.simpleOddsTitleLabel,
+            self.simpleOddsValueLabel,
+            self.secondarySystemOddsTitleLabel,
+            self.secondarySystemOddsValueLabel,
+            self.secondaryMultipleOddsTitleLabel,
+            self.secondaryMultipleOddsValueLabel,
+            self.secondaryMixMatchOddsTitleLabel,
+            self.secondaryMixMatchOddsValueLabel
+        ]
+        size11Labels.forEach { $0.font = AppFont.with(type: .bold, size: 11) }
+    }
     private func setupCashback() {
         self.cashbackSwitch.addTarget(self, action: #selector(cashbackSwitchValueChanged(_:)), for: .valueChanged)
 

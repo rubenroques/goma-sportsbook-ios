@@ -32,6 +32,11 @@ class HomeAwayCardStatsView: NibView {
 
     override func commonInit() {
 
+        // Setup fonts
+        self.homeValueLabel.font = AppFont.with(type: .medium, size: 11)
+        self.awayValueLabel.font = AppFont.with(type: .medium, size: 11)
+        self.captionLabel.font = AppFont.with(type: .medium, size: 9)
+        
         self.setupWithTheme()
 
         self.homeValueLabel.text = "8/10"

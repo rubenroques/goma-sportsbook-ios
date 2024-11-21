@@ -66,8 +66,11 @@ class MyTicketsViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
 
+        // Setup fonts
+        self.firstTextFieldLabel.font = AppFont.with(type: .heavy, size: 20)
+        self.secondTextFieldLabel.font = AppFont.with(type: .heavy, size: 14)
+        
         self.noBetsButton.isHidden = true
-
         self.emptyBaseView.isHidden = true
 
         self.ticketsTableView.delegate = self.viewModel

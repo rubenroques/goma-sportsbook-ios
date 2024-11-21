@@ -118,6 +118,11 @@ class PreLiveEventsViewController: UIViewController {
 
         self.connectPublishers()
 
+        // Setup fonts
+        self.filtersCountLabel.font = AppFont.with(type: .heavy, size: 10)
+        self.sportTypeNameLabel.font = AppFont.with(type: .heavy, size: 7)
+    
+        //
         self.viewModel.didSelectMatchAction = { match in
             let matchDetailsViewController = MatchDetailsViewController(viewModel: MatchDetailsViewModel(match: match))
             self.navigationController?.pushViewController(matchDetailsViewController, animated: true)

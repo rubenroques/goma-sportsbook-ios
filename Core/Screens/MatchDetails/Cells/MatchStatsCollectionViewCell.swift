@@ -26,7 +26,11 @@ class MatchStatsCollectionViewCell: UICollectionViewCell {
 
     override func awakeFromNib() {
         super.awakeFromNib()
-
+        
+        self.homeNameCaptionLabel.font = AppFont.with(type: .medium, size: 9)
+        self.awayNameCaptionLabel.font = AppFont.with(type: .medium, size: 9)
+        self.marketLabel.font = AppFont.with(type: .heavy, size: 12)
+        
         self.homeNameCaptionLabel.text = ""
         self.awayNameCaptionLabel.text = ""
 

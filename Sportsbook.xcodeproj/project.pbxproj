@@ -7267,6 +7267,14 @@
 		CE21C3562CEB96490012CABA /* cashbackVideo.mp4 in Resources */ = {isa = PBXBuildFile; fileRef = CE21C3502CEB96490012CABA /* cashbackVideo.mp4 */; };
 		CE21C3572CEB96490012CABA /* cashbackVideo.mp4 in Resources */ = {isa = PBXBuildFile; fileRef = CE21C3502CEB96490012CABA /* cashbackVideo.mp4 */; };
 		CE21C3582CEB96490012CABA /* cashbackVideo.mp4 in Resources */ = {isa = PBXBuildFile; fileRef = CE21C3502CEB96490012CABA /* cashbackVideo.mp4 */; };
+		CE33EA712CEF4F7600804185 /* replay_sucess_4.json in Resources */ = {isa = PBXBuildFile; fileRef = CE33EA702CEF4F7600804185 /* replay_sucess_4.json */; };
+		CE33EA722CEF4F7600804185 /* replay_sucess_4.json in Resources */ = {isa = PBXBuildFile; fileRef = CE33EA702CEF4F7600804185 /* replay_sucess_4.json */; };
+		CE33EA732CEF4F7600804185 /* replay_sucess_4.json in Resources */ = {isa = PBXBuildFile; fileRef = CE33EA702CEF4F7600804185 /* replay_sucess_4.json */; };
+		CE33EA742CEF4F7600804185 /* replay_sucess_4.json in Resources */ = {isa = PBXBuildFile; fileRef = CE33EA702CEF4F7600804185 /* replay_sucess_4.json */; };
+		CE33EA752CEF4F7600804185 /* replay_sucess_4.json in Resources */ = {isa = PBXBuildFile; fileRef = CE33EA702CEF4F7600804185 /* replay_sucess_4.json */; };
+		CE33EA762CEF4F7600804185 /* replay_sucess_4.json in Resources */ = {isa = PBXBuildFile; fileRef = CE33EA702CEF4F7600804185 /* replay_sucess_4.json */; };
+		CE33EA772CEF4F7600804185 /* replay_sucess_4.json in Resources */ = {isa = PBXBuildFile; fileRef = CE33EA702CEF4F7600804185 /* replay_sucess_4.json */; };
+		CE33EA782CEF4F7600804185 /* replay_sucess_4.json in Resources */ = {isa = PBXBuildFile; fileRef = CE33EA702CEF4F7600804185 /* replay_sucess_4.json */; };
 		CEB24B9F2CED274D0031F470 /* ScaleAspectFitImageView.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEB24B9E2CED274D0031F470 /* ScaleAspectFitImageView.swift */; };
 		CEB24BA02CED274D0031F470 /* ScaleAspectFitImageView.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEB24B9E2CED274D0031F470 /* ScaleAspectFitImageView.swift */; };
 		CEB24BA12CED274D0031F470 /* ScaleAspectFitImageView.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEB24B9E2CED274D0031F470 /* ScaleAspectFitImageView.swift */; };
@@ -8254,6 +8262,7 @@
 		A9FB6D5A28C657CE00E3FE58 /* TipsListViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TipsListViewController.swift; sourceTree = "<group>"; };
 		A9FB6D6228C65EF100E3FE58 /* RankingsListViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RankingsListViewController.swift; sourceTree = "<group>"; };
 		CE21C3502CEB96490012CABA /* cashbackVideo.mp4 */ = {isa = PBXFileReference; lastKnownFileType = file; path = cashbackVideo.mp4; sourceTree = "<group>"; };
+		CE33EA702CEF4F7600804185 /* replay_sucess_4.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = replay_sucess_4.json; sourceTree = "<group>"; };
 		CEB24B9E2CED274D0031F470 /* ScaleAspectFitImageView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScaleAspectFitImageView.swift; sourceTree = "<group>"; };
 		F410E62827BC4FAB005C1964 /* TransactionsTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TransactionsTableViewCell.swift; sourceTree = "<group>"; };
 		F47BB79E27B2D0EF003FA2BC /* DropDownSelectionView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DropDownSelectionView.swift; sourceTree = "<group>"; };
@@ -10532,6 +10541,7 @@
 				6531BB962C0E077C002C696D /* replay_sucess.json */,
 				651BF0782C11BEE4001AF8F4 /* replay_sucess_2.json */,
 				651BF0812C133FB4001AF8F4 /* replay_sucess_3.json */,
+				CE33EA702CEF4F7600804185 /* replay_sucess_4.json */,
 				65F819612BAC83DA004E27C3 /* first_deposit.json */,
 				A9A1B2D82A128D8A00F7A8ED /* deposit_animation.json */,
 				455897F82A9CE5CE00E39598 /* progress_bar_fire_ball.json */,
@@ -12565,6 +12575,7 @@
 				450B7AA528F58574009229E3 /* SportsTypes.xcassets in Resources */,
 				450B7AA628F58574009229E3 /* BetslipErrorView.xib in Resources */,
 				450B7AA728F58574009229E3 /* SimpleRegisterDetailsViewController.xib in Resources */,
+				CE33EA772CEF4F7600804185 /* replay_sucess_4.json in Resources */,
 				450B7AA828F58574009229E3 /* DebugViewController.xib in Resources */,
 				45F2F9AA298C067C0075AF02 /* StaticColors.xcassets in Resources */,
 				450B7AA928F58574009229E3 /* CountryFlags.xcassets in Resources */,
@@ -12734,6 +12745,7 @@
 				457CBBD0282D27D000ED0F00 /* SportsTypes.xcassets in Resources */,
 				457CBBD1282D27D000ED0F00 /* BetslipErrorView.xib in Resources */,
 				457CBBD2282D27D000ED0F00 /* SimpleRegisterDetailsViewController.xib in Resources */,
+				CE33EA722CEF4F7600804185 /* replay_sucess_4.json in Resources */,
 				457CBBD3282D27D000ED0F00 /* DebugViewController.xib in Resources */,
 				45F2F9AE298C067C0075AF02 /* StaticColors.xcassets in Resources */,
 				457CBBD4282D27D000ED0F00 /* CountryFlags.xcassets in Resources */,
@@ -12894,6 +12906,7 @@
 				457CBE77282D2CD100ED0F00 /* SportsTypes.xcassets in Resources */,
 				457CBE78282D2CD100ED0F00 /* BetslipErrorView.xib in Resources */,
 				457CBE79282D2CD100ED0F00 /* SimpleRegisterDetailsViewController.xib in Resources */,
+				CE33EA742CEF4F7600804185 /* replay_sucess_4.json in Resources */,
 				457CBE7A282D2CD100ED0F00 /* DebugViewController.xib in Resources */,
 				45F2F9AF298C067C0075AF02 /* StaticColors.xcassets in Resources */,
 				457CBE7B282D2CD100ED0F00 /* CountryFlags.xcassets in Resources */,
@@ -13054,6 +13067,7 @@
 				4589C94E282024E400243547 /* SportsTypes.xcassets in Resources */,
 				4589C94F282024E400243547 /* BetslipErrorView.xib in Resources */,
 				4589C950282024E400243547 /* SimpleRegisterDetailsViewController.xib in Resources */,
+				CE33EA782CEF4F7600804185 /* replay_sucess_4.json in Resources */,
 				4589C951282024E400243547 /* DebugViewController.xib in Resources */,
 				45F2F9AB298C067C0075AF02 /* StaticColors.xcassets in Resources */,
 				4589C952282024E400243547 /* CountryFlags.xcassets in Resources */,
@@ -13214,6 +13228,7 @@
 				A9BAFB432AB0B46D002EDBA1 /* Localizable.strings in Resources */,
 				45A332CE298976BA008181E9 /* SportsTypes.xcassets in Resources */,
 				45A332CF298976BA008181E9 /* BetslipErrorView.xib in Resources */,
+				CE33EA762CEF4F7600804185 /* replay_sucess_4.json in Resources */,
 				45A332D0298976BA008181E9 /* SimpleRegisterDetailsViewController.xib in Resources */,
 				45A332D1298976BA008181E9 /* DebugViewController.xib in Resources */,
 				651BF0792C11BEE4001AF8F4 /* replay_sucess_2.json in Resources */,
@@ -13374,6 +13389,7 @@
 				45A6BDA728246A7500D9B416 /* SportsTypes.xcassets in Resources */,
 				45A6BDA828246A7500D9B416 /* BetslipErrorView.xib in Resources */,
 				45A6BDA928246A7500D9B416 /* SimpleRegisterDetailsViewController.xib in Resources */,
+				CE33EA732CEF4F7600804185 /* replay_sucess_4.json in Resources */,
 				45A6BDAA28246A7500D9B416 /* DebugViewController.xib in Resources */,
 				45F2F9AD298C067C0075AF02 /* StaticColors.xcassets in Resources */,
 				45A6BDAB28246A7500D9B416 /* CountryFlags.xcassets in Resources */,
@@ -13534,6 +13550,7 @@
 				45F6BDA32AB3732C00C81DE1 /* Localizable.strings in Resources */,
 				45F6BDA42AB3732C00C81DE1 /* SportsTypes.xcassets in Resources */,
 				45F6BDA52AB3732C00C81DE1 /* BetslipErrorView.xib in Resources */,
+				CE33EA712CEF4F7600804185 /* replay_sucess_4.json in Resources */,
 				45F6BDA62AB3732C00C81DE1 /* SimpleRegisterDetailsViewController.xib in Resources */,
 				45F6BDA72AB3732C00C81DE1 /* DebugViewController.xib in Resources */,
 				45F6BDA82AB3732C00C81DE1 /* CountryFlags.xcassets in Resources */,
@@ -13701,6 +13718,7 @@
 				A9BAFB462AB0B46D002EDBA1 /* Localizable.strings in Resources */,
 				A9C342FD28F9A74A0055360B /* SportsTypes.xcassets in Resources */,
 				A9C342FE28F9A74A0055360B /* BetslipErrorView.xib in Resources */,
+				CE33EA752CEF4F7600804185 /* replay_sucess_4.json in Resources */,
 				A9C342FF28F9A74A0055360B /* SimpleRegisterDetailsViewController.xib in Resources */,
 				A9C3430028F9A74A0055360B /* DebugViewController.xib in Resources */,
 				A9C3430128F9A74A0055360B /* CountryFlags.xcassets in Resources */,
@@ -20461,7 +20479,7 @@
 				CODE_SIGN_IDENTITY = "Apple Development";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				CODE_SIGN_STYLE = Manual;
-				CURRENT_PROJECT_VERSION = 103400;
+				CURRENT_PROJECT_VERSION = 103401;
 				DEVELOPMENT_TEAM = 422GNXXZJR;
 				"DEVELOPMENT_TEAM[sdk=iphoneos*]" = 422GNXXZJR;
 				INFOPLIST_FILE = "./Clients/Betsson/Misc-UAT/Betsson-UAT-Info.plist";
@@ -20493,7 +20511,7 @@
 				CODE_SIGN_IDENTITY = "Apple Distribution";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution";
 				CODE_SIGN_STYLE = Manual;
-				CURRENT_PROJECT_VERSION = 103400;
+				CURRENT_PROJECT_VERSION = 103401;
 				DEVELOPMENT_TEAM = 422GNXXZJR;
 				"DEVELOPMENT_TEAM[sdk=iphoneos*]" = 422GNXXZJR;
 				INFOPLIST_FILE = "./Clients/Betsson/Misc-UAT/Betsson-UAT-Info.plist";

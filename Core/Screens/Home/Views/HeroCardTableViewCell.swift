@@ -208,28 +208,12 @@ class HeroCardTableViewCell: UITableViewCell {
         panGestureRecognizer.delegate = self
         self.baseView.addGestureRecognizer(panGestureRecognizer)
     }
-    
+
     func stopTimer() {
         self.timer?.invalidate()
         self.timer = nil
     }
-    
-//    @objc func handlePanGesture(_ gestureRecognizer: UIPanGestureRecognizer) {
-//        
-//        if gestureRecognizer.state == .ended {
-//            let velocity = gestureRecognizer.velocity(in: collectionView)
-//            
-//            if abs(velocity.x) > abs(velocity.y) {
-//                if velocity.x > 0 {
-//                    // Swiped right
-//                    self.getCollectionViewPage(isPrevious: true)
-//                } else {
-//                    // Swiped left
-//                    self.getCollectionViewPage()
-//                }
-//            }
-//        }
-//    }
+
     @objc func handlePanGesture(_ gestureRecognizer: UIPanGestureRecognizer) {
         let translation = gestureRecognizer.translation(in: collectionView)
 

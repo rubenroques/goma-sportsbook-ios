@@ -122,6 +122,9 @@ class BetslipViewController: UIViewController {
 
         self.betsLabel.text = localized("bets")
 
+        self.accountValueLabel.font = AppFont.with(type: .bold, size: 14)
+        self.betsLabel.font = AppFont.with(type: .heavy, size: 20)
+
         //
         //
         self.closeButton.titleLabel?.font = AppFont.with(type: AppFont.AppFontType.semibold, size: 17)

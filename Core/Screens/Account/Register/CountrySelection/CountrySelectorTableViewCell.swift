@@ -20,6 +20,9 @@ class CountrySelectorTableViewCell: UITableViewCell {
         self.nameLabel.text = ""
         self.prefixLabel.text = ""
 
+        self.nameLabel.font = AppFont.with(type: .bold, size: 16)
+        self.prefixLabel.font = AppFont.with(type: .bold, size: 16)
+        
         self.setupWithTheme()
     }
 

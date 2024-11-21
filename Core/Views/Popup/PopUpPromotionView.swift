@@ -65,6 +65,13 @@ class PopUpPromotionView: NibView {
     }
 
     override func commonInit() {
+        // Setup fonts
+        self.topSubtitleLabel.font = AppFont.with(type: .heavy, size: 12)
+        self.topTitleLabel.font = AppFont.with(type: .heavy, size: 19)
+        self.titleLabel.font = AppFont.with(type: .heavy, size: 20)
+        self.subtitleLabel.font = AppFont.with(type: .bold, size: 14)
+        
+
         self.layer.cornerRadius = CornerRadius.modal
 
         imageView.image = nil

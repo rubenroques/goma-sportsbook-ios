@@ -193,6 +193,11 @@ class DepositViewController: UIViewController {
         depositTipLabel.font = AppFont.with(type: .semibold, size: 12)
         depositTipLabel.isHidden = false
 
+        self.titleLabel.font = AppFont.with(type: .heavy, size: 20)
+        self.bonusTitleLabel.font = AppFont.with(type: .heavy, size: 14)
+        self.bonusInfoLabel.font = AppFont.with(type: .bold, size: 12)
+        self.bonusDetailLabel.font = AppFont.with(type: .heavy, size: 14)
+
         self.setDepositAmountButtonDesign(button: self.amount10Button, title: "25€")
         self.setDepositAmountButtonDesign(button: self.amount20Button, title: "50€")
         self.setDepositAmountButtonDesign(button: self.amount50Button, title: "100€")

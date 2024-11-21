@@ -358,6 +358,30 @@ class RootViewController: UIViewController {
         self.commonInit()
         // self.loadChildViewControllerIfNeeded(tab: )
 
+
+        // Setup fonts
+        self.sportsbookTitleLabel.font = AppFont.with(type: .heavy, size: 10)
+        
+        // All navigation title labels with same style
+        let navigationTitleLabels = [
+            self.homeTitleLabel,
+            self.sportsTitleLabel,
+            self.featuredCompetitionTitleLabel,
+            self.liveTitleLabel,
+            self.tipsTitleLabel,
+            self.cashbackTitleLabel,
+            self.casinoTitleLabel
+        ]
+        
+        navigationTitleLabels.forEach { label in
+            label?.font = AppFont.with(type: .heavy, size: 11)
+        }
+        
+        // Account value with different style
+        self.accountValueLabel.font = AppFont.with(type: .bold, size: 14)
+        
+        //
+        //
         let initialTab = self.selectedTabItem
         self.selectedTabItem = initialTab
 

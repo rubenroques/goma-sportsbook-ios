@@ -89,7 +89,23 @@ class BannerMatchCollectionViewCell: UICollectionViewCell {
         super.awakeFromNib()
 
         self.bringSubviewToFront(self.matchBaseView)
-
+  
+        // Setup fonts
+        self.homeOddValueLabel.font = AppFont.with(type: .heavy, size: 13)
+        self.homeOddTitleLabel.font = AppFont.with(type: .medium, size: 11)
+        
+        self.drawOddValueLabel.font = AppFont.with(type: .heavy, size: 13)
+        self.drawOddTitleLabel.font = AppFont.with(type: .medium, size: 11)
+        
+        self.awayOddValueLabel.font = AppFont.with(type: .heavy, size: 13)
+        self.awayOddTitleLabel.font = AppFont.with(type: .medium, size: 11)
+        
+        self.dateLabel.font = AppFont.with(type: .bold, size: 12)
+        self.timeLabel.font = AppFont.with(type: .heavy, size: 16)
+        
+        self.awayParticipantNameLabel.font = AppFont.with(type: .heavy, size: 15)
+        self.homeParticipantNameLabel.font = AppFont.with(type: .heavy, size: 15)
+        
         self.backgroundView?.backgroundColor = .clear
         self.backgroundColor = .clear
         self.contentView.backgroundColor = .clear
