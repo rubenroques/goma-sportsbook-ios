@@ -206,6 +206,7 @@ class ClientManagedHomeViewTemplateDataSource {
         self.matchLineTableCellViewModelCache = [:]
         self.matchLineTableCellViewModelCache = [:]
         self.marketWidgetContainerTableViewModelCache = [:]
+        self.heroCardWidgetCellViewModelCache = [:]
 
         self.suggestedBetslips = []
         self.highlightedMarkets = []
@@ -927,11 +928,10 @@ extension ClientManagedHomeViewTemplateDataSource: HomeViewTemplateDataSource {
 
     }
     
-    // TODO: HERO CARD CELL VIEW MODEL
     func heroCardMatchViewModel(forIndex index: Int) -> MatchWidgetCellViewModel? {
                 
         if let match = self.heroMatches[safe: index] {
-            let id = match.id + MatchWidgetType.topImage.rawValue
+            let id = match.id
             if let matchWidgetCellViewModel = self.heroCardWidgetCellViewModelCache[id] {
                 return matchWidgetCellViewModel
             }

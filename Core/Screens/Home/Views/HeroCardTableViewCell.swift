@@ -201,7 +201,8 @@ class HeroCardTableViewCell: UITableViewCell {
             
             self?.collectionView.scrollToItem(at: indexPath, at: .centeredHorizontally, animated: true)
         }
-   
+
+        self.reloadData()
     }
 
     func stopTimer() {
@@ -279,6 +280,7 @@ class HeroCardTableViewCell: UITableViewCell {
             let firstIndexPath = IndexPath(item: 0, section: visibleIndexPath.section)
             collectionView.scrollToItem(at: firstIndexPath, at: .centeredHorizontally, animated: true)
         }
+        
     }
 
     // MARK: Actions
@@ -314,7 +316,7 @@ class HeroCardTableViewCell: UITableViewCell {
             let firstIndexPath = IndexPath(item: 0, section: visibleIndexPath.section)
             collectionView.scrollToItem(at: firstIndexPath, at: .centeredHorizontally, animated: true)
         }
-
+        
     }
     
     @IBAction private func didTapMatchView() {
