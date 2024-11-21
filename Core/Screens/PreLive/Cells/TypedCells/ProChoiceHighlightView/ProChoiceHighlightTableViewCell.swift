@@ -19,7 +19,7 @@ class ProChoiceHighlightCollectionViewCell: UICollectionViewCell {
 
     // New UI components
     private lazy var eventImageBaseView: UIView = self.createEventImageBaseView()
-    private lazy var eventImageView: UIImageView = self.createEventImageView()
+    private lazy var eventImageView: ScaleAspectFitImageView = self.createEventImageView()
 
     private lazy var leagueInfoContainerView: UIView = self.createLeagueInfoContainerView()
     private lazy var leagueInfoStackView: UIStackView = self.createLeagueInfoStackView()
@@ -143,8 +143,6 @@ class ProChoiceHighlightCollectionViewCell: UICollectionViewCell {
         super.init(frame: frame)
         self.setupSubviews()
         self.setupWithTheme()
-
-        self.eventImageView.contentMode = .scaleAspectFill
 
         self.homeButton.isUserInteractionEnabled = true
         self.drawButton.isUserInteractionEnabled = true
@@ -1054,7 +1052,6 @@ extension ProChoiceHighlightCollectionViewCell {
             self.eventImageView.leadingAnchor.constraint(equalTo: self.eventImageBaseView.leadingAnchor),
             self.eventImageView.trailingAnchor.constraint(equalTo: self.eventImageBaseView.trailingAnchor),
             self.eventImageView.topAnchor.constraint(equalTo: self.eventImageBaseView.topAnchor),
-            self.eventImageView.bottomAnchor.constraint(equalTo: self.containerView.bottomAnchor),
 
             self.containerStackView.topAnchor.constraint(equalTo: self.eventImageBaseView.bottomAnchor),
             self.containerStackView.leadingAnchor.constraint(equalTo: self.containerView.leadingAnchor),
@@ -1261,9 +1258,8 @@ extension ProChoiceHighlightCollectionViewCell {
         return view
     }
 
-    private func createEventImageView() -> UIImageView {
-        let imageView = UIImageView()
-        imageView.contentMode = .scaleAspectFill
+    private func createEventImageView() -> ScaleAspectFitImageView {
+        let imageView = ScaleAspectFitImageView()
         imageView.clipsToBounds = true
         imageView.translatesAutoresizingMaskIntoConstraints = false
         return imageView

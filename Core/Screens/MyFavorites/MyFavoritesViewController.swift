@@ -765,7 +765,7 @@ extension MyFavoritesViewController {
         self.loadingScreenBaseView.addSubview(self.activityIndicatorView)
         self.loadingScreenBaseView.bringSubviewToFront(self.activityIndicatorView)
 
-        self.topSliderCollectionView.register(ListTypeCollectionViewCell.nib,
+        self.topSliderCollectionView.register(ListTypeCollectionViewCell.self,
                                        forCellWithReuseIdentifier: ListTypeCollectionViewCell.identifier)
         self.topSliderCollectionView.delegate = self
         self.topSliderCollectionView.dataSource = self

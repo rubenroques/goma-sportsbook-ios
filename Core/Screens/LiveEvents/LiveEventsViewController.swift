@@ -211,7 +211,7 @@ class LiveEventsViewController: UIViewController {
         filtersCollectionView.showsVerticalScrollIndicator = false
         filtersCollectionView.showsHorizontalScrollIndicator = false
         filtersCollectionView.alwaysBounceHorizontal = true
-        filtersCollectionView.register(ListTypeCollectionViewCell.nib,
+        filtersCollectionView.register(ListTypeCollectionViewCell.self,
                                        forCellWithReuseIdentifier: ListTypeCollectionViewCell.identifier)
         filtersCollectionView.delegate = self
         filtersCollectionView.dataSource = self

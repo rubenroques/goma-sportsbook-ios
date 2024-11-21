@@ -9,6 +9,8 @@ import UIKit
 
 class ListBackgroundCollectionViewCell: UICollectionViewCell {
     
+    static let cellHeight: CGFloat = 42
+    
     private lazy var selectionHighlightView: UIView = Self.createSelectionHighlightView()
     private lazy var containerView: UIView = Self.createContainerView()
     private lazy var backgroundImageView: UIImageView = Self.createBackgroundImageView()
@@ -34,24 +36,6 @@ class ListBackgroundCollectionViewCell: UICollectionViewCell {
         fatalError("init(coder:) has not been implemented")
     }
 
-    override func layoutSubviews() {
-        super.layoutSubviews()
-
-        self.selectionHighlightView.layer.cornerRadius = self.selectionHighlightView.frame.height / 2
-        self.selectionHighlightView.clipsToBounds = true
-        
-        self.containerView.layer.cornerRadius = self.containerView.frame.height / 2
-        self.containerView.clipsToBounds = true
-        
-        self.backgroundImageView.layer.cornerRadius = self.backgroundImageView.frame.height / 2
-        
-        self.iconImageView.backgroundColor = .clear
-        
-        self.contentView.setNeedsLayout()
-        self.contentView.layoutIfNeeded()
-        
-    }
-
     override func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {
         super.traitCollectionDidChange(previousTraitCollection)
 
@@ -67,6 +51,7 @@ class ListBackgroundCollectionViewCell: UICollectionViewCell {
     }
 
     func setupWithTheme() {
+        self.iconImageView.backgroundColor = .clear
         self.normalColor = UIColor.App.pillBackground
         self.selectedColor = UIColor.App.highlightPrimary
 
@@ -85,7 +70,7 @@ class ListBackgroundCollectionViewCell: UICollectionViewCell {
             let text = title
             let attributedString = NSMutableAttributedString(string: text)
             let fullRange = (text as NSString).range(of: title)
-            var range = (text as NSString).range(of: localized("mix_match_mix_string"))
+            let range = (text as NSString).range(of: localized("mix_match_mix_string"))
             
             attributedString.addAttribute(.foregroundColor, value: UIColor.App.buttonTextPrimary, range: fullRange)
             attributedString.addAttribute(.font, value: AppFont.with(type: .semibold, size: 14), range: fullRange)
@@ -152,6 +137,14 @@ extension ListBackgroundCollectionViewCell {
 
     private func setupSubviews() {
 
+        self.containerView.layer.cornerRadius = (Self.cellHeight - 4) / 2
+        self.selectionHighlightView.layer.cornerRadius = (Self.cellHeight - 2) / 2
+        self.backgroundImageView.layer.cornerRadius = (Self.cellHeight - 4) / 2
+        
+        self.selectionHighlightView.clipsToBounds = true
+        self.containerView.clipsToBounds = true
+        self.backgroundImageView.clipsToBounds = true
+
         self.contentView.addSubview(self.selectionHighlightView)
 
         self.selectionHighlightView.addSubview(self.containerView)
@@ -170,7 +163,7 @@ extension ListBackgroundCollectionViewCell {
     private func initConstraints() {
 
         NSLayoutConstraint.activate([
-            self.contentView.heightAnchor.constraint(equalToConstant: 42),
+            self.contentView.heightAnchor.constraint(equalToConstant: Self.cellHeight),
             
             self.selectionHighlightView.leadingAnchor.constraint(equalTo: self.contentView.leadingAnchor, constant: 1),
             self.selectionHighlightView.trailingAnchor.constraint(equalTo: self.contentView.trailingAnchor, constant: -1),

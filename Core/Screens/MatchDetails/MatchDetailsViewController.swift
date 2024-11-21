@@ -431,15 +431,18 @@ class MatchDetailsViewController: UIViewController {
         self.headerDetailPreliveView.isHidden = false
         
         // Market Types CollectionView
-        let flowLayout = UICollectionViewFlowLayout()
-        flowLayout.estimatedItemSize = UICollectionViewFlowLayout.automaticSize
-        flowLayout.scrollDirection = .horizontal
-        self.marketTypesCollectionView.collectionViewLayout = flowLayout
-        self.marketTypesCollectionView.contentInset = UIEdgeInsets(top: 0, left: 16, bottom: 0, right: 16)
+        let layout = UICollectionViewFlowLayout()
+        layout.scrollDirection = .horizontal
+        layout.estimatedItemSize = UICollectionViewFlowLayout.automaticSize
+        layout.minimumInteritemSpacing = 10
+        layout.minimumLineSpacing = 10
+        layout.sectionInset = UIEdgeInsets(top: 0, left: 16, bottom: 0, right: 16)
+        
+        self.marketTypesCollectionView.collectionViewLayout = layout
         self.marketTypesCollectionView.showsVerticalScrollIndicator = false
         self.marketTypesCollectionView.showsHorizontalScrollIndicator = false
         self.marketTypesCollectionView.alwaysBounceHorizontal = true
-        self.marketTypesCollectionView.register(ListTypeCollectionViewCell.nib,
+        self.marketTypesCollectionView.register(ListTypeCollectionViewCell.self,
                                                 forCellWithReuseIdentifier: ListTypeCollectionViewCell.identifier)
         self.marketTypesCollectionView.register(ListBackgroundCollectionViewCell.self,
                                        forCellWithReuseIdentifier: ListBackgroundCollectionViewCell.identifier)

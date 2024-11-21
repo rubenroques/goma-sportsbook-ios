@@ -114,7 +114,7 @@ class MyGamesRootViewController: UIViewController {
         self.pagedViewController.delegate = self
         self.pagedViewController.dataSource = self
 
-        self.shortcutsCollectionView.register(ListTypeCollectionViewCell.nib,
+        self.shortcutsCollectionView.register(ListTypeCollectionViewCell.self,
                                               forCellWithReuseIdentifier: ListTypeCollectionViewCell.identifier)
 
         self.shortcutsCollectionView.delegate = self

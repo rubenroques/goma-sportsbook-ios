@@ -631,7 +631,6 @@
 		450B7AE828F58574009229E3 /* DepositViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = A9875794276CA50F0099990D /* DepositViewController.xib */; };
 		450B7AEA28F58574009229E3 /* HomeFilterViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = A9C6022A2716F13F00992E11 /* HomeFilterViewController.xib */; };
 		450B7AEB28F58574009229E3 /* FilterSliderInfoView.xib in Resources */ = {isa = PBXBuildFile; fileRef = A92F5D892719D63300884BDF /* FilterSliderInfoView.xib */; };
-		450B7AEC28F58574009229E3 /* ListTypeCollectionViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 45A16E132707B6C100A95C01 /* ListTypeCollectionViewCell.xib */; };
 		450B7AED28F58574009229E3 /* EmailVerificationViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = A96279F22743D3AA0001E1D5 /* EmailVerificationViewController.xib */; };
 		450B7AEE28F58574009229E3 /* MultipleBettingTicketTableViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 454E0ACB2734386A00794E0C /* MultipleBettingTicketTableViewCell.xib */; };
 		450B7AEF28F58574009229E3 /* OddDoubleCollectionViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 45CD7B4A2716F5CB003044C5 /* OddDoubleCollectionViewCell.xib */; };
@@ -1600,7 +1599,6 @@
 		457CBC12282D27D000ED0F00 /* DepositViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = A9875794276CA50F0099990D /* DepositViewController.xib */; };
 		457CBC14282D27D000ED0F00 /* HomeFilterViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = A9C6022A2716F13F00992E11 /* HomeFilterViewController.xib */; };
 		457CBC15282D27D000ED0F00 /* FilterSliderInfoView.xib in Resources */ = {isa = PBXBuildFile; fileRef = A92F5D892719D63300884BDF /* FilterSliderInfoView.xib */; };
-		457CBC16282D27D000ED0F00 /* ListTypeCollectionViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 45A16E132707B6C100A95C01 /* ListTypeCollectionViewCell.xib */; };
 		457CBC17282D27D000ED0F00 /* EmailVerificationViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = A96279F22743D3AA0001E1D5 /* EmailVerificationViewController.xib */; };
 		457CBC18282D27D000ED0F00 /* MultipleBettingTicketTableViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 454E0ACB2734386A00794E0C /* MultipleBettingTicketTableViewCell.xib */; };
 		457CBC19282D27D000ED0F00 /* OddDoubleCollectionViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 45CD7B4A2716F5CB003044C5 /* OddDoubleCollectionViewCell.xib */; };
@@ -2132,7 +2130,6 @@
 		457CBEBA282D2CD100ED0F00 /* DepositViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = A9875794276CA50F0099990D /* DepositViewController.xib */; };
 		457CBEBC282D2CD100ED0F00 /* HomeFilterViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = A9C6022A2716F13F00992E11 /* HomeFilterViewController.xib */; };
 		457CBEBD282D2CD100ED0F00 /* FilterSliderInfoView.xib in Resources */ = {isa = PBXBuildFile; fileRef = A92F5D892719D63300884BDF /* FilterSliderInfoView.xib */; };
-		457CBEBE282D2CD100ED0F00 /* ListTypeCollectionViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 45A16E132707B6C100A95C01 /* ListTypeCollectionViewCell.xib */; };
 		457CBEBF282D2CD100ED0F00 /* EmailVerificationViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = A96279F22743D3AA0001E1D5 /* EmailVerificationViewController.xib */; };
 		457CBEC0282D2CD100ED0F00 /* MultipleBettingTicketTableViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 454E0ACB2734386A00794E0C /* MultipleBettingTicketTableViewCell.xib */; };
 		457CBEC1282D2CD100ED0F00 /* OddDoubleCollectionViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 45CD7B4A2716F5CB003044C5 /* OddDoubleCollectionViewCell.xib */; };
@@ -2665,7 +2662,6 @@
 		4589C991282024E400243547 /* DepositViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = A9875794276CA50F0099990D /* DepositViewController.xib */; };
 		4589C993282024E400243547 /* HomeFilterViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = A9C6022A2716F13F00992E11 /* HomeFilterViewController.xib */; };
 		4589C994282024E400243547 /* FilterSliderInfoView.xib in Resources */ = {isa = PBXBuildFile; fileRef = A92F5D892719D63300884BDF /* FilterSliderInfoView.xib */; };
-		4589C995282024E400243547 /* ListTypeCollectionViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 45A16E132707B6C100A95C01 /* ListTypeCollectionViewCell.xib */; };
 		4589C997282024E400243547 /* EmailVerificationViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = A96279F22743D3AA0001E1D5 /* EmailVerificationViewController.xib */; };
 		4589C998282024E400243547 /* MultipleBettingTicketTableViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 454E0ACB2734386A00794E0C /* MultipleBettingTicketTableViewCell.xib */; };
 		4589C999282024E400243547 /* OddDoubleCollectionViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 45CD7B4A2716F5CB003044C5 /* OddDoubleCollectionViewCell.xib */; };
@@ -3438,7 +3434,6 @@
 		45A33310298976BA008181E9 /* DepositViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = A9875794276CA50F0099990D /* DepositViewController.xib */; };
 		45A33312298976BA008181E9 /* HomeFilterViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = A9C6022A2716F13F00992E11 /* HomeFilterViewController.xib */; };
 		45A33313298976BA008181E9 /* FilterSliderInfoView.xib in Resources */ = {isa = PBXBuildFile; fileRef = A92F5D892719D63300884BDF /* FilterSliderInfoView.xib */; };
-		45A33314298976BA008181E9 /* ListTypeCollectionViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 45A16E132707B6C100A95C01 /* ListTypeCollectionViewCell.xib */; };
 		45A33315298976BA008181E9 /* EmailVerificationViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = A96279F22743D3AA0001E1D5 /* EmailVerificationViewController.xib */; };
 		45A33316298976BA008181E9 /* MultipleBettingTicketTableViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 454E0ACB2734386A00794E0C /* MultipleBettingTicketTableViewCell.xib */; };
 		45A33317298976BA008181E9 /* OddDoubleCollectionViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 45CD7B4A2716F5CB003044C5 /* OddDoubleCollectionViewCell.xib */; };
@@ -3983,7 +3978,6 @@
 		45A6BDEA28246A7500D9B416 /* DepositViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = A9875794276CA50F0099990D /* DepositViewController.xib */; };
 		45A6BDEC28246A7500D9B416 /* HomeFilterViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = A9C6022A2716F13F00992E11 /* HomeFilterViewController.xib */; };
 		45A6BDED28246A7500D9B416 /* FilterSliderInfoView.xib in Resources */ = {isa = PBXBuildFile; fileRef = A92F5D892719D63300884BDF /* FilterSliderInfoView.xib */; };
-		45A6BDEE28246A7500D9B416 /* ListTypeCollectionViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 45A16E132707B6C100A95C01 /* ListTypeCollectionViewCell.xib */; };
 		45A6BDF028246A7500D9B416 /* EmailVerificationViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = A96279F22743D3AA0001E1D5 /* EmailVerificationViewController.xib */; };
 		45A6BDF128246A7500D9B416 /* MultipleBettingTicketTableViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 454E0ACB2734386A00794E0C /* MultipleBettingTicketTableViewCell.xib */; };
 		45A6BDF228246A7500D9B416 /* OddDoubleCollectionViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 45CD7B4A2716F5CB003044C5 /* OddDoubleCollectionViewCell.xib */; };
@@ -5275,7 +5269,6 @@
 		45F6BDF32AB3732C00C81DE1 /* DepositViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = A9875794276CA50F0099990D /* DepositViewController.xib */; };
 		45F6BDF52AB3732C00C81DE1 /* HomeFilterViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = A9C6022A2716F13F00992E11 /* HomeFilterViewController.xib */; };
 		45F6BDF62AB3732C00C81DE1 /* FilterSliderInfoView.xib in Resources */ = {isa = PBXBuildFile; fileRef = A92F5D892719D63300884BDF /* FilterSliderInfoView.xib */; };
-		45F6BDF72AB3732C00C81DE1 /* ListTypeCollectionViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 45A16E132707B6C100A95C01 /* ListTypeCollectionViewCell.xib */; };
 		45F6BDF82AB3732C00C81DE1 /* EmailVerificationViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = A96279F22743D3AA0001E1D5 /* EmailVerificationViewController.xib */; };
 		45F6BDF92AB3732C00C81DE1 /* MultipleBettingTicketTableViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 454E0ACB2734386A00794E0C /* MultipleBettingTicketTableViewCell.xib */; };
 		45F6BDFA2AB3732C00C81DE1 /* OddDoubleCollectionViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 45CD7B4A2716F5CB003044C5 /* OddDoubleCollectionViewCell.xib */; };
@@ -7025,7 +7018,6 @@
 		A9C3434028F9A74A0055360B /* DepositViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = A9875794276CA50F0099990D /* DepositViewController.xib */; };
 		A9C3434228F9A74A0055360B /* HomeFilterViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = A9C6022A2716F13F00992E11 /* HomeFilterViewController.xib */; };
 		A9C3434328F9A74A0055360B /* FilterSliderInfoView.xib in Resources */ = {isa = PBXBuildFile; fileRef = A92F5D892719D63300884BDF /* FilterSliderInfoView.xib */; };
-		A9C3434428F9A74A0055360B /* ListTypeCollectionViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 45A16E132707B6C100A95C01 /* ListTypeCollectionViewCell.xib */; };
 		A9C3434528F9A74A0055360B /* EmailVerificationViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = A96279F22743D3AA0001E1D5 /* EmailVerificationViewController.xib */; };
 		A9C3434628F9A74A0055360B /* MultipleBettingTicketTableViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 454E0ACB2734386A00794E0C /* MultipleBettingTicketTableViewCell.xib */; };
 		A9C3434728F9A74A0055360B /* OddDoubleCollectionViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 45CD7B4A2716F5CB003044C5 /* OddDoubleCollectionViewCell.xib */; };
@@ -7647,7 +7639,6 @@
 		45A0B301274FA3B800211A85 /* MarketGroup.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MarketGroup.swift; sourceTree = "<group>"; };
 		45A0E88E2CC6765F007C8E99 /* MarketWidgetCellViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MarketWidgetCellViewModel.swift; sourceTree = "<group>"; };
 		45A16E122707B6C100A95C01 /* ListTypeCollectionViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ListTypeCollectionViewCell.swift; sourceTree = "<group>"; };
-		45A16E132707B6C100A95C01 /* ListTypeCollectionViewCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = ListTypeCollectionViewCell.xib; sourceTree = "<group>"; };
 		45A2896626C32D3F00BCD5DA /* NetworkModels.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NetworkModels.swift; sourceTree = "<group>"; };
 		45A2896926C32D7500BCD5DA /* NetworkSession.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NetworkSession.swift; sourceTree = "<group>"; };
 		45A2896F26C32E1C00BCD5DA /* NetworkManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NetworkManager.swift; sourceTree = "<group>"; };
@@ -9887,13 +9878,13 @@
 			path = CollectionViewLayouts;
 			sourceTree = "<group>";
 		};
-		45A16E112707B69200A95C01 /* Filters */ = {
+		45A16E112707B69200A95C01 /* PillCell */ = {
 			isa = PBXGroup;
 			children = (
+				452B9D2F2C1B54860032363F /* ListBackgroundCollectionViewCell.swift */,
 				45A16E122707B6C100A95C01 /* ListTypeCollectionViewCell.swift */,
-				45A16E132707B6C100A95C01 /* ListTypeCollectionViewCell.xib */,
 			);
-			path = Filters;
+			path = PillCell;
 			sourceTree = "<group>";
 		};
 		45A2897526C338F100BCD5DA /* Definitions */ = {
@@ -10328,7 +10319,6 @@
 				45109A642799C7EA00E4AC2E /* ViewModels */,
 				45C26DC627976A1000513D41 /* DataSources */,
 				45D871CE271098F100F5B87B /* Cells */,
-				45A16E112707B69200A95C01 /* Filters */,
 			);
 			path = PreLive;
 			sourceTree = "<group>";
@@ -10365,6 +10355,7 @@
 		45D871CE271098F100F5B87B /* Cells */ = {
 			isa = PBXGroup;
 			children = (
+				45A16E112707B69200A95C01 /* PillCell */,
 				4515901A2CC1BC9E008EF4C3 /* TypedCells */,
 				A9A43C922A4B3106008FB399 /* Lists */,
 				457816A72706679400F66878 /* MatchLineTableViewCell.swift */,
@@ -11695,7 +11686,6 @@
 		A9BCF43A274FB589006DD528 /* Cells */ = {
 			isa = PBXGroup;
 			children = (
-				452B9D2F2C1B54860032363F /* ListBackgroundCollectionViewCell.swift */,
 				45626E36275541790069B89B /* ThreeAwayMarketDetailTableViewCell.swift */,
 				45626E37275541790069B89B /* ThreeAwayMarketDetailTableViewCell.xib */,
 				45626E422755599D0069B89B /* OverUnderMarketDetailTableViewCell.swift */,
@@ -12654,7 +12644,6 @@
 				450B7AE828F58574009229E3 /* DepositViewController.xib in Resources */,
 				450B7AEA28F58574009229E3 /* HomeFilterViewController.xib in Resources */,
 				450B7AEB28F58574009229E3 /* FilterSliderInfoView.xib in Resources */,
-				450B7AEC28F58574009229E3 /* ListTypeCollectionViewCell.xib in Resources */,
 				450B7AED28F58574009229E3 /* EmailVerificationViewController.xib in Resources */,
 				450B7AEE28F58574009229E3 /* MultipleBettingTicketTableViewCell.xib in Resources */,
 				450B7AEF28F58574009229E3 /* OddDoubleCollectionViewCell.xib in Resources */,
@@ -12826,7 +12815,6 @@
 				457CBC12282D27D000ED0F00 /* DepositViewController.xib in Resources */,
 				457CBC14282D27D000ED0F00 /* HomeFilterViewController.xib in Resources */,
 				457CBC15282D27D000ED0F00 /* FilterSliderInfoView.xib in Resources */,
-				457CBC16282D27D000ED0F00 /* ListTypeCollectionViewCell.xib in Resources */,
 				457CBC17282D27D000ED0F00 /* EmailVerificationViewController.xib in Resources */,
 				457CBC18282D27D000ED0F00 /* MultipleBettingTicketTableViewCell.xib in Resources */,
 				457CBC19282D27D000ED0F00 /* OddDoubleCollectionViewCell.xib in Resources */,
@@ -12985,7 +12973,6 @@
 				457CBEBA282D2CD100ED0F00 /* DepositViewController.xib in Resources */,
 				457CBEBC282D2CD100ED0F00 /* HomeFilterViewController.xib in Resources */,
 				457CBEBD282D2CD100ED0F00 /* FilterSliderInfoView.xib in Resources */,
-				457CBEBE282D2CD100ED0F00 /* ListTypeCollectionViewCell.xib in Resources */,
 				457CBEBF282D2CD100ED0F00 /* EmailVerificationViewController.xib in Resources */,
 				457CBEC0282D2CD100ED0F00 /* MultipleBettingTicketTableViewCell.xib in Resources */,
 				457CBEC1282D2CD100ED0F00 /* OddDoubleCollectionViewCell.xib in Resources */,
@@ -13148,7 +13135,6 @@
 				4589C991282024E400243547 /* DepositViewController.xib in Resources */,
 				4589C993282024E400243547 /* HomeFilterViewController.xib in Resources */,
 				4589C994282024E400243547 /* FilterSliderInfoView.xib in Resources */,
-				4589C995282024E400243547 /* ListTypeCollectionViewCell.xib in Resources */,
 				4589C997282024E400243547 /* EmailVerificationViewController.xib in Resources */,
 				4589C998282024E400243547 /* MultipleBettingTicketTableViewCell.xib in Resources */,
 				4589C999282024E400243547 /* OddDoubleCollectionViewCell.xib in Resources */,
@@ -13319,7 +13305,6 @@
 				45A33310298976BA008181E9 /* DepositViewController.xib in Resources */,
 				45A33312298976BA008181E9 /* HomeFilterViewController.xib in Resources */,
 				45A33313298976BA008181E9 /* FilterSliderInfoView.xib in Resources */,
-				45A33314298976BA008181E9 /* ListTypeCollectionViewCell.xib in Resources */,
 				45A33315298976BA008181E9 /* EmailVerificationViewController.xib in Resources */,
 				45A33316298976BA008181E9 /* MultipleBettingTicketTableViewCell.xib in Resources */,
 				45A33317298976BA008181E9 /* OddDoubleCollectionViewCell.xib in Resources */,
@@ -13470,7 +13455,6 @@
 				45A6BDEA28246A7500D9B416 /* DepositViewController.xib in Resources */,
 				45A6BDEC28246A7500D9B416 /* HomeFilterViewController.xib in Resources */,
 				45A6BDED28246A7500D9B416 /* FilterSliderInfoView.xib in Resources */,
-				45A6BDEE28246A7500D9B416 /* ListTypeCollectionViewCell.xib in Resources */,
 				45A6BDF028246A7500D9B416 /* EmailVerificationViewController.xib in Resources */,
 				45A6BDF128246A7500D9B416 /* MultipleBettingTicketTableViewCell.xib in Resources */,
 				45A6BDF228246A7500D9B416 /* OddDoubleCollectionViewCell.xib in Resources */,
@@ -13628,7 +13612,6 @@
 				45F6BDF32AB3732C00C81DE1 /* DepositViewController.xib in Resources */,
 				45F6BDF52AB3732C00C81DE1 /* HomeFilterViewController.xib in Resources */,
 				45F6BDF62AB3732C00C81DE1 /* FilterSliderInfoView.xib in Resources */,
-				45F6BDF72AB3732C00C81DE1 /* ListTypeCollectionViewCell.xib in Resources */,
 				45F6BDF82AB3732C00C81DE1 /* EmailVerificationViewController.xib in Resources */,
 				45F6BDF92AB3732C00C81DE1 /* MultipleBettingTicketTableViewCell.xib in Resources */,
 				45F6BDFA2AB3732C00C81DE1 /* OddDoubleCollectionViewCell.xib in Resources */,
@@ -13797,7 +13780,6 @@
 				A9C3434028F9A74A0055360B /* DepositViewController.xib in Resources */,
 				A9C3434228F9A74A0055360B /* HomeFilterViewController.xib in Resources */,
 				A9C3434328F9A74A0055360B /* FilterSliderInfoView.xib in Resources */,
-				A9C3434428F9A74A0055360B /* ListTypeCollectionViewCell.xib in Resources */,
 				A9C3434528F9A74A0055360B /* EmailVerificationViewController.xib in Resources */,
 				A9C3434628F9A74A0055360B /* MultipleBettingTicketTableViewCell.xib in Resources */,
 				A9C3434728F9A74A0055360B /* OddDoubleCollectionViewCell.xib in Resources */,
@@ -20357,7 +20339,7 @@
 				CODE_SIGN_IDENTITY = "Apple Development";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				CODE_SIGN_STYLE = Manual;
-				CURRENT_PROJECT_VERSION = 103400;
+				CURRENT_PROJECT_VERSION = 103401;
 				DEVELOPMENT_TEAM = QN2DYX5K4M;
 				"DEVELOPMENT_TEAM[sdk=iphoneos*]" = QN2DYX5K4M;
 				INFOPLIST_FILE = "./Clients/Betsson/Misc-PROD/Betsson-PROD-Info.plist";
@@ -20389,7 +20371,7 @@
 				CODE_SIGN_IDENTITY = "Apple Distribution";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution";
 				CODE_SIGN_STYLE = Manual;
-				CURRENT_PROJECT_VERSION = 103400;
+				CURRENT_PROJECT_VERSION = 103401;
 				DEVELOPMENT_TEAM = QN2DYX5K4M;
 				"DEVELOPMENT_TEAM[sdk=iphoneos*]" = QN2DYX5K4M;
 				INFOPLIST_FILE = "./Clients/Betsson/Misc-PROD/Betsson-PROD-Info.plist";
@@ -20543,7 +20525,7 @@
 				CODE_SIGN_IDENTITY = "Apple Development";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "Apple Development";
 				CODE_SIGN_STYLE = Manual;
-				CURRENT_PROJECT_VERSION = 103400;
+				CURRENT_PROJECT_VERSION = 103401;
 				DEBUG_INFORMATION_FORMAT = dwarf;
 				DEVELOPMENT_TEAM = "";
 				"DEVELOPMENT_TEAM[sdk=iphoneos*]" = QN2DYX5K4M;
@@ -20588,7 +20570,7 @@
 				CODE_SIGN_IDENTITY = "Apple Distribution";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution";
 				CODE_SIGN_STYLE = Manual;
-				CURRENT_PROJECT_VERSION = 103400;
+				CURRENT_PROJECT_VERSION = 103401;
 				DEVELOPMENT_TEAM = "";
 				"DEVELOPMENT_TEAM[sdk=iphoneos*]" = QN2DYX5K4M;
 				ENABLE_USER_SCRIPT_SANDBOXING = YES;

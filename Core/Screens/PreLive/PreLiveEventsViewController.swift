@@ -250,7 +250,7 @@ class PreLiveEventsViewController: UIViewController {
         filtersCollectionView.showsHorizontalScrollIndicator = false
         filtersCollectionView.alwaysBounceHorizontal = true
 
-        filtersCollectionView.register(ListTypeCollectionViewCell.nib, forCellWithReuseIdentifier: ListTypeCollectionViewCell.identifier)
+        filtersCollectionView.register(ListTypeCollectionViewCell.self, forCellWithReuseIdentifier: ListTypeCollectionViewCell.identifier)
 
         filtersCollectionView.register(CompetitionListIconCollectionViewCell.self,
                                        forCellWithReuseIdentifier: CompetitionListIconCollectionViewCell.identifier)

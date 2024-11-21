@@ -510,7 +510,11 @@ extension MatchDetailsViewModel: UICollectionViewDataSource, UICollectionViewDel
         let previousSelectionValue = self.selectedMarketTypeIndexPublisher.value ?? -1
         if indexPath.row != previousSelectionValue {
             self.selectedMarketTypeIndexPublisher.send(indexPath.row)
-            collectionView.scrollToItem(at: indexPath, at: .centeredHorizontally, animated: true)
+            
+            // Perform scroll with the same duration as UIPageViewController's default transition (0.3s)
+            UIView.animate(withDuration: 0.3, delay: 0, options: .curveEaseInOut) {
+                collectionView.scrollToItem(at: indexPath, at: .centeredHorizontally, animated: false)
+            }
         }
         else {
             self.scrollToTopAction?(indexPath.row)
