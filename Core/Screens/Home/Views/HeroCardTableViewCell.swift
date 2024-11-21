@@ -207,6 +207,8 @@ class HeroCardTableViewCell: UITableViewCell {
         let panGestureRecognizer = UIPanGestureRecognizer(target: self, action: #selector(handlePanGesture(_:)))
         panGestureRecognizer.delegate = self
         self.baseView.addGestureRecognizer(panGestureRecognizer)
+        
+        self.reloadData()
     }
     
     func stopTimer() {
@@ -300,6 +302,7 @@ class HeroCardTableViewCell: UITableViewCell {
             let firstIndexPath = IndexPath(item: 0, section: visibleIndexPath.section)
             collectionView.scrollToItem(at: firstIndexPath, at: .centeredHorizontally, animated: true)
         }
+        
     }
 
     // MARK: Actions
@@ -335,7 +338,7 @@ class HeroCardTableViewCell: UITableViewCell {
             let firstIndexPath = IndexPath(item: 0, section: visibleIndexPath.section)
             collectionView.scrollToItem(at: firstIndexPath, at: .centeredHorizontally, animated: true)
         }
-
+        
     }
     
     @IBAction private func didTapMatchView() {
