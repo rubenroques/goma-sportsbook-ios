@@ -387,14 +387,7 @@ class ProChoiceHighlightCollectionViewCell: UICollectionViewCell {
         self.drawButton.isHidden = true
         self.awayButton.isHidden = true
 
-        var availableOutcomes = (self.viewModel?.availableOutcomes ?? [])
-
-        if availableOutcomes.count > 3 {
-            availableOutcomes = availableOutcomes.sorted { outcomeLeft, outcomeRight in
-                return outcomeLeft.bettingOffer.decimalOdd < outcomeRight.bettingOffer.decimalOdd
-            }
-        }
-
+        let availableOutcomes = (self.viewModel?.availableOutcomes ?? [])
         let market = self.viewModel?.highlightedMarket.content
 
         if let outcome = availableOutcomes[safe: 0] {
@@ -1128,6 +1121,7 @@ extension ProChoiceHighlightCollectionViewCell {
             
             self.homeOutcomeNameLabel.centerXAnchor.constraint(equalTo: self.homeOutcomeBaseView.centerXAnchor),
             self.homeOutcomeNameLabel.topAnchor.constraint(equalTo: self.homeOutcomeBaseView.topAnchor, constant: 1),
+            self.homeOutcomeNameLabel.leadingAnchor.constraint(equalTo: self.homeOutcomeNameLabel.leadingAnchor, constant: 1),
             
             self.homeOutcomeValueLabel.topAnchor.constraint(equalTo: self.homeOutcomeNameLabel.bottomAnchor, constant: 4),
             self.homeOutcomeValueLabel.centerXAnchor.constraint(equalTo: self.homeOutcomeBaseView.centerXAnchor),
@@ -1149,6 +1143,7 @@ extension ProChoiceHighlightCollectionViewCell {
 
             self.drawOutcomeNameLabel.centerXAnchor.constraint(equalTo: self.drawOutcomeBaseView.centerXAnchor),
             self.drawOutcomeNameLabel.topAnchor.constraint(equalTo: self.drawOutcomeBaseView.topAnchor, constant: 1),
+            self.drawOutcomeNameLabel.leadingAnchor.constraint(equalTo: self.drawOutcomeBaseView.leadingAnchor, constant: 1),
             
             self.drawOutcomeValueLabel.topAnchor.constraint(equalTo: self.drawOutcomeNameLabel.bottomAnchor, constant: 4),
             self.drawOutcomeValueLabel.centerXAnchor.constraint(equalTo: self.drawOutcomeBaseView.centerXAnchor),
@@ -1170,6 +1165,7 @@ extension ProChoiceHighlightCollectionViewCell {
             
             self.awayOutcomeNameLabel.centerXAnchor.constraint(equalTo: self.awayOutcomeBaseView.centerXAnchor),
             self.awayOutcomeNameLabel.topAnchor.constraint(equalTo: self.awayOutcomeBaseView.topAnchor, constant: 1),
+            self.awayOutcomeNameLabel.leadingAnchor.constraint(equalTo: self.awayOutcomeBaseView.leadingAnchor, constant: 1),
             
             self.awayOutcomeValueLabel.topAnchor.constraint(equalTo: self.awayOutcomeNameLabel.bottomAnchor, constant: 4),
             self.awayOutcomeValueLabel.centerXAnchor.constraint(equalTo: self.awayOutcomeBaseView.centerXAnchor),

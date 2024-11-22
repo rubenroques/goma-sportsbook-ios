@@ -19,15 +19,21 @@ class MarketWidgetCellViewModel {
     var availableOutcomes: [Outcome] {
         let highlightedMarket = self.highlightedMarket.content
         let validOutcomesCount = self.highlightedMarket.promotedDetailsCount
-        let processedOutcomes = highlightedMarket.outcomes.filter { outcome in
+        var processedOutcomes = highlightedMarket.outcomes.filter { outcome in
             if !outcome.bettingOffer.isAvailable || outcome.bettingOffer.decimalOdd.isNaN {
                 return false
             }
             return true
         }
-        .prefix(validOutcomesCount)
-
-        return Array(processedOutcomes)
+        
+        if processedOutcomes.count > 3 {
+            processedOutcomes = processedOutcomes.sorted { outcomeLeft, outcomeRight in
+                return outcomeLeft.bettingOffer.decimalOdd < outcomeRight.bettingOffer.decimalOdd
+            }
+        }
+        
+        let prefixProcessedOutcomes = processedOutcomes.prefix(validOutcomesCount)
+        return Array(prefixProcessedOutcomes)
     }
 
     var eventImagePublisher: AnyPublisher<String, Never> {

@@ -789,7 +789,6 @@ class MatchDetailsViewController: UIViewController {
             .removeDuplicates()
             .receive(on: DispatchQueue.main)
             .sink { [weak self] newIndex in
-                self?.reloadCollectionView()
                 if let newIndex = newIndex {
                     self?.scrollToMarketDetailViewController(atIndex: newIndex)
                 }
