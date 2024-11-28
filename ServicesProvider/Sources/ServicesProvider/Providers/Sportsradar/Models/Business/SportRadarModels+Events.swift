@@ -426,7 +426,13 @@ extension SportRadarModels {
             nameValue = nameValue.replacingOccurrences(of: "\r", with: "")
             self.name = nameValue
             
+            
             self.marketTypeId = try container.decodeIfPresent(String.self, forKey: .marketTypeId)
+            
+            #if DEBUG
+            self.name = self.name + " - \(self.marketTypeId ?? "")"
+            #endif
+            
             self.eventMarketTypeId = try container.decodeIfPresent(String.self, forKey: .eventMarketTypeId)
             self.eventName = try container.decodeIfPresent(String.self, forKey: .eventName)
             self.isMainOutright = try container.decodeIfPresent(Bool.self, forKey: .isMainOutright)

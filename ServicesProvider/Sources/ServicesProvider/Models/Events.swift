@@ -531,7 +531,7 @@ public struct EventMarket {
     public var id: String
     public var name: String
     public var marketIds: [String]
-    public var order: Int
+    public var groupOrder: Int
 }
 
 public struct AvailableMarket {
