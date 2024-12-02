@@ -37,8 +37,6 @@ class MatchDetailsViewModel: NSObject {
     var shouldRenderFieldWidget: CurrentValueSubject<Bool, Never> = .init(false)
     var fieldWidgetRenderDataType: FieldWidgetRenderDataType?
 
-    private var selectedIndexPath: IndexPath?
-    
     var match: Match? {
         switch matchCurrentValueSubject.value {
         case .loaded(let match):
@@ -498,10 +496,10 @@ extension MatchDetailsViewModel: UICollectionViewDataSource, UICollectionViewDel
             cell.setupWithTitle(marketName)
             
             if let index = self.selectedMarketTypeIndexPublisher.value, index == indexPath.row {
-                cell.isSelected = true
+                cell.setSelectedType(true)
             }
             else {
-                cell.isSelected = false
+                cell.setSelectedType(false)
             }
             
             return cell
@@ -511,15 +509,6 @@ extension MatchDetailsViewModel: UICollectionViewDataSource, UICollectionViewDel
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
         let previousSelectionValue = self.selectedMarketTypeIndexPublisher.value ?? -1
         if indexPath.row != previousSelectionValue {
-            
-            // Deselect previous item if it exists
-            if let previousIndexPath = selectedIndexPath {
-                collectionView.deselectItem(at: previousIndexPath, animated: true)
-            }
-            
-            // Update selected index path
-            self.selectedIndexPath = indexPath
-            
             self.selectedMarketTypeIndexPublisher.send(indexPath.row)
             
             // Perform scroll with the same duration as UIPageViewController's default transition (0.3s)

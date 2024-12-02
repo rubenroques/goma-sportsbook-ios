@@ -21,16 +21,8 @@ class ListTypeCollectionViewCell: UICollectionViewCell {
     var selectedType: Bool = false
     var isCustomDesign: Bool = false
 
-    override var isSelected: Bool {
-        didSet {
-            self.drawSelectionState()
-        }
-    }
-    
     override init(frame: CGRect) {
         super.init(frame: frame)
-        
-        self.isSelected = false
         
         self.setupSubviews()
         self.setupWithTheme()
@@ -50,27 +42,18 @@ class ListTypeCollectionViewCell: UICollectionViewCell {
         super.prepareForReuse()
 
         self.setupWithTheme()
-        self.isSelected = false
+        self.setSelectedType(false)
     }
 
     func setupWithTheme() {
         self.normalColor = UIColor.App.pillBackground
         self.selectedColor = UIColor.App.highlightPrimary
-                        
-        self.titleLabel.textColor = UIColor.App.textPrimary
+        self.selectionHighlightView.backgroundColor = UIColor.App.highlightPrimary
+        self.labelView.backgroundColor = UIColor.App.pillBackground
         
-        self.drawSelectionState()
-    }
-    
-    private func drawSelectionState() {
-        if self.isSelected {
-            self.selectionHighlightView.backgroundColor = self.selectedColor
-            self.labelView.backgroundColor = self.normalColor
-        }
-        else {
-            self.selectionHighlightView.backgroundColor = self.normalColor
-            self.labelView.backgroundColor = self.normalColor
-        }
+        self.setupWithSelection(self.selectedType)
+        
+        self.titleLabel.textColor = UIColor.App.textPrimary
     }
 
     func setupWithTitle(_ title: String) {
@@ -90,11 +73,22 @@ class ListTypeCollectionViewCell: UICollectionViewCell {
             self.titleLabel.attributedText = attributedString
         }
     }
-    
+
     func setSelectedType(_ selected: Bool) {
-        self.isSelected = selected
+        self.selectedType = selected
+        self.setupWithSelection(self.selectedType)
     }
 
+    func setupWithSelection(_ selected: Bool) {
+        if selected {
+            self.selectionHighlightView.backgroundColor = self.selectedColor
+            self.labelView.backgroundColor = self.normalColor
+        }
+        else {
+            self.selectionHighlightView.backgroundColor = self.normalColor
+            self.labelView.backgroundColor = self.normalColor
+        }
+    }
 }
 
 // MARK: - UI Creation

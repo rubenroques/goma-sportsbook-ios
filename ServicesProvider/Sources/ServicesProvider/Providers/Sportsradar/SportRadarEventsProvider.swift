@@ -1024,6 +1024,7 @@ extension SportRadarEventsProvider {
                 let fieldWidgetId = fieldWidget.data,
                 let bundleUrl = Bundle.main.url(forResource: fileStringSplit[0], withExtension: fileStringSplit[1])
             else {
+                // 
                 return Fail(outputType: FieldWidgetRenderDataType.self, failure: ServiceProviderError.invalidResponse).eraseToAnyPublisher()
             }
             
@@ -2140,14 +2141,7 @@ extension SportRadarEventsProvider {
                         if eventSportCode.contains(marketSportType.key) || marketSportType.key.lowercased() == "all" {
                             let marketSportId = marketSport.ids[0]
                             let marketPosition = marketSport.marketOrder
-                            
-                            if marketSportId == "48" {
-                                print("break")
-                            }
-                            
-                            print("[MARKET_ORDER] set \(marketPosition) for \(marketGroupKey)-\(marketSportId)")
-                            
-                            
+ 
                             marketPositions["\(marketGroupKey)-\(marketSportId)"] = marketPosition
                             
                             selectedMarketIds.append(marketSportId)

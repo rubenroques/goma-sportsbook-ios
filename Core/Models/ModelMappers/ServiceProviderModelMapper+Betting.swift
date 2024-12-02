@@ -128,6 +128,7 @@ extension ServiceProviderModelMapper {
             transactionType = Self.stringFromTransactionType(transactionType: .automatedWithdrawal)
         }
         
+        
         if transactionDetail.amount < 0.0 {
             valueType = .loss
         }
@@ -138,8 +139,18 @@ extension ServiceProviderModelMapper {
             valueType = .neutral
         }
         
-         print("DebugTransaction: ", transactionType, transactionDetail.amount)
-        
+        if let reference = transactionDetail.reference ?? transactionDetail.escrowType {
+            switch reference.lowercased() {
+            case "esc_review", "esc_an_win", "esc_aml":
+                transactionType = localized("administrative_costs")
+                valueType = .neutral
+            case "esc_rg_def":
+                transactionType = localized("automated_withdrawal_threshold")
+            default:
+                break
+            }
+        }
+
         return TransactionHistory(transactionID: "\(transactionDetail.id)",
                                   date: transactionDetail.date,
                                   type: transactionType ?? "",
