@@ -215,7 +215,7 @@ class InAppMessageTableViewCell: UITableViewCell {
                 self.backgroundImageView.kf.setImage(with: backgroundImageUrl)
                 self.hasBackgroundImage = true
 
-                // self.logoImageView.image = UIImage(named: "logo_horizontal_center")
+                // self.logoImageView.image = UIImage(named: "brand_icon_variation_1")
                 self.hasLogoImage = false
             }
         }
@@ -317,7 +317,7 @@ extension InAppMessageTableViewCell {
     private static func createLogoImageView() -> UIImageView {
         let imageView = UIImageView()
         imageView.translatesAutoresizingMaskIntoConstraints = false
-        imageView.image = UIImage(named: "logo_horizontal_center")
+        imageView.image = UIImage(named: "brand_icon_variation_1")
         imageView.contentMode = .scaleAspectFit
         return imageView
     }

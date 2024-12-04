@@ -27,7 +27,6 @@ class HeroCardTableViewCell: UITableViewCell {
     private lazy var competitionLabel: UILabel = Self.createCompetitionLabel()
     private lazy var topSeparatorAlphaLineView: FadingView = Self.createTopSeparatorAlphaLineView()
     private lazy var collectionView: UICollectionView = Self.createCollectionView()
-//    private lazy var pageControl = Self.createPageControl()
     private lazy var pageControlBaseView: UIView = Self.createPageControlBaseView()
     private lazy var pageControl: CustomPageControl = Self.createPageControl()
 
@@ -420,7 +419,7 @@ extension HeroCardTableViewCell {
     private static func createImageGradientPatternView() -> UIImageView {
         let imageView = UIImageView()
         imageView.translatesAutoresizingMaskIntoConstraints = false
-        imageView.image = nil // UIImage(named: "gradient_pattern")
+        imageView.image = UIImage(named: "gradient_pattern")
         imageView.contentMode = .scaleAspectFill
         return imageView
     }

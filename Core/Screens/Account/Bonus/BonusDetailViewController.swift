@@ -233,7 +233,7 @@ extension BonusDetailViewController {
         let imageView = UIImageView()
         imageView.translatesAutoresizingMaskIntoConstraints = false
         imageView.contentMode = .scaleAspectFill
-        imageView.image = UIImage(named: "logo_horizontal_center")
+        imageView.image = UIImage(named: "brand_icon_variation_1")
         imageView.isHidden = true
         return imageView
     }

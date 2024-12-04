@@ -153,10 +153,10 @@ class LoginViewController: UIViewController {
         self.dismissButton.titleLabel?.font = AppFont.with(type: AppFont.AppFontType.semibold, size: 17)
         self.dismissButton.setTitle(localized("close"), for: .normal)
         
-        self.logoImageView.image = UIImage(named: "logo_horizontal_center")
+        self.logoImageView.image = UIImage(named: "brand_icon_variation_1")
         self.logoImageView.sizeToFit()
         
-        self.loginLabel.font = AppFont.with(type: AppFont.AppFontType.bold, size: 26)
+        self.loginLabel.font = AppFont.with(type: AppFont.AppFontType.bold, size: 24)
         self.loginLabel.text = localized("login")
 
         self.usernameHeaderTextFieldView.setPlaceholderText(localized("email"))
