@@ -13,42 +13,15 @@ For _fastlane_ installation instructions, see [Installing _fastlane_](https://do
 
 # Available Actions
 
-### test
-
-```sh
-[bundle exec] fastlane test
-```
-
-
-
-----
-
-
 ## iOS
 
-### ios update_version
+### ios test
 
 ```sh
-[bundle exec] fastlane ios update_version
+[bundle exec] fastlane ios test
 ```
 
-
-
-### ios certificates
-
-```sh
-[bundle exec] fastlane ios certificates
-```
-
-
-
-### ios distribute_to_firebase
-
-```sh
-[bundle exec] fastlane ios distribute_to_firebase
-```
-
-
+Print environment variables and arguments
 
 ### ios version_bump
 
@@ -56,7 +29,7 @@ For _fastlane_ installation instructions, see [Installing _fastlane_](https://do
 [bundle exec] fastlane ios version_bump
 ```
 
-
+Update build number
 
 ### ios marketing_version_bump
 
@@ -64,7 +37,23 @@ For _fastlane_ installation instructions, see [Installing _fastlane_](https://do
 [bundle exec] fastlane ios marketing_version_bump
 ```
 
+Update marketing version
 
+### ios certificates
+
+```sh
+[bundle exec] fastlane ios certificates
+```
+
+Setup certificates and provisioning profiles
+
+### ios distribute_to_firebase
+
+```sh
+[bundle exec] fastlane ios distribute_to_firebase
+```
+
+Build and distribute to Firebase
 
 ### ios betsson_uat
 
@@ -89,6 +78,14 @@ For _fastlane_ installation instructions, see [Installing _fastlane_](https://do
 ```
 
 
+
+### ios betsson_prod_hardcoded
+
+```sh
+[bundle exec] fastlane ios betsson_prod_hardcoded
+```
+
+Hardcoded lane for Betsson PROD with extension support
 
 ----
 
