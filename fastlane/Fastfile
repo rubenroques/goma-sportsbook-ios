@@ -274,8 +274,9 @@ platform :ios do
   end
 
   lane :betsson do |options|
+    version_bump
     betsson_uat(release_notes: options[:release_notes])
-    betsson_prod(release_notes: options[:release_notes])
+    #betsson_prod(release_notes: options[:release_notes])
   end
 
   desc "Hardcoded lane for Betsson PROD with extension support"
