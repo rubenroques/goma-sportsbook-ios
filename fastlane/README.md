@@ -79,14 +79,6 @@ Build and distribute to Firebase
 
 
 
-### ios betsson_prod_hardcoded
-
-```sh
-[bundle exec] fastlane ios betsson_prod_hardcoded
-```
-
-Hardcoded lane for Betsson PROD with extension support
-
 ----
 
 This README.md is auto-generated and will be re-generated every time [_fastlane_](https://fastlane.tools) is run.

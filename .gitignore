@@ -109,3 +109,5 @@ iOSInjectionProject/
 
 #ignore ENV variables
 .env
+fastlane/logs
+culprits.txt

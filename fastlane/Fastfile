@@ -20,6 +20,28 @@ SCHEME_MAPPING = {
   "Betsson PROD" => "BETSSON_PROD"
 }
 
+# Bundle ID mappings
+BUNDLE_ID_MAPPING = {
+  "BETSSON_UAT" => {
+    "main_app" => "com.gomagaming.betsson"
+  },
+  "BETSSON_PROD" => {
+    "main_app" => "fr.betsson.ios.app",
+    "notification_service" => "fr.betsson.ios.app.betssonNotificationsService"
+  }
+}
+
+# Provisioning profile mappings
+PROVISIONING_PROFILE_MAPPING = {
+  "BETSSON_UAT" => {
+    "com.gomagaming.betsson" => "match AdHoc com.gomagaming.betsson"
+  },
+  "BETSSON_PROD" => {
+    "fr.betsson.ios.app" => "match AdHoc fr.betsson.ios.app",
+    "fr.betsson.ios.app.betssonNotificationsService" => "match AdHoc fr.betsson.ios.app.betssonNotificationsService"
+  }
+}
+
 # before_all do |lane|
 #   ensure_git_status_clean unless lane == :test
 #   ensure_bundle_exec
@@ -60,8 +82,17 @@ platform :ios do
     current_build = get_build_number(xcodeproj: "Sportsbook.xcodeproj")
     puts "Current build number (CURRENT_PROJECT_VERSION): #{current_build}"
     
-    # Prompt for new build number
-    new_build = prompt(text: "Enter new build number (CURRENT_PROJECT_VERSION):")
+    # Prompt for new build number using UI.input
+    new_build = UI.input("Enter new build number (CURRENT_PROJECT_VERSION), press enter to keep current, or '+' to increment:")
+    
+    # Handle the input
+    new_build = if new_build.to_s.strip.empty?
+      current_build  # Keep current if empty
+    elsif new_build.strip == "+"
+      (current_build.to_i + 1).to_s  # Increment if +
+    else
+      new_build  # Use provided number
+    end
     
     # Update build number
     increment_build_number(
@@ -79,8 +110,11 @@ platform :ios do
     current_version = get_version_number(xcodeproj: "Sportsbook.xcodeproj")
     puts "Current version (MARKETING_VERSION): #{current_version}"
     
-    # Prompt for new version
-    new_version = prompt(text: "Enter new version number (MARKETING_VERSION):")
+    # Prompt for new version using UI.input
+    new_version = UI.input("Enter new version number (MARKETING_VERSION) or press enter to keep current:")
+    
+    # Use current version if input is empty
+    new_version = new_version.to_s.strip.empty? ? current_version : new_version
     
     # Update version
     increment_version_number(
@@ -97,18 +131,14 @@ platform :ios do
     
     # Get internal ID from scheme mapping if a scheme is provided
     internal_id = app_scheme ? SCHEME_MAPPING[app_scheme] : app_scheme
-    
-    # Validate scheme if provided
-    if internal_id && !ENV["#{internal_id}_APP_ID"]
-      UI.user_error!("Invalid scheme: #{app_scheme}")
-    end
 
     # Set Match parameters based on environment
     match_params = {
       type: "adhoc",
-      force_for_new_devices: true,
+      force_for_new_devices: false,
       readonly: true,
-      force: options[:force] || false
+      force: false,
+      verbose: false
     }
 
     case internal_id
@@ -117,14 +147,14 @@ platform :ios do
         git_url: ENV["MATCH_GIT_URL_UAT"],
         username: ENV["BETSSON_UAT_APPLE_ID"],
         team_id: ENV["BETSSON_UAT_TEAM_ID"],
-        app_identifier: ENV["BETSSON_UAT_APP_ID"]
+        app_identifier: BUNDLE_ID_MAPPING[internal_id].values
       })
     when "BETSSON_PROD"
       match_params.merge!({
         git_url: ENV["MATCH_GIT_URL_PROD"],
         username: ENV["BETSSON_PROD_APPLE_ID"],
         team_id: ENV["BETSSON_PROD_TEAM_ID"],
-        app_identifier: ENV["BETSSON_PROD_APP_ID"]
+        app_identifier: BUNDLE_ID_MAPPING[internal_id].values
       })
     else
       UI.user_error!("Please specify a valid scheme: 'Betsson UAT' or 'Betsson PROD'")
@@ -143,6 +173,8 @@ platform :ios do
 
   desc "Build and distribute to Firebase"
   lane :distribute_to_firebase do |options|
+    is_verbose = options[:verbose] == true
+    
     UI.message "🚀 Starting distribution process..."
     
     app_scheme = options[:app_scheme]
@@ -158,7 +190,7 @@ platform :ios do
       UI.user_error!("Invalid scheme: #{app_scheme}. Must be one of: #{SCHEME_MAPPING.keys.join(', ')}")
     end
     
-    UI.message "🔍 Using internal ID: #{internal_id}"
+    UI.message "🔍 Using internal ID: #{internal_id}" if is_verbose
     
     # Validate scheme and environment variables
     unless ENV["#{internal_id}_FIREBASE_APP_ID"]
@@ -171,70 +203,42 @@ platform :ios do
     unless firebase_cli_token
       UI.user_error!("Missing Firebase CLI token for environment: #{environment}")
     end
-
-    # Generate release notes if not provided
-    #unless release_notes
-    #  UI.message "📝 Generating release notes from git commits..."
-    #  # Get last 5 commits
-    #  changelog = changelog_from_git_commits(
-    #    commits_count: 5,
-    #    pretty: "- %s",
-    #    date_format: "short",
-    #    match_lightweight_tag: false,
-    #    merge_commit_filtering: "exclude_merges"
-    #  )
-    #  version = get_version_number(xcodeproj: "Sportsbook.xcodeproj")
-    #  build = get_build_number(xcodeproj: "Sportsbook.xcodeproj")
-    #  
-    #  UI.message "📊 Version: #{version}, Build: #{build}"
-    #  release_notes = "#{app_scheme} v#{version} (#{build})\n\nRecent changes:\n#{changelog}"
-    #end
-    
-    # Run tests if requested
-    #if options[:run_tests]
-    #  UI.message "🧪 Running tests..."
-    #  test
-    #end
     
     # Update certificates
-    UI.message "🔐 Updating certificates..."
+    UI.message "🔐 Updating certificates..." if is_verbose
     certificates(app_scheme: app_scheme)
     
     # Print Xcode version
-    UI.message "🛠 Xcode Version:"
-    sh("xcodebuild -version")
-    
-    # Print available schemes
-    UI.message "📋 Available Schemes:"
-    sh("xcodebuild -list -project ../Sportsbook.xcodeproj")
-    
-    # Print build settings
-    UI.message "⚙️ Build Settings for #{app_scheme}:"
-    sh("xcodebuild -showBuildSettings -scheme \"#{app_scheme}\" -project ../Sportsbook.xcodeproj")
-    
-    UI.message "🏗 Starting build process..."
+    if is_verbose
+      UI.message "🛠 Xcode Version:"
+      sh("xcodebuild -version")
+    end
+
+    UI.message "🏗 Starting build process..." if is_verbose
     
     # Build app with detailed output
     build_ios_app(
       scheme: app_scheme,
       clean: true,
-      silent: false,
-      suppress_xcode_output: false,
+      silent: !is_verbose,
+      suppress_xcode_output: !is_verbose,  # Only show xcodebuild output in verbose mode
       skip_profile_detection: true,
       export_method: "ad-hoc",
       export_options: {
         compileBitcode: false,
         uploadBitcode: false,
         uploadSymbols: true,
-        manageAppVersionAndBuildNumber: false
+        manageAppVersionAndBuildNumber: false,
+        provisioningProfiles: PROVISIONING_PROFILE_MAPPING[internal_id]
       },
+      xcargs: is_verbose ? "-verbose" : nil,
       buildlog_path: "fastlane/logs",
       output_directory: "fastlane/builds",
-      xcargs: "-verbose",
-      analyze_build_time: true,
+      analyze_build_time: is_verbose,
       include_symbols: true,
       include_bitcode: false,
-      export_xcargs: "-verbose"
+      export_xcargs: is_verbose ? "-verbose" : nil,
+      xcodebuild_formatter: nil  # Remove xcpretty since we're using suppress_xcode_output
     )
     
     UI.message "📦 Build completed. Uploading to Firebase..."
@@ -245,13 +249,10 @@ platform :ios do
       firebase_cli_token: firebase_cli_token,
       groups: firebase_groups,
       release_notes: release_notes,
-      debug: true
+      debug: is_verbose
     )
     
     UI.success "✅ Distribution completed successfully!"
-    
-    # Print build time summary
-    UI.message "⏱ Build time summary available in fastlane/logs"
   end
 
   # Existing lanes with improved error handling
@@ -259,8 +260,8 @@ platform :ios do
     distribute_to_firebase(
       app_scheme: "Betsson UAT",
       environment: "UAT",
-      run_tests: true,
-      release_notes: options[:release_notes]
+      release_notes: options[:release_notes],
+      verbose: options[:verbose]
     )
   end
 
@@ -268,38 +269,21 @@ platform :ios do
     distribute_to_firebase(
       app_scheme: "Betsson PROD",
       environment: "PROD",
-      run_tests: true,
-      release_notes: options[:release_notes]
+      release_notes: options[:release_notes],
+      verbose: options[:verbose]
     )
   end
 
   lane :betsson do |options|
     version_bump
-    betsson_uat(release_notes: options[:release_notes])
-    #betsson_prod(release_notes: options[:release_notes])
+    betsson_uat(
+      release_notes: options[:release_notes],
+      verbose: options[:verbose]
+    )
+    betsson_prod(
+      release_notes: options[:release_notes],
+      verbose: options[:verbose]
+    )
   end
 
-  desc "Hardcoded lane for Betsson PROD with extension support"
-  lane :betsson_prod_hardcoded do
-    # Get certificates for both main app and extension
-    match(
-      type: "adhoc",
-      git_url: "git@github.com:gomagaming/BetssonFastlaneAppleCertificates.git",
-      app_identifier: [
-        "fr.betsson.ios.app",
-        "fr.betsson.ios.app.betssonNotificationsService"
-      ],
-      username: "ruben@gomadevelopment.pt",
-      team_id: "QN2DYX5K4M",
-      readonly: false
-    )
-    
-    # Build the app
-    build_ios_app(
-      scheme: "Betsson PROD",
-      clean: true,
-      export_method: "ad-hoc",
-      skip_profile_detection: true
-    )
-  end
 end
