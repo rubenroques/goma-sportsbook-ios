@@ -417,7 +417,7 @@ class DepositViewController: UIViewController {
                 var starAnimation = LottieAnimation.named("deposit_animation")
                 
                 if isFirstDeposit {
-                    starAnimation = LottieAnimation.named("first_deposit_7")
+                    starAnimation = LottieAnimation.named("first_deposit_8")
                 }
 
                 animationView.animation = starAnimation
