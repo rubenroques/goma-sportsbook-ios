@@ -81,7 +81,6 @@ class SportTypeStore {
                                                  liveEventsCount: liveSport.numberEvents)
                             
                             updatedSportsList.append(newSport)
-                            print("Added new Sport for alphaCode: \(liveSport)")
                         }
                     }
                     return .loaded(updatedSportsList)
@@ -99,7 +98,7 @@ class SportTypeStore {
     }
 
     deinit {
-        print("SportTypeStore deinit")
+
     }
 
     func requestInitialSportsData() {
@@ -141,7 +140,7 @@ class SportTypeStore {
                     
                     self?.liveSportsCountCurrentValueSubject.send(finalSports)
                 case .disconnected:
-                    print("SportTypeStore subscribeLiveSportTypes")
+                    break
                 }
             })
             .store(in: &self.cancellables)
@@ -167,11 +166,7 @@ class SportTypeStore {
                 let filteredSports = sports.filter({
                     $0.eventsCount > 0 || $0.liveEventsCount > 0 || $0.outrightEventsCount > 0
                 })
-                
                 self?.activeSportsCurrentValueSubject.send(.loaded(filteredSports))
-
-                print(sportTypes.map({ return "Sport: \($0.name) \($0.iconId) \($0.numericId) \($0.alphaId);" }))
-                
             case .disconnected:
                 break
             }

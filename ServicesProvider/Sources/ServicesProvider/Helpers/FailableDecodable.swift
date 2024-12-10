@@ -16,13 +16,13 @@ struct FailableDecodable<Content: Codable>: Codable {
         do {
             self.content = try container.decode(Content.self)
         } catch let DecodingError.typeMismatch(type, context)  {
-            print("FailableDecodable Error: Type '\(type)' mismatch: \(context.debugDescription); codingPath: \(context.codingPath)")
+            //print("FailableDecodable Error: Type '\(type)' mismatch: \(context.debugDescription); codingPath: \(context.codingPath)")
             self.content = nil
         } catch let DecodingError.valueNotFound(type, context)  {
-            print("FailableDecodable Error: Type '\(type)' mismatch: \(context.debugDescription); codingPath: \(context.codingPath)")
+            //print("FailableDecodable Error: Type '\(type)' mismatch: \(context.debugDescription); codingPath: \(context.codingPath)")
             self.content = nil
         } catch {
-            print("FailableDecodable Error: Unknown error decoding \(error)")
+            //print("FailableDecodable Error: Unknown error decoding \(error)")
             self.content = nil
         }
     }

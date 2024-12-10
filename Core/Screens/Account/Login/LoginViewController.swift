@@ -206,9 +206,6 @@ class LoginViewController: UIViewController {
         debugLogoImageViewTap.numberOfTapsRequired = 3
         self.logoImageView.addGestureRecognizer(debugLogoImageViewTap)
          #endif
-
-        // let tapTest = UITapGestureRecognizer.init(target: self, action: #selector(didTapTest))
-        // self.logoImageView.addGestureRecognizer(tapTest)
     }
     
     @objc private func didTapTest() {
@@ -780,9 +777,14 @@ class LoginViewController: UIViewController {
 extension LoginViewController {
 
     @objc func didTapDebugFormFill() {
-        if self.usernameHeaderTextFieldView.text.isEmpty || self.usernameHeaderTextFieldView.text == "ruben" {
+        if self.usernameHeaderTextFieldView.text.isEmpty {
             self.usernameHeaderTextFieldView.setText("gomaTest") // ("pafeha4474@lance7.com") // ("gomafrontend") // ("ruben@gomadevelopment.pt")
             self.passwordHeaderTextFieldView.setText("Testaccount!1") // ("iosGoma123") // ("Omega123") // ("ruben=GOMA=12345")
+            self.loginButton.isEnabled = true
+        }
+        else if self.usernameHeaderTextFieldView.text == "gomaTest" {
+            self.usernameHeaderTextFieldView.setText("rroques107")
+            self.passwordHeaderTextFieldView.setText("Ruben-Goma-12345")
             self.loginButton.isEnabled = true
         }
         else if self.usernameHeaderTextFieldView.text == "gomaTest" {

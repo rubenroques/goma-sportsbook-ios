@@ -22,29 +22,12 @@ class SportRadarEventStorage {
     private var marketsDictionary: OrderedDictionary<String, CurrentValueSubject<Market, Never>>
     private var outcomesDictionary: OrderedDictionary<String, CurrentValueSubject<Outcome, Never>>
 
-    #if DEBUG
-    private var removedMarkets: [String: Market] = [:]
-    #endif
-
     private var cancellables = Set<AnyCancellable>()
 
     init() {
         self.eventSubject = .init(nil)
         self.marketsDictionary = [:]
         self.outcomesDictionary = [:]
-
-//
-//        #if DEBUG
-//        self.eventSubject
-//            .compactMap({ $0 })
-//            .sink { [weak self] (event: Event) in
-//                let marketsS: String? = event.markets.map({ return "\($0.isMainMarket)-\($0.name)" }).joined(separator: ",")
-//                let removedmarketsS: String? = self?.removedMarkets.values.map({ "[\($0.isMainMarket)-\($0.name)]" }).joined(separator: ",")
-//
-//                print("DebugMainMarket: \(event.homeTeamName): [\(marketsS ?? "")] {\(removedmarketsS ?? "")}")
-//            }
-//            .store(in: &self.cancellables)
-//        #endif
     }
 
     func reset() {
@@ -139,12 +122,6 @@ extension SportRadarEventStorage {
 
         market.isMainMarket = true
 
-//        #if DEBUG
-//        if let removedMarket = self.marketsDictionary[removedMainMarketId] {
-//            self.removedMarkets[removedMainMarketId] = removedMarket.value
-//        }
-//        #endif
-
         // remove old main market
         self.marketsDictionary.removeValue(forKey: removedMainMarketId)
 
@@ -189,13 +166,6 @@ extension SportRadarEventStorage {
 
 
     func removeMarket(withId id: String) {
-
-//        #if DEBUG
-//        if let removedMarket = self.marketsDictionary[id] {
-//            self.removedMarkets[id] = removedMarket.value
-//        }
-//        #endif
-
         self.marketsDictionary.removeValue(forKey: id)
         
         let updatedMarkets: [Market] = self.marketsDictionary.values.map(\.value)

@@ -1993,11 +1993,7 @@ extension SportRadarEventsProvider {
                     return fullEvent.eventId.split(separator: ":").last
                 }
                 .map(String.init)
-            #if DEBUG
-            return eventsIds // ["3891500.1"] // DEBUG EVENTS FOR LIVE SECTION
-            #else
             return eventsIds
-            #endif
         })
         .mapError({ error in
             return error
@@ -2234,16 +2230,8 @@ extension SportRadarEventsProvider {
         }
 
         for availableMarket in availableMarkets {
-            print("[MARKET_ORDER] Market positions: \(marketPositions)")
-            
             let groupMarkets = availableMarket.value
                 .map(\.market)
-            
-            print("[MARKET_ORDER] Before sorting - Market positions:")
-            for market in groupMarkets {
-                let position = marketPositions[market.marketTypeId ?? ""] ?? 999
-                print("[MARKET_ORDER] Market: \(market.marketTypeId ?? "unknown"), Position: \(position)")
-            }
             
             let sortedMarkets = groupMarkets
                 .sorted { lhs, rhs in
@@ -2256,11 +2244,6 @@ extension SportRadarEventsProvider {
                     return lhsPosition < rhsPosition
                 }
             
-            print("[MARKET_ORDER] After sorting - Market order:")
-            for (index, market) in sortedMarkets.enumerated() {
-                print("[MARKET_ORDER] Position \(index): Market \(market.marketTypeId ?? "unknown")")
-            }
-            
             let marketGroup = MarketGroup(type: availableMarket.key,
                                           id: availableMarket.value.first?.marketGroupId ?? "0",
                                           groupKey: "\(availableMarket.value.first?.marketGroupId ?? "0")",
@@ -2271,7 +2254,6 @@ extension SportRadarEventsProvider {
                                           markets: sortedMarkets)
 
             marketGroups[availableMarket.key] = marketGroup
-            print("[MARKET_ORDER] Added market group: \(availableMarket.key) with position: \(marketGroup.position ?? 0)")
         }
 
         var marketGroupsArray = Array(marketGroups.values)

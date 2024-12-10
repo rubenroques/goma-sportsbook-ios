@@ -2012,3 +2012,5 @@ Pour le faire, il faut s’adresser à l’Autorité Nationale des Jeux (ANJ).";
 "cashback_video_url" = "/promotions/cashbackVideo.mp4";
 
 "administrative_costs" = "Frais administratifs";
+
+"betting_fail_to_place_bets" = "Something went wrong while placing your Bet(s).";

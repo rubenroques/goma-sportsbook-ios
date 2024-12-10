@@ -57,13 +57,7 @@ class GeoLocationManager: NSObject, CLLocationManagerDelegate {
     }
 
     func startGeoLocationUpdates() {
-
         Logger.log("startGeoLocationUpdates")
-//
-//        #if DEBUG
-//        locationManager?.startUpdatingLocation()
-//        return
-//        #endif
 
         if CLLocationManager.significantLocationChangeMonitoringAvailable() {
             locationManager?.startMonitoringSignificantLocationChanges()
@@ -126,7 +120,6 @@ class GeoLocationManager: NSObject, CLLocationManagerDelegate {
         self.locationStatus.send(.valid)
 
         // TODO: Check if the user location is valid
-
 //        Logger.log("checkValidLocation \(location.coordinate) | \(CLLocationManager.authorizationStatus())")
 //
 //        Env.gomaNetworkClient.requestGeoLocation(deviceId: Env.deviceId,

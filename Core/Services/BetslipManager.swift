@@ -74,30 +74,18 @@ class BetslipManager: NSObject {
             .store(in: &self.cancellables)
         
         self.bettingTicketsPublisher
-            .removeDuplicates()
+            .removeDuplicates(by: { left, right in
+                left.map(\.id) == right.map(\.id)
+            })
             .sink { [weak self] tickets in
                 self?.refreshBetBuilderPotentialReturn()
-                // self?.betBuilderTransformer.updateBettingTickets(tickets)
             }
             .store(in: &cancellables)
-
-//        self.bettingTicketsPublisher
-//            .removeDuplicates()
-//            .withPrevious([])
-//            .sink { [weak self] previousTickets, currentTickets  in
-//                if previousTickets.count > currentTickets.count {
-//                    // Is removing
-//                    print("MixMatchDebug: is removing tickets")
-//                }
-//                else if previousTickets.count < currentTickets.count {
-//                    print("MixMatchDebug: is adding tickets")
-//                    self?.refreshBetBuilderPotentialReturn()
-//                }
-//            }
-//            .store(in: &self.cancellables)
         
         self.bettingTicketsPublisher
-            .removeDuplicates()
+            .removeDuplicates(by: { left, right in
+                left.map(\.id) == right.map(\.id)
+            })
             .filter({ return !$0.isEmpty })
             .sink(receiveValue: { [weak self] bettingTickets in
                 self?.requestAllowedBetTypes(withBettingTickets: bettingTickets)
@@ -660,6 +648,8 @@ extension BetslipManager {
                     return BetslipErrorType.betPlacementDetailedError(message: message)
                 case .betNeedsUserConfirmation(let betDetails):
                     return BetslipErrorType.betNeedsUserConfirmation(betDetails: betDetails)
+                case .badRequest:
+                    return BetslipErrorType.betPlacementError
                 default:
                     return BetslipErrorType.betPlacementError
                 }
@@ -1028,6 +1018,7 @@ extension BetslipManager {
         }
         
         let betTicket = BetTicket.init(tickets: betTicketSelections, stake: stake, betGroupingType: BetGroupingType.multiple(identifier: ""))
+        
         let publisher =  Env.servicesProvider.placeBetBuilderBet(betTicket: betTicket, calculatedOdd: calculatedOdd)
             .mapError({ error in
                 switch error {
@@ -1045,6 +1036,8 @@ extension BetslipManager {
                     return BetslipErrorType.betPlacementDetailedError(message: message)
                 case .betNeedsUserConfirmation(let betDetails):
                     return BetslipErrorType.betNeedsUserConfirmation(betDetails: betDetails)
+                case .badRequest, .internalServerError:
+                    return BetslipErrorType.betPlacementError
                 default:
                     return BetslipErrorType.betPlacementError
                 }

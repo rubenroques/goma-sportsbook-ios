@@ -1057,13 +1057,15 @@ class PreSubmissionBetslipViewController: UIViewController {
             })
             .store(in: &self.cancellables)
 
+        //
+        // BetBuilder logic
         Publishers.CombineLatest3(debounceRealValuePublisher, self.listTypePublisher, Env.betslipManager.bettingTicketsPublisher)
             .filter({ _, listTypePublisher, _ -> Bool in
                 return listTypePublisher == .betBuilder
             })
             .receive(on: DispatchQueue.main)
             .sink(receiveValue: { [weak self] bettingValue, listTypePublisher, bettingTickets in
-
+                
                 let ticketsMatches = bettingTickets.map(\.matchId)
                 let allBetsSameMatch = Set(ticketsMatches).count == 1
 
@@ -1083,10 +1085,26 @@ class PreSubmissionBetslipViewController: UIViewController {
                     }
                 }
 
-                self?.placeBetButton.isEnabled = hasValidBettingValue
             })
             .store(in: &self.cancellables)
 
+        // PlaceBetButton for betBuilder
+        Publishers.CombineLatest3(debounceRealValuePublisher, self.listTypePublisher, Env.betslipManager.bettingTicketsPublisher)
+            .filter({ _, listTypePublisher, _ -> Bool in
+                return listTypePublisher == .betBuilder
+            })
+            .receive(on: DispatchQueue.main)
+            .sink(receiveValue: { [weak self] bettingValue, listTypePublisher, bettingTickets in
+                let ticketsMatches = bettingTickets.map(\.matchId)
+                let allBetsSameMatch = Set(ticketsMatches).count == 1
+                let hasValidBettingValue = bettingValue > 0.0 && allBetsSameMatch
+                
+                self?.placeBetButton.isEnabled = hasValidBettingValue
+            })
+            .store(in: &self.cancellables)
+        
+        //
+        //
         Publishers.CombineLatest3(self.listTypePublisher, self.simpleBetsBettingValues, Env.betslipManager.bettingTicketsPublisher)
             .receive(on: DispatchQueue.main)
             .filter { betslipType, _, _ in
@@ -2561,6 +2579,8 @@ extension PreSubmissionBetslipViewController {
                         self?.showErrorView(errorMessage: detailedMessage)
                     case .betNeedsUserConfirmation(let betDetails):
                         self?.requestUserConfirmationForBoostedBet(betDetails: betDetails)
+                    case .betPlacementError:
+                        self?.showErrorView(errorMessage: localized("betting_fail_to_place_bets"))
                     default:
                         self?.showErrorView(errorMessage: localized("error_placing_bet"))
                     }

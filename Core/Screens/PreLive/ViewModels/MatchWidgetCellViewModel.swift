@@ -426,11 +426,10 @@ extension MatchWidgetCellViewModel {
             .sink(receiveCompletion: { [weak self] completion in
                 switch completion {
                 case .finished:
-                    print("MatchWidgetCellViewModel subscribeMatchLiveDataOnLists finished")
+                    break
                 case .failure(let error):
                     switch error {
                     case .resourceNotFound:
-                        print("MatchWidgetCellViewModel subscribeMatchLiveDataOnLists resourceNotFound should fallback: \(shouldRequestLiveDataFallback)")
                         if shouldRequestLiveDataFallback {
                             self?.subscribeMatchLiveDataUpdates(withId: matchId)
                         }
@@ -446,13 +445,7 @@ extension MatchWidgetCellViewModel {
     
     private func subscribeMatchLiveDataUpdates(withId matchId: String) {
         Env.servicesProvider.subscribeToLiveDataUpdates(forEventWithId: matchId)
-            .sink(receiveCompletion: { [weak self] completion in
-                switch completion {
-                case .finished:
-                    print("MatchWidgetCellViewModel subscribeMatchLiveDataUpdates finished")
-                case .failure(let error):
-                    print("MatchWidgetCellViewModel subscribeMatchLiveDataUpdates error \(error)")
-                }
+            .sink(receiveCompletion: { [weak self] _ in
                 self?.liveMatchDetailsSubscription = nil
             }, receiveValue: { [weak self] (eventSubscribableContent: SubscribableContent<ServicesProvider.EventLiveData>) in
                 switch eventSubscribableContent {

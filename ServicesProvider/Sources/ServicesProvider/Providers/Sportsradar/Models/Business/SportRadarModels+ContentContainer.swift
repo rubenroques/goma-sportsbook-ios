@@ -184,10 +184,6 @@ extension SportRadarModels {
             let container = try decoder.container(keyedBy: CodingKeys.self)
 
             let changeType: String = (try? container.decode(String.self, forKey: .changeType)) ?? ""
-
-            
-            // let path: String = try container.decodeIfPresent(String.self, forKey: .path) ?? ""
-            // print("ServiceProviderLogs: path:\(path)")
             
             switch changeType.lowercased() {
             case "refreshed":
@@ -332,11 +328,6 @@ extension SportRadarModels {
             let contentIdentifier = try container.decode(ContentIdentifier.self, forKey: .content)
             let path: String = try container.decodeIfPresent(String.self, forKey: .path) ?? ""
             
-            if contentType == .eventMainMarket && path.lowercased().contains("idfomarket") {
-                print("parseUpdated break")
-            }
-
-
             if case let ContentRoute.eventMainMarket(eventId) = contentIdentifier.contentRoute {
                 if let event = try? container.decode(SportRadarModels.Event.self, forKey: .change) {
                     return .updateEventMainMarket(contentIdentifier: contentIdentifier, event: event)
@@ -711,7 +702,7 @@ extension SportRadarModels {
                 return .updateMarketTradability(contentIdentifier: contentIdentifier, marketId: marketId, isTradable: newIsTradable)
             }
             else if path.contains("selections"), let selectionId = SocketMessageParseHelper.extractSelectionId(path) {
-                print("Updated Selection \(selectionId)")
+                // print("Updated Selection \(selectionId)")
             }
             else if contentIdentifier.contentType == .market, // Is a contentRout of market updates
                     path == "istradable", // the path is istradable
@@ -731,10 +722,6 @@ extension SportRadarModels {
             
             let contentIdentifier = try container.decode(ContentIdentifier.self, forKey: .content)
             let path: String = try container.decodeIfPresent(String.self, forKey: .path) ?? ""
-            
-            if contentType == .eventMainMarket && path.lowercased().contains("idfomarket") {
-                print("parseAdded break")
-            }
 
             if case let ContentRoute.liveSports = contentIdentifier.contentRoute {
                 if path.contains("idfosporttype"),
@@ -788,9 +775,6 @@ extension SportRadarModels {
             let contentIdentifier = try container.decode(ContentIdentifier.self, forKey: .content)
             let path: String = try container.decodeIfPresent(String.self, forKey: .path) ?? ""
 
-            if contentType == .eventMainMarket && path.lowercased().contains("idfomarket") {
-                print("parseRemoved break")
-            }
 
             if case ContentRoute.liveSports = contentIdentifier.contentRoute {
                 if path.contains("idfosporttype"),

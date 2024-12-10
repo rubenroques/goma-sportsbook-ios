@@ -377,13 +377,12 @@ extension UserSessionStore {
             .sink(receiveCompletion: { completion in
                 switch completion {
                 case .finished:
-                    print("LoginViewController setTermsConsents finished")
+                    break
                 case .failure(let error):
                     print("LoginViewController setTermsConsents failure with error \(error)")
                 }
 
             }, receiveValue: { [weak self] userConsentsArray in
-                
                 if userConsentsArray.contains(where: { userConsent in
                     userConsent.type == .terms &&
                     userConsent.status != .consented &&
@@ -394,8 +393,6 @@ extension UserSessionStore {
                 else {
                     self?.shouldAcceptTermsUpdatePublisher.send(false)
                 }
-
-                print("LoginViewController setTermsConsents ok")
             })
             .store(in: &self.cancellables)
     }
@@ -525,17 +522,6 @@ extension UserSessionStore {
     }
 
     func refreshUserWallet() {
-
-        if Thread.isMainThread {
-            // This code is running on the main thread
-            // You can put your main-thread-specific logic here
-            print("UserSessionStore refreshUserWallet isMainThread")
-        } else {
-            // This code is running on a background thread
-            // You may need to dispatch UI-related tasks to the main thread if necessary
-            print("UserSessionStore refreshUserWallet not isMainThread")
-        }
-
         guard self.isUserLogged() else {
             self.isRefreshingUserWallet = false
             return
@@ -550,7 +536,7 @@ extension UserSessionStore {
         
         self.isRefreshingUserWallet = true
 
-        Logger.log("UserSessionStore - refreshUserWallet")
+        Logger.log("UserSessionStore - will refreshUserWallet")
 
         Env.servicesProvider.getUserBalance()
             .receive(on: DispatchQueue.main)
@@ -606,10 +592,8 @@ extension UserSessionStore {
         
         Env.servicesProvider.getProfile()
             .receive(on: DispatchQueue.main)
-            .sink(receiveCompletion: { [weak self] completion in
-                if case .failure = completion {
-                    print("USER PROFILE ERROR")
-                }
+            .sink(receiveCompletion: { _ in
+                //
             }, receiveValue: { [weak self] userProfile in
                 
                 var currentUserProfile = self?.userProfilePublisher.value
@@ -659,7 +643,7 @@ extension UserSessionStore {
                     case .failedTempLock(let date):
                         break
                     }
-                    print("UserSessionStore login failed, error: \(error)")
+                    print("UserSessionStore - login failed, error: \(error)")
                 case .finished:
                     ()
                 }
@@ -681,8 +665,8 @@ extension UserSessionStore {
         Env.gomaNetworkClient.requestLogin(deviceId: Env.deviceId, loginForm: userLoginForm)
             .receive(on: DispatchQueue.main)
             .sink(receiveCompletion: { _ in
-                
-            }, receiveValue: { [weak self] value in
+                //
+            }, receiveValue: { value in
                 Env.gomaNetworkClient.refreshAuthToken(token: value)
                 Env.gomaSocialClient.connectSocket()
 

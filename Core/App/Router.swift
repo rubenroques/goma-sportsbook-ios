@@ -58,15 +58,12 @@ class Router {
     init(window: UIWindow) {
         self.rootWindow = window
 
-        print("DebugRouter: init window \(window)")
-              
         NotificationCenter.default.addObserver(self, selector: #selector(applicationDidBecomeActive),
                                                name: UIApplication.didBecomeActiveNotification,
                                                object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(applicationDidBecomeActive),
                                                name: UIApplication.willEnterForegroundNotification,
                                                object: nil)
-
     }
 
     func makeKeyAndVisible() {
@@ -84,38 +81,19 @@ class Router {
             self.rootWindow.overrideUserInterfaceStyle = UIUserInterfaceStyle.unspecified
         }
 
-//        #if DEBUG
-//        let testVC = GenericCellTestViewController(
-//            cellClass: ProChoiceHighlightTableViewCell.self,
-//            configureCell: { cell, index in
-//                cell.configure(with: ProChoiceHighlightViewModel.empty)
-//            },
-//            numberOfRows: 10
-//        )
-//        self.rootWindow.rootViewController = testVC
-//        self.rootWindow.makeKeyAndVisible()
-//
-//        #else
         let splashViewController = SplashViewController(loadingCompleted: {
             self.showPostLoadingFlow()
         })
 
-        print("DebugRouter: rootWindow.rootViewController = splashViewController")
-              
         self.rootWindow.rootViewController = splashViewController
-        
-        print("DebugRouter makeKeyAndVisible")
         self.rootWindow.makeKeyAndVisible()
-//        #endif
     }
     
     func setSupportedLanguages() {
-        
         // Force the target supported languages
         let targetSupportedLanguages = TargetVariables.supportedLanguages.map(\.languageCode)
         UserDefaults.standard.set(targetSupportedLanguages, forKey: "AppleLanguages")
         UserDefaults.standard.synchronize()
-        
     }
 
     @objc func applicationDidBecomeActive(notification: NSNotification) {
@@ -124,29 +102,19 @@ class Router {
 
     func showPostLoadingFlow() {
 
-        print("DebugRouter showPostLoadingFlow")
-        
         var bootRootViewController: UIViewController
         if Env.userSessionStore.isUserLogged() || UserSessionStore.didSkipLoginFlow() {
             let rootViewController = RootViewController(defaultSport: Env.sportsStore.defaultSport)
             self.mainRootViewController = rootViewController
-            
-            print("DebugRouter showPostLoadingFlow - root")
-            
             bootRootViewController = Router.mainScreenViewControllerFlow(rootViewController)
         }
         else {
-            
-            print("DebugRouter showPostLoadingFlow - login")
-            
             bootRootViewController = Router.createLoginViewControllerFlow()
         }
         
         self.subscribeToUserActionBlockers()
         self.subscribeToURLRedirects()
         self.subscribeToNotificationsOpened()
-
-        print("DebugRouter set rootViewController")
         
         self.rootWindow.rootViewController = bootRootViewController
     }
@@ -305,25 +273,13 @@ class Router {
             .receive(on: DispatchQueue.main)
             .first()
             .sink(receiveValue: { [weak self] _ in
-                print("OPENING PUSH NOTIFICATION!")
                 self?.appSharedState = .inactiveApp
                 self?.openRoute(route)
             })
             .store(in: &cancellables)
-//        Env.servicesProvider.eventsConnectionStatePublisher
-//            .filter({ $0 == .connected })
-//            .receive(on: DispatchQueue.main)
-//            .first()
-//            .sink(receiveValue: { [weak self] _ in
-//                print("OPENING PUSH NOTIFICATION!")
-//                self?.appSharedState = .inactiveApp
-//                self?.openRoute(route)
-//            })
-//            .store(in: &cancellables)
     }
 
     func openRoute(_ route: Route) {
-        print("DebugRouter openRoute \(route)")
         
         switch route {
         case .openBet(let id):
@@ -365,14 +321,12 @@ class Router {
 
     // MaintenanceScreen
     func showUnderMaintenanceScreenOnBoot() {
-        print("DebugRouter showUnderMaintenanceScreenOnBoot")
         let maintenanceViewController = MaintenanceViewController()
         self.rootWindow.rootViewController = maintenanceViewController
         self.rootWindow.makeKeyAndVisible()
     }
     
     func showUnderMaintenanceScreen(withReason reason: String) {
-        print("DebugRouter showUnderMaintenanceScreen")
         if let presentedViewController = self.rootViewController?.presentedViewController {
             if !(presentedViewController is MaintenanceViewController) {
                 presentedViewController.dismiss(animated: false, completion: nil)
@@ -384,7 +338,6 @@ class Router {
     }
 
     func hideUnderMaintenanceScreen() {
-        print("DebugRouter hideUnderMaintenanceScreen")
         if let presentedViewController = self.rootViewController?.presentedViewController,
            presentedViewController is MaintenanceViewController {
             presentedViewController.dismiss(animated: true, completion: nil)
@@ -393,13 +346,11 @@ class Router {
 
     // Required Update Screen
     func showRequiredUpdateScreen() {
-        print("DebugRouter showRequiredUpdateScreen")
         let versionUpdateViewController = VersionUpdateViewController(updateRequired: true)
         self.rootViewController?.present(versionUpdateViewController, animated: true, completion: nil)
     }
 
     func hideRequiredUpdateScreen() {
-        print("DebugRouter hideRequiredUpdateScreen")
         if let presentedViewController = self.rootViewController?.presentedViewController,
            presentedViewController is VersionUpdateViewController {
             presentedViewController.dismiss(animated: true, completion: nil)
@@ -425,7 +376,6 @@ class Router {
     }
 
     func hideLocationScreen() {
-        print("DebugRouter hideLocationScreen")
         if let presentedViewController = self.rootViewController?.presentedViewController {
             if presentedViewController is ForbiddenLocationViewController ||
                 presentedViewController is RequestLocationAccessViewController ||
@@ -436,7 +386,6 @@ class Router {
     }
 
     func showInvalidLocationScreen() {
-        print("DebugRouter showInvalidLocationScreen")
         self.hideLocationScreen()
 
         let forbiddenAccessViewController = ForbiddenLocationViewController()
@@ -444,7 +393,6 @@ class Router {
     }
 
     func showRequestLocationScreen() {
-        print("DebugRouter showRequestLocationScreen")
         self.hideLocationScreen()
 
         let permissionAccessViewController = RequestLocationAccessViewController()
@@ -452,7 +400,6 @@ class Router {
     }
 
     func showRequestDeniedLocationScreen() {
-        print("DebugRouter showRequestDeniedLocationScreen")
         self.hideLocationScreen()
 
         let refusedAccessViewController = RefusedAccessViewController()
@@ -540,19 +487,13 @@ class Router {
             case .inactiveApp:
                 
                 if let rootViewController = self.mainRootViewController {
-                    
                     rootViewController.openBetslipModalWithShareData(ticketToken: token)
                 }
                 
                 if let currentViewController = self.rootViewController as? RootViewController {
-                    
                     currentViewController.openBetslipModalWithShareData(ticketToken: token)
                 }
                 
-//                let betslipViewController = BetslipViewController(startScreen: .sharedBet(token))
-//
-//                let navigationViewController = Router.navigationController(with: betslipViewController)
-//                self.rootViewController?.present(navigationViewController, animated: true, completion: nil)
             case .activeApp:
 
                 Env.servicesProvider.eventsConnectionStatePublisher
@@ -586,7 +527,6 @@ class Router {
     //
     // User actions tracking
     func showUserTrackingViewController() {
-        print("DebugRouter showUserTrackingViewController")
         if let presentedViewController = self.rootViewController?.presentedViewController {
             if !(presentedViewController is UserTrackingViewController) {
                 presentedViewController.dismiss(animated: false, completion: nil)
@@ -599,7 +539,6 @@ class Router {
     }
 
     func hideUserTrackingViewController() {
-        print("DebugRouter hideUserTrackingViewController")
         if let presentedViewController = self.rootViewController?.presentedViewController,
            presentedViewController is UserTrackingViewController {
             presentedViewController.dismiss(animated: true, completion: nil)
@@ -614,7 +553,6 @@ class Router {
     //
     // Updated terms
     func showUpdatedTermsConditionsViewController() {
-        print("DebugRouter showUpdatedTermsConditionsViewController")
         if let presentedViewController = self.rootViewController?.presentedViewController {
             if !(presentedViewController is UpdatedTermsConditionsViewController) {
                 presentedViewController.dismiss(animated: false, completion: nil)
@@ -628,7 +566,6 @@ class Router {
     }
 
     func hideUpdatedTermsConditionsViewController() {
-        print("DebugRouter hideUpdatedTermsConditionsViewController")
         if let presentedViewController = self.rootViewController?.presentedViewController,
            presentedViewController is UpdatedTermsConditionsViewController {
             presentedViewController.dismiss(animated: true, completion: nil)
@@ -969,12 +906,10 @@ class Router {
 extension Router {
 
     func presentViewControllerAsRoot(_ viewController: UIViewController) {
-        print("DebugRouter: presentViewControllerAsRoot \(viewController)")
         self.rootWindow.rootViewController = rootViewController
     }
 
     static func mainScreenViewController() -> UIViewController {
-        print("DebugRouter: static get mainScreenViewController")
         return RootViewController(defaultSport: Env.sportsStore.defaultSport)
     }
 

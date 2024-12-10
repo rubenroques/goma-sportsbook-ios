@@ -2063,3 +2063,5 @@ Pour le faire, il faut s’adresser à l’Autorité Nationale des Jeux (ANJ).";
 "cashback_video_url" = "/promotions/cashbackVideo.mp4";
 
 "administrative_costs" = "Frais administratifs";
+
+"betting_fail_to_place_bets" = "Un erreur s'est produite lors du placement de votre pari.";

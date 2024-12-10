@@ -111,10 +111,10 @@ class OmegaConnector: Connector {
         }
 
         return self.session.dataTaskPublisher(for: request)
-            .handleEvents(receiveOutput: { result in
-                print("ServiceProvider-OmegaConnector [[ requesting ]] ", dump(request),
-                      " [[ response ]] ", String(data: result.data, encoding: .utf8) ?? "!?" )
-            })
+//            .handleEvents(receiveOutput: { result in
+//                print("ServiceProvider-OmegaConnector [[ requesting ]] ", dump(request),
+//                      " [[ response ]] ", String(data: result.data, encoding: .utf8) ?? "!?" )
+//            })
             .tryMap { result -> Data in
                 if let httpResponse = result.response as? HTTPURLResponse, httpResponse.statusCode == 401 {
                     throw ServiceProviderError.unauthorized
@@ -174,7 +174,6 @@ class OmegaConnector: Connector {
                         return Just(mappedObject).setFailureType(to: ServiceProviderError.self).eraseToAnyPublisher()
                     }
                     catch {
-                        print("ServiceProvider-OmegaConnector Decoding Error \(error)")
                         return Fail(error: ServiceProviderError.invalidResponse).eraseToAnyPublisher()
                     }
                 }
@@ -214,7 +213,6 @@ class OmegaConnector: Connector {
             }
             .decode(type: SportRadarModels.LoginResponse.self, decoder: self.decoder)
             .mapError { error in
-                print("ServiceProvider-OmegaConnector Error \(error)")
                 return ServiceProviderError.invalidResponse
             }
             .flatMap({ [weak self] loginResponse -> AnyPublisher<SportRadarModels.LoginResponse, ServiceProviderError> in
@@ -284,13 +282,11 @@ class OmegaConnector: Connector {
             return Fail(error: ServiceProviderError.userSessionNotFound).eraseToAnyPublisher()
         }
 
-        print("Opening Session for SESSION KEY: \(sessionKey)")
-
         return self.session.dataTaskPublisher(for: request)
-            .handleEvents(receiveOutput: { result in
-                print("ServiceProvider-OmegaConnector openSession [[ requesting ]] ", request,
-                      " [[ response ]] ", String(data: result.data, encoding: .utf8) ?? "!?" )
-            })
+//            .handleEvents(receiveOutput: { result in
+//                print("ServiceProvider-OmegaConnector openSession [[ requesting ]] ", request,
+//                      " [[ response ]] ", String(data: result.data, encoding: .utf8) ?? "!?" )
+//            })
             .tryMap { result in
                 if let httpResponse = result.response as? HTTPURLResponse, httpResponse.statusCode == 401 {
                     throw ServiceProviderError.unauthorized
@@ -305,7 +301,6 @@ class OmegaConnector: Connector {
             }
             .decode(type: SportRadarModels.OpenSessionResponse.self, decoder: self.decoder)
             .mapError({ error -> ServiceProviderError in
-                print("ServiceProvider-OmegaConnector Error \(error)")
                 if let typedError = error as? ServiceProviderError {
                     return typedError
                 }

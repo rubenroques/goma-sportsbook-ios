@@ -22,13 +22,9 @@ class Bootstrap {
     }
 
     func boot() {
-        print("DebugRouter boot ")
-
         self.environment = Env
 
         guard let environment = self.environment else { return }
-
-        print("DebugRouter environment set")
 
         environment.businessSettingsSocket.connectAfterAuth()
 
@@ -73,15 +69,12 @@ class Bootstrap {
             .sink(receiveValue: { [weak self] maintenanceModeType in
                 switch maintenanceModeType {
                 case .on:
-                    print("DebugRouter maintenanceModePublisher on")
                     self?.router.showUnderMaintenanceScreenOnBoot()
                 case .off:
-                    print("DebugRouter maintenanceModePublisher off")
-
                     self?.router.makeKeyAndVisible()
                     self?.bootTriggerCancelable?.cancel()
                 case .unknown:
-                    print("DebugRouter maintenanceModePublisher unknown")
+                    break
                 }
             })
         

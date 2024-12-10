@@ -199,17 +199,6 @@ extension ServiceProviderModelMapper {
         else {
             venueCountry = nil
         }
-
-        //        #if DEBUG
-        //        var newMappedOutcomes = [Outcome]()
-        //        for (index, outcome) in mappedOutcomes.enumerated() {
-        //            var newOutcome = outcome
-        //            newOutcome.translatedName = "\(index)-" + outcome.translatedName
-        //            newMappedOutcomes.append(newOutcome)
-        //        }
-        //        mappedOutcomes = newMappedOutcomes
-        //        #endif
-        //
         
         return Market(id: market.id,
                       typeId: market.name,

@@ -118,7 +118,7 @@ class SportRadarSocketConnector: NSObject, Connector {
         }
         
         self.socket.write(string: body) {
-            print("ServiceProvider - SportRadarSocketConnector: sendListeningStarted sent")
+            print("ServiceProvider - ↔️ SportRadarSocketConnector: sendListeningStarted sent")
         }
         
     }
@@ -163,7 +163,7 @@ extension SportRadarSocketConnector: Starscream.WebSocketDelegate {
             print("ServiceProvider - ↔️ SportRadarSocketConnector websocket is disconnected: \(reason) with code: \(code)")
 
         case .text(let string):
-            print("\n▶️ServiceProvider - ↔️ Ⓜ️ SportRadarSocketConnector received text: \(string)◀️\n")
+            // print("\n▶️ServiceProvider - ↔️ Ⓜ️ SportRadarSocketConnector received text: \(string)◀️\n")
             if let data = string.data(using: .utf8),
                let sportRadarSocketResponse = try? decoder.decode(SportRadarModels.NotificationType.self, from: data) {
                 self.handleContentMessage(sportRadarSocketResponse, messageData: data)
@@ -278,7 +278,8 @@ extension SportRadarSocketConnector: Starscream.WebSocketDelegate {
                     }
 
                 case .unknown:
-                    print("❓SportRadarSocketConnector handleContentMessage unknown: \( String(data: messageData, encoding: .utf8) ?? "" )")
+                    break
+                    // print("❓SportRadarSocketConnector handleContentMessage unknown: \( String(data: messageData, encoding: .utf8) ?? "" )")
 
                 default:
                     if let subscriber = self.messageSubscriber {

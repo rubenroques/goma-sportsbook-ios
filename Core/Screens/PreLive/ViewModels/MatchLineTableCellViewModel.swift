@@ -140,8 +140,8 @@ extension MatchLineTableCellViewModel {
                 .mapError { error in ServiceProviderError.errorMessage(message: error.localizedDescription) }
         )
         .receive(on: DispatchQueue.main)
-        .sink { completion in
-            print("loadPreLiveEventDetails completion \(completion)")
+        .sink { _ in
+            
         } receiveValue: { [weak self] eventWithSecundaryMarkets, marketsAdditionalInfos in
             guard
                 var newMatch = ServiceProviderModelMapper.match(fromEvent: eventWithSecundaryMarkets)
@@ -178,7 +178,7 @@ extension MatchLineTableCellViewModel {
         var firstMarket = oldMatch?.markets.first // Capture the first market
         var additionalMarkets: [Market] = []
 
-        var newMainMarket: Market? = newMarkets.first { newMarket in
+        let newMainMarket: Market? = newMarkets.first { newMarket in
             newMarket.isMainMarket == true
         }
 
@@ -234,7 +234,6 @@ extension MatchLineTableCellViewModel {
 
         // replace new first market in the array with a the main market
         if let newMainMarketValue = newMainMarket {
-            print("Replacing main market for \(oldMatch?.homeParticipant.name) \(firstMarket?.name) -> \(newMainMarket?.name ?? "---")")
             firstMarket = newMainMarketValue
         }
 

@@ -65,9 +65,6 @@ public struct AdresseFrancaiseClient {
 
         return session.dataTaskPublisher(for: request)
             .map(\.data)
-//            .handleEvents(receiveOutput: { data in
-//                print("DEBUG AdresseFrancaise: \(String.init(data: data, encoding: .utf8))")
-//            })
             .decode(type: AddressSearchResponse.self, decoder: decoder)
             .mapError({ error in
                 switch error {

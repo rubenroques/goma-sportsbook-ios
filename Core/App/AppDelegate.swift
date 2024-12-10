@@ -30,7 +30,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate, MessagingDelegate {
         // External Localization tool
         #if DEBUG
         let phraseConfiguration = PhraseConfiguration()
-        phraseConfiguration.debugMode = true
+        phraseConfiguration.debugMode = false
         phraseConfiguration.localeOverride = "fr-FR"
         Phrase.shared.configuration = phraseConfiguration
         Phrase.shared.setup(distributionID: "8dff53ee102cd6a5c31935d4d5938c3f", environmentSecret: "GuBCndN-seQgps-CuyMlx6AXkzsiyGuJMIFicqpvMoc")
@@ -160,12 +160,9 @@ class AppDelegate: UIResponder, UIApplicationDelegate, MessagingDelegate {
         let environment = ADJEnvironmentProduction
         let adjustConfig = ADJConfig(appToken: appToken, environment: environment)
         
-        adjustConfig?.logLevel = ADJLogLevelVerbose
+        adjustConfig?.logLevel = ADJLogLevelSuppress
         
         Adjust.appDidLaunch(adjustConfig)
-
-        print("Print Fonts")
-        AppFont.printFonts()
 
         //
         self.window = UIWindow()

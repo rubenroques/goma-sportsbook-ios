@@ -30,16 +30,11 @@ class SplashViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-     
-        Logger.log("SplashViewController viewDidLoad")
     }
     
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
         
-        Logger.log("SplashViewController viewDidAppear")
-        Logger.log("Starting connections")
-
         self.reachability = try? Reachability()
 
         self.reachability?.whenUnreachable = { _ in
