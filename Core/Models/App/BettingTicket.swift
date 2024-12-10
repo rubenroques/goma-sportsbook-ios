@@ -63,7 +63,7 @@ struct BettingTicket: Codable, Hashable {
             lhs.matchDescription == rhs.matchDescription &&
             lhs.marketDescription == rhs.marketDescription &&
             lhs.outcomeDescription == rhs.outcomeDescription &&
-            lhs.outcomeId == rhs.marketId &&
+            lhs.outcomeId == rhs.outcomeId &&
             lhs.marketId == rhs.marketId &&
             lhs.matchId == rhs.matchId &&
             lhs.homeParticipantName == rhs.homeParticipantName &&

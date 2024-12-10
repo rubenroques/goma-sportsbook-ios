@@ -141,6 +141,7 @@ class LiveEventsViewController: UIViewController {
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
 
+        self.reloadData()
         self.floatingShortcutsView.resetAnimations()
         self.setHomeFilters(homeFilters: self.viewModel.homeFilterOptions)
     }

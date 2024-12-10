@@ -171,6 +171,8 @@ class PreLiveEventsViewController: UIViewController {
 
         self.floatingShortcutsView.resetAnimations()
         self.setHomeFilters(homeFilters: self.viewModel.homeFilterOptions)
+        
+        self.reloadData()
     }
 
     override func viewWillDisappear(_ animated: Bool) {

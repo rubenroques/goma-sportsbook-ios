@@ -250,7 +250,9 @@ class BetslipViewController: UIViewController {
 
     @IBAction private func didTapCancelButton() {
         self.willDismissAction?()
-        self.dismiss(animated: true, completion: nil)
+        self.dismiss(animated: true, completion: { [weak self] in
+            self?.willDismissAction?()
+        })
     }
 
     func showBetPlacedScreen(withBetPlacedDetails betPlacedDetailsArray: [BetPlacedDetails], withCashbackResultValue cashbackResultValue: Double? = nil, usedCashback: Bool) {
