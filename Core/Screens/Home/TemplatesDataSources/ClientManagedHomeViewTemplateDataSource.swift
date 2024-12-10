@@ -624,7 +624,7 @@ class ClientManagedHomeViewTemplateDataSource {
             .sink { _ in
                 //
             } receiveValue: {
-                print("trackEvent impressionsEvents called ok")
+                //
             }
             .store(in: &self.cancellables)
         
