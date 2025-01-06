@@ -304,6 +304,8 @@ extension SportRadarModels {
         var outcomes: [Outcome]
         var marketTypeId: String?
         var eventMarketTypeId: String?
+        var marketTypeCategoryId: String?
+        
         var eventName: String?
         var isMainOutright: Bool?
         var eventMarketCount: Int?
@@ -333,6 +335,7 @@ extension SportRadarModels {
             case outcomes = "selections"
             case marketTypeId = "idefmarkettype"
             case eventMarketTypeId = "idfomarkettype"
+            case marketTypeCategoryId = "idfomarkettypecategory"
             
             case isMainOutright = "ismainoutright"
             case eventMarketCount = "eventMarketCount"
@@ -362,6 +365,7 @@ extension SportRadarModels {
              outcomes: [Outcome],
              marketTypeId: String? = nil,
              eventMarketTypeId: String? = nil,
+             marketTypeCategoryId: String? = nil,
              eventName: String? = nil,
              isMainOutright: Bool? = nil,
              eventMarketCount: Int? = nil,
@@ -389,6 +393,8 @@ extension SportRadarModels {
             self.outcomes = outcomes
             self.marketTypeId = marketTypeId
             self.eventMarketTypeId = eventMarketTypeId
+            self.marketTypeCategoryId = marketTypeCategoryId
+            
             self.eventName = eventName
             self.isMainOutright = isMainOutright
             self.eventMarketCount = eventMarketCount
@@ -425,6 +431,12 @@ extension SportRadarModels {
             self.marketTypeId = try container.decodeIfPresent(String.self, forKey: .marketTypeId)
             
             self.eventMarketTypeId = try container.decodeIfPresent(String.self, forKey: .eventMarketTypeId)
+            self.marketTypeCategoryId = try container.decodeIfPresent(String.self, forKey: .marketTypeCategoryId)
+
+            if self.marketTypeId == nil && self.marketTypeCategoryId != nil {
+                self.marketTypeId = self.marketTypeCategoryId
+            }
+            
             self.eventName = try container.decodeIfPresent(String.self, forKey: .eventName)
             self.isMainOutright = try container.decodeIfPresent(Bool.self, forKey: .isMainOutright)
             self.eventMarketCount = try container.decodeIfPresent(Int.self, forKey: .eventMarketCount)
