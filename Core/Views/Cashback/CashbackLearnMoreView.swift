@@ -95,7 +95,7 @@ extension CashbackLearnMoreView {
         let text = "\(localized("cashback_info")) \(localized("learn_more"))"
         let underlineAttriString = NSMutableAttributedString(string: text)
         let fullRange = (text as NSString).range(of: text)
-        var range = (text as NSString).range(of: localized("learn_more"))
+        let range = (text as NSString).range(of: localized("learn_more"))
 
         underlineAttriString.addAttribute(.foregroundColor, value: UIColor.App.textPrimary, range: fullRange)
         underlineAttriString.addAttribute(.foregroundColor, value: UIColor.App.highlightSecondary, range: range)

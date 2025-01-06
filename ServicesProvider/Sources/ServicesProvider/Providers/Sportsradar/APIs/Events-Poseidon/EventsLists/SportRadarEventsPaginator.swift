@@ -16,14 +16,12 @@ class SportRadarEventsPaginator {
         if case let .connected(subscription) = eventsSubject.value {
             return self.eventsSubject
                 .prepend(.connected(subscription: subscription))
-                .print("SportRadarEventsPaginator eventsGroupPublisher prepend connected")
                 .eraseToAnyPublisher()
         }
         else if case .contentUpdate(_) = eventsSubject.value {
             if let subscription = self.subscription {
                 return self.eventsSubject
                     .prepend(.connected(subscription: subscription))
-                    .print("SportRadarEventsPaginator eventsGroupPublisher prepend connected and contentUpdate")
                     .eraseToAnyPublisher()
             }
             else {
@@ -32,7 +30,6 @@ class SportRadarEventsPaginator {
         }
         else {
             return self.eventsSubject
-                .print("SportRadarEventsPaginator eventsGroupPublisher disconnected")
                 .eraseToAnyPublisher()
         }
     }
@@ -48,11 +45,7 @@ class SportRadarEventsPaginator {
     private var startPageIndex: Int = 0
     private var currentPage: Int
 
-    private var hasNextPage: Bool = false {
-        didSet {
-            print("SportRadarEventsPaginator set hasNextPage: \(self.hasNextPage)")
-        }
-    }
+    private var hasNextPage: Bool = false
 
     private var sessionToken: String
 
@@ -118,7 +111,7 @@ class SportRadarEventsPaginator {
     }
 
     deinit {
-        print("SportRadarEventsPaginator deinit \(self.contentIdentifier)")
+        
     }
     
     //
@@ -158,10 +151,7 @@ class SportRadarEventsPaginator {
     // Return as boolean indicating if there is more pages
     func requestNextPage() -> AnyPublisher<Bool, ServiceProviderError> {
 
-        print("SportRadarEventsPaginator requestNextPage")
-
         if !hasNextPage {
-            print("SportRadarEventsPaginator requestNextPage hasNextPage: false")
             return Just(false).setFailureType(to: ServiceProviderError.self).eraseToAnyPublisher()
         }
 
@@ -225,7 +215,6 @@ class SportRadarEventsPaginator {
 
         // Update the socket session token
         self.sessionToken = newSessionToken
-        print("SportRadarEventsPaginator: reconnect withNewSessionToken \(newSessionToken)")
 
         guard let subscription = self.subscription else { return }
 
@@ -376,18 +365,15 @@ extension SportRadarEventsPaginator: UnsubscriptionController {
         let endpoint = SportRadarRestAPIClient.unsubscribe(sessionToken: subscription.sessionToken, contentIdentifier: subscription.contentIdentifier)
         guard let request = endpoint.request() else { return }
         
-        print("subscr deinit : \(dump(endpoint))")
-        
         let sessionDataTask = URLSession.shared.dataTask(with: request) { data, response, error in
             guard
                 error == nil,
                 let httpResponse = response as? HTTPURLResponse,
                 (200...299).contains(httpResponse.statusCode)
             else {
-                print("SportRadarEventsPaginator unsubscribe failed")
                 return
             }
-            print("SportRadarEventsPaginator unsubscribe ok")
+            // print("SportRadarEventsPaginator unsubscribe ok")
         }
         sessionDataTask.resume()
     }

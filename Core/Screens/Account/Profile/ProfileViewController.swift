@@ -64,6 +64,8 @@ class ProfileViewController: UIViewController {
 
     @IBOutlet private weak var stackView: UIStackView!
 
+
+
     @IBOutlet private weak var logoutBaseView: UIView!
     @IBOutlet private weak var logoutButton: UIButton!
 
@@ -97,6 +99,10 @@ class ProfileViewController: UIViewController {
     var ibanPaymentDetails: BankPaymentDetail?
     var shouldShowIbanScreen: (() -> Void)?
 
+    // Add new property for theme selector
+    private var themeBaseView: UIView!
+    private var themeSelectorView: ThemeSelectorView!
+
     init(userProfile: UserProfile? = nil) {
 
         self.pageMode = .anonymous
@@ -122,7 +128,6 @@ class ProfileViewController: UIViewController {
 
         self.commonInit()
         self.setupWithTheme()
-        
     }
 
     override func viewWillAppear(_ animated: Bool) {
@@ -272,7 +277,16 @@ class ProfileViewController: UIViewController {
     }
 
     func commonInit() {
-
+        
+        // Default label setup
+        self.usernameLabel.font = AppFont.with(type: .heavy, size: 22)
+        self.userIdLabel.font = AppFont.with(type: .bold, size: 11)
+        self.infoLabel.font = AppFont.with(type: .medium, size: 12)
+        self.totalBalanceTitleLabel.font = AppFont.with(type: .heavy, size: 18)
+        self.totalBalanceLabel.font = AppFont.with(type: .heavy, size: 24)
+        self.currentBalanceTitleLabel.font = AppFont.with(type: .heavy, size: 18)
+        self.currentBalanceLabel.font = AppFont.with(type: .heavy, size: 24)
+        
         self.footerResponsibleGamingView.translatesAutoresizingMaskIntoConstraints = false
 
         self.footerResponsibleGamingView.showLinksView()
@@ -327,7 +341,7 @@ class ProfileViewController: UIViewController {
         bonusBalanceTitleLabel.font = AppFont.with(type: .bold, size: 14)
         bonusBalanceLabel.font = AppFont.with(type: .bold, size: 16)
 
-        replayBalanceTitleLabel.text = localized("replay_balance")
+        replayBalanceTitleLabel.text = localized("cashback_balance")
         replayBalanceTitleLabel.font = AppFont.with(type: .bold, size: 14)
         replayBalanceLabel.font = AppFont.with(type: .bold, size: 16)
 
@@ -552,7 +566,7 @@ class ProfileViewController: UIViewController {
         myAccountView.addGestureRecognizer(myAccountTap)
 
         let cashbackView = NavigationCardView()
-        cashbackView.setupView(title: localized("replay"), iconTitle: "cashback_profile_icon")
+        cashbackView.setupView(title: localized("cashback"), iconTitle: "cashback_profile_icon")
         let cashbackTap = UITapGestureRecognizer(target: self, action: #selector(cashbackViewTapped(sender:)))
         cashbackView.addGestureRecognizer(cashbackTap)
 
@@ -598,6 +612,31 @@ class ProfileViewController: UIViewController {
         let supportTap = UITapGestureRecognizer(target: self, action: #selector(supportViewTapped(sender:)))
         supportView.addGestureRecognizer(supportTap)
 
+        // Create and setup theme selector container and view
+        themeBaseView = UIView()
+        themeBaseView.backgroundColor = .clear
+        let currentTheme = UserDefaults.standard.theme
+        themeSelectorView = ThemeSelectorView(selectedMode: currentTheme) // You might want to get the actual current theme here
+        
+        // Add theme selector to its container
+        themeBaseView.addSubview(themeSelectorView)
+        themeSelectorView.translatesAutoresizingMaskIntoConstraints = false
+        
+        // Setup constraints
+        NSLayoutConstraint.activate([
+            themeSelectorView.topAnchor.constraint(equalTo: themeBaseView.topAnchor, constant: 26),
+            themeSelectorView.leadingAnchor.constraint(greaterThanOrEqualTo: themeBaseView.leadingAnchor, constant: 16),
+            themeSelectorView.centerXAnchor.constraint(equalTo: themeBaseView.centerXAnchor),
+            themeSelectorView.widthAnchor.constraint(equalToConstant: 280),
+            themeSelectorView.bottomAnchor.constraint(equalTo: themeBaseView.bottomAnchor, constant: -16)
+        ])
+        
+        // Setup theme change handler
+        themeSelectorView.onThemeChange = { [weak self] newMode in
+            self?.handleThemeChange(newMode)
+        }
+        
+
         self.stackView.addArrangedSubview(myAccountView)
         self.stackView.addArrangedSubview(responsibleGamingView)
         
@@ -611,6 +650,22 @@ class ProfileViewController: UIViewController {
         self.stackView.addArrangedSubview(settingsView)
         self.stackView.addArrangedSubview(supportView)
 
+        // Add to main stack view - add this before the logout view
+        self.stackView.addArrangedSubview(themeBaseView)
+
+    }
+
+    // Add handler for theme changes
+    private func handleThemeChange(_ mode: Theme) {
+        UserDefaults.standard.theme = mode
+        switch mode {
+        case .light:
+            UIApplication.shared.keyWindow?.overrideUserInterfaceStyle = .light
+        case .device:
+            UIApplication.shared.keyWindow?.overrideUserInterfaceStyle = .unspecified
+        case .dark:
+            UIApplication.shared.keyWindow?.overrideUserInterfaceStyle = .dark
+        }
     }
 
     // MARK: Functions
@@ -620,7 +675,7 @@ class ProfileViewController: UIViewController {
 
         Env.servicesProvider.getPaymentInformation()
             .receive(on: DispatchQueue.main)
-            .sink(receiveCompletion: { [weak self] completion in
+            .sink(receiveCompletion: { completion in
 
                 switch completion {
                 case .finished:
@@ -859,4 +914,196 @@ extension ProfileViewController {
         self.navigationController?.pushViewController(betSelectorViewConroller, animated: true)
     }
 
+}
+
+extension Theme {
+    
+    var title: String {
+        switch self {
+        case .light: return localized("theme_short_light")
+        case .device: return localized("theme_short_system")
+        case .dark: return localized("theme_short_dark")
+        }
+        
+    }
+    
+    var iconName: String {
+        switch self {
+        case .light: return "light_theme_icon"
+        case .device: return "system_theme_icon"
+        case .dark: return "dark_theme_icon"
+        }
+    }
+}
+
+class ThemeSelectorView: UIView {
+    
+    // MARK: - Properties
+    private var selectedMode: Theme
+    var onThemeChange: ((Theme) -> Void)?
+    
+    private lazy var stackView: UIStackView = {
+        let stack = UIStackView()
+        stack.axis = .horizontal
+        stack.distribution = .fill
+        stack.spacing = 0
+        stack.translatesAutoresizingMaskIntoConstraints = false
+        return stack
+    }()
+    
+    private var containerViews: [UIView] = []
+    
+    // MARK: - Initialization
+    init(selectedMode: Theme = .device) {
+        self.selectedMode = selectedMode
+        super.init(frame: .zero)
+        setupView()
+    }
+    
+    required init?(coder: NSCoder) {
+        self.selectedMode = .device
+        super.init(coder: coder)
+        setupView()
+    }
+    
+    // MARK: - Setup
+    private func setupView() {
+        backgroundColor = UIColor.App.backgroundSecondary
+        layer.cornerRadius = 6.5
+        clipsToBounds = true
+        
+        addSubview(stackView)
+        stackView.spacing = 0
+        
+        NSLayoutConstraint.activate([
+            stackView.topAnchor.constraint(equalTo: topAnchor),
+            stackView.bottomAnchor.constraint(equalTo: bottomAnchor),
+            stackView.leadingAnchor.constraint(equalTo: leadingAnchor),
+            stackView.trailingAnchor.constraint(equalTo: trailingAnchor),
+            heightAnchor.constraint(equalToConstant: 35)
+        ])
+        
+        setupContainerViews()
+        updateSelection()
+    }
+    
+    override func layoutSubviews() {
+        super.layoutSubviews()
+    }
+    
+    private func setupContainerViews() {
+        Theme.allCases.enumerated().forEach { index, mode in
+            let button = createButton(for: mode)
+            self.stackView.addArrangedSubview(button)
+            self.containerViews.append(button)
+            
+            // Add separator after first and second containerViews
+            if index < 2 {
+                let separator = self.createSeparator()
+                self.stackView.addArrangedSubview(separator)
+            }
+        }
+    }
+    
+    private func createSeparator() -> UIView {
+        let separator = UIView()
+        separator.backgroundColor = UIColor.App.separatorLine
+        separator.translatesAutoresizingMaskIntoConstraints = false
+        
+        NSLayoutConstraint.activate([
+            separator.widthAnchor.constraint(equalToConstant: 1)
+        ])
+        
+        return separator
+    }
+    
+    private func createButton(for mode: Theme) -> UIView {
+        let baseView = UIView()
+        baseView.translatesAutoresizingMaskIntoConstraints = false
+        
+        // Create container stack
+        let containerStack = UIStackView()
+        containerStack.axis = .horizontal
+        containerStack.spacing = 6
+        containerStack.alignment = .center
+        containerStack.translatesAutoresizingMaskIntoConstraints = false
+        
+        // Create and configure image view
+        let imageView = UIImageView()
+        imageView.contentMode = .scaleAspectFit
+        imageView.tintColor = UIColor.App.textPrimary
+        imageView.translatesAutoresizingMaskIntoConstraints = false
+        imageView.heightAnchor.constraint(equalToConstant: 14).isActive = true
+        imageView.widthAnchor.constraint(equalToConstant: 14).isActive = true
+        imageView.image = UIImage(named: mode.iconName)
+        
+        // Create and configure label
+        let label = UILabel()
+        label.text = mode.title
+        label.font = AppFont.with(type: .medium, size: 14)
+        label.textColor = UIColor.App.textPrimary
+        
+        // Add views to container
+        containerStack.addArrangedSubview(imageView)
+        containerStack.addArrangedSubview(label)
+        
+        // Add container to baseView
+        baseView.addSubview(containerStack)
+        
+        // Center container in button
+        NSLayoutConstraint.activate([
+            containerStack.centerXAnchor.constraint(equalTo: baseView.centerXAnchor),
+            containerStack.centerYAnchor.constraint(equalTo: baseView.centerYAnchor),
+            baseView.widthAnchor.constraint(equalToConstant: 94),
+        ])
+        
+        baseView.tag = self.containerViews.count
+        
+        let tapGesture = UITapGestureRecognizer(target: self, action: #selector(buttonTapped(_:)))
+        baseView.addGestureRecognizer(tapGesture)
+        return baseView
+    }
+    
+    // MARK: - Actions
+    @objc private func buttonTapped(_ sender: UITapGestureRecognizer) {
+        guard let tappedView = sender.view else { return }
+        let newMode = Theme.allCases[tappedView.tag]
+        if newMode != selectedMode {
+            self.selectedMode = newMode
+            self.updateSelection()
+            self.onThemeChange?(newMode)
+        }
+    }
+    
+    // MARK: - Public Methods
+    func setSelectedMode(_ mode: Theme) {
+        self.selectedMode = mode
+        self.updateSelection()
+    }
+    
+    // MARK: - Private Methods
+    private func updateSelection() {
+        self.containerViews.enumerated().forEach { index, button in
+            let isSelected = Theme.allCases[index] == self.selectedMode
+            self.updateContainerView(button, isSelected: isSelected)
+        }
+    }
+    
+    private func updateContainerView(_ containerView: UIView, isSelected: Bool) {
+        containerView.backgroundColor = isSelected ? UIColor.App.backgroundOddsHeroCard : .clear
+        
+        // Update text color for all subviews
+        containerView.subviews.forEach { view in
+            if let stackView = view as? UIStackView {
+                stackView.arrangedSubviews.forEach { subview in
+                    if let imageView = subview as? UIImageView {
+                        imageView.setTintColor(color: (isSelected ? UIColor.App.buttonTextPrimary : UIColor.App.textSecondary))
+                    }
+                    if let label = subview as? UILabel {
+                        label.textColor = isSelected ? UIColor.App.buttonTextPrimary : UIColor.App.textSecondary
+                    }
+                }
+            }
+        }
+    }
 }

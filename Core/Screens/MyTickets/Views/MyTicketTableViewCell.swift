@@ -159,6 +159,30 @@ class MyTicketTableViewCell: UITableViewCell {
 //        else {
 //            self.shareButton.isHidden = true
 //        }
+
+            
+        // Setup fonts
+        self.titleLabel.font = AppFont.with(type: .heavy, size: 16)
+        self.subtitleLabel.font = AppFont.with(type: .bold, size: 10)
+        self.freebetLabel.font = AppFont.with(type: .bold, size: 10)
+        self.betIdLabel.font = AppFont.with(type: .bold, size: 10)
+        
+        self.totalOddTitleLabel.font = AppFont.with(type: .bold, size: 12)
+        self.betAmountTitleLabel.font = AppFont.with(type: .bold, size: 12)
+        self.winningsTitleLabel.font = AppFont.with(type: .bold, size: 12)
+        
+        self.totalOddSubtitleLabel.font = AppFont.with(type: .bold, size: 16)
+        self.betAmountSubtitleLabel.font = AppFont.with(type: .bold, size: 16)
+        self.cashbackValueLabel.font = AppFont.with(type: .bold, size: 16)
+        self.winningsSubtitleLabel.font = AppFont.with(type: .bold, size: 16)
+        
+        self.originalAmountValueLabel.font = AppFont.with(type: .bold, size: 9)
+        self.returnedAmountValueLabel.font = AppFont.with(type: .bold, size: 9)
+        
+        self.minimumCashoutValueLabel.font = AppFont.with(type: .bold, size: 12)
+        self.maximumCashoutValueLabel.font = AppFont.with(type: .bold, size: 12)
+        
+        //
         self.shareButton.isHidden = false
 
         self.loadingView.isHidden = true
@@ -208,7 +232,7 @@ class MyTicketTableViewCell: UITableViewCell {
 
         self.returnedAmountValueLabel.text = "\(localized("returned"))\n€0.10"
 
-        self.cashbackUsedTitleLabel.text = localized("used_replay").uppercased()
+        self.cashbackUsedTitleLabel.text = localized("used_cashback").uppercased()
         self.cashbackUsedTitleLabel.font = AppFont.with(type: .bold, size: 9)
 
         self.hasPartialCashoutReturned = false

@@ -23,7 +23,11 @@ class CountrySelectorTableViewCell: UITableViewCell, NibIdentifiable {
 
     override func awakeFromNib() {
         super.awakeFromNib()
-
+        
+        // Setup fonts
+        self.nameLabel.font = AppFont.with(type: .bold, size: 16)
+        self.prefixLabel.font = AppFont.with(type: .bold, size: 16)
+        
         self.nameLabel.text = ""
         self.prefixLabel.text = ""
 

@@ -535,7 +535,7 @@ class BettingHistoryViewModel {
             return viewModel
         }
         else {
-            let viewModel =  MyTicketCellViewModel(ticket: ticket)
+            let viewModel =  MyTicketCellViewModel(ticket: ticket, allowedCashback: false)
 
             viewModel.requestDataRefreshAction = { [weak self] in
                 Env.userSessionStore.refreshUserWalletAfterDelay()

@@ -82,10 +82,6 @@ class MatchLineTableViewCell: UITableViewCell {
         
         self.debugLabel.isHidden = true
 
-//        #if DEBUG
-//        self.debugLabel.isHidden = false
-//        #endif
-
         self.backSliderView.alpha = 0.0
 
         self.collectionView.delegate = self
@@ -120,25 +116,10 @@ class MatchLineTableViewCell: UITableViewCell {
         self.collectionViewBottomMarginConstraint.constant = StyleHelper.cardsStyleMargin()
 
         self.setupWithTheme()
-//        
-//        #if DEBUG
-//        let debugLabel = UILabel()
-//        debugLabel.translatesAutoresizingMaskIntoConstraints = false
-//        debugLabel.text = self.debugUUID.uuidString
-//        self.addSubview(debugLabel)
-//        
-//        NSLayoutConstraint.activate([
-//            debugLabel.centerXAnchor.constraint(equalTo: self.contentView.centerXAnchor),
-//            debugLabel.topAnchor.constraint(equalTo: self.contentView.topAnchor),
-//        ])
-//        #endif
-
     }
 
     override func prepareForReuse() {
         super.prepareForReuse()
-
-        // print("BlinkDebug line (\(self.debugUUID.uuidString)) prepareForReuse")
         
         self.selectionStyle = .none
 
@@ -175,8 +156,6 @@ class MatchLineTableViewCell: UITableViewCell {
                 self.layoutIfNeeded()
             }
         }
-        
-        // self.collectionView.reloadData()
     }
 
     override func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {

@@ -127,6 +127,18 @@ class OddDoubleCollectionViewCell: UICollectionViewCell {
     override func awakeFromNib() {
         super.awakeFromNib()
 
+        // Setup fonts
+        self.suspendedLabel.font = AppFont.with(type: .bold, size: 13)
+        self.participantsNameLabel.font = AppFont.with(type: .medium, size: 10)
+        self.homeNameCaptionLabel.font = AppFont.with(type: .medium, size: 9)
+        self.awayNameCaptionLabel.font = AppFont.with(type: .medium, size: 9)
+        self.leftOddValueLabel.font = AppFont.with(type: .bold, size: 13)
+        self.leftOddTitleLabel.font = AppFont.with(type: .medium, size: 10)
+        self.rightOddValueLabel.font = AppFont.with(type: .bold, size: 13)
+        self.rightOddTitleLabel.font = AppFont.with(type: .medium, size: 10)
+        self.marketNameLabel.font = AppFont.with(type: .bold, size: 14)
+
+        //
         self.backgroundView?.backgroundColor = .clear
         self.backgroundColor = .clear
 

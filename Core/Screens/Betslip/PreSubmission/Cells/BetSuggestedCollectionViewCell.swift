@@ -33,6 +33,11 @@ class BetSuggestedCollectionViewCell: UICollectionViewCell {
 
         self.totalOddValueLabel.text = ""
         self.numberOfSelectionsValueLabel.text = ""
+    
+        self.numberOfSelectionsLabel.font = AppFont.with(type: .heavy, size: 12)
+        self.numberOfSelectionsValueLabel.font = AppFont.with(type: .heavy, size: 14)
+        self.totalOddLabel.font = AppFont.with(type: .heavy, size: 12)
+        self.totalOddValueLabel.font = AppFont.with(type: .heavy, size: 14)
 
         self.setupWithTheme()
 

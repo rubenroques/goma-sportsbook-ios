@@ -6,6 +6,7 @@
 //
 
 import UIKit
+import AVKit
 
 class CashbackInfoViewController: UIViewController {
 
@@ -20,6 +21,8 @@ class CashbackInfoViewController: UIViewController {
     private lazy var cashbackInfoBaseView: UIView = Self.createCashbackInfoBaseView()
     private lazy var cashbackInfoTitleLabel: UILabel = Self.createCashbackInfoTitleLabel()
     private lazy var cashbackInfoDescriptionLabel: UILabel = Self.createCashbackInfoDescriptionLabel()
+
+    private lazy var videoPlayerView: UIView = Self.createVideoPlayerView()
 
     private lazy var cashbackBetBaseView: UIView = Self.createCashbackBetBaseView()
     private lazy var cashbackBetTitleLabel: UILabel = Self.createCashbackBetTitleLabel()
@@ -56,6 +59,9 @@ class CashbackInfoViewController: UIViewController {
 
     private lazy var termsViewBottomConstraint: NSLayoutConstraint = Self.createTermsViewBottomConstraint()
     private lazy var termsDescriptionLabelBottomConstraint: NSLayoutConstraint = Self.createTermsDescriptionLabelBottomConstraint()
+    
+    private var player: AVPlayer?
+    private var playerLayer: AVPlayerLayer?
 
     private var aspectRatio: CGFloat = 1.0
 
@@ -109,24 +115,33 @@ class CashbackInfoViewController: UIViewController {
         let termsToggleTap = UITapGestureRecognizer(target: self, action: #selector(didTapToggleButton))
         self.termsView.addGestureRecognizer(termsToggleTap)
 
+        // Initialize AVPlayer
+        // local old video:  Bundle.main.url(forResource: "cashbackVideo", withExtension: "mp4")
+        let videoURLString = TargetVariables.clientBaseUrl + localized("cashback_video_url")
+        if let videoURL = URL(string: videoURLString) {
+            self.player = AVPlayer(url: videoURL)
+            self.player?.play() // Autoplay
+            
+            self.playerLayer = AVPlayerLayer(player: self.player)
+            self.playerLayer?.videoGravity = .resizeAspect
+            self.videoPlayerView.layer.addSublayer(self.playerLayer!)
+        }
     }
 
     override func viewDidLayoutSubviews() {
         super.viewDidLayoutSubviews()
 
         self.cashbackInfoBaseView.layer.cornerRadius = CornerRadius.card
-
         self.cashbackBetBaseView.layer.cornerRadius = CornerRadius.card
-
         self.cashbackBalanceBaseView.layer.cornerRadius = CornerRadius.card
-
         self.cashbackUsedBaseView.layer.cornerRadius = CornerRadius.card
-
         self.cashbackUsedExampleView.layer.cornerRadius = CornerRadius.headerInput
 
         self.resizeBannerImageView()
 
         self.resizeBottomBannerImageView()
+    
+        self.playerLayer?.frame = self.videoPlayerView.bounds
     }
 
     private func setupWithTheme() {
@@ -229,9 +244,9 @@ class CashbackInfoViewController: UIViewController {
     }
 
     @objc private func didTapToggleButton() {
-
         self.isTermsCollapsed = !self.isTermsCollapsed
     }
+
 }
 
 extension CashbackInfoViewController {
@@ -255,7 +270,7 @@ extension CashbackInfoViewController {
         let label = UILabel()
         label.translatesAutoresizingMaskIntoConstraints = false
         label.font = AppFont.with(type: .bold, size: 20)
-        label.text = localized("replay")
+        label.text = localized("cashback")
         label.textAlignment = .center
         return label
     }
@@ -276,7 +291,7 @@ extension CashbackInfoViewController {
     private static func createBannerImageView() -> UIImageView {
         let imageView = UIImageView()
         imageView.translatesAutoresizingMaskIntoConstraints = false
-        imageView.image = UIImage(named: "replay_big_euro_banner")
+        imageView.image = UIImage(named: "replay_big_banner")
         imageView.contentMode = .scaleAspectFill
         return imageView
     }
@@ -291,7 +306,7 @@ extension CashbackInfoViewController {
         let label = UILabel()
         label.translatesAutoresizingMaskIntoConstraints = false
         label.font = AppFont.with(type: .bold, size: 18)
-        label.text = localized("replay_page_section_1_title")
+        label.text = localized("cashback_page_section_1_title")
         label.textAlignment = .left
         return label
     }
@@ -300,7 +315,7 @@ extension CashbackInfoViewController {
         let label = UILabel()
         label.translatesAutoresizingMaskIntoConstraints = false
         label.font = AppFont.with(type: .regular, size: 14)
-        label.text = localized("replay_page_section_1_description")
+        label.text = localized("cashback_page_section_1_description")
         label.textAlignment = .left
         label.numberOfLines = 0
         label.addLineHeight(to: label, lineHeight: 18)
@@ -317,7 +332,7 @@ extension CashbackInfoViewController {
         let label = UILabel()
         label.translatesAutoresizingMaskIntoConstraints = false
         label.font = AppFont.with(type: .bold, size: 18)
-        label.text = localized("replay_page_section_2_title")
+        label.text = localized("cashback_page_section_2_title")
         label.textAlignment = .left
         return label
     }
@@ -326,7 +341,7 @@ extension CashbackInfoViewController {
         let label = UILabel()
         label.translatesAutoresizingMaskIntoConstraints = false
         label.font = AppFont.with(type: .regular, size: 14)
-        label.text = localized("replay_page_section_2_description")
+        label.text = localized("cashback_page_section_2_description")
         label.textAlignment = .left
         label.numberOfLines = 0
         label.addLineHeight(to: label, lineHeight: 18)
@@ -351,7 +366,7 @@ extension CashbackInfoViewController {
         let label = UILabel()
         label.translatesAutoresizingMaskIntoConstraints = false
         label.font = AppFont.with(type: .bold, size: 18)
-        label.text = localized("replay_page_section_3_title")
+        label.text = localized("cashback_page_section_3_title")
         label.textAlignment = .left
         return label
     }
@@ -360,7 +375,7 @@ extension CashbackInfoViewController {
         let label = UILabel()
         label.translatesAutoresizingMaskIntoConstraints = false
         label.font = AppFont.with(type: .regular, size: 14)
-        label.text = localized("replay_page_section_3_description_1")
+        label.text = localized("cashback_page_section_3_description_1")
         label.textAlignment = .left
         label.numberOfLines = 0
         label.addLineHeight(to: label, lineHeight: 18)
@@ -379,7 +394,7 @@ extension CashbackInfoViewController {
         let label = UILabel()
         label.translatesAutoresizingMaskIntoConstraints = false
         label.font = AppFont.with(type: .regular, size: 14)
-        label.text = localized("replay_page_section_3_description_2")
+        label.text = localized("cashback_page_section_3_description_2")
         label.textAlignment = .left
         label.numberOfLines = 0
         label.addLineHeight(to: label, lineHeight: 18)
@@ -396,7 +411,7 @@ extension CashbackInfoViewController {
         let label = UILabel()
         label.translatesAutoresizingMaskIntoConstraints = false
         label.font = AppFont.with(type: .bold, size: 18)
-        label.text = localized("replay_page_section_4_title")
+        label.text = localized("cashback_page_section_4_title")
         label.textAlignment = .left
         label.numberOfLines = 0
         return label
@@ -406,7 +421,7 @@ extension CashbackInfoViewController {
         let label = UILabel()
         label.translatesAutoresizingMaskIntoConstraints = false
         label.font = AppFont.with(type: .regular, size: 14)
-        label.text = localized("replay_page_section_4_description")
+        label.text = localized("cashback_page_section_4_description")
         label.textAlignment = .left
         label.numberOfLines = 0
         label.addLineHeight(to: label, lineHeight: 18)
@@ -423,7 +438,7 @@ extension CashbackInfoViewController {
         let label = UILabel()
         label.translatesAutoresizingMaskIntoConstraints = false
         label.font = AppFont.with(type: .bold, size: 13)
-        label.text = localized("used_replay").uppercased()
+        label.text = localized("used_cashback").uppercased()
         label.textAlignment = .left
         return label
     }
@@ -475,13 +490,13 @@ extension CashbackInfoViewController {
         let label = UILabel()
         label.translatesAutoresizingMaskIntoConstraints = false
         label.font = AppFont.with(type: .bold, size: 14)
-        label.text = localized("promotions_replay_terms_and_conditions")
+        label.text = localized("promotions_cashback_terms_and_conditions")
         label.textAlignment = .left
         label.numberOfLines = 0
 
-        let text = localized("promotions_replay_terms_and_conditions")
+        let text = localized("promotions_cashback_terms_and_conditions")
         let attributedString = NSMutableAttributedString(string: text)
-        let fullRange = (text as NSString).range(of: localized("promotions_replay_terms_and_conditions"))
+        let fullRange = (text as NSString).range(of: localized("promotions_cashback_terms_and_conditions"))
         var range = (text as NSString).range(of: "•")
 
         let paragraphStyle = NSMutableParagraphStyle()
@@ -546,6 +561,13 @@ extension CashbackInfoViewController {
         return constraint
     }
 
+    private static func createVideoPlayerView() -> UIView {
+        let view = UIView()
+        view.translatesAutoresizingMaskIntoConstraints = false
+        view.backgroundColor = .clear
+        return view
+    }
+
     private func setupSubviews() {
 
         self.view.addSubview(self.navigationView)
@@ -564,6 +586,8 @@ extension CashbackInfoViewController {
         self.cashbackInfoBaseView.addSubview(self.cashbackInfoTitleLabel)
         self.cashbackInfoBaseView.addSubview(self.cashbackInfoDescriptionLabel)
 
+        self.containerView.addSubview(self.videoPlayerView)
+        
         self.containerView.addSubview(self.cashbackBetBaseView)
 
         self.cashbackBetBaseView.addSubview(self.cashbackBetTitleLabel)
@@ -653,12 +677,19 @@ extension CashbackInfoViewController {
             self.cashbackInfoDescriptionLabel.topAnchor.constraint(equalTo: self.cashbackInfoTitleLabel.bottomAnchor, constant: 7),
             self.cashbackInfoDescriptionLabel.bottomAnchor.constraint(equalTo: self.cashbackInfoBaseView.bottomAnchor, constant: -16)
         ])
+        
+        NSLayoutConstraint.activate([
+            self.videoPlayerView.leadingAnchor.constraint(equalTo: self.containerView.leadingAnchor),
+            self.videoPlayerView.trailingAnchor.constraint(equalTo: self.containerView.trailingAnchor),
+            self.videoPlayerView.topAnchor.constraint(equalTo: self.cashbackInfoBaseView.bottomAnchor, constant: 20),
+            self.videoPlayerView.heightAnchor.constraint(equalTo: self.videoPlayerView.widthAnchor, multiplier: 16.0/9.0)
+        ])
 
         // Cashback bet
         NSLayoutConstraint.activate([
             self.cashbackBetBaseView.leadingAnchor.constraint(equalTo: self.containerView.leadingAnchor, constant: 14),
             self.cashbackBetBaseView.trailingAnchor.constraint(equalTo: self.containerView.trailingAnchor, constant: -14),
-            self.cashbackBetBaseView.topAnchor.constraint(equalTo: self.cashbackInfoBaseView.bottomAnchor, constant: 16),
+            self.cashbackBetBaseView.topAnchor.constraint(equalTo: self.videoPlayerView.bottomAnchor, constant: 16),
 
             self.cashbackBetTitleLabel.leadingAnchor.constraint(equalTo: self.cashbackBetBaseView.leadingAnchor, constant: 16),
             self.cashbackBetTitleLabel.trailingAnchor.constraint(equalTo: self.cashbackBetBaseView.trailingAnchor, constant: -16),

@@ -425,10 +425,6 @@ extension MatchDetailsViewModel {
                         position: rawMarketGroup.position)
 
         }
-        // NOTE: Is already sorted before convertion, so no needed
-//        let sortedMarketGroups = marketGroups.sorted(by: {
-//            $0.position ?? 0 < $1.position ?? 99
-//        })
         return marketGroups
     }
 
@@ -460,10 +456,8 @@ extension MatchDetailsViewModel: UICollectionViewDataSource, UICollectionViewDel
             let marketTranslatedName = item.translatedName ?? localized("market")
             
             let normalizedTranslatedName = marketTranslatedName.replacingOccurrences(of: "[^a-zA-Z0-9]", with: "_", options: .regularExpression).lowercased()
-            
-            let marketKey = "market_group_\(normalizedTranslatedName)"
-            
-            var marketName = "\(localized("mix_match_mix_string"))\(localized("mix_match_match_string"))"
+                        
+            let marketName = "\(localized("mix_match_mix_string"))\(localized("mix_match_match_string"))"
             
             cell.setupInfo(title: marketName, iconName: "mix_match_icon", backgroundName: "mix_match_background_pill")
             
@@ -487,7 +481,6 @@ extension MatchDetailsViewModel: UICollectionViewDataSource, UICollectionViewDel
             
             let marketTranslatedName = item.translatedName ?? localized("market")
             
-            //let normalizedTranslatedName = marketTranslatedName.replacingOccurrences(of: " ", with: "_").replacingOccurrences(of: "/", with: "_").lowercased()
             let normalizedTranslatedName = marketTranslatedName.replacingOccurrences(of: "[^a-zA-Z0-9]", with: "_", options: .regularExpression).lowercased()
             
             let marketKey = "market_group_\(normalizedTranslatedName)"
@@ -512,14 +505,16 @@ extension MatchDetailsViewModel: UICollectionViewDataSource, UICollectionViewDel
             return cell
         }
     }
-
+    
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
-
         let previousSelectionValue = self.selectedMarketTypeIndexPublisher.value ?? -1
-
         if indexPath.row != previousSelectionValue {
             self.selectedMarketTypeIndexPublisher.send(indexPath.row)
-            collectionView.scrollToItem(at: indexPath, at: .centeredHorizontally, animated: true)
+            
+            // Perform scroll with the same duration as UIPageViewController's default transition (0.3s)
+            UIView.animate(withDuration: 0.3, delay: 0, options: .curveEaseInOut) {
+                collectionView.scrollToItem(at: indexPath, at: .centeredHorizontally, animated: false)
+            }
         }
         else {
             self.scrollToTopAction?(indexPath.row)

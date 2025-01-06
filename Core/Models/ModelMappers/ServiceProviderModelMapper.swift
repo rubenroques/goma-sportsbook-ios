@@ -199,17 +199,6 @@ extension ServiceProviderModelMapper {
         else {
             venueCountry = nil
         }
-
-        //        #if DEBUG
-        //        var newMappedOutcomes = [Outcome]()
-        //        for (index, outcome) in mappedOutcomes.enumerated() {
-        //            var newOutcome = outcome
-        //            newOutcome.translatedName = "\(index)-" + outcome.translatedName
-        //            newMappedOutcomes.append(newOutcome)
-        //        }
-        //        mappedOutcomes = newMappedOutcomes
-        //        #endif
-        //
         
         return Market(id: market.id,
                       typeId: market.name,
@@ -279,7 +268,8 @@ extension ServiceProviderModelMapper {
                                     bettingOffer: bettingOffer,
                                     orderValue: outcome.orderValue,
                                     externalReference: outcome.externalReference,
-                                    customBetAvailableMarket: outcome.customBetAvailableMarket)
+                                    customBetAvailableMarket: outcome.customBetAvailableMarket,
+                                    isTerminated: outcome.isTerminated)
         return mappedOutcome
     }
     

@@ -58,7 +58,7 @@ class CashbackBalanceView: UIView {
         self.containerView.layer.cornerRadius = CornerRadius.squareView
 
         self.containerView.layer.borderColor = UIColor.App.highlightPrimary.cgColor
-        self.containerView.layer.borderWidth = 1.66
+        self.containerView.layer.borderWidth = 1.5
     }
 
     func commonInit() {
@@ -77,7 +77,7 @@ class CashbackBalanceView: UIView {
 
         self.titleLabel.textColor = UIColor.App.textPrimary
 
-        self.valueLabel.textColor = UIColor.App.textPrimary
+        self.valueLabel.textColor = UIColor.App.highlightPrimary
 
         self.switchButton.onTintColor = UIColor.App.buttonBackgroundPrimary
 
@@ -122,8 +122,8 @@ extension CashbackBalanceView {
     private static func createTitleLabel() -> UILabel {
         let label = UILabel()
         label.translatesAutoresizingMaskIntoConstraints = false
-        label.text = localized("replay_balance")
-        label.font = AppFont.with(type: .semibold, size: 12)
+        label.text = localized("cashback_balance") + ":"
+        label.font = AppFont.with(type: .semibold, size: 13)
         label.numberOfLines = 0
         return label
     }
@@ -155,11 +155,11 @@ extension CashbackBalanceView {
     private func setupSubviews() {
         self.addSubview(self.containerView)
 
-        self.containerView.addSubview(self.iconImageView)
+        // self.containerView.addSubview(self.iconImageView)
         self.containerView.addSubview(self.titleLabel)
         self.containerView.addSubview(self.valueLabel)
         self.containerView.addSubview(self.switchButton)
-        self.containerView.addSubview(self.closeButton)
+        // self.containerView.addSubview(self.closeButton)
 
         self.initConstraints()
     }
@@ -172,28 +172,28 @@ extension CashbackBalanceView {
             self.containerView.trailingAnchor.constraint(equalTo: self.trailingAnchor),
             self.containerView.topAnchor.constraint(equalTo: self.topAnchor),
             self.containerView.bottomAnchor.constraint(equalTo: self.bottomAnchor),
-            // self.containerView.heightAnchor.constraint(equalToConstant: 60),
+            self.containerView.heightAnchor.constraint(equalToConstant: 48),
 
-            self.iconImageView.leadingAnchor.constraint(equalTo: self.containerView.leadingAnchor, constant: 5),
-            self.iconImageView.topAnchor.constraint(equalTo: self.containerView.topAnchor, constant: 10),
-            self.iconImageView.bottomAnchor.constraint(equalTo: self.containerView.bottomAnchor, constant: -10),
-            self.iconImageView.widthAnchor.constraint(equalToConstant: 25),
-            self.iconImageView.heightAnchor.constraint(equalTo: self.iconImageView.widthAnchor),
+//            self.iconImageView.leadingAnchor.constraint(equalTo: self.containerView.leadingAnchor, constant: 5),
+//            self.iconImageView.topAnchor.constraint(equalTo: self.containerView.topAnchor, constant: 10),
+//            self.iconImageView.bottomAnchor.constraint(equalTo: self.containerView.bottomAnchor, constant: -10),
+//            self.iconImageView.widthAnchor.constraint(equalToConstant: 25),
+//            self.iconImageView.heightAnchor.constraint(equalTo: self.iconImageView.widthAnchor),
 
-            self.titleLabel.leadingAnchor.constraint(equalTo: self.iconImageView.trailingAnchor, constant: 4),
-            self.titleLabel.centerYAnchor.constraint(equalTo: self.iconImageView.centerYAnchor),
+            self.titleLabel.leadingAnchor.constraint(equalTo: self.containerView.leadingAnchor, constant: 10),
+            self.titleLabel.centerYAnchor.constraint(equalTo: self.containerView.centerYAnchor),
 
             self.valueLabel.leadingAnchor.constraint(equalTo: self.titleLabel.trailingAnchor, constant: 4),
-            self.valueLabel.centerYAnchor.constraint(equalTo: self.titleLabel.centerYAnchor),
+            self.valueLabel.centerYAnchor.constraint(equalTo: self.containerView.centerYAnchor),
             self.valueLabel.trailingAnchor.constraint(equalTo: self.switchButton.leadingAnchor, constant: -25),
 
-            self.switchButton.trailingAnchor.constraint(equalTo: self.closeButton.leadingAnchor, constant: -5),
+            self.switchButton.trailingAnchor.constraint(equalTo: self.containerView.trailingAnchor, constant: -10),
             self.switchButton.centerYAnchor.constraint(equalTo: self.containerView.centerYAnchor),
 
-            self.closeButton.trailingAnchor.constraint(equalTo: self.containerView.trailingAnchor),
-            self.closeButton.centerYAnchor.constraint(equalTo: self.iconImageView.centerYAnchor),
-            self.closeButton.widthAnchor.constraint(equalToConstant: 40),
-            self.closeButton.heightAnchor.constraint(equalTo: self.closeButton.widthAnchor)
+//            self.closeButton.trailingAnchor.constraint(equalTo: self.containerView.trailingAnchor),
+//            self.closeButton.centerYAnchor.constraint(equalTo: self.iconImageView.centerYAnchor),
+//            self.closeButton.widthAnchor.constraint(equalToConstant: 40),
+//            self.closeButton.heightAnchor.constraint(equalTo: self.closeButton.widthAnchor)
 
         ])
 

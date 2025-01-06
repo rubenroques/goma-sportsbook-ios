@@ -50,7 +50,6 @@ class PopularMatchesDataSource: NSObject {
         return Publishers.Merge3(outrightsChangedArrayPublisher, matchesChangedArrayPublisher, self.forcedRefreshPassthroughSubject)
             .debounce(for: .milliseconds(200), scheduler: DispatchQueue.main)
             .map({ _ in })
-            .print("PopularMatchesDataSource dataChangedPublisher send")
             .eraseToAnyPublisher()
     }
 
@@ -130,13 +129,7 @@ extension PopularMatchesDataSource {
     private func fetchPopularMatchesNextPage() {
         let sportType = ServiceProviderModelMapper.serviceProviderSportType(fromSport: self.sport)
         Env.servicesProvider.requestPreLiveMatchesNextPage(forSportType: sportType, sortType: .popular)
-            .sink { completion in
-                switch completion {
-                case .finished:
-                    print("PopularMatchesDataSource fetchPopularMatchesNextPage completion finished")
-                case .failure(let serviceProviderError):
-                    print("PopularMatchesDataSource fetchPopularMatchesNextPage completion error: \(serviceProviderError)")
-                }
+            .sink { _ in
             } receiveValue: { [weak self] hasNextPage in
                 self?.hasNextPage = hasNextPage
 
@@ -149,7 +142,6 @@ extension PopularMatchesDataSource {
 
     private func fetchPopularMatches() {
 
-        print("PopularMatchesDataSource fetchPopularMatches requested ")
 
         self.isLoadingCurrentValueSubject.send(true)
 
@@ -165,18 +157,15 @@ extension PopularMatchesDataSource {
                 case .finished:
                     ()
                 case .failure(let error):
-                    print("PopularMatchesDataSource fetchPopularMatches error: \(error)")
                     self?.allMatchesSubject.send([])
                     self?.isLoadingCurrentValueSubject.send(false)
                 }
             }, receiveValue: { [weak self] (subscribableContent: SubscribableContent<[EventsGroup]>) in
                 switch subscribableContent {
                 case .connected(let subscription):
-                    print("PopularMatchesDataSource fetchPopularMatches connected \(subscription)")
                     self?.popularSubscription = subscription
                 case .contentUpdate(let eventsGroups):
                     guard let self = self else { return }
-                    print("PopularMatchesDataSource fetchPopularMatches received data \(eventsGroups.count)")
 
                     let splittedEventGroups = self.splitEventsGroups(eventsGroups)
                     let mappedOutrights: [Competition]? = ServiceProviderModelMapper.competitions(fromEventsGroups: splittedEventGroups.competitionsEventGroups)
@@ -187,7 +176,7 @@ extension PopularMatchesDataSource {
 
                     self.isLoadingCurrentValueSubject.send(false)
                 case .disconnected:
-                    print("PopularMatchesDataSource fetchPopularMatches disconnected")
+                    break
                 }
             })
     }

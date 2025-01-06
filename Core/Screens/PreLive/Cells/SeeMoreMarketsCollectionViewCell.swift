@@ -62,6 +62,12 @@ class SeeMoreMarketsCollectionViewCell: UICollectionViewCell {
 //        // self.layer.isDoubleSided = false
 //
 //        self.baseView.clipsToBounds = true
+
+        //
+        // Setup fonts
+        self.titleLabel.font = AppFont.with(type: .heavy, size: 14)
+        self.subtitleLabel.font = AppFont.with(type: .bold, size: 12)
+            
         self.baseView.layer.cornerRadius = 9
 
         self.baseView.addSubview(self.circularProgressView)

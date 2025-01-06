@@ -73,11 +73,7 @@ class LiveEventsViewModel: NSObject {
 
     private var liveMatchesViewModelDataSource = LiveMatchesViewModelDataSource(liveMatches: [], upcomingMatches: [])
 
-    private var liveMatches: [Match] = [] {
-        didSet {
-            print("LiveMatchesViewModel liveMatches did set")
-        }
-    }
+    private var liveMatches: [Match] = []
     private var upcomingMatches: [Match] = []
     private var outrightCompetitions: [Competition] = []
     
@@ -174,9 +170,7 @@ class LiveEventsViewModel: NSObject {
             }, receiveValue: { [weak self] allSports in
                 let liveSports = allSports.filter({
                     $0.liveEventsCount > 0
-                })
-                print("LIVE SPORTS UPDATE: \(liveSports)")
-                
+                })                
                 self?.liveSports = liveSports
             })
             .store(in: &cancellables)
@@ -388,7 +382,7 @@ class LiveEventsViewModel: NSObject {
                 case .finished:
                     ()
                 case .failure(let error):
-                    print("TodayMatchesDataSource fetchUpcomingMatches error: \(error)")
+                    print("LiveMatchesDataSource fetchUpcomingMatches error: \(error)")
                     self?.upcomingMatches = []
                     self?.outrightCompetitions = []
                 }
@@ -411,7 +405,7 @@ class LiveEventsViewModel: NSObject {
 
                     self.isLoadingUpcomingSubject.send(false)
                 case .disconnected:
-                    print("TodayMatchesDataSource fetchUpcomingMatches disconnected")
+                    break
                 }
             })
     }
@@ -519,11 +513,7 @@ extension LiveEventsViewModel {
 
 class LiveMatchesViewModelDataSource: NSObject, UITableViewDataSource, UITableViewDelegate {
     
-    var liveMatches: [Match] = [] {
-        didSet {
-            print("LiveMatchesViewModelDataSource liveMatches did set")
-        }
-    }
+    var liveMatches: [Match] = []
     
     var upcomingMatches: [Match] = []
     

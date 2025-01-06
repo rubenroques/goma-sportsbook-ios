@@ -64,7 +64,13 @@ class MultipleBettingTicketTableViewCell: UITableViewCell {
     
     override func awakeFromNib() {
         super.awakeFromNib()
+        
         // Initialization code
+        self.outcomeNameLabel.font = AppFont.with(type: .heavy, size: 15)
+        self.oddValueLabel.font = AppFont.with(type: .heavy, size: 14)
+        self.marketNameLabel.font = AppFont.with(type: .heavy, size: 14)
+        self.matchDetailLabel.font = AppFont.with(type: .bold, size: 12)
+        self.suspendedBettingOfferLabel.font = AppFont.with(type: .heavy, size: 20)
 
         self.suspendedBettingOfferView.isHidden = true
         self.mixMatchIconImageView.isHidden = true

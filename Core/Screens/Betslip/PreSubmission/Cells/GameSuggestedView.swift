@@ -47,6 +47,8 @@ class GameSuggestedView: NibView {
     }
 
     override func commonInit() {
+        self.gameTitleLabel.font = AppFont.with(type: .heavy, size: 14)
+        self.gameInfoLabel.font = AppFont.with(type: .regular, size: 12)
 
         self.gameTitleLabel.text = self.gameTitle
         self.gameInfoLabel.text = self.gameInfo

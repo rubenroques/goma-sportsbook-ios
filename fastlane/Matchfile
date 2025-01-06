@@ -7,7 +7,9 @@ type("adhoc") # The default type, can be: appstore, adhoc, enterprise or develop
 username("ruben@gomadevelopment.pt") # Your Apple Developer Portal username
 
 app_identifier([
-	"com.gomagaming.betsson"
+	"com.gomagaming.betsson",
+	"fr.betsson.ios.app",
+	"fr.betsson.ios.app.betssonNotificationsService"
 
 #	"com.gomagaming.goma",
 #	"com.gomagaming.gomasportradar",

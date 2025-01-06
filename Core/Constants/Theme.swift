@@ -9,8 +9,8 @@ import Foundation
 import UIKit
 
 enum Theme: Int, CaseIterable {
-    case device
     case light
+    case device
     case dark
 }
 

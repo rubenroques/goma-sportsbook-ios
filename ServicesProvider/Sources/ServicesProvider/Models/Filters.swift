@@ -88,12 +88,12 @@ public struct MarketSportType: Codable {
 
 public struct MarketSport: Codable {
     public var ids: [String]
-    public var displayOrder: Int
+    public var marketOrder: Int
     public var expanded: Bool
 
     enum CodingKeys: String, CodingKey {
         case ids = "ids"
-        case displayOrder = "displayOrder"
+        case marketOrder = "displayOrder"
         case expanded = "expanded"
     }
 }

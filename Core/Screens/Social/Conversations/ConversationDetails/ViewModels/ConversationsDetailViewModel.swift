@@ -221,11 +221,7 @@ class ConversationDetailViewModel: NSObject {
 
         guard let conversationData = self.conversationData else { return }
         
-        #if DEBUG
-        self.titlePublisher.value = "\(conversationData.name)-\(conversationData.id)"
-        #else
         self.titlePublisher.value = conversationData.name
-        #endif
         
         if conversationData.conversationType == .user {
             self.usersPublisher.value = "\(conversationData.name.lowercased())"

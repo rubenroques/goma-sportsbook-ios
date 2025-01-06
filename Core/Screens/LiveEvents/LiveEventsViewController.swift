@@ -84,6 +84,9 @@ class LiveEventsViewController: UIViewController {
         self.setupWithTheme()
         self.connectPublishers()
 
+        self.filtersCountLabel.font = AppFont.with(type: .heavy, size: 10)
+        self.sportTypeNameLabel.font = AppFont.with(type: .heavy, size: 7)
+
         self.viewModel.didSelectMatchAction = { match in
             let matchDetailsViewController = MatchDetailsViewController(viewModel: MatchDetailsViewModel(match: match))
             self.navigationController?.pushViewController(matchDetailsViewController, animated: true)
@@ -138,6 +141,7 @@ class LiveEventsViewController: UIViewController {
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
 
+        self.reloadData()
         self.floatingShortcutsView.resetAnimations()
         self.setHomeFilters(homeFilters: self.viewModel.homeFilterOptions)
     }
@@ -208,7 +212,7 @@ class LiveEventsViewController: UIViewController {
         filtersCollectionView.showsVerticalScrollIndicator = false
         filtersCollectionView.showsHorizontalScrollIndicator = false
         filtersCollectionView.alwaysBounceHorizontal = true
-        filtersCollectionView.register(ListTypeCollectionViewCell.nib,
+        filtersCollectionView.register(ListTypeCollectionViewCell.self,
                                        forCellWithReuseIdentifier: ListTypeCollectionViewCell.identifier)
         filtersCollectionView.delegate = self
         filtersCollectionView.dataSource = self

@@ -137,7 +137,7 @@ class SportRadarEventMarketsCoordinator {
             .sink(receiveCompletion: { [weak self] completion in
                 switch completion {
                 case .finished:
-                    print("subscribeEventSecundaryMarkets completed")
+                    break
                 case .failure(let failure):
                     self?.subscription = nil
                     print("subscribeEventSecundaryMarkets completed with error: \(failure)")
@@ -193,7 +193,7 @@ class SportRadarEventMarketsCoordinator {
             .sink(receiveCompletion: { [weak self] completion in
                 switch completion {
                 case .finished:
-                    print("subscribeEventSecundaryMarkets completed")
+                    break
                 case .failure(let failure):
                     self?.subscription = nil
                     print("subscribeEventSecundaryMarkets completed with error: \(failure)")
@@ -277,11 +277,8 @@ extension SportRadarEventMarketsCoordinator {
         guard
             self.eventSecundaryMarketsIdentifier == updatedContentIdentifier || self.eventMainMarketIdentifier == updatedContentIdentifier
         else {
-            print("SportRadarEventMarketsCoordinator liveDataSummaryEventSummary not equal handleContentUpdate \(updatedContentIdentifier) != \(self.eventSecundaryMarketsIdentifier) \(self.eventMainMarketIdentifier)")
             return
         }
-
-        print("SportRadarEventMarketsCoordinator liveDataSummaryEventSummary handleContentUpdate \(updatedContentIdentifier)")
 
         switch content {
 

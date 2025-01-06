@@ -226,6 +226,18 @@ class SportRadarBettingProvider: BettingProvider, Connector {
             }).eraseToAnyPublisher()
     }
 
+    func allowedCashoutBetIds() -> AnyPublisher<[String], ServiceProviderError> {
+        let endpoint = BettingAPIClient.getAllowedCashoutBetIds
+        let publisher: AnyPublisher<[Double], ServiceProviderError> = self.connector.request(endpoint)
+        return publisher
+            .map({ idsArray in
+                let mappedDoubles = idsArray.map { value in
+                    return String(format: "%.2f", value)
+                }
+                return mappedDoubles
+            }).eraseToAnyPublisher()
+    }
+    
     func cashoutBet(betId: String, cashoutValue: Double, stakeValue: Double? = nil) -> AnyPublisher<CashoutResult, ServiceProviderError> {
         let endpoint = BettingAPIClient.cashoutBet(betId: betId, cashoutValue: cashoutValue, stakeValue: stakeValue)
         let publisher: AnyPublisher<SportRadarModels.CashoutResult, ServiceProviderError> = self.connector.request(endpoint)

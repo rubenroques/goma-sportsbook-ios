@@ -45,7 +45,20 @@ class HeadToHeadCardStatsView: NibView {
 
     override func commonInit() {
         self.setupWithTheme()
-
+           
+        // Setup fonts
+        self.winHomeValueLabel.font = AppFont.with(type: .medium, size: 10)
+        self.drawHomeValueLabel.font = AppFont.with(type: .medium, size: 10)
+        self.lossHomeValueLabel.font = AppFont.with(type: .medium, size: 10)
+        self.winTitleLabel.font = AppFont.with(type: .medium, size: 10)
+        self.drawTitleLabel.font = AppFont.with(type: .medium, size: 10)
+        self.lossTitleLabel.font = AppFont.with(type: .medium, size: 10)        
+        self.winAwayValueLabel.font = AppFont.with(type: .medium, size: 10)
+        self.drawAwayValueLabel.font = AppFont.with(type: .medium, size: 10)
+        self.lossAwayValueLabel.font = AppFont.with(type: .medium, size: 10)
+        self.captionLabel.font = AppFont.with(type: .medium, size: 9)
+        
+        //
         self.winHomeValueLabel.text = "9"
         self.winHomeProgressBar.progress = 0.9
         self.drawHomeValueLabel.text = "0"

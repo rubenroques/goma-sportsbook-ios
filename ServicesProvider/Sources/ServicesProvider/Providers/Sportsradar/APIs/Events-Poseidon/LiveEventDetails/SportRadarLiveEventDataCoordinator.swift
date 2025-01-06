@@ -58,7 +58,6 @@ class SportRadarLiveEventDataCoordinator {
     private var cancellables = Set<AnyCancellable>()
 
     init(eventId: String, sessionToken: String, storage: SportRadarEventStorage, liveDataExtendedSubscription: Subscription? = nil) {
-        print("LoadingBug ledc 1")
         self.eventIdObserved = eventId
         
         self.liveDataExtendedSubscription = liveDataExtendedSubscription
@@ -110,7 +109,7 @@ class SportRadarLiveEventDataCoordinator {
     }
     
     deinit {
-        print("SportRadarLiveEventDataCoordinator - deinit \(self.liveEventContentIdentifier) ")
+        
     }
 
     private func checkLiveEventDetailsAvailable() -> AnyPublisher<Void, ServiceProviderError> {
@@ -337,7 +336,6 @@ extension SportRadarLiveEventDataCoordinator: UnsubscriptionController {
                 print("ServiceProvider.Subscription.Debug unsubscribe failed")
                 return
             }
-            print("ServiceProvider.Subscription.Debug unsubscribe ok")
         }
         sessionDataTask.resume()
     }

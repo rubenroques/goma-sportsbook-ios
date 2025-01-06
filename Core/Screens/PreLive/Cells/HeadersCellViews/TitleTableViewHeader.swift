@@ -26,6 +26,9 @@ class TitleTableViewHeader: UITableViewHeaderFooterView {
         super.awakeFromNib()
         self.setupWithTheme()
 
+        // Setup fonts
+        self.sectionTitleLabel.font = AppFont.with(type: .heavy, size: 16)
+        
         self.hasSearchIcon = false
 
         let searchTapGesture = UITapGestureRecognizer(target: self, action: #selector(didTapSearchIcon))

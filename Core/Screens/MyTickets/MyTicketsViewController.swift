@@ -27,6 +27,7 @@ class MyTicketsViewController: UIViewController {
 
     private let refreshControl = UIRefreshControl()
     private var shouldShowCenterLoadingView = false
+    
     private var viewModel: MyTicketsViewModel
 
     private var cancellables = Set<AnyCancellable>()
@@ -66,8 +67,11 @@ class MyTicketsViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
 
+        // Setup fonts
+        self.firstTextFieldLabel.font = AppFont.with(type: .heavy, size: 20)
+        self.secondTextFieldLabel.font = AppFont.with(type: .heavy, size: 14)
+        
         self.noBetsButton.isHidden = true
-
         self.emptyBaseView.isHidden = true
 
         self.ticketsTableView.delegate = self.viewModel
@@ -405,7 +409,6 @@ class MyTicketsViewController: UIViewController {
         }
 
         self.view.bringSubviewToFront(alertView)
-
     }
 
     private func showCashbackInfo() {
@@ -418,20 +421,16 @@ class MyTicketsViewController: UIViewController {
     private func scrollDown() {
 
         let scrollPosition = self.ticketsTableView.contentOffset.y
-
         let bottomOffset = self.ticketsTableView.contentSize.height - self.ticketsTableView.bounds.size.height
-
         var newScrollPosition = scrollPosition + 120
 
         if newScrollPosition > bottomOffset {
             newScrollPosition = bottomOffset
         }
-
         let scrollPoint = CGPoint(x: 0, y: newScrollPosition)
 
         self.ticketsTableView.setContentOffset(scrollPoint, animated: true)
     }
-
 }
 
 extension MyTicketsViewController {

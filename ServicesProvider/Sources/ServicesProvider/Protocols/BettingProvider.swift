@@ -33,7 +33,8 @@ protocol BettingProvider: Connector {
     func calculateCashout(betId: String, stakeValue: String?) -> AnyPublisher<Cashout, ServiceProviderError>
 
     func cashoutBet(betId: String, cashoutValue: Double, stakeValue: Double?) -> AnyPublisher<CashoutResult, ServiceProviderError>
-
+    func allowedCashoutBetIds() -> AnyPublisher<[String], ServiceProviderError>
+    
     func calculateCashback(forBetTicket betTicket: BetTicket)  -> AnyPublisher<CashbackResult, ServiceProviderError>
 
     func getBetslipSettings() -> AnyPublisher<BetslipSettings?, Never>

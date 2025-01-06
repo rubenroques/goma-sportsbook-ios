@@ -18,10 +18,10 @@ import Adjust
 
 class DepositViewController: UIViewController {
 
-    public var shouldDismissAction: (() -> Void)? = nil
-    public var didTapBackButtonAction: (() -> Void)? = nil
-    public var didTapCancelButtonAction: (() -> Void)? = nil
-    public var shouldRefreshUserWallet: (() -> Void)? = nil
+    public var shouldDismissAction: (() -> Void)?
+    public var didTapBackButtonAction: (() -> Void)?
+    public var didTapCancelButtonAction: (() -> Void)?
+    public var shouldRefreshUserWallet: (() -> Void)?
     
     @IBOutlet private var topView: UIView!
     @IBOutlet private var containerView: UIView!
@@ -193,6 +193,11 @@ class DepositViewController: UIViewController {
         depositTipLabel.font = AppFont.with(type: .semibold, size: 12)
         depositTipLabel.isHidden = false
 
+        self.titleLabel.font = AppFont.with(type: .heavy, size: 20)
+        self.bonusTitleLabel.font = AppFont.with(type: .heavy, size: 14)
+        self.bonusInfoLabel.font = AppFont.with(type: .bold, size: 12)
+        self.bonusDetailLabel.font = AppFont.with(type: .heavy, size: 14)
+
         self.setDepositAmountButtonDesign(button: self.amount10Button, title: "25€")
         self.setDepositAmountButtonDesign(button: self.amount20Button, title: "50€")
         self.setDepositAmountButtonDesign(button: self.amount50Button, title: "100€")
@@ -222,27 +227,6 @@ class DepositViewController: UIViewController {
         self.setupPublishers()
 
         self.isLoading = false
-
-//        let animationView = LottieAnimationView()
-//
-//        animationView.translatesAutoresizingMaskIntoConstraints = false
-//        animationView.contentMode = .scaleAspectFit
-//
-//        self.animationBaseView.addSubview(animationView)
-//
-//        let starAnimation = LottieAnimation.named("deposit_animation")
-//
-//        animationView.animation = starAnimation
-//        animationView.loopMode = .loop
-//
-//        NSLayoutConstraint.activate([
-//            animationView.leadingAnchor.constraint(equalTo: self.animationBaseView.leadingAnchor),
-//            animationView.trailingAnchor.constraint(equalTo: self.animationBaseView.trailingAnchor),
-//            animationView.topAnchor.constraint(equalTo: self.animationBaseView.topAnchor),
-//            animationView.bottomAnchor.constraint(equalTo: self.animationBaseView.bottomAnchor)
-//        ])
-//
-//        animationView.play()
 
         self.titleLabel.text = localized("how_much_deposit")
 
@@ -433,7 +417,7 @@ class DepositViewController: UIViewController {
                 var starAnimation = LottieAnimation.named("deposit_animation")
                 
                 if isFirstDeposit {
-                    starAnimation = LottieAnimation.named("first_deposit")
+                    starAnimation = LottieAnimation.named("first_deposit_8")
                 }
 
                 animationView.animation = starAnimation

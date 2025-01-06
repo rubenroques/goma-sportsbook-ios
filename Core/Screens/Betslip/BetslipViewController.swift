@@ -122,6 +122,9 @@ class BetslipViewController: UIViewController {
 
         self.betsLabel.text = localized("bets")
 
+        self.accountValueLabel.font = AppFont.with(type: .bold, size: 14)
+        self.betsLabel.font = AppFont.with(type: .heavy, size: 20)
+
         //
         //
         self.closeButton.titleLabel?.font = AppFont.with(type: AppFont.AppFontType.semibold, size: 17)
@@ -247,7 +250,9 @@ class BetslipViewController: UIViewController {
 
     @IBAction private func didTapCancelButton() {
         self.willDismissAction?()
-        self.dismiss(animated: true, completion: nil)
+        self.dismiss(animated: true, completion: { [weak self] in
+            self?.willDismissAction?()
+        })
     }
 
     func showBetPlacedScreen(withBetPlacedDetails betPlacedDetailsArray: [BetPlacedDetails], withCashbackResultValue cashbackResultValue: Double? = nil, usedCashback: Bool) {

@@ -179,7 +179,7 @@ class TransactionsTableViewCell: UITableViewCell {
         if transactionHistoryEntry.type == localized("automated_withdrawal") {
             self.transactionIcon.image = UIImage(named: "automated_withdraw_icon")
         }
-        else if transactionHistoryEntry.type == localized("automated_withdrawal_threshold") {
+        else if transactionHistoryEntry.type == localized("automated_withdrawal_threshold") || transactionHistoryEntry.type == localized("administrative_costs") {
             self.transactionIcon.image = UIImage(named: "automated_withdraw_threshold_icon")
         }
         else if transactionHistoryEntry.transactionType == .depositReturned {

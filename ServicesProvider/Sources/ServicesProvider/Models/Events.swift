@@ -373,7 +373,9 @@ public class Outcome: Codable, Equatable {
     public var marketId: String?
     public var orderValue: String?
     public var externalReference: String?
+    
     public var isTradable: Bool
+    public var isTerminated: Bool
 
     public var customBetAvailableMarket: Bool?
     
@@ -385,6 +387,7 @@ public class Outcome: Codable, Equatable {
         case orderValue = "orderValue"
         case externalReference = "externalReference"
         case isTradable = "isTradable"
+        case isTerminated = "isTerminated"
         case customBetAvailableMarket = "customBetAvailableMarket"
     }
 
@@ -395,6 +398,7 @@ public class Outcome: Codable, Equatable {
                 orderValue: String?,
                 externalReference: String?,
                 isTradable: Bool,
+                isTerminated: Bool,
                 customBetAvailableMarket: Bool?) {
         
         self.id = id
@@ -404,6 +408,7 @@ public class Outcome: Codable, Equatable {
         self.orderValue = orderValue
         self.externalReference = externalReference
         self.isTradable = isTradable
+        self.isTerminated = isTerminated
         self.customBetAvailableMarket = customBetAvailableMarket
     }
 
@@ -416,6 +421,7 @@ public class Outcome: Codable, Equatable {
         self.orderValue = try container.decodeIfPresent(String.self, forKey: .orderValue)
         self.externalReference = try container.decodeIfPresent(String.self, forKey: .externalReference)
         self.isTradable = (try? container.decode(Bool.self, forKey: .isTradable)) ?? false
+        self.isTerminated = (try? container.decode(Bool.self, forKey: .isTerminated)) ?? false
         self.customBetAvailableMarket = try container.decodeIfPresent(Bool.self, forKey: .customBetAvailableMarket)
     }
 
@@ -428,6 +434,7 @@ public class Outcome: Codable, Equatable {
         lhs.orderValue == rhs.orderValue &&
         lhs.externalReference == rhs.externalReference &&
         lhs.isTradable == rhs.isTradable &&
+        lhs.isTerminated == rhs.isTerminated &&
         lhs.customBetAvailableMarket == rhs.customBetAvailableMarket
     }
 }
@@ -524,7 +531,7 @@ public struct EventMarket {
     public var id: String
     public var name: String
     public var marketIds: [String]
-    public var order: Int
+    public var groupOrder: Int
 }
 
 public struct AvailableMarket {

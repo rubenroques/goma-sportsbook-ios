@@ -679,6 +679,29 @@ class MatchWidgetCollectionViewCell: UICollectionViewCell {
         self.backgroundImageGradientLayer.endPoint = CGPoint(x: 0.5, y: 0.0) // top
         self.backgroundImageView.layer.addSublayer(self.backgroundImageGradientLayer)
         
+        //         
+        // Setup fonts
+        self.eventNameLabel.font = AppFont.with(type: .medium, size: 11)
+        self.suspendedLabel.font = AppFont.with(type: .bold, size: 13)
+        self.seeAllLabel.font = AppFont.with(type: .bold, size: 13)
+        // Odd value labels
+        self.homeOddValueLabel.font = AppFont.with(type: .bold, size: 13)
+        self.drawOddValueLabel.font = AppFont.with(type: .bold, size: 13)
+        self.awayOddValueLabel.font = AppFont.with(type: .bold, size: 13)
+        // Odd title labels
+        self.homeOddTitleLabel.font = AppFont.with(type: .medium, size: 10)
+        self.drawOddTitleLabel.font = AppFont.with(type: .medium, size: 10)
+        self.awayOddTitleLabel.font = AppFont.with(type: .medium, size: 10)
+        // Date and time labels
+        self.dateLabel.font = AppFont.with(type: .medium, size: 12)
+        self.timeLabel.font = AppFont.with(type: .bold, size: 16)
+        self.resultLabel.font = AppFont.with(type: .bold, size: 17)
+        self.matchTimeLabel.font = AppFont.with(type: .semibold, size: 8)
+        // Participant name labels
+        self.homeParticipantNameLabel.font = AppFont.with(type: .bold, size: 14)
+        self.awayParticipantNameLabel.font = AppFont.with(type: .bold, size: 14)
+        self.outrightNameLabel.font = AppFont.with(type: .bold, size: 14)
+        
         //
         // Hide boosted odds views
         self.homeBoostedOddValueBaseView.isHidden = true
@@ -987,21 +1010,6 @@ class MatchWidgetCollectionViewCell: UICollectionViewCell {
         //
         self.adjustDesignToCardHeightStyle()
         self.setupWithTheme()
-        
-//#if DEBUG
-//        let debugLabel = UILabel()
-//        debugLabel.translatesAutoresizingMaskIntoConstraints = false
-//        debugLabel.text = self.debugUUID.uuidString
-//        debugLabel.font = UIFont.systemFont(ofSize: 13)
-//        self.addSubview(debugLabel)
-//        
-//        NSLayoutConstraint.activate([
-//            debugLabel.centerXAnchor.constraint(equalTo: self.contentView.centerXAnchor),
-//            debugLabel.centerYAnchor.constraint(equalTo: self.contentView.centerYAnchor, constant: 15),
-//        ])
-//#endif
-//        
-        
     }
     
     override func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {
@@ -1698,12 +1706,6 @@ class MatchWidgetCollectionViewCell: UICollectionViewCell {
             self.homeContentRedesignTopConstraint.constant = 25
             self.awayContentRedesignTopConstraint.constant = 45
         }
-        
-        StyleHelper.shared.$cardsStyleActive
-            .sink { cardsStyle in
-                print("StyleHelper cardsStyleActive")
-            }
-            .store(in: &self.cancellables)
     }
     
     

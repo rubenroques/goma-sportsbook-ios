@@ -206,6 +206,7 @@ class ClientManagedHomeViewTemplateDataSource {
         self.matchLineTableCellViewModelCache = [:]
         self.matchLineTableCellViewModelCache = [:]
         self.marketWidgetContainerTableViewModelCache = [:]
+        self.heroCardWidgetCellViewModelCache = [:]
 
         self.suggestedBetslips = []
         self.highlightedMarkets = []
@@ -255,9 +256,8 @@ class ClientManagedHomeViewTemplateDataSource {
     func fetchBanners() {
         let cancellable = Env.servicesProvider.getPromotionalTopBanners()
             .receive(on: DispatchQueue.main)
-            .sink { [weak self] completion in
-                print("ClientManagedHomeTemplate getPromotionalTopBanners completion \(completion)")
-                // Optionally handle completion (e.g., handle errors)
+            .sink { _ in
+                //
             } receiveValue: { [weak self] (promotionalBanners: [PromotionalBanner]) in
                 guard let self = self else { return }
                 
@@ -268,9 +268,6 @@ class ClientManagedHomeViewTemplateDataSource {
                 } else {
                     displayBanners = displayBanners.filter { $0.bannerDisplay == "LOGGEDOFF" }
                 }
-                
-                print("DISPLAY BANNERS: \(displayBanners)")
-                
                 self.banners = displayBanners.map { promotionalBanner in
                     BannerInfo(
                         type: "",
@@ -294,8 +291,8 @@ class ClientManagedHomeViewTemplateDataSource {
 
         let cancellable = Env.servicesProvider.getPromotionalTopStories()
             .receive(on: DispatchQueue.main)
-            .sink { completion in
-                print("ClientManagedHomeTemplate getPromotionalTopStories Promotional stories completion \(completion)")
+            .sink { _ in
+                //
             } receiveValue: { [weak self] promotionalStories in
                 let mappedPromotionalStories = promotionalStories.map({ promotionalStory in
                     let promotionalStory = ServiceProviderModelMapper.promotionalStory(fromPromotionalStory: promotionalStory)
@@ -312,8 +309,8 @@ class ClientManagedHomeViewTemplateDataSource {
         let cancellable = Env.servicesProvider.getPromotionalSlidingTopEvents()
             .map(ServiceProviderModelMapper.matches(fromEvents:))
             .receive(on: DispatchQueue.main)
-            .sink(receiveCompletion: { completion in
-                print("ClientManagedHomeTemplate getPromotionalSlidingTopEvents completion \(completion)")
+            .sink(receiveCompletion: { _ in
+                //
             }, receiveValue: { [weak self] matches in
                 self?.quickSwipeStackMatches = matches
                 self?.refreshPublisher.send()
@@ -373,8 +370,8 @@ class ClientManagedHomeViewTemplateDataSource {
             return events
         }
         .receive(on: DispatchQueue.main)
-        .sink(receiveCompletion: { completion in
-            print("ClientManagedHomeTemplate fetchHighlightMatches completion \(completion)")
+        .sink(receiveCompletion: { _ in
+            //
         }, receiveValue: { [weak self] highlightedMatchTypes in
             var imageMatches: [Match] = [ ]
             var boostedMatches: [Match] = []
@@ -421,7 +418,6 @@ class ClientManagedHomeViewTemplateDataSource {
             .sink { completion in
 
             } receiveValue: { [weak self] highlightMarkets in
-                print("getHighlightedMarkets \(highlightMarkets)")
                 let markets = highlightMarkets.map(\.market)
                 let mappedMarkets = ServiceProviderModelMapper.markets(fromServiceProviderMarkets: markets)
 
@@ -450,8 +446,8 @@ class ClientManagedHomeViewTemplateDataSource {
             .receive(on: DispatchQueue.main)
             .map(ServiceProviderModelMapper.matches(fromEvents:))
             .compactMap({ $0 })
-            .sink(receiveCompletion: { completion in
-                    print("ClientManagedHomeTemplate getHeroGameEvent completion \(completion)")
+            .sink(receiveCompletion: { _ in
+                 
             }, receiveValue: { [weak self] heroMatches in
                 self?.heroMatches = heroMatches
                 self?.refreshPublisher.send()
@@ -465,8 +461,8 @@ class ClientManagedHomeViewTemplateDataSource {
 
         let cancellable = Env.servicesProvider.getPromotedSports()
             .receive(on: DispatchQueue.main)
-            .sink { completion in
-                print("ClientManagedHomeTemplate getPromotedSports completion \(completion)")
+            .sink { _ in
+                //
             } receiveValue: { [weak self] promotedSports in
                 self?.promotedSports = promotedSports
                 self?.refreshPublisher.send()
@@ -483,8 +479,8 @@ class ClientManagedHomeViewTemplateDataSource {
         let mergeManyCancellable = Publishers.MergeMany(publishers)
             .collect()
             .receive(on: DispatchQueue.main)
-            .sink { completion in
-                print("ClientManagedHomeTemplate fetchMatchesForPromotedSport completion \(completion)")
+            .sink { _ in
+                //
             } receiveValue: { [weak self] eventGroups in
                 let matches = eventGroups.flatMap(\.events).prefix(20).map(ServiceProviderModelMapper.match(fromEvent:)).compactMap({ $0 })
                 self?.promotedSportsMatches[promotedSport.id] = matches
@@ -588,10 +584,6 @@ class ClientManagedHomeViewTemplateDataSource {
             userId = loggedUserId
         }
 
-        #if DEBUG
-        homeLiveEventsCount = 20
-        #endif
-
         let cancellable = Env.servicesProvider.getHighlightedLiveEvents(eventCount: homeLiveEventsCount, userId: userId)
             .map { highlightedLiveEvents in
                 return highlightedLiveEvents.compactMap(ServiceProviderModelMapper.match(fromEvent:))
@@ -613,7 +605,6 @@ class ClientManagedHomeViewTemplateDataSource {
             }
 
         self.addCancellable(cancellable)
-
     }
     
     private func waitUserToTrackImpressionForEvents(eventsIds: [String]) {
@@ -625,7 +616,6 @@ class ClientManagedHomeViewTemplateDataSource {
             .sink { [weak self] userIdentifier in
                 self?.trackImpressionForEvents(eventsIds: eventsIds, userId: userIdentifier)
             }
-        
     }
     
     private func trackImpressionForEvents(eventsIds: [String], userId: String) {
@@ -634,7 +624,7 @@ class ClientManagedHomeViewTemplateDataSource {
             .sink { _ in
                 //
             } receiveValue: {
-                print("trackEvent impressionsEvents called ok")
+                //
             }
             .store(in: &self.cancellables)
         
@@ -657,8 +647,8 @@ class ClientManagedHomeViewTemplateDataSource {
         let cancellable = Env.servicesProvider.getPromotedBetslips(userId: userIdentifier)
             .map(ServiceProviderModelMapper.suggestedBetslips(fromPromotedBetslips:))
             .receive(on: DispatchQueue.main)
-            .sink { completion in
-                print("ClientManagedHomeTemplate getPromotedSports completion \(completion)")
+            .sink { _ in
+                //
             } receiveValue: { [weak self] suggestedBetslips in
                 self?.suggestedBetslips = suggestedBetslips
                 self?.refreshPublisher.send()
@@ -923,11 +913,10 @@ extension ClientManagedHomeViewTemplateDataSource: HomeViewTemplateDataSource {
 
     }
     
-    // TODO: HERO CARD CELL VIEW MODEL
     func heroCardMatchViewModel(forIndex index: Int) -> MatchWidgetCellViewModel? {
                 
         if let match = self.heroMatches[safe: index] {
-            let id = match.id + MatchWidgetType.topImage.rawValue
+            let id = match.id
             if let matchWidgetCellViewModel = self.heroCardWidgetCellViewModelCache[id] {
                 return matchWidgetCellViewModel
             }

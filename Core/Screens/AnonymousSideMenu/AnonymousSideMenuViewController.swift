@@ -135,7 +135,7 @@ class AnonymousSideMenuViewController: UIViewController {
 
         let replayView = NavigationCardView()
         replayView.hasNotifications = true
-        replayView.setupView(title: localized("replay"), iconTitle: "cashback_icon")
+        replayView.setupView(title: localized("cashback"), iconTitle: "cashback_icon")
         let replayTap = UITapGestureRecognizer(target: self, action: #selector(replayViewTapped))
         replayView.addGestureRecognizer(replayTap)
 

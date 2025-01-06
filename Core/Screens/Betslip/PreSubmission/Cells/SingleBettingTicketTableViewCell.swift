@@ -137,7 +137,14 @@ class SingleBettingTicketTableViewCell: UITableViewCell {
     
     override func awakeFromNib() {
         super.awakeFromNib()
-
+        
+        self.outcomeNameLabel.font = AppFont.with(type: .heavy, size: 15)
+        self.oddValueLabel.font = AppFont.with(type: .heavy, size: 14)
+        self.marketNameLabel.font = AppFont.with(type: .heavy, size: 14)
+        self.matchDetailLabel.font = AppFont.with(type: .bold, size: 12)
+        self.returnsValueLabel.font = AppFont.with(type: .bold, size: 12)
+        self.suspendedBettingOfferLabel.font = AppFont.with(type: .heavy, size: 20)
+        
         self.amountTextfield.keyboardType = .decimalPad
 
         self.suspendedBettingOfferView.isHidden = true

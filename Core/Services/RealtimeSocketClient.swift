@@ -40,13 +40,10 @@ class RealtimeSocketClient {
     private static let url = TargetVariables.firebaseDatabaseURL
 
     init() {
-        print("DebugRouter RealtimeSocketClient init")
         Database.database(url: Self.url).isPersistenceEnabled = false
     }
 
     func connectAfterAuth() {
-        print("DebugRouter RealtimeSocketClient databaseReference.observe called")
-
         // We can only connect to the ea
         Auth.auth().addStateDidChangeListener { [weak self] auth, user in 
             if user != nil {
@@ -95,11 +92,10 @@ class RealtimeSocketClient {
             let data = try? JSONSerialization.data(withJSONObject: value),
             let firebaseClientSettings = try? JSONDecoder().decode(FirebaseClientSettings.self, from: data)
         else {
-            print("DebugRouter RealtimeSocketClient connect failed")
             return
         }
                     
-        print("DebugRouter firebaseClientSettings \(firebaseClientSettings)")
+        // print("DebugRouter firebaseClientSettings \(firebaseClientSettings)")
 
         let versions = (required: firebaseClientSettings.requiredAppVersion, current: firebaseClientSettings.currentAppVersion)
         self.requiredVersionPublisher.send(versions)

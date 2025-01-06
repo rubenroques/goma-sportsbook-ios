@@ -411,10 +411,15 @@ class BetBuilderProcessor: Codable {
         self.validTickets = tickets
         self.processDifferences()
     }
-    
+
     func processInvalidTickets(_ tickets: [BettingTicket]) {
-        // Filter out any tickets that are in validTickets
-        self.invalidTicketsSubject.send(tickets.filter{!validTickets.contains($0)})
+        // Create a Set of valid ticket IDs for efficient lookup
+        let validTicketIDs = Set(validTickets.map { $0.id })
+        
+        // Filter out tickets that are not in the validTicketIDs set
+        let invalidTickets = tickets.filter { !validTicketIDs.contains($0.id) }
+        
+        self.invalidTicketsSubject.send(invalidTickets)
         self.processDifferences()
     }
     

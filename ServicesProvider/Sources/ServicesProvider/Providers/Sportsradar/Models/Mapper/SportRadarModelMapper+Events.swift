@@ -188,6 +188,7 @@ extension SportRadarModelMapper {
                        orderValue: internalOutcome.orderValue,
                        externalReference: internalOutcome.externalReference,
                        isTradable: internalOutcome.isTradable ?? true,
+                       isTerminated: internalOutcome.isTerminated ?? false,
                        customBetAvailableMarket: internalOutcome.customBetAvailableMarket)
     }
 

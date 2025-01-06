@@ -14,7 +14,6 @@ import ServicesProvider
 import AdyenComponents
 import AdyenActions
 import OptimoveSDK
-import AdyenCard
 
 class PaymentsDropIn {
 
@@ -50,8 +49,6 @@ class PaymentsDropIn {
     var dropInComponent: DropInComponent?
         
     var isPaypalDeposit: Bool = false
-    
-    var cardDetails: CardDetails?
 
     // MARK: Lifetime and Cycle
     init() {
@@ -239,8 +236,7 @@ class PaymentsDropIn {
     }
     
     func setupPaymentDropIn() -> DropInComponent? {
-        
-        
+
         guard
             let paymentMethodsResponse = self.paymentMethodsResponse
         else {
@@ -264,7 +260,7 @@ class PaymentsDropIn {
         let payment = Payment(amount: Amount(value: Int(self.dropInDepositAmount) ?? 0, currencyCode: "EUR"), countryCode: "FR")
         let dropInConfiguration = DropInComponent.Configuration()
         
-        dropInConfiguration.card = DropInComponent.Card( showsHolderNameField: true, showsStorePaymentMethodField: false)
+        dropInConfiguration.card = DropInComponent.Card(showsStorePaymentMethodField: false)
         
         if let applePayPayment = try? ApplePayPayment(payment: payment, brand: "Betsson France") {
             dropInConfiguration.applePay = ApplePayComponent.Configuration.init(payment: applePayPayment,
@@ -316,37 +312,12 @@ extension PaymentsDropIn: AdyenSessionDelegate {
     func didComplete(with result: AdyenSessionResult, component: Component, session: AdyenSession) {
 
         print("PaymentsDropIn - ADYEN SESSION RESULT: \(result)")
-        
-        // Update Omega payment with card info
-        if let cardDetails = self.cardDetails {
-            
-            Env.servicesProvider.updatePayment(amount: self.depositAmount,
-                                               paymentId: self.paymentId ?? "",
-                                               type: "scheme",
-                                               returnUrl: nil,
-                                               nameOnCard: cardDetails.nameOnCard,
-                                               encryptedExpiryYear: cardDetails.encryptedExpiryYear,
-                                               encryptedExpiryMonth: cardDetails.encryptedExpiryMonth,
-                                               encryptedSecurityCode: cardDetails.encryptedSecurityCode,
-                                               encryptedCardNumber: cardDetails.encryptedCardNumber)
-            .receive(on: DispatchQueue.main)
-            .sink { completion in
-                print("updatePayment card completion: \(completion)")
-                
-            } receiveValue: { updatePaymentResponse in
-                
-                print("UPDATE PAYMENT CARD: \(updatePaymentResponse)")
-                
-            }
-            .store(in: &self.cancellables)
-        }
 
         if result.resultCode == .refused {
             self.dropInComponent?.viewController.dismiss(animated: true)
             self.showPaymentStatus?(.refused, self.paymentId)
         }
-
-        if result.resultCode == .authorised {
+        else if result.resultCode == .authorised {
             self.dropInComponent?.viewController.dismiss(animated: true)
             self.showPaymentStatus?(.authorised, self.paymentId)
         }
@@ -395,22 +366,10 @@ extension PaymentsDropIn: AdyenSessionDelegate {
 extension PaymentsDropIn: AdyenSessionPaymentsHandler, AdyenSessionPaymentDetailsHandler {
  
     func didSubmit(_ paymentComponentData: PaymentComponentData, from component: Component, dropInComponent: AnyDropInComponent?, session: AdyenSession) {
-        
-        if let cardComponentDetails = paymentComponentData.paymentMethod as? AdyenCard.CardDetails {
-            let cardDetails = CardDetails(nameOnCard: cardComponentDetails.holderName,
-                                          encryptedExpiryYear: cardComponentDetails.encryptedExpiryYear,
-                                          encryptedExpiryMonth: cardComponentDetails.encryptedExpiryMonth,
-                                          encryptedSecurityCode: cardComponentDetails.encryptedSecurityCode,
-                                          encryptedCardNumber: cardComponentDetails.encryptedCardNumber)
-
-            self.cardDetails = cardDetails
-        }
-        
         self.adyenSession?.didSubmit(paymentComponentData,
                                      from: component,
                                      dropInComponent: dropInComponent,
                                      session: session)
-        
     }
     
     func didProvide(_ actionComponentData: ActionComponentData, from component: ActionComponent, session: AdyenSession) {
@@ -529,7 +488,7 @@ extension PaymentsDropIn {
     
     func checkSuccessOnRedirectURL(_ url: URL) {
         
-        if url.absoluteString.contains("deposit-results.html") && url.absoluteString.contains("resultCode=authorised") {
+        if url.absoluteString.contains("deposit-results") { // && url.absoluteString.contains("resultCode=authorised") {
             self.dropInComponent?.viewController.dismiss(animated: true)
             if let paymentId = self.paymentId {
                 self.showPaymentStatus?(.startedProcessing, paymentId)
@@ -537,12 +496,4 @@ extension PaymentsDropIn {
         }
         
     }
-}
-
-struct CardDetails {
-    let nameOnCard: String?
-    let encryptedExpiryYear: String?
-    let encryptedExpiryMonth: String?
-    let encryptedSecurityCode: String?
-    let encryptedCardNumber: String?
 }

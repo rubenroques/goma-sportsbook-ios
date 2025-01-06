@@ -47,7 +47,7 @@ class BetSubmissionSuccessViewController: UIViewController {
         animationView.translatesAutoresizingMaskIntoConstraints = false
         animationView.contentMode = .scaleAspectFit
 
-        let startAnimation = LottieAnimation.named("replay_sucess_3")
+        let startAnimation = LottieAnimation.named("replay_sucess_7")
 
         animationView.animation = startAnimation
         animationView.loopMode = .playOnce
@@ -429,7 +429,7 @@ class BetSubmissionSuccessViewController: UIViewController {
 
         let sharedTicketCardView = SharedTicketCardView()
 
-        let betCardViewModel = MyTicketCellViewModel(ticket: betHistory)
+        let betCardViewModel = MyTicketCellViewModel(ticket: betHistory, allowedCashback: false)
 
         sharedTicketCardView.configure(withBetHistoryEntry: betHistory,
                                        countryCodes: [],

@@ -88,7 +88,7 @@ class BonusRootViewController: UIViewController {
         self.bonusTypePagedViewController.delegate = self
         self.bonusTypePagedViewController.dataSource = self
 
-        self.bonusTypesCollectionView.register(ListTypeCollectionViewCell.nib,
+        self.bonusTypesCollectionView.register(ListTypeCollectionViewCell.self,
                                        forCellWithReuseIdentifier: ListTypeCollectionViewCell.identifier)
 
         self.bonusTypesCollectionView.delegate = self

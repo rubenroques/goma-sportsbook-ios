@@ -387,10 +387,8 @@ class TransactionsHistoryViewModel {
 
     func processTransactions(transactions: [TransactionDetail], transactionType: TransactionsType) {
         
-        var transactionsHistory = transactions.map { transactionDetail -> TransactionHistory in
-
+        let transactionsHistory = transactions.map { transactionDetail -> TransactionHistory in
             let transactionHistory = ServiceProviderModelMapper.transactionHistory(fromServiceProviderTransactionDetail: transactionDetail)
-
             return transactionHistory
         }
 

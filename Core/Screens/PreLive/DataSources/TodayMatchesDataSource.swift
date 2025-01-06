@@ -57,7 +57,6 @@ class TodayMatchesDataSource: NSObject {
 
         return Publishers.Merge3(outrightsChangedArrayPublisher, matchesChangedArrayPublisher, self.forcedRefreshPassthroughSubject)
             .map({ _ in })
-            .print("TodayMatchesDataSource dataChangedPublisher send")
             .eraseToAnyPublisher()
     }
 
@@ -205,7 +204,7 @@ extension TodayMatchesDataSource {
 
                     self.isLoadingCurrentValueSubject.send(false)
                 case .disconnected:
-                    print("TodayMatchesDataSource fetchTodayMatches disconnected")
+                    break
                 }
             })
     }

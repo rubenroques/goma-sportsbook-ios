@@ -336,6 +336,19 @@ class MatchDetailsViewController: UIViewController {
         
         self.setupNotifications()
         
+        // Setup fonts
+        self.matchNotAvailableLabel.font = AppFont.with(type: .bold, size: 18)
+        self.accountValueLabel.font = AppFont.with(type: .heavy, size: 12)
+        self.homeTeamLabel.font = AppFont.with(type: .heavy, size: 16)
+        self.awayTeamLabel.font = AppFont.with(type: .heavy, size: 16)
+        self.preLiveDateLabel.font = AppFont.with(type: .bold, size: 14)
+        self.preLiveTimeLabel.font = AppFont.with(type: .heavy, size: 16)
+        self.liveTimeLabel.font = AppFont.with(type: .heavy, size: 10)
+        self.liveButtonLabel.font = AppFont.with(type: .bold, size: 13)
+        self.statsButtonLabel.font = AppFont.with(type: .bold, size: 13)
+        self.statsNotFoundLabel.font = AppFont.with(type: .medium, size: 17)
+        self.marketsNotAvailableLabel.font = AppFont.with(type: .bold, size: 18)
+        
         self.view.transitionId = "SeeMoreToMatchDetails"
         
         //
@@ -418,18 +431,22 @@ class MatchDetailsViewController: UIViewController {
         self.headerDetailPreliveView.isHidden = false
         
         // Market Types CollectionView
-        let flowLayout = UICollectionViewFlowLayout()
-        flowLayout.estimatedItemSize = UICollectionViewFlowLayout.automaticSize
-        flowLayout.scrollDirection = .horizontal
-        self.marketTypesCollectionView.collectionViewLayout = flowLayout
-        self.marketTypesCollectionView.contentInset = UIEdgeInsets(top: 0, left: 16, bottom: 0, right: 16)
+        let layout = UICollectionViewFlowLayout()
+        layout.scrollDirection = .horizontal
+        layout.estimatedItemSize = UICollectionViewFlowLayout.automaticSize
+        layout.minimumInteritemSpacing = 10
+        layout.minimumLineSpacing = 10
+        layout.sectionInset = UIEdgeInsets(top: 0, left: 16, bottom: 0, right: 16)
+        
+        self.marketTypesCollectionView.collectionViewLayout = layout
         self.marketTypesCollectionView.showsVerticalScrollIndicator = false
         self.marketTypesCollectionView.showsHorizontalScrollIndicator = false
         self.marketTypesCollectionView.alwaysBounceHorizontal = true
-        self.marketTypesCollectionView.register(ListTypeCollectionViewCell.nib,
+        self.marketTypesCollectionView.register(ListTypeCollectionViewCell.self,
                                                 forCellWithReuseIdentifier: ListTypeCollectionViewCell.identifier)
         self.marketTypesCollectionView.register(ListBackgroundCollectionViewCell.self,
                                        forCellWithReuseIdentifier: ListBackgroundCollectionViewCell.identifier)
+        
         
         self.marketTypesCollectionView.delegate = self.viewModel
         self.marketTypesCollectionView.dataSource = self.viewModel
@@ -514,7 +531,6 @@ class MatchDetailsViewController: UIViewController {
         self.marketTypesCollectionView.reloadData()
 
         //
-        //
         // Add loading view controller
         self.loadingSpinnerViewController.willMove(toParent: self)
         self.addChild(self.loadingSpinnerViewController)
@@ -534,7 +550,6 @@ class MatchDetailsViewController: UIViewController {
         // Start loading
         self.loadingSpinnerViewController.startAnimating()
         self.loadingSpinnerViewController.view.isHidden = false
-        //
         //
         //
         

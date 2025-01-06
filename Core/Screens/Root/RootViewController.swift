@@ -269,8 +269,13 @@ class RootViewController: UIViewController {
         case casino
     }
     var selectedTabItem: TabItem {
+        willSet {
+            if self.selectedTabItem == .cashback && newValue != .cashback {
+                self.cashbackViewController.didBecomeInactive()
+            }
+        }
         didSet {
-            switch selectedTabItem {
+            switch self.selectedTabItem {
             case .home:
                 self.selectHomeTabBarItem()
             case .preLive:
@@ -353,6 +358,30 @@ class RootViewController: UIViewController {
         self.commonInit()
         // self.loadChildViewControllerIfNeeded(tab: )
 
+
+        // Setup fonts
+        self.sportsbookTitleLabel.font = AppFont.with(type: .heavy, size: 10)
+        
+        // All navigation title labels with same style
+        let navigationTitleLabels = [
+            self.homeTitleLabel,
+            self.sportsTitleLabel,
+            self.featuredCompetitionTitleLabel,
+            self.liveTitleLabel,
+            self.tipsTitleLabel,
+            self.cashbackTitleLabel,
+            self.casinoTitleLabel
+        ]
+        
+        navigationTitleLabels.forEach { label in
+            label?.font = AppFont.with(type: .heavy, size: 11)
+        }
+        
+        // Account value with different style
+        self.accountValueLabel.font = AppFont.with(type: .bold, size: 14)
+        
+        //
+        //
         let initialTab = self.selectedTabItem
         self.selectedTabItem = initialTab
 
@@ -647,7 +676,7 @@ class RootViewController: UIViewController {
         self.casinoTitleLabel.text = localized("casino")
         self.sportsbookTitleLabel.text = localized("sportsbook")
         self.tipsTitleLabel.text = localized("tips")
-        self.cashbackTitleLabel.text = localized("replay")
+        self.cashbackTitleLabel.text = localized("cashback")
         
         self.casinoBottomView.backgroundColor = UIColor.App.backgroundPrimary
         

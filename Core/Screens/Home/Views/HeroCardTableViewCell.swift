@@ -27,7 +27,6 @@ class HeroCardTableViewCell: UITableViewCell {
     private lazy var competitionLabel: UILabel = Self.createCompetitionLabel()
     private lazy var topSeparatorAlphaLineView: FadingView = Self.createTopSeparatorAlphaLineView()
     private lazy var collectionView: UICollectionView = Self.createCollectionView()
-//    private lazy var pageControl = Self.createPageControl()
     private lazy var pageControlBaseView: UIView = Self.createPageControlBaseView()
     private lazy var pageControl: CustomPageControl = Self.createPageControl()
 
@@ -55,6 +54,10 @@ class HeroCardTableViewCell: UITableViewCell {
 
         self.setupSubviews()
         self.setupWithTheme()
+        
+        let panGestureRecognizer = UIPanGestureRecognizer(target: self, action: #selector(handlePanGesture(_:)))
+        panGestureRecognizer.delegate = self
+        self.baseView.addGestureRecognizer(panGestureRecognizer)
         
         self.favoriteButton.addTarget(self, action: #selector(self.didTapFavoriteIcon), for: .primaryActionTriggered)
         
@@ -197,39 +200,15 @@ class HeroCardTableViewCell: UITableViewCell {
             
             self?.collectionView.scrollToItem(at: indexPath, at: .centeredHorizontally, animated: true)
         }
-        
-        for recognizer in collectionView.gestureRecognizers ?? [] {
-            if recognizer is UIPanGestureRecognizer {
-                collectionView.removeGestureRecognizer(recognizer)
-            }
-        }
-        
-        let panGestureRecognizer = UIPanGestureRecognizer(target: self, action: #selector(handlePanGesture(_:)))
-        panGestureRecognizer.delegate = self
-        self.baseView.addGestureRecognizer(panGestureRecognizer)
+
+        self.reloadData()
     }
-    
+
     func stopTimer() {
         self.timer?.invalidate()
         self.timer = nil
     }
-    
-//    @objc func handlePanGesture(_ gestureRecognizer: UIPanGestureRecognizer) {
-//        
-//        if gestureRecognizer.state == .ended {
-//            let velocity = gestureRecognizer.velocity(in: collectionView)
-//            
-//            if abs(velocity.x) > abs(velocity.y) {
-//                if velocity.x > 0 {
-//                    // Swiped right
-//                    self.getCollectionViewPage(isPrevious: true)
-//                } else {
-//                    // Swiped left
-//                    self.getCollectionViewPage()
-//                }
-//            }
-//        }
-//    }
+
     @objc func handlePanGesture(_ gestureRecognizer: UIPanGestureRecognizer) {
         let translation = gestureRecognizer.translation(in: collectionView)
 
@@ -300,6 +279,7 @@ class HeroCardTableViewCell: UITableViewCell {
             let firstIndexPath = IndexPath(item: 0, section: visibleIndexPath.section)
             collectionView.scrollToItem(at: firstIndexPath, at: .centeredHorizontally, animated: true)
         }
+        
     }
 
     // MARK: Actions
@@ -335,7 +315,7 @@ class HeroCardTableViewCell: UITableViewCell {
             let firstIndexPath = IndexPath(item: 0, section: visibleIndexPath.section)
             collectionView.scrollToItem(at: firstIndexPath, at: .centeredHorizontally, animated: true)
         }
-
+        
     }
     
     @IBAction private func didTapMatchView() {

@@ -62,17 +62,26 @@ class BettingConnector: Connector {
             return Fail<T, ServiceProviderError>(error: error).eraseToAnyPublisher()
         }
 
-        print("Betting-NetworkManager: URL Request: \n", request.cURL(pretty: true), "\n==========================================")
+        // print("Betting-NetworkManager: URL Request: \n", request.cURL(pretty: true), "\n==========================================")
         
         return self.session.dataTaskPublisher(for: request)
             .tryMap { result -> Data in
-                if let httpResponse = result.response as? HTTPURLResponse, httpResponse.statusCode == 401 {
 
-                    // Betslip mixmatch error
-                    if (request.url?.absoluteString ?? "").contains("/custom-bet/v1/calculate") {
-                        throw ServiceProviderError.badRequest
+                if (request.url?.absoluteString ?? "").contains("/custom-bet/v1/calculate") || (request.url?.absoluteString ?? "").contains("custom-bet/v1/placecustombet") {
+                    var responseBody = String(data: request.httpBody ?? Data(), encoding: .utf8) ?? ""
+                    responseBody = responseBody.replacingOccurrences(of: "\n", with: " ")
+                    print("MixMatchDebug: | ", request, " body: ", responseBody , " | response: ", String(data: result.data, encoding: .utf8) ?? "!?" )
+                }
+                
+                if (request.url?.absoluteString ?? "").contains("/custom-bet/v1/calculate") {
+                    if let httpResponse = result.response as? HTTPURLResponse {
+                        if httpResponse.statusCode == 401 || httpResponse.statusCode == 500 || httpResponse.statusCode == 503 {
+                            throw ServiceProviderError.badRequest
+                        }
                     }
+                }
 
+                if let httpResponse = result.response as? HTTPURLResponse, httpResponse.statusCode == 401 {
                     throw ServiceProviderError.unauthorized
                 }
                 else if let httpResponse = result.response as? HTTPURLResponse, httpResponse.statusCode == 404 {
@@ -96,10 +105,10 @@ class BettingConnector: Connector {
                 return result.data
             }
             .handleEvents(receiveOutput: { data in
-                print("Betting-NetworkManager [[ requesting ]] ",
-                      request, " Body: ",
-                      String(data: request.httpBody ?? Data(), encoding: .utf8) ?? "" ,
-                      " [[ response ]] ", String(data: data, encoding: .utf8) ?? "!?" )
+//                    print("Betting-NetworkManager [[ requesting ]] ",
+//                          request, " Body: ",
+//                          String(data: request.httpBody ?? Data(), encoding: .utf8) ?? "" ,
+//                          " [[ response ]] ", String(data: data, encoding: .utf8) ?? "!?" )
             })
         
             .decode(type: T.self, decoder: self.decoder)

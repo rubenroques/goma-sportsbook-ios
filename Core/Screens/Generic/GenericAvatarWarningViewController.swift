@@ -135,18 +135,12 @@ class GenericAvatarWarningViewController: UIViewController {
         self.didTapBackAction?()
     }
     
-    func requestPendindStatusUpdate(retryCount: Int = 0) {
-        
-        guard retryCount < 5 else {
-            self.activityIndicatorView.stopAnimating()
-            self.continueWithPaymentStatusOk(false)
-            return
-        }
+    func requestPendindStatusUpdate() {
 
         self.activityIndicatorView.startAnimating()
         
-        DispatchQueue.main.asyncAfter(deadline: .now() + 3.0) {
-            
+        DispatchQueue.main.asyncAfter(deadline: .now() + 5.0) {
+
             Env.servicesProvider.checkPaymentStatus(paymentMethod: "ADYEN_ALL", paymentId: self.paymentId)
                 .receive(on: DispatchQueue.main)
                 .sink { completion in
@@ -154,7 +148,7 @@ class GenericAvatarWarningViewController: UIViewController {
                 } receiveValue: { [weak self] paymentStatusResponse in
                     print("GenericAvatarWarningViewController checkPaymentStatus value: \(paymentStatusResponse)")
                     if (paymentStatusResponse.paymentStatus ?? "").lowercased() == "pending" {
-                        self?.requestPendindStatusUpdate(retryCount: retryCount + 1)
+                        self?.requestPendindStatusUpdate()
                     }
                     else if (paymentStatusResponse.paymentStatus ?? "").lowercased() == "completed" {
                         self?.activityIndicatorView.stopAnimating()

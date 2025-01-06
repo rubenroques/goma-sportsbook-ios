@@ -44,7 +44,7 @@ class SportRadarRestConnector {
             return AnyPublisher(Fail<T, ServiceProviderError>(error: error))
         }
 
-        print("Request:", request.cURL(pretty: true))
+        // print("SportRadarRestConnector Request:", request.cURL(pretty: true))
         
         return self.session.dataTaskPublisher(for: request)
             .tryMap { result in
@@ -70,13 +70,15 @@ class SportRadarRestConnector {
                     throw ServiceProviderError.resourceUnavailableOrDeleted
                 }
 
-                print("SportRadarRestConnector.Data: \(String(data: result.data, encoding: .utf8)!) ")
+                //
+                // print("SportRadarRestConnector.Data: \(String(data: result.data, encoding: .utf8)!) ")
+                
                 return result.data
             }
             .decode(type: T.self, decoder: self.decoder)
             .mapError { error in
                 // Debug helper
-                print("ServiceProvider-NetworkManager Error \(error)")
+                // print("ServiceProvider-NetworkManager Error \(error)")
                 
                 if "\(error)" == "emptyData" {
                     return ServiceProviderError.emptyData

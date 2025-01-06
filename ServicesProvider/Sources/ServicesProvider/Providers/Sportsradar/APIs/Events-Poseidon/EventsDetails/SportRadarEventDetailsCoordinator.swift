@@ -170,7 +170,6 @@ class SportRadarEventDetailsCoordinator {
             return
         }
 
-        print("LoadingBug requestEventLiveData")
         let sessionDataTask = self.session.dataTask(with: request) { [weak self] data, response, error in
             guard
                 (error == nil),
@@ -178,7 +177,6 @@ class SportRadarEventDetailsCoordinator {
                 (200...299).contains(httpResponse.statusCode)
             else {
                 publisher.send(completion: .failure(ServiceProviderError.onSubscribe))
-                print("LoadingBug requestEventLiveData not found")
                 return
             }
             if let liveDataExtendedSubscription = self?.liveDataExtendedSubscription {

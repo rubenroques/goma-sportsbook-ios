@@ -482,6 +482,8 @@ class PreSubmissionBetslipViewController: UIViewController {
             self.betBuilderWarningView.trailingAnchor.constraint(equalTo: self.view.safeAreaLayoutGuide.trailingAnchor),
             self.betBuilderWarningView.bottomAnchor.constraint(equalTo: self.placeBetBaseView.safeAreaLayoutGuide.topAnchor, constant: -10)
         ])
+        //
+        self.setupFonts()
 
         //
         if let suggestedBetsListViewController = self.suggestedBetsListViewController {
@@ -1055,13 +1057,15 @@ class PreSubmissionBetslipViewController: UIViewController {
             })
             .store(in: &self.cancellables)
 
+        //
+        // BetBuilder logic
         Publishers.CombineLatest3(debounceRealValuePublisher, self.listTypePublisher, Env.betslipManager.bettingTicketsPublisher)
             .filter({ _, listTypePublisher, _ -> Bool in
                 return listTypePublisher == .betBuilder
             })
             .receive(on: DispatchQueue.main)
             .sink(receiveValue: { [weak self] bettingValue, listTypePublisher, bettingTickets in
-
+                
                 let ticketsMatches = bettingTickets.map(\.matchId)
                 let allBetsSameMatch = Set(ticketsMatches).count == 1
 
@@ -1081,10 +1085,26 @@ class PreSubmissionBetslipViewController: UIViewController {
                     }
                 }
 
-                self?.placeBetButton.isEnabled = hasValidBettingValue
             })
             .store(in: &self.cancellables)
 
+        // PlaceBetButton for betBuilder
+        Publishers.CombineLatest3(debounceRealValuePublisher, self.listTypePublisher, Env.betslipManager.bettingTicketsPublisher)
+            .filter({ _, listTypePublisher, _ -> Bool in
+                return listTypePublisher == .betBuilder
+            })
+            .receive(on: DispatchQueue.main)
+            .sink(receiveValue: { [weak self] bettingValue, listTypePublisher, bettingTickets in
+                let ticketsMatches = bettingTickets.map(\.matchId)
+                let allBetsSameMatch = Set(ticketsMatches).count == 1
+                let hasValidBettingValue = bettingValue > 0.0 && allBetsSameMatch
+                
+                self?.placeBetButton.isEnabled = hasValidBettingValue
+            })
+            .store(in: &self.cancellables)
+        
+        //
+        //
         Publishers.CombineLatest3(self.listTypePublisher, self.simpleBetsBettingValues, Env.betslipManager.bettingTicketsPublisher)
             .receive(on: DispatchQueue.main)
             .filter { betslipType, _, _ in
@@ -1621,10 +1641,62 @@ class PreSubmissionBetslipViewController: UIViewController {
         self.cashbackCoinAnimationView.backgroundColor = .clear
     }
 
+    private func setupFonts() {
+        // Font size 17
+        self.cashbackValueLabel.font = AppFont.with(type: .bold, size: 17)
+        
+        // Font size 16
+        let size16Labels: [UILabel] = [
+            self.systemBetTypeTitleLabel,
+            self.systemBetTypeLabel,
+            self.systemWinningsTitleLabel,
+            self.systemWinningsValueLabel,
+            self.mixMatchWinningsTitleLabel,
+            self.mixMatchWinningsValueLabel,
+            self.multipleWinningsTitleLabel,
+            self.multipleWinningsValueLabel,
+            self.simpleWinningsTitleLabel,
+            self.simpleWinningsValueLabel,
+            self.secondarySystemWinningsTitleLabel,
+            self.secondarySystemWinningsValueLabel,
+            self.secondaryMultipleWinningsTitleLabel,
+            self.secondaryMultipleWinningsValueLabel,
+            self.secondaryMixMatchWinningsTitleLabel,
+            self.secondaryMixMatchWinningsValueLabel
+        ]
+        size16Labels.forEach { $0.font = AppFont.with(type: .bold, size: 16) }
+        
+        // Font size 14
+        let size14Labels: [UILabel] = [
+            self.cashbackTitleLabel,
+            self.cashbackInfoMultipleValueLabel,
+            self.cashbackInfoSingleValueLabel
+        ]
+        size14Labels.forEach { $0.font = AppFont.with(type: .bold, size: 14) }
+        
+        // Font size 11
+        let size11Labels: [UILabel] = [
+            self.systemOddsTitleLabel,
+            self.systemOddsValueLabel,
+            self.mixMatchOddsTitleLabel,
+            self.mixMatchOddsValueLabel,
+            self.multipleOddsTitleLabel,
+            self.multipleOddsValueLabel,
+            self.simpleOddsTitleLabel,
+            self.simpleOddsValueLabel,
+            self.secondarySystemOddsTitleLabel,
+            self.secondarySystemOddsValueLabel,
+            self.secondaryMultipleOddsTitleLabel,
+            self.secondaryMultipleOddsValueLabel,
+            self.secondaryMixMatchOddsTitleLabel,
+            self.secondaryMixMatchOddsValueLabel
+        ]
+        size11Labels.forEach { $0.font = AppFont.with(type: .bold, size: 11) }
+    }
     private func setupCashback() {
         self.cashbackSwitch.addTarget(self, action: #selector(cashbackSwitchValueChanged(_:)), for: .valueChanged)
 
-        self.cashbackTitleLabel.text = localized("replay_balance")
+        self.cashbackTitleLabel.text = localized("cashback")
         self.cashbackSwitch.setOn(false, animated: false)
         self.isCashbackToggleOn.send(false)
 
@@ -2164,7 +2236,7 @@ class PreSubmissionBetslipViewController: UIViewController {
 
                 if self.isCashbackToggleOn.value, let cashbackValue = Env.userSessionStore.userCashbackBalance.value {
                     if totalValue > cashbackValue {
-                        let errorMessage = localized("betslip_replay_error")
+                        let errorMessage = localized("betslip_cashback_error")
                         self.showErrorView(errorMessage: errorMessage)
                         self.isLoading = false
                         return
@@ -2214,7 +2286,7 @@ class PreSubmissionBetslipViewController: UIViewController {
 
                 if self.isCashbackToggleOn.value, let cashbackValue = Env.userSessionStore.userCashbackBalance.value {
                     if self.betValueSubject.value > cashbackValue {
-                        let errorMessage = localized("betslip_replay_error")
+                        let errorMessage = localized("betslip_cashback_error")
                         self.showErrorView(errorMessage: errorMessage)
                         self.isLoading = false
                         return
@@ -2270,7 +2342,7 @@ class PreSubmissionBetslipViewController: UIViewController {
 
                 if self.isCashbackToggleOn.value, let cashbackValue = Env.userSessionStore.userCashbackBalance.value {
                     if self.betValueSubject.value > cashbackValue {
-                        let errorMessage = localized("betslip_replay_error")
+                        let errorMessage = localized("betslip_cashback_error")
                         self.showErrorView(errorMessage: errorMessage)
                         self.isLoading = false
                         return
@@ -2482,7 +2554,7 @@ extension PreSubmissionBetslipViewController {
     private func placeBetBuilderBet() {
         if self.isCashbackToggleOn.value, let cashbackValue = Env.userSessionStore.userCashbackBalance.value {
             if self.betValueSubject.value > cashbackValue {
-                let errorMessage = localized("betslip_replay_error")
+                let errorMessage = localized("betslip_cashback_error")
                 self.showErrorView(errorMessage: errorMessage)
                 self.isLoading = false
                 return
@@ -2507,6 +2579,8 @@ extension PreSubmissionBetslipViewController {
                         self?.showErrorView(errorMessage: detailedMessage)
                     case .betNeedsUserConfirmation(let betDetails):
                         self?.requestUserConfirmationForBoostedBet(betDetails: betDetails)
+                    case .betPlacementError:
+                        self?.showErrorView(errorMessage: localized("betting_fail_to_place_bets"))
                     default:
                         self?.showErrorView(errorMessage: localized("error_placing_bet"))
                     }

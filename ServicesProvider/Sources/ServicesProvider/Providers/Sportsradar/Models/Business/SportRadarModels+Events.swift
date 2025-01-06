@@ -168,11 +168,6 @@ extension SportRadarModels {
             self.sportIdCode = try container.decodeIfPresent(String.self, forKey: .sportIdCode)
 
             self.trackableReference = try container.decodeIfPresent(String.self, forKey: .trackableReference)
-            
-//            #if DEBUG
-//            self.homeName = self.id + " " + (self.homeName ?? "")
-//            self.awayName = (self.markets.first?.id ?? "") + " " + (self.awayName ?? "")
-//            #endif
 
             if let startDateString = try container.decodeIfPresent(String.self, forKey: .startDate) {
                 if let date = Self.dateFormatter.date(from: startDateString) {
@@ -309,6 +304,8 @@ extension SportRadarModels {
         var outcomes: [Outcome]
         var marketTypeId: String?
         var eventMarketTypeId: String?
+        var marketTypeCategoryId: String?
+        
         var eventName: String?
         var isMainOutright: Bool?
         var eventMarketCount: Int?
@@ -338,6 +335,7 @@ extension SportRadarModels {
             case outcomes = "selections"
             case marketTypeId = "idefmarkettype"
             case eventMarketTypeId = "idfomarkettype"
+            case marketTypeCategoryId = "idfomarkettypecategory"
             
             case isMainOutright = "ismainoutright"
             case eventMarketCount = "eventMarketCount"
@@ -367,6 +365,7 @@ extension SportRadarModels {
              outcomes: [Outcome],
              marketTypeId: String? = nil,
              eventMarketTypeId: String? = nil,
+             marketTypeCategoryId: String? = nil,
              eventName: String? = nil,
              isMainOutright: Bool? = nil,
              eventMarketCount: Int? = nil,
@@ -394,6 +393,8 @@ extension SportRadarModels {
             self.outcomes = outcomes
             self.marketTypeId = marketTypeId
             self.eventMarketTypeId = eventMarketTypeId
+            self.marketTypeCategoryId = marketTypeCategoryId
+            
             self.eventName = eventName
             self.isMainOutright = isMainOutright
             self.eventMarketCount = eventMarketCount
@@ -426,8 +427,16 @@ extension SportRadarModels {
             nameValue = nameValue.replacingOccurrences(of: "\r", with: "")
             self.name = nameValue
             
+            
             self.marketTypeId = try container.decodeIfPresent(String.self, forKey: .marketTypeId)
+            
             self.eventMarketTypeId = try container.decodeIfPresent(String.self, forKey: .eventMarketTypeId)
+            self.marketTypeCategoryId = try container.decodeIfPresent(String.self, forKey: .marketTypeCategoryId)
+
+            if self.marketTypeId == nil && self.marketTypeCategoryId != nil {
+                self.marketTypeId = self.marketTypeCategoryId
+            }
+            
             self.eventName = try container.decodeIfPresent(String.self, forKey: .eventName)
             self.isMainOutright = try container.decodeIfPresent(Bool.self, forKey: .isMainOutright)
             self.eventMarketCount = try container.decodeIfPresent(Int.self, forKey: .eventMarketCount)
@@ -531,6 +540,8 @@ extension SportRadarModels {
         private var priceDenominator: String?
 
         var isTradable: Bool?
+        var isTerminated: Bool?
+        
         var isOverUnder: Bool
 
         var customBetAvailableMarket: Bool?
@@ -578,16 +589,13 @@ extension SportRadarModels {
             }
             
             self.customBetAvailableMarket = nil
-
+            self.isTerminated = false
+            
             let suspensiontype: String = (try? container.decode(String.self, forKey: SportRadarModels.Outcome.CodingKeys.suspensiontype)) ?? ""
             if suspensiontype.lowercased() == "n/o" {
                 self.isTradable = false
+                self.isTerminated = true
             }
-
-//            #if DEBUG
-//            self.name = self.id + " " + self.name
-//            #endif
-
         }
 
         func encode(to encoder: any Encoder) throws {
