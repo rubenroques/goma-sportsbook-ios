@@ -161,7 +161,7 @@ class BetslipManager: NSObject {
                     case .resourceUnavailableOrDeleted:
                         self?.disableBettingTicket(bettingTicket)
                     default:
-                        print("Error retrieving data! \(error)")
+                        print("Error retrieving data! subscribeToMarketDetails \(error)")
                     }
                 case .finished:
                     print("Data retrieved!")

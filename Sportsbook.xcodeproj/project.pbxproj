@@ -7243,6 +7243,22 @@
 		CE544FCF2D07029900AA24CA /* first_deposit_8.json in Resources */ = {isa = PBXBuildFile; fileRef = CE544FC92D07029900AA24CA /* first_deposit_8.json */; };
 		CE544FD02D07029900AA24CA /* first_deposit_8.json in Resources */ = {isa = PBXBuildFile; fileRef = CE544FC92D07029900AA24CA /* first_deposit_8.json */; };
 		CE544FD12D07029900AA24CA /* first_deposit_8.json in Resources */ = {isa = PBXBuildFile; fileRef = CE544FC92D07029900AA24CA /* first_deposit_8.json */; };
+		CE9D9CA62D2C37E70077A78D /* AdresseFrancaise in Frameworks */ = {isa = PBXBuildFile; productRef = CE9D9CA52D2C37E70077A78D /* AdresseFrancaise */; };
+		CE9D9CB02D2C37E70077A78D /* Lottie in Frameworks */ = {isa = PBXBuildFile; productRef = CE9D9CAF2D2C37E70077A78D /* Lottie */; };
+		CE9D9CB22D2C37E70077A78D /* IdensicMobileSDK in Frameworks */ = {isa = PBXBuildFile; productRef = CE9D9CB12D2C37E70077A78D /* IdensicMobileSDK */; };
+		CE9D9CBA2D2C37E70077A78D /* ZendeskChatSDK in Frameworks */ = {isa = PBXBuildFile; productRef = CE9D9CB92D2C37E70077A78D /* ZendeskChatSDK */; };
+		CE9D9CBC2D2C37E70077A78D /* ZendeskAnswerBotSDK in Frameworks */ = {isa = PBXBuildFile; productRef = CE9D9CBB2D2C37E70077A78D /* ZendeskAnswerBotSDK */; };
+		CE9D9CBE2D2C37E70077A78D /* ZendeskSupportSDK in Frameworks */ = {isa = PBXBuildFile; productRef = CE9D9CBD2D2C37E70077A78D /* ZendeskSupportSDK */; };
+		CE9D9CC02D2C37E70077A78D /* OptimoveCore in Frameworks */ = {isa = PBXBuildFile; productRef = CE9D9CBF2D2C37E70077A78D /* OptimoveCore */; };
+		CE9D9CC22D2C37E70077A78D /* OptimoveNotificationServiceExtension in Frameworks */ = {isa = PBXBuildFile; productRef = CE9D9CC12D2C37E70077A78D /* OptimoveNotificationServiceExtension */; };
+		CE9D9CC42D2C37E70077A78D /* OptimoveSDK in Frameworks */ = {isa = PBXBuildFile; productRef = CE9D9CC32D2C37E70077A78D /* OptimoveSDK */; };
+		CE9D9CC62D2C37E70077A78D /* SwiftPrettyPrint in Frameworks */ = {isa = PBXBuildFile; productRef = CE9D9CC52D2C37E70077A78D /* SwiftPrettyPrint */; };
+		CE9D9CC82D2C37E70077A78D /* Adjust in Frameworks */ = {isa = PBXBuildFile; productRef = CE9D9CC72D2C37E70077A78D /* Adjust */; };
+		CE9D9CCA2D2C37E70077A78D /* Criteo in Frameworks */ = {isa = PBXBuildFile; productRef = CE9D9CC92D2C37E70077A78D /* Criteo */; };
+		CE9D9CCC2D2C37E70077A78D /* Sociomantic in Frameworks */ = {isa = PBXBuildFile; productRef = CE9D9CCB2D2C37E70077A78D /* Sociomantic */; };
+		CE9D9CCE2D2C37E70077A78D /* Trademob in Frameworks */ = {isa = PBXBuildFile; productRef = CE9D9CCD2D2C37E70077A78D /* Trademob */; };
+		CE9D9CD02D2C37E70077A78D /* WebBridge in Frameworks */ = {isa = PBXBuildFile; productRef = CE9D9CCF2D2C37E70077A78D /* WebBridge */; };
+		CE9D9CD12D2C38DE0077A78D /* AdServices.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 65A4BA072C09E54700279143 /* AdServices.framework */; };
 		CEB24B9F2CED274D0031F470 /* ScaleAspectFitImageView.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEB24B9E2CED274D0031F470 /* ScaleAspectFitImageView.swift */; };
 		CEB24BA02CED274D0031F470 /* ScaleAspectFitImageView.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEB24B9E2CED274D0031F470 /* ScaleAspectFitImageView.swift */; };
 		CEB24BA12CED274D0031F470 /* ScaleAspectFitImageView.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEB24B9E2CED274D0031F470 /* ScaleAspectFitImageView.swift */; };
@@ -8255,6 +8271,8 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				CE9D9CD02D2C37E70077A78D /* WebBridge in Frameworks */,
+				CE9D9CCA2D2C37E70077A78D /* Criteo in Frameworks */,
 				45DB8DA62A6A905D0018C591 /* Extensions in Frameworks */,
 				45DB8DAA2A6A905D0018C591 /* HeaderTextField in Frameworks */,
 				45DB8DB92A6AA5100018C591 /* PhraseSDK in Frameworks */,
@@ -8263,23 +8281,37 @@
 				450B7A9228F58574009229E3 /* FirebaseDatabase in Frameworks */,
 				A96FAEF329829F9D00A0751F /* AdyenDropIn in Frameworks */,
 				450B7A9428F58574009229E3 /* DictionaryCoding in Frameworks */,
+				CE9D9CC62D2C37E70077A78D /* SwiftPrettyPrint in Frameworks */,
 				450B7A9528F58574009229E3 /* Reachability in Frameworks */,
+				CE9D9CC82D2C37E70077A78D /* Adjust in Frameworks */,
+				CE9D9CC22D2C37E70077A78D /* OptimoveNotificationServiceExtension in Frameworks */,
+				CE9D9CCE2D2C37E70077A78D /* Trademob in Frameworks */,
 				45A33022298935F6008181E9 /* AdyenComponents in Frameworks */,
 				4554ED0A2976F7FE006942B3 /* IQKeyboardManagerSwift in Frameworks */,
 				450B7A9628F58574009229E3 /* Kingfisher in Frameworks */,
 				450B7A9928F58574009229E3 /* FirebaseAuth in Frameworks */,
+				CE9D9CBE2D2C37E70077A78D /* ZendeskSupportSDK in Frameworks */,
 				45A33020298935F6008181E9 /* AdyenCard in Frameworks */,
 				450B7A9A28F58574009229E3 /* Collections in Frameworks */,
+				CE9D9CC02D2C37E70077A78D /* OptimoveCore in Frameworks */,
 				45A33024298935F6008181E9 /* AdyenEncryption in Frameworks */,
 				45A3301E298935F6008181E9 /* AdyenActions in Frameworks */,
+				CE9D9CBA2D2C37E70077A78D /* ZendeskChatSDK in Frameworks */,
+				CE9D9CBC2D2C37E70077A78D /* ZendeskAnswerBotSDK in Frameworks */,
 				450B7A9B28F58574009229E3 /* CombineCocoa in Frameworks */,
 				450B7A9C28F58574009229E3 /* SwiftyBeaver in Frameworks */,
 				45A33028298935F6008181E9 /* AdyenSwiftUI in Frameworks */,
 				45A3302A298935F6008181E9 /* AdyenWeChatPay in Frameworks */,
 				45A3301C298935F6008181E9 /* Adyen in Frameworks */,
+				CE9D9CCC2D2C37E70077A78D /* Sociomantic in Frameworks */,
+				CE9D9CB22D2C37E70077A78D /* IdensicMobileSDK in Frameworks */,
 				45DB8DA42A6A905D0018C591 /* CountrySelectionFeature in Frameworks */,
+				CE9D9CD12D2C38DE0077A78D /* AdServices.framework in Frameworks */,
+				CE9D9CB02D2C37E70077A78D /* Lottie in Frameworks */,
 				45A33026298935F6008181E9 /* AdyenSession in Frameworks */,
 				450B7A9D28F58574009229E3 /* FirebaseCrashlytics in Frameworks */,
+				CE9D9CA62D2C37E70077A78D /* AdresseFrancaise in Frameworks */,
+				CE9D9CC42D2C37E70077A78D /* OptimoveSDK in Frameworks */,
 				450B7A9E28F58574009229E3 /* FirebaseAnalytics in Frameworks */,
 				450B7A9F28F58574009229E3 /* OrderedCollections in Frameworks */,
 				450B7AA028F58574009229E3 /* SweeterSwift in Frameworks */,
@@ -12091,6 +12123,21 @@
 				45DB8DA92A6A905D0018C591 /* HeaderTextField */,
 				45DB8DAB2A6A905D0018C591 /* Theming */,
 				45DB8DB82A6AA5100018C591 /* PhraseSDK */,
+				CE9D9CA52D2C37E70077A78D /* AdresseFrancaise */,
+				CE9D9CAF2D2C37E70077A78D /* Lottie */,
+				CE9D9CB12D2C37E70077A78D /* IdensicMobileSDK */,
+				CE9D9CB92D2C37E70077A78D /* ZendeskChatSDK */,
+				CE9D9CBB2D2C37E70077A78D /* ZendeskAnswerBotSDK */,
+				CE9D9CBD2D2C37E70077A78D /* ZendeskSupportSDK */,
+				CE9D9CBF2D2C37E70077A78D /* OptimoveCore */,
+				CE9D9CC12D2C37E70077A78D /* OptimoveNotificationServiceExtension */,
+				CE9D9CC32D2C37E70077A78D /* OptimoveSDK */,
+				CE9D9CC52D2C37E70077A78D /* SwiftPrettyPrint */,
+				CE9D9CC72D2C37E70077A78D /* Adjust */,
+				CE9D9CC92D2C37E70077A78D /* Criteo */,
+				CE9D9CCB2D2C37E70077A78D /* Sociomantic */,
+				CE9D9CCD2D2C37E70077A78D /* Trademob */,
+				CE9D9CCF2D2C37E70077A78D /* WebBridge */,
 			);
 			productName = Sportsbook;
 			productReference = 450B7B2428F58574009229E3 /* SportRadar.app */;
@@ -22251,6 +22298,80 @@
 		A9C3409C28F9A74A0055360B /* SocketIO */ = {
 			isa = XCSwiftPackageProductDependency;
 			productName = SocketIO;
+		};
+		CE9D9CA52D2C37E70077A78D /* AdresseFrancaise */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = AdresseFrancaise;
+		};
+		CE9D9CAF2D2C37E70077A78D /* Lottie */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 45F805912A05357E005296E0 /* XCRemoteSwiftPackageReference "lottie-spm" */;
+			productName = Lottie;
+		};
+		CE9D9CB12D2C37E70077A78D /* IdensicMobileSDK */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 4566B95C2A6AEE8900477046 /* XCRemoteSwiftPackageReference "IdensicMobileSDK-iOS" */;
+			productName = IdensicMobileSDK;
+		};
+		CE9D9CB92D2C37E70077A78D /* ZendeskChatSDK */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 45ECD74B2A8FFB2000492CB9 /* XCRemoteSwiftPackageReference "chat_sdk_ios" */;
+			productName = ZendeskChatSDK;
+		};
+		CE9D9CBB2D2C37E70077A78D /* ZendeskAnswerBotSDK */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 45ECD74E2A8FFB5100492CB9 /* XCRemoteSwiftPackageReference "answer_bot_sdk_ios" */;
+			productName = ZendeskAnswerBotSDK;
+		};
+		CE9D9CBD2D2C37E70077A78D /* ZendeskSupportSDK */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 45ECD7512A8FFB8A00492CB9 /* XCRemoteSwiftPackageReference "support_sdk_ios" */;
+			productName = ZendeskSupportSDK;
+		};
+		CE9D9CBF2D2C37E70077A78D /* OptimoveCore */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = A9C5AC1B2ACDB30000C3FD56 /* XCRemoteSwiftPackageReference "Optimove-SDK-iOS" */;
+			productName = OptimoveCore;
+		};
+		CE9D9CC12D2C37E70077A78D /* OptimoveNotificationServiceExtension */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = A9C5AC1B2ACDB30000C3FD56 /* XCRemoteSwiftPackageReference "Optimove-SDK-iOS" */;
+			productName = OptimoveNotificationServiceExtension;
+		};
+		CE9D9CC32D2C37E70077A78D /* OptimoveSDK */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = A9C5AC1B2ACDB30000C3FD56 /* XCRemoteSwiftPackageReference "Optimove-SDK-iOS" */;
+			productName = OptimoveSDK;
+		};
+		CE9D9CC52D2C37E70077A78D /* SwiftPrettyPrint */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 459F410A2AF54C86006BAEE9 /* XCRemoteSwiftPackageReference "SwiftPrettyPrint" */;
+			productName = SwiftPrettyPrint;
+		};
+		CE9D9CC72D2C37E70077A78D /* Adjust */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 659510E82B2C7004001B2F2E /* XCRemoteSwiftPackageReference "ios_sdk" */;
+			productName = Adjust;
+		};
+		CE9D9CC92D2C37E70077A78D /* Criteo */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 659510E82B2C7004001B2F2E /* XCRemoteSwiftPackageReference "ios_sdk" */;
+			productName = Criteo;
+		};
+		CE9D9CCB2D2C37E70077A78D /* Sociomantic */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 659510E82B2C7004001B2F2E /* XCRemoteSwiftPackageReference "ios_sdk" */;
+			productName = Sociomantic;
+		};
+		CE9D9CCD2D2C37E70077A78D /* Trademob */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 659510E82B2C7004001B2F2E /* XCRemoteSwiftPackageReference "ios_sdk" */;
+			productName = Trademob;
+		};
+		CE9D9CCF2D2C37E70077A78D /* WebBridge */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 659510E82B2C7004001B2F2E /* XCRemoteSwiftPackageReference "ios_sdk" */;
+			productName = WebBridge;
 		};
 /* End XCSwiftPackageProductDependency section */
 	};

@@ -24,7 +24,7 @@ struct TargetVariables: SportsbookTarget {
     }
 
     static var firebaseDatabaseURL: String {
-        "https://goma-sportsbook-dev.europe-west1.firebasedatabase.app/"
+        return "https://goma-sportsbook.europe-west1.firebasedatabase.app/"
     }
 
     static var everyMatrixHost: String {
@@ -56,7 +56,7 @@ struct TargetVariables: SportsbookTarget {
     }
 
     static var features: [SportsbookTargetFeatures] {
-        return []
+        return [.cashback]
     }
 
     static var shouldUserBlurEffectTabBar: Bool {
@@ -76,20 +76,25 @@ struct TargetVariables: SportsbookTarget {
     }
     
     static var supportedLanguages: [SportsbookSupportedLanguage] {
-        return SportsbookSupportedLanguage.allCases
+        return [SportsbookSupportedLanguage.french]
     }
-    
+
     static var clientBaseUrl: String {
-        return ""
+        return "https://goma-uat.betsson.fr"
     }
     
     static var appStoreUrl: String? {
-        return nil
-    }
-    
-    static var secundaryMarketSpecsUrl: String? {
-        return nil
+        return "https://apps.apple.com/"
     }
 
+    static var secundaryMarketSpecsUrl: String? {
+        return "https://goma-uat.betsson.fr/secondary_markets_config.json"
+    }
+    
+    static var knowYourClientLevels: [KnowYourCustomerLevel: String] {
+        return [.identification: "kyc-level-1-id-verification-UAT",
+                .proofOfAddress: "kyc-level-2-poa-verification-UAT",
+                .bankAccountIdentification: "RIB Verification"]
+    }
     
 }
