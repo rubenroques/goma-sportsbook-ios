@@ -372,6 +372,7 @@ extension AvatarFormStepView {
     }
 
     private func createAvatarAnimationView(withFrame frame: CGRect, andName name: String) -> LottieAnimationView {
+        
         let animationView = LottieAnimationView(frame: frame)
         animationView.contentMode = .scaleAspectFill
         animationView.clipsToBounds = false
@@ -384,10 +385,8 @@ extension AvatarFormStepView {
             animationName = name + "-light"
         }
         
-        let avatarAnimation = LottieAnimation.named(animationName)
+        let avatarAnimation = LottieAnimation.named(animationName, bundle: Bundle.module)
         animationView.animation = avatarAnimation
-
         return animationView
     }
-
 }

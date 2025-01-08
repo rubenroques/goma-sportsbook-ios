@@ -46,7 +46,12 @@ let package = Package(
                 "AdresseFrancaise",
                 "Extensions",
                 "Theming",
-            ]),
+            ],
+            path: "",
+            sources: ["Sources"],
+            resources: [.process("Resources")]
+        ),
+        
         .testTarget(
             name: "RegisterFlowTests",
             dependencies: ["RegisterFlow"]),

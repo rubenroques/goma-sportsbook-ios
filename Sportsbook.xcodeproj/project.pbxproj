@@ -928,48 +928,6 @@
 		452B9D352C1B54870032363F /* ListBackgroundCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 452B9D2F2C1B54860032363F /* ListBackgroundCollectionViewCell.swift */; };
 		452B9D362C1B54870032363F /* ListBackgroundCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 452B9D2F2C1B54860032363F /* ListBackgroundCollectionViewCell.swift */; };
 		452B9D372C1B54870032363F /* ListBackgroundCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 452B9D2F2C1B54860032363F /* ListBackgroundCollectionViewCell.swift */; };
-		452BA18A2A902C4900D0AA48 /* avatar3-dark.json in Resources */ = {isa = PBXBuildFile; fileRef = 452BA1842A902C4800D0AA48 /* avatar3-dark.json */; };
-		452BA18B2A902C4900D0AA48 /* avatar3-dark.json in Resources */ = {isa = PBXBuildFile; fileRef = 452BA1842A902C4800D0AA48 /* avatar3-dark.json */; };
-		452BA18C2A902C4900D0AA48 /* avatar3-dark.json in Resources */ = {isa = PBXBuildFile; fileRef = 452BA1842A902C4800D0AA48 /* avatar3-dark.json */; };
-		452BA18D2A902C4900D0AA48 /* avatar3-dark.json in Resources */ = {isa = PBXBuildFile; fileRef = 452BA1842A902C4800D0AA48 /* avatar3-dark.json */; };
-		452BA18E2A902C4900D0AA48 /* avatar3-dark.json in Resources */ = {isa = PBXBuildFile; fileRef = 452BA1842A902C4800D0AA48 /* avatar3-dark.json */; };
-		452BA18F2A902C4900D0AA48 /* avatar3-dark.json in Resources */ = {isa = PBXBuildFile; fileRef = 452BA1842A902C4800D0AA48 /* avatar3-dark.json */; };
-		452BA1902A902C4900D0AA48 /* avatar3-dark.json in Resources */ = {isa = PBXBuildFile; fileRef = 452BA1842A902C4800D0AA48 /* avatar3-dark.json */; };
-		452BA1912A902C4900D0AA48 /* avatar6-dark.json in Resources */ = {isa = PBXBuildFile; fileRef = 452BA1852A902C4800D0AA48 /* avatar6-dark.json */; };
-		452BA1922A902C4900D0AA48 /* avatar6-dark.json in Resources */ = {isa = PBXBuildFile; fileRef = 452BA1852A902C4800D0AA48 /* avatar6-dark.json */; };
-		452BA1932A902C4900D0AA48 /* avatar6-dark.json in Resources */ = {isa = PBXBuildFile; fileRef = 452BA1852A902C4800D0AA48 /* avatar6-dark.json */; };
-		452BA1942A902C4900D0AA48 /* avatar6-dark.json in Resources */ = {isa = PBXBuildFile; fileRef = 452BA1852A902C4800D0AA48 /* avatar6-dark.json */; };
-		452BA1952A902C4900D0AA48 /* avatar6-dark.json in Resources */ = {isa = PBXBuildFile; fileRef = 452BA1852A902C4800D0AA48 /* avatar6-dark.json */; };
-		452BA1962A902C4900D0AA48 /* avatar6-dark.json in Resources */ = {isa = PBXBuildFile; fileRef = 452BA1852A902C4800D0AA48 /* avatar6-dark.json */; };
-		452BA1972A902C4900D0AA48 /* avatar6-dark.json in Resources */ = {isa = PBXBuildFile; fileRef = 452BA1852A902C4800D0AA48 /* avatar6-dark.json */; };
-		452BA1982A902C4900D0AA48 /* avatar1-dark.json in Resources */ = {isa = PBXBuildFile; fileRef = 452BA1862A902C4900D0AA48 /* avatar1-dark.json */; };
-		452BA1992A902C4900D0AA48 /* avatar1-dark.json in Resources */ = {isa = PBXBuildFile; fileRef = 452BA1862A902C4900D0AA48 /* avatar1-dark.json */; };
-		452BA19A2A902C4900D0AA48 /* avatar1-dark.json in Resources */ = {isa = PBXBuildFile; fileRef = 452BA1862A902C4900D0AA48 /* avatar1-dark.json */; };
-		452BA19B2A902C4900D0AA48 /* avatar1-dark.json in Resources */ = {isa = PBXBuildFile; fileRef = 452BA1862A902C4900D0AA48 /* avatar1-dark.json */; };
-		452BA19C2A902C4900D0AA48 /* avatar1-dark.json in Resources */ = {isa = PBXBuildFile; fileRef = 452BA1862A902C4900D0AA48 /* avatar1-dark.json */; };
-		452BA19D2A902C4900D0AA48 /* avatar1-dark.json in Resources */ = {isa = PBXBuildFile; fileRef = 452BA1862A902C4900D0AA48 /* avatar1-dark.json */; };
-		452BA19E2A902C4900D0AA48 /* avatar1-dark.json in Resources */ = {isa = PBXBuildFile; fileRef = 452BA1862A902C4900D0AA48 /* avatar1-dark.json */; };
-		452BA19F2A902C4900D0AA48 /* avatar4-dark.json in Resources */ = {isa = PBXBuildFile; fileRef = 452BA1872A902C4900D0AA48 /* avatar4-dark.json */; };
-		452BA1A02A902C4900D0AA48 /* avatar4-dark.json in Resources */ = {isa = PBXBuildFile; fileRef = 452BA1872A902C4900D0AA48 /* avatar4-dark.json */; };
-		452BA1A12A902C4900D0AA48 /* avatar4-dark.json in Resources */ = {isa = PBXBuildFile; fileRef = 452BA1872A902C4900D0AA48 /* avatar4-dark.json */; };
-		452BA1A22A902C4900D0AA48 /* avatar4-dark.json in Resources */ = {isa = PBXBuildFile; fileRef = 452BA1872A902C4900D0AA48 /* avatar4-dark.json */; };
-		452BA1A32A902C4900D0AA48 /* avatar4-dark.json in Resources */ = {isa = PBXBuildFile; fileRef = 452BA1872A902C4900D0AA48 /* avatar4-dark.json */; };
-		452BA1A42A902C4900D0AA48 /* avatar4-dark.json in Resources */ = {isa = PBXBuildFile; fileRef = 452BA1872A902C4900D0AA48 /* avatar4-dark.json */; };
-		452BA1A52A902C4900D0AA48 /* avatar4-dark.json in Resources */ = {isa = PBXBuildFile; fileRef = 452BA1872A902C4900D0AA48 /* avatar4-dark.json */; };
-		452BA1A62A902C4900D0AA48 /* avatar5-dark.json in Resources */ = {isa = PBXBuildFile; fileRef = 452BA1882A902C4900D0AA48 /* avatar5-dark.json */; };
-		452BA1A72A902C4900D0AA48 /* avatar5-dark.json in Resources */ = {isa = PBXBuildFile; fileRef = 452BA1882A902C4900D0AA48 /* avatar5-dark.json */; };
-		452BA1A82A902C4900D0AA48 /* avatar5-dark.json in Resources */ = {isa = PBXBuildFile; fileRef = 452BA1882A902C4900D0AA48 /* avatar5-dark.json */; };
-		452BA1A92A902C4900D0AA48 /* avatar5-dark.json in Resources */ = {isa = PBXBuildFile; fileRef = 452BA1882A902C4900D0AA48 /* avatar5-dark.json */; };
-		452BA1AA2A902C4900D0AA48 /* avatar5-dark.json in Resources */ = {isa = PBXBuildFile; fileRef = 452BA1882A902C4900D0AA48 /* avatar5-dark.json */; };
-		452BA1AB2A902C4900D0AA48 /* avatar5-dark.json in Resources */ = {isa = PBXBuildFile; fileRef = 452BA1882A902C4900D0AA48 /* avatar5-dark.json */; };
-		452BA1AC2A902C4900D0AA48 /* avatar5-dark.json in Resources */ = {isa = PBXBuildFile; fileRef = 452BA1882A902C4900D0AA48 /* avatar5-dark.json */; };
-		452BA1AD2A902C4A00D0AA48 /* avatar2-dark.json in Resources */ = {isa = PBXBuildFile; fileRef = 452BA1892A902C4900D0AA48 /* avatar2-dark.json */; };
-		452BA1AE2A902C4A00D0AA48 /* avatar2-dark.json in Resources */ = {isa = PBXBuildFile; fileRef = 452BA1892A902C4900D0AA48 /* avatar2-dark.json */; };
-		452BA1AF2A902C4A00D0AA48 /* avatar2-dark.json in Resources */ = {isa = PBXBuildFile; fileRef = 452BA1892A902C4900D0AA48 /* avatar2-dark.json */; };
-		452BA1B02A902C4A00D0AA48 /* avatar2-dark.json in Resources */ = {isa = PBXBuildFile; fileRef = 452BA1892A902C4900D0AA48 /* avatar2-dark.json */; };
-		452BA1B12A902C4A00D0AA48 /* avatar2-dark.json in Resources */ = {isa = PBXBuildFile; fileRef = 452BA1892A902C4900D0AA48 /* avatar2-dark.json */; };
-		452BA1B22A902C4A00D0AA48 /* avatar2-dark.json in Resources */ = {isa = PBXBuildFile; fileRef = 452BA1892A902C4900D0AA48 /* avatar2-dark.json */; };
-		452BA1B32A902C4A00D0AA48 /* avatar2-dark.json in Resources */ = {isa = PBXBuildFile; fileRef = 452BA1892A902C4900D0AA48 /* avatar2-dark.json */; };
 		45372F5B29D1FD04002FB894 /* OddOutcomesSortingHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 45372F5A29D1FD04002FB894 /* OddOutcomesSortingHelper.swift */; };
 		45372F5C29D1FD04002FB894 /* OddOutcomesSortingHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 45372F5A29D1FD04002FB894 /* OddOutcomesSortingHelper.swift */; };
 		45372F5D29D1FD04002FB894 /* OddOutcomesSortingHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 45372F5A29D1FD04002FB894 /* OddOutcomesSortingHelper.swift */; };
@@ -4484,48 +4442,6 @@
 		45F6BA742AAF32A100C81DE1 /* BetslipProxyWebViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 45F6BA6F2AAF32A100C81DE1 /* BetslipProxyWebViewController.swift */; };
 		45F6BA752AAF32A100C81DE1 /* BetslipProxyWebViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 45F6BA6F2AAF32A100C81DE1 /* BetslipProxyWebViewController.swift */; };
 		45F6BA762AAF32A100C81DE1 /* BetslipProxyWebViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 45F6BA6F2AAF32A100C81DE1 /* BetslipProxyWebViewController.swift */; };
-		45F6BA7D2AB1F2B600C81DE1 /* avatar2-light.json in Resources */ = {isa = PBXBuildFile; fileRef = 45F6BA772AB1F2B500C81DE1 /* avatar2-light.json */; };
-		45F6BA7E2AB1F2B600C81DE1 /* avatar2-light.json in Resources */ = {isa = PBXBuildFile; fileRef = 45F6BA772AB1F2B500C81DE1 /* avatar2-light.json */; };
-		45F6BA7F2AB1F2B600C81DE1 /* avatar2-light.json in Resources */ = {isa = PBXBuildFile; fileRef = 45F6BA772AB1F2B500C81DE1 /* avatar2-light.json */; };
-		45F6BA802AB1F2B600C81DE1 /* avatar2-light.json in Resources */ = {isa = PBXBuildFile; fileRef = 45F6BA772AB1F2B500C81DE1 /* avatar2-light.json */; };
-		45F6BA812AB1F2B600C81DE1 /* avatar2-light.json in Resources */ = {isa = PBXBuildFile; fileRef = 45F6BA772AB1F2B500C81DE1 /* avatar2-light.json */; };
-		45F6BA822AB1F2B600C81DE1 /* avatar2-light.json in Resources */ = {isa = PBXBuildFile; fileRef = 45F6BA772AB1F2B500C81DE1 /* avatar2-light.json */; };
-		45F6BA832AB1F2B600C81DE1 /* avatar2-light.json in Resources */ = {isa = PBXBuildFile; fileRef = 45F6BA772AB1F2B500C81DE1 /* avatar2-light.json */; };
-		45F6BA842AB1F2B600C81DE1 /* avatar3-light.json in Resources */ = {isa = PBXBuildFile; fileRef = 45F6BA782AB1F2B500C81DE1 /* avatar3-light.json */; };
-		45F6BA852AB1F2B600C81DE1 /* avatar3-light.json in Resources */ = {isa = PBXBuildFile; fileRef = 45F6BA782AB1F2B500C81DE1 /* avatar3-light.json */; };
-		45F6BA862AB1F2B600C81DE1 /* avatar3-light.json in Resources */ = {isa = PBXBuildFile; fileRef = 45F6BA782AB1F2B500C81DE1 /* avatar3-light.json */; };
-		45F6BA872AB1F2B600C81DE1 /* avatar3-light.json in Resources */ = {isa = PBXBuildFile; fileRef = 45F6BA782AB1F2B500C81DE1 /* avatar3-light.json */; };
-		45F6BA882AB1F2B600C81DE1 /* avatar3-light.json in Resources */ = {isa = PBXBuildFile; fileRef = 45F6BA782AB1F2B500C81DE1 /* avatar3-light.json */; };
-		45F6BA892AB1F2B600C81DE1 /* avatar3-light.json in Resources */ = {isa = PBXBuildFile; fileRef = 45F6BA782AB1F2B500C81DE1 /* avatar3-light.json */; };
-		45F6BA8A2AB1F2B600C81DE1 /* avatar3-light.json in Resources */ = {isa = PBXBuildFile; fileRef = 45F6BA782AB1F2B500C81DE1 /* avatar3-light.json */; };
-		45F6BA8B2AB1F2B600C81DE1 /* avatar4-light.json in Resources */ = {isa = PBXBuildFile; fileRef = 45F6BA792AB1F2B500C81DE1 /* avatar4-light.json */; };
-		45F6BA8C2AB1F2B600C81DE1 /* avatar4-light.json in Resources */ = {isa = PBXBuildFile; fileRef = 45F6BA792AB1F2B500C81DE1 /* avatar4-light.json */; };
-		45F6BA8D2AB1F2B600C81DE1 /* avatar4-light.json in Resources */ = {isa = PBXBuildFile; fileRef = 45F6BA792AB1F2B500C81DE1 /* avatar4-light.json */; };
-		45F6BA8E2AB1F2B600C81DE1 /* avatar4-light.json in Resources */ = {isa = PBXBuildFile; fileRef = 45F6BA792AB1F2B500C81DE1 /* avatar4-light.json */; };
-		45F6BA8F2AB1F2B600C81DE1 /* avatar4-light.json in Resources */ = {isa = PBXBuildFile; fileRef = 45F6BA792AB1F2B500C81DE1 /* avatar4-light.json */; };
-		45F6BA902AB1F2B600C81DE1 /* avatar4-light.json in Resources */ = {isa = PBXBuildFile; fileRef = 45F6BA792AB1F2B500C81DE1 /* avatar4-light.json */; };
-		45F6BA912AB1F2B600C81DE1 /* avatar4-light.json in Resources */ = {isa = PBXBuildFile; fileRef = 45F6BA792AB1F2B500C81DE1 /* avatar4-light.json */; };
-		45F6BA922AB1F2B600C81DE1 /* avatar5-light.json in Resources */ = {isa = PBXBuildFile; fileRef = 45F6BA7A2AB1F2B600C81DE1 /* avatar5-light.json */; };
-		45F6BA932AB1F2B600C81DE1 /* avatar5-light.json in Resources */ = {isa = PBXBuildFile; fileRef = 45F6BA7A2AB1F2B600C81DE1 /* avatar5-light.json */; };
-		45F6BA942AB1F2B600C81DE1 /* avatar5-light.json in Resources */ = {isa = PBXBuildFile; fileRef = 45F6BA7A2AB1F2B600C81DE1 /* avatar5-light.json */; };
-		45F6BA952AB1F2B600C81DE1 /* avatar5-light.json in Resources */ = {isa = PBXBuildFile; fileRef = 45F6BA7A2AB1F2B600C81DE1 /* avatar5-light.json */; };
-		45F6BA962AB1F2B600C81DE1 /* avatar5-light.json in Resources */ = {isa = PBXBuildFile; fileRef = 45F6BA7A2AB1F2B600C81DE1 /* avatar5-light.json */; };
-		45F6BA972AB1F2B600C81DE1 /* avatar5-light.json in Resources */ = {isa = PBXBuildFile; fileRef = 45F6BA7A2AB1F2B600C81DE1 /* avatar5-light.json */; };
-		45F6BA982AB1F2B600C81DE1 /* avatar5-light.json in Resources */ = {isa = PBXBuildFile; fileRef = 45F6BA7A2AB1F2B600C81DE1 /* avatar5-light.json */; };
-		45F6BA992AB1F2B600C81DE1 /* avatar1-light.json in Resources */ = {isa = PBXBuildFile; fileRef = 45F6BA7B2AB1F2B600C81DE1 /* avatar1-light.json */; };
-		45F6BA9A2AB1F2B600C81DE1 /* avatar1-light.json in Resources */ = {isa = PBXBuildFile; fileRef = 45F6BA7B2AB1F2B600C81DE1 /* avatar1-light.json */; };
-		45F6BA9B2AB1F2B600C81DE1 /* avatar1-light.json in Resources */ = {isa = PBXBuildFile; fileRef = 45F6BA7B2AB1F2B600C81DE1 /* avatar1-light.json */; };
-		45F6BA9C2AB1F2B600C81DE1 /* avatar1-light.json in Resources */ = {isa = PBXBuildFile; fileRef = 45F6BA7B2AB1F2B600C81DE1 /* avatar1-light.json */; };
-		45F6BA9D2AB1F2B600C81DE1 /* avatar1-light.json in Resources */ = {isa = PBXBuildFile; fileRef = 45F6BA7B2AB1F2B600C81DE1 /* avatar1-light.json */; };
-		45F6BA9E2AB1F2B600C81DE1 /* avatar1-light.json in Resources */ = {isa = PBXBuildFile; fileRef = 45F6BA7B2AB1F2B600C81DE1 /* avatar1-light.json */; };
-		45F6BA9F2AB1F2B600C81DE1 /* avatar1-light.json in Resources */ = {isa = PBXBuildFile; fileRef = 45F6BA7B2AB1F2B600C81DE1 /* avatar1-light.json */; };
-		45F6BAA02AB1F2B600C81DE1 /* avatar6-light.json in Resources */ = {isa = PBXBuildFile; fileRef = 45F6BA7C2AB1F2B600C81DE1 /* avatar6-light.json */; };
-		45F6BAA12AB1F2B600C81DE1 /* avatar6-light.json in Resources */ = {isa = PBXBuildFile; fileRef = 45F6BA7C2AB1F2B600C81DE1 /* avatar6-light.json */; };
-		45F6BAA22AB1F2B600C81DE1 /* avatar6-light.json in Resources */ = {isa = PBXBuildFile; fileRef = 45F6BA7C2AB1F2B600C81DE1 /* avatar6-light.json */; };
-		45F6BAA32AB1F2B600C81DE1 /* avatar6-light.json in Resources */ = {isa = PBXBuildFile; fileRef = 45F6BA7C2AB1F2B600C81DE1 /* avatar6-light.json */; };
-		45F6BAA42AB1F2B600C81DE1 /* avatar6-light.json in Resources */ = {isa = PBXBuildFile; fileRef = 45F6BA7C2AB1F2B600C81DE1 /* avatar6-light.json */; };
-		45F6BAA52AB1F2B600C81DE1 /* avatar6-light.json in Resources */ = {isa = PBXBuildFile; fileRef = 45F6BA7C2AB1F2B600C81DE1 /* avatar6-light.json */; };
-		45F6BAA62AB1F2B600C81DE1 /* avatar6-light.json in Resources */ = {isa = PBXBuildFile; fileRef = 45F6BA7C2AB1F2B600C81DE1 /* avatar6-light.json */; };
 		45F6BADF2AB3732C00C81DE1 /* SearchViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A995C193279991A100151462 /* SearchViewController.swift */; };
 		45F6BAE02AB3732C00C81DE1 /* BetslipHistory.swift in Sources */ = {isa = PBXBuildFile; fileRef = 457F4971273804810047169D /* BetslipHistory.swift */; };
 		45F6BAE12AB3732C00C81DE1 /* ReceivedTicketMessageTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 45B6E21D283FCFDC001B570C /* ReceivedTicketMessageTableViewCell.swift */; };
@@ -5192,7 +5108,6 @@
 		45F6BD782AB3732C00C81DE1 /* SmoothProgressBarView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 45CE91612A2F803B00BB3AB7 /* SmoothProgressBarView.swift */; };
 		45F6BD792AB3732C00C81DE1 /* MyGamesTypeList.swift in Sources */ = {isa = PBXBuildFile; fileRef = A91A645E2A7A66B5002A6984 /* MyGamesTypeList.swift */; };
 		45F6BDA12AB3732C00C81DE1 /* WithdrawViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = A90D8AF4277200C400DF88EB /* WithdrawViewController.xib */; };
-		45F6BDA22AB3732C00C81DE1 /* avatar3-light.json in Resources */ = {isa = PBXBuildFile; fileRef = 45F6BA782AB1F2B500C81DE1 /* avatar3-light.json */; };
 		45F6BDA32AB3732C00C81DE1 /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = A9BAFB412AB0B46D002EDBA1 /* Localizable.strings */; };
 		45F6BDA42AB3732C00C81DE1 /* SportsTypes.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 454990CB2716333F00D57CE2 /* SportsTypes.xcassets */; };
 		45F6BDA52AB3732C00C81DE1 /* BetslipErrorView.xib in Resources */ = {isa = PBXBuildFile; fileRef = A9BCF44B2750FCA5006DD528 /* BetslipErrorView.xib */; };
@@ -5201,16 +5116,13 @@
 		45F6BDA82AB3732C00C81DE1 /* CountryFlags.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 45D871CB27108F5900F5B87B /* CountryFlags.xcassets */; };
 		45F6BDA92AB3732C00C81DE1 /* FilterSliderCollapseView.xib in Resources */ = {isa = PBXBuildFile; fileRef = A92F5D822718388500884BDF /* FilterSliderCollapseView.xib */; };
 		45F6BDAA2AB3732C00C81DE1 /* TournamentTableViewHeader.xib in Resources */ = {isa = PBXBuildFile; fileRef = 457816B42707631000F66878 /* TournamentTableViewHeader.xib */; };
-		45F6BDAB2AB3732C00C81DE1 /* avatar5-dark.json in Resources */ = {isa = PBXBuildFile; fileRef = 452BA1882A902C4900D0AA48 /* avatar5-dark.json */; };
 		45F6BDAC2AB3732C00C81DE1 /* BetSubmissionSuccessViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = F4A438E4274FD8FB00F59CFF /* BetSubmissionSuccessViewController.xib */; };
 		45F6BDAD2AB3732C00C81DE1 /* SplashViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 452047B927036D3900B277B5 /* SplashViewController.xib */; };
-		45F6BDAE2AB3732C00C81DE1 /* avatar2-light.json in Resources */ = {isa = PBXBuildFile; fileRef = 45F6BA772AB1F2B500C81DE1 /* avatar2-light.json */; };
 		45F6BDAF2AB3732C00C81DE1 /* HeaderTextFieldView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 4589F40B26BF0203005DF543 /* HeaderTextFieldView.xib */; };
 		45F6BDB02AB3732C00C81DE1 /* SingleBettingTicketTableViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 454E0AC2273305E200794E0C /* SingleBettingTicketTableViewCell.xib */; };
 		45F6BDB12AB3732C00C81DE1 /* EnabledAccessViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = A9B8409E26DE712500269B05 /* EnabledAccessViewController.xib */; };
 		45F6BDB22AB3732C00C81DE1 /* VersionUpdateViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = A9B8407B26CA789A00269B05 /* VersionUpdateViewController.xib */; };
 		45F6BDB32AB3732C00C81DE1 /* CompetitionsFiltersView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 45D527DE2720535400744D34 /* CompetitionsFiltersView.xib */; };
-		45F6BDB42AB3732C00C81DE1 /* avatar1-light.json in Resources */ = {isa = PBXBuildFile; fileRef = 45F6BA7B2AB1F2B600C81DE1 /* avatar1-light.json */; };
 		45F6BDB52AB3732C00C81DE1 /* Colors.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 45A3335D298976E3008181E9 /* Colors.xcassets */; };
 		45F6BDB62AB3732C00C81DE1 /* FilterCollapseView.xib in Resources */ = {isa = PBXBuildFile; fileRef = A9C602372716F7F900992E11 /* FilterCollapseView.xib */; };
 		45F6BDB72AB3732C00C81DE1 /* PhonePrefixSelectorViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 455C960526FCA85F00456F30 /* PhonePrefixSelectorViewController.xib */; };
@@ -5219,7 +5131,6 @@
 		45F6BDBB2AB3732C00C81DE1 /* TitleTableViewHeader.xib in Resources */ = {isa = PBXBuildFile; fileRef = 457816BA2707632400F66878 /* TitleTableViewHeader.xib */; };
 		45F6BDBC2AB3732C00C81DE1 /* MyTicketsViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 458BAC68276B65D5006C4BC7 /* MyTicketsViewController.xib */; };
 		45F6BDBD2AB3732C00C81DE1 /* LoginViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 4589F3F226BF017A005DF543 /* LoginViewController.xib */; };
-		45F6BDBE2AB3732C00C81DE1 /* avatar4-light.json in Resources */ = {isa = PBXBuildFile; fileRef = 45F6BA792AB1F2B500C81DE1 /* avatar4-light.json */; };
 		45F6BDBF2AB3732C00C81DE1 /* ActivationAlertCollectionViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = A9627A0B274548610001E1D5 /* ActivationAlertCollectionViewCell.xib */; };
 		45F6BDC02AB3732C00C81DE1 /* RecentSearchRowView.xib in Resources */ = {isa = PBXBuildFile; fileRef = A96B618627A03C5E005DC376 /* RecentSearchRowView.xib */; };
 		45F6BDC12AB3732C00C81DE1 /* SimpleRegisterEmailCheckViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 45BEA47B26F4DC9900680181 /* SimpleRegisterEmailCheckViewController.xib */; };
@@ -5242,15 +5153,12 @@
 		45F6BDD42AB3732C00C81DE1 /* BannerScrollTableViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 45D3DE39271499DB00717124 /* BannerScrollTableViewCell.xib */; };
 		45F6BDD52AB3732C00C81DE1 /* BetslipViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 454E0A952732C01B00794E0C /* BetslipViewController.xib */; };
 		45F6BDD62AB3732C00C81DE1 /* MatchFiltersViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 45EF5435270C603D00D1E13E /* MatchFiltersViewController.xib */; };
-		45F6BDD72AB3732C00C81DE1 /* avatar2-dark.json in Resources */ = {isa = PBXBuildFile; fileRef = 452BA1892A902C4900D0AA48 /* avatar2-dark.json */; };
 		45F6BDD82AB3732C00C81DE1 /* WelcomeViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 4589F3ED26BF017A005DF543 /* WelcomeViewController.xib */; };
-		45F6BDD92AB3732C00C81DE1 /* avatar3-dark.json in Resources */ = {isa = PBXBuildFile; fileRef = 452BA1842A902C4800D0AA48 /* avatar3-dark.json */; };
 		45F6BDDA2AB3732C00C81DE1 /* zendesk_support.html in Resources */ = {isa = PBXBuildFile; fileRef = A9A521802A03BD8D00C0F6C6 /* zendesk_support.html */; };
 		45F6BDDB2AB3732C00C81DE1 /* UploadView.xib in Resources */ = {isa = PBXBuildFile; fileRef = A92F5DA2272C44A000884BDF /* UploadView.xib */; };
 		45F6BDDC2AB3732C00C81DE1 /* MyTicketTableViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 458BAC742770ACAE006C4BC7 /* MyTicketTableViewCell.xib */; };
 		45F6BDDD2AB3732C00C81DE1 /* HeadToHeadCardStatsView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 45A642D627985AAB008EFD5B /* HeadToHeadCardStatsView.xib */; };
 		45F6BDDE2AB3732C00C81DE1 /* success_thumbs_up.json in Resources */ = {isa = PBXBuildFile; fileRef = A92BDCF72A163D0100E9B045 /* success_thumbs_up.json */; };
-		45F6BDDF2AB3732C00C81DE1 /* avatar6-light.json in Resources */ = {isa = PBXBuildFile; fileRef = 45F6BA7C2AB1F2B600C81DE1 /* avatar6-light.json */; };
 		45F6BDE22AB3732C00C81DE1 /* LoadingMoreTableViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 45726330272B13D7002F2959 /* LoadingMoreTableViewCell.xib */; };
 		45F6BDE32AB3732C00C81DE1 /* MatchLineTableViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 457816A82706679400F66878 /* MatchLineTableViewCell.xib */; };
 		45F6BDE42AB3732C00C81DE1 /* RecentSearchHeaderView.xib in Resources */ = {isa = PBXBuildFile; fileRef = A96B619027A0496C005DC376 /* RecentSearchHeaderView.xib */; };
@@ -5276,14 +5184,12 @@
 		45F6BDFC2AB3732C00C81DE1 /* MarketDetailCollectionViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = A9BCF442274FC3FF006DD528 /* MarketDetailCollectionViewCell.xib */; };
 		45F6BDFD2AB3732C00C81DE1 /* Gradients.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 451F51EB298D2D7D00994660 /* Gradients.xcassets */; };
 		45F6BDFE2AB3732C00C81DE1 /* SearchViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = A995C194279991A100151462 /* SearchViewController.xib */; };
-		45F6BDFF2AB3732C00C81DE1 /* avatar1-dark.json in Resources */ = {isa = PBXBuildFile; fileRef = 452BA1862A902C4900D0AA48 /* avatar1-dark.json */; };
 		45F6BE002AB3732C00C81DE1 /* ForbiddenLocationViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = A9B8408526D3E84000269B05 /* ForbiddenLocationViewController.xib */; };
 		45F6BE012AB3732C00C81DE1 /* MatchDetailsViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = A9BCF433274D1A77006DD528 /* MatchDetailsViewController.xib */; };
 		45F6BE022AB3732C00C81DE1 /* PersonalInfoViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = A9C82FB426F3AFB400059DCD /* PersonalInfoViewController.xib */; };
 		45F6BE032AB3732C00C81DE1 /* FullRegisterAddressCountryViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = A99A972126FE16D500F8D163 /* FullRegisterAddressCountryViewController.xib */; };
 		45F6BE042AB3732C00C81DE1 /* FullRegisterPersonalInfoViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = A99A971B26FDDF4E00F8D163 /* FullRegisterPersonalInfoViewController.xib */; };
 		45F6BE052AB3732C00C81DE1 /* HomeAwayCardStatsView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 4502BF392798713C00F5B0CD /* HomeAwayCardStatsView.xib */; };
-		45F6BE062AB3732C00C81DE1 /* avatar5-light.json in Resources */ = {isa = PBXBuildFile; fileRef = 45F6BA7A2AB1F2B600C81DE1 /* avatar5-light.json */; };
 		45F6BE072AB3732C00C81DE1 /* MatchWidgetCollectionViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 457816AE2706699900F66878 /* MatchWidgetCollectionViewCell.xib */; };
 		45F6BE082AB3732C00C81DE1 /* TestingInterface.xib in Resources */ = {isa = PBXBuildFile; fileRef = 45C3E8D927B57548007A1A0F /* TestingInterface.xib */; };
 		45F6BE092AB3732C00C81DE1 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 45A33358298976E3008181E9 /* GoogleService-Info.plist */; };
@@ -5299,9 +5205,7 @@
 		45F6BE132AB3732C00C81DE1 /* progress_bar_fire_ball.json in Resources */ = {isa = PBXBuildFile; fileRef = 455897F82A9CE5CE00E39598 /* progress_bar_fire_ball.json */; };
 		45F6BE142AB3732C00C81DE1 /* MatchStatsCollectionViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 4589C743281A0CB700243547 /* MatchStatsCollectionViewCell.xib */; };
 		45F6BE152AB3732C00C81DE1 /* ProfileViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 455C962026FDD66300456F30 /* ProfileViewController.xib */; };
-		45F6BE162AB3732C00C81DE1 /* avatar4-dark.json in Resources */ = {isa = PBXBuildFile; fileRef = 452BA1872A902C4900D0AA48 /* avatar4-dark.json */; };
 		45F6BE172AB3732C00C81DE1 /* BannerTopCollectionViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 45D3DE3F27149BE800717124 /* BannerTopCollectionViewCell.xib */; };
-		45F6BE182AB3732C00C81DE1 /* avatar6-dark.json in Resources */ = {isa = PBXBuildFile; fileRef = 452BA1852A902C4800D0AA48 /* avatar6-dark.json */; };
 		45F6BE192AB3732C00C81DE1 /* LiveEventsViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 45D712F727033BEF00AC0364 /* LiveEventsViewController.xib */; };
 		45F6BE1A2AB3732C00C81DE1 /* stats_widget_dark.html in Resources */ = {isa = PBXBuildFile; fileRef = A9B63084291BE10900BB850E /* stats_widget_dark.html */; };
 		45F6BE1D2AB3732C00C81DE1 /* PolicyLinkView.xib in Resources */ = {isa = PBXBuildFile; fileRef = A9BCF42F274BBE8D006DD528 /* PolicyLinkView.xib */; };
@@ -7219,6 +7123,9 @@
 		A9FB6D6928C65EF100E3FE58 /* RankingsListViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9FB6D6228C65EF100E3FE58 /* RankingsListViewController.swift */; };
 		A9FEF5752AB8630600CB638F /* RegisterSuccessViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9BAFB4C2AB213E5002EDBA1 /* RegisterSuccessViewController.swift */; };
 		A9FEF5762AB8630B00CB638F /* RegisterErrorViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9BB46292AB366400003741E /* RegisterErrorViewController.swift */; };
+		CE12A0E42D2D992C0022BDF7 /* Media.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = CE12A0E32D2D992C0022BDF7 /* Media.xcassets */; };
+		CE12A0E62D2D99B60022BDF7 /* Media.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = CE12A0E52D2D99B60022BDF7 /* Media.xcassets */; };
+		CE12A0E72D2D99B60022BDF7 /* Media.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = CE12A0E52D2D99B60022BDF7 /* Media.xcassets */; };
 		CE21C3512CEB96490012CABA /* cashbackVideo.mp4 in Resources */ = {isa = PBXBuildFile; fileRef = CE21C3502CEB96490012CABA /* cashbackVideo.mp4 */; };
 		CE21C3522CEB96490012CABA /* cashbackVideo.mp4 in Resources */ = {isa = PBXBuildFile; fileRef = CE21C3502CEB96490012CABA /* cashbackVideo.mp4 */; };
 		CE21C3532CEB96490012CABA /* cashbackVideo.mp4 in Resources */ = {isa = PBXBuildFile; fileRef = CE21C3502CEB96490012CABA /* cashbackVideo.mp4 */; };
@@ -7375,12 +7282,6 @@
 		452B9D1D2C1890160032363F /* SystemBettingTicketDataSource.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SystemBettingTicketDataSource.swift; sourceTree = "<group>"; };
 		452B9D262C1890CA0032363F /* BetBuilderBettingTicketDataSource.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BetBuilderBettingTicketDataSource.swift; sourceTree = "<group>"; };
 		452B9D2F2C1B54860032363F /* ListBackgroundCollectionViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ListBackgroundCollectionViewCell.swift; sourceTree = "<group>"; };
-		452BA1842A902C4800D0AA48 /* avatar3-dark.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = "avatar3-dark.json"; sourceTree = "<group>"; };
-		452BA1852A902C4800D0AA48 /* avatar6-dark.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = "avatar6-dark.json"; sourceTree = "<group>"; };
-		452BA1862A902C4900D0AA48 /* avatar1-dark.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = "avatar1-dark.json"; sourceTree = "<group>"; };
-		452BA1872A902C4900D0AA48 /* avatar4-dark.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = "avatar4-dark.json"; sourceTree = "<group>"; };
-		452BA1882A902C4900D0AA48 /* avatar5-dark.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = "avatar5-dark.json"; sourceTree = "<group>"; };
-		452BA1892A902C4900D0AA48 /* avatar2-dark.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = "avatar2-dark.json"; sourceTree = "<group>"; };
 		453079372750EDBF00278B7C /* MatchDetailsViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MatchDetailsViewModel.swift; sourceTree = "<group>"; };
 		45322137280EFEDC0092CCB4 /* TransactionsHistoryViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TransactionsHistoryViewController.swift; sourceTree = "<group>"; };
 		4532213A280EFEF20092CCB4 /* BettingHistoryViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BettingHistoryViewController.swift; sourceTree = "<group>"; };
@@ -7797,12 +7698,6 @@
 		45F2F9A8298C067C0075AF02 /* StaticColors.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = StaticColors.xcassets; sourceTree = "<group>"; };
 		45F5C5152ABAE7F5001AD544 /* PaymentsBrowserViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PaymentsBrowserViewController.swift; sourceTree = "<group>"; };
 		45F6BA6F2AAF32A100C81DE1 /* BetslipProxyWebViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BetslipProxyWebViewController.swift; sourceTree = "<group>"; };
-		45F6BA772AB1F2B500C81DE1 /* avatar2-light.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = "avatar2-light.json"; sourceTree = "<group>"; };
-		45F6BA782AB1F2B500C81DE1 /* avatar3-light.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = "avatar3-light.json"; sourceTree = "<group>"; };
-		45F6BA792AB1F2B500C81DE1 /* avatar4-light.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = "avatar4-light.json"; sourceTree = "<group>"; };
-		45F6BA7A2AB1F2B600C81DE1 /* avatar5-light.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = "avatar5-light.json"; sourceTree = "<group>"; };
-		45F6BA7B2AB1F2B600C81DE1 /* avatar1-light.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = "avatar1-light.json"; sourceTree = "<group>"; };
-		45F6BA7C2AB1F2B600C81DE1 /* avatar6-light.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = "avatar6-light.json"; sourceTree = "<group>"; };
 		45F6BE372AB3732C00C81DE1 /* Betsson UAT.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Betsson UAT.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		45F6BE3C2AB3739F00C81DE1 /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
 		45F6BE3E2AB3739F00C81DE1 /* Betsson-PROD-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "Betsson-PROD-Info.plist"; sourceTree = "<group>"; };
@@ -8240,6 +8135,8 @@
 		A9FB6D5128C645C800E3FE58 /* RankingsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RankingsViewController.swift; sourceTree = "<group>"; };
 		A9FB6D5A28C657CE00E3FE58 /* TipsListViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TipsListViewController.swift; sourceTree = "<group>"; };
 		A9FB6D6228C65EF100E3FE58 /* RankingsListViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RankingsListViewController.swift; sourceTree = "<group>"; };
+		CE12A0E32D2D992C0022BDF7 /* Media.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Media.xcassets; sourceTree = "<group>"; };
+		CE12A0E52D2D99B60022BDF7 /* Media.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Media.xcassets; sourceTree = "<group>"; };
 		CE21C3502CEB96490012CABA /* cashbackVideo.mp4 */ = {isa = PBXFileReference; lastKnownFileType = file; path = cashbackVideo.mp4; sourceTree = "<group>"; };
 		CE315ED52D00B3FA0080D900 /* replay_sucess_7.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = replay_sucess_7.json; sourceTree = "<group>"; };
 		CE544FC92D07029900AA24CA /* first_deposit_8.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = first_deposit_8.json; sourceTree = "<group>"; };
@@ -8673,6 +8570,7 @@
 			children = (
 				450B7B3228F58625009229E3 /* SportRadar-Assets.xcassets */,
 				450B7B3328F58625009229E3 /* Colors.xcassets */,
+				CE12A0E32D2D992C0022BDF7 /* Media.xcassets */,
 			);
 			path = Assets;
 			sourceTree = "<group>";
@@ -8811,25 +8709,6 @@
 				452B9D262C1890CA0032363F /* BetBuilderBettingTicketDataSource.swift */,
 			);
 			path = DataSources;
-			sourceTree = "<group>";
-		};
-		452BA1532A902BB000D0AA48 /* SignUpAvatars */ = {
-			isa = PBXGroup;
-			children = (
-				45F6BA7B2AB1F2B600C81DE1 /* avatar1-light.json */,
-				45F6BA772AB1F2B500C81DE1 /* avatar2-light.json */,
-				45F6BA782AB1F2B500C81DE1 /* avatar3-light.json */,
-				45F6BA792AB1F2B500C81DE1 /* avatar4-light.json */,
-				45F6BA7A2AB1F2B600C81DE1 /* avatar5-light.json */,
-				45F6BA7C2AB1F2B600C81DE1 /* avatar6-light.json */,
-				452BA1862A902C4900D0AA48 /* avatar1-dark.json */,
-				452BA1892A902C4900D0AA48 /* avatar2-dark.json */,
-				452BA1842A902C4800D0AA48 /* avatar3-dark.json */,
-				452BA1872A902C4900D0AA48 /* avatar4-dark.json */,
-				452BA1882A902C4900D0AA48 /* avatar5-dark.json */,
-				452BA1852A902C4800D0AA48 /* avatar6-dark.json */,
-			);
-			path = SignUpAvatars;
 			sourceTree = "<group>";
 		};
 		4532213D280F011C0092CCB4 /* PersonalInfo */ = {
@@ -9947,6 +9826,7 @@
 				45A3335C298976E3008181E9 /* Betsson-Assets.xcassets */,
 				45A3335D298976E3008181E9 /* Colors.xcassets */,
 				451F51EB298D2D7D00994660 /* Gradients.xcassets */,
+				CE12A0E52D2D99B60022BDF7 /* Media.xcassets */,
 			);
 			path = Assets;
 			sourceTree = "<group>";
@@ -10530,7 +10410,6 @@
 		45F805942A053841005296E0 /* Animations */ = {
 			isa = PBXGroup;
 			children = (
-				452BA1532A902BB000D0AA48 /* SignUpAvatars */,
 				A92BDCF72A163D0100E9B045 /* success_thumbs_up.json */,
 				455897F02A9CE5C300E39598 /* progress_end_animation.json */,
 				6531BB8D2C0A295B002C696D /* replay_coin.json */,
@@ -12578,7 +12457,6 @@
 			buildActionMask = 2147483647;
 			files = (
 				450B7AA428F58574009229E3 /* WithdrawViewController.xib in Resources */,
-				45F6BA852AB1F2B600C81DE1 /* avatar3-light.json in Resources */,
 				450B7AA528F58574009229E3 /* SportsTypes.xcassets in Resources */,
 				450B7AA628F58574009229E3 /* BetslipErrorView.xib in Resources */,
 				450B7AA728F58574009229E3 /* SimpleRegisterDetailsViewController.xib in Resources */,
@@ -12590,23 +12468,19 @@
 				450B7AAA28F58574009229E3 /* FilterSliderCollapseView.xib in Resources */,
 				450B7AAB28F58574009229E3 /* TournamentTableViewHeader.xib in Resources */,
 				450B7AAC28F58574009229E3 /* BetSubmissionSuccessViewController.xib in Resources */,
-				45F6BA7E2AB1F2B600C81DE1 /* avatar2-light.json in Resources */,
 				450B7AAD28F58574009229E3 /* SplashViewController.xib in Resources */,
 				450B7AAE28F58574009229E3 /* HeaderTextFieldView.xib in Resources */,
 				450B7AAF28F58574009229E3 /* SingleBettingTicketTableViewCell.xib in Resources */,
 				451135762BC7F81C00124983 /* PrivacyInfo.xcprivacy in Resources */,
 				450B7AB028F58574009229E3 /* EnabledAccessViewController.xib in Resources */,
 				450B7AB128F58574009229E3 /* VersionUpdateViewController.xib in Resources */,
-				45F6BA9A2AB1F2B600C81DE1 /* avatar1-light.json in Resources */,
 				450B7AB228F58574009229E3 /* CompetitionsFiltersView.xib in Resources */,
 				450B7AB328F58574009229E3 /* FilterCollapseView.xib in Resources */,
 				450B7AB428F58574009229E3 /* PhonePrefixSelectorViewController.xib in Resources */,
 				A9B6307D291BE10200BB850E /* stats_widget_light.html in Resources */,
 				A9A1B2DA2A128D8B00F7A8ED /* deposit_animation.json in Resources */,
 				450B7AB628F58574009229E3 /* TitleTableViewHeader.xib in Resources */,
-				452BA1922A902C4900D0AA48 /* avatar6-dark.json in Resources */,
 				450B7AB828F58574009229E3 /* MyTicketsViewController.xib in Resources */,
-				45F6BA8C2AB1F2B600C81DE1 /* avatar4-light.json in Resources */,
 				450B7AB928F58574009229E3 /* LoginViewController.xib in Resources */,
 				450B7ABA28F58574009229E3 /* ActivationAlertCollectionViewCell.xib in Resources */,
 				450B7ABB28F58574009229E3 /* RecentSearchRowView.xib in Resources */,
@@ -12618,6 +12492,7 @@
 				450B7AC228F58574009229E3 /* ThreeAwayMarketDetailTableViewCell.xib in Resources */,
 				450B7AC328F58574009229E3 /* SeeMoreMarketsCollectionViewCell.xib in Resources */,
 				450B7AC528F58574009229E3 /* PreLiveEventsViewController.xib in Resources */,
+				CE12A0E42D2D992C0022BDF7 /* Media.xcassets in Resources */,
 				450B7AC628F58574009229E3 /* FullRegisterDocumentsViewController.xib in Resources */,
 				450B7AC728F58574009229E3 /* README.md in Resources */,
 				450FC3E62A2A6737000DB866 /* DummyImages.xcassets in Resources */,
@@ -12625,19 +12500,16 @@
 				450B7AC928F58574009229E3 /* PopUpPromotionView.xib in Resources */,
 				455897F22A9CE5C300E39598 /* progress_end_animation.json in Resources */,
 				A9BAFB442AB0B46D002EDBA1 /* Localizable.strings in Resources */,
-				452BA1992A902C4900D0AA48 /* avatar1-dark.json in Resources */,
 				450B7ACB28F58574009229E3 /* PreSubmissionBetslipViewController.xib in Resources */,
 				455897FA2A9CE5CE00E39598 /* progress_bar_fire_ball.json in Resources */,
 				450B7ACC28F58574009229E3 /* BannerScrollTableViewCell.xib in Resources */,
 				450B7ACD28F58574009229E3 /* BetslipViewController.xib in Resources */,
 				450B7ACF28F58574009229E3 /* MatchFiltersViewController.xib in Resources */,
-				452BA1AE2A902C4A00D0AA48 /* avatar2-dark.json in Resources */,
 				450B7AD028F58574009229E3 /* WelcomeViewController.xib in Resources */,
 				450B7AD128F58574009229E3 /* UploadView.xib in Resources */,
 				6531BB902C0A295B002C696D /* replay_coin.json in Resources */,
 				450B7AD228F58574009229E3 /* MyTicketTableViewCell.xib in Resources */,
 				450B7AD328F58574009229E3 /* HeadToHeadCardStatsView.xib in Resources */,
-				45F6BAA12AB1F2B600C81DE1 /* avatar6-light.json in Resources */,
 				450B7AD728F58574009229E3 /* LoadingMoreTableViewCell.xib in Resources */,
 				450B7AD828F58574009229E3 /* MatchLineTableViewCell.xib in Resources */,
 				450B7AD928F58574009229E3 /* RecentSearchHeaderView.xib in Resources */,
@@ -12646,9 +12518,7 @@
 				450B7ADC28F58574009229E3 /* ProfileLimitsManagementViewController.xib in Resources */,
 				450B7ADD28F58574009229E3 /* CilinderSceneKitScene.scn in Resources */,
 				450B7ADE28F58574009229E3 /* WithdrawWebViewController.xib in Resources */,
-				452BA18B2A902C4900D0AA48 /* avatar3-dark.json in Resources */,
 				450B7ADF28F58574009229E3 /* DocumentPickerView.xib in Resources */,
-				452BA1A72A902C4900D0AA48 /* avatar5-dark.json in Resources */,
 				450B7AE028F58574009229E3 /* MaintenanceViewController.xib in Resources */,
 				450B7AE328F58574009229E3 /* SimpleRegisterEmailSentViewController.xib in Resources */,
 				450B7AE528F58574009229E3 /* CountrySelectorTableViewCell.xib in Resources */,
@@ -12685,11 +12555,9 @@
 				450B7AF728F58574009229E3 /* FullRegisterPersonalInfoViewController.xib in Resources */,
 				450B7AF828F58574009229E3 /* HomeAwayCardStatsView.xib in Resources */,
 				455420252B0E218300B22EBD /* field_widget_dark.html in Resources */,
-				45F6BA932AB1F2B600C81DE1 /* avatar5-light.json in Resources */,
 				CE315ED72D00B3FA0080D900 /* replay_sucess_7.json in Resources */,
 				450B7AF928F58574009229E3 /* MatchWidgetCollectionViewCell.xib in Resources */,
 				450B7B3528F58625009229E3 /* LaunchScreen-SportRadar.storyboard in Resources */,
-				452BA1A02A902C4900D0AA48 /* avatar4-dark.json in Resources */,
 				450B7AFB28F58574009229E3 /* TestingInterface.xib in Resources */,
 				450B7AFC28F58574009229E3 /* RequestLocationAccessViewController.xib in Resources */,
 				450B7AFE28F58574009229E3 /* LogViewerViewController.xib in Resources */,
@@ -12744,7 +12612,6 @@
 			buildActionMask = 2147483647;
 			files = (
 				457CBBCF282D27D000ED0F00 /* WithdrawViewController.xib in Resources */,
-				45F6BA892AB1F2B600C81DE1 /* avatar3-light.json in Resources */,
 				457CBBD0282D27D000ED0F00 /* SportsTypes.xcassets in Resources */,
 				457CBBD1282D27D000ED0F00 /* BetslipErrorView.xib in Resources */,
 				457CBBD2282D27D000ED0F00 /* SimpleRegisterDetailsViewController.xib in Resources */,
@@ -12756,23 +12623,19 @@
 				457CBBD5282D27D000ED0F00 /* FilterSliderCollapseView.xib in Resources */,
 				457CBC6B282D2AE800ED0F00 /* LaunchScreen-EveryMatrix.storyboard in Resources */,
 				457CBBD6282D27D000ED0F00 /* TournamentTableViewHeader.xib in Resources */,
-				45F6BA822AB1F2B600C81DE1 /* avatar2-light.json in Resources */,
 				457CBBD7282D27D000ED0F00 /* BetSubmissionSuccessViewController.xib in Resources */,
 				457CBBD8282D27D000ED0F00 /* SplashViewController.xib in Resources */,
 				457CBBD9282D27D000ED0F00 /* HeaderTextFieldView.xib in Resources */,
 				4511357A2BC7F81C00124983 /* PrivacyInfo.xcprivacy in Resources */,
 				457CBBDA282D27D000ED0F00 /* SingleBettingTicketTableViewCell.xib in Resources */,
 				457CBBDB282D27D000ED0F00 /* EnabledAccessViewController.xib in Resources */,
-				45F6BA9E2AB1F2B600C81DE1 /* avatar1-light.json in Resources */,
 				457CBBDC282D27D000ED0F00 /* VersionUpdateViewController.xib in Resources */,
 				457CBBDD282D27D000ED0F00 /* CompetitionsFiltersView.xib in Resources */,
 				457CBBDE282D27D000ED0F00 /* FilterCollapseView.xib in Resources */,
 				A9B63082291BE10200BB850E /* stats_widget_light.html in Resources */,
 				457CBBDF282D27D000ED0F00 /* PhonePrefixSelectorViewController.xib in Resources */,
 				A9A1B2DE2A128D8B00F7A8ED /* deposit_animation.json in Resources */,
-				452BA1962A902C4900D0AA48 /* avatar6-dark.json in Resources */,
 				457CBBE1282D27D000ED0F00 /* TitleTableViewHeader.xib in Resources */,
-				45F6BA902AB1F2B600C81DE1 /* avatar4-light.json in Resources */,
 				457CBBE3282D27D000ED0F00 /* MyTicketsViewController.xib in Resources */,
 				457CBBE4282D27D000ED0F00 /* LoginViewController.xib in Resources */,
 				457CBBE5282D27D000ED0F00 /* ActivationAlertCollectionViewCell.xib in Resources */,
@@ -12792,19 +12655,16 @@
 				455897F62A9CE5C300E39598 /* progress_end_animation.json in Resources */,
 				457CBBF3282D27D000ED0F00 /* BannerMatchCollectionViewCell.xib in Resources */,
 				A9BAFB482AB0B46D002EDBA1 /* Localizable.strings in Resources */,
-				452BA19D2A902C4900D0AA48 /* avatar1-dark.json in Resources */,
 				457CBBF4282D27D000ED0F00 /* PopUpPromotionView.xib in Resources */,
 				455897FE2A9CE5CE00E39598 /* progress_bar_fire_ball.json in Resources */,
 				457CBBF6282D27D000ED0F00 /* PreSubmissionBetslipViewController.xib in Resources */,
 				457CBBF7282D27D000ED0F00 /* BannerScrollTableViewCell.xib in Resources */,
-				452BA1B22A902C4A00D0AA48 /* avatar2-dark.json in Resources */,
 				457CBBF8282D27D000ED0F00 /* BetslipViewController.xib in Resources */,
 				457CBBFA282D27D000ED0F00 /* MatchFiltersViewController.xib in Resources */,
 				6531BB942C0A295B002C696D /* replay_coin.json in Resources */,
 				457CBBFB282D27D000ED0F00 /* WelcomeViewController.xib in Resources */,
 				457CBBFC282D27D000ED0F00 /* UploadView.xib in Resources */,
 				457CBBFD282D27D000ED0F00 /* MyTicketTableViewCell.xib in Resources */,
-				45F6BAA52AB1F2B600C81DE1 /* avatar6-light.json in Resources */,
 				457CBBFE282D27D000ED0F00 /* HeadToHeadCardStatsView.xib in Resources */,
 				457CBC02282D27D000ED0F00 /* LoadingMoreTableViewCell.xib in Resources */,
 				457CBC03282D27D000ED0F00 /* MatchLineTableViewCell.xib in Resources */,
@@ -12812,9 +12672,7 @@
 				457CBC05282D27D000ED0F00 /* SportSelectionViewController.xib in Resources */,
 				457CBC06282D27D000ED0F00 /* FilterRowView.xib in Resources */,
 				4568B9682858CF4100FA99B3 /* CilinderSceneKitScene.scn in Resources */,
-				452BA18F2A902C4900D0AA48 /* avatar3-dark.json in Resources */,
 				457CBC07282D27D000ED0F00 /* ProfileLimitsManagementViewController.xib in Resources */,
-				452BA1AB2A902C4900D0AA48 /* avatar5-dark.json in Resources */,
 				457CBC08282D27D000ED0F00 /* WithdrawWebViewController.xib in Resources */,
 				457CBC09282D27D000ED0F00 /* DocumentPickerView.xib in Resources */,
 				457CBC0A282D27D000ED0F00 /* MaintenanceViewController.xib in Resources */,
@@ -12851,11 +12709,9 @@
 				457CBC61282D291200ED0F00 /* GoogleService-Info.plist in Resources */,
 				457CBC20282D27D000ED0F00 /* FullRegisterAddressCountryViewController.xib in Resources */,
 				455420292B0E218300B22EBD /* field_widget_dark.html in Resources */,
-				45F6BA972AB1F2B600C81DE1 /* avatar5-light.json in Resources */,
 				CE315ED62D00B3FA0080D900 /* replay_sucess_7.json in Resources */,
 				457CBC21282D27D000ED0F00 /* FullRegisterPersonalInfoViewController.xib in Resources */,
 				457CBC22282D27D000ED0F00 /* HomeAwayCardStatsView.xib in Resources */,
-				452BA1A42A902C4900D0AA48 /* avatar4-dark.json in Resources */,
 				457CBC23282D27D000ED0F00 /* MatchWidgetCollectionViewCell.xib in Resources */,
 				457CBC25282D27D000ED0F00 /* TestingInterface.xib in Resources */,
 				457CBC26282D27D000ED0F00 /* RequestLocationAccessViewController.xib in Resources */,
@@ -12901,7 +12757,6 @@
 			buildActionMask = 2147483647;
 			files = (
 				457CBE76282D2CD100ED0F00 /* WithdrawViewController.xib in Resources */,
-				45F6BA8A2AB1F2B600C81DE1 /* avatar3-light.json in Resources */,
 				457CBE77282D2CD100ED0F00 /* SportsTypes.xcassets in Resources */,
 				457CBE78282D2CD100ED0F00 /* BetslipErrorView.xib in Resources */,
 				457CBE79282D2CD100ED0F00 /* SimpleRegisterDetailsViewController.xib in Resources */,
@@ -12913,23 +12768,19 @@
 				457CBE7C282D2CD100ED0F00 /* FilterSliderCollapseView.xib in Resources */,
 				457CBE7E282D2CD100ED0F00 /* TournamentTableViewHeader.xib in Resources */,
 				4568B9692858CF4100FA99B3 /* CilinderSceneKitScene.scn in Resources */,
-				45F6BA832AB1F2B600C81DE1 /* avatar2-light.json in Resources */,
 				457CBE7F282D2CD100ED0F00 /* BetSubmissionSuccessViewController.xib in Resources */,
 				457CBE80282D2CD100ED0F00 /* SplashViewController.xib in Resources */,
 				457CBE81282D2CD100ED0F00 /* HeaderTextFieldView.xib in Resources */,
 				4511357B2BC7F81C00124983 /* PrivacyInfo.xcprivacy in Resources */,
 				457CBE82282D2CD100ED0F00 /* SingleBettingTicketTableViewCell.xib in Resources */,
 				457CBE83282D2CD100ED0F00 /* EnabledAccessViewController.xib in Resources */,
-				45F6BA9F2AB1F2B600C81DE1 /* avatar1-light.json in Resources */,
 				457CBE84282D2CD100ED0F00 /* VersionUpdateViewController.xib in Resources */,
 				457CBE85282D2CD100ED0F00 /* CompetitionsFiltersView.xib in Resources */,
 				457CBE86282D2CD100ED0F00 /* FilterCollapseView.xib in Resources */,
 				A9B63083291BE10200BB850E /* stats_widget_light.html in Resources */,
 				457CBE87282D2CD100ED0F00 /* PhonePrefixSelectorViewController.xib in Resources */,
 				A9A1B2DF2A128D8B00F7A8ED /* deposit_animation.json in Resources */,
-				452BA1972A902C4900D0AA48 /* avatar6-dark.json in Resources */,
 				457CBE89282D2CD100ED0F00 /* TitleTableViewHeader.xib in Resources */,
-				45F6BA912AB1F2B600C81DE1 /* avatar4-light.json in Resources */,
 				457CBE8B282D2CD100ED0F00 /* MyTicketsViewController.xib in Resources */,
 				457CBE8C282D2CD100ED0F00 /* LoginViewController.xib in Resources */,
 				457CBE8D282D2CD100ED0F00 /* ActivationAlertCollectionViewCell.xib in Resources */,
@@ -12949,19 +12800,16 @@
 				455897F72A9CE5C300E39598 /* progress_end_animation.json in Resources */,
 				457CBE9D282D2CD100ED0F00 /* PopUpPromotionView.xib in Resources */,
 				A9BAFB492AB0B46D002EDBA1 /* Localizable.strings in Resources */,
-				452BA19E2A902C4900D0AA48 /* avatar1-dark.json in Resources */,
 				455897FF2A9CE5CE00E39598 /* progress_bar_fire_ball.json in Resources */,
 				457CBE9F282D2CD100ED0F00 /* PreSubmissionBetslipViewController.xib in Resources */,
 				457CBEA0282D2CD100ED0F00 /* BannerScrollTableViewCell.xib in Resources */,
 				457CBEA1282D2CD100ED0F00 /* BetslipViewController.xib in Resources */,
-				452BA1B32A902C4A00D0AA48 /* avatar2-dark.json in Resources */,
 				457CBEA2282D2CD100ED0F00 /* MatchFiltersViewController.xib in Resources */,
 				457CBEA3282D2CD100ED0F00 /* WelcomeViewController.xib in Resources */,
 				6531BB952C0A295B002C696D /* replay_coin.json in Resources */,
 				457CBEA4282D2CD100ED0F00 /* UploadView.xib in Resources */,
 				457CBEA5282D2CD100ED0F00 /* MyTicketTableViewCell.xib in Resources */,
 				457CBEA6282D2CD100ED0F00 /* HeadToHeadCardStatsView.xib in Resources */,
-				45F6BAA62AB1F2B600C81DE1 /* avatar6-light.json in Resources */,
 				457CBEAA282D2CD100ED0F00 /* LoadingMoreTableViewCell.xib in Resources */,
 				457CBEAB282D2CD100ED0F00 /* MatchLineTableViewCell.xib in Resources */,
 				457CBEAC282D2CD100ED0F00 /* RecentSearchHeaderView.xib in Resources */,
@@ -12969,9 +12817,7 @@
 				457CBEAE282D2CD100ED0F00 /* FilterRowView.xib in Resources */,
 				457CBEAF282D2CD100ED0F00 /* ProfileLimitsManagementViewController.xib in Resources */,
 				457CBEB0282D2CD100ED0F00 /* WithdrawWebViewController.xib in Resources */,
-				452BA1902A902C4900D0AA48 /* avatar3-dark.json in Resources */,
 				457CBEB1282D2CD100ED0F00 /* DocumentPickerView.xib in Resources */,
-				452BA1AC2A902C4900D0AA48 /* avatar5-dark.json in Resources */,
 				457CBEB2282D2CD100ED0F00 /* MaintenanceViewController.xib in Resources */,
 				457CBEB5282D2CD100ED0F00 /* SimpleRegisterEmailSentViewController.xib in Resources */,
 				457CBEB7282D2CD100ED0F00 /* CountrySelectorTableViewCell.xib in Resources */,
@@ -13008,11 +12854,9 @@
 				457CBECA282D2CD100ED0F00 /* FullRegisterPersonalInfoViewController.xib in Resources */,
 				457CBECB282D2CD100ED0F00 /* HomeAwayCardStatsView.xib in Resources */,
 				4554202A2B0E218300B22EBD /* field_widget_dark.html in Resources */,
-				45F6BA982AB1F2B600C81DE1 /* avatar5-light.json in Resources */,
 				CE315ED82D00B3FA0080D900 /* replay_sucess_7.json in Resources */,
 				457CBECC282D2CD100ED0F00 /* MatchWidgetCollectionViewCell.xib in Resources */,
 				457CBECD282D2CD100ED0F00 /* TestingInterface.xib in Resources */,
-				452BA1A52A902C4900D0AA48 /* avatar4-dark.json in Resources */,
 				457CBECE282D2CD100ED0F00 /* RequestLocationAccessViewController.xib in Resources */,
 				457CBED0282D2CD100ED0F00 /* LogViewerViewController.xib in Resources */,
 				457CBF0B282D2DEC00ED0F00 /* Crocobet-Assets.xcassets in Resources */,
@@ -13058,7 +12902,6 @@
 			buildActionMask = 2147483647;
 			files = (
 				4589C94D282024E400243547 /* WithdrawViewController.xib in Resources */,
-				45F6BA862AB1F2B600C81DE1 /* avatar3-light.json in Resources */,
 				4589C94E282024E400243547 /* SportsTypes.xcassets in Resources */,
 				4589C94F282024E400243547 /* BetslipErrorView.xib in Resources */,
 				4589C950282024E400243547 /* SimpleRegisterDetailsViewController.xib in Resources */,
@@ -13070,23 +12913,19 @@
 				4589C953282024E400243547 /* FilterSliderCollapseView.xib in Resources */,
 				4589C954282024E400243547 /* TournamentTableViewHeader.xib in Resources */,
 				4589C955282024E400243547 /* BetSubmissionSuccessViewController.xib in Resources */,
-				45F6BA7F2AB1F2B600C81DE1 /* avatar2-light.json in Resources */,
 				4589C956282024E400243547 /* SplashViewController.xib in Resources */,
 				4589C957282024E400243547 /* HeaderTextFieldView.xib in Resources */,
 				4589C958282024E400243547 /* SingleBettingTicketTableViewCell.xib in Resources */,
 				451135772BC7F81C00124983 /* PrivacyInfo.xcprivacy in Resources */,
 				4589C959282024E400243547 /* EnabledAccessViewController.xib in Resources */,
 				4589C95A282024E400243547 /* VersionUpdateViewController.xib in Resources */,
-				45F6BA9B2AB1F2B600C81DE1 /* avatar1-light.json in Resources */,
 				4589C95B282024E400243547 /* CompetitionsFiltersView.xib in Resources */,
 				4589C95C282024E400243547 /* FilterCollapseView.xib in Resources */,
 				4589C95D282024E400243547 /* PhonePrefixSelectorViewController.xib in Resources */,
 				A9B6307C291BE10200BB850E /* stats_widget_light.html in Resources */,
 				A9A1B2DB2A128D8B00F7A8ED /* deposit_animation.json in Resources */,
 				4589C95F282024E400243547 /* TitleTableViewHeader.xib in Resources */,
-				452BA1932A902C4900D0AA48 /* avatar6-dark.json in Resources */,
 				4589C961282024E400243547 /* MyTicketsViewController.xib in Resources */,
-				45F6BA8D2AB1F2B600C81DE1 /* avatar4-light.json in Resources */,
 				4589C962282024E400243547 /* LoginViewController.xib in Resources */,
 				4589C963282024E400243547 /* ActivationAlertCollectionViewCell.xib in Resources */,
 				4589C964282024E400243547 /* RecentSearchRowView.xib in Resources */,
@@ -13105,20 +12944,17 @@
 				4589C973282024E400243547 /* PopUpPromotionView.xib in Resources */,
 				455897F32A9CE5C300E39598 /* progress_end_animation.json in Resources */,
 				A9BAFB452AB0B46D002EDBA1 /* Localizable.strings in Resources */,
-				452BA19A2A902C4900D0AA48 /* avatar1-dark.json in Resources */,
 				4589C975282024E400243547 /* PreSubmissionBetslipViewController.xib in Resources */,
 				455897FB2A9CE5CE00E39598 /* progress_bar_fire_ball.json in Resources */,
 				4589C976282024E400243547 /* BannerScrollTableViewCell.xib in Resources */,
 				4589C977282024E400243547 /* BetslipViewController.xib in Resources */,
 				4589C9E12820279E00243547 /* Colors.xcassets in Resources */,
-				452BA1AF2A902C4A00D0AA48 /* avatar2-dark.json in Resources */,
 				4589C978282024E400243547 /* MatchFiltersViewController.xib in Resources */,
 				4589C979282024E400243547 /* WelcomeViewController.xib in Resources */,
 				6531BB912C0A295B002C696D /* replay_coin.json in Resources */,
 				4589C97A282024E400243547 /* UploadView.xib in Resources */,
 				4589C97B282024E400243547 /* MyTicketTableViewCell.xib in Resources */,
 				4589C97C282024E400243547 /* HeadToHeadCardStatsView.xib in Resources */,
-				45F6BAA22AB1F2B600C81DE1 /* avatar6-light.json in Resources */,
 				4589C980282024E400243547 /* LoadingMoreTableViewCell.xib in Resources */,
 				4589C981282024E400243547 /* MatchLineTableViewCell.xib in Resources */,
 				4589C982282024E400243547 /* RecentSearchHeaderView.xib in Resources */,
@@ -13126,9 +12962,7 @@
 				4589C984282024E400243547 /* FilterRowView.xib in Resources */,
 				4589C986282024E400243547 /* ProfileLimitsManagementViewController.xib in Resources */,
 				4568B9662858CF4100FA99B3 /* CilinderSceneKitScene.scn in Resources */,
-				452BA18C2A902C4900D0AA48 /* avatar3-dark.json in Resources */,
 				4589C987282024E400243547 /* WithdrawWebViewController.xib in Resources */,
-				452BA1A82A902C4900D0AA48 /* avatar5-dark.json in Resources */,
 				4589C988282024E400243547 /* DocumentPickerView.xib in Resources */,
 				4589C989282024E400243547 /* MaintenanceViewController.xib in Resources */,
 				45A6BB7A28202E6B00D9B416 /* LaunchScreen-GOMA.storyboard in Resources */,
@@ -13165,11 +12999,9 @@
 				4589C9A0282024E400243547 /* FullRegisterAddressCountryViewController.xib in Resources */,
 				4589C9A1282024E400243547 /* FullRegisterPersonalInfoViewController.xib in Resources */,
 				455420262B0E218300B22EBD /* field_widget_dark.html in Resources */,
-				45F6BA942AB1F2B600C81DE1 /* avatar5-light.json in Resources */,
 				CE315ED92D00B3FA0080D900 /* replay_sucess_7.json in Resources */,
 				4589C9A2282024E400243547 /* HomeAwayCardStatsView.xib in Resources */,
 				4589C9A3282024E400243547 /* MatchWidgetCollectionViewCell.xib in Resources */,
-				452BA1A12A902C4900D0AA48 /* avatar4-dark.json in Resources */,
 				4589C9E4282029F700243547 /* GoogleService-Info.plist in Resources */,
 				4589C9A4282024E400243547 /* TestingInterface.xib in Resources */,
 				4589C9A5282024E400243547 /* RequestLocationAccessViewController.xib in Resources */,
@@ -13215,7 +13047,6 @@
 			buildActionMask = 2147483647;
 			files = (
 				45A332CD298976BA008181E9 /* WithdrawViewController.xib in Resources */,
-				45F6BA842AB1F2B600C81DE1 /* avatar3-light.json in Resources */,
 				A9BAFB432AB0B46D002EDBA1 /* Localizable.strings in Resources */,
 				45A332CE298976BA008181E9 /* SportsTypes.xcassets in Resources */,
 				45A332CF298976BA008181E9 /* BetslipErrorView.xib in Resources */,
@@ -13225,16 +13056,13 @@
 				45A332D2298976BA008181E9 /* CountryFlags.xcassets in Resources */,
 				45A332D3298976BA008181E9 /* FilterSliderCollapseView.xib in Resources */,
 				45A332D4298976BA008181E9 /* TournamentTableViewHeader.xib in Resources */,
-				452BA1A62A902C4900D0AA48 /* avatar5-dark.json in Resources */,
 				45A332D5298976BA008181E9 /* BetSubmissionSuccessViewController.xib in Resources */,
 				45A332D6298976BA008181E9 /* SplashViewController.xib in Resources */,
-				45F6BA7D2AB1F2B600C81DE1 /* avatar2-light.json in Resources */,
 				45A332D7298976BA008181E9 /* HeaderTextFieldView.xib in Resources */,
 				45A332D8298976BA008181E9 /* SingleBettingTicketTableViewCell.xib in Resources */,
 				45A332D9298976BA008181E9 /* EnabledAccessViewController.xib in Resources */,
 				45A332DA298976BA008181E9 /* VersionUpdateViewController.xib in Resources */,
 				45A332DB298976BA008181E9 /* CompetitionsFiltersView.xib in Resources */,
-				45F6BA992AB1F2B600C81DE1 /* avatar1-light.json in Resources */,
 				45A33364298976E3008181E9 /* Colors.xcassets in Resources */,
 				45A332DC298976BA008181E9 /* FilterCollapseView.xib in Resources */,
 				45A332DD298976BA008181E9 /* PhonePrefixSelectorViewController.xib in Resources */,
@@ -13244,7 +13072,6 @@
 				45A332E0298976BA008181E9 /* TitleTableViewHeader.xib in Resources */,
 				45A332E2298976BA008181E9 /* MyTicketsViewController.xib in Resources */,
 				45A332E3298976BA008181E9 /* LoginViewController.xib in Resources */,
-				45F6BA8B2AB1F2B600C81DE1 /* avatar4-light.json in Resources */,
 				45A332E4298976BA008181E9 /* ActivationAlertCollectionViewCell.xib in Resources */,
 				45A332E5298976BA008181E9 /* RecentSearchRowView.xib in Resources */,
 				45A332E6298976BA008181E9 /* SimpleRegisterEmailCheckViewController.xib in Resources */,
@@ -13255,6 +13082,7 @@
 				45290A4D2CB6AAFC00D69021 /* Roboto-Light.ttf in Resources */,
 				45290A4E2CB6AAFC00D69021 /* Roboto-Thin.ttf in Resources */,
 				45290A4F2CB6AAFC00D69021 /* Roboto-ThinItalic.ttf in Resources */,
+				CE12A0E72D2D99B60022BDF7 /* Media.xcassets in Resources */,
 				45290A502CB6AAFC00D69021 /* Roboto-BoldItalic.ttf in Resources */,
 				45290A512CB6AAFC00D69021 /* Roboto-BlackItalic.ttf in Resources */,
 				45290A522CB6AAFC00D69021 /* Roboto-Italic.ttf in Resources */,
@@ -13279,15 +13107,12 @@
 				45A332F6298976BA008181E9 /* BannerScrollTableViewCell.xib in Resources */,
 				45A332F7298976BA008181E9 /* BetslipViewController.xib in Resources */,
 				45A332F8298976BA008181E9 /* MatchFiltersViewController.xib in Resources */,
-				452BA1AD2A902C4A00D0AA48 /* avatar2-dark.json in Resources */,
 				45A332F9298976BA008181E9 /* WelcomeViewController.xib in Resources */,
-				452BA18A2A902C4900D0AA48 /* avatar3-dark.json in Resources */,
 				A9A521812A03BD8D00C0F6C6 /* zendesk_support.html in Resources */,
 				45A332FA298976BA008181E9 /* UploadView.xib in Resources */,
 				45A332FB298976BA008181E9 /* MyTicketTableViewCell.xib in Resources */,
 				45A332FC298976BA008181E9 /* HeadToHeadCardStatsView.xib in Resources */,
 				A92BDCF82A163D0200E9B045 /* success_thumbs_up.json in Resources */,
-				45F6BAA02AB1F2B600C81DE1 /* avatar6-light.json in Resources */,
 				45A33300298976BA008181E9 /* LoadingMoreTableViewCell.xib in Resources */,
 				45A33301298976BA008181E9 /* MatchLineTableViewCell.xib in Resources */,
 				45A33302298976BA008181E9 /* RecentSearchHeaderView.xib in Resources */,
@@ -13315,7 +13140,6 @@
 				455420232B0E218300B22EBD /* field_widget_dark.html in Resources */,
 				451F51EC298D2D7D00994660 /* Gradients.xcassets in Resources */,
 				45A3331A298976BA008181E9 /* SearchViewController.xib in Resources */,
-				452BA1982A902C4900D0AA48 /* avatar1-dark.json in Resources */,
 				45A3331B298976BA008181E9 /* ForbiddenLocationViewController.xib in Resources */,
 				45A3331C298976BA008181E9 /* MatchDetailsViewController.xib in Resources */,
 				45A3331E298976BA008181E9 /* PersonalInfoViewController.xib in Resources */,
@@ -13323,7 +13147,6 @@
 				45A33320298976BA008181E9 /* FullRegisterPersonalInfoViewController.xib in Resources */,
 				CE315EDD2D00B3FA0080D900 /* replay_sucess_7.json in Resources */,
 				45A33321298976BA008181E9 /* HomeAwayCardStatsView.xib in Resources */,
-				45F6BA922AB1F2B600C81DE1 /* avatar5-light.json in Resources */,
 				45A33322298976BA008181E9 /* MatchWidgetCollectionViewCell.xib in Resources */,
 				45A33324298976BA008181E9 /* TestingInterface.xib in Resources */,
 				450FC3E52A2A6737000DB866 /* DummyImages.xcassets in Resources */,
@@ -13338,10 +13161,8 @@
 				455897F92A9CE5CE00E39598 /* progress_bar_fire_ball.json in Resources */,
 				45A3332D298976BA008181E9 /* MatchStatsCollectionViewCell.xib in Resources */,
 				45A3332E298976BA008181E9 /* ProfileViewController.xib in Resources */,
-				452BA19F2A902C4900D0AA48 /* avatar4-dark.json in Resources */,
 				45A3332F298976BA008181E9 /* BannerTopCollectionViewCell.xib in Resources */,
 				CE21C3522CEB96490012CABA /* cashbackVideo.mp4 in Resources */,
-				452BA1912A902C4900D0AA48 /* avatar6-dark.json in Resources */,
 				45A33330298976BA008181E9 /* LiveEventsViewController.xib in Resources */,
 				45A33331298976BA008181E9 /* stats_widget_dark.html in Resources */,
 				45A33334298976BA008181E9 /* PolicyLinkView.xib in Resources */,
@@ -13372,7 +13193,6 @@
 			buildActionMask = 2147483647;
 			files = (
 				45A6BDA628246A7500D9B416 /* WithdrawViewController.xib in Resources */,
-				45F6BA882AB1F2B600C81DE1 /* avatar3-light.json in Resources */,
 				45A6BDA728246A7500D9B416 /* SportsTypes.xcassets in Resources */,
 				45A6BDA828246A7500D9B416 /* BetslipErrorView.xib in Resources */,
 				45A6BDA928246A7500D9B416 /* SimpleRegisterDetailsViewController.xib in Resources */,
@@ -13384,23 +13204,19 @@
 				45A6BDAC28246A7500D9B416 /* FilterSliderCollapseView.xib in Resources */,
 				45A6BDAD28246A7500D9B416 /* TournamentTableViewHeader.xib in Resources */,
 				45A6BDAE28246A7500D9B416 /* BetSubmissionSuccessViewController.xib in Resources */,
-				45F6BA812AB1F2B600C81DE1 /* avatar2-light.json in Resources */,
 				45A6BDAF28246A7500D9B416 /* SplashViewController.xib in Resources */,
 				45A6BDB028246A7500D9B416 /* HeaderTextFieldView.xib in Resources */,
 				45A6BDB128246A7500D9B416 /* SingleBettingTicketTableViewCell.xib in Resources */,
 				451135792BC7F81C00124983 /* PrivacyInfo.xcprivacy in Resources */,
 				45A6BDB228246A7500D9B416 /* EnabledAccessViewController.xib in Resources */,
 				45A6BDB328246A7500D9B416 /* VersionUpdateViewController.xib in Resources */,
-				45F6BA9D2AB1F2B600C81DE1 /* avatar1-light.json in Resources */,
 				45A6BDB428246A7500D9B416 /* CompetitionsFiltersView.xib in Resources */,
 				45A6BDB528246A7500D9B416 /* FilterCollapseView.xib in Resources */,
 				45A6BDB628246A7500D9B416 /* PhonePrefixSelectorViewController.xib in Resources */,
 				A9B63081291BE10200BB850E /* stats_widget_light.html in Resources */,
 				A9A1B2DD2A128D8B00F7A8ED /* deposit_animation.json in Resources */,
 				45A6BDB828246A7500D9B416 /* TitleTableViewHeader.xib in Resources */,
-				452BA1952A902C4900D0AA48 /* avatar6-dark.json in Resources */,
 				45A6BDBA28246A7500D9B416 /* MyTicketsViewController.xib in Resources */,
-				45F6BA8F2AB1F2B600C81DE1 /* avatar4-light.json in Resources */,
 				45A6BDBB28246A7500D9B416 /* LoginViewController.xib in Resources */,
 				45A6BDBC28246A7500D9B416 /* ActivationAlertCollectionViewCell.xib in Resources */,
 				45A6BDBD28246A7500D9B416 /* RecentSearchRowView.xib in Resources */,
@@ -13419,19 +13235,16 @@
 				45A6BDCC28246A7500D9B416 /* PopUpPromotionView.xib in Resources */,
 				455897F52A9CE5C300E39598 /* progress_end_animation.json in Resources */,
 				A9BAFB472AB0B46D002EDBA1 /* Localizable.strings in Resources */,
-				452BA19C2A902C4900D0AA48 /* avatar1-dark.json in Resources */,
 				45A6BDCE28246A7500D9B416 /* PreSubmissionBetslipViewController.xib in Resources */,
 				455897FD2A9CE5CE00E39598 /* progress_bar_fire_ball.json in Resources */,
 				45A6BDCF28246A7500D9B416 /* BannerScrollTableViewCell.xib in Resources */,
 				45A6BDD028246A7500D9B416 /* BetslipViewController.xib in Resources */,
 				45A6BDD128246A7500D9B416 /* MatchFiltersViewController.xib in Resources */,
-				452BA1B12A902C4A00D0AA48 /* avatar2-dark.json in Resources */,
 				45A6BDD228246A7500D9B416 /* WelcomeViewController.xib in Resources */,
 				45A6BDD328246A7500D9B416 /* UploadView.xib in Resources */,
 				6531BB932C0A295B002C696D /* replay_coin.json in Resources */,
 				45A6BDD428246A7500D9B416 /* MyTicketTableViewCell.xib in Resources */,
 				45A6BDD528246A7500D9B416 /* HeadToHeadCardStatsView.xib in Resources */,
-				45F6BAA42AB1F2B600C81DE1 /* avatar6-light.json in Resources */,
 				45A6BDD928246A7500D9B416 /* LoadingMoreTableViewCell.xib in Resources */,
 				45A6BE3528246AFA00D9B416 /* Colors.xcassets in Resources */,
 				45A6BE3728246AFA00D9B416 /* GoogleService-Info.plist in Resources */,
@@ -13440,9 +13253,7 @@
 				45A6BDDC28246A7500D9B416 /* SportSelectionViewController.xib in Resources */,
 				45A6BDDD28246A7500D9B416 /* FilterRowView.xib in Resources */,
 				4568B9672858CF4100FA99B3 /* CilinderSceneKitScene.scn in Resources */,
-				452BA18E2A902C4900D0AA48 /* avatar3-dark.json in Resources */,
 				45A6BDDF28246A7500D9B416 /* ProfileLimitsManagementViewController.xib in Resources */,
-				452BA1AA2A902C4900D0AA48 /* avatar5-dark.json in Resources */,
 				45A6BDE028246A7500D9B416 /* WithdrawWebViewController.xib in Resources */,
 				45A6BDE128246A7500D9B416 /* DocumentPickerView.xib in Resources */,
 				45A6BDE228246A7500D9B416 /* MaintenanceViewController.xib in Resources */,
@@ -13479,11 +13290,9 @@
 				45A6BDF828246A7500D9B416 /* PersonalInfoViewController.xib in Resources */,
 				45A6BDF928246A7500D9B416 /* FullRegisterAddressCountryViewController.xib in Resources */,
 				455420282B0E218300B22EBD /* field_widget_dark.html in Resources */,
-				45F6BA962AB1F2B600C81DE1 /* avatar5-light.json in Resources */,
 				CE315EDC2D00B3FA0080D900 /* replay_sucess_7.json in Resources */,
 				45A6BDFA28246A7500D9B416 /* FullRegisterPersonalInfoViewController.xib in Resources */,
 				45A6BDFB28246A7500D9B416 /* HomeAwayCardStatsView.xib in Resources */,
-				452BA1A32A902C4900D0AA48 /* avatar4-dark.json in Resources */,
 				45A6BDFC28246A7500D9B416 /* MatchWidgetCollectionViewCell.xib in Resources */,
 				45A6BDFD28246A7500D9B416 /* TestingInterface.xib in Resources */,
 				45A6BDFE28246A7500D9B416 /* RequestLocationAccessViewController.xib in Resources */,
@@ -13529,7 +13338,6 @@
 			buildActionMask = 2147483647;
 			files = (
 				45F6BDA12AB3732C00C81DE1 /* WithdrawViewController.xib in Resources */,
-				45F6BDA22AB3732C00C81DE1 /* avatar3-light.json in Resources */,
 				45F6BDA32AB3732C00C81DE1 /* Localizable.strings in Resources */,
 				45F6BDA42AB3732C00C81DE1 /* SportsTypes.xcassets in Resources */,
 				45F6BDA52AB3732C00C81DE1 /* BetslipErrorView.xib in Resources */,
@@ -13538,17 +13346,14 @@
 				45F6BDA82AB3732C00C81DE1 /* CountryFlags.xcassets in Resources */,
 				45F6BDA92AB3732C00C81DE1 /* FilterSliderCollapseView.xib in Resources */,
 				45F6BDAA2AB3732C00C81DE1 /* TournamentTableViewHeader.xib in Resources */,
-				45F6BDAB2AB3732C00C81DE1 /* avatar5-dark.json in Resources */,
 				45F6BDAC2AB3732C00C81DE1 /* BetSubmissionSuccessViewController.xib in Resources */,
 				45F6BDAD2AB3732C00C81DE1 /* SplashViewController.xib in Resources */,
-				45F6BDAE2AB3732C00C81DE1 /* avatar2-light.json in Resources */,
 				45F6BDAF2AB3732C00C81DE1 /* HeaderTextFieldView.xib in Resources */,
 				45F6BDB02AB3732C00C81DE1 /* SingleBettingTicketTableViewCell.xib in Resources */,
 				45F6BDB12AB3732C00C81DE1 /* EnabledAccessViewController.xib in Resources */,
 				451135752BC7F81C00124983 /* PrivacyInfo.xcprivacy in Resources */,
 				45F6BDB22AB3732C00C81DE1 /* VersionUpdateViewController.xib in Resources */,
 				45F6BDB32AB3732C00C81DE1 /* CompetitionsFiltersView.xib in Resources */,
-				45F6BDB42AB3732C00C81DE1 /* avatar1-light.json in Resources */,
 				45F6BDB52AB3732C00C81DE1 /* Colors.xcassets in Resources */,
 				45F6BDB62AB3732C00C81DE1 /* FilterCollapseView.xib in Resources */,
 				45F6BDB72AB3732C00C81DE1 /* PhonePrefixSelectorViewController.xib in Resources */,
@@ -13557,7 +13362,6 @@
 				45F6BDBB2AB3732C00C81DE1 /* TitleTableViewHeader.xib in Resources */,
 				45F6BDBC2AB3732C00C81DE1 /* MyTicketsViewController.xib in Resources */,
 				45F6BDBD2AB3732C00C81DE1 /* LoginViewController.xib in Resources */,
-				45F6BDBE2AB3732C00C81DE1 /* avatar4-light.json in Resources */,
 				45F6BDBF2AB3732C00C81DE1 /* ActivationAlertCollectionViewCell.xib in Resources */,
 				45F6BDC02AB3732C00C81DE1 /* RecentSearchRowView.xib in Resources */,
 				45F6BDC12AB3732C00C81DE1 /* SimpleRegisterEmailCheckViewController.xib in Resources */,
@@ -13569,6 +13373,7 @@
 				45F6BDC72AB3732C00C81DE1 /* TinderStyleBetBuilder.html in Resources */,
 				45F6BDC82AB3732C00C81DE1 /* sports-loading.json in Resources */,
 				45F6BDC92AB3732C00C81DE1 /* SeeMoreMarketsCollectionViewCell.xib in Resources */,
+				CE12A0E62D2D99B60022BDF7 /* Media.xcassets in Resources */,
 				45F6BDCB2AB3732C00C81DE1 /* Betsson-Assets.xcassets in Resources */,
 				45F6BDCC2AB3732C00C81DE1 /* PreLiveEventsViewController.xib in Resources */,
 				45F6BDCD2AB3732C00C81DE1 /* FullRegisterDocumentsViewController.xib in Resources */,
@@ -13580,16 +13385,13 @@
 				45F6BDD42AB3732C00C81DE1 /* BannerScrollTableViewCell.xib in Resources */,
 				45F6BDD52AB3732C00C81DE1 /* BetslipViewController.xib in Resources */,
 				45F6BDD62AB3732C00C81DE1 /* MatchFiltersViewController.xib in Resources */,
-				45F6BDD72AB3732C00C81DE1 /* avatar2-dark.json in Resources */,
 				45F6BDD82AB3732C00C81DE1 /* WelcomeViewController.xib in Resources */,
-				45F6BDD92AB3732C00C81DE1 /* avatar3-dark.json in Resources */,
 				45F6BDDA2AB3732C00C81DE1 /* zendesk_support.html in Resources */,
 				45F6BDDB2AB3732C00C81DE1 /* UploadView.xib in Resources */,
 				6531BB8F2C0A295B002C696D /* replay_coin.json in Resources */,
 				45F6BDDC2AB3732C00C81DE1 /* MyTicketTableViewCell.xib in Resources */,
 				45F6BDDD2AB3732C00C81DE1 /* HeadToHeadCardStatsView.xib in Resources */,
 				45F6BDDE2AB3732C00C81DE1 /* success_thumbs_up.json in Resources */,
-				45F6BDDF2AB3732C00C81DE1 /* avatar6-light.json in Resources */,
 				45F6BDE22AB3732C00C81DE1 /* LoadingMoreTableViewCell.xib in Resources */,
 				45F6BDE32AB3732C00C81DE1 /* MatchLineTableViewCell.xib in Resources */,
 				45F6BDE42AB3732C00C81DE1 /* RecentSearchHeaderView.xib in Resources */,
@@ -13616,7 +13418,6 @@
 				45F6BDFC2AB3732C00C81DE1 /* MarketDetailCollectionViewCell.xib in Resources */,
 				45F6BDFD2AB3732C00C81DE1 /* Gradients.xcassets in Resources */,
 				45F6BDFE2AB3732C00C81DE1 /* SearchViewController.xib in Resources */,
-				45F6BDFF2AB3732C00C81DE1 /* avatar1-dark.json in Resources */,
 				45F6BE002AB3732C00C81DE1 /* ForbiddenLocationViewController.xib in Resources */,
 				45F6BE012AB3732C00C81DE1 /* MatchDetailsViewController.xib in Resources */,
 				45290A022CB6AAFC00D69021 /* Roboto-Bold.ttf in Resources */,
@@ -13636,7 +13437,6 @@
 				45F6BE042AB3732C00C81DE1 /* FullRegisterPersonalInfoViewController.xib in Resources */,
 				45F6BE052AB3732C00C81DE1 /* HomeAwayCardStatsView.xib in Resources */,
 				455420242B0E218300B22EBD /* field_widget_dark.html in Resources */,
-				45F6BE062AB3732C00C81DE1 /* avatar5-light.json in Resources */,
 				CE315EDA2D00B3FA0080D900 /* replay_sucess_7.json in Resources */,
 				45F6BE072AB3732C00C81DE1 /* MatchWidgetCollectionViewCell.xib in Resources */,
 				45F6BE082AB3732C00C81DE1 /* TestingInterface.xib in Resources */,
@@ -13653,9 +13453,7 @@
 				45F6BE132AB3732C00C81DE1 /* progress_bar_fire_ball.json in Resources */,
 				45F6BE142AB3732C00C81DE1 /* MatchStatsCollectionViewCell.xib in Resources */,
 				45F6BE152AB3732C00C81DE1 /* ProfileViewController.xib in Resources */,
-				45F6BE162AB3732C00C81DE1 /* avatar4-dark.json in Resources */,
 				45F6BE172AB3732C00C81DE1 /* BannerTopCollectionViewCell.xib in Resources */,
-				45F6BE182AB3732C00C81DE1 /* avatar6-dark.json in Resources */,
 				CE21C3532CEB96490012CABA /* cashbackVideo.mp4 in Resources */,
 				45F6BE192AB3732C00C81DE1 /* LiveEventsViewController.xib in Resources */,
 				45F6BE1A2AB3732C00C81DE1 /* stats_widget_dark.html in Resources */,
@@ -13693,7 +13491,6 @@
 			buildActionMask = 2147483647;
 			files = (
 				A9C342FC28F9A74A0055360B /* WithdrawViewController.xib in Resources */,
-				45F6BA872AB1F2B600C81DE1 /* avatar3-light.json in Resources */,
 				A9BAFB462AB0B46D002EDBA1 /* Localizable.strings in Resources */,
 				A9C342FD28F9A74A0055360B /* SportsTypes.xcassets in Resources */,
 				A9C342FE28F9A74A0055360B /* BetslipErrorView.xib in Resources */,
@@ -13702,17 +13499,14 @@
 				A9C3430128F9A74A0055360B /* CountryFlags.xcassets in Resources */,
 				A9C3430228F9A74A0055360B /* FilterSliderCollapseView.xib in Resources */,
 				A9C3430328F9A74A0055360B /* TournamentTableViewHeader.xib in Resources */,
-				452BA1A92A902C4900D0AA48 /* avatar5-dark.json in Resources */,
 				A9C3430428F9A74A0055360B /* BetSubmissionSuccessViewController.xib in Resources */,
 				A9C3430528F9A74A0055360B /* SplashViewController.xib in Resources */,
-				45F6BA802AB1F2B600C81DE1 /* avatar2-light.json in Resources */,
 				A9C3430628F9A74A0055360B /* HeaderTextFieldView.xib in Resources */,
 				A9C3430728F9A74A0055360B /* SingleBettingTicketTableViewCell.xib in Resources */,
 				A9C3430828F9A74A0055360B /* EnabledAccessViewController.xib in Resources */,
 				451135782BC7F81C00124983 /* PrivacyInfo.xcprivacy in Resources */,
 				A9C3430928F9A74A0055360B /* VersionUpdateViewController.xib in Resources */,
 				A9C3430A28F9A74A0055360B /* CompetitionsFiltersView.xib in Resources */,
-				45F6BA9C2AB1F2B600C81DE1 /* avatar1-light.json in Resources */,
 				A9C3439428F9A7DC0055360B /* Colors.xcassets in Resources */,
 				A9C3430B28F9A74A0055360B /* FilterCollapseView.xib in Resources */,
 				A9C3430C28F9A74A0055360B /* PhonePrefixSelectorViewController.xib in Resources */,
@@ -13721,7 +13515,6 @@
 				A9C3431028F9A74A0055360B /* MyTicketsViewController.xib in Resources */,
 				A9C3431128F9A74A0055360B /* LoginViewController.xib in Resources */,
 				A9C3431228F9A74A0055360B /* ActivationAlertCollectionViewCell.xib in Resources */,
-				45F6BA8E2AB1F2B600C81DE1 /* avatar4-light.json in Resources */,
 				A9C3431328F9A74A0055360B /* RecentSearchRowView.xib in Resources */,
 				A9C3431428F9A74A0055360B /* SimpleRegisterEmailCheckViewController.xib in Resources */,
 				A9C3431528F9A74A0055360B /* RefusedAccessViewController.xib in Resources */,
@@ -13744,16 +13537,13 @@
 				A9C3432428F9A74A0055360B /* BannerScrollTableViewCell.xib in Resources */,
 				A9C3432528F9A74A0055360B /* BetslipViewController.xib in Resources */,
 				A9C3432728F9A74A0055360B /* MatchFiltersViewController.xib in Resources */,
-				452BA1B02A902C4A00D0AA48 /* avatar2-dark.json in Resources */,
 				A9C3432828F9A74A0055360B /* WelcomeViewController.xib in Resources */,
-				452BA18D2A902C4900D0AA48 /* avatar3-dark.json in Resources */,
 				A9A521842A03BD8D00C0F6C6 /* zendesk_support.html in Resources */,
 				A9C3432928F9A74A0055360B /* UploadView.xib in Resources */,
 				6531BB922C0A295B002C696D /* replay_coin.json in Resources */,
 				A9C3432A28F9A74A0055360B /* MyTicketTableViewCell.xib in Resources */,
 				A9C3432B28F9A74A0055360B /* HeadToHeadCardStatsView.xib in Resources */,
 				A92BDCFB2A163D0200E9B045 /* success_thumbs_up.json in Resources */,
-				45F6BAA32AB1F2B600C81DE1 /* avatar6-light.json in Resources */,
 				A9C3432F28F9A74A0055360B /* LoadingMoreTableViewCell.xib in Resources */,
 				A9C3433028F9A74A0055360B /* MatchLineTableViewCell.xib in Resources */,
 				A9C3433128F9A74A0055360B /* RecentSearchHeaderView.xib in Resources */,
@@ -13780,7 +13570,6 @@
 				A9C3434828F9A74A0055360B /* SearchTitleSectionHeaderView.xib in Resources */,
 				451F51EF298D2D7D00994660 /* Gradients.xcassets in Resources */,
 				A9C3434928F9A74A0055360B /* MarketDetailCollectionViewCell.xib in Resources */,
-				452BA19B2A902C4900D0AA48 /* avatar1-dark.json in Resources */,
 				A9C3434A28F9A74A0055360B /* SearchViewController.xib in Resources */,
 				A9C3434B28F9A74A0055360B /* ForbiddenLocationViewController.xib in Resources */,
 				452909F62CB6AAFC00D69021 /* Roboto-Bold.ttf in Resources */,
@@ -13800,7 +13589,6 @@
 				A9C3434E28F9A74A0055360B /* FullRegisterAddressCountryViewController.xib in Resources */,
 				A9C3434F28F9A74A0055360B /* FullRegisterPersonalInfoViewController.xib in Resources */,
 				455420272B0E218300B22EBD /* field_widget_dark.html in Resources */,
-				45F6BA952AB1F2B600C81DE1 /* avatar5-light.json in Resources */,
 				CE315EDB2D00B3FA0080D900 /* replay_sucess_7.json in Resources */,
 				A9C3435028F9A74A0055360B /* HomeAwayCardStatsView.xib in Resources */,
 				A9C3435128F9A74A0055360B /* MatchWidgetCollectionViewCell.xib in Resources */,
@@ -13817,9 +13605,7 @@
 				455897FC2A9CE5CE00E39598 /* progress_bar_fire_ball.json in Resources */,
 				A9C3435C28F9A74A0055360B /* MatchStatsCollectionViewCell.xib in Resources */,
 				A9C3435D28F9A74A0055360B /* ProfileViewController.xib in Resources */,
-				452BA1A22A902C4900D0AA48 /* avatar4-dark.json in Resources */,
 				A9C3435F28F9A74A0055360B /* BannerTopCollectionViewCell.xib in Resources */,
-				452BA1942A902C4900D0AA48 /* avatar6-dark.json in Resources */,
 				CE21C3582CEB96490012CABA /* cashbackVideo.mp4 in Resources */,
 				A9C3436028F9A74A0055360B /* LiveEventsViewController.xib in Resources */,
 				A9C3436328F9A74A0055360B /* PolicyLinkView.xib in Resources */,

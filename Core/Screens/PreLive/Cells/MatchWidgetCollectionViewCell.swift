@@ -2930,7 +2930,7 @@ extension MatchWidgetCollectionViewCell {
         self.boostedTopRightCornerBaseView.translatesAutoresizingMaskIntoConstraints = false
         self.boostedTopRightCornerBaseView.backgroundColor = .clear
 
-        self.boostedTopRightCornerImageView.image = UIImage(named: "cote_boosteed_icon")
+        self.boostedTopRightCornerImageView.image = UIImage(named: "boosted_odd_promotional")
         self.boostedTopRightCornerImageView.contentMode = .scaleAspectFit
         self.boostedTopRightCornerImageView.translatesAutoresizingMaskIntoConstraints = false
         

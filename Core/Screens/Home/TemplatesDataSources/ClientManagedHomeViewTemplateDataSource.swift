@@ -16,7 +16,7 @@ class ClientManagedHomeViewTemplateDataSource {
         .userProfile,
         .bannerLine, // PromotionBanners
         .quickSwipeStack, // MatchBanners
-        .promotionalStories, // PromotionStories
+        .promotionalStories, // PromotionStories - instagram style stories
         .heroCard, // HeroBanner
         .highlightedLiveMatches, // LiveGamesHome
         .makeOwnBetCallToAction, // MakeYourOwnBet
