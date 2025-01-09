@@ -169,13 +169,13 @@ public struct DefaultColorScheme: ColorScheme {
     }
 
     public var liveBorderGradient1: UIColor {
-        return UIColor(named: "liveColor1", in: Bundle.module, compatibleWith: nil) ?? self.highlightPrimary
+        return UIColor(named: "liveBorderGradient1", in: Bundle.module, compatibleWith: nil) ?? self.highlightPrimary
     }
     public var liveBorderGradient2: UIColor {
-        return UIColor(named: "liveColor2", in: Bundle.module, compatibleWith: nil) ?? self.highlightPrimary
+        return UIColor(named: "liveBorderGradient2", in: Bundle.module, compatibleWith: nil) ?? self.highlightPrimary
     }
     public var liveBorderGradient3: UIColor {
-        return UIColor(named: "liveColor3", in: Bundle.module, compatibleWith: nil) ?? self.highlightPrimary
+        return UIColor(named: "liveBorderGradient3", in: Bundle.module, compatibleWith: nil) ?? self.highlightPrimary
     }
 
     public var textHeroCard: UIColor {

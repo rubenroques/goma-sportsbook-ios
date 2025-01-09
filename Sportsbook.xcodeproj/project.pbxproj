@@ -770,12 +770,6 @@
 		451E1F7328290DE2000E957B /* PictureInPictureView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 451E1F7028290DE2000E957B /* PictureInPictureView.swift */; };
 		451E1F7428290DE2000E957B /* PictureInPictureView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 451E1F7028290DE2000E957B /* PictureInPictureView.swift */; };
 		451F51EC298D2D7D00994660 /* Gradients.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 451F51EB298D2D7D00994660 /* Gradients.xcassets */; };
-		451F51ED298D2D7D00994660 /* Gradients.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 451F51EB298D2D7D00994660 /* Gradients.xcassets */; };
-		451F51EE298D2D7D00994660 /* Gradients.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 451F51EB298D2D7D00994660 /* Gradients.xcassets */; };
-		451F51EF298D2D7D00994660 /* Gradients.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 451F51EB298D2D7D00994660 /* Gradients.xcassets */; };
-		451F51F0298D2D7D00994660 /* Gradients.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 451F51EB298D2D7D00994660 /* Gradients.xcassets */; };
-		451F51F1298D2D7D00994660 /* Gradients.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 451F51EB298D2D7D00994660 /* Gradients.xcassets */; };
-		451F51F2298D2D7D00994660 /* Gradients.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 451F51EB298D2D7D00994660 /* Gradients.xcassets */; };
 		4521F0842CC55AFD00C2E4FD /* MarketWidgetContainerTableViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4521F0832CC55AFD00C2E4FD /* MarketWidgetContainerTableViewModel.swift */; };
 		4521F0852CC55AFD00C2E4FD /* MarketWidgetContainerTableViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4521F0832CC55AFD00C2E4FD /* MarketWidgetContainerTableViewModel.swift */; };
 		4521F0862CC55AFD00C2E4FD /* MarketWidgetContainerTableViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4521F0832CC55AFD00C2E4FD /* MarketWidgetContainerTableViewModel.swift */; };
@@ -7126,6 +7120,7 @@
 		CE12A0E42D2D992C0022BDF7 /* Media.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = CE12A0E32D2D992C0022BDF7 /* Media.xcassets */; };
 		CE12A0E62D2D99B60022BDF7 /* Media.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = CE12A0E52D2D99B60022BDF7 /* Media.xcassets */; };
 		CE12A0E72D2D99B60022BDF7 /* Media.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = CE12A0E52D2D99B60022BDF7 /* Media.xcassets */; };
+		CE12A0EB2D302CE90022BDF7 /* Gradients.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = CE12A0E82D302CE90022BDF7 /* Gradients.xcassets */; };
 		CE21C3512CEB96490012CABA /* cashbackVideo.mp4 in Resources */ = {isa = PBXBuildFile; fileRef = CE21C3502CEB96490012CABA /* cashbackVideo.mp4 */; };
 		CE21C3522CEB96490012CABA /* cashbackVideo.mp4 in Resources */ = {isa = PBXBuildFile; fileRef = CE21C3502CEB96490012CABA /* cashbackVideo.mp4 */; };
 		CE21C3532CEB96490012CABA /* cashbackVideo.mp4 in Resources */ = {isa = PBXBuildFile; fileRef = CE21C3502CEB96490012CABA /* cashbackVideo.mp4 */; };
@@ -8137,6 +8132,7 @@
 		A9FB6D6228C65EF100E3FE58 /* RankingsListViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RankingsListViewController.swift; sourceTree = "<group>"; };
 		CE12A0E32D2D992C0022BDF7 /* Media.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Media.xcassets; sourceTree = "<group>"; };
 		CE12A0E52D2D99B60022BDF7 /* Media.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Media.xcassets; sourceTree = "<group>"; };
+		CE12A0E82D302CE90022BDF7 /* Gradients.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Gradients.xcassets; sourceTree = "<group>"; };
 		CE21C3502CEB96490012CABA /* cashbackVideo.mp4 */ = {isa = PBXFileReference; lastKnownFileType = file; path = cashbackVideo.mp4; sourceTree = "<group>"; };
 		CE315ED52D00B3FA0080D900 /* replay_sucess_7.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = replay_sucess_7.json; sourceTree = "<group>"; };
 		CE544FC92D07029900AA24CA /* first_deposit_8.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = first_deposit_8.json; sourceTree = "<group>"; };
@@ -8570,6 +8566,7 @@
 			children = (
 				450B7B3228F58625009229E3 /* SportRadar-Assets.xcassets */,
 				450B7B3328F58625009229E3 /* Colors.xcassets */,
+				CE12A0E82D302CE90022BDF7 /* Gradients.xcassets */,
 				CE12A0E32D2D992C0022BDF7 /* Media.xcassets */,
 			);
 			path = Assets;
@@ -12464,7 +12461,6 @@
 				45F2F9AA298C067C0075AF02 /* StaticColors.xcassets in Resources */,
 				450B7AA928F58574009229E3 /* CountryFlags.xcassets in Resources */,
 				A92BDCF92A163D0200E9B045 /* success_thumbs_up.json in Resources */,
-				451F51ED298D2D7D00994660 /* Gradients.xcassets in Resources */,
 				450B7AAA28F58574009229E3 /* FilterSliderCollapseView.xib in Resources */,
 				450B7AAB28F58574009229E3 /* TournamentTableViewHeader.xib in Resources */,
 				450B7AAC28F58574009229E3 /* BetSubmissionSuccessViewController.xib in Resources */,
@@ -12511,6 +12507,7 @@
 				450B7AD228F58574009229E3 /* MyTicketTableViewCell.xib in Resources */,
 				450B7AD328F58574009229E3 /* HeadToHeadCardStatsView.xib in Resources */,
 				450B7AD728F58574009229E3 /* LoadingMoreTableViewCell.xib in Resources */,
+				CE12A0EB2D302CE90022BDF7 /* Gradients.xcassets in Resources */,
 				450B7AD828F58574009229E3 /* MatchLineTableViewCell.xib in Resources */,
 				450B7AD928F58574009229E3 /* RecentSearchHeaderView.xib in Resources */,
 				450B7ADA28F58574009229E3 /* SportSelectionViewController.xib in Resources */,
@@ -12619,7 +12616,6 @@
 				45F2F9AE298C067C0075AF02 /* StaticColors.xcassets in Resources */,
 				457CBBD4282D27D000ED0F00 /* CountryFlags.xcassets in Resources */,
 				A92BDCFD2A163D0200E9B045 /* success_thumbs_up.json in Resources */,
-				451F51F1298D2D7D00994660 /* Gradients.xcassets in Resources */,
 				457CBBD5282D27D000ED0F00 /* FilterSliderCollapseView.xib in Resources */,
 				457CBC6B282D2AE800ED0F00 /* LaunchScreen-EveryMatrix.storyboard in Resources */,
 				457CBBD6282D27D000ED0F00 /* TournamentTableViewHeader.xib in Resources */,
@@ -12764,7 +12760,6 @@
 				45F2F9AF298C067C0075AF02 /* StaticColors.xcassets in Resources */,
 				457CBE7B282D2CD100ED0F00 /* CountryFlags.xcassets in Resources */,
 				A92BDCFE2A163D0200E9B045 /* success_thumbs_up.json in Resources */,
-				451F51F2298D2D7D00994660 /* Gradients.xcassets in Resources */,
 				457CBE7C282D2CD100ED0F00 /* FilterSliderCollapseView.xib in Resources */,
 				457CBE7E282D2CD100ED0F00 /* TournamentTableViewHeader.xib in Resources */,
 				4568B9692858CF4100FA99B3 /* CilinderSceneKitScene.scn in Resources */,
@@ -12909,7 +12904,6 @@
 				45F2F9AB298C067C0075AF02 /* StaticColors.xcassets in Resources */,
 				4589C952282024E400243547 /* CountryFlags.xcassets in Resources */,
 				A92BDCFA2A163D0200E9B045 /* success_thumbs_up.json in Resources */,
-				451F51EE298D2D7D00994660 /* Gradients.xcassets in Resources */,
 				4589C953282024E400243547 /* FilterSliderCollapseView.xib in Resources */,
 				4589C954282024E400243547 /* TournamentTableViewHeader.xib in Resources */,
 				4589C955282024E400243547 /* BetSubmissionSuccessViewController.xib in Resources */,
@@ -13200,7 +13194,6 @@
 				45F2F9AD298C067C0075AF02 /* StaticColors.xcassets in Resources */,
 				45A6BDAB28246A7500D9B416 /* CountryFlags.xcassets in Resources */,
 				A92BDCFC2A163D0200E9B045 /* success_thumbs_up.json in Resources */,
-				451F51F0298D2D7D00994660 /* Gradients.xcassets in Resources */,
 				45A6BDAC28246A7500D9B416 /* FilterSliderCollapseView.xib in Resources */,
 				45A6BDAD28246A7500D9B416 /* TournamentTableViewHeader.xib in Resources */,
 				45A6BDAE28246A7500D9B416 /* BetSubmissionSuccessViewController.xib in Resources */,
@@ -13568,7 +13561,6 @@
 				A9C3434628F9A74A0055360B /* MultipleBettingTicketTableViewCell.xib in Resources */,
 				A9C3434728F9A74A0055360B /* OddDoubleCollectionViewCell.xib in Resources */,
 				A9C3434828F9A74A0055360B /* SearchTitleSectionHeaderView.xib in Resources */,
-				451F51EF298D2D7D00994660 /* Gradients.xcassets in Resources */,
 				A9C3434928F9A74A0055360B /* MarketDetailCollectionViewCell.xib in Resources */,
 				A9C3434A28F9A74A0055360B /* SearchViewController.xib in Resources */,
 				A9C3434B28F9A74A0055360B /* ForbiddenLocationViewController.xib in Resources */,
@@ -19719,20 +19711,23 @@
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_ENTITLEMENTS = Clients/SportRadar/Misc/SportRadar.entitlements;
 				CODE_SIGN_IDENTITY = "Apple Development";
-				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 103436;
-				DEVELOPMENT_TEAM = 422GNXXZJR;
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				CODE_SIGN_STYLE = Manual;
+				CURRENT_PROJECT_VERSION = 09002;
+				DEVELOPMENT_TEAM = "";
+				"DEVELOPMENT_TEAM[sdk=iphoneos*]" = 422GNXXZJR;
 				INFOPLIST_FILE = "./Clients/SportRadar/Misc/SportRadar-Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 13.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 0.1.1;
+				MARKETING_VERSION = 0.9.1;
 				OTHER_LDFLAGS = "$(inherited)";
-				PRODUCT_BUNDLE_IDENTIFIER = com.gomagaming.sportradar;
+				PRODUCT_BUNDLE_IDENTIFIER = com.gomagaming.sportradarviab;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "";
+				"PROVISIONING_PROFILE_SPECIFIER[sdk=iphoneos*]" = "GomaGaming - Demo - SportRadar via B - Dev";
 				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
 				SUPPORTS_MACCATALYST = NO;
 				SUPPORTS_MAC_DESIGNED_FOR_IPHONE_IPAD = NO;
@@ -19748,20 +19743,23 @@
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_ENTITLEMENTS = Clients/SportRadar/Misc/SportRadar.entitlements;
 				CODE_SIGN_IDENTITY = "Apple Development";
-				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 103436;
-				DEVELOPMENT_TEAM = 422GNXXZJR;
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution";
+				CODE_SIGN_STYLE = Manual;
+				CURRENT_PROJECT_VERSION = 09002;
+				DEVELOPMENT_TEAM = "";
+				"DEVELOPMENT_TEAM[sdk=iphoneos*]" = 422GNXXZJR;
 				INFOPLIST_FILE = "./Clients/SportRadar/Misc/SportRadar-Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 13.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 0.1.1;
+				MARKETING_VERSION = 0.9.1;
 				OTHER_LDFLAGS = "$(inherited)";
-				PRODUCT_BUNDLE_IDENTIFIER = com.gomagaming.sportradar;
+				PRODUCT_BUNDLE_IDENTIFIER = com.gomagaming.sportradarviab;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "";
+				"PROVISIONING_PROFILE_SPECIFIER[sdk=iphoneos*]" = "GomaGaming - Demo - SportRadar via B - Ad Hoc";
 				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
 				SUPPORTS_MACCATALYST = NO;
 				SUPPORTS_MAC_DESIGNED_FOR_IPHONE_IPAD = NO;
@@ -20067,7 +20065,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 0.1.0;
+				MARKETING_VERSION = 0.9.0;
 				OTHER_LDFLAGS = "$(inherited)";
 				PRODUCT_BUNDLE_IDENTIFIER = com.gomagaming.goma;
 				PRODUCT_NAME = "$(TARGET_NAME)";
@@ -20096,7 +20094,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 0.1.0;
+				MARKETING_VERSION = 0.9.0;
 				OTHER_LDFLAGS = "$(inherited)";
 				PRODUCT_BUNDLE_IDENTIFIER = com.gomagaming.goma;
 				PRODUCT_NAME = "$(TARGET_NAME)";
@@ -20395,7 +20393,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 0.1.0;
+				MARKETING_VERSION = 0.9.1;
 				OTHER_LDFLAGS = "$(inherited)";
 				PRODUCT_BUNDLE_IDENTIFIER = com.gomagaming.gomasportradar;
 				PRODUCT_NAME = "$(TARGET_NAME)";
@@ -20425,7 +20423,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 0.1.0;
+				MARKETING_VERSION = 0.9.1;
 				OTHER_LDFLAGS = "$(inherited)";
 				PRODUCT_BUNDLE_IDENTIFIER = com.gomagaming.gomasportradar;
 				PRODUCT_NAME = "$(TARGET_NAME)";

@@ -787,8 +787,8 @@ extension LoginViewController {
             self.passwordHeaderTextFieldView.setText("Ruben-Goma-12345")
             self.loginButton.isEnabled = true
         }
-        else if self.usernameHeaderTextFieldView.text == "gomaTest" {
-            self.usernameHeaderTextFieldView.setText("ivogoma")
+        else if self.usernameHeaderTextFieldView.text == "rroques107" {
+            self.usernameHeaderTextFieldView.setText("ivouat")
             self.passwordHeaderTextFieldView.setText("testesdoIvo1@")
             self.loginButton.isEnabled = true
         }

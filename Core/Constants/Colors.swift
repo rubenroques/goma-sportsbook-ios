@@ -166,13 +166,13 @@ extension UIColor {
         }
         
         static var liveBorderGradient1: UIColor {
-            return UIColor(named: "liveColor1") ?? Self.highlightPrimary
+            return UIColor(named: "liveBorderGradient1") ?? Self.highlightPrimary
         }
         static var liveBorderGradient2: UIColor {
-            return UIColor(named: "liveColor2") ?? Self.highlightPrimary
+            return UIColor(named: "liveBorderGradient2") ?? Self.highlightPrimary
         }
         static var liveBorderGradient3: UIColor {
-            return UIColor(named: "liveColor3") ?? Self.highlightPrimary
+            return UIColor(named: "liveBorderGradient3") ?? Self.highlightPrimary
         }
         
         static var textHeroCard: UIColor {

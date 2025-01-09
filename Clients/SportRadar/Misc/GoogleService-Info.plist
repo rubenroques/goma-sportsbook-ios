@@ -2,10 +2,6 @@
 <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
 <plist version="1.0">
 <dict>
-	<key>CLIENT_ID</key>
-	<string>844144342615-5eaf7cg98ls5hl3oeorpmak8mo11p6jq.apps.googleusercontent.com</string>
-	<key>REVERSED_CLIENT_ID</key>
-	<string>com.googleusercontent.apps.844144342615-5eaf7cg98ls5hl3oeorpmak8mo11p6jq</string>
 	<key>API_KEY</key>
 	<string>AIzaSyDNv7AlyZSGqPd9_VVqjXYPlpuvx-WyYZM</string>
 	<key>GCM_SENDER_ID</key>
@@ -13,11 +9,11 @@
 	<key>PLIST_VERSION</key>
 	<string>1</string>
 	<key>BUNDLE_ID</key>
-	<string>com.gomagaming.sportradar</string>
+	<string>com.gomagaming.sportradarviab</string>
 	<key>PROJECT_ID</key>
 	<string>goma-sportsbook</string>
 	<key>STORAGE_BUCKET</key>
-	<string>goma-sportsbook.appspot.com</string>
+	<string>goma-sportsbook.firebasestorage.app</string>
 	<key>IS_ADS_ENABLED</key>
 	<false></false>
 	<key>IS_ANALYTICS_ENABLED</key>
@@ -29,7 +25,7 @@
 	<key>IS_SIGNIN_ENABLED</key>
 	<true></true>
 	<key>GOOGLE_APP_ID</key>
-	<string>1:844144342615:ios:20b90dbf7fb2705d8a9512</string>
+	<string>1:844144342615:ios:11dcb5fd06bccd108a9512</string>
 	<key>DATABASE_URL</key>
 	<string>https://goma-sportsbook-default-rtdb.europe-west1.firebasedatabase.app</string>
 </dict>

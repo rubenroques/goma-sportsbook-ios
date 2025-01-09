@@ -71,25 +71,6 @@ extension MakeYourBetTableViewCell {
         return view
     }
 
-//    private static func createTitleLabel() -> UILabel {
-//        let titleLabel = UILabel()
-//        titleLabel.numberOfLines = 2
-//        titleLabel.textAlignment = .center
-//        titleLabel.text = "MAKE YOUR\n              OWN BET"
-//        titleLabel.font = AppFont.with(type: .bold, size: 22)
-//        titleLabel.translatesAutoresizingMaskIntoConstraints = false
-//        return titleLabel
-//    }
-//
-//    private static func createImageView() -> UIImageView {
-//        let view = UIImageView()
-//        view.image = UIImage(named: "hand_pointing_image")
-//        view.translatesAutoresizingMaskIntoConstraints = false
-//        view.contentMode = .scaleAspectFit
-//        view.backgroundColor = .clear
-//        return view
-//    }
-
     private static func createImageView() -> UIImageView {
         let view = UIImageView()
         view.image = UIImage(named: "combi_express_euro_banner")

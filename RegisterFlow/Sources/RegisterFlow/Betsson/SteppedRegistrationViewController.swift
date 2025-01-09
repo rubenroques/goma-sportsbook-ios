@@ -824,7 +824,7 @@ public extension SteppedRegistrationViewController {
 
     private static func createProgressImageView() -> UIImageView {
         let imageView = UIImageView()
-        imageView.image = UIImage(named: "progress_bar_animation")
+        imageView.image = UIImage(named: "progress_bar_animation", in: Bundle.module, compatibleWith: nil)
         imageView.contentMode = .scaleAspectFit
         imageView.translatesAutoresizingMaskIntoConstraints = false
         return imageView

@@ -161,6 +161,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate, MessagingDelegate {
         let adjustConfig = ADJConfig(appToken: appToken, environment: environment)
         
         adjustConfig?.logLevel = ADJLogLevelSuppress
+        adjustConfig?.delegate = self
         
         Adjust.appDidLaunch(adjustConfig)
 
@@ -208,7 +209,6 @@ class AppDelegate: UIResponder, UIApplicationDelegate, MessagingDelegate {
             if (urlSections.contains("competitions") || urlSections.contains("live")) && urlSections.count > 6 {
                 if let gameDetailId = urlSections.last {
                     self.openSharedRoute(Route.event(id: gameDetailId), onApplication: application)
-                    
                 }
             }
             else if urlSections.contains("competitions") && urlSections.count <= 6 {
@@ -218,9 +218,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate, MessagingDelegate {
             }
             else if urlSections.contains("bet") {
                 if let ticketId = urlSections.last {
-
                     self.openSharedRoute(Route.ticket(id: ticketId), onApplication: application)
-
                 }
             }
             else if urlSections.contains("contact-settings") {
@@ -387,4 +385,13 @@ extension AppDelegate: UNUserNotificationCenterDelegate {
         self.bootstrap.router.openPushNotificationRoute(route)
     }
 
+}
+
+extension AppDelegate: AdjustDelegate {
+    
+    func adjustDeeplinkResponse(_ deeplink: URL?) -> Bool {
+    
+        return false
+    }
+    
 }
