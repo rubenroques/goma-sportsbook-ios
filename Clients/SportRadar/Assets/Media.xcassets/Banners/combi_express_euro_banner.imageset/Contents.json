@@ -1,17 +1,17 @@
 {
   "images" : [
     {
-      "filename" : "mobile-bs – 1.png",
+      "filename" : "betswipe_home_mobile 2.png",
       "idiom" : "universal",
       "scale" : "1x"
     },
     {
-      "filename" : "mobile-bs – 1@2x.png",
+      "filename" : "betswipe_home_mobile 1.png",
       "idiom" : "universal",
       "scale" : "2x"
     },
     {
-      "filename" : "mobile-bs – 1@3x.png",
+      "filename" : "betswipe_home_mobile.png",
       "idiom" : "universal",
       "scale" : "3x"
     }

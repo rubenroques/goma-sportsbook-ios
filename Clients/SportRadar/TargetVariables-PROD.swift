@@ -12,19 +12,19 @@ struct TargetVariables: SportsbookTarget {
     static var environmentType: EnvironmentType = .prod
 
     static var gomaGamingHost: String {
-        return "https://gomagaming.com" // https://sportsbook-api.gomagaming.com"
+        return "https://gomagaming.com" //https://sportsbook-api.gomagaming.com"
     }
 
     static var gomaGamingAnonymousAuthEndpoint: String {
-        return "https://gomagaming.com" // https://sportsbook-api.gomagaming.com/api/auth/v1"
+        return "https://gomagaming.com" //https://sportsbook-api.gomagaming.com/api/auth/v1"
     }
 
     static var gomaGamingLoggedAuthEndpoint: String {
-        return "https://gomagaming.com" // https://sportsbook-api.gomagaming.com/api/auth/v1/login"
+        return "https://gomagaming.com" //https://sportsbook-api.gomagaming.com/api/auth/v1/login"
     }
 
     static var firebaseDatabaseURL: String {
-        return "https://goma-sportsbook.europe-west1.firebasedatabase.app/"
+        return "https://goma-sportsbook-sportradar-viab-95a78.europe-west1.firebasedatabase.app/"
     }
 
     static var everyMatrixHost: String {
@@ -72,7 +72,7 @@ struct TargetVariables: SportsbookTarget {
     }
 
     static var serviceProviderEnvironment: EnvironmentType {
-        return .dev
+        return .prod
     }
     
     static var supportedLanguages: [SportsbookSupportedLanguage] {
@@ -84,7 +84,7 @@ struct TargetVariables: SportsbookTarget {
     }
     
     static var appStoreUrl: String? {
-        return "https://apps.apple.com/fr/app/betsson/id6463237718"
+        return "https://apps.apple.com/"
     }
 
     static var secundaryMarketSpecsUrl: String? {
@@ -96,5 +96,5 @@ struct TargetVariables: SportsbookTarget {
                 .proofOfAddress: "kyc-level-2-poa-verification-UAT",
                 .bankAccountIdentification: "RIB Verification"]
     }
-
+    
 }
