@@ -400,14 +400,12 @@ class ProfileViewController: UIViewController {
         Env.servicesProvider.getAvailableBonuses()
             .receive(on: DispatchQueue.main)
             .sink(receiveCompletion: { [weak self] completion in
-
                 switch completion {
                 case .finished:
                     ()
                 case .failure(let error):
                     print("AVAILABLE BONUSES ERROR: \(error)")
                 }
-
             }, receiveValue: { [weak self] availableBonuses in
 
                 let filteredBonus = availableBonuses.filter({
@@ -840,11 +838,10 @@ extension ProfileViewController {
 
     @objc func promotionsViewTapped(sender: UITapGestureRecognizer) {
 
-        var gomaBaseUrl = TargetVariables.clientBaseUrl
+        let promotionsWebViewModel = PromotionsWebViewModel()
         let appLanguage = "fr"
-
         let isDarkTheme = self.traitCollection.userInterfaceStyle == .dark ? true : false
-        let urlString = "\(gomaBaseUrl)/\(appLanguage)/in-app/promotions?dark=\(isDarkTheme)"
+        let urlString = TargetVariables.generatePromotionsPageUrlString(forAppLanguage: appLanguage, isDarkTheme: isDarkTheme)
 
         if let url = URL(string: urlString) {
             let promotionsWebViewModel = PromotionsWebViewModel()

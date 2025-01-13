@@ -238,12 +238,9 @@ extension AnonymousSideMenuViewController {
 
     @objc func promotionsViewTapped() {
         let promotionsWebViewModel = PromotionsWebViewModel()
-
-        let baseUrl = TargetVariables.clientBaseUrl
         let appLanguage = "fr"
-
         let isDarkTheme = self.traitCollection.userInterfaceStyle == .dark ? true : false
-        let urlString = "\(baseUrl)/\(appLanguage)/in-app/promotions?dark=\(isDarkTheme)"
+        let urlString = TargetVariables.generatePromotionsPageUrlString(forAppLanguage: appLanguage, isDarkTheme: isDarkTheme)
 
         if let url = URL(string: urlString) {
             let promotionsWebViewController = PromotionsWebViewController(url: url, viewModel: promotionsWebViewModel)

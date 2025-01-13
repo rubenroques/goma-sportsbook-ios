@@ -1,7 +1,7 @@
 {
   "images" : [
     {
-      "filename" : "Group copy.png",
+      "filename" : "no content-1 1.png",
       "idiom" : "universal",
       "scale" : "1x"
     },
@@ -12,12 +12,12 @@
           "value" : "dark"
         }
       ],
-      "filename" : "Group.png",
+      "filename" : "no content-1 2.png",
       "idiom" : "universal",
       "scale" : "1x"
     },
     {
-      "filename" : "Group@2x copy.png",
+      "filename" : "no content@2x-1.png",
       "idiom" : "universal",
       "scale" : "2x"
     },
@@ -28,12 +28,12 @@
           "value" : "dark"
         }
       ],
-      "filename" : "Group@2x.png",
+      "filename" : "no content@2x-1 1.png",
       "idiom" : "universal",
       "scale" : "2x"
     },
     {
-      "filename" : "Group@3x copy.png",
+      "filename" : "no content@3x-1.png",
       "idiom" : "universal",
       "scale" : "3x"
     },
@@ -44,7 +44,7 @@
           "value" : "dark"
         }
       ],
-      "filename" : "Group@3x.png",
+      "filename" : "no content@3x-1 1.png",
       "idiom" : "universal",
       "scale" : "3x"
     }

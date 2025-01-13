@@ -48,11 +48,15 @@ protocol SportsbookTarget {
 
     static var clientBaseUrl: String { get }
     
+    static func generatePromotionsPageUrlString(forAppLanguage: String?, isDarkTheme: Bool?) -> String
+    
     static var appStoreUrl: String? { get }
     
     static var secundaryMarketSpecsUrl: String? { get }
     
     static var knowYourClientLevels: [KnowYourCustomerLevel: String] { get }
+    
+    static var reservedRightsBrandString: String { get }
     
 }
 
@@ -123,4 +127,9 @@ extension SportsbookTarget {
     static var knowYourClientLevels: [KnowYourCustomerLevel: String] {
         return [:]
     }
+    
+    static func generatePromotionsPageUrlString(forAppLanguage: String?, isDarkTheme: Bool?) -> String {
+        return Self.clientBaseUrl
+    }
+
 }

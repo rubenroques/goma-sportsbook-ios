@@ -80,7 +80,14 @@ struct TargetVariables: SportsbookTarget {
     }
 
     static var clientBaseUrl: String {
-        return "https://goma-uat.betsson.fr"
+        return "https://betsson.fr"
+    }
+    
+    static func generatePromotionsPageUrlString(forAppLanguage appLanguage: String?, isDarkTheme: Bool?) -> String {
+        let baseUrl = Self.clientBaseUrl
+        let isDarkThemeString = isDarkTheme?.description ?? ""
+        let urlString = "\(baseUrl)/\(appLanguage ?? "")/in-app/promotions?dark=\(isDarkThemeString)"
+        return urlString
     }
     
     static var appStoreUrl: String? {

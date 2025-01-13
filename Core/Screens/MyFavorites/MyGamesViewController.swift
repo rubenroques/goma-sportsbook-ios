@@ -442,7 +442,7 @@ extension MyGamesViewController {
     private static func createEmptyStateImageView() -> UIImageView {
         let imageView = UIImageView()
         imageView.translatesAutoresizingMaskIntoConstraints = false
-        imageView.image = UIImage(named: "no_content_icon")
+        imageView.image = UIImage(named: "no_favourites_icon")
         imageView.contentMode = .scaleAspectFit
         return imageView
     }

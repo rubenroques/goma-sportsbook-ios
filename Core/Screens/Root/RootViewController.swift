@@ -1244,12 +1244,9 @@ class RootViewController: UIViewController {
     func openPromotions() {
         
         let promotionsWebViewModel = PromotionsWebViewModel()
-
-        let gomaBaseUrl = TargetVariables.clientBaseUrl
         let appLanguage = "fr"
-
         let isDarkTheme = self.traitCollection.userInterfaceStyle == .dark ? true : false
-        let urlString = "\(gomaBaseUrl)/\(appLanguage)/in-app/promotions?dark=\(isDarkTheme)"
+        let urlString = TargetVariables.generatePromotionsPageUrlString(forAppLanguage: appLanguage, isDarkTheme: isDarkTheme)
 
         if let url = URL(string: urlString) {
             
