@@ -55,9 +55,8 @@ protocol SportsbookTarget {
     static var secundaryMarketSpecsUrl: String? { get }
     
     static var knowYourClientLevels: [KnowYourCustomerLevel: String] { get }
-    
-    static var reservedRightsBrandString: String { get }
-    
+        
+    static var localizationOverrides: [String: String] { get }
 }
 
 enum SportsbookTargetFeatures: CaseIterable {
@@ -131,5 +130,8 @@ extension SportsbookTarget {
     static func generatePromotionsPageUrlString(forAppLanguage: String?, isDarkTheme: Bool?) -> String {
         return Self.clientBaseUrl
     }
-
+    
+    static var localizationOverrides: [String: String] {
+        return [:]
+    }
 }

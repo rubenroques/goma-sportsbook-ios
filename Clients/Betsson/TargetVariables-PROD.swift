@@ -103,5 +103,9 @@ struct TargetVariables: SportsbookTarget {
                 .proofOfAddress: "kyc-level-2-poa-verification",
                 .bankAccountIdentification: "RIB Verification"]
     }
-
+    
+    static var localizationOverrides: [String: String] {
+        return [:]
+    }
+    
 }

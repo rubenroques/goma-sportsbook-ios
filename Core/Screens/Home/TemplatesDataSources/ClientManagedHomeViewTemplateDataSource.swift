@@ -13,7 +13,7 @@ class ClientManagedHomeViewTemplateDataSource {
 
     // Define the array mapping sections to content types
     private let contentTypes: [HomeViewModel.Content] = [
-        .userProfile,
+        .userProfile, // AlertBanners
         .bannerLine, // PromotionBanners
         .quickSwipeStack, // MatchBanners
         .promotionalStories, // PromotionStories - instagram style stories

@@ -84,7 +84,7 @@ struct TargetVariables: SportsbookTarget {
     }
     
     static func generatePromotionsPageUrlString(forAppLanguage appLanguage: String?, isDarkTheme: Bool?) -> String {
-        let baseUrl = Self.clientBaseUrl
+        let baseUrl = "https://sportradar.gomadevelopment.pt"
         let isDarkThemeString = isDarkTheme?.description ?? ""
         let urlString = "\(baseUrl)/\(appLanguage ?? "")/in-app/promotions?dark=\(isDarkThemeString)"
         return urlString
@@ -104,4 +104,13 @@ struct TargetVariables: SportsbookTarget {
                 .bankAccountIdentification: "RIB Verification"]
     }
     
+    static var localizationOverrides: [String: String] {
+        return [
+            "anj_authorization_text": "SportRadar.fr est édité par SportRadar, société de droit maltais, titulaire des licences n# délivrées par l'ANJ le 01/01/2025",
+            "app_version_profile": "App Version {version_1} ({version_2})\n® Tous droits réservés",
+            "app_version_profile_1": "App Version {version_1} ({version_2})",
+            "app_version_profile_2": "® Tous droits réservés",
+        ]
+    }
+
 }

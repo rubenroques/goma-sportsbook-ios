@@ -104,4 +104,8 @@ struct TargetVariables: SportsbookTarget {
                 .bankAccountIdentification: "RIB Verification"]
     }
 
+    static var localizationOverrides: [String: String] {
+        return [:]
+    }
+
 }
