@@ -193,16 +193,16 @@ extension UserDefaults {
     var cardsStyle: CardsStyle {
         get {
             let defaultValue = TargetVariables.defaultCardStyle
-            if let skipped = self.value(forKey: UserDefaultsKey.cardsStyle.key) as? Int {
-                return CardsStyle(rawValue: skipped) ?? defaultValue // Has a previous stored value, use it
+            if let style: CardsStyle = self.codable(forKey: UserDefaultsKey.cardsStyle.key) {
+                return style
             }
             else {
-                self.setValue(defaultValue.rawValue, forKey: UserDefaultsKey.cardsStyle.key)
+                self.set(codable: defaultValue, forKey: UserDefaultsKey.cardsStyle.key)
                 return defaultValue
             }
         }
         set {
-            self.setValue(newValue.rawValue, forKey: UserDefaultsKey.cardsStyle.key)
+            self.set(codable: newValue, forKey: UserDefaultsKey.cardsStyle.key)
             self.synchronize()
         }
     }
@@ -282,9 +282,9 @@ extension UserDefaults {
     }
 }
 
-enum CardsStyle: Int {
-    case small = 3
-    case normal = 5
+enum CardsStyle: Codable, CaseIterable {
+    case small
+    case normal
 }
 
 

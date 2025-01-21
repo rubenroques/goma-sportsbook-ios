@@ -26,6 +26,7 @@ protocol SportsbookTarget {
 
     static var supportedThemes: [Theme] { get }
 
+    static var supportedCardStyles: [CardsStyle] { get }
     static var defaultCardStyle: CardsStyle { get }
     
     static var serviceProviderType: ServiceProviderType { get }
@@ -109,6 +110,14 @@ extension SportsbookTarget {
             }
         }
         return false
+    }
+
+    static var supportedCardStyles: [CardsStyle] {
+        return CardsStyle.allCases
+    }
+
+    static var defaultCardStyle: CardsStyle {
+        return .normal
     }
 
     static var shouldUserBlurEffectTabBar: Bool {

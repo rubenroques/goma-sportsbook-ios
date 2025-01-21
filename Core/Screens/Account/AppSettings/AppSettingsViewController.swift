@@ -112,7 +112,12 @@ class AppSettingsViewController: UIViewController {
             self.topStackView.addArrangedSubview(appearanceView)
         }
 
-        self.topStackView.addArrangedSubview(cardsStyleView)
+        if TargetVariables.supportedCardStyles.count > 1 {
+            self.topStackView.addArrangedSubview(cardsStyleView)
+        }
+        else {
+            appearanceView.hasSeparatorLineView = false
+        }
 
         // TODO: Disabled odds settings
         // self.topStackView.addArrangedSubview(oddsView)

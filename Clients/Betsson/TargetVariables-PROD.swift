@@ -35,6 +35,10 @@ struct TargetVariables: SportsbookTarget {
         return Theme.allCases
     }
 
+    static var supportedCardStyles: [CardsStyle] {
+        return [CardsStyle.normal]
+    }
+
     static var defaultCardStyle: CardsStyle {
         return .normal
     }

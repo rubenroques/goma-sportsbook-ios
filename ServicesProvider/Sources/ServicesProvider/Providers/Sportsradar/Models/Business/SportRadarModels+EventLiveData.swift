@@ -173,7 +173,7 @@ extension SportRadarModels {
             var attributesContainer = container.nestedContainer(keyedBy: CodingKeys.self, forKey: .attributedContainer)
             var completeContainer = attributesContainer.nestedContainer(keyedBy: CodingKeys.self, forKey: .completeContainer)
             var statusContainer = completeContainer.nestedContainer(keyedBy: CodingKeys.self, forKey: .statusContainer)
-            var eventContainer = statusContainer.nestedContainer(keyedBy: CodingKeys.self, forKey: .eventContainer)
+            // var eventContainer = statusContainer.nestedContainer(keyedBy: CodingKeys.self, forKey: .eventContainer)
             
             var currentScoreContainer = completeContainer.nestedContainer(keyedBy: CodingKeys.self, forKey: .currentScoreContainer)
             var competitorContainer = currentScoreContainer.nestedContainer(keyedBy: CodingKeys.self, forKey: .competitorContainer)
