@@ -9028,7 +9028,6 @@
 		CE12A0E52D2D99B60022BDF7 /* Media.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Media.xcassets; sourceTree = "<group>"; };
 		CE12A0E82D302CE90022BDF7 /* Gradients.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Gradients.xcassets; sourceTree = "<group>"; };
 		CE12A4C02D31347E0022BDF7 /* SportRadar PROD.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "SportRadar PROD.app"; sourceTree = BUILT_PRODUCTS_DIR; };
-		CE12A4C12D31347E0022BDF7 /* SportRadar UAT copy-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; name = "SportRadar UAT copy-Info.plist"; path = "/Users/rroques/Desktop/GOMA/iOS/sportsbook-ios/SportRadar UAT copy-Info.plist"; sourceTree = "<absolute>"; };
 		CE12A4C22D3134E80022BDF7 /* TargetVariables-PROD.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "TargetVariables-PROD.swift"; sourceTree = "<group>"; };
 		CE12A4C52D3135200022BDF7 /* GoogleService-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
 		CE12A4C62D3135200022BDF7 /* SportRadar-PROD.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = "SportRadar-PROD.entitlements"; sourceTree = "<group>"; };
@@ -9866,7 +9865,6 @@
 				455A0C5126BD902C00EC572D /* Products */,
 				455A0D2F26BDF61200EC572D /* Frameworks */,
 				459709FE2C5BE2A800E8F91D /* Recovered References */,
-				CE12A4C12D31347E0022BDF7 /* SportRadar UAT copy-Info.plist */,
 			);
 			sourceTree = "<group>";
 		};
