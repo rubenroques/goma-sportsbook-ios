@@ -511,6 +511,7 @@
 "minimum_deposit_value" = "Minimum Value: {value}{currency}";
 "minimum_users_message" = "You can't remove users if the group chat has only 3 users."; // UNUSED
 "minimum_withdraw_value" = "Minimum Value: {value}{currency}";
+"transfer_additional_info" = "90% de nos joueurs reçoivent leurs retraits sur leur compte bancaire en moins de 24 heures";
 "mobile" = "Phone Number";
 "mobile_phone_number" = "Mobile Phone Number"; // UNUSED
 "mobilephone_is_required" = "The mobile phone is a required field. Please complete this field."; // UNUSED

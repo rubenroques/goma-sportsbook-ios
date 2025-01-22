@@ -512,6 +512,7 @@
 "minimum_deposit_value" = "Valeur minimale : 10 €";
 "minimum_users_message" = "";
 "minimum_withdraw_value" = "Valeur minimale : 10 €";
+"transfer_additional_info" = "90% de nos joueurs reçoivent leurs retraits sur leur compte bancaire en moins de 24 heures";
 "mobile" = "Numéro de téléphone";
 "mobile_phone_number" = "Numéro de téléphone portable";
 "mobilephone_is_required" = "Le téléphone mobile est un champ obligatoire. Veuillez remplir ce champ.";

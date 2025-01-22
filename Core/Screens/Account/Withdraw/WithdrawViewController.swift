@@ -25,6 +25,7 @@ class WithdrawViewController: UIViewController {
 
     @IBOutlet private var withdrawHeaderTextFieldView: HeaderTextFieldView!
     @IBOutlet private var tipLabel: UILabel!
+    @IBOutlet private var additionalInfoLabel: UILabel!
     @IBOutlet private var nextButton: UIButton!
     @IBOutlet private var activityIndicatorView: UIActivityIndicatorView!
     @IBOutlet private var paymentsLabel: UILabel!
@@ -142,9 +143,13 @@ class WithdrawViewController: UIViewController {
         self.withdrawHeaderTextFieldView.setKeyboardType(.decimalPad)
         self.withdrawHeaderTextFieldView.setRightLabelCustom(title: "€", font: AppFont.with(type: .semibold, size: 20), color: UIColor.App.textSecondary)
 
-        tipLabel.text = localized("minimum_withdraw_value")
-        tipLabel.font = AppFont.with(type: .semibold, size: 12)
-        tipLabel.isHidden = true
+        self.tipLabel.text = localized("minimum_withdraw_value")
+        self.tipLabel.font = AppFont.with(type: .semibold, size: 12)
+        self.tipLabel.isHidden = true
+
+        self.additionalInfoLabel.text = localized("transfer_additional_info")
+        self.additionalInfoLabel.font = AppFont.with(type: .semibold, size: 12)
+        self.additionalInfoLabel.isHidden = false
 
         self.nextButton.setTitle(localized("next"), for: .normal)
         self.nextButton.isEnabled = false
@@ -212,7 +217,8 @@ class WithdrawViewController: UIViewController {
         self.withdrawHeaderTextFieldView.setTextFieldColor(UIColor.App.textPrimary)
 
         self.tipLabel.textColor = UIColor.App.textSecondary
-
+        self.additionalInfoLabel.textColor = UIColor.App.textSecondary
+        
         self.nextButton.setBackgroundColor(UIColor.App.buttonBackgroundPrimary, for: .normal)
         self.nextButton.setBackgroundColor(UIColor.App.buttonDisablePrimary, for: .disabled)
         self.nextButton.setTitleColor(UIColor.App.buttonTextPrimary, for: .normal)
