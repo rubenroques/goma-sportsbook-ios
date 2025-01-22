@@ -8019,6 +8019,24 @@
 		CE12A4BB2D31347E0022BDF7 /* OddTripleCollectionViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 45CD7B4D2716F5CB003044C5 /* OddTripleCollectionViewCell.xib */; };
 		CE12A4C32D3134E80022BDF7 /* TargetVariables-PROD.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE12A4C22D3134E80022BDF7 /* TargetVariables-PROD.swift */; };
 		CE12A4CA2D3135200022BDF7 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = CE12A4C52D3135200022BDF7 /* GoogleService-Info.plist */; };
+		CE16F27E2D417EAC000BEF9F /* ChipsTypeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE16F27D2D417EAC000BEF9F /* ChipsTypeView.swift */; };
+		CE16F27F2D417EAC000BEF9F /* ChipsTypeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE16F27D2D417EAC000BEF9F /* ChipsTypeView.swift */; };
+		CE16F2802D417EAC000BEF9F /* ChipsTypeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE16F27D2D417EAC000BEF9F /* ChipsTypeView.swift */; };
+		CE16F2812D417EAC000BEF9F /* ChipsTypeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE16F27D2D417EAC000BEF9F /* ChipsTypeView.swift */; };
+		CE16F2822D417EAC000BEF9F /* ChipsTypeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE16F27D2D417EAC000BEF9F /* ChipsTypeView.swift */; };
+		CE16F2832D417EAC000BEF9F /* ChipsTypeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE16F27D2D417EAC000BEF9F /* ChipsTypeView.swift */; };
+		CE16F2842D417EAC000BEF9F /* ChipsTypeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE16F27D2D417EAC000BEF9F /* ChipsTypeView.swift */; };
+		CE16F2852D417EAC000BEF9F /* ChipsTypeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE16F27D2D417EAC000BEF9F /* ChipsTypeView.swift */; };
+		CE16F2862D417EAC000BEF9F /* ChipsTypeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE16F27D2D417EAC000BEF9F /* ChipsTypeView.swift */; };
+		CE16F2882D417EC9000BEF9F /* ChipsTypeViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE16F2872D417EC9000BEF9F /* ChipsTypeViewModel.swift */; };
+		CE16F2892D417EC9000BEF9F /* ChipsTypeViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE16F2872D417EC9000BEF9F /* ChipsTypeViewModel.swift */; };
+		CE16F28A2D417EC9000BEF9F /* ChipsTypeViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE16F2872D417EC9000BEF9F /* ChipsTypeViewModel.swift */; };
+		CE16F28B2D417EC9000BEF9F /* ChipsTypeViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE16F2872D417EC9000BEF9F /* ChipsTypeViewModel.swift */; };
+		CE16F28C2D417EC9000BEF9F /* ChipsTypeViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE16F2872D417EC9000BEF9F /* ChipsTypeViewModel.swift */; };
+		CE16F28D2D417EC9000BEF9F /* ChipsTypeViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE16F2872D417EC9000BEF9F /* ChipsTypeViewModel.swift */; };
+		CE16F28E2D417EC9000BEF9F /* ChipsTypeViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE16F2872D417EC9000BEF9F /* ChipsTypeViewModel.swift */; };
+		CE16F28F2D417EC9000BEF9F /* ChipsTypeViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE16F2872D417EC9000BEF9F /* ChipsTypeViewModel.swift */; };
+		CE16F2902D417EC9000BEF9F /* ChipsTypeViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE16F2872D417EC9000BEF9F /* ChipsTypeViewModel.swift */; };
 		CE21C3512CEB96490012CABA /* cashbackVideo.mp4 in Resources */ = {isa = PBXBuildFile; fileRef = CE21C3502CEB96490012CABA /* cashbackVideo.mp4 */; };
 		CE21C3522CEB96490012CABA /* cashbackVideo.mp4 in Resources */ = {isa = PBXBuildFile; fileRef = CE21C3502CEB96490012CABA /* cashbackVideo.mp4 */; };
 		CE21C3532CEB96490012CABA /* cashbackVideo.mp4 in Resources */ = {isa = PBXBuildFile; fileRef = CE21C3502CEB96490012CABA /* cashbackVideo.mp4 */; };
@@ -9032,6 +9050,8 @@
 		CE12A4C52D3135200022BDF7 /* GoogleService-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
 		CE12A4C62D3135200022BDF7 /* SportRadar-PROD.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = "SportRadar-PROD.entitlements"; sourceTree = "<group>"; };
 		CE12A4C72D3135200022BDF7 /* SportRadar-PROD-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "SportRadar-PROD-Info.plist"; sourceTree = "<group>"; };
+		CE16F27D2D417EAC000BEF9F /* ChipsTypeView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChipsTypeView.swift; sourceTree = "<group>"; };
+		CE16F2872D417EC9000BEF9F /* ChipsTypeViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChipsTypeViewModel.swift; sourceTree = "<group>"; };
 		CE21C3502CEB96490012CABA /* cashbackVideo.mp4 */ = {isa = PBXFileReference; lastKnownFileType = file; path = cashbackVideo.mp4; sourceTree = "<group>"; };
 		CE2E0F122D3995D100488EF5 /* replay_sucess.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = replay_sucess.json; sourceTree = "<group>"; };
 		CE315ED52D00B3FA0080D900 /* replay_sucess.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = replay_sucess.json; sourceTree = "<group>"; };
@@ -10587,6 +10607,7 @@
 		4589F40726BF01B4005DF543 /* Views */ = {
 			isa = PBXGroup;
 			children = (
+				CE16F27C2D417E9A000BEF9F /* ChipsTypeView */,
 				CEB24B9E2CED274D0031F470 /* ScaleAspectFitImageView.swift */,
 				45644F9D2C9B5C16001C6464 /* OpenStatsButton */,
 				6547C87E2C63DBCE0041409C /* HeroCard */,
@@ -12853,6 +12874,15 @@
 				CE12A4C62D3135200022BDF7 /* SportRadar-PROD.entitlements */,
 			);
 			path = "Misc-PROD";
+			sourceTree = "<group>";
+		};
+		CE16F27C2D417E9A000BEF9F /* ChipsTypeView */ = {
+			isa = PBXGroup;
+			children = (
+				CE16F27D2D417EAC000BEF9F /* ChipsTypeView.swift */,
+				CE16F2872D417EC9000BEF9F /* ChipsTypeViewModel.swift */,
+			);
+			path = ChipsTypeView;
 			sourceTree = "<group>";
 		};
 		CE21C34F2CEB963D0012CABA /* Videos */ = {
@@ -15296,6 +15326,7 @@
 				A96FAED12981908900A0751F /* UploadDocumentsViewModel.swift in Sources */,
 				450B794328F58574009229E3 /* AggregatorRepository.swift in Sources */,
 				450B794428F58574009229E3 /* LoadingMoreTableViewCell.swift in Sources */,
+				CE16F2822D417EAC000BEF9F /* ChipsTypeView.swift in Sources */,
 				A9A43C792A4B2B68008FB399 /* RibDocsViewModel.swift in Sources */,
 				450B794528F58574009229E3 /* UserInfoSimpleCardView.swift in Sources */,
 				A9A521702A02B98A00C0F6C6 /* CardsStyleViewController.swift in Sources */,
@@ -15470,6 +15501,7 @@
 				450B79D628F58574009229E3 /* SingleBettingTicketTableViewCell.swift in Sources */,
 				450B79D728F58574009229E3 /* NavControllerTrasntitionDismissing.swift in Sources */,
 				450B79D828F58574009229E3 /* PreviewChatTableViewCell.swift in Sources */,
+				CE16F2892D417EC9000BEF9F /* ChipsTypeViewModel.swift in Sources */,
 				65F884172C1B081E00A56983 /* PromotedCompetitionTableViewCell.swift in Sources */,
 				450B79D928F58574009229E3 /* ShareTicketFriendGroupViewController.swift in Sources */,
 				450B79DA28F58574009229E3 /* FavoriteCompetitionsDataSource.swift in Sources */,
@@ -16112,6 +16144,7 @@
 				457CBAA5282D27D000ED0F00 /* GamesNotificationViewController.swift in Sources */,
 				45B6E20C283E3FA8001B570C /* FriendProfileViewController.swift in Sources */,
 				457CBAA6282D27D000ED0F00 /* MarketGroupDetailsViewModel.swift in Sources */,
+				CE16F28A2D417EC9000BEF9F /* ChipsTypeViewModel.swift in Sources */,
 				45C10F5028772DA700037BBE /* ModalTransitionPresenting.swift in Sources */,
 				A986D36128CF4C5C00AF95D7 /* InviteContactTableViewCell.swift in Sources */,
 				45C10F2C28772DA700037BBE /* Animations.swift in Sources */,
@@ -16485,6 +16518,7 @@
 				45B6E235284151E5001B570C /* EditGroupAddUserViewController.swift in Sources */,
 				457CBB9D282D27D000ED0F00 /* ConversationsViewController.swift in Sources */,
 				A9958C7329705D62001474E2 /* DocumentView.swift in Sources */,
+				CE16F2802D417EAC000BEF9F /* ChipsTypeView.swift in Sources */,
 				457CBB9E282D27D000ED0F00 /* WithdrawResponse.swift in Sources */,
 				457CBB9F282D27D000ED0F00 /* NavigationCardView.swift in Sources */,
 				65F884242C1B4A3700A56983 /* FeaturedCompetitionDetailRootViewController.swift in Sources */,
@@ -16925,6 +16959,7 @@
 				A9A292442A61597C00A7C334 /* UserGodfatherView.swift in Sources */,
 				A9FB6D4F28C642AD00E3FE58 /* TipsViewController.swift in Sources */,
 				457CBD8E282D2CD100ED0F00 /* ProfileViewController.swift in Sources */,
+				CE16F2832D417EAC000BEF9F /* ChipsTypeView.swift in Sources */,
 				45B9F97D2A1E245700DA2B88 /* ClientManagedHomeViewTemplateDataSource.swift in Sources */,
 				457CBD8F282D2CD100ED0F00 /* BonusViewController.swift in Sources */,
 				457CBD90282D2CD100ED0F00 /* ChatMessageView.swift in Sources */,
@@ -16962,6 +16997,7 @@
 				457CBDA7282D2CD100ED0F00 /* KeychainInterface.swift in Sources */,
 				457CBDA8282D2CD100ED0F00 /* UserDefaults.swift in Sources */,
 				457CBDA9282D2CD100ED0F00 /* SportSelectionCollectionViewCellViewModel.swift in Sources */,
+				CE16F28E2D417EC9000BEF9F /* ChipsTypeViewModel.swift in Sources */,
 				457CBDAA282D2CD100ED0F00 /* ActivationAlertView.swift in Sources */,
 				457CBDAB282D2CD100ED0F00 /* Internationalization.swift in Sources */,
 				A99DE668299E825900AA24AA /* RecoverPasswordViewModel.swift in Sources */,
@@ -17567,6 +17603,7 @@
 				A96FAED02981908900A0751F /* UploadDocumentsViewModel.swift in Sources */,
 				4589C83B282024E400243547 /* LoadingMoreTableViewCell.swift in Sources */,
 				A9DF8DFB28DDC1D80083BF56 /* UserInfoSimpleCardView.swift in Sources */,
+				CE16F27E2D417EAC000BEF9F /* ChipsTypeView.swift in Sources */,
 				A9A43C7A2A4B2B68008FB399 /* RibDocsViewModel.swift in Sources */,
 				4589C83C282024E400243547 /* FavoriteGoma.swift in Sources */,
 				A9A521712A02B98A00C0F6C6 /* CardsStyleViewController.swift in Sources */,
@@ -17741,6 +17778,7 @@
 				4589C8AE282024E400243547 /* SingleBettingTicketTableViewCell.swift in Sources */,
 				45C10F3028772DA700037BBE /* NavControllerTrasntitionDismissing.swift in Sources */,
 				45761A032844E85900A40826 /* PreviewChatTableViewCell.swift in Sources */,
+				CE16F28D2D417EC9000BEF9F /* ChipsTypeViewModel.swift in Sources */,
 				65F884182C1B081E00A56983 /* PromotedCompetitionTableViewCell.swift in Sources */,
 				A9C1C0A12874404C00E9D6AC /* ShareTicketFriendGroupViewController.swift in Sources */,
 				4589C8AF282024E400243547 /* FavoriteCompetitionsDataSource.swift in Sources */,
@@ -18285,6 +18323,7 @@
 				45A33159298976BA008181E9 /* UIStackView+Extensions.swift in Sources */,
 				45A3315A298976BA008181E9 /* UploadDocumentsViewModel.swift in Sources */,
 				45A3315B298976BA008181E9 /* AggregatorRepository.swift in Sources */,
+				CE16F2842D417EAC000BEF9F /* ChipsTypeView.swift in Sources */,
 				A9A43C782A4B2B68008FB399 /* RibDocsViewModel.swift in Sources */,
 				45A3315C298976BA008181E9 /* LoadingMoreTableViewCell.swift in Sources */,
 				A9A5216F2A02B98A00C0F6C6 /* CardsStyleViewController.swift in Sources */,
@@ -18459,6 +18498,7 @@
 				45A331F3298976BA008181E9 /* BannerTopCollectionViewCell.swift in Sources */,
 				45A331F4298976BA008181E9 /* SingleBettingTicketTableViewCell.swift in Sources */,
 				45A331F5298976BA008181E9 /* NavControllerTrasntitionDismissing.swift in Sources */,
+				CE16F28B2D417EC9000BEF9F /* ChipsTypeViewModel.swift in Sources */,
 				65F884152C1B081E00A56983 /* PromotedCompetitionTableViewCell.swift in Sources */,
 				45A331F6298976BA008181E9 /* PreviewChatTableViewCell.swift in Sources */,
 				45A331F7298976BA008181E9 /* ShareTicketFriendGroupViewController.swift in Sources */,
@@ -19003,6 +19043,7 @@
 				A9CB3E7B29CE1DCD00BEF9C1 /* BonusEmptyView.swift in Sources */,
 				A9DF8DFC28DDC1D80083BF56 /* UserInfoSimpleCardView.swift in Sources */,
 				45A6BC8B28246A7500D9B416 /* LoadingMoreTableViewCell.swift in Sources */,
+				CE16F2812D417EAC000BEF9F /* ChipsTypeView.swift in Sources */,
 				452B9D232C1890160032363F /* SystemBettingTicketDataSource.swift in Sources */,
 				A9DF8E6128E751F10083BF56 /* ListTitleHeaderFooterView.swift in Sources */,
 				A90FB7E929B0BD9C00D08A7C /* CasualGamblingViewController.swift in Sources */,
@@ -19177,6 +19218,7 @@
 				45A6BD0428246A7500D9B416 /* FavoriteCompetitionsDataSource.swift in Sources */,
 				6547C87B2C63C0AC0041409C /* HeroCardSecondaryMarketCollectionViewCell.swift in Sources */,
 				A9C1C0A22874404C00E9D6AC /* ShareTicketFriendGroupViewController.swift in Sources */,
+				CE16F2882D417EC9000BEF9F /* ChipsTypeViewModel.swift in Sources */,
 				45A6BD0528246A7500D9B416 /* TabularBarDataSource.swift in Sources */,
 				4568B9702858E45F00FA99B3 /* FlipNumberView.swift in Sources */,
 				A98708B528D3455300F27348 /* RankingsListViewModel.swift in Sources */,
@@ -19721,6 +19763,7 @@
 				45F6BC032AB3732C00C81DE1 /* UIStackView+Extensions.swift in Sources */,
 				45F6BC042AB3732C00C81DE1 /* UploadDocumentsViewModel.swift in Sources */,
 				45F6BC052AB3732C00C81DE1 /* AggregatorRepository.swift in Sources */,
+				CE16F2862D417EAC000BEF9F /* ChipsTypeView.swift in Sources */,
 				45F6BC062AB3732C00C81DE1 /* RibDocsViewModel.swift in Sources */,
 				45F6BC072AB3732C00C81DE1 /* LoadingMoreTableViewCell.swift in Sources */,
 				45F6BC082AB3732C00C81DE1 /* CardsStyleViewController.swift in Sources */,
@@ -19895,6 +19938,7 @@
 				45F6BCA72AB3732C00C81DE1 /* FeaturedTipView.swift in Sources */,
 				45F6BCA82AB3732C00C81DE1 /* BannerTopCollectionViewCell.swift in Sources */,
 				45F6BCA92AB3732C00C81DE1 /* SingleBettingTicketTableViewCell.swift in Sources */,
+				CE16F28F2D417EC9000BEF9F /* ChipsTypeViewModel.swift in Sources */,
 				65F884162C1B081E00A56983 /* PromotedCompetitionTableViewCell.swift in Sources */,
 				45F6BCAA2AB3732C00C81DE1 /* NavControllerTrasntitionDismissing.swift in Sources */,
 				45F6BCAB2AB3732C00C81DE1 /* PreviewChatTableViewCell.swift in Sources */,
@@ -20519,6 +20563,7 @@
 				A9C341D028F9A74A0055360B /* PreLiveEventsViewController.swift in Sources */,
 				A9C341D128F9A74A0055360B /* ViewState.swift in Sources */,
 				A9C341D228F9A74A0055360B /* BonusAvailableDataSource.swift in Sources */,
+				CE16F2852D417EAC000BEF9F /* ChipsTypeView.swift in Sources */,
 				A9C341D328F9A74A0055360B /* LoginViewController.swift in Sources */,
 				A9C341D428F9A74A0055360B /* GroupUserManagementTableViewCell.swift in Sources */,
 				A9C341D528F9A74A0055360B /* HomeViewModel.swift in Sources */,
@@ -20556,6 +20601,7 @@
 				A9C341F628F9A74A0055360B /* FriendStatusCellViewModel.swift in Sources */,
 				A9C341F728F9A74A0055360B /* FriendStatusTableViewCell.swift in Sources */,
 				A9C341F828F9A74A0055360B /* UIView+Shift.swift in Sources */,
+				CE16F28C2D417EC9000BEF9F /* ChipsTypeViewModel.swift in Sources */,
 				A9C341FA28F9A74A0055360B /* MessageDetailViewModel.swift in Sources */,
 				A9C341FB28F9A74A0055360B /* MatchLineTableViewCell.swift in Sources */,
 				A9C341FC28F9A74A0055360B /* KeychainInterface.swift in Sources */,
@@ -21161,6 +21207,7 @@
 				CE12A26F2D31347E0022BDF7 /* AggregatorRepository.swift in Sources */,
 				CE12A2702D31347E0022BDF7 /* LoadingMoreTableViewCell.swift in Sources */,
 				CE12A2712D31347E0022BDF7 /* RibDocsViewModel.swift in Sources */,
+				CE16F27F2D417EAC000BEF9F /* ChipsTypeView.swift in Sources */,
 				CE12A2722D31347E0022BDF7 /* UserInfoSimpleCardView.swift in Sources */,
 				CE12A2732D31347E0022BDF7 /* CardsStyleViewController.swift in Sources */,
 				CE12A2742D31347E0022BDF7 /* FavoriteGoma.swift in Sources */,
@@ -21335,6 +21382,7 @@
 				CE12A31D2D31347E0022BDF7 /* NavControllerTrasntitionDismissing.swift in Sources */,
 				CE12A31E2D31347E0022BDF7 /* PreviewChatTableViewCell.swift in Sources */,
 				CE12A31F2D31347E0022BDF7 /* PromotedCompetitionTableViewCell.swift in Sources */,
+				CE16F2902D417EC9000BEF9F /* ChipsTypeViewModel.swift in Sources */,
 				CE12A3202D31347E0022BDF7 /* ShareTicketFriendGroupViewController.swift in Sources */,
 				CE12A3212D31347E0022BDF7 /* FavoriteCompetitionsDataSource.swift in Sources */,
 				CE12A3222D31347E0022BDF7 /* FlipNumberView.swift in Sources */,
