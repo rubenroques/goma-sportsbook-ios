@@ -13,7 +13,8 @@ import SwiftUI
 class LiveEventsViewController: UIViewController {
 
     @IBOutlet private weak var filtersBarBaseView: UIView!
-    @IBOutlet private weak var filtersCollectionView: UICollectionView!
+    @IBOutlet private weak var filtersChipsBaseView: UIView!
+    private var chipsTypeView: ChipsTypeView
     @IBOutlet private weak var filtersSeparatorLineView: UIView!
     @IBOutlet private weak var tableView: UITableView!
 
@@ -68,6 +69,8 @@ class LiveEventsViewController: UIViewController {
 
     init(viewModel: LiveEventsViewModel) {
         self.viewModel = viewModel
+
+        self.chipsTypeView = ChipsTypeView(viewModel: self.viewModel.chipsViewModel)
 
         super.init(nibName: "LiveEventsViewController", bundle: nil)
     }
@@ -130,7 +133,7 @@ class LiveEventsViewController: UIViewController {
             let outrightMarketDetailsViewController = OutrightMarketDetailsViewController(viewModel: viewModel)
             self.navigationController?.pushViewController(outrightMarketDetailsViewController, animated: true)
         }
-        
+
         // New loading
         self.loadingView.alpha = 0.0
         self.addChildViewController(self.loadingSpinnerViewController, toView: self.loadingBaseView)
@@ -179,6 +182,16 @@ class LiveEventsViewController: UIViewController {
 
         self.sportTypeIconImageView.image = UIImage(named: "sport_type_mono_icon_1")
 
+        self.chipsTypeView.contentInset = UIEdgeInsets(top: 0, left: 74, bottom: 0, right: 54)
+
+        self.filtersChipsBaseView.addSubview(self.chipsTypeView)
+        NSLayoutConstraint.activate([
+            self.filtersChipsBaseView.leadingAnchor.constraint(equalTo: self.chipsTypeView.leadingAnchor),
+            self.filtersChipsBaseView.trailingAnchor.constraint(equalTo: self.chipsTypeView.trailingAnchor),
+            self.filtersChipsBaseView.topAnchor.constraint(equalTo: self.chipsTypeView.topAnchor),
+            self.filtersChipsBaseView.bottomAnchor.constraint(equalTo: self.chipsTypeView.bottomAnchor),
+        ])
+
         let color = UIColor.App.backgroundPrimary
 
         self.leftGradientBaseView.backgroundColor = color
@@ -204,19 +217,6 @@ class LiveEventsViewController: UIViewController {
         filtersButtonView.addGestureRecognizer(tapFilterGesture)
         filtersButtonView.isUserInteractionEnabled = true
 
-        let flowLayout = UICollectionViewFlowLayout()
-        flowLayout.estimatedItemSize = UICollectionViewFlowLayout.automaticSize
-        flowLayout.scrollDirection = .horizontal
-        filtersCollectionView.collectionViewLayout = flowLayout
-        filtersCollectionView.contentInset = UIEdgeInsets(top: 0, left: 74, bottom: 0, right: 54)
-        filtersCollectionView.showsVerticalScrollIndicator = false
-        filtersCollectionView.showsHorizontalScrollIndicator = false
-        filtersCollectionView.alwaysBounceHorizontal = true
-        filtersCollectionView.register(ListTypeCollectionViewCell.self,
-                                       forCellWithReuseIdentifier: ListTypeCollectionViewCell.identifier)
-        filtersCollectionView.delegate = self
-        filtersCollectionView.dataSource = self
-
         filtersCountLabel.isHidden = true
         liveEventsCountView.isHidden = true
 
@@ -226,9 +226,9 @@ class LiveEventsViewController: UIViewController {
 
         self.tableView.separatorStyle = .none
         self.tableView.register(MatchLineTableViewCell.nib, forCellReuseIdentifier: MatchLineTableViewCell.identifier)
-        
+
         self.tableView.register(MatchLineTableViewCell.nib, forCellReuseIdentifier: MatchLineTableViewCell.identifier+"Live")
-        
+
         self.tableView.register(OutrightCompetitionLargeLineTableViewCell.self, forCellReuseIdentifier: OutrightCompetitionLargeLineTableViewCell.identifier)
         self.tableView.register(BannerScrollTableViewCell.nib, forCellReuseIdentifier: BannerScrollTableViewCell.identifier)
         self.tableView.register(EmptyLiveMessageBannerTableViewCell.self, forCellReuseIdentifier: EmptyLiveMessageBannerTableViewCell.identifier)
@@ -236,7 +236,7 @@ class LiveEventsViewController: UIViewController {
         self.tableView.register(FooterResponsibleGamingViewCell.self, forCellReuseIdentifier: FooterResponsibleGamingViewCell.identifier)
         self.tableView.register(TournamentTableViewHeader.nib, forHeaderFooterViewReuseIdentifier: TournamentTableViewHeader.identifier)
         self.tableView.register(TitleTableViewHeader.nib, forHeaderFooterViewReuseIdentifier: TitleTableViewHeader.identifier)
-        
+
         self.tableView.delegate = self
         self.tableView.dataSource = self
 
@@ -307,16 +307,12 @@ class LiveEventsViewController: UIViewController {
 
     func connectPublishers() {
 
-        NotificationCenter.default.publisher(for: .cardsStyleChanged)
+        self.viewModel.tableUpdatePublisher
             .receive(on: DispatchQueue.main)
-            .sink { [weak self] _ in
+            .sink { [weak self] in
                 self?.reloadData()
             }
             .store(in: &cancellables)
-
-        self.viewModel.dataDidChangedAction = { [unowned self] in
-            self.tableView.reloadData()
-        }
 
         self.viewModel.liveEventsCountPublisher
             .receive(on: DispatchQueue.main)
@@ -374,6 +370,9 @@ class LiveEventsViewController: UIViewController {
     private func setupWithTheme() {
         self.view.backgroundColor = .clear
 
+        self.chipsTypeView.backgroundColor = UIColor.App.pillNavigation
+        self.filtersChipsBaseView.backgroundColor = UIColor.App.pillNavigation
+
         self.tableView.backgroundColor = .clear
         self.tableView.backgroundView?.backgroundColor = .clear
 
@@ -408,8 +407,6 @@ class LiveEventsViewController: UIViewController {
         self.filtersSeparatorLineView.backgroundColor = UIColor.App.separatorLine
         self.filtersButtonView.backgroundColor = UIColor.App.pillSettings
 
-        self.filtersCollectionView.backgroundColor = UIColor.App.pillNavigation
-
         self.emptyBaseView.backgroundColor = .clear
         self.firstTextFieldEmptyStateLabel.textColor = UIColor.App.textPrimary
         self.secondTextFieldEmptyStateLabel.textColor = UIColor.App.textPrimary
@@ -431,10 +428,10 @@ class LiveEventsViewController: UIViewController {
         self.present(homeFilterViewController, animated: true, completion: nil)
     }
 
+    // Centralized reload data, so we can add more reload logic here in the future
     func reloadData() {
         self.tableView.reloadData()
     }
-
 
     private func openQuickbet(_ bettingTicket: BettingTicket) {
 
@@ -445,11 +442,11 @@ class LiveEventsViewController: UIViewController {
 
             quickbetViewController.modalPresentationStyle = .overCurrentContext
             quickbetViewController.modalTransitionStyle = .crossDissolve
-            
+
             quickbetViewController.shouldShowBetSuccess = { bettingTicket, betPlacedDetails in
-                
+
                 quickbetViewController.dismiss(animated: true, completion: {
-                    
+
                     self.showBetSucess(bettingTicket: bettingTicket, betPlacedDetails: betPlacedDetails)
                 })
             }
@@ -461,14 +458,14 @@ class LiveEventsViewController: UIViewController {
             self.present(loginViewController, animated: true, completion: nil)
         }
     }
-    
+
     private func showBetSucess(bettingTicket: BettingTicket, betPlacedDetails: [BetPlacedDetails]) {
-        
+
         let betSubmissionSuccessViewController = BetSubmissionSuccessViewController(betPlacedDetailsArray: betPlacedDetails,
                                                                                     cashbackResultValue: nil,
                                                                                     usedCashback: false,
         bettingTickets: [bettingTicket])
-        
+
         self.present(Router.navigationController(with: betSubmissionSuccessViewController), animated: true)
     }
 
@@ -625,12 +622,6 @@ extension LiveEventsViewController: UICollectionViewDelegate, UICollectionViewDa
         }
 
         return cell
-    }
-
-    func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
-        self.filterSelectedOption = indexPath.row
-        self.filtersCollectionView.reloadData()
-        self.filtersCollectionView.scrollToItem(at: indexPath, at: .centeredHorizontally, animated: true)
     }
 
 }

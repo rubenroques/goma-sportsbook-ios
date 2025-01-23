@@ -10,7 +10,7 @@ enum ChipType {
     case textual(title: String)
     case icon(title: String, iconName: String)
     case backgroungImage(title: String, iconName: String, imageName: String)
-    
+
     var title: String {
         switch self {
         case .textual(title: let title):
@@ -24,6 +24,7 @@ enum ChipType {
 }
 
 class ChipsTypeViewModel {
+
     // MARK: - Properties
     @Published private(set) var tabs: [ChipType]
     @Published private(set) var selectedIndex: Int?
@@ -35,7 +36,7 @@ class ChipsTypeViewModel {
         self.tabs = tabs
         self.selectedIndex = defaultSelectedIndex
     }
-    
+
     // MARK: - Public Methods
     func selectTab(at index: Int) {
         guard index != selectedIndex else { return }
@@ -50,7 +51,7 @@ class ChipsTypeViewModel {
 
     func updateTabs(_ newTabs: [ChipType]) {
         self.tabs = newTabs
-        
+
         // Try to apply pending selection if it exists and is now valid
         if let pending = pendingSelectionIndex, pending >= 0 && pending < newTabs.count {
             self.selectedIndex = pending
@@ -62,11 +63,11 @@ class ChipsTypeViewModel {
             self.pendingSelectionIndex = nil
         }
     }
-    
+
     func numberOfTabs() -> Int {
         return self.tabs.count
     }
-    
+
     func tab(at index: Int) -> ChipType? {
         return self.tabs[safe: index]
     }
