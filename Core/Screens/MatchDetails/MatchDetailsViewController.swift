@@ -12,38 +12,38 @@ import WebKit
 import ServicesProvider
 
 class MatchDetailsViewController: UIViewController {
-    
+
     @IBOutlet private var topView: UIView!
     @IBOutlet private var headerDetailView: UIView!
     @IBOutlet private var headerDetailTopView: UIView!
     @IBOutlet private var backButton: UIButton!
     @IBOutlet private var shareButton: UIButton!
-    
+
     @IBOutlet private var headerCompetitionDetailView: UIView!
     @IBOutlet private var headerCompetitionLabel: UILabel!
     @IBOutlet private var headerCompetitionSportImageView: UIImageView!
     @IBOutlet private var headerCompetitionImageView: UIImageView!
-    
+
     @IBOutlet private var headerDetailStackView: UIStackView!
     @IBOutlet private var headerDetailHomeView: UIView!
     @IBOutlet private var headerDetailHomeLabel: UILabel!
     @IBOutlet private var headerDetailAwayView: UIView!
     @IBOutlet private var headerDetailAwayLabel: UILabel!
-    
+
     @IBOutlet private var homeServingIndicatorView: UIView!
     @IBOutlet private var awayServingIndicatorView: UIView!
-    
+
     @IBOutlet private var headerDetailMiddleView: UIView!
     @IBOutlet private var headerDetailMiddleStackView: UIStackView!
-    
+
     @IBOutlet private var headerDetailPreliveView: UIView!
     @IBOutlet private var headerDetailPreliveTopLabel: UILabel!
     @IBOutlet private var headerDetailPreliveBottomLabel: UILabel!
-    
+
     @IBOutlet private var headerDetailLiveView: UIView!
     @IBOutlet private var headerDetailLiveTopLabel: UILabel!
     @IBOutlet private var headerDetailLiveBottomLabel: UILabel!
-    
+
     @IBOutlet private var headerButtonsBaseView: UIView!
     @IBOutlet private var headerButtonsStackView: UIStackView!
     @IBOutlet private var headerLiveButtonBaseView: UIView!
@@ -54,7 +54,7 @@ class MatchDetailsViewController: UIViewController {
     @IBOutlet private var headerStatsButtonBaseView: UIView!
     @IBOutlet private var statsButtonLabel: UILabel!
     @IBOutlet private var statsButtonImageView: UIImageView!
-    
+
     @IBOutlet private var accountValueView: UIView!
     @IBOutlet private var accountPlusView: UIView!
     @IBOutlet private var accountValueLabel: UILabel!
@@ -62,7 +62,7 @@ class MatchDetailsViewController: UIViewController {
 
     @IBOutlet private var matchFieldBaseView: UIView!
     @IBOutlet private var matchFieldLoadingView: UIActivityIndicatorView!
-    
+
     @IBOutlet private var matchFieldWebView: WKWebView!
     @IBOutlet private var matchFieldWebViewHeight: NSLayoutConstraint!
 
@@ -72,8 +72,10 @@ class MatchDetailsViewController: UIViewController {
     @IBOutlet private var statsCollectionViewHeight: NSLayoutConstraint!
     @IBOutlet private var statsBackSliderView: UIView!
     @IBOutlet private var statsNotFoundLabel: UILabel!
-    
-    @IBOutlet private var marketTypesCollectionView: UICollectionView!
+
+    @IBOutlet private var marketTypesBaseView: UIView!
+
+    private var chipsTypeView: ChipsTypeView
 
     private lazy var backgroundGradientView: GradientView = {
         let view = GradientView()
@@ -98,7 +100,7 @@ class MatchDetailsViewController: UIViewController {
     @IBOutlet private var awayRedCardsLabel: UILabel!
 
     @IBOutlet private var marketsStackView: UIStackView!
-    
+
     // New top details view
     @IBOutlet private weak var topSeparatorAlphaLineView: FadingView!
     @IBOutlet private weak var matchDetailsContentView: UIView!
@@ -110,22 +112,22 @@ class MatchDetailsViewController: UIViewController {
     @IBOutlet private weak var preLiveTimeLabel: UILabel!
     @IBOutlet private weak var liveDetailsView: UIView!
     @IBOutlet private weak var scoreView: ScoreView!
-    
+
     private lazy var floatingShortcutsView: FloatingShortcutsView = Self.createFloatingShortcutsView()
     private static func createFloatingShortcutsView() -> FloatingShortcutsView {
         let floatingShortcutsView = FloatingShortcutsView()
         floatingShortcutsView.translatesAutoresizingMaskIntoConstraints = false
         return floatingShortcutsView
     }
-    
+
     private lazy var sharedGameCardView: SharedGameCardView = {
         let gameCard = SharedGameCardView()
         gameCard.translatesAutoresizingMaskIntoConstraints = false
         gameCard.isHidden = true
-        
+
         return gameCard
     }()
-    
+
     private var showingStatsBackSliderView: Bool = false
     private var shouldShowStatsView = false
     private var isStatsViewExpanded: Bool = false {
@@ -136,14 +138,14 @@ class MatchDetailsViewController: UIViewController {
             else {
                 self.statsCollectionViewHeight.constant = 0
             }
-            
+
             UIView.animate(withDuration: 0.2, delay: 0.0, options: UIView.AnimationOptions.curveEaseOut) {
                 self.view.setNeedsLayout()
                 self.view.layoutIfNeeded()
             }
         }
     }
-    
+
     // Tooltip views
     lazy var mixMatchInfoDialogView: InfoDialogView = {
         let view = InfoDialogView()
@@ -151,7 +153,7 @@ class MatchDetailsViewController: UIViewController {
         view.configure(title: localized("mix_match_tooltip_description"))
         return view
     }()
-    
+
     var didShowMixMatchTooltip: Bool = false
     // =========================================================================
     // Header bar and buttons logic
@@ -166,7 +168,7 @@ class MatchDetailsViewController: UIViewController {
             }
         }
     }
-    
+
     private var matchFielHeight: CGFloat = 0
     private var isMatchFieldExpanded: Bool = false {
         didSet {
@@ -180,7 +182,7 @@ class MatchDetailsViewController: UIViewController {
                 self.fieldExpandImageView.setImageColor(color: UIColor.App.textPrimary)
                 self.matchFieldWebViewHeight.constant = 0
             }
-            
+
             UIView.animate(withDuration: 0.2, delay: 0.0, options: UIView.AnimationOptions.curveEaseOut) {
                 self.view.setNeedsLayout()
                 self.view.layoutIfNeeded()
@@ -204,7 +206,7 @@ class MatchDetailsViewController: UIViewController {
             }
         }
     }
-    
+
     // ScrollView content offset
     private var lastContentOffset: CGFloat = 0
     private var autoScrollEnabled: Bool = true
@@ -214,7 +216,7 @@ class MatchDetailsViewController: UIViewController {
         case live
         case stats
     }
-    
+
     var headerBarSelection: HeaderBarSelection = .none {
         didSet {
             switch self.headerBarSelection {
@@ -228,12 +230,12 @@ class MatchDetailsViewController: UIViewController {
                 self.statsButtonLabel.textColor = UIColor.App.textSecondary
                 self.statsButtonImageView.setImageColor(color: UIColor.App.textSecondary)
                 //
-                
+
                 self.isStatsViewExpanded = false
                 self.isMatchFieldExpanded = false
 
                 self.headerStatsButtonBaseView.isHidden = true
-                
+
             case .live:
                 self.headerLiveButtonBaseView.backgroundColor = UIColor.App.backgroundPrimary
                 self.liveButtonLabel.textColor = UIColor.App.textPrimary
@@ -244,10 +246,10 @@ class MatchDetailsViewController: UIViewController {
                 self.statsButtonLabel.textColor = UIColor.App.textSecondary
                 self.statsButtonImageView.setImageColor(color: UIColor.App.textSecondary)
                 //
-                
+
                 self.isStatsViewExpanded = false
                 self.isMatchFieldExpanded = true
-                
+
             case .stats:
                 self.headerLiveButtonBaseView.backgroundColor = UIColor.App.backgroundTertiary
                 self.liveButtonLabel.textColor = UIColor.App.textSecondary
@@ -257,13 +259,13 @@ class MatchDetailsViewController: UIViewController {
                 self.headerStatsButtonBaseView.backgroundColor = UIColor.App.backgroundPrimary
                 self.statsButtonLabel.textColor = UIColor.App.textPrimary
                 self.statsButtonImageView.setImageColor(color: UIColor.App.textPrimary)
-                
+
                 self.isStatsViewExpanded = true
                 self.isMatchFieldExpanded = false
             }
         }
     }
-    
+
     private var isLiveFieldReady: Bool = false {
 
         didSet {
@@ -301,41 +303,43 @@ class MatchDetailsViewController: UIViewController {
     //
 
     // =========================================================================
-    
+
     private var marketGroupsViewControllers = [UIViewController]()
     private var currentPageViewControllerIndex: Int = 0
-    
+
     private var viewModel: MatchDetailsViewModel
-    
+
     private var cancellables = Set<AnyCancellable>()
-    
+
     var showMixMatchDefault: Bool = false
-    
+
     // MARK: - Lifetime and Cycle
     init(viewModel: MatchDetailsViewModel) {
         self.viewModel = viewModel
-        
+
+        self.chipsTypeView = ChipsTypeView(viewModel: self.viewModel.chipsTypeViewModel)
+
         self.marketGroupsPagedViewController = UIPageViewController(transitionStyle: .scroll,
                                                                     navigationOrientation: .horizontal,
                                                                     options: nil)
-        
+
         super.init(nibName: "MatchDetailsViewController", bundle: nil)
     }
-    
+
     @available(iOS, unavailable)
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
-    
+
     deinit {
         NotificationCenter.default.removeObserver(self)
     }
-    
+
     override func viewDidLoad() {
         super.viewDidLoad()
-        
+
         self.setupNotifications()
-        
+
         // Setup fonts
         self.matchNotAvailableLabel.font = AppFont.with(type: .bold, size: 18)
         self.accountValueLabel.font = AppFont.with(type: .heavy, size: 12)
@@ -348,9 +352,9 @@ class MatchDetailsViewController: UIViewController {
         self.statsButtonLabel.font = AppFont.with(type: .bold, size: 13)
         self.statsNotFoundLabel.font = AppFont.with(type: .medium, size: 17)
         self.marketsNotAvailableLabel.font = AppFont.with(type: .bold, size: 18)
-        
+
         self.view.transitionId = "SeeMoreToMatchDetails"
-        
+
         //
         self.addChildViewController(marketGroupsPagedViewController, toView: marketGroupsPagedBaseView)
 
@@ -367,7 +371,7 @@ class MatchDetailsViewController: UIViewController {
 
         //
         self.matchFieldWebViewHeight.constant = 0
-        
+
         //
         self.matchNotAvailableView.isHidden = true
 
@@ -376,45 +380,45 @@ class MatchDetailsViewController: UIViewController {
 
         self.matchFieldBaseView.isHidden = false
         self.statsBaseView.isHidden = false
-        
+
         //
         self.isLiveFieldReady = false
         self.shouldShowLiveFieldWebView = false
-        
+
         self.homeServingIndicatorView.isHidden = true
         self.awayServingIndicatorView.isHidden = true
-        
+
         //
         self.backButton.setImage(UIImage(named: "arrow_back_icon"), for: .normal)
-        
+
         self.shareButton.setTitle("", for: .normal)
         self.shareButton.setImage(UIImage(named: "more_options_icon"), for: .normal)
-        
+
         self.headerCompetitionLabel.text = ""
         self.headerCompetitionLabel.font = AppFont.with(type: .semibold, size: 11)
-        
+
         self.headerCompetitionImageView.image = nil
         self.headerCompetitionImageView.layer.cornerRadius = self.headerCompetitionImageView.frame.width/2
         self.headerCompetitionImageView.contentMode = .scaleAspectFill
         self.headerCompetitionImageView.layer.borderWidth = 0.5
-        
+
         self.headerDetailHomeLabel.text = localized("home_label_default")
         self.headerDetailHomeLabel.font = AppFont.with(type: .bold, size: 16)
         self.headerDetailHomeLabel.numberOfLines = 0
-        
+
         self.headerDetailAwayLabel.text = localized("away_label_default")
         self.headerDetailAwayLabel.font = AppFont.with(type: .bold, size: 16)
         self.headerDetailAwayLabel.numberOfLines = 0
-        
+
         self.headerDetailPreliveTopLabel.text = localized("match_label_default")
         self.headerDetailPreliveTopLabel.font = AppFont.with(type: .semibold, size: 12)
-        
+
         self.headerDetailPreliveBottomLabel.text = "00:00"
         self.headerDetailPreliveBottomLabel.font = AppFont.with(type: .bold, size: 16)
-        
+
         self.headerDetailLiveTopLabel.text = "'0 - 0'"
         self.headerDetailLiveTopLabel.font = AppFont.with(type: .bold, size: 16)
-        
+
         self.headerDetailLiveBottomLabel.text = localized("match_start_label_default")
         self.headerDetailLiveBottomLabel.font = AppFont.with(type: .semibold, size: 12)
         self.headerDetailLiveBottomLabel.numberOfLines = 0
@@ -429,28 +433,19 @@ class MatchDetailsViewController: UIViewController {
         // Default to Pre Live
         self.headerDetailLiveView.isHidden = true
         self.headerDetailPreliveView.isHidden = false
-        
-        // Market Types CollectionView
-        let layout = UICollectionViewFlowLayout()
-        layout.scrollDirection = .horizontal
-        layout.estimatedItemSize = UICollectionViewFlowLayout.automaticSize
-        layout.minimumInteritemSpacing = 10
-        layout.minimumLineSpacing = 10
-        layout.sectionInset = UIEdgeInsets(top: 0, left: 16, bottom: 0, right: 16)
-        
-        self.marketTypesCollectionView.collectionViewLayout = layout
-        self.marketTypesCollectionView.showsVerticalScrollIndicator = false
-        self.marketTypesCollectionView.showsHorizontalScrollIndicator = false
-        self.marketTypesCollectionView.alwaysBounceHorizontal = true
-        self.marketTypesCollectionView.register(ListTypeCollectionViewCell.self,
-                                                forCellWithReuseIdentifier: ListTypeCollectionViewCell.identifier)
-        self.marketTypesCollectionView.register(ListBackgroundCollectionViewCell.self,
-                                       forCellWithReuseIdentifier: ListBackgroundCollectionViewCell.identifier)
-        
-        
-        self.marketTypesCollectionView.delegate = self.viewModel
-        self.marketTypesCollectionView.dataSource = self.viewModel
-        
+
+        // Market Types base view
+        self.addChildViewController(self.marketGroupsPagedViewController, toView: self.marketGroupsPagedBaseView)
+
+        self.marketTypesBaseView.addSubview(self.chipsTypeView)
+        NSLayoutConstraint.activate([
+            self.chipsTypeView.leadingAnchor.constraint(equalTo: self.marketTypesBaseView.leadingAnchor),
+            self.chipsTypeView.trailingAnchor.constraint(equalTo: self.marketTypesBaseView.trailingAnchor),
+            self.chipsTypeView.topAnchor.constraint(equalTo: self.marketTypesBaseView.topAnchor),
+            self.chipsTypeView.bottomAnchor.constraint(equalTo: self.marketTypesBaseView.bottomAnchor),
+        ])
+
+
         self.marketGroupsPagedViewController.delegate = self
         self.marketGroupsPagedViewController.dataSource = self
 
@@ -460,55 +455,55 @@ class MatchDetailsViewController: UIViewController {
         self.accountValueView.layer.cornerRadius = CornerRadius.view
         self.accountValueView.layer.masksToBounds = true
         self.accountValueView.isUserInteractionEnabled = true
-        
+
         self.accountPlusView.layer.cornerRadius = CornerRadius.squareView
         self.accountPlusView.layer.masksToBounds = true
-        
+
         let accountValueTapGesture = UITapGestureRecognizer(target: self, action: #selector(didTapAccountValue))
         accountValueView.addGestureRecognizer(accountValueTapGesture)
-        
+
         let competitionDetailTapGesture = UITapGestureRecognizer(target: self, action: #selector(openCompetitionsDetails))
         headerCompetitionDetailView.addGestureRecognizer(competitionDetailTapGesture)
-        
+
         // matchFieldWebView
         //
         self.matchFieldWebView.scrollView.alwaysBounceVertical = false
         self.matchFieldWebView.scrollView.bounces = false
         self.matchFieldWebView.navigationDelegate = self
-        
+
         self.matchFieldLoadingView.hidesWhenStopped = true
         self.matchFieldLoadingView.stopAnimating()
         self.matchFieldLoadingView.layer.anchorPoint = CGPoint(x: 1.0, y: 0.5)
         self.matchFieldLoadingView.transform = CGAffineTransform.init(scaleX: 0.6, y: 0.6)
-        
+
         //
         // stats
         self.statsCollectionView.delegate = self
         self.statsCollectionView.dataSource = self
         self.statsCollectionView.allowsSelection = false
-        
+
         self.statsCollectionView.showsVerticalScrollIndicator = false
         self.statsCollectionView.showsHorizontalScrollIndicator = false
         self.statsCollectionView.contentInset = UIEdgeInsets(top: 0, left: 8, bottom: 0, right: 8)
-        
+
         let statsFlowLayout = UICollectionViewFlowLayout()
         statsFlowLayout.scrollDirection = .horizontal
         self.statsCollectionView.collectionViewLayout = statsFlowLayout
-        
+
         self.statsCollectionView.register(MatchStatsCollectionViewCell.nib, forCellWithReuseIdentifier: MatchStatsCollectionViewCell.identifier)
-        
+
         self.statsBackSliderView.alpha = 0.0
         self.statsBackSliderView.layer.cornerRadius = 6
-        
+
         let backSliderTapGesture = UITapGestureRecognizer(target: self, action: #selector(didTapBackSliderButton))
         self.statsBackSliderView.addGestureRecognizer(backSliderTapGesture)
-        
+
         self.statsNotFoundLabel.isHidden = true
-        
+
         // match share
         //
         self.view.addSubview(self.sharedGameCardView)
-        
+
         NSLayoutConstraint.activate([
             sharedGameCardView.leadingAnchor.constraint(equalTo: self.view.leadingAnchor, constant: 16),
             sharedGameCardView.trailingAnchor.constraint(equalTo: self.view.trailingAnchor, constant: -16),
@@ -518,17 +513,15 @@ class MatchDetailsViewController: UIViewController {
 
         let didTapLiveGesture = UITapGestureRecognizer(target: self, action: #selector(didTapLiveButtonHeaderView))
         self.headerLiveButtonBaseView.addGestureRecognizer(didTapLiveGesture)
-        
+
         let didTapStatsGesture = UITapGestureRecognizer(target: self, action: #selector(didTapStatsButtonHeaderView))
         self.headerStatsButtonBaseView.addGestureRecognizer(didTapStatsGesture)
-        
+
         self.headerBarSelection = .none
 
         self.setupWithTheme()
-        
+
         self.bind(toViewModel: self.viewModel)
-        
-        self.marketTypesCollectionView.reloadData()
 
         //
         // Add loading view controller
@@ -537,61 +530,61 @@ class MatchDetailsViewController: UIViewController {
 
         self.loadingSpinnerViewController.view.translatesAutoresizingMaskIntoConstraints = false
         self.view.addSubview(self.loadingSpinnerViewController.view)
-        
+
         NSLayoutConstraint.activate([
             self.view.leadingAnchor.constraint(equalTo: self.loadingSpinnerViewController.view.leadingAnchor),
             self.view.trailingAnchor.constraint(equalTo: self.loadingSpinnerViewController.view.trailingAnchor),
             self.headerDetailView.bottomAnchor.constraint(equalTo: self.loadingSpinnerViewController.view.topAnchor),
             self.view.bottomAnchor.constraint(equalTo: self.loadingSpinnerViewController.view.bottomAnchor)
         ])
-        
+
         self.loadingSpinnerViewController.didMove(toParent: self)
-        
+
         // Start loading
         self.loadingSpinnerViewController.startAnimating()
         self.loadingSpinnerViewController.view.isHidden = false
         //
         //
-        
+
         // Shared Game
         self.view.sendSubviewToBack(self.sharedGameCardView)
-        
+
         //
         self.view.bringSubviewToFront(self.matchNotAvailableView)
-        
+
         // Tooltip
         self.view.addSubview(self.mixMatchInfoDialogView)
 
         NSLayoutConstraint.activate([
 
-            self.mixMatchInfoDialogView.bottomAnchor.constraint(equalTo: self.marketTypesCollectionView.topAnchor, constant: 5),
+            self.mixMatchInfoDialogView.bottomAnchor.constraint(equalTo: self.chipsTypeView.topAnchor, constant: 5),
             self.mixMatchInfoDialogView.leadingAnchor.constraint(equalTo: self.view.leadingAnchor, constant: 30),
             self.mixMatchInfoDialogView.trailingAnchor.constraint(equalTo: self.view.centerXAnchor, constant: 20),
             self.mixMatchInfoDialogView.widthAnchor.constraint(lessThanOrEqualToConstant: 200)
         ])
 
         self.mixMatchInfoDialogView.alpha = 0
-        
+
         if self.showMixMatchDefault {
             self.currentPageViewControllerIndex = 1
         }
     }
-    
+
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
-        
+
         if self.isRootModal {
             self.backButton.setImage(UIImage(named: "arrow_close_icon"), for: .normal)
         }
-        
+
         self.floatingShortcutsView.resetAnimations()
-        
+
         self.navigationController?.interactivePopGestureRecognizer?.delegate = self
     }
-    
+
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
-                
+
         // betslip
         //
         self.view.addSubview(self.floatingShortcutsView)
@@ -599,7 +592,7 @@ class MatchDetailsViewController: UIViewController {
             self.floatingShortcutsView.trailingAnchor.constraint(equalTo: self.view.trailingAnchor, constant: -12),
             self.floatingShortcutsView.bottomAnchor.constraint(equalTo: self.view.safeAreaLayoutGuide.bottomAnchor, constant: -12),
         ])
-        
+
         self.floatingShortcutsView.didTapBetslipButtonAction = { [weak self] in
             self?.didTapBetslipView()
         }
@@ -607,13 +600,13 @@ class MatchDetailsViewController: UIViewController {
             self?.didTapChatView()
         }
     }
-    
+
     override func viewWillDisappear(_ animated: Bool) {
         super.viewWillDisappear(animated)
-        
+
         self.navigationController?.interactivePopGestureRecognizer?.delegate = nil
     }
-    
+
     private func setupNotifications() {
         NotificationCenter.default.publisher(for: UIApplication.willEnterForegroundNotification)
             .sink { [weak self] _ in
@@ -621,20 +614,20 @@ class MatchDetailsViewController: UIViewController {
             }
             .store(in: &self.cancellables)
     }
-    
+
     override func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {
         super.traitCollectionDidChange(previousTraitCollection)
-        
+
         self.setupWithTheme()
     }
-    
+
     override func viewDidLayoutSubviews() {
         super.viewDidLayoutSubviews()
-    
+
         self.awayServingIndicatorView.layer.cornerRadius = self.awayServingIndicatorView.frame.size.width / 2
         self.homeServingIndicatorView.layer.cornerRadius = self.homeServingIndicatorView.frame.size.width / 2
     }
-    
+
     func setupWithTheme() {
         self.view.backgroundColor = UIColor.App.backgroundPrimary
 
@@ -642,7 +635,7 @@ class MatchDetailsViewController: UIViewController {
         self.headerDetailView.backgroundColor = UIColor.App.gameHeader
         self.headerDetailTopView.backgroundColor = .clear
         self.backButton.tintColor = UIColor.App.textPrimary
-        
+
         self.headerCompetitionDetailView.backgroundColor = .clear
         self.headerCompetitionLabel.textColor = UIColor.App.textSecondary
         self.headerCompetitionSportImageView.setTintColor(color: UIColor.App.textPrimary)
@@ -654,10 +647,10 @@ class MatchDetailsViewController: UIViewController {
         self.headerDetailHomeLabel.textColor = UIColor.App.textPrimary
         self.headerDetailAwayView.backgroundColor = .clear
         self.headerDetailAwayLabel.textColor = UIColor.App.textPrimary
-        
+
         self.awayServingIndicatorView.backgroundColor = UIColor.App.highlightPrimary
         self.homeServingIndicatorView.backgroundColor = UIColor.App.highlightPrimary
-        
+
         self.headerDetailMiddleView.backgroundColor = .clear
         self.headerDetailMiddleStackView.backgroundColor = .clear
         self.headerDetailPreliveView.backgroundColor = .clear
@@ -666,12 +659,12 @@ class MatchDetailsViewController: UIViewController {
         self.headerDetailLiveView.backgroundColor = .clear
         self.headerDetailLiveTopLabel.textColor = UIColor.App.textPrimary
         self.headerDetailLiveBottomLabel.textColor = UIColor.App.textSecondary
-        
+
         self.headerButtonsBaseView.backgroundColor = UIColor.App.separatorLine
         self.headerButtonsStackView.backgroundColor = UIColor.App.backgroundPrimary
         self.headerLiveButtonBaseView.backgroundColor = UIColor.App.backgroundTertiary
         self.headerStatsButtonBaseView.backgroundColor = UIColor.App.backgroundTertiary
-        
+
         self.accountValueView.backgroundColor = UIColor.App.backgroundBorder
         self.accountValueLabel.textColor = UIColor.App.textPrimary
         self.accountPlusView.backgroundColor = UIColor.App.highlightSecondary
@@ -688,12 +681,15 @@ class MatchDetailsViewController: UIViewController {
         }
 
         self.marketGroupsPagedBaseView.backgroundColor = .clear
+        
         // Market List CollectionView
-        self.marketTypesCollectionView.backgroundColor = UIColor.App.pillNavigation
+        self.chipsTypeView.backgroundColor = UIColor.App.pillNavigation
+        self.marketTypesBaseView.backgroundColor = UIColor.App.pillNavigation
 
+        //
         self.matchFieldBaseView.backgroundColor = UIColor.App.backgroundTertiary
         self.matchFieldWebView.backgroundColor = UIColor.App.backgroundTertiary
-        
+
         self.matchNotAvailableView.backgroundColor = .clear
         self.matchNotAvailableLabel.textColor = UIColor.App.textPrimary
 
@@ -701,7 +697,7 @@ class MatchDetailsViewController: UIViewController {
         self.marketsNotAvailableLabel.textColor = UIColor.App.textPrimary
 
         self.matchFieldLoadingView.tintColor = .gray
-        
+
         self.statsBaseView.backgroundColor = UIColor.App.backgroundTertiary
         self.statsCollectionBaseView.backgroundColor = UIColor.App.backgroundPrimary
         self.statsCollectionView.backgroundColor = UIColor.App.backgroundPrimary
@@ -710,38 +706,38 @@ class MatchDetailsViewController: UIViewController {
 
         self.fieldExpandImageView.setImageColor(color: UIColor.App.textPrimary)
         self.fieldExpandImageView.tintColor = UIColor.App.textPrimary
-        
+
         // New top details view
         self.topSeparatorAlphaLineView.colors = [.clear, .black, .black, .clear]
         self.topSeparatorAlphaLineView.startPoint = CGPoint(x: 0.0, y: 0.5)
         self.topSeparatorAlphaLineView.endPoint = CGPoint(x: 1.0, y: 0.5)
         self.topSeparatorAlphaLineView.fadeLocations = [0.0, 0.42, 0.58, 1.0]
         self.topSeparatorAlphaLineView.backgroundColor = UIColor.App.highlightPrimary
-        
+
         self.matchDetailsContentView.backgroundColor = .clear
-        
+
         self.homeTeamLabel.textColor = UIColor.App.textPrimary
-        
+
         self.awayTeamLabel.textColor = UIColor.App.textPrimary
-        
+
         self.liveTimeLabel.textColor = UIColor.App.buttonBackgroundPrimary
-        
+
         self.preLiveDetailsView.backgroundColor = .clear
-        
+
         self.preLiveDateLabel.textColor = UIColor.App.textSecondary
-        
+
         self.preLiveTimeLabel.textColor = UIColor.App.textPrimary
-        
+
         self.liveDetailsView.backgroundColor = .clear
 
         self.scoreView.backgroundColor = .clear
         self.scoreView.setupWithTheme()
 
     }
-    
+
     // MARK: - Bindings
     private func bind(toViewModel viewModel: MatchDetailsViewModel) {
-        
+
         Env.userSessionStore.userProfilePublisher
             .receive(on: DispatchQueue.main)
             .sink { [weak self] userProfile in
@@ -753,7 +749,7 @@ class MatchDetailsViewController: UIViewController {
                 }
             }
             .store(in: &self.cancellables)
-        
+
         Env.userSessionStore.userWalletPublisher
             .receive(on: DispatchQueue.main)
             .sink { [weak self] userWallet in
@@ -766,7 +762,7 @@ class MatchDetailsViewController: UIViewController {
                 }
             }
             .store(in: &self.cancellables)
-        
+
         self.viewModel.marketGroupsState
             .removeDuplicates()
             .receive(on: DispatchQueue.main)
@@ -781,7 +777,6 @@ class MatchDetailsViewController: UIViewController {
                     self?.showMarketsNotAvailableView()
                     self?.reloadMarketGroupDetails([])
                 }
-                self?.reloadCollectionView()
             }
             .store(in: &self.cancellables)
 //
@@ -789,7 +784,6 @@ class MatchDetailsViewController: UIViewController {
             .removeDuplicates()
             .receive(on: DispatchQueue.main)
             .sink { [weak self] newIndex in
-                self?.reloadCollectionView()
                 if let newIndex = newIndex {
                     self?.scrollToMarketDetailViewController(atIndex: newIndex)
                 }
@@ -810,75 +804,32 @@ class MatchDetailsViewController: UIViewController {
                         self?.matchMode = .live
                         self?.reloadMarketsWithLiveMatch(match: match)
                     }
-                                        
+
                     self?.setupHeaderDetails(withMatch: match)
-                                        
+
                     let theme = self?.traitCollection.userInterfaceStyle
                     viewModel.getFieldWidget(isDarkTheme: theme == .dark ? true : false)
 
                     self?.statsCollectionView.reloadData()
-                    
+
                     self?.loadingSpinnerViewController.view.isHidden = true
                     self?.loadingSpinnerViewController.stopAnimating()
                 case .failed:
                     self?.loadingSpinnerViewController.view.isHidden = true
                     self?.loadingSpinnerViewController.stopAnimating()
-                    
+
                     self?.showMatchNotAvailableView()
                 }
             })
             .store(in: &self.cancellables)
 
-//        
-//        Publishers.CombineLatest(
-//            self.viewModel.matchPublisher.removeDuplicates(),
-//            self.viewModel.marketGroupsState.removeDuplicates()
-//        )
-//        .receive(on: DispatchQueue.main)
-//        .sink { [weak self] matchPublisherLoadableContent, marketGroupsStateLoadableContent in
-//            
-//            switch (matchPublisherLoadableContent, marketGroupsStateLoadableContent) {
-//            case (.failed, _):
-//                self?.loadingSpinnerViewController.view.isHidden = true
-//                self?.loadingSpinnerViewController.stopAnimating()
-//                
-//                self?.showMatchNotAvailableView()
-//                
-//            case (.loaded(let match), .loaded(let marketGroups)):
-//                switch match.status {
-//                case .notStarted, .ended, .unknown:
-//                    self?.matchMode = .preLive
-//                case .inProgress:
-//                    self?.matchMode = .live
-//                }
-//                
-//                self?.setupHeaderDetails(withMatch: match)
-//                
-//                let theme = self?.traitCollection.userInterfaceStyle
-//                viewModel.getFieldWidget(isDarkTheme: theme == .dark ? true : false)
-//                
-//                self?.statsCollectionView.reloadData()
-//                
-//                self?.reloadMarketGroupDetails(marketGroups)
-//                self?.showMarkets()
-//                self?.reloadCollectionView()
-//                
-//                self?.loadingSpinnerViewController.view.isHidden = true
-//                self?.loadingSpinnerViewController.stopAnimating()
-//                
-//            default:
-//                ()
-//            }
-//        }
-//        .store(in: &self.cancellables)
-        
         self.viewModel.matchStatsUpdatedPublisher
             .receive(on: DispatchQueue.main)
             .sink(receiveValue: { [weak self] in
                 self?.reloadStatsCollectionView()
             })
             .store(in: &self.cancellables)
-        
+
         self.viewModel.homeRedCardsScorePublisher
             .receive(on: DispatchQueue.main)
             .sink(receiveValue: { [weak self] homeScoreValue in
@@ -893,7 +844,7 @@ class MatchDetailsViewController: UIViewController {
                 }
             })
             .store(in: &self.cancellables)
-        
+
         self.viewModel.awayRedCardsScorePublisher
             .receive(on: DispatchQueue.main)
             .sink(receiveValue: { [weak self] awayScoreValue in
@@ -906,10 +857,10 @@ class MatchDetailsViewController: UIViewController {
                     self?.awayRedCardImage.isHidden = true
                     self?.awayRedCardsLabel.isHidden = true
                 }
-                  
+
             })
             .store(in: &self.cancellables)
-        
+
         self.viewModel.matchDetailedScores
             .receive(on: DispatchQueue.main)
             .sink(receiveValue: { [weak self] detailedScoresList in
@@ -927,7 +878,7 @@ class MatchDetailsViewController: UIViewController {
             .receive(on: DispatchQueue.main)
             .sink { [weak self] activePlayerServe in
                 guard let self = self else { return }
-                
+
                 switch activePlayerServe {
                 case .home:
                     self.homeServingIndicatorView.isHidden = false
@@ -941,7 +892,7 @@ class MatchDetailsViewController: UIViewController {
                 }
             }
             .store(in: &self.cancellables)
-        
+
         self.viewModel.shouldRenderFieldWidget
             .receive(on: DispatchQueue.main)
             .sink(receiveValue: { [weak self] shouldRender in
@@ -962,12 +913,12 @@ class MatchDetailsViewController: UIViewController {
                 marketGroupViewController.scrollToTop()
             }
         }
-        
+
         self.viewModel.shouldShowTabTooltip = { [weak self] in
-            
+
             if let didShowMixMatchTooltip = self?.didShowMixMatchTooltip,
                !didShowMixMatchTooltip {
-                
+
                 UIView.animate(withDuration: 0.5, animations: {
                     self?.mixMatchInfoDialogView.alpha = 1
                     self?.didShowMixMatchTooltip = true
@@ -980,17 +931,17 @@ class MatchDetailsViewController: UIViewController {
                         }
                     }
                 }
-                
+
             }
-            
+
         }
-        
+
     }
-    
+
     private func refreshViewModel() {
         self.viewModel.forceRefreshData()
     }
-    
+
     func reloadMarketsWithLiveMatch(match: Match) {
         for viewController in marketGroupsViewControllers {
             if let marketGroupViewController = viewController as? MarketGroupDetailsViewController {
@@ -1000,13 +951,13 @@ class MatchDetailsViewController: UIViewController {
     }
 
     func reloadMarketGroupDetails(_ marketGroups: [MarketGroup]) {
-        
+
         guard let match = self.viewModel.match else {
             return
         }
-        
+
         self.marketGroupsViewControllers = []
-        
+
         for marketGroup in marketGroups {
             if let groupKey = marketGroup.groupKey {
 
@@ -1022,7 +973,7 @@ class MatchDetailsViewController: UIViewController {
                 self.marketGroupsViewControllers.append(marketGroupDetailsViewController)
             }
         }
-        
+
         if self.showMixMatchDefault {
             if let firstViewController = self.marketGroupsViewControllers[safe: 1] {
                 self.marketGroupsPagedViewController.setViewControllers([firstViewController],
@@ -1041,19 +992,15 @@ class MatchDetailsViewController: UIViewController {
         }
 
     }
-    
+
     func reloadMarketGroupDetailsContent() {
         for marketGroupsViewController in marketGroupsViewControllers {
             (marketGroupsViewController as? MarketGroupDetailsViewController)?.reloadContent()
         }
     }
-    
-    func reloadCollectionView() {
-        self.marketTypesCollectionView.reloadData()
-    }
-    
+
     func scrollToMarketDetailViewController(atIndex index: Int) {
-        
+
         let previousIndex = self.currentPageViewControllerIndex
         if index > previousIndex {
             if let selectedViewController = self.marketGroupsViewControllers[safe: index] {
@@ -1071,10 +1018,10 @@ class MatchDetailsViewController: UIViewController {
                                                                         completion: nil)
             }
         }
-        
+
         self.currentPageViewControllerIndex = index
     }
-    
+
     func reloadStatsCollectionView() {
         if self.viewModel.numberOfStatsSections() == 0 {
             self.statsNotFoundLabel.isHidden = false
@@ -1086,18 +1033,17 @@ class MatchDetailsViewController: UIViewController {
         }
         self.statsCollectionView.reloadData()
     }
-    
+
     func reloadSelectedIndex() {
         self.selectMarketType(atIndex: self.currentPageViewControllerIndex)
     }
-    
+
     func selectMarketType(atIndex index: Int) {
         self.viewModel.selectMarketType(atIndex: index)
-        self.marketTypesCollectionView.scrollToItem(at: IndexPath(row: index, section: 0), at: .centeredHorizontally, animated: true)
     }
-    
+
     func setupMatchField() {
-        
+
         guard
             self.viewModel.match != nil,
             !self.isLiveFieldReady // if we already loadd the live field we should not reload it
@@ -1124,19 +1070,19 @@ class MatchDetailsViewController: UIViewController {
         }
 
     }
-    
+
     func setupHeaderDetails(withMatch match: Match) {
         self.headerDetailHomeLabel.text = match.homeParticipant.name
         self.homeTeamLabel.text = match.homeParticipant.name
- 
+
         self.headerDetailAwayLabel.text = match.awayParticipant.name
         self.awayTeamLabel.text = match.awayParticipant.name
-        
+
         self.headerCompetitionLabel.text = match.competitionName
-        
+
         let assetName = Assets.flagName(withCountryCode: match.venue?.isoCode ?? match.venue?.id ?? "")
         self.headerCompetitionImageView.image =  UIImage(named: assetName)
-        
+
         if let sportIconImage = UIImage(named: "sport_type_icon_\(match.sport.id)") {
             self.headerCompetitionSportImageView.image =  sportIconImage
         }
@@ -1146,37 +1092,37 @@ class MatchDetailsViewController: UIViewController {
         else {
             self.headerCompetitionSportImageView.image = nil
         }
-        
+
         self.headerCompetitionSportImageView.setTintColor(color: UIColor.App.textPrimary)
-        
+
         // With new details view
         if self.matchMode == .preLive {
             if let date = match.date {
                 let startDateString = MatchWidgetCellViewModel.startDateString(fromDate: date)
                 self.headerDetailPreliveTopLabel.text = startDateString
                 self.preLiveDateLabel.text = startDateString
-                
+
                 let hourDateString = MatchWidgetCellViewModel.hourDateFormatter.string(from: date)
                 self.headerDetailPreliveBottomLabel.text = hourDateString
                 self.preLiveTimeLabel.text = hourDateString
             }
 
             self.liveTimeLabel.isHidden = true
-            
+
             self.preLiveDetailsView.isHidden = false
             self.liveDetailsView.isHidden = true
         }
         else {
             self.headerDetailLiveTopLabel.text = self.viewModel.matchScore
             self.headerDetailLiveBottomLabel.text = self.viewModel.matchTimeDetails
-            
+
             self.liveTimeLabel.text = self.viewModel.matchTimeDetails
             self.liveTimeLabel.isHidden = false
 
             self.preLiveDetailsView.isHidden = true
             self.liveDetailsView.isHidden = false
         }
-        
+
     }
 
     func expandLiveFieldIfNeeded() {
@@ -1186,15 +1132,15 @@ class MatchDetailsViewController: UIViewController {
     }
 
     @objc func didTapLiveButtonHeaderView() {
-        
+
         if !isLiveFieldReady {
             return
         }
-        
+
         if !shouldShowLiveFieldWebView {
             return
         }
-        
+
         switch self.headerBarSelection {
         case .none, .stats:
             self.headerBarSelection = .live
@@ -1202,7 +1148,7 @@ class MatchDetailsViewController: UIViewController {
             self.headerBarSelection = .none
         }
     }
-    
+
     @objc func didTapStatsButtonHeaderView() {
         switch self.headerBarSelection {
         case .none, .live:
@@ -1214,7 +1160,7 @@ class MatchDetailsViewController: UIViewController {
 
     func showMarkets() {
         self.marketGroupsPagedBaseView.isHidden = false
-        self.marketTypesCollectionView.isHidden = false
+        self.chipsTypeView.isHidden = false
         self.marketsNotAvailableView.isHidden = true
         self.matchNotAvailableView.isHidden = true
     }
@@ -1222,31 +1168,30 @@ class MatchDetailsViewController: UIViewController {
     func showMatchNotAvailableView() {
         self.shareButton.isHidden = true
         self.marketGroupsPagedBaseView.isHidden = true
-        self.marketTypesCollectionView.isHidden = true
+        self.chipsTypeView.isHidden = true
         self.marketsNotAvailableView.isHidden = true
         self.matchNotAvailableView.isHidden = false
     }
 
     func showMarketsNotAvailableView() {
         self.marketGroupsPagedBaseView.isHidden = true
-        self.marketTypesCollectionView.isHidden = true
+        self.chipsTypeView.isHidden = true
         self.marketsNotAvailableView.isHidden = false
         self.matchNotAvailableView.isHidden = true
     }
-    
+
     @objc func didTapBetslipView() {
         self.openBetslipModal()
     }
-    
+
     func openBetslipModal() {
         let betslipViewController = BetslipViewController()
         betslipViewController.willDismissAction = { [weak self] in
-            self?.marketTypesCollectionView.reloadData()
             self?.reloadMarketGroupDetailsContent()
         }
         self.present(Router.navigationController(with: betslipViewController), animated: true, completion: nil)
     }
-    
+
     @objc private func openCompetitionsDetails() {
 
 //        if let match = self.viewModel.match {
@@ -1256,11 +1201,11 @@ class MatchDetailsViewController: UIViewController {
 //        }
 
     }
-    
+
     @objc func didTapChatView() {
         self.openChatModal()
     }
-    
+
     func openChatModal() {
         if Env.userSessionStore.isUserLogged() {
             let socialViewController = SocialViewController()
@@ -1281,11 +1226,11 @@ class MatchDetailsViewController: UIViewController {
 
             quickbetViewController.modalPresentationStyle = .overCurrentContext
             quickbetViewController.modalTransitionStyle = .crossDissolve
-            
+
             quickbetViewController.shouldShowBetSuccess = { bettingTicket, betPlacedDetails in
-                
+
                 quickbetViewController.dismiss(animated: true, completion: {
-                    
+
                     self.showBetSucess(bettingTicket: bettingTicket, betPlacedDetails: betPlacedDetails)
                 })
             }
@@ -1297,17 +1242,17 @@ class MatchDetailsViewController: UIViewController {
             self.present(loginViewController, animated: true, completion: nil)
         }
     }
-    
+
     private func showBetSucess(bettingTicket: BettingTicket, betPlacedDetails: [BetPlacedDetails]) {
-        
+
         let betSubmissionSuccessViewController = BetSubmissionSuccessViewController(betPlacedDetailsArray: betPlacedDetails,
                                                                                     cashbackResultValue: nil,
                                                                                     usedCashback: false,
         bettingTickets: [bettingTicket])
-        
+
         self.present(Router.navigationController(with: betSubmissionSuccessViewController), animated: true)
     }
-    
+
     @objc private func didTapAccountValue() {
         let depositViewController = DepositViewController()
         let navigationViewController = Router.navigationController(with: depositViewController)
@@ -1316,11 +1261,11 @@ class MatchDetailsViewController: UIViewController {
         }
         self.present(navigationViewController, animated: true, completion: nil)
     }
-    
+
     @objc func didTapBackSliderButton() {
         self.statsCollectionView.setContentOffset(CGPoint(x: -self.statsCollectionView.contentInset.left, y: 1), animated: true)
     }
-    
+
     @IBAction private func didTapBackAction() {
         if self.isRootModal {
             self.presentingViewController?.dismiss(animated: true)
@@ -1329,12 +1274,12 @@ class MatchDetailsViewController: UIViewController {
             self.navigationController?.popViewController(animated: true)
         }
     }
-    
+
     @IBAction private func didTapMoreOptionsButton() {
         let actionSheetController: UIAlertController = UIAlertController(title: nil, message: nil, preferredStyle: .actionSheet)
 
         if Env.userSessionStore.isUserLogged() {
-            
+
             if Env.favoritesManager.isEventFavorite(eventId: self.viewModel.matchId) {
                 let favoriteAction: UIAlertAction = UIAlertAction(title: "Remove from favorites", style: .default) { _ -> Void in
                     Env.favoritesManager.removeFavorite(eventId: self.viewModel.matchId, favoriteType: .match)
@@ -1348,21 +1293,21 @@ class MatchDetailsViewController: UIViewController {
                 actionSheetController.addAction(favoriteAction)
             }
         }
-        
+
         let shareAction: UIAlertAction = UIAlertAction(title: localized("share_event"), style: .default) { [weak self] _ -> Void in
             self?.didTapShareButton()
         }
         actionSheetController.addAction(shareAction)
-        
+
         let cancelAction: UIAlertAction = UIAlertAction(title: localized("cancel"), style: .cancel) { _ -> Void in }
         actionSheetController.addAction(cancelAction)
-        
+
         if let popoverController = actionSheetController.popoverPresentationController {
             popoverController.sourceView = self.view
             popoverController.sourceRect = CGRect(x: self.view.bounds.midX, y: self.view.bounds.midY, width: 0, height: 0)
             popoverController.permittedArrowDirections = []
         }
-        
+
         self.present(actionSheetController, animated: true, completion: nil)
 //        }
 //        else {
@@ -1370,43 +1315,43 @@ class MatchDetailsViewController: UIViewController {
 //            self.present(loginViewController, animated: true, completion: nil)
 //        }
     }
-    
+
     private func didTapShareButton() {
-        
+
         guard
             var match = self.viewModel.match
         else {
             return
         }
-        
+
         if let viewController = self.marketGroupsViewControllers.first as? MarketGroupDetailsViewController, let market = viewController.firstMarket() {
             match.markets = [market]
         }
-        
+
         self.sharedGameCardView.setupSharedCardInfo(withMatch: match)
 
         self.sharedGameCardView.isHidden = false
-        
+
         let renderer = UIGraphicsImageRenderer(size: self.sharedGameCardView.bounds.size)
         let snapshot = renderer.image { _ in
             self.sharedGameCardView.drawHierarchy(in: self.sharedGameCardView.bounds, afterScreenUpdates: true)
         }
-        
+
         let metadata = LPLinkMetadata()
 
         let matchSlugUrl = self.generateUrlSlug(match: match)
 
         if let matchUrl = URL(string: matchSlugUrl) {
-            
+
             let imageProvider = NSItemProvider(object: snapshot)
             metadata.imageProvider = imageProvider
             metadata.url = matchUrl
             metadata.originalURL = matchUrl
             metadata.title = localized("check_this_game")
         }
-        
+
         let metadataItemSource = LinkPresentationItemSource(metaData: metadata)
-        
+
         let shareActivityViewController = UIActivityViewController(activityItems: [metadataItemSource, snapshot], applicationActivities: nil)
         if let popoverController = shareActivityViewController.popoverPresentationController {
             popoverController.sourceView = self.view
@@ -1417,7 +1362,7 @@ class MatchDetailsViewController: UIViewController {
             self?.sharedGameCardView.isHidden = true
         }
         self.present(shareActivityViewController, animated: true, completion: nil)
-        
+
     }
 
     private func generateUrlSlug(match: Match) -> String {
@@ -1457,11 +1402,11 @@ class MatchDetailsViewController: UIViewController {
 //
 //        return removingConsecutiveDashes
 //    }
-    
+
 }
 
 extension MatchDetailsViewController: UIPageViewControllerDelegate, UIPageViewControllerDataSource {
-    
+
     func pageViewController(_ pageViewController: UIPageViewController, viewControllerBefore viewController: UIViewController) -> UIViewController? {
         if let index = marketGroupsViewControllers.firstIndex(of: viewController) {
             if index > 0 {
@@ -1470,7 +1415,7 @@ extension MatchDetailsViewController: UIPageViewControllerDelegate, UIPageViewCo
         }
         return nil
     }
-    
+
     func pageViewController(_ pageViewController: UIPageViewController, viewControllerAfter viewController: UIViewController) -> UIViewController? {
         if let index = marketGroupsViewControllers.firstIndex(of: viewController) {
             if index < marketGroupsViewControllers.count - 1 {
@@ -1479,16 +1424,16 @@ extension MatchDetailsViewController: UIPageViewControllerDelegate, UIPageViewCo
         }
         return nil
     }
-    
+
     func pageViewController(_ pageViewController: UIPageViewController,
                             didFinishAnimating finished: Bool,
                             previousViewControllers: [UIViewController],
                             transitionCompleted completed: Bool) {
-        
+
         if !completed {
             return
         }
-        
+
         if let currentViewController = pageViewController.viewControllers?.first,
            let index = marketGroupsViewControllers.firstIndex(of: currentViewController) {
             self.selectMarketType(atIndex: index)
@@ -1497,11 +1442,11 @@ extension MatchDetailsViewController: UIPageViewControllerDelegate, UIPageViewCo
             self.selectMarketType(atIndex: 0)
         }
     }
-    
+
 }
 
 extension MatchDetailsViewController: WKNavigationDelegate {
-    
+
     private func recalculateWebview() {
         executeDelayed(1) {
             self.matchFieldWebView.evaluateJavaScript("document.body.scrollHeight", completionHandler: { height, error in
@@ -1514,7 +1459,7 @@ extension MatchDetailsViewController: WKNavigationDelegate {
             })
         }
     }
-    
+
     private func redrawWebView(withHeight heigth: CGFloat) {
         if heigth < 100 {
             self.recalculateWebview()
@@ -1524,7 +1469,7 @@ extension MatchDetailsViewController: WKNavigationDelegate {
             self.isLiveFieldReady = true
         }
     }
-    
+
     func webView(_ webView: WKWebView, didFinish navigation: WKNavigation!) {
         self.matchFieldWebView.evaluateJavaScript("document.readyState", completionHandler: { complete, error in
             if complete != nil {
@@ -1535,92 +1480,92 @@ extension MatchDetailsViewController: WKNavigationDelegate {
             }
         })
     }
-    
+
     func webView(_ webView: WKWebView, didFail navigation: WKNavigation!, withError error: Error) {
-        
+
     }
-    
+
 }
 
 extension MatchDetailsViewController: UIGestureRecognizerDelegate {
-    
+
     func gestureRecognizer(_ gestureRecognizer: UIGestureRecognizer, shouldRecognizeSimultaneouslyWith otherGestureRecognizer: UIGestureRecognizer) -> Bool {
         return true
     }
-    
+
     func gestureRecognizer(_ gestureRecognizer: UIGestureRecognizer, shouldRequireFailureOf otherGestureRecognizer: UIGestureRecognizer) -> Bool {
         return false
     }
-    
+
     func gestureRecognizer(_ gestureRecognizer: UIGestureRecognizer, shouldBeRequiredToFailBy otherGestureRecognizer: UIGestureRecognizer) -> Bool {
         return true
     }
-    
+
 }
 
 extension MatchDetailsViewController: UICollectionViewDelegate, UICollectionViewDataSource, UICollectionViewDelegateFlowLayout {
-    
+
     func numberOfSections(in collectionView: UICollectionView) -> Int {
         return self.viewModel.numberOfStatsSections()
     }
-    
+
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
         return self.viewModel.numberOfStatsRows(forSection: section)
     }
-    
+
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         guard
             let cell = collectionView.dequeueCellType(MatchStatsCollectionViewCell.self, indexPath: indexPath)
         else {
             fatalError()
         }
-        
+
         if let jsonData = self.viewModel.jsonData(forIndexPath: indexPath) {
             cell.setupStatsLine(withjson: jsonData)
         }
-        
+
         if let match = self.viewModel.match {
             cell.setupWithTeams(homeTeamName: match.homeParticipant.name, awayTeamName: match.awayParticipant.name)
         }
-        
+
         if let marketStatsTitle = self.viewModel.marketStatsTitle(forIndexPath: indexPath) {
             cell.setupWithMarketTitle(title: marketStatsTitle)
         }
-        
+
         return cell
     }
-    
+
     func collectionView(_ collectionView: UICollectionView,
                         layout collectionViewLayout: UICollectionViewLayout,
                         minimumInteritemSpacingForSectionAt section: Int) -> CGFloat {
         return 16
     }
-    
+
     func collectionView(_ collectionView: UICollectionView,
                         layout collectionViewLayout: UICollectionViewLayout,
                         minimumLineSpacingForSectionAt section: Int) -> CGFloat {
         return 16
     }
-    
+
     func collectionView(_ collectionView: UICollectionView,
                         layout collectionViewLayout: UICollectionViewLayout,
                         insetForSectionAt section: Int) -> UIEdgeInsets {
         return UIEdgeInsets(top: 0, left: 8, bottom: 0, right: 8)
     }
-    
+
     func collectionView(_ collectionView: UICollectionView,
                         layout collectionViewLayout: UICollectionViewLayout,
                         sizeForItemAt indexPath: IndexPath) -> CGSize {
-        
+
         let screenWidth = UIScreen.main.bounds.size.width
         var width = screenWidth*0.83
-        
+
         if width > 390 {
             width = 390
         }
         return CGSize(width: width, height: collectionView.frame.size.height - 4)
     }
-    
+
 }
 
 extension MatchDetailsViewController: UIScrollViewDelegate {
@@ -1628,7 +1573,7 @@ extension MatchDetailsViewController: UIScrollViewDelegate {
         if scrollView == self.statsCollectionView {
             let screenWidth = UIScreen.main.bounds.size.width
             let width = screenWidth*0.6
-            
+
             if scrollView.contentOffset.x > width {
                 if !self.showingStatsBackSliderView {
                     self.showingStatsBackSliderView = true

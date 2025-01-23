@@ -65,7 +65,7 @@
                 <outlet property="liveDetailsView" destination="lij-S3-MhM" id="IBH-UO-gQK"/>
                 <outlet property="liveTimeLabel" destination="Wh0-1s-CDa" id="pcy-dx-wdL"/>
                 <outlet property="marketGroupsPagedBaseView" destination="8LV-6W-WLu" id="QRI-Se-Osv"/>
-                <outlet property="marketTypesCollectionView" destination="bBf-el-85E" id="ECQ-NU-tsR"/>
+                <outlet property="marketTypesBaseView" destination="bBf-el-85E" id="ECQ-NU-tsR"/>
                 <outlet property="marketsNotAvailableLabel" destination="baT-1t-Vd7" id="bXk-Wu-Pch"/>
                 <outlet property="marketsNotAvailableView" destination="56R-Yf-D3H" id="sPA-s2-sWX"/>
                 <outlet property="marketsStackView" destination="W2u-dp-ZVd" id="att-Gn-YWr"/>
@@ -764,19 +764,13 @@
                                 <constraint firstItem="7pb-Co-fjG" firstAttribute="top" secondItem="cyX-7G-uWo" secondAttribute="top" id="jjp-Zn-JHD"/>
                             </constraints>
                         </view>
-                        <collectionView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" dataMode="none" translatesAutoresizingMaskIntoConstraints="NO" id="bBf-el-85E">
+                        <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="bBf-el-85E">
                             <rect key="frame" x="0.0" y="40" width="711" height="70"/>
                             <color key="backgroundColor" systemColor="systemBackgroundColor"/>
                             <constraints>
                                 <constraint firstAttribute="height" constant="70" id="dsG-q0-bQm"/>
                             </constraints>
-                            <collectionViewFlowLayout key="collectionViewLayout" minimumLineSpacing="10" minimumInteritemSpacing="10" id="F81-9A-dV6">
-                                <size key="itemSize" width="128" height="128"/>
-                                <size key="headerReferenceSize" width="0.0" height="0.0"/>
-                                <size key="footerReferenceSize" width="0.0" height="0.0"/>
-                                <inset key="sectionInset" minX="0.0" minY="0.0" maxX="0.0" maxY="0.0"/>
-                            </collectionViewFlowLayout>
-                        </collectionView>
+                        </view>
                     </subviews>
                 </stackView>
                 <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="8LV-6W-WLu">

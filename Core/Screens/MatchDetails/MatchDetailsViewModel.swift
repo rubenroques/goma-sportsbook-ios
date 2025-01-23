@@ -29,6 +29,8 @@ class MatchDetailsViewModel: NSObject {
 
     private var matchCurrentValueSubject: CurrentValueSubject<LoadableContent<Match>, Never> = .init(.idle)
 
+    var chipsTypeViewModel: ChipsTypeViewModel
+
     var marketGroupsState: CurrentValueSubject<LoadableContent<[MarketGroup]>, Never> = .init(.idle)
     var selectedMarketTypeIndexPublisher: CurrentValueSubject<Int?, Never> = .init(nil)
 
@@ -89,11 +91,11 @@ class MatchDetailsViewModel: NSObject {
         let details = [self.match?.matchTime, self.match?.detailedStatus]
         return details.compactMap({ $0 }).joined(separator: " - ")
     }
-    
+
     var matchDetailedScores: CurrentValueSubject<[String: [String: Score]], Never> = .init([:])
-    
+
     var activePlayerServePublisher: CurrentValueSubject<Match.ActivePlayerServe?, Never> = .init(nil)
-    
+
     private var statsJSON: JSON?
     let matchStatsViewModel: MatchStatsViewModel
 
@@ -101,24 +103,26 @@ class MatchDetailsViewModel: NSObject {
     private var matchDetailsCancellable: AnyCancellable?
     private var matchGroupsCancellable: AnyCancellable?
     private var liveMatchDataCancellable: AnyCancellable?
-    
+
     private var cancellables = Set<AnyCancellable>()
     private var matchDetailsSubscription: ServicesProvider.Subscription?
 
     private var liveDataSubscription: ServicesProvider.Subscription?
-    
+
     var isFromLiveCard: Bool = false
 
     var scrollToTopAction: ((Int) -> Void)?
     var shouldShowTabTooltip: (() -> Void)?
-    
+
     var showMixMatchDefault: Bool = false
 
     init(matchMode: MatchMode = .preLive, match: Match) {
         self.matchId = match.id
         self.matchStatsViewModel = MatchStatsViewModel(matchId: match.id)
-        
+
         self.isFromLiveCard = match.status == .notStarted ? false : true
+
+        self.chipsTypeViewModel = ChipsTypeViewModel(tabs: [], defaultSelectedIndex: nil)
 
         super.init()
 
@@ -130,16 +134,18 @@ class MatchDetailsViewModel: NSObject {
         self.matchId = matchId
         self.matchStatsViewModel = MatchStatsViewModel(matchId: matchId)
 
+        self.chipsTypeViewModel = ChipsTypeViewModel(tabs: [], defaultSelectedIndex: nil)
+
         super.init()
 
         self.connectPublishers()
         self.getMatchDetails()
     }
-    
+
     func forceRefreshData() {
         self.serviceProviderStateCancellable = Env.servicesProvider.eventsConnectionStatePublisher
             .sink(receiveCompletion: { completion in
-                
+
             }, receiveValue: { state in
                 switch state {
                 case .connected:
@@ -150,8 +156,43 @@ class MatchDetailsViewModel: NSObject {
                 }
             })
     }
- 
+
     private func connectPublishers() {
+        
+        // Set a default selected tab
+        self.chipsTypeViewModel.selectTab(at: 0)
+        
+        self.marketGroupsState
+            .receive(on: DispatchQueue.main)
+            .compactMap { (marketGroupsState: LoadableContent<[MarketGroup]>) -> [MarketGroup]? in
+                switch marketGroupsState {
+                case .idle, .loading:
+                    return nil
+                case .failed:
+                    return []
+                case .loaded(let marketGroups):
+                    return marketGroups
+                }
+            }
+            .map { (marketGroupsState: [MarketGroup]) -> [ChipType] in
+                return marketGroupsState.map { item in
+                    let marketTranslatedName = item.translatedName ?? localized("market")
+                    let normalizedTranslatedName = marketTranslatedName.replacingOccurrences(of: "[^a-zA-Z0-9]", with: "_", options: .regularExpression).lowercased()
+                    let marketKey = "market_group_\(normalizedTranslatedName)"
+                    var marketName = localized(marketKey)
+                    if normalizedTranslatedName == "mixmatch" {
+                        marketName = "\(localized("mix_match_mix_string"))\(localized("mix_match_match_string"))"
+                        return ChipType.backgroungImage(title: marketName, iconName: "mix_match_icon", imageName: "mix_match_background_pill")
+                    }
+                    else {
+                        return ChipType.textual(title: marketName)
+                    }
+                }
+            }
+            .sink { [weak self] tabListTypes in
+                self?.chipsTypeViewModel.updateTabs(tabListTypes)
+            }
+            .store(in: &self.cancellables)
 
         self.marketGroupsState
             .receive(on: DispatchQueue.main)
@@ -189,19 +230,19 @@ class MatchDetailsViewModel: NSObject {
 
     private func getMatchDetails() {
         print("MatchDetailsViewModel forceRefreshData")
-        
+
         self.matchDetailsSubscription = nil
         self.liveDataSubscription = nil
-        
+
         self.matchDetailsCancellable?.cancel()
         self.matchDetailsCancellable = nil
-        
+
         self.matchGroupsCancellable?.cancel()
         self.matchGroupsCancellable = nil
-        
+
         self.liveMatchDataCancellable?.cancel()
         self.liveMatchDataCancellable = nil
-        
+
         let eventDetailsPublisher = Env.servicesProvider.subscribeEventDetails(eventId: self.matchId)
 
         // Subscribe to the content of the event details
@@ -235,7 +276,7 @@ class MatchDetailsViewModel: NSObject {
                         return
                     }
                     self.matchCurrentValueSubject.send(.loaded(match))
-                    
+
                 case .disconnected:
                     print("MatchDetailsViewModel getMatchDetails subscribeEventDetails disconnected")
                 }
@@ -260,7 +301,7 @@ class MatchDetailsViewModel: NSObject {
             })
             .compactMap({ $0 })
             .eraseToAnyPublisher()
-        
+
         // Show marketGroups loading
         matchDetailsReceivedPublisher.map({ _ in
             return ()
@@ -332,7 +373,7 @@ class MatchDetailsViewModel: NSObject {
             })
             .store(in: &self.cancellables)
     }
-    
+
     private func subscribeMatchLiveDataUpdates(withId matchId: String, sportAlphaCode: String) {
         Env.servicesProvider.subscribeToLiveDataUpdates(forEventWithId: matchId)
             .receive(on: DispatchQueue.main)
@@ -350,7 +391,7 @@ class MatchDetailsViewModel: NSObject {
                 }
                 self?.liveDataSubscription = nil
             }, receiveValue: { [weak self] (eventSubscribableContent: SubscribableContent<ServicesProvider.EventLiveData>) in
-            
+
                 switch eventSubscribableContent {
                 case .connected(let subscription):
                     self?.liveDataSubscription = subscription
@@ -366,9 +407,9 @@ class MatchDetailsViewModel: NSObject {
                 }
             })
             .store(in: &self.cancellables)
-    
+
     }
-    
+
     func getFieldWidget(isDarkTheme: Bool) {
 
         Env.servicesProvider.getFieldWidget(eventId: self.matchId, isDarkTheme: isDarkTheme)
@@ -409,11 +450,11 @@ class MatchDetailsViewModel: NSObject {
             return nil
         }
     }
-    
+
 }
 
 extension MatchDetailsViewModel {
-    
+
     private static func convertMarketGroups(_ marketGroups: [ServicesProvider.MarketGroup]) -> [MarketGroup] {
         let marketGroups = marketGroups.map { rawMarketGroup in
             MarketGroup(id: rawMarketGroup.id,
@@ -441,26 +482,26 @@ extension MatchDetailsViewModel: UICollectionViewDataSource, UICollectionViewDel
     }
 
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
-        
+
         if let item = self.marketGroup(forIndex: indexPath.row),
            item.id == "99" && item.type == "MixMatch" {
-            
+
             guard
                 let cell = collectionView.dequeueCellType(ListBackgroundCollectionViewCell.self, indexPath: indexPath)
             else {
                 fatalError()
             }
-            
+
             cell.isCustomDesign = true
-            
+
             let marketTranslatedName = item.translatedName ?? localized("market")
-            
+
             let normalizedTranslatedName = marketTranslatedName.replacingOccurrences(of: "[^a-zA-Z0-9]", with: "_", options: .regularExpression).lowercased()
-                        
+
             let marketName = "\(localized("mix_match_mix_string"))\(localized("mix_match_match_string"))"
-            
+
             cell.setupInfo(title: marketName, iconName: "mix_match_icon", backgroundName: "mix_match_background_pill")
-            
+
             if let index = self.selectedMarketTypeIndexPublisher.value, index == indexPath.row {
                 cell.setSelectedType(true)
                 self.shouldShowTabTooltip?()
@@ -468,7 +509,7 @@ extension MatchDetailsViewModel: UICollectionViewDataSource, UICollectionViewDel
             else {
                 cell.setSelectedType(false)
             }
-            
+
             return cell
         }
         else {
@@ -478,39 +519,39 @@ extension MatchDetailsViewModel: UICollectionViewDataSource, UICollectionViewDel
             else {
                 fatalError()
             }
-            
+
             let marketTranslatedName = item.translatedName ?? localized("market")
-            
+
             let normalizedTranslatedName = marketTranslatedName.replacingOccurrences(of: "[^a-zA-Z0-9]", with: "_", options: .regularExpression).lowercased()
-            
+
             let marketKey = "market_group_\(normalizedTranslatedName)"
-            
+
             var marketName = localized(marketKey)
-            
+
             if normalizedTranslatedName == "mixmatch" {
                 marketName = "\(localized("mix_match_mix_string"))\(localized("mix_match_match_string"))"
             }
-            
+
             cell.isCustomDesign = true
-            
+
             cell.setupWithTitle(marketName)
-            
+
             if let index = self.selectedMarketTypeIndexPublisher.value, index == indexPath.row {
                 cell.setSelectedType(true)
             }
             else {
                 cell.setSelectedType(false)
             }
-            
+
             return cell
         }
     }
-    
+
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
         let previousSelectionValue = self.selectedMarketTypeIndexPublisher.value ?? -1
         if indexPath.row != previousSelectionValue {
             self.selectedMarketTypeIndexPublisher.send(indexPath.row)
-            
+
             // Perform scroll with the same duration as UIPageViewController's default transition (0.3s)
             UIView.animate(withDuration: 0.3, delay: 0, options: .curveEaseInOut) {
                 collectionView.scrollToItem(at: indexPath, at: .centeredHorizontally, animated: false)
