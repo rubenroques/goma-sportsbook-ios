@@ -26,39 +26,55 @@
 
 ### Login
 **Name:** `login`
-**Purpose:** Authenticate user and establish session
-**Required Information:**
+
+
+*Purpose:* Authenticate user and establish session
+
+
+*Required Information:*
 - Username
 - Password
 
-**Returns:** `UserProfile` - Complete user profile information including preferences and status
+
+*Returns:* `UserProfile` - Complete user profile information including preferences and status
 
 ### Logout
 **Name:** `logout`
-**Purpose:** End user session securely
-**Required Information:** None
-**Returns:** `BasicResponse` - Simple success/failure response
+
+*Purpose:* End user session securely
+
+*Required Information:* None
+
+*Returns:* `BasicResponse` - Simple success/failure response
 
 ### Get Password Policy
 **Name:** `getPasswordPolicy`
-**Purpose:** Retrieve password requirements and rules
-**Required Information:** None
-**Returns:** `PasswordPolicy` - Password requirements and constraints
+
+*Purpose:* Retrieve password requirements and rules
+
+*Required Information:* None
+
+*Returns:* `PasswordPolicy` - Password requirements and constraints
 
 ## User Profile Management
 
 ### Get User Profile
 **Name:** `getUserProfile`
-**Purpose:** Retrieve current user's profile information
-**Required Information:**
+
+*Purpose:* Retrieve current user's profile information
+
+*Required Information:*
 - KYC Expiration (optional)
 
-**Returns:** `UserProfile` - User's complete profile information and account status
+
+*Returns:* `UserProfile` - User's complete profile information and account status
 
 ### Update User Profile
 **Name:** `updateUserProfile`
-**Purpose:** Modify user's profile information
-**Required Information:**
+
+*Purpose:* Modify user's profile information
+
+*Required Information:*
 - Username (optional)
 - Email (optional)
 - First Name (optional)
@@ -72,66 +88,87 @@
 - Country (optional)
 - Card ID (optional)
 
-**Returns:** `Bool` - Success or failure of the update operation
+
+*Returns:* `Bool` - Success or failure of the update operation
 
 ### Update Extra Info
 **Name:** `updateExtraInfo`
-**Purpose:** Update additional user information
-**Required Information:**
+
+*Purpose:* Update additional user information
+
+*Required Information:*
 - Place of Birth (optional)
 - Secondary Address (optional)
 
-**Returns:** `BasicResponse` - Simple success/failure response
+
+*Returns:* `BasicResponse` - Simple success/failure response
 
 ### Update Device Identifier
 **Name:** `updateDeviceIdentifier`
-**Purpose:** Update device information for the user
-**Required Information:**
+
+*Purpose:* Update device information for the user
+
+*Required Information:*
 - Device Identifier
 - App Version
 
-**Returns:** `BasicResponse` - Simple success/failure response
+
+*Returns:* `BasicResponse` - Simple success/failure response
 
 ### Sign Up Completion
 **Name:** `signUpCompletion`
-**Purpose:** Completes the signup process with additional user information
-**Required Information:**
+
+*Purpose:* Completes the signup process with additional user information
+
+*Required Information:*
 - Form containing additional user information
 
-**Returns:** `Bool` - Success status of signup completion
+
+*Returns:* `Bool` - Success status of signup completion
 
 ### Forgot Password
 **Name:** `forgotPassword`
-**Purpose:** Initiates the password recovery process
-**Required Information:**
+
+*Purpose:* Initiates the password recovery process
+
+*Required Information:*
 - Email
 - Secret Question (optional)
 - Secret Answer (optional)
 
-**Returns:** `Bool` - Password recovery initiation success status
+
+*Returns:* `Bool` - Password recovery initiation success status
 
 ## Registration
 
 ### Check Email Registered
 **Name:** `checkEmailRegistered`
-**Purpose:** Verify if an email is already in use
-**Required Information:**
+
+*Purpose:* Verify if an email is already in use
+
+*Required Information:*
 - Email address
 
-**Returns:** `Bool` - True if email exists, false otherwise
+
+*Returns:* `Bool` - True if email exists, false otherwise
 
 ### Validate Username
 **Name:** `validateUsername`
-**Purpose:** Check username availability and get suggestions
-**Required Information:**
+
+*Purpose:* Check username availability and get suggestions
+
+*Required Information:*
 - Username
 
-**Returns:** `UsernameValidation` - Username availability status and suggestions if taken
+
+*Returns:* `UsernameValidation` - Username availability status and suggestions if taken
 
 ### Simple Sign Up
 **Name:** `simpleSignUp`
-**Purpose:** Quick registration with basic information
-**Required Information:**
+
+*Purpose:* Quick registration with basic information
+
+*Required Information:*
 - Email
 - Username
 - Password
@@ -141,12 +178,15 @@
 - Country ISO Code
 - Currency Code
 
-**Returns:** `Bool` - Registration success status
+
+*Returns:* `Bool` - Registration success status
 
 ### Complete Sign Up
 **Name:** `signUp`
-**Purpose:** Full registration with complete user information
-**Required Information:**
+
+*Purpose:* Full registration with complete user information
+
+*Required Information:*
 - Email
 - Username
 - Password
@@ -159,33 +199,43 @@
 - Marketing Preferences
 - Consent Information
 
-**Returns:** `SignUpResponse` - Detailed registration response with status and any errors
+
+*Returns:* `SignUpResponse` - Detailed registration response with status and any errors
 
 ### Sign Up Confirmation
 **Name:** `signupConfirmation`
-**Purpose:** Verify email during registration process
-**Required Information:**
+
+*Purpose:* Verify email during registration process
+
+*Required Information:*
 - Email
 - Confirmation Code
 
-**Returns:** `Bool` - Confirmation success status
+
+*Returns:* `Bool` - Confirmation success status
 
 ### Mobile Verification
 **Name:** `getMobileVerificationCode`
-**Purpose:** Request verification code for mobile number
-**Required Information:**
+
+*Purpose:* Request verification code for mobile number
+
+*Required Information:*
 - Mobile Number
 
-**Returns:** `MobileVerifyResponse` - Verification request details and status
+
+*Returns:* `MobileVerifyResponse` - Verification request details and status
 
 ### Verify Mobile Code
 **Name:** `verifyMobileCode`
-**Purpose:** Validate mobile verification code
-**Required Information:**
+
+*Purpose:* Validate mobile verification code
+
+*Required Information:*
 - Verification Code
 - Request ID
 
-**Returns:** `MobileVerifyResponse` - Verification success status
+
+*Returns:* `MobileVerifyResponse` - Verification success status
 
 # Financial Services
 
@@ -193,130 +243,175 @@
 
 ### Get User Balance
 **Name:** `getUserBalance`
-**Purpose:** Retrieve current wallet balance
-**Required Information:** None
-**Returns:** `UserWallet` - Current balance and wallet status information
+
+*Purpose:* Retrieve current wallet balance
+
+*Required Information:* None
+
+*Returns:* `UserWallet` - Current balance and wallet status information
 
 ### Get User Cashback Balance
 **Name:** `getUserCashbackBalance`
-**Purpose:** Check available cashback balance
-**Required Information:** None
-**Returns:** `CashbackBalance` - Available cashback amount and status
+
+*Purpose:* Check available cashback balance
+
+*Required Information:* None
+
+*Returns:* `CashbackBalance` - Available cashback amount and status
 
 ## Deposits
 
 ### Get Payment Methods
 **Name:** `getPayments`
-**Purpose:** List available deposit methods
-**Required Information:** None
-**Returns:** `SimplePaymentMethodsResponse` - List of available payment methods and their details
+
+*Purpose:* List available deposit methods
+
+*Required Information:* None
+
+*Returns:* `SimplePaymentMethodsResponse` - List of available payment methods and their details
 
 ### Process Deposit
 **Name:** `processDeposit`
-**Purpose:** Initiate a deposit transaction
-**Required Information:**
+
+*Purpose:* Initiate a deposit transaction
+
+*Required Information:*
 - Payment Method
 - Amount
 - Payment Option
 
-**Returns:** `ProcessDepositResponse` - Deposit transaction details and status
+
+*Returns:* `ProcessDepositResponse` - Deposit transaction details and status
 
 ### Update Payment
 **Name:** `updatePayment`
-**Purpose:** Update payment transaction details
-**Required Information:**
+
+*Purpose:* Update payment transaction details
+
+*Required Information:*
 - Amount
 - Payment ID
 - Payment Type
 - Return URL (optional)
 - Card Details (optional)
 
-**Returns:** `UpdatePaymentResponse` - Updated payment transaction status
+
+*Returns:* `UpdatePaymentResponse` - Updated payment transaction status
 
 ### Cancel Deposit
 **Name:** `cancelDeposit`
-**Purpose:** Cancel a pending deposit
-**Required Information:**
+
+*Purpose:* Cancel a pending deposit
+
+*Required Information:*
 - Payment ID
 
-**Returns:** `BasicResponse` - Cancellation confirmation
+
+*Returns:* `BasicResponse` - Cancellation confirmation
 
 ### Check Payment Status
 **Name:** `checkPaymentStatus`
-**Purpose:** Verify status of a payment
-**Required Information:**
+
+*Purpose:* Verify status of a payment
+
+*Required Information:*
 - Payment Method
 - Payment ID
 
-**Returns:** `PaymentStatusResponse` - Current status of the payment
+
+*Returns:* `PaymentStatusResponse` - Current status of the payment
 
 ## Withdrawals
 
 ### Get Withdrawal Methods
 **Name:** `getWithdrawalMethods`
-**Purpose:** List available withdrawal methods
-**Required Information:** None
-**Returns:** `[WithdrawalMethod]` - List of available withdrawal methods
+
+*Purpose:* List available withdrawal methods
+
+*Required Information:* None
+
+*Returns:* `[WithdrawalMethod]` - List of available withdrawal methods
 
 ### Process Withdrawal
 **Name:** `processWithdrawal`
-**Purpose:** Initiate a withdrawal request
-**Required Information:**
+
+*Purpose:* Initiate a withdrawal request
+
+*Required Information:*
 - Payment Method
 - Amount
 - Conversion ID (optional)
 
-**Returns:** `ProcessWithdrawalResponse` - Withdrawal request status and details
+
+*Returns:* `ProcessWithdrawalResponse` - Withdrawal request status and details
 
 ### Prepare Withdrawal
 **Name:** `prepareWithdrawal`
-**Purpose:** Setup withdrawal request
-**Required Information:**
+
+*Purpose:* Setup withdrawal request
+
+*Required Information:*
 - Payment Method
 
-**Returns:** `PrepareWithdrawalResponse` - Withdrawal preparation status
+
+*Returns:* `PrepareWithdrawalResponse` - Withdrawal preparation status
 
 ### Get Pending Withdrawals
 **Name:** `getPendingWithdrawals`
-**Purpose:** List all pending withdrawal requests
-**Required Information:** None
-**Returns:** `[PendingWithdrawal]` - List of pending withdrawal transactions
+
+*Purpose:* List all pending withdrawal requests
+
+*Required Information:* None
+
+*Returns:* `[PendingWithdrawal]` - List of pending withdrawal transactions
 
 ### Cancel Withdrawal
 **Name:** `cancelWithdrawal`
-**Purpose:** Cancel a pending withdrawal
-**Required Information:**
+
+*Purpose:* Cancel a pending withdrawal
+
+*Required Information:*
 - Payment ID
 
-**Returns:** `CancelWithdrawalResponse` - Withdrawal cancellation status
+
+*Returns:* `CancelWithdrawalResponse` - Withdrawal cancellation status
 
 ## Transaction History
 
 ### Get Transaction History
 **Name:** `getTransactionsHistory`
-**Purpose:** Retrieve transaction history
-**Required Information:**
+
+*Purpose:* Retrieve transaction history
+
+*Required Information:*
 - Start Date
 - End Date
 - Transaction Types (optional)
 - Page Number (optional)
 
-**Returns:** `[TransactionDetail]` - List of transaction records
+
+*Returns:* `[TransactionDetail]` - List of transaction records
 
 ### Get Payment Information
 **Name:** `getPaymentInformation`
-**Purpose:** Retrieve saved payment methods
-**Required Information:** None
-**Returns:** `PaymentInformation` - Saved payment method details
+
+*Purpose:* Retrieve saved payment methods
+
+*Required Information:* None
+
+*Returns:* `PaymentInformation` - Saved payment method details
 
 ### Add Payment Information
 **Name:** `addPaymentInformation`
-**Purpose:** Save new payment method
-**Required Information:**
+
+*Purpose:* Save new payment method
+
+*Required Information:*
 - Payment Type
 - Payment Fields
 
-**Returns:** `AddPaymentInformationResponse` - Payment method addition status
+
+*Returns:* `AddPaymentInformationResponse` - Payment method addition status
 
 # Gaming Services
 
@@ -324,127 +419,171 @@
 
 ### Update Weekly Deposit Limits
 **Name:** `updateWeeklyDepositLimits`
-**Purpose:** Set deposit limits for responsible gaming
-**Required Information:**
+
+*Purpose:* Set deposit limits for responsible gaming
+
+*Required Information:*
 - New Limit Amount
 
-**Returns:** `Bool` - Limit update success status
+
+*Returns:* `Bool` - Limit update success status
 
 ### Update Weekly Betting Limits
 **Name:** `updateWeeklyBettingLimits`
-**Purpose:** Set betting limits for responsible gaming
-**Required Information:**
+
+*Purpose:* Set betting limits for responsible gaming
+
+*Required Information:*
 - New Limit Amount
 
-**Returns:** `Bool` - Limit update success status
+
+*Returns:* `Bool` - Limit update success status
 
 ### Update Responsible Gaming Limits
 **Name:** `updateResponsibleGamingLimits`
-**Purpose:** Set comprehensive gaming limits
-**Required Information:**
+
+*Purpose:* Set comprehensive gaming limits
+
+*Required Information:*
 - New Limit Amount
 - Limit Type
 - Rolling Weekly Limits Flag
 
-**Returns:** `Bool` - Limit update success status
+
+*Returns:* `Bool` - Limit update success status
 
 ### Get Personal Deposit Limits
 **Name:** `getPersonalDepositLimits`
-**Purpose:** View current deposit limits
-**Required Information:** None
-**Returns:** `PersonalDepositLimitResponse` - Current deposit limit settings
+
+*Purpose:* View current deposit limits
+
+*Required Information:* None
+
+*Returns:* `PersonalDepositLimitResponse` - Current deposit limit settings
 
 ### Get All Limits
 **Name:** `getLimits`
-**Purpose:** View all active gaming limits
-**Required Information:** None
-**Returns:** `LimitsResponse` - All current limit settings
+
+*Purpose:* View all active gaming limits
+
+*Required Information:* None
+
+*Returns:* `LimitsResponse` - All current limit settings
 
 ### Get Responsible Gaming Limits
 **Name:** `getResponsibleGamingLimits`
-**Purpose:** View responsible gaming limits
-**Required Information:**
+
+*Purpose:* View responsible gaming limits
+
+*Required Information:*
 - Period Types (optional)
 - Limit Types (optional)
 
-**Returns:** `ResponsibleGamingLimitsResponse` - Current responsible gaming limits
+
+*Returns:* `ResponsibleGamingLimitsResponse` - Current responsible gaming limits
 
 ### Lock Player Account
 **Name:** `lockPlayer`
-**Purpose:** Self-exclude from gaming activities
-**Required Information:**
+
+*Purpose:* Self-exclude from gaming activities
+
+*Required Information:*
 - Is Permanent (optional)
 - Lock Period Unit (optional)
 - Lock Period (optional)
 
-**Returns:** `BasicResponse` - Account lock confirmation
+
+*Returns:* `BasicResponse` - Account lock confirmation
 
 ## Bonuses & Rewards
 
 ### Get Granted Bonuses
 **Name:** `getGrantedBonuses`
-**Purpose:** View active and historical bonuses
-**Required Information:** None
-**Returns:** `[GrantedBonus]` - List of granted bonuses
+
+*Purpose:* View active and historical bonuses
+
+*Required Information:* None
+
+*Returns:* `[GrantedBonus]` - List of granted bonuses
 
 ### Redeem Bonus
 **Name:** `redeemBonus`
-**Purpose:** Activate a bonus code
-**Required Information:**
+
+*Purpose:* Activate a bonus code
+
+*Required Information:*
 - Bonus Code
 
-**Returns:** `RedeemBonusResponse` - Bonus redemption status
+
+*Returns:* `RedeemBonusResponse` - Bonus redemption status
 
 ### Get Available Bonuses
 **Name:** `getAvailableBonuses`
-**Purpose:** View bonuses available to claim
-**Required Information:** None
-**Returns:** `[AvailableBonus]` - List of available bonuses
+
+*Purpose:* View bonuses available to claim
+
+*Required Information:* None
+
+*Returns:* `[AvailableBonus]` - List of available bonuses
 
 ### Redeem Available Bonus
 **Name:** `redeemAvailableBonus`
-**Purpose:** Claim an available bonus
-**Required Information:**
+
+*Purpose:* Claim an available bonus
+
+*Required Information:*
 - Party ID
 - Bonus Code
 
-**Returns:** `BasicResponse` - Bonus claim status
+
+*Returns:* `BasicResponse` - Bonus claim status
 
 ### Cancel Bonus
 **Name:** `cancelBonus`
-**Purpose:** Cancel an active bonus
-**Required Information:**
+
+*Purpose:* Cancel an active bonus
+
+*Required Information:*
 - Bonus ID
 
-**Returns:** `BasicResponse` - Bonus cancellation status
+
+*Returns:* `BasicResponse` - Bonus cancellation status
 
 ### Opt Out Bonus
 **Name:** `optOutBonus`
-**Purpose:** Opt out from bonus programs
-**Required Information:**
+
+*Purpose:* Opt out from bonus programs
+
+*Required Information:*
 - Party ID
 - Bonus Code
 
-**Returns:** `BasicResponse` - Opt-out confirmation
+
+*Returns:* `BasicResponse` - Opt-out confirmation
 
 ## Support Services
 
 ### Contact Us
 **Name:** `contactUs`
-**Purpose:** Send general contact request
-**Required Information:**
+
+*Purpose:* Send general contact request
+
+*Required Information:*
 - First Name
 - Last Name
 - Email
 - Subject
 - Message
 
-**Returns:** `BasicResponse` - Contact request confirmation
+
+*Returns:* `BasicResponse` - Contact request confirmation
 
 ### Contact Support
 **Name:** `contactSupport`
-**Purpose:** Send detailed support request
-**Required Information:**
+
+*Purpose:* Send detailed support request
+
+*Required Information:*
 - User Identifier
 - First Name
 - Last Name
@@ -454,127 +593,176 @@
 - Message
 - Login Status
 
-**Returns:** `SupportResponse` - Support request status
+
+*Returns:* `SupportResponse` - Support request status
 
 ## Location Services
 
 ### Get All Countries
 **Name:** `getAllCountries`
-**Purpose:** List all supported countries
-**Required Information:** None
-**Returns:** `[Country]` - List of all countries
+
+*Purpose:* List all supported countries
+
+*Required Information:* None
+
+*Returns:* `[Country]` - List of all countries
 
 ### Get Available Countries
 **Name:** `getCountries`
-**Purpose:** List countries available for registration
-**Required Information:** None
-**Returns:** `[Country]` - List of available countries
+
+*Purpose:* List countries available for registration
+
+*Required Information:* None
+
+*Returns:* `[Country]` - List of available countries
 
 ### Get Current Country
 **Name:** `getCurrentCountry`
-**Purpose:** Get user's current country
-**Required Information:** None
-**Returns:** `Country?` - Current country information
+
+*Purpose:* Get user's current country
+
+*Required Information:* None
+
+*Returns:* `Country?` - Current country information
 
 ## Referral Program
 
 ### Get Referral Link
 **Name:** `getReferralLink`
-**Purpose:** Get user's unique referral link
-**Required Information:** None
-**Returns:** `ReferralLink` - Referral link information
+
+*Purpose:* Get user's unique referral link
+
+*Required Information:* None
+
+*Returns:* `ReferralLink` - Referral link information
 
 ### Get Referees
 **Name:** `getReferees`
-**Purpose:** List referred users
-**Required Information:** None
-**Returns:** `[Referee]` - List of referred users and their status
+
+*Purpose:* List referred users
+
+*Required Information:* None
+
+*Returns:* `[Referee]` - List of referred users and their status
 
 # Identity Verification
 
 ### Get Sumsub Access Token
 **Name:** `getSumsubAccessToken`
-**Purpose:** Retrieves an access token for Sumsub identity verification service
-**Required Information:**
+
+*Purpose:* Retrieves an access token for Sumsub identity verification service
+
+*Required Information:*
 - User ID
 - Level Name
 
-**Returns:** `AccessTokenResponse` - Access token for identity verification
+
+*Returns:* `AccessTokenResponse` - Access token for identity verification
 
 ### Get Sumsub Applicant Data
 **Name:** `getSumsubApplicantData`
-**Purpose:** Retrieves applicant verification data from Sumsub
-**Required Information:**
+
+*Purpose:* Retrieves applicant verification data from Sumsub
+
+*Required Information:*
 - User ID
 
-**Returns:** `ApplicantDataResponse` - Detailed applicant verification data
+
+*Returns:* `ApplicantDataResponse` - Detailed applicant verification data
 
 ### Generate Document Type Token
 **Name:** `generateDocumentTypeToken`
-**Purpose:** Generates a token for uploading a specific type of document
-**Required Information:**
+
+*Purpose:* Generates a token for uploading a specific type of document
+
+*Required Information:*
 - Document Type
 
-**Returns:** `AccessTokenResponse` - Document upload token
+
+*Returns:* `AccessTokenResponse` - Document upload token
 
 ### Check Documentation Data
 **Name:** `checkDocumentationData`
-**Purpose:** Checks the status of user's submitted documentation
-**Required Information:** None
-**Returns:** `ApplicantDataResponse` - Current status of user's documentation verification
+
+*Purpose:* Checks the status of user's submitted documentation
+
+*Required Information:* None
+
+*Returns:* `ApplicantDataResponse` - Current status of user's documentation verification
 
 # Documents
 
 ### Get Document Types
 **Name:** `getDocumentTypes`
-**Purpose:** Retrieves available document types for verification
-**Required Information:** None
-**Returns:** `DocumentTypesResponse` - List of available document types
+
+*Purpose:* Retrieves available document types for verification
+
+*Required Information:* None
+
+*Returns:* `DocumentTypesResponse` - List of available document types
 
 ### Get User Documents
 **Name:** `getUserDocuments`
-**Purpose:** Retrieves user's uploaded documents
-**Required Information:** None
-**Returns:** `UserDocumentsResponse` - List of user's uploaded documents
+
+*Purpose:* Retrieves user's uploaded documents
+
+*Required Information:* None
+
+*Returns:* `UserDocumentsResponse` - List of user's uploaded documents
 
 ### Upload User Document
 **Name:** `uploadUserDocument`
-**Purpose:** Uploads a single user verification document
-**Required Information:**
+
+*Purpose:* Uploads a single user verification document
+
+*Required Information:*
 - Document Type
 - File Data
 - File Name
 
-**Returns:** `UploadDocumentResponse` - Upload status
+
+*Returns:* `UploadDocumentResponse` - Upload status
 
 ### Upload Multiple User Documents
 **Name:** `uploadMultipleUserDocuments`
-**Purpose:** Uploads multiple user verification documents
-**Required Information:**
+
+*Purpose:* Uploads multiple user verification documents
+
+*Required Information:*
 - Document Type
 - Files (Dictionary of filename to file data pairs)
 
-**Returns:** `UploadDocumentResponse` - Upload status
+
+*Returns:* `UploadDocumentResponse` - Upload status
 
 # Consent Management
 
 ### Get All Consents
 **Name:** `getAllConsents`
-**Purpose:** Retrieves all available consent types and their information
-**Required Information:** None
-**Returns:** `[ConsentInfo]` - Array of consent information including mandatory and optional consents
+
+*Purpose:* Retrieves all available consent types and their information
+
+*Required Information:* None
+
+*Returns:* `[ConsentInfo]` - Array of consent information including mandatory and optional consents
 
 ### Get User Consents
 **Name:** `getUserConsents`
-**Purpose:** Retrieves the user's current consent statuses
-**Required Information:** None
-**Returns:** `[UserConsent]` - Array of user consents with their current status
+
+*Purpose:* Retrieves the user's current consent statuses
+
+*Required Information:* None
+
+*Returns:* `[UserConsent]` - Array of user consents with their current status
 
 ### Set User Consents
 **Name:** `setUserConsents`
-**Purpose:** Updates user consent statuses for specified consent versions
-**Required Information:**
+
+*Purpose:* Updates user consent statuses for specified consent versions
+
+*Required Information:*
 - Consent Version IDs (optional)
 - Unconsent Version IDs (optional)
 
-**Returns:** `BasicResponse` - Consent update status
+
+*Returns:* `BasicResponse` - Consent update status
