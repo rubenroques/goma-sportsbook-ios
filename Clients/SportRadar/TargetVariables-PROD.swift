@@ -39,6 +39,10 @@ struct TargetVariables: SportsbookTarget {
         return .normal
     }
 
+    static var competitionListStyle: CompetitionListStyle {
+        return .toggle
+    }
+
     static var defaultOddsValueType: OddsValueType {
         return .allOdds
     }
@@ -74,7 +78,7 @@ struct TargetVariables: SportsbookTarget {
     static var serviceProviderEnvironment: EnvironmentType {
         return .prod
     }
-    
+
     static var supportedLanguages: [SportsbookSupportedLanguage] {
         return [SportsbookSupportedLanguage.french]
     }
@@ -82,14 +86,14 @@ struct TargetVariables: SportsbookTarget {
     static var clientBaseUrl: String {
         return "https://betsson.fr"
     }
-    
+
     static func generatePromotionsPageUrlString(forAppLanguage appLanguage: String?, isDarkTheme: Bool?) -> String {
         let baseUrl = "https://sportradar.gomadevelopment.pt"
         let isDarkThemeString = isDarkTheme?.description ?? ""
         let urlString = "\(baseUrl)/\(appLanguage ?? "")/in-app/promotions?dark=\(isDarkThemeString)"
         return urlString
     }
-    
+
     static var appStoreUrl: String? {
         return "https://apps.apple.com/"
     }
@@ -97,13 +101,13 @@ struct TargetVariables: SportsbookTarget {
     static var secundaryMarketSpecsUrl: String? {
         return "https://goma-uat.betsson.fr/secondary_markets_config.json"
     }
-    
+
     static var knowYourClientLevels: [KnowYourCustomerLevel: String] {
         return [.identification: "kyc-level-1-id-verification-UAT",
                 .proofOfAddress: "kyc-level-2-poa-verification-UAT",
                 .bankAccountIdentification: "RIB Verification"]
     }
-    
+
     static var localizationOverrides: [String: String] {
         return [
             "anj_authorization_text": "SportRadar.fr est édité par SportRadar, société de droit maltais, titulaire des licences n# délivrées par l'ANJ le 01/01/2025",

@@ -19,11 +19,21 @@ class CompetitionFilterHeaderView: UITableViewHeaderFooterView {
         return baseView
     }()
 
+    private lazy var iconLabelStackView: UIStackView = {
+        let stackView = UIStackView()
+        stackView.axis = .horizontal
+        stackView.spacing = 6
+        stackView.alignment = .center
+        stackView.translatesAutoresizingMaskIntoConstraints = false
+        return stackView
+    }()
+
     private lazy var iconImageView: UIImageView = {
         var imageView = UIImageView()
         imageView.translatesAutoresizingMaskIntoConstraints = false
         imageView.image = UIImage(named: "country_flag_240")
-        imageView.contentMode = .scaleAspectFit
+        imageView.contentMode = .scaleAspectFill
+        imageView.layer.borderWidth = 0.5
         return imageView
     }()
 
@@ -106,7 +116,7 @@ class CompetitionFilterHeaderView: UITableViewHeaderFooterView {
 
     override init(reuseIdentifier: String?) {
         super.init(reuseIdentifier: reuseIdentifier)
-    
+
         self.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(tapHeader)))
 
         self.setupSubviews()
@@ -145,6 +155,7 @@ class CompetitionFilterHeaderView: UITableViewHeaderFooterView {
         self.section = nil
         self.isExpanded = false
         self.viewModel = nil
+
         self.iconImageView.image = nil
     }
 
@@ -170,9 +181,8 @@ class CompetitionFilterHeaderView: UITableViewHeaderFooterView {
             arrowImageView.image = UIImage(named: "arrow_down_icon")
         }
 
-        self.iconImageView.layer.cornerRadius = 18 / 2
+        self.iconImageView.layer.cornerRadius = self.iconImageView.frame.height / 2
         self.iconImageView.layer.masksToBounds = true
-
     }
 
     func setupSubviews() {
@@ -183,9 +193,11 @@ class CompetitionFilterHeaderView: UITableViewHeaderFooterView {
         self.selectedFiltersBaseView.addSubview(self.selectedFiltersLabel)
         self.selectedFiltersBaseView.isHidden = true
 
+        self.iconLabelStackView.addArrangedSubview(self.iconImageView)
+        self.iconLabelStackView.addArrangedSubview(self.titleLabel)
+
         self.addSubview(self.baseView)
-        self.baseView.addSubview(self.iconImageView)
-        self.baseView.addSubview(self.titleLabel)
+        self.baseView.addSubview(self.iconLabelStackView)
         self.baseView.addSubview(self.arrowImageView)
         self.baseView.addSubview(self.selectedFiltersBaseView)
 
@@ -197,27 +209,20 @@ class CompetitionFilterHeaderView: UITableViewHeaderFooterView {
 
             self.baseView.heightAnchor.constraint(greaterThanOrEqualToConstant: 56),
 
-            self.baseView.leadingAnchor.constraint(equalTo: titleLabel.leadingAnchor, constant: -20),
-//
-            self.baseView.centerYAnchor.constraint(equalTo: titleLabel.centerYAnchor, constant: -1),
-//            self.baseView.bottomAnchor.constraint(equalTo: titleLabel.bottomAnchor, constant: 4),
-
-            self.iconImageView.leadingAnchor.constraint(equalTo: self.baseView.leadingAnchor, constant: 20),
             self.iconImageView.widthAnchor.constraint(equalToConstant: 18),
             self.iconImageView.heightAnchor.constraint(equalTo: self.iconImageView.widthAnchor),
-            self.iconImageView.centerYAnchor.constraint(equalTo: self.titleLabel.centerYAnchor),
 
-//            self.titleLabel.leadingAnchor.constraint(equalTo: self.iconImageView.trailingAnchor, constant: 8),
-            self.titleLabel.trailingAnchor.constraint(equalTo: arrowImageView.leadingAnchor, constant: -6),
-            self.titleLabel.bottomAnchor.constraint(equalTo: self.baseView.bottomAnchor, constant: -4),
+            self.iconLabelStackView.leadingAnchor.constraint(equalTo: self.baseView.leadingAnchor, constant: 20),
+            self.iconLabelStackView.centerYAnchor.constraint(equalTo: self.baseView.centerYAnchor),
+            self.baseView.bottomAnchor.constraint(equalTo: self.titleLabel.bottomAnchor, constant: 4),
 
             self.arrowImageView.widthAnchor.constraint(equalToConstant: 14),
-            self.arrowImageView.widthAnchor.constraint(equalTo: arrowImageView.heightAnchor),
-            self.arrowImageView.centerYAnchor.constraint(equalTo: baseView.centerYAnchor, constant: 1),
-            self.arrowImageView.trailingAnchor.constraint(equalTo: baseView.trailingAnchor, constant: -20),
+            self.arrowImageView.widthAnchor.constraint(equalTo: self.arrowImageView.heightAnchor),
+            self.arrowImageView.centerYAnchor.constraint(equalTo: self.baseView.centerYAnchor, constant: 1),
+            self.arrowImageView.trailingAnchor.constraint(equalTo: self.baseView.trailingAnchor, constant: -20),
 
             self.selectedFiltersBaseView.trailingAnchor.constraint(equalTo: self.arrowImageView.leadingAnchor, constant: -8),
-            self.selectedFiltersBaseView.centerYAnchor.constraint(equalTo: baseView.centerYAnchor, constant: 1),
+            self.selectedFiltersBaseView.centerYAnchor.constraint(equalTo: self.baseView.centerYAnchor, constant: 1),
             self.selectedFiltersBaseView.widthAnchor.constraint(equalTo: self.selectedFiltersBaseView.heightAnchor),
             self.selectedFiltersBaseView.widthAnchor.constraint(equalToConstant: 24),
 
@@ -242,6 +247,7 @@ class CompetitionFilterHeaderView: UITableViewHeaderFooterView {
         self.selectedFiltersLabel.textColor = UIColor.App.buttonTextPrimary
 
         self.iconImageView.backgroundColor = .clear
+        self.iconImageView.layer.borderColor = UIColor.App.highlightPrimaryContrast.cgColor
     }
 
     func configure(viewModel: CompetitionFilterSectionViewModel) {
@@ -262,7 +268,7 @@ class CompetitionFilterHeaderView: UITableViewHeaderFooterView {
         }
 
         // TEMP
-        self.iconImageView.isHidden = true
+        // self.iconImageView.isHidden = true
     }
 
 }

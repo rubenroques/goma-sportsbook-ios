@@ -29,6 +29,8 @@ protocol SportsbookTarget {
     static var supportedCardStyles: [CardsStyle] { get }
     static var defaultCardStyle: CardsStyle { get }
     
+    static var competitionListStyle: CompetitionListStyle { get }
+    
     static var serviceProviderType: ServiceProviderType { get }
 
     static var homeTemplateBuilder: HomeTemplateBuilderType { get }
@@ -120,6 +122,10 @@ extension SportsbookTarget {
         return .normal
     }
 
+    static var competitionListStyle: CompetitionListStyle {
+        return .toggle
+    }
+    
     static var shouldUserBlurEffectTabBar: Bool {
         return false
     }

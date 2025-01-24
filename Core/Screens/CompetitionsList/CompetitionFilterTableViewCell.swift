@@ -8,6 +8,11 @@
 import UIKit
 import Combine
 
+enum CompetitionFilterCellMode {
+    case toggle
+    case navigate
+}
+
 class CompetitionFilterCellViewModel {
 
     var id: String
@@ -16,14 +21,16 @@ class CompetitionFilterCellViewModel {
     var isSelected: Bool
     var isLastCell: Bool
     var country: Country?
+    var mode: CompetitionFilterCellMode
 
-    init(competition: Competition, locationId: String, isSelected: Bool, isLastCell: Bool, country: Country?) {
+    init(competition: Competition, locationId: String, isSelected: Bool, isLastCell: Bool, country: Country?, mode: CompetitionFilterCellMode) {
         self.id = competition.id
         self.title = competition.name
         self.locationId = locationId
         self.isSelected = isSelected
         self.isLastCell = isLastCell
         self.country = country
+        self.mode = mode
     }
 
 }
@@ -36,6 +43,15 @@ class CompetitionFilterTableViewCell: UITableViewCell {
         baseView.clipsToBounds = true
         baseView.translatesAutoresizingMaskIntoConstraints = false
         return baseView
+    }()
+
+    private var iconLabelStackView: UIStackView = {
+        let stackView = UIStackView()
+        stackView.axis = .horizontal
+        stackView.spacing = 6
+        stackView.alignment = .center
+        stackView.translatesAutoresizingMaskIntoConstraints = false
+        return stackView
     }()
 
     private var separatorLineView: UIView = {
@@ -68,9 +84,18 @@ class CompetitionFilterTableViewCell: UITableViewCell {
         return imageView
     }()
 
-    var viewModel: CompetitionFilterCellViewModel?
+    private var navigationArrowImageView: UIImageView = {
+        var imageView = UIImageView()
+        imageView.contentMode = .center
+        imageView.translatesAutoresizingMaskIntoConstraints = false
+        imageView.image = UIImage(named: "nav_arrow_right_icon")
+        return imageView
+    }()
 
-    var didTapCellAction: ((CompetitionFilterCellViewModel) -> Void)?
+    private var viewModel: CompetitionFilterCellViewModel?
+
+    var didToggleCellAction: ((String, String) -> Void)?
+    var didTapNavigationAction: ((String) -> Void)?
 
     private var cancellables: Set<AnyCancellable> = []
 
@@ -89,7 +114,7 @@ class CompetitionFilterTableViewCell: UITableViewCell {
         fatalError("init(coder:) has not been implemented")
     }
 
-    override func prepareForReuse() {        
+    override func prepareForReuse() {
         super.prepareForReuse()
 
         self.configureAsNormalCell()
@@ -100,6 +125,8 @@ class CompetitionFilterTableViewCell: UITableViewCell {
         self.titleLabel.text = ""
 
         self.countryImageView.image = nil
+        self.selectedImageView.isHidden = false
+        self.navigationArrowImageView.isHidden = true
     }
 
     override func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {
@@ -110,17 +137,6 @@ class CompetitionFilterTableViewCell: UITableViewCell {
 
     override func layoutSubviews() {
         super.layoutSubviews()
-
-//        if viewModel?.isLastCell ?? false {
-//            baseView.clipsToBounds = true
-//            baseView.layer.cornerRadius = 5
-//            baseView.layer.maskedCorners = [.layerMinXMaxYCorner, .layerMaxXMaxYCorner]
-//        }
-//        else {
-//            baseView.clipsToBounds = true
-//            baseView.layer.cornerRadius = 0
-//            baseView.layer.maskedCorners = []
-//        }
 
         self.countryImageView.layer.cornerRadius = self.countryImageView.frame.size.width / 2
         self.countryImageView.layer.masksToBounds = true
@@ -141,42 +157,43 @@ class CompetitionFilterTableViewCell: UITableViewCell {
 
         selectedImageView.image = UIImage(named: "checkbox_unselected_icon")!
 
+        self.iconLabelStackView.addArrangedSubview(self.countryImageView)
+        self.iconLabelStackView.addArrangedSubview(self.titleLabel)
+        self.iconLabelStackView.addArrangedSubview(self.navigationArrowImageView)
+
         self.contentView.addSubview(baseView)
-        baseView.addSubview(countryImageView)
-        baseView.addSubview(titleLabel)
-        baseView.addSubview(separatorLineView)
-        baseView.addSubview(selectedImageView)
+        self.baseView.addSubview(iconLabelStackView)
+        self.baseView.addSubview(separatorLineView)
+        self.baseView.addSubview(selectedImageView)
 
         NSLayoutConstraint.activate([
-            self.contentView.leadingAnchor.constraint(equalTo: baseView.leadingAnchor, constant: -26),
-            self.contentView.trailingAnchor.constraint(equalTo: baseView.trailingAnchor, constant: 26),
-            self.contentView.topAnchor.constraint(equalTo: baseView.topAnchor),
-            self.contentView.bottomAnchor.constraint(equalTo: baseView.bottomAnchor),
+            self.contentView.leadingAnchor.constraint(equalTo: self.baseView.leadingAnchor, constant: -26),
+            self.contentView.trailingAnchor.constraint(equalTo: self.baseView.trailingAnchor, constant: 26),
+            self.contentView.topAnchor.constraint(equalTo: self.baseView.topAnchor),
+            self.contentView.bottomAnchor.constraint(equalTo: self.baseView.bottomAnchor),
 
-            baseView.heightAnchor.constraint(greaterThanOrEqualToConstant: 52),
+            self.baseView.heightAnchor.constraint(greaterThanOrEqualToConstant: 52),
 
-//            baseView.leadingAnchor.constraint(equalTo: titleLabel.leadingAnchor, constant: -20),
-            baseView.centerYAnchor.constraint(equalTo: titleLabel.centerYAnchor, constant: -1),
-            baseView.bottomAnchor.constraint(equalTo: titleLabel.bottomAnchor, constant: 4),
+            self.baseView.leadingAnchor.constraint(equalTo: self.separatorLineView.leadingAnchor, constant: -16),
+            self.baseView.trailingAnchor.constraint(equalTo: self.separatorLineView.trailingAnchor, constant: 16),
+            self.baseView.bottomAnchor.constraint(equalTo: self.separatorLineView.bottomAnchor),
 
-            baseView.leadingAnchor.constraint(equalTo: separatorLineView.leadingAnchor, constant: -16),
-            baseView.trailingAnchor.constraint(equalTo: separatorLineView.trailingAnchor, constant: 16),
-            baseView.bottomAnchor.constraint(equalTo: separatorLineView.bottomAnchor),
-            separatorLineView.heightAnchor.constraint(equalToConstant: 1),
-
-            self.countryImageView.leadingAnchor.constraint(equalTo: self.baseView.leadingAnchor, constant: 20),
-            self.countryImageView.centerYAnchor.constraint(equalTo: self.titleLabel.centerYAnchor),
             self.countryImageView.widthAnchor.constraint(equalToConstant: 16),
             self.countryImageView.heightAnchor.constraint(equalTo: self.countryImageView.widthAnchor),
 
-            titleLabel.leadingAnchor.constraint(equalTo: self.countryImageView.trailingAnchor, constant: 4),
-            titleLabel.heightAnchor.constraint(equalToConstant: 46),
-            titleLabel.trailingAnchor.constraint(equalTo: selectedImageView.leadingAnchor, constant: -6),
+            self.navigationArrowImageView.widthAnchor.constraint(equalToConstant: 19),
+            self.navigationArrowImageView.heightAnchor.constraint(equalTo: self.navigationArrowImageView.widthAnchor),
 
-            selectedImageView.widthAnchor.constraint(equalToConstant: 19),
-            selectedImageView.widthAnchor.constraint(equalTo: selectedImageView.heightAnchor),
-            selectedImageView.centerYAnchor.constraint(equalTo: baseView.centerYAnchor, constant: 1),
-            selectedImageView.trailingAnchor.constraint(equalTo: baseView.trailingAnchor, constant: -20),
+            self.iconLabelStackView.leadingAnchor.constraint(equalTo: self.baseView.leadingAnchor, constant: 20),
+            self.iconLabelStackView.centerYAnchor.constraint(equalTo: self.baseView.centerYAnchor),
+            self.iconLabelStackView.trailingAnchor.constraint(greaterThanOrEqualTo: self.baseView.trailingAnchor, constant: -6),
+
+            self.selectedImageView.widthAnchor.constraint(equalToConstant: 19),
+            self.selectedImageView.widthAnchor.constraint(equalTo: self.selectedImageView.heightAnchor),
+            self.selectedImageView.centerYAnchor.constraint(equalTo: self.baseView.centerYAnchor, constant: 1),
+            self.selectedImageView.trailingAnchor.constraint(equalTo: self.baseView.trailingAnchor, constant: -20),
+
+            self.separatorLineView.heightAnchor.constraint(equalToConstant: 1),
         ])
     }
 
@@ -196,27 +213,31 @@ class CompetitionFilterTableViewCell: UITableViewCell {
 
     func configure(withViewModel viewModel: CompetitionFilterCellViewModel) {
         self.viewModel = viewModel
+        self.titleLabel.text = "Abc De" // viewModel.title
 
-        self.titleLabel.text = viewModel.title
-
-        self.setCellSelected(viewModel.isSelected)
+        switch viewModel.mode {
+        case .toggle:
+            self.selectedImageView.isHidden = false
+            self.navigationArrowImageView.isHidden = true
+            self.setCellSelected(viewModel.isSelected)
+        case .navigate:
+            self.selectedImageView.isHidden = true
+            self.navigationArrowImageView.isHidden = false
+        }
 
         if viewModel.isLastCell {
             self.configureAsLastCell()
-        }
-        else {
+        } else {
             self.configureAsNormalCell()
         }
 
         if let countryIsoCode = viewModel.country?.iso2Code {
             if countryIsoCode != "" {
                 self.countryImageView.image = UIImage(named: Assets.flagName(withCountryCode: countryIsoCode))
-            }
-            else {
+            } else {
                 self.countryImageView.image = UIImage(named: "country_flag_240")
             }
-        }
-        else {
+        } else {
             self.countryImageView.image = UIImage(named: "country_flag_240")
         }
 
@@ -241,9 +262,14 @@ class CompetitionFilterTableViewCell: UITableViewCell {
     }
 
     @objc func didTapCell() {
-        if let viewModel = viewModel {
+        guard let viewModel = viewModel else { return }
+
+        switch viewModel.mode {
+        case .toggle:
             viewModel.isSelected.toggle()
-            self.didTapCellAction?(viewModel)
+            self.didToggleCellAction?(viewModel.id, viewModel.locationId)
+        case .navigate:
+            self.didTapNavigationAction?(viewModel.id)
         }
     }
 

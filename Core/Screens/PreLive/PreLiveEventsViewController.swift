@@ -121,7 +121,7 @@ class PreLiveEventsViewController: UIViewController {
         // Setup fonts
         self.filtersCountLabel.font = AppFont.with(type: .heavy, size: 10)
         self.sportTypeNameLabel.font = AppFont.with(type: .heavy, size: 7)
-    
+
         //
         self.viewModel.didSelectMatchAction = { match in
             let matchDetailsViewController = MatchDetailsViewController(viewModel: MatchDetailsViewModel(match: match))
@@ -171,7 +171,7 @@ class PreLiveEventsViewController: UIViewController {
 
         self.floatingShortcutsView.resetAnimations()
         self.setHomeFilters(homeFilters: self.viewModel.homeFilterOptions)
-        
+
         self.reloadData()
     }
 
@@ -289,7 +289,7 @@ class PreLiveEventsViewController: UIViewController {
         tableView.separatorStyle = .none
 
         tableView.register(UITableViewCell.self, forCellReuseIdentifier: UITableViewCell.identifier) // fallback
-        
+
         tableView.register(OutrightCompetitionLineTableViewCell.self, forCellReuseIdentifier: OutrightCompetitionLineTableViewCell.identifier)
         tableView.register(OutrightCompetitionLargeLineTableViewCell.self, forCellReuseIdentifier: OutrightCompetitionLargeLineTableViewCell.identifier)
 
@@ -300,7 +300,7 @@ class PreLiveEventsViewController: UIViewController {
         tableView.register(EmptyCardTableViewCell.nib, forCellReuseIdentifier: EmptyCardTableViewCell.identifier)
 
         tableView.register(FooterResponsibleGamingViewCell.self, forCellReuseIdentifier: FooterResponsibleGamingViewCell.identifier)
-        
+
         tableView.register(TitleTableViewHeader.nib, forHeaderFooterViewReuseIdentifier: TitleTableViewHeader.identifier)
         tableView.register(TournamentTableViewHeader.nib, forHeaderFooterViewReuseIdentifier: TournamentTableViewHeader.identifier)
 
@@ -308,7 +308,7 @@ class PreLiveEventsViewController: UIViewController {
         tableView.dataSource = self
 
         tableView.clipsToBounds = false
-        
+
         tableView.estimatedRowHeight = 155
         tableView.estimatedSectionHeaderHeight = 0
         tableView.estimatedSectionFooterHeight = 0
@@ -358,6 +358,9 @@ class PreLiveEventsViewController: UIViewController {
         }
         self.competitionsFiltersView.tapHeaderViewAction = { [unowned self] in
             self.openCompetitionsFilters()
+        }
+        self.competitionsFiltersView.didTapCompetitionNavigationAction = { [unowned self] competitionId in
+            self.openCompetitionsDetails(competitionsIds: [competitionId], sport: self.viewModel.selectedSport)
         }
 
         self.competitionsFiltersDarkBackgroundView.alpha = 1
@@ -428,7 +431,7 @@ class PreLiveEventsViewController: UIViewController {
                 }
 
                 self.sportTypeNameLabel.text = newSelectedSport.name
-                
+
                 self.competitionsFiltersView.resetSelection()
             }
             .store(in: &self.cancellables)
@@ -748,11 +751,11 @@ class PreLiveEventsViewController: UIViewController {
 
             quickbetViewController.modalPresentationStyle = .overCurrentContext
             quickbetViewController.modalTransitionStyle = .crossDissolve
-            
+
             quickbetViewController.shouldShowBetSuccess = { bettingTicket, betPlacedDetails in
-                
+
                 quickbetViewController.dismiss(animated: true, completion: {
-                    
+
                     self.showBetSucess(bettingTicket: bettingTicket, betPlacedDetails: betPlacedDetails)
                 })
             }
@@ -764,14 +767,14 @@ class PreLiveEventsViewController: UIViewController {
             self.present(loginViewController, animated: true, completion: nil)
         }
     }
-    
+
     private func showBetSucess(bettingTicket: BettingTicket, betPlacedDetails: [BetPlacedDetails]) {
-        
+
         let betSubmissionSuccessViewController = BetSubmissionSuccessViewController(betPlacedDetailsArray: betPlacedDetails,
                                                                                     cashbackResultValue: nil,
                                                                                     usedCashback: false,
         bettingTickets: [bettingTicket])
-        
+
         self.present(Router.navigationController(with: betSubmissionSuccessViewController), animated: true)
     }
 
@@ -840,6 +843,12 @@ class PreLiveEventsViewController: UIViewController {
     @IBAction private func didTapLoginButton() {
         let loginViewController = Router.navigationController(with: LoginViewController())
         self.present(loginViewController, animated: true, completion: nil)
+    }
+
+    private func openCompetitionsDetails(competitionsIds: [String], sport: Sport) {
+        let competitionDetailsViewModel = TopCompetitionDetailsViewModel(competitionsIds: competitionsIds, sport: sport)
+        let competitionDetailsViewController = TopCompetitionDetailsViewController(viewModel: competitionDetailsViewModel)
+        self.navigationController?.pushViewController(competitionDetailsViewController, animated: true)
     }
 
     func setHighlightedTopCompetition(section: Int) {

@@ -28,6 +28,8 @@ class CompetitionsFiltersView: UIView, NibLoadable {
     var applyFiltersAction: (([String]) -> Void)?
     var tapHeaderViewAction: (() -> Void)?
 
+    var didTapCompetitionNavigationAction: (String) -> Void = { _ in }
+
     private var competitionSelectedIds: [String: Set<String>] = [:]
     private var initialSelectedIds: Set<String> = []
 
@@ -50,7 +52,7 @@ class CompetitionsFiltersView: UIView, NibLoadable {
             }
         }
     }
-    
+
     var competitions: [CompetitionFilterSectionViewModel] = [] {
         didSet {
             if self.loadedExpandedCells.isEmpty {
@@ -148,7 +150,7 @@ class CompetitionsFiltersView: UIView, NibLoadable {
                 self.headerBaseView.backgroundColor = UIColor.App.highlightSecondary
                 self.titleLabel.textColor = UIColor.App.buttonTextPrimary
                 self.smallTitleLabel.textColor = UIColor.App.buttonTextPrimary
-                
+
                 UIView.animate(withDuration: 0.4) {
                     self.titleLabel.alpha = 0.0
                     self.smallTitleLabel.alpha = 1.0
@@ -189,7 +191,7 @@ class CompetitionsFiltersView: UIView, NibLoadable {
 
         self.titleLabel.font = AppFont.with(type: .heavy, size: 16)
         self.smallTitleLabel.font = AppFont.with(type: .heavy, size: 8)
-        
+
         self.loadingView.hidesWhenStopped = true
         self.loadingView.stopAnimating()
 
@@ -271,7 +273,7 @@ class CompetitionsFiltersView: UIView, NibLoadable {
         super.layoutSubviews()
 
         self.headerBaseView.roundCorners(corners: [.topRight, .topLeft], radius: 20)
-        
+
     }
 
     override func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {
@@ -462,37 +464,42 @@ extension CompetitionsFiltersView: UITableViewDelegate, UITableViewDataSource {
         let isSelected = self.selectedIds.value.contains(viewModel.id)
         let isLastCell = tableView.numberOfRows(inSection: indexPath.section) == indexPath.row + 1
 
+        let competitionStyles = TargetVariables.competitionListStyle
+        let mode: CompetitionFilterCellMode = competitionStyles == .navigateToDetails ? CompetitionFilterCellMode.navigate : CompetitionFilterCellMode.toggle
+
         cell.configure(withViewModel: CompetitionFilterCellViewModel(competition: viewModel.competition,
                                                                      locationId: groupViewModel.id,
                                                                      isSelected: isSelected,
                                                                      isLastCell: isLastCell,
-                                                                     country: groupViewModel.country))
+                                                                     country: groupViewModel.country,
+                                                                     mode: mode))
 
-        cell.didTapCellAction = { [weak self] viewModel in
+        if mode == .toggle {
+            cell.didToggleCellAction = { [weak self] competitionId, locationId in
+                guard let self = self else { return }
 
-            guard let self = self else { return }
+                if !self.selectedIds.value.contains(competitionId) {
+                    var selectedIdsCopy = self.selectedIds.value
+                    selectedIdsCopy.insert(competitionId)
+                    self.selectedIds.send(selectedIdsCopy)
 
-            if viewModel.isSelected {
-                var selectedIdsCopy = self.selectedIds.value
-                selectedIdsCopy.insert(viewModel.id)
-                self.selectedIds.send(selectedIdsCopy)
+                    self.insertCompetition(withId: competitionId, countryGroupId: locationId)
+                } else {
+                    var selectedIdsCopy = self.selectedIds.value
+                    selectedIdsCopy.remove(competitionId)
+                    self.selectedIds.send(selectedIdsCopy)
 
-                self.insertCompetition(withId: viewModel.id, countryGroupId: viewModel.locationId)
+                    self.removeCompetition(withId: competitionId, countryGroupId: locationId)
+                }
+
+                self.reloadTableView()
             }
-            else {
-                var selectedIdsCopy = self.selectedIds.value
-                selectedIdsCopy.remove(viewModel.id)
-                self.selectedIds.send(selectedIdsCopy)
-
-                self.removeCompetition(withId: viewModel.id, countryGroupId: viewModel.locationId)
+        } else if mode == .navigate {
+            cell.didTapNavigationAction = { [weak self] competitionId in
+                self?.didTapCompetitionNavigationAction(competitionId)
             }
-
-            self.reloadTableView()
         }
 
-        // cell.titleLabel.text = viewModel.name
-        // cell.selectionStyle = .none
-        
         return cell
     }
 
