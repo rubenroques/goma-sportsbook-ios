@@ -1,0 +1,325 @@
+import Foundation
+
+// MARK: - Data Structures
+struct APIInventory: Codable {
+    let models: [Model]
+    let relationships: [Relationship]
+    let endpoints: Endpoints
+}
+
+struct Model: Codable {
+    let name: String
+    let path: String
+    let properties: [String: PropertyDetails]
+    let relationships: [Relationship]?
+}
+
+struct PropertyDetails: Codable {
+    let type: String
+    let description: String?
+}
+
+struct Relationship: Codable {
+    let source: String?
+    let target: String?
+    let target_type: String?  // Some relationships might use target_type instead of target
+
+    var targetModel: String {
+        return target_type ?? target ?? ""
+    }
+}
+
+struct Endpoints: Codable {
+    let rest: [String]
+    let websocket: [String]
+}
+
+// MARK: - Sportradar Documentation Structures
+struct SportradarDoc: Codable {
+    let api_methods: [String: [String: EndpointDetails]]
+    let websocket_methods: [String: EndpointDetails]
+}
+
+struct EndpointDetails: Codable {
+    let description: String?
+    let signature: String?
+    let parameters: Parameters?
+    let returns: ReturnDetails?
+    let subscription_details: SubscriptionDetails?
+    let content_identifier: ContentIdentifier?
+}
+
+// Make Parameters handle both dictionary and string cases
+enum Parameters: Codable {
+    case dictionary([String: ParameterDetails])
+    case single(String)
+
+    init(from decoder: Decoder) throws {
+        let container = try decoder.singleValueContainer()
+        if let dict = try? container.decode([String: ParameterDetails].self) {
+            self = .dictionary(dict)
+        } else if let str = try? container.decode(String.self) {
+            self = .single(str)
+        } else {
+            throw DecodingError.typeMismatch(
+                Parameters.self,
+                DecodingError.Context(
+                    codingPath: decoder.codingPath,
+                    debugDescription: "Expected either a dictionary or a string"
+                )
+            )
+        }
+    }
+
+    func encode(to encoder: Encoder) throws {
+        var container = encoder.singleValueContainer()
+        switch self {
+        case .dictionary(let dict):
+            try container.encode(dict)
+        case .single(let str):
+            try container.encode(str)
+        }
+    }
+}
+
+struct ParameterDetails: Codable {
+    let type: String?
+    let description: String?
+
+    // Handle nested parameters
+    private enum CodingKeys: String, CodingKey {
+        case type, description
+    }
+
+    init(from decoder: Decoder) throws {
+        let container = try decoder.container(keyedBy: CodingKeys.self)
+
+        // Try to decode as regular parameter first
+        if let typeValue = try? container.decodeIfPresent(String.self, forKey: .type) {
+            self.type = typeValue
+            self.description = try container.decodeIfPresent(String.self, forKey: .description)
+        } else {
+            // If that fails, treat it as a nested parameter
+            self.type = "Object"
+            self.description = "Complex parameter with multiple fields"
+        }
+    }
+}
+
+struct ReturnDetails: Codable {
+    let type: String?
+    let description: String?
+}
+
+struct SubscriptionDetails: Codable {
+    let requires_socket_token: Bool?
+    let auto_unsubscribe: Bool?
+    let update_frequency: String?
+    let event_updates: EventUpdates?
+    let market_types: MarketTypes?
+}
+
+struct EventUpdates: Codable {
+    let includes: [String]?
+}
+
+struct MarketTypes: Codable {
+    let includes: [String]?
+}
+
+struct ContentIdentifier: Codable {
+    let type: String?
+    let route: String?
+}
+
+// MARK: - Documentation Generator
+class DocumentationGenerator {
+    private let inventory: APIInventory
+    private let sportradarDoc: SportradarDoc
+    private var modelLinks: [String: String] = [:]
+
+    init(inventoryPath: String, docPath: String) throws {
+        // Load API inventory
+        let inventoryData = try Data(contentsOf: URL(fileURLWithPath: inventoryPath))
+        self.inventory = try JSONDecoder().decode(APIInventory.self, from: inventoryData)
+
+        // Load Sportradar documentation
+        let docData = try Data(contentsOf: URL(fileURLWithPath: docPath))
+        self.sportradarDoc = try JSONDecoder().decode(SportradarDoc.self, from: docData)
+
+        // Generate model anchors
+        for model in inventory.models {
+            modelLinks[model.name] = "#\(model.name.lowercased())"
+        }
+    }
+
+    func generateMarkdown() -> String {
+        var markdown = """
+        # API Documentation
+
+        This documentation provides a comprehensive overview of our API services, including available endpoints and data models.
+
+        ## Table of Contents
+        1. [REST Services](#rest-services)
+        2. [Real-time Services](#real-time-services)
+        3. [Data Models](#data-models)
+
+        """
+
+        // Add REST Services
+        markdown += "\n# REST Services\n\n"
+        for (category, endpoints) in sportradarDoc.api_methods {
+            markdown += "## \(category)\n\n"
+
+            for (endpoint, details) in endpoints {
+                markdown += formatEndpoint(name: endpoint, details: details)
+            }
+        }
+
+        // Add WebSocket Services
+        markdown += "\n# Real-time Services\n\n"
+        markdown += "_These services provide real-time updates through WebSocket connections._\n\n"
+
+        for (endpoint, details) in sportradarDoc.websocket_methods {
+            markdown += formatWebSocketEndpoint(name: endpoint, details: details)
+        }
+
+        // Add Models
+        markdown += "\n# Data Models\n\n"
+        markdown += "_This section describes the data structures used in the API._\n\n"
+
+        for model in inventory.models.sorted(by: { $0.name < $1.name }) {
+            markdown += formatModel(model: model)
+        }
+
+        return markdown
+    }
+
+    private func formatEndpoint(name: String, details: EndpointDetails) -> String {
+        var output = "### \(name)\n\n"  // Just use the raw name
+
+        if let description = details.description {
+            output += "_\(description)_\n\n"
+        }
+
+        // Handle parameters
+        if let parameters = details.parameters {
+            output += "**Required Information:**\n"
+            switch parameters {
+            case .dictionary(let params):
+                for (paramName, param) in params {
+                    let description = param.description ?? "No description available"
+                    let type = param.type ?? "Unknown type"
+                    output += "- \(paramName) (\(type)): \(description)\n"  // Use raw parameter name
+                }
+            case .single(let param):
+                output += "- \(param)\n"
+            }
+            output += "\n"
+        }
+
+        // Handle returns
+        if let returns = details.returns {
+            let type = returns.type ?? "Unknown type"
+            let description = returns.description ?? "No description available"
+            output += "**Returns:** \(description) (`\(type)`)\n\n"
+        }
+
+        // Add subscription details if available
+        if let subscription = details.subscription_details {
+            output += "**Subscription Details:**\n"
+            if let frequency = subscription.update_frequency {
+                output += "- Update Frequency: \(frequency)\n"
+            }
+            if let updates = subscription.event_updates?.includes {
+                output += "- Updates Include:\n"
+                for update in updates {
+                    output += "  - \(update)\n"
+                }
+            }
+            if let marketTypes = subscription.market_types?.includes {
+                output += "- Market Types:\n"
+                for type in marketTypes {
+                    output += "  - \(type)\n"
+                }
+            }
+            output += "\n"
+        }
+
+        return output
+    }
+
+    private func formatWebSocketEndpoint(name: String, details: EndpointDetails) -> String {
+        var output = "### \(name)\n\n"  // Just use the raw name
+
+        if let description = details.description {
+            output += "_\(description)_\n\n"
+        }
+
+        if let subscription = details.subscription_details {
+            output += "**Update Information:**\n"
+            if let frequency = subscription.update_frequency {
+                output += "- Frequency: \(frequency)\n"
+            }
+            if let updates = subscription.event_updates?.includes {
+                output += "- Includes:\n"
+                for update in updates {
+                    output += "  - \(update)\n"
+                }
+            }
+            output += "\n"
+        }
+
+        return output
+    }
+
+    private func formatModel(model: Model) -> String {
+        var output = "### \(model.name)\n\n"
+
+        output += "**Properties:**\n\n"
+        output += "| Name | Type | Description |\n"
+        output += "|------|------|-------------|\n"
+
+        for (name, details) in model.properties {
+            var typeString = details.type
+            if let linkedType = modelLinks[details.type] {
+                typeString = "[\(details.type)](\(linkedType))"
+            }
+            let description = details.description ?? "No description available"
+            output += "| \(name) | \(typeString) | \(description) |\n"
+        }
+
+        if let relationships = model.relationships, !relationships.isEmpty {
+            output += "\n**Related Models:**\n"
+            for relationship in relationships {
+                let targetModel = relationship.targetModel
+                if !targetModel.isEmpty, let targetLink = modelLinks[targetModel] {
+                    output += "- [\(targetModel)](\(targetLink))\n"
+                }
+            }
+        }
+
+        output += "\n"
+        return output
+    }
+}
+
+// MARK: - Main
+do {
+    guard CommandLine.arguments.count > 2 else {
+        print("Usage: swift DocGenerator.swift <path_to_api_inventory.json> <path_to_sportradar_documentation.json>")
+        exit(1)
+    }
+
+    let inventoryPath = CommandLine.arguments[1]
+    let docPath = CommandLine.arguments[2]
+    let generator = try DocumentationGenerator(inventoryPath: inventoryPath, docPath: docPath)
+    let markdown = generator.generateMarkdown()
+
+    // Write to documentation file
+    try markdown.write(toFile: "API.md", atomically: true, encoding: .utf8)
+    print("✅ Documentation generated successfully in API.md")
+} catch {
+    print("❌ Error: \(error)")
+    exit(1)
+}

@@ -9,7 +9,7 @@ import Foundation
 import Combine
 
 class SportRadarBettingProvider: BettingProvider, Connector {
-    
+
     var sessionCoordinator: SportRadarSessionCoordinator
 
     private var connector: BettingConnector
@@ -50,7 +50,7 @@ class SportRadarBettingProvider: BettingProvider, Connector {
     func getBetHistory(pageIndex: Int) -> AnyPublisher<BettingHistory, ServiceProviderError> {
         let endpoint = BettingAPIClient.betHistory(page: pageIndex, startDate: nil, endDate: nil, betState: nil, betResult: nil, pageSize: 10)
         let publisher: AnyPublisher<[FailableDecodable<SportRadarModels.Bet>], ServiceProviderError> = self.connector.request(endpoint)
-        
+
         return publisher
             .map { failableBets in
                 // Filter out any nil contents (failed decodes)
@@ -63,9 +63,9 @@ class SportRadarBettingProvider: BettingProvider, Connector {
 
     func getOpenBetsHistory(pageIndex: Int, startDate: String?, endDate: String?) -> AnyPublisher<BettingHistory, ServiceProviderError> {
         let endpoint = BettingAPIClient.betHistory(page: pageIndex, startDate: startDate, endDate: endDate, betState: [SportRadarModels.BetState.opened], betResult: [SportRadarModels.BetResult.notSpecified], pageSize: 20)
-        
+
         let publisher: AnyPublisher<[FailableDecodable<SportRadarModels.Bet>], ServiceProviderError> = self.connector.request(endpoint)
-        
+
         return publisher
             .map { failableBets in
                 // Filter out any nil contents (failed decodes)
@@ -79,7 +79,7 @@ class SportRadarBettingProvider: BettingProvider, Connector {
     func getResolvedBetsHistory(pageIndex: Int, startDate: String?, endDate: String?) -> AnyPublisher<BettingHistory, ServiceProviderError> {
         let endpoint = BettingAPIClient.betHistory(page: pageIndex, startDate: startDate, endDate: endDate, betState: [SportRadarModels.BetState.settled, SportRadarModels.BetState.closed, SportRadarModels.BetState.cancelled], betResult: [SportRadarModels.BetResult.notSpecified], pageSize: 20)
         let publisher: AnyPublisher<[FailableDecodable<SportRadarModels.Bet>], ServiceProviderError> = self.connector.request(endpoint)
-        
+
         return publisher
             .map { failableBets in
                 // Filter out any nil contents (failed decodes)
@@ -93,7 +93,7 @@ class SportRadarBettingProvider: BettingProvider, Connector {
     func getWonBetsHistory(pageIndex: Int, startDate: String?, endDate: String?) -> AnyPublisher<BettingHistory, ServiceProviderError> {
         let endpoint = BettingAPIClient.betHistory(page: pageIndex, startDate: startDate, endDate: endDate, betState: [SportRadarModels.BetState.settled, SportRadarModels.BetState.closed, SportRadarModels.BetState.cancelled], betResult: [SportRadarModels.BetResult.notSpecified], pageSize: 20)
         let publisher: AnyPublisher<[FailableDecodable<SportRadarModels.Bet>], ServiceProviderError> = self.connector.request(endpoint)
-        
+
         return publisher
             .map { failableBets in
                 // Filter out any nil contents (failed decodes)
@@ -146,22 +146,22 @@ class SportRadarBettingProvider: BettingProvider, Connector {
                 else if internalPlacedBetsResponse.responseCode == "1" && internalPlacedBetsResponse.detailedResponseCode == "66" {
                     var placedBetsResponse = SportRadarModelMapper.placedBetsResponse(fromInternalPlacedBetsResponse: internalPlacedBetsResponse)
                     placedBetsResponse.requiredConfirmation = true
-                    
+
                     let notPlacedBetError = ServiceProviderError.betNeedsUserConfirmation(betDetails: placedBetsResponse)
                     return Fail(outputType: PlacedBetsResponse.self, failure: notPlacedBetError)
                         .eraseToAnyPublisher()
                 }
                 else {
-                    
+
                     if internalPlacedBetsResponse.responseCode == "4",
                        let message = internalPlacedBetsResponse.errorMessage,
                        message.contains("wager limit") {
-                        
+
                         let notPlacedBetError = ServiceProviderError.notPlacedBet(message: "bet_error_wager_limit")
                         return Fail(outputType: PlacedBetsResponse.self, failure: notPlacedBetError)
                             .eraseToAnyPublisher()
                     }
-                    
+
                     let notPlacedBetError = ServiceProviderError.notPlacedBet(message: internalPlacedBetsResponse.errorMessage ?? "")
                     return Fail(outputType: PlacedBetsResponse.self, failure: notPlacedBetError)
                         .eraseToAnyPublisher()
@@ -182,7 +182,7 @@ class SportRadarBettingProvider: BettingProvider, Connector {
             })
             .eraseToAnyPublisher()
     }
-    
+
     func rejectBoostedBet(identifier: String) -> AnyPublisher<Bool, ServiceProviderError> {
         let endpoint = BettingAPIClient.rejectBoostedBet(identifier: identifier)
         let publisher: AnyPublisher<NoReply, ServiceProviderError> = self.connector.request(endpoint)
@@ -193,7 +193,7 @@ class SportRadarBettingProvider: BettingProvider, Connector {
                 else {
                     throw ServiceProviderError.invalidResponse
                 }
-                
+
                 return Just( NoReply() )
                     .setFailureType(to: ServiceProviderError.self)
                     .eraseToAnyPublisher()
@@ -206,7 +206,7 @@ class SportRadarBettingProvider: BettingProvider, Connector {
             })
             .eraseToAnyPublisher()
     }
-    
+
     func getBetDetails(identifier: String) -> AnyPublisher<Bet, ServiceProviderError> {
 //        let endpoint = BettingAPIClient.betDetails(identifier: identifier)
 //        let publisher: AnyPublisher<SportRadarModels.Bet, ServiceProviderError> = self.connector.request(endpoint)
@@ -237,7 +237,7 @@ class SportRadarBettingProvider: BettingProvider, Connector {
                 return mappedDoubles
             }).eraseToAnyPublisher()
     }
-    
+
     func cashoutBet(betId: String, cashoutValue: Double, stakeValue: Double? = nil) -> AnyPublisher<CashoutResult, ServiceProviderError> {
         let endpoint = BettingAPIClient.cashoutBet(betId: betId, cashoutValue: cashoutValue, stakeValue: stakeValue)
         let publisher: AnyPublisher<SportRadarModels.CashoutResult, ServiceProviderError> = self.connector.request(endpoint)
@@ -267,14 +267,14 @@ class SportRadarBettingProvider: BettingProvider, Connector {
     }
 
     func updateBetslipSettings(_ betslipSettings: BetslipSettings) -> AnyPublisher<Bool, Never> {
- 
+
         if let oddChangeRunningOrPreMatch = betslipSettings.oddChangeRunningOrPreMatch {
             let endpointPreMatch = BettingAPIClient.updateBetslipSettingsPreMatch(oddChange: oddChangeRunningOrPreMatch)
             let publisherPreMatch: AnyPublisher<String, ServiceProviderError> = self.connector.request(endpointPreMatch)
-            
+
             let endpointRunning = BettingAPIClient.updateBetslipSettingsRunning(oddChange: oddChangeRunningOrPreMatch)
             let publisherRunning: AnyPublisher<String, ServiceProviderError> = self.connector.request(endpointRunning)
-            
+
             return Publishers.CombineLatest(publisherPreMatch, publisherRunning)
                 .map({ publisherPreMatchResponse, publisherRunningResponse -> Bool in
                     return true
@@ -299,7 +299,7 @@ class SportRadarBettingProvider: BettingProvider, Connector {
             return Just(false).eraseToAnyPublisher()
         }
 
-       
+
     }
 
     func getFreebet() -> AnyPublisher<FreebetBalance, ServiceProviderError> {
@@ -395,22 +395,22 @@ class SportRadarBettingProvider: BettingProvider, Connector {
                 else if internalPlacedBetsResponse.responseCode == "1" && internalPlacedBetsResponse.detailedResponseCode == "66" {
                     var placedBetsResponse = SportRadarModelMapper.placedBetsResponse(fromInternalPlacedBetsResponse: internalPlacedBetsResponse)
                     placedBetsResponse.requiredConfirmation = true
-                    
+
                     let notPlacedBetError = ServiceProviderError.betNeedsUserConfirmation(betDetails: placedBetsResponse)
                     return Fail(outputType: PlacedBetsResponse.self, failure: notPlacedBetError)
                         .eraseToAnyPublisher()
                 }
                 else {
-                    
+
                     if internalPlacedBetsResponse.responseCode == "4",
                        let message = internalPlacedBetsResponse.errorMessage,
                        message.contains("wager limit") {
-                        
+
                         let notPlacedBetError = ServiceProviderError.notPlacedBet(message: "bet_error_wager_limit")
                         return Fail(outputType: PlacedBetsResponse.self, failure: notPlacedBetError)
                             .eraseToAnyPublisher()
                     }
-                    
+
                     let notPlacedBetError = ServiceProviderError.notPlacedBet(message: internalPlacedBetsResponse.errorMessage ?? "")
                     return Fail(outputType: PlacedBetsResponse.self, failure: notPlacedBetError)
                         .eraseToAnyPublisher()

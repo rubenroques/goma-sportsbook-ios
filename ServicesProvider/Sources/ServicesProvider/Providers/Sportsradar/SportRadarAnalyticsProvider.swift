@@ -9,10 +9,10 @@ import Foundation
 import Combine
 
 struct SportRadarAnalyticsProvider: AnalyticsProvider {
-    
+
     private let session: URLSession
     private let decoder: JSONDecoder
-    
+
     init(session: URLSession = URLSession(configuration: URLSessionConfiguration.default), decoder: JSONDecoder = JSONDecoder()) {
         self.session = session
         self.decoder = decoder
@@ -42,23 +42,23 @@ struct SportRadarAnalyticsProvider: AnalyticsProvider {
                 else if let httpResponse = result.response as? HTTPURLResponse, httpResponse.statusCode != 200 {
                     throw ServiceProviderError.unknown
                 }
-                
+
                 return result.data
             }
             .decode(type: T.self, decoder: self.decoder)
             .mapError { error in
                 // Debug helper
                 print("ServiceProvider-NetworkManager Error \(error)")
-                
+
                 if "\(error)" == "emptyData" {
                     return ServiceProviderError.emptyData
                 }
-                
+
                 if let typedError = error as? ServiceProviderError,
                     case .resourceUnavailableOrDeleted = typedError {
                     return typedError
                 }
-                
+
                 if let decodingError = error as? DecodingError {
                     let errorMessage = "\(decodingError)"
                     return ServiceProviderError.decodingError(message: errorMessage)
@@ -70,13 +70,13 @@ struct SportRadarAnalyticsProvider: AnalyticsProvider {
     }
 
     func trackEvent(_ event: AnalyticsEvent, userIdentifer: String?) -> AnyPublisher<Void, ServiceProviderError> {
-        
+
         guard
             let typeEvent = event as? VaixAnalyticsEvent
         else {
             return Fail(outputType: Void.self, failure: ServiceProviderError.invalidRequestFormat).eraseToAnyPublisher()
         }
-        
+
         let endpoint = VaixAPIClient.analyticsTrackEvent(event: typeEvent, userId: userIdentifer ?? "0")
         let publisher: AnyPublisher<BasicResponse, ServiceProviderError> = self.request(endpoint)
 

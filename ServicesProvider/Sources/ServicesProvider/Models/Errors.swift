@@ -1,6 +1,6 @@
 //
 //  File.swift
-//  
+//
 //
 //  Created by Ruben Roques on 11/10/2022.
 //
@@ -8,7 +8,7 @@
 import Foundation
 
 public enum ServiceProviderError: Error {
-    
+
     case privilegedAccessManagerNotFound
     case eventsProviderNotFound
     case bettingProviderNotFound
@@ -16,7 +16,7 @@ public enum ServiceProviderError: Error {
 
     case invalidEmailPassword
     case quickSignUpIncomplete
-    
+
     case invalidSignUpEmail
     case invalidSignUpUsername
     case invalidSignUpPassword
@@ -24,13 +24,13 @@ public enum ServiceProviderError: Error {
     case invalidMobileVerifyCode
 
     case failedTempLock(date: String)
-    
+
     case incompletedSportData
     case userSessionNotFound
 
     case notPlacedBet(message: String)
     case betNeedsUserConfirmation(betDetails: PlacedBetsResponse)
-    
+
     case onSubscribe
     case resourceNotFound
 
@@ -45,13 +45,13 @@ public enum ServiceProviderError: Error {
     case forbidden
     case invalidResponse
     case emptyData
-    
+
     case decodingError(message: String)
     case errorMessage(message: String)
-    
+
     case errorDetailedMessage(key: String, message: String)
-    
+
     case invalidUserLocation
-    
+
     case unknown
 }

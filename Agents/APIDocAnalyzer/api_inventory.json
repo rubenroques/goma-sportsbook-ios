@@ -1,0 +1,4036 @@
+{
+  "models": [
+    {
+      "properties": {
+        "selections": {
+          "type": "PromotedBetslipSelection",
+          "description": "Array of PromotedBetslipSelection property"
+        },
+        "betslipCount": {
+          "type": "Int",
+          "description": "Int property"
+        }
+      },
+      "relationships": [
+        {
+          "via": "selections",
+          "target": "PromotedBetslipSelection"
+        }
+      ],
+      "name": "PromotedBetslip",
+      "path": "../../ServicesProvider/Sources/ServicesProvider/Providers/Sportsradar/Models/Business/SportRadarModels+PromotedBetslips.swift"
+    },
+    {
+      "properties": {
+        "expiryDate": {
+          "type": "String?",
+          "description": "Optional String property"
+        }
+      },
+      "relationships": [],
+      "name": "KYCStatusDetail",
+      "path": "../../ServicesProvider/Sources/ServicesProvider/Providers/Sportsradar/Models/Business/SportRadarModels+User.swift"
+    },
+    {
+      "properties": {
+        "status": {
+          "type": "String",
+          "description": "String property"
+        },
+        "message": {
+          "type": "String?",
+          "description": "Optional String property"
+        },
+        "currency": {
+          "type": "String?",
+          "description": "Optional String property"
+        },
+        "loyaltyPoint": {
+          "type": "Int?",
+          "description": "Optional Int property"
+        },
+        "vipStatus": {
+          "type": "String?",
+          "description": "Optional String property"
+        },
+        "totalBalance": {
+          "type": "String?",
+          "description": "Optional String property"
+        },
+        "totalBalanceNumber": {
+          "type": "Double?",
+          "description": "Optional Double property"
+        },
+        "withdrawableBalance": {
+          "type": "String?",
+          "description": "Optional String property"
+        },
+        "withdrawableBalanceNumber": {
+          "type": "Double?",
+          "description": "Optional Double property"
+        },
+        "bonusBalance": {
+          "type": "String?",
+          "description": "Optional String property"
+        },
+        "bonusBalanceNumber": {
+          "type": "Double?",
+          "description": "Optional Double property"
+        },
+        "pendingBonusBalance": {
+          "type": "String?",
+          "description": "Optional String property"
+        },
+        "pendingBonusBalanceNumber": {
+          "type": "Double?",
+          "description": "Optional Double property"
+        },
+        "casinoPlayableBonusBalance": {
+          "type": "String?",
+          "description": "Optional String property"
+        },
+        "casinoPlayableBonusBalanceNumber": {
+          "type": "Double?",
+          "description": "Optional Double property"
+        },
+        "sportsbookPlayableBonusBalance": {
+          "type": "String?",
+          "description": "Optional String property"
+        },
+        "sportsbookPlayableBonusBalanceNumber": {
+          "type": "Double?",
+          "description": "Optional Double property"
+        },
+        "withdrawableEscrowBalance": {
+          "type": "String?",
+          "description": "Optional String property"
+        },
+        "withdrawableEscrowBalanceNumber": {
+          "type": "Double?",
+          "description": "Optional Double property"
+        },
+        "totalWithdrawableBalance": {
+          "type": "String?",
+          "description": "Optional String property"
+        },
+        "totalWithdrawableBalanceNumber": {
+          "type": "Double?",
+          "description": "Optional Double property"
+        },
+        "withdrawRestrictionAmount": {
+          "type": "String?",
+          "description": "Optional String property"
+        },
+        "withdrawRestrictionAmountNumber": {
+          "type": "Double?",
+          "description": "Optional Double property"
+        },
+        "totalEscrowBalance": {
+          "type": "String?",
+          "description": "Optional String property"
+        },
+        "totalEscrowBalanceNumber": {
+          "type": "Double?",
+          "description": "Optional Double property"
+        }
+      },
+      "relationships": [],
+      "name": "BalanceResponse",
+      "path": "../../ServicesProvider/Sources/ServicesProvider/Providers/Sportsradar/Models/Business/SportRadarModels+User.swift"
+    },
+    {
+      "properties": {
+        "paymentMethodType": {
+          "type": "String",
+          "description": "String property"
+        },
+        "url": {
+          "type": "String",
+          "description": "String property"
+        },
+        "method": {
+          "type": "String",
+          "description": "String property"
+        },
+        "type": {
+          "type": "String",
+          "description": "String property"
+        }
+      },
+      "relationships": [],
+      "name": "UpdatePaymentAction",
+      "path": "../../ServicesProvider/Sources/ServicesProvider/Providers/Sportsradar/Models/Business/SportRadarModels+User.swift"
+    },
+    {
+      "properties": {
+        "code": {
+          "type": "String",
+          "description": "String property"
+        },
+        "paymentMethod": {
+          "type": "String",
+          "description": "String property"
+        },
+        "minimumWithdrawal": {
+          "type": "String",
+          "description": "String property"
+        },
+        "maximumWithdrawal": {
+          "type": "String",
+          "description": "String property"
+        },
+        "conversionRequired": {
+          "type": "Bool",
+          "description": "Bool property"
+        }
+      },
+      "relationships": [],
+      "name": "WithdrawalMethod",
+      "path": "../../ServicesProvider/Sources/ServicesProvider/Providers/Sportsradar/Models/Business/Withdrawals/SportRadarModels+WithdrawalMethod.swift"
+    },
+    {
+      "properties": {
+        "typeCode": {
+          "type": "String",
+          "description": "String property"
+        },
+        "typeName": {
+          "type": "String",
+          "description": "String property"
+        },
+        "potencialReturn": {
+          "type": "Double",
+          "description": "Double property"
+        },
+        "totalStake": {
+          "type": "Double",
+          "description": "Double property"
+        },
+        "numberOfIndividualBets": {
+          "type": "Int",
+          "description": "Int property"
+        }
+      },
+      "relationships": [],
+      "name": "BetType",
+      "path": "../../ServicesProvider/Sources/ServicesProvider/Providers/Sportsradar/Models/Business/SportRadarModels+Betting.swift"
+    },
+    {
+      "properties": {
+        "status": {
+          "type": "String",
+          "description": "String property"
+        },
+        "wagerLimit": {
+          "type": "String?",
+          "description": "Optional String property"
+        },
+        "lossLimit": {
+          "type": "String?",
+          "description": "Optional String property"
+        },
+        "currency": {
+          "type": "String",
+          "description": "String property"
+        },
+        "pendingWagerLimit": {
+          "type": "LimitPending?",
+          "description": "Optional LimitPending property"
+        }
+      },
+      "relationships": [
+        {
+          "via": "pendingWagerLimit",
+          "target": "LimitPending"
+        }
+      ],
+      "name": "LimitsResponse",
+      "path": "../../ServicesProvider/Sources/ServicesProvider/Providers/Sportsradar/Models/Business/SportRadarModels+User.swift"
+    },
+    {
+      "properties": {
+        "name": {
+          "type": "String",
+          "description": "String property"
+        },
+        "type": {
+          "type": "String",
+          "description": "String property"
+        },
+        "brands": {
+          "type": "String?",
+          "description": "Optional Array of String property"
+        }
+      },
+      "relationships": [],
+      "name": "PaymentMethod",
+      "path": "../../ServicesProvider/Sources/ServicesProvider/Providers/Sportsradar/Models/Business/SportRadarModels+User.swift"
+    },
+    {
+      "properties": {
+        "status": {
+          "type": "String",
+          "description": "String property"
+        },
+        "withdrawalMethods": {
+          "type": "WithdrawalMethod",
+          "description": "Array of WithdrawalMethod property"
+        }
+      },
+      "relationships": [
+        {
+          "via": "withdrawalMethods",
+          "target": "WithdrawalMethod"
+        }
+      ],
+      "name": "WithdrawalMethodsResponse",
+      "path": "../../ServicesProvider/Sources/ServicesProvider/Providers/Sportsradar/Models/Business/Withdrawals/SportRadarModels+WithdrawalMethodsResponse+Withdrawals.swift"
+    },
+    {
+      "properties": {
+        "status": {
+          "type": "String",
+          "description": "String property"
+        },
+        "partyId": {
+          "type": "String?",
+          "description": "Optional String property"
+        },
+        "username": {
+          "type": "String?",
+          "description": "Optional String property"
+        },
+        "language": {
+          "type": "String?",
+          "description": "Optional String property"
+        },
+        "currency": {
+          "type": "String?",
+          "description": "Optional String property"
+        },
+        "email": {
+          "type": "String?",
+          "description": "Optional String property"
+        },
+        "sessionKey": {
+          "type": "String?",
+          "description": "Optional String property"
+        },
+        "parentId": {
+          "type": "String?",
+          "description": "Optional String property"
+        },
+        "level": {
+          "type": "String?",
+          "description": "Optional String property"
+        },
+        "userType": {
+          "type": "String?",
+          "description": "Optional String property"
+        },
+        "isFirstLogin": {
+          "type": "String?",
+          "description": "Optional String property"
+        },
+        "registrationStatus": {
+          "type": "String?",
+          "description": "Optional String property"
+        },
+        "pendingLimitConfirmation": {
+          "type": "String?",
+          "description": "Optional String property"
+        },
+        "country": {
+          "type": "String?",
+          "description": "Optional String property"
+        },
+        "kycStatus": {
+          "type": "String?",
+          "description": "Optional String property"
+        },
+        "lockStatus": {
+          "type": "String?",
+          "description": "Optional String property"
+        },
+        "securityVerificationRequiredFields": {
+          "type": "String?",
+          "description": "Optional Array of String property"
+        },
+        "message": {
+          "type": "String?",
+          "description": "Optional String property"
+        },
+        "lockUntilDateFormatted": {
+          "type": "String?",
+          "description": "Optional String property"
+        },
+        "kycStatusDetails": {
+          "type": "KYCStatusDetail?",
+          "description": "Optional KYCStatusDetail property"
+        }
+      },
+      "relationships": [
+        {
+          "via": "kycStatusDetails",
+          "target": "KYCStatusDetail"
+        }
+      ],
+      "name": "LoginResponse",
+      "path": "../../ServicesProvider/Sources/ServicesProvider/Providers/Sportsradar/Models/Business/SportRadarModels+User.swift"
+    },
+    {
+      "properties": {
+        "status": {
+          "type": "String",
+          "description": "String property"
+        },
+        "bonuses": {
+          "type": "GrantedBonus",
+          "description": "Array of GrantedBonus property"
+        }
+      },
+      "relationships": [
+        {
+          "via": "bonuses",
+          "target": "GrantedBonus"
+        }
+      ],
+      "name": "GrantedBonusResponse",
+      "path": "../../ServicesProvider/Sources/ServicesProvider/Providers/Sportsradar/Models/Business/Bonus/SportRadarModels+GrantedBonusResponse.swift"
+    },
+    {
+      "properties": {
+        "name": {
+          "type": "String",
+          "description": "String property"
+        },
+        "numericId": {
+          "type": "String?",
+          "description": "Optional String property"
+        },
+        "alphaId": {
+          "type": "String?",
+          "description": "Optional String property"
+        },
+        "numberEvents": {
+          "type": "Int",
+          "description": "Int property"
+        },
+        "numberOutrightEvents": {
+          "type": "Int",
+          "description": "Int property"
+        },
+        "numberOutrightMarkets": {
+          "type": "Int",
+          "description": "Int property"
+        },
+        "numberLiveEvents": {
+          "type": "Int",
+          "description": "Int property"
+        }
+      },
+      "relationships": [],
+      "name": "SportType",
+      "path": "../../ServicesProvider/Sources/ServicesProvider/Providers/Sportsradar/Models/Business/SportRadarModels+Sports.swift"
+    },
+    {
+      "properties": {
+        "code": {
+          "type": "String",
+          "description": "String property"
+        },
+        "paymentMethod": {
+          "type": "String",
+          "description": "String property"
+        },
+        "methods": {
+          "type": "PaymentMethod?",
+          "description": "Optional Array of PaymentMethod property"
+        }
+      },
+      "relationships": [
+        {
+          "via": "methods",
+          "target": "PaymentMethod"
+        }
+      ],
+      "name": "DepositMethod",
+      "path": "../../ServicesProvider/Sources/ServicesProvider/Providers/Sportsradar/Models/Business/SportRadarModels+User.swift"
+    },
+    {
+      "properties": {
+        "status": {
+          "type": "String",
+          "description": "String property"
+        },
+        "message": {
+          "type": "String?",
+          "description": "Optional String property"
+        },
+        "requestId": {
+          "type": "Int?",
+          "description": "Optional Int property"
+        }
+      },
+      "relationships": [],
+      "name": "MobileVerifyResponse",
+      "path": "../../ServicesProvider/Sources/ServicesProvider/Providers/Sportsradar/Models/Business/SportRadarModels+User.swift"
+    },
+    {
+      "properties": {
+        "status": {
+          "type": "String",
+          "description": "String property"
+        },
+        "sportId": {
+          "type": "String",
+          "description": "String property"
+        },
+        "eventId": {
+          "type": "String",
+          "description": "String property"
+        },
+        "eventType": {
+          "type": "String?",
+          "description": "Optional String property"
+        },
+        "countryId": {
+          "type": "String",
+          "description": "String property"
+        }
+      },
+      "relationships": [],
+      "name": "HighlightedEventPointer",
+      "path": "../../ServicesProvider/Sources/ServicesProvider/Providers/Sportsradar/Models/Business/SportRadarModels+Events.swift"
+    },
+    {
+      "properties": {
+        "id": {
+          "type": "Int",
+          "description": "Int property"
+        },
+        "key": {
+          "type": "String",
+          "description": "String property"
+        },
+        "name": {
+          "type": "String",
+          "description": "String property"
+        },
+        "consentVersionId": {
+          "type": "Int",
+          "description": "Int property"
+        },
+        "status": {
+          "type": "String?",
+          "description": "Optional String property"
+        },
+        "isMandatory": {
+          "type": "Bool?",
+          "description": "Optional Bool property"
+        }
+      },
+      "relationships": [],
+      "name": "Consent",
+      "path": "../../ServicesProvider/Sources/ServicesProvider/Providers/Sportsradar/Models/Business/UserConsents/SportRadarModels+UserConsentsResponse.swift"
+    },
+    {
+      "properties": {
+        "status": {
+          "type": "String",
+          "description": "String property"
+        },
+        "paymentId": {
+          "type": "String?",
+          "description": "Optional String property"
+        },
+        "paymentStatus": {
+          "type": "String?",
+          "description": "Optional String property"
+        },
+        "message": {
+          "type": "String?",
+          "description": "Optional String property"
+        }
+      },
+      "relationships": [],
+      "name": "PaymentStatusResponse",
+      "path": "../../ServicesProvider/Sources/ServicesProvider/Providers/Sportsradar/Models/Business/SportRadarModels+User.swift"
+    },
+    {
+      "properties": {
+        "status": {
+          "type": "String",
+          "description": "String property"
+        },
+        "message": {
+          "type": "String?",
+          "description": "Optional String property"
+        },
+        "data": {
+          "type": "ApplicantDataResponse",
+          "description": "ApplicantDataResponse property"
+        }
+      },
+      "relationships": [
+        {
+          "via": "data",
+          "target": "ApplicantDataResponse"
+        }
+      ],
+      "name": "ApplicantRootResponse",
+      "path": "../../ServicesProvider/Sources/ServicesProvider/Providers/Sportsradar/Models/Business/Documents/SportRadarModels+ApplicantDataResponse.swift"
+    },
+    {
+      "properties": {
+        "status": {
+          "type": "String",
+          "description": "String property"
+        },
+        "documentTypes": {
+          "type": "DocumentType",
+          "description": "Array of DocumentType property"
+        }
+      },
+      "relationships": [
+        {
+          "via": "documentTypes",
+          "target": "DocumentType"
+        }
+      ],
+      "name": "DocumentTypesResponse",
+      "path": "../../ServicesProvider/Sources/ServicesProvider/Providers/Sportsradar/Models/Business/SportRadarModels+User.swift"
+    },
+    {
+      "properties": {
+        "id": {
+          "type": "Int",
+          "description": "Int property"
+        },
+        "partyId": {
+          "type": "Int",
+          "description": "Int property"
+        },
+        "limitType": {
+          "type": "String",
+          "description": "String property"
+        },
+        "periodType": {
+          "type": "String",
+          "description": "String property"
+        },
+        "effectiveDate": {
+          "type": "String",
+          "description": "String property"
+        },
+        "expiryDate": {
+          "type": "String",
+          "description": "String property"
+        },
+        "limit": {
+          "type": "Double",
+          "description": "Double property"
+        }
+      },
+      "relationships": [],
+      "name": "ResponsibleGamingLimit",
+      "path": "../../ServicesProvider/Sources/ServicesProvider/Providers/Sportsradar/Models/Business/Limits/SportRadarModels+ResponsibleGamingLimitsResponse.swift"
+    },
+    {
+      "properties": {
+        "status": {
+          "type": "String",
+          "description": "String property"
+        },
+        "paymentId": {
+          "type": "String?",
+          "description": "Optional String property"
+        },
+        "continueUrl": {
+          "type": "String?",
+          "description": "Optional String property"
+        },
+        "clientKey": {
+          "type": "String?",
+          "description": "Optional String property"
+        },
+        "sessionId": {
+          "type": "String?",
+          "description": "Optional String property"
+        },
+        "sessionData": {
+          "type": "String?",
+          "description": "Optional String property"
+        },
+        "message": {
+          "type": "String?",
+          "description": "Optional String property"
+        }
+      },
+      "relationships": [],
+      "name": "ProcessDepositResponse",
+      "path": "../../ServicesProvider/Sources/ServicesProvider/Providers/Sportsradar/Models/Business/SportRadarModels+User.swift"
+    },
+    {
+      "properties": {
+        "status": {
+          "type": "String",
+          "description": "String property"
+        },
+        "dailyLimit": {
+          "type": "String?",
+          "description": "Optional String property"
+        },
+        "weeklyLimit": {
+          "type": "String?",
+          "description": "Optional String property"
+        },
+        "monthlyLimit": {
+          "type": "String?",
+          "description": "Optional String property"
+        },
+        "currency": {
+          "type": "String",
+          "description": "String property"
+        },
+        "hasPendingWeeklyLimit": {
+          "type": "String?",
+          "description": "Optional String property"
+        },
+        "pendingWeeklyLimit": {
+          "type": "String?",
+          "description": "Optional String property"
+        },
+        "pendingWeeklyLimitEffectiveDate": {
+          "type": "String?",
+          "description": "Optional String property"
+        }
+      },
+      "relationships": [],
+      "name": "PersonalDepositLimitResponse",
+      "path": "../../ServicesProvider/Sources/ServicesProvider/Providers/Sportsradar/Models/Business/SportRadarModels+User.swift"
+    },
+    {
+      "properties": {
+        "id": {
+          "type": "String",
+          "description": "String property"
+        },
+        "name": {
+          "type": "String",
+          "description": "String property"
+        },
+        "title": {
+          "type": "String",
+          "description": "String property"
+        },
+        "imageUrl": {
+          "type": "String",
+          "description": "String property"
+        },
+        "bodyText": {
+          "type": "String?",
+          "description": "Optional String property"
+        },
+        "type": {
+          "type": "String",
+          "description": "String property"
+        },
+        "linkUrl": {
+          "type": "String?",
+          "description": "Optional String property"
+        },
+        "marketId": {
+          "type": "String?",
+          "description": "Optional String property"
+        }
+      },
+      "relationships": [],
+      "name": "Banner",
+      "path": "../../ServicesProvider/Sources/ServicesProvider/Providers/Sportsradar/Models/Business/SportRadarModels+Events.swift"
+    },
+    {
+      "properties": {
+        "status": {
+          "type": "String",
+          "description": "String property"
+        },
+        "depositMethods": {
+          "type": "DepositMethod",
+          "description": "Array of DepositMethod property"
+        }
+      },
+      "relationships": [
+        {
+          "via": "depositMethods",
+          "target": "DepositMethod"
+        }
+      ],
+      "name": "PaymentsResponse",
+      "path": "../../ServicesProvider/Sources/ServicesProvider/Providers/Sportsradar/Models/Business/SportRadarModels+User.swift"
+    },
+    {
+      "properties": {
+        "identifier": {
+          "type": "String",
+          "description": "String property"
+        },
+        "eachWayReduction": {
+          "type": "String",
+          "description": "String property"
+        },
+        "eachWayPlaceTerms": {
+          "type": "String",
+          "description": "String property"
+        },
+        "idFOPriceType": {
+          "type": "String",
+          "description": "String property"
+        },
+        "isTrap": {
+          "type": "String",
+          "description": "String property"
+        },
+        "priceUp": {
+          "type": "String",
+          "description": "String property"
+        },
+        "priceDown": {
+          "type": "String",
+          "description": "String property"
+        }
+      },
+      "relationships": [],
+      "name": "BetTicketSelection",
+      "path": "../../ServicesProvider/Sources/ServicesProvider/Providers/Sportsradar/Models/Business/SportRadarModels+Betting.swift"
+    },
+    {
+      "properties": {
+        "potentialReturn": {
+          "type": "Double",
+          "description": "Double property"
+        },
+        "calculatedOdds": {
+          "type": "Double",
+          "description": "Double property"
+        }
+      },
+      "relationships": [],
+      "name": "BetBuilderPotentialReturn",
+      "path": "../../ServicesProvider/Sources/ServicesProvider/Providers/Sportsradar/Models/Business/SportRadarModels+Betting.swift"
+    },
+    {
+      "properties": {
+        "resultCode": {
+          "type": "String",
+          "description": "String property"
+        },
+        "action": {
+          "type": "UpdatePaymentAction?",
+          "description": "Optional UpdatePaymentAction property"
+        }
+      },
+      "relationships": [
+        {
+          "via": "action",
+          "target": "UpdatePaymentAction"
+        }
+      ],
+      "name": "UpdatePaymentResponse",
+      "path": "../../ServicesProvider/Sources/ServicesProvider/Providers/Sportsradar/Models/Business/SportRadarModels+User.swift"
+    },
+    {
+      "properties": {
+        "id": {
+          "type": "String",
+          "description": "String property"
+        },
+        "name": {
+          "type": "String",
+          "description": "String property"
+        }
+      },
+      "relationships": [],
+      "name": "ScheduledSport",
+      "path": "../../ServicesProvider/Sources/ServicesProvider/Providers/Sportsradar/Models/Business/SportRadarModels+Sports.swift"
+    },
+    {
+      "properties": {
+        "token": {
+          "type": "String?",
+          "description": "Optional String property"
+        },
+        "userId": {
+          "type": "String?",
+          "description": "Optional String property"
+        },
+        "description": {
+          "type": "String?",
+          "description": "Optional String property"
+        },
+        "code": {
+          "type": "Int?",
+          "description": "Optional Int property"
+        }
+      },
+      "relationships": [],
+      "name": "AccessTokenResponse",
+      "path": "../../ServicesProvider/Sources/ServicesProvider/Providers/Sportsradar/Models/Business/Documents/SportRadarModels+AcessTokenResponse.swift"
+    },
+    {
+      "properties": {
+        "attemptCount": {
+          "type": "Int",
+          "description": "Int property"
+        },
+        "createDate": {
+          "type": "String",
+          "description": "String property"
+        },
+        "reviewDate": {
+          "type": "String?",
+          "description": "Optional String property"
+        },
+        "reviewResult": {
+          "type": "ApplicantReviewResult?",
+          "description": "Optional ApplicantReviewResult property"
+        },
+        "reviewStatus": {
+          "type": "String",
+          "description": "String property"
+        },
+        "levelName": {
+          "type": "String",
+          "description": "String property"
+        }
+      },
+      "relationships": [
+        {
+          "via": "reviewResult",
+          "target": "ApplicantReviewResult"
+        }
+      ],
+      "name": "ApplicantReviewData",
+      "path": "../../ServicesProvider/Sources/ServicesProvider/Providers/Sportsradar/Models/Business/Documents/SportRadarModels+ApplicantDataResponse.swift"
+    },
+    {
+      "properties": {
+        "code": {
+          "type": "String",
+          "description": "String property"
+        },
+        "link": {
+          "type": "String",
+          "description": "String property"
+        }
+      },
+      "relationships": [],
+      "name": "ReferralLink",
+      "path": "../../ServicesProvider/Sources/ServicesProvider/Providers/Sportsradar/Models/Business/Referrals/SportRadarModels+ReferralLink.swift"
+    },
+    {
+      "properties": {
+        "id": {
+          "type": "String",
+          "description": "String property"
+        },
+        "homeScore": {
+          "type": "Int?",
+          "description": "Optional Int property"
+        },
+        "awayScore": {
+          "type": "Int?",
+          "description": "Optional Int property"
+        },
+        "matchTime": {
+          "type": "String?",
+          "description": "Optional String property"
+        },
+        "status": {
+          "type": "EventStatus?",
+          "description": "Optional EventStatus property"
+        },
+        "scores": {
+          "type": "String: Score",
+          "description": "Array of String: Score property"
+        },
+        "activePlayerServing": {
+          "type": "ActivePlayerServe?",
+          "description": "Optional ActivePlayerServe property"
+        }
+      },
+      "relationships": [
+        {
+          "via": "status",
+          "target": "EventStatus"
+        },
+        {
+          "via": "scores",
+          "target": "String: Score"
+        },
+        {
+          "via": "activePlayerServing",
+          "target": "ActivePlayerServe"
+        }
+      ],
+      "name": "EventLiveDataExtended",
+      "path": "../../ServicesProvider/Sources/ServicesProvider/Providers/Sportsradar/Models/Business/SportRadarModels+EventLiveData.swift"
+    },
+    {
+      "properties": {
+        "id": {
+          "type": "String",
+          "description": "String property"
+        },
+        "regionNodes": {
+          "type": "SportRegion",
+          "description": "Array of SportRegion property"
+        },
+        "navigationTypes": {
+          "type": "String?",
+          "description": "Optional Array of String property"
+        },
+        "name": {
+          "type": "String?",
+          "description": "Optional String property"
+        },
+        "defaultOrder": {
+          "type": "Int?",
+          "description": "Optional Int property"
+        },
+        "numMarkets": {
+          "type": "String?",
+          "description": "Optional String property"
+        },
+        "numEvents": {
+          "type": "String?",
+          "description": "Optional String property"
+        },
+        "numOutrightMarkets": {
+          "type": "String?",
+          "description": "Optional String property"
+        },
+        "numOutrightEvents": {
+          "type": "String?",
+          "description": "Optional String property"
+        }
+      },
+      "relationships": [
+        {
+          "via": "regionNodes",
+          "target": "SportRegion"
+        }
+      ],
+      "name": "SportNodeInfo",
+      "path": "../../ServicesProvider/Sources/ServicesProvider/Providers/Sportsradar/Models/Business/SportRadarModels+Events.swift"
+    },
+    {
+      "properties": {
+        "markets": {
+          "type": "Market",
+          "description": "Array of Market property"
+        },
+        "marketGroupId": {
+          "type": "String?",
+          "description": "Optional String property"
+        }
+      },
+      "relationships": [
+        {
+          "via": "markets",
+          "target": "Market"
+        }
+      ],
+      "name": "MarketGroup",
+      "path": "../../ServicesProvider/Sources/ServicesProvider/Providers/Sportsradar/Models/Business/SportRadarModels+Events.swift"
+    },
+    {
+      "properties": {
+        "documentType": {
+          "type": "String",
+          "description": "String property"
+        },
+        "issueDateRequired": {
+          "type": "Bool?",
+          "description": "Optional Bool property"
+        },
+        "expiryDateRequired": {
+          "type": "Bool?",
+          "description": "Optional Bool property"
+        },
+        "documentNumberRequired": {
+          "type": "Bool?",
+          "description": "Optional Bool property"
+        },
+        "multipleFileRequired": {
+          "type": "Bool?",
+          "description": "Optional Bool property"
+        }
+      },
+      "relationships": [],
+      "name": "DocumentType",
+      "path": "../../ServicesProvider/Sources/ServicesProvider/Providers/Sportsradar/Models/Business/SportRadarModels+User.swift"
+    },
+    {
+      "properties": {
+        "favoriteEvents": {
+          "type": "FavoriteEvent",
+          "description": "Array of FavoriteEvent property"
+        }
+      },
+      "relationships": [
+        {
+          "via": "favoriteEvents",
+          "target": "FavoriteEvent"
+        }
+      ],
+      "name": "FavoriteEventResponse",
+      "path": "../../ServicesProvider/Sources/ServicesProvider/Providers/Sportsradar/Models/Business/SportRadarModels+Events.swift"
+    },
+    {
+      "properties": {
+        "promotedSports": {
+          "type": "PromotedSport",
+          "description": "Array of PromotedSport property"
+        }
+      },
+      "relationships": [
+        {
+          "via": "promotedSports",
+          "target": "PromotedSport"
+        }
+      ],
+      "name": "PromotedSportsNodeResponse",
+      "path": "../../ServicesProvider/Sources/ServicesProvider/Providers/Sportsradar/Models/Business/HomeWidgets/PromotedSports.swift"
+    },
+    {
+      "properties": {
+        "status": {
+          "type": "String",
+          "description": "String property"
+        },
+        "paymentId": {
+          "type": "Int",
+          "description": "Int property"
+        },
+        "amount": {
+          "type": "String",
+          "description": "String property"
+        }
+      },
+      "relationships": [],
+      "name": "PendingWithdrawal",
+      "path": "../../ServicesProvider/Sources/ServicesProvider/Providers/Sportsradar/Models/Business/Withdrawals/SportRadarModels+PendingWithdrawal.swift"
+    },
+    {
+      "properties": {
+        "bannerItems": {
+          "type": "Banner",
+          "description": "Array of Banner property"
+        }
+      },
+      "relationships": [
+        {
+          "via": "bannerItems",
+          "target": "Banner"
+        }
+      ],
+      "name": "BannerResponse",
+      "path": "../../ServicesProvider/Sources/ServicesProvider/Providers/Sportsradar/Models/Business/SportRadarModels+Events.swift"
+    },
+    {
+      "properties": {
+        "id": {
+          "type": "Int",
+          "description": "Int property"
+        },
+        "key": {
+          "type": "String",
+          "description": "String property"
+        },
+        "name": {
+          "type": "String",
+          "description": "String property"
+        },
+        "consentVersionId": {
+          "type": "Int",
+          "description": "Int property"
+        },
+        "isMandatory": {
+          "type": "Bool?",
+          "description": "Optional Bool property"
+        }
+      },
+      "relationships": [],
+      "name": "UserConsentInfo",
+      "path": "../../ServicesProvider/Sources/ServicesProvider/Providers/Sportsradar/Models/Business/UserConsents/SportRadarModels+UserConsentInfo.swift"
+    },
+    {
+      "properties": {
+        "status": {
+          "type": "String",
+          "description": "String property"
+        },
+        "message": {
+          "type": "String?",
+          "description": "Optional String property"
+        },
+        "bonus": {
+          "type": "RedeemBonus?",
+          "description": "Optional RedeemBonus property"
+        }
+      },
+      "relationships": [
+        {
+          "via": "bonus",
+          "target": "RedeemBonus"
+        }
+      ],
+      "name": "RedeemBonusResponse",
+      "path": "../../ServicesProvider/Sources/ServicesProvider/Providers/Sportsradar/Models/Business/Bonus/SportRadarModels+RedeemBonusResponse.swift"
+    },
+    {
+      "properties": {
+        "status": {
+          "type": "String",
+          "description": "String property"
+        },
+        "limits": {
+          "type": "ResponsibleGamingLimit",
+          "description": "Array of ResponsibleGamingLimit property"
+        }
+      },
+      "relationships": [
+        {
+          "via": "limits",
+          "target": "ResponsibleGamingLimit"
+        }
+      ],
+      "name": "ResponsibleGamingLimitsResponse",
+      "path": "../../ServicesProvider/Sources/ServicesProvider/Providers/Sportsradar/Models/Business/Limits/SportRadarModels+ResponsibleGamingLimitsResponse.swift"
+    },
+    {
+      "properties": {
+        "status": {
+          "type": "String",
+          "description": "String property"
+        },
+        "countries": {
+          "type": "String",
+          "description": "Array of String property"
+        }
+      },
+      "relationships": [],
+      "name": "GetCountriesResponse",
+      "path": "../../ServicesProvider/Sources/ServicesProvider/Providers/Sportsradar/Models/Business/SportRadarModels+User.swift"
+    },
+    {
+      "properties": {
+        "id": {
+          "type": "Int",
+          "description": "Int property"
+        },
+        "status": {
+          "type": "String",
+          "description": "String property"
+        }
+      },
+      "relationships": [],
+      "name": "SupportRequest",
+      "path": "../../ServicesProvider/Sources/ServicesProvider/Providers/Sportsradar/Models/Business/SportRadarModels+User.swift"
+    },
+    {
+      "properties": {
+        "effectiveDate": {
+          "type": "String",
+          "description": "String property"
+        },
+        "limit": {
+          "type": "String",
+          "description": "String property"
+        },
+        "limitNumber": {
+          "type": "Double",
+          "description": "Double property"
+        }
+      },
+      "relationships": [],
+      "name": "LimitPending",
+      "path": "../../ServicesProvider/Sources/ServicesProvider/Providers/Sportsradar/Models/Business/SportRadarModels+User.swift"
+    },
+    {
+      "properties": {
+        "status": {
+          "type": "String",
+          "description": "String property"
+        },
+        "message": {
+          "type": "String?",
+          "description": "Optional String property"
+        }
+      },
+      "relationships": [],
+      "name": "UploadDocumentResponse",
+      "path": "../../ServicesProvider/Sources/ServicesProvider/Providers/Sportsradar/Models/Business/SportRadarModels+User.swift"
+    },
+    {
+      "properties": {
+        "listId": {
+          "type": "Int",
+          "description": "Int property"
+        }
+      },
+      "relationships": [],
+      "name": "FavoritesListAddResponse",
+      "path": "../../ServicesProvider/Sources/ServicesProvider/Providers/Sportsradar/Models/Business/SportRadarModels+Events.swift"
+    },
+    {
+      "properties": {
+        "id": {
+          "type": "Double",
+          "description": "Double property"
+        },
+        "amount": {
+          "type": "Double?",
+          "description": "Optional Double property"
+        },
+        "amountFree": {
+          "type": "Double?",
+          "description": "Optional Double property"
+        }
+      },
+      "relationships": [],
+      "name": "CashbackResult",
+      "path": "../../ServicesProvider/Sources/ServicesProvider/Providers/Sportsradar/Models/Business/Cashback/SportRadarModels+CashbackResult.swift"
+    },
+    {
+      "properties": {
+        "headlineItems": {
+          "type": "HeadlineItem?",
+          "description": "Optional Array of HeadlineItem property"
+        }
+      },
+      "relationships": [
+        {
+          "via": "headlineItems",
+          "target": "HeadlineItem"
+        }
+      ],
+      "name": "HeadlineResponse",
+      "path": "../../ServicesProvider/Sources/ServicesProvider/Providers/Sportsradar/Models/Business/HomeWidgets/HeadlineResponse.swift"
+    },
+    {
+      "properties": {
+        "identifier": {
+          "type": "String",
+          "description": "String property"
+        },
+        "potentialReturn": {
+          "type": "Double",
+          "description": "Double property"
+        },
+        "totalAvailableStake": {
+          "type": "Double",
+          "description": "Double property"
+        },
+        "betLegs": {
+          "type": "PlacedBetLeg",
+          "description": "Array of PlacedBetLeg property"
+        },
+        "type": {
+          "type": "String?",
+          "description": "Optional String property"
+        }
+      },
+      "relationships": [
+        {
+          "via": "betLegs",
+          "target": "PlacedBetLeg"
+        }
+      ],
+      "name": "PlacedBetEntry",
+      "path": "../../ServicesProvider/Sources/ServicesProvider/Providers/Sportsradar/Models/Business/SportRadarModels+Betting.swift"
+    },
+    {
+      "properties": {
+        "id": {
+          "type": "Int",
+          "description": "Int property"
+        },
+        "name": {
+          "type": "String",
+          "description": "String property"
+        },
+        "customerId": {
+          "type": "Int",
+          "description": "Int property"
+        }
+      },
+      "relationships": [],
+      "name": "FavoriteList",
+      "path": "../../ServicesProvider/Sources/ServicesProvider/Providers/Sportsradar/Models/Business/SportRadarModels+Events.swift"
+    },
+    {
+      "properties": {
+        "promotedSports": {
+          "type": "PromotedSport",
+          "description": "Array of PromotedSport property"
+        }
+      },
+      "relationships": [
+        {
+          "via": "promotedSports",
+          "target": "PromotedSport"
+        }
+      ],
+      "name": "PromotedSportsResponse",
+      "path": "../../ServicesProvider/Sources/ServicesProvider/Providers/Sportsradar/Models/Business/HomeWidgets/PromotedSports.swift"
+    },
+    {
+      "properties": {
+        "id": {
+          "type": "Int",
+          "description": "Int property"
+        },
+        "paymentInfoId": {
+          "type": "Int",
+          "description": "Int property"
+        },
+        "key": {
+          "type": "String",
+          "description": "String property"
+        },
+        "value": {
+          "type": "String",
+          "description": "String property"
+        }
+      },
+      "relationships": [],
+      "name": "BankPaymentDetail",
+      "path": "../../ServicesProvider/Sources/ServicesProvider/Providers/Sportsradar/Models/Business/Withdrawals/SportRadarModels+BankPaymentDetail.swift"
+    },
+    {
+      "properties": {
+        "id": {
+          "type": "String",
+          "description": "String property"
+        },
+        "name": {
+          "type": "String",
+          "description": "String property"
+        },
+        "numberEvents": {
+          "type": "String",
+          "description": "String property"
+        },
+        "numberOutrightEvents": {
+          "type": "String",
+          "description": "String property"
+        }
+      },
+      "relationships": [],
+      "name": "SportCompetition",
+      "path": "../../ServicesProvider/Sources/ServicesProvider/Providers/Sportsradar/Models/Business/SportRadarModels+Events.swift"
+    },
+    {
+      "properties": {
+        "status": {
+          "type": "String",
+          "description": "String property"
+        },
+        "countryInfo": {
+          "type": "CountryInfo",
+          "description": "CountryInfo property"
+        }
+      },
+      "relationships": [
+        {
+          "via": "countryInfo",
+          "target": "CountryInfo"
+        }
+      ],
+      "name": "GetCountryInfoResponse",
+      "path": "../../ServicesProvider/Sources/ServicesProvider/Providers/Sportsradar/Models/Business/SportRadarModels+User.swift"
+    },
+    {
+      "properties": {
+        "sportNodes": {
+          "type": "SportNode?",
+          "description": "Optional Array of SportNode property"
+        }
+      },
+      "relationships": [
+        {
+          "via": "sportNodes",
+          "target": "SportNode"
+        }
+      ],
+      "name": "SportsList",
+      "path": "../../ServicesProvider/Sources/ServicesProvider/Providers/Sportsradar/Models/Business/SportRadarModels+Sports.swift"
+    },
+    {
+      "properties": {
+        "status": {
+          "type": "String",
+          "description": "String property"
+        },
+        "userDocuments": {
+          "type": "UserDocument",
+          "description": "Array of UserDocument property"
+        }
+      },
+      "relationships": [
+        {
+          "via": "userDocuments",
+          "target": "UserDocument"
+        }
+      ],
+      "name": "UserDocumentsResponse",
+      "path": "../../ServicesProvider/Sources/ServicesProvider/Providers/Sportsradar/Models/Business/SportRadarModels+User.swift"
+    },
+    {
+      "properties": {
+        "bets": {
+          "type": "Bet",
+          "description": "Array of Bet property"
+        }
+      },
+      "relationships": [
+        {
+          "via": "bets",
+          "target": "Bet"
+        }
+      ],
+      "name": "BettingHistory",
+      "path": "../../ServicesProvider/Sources/ServicesProvider/Providers/Sportsradar/Models/Business/SportRadarModels+Betting.swift"
+    },
+    {
+      "properties": {
+        "cashoutValue": {
+          "type": "Double",
+          "description": "Double property"
+        },
+        "partialCashoutAvailable": {
+          "type": "Bool?",
+          "description": "Optional Bool property"
+        }
+      },
+      "relationships": [],
+      "name": "Cashout",
+      "path": "../../ServicesProvider/Sources/ServicesProvider/Providers/Sportsradar/Models/Business/Cashout/SportRadarModels+Cashout.swift"
+    },
+    {
+      "properties": {
+        "balance": {
+          "type": "Double",
+          "description": "Double property"
+        }
+      },
+      "relationships": [],
+      "name": "FreebetResponse",
+      "path": "../../ServicesProvider/Sources/ServicesProvider/Providers/Sportsradar/Models/Business/Freebets/SportRadarModels+Freebet.swift"
+    },
+    {
+      "properties": {
+        "documentType": {
+          "type": "String",
+          "description": "String property"
+        },
+        "fileName": {
+          "type": "String?",
+          "description": "Optional String property"
+        },
+        "status": {
+          "type": "String",
+          "description": "String property"
+        },
+        "uploadDate": {
+          "type": "String",
+          "description": "String property"
+        },
+        "userDocumentFiles": {
+          "type": "UserDocumentFile?",
+          "description": "Optional Array of UserDocumentFile property"
+        }
+      },
+      "relationships": [
+        {
+          "via": "userDocumentFiles",
+          "target": "UserDocumentFile"
+        }
+      ],
+      "name": "UserDocument",
+      "path": "../../ServicesProvider/Sources/ServicesProvider/Providers/Sportsradar/Models/Business/SportRadarModels+User.swift"
+    },
+    {
+      "properties": {
+        "status": {
+          "type": "String",
+          "description": "String property"
+        },
+        "referralLinks": {
+          "type": "ReferralLink",
+          "description": "Array of ReferralLink property"
+        }
+      },
+      "relationships": [
+        {
+          "via": "referralLinks",
+          "target": "ReferralLink"
+        }
+      ],
+      "name": "ReferralResponse",
+      "path": "../../ServicesProvider/Sources/ServicesProvider/Providers/Sportsradar/Models/Business/Referrals/SportRadarModels+ReferralResponse.swift"
+    },
+    {
+      "properties": {
+        "id": {
+          "type": "Int",
+          "description": "Int property"
+        },
+        "partyId": {
+          "type": "Int",
+          "description": "Int property"
+        },
+        "type": {
+          "type": "String",
+          "description": "String property"
+        },
+        "description": {
+          "type": "String?",
+          "description": "Optional String property"
+        },
+        "priority": {
+          "type": "Int?",
+          "description": "Optional Int property"
+        },
+        "details": {
+          "type": "BankPaymentDetail",
+          "description": "Array of BankPaymentDetail property"
+        }
+      },
+      "relationships": [
+        {
+          "via": "details",
+          "target": "BankPaymentDetail"
+        }
+      ],
+      "name": "BankPaymentInfo",
+      "path": "../../ServicesProvider/Sources/ServicesProvider/Providers/Sportsradar/Models/Business/Withdrawals/SportRadarModels+BankPaymentInfo.swift"
+    },
+    {
+      "properties": {
+        "tickets": {
+          "type": "BetTicket",
+          "description": "Array of BetTicket property"
+        }
+      },
+      "relationships": [
+        {
+          "via": "tickets",
+          "target": "BetTicket"
+        }
+      ],
+      "name": "BetSlipStateResponse",
+      "path": "../../ServicesProvider/Sources/ServicesProvider/Providers/Sportsradar/Models/Business/SportRadarModels+Betting.swift"
+    },
+    {
+      "properties": {
+        "favoritesList": {
+          "type": "FavoriteList",
+          "description": "Array of FavoriteList property"
+        }
+      },
+      "relationships": [
+        {
+          "via": "favoritesList",
+          "target": "FavoriteList"
+        }
+      ],
+      "name": "FavoritesListResponse",
+      "path": "../../ServicesProvider/Sources/ServicesProvider/Providers/Sportsradar/Models/Business/SportRadarModels+Events.swift"
+    },
+    {
+      "properties": {
+        "id": {
+          "type": "String",
+          "description": "String property"
+        },
+        "title": {
+          "type": "String",
+          "description": "String property"
+        },
+        "imageUrl": {
+          "type": "String",
+          "description": "String property"
+        },
+        "linkUrl": {
+          "type": "String",
+          "description": "String property"
+        },
+        "bodyText": {
+          "type": "String",
+          "description": "String property"
+        }
+      },
+      "relationships": [],
+      "name": "PromotionalStory",
+      "path": "../../ServicesProvider/Sources/ServicesProvider/Providers/Sportsradar/Models/Business/PromotionStories/SportRadarModels+PromotionalStoriesResponse.swift"
+    },
+    {
+      "properties": {
+        "id": {
+          "type": "String",
+          "description": "String property"
+        },
+        "name": {
+          "type": "String",
+          "description": "String property"
+        },
+        "competitionNodes": {
+          "type": "SportCompetition",
+          "description": "Array of SportCompetition property"
+        }
+      },
+      "relationships": [
+        {
+          "via": "competitionNodes",
+          "target": "SportCompetition"
+        }
+      ],
+      "name": "SportRegionInfo",
+      "path": "../../ServicesProvider/Sources/ServicesProvider/Providers/Sportsradar/Models/Business/SportRadarModels+Events.swift"
+    },
+    {
+      "properties": {
+        "status": {
+          "type": "String",
+          "description": "String property"
+        },
+        "amount": {
+          "type": "String",
+          "description": "String property"
+        },
+        "currency": {
+          "type": "String",
+          "description": "String property"
+        }
+      },
+      "relationships": [],
+      "name": "CancelWithdrawalResponse",
+      "path": "../../ServicesProvider/Sources/ServicesProvider/Providers/Sportsradar/Models/Business/Withdrawals/SportRadarModels+CancelWithdrawalResponse.swift"
+    },
+    {
+      "properties": {
+        "externalUserId": {
+          "type": "String?",
+          "description": "Optional String property"
+        },
+        "info": {
+          "type": "ApplicantDataInfo?",
+          "description": "Optional ApplicantDataInfo property"
+        },
+        "reviewData": {
+          "type": "ApplicantReviewData?",
+          "description": "Optional ApplicantReviewData property"
+        },
+        "description": {
+          "type": "String?",
+          "description": "Optional String property"
+        }
+      },
+      "relationships": [
+        {
+          "via": "info",
+          "target": "ApplicantDataInfo"
+        },
+        {
+          "via": "reviewData",
+          "target": "ApplicantReviewData"
+        }
+      ],
+      "name": "ApplicantDataResponse",
+      "path": "../../ServicesProvider/Sources/ServicesProvider/Providers/Sportsradar/Models/Business/Documents/SportRadarModels+ApplicantDataResponse.swift"
+    },
+    {
+      "properties": {
+        "errors": {
+          "type": "CheckUsernameError?",
+          "description": "Optional Array of CheckUsernameError property"
+        },
+        "status": {
+          "type": "String",
+          "description": "String property"
+        },
+        "message": {
+          "type": "String?",
+          "description": "Optional String property"
+        },
+        "additionalInfos": {
+          "type": "CheckUsernameAdditionalInfo?",
+          "description": "Optional Array of CheckUsernameAdditionalInfo property"
+        }
+      },
+      "relationships": [
+        {
+          "via": "errors",
+          "target": "CheckUsernameError"
+        },
+        {
+          "via": "additionalInfos",
+          "target": "CheckUsernameAdditionalInfo"
+        }
+      ],
+      "name": "CheckUsernameResponse",
+      "path": "../../ServicesProvider/Sources/ServicesProvider/Providers/Sportsradar/Models/Business/SportRadarModels+User.swift"
+    },
+    {
+      "properties": {
+        "fileName": {
+          "type": "String",
+          "description": "String property"
+        }
+      },
+      "relationships": [],
+      "name": "UserDocumentFile",
+      "path": "../../ServicesProvider/Sources/ServicesProvider/Providers/Sportsradar/Models/Business/SportRadarModels+User.swift"
+    },
+    {
+      "properties": {
+        "cashoutResult": {
+          "type": "Int?",
+          "description": "Optional Int property"
+        },
+        "cashoutReoffer": {
+          "type": "Double?",
+          "description": "Optional Double property"
+        },
+        "message": {
+          "type": "String?",
+          "description": "Optional String property"
+        }
+      },
+      "relationships": [],
+      "name": "CashoutResult",
+      "path": "../../ServicesProvider/Sources/ServicesProvider/Providers/Sportsradar/Models/Business/Cashout/SportRadarModels+CashoutResult.swift"
+    },
+    {
+      "properties": {
+        "id": {
+          "type": "String?",
+          "description": "Optional String property"
+        },
+        "beginDate": {
+          "type": "String?",
+          "description": "Optional String property"
+        },
+        "betOfferId": {
+          "type": "Int?",
+          "description": "Optional Int property"
+        },
+        "country": {
+          "type": "String?",
+          "description": "Optional String property"
+        },
+        "countryId": {
+          "type": "String?",
+          "description": "Optional String property"
+        },
+        "eventId": {
+          "type": "String?",
+          "description": "Optional String property"
+        },
+        "eventType": {
+          "type": "String?",
+          "description": "Optional String property"
+        },
+        "league": {
+          "type": "String?",
+          "description": "Optional String property"
+        },
+        "leagueId": {
+          "type": "String?",
+          "description": "Optional String property"
+        },
+        "market": {
+          "type": "String?",
+          "description": "Optional String property"
+        },
+        "marketId": {
+          "type": "Int?",
+          "description": "Optional Int property"
+        },
+        "marketType": {
+          "type": "String?",
+          "description": "Optional String property"
+        },
+        "marketTypeId": {
+          "type": "Int?",
+          "description": "Optional Int property"
+        },
+        "orakoEventId": {
+          "type": "String",
+          "description": "String property"
+        },
+        "orakoMarketId": {
+          "type": "String",
+          "description": "String property"
+        },
+        "orakoSelectionId": {
+          "type": "String",
+          "description": "String property"
+        },
+        "outcomeType": {
+          "type": "String?",
+          "description": "Optional String property"
+        },
+        "outcomeId": {
+          "type": "Int?",
+          "description": "Optional Int property"
+        },
+        "participantIds": {
+          "type": "String?",
+          "description": "Optional Array of String property"
+        },
+        "participants": {
+          "type": "String?",
+          "description": "Optional Array of String property"
+        },
+        "period": {
+          "type": "String?",
+          "description": "Optional String property"
+        },
+        "periodId": {
+          "type": "Int?",
+          "description": "Optional Int property"
+        },
+        "quote": {
+          "type": "Double?",
+          "description": "Optional Double property"
+        },
+        "quoteGroup": {
+          "type": "String?",
+          "description": "Optional String property"
+        },
+        "sport": {
+          "type": "String?",
+          "description": "Optional String property"
+        },
+        "sportId": {
+          "type": "String?",
+          "description": "Optional String property"
+        },
+        "status": {
+          "type": "String?",
+          "description": "Optional String property"
+        }
+      },
+      "relationships": [],
+      "name": "PromotedBetslipSelection",
+      "path": "../../ServicesProvider/Sources/ServicesProvider/Providers/Sportsradar/Models/Business/SportRadarModels+PromotedBetslips.swift"
+    },
+    {
+      "properties": {
+        "id": {
+          "type": "String",
+          "description": "String property"
+        },
+        "name": {
+          "type": "String",
+          "description": "String property"
+        },
+        "marketGroups": {
+          "type": "SportCompetitionMarketGroup",
+          "description": "Array of SportCompetitionMarketGroup property"
+        },
+        "numberOutrightEvents": {
+          "type": "String",
+          "description": "String property"
+        },
+        "numberOutrightMarkets": {
+          "type": "String",
+          "description": "String property"
+        },
+        "parentId": {
+          "type": "String?",
+          "description": "Optional String property"
+        }
+      },
+      "relationships": [
+        {
+          "via": "marketGroups",
+          "target": "SportCompetitionMarketGroup"
+        }
+      ],
+      "name": "SportCompetitionInfo",
+      "path": "../../ServicesProvider/Sources/ServicesProvider/Providers/Sportsradar/Models/Business/SportRadarModels+Events.swift"
+    },
+    {
+      "properties": {
+        "displayOrder": {
+          "type": "Int?",
+          "description": "Optional Int property"
+        },
+        "idAccountFavorite": {
+          "type": "Int?",
+          "description": "Optional Int property"
+        }
+      },
+      "relationships": [],
+      "name": "FavoriteAddResponse",
+      "path": "../../ServicesProvider/Sources/ServicesProvider/Providers/Sportsradar/Models/Business/SportRadarModels+Events.swift"
+    },
+    {
+      "properties": {
+        "id": {
+          "type": "String",
+          "description": "String property"
+        },
+        "marketId": {
+          "type": "String",
+          "description": "String property"
+        },
+        "name": {
+          "type": "String",
+          "description": "String property"
+        },
+        "priceDenominator": {
+          "type": "String",
+          "description": "String property"
+        },
+        "priceNumerator": {
+          "type": "String",
+          "description": "String property"
+        },
+        "odd": {
+          "type": "Double",
+          "description": "Double property"
+        }
+      },
+      "relationships": [],
+      "name": "TicketSelection",
+      "path": "../../ServicesProvider/Sources/ServicesProvider/Providers/Sportsradar/Models/Business/SharedTicket/SportRadarModels+TicketSelection.swift"
+    },
+    {
+      "properties": {
+        "potentialReturn": {
+          "type": "Double",
+          "description": "Double property"
+        },
+        "totalStake": {
+          "type": "Double",
+          "description": "Double property"
+        },
+        "numberOfBets": {
+          "type": "Int",
+          "description": "Int property"
+        },
+        "totalOdd": {
+          "type": "Double?",
+          "description": "Optional Double property"
+        }
+      },
+      "relationships": [],
+      "name": "BetslipPotentialReturnResponse",
+      "path": "../../ServicesProvider/Sources/ServicesProvider/Providers/Sportsradar/Models/Business/SportRadarModels+Betting.swift"
+    },
+    {
+      "properties": {
+        "request": {
+          "type": "SupportRequest?",
+          "description": "Optional SupportRequest property"
+        },
+        "error": {
+          "type": "String?",
+          "description": "Optional String property"
+        },
+        "description": {
+          "type": "String?",
+          "description": "Optional String property"
+        }
+      },
+      "relationships": [
+        {
+          "via": "request",
+          "target": "SupportRequest"
+        }
+      ],
+      "name": "SupportResponse",
+      "path": "../../ServicesProvider/Sources/ServicesProvider/Providers/Sportsradar/Models/Business/SportRadarModels+User.swift"
+    },
+    {
+      "properties": {
+        "data": {
+          "type": "VaixBatchData",
+          "description": "VaixBatchData property"
+        },
+        "status": {
+          "type": "String",
+          "description": "String property"
+        }
+      },
+      "relationships": [
+        {
+          "via": "data",
+          "target": "VaixBatchData"
+        }
+      ],
+      "name": "VaixBatchBody",
+      "path": "../../ServicesProvider/Sources/ServicesProvider/Providers/Sportsradar/Models/Business/SportRadarModels+PromotedBetslips.swift"
+    },
+    {
+      "properties": {
+        "status": {
+          "type": "String",
+          "description": "String property"
+        },
+        "bonuses": {
+          "type": "AvailableBonus",
+          "description": "Array of AvailableBonus property"
+        }
+      },
+      "relationships": [
+        {
+          "via": "bonuses",
+          "target": "AvailableBonus"
+        }
+      ],
+      "name": "AvailableBonusResponse",
+      "path": "../../ServicesProvider/Sources/ServicesProvider/Providers/Sportsradar/Models/Business/Bonus/SportRadarModels+AvailableBonusResponse.swift"
+    },
+    {
+      "properties": {
+        "id": {
+          "type": "Double",
+          "description": "Double property"
+        },
+        "priceDenominator": {
+          "type": "Int",
+          "description": "Int property"
+        },
+        "priceNumerator": {
+          "type": "Int",
+          "description": "Int property"
+        },
+        "priceType": {
+          "type": "String",
+          "description": "String property"
+        }
+      },
+      "relationships": [],
+      "name": "SharedBetSelection",
+      "path": "../../ServicesProvider/Sources/ServicesProvider/Providers/Sportsradar/Models/Business/SharedTicket/SportRadarModels+SharedBetSelection.swift"
+    },
+    {
+      "properties": {
+        "id": {
+          "type": "String",
+          "description": "String property"
+        },
+        "name": {
+          "type": "String?",
+          "description": "Optional String property"
+        },
+        "numberEvents": {
+          "type": "String",
+          "description": "String property"
+        },
+        "numberOutrightEvents": {
+          "type": "String",
+          "description": "String property"
+        }
+      },
+      "relationships": [],
+      "name": "SportRegion",
+      "path": "../../ServicesProvider/Sources/ServicesProvider/Providers/Sportsradar/Models/Business/SportRadarModels+Events.swift"
+    },
+    {
+      "properties": {
+        "id": {
+          "type": "String",
+          "description": "String property"
+        },
+        "name": {
+          "type": "String",
+          "description": "String property"
+        },
+        "outcomes": {
+          "type": "Outcome",
+          "description": "Array of Outcome property"
+        },
+        "marketTypeId": {
+          "type": "String?",
+          "description": "Optional String property"
+        },
+        "eventMarketTypeId": {
+          "type": "String?",
+          "description": "Optional String property"
+        },
+        "marketTypeCategoryId": {
+          "type": "String?",
+          "description": "Optional String property"
+        },
+        "eventName": {
+          "type": "String?",
+          "description": "Optional String property"
+        },
+        "isMainOutright": {
+          "type": "Bool?",
+          "description": "Optional Bool property"
+        },
+        "eventMarketCount": {
+          "type": "Int?",
+          "description": "Optional Int property"
+        },
+        "isTradable": {
+          "type": "Bool",
+          "description": "Bool property"
+        },
+        "startDate": {
+          "type": "Date?",
+          "description": "Optional Date property"
+        },
+        "homeParticipant": {
+          "type": "String?",
+          "description": "Optional String property"
+        },
+        "awayParticipant": {
+          "type": "String?",
+          "description": "Optional String property"
+        },
+        "eventId": {
+          "type": "String?",
+          "description": "Optional String property"
+        },
+        "isOverUnder": {
+          "type": "Bool",
+          "description": "Bool property"
+        },
+        "marketDigitLine": {
+          "type": "String?",
+          "description": "Optional String property"
+        },
+        "outcomesOrder": {
+          "type": "OutcomesOrder",
+          "description": "OutcomesOrder property"
+        },
+        "competitionId": {
+          "type": "String?",
+          "description": "Optional String property"
+        },
+        "competitionName": {
+          "type": "String?",
+          "description": "Optional String property"
+        },
+        "sportTypeName": {
+          "type": "String?",
+          "description": "Optional String property"
+        },
+        "sportTypeCode": {
+          "type": "String?",
+          "description": "Optional String property"
+        },
+        "sportIdCode": {
+          "type": "String?",
+          "description": "Optional String property"
+        },
+        "tournamentCountryName": {
+          "type": "String?",
+          "description": "Optional String property"
+        },
+        "customBetAvailable": {
+          "type": "Bool?",
+          "description": "Optional Bool property"
+        },
+        "isMainMarket": {
+          "type": "Bool",
+          "description": "Bool property"
+        }
+      },
+      "relationships": [
+        {
+          "via": "outcomes",
+          "target": "Outcome"
+        },
+        {
+          "via": "outcomesOrder",
+          "target": "OutcomesOrder"
+        }
+      ],
+      "name": "Market",
+      "path": "../../ServicesProvider/Sources/ServicesProvider/Providers/Sportsradar/Models/Business/SportRadarModels+Events.swift"
+    },
+    {
+      "properties": {
+        "id": {
+          "type": "String",
+          "description": "String property"
+        },
+        "name": {
+          "type": "String",
+          "description": "String property"
+        },
+        "marketGroups": {
+          "type": "MarketGroupPromotedSport",
+          "description": "Array of MarketGroupPromotedSport property"
+        }
+      },
+      "relationships": [
+        {
+          "via": "marketGroups",
+          "target": "MarketGroupPromotedSport"
+        }
+      ],
+      "name": "PromotedSport",
+      "path": "../../ServicesProvider/Sources/ServicesProvider/Providers/Sportsradar/Models/Business/HomeWidgets/PromotedSports.swift"
+    },
+    {
+      "properties": {
+        "id": {
+          "type": "String",
+          "description": "String property"
+        },
+        "name": {
+          "type": "String",
+          "description": "String property"
+        },
+        "categoryName": {
+          "type": "String",
+          "description": "String property"
+        }
+      },
+      "relationships": [],
+      "name": "CompetitionParentNode",
+      "path": "../../ServicesProvider/Sources/ServicesProvider/Providers/Sportsradar/Models/Business/SportRadarModels+Events.swift"
+    },
+    {
+      "properties": {
+        "id": {
+          "type": "String",
+          "description": "String property"
+        },
+        "typeId": {
+          "type": "String?",
+          "description": "Optional String property"
+        },
+        "name": {
+          "type": "String?",
+          "description": "Optional String property"
+        }
+      },
+      "relationships": [],
+      "name": "MarketGroupPromotedSport",
+      "path": "../../ServicesProvider/Sources/ServicesProvider/Providers/Sportsradar/Models/Business/HomeWidgets/PromotedSports.swift"
+    },
+    {
+      "properties": {
+        "bets": {
+          "type": "SharedBet",
+          "description": "Array of SharedBet property"
+        },
+        "totalStake": {
+          "type": "Double",
+          "description": "Double property"
+        },
+        "betId": {
+          "type": "Double",
+          "description": "Double property"
+        }
+      },
+      "relationships": [
+        {
+          "via": "bets",
+          "target": "SharedBet"
+        }
+      ],
+      "name": "SharedTicketResponse",
+      "path": "../../ServicesProvider/Sources/ServicesProvider/Providers/Sportsradar/Models/Business/SharedTicket/SportRadarModels+SharedTicketResponse.swift"
+    },
+    {
+      "properties": {
+        "selections": {
+          "type": "BetTicketSelection",
+          "description": "Array of BetTicketSelection property"
+        },
+        "betTypeCode": {
+          "type": "String",
+          "description": "String property"
+        },
+        "winStake": {
+          "type": "String",
+          "description": "String property"
+        },
+        "potentialReturn": {
+          "type": "Double?",
+          "description": "Optional Double property"
+        },
+        "pool": {
+          "type": "Bool",
+          "description": "Bool property"
+        }
+      },
+      "relationships": [
+        {
+          "via": "selections",
+          "target": "BetTicketSelection"
+        }
+      ],
+      "name": "BetTicket",
+      "path": "../../ServicesProvider/Sources/ServicesProvider/Providers/Sportsradar/Models/Business/SportRadarModels+Betting.swift"
+    },
+    {
+      "properties": {
+        "body": {
+          "type": "VaixBatchBody",
+          "description": "VaixBatchBody property"
+        },
+        "name": {
+          "type": "String",
+          "description": "String property"
+        },
+        "statusCode": {
+          "type": "Int",
+          "description": "Int property"
+        }
+      },
+      "relationships": [
+        {
+          "via": "body",
+          "target": "VaixBatchBody"
+        }
+      ],
+      "name": "PromotedBetslipsInternalRequest",
+      "path": "../../ServicesProvider/Sources/ServicesProvider/Providers/Sportsradar/Models/Business/SportRadarModels+PromotedBetslips.swift"
+    },
+    {
+      "properties": {
+        "status": {
+          "type": "String",
+          "description": "String property"
+        },
+        "data": {
+          "type": "BankPaymentInfo",
+          "description": "Array of BankPaymentInfo property"
+        }
+      },
+      "relationships": [
+        {
+          "via": "data",
+          "target": "BankPaymentInfo"
+        }
+      ],
+      "name": "PaymentInformation",
+      "path": "../../ServicesProvider/Sources/ServicesProvider/Providers/Sportsradar/Models/Business/Withdrawals/SportRadarModels+PaymentInformation.swift"
+    },
+    {
+      "properties": {
+        "status": {
+          "type": "String",
+          "description": "String property"
+        },
+        "partyId": {
+          "type": "String",
+          "description": "String property"
+        },
+        "userId": {
+          "type": "String",
+          "description": "String property"
+        },
+        "email": {
+          "type": "String",
+          "description": "String property"
+        },
+        "firstName": {
+          "type": "String?",
+          "description": "Optional String property"
+        },
+        "lastName": {
+          "type": "String?",
+          "description": "Optional String property"
+        },
+        "middleName": {
+          "type": "String?",
+          "description": "Optional String property"
+        },
+        "nickname": {
+          "type": "String?",
+          "description": "Optional String property"
+        },
+        "language": {
+          "type": "String?",
+          "description": "Optional String property"
+        },
+        "phone": {
+          "type": "String?",
+          "description": "Optional String property"
+        },
+        "phoneCountryCode": {
+          "type": "String?",
+          "description": "Optional String property"
+        },
+        "phoneLocalNumber": {
+          "type": "String?",
+          "description": "Optional String property"
+        },
+        "phoneNeedsReview": {
+          "type": "Bool?",
+          "description": "Optional Bool property"
+        },
+        "birthDate": {
+          "type": "String?",
+          "description": "Optional String property"
+        },
+        "birthDateFormatted": {
+          "type": "Date",
+          "description": "Date property"
+        },
+        "regDate": {
+          "type": "String?",
+          "description": "Optional String property"
+        },
+        "regDateFormatted": {
+          "type": "Date?",
+          "description": "Optional Date property"
+        },
+        "mobilePhone": {
+          "type": "String?",
+          "description": "Optional String property"
+        },
+        "mobileCountryCode": {
+          "type": "String?",
+          "description": "Optional String property"
+        },
+        "mobileLocalNumber": {
+          "type": "String?",
+          "description": "Optional String property"
+        },
+        "mobileNeedsReview": {
+          "type": "Bool?",
+          "description": "Optional Bool property"
+        },
+        "currency": {
+          "type": "String?",
+          "description": "Optional String property"
+        },
+        "lastLogin": {
+          "type": "String?",
+          "description": "Optional String property"
+        },
+        "lastLoginFormatted": {
+          "type": "Date?",
+          "description": "Optional Date property"
+        },
+        "level": {
+          "type": "Int?",
+          "description": "Optional Int property"
+        },
+        "parentID": {
+          "type": "String?",
+          "description": "Optional String property"
+        },
+        "userType": {
+          "type": "Int?",
+          "description": "Optional Int property"
+        },
+        "isAutopay": {
+          "type": "Bool?",
+          "description": "Optional Bool property"
+        },
+        "registrationStatus": {
+          "type": "String?",
+          "description": "Optional String property"
+        },
+        "sessionKey": {
+          "type": "String?",
+          "description": "Optional String property"
+        },
+        "vipStatus": {
+          "type": "String?",
+          "description": "Optional String property"
+        },
+        "kycStatus": {
+          "type": "String?",
+          "description": "Optional String property"
+        },
+        "emailVerificationStatus": {
+          "type": "String",
+          "description": "String property"
+        },
+        "verificationStatus": {
+          "type": "String?",
+          "description": "Optional String property"
+        },
+        "lockedStatus": {
+          "type": "String?",
+          "description": "Optional String property"
+        },
+        "gender": {
+          "type": "String?",
+          "description": "Optional String property"
+        },
+        "contactPreference": {
+          "type": "String?",
+          "description": "Optional String property"
+        },
+        "verificationMethod": {
+          "type": "String?",
+          "description": "Optional String property"
+        },
+        "docNumber": {
+          "type": "String?",
+          "description": "Optional String property"
+        },
+        "readonlyFields": {
+          "type": "String?",
+          "description": "Optional String property"
+        },
+        "accountNumber": {
+          "type": "String?",
+          "description": "Optional String property"
+        },
+        "idCardNumber": {
+          "type": "String?",
+          "description": "Optional String property"
+        },
+        "madeDeposit": {
+          "type": "Bool?",
+          "description": "Optional Bool property"
+        },
+        "testPlayer": {
+          "type": "Bool?",
+          "description": "Optional Bool property"
+        },
+        "address": {
+          "type": "String?",
+          "description": "Optional String property"
+        },
+        "city": {
+          "type": "String?",
+          "description": "Optional String property"
+        },
+        "province": {
+          "type": "String?",
+          "description": "Optional String property"
+        },
+        "postalCode": {
+          "type": "String?",
+          "description": "Optional String property"
+        },
+        "country": {
+          "type": "String?",
+          "description": "Optional String property"
+        },
+        "nationality": {
+          "type": "String?",
+          "description": "Optional String property"
+        },
+        "municipality": {
+          "type": "String?",
+          "description": "Optional String property"
+        },
+        "streetNumber": {
+          "type": "String?",
+          "description": "Optional String property"
+        },
+        "building": {
+          "type": "String?",
+          "description": "Optional String property"
+        },
+        "unit": {
+          "type": "String?",
+          "description": "Optional String property"
+        },
+        "floorNumber": {
+          "type": "String?",
+          "description": "Optional String property"
+        },
+        "birthDepartment": {
+          "type": "String?",
+          "description": "Optional String property"
+        },
+        "birthCity": {
+          "type": "String?",
+          "description": "Optional String property"
+        },
+        "birthCoutryCode": {
+          "type": "String?",
+          "description": "Optional String property"
+        },
+        "extraInfos": {
+          "type": "ExtraInfo?",
+          "description": "Optional Array of ExtraInfo property"
+        }
+      },
+      "relationships": [
+        {
+          "via": "extraInfos",
+          "target": "ExtraInfo"
+        }
+      ],
+      "name": "PlayerInfoResponse",
+      "path": "../../ServicesProvider/Sources/ServicesProvider/Providers/Sportsradar/Models/Business/SportRadarModels+User.swift"
+    },
+    {
+      "properties": {
+        "status": {
+          "type": "String",
+          "description": "String property"
+        },
+        "exists": {
+          "type": "String",
+          "description": "String property"
+        },
+        "fieldExist": {
+          "type": "Bool",
+          "description": "Bool property"
+        }
+      },
+      "relationships": [],
+      "name": "CheckCredentialResponse",
+      "path": "../../ServicesProvider/Sources/ServicesProvider/Providers/Sportsradar/Models/Business/SportRadarModels+User.swift"
+    },
+    {
+      "properties": {
+        "status": {
+          "type": "String",
+          "description": "String property"
+        },
+        "launchToken": {
+          "type": "String",
+          "description": "String property"
+        }
+      },
+      "relationships": [],
+      "name": "OpenSessionResponse",
+      "path": "../../ServicesProvider/Sources/ServicesProvider/Providers/Sportsradar/Models/Business/SportRadarModels+User.swift"
+    },
+    {
+      "properties": {
+        "id": {
+          "type": "String",
+          "description": "String property"
+        },
+        "name": {
+          "type": "String",
+          "description": "String property"
+        },
+        "favoriteListId": {
+          "type": "Int",
+          "description": "Int property"
+        },
+        "accountFavoriteId": {
+          "type": "Int",
+          "description": "Int property"
+        }
+      },
+      "relationships": [],
+      "name": "FavoriteEvent",
+      "path": "../../ServicesProvider/Sources/ServicesProvider/Providers/Sportsradar/Models/Business/SportRadarModels+Events.swift"
+    },
+    {
+      "properties": {
+        "status": {
+          "type": "String",
+          "description": "String property"
+        },
+        "message": {
+          "type": "String?",
+          "description": "Optional String property"
+        },
+        "userConsents": {
+          "type": "UserConsent",
+          "description": "Array of UserConsent property"
+        }
+      },
+      "relationships": [
+        {
+          "via": "userConsents",
+          "target": "UserConsent"
+        }
+      ],
+      "name": "UserConsentsResponse",
+      "path": "../../ServicesProvider/Sources/ServicesProvider/Providers/Sportsradar/Models/Business/UserConsents/SportRadarModels+UserConsentsResponse.swift"
+    },
+    {
+      "properties": {
+        "listId": {
+          "type": "String?",
+          "description": "Optional String property"
+        }
+      },
+      "relationships": [],
+      "name": "FavoritesListDeleteResponse",
+      "path": "../../ServicesProvider/Sources/ServicesProvider/Providers/Sportsradar/Models/Business/SportRadarModels+Events.swift"
+    },
+    {
+      "properties": {
+        "applicantDocs": {
+          "type": "ApplicantDoc?",
+          "description": "Optional Array of ApplicantDoc property"
+        }
+      },
+      "relationships": [
+        {
+          "via": "applicantDocs",
+          "target": "ApplicantDoc"
+        }
+      ],
+      "name": "ApplicantDataInfo",
+      "path": "../../ServicesProvider/Sources/ServicesProvider/Providers/Sportsradar/Models/Business/Documents/SportRadarModels+ApplicantDataResponse.swift"
+    },
+    {
+      "properties": {
+        "sportType": {
+          "type": "SportType",
+          "description": "SportType property"
+        },
+        "eventsCount": {
+          "type": "Int",
+          "description": "Int property"
+        },
+        "sportName": {
+          "type": "String",
+          "description": "String property"
+        }
+      },
+      "relationships": [
+        {
+          "via": "sportType",
+          "target": "SportType"
+        }
+      ],
+      "name": "SportTypeDetails",
+      "path": "../../ServicesProvider/Sources/ServicesProvider/Providers/Sportsradar/Models/Business/SportRadarModels+Sports.swift"
+    },
+    {
+      "properties": {
+        "promotedBetslips": {
+          "type": "PromotedBetslip",
+          "description": "Array of PromotedBetslip property"
+        },
+        "count": {
+          "type": "Int",
+          "description": "Int property"
+        }
+      },
+      "relationships": [
+        {
+          "via": "promotedBetslips",
+          "target": "PromotedBetslip"
+        }
+      ],
+      "name": "VaixBatchData",
+      "path": "../../ServicesProvider/Sources/ServicesProvider/Providers/Sportsradar/Models/Business/SportRadarModels+PromotedBetslips.swift"
+    },
+    {
+      "properties": {
+        "state": {
+          "type": "Int",
+          "description": "Int property"
+        },
+        "detailedState": {
+          "type": "Int",
+          "description": "Int property"
+        },
+        "statusCode": {
+          "type": "String?",
+          "description": "Optional String property"
+        },
+        "statusText": {
+          "type": "String?",
+          "description": "Optional String property"
+        }
+      },
+      "relationships": [],
+      "name": "ConfirmBetPlaceResponse",
+      "path": "../../ServicesProvider/Sources/ServicesProvider/Providers/Sportsradar/Models/Business/SportRadarModels+Betting.swift"
+    },
+    {
+      "properties": {
+        "id": {
+          "type": "String",
+          "description": "String property"
+        },
+        "name": {
+          "type": "String",
+          "description": "String property"
+        }
+      },
+      "relationships": [],
+      "name": "SportCompetitionMarketGroup",
+      "path": "../../ServicesProvider/Sources/ServicesProvider/Providers/Sportsradar/Models/Business/SportRadarModels+Events.swift"
+    },
+    {
+      "properties": {
+        "name": {
+          "type": "String",
+          "description": "String property"
+        },
+        "iso2Code": {
+          "type": "String",
+          "description": "String property"
+        },
+        "phonePrefix": {
+          "type": "String",
+          "description": "String property"
+        }
+      },
+      "relationships": [],
+      "name": "CountryInfo",
+      "path": "../../ServicesProvider/Sources/ServicesProvider/Providers/Sportsradar/Models/Business/SportRadarModels+User.swift"
+    },
+    {
+      "properties": {
+        "title": {
+          "type": "String",
+          "description": "String property"
+        },
+        "competitions": {
+          "type": "TopCompetitionPointer",
+          "description": "Array of TopCompetitionPointer property"
+        }
+      },
+      "relationships": [
+        {
+          "via": "competitions",
+          "target": "TopCompetitionPointer"
+        }
+      ],
+      "name": "TopCompetitionData",
+      "path": "../../ServicesProvider/Sources/ServicesProvider/Providers/Sportsradar/Models/Business/Competitions/SportRadarModels+TopCompetitionsResponse.swift"
+    },
+    {
+      "properties": {
+        "id": {
+          "type": "String",
+          "description": "String property"
+        },
+        "name": {
+          "type": "String",
+          "description": "String property"
+        },
+        "competitionId": {
+          "type": "String",
+          "description": "String property"
+        }
+      },
+      "relationships": [],
+      "name": "TopCompetitionPointer",
+      "path": "../../ServicesProvider/Sources/ServicesProvider/Providers/Sportsradar/Models/Business/Competitions/SportRadarModels+TopCompetitionsResponse.swift"
+    },
+    {
+      "properties": {
+        "idfwheadline": {
+          "type": "String?",
+          "description": "Optional String property"
+        },
+        "marketGroupId": {
+          "type": "String?",
+          "description": "Optional String property"
+        },
+        "marketId": {
+          "type": "String?",
+          "description": "Optional String property"
+        },
+        "name": {
+          "type": "String?",
+          "description": "Optional String property"
+        },
+        "title": {
+          "type": "String?",
+          "description": "Optional String property"
+        },
+        "tsactivefrom": {
+          "type": "String?",
+          "description": "Optional String property"
+        },
+        "tsactiveto": {
+          "type": "String?",
+          "description": "Optional String property"
+        },
+        "idfwheadlinetype": {
+          "type": "String?",
+          "description": "Optional String property"
+        },
+        "headlinemediatype": {
+          "type": "String?",
+          "description": "Optional String property"
+        },
+        "categoryName": {
+          "type": "String?",
+          "description": "Optional String property"
+        },
+        "numofselections": {
+          "type": "String?",
+          "description": "Optional String property"
+        },
+        "imageURL": {
+          "type": "String?",
+          "description": "Optional String property"
+        },
+        "linkURL": {
+          "type": "String?",
+          "description": "Optional String property"
+        },
+        "oldMarketId": {
+          "type": "String?",
+          "description": "Optional String property"
+        },
+        "tournamentCountryName": {
+          "type": "String?",
+          "description": "Optional String property"
+        }
+      },
+      "relationships": [],
+      "name": "HeadlineItem",
+      "path": "../../ServicesProvider/Sources/ServicesProvider/Providers/Sportsradar/Models/Business/HomeWidgets/HeadlineResponse.swift"
+    },
+    {
+      "properties": {
+        "status": {
+          "type": "String",
+          "description": "String property"
+        },
+        "pendingWithdrawals": {
+          "type": "PendingWithdrawal",
+          "description": "Array of PendingWithdrawal property"
+        }
+      },
+      "relationships": [
+        {
+          "via": "pendingWithdrawals",
+          "target": "PendingWithdrawal"
+        }
+      ],
+      "name": "PendingWithdrawalResponse",
+      "path": "../../ServicesProvider/Sources/ServicesProvider/Providers/Sportsradar/Models/Business/Withdrawals/SportRadarModels+PendingWithdrawalResponse.swift"
+    },
+    {
+      "properties": {
+        "id": {
+          "type": "String",
+          "description": "String property"
+        },
+        "name": {
+          "type": "String",
+          "description": "String property"
+        },
+        "numberEvents": {
+          "type": "Int",
+          "description": "Int property"
+        },
+        "numberOutrightEvents": {
+          "type": "Int",
+          "description": "Int property"
+        },
+        "numberOutrightMarkets": {
+          "type": "Int",
+          "description": "Int property"
+        },
+        "numberLiveEvents": {
+          "type": "Int",
+          "description": "Int property"
+        },
+        "alphaCode": {
+          "type": "String",
+          "description": "String property"
+        }
+      },
+      "relationships": [],
+      "name": "SportNode",
+      "path": "../../ServicesProvider/Sources/ServicesProvider/Providers/Sportsradar/Models/Business/SportRadarModels+Sports.swift"
+    },
+    {
+      "properties": {
+        "status": {
+          "type": "String",
+          "description": "String property"
+        },
+        "referees": {
+          "type": "Referee",
+          "description": "Array of Referee property"
+        }
+      },
+      "relationships": [
+        {
+          "via": "referees",
+          "target": "Referee"
+        }
+      ],
+      "name": "RefereesResponse",
+      "path": "../../ServicesProvider/Sources/ServicesProvider/Providers/Sportsradar/Models/Business/Referrals/SportRadarModels+RefereesResponse.swift"
+    },
+    {
+      "properties": {
+        "oddChangeLegacy": {
+          "type": "BetslipOddChangeSetting?",
+          "description": "Optional BetslipOddChangeSetting property"
+        },
+        "oddChangeRunningOrPreMatch": {
+          "type": "BetslipOddChangeSetting?",
+          "description": "Optional BetslipOddChangeSetting property"
+        }
+      },
+      "relationships": [
+        {
+          "via": "oddChangeLegacy",
+          "target": "BetslipOddChangeSetting"
+        },
+        {
+          "via": "oddChangeRunningOrPreMatch",
+          "target": "BetslipOddChangeSetting"
+        }
+      ],
+      "name": "BetslipSettings",
+      "path": "../../ServicesProvider/Sources/ServicesProvider/Providers/Sportsradar/Models/Business/SportRadarModels+Betting.swift"
+    },
+    {
+      "properties": {
+        "status": {
+          "type": "String",
+          "description": "String property"
+        },
+        "message": {
+          "type": "String?",
+          "description": "Optional String property"
+        }
+      },
+      "relationships": [],
+      "name": "AddPaymentInformationResponse",
+      "path": "../../ServicesProvider/Sources/ServicesProvider/Providers/Sportsradar/Models/Business/Withdrawals/SportRadarModels+AddPaymentInformationResponse.swift"
+    },
+    {
+      "properties": {
+        "status": {
+          "type": "String",
+          "description": "String property"
+        },
+        "errors": {
+          "type": "FieldError?",
+          "description": "Optional Array of FieldError property"
+        },
+        "message": {
+          "type": "String?",
+          "description": "Optional String property"
+        }
+      },
+      "relationships": [
+        {
+          "via": "errors",
+          "target": "FieldError"
+        }
+      ],
+      "name": "StatusResponse",
+      "path": "../../ServicesProvider/Sources/ServicesProvider/Providers/Sportsradar/Models/Business/SportRadarModels+User.swift"
+    },
+    {
+      "properties": {
+        "field": {
+          "type": "String",
+          "description": "String property"
+        },
+        "error": {
+          "type": "String",
+          "description": "String property"
+        }
+      },
+      "relationships": [],
+      "name": "FieldError",
+      "path": "../../ServicesProvider/Sources/ServicesProvider/Providers/Sportsradar/Models/Business/SportRadarModels+User.swift"
+    },
+    {
+      "properties": {
+        "data": {
+          "type": "TicketSelection?",
+          "description": "Optional TicketSelection property"
+        },
+        "errorType": {
+          "type": "String?",
+          "description": "Optional String property"
+        }
+      },
+      "relationships": [
+        {
+          "via": "data",
+          "target": "TicketSelection"
+        }
+      ],
+      "name": "TicketSelectionResponse",
+      "path": "../../ServicesProvider/Sources/ServicesProvider/Providers/Sportsradar/Models/Business/SharedTicket/SportRadarModels+TicketSelectionResponse.swift"
+    },
+    {
+      "properties": {
+        "promotedBetslips": {
+          "type": "PromotedBetslip",
+          "description": "Array of PromotedBetslip property"
+        },
+        "status": {
+          "type": "String",
+          "description": "String property"
+        }
+      },
+      "relationships": [
+        {
+          "via": "promotedBetslips",
+          "target": "PromotedBetslip"
+        }
+      ],
+      "name": "PromotedBetslipsBatchResponse",
+      "path": "../../ServicesProvider/Sources/ServicesProvider/Providers/Sportsradar/Models/Business/SportRadarModels+PromotedBetslips.swift"
+    },
+    {
+      "properties": {
+        "data": {
+          "type": "TopCompetitionData",
+          "description": "Array of TopCompetitionData property"
+        }
+      },
+      "relationships": [
+        {
+          "via": "data",
+          "target": "TopCompetitionData"
+        }
+      ],
+      "name": "TopCompetitionsResponse",
+      "path": "../../ServicesProvider/Sources/ServicesProvider/Providers/Sportsradar/Models/Business/Competitions/SportRadarModels+TopCompetitionsResponse.swift"
+    },
+    {
+      "properties": {
+        "status": {
+          "type": "String",
+          "description": "String property"
+        },
+        "balance": {
+          "type": "String?",
+          "description": "Optional String property"
+        },
+        "message": {
+          "type": "String?",
+          "description": "Optional String property"
+        }
+      },
+      "relationships": [],
+      "name": "CashbackBalance",
+      "path": "../../ServicesProvider/Sources/ServicesProvider/Providers/Sportsradar/Models/Business/Cashback/SportRadarModels+CashbackBalance.swift"
+    },
+    {
+      "properties": {
+        "events": {
+          "type": "Event",
+          "description": "Array of Event property"
+        },
+        "marketGroupId": {
+          "type": "String?",
+          "description": "Optional String property"
+        }
+      },
+      "relationships": [
+        {
+          "via": "events",
+          "target": "Event"
+        }
+      ],
+      "name": "EventsGroup",
+      "path": "../../ServicesProvider/Sources/ServicesProvider/Providers/Sportsradar/Models/Business/SportRadarModels+Events.swift"
+    },
+    {
+      "properties": {
+        "data": {
+          "type": "T",
+          "description": "T property"
+        },
+        "version": {
+          "type": "Int?",
+          "description": "Optional Int property"
+        }
+      },
+      "relationships": [
+        {
+          "via": "data",
+          "target": "T"
+        }
+      ],
+      "name": "SportRadarResponse",
+      "path": "../../ServicesProvider/Sources/ServicesProvider/Providers/Sportsradar/Models/Business/SportRadarModels+Events.swift"
+    },
+    {
+      "properties": {
+        "promotionalBannerItems": {
+          "type": "PromotionalBanner",
+          "description": "Array of PromotionalBanner property"
+        }
+      },
+      "relationships": [
+        {
+          "via": "promotionalBannerItems",
+          "target": "PromotionalBanner"
+        }
+      ],
+      "name": "PromotionalBannersResponse",
+      "path": "../../ServicesProvider/Sources/ServicesProvider/Providers/Sportsradar/Models/Business/HomeWidgets/PromotionalBanners.swift"
+    },
+    {
+      "properties": {
+        "promotionalStories": {
+          "type": "PromotionalStory",
+          "description": "Array of PromotionalStory property"
+        }
+      },
+      "relationships": [
+        {
+          "via": "promotionalStories",
+          "target": "PromotionalStory"
+        }
+      ],
+      "name": "PromotionalStoriesResponse",
+      "path": "../../ServicesProvider/Sources/ServicesProvider/Providers/Sportsradar/Models/Business/PromotionStories/SportRadarModels+PromotionalStoriesResponse.swift"
+    },
+    {
+      "properties": {
+        "status": {
+          "type": "String",
+          "description": "String property"
+        },
+        "transactions": {
+          "type": "TransactionDetail?",
+          "description": "Optional Array of TransactionDetail property"
+        }
+      },
+      "relationships": [
+        {
+          "via": "transactions",
+          "target": "TransactionDetail"
+        }
+      ],
+      "name": "TransactionsHistoryResponse",
+      "path": "../../ServicesProvider/Sources/ServicesProvider/Providers/Sportsradar/Models/Business/SportRadarModels+Transactions.swift"
+    },
+    {
+      "properties": {
+        "id": {
+          "type": "String",
+          "description": "String property"
+        },
+        "name": {
+          "type": "String",
+          "description": "String property"
+        },
+        "events": {
+          "type": "Event",
+          "description": "Array of Event property"
+        }
+      },
+      "relationships": [
+        {
+          "via": "events",
+          "target": "Event"
+        }
+      ],
+      "name": "CompetitionMarketGroup",
+      "path": "../../ServicesProvider/Sources/ServicesProvider/Providers/Sportsradar/Models/Business/SportRadarModels+Events.swift"
+    },
+    {
+      "properties": {
+        "identifier": {
+          "type": "String",
+          "description": "String property"
+        },
+        "priceType": {
+          "type": "String",
+          "description": "String property"
+        },
+        "odd": {
+          "type": "Double",
+          "description": "Double property"
+        },
+        "priceNumerator": {
+          "type": "Int",
+          "description": "Int property"
+        },
+        "priceDenominator": {
+          "type": "Int",
+          "description": "Int property"
+        }
+      },
+      "relationships": [],
+      "name": "PlacedBetLeg",
+      "path": "../../ServicesProvider/Sources/ServicesProvider/Providers/Sportsradar/Models/Business/SportRadarModels+Betting.swift"
+    },
+    {
+      "properties": {
+        "status": {
+          "type": "String",
+          "description": "String property"
+        },
+        "paymentId": {
+          "type": "String?",
+          "description": "Optional String property"
+        },
+        "message": {
+          "type": "String?",
+          "description": "Optional String property"
+        }
+      },
+      "relationships": [],
+      "name": "ProcessWithdrawalResponse",
+      "path": "../../ServicesProvider/Sources/ServicesProvider/Providers/Sportsradar/Models/Business/Withdrawals/SportRadarModels+ProcessWithdrawalResponse.swift"
+    },
+    {
+      "properties": {
+        "docType": {
+          "type": "String",
+          "description": "String property"
+        }
+      },
+      "relationships": [],
+      "name": "ApplicantDoc",
+      "path": "../../ServicesProvider/Sources/ServicesProvider/Providers/Sportsradar/Models/Business/Documents/SportRadarModels+ApplicantDataResponse.swift"
+    },
+    {
+      "properties": {
+        "data": {
+          "type": "T?",
+          "description": "Optional T property"
+        }
+      },
+      "relationships": [
+        {
+          "via": "data",
+          "target": "T"
+        }
+      ],
+      "name": "RestResponse",
+      "path": "../../ServicesProvider/Sources/ServicesProvider/Providers/Sportsradar/Models/Business/SportRadarModels+SocketContent.swift"
+    },
+    {
+      "properties": {
+        "status": {
+          "type": "String",
+          "description": "String property"
+        },
+        "consents": {
+          "type": "Consent",
+          "description": "Array of Consent property"
+        }
+      },
+      "relationships": [
+        {
+          "via": "consents",
+          "target": "Consent"
+        }
+      ],
+      "name": "ConsentsResponse",
+      "path": "../../ServicesProvider/Sources/ServicesProvider/Providers/Sportsradar/Models/Business/UserConsents/SportRadarModels+UserConsentsResponse.swift"
+    },
+    {
+      "properties": {
+        "id": {
+          "type": "Int",
+          "description": "Int property"
+        },
+        "dateTime": {
+          "type": "String",
+          "description": "String property"
+        },
+        "type": {
+          "type": "String",
+          "description": "String property"
+        },
+        "amount": {
+          "type": "Double",
+          "description": "Double property"
+        },
+        "postBalance": {
+          "type": "Double",
+          "description": "Double property"
+        },
+        "amountBonus": {
+          "type": "Double",
+          "description": "Double property"
+        },
+        "postBalanceBonus": {
+          "type": "Double",
+          "description": "Double property"
+        },
+        "currency": {
+          "type": "String",
+          "description": "String property"
+        },
+        "paymentId": {
+          "type": "Int?",
+          "description": "Optional Int property"
+        },
+        "gameTranId": {
+          "type": "String?",
+          "description": "Optional String property"
+        },
+        "reference": {
+          "type": "String?",
+          "description": "Optional String property"
+        },
+        "escrowTranType": {
+          "type": "String?",
+          "description": "Optional String property"
+        },
+        "escrowTranSubType": {
+          "type": "String?",
+          "description": "Optional String property"
+        },
+        "escrowType": {
+          "type": "String?",
+          "description": "Optional String property"
+        }
+      },
+      "relationships": [],
+      "name": "TransactionDetail",
+      "path": "../../ServicesProvider/Sources/ServicesProvider/Providers/Sportsradar/Models/Business/SportRadarModels+Transactions.swift"
+    },
+    {
+      "properties": {
+        "id": {
+          "type": "String",
+          "description": "String property"
+        },
+        "name": {
+          "type": "String",
+          "description": "String property"
+        },
+        "hashCode": {
+          "type": "String",
+          "description": "String property"
+        },
+        "marketId": {
+          "type": "String?",
+          "description": "Optional String property"
+        },
+        "orderValue": {
+          "type": "String?",
+          "description": "Optional String property"
+        },
+        "externalReference": {
+          "type": "String?",
+          "description": "Optional String property"
+        },
+        "odd": {
+          "type": "OddFormat",
+          "description": "OddFormat property"
+        },
+        "priceNumerator": {
+          "type": "String?",
+          "description": "Optional String property"
+        },
+        "priceDenominator": {
+          "type": "String?",
+          "description": "Optional String property"
+        },
+        "isTradable": {
+          "type": "Bool?",
+          "description": "Optional Bool property"
+        },
+        "isTerminated": {
+          "type": "Bool?",
+          "description": "Optional Bool property"
+        },
+        "isOverUnder": {
+          "type": "Bool",
+          "description": "Bool property"
+        },
+        "customBetAvailableMarket": {
+          "type": "Bool?",
+          "description": "Optional Bool property"
+        }
+      },
+      "relationships": [
+        {
+          "via": "odd",
+          "target": "OddFormat"
+        }
+      ],
+      "name": "Outcome",
+      "path": "../../ServicesProvider/Sources/ServicesProvider/Providers/Sportsradar/Models/Business/SportRadarModels+Events.swift"
+    },
+    {
+      "properties": {
+        "reviewAnswer": {
+          "type": "String",
+          "description": "String property"
+        },
+        "reviewRejectType": {
+          "type": "String?",
+          "description": "Optional String property"
+        },
+        "moderationComment": {
+          "type": "String?",
+          "description": "Optional String property"
+        }
+      },
+      "relationships": [],
+      "name": "ApplicantReviewResult",
+      "path": "../../ServicesProvider/Sources/ServicesProvider/Providers/Sportsradar/Models/Business/Documents/SportRadarModels+ApplicantDataResponse.swift"
+    },
+    {
+      "properties": {
+        "id": {
+          "type": "Int",
+          "description": "Int property"
+        },
+        "name": {
+          "type": "String",
+          "description": "String property"
+        },
+        "status": {
+          "type": "String",
+          "description": "String property"
+        },
+        "triggerDate": {
+          "type": "String",
+          "description": "String property"
+        },
+        "expiryDate": {
+          "type": "String",
+          "description": "String property"
+        },
+        "amount": {
+          "type": "String",
+          "description": "String property"
+        },
+        "wagerRequired": {
+          "type": "String",
+          "description": "String property"
+        },
+        "amountWagered": {
+          "type": "String",
+          "description": "String property"
+        }
+      },
+      "relationships": [],
+      "name": "RedeemBonus",
+      "path": "../../ServicesProvider/Sources/ServicesProvider/Providers/Sportsradar/Models/Business/Bonus/SportRadarModels+RedeemBonus.swift"
+    },
+    {
+      "properties": {
+        "status": {
+          "type": "String",
+          "description": "String property"
+        },
+        "message": {
+          "type": "String?",
+          "description": "Optional String property"
+        }
+      },
+      "relationships": [],
+      "name": "BasicResponse",
+      "path": "../../ServicesProvider/Sources/ServicesProvider/Providers/Sportsradar/Models/Business/SportRadarModels+User.swift"
+    },
+    {
+      "properties": {
+        "status": {
+          "type": "String",
+          "description": "String property"
+        },
+        "conversionId": {
+          "type": "String?",
+          "description": "Optional String property"
+        },
+        "message": {
+          "type": "String?",
+          "description": "Optional String property"
+        }
+      },
+      "relationships": [],
+      "name": "PrepareWithdrawalResponse",
+      "path": "../../ServicesProvider/Sources/ServicesProvider/Providers/Sportsradar/Models/Business/Withdrawals/SportRadarModels+ProcessWithdrawalResponse.swift"
+    },
+    {
+      "properties": {
+        "identifier": {
+          "type": "String",
+          "description": "String property"
+        },
+        "eventName": {
+          "type": "String",
+          "description": "String property"
+        },
+        "homeTeamName": {
+          "type": "String?",
+          "description": "Optional String property"
+        },
+        "awayTeamName": {
+          "type": "String?",
+          "description": "Optional String property"
+        },
+        "sportTypeName": {
+          "type": "String",
+          "description": "String property"
+        },
+        "type": {
+          "type": "String",
+          "description": "String property"
+        },
+        "state": {
+          "type": "BetState",
+          "description": "BetState property"
+        },
+        "result": {
+          "type": "BetResult",
+          "description": "BetResult property"
+        },
+        "globalState": {
+          "type": "BetState",
+          "description": "BetState property"
+        },
+        "marketName": {
+          "type": "String",
+          "description": "String property"
+        },
+        "outcomeName": {
+          "type": "String",
+          "description": "String property"
+        },
+        "eventResult": {
+          "type": "String?",
+          "description": "Optional String property"
+        },
+        "potentialReturn": {
+          "type": "Double?",
+          "description": "Optional Double property"
+        },
+        "totalReturn": {
+          "type": "Double?",
+          "description": "Optional Double property"
+        },
+        "totalOdd": {
+          "type": "Double",
+          "description": "Double property"
+        },
+        "totalStake": {
+          "type": "Double",
+          "description": "Double property"
+        },
+        "attemptedDate": {
+          "type": "Date",
+          "description": "Date property"
+        },
+        "oddNumerator": {
+          "type": "Double",
+          "description": "Double property"
+        },
+        "oddDenominator": {
+          "type": "Double",
+          "description": "Double property"
+        },
+        "order": {
+          "type": "Int",
+          "description": "Int property"
+        },
+        "eventId": {
+          "type": "Double",
+          "description": "Double property"
+        },
+        "eventDate": {
+          "type": "Date?",
+          "description": "Optional Date property"
+        },
+        "tournamentCountryName": {
+          "type": "String?",
+          "description": "Optional String property"
+        },
+        "tournamentName": {
+          "type": "String?",
+          "description": "Optional String property"
+        },
+        "freeBet": {
+          "type": "Bool",
+          "description": "Bool property"
+        },
+        "partialCashoutReturn": {
+          "type": "Double?",
+          "description": "Optional Double property"
+        },
+        "partialCashoutStake": {
+          "type": "Double?",
+          "description": "Optional Double property"
+        },
+        "betslipId": {
+          "type": "Int?",
+          "description": "Optional Int property"
+        },
+        "cashbackReturn": {
+          "type": "Double?",
+          "description": "Optional Double property"
+        },
+        "freebetReturn": {
+          "type": "Double?",
+          "description": "Optional Double property"
+        },
+        "potentialCashbackReturn": {
+          "type": "Double?",
+          "description": "Optional Double property"
+        },
+        "potentialFreebetReturn": {
+          "type": "Double?",
+          "description": "Optional Double property"
+        },
+        "dateFormatter": {
+          "type": "DateFormatter",
+          "description": "DateFormatter property"
+        },
+        "fallbackDateFormatter": {
+          "type": "DateFormatter",
+          "description": "DateFormatter property"
+        }
+      },
+      "relationships": [
+        {
+          "via": "state",
+          "target": "BetState"
+        },
+        {
+          "via": "result",
+          "target": "BetResult"
+        },
+        {
+          "via": "globalState",
+          "target": "BetState"
+        },
+        {
+          "via": "dateFormatter",
+          "target": "DateFormatter"
+        },
+        {
+          "via": "fallbackDateFormatter",
+          "target": "DateFormatter"
+        }
+      ],
+      "name": "Bet",
+      "path": "../../ServicesProvider/Sources/ServicesProvider/Providers/Sportsradar/Models/Business/SportRadarModels+Betting.swift"
+    },
+    {
+      "properties": {
+        "identifier": {
+          "type": "String",
+          "description": "String property"
+        },
+        "responseCode": {
+          "type": "String",
+          "description": "String property"
+        },
+        "detailedResponseCode": {
+          "type": "String?",
+          "description": "Optional String property"
+        },
+        "errorMessage": {
+          "type": "String?",
+          "description": "Optional String property"
+        },
+        "totalStake": {
+          "type": "Double",
+          "description": "Double property"
+        },
+        "bets": {
+          "type": "PlacedBetEntry",
+          "description": "Array of PlacedBetEntry property"
+        }
+      },
+      "relationships": [
+        {
+          "via": "bets",
+          "target": "PlacedBetEntry"
+        }
+      ],
+      "name": "PlacedBetsResponse",
+      "path": "../../ServicesProvider/Sources/ServicesProvider/Providers/Sportsradar/Models/Business/SportRadarModels+Betting.swift"
+    },
+    {
+      "properties": {
+        "tickets": {
+          "type": "BetTicket",
+          "description": "Array of BetTicket property"
+        }
+      },
+      "relationships": [
+        {
+          "via": "tickets",
+          "target": "BetTicket"
+        }
+      ],
+      "name": "BetSlip",
+      "path": "../../ServicesProvider/Sources/ServicesProvider/Providers/Sportsradar/Models/Business/SportRadarModels+Betting.swift"
+    },
+    {
+      "properties": {
+        "id": {
+          "type": "String",
+          "description": "String property"
+        },
+        "name": {
+          "type": "String?",
+          "description": "Optional String property"
+        },
+        "bannerType": {
+          "type": "String?",
+          "description": "Optional String property"
+        },
+        "imageURL": {
+          "type": "String?",
+          "description": "Optional String property"
+        },
+        "bannerDisplay": {
+          "type": "String?",
+          "description": "Optional String property"
+        },
+        "linkType": {
+          "type": "String?",
+          "description": "Optional String property"
+        },
+        "location": {
+          "type": "String?",
+          "description": "Optional String property"
+        },
+        "bannerContents": {
+          "type": "String?",
+          "description": "Optional Array of String property"
+        }
+      },
+      "relationships": [],
+      "name": "PromotionalBanner",
+      "path": "../../ServicesProvider/Sources/ServicesProvider/Providers/Sportsradar/Models/Business/HomeWidgets/PromotionalBanners.swift"
+    }
+  ],
+  "relationships": [],
+  "endpoints": {
+    "rest": [
+      "addFavoriteToList",
+      "addFavoritesList",
+      "addPaymentInformation",
+      "allowedCashoutBetIds",
+      "calculateBetBuilderPotentialReturn",
+      "calculateCashback",
+      "calculateCashout",
+      "calculatePotentialReturn",
+      "cancelBonus",
+      "cancelDeposit",
+      "cancelWithdrawal",
+      "cashoutBet",
+      "checkDocumentationData",
+      "checkEmailRegistered",
+      "checkPaymentStatus",
+      "confirmBoostedBet",
+      "contactSupport",
+      "contactUs",
+      "deleteFavoriteFromList",
+      "deleteFavoritesList",
+      "forgotPassword",
+      "generateDocumentTypeToken",
+      "getAllConsents",
+      "getAllCountries",
+      "getAllowedBetTypes",
+      "getAvailableBonuses",
+      "getAvailableSportTypes",
+      "getBetDetails",
+      "getBetHistory",
+      "getBetslipSettings",
+      "getCashbackSuccessBanner",
+      "getCompetitionMarketGroups",
+      "getCountries",
+      "getCurrentCountry",
+      "getDocumentTypes",
+      "getEventDetails",
+      "getEventForMarketGroup",
+      "getEventLiveData",
+      "getEventSecundaryMarkets",
+      "getEventSummary",
+      "getEventSummaryByMarket",
+      "getEventsForEventGroup",
+      "getFavoritesFromList",
+      "getFavoritesList",
+      "getFreebet",
+      "getGrantedBonuses",
+      "getHeroGameEvent",
+      "getHighlightedBoostedEvents",
+      "getHighlightedLiveEvents",
+      "getHighlightedLiveEventsIds",
+      "getHighlightedMarkets",
+      "getHighlightedVisualImageEvents",
+      "getHomeSliders",
+      "getLimits",
+      "getMarketInfo",
+      "getMobileVerificationCode",
+      "getOpenBetsHistory",
+      "getPasswordPolicy",
+      "getPaymentInformation",
+      "getPayments",
+      "getPendingWithdrawals",
+      "getPersonalDepositLimits",
+      "getPromotedBetslips",
+      "getPromotedSports",
+      "getPromotionalSlidingTopEvents",
+      "getPromotionalTopBanners",
+      "getPromotionalTopStories",
+      "getReferees",
+      "getReferralLink",
+      "getRegionCompetitions",
+      "getResolvedBetsHistory",
+      "getResponsibleGamingLimits",
+      "getSearchEvents",
+      "getSharedTicket",
+      "getSportRegions",
+      "getSumsubAccessToken",
+      "getSumsubApplicantData",
+      "getTicketSelection",
+      "getTopCompetitions",
+      "getTopCompetitionsPointers",
+      "getTransactionsHistory",
+      "getUserBalance",
+      "getUserCashbackBalance",
+      "getUserConsents",
+      "getUserDocuments",
+      "getUserProfile",
+      "getWithdrawalMethods",
+      "getWonBetsHistory",
+      "lockPlayer",
+      "login",
+      "logout",
+      "optOutBonus",
+      "placeBetBuilderBet",
+      "placeBets",
+      "prepareWithdrawal",
+      "processDeposit",
+      "processWithdrawal",
+      "redeemAvailableBonus",
+      "redeemBonus",
+      "rejectBoostedBet",
+      "setUserConsents",
+      "signUp",
+      "signUpCompletion",
+      "signupConfirmation",
+      "simpleSignUp",
+      "updateBetslipSettings",
+      "updateDeviceIdentifier",
+      "updateExtraInfo",
+      "updatePassword",
+      "updatePayment",
+      "updateResponsibleGamingLimits",
+      "updateUserProfile",
+      "updateWeeklyBettingLimits",
+      "updateWeeklyDepositLimits",
+      "uploadMultipleUserDocuments",
+      "uploadUserDocument",
+      "validateUsername",
+      "verifyMobileCode"
+    ],
+    "websocket": [
+      "subscribeAllSportTypes",
+      "subscribeCompetitionMatches",
+      "subscribeEventDetails",
+      "subscribeEventMarkets",
+      "subscribeLiveMatches",
+      "subscribeLiveSportTypes",
+      "subscribeOutrightMarkets",
+      "subscribePreLiveMatches",
+      "subscribePreLiveSportTypes",
+      "subscribeToLiveDataUpdates",
+      "subscribeToMarketDetails"
+    ]
+  }
+}

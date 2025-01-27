@@ -1,6 +1,6 @@
 //
 //  SubscriptionIdentifier.swift
-//  
+//
 //
 //  Created by Ruben Roques on 11/10/2022.
 //
@@ -213,7 +213,7 @@ public enum ContentRoute {
 }
 
 public class ContentIdentifier: Decodable, Identifiable {
-    
+
     public let id: String
 
     public let pageableId: String
@@ -229,16 +229,16 @@ public class ContentIdentifier: Decodable, Identifiable {
         case contentType = "type"
         case contentRoute = "id"
     }
-    
+
     public required init(contentType: ContentType,
                          contentRoute: ContentRoute) {
         self.contentType = contentType
         self.contentRoute = contentRoute
-        
+
         self.id = "\(contentType.rawValue)-\(contentRoute.fullRoute)".MD5()
         self.pageableId = "\(contentType.rawValue)-\(contentRoute.pageableRoute)".MD5()
     }
-    
+
     public required init(from decoder: Decoder) throws {
         let container = try decoder.container(keyedBy: CodingKeys.self)
 

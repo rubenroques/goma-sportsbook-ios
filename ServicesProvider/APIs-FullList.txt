@@ -1,0 +1,144 @@
+I'll analyze the code and create two lists of function signatures based on their API consumption type:
+
+**REST API Functions (using self.restConnector.request):**
+
+1. `getMarketInfo(marketId: String) -> AnyPublisher<Market, ServiceProviderError>`
+2. `getEventSummary(eventId: String) -> AnyPublisher<Event, ServiceProviderError>`
+3. `getEventSummary(forMarketId: String) -> AnyPublisher<Event, ServiceProviderError>`
+4. `getAvailableSportTypes(initialDate: Date?, endDate: Date?) -> AnyPublisher<[SportType], ServiceProviderError>`
+5. `getSportRegions(sportId: String) -> AnyPublisher<SportNodeInfo, ServiceProviderError>`
+6. `getRegionCompetitions(regionId: String) -> AnyPublisher<SportRegionInfo, ServiceProviderError>`
+7. `getCompetitionMarketGroups(competitionId: String) -> AnyPublisher<SportCompetitionInfo, ServiceProviderError>`
+8. `getSearchEvents(query: String, resultLimit: String, page: String, isLive: Bool) -> AnyPublisher<EventsGroup, ServiceProviderError>`
+9. `getHomeSliders() -> AnyPublisher<BannerResponse, ServiceProviderError>`
+10. `getPromotionalTopBanners() -> AnyPublisher<[PromotionalBanner], ServiceProviderError>`
+11. `getPromotionalSlidingTopEvents() -> AnyPublisher<[Event], ServiceProviderError>`
+12. `getPromotionalTopStories() -> AnyPublisher<[PromotionalStory], ServiceProviderError>`
+13. `getHighlightedBoostedEvents() -> AnyPublisher<[Event], ServiceProviderError>`
+14. `getHighlightedVisualImageEvents() -> AnyPublisher<[Event], ServiceProviderError>`
+15. `getHighlightedMarkets() -> AnyPublisher<[HighlightMarket], ServiceProviderError>`
+16. `getHeroGameEvent() -> AnyPublisher<[Event], ServiceProviderError>`
+17. `getPromotedSports() -> AnyPublisher<[PromotedSport], ServiceProviderError>`
+18. `getCashbackSuccessBanner() -> AnyPublisher<BannerResponse, ServiceProviderError>`
+19. `getTopCompetitionsPointers() -> AnyPublisher<[TopCompetitionPointer], ServiceProviderError>`
+20. `getTopCompetitions() -> AnyPublisher<[TopCompetition], ServiceProviderError>`
+21. `getEventsForEventGroup(withId: String) -> AnyPublisher<EventsGroup, ServiceProviderError>`
+22. `getEventForMarketGroup(withId: String) -> AnyPublisher<Event, ServiceProviderError>`
+23. `getEventDetails(eventId: String) -> AnyPublisher<Event, ServiceProviderError>`
+24. `getEventSecundaryMarkets(eventId: String) -> AnyPublisher<Event, ServiceProviderError>`
+25. `getEventLiveData(eventId: String) -> AnyPublisher<EventLiveData, ServiceProviderError>`
+26. `getHighlightedLiveEventsIds(eventCount: Int, userId: String?) -> AnyPublisher<[String], ServiceProviderError>`
+27. `getHighlightedLiveEvents(eventCount: Int, userId: String?) -> AnyPublisher<[Event], ServiceProviderError>`
+28. `getPromotedBetslips(userId: String?) -> AnyPublisher<[PromotedBetslip], ServiceProviderError>`
+29. `getFavoritesList() -> AnyPublisher<FavoritesListResponse, ServiceProviderError>`
+30. `addFavoritesList(name: String) -> AnyPublisher<FavoritesListAddResponse, ServiceProviderError>`
+31. `deleteFavoritesList(listId: Int) -> AnyPublisher<FavoritesListDeleteResponse, ServiceProviderError>`
+32. `addFavoriteToList(listId: Int, eventId: String) -> AnyPublisher<FavoriteAddResponse, ServiceProviderError>`
+33. `getFavoritesFromList(listId: Int) -> AnyPublisher<FavoriteEventResponse, ServiceProviderError>`
+34. `deleteFavoriteFromList(eventId: Int) -> AnyPublisher<FavoritesListDeleteResponse, ServiceProviderError>`
+
+
+**WebSocket Functions (requiring socketConnector.token):**
+
+1. `subscribeLiveMatches(forSportType: SportType) -> AnyPublisher<SubscribableContent<[EventsGroup]>, ServiceProviderError>`
+2. `subscribePreLiveMatches(forSportType: SportType, initialDate: Date?, endDate: Date?, eventCount: Int?, sortType: EventListSort) -> AnyPublisher<SubscribableContent<[EventsGroup]>, ServiceProviderError>`
+3. `subscribeCompetitionMatches(forMarketGroupId: String) -> AnyPublisher<SubscribableContent<[EventsGroup]>, ServiceProviderError>`
+4. `subscribeToMarketDetails(withId: String, onEventId: String) -> AnyPublisher<SubscribableContent<Market>, ServiceProviderError>`
+5. `subscribeEventDetails(eventId: String) -> AnyPublisher<SubscribableContent<Event>, ServiceProviderError>`
+6. `subscribeOutrightMarkets(forMarketGroupId: String) -> AnyPublisher<SubscribableContent<[EventsGroup]>, ServiceProviderError>`
+7. `subscribePreLiveSportTypes(initialDate: Date?, endDate: Date?) -> AnyPublisher<SubscribableContent<[SportType]>, ServiceProviderError>`
+8. `subscribeLiveSportTypes() -> AnyPublisher<SubscribableContent<[SportType]>, ServiceProviderError>`
+9. `subscribeAllSportTypes() -> AnyPublisher<SubscribableContent<[SportType]>, ServiceProviderError>`
+10. `subscribeToLiveDataUpdates(forEventWithId: String) -> AnyPublisher<SubscribableContent<EventLiveData>, ServiceProviderError>`
+11. `subscribeEventMarkets(eventId: String) -> AnyPublisher<SubscribableContent<Event>, ServiceProviderError>`
+
+
+** PAM Rest API functions ** 
+
+1. `login(username: String, password: String) -> AnyPublisher<UserProfile, ServiceProviderError>`
+2. `getUserProfile(withKycExpire: String?) -> AnyPublisher<UserProfile, ServiceProviderError>`
+3. `updateUserProfile(form: UpdateUserProfileForm) -> AnyPublisher<Bool, ServiceProviderError>`
+4. `checkEmailRegistered(_ email: String) -> AnyPublisher<Bool, ServiceProviderError>`
+5. `validateUsername(_ username: String) -> AnyPublisher<UsernameValidation, ServiceProviderError>`
+6. `simpleSignUp(form: SimpleSignUpForm) -> AnyPublisher<Bool, ServiceProviderError>`
+7. `signUp(form: SignUpForm) -> AnyPublisher<SignUpResponse, ServiceProviderError>`
+8. `updateExtraInfo(placeOfBirth: String?, address2: String?) -> AnyPublisher<BasicResponse, ServiceProviderError>`
+9. `updateDeviceIdentifier(deviceIdentifier: String, appVersion: String) -> AnyPublisher<BasicResponse, ServiceProviderError>`
+10. `getAllCountries() -> AnyPublisher<[Country], ServiceProviderError>`
+11. `getCountries() -> AnyPublisher<[Country], ServiceProviderError>`
+12. `getCurrentCountry() -> AnyPublisher<Country?, ServiceProviderError>`
+13. `signupConfirmation(_ email: String, confirmationCode: String) -> AnyPublisher<Bool, ServiceProviderError>`
+14. `forgotPassword(email: String, secretQuestion: String?, secretAnswer: String?) -> AnyPublisher<Bool, ServiceProviderError>`
+15. `updatePassword(oldPassword: String, newPassword: String) -> AnyPublisher<Bool, ServiceProviderError>`
+16. `getPasswordPolicy() -> AnyPublisher<PasswordPolicy, ServiceProviderError>`
+17. `updateWeeklyDepositLimits(newLimit: Double) -> AnyPublisher<Bool, ServiceProviderError>`
+18. `updateWeeklyBettingLimits(newLimit: Double) -> AnyPublisher<Bool, ServiceProviderError>`
+19. `updateResponsibleGamingLimits(newLimit: Double, limitType: String, hasRollingWeeklyLimits: Bool) -> AnyPublisher<Bool, ServiceProviderError>`
+20. `getPersonalDepositLimits() -> AnyPublisher<PersonalDepositLimitResponse, ServiceProviderError>`
+21. `getLimits() -> AnyPublisher<LimitsResponse, ServiceProviderError>`
+22. `getResponsibleGamingLimits(periodTypes: String?, limitTypes: String?) -> AnyPublisher<ResponsibleGamingLimitsResponse, ServiceProviderError>`
+23. `lockPlayer(isPermanent: Bool?, lockPeriodUnit: String?, lockPeriod: String?) -> AnyPublisher<BasicResponse, ServiceProviderError>`
+24. `getUserBalance() -> AnyPublisher<UserWallet, ServiceProviderError>`
+25. `getUserCashbackBalance() -> AnyPublisher<CashbackBalance, ServiceProviderError>`
+26. `signUpCompletion(form: ServicesProvider.UpdateUserProfileForm)  -> AnyPublisher<Bool, ServiceProviderError>`
+27. `getDocumentTypes() -> AnyPublisher<DocumentTypesResponse, ServiceProviderError>`
+28. `getUserDocuments() -> AnyPublisher<UserDocumentsResponse, ServiceProviderError>`
+29. `uploadUserDocument(documentType: String, file: Data, fileName: String) -> AnyPublisher<UploadDocumentResponse, ServiceProviderError>`
+30. `uploadMultipleUserDocuments(documentType: String, files: [String: Data]) -> AnyPublisher<UploadDocumentResponse, ServiceProviderError>`
+31. `getPayments() -> AnyPublisher<SimplePaymentMethodsResponse, ServiceProviderError>`
+32. `processDeposit(paymentMethod: String, amount: Double, option: String) -> AnyPublisher<ProcessDepositResponse, ServiceProviderError>`
+33. `updatePayment(amount: Double, paymentId: String, type: String, returnUrl: String?, nameOnCard: String?, encryptedExpiryYear: String?, encryptedExpiryMonth: String?, encryptedSecurityCode: String?, encryptedCardNumber: String?) -> AnyPublisher<UpdatePaymentResponse, ServiceProviderError>`
+34. `cancelDeposit(paymentId: String) -> AnyPublisher<BasicResponse, ServiceProviderError>`
+35. `checkPaymentStatus(paymentMethod: String, paymentId: String) -> AnyPublisher<PaymentStatusResponse, ServiceProviderError>`
+36. `getWithdrawalMethods() -> AnyPublisher<[WithdrawalMethod], ServiceProviderError>`
+37. `processWithdrawal(paymentMethod: String, amount: Double, conversionId: String?) -> AnyPublisher<ProcessWithdrawalResponse, ServiceProviderError>`
+38. `prepareWithdrawal(paymentMethod: String) -> AnyPublisher<PrepareWithdrawalResponse, ServiceProviderError>`
+39. `getPendingWithdrawals() -> AnyPublisher<[PendingWithdrawal], ServiceProviderError>`
+40. `cancelWithdrawal(paymentId: Int) -> AnyPublisher<CancelWithdrawalResponse, ServiceProviderError>`
+41. `getPaymentInformation() -> AnyPublisher<PaymentInformation, ServiceProviderError>`
+42. `addPaymentInformation(type: String, fields: String) -> AnyPublisher<AddPaymentInformationResponse, ServiceProviderError>`
+43. `getTransactionsHistory(startDate: String, endDate: String, transactionTypes: [TransactionType]?, pageNumber: Int?) -> AnyPublisher<[TransactionDetail], ServiceProviderError>`
+44. `getGrantedBonuses() -> AnyPublisher<[GrantedBonus], ServiceProviderError>`
+45. `redeemBonus(code: String) -> AnyPublisher<RedeemBonusResponse, ServiceProviderError>`
+46. `getAvailableBonuses() -> AnyPublisher<[AvailableBonus], ServiceProviderError>`
+47. `redeemAvailableBonus(partyId: String, code: String) -> AnyPublisher<BasicResponse, ServiceProviderError>`
+48. `cancelBonus(bonusId: String) -> AnyPublisher<BasicResponse, ServiceProviderError>`
+49. `optOutBonus(partyId: String, code: String) -> AnyPublisher<BasicResponse, ServiceProviderError>`
+50. `contactUs(firstName: String, lastName: String, email: String, subject: String, message: String) -> AnyPublisher<BasicResponse, ServiceProviderError>`
+51. `contactSupport(userIdentifier: String, firstName: String, lastName: String, email: String, subject: String, subjectType: String , message: String, isLogged: Bool) -> AnyPublisher<SupportResponse, ServiceProviderError>`
+52. `getAllConsents() -> AnyPublisher<[ConsentInfo], ServiceProviderError>`
+53. `getUserConsents() -> AnyPublisher<[UserConsent], ServiceProviderError>`
+54. `setUserConsents(consentVersionIds: [Int]?, unconsenVersionIds: [Int]?) -> AnyPublisher<BasicResponse, ServiceProviderError>`
+55. `getSumsubAccessToken(userId: String, levelName: String) -> AnyPublisher<AccessTokenResponse, ServiceProviderError>`
+56. `getSumsubApplicantData(userId: String) -> AnyPublisher<ApplicantDataResponse, ServiceProviderError>`
+57. `generateDocumentTypeToken(docType: String) -> AnyPublisher<AccessTokenResponse, ServiceProviderError>`
+58. `checkDocumentationData() -> AnyPublisher<ApplicantDataResponse, ServiceProviderError>`
+59. `getMobileVerificationCode(forMobileNumber mobileNumber: String) -> AnyPublisher<MobileVerifyResponse, ServiceProviderError>`
+60. `verifyMobileCode(code: String, requestId: String) -> AnyPublisher<MobileVerifyResponse, ServiceProviderError>`
+61. `getReferralLink() -> AnyPublisher<ReferralLink, ServiceProviderError>`
+62. `getReferees() -> AnyPublisher<[Referee], ServiceProviderError>`
+
+
+** Betting REST API functions **
+
+1. getBetHistory(pageIndex: Int) -> AnyPublisher<BettingHistory, ServiceProviderError>
+2. getBetDetails(identifier: String) -> AnyPublisher<Bet, ServiceProviderError>
+3. getOpenBetsHistory(pageIndex: Int, startDate: String?, endDate: String?) -> AnyPublisher<BettingHistory, ServiceProviderError>
+4. getResolvedBetsHistory(pageIndex: Int, startDate: String?, endDate: String?) -> AnyPublisher<BettingHistory, ServiceProviderError>
+5. getWonBetsHistory(pageIndex: Int, startDate: String?, endDate: String?) -> AnyPublisher<BettingHistory, ServiceProviderError>
+6. getAllowedBetTypes(withBetTicketSelections betTicketSelections: [BetTicketSelection]) -> AnyPublisher<[BetType], ServiceProviderError>
+7. calculatePotentialReturn(forBetTicket betTicket: BetTicket) -> AnyPublisher<BetslipPotentialReturn, ServiceProviderError>
+8. placeBets(betTickets: [BetTicket], useFreebetBalance: Bool) -> AnyPublisher<PlacedBetsResponse, ServiceProviderError>
+9. calculateBetBuilderPotentialReturn(forBetTicket betTicket: BetTicket) -> AnyPublisher<BetBuilderPotentialReturn, ServiceProviderError>
+10. placeBetBuilderBet(betTicket: BetTicket, calculatedOdd: Double) -> AnyPublisher<PlacedBetsResponse, ServiceProviderError>
+11. confirmBoostedBet(identifier: String) -> AnyPublisher<Bool, ServiceProviderError>
+12. rejectBoostedBet(identifier: String) -> AnyPublisher<Bool, ServiceProviderError>
+13. calculateCashout(betId: String, stakeValue: String?) -> AnyPublisher<Cashout, ServiceProviderError>
+14. cashoutBet(betId: String, cashoutValue: Double, stakeValue: Double?) -> AnyPublisher<CashoutResult, ServiceProviderError>
+15. allowedCashoutBetIds() -> AnyPublisher<[String], ServiceProviderError>
+16. calculateCashback(forBetTicket betTicket: BetTicket)  -> AnyPublisher<CashbackResult, ServiceProviderError>
+17. getBetslipSettings() -> AnyPublisher<BetslipSettings?, Never>
+18. updateBetslipSettings(_ betslipSettings: BetslipSettings) -> AnyPublisher<Bool, Never>
+19. getFreebet() -> AnyPublisher<FreebetBalance, ServiceProviderError>
+20. getSharedTicket(betslipId: String) -> AnyPublisher<SharedTicketResponse, ServiceProviderError>
+21. getTicketSelection(ticketSelectionId: String) -> AnyPublisher<TicketSelection, ServiceProviderError>
