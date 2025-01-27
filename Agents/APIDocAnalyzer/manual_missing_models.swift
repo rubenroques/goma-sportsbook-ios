@@ -16,7 +16,6 @@ public struct DocumentTypesResponse {
     }
 }
 
-
 public struct UserWallet {
     public var vipStatus: String?
     public var currency: String?
@@ -71,16 +70,6 @@ public struct UserWallet {
 
 
 }
-
-//
-//  User.swift
-//
-//
-//  Created by Ruben Roques on 24/10/2022.
-//
-
-import Foundation
-import SharedModels
 
 public enum KnowYourClientStatus: String, Codable {
     case open
@@ -939,11 +928,11 @@ public struct ConsentInfo: Codable {
 
 
 public enum Score: Codable, Hashable {
-    
+
     case set(index: Int, home: Int?, away: Int?)
     case gamePart(home: Int?, away: Int?)
     case matchFull(home: Int?, away: Int?)
-    
+
     public var sortValue: Int {
         switch self {
         case .set(let index, _, _):
@@ -954,7 +943,7 @@ public enum Score: Codable, Hashable {
             return 200
         }
     }
-    
+
     public var key: String {
         switch self {
         case .set(let index, _, _):
@@ -965,7 +954,7 @@ public enum Score: Codable, Hashable {
             return "matchFull"
         }
     }
-    
+
 }
 
 

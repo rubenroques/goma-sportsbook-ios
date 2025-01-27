@@ -1,6 +1,6 @@
 # API Documentation Analyzer
 
-A tool for analyzing API documentation and Swift model files to extract structured information about models, their properties, relationships, and endpoints.
+A tool that analyzes Swift codebase and API documentation to generate comprehensive documentation with model relationships, endpoints, and type information.
 
 ## Features
 
@@ -8,13 +8,15 @@ A tool for analyzing API documentation and Swift model files to extract structur
 - Extracts model properties and their types
 - Identifies relationships between models
 - Catalogs REST and WebSocket endpoints
-- Supports both Swift parser and GPT-4 analysis modes
-- Generates structured JSON output
+- Generates Markdown documentation with linked models
+- Supports both direct file parsing and GPT-4 analysis modes
 
 ## Prerequisites
 
+- macOS 13.0+
 - Python 3.8+
 - Swift 5.9+
+- Xcode Command Line Tools
 - SwiftSyntax package
 
 ## Installation
@@ -26,132 +28,179 @@ pip install -r requirements.txt
 ```
 3. Build the Swift parser:
 ```bash
+cd APIDocAnalyzer
 swift build
+```
+
+## Required Dependencies
+
+### Python Packages
+```
+openai>=1.12.0
+python-dotenv>=1.0.0
+pathlib>=1.0.1
+typing-extensions>=4.5.0
+```
+
+### Swift Packages
+```swift
+.package(url: "https://github.com/apple/swift-syntax.git", from: "509.0.0")
 ```
 
 ## Usage
 
-Basic usage:
+### Basic Analysis
 ```bash
-python analyzer.py <path_to_documentation> <root_folder>
+python analyzer.py <path_to_documentation.json> <root_folder> [--verbose]
 ```
 
-Options:
-- `--gpt`: Use GPT-4 for analysis (requires OpenAI API key)
-- `--verbose`: Show detailed logging
-
-Example:
+### With GPT Analysis
 ```bash
-python analyzer.py api_docs.json /path/to/swift/files --verbose
+python analyzer.py <path_to_documentation.json> <root_folder> --gpt --verbose
 ```
 
-## Output Format
+### Generate Documentation
+```bash
+swift run DocGenerator api_inventory.json sportradar_documentation.json
+```
 
-The tool generates an `api_inventory.json` file with the following structure:
+## Input Files
 
+1. API Documentation JSON:
+```json
+{
+  "api_methods": {
+    "category": {
+      "endpoint": {
+        "description": "Description",
+        "signature": "func name() -> ReturnType",
+        "parameters": { ... }
+      }
+    }
+  },
+  "websocket_methods": { ... }
+}
+```
+
+2. Swift Model Files:
+- Must be accessible from the root folder
+- Should contain model definitions (struct/class/enum)
+- Can be in any subfolder structure
+
+## Output Files
+
+1. `api_inventory.json`:
 ```json
 {
   "models": [
     {
       "name": "ModelName",
-      "properties": {
-        "propertyName": {
-          "type": "PropertyType",
-          "description": "Property description"
+      "path": "path/to/file.swift",
+      "properties": [
+        {
+          "name": "propertyName",
+          "type": "PropertyType"
         }
-      },
-      "path": "path/to/swift/file"
-    }
-  ],
-  "relationships": [
-    {
-      "source": "SourceModel",
-      "target": "TargetModel",
-      "via": "propertyName"
+      ],
+      "relationships": [
+        {
+          "source_property": "propertyName",
+          "target_type": "RelatedModel"
+        }
+      ]
     }
   ],
   "endpoints": {
-    "rest": ["endpoint1", "endpoint2"],
-    "websocket": ["wsEndpoint1", "wsEndpoint2"]
+    "rest": ["endpoint1"],
+    "websocket": ["ws1"]
   }
 }
 ```
 
-## Project Structure
-
-- `analyzer.py`: Main script for orchestrating the analysis
-- `finder.py`: Handles finding Swift files and model implementations
-- `parser.py`: Python interface to the Swift parser
-- `swift_parser.swift`: Swift script for parsing model files using SwiftSyntax
-- `requirements.txt`: Python dependencies
-- `Package.swift`: Swift package dependencies
-
-## Dependencies
-
-Python:
-- openai>=1.12.0
-- python-dotenv>=1.0.0
-- pathlib>=1.0.1
-- typing-extensions>=4.5.0
-
-Swift:
-- SwiftSyntax 509.0.0+
+2. `API.md`:
+- Generated Markdown documentation
+- Linked model references
+- Organized sections for REST/WebSocket endpoints
+- Property tables for each model
+- Related model links
 
 ## Error Handling
 
-- Logs missing models
-- Attempts recovery from manual definitions
-- Validates file paths and API keys
-- Handles parsing edge cases
-
-## Contributing
-
-1. Fork the repository
-2. Create your feature branch
-3. Submit a pull request
-
-## License
-
-MIT
+The tool handles several edge cases:
+- Missing model implementations
+- Invalid Swift syntax
+- Malformed JSON documentation
+- Circular model dependencies
+- File access permissions
+- Swift build failures
 
 ## For LLMs
 
 ```context
-SYSTEM: You are analyzing a Python tool designed for API documentation analysis.
+SYSTEM: You are analyzing a documentation generator for Swift APIs.
 
-OBJECTIVE: Extract and analyze Swift models from API documentation and codebase.
+OBJECTIVE: Generate comprehensive API documentation by analyzing Swift codebase and API specifications.
 
 KEY COMPONENTS:
-1. Input:
-   - JSON API documentation with endpoints, signatures, and schemas
-   - Swift codebase containing model implementations
-   - Optional manual_missing_models.swift for fallback definitions
 
-2. Core Functionality:
-   - Signature Parser: Extracts model names from function signatures
-     - Handles: AnyPublisher<T, Error>, [T], SubscribableContent<T>
-   - Swift Parser: Extracts properties and relationships from Swift code
-   - Model Analyzer: Maps properties, types, and relationships
+1. Data Sources:
+   - Swift source files (.swift)
+   - API documentation (JSON)
+   - Model inventory (JSON)
 
-3. Data Structures:
-   - Models: Array[{name, properties, path}]
-   - Properties: {type, description}
-   - Relationships: [{source, via, target}]
+2. Analysis Pipeline:
+   a. Swift Parser (SwiftSyntax)
+      - Extracts: structs, classes, enums
+      - Handles: properties, types, relationships
+      - Supports: optionals, arrays, dictionaries
 
-4. Caching Strategy:
-   - model_cache: Analyzed models
-   - schema_cache: Schema analysis results
-   - swift_models: Raw implementations
-   - swift_files: File contents
+   b. Documentation Analyzer
+      - Maps: endpoints to models
+      - Tracks: type relationships
+      - Formats: markdown output
 
-EXECUTION FLOW:
-1. Load Swift files recursively
-2. Process API documentation
-3. Extract models from signatures
-4. Find and parse Swift implementations
-5. Generate relationships graph
-6. Check manual models for missing ones
-7. Output JSON inventory
+   c. Model Resolution
+      - Direct: Swift file parsing
+      - Indirect: Type inference
+      - Fallback: Manual definitions
 
-OUTPUT: api_inventory.json with models, relationships, and endpoints
+3. Type System:
+   - Base Types: String, Int, Double, Bool, Date
+   - Collections: Array<T>, Dictionary<K,V>
+   - Custom Types: All user-defined models
+   - Special: AnyPublisher<T,E>, Optional<T>
+
+4. Documentation Structure:
+   - REST Services
+     - Endpoints
+     - Arguments
+     - Return Types
+   - Real-time Services
+     - WebSocket endpoints
+     - Subscription details
+   - Data Models
+     - Properties
+     - Type relationships
+     - Cross-references
+
+EXECUTION CONTEXT:
+- Environment: macOS
+- Runtime: Python 3.8+, Swift 5.9+
+- Dependencies: SwiftSyntax, OpenAI (optional)
+- File System: Read access to Swift sources
+
+OUTPUT FORMATS:
+1. Inventory (JSON)
+   - Model definitions
+   - Type relationships
+   - Endpoint catalog
+
+2. Documentation (Markdown)
+   - Linked references
+   - Type tables
+   - API endpoints
 ```
+
+## License
+
+MIT

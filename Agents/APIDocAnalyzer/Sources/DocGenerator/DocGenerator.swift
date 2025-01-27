@@ -139,11 +139,11 @@ class DocumentationGenerator {
 
         print("📝 Found \(inventory.models.count) models in inventory")
         print("🔍 Looking for Event model...")
-        
+
         // Debug: Print all model names
         let modelNames = inventory.models.map { $0.name }
         print("📋 All models: \(modelNames.joined(separator: ", "))")
-        
+
         if let eventModel = inventory.models.first(where: { $0.name == "Event" }) {
             print("✅ Found Event model at path: \(eventModel.path)")
         } else {
@@ -158,7 +158,7 @@ class DocumentationGenerator {
         for model in inventory.models {
             modelLinks[model.name] = "#\(model.name.lowercased())"
         }
-        
+
         // Debug: Print all model links
         print("🔗 Model links created: \(modelLinks.keys.joined(separator: ", "))")
     }
@@ -206,7 +206,7 @@ class DocumentationGenerator {
     }
 
     private func formatEndpoint(name: String, details: EndpointDetails) -> String {
-        var output = "### \(name)\n\n"  // Just use the raw name
+        var output = "### 🔸 \(name)\n\n"  // Just use the raw name
 
         if let description = details.description {
             output += "_\(description)_\n\n"
@@ -214,13 +214,14 @@ class DocumentationGenerator {
 
         // Handle parameters
         if let parameters = details.parameters {
-            output += "**Required Information:**\n"
+            output += "**Arguments:**\n"
             switch parameters {
             case .dictionary(let params):
                 for (paramName, param) in params {
-                    let description = param.description ?? "No description available"
+                    // let description = param.description ?? "No description available"
                     let type = param.type ?? "Unknown type"
-                    output += "- \(paramName) (\(type)): \(description)\n"  // Use raw parameter name
+                    let linkedType = linkModelsInType(type)
+                    output += "- \(paramName): \(linkedType)\n"
                 }
             case .single(let param):
                 output += "- \(param)\n"
@@ -228,11 +229,15 @@ class DocumentationGenerator {
             output += "\n"
         }
 
-        // Handle returns
-        if let returns = details.returns {
-            let type = returns.type ?? "Unknown type"
-            let description = returns.description ?? "No description available"
-            output += "**Returns:** \(description) (`\(type)`)\n\n"
+
+        // Extract return type from signature if available
+        if let signature = details.signature {
+            let returnTypes = extractReturnTypes(from: signature)
+            if !returnTypes.isEmpty {
+                output += "**Returns:** "
+                output += returnTypes.map { linkModelsInType($0) }.joined(separator: ", ")
+                output += "\n\n"
+            }
         }
 
         // Add subscription details if available
@@ -259,8 +264,86 @@ class DocumentationGenerator {
         return output
     }
 
+    private func extractReturnTypes(from signature: String) -> [String] {
+        // Match return types in different formats, ignoring AnyPublisher wrapper:
+        // 1. AnyPublisher<Type, Error> -> extract Type
+        // 2. -> Type
+        // 3. [Type]
+        let patterns = [
+            #"AnyPublisher<([^,]+),\s*[^>]+>"#,  // Extract type from AnyPublisher<Type, Error>
+            #"-> *([A-Za-z0-9_\[\]]+)"#,         // -> Type or -> [Type]
+            #"\[([A-Za-z0-9_]+)\]"#              // [Type] in other contexts
+        ]
+
+        var types = Set<String>()
+
+        for pattern in patterns {
+            let regex = try? NSRegularExpression(pattern: pattern)
+            let nsRange = NSRange(signature.startIndex..<signature.endIndex, in: signature)
+
+            regex?.matches(in: signature, range: nsRange).forEach { match in
+                if let typeRange = Range(match.range(at: 1), in: signature) {
+                    var type = String(signature[typeRange]).trimmingCharacters(in: .whitespaces)
+
+                    // Remove AnyPublisher wrapper if present
+                    if type.hasPrefix("AnyPublisher<") {
+                        type = type.replacingOccurrences(of: "AnyPublisher<", with: "")
+                            .replacingOccurrences(of: ", Error>", with: "")
+                            .trimmingCharacters(in: .whitespaces)
+                    }
+
+                    // Filter out non-model types
+                    if !type.isEmpty && !["Error", "Void", "AnyPublisher"].contains(type) {
+                        types.insert(type)
+                    }
+                }
+            }
+        }
+
+        return Array(types).sorted()
+    }
+
+    private func linkModelsInSignature(_ signature: String) -> String {
+        // Regular expression to find Swift types in function signature
+        let pattern = #"(?:->|:)\s*(?:AnyPublisher<)?([A-Za-z_][A-Za-z0-9_]*(?:\s*,\s*[A-Za-z_][A-Za-z0-9_]*)?)"#
+        var result = signature
+
+        let regex = try? NSRegularExpression(pattern: pattern)
+        let nsRange = NSRange(signature.startIndex..<signature.endIndex, in: signature)
+
+        // Process matches in reverse to avoid messing up string indices
+        regex?.matches(in: signature, range: nsRange)
+            .reversed()
+            .forEach { match in
+                if let typeRange = Range(match.range(at: 1), in: signature) {
+                    let type = String(signature[typeRange])
+                    // Split for cases like "Model, Error"
+                    let types = type.components(separatedBy: ",").map { $0.trimmingCharacters(in: .whitespaces) }
+
+                    for modelName in types {
+                        if let link = modelLinks[modelName] {
+                            result = result.replacingOccurrences(
+                                of: modelName,
+                                with: "[\(modelName)](\(link))"
+                            )
+                        }
+                    }
+                }
+            }
+
+        return result
+    }
+
+    private func linkModelsInType(_ type: String) -> String {
+        // Check if this type exists in our model links
+        if let link = modelLinks[type] {
+            return "[\(type)](\(link))"
+        }
+        return type
+    }
+
     private func formatWebSocketEndpoint(name: String, details: EndpointDetails) -> String {
-        var output = "### \(name)\n\n"  // Just use the raw name
+        var output = "### 🔹 \(name)\n\n"  // Just use the raw name
 
         if let description = details.description {
             output += "_\(description)_\n\n"
@@ -284,7 +367,7 @@ class DocumentationGenerator {
     }
 
     private func formatModel(model: Model) -> String {
-        var output = "### \(model.name)\n\n"
+        var output = "### Ⓜ️ \(model.name)\n\n"
 
         output += "**Properties:**\n\n"
         output += "| Name | Type |\n"
@@ -296,10 +379,13 @@ class DocumentationGenerator {
         }
 
         if !model.relationships.isEmpty {
+            // Use a Set to remove duplicates while preserving order
+            var uniqueRelations = Set<String>()
             output += "\n**Related Models:**\n"
             for relationship in model.relationships {
                 let targetModel = relationship.target_type
-                if !targetModel.isEmpty, let targetLink = modelLinks[targetModel] {
+                if !targetModel.isEmpty && !uniqueRelations.contains(targetModel), let targetLink = modelLinks[targetModel] {
+                    uniqueRelations.insert(targetModel)
                     output += "- [\(targetModel)](\(targetLink))\n"
                 }
             }

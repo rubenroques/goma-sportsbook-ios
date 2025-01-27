@@ -9,900 +9,1199 @@ This documentation provides a comprehensive overview of our API services, includ
 
 # REST Services
 
-## referral
-
-### getReferralLink
-
-_Retrieves the user's referral link_
-
-**Required Information:**
-
-### getReferees
-
-_Retrieves the list of users referred by the current user_
-
-**Required Information:**
-
-## events
-
-### getSearchEvents
-
-_Searches for events based on a query string with pagination support_
-
-**Required Information:**
-- query (String): Search query string to find events
-- page (String): Page number for paginated results
-- resultLimit (String): Maximum number of results to return per page
-- isLive (Bool): Filter for live events only
-
-### getHeroGameEvent
-
-_Retrieves the hero game event_
-
-**Required Information:**
-
-### getMarketInfo
-
-_Retrieves detailed information about a specific market_
-
-**Required Information:**
-- marketId (String): Unique identifier of the market to retrieve
-
-### getAvailableSportTypes
-
-_Retrieves a list of available sport types within an optional date range_
-
-**Required Information:**
-- endDate (Date?): Optional end date to filter sports availability
-- initialDate (Date?): Optional start date to filter sports availability
-
-### getHighlightedLiveEventsIds
-
-_Retrieves IDs of highlighted live events, optionally filtered by user_
-
-**Required Information:**
-- eventCount (Int): Maximum number of event IDs to retrieve
-- userId (String?): Optional user ID for personalized highlights
-
-### getHighlightedMarkets
-
-_Retrieves highlighted markets_
-
-**Required Information:**
-
-### getEventsForEventGroup
-
-_Retrieves events associated with a specific event group_
-
-**Required Information:**
-- withId (String): Unique identifier of the event group
-
-### getCompetitionMarketGroups
-
-_Retrieves information about market groups available for a specific competition_
-
-**Required Information:**
-- competitionId (String): Unique identifier of the competition to get market groups for
-
-### getTopCompetitionsPointers
-
-_Retrieves pointers to top competitions_
-
-**Required Information:**
-
-### getEventLiveData
-
-_Retrieves live data and statistics for a specific event_
-
-**Required Information:**
-- eventId (String): Unique identifier of the event
-
-### getEventForMarketGroup
-
-_Retrieves an event associated with a specific market group_
-
-**Required Information:**
-- withId (String): Unique identifier of the market group
-
-### getEventSummary
-
-_Retrieves a summary of a specific event using its event ID_
-
-**Required Information:**
-- eventId (String): Unique identifier of the event to retrieve
-
-### getCashbackSuccessBanner
-
-_Retrieves the cashback success banner_
-
-**Required Information:**
-
-### getPromotionalTopStories
-
-_Retrieves promotional top stories_
-
-**Required Information:**
-
-### getEventSecundaryMarkets
-
-_Retrieves secondary markets information for a specific event_
-
-**Required Information:**
-- eventId (String): Unique identifier of the event
-
-### getEventDetails
-
-_Retrieves detailed information about a specific event_
-
-**Required Information:**
-- eventId (String): Unique identifier of the event
-
-### getEventSummaryByMarket
-
-_Retrieves a summary of an event using a market ID associated with the event_
-
-**Required Information:**
-- forMarketId (String): Market ID associated with the event to retrieve
-
-### getRegionCompetitions
-
-_Retrieves information about competitions available in a specific region_
-
-**Required Information:**
-- regionId (String): Unique identifier of the region to get competitions for
-
-### getHomeSliders
-
-_Retrieves the home page slider banners_
-
-**Required Information:**
-
-### getTopCompetitions
-
-_Retrieves the list of top competitions_
-
-**Required Information:**
-
-### getHighlightedBoostedEvents
-
-_Retrieves events with boosted odds that are highlighted_
-
-**Required Information:**
-
-### getPromotionalSlidingTopEvents
-
-_Retrieves promotional sliding events for the top section_
-
-**Required Information:**
-
-### getPromotionalTopBanners
-
-_Retrieves promotional banners for the top section_
-
-**Required Information:**
-
-### getPromotedSports
-
-_Retrieves the list of promoted sports_
-
-**Required Information:**
-
-### getHighlightedVisualImageEvents
-
-_Retrieves events with visual images that are highlighted_
-
-**Required Information:**
-
-### getSportRegions
-
-_Retrieves information about regions available for a specific sport_
-
-**Required Information:**
-- sportId (String): Unique identifier of the sport to get regions for
-
-### getHighlightedLiveEvents
-
-_Retrieves detailed information about highlighted live events, optionally filtered by user_
-
-**Required Information:**
-- userId (String?): Optional user ID for personalized highlights
-- eventCount (Int): Maximum number of events to retrieve
-
-## registration
-
-### simpleSignUp
-
-_Registers a new user with basic information_
-
-**Required Information:**
-- form (SimpleSignUpForm): No description available
-
-### checkEmailRegistered
-
-_Checks if an email is already registered in the system_
-
-**Required Information:**
-- email (String): Email address to check
-
-### validateUsername
-
-_Validates a username and provides suggestions if unavailable_
-
-**Required Information:**
-- username (String): Username to validate
-
-### signupConfirmation
-
-_Confirms user signup with verification code_
-
-**Required Information:**
-- email (String): Email address used for registration
-- confirmationCode (String): Verification code received by user
-
-### signUpCompletion
-
-_Completes the signup process with additional user information_
-
-**Required Information:**
-- Form containing additional user information
-
-### signUp
-
-_Registers a new user with complete information_
-
-**Required Information:**
-- form (SignUpForm): No description available
-
-## wallet
-
-### getUserBalance
-
-_Retrieves the user's wallet balance information_
-
-**Required Information:**
-
-### getUserCashbackBalance
-
-_Retrieves the user's cashback balance information_
-
-**Required Information:**
-
 ## bonuses
 
-### redeemBonus
-
-_Redeems a bonus using a bonus code_
-
-**Required Information:**
-- code (String): The bonus code to redeem
-
-### optOutBonus
-
-_Opts out from a specific bonus_
-
-**Required Information:**
-- partyId (String): User's party identifier
-- code (String): The bonus code to opt out from
-
-### getGrantedBonuses
+### 🔸 getGrantedBonuses
 
 _Retrieves the list of bonuses that have been granted to the user_
 
-**Required Information:**
+**Arguments:**
 
-### getAvailableBonuses
+**Returns:** [GrantedBonus](#grantedbonus), [GrantedBonus]
+
+### 🔸 optOutBonus
+
+_Opts out from a specific bonus_
+
+**Arguments:**
+- partyId: String
+- code: String
+
+**Returns:** [BasicResponse](#basicresponse)
+
+### 🔸 getAvailableBonuses
 
 _Retrieves the list of bonuses available for the user to claim_
 
-**Required Information:**
+**Arguments:**
 
-### cancelBonus
+**Returns:** [AvailableBonus](#availablebonus), [AvailableBonus]
+
+### 🔸 redeemBonus
+
+_Redeems a bonus using a bonus code_
+
+**Arguments:**
+- code: String
+
+**Returns:** [RedeemBonusResponse](#redeembonusresponse)
+
+### 🔸 cancelBonus
 
 _Cancels an active bonus_
 
-**Required Information:**
-- bonusId (String): ID of the bonus to cancel
+**Arguments:**
+- bonusId: String
 
-### redeemAvailableBonus
+**Returns:** [BasicResponse](#basicresponse)
+
+### 🔸 redeemAvailableBonus
 
 _Claims an available bonus for a specific user_
 
-**Required Information:**
-- partyId (String): User's party identifier
-- code (String): The bonus code to redeem
+**Arguments:**
+- code: String
+- partyId: String
 
-## documents
+**Returns:** [BasicResponse](#basicresponse)
 
-### uploadMultipleUserDocuments
+## registration
 
-_Uploads multiple user verification documents_
+### 🔸 signUpCompletion
 
-**Required Information:**
-- documentType (String): Type of documents being uploaded
-- files ([String: Data]): Dictionary of filename to file data pairs
+_Completes the signup process with additional user information_
 
-### getUserDocuments
+**Arguments:**
+- Form containing additional user information
 
-_Retrieves user's uploaded documents_
+**Returns:** Bool
 
-**Required Information:**
+### 🔸 simpleSignUp
 
-### getDocumentTypes
+_Registers a new user with basic information_
 
-_Retrieves available document types for verification_
+**Arguments:**
+- form: SimpleSignUpForm
 
-**Required Information:**
+**Returns:** Bool
 
-### uploadUserDocument
+### 🔸 validateUsername
 
-_Uploads a single user verification document_
+_Validates a username and provides suggestions if unavailable_
 
-**Required Information:**
-- fileName (String): Name of the file being uploaded
-- documentType (String): Type of document being uploaded
-- file (Data): Document file data
+**Arguments:**
+- username: String
 
-## responsible_gaming
+**Returns:** UsernameValidation
 
-### updateResponsibleGamingLimits
+### 🔸 checkEmailRegistered
 
-_Updates the user's responsible gaming limits_
+_Checks if an email is already registered in the system_
 
-**Required Information:**
-- hasRollingWeeklyLimits (Bool): Whether to use rolling weekly limits instead of calendar weekly limits
-- newLimit (Double): New limit amount
-- limitType (String): Type of limit (deposit, betting, or autoPayout)
+**Arguments:**
+- email: String
 
-### getPersonalDepositLimits
+**Returns:** Bool
 
-_Retrieves the user's personal deposit limits_
+### 🔸 signUp
 
-**Required Information:**
+_Registers a new user with complete information_
 
-### updateWeeklyBettingLimits
+**Arguments:**
+- form: SignUpForm
 
-_Updates the user's weekly betting limits_
+**Returns:** SignUpResponse
 
-**Required Information:**
-- newLimit (Double): New weekly betting limit amount
+### 🔸 signupConfirmation
 
-### updateWeeklyDepositLimits
+_Confirms user signup with verification code_
 
-_Updates the user's weekly deposit limits_
+**Arguments:**
+- confirmationCode: String
+- email: String
 
-**Required Information:**
-- newLimit (Double): New weekly deposit limit amount
-
-### getLimits
-
-_Retrieves all user limits information_
-
-**Required Information:**
-
-### getResponsibleGamingLimits
-
-_Retrieves responsible gaming limits for specified period and limit types_
-
-**Required Information:**
-- periodTypes (String?): Comma-separated list of period types (e.g., 'RollingWeekly,Permanent')
-- limitTypes (String?): Comma-separated list of limit types (e.g., 'DEPOSIT_LIMIT,WAGER_LIMIT,BALANCE_LIMIT')
-
-## authentication
-
-### logout
-
-_Logs out the current user and invalidates their session_
-
-**Required Information:**
-
-### login
-
-_Authenticates a user with username and password_
-
-**Required Information:**
-- username (String): User's login username
-- password (String): User's login password
-
-### getPasswordPolicy
-
-_Retrieves the password policy requirements_
-
-**Required Information:**
+**Returns:** Bool
 
 ## profile
 
-### getUserProfile
+### 🔸 getUserProfile
 
 _Retrieves the user's profile information_
 
-**Required Information:**
-- kycExpire (String?): Optional KYC expiration date
+**Arguments:**
+- kycExpire: String?
+
+**Returns:** UserProfile
 
 ## support
 
-### contactUs
+### 🔸 contactUs
 
 _Sends a contact request to customer support_
 
-**Required Information:**
-- firstName (String): User's first name
-- subject (String): Subject of the contact request
-- message (String): Message content
-- lastName (String): User's last name
-- email (String): User's email address
+**Arguments:**
+- message: String
+- subject: String
+- email: String
+- firstName: String
+- lastName: String
 
-### contactSupport
+**Returns:** [BasicResponse](#basicresponse)
+
+### 🔸 contactSupport
 
 _Sends a detailed support request with user information_
 
-**Required Information:**
-- message (String): Detailed message content
-- subject (String): Subject of the support request
-- email (String): User's email address
-- isLogged (Bool): Whether the user is currently logged in
-- userIdentifier (String): User's unique identifier
-- subjectType (String): Category or type of the support request
-- firstName (String): User's first name
-- lastName (String): User's last name
-
-## payments
-
-### cancelWithdrawal
-
-_Cancels a pending withdrawal transaction_
-
-**Required Information:**
-- paymentId (Int): ID of the withdrawal payment to cancel
-
-### checkPaymentStatus
-
-_Checks the status of a payment transaction_
-
-**Required Information:**
-- paymentId (String): ID of the payment to check
-- paymentMethod (String): Payment method used for the transaction
-
-### getPendingWithdrawals
-
-_Retrieves list of pending withdrawal transactions_
-
-**Required Information:**
-
-### getPayments
-
-_Retrieves available payment methods for deposits_
-
-**Required Information:**
-
-### processDeposit
-
-_Processes a deposit request_
-
-**Required Information:**
-- amount (Double): Deposit amount
-- option (String): Payment option details
-- paymentMethod (String): Selected payment method
-
-### addPaymentInformation
-
-_Adds new payment information for the user_
-
-**Required Information:**
-- type (String): Type of payment information
-- fields (String): Payment information fields in string format
-
-### processWithdrawal
-
-_Processes a withdrawal request_
-
-**Required Information:**
-- conversionId (String?): Optional conversion ID for currency conversion
-- paymentMethod (String): Selected withdrawal method
-- amount (Double): Withdrawal amount
-
-### getWithdrawalMethods
-
-_Retrieves available withdrawal methods_
-
-**Required Information:**
-
-### getPaymentInformation
-
-_Retrieves saved payment information for the user_
-
-**Required Information:**
-
-### prepareWithdrawal
-
-_Prepares a withdrawal request for processing_
-
-**Required Information:**
-- paymentMethod (String): Selected withdrawal method
-
-### cancelDeposit
-
-_Cancels a pending deposit transaction_
-
-**Required Information:**
-- paymentId (String): ID of the deposit payment to cancel
-
-### getTransactionsHistory
-
-_Retrieves transaction history for a specified date range_
-
-**Required Information:**
-- pageNumber (Int?): Optional page number for pagination
-- endDate (String): End date for transaction history
-- startDate (String): Start date for transaction history
-- transactionTypes ([TransactionType]?): Optional array of transaction types to filter
-
-### updatePayment
-
-_Updates payment information for an existing payment_
-
-**Required Information:**
-- type (String): Payment type
-- paymentId (String): ID of the payment to update
-- amount (Double): Payment amount
-- encryptedExpiryYear (String?): Encrypted card expiry year
-- nameOnCard (String?): Name as it appears on the card
-- returnUrl (String?): URL to return to after payment processing
-- encryptedExpiryMonth (String?): Encrypted card expiry month
-- encryptedCardNumber (String?): Encrypted card number
-- encryptedSecurityCode (String?): Encrypted card security code
-
-## account_management
-
-### updateExtraInfo
-
-_Updates additional user information_
-
-**Required Information:**
-- placeOfBirth (String?): User's place of birth
-- address2 (String?): Secondary address
-
-### verifyMobileCode
-
-_Verifies a mobile verification code_
-
-**Required Information:**
-- requestId (String): ID of the verification request
-- code (String): Verification code received by user
-
-### updatePassword
-
-_Updates the user's password_
-
-**Required Information:**
-- newPassword (String): New password to set
-- oldPassword (String): Current password for verification
-
-### updateUserProfile
-
-_Updates the user's profile information_
-
-**Required Information:**
-- form (UpdateUserProfileForm): No description available
-
-### updateDeviceIdentifier
-
-_Updates the device identifier and app version for the user_
-
-**Required Information:**
-- appVersion (String): Current app version
-- deviceIdentifier (String): Unique device identifier
-
-### lockPlayer
-
-_Locks a player's account with specified duration_
-
-**Required Information:**
-- lockPeriodUnit (String?): Unit of time for the lock period
-- lockPeriod (String?): Duration of the lock period
-- isPermanent (Bool?): Whether the lock is permanent
-
-### forgotPassword
-
-_Initiates the password recovery process_
-
-**Required Information:**
-- secretQuestion (String?): Optional security question
-- email (String): Email address for password recovery
-- secretAnswer (String?): Optional answer to security question
-
-### getMobileVerificationCode
-
-_Requests a verification code for a mobile number_
-
-**Required Information:**
-- mobileNumber (String): Mobile number to verify
-
-## consent_management
-
-### setUserConsents
-
-_Updates user consent statuses for specified consent versions_
-
-**Required Information:**
-- consentVersionIds ([Int]?): Array of consent version IDs to consent to
-- unconsenVersionIds ([Int]?): Array of consent version IDs to revoke consent from
-
-### getUserConsents
-
-_Retrieves the user's current consent statuses_
-
-**Required Information:**
-
-### getAllConsents
-
-_Retrieves all available consent types and their information_
-
-**Required Information:**
-
-## betting
-
-### getBetDetails
-
-_Retrieves detailed information about a specific bet_
-
-**Required Information:**
-- identifier (String): Unique identifier of the bet to retrieve
-
-### calculateCashout
-
-_Calculates the cashout value for a specific bet_
-
-**Required Information:**
-- betId (String): ID of the bet to calculate cashout for
-- stakeValue (String?): Optional stake value for partial cashout
-
-### rejectBoostedBet
-
-_Rejects a boosted bet offer_
-
-**Required Information:**
-- identifier (String): Unique identifier of the boosted bet to reject
-
-### getResolvedBetsHistory
-
-_Retrieves history of resolved bets with optional date filtering_
-
-**Required Information:**
-- pageIndex (Int): Page number for pagination
-- startDate (String?): Optional start date for filtering bets
-- endDate (String?): Optional end date for filtering bets
-
-### placeBetBuilderBet
-
-_Places a bet builder bet with calculated odds_
-
-**Required Information:**
-- calculatedOdd (Double): Pre-calculated odds for the bet builder
-- betTicket (BetTicket): The bet builder ticket to place
-
-### getTicketSelection
-
-_Retrieves a specific ticket selection by its ID_
-
-**Required Information:**
-- ticketSelectionId (String): ID of the ticket selection to retrieve
-
-### getBetHistory
-
-_Retrieves betting history with pagination_
-
-**Required Information:**
-- pageIndex (Int): Page number for pagination
-
-### allowedCashoutBetIds
-
-_Retrieves IDs of bets that are eligible for cashout_
-
-**Required Information:**
-
-### getWonBetsHistory
-
-_Retrieves history of won bets with optional date filtering_
-
-**Required Information:**
-- startDate (String?): Optional start date for filtering bets
-- pageIndex (Int): Page number for pagination
-- endDate (String?): Optional end date for filtering bets
-
-### getOpenBetsHistory
-
-_Retrieves history of open bets with optional date filtering_
-
-**Required Information:**
-- startDate (String?): Optional start date for filtering bets
-- endDate (String?): Optional end date for filtering bets
-- pageIndex (Int): Page number for pagination
-
-### cashoutBet
-
-_Performs a cashout operation on a specific bet_
-
-**Required Information:**
-- betId (String): ID of the bet to cash out
-- stakeValue (Double?): Optional stake value for partial cashout
-- cashoutValue (Double): Value to cash out
-
-### placeBets
-
-_Places one or more bets using the provided bet tickets_
-
-**Required Information:**
-- betTickets ([BetTicket]): Array of bet tickets to place
-- useFreebetBalance (Bool): Whether to use freebet balance for placing bets
-
-### confirmBoostedBet
-
-_Confirms a boosted bet offer_
-
-**Required Information:**
-- identifier (String): Unique identifier of the boosted bet to confirm
-
-### getAllowedBetTypes
-
-_Retrieves allowed bet types for given selections_
-
-**Required Information:**
-- betTicketSelections ([BetTicketSelection]): Array of bet ticket selections to check allowed types for
-
-### calculateBetBuilderPotentialReturn
-
-_Calculates potential return for a bet builder ticket_
-
-**Required Information:**
-- betTicket (BetTicket): The bet builder ticket to calculate potential returns for
-
-### updateBetslipSettings
-
-_Updates the user's betslip settings_
-
-**Required Information:**
-- betslipSettings (BetslipSettings): New betslip settings to apply
-
-### getSharedTicket
-
-_Retrieves a shared bet ticket by its ID_
-
-**Required Information:**
-- betslipId (String): ID of the shared bet ticket to retrieve
-
-### calculatePotentialReturn
-
-_Calculates potential return for a bet ticket before placing the bet_
-
-**Required Information:**
-- betTicket (BetTicket): The bet ticket to calculate potential returns for
-
-### getFreebet
-
-_Retrieves information about available freebets for the user_
-
-**Required Information:**
-
-### calculateCashback
-
-_Calculates potential cashback for a bet ticket_
-
-**Required Information:**
-- betTicket (BetTicket): The bet ticket to calculate cashback for
-
-### getBetslipSettings
-
-_Retrieves the current betslip settings for the user_
-
-**Required Information:**
-
-## favorites
-
-### deleteFavoriteFromList
-
-_Deletes a favorite event from a list_
-
-**Required Information:**
-- eventId (Int): ID of the event to delete from favorites
-
-### deleteFavoritesList
-
-_Deletes a favorites list with the specified ID_
-
-**Required Information:**
-- listId (Int): ID of the favorites list to delete
-
-### getPromotedBetslips
-
-_Retrieves promoted betslips, optionally filtered by user_
-
-**Required Information:**
-- userId (String?): Optional user ID for personalized betslips
-
-### getFavoritesList
-
-_Retrieves all favorite lists for the current user_
-
-**Required Information:**
-
-### addFavoritesList
-
-_Creates a new favorites list with the specified name_
-
-**Required Information:**
-- name (String): Name of the new favorites list
-
-### addFavoriteToList
-
-_Adds an event to a specified favorites list_
-
-**Required Information:**
-- listId (Int): ID of the favorites list to add the event to
-- eventId (String): ID of the event to add to favorites
-
-### getFavoritesFromList
-
-_Retrieves all favorite events from a specified list_
-
-**Required Information:**
-- listId (Int): ID of the favorites list to get events from
+**Arguments:**
+- lastName: String
+- isLogged: Bool
+- userIdentifier: String
+- firstName: String
+- message: String
+- subject: String
+- email: String
+- subjectType: String
+
+**Returns:** [SupportResponse](#supportresponse)
 
 ## location
 
-### getAllCountries
+### 🔸 getAllCountries
 
 _Retrieves all available countries_
 
-**Required Information:**
+**Arguments:**
 
-### getCountries
+**Returns:** Country, [Country]
+
+### 🔸 getCountries
 
 _Retrieves list of available countries_
 
-**Required Information:**
+**Arguments:**
 
-### getCurrentCountry
+**Returns:** Country, [Country]
+
+### 🔸 getCurrentCountry
 
 _Retrieves the current country information_
 
-**Required Information:**
+**Arguments:**
+
+**Returns:** Country?
+
+## events
+
+### 🔸 getHighlightedLiveEvents
+
+_Retrieves detailed information about highlighted live events, optionally filtered by user_
+
+**Arguments:**
+- eventCount: Int
+- userId: String?
+
+**Returns:** [Event](#event), [Event]
+
+### 🔸 getEventSecundaryMarkets
+
+_Retrieves secondary markets information for a specific event_
+
+**Arguments:**
+- eventId: String
+
+**Returns:** [Event](#event)
+
+### 🔸 getEventDetails
+
+_Retrieves detailed information about a specific event_
+
+**Arguments:**
+- eventId: String
+
+**Returns:** [Event](#event)
+
+### 🔸 getEventsForEventGroup
+
+_Retrieves events associated with a specific event group_
+
+**Arguments:**
+- withId: String
+
+**Returns:** [EventsGroup](#eventsgroup)
+
+### 🔸 getHeroGameEvent
+
+_Retrieves the hero game event_
+
+**Arguments:**
+
+**Returns:** [Event](#event), [Event]
+
+### 🔸 getPromotionalSlidingTopEvents
+
+_Retrieves promotional sliding events for the top section_
+
+**Arguments:**
+
+**Returns:** [Event](#event), [Event]
+
+### 🔸 getEventSummaryByMarket
+
+_Retrieves a summary of an event using a market ID associated with the event_
+
+**Arguments:**
+- forMarketId: String
+
+**Returns:** [Event](#event)
+
+### 🔸 getHighlightedMarkets
+
+_Retrieves highlighted markets_
+
+**Arguments:**
+
+**Returns:** HighlightMarket, [HighlightMarket]
+
+### 🔸 getSearchEvents
+
+_Searches for events based on a query string with pagination support_
+
+**Arguments:**
+- page: String
+- resultLimit: String
+- query: String
+- isLive: Bool
+
+**Returns:** [EventsGroup](#eventsgroup)
+
+### 🔸 getPromotionalTopBanners
+
+_Retrieves promotional banners for the top section_
+
+**Arguments:**
+
+**Returns:** [PromotionalBanner](#promotionalbanner), [PromotionalBanner]
+
+### 🔸 getTopCompetitions
+
+_Retrieves the list of top competitions_
+
+**Arguments:**
+
+**Returns:** TopCompetition, [TopCompetition]
+
+### 🔸 getCashbackSuccessBanner
+
+_Retrieves the cashback success banner_
+
+**Arguments:**
+
+**Returns:** [BannerResponse](#bannerresponse)
+
+### 🔸 getRegionCompetitions
+
+_Retrieves information about competitions available in a specific region_
+
+**Arguments:**
+- regionId: String
+
+**Returns:** [SportRegionInfo](#sportregioninfo)
+
+### 🔸 getEventForMarketGroup
+
+_Retrieves an event associated with a specific market group_
+
+**Arguments:**
+- withId: String
+
+**Returns:** [Event](#event)
+
+### 🔸 getPromotionalTopStories
+
+_Retrieves promotional top stories_
+
+**Arguments:**
+
+**Returns:** [PromotionalStory](#promotionalstory), [PromotionalStory]
+
+### 🔸 getAvailableSportTypes
+
+_Retrieves a list of available sport types within an optional date range_
+
+**Arguments:**
+- endDate: Date?
+- initialDate: Date?
+
+**Returns:** [SportType](#sporttype), [SportType]
+
+### 🔸 getHighlightedLiveEventsIds
+
+_Retrieves IDs of highlighted live events, optionally filtered by user_
+
+**Arguments:**
+- userId: String?
+- eventCount: Int
+
+**Returns:** String, [String]
+
+### 🔸 getHomeSliders
+
+_Retrieves the home page slider banners_
+
+**Arguments:**
+
+**Returns:** [BannerResponse](#bannerresponse)
+
+### 🔸 getCompetitionMarketGroups
+
+_Retrieves information about market groups available for a specific competition_
+
+**Arguments:**
+- competitionId: String
+
+**Returns:** [SportCompetitionInfo](#sportcompetitioninfo)
+
+### 🔸 getEventLiveData
+
+_Retrieves live data and statistics for a specific event_
+
+**Arguments:**
+- eventId: String
+
+**Returns:** EventLiveData
+
+### 🔸 getPromotedSports
+
+_Retrieves the list of promoted sports_
+
+**Arguments:**
+
+**Returns:** [PromotedSport](#promotedsport), [PromotedSport]
+
+### 🔸 getSportRegions
+
+_Retrieves information about regions available for a specific sport_
+
+**Arguments:**
+- sportId: String
+
+**Returns:** [SportNodeInfo](#sportnodeinfo)
+
+### 🔸 getHighlightedBoostedEvents
+
+_Retrieves events with boosted odds that are highlighted_
+
+**Arguments:**
+
+**Returns:** [Event](#event), [Event]
+
+### 🔸 getTopCompetitionsPointers
+
+_Retrieves pointers to top competitions_
+
+**Arguments:**
+
+**Returns:** [TopCompetitionPointer](#topcompetitionpointer), [TopCompetitionPointer]
+
+### 🔸 getEventSummary
+
+_Retrieves a summary of a specific event using its event ID_
+
+**Arguments:**
+- eventId: String
+
+**Returns:** [Event](#event)
+
+### 🔸 getMarketInfo
+
+_Retrieves detailed information about a specific market_
+
+**Arguments:**
+- marketId: String
+
+**Returns:** [Market](#market)
+
+### 🔸 getHighlightedVisualImageEvents
+
+_Retrieves events with visual images that are highlighted_
+
+**Arguments:**
+
+**Returns:** [Event](#event), [Event]
+
+## betting
+
+### 🔸 getFreebet
+
+_Retrieves information about available freebets for the user_
+
+**Arguments:**
+
+**Returns:** [FreebetResponse](#freebetresponse)
+
+### 🔸 getAllowedBetTypes
+
+_Retrieves allowed bet types for given selections_
+
+**Arguments:**
+- betTicketSelections: [BetTicketSelection]
+
+**Returns:** [BetTicketSelection](#betticketselection), [BetType](#bettype), [BetType]
+
+### 🔸 calculatePotentialReturn
+
+_Calculates potential return for a bet ticket before placing the bet_
+
+**Arguments:**
+- betTicket: [BetTicket](#betticket)
+
+**Returns:** BetslipPotentialReturn
+
+### 🔸 getWonBetsHistory
+
+_Retrieves history of won bets with optional date filtering_
+
+**Arguments:**
+- startDate: String?
+- endDate: String?
+- pageIndex: Int
+
+**Returns:** [BettingHistory](#bettinghistory)
+
+### 🔸 cashoutBet
+
+_Performs a cashout operation on a specific bet_
+
+**Arguments:**
+- cashoutValue: Double
+- betId: String
+- stakeValue: Double?
+
+**Returns:** [CashoutResult](#cashoutresult)
+
+### 🔸 getTicketSelection
+
+_Retrieves a specific ticket selection by its ID_
+
+**Arguments:**
+- ticketSelectionId: String
+
+**Returns:** [TicketSelection](#ticketselection)
+
+### 🔸 getSharedTicket
+
+_Retrieves a shared bet ticket by its ID_
+
+**Arguments:**
+- betslipId: String
+
+**Returns:** [SharedTicketResponse](#sharedticketresponse)
+
+### 🔸 getBetHistory
+
+_Retrieves betting history with pagination_
+
+**Arguments:**
+- pageIndex: Int
+
+**Returns:** [BettingHistory](#bettinghistory)
+
+### 🔸 calculateBetBuilderPotentialReturn
+
+_Calculates potential return for a bet builder ticket_
+
+**Arguments:**
+- betTicket: [BetTicket](#betticket)
+
+**Returns:** [BetBuilderPotentialReturn](#betbuilderpotentialreturn)
+
+### 🔸 updateBetslipSettings
+
+_Updates the user's betslip settings_
+
+**Arguments:**
+- betslipSettings: [BetslipSettings](#betslipsettings)
+
+**Returns:** [BetslipSettings](#betslipsettings)
+
+### 🔸 confirmBoostedBet
+
+_Confirms a boosted bet offer_
+
+**Arguments:**
+- identifier: String
+
+**Returns:** Bool
+
+### 🔸 rejectBoostedBet
+
+_Rejects a boosted bet offer_
+
+**Arguments:**
+- identifier: String
+
+**Returns:** Bool
+
+### 🔸 calculateCashout
+
+_Calculates the cashout value for a specific bet_
+
+**Arguments:**
+- betId: String
+- stakeValue: String?
+
+**Returns:** [Cashout](#cashout)
+
+### 🔸 calculateCashback
+
+_Calculates potential cashback for a bet ticket_
+
+**Arguments:**
+- betTicket: [BetTicket](#betticket)
+
+**Returns:** [CashbackResult](#cashbackresult)
+
+### 🔸 getResolvedBetsHistory
+
+_Retrieves history of resolved bets with optional date filtering_
+
+**Arguments:**
+- pageIndex: Int
+- startDate: String?
+- endDate: String?
+
+**Returns:** [BettingHistory](#bettinghistory)
+
+### 🔸 getOpenBetsHistory
+
+_Retrieves history of open bets with optional date filtering_
+
+**Arguments:**
+- startDate: String?
+- pageIndex: Int
+- endDate: String?
+
+**Returns:** [BettingHistory](#bettinghistory)
+
+### 🔸 allowedCashoutBetIds
+
+_Retrieves IDs of bets that are eligible for cashout_
+
+**Arguments:**
+
+**Returns:** String, [String]
+
+### 🔸 placeBetBuilderBet
+
+_Places a bet builder bet with calculated odds_
+
+**Arguments:**
+- betTicket: [BetTicket](#betticket)
+- calculatedOdd: Double
+
+**Returns:** [PlacedBetsResponse](#placedbetsresponse)
+
+### 🔸 getBetDetails
+
+_Retrieves detailed information about a specific bet_
+
+**Arguments:**
+- identifier: String
+
+**Returns:** [Bet](#bet)
+
+### 🔸 placeBets
+
+_Places one or more bets using the provided bet tickets_
+
+**Arguments:**
+- betTickets: [BetTicket]
+- useFreebetBalance: Bool
+
+**Returns:** [BetTicket](#betticket), [PlacedBetsResponse](#placedbetsresponse)
+
+### 🔸 getBetslipSettings
+
+_Retrieves the current betslip settings for the user_
+
+**Arguments:**
+
+**Returns:** [BetslipSettings](#betslipsettings)
 
 ## identity_verification
 
-### generateDocumentTypeToken
-
-_Generates a token for uploading a specific type of document_
-
-**Required Information:**
-- docType (String): Type of document to generate token for
-
-### getSumsubApplicantData
-
-_Retrieves applicant verification data from Sumsub_
-
-**Required Information:**
-- userId (String): User's unique identifier
-
-### checkDocumentationData
-
-_Checks the status of user's submitted documentation_
-
-**Required Information:**
-
-### getSumsubAccessToken
+### 🔸 getSumsubAccessToken
 
 _Retrieves an access token for Sumsub identity verification service_
 
-**Required Information:**
-- userId (String): User's unique identifier
-- levelName (String): Verification level name
+**Arguments:**
+- levelName: String
+- userId: String
+
+**Returns:** [AccessTokenResponse](#accesstokenresponse)
+
+### 🔸 checkDocumentationData
+
+_Checks the status of user's submitted documentation_
+
+**Arguments:**
+
+**Returns:** [ApplicantDataResponse](#applicantdataresponse)
+
+### 🔸 generateDocumentTypeToken
+
+_Generates a token for uploading a specific type of document_
+
+**Arguments:**
+- docType: String
+
+**Returns:** [AccessTokenResponse](#accesstokenresponse)
+
+### 🔸 getSumsubApplicantData
+
+_Retrieves applicant verification data from Sumsub_
+
+**Arguments:**
+- userId: String
+
+**Returns:** [ApplicantDataResponse](#applicantdataresponse)
+
+## account_management
+
+### 🔸 updatePassword
+
+_Updates the user's password_
+
+**Arguments:**
+- newPassword: String
+- oldPassword: String
+
+**Returns:** Bool
+
+### 🔸 updateExtraInfo
+
+_Updates additional user information_
+
+**Arguments:**
+- address2: String?
+- placeOfBirth: String?
+
+**Returns:** [BasicResponse](#basicresponse)
+
+### 🔸 updateDeviceIdentifier
+
+_Updates the device identifier and app version for the user_
+
+**Arguments:**
+- deviceIdentifier: String
+- appVersion: String
+
+**Returns:** [BasicResponse](#basicresponse)
+
+### 🔸 verifyMobileCode
+
+_Verifies a mobile verification code_
+
+**Arguments:**
+- code: String
+- requestId: String
+
+**Returns:** [MobileVerifyResponse](#mobileverifyresponse)
+
+### 🔸 getMobileVerificationCode
+
+_Requests a verification code for a mobile number_
+
+**Arguments:**
+- mobileNumber: String
+
+**Returns:** [MobileVerifyResponse](#mobileverifyresponse)
+
+### 🔸 forgotPassword
+
+_Initiates the password recovery process_
+
+**Arguments:**
+- secretAnswer: String?
+- email: String
+- secretQuestion: String?
+
+**Returns:** Bool
+
+### 🔸 lockPlayer
+
+_Locks a player's account with specified duration_
+
+**Arguments:**
+- lockPeriodUnit: String?
+- isPermanent: Bool?
+- lockPeriod: String?
+
+**Returns:** [BasicResponse](#basicresponse)
+
+### 🔸 updateUserProfile
+
+_Updates the user's profile information_
+
+**Arguments:**
+- form: UpdateUserProfileForm
+
+**Returns:** Bool
+
+## payments
+
+### 🔸 getPayments
+
+_Retrieves available payment methods for deposits_
+
+**Arguments:**
+
+**Returns:** SimplePaymentMethodsResponse
+
+### 🔸 cancelWithdrawal
+
+_Cancels a pending withdrawal transaction_
+
+**Arguments:**
+- paymentId: Int
+
+**Returns:** [CancelWithdrawalResponse](#cancelwithdrawalresponse)
+
+### 🔸 cancelDeposit
+
+_Cancels a pending deposit transaction_
+
+**Arguments:**
+- paymentId: String
+
+**Returns:** [BasicResponse](#basicresponse)
+
+### 🔸 getPendingWithdrawals
+
+_Retrieves list of pending withdrawal transactions_
+
+**Arguments:**
+
+**Returns:** [PendingWithdrawal](#pendingwithdrawal), [PendingWithdrawal]
+
+### 🔸 prepareWithdrawal
+
+_Prepares a withdrawal request for processing_
+
+**Arguments:**
+- paymentMethod: String
+
+**Returns:** [PrepareWithdrawalResponse](#preparewithdrawalresponse)
+
+### 🔸 checkPaymentStatus
+
+_Checks the status of a payment transaction_
+
+**Arguments:**
+- paymentId: String
+- paymentMethod: String
+
+**Returns:** [PaymentStatusResponse](#paymentstatusresponse)
+
+### 🔸 getWithdrawalMethods
+
+_Retrieves available withdrawal methods_
+
+**Arguments:**
+
+**Returns:** [WithdrawalMethod](#withdrawalmethod), [WithdrawalMethod]
+
+### 🔸 addPaymentInformation
+
+_Adds new payment information for the user_
+
+**Arguments:**
+- fields: String
+- type: String
+
+**Returns:** [AddPaymentInformationResponse](#addpaymentinformationresponse)
+
+### 🔸 getTransactionsHistory
+
+_Retrieves transaction history for a specified date range_
+
+**Arguments:**
+- pageNumber: Int?
+- startDate: String
+- endDate: String
+- transactionTypes: [TransactionType]?
+
+**Returns:** [TransactionDetail](#transactiondetail), TransactionType, [TransactionDetail]
+
+### 🔸 processDeposit
+
+_Processes a deposit request_
+
+**Arguments:**
+- amount: Double
+- paymentMethod: String
+- option: String
+
+**Returns:** [ProcessDepositResponse](#processdepositresponse)
+
+### 🔸 processWithdrawal
+
+_Processes a withdrawal request_
+
+**Arguments:**
+- amount: Double
+- conversionId: String?
+- paymentMethod: String
+
+**Returns:** [ProcessWithdrawalResponse](#processwithdrawalresponse)
+
+### 🔸 updatePayment
+
+_Updates payment information for an existing payment_
+
+**Arguments:**
+- encryptedCardNumber: String?
+- nameOnCard: String?
+- paymentId: String
+- encryptedExpiryYear: String?
+- returnUrl: String?
+- type: String
+- encryptedExpiryMonth: String?
+- amount: Double
+- encryptedSecurityCode: String?
+
+**Returns:** [UpdatePaymentResponse](#updatepaymentresponse)
+
+### 🔸 getPaymentInformation
+
+_Retrieves saved payment information for the user_
+
+**Arguments:**
+
+**Returns:** [PaymentInformation](#paymentinformation)
+
+## wallet
+
+### 🔸 getUserBalance
+
+_Retrieves the user's wallet balance information_
+
+**Arguments:**
+
+**Returns:** UserWallet
+
+### 🔸 getUserCashbackBalance
+
+_Retrieves the user's cashback balance information_
+
+**Arguments:**
+
+**Returns:** [CashbackBalance](#cashbackbalance)
+
+## authentication
+
+### 🔸 logout
+
+_Logs out the current user and invalidates their session_
+
+**Arguments:**
+
+**Returns:** [BasicResponse](#basicresponse)
+
+### 🔸 login
+
+_Authenticates a user with username and password_
+
+**Arguments:**
+- username: String
+- password: String
+
+**Returns:** UserProfile
+
+### 🔸 getPasswordPolicy
+
+_Retrieves the password policy requirements_
+
+**Arguments:**
+
+**Returns:** PasswordPolicy
+
+## referral
+
+### 🔸 getReferees
+
+_Retrieves the list of users referred by the current user_
+
+**Arguments:**
+
+**Returns:** [Referee](#referee), [Referee]
+
+### 🔸 getReferralLink
+
+_Retrieves the user's referral link_
+
+**Arguments:**
+
+**Returns:** [ReferralLink](#referrallink)
+
+## favorites
+
+### 🔸 getPromotedBetslips
+
+_Retrieves promoted betslips, optionally filtered by user_
+
+**Arguments:**
+- userId: String?
+
+**Returns:** [PromotedBetslip](#promotedbetslip), [PromotedBetslip]
+
+### 🔸 getFavoritesList
+
+_Retrieves all favorite lists for the current user_
+
+**Arguments:**
+
+**Returns:** [FavoritesListResponse](#favoriteslistresponse)
+
+### 🔸 addFavoritesList
+
+_Creates a new favorites list with the specified name_
+
+**Arguments:**
+- name: String
+
+**Returns:** [FavoritesListAddResponse](#favoriteslistaddresponse)
+
+### 🔸 deleteFavoriteFromList
+
+_Deletes a favorite event from a list_
+
+**Arguments:**
+- eventId: Int
+
+**Returns:** [FavoritesListDeleteResponse](#favoriteslistdeleteresponse)
+
+### 🔸 getFavoritesFromList
+
+_Retrieves all favorite events from a specified list_
+
+**Arguments:**
+- listId: Int
+
+**Returns:** [FavoriteEventResponse](#favoriteeventresponse)
+
+### 🔸 deleteFavoritesList
+
+_Deletes a favorites list with the specified ID_
+
+**Arguments:**
+- listId: Int
+
+**Returns:** [FavoritesListDeleteResponse](#favoriteslistdeleteresponse)
+
+### 🔸 addFavoriteToList
+
+_Adds an event to a specified favorites list_
+
+**Arguments:**
+- eventId: String
+- listId: Int
+
+**Returns:** [FavoriteAddResponse](#favoriteaddresponse)
+
+## responsible_gaming
+
+### 🔸 updateResponsibleGamingLimits
+
+_Updates the user's responsible gaming limits_
+
+**Arguments:**
+- newLimit: Double
+- limitType: String
+- hasRollingWeeklyLimits: Bool
+
+**Returns:** Bool
+
+### 🔸 getPersonalDepositLimits
+
+_Retrieves the user's personal deposit limits_
+
+**Arguments:**
+
+**Returns:** [PersonalDepositLimitResponse](#personaldepositlimitresponse)
+
+### 🔸 getResponsibleGamingLimits
+
+_Retrieves responsible gaming limits for specified period and limit types_
+
+**Arguments:**
+- periodTypes: String?
+- limitTypes: String?
+
+**Returns:** [ResponsibleGamingLimitsResponse](#responsiblegaminglimitsresponse)
+
+### 🔸 updateWeeklyDepositLimits
+
+_Updates the user's weekly deposit limits_
+
+**Arguments:**
+- newLimit: Double
+
+**Returns:** Bool
+
+### 🔸 updateWeeklyBettingLimits
+
+_Updates the user's weekly betting limits_
+
+**Arguments:**
+- newLimit: Double
+
+**Returns:** Bool
+
+### 🔸 getLimits
+
+_Retrieves all user limits information_
+
+**Arguments:**
+
+**Returns:** [LimitsResponse](#limitsresponse)
+
+## documents
+
+### 🔸 getDocumentTypes
+
+_Retrieves available document types for verification_
+
+**Arguments:**
+
+**Returns:** [DocumentTypesResponse](#documenttypesresponse)
+
+### 🔸 getUserDocuments
+
+_Retrieves user's uploaded documents_
+
+**Arguments:**
+
+**Returns:** [UserDocumentsResponse](#userdocumentsresponse)
+
+### 🔸 uploadUserDocument
+
+_Uploads a single user verification document_
+
+**Arguments:**
+- documentType: String
+- file: Data
+- fileName: String
+
+**Returns:** [UploadDocumentResponse](#uploaddocumentresponse)
+
+### 🔸 uploadMultipleUserDocuments
+
+_Uploads multiple user verification documents_
+
+**Arguments:**
+- files: [String: Data]
+- documentType: String
+
+**Returns:** [UploadDocumentResponse](#uploaddocumentresponse)
+
+## consent_management
+
+### 🔸 getAllConsents
+
+_Retrieves all available consent types and their information_
+
+**Arguments:**
+
+**Returns:** ConsentInfo, [ConsentInfo]
+
+### 🔸 setUserConsents
+
+_Updates user consent statuses for specified consent versions_
+
+**Arguments:**
+- unconsenVersionIds: [Int]?
+- consentVersionIds: [Int]?
+
+**Returns:** [BasicResponse](#basicresponse), Int
+
+### 🔸 getUserConsents
+
+_Retrieves the user's current consent statuses_
+
+**Arguments:**
+
+**Returns:** [UserConsent](#userconsent), [UserConsent]
 
 
 # Real-time Services
 
 _These services provide real-time updates through WebSocket connections._
 
-### subscribeEventDetails
+### 🔹 subscribePreLiveMatches
+
+_Subscribes to pre-live (upcoming) matches for a specific sport type with optional date range and sorting parameters_
+
+**Update Information:**
+- Frequency: on-change
+
+### 🔹 subscribeLiveMatches
+
+_Subscribes to live matches updates for a specific sport type through WebSocket connection_
+
+**Update Information:**
+- Frequency: real-time
+
+### 🔹 subscribeToMarketDetails
+
+_Subscribes to real-time updates for a specific market within an event_
+
+**Update Information:**
+- Frequency: real-time
+
+### 🔹 subscribePreLiveSportTypes
+
+_Subscribes to updates for available pre-live sport types within a specified date range_
+
+**Update Information:**
+- Frequency: on-change
+
+### 🔹 subscribeAllSportTypes
+
+_Subscribes to updates for all available sport types, including both live and pre-live sports_
+
+**Update Information:**
+- Frequency: on-change
+
+### 🔹 subscribeOutrightMarkets
+
+_Subscribes to outright market updates for a specific market group (e.g., tournament winner, top scorer)_
+
+**Update Information:**
+- Frequency: on-change
+
+### 🔹 subscribeEventMarkets
+
+_Subscribes to all markets associated with a specific event, including odds updates and market status changes_
+
+**Update Information:**
+- Frequency: real-time
+
+### 🔹 subscribeLiveSportTypes
+
+_Subscribes to updates for currently live sport types and their active events_
+
+**Update Information:**
+- Frequency: real-time
+
+### 🔹 subscribeToLiveDataUpdates
+
+_Subscribes to real-time live data updates for a specific event, including detailed statistics and play-by-play information_
+
+**Update Information:**
+- Frequency: real-time
+
+### 🔹 subscribeEventDetails
 
 _Subscribes to detailed updates for a specific event, including scores, statistics, and market information_
 
@@ -915,82 +1214,19 @@ _Subscribes to detailed updates for a specific event, including scores, statisti
   - market information
   - event status changes
 
-### subscribeToMarketDetails
-
-_Subscribes to real-time updates for a specific market within an event_
-
-**Update Information:**
-- Frequency: real-time
-
-### subscribePreLiveMatches
-
-_Subscribes to pre-live (upcoming) matches for a specific sport type with optional date range and sorting parameters_
-
-**Update Information:**
-- Frequency: on-change
-
-### subscribeLiveMatches
-
-_Subscribes to live matches updates for a specific sport type through WebSocket connection_
-
-**Update Information:**
-- Frequency: real-time
-
-### subscribeToLiveDataUpdates
-
-_Subscribes to real-time live data updates for a specific event, including detailed statistics and play-by-play information_
-
-**Update Information:**
-- Frequency: real-time
-
-### subscribeLiveSportTypes
-
-_Subscribes to updates for currently live sport types and their active events_
-
-**Update Information:**
-- Frequency: real-time
-
-### subscribeCompetitionMatches
+### 🔹 subscribeCompetitionMatches
 
 _Subscribes to matches updates for a specific competition identified by its market group ID_
 
 **Update Information:**
 - Frequency: real-time
 
-### subscribeOutrightMarkets
-
-_Subscribes to outright market updates for a specific market group (e.g., tournament winner, top scorer)_
-
-**Update Information:**
-- Frequency: on-change
-
-### subscribeEventMarkets
-
-_Subscribes to all markets associated with a specific event, including odds updates and market status changes_
-
-**Update Information:**
-- Frequency: real-time
-
-### subscribeAllSportTypes
-
-_Subscribes to updates for all available sport types, including both live and pre-live sports_
-
-**Update Information:**
-- Frequency: on-change
-
-### subscribePreLiveSportTypes
-
-_Subscribes to updates for available pre-live sport types within a specified date range_
-
-**Update Information:**
-- Frequency: on-change
-
 
 # Data Models
 
 _This section describes the data structures used in the API._
 
-### AccessTokenResponse
+### Ⓜ️ AccessTokenResponse
 
 **Properties:**
 
@@ -1001,7 +1237,7 @@ _This section describes the data structures used in the API._
 | description | String? |
 | code | Int? |
 
-### ActivePlayerServe
+### Ⓜ️ ActivePlayerServe
 
 **Properties:**
 
@@ -1012,9 +1248,8 @@ _This section describes the data structures used in the API._
 
 **Related Models:**
 - [ActivePlayerServe](#activeplayerserve)
-- [ActivePlayerServe](#activeplayerserve)
 
-### AddPaymentInformationResponse
+### Ⓜ️ AddPaymentInformationResponse
 
 **Properties:**
 
@@ -1023,7 +1258,7 @@ _This section describes the data structures used in the API._
 | status | String |
 | message | String? |
 
-### ApplicantDataInfo
+### Ⓜ️ ApplicantDataInfo
 
 **Properties:**
 
@@ -1034,7 +1269,7 @@ _This section describes the data structures used in the API._
 **Related Models:**
 - [ApplicantDoc](#applicantdoc)
 
-### ApplicantDataResponse
+### Ⓜ️ ApplicantDataResponse
 
 **Properties:**
 
@@ -1049,7 +1284,7 @@ _This section describes the data structures used in the API._
 - [ApplicantDataInfo](#applicantdatainfo)
 - [ApplicantReviewData](#applicantreviewdata)
 
-### ApplicantDoc
+### Ⓜ️ ApplicantDoc
 
 **Properties:**
 
@@ -1057,7 +1292,7 @@ _This section describes the data structures used in the API._
 |------|------|
 | docType | String |
 
-### ApplicantReviewData
+### Ⓜ️ ApplicantReviewData
 
 **Properties:**
 
@@ -1073,7 +1308,7 @@ _This section describes the data structures used in the API._
 **Related Models:**
 - [ApplicantReviewResult](#applicantreviewresult)
 
-### ApplicantReviewResult
+### Ⓜ️ ApplicantReviewResult
 
 **Properties:**
 
@@ -1083,7 +1318,7 @@ _This section describes the data structures used in the API._
 | reviewRejectType | String? |
 | moderationComment | String? |
 
-### ApplicantRootResponse
+### Ⓜ️ ApplicantRootResponse
 
 **Properties:**
 
@@ -1096,7 +1331,7 @@ _This section describes the data structures used in the API._
 **Related Models:**
 - [ApplicantDataResponse](#applicantdataresponse)
 
-### AvailableBonus
+### Ⓜ️ AvailableBonus
 
 **Properties:**
 
@@ -1113,7 +1348,7 @@ _This section describes the data structures used in the API._
 | wagerRequirement | Double? |
 | imageUrl | String? |
 
-### AvailableBonusResponse
+### Ⓜ️ AvailableBonusResponse
 
 **Properties:**
 
@@ -1125,7 +1360,7 @@ _This section describes the data structures used in the API._
 **Related Models:**
 - [AvailableBonus](#availablebonus)
 
-### BalanceResponse
+### Ⓜ️ BalanceResponse
 
 **Properties:**
 
@@ -1157,7 +1392,7 @@ _This section describes the data structures used in the API._
 | totalEscrowBalance | String? |
 | totalEscrowBalanceNumber | Double? |
 
-### BankPaymentDetail
+### Ⓜ️ BankPaymentDetail
 
 **Properties:**
 
@@ -1168,7 +1403,7 @@ _This section describes the data structures used in the API._
 | key | String |
 | value | String |
 
-### BankPaymentInfo
+### Ⓜ️ BankPaymentInfo
 
 **Properties:**
 
@@ -1184,7 +1419,7 @@ _This section describes the data structures used in the API._
 **Related Models:**
 - [BankPaymentDetail](#bankpaymentdetail)
 
-### Banner
+### Ⓜ️ Banner
 
 **Properties:**
 
@@ -1199,7 +1434,7 @@ _This section describes the data structures used in the API._
 | linkUrl | String? |
 | marketId | String? |
 
-### BannerResponse
+### Ⓜ️ BannerResponse
 
 **Properties:**
 
@@ -1210,7 +1445,7 @@ _This section describes the data structures used in the API._
 **Related Models:**
 - [Banner](#banner)
 
-### BannerSpecialAction
+### Ⓜ️ BannerSpecialAction
 
 **Properties:**
 
@@ -1221,9 +1456,8 @@ _This section describes the data structures used in the API._
 
 **Related Models:**
 - [BannerSpecialAction](#bannerspecialaction)
-- [BannerSpecialAction](#bannerspecialaction)
 
-### BasicResponse
+### Ⓜ️ BasicResponse
 
 **Properties:**
 
@@ -1232,7 +1466,7 @@ _This section describes the data structures used in the API._
 | status | String |
 | message | String? |
 
-### Bet
+### Ⓜ️ Bet
 
 **Properties:**
 
@@ -1276,9 +1510,8 @@ _This section describes the data structures used in the API._
 **Related Models:**
 - [BetState](#betstate)
 - [BetResult](#betresult)
-- [BetState](#betstate)
 
-### BetBuilderPotentialReturn
+### Ⓜ️ BetBuilderPotentialReturn
 
 **Properties:**
 
@@ -1287,7 +1520,7 @@ _This section describes the data structures used in the API._
 | potentialReturn | Double |
 | calculatedOdds | Double |
 
-### BetResult
+### Ⓜ️ BetResult
 
 **Properties:**
 
@@ -1303,14 +1536,8 @@ _This section describes the data structures used in the API._
 
 **Related Models:**
 - [BetResult](#betresult)
-- [BetResult](#betresult)
-- [BetResult](#betresult)
-- [BetResult](#betresult)
-- [BetResult](#betresult)
-- [BetResult](#betresult)
-- [BetResult](#betresult)
 
-### BetSlip
+### Ⓜ️ BetSlip
 
 **Properties:**
 
@@ -1321,7 +1548,7 @@ _This section describes the data structures used in the API._
 **Related Models:**
 - [BetTicket](#betticket)
 
-### BetSlipStateResponse
+### Ⓜ️ BetSlipStateResponse
 
 **Properties:**
 
@@ -1332,7 +1559,7 @@ _This section describes the data structures used in the API._
 **Related Models:**
 - [BetTicket](#betticket)
 
-### BetState
+### Ⓜ️ BetState
 
 **Properties:**
 
@@ -1352,18 +1579,8 @@ _This section describes the data structures used in the API._
 
 **Related Models:**
 - [BetState](#betstate)
-- [BetState](#betstate)
-- [BetState](#betstate)
-- [BetState](#betstate)
-- [BetState](#betstate)
-- [BetState](#betstate)
-- [BetState](#betstate)
-- [BetState](#betstate)
-- [BetState](#betstate)
-- [BetState](#betstate)
-- [BetState](#betstate)
 
-### BetTicket
+### Ⓜ️ BetTicket
 
 **Properties:**
 
@@ -1378,7 +1595,7 @@ _This section describes the data structures used in the API._
 **Related Models:**
 - [BetTicketSelection](#betticketselection)
 
-### BetTicketSelection
+### Ⓜ️ BetTicketSelection
 
 **Properties:**
 
@@ -1392,7 +1609,7 @@ _This section describes the data structures used in the API._
 | priceUp | String |
 | priceDown | String |
 
-### BetType
+### Ⓜ️ BetType
 
 **Properties:**
 
@@ -1404,7 +1621,7 @@ _This section describes the data structures used in the API._
 | totalStake | Double |
 | numberOfIndividualBets | Int |
 
-### BetslipPotentialReturnResponse
+### Ⓜ️ BetslipPotentialReturnResponse
 
 **Properties:**
 
@@ -1415,7 +1632,7 @@ _This section describes the data structures used in the API._
 | numberOfBets | Int |
 | totalOdd | Double? |
 
-### BetslipSettings
+### Ⓜ️ BetslipSettings
 
 **Properties:**
 
@@ -1426,7 +1643,7 @@ _This section describes the data structures used in the API._
 
 **Related Models:**
 
-### BettingHistory
+### Ⓜ️ BettingHistory
 
 **Properties:**
 
@@ -1437,7 +1654,7 @@ _This section describes the data structures used in the API._
 **Related Models:**
 - [Bet](#bet)
 
-### CancelWithdrawalResponse
+### Ⓜ️ CancelWithdrawalResponse
 
 **Properties:**
 
@@ -1447,7 +1664,7 @@ _This section describes the data structures used in the API._
 | amount | String |
 | currency | String |
 
-### CashbackBalance
+### Ⓜ️ CashbackBalance
 
 **Properties:**
 
@@ -1457,7 +1674,7 @@ _This section describes the data structures used in the API._
 | balance | String? |
 | message | String? |
 
-### CashbackResult
+### Ⓜ️ CashbackResult
 
 **Properties:**
 
@@ -1467,7 +1684,7 @@ _This section describes the data structures used in the API._
 | amount | Double? |
 | amountFree | Double? |
 
-### Cashout
+### Ⓜ️ Cashout
 
 **Properties:**
 
@@ -1476,7 +1693,7 @@ _This section describes the data structures used in the API._
 | cashoutValue | Double |
 | partialCashoutAvailable | Bool? |
 
-### CashoutResult
+### Ⓜ️ CashoutResult
 
 **Properties:**
 
@@ -1486,7 +1703,7 @@ _This section describes the data structures used in the API._
 | cashoutReoffer | Double? |
 | message | String? |
 
-### CheckCredentialResponse
+### Ⓜ️ CheckCredentialResponse
 
 **Properties:**
 
@@ -1496,7 +1713,7 @@ _This section describes the data structures used in the API._
 | exists | String |
 | fieldExist | Bool |
 
-### CheckUsernameResponse
+### Ⓜ️ CheckUsernameResponse
 
 **Properties:**
 
@@ -1509,7 +1726,7 @@ _This section describes the data structures used in the API._
 
 **Related Models:**
 
-### CompetitionMarketGroup
+### Ⓜ️ CompetitionMarketGroup
 
 **Properties:**
 
@@ -1522,7 +1739,7 @@ _This section describes the data structures used in the API._
 **Related Models:**
 - [Event](#event)
 
-### CompetitionParentNode
+### Ⓜ️ CompetitionParentNode
 
 **Properties:**
 
@@ -1532,7 +1749,7 @@ _This section describes the data structures used in the API._
 | name | String |
 | categoryName | String |
 
-### ConfirmBetPlaceResponse
+### Ⓜ️ ConfirmBetPlaceResponse
 
 **Properties:**
 
@@ -1543,7 +1760,7 @@ _This section describes the data structures used in the API._
 | statusCode | String? |
 | statusText | String? |
 
-### Consent
+### Ⓜ️ Consent
 
 **Properties:**
 
@@ -1556,7 +1773,7 @@ _This section describes the data structures used in the API._
 | status | String? |
 | isMandatory | Bool? |
 
-### ConsentsResponse
+### Ⓜ️ ConsentsResponse
 
 **Properties:**
 
@@ -1568,7 +1785,7 @@ _This section describes the data structures used in the API._
 **Related Models:**
 - [Consent](#consent)
 
-### ContentContainer
+### Ⓜ️ ContentContainer
 
 **Properties:**
 
@@ -1613,42 +1830,8 @@ _This section describes the data structures used in the API._
 
 **Related Models:**
 - [ContentContainer](#contentcontainer)
-- [ContentContainer](#contentcontainer)
-- [ContentContainer](#contentcontainer)
-- [ContentContainer](#contentcontainer)
-- [ContentContainer](#contentcontainer)
-- [ContentContainer](#contentcontainer)
-- [ContentContainer](#contentcontainer)
-- [ContentContainer](#contentcontainer)
-- [ContentContainer](#contentcontainer)
-- [ContentContainer](#contentcontainer)
-- [ContentContainer](#contentcontainer)
-- [ContentContainer](#contentcontainer)
-- [ContentContainer](#contentcontainer)
-- [ContentContainer](#contentcontainer)
-- [ContentContainer](#contentcontainer)
-- [ContentContainer](#contentcontainer)
-- [ContentContainer](#contentcontainer)
-- [ContentContainer](#contentcontainer)
-- [ContentContainer](#contentcontainer)
-- [ContentContainer](#contentcontainer)
-- [ContentContainer](#contentcontainer)
-- [ContentContainer](#contentcontainer)
-- [ContentContainer](#contentcontainer)
-- [ContentContainer](#contentcontainer)
-- [ContentContainer](#contentcontainer)
-- [ContentContainer](#contentcontainer)
-- [ContentContainer](#contentcontainer)
-- [ContentContainer](#contentcontainer)
-- [ContentContainer](#contentcontainer)
-- [ContentContainer](#contentcontainer)
-- [ContentContainer](#contentcontainer)
-- [ContentContainer](#contentcontainer)
-- [ContentContainer](#contentcontainer)
-- [ContentContainer](#contentcontainer)
-- [ContentContainer](#contentcontainer)
 
-### CountryInfo
+### Ⓜ️ CountryInfo
 
 **Properties:**
 
@@ -1658,7 +1841,7 @@ _This section describes the data structures used in the API._
 | iso2Code | String |
 | phonePrefix | String |
 
-### DepositMethod
+### Ⓜ️ DepositMethod
 
 **Properties:**
 
@@ -1671,7 +1854,7 @@ _This section describes the data structures used in the API._
 **Related Models:**
 - [PaymentMethod](#paymentmethod)
 
-### DocumentType
+### Ⓜ️ DocumentType
 
 **Properties:**
 
@@ -1683,7 +1866,7 @@ _This section describes the data structures used in the API._
 | documentNumberRequired | Bool? |
 | multipleFileRequired | Bool? |
 
-### DocumentTypesResponse
+### Ⓜ️ DocumentTypesResponse
 
 **Properties:**
 
@@ -1695,7 +1878,7 @@ _This section describes the data structures used in the API._
 **Related Models:**
 - [DocumentType](#documenttype)
 
-### Event
+### Ⓜ️ Event
 
 **Properties:**
 
@@ -1730,7 +1913,7 @@ _This section describes the data structures used in the API._
 - [Score](#score)
 - [ActivePlayerServe](#activeplayerserve)
 
-### EventLiveDataExtended
+### Ⓜ️ EventLiveDataExtended
 
 **Properties:**
 
@@ -1749,7 +1932,7 @@ _This section describes the data structures used in the API._
 - [Score](#score)
 - [ActivePlayerServe](#activeplayerserve)
 
-### EventStatus
+### Ⓜ️ EventStatus
 
 **Properties:**
 
@@ -1763,11 +1946,8 @@ _This section describes the data structures used in the API._
 
 **Related Models:**
 - [EventStatus](#eventstatus)
-- [EventStatus](#eventstatus)
-- [EventStatus](#eventstatus)
-- [EventStatus](#eventstatus)
 
-### EventsGroup
+### Ⓜ️ EventsGroup
 
 **Properties:**
 
@@ -1779,7 +1959,7 @@ _This section describes the data structures used in the API._
 **Related Models:**
 - [Event](#event)
 
-### FavoriteAddResponse
+### Ⓜ️ FavoriteAddResponse
 
 **Properties:**
 
@@ -1788,7 +1968,7 @@ _This section describes the data structures used in the API._
 | displayOrder | Int? |
 | idAccountFavorite | Int? |
 
-### FavoriteEvent
+### Ⓜ️ FavoriteEvent
 
 **Properties:**
 
@@ -1799,7 +1979,7 @@ _This section describes the data structures used in the API._
 | favoriteListId | Int |
 | accountFavoriteId | Int |
 
-### FavoriteEventResponse
+### Ⓜ️ FavoriteEventResponse
 
 **Properties:**
 
@@ -1810,7 +1990,7 @@ _This section describes the data structures used in the API._
 **Related Models:**
 - [FavoriteEvent](#favoriteevent)
 
-### FavoriteList
+### Ⓜ️ FavoriteList
 
 **Properties:**
 
@@ -1820,7 +2000,7 @@ _This section describes the data structures used in the API._
 | name | String |
 | customerId | Int |
 
-### FavoritesListAddResponse
+### Ⓜ️ FavoritesListAddResponse
 
 **Properties:**
 
@@ -1828,7 +2008,7 @@ _This section describes the data structures used in the API._
 |------|------|
 | listId | Int |
 
-### FavoritesListDeleteResponse
+### Ⓜ️ FavoritesListDeleteResponse
 
 **Properties:**
 
@@ -1836,7 +2016,7 @@ _This section describes the data structures used in the API._
 |------|------|
 | listId | String? |
 
-### FavoritesListResponse
+### Ⓜ️ FavoritesListResponse
 
 **Properties:**
 
@@ -1847,7 +2027,7 @@ _This section describes the data structures used in the API._
 **Related Models:**
 - [FavoriteList](#favoritelist)
 
-### FieldError
+### Ⓜ️ FieldError
 
 **Properties:**
 
@@ -1856,7 +2036,7 @@ _This section describes the data structures used in the API._
 | field | String |
 | error | String |
 
-### FreebetResponse
+### Ⓜ️ FreebetResponse
 
 **Properties:**
 
@@ -1864,7 +2044,7 @@ _This section describes the data structures used in the API._
 |------|------|
 | balance | Double |
 
-### GetCountriesResponse
+### Ⓜ️ GetCountriesResponse
 
 **Properties:**
 
@@ -1873,7 +2053,7 @@ _This section describes the data structures used in the API._
 | status | String |
 | countries | [String] |
 
-### GetCountryInfoResponse
+### Ⓜ️ GetCountryInfoResponse
 
 **Properties:**
 
@@ -1885,7 +2065,7 @@ _This section describes the data structures used in the API._
 **Related Models:**
 - [CountryInfo](#countryinfo)
 
-### GrantedBonus
+### Ⓜ️ GrantedBonus
 
 **Properties:**
 
@@ -1900,7 +2080,7 @@ _This section describes the data structures used in the API._
 | wagerRequirement | String? |
 | amountWagered | String? |
 
-### GrantedBonusResponse
+### Ⓜ️ GrantedBonusResponse
 
 **Properties:**
 
@@ -1912,7 +2092,7 @@ _This section describes the data structures used in the API._
 **Related Models:**
 - [GrantedBonus](#grantedbonus)
 
-### HeadlineItem
+### Ⓜ️ HeadlineItem
 
 **Properties:**
 
@@ -1934,7 +2114,7 @@ _This section describes the data structures used in the API._
 | oldMarketId | String? |
 | tournamentCountryName | String? |
 
-### HeadlineResponse
+### Ⓜ️ HeadlineResponse
 
 **Properties:**
 
@@ -1945,7 +2125,7 @@ _This section describes the data structures used in the API._
 **Related Models:**
 - [HeadlineItem](#headlineitem)
 
-### HighlightedEventPointer
+### Ⓜ️ HighlightedEventPointer
 
 **Properties:**
 
@@ -1957,7 +2137,7 @@ _This section describes the data structures used in the API._
 | eventType | String? |
 | countryId | String |
 
-### KYCStatusDetail
+### Ⓜ️ KYCStatusDetail
 
 **Properties:**
 
@@ -1965,7 +2145,7 @@ _This section describes the data structures used in the API._
 |------|------|
 | expiryDate | String? |
 
-### LimitPending
+### Ⓜ️ LimitPending
 
 **Properties:**
 
@@ -1975,7 +2155,7 @@ _This section describes the data structures used in the API._
 | limit | String |
 | limitNumber | Double |
 
-### LimitsResponse
+### Ⓜ️ LimitsResponse
 
 **Properties:**
 
@@ -1990,7 +2170,7 @@ _This section describes the data structures used in the API._
 **Related Models:**
 - [LimitPending](#limitpending)
 
-### LoginResponse
+### Ⓜ️ LoginResponse
 
 **Properties:**
 
@@ -2020,7 +2200,7 @@ _This section describes the data structures used in the API._
 **Related Models:**
 - [KYCStatusDetail](#kycstatusdetail)
 
-### Market
+### Ⓜ️ Market
 
 **Properties:**
 
@@ -2055,7 +2235,7 @@ _This section describes the data structures used in the API._
 **Related Models:**
 - [Outcome](#outcome)
 
-### MarketGroup
+### Ⓜ️ MarketGroup
 
 **Properties:**
 
@@ -2067,7 +2247,7 @@ _This section describes the data structures used in the API._
 **Related Models:**
 - [Market](#market)
 
-### MarketGroupPromotedSport
+### Ⓜ️ MarketGroupPromotedSport
 
 **Properties:**
 
@@ -2077,7 +2257,7 @@ _This section describes the data structures used in the API._
 | typeId | String? |
 | name | String? |
 
-### MobileVerifyResponse
+### Ⓜ️ MobileVerifyResponse
 
 **Properties:**
 
@@ -2087,7 +2267,7 @@ _This section describes the data structures used in the API._
 | message | String? |
 | requestId | Int? |
 
-### NotificationType
+### Ⓜ️ NotificationType
 
 **Properties:**
 
@@ -2101,12 +2281,8 @@ _This section describes the data structures used in the API._
 
 **Related Models:**
 - [NotificationType](#notificationtype)
-- [NotificationType](#notificationtype)
-- [NotificationType](#notificationtype)
-- [NotificationType](#notificationtype)
-- [NotificationType](#notificationtype)
 
-### OpenSessionResponse
+### Ⓜ️ OpenSessionResponse
 
 **Properties:**
 
@@ -2115,7 +2291,7 @@ _This section describes the data structures used in the API._
 | status | String |
 | launchToken | String |
 
-### Outcome
+### Ⓜ️ Outcome
 
 **Properties:**
 
@@ -2137,7 +2313,7 @@ _This section describes the data structures used in the API._
 
 **Related Models:**
 
-### PaymentInformation
+### Ⓜ️ PaymentInformation
 
 **Properties:**
 
@@ -2149,7 +2325,7 @@ _This section describes the data structures used in the API._
 **Related Models:**
 - [BankPaymentInfo](#bankpaymentinfo)
 
-### PaymentMethod
+### Ⓜ️ PaymentMethod
 
 **Properties:**
 
@@ -2159,7 +2335,7 @@ _This section describes the data structures used in the API._
 | type | String |
 | brands | [String]? |
 
-### PaymentStatusResponse
+### Ⓜ️ PaymentStatusResponse
 
 **Properties:**
 
@@ -2170,7 +2346,7 @@ _This section describes the data structures used in the API._
 | paymentStatus | String? |
 | message | String? |
 
-### PaymentsResponse
+### Ⓜ️ PaymentsResponse
 
 **Properties:**
 
@@ -2182,7 +2358,7 @@ _This section describes the data structures used in the API._
 **Related Models:**
 - [DepositMethod](#depositmethod)
 
-### PendingWithdrawal
+### Ⓜ️ PendingWithdrawal
 
 **Properties:**
 
@@ -2192,7 +2368,7 @@ _This section describes the data structures used in the API._
 | paymentId | Int |
 | amount | String |
 
-### PendingWithdrawalResponse
+### Ⓜ️ PendingWithdrawalResponse
 
 **Properties:**
 
@@ -2204,7 +2380,7 @@ _This section describes the data structures used in the API._
 **Related Models:**
 - [PendingWithdrawal](#pendingwithdrawal)
 
-### PersonalDepositLimitResponse
+### Ⓜ️ PersonalDepositLimitResponse
 
 **Properties:**
 
@@ -2219,7 +2395,7 @@ _This section describes the data structures used in the API._
 | pendingWeeklyLimit | String? |
 | pendingWeeklyLimitEffectiveDate | String? |
 
-### PlacedBetEntry
+### Ⓜ️ PlacedBetEntry
 
 **Properties:**
 
@@ -2234,7 +2410,7 @@ _This section describes the data structures used in the API._
 **Related Models:**
 - [PlacedBetLeg](#placedbetleg)
 
-### PlacedBetLeg
+### Ⓜ️ PlacedBetLeg
 
 **Properties:**
 
@@ -2246,7 +2422,7 @@ _This section describes the data structures used in the API._
 | priceNumerator | Int |
 | priceDenominator | Int |
 
-### PlacedBetsResponse
+### Ⓜ️ PlacedBetsResponse
 
 **Properties:**
 
@@ -2262,7 +2438,7 @@ _This section describes the data structures used in the API._
 **Related Models:**
 - [PlacedBetEntry](#placedbetentry)
 
-### PlayerInfoResponse
+### Ⓜ️ PlayerInfoResponse
 
 **Properties:**
 
@@ -2330,7 +2506,7 @@ _This section describes the data structures used in the API._
 
 **Related Models:**
 
-### PrepareWithdrawalResponse
+### Ⓜ️ PrepareWithdrawalResponse
 
 **Properties:**
 
@@ -2340,7 +2516,7 @@ _This section describes the data structures used in the API._
 | conversionId | String? |
 | message | String? |
 
-### ProcessDepositResponse
+### Ⓜ️ ProcessDepositResponse
 
 **Properties:**
 
@@ -2354,7 +2530,7 @@ _This section describes the data structures used in the API._
 | sessionData | String? |
 | message | String? |
 
-### ProcessWithdrawalResponse
+### Ⓜ️ ProcessWithdrawalResponse
 
 **Properties:**
 
@@ -2364,7 +2540,7 @@ _This section describes the data structures used in the API._
 | paymentId | String? |
 | message | String? |
 
-### PromotedBetslip
+### Ⓜ️ PromotedBetslip
 
 **Properties:**
 
@@ -2376,7 +2552,7 @@ _This section describes the data structures used in the API._
 **Related Models:**
 - [PromotedBetslipSelection](#promotedbetslipselection)
 
-### PromotedBetslipSelection
+### Ⓜ️ PromotedBetslipSelection
 
 **Properties:**
 
@@ -2410,7 +2586,7 @@ _This section describes the data structures used in the API._
 | sportId | String? |
 | status | String? |
 
-### PromotedBetslipsBatchResponse
+### Ⓜ️ PromotedBetslipsBatchResponse
 
 **Properties:**
 
@@ -2422,7 +2598,7 @@ _This section describes the data structures used in the API._
 **Related Models:**
 - [PromotedBetslip](#promotedbetslip)
 
-### PromotedBetslipsInternalRequest
+### Ⓜ️ PromotedBetslipsInternalRequest
 
 **Properties:**
 
@@ -2435,7 +2611,7 @@ _This section describes the data structures used in the API._
 **Related Models:**
 - [VaixBatchBody](#vaixbatchbody)
 
-### PromotedSport
+### Ⓜ️ PromotedSport
 
 **Properties:**
 
@@ -2448,7 +2624,7 @@ _This section describes the data structures used in the API._
 **Related Models:**
 - [MarketGroupPromotedSport](#marketgrouppromotedsport)
 
-### PromotedSportsNodeResponse
+### Ⓜ️ PromotedSportsNodeResponse
 
 **Properties:**
 
@@ -2459,7 +2635,7 @@ _This section describes the data structures used in the API._
 **Related Models:**
 - [PromotedSport](#promotedsport)
 
-### PromotedSportsResponse
+### Ⓜ️ PromotedSportsResponse
 
 **Properties:**
 
@@ -2470,7 +2646,7 @@ _This section describes the data structures used in the API._
 **Related Models:**
 - [PromotedSport](#promotedsport)
 
-### PromotionalBanner
+### Ⓜ️ PromotionalBanner
 
 **Properties:**
 
@@ -2485,7 +2661,7 @@ _This section describes the data structures used in the API._
 | location | String? |
 | bannerContents | [String]? |
 
-### PromotionalBannersResponse
+### Ⓜ️ PromotionalBannersResponse
 
 **Properties:**
 
@@ -2496,7 +2672,7 @@ _This section describes the data structures used in the API._
 **Related Models:**
 - [PromotionalBanner](#promotionalbanner)
 
-### PromotionalStoriesResponse
+### Ⓜ️ PromotionalStoriesResponse
 
 **Properties:**
 
@@ -2507,7 +2683,7 @@ _This section describes the data structures used in the API._
 **Related Models:**
 - [PromotionalStory](#promotionalstory)
 
-### PromotionalStory
+### Ⓜ️ PromotionalStory
 
 **Properties:**
 
@@ -2519,7 +2695,7 @@ _This section describes the data structures used in the API._
 | linkUrl | String |
 | bodyText | String |
 
-### RedeemBonus
+### Ⓜ️ RedeemBonus
 
 **Properties:**
 
@@ -2534,7 +2710,7 @@ _This section describes the data structures used in the API._
 | wagerRequired | String |
 | amountWagered | String |
 
-### RedeemBonusResponse
+### Ⓜ️ RedeemBonusResponse
 
 **Properties:**
 
@@ -2547,7 +2723,7 @@ _This section describes the data structures used in the API._
 **Related Models:**
 - [RedeemBonus](#redeembonus)
 
-### Referee
+### Ⓜ️ Referee
 
 **Properties:**
 
@@ -2559,7 +2735,7 @@ _This section describes the data structures used in the API._
 | kycStatus | String |
 | depositPassed | Bool |
 
-### RefereesResponse
+### Ⓜ️ RefereesResponse
 
 **Properties:**
 
@@ -2571,7 +2747,7 @@ _This section describes the data structures used in the API._
 **Related Models:**
 - [Referee](#referee)
 
-### ReferralLink
+### Ⓜ️ ReferralLink
 
 **Properties:**
 
@@ -2580,7 +2756,7 @@ _This section describes the data structures used in the API._
 | code | String |
 | link | String |
 
-### ReferralResponse
+### Ⓜ️ ReferralResponse
 
 **Properties:**
 
@@ -2592,7 +2768,7 @@ _This section describes the data structures used in the API._
 **Related Models:**
 - [ReferralLink](#referrallink)
 
-### ResponsibleGamingLimit
+### Ⓜ️ ResponsibleGamingLimit
 
 **Properties:**
 
@@ -2606,7 +2782,7 @@ _This section describes the data structures used in the API._
 | expiryDate | String |
 | limit | Double |
 
-### ResponsibleGamingLimitsResponse
+### Ⓜ️ ResponsibleGamingLimitsResponse
 
 **Properties:**
 
@@ -2618,7 +2794,7 @@ _This section describes the data structures used in the API._
 **Related Models:**
 - [ResponsibleGamingLimit](#responsiblegaminglimit)
 
-### ScheduledSport
+### Ⓜ️ ScheduledSport
 
 **Properties:**
 
@@ -2627,7 +2803,7 @@ _This section describes the data structures used in the API._
 | id | String |
 | name | String |
 
-### Score
+### Ⓜ️ Score
 
 **Properties:**
 
@@ -2641,10 +2817,8 @@ _This section describes the data structures used in the API._
 
 **Related Models:**
 - [Score](#score)
-- [Score](#score)
-- [Score](#score)
 
-### ScoreCodingKeys
+### Ⓜ️ ScoreCodingKeys
 
 **Properties:**
 
@@ -2661,13 +2835,8 @@ _This section describes the data structures used in the API._
 
 **Related Models:**
 - [ScoreCodingKeys](#scorecodingkeys)
-- [ScoreCodingKeys](#scorecodingkeys)
-- [ScoreCodingKeys](#scorecodingkeys)
-- [ScoreCodingKeys](#scorecodingkeys)
-- [ScoreCodingKeys](#scorecodingkeys)
-- [ScoreCodingKeys](#scorecodingkeys)
 
-### SharedBet
+### Ⓜ️ SharedBet
 
 **Properties:**
 
@@ -2681,7 +2850,7 @@ _This section describes the data structures used in the API._
 **Related Models:**
 - [SharedBetSelection](#sharedbetselection)
 
-### SharedBetSelection
+### Ⓜ️ SharedBetSelection
 
 **Properties:**
 
@@ -2692,7 +2861,7 @@ _This section describes the data structures used in the API._
 | priceNumerator | Int |
 | priceType | String |
 
-### SharedTicketResponse
+### Ⓜ️ SharedTicketResponse
 
 **Properties:**
 
@@ -2705,7 +2874,7 @@ _This section describes the data structures used in the API._
 **Related Models:**
 - [SharedBet](#sharedbet)
 
-### SportCompetition
+### Ⓜ️ SportCompetition
 
 **Properties:**
 
@@ -2716,7 +2885,7 @@ _This section describes the data structures used in the API._
 | numberEvents | String |
 | numberOutrightEvents | String |
 
-### SportCompetitionInfo
+### Ⓜ️ SportCompetitionInfo
 
 **Properties:**
 
@@ -2732,7 +2901,7 @@ _This section describes the data structures used in the API._
 **Related Models:**
 - [SportCompetitionMarketGroup](#sportcompetitionmarketgroup)
 
-### SportCompetitionMarketGroup
+### Ⓜ️ SportCompetitionMarketGroup
 
 **Properties:**
 
@@ -2741,7 +2910,7 @@ _This section describes the data structures used in the API._
 | id | String |
 | name | String |
 
-### SportNode
+### Ⓜ️ SportNode
 
 **Properties:**
 
@@ -2755,7 +2924,7 @@ _This section describes the data structures used in the API._
 | numberLiveEvents | Int |
 | alphaCode | String |
 
-### SportNodeInfo
+### Ⓜ️ SportNodeInfo
 
 **Properties:**
 
@@ -2774,7 +2943,7 @@ _This section describes the data structures used in the API._
 **Related Models:**
 - [SportRegion](#sportregion)
 
-### SportRadarError
+### Ⓜ️ SportRadarError
 
 **Properties:**
 
@@ -2787,11 +2956,8 @@ _This section describes the data structures used in the API._
 
 **Related Models:**
 - [SportRadarError](#sportradarerror)
-- [SportRadarError](#sportradarerror)
-- [SportRadarError](#sportradarerror)
-- [SportRadarError](#sportradarerror)
 
-### SportRegion
+### Ⓜ️ SportRegion
 
 **Properties:**
 
@@ -2802,7 +2968,7 @@ _This section describes the data structures used in the API._
 | numberEvents | String |
 | numberOutrightEvents | String |
 
-### SportRegionInfo
+### Ⓜ️ SportRegionInfo
 
 **Properties:**
 
@@ -2815,7 +2981,7 @@ _This section describes the data structures used in the API._
 **Related Models:**
 - [SportCompetition](#sportcompetition)
 
-### SportType
+### Ⓜ️ SportType
 
 **Properties:**
 
@@ -2829,7 +2995,7 @@ _This section describes the data structures used in the API._
 | numberOutrightMarkets | Int |
 | numberLiveEvents | Int |
 
-### SportTypeDetails
+### Ⓜ️ SportTypeDetails
 
 **Properties:**
 
@@ -2842,7 +3008,7 @@ _This section describes the data structures used in the API._
 **Related Models:**
 - [SportType](#sporttype)
 
-### SportsList
+### Ⓜ️ SportsList
 
 **Properties:**
 
@@ -2853,7 +3019,7 @@ _This section describes the data structures used in the API._
 **Related Models:**
 - [SportNode](#sportnode)
 
-### StatusResponse
+### Ⓜ️ StatusResponse
 
 **Properties:**
 
@@ -2866,7 +3032,7 @@ _This section describes the data structures used in the API._
 **Related Models:**
 - [FieldError](#fielderror)
 
-### SupportRequest
+### Ⓜ️ SupportRequest
 
 **Properties:**
 
@@ -2875,7 +3041,7 @@ _This section describes the data structures used in the API._
 | id | Int |
 | status | String |
 
-### SupportResponse
+### Ⓜ️ SupportResponse
 
 **Properties:**
 
@@ -2888,7 +3054,7 @@ _This section describes the data structures used in the API._
 **Related Models:**
 - [SupportRequest](#supportrequest)
 
-### TicketSelection
+### Ⓜ️ TicketSelection
 
 **Properties:**
 
@@ -2901,7 +3067,7 @@ _This section describes the data structures used in the API._
 | priceNumerator | String |
 | odd | Double |
 
-### TicketSelectionResponse
+### Ⓜ️ TicketSelectionResponse
 
 **Properties:**
 
@@ -2913,7 +3079,7 @@ _This section describes the data structures used in the API._
 **Related Models:**
 - [TicketSelection](#ticketselection)
 
-### TopCompetitionData
+### Ⓜ️ TopCompetitionData
 
 **Properties:**
 
@@ -2925,7 +3091,7 @@ _This section describes the data structures used in the API._
 **Related Models:**
 - [TopCompetitionPointer](#topcompetitionpointer)
 
-### TopCompetitionPointer
+### Ⓜ️ TopCompetitionPointer
 
 **Properties:**
 
@@ -2935,7 +3101,7 @@ _This section describes the data structures used in the API._
 | name | String |
 | competitionId | String |
 
-### TopCompetitionsResponse
+### Ⓜ️ TopCompetitionsResponse
 
 **Properties:**
 
@@ -2946,7 +3112,7 @@ _This section describes the data structures used in the API._
 **Related Models:**
 - [TopCompetitionData](#topcompetitiondata)
 
-### TransactionDetail
+### Ⓜ️ TransactionDetail
 
 **Properties:**
 
@@ -2967,7 +3133,7 @@ _This section describes the data structures used in the API._
 | escrowTranSubType | String? |
 | escrowType | String? |
 
-### TransactionsHistoryResponse
+### Ⓜ️ TransactionsHistoryResponse
 
 **Properties:**
 
@@ -2979,7 +3145,7 @@ _This section describes the data structures used in the API._
 **Related Models:**
 - [TransactionDetail](#transactiondetail)
 
-### UpdatePaymentAction
+### Ⓜ️ UpdatePaymentAction
 
 **Properties:**
 
@@ -2990,7 +3156,7 @@ _This section describes the data structures used in the API._
 | method | String |
 | type | String |
 
-### UpdatePaymentResponse
+### Ⓜ️ UpdatePaymentResponse
 
 **Properties:**
 
@@ -3002,7 +3168,7 @@ _This section describes the data structures used in the API._
 **Related Models:**
 - [UpdatePaymentAction](#updatepaymentaction)
 
-### UploadDocumentResponse
+### Ⓜ️ UploadDocumentResponse
 
 **Properties:**
 
@@ -3011,7 +3177,7 @@ _This section describes the data structures used in the API._
 | status | String |
 | message | String? |
 
-### UserConsent
+### Ⓜ️ UserConsent
 
 **Properties:**
 
@@ -3023,7 +3189,7 @@ _This section describes the data structures used in the API._
 **Related Models:**
 - [UserConsentInfo](#userconsentinfo)
 
-### UserConsentInfo
+### Ⓜ️ UserConsentInfo
 
 **Properties:**
 
@@ -3035,7 +3201,7 @@ _This section describes the data structures used in the API._
 | consentVersionId | Int |
 | isMandatory | Bool? |
 
-### UserConsentsResponse
+### Ⓜ️ UserConsentsResponse
 
 **Properties:**
 
@@ -3048,7 +3214,7 @@ _This section describes the data structures used in the API._
 **Related Models:**
 - [UserConsent](#userconsent)
 
-### UserDocument
+### Ⓜ️ UserDocument
 
 **Properties:**
 
@@ -3063,7 +3229,7 @@ _This section describes the data structures used in the API._
 **Related Models:**
 - [UserDocumentFile](#userdocumentfile)
 
-### UserDocumentFile
+### Ⓜ️ UserDocumentFile
 
 **Properties:**
 
@@ -3071,7 +3237,7 @@ _This section describes the data structures used in the API._
 |------|------|
 | fileName | String |
 
-### UserDocumentsResponse
+### Ⓜ️ UserDocumentsResponse
 
 **Properties:**
 
@@ -3083,7 +3249,7 @@ _This section describes the data structures used in the API._
 **Related Models:**
 - [UserDocument](#userdocument)
 
-### VaixBatchBody
+### Ⓜ️ VaixBatchBody
 
 **Properties:**
 
@@ -3095,7 +3261,7 @@ _This section describes the data structures used in the API._
 **Related Models:**
 - [VaixBatchData](#vaixbatchdata)
 
-### VaixBatchData
+### Ⓜ️ VaixBatchData
 
 **Properties:**
 
@@ -3107,7 +3273,7 @@ _This section describes the data structures used in the API._
 **Related Models:**
 - [PromotedBetslip](#promotedbetslip)
 
-### WithdrawalMethod
+### Ⓜ️ WithdrawalMethod
 
 **Properties:**
 
@@ -3119,7 +3285,7 @@ _This section describes the data structures used in the API._
 | maximumWithdrawal | String |
 | conversionRequired | Bool |
 
-### WithdrawalMethodsResponse
+### Ⓜ️ WithdrawalMethodsResponse
 
 **Properties:**
 
