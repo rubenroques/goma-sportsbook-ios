@@ -9,142 +9,410 @@ This documentation provides a comprehensive overview of our API services, includ
 
 # REST Services
 
-## bonuses
+## favorites
 
-### optOutBonus
+### deleteFavoritesList
 
-_Opts out from a specific bonus_
-
-**Required Information:**
-- code (String): The bonus code to opt out from
-- partyId (String): User's party identifier
-
-### cancelBonus
-
-_Cancels an active bonus_
+_Deletes a favorites list with the specified ID_
 
 **Required Information:**
-- bonusId (String): ID of the bonus to cancel
+- listId (Int): ID of the favorites list to delete
 
-### redeemAvailableBonus
+### addFavoritesList
 
-_Claims an available bonus for a specific user_
-
-**Required Information:**
-- code (String): The bonus code to redeem
-- partyId (String): User's party identifier
-
-### getGrantedBonuses
-
-_Retrieves the list of bonuses that have been granted to the user_
+_Creates a new favorites list with the specified name_
 
 **Required Information:**
+- name (String): Name of the new favorites list
 
-### getAvailableBonuses
+### addFavoriteToList
 
-_Retrieves the list of bonuses available for the user to claim_
+_Adds an event to a specified favorites list_
+
+**Required Information:**
+- listId (Int): ID of the favorites list to add the event to
+- eventId (String): ID of the event to add to favorites
+
+### getFavoritesList
+
+_Retrieves all favorite lists for the current user_
 
 **Required Information:**
 
-### redeemBonus
+### getFavoritesFromList
 
-_Redeems a bonus using a bonus code_
-
-**Required Information:**
-- code (String): The bonus code to redeem
-
-## responsible_gaming
-
-### getPersonalDepositLimits
-
-_Retrieves the user's personal deposit limits_
+_Retrieves all favorite events from a specified list_
 
 **Required Information:**
+- listId (Int): ID of the favorites list to get events from
 
-### updateResponsibleGamingLimits
+### deleteFavoriteFromList
 
-_Updates the user's responsible gaming limits_
-
-**Required Information:**
-- limitType (String): Type of limit (deposit, betting, or autoPayout)
-- hasRollingWeeklyLimits (Bool): Whether to use rolling weekly limits instead of calendar weekly limits
-- newLimit (Double): New limit amount
-
-### updateWeeklyBettingLimits
-
-_Updates the user's weekly betting limits_
+_Deletes a favorite event from a list_
 
 **Required Information:**
-- newLimit (Double): New weekly betting limit amount
+- eventId (Int): ID of the event to delete from favorites
 
-### getLimits
+### getPromotedBetslips
 
-_Retrieves all user limits information_
+_Retrieves promoted betslips, optionally filtered by user_
+
+**Required Information:**
+- userId (String?): Optional user ID for personalized betslips
+
+## support
+
+### contactUs
+
+_Sends a contact request to customer support_
+
+**Required Information:**
+- subject (String): Subject of the contact request
+- lastName (String): User's last name
+- message (String): Message content
+- email (String): User's email address
+- firstName (String): User's first name
+
+### contactSupport
+
+_Sends a detailed support request with user information_
+
+**Required Information:**
+- subjectType (String): Category or type of the support request
+- firstName (String): User's first name
+- isLogged (Bool): Whether the user is currently logged in
+- lastName (String): User's last name
+- message (String): Detailed message content
+- userIdentifier (String): User's unique identifier
+- email (String): User's email address
+- subject (String): Subject of the support request
+
+## identity_verification
+
+### getSumsubApplicantData
+
+_Retrieves applicant verification data from Sumsub_
+
+**Required Information:**
+- userId (String): User's unique identifier
+
+### generateDocumentTypeToken
+
+_Generates a token for uploading a specific type of document_
+
+**Required Information:**
+- docType (String): Type of document to generate token for
+
+### checkDocumentationData
+
+_Checks the status of user's submitted documentation_
 
 **Required Information:**
 
-### getResponsibleGamingLimits
+### getSumsubAccessToken
 
-_Retrieves responsible gaming limits for specified period and limit types_
-
-**Required Information:**
-- limitTypes (String?): Comma-separated list of limit types (e.g., 'DEPOSIT_LIMIT,WAGER_LIMIT,BALANCE_LIMIT')
-- periodTypes (String?): Comma-separated list of period types (e.g., 'RollingWeekly,Permanent')
-
-### updateWeeklyDepositLimits
-
-_Updates the user's weekly deposit limits_
+_Retrieves an access token for Sumsub identity verification service_
 
 **Required Information:**
-- newLimit (Double): New weekly deposit limit amount
+- levelName (String): Verification level name
+- userId (String): User's unique identifier
+
+## account_management
+
+### getMobileVerificationCode
+
+_Requests a verification code for a mobile number_
+
+**Required Information:**
+- mobileNumber (String): Mobile number to verify
+
+### verifyMobileCode
+
+_Verifies a mobile verification code_
+
+**Required Information:**
+- code (String): Verification code received by user
+- requestId (String): ID of the verification request
+
+### updateUserProfile
+
+_Updates the user's profile information_
+
+**Required Information:**
+- form (UpdateUserProfileForm): No description available
+
+### lockPlayer
+
+_Locks a player's account with specified duration_
+
+**Required Information:**
+- isPermanent (Bool?): Whether the lock is permanent
+- lockPeriodUnit (String?): Unit of time for the lock period
+- lockPeriod (String?): Duration of the lock period
+
+### updateExtraInfo
+
+_Updates additional user information_
+
+**Required Information:**
+- address2 (String?): Secondary address
+- placeOfBirth (String?): User's place of birth
+
+### updatePassword
+
+_Updates the user's password_
+
+**Required Information:**
+- newPassword (String): New password to set
+- oldPassword (String): Current password for verification
+
+### forgotPassword
+
+_Initiates the password recovery process_
+
+**Required Information:**
+- email (String): Email address for password recovery
+- secretAnswer (String?): Optional answer to security question
+- secretQuestion (String?): Optional security question
+
+### updateDeviceIdentifier
+
+_Updates the device identifier and app version for the user_
+
+**Required Information:**
+- deviceIdentifier (String): Unique device identifier
+- appVersion (String): Current app version
+
+## authentication
+
+### login
+
+_Authenticates a user with username and password_
+
+**Required Information:**
+- username (String): User's login username
+- password (String): User's login password
+
+### logout
+
+_Logs out the current user and invalidates their session_
+
+**Required Information:**
+
+### getPasswordPolicy
+
+_Retrieves the password policy requirements_
+
+**Required Information:**
+
+## payments
+
+### getTransactionsHistory
+
+_Retrieves transaction history for a specified date range_
+
+**Required Information:**
+- pageNumber (Int?): Optional page number for pagination
+- transactionTypes ([TransactionType]?): Optional array of transaction types to filter
+- startDate (String): Start date for transaction history
+- endDate (String): End date for transaction history
+
+### getPayments
+
+_Retrieves available payment methods for deposits_
+
+**Required Information:**
+
+### cancelDeposit
+
+_Cancels a pending deposit transaction_
+
+**Required Information:**
+- paymentId (String): ID of the deposit payment to cancel
+
+### processDeposit
+
+_Processes a deposit request_
+
+**Required Information:**
+- amount (Double): Deposit amount
+- option (String): Payment option details
+- paymentMethod (String): Selected payment method
+
+### prepareWithdrawal
+
+_Prepares a withdrawal request for processing_
+
+**Required Information:**
+- paymentMethod (String): Selected withdrawal method
+
+### getPaymentInformation
+
+_Retrieves saved payment information for the user_
+
+**Required Information:**
+
+### updatePayment
+
+_Updates payment information for an existing payment_
+
+**Required Information:**
+- returnUrl (String?): URL to return to after payment processing
+- amount (Double): Payment amount
+- encryptedExpiryYear (String?): Encrypted card expiry year
+- paymentId (String): ID of the payment to update
+- type (String): Payment type
+- encryptedCardNumber (String?): Encrypted card number
+- nameOnCard (String?): Name as it appears on the card
+- encryptedSecurityCode (String?): Encrypted card security code
+- encryptedExpiryMonth (String?): Encrypted card expiry month
+
+### getPendingWithdrawals
+
+_Retrieves list of pending withdrawal transactions_
+
+**Required Information:**
+
+### addPaymentInformation
+
+_Adds new payment information for the user_
+
+**Required Information:**
+- type (String): Type of payment information
+- fields (String): Payment information fields in string format
+
+### processWithdrawal
+
+_Processes a withdrawal request_
+
+**Required Information:**
+- amount (Double): Withdrawal amount
+- paymentMethod (String): Selected withdrawal method
+- conversionId (String?): Optional conversion ID for currency conversion
+
+### getWithdrawalMethods
+
+_Retrieves available withdrawal methods_
+
+**Required Information:**
+
+### checkPaymentStatus
+
+_Checks the status of a payment transaction_
+
+**Required Information:**
+- paymentId (String): ID of the payment to check
+- paymentMethod (String): Payment method used for the transaction
+
+### cancelWithdrawal
+
+_Cancels a pending withdrawal transaction_
+
+**Required Information:**
+- paymentId (Int): ID of the withdrawal payment to cancel
+
+## registration
+
+### simpleSignUp
+
+_Registers a new user with basic information_
+
+**Required Information:**
+- form (SimpleSignUpForm): No description available
+
+### signupConfirmation
+
+_Confirms user signup with verification code_
+
+**Required Information:**
+- email (String): Email address used for registration
+- confirmationCode (String): Verification code received by user
+
+### signUpCompletion
+
+_Completes the signup process with additional user information_
+
+**Required Information:**
+- Form containing additional user information
+
+### signUp
+
+_Registers a new user with complete information_
+
+**Required Information:**
+- form (SignUpForm): No description available
+
+### validateUsername
+
+_Validates a username and provides suggestions if unavailable_
+
+**Required Information:**
+- username (String): Username to validate
+
+### checkEmailRegistered
+
+_Checks if an email is already registered in the system_
+
+**Required Information:**
+- email (String): Email address to check
+
+## location
+
+### getCurrentCountry
+
+_Retrieves the current country information_
+
+**Required Information:**
+
+### getAllCountries
+
+_Retrieves all available countries_
+
+**Required Information:**
+
+### getCountries
+
+_Retrieves list of available countries_
+
+**Required Information:**
+
+## consent_management
+
+### setUserConsents
+
+_Updates user consent statuses for specified consent versions_
+
+**Required Information:**
+- consentVersionIds ([Int]?): Array of consent version IDs to consent to
+- unconsenVersionIds ([Int]?): Array of consent version IDs to revoke consent from
+
+### getUserConsents
+
+_Retrieves the user's current consent statuses_
+
+**Required Information:**
+
+### getAllConsents
+
+_Retrieves all available consent types and their information_
+
+**Required Information:**
 
 ## betting
 
-### cashoutBet
+### calculatePotentialReturn
 
-_Performs a cashout operation on a specific bet_
+_Calculates potential return for a bet ticket before placing the bet_
 
 **Required Information:**
-- betId (String): ID of the bet to cash out
-- stakeValue (Double?): Optional stake value for partial cashout
-- cashoutValue (Double): Value to cash out
+- betTicket (BetTicket): The bet ticket to calculate potential returns for
 
-### getWonBetsHistory
+### getBetHistory
 
-_Retrieves history of won bets with optional date filtering_
+_Retrieves betting history with pagination_
 
 **Required Information:**
 - pageIndex (Int): Page number for pagination
-- endDate (String?): Optional end date for filtering bets
-- startDate (String?): Optional start date for filtering bets
-
-### updateBetslipSettings
-
-_Updates the user's betslip settings_
-
-**Required Information:**
-- betslipSettings (BetslipSettings): New betslip settings to apply
-
-### allowedCashoutBetIds
-
-_Retrieves IDs of bets that are eligible for cashout_
-
-**Required Information:**
-
-### placeBets
-
-_Places one or more bets using the provided bet tickets_
-
-**Required Information:**
-- betTickets ([BetTicket]): Array of bet tickets to place
-- useFreebetBalance (Bool): Whether to use freebet balance for placing bets
-
-### getTicketSelection
-
-_Retrieves a specific ticket selection by its ID_
-
-**Required Information:**
-- ticketSelectionId (String): ID of the ticket selection to retrieve
 
 ### getAllowedBetTypes
 
@@ -161,76 +429,11 @@ _Calculates the cashout value for a specific bet_
 - stakeValue (String?): Optional stake value for partial cashout
 - betId (String): ID of the bet to calculate cashout for
 
-### rejectBoostedBet
-
-_Rejects a boosted bet offer_
-
-**Required Information:**
-- identifier (String): Unique identifier of the boosted bet to reject
-
-### getFreebet
-
-_Retrieves information about available freebets for the user_
-
-**Required Information:**
-
-### getResolvedBetsHistory
-
-_Retrieves history of resolved bets with optional date filtering_
-
-**Required Information:**
-- startDate (String?): Optional start date for filtering bets
-- pageIndex (Int): Page number for pagination
-- endDate (String?): Optional end date for filtering bets
-
-### getSharedTicket
-
-_Retrieves a shared bet ticket by its ID_
-
-**Required Information:**
-- betslipId (String): ID of the shared bet ticket to retrieve
-
-### calculatePotentialReturn
-
-_Calculates potential return for a bet ticket before placing the bet_
-
-**Required Information:**
-- betTicket (BetTicket): The bet ticket to calculate potential returns for
-
-### calculateCashback
-
-_Calculates potential cashback for a bet ticket_
-
-**Required Information:**
-- betTicket (BetTicket): The bet ticket to calculate cashback for
-
-### placeBetBuilderBet
-
-_Places a bet builder bet with calculated odds_
-
-**Required Information:**
-- calculatedOdd (Double): Pre-calculated odds for the bet builder
-- betTicket (BetTicket): The bet builder ticket to place
-
-### getBetHistory
-
-_Retrieves betting history with pagination_
-
-**Required Information:**
-- pageIndex (Int): Page number for pagination
-
 ### getBetslipSettings
 
 _Retrieves the current betslip settings for the user_
 
 **Required Information:**
-
-### getBetDetails
-
-_Retrieves detailed information about a specific bet_
-
-**Required Information:**
-- identifier (String): Unique identifier of the bet to retrieve
 
 ### calculateBetBuilderPotentialReturn
 
@@ -239,9 +442,38 @@ _Calculates potential return for a bet builder ticket_
 **Required Information:**
 - betTicket (BetTicket): The bet builder ticket to calculate potential returns for
 
+### getSharedTicket
+
+_Retrieves a shared bet ticket by its ID_
+
+**Required Information:**
+- betslipId (String): ID of the shared bet ticket to retrieve
+
+### getTicketSelection
+
+_Retrieves a specific ticket selection by its ID_
+
+**Required Information:**
+- ticketSelectionId (String): ID of the ticket selection to retrieve
+
 ### getOpenBetsHistory
 
 _Retrieves history of open bets with optional date filtering_
+
+**Required Information:**
+- endDate (String?): Optional end date for filtering bets
+- startDate (String?): Optional start date for filtering bets
+- pageIndex (Int): Page number for pagination
+
+### allowedCashoutBetIds
+
+_Retrieves IDs of bets that are eligible for cashout_
+
+**Required Information:**
+
+### getResolvedBetsHistory
+
+_Retrieves history of resolved bets with optional date filtering_
 
 **Required Information:**
 - endDate (String?): Optional end date for filtering bets
@@ -255,353 +487,104 @@ _Confirms a boosted bet offer_
 **Required Information:**
 - identifier (String): Unique identifier of the boosted bet to confirm
 
-## registration
+### getFreebet
 
-### validateUsername
-
-_Validates a username and provides suggestions if unavailable_
-
-**Required Information:**
-- username (String): Username to validate
-
-### signUp
-
-_Registers a new user with complete information_
-
-**Required Information:**
-- form (SignUpForm): No description available
-
-### signupConfirmation
-
-_Confirms user signup with verification code_
-
-**Required Information:**
-- confirmationCode (String): Verification code received by user
-- email (String): Email address used for registration
-
-### signUpCompletion
-
-_Completes the signup process with additional user information_
-
-**Required Information:**
-- Form containing additional user information
-
-### checkEmailRegistered
-
-_Checks if an email is already registered in the system_
-
-**Required Information:**
-- email (String): Email address to check
-
-### simpleSignUp
-
-_Registers a new user with basic information_
-
-**Required Information:**
-- form (SimpleSignUpForm): No description available
-
-## events
-
-### getMarketInfo
-
-_Retrieves detailed information about a specific market_
-
-**Required Information:**
-- marketId (String): Unique identifier of the market to retrieve
-
-### getEventForMarketGroup
-
-_Retrieves an event associated with a specific market group_
-
-**Required Information:**
-- withId (String): Unique identifier of the market group
-
-### getHeroGameEvent
-
-_Retrieves the hero game event_
+_Retrieves information about available freebets for the user_
 
 **Required Information:**
 
-### getPromotionalTopBanners
+### rejectBoostedBet
 
-_Retrieves promotional banners for the top section_
+_Rejects a boosted bet offer_
+
+**Required Information:**
+- identifier (String): Unique identifier of the boosted bet to reject
+
+### placeBetBuilderBet
+
+_Places a bet builder bet with calculated odds_
+
+**Required Information:**
+- calculatedOdd (Double): Pre-calculated odds for the bet builder
+- betTicket (BetTicket): The bet builder ticket to place
+
+### updateBetslipSettings
+
+_Updates the user's betslip settings_
+
+**Required Information:**
+- betslipSettings (BetslipSettings): New betslip settings to apply
+
+### placeBets
+
+_Places one or more bets using the provided bet tickets_
+
+**Required Information:**
+- useFreebetBalance (Bool): Whether to use freebet balance for placing bets
+- betTickets ([BetTicket]): Array of bet tickets to place
+
+### getBetDetails
+
+_Retrieves detailed information about a specific bet_
+
+**Required Information:**
+- identifier (String): Unique identifier of the bet to retrieve
+
+### calculateCashback
+
+_Calculates potential cashback for a bet ticket_
+
+**Required Information:**
+- betTicket (BetTicket): The bet ticket to calculate cashback for
+
+### cashoutBet
+
+_Performs a cashout operation on a specific bet_
+
+**Required Information:**
+- stakeValue (Double?): Optional stake value for partial cashout
+- betId (String): ID of the bet to cash out
+- cashoutValue (Double): Value to cash out
+
+### getWonBetsHistory
+
+_Retrieves history of won bets with optional date filtering_
+
+**Required Information:**
+- startDate (String?): Optional start date for filtering bets
+- endDate (String?): Optional end date for filtering bets
+- pageIndex (Int): Page number for pagination
+
+## documents
+
+### getDocumentTypes
+
+_Retrieves available document types for verification_
 
 **Required Information:**
 
-### getEventLiveData
+### getUserDocuments
 
-_Retrieves live data and statistics for a specific event_
-
-**Required Information:**
-- eventId (String): Unique identifier of the event
-
-### getSportRegions
-
-_Retrieves information about regions available for a specific sport_
-
-**Required Information:**
-- sportId (String): Unique identifier of the sport to get regions for
-
-### getEventSummary
-
-_Retrieves a summary of a specific event using its event ID_
-
-**Required Information:**
-- eventId (String): Unique identifier of the event to retrieve
-
-### getEventSummaryByMarket
-
-_Retrieves a summary of an event using a market ID associated with the event_
-
-**Required Information:**
-- forMarketId (String): Market ID associated with the event to retrieve
-
-### getEventDetails
-
-_Retrieves detailed information about a specific event_
-
-**Required Information:**
-- eventId (String): Unique identifier of the event
-
-### getHighlightedVisualImageEvents
-
-_Retrieves events with visual images that are highlighted_
+_Retrieves user's uploaded documents_
 
 **Required Information:**
 
-### getHighlightedLiveEventsIds
+### uploadMultipleUserDocuments
 
-_Retrieves IDs of highlighted live events, optionally filtered by user_
-
-**Required Information:**
-- userId (String?): Optional user ID for personalized highlights
-- eventCount (Int): Maximum number of event IDs to retrieve
-
-### getHighlightedBoostedEvents
-
-_Retrieves events with boosted odds that are highlighted_
+_Uploads multiple user verification documents_
 
 **Required Information:**
+- documentType (String): Type of documents being uploaded
+- files ([String: Data]): Dictionary of filename to file data pairs
 
-### getPromotedSports
+### uploadUserDocument
 
-_Retrieves the list of promoted sports_
-
-**Required Information:**
-
-### getTopCompetitions
-
-_Retrieves the list of top competitions_
+_Uploads a single user verification document_
 
 **Required Information:**
-
-### getHomeSliders
-
-_Retrieves the home page slider banners_
-
-**Required Information:**
-
-### getSearchEvents
-
-_Searches for events based on a query string with pagination support_
-
-**Required Information:**
-- isLive (Bool): Filter for live events only
-- resultLimit (String): Maximum number of results to return per page
-- page (String): Page number for paginated results
-- query (String): Search query string to find events
-
-### getCashbackSuccessBanner
-
-_Retrieves the cashback success banner_
-
-**Required Information:**
-
-### getEventSecundaryMarkets
-
-_Retrieves secondary markets information for a specific event_
-
-**Required Information:**
-- eventId (String): Unique identifier of the event
-
-### getPromotionalSlidingTopEvents
-
-_Retrieves promotional sliding events for the top section_
-
-**Required Information:**
-
-### getAvailableSportTypes
-
-_Retrieves a list of available sport types within an optional date range_
-
-**Required Information:**
-- initialDate (Date?): Optional start date to filter sports availability
-- endDate (Date?): Optional end date to filter sports availability
-
-### getPromotionalTopStories
-
-_Retrieves promotional top stories_
-
-**Required Information:**
-
-### getEventsForEventGroup
-
-_Retrieves events associated with a specific event group_
-
-**Required Information:**
-- withId (String): Unique identifier of the event group
-
-### getHighlightedMarkets
-
-_Retrieves highlighted markets_
-
-**Required Information:**
-
-### getCompetitionMarketGroups
-
-_Retrieves information about market groups available for a specific competition_
-
-**Required Information:**
-- competitionId (String): Unique identifier of the competition to get market groups for
-
-### getRegionCompetitions
-
-_Retrieves information about competitions available in a specific region_
-
-**Required Information:**
-- regionId (String): Unique identifier of the region to get competitions for
-
-### getTopCompetitionsPointers
-
-_Retrieves pointers to top competitions_
-
-**Required Information:**
-
-### getHighlightedLiveEvents
-
-_Retrieves detailed information about highlighted live events, optionally filtered by user_
-
-**Required Information:**
-- eventCount (Int): Maximum number of events to retrieve
-- userId (String?): Optional user ID for personalized highlights
-
-## authentication
-
-### login
-
-_Authenticates a user with username and password_
-
-**Required Information:**
-- password (String): User's login password
-- username (String): User's login username
-
-### logout
-
-_Logs out the current user and invalidates their session_
-
-**Required Information:**
-
-### getPasswordPolicy
-
-_Retrieves the password policy requirements_
-
-**Required Information:**
-
-## identity_verification
-
-### getSumsubAccessToken
-
-_Retrieves an access token for Sumsub identity verification service_
-
-**Required Information:**
-- userId (String): User's unique identifier
-- levelName (String): Verification level name
-
-### checkDocumentationData
-
-_Checks the status of user's submitted documentation_
-
-**Required Information:**
-
-### getSumsubApplicantData
-
-_Retrieves applicant verification data from Sumsub_
-
-**Required Information:**
-- userId (String): User's unique identifier
-
-### generateDocumentTypeToken
-
-_Generates a token for uploading a specific type of document_
-
-**Required Information:**
-- docType (String): Type of document to generate token for
-
-## account_management
-
-### forgotPassword
-
-_Initiates the password recovery process_
-
-**Required Information:**
-- secretQuestion (String?): Optional security question
-- secretAnswer (String?): Optional answer to security question
-- email (String): Email address for password recovery
-
-### lockPlayer
-
-_Locks a player's account with specified duration_
-
-**Required Information:**
-- lockPeriod (String?): Duration of the lock period
-- isPermanent (Bool?): Whether the lock is permanent
-- lockPeriodUnit (String?): Unit of time for the lock period
-
-### updateExtraInfo
-
-_Updates additional user information_
-
-**Required Information:**
-- placeOfBirth (String?): User's place of birth
-- address2 (String?): Secondary address
-
-### getMobileVerificationCode
-
-_Requests a verification code for a mobile number_
-
-**Required Information:**
-- mobileNumber (String): Mobile number to verify
-
-### updateUserProfile
-
-_Updates the user's profile information_
-
-**Required Information:**
-- form (UpdateUserProfileForm): No description available
-
-### updateDeviceIdentifier
-
-_Updates the device identifier and app version for the user_
-
-**Required Information:**
-- deviceIdentifier (String): Unique device identifier
-- appVersion (String): Current app version
-
-### verifyMobileCode
-
-_Verifies a mobile verification code_
-
-**Required Information:**
-- code (String): Verification code received by user
-- requestId (String): ID of the verification request
-
-### updatePassword
-
-_Updates the user's password_
-
-**Required Information:**
-- oldPassword (String): Current password for verification
-- newPassword (String): New password to set
+- file (Data): Document file data
+- documentType (String): Type of document being uploaded
+- fileName (String): Name of the file being uploaded
 
 ## wallet
 
@@ -617,6 +600,235 @@ _Retrieves the user's wallet balance information_
 
 **Required Information:**
 
+## bonuses
+
+### cancelBonus
+
+_Cancels an active bonus_
+
+**Required Information:**
+- bonusId (String): ID of the bonus to cancel
+
+### redeemAvailableBonus
+
+_Claims an available bonus for a specific user_
+
+**Required Information:**
+- code (String): The bonus code to redeem
+- partyId (String): User's party identifier
+
+### getAvailableBonuses
+
+_Retrieves the list of bonuses available for the user to claim_
+
+**Required Information:**
+
+### getGrantedBonuses
+
+_Retrieves the list of bonuses that have been granted to the user_
+
+**Required Information:**
+
+### redeemBonus
+
+_Redeems a bonus using a bonus code_
+
+**Required Information:**
+- code (String): The bonus code to redeem
+
+### optOutBonus
+
+_Opts out from a specific bonus_
+
+**Required Information:**
+- partyId (String): User's party identifier
+- code (String): The bonus code to opt out from
+
+## events
+
+### getAvailableSportTypes
+
+_Retrieves a list of available sport types within an optional date range_
+
+**Required Information:**
+- endDate (Date?): Optional end date to filter sports availability
+- initialDate (Date?): Optional start date to filter sports availability
+
+### getHomeSliders
+
+_Retrieves the home page slider banners_
+
+**Required Information:**
+
+### getEventSummaryByMarket
+
+_Retrieves a summary of an event using a market ID associated with the event_
+
+**Required Information:**
+- forMarketId (String): Market ID associated with the event to retrieve
+
+### getTopCompetitions
+
+_Retrieves the list of top competitions_
+
+**Required Information:**
+
+### getEventDetails
+
+_Retrieves detailed information about a specific event_
+
+**Required Information:**
+- eventId (String): Unique identifier of the event
+
+### getMarketInfo
+
+_Retrieves detailed information about a specific market_
+
+**Required Information:**
+- marketId (String): Unique identifier of the market to retrieve
+
+### getPromotionalTopStories
+
+_Retrieves promotional top stories_
+
+**Required Information:**
+
+### getCashbackSuccessBanner
+
+_Retrieves the cashback success banner_
+
+**Required Information:**
+
+### getHighlightedLiveEventsIds
+
+_Retrieves IDs of highlighted live events, optionally filtered by user_
+
+**Required Information:**
+- userId (String?): Optional user ID for personalized highlights
+- eventCount (Int): Maximum number of event IDs to retrieve
+
+### getPromotionalTopBanners
+
+_Retrieves promotional banners for the top section_
+
+**Required Information:**
+
+### getEventForMarketGroup
+
+_Retrieves an event associated with a specific market group_
+
+**Required Information:**
+- withId (String): Unique identifier of the market group
+
+### getPromotionalSlidingTopEvents
+
+_Retrieves promotional sliding events for the top section_
+
+**Required Information:**
+
+### getTopCompetitionsPointers
+
+_Retrieves pointers to top competitions_
+
+**Required Information:**
+
+### getEventsForEventGroup
+
+_Retrieves events associated with a specific event group_
+
+**Required Information:**
+- withId (String): Unique identifier of the event group
+
+### getCompetitionMarketGroups
+
+_Retrieves information about market groups available for a specific competition_
+
+**Required Information:**
+- competitionId (String): Unique identifier of the competition to get market groups for
+
+### getPromotedSports
+
+_Retrieves the list of promoted sports_
+
+**Required Information:**
+
+### getEventLiveData
+
+_Retrieves live data and statistics for a specific event_
+
+**Required Information:**
+- eventId (String): Unique identifier of the event
+
+### getHighlightedMarkets
+
+_Retrieves highlighted markets_
+
+**Required Information:**
+
+### getEventSummary
+
+_Retrieves a summary of a specific event using its event ID_
+
+**Required Information:**
+- eventId (String): Unique identifier of the event to retrieve
+
+### getHighlightedBoostedEvents
+
+_Retrieves events with boosted odds that are highlighted_
+
+**Required Information:**
+
+### getHeroGameEvent
+
+_Retrieves the hero game event_
+
+**Required Information:**
+
+### getHighlightedLiveEvents
+
+_Retrieves detailed information about highlighted live events, optionally filtered by user_
+
+**Required Information:**
+- eventCount (Int): Maximum number of events to retrieve
+- userId (String?): Optional user ID for personalized highlights
+
+### getSportRegions
+
+_Retrieves information about regions available for a specific sport_
+
+**Required Information:**
+- sportId (String): Unique identifier of the sport to get regions for
+
+### getSearchEvents
+
+_Searches for events based on a query string with pagination support_
+
+**Required Information:**
+- page (String): Page number for paginated results
+- resultLimit (String): Maximum number of results to return per page
+- query (String): Search query string to find events
+- isLive (Bool): Filter for live events only
+
+### getEventSecundaryMarkets
+
+_Retrieves secondary markets information for a specific event_
+
+**Required Information:**
+- eventId (String): Unique identifier of the event
+
+### getHighlightedVisualImageEvents
+
+_Retrieves events with visual images that are highlighted_
+
+**Required Information:**
+
+### getRegionCompetitions
+
+_Retrieves information about competitions available in a specific region_
+
+**Required Information:**
+- regionId (String): Unique identifier of the region to get competitions for
+
 ## profile
 
 ### getUserProfile
@@ -625,6 +837,51 @@ _Retrieves the user's profile information_
 
 **Required Information:**
 - kycExpire (String?): Optional KYC expiration date
+
+## responsible_gaming
+
+### getLimits
+
+_Retrieves all user limits information_
+
+**Required Information:**
+
+### updateResponsibleGamingLimits
+
+_Updates the user's responsible gaming limits_
+
+**Required Information:**
+- newLimit (Double): New limit amount
+- limitType (String): Type of limit (deposit, betting, or autoPayout)
+- hasRollingWeeklyLimits (Bool): Whether to use rolling weekly limits instead of calendar weekly limits
+
+### updateWeeklyBettingLimits
+
+_Updates the user's weekly betting limits_
+
+**Required Information:**
+- newLimit (Double): New weekly betting limit amount
+
+### getPersonalDepositLimits
+
+_Retrieves the user's personal deposit limits_
+
+**Required Information:**
+
+### getResponsibleGamingLimits
+
+_Retrieves responsible gaming limits for specified period and limit types_
+
+**Required Information:**
+- periodTypes (String?): Comma-separated list of period types (e.g., 'RollingWeekly,Permanent')
+- limitTypes (String?): Comma-separated list of limit types (e.g., 'DEPOSIT_LIMIT,WAGER_LIMIT,BALANCE_LIMIT')
+
+### updateWeeklyDepositLimits
+
+_Updates the user's weekly deposit limits_
+
+**Required Information:**
+- newLimit (Double): New weekly deposit limit amount
 
 ## referral
 
@@ -640,295 +897,10 @@ _Retrieves the list of users referred by the current user_
 
 **Required Information:**
 
-## payments
-
-### getWithdrawalMethods
-
-_Retrieves available withdrawal methods_
-
-**Required Information:**
-
-### getPaymentInformation
-
-_Retrieves saved payment information for the user_
-
-**Required Information:**
-
-### prepareWithdrawal
-
-_Prepares a withdrawal request for processing_
-
-**Required Information:**
-- paymentMethod (String): Selected withdrawal method
-
-### getTransactionsHistory
-
-_Retrieves transaction history for a specified date range_
-
-**Required Information:**
-- pageNumber (Int?): Optional page number for pagination
-- startDate (String): Start date for transaction history
-- endDate (String): End date for transaction history
-- transactionTypes ([TransactionType]?): Optional array of transaction types to filter
-
-### processDeposit
-
-_Processes a deposit request_
-
-**Required Information:**
-- amount (Double): Deposit amount
-- paymentMethod (String): Selected payment method
-- option (String): Payment option details
-
-### checkPaymentStatus
-
-_Checks the status of a payment transaction_
-
-**Required Information:**
-- paymentId (String): ID of the payment to check
-- paymentMethod (String): Payment method used for the transaction
-
-### getPendingWithdrawals
-
-_Retrieves list of pending withdrawal transactions_
-
-**Required Information:**
-
-### processWithdrawal
-
-_Processes a withdrawal request_
-
-**Required Information:**
-- paymentMethod (String): Selected withdrawal method
-- conversionId (String?): Optional conversion ID for currency conversion
-- amount (Double): Withdrawal amount
-
-### cancelWithdrawal
-
-_Cancels a pending withdrawal transaction_
-
-**Required Information:**
-- paymentId (Int): ID of the withdrawal payment to cancel
-
-### addPaymentInformation
-
-_Adds new payment information for the user_
-
-**Required Information:**
-- fields (String): Payment information fields in string format
-- type (String): Type of payment information
-
-### getPayments
-
-_Retrieves available payment methods for deposits_
-
-**Required Information:**
-
-### cancelDeposit
-
-_Cancels a pending deposit transaction_
-
-**Required Information:**
-- paymentId (String): ID of the deposit payment to cancel
-
-### updatePayment
-
-_Updates payment information for an existing payment_
-
-**Required Information:**
-- paymentId (String): ID of the payment to update
-- amount (Double): Payment amount
-- encryptedExpiryMonth (String?): Encrypted card expiry month
-- encryptedSecurityCode (String?): Encrypted card security code
-- encryptedCardNumber (String?): Encrypted card number
-- encryptedExpiryYear (String?): Encrypted card expiry year
-- type (String): Payment type
-- nameOnCard (String?): Name as it appears on the card
-- returnUrl (String?): URL to return to after payment processing
-
-## documents
-
-### getDocumentTypes
-
-_Retrieves available document types for verification_
-
-**Required Information:**
-
-### uploadMultipleUserDocuments
-
-_Uploads multiple user verification documents_
-
-**Required Information:**
-- documentType (String): Type of documents being uploaded
-- files ([String: Data]): Dictionary of filename to file data pairs
-
-### getUserDocuments
-
-_Retrieves user's uploaded documents_
-
-**Required Information:**
-
-### uploadUserDocument
-
-_Uploads a single user verification document_
-
-**Required Information:**
-- documentType (String): Type of document being uploaded
-- file (Data): Document file data
-- fileName (String): Name of the file being uploaded
-
-## favorites
-
-### addFavoriteToList
-
-_Adds an event to a specified favorites list_
-
-**Required Information:**
-- eventId (String): ID of the event to add to favorites
-- listId (Int): ID of the favorites list to add the event to
-
-### deleteFavoriteFromList
-
-_Deletes a favorite event from a list_
-
-**Required Information:**
-- eventId (Int): ID of the event to delete from favorites
-
-### getFavoritesList
-
-_Retrieves all favorite lists for the current user_
-
-**Required Information:**
-
-### deleteFavoritesList
-
-_Deletes a favorites list with the specified ID_
-
-**Required Information:**
-- listId (Int): ID of the favorites list to delete
-
-### getPromotedBetslips
-
-_Retrieves promoted betslips, optionally filtered by user_
-
-**Required Information:**
-- userId (String?): Optional user ID for personalized betslips
-
-### getFavoritesFromList
-
-_Retrieves all favorite events from a specified list_
-
-**Required Information:**
-- listId (Int): ID of the favorites list to get events from
-
-### addFavoritesList
-
-_Creates a new favorites list with the specified name_
-
-**Required Information:**
-- name (String): Name of the new favorites list
-
-## support
-
-### contactSupport
-
-_Sends a detailed support request with user information_
-
-**Required Information:**
-- lastName (String): User's last name
-- firstName (String): User's first name
-- message (String): Detailed message content
-- subject (String): Subject of the support request
-- email (String): User's email address
-- subjectType (String): Category or type of the support request
-- userIdentifier (String): User's unique identifier
-- isLogged (Bool): Whether the user is currently logged in
-
-### contactUs
-
-_Sends a contact request to customer support_
-
-**Required Information:**
-- email (String): User's email address
-- firstName (String): User's first name
-- lastName (String): User's last name
-- message (String): Message content
-- subject (String): Subject of the contact request
-
-## location
-
-### getCountries
-
-_Retrieves list of available countries_
-
-**Required Information:**
-
-### getCurrentCountry
-
-_Retrieves the current country information_
-
-**Required Information:**
-
-### getAllCountries
-
-_Retrieves all available countries_
-
-**Required Information:**
-
-## consent_management
-
-### setUserConsents
-
-_Updates user consent statuses for specified consent versions_
-
-**Required Information:**
-- consentVersionIds ([Int]?): Array of consent version IDs to consent to
-- unconsenVersionIds ([Int]?): Array of consent version IDs to revoke consent from
-
-### getAllConsents
-
-_Retrieves all available consent types and their information_
-
-**Required Information:**
-
-### getUserConsents
-
-_Retrieves the user's current consent statuses_
-
-**Required Information:**
-
 
 # Real-time Services
 
 _These services provide real-time updates through WebSocket connections._
-
-### subscribeCompetitionMatches
-
-_Subscribes to matches updates for a specific competition identified by its market group ID_
-
-**Update Information:**
-- Frequency: real-time
-
-### subscribeToLiveDataUpdates
-
-_Subscribes to real-time live data updates for a specific event, including detailed statistics and play-by-play information_
-
-**Update Information:**
-- Frequency: real-time
-
-### subscribeAllSportTypes
-
-_Subscribes to updates for all available sport types, including both live and pre-live sports_
-
-**Update Information:**
-- Frequency: on-change
-
-### subscribeEventMarkets
-
-_Subscribes to all markets associated with a specific event, including odds updates and market status changes_
-
-**Update Information:**
-- Frequency: real-time
 
 ### subscribeLiveSportTypes
 
@@ -936,41 +908,6 @@ _Subscribes to updates for currently live sport types and their active events_
 
 **Update Information:**
 - Frequency: real-time
-
-### subscribePreLiveMatches
-
-_Subscribes to pre-live (upcoming) matches for a specific sport type with optional date range and sorting parameters_
-
-**Update Information:**
-- Frequency: on-change
-
-### subscribeLiveMatches
-
-_Subscribes to live matches updates for a specific sport type through WebSocket connection_
-
-**Update Information:**
-- Frequency: real-time
-
-### subscribeToMarketDetails
-
-_Subscribes to real-time updates for a specific market within an event_
-
-**Update Information:**
-- Frequency: real-time
-
-### subscribePreLiveSportTypes
-
-_Subscribes to updates for available pre-live sport types within a specified date range_
-
-**Update Information:**
-- Frequency: on-change
-
-### subscribeOutrightMarkets
-
-_Subscribes to outright market updates for a specific market group (e.g., tournament winner, top scorer)_
-
-**Update Information:**
-- Frequency: on-change
 
 ### subscribeEventDetails
 
@@ -985,6 +922,69 @@ _Subscribes to detailed updates for a specific event, including scores, statisti
   - market information
   - event status changes
 
+### subscribeOutrightMarkets
+
+_Subscribes to outright market updates for a specific market group (e.g., tournament winner, top scorer)_
+
+**Update Information:**
+- Frequency: on-change
+
+### subscribeEventMarkets
+
+_Subscribes to all markets associated with a specific event, including odds updates and market status changes_
+
+**Update Information:**
+- Frequency: real-time
+
+### subscribePreLiveSportTypes
+
+_Subscribes to updates for available pre-live sport types within a specified date range_
+
+**Update Information:**
+- Frequency: on-change
+
+### subscribeToLiveDataUpdates
+
+_Subscribes to real-time live data updates for a specific event, including detailed statistics and play-by-play information_
+
+**Update Information:**
+- Frequency: real-time
+
+### subscribeToMarketDetails
+
+_Subscribes to real-time updates for a specific market within an event_
+
+**Update Information:**
+- Frequency: real-time
+
+### subscribeAllSportTypes
+
+_Subscribes to updates for all available sport types, including both live and pre-live sports_
+
+**Update Information:**
+- Frequency: on-change
+
+### subscribeLiveMatches
+
+_Subscribes to live matches updates for a specific sport type through WebSocket connection_
+
+**Update Information:**
+- Frequency: real-time
+
+### subscribePreLiveMatches
+
+_Subscribes to pre-live (upcoming) matches for a specific sport type with optional date range and sorting parameters_
+
+**Update Information:**
+- Frequency: on-change
+
+### subscribeCompetitionMatches
+
+_Subscribes to matches updates for a specific competition identified by its market group ID_
+
+**Update Information:**
+- Frequency: real-time
+
 
 # Data Models
 
@@ -996,10 +996,10 @@ _This section describes the data structures used in the API._
 
 | Name | Type | Description |
 |------|------|-------------|
-| code | Int? | Optional Int property |
-| userId | String? | Optional String property |
-| description | String? | Optional String property |
-| token | String? | Optional String property |
+| token | String? | The token of the model |
+| userId | String? | The userId of the model |
+| description | String? | The description of the model |
+| code | Int? | The code of the model |
 
 ### AddPaymentInformationResponse
 
@@ -1007,8 +1007,8 @@ _This section describes the data structures used in the API._
 
 | Name | Type | Description |
 |------|------|-------------|
-| message | String? | Optional String property |
-| status | String | String property |
+| status | String | The status of the model |
+| message | String? | The message of the model |
 
 ### ApplicantDataInfo
 
@@ -1016,10 +1016,10 @@ _This section describes the data structures used in the API._
 
 | Name | Type | Description |
 |------|------|-------------|
-| applicantDocs | ApplicantDoc? | Optional Array of ApplicantDoc property |
+| applicantDocs | [ApplicantDoc]? | The applicantDocs of the model |
 
 **Related Models:**
-- [ApplicantDoc](#applicantdoc)
+- [ApplicantDoc](#applicantdoc) (via `applicantDocs`)
 
 ### ApplicantDataResponse
 
@@ -1027,14 +1027,14 @@ _This section describes the data structures used in the API._
 
 | Name | Type | Description |
 |------|------|-------------|
-| reviewData | ApplicantReviewData? | Optional ApplicantReviewData property |
-| description | String? | Optional String property |
-| externalUserId | String? | Optional String property |
-| info | ApplicantDataInfo? | Optional ApplicantDataInfo property |
+| externalUserId | String? | The externalUserId of the model |
+| info | ApplicantDataInfo? | The info of the model |
+| reviewData | ApplicantReviewData? | The reviewData of the model |
+| description | String? | The description of the model |
 
 **Related Models:**
-- [ApplicantDataInfo](#applicantdatainfo)
-- [ApplicantReviewData](#applicantreviewdata)
+- [ApplicantDataInfo](#applicantdatainfo) (via `info`)
+- [ApplicantReviewData](#applicantreviewdata) (via `reviewData`)
 
 ### ApplicantDoc
 
@@ -1042,7 +1042,7 @@ _This section describes the data structures used in the API._
 
 | Name | Type | Description |
 |------|------|-------------|
-| docType | String | String property |
+| docType | String | The docType of the model |
 
 ### ApplicantReviewData
 
@@ -1050,15 +1050,15 @@ _This section describes the data structures used in the API._
 
 | Name | Type | Description |
 |------|------|-------------|
-| levelName | String | String property |
-| reviewDate | String? | Optional String property |
-| createDate | String | String property |
-| attemptCount | Int | Int property |
-| reviewResult | ApplicantReviewResult? | Optional ApplicantReviewResult property |
-| reviewStatus | String | String property |
+| attemptCount | Int | The attemptCount of the model |
+| createDate | String | The createDate of the model |
+| reviewDate | String? | The reviewDate of the model |
+| reviewResult | ApplicantReviewResult? | The reviewResult of the model |
+| reviewStatus | String | The reviewStatus of the model |
+| levelName | String | The levelName of the model |
 
 **Related Models:**
-- [ApplicantReviewResult](#applicantreviewresult)
+- [ApplicantReviewResult](#applicantreviewresult) (via `reviewResult`)
 
 ### ApplicantReviewResult
 
@@ -1066,65 +1066,9 @@ _This section describes the data structures used in the API._
 
 | Name | Type | Description |
 |------|------|-------------|
-| reviewAnswer | String | String property |
-| reviewRejectType | String? | Optional String property |
-| moderationComment | String? | Optional String property |
-
-### ApplicantRootResponse
-
-**Properties:**
-
-| Name | Type | Description |
-|------|------|-------------|
-| data | [ApplicantDataResponse](#applicantdataresponse) | ApplicantDataResponse property |
-| status | String | String property |
-| message | String? | Optional String property |
-
-**Related Models:**
-- [ApplicantDataResponse](#applicantdataresponse)
-
-### AvailableBonusResponse
-
-**Properties:**
-
-| Name | Type | Description |
-|------|------|-------------|
-| status | String | String property |
-| bonuses | AvailableBonus | Array of AvailableBonus property |
-
-**Related Models:**
-
-### BalanceResponse
-
-**Properties:**
-
-| Name | Type | Description |
-|------|------|-------------|
-| bonusBalanceNumber | Double? | Optional Double property |
-| loyaltyPoint | Int? | Optional Int property |
-| casinoPlayableBonusBalanceNumber | Double? | Optional Double property |
-| status | String | String property |
-| bonusBalance | String? | Optional String property |
-| casinoPlayableBonusBalance | String? | Optional String property |
-| totalEscrowBalanceNumber | Double? | Optional Double property |
-| withdrawableEscrowBalanceNumber | Double? | Optional Double property |
-| withdrawRestrictionAmount | String? | Optional String property |
-| sportsbookPlayableBonusBalanceNumber | Double? | Optional Double property |
-| message | String? | Optional String property |
-| withdrawableBalance | String? | Optional String property |
-| sportsbookPlayableBonusBalance | String? | Optional String property |
-| totalWithdrawableBalanceNumber | Double? | Optional Double property |
-| vipStatus | String? | Optional String property |
-| withdrawableEscrowBalance | String? | Optional String property |
-| totalBalanceNumber | Double? | Optional Double property |
-| pendingBonusBalanceNumber | Double? | Optional Double property |
-| currency | String? | Optional String property |
-| totalWithdrawableBalance | String? | Optional String property |
-| totalBalance | String? | Optional String property |
-| withdrawableBalanceNumber | Double? | Optional Double property |
-| totalEscrowBalance | String? | Optional String property |
-| withdrawRestrictionAmountNumber | Double? | Optional Double property |
-| pendingBonusBalance | String? | Optional String property |
+| reviewAnswer | String | The reviewAnswer of the model |
+| reviewRejectType | String? | The reviewRejectType of the model |
+| moderationComment | String? | The moderationComment of the model |
 
 ### BankPaymentDetail
 
@@ -1132,10 +1076,10 @@ _This section describes the data structures used in the API._
 
 | Name | Type | Description |
 |------|------|-------------|
-| key | String | String property |
-| value | String | String property |
-| id | Int | Int property |
-| paymentInfoId | Int | Int property |
+| id | Int | The id of the model |
+| paymentInfoId | Int | The paymentInfoId of the model |
+| key | String | The key of the model |
+| value | String | The value of the model |
 
 ### BankPaymentInfo
 
@@ -1143,15 +1087,15 @@ _This section describes the data structures used in the API._
 
 | Name | Type | Description |
 |------|------|-------------|
-| details | [BankPaymentDetail](#bankpaymentdetail) | Array of BankPaymentDetail property |
-| id | Int | Int property |
-| description | String? | Optional String property |
-| type | String | String property |
-| partyId | Int | Int property |
-| priority | Int? | Optional Int property |
+| id | Int | The id of the model |
+| partyId | Int | The partyId of the model |
+| type | String | The type of the model |
+| description | String? | The description of the model |
+| priority | Int? | The priority of the model |
+| details | [#bankpaymentdetail|BankPaymentDetail] | The details of the model |
 
 **Related Models:**
-- [BankPaymentDetail](#bankpaymentdetail)
+- [BankPaymentDetail](#bankpaymentdetail) (via `details`)
 
 ### Banner
 
@@ -1159,14 +1103,14 @@ _This section describes the data structures used in the API._
 
 | Name | Type | Description |
 |------|------|-------------|
-| linkUrl | String? | Optional String property |
-| title | String | String property |
-| id | String | String property |
-| bodyText | String? | Optional String property |
-| name | String | String property |
-| marketId | String? | Optional String property |
-| imageUrl | String | String property |
-| type | String | String property |
+| id | String | The id of the model |
+| name | String | The name of the model |
+| title | String | The title of the model |
+| imageUrl | String | The imageUrl of the model |
+| bodyText | String? | The bodyText of the model |
+| type | String | The type of the model |
+| linkUrl | String? | The linkUrl of the model |
+| marketId | String? | The marketId of the model |
 
 ### BannerResponse
 
@@ -1174,10 +1118,10 @@ _This section describes the data structures used in the API._
 
 | Name | Type | Description |
 |------|------|-------------|
-| bannerItems | [Banner](#banner) | Array of Banner property |
+| bannerItems | [#banner|Banner] | The bannerItems of the model |
 
 **Related Models:**
-- [Banner](#banner)
+- [Banner](#banner) (via `bannerItems`)
 
 ### BasicResponse
 
@@ -1185,8 +1129,8 @@ _This section describes the data structures used in the API._
 
 | Name | Type | Description |
 |------|------|-------------|
-| status | String | String property |
-| message | String? | Optional String property |
+| status | String | The status of the model |
+| message | String? | The message of the model |
 
 ### Bet
 
@@ -1194,40 +1138,40 @@ _This section describes the data structures used in the API._
 
 | Name | Type | Description |
 |------|------|-------------|
-| state | BetState | BetState property |
-| freebetReturn | Double? | Optional Double property |
-| attemptedDate | Date | Date property |
-| fallbackDateFormatter | DateFormatter | DateFormatter property |
-| oddDenominator | Double | Double property |
-| potentialReturn | Double? | Optional Double property |
-| freeBet | Bool | Bool property |
-| totalStake | Double | Double property |
-| totalReturn | Double? | Optional Double property |
-| order | Int | Int property |
-| tournamentName | String? | Optional String property |
-| outcomeName | String | String property |
-| totalOdd | Double | Double property |
-| eventId | Double | Double property |
-| homeTeamName | String? | Optional String property |
-| identifier | String | String property |
-| potentialCashbackReturn | Double? | Optional Double property |
-| globalState | BetState | BetState property |
-| partialCashoutReturn | Double? | Optional Double property |
-| eventName | String | String property |
-| eventDate | Date? | Optional Date property |
-| potentialFreebetReturn | Double? | Optional Double property |
-| result | BetResult | BetResult property |
-| eventResult | String? | Optional String property |
-| tournamentCountryName | String? | Optional String property |
-| type | String | String property |
-| cashbackReturn | Double? | Optional Double property |
-| awayTeamName | String? | Optional String property |
-| oddNumerator | Double | Double property |
-| sportTypeName | String | String property |
-| partialCashoutStake | Double? | Optional Double property |
-| marketName | String | String property |
-| dateFormatter | DateFormatter | DateFormatter property |
-| betslipId | Int? | Optional Int property |
+| identifier | String | The identifier of the model |
+| eventName | String | The eventName of the model |
+| homeTeamName | String? | The homeTeamName of the model |
+| awayTeamName | String? | The awayTeamName of the model |
+| sportTypeName | String | The sportTypeName of the model |
+| type | String | The type of the model |
+| state | BetState | The state of the model |
+| result | BetResult | The result of the model |
+| globalState | BetState | The globalState of the model |
+| marketName | String | The marketName of the model |
+| outcomeName | String | The outcomeName of the model |
+| eventResult | String? | The eventResult of the model |
+| potentialReturn | Double? | The potentialReturn of the model |
+| totalReturn | Double? | The totalReturn of the model |
+| totalOdd | Double | The totalOdd of the model |
+| totalStake | Double | The totalStake of the model |
+| attemptedDate | Date | The attemptedDate of the model |
+| oddNumerator | Double | The oddNumerator of the model |
+| oddDenominator | Double | The oddDenominator of the model |
+| order | Int | The order of the model |
+| eventId | Double | The eventId of the model |
+| eventDate | Date? | The eventDate of the model |
+| tournamentCountryName | String? | The tournamentCountryName of the model |
+| tournamentName | String? | The tournamentName of the model |
+| freeBet | Bool | The freeBet of the model |
+| partialCashoutReturn | Double? | The partialCashoutReturn of the model |
+| partialCashoutStake | Double? | The partialCashoutStake of the model |
+| betslipId | Int? | The betslipId of the model |
+| cashbackReturn | Double? | The cashbackReturn of the model |
+| freebetReturn | Double? | The freebetReturn of the model |
+| potentialCashbackReturn | Double? | The potentialCashbackReturn of the model |
+| potentialFreebetReturn | Double? | The potentialFreebetReturn of the model |
+| dateFormatter | DateFormatter | The dateFormatter of the model |
+| fallbackDateFormatter | DateFormatter | The fallbackDateFormatter of the model |
 
 **Related Models:**
 
@@ -1237,8 +1181,8 @@ _This section describes the data structures used in the API._
 
 | Name | Type | Description |
 |------|------|-------------|
-| calculatedOdds | Double | Double property |
-| potentialReturn | Double | Double property |
+| potentialReturn | Double | The potentialReturn of the model |
+| calculatedOdds | Double | The calculatedOdds of the model |
 
 ### BetSlip
 
@@ -1246,21 +1190,10 @@ _This section describes the data structures used in the API._
 
 | Name | Type | Description |
 |------|------|-------------|
-| tickets | [BetTicket](#betticket) | Array of BetTicket property |
+| tickets | [#betticket|BetTicket] | The tickets of the model |
 
 **Related Models:**
-- [BetTicket](#betticket)
-
-### BetSlipStateResponse
-
-**Properties:**
-
-| Name | Type | Description |
-|------|------|-------------|
-| tickets | [BetTicket](#betticket) | Array of BetTicket property |
-
-**Related Models:**
-- [BetTicket](#betticket)
+- [BetTicket](#betticket) (via `tickets`)
 
 ### BetTicket
 
@@ -1268,14 +1201,14 @@ _This section describes the data structures used in the API._
 
 | Name | Type | Description |
 |------|------|-------------|
-| winStake | String | String property |
-| selections | [BetTicketSelection](#betticketselection) | Array of BetTicketSelection property |
-| potentialReturn | Double? | Optional Double property |
-| betTypeCode | String | String property |
-| pool | Bool | Bool property |
+| selections | [#betticketselection|BetTicketSelection] | The selections of the model |
+| betTypeCode | String | The betTypeCode of the model |
+| winStake | String | The winStake of the model |
+| potentialReturn | Double? | The potentialReturn of the model |
+| pool | Bool | The pool of the model |
 
 **Related Models:**
-- [BetTicketSelection](#betticketselection)
+- [BetTicketSelection](#betticketselection) (via `selections`)
 
 ### BetTicketSelection
 
@@ -1283,13 +1216,13 @@ _This section describes the data structures used in the API._
 
 | Name | Type | Description |
 |------|------|-------------|
-| eachWayPlaceTerms | String | String property |
-| isTrap | String | String property |
-| priceUp | String | String property |
-| identifier | String | String property |
-| priceDown | String | String property |
-| eachWayReduction | String | String property |
-| idFOPriceType | String | String property |
+| identifier | String | The identifier of the model |
+| eachWayReduction | String | The eachWayReduction of the model |
+| eachWayPlaceTerms | String | The eachWayPlaceTerms of the model |
+| idFOPriceType | String | The idFOPriceType of the model |
+| isTrap | String | The isTrap of the model |
+| priceUp | String | The priceUp of the model |
+| priceDown | String | The priceDown of the model |
 
 ### BetType
 
@@ -1297,22 +1230,11 @@ _This section describes the data structures used in the API._
 
 | Name | Type | Description |
 |------|------|-------------|
-| numberOfIndividualBets | Int | Int property |
-| typeName | String | String property |
-| typeCode | String | String property |
-| potencialReturn | Double | Double property |
-| totalStake | Double | Double property |
-
-### BetslipPotentialReturnResponse
-
-**Properties:**
-
-| Name | Type | Description |
-|------|------|-------------|
-| totalStake | Double | Double property |
-| totalOdd | Double? | Optional Double property |
-| numberOfBets | Int | Int property |
-| potentialReturn | Double | Double property |
+| typeCode | String | The typeCode of the model |
+| typeName | String | The typeName of the model |
+| potencialReturn | Double | The potencialReturn of the model |
+| totalStake | Double | The totalStake of the model |
+| numberOfIndividualBets | Int | The numberOfIndividualBets of the model |
 
 ### BetslipSettings
 
@@ -1320,8 +1242,8 @@ _This section describes the data structures used in the API._
 
 | Name | Type | Description |
 |------|------|-------------|
-| oddChangeRunningOrPreMatch | BetslipOddChangeSetting? | Optional BetslipOddChangeSetting property |
-| oddChangeLegacy | BetslipOddChangeSetting? | Optional BetslipOddChangeSetting property |
+| oddChangeLegacy | BetslipOddChangeSetting? | The oddChangeLegacy of the model |
+| oddChangeRunningOrPreMatch | BetslipOddChangeSetting? | The oddChangeRunningOrPreMatch of the model |
 
 **Related Models:**
 
@@ -1331,10 +1253,10 @@ _This section describes the data structures used in the API._
 
 | Name | Type | Description |
 |------|------|-------------|
-| bets | [Bet](#bet) | Array of Bet property |
+| bets | [#bet|Bet] | The bets of the model |
 
 **Related Models:**
-- [Bet](#bet)
+- [Bet](#bet) (via `bets`)
 
 ### CancelWithdrawalResponse
 
@@ -1342,9 +1264,9 @@ _This section describes the data structures used in the API._
 
 | Name | Type | Description |
 |------|------|-------------|
-| status | String | String property |
-| currency | String | String property |
-| amount | String | String property |
+| status | String | The status of the model |
+| amount | String | The amount of the model |
+| currency | String | The currency of the model |
 
 ### CashbackBalance
 
@@ -1352,9 +1274,9 @@ _This section describes the data structures used in the API._
 
 | Name | Type | Description |
 |------|------|-------------|
-| balance | String? | Optional String property |
-| message | String? | Optional String property |
-| status | String | String property |
+| status | String | The status of the model |
+| balance | String? | The balance of the model |
+| message | String? | The message of the model |
 
 ### CashbackResult
 
@@ -1362,9 +1284,9 @@ _This section describes the data structures used in the API._
 
 | Name | Type | Description |
 |------|------|-------------|
-| amountFree | Double? | Optional Double property |
-| id | Double | Double property |
-| amount | Double? | Optional Double property |
+| id | Double | The id of the model |
+| amount | Double? | The amount of the model |
+| amountFree | Double? | The amountFree of the model |
 
 ### Cashout
 
@@ -1372,8 +1294,8 @@ _This section describes the data structures used in the API._
 
 | Name | Type | Description |
 |------|------|-------------|
-| cashoutValue | Double | Double property |
-| partialCashoutAvailable | Bool? | Optional Bool property |
+| cashoutValue | Double | The cashoutValue of the model |
+| partialCashoutAvailable | Bool? | The partialCashoutAvailable of the model |
 
 ### CashoutResult
 
@@ -1381,32 +1303,9 @@ _This section describes the data structures used in the API._
 
 | Name | Type | Description |
 |------|------|-------------|
-| cashoutReoffer | Double? | Optional Double property |
-| message | String? | Optional String property |
-| cashoutResult | Int? | Optional Int property |
-
-### CheckCredentialResponse
-
-**Properties:**
-
-| Name | Type | Description |
-|------|------|-------------|
-| fieldExist | Bool | Bool property |
-| exists | String | String property |
-| status | String | String property |
-
-### CheckUsernameResponse
-
-**Properties:**
-
-| Name | Type | Description |
-|------|------|-------------|
-| additionalInfos | CheckUsernameAdditionalInfo? | Optional Array of CheckUsernameAdditionalInfo property |
-| message | String? | Optional String property |
-| errors | CheckUsernameError? | Optional Array of CheckUsernameError property |
-| status | String | String property |
-
-**Related Models:**
+| cashoutResult | Int? | The cashoutResult of the model |
+| cashoutReoffer | Double? | The cashoutReoffer of the model |
+| message | String? | The message of the model |
 
 ### CompetitionMarketGroup
 
@@ -1414,9 +1313,9 @@ _This section describes the data structures used in the API._
 
 | Name | Type | Description |
 |------|------|-------------|
-| id | String | String property |
-| name | String | String property |
-| events | Event | Array of Event property |
+| id | String | The id of the model |
+| name | String | The name of the model |
+| events | [Event] | The events of the model |
 
 **Related Models:**
 
@@ -1426,20 +1325,9 @@ _This section describes the data structures used in the API._
 
 | Name | Type | Description |
 |------|------|-------------|
-| categoryName | String | String property |
-| name | String | String property |
-| id | String | String property |
-
-### ConfirmBetPlaceResponse
-
-**Properties:**
-
-| Name | Type | Description |
-|------|------|-------------|
-| statusText | String? | Optional String property |
-| state | Int | Int property |
-| statusCode | String? | Optional String property |
-| detailedState | Int | Int property |
+| id | String | The id of the model |
+| name | String | The name of the model |
+| categoryName | String | The categoryName of the model |
 
 ### Consent
 
@@ -1447,24 +1335,25 @@ _This section describes the data structures used in the API._
 
 | Name | Type | Description |
 |------|------|-------------|
-| status | String? | Optional String property |
-| key | String | String property |
-| consentVersionId | Int | Int property |
-| isMandatory | Bool? | Optional Bool property |
-| id | Int | Int property |
-| name | String | String property |
+| id | Int | The id of the model |
+| key | String | The key of the model |
+| name | String | The name of the model |
+| consentVersionId | Int | The consentVersionId of the model |
+| status | String? | The status of the model |
+| isMandatory | Bool? | The isMandatory of the model |
 
-### ConsentsResponse
+### ConsentInfo
 
 **Properties:**
 
 | Name | Type | Description |
 |------|------|-------------|
-| status | String | String property |
-| consents | [Consent](#consent) | Array of Consent property |
-
-**Related Models:**
-- [Consent](#consent)
+| id | Int | The id of the model |
+| key | String | The key of the model |
+| name | String | The name of the model |
+| consentVersionId | Int | The consentVersionId of the model |
+| status | String? | The status of the model |
+| isMandatory | Bool? | The isMandatory of the model |
 
 ### CountryInfo
 
@@ -1472,9 +1361,9 @@ _This section describes the data structures used in the API._
 
 | Name | Type | Description |
 |------|------|-------------|
-| name | String | String property |
-| iso2Code | String | String property |
-| phonePrefix | String | String property |
+| name | String | The name of the model |
+| iso2Code | String | The iso2Code of the model |
+| phonePrefix | String | The phonePrefix of the model |
 
 ### DepositMethod
 
@@ -1482,12 +1371,12 @@ _This section describes the data structures used in the API._
 
 | Name | Type | Description |
 |------|------|-------------|
-| code | String | String property |
-| methods | PaymentMethod? | Optional Array of PaymentMethod property |
-| paymentMethod | String | String property |
+| code | String | The code of the model |
+| paymentMethod | String | The paymentMethod of the model |
+| methods | [PaymentMethod]? | The methods of the model |
 
 **Related Models:**
-- [PaymentMethod](#paymentmethod)
+- [PaymentMethod](#paymentmethod) (via `methods`)
 
 ### DocumentType
 
@@ -1495,11 +1384,11 @@ _This section describes the data structures used in the API._
 
 | Name | Type | Description |
 |------|------|-------------|
-| expiryDateRequired | Bool? | Optional Bool property |
-| documentNumberRequired | Bool? | Optional Bool property |
-| documentType | String | String property |
-| multipleFileRequired | Bool? | Optional Bool property |
-| issueDateRequired | Bool? | Optional Bool property |
+| documentType | String | The documentType of the model |
+| issueDateRequired | Bool? | The issueDateRequired of the model |
+| expiryDateRequired | Bool? | The expiryDateRequired of the model |
+| documentNumberRequired | Bool? | The documentNumberRequired of the model |
+| multipleFileRequired | Bool? | The multipleFileRequired of the model |
 
 ### DocumentTypesResponse
 
@@ -1507,11 +1396,11 @@ _This section describes the data structures used in the API._
 
 | Name | Type | Description |
 |------|------|-------------|
-| documentTypes | [DocumentType](#documenttype) | Array of DocumentType property |
-| status | String | String property |
+| status | String | The status of the model |
+| documentTypes | [#documenttype|DocumentType] | The documentTypes of the model |
 
 **Related Models:**
-- [DocumentType](#documenttype)
+- [DocumentType](#documenttype) (via `documentTypes`)
 
 ### EventLiveDataExtended
 
@@ -1519,13 +1408,13 @@ _This section describes the data structures used in the API._
 
 | Name | Type | Description |
 |------|------|-------------|
-| matchTime | String? | Optional String property |
-| awayScore | Int? | Optional Int property |
-| id | String | String property |
-| homeScore | Int? | Optional Int property |
-| activePlayerServing | ActivePlayerServe? | Optional ActivePlayerServe property |
-| scores | String: Score | Array of String: Score property |
-| status | EventStatus? | Optional EventStatus property |
+| id | String | The id of the model |
+| homeScore | Int? | The homeScore of the model |
+| awayScore | Int? | The awayScore of the model |
+| matchTime | String? | The matchTime of the model |
+| status | EventStatus? | The status of the model |
+| scores | [String: Score] | The scores of the model |
+| activePlayerServing | ActivePlayerServe? | The activePlayerServing of the model |
 
 **Related Models:**
 
@@ -1535,8 +1424,8 @@ _This section describes the data structures used in the API._
 
 | Name | Type | Description |
 |------|------|-------------|
-| marketGroupId | String? | Optional String property |
-| events | Event | Array of Event property |
+| events | [Event] | The events of the model |
+| marketGroupId | String? | The marketGroupId of the model |
 
 **Related Models:**
 
@@ -1546,8 +1435,8 @@ _This section describes the data structures used in the API._
 
 | Name | Type | Description |
 |------|------|-------------|
-| idAccountFavorite | Int? | Optional Int property |
-| displayOrder | Int? | Optional Int property |
+| displayOrder | Int? | The displayOrder of the model |
+| idAccountFavorite | Int? | The idAccountFavorite of the model |
 
 ### FavoriteEvent
 
@@ -1555,10 +1444,10 @@ _This section describes the data structures used in the API._
 
 | Name | Type | Description |
 |------|------|-------------|
-| favoriteListId | Int | Int property |
-| id | String | String property |
-| name | String | String property |
-| accountFavoriteId | Int | Int property |
+| id | String | The id of the model |
+| name | String | The name of the model |
+| favoriteListId | Int | The favoriteListId of the model |
+| accountFavoriteId | Int | The accountFavoriteId of the model |
 
 ### FavoriteEventResponse
 
@@ -1566,10 +1455,10 @@ _This section describes the data structures used in the API._
 
 | Name | Type | Description |
 |------|------|-------------|
-| favoriteEvents | [FavoriteEvent](#favoriteevent) | Array of FavoriteEvent property |
+| favoriteEvents | [#favoriteevent|FavoriteEvent] | The favoriteEvents of the model |
 
 **Related Models:**
-- [FavoriteEvent](#favoriteevent)
+- [FavoriteEvent](#favoriteevent) (via `favoriteEvents`)
 
 ### FavoriteList
 
@@ -1577,9 +1466,9 @@ _This section describes the data structures used in the API._
 
 | Name | Type | Description |
 |------|------|-------------|
-| name | String | String property |
-| customerId | Int | Int property |
-| id | Int | Int property |
+| id | Int | The id of the model |
+| name | String | The name of the model |
+| customerId | Int | The customerId of the model |
 
 ### FavoritesListAddResponse
 
@@ -1587,7 +1476,7 @@ _This section describes the data structures used in the API._
 
 | Name | Type | Description |
 |------|------|-------------|
-| listId | Int | Int property |
+| listId | Int | The listId of the model |
 
 ### FavoritesListDeleteResponse
 
@@ -1595,7 +1484,7 @@ _This section describes the data structures used in the API._
 
 | Name | Type | Description |
 |------|------|-------------|
-| listId | String? | Optional String property |
+| listId | String? | The listId of the model |
 
 ### FavoritesListResponse
 
@@ -1603,10 +1492,10 @@ _This section describes the data structures used in the API._
 
 | Name | Type | Description |
 |------|------|-------------|
-| favoritesList | [FavoriteList](#favoritelist) | Array of FavoriteList property |
+| favoritesList | [#favoritelist|FavoriteList] | The favoritesList of the model |
 
 **Related Models:**
-- [FavoriteList](#favoritelist)
+- [FavoriteList](#favoritelist) (via `favoritesList`)
 
 ### FieldError
 
@@ -1614,8 +1503,8 @@ _This section describes the data structures used in the API._
 
 | Name | Type | Description |
 |------|------|-------------|
-| field | String | String property |
-| error | String | String property |
+| field | String | The field of the model |
+| error | String | The error of the model |
 
 ### FreebetResponse
 
@@ -1623,39 +1512,7 @@ _This section describes the data structures used in the API._
 
 | Name | Type | Description |
 |------|------|-------------|
-| balance | Double | Double property |
-
-### GetCountriesResponse
-
-**Properties:**
-
-| Name | Type | Description |
-|------|------|-------------|
-| status | String | String property |
-| countries | String | Array of String property |
-
-### GetCountryInfoResponse
-
-**Properties:**
-
-| Name | Type | Description |
-|------|------|-------------|
-| status | String | String property |
-| countryInfo | [CountryInfo](#countryinfo) | CountryInfo property |
-
-**Related Models:**
-- [CountryInfo](#countryinfo)
-
-### GrantedBonusResponse
-
-**Properties:**
-
-| Name | Type | Description |
-|------|------|-------------|
-| status | String | String property |
-| bonuses | GrantedBonus | Array of GrantedBonus property |
-
-**Related Models:**
+| balance | Double | The balance of the model |
 
 ### HeadlineItem
 
@@ -1663,32 +1520,35 @@ _This section describes the data structures used in the API._
 
 | Name | Type | Description |
 |------|------|-------------|
-| idfwheadlinetype | String? | Optional String property |
-| imageURL | String? | Optional String property |
-| linkURL | String? | Optional String property |
-| categoryName | String? | Optional String property |
-| idfwheadline | String? | Optional String property |
-| name | String? | Optional String property |
-| marketId | String? | Optional String property |
-| tsactivefrom | String? | Optional String property |
-| tsactiveto | String? | Optional String property |
-| marketGroupId | String? | Optional String property |
-| headlinemediatype | String? | Optional String property |
-| tournamentCountryName | String? | Optional String property |
-| oldMarketId | String? | Optional String property |
-| numofselections | String? | Optional String property |
-| title | String? | Optional String property |
+| idfwheadline | String? | The idfwheadline of the model |
+| marketGroupId | String? | The marketGroupId of the model |
+| marketId | String? | The marketId of the model |
+| name | String? | The name of the model |
+| title | String? | The title of the model |
+| tsactivefrom | String? | The tsactivefrom of the model |
+| tsactiveto | String? | The tsactiveto of the model |
+| idfwheadlinetype | String? | The idfwheadlinetype of the model |
+| headlinemediatype | String? | The headlinemediatype of the model |
+| categoryName | String? | The categoryName of the model |
+| numofselections | String? | The numofselections of the model |
+| imageURL | String? | The imageURL of the model |
+| linkURL | String? | The linkURL of the model |
+| oldMarketId | String? | The oldMarketId of the model |
+| tournamentCountryName | String? | The tournamentCountryName of the model |
 
-### HeadlineResponse
+### HighlightMarket
 
 **Properties:**
 
 | Name | Type | Description |
 |------|------|-------------|
-| headlineItems | HeadlineItem? | Optional Array of HeadlineItem property |
+| id | String | The id of the model |
+| market | [Market](#market) | The market of the model |
+| enabledSelectionsCount | Int | The enabledSelectionsCount of the model |
+| promotionImageURl | String? | The promotionImageURl of the model |
 
 **Related Models:**
-- [HeadlineItem](#headlineitem)
+- [Market](#market) (via `market`)
 
 ### HighlightedEventPointer
 
@@ -1696,11 +1556,11 @@ _This section describes the data structures used in the API._
 
 | Name | Type | Description |
 |------|------|-------------|
-| sportId | String | String property |
-| countryId | String | String property |
-| status | String | String property |
-| eventType | String? | Optional String property |
-| eventId | String | String property |
+| status | String | The status of the model |
+| sportId | String | The sportId of the model |
+| eventId | String | The eventId of the model |
+| eventType | String? | The eventType of the model |
+| countryId | String | The countryId of the model |
 
 ### KYCStatusDetail
 
@@ -1708,7 +1568,7 @@ _This section describes the data structures used in the API._
 
 | Name | Type | Description |
 |------|------|-------------|
-| expiryDate | String? | Optional String property |
+| expiryDate | String? | The expiryDate of the model |
 
 ### LimitPending
 
@@ -1716,9 +1576,9 @@ _This section describes the data structures used in the API._
 
 | Name | Type | Description |
 |------|------|-------------|
-| limitNumber | Double | Double property |
-| limit | String | String property |
-| effectiveDate | String | String property |
+| effectiveDate | String | The effectiveDate of the model |
+| limit | String | The limit of the model |
+| limitNumber | Double | The limitNumber of the model |
 
 ### LimitsResponse
 
@@ -1726,44 +1586,14 @@ _This section describes the data structures used in the API._
 
 | Name | Type | Description |
 |------|------|-------------|
-| status | String | String property |
-| currency | String | String property |
-| wagerLimit | String? | Optional String property |
-| lossLimit | String? | Optional String property |
-| pendingWagerLimit | LimitPending? | Optional LimitPending property |
+| status | String | The status of the model |
+| wagerLimit | String? | The wagerLimit of the model |
+| lossLimit | String? | The lossLimit of the model |
+| currency | String | The currency of the model |
+| pendingWagerLimit | LimitPending? | The pendingWagerLimit of the model |
 
 **Related Models:**
-- [LimitPending](#limitpending)
-
-### LoginResponse
-
-**Properties:**
-
-| Name | Type | Description |
-|------|------|-------------|
-| currency | String? | Optional String property |
-| isFirstLogin | String? | Optional String property |
-| status | String | String property |
-| sessionKey | String? | Optional String property |
-| pendingLimitConfirmation | String? | Optional String property |
-| email | String? | Optional String property |
-| level | String? | Optional String property |
-| userType | String? | Optional String property |
-| kycStatus | String? | Optional String property |
-| kycStatusDetails | KYCStatusDetail? | Optional KYCStatusDetail property |
-| username | String? | Optional String property |
-| securityVerificationRequiredFields | String? | Optional Array of String property |
-| language | String? | Optional String property |
-| message | String? | Optional String property |
-| partyId | String? | Optional String property |
-| parentId | String? | Optional String property |
-| country | String? | Optional String property |
-| registrationStatus | String? | Optional String property |
-| lockUntilDateFormatted | String? | Optional String property |
-| lockStatus | String? | Optional String property |
-
-**Related Models:**
-- [KYCStatusDetail](#kycstatusdetail)
+- [LimitPending](#limitpending) (via `pendingWagerLimit`)
 
 ### Market
 
@@ -1771,34 +1601,34 @@ _This section describes the data structures used in the API._
 
 | Name | Type | Description |
 |------|------|-------------|
-| isMainMarket | Bool | Bool property |
-| competitionId | String? | Optional String property |
-| competitionName | String? | Optional String property |
-| sportIdCode | String? | Optional String property |
-| id | String | String property |
-| outcomesOrder | OutcomesOrder | OutcomesOrder property |
-| homeParticipant | String? | Optional String property |
-| sportTypeName | String? | Optional String property |
-| isTradable | Bool | Bool property |
-| isOverUnder | Bool | Bool property |
-| awayParticipant | String? | Optional String property |
-| name | String | String property |
-| eventId | String? | Optional String property |
-| marketDigitLine | String? | Optional String property |
-| marketTypeCategoryId | String? | Optional String property |
-| eventMarketTypeId | String? | Optional String property |
-| tournamentCountryName | String? | Optional String property |
-| eventName | String? | Optional String property |
-| marketTypeId | String? | Optional String property |
-| sportTypeCode | String? | Optional String property |
-| startDate | Date? | Optional Date property |
-| isMainOutright | Bool? | Optional Bool property |
-| eventMarketCount | Int? | Optional Int property |
-| outcomes | [Outcome](#outcome) | Array of Outcome property |
-| customBetAvailable | Bool? | Optional Bool property |
+| id | String | The id of the model |
+| name | String | The name of the model |
+| outcomes | [#outcome|Outcome] | The outcomes of the model |
+| marketTypeId | String? | The marketTypeId of the model |
+| eventMarketTypeId | String? | The eventMarketTypeId of the model |
+| marketTypeCategoryId | String? | The marketTypeCategoryId of the model |
+| eventName | String? | The eventName of the model |
+| isMainOutright | Bool? | The isMainOutright of the model |
+| eventMarketCount | Int? | The eventMarketCount of the model |
+| isTradable | Bool | The isTradable of the model |
+| startDate | Date? | The startDate of the model |
+| homeParticipant | String? | The homeParticipant of the model |
+| awayParticipant | String? | The awayParticipant of the model |
+| eventId | String? | The eventId of the model |
+| isOverUnder | Bool | The isOverUnder of the model |
+| marketDigitLine | String? | The marketDigitLine of the model |
+| outcomesOrder | OutcomesOrder | The outcomesOrder of the model |
+| competitionId | String? | The competitionId of the model |
+| competitionName | String? | The competitionName of the model |
+| sportTypeName | String? | The sportTypeName of the model |
+| sportTypeCode | String? | The sportTypeCode of the model |
+| sportIdCode | String? | The sportIdCode of the model |
+| tournamentCountryName | String? | The tournamentCountryName of the model |
+| customBetAvailable | Bool? | The customBetAvailable of the model |
+| isMainMarket | Bool | The isMainMarket of the model |
 
 **Related Models:**
-- [Outcome](#outcome)
+- [Outcome](#outcome) (via `outcomes`)
 
 ### MarketGroup
 
@@ -1806,11 +1636,11 @@ _This section describes the data structures used in the API._
 
 | Name | Type | Description |
 |------|------|-------------|
-| markets | [Market](#market) | Array of Market property |
-| marketGroupId | String? | Optional String property |
+| markets | [#market|Market] | The markets of the model |
+| marketGroupId | String? | The marketGroupId of the model |
 
 **Related Models:**
-- [Market](#market)
+- [Market](#market) (via `markets`)
 
 ### MarketGroupPromotedSport
 
@@ -1818,9 +1648,9 @@ _This section describes the data structures used in the API._
 
 | Name | Type | Description |
 |------|------|-------------|
-| name | String? | Optional String property |
-| id | String | String property |
-| typeId | String? | Optional String property |
+| id | String | The id of the model |
+| typeId | String? | The typeId of the model |
+| name | String? | The name of the model |
 
 ### MobileVerifyResponse
 
@@ -1828,18 +1658,9 @@ _This section describes the data structures used in the API._
 
 | Name | Type | Description |
 |------|------|-------------|
-| requestId | Int? | Optional Int property |
-| message | String? | Optional String property |
-| status | String | String property |
-
-### OpenSessionResponse
-
-**Properties:**
-
-| Name | Type | Description |
-|------|------|-------------|
-| launchToken | String | String property |
-| status | String | String property |
+| status | String | The status of the model |
+| message | String? | The message of the model |
+| requestId | Int? | The requestId of the model |
 
 ### Outcome
 
@@ -1847,21 +1668,30 @@ _This section describes the data structures used in the API._
 
 | Name | Type | Description |
 |------|------|-------------|
-| odd | OddFormat | OddFormat property |
-| isTerminated | Bool? | Optional Bool property |
-| priceNumerator | String? | Optional String property |
-| marketId | String? | Optional String property |
-| name | String | String property |
-| isOverUnder | Bool | Bool property |
-| customBetAvailableMarket | Bool? | Optional Bool property |
-| id | String | String property |
-| isTradable | Bool? | Optional Bool property |
-| hashCode | String | String property |
-| externalReference | String? | Optional String property |
-| orderValue | String? | Optional String property |
-| priceDenominator | String? | Optional String property |
+| id | String | The id of the model |
+| name | String | The name of the model |
+| hashCode | String | The hashCode of the model |
+| marketId | String? | The marketId of the model |
+| orderValue | String? | The orderValue of the model |
+| externalReference | String? | The externalReference of the model |
+| odd | OddFormat | The odd of the model |
+| priceNumerator | String? | The priceNumerator of the model |
+| priceDenominator | String? | The priceDenominator of the model |
+| isTradable | Bool? | The isTradable of the model |
+| isTerminated | Bool? | The isTerminated of the model |
+| isOverUnder | Bool | The isOverUnder of the model |
+| customBetAvailableMarket | Bool? | The customBetAvailableMarket of the model |
 
 **Related Models:**
+
+### PasswordPolicy
+
+**Properties:**
+
+| Name | Type | Description |
+|------|------|-------------|
+| regularExpression | String? | The regularExpression of the model |
+| message | String | The message of the model |
 
 ### PaymentInformation
 
@@ -1869,11 +1699,11 @@ _This section describes the data structures used in the API._
 
 | Name | Type | Description |
 |------|------|-------------|
-| status | String | String property |
-| data | [BankPaymentInfo](#bankpaymentinfo) | Array of BankPaymentInfo property |
+| status | String | The status of the model |
+| data | [#bankpaymentinfo|BankPaymentInfo] | The data of the model |
 
 **Related Models:**
-- [BankPaymentInfo](#bankpaymentinfo)
+- [BankPaymentInfo](#bankpaymentinfo) (via `data`)
 
 ### PaymentMethod
 
@@ -1881,9 +1711,9 @@ _This section describes the data structures used in the API._
 
 | Name | Type | Description |
 |------|------|-------------|
-| name | String | String property |
-| brands | String? | Optional Array of String property |
-| type | String | String property |
+| name | String | The name of the model |
+| type | String | The type of the model |
+| brands | [String]? | The brands of the model |
 
 ### PaymentStatusResponse
 
@@ -1891,22 +1721,10 @@ _This section describes the data structures used in the API._
 
 | Name | Type | Description |
 |------|------|-------------|
-| paymentId | String? | Optional String property |
-| status | String | String property |
-| message | String? | Optional String property |
-| paymentStatus | String? | Optional String property |
-
-### PaymentsResponse
-
-**Properties:**
-
-| Name | Type | Description |
-|------|------|-------------|
-| depositMethods | [DepositMethod](#depositmethod) | Array of DepositMethod property |
-| status | String | String property |
-
-**Related Models:**
-- [DepositMethod](#depositmethod)
+| status | String | The status of the model |
+| paymentId | String? | The paymentId of the model |
+| paymentStatus | String? | The paymentStatus of the model |
+| message | String? | The message of the model |
 
 ### PendingWithdrawal
 
@@ -1914,21 +1732,9 @@ _This section describes the data structures used in the API._
 
 | Name | Type | Description |
 |------|------|-------------|
-| amount | String | String property |
-| paymentId | Int | Int property |
-| status | String | String property |
-
-### PendingWithdrawalResponse
-
-**Properties:**
-
-| Name | Type | Description |
-|------|------|-------------|
-| status | String | String property |
-| pendingWithdrawals | [PendingWithdrawal](#pendingwithdrawal) | Array of PendingWithdrawal property |
-
-**Related Models:**
-- [PendingWithdrawal](#pendingwithdrawal)
+| status | String | The status of the model |
+| paymentId | Int | The paymentId of the model |
+| amount | String | The amount of the model |
 
 ### PersonalDepositLimitResponse
 
@@ -1936,14 +1742,14 @@ _This section describes the data structures used in the API._
 
 | Name | Type | Description |
 |------|------|-------------|
-| currency | String | String property |
-| pendingWeeklyLimit | String? | Optional String property |
-| pendingWeeklyLimitEffectiveDate | String? | Optional String property |
-| status | String | String property |
-| weeklyLimit | String? | Optional String property |
-| monthlyLimit | String? | Optional String property |
-| hasPendingWeeklyLimit | String? | Optional String property |
-| dailyLimit | String? | Optional String property |
+| status | String | The status of the model |
+| dailyLimit | String? | The dailyLimit of the model |
+| weeklyLimit | String? | The weeklyLimit of the model |
+| monthlyLimit | String? | The monthlyLimit of the model |
+| currency | String | The currency of the model |
+| hasPendingWeeklyLimit | String? | The hasPendingWeeklyLimit of the model |
+| pendingWeeklyLimit | String? | The pendingWeeklyLimit of the model |
+| pendingWeeklyLimitEffectiveDate | String? | The pendingWeeklyLimitEffectiveDate of the model |
 
 ### PlacedBetEntry
 
@@ -1951,14 +1757,14 @@ _This section describes the data structures used in the API._
 
 | Name | Type | Description |
 |------|------|-------------|
-| potentialReturn | Double | Double property |
-| betLegs | [PlacedBetLeg](#placedbetleg) | Array of PlacedBetLeg property |
-| type | String? | Optional String property |
-| totalAvailableStake | Double | Double property |
-| identifier | String | String property |
+| identifier | String | The identifier of the model |
+| potentialReturn | Double | The potentialReturn of the model |
+| totalAvailableStake | Double | The totalAvailableStake of the model |
+| betLegs | [#placedbetleg|PlacedBetLeg] | The betLegs of the model |
+| type | String? | The type of the model |
 
 **Related Models:**
-- [PlacedBetLeg](#placedbetleg)
+- [PlacedBetLeg](#placedbetleg) (via `betLegs`)
 
 ### PlacedBetLeg
 
@@ -1966,11 +1772,11 @@ _This section describes the data structures used in the API._
 
 | Name | Type | Description |
 |------|------|-------------|
-| odd | Double | Double property |
-| identifier | String | String property |
-| priceType | String | String property |
-| priceNumerator | Int | Int property |
-| priceDenominator | Int | Int property |
+| identifier | String | The identifier of the model |
+| priceType | String | The priceType of the model |
+| odd | Double | The odd of the model |
+| priceNumerator | Int | The priceNumerator of the model |
+| priceDenominator | Int | The priceDenominator of the model |
 
 ### PlacedBetsResponse
 
@@ -1978,83 +1784,15 @@ _This section describes the data structures used in the API._
 
 | Name | Type | Description |
 |------|------|-------------|
-| identifier | String | String property |
-| errorMessage | String? | Optional String property |
-| responseCode | String | String property |
-| totalStake | Double | Double property |
-| bets | [PlacedBetEntry](#placedbetentry) | Array of PlacedBetEntry property |
-| detailedResponseCode | String? | Optional String property |
+| identifier | String | The identifier of the model |
+| responseCode | String | The responseCode of the model |
+| detailedResponseCode | String? | The detailedResponseCode of the model |
+| errorMessage | String? | The errorMessage of the model |
+| totalStake | Double | The totalStake of the model |
+| bets | [#placedbetentry|PlacedBetEntry] | The bets of the model |
 
 **Related Models:**
-- [PlacedBetEntry](#placedbetentry)
-
-### PlayerInfoResponse
-
-**Properties:**
-
-| Name | Type | Description |
-|------|------|-------------|
-| mobileNeedsReview | Bool? | Optional Bool property |
-| middleName | String? | Optional String property |
-| lastLoginFormatted | Date? | Optional Date property |
-| birthCity | String? | Optional String property |
-| currency | String? | Optional String property |
-| registrationStatus | String? | Optional String property |
-| mobileLocalNumber | String? | Optional String property |
-| partyId | String | String property |
-| phoneNeedsReview | Bool? | Optional Bool property |
-| isAutopay | Bool? | Optional Bool property |
-| regDate | String? | Optional String property |
-| mobilePhone | String? | Optional String property |
-| accountNumber | String? | Optional String property |
-| gender | String? | Optional String property |
-| lastName | String? | Optional String property |
-| phone | String? | Optional String property |
-| sessionKey | String? | Optional String property |
-| userId | String | String property |
-| country | String? | Optional String property |
-| streetNumber | String? | Optional String property |
-| testPlayer | Bool? | Optional Bool property |
-| idCardNumber | String? | Optional String property |
-| language | String? | Optional String property |
-| verificationMethod | String? | Optional String property |
-| nickname | String? | Optional String property |
-| emailVerificationStatus | String | String property |
-| province | String? | Optional String property |
-| phoneCountryCode | String? | Optional String property |
-| level | Int? | Optional Int property |
-| birthDate | String? | Optional String property |
-| unit | String? | Optional String property |
-| nationality | String? | Optional String property |
-| firstName | String? | Optional String property |
-| mobileCountryCode | String? | Optional String property |
-| regDateFormatted | Date? | Optional Date property |
-| postalCode | String? | Optional String property |
-| contactPreference | String? | Optional String property |
-| vipStatus | String? | Optional String property |
-| birthDateFormatted | Date | Date property |
-| docNumber | String? | Optional String property |
-| municipality | String? | Optional String property |
-| readonlyFields | String? | Optional String property |
-| verificationStatus | String? | Optional String property |
-| city | String? | Optional String property |
-| birthCoutryCode | String? | Optional String property |
-| floorNumber | String? | Optional String property |
-| email | String | String property |
-| extraInfos | ExtraInfo? | Optional Array of ExtraInfo property |
-| userType | Int? | Optional Int property |
-| madeDeposit | Bool? | Optional Bool property |
-| address | String? | Optional String property |
-| phoneLocalNumber | String? | Optional String property |
-| parentID | String? | Optional String property |
-| birthDepartment | String? | Optional String property |
-| lockedStatus | String? | Optional String property |
-| kycStatus | String? | Optional String property |
-| building | String? | Optional String property |
-| lastLogin | String? | Optional String property |
-| status | String | String property |
-
-**Related Models:**
+- [PlacedBetEntry](#placedbetentry) (via `bets`)
 
 ### PrepareWithdrawalResponse
 
@@ -2062,9 +1800,9 @@ _This section describes the data structures used in the API._
 
 | Name | Type | Description |
 |------|------|-------------|
-| status | String | String property |
-| message | String? | Optional String property |
-| conversionId | String? | Optional String property |
+| status | String | The status of the model |
+| conversionId | String? | The conversionId of the model |
+| message | String? | The message of the model |
 
 ### ProcessDepositResponse
 
@@ -2072,13 +1810,13 @@ _This section describes the data structures used in the API._
 
 | Name | Type | Description |
 |------|------|-------------|
-| continueUrl | String? | Optional String property |
-| sessionId | String? | Optional String property |
-| status | String | String property |
-| clientKey | String? | Optional String property |
-| paymentId | String? | Optional String property |
-| sessionData | String? | Optional String property |
-| message | String? | Optional String property |
+| status | String | The status of the model |
+| paymentId | String? | The paymentId of the model |
+| continueUrl | String? | The continueUrl of the model |
+| clientKey | String? | The clientKey of the model |
+| sessionId | String? | The sessionId of the model |
+| sessionData | String? | The sessionData of the model |
+| message | String? | The message of the model |
 
 ### ProcessWithdrawalResponse
 
@@ -2086,9 +1824,9 @@ _This section describes the data structures used in the API._
 
 | Name | Type | Description |
 |------|------|-------------|
-| message | String? | Optional String property |
-| paymentId | String? | Optional String property |
-| status | String | String property |
+| status | String | The status of the model |
+| paymentId | String? | The paymentId of the model |
+| message | String? | The message of the model |
 
 ### PromotedBetslip
 
@@ -2096,11 +1834,11 @@ _This section describes the data structures used in the API._
 
 | Name | Type | Description |
 |------|------|-------------|
-| selections | [PromotedBetslipSelection](#promotedbetslipselection) | Array of PromotedBetslipSelection property |
-| betslipCount | Int | Int property |
+| selections | [#promotedbetslipselection|PromotedBetslipSelection] | The selections of the model |
+| betslipCount | Int | The betslipCount of the model |
 
 **Related Models:**
-- [PromotedBetslipSelection](#promotedbetslipselection)
+- [PromotedBetslipSelection](#promotedbetslipselection) (via `selections`)
 
 ### PromotedBetslipSelection
 
@@ -2108,45 +1846,33 @@ _This section describes the data structures used in the API._
 
 | Name | Type | Description |
 |------|------|-------------|
-| marketId | Int? | Optional Int property |
-| countryId | String? | Optional String property |
-| period | String? | Optional String property |
-| quoteGroup | String? | Optional String property |
-| marketTypeId | Int? | Optional Int property |
-| participants | String? | Optional Array of String property |
-| sport | String? | Optional String property |
-| country | String? | Optional String property |
-| participantIds | String? | Optional Array of String property |
-| sportId | String? | Optional String property |
-| beginDate | String? | Optional String property |
-| leagueId | String? | Optional String property |
-| orakoMarketId | String | String property |
-| periodId | Int? | Optional Int property |
-| market | String? | Optional String property |
-| marketType | String? | Optional String property |
-| eventId | String? | Optional String property |
-| orakoEventId | String | String property |
-| outcomeType | String? | Optional String property |
-| betOfferId | Int? | Optional Int property |
-| eventType | String? | Optional String property |
-| league | String? | Optional String property |
-| status | String? | Optional String property |
-| quote | Double? | Optional Double property |
-| outcomeId | Int? | Optional Int property |
-| id | String? | Optional String property |
-| orakoSelectionId | String | String property |
-
-### PromotedBetslipsBatchResponse
-
-**Properties:**
-
-| Name | Type | Description |
-|------|------|-------------|
-| promotedBetslips | [PromotedBetslip](#promotedbetslip) | Array of PromotedBetslip property |
-| status | String | String property |
-
-**Related Models:**
-- [PromotedBetslip](#promotedbetslip)
+| id | String? | The id of the model |
+| beginDate | String? | The beginDate of the model |
+| betOfferId | Int? | The betOfferId of the model |
+| country | String? | The country of the model |
+| countryId | String? | The countryId of the model |
+| eventId | String? | The eventId of the model |
+| eventType | String? | The eventType of the model |
+| league | String? | The league of the model |
+| leagueId | String? | The leagueId of the model |
+| market | String? | The market of the model |
+| marketId | Int? | The marketId of the model |
+| marketType | String? | The marketType of the model |
+| marketTypeId | Int? | The marketTypeId of the model |
+| orakoEventId | String | The orakoEventId of the model |
+| orakoMarketId | String | The orakoMarketId of the model |
+| orakoSelectionId | String | The orakoSelectionId of the model |
+| outcomeType | String? | The outcomeType of the model |
+| outcomeId | Int? | The outcomeId of the model |
+| participantIds | [String]? | The participantIds of the model |
+| participants | [String]? | The participants of the model |
+| period | String? | The period of the model |
+| periodId | Int? | The periodId of the model |
+| quote | Double? | The quote of the model |
+| quoteGroup | String? | The quoteGroup of the model |
+| sport | String? | The sport of the model |
+| sportId | String? | The sportId of the model |
+| status | String? | The status of the model |
 
 ### PromotedBetslipsInternalRequest
 
@@ -2154,12 +1880,12 @@ _This section describes the data structures used in the API._
 
 | Name | Type | Description |
 |------|------|-------------|
-| body | [VaixBatchBody](#vaixbatchbody) | VaixBatchBody property |
-| statusCode | Int | Int property |
-| name | String | String property |
+| body | [VaixBatchBody](#vaixbatchbody) | The body of the model |
+| name | String | The name of the model |
+| statusCode | Int | The statusCode of the model |
 
 **Related Models:**
-- [VaixBatchBody](#vaixbatchbody)
+- [VaixBatchBody](#vaixbatchbody) (via `body`)
 
 ### PromotedSport
 
@@ -2167,34 +1893,12 @@ _This section describes the data structures used in the API._
 
 | Name | Type | Description |
 |------|------|-------------|
-| marketGroups | [MarketGroupPromotedSport](#marketgrouppromotedsport) | Array of MarketGroupPromotedSport property |
-| id | String | String property |
-| name | String | String property |
+| id | String | The id of the model |
+| name | String | The name of the model |
+| marketGroups | [#marketgrouppromotedsport|MarketGroupPromotedSport] | The marketGroups of the model |
 
 **Related Models:**
-- [MarketGroupPromotedSport](#marketgrouppromotedsport)
-
-### PromotedSportsNodeResponse
-
-**Properties:**
-
-| Name | Type | Description |
-|------|------|-------------|
-| promotedSports | [PromotedSport](#promotedsport) | Array of PromotedSport property |
-
-**Related Models:**
-- [PromotedSport](#promotedsport)
-
-### PromotedSportsResponse
-
-**Properties:**
-
-| Name | Type | Description |
-|------|------|-------------|
-| promotedSports | [PromotedSport](#promotedsport) | Array of PromotedSport property |
-
-**Related Models:**
-- [PromotedSport](#promotedsport)
+- [MarketGroupPromotedSport](#marketgrouppromotedsport) (via `marketGroups`)
 
 ### PromotionalBanner
 
@@ -2202,36 +1906,14 @@ _This section describes the data structures used in the API._
 
 | Name | Type | Description |
 |------|------|-------------|
-| id | String | String property |
-| bannerDisplay | String? | Optional String property |
-| linkType | String? | Optional String property |
-| bannerContents | String? | Optional Array of String property |
-| bannerType | String? | Optional String property |
-| name | String? | Optional String property |
-| location | String? | Optional String property |
-| imageURL | String? | Optional String property |
-
-### PromotionalBannersResponse
-
-**Properties:**
-
-| Name | Type | Description |
-|------|------|-------------|
-| promotionalBannerItems | [PromotionalBanner](#promotionalbanner) | Array of PromotionalBanner property |
-
-**Related Models:**
-- [PromotionalBanner](#promotionalbanner)
-
-### PromotionalStoriesResponse
-
-**Properties:**
-
-| Name | Type | Description |
-|------|------|-------------|
-| promotionalStories | [PromotionalStory](#promotionalstory) | Array of PromotionalStory property |
-
-**Related Models:**
-- [PromotionalStory](#promotionalstory)
+| id | String | The id of the model |
+| name | String? | The name of the model |
+| bannerType | String? | The bannerType of the model |
+| imageURL | String? | The imageURL of the model |
+| bannerDisplay | String? | The bannerDisplay of the model |
+| linkType | String? | The linkType of the model |
+| location | String? | The location of the model |
+| bannerContents | [String]? | The bannerContents of the model |
 
 ### PromotionalStory
 
@@ -2239,11 +1921,11 @@ _This section describes the data structures used in the API._
 
 | Name | Type | Description |
 |------|------|-------------|
-| linkUrl | String | String property |
-| imageUrl | String | String property |
-| bodyText | String | String property |
-| title | String | String property |
-| id | String | String property |
+| id | String | The id of the model |
+| title | String | The title of the model |
+| imageUrl | String | The imageUrl of the model |
+| linkUrl | String | The linkUrl of the model |
+| bodyText | String | The bodyText of the model |
 
 ### RedeemBonus
 
@@ -2251,14 +1933,14 @@ _This section describes the data structures used in the API._
 
 | Name | Type | Description |
 |------|------|-------------|
-| amount | String | String property |
-| expiryDate | String | String property |
-| id | Int | Int property |
-| name | String | String property |
-| amountWagered | String | String property |
-| triggerDate | String | String property |
-| status | String | String property |
-| wagerRequired | String | String property |
+| id | Int | The id of the model |
+| name | String | The name of the model |
+| status | String | The status of the model |
+| triggerDate | String | The triggerDate of the model |
+| expiryDate | String | The expiryDate of the model |
+| amount | String | The amount of the model |
+| wagerRequired | String | The wagerRequired of the model |
+| amountWagered | String | The amountWagered of the model |
 
 ### RedeemBonusResponse
 
@@ -2266,23 +1948,12 @@ _This section describes the data structures used in the API._
 
 | Name | Type | Description |
 |------|------|-------------|
-| status | String | String property |
-| message | String? | Optional String property |
-| bonus | RedeemBonus? | Optional RedeemBonus property |
+| status | String | The status of the model |
+| message | String? | The message of the model |
+| bonus | RedeemBonus? | The bonus of the model |
 
 **Related Models:**
-- [RedeemBonus](#redeembonus)
-
-### RefereesResponse
-
-**Properties:**
-
-| Name | Type | Description |
-|------|------|-------------|
-| status | String | String property |
-| referees | Referee | Array of Referee property |
-
-**Related Models:**
+- [RedeemBonus](#redeembonus) (via `bonus`)
 
 ### ReferralLink
 
@@ -2290,20 +1961,8 @@ _This section describes the data structures used in the API._
 
 | Name | Type | Description |
 |------|------|-------------|
-| code | String | String property |
-| link | String | String property |
-
-### ReferralResponse
-
-**Properties:**
-
-| Name | Type | Description |
-|------|------|-------------|
-| referralLinks | [ReferralLink](#referrallink) | Array of ReferralLink property |
-| status | String | String property |
-
-**Related Models:**
-- [ReferralLink](#referrallink)
+| code | String | The code of the model |
+| link | String | The link of the model |
 
 ### ResponsibleGamingLimit
 
@@ -2311,13 +1970,13 @@ _This section describes the data structures used in the API._
 
 | Name | Type | Description |
 |------|------|-------------|
-| effectiveDate | String | String property |
-| partyId | Int | Int property |
-| id | Int | Int property |
-| periodType | String | String property |
-| limit | Double | Double property |
-| limitType | String | String property |
-| expiryDate | String | String property |
+| id | Int | The id of the model |
+| partyId | Int | The partyId of the model |
+| limitType | String | The limitType of the model |
+| periodType | String | The periodType of the model |
+| effectiveDate | String | The effectiveDate of the model |
+| expiryDate | String | The expiryDate of the model |
+| limit | Double | The limit of the model |
 
 ### ResponsibleGamingLimitsResponse
 
@@ -2325,21 +1984,11 @@ _This section describes the data structures used in the API._
 
 | Name | Type | Description |
 |------|------|-------------|
-| limits | [ResponsibleGamingLimit](#responsiblegaminglimit) | Array of ResponsibleGamingLimit property |
-| status | String | String property |
+| status | String | The status of the model |
+| limits | [#responsiblegaminglimit|ResponsibleGamingLimit] | The limits of the model |
 
 **Related Models:**
-- [ResponsibleGamingLimit](#responsiblegaminglimit)
-
-### RestResponse
-
-**Properties:**
-
-| Name | Type | Description |
-|------|------|-------------|
-| data | T? | Optional T property |
-
-**Related Models:**
+- [ResponsibleGamingLimit](#responsiblegaminglimit) (via `limits`)
 
 ### ScheduledSport
 
@@ -2347,8 +1996,8 @@ _This section describes the data structures used in the API._
 
 | Name | Type | Description |
 |------|------|-------------|
-| id | String | String property |
-| name | String | String property |
+| id | String | The id of the model |
+| name | String | The name of the model |
 
 ### SharedBetSelection
 
@@ -2356,10 +2005,10 @@ _This section describes the data structures used in the API._
 
 | Name | Type | Description |
 |------|------|-------------|
-| id | Double | Double property |
-| priceDenominator | Int | Int property |
-| priceNumerator | Int | Int property |
-| priceType | String | String property |
+| id | Double | The id of the model |
+| priceDenominator | Int | The priceDenominator of the model |
+| priceNumerator | Int | The priceNumerator of the model |
+| priceType | String | The priceType of the model |
 
 ### SharedTicketResponse
 
@@ -2367,11 +2016,43 @@ _This section describes the data structures used in the API._
 
 | Name | Type | Description |
 |------|------|-------------|
-| betId | Double | Double property |
-| bets | SharedBet | Array of SharedBet property |
-| totalStake | Double | Double property |
+| bets | [SharedBet] | The bets of the model |
+| totalStake | Double | The totalStake of the model |
+| betId | Double | The betId of the model |
 
 **Related Models:**
+
+### SignUpResponse
+
+**Properties:**
+
+| Name | Type | Description |
+|------|------|-------------|
+| successful | Bool | The successful of the model |
+| errors | [SignUpError]? | The errors of the model |
+
+**Related Models:**
+
+### SimplePaymentMethod
+
+**Properties:**
+
+| Name | Type | Description |
+|------|------|-------------|
+| name | String | The name of the model |
+| type | String | The type of the model |
+| brands | [String]? | The brands of the model |
+
+### SimplePaymentMethodsResponse
+
+**Properties:**
+
+| Name | Type | Description |
+|------|------|-------------|
+| paymentMethods | [#simplepaymentmethod|SimplePaymentMethod] | The paymentMethods of the model |
+
+**Related Models:**
+- [SimplePaymentMethod](#simplepaymentmethod) (via `paymentMethods`)
 
 ### SportCompetition
 
@@ -2379,10 +2060,10 @@ _This section describes the data structures used in the API._
 
 | Name | Type | Description |
 |------|------|-------------|
-| id | String | String property |
-| name | String | String property |
-| numberEvents | String | String property |
-| numberOutrightEvents | String | String property |
+| id | String | The id of the model |
+| name | String | The name of the model |
+| numberEvents | String | The numberEvents of the model |
+| numberOutrightEvents | String | The numberOutrightEvents of the model |
 
 ### SportCompetitionInfo
 
@@ -2390,15 +2071,15 @@ _This section describes the data structures used in the API._
 
 | Name | Type | Description |
 |------|------|-------------|
-| numberOutrightEvents | String | String property |
-| numberOutrightMarkets | String | String property |
-| name | String | String property |
-| marketGroups | [SportCompetitionMarketGroup](#sportcompetitionmarketgroup) | Array of SportCompetitionMarketGroup property |
-| id | String | String property |
-| parentId | String? | Optional String property |
+| id | String | The id of the model |
+| name | String | The name of the model |
+| marketGroups | [#sportcompetitionmarketgroup|SportCompetitionMarketGroup] | The marketGroups of the model |
+| numberOutrightEvents | String | The numberOutrightEvents of the model |
+| numberOutrightMarkets | String | The numberOutrightMarkets of the model |
+| parentId | String? | The parentId of the model |
 
 **Related Models:**
-- [SportCompetitionMarketGroup](#sportcompetitionmarketgroup)
+- [SportCompetitionMarketGroup](#sportcompetitionmarketgroup) (via `marketGroups`)
 
 ### SportCompetitionMarketGroup
 
@@ -2406,8 +2087,8 @@ _This section describes the data structures used in the API._
 
 | Name | Type | Description |
 |------|------|-------------|
-| name | String | String property |
-| id | String | String property |
+| id | String | The id of the model |
+| name | String | The name of the model |
 
 ### SportNode
 
@@ -2415,13 +2096,13 @@ _This section describes the data structures used in the API._
 
 | Name | Type | Description |
 |------|------|-------------|
-| numberOutrightEvents | Int | Int property |
-| alphaCode | String | String property |
-| numberEvents | Int | Int property |
-| name | String | String property |
-| numberLiveEvents | Int | Int property |
-| numberOutrightMarkets | Int | Int property |
-| id | String | String property |
+| id | String | The id of the model |
+| name | String | The name of the model |
+| numberEvents | Int | The numberEvents of the model |
+| numberOutrightEvents | Int | The numberOutrightEvents of the model |
+| numberOutrightMarkets | Int | The numberOutrightMarkets of the model |
+| numberLiveEvents | Int | The numberLiveEvents of the model |
+| alphaCode | String | The alphaCode of the model |
 
 ### SportNodeInfo
 
@@ -2429,29 +2110,18 @@ _This section describes the data structures used in the API._
 
 | Name | Type | Description |
 |------|------|-------------|
-| defaultOrder | Int? | Optional Int property |
-| name | String? | Optional String property |
-| regionNodes | [SportRegion](#sportregion) | Array of SportRegion property |
-| numOutrightEvents | String? | Optional String property |
-| navigationTypes | String? | Optional Array of String property |
-| numEvents | String? | Optional String property |
-| numOutrightMarkets | String? | Optional String property |
-| id | String | String property |
-| numMarkets | String? | Optional String property |
+| id | String | The id of the model |
+| regionNodes | [#sportregion|SportRegion] | The regionNodes of the model |
+| navigationTypes | [String]? | The navigationTypes of the model |
+| name | String? | The name of the model |
+| defaultOrder | Int? | The defaultOrder of the model |
+| numMarkets | String? | The numMarkets of the model |
+| numEvents | String? | The numEvents of the model |
+| numOutrightMarkets | String? | The numOutrightMarkets of the model |
+| numOutrightEvents | String? | The numOutrightEvents of the model |
 
 **Related Models:**
-- [SportRegion](#sportregion)
-
-### SportRadarResponse
-
-**Properties:**
-
-| Name | Type | Description |
-|------|------|-------------|
-| data | T | T property |
-| version | Int? | Optional Int property |
-
-**Related Models:**
+- [SportRegion](#sportregion) (via `regionNodes`)
 
 ### SportRegion
 
@@ -2459,10 +2129,10 @@ _This section describes the data structures used in the API._
 
 | Name | Type | Description |
 |------|------|-------------|
-| name | String? | Optional String property |
-| numberEvents | String | String property |
-| numberOutrightEvents | String | String property |
-| id | String | String property |
+| id | String | The id of the model |
+| name | String? | The name of the model |
+| numberEvents | String | The numberEvents of the model |
+| numberOutrightEvents | String | The numberOutrightEvents of the model |
 
 ### SportRegionInfo
 
@@ -2470,12 +2140,12 @@ _This section describes the data structures used in the API._
 
 | Name | Type | Description |
 |------|------|-------------|
-| competitionNodes | [SportCompetition](#sportcompetition) | Array of SportCompetition property |
-| id | String | String property |
-| name | String | String property |
+| id | String | The id of the model |
+| name | String | The name of the model |
+| competitionNodes | [#sportcompetition|SportCompetition] | The competitionNodes of the model |
 
 **Related Models:**
-- [SportCompetition](#sportcompetition)
+- [SportCompetition](#sportcompetition) (via `competitionNodes`)
 
 ### SportType
 
@@ -2483,13 +2153,13 @@ _This section describes the data structures used in the API._
 
 | Name | Type | Description |
 |------|------|-------------|
-| alphaId | String? | Optional String property |
-| numericId | String? | Optional String property |
-| numberOutrightEvents | Int | Int property |
-| numberOutrightMarkets | Int | Int property |
-| name | String | String property |
-| numberLiveEvents | Int | Int property |
-| numberEvents | Int | Int property |
+| name | String | The name of the model |
+| numericId | String? | The numericId of the model |
+| alphaId | String? | The alphaId of the model |
+| numberEvents | Int | The numberEvents of the model |
+| numberOutrightEvents | Int | The numberOutrightEvents of the model |
+| numberOutrightMarkets | Int | The numberOutrightMarkets of the model |
+| numberLiveEvents | Int | The numberLiveEvents of the model |
 
 ### SportTypeDetails
 
@@ -2497,12 +2167,12 @@ _This section describes the data structures used in the API._
 
 | Name | Type | Description |
 |------|------|-------------|
-| eventsCount | Int | Int property |
-| sportType | [SportType](#sporttype) | SportType property |
-| sportName | String | String property |
+| sportType | [SportType](#sporttype) | The sportType of the model |
+| eventsCount | Int | The eventsCount of the model |
+| sportName | String | The sportName of the model |
 
 **Related Models:**
-- [SportType](#sporttype)
+- [SportType](#sporttype) (via `sportType`)
 
 ### SportsList
 
@@ -2510,23 +2180,10 @@ _This section describes the data structures used in the API._
 
 | Name | Type | Description |
 |------|------|-------------|
-| sportNodes | SportNode? | Optional Array of SportNode property |
+| sportNodes | [SportNode]? | The sportNodes of the model |
 
 **Related Models:**
-- [SportNode](#sportnode)
-
-### StatusResponse
-
-**Properties:**
-
-| Name | Type | Description |
-|------|------|-------------|
-| status | String | String property |
-| message | String? | Optional String property |
-| errors | FieldError? | Optional Array of FieldError property |
-
-**Related Models:**
-- [FieldError](#fielderror)
+- [SportNode](#sportnode) (via `sportNodes`)
 
 ### SupportRequest
 
@@ -2534,8 +2191,8 @@ _This section describes the data structures used in the API._
 
 | Name | Type | Description |
 |------|------|-------------|
-| id | Int | Int property |
-| status | String | String property |
+| id | Int | The id of the model |
+| status | String | The status of the model |
 
 ### SupportResponse
 
@@ -2543,12 +2200,12 @@ _This section describes the data structures used in the API._
 
 | Name | Type | Description |
 |------|------|-------------|
-| error | String? | Optional String property |
-| description | String? | Optional String property |
-| request | SupportRequest? | Optional SupportRequest property |
+| request | SupportRequest? | The request of the model |
+| error | String? | The error of the model |
+| description | String? | The description of the model |
 
 **Related Models:**
-- [SupportRequest](#supportrequest)
+- [SupportRequest](#supportrequest) (via `request`)
 
 ### TicketSelection
 
@@ -2556,24 +2213,12 @@ _This section describes the data structures used in the API._
 
 | Name | Type | Description |
 |------|------|-------------|
-| odd | Double | Double property |
-| priceNumerator | String | String property |
-| marketId | String | String property |
-| name | String | String property |
-| id | String | String property |
-| priceDenominator | String | String property |
-
-### TicketSelectionResponse
-
-**Properties:**
-
-| Name | Type | Description |
-|------|------|-------------|
-| data | TicketSelection? | Optional TicketSelection property |
-| errorType | String? | Optional String property |
-
-**Related Models:**
-- [TicketSelection](#ticketselection)
+| id | String | The id of the model |
+| marketId | String | The marketId of the model |
+| name | String | The name of the model |
+| priceDenominator | String | The priceDenominator of the model |
+| priceNumerator | String | The priceNumerator of the model |
+| odd | Double | The odd of the model |
 
 ### TopCompetitionData
 
@@ -2581,11 +2226,11 @@ _This section describes the data structures used in the API._
 
 | Name | Type | Description |
 |------|------|-------------|
-| title | String | String property |
-| competitions | [TopCompetitionPointer](#topcompetitionpointer) | Array of TopCompetitionPointer property |
+| title | String | The title of the model |
+| competitions | [#topcompetitionpointer|TopCompetitionPointer] | The competitions of the model |
 
 **Related Models:**
-- [TopCompetitionPointer](#topcompetitionpointer)
+- [TopCompetitionPointer](#topcompetitionpointer) (via `competitions`)
 
 ### TopCompetitionPointer
 
@@ -2593,20 +2238,9 @@ _This section describes the data structures used in the API._
 
 | Name | Type | Description |
 |------|------|-------------|
-| name | String | String property |
-| competitionId | String | String property |
-| id | String | String property |
-
-### TopCompetitionsResponse
-
-**Properties:**
-
-| Name | Type | Description |
-|------|------|-------------|
-| data | [TopCompetitionData](#topcompetitiondata) | Array of TopCompetitionData property |
-
-**Related Models:**
-- [TopCompetitionData](#topcompetitiondata)
+| id | String | The id of the model |
+| name | String | The name of the model |
+| competitionId | String | The competitionId of the model |
 
 ### TransactionDetail
 
@@ -2614,32 +2248,20 @@ _This section describes the data structures used in the API._
 
 | Name | Type | Description |
 |------|------|-------------|
-| postBalanceBonus | Double | Double property |
-| dateTime | String | String property |
-| postBalance | Double | Double property |
-| type | String | String property |
-| amount | Double | Double property |
-| escrowTranSubType | String? | Optional String property |
-| id | Int | Int property |
-| reference | String? | Optional String property |
-| escrowTranType | String? | Optional String property |
-| amountBonus | Double | Double property |
-| currency | String | String property |
-| escrowType | String? | Optional String property |
-| gameTranId | String? | Optional String property |
-| paymentId | Int? | Optional Int property |
-
-### TransactionsHistoryResponse
-
-**Properties:**
-
-| Name | Type | Description |
-|------|------|-------------|
-| status | String | String property |
-| transactions | TransactionDetail? | Optional Array of TransactionDetail property |
-
-**Related Models:**
-- [TransactionDetail](#transactiondetail)
+| id | Int | The id of the model |
+| dateTime | String | The dateTime of the model |
+| type | String | The type of the model |
+| amount | Double | The amount of the model |
+| postBalance | Double | The postBalance of the model |
+| amountBonus | Double | The amountBonus of the model |
+| postBalanceBonus | Double | The postBalanceBonus of the model |
+| currency | String | The currency of the model |
+| paymentId | Int? | The paymentId of the model |
+| gameTranId | String? | The gameTranId of the model |
+| reference | String? | The reference of the model |
+| escrowTranType | String? | The escrowTranType of the model |
+| escrowTranSubType | String? | The escrowTranSubType of the model |
+| escrowType | String? | The escrowType of the model |
 
 ### UpdatePaymentAction
 
@@ -2647,10 +2269,10 @@ _This section describes the data structures used in the API._
 
 | Name | Type | Description |
 |------|------|-------------|
-| url | String | String property |
-| type | String | String property |
-| method | String | String property |
-| paymentMethodType | String | String property |
+| paymentMethodType | String | The paymentMethodType of the model |
+| url | String | The url of the model |
+| method | String | The method of the model |
+| type | String | The type of the model |
 
 ### UpdatePaymentResponse
 
@@ -2658,11 +2280,11 @@ _This section describes the data structures used in the API._
 
 | Name | Type | Description |
 |------|------|-------------|
-| action | UpdatePaymentAction? | Optional UpdatePaymentAction property |
-| resultCode | String | String property |
+| resultCode | String | The resultCode of the model |
+| action | UpdatePaymentAction? | The action of the model |
 
 **Related Models:**
-- [UpdatePaymentAction](#updatepaymentaction)
+- [UpdatePaymentAction](#updatepaymentaction) (via `action`)
 
 ### UploadDocumentResponse
 
@@ -2670,8 +2292,8 @@ _This section describes the data structures used in the API._
 
 | Name | Type | Description |
 |------|------|-------------|
-| message | String? | Optional String property |
-| status | String | String property |
+| status | String | The status of the model |
+| message | String? | The message of the model |
 
 ### UserConsentInfo
 
@@ -2679,23 +2301,11 @@ _This section describes the data structures used in the API._
 
 | Name | Type | Description |
 |------|------|-------------|
-| consentVersionId | Int | Int property |
-| isMandatory | Bool? | Optional Bool property |
-| key | String | String property |
-| name | String | String property |
-| id | Int | Int property |
-
-### UserConsentsResponse
-
-**Properties:**
-
-| Name | Type | Description |
-|------|------|-------------|
-| userConsents | UserConsent | Array of UserConsent property |
-| message | String? | Optional String property |
-| status | String | String property |
-
-**Related Models:**
+| id | Int | The id of the model |
+| key | String | The key of the model |
+| name | String | The name of the model |
+| consentVersionId | Int | The consentVersionId of the model |
+| isMandatory | Bool? | The isMandatory of the model |
 
 ### UserDocument
 
@@ -2703,14 +2313,14 @@ _This section describes the data structures used in the API._
 
 | Name | Type | Description |
 |------|------|-------------|
-| userDocumentFiles | UserDocumentFile? | Optional Array of UserDocumentFile property |
-| status | String | String property |
-| uploadDate | String | String property |
-| fileName | String? | Optional String property |
-| documentType | String | String property |
+| documentType | String | The documentType of the model |
+| fileName | String? | The fileName of the model |
+| status | String | The status of the model |
+| uploadDate | String | The uploadDate of the model |
+| userDocumentFiles | [UserDocumentFile]? | The userDocumentFiles of the model |
 
 **Related Models:**
-- [UserDocumentFile](#userdocumentfile)
+- [UserDocumentFile](#userdocumentfile) (via `userDocumentFiles`)
 
 ### UserDocumentFile
 
@@ -2718,7 +2328,7 @@ _This section describes the data structures used in the API._
 
 | Name | Type | Description |
 |------|------|-------------|
-| fileName | String | String property |
+| fileName | String | The fileName of the model |
 
 ### UserDocumentsResponse
 
@@ -2726,11 +2336,94 @@ _This section describes the data structures used in the API._
 
 | Name | Type | Description |
 |------|------|-------------|
-| status | String | String property |
-| userDocuments | [UserDocument](#userdocument) | Array of UserDocument property |
+| status | String | The status of the model |
+| userDocuments | [#userdocument|UserDocument] | The userDocuments of the model |
 
 **Related Models:**
-- [UserDocument](#userdocument)
+- [UserDocument](#userdocument) (via `userDocuments`)
+
+### UserProfile
+
+**Properties:**
+
+| Name | Type | Description |
+|------|------|-------------|
+| userIdentifier | String | The userIdentifier of the model |
+| sessionKey | String | The sessionKey of the model |
+| username | String | The username of the model |
+| email | String | The email of the model |
+| firstName | String? | The firstName of the model |
+| middleName | String? | The middleName of the model |
+| lastName | String? | The lastName of the model |
+| birthDate | Date | The birthDate of the model |
+| gender | String? | The gender of the model |
+| nationalityCode | String? | The nationalityCode of the model |
+| countryCode | String? | The countryCode of the model |
+| personalIdNumber | String? | The personalIdNumber of the model |
+| address | String? | The address of the model |
+| province | String? | The province of the model |
+| city | String? | The city of the model |
+| postalCode | String? | The postalCode of the model |
+| birthDepartment | String? | The birthDepartment of the model |
+| streetNumber | String? | The streetNumber of the model |
+| phoneNumber | String? | The phoneNumber of the model |
+| mobilePhone | String? | The mobilePhone of the model |
+| mobileCountryCode | String? | The mobileCountryCode of the model |
+| mobileLocalNumber | String? | The mobileLocalNumber of the model |
+| avatarName | String? | The avatarName of the model |
+| godfatherCode | String? | The godfatherCode of the model |
+| placeOfBirth | String? | The placeOfBirth of the model |
+| additionalStreetLine | String? | The additionalStreetLine of the model |
+| emailVerificationStatus | EmailVerificationStatus | The emailVerificationStatus of the model |
+| userRegistrationStatus | UserRegistrationStatus | The userRegistrationStatus of the model |
+| kycStatus | KnowYourCustomerStatus | The kycStatus of the model |
+| lockedStatus | LockedStatus | The lockedStatus of the model |
+| hasMadeDeposit | Bool | The hasMadeDeposit of the model |
+| kycExpiryDate | String? | The kycExpiryDate of the model |
+| currency | String? | The currency of the model |
+
+**Related Models:**
+
+### UserWallet
+
+**Properties:**
+
+| Name | Type | Description |
+|------|------|-------------|
+| vipStatus | String? | The vipStatus of the model |
+| currency | String? | The currency of the model |
+| loyaltyPoint | Int? | The loyaltyPoint of the model |
+| totalString | String? | The totalString of the model |
+| total | Double? | The total of the model |
+| withdrawableString | String? | The withdrawableString of the model |
+| withdrawable | Double? | The withdrawable of the model |
+| bonusString | String? | The bonusString of the model |
+| bonus | Double? | The bonus of the model |
+| pendingBonusString | String? | The pendingBonusString of the model |
+| pendingBonus | Double? | The pendingBonus of the model |
+| casinoPlayableBonusString | String? | The casinoPlayableBonusString of the model |
+| casinoPlayableBonus | Double? | The casinoPlayableBonus of the model |
+| sportsbookPlayableBonusString | String? | The sportsbookPlayableBonusString of the model |
+| sportsbookPlayableBonus | Double? | The sportsbookPlayableBonus of the model |
+| withdrawableEscrowString | String? | The withdrawableEscrowString of the model |
+| withdrawableEscrow | Double? | The withdrawableEscrow of the model |
+| totalWithdrawableString | String? | The totalWithdrawableString of the model |
+| totalWithdrawable | Double? | The totalWithdrawable of the model |
+| withdrawRestrictionAmountString | String? | The withdrawRestrictionAmountString of the model |
+| withdrawRestrictionAmount | Double? | The withdrawRestrictionAmount of the model |
+| totalEscrowString | String? | The totalEscrowString of the model |
+| totalEscrow | Double? | The totalEscrow of the model |
+
+### UsernameValidation
+
+**Properties:**
+
+| Name | Type | Description |
+|------|------|-------------|
+| username | String | The username of the model |
+| isAvailable | Bool | The isAvailable of the model |
+| suggestedUsernames | [String]? | The suggestedUsernames of the model |
+| hasErrors | Bool | The hasErrors of the model |
 
 ### VaixBatchBody
 
@@ -2738,11 +2431,11 @@ _This section describes the data structures used in the API._
 
 | Name | Type | Description |
 |------|------|-------------|
-| data | [VaixBatchData](#vaixbatchdata) | VaixBatchData property |
-| status | String | String property |
+| data | [VaixBatchData](#vaixbatchdata) | The data of the model |
+| status | String | The status of the model |
 
 **Related Models:**
-- [VaixBatchData](#vaixbatchdata)
+- [VaixBatchData](#vaixbatchdata) (via `data`)
 
 ### VaixBatchData
 
@@ -2750,11 +2443,11 @@ _This section describes the data structures used in the API._
 
 | Name | Type | Description |
 |------|------|-------------|
-| promotedBetslips | [PromotedBetslip](#promotedbetslip) | Array of PromotedBetslip property |
-| count | Int | Int property |
+| promotedBetslips | [#promotedbetslip|PromotedBetslip] | The promotedBetslips of the model |
+| count | Int | The count of the model |
 
 **Related Models:**
-- [PromotedBetslip](#promotedbetslip)
+- [PromotedBetslip](#promotedbetslip) (via `promotedBetslips`)
 
 ### WithdrawalMethod
 
@@ -2762,21 +2455,9 @@ _This section describes the data structures used in the API._
 
 | Name | Type | Description |
 |------|------|-------------|
-| minimumWithdrawal | String | String property |
-| conversionRequired | Bool | Bool property |
-| maximumWithdrawal | String | String property |
-| paymentMethod | String | String property |
-| code | String | String property |
-
-### WithdrawalMethodsResponse
-
-**Properties:**
-
-| Name | Type | Description |
-|------|------|-------------|
-| withdrawalMethods | [WithdrawalMethod](#withdrawalmethod) | Array of WithdrawalMethod property |
-| status | String | String property |
-
-**Related Models:**
-- [WithdrawalMethod](#withdrawalmethod)
+| code | String | The code of the model |
+| paymentMethod | String | The paymentMethod of the model |
+| minimumWithdrawal | String | The minimumWithdrawal of the model |
+| maximumWithdrawal | String | The maximumWithdrawal of the model |
+| conversionRequired | Bool | The conversionRequired of the model |
 

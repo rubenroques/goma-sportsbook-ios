@@ -13,7 +13,7 @@ from parser import SwiftParser
 
 # Configure logging
 logging.basicConfig(
-    level=logging.INFO,
+    level=logging.DEBUG,
     format='%(asctime)s - %(levelname)s - %(message)s',
     datefmt='%H:%M:%S'
 )
@@ -58,8 +58,79 @@ class APIDocAnalyzer:
         logger.info("✅ Initialization complete")
 
     def _find_swift_model(self, model_name: str) -> Tuple[Optional[str], Optional[str]]:
-        """Find Swift implementation of a model"""
-        return self.swift_finder.find_model_implementation(model_name)
+        """
+        Find Swift implementation of a model.
+        First tries in the scanned folders, then falls back to manual_missing_models.swift.
+        Returns: Tuple of (implementation, file_path)
+        """
+        def extract_implementation(content: str, search_term: str) -> Optional[str]:
+            """Helper to extract full implementation between braces"""
+            start_idx = content.find(search_term)
+            if start_idx == -1:
+                return None
+
+            # Extract the full implementation
+            code = content[start_idx:]
+            # Extract implementation by matching braces
+            brace_count = 0
+            end_idx = 0
+            in_implementation = False
+
+            for i, char in enumerate(code):
+                if char == '{':
+                    brace_count += 1
+                    in_implementation = True
+                elif char == '}':
+                    brace_count -= 1
+                    if brace_count == 0 and in_implementation:
+                        end_idx = i + 1
+                        break
+
+            if end_idx > 0:
+                return code[:end_idx]
+            return None
+
+        # First try in scanned folders
+        for file_path, content in self.swift_files.items():
+            # Look for the model definition
+            search_terms = [
+                f"struct {model_name}",
+                f"class {model_name}",
+                f"protocol {model_name}"
+            ]
+
+            for term in search_terms:
+                if term in content:
+                    logger.info(f"  📄 Found {term} in {file_path}")
+                    impl = extract_implementation(content, term)
+                    if impl:
+                        return impl, file_path
+
+        # If not found, try in manual_missing_models.swift
+        logger.info(f"🔍 Model {model_name} not found in scanned folders, checking manual_missing_models.swift")
+        manual_models_path = os.path.join(os.path.dirname(os.path.abspath(__file__)), "manual_missing_models.swift")
+
+        if os.path.exists(manual_models_path):
+            try:
+                with open(manual_models_path, 'r') as f:
+                    content = f.read()
+                    # Look for the model definition
+                    search_terms = [
+                        f"struct {model_name}",
+                        f"class {model_name}",
+                        f"protocol {model_name}"
+                    ]
+
+                    for term in search_terms:
+                        if term in content:
+                            logger.info(f"  📄 Found {term} in manual_missing_models.swift")
+                            impl = extract_implementation(content, term)
+                            if impl:
+                                return impl, manual_models_path
+            except Exception as e:
+                logger.error(f"❌ Error reading manual_missing_models.swift: {str(e)}")
+
+        return None, None
 
     def analyze_model(self, model_name: str) -> Optional[Dict]:
         """
@@ -104,14 +175,14 @@ class APIDocAnalyzer:
             Code:
             {impl}
             """
-            
+
             try:
                 response = self.openai_client.chat.completions.create(
                     model="gpt-4",
                     messages=[{"role": "user", "content": prompt}],
                     temperature=0
                 )
-                
+
                 analysis = json.loads(response.choices[0].message.content)
                 if not analysis.get('properties'):
                     logger.warning(f"⚠️ No properties found in GPT analysis for model {model_name}")
@@ -130,34 +201,34 @@ class APIDocAnalyzer:
         Analyze the API documentation and generate an inventory of models and endpoints.
         """
         logger.info(f"📚 Starting analysis of API documentation: {doc_path}")
-        
+
         with open(doc_path, 'r') as f:
             self.api_doc = json.load(f)
-        
+
         # Extract model names and endpoints
         model_names = self._extract_model_names()
         endpoints = self._extract_endpoints()
-        
+
         logger.info(f"📋 Found {len(model_names)} models to analyze")
         logger.info(f"🌐 Found {len(endpoints)} endpoints")
-        
+
         # Analyze each model
         models = []
         model_info = {}
         relationships = set()
-        
+
         for model_name in model_names:
             if model_name in model_info:
                 continue
-                
+
             result = self.analyze_model(model_name)
             if not result:
                 logger.warning(f"⚠️ Failed to analyze model: {model_name}")
                 continue
-                
+
             models.append(result)
             model_info[model_name] = result
-            
+
             # Track relationships
             if 'relationships' in result:
                 for rel in result['relationships']:
@@ -171,19 +242,19 @@ class APIDocAnalyzer:
                             if rel_result:
                                 models.append(rel_result)
                                 model_info[target_model] = rel_result
-        
+
         # Log analysis results
         logger.info(f"✅ Successfully analyzed {len(models)} models")
         if self.not_found_models:
             logger.warning(f"⚠️ Could not find {len(self.not_found_models)} models: {', '.join(self.not_found_models)}")
-        
+
         # Generate inventory
         inventory = {
             'models': models,
             'relationships': [{'source': src, 'target': tgt} for src, tgt in relationships],
             'endpoints': endpoints
         }
-        
+
         return inventory
 
     def _extract_model_names(self) -> Set[str]:
@@ -191,30 +262,41 @@ class APIDocAnalyzer:
         model_names = set()
 
         # Extract from REST endpoints
+        logger.info("🔍 Extracting models from REST endpoints...")
         for category in self.api_doc.get('api_methods', {}).values():
             for endpoint_data in category.values():
                 if 'signature' in endpoint_data:
                     model_name = self._extract_model_from_signature(endpoint_data['signature'])
                     if model_name:
+                        logger.info(f"  ✅ Found model from REST endpoint: {model_name}")
                         model_names.add(model_name)
 
         # Extract from WebSocket endpoints
+        logger.info("🔍 Extracting models from WebSocket endpoints...")
         for endpoint_data in self.api_doc.get('websocket_methods', {}).values():
             if 'signature' in endpoint_data:
                 model_name = self._extract_model_from_signature(endpoint_data['signature'])
                 if model_name:
+                    logger.info(f"  ✅ Found model from WebSocket endpoint: {model_name}")
                     model_names.add(model_name)
 
         # Also add any models found in Swift files
+        logger.info("🔍 Extracting models from Swift files...")
         for file_path in self.swift_files:
-            if 'Models' in file_path:
-                content = self.swift_files[file_path]
-                # Find struct/class declarations
-                matches = re.finditer(r'(?:struct|class|protocol)\s+(\w+)', content)
-                for match in matches:
-                    model_names.add(match.group(1))
+            # Look in all Swift files, but log which directory we found the model in
+            content = self.swift_files[file_path]
+            # Find struct/class/protocol declarations
+            matches = re.finditer(r'(?:struct|class|protocol|enum)\s+(\w+)(?:\s*:|\s*\{)', content)
+            for match in matches:
+                model_name = match.group(1)
+                # Skip certain utility types
+                if model_name.endswith('Response') or model_name == 'Codable' or model_name == 'Hashable':
+                    continue
+                logger.info(f"  ✅ Found model in {file_path}: {model_name}")
+                model_names.add(model_name)
 
-        logger.info(f"Extracted {len(model_names)} model names")
+        logger.info(f"📋 Total models found: {len(model_names)}")
+        logger.debug(f"📋 Models found: {', '.join(sorted(model_names))}")
         return model_names
 
     def _extract_model_from_signature(self, signature: str) -> Optional[str]:
@@ -222,29 +304,49 @@ class APIDocAnalyzer:
         if not signature:
             return None
 
-        # Extract return type from signature
+        def strip_wrapper_types(type_str: str) -> str:
+            """Strip wrapper types to get the core model name"""
+            # Remove optional marker
+            type_str = type_str.rstrip('?')
+
+            # Handle array wrapper [Event]
+            array_match = re.match(r'\[(.*?)\]', type_str)
+            if array_match:
+                type_str = array_match.group(1)
+
+            # Handle dictionary wrapper [String: Event]
+            dict_match = re.match(r'\[.*?:\s*(.*?)\]', type_str)
+            if dict_match:
+                type_str = dict_match.group(1)
+
+            # Handle AnyPublisher wrapper
+            publisher_match = re.search(r'AnyPublisher\s*<\s*([^,]+)\s*,\s*[^>]+>', type_str)
+            if publisher_match:
+                type_str = publisher_match.group(1)
+                # Recursively strip in case of nested types like AnyPublisher<[Event], Error>
+                type_str = strip_wrapper_types(type_str)
+
+            # Handle SubscribableContent wrapper
+            subscribable_match = re.search(r'SubscribableContent\s*<\s*([^>]+)\s*>', type_str)
+            if subscribable_match:
+                type_str = subscribable_match.group(1)
+                # Recursively strip in case of nested types like SubscribableContent<[Event]>
+                type_str = strip_wrapper_types(type_str)
+
+            # Strip any remaining whitespace
+            return type_str.strip()
+
+        # Extract return type
         return_match = re.search(r'->\s*(.+)$', signature)
         if not return_match:
             return None
 
         return_type = return_match.group(1).strip()
+        stripped_type = strip_wrapper_types(return_type)
 
-        # Handle AnyPublisher<T, Error>
-        publisher_match = re.search(r'AnyPublisher\s*<\s*([^,]+)\s*,\s*[^>]+>', return_type)
-        if publisher_match:
-            inner_type = publisher_match.group(1).strip()
-            # Handle arrays and other nested types
-            array_match = re.match(r'\[(.*?)\]', inner_type)
-            if array_match:
-                return array_match.group(1).strip()
-            return inner_type
-
-        # Handle direct array types
-        array_match = re.match(r'\[(.*?)\]', return_type)
-        if array_match:
-            return array_match.group(1).strip()
-
-        return return_type
+        # Filter out primitive types and common Swift types
+        primitive_types = {'String', 'Int', 'Double', 'Bool', 'Void', 'Error', 'Data', 'Date', 'AnyPublisher', 'Dictionary', 'Array'}
+        return None if stripped_type in primitive_types else stripped_type
 
     def _extract_endpoints(self) -> Dict[str, List[str]]:
         """Extract REST and WebSocket endpoints from documentation"""

@@ -1,6 +1,7 @@
 import os
 import glob
 import logging
+import re
 from typing import Dict, Optional
 
 logger = logging.getLogger('APIDocAnalyzer')
@@ -20,8 +21,14 @@ class SwiftFileFinder:
         logger.info(f"📂 Loading Swift files from {self.root_folder}")
         try:
             # Use glob to recursively find all .swift files
-            swift_files = glob.glob(os.path.join(self.root_folder, '**/*.swift'), recursive=True)
+            pattern = os.path.join(self.root_folder, '**/*.swift')
+            logger.info(f"  🔍 Searching with pattern: {pattern}")
+            swift_files = glob.glob(pattern, recursive=True)
             logger.info(f"  📄 Found {len(swift_files)} Swift files")
+
+            # Debug: Print all found files
+            for file in swift_files:
+                logger.info(f"    📄 Found file: {file}")
 
             for file_path in swift_files:
                 try:
@@ -56,7 +63,8 @@ class SwiftFileFinder:
         search_terms = [
             f"struct {model_name}",
             f"class {model_name}",
-            f"protocol {model_name}"
+            f"protocol {model_name}",
+            f"enum {model_name}"
         ]
 
         for file_path, content in self.swift_files.items():
@@ -72,7 +80,7 @@ class SwiftFileFinder:
                         brace_count = 0
                         end_idx = 0
                         in_implementation = False
-                        
+
                         for i, char in enumerate(code):
                             if char == '{':
                                 brace_count += 1
@@ -82,9 +90,9 @@ class SwiftFileFinder:
                                 if brace_count == 0 and in_implementation:
                                     end_idx = i + 1
                                     break
-                        
+
                         if end_idx > 0:
                             implementation = code[:end_idx]
                             return implementation, file_path
 
-        return None, None 
+        return None, None

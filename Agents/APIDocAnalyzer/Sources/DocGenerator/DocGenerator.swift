@@ -143,6 +143,19 @@ class DocumentationGenerator {
         let inventoryData = try Data(contentsOf: URL(fileURLWithPath: inventoryPath))
         self.inventory = try JSONDecoder().decode(APIInventory.self, from: inventoryData)
 
+        print("📝 Found \(inventory.models.count) models in inventory")
+        print("🔍 Looking for Event model...")
+        
+        // Debug: Print all model names
+        let modelNames = inventory.models.map { $0.name }
+        print("📋 All models: \(modelNames.joined(separator: ", "))")
+        
+        if let eventModel = inventory.models.first(where: { $0.name == "Event" }) {
+            print("✅ Found Event model at path: \(eventModel.path)")
+        } else {
+            print("❌ Event model not found in inventory")
+        }
+
         // Load Sportradar documentation
         let docData = try Data(contentsOf: URL(fileURLWithPath: docPath))
         self.sportradarDoc = try JSONDecoder().decode(SportradarDoc.self, from: docData)
@@ -151,6 +164,9 @@ class DocumentationGenerator {
         for model in inventory.models {
             modelLinks[model.name] = "#\(model.name.lowercased())"
         }
+        
+        // Debug: Print all model links
+        print("🔗 Model links created: \(modelLinks.keys.joined(separator: ", "))")
     }
 
     func generateMarkdown() -> String {
