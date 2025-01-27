@@ -1,12 +1,10 @@
 import os
 import json
-import logging
 import subprocess
 from pathlib import Path
 from typing import Dict, List, Optional, Set, Tuple
 from dataclasses import dataclass
-
-logger = logging.getLogger('APIDocAnalyzer')
+from logger_config import setup_logger
 
 @dataclass
 class SwiftProperty:
@@ -21,6 +19,7 @@ class SwiftProperty:
 class SwiftParser:
     def __init__(self):
         """Initialize the Swift parser"""
+        self.logger = setup_logger('APIDocAnalyzer.parser')
         self._script_dir = Path(os.path.dirname(os.path.abspath(__file__)))
         self._swift_parser_path = self._script_dir / '.build/debug/ModelParser'
 
@@ -30,7 +29,7 @@ class SwiftParser:
 
     def _build_swift_parser(self):
         """Build the Swift parser executable"""
-        logger.info("🔨 Building Swift parser...")
+        self.logger.info("Building Swift parser...")
         try:
             result = subprocess.run(
                 ['swift', 'build'],
@@ -39,16 +38,16 @@ class SwiftParser:
                 text=True
             )
             if result.returncode != 0:
-                logger.error(f"❌ Failed to build Swift parser: {result.stderr}")
+                self.logger.error(f"Failed to build Swift parser: {result.stderr}")
                 raise RuntimeError("Failed to build Swift parser")
-            logger.info("✅ Swift parser built successfully")
+            self.logger.info("Swift parser built successfully")
         except Exception as e:
-            logger.error(f"❌ Error building Swift parser: {str(e)}")
+            self.logger.error(f"Error building Swift parser: {str(e)}")
             raise
 
     def parse_properties(self, file_path: str, type_name: str) -> List[SwiftProperty]:
         """Parse properties from a Swift file using the Swift parser"""
-        logger.info(f"🔍 Parsing properties for {type_name} in {file_path}")
+        self.logger.debug(f"Parsing properties for {type_name} in {file_path}")
 
         try:
             # Run the Swift parser
@@ -59,13 +58,13 @@ class SwiftParser:
             )
 
             if result.returncode != 0:
-                logger.error(f"❌ Swift parser failed: {result.stderr}")
+                self.logger.error(f"Swift parser failed: {result.stderr}")
                 return []
 
             # Parse the JSON output
             try:
                 type_info = json.loads(result.stdout)
-                logger.debug(f"📋 Swift parser output: {type_info}")
+                self.logger.debug(f"Swift parser output: {type_info}")
 
                 # Convert the Swift parser output to SwiftProperty objects
                 properties = []
@@ -82,16 +81,16 @@ class SwiftParser:
                 return properties
 
             except json.JSONDecodeError as e:
-                logger.error(f"❌ Error parsing Swift parser output: {str(e)}")
-                logger.debug(f"Raw output: {result.stdout}")
+                self.logger.error(f"Error parsing Swift parser output: {str(e)}")
+                self.logger.debug(f"Raw output: {result.stdout}")
                 return []
 
         except Exception as e:
-            logger.error(f"❌ Error running Swift parser: {str(e)}")
+            self.logger.error(f"Error running Swift parser: {str(e)}")
             return []
 
     def properties_to_dict(self, properties: List[SwiftProperty]) -> Dict:
-        """Convert properties to a dictionary format"""
+        """Convert properties to a dictionary format matching the DocGenerator structure"""
         result = {
             'properties': [],
             'relationships': []
@@ -107,24 +106,22 @@ class SwiftParser:
             if prop.is_optional:
                 prop_type = f"{prop_type}?"
 
-            # Add property info
-            prop_info = {
+            # Add property info as a flat object
+            result['properties'].append({
                 'name': prop.name,
-                'type': prop_type,
-                'description': f"The {prop.name} of the model"  # Basic description
-            }
-            result['properties'].append(prop_info)
+                'type': prop_type
+            })
 
             # Track relationships (custom types)
             base_type = prop.type
-            if base_type not in {'String', 'Int', 'Double', 'Bool', 'Date', 'Data'}:
+            if base_type not in {'String', 'Int', 'Double', 'Bool', 'Date', 'Data', 'Dictionary', 'Array', 'Any', 'CodingKeys', 'AnyPublisher', 'Error', 'Data', 'Date', 'Void'}:
                 result['relationships'].append({
                     'source_property': prop.name,
                     'target_type': base_type
                 })
 
             # If it's a dictionary with a custom value type, track that relationship too
-            if prop.is_dictionary and prop.value_type not in {'String', 'Int', 'Double', 'Bool', 'Date', 'Data'}:
+            if prop.is_dictionary and prop.value_type not in {'String', 'Int', 'Double', 'Bool', 'Date', 'Data', 'Dictionary', 'Array', 'Any', 'CodingKeys', 'AnyPublisher', 'Error', 'Data', 'Date', 'Void'}:
                 result['relationships'].append({
                     'source_property': f"{prop.name} values",
                     'target_type': prop.value_type

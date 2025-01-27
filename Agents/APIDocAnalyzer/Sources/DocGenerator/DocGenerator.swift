@@ -3,30 +3,24 @@ import Foundation
 // MARK: - Data Structures
 struct APIInventory: Codable {
     let models: [Model]
-    let relationships: [Relationship]
     let endpoints: Endpoints
 }
 
 struct Model: Codable {
     let name: String
     let path: String
-    let properties: [String: PropertyDetails]
-    let relationships: [Relationship]?
+    let properties: [Property]
+    let relationships: [Relationship]
 }
 
-struct PropertyDetails: Codable {
+struct Property: Codable {
+    let name: String
     let type: String
-    let description: String?
 }
 
 struct Relationship: Codable {
-    let source: String?
-    let target: String?
-    let target_type: String?  // Some relationships might use target_type instead of target
-
-    var targetModel: String {
-        return target_type ?? target ?? ""
-    }
+    let source_property: String
+    let target_type: String
 }
 
 struct Endpoints: Codable {
@@ -293,22 +287,18 @@ class DocumentationGenerator {
         var output = "### \(model.name)\n\n"
 
         output += "**Properties:**\n\n"
-        output += "| Name | Type | Description |\n"
-        output += "|------|------|-------------|\n"
+        output += "| Name | Type |\n"
+        output += "|------|------|\n"
 
-        for (name, details) in model.properties {
-            var typeString = details.type
-            if let linkedType = modelLinks[details.type] {
-                typeString = "[\(details.type)](\(linkedType))"
-            }
-            let description = details.description ?? "No description available"
-            output += "| \(name) | \(typeString) | \(description) |\n"
+        for property in model.properties {
+            let typeString = property.type
+            output += "| \(property.name) | \(typeString) |\n"
         }
 
-        if let relationships = model.relationships, !relationships.isEmpty {
+        if !model.relationships.isEmpty {
             output += "\n**Related Models:**\n"
-            for relationship in relationships {
-                let targetModel = relationship.targetModel
+            for relationship in model.relationships {
+                let targetModel = relationship.target_type
                 if !targetModel.isEmpty, let targetLink = modelLinks[targetModel] {
                     output += "- [\(targetModel)](\(targetLink))\n"
                 }

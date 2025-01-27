@@ -25,19 +25,19 @@ class TypeVisitor: SyntaxVisitor {
     var targetTypeName: String
     var currentTypeInfo: TypeInfo?
     var isVerbose: Bool
-    
+
     init(targetTypeName: String, isVerbose: Bool) {
         self.targetTypeName = targetTypeName
         self.isVerbose = isVerbose
         super.init(viewMode: .sourceAccurate)
     }
-    
+
     private func debug(_ message: String) {
         if isVerbose {
             print("DEBUG: " + message)
         }
     }
-    
+
     override func visit(_ node: StructDeclSyntax) -> SyntaxVisitorContinueKind {
         debug("📄 Found struct: \(node.name.text)")
         if node.name.text == targetTypeName {
@@ -58,7 +58,7 @@ class TypeVisitor: SyntaxVisitor {
         }
         return .skipChildren
     }
-    
+
     override func visit(_ node: ClassDeclSyntax) -> SyntaxVisitorContinueKind {
         debug("📄 Found class: \(node.name.text)")
         if node.name.text == targetTypeName {
@@ -85,7 +85,7 @@ class TypeVisitor: SyntaxVisitor {
         if node.name.text == targetTypeName {
             debug("✅ Found matching enum: \(targetTypeName)")
             var properties: [Property] = []
-            
+
             // Process enum cases
             for member in node.memberBlock.members {
                 if let caseDecl = member.decl.as(EnumCaseDeclSyntax.self) {
@@ -93,19 +93,18 @@ class TypeVisitor: SyntaxVisitor {
                     for element in caseDecl.elements {
                         let caseName = element.name.text
                         debug("    🔍 Processing case: \(caseName)")
-                        
+
                         // Handle associated values if present
                         var associatedValues: [String]? = nil
                         if let parameterClause = element.parameterClause {
                             associatedValues = []
                             for parameter in parameterClause.parameters {
-                                if let type = parameter.type {
-                                    associatedValues?.append(type.description.trimmingCharacters(in: .whitespaces))
-                                }
+                                let typeString = parameter.type.description.trimmingCharacters(in: .whitespaces)
+                                associatedValues?.append(typeString)
                             }
                             debug("      📦 Associated values: \(associatedValues ?? [])")
                         }
-                        
+
                         let property = Property(
                             name: caseName,
                             type: targetTypeName, // The enum type itself
@@ -121,7 +120,7 @@ class TypeVisitor: SyntaxVisitor {
                         properties.append(property)
                     }
                 }
-                
+
                 // Also process any regular properties (like computed properties)
                 if let varDecl = member.decl.as(VariableDeclSyntax.self) {
                     debug("  📝 Processing variable declaration")
@@ -131,14 +130,14 @@ class TypeVisitor: SyntaxVisitor {
                     }
                 }
             }
-            
+
             currentTypeInfo = TypeInfo(name: targetTypeName, kind: "enum", properties: properties)
             debug("✨ Finished processing enum with \(properties.count) cases/properties")
             return .skipChildren
         }
         return .skipChildren
     }
-    
+
     private func processVariableDecl(_ varDecl: VariableDeclSyntax) -> Property? {
         guard let binding = varDecl.bindings.first,
               let pattern = binding.pattern.as(IdentifierPatternSyntax.self),
@@ -146,7 +145,7 @@ class TypeVisitor: SyntaxVisitor {
             debug("    ⚠️ Skipping invalid variable declaration")
             return nil
         }
-        
+
         let propertyName = pattern.identifier.text
         debug("    🔍 Analyzing type for property: \(propertyName)")
         let (baseType, isOptional, isArray, isDictionary, keyType, valueType) = analyzeType(type)
@@ -159,7 +158,7 @@ class TypeVisitor: SyntaxVisitor {
             debug("      - Key type: \(keyType ?? "nil")")
             debug("      - Value type: \(valueType ?? "nil")")
         }
-        
+
         return Property(
             name: propertyName,
             type: baseType,
@@ -172,7 +171,7 @@ class TypeVisitor: SyntaxVisitor {
             associatedValues: nil
         )
     }
-    
+
     private func analyzeType(_ type: TypeSyntax) -> (String, Bool, Bool, Bool, String?, String?) {
         var isOptional = false
         var isArray = false
@@ -180,16 +179,16 @@ class TypeVisitor: SyntaxVisitor {
         var keyType: String? = nil
         var valueType: String? = nil
         var baseType = type.description.trimmingCharacters(in: .whitespaces)
-        
+
         debug("      Raw type: \(baseType)")
-        
+
         // Check for Optional
         if baseType.hasSuffix("?") {
             isOptional = true
             baseType = String(baseType.dropLast())
             debug("      Detected optional type")
         }
-        
+
         // Check for Array
         if baseType.hasPrefix("[") && baseType.hasSuffix("]") {
             if baseType.contains(":") {
@@ -208,7 +207,7 @@ class TypeVisitor: SyntaxVisitor {
                 debug("      Detected array type: [\(baseType)]")
             }
         }
-        
+
         return (baseType, isOptional, isArray, isDictionary, keyType, valueType)
     }
 }
@@ -244,12 +243,12 @@ do {
     let fileContents = try String(contentsOfFile: filePath, encoding: .utf8)
     if isVerbose { print("📝 Parsing source file...") }
     let sourceFile = Parser.parse(source: fileContents)
-    
+
     if isVerbose { print("🔍 Creating visitor...") }
     let visitor = TypeVisitor(targetTypeName: typeName, isVerbose: isVerbose)
     if isVerbose { print("🚶‍♂️ Walking syntax tree...") }
     visitor.walk(sourceFile)
-    
+
     if let typeInfo = visitor.currentTypeInfo {
         if isVerbose { print("✅ Type found, encoding to JSON...") }
         let encoder = JSONEncoder()
