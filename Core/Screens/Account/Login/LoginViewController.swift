@@ -153,7 +153,7 @@ class LoginViewController: UIViewController {
         self.dismissButton.titleLabel?.font = AppFont.with(type: AppFont.AppFontType.semibold, size: 17)
         self.dismissButton.setTitle(localized("close"), for: .normal)
         
-        self.logoImageView.image = UIImage(named: "brand_icon_variation_1")
+        self.logoImageView.image = UIImage(named: "brand_icon_variation_new")
         self.logoImageView.sizeToFit()
         
         self.loginLabel.font = AppFont.with(type: AppFont.AppFontType.bold, size: 24)
@@ -340,11 +340,14 @@ class LoginViewController: UIViewController {
                         RegisterStep(forms: [.terms, .promoCodes])
                     ]
         }
+        
+        let hasLegalAgeWarning = TargetVariables.features.contains(.legalAgeWarning) ? true : false
 
         let viewModel = SteppedRegistrationViewModel(registerSteps: registerSteps,
                                                      userRegisterEnvelop: userRegisterEnvelopValue,
                                                      serviceProvider: Env.servicesProvider,
-                                                     userRegisterEnvelopUpdater: userRegisterEnvelopUpdater)
+                                                     userRegisterEnvelopUpdater: userRegisterEnvelopUpdater,
+                                                     hasLegalAgeWarning: hasLegalAgeWarning)
         
         viewModel.hasReferralCode = self.referralCode != nil ? true : false
 

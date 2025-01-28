@@ -93,14 +93,20 @@ public class SteppedRegistrationViewModel {
     var confirmationCodeFilled: String?
     
     public var hasReferralCode: Bool = false
+    
+    public var hasLegalAgeWarning: Bool
 
     private var cancellables = Set<AnyCancellable>()
+    
 
     public init(registerSteps: [RegisterStep]? = nil,
                 currentStep: Int? = nil,
                 userRegisterEnvelop: UserRegisterEnvelop,
                 serviceProvider: ServicesProviderClient,
-                userRegisterEnvelopUpdater: UserRegisterEnvelopUpdater) {
+                userRegisterEnvelopUpdater: UserRegisterEnvelopUpdater,
+                hasLegalAgeWarning: Bool = false) {
+        
+        self.hasLegalAgeWarning = hasLegalAgeWarning
 
         if let registerSteps {
             self.registerSteps = registerSteps
@@ -257,6 +263,9 @@ public class SteppedRegistrationViewController: UIViewController {
     public var sendRegisterEventAction: ((String) -> Void)?
 
     private lazy var topSafeAreaView: UIView = Self.createTopSafeAreaView()
+    
+    private lazy var bannerImageView: UIImageView = Self.createBannerImageView()
+    private lazy var legalAgeImageView: UIImageView = Self.createLegalAgeImageView()
 
     private lazy var headerBaseView: UIView = Self.createHeaderBaseView()
     private lazy var backButton: UIButton = Self.createBackButton()
@@ -281,6 +290,10 @@ public class SteppedRegistrationViewController: UIViewController {
 
     private lazy var loadingBaseView: UIView = Self.createLoadingBaseView()
     private lazy var loadingView: UIActivityIndicatorView = Self.createLoadingView()
+    
+    // Constraints
+    private lazy var headerViewTopToBannerConstraint: NSLayoutConstraint = Self.createHeaderViewTopToBannerConstraint()
+    private lazy var headerViewTopToScreenConstraint: NSLayoutConstraint = Self.createHeaderViewTopToScreenConstraint()
 
     private let viewModel: SteppedRegistrationViewModel
 
@@ -342,6 +355,15 @@ public class SteppedRegistrationViewController: UIViewController {
 
         self.setupSubviews()
         self.setupWithTheme()
+        
+        if self.viewModel.hasLegalAgeWarning {
+            self.headerViewTopToScreenConstraint.isActive = false
+            self.headerViewTopToBannerConstraint.isActive = true
+        }
+        else {
+            self.headerViewTopToScreenConstraint.isActive = true
+            self.headerViewTopToBannerConstraint.isActive = false
+        }
 
         self.viewModel.progressPercentage
             .withPrevious()
@@ -710,6 +732,22 @@ public extension SteppedRegistrationViewController {
     private static var footerHeight: CGFloat {
         76
     }
+    
+    private static func createBannerImageView() -> UIImageView {
+        let imageView = UIImageView()
+        imageView.translatesAutoresizingMaskIntoConstraints = false
+        imageView.image = UIImage(named: "banner_register", in: Bundle.module, compatibleWith: nil)
+        imageView.contentMode = .scaleAspectFit
+        return imageView
+    }
+    
+    private static func createLegalAgeImageView() -> UIImageView {
+        let imageView = UIImageView()
+        imageView.translatesAutoresizingMaskIntoConstraints = false
+        imageView.image = UIImage(named: "minus_18_icon", in: Bundle.module, compatibleWith: nil)
+        imageView.contentMode = .scaleAspectFit
+        return imageView
+    }
 
     private static func createHeaderBaseView() -> UIView {
         let view = UIView()
@@ -837,6 +875,17 @@ public extension SteppedRegistrationViewController {
         view.clipsToBounds = false
         return view
     }
+    
+    // Constraints
+    private static func createHeaderViewTopToBannerConstraint() -> NSLayoutConstraint {
+        let constraint = NSLayoutConstraint()
+        return constraint
+    }
+    
+    private static func createHeaderViewTopToScreenConstraint() -> NSLayoutConstraint {
+        let constraint = NSLayoutConstraint()
+        return constraint
+    }
 
     private func setupSubviews() {
 
@@ -853,6 +902,10 @@ public extension SteppedRegistrationViewController {
 
     private func initConstraints() {
         self.view.addSubview(self.topSafeAreaView)
+        
+        self.view.addSubview(self.bannerImageView)
+        
+        self.bannerImageView.addSubview(self.legalAgeImageView)
 
         self.view.addSubview(self.headerBaseView)
         self.headerBaseView.addSubview(self.backButton)
@@ -883,8 +936,18 @@ public extension SteppedRegistrationViewController {
             self.topSafeAreaView.trailingAnchor.constraint(equalTo: self.view.trailingAnchor),
             self.topSafeAreaView.topAnchor.constraint(equalTo: self.view.topAnchor),
             self.topSafeAreaView.bottomAnchor.constraint(equalTo: self.view.safeAreaLayoutGuide.topAnchor),
+            
+            self.bannerImageView.leadingAnchor.constraint(equalTo: self.view.leadingAnchor),
+            self.bannerImageView.trailingAnchor.constraint(equalTo: self.view.trailingAnchor),
+            self.bannerImageView.topAnchor.constraint(equalTo: self.view.safeAreaLayoutGuide.topAnchor),
+            self.bannerImageView.heightAnchor.constraint(equalToConstant: 70),
+            
+            self.legalAgeImageView.trailingAnchor.constraint(equalTo: self.bannerImageView.trailingAnchor, constant: -5),
+            self.legalAgeImageView.centerYAnchor.constraint(equalTo: self.bannerImageView.centerYAnchor),
+            self.legalAgeImageView.heightAnchor.constraint(equalToConstant: 60),
+            self.legalAgeImageView.widthAnchor.constraint(equalTo: self.bannerImageView.heightAnchor),
 
-            self.headerBaseView.topAnchor.constraint(equalTo: self.view.safeAreaLayoutGuide.topAnchor),
+//            self.headerBaseView.topAnchor.constraint(equalTo: self.view.safeAreaLayoutGuide.topAnchor),
             self.headerBaseView.leadingAnchor.constraint(equalTo: self.view.leadingAnchor),
             self.headerBaseView.trailingAnchor.constraint(equalTo: self.view.trailingAnchor),
             self.headerBaseView.heightAnchor.constraint(equalToConstant: Self.headerHeight),
@@ -960,8 +1023,26 @@ public extension SteppedRegistrationViewController {
             self.progressEndImageView.widthAnchor.constraint(equalToConstant: 23),
             self.progressEndImageView.heightAnchor.constraint(equalToConstant: 23),
         ])
+        
+        // Constraints
+        self.headerViewTopToScreenConstraint = NSLayoutConstraint(item: self.headerBaseView,
+                                                                  attribute: .top,
+                                                                    relatedBy: .equal,
+                                                                  toItem: self.view.safeAreaLayoutGuide,
+                                                                  attribute: .top,
+                                                                    multiplier: 1,
+                                                                    constant: 0)
+        self.headerViewTopToScreenConstraint.isActive = true
+        
+        self.headerViewTopToBannerConstraint = NSLayoutConstraint(item: self.headerBaseView,
+                                                                  attribute: .top,
+                                                                    relatedBy: .equal,
+                                                                  toItem: self.bannerImageView,
+                                                                  attribute: .bottom,
+                                                                    multiplier: 1,
+                                                                    constant: 0)
+        self.headerViewTopToBannerConstraint.isActive = false
     }
-
 }
 
 class TallProgressBarView: UIProgressView {
