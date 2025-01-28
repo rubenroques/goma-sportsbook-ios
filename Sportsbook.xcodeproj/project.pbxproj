@@ -8037,6 +8037,24 @@
 		CE16F28E2D417EC9000BEF9F /* ChipsTypeViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE16F2872D417EC9000BEF9F /* ChipsTypeViewModel.swift */; };
 		CE16F28F2D417EC9000BEF9F /* ChipsTypeViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE16F2872D417EC9000BEF9F /* ChipsTypeViewModel.swift */; };
 		CE16F2902D417EC9000BEF9F /* ChipsTypeViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE16F2872D417EC9000BEF9F /* ChipsTypeViewModel.swift */; };
+		CE18A9E82D4908A600AC48AA /* SimpleCompetitionDetailsViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE18A9E62D4908A600AC48AA /* SimpleCompetitionDetailsViewModel.swift */; };
+		CE18A9E92D4908A600AC48AA /* SimpleCompetitionDetailsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE18A9E52D4908A600AC48AA /* SimpleCompetitionDetailsViewController.swift */; };
+		CE18A9EA2D4908A600AC48AA /* SimpleCompetitionDetailsViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE18A9E62D4908A600AC48AA /* SimpleCompetitionDetailsViewModel.swift */; };
+		CE18A9EB2D4908A600AC48AA /* SimpleCompetitionDetailsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE18A9E52D4908A600AC48AA /* SimpleCompetitionDetailsViewController.swift */; };
+		CE18A9EC2D4908A600AC48AA /* SimpleCompetitionDetailsViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE18A9E62D4908A600AC48AA /* SimpleCompetitionDetailsViewModel.swift */; };
+		CE18A9ED2D4908A600AC48AA /* SimpleCompetitionDetailsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE18A9E52D4908A600AC48AA /* SimpleCompetitionDetailsViewController.swift */; };
+		CE18A9EE2D4908A600AC48AA /* SimpleCompetitionDetailsViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE18A9E62D4908A600AC48AA /* SimpleCompetitionDetailsViewModel.swift */; };
+		CE18A9EF2D4908A600AC48AA /* SimpleCompetitionDetailsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE18A9E52D4908A600AC48AA /* SimpleCompetitionDetailsViewController.swift */; };
+		CE18A9F02D4908A600AC48AA /* SimpleCompetitionDetailsViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE18A9E62D4908A600AC48AA /* SimpleCompetitionDetailsViewModel.swift */; };
+		CE18A9F12D4908A600AC48AA /* SimpleCompetitionDetailsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE18A9E52D4908A600AC48AA /* SimpleCompetitionDetailsViewController.swift */; };
+		CE18A9F22D4908A600AC48AA /* SimpleCompetitionDetailsViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE18A9E62D4908A600AC48AA /* SimpleCompetitionDetailsViewModel.swift */; };
+		CE18A9F32D4908A600AC48AA /* SimpleCompetitionDetailsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE18A9E52D4908A600AC48AA /* SimpleCompetitionDetailsViewController.swift */; };
+		CE18A9F42D4908A600AC48AA /* SimpleCompetitionDetailsViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE18A9E62D4908A600AC48AA /* SimpleCompetitionDetailsViewModel.swift */; };
+		CE18A9F52D4908A600AC48AA /* SimpleCompetitionDetailsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE18A9E52D4908A600AC48AA /* SimpleCompetitionDetailsViewController.swift */; };
+		CE18A9F62D4908A600AC48AA /* SimpleCompetitionDetailsViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE18A9E62D4908A600AC48AA /* SimpleCompetitionDetailsViewModel.swift */; };
+		CE18A9F72D4908A600AC48AA /* SimpleCompetitionDetailsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE18A9E52D4908A600AC48AA /* SimpleCompetitionDetailsViewController.swift */; };
+		CE18A9F82D4908A600AC48AA /* SimpleCompetitionDetailsViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE18A9E62D4908A600AC48AA /* SimpleCompetitionDetailsViewModel.swift */; };
+		CE18A9F92D4908A600AC48AA /* SimpleCompetitionDetailsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE18A9E52D4908A600AC48AA /* SimpleCompetitionDetailsViewController.swift */; };
 		CE21C3512CEB96490012CABA /* cashbackVideo.mp4 in Resources */ = {isa = PBXBuildFile; fileRef = CE21C3502CEB96490012CABA /* cashbackVideo.mp4 */; };
 		CE21C3522CEB96490012CABA /* cashbackVideo.mp4 in Resources */ = {isa = PBXBuildFile; fileRef = CE21C3502CEB96490012CABA /* cashbackVideo.mp4 */; };
 		CE21C3532CEB96490012CABA /* cashbackVideo.mp4 in Resources */ = {isa = PBXBuildFile; fileRef = CE21C3502CEB96490012CABA /* cashbackVideo.mp4 */; };
@@ -9061,6 +9079,8 @@
 		CE12A4C72D3135200022BDF7 /* SportRadar-PROD-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "SportRadar-PROD-Info.plist"; sourceTree = "<group>"; };
 		CE16F27D2D417EAC000BEF9F /* ChipsTypeView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChipsTypeView.swift; sourceTree = "<group>"; };
 		CE16F2872D417EC9000BEF9F /* ChipsTypeViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChipsTypeViewModel.swift; sourceTree = "<group>"; };
+		CE18A9E52D4908A600AC48AA /* SimpleCompetitionDetailsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SimpleCompetitionDetailsViewController.swift; sourceTree = "<group>"; };
+		CE18A9E62D4908A600AC48AA /* SimpleCompetitionDetailsViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SimpleCompetitionDetailsViewModel.swift; sourceTree = "<group>"; };
 		CE21C3502CEB96490012CABA /* cashbackVideo.mp4 */ = {isa = PBXFileReference; lastKnownFileType = file; path = cashbackVideo.mp4; sourceTree = "<group>"; };
 		CE25A5FC2D42940E00B748D6 /* ChipCollectionViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChipCollectionViewCell.swift; sourceTree = "<group>"; };
 		CE2E0F122D3995D100488EF5 /* replay_sucess.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = replay_sucess.json; sourceTree = "<group>"; };
@@ -10535,6 +10555,7 @@
 				4503E79827D0E85D00077CD2 /* CompetitionDetails */,
 				454F0A7B27C4146F003123DF /* OutrightMarketDetails */,
 				45ECD7742A9001E200492CB9 /* TopCompetitionDetails */,
+				CE18A9E72D4908A600AC48AA /* SimpleCompetitionDetails */,
 				451B0A35286AFD7300005FA5 /* Support */,
 				454E090627EB82F200391560 /* Social */,
 				4566339429DDD42F00C4F1A9 /* AnonymousSideMenu */,
@@ -12896,6 +12917,15 @@
 			path = ChipsTypeView;
 			sourceTree = "<group>";
 		};
+		CE18A9E72D4908A600AC48AA /* SimpleCompetitionDetails */ = {
+			isa = PBXGroup;
+			children = (
+				CE18A9E52D4908A600AC48AA /* SimpleCompetitionDetailsViewController.swift */,
+				CE18A9E62D4908A600AC48AA /* SimpleCompetitionDetailsViewModel.swift */,
+			);
+			path = SimpleCompetitionDetails;
+			sourceTree = "<group>";
+		};
 		CE21C34F2CEB963D0012CABA /* Videos */ = {
 			isa = PBXGroup;
 			children = (
@@ -15050,6 +15080,8 @@
 				4542DFE12C009E340033BFB8 /* TabularScrollView.swift in Sources */,
 				450B785728F58574009229E3 /* CasinoGameDetailViewModel.swift in Sources */,
 				655E200C2B28A14700C95337 /* TextSectionView.swift in Sources */,
+				CE18A9EA2D4908A600AC48AA /* SimpleCompetitionDetailsViewModel.swift in Sources */,
+				CE18A9EB2D4908A600AC48AA /* SimpleCompetitionDetailsViewController.swift in Sources */,
 				A9BA04072A308CCA007880FC /* ExtraDocsViewController.swift in Sources */,
 				450B785828F58574009229E3 /* PopUpPromotionView.swift in Sources */,
 				450B785928F58574009229E3 /* ModalTransitionModalTransitioningDelegate.swift in Sources */,
@@ -16330,6 +16362,8 @@
 				F4DE47AB288F620000CF30AA /* FilterHistoryViewModel.swift in Sources */,
 				457CBB1B282D27D000ED0F00 /* MainMarketType.swift in Sources */,
 				457CBB1C282D27D000ED0F00 /* Colors.swift in Sources */,
+				CE18A9F42D4908A600AC48AA /* SimpleCompetitionDetailsViewModel.swift in Sources */,
+				CE18A9F52D4908A600AC48AA /* SimpleCompetitionDetailsViewController.swift in Sources */,
 				A90FB7F429B0C53900D08A7C /* TipsControlViewController.swift in Sources */,
 				A9B946C228C0F7F00091296E /* FeaturedTipCollectionViewModel.swift in Sources */,
 				457CBB1D282D27D000ED0F00 /* CashoutAggregator.swift in Sources */,
@@ -17277,6 +17311,8 @@
 				451590262CC1BCB9008EF4C3 /* ProChoiceHighlightTableViewCell.swift in Sources */,
 				457CBE56282D2CD100ED0F00 /* Endpoint.swift in Sources */,
 				A93FE2272A45A8B9006A6907 /* CashbackBalanceView.swift in Sources */,
+				CE18A9F22D4908A600AC48AA /* SimpleCompetitionDetailsViewModel.swift in Sources */,
+				CE18A9F32D4908A600AC48AA /* SimpleCompetitionDetailsViewController.swift in Sources */,
 				4521F0942CC55BC200C2E4FD /* MarketWidgetContainerTableViewCell.swift in Sources */,
 				45CE914F2A2F3B4B00BB3AB7 /* StoriesFullScreenViewController.swift in Sources */,
 				457CBE57282D2CD100ED0F00 /* OutrightMarketDetailsStore.swift in Sources */,
@@ -17330,6 +17366,8 @@
 				4542DFE22C009E340033BFB8 /* TabularScrollView.swift in Sources */,
 				F4A62A97285946AD007B46C5 /* CasinoGameDetailViewModel.swift in Sources */,
 				655E200D2B28A14700C95337 /* TextSectionView.swift in Sources */,
+				CE18A9F62D4908A600AC48AA /* SimpleCompetitionDetailsViewModel.swift in Sources */,
+				CE18A9F72D4908A600AC48AA /* SimpleCompetitionDetailsViewController.swift in Sources */,
 				A9BA04082A308CCA007880FC /* ExtraDocsViewController.swift in Sources */,
 				4589C784282024E400243547 /* PopUpPromotionView.swift in Sources */,
 				45C10F4828772DA700037BBE /* ModalTransitionModalTransitioningDelegate.swift in Sources */,
@@ -18051,6 +18089,8 @@
 				4542DFDF2C009E340033BFB8 /* TabularScrollView.swift in Sources */,
 				45A33067298976BA008181E9 /* CasinoGameDetailViewModel.swift in Sources */,
 				655E200A2B28A14700C95337 /* TextSectionView.swift in Sources */,
+				CE18A9F02D4908A600AC48AA /* SimpleCompetitionDetailsViewModel.swift in Sources */,
+				CE18A9F12D4908A600AC48AA /* SimpleCompetitionDetailsViewController.swift in Sources */,
 				A9BA04062A308CCA007880FC /* ExtraDocsViewController.swift in Sources */,
 				45A33068298976BA008181E9 /* PopUpPromotionView.swift in Sources */,
 				45A33069298976BA008181E9 /* ModalTransitionModalTransitioningDelegate.swift in Sources */,
@@ -18772,6 +18812,8 @@
 				A96FAEDB2981912100A0751F /* UploadDocuments.swift in Sources */,
 				45A6BBCC28246A7400D9B416 /* BannerMatchCollectionViewCell.swift in Sources */,
 				45CE4DD32B04DDB8005C2414 /* SecundaryMarketDetails.swift in Sources */,
+				CE18A9EE2D4908A600AC48AA /* SimpleCompetitionDetailsViewModel.swift in Sources */,
+				CE18A9EF2D4908A600AC48AA /* SimpleCompetitionDetailsViewController.swift in Sources */,
 				45A6BBCD28246A7400D9B416 /* FilterSliderCollapseView.swift in Sources */,
 				F4A62A98285946AD007B46C5 /* CasinoGameDetailViewModel.swift in Sources */,
 				45B9F98B2A1E564D00DA2B88 /* HomeTemplateParser.swift in Sources */,
@@ -19493,6 +19535,8 @@
 				4542DFE02C009E340033BFB8 /* TabularScrollView.swift in Sources */,
 				45F6BAF52AB3732C00C81DE1 /* CasinoGameDetailViewModel.swift in Sources */,
 				655E200B2B28A14700C95337 /* TextSectionView.swift in Sources */,
+				CE18A9F82D4908A600AC48AA /* SimpleCompetitionDetailsViewModel.swift in Sources */,
+				CE18A9F92D4908A600AC48AA /* SimpleCompetitionDetailsViewController.swift in Sources */,
 				45F6BAF62AB3732C00C81DE1 /* ExtraDocsViewController.swift in Sources */,
 				45F6BAF72AB3732C00C81DE1 /* PopUpPromotionView.swift in Sources */,
 				45F6BAF82AB3732C00C81DE1 /* ModalTransitionModalTransitioningDelegate.swift in Sources */,
@@ -20886,6 +20930,8 @@
 				451590202CC1BCB9008EF4C3 /* ProChoiceHighlightTableViewCell.swift in Sources */,
 				A9C342D628F9A74A0055360B /* CasinoGameDetailViewController.swift in Sources */,
 				A9C342D728F9A74A0055360B /* NibIdentifiable.swift in Sources */,
+				CE18A9E82D4908A600AC48AA /* SimpleCompetitionDetailsViewModel.swift in Sources */,
+				CE18A9E92D4908A600AC48AA /* SimpleCompetitionDetailsViewController.swift in Sources */,
 				4521F0952CC55BC200C2E4FD /* MarketWidgetContainerTableViewCell.swift in Sources */,
 				A9C342D928F9A74A0055360B /* GomaClientSettings.swift in Sources */,
 				A9C342DA28F9A74A0055360B /* ConversationDetailViewController.swift in Sources */,
@@ -20939,6 +20985,8 @@
 				CE12A14F2D31347E0022BDF7 /* TabularScrollView.swift in Sources */,
 				CE12A1502D31347E0022BDF7 /* CasinoGameDetailViewModel.swift in Sources */,
 				CE12A1512D31347E0022BDF7 /* TextSectionView.swift in Sources */,
+				CE18A9EC2D4908A600AC48AA /* SimpleCompetitionDetailsViewModel.swift in Sources */,
+				CE18A9ED2D4908A600AC48AA /* SimpleCompetitionDetailsViewController.swift in Sources */,
 				CE12A1522D31347E0022BDF7 /* ExtraDocsViewController.swift in Sources */,
 				CE12A1532D31347E0022BDF7 /* PopUpPromotionView.swift in Sources */,
 				CE12A1542D31347E0022BDF7 /* ModalTransitionModalTransitioningDelegate.swift in Sources */,

@@ -67,7 +67,7 @@ class PreLiveEventsViewController: UIViewController {
 
     private let footerInnerView = UIView(frame: .zero)
 
-    private var competitionsFiltersView: CompetitionsFiltersView = CompetitionsFiltersView()
+    private var competitionsFiltersView = CompetitionsFiltersView()
 
     var selectedTopCompetitionIndex: Int = 0
     var reachedTopCompetitionSection: Int = 0
@@ -846,9 +846,11 @@ class PreLiveEventsViewController: UIViewController {
     }
 
     private func openCompetitionsDetails(competitionsIds: [String], sport: Sport) {
-        let competitionDetailsViewModel = TopCompetitionDetailsViewModel(competitionsIds: competitionsIds, sport: sport)
-        let competitionDetailsViewController = TopCompetitionDetailsViewController(viewModel: competitionDetailsViewModel)
-        self.navigationController?.pushViewController(competitionDetailsViewController, animated: true)
+        if let competitionId = competitionsIds.first {
+            let competitionDetailsViewModel = SimpleCompetitionDetailsViewModel(competitionId: competitionId, sport: sport)
+            let competitionDetailsViewController = SimpleCompetitionDetailsViewController(viewModel: competitionDetailsViewModel)
+            self.navigationController?.pushViewController(competitionDetailsViewController, animated: true)
+        }
     }
 
     func setHighlightedTopCompetition(section: Int) {

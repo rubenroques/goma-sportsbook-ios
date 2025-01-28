@@ -112,5 +112,7 @@ iOSInjectionProject/
 fastlane/logs
 culprits.txt
 .vscode
+.vscode/
 Agents/APIDocAnalyzer/__pycache__
 Agents/APIDocAnalyzer/venv
+Scripts/APIDocAnalyzer/venv

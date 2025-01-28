@@ -1,15 +1,15 @@
 //
-//  CompetitionDetailsViewController.swift
+//  SimpleCompetitionDetailsViewController.swift
 //  Sportsbook
 //
-//  Created by Ruben Roques on 03/03/2022.
+//  Created by Ruben Roques on 19/03/2024.
 //
 
 import UIKit
 import Combine
 import OrderedCollections
 
-class CompetitionDetailsViewController: UIViewController {
+class SimpleCompetitionDetailsViewController: UIViewController {
 
     // MARK: - Public Properties
 
@@ -17,30 +17,41 @@ class CompetitionDetailsViewController: UIViewController {
     private lazy var topSafeAreaView: UIView = Self.createTopSafeAreaView()
     private lazy var navigationView: UIView = Self.createNavigationView()
     private lazy var backgroundGradientView: GradientView = Self.createBackgroundGradientView()
-
+    private lazy var backgroundImageView: UIImageView = Self.createBackgroundImageView()
+    
+    private lazy var titleStackView: UIStackView = Self.createTitleStackView()
     private lazy var titleLabel: UILabel = Self.createTitleLabel()
+    private lazy var countryFlagImageView: UIImageView = Self.createCountryFlagImageView()
     private lazy var backButton: UIButton = Self.createBackButton()
     private lazy var tableView: UITableView = Self.createTableView()
 
     private lazy var floatingShortcutsView: FloatingShortcutsView = Self.createFloatingShortcutsView()
-
+    
     private lazy var loadingBaseView: UIView = Self.createLoadingBaseView()
-    private lazy var loadingActivityIndicatorView: UIActivityIndicatorView = Self.createLoadingActivityIndicatorView()
+    private let loadingSpinnerViewController = LoadingSpinnerViewController()
 
     private lazy var accountValueView: UIView = Self.createAccountValueView()
     private lazy var accountPlusView: UIView = Self.createAccountPlusView()
     private lazy var accountPlusImageView: UIImageView = Self.createAccountPlusImageView()
     private lazy var accountValueLabel: UILabel = Self.createAccountValueLabel()
-
-    private var collapsedCompetitionsSections: Set<Int> = []
+    
     private var matchStatsViewModelForMatch: ((Match) -> MatchStatsViewModel?)?
 
-    private var viewModel: CompetitionDetailsViewModel
+    private var viewModel: SimpleCompetitionDetailsViewModel
     private var cancellables = Set<AnyCancellable>()
+    
+    var isFeaturedCompetition: Bool = false {
+        didSet {
+            self.backgroundGradientView.isHidden = isFeaturedCompetition
+            self.backgroundImageView.isHidden = !isFeaturedCompetition
+        }
+    }
 
     // MARK: - Lifetime and Cycle
-    init(viewModel: CompetitionDetailsViewModel) {
+    init(viewModel: SimpleCompetitionDetailsViewModel, isFeaturedCompetition: Bool = false) {
         self.viewModel = viewModel
+        self.isFeaturedCompetition = isFeaturedCompetition
+        
         super.init(nibName: nil, bundle: nil)
     }
 
@@ -54,16 +65,15 @@ class CompetitionDetailsViewController: UIViewController {
 
         self.setupSubviews()
         self.setupWithTheme()
+        
+        self.addChildViewController(self.loadingSpinnerViewController, toView: self.loadingBaseView)
 
         self.tableView.delegate = self
         self.tableView.dataSource = self
 
         self.tableView.register(MatchLineTableViewCell.nib, forCellReuseIdentifier: MatchLineTableViewCell.identifier)
-
         self.tableView.register(OutrightCompetitionLineTableViewCell.self, forCellReuseIdentifier: OutrightCompetitionLineTableViewCell.identifier)
         self.tableView.register(OutrightCompetitionLargeLineTableViewCell.self, forCellReuseIdentifier: OutrightCompetitionLargeLineTableViewCell.identifier)
-
-        self.tableView.register(TournamentTableViewHeader.nib, forHeaderFooterViewReuseIdentifier: TournamentTableViewHeader.identifier)
 
         self.backButton.addTarget(self, action: #selector(didTapBackButton), for: .primaryActionTriggered)
 
@@ -73,7 +83,7 @@ class CompetitionDetailsViewController: UIViewController {
         self.floatingShortcutsView.didTapChatButtonAction = { [weak self] in
             self?.didTapChatView()
         }
-
+        
         let accountValueTapGesture = UITapGestureRecognizer(target: self, action: #selector(didTapAccountValue))
         self.accountValueView.addGestureRecognizer(accountValueTapGesture)
         self.accountValueView.isHidden = true
@@ -81,13 +91,25 @@ class CompetitionDetailsViewController: UIViewController {
         self.showLoading()
 
         self.bind(toViewModel: self.viewModel)
+        
+        if isFeaturedCompetition {
+            if let featuredCompetitionBackground = Env.businessSettingsSocket.clientSettings.featuredCompetition?.pageDetailBackground {
+                if let url = URL(string: featuredCompetitionBackground) {
+                    self.backgroundImageView.kf.setImage(with: url)
+                }
+            }
+        }
     }
-
+    
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
 
         self.floatingShortcutsView.resetAnimations()
         self.navigationController?.interactivePopGestureRecognizer?.delegate = self
+        
+        if self.isRootModal {
+            self.backButton.setImage(UIImage(named: "arrow_close_icon"), for: .normal)
+        }
     }
 
     override func viewWillDisappear(_ animated: Bool) {
@@ -95,7 +117,7 @@ class CompetitionDetailsViewController: UIViewController {
 
         self.navigationController?.interactivePopGestureRecognizer?.delegate = nil
     }
-
+    
     // MARK: - Layout and Theme
     override func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {
         super.traitCollectionDidChange(previousTraitCollection)
@@ -129,12 +151,12 @@ class CompetitionDetailsViewController: UIViewController {
             self.backgroundGradientView.colors = []
             self.backgroundGradientView.backgroundColor = UIColor.App.backgroundPrimary
         }
-
+        
+        self.backgroundImageView.backgroundColor = .clear
     }
 
-
     // MARK: - Bindings
-    private func bind(toViewModel viewModel: CompetitionDetailsViewModel) {
+    private func bind(toViewModel viewModel: SimpleCompetitionDetailsViewModel) {
 
         Env.userSessionStore.userProfilePublisher
             .receive(on: DispatchQueue.main)
@@ -162,35 +184,7 @@ class CompetitionDetailsViewController: UIViewController {
             }
             .store(in: &cancellables)
 
-//        Env.userSessionStore.userBalanceWallet
-//            .compactMap({$0})
-//            .map(\.amount)
-//            .receive(on: DispatchQueue.main)
-//            .sink { [weak self] value in
-//                if let bonusWallet = Env.userSessionStore.userBonusBalanceWallet.value {
-//                    let accountValue = bonusWallet.amount + value
-//                    self?.accountValueLabel.text = CurrencyFormater.defaultFormat.string(from: NSNumber(value: accountValue)) ?? "-.--€"
-//
-//                }
-//                else {
-//                    self?.accountValueLabel.text = CurrencyFormater.defaultFormat.string(from: NSNumber(value: value)) ?? "-.--€"
-//                }
-//            }
-//            .store(in: &cancellables)
-//
-//        Env.userSessionStore.userBonusBalanceWallet
-//            .compactMap({$0})
-//            .map(\.amount)
-//            .receive(on: DispatchQueue.main)
-//            .sink { [weak self] value in
-//                if let currentWallet = Env.userSessionStore.userBalanceWallet.value {
-//                    let accountValue = currentWallet.amount + value
-//                    self?.accountValueLabel.text = CurrencyFormater.defaultFormat.string(from: NSNumber(value: accountValue)) ?? "-.--€"
-//                }
-//            }
-//            .store(in: &cancellables)
-
-        self.viewModel.isLoadingCompetitions
+        self.viewModel.isLoadingPublisher
             .receive(on: DispatchQueue.main)
             .sink(receiveValue: { [weak self] isLoading in
                 if isLoading {
@@ -206,14 +200,22 @@ class CompetitionDetailsViewController: UIViewController {
             .receive(on: DispatchQueue.main)
             .sink(receiveValue: { [weak self] in
                 self?.reloadTableView()
+                if let competition = self?.viewModel.competition {
+                    self?.titleLabel.text = competition.name
+                    self?.countryFlagImageView.image = UIImage(named: Assets.flagName(withCountryCode: competition.venue?.isoCode ?? ""))
+                }
             })
             .store(in: &self.cancellables)
-
     }
 
     // MARK: - Actions
     @objc func didTapBackButton() {
-        self.navigationController?.popViewController(animated: true)
+        if self.isRootModal {
+            self.presentingViewController?.dismiss(animated: true)
+        }
+        else {
+            self.navigationController?.popViewController(animated: true)
+        }
     }
 
     @objc func didTapBetslipView() {
@@ -231,7 +233,7 @@ class CompetitionDetailsViewController: UIViewController {
     @objc func didTapChatView() {
         self.openChatModal()
     }
-
+    
     func openChatModal() {
         if Env.userSessionStore.isUserLogged() {
             let socialViewController = SocialViewController()
@@ -242,13 +244,13 @@ class CompetitionDetailsViewController: UIViewController {
             self.present(loginViewController, animated: true, completion: nil)
         }
     }
-
+    
     func presentLoginViewController() {
       let loginViewController = Router.navigationController(with: LoginViewController())
       self.present(loginViewController, animated: true, completion: nil)
     }
-
-    private func openCompetitionDetails(_ competition: Competition) {
+    
+    private func openTopCompetitionDetails(_ competition: Competition) {
         let viewModel = OutrightMarketDetailsViewModel(competition: competition, store: OutrightMarketDetailsStore())
         let outrightMarketDetailsViewController = OutrightMarketDetailsViewController(viewModel: viewModel)
         self.navigationController?.pushViewController(outrightMarketDetailsViewController, animated: true)
@@ -266,7 +268,7 @@ class CompetitionDetailsViewController: UIViewController {
         depositViewController.shouldRefreshUserWallet = { [weak self] in
             Env.userSessionStore.refreshUserWallet()
         }
-
+        
         self.present(navigationViewController, animated: true, completion: nil)
     }
 
@@ -277,26 +279,25 @@ class CompetitionDetailsViewController: UIViewController {
 
     private func showLoading() {
         self.loadingBaseView.isHidden = false
-        self.loadingActivityIndicatorView.startAnimating()
+        self.loadingSpinnerViewController.startAnimating()
     }
 
     private func hideLoading() {
         self.loadingBaseView.isHidden = true
-        self.loadingActivityIndicatorView.stopAnimating()
+        self.loadingSpinnerViewController.stopAnimating()
     }
-
 }
 
 // MARK: - TableView Protocols
 //
-extension CompetitionDetailsViewController: UITableViewDelegate, UITableViewDataSource {
+extension SimpleCompetitionDetailsViewController: UITableViewDelegate, UITableViewDataSource {
 
     func numberOfSections(in tableView: UITableView) -> Int {
-        return self.viewModel.numberOfSection()
+        return 1
     }
 
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        self.viewModel.numberOfItems(forSection: section)
+        return self.viewModel.numberOfItems()
     }
 
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
@@ -314,18 +315,17 @@ extension CompetitionDetailsViewController: UITableViewDelegate, UITableViewData
 
                 cell.configure(withViewModel: OutrightCompetitionLargeLineViewModel(competition: competition))
                 cell.didSelectCompetitionAction = { [weak self] competition in
-                    self?.openCompetitionDetails(competition)
+                    self?.openTopCompetitionDetails(competition)
                 }
                 return cell
             }
         case .match(let match):
             if let cell = tableView.dequeueCellType(MatchLineTableViewCell.self) {
-                cell.matchStatsViewModel = self.viewModel.matchStatsViewModel(forMatch: match)
 
-                let viewModel = MatchLineTableCellViewModel(match: match)
+                let viewModel = self.viewModel.matchLineTableCellViewModel(forMatch: match)
                 cell.configure(withViewModel: viewModel)
 
-                cell.shouldShowCountryFlag(true)
+                cell.shouldShowCountryFlag(false)
                 cell.tappedMatchLineAction = { [weak self] match in
                     self?.openMatchDetails(match)
                 }
@@ -335,67 +335,7 @@ extension CompetitionDetailsViewController: UITableViewDelegate, UITableViewData
         fatalError()
     }
 
-    func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
-        guard
-            let headerView = tableView.dequeueReusableHeaderFooterView(withIdentifier: TournamentTableViewHeader.identifier)
-                as? TournamentTableViewHeader,
-            let competition = self.viewModel.competitionForSection(forSection: section)
-        else {
-            fatalError()
-        }
-
-        headerView.nameTitleLabel.text = competition.name
-        headerView.countryFlagImageView.image = UIImage(named: Assets.flagName(withCountryCode: competition.venue?.isoCode ?? ""))
-        headerView.sectionIndex = section
-        headerView.competition = competition
-        headerView.didToggleHeaderViewAction = { [weak self] section in
-            guard
-                let weakSelf = self
-            else { return }
-
-            if weakSelf.collapsedCompetitionsSections.contains(section) {
-                weakSelf.collapsedCompetitionsSections.remove(section)
-            }
-            else {
-                weakSelf.collapsedCompetitionsSections.insert(section)
-            }
-            weakSelf.needReloadSection(section)
-        }
-        if self.collapsedCompetitionsSections.contains(section) {
-            headerView.collapseImageView.image = UIImage(named: "arrow_down_icon")
-        }
-        else {
-            headerView.collapseImageView.image = UIImage(named: "arrow_up_icon")
-        }
-
-        headerView.didTapFavoriteCompetitionAction = { [weak self] competition in
-
-            if !Env.userSessionStore.isUserLogged() {
-                self?.presentLoginViewController()
-            }
-            else {
-                self?.viewModel.markCompetitionAsFavorite(competition: competition)
-                tableView.reloadData()
-            }
-
-        }
-
-        return headerView
-    }
-
-    func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
-        return 54
-    }
-
-    func tableView(_ tableView: UITableView, estimatedHeightForHeaderInSection section: Int) -> CGFloat {
-        return 54
-    }
-
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
-        if self.collapsedCompetitionsSections.contains(indexPath.section) {
-            return .leastNonzeroMagnitude
-        }
-
         if let contentType = self.viewModel.contentType(forIndexPath: indexPath) {
             switch contentType {
             case .outrightMarket:
@@ -412,10 +352,6 @@ extension CompetitionDetailsViewController: UITableViewDelegate, UITableViewData
     }
 
     func tableView(_ tableView: UITableView, estimatedHeightForRowAt indexPath: IndexPath) -> CGFloat {
-        if self.collapsedCompetitionsSections.contains(indexPath.section) {
-            return .leastNonzeroMagnitude
-        }
-
         if let contentType = self.viewModel.contentType(forIndexPath: indexPath) {
             switch contentType {
             case .outrightMarket:
@@ -430,25 +366,9 @@ extension CompetitionDetailsViewController: UITableViewDelegate, UITableViewData
 
         return .leastNonzeroMagnitude
     }
-
-    func needReloadSection(_ section: Int) {
-
-        guard
-            let competition = self.viewModel.competitionForSection(forSection: section)
-        else {
-            return
-        }
-
-        let rows = (0 ..< competition.matches.count).map({ IndexPath(row: $0, section: section) }) // all section rows
-
-        self.tableView.beginUpdates()
-        self.tableView.reloadRows(at: rows, with: .automatic)
-        self.tableView.endUpdates()
-    }
-
 }
 
-extension CompetitionDetailsViewController: UIGestureRecognizerDelegate {
+extension SimpleCompetitionDetailsViewController: UIGestureRecognizerDelegate {
 
     func gestureRecognizer(_ gestureRecognizer: UIGestureRecognizer, shouldRecognizeSimultaneouslyWith otherGestureRecognizer: UIGestureRecognizer) -> Bool {
         return true
@@ -461,12 +381,11 @@ extension CompetitionDetailsViewController: UIGestureRecognizerDelegate {
     func gestureRecognizer(_ gestureRecognizer: UIGestureRecognizer, shouldBeRequiredToFailBy otherGestureRecognizer: UIGestureRecognizer) -> Bool {
         return true
     }
-
 }
 
 // MARK: - User Interface setup
 //
-extension CompetitionDetailsViewController {
+extension SimpleCompetitionDetailsViewController {
 
     private static func createTopSafeAreaView() -> UIView {
         let view = UIView()
@@ -479,6 +398,15 @@ extension CompetitionDetailsViewController {
         view.translatesAutoresizingMaskIntoConstraints = false
         return view
     }
+    
+    private static func createTitleStackView() -> UIStackView {
+        let stackView = UIStackView()
+        stackView.translatesAutoresizingMaskIntoConstraints = false
+        stackView.axis = .horizontal
+        stackView.spacing = 8
+        stackView.alignment = .center
+        return stackView
+    }
 
     private static func createTitleLabel() -> UILabel {
         let titleLabel = UILabel()
@@ -486,9 +414,17 @@ extension CompetitionDetailsViewController {
         titleLabel.textColor = UIColor.App.textPrimary
         titleLabel.font = AppFont.with(type: .semibold, size: 14)
         titleLabel.textAlignment = .left
-        titleLabel.text = localized("competition_details")
         titleLabel.setContentCompressionResistancePriority(.defaultLow, for: .horizontal)
         return titleLabel
+    }
+    
+    private static func createCountryFlagImageView() -> UIImageView {
+        let imageView = UIImageView()
+        imageView.translatesAutoresizingMaskIntoConstraints = false
+        imageView.contentMode = .scaleAspectFit
+        imageView.widthAnchor.constraint(equalToConstant: 24).isActive = true
+        imageView.heightAnchor.constraint(equalToConstant: 24).isActive = true
+        return imageView
     }
 
     private static func createBackButton() -> UIButton {
@@ -499,48 +435,28 @@ extension CompetitionDetailsViewController {
         return backButton
     }
 
-    private static func createHeaderView() -> UIView {
-        let view = UIView()
-        view.translatesAutoresizingMaskIntoConstraints = false
-        return view
-    }
-    private static func createSeparatorHeaderView() -> UIView {
-        let view = UIView()
-        view.translatesAutoresizingMaskIntoConstraints = false
-        return view
-    }
-
     private static func createTableView() -> UITableView {
-        let tableView = UITableView.init(frame: .zero, style: .grouped)
+        let tableView = UITableView.init(frame: .zero, style: .plain)
         tableView.translatesAutoresizingMaskIntoConstraints = false
         tableView.separatorStyle = .none
         tableView.allowsSelection = false
-        // tableView.contentInset = UIEdgeInsets(top: -, left: 0, bottom: 0, right: 0)
         tableView.contentInsetAdjustmentBehavior = .never
         if #available(iOS 15.0, *) {
             tableView.sectionHeaderTopPadding = 0
         }
         return tableView
     }
-
+    
     private static func createFloatingShortcutsView() -> FloatingShortcutsView {
         let floatingShortcutsView = FloatingShortcutsView()
         floatingShortcutsView.translatesAutoresizingMaskIntoConstraints = false
         return floatingShortcutsView
     }
-
+    
     private static func createLoadingBaseView() -> UIView {
         let view = UIView()
         view.translatesAutoresizingMaskIntoConstraints = false
         return view
-    }
-
-    private static func createLoadingActivityIndicatorView() -> UIActivityIndicatorView {
-        let activityIndicatorView = UIActivityIndicatorView.init(style: .large)
-        activityIndicatorView.translatesAutoresizingMaskIntoConstraints = false
-        activityIndicatorView.hidesWhenStopped = true
-        activityIndicatorView.stopAnimating()
-        return activityIndicatorView
     }
 
     private static func createAccountValueView() -> UIView {
@@ -581,15 +497,27 @@ extension CompetitionDetailsViewController {
         view.translatesAutoresizingMaskIntoConstraints = false
         return view
     }
+    
+    private static func createBackgroundImageView() -> UIImageView {
+        let imageView = UIImageView()
+        imageView.translatesAutoresizingMaskIntoConstraints = false
+        imageView.contentMode = .scaleAspectFill
+        imageView.isHidden = true
+        imageView.clipsToBounds = true
+        return imageView
+    }
 
     private func setupSubviews() {
-
         self.view.addSubview(self.topSafeAreaView)
         self.view.addSubview(self.navigationView)
         self.view.addSubview(self.backgroundGradientView)
-
+        self.view.addSubview(self.backgroundImageView)
+        
         self.navigationView.addSubview(self.backButton)
-        self.navigationView.addSubview(self.titleLabel)
+        
+        self.titleStackView.addArrangedSubview(self.countryFlagImageView)
+        self.titleStackView.addArrangedSubview(self.titleLabel)
+        self.navigationView.addSubview(self.titleStackView)
 
         self.accountValueView.addSubview(self.accountPlusView)
         self.accountPlusView.addSubview(self.accountPlusImageView)
@@ -597,11 +525,8 @@ extension CompetitionDetailsViewController {
         self.navigationView.addSubview(self.accountValueView)
 
         self.view.addSubview(self.tableView)
-
         self.view.addSubview(self.floatingShortcutsView)
-
         self.view.addSubview(self.loadingBaseView)
-        self.loadingBaseView.addSubview(self.loadingActivityIndicatorView)
 
         self.initConstraints()
 
@@ -610,7 +535,6 @@ extension CompetitionDetailsViewController {
     }
 
     private func initConstraints() {
-
         NSLayoutConstraint.activate([
             self.topSafeAreaView.leadingAnchor.constraint(equalTo: self.view.leadingAnchor),
             self.topSafeAreaView.trailingAnchor.constraint(equalTo: self.view.trailingAnchor),
@@ -629,14 +553,14 @@ extension CompetitionDetailsViewController {
             self.backgroundGradientView.topAnchor.constraint(equalTo: self.navigationView.bottomAnchor),
             self.backgroundGradientView.bottomAnchor.constraint(equalTo: self.view.bottomAnchor),
 
-            self.titleLabel.leadingAnchor.constraint(equalTo: self.backButton.trailingAnchor, constant: 8),
-            self.titleLabel.centerYAnchor.constraint(equalTo: self.navigationView.centerYAnchor),
-            self.titleLabel.trailingAnchor.constraint(equalTo: self.accountValueView.leadingAnchor),
-
             self.backButton.widthAnchor.constraint(equalTo: self.backButton.heightAnchor),
             self.backButton.widthAnchor.constraint(equalToConstant: 40),
             self.backButton.centerYAnchor.constraint(equalTo: self.navigationView.centerYAnchor),
             self.backButton.leadingAnchor.constraint(equalTo: self.navigationView.leadingAnchor, constant: 8),
+            
+            self.titleStackView.leadingAnchor.constraint(equalTo: self.backButton.trailingAnchor, constant: 8),
+            self.titleStackView.centerYAnchor.constraint(equalTo: self.navigationView.centerYAnchor),
+            self.titleStackView.trailingAnchor.constraint(lessThanOrEqualTo: self.accountValueView.leadingAnchor, constant: -8),
 
             self.accountValueView.centerYAnchor.constraint(equalTo: self.navigationView.centerYAnchor),
             self.accountValueView.heightAnchor.constraint(equalToConstant: 24),
@@ -665,21 +589,22 @@ extension CompetitionDetailsViewController {
         ])
 
         NSLayoutConstraint.activate([
-            self.loadingActivityIndicatorView.centerYAnchor.constraint(equalTo: self.loadingBaseView.centerYAnchor),
-            self.loadingActivityIndicatorView.centerXAnchor.constraint(equalTo: self.loadingBaseView.centerXAnchor),
-        ])
-
-        NSLayoutConstraint.activate([
-            self.loadingBaseView.centerYAnchor.constraint(equalTo: self.view.centerYAnchor),
-            self.loadingBaseView.centerXAnchor.constraint(equalTo: self.view.centerXAnchor),
-            self.view.leadingAnchor.constraint(equalTo: self.loadingBaseView.leadingAnchor),
-            self.navigationView.bottomAnchor.constraint(equalTo: self.loadingBaseView.topAnchor)
+            self.loadingBaseView.leadingAnchor.constraint(equalTo: self.view.leadingAnchor),
+            self.loadingBaseView.trailingAnchor.constraint(equalTo: self.view.trailingAnchor),
+            self.loadingBaseView.topAnchor.constraint(equalTo: self.navigationView.bottomAnchor),
+            self.loadingBaseView.bottomAnchor.constraint(equalTo: self.view.bottomAnchor)
         ])
 
         NSLayoutConstraint.activate([
             self.floatingShortcutsView.trailingAnchor.constraint(equalTo: self.view.trailingAnchor, constant: -12),
             self.floatingShortcutsView.bottomAnchor.constraint(equalTo: self.view.safeAreaLayoutGuide.bottomAnchor, constant: -12),
         ])
-
+        
+        NSLayoutConstraint.activate([
+            self.backgroundImageView.leadingAnchor.constraint(equalTo: self.view.leadingAnchor),
+            self.backgroundImageView.trailingAnchor.constraint(equalTo: self.view.trailingAnchor),
+            self.backgroundImageView.topAnchor.constraint(equalTo: self.navigationView.bottomAnchor),
+            self.backgroundImageView.bottomAnchor.constraint(equalTo: self.view.bottomAnchor)
+        ])
     }
-}
+} 
