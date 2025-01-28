@@ -48,7 +48,7 @@ class CompetitionFilterTableViewCell: UITableViewCell {
     private var iconLabelStackView: UIStackView = {
         let stackView = UIStackView()
         stackView.axis = .horizontal
-        stackView.spacing = 6
+        stackView.spacing = 9
         stackView.alignment = .center
         stackView.translatesAutoresizingMaskIntoConstraints = false
         return stackView
@@ -152,47 +152,55 @@ class CompetitionFilterTableViewCell: UITableViewCell {
     }
 
     func setupSubviews() {
-
         self.selectionStyle = .none
-
-        selectedImageView.image = UIImage(named: "checkbox_unselected_icon")!
-
+        self.selectedImageView.image = UIImage(named: "checkbox_unselected_icon")!
+        
+        // Configure label
+        self.titleLabel.lineBreakMode = .byTruncatingTail
+        
         self.iconLabelStackView.addArrangedSubview(self.countryImageView)
         self.iconLabelStackView.addArrangedSubview(self.titleLabel)
-        self.iconLabelStackView.addArrangedSubview(self.navigationArrowImageView)
-
+        
+        // Remove navigationArrowImageView from stack view since we want to position it independently
+        // self.iconLabelStackView.addArrangedSubview(self.navigationArrowImageView)
+        
         self.contentView.addSubview(baseView)
         self.baseView.addSubview(iconLabelStackView)
         self.baseView.addSubview(separatorLineView)
         self.baseView.addSubview(selectedImageView)
-
+        self.baseView.addSubview(navigationArrowImageView) // Add directly to baseView
+        
         NSLayoutConstraint.activate([
             self.contentView.leadingAnchor.constraint(equalTo: self.baseView.leadingAnchor, constant: -26),
             self.contentView.trailingAnchor.constraint(equalTo: self.baseView.trailingAnchor, constant: 26),
             self.contentView.topAnchor.constraint(equalTo: self.baseView.topAnchor),
             self.contentView.bottomAnchor.constraint(equalTo: self.baseView.bottomAnchor),
-
+            
             self.baseView.heightAnchor.constraint(greaterThanOrEqualToConstant: 52),
-
+            
             self.baseView.leadingAnchor.constraint(equalTo: self.separatorLineView.leadingAnchor, constant: -16),
             self.baseView.trailingAnchor.constraint(equalTo: self.separatorLineView.trailingAnchor, constant: 16),
             self.baseView.bottomAnchor.constraint(equalTo: self.separatorLineView.bottomAnchor),
-
+            
             self.countryImageView.widthAnchor.constraint(equalToConstant: 16),
             self.countryImageView.heightAnchor.constraint(equalTo: self.countryImageView.widthAnchor),
-
-            self.navigationArrowImageView.widthAnchor.constraint(equalToConstant: 19),
-            self.navigationArrowImageView.heightAnchor.constraint(equalTo: self.navigationArrowImageView.widthAnchor),
-
+            
+            // Position iconLabelStackView
             self.iconLabelStackView.leadingAnchor.constraint(equalTo: self.baseView.leadingAnchor, constant: 20),
             self.iconLabelStackView.centerYAnchor.constraint(equalTo: self.baseView.centerYAnchor),
-            self.iconLabelStackView.trailingAnchor.constraint(greaterThanOrEqualTo: self.baseView.trailingAnchor, constant: -6),
-
+            
+            // Constrain navigationArrowImageView
+            self.navigationArrowImageView.widthAnchor.constraint(equalToConstant: 19),
+            self.navigationArrowImageView.heightAnchor.constraint(equalTo: self.navigationArrowImageView.widthAnchor),
+            self.navigationArrowImageView.centerYAnchor.constraint(equalTo: self.baseView.centerYAnchor),
+            self.navigationArrowImageView.leadingAnchor.constraint(equalTo: self.iconLabelStackView.trailingAnchor, constant: 8),
+            self.navigationArrowImageView.trailingAnchor.constraint(lessThanOrEqualTo: self.selectedImageView.leadingAnchor, constant: -8),
+            
             self.selectedImageView.widthAnchor.constraint(equalToConstant: 19),
             self.selectedImageView.widthAnchor.constraint(equalTo: self.selectedImageView.heightAnchor),
             self.selectedImageView.centerYAnchor.constraint(equalTo: self.baseView.centerYAnchor, constant: 1),
             self.selectedImageView.trailingAnchor.constraint(equalTo: self.baseView.trailingAnchor, constant: -20),
-
+            
             self.separatorLineView.heightAnchor.constraint(equalToConstant: 1),
         ])
     }
@@ -213,16 +221,18 @@ class CompetitionFilterTableViewCell: UITableViewCell {
 
     func configure(withViewModel viewModel: CompetitionFilterCellViewModel) {
         self.viewModel = viewModel
-        self.titleLabel.text = "Abc De" // viewModel.title
+        self.titleLabel.text = viewModel.title
 
         switch viewModel.mode {
         case .toggle:
             self.selectedImageView.isHidden = false
             self.navigationArrowImageView.isHidden = true
+            self.countryImageView.alpha = 1
             self.setCellSelected(viewModel.isSelected)
         case .navigate:
             self.selectedImageView.isHidden = true
             self.navigationArrowImageView.isHidden = false
+            self.countryImageView.alpha = 0
         }
 
         if viewModel.isLastCell {

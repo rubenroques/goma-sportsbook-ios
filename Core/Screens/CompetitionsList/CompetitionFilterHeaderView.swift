@@ -22,7 +22,7 @@ class CompetitionFilterHeaderView: UITableViewHeaderFooterView {
     private lazy var iconLabelStackView: UIStackView = {
         let stackView = UIStackView()
         stackView.axis = .horizontal
-        stackView.spacing = 6
+        stackView.spacing = 8
         stackView.alignment = .center
         stackView.translatesAutoresizingMaskIntoConstraints = false
         return stackView

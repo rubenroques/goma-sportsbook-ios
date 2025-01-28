@@ -18,15 +18,16 @@ class SimpleCompetitionDetailsViewController: UIViewController {
     private lazy var navigationView: UIView = Self.createNavigationView()
     private lazy var backgroundGradientView: GradientView = Self.createBackgroundGradientView()
     private lazy var backgroundImageView: UIImageView = Self.createBackgroundImageView()
-    
+
     private lazy var titleStackView: UIStackView = Self.createTitleStackView()
     private lazy var titleLabel: UILabel = Self.createTitleLabel()
     private lazy var countryFlagImageView: UIImageView = Self.createCountryFlagImageView()
+    private lazy var favoriteButton: UIButton = Self.createFavoriteButton()
     private lazy var backButton: UIButton = Self.createBackButton()
     private lazy var tableView: UITableView = Self.createTableView()
 
     private lazy var floatingShortcutsView: FloatingShortcutsView = Self.createFloatingShortcutsView()
-    
+
     private lazy var loadingBaseView: UIView = Self.createLoadingBaseView()
     private let loadingSpinnerViewController = LoadingSpinnerViewController()
 
@@ -34,12 +35,12 @@ class SimpleCompetitionDetailsViewController: UIViewController {
     private lazy var accountPlusView: UIView = Self.createAccountPlusView()
     private lazy var accountPlusImageView: UIImageView = Self.createAccountPlusImageView()
     private lazy var accountValueLabel: UILabel = Self.createAccountValueLabel()
-    
+
     private var matchStatsViewModelForMatch: ((Match) -> MatchStatsViewModel?)?
 
     private var viewModel: SimpleCompetitionDetailsViewModel
     private var cancellables = Set<AnyCancellable>()
-    
+
     var isFeaturedCompetition: Bool = false {
         didSet {
             self.backgroundGradientView.isHidden = isFeaturedCompetition
@@ -51,7 +52,7 @@ class SimpleCompetitionDetailsViewController: UIViewController {
     init(viewModel: SimpleCompetitionDetailsViewModel, isFeaturedCompetition: Bool = false) {
         self.viewModel = viewModel
         self.isFeaturedCompetition = isFeaturedCompetition
-        
+
         super.init(nibName: nil, bundle: nil)
     }
 
@@ -65,7 +66,7 @@ class SimpleCompetitionDetailsViewController: UIViewController {
 
         self.setupSubviews()
         self.setupWithTheme()
-        
+
         self.addChildViewController(self.loadingSpinnerViewController, toView: self.loadingBaseView)
 
         self.tableView.delegate = self
@@ -76,6 +77,7 @@ class SimpleCompetitionDetailsViewController: UIViewController {
         self.tableView.register(OutrightCompetitionLargeLineTableViewCell.self, forCellReuseIdentifier: OutrightCompetitionLargeLineTableViewCell.identifier)
 
         self.backButton.addTarget(self, action: #selector(didTapBackButton), for: .primaryActionTriggered)
+        self.favoriteButton.addTarget(self, action: #selector(didTapFavoriteButton), for: .primaryActionTriggered)
 
         self.floatingShortcutsView.didTapBetslipButtonAction = { [weak self] in
             self?.didTapBetslipView()
@@ -83,15 +85,19 @@ class SimpleCompetitionDetailsViewController: UIViewController {
         self.floatingShortcutsView.didTapChatButtonAction = { [weak self] in
             self?.didTapChatView()
         }
-        
+
+        self.countryFlagImageView.clipsToBounds = true
+
         let accountValueTapGesture = UITapGestureRecognizer(target: self, action: #selector(didTapAccountValue))
         self.accountValueView.addGestureRecognizer(accountValueTapGesture)
         self.accountValueView.isHidden = true
 
         self.showLoading()
-
-        self.bind(toViewModel: self.viewModel)
         
+        self.favoriteButton.isHidden = true
+        
+        self.bind(toViewModel: self.viewModel)
+
         if isFeaturedCompetition {
             if let featuredCompetitionBackground = Env.businessSettingsSocket.clientSettings.featuredCompetition?.pageDetailBackground {
                 if let url = URL(string: featuredCompetitionBackground) {
@@ -100,13 +106,13 @@ class SimpleCompetitionDetailsViewController: UIViewController {
             }
         }
     }
-    
+
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
 
         self.floatingShortcutsView.resetAnimations()
         self.navigationController?.interactivePopGestureRecognizer?.delegate = self
-        
+
         if self.isRootModal {
             self.backButton.setImage(UIImage(named: "arrow_close_icon"), for: .normal)
         }
@@ -117,7 +123,12 @@ class SimpleCompetitionDetailsViewController: UIViewController {
 
         self.navigationController?.interactivePopGestureRecognizer?.delegate = nil
     }
-    
+
+    override func viewWillLayoutSubviews() {
+        super.viewWillLayoutSubviews()
+        self.countryFlagImageView.layer.cornerRadius = self.countryFlagImageView.frame.size.width / 2
+    }
+
     // MARK: - Layout and Theme
     override func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {
         super.traitCollectionDidChange(previousTraitCollection)
@@ -151,8 +162,10 @@ class SimpleCompetitionDetailsViewController: UIViewController {
             self.backgroundGradientView.colors = []
             self.backgroundGradientView.backgroundColor = UIColor.App.backgroundPrimary
         }
-        
+
         self.backgroundImageView.backgroundColor = .clear
+        self.countryFlagImageView.backgroundColor = .clear
+        self.favoriteButton.backgroundColor = UIColor.App.backgroundSecondary
     }
 
     // MARK: - Bindings
@@ -199,11 +212,14 @@ class SimpleCompetitionDetailsViewController: UIViewController {
         self.viewModel.refreshPublisher
             .receive(on: DispatchQueue.main)
             .sink(receiveValue: { [weak self] in
-                self?.reloadTableView()
                 if let competition = self?.viewModel.competition {
+                    self?.favoriteButton.isEnabled = true
+                    self?.favoriteButton.isHidden = false
                     self?.titleLabel.text = competition.name
                     self?.countryFlagImageView.image = UIImage(named: Assets.flagName(withCountryCode: competition.venue?.isoCode ?? ""))
+                    self?.updateFavoriteButton(competition: competition)
                 }
+                self?.reloadTableView()
             })
             .store(in: &self.cancellables)
     }
@@ -233,7 +249,7 @@ class SimpleCompetitionDetailsViewController: UIViewController {
     @objc func didTapChatView() {
         self.openChatModal()
     }
-    
+
     func openChatModal() {
         if Env.userSessionStore.isUserLogged() {
             let socialViewController = SocialViewController()
@@ -244,12 +260,12 @@ class SimpleCompetitionDetailsViewController: UIViewController {
             self.present(loginViewController, animated: true, completion: nil)
         }
     }
-    
+
     func presentLoginViewController() {
       let loginViewController = Router.navigationController(with: LoginViewController())
       self.present(loginViewController, animated: true, completion: nil)
     }
-    
+
     private func openTopCompetitionDetails(_ competition: Competition) {
         let viewModel = OutrightMarketDetailsViewModel(competition: competition, store: OutrightMarketDetailsStore())
         let outrightMarketDetailsViewController = OutrightMarketDetailsViewController(viewModel: viewModel)
@@ -268,8 +284,40 @@ class SimpleCompetitionDetailsViewController: UIViewController {
         depositViewController.shouldRefreshUserWallet = { [weak self] in
             Env.userSessionStore.refreshUserWallet()
         }
-        
+
         self.present(navigationViewController, animated: true, completion: nil)
+    }
+
+    @objc private func didTapFavoriteButton() {
+        if !Env.userSessionStore.isUserLogged() {
+            self.presentLoginViewController()
+            return
+        }
+
+        guard let competition = self.viewModel.competition else { return }
+
+        var isFavorite = false
+        for competitionId in Env.favoritesManager.favoriteEventsIdPublisher.value where competitionId == competition.id {
+            isFavorite = true
+        }
+
+        if isFavorite {
+            Env.favoritesManager.removeFavorite(eventId: competition.id, favoriteType: .competition)
+        } else {
+            Env.favoritesManager.addFavorite(eventId: competition.id, favoriteType: .competition)
+        }
+
+        self.updateFavoriteButton(competition: competition)
+    }
+
+    private func updateFavoriteButton(competition: Competition) {
+        var isFavorite = false
+        for competitionId in Env.favoritesManager.favoriteEventsIdPublisher.value where competitionId == competition.id {
+            isFavorite = true
+        }
+
+        let image = isFavorite ? UIImage(named: "selected_favorite_icon") : UIImage(named: "unselected_favorite_icon")
+        self.favoriteButton.setImage(image, for: .normal)
     }
 
     // MARK: - Convenience
@@ -398,7 +446,7 @@ extension SimpleCompetitionDetailsViewController {
         view.translatesAutoresizingMaskIntoConstraints = false
         return view
     }
-    
+
     private static func createTitleStackView() -> UIStackView {
         let stackView = UIStackView()
         stackView.translatesAutoresizingMaskIntoConstraints = false
@@ -417,14 +465,25 @@ extension SimpleCompetitionDetailsViewController {
         titleLabel.setContentCompressionResistancePriority(.defaultLow, for: .horizontal)
         return titleLabel
     }
-    
+
     private static func createCountryFlagImageView() -> UIImageView {
         let imageView = UIImageView()
         imageView.translatesAutoresizingMaskIntoConstraints = false
-        imageView.contentMode = .scaleAspectFit
+        imageView.contentMode = .scaleAspectFill
+        imageView.clipsToBounds = true
         imageView.widthAnchor.constraint(equalToConstant: 24).isActive = true
         imageView.heightAnchor.constraint(equalToConstant: 24).isActive = true
         return imageView
+    }
+
+    private static func createFavoriteButton() -> UIButton {
+        let button = UIButton(type: .custom)
+        button.translatesAutoresizingMaskIntoConstraints = false
+        button.setImage(UIImage(named: "unselected_favorite_icon"), for: .normal)
+        button.layer.cornerRadius = CornerRadius.squareView
+        button.widthAnchor.constraint(equalToConstant: 27).isActive = true
+        button.heightAnchor.constraint(equalToConstant: 27).isActive = true
+        return button
     }
 
     private static func createBackButton() -> UIButton {
@@ -446,13 +505,13 @@ extension SimpleCompetitionDetailsViewController {
         }
         return tableView
     }
-    
+
     private static func createFloatingShortcutsView() -> FloatingShortcutsView {
         let floatingShortcutsView = FloatingShortcutsView()
         floatingShortcutsView.translatesAutoresizingMaskIntoConstraints = false
         return floatingShortcutsView
     }
-    
+
     private static func createLoadingBaseView() -> UIView {
         let view = UIView()
         view.translatesAutoresizingMaskIntoConstraints = false
@@ -497,7 +556,7 @@ extension SimpleCompetitionDetailsViewController {
         view.translatesAutoresizingMaskIntoConstraints = false
         return view
     }
-    
+
     private static func createBackgroundImageView() -> UIImageView {
         let imageView = UIImageView()
         imageView.translatesAutoresizingMaskIntoConstraints = false
@@ -512,10 +571,11 @@ extension SimpleCompetitionDetailsViewController {
         self.view.addSubview(self.navigationView)
         self.view.addSubview(self.backgroundGradientView)
         self.view.addSubview(self.backgroundImageView)
-        
+
         self.navigationView.addSubview(self.backButton)
-        
+
         self.titleStackView.addArrangedSubview(self.countryFlagImageView)
+        self.titleStackView.addArrangedSubview(self.favoriteButton)
         self.titleStackView.addArrangedSubview(self.titleLabel)
         self.navigationView.addSubview(self.titleStackView)
 
@@ -557,7 +617,7 @@ extension SimpleCompetitionDetailsViewController {
             self.backButton.widthAnchor.constraint(equalToConstant: 40),
             self.backButton.centerYAnchor.constraint(equalTo: self.navigationView.centerYAnchor),
             self.backButton.leadingAnchor.constraint(equalTo: self.navigationView.leadingAnchor, constant: 8),
-            
+
             self.titleStackView.leadingAnchor.constraint(equalTo: self.backButton.trailingAnchor, constant: 8),
             self.titleStackView.centerYAnchor.constraint(equalTo: self.navigationView.centerYAnchor),
             self.titleStackView.trailingAnchor.constraint(lessThanOrEqualTo: self.accountValueView.leadingAnchor, constant: -8),
@@ -599,7 +659,7 @@ extension SimpleCompetitionDetailsViewController {
             self.floatingShortcutsView.trailingAnchor.constraint(equalTo: self.view.trailingAnchor, constant: -12),
             self.floatingShortcutsView.bottomAnchor.constraint(equalTo: self.view.safeAreaLayoutGuide.bottomAnchor, constant: -12),
         ])
-        
+
         NSLayoutConstraint.activate([
             self.backgroundImageView.leadingAnchor.constraint(equalTo: self.view.leadingAnchor),
             self.backgroundImageView.trailingAnchor.constraint(equalTo: self.view.trailingAnchor),
@@ -607,4 +667,4 @@ extension SimpleCompetitionDetailsViewController {
             self.backgroundImageView.bottomAnchor.constraint(equalTo: self.view.bottomAnchor)
         ])
     }
-} 
+}
