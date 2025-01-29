@@ -1,0 +1,37 @@
+paths:
+  /consents:
+    get:
+      tags:
+        - Consents
+      summary: Get all consents
+      description: Retrieve list of all available consent types
+      security: []
+
+  /user/consents:
+    get:
+      tags:
+        - Consents
+      summary: Get user consents
+      description: Retrieve list of user's consent preferences
+
+  /user/consents/save:
+    post:
+      tags:
+        - Consents
+      summary: Set user consents
+      description: Update user's consent preferences
+      parameters:
+        - name: consentedVersions
+          in: query
+          schema:
+            type: array
+            items:
+              type: integer
+              format: int32
+        - name: unConsentedVersions
+          in: query
+          schema:
+            type: array
+            items:
+              type: integer
+              format: int32 

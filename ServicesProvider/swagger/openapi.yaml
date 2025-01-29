@@ -1,0 +1,178 @@
+openapi: 3.0.0
+info:
+  title: PAM Omega API
+  description: API for Player Account Management System
+  version: 1.0.0
+  contact:
+    name: API Support
+    email: support@example.com
+
+servers:
+  - url: https://ps.omegasys.eu/ps/ips
+    description: Production server
+  - url: https://ps.omegasys.eu/ps/ips
+    description: Development server
+  - url: https://ps.omegasys.eu
+    description: SumSub server
+
+tags:
+  - name: Authentication
+    description: Authentication and session management endpoints
+  - name: User Profile
+    description: User profile management endpoints
+  - name: Registration
+    description: User registration and verification endpoints
+  - name: Responsible Gaming
+    description: Responsible gaming and limits management
+  - name: Financial Operations
+    description: Payment, deposit and withdrawal operations
+  - name: Bonuses
+    description: Bonus management endpoints
+  - name: KYC
+    description: Know Your Customer and documentation endpoints
+  - name: Support
+    description: Customer support endpoints
+  - name: Consents
+    description: User consents and privacy management
+  - name: Referral
+    description: Referral system endpoints
+
+components:
+  securitySchemes:
+    SessionKey:
+      type: apiKey
+      in: header
+      name: X-Session-Key
+    AppOrigin:
+      type: apiKey
+      in: header
+      name: app-origin
+
+security:
+  - SessionKey: []
+    AppOrigin: []
+
+paths:
+  /login:
+    $ref: './paths/auth.yaml#/paths/~1login'
+  /logout:
+    $ref: './paths/auth.yaml#/paths/~1logout'
+  /openGameSession:
+    $ref: './paths/auth.yaml#/paths/~1openGameSession'
+
+  /getPlayerInfo:
+    $ref: './paths/user-profile.yaml#/paths/~1getPlayerInfo'
+  /updatePlayerInfo:
+    $ref: './paths/user-profile.yaml#/paths/~1updatePlayerInfo'
+  /updateExtraInfo:
+    $ref: './paths/user-profile.yaml#/paths/~1updateExtraInfo'
+  /updateDeviceIdentifier:
+    $ref: './paths/user-profile.yaml#/paths/~1updateDeviceIdentifier'
+
+  /checkCredential:
+    $ref: './paths/registration.yaml#/paths/~1checkCredential'
+  /getUserIdSuggestion:
+    $ref: './paths/registration.yaml#/paths/~1getUserIdSuggestion'
+  /quickSignup:
+    $ref: './paths/registration.yaml#/paths/~1quickSignup'
+  /signup:
+    $ref: './paths/registration.yaml#/paths/~1signup'
+  /resendVerificationCode:
+    $ref: './paths/registration.yaml#/paths/~1resendVerificationCode'
+  /signupConfirmation:
+    $ref: './paths/registration.yaml#/paths/~1signupConfirmation'
+  /verify:
+    $ref: './paths/registration.yaml#/paths/~1verify'
+
+  /setPersonalDepositLimits:
+    $ref: './paths/responsible-gaming.yaml#/paths/~1setPersonalDepositLimits'
+  /updateWagerLimit:
+    $ref: './paths/responsible-gaming.yaml#/paths/~1updateWagerLimit'
+  /updateResponsibleGamingLimit:
+    $ref: './paths/responsible-gaming.yaml#/paths/~1updateResponsibleGamingLimit'
+  /getPersonalDepositLimits:
+    $ref: './paths/responsible-gaming.yaml#/paths/~1getPersonalDepositLimits'
+  /getLimits:
+    $ref: './paths/responsible-gaming.yaml#/paths/~1getLimits'
+  /getResponsibleGamingLimit:
+    $ref: './paths/responsible-gaming.yaml#/paths/~1getResponsibleGamingLimit'
+  /lockPlayer:
+    $ref: './paths/responsible-gaming.yaml#/paths/~1lockPlayer'
+
+  /getBalance:
+    $ref: './paths/financial.yaml#/paths/~1getBalance'
+  /getCashbackBalance:
+    $ref: './paths/financial.yaml#/paths/~1getCashbackBalance'
+  /getDepositMethods:
+    $ref: './paths/financial.yaml#/paths/~1getDepositMethods'
+  /processDeposit:
+    $ref: './paths/financial.yaml#/paths/~1processDeposit'
+  /updatePayment:
+    $ref: './paths/financial.yaml#/paths/~1updatePayment'
+  /cancelDeposit:
+    $ref: './paths/financial.yaml#/paths/~1cancelDeposit'
+  /checkPaymentStatus:
+    $ref: './paths/financial.yaml#/paths/~1checkPaymentStatus'
+  /getWithdrawalMethods:
+    $ref: './paths/financial.yaml#/paths/~1getWithdrawalMethods'
+  /processWithdrawal:
+    $ref: './paths/financial.yaml#/paths/~1processWithdrawal'
+  /prepareWithdrawal:
+    $ref: './paths/financial.yaml#/paths/~1prepareWithdrawal'
+  /getPendingWithdrawals:
+    $ref: './paths/financial.yaml#/paths/~1getPendingWithdrawals'
+  /cancelWithdrawal:
+    $ref: './paths/financial.yaml#/paths/~1cancelWithdrawal'
+  /getPaymentInformation:
+    $ref: './paths/financial.yaml#/paths/~1getPaymentInformation'
+  /addPaymentInformation:
+    $ref: './paths/financial.yaml#/paths/~1addPaymentInformation'
+  /getTransactionHistoryByCurrency:
+    $ref: './paths/financial.yaml#/paths/~1getTransactionHistoryByCurrency'
+
+  /getBonuses:
+    $ref: './paths/bonuses.yaml#/paths/~1getBonuses'
+  /redeemBonus:
+    $ref: './paths/bonuses.yaml#/paths/~1redeemBonus'
+  /getEligibleOptInBonusPlans:
+    $ref: './paths/bonuses.yaml#/paths/~1getEligibleOptInBonusPlans'
+  /optInBonus:
+    $ref: './paths/bonuses.yaml#/paths/~1optInBonus'
+  /cancelBonus:
+    $ref: './paths/bonuses.yaml#/paths/~1cancelBonus'
+  /optOutBonus:
+    $ref: './paths/bonuses.yaml#/paths/~1optOutBonus'
+
+  /getDocumentTypes:
+    $ref: './paths/kyc.yaml#/paths/~1getDocumentTypes'
+  /getUserDocuments:
+    $ref: './paths/kyc.yaml#/paths/~1getUserDocuments'
+  /uploadUserDocument:
+    $ref: './paths/kyc.yaml#/paths/~1uploadUserDocument'
+  /uploadMultiUserDocument:
+    $ref: './paths/kyc.yaml#/paths/~1uploadMultiUserDocument'
+  /generateToken:
+    $ref: './paths/kyc.yaml#/paths/~1generateToken'
+  /checkDocumentation:
+    $ref: './paths/kyc.yaml#/paths/~1checkDocumentation'
+  /resources/accessTokens:
+    $ref: './paths/kyc.yaml#/paths/~1resources~1accessTokens'
+  /resources/applicants/-;externalUserId={userId}/one:
+    $ref: './paths/kyc.yaml#/paths/~1resources~1applicants~1-;externalUserId={userId}~1one'
+
+  /contactus:
+    $ref: './paths/support.yaml#/paths/~1contactus'
+  /api/v2/requests:
+    $ref: './paths/support.yaml#/paths/~1api~1v2~1requests'
+
+  /consents:
+    $ref: './paths/consents.yaml#/paths/~1consents'
+  /user/consents:
+    $ref: './paths/consents.yaml#/paths/~1user~1consents'
+  /user/consents/save:
+    $ref: './paths/consents.yaml#/paths/~1user~1consents~1save'
+
+  /getReferralLinks:
+    $ref: './paths/referral.yaml#/paths/~1getReferralLinks'
+  /getReferees:
+    $ref: './paths/referral.yaml#/paths/~1getReferees'

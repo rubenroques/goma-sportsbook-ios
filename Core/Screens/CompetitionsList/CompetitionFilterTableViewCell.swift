@@ -227,7 +227,7 @@ class CompetitionFilterTableViewCell: UITableViewCell {
         case .toggle:
             self.selectedImageView.isHidden = false
             self.navigationArrowImageView.isHidden = true
-            self.countryImageView.alpha = 1
+            self.countryImageView.alpha = 0
             self.setCellSelected(viewModel.isSelected)
         case .navigate:
             self.selectedImageView.isHidden = true

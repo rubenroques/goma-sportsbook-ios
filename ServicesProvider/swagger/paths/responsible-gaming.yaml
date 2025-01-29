@@ -1,0 +1,118 @@
+paths:
+  /setPersonalDepositLimits:
+    get:
+      tags:
+        - Responsible Gaming
+      summary: Update weekly deposit limits
+      description: Set personal deposit limits for the user
+      parameters:
+        - name: weeklyLimit
+          in: query
+          required: true
+          schema:
+            type: number
+            format: double
+            description: New weekly deposit limit amount
+
+  /updateWagerLimit:
+    get:
+      tags:
+        - Responsible Gaming
+      summary: Update weekly betting limits
+      description: Set personal betting limits for the user
+      parameters:
+        - name: limit
+          in: query
+          required: true
+          schema:
+            type: number
+            format: double
+            description: New weekly betting limit amount
+
+  /updateResponsibleGamingLimit:
+    get:
+      tags:
+        - Responsible Gaming
+      summary: Update responsible gaming limits
+      description: Set specific responsible gaming limits for the user
+      parameters:
+        - name: limitType
+          in: query
+          required: true
+          schema:
+            type: string
+            description: Type of limit to update
+        - name: periodType
+          in: query
+          required: true
+          schema:
+            type: string
+            description: Period for the limit (daily, weekly, monthly)
+        - name: limit
+          in: query
+          required: true
+          schema:
+            type: number
+            format: double
+            description: New limit amount
+
+  /getPersonalDepositLimits:
+    get:
+      tags:
+        - Responsible Gaming
+      summary: Get deposit limits
+      description: Retrieve current personal deposit limits
+
+  /getLimits:
+    get:
+      tags:
+        - Responsible Gaming
+      summary: Get all limits
+      description: Retrieve all current user limits
+
+  /getResponsibleGamingLimit:
+    get:
+      tags:
+        - Responsible Gaming
+      summary: Get specific responsible gaming limits
+      description: Retrieve specific responsible gaming limits
+      parameters:
+        - name: limitTypes
+          in: query
+          required: true
+          schema:
+            type: string
+            description: Type of limit to retrieve
+        - name: periodTypes
+          in: query
+          required: true
+          schema:
+            type: string
+            description: Period type to retrieve (daily, weekly, monthly)
+
+  /lockPlayer:
+    post:
+      tags:
+        - Responsible Gaming
+      summary: Lock player account
+      description: Temporarily or permanently lock the player's account
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                isPermanent:
+                  type: boolean
+                  description: Whether the lock is permanent
+                lockPeriodUnit:
+                  type: string
+                  description: Unit of time for temporary lock (days, weeks, months)
+                lockPeriod:
+                  type: string
+                  description: Duration of temporary lock
+                lockType:
+                  type: string
+                  enum: [TIMEOUT]
+                  default: TIMEOUT 

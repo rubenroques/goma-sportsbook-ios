@@ -1,0 +1,84 @@
+paths:
+  /contactus:
+    get:
+      tags:
+        - Support
+      summary: Contact us
+      description: Send a contact form message
+      security: []
+      parameters:
+        - name: firstName
+          in: query
+          required: true
+          schema:
+            type: string
+        - name: lastName
+          in: query
+          required: true
+          schema:
+            type: string
+        - name: email
+          in: query
+          required: true
+          schema:
+            type: string
+            format: email
+        - name: subject
+          in: query
+          required: true
+          schema:
+            type: string
+        - name: message
+          in: query
+          required: true
+          schema:
+            type: string
+
+  /api/v2/requests:
+    post:
+      tags:
+        - Support
+      summary: Contact support
+      description: Send a support request
+      parameters:
+        - name: userIdentifier
+          in: query
+          required: true
+          schema:
+            type: string
+        - name: firstName
+          in: query
+          required: true
+          schema:
+            type: string
+        - name: lastName
+          in: query
+          required: true
+          schema:
+            type: string
+        - name: email
+          in: query
+          required: true
+          schema:
+            type: string
+            format: email
+        - name: subject
+          in: query
+          required: true
+          schema:
+            type: string
+        - name: subjectType
+          in: query
+          required: true
+          schema:
+            type: string
+        - name: message
+          in: query
+          required: true
+          schema:
+            type: string
+        - name: isLogged
+          in: query
+          required: true
+          schema:
+            type: boolean 
