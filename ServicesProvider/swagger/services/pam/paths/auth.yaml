@@ -5,7 +5,7 @@ paths:
         - Authentication
       summary: Login to the system
       description: Authenticate a user with username and password
-      security: []  # No security required for login
+      security: []
       requestBody:
         required: true
         content:

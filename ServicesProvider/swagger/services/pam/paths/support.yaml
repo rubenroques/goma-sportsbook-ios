@@ -1,6 +1,6 @@
 paths:
   /contactus:
-    get:
+    post:
       tags:
         - Support
       summary: Contact us
@@ -81,4 +81,4 @@ paths:
           in: query
           required: true
           schema:
-            type: boolean 
+            type: boolean
