@@ -601,7 +601,6 @@
 		450B7AC128F58574009229E3 /* ActivationAlertScrollableTableViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = A9627A14274564890001E1D5 /* ActivationAlertScrollableTableViewCell.xib */; };
 		450B7AC228F58574009229E3 /* ThreeAwayMarketDetailTableViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 45626E37275541790069B89B /* ThreeAwayMarketDetailTableViewCell.xib */; };
 		450B7AC328F58574009229E3 /* SeeMoreMarketsCollectionViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 45CD7B57271738C7003044C5 /* SeeMoreMarketsCollectionViewCell.xib */; };
-		450B7AC528F58574009229E3 /* PreLiveEventsViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 45D712F127031DDE00AC0364 /* PreLiveEventsViewController.xib */; };
 		450B7AC628F58574009229E3 /* FullRegisterDocumentsViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = A92F5DA9272C44CD00884BDF /* FullRegisterDocumentsViewController.xib */; };
 		450B7AC728F58574009229E3 /* README.md in Resources */ = {isa = PBXBuildFile; fileRef = 45C3E8D127B406D8007A1A0F /* README.md */; };
 		450B7AC828F58574009229E3 /* BannerMatchCollectionViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 45D728D027158DA400EFE04D /* BannerMatchCollectionViewCell.xib */; };
@@ -1522,7 +1521,6 @@
 		457CBBEC282D27D000ED0F00 /* ActivationAlertScrollableTableViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = A9627A14274564890001E1D5 /* ActivationAlertScrollableTableViewCell.xib */; };
 		457CBBED282D27D000ED0F00 /* ThreeAwayMarketDetailTableViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 45626E37275541790069B89B /* ThreeAwayMarketDetailTableViewCell.xib */; };
 		457CBBEE282D27D000ED0F00 /* SeeMoreMarketsCollectionViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 45CD7B57271738C7003044C5 /* SeeMoreMarketsCollectionViewCell.xib */; };
-		457CBBF0282D27D000ED0F00 /* PreLiveEventsViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 45D712F127031DDE00AC0364 /* PreLiveEventsViewController.xib */; };
 		457CBBF1282D27D000ED0F00 /* FullRegisterDocumentsViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = A92F5DA9272C44CD00884BDF /* FullRegisterDocumentsViewController.xib */; };
 		457CBBF2282D27D000ED0F00 /* README.md in Resources */ = {isa = PBXBuildFile; fileRef = 45C3E8D127B406D8007A1A0F /* README.md */; };
 		457CBBF3282D27D000ED0F00 /* BannerMatchCollectionViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 45D728D027158DA400EFE04D /* BannerMatchCollectionViewCell.xib */; };
@@ -2053,7 +2051,6 @@
 		457CBE95282D2CD100ED0F00 /* ActivationAlertScrollableTableViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = A9627A14274564890001E1D5 /* ActivationAlertScrollableTableViewCell.xib */; };
 		457CBE96282D2CD100ED0F00 /* ThreeAwayMarketDetailTableViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 45626E37275541790069B89B /* ThreeAwayMarketDetailTableViewCell.xib */; };
 		457CBE97282D2CD100ED0F00 /* SeeMoreMarketsCollectionViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 45CD7B57271738C7003044C5 /* SeeMoreMarketsCollectionViewCell.xib */; };
-		457CBE99282D2CD100ED0F00 /* PreLiveEventsViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 45D712F127031DDE00AC0364 /* PreLiveEventsViewController.xib */; };
 		457CBE9A282D2CD100ED0F00 /* FullRegisterDocumentsViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = A92F5DA9272C44CD00884BDF /* FullRegisterDocumentsViewController.xib */; };
 		457CBE9B282D2CD100ED0F00 /* README.md in Resources */ = {isa = PBXBuildFile; fileRef = 45C3E8D127B406D8007A1A0F /* README.md */; };
 		457CBE9C282D2CD100ED0F00 /* BannerMatchCollectionViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 45D728D027158DA400EFE04D /* BannerMatchCollectionViewCell.xib */; };
@@ -2585,7 +2582,6 @@
 		4589C96B282024E400243547 /* ActivationAlertScrollableTableViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = A9627A14274564890001E1D5 /* ActivationAlertScrollableTableViewCell.xib */; };
 		4589C96C282024E400243547 /* ThreeAwayMarketDetailTableViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 45626E37275541790069B89B /* ThreeAwayMarketDetailTableViewCell.xib */; };
 		4589C96D282024E400243547 /* SeeMoreMarketsCollectionViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 45CD7B57271738C7003044C5 /* SeeMoreMarketsCollectionViewCell.xib */; };
-		4589C96F282024E400243547 /* PreLiveEventsViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 45D712F127031DDE00AC0364 /* PreLiveEventsViewController.xib */; };
 		4589C970282024E400243547 /* FullRegisterDocumentsViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = A92F5DA9272C44CD00884BDF /* FullRegisterDocumentsViewController.xib */; };
 		4589C971282024E400243547 /* README.md in Resources */ = {isa = PBXBuildFile; fileRef = 45C3E8D127B406D8007A1A0F /* README.md */; };
 		4589C972282024E400243547 /* BannerMatchCollectionViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 45D728D027158DA400EFE04D /* BannerMatchCollectionViewCell.xib */; };
@@ -3356,7 +3352,6 @@
 		45A332EB298976BA008181E9 /* ActivationAlertScrollableTableViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = A9627A14274564890001E1D5 /* ActivationAlertScrollableTableViewCell.xib */; };
 		45A332EC298976BA008181E9 /* ThreeAwayMarketDetailTableViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 45626E37275541790069B89B /* ThreeAwayMarketDetailTableViewCell.xib */; };
 		45A332ED298976BA008181E9 /* SeeMoreMarketsCollectionViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 45CD7B57271738C7003044C5 /* SeeMoreMarketsCollectionViewCell.xib */; };
-		45A332EF298976BA008181E9 /* PreLiveEventsViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 45D712F127031DDE00AC0364 /* PreLiveEventsViewController.xib */; };
 		45A332F0298976BA008181E9 /* FullRegisterDocumentsViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = A92F5DA9272C44CD00884BDF /* FullRegisterDocumentsViewController.xib */; };
 		45A332F1298976BA008181E9 /* README.md in Resources */ = {isa = PBXBuildFile; fileRef = 45C3E8D127B406D8007A1A0F /* README.md */; };
 		45A332F2298976BA008181E9 /* BannerMatchCollectionViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 45D728D027158DA400EFE04D /* BannerMatchCollectionViewCell.xib */; };
@@ -3901,7 +3896,6 @@
 		45A6BDC428246A7500D9B416 /* ActivationAlertScrollableTableViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = A9627A14274564890001E1D5 /* ActivationAlertScrollableTableViewCell.xib */; };
 		45A6BDC528246A7500D9B416 /* ThreeAwayMarketDetailTableViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 45626E37275541790069B89B /* ThreeAwayMarketDetailTableViewCell.xib */; };
 		45A6BDC628246A7500D9B416 /* SeeMoreMarketsCollectionViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 45CD7B57271738C7003044C5 /* SeeMoreMarketsCollectionViewCell.xib */; };
-		45A6BDC828246A7500D9B416 /* PreLiveEventsViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 45D712F127031DDE00AC0364 /* PreLiveEventsViewController.xib */; };
 		45A6BDC928246A7500D9B416 /* FullRegisterDocumentsViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = A92F5DA9272C44CD00884BDF /* FullRegisterDocumentsViewController.xib */; };
 		45A6BDCA28246A7500D9B416 /* README.md in Resources */ = {isa = PBXBuildFile; fileRef = 45C3E8D127B406D8007A1A0F /* README.md */; };
 		45A6BDCB28246A7500D9B416 /* BannerMatchCollectionViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 45D728D027158DA400EFE04D /* BannerMatchCollectionViewCell.xib */; };
@@ -5137,7 +5131,6 @@
 		45F6BDC82AB3732C00C81DE1 /* sports-loading.json in Resources */ = {isa = PBXBuildFile; fileRef = 45E46C162A08FEB900BB9B85 /* sports-loading.json */; };
 		45F6BDC92AB3732C00C81DE1 /* SeeMoreMarketsCollectionViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 45CD7B57271738C7003044C5 /* SeeMoreMarketsCollectionViewCell.xib */; };
 		45F6BDCB2AB3732C00C81DE1 /* Betsson-Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 45A3335C298976E3008181E9 /* Betsson-Assets.xcassets */; };
-		45F6BDCC2AB3732C00C81DE1 /* PreLiveEventsViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 45D712F127031DDE00AC0364 /* PreLiveEventsViewController.xib */; };
 		45F6BDCD2AB3732C00C81DE1 /* FullRegisterDocumentsViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = A92F5DA9272C44CD00884BDF /* FullRegisterDocumentsViewController.xib */; };
 		45F6BDCE2AB3732C00C81DE1 /* README.md in Resources */ = {isa = PBXBuildFile; fileRef = 45C3E8D127B406D8007A1A0F /* README.md */; };
 		45F6BDCF2AB3732C00C81DE1 /* BannerMatchCollectionViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 45D728D027158DA400EFE04D /* BannerMatchCollectionViewCell.xib */; };
@@ -6854,7 +6847,6 @@
 		A9C3431928F9A74A0055360B /* ActivationAlertScrollableTableViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = A9627A14274564890001E1D5 /* ActivationAlertScrollableTableViewCell.xib */; };
 		A9C3431A28F9A74A0055360B /* ThreeAwayMarketDetailTableViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 45626E37275541790069B89B /* ThreeAwayMarketDetailTableViewCell.xib */; };
 		A9C3431B28F9A74A0055360B /* SeeMoreMarketsCollectionViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 45CD7B57271738C7003044C5 /* SeeMoreMarketsCollectionViewCell.xib */; };
-		A9C3431D28F9A74A0055360B /* PreLiveEventsViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 45D712F127031DDE00AC0364 /* PreLiveEventsViewController.xib */; };
 		A9C3431E28F9A74A0055360B /* FullRegisterDocumentsViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = A92F5DA9272C44CD00884BDF /* FullRegisterDocumentsViewController.xib */; };
 		A9C3431F28F9A74A0055360B /* README.md in Resources */ = {isa = PBXBuildFile; fileRef = 45C3E8D127B406D8007A1A0F /* README.md */; };
 		A9C3432028F9A74A0055360B /* BannerMatchCollectionViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 45D728D027158DA400EFE04D /* BannerMatchCollectionViewCell.xib */; };
@@ -7914,7 +7906,6 @@
 		CE12A4502D31347E0022BDF7 /* ActivationAlertScrollableTableViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = A9627A14274564890001E1D5 /* ActivationAlertScrollableTableViewCell.xib */; };
 		CE12A4512D31347E0022BDF7 /* ThreeAwayMarketDetailTableViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 45626E37275541790069B89B /* ThreeAwayMarketDetailTableViewCell.xib */; };
 		CE12A4522D31347E0022BDF7 /* SeeMoreMarketsCollectionViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 45CD7B57271738C7003044C5 /* SeeMoreMarketsCollectionViewCell.xib */; };
-		CE12A4532D31347E0022BDF7 /* PreLiveEventsViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 45D712F127031DDE00AC0364 /* PreLiveEventsViewController.xib */; };
 		CE12A4542D31347E0022BDF7 /* Media.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = CE12A0E32D2D992C0022BDF7 /* Media.xcassets */; };
 		CE12A4552D31347E0022BDF7 /* FullRegisterDocumentsViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = A92F5DA9272C44CD00884BDF /* FullRegisterDocumentsViewController.xib */; };
 		CE12A4562D31347E0022BDF7 /* README.md in Resources */ = {isa = PBXBuildFile; fileRef = 45C3E8D127B406D8007A1A0F /* README.md */; };
@@ -8055,6 +8046,15 @@
 		CE18A9F72D4908A600AC48AA /* SimpleCompetitionDetailsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE18A9E52D4908A600AC48AA /* SimpleCompetitionDetailsViewController.swift */; };
 		CE18A9F82D4908A600AC48AA /* SimpleCompetitionDetailsViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE18A9E62D4908A600AC48AA /* SimpleCompetitionDetailsViewModel.swift */; };
 		CE18A9F92D4908A600AC48AA /* SimpleCompetitionDetailsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE18A9E52D4908A600AC48AA /* SimpleCompetitionDetailsViewController.swift */; };
+		CE18A9FB2D4B19CA00AC48AA /* PreLiveEventsViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = CE18A9FA2D4B19CA00AC48AA /* PreLiveEventsViewController.xib */; };
+		CE18A9FC2D4B19CA00AC48AA /* PreLiveEventsViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = CE18A9FA2D4B19CA00AC48AA /* PreLiveEventsViewController.xib */; };
+		CE18A9FD2D4B19CA00AC48AA /* PreLiveEventsViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = CE18A9FA2D4B19CA00AC48AA /* PreLiveEventsViewController.xib */; };
+		CE18A9FE2D4B19CA00AC48AA /* PreLiveEventsViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = CE18A9FA2D4B19CA00AC48AA /* PreLiveEventsViewController.xib */; };
+		CE18A9FF2D4B19CA00AC48AA /* PreLiveEventsViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = CE18A9FA2D4B19CA00AC48AA /* PreLiveEventsViewController.xib */; };
+		CE18AA002D4B19CA00AC48AA /* PreLiveEventsViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = CE18A9FA2D4B19CA00AC48AA /* PreLiveEventsViewController.xib */; };
+		CE18AA012D4B19CA00AC48AA /* PreLiveEventsViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = CE18A9FA2D4B19CA00AC48AA /* PreLiveEventsViewController.xib */; };
+		CE18AA022D4B19CA00AC48AA /* PreLiveEventsViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = CE18A9FA2D4B19CA00AC48AA /* PreLiveEventsViewController.xib */; };
+		CE18AA032D4B19CA00AC48AA /* PreLiveEventsViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = CE18A9FA2D4B19CA00AC48AA /* PreLiveEventsViewController.xib */; };
 		CE21C3512CEB96490012CABA /* cashbackVideo.mp4 in Resources */ = {isa = PBXBuildFile; fileRef = CE21C3502CEB96490012CABA /* cashbackVideo.mp4 */; };
 		CE21C3522CEB96490012CABA /* cashbackVideo.mp4 in Resources */ = {isa = PBXBuildFile; fileRef = CE21C3502CEB96490012CABA /* cashbackVideo.mp4 */; };
 		CE21C3532CEB96490012CABA /* cashbackVideo.mp4 in Resources */ = {isa = PBXBuildFile; fileRef = CE21C3502CEB96490012CABA /* cashbackVideo.mp4 */; };
@@ -8597,7 +8597,6 @@
 		45D527E12720575000744D34 /* CompetitionFilterRowViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CompetitionFilterRowViewModel.swift; sourceTree = "<group>"; };
 		45D64AF02B6002F70092DA8E /* BoostedBetConfirmationView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BoostedBetConfirmationView.swift; sourceTree = "<group>"; };
 		45D712F027031DDE00AC0364 /* PreLiveEventsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PreLiveEventsViewController.swift; sourceTree = "<group>"; };
-		45D712F127031DDE00AC0364 /* PreLiveEventsViewController.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = PreLiveEventsViewController.xib; sourceTree = "<group>"; };
 		45D712F627033BEF00AC0364 /* LiveEventsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LiveEventsViewController.swift; sourceTree = "<group>"; };
 		45D712F727033BEF00AC0364 /* LiveEventsViewController.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = LiveEventsViewController.xib; sourceTree = "<group>"; };
 		45D728CC2714AD8C00EFE04D /* MatchWidgetCellViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MatchWidgetCellViewModel.swift; sourceTree = "<group>"; };
@@ -9081,6 +9080,7 @@
 		CE16F2872D417EC9000BEF9F /* ChipsTypeViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChipsTypeViewModel.swift; sourceTree = "<group>"; };
 		CE18A9E52D4908A600AC48AA /* SimpleCompetitionDetailsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SimpleCompetitionDetailsViewController.swift; sourceTree = "<group>"; };
 		CE18A9E62D4908A600AC48AA /* SimpleCompetitionDetailsViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SimpleCompetitionDetailsViewModel.swift; sourceTree = "<group>"; };
+		CE18A9FA2D4B19CA00AC48AA /* PreLiveEventsViewController.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = PreLiveEventsViewController.xib; sourceTree = "<group>"; };
 		CE21C3502CEB96490012CABA /* cashbackVideo.mp4 */ = {isa = PBXFileReference; lastKnownFileType = file; path = cashbackVideo.mp4; sourceTree = "<group>"; };
 		CE25A5FC2D42940E00B748D6 /* ChipCollectionViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChipCollectionViewCell.swift; sourceTree = "<group>"; };
 		CE2E0F122D3995D100488EF5 /* replay_sucess.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = replay_sucess.json; sourceTree = "<group>"; };
@@ -11210,7 +11210,7 @@
 			isa = PBXGroup;
 			children = (
 				45D712F027031DDE00AC0364 /* PreLiveEventsViewController.swift */,
-				45D712F127031DDE00AC0364 /* PreLiveEventsViewController.xib */,
+				CE18A9FA2D4B19CA00AC48AA /* PreLiveEventsViewController.xib */,
 				45109A642799C7EA00E4AC2E /* ViewModels */,
 				45C26DC627976A1000513D41 /* DataSources */,
 				45D871CE271098F100F5B87B /* Cells */,
@@ -13597,6 +13597,7 @@
 				450B7AB028F58574009229E3 /* EnabledAccessViewController.xib in Resources */,
 				450B7AB128F58574009229E3 /* VersionUpdateViewController.xib in Resources */,
 				450B7AB228F58574009229E3 /* CompetitionsFiltersView.xib in Resources */,
+				CE18A9FC2D4B19CA00AC48AA /* PreLiveEventsViewController.xib in Resources */,
 				450B7AB328F58574009229E3 /* FilterCollapseView.xib in Resources */,
 				450B7AB428F58574009229E3 /* PhonePrefixSelectorViewController.xib in Resources */,
 				A9B6307D291BE10200BB850E /* stats_widget_light.html in Resources */,
@@ -13613,7 +13614,6 @@
 				450B7AC128F58574009229E3 /* ActivationAlertScrollableTableViewCell.xib in Resources */,
 				450B7AC228F58574009229E3 /* ThreeAwayMarketDetailTableViewCell.xib in Resources */,
 				450B7AC328F58574009229E3 /* SeeMoreMarketsCollectionViewCell.xib in Resources */,
-				450B7AC528F58574009229E3 /* PreLiveEventsViewController.xib in Resources */,
 				CE12A0E42D2D992C0022BDF7 /* Media.xcassets in Resources */,
 				450B7AC628F58574009229E3 /* FullRegisterDocumentsViewController.xib in Resources */,
 				450B7AC728F58574009229E3 /* README.md in Resources */,
@@ -13737,6 +13737,7 @@
 				457CBBCF282D27D000ED0F00 /* WithdrawViewController.xib in Resources */,
 				457CBBD0282D27D000ED0F00 /* SportsTypes.xcassets in Resources */,
 				457CBBD1282D27D000ED0F00 /* BetslipErrorView.xib in Resources */,
+				CE18AA002D4B19CA00AC48AA /* PreLiveEventsViewController.xib in Resources */,
 				457CBBD2282D27D000ED0F00 /* SimpleRegisterDetailsViewController.xib in Resources */,
 				457CBBD3282D27D000ED0F00 /* DebugViewController.xib in Resources */,
 				45F2F9AE298C067C0075AF02 /* StaticColors.xcassets in Resources */,
@@ -13770,7 +13771,6 @@
 				457CBBEC282D27D000ED0F00 /* ActivationAlertScrollableTableViewCell.xib in Resources */,
 				457CBBED282D27D000ED0F00 /* ThreeAwayMarketDetailTableViewCell.xib in Resources */,
 				457CBBEE282D27D000ED0F00 /* SeeMoreMarketsCollectionViewCell.xib in Resources */,
-				457CBBF0282D27D000ED0F00 /* PreLiveEventsViewController.xib in Resources */,
 				450FC3EA2A2A6737000DB866 /* DummyImages.xcassets in Resources */,
 				457CBBF1282D27D000ED0F00 /* FullRegisterDocumentsViewController.xib in Resources */,
 				457CBBF2282D27D000ED0F00 /* README.md in Resources */,
@@ -13880,6 +13880,7 @@
 				457CBE76282D2CD100ED0F00 /* WithdrawViewController.xib in Resources */,
 				457CBE77282D2CD100ED0F00 /* SportsTypes.xcassets in Resources */,
 				457CBE78282D2CD100ED0F00 /* BetslipErrorView.xib in Resources */,
+				CE18AA012D4B19CA00AC48AA /* PreLiveEventsViewController.xib in Resources */,
 				457CBE79282D2CD100ED0F00 /* SimpleRegisterDetailsViewController.xib in Resources */,
 				457CBE7A282D2CD100ED0F00 /* DebugViewController.xib in Resources */,
 				45F2F9AF298C067C0075AF02 /* StaticColors.xcassets in Resources */,
@@ -13912,7 +13913,6 @@
 				457CBE95282D2CD100ED0F00 /* ActivationAlertScrollableTableViewCell.xib in Resources */,
 				457CBE96282D2CD100ED0F00 /* ThreeAwayMarketDetailTableViewCell.xib in Resources */,
 				457CBE97282D2CD100ED0F00 /* SeeMoreMarketsCollectionViewCell.xib in Resources */,
-				457CBE99282D2CD100ED0F00 /* PreLiveEventsViewController.xib in Resources */,
 				457CBE9A282D2CD100ED0F00 /* FullRegisterDocumentsViewController.xib in Resources */,
 				450FC3EB2A2A6737000DB866 /* DummyImages.xcassets in Resources */,
 				457CBE9B282D2CD100ED0F00 /* README.md in Resources */,
@@ -14023,6 +14023,7 @@
 				4589C94D282024E400243547 /* WithdrawViewController.xib in Resources */,
 				4589C94E282024E400243547 /* SportsTypes.xcassets in Resources */,
 				4589C94F282024E400243547 /* BetslipErrorView.xib in Resources */,
+				CE18A9FD2D4B19CA00AC48AA /* PreLiveEventsViewController.xib in Resources */,
 				4589C950282024E400243547 /* SimpleRegisterDetailsViewController.xib in Resources */,
 				4589C951282024E400243547 /* DebugViewController.xib in Resources */,
 				45F2F9AB298C067C0075AF02 /* StaticColors.xcassets in Resources */,
@@ -14054,7 +14055,6 @@
 				4589C96B282024E400243547 /* ActivationAlertScrollableTableViewCell.xib in Resources */,
 				4589C96C282024E400243547 /* ThreeAwayMarketDetailTableViewCell.xib in Resources */,
 				4589C96D282024E400243547 /* SeeMoreMarketsCollectionViewCell.xib in Resources */,
-				4589C96F282024E400243547 /* PreLiveEventsViewController.xib in Resources */,
 				4589C970282024E400243547 /* FullRegisterDocumentsViewController.xib in Resources */,
 				4589C971282024E400243547 /* README.md in Resources */,
 				450FC3E72A2A6737000DB866 /* DummyImages.xcassets in Resources */,
@@ -14181,6 +14181,7 @@
 				45A332DA298976BA008181E9 /* VersionUpdateViewController.xib in Resources */,
 				45A332DB298976BA008181E9 /* CompetitionsFiltersView.xib in Resources */,
 				45A33364298976E3008181E9 /* Colors.xcassets in Resources */,
+				CE18A9FE2D4B19CA00AC48AA /* PreLiveEventsViewController.xib in Resources */,
 				45A332DC298976BA008181E9 /* FilterCollapseView.xib in Resources */,
 				45A332DD298976BA008181E9 /* PhonePrefixSelectorViewController.xib in Resources */,
 				45B9F97F2A1E2BCE00DA2B88 /* home_template.js in Resources */,
@@ -14214,7 +14215,6 @@
 				45E46C172A08FEB900BB9B85 /* sports-loading.json in Resources */,
 				45A332ED298976BA008181E9 /* SeeMoreMarketsCollectionViewCell.xib in Resources */,
 				45A33363298976E3008181E9 /* Betsson-Assets.xcassets in Resources */,
-				45A332EF298976BA008181E9 /* PreLiveEventsViewController.xib in Resources */,
 				45A332F0298976BA008181E9 /* FullRegisterDocumentsViewController.xib in Resources */,
 				45A332F1298976BA008181E9 /* README.md in Resources */,
 				45A332F2298976BA008181E9 /* BannerMatchCollectionViewCell.xib in Resources */,
@@ -14312,6 +14312,7 @@
 				45A6BDA628246A7500D9B416 /* WithdrawViewController.xib in Resources */,
 				45A6BDA728246A7500D9B416 /* SportsTypes.xcassets in Resources */,
 				45A6BDA828246A7500D9B416 /* BetslipErrorView.xib in Resources */,
+				CE18AA032D4B19CA00AC48AA /* PreLiveEventsViewController.xib in Resources */,
 				45A6BDA928246A7500D9B416 /* SimpleRegisterDetailsViewController.xib in Resources */,
 				45A6BDAA28246A7500D9B416 /* DebugViewController.xib in Resources */,
 				45F2F9AD298C067C0075AF02 /* StaticColors.xcassets in Resources */,
@@ -14343,7 +14344,6 @@
 				45A6BDC428246A7500D9B416 /* ActivationAlertScrollableTableViewCell.xib in Resources */,
 				45A6BDC528246A7500D9B416 /* ThreeAwayMarketDetailTableViewCell.xib in Resources */,
 				45A6BDC628246A7500D9B416 /* SeeMoreMarketsCollectionViewCell.xib in Resources */,
-				45A6BDC828246A7500D9B416 /* PreLiveEventsViewController.xib in Resources */,
 				45A6BDC928246A7500D9B416 /* FullRegisterDocumentsViewController.xib in Resources */,
 				45A6BDCA28246A7500D9B416 /* README.md in Resources */,
 				450FC3E92A2A6737000DB866 /* DummyImages.xcassets in Resources */,
@@ -14470,6 +14470,7 @@
 				45F6BDB22AB3732C00C81DE1 /* VersionUpdateViewController.xib in Resources */,
 				45F6BDB32AB3732C00C81DE1 /* CompetitionsFiltersView.xib in Resources */,
 				45F6BDB52AB3732C00C81DE1 /* Colors.xcassets in Resources */,
+				CE18A9FF2D4B19CA00AC48AA /* PreLiveEventsViewController.xib in Resources */,
 				45F6BDB62AB3732C00C81DE1 /* FilterCollapseView.xib in Resources */,
 				45F6BDB72AB3732C00C81DE1 /* PhonePrefixSelectorViewController.xib in Resources */,
 				45F6BDB82AB3732C00C81DE1 /* home_template.js in Resources */,
@@ -14490,7 +14491,6 @@
 				45F6BDC92AB3732C00C81DE1 /* SeeMoreMarketsCollectionViewCell.xib in Resources */,
 				CE12A0E62D2D99B60022BDF7 /* Media.xcassets in Resources */,
 				45F6BDCB2AB3732C00C81DE1 /* Betsson-Assets.xcassets in Resources */,
-				45F6BDCC2AB3732C00C81DE1 /* PreLiveEventsViewController.xib in Resources */,
 				45F6BDCD2AB3732C00C81DE1 /* FullRegisterDocumentsViewController.xib in Resources */,
 				45F6BDCE2AB3732C00C81DE1 /* README.md in Resources */,
 				45F6BDCF2AB3732C00C81DE1 /* BannerMatchCollectionViewCell.xib in Resources */,
@@ -14608,6 +14608,7 @@
 				A9C342FC28F9A74A0055360B /* WithdrawViewController.xib in Resources */,
 				A9BAFB462AB0B46D002EDBA1 /* Localizable.strings in Resources */,
 				A9C342FD28F9A74A0055360B /* SportsTypes.xcassets in Resources */,
+				CE18AA022D4B19CA00AC48AA /* PreLiveEventsViewController.xib in Resources */,
 				A9C342FE28F9A74A0055360B /* BetslipErrorView.xib in Resources */,
 				A9C342FF28F9A74A0055360B /* SimpleRegisterDetailsViewController.xib in Resources */,
 				A9C3430028F9A74A0055360B /* DebugViewController.xib in Resources */,
@@ -14640,7 +14641,6 @@
 				A9C3431B28F9A74A0055360B /* SeeMoreMarketsCollectionViewCell.xib in Resources */,
 				45ED1AE92A37781100770CEF /* TinderStyleBetBuilder.html in Resources */,
 				45E46C1A2A08FEB900BB9B85 /* sports-loading.json in Resources */,
-				A9C3431D28F9A74A0055360B /* PreLiveEventsViewController.xib in Resources */,
 				A9C3431E28F9A74A0055360B /* FullRegisterDocumentsViewController.xib in Resources */,
 				A9C3431F28F9A74A0055360B /* README.md in Resources */,
 				A9C3432028F9A74A0055360B /* BannerMatchCollectionViewCell.xib in Resources */,
@@ -14766,6 +14766,7 @@
 				CE12A4402D31347E0022BDF7 /* EnabledAccessViewController.xib in Resources */,
 				CE12A4412D31347E0022BDF7 /* VersionUpdateViewController.xib in Resources */,
 				CE12A4422D31347E0022BDF7 /* CompetitionsFiltersView.xib in Resources */,
+				CE18A9FB2D4B19CA00AC48AA /* PreLiveEventsViewController.xib in Resources */,
 				CE12A4432D31347E0022BDF7 /* FilterCollapseView.xib in Resources */,
 				CE12A4442D31347E0022BDF7 /* PhonePrefixSelectorViewController.xib in Resources */,
 				CE12A4452D31347E0022BDF7 /* stats_widget_light.html in Resources */,
@@ -14782,7 +14783,6 @@
 				CE12A4502D31347E0022BDF7 /* ActivationAlertScrollableTableViewCell.xib in Resources */,
 				CE12A4512D31347E0022BDF7 /* ThreeAwayMarketDetailTableViewCell.xib in Resources */,
 				CE12A4522D31347E0022BDF7 /* SeeMoreMarketsCollectionViewCell.xib in Resources */,
-				CE12A4532D31347E0022BDF7 /* PreLiveEventsViewController.xib in Resources */,
 				CE12A4542D31347E0022BDF7 /* Media.xcassets in Resources */,
 				CE12A4552D31347E0022BDF7 /* FullRegisterDocumentsViewController.xib in Resources */,
 				CE12A4562D31347E0022BDF7 /* README.md in Resources */,
