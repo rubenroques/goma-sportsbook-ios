@@ -436,7 +436,7 @@ class MatchDetailsViewModel: NSObject {
 
     func selectMarketType(atIndex index: Int) {
         self.selectedMarketTypeIndexPublisher.send(index)
-       // self.chipsTypeViewModel.selectTab(at: index)
+        self.chipsTypeViewModel.selectTab(at: index)
     }
 
     func numberOfMarketGroups() -> Int {
