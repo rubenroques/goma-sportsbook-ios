@@ -208,16 +208,21 @@ class MatchDetailsViewModel: NSObject {
                 return marketGroups.firstIndex(where: { $0.isDefault ?? false }) ?? 0
             }
             .sink { [weak self] defaultSelectedIndex in
-                if let showMixMatchDefault = self?.showMixMatchDefault,
-                showMixMatchDefault {
-                    self?.selectedMarketTypeIndexPublisher.send(1)
+                if let showMixMatchDefault = self?.showMixMatchDefault, showMixMatchDefault {
+                    self?.chipsTypeViewModel.selectTab(at: 1)
                 }
                 else {
-                    self?.selectedMarketTypeIndexPublisher.send(defaultSelectedIndex)
+                    self?.chipsTypeViewModel.selectTab(at: defaultSelectedIndex)
                 }
             }
             .store(in: &self.cancellables)
 
+        self.chipsTypeViewModel.$selectedIndex
+            .sink { [weak self] selectedIndex in
+                self?.selectedMarketTypeIndexPublisher.send(selectedIndex)
+            }
+            .store(in: &self.cancellables)
+        
         self.matchStatsViewModel.statsTypePublisher
             .receive(on: DispatchQueue.main)
             .sink { [weak self] statsJSON in
@@ -431,6 +436,7 @@ class MatchDetailsViewModel: NSObject {
 
     func selectMarketType(atIndex index: Int) {
         self.selectedMarketTypeIndexPublisher.send(index)
+        self.chipsTypeViewModel.selectTab(at: index)
     }
 
     func numberOfMarketGroups() -> Int {
@@ -467,99 +473,6 @@ extension MatchDetailsViewModel {
 
         }
         return marketGroups
-    }
-
-}
-
-extension MatchDetailsViewModel: UICollectionViewDataSource, UICollectionViewDelegate {
-
-    func numberOfSections(in collectionView: UICollectionView) -> Int {
-        return 1
-    }
-
-    func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        return self.numberOfMarketGroups()
-    }
-
-    func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
-
-        if let item = self.marketGroup(forIndex: indexPath.row),
-           item.id == "99" && item.type == "MixMatch" {
-
-            guard
-                let cell = collectionView.dequeueCellType(ListBackgroundCollectionViewCell.self, indexPath: indexPath)
-            else {
-                fatalError()
-            }
-
-            cell.isCustomDesign = true
-
-            let marketTranslatedName = item.translatedName ?? localized("market")
-
-            let normalizedTranslatedName = marketTranslatedName.replacingOccurrences(of: "[^a-zA-Z0-9]", with: "_", options: .regularExpression).lowercased()
-
-            let marketName = "\(localized("mix_match_mix_string"))\(localized("mix_match_match_string"))"
-
-            cell.setupInfo(title: marketName, iconName: "mix_match_icon", backgroundName: "mix_match_background_pill")
-
-            if let index = self.selectedMarketTypeIndexPublisher.value, index == indexPath.row {
-                cell.setSelectedType(true)
-                self.shouldShowTabTooltip?()
-            }
-            else {
-                cell.setSelectedType(false)
-            }
-
-            return cell
-        }
-        else {
-            guard
-                let cell = collectionView.dequeueCellType(ListTypeCollectionViewCell.self, indexPath: indexPath),
-                let item = self.marketGroup(forIndex: indexPath.row)
-            else {
-                fatalError()
-            }
-
-            let marketTranslatedName = item.translatedName ?? localized("market")
-
-            let normalizedTranslatedName = marketTranslatedName.replacingOccurrences(of: "[^a-zA-Z0-9]", with: "_", options: .regularExpression).lowercased()
-
-            let marketKey = "market_group_\(normalizedTranslatedName)"
-
-            var marketName = localized(marketKey)
-
-            if normalizedTranslatedName == "mixmatch" {
-                marketName = "\(localized("mix_match_mix_string"))\(localized("mix_match_match_string"))"
-            }
-
-            cell.isCustomDesign = true
-
-            cell.setupWithTitle(marketName)
-
-            if let index = self.selectedMarketTypeIndexPublisher.value, index == indexPath.row {
-                cell.setSelectedType(true)
-            }
-            else {
-                cell.setSelectedType(false)
-            }
-
-            return cell
-        }
-    }
-
-    func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
-        let previousSelectionValue = self.selectedMarketTypeIndexPublisher.value ?? -1
-        if indexPath.row != previousSelectionValue {
-            self.selectedMarketTypeIndexPublisher.send(indexPath.row)
-
-            // Perform scroll with the same duration as UIPageViewController's default transition (0.3s)
-            UIView.animate(withDuration: 0.3, delay: 0, options: .curveEaseInOut) {
-                collectionView.scrollToItem(at: indexPath, at: .centeredHorizontally, animated: false)
-            }
-        }
-        else {
-            self.scrollToTopAction?(indexPath.row)
-        }
     }
 
 }
