@@ -86,6 +86,8 @@ enum SportsbookTargetFeatures: CaseIterable {
     case freebets
 
     case casino
+    
+    case legalAgeWarning
 }
 
 enum SportsbookSupportedLanguage: String, CaseIterable {
