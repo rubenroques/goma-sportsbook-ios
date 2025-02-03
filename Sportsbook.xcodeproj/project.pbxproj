@@ -3,7 +3,7 @@
 	archiveVersion = 1;
 	classes = {
 	};
-	objectVersion = 54;
+	objectVersion = 70;
 	objects = {
 
 /* Begin PBXBuildFile section */
@@ -5252,6 +5252,35 @@
 		6531BB932C0A295B002C696D /* replay_coin.json in Resources */ = {isa = PBXBuildFile; fileRef = 6531BB8D2C0A295B002C696D /* replay_coin.json */; };
 		6531BB942C0A295B002C696D /* replay_coin.json in Resources */ = {isa = PBXBuildFile; fileRef = 6531BB8D2C0A295B002C696D /* replay_coin.json */; };
 		6531BB952C0A295B002C696D /* replay_coin.json in Resources */ = {isa = PBXBuildFile; fileRef = 6531BB8D2C0A295B002C696D /* replay_coin.json */; };
+		653A37872D4BDB7900B89CDF /* TallProgressBarView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 653A37862D4BDB7900B89CDF /* TallProgressBarView.swift */; };
+		653A37882D4BDB7900B89CDF /* TallProgressBarView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 653A37862D4BDB7900B89CDF /* TallProgressBarView.swift */; };
+		653A37892D4BDB7900B89CDF /* TallProgressBarView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 653A37862D4BDB7900B89CDF /* TallProgressBarView.swift */; };
+		653A378A2D4BDB7900B89CDF /* TallProgressBarView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 653A37862D4BDB7900B89CDF /* TallProgressBarView.swift */; };
+		653A378B2D4BDB7900B89CDF /* TallProgressBarView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 653A37862D4BDB7900B89CDF /* TallProgressBarView.swift */; };
+		653A378C2D4BDB7900B89CDF /* TallProgressBarView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 653A37862D4BDB7900B89CDF /* TallProgressBarView.swift */; };
+		653A378D2D4BDB7900B89CDF /* TallProgressBarView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 653A37862D4BDB7900B89CDF /* TallProgressBarView.swift */; };
+		653A378E2D4BDB7900B89CDF /* TallProgressBarView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 653A37862D4BDB7900B89CDF /* TallProgressBarView.swift */; };
+		653A378F2D4BDB7900B89CDF /* TallProgressBarView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 653A37862D4BDB7900B89CDF /* TallProgressBarView.swift */; };
+		653A37922D4BDBC500B89CDF /* QuestionFormStepView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 653A37912D4BDBC500B89CDF /* QuestionFormStepView.swift */; };
+		653A37932D4BDBC500B89CDF /* QuestionFormStepView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 653A37912D4BDBC500B89CDF /* QuestionFormStepView.swift */; };
+		653A37942D4BDBC500B89CDF /* QuestionFormStepView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 653A37912D4BDBC500B89CDF /* QuestionFormStepView.swift */; };
+		653A37952D4BDBC500B89CDF /* QuestionFormStepView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 653A37912D4BDBC500B89CDF /* QuestionFormStepView.swift */; };
+		653A37962D4BDBC500B89CDF /* QuestionFormStepView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 653A37912D4BDBC500B89CDF /* QuestionFormStepView.swift */; };
+		653A37972D4BDBC500B89CDF /* QuestionFormStepView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 653A37912D4BDBC500B89CDF /* QuestionFormStepView.swift */; };
+		653A37982D4BDBC500B89CDF /* QuestionFormStepView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 653A37912D4BDBC500B89CDF /* QuestionFormStepView.swift */; };
+		653A37992D4BDBC500B89CDF /* QuestionFormStepView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 653A37912D4BDBC500B89CDF /* QuestionFormStepView.swift */; };
+		653A379A2D4BDBC500B89CDF /* QuestionFormStepView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 653A37912D4BDBC500B89CDF /* QuestionFormStepView.swift */; };
+		653A37C42D4D3A9900B89CDF /* TripleAnswerQuestionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 653A37C32D4D3A9900B89CDF /* TripleAnswerQuestionView.swift */; };
+		653A37C52D4D3A9900B89CDF /* TripleAnswerQuestionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 653A37C32D4D3A9900B89CDF /* TripleAnswerQuestionView.swift */; };
+		653A37C62D4D3A9900B89CDF /* TripleAnswerQuestionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 653A37C32D4D3A9900B89CDF /* TripleAnswerQuestionView.swift */; };
+		653A37C72D4D3A9900B89CDF /* TripleAnswerQuestionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 653A37C32D4D3A9900B89CDF /* TripleAnswerQuestionView.swift */; };
+		653A37C82D4D3A9900B89CDF /* TripleAnswerQuestionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 653A37C32D4D3A9900B89CDF /* TripleAnswerQuestionView.swift */; };
+		653A37C92D4D3A9900B89CDF /* TripleAnswerQuestionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 653A37C32D4D3A9900B89CDF /* TripleAnswerQuestionView.swift */; };
+		653A37CA2D4D3A9900B89CDF /* TripleAnswerQuestionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 653A37C32D4D3A9900B89CDF /* TripleAnswerQuestionView.swift */; };
+		653A37CB2D4D3A9900B89CDF /* TripleAnswerQuestionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 653A37C32D4D3A9900B89CDF /* TripleAnswerQuestionView.swift */; };
+		653A37CC2D4D3A9900B89CDF /* TripleAnswerQuestionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 653A37C32D4D3A9900B89CDF /* TripleAnswerQuestionView.swift */; };
+		653A37CE2D50E0BF00B89CDF /* FirebaseFirestore in Frameworks */ = {isa = PBXBuildFile; productRef = 653A37CD2D50E0BF00B89CDF /* FirebaseFirestore */; };
+		653A37D02D50E0DD00B89CDF /* FirebaseFirestoreSwift in Frameworks */ = {isa = PBXBuildFile; productRef = 653A37CF2D50E0DD00B89CDF /* FirebaseFirestoreSwift */; };
 		6547C8762C63C0AC0041409C /* HeroCardSecondaryMarketCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6547C8752C63C0AC0041409C /* HeroCardSecondaryMarketCollectionViewCell.swift */; };
 		6547C8772C63C0AC0041409C /* HeroCardSecondaryMarketCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6547C8752C63C0AC0041409C /* HeroCardSecondaryMarketCollectionViewCell.swift */; };
 		6547C8782C63C0AC0041409C /* HeroCardSecondaryMarketCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6547C8752C63C0AC0041409C /* HeroCardSecondaryMarketCollectionViewCell.swift */; };
@@ -8640,6 +8669,9 @@
 		45FF105229D74721009AC196 /* UserTrackingSettingsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserTrackingSettingsViewController.swift; sourceTree = "<group>"; };
 		65238DFF2C206C77005703C2 /* FeaturedCompetition.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FeaturedCompetition.swift; sourceTree = "<group>"; };
 		6531BB8D2C0A295B002C696D /* replay_coin.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = replay_coin.json; sourceTree = "<group>"; };
+		653A37862D4BDB7900B89CDF /* TallProgressBarView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TallProgressBarView.swift; sourceTree = "<group>"; };
+		653A37912D4BDBC500B89CDF /* QuestionFormStepView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QuestionFormStepView.swift; sourceTree = "<group>"; };
+		653A37C32D4D3A9900B89CDF /* TripleAnswerQuestionView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TripleAnswerQuestionView.swift; sourceTree = "<group>"; };
 		6547C8752C63C0AC0041409C /* HeroCardSecondaryMarketCollectionViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HeroCardSecondaryMarketCollectionViewCell.swift; sourceTree = "<group>"; };
 		6547C87F2C63DBF00041409C /* CustomPageControl.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomPageControl.swift; sourceTree = "<group>"; };
 		6547C8882C650BA50041409C /* CustomPageIndicator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomPageIndicator.swift; sourceTree = "<group>"; };
@@ -9109,6 +9141,10 @@
 		F4F8C9F127C0126D0082CC08 /* FilterHistoryViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FilterHistoryViewController.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
+/* Begin PBXFileSystemSynchronizedRootGroup section */
+		653A37712D4A527800B89CDF /* BettingPractices */ = {isa = PBXFileSystemSynchronizedRootGroup; explicitFileTypes = {}; explicitFolders = (); path = BettingPractices; sourceTree = "<group>"; };
+/* End PBXFileSystemSynchronizedRootGroup section */
+
 /* Begin PBXFrameworksBuildPhase section */
 		450B7A8F28F58574009229E3 /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
@@ -9337,6 +9373,7 @@
 				45C10EED2C652AC500D187A1 /* (null) in Frameworks */,
 				45C10F2F2C652AC500D187A1 /* Adyen in Frameworks */,
 				45C10EEE2C652AC500D187A1 /* (null) in Frameworks */,
+				653A37D02D50E0DD00B89CDF /* FirebaseFirestoreSwift in Frameworks */,
 				45C10EEF2C652AC500D187A1 /* (null) in Frameworks */,
 				45C10F2E2C652AC500D187A1 /* AdyenDropIn in Frameworks */,
 				45C10F252C652AC500D187A1 /* OrderedCollections in Frameworks */,
@@ -9407,6 +9444,7 @@
 				45C10F3D2C652AC500D187A1 /* ZendeskChatSDK in Frameworks */,
 				45C10F0E2C652AC500D187A1 /* (null) in Frameworks */,
 				45C10F0F2C652AC500D187A1 /* (null) in Frameworks */,
+				653A37CE2D50E0BF00B89CDF /* FirebaseFirestore in Frameworks */,
 				45C10F102C652AC500D187A1 /* (null) in Frameworks */,
 				45C10F112C652AC500D187A1 /* (null) in Frameworks */,
 				45C10F122C652AC500D187A1 /* (null) in Frameworks */,
@@ -10638,6 +10676,7 @@
 		4589F40726BF01B4005DF543 /* Views */ = {
 			isa = PBXGroup;
 			children = (
+				653A37902D4BDBB500B89CDF /* Questions */,
 				CE16F27C2D417E9A000BEF9F /* ChipsTypeView */,
 				CEB24B9E2CED274D0031F470 /* ScaleAspectFitImageView.swift */,
 				45644F9D2C9B5C16001C6464 /* OpenStatsButton */,
@@ -10701,6 +10740,7 @@
 				A9527C2B2A9CEDC0006F4E37 /* InfoDialogView.swift */,
 				655E20092B28A14700C95337 /* TextSectionView.swift */,
 				655E20122B29CB7E00C95337 /* TextSubsectionView.swift */,
+				653A37862D4BDB7900B89CDF /* TallProgressBarView.swift */,
 			);
 			path = Views;
 			sourceTree = "<group>";
@@ -11430,6 +11470,15 @@
 				45F805952A05385B005296E0 /* dots-loading.json */,
 			);
 			path = Animations;
+			sourceTree = "<group>";
+		};
+		653A37902D4BDBB500B89CDF /* Questions */ = {
+			isa = PBXGroup;
+			children = (
+				653A37912D4BDBC500B89CDF /* QuestionFormStepView.swift */,
+				653A37C32D4D3A9900B89CDF /* TripleAnswerQuestionView.swift */,
+			);
+			path = Questions;
 			sourceTree = "<group>";
 		};
 		6547C87E2C63DBCE0041409C /* HeroCard */ = {
@@ -12680,6 +12729,7 @@
 		A9C82FB226F3AB3400059DCD /* Profile */ = {
 			isa = PBXGroup;
 			children = (
+				653A37712D4A527800B89CDF /* BettingPractices */,
 				A91A05B629CB532B00E0A772 /* CloseAccount */,
 				A90FB7ED29B0C4BC00D08A7C /* TipsControl */,
 				A90FB7E329B0BD6500D08A7C /* CasualGambling */,
@@ -13021,6 +13071,9 @@
 			);
 			dependencies = (
 			);
+			fileSystemSynchronizedGroups = (
+				653A37712D4A527800B89CDF /* BettingPractices */,
+			);
 			name = "SportRadar UAT";
 			packageProductDependencies = (
 				450B782428F58574009229E3 /* Reachability */,
@@ -13106,6 +13159,9 @@
 			);
 			dependencies = (
 			);
+			fileSystemSynchronizedGroups = (
+				653A37712D4A527800B89CDF /* BettingPractices */,
+			);
 			name = EveryMatrix;
 			packageProductDependencies = (
 				457CB9C6282D27D000ED0F00 /* Reachability */,
@@ -13142,6 +13198,9 @@
 			);
 			dependencies = (
 			);
+			fileSystemSynchronizedGroups = (
+				653A37712D4A527800B89CDF /* BettingPractices */,
+			);
 			name = Crocobet;
 			packageProductDependencies = (
 				457CBC6D282D2CD100ED0F00 /* Reachability */,
@@ -13177,6 +13236,9 @@
 			buildRules = (
 			);
 			dependencies = (
+			);
+			fileSystemSynchronizedGroups = (
+				653A37712D4A527800B89CDF /* BettingPractices */,
 			);
 			name = GOMASports;
 			packageProductDependencies = (
@@ -13224,6 +13286,9 @@
 			);
 			dependencies = (
 				655E20012B21E8A500C95337 /* PBXTargetDependency */,
+			);
+			fileSystemSynchronizedGroups = (
+				653A37712D4A527800B89CDF /* BettingPractices */,
 			);
 			name = "Betsson PROD";
 			packageProductDependencies = (
@@ -13291,6 +13356,9 @@
 			);
 			dependencies = (
 			);
+			fileSystemSynchronizedGroups = (
+				653A37712D4A527800B89CDF /* BettingPractices */,
+			);
 			name = DAZN;
 			packageProductDependencies = (
 				45A6BB9F28246A7400D9B416 /* Reachability */,
@@ -13326,6 +13394,9 @@
 			buildRules = (
 			);
 			dependencies = (
+			);
+			fileSystemSynchronizedGroups = (
+				653A37712D4A527800B89CDF /* BettingPractices */,
 			);
 			name = "Betsson UAT";
 			packageProductDependencies = (
@@ -13375,6 +13446,8 @@
 				659510ED2B2C7004001B2F2E /* Sociomantic */,
 				659510EF2B2C7004001B2F2E /* Trademob */,
 				659510F12B2C7004001B2F2E /* WebBridge */,
+				653A37CD2D50E0BF00B89CDF /* FirebaseFirestore */,
+				653A37CF2D50E0DD00B89CDF /* FirebaseFirestoreSwift */,
 			);
 			productName = Sportsbook;
 			productReference = 45F6BE372AB3732C00C81DE1 /* Betsson UAT.app */;
@@ -13413,6 +13486,9 @@
 			);
 			dependencies = (
 			);
+			fileSystemSynchronizedGroups = (
+				653A37712D4A527800B89CDF /* BettingPractices */,
+			);
 			name = GomaSportRadar;
 			packageProductDependencies = (
 				A9C3407F28F9A74A0055360B /* Reachability */,
@@ -13447,6 +13523,9 @@
 			buildRules = (
 			);
 			dependencies = (
+			);
+			fileSystemSynchronizedGroups = (
+				653A37712D4A527800B89CDF /* BettingPractices */,
 			);
 			name = "SportRadar PROD";
 			packageProductDependencies = (
@@ -15383,6 +15462,7 @@
 				450B794E28F58574009229E3 /* SportSelectionCollectionViewCell.swift in Sources */,
 				450B794F28F58574009229E3 /* MultiSlider.swift in Sources */,
 				A99DE663299E825900AA24AA /* RecoverPasswordViewModel.swift in Sources */,
+				653A37892D4BDB7900B89CDF /* TallProgressBarView.swift in Sources */,
 				450B795028F58574009229E3 /* UserLoginForm.swift in Sources */,
 				450B795128F58574009229E3 /* OutrightCompetitionWidgetCollectionViewCell.swift in Sources */,
 				450B795228F58574009229E3 /* Tournament.swift in Sources */,
@@ -15615,6 +15695,7 @@
 				45B9F9782A1E245700DA2B88 /* ClientManagedHomeViewTemplateDataSource.swift in Sources */,
 				450B7A1428F58574009229E3 /* BusinessModules.swift in Sources */,
 				450B7A1628F58574009229E3 /* NSObject+Extension.swift in Sources */,
+				653A37992D4BDBC500B89CDF /* QuestionFormStepView.swift in Sources */,
 				45DB8D9D2A66D9480018C591 /* DebugUserDefaults.swift in Sources */,
 				450B7A1728F58574009229E3 /* Logger.swift in Sources */,
 				450B7A1828F58574009229E3 /* NavControllerTransitionCoordinator.swift in Sources */,
@@ -15629,6 +15710,7 @@
 				452B9D322C1B54860032363F /* ListBackgroundCollectionViewCell.swift in Sources */,
 				450B7A1E28F58574009229E3 /* EmptyCardTableViewCell.swift in Sources */,
 				450B7A2028F58574009229E3 /* AddFriendViewController.swift in Sources */,
+				653A37CB2D4D3A9900B89CDF /* TripleAnswerQuestionView.swift in Sources */,
 				45F6BA712AAF32A100C81DE1 /* BetslipProxyWebViewController.swift in Sources */,
 				450B7A2128F58574009229E3 /* GroupUserManagementCellViewModel.swift in Sources */,
 				450B7A2228F58574009229E3 /* NetworkModels.swift in Sources */,
@@ -16373,12 +16455,14 @@
 				457CBB21282D27D000ED0F00 /* ThreeAwayMarketDetailTableViewCell.swift in Sources */,
 				A9FB6D5F28C657CE00E3FE58 /* TipsListViewController.swift in Sources */,
 				457CBB22282D27D000ED0F00 /* AddFriendViewModel.swift in Sources */,
+				653A37972D4BDBC500B89CDF /* QuestionFormStepView.swift in Sources */,
 				457CBB24282D27D000ED0F00 /* UIView+Extensions.swift in Sources */,
 				457CBB26282D27D000ED0F00 /* HistoryRootViewController.swift in Sources */,
 				457CBB27282D27D000ED0F00 /* TransactionHistory.swift in Sources */,
 				452B9D1B2C188FEF0032363F /* MultipleBettingTicketDataSource.swift in Sources */,
 				457CBB28282D27D000ED0F00 /* EnvironmentType.swift in Sources */,
 				A9B946BA28BFAA3E0091296E /* FeaturedTipView.swift in Sources */,
+				653A37CC2D4D3A9900B89CDF /* TripleAnswerQuestionView.swift in Sources */,
 				457CBB29282D27D000ED0F00 /* CountrySelectorTableViewCell.swift in Sources */,
 				457CBB2A282D27D000ED0F00 /* BannerTopCollectionViewCell.swift in Sources */,
 				45C10F3228772DA700037BBE /* NavControllerTrasntitionDismissing.swift in Sources */,
@@ -16579,6 +16663,7 @@
 				A99DE67929A643F800AA24AA /* PaymentStatus.swift in Sources */,
 				4521F08F2CC55BC200C2E4FD /* MarketWidgetContainerTableViewCell.swift in Sources */,
 				65F8842E2C1C43D300A56983 /* BannerTournamentTableViewHeader.swift in Sources */,
+				653A378F2D4BDB7900B89CDF /* TallProgressBarView.swift in Sources */,
 				457CBBA7282D27D000ED0F00 /* RecentSearchHeaderView.swift in Sources */,
 				65F8841B2C1B081E00A56983 /* PromotedCompetitionTableViewCell.swift in Sources */,
 				A93FE2262A45A8B9006A6907 /* CashbackBalanceView.swift in Sources */,
@@ -16695,6 +16780,7 @@
 				A9A1B2D62A0E56CF00F7A8ED /* ServiceProviderModelMapper+UserConsent.swift in Sources */,
 				457CBCBD282D2CD100ED0F00 /* Constants.swift in Sources */,
 				A9C2D52A29C2286F00DB95BD /* IBANProofViewController.swift in Sources */,
+				653A378B2D4BDB7900B89CDF /* TallProgressBarView.swift in Sources */,
 				457CBCBF282D2CD100ED0F00 /* ConversationsDetailViewModel.swift in Sources */,
 				45B6E203283E3F20001B570C /* EditContactViewModel.swift in Sources */,
 				457CBCC0282D2CD100ED0F00 /* DocumentPickerView.swift in Sources */,
@@ -16924,6 +17010,7 @@
 				457CBD53282D2CD100ED0F00 /* Sport.swift in Sources */,
 				A96FAEDD2981912100A0751F /* UploadDocuments.swift in Sources */,
 				457CBD54282D2CD100ED0F00 /* NotificationsViewModel.swift in Sources */,
+				653A37932D4BDBC500B89CDF /* QuestionFormStepView.swift in Sources */,
 				45CE4DDE2B04E357005C2414 /* SecundaryMarketsService.swift in Sources */,
 				457CBD55282D2CD100ED0F00 /* UserSessionStore.swift in Sources */,
 				45B6E21C283FCF7E001B570C /* SentTicketMessageTableViewCell.swift in Sources */,
@@ -17234,6 +17321,7 @@
 				457CBE2A282D2CD100ED0F00 /* DebugViewController.swift in Sources */,
 				457CBE2B282D2CD100ED0F00 /* UIViewController+Extensions.swift in Sources */,
 				459EF2892BBF39610098A7F6 /* FadingView.swift in Sources */,
+				653A37C52D4D3A9900B89CDF /* TripleAnswerQuestionView.swift in Sources */,
 				457CBE2C282D2CD100ED0F00 /* CompetitionsFiltersView.swift in Sources */,
 				A9BA04152A3099FA007880FC /* ManualUploadDocumentsViewController.swift in Sources */,
 				45D881FA2C5A4A6F003E1360 /* BetslipModels.swift in Sources */,
@@ -17669,6 +17757,7 @@
 				4589C843282024E400243547 /* MultiSlider.swift in Sources */,
 				4589C844282024E400243547 /* UserLoginForm.swift in Sources */,
 				A99DE664299E825900AA24AA /* RecoverPasswordViewModel.swift in Sources */,
+				653A378A2D4BDB7900B89CDF /* TallProgressBarView.swift in Sources */,
 				4589C845282024E400243547 /* OutrightCompetitionWidgetCollectionViewCell.swift in Sources */,
 				4589C846282024E400243547 /* Tournament.swift in Sources */,
 				4589C847282024E400243547 /* OverUnderMarketDetailTableViewCell.swift in Sources */,
@@ -17901,6 +17990,7 @@
 				45B9F9792A1E245700DA2B88 /* ClientManagedHomeViewTemplateDataSource.swift in Sources */,
 				45D1ED5D28A150C2001E18E5 /* BusinessModules.swift in Sources */,
 				4589C8DE282024E400243547 /* NSObject+Extension.swift in Sources */,
+				653A37982D4BDBC500B89CDF /* QuestionFormStepView.swift in Sources */,
 				45DB8D9E2A66D9480018C591 /* DebugUserDefaults.swift in Sources */,
 				4589C8DF282024E400243547 /* Logger.swift in Sources */,
 				45C10F3628772DA700037BBE /* NavControllerTransitionCoordinator.swift in Sources */,
@@ -17915,6 +18005,7 @@
 				452B9D332C1B54870032363F /* ListBackgroundCollectionViewCell.swift in Sources */,
 				4589C8E4282024E400243547 /* AddFriendViewController.swift in Sources */,
 				4589C8E5282024E400243547 /* GroupUserManagementCellViewModel.swift in Sources */,
+				653A37CA2D4D3A9900B89CDF /* TripleAnswerQuestionView.swift in Sources */,
 				45F6BA722AAF32A100C81DE1 /* BetslipProxyWebViewController.swift in Sources */,
 				4589C8E6282024E400243547 /* NetworkModels.swift in Sources */,
 				4589C8E7282024E400243547 /* RootViewController.swift in Sources */,
@@ -18392,6 +18483,7 @@
 				45A33165298976BA008181E9 /* VersionUpdateViewController.swift in Sources */,
 				45A33166298976BA008181E9 /* SportSelectionCollectionViewCell.swift in Sources */,
 				A99DE662299E825900AA24AA /* RecoverPasswordViewModel.swift in Sources */,
+				653A37872D4BDB7900B89CDF /* TallProgressBarView.swift in Sources */,
 				45A33167298976BA008181E9 /* MultiSlider.swift in Sources */,
 				45A33168298976BA008181E9 /* UserLoginForm.swift in Sources */,
 				45A33169298976BA008181E9 /* OutrightCompetitionWidgetCollectionViewCell.swift in Sources */,
@@ -18624,6 +18716,7 @@
 				45B9F9772A1E245700DA2B88 /* ClientManagedHomeViewTemplateDataSource.swift in Sources */,
 				45A33231298976BA008181E9 /* SimpleRegisterEmailCheckViewController.swift in Sources */,
 				45A33232298976BA008181E9 /* BusinessModules.swift in Sources */,
+				653A37952D4BDBC500B89CDF /* QuestionFormStepView.swift in Sources */,
 				45DB8D9C2A66D9480018C591 /* DebugUserDefaults.swift in Sources */,
 				45A33234298976BA008181E9 /* NSObject+Extension.swift in Sources */,
 				45A33235298976BA008181E9 /* Logger.swift in Sources */,
@@ -18638,6 +18731,7 @@
 				452B9D302C1B54860032363F /* ListBackgroundCollectionViewCell.swift in Sources */,
 				45A3323E298976BA008181E9 /* EmptyCardTableViewCell.swift in Sources */,
 				45A33240298976BA008181E9 /* AddFriendViewController.swift in Sources */,
+				653A37C42D4D3A9900B89CDF /* TripleAnswerQuestionView.swift in Sources */,
 				455E86B92AC464B20031AF26 /* TargetVariables-PROD.swift in Sources */,
 				45F6BA702AAF32A100C81DE1 /* BetslipProxyWebViewController.swift in Sources */,
 				45A33241298976BA008181E9 /* GroupUserManagementCellViewModel.swift in Sources */,
@@ -19115,6 +19209,7 @@
 				45A6BC9428246A7500D9B416 /* UserLoginForm.swift in Sources */,
 				45A6BC9528246A7500D9B416 /* OutrightCompetitionWidgetCollectionViewCell.swift in Sources */,
 				45A6BC9628246A7500D9B416 /* Tournament.swift in Sources */,
+				653A378C2D4BDB7900B89CDF /* TallProgressBarView.swift in Sources */,
 				45A6BC9728246A7500D9B416 /* OverUnderMarketDetailTableViewCell.swift in Sources */,
 				45A6BC9828246A7500D9B416 /* SearchViewModel.swift in Sources */,
 				45A6BC9A28246A7500D9B416 /* DepositResponse.swift in Sources */,
@@ -19347,6 +19442,7 @@
 				45A6BD3328246A7500D9B416 /* SimpleRegisterEmailCheckViewController.swift in Sources */,
 				454F73B9299152C100437460 /* GradientView.swift in Sources */,
 				45A6BD3528246A7500D9B416 /* NSObject+Extension.swift in Sources */,
+				653A37922D4BDBC500B89CDF /* QuestionFormStepView.swift in Sources */,
 				45C10F3728772DA700037BBE /* NavControllerTransitionCoordinator.swift in Sources */,
 				45CE4DDC2B04E357005C2414 /* SecundaryMarketsService.swift in Sources */,
 				45B6E205283E3F21001B570C /* EditContactViewModel.swift in Sources */,
@@ -19361,6 +19457,7 @@
 				45A6BD3B28246A7500D9B416 /* AddFriendViewController.swift in Sources */,
 				45A6BD3C28246A7500D9B416 /* GroupUserManagementCellViewModel.swift in Sources */,
 				A9C04C2F2A7D04C50025A6DA /* MyGamesRootViewModel.swift in Sources */,
+				653A37C72D4D3A9900B89CDF /* TripleAnswerQuestionView.swift in Sources */,
 				45B74AD4292BFE3500F2076C /* ServiceProviderType.swift in Sources */,
 				45A6BD3D28246A7500D9B416 /* NetworkModels.swift in Sources */,
 				45A6BD3E28246A7500D9B416 /* RootViewController.swift in Sources */,
@@ -19838,6 +19935,7 @@
 				45F6BC102AB3732C00C81DE1 /* VersionUpdateViewController.swift in Sources */,
 				45F6BC112AB3732C00C81DE1 /* SportSelectionCollectionViewCell.swift in Sources */,
 				45F6BC122AB3732C00C81DE1 /* RecoverPasswordViewModel.swift in Sources */,
+				653A378E2D4BDB7900B89CDF /* TallProgressBarView.swift in Sources */,
 				45F6BC132AB3732C00C81DE1 /* MultiSlider.swift in Sources */,
 				45F6BC142AB3732C00C81DE1 /* UserLoginForm.swift in Sources */,
 				45F6BC152AB3732C00C81DE1 /* OutrightCompetitionWidgetCollectionViewCell.swift in Sources */,
@@ -20070,6 +20168,7 @@
 				45F6BCE82AB3732C00C81DE1 /* String+Extensions.swift in Sources */,
 				45F6BCE92AB3732C00C81DE1 /* ClientManagedHomeViewTemplateDataSource.swift in Sources */,
 				45F6BCEA2AB3732C00C81DE1 /* SimpleRegisterEmailCheckViewController.swift in Sources */,
+				653A379A2D4BDBC500B89CDF /* QuestionFormStepView.swift in Sources */,
 				45F6BCEB2AB3732C00C81DE1 /* BusinessModules.swift in Sources */,
 				45F6BCEC2AB3732C00C81DE1 /* DebugUserDefaults.swift in Sources */,
 				45F6BCED2AB3732C00C81DE1 /* NSObject+Extension.swift in Sources */,
@@ -20084,6 +20183,7 @@
 				452B9D312C1B54860032363F /* ListBackgroundCollectionViewCell.swift in Sources */,
 				45F6BCF62AB3732C00C81DE1 /* SportTypeStore.swift in Sources */,
 				45F6BCF72AB3732C00C81DE1 /* EmptyCardTableViewCell.swift in Sources */,
+				653A37C92D4D3A9900B89CDF /* TripleAnswerQuestionView.swift in Sources */,
 				45F6BCF82AB3732C00C81DE1 /* AddFriendViewController.swift in Sources */,
 				45F6BCF92AB3732C00C81DE1 /* BetslipProxyWebViewController.swift in Sources */,
 				45F6BCFA2AB3732C00C81DE1 /* GroupUserManagementCellViewModel.swift in Sources */,
@@ -20314,6 +20414,7 @@
 				A9C340D328F9A74A0055360B /* OddsViewModel.swift in Sources */,
 				6584F9022BA0B84200E317EA /* EmptyReferralView.swift in Sources */,
 				A9C340D428F9A74A0055360B /* BonusProgressViewModel.swift in Sources */,
+				653A37882D4BDB7900B89CDF /* TallProgressBarView.swift in Sources */,
 				65F884222C1B4A3700A56983 /* FeaturedCompetitionDetailRootViewController.swift in Sources */,
 				A9C340D528F9A74A0055360B /* SportSelectionViewController.swift in Sources */,
 				A9C340D628F9A74A0055360B /* SportMatchDoubleLineTableViewCell.swift in Sources */,
@@ -20543,6 +20644,7 @@
 				A9C3418828F9A74A0055360B /* CompetitionsDataSource.swift in Sources */,
 				A9C3418928F9A74A0055360B /* TipsSliderViewModel.swift in Sources */,
 				A9C3418B28F9A74A0055360B /* GamesNotificationViewController.swift in Sources */,
+				653A37962D4BDBC500B89CDF /* QuestionFormStepView.swift in Sources */,
 				A9C3418C28F9A74A0055360B /* MarketGroupDetailsViewModel.swift in Sources */,
 				A9C3418D28F9A74A0055360B /* UIViewController+SwiftUI.swift in Sources */,
 				A9C3418E28F9A74A0055360B /* BonusDetailViewModel.swift in Sources */,
@@ -20853,6 +20955,7 @@
 				A9C2D52729C2286F00DB95BD /* IBANProofViewController.swift in Sources */,
 				A9C3429828F9A74A0055360B /* MyAccountViewController.swift in Sources */,
 				A9C3429928F9A74A0055360B /* FullRegisterPersonalInfoViewController.swift in Sources */,
+				653A37C62D4D3A9900B89CDF /* TripleAnswerQuestionView.swift in Sources */,
 				A9C3429A28F9A74A0055360B /* MarketGroupDetailsViewController.swift in Sources */,
 				A90FB7CA29AF7C1700D08A7C /* ResponsibleGamingViewController.swift in Sources */,
 				A9C3429C28F9A74A0055360B /* ConversationBetSelectionViewModel.swift in Sources */,
@@ -21288,6 +21391,7 @@
 				CE12A27C2D31347E0022BDF7 /* MultiSlider.swift in Sources */,
 				CE12A27D2D31347E0022BDF7 /* RecoverPasswordViewModel.swift in Sources */,
 				CE12A27E2D31347E0022BDF7 /* UserLoginForm.swift in Sources */,
+				653A378D2D4BDB7900B89CDF /* TallProgressBarView.swift in Sources */,
 				CE12A27F2D31347E0022BDF7 /* OutrightCompetitionWidgetCollectionViewCell.swift in Sources */,
 				CE12A2802D31347E0022BDF7 /* Tournament.swift in Sources */,
 				CE12A2812D31347E0022BDF7 /* MyCompetitionsViewModel.swift in Sources */,
@@ -21520,6 +21624,7 @@
 				CE12A3632D31347E0022BDF7 /* BusinessModules.swift in Sources */,
 				CE12A3642D31347E0022BDF7 /* NSObject+Extension.swift in Sources */,
 				CE12A3652D31347E0022BDF7 /* DebugUserDefaults.swift in Sources */,
+				653A37942D4BDBC500B89CDF /* QuestionFormStepView.swift in Sources */,
 				CE12A3662D31347E0022BDF7 /* Logger.swift in Sources */,
 				CE12A3672D31347E0022BDF7 /* NavControllerTransitionCoordinator.swift in Sources */,
 				CE12A3682D31347E0022BDF7 /* GamesNotificationViewModel.swift in Sources */,
@@ -21534,6 +21639,7 @@
 				CE12A3712D31347E0022BDF7 /* EmptyCardTableViewCell.swift in Sources */,
 				CE12A3722D31347E0022BDF7 /* AddFriendViewController.swift in Sources */,
 				CE12A3732D31347E0022BDF7 /* BetslipProxyWebViewController.swift in Sources */,
+				653A37C82D4D3A9900B89CDF /* TripleAnswerQuestionView.swift in Sources */,
 				CE12A3742D31347E0022BDF7 /* GroupUserManagementCellViewModel.swift in Sources */,
 				CE12A3752D31347E0022BDF7 /* NetworkModels.swift in Sources */,
 				CE12A3762D31347E0022BDF7 /* RootViewController.swift in Sources */,
@@ -24208,6 +24314,16 @@
 			isa = XCSwiftPackageProductDependency;
 			package = 45F805912A05357E005296E0 /* XCRemoteSwiftPackageReference "lottie-spm" */;
 			productName = Lottie;
+		};
+		653A37CD2D50E0BF00B89CDF /* FirebaseFirestore */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 452047AB2703597500B277B5 /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */;
+			productName = FirebaseFirestore;
+		};
+		653A37CF2D50E0DD00B89CDF /* FirebaseFirestoreSwift */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 452047AB2703597500B277B5 /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */;
+			productName = FirebaseFirestoreSwift;
 		};
 		655E20062B21E9E100C95337 /* OptimoveNotificationServiceExtension */ = {
 			isa = XCSwiftPackageProductDependency;

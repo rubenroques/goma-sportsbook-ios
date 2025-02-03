@@ -118,11 +118,15 @@ class GenericAvatarSuccessViewController: UIViewController {
 
     }
 
-    func setTextInfo(title: String, subtitle: String) {
+    func setTextInfo(title: String, subtitle: String, buttonText: String? = nil) {
 
         self.titleLabel.text = title
 
         self.subtitleLabel.text = subtitle
+        
+        if let buttonText {
+            self.continueButton.setTitle(buttonText, for: .normal)
+        }
     }
 
     @objc private func didTapCloseButton() {
