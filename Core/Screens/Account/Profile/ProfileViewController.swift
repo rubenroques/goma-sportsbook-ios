@@ -90,12 +90,12 @@ class ProfileViewController: UIViewController {
     }()
 
     // Constraints
-    @IBOutlet weak var profileBaseViewLeadingConstraint: NSLayoutConstraint!
-    @IBOutlet weak var profileBaseViewCenterXConstraint: NSLayoutConstraint!
+    @IBOutlet private weak var profileBaseViewLeadingConstraint: NSLayoutConstraint!
+    @IBOutlet private weak var profileBaseViewCenterXConstraint: NSLayoutConstraint!
     
-    @IBOutlet weak var titleLabelTopConstraint: NSLayoutConstraint!
+    @IBOutlet private weak var titleLabelTopConstraint: NSLayoutConstraint!
     
-    @IBOutlet weak var topBarViewHeightConstraint: NSLayoutConstraint!
+    @IBOutlet private weak var topBarViewHeightConstraint: NSLayoutConstraint!
     
     var depositOnRegisterViewController: DepositOnRegisterViewController?
 

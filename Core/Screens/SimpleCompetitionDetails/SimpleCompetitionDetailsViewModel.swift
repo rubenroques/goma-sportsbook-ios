@@ -149,8 +149,8 @@ class SimpleCompetitionDetailsViewModel {
             case .connected(let subscription):
                 self?.competitionMatchesSubscription = subscription
             case .contentUpdate(let eventsGroups):
-                if let outrightMatch = ServiceProviderModelMapper.matches(fromEventsGroups: eventsGroups).first {
-                    self?.processCompetitionOutrights(outrightMatch: outrightMatch, competitionInfo: competitionInfo)
+                if let outrightCompetition = ServiceProviderModelMapper.competitions(fromEventsGroups: eventsGroups).first {
+                    self?.processCompetitionOutrights(outrightCompetition: outrightCompetition, competitionInfo: competitionInfo)
                 }
                 self?.activeNetworkRequestCount -= 1
             case .disconnected:
@@ -160,19 +160,18 @@ class SimpleCompetitionDetailsViewModel {
         .store(in: &cancellables)
     }
 
-    private func processCompetitionOutrights(outrightMatch: Match, competitionInfo: SportCompetitionInfo) {
+    private func processCompetitionOutrights(outrightCompetition: Competition, competitionInfo: SportCompetitionInfo) {
         let numberOutrightMarkets = competitionInfo.numberOutrightMarkets == "0" ? 1 : Int(competitionInfo.numberOutrightMarkets) ?? 0
-
         let newCompetition = Competition(id: competitionInfo.id,
-                                       name: competitionInfo.name,
-                                       matches: [],
-                                       venue: outrightMatch.venue,
-                                       sport: nil,
-                                       numberOutrightMarkets: numberOutrightMarkets,
-                                       competitionInfo: competitionInfo)
-
+                                         name: competitionInfo.name,
+                                         matches: [],
+                                         venue: outrightCompetition.venue,
+                                         sport: nil,
+                                         numberOutrightMarkets: numberOutrightMarkets,
+                                         competitionInfo: competitionInfo)
         self.competitionSubject.send(newCompetition)
     }
+    
 }
 
 extension SimpleCompetitionDetailsViewModel {
@@ -225,4 +224,4 @@ extension SimpleCompetitionDetailsViewModel {
 
         return nil
     }
-} 
+}

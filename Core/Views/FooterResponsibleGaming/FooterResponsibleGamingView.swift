@@ -272,7 +272,7 @@ class FooterResponsibleGamingView: UIView {
     }
 
     @objc func openIntagramURL() {
-        self.openURL("https://www.instagram.com/betssonfrance/")
+        self.openURL("https://www.instagram.com/betsson_france/")
     }
 
     @objc func openTwitterURL() {

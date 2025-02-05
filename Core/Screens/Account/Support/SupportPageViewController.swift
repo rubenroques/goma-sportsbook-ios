@@ -7,14 +7,6 @@
 
 import UIKit
 import Combine
-import ZendeskCoreSDK // Core
-import MessagingSDK // UI provider
-import AnswerBotSDK // UI provider
-import SupportSDK // UI provider
-import ChatSDK // UI provider
-import SupportProvidersSDK // API provider
-import AnswerBotProvidersSDK // API provider
-import ChatProvidersSDK
 import WebKit
 
 class SupportPageViewController: UIViewController {
