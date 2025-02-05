@@ -116,3 +116,4 @@ culprits.txt
 Agents/APIDocAnalyzer/__pycache__
 Agents/APIDocAnalyzer/venv
 Scripts/APIDocAnalyzer/venv
+ServicesProvider/swagger/node_modules

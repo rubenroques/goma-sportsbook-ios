@@ -7,6 +7,8 @@
     "start": "node server.js"
   },
   "dependencies": {
+    "@ngrok/ngrok": "^0.9.1",
+    "dotenv": "^16.4.1",
     "express": "^4.18.2",
     "swagger-ui-express": "^5.0.0",
     "yamljs": "^0.3.0",

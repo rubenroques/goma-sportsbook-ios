@@ -506,7 +506,7 @@ class PreSubmissionBetslipViewController: UIViewController {
         self.secondaryPlaceBetButtonsSeparatorView.alpha = 1.0
 
         self.simpleWinningsValueLabel.text = localized("no_value")
-        self.simpleOddsTitleLabel.text = localized("bets") + ":"
+        self.simpleOddsTitleLabel.text = localized("total_bets")
         self.simpleOddsValueLabel.text = "1"
 
         self.multipleOddsTitleLabel.text = localized("total_odd")
@@ -522,14 +522,14 @@ class PreSubmissionBetslipViewController: UIViewController {
         self.secondaryMultipleOddsValueLabel.text = "-.--"
 
         self.systemWinningsValueLabel.text = localized("no_value")
-        self.systemOddsTitleLabel.text = localized("total_bet_amount")
+        self.systemOddsTitleLabel.text = localized("total_amount")
         self.systemOddsValueLabel.text = localized("no_value")
 
         self.systemBetTypeTitleLabel.text = localized("system_options")
 
         //
         self.mixMatchWinningsValueLabel.text = localized("no_value")
-        self.mixMatchOddsTitleLabel.text = localized("total_bet_amount")
+        self.mixMatchOddsTitleLabel.text = localized("total_odd")
         self.mixMatchOddsValueLabel.text = localized("no_value")
 
         self.secondaryMixMatchWinningsValueLabel.text = localized("no_value")

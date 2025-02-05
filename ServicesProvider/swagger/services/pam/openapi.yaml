@@ -2,17 +2,19 @@ openapi: 3.0.0
 info:
   title: PAM Omega API
   description: API for Player Account Management System
-  version: 1.0.0
+  version: 0.0.1
   contact:
     name: API Support
     email: support@example.com
 
 servers:
-  - url: https://ps.omegasys.eu/ps/ips
+  - url: https://ips.betsson.fr
     description: Production server
-  - url: https://ps.omegasys.eu/ps/ips
+  - url: https://ips-stg.betsson.fr
     description: Development server
-  - url: https://ps.omegasys.eu
+  - url: https://betssonfrance.zendesk.com
+    description: Support server
+  - url: https://api.sumsub.com
     description: SumSub server
 
 tags:

@@ -427,12 +427,12 @@ extension SportRadarModels {
             nameValue = nameValue.replacingOccurrences(of: "\r", with: "")
             self.name = nameValue
             
-            
             self.marketTypeId = try container.decodeIfPresent(String.self, forKey: .marketTypeId)
             
             self.eventMarketTypeId = try container.decodeIfPresent(String.self, forKey: .eventMarketTypeId)
             self.marketTypeCategoryId = try container.decodeIfPresent(String.self, forKey: .marketTypeCategoryId)
-
+            
+            // Fallback to marketTypeCategoryId if marketTypeId is empty
             if self.marketTypeId == nil && self.marketTypeCategoryId != nil {
                 self.marketTypeId = self.marketTypeCategoryId
             }

@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="21507" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="23094" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
     <device id="retina6_1" orientation="portrait" appearance="light"/>
     <dependencies>
         <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="21505"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="23084"/>
         <capability name="Named colors" minToolsVersion="9.0"/>
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
         <capability name="System colors in document resources" minToolsVersion="11.0"/>
@@ -13,11 +13,11 @@
         <array key="Roboto-Black.ttf">
             <string>Roboto-Black</string>
         </array>
-        <array key="Roboto-Medium.ttf">
-            <string>Roboto-Medium</string>
-        </array>
         <array key="Roboto-Bold.ttf">
             <string>Roboto-Bold</string>
+        </array>
+        <array key="Roboto-Medium.ttf">
+            <string>Roboto-Medium</string>
         </array>
     </customFonts>
     <objects>
@@ -39,6 +39,8 @@
                 <outlet property="logoutBaseView" destination="bhB-MW-me9" id="zxO-Py-JK4"/>
                 <outlet property="logoutButton" destination="yAA-45-gAr" id="AqD-gg-uWm"/>
                 <outlet property="profileBaseView" destination="lFI-1X-kZb" id="hqb-uQ-2ln"/>
+                <outlet property="profileBaseViewCenterXConstraint" destination="CIQ-eA-hX1" id="wfd-sI-YOZ"/>
+                <outlet property="profileBaseViewLeadingConstraint" destination="TVP-3F-FE6" id="qVz-6M-QHE"/>
                 <outlet property="profilePictureBaseInnerView" destination="dvg-k3-aVW" id="KsE-8n-DL7"/>
                 <outlet property="profilePictureBaseView" destination="Jbl-ih-uBZ" id="8hF-rq-ajY"/>
                 <outlet property="profilePictureImageView" destination="rcX-bW-GVx" id="gSK-mz-i6d"/>
@@ -50,7 +52,9 @@
                 <outlet property="scrollView" destination="Xvy-bu-gRF" id="XUT-aI-xje"/>
                 <outlet property="shadowView" destination="VDW-H2-PFU" id="z3V-DQ-qKE"/>
                 <outlet property="stackView" destination="6QV-ge-SXI" id="i6L-MC-BTC"/>
+                <outlet property="titleLabelTopConstraint" destination="1Yk-s4-0oC" id="Ezu-eh-Zgh"/>
                 <outlet property="topBarView" destination="upr-br-gCP" id="kBu-NP-iT4"/>
+                <outlet property="topBarViewHeightConstraint" destination="g4R-ms-IT6" id="xuT-fw-ydf"/>
                 <outlet property="totalBalanceInfoImageView" destination="zQX-7w-xuI" id="6BE-Dy-WIb"/>
                 <outlet property="totalBalanceLabel" destination="F24-gl-VWS" id="NVQ-MP-O0b"/>
                 <outlet property="totalBalanceTitleLabel" destination="ZNA-lM-Y9t" id="x9d-if-LRb"/>
@@ -103,13 +107,13 @@
                             </constraints>
                         </view>
                         <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Y8Q-jn-Zp8">
-                            <rect key="frame" x="179" y="22" width="56.5" height="22"/>
+                            <rect key="frame" x="180" y="68" width="54.5" height="26"/>
                             <fontDescription key="fontDescription" name="Roboto-Black" family="Roboto" pointSize="22"/>
                             <color key="textColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                             <nil key="highlightedColor"/>
                         </label>
                         <stackView opaque="NO" contentMode="scaleToFill" spacing="4" translatesAutoresizingMaskIntoConstraints="NO" id="M40-Fh-HHv">
-                            <rect key="frame" x="157" y="50" width="100" height="20"/>
+                            <rect key="frame" x="157" y="100" width="100" height="20"/>
                             <subviews>
                                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="1gg-my-EQA">
                                     <rect key="frame" x="0.0" y="0.0" width="76" height="20"/>
@@ -141,7 +145,7 @@
                             </constraints>
                         </stackView>
                         <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="wIc-jL-CMS">
-                            <rect key="frame" x="348" y="17" width="58" height="32"/>
+                            <rect key="frame" x="349" y="17" width="57" height="35"/>
                             <fontDescription key="fontDescription" name="Roboto-Black" family="Roboto" pointSize="16"/>
                             <inset key="contentEdgeInsets" minX="8" minY="8" maxX="8" maxY="8"/>
                             <inset key="imageEdgeInsets" minX="0.0" minY="0.0" maxX="2.2250738585072014e-308" maxY="0.0"/>
@@ -154,7 +158,9 @@
                     <color key="backgroundColor" name="backgroundPrimary"/>
                     <constraints>
                         <constraint firstItem="M40-Fh-HHv" firstAttribute="top" secondItem="Y8Q-jn-Zp8" secondAttribute="bottom" constant="6" id="0Jh-Sb-YAD"/>
+                        <constraint firstItem="Y8Q-jn-Zp8" firstAttribute="top" secondItem="Jbl-ih-uBZ" secondAttribute="bottom" constant="15" id="1Yk-s4-0oC"/>
                         <constraint firstItem="Y8Q-jn-Zp8" firstAttribute="centerX" secondItem="upr-br-gCP" secondAttribute="centerX" id="77J-tn-z3X"/>
+                        <constraint firstItem="Jbl-ih-uBZ" firstAttribute="centerX" secondItem="upr-br-gCP" secondAttribute="centerX" id="CIQ-eA-hX1"/>
                         <constraint firstItem="Jbl-ih-uBZ" firstAttribute="leading" secondItem="upr-br-gCP" secondAttribute="leading" constant="16" id="TVP-3F-FE6"/>
                         <constraint firstItem="Jbl-ih-uBZ" firstAttribute="top" secondItem="upr-br-gCP" secondAttribute="top" constant="13" id="X1b-BT-fQW"/>
                         <constraint firstAttribute="trailing" secondItem="wIc-jL-CMS" secondAttribute="trailing" constant="8" id="Xvv-tM-j6t"/>
@@ -210,7 +216,7 @@
                                                     <rect key="frame" x="0.0" y="14" width="414" height="80"/>
                                                     <subviews>
                                                         <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="yAA-45-gAr">
-                                                            <rect key="frame" x="149.5" y="15.5" width="115" height="49"/>
+                                                            <rect key="frame" x="150" y="15.5" width="114" height="49"/>
                                                             <fontDescription key="fontDescription" name="Roboto-Black" family="Roboto" pointSize="16"/>
                                                             <inset key="contentEdgeInsets" minX="15" minY="15" maxX="30" maxY="15"/>
                                                             <inset key="titleEdgeInsets" minX="15" minY="0.0" maxX="-15" maxY="0.0"/>
@@ -231,7 +237,7 @@
                                                     <rect key="frame" x="0.0" y="102" width="414" height="60"/>
                                                     <subviews>
                                                         <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="2" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="hFx-VW-GNj">
-                                                            <rect key="frame" x="16" y="18" width="382" height="24"/>
+                                                            <rect key="frame" x="16" y="16" width="382" height="28.5"/>
                                                             <string key="text">App Version 0.0.1 (00100)
 Sportsbook® All Rights Reserved</string>
                                                             <fontDescription key="fontDescription" name="Roboto-Medium" family="Roboto" pointSize="12"/>
@@ -272,20 +278,20 @@ Sportsbook® All Rights Reserved</string>
                                                     <rect key="frame" x="0.0" y="0.0" width="314" height="30"/>
                                                     <subviews>
                                                         <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" horizontalCompressionResistancePriority="749" text="Current Balance" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="ZNA-lM-Y9t">
-                                                            <rect key="frame" x="0.0" y="6" width="131" height="18"/>
+                                                            <rect key="frame" x="0.0" y="4.5" width="114" height="21.5"/>
                                                             <fontDescription key="fontDescription" name="Roboto-Black" family="Roboto" pointSize="18"/>
                                                             <color key="textColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                                             <nil key="highlightedColor"/>
                                                         </label>
                                                         <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" verticalHuggingPriority="251" image="info_small_icon" translatesAutoresizingMaskIntoConstraints="NO" id="zQX-7w-xuI">
-                                                            <rect key="frame" x="137" y="8" width="14" height="14"/>
+                                                            <rect key="frame" x="120" y="8" width="14" height="14"/>
                                                             <constraints>
                                                                 <constraint firstAttribute="height" constant="14" id="XnD-d4-sR0"/>
                                                                 <constraint firstAttribute="width" constant="14" id="c4g-mQ-f4Y"/>
                                                             </constraints>
                                                         </imageView>
                                                         <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="249" verticalHuggingPriority="251" horizontalCompressionResistancePriority="751" text="49.875.655,59€" textAlignment="right" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="F24-gl-VWS">
-                                                            <rect key="frame" x="157" y="3" width="157" height="24"/>
+                                                            <rect key="frame" x="140" y="1" width="174" height="28.5"/>
                                                             <fontDescription key="fontDescription" name="Roboto-Black" family="Roboto" pointSize="24"/>
                                                             <color key="textColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                                             <nil key="highlightedColor"/>
@@ -307,13 +313,13 @@ Sportsbook® All Rights Reserved</string>
                                                     <rect key="frame" x="0.0" y="34" width="314" height="30"/>
                                                     <subviews>
                                                         <label opaque="NO" userInteractionEnabled="NO" contentMode="left" verticalHuggingPriority="251" text="Current Balance" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="bCK-AS-qFJ">
-                                                            <rect key="frame" x="0.0" y="6" width="153" height="18"/>
+                                                            <rect key="frame" x="0.0" y="4.5" width="136" height="21.5"/>
                                                             <fontDescription key="fontDescription" name="Roboto-Black" family="Roboto" pointSize="18"/>
                                                             <color key="textColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                                             <nil key="highlightedColor"/>
                                                         </label>
                                                         <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="49.875.655,59€" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="qQR-iY-klN">
-                                                            <rect key="frame" x="157" y="3" width="157" height="24"/>
+                                                            <rect key="frame" x="140" y="1" width="174" height="28.5"/>
                                                             <fontDescription key="fontDescription" name="Roboto-Black" family="Roboto" pointSize="24"/>
                                                             <color key="textColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                                             <nil key="highlightedColor"/>
@@ -485,7 +491,7 @@ Sportsbook® All Rights Reserved</string>
         <image name="info_small_icon" width="11" height="11"/>
         <image name="logout_account_icon" width="18" height="19"/>
         <namedColor name="backgroundPrimary">
-            <color red="0.043137254901960784" green="0.043137254901960784" blue="0.043137254901960784" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+            <color red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
         </namedColor>
         <systemColor name="systemBackgroundColor">
             <color white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>

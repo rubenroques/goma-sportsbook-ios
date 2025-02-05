@@ -1,0 +1,90 @@
+paths:
+  /api/custom-bet/v1/calculate:
+    post:
+      tags:
+        - Bet Builder
+      summary: Calculate bet builder returns
+      description: Calculate potential returns for a custom bet builder bet
+      operationId: calculateBetBuilderReturn
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                idFOSelections:
+                  type: array
+                  items:
+                    type: string
+                stakeAmount:
+                  type: number
+                  format: double
+      responses:
+        '200':
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  potentialReturn:
+                    type: number
+                    format: double
+                  calculatedOdds:
+                    type: number
+                    format: double
+
+  /api/custom-bet/v1/placecustombet:
+    post:
+      tags:
+        - Bet Builder
+      summary: Place bet builder bet
+      description: Place a custom bet builder bet with calculated odds
+      operationId: placeBetBuilderBet
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                idFOSelections:
+                  type: array
+                  items:
+                    type: string
+                stakeAmount:
+                  type: number
+                  format: double
+                free:
+                  type: integer
+                  default: 0
+                useAutoAcceptance:
+                  type: boolean
+                  default: true
+                calculatedOdds:
+                  type: number
+                  format: double
+      responses:
+        '200':
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  idFOBetSlip:
+                    type: string
+                  bets:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        idFoBet:
+                          type: string
+                        potentialReturn:
+                          type: number
+                          format: double
+                        totalStake:
+                          type: number
+                          format: double 

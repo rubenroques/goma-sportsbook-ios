@@ -1,0 +1,83 @@
+paths:
+  /api/cashout/fo/cashout/{betId}/calculate:
+    post:
+      tags:
+        - Cashout
+      summary: Calculate cashout
+      description: Calculate the potential cashout value for a bet
+      operationId: calculateCashout
+      parameters:
+        - name: betId
+          in: path
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: false
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                stakeValue:
+                  type: string
+                  description: Stake value for partial cashout
+      responses:
+        '200':
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  cashoutValue:
+                    type: number
+                    format: double
+
+  /api/cashout/fo/cashout/{betId}:
+    post:
+      tags:
+        - Cashout
+      summary: Cashout bet
+      description: Execute a cashout for a bet
+      operationId: cashoutBet
+      parameters:
+        - name: betId
+          in: path
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                expectedValue:
+                  type: number
+                  format: double
+                stakeValue:
+                  type: number
+                  format: double
+                  description: Optional stake value for partial cashout
+      responses:
+        '200':
+          description: Successful operation
+
+  /api/cashout/fo/cashout/allowedBetIds:
+    get:
+      tags:
+        - Cashout
+      summary: Get allowed cashout bet IDs
+      description: Get a list of bet IDs that are eligible for cashout
+      operationId: getAllowedCashoutBetIds
+      responses:
+        '200':
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: string 

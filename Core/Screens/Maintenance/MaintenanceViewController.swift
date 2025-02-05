@@ -41,7 +41,7 @@ class MaintenanceViewController: UIViewController {
     }
 
     func commonInit() {
-        brandImageView.image = UIImage(named: "brand_icon_variation_1")
+        brandImageView.image = UIImage(named: "brand_icon_variation_new")
         brandImageView.contentMode = .scaleAspectFit
         
         logoImageView.backgroundColor = UIColor.App.backgroundPrimary

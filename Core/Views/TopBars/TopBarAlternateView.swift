@@ -31,6 +31,13 @@ class TopBarView: UIView {
     private lazy var cashbackLabel: UILabel = Self.createCashbackLabel()
     private lazy var loginBaseView: UIView = Self.createLoginBaseView()
     private lazy var loginButton: UIButton = Self.createLoginButton()
+    private lazy var legalAgeImageView: UIImageView = Self.createLegalAgeImageView()
+    
+    // Constraints
+    private lazy var profileBaseViewTrailingConstraint: NSLayoutConstraint = Self.createProfileBaseViewTrailingConstraint()
+    private lazy var anonymousMenuViewTrailingConstraint: NSLayoutConstraint = Self.createAnonymousMenuViewTrailingConstraint()
+
+    private lazy var legalAgeImageViewLeadingConstraint: NSLayoutConstraint = Self.createLegalAgeImageViewLeadingConstraint()
 
     private var cancellables = Set<AnyCancellable>()
 
@@ -119,6 +126,17 @@ class TopBarView: UIView {
     }
 
     private func commonInit() {
+        
+        if TargetVariables.features.contains(.legalAgeWarning) {
+            self.profileBaseViewTrailingConstraint.isActive = false
+            self.legalAgeImageViewLeadingConstraint.isActive = true
+            self.legalAgeImageView.isHidden = false
+        }
+        else {
+            self.profileBaseViewTrailingConstraint.isActive = true
+            self.legalAgeImageViewLeadingConstraint.isActive = false
+            self.legalAgeImageView.isHidden = true
+        }
 
         self.loginButton.addTarget(self, action: #selector(self.didTapLoginButton), for: UIControl.Event.primaryActionTriggered)
 
@@ -298,7 +316,7 @@ extension TopBarView {
         let imageView = UIImageView()
         imageView.translatesAutoresizingMaskIntoConstraints = false
         imageView.contentMode = .scaleAspectFit
-        imageView.image = UIImage(named: "logo_horizontal_left")
+        imageView.image = UIImage(named: "new_logo_horizontal_left")
         return imageView
     }
 
@@ -427,6 +445,30 @@ extension TopBarView {
         button.contentEdgeInsets = UIEdgeInsets(top: 10, left: 16, bottom: 11, right: 16)
         return button
     }
+    
+    private static func createLegalAgeImageView() -> UIImageView {
+        let imageView = UIImageView()
+        imageView.translatesAutoresizingMaskIntoConstraints = false
+        imageView.image = UIImage(named: "minus_18_icon")
+        imageView.contentMode = .scaleAspectFit
+        return imageView
+    }
+    
+    // Constraints
+    private static func createProfileBaseViewTrailingConstraint() -> NSLayoutConstraint {
+        let constraint = NSLayoutConstraint()
+        return constraint
+    }
+    
+    private static func createLegalAgeImageViewLeadingConstraint() -> NSLayoutConstraint {
+        let constraint = NSLayoutConstraint()
+        return constraint
+    }
+    
+    private static func createAnonymousMenuViewTrailingConstraint() -> NSLayoutConstraint {
+        let constraint = NSLayoutConstraint()
+        return constraint
+    }
 
     private func setupSubviews() {
 
@@ -469,6 +511,8 @@ extension TopBarView {
 
         self.loginBaseView.addSubview(self.loginButton)
 
+        self.topBarView.addSubview(self.legalAgeImageView)
+        
         self.initConstraints()
 
         self.setNeedsLayout()
@@ -490,7 +534,7 @@ extension TopBarView {
             self.appIconImageView.heightAnchor.constraint(equalToConstant: 30),
             self.appIconImageView.widthAnchor.constraint(lessThanOrEqualToConstant: 130),
 
-            self.profileBaseView.trailingAnchor.constraint(equalTo: self.topBarView.trailingAnchor, constant: -15),
+//            self.profileBaseView.trailingAnchor.constraint(equalTo: self.topBarView.trailingAnchor, constant: -15),
             self.profileBaseView.centerYAnchor.constraint(equalTo: self.topBarView.centerYAnchor),
             self.profileBaseView.widthAnchor.constraint(equalToConstant: 45),
             self.profileBaseView.heightAnchor.constraint(equalTo: self.profileBaseView.widthAnchor),
@@ -570,9 +614,34 @@ extension TopBarView {
             self.loginButton.trailingAnchor.constraint(equalTo: self.loginBaseView.trailingAnchor),
             self.loginButton.widthAnchor.constraint(greaterThanOrEqualToConstant: 80),
             self.loginButton.heightAnchor.constraint(equalToConstant: 30),
-            self.loginButton.centerYAnchor.constraint(equalTo: self.loginBaseView.centerYAnchor)
+            self.loginButton.centerYAnchor.constraint(equalTo: self.loginBaseView.centerYAnchor),
+            
+            self.legalAgeImageView.trailingAnchor.constraint(equalTo: self.topBarView.trailingAnchor, constant: -6),
+            self.legalAgeImageView.centerYAnchor.constraint(equalTo: self.topBarView.centerYAnchor),
+            self.legalAgeImageView.heightAnchor.constraint(equalToConstant: /*UIScreen.main.bounds.height * 0.07*/ 60),
+            self.legalAgeImageView.widthAnchor.constraint(equalTo: self.legalAgeImageView.heightAnchor)
 
         ])
+
+        
+        // Constraints
+        self.profileBaseViewTrailingConstraint = NSLayoutConstraint(item: self.profileBaseView,
+                                                                    attribute: .trailing,
+                                                                    relatedBy: .equal,
+                                                                    toItem: self.topBarView,
+                                                                    attribute: .trailing,
+                                                                    multiplier: 1,
+                                                                    constant: -15)
+        self.profileBaseViewTrailingConstraint.isActive = true
+        
+        self.legalAgeImageViewLeadingConstraint = NSLayoutConstraint(item: self.legalAgeImageView,
+                                                                     attribute: .leading,
+                                                                     relatedBy: .equal,
+                                                                     toItem: self.profileBaseView,
+                                                                     attribute: .trailing,
+                                                                     multiplier: 1,
+                                                                     constant: 5)
+        self.legalAgeImageViewLeadingConstraint.isActive = false
 
     }
 
