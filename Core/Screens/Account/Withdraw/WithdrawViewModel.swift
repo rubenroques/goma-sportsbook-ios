@@ -27,8 +27,8 @@ class WithdrawViewModel: NSObject {
     var ibanPaymentDetails: BankPaymentDetail?
     var shouldShowIbanScreen: (() -> Void)?
     
-    var withdrawalMethod: String = "ADYEN_BANK_TRANSFER"
-//    var withdrawalMethod: String = "ADYEN_BP_BANKTRF"
+//    var withdrawalMethod: String = "ADYEN_BANK_TRANSFER"
+    var withdrawalMethod: String = "ADYEN_BP_BANKTRF"
 
     // MARK: Lifetime and Cycle
     override init() {
