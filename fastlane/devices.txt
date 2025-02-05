@@ -1,2 +1,2 @@
-Device ID	Device Name	Device Platform
-00008030-001925DE2238802E	iPhone 11 Pro Max de Ruben Roques	ios
+"Device ID","Device Name","Device Platform"
+"00008030-001925DE2238802E","iPhone 11 Pro Max de Ruben Roques","ios"
