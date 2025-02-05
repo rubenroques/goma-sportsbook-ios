@@ -87,6 +87,7 @@ enum SportsbookTargetFeatures: CaseIterable {
 
     case casino
     
+    case responsibleGamingForm
     case legalAgeWarning
 }
 

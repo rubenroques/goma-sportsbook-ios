@@ -87,7 +87,10 @@ class ResponsibleGamingViewController: UIViewController {
         self.stackView.addArrangedSubview(tipsControlView)
 
         if Env.userSessionStore.isUserLogged() {
-            self.stackView.addArrangedSubview(bettingPracticesView)
+            
+            if TargetVariables.features.contains(.responsibleGamingForm) {
+                self.stackView.addArrangedSubview(bettingPracticesView)
+            }
             self.stackView.addArrangedSubview(limitsView)
             self.stackView.addArrangedSubview(selfExclusionView)
             self.stackView.addArrangedSubview(closeAccountView)
