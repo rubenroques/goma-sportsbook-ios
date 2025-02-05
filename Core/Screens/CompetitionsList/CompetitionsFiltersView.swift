@@ -11,6 +11,8 @@ import OrderedCollections
 
 class CompetitionsFiltersView: UIView, NibLoadable {
 
+    @IBOutlet private weak var headerStackView: UIStackView!
+    
     @IBOutlet private weak var headerBaseView: UIView!
 
     @IBOutlet private weak var closeButton: UIButton!
@@ -186,6 +188,14 @@ class CompetitionsFiltersView: UIView, NibLoadable {
 
         self.translatesAutoresizingMaskIntoConstraints = false
 
+        let competitionStyles = TargetVariables.competitionListStyle
+        switch competitionStyles {
+        case .toggle:
+            self.headerBaseView.isHidden = false
+        case .navigateToDetails:
+            self.headerBaseView.isHidden = true
+        }
+        
         self.closeButton.setTitle(localized("close"), for: .normal)
         self.clearButton.setTitle(localized("clear_all"), for: .normal)
 

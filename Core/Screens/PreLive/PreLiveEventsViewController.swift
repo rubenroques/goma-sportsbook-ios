@@ -51,6 +51,7 @@ class PreLiveEventsViewController: UIViewController {
     private let loadingSpinnerViewController = LoadingSpinnerViewController()
 
     @IBOutlet private weak var openedCompetitionsFiltersConstraint: NSLayoutConstraint!
+    
     @IBOutlet private weak var competitionsFiltersBaseView: UIView!
     @IBOutlet private weak var competitionsFiltersDarkBackgroundView: UIView!
 
