@@ -228,9 +228,9 @@ class MyTicketTableViewCell: UITableViewCell {
 
         self.freebetBaseView.isHidden = true
 
-        self.originalAmountValueLabel.text = "\(localized("original"))\n€1.00"
+        self.originalAmountValueLabel.text = "\(localized("original")) "
 
-        self.returnedAmountValueLabel.text = "\(localized("returned"))\n€0.10"
+        self.returnedAmountValueLabel.text = "\(localized("returned")) "
 
         self.cashbackUsedTitleLabel.text = localized("used_cashback").uppercased()
         self.cashbackUsedTitleLabel.font = AppFont.with(type: .bold, size: 9)
@@ -679,7 +679,7 @@ class MyTicketTableViewCell: UITableViewCell {
 
             // Original amount
             let originalBetAmountString = CurrencyFormater.defaultFormat.string(from: NSNumber(value: betHistoryEntry.totalBetAmount ?? 0.0))
-            self.originalAmountValueLabel.text = "\(localized("original"))\n\(originalBetAmountString ?? "")"
+            self.originalAmountValueLabel.text = "\(localized("original")): \(originalBetAmountString ?? "")"
 
             // New bet amount
             let newBetAmount = (betHistoryEntry.totalBetAmount ?? 0.0) - partialCashoutStake
@@ -693,7 +693,7 @@ class MyTicketTableViewCell: UITableViewCell {
 
             // Returned Amount
             let returnedBetAmountString = CurrencyFormater.defaultFormat.string(from: NSNumber(value: partialCashoutReturn))
-            self.returnedAmountValueLabel.text = "\(localized("returned"))\n\(returnedBetAmountString ?? "")"
+            self.returnedAmountValueLabel.text = "\(localized("returned")): \(returnedBetAmountString ?? "")"
 
             self.hasPartialCashoutReturned = true
 

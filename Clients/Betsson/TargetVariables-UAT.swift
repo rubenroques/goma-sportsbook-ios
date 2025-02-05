@@ -115,5 +115,4 @@ struct TargetVariables: SportsbookTarget {
     static var localizationOverrides: [String: String] {
         return [:]
     }
-
 }

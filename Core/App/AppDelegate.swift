@@ -15,6 +15,8 @@ import PhraseSDK
 import AdyenActions
 import OptimoveSDK
 import Adjust
+import FirebaseCore
+import FirebaseFirestore
 
 @main
 class AppDelegate: UIResponder, UIApplicationDelegate, MessagingDelegate {
@@ -249,6 +251,11 @@ class AppDelegate: UIResponder, UIApplicationDelegate, MessagingDelegate {
                     $0.name == "referralCode"
                 })?.value {
                     self.openSharedRoute(Route.referral(code: code), onApplication: application)
+                }
+            }
+            else if url.absoluteString.contains("betting-questionnaire") {
+                if TargetVariables.features.contains(.responsibleGamingForm) {
+                    self.openSharedRoute(Route.responsibleForm, onApplication: application)
                 }
             }
         }

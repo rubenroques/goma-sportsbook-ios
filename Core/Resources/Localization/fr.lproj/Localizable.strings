@@ -2066,3 +2066,37 @@ Pour le faire, il faut s’adresser à l’Autorité Nationale des Jeux (ANJ).";
 "administrative_costs" = "Frais administratifs";
 
 "betting_fail_to_place_bets" = "Un erreur s'est produite lors du placement de votre pari.";
+
+"betting_questionnaire" = "Betting Practices Questionnaire";
+"flat_foot_security" = "Plat du pied, sécurité !";
+"questionnaire_intro_1" = "Pour maintenir le plaisir du jeu, gardes-en sous le pied. L'équipe Betsson a mis en place un petit questionnaire pour t'aider à évaluer ta pratique de jeu.";
+"questionnaire_intro_2" = "Essaie d'y répondre le plus honnêtement possible, tu seras peut-être surpris du résultat ! ";
+"take_questionnaire" = "Take Questionnaire";
+
+"sometimes" = "Parfois";
+
+"questionnaire_question_1" = "Le jeu occupe une place importante dans mon esprit ";
+
+"questionnaire_question_2" = "J'ai déjà utilisé des méthodes pour tenter de modérer, diminuer ou arrêter ma pratique de jeu";
+
+"questionnaire_question_3" = "Il m'arrive de miser plus d'argent que prévu initialement";
+
+"questionnaire_question_4" = "Il m'arrive de rejouer dans l’espoir de récupérer l'argent que j'ai perdu";
+
+"questionnaire_question_5" = "J'ai déjà ressenti de la culpabilité à jouer";
+
+"questionnaire_question_6" = "Ne pas pouvoir jouer peut me rendre impatient ou nerveux";
+
+"questionnaire_question_7" = "J'ai déjà ressenti du stress, de l’angoisse ou rencontré des problèmes de santé provoqués par la pratique des jeux d'argent";
+
+"questionnaire_question_8" = "Ma pratique du jeu a globalement un impact négatif sur mes finances, ma santé psychologique ou mes relations familiales ";
+
+"questionnaire_question_9" = "J'ai déjà vendu quelque chose ou emprunté de l’argent pour pouvoir jouer ";
+
+"questionnaire_question_10" = "Il m'arrive de chercher à cacher ma pratique du jeu ";
+
+"questionnaire_success" = "Vos réponses ont été enregistrées, merci pour votre temps.";
+
+"leave_questionnaire" = "Êtes-vous sûr de vouloir partir ?";
+
+"back_home" = "Retour à la page d'accueil";

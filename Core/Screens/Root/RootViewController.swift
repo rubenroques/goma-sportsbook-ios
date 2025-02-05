@@ -1288,6 +1288,41 @@ class RootViewController: UIViewController {
         
         self.presentRegisterScreen(withReferralCode: code)
     }
+    
+    func openResponsibleForm() {
+        
+        Env.userSessionStore.isLoadingUserSessionPublisher
+            .filter({ $0 == false })
+            .receive(on: DispatchQueue.main)
+            .first()
+            .sink(receiveValue: { [weak self] _ in
+                
+                if Env.userSessionStore.isUserLogged() {
+                    let bettingPracticesViewController = BettingPracticesViewController()
+                    
+                    let navigationController = Router.navigationController(with: bettingPracticesViewController)
+                    
+                    self?.present(navigationController, animated: true, completion: nil)
+                }
+                else {
+                    
+                    let loginViewController = LoginViewController()
+                    
+                    let navigationViewController = Router.navigationController(with: loginViewController)
+                    
+                    loginViewController.hasPendingRedirect = true
+                    
+                    loginViewController.needsRedirect = { [weak self] in
+                        self?.openResponsibleForm()
+                    }
+                    
+                    self?.present(navigationViewController, animated: true, completion: nil)
+                }
+                
+            })
+            .store(in: &cancellables)
+
+    }
 
     //
     // Obrigatory Limits

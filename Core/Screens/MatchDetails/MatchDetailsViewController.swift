@@ -354,6 +354,9 @@ class MatchDetailsViewController: UIViewController {
         self.marketsNotAvailableLabel.font = AppFont.with(type: .bold, size: 18)
 
         self.view.transitionId = "SeeMoreToMatchDetails"
+        
+        self.homeTeamLabel.text = ""
+        self.awayTeamLabel.text = ""
 
         //
         self.addChildViewController(marketGroupsPagedViewController, toView: marketGroupsPagedBaseView)
