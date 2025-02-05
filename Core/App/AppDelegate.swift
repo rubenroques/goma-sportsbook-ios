@@ -254,7 +254,9 @@ class AppDelegate: UIResponder, UIApplicationDelegate, MessagingDelegate {
                 }
             }
             else if url.absoluteString.contains("betting-questionnaire") {
-                self.openSharedRoute(Route.responsibleForm, onApplication: application)
+                if TargetVariables.features.contains(.responsibleGamingForm) {
+                    self.openSharedRoute(Route.responsibleForm, onApplication: application)
+                }
             }
         }
         return true

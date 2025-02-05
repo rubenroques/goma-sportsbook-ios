@@ -5281,6 +5281,8 @@
 		653A37CC2D4D3A9900B89CDF /* TripleAnswerQuestionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 653A37C32D4D3A9900B89CDF /* TripleAnswerQuestionView.swift */; };
 		653A37CE2D50E0BF00B89CDF /* FirebaseFirestore in Frameworks */ = {isa = PBXBuildFile; productRef = 653A37CD2D50E0BF00B89CDF /* FirebaseFirestore */; };
 		653A37D02D50E0DD00B89CDF /* FirebaseFirestoreSwift in Frameworks */ = {isa = PBXBuildFile; productRef = 653A37CF2D50E0DD00B89CDF /* FirebaseFirestoreSwift */; };
+		653A37FA2D537DB500B89CDF /* FirebaseFirestore in Frameworks */ = {isa = PBXBuildFile; productRef = 653A37F92D537DB500B89CDF /* FirebaseFirestore */; };
+		653A37FC2D537DB600B89CDF /* FirebaseFirestoreSwift in Frameworks */ = {isa = PBXBuildFile; productRef = 653A37FB2D537DB600B89CDF /* FirebaseFirestoreSwift */; };
 		6547C8762C63C0AC0041409C /* HeroCardSecondaryMarketCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6547C8752C63C0AC0041409C /* HeroCardSecondaryMarketCollectionViewCell.swift */; };
 		6547C8772C63C0AC0041409C /* HeroCardSecondaryMarketCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6547C8752C63C0AC0041409C /* HeroCardSecondaryMarketCollectionViewCell.swift */; };
 		6547C8782C63C0AC0041409C /* HeroCardSecondaryMarketCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6547C8752C63C0AC0041409C /* HeroCardSecondaryMarketCollectionViewCell.swift */; };
@@ -9296,6 +9298,7 @@
 				45A332B1298976BA008181E9 /* FirebaseMessaging in Frameworks */,
 				45A332B2298976BA008181E9 /* FirebaseDatabase in Frameworks */,
 				458C07512AD5B49A0096E0D4 /* OptimoveNotificationServiceExtension in Frameworks */,
+				653A37FA2D537DB500B89CDF /* FirebaseFirestore in Frameworks */,
 				659510F22B2C7004001B2F2E /* WebBridge in Frameworks */,
 				45A332B3298976BA008181E9 /* AdyenDropIn in Frameworks */,
 				45A332B4298976BA008181E9 /* DictionaryCoding in Frameworks */,
@@ -9321,6 +9324,7 @@
 				45A332C0298976BA008181E9 /* AdyenSwiftUI in Frameworks */,
 				45A332C1298976BA008181E9 /* AdyenWeChatPay in Frameworks */,
 				458C07532AD5B4A10096E0D4 /* OptimoveSDK in Frameworks */,
+				653A37FC2D537DB600B89CDF /* FirebaseFirestoreSwift in Frameworks */,
 				45A332C2298976BA008181E9 /* Adyen in Frameworks */,
 				45A332C3298976BA008181E9 /* AdyenSession in Frameworks */,
 				45A332C4298976BA008181E9 /* FirebaseCrashlytics in Frameworks */,
@@ -13338,6 +13342,8 @@
 				659510ED2B2C7004001B2F2E /* Sociomantic */,
 				659510EF2B2C7004001B2F2E /* Trademob */,
 				659510F12B2C7004001B2F2E /* WebBridge */,
+				653A37F92D537DB500B89CDF /* FirebaseFirestore */,
+				653A37FB2D537DB600B89CDF /* FirebaseFirestoreSwift */,
 			);
 			productName = Sportsbook;
 			productReference = 45A3334E298976BA008181E9 /* Betsson.app */;
@@ -24321,6 +24327,16 @@
 			productName = FirebaseFirestore;
 		};
 		653A37CF2D50E0DD00B89CDF /* FirebaseFirestoreSwift */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 452047AB2703597500B277B5 /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */;
+			productName = FirebaseFirestoreSwift;
+		};
+		653A37F92D537DB500B89CDF /* FirebaseFirestore */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 452047AB2703597500B277B5 /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */;
+			productName = FirebaseFirestore;
+		};
+		653A37FB2D537DB600B89CDF /* FirebaseFirestoreSwift */ = {
 			isa = XCSwiftPackageProductDependency;
 			package = 452047AB2703597500B277B5 /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */;
 			productName = FirebaseFirestoreSwift;
