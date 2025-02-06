@@ -7,7 +7,7 @@
 
 import Foundation
 
-struct CompetitionFilterRowViewModel {
+struct CompetitionFilterRowViewModel: Identifiable {
 
     var id: String = ""
     var name: String = ""

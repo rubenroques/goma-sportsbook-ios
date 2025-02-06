@@ -10,14 +10,14 @@ import UIKit
 extension UIColor {
 
     // Colors file is localed on each Client "ThemeColors.xcassets" file
-    
+
     struct App {
-        
+
         static let backgroundPrimary: UIColor = UIColor(named: "backgroundPrimary")!
         static let backgroundSecondary = UIColor(named: "backgroundSecondary")!
         static let backgroundTertiary = UIColor(named: "backgroundTertiary")!
         static let backgroundBorder = UIColor(named: "backgroundBorder")!
-        
+
         static let backgroundCards = UIColor(named: "backgroundCards")!
         static var backgroundHeader: UIColor {
             return UIColor(named: "backgroundHeader") ?? Self.backgroundPrimary
@@ -30,7 +30,7 @@ extension UIColor {
 
         static let backgroundOdds = UIColor(named: "backgroundOdds")!
         static let backgroundDisabledOdds = UIColor(named: "backgroundDisabledOdds")!
-        
+
         static let separatorLine = UIColor(named: "separatorLine")!
 
         static let scroll = UIColor(named: "scroll")!
@@ -61,7 +61,7 @@ extension UIColor {
 
         static let backgroundDrop: UIColor = UIColor(named: "backgroundDrop")!
         static let borderDrop = UIColor(named: "borderDrop")!
-        
+
         static let highlightPrimary = UIColor(named: "highlightPrimary")!
         static let highlightSecondary = UIColor(named: "highlightSecondary")!
 
@@ -70,7 +70,7 @@ extension UIColor {
         static let buttonActiveHoverPrimary = UIColor(named: "buttonActiveHoverPrimary")!
         static let buttonDisablePrimary = UIColor(named: "buttonDisablePrimary")!
         static let buttonTextDisablePrimary = UIColor(named: "buttonTextDisablePrimary")!
-        
+
         static let buttonBackgroundSecondary = UIColor(named: "buttonBackgroundSecondary")!
         static let buttonActiveHoverSecondary = UIColor(named: "buttonActiveHoverSecondary")!
 
@@ -79,24 +79,24 @@ extension UIColor {
         static let buttonBorderTertiary = UIColor(named: "buttonBorderTertiary")!
 
         static let bubblesPrimary = UIColor(named: "bubblesPrimary")!
-        
+
         static let alertError = UIColor(named: "alertError")!
         static let alertSuccess = UIColor(named: "alertSuccess")!
         static let alertWarning = UIColor(named: "alertWarning")!
-    
+
         static let myTicketsLost = UIColor(named: "myTicketsLost")!
         static let myTicketsLostFaded = UIColor(named: "myTicketsLostFaded")!
-        
+
         static let myTicketsWon = UIColor(named: "myTicketsWon")!
         static let myTicketsWonFaded = UIColor(named: "myTicketsWonFaded")!
-        
+
         static let myTicketsOther = UIColor(named: "myTicketsOther")!
 
         static let backgroundDarker = UIColor(named: "backgroundDarker")!
 
         static let statsHome = UIColor(named: "statsHome")!
         static let statsAway = UIColor(named: "statsAway")!
-        
+
         static let highlightPrimaryContrast = UIColor(named: "highlightPrimaryContrast")!
         static var highlightSecondaryContrast: UIColor {
             return UIColor(named: "highlightSecondaryContrast") ?? Self.highlightPrimaryContrast
@@ -164,7 +164,7 @@ extension UIColor {
         static var highlightTertiary: UIColor {
             return UIColor(named: "highlightTertiary") ?? Self.alertSuccess
         }
-        
+
         static var liveBorderGradient1: UIColor {
             return UIColor(named: "liveBorderGradient1") ?? Self.highlightPrimary
         }
@@ -174,19 +174,19 @@ extension UIColor {
         static var liveBorderGradient3: UIColor {
             return UIColor(named: "liveBorderGradient3") ?? Self.highlightPrimary
         }
-        
+
         static var textHeroCard: UIColor {
             return UIColor(named: "textHeroCard") ?? Self.textHeroCard
         }
-        
+
         static var textSecondaryHeroCard: UIColor {
             return UIColor(named: "textSecondaryHeroCard") ?? Self.textSecondaryHeroCard
         }
-        
+
         static var backgroundOddsHeroCard: UIColor {
             return UIColor(named: "backgroundOddsHeroCard") ?? Self.backgroundOddsHeroCard
         }
-        
+
         static var iconSportsHeroCard: UIColor {
             return UIColor(named: "iconSportsHeroCard") ?? Self.iconSportsHeroCard
         }

@@ -7,7 +7,7 @@
 
 import Foundation
 
-struct CompetitionFilterSectionViewModel {
+struct CompetitionFilterSectionViewModel: Identifiable {
 
     var id: String
     var name: String

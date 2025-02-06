@@ -6,7 +6,7 @@ options: # Some general settings for the project
   tabWidth: 4 # a tab is 2 spaces
   bundleIdPrefix: "com.gomagaming.sportsbook"
   deploymentTarget: "13.0"
-  groupOrdering: 
+  groupOrdering:
     - order: [Core, Clients]
     - pattern: 'Core'
       order: [App, Services, Screens, Stores, Models, Views, Constants, Protocols, Tools, Resources]
@@ -76,7 +76,7 @@ targetTemplates:
         # Clients/Showcase/Beta/ShowcaseBeta.entitlements
         CODE_SIGN_ENTITLEMENTS: Clients/${clientTargetName}/${clientTargetEnvName}/${clientTargetName}${clientTargetEnvName}.entitlements
 
-    dependencies: 
+    dependencies:
       - package: MultiSlider
       - package: Starscream
       - package: CombineCocoa
@@ -135,6 +135,6 @@ packages:
   MultiSlider:
     url: https://github.com/yonat/MultiSlider
     from: 1.11.2
-  swift-collections: 
+  swift-collections:
     url: https://github.com/apple/swift-collections.git
     from: 1.0.0

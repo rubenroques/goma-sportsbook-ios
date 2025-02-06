@@ -103,14 +103,13 @@ class GomaGamingSocialServiceClient {
 
         Env.gomaNetworkClient.getFollowingUsers(deviceId: Env.deviceId)
             .receive(on: DispatchQueue.main)
-            .sink(receiveCompletion: { [weak self] completion in
+            .sink(receiveCompletion: { completion in
                 switch completion {
                 case .failure(let error):
                     print("FOLLOWING USERS ERROR: \(error)")
                 case .finished:
                     ()
                 }
-
             }, receiveValue: { [weak self] response in
                 print("FOLLOWING USERS RESPONSE: \(response)")
 
