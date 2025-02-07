@@ -1,50 +1,17 @@
 {
   "images" : [
     {
-      "filename" : "Female Avatar Snowboard.png",
+      "filename" : "passione.png",
       "idiom" : "universal",
       "scale" : "1x"
     },
     {
-      "appearances" : [
-        {
-          "appearance" : "luminosity",
-          "value" : "dark"
-        }
-      ],
-      "filename" : "Female Avatar Snowboard 1.png",
-      "idiom" : "universal",
-      "scale" : "1x"
-    },
-    {
-      "filename" : "Female Avatar Snowboard@2x.png",
+      "filename" : "passione@2x.png",
       "idiom" : "universal",
       "scale" : "2x"
     },
     {
-      "appearances" : [
-        {
-          "appearance" : "luminosity",
-          "value" : "dark"
-        }
-      ],
-      "filename" : "Female Avatar Snowboard@2x 1.png",
-      "idiom" : "universal",
-      "scale" : "2x"
-    },
-    {
-      "filename" : "Female Avatar Snowboard@3x.png",
-      "idiom" : "universal",
-      "scale" : "3x"
-    },
-    {
-      "appearances" : [
-        {
-          "appearance" : "luminosity",
-          "value" : "dark"
-        }
-      ],
-      "filename" : "Female Avatar Snowboard@3x 1.png",
+      "filename" : "passione@3x.png",
       "idiom" : "universal",
       "scale" : "3x"
     }

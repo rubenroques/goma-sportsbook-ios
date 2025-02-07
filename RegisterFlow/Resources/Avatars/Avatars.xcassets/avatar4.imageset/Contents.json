@@ -1,50 +1,17 @@
 {
   "images" : [
     {
-      "filename" : "Male Avatar Soccer.png",
+      "filename" : "flambeur.png",
       "idiom" : "universal",
       "scale" : "1x"
     },
     {
-      "appearances" : [
-        {
-          "appearance" : "luminosity",
-          "value" : "dark"
-        }
-      ],
-      "filename" : "Male Avatar Soccer 1.png",
-      "idiom" : "universal",
-      "scale" : "1x"
-    },
-    {
-      "filename" : "Male Avatar Soccer@2x.png",
+      "filename" : "flambeur@2x.png",
       "idiom" : "universal",
       "scale" : "2x"
     },
     {
-      "appearances" : [
-        {
-          "appearance" : "luminosity",
-          "value" : "dark"
-        }
-      ],
-      "filename" : "Male Avatar Soccer@2x 1.png",
-      "idiom" : "universal",
-      "scale" : "2x"
-    },
-    {
-      "filename" : "Male Avatar Soccer@3x.png",
-      "idiom" : "universal",
-      "scale" : "3x"
-    },
-    {
-      "appearances" : [
-        {
-          "appearance" : "luminosity",
-          "value" : "dark"
-        }
-      ],
-      "filename" : "Male Avatar Soccer@3x 1.png",
+      "filename" : "flambeur@3x.png",
       "idiom" : "universal",
       "scale" : "3x"
     }

@@ -7187,6 +7187,58 @@
 		CE0C6CA12D56327E00EAD26B /* SmallToolTipViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE0C6C902D56327E00EAD26B /* SmallToolTipViewModel.swift */; };
 		CE0C6CA22D56327E00EAD26B /* SmallToolTipView.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE0C6C8F2D56327E00EAD26B /* SmallToolTipView.swift */; };
 		CE0C6CA32D56327E00EAD26B /* SmallToolTipViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE0C6C902D56327E00EAD26B /* SmallToolTipViewModel.swift */; };
+		CE0C6CB02D56376B00EAD26B /* avatar3-light.json in Resources */ = {isa = PBXBuildFile; fileRef = CE0C6CA92D56376B00EAD26B /* avatar3-light.json */; };
+		CE0C6CB12D56376B00EAD26B /* avatar2-dark.json in Resources */ = {isa = PBXBuildFile; fileRef = CE0C6CA62D56376B00EAD26B /* avatar2-dark.json */; };
+		CE0C6CB22D56376B00EAD26B /* avatar5-light.json in Resources */ = {isa = PBXBuildFile; fileRef = CE0C6CAD2D56376B00EAD26B /* avatar5-light.json */; };
+		CE0C6CB32D56376B00EAD26B /* avatar3-dark.json in Resources */ = {isa = PBXBuildFile; fileRef = CE0C6CA82D56376B00EAD26B /* avatar3-dark.json */; };
+		CE0C6CB42D56376B00EAD26B /* avatar5-dark.json in Resources */ = {isa = PBXBuildFile; fileRef = CE0C6CAC2D56376B00EAD26B /* avatar5-dark.json */; };
+		CE0C6CB52D56376B00EAD26B /* avatar1-dark.json in Resources */ = {isa = PBXBuildFile; fileRef = CE0C6CA42D56376B00EAD26B /* avatar1-dark.json */; };
+		CE0C6CB62D56376B00EAD26B /* avatar1-light.json in Resources */ = {isa = PBXBuildFile; fileRef = CE0C6CA52D56376B00EAD26B /* avatar1-light.json */; };
+		CE0C6CB72D56376B00EAD26B /* avatar4-light.json in Resources */ = {isa = PBXBuildFile; fileRef = CE0C6CAB2D56376B00EAD26B /* avatar4-light.json */; };
+		CE0C6CB82D56376B00EAD26B /* avatar6-dark.json in Resources */ = {isa = PBXBuildFile; fileRef = CE0C6CAE2D56376B00EAD26B /* avatar6-dark.json */; };
+		CE0C6CB92D56376B00EAD26B /* avatar4-dark.json in Resources */ = {isa = PBXBuildFile; fileRef = CE0C6CAA2D56376B00EAD26B /* avatar4-dark.json */; };
+		CE0C6CBA2D56376B00EAD26B /* avatar6-light.json in Resources */ = {isa = PBXBuildFile; fileRef = CE0C6CAF2D56376B00EAD26B /* avatar6-light.json */; };
+		CE0C6CBB2D56376B00EAD26B /* avatar2-light.json in Resources */ = {isa = PBXBuildFile; fileRef = CE0C6CA72D56376B00EAD26B /* avatar2-light.json */; };
+		CE0C6CBC2D56376B00EAD26B /* avatar3-light.json in Resources */ = {isa = PBXBuildFile; fileRef = CE0C6CA92D56376B00EAD26B /* avatar3-light.json */; };
+		CE0C6CBD2D56376B00EAD26B /* avatar2-dark.json in Resources */ = {isa = PBXBuildFile; fileRef = CE0C6CA62D56376B00EAD26B /* avatar2-dark.json */; };
+		CE0C6CBE2D56376B00EAD26B /* avatar5-light.json in Resources */ = {isa = PBXBuildFile; fileRef = CE0C6CAD2D56376B00EAD26B /* avatar5-light.json */; };
+		CE0C6CBF2D56376B00EAD26B /* avatar3-dark.json in Resources */ = {isa = PBXBuildFile; fileRef = CE0C6CA82D56376B00EAD26B /* avatar3-dark.json */; };
+		CE0C6CC02D56376B00EAD26B /* avatar5-dark.json in Resources */ = {isa = PBXBuildFile; fileRef = CE0C6CAC2D56376B00EAD26B /* avatar5-dark.json */; };
+		CE0C6CC12D56376B00EAD26B /* avatar1-dark.json in Resources */ = {isa = PBXBuildFile; fileRef = CE0C6CA42D56376B00EAD26B /* avatar1-dark.json */; };
+		CE0C6CC22D56376B00EAD26B /* avatar1-light.json in Resources */ = {isa = PBXBuildFile; fileRef = CE0C6CA52D56376B00EAD26B /* avatar1-light.json */; };
+		CE0C6CC32D56376B00EAD26B /* avatar4-light.json in Resources */ = {isa = PBXBuildFile; fileRef = CE0C6CAB2D56376B00EAD26B /* avatar4-light.json */; };
+		CE0C6CC42D56376B00EAD26B /* avatar6-dark.json in Resources */ = {isa = PBXBuildFile; fileRef = CE0C6CAE2D56376B00EAD26B /* avatar6-dark.json */; };
+		CE0C6CC52D56376B00EAD26B /* avatar4-dark.json in Resources */ = {isa = PBXBuildFile; fileRef = CE0C6CAA2D56376B00EAD26B /* avatar4-dark.json */; };
+		CE0C6CC62D56376B00EAD26B /* avatar6-light.json in Resources */ = {isa = PBXBuildFile; fileRef = CE0C6CAF2D56376B00EAD26B /* avatar6-light.json */; };
+		CE0C6CC72D56376B00EAD26B /* avatar2-light.json in Resources */ = {isa = PBXBuildFile; fileRef = CE0C6CA72D56376B00EAD26B /* avatar2-light.json */; };
+		CE0C6CD42D56377800EAD26B /* avatar5-dark.json in Resources */ = {isa = PBXBuildFile; fileRef = CE0C6CD02D56377800EAD26B /* avatar5-dark.json */; };
+		CE0C6CD52D56377800EAD26B /* avatar3-light.json in Resources */ = {isa = PBXBuildFile; fileRef = CE0C6CCD2D56377800EAD26B /* avatar3-light.json */; };
+		CE0C6CD62D56377800EAD26B /* avatar4-dark.json in Resources */ = {isa = PBXBuildFile; fileRef = CE0C6CCE2D56377800EAD26B /* avatar4-dark.json */; };
+		CE0C6CD72D56377800EAD26B /* avatar6-dark.json in Resources */ = {isa = PBXBuildFile; fileRef = CE0C6CD22D56377800EAD26B /* avatar6-dark.json */; };
+		CE0C6CD82D56377800EAD26B /* avatar6-light.json in Resources */ = {isa = PBXBuildFile; fileRef = CE0C6CD32D56377800EAD26B /* avatar6-light.json */; };
+		CE0C6CD92D56377800EAD26B /* avatar2-dark.json in Resources */ = {isa = PBXBuildFile; fileRef = CE0C6CCA2D56377800EAD26B /* avatar2-dark.json */; };
+		CE0C6CDA2D56377800EAD26B /* avatar1-light.json in Resources */ = {isa = PBXBuildFile; fileRef = CE0C6CC92D56377800EAD26B /* avatar1-light.json */; };
+		CE0C6CDB2D56377800EAD26B /* avatar4-light.json in Resources */ = {isa = PBXBuildFile; fileRef = CE0C6CCF2D56377800EAD26B /* avatar4-light.json */; };
+		CE0C6CDC2D56377800EAD26B /* avatar2-light.json in Resources */ = {isa = PBXBuildFile; fileRef = CE0C6CCB2D56377800EAD26B /* avatar2-light.json */; };
+		CE0C6CDD2D56377800EAD26B /* avatar1-dark.json in Resources */ = {isa = PBXBuildFile; fileRef = CE0C6CC82D56377800EAD26B /* avatar1-dark.json */; };
+		CE0C6CDE2D56377800EAD26B /* avatar5-light.json in Resources */ = {isa = PBXBuildFile; fileRef = CE0C6CD12D56377800EAD26B /* avatar5-light.json */; };
+		CE0C6CDF2D56377800EAD26B /* avatar3-dark.json in Resources */ = {isa = PBXBuildFile; fileRef = CE0C6CCC2D56377800EAD26B /* avatar3-dark.json */; };
+		CE0C6CE02D56377800EAD26B /* avatar5-dark.json in Resources */ = {isa = PBXBuildFile; fileRef = CE0C6CD02D56377800EAD26B /* avatar5-dark.json */; };
+		CE0C6CE12D56377800EAD26B /* avatar3-light.json in Resources */ = {isa = PBXBuildFile; fileRef = CE0C6CCD2D56377800EAD26B /* avatar3-light.json */; };
+		CE0C6CE22D56377800EAD26B /* avatar4-dark.json in Resources */ = {isa = PBXBuildFile; fileRef = CE0C6CCE2D56377800EAD26B /* avatar4-dark.json */; };
+		CE0C6CE32D56377800EAD26B /* avatar6-dark.json in Resources */ = {isa = PBXBuildFile; fileRef = CE0C6CD22D56377800EAD26B /* avatar6-dark.json */; };
+		CE0C6CE42D56377800EAD26B /* avatar6-light.json in Resources */ = {isa = PBXBuildFile; fileRef = CE0C6CD32D56377800EAD26B /* avatar6-light.json */; };
+		CE0C6CE52D56377800EAD26B /* avatar2-dark.json in Resources */ = {isa = PBXBuildFile; fileRef = CE0C6CCA2D56377800EAD26B /* avatar2-dark.json */; };
+		CE0C6CE62D56377800EAD26B /* avatar1-light.json in Resources */ = {isa = PBXBuildFile; fileRef = CE0C6CC92D56377800EAD26B /* avatar1-light.json */; };
+		CE0C6CE72D56377800EAD26B /* avatar4-light.json in Resources */ = {isa = PBXBuildFile; fileRef = CE0C6CCF2D56377800EAD26B /* avatar4-light.json */; };
+		CE0C6CE82D56377800EAD26B /* avatar2-light.json in Resources */ = {isa = PBXBuildFile; fileRef = CE0C6CCB2D56377800EAD26B /* avatar2-light.json */; };
+		CE0C6CE92D56377800EAD26B /* avatar1-dark.json in Resources */ = {isa = PBXBuildFile; fileRef = CE0C6CC82D56377800EAD26B /* avatar1-dark.json */; };
+		CE0C6CEA2D56377800EAD26B /* avatar5-light.json in Resources */ = {isa = PBXBuildFile; fileRef = CE0C6CD12D56377800EAD26B /* avatar5-light.json */; };
+		CE0C6CEB2D56377800EAD26B /* avatar3-dark.json in Resources */ = {isa = PBXBuildFile; fileRef = CE0C6CCC2D56377800EAD26B /* avatar3-dark.json */; };
+		CE0C6CED2D56716000EAD26B /* IQKeyboardManagerSwift in Frameworks */ = {isa = PBXBuildFile; productRef = CE0C6CEC2D56716000EAD26B /* IQKeyboardManagerSwift */; };
+		CE0C6CEF2D56716000EAD26B /* Lottie in Frameworks */ = {isa = PBXBuildFile; productRef = CE0C6CEE2D56716000EAD26B /* Lottie */; };
+		CE0C6CF12D56716000EAD26B /* PhraseSDK in Frameworks */ = {isa = PBXBuildFile; productRef = CE0C6CF02D56716000EAD26B /* PhraseSDK */; };
+		CE0C6CF32D56716000EAD26B /* SwiftPrettyPrint in Frameworks */ = {isa = PBXBuildFile; productRef = CE0C6CF22D56716000EAD26B /* SwiftPrettyPrint */; };
 		CE12A0E42D2D992C0022BDF7 /* Media.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = CE12A0E32D2D992C0022BDF7 /* Media.xcassets */; };
 		CE12A0E62D2D99B60022BDF7 /* Media.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = CE12A0E52D2D99B60022BDF7 /* Media.xcassets */; };
 		CE12A0E72D2D99B60022BDF7 /* Media.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = CE12A0E52D2D99B60022BDF7 /* Media.xcassets */; };
@@ -9142,6 +9194,30 @@
 		A9FB6D6228C65EF100E3FE58 /* RankingsListViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RankingsListViewController.swift; sourceTree = "<group>"; };
 		CE0C6C8F2D56327E00EAD26B /* SmallToolTipView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SmallToolTipView.swift; sourceTree = "<group>"; };
 		CE0C6C902D56327E00EAD26B /* SmallToolTipViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SmallToolTipViewModel.swift; sourceTree = "<group>"; };
+		CE0C6CA42D56376B00EAD26B /* avatar1-dark.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = "avatar1-dark.json"; sourceTree = "<group>"; };
+		CE0C6CA52D56376B00EAD26B /* avatar1-light.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = "avatar1-light.json"; sourceTree = "<group>"; };
+		CE0C6CA62D56376B00EAD26B /* avatar2-dark.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = "avatar2-dark.json"; sourceTree = "<group>"; };
+		CE0C6CA72D56376B00EAD26B /* avatar2-light.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = "avatar2-light.json"; sourceTree = "<group>"; };
+		CE0C6CA82D56376B00EAD26B /* avatar3-dark.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = "avatar3-dark.json"; sourceTree = "<group>"; };
+		CE0C6CA92D56376B00EAD26B /* avatar3-light.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = "avatar3-light.json"; sourceTree = "<group>"; };
+		CE0C6CAA2D56376B00EAD26B /* avatar4-dark.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = "avatar4-dark.json"; sourceTree = "<group>"; };
+		CE0C6CAB2D56376B00EAD26B /* avatar4-light.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = "avatar4-light.json"; sourceTree = "<group>"; };
+		CE0C6CAC2D56376B00EAD26B /* avatar5-dark.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = "avatar5-dark.json"; sourceTree = "<group>"; };
+		CE0C6CAD2D56376B00EAD26B /* avatar5-light.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = "avatar5-light.json"; sourceTree = "<group>"; };
+		CE0C6CAE2D56376B00EAD26B /* avatar6-dark.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = "avatar6-dark.json"; sourceTree = "<group>"; };
+		CE0C6CAF2D56376B00EAD26B /* avatar6-light.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = "avatar6-light.json"; sourceTree = "<group>"; };
+		CE0C6CC82D56377800EAD26B /* avatar1-dark.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = "avatar1-dark.json"; sourceTree = "<group>"; };
+		CE0C6CC92D56377800EAD26B /* avatar1-light.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = "avatar1-light.json"; sourceTree = "<group>"; };
+		CE0C6CCA2D56377800EAD26B /* avatar2-dark.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = "avatar2-dark.json"; sourceTree = "<group>"; };
+		CE0C6CCB2D56377800EAD26B /* avatar2-light.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = "avatar2-light.json"; sourceTree = "<group>"; };
+		CE0C6CCC2D56377800EAD26B /* avatar3-dark.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = "avatar3-dark.json"; sourceTree = "<group>"; };
+		CE0C6CCD2D56377800EAD26B /* avatar3-light.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = "avatar3-light.json"; sourceTree = "<group>"; };
+		CE0C6CCE2D56377800EAD26B /* avatar4-dark.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = "avatar4-dark.json"; sourceTree = "<group>"; };
+		CE0C6CCF2D56377800EAD26B /* avatar4-light.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = "avatar4-light.json"; sourceTree = "<group>"; };
+		CE0C6CD02D56377800EAD26B /* avatar5-dark.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = "avatar5-dark.json"; sourceTree = "<group>"; };
+		CE0C6CD12D56377800EAD26B /* avatar5-light.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = "avatar5-light.json"; sourceTree = "<group>"; };
+		CE0C6CD22D56377800EAD26B /* avatar6-dark.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = "avatar6-dark.json"; sourceTree = "<group>"; };
+		CE0C6CD32D56377800EAD26B /* avatar6-light.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = "avatar6-light.json"; sourceTree = "<group>"; };
 		CE12A0E32D2D992C0022BDF7 /* Media.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Media.xcassets; sourceTree = "<group>"; };
 		CE12A0E52D2D99B60022BDF7 /* Media.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Media.xcassets; sourceTree = "<group>"; };
 		CE12A0E82D302CE90022BDF7 /* Gradients.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Gradients.xcassets; sourceTree = "<group>"; };
@@ -9381,14 +9457,18 @@
 			files = (
 				45B7BD5228E5B084007832C2 /* ServiceProvider in Frameworks */,
 				45A6BD9328246A7500D9B416 /* FirebaseMessaging in Frameworks */,
+				CE0C6CF12D56716000EAD26B /* PhraseSDK in Frameworks */,
 				45A6BD9428246A7500D9B416 /* FirebaseDatabase in Frameworks */,
 				45A6BD9628246A7500D9B416 /* DictionaryCoding in Frameworks */,
+				CE0C6CED2D56716000EAD26B /* IQKeyboardManagerSwift in Frameworks */,
 				45A6BD9728246A7500D9B416 /* Reachability in Frameworks */,
 				45A6BD9828246A7500D9B416 /* Kingfisher in Frameworks */,
 				45A6BD9B28246A7500D9B416 /* FirebaseAuth in Frameworks */,
 				45A6BD9C28246A7500D9B416 /* Collections in Frameworks */,
+				CE0C6CF32D56716000EAD26B /* SwiftPrettyPrint in Frameworks */,
 				45A6BD9D28246A7500D9B416 /* CombineCocoa in Frameworks */,
 				45A6BD9E28246A7500D9B416 /* SwiftyBeaver in Frameworks */,
+				CE0C6CEF2D56716000EAD26B /* Lottie in Frameworks */,
 				45A6BD9F28246A7500D9B416 /* FirebaseCrashlytics in Frameworks */,
 				45A6BDA028246A7500D9B416 /* FirebaseAnalytics in Frameworks */,
 				45A6BDA128246A7500D9B416 /* OrderedCollections in Frameworks */,
@@ -13036,6 +13116,18 @@
 		CE2E0F102D39939C00488EF5 /* Animations */ = {
 			isa = PBXGroup;
 			children = (
+				CE0C6CA42D56376B00EAD26B /* avatar1-dark.json */,
+				CE0C6CA52D56376B00EAD26B /* avatar1-light.json */,
+				CE0C6CA62D56376B00EAD26B /* avatar2-dark.json */,
+				CE0C6CA72D56376B00EAD26B /* avatar2-light.json */,
+				CE0C6CA82D56376B00EAD26B /* avatar3-dark.json */,
+				CE0C6CA92D56376B00EAD26B /* avatar3-light.json */,
+				CE0C6CAA2D56376B00EAD26B /* avatar4-dark.json */,
+				CE0C6CAB2D56376B00EAD26B /* avatar4-light.json */,
+				CE0C6CAC2D56376B00EAD26B /* avatar5-dark.json */,
+				CE0C6CAD2D56376B00EAD26B /* avatar5-light.json */,
+				CE0C6CAE2D56376B00EAD26B /* avatar6-dark.json */,
+				CE0C6CAF2D56376B00EAD26B /* avatar6-light.json */,
 				CE315ED52D00B3FA0080D900 /* replay_sucess.json */,
 			);
 			path = Animations;
@@ -13044,6 +13136,18 @@
 		CE2E0F112D3993DB00488EF5 /* Animations */ = {
 			isa = PBXGroup;
 			children = (
+				CE0C6CC82D56377800EAD26B /* avatar1-dark.json */,
+				CE0C6CC92D56377800EAD26B /* avatar1-light.json */,
+				CE0C6CCA2D56377800EAD26B /* avatar2-dark.json */,
+				CE0C6CCB2D56377800EAD26B /* avatar2-light.json */,
+				CE0C6CCC2D56377800EAD26B /* avatar3-dark.json */,
+				CE0C6CCD2D56377800EAD26B /* avatar3-light.json */,
+				CE0C6CCE2D56377800EAD26B /* avatar4-dark.json */,
+				CE0C6CCF2D56377800EAD26B /* avatar4-light.json */,
+				CE0C6CD02D56377800EAD26B /* avatar5-dark.json */,
+				CE0C6CD12D56377800EAD26B /* avatar5-light.json */,
+				CE0C6CD22D56377800EAD26B /* avatar6-dark.json */,
+				CE0C6CD32D56377800EAD26B /* avatar6-light.json */,
 				CE2E0F122D3995D100488EF5 /* replay_sucess.json */,
 			);
 			path = Animations;
@@ -13412,6 +13516,10 @@
 				45A6BBBA28246A7400D9B416 /* SwiftyBeaver */,
 				45A6BBBC28246A7400D9B416 /* SocketIO */,
 				45B7BD5128E5B084007832C2 /* ServiceProvider */,
+				CE0C6CEC2D56716000EAD26B /* IQKeyboardManagerSwift */,
+				CE0C6CEE2D56716000EAD26B /* Lottie */,
+				CE0C6CF02D56716000EAD26B /* PhraseSDK */,
+				CE0C6CF22D56716000EAD26B /* SwiftPrettyPrint */,
 			);
 			productName = Sportsbook;
 			productReference = 45A6BE2628246A7500D9B416 /* DAZN.app */;
@@ -13729,6 +13837,18 @@
 				450B7AD228F58574009229E3 /* MyTicketTableViewCell.xib in Resources */,
 				450B7AD328F58574009229E3 /* HeadToHeadCardStatsView.xib in Resources */,
 				450B7AD728F58574009229E3 /* LoadingMoreTableViewCell.xib in Resources */,
+				CE0C6CE02D56377800EAD26B /* avatar5-dark.json in Resources */,
+				CE0C6CE12D56377800EAD26B /* avatar3-light.json in Resources */,
+				CE0C6CE22D56377800EAD26B /* avatar4-dark.json in Resources */,
+				CE0C6CE32D56377800EAD26B /* avatar6-dark.json in Resources */,
+				CE0C6CE42D56377800EAD26B /* avatar6-light.json in Resources */,
+				CE0C6CE52D56377800EAD26B /* avatar2-dark.json in Resources */,
+				CE0C6CE62D56377800EAD26B /* avatar1-light.json in Resources */,
+				CE0C6CE72D56377800EAD26B /* avatar4-light.json in Resources */,
+				CE0C6CE82D56377800EAD26B /* avatar2-light.json in Resources */,
+				CE0C6CE92D56377800EAD26B /* avatar1-dark.json in Resources */,
+				CE0C6CEA2D56377800EAD26B /* avatar5-light.json in Resources */,
+				CE0C6CEB2D56377800EAD26B /* avatar3-dark.json in Resources */,
 				CE12A0EB2D302CE90022BDF7 /* Gradients.xcassets in Resources */,
 				450B7AD828F58574009229E3 /* MatchLineTableViewCell.xib in Resources */,
 				450B7AD928F58574009229E3 /* RecentSearchHeaderView.xib in Resources */,
@@ -14354,6 +14474,18 @@
 				45A33320298976BA008181E9 /* FullRegisterPersonalInfoViewController.xib in Resources */,
 				CE315EDD2D00B3FA0080D900 /* replay_sucess.json in Resources */,
 				45A33321298976BA008181E9 /* HomeAwayCardStatsView.xib in Resources */,
+				CE0C6CB02D56376B00EAD26B /* avatar3-light.json in Resources */,
+				CE0C6CB12D56376B00EAD26B /* avatar2-dark.json in Resources */,
+				CE0C6CB22D56376B00EAD26B /* avatar5-light.json in Resources */,
+				CE0C6CB32D56376B00EAD26B /* avatar3-dark.json in Resources */,
+				CE0C6CB42D56376B00EAD26B /* avatar5-dark.json in Resources */,
+				CE0C6CB52D56376B00EAD26B /* avatar1-dark.json in Resources */,
+				CE0C6CB62D56376B00EAD26B /* avatar1-light.json in Resources */,
+				CE0C6CB72D56376B00EAD26B /* avatar4-light.json in Resources */,
+				CE0C6CB82D56376B00EAD26B /* avatar6-dark.json in Resources */,
+				CE0C6CB92D56376B00EAD26B /* avatar4-dark.json in Resources */,
+				CE0C6CBA2D56376B00EAD26B /* avatar6-light.json in Resources */,
+				CE0C6CBB2D56376B00EAD26B /* avatar2-light.json in Resources */,
 				45A33322298976BA008181E9 /* MatchWidgetCollectionViewCell.xib in Resources */,
 				45A33324298976BA008181E9 /* TestingInterface.xib in Resources */,
 				450FC3E52A2A6737000DB866 /* DummyImages.xcassets in Resources */,
@@ -14642,6 +14774,18 @@
 				45F6BE052AB3732C00C81DE1 /* HomeAwayCardStatsView.xib in Resources */,
 				455420242B0E218300B22EBD /* field_widget_dark.html in Resources */,
 				CE315EDA2D00B3FA0080D900 /* replay_sucess.json in Resources */,
+				CE0C6CBC2D56376B00EAD26B /* avatar3-light.json in Resources */,
+				CE0C6CBD2D56376B00EAD26B /* avatar2-dark.json in Resources */,
+				CE0C6CBE2D56376B00EAD26B /* avatar5-light.json in Resources */,
+				CE0C6CBF2D56376B00EAD26B /* avatar3-dark.json in Resources */,
+				CE0C6CC02D56376B00EAD26B /* avatar5-dark.json in Resources */,
+				CE0C6CC12D56376B00EAD26B /* avatar1-dark.json in Resources */,
+				CE0C6CC22D56376B00EAD26B /* avatar1-light.json in Resources */,
+				CE0C6CC32D56376B00EAD26B /* avatar4-light.json in Resources */,
+				CE0C6CC42D56376B00EAD26B /* avatar6-dark.json in Resources */,
+				CE0C6CC52D56376B00EAD26B /* avatar4-dark.json in Resources */,
+				CE0C6CC62D56376B00EAD26B /* avatar6-light.json in Resources */,
+				CE0C6CC72D56376B00EAD26B /* avatar2-light.json in Resources */,
 				45F6BE072AB3732C00C81DE1 /* MatchWidgetCollectionViewCell.xib in Resources */,
 				45F6BE082AB3732C00C81DE1 /* TestingInterface.xib in Resources */,
 				45F6BE092AB3732C00C81DE1 /* GoogleService-Info.plist in Resources */,
@@ -14891,6 +15035,18 @@
 				CE12A4642D31347E0022BDF7 /* MyTicketTableViewCell.xib in Resources */,
 				CE12A4652D31347E0022BDF7 /* HeadToHeadCardStatsView.xib in Resources */,
 				CE12A4662D31347E0022BDF7 /* LoadingMoreTableViewCell.xib in Resources */,
+				CE0C6CD42D56377800EAD26B /* avatar5-dark.json in Resources */,
+				CE0C6CD52D56377800EAD26B /* avatar3-light.json in Resources */,
+				CE0C6CD62D56377800EAD26B /* avatar4-dark.json in Resources */,
+				CE0C6CD72D56377800EAD26B /* avatar6-dark.json in Resources */,
+				CE0C6CD82D56377800EAD26B /* avatar6-light.json in Resources */,
+				CE0C6CD92D56377800EAD26B /* avatar2-dark.json in Resources */,
+				CE0C6CDA2D56377800EAD26B /* avatar1-light.json in Resources */,
+				CE0C6CDB2D56377800EAD26B /* avatar4-light.json in Resources */,
+				CE0C6CDC2D56377800EAD26B /* avatar2-light.json in Resources */,
+				CE0C6CDD2D56377800EAD26B /* avatar1-dark.json in Resources */,
+				CE0C6CDE2D56377800EAD26B /* avatar5-light.json in Resources */,
+				CE0C6CDF2D56377800EAD26B /* avatar3-dark.json in Resources */,
 				CE12A4672D31347E0022BDF7 /* Gradients.xcassets in Resources */,
 				CE12A4682D31347E0022BDF7 /* MatchLineTableViewCell.xib in Resources */,
 				CE12A4692D31347E0022BDF7 /* RecentSearchHeaderView.xib in Resources */,
@@ -21929,7 +22085,7 @@
 				CODE_SIGN_IDENTITY = "Apple Development";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				CODE_SIGN_STYLE = Manual;
-				CURRENT_PROJECT_VERSION = 103447;
+				CURRENT_PROJECT_VERSION = 103449;
 				DEVELOPMENT_TEAM = "";
 				"DEVELOPMENT_TEAM[sdk=iphoneos*]" = 422GNXXZJR;
 				INFOPLIST_FILE = "./Clients/SportRadar/Misc-UAT/SportRadar-UAT-Info.plist";
@@ -21961,7 +22117,7 @@
 				CODE_SIGN_IDENTITY = "Apple Development";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution";
 				CODE_SIGN_STYLE = Manual;
-				CURRENT_PROJECT_VERSION = 103447;
+				CURRENT_PROJECT_VERSION = 103449;
 				DEVELOPMENT_TEAM = "";
 				"DEVELOPMENT_TEAM[sdk=iphoneos*]" = 422GNXXZJR;
 				INFOPLIST_FILE = "./Clients/SportRadar/Misc-UAT/SportRadar-UAT-Info.plist";
@@ -22157,7 +22313,7 @@
 				CODE_SIGN_ENTITLEMENTS = Clients/EveryMatrix/Misc/EveryMatrix.entitlements;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 103447;
+				CURRENT_PROJECT_VERSION = 103449;
 				DEVELOPMENT_TEAM = 422GNXXZJR;
 				INFOPLIST_FILE = "./Clients/EveryMatrix/Misc/EveryMatrix-Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 13.0;
@@ -22186,7 +22342,7 @@
 				CODE_SIGN_ENTITLEMENTS = Clients/EveryMatrix/Misc/EveryMatrix.entitlements;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 103447;
+				CURRENT_PROJECT_VERSION = 103449;
 				DEVELOPMENT_TEAM = 422GNXXZJR;
 				INFOPLIST_FILE = "./Clients/EveryMatrix/Misc/EveryMatrix-Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 13.0;
@@ -22215,7 +22371,7 @@
 				CODE_SIGN_ENTITLEMENTS = Clients/Crocobet/Misc/Crocobet.entitlements;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Manual;
-				CURRENT_PROJECT_VERSION = 103447;
+				CURRENT_PROJECT_VERSION = 103449;
 				DEVELOPMENT_TEAM = "";
 				INFOPLIST_FILE = "./Clients/Crocobet/Misc/Crocobet-Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 13.0;
@@ -22244,7 +22400,7 @@
 				CODE_SIGN_ENTITLEMENTS = Clients/Crocobet/Misc/Crocobet.entitlements;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Manual;
-				CURRENT_PROJECT_VERSION = 103447;
+				CURRENT_PROJECT_VERSION = 103449;
 				DEVELOPMENT_TEAM = "";
 				INFOPLIST_FILE = "./Clients/Crocobet/Misc/Crocobet-Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 13.0;
@@ -22273,7 +22429,7 @@
 				CODE_SIGN_ENTITLEMENTS = Clients/GOMASports/Misc/GOMASports.entitlements;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 103447;
+				CURRENT_PROJECT_VERSION = 103449;
 				DEVELOPMENT_TEAM = 422GNXXZJR;
 				INFOPLIST_FILE = "./Clients/GOMASports/Misc/GOMASports-Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 13.0;
@@ -22302,7 +22458,7 @@
 				CODE_SIGN_ENTITLEMENTS = Clients/GOMASports/Misc/GOMASports.entitlements;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 103447;
+				CURRENT_PROJECT_VERSION = 103449;
 				DEVELOPMENT_TEAM = 422GNXXZJR;
 				INFOPLIST_FILE = "./Clients/GOMASports/Misc/GOMASports-Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 13.0;
@@ -22332,7 +22488,7 @@
 				CODE_SIGN_IDENTITY = "Apple Development";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				CODE_SIGN_STYLE = Manual;
-				CURRENT_PROJECT_VERSION = 103447;
+				CURRENT_PROJECT_VERSION = 103449;
 				DEVELOPMENT_TEAM = QN2DYX5K4M;
 				"DEVELOPMENT_TEAM[sdk=iphoneos*]" = QN2DYX5K4M;
 				INFOPLIST_FILE = "./Clients/Betsson/Misc-PROD/Betsson-PROD-Info.plist";
@@ -22364,7 +22520,7 @@
 				CODE_SIGN_IDENTITY = "Apple Distribution";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution";
 				CODE_SIGN_STYLE = Manual;
-				CURRENT_PROJECT_VERSION = 103447;
+				CURRENT_PROJECT_VERSION = 103449;
 				DEVELOPMENT_TEAM = QN2DYX5K4M;
 				"DEVELOPMENT_TEAM[sdk=iphoneos*]" = QN2DYX5K4M;
 				INFOPLIST_FILE = "./Clients/Betsson/Misc-PROD/Betsson-PROD-Info.plist";
@@ -22395,7 +22551,7 @@
 				CODE_SIGN_ENTITLEMENTS = Clients/DAZN/Misc/DAZN.entitlements;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 103447;
+				CURRENT_PROJECT_VERSION = 103449;
 				DEVELOPMENT_TEAM = 422GNXXZJR;
 				INFOPLIST_FILE = "./Clients/DAZN/Misc/DAZN-Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 13.0;
@@ -22424,7 +22580,7 @@
 				CODE_SIGN_ENTITLEMENTS = Clients/DAZN/Misc/DAZN.entitlements;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 103447;
+				CURRENT_PROJECT_VERSION = 103449;
 				DEVELOPMENT_TEAM = 422GNXXZJR;
 				INFOPLIST_FILE = "./Clients/DAZN/Misc/DAZN-Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 13.0;
@@ -22454,7 +22610,7 @@
 				CODE_SIGN_IDENTITY = "Apple Development";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				CODE_SIGN_STYLE = Manual;
-				CURRENT_PROJECT_VERSION = 103447;
+				CURRENT_PROJECT_VERSION = 103449;
 				DEVELOPMENT_TEAM = 422GNXXZJR;
 				"DEVELOPMENT_TEAM[sdk=iphoneos*]" = 422GNXXZJR;
 				INFOPLIST_FILE = "./Clients/Betsson/Misc-UAT/Betsson-UAT-Info.plist";
@@ -22486,7 +22642,7 @@
 				CODE_SIGN_IDENTITY = "Apple Distribution";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution";
 				CODE_SIGN_STYLE = Manual;
-				CURRENT_PROJECT_VERSION = 103447;
+				CURRENT_PROJECT_VERSION = 103449;
 				DEVELOPMENT_TEAM = 422GNXXZJR;
 				"DEVELOPMENT_TEAM[sdk=iphoneos*]" = 422GNXXZJR;
 				INFOPLIST_FILE = "./Clients/Betsson/Misc-UAT/Betsson-UAT-Info.plist";
@@ -22518,7 +22674,7 @@
 				CODE_SIGN_IDENTITY = "Apple Development";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution";
 				CODE_SIGN_STYLE = Manual;
-				CURRENT_PROJECT_VERSION = 103447;
+				CURRENT_PROJECT_VERSION = 103449;
 				DEBUG_INFORMATION_FORMAT = dwarf;
 				DEVELOPMENT_TEAM = "";
 				"DEVELOPMENT_TEAM[sdk=iphoneos*]" = QN2DYX5K4M;
@@ -22563,7 +22719,7 @@
 				CODE_SIGN_IDENTITY = "Apple Distribution";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution";
 				CODE_SIGN_STYLE = Manual;
-				CURRENT_PROJECT_VERSION = 103447;
+				CURRENT_PROJECT_VERSION = 103449;
 				DEVELOPMENT_TEAM = "";
 				"DEVELOPMENT_TEAM[sdk=iphoneos*]" = QN2DYX5K4M;
 				ENABLE_USER_SCRIPT_SANDBOXING = YES;
@@ -22601,7 +22757,7 @@
 				CODE_SIGN_ENTITLEMENTS = Clients/GOMASportRadar/Misc/GOMASportRadar.entitlements;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 103447;
+				CURRENT_PROJECT_VERSION = 103449;
 				DEVELOPMENT_TEAM = 422GNXXZJR;
 				INFOPLIST_FILE = "./Clients/GOMASportRadar/Misc/GOMASportRadar-Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 13.0;
@@ -22631,7 +22787,7 @@
 				CODE_SIGN_ENTITLEMENTS = Clients/GOMASportRadar/Misc/GOMASportRadar.entitlements;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 103447;
+				CURRENT_PROJECT_VERSION = 103449;
 				DEVELOPMENT_TEAM = 422GNXXZJR;
 				INFOPLIST_FILE = "./Clients/GOMASportRadar/Misc/GOMASportRadar-Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 13.0;
@@ -22661,7 +22817,7 @@
 				CODE_SIGN_IDENTITY = "Apple Development";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				CODE_SIGN_STYLE = Manual;
-				CURRENT_PROJECT_VERSION = 103447;
+				CURRENT_PROJECT_VERSION = 103449;
 				DEVELOPMENT_TEAM = "";
 				"DEVELOPMENT_TEAM[sdk=iphoneos*]" = 422GNXXZJR;
 				INFOPLIST_FILE = "./Clients/SportRadar/Misc-PROD/SportRadar-PROD-Info.plist";
@@ -22693,7 +22849,7 @@
 				CODE_SIGN_IDENTITY = "Apple Development";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution";
 				CODE_SIGN_STYLE = Manual;
-				CURRENT_PROJECT_VERSION = 103447;
+				CURRENT_PROJECT_VERSION = 103449;
 				DEVELOPMENT_TEAM = "";
 				"DEVELOPMENT_TEAM[sdk=iphoneos*]" = 422GNXXZJR;
 				INFOPLIST_FILE = "./Clients/SportRadar/Misc-PROD/SportRadar-PROD-Info.plist";
@@ -24488,6 +24644,26 @@
 		A9C3409C28F9A74A0055360B /* SocketIO */ = {
 			isa = XCSwiftPackageProductDependency;
 			productName = SocketIO;
+		};
+		CE0C6CEC2D56716000EAD26B /* IQKeyboardManagerSwift */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 4554ED082976F7FE006942B3 /* XCRemoteSwiftPackageReference "IQKeyboardManager" */;
+			productName = IQKeyboardManagerSwift;
+		};
+		CE0C6CEE2D56716000EAD26B /* Lottie */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 45F805912A05357E005296E0 /* XCRemoteSwiftPackageReference "lottie-spm" */;
+			productName = Lottie;
+		};
+		CE0C6CF02D56716000EAD26B /* PhraseSDK */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 45DB8DB72A6AA5100018C591 /* XCRemoteSwiftPackageReference "ios-sdk" */;
+			productName = PhraseSDK;
+		};
+		CE0C6CF22D56716000EAD26B /* SwiftPrettyPrint */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 459F410A2AF54C86006BAEE9 /* XCRemoteSwiftPackageReference "SwiftPrettyPrint" */;
+			productName = SwiftPrettyPrint;
 		};
 		CE12A0F22D31347E0022BDF7 /* Reachability */ = {
 			isa = XCSwiftPackageProductDependency;
