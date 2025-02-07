@@ -245,6 +245,7 @@ public class Market: Codable, Equatable {
     public var name: String
     public var outcomes: [Outcome]
     public var marketTypeId: String?
+    public var marketFilterId: String?
     public var eventMarketTypeId: String?
     public var eventName: String?
     public var isMainOutright: Bool?
@@ -273,6 +274,7 @@ public class Market: Codable, Equatable {
         case name = "name"
         case outcomes = "outcomes"
         case marketTypeId = "marketTypeId"
+        case marketFilterId = "marketFilterId"
         case eventMarketTypeId = "eventMarketTypeId"
         case eventName = "eventName"
         case isMainOutright = "ismainoutright"
@@ -295,6 +297,7 @@ public class Market: Codable, Equatable {
                 name: String,
                 outcomes: [Outcome],
                 marketTypeId: String?,
+                marketFilterId: String?,
                 eventMarketTypeId: String?,
                 eventName: String?,
                 isMainOutright: Bool?,
@@ -318,6 +321,7 @@ public class Market: Codable, Equatable {
         self.name = name
         self.outcomes = outcomes
         self.marketTypeId = marketTypeId
+        self.marketFilterId = marketFilterId
         self.eventMarketTypeId = eventMarketTypeId
         self.eventName = eventName
         self.isMainOutright = isMainOutright
@@ -527,10 +531,10 @@ public struct FieldWidget: Codable {
     }
 }
 
-public struct EventMarket {
+public struct MarketGroupPointer {
     public var id: String
     public var name: String
-    public var marketIds: [String]
+    public var marketGroupIds: [String]
     public var groupOrder: Int
 }
 

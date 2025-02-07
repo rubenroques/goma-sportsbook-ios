@@ -37,7 +37,12 @@ class MyTicketTableViewCell: UITableViewCell {
     @IBOutlet private weak var winningsSubtitleLabel: UILabel!
 
     @IBOutlet private weak var cashbackInfoBaseView: UIView!
-    @IBOutlet private weak var cashbackInfoView: CashbackInfoView!
+    private lazy var cashbackInfoView: CashbackInfoView = {
+        let view = CashbackInfoView()
+        view.translatesAutoresizingMaskIntoConstraints = false
+        return view
+    }()
+    
     @IBOutlet private weak var cashbackValueLabel: UILabel!
 
     @IBOutlet private weak var cashoutBaseView: UIView!
@@ -181,6 +186,12 @@ class MyTicketTableViewCell: UITableViewCell {
         
         self.minimumCashoutValueLabel.font = AppFont.with(type: .bold, size: 12)
         self.maximumCashoutValueLabel.font = AppFont.with(type: .bold, size: 12)
+        
+        self.cashbackInfoBaseView.addSubview(self.cashbackInfoView)
+        NSLayoutConstraint.activate([
+            self.cashbackInfoView.centerXAnchor.constraint(equalTo: self.cashbackInfoBaseView.centerXAnchor),
+            self.cashbackInfoView.centerYAnchor.constraint(equalTo: self.cashbackInfoBaseView.centerYAnchor),
+        ])
         
         //
         self.shareButton.isHidden = false
@@ -679,7 +690,7 @@ class MyTicketTableViewCell: UITableViewCell {
 
             // Original amount
             let originalBetAmountString = CurrencyFormater.defaultFormat.string(from: NSNumber(value: betHistoryEntry.totalBetAmount ?? 0.0))
-            self.originalAmountValueLabel.text = "\(localized("original")): \(originalBetAmountString ?? "")"
+            self.originalAmountValueLabel.text = "\(localized("original")):\n \(originalBetAmountString ?? "")"
 
             // New bet amount
             let newBetAmount = (betHistoryEntry.totalBetAmount ?? 0.0) - partialCashoutStake
@@ -693,7 +704,7 @@ class MyTicketTableViewCell: UITableViewCell {
 
             // Returned Amount
             let returnedBetAmountString = CurrencyFormater.defaultFormat.string(from: NSNumber(value: partialCashoutReturn))
-            self.returnedAmountValueLabel.text = "\(localized("returned")): \(returnedBetAmountString ?? "")"
+            self.returnedAmountValueLabel.text = "\(localized("returned")):\n \(returnedBetAmountString ?? "")"
 
             self.hasPartialCashoutReturned = true
 

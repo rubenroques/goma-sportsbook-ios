@@ -154,7 +154,7 @@ class NamesFormStepView: FormStepView {
         self.firstNameHeaderTextFieldView.setReturnKeyType(.next)
         self.firstNameHeaderTextFieldView.setPlaceholderText(Localization.localized("first_name"))
         self.firstNameHeaderTextFieldView.didTapReturn = { [weak self] in
-            self?.lastNameHeaderTextFieldView.becomeFirstResponder()
+            self?.middleNameHeaderTextFieldView.becomeFirstResponder()
         }
         self.firstNameHeaderTextFieldView.keyboardType = .alphabet
         self.firstNameHeaderTextFieldView.isAlphabetMode = true
@@ -162,7 +162,7 @@ class NamesFormStepView: FormStepView {
         self.middleNameHeaderTextFieldView.setReturnKeyType(.next)
         self.middleNameHeaderTextFieldView.setPlaceholderText(Localization.localized("middle_name"))
         self.middleNameHeaderTextFieldView.didTapReturn = { [weak self] in
-            self?.middleNameHeaderTextFieldView.becomeFirstResponder()
+            self?.lastNameHeaderTextFieldView.becomeFirstResponder()
         }
         self.middleNameHeaderTextFieldView.keyboardType = .alphabet
         self.middleNameHeaderTextFieldView.isMiddleNameMode = true

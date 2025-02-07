@@ -48,9 +48,6 @@ class MatchDetailsViewModel: NSObject {
         }
     }
 
-    var marketFilters: [EventMarket]?
-    var availableMarkets: [String: [String]] = [:]
-
     var isLiveMatch: Bool {
         if let match = self.match {
             switch match.status {

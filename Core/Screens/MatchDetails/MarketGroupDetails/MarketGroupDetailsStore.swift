@@ -58,23 +58,20 @@ class MarketGroupDetailsStore {
 
         for market in markets {
 
-            var similarMarketKey = "\(market.marketTypeId ?? "000")-\(match.homeParticipant.name )-\(match.awayParticipant.name)"
+            var digitValue = "empty" // Market group has no digit (all similar market should have a digit)
+            if market.nameDigit1 != nil || market.nameDigit2 != nil || market.nameDigit2 != nil {
+                digitValue = "line" // Market group has digit (similiar should have digit too)
+            }
+            
+            var similarMarketKey = "\(market.marketTypeId ?? market.id)-\(match.homeParticipant.name )-\(match.awayParticipant.name)+\(digitValue)"
             
             // ==================================
             // Avoid grouping markets with this id
             // add here if we need to ungroup more ids
-            let marketTypeId = market.marketTypeId ?? "000"
+            let marketTypeId = market.marketTypeId ?? market.id
             if Env.businessSettingsSocket.clientSettings.ungroupedMarkets.contains(marketTypeId) {
                 similarMarketKey = "\(market.id)-\(match.homeParticipant.name )-\(match.awayParticipant.name)"
             }
-            
-//            Previous hardcoded version
-//            if market.marketTypeId ?? "000" == "1492" ||
-//                market.marketTypeId ?? "000" == "1730" ||
-//                market.marketTypeId ?? "000" == "1731" {
-//                similarMarketKey = "\(market.id)-\(match.homeParticipant.name )-\(match.awayParticipant.name)"
-//            }
-            //
             // ==================================
             
             //

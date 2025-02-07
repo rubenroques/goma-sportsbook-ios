@@ -110,7 +110,6 @@ class GomaGamingSocialServiceClient {
                 case .finished:
                     ()
                 }
-
             }, receiveValue: { [weak self] response in
                 print("FOLLOWING USERS RESPONSE: \(response)")
 

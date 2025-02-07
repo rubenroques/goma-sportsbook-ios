@@ -2116,7 +2116,7 @@ extension SportRadarEventsProvider {
 
     private func processMarketFilters(marketFilter: MarketFilter, match: Event) -> [MarketGroup] {
 
-        var eventMarkets: [EventMarket] = []
+        var eventMarkets: [MarketGroupPointer] = []
         var marketGroups: OrderedDictionary<String, MarketGroup> = [:]
         var availableMarkets: [String: [AvailableMarket]] = [:]
 
@@ -2146,10 +2146,10 @@ extension SportRadarEventsProvider {
                 }
             }
             let id = marketFilter.translations?.english ??  "\(marketFilter.displayOrder)"
-            let eventMarket = EventMarket(id: id,
-                                          name: marketGroupKey,
-                                          marketIds: selectedMarketIds,
-                                          groupOrder: marketFilter.displayOrder)
+            let eventMarket = MarketGroupPointer(id: id,
+                                                 name: marketGroupKey,
+                                                 marketGroupIds: selectedMarketIds,
+                                                 groupOrder: marketFilter.displayOrder)
             eventMarkets.append(eventMarket)
         }
 
@@ -2157,11 +2157,11 @@ extension SportRadarEventsProvider {
 
         for matchMarket in matchMarkets {
 
-            if let marketTypeId = matchMarket.marketTypeId {
+            if let marketFilterId = matchMarket.marketFilterId {
 
                 for eventMarket in eventMarkets {
 
-                    if eventMarket.marketIds.contains(marketTypeId) {
+                    if eventMarket.marketGroupIds.contains(marketFilterId) {
 
                         if availableMarkets[eventMarket.name] == nil {
                             let availableMarket = AvailableMarket(marketId: matchMarket.id,
@@ -2225,7 +2225,6 @@ extension SportRadarEventsProvider {
                                                           orderGroupOrder: eventMarket.groupOrder)
                     availableMarkets[eventMarket.name]?.append(availableMarket)
                 }
-
             }
         }
 
@@ -2235,8 +2234,8 @@ extension SportRadarEventsProvider {
 
             let sortedMarkets = groupMarkets
                 .sorted { lhs, rhs in
-                    let lhsKey = "\(availableMarket.key)-\(lhs.marketTypeId ?? "")"
-                    let rhsKey = "\(availableMarket.key)-\(rhs.marketTypeId ?? "")"
+                    let lhsKey = "\(availableMarket.key)-\(lhs.marketFilterId ?? "")"
+                    let rhsKey = "\(availableMarket.key)-\(rhs.marketFilterId ?? "")"
 
                     let lhsPosition = marketPositions[lhsKey] ?? 999
                     let rhsPosition = marketPositions[rhsKey] ?? 999

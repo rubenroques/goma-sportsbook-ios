@@ -147,6 +147,11 @@ extension ChipsTypeView: UICollectionViewDelegate, UICollectionViewDataSource {
         else {
             fatalError()
         }
+        
+        if case .backgroungImage(_, _, _) = tab {
+            cell.isCustomDesign = true
+        }
+        
         cell.setup(with: tab)
         return cell
     }

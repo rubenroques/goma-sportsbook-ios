@@ -59,7 +59,7 @@ extension SportRadarModels {
         init(from decoder: Decoder) throws {
             let container: KeyedDecodingContainer<CodingKeys> = try decoder.container(keyedBy: CodingKeys.self)
             
-            self.id = (try? container.decode(String.self, forKey: .targetEventId)) ?? "000"
+            self.id = (try? container.decode(String.self, forKey: .targetEventId)) ?? "NO_ID_FOUND"
             
             self.matchTime = nil
             if let fullMatchTime = try container.decodeIfPresent(String.self, forKey: .matchTime),
