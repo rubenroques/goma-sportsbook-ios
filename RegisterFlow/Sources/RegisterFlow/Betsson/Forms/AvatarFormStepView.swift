@@ -138,7 +138,7 @@ class AvatarFormStepView: FormStepView {
 //                ])
 
                 let imageView = Self.createAvatarImageView()
-                imageView.image = UIImage(named: avatarName, in: Bundle.module, with: nil)
+                imageView.image = UIImage(named: avatarName, in: Bundle.main, with: nil)
                 imageView.tag = tagCounter
 
                 baseView.addSubview(imageView)
@@ -385,7 +385,7 @@ extension AvatarFormStepView {
             animationName = name + "-light"
         }
         
-        let avatarAnimation = LottieAnimation.named(animationName, bundle: Bundle.module)
+        let avatarAnimation = LottieAnimation.named(animationName, bundle: Bundle.main)
         animationView.animation = avatarAnimation
         return animationView
     }

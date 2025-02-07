@@ -7169,6 +7169,24 @@
 		A9FB6D6928C65EF100E3FE58 /* RankingsListViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9FB6D6228C65EF100E3FE58 /* RankingsListViewController.swift */; };
 		A9FEF5752AB8630600CB638F /* RegisterSuccessViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9BAFB4C2AB213E5002EDBA1 /* RegisterSuccessViewController.swift */; };
 		A9FEF5762AB8630B00CB638F /* RegisterErrorViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9BB46292AB366400003741E /* RegisterErrorViewController.swift */; };
+		CE0C6C922D56327E00EAD26B /* SmallToolTipView.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE0C6C8F2D56327E00EAD26B /* SmallToolTipView.swift */; };
+		CE0C6C932D56327E00EAD26B /* SmallToolTipViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE0C6C902D56327E00EAD26B /* SmallToolTipViewModel.swift */; };
+		CE0C6C942D56327E00EAD26B /* SmallToolTipView.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE0C6C8F2D56327E00EAD26B /* SmallToolTipView.swift */; };
+		CE0C6C952D56327E00EAD26B /* SmallToolTipViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE0C6C902D56327E00EAD26B /* SmallToolTipViewModel.swift */; };
+		CE0C6C962D56327E00EAD26B /* SmallToolTipView.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE0C6C8F2D56327E00EAD26B /* SmallToolTipView.swift */; };
+		CE0C6C972D56327E00EAD26B /* SmallToolTipViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE0C6C902D56327E00EAD26B /* SmallToolTipViewModel.swift */; };
+		CE0C6C982D56327E00EAD26B /* SmallToolTipView.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE0C6C8F2D56327E00EAD26B /* SmallToolTipView.swift */; };
+		CE0C6C992D56327E00EAD26B /* SmallToolTipViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE0C6C902D56327E00EAD26B /* SmallToolTipViewModel.swift */; };
+		CE0C6C9A2D56327E00EAD26B /* SmallToolTipView.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE0C6C8F2D56327E00EAD26B /* SmallToolTipView.swift */; };
+		CE0C6C9B2D56327E00EAD26B /* SmallToolTipViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE0C6C902D56327E00EAD26B /* SmallToolTipViewModel.swift */; };
+		CE0C6C9C2D56327E00EAD26B /* SmallToolTipView.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE0C6C8F2D56327E00EAD26B /* SmallToolTipView.swift */; };
+		CE0C6C9D2D56327E00EAD26B /* SmallToolTipViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE0C6C902D56327E00EAD26B /* SmallToolTipViewModel.swift */; };
+		CE0C6C9E2D56327E00EAD26B /* SmallToolTipView.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE0C6C8F2D56327E00EAD26B /* SmallToolTipView.swift */; };
+		CE0C6C9F2D56327E00EAD26B /* SmallToolTipViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE0C6C902D56327E00EAD26B /* SmallToolTipViewModel.swift */; };
+		CE0C6CA02D56327E00EAD26B /* SmallToolTipView.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE0C6C8F2D56327E00EAD26B /* SmallToolTipView.swift */; };
+		CE0C6CA12D56327E00EAD26B /* SmallToolTipViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE0C6C902D56327E00EAD26B /* SmallToolTipViewModel.swift */; };
+		CE0C6CA22D56327E00EAD26B /* SmallToolTipView.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE0C6C8F2D56327E00EAD26B /* SmallToolTipView.swift */; };
+		CE0C6CA32D56327E00EAD26B /* SmallToolTipViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE0C6C902D56327E00EAD26B /* SmallToolTipViewModel.swift */; };
 		CE12A0E42D2D992C0022BDF7 /* Media.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = CE12A0E32D2D992C0022BDF7 /* Media.xcassets */; };
 		CE12A0E62D2D99B60022BDF7 /* Media.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = CE12A0E52D2D99B60022BDF7 /* Media.xcassets */; };
 		CE12A0E72D2D99B60022BDF7 /* Media.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = CE12A0E52D2D99B60022BDF7 /* Media.xcassets */; };
@@ -9122,6 +9140,8 @@
 		A9FB6D5128C645C800E3FE58 /* RankingsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RankingsViewController.swift; sourceTree = "<group>"; };
 		A9FB6D5A28C657CE00E3FE58 /* TipsListViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TipsListViewController.swift; sourceTree = "<group>"; };
 		A9FB6D6228C65EF100E3FE58 /* RankingsListViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RankingsListViewController.swift; sourceTree = "<group>"; };
+		CE0C6C8F2D56327E00EAD26B /* SmallToolTipView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SmallToolTipView.swift; sourceTree = "<group>"; };
+		CE0C6C902D56327E00EAD26B /* SmallToolTipViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SmallToolTipViewModel.swift; sourceTree = "<group>"; };
 		CE12A0E32D2D992C0022BDF7 /* Media.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Media.xcassets; sourceTree = "<group>"; };
 		CE12A0E52D2D99B60022BDF7 /* Media.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Media.xcassets; sourceTree = "<group>"; };
 		CE12A0E82D302CE90022BDF7 /* Gradients.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Gradients.xcassets; sourceTree = "<group>"; };
@@ -10684,6 +10704,7 @@
 		4589F40726BF01B4005DF543 /* Views */ = {
 			isa = PBXGroup;
 			children = (
+				CE0C6C912D56327E00EAD26B /* SmallToolTipView */,
 				653A37902D4BDBB500B89CDF /* Questions */,
 				CE16F27C2D417E9A000BEF9F /* ChipsTypeView */,
 				CEB24B9E2CED274D0031F470 /* ScaleAspectFitImageView.swift */,
@@ -12964,6 +12985,15 @@
 				A986D33028C7606800AF95D7 /* Cells */,
 			);
 			path = Tips;
+			sourceTree = "<group>";
+		};
+		CE0C6C912D56327E00EAD26B /* SmallToolTipView */ = {
+			isa = PBXGroup;
+			children = (
+				CE0C6C8F2D56327E00EAD26B /* SmallToolTipView.swift */,
+				CE0C6C902D56327E00EAD26B /* SmallToolTipViewModel.swift */,
+			);
+			path = SmallToolTipView;
 			sourceTree = "<group>";
 		};
 		CE12A4C82D3135200022BDF7 /* Misc-PROD */ = {
@@ -15825,6 +15855,8 @@
 				A9A651782A52F0A1001D7A22 /* TitleDropdownView.swift in Sources */,
 				A99CC2F12A26019E0035BA3D /* TopBarAlternateView.swift in Sources */,
 				45A0E8942CC6765F007C8E99 /* MarketWidgetCellViewModel.swift in Sources */,
+				CE0C6C982D56327E00EAD26B /* SmallToolTipView.swift in Sources */,
+				CE0C6C992D56327E00EAD26B /* SmallToolTipViewModel.swift in Sources */,
 				450B7A8828F58574009229E3 /* NetworkSession.swift in Sources */,
 				450B7A8928F58574009229E3 /* AddUnregisteredFriendTableViewCell.swift in Sources */,
 				450B7A8A28F58574009229E3 /* RankingsListViewController.swift in Sources */,
@@ -16382,6 +16414,8 @@
 				457CBAF7282D27D000ED0F00 /* BonusHistoryCellViewModel.swift in Sources */,
 				457CBAF8282D27D000ED0F00 /* BonusProgressView.swift in Sources */,
 				A9C18A96285CDF0B009F0063 /* ToastCustom.swift in Sources */,
+				CE0C6C9A2D56327E00EAD26B /* SmallToolTipView.swift in Sources */,
+				CE0C6C9B2D56327E00EAD26B /* SmallToolTipViewModel.swift in Sources */,
 				457CBAF9282D27D000ED0F00 /* DateHeaderFooterView.swift in Sources */,
 				451B0A42286AFD7300005FA5 /* SupportPageViewModel.swift in Sources */,
 				457CBAFA282D27D000ED0F00 /* MaintenanceViewController.swift in Sources */,
@@ -16858,6 +16892,8 @@
 				457CBCF8282D2CD100ED0F00 /* UIImage+Extensions.swift in Sources */,
 				6547C8902C650BA50041409C /* CustomPageIndicator.swift in Sources */,
 				457CBCF9282D2CD100ED0F00 /* PreSubmissionBetslipViewModel.swift in Sources */,
+				CE0C6CA22D56327E00EAD26B /* SmallToolTipView.swift in Sources */,
+				CE0C6CA32D56327E00EAD26B /* SmallToolTipViewModel.swift in Sources */,
 				457CBCFA282D2CD100ED0F00 /* SportsAggregator.swift in Sources */,
 				A9FB6D5728C645C800E3FE58 /* RankingsViewController.swift in Sources */,
 				A98295AA283BA1420014066A /* BetSelectionCellViewModel.swift in Sources */,
@@ -18132,6 +18168,8 @@
 				A9A651792A52F0A1001D7A22 /* TitleDropdownView.swift in Sources */,
 				A99CC2F22A26019E0035BA3D /* TopBarAlternateView.swift in Sources */,
 				45A0E88F2CC6765F007C8E99 /* MarketWidgetCellViewModel.swift in Sources */,
+				CE0C6C9E2D56327E00EAD26B /* SmallToolTipView.swift in Sources */,
+				CE0C6C9F2D56327E00EAD26B /* SmallToolTipViewModel.swift in Sources */,
 				4589C935282024E400243547 /* NetworkSession.swift in Sources */,
 				4589C936282024E400243547 /* AddUnregisteredFriendTableViewCell.swift in Sources */,
 				A9FB6D6528C65EF100E3FE58 /* RankingsListViewController.swift in Sources */,
@@ -18862,6 +18900,8 @@
 				A9A651772A52F0A1001D7A22 /* TitleDropdownView.swift in Sources */,
 				A99CC2F02A26019E0035BA3D /* TopBarAlternateView.swift in Sources */,
 				45A0E8932CC6765F007C8E99 /* MarketWidgetCellViewModel.swift in Sources */,
+				CE0C6C922D56327E00EAD26B /* SmallToolTipView.swift in Sources */,
+				CE0C6C932D56327E00EAD26B /* SmallToolTipViewModel.swift in Sources */,
 				45A332A8298976BA008181E9 /* NetworkSession.swift in Sources */,
 				45A332A9298976BA008181E9 /* AddUnregisteredFriendTableViewCell.swift in Sources */,
 				45A332AA298976BA008181E9 /* RankingsListViewController.swift in Sources */,
@@ -19592,6 +19632,8 @@
 				45A6BD8828246A7500D9B416 /* OutrightMarketDetailsStore.swift in Sources */,
 				45A6BD8928246A7500D9B416 /* RecentSearchTableViewCell.swift in Sources */,
 				45A0E8912CC6765F007C8E99 /* MarketWidgetCellViewModel.swift in Sources */,
+				CE0C6C962D56327E00EAD26B /* SmallToolTipView.swift in Sources */,
+				CE0C6C972D56327E00EAD26B /* SmallToolTipViewModel.swift in Sources */,
 				45A6BD8A28246A7500D9B416 /* TestsViewController.swift in Sources */,
 				45A6BD8C28246A7500D9B416 /* Odd.swift in Sources */,
 				45A6BD8D28246A7500D9B416 /* NetworkSession.swift in Sources */,
@@ -20322,6 +20364,8 @@
 				45F6BD6F2AB3732C00C81DE1 /* TitleDropdownView.swift in Sources */,
 				45F6BD702AB3732C00C81DE1 /* TopBarAlternateView.swift in Sources */,
 				45A0E8952CC6765F007C8E99 /* MarketWidgetCellViewModel.swift in Sources */,
+				CE0C6C9C2D56327E00EAD26B /* SmallToolTipView.swift in Sources */,
+				CE0C6C9D2D56327E00EAD26B /* SmallToolTipViewModel.swift in Sources */,
 				45F6BD712AB3732C00C81DE1 /* NetworkSession.swift in Sources */,
 				45F6BD722AB3732C00C81DE1 /* AddUnregisteredFriendTableViewCell.swift in Sources */,
 				45F6BD732AB3732C00C81DE1 /* RankingsListViewController.swift in Sources */,
@@ -20512,6 +20556,8 @@
 				A90FB7DE29B0BCF000D08A7C /* SelfExclusionViewModel.swift in Sources */,
 				A91A645A2A7A5CB3002A6984 /* MyGamesRootViewController.swift in Sources */,
 				A9C3411728F9A74A0055360B /* ChatSettingsViewController.swift in Sources */,
+				CE0C6C942D56327E00EAD26B /* SmallToolTipView.swift in Sources */,
+				CE0C6C952D56327E00EAD26B /* SmallToolTipViewModel.swift in Sources */,
 				A9C3411828F9A74A0055360B /* Changeable.swift in Sources */,
 				A9C3411928F9A74A0055360B /* HomeFilterViewController.swift in Sources */,
 				A9C3411A28F9A74A0055360B /* Bootstrap.swift in Sources */,
@@ -21786,6 +21832,8 @@
 				CE12A3F32D31347E0022BDF7 /* TopBarAlternateView.swift in Sources */,
 				CE12A3F42D31347E0022BDF7 /* MarketWidgetCellViewModel.swift in Sources */,
 				CE12A3F52D31347E0022BDF7 /* NetworkSession.swift in Sources */,
+				CE0C6CA02D56327E00EAD26B /* SmallToolTipView.swift in Sources */,
+				CE0C6CA12D56327E00EAD26B /* SmallToolTipViewModel.swift in Sources */,
 				CE12A3F62D31347E0022BDF7 /* AddUnregisteredFriendTableViewCell.swift in Sources */,
 				CE12A3F72D31347E0022BDF7 /* RankingsListViewController.swift in Sources */,
 				CE12A3F82D31347E0022BDF7 /* PhonePrefixSelectorViewController.swift in Sources */,
@@ -21881,7 +21929,7 @@
 				CODE_SIGN_IDENTITY = "Apple Development";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				CODE_SIGN_STYLE = Manual;
-				CURRENT_PROJECT_VERSION = 103445;
+				CURRENT_PROJECT_VERSION = 103447;
 				DEVELOPMENT_TEAM = "";
 				"DEVELOPMENT_TEAM[sdk=iphoneos*]" = 422GNXXZJR;
 				INFOPLIST_FILE = "./Clients/SportRadar/Misc-UAT/SportRadar-UAT-Info.plist";
@@ -21913,7 +21961,7 @@
 				CODE_SIGN_IDENTITY = "Apple Development";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution";
 				CODE_SIGN_STYLE = Manual;
-				CURRENT_PROJECT_VERSION = 103445;
+				CURRENT_PROJECT_VERSION = 103447;
 				DEVELOPMENT_TEAM = "";
 				"DEVELOPMENT_TEAM[sdk=iphoneos*]" = 422GNXXZJR;
 				INFOPLIST_FILE = "./Clients/SportRadar/Misc-UAT/SportRadar-UAT-Info.plist";
@@ -22109,7 +22157,7 @@
 				CODE_SIGN_ENTITLEMENTS = Clients/EveryMatrix/Misc/EveryMatrix.entitlements;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 103445;
+				CURRENT_PROJECT_VERSION = 103447;
 				DEVELOPMENT_TEAM = 422GNXXZJR;
 				INFOPLIST_FILE = "./Clients/EveryMatrix/Misc/EveryMatrix-Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 13.0;
@@ -22138,7 +22186,7 @@
 				CODE_SIGN_ENTITLEMENTS = Clients/EveryMatrix/Misc/EveryMatrix.entitlements;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 103445;
+				CURRENT_PROJECT_VERSION = 103447;
 				DEVELOPMENT_TEAM = 422GNXXZJR;
 				INFOPLIST_FILE = "./Clients/EveryMatrix/Misc/EveryMatrix-Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 13.0;
@@ -22167,7 +22215,7 @@
 				CODE_SIGN_ENTITLEMENTS = Clients/Crocobet/Misc/Crocobet.entitlements;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Manual;
-				CURRENT_PROJECT_VERSION = 103445;
+				CURRENT_PROJECT_VERSION = 103447;
 				DEVELOPMENT_TEAM = "";
 				INFOPLIST_FILE = "./Clients/Crocobet/Misc/Crocobet-Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 13.0;
@@ -22196,7 +22244,7 @@
 				CODE_SIGN_ENTITLEMENTS = Clients/Crocobet/Misc/Crocobet.entitlements;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Manual;
-				CURRENT_PROJECT_VERSION = 103445;
+				CURRENT_PROJECT_VERSION = 103447;
 				DEVELOPMENT_TEAM = "";
 				INFOPLIST_FILE = "./Clients/Crocobet/Misc/Crocobet-Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 13.0;
@@ -22225,7 +22273,7 @@
 				CODE_SIGN_ENTITLEMENTS = Clients/GOMASports/Misc/GOMASports.entitlements;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 103445;
+				CURRENT_PROJECT_VERSION = 103447;
 				DEVELOPMENT_TEAM = 422GNXXZJR;
 				INFOPLIST_FILE = "./Clients/GOMASports/Misc/GOMASports-Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 13.0;
@@ -22254,7 +22302,7 @@
 				CODE_SIGN_ENTITLEMENTS = Clients/GOMASports/Misc/GOMASports.entitlements;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 103445;
+				CURRENT_PROJECT_VERSION = 103447;
 				DEVELOPMENT_TEAM = 422GNXXZJR;
 				INFOPLIST_FILE = "./Clients/GOMASports/Misc/GOMASports-Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 13.0;
@@ -22284,7 +22332,7 @@
 				CODE_SIGN_IDENTITY = "Apple Development";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				CODE_SIGN_STYLE = Manual;
-				CURRENT_PROJECT_VERSION = 103445;
+				CURRENT_PROJECT_VERSION = 103447;
 				DEVELOPMENT_TEAM = QN2DYX5K4M;
 				"DEVELOPMENT_TEAM[sdk=iphoneos*]" = QN2DYX5K4M;
 				INFOPLIST_FILE = "./Clients/Betsson/Misc-PROD/Betsson-PROD-Info.plist";
@@ -22316,7 +22364,7 @@
 				CODE_SIGN_IDENTITY = "Apple Distribution";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution";
 				CODE_SIGN_STYLE = Manual;
-				CURRENT_PROJECT_VERSION = 103445;
+				CURRENT_PROJECT_VERSION = 103447;
 				DEVELOPMENT_TEAM = QN2DYX5K4M;
 				"DEVELOPMENT_TEAM[sdk=iphoneos*]" = QN2DYX5K4M;
 				INFOPLIST_FILE = "./Clients/Betsson/Misc-PROD/Betsson-PROD-Info.plist";
@@ -22347,7 +22395,7 @@
 				CODE_SIGN_ENTITLEMENTS = Clients/DAZN/Misc/DAZN.entitlements;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 103445;
+				CURRENT_PROJECT_VERSION = 103447;
 				DEVELOPMENT_TEAM = 422GNXXZJR;
 				INFOPLIST_FILE = "./Clients/DAZN/Misc/DAZN-Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 13.0;
@@ -22376,7 +22424,7 @@
 				CODE_SIGN_ENTITLEMENTS = Clients/DAZN/Misc/DAZN.entitlements;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 103445;
+				CURRENT_PROJECT_VERSION = 103447;
 				DEVELOPMENT_TEAM = 422GNXXZJR;
 				INFOPLIST_FILE = "./Clients/DAZN/Misc/DAZN-Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 13.0;
@@ -22406,7 +22454,7 @@
 				CODE_SIGN_IDENTITY = "Apple Development";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				CODE_SIGN_STYLE = Manual;
-				CURRENT_PROJECT_VERSION = 103445;
+				CURRENT_PROJECT_VERSION = 103447;
 				DEVELOPMENT_TEAM = 422GNXXZJR;
 				"DEVELOPMENT_TEAM[sdk=iphoneos*]" = 422GNXXZJR;
 				INFOPLIST_FILE = "./Clients/Betsson/Misc-UAT/Betsson-UAT-Info.plist";
@@ -22438,7 +22486,7 @@
 				CODE_SIGN_IDENTITY = "Apple Distribution";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution";
 				CODE_SIGN_STYLE = Manual;
-				CURRENT_PROJECT_VERSION = 103445;
+				CURRENT_PROJECT_VERSION = 103447;
 				DEVELOPMENT_TEAM = 422GNXXZJR;
 				"DEVELOPMENT_TEAM[sdk=iphoneos*]" = 422GNXXZJR;
 				INFOPLIST_FILE = "./Clients/Betsson/Misc-UAT/Betsson-UAT-Info.plist";
@@ -22470,7 +22518,7 @@
 				CODE_SIGN_IDENTITY = "Apple Development";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution";
 				CODE_SIGN_STYLE = Manual;
-				CURRENT_PROJECT_VERSION = 103445;
+				CURRENT_PROJECT_VERSION = 103447;
 				DEBUG_INFORMATION_FORMAT = dwarf;
 				DEVELOPMENT_TEAM = "";
 				"DEVELOPMENT_TEAM[sdk=iphoneos*]" = QN2DYX5K4M;
@@ -22515,7 +22563,7 @@
 				CODE_SIGN_IDENTITY = "Apple Distribution";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution";
 				CODE_SIGN_STYLE = Manual;
-				CURRENT_PROJECT_VERSION = 103445;
+				CURRENT_PROJECT_VERSION = 103447;
 				DEVELOPMENT_TEAM = "";
 				"DEVELOPMENT_TEAM[sdk=iphoneos*]" = QN2DYX5K4M;
 				ENABLE_USER_SCRIPT_SANDBOXING = YES;
@@ -22553,7 +22601,7 @@
 				CODE_SIGN_ENTITLEMENTS = Clients/GOMASportRadar/Misc/GOMASportRadar.entitlements;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 103445;
+				CURRENT_PROJECT_VERSION = 103447;
 				DEVELOPMENT_TEAM = 422GNXXZJR;
 				INFOPLIST_FILE = "./Clients/GOMASportRadar/Misc/GOMASportRadar-Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 13.0;
@@ -22583,7 +22631,7 @@
 				CODE_SIGN_ENTITLEMENTS = Clients/GOMASportRadar/Misc/GOMASportRadar.entitlements;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 103445;
+				CURRENT_PROJECT_VERSION = 103447;
 				DEVELOPMENT_TEAM = 422GNXXZJR;
 				INFOPLIST_FILE = "./Clients/GOMASportRadar/Misc/GOMASportRadar-Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 13.0;
@@ -22613,7 +22661,7 @@
 				CODE_SIGN_IDENTITY = "Apple Development";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				CODE_SIGN_STYLE = Manual;
-				CURRENT_PROJECT_VERSION = 103445;
+				CURRENT_PROJECT_VERSION = 103447;
 				DEVELOPMENT_TEAM = "";
 				"DEVELOPMENT_TEAM[sdk=iphoneos*]" = 422GNXXZJR;
 				INFOPLIST_FILE = "./Clients/SportRadar/Misc-PROD/SportRadar-PROD-Info.plist";
@@ -22645,7 +22693,7 @@
 				CODE_SIGN_IDENTITY = "Apple Development";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution";
 				CODE_SIGN_STYLE = Manual;
-				CURRENT_PROJECT_VERSION = 103445;
+				CURRENT_PROJECT_VERSION = 103447;
 				DEVELOPMENT_TEAM = "";
 				"DEVELOPMENT_TEAM[sdk=iphoneos*]" = 422GNXXZJR;
 				INFOPLIST_FILE = "./Clients/SportRadar/Misc-PROD/SportRadar-PROD-Info.plist";
