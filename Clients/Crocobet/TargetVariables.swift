@@ -36,10 +36,6 @@ struct TargetVariables: SportsbookTarget {
 #endif
     }
 
-    static var everyMatrixHost: String {
-        return ""
-    }
-
     static var supportedThemes: [Theme] {
         return Theme.allCases
     }

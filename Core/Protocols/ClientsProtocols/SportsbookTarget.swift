@@ -22,8 +22,6 @@ protocol SportsbookTarget {
 
     static var firebaseDatabaseURL: String { get }
     
-    static var everyMatrixHost: String { get }
-
     static var supportedThemes: [Theme] { get }
 
     static var supportedCardStyles: [CardsStyle] { get }

@@ -27,10 +27,6 @@ struct TargetVariables: SportsbookTarget {
         return "https://betssonfr-74f1b-default-rtdb.europe-west1.firebasedatabase.app/"
     }
 
-    static var everyMatrixHost: String {
-        return ""
-    }
-
     static var supportedThemes: [Theme] {
         return Theme.allCases
     }

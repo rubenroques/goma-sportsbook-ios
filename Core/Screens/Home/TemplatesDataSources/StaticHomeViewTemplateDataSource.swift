@@ -559,7 +559,11 @@ extension StaticHomeViewTemplateDataSource: HomeViewTemplateDataSource {
     func highlightedMarket(forIndex index: Int) -> MarketWidgetContainerTableViewModel? {
         return nil
     }
-
+    
+    func videoNewsLineViewModel() -> VideoPreviewLineCellViewModel? {
+        return nil
+    }
+    
 }
 
 extension StaticHomeViewTemplateDataSource {

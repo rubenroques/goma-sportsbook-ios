@@ -222,7 +222,7 @@ class ProChoiceHighlightCollectionViewCell: UICollectionViewCell {
         self.backgroundColor = .clear
         self.contentView.backgroundColor = .clear
 
-        self.containerView.backgroundColor = UIColor.App.backgroundPrimary
+        self.containerView.backgroundColor = UIColor.App.backgroundCards
 
         self.gradientBorderView.gradientColors = [UIColor.App.cardBorderLineGradient1,
                                                   UIColor.App.cardBorderLineGradient2,
@@ -1221,9 +1221,8 @@ extension ProChoiceHighlightCollectionViewCell {
         return view
     }
 
-
     private func createGradientBorderView() -> GradientBorderView {
-        var gradientBorderView = GradientBorderView()
+        let gradientBorderView = GradientBorderView()
         gradientBorderView.translatesAutoresizingMaskIntoConstraints = false
         gradientBorderView.gradientBorderWidth = 1.2
         gradientBorderView.gradientCornerRadius = 9

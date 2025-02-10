@@ -27,10 +27,6 @@ struct TargetVariables: SportsbookTarget {
         return "https://goma-sportsbook-sportradar-viab-95a78.europe-west1.firebasedatabase.app/"
     }
 
-    static var everyMatrixHost: String {
-        return ""
-    }
-
     static var supportedThemes: [Theme] {
         return Theme.allCases
     }

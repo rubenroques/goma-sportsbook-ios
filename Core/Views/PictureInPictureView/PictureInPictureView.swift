@@ -10,7 +10,7 @@ import WebKit
 
 
 class BlockingWindow: UIWindow {
-    
+
 }
 
 class PassthroughWindow: UIWindow {
@@ -173,6 +173,10 @@ class PictureInPictureView: UIView {
 
                 self.pictureInPictureViewWidthConstraint?.constant = self.pictureInPictureViewWidth
                 self.pictureInPictureViewHeightConstraint?.constant = self.pictureInPictureViewHeight
+
+                // Disable webview interaction when minimized
+                self.pictureInPictureWebView?.isUserInteractionEnabled = false
+
                 self.setNeedsLayout()
                 self.layoutIfNeeded()
             }
@@ -204,6 +208,11 @@ class PictureInPictureView: UIView {
             animator.startAnimation()
 
             self.latestCenterPosition = nearestCornerPosition
+
+            // Ensure webview interaction is disabled when settling in mini mode
+            self.pictureInPictureWebView?.isUserInteractionEnabled = false
+            self.pictureInPictureCloseView.alpha = 1.0
+            self.pictureInPictureExpandView.alpha = 1.0
 
         default: break
         }
@@ -291,6 +300,9 @@ extension PictureInPictureView {
 
             self.setNeedsLayout()
             self.layoutIfNeeded()
+
+            // Enable webview interaction when expanded
+            self.pictureInPictureWebView?.isUserInteractionEnabled = true
         }
     }
 

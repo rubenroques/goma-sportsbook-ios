@@ -1146,6 +1146,10 @@ extension ClientManagedHomeViewTemplateDataSource: HomeViewTemplateDataSource {
     func topCompetitionsLineCellViewModel(forSection section: Int) -> TopCompetitionsLineCellViewModel? {
         return self.topCompetitionsLineCellViewModel
     }
+    
+    func videoNewsLineViewModel() -> VideoPreviewLineCellViewModel? {
+        return nil
+    }
 
 }
 
