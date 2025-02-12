@@ -1,7 +1,6 @@
 {
   "images" : [
     {
-      "filename" : "bg_light_suggested.png",
       "idiom" : "universal",
       "scale" : "1x"
     },
@@ -12,12 +11,10 @@
           "value" : "dark"
         }
       ],
-      "filename" : "bg_dark_suggested.png",
       "idiom" : "universal",
       "scale" : "1x"
     },
     {
-      "filename" : "bg_light_suggested@2x.png",
       "idiom" : "universal",
       "scale" : "2x"
     },
@@ -28,12 +25,10 @@
           "value" : "dark"
         }
       ],
-      "filename" : "bg_dark_suggested@2x.png",
       "idiom" : "universal",
       "scale" : "2x"
     },
     {
-      "filename" : "bg_light_suggested@3x.png",
       "idiom" : "universal",
       "scale" : "3x"
     },
@@ -44,7 +39,6 @@
           "value" : "dark"
         }
       ],
-      "filename" : "bg_dark_suggested@3x.png",
       "idiom" : "universal",
       "scale" : "3x"
     }

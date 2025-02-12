@@ -2938,7 +2938,7 @@ extension MatchWidgetCollectionViewCell {
         self.baseView.addSubview(self.boostedTopRightCornerBaseView)
 
         self.boostedBackgroungImageView.translatesAutoresizingMaskIntoConstraints = false
-        self.boostedBackgroungImageView.backgroundColor = .green
+        self.boostedBackgroungImageView.backgroundColor = UIColor.App.backgroundCards
         self.boostedBackgroungImageView.contentMode = .scaleAspectFill
         self.boostedBackgroungImageView.image = UIImage(named: "boosted_card_background")
         

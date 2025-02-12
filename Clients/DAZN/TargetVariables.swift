@@ -87,7 +87,7 @@ struct TargetVariables: SportsbookTarget {
     }
     
     static var serviceProviderEnvironment: EnvironmentType {
-        return .dev
+        return .prod
     }
     
     static var supportedLanguages: [SportsbookSupportedLanguage] {
