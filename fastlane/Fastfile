@@ -135,7 +135,7 @@ platform :ios do
     # Set Match parameters based on environment
     match_params = {
       type: "adhoc",
-      force_for_new_devices: false,
+      force_for_new_devices: true,
       readonly: true,
       force: false,
       verbose: false
