@@ -335,6 +335,56 @@ public struct SignUpResponse {
     
 }
 
+public struct BasicSignUpForm {
+    public var name: String
+    public var email: String
+    public var username: String
+    public var avatarName: String
+    public var password: String
+    
+    public init(name: String, email: String, username: String, avatarName: String ,password: String) {
+        self.name = name
+        self.email = email
+        self.username = username
+        self.avatarName = avatarName
+        self.password = password
+    }
+}
+
+public struct BasicSignUpResponse {
+    
+    public var successful: Bool
+    public var errors: [SignUpError]?
+    public var userData: SignUpUserData?
+    
+    public init(successful: Bool, errors: [SignUpError]? = nil, userData: SignUpUserData? = nil) {
+        self.successful = successful
+        self.errors = errors
+        self.userData = userData
+    }
+}
+
+public struct SignUpUserData {
+    public var id: Int
+    public var name: String
+    public var email: String
+    public var username: String
+    public var avatarName: String
+    
+    public init(id: Int, name: String, email: String, username: String, avatarName: String) {
+        self.id = id
+        self.name = name
+        self.email = email
+        self.username = username
+        self.avatarName = avatarName
+    }
+}
+
+public struct SignUpError {
+    public var field: String
+    public var error: String
+}
+
 public struct UpdateUserProfileForm {
     
     public var username: String?

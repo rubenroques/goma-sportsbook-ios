@@ -5295,6 +5295,16 @@
 		653A384D2D53921C00B89CDF /* QuestionnaireFormFactory.swift in Sources */ = {isa = PBXBuildFile; fileRef = 653A38462D53921C00B89CDF /* QuestionnaireFormFactory.swift */; };
 		653A384E2D53921C00B89CDF /* QuestionnaireFormFactory.swift in Sources */ = {isa = PBXBuildFile; fileRef = 653A38462D53921C00B89CDF /* QuestionnaireFormFactory.swift */; };
 		653A384F2D53921C00B89CDF /* QuestionnaireFormFactory.swift in Sources */ = {isa = PBXBuildFile; fileRef = 653A38462D53921C00B89CDF /* QuestionnaireFormFactory.swift */; };
+		653A387B2D660D7000B89CDF /* RegisterFlowType.swift in Sources */ = {isa = PBXBuildFile; fileRef = 653A387A2D660D7000B89CDF /* RegisterFlowType.swift */; };
+		653A387C2D660D7000B89CDF /* RegisterFlowType.swift in Sources */ = {isa = PBXBuildFile; fileRef = 653A387A2D660D7000B89CDF /* RegisterFlowType.swift */; };
+		653A387D2D660D7000B89CDF /* RegisterFlowType.swift in Sources */ = {isa = PBXBuildFile; fileRef = 653A387A2D660D7000B89CDF /* RegisterFlowType.swift */; };
+		653A387E2D660D7000B89CDF /* RegisterFlowType.swift in Sources */ = {isa = PBXBuildFile; fileRef = 653A387A2D660D7000B89CDF /* RegisterFlowType.swift */; };
+		653A387F2D660D7000B89CDF /* RegisterFlowType.swift in Sources */ = {isa = PBXBuildFile; fileRef = 653A387A2D660D7000B89CDF /* RegisterFlowType.swift */; };
+		653A38802D660D7000B89CDF /* RegisterFlowType.swift in Sources */ = {isa = PBXBuildFile; fileRef = 653A387A2D660D7000B89CDF /* RegisterFlowType.swift */; };
+		653A38812D660D7000B89CDF /* RegisterFlowType.swift in Sources */ = {isa = PBXBuildFile; fileRef = 653A387A2D660D7000B89CDF /* RegisterFlowType.swift */; };
+		653A38822D660D7000B89CDF /* RegisterFlowType.swift in Sources */ = {isa = PBXBuildFile; fileRef = 653A387A2D660D7000B89CDF /* RegisterFlowType.swift */; };
+		653A38832D660D7000B89CDF /* RegisterFlowType.swift in Sources */ = {isa = PBXBuildFile; fileRef = 653A387A2D660D7000B89CDF /* RegisterFlowType.swift */; };
+		653A38842D660D7000B89CDF /* RegisterFlowType.swift in Sources */ = {isa = PBXBuildFile; fileRef = 653A387A2D660D7000B89CDF /* RegisterFlowType.swift */; };
 		6547C8762C63C0AC0041409C /* HeroCardSecondaryMarketCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6547C8752C63C0AC0041409C /* HeroCardSecondaryMarketCollectionViewCell.swift */; };
 		6547C8772C63C0AC0041409C /* HeroCardSecondaryMarketCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6547C8752C63C0AC0041409C /* HeroCardSecondaryMarketCollectionViewCell.swift */; };
 		6547C8782C63C0AC0041409C /* HeroCardSecondaryMarketCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6547C8752C63C0AC0041409C /* HeroCardSecondaryMarketCollectionViewCell.swift */; };
@@ -9749,6 +9759,7 @@
 		653A38322D53921600B89CDF /* BettingPracticesQuestionnaireViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BettingPracticesQuestionnaireViewModel.swift; sourceTree = "<group>"; };
 		653A383C2D53921900B89CDF /* BettingPracticesViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BettingPracticesViewController.swift; sourceTree = "<group>"; };
 		653A38462D53921C00B89CDF /* QuestionnaireFormFactory.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QuestionnaireFormFactory.swift; sourceTree = "<group>"; };
+		653A387A2D660D7000B89CDF /* RegisterFlowType.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RegisterFlowType.swift; sourceTree = "<group>"; };
 		6547C8752C63C0AC0041409C /* HeroCardSecondaryMarketCollectionViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HeroCardSecondaryMarketCollectionViewCell.swift; sourceTree = "<group>"; };
 		6547C87F2C63DBF00041409C /* CustomPageControl.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomPageControl.swift; sourceTree = "<group>"; };
 		6547C8882C650BA50041409C /* CustomPageIndicator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomPageIndicator.swift; sourceTree = "<group>"; };
@@ -12273,6 +12284,7 @@
 				A9059F192ABB5B1300796583 /* DocumentLevelStatus.swift */,
 				658A4CB52B9F6C4800F73772 /* Referrals.swift */,
 				65238DFF2C206C77005703C2 /* FeaturedCompetition.swift */,
+				653A387A2D660D7000B89CDF /* RegisterFlowType.swift */,
 			);
 			path = Shared;
 			sourceTree = "<group>";
@@ -16947,6 +16959,7 @@
 				450B78D228F58574009229E3 /* ProfileLimitsManagementViewController.swift in Sources */,
 				450B78D428F58574009229E3 /* TipsSliderViewController.swift in Sources */,
 				450B78D528F58574009229E3 /* UILabel+Extensions.swift in Sources */,
+				653A387B2D660D7000B89CDF /* RegisterFlowType.swift in Sources */,
 				450B78D628F58574009229E3 /* WelcomeViewController.swift in Sources */,
 				450B78D728F58574009229E3 /* CGPoint+Shift.swift in Sources */,
 				450B78D928F58574009229E3 /* UserSettings.swift in Sources */,
@@ -17810,6 +17823,7 @@
 				457CBA5B282D27D000ED0F00 /* WelcomeViewController.swift in Sources */,
 				A9527C292A990E60006F4E37 /* MyCompetitionsRootViewModel.swift in Sources */,
 				A99CC2FD2A262ABB0035BA3D /* ScreenState.swift in Sources */,
+				653A387C2D660D7000B89CDF /* RegisterFlowType.swift in Sources */,
 				457CBA5D282D27D000ED0F00 /* UserSettings.swift in Sources */,
 				457CBA5F282D27D000ED0F00 /* StaticTableViewController.swift in Sources */,
 				457CBA60282D27D000ED0F00 /* TransactionsTableViewCell.swift in Sources */,
@@ -18938,6 +18952,7 @@
 				457CBE08282D2CD100ED0F00 /* EmptyCardTableViewCell.swift in Sources */,
 				45C10F8D28772DA700037BBE /* ShiftViewOptions.swift in Sources */,
 				457CBE0A282D2CD100ED0F00 /* AddFriendViewController.swift in Sources */,
+				653A38812D660D7000B89CDF /* RegisterFlowType.swift in Sources */,
 				457CBE0B282D2CD100ED0F00 /* GroupUserManagementCellViewModel.swift in Sources */,
 				457CBE0C282D2CD100ED0F00 /* NetworkModels.swift in Sources */,
 				457CBE0D282D2CD100ED0F00 /* RootViewController.swift in Sources */,
@@ -19274,6 +19289,7 @@
 				4589B02D28CB47AB0043CE33 /* TipsSliderViewController.swift in Sources */,
 				4589C7E6282024E400243547 /* UILabel+Extensions.swift in Sources */,
 				4589C7E7282024E400243547 /* WelcomeViewController.swift in Sources */,
+				653A38832D660D7000B89CDF /* RegisterFlowType.swift in Sources */,
 				45C10F7828772DA700037BBE /* CGPoint+Shift.swift in Sources */,
 				4589C7E9282024E400243547 /* UserSettings.swift in Sources */,
 				4589C7EB282024E400243547 /* StaticTableViewController.swift in Sources */,
@@ -20007,6 +20023,7 @@
 				45A330E8298976BA008181E9 /* TipsSliderViewController.swift in Sources */,
 				45A330E9298976BA008181E9 /* UILabel+Extensions.swift in Sources */,
 				45A330EA298976BA008181E9 /* WelcomeViewController.swift in Sources */,
+				653A38802D660D7000B89CDF /* RegisterFlowType.swift in Sources */,
 				45A330EB298976BA008181E9 /* CGPoint+Shift.swift in Sources */,
 				45A330ED298976BA008181E9 /* UserSettings.swift in Sources */,
 				45A330EE298976BA008181E9 /* StaticTableViewController.swift in Sources */,
@@ -20740,6 +20757,7 @@
 				A9DF8E5128E7071B0083BF56 /* UserNotificationInviteTableViewCell.swift in Sources */,
 				45A6BC3D28246A7500D9B416 /* FunctionalUtils.swift in Sources */,
 				45A6BC3E28246A7500D9B416 /* MarketGroup.swift in Sources */,
+				653A38842D660D7000B89CDF /* RegisterFlowType.swift in Sources */,
 				45A6BC3F28246A7500D9B416 /* MarketGroupDetailsStore.swift in Sources */,
 				451E1F7428290DE2000E957B /* PictureInPictureView.swift in Sources */,
 				45A6BC4028246A7500D9B416 /* StyleHelpers.swift in Sources */,
@@ -21473,6 +21491,7 @@
 				45F6BB842AB3732C00C81DE1 /* TipsSliderViewController.swift in Sources */,
 				45F6BB852AB3732C00C81DE1 /* UILabel+Extensions.swift in Sources */,
 				45F6BB862AB3732C00C81DE1 /* WelcomeViewController.swift in Sources */,
+				653A387F2D660D7000B89CDF /* RegisterFlowType.swift in Sources */,
 				45F6BB872AB3732C00C81DE1 /* CGPoint+Shift.swift in Sources */,
 				45F6BB882AB3732C00C81DE1 /* UserSettings.swift in Sources */,
 				45F6BB892AB3732C00C81DE1 /* StaticTableViewController.swift in Sources */,
@@ -22609,6 +22628,7 @@
 				A9C3427128F9A74A0055360B /* Logger.swift in Sources */,
 				A9C3427228F9A74A0055360B /* NavControllerTransitionCoordinator.swift in Sources */,
 				A9C3427328F9A74A0055360B /* GamesNotificationViewModel.swift in Sources */,
+				653A38822D660D7000B89CDF /* RegisterFlowType.swift in Sources */,
 				A9C3427428F9A74A0055360B /* EditContactViewModel.swift in Sources */,
 				A9C3427528F9A74A0055360B /* ShiftViewOptions.swift in Sources */,
 				A9C3427628F9A74A0055360B /* SearchTitleSectionHeaderView.swift in Sources */,
@@ -22945,6 +22965,7 @@
 				CE12A1EB2D31347E0022BDF7 /* TipsSliderViewController.swift in Sources */,
 				CE12A1EC2D31347E0022BDF7 /* UILabel+Extensions.swift in Sources */,
 				CE12A1ED2D31347E0022BDF7 /* WelcomeViewController.swift in Sources */,
+				653A387E2D660D7000B89CDF /* RegisterFlowType.swift in Sources */,
 				CE12A1EE2D31347E0022BDF7 /* CGPoint+Shift.swift in Sources */,
 				CE12A1EF2D31347E0022BDF7 /* UserSettings.swift in Sources */,
 				CE12A1F02D31347E0022BDF7 /* StaticTableViewController.swift in Sources */,
@@ -23678,6 +23699,7 @@
 				CEA566B32D5A58D800696793 /* FunctionalUtils.swift in Sources */,
 				CEA566B42D5A58D800696793 /* MarketGroup.swift in Sources */,
 				CEA566B52D5A58D800696793 /* MarketGroupDetailsStore.swift in Sources */,
+				653A387D2D660D7000B89CDF /* RegisterFlowType.swift in Sources */,
 				CEA566B62D5A58D800696793 /* PictureInPictureView.swift in Sources */,
 				CEA566B72D5A58D800696793 /* StyleHelpers.swift in Sources */,
 				CEA566B82D5A58D800696793 /* TipsViewModel.swift in Sources */,

@@ -251,3 +251,14 @@ public class UserRegisterEnvelopUpdater {
     }
     
 }
+
+extension UserRegisterEnvelopUpdater {
+    
+    func setFullName(_ name: String?) {
+        var newUserEnvelop = self.userRegisterEnvelop
+        newUserEnvelop.fullName = name
+        self.filledDataUpdated.send(newUserEnvelop)
+        self.userRegisterEnvelop = newUserEnvelop
+    }
+
+}

@@ -767,6 +767,15 @@ extension ServicesProviderClient {
         }
         return privilegedAccessManager.signUp(form: form)
     }
+    
+    public func basicSignUp(form: BasicSignUpForm) -> AnyPublisher<BasicSignUpResponse, ServiceProviderError> {
+        guard
+            let privilegedAccessManager = self.privilegedAccessManager
+        else {
+            return Fail(error: ServiceProviderError.privilegedAccessManagerNotFound).eraseToAnyPublisher()
+        }
+        return privilegedAccessManager.basicSignUp(form: form)
+    }
 
     public func updateExtraInfo(placeOfBirth: String?, address2: String?) -> AnyPublisher<BasicResponse, ServiceProviderError> {
         guard

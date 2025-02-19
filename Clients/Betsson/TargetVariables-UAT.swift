@@ -111,4 +111,8 @@ struct TargetVariables: SportsbookTarget {
     static var localizationOverrides: [String: String] {
         return [:]
     }
+    
+    static var registerFlowType: RegisterFlowType {
+        return .betsson
+    }
 }
