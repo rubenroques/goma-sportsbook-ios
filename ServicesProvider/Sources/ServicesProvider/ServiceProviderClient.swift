@@ -347,6 +347,7 @@ extension ServicesProviderClient {
                                                        position: 0,
                                                        isDefault: true,
                                                        numberOfMarkets: nil,
+                                                       loaded: true,
                                                        markets: event.markets)]
             return Just(defaultMarketGroup).eraseToAnyPublisher()
         }

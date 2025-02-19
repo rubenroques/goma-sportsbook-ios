@@ -52,9 +52,8 @@ extension GomaModelMapper {
     
     static func placedBetsResponse(fromPlaceBetTicketsResponses placeBetTicketsResponses: [GomaModels.PlaceBetTicketResponse] ) -> PlacedBetsResponse {
         let bets = placeBetTicketsResponses.map(Self.bet(fromPlaceBetTicketResponse:))
-        return PlacedBetsResponse(identifier: "",
-                                  bets: [],
-                                  detailedBets: bets)
+        let totalStake = placeBetTicketsResponses.map(\.stake).reduce(1, *)
+        return PlacedBetsResponse(identifier: "", bets: [], detailedBets: bets, requiredConfirmation: false, totalStake: totalStake)
     }
     
 //
@@ -71,7 +70,7 @@ extension GomaModelMapper {
 //    
     static func placedBetsResponse(fromMyTicket myTicket :GomaModels.MyTicket) -> PlacedBetsResponse {
         let bet = Self.bet(fromMyTicket: myTicket)
-        return PlacedBetsResponse(identifier: "\(myTicket.id)", bets: [], detailedBets: [bet])
+        return PlacedBetsResponse(identifier: "\(myTicket.id)", bets: [], detailedBets: [bet], requiredConfirmation: false, totalStake: bet.stake)
     }
         
     static func bet(fromPlaceBetTicketResponse placeBetTicketResponse: GomaModels.PlaceBetTicketResponse) -> Bet {

@@ -115,6 +115,7 @@ enum GomaAPIClient {
 }
 
 extension GomaAPIClient: Endpoint {
+    
     var url: String {
         return "https://api.gomademo.com/"
     }
@@ -1092,6 +1093,9 @@ extension GomaAPIClient: Endpoint {
         }
     }
     
+    var comment: String? {
+        return nil
+    }
     
 }
 

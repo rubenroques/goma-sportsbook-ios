@@ -8,41 +8,41 @@
 import Foundation
 import SharedModels
 
-public enum KnowYourClientStatus: String, Codable {
+public enum KnowYourClientStatus: String, Codable, Equatable, Hashable {
     case open
     case requested
     case failed
     case completed
 }
 
-public enum UserVerificationStatus: String, Codable {
+public enum UserVerificationStatus: String, Codable, Equatable, Hashable {
     case verified
     case unverified
 }
 
-public enum EmailVerificationStatus: String, Codable {
+public enum EmailVerificationStatus: String, Codable, Equatable, Hashable {
     case verified
     case unverified
 }
 
-public enum UserRegistrationStatus: String, Codable {
+public enum UserRegistrationStatus: String, Codable, Equatable, Hashable {
     case completed
     case quickOpen
     case quickRegister
 }
 
-public enum KnowYourCustomerStatus: String, Codable {
+public enum KnowYourCustomerStatus: String, Codable, Equatable, Hashable {
     case request
     case passConditional
     case pass
 }
 
-public enum LockedStatus: String, Codable {
+public enum LockedStatus: String, Codable, Equatable, Hashable {
     case locked
     case notLocked
 }
 
-public struct UserOverview: Codable {
+public struct UserOverview: Codable, Equatable, Hashable {
     
     public let sessionKey: String
     public let username: String
@@ -80,7 +80,7 @@ public struct UserOverview: Codable {
     
 }
 
-public struct UserProfile: Codable {
+public struct UserProfile: Codable, Equatable, Hashable {
     
     public let userIdentifier: String
     public let sessionKey: String
@@ -213,6 +213,25 @@ public extension UserProfile {
     }
 }
 
+// TODO: SP Merge - why do we need another struct for login reply
+public struct LoginResponse {
+    public var token: String
+    public var userProfile: UserProfile
+    
+    public init(token: String, userProfile: UserProfile) {
+        self.token = token
+        self.userProfile = userProfile
+    }
+}
+
+public struct LogoutResponse {
+    public var message: String
+    
+    public init(message: String) {
+        self.message = message
+    }
+}
+
 public struct SimpleSignUpForm {
     public var email: String
     public var username: String
@@ -335,6 +354,40 @@ public struct SignUpResponse {
     
 }
 
+public struct DetailedSignUpResponse {
+    
+    public var successful: Bool
+    public var errors: [SignUpError]?
+    public var userData: SignUpUserData?
+    
+    public init(successful: Bool, errors: [SignUpError]? = nil, userData: SignUpUserData? = nil) {
+        self.successful = successful
+        self.errors = errors
+        self.userData = userData
+    }
+}
+
+public struct SignUpError {
+    public var field: String
+    public var error: String
+}
+
+public struct SignUpUserData {
+    public var id: Int
+    public var name: String
+    public var email: String
+    public var username: String
+    public var avatarName: String
+    
+    public init(id: Int, name: String, email: String, username: String, avatarName: String) {
+        self.id = id
+        self.name = name
+        self.email = email
+        self.username = username
+        self.avatarName = avatarName
+    }
+}
+
 public struct UpdateUserProfileForm {
     
     public var username: String?
@@ -355,11 +408,15 @@ public struct UpdateUserProfileForm {
     public var securityQuestion: String?
     public var securityAnswer: String?
     
-    public init(username: String? = nil, email: String? = nil, firstName: String? = nil, middleName: String? = nil,
-                lastName: String? = nil, birthDate: Date? = nil, gender: String? = nil,
+    public var avatar: String?
+    
+    public init(username: String? = nil, email: String? = nil,
+                firstName: String? = nil, middleName: String? = nil, lastName: String? = nil,
+                birthDate: Date? = nil, gender: String? = nil,
                 address: String? = nil, province: String? = nil, city: String? = nil,
                 postalCode: String? = nil, country: Country? = nil, cardId: String? = nil,
-                mobileNumber: String? = nil, securityQuestion: String? = nil, securityAnswer: String? = nil) {
+                mobileNumber: String? = nil, securityQuestion: String? = nil, securityAnswer: String? = nil,
+                avatar: String? = nil) {
         self.username = username
         self.email = email
         self.firstName = firstName
@@ -376,6 +433,7 @@ public struct UpdateUserProfileForm {
         self.mobileNumber = mobileNumber
         self.securityQuestion = securityQuestion
         self.securityAnswer = securityAnswer
+        self.avatar = avatar
     }
     
 }
@@ -709,6 +767,15 @@ public struct LimitInfo {
     }
 }
 
+
+public struct BasicMessageResponse: Codable {
+    public var message: String
+    
+    enum CodingKeys: String, CodingKey {
+        case message = "message"
+    }
+}
+
 public struct BasicResponse: Codable {
     public var status: String
     public var message: String?
@@ -776,4 +843,57 @@ public struct PasswordPolicy {
         self.regularExpression = regularExpression
         self.message = message
     }
+}
+
+public struct UserNotificationsSettings: Codable {
+    
+    public var notifications: Bool
+    public var notificationsGamesWatchlist: Bool
+    public var notificationsCompetitionsWatchlist: Bool
+    public var notificationsGoal: Bool
+    public var notificationsStartGame: Bool
+    public var notificationsHalftime: Bool
+    public var notificationsFulltime: Bool
+    public var notificationsSecondHalf: Bool
+    public var notificationsRedcard: Bool
+    public var notificationsBets: Bool
+    public var notificationsBetSelections: Bool
+    public var notificationsEmail: Bool
+    public var notificationsSms: Bool
+    public var notificationsChats: Bool
+    public var notificationsNews: Bool
+    
+    public init(notifications: Bool,
+                notificationsGamesWatchlist: Bool,
+                notificationsCompetitionsWatchlist: Bool,
+                notificationsGoal: Bool,
+                notificationsStartGame: Bool,
+                notificationsHalftime: Bool,
+                notificationsFulltime: Bool,
+                notificationsSecondHalf: Bool,
+                notificationsRedcard: Bool,
+                notificationsBets: Bool,
+                notificationsBetSelections: Bool,
+                notificationsEmail: Bool,
+                notificationsSms: Bool,
+                notificationsChats: Bool,
+                notificationsNews: Bool)
+    {
+        self.notifications = notifications
+        self.notificationsGamesWatchlist = notificationsGamesWatchlist
+        self.notificationsCompetitionsWatchlist = notificationsCompetitionsWatchlist
+        self.notificationsGoal = notificationsGoal
+        self.notificationsStartGame = notificationsStartGame
+        self.notificationsHalftime = notificationsHalftime
+        self.notificationsFulltime = notificationsFulltime
+        self.notificationsSecondHalf = notificationsSecondHalf
+        self.notificationsRedcard = notificationsRedcard
+        self.notificationsBets = notificationsBets
+        self.notificationsBetSelections = notificationsBetSelections
+        self.notificationsEmail = notificationsEmail
+        self.notificationsSms = notificationsSms
+        self.notificationsChats = notificationsChats
+        self.notificationsNews = notificationsNews
+    }
+    
 }

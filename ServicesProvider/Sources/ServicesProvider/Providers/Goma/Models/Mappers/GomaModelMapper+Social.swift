@@ -45,9 +45,9 @@ extension GomaModelMapper {
         return FriendRequest(id: friendRequest.id, name: friendRequest.name, username: friendRequest.username)
     }
     
-    static func userFriend(fromUserFriend userFriend: GomaModels.UserFriend) -> UserFriend {
+    static func userFriend(fromGomaFriend userFriend: GomaModels.GomaFriend) -> GomaFriend {
         
-        return UserFriend(id: userFriend.id, name: userFriend.name, avatar: userFriend.avatar, isAdmin: userFriend.isAdmin)
+        return GomaFriend(id: userFriend.id, name: userFriend.name, avatar: userFriend.avatar, isAdmin: userFriend.isAdmin)
     }
     
     static func chatroomData(fromChatroomData chatroomData: GomaModels.ChatroomData) -> ChatroomData {
@@ -55,7 +55,7 @@ extension GomaModelMapper {
         let chatroom = Self.chatroom(fromChatroom: chatroomData.chatroom)
         
         let userFriends = chatroomData.users.map({
-            return Self.userFriend(fromUserFriend: $0)
+            return Self.userFriend(fromGomaFriend: $0)
         })
         
         return ChatroomData(chatroom: chatroom, users: userFriends)

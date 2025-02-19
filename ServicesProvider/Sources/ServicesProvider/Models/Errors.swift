@@ -7,11 +7,12 @@
 
 import Foundation
 
-public enum ServiceProviderError: Error {
+public enum ServiceProviderError: Error, Equatable, Hashable {
 
     case privilegedAccessManagerNotFound
     case eventsProviderNotFound
     case bettingProviderNotFound
+    case promotionsProviderNotFound
     case subscriptionNotFound
 
     case invalidEmailPassword
@@ -53,5 +54,7 @@ public enum ServiceProviderError: Error {
 
     case invalidUserLocation
 
+    case notSupportedForProvider
+    
     case unknown
 }

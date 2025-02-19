@@ -22,12 +22,15 @@ public struct PromotionalStory: Codable {
     public var imageUrl: String
     public var linkUrl: String
     public var bodyText: String
-
+    public var callToActionText: String?
+    
     enum CodingKeys: String, CodingKey {
         case id = "idfwheadline"
         case title = "title"
         case imageUrl = "imageurl"
         case linkUrl = "linkurl"
         case bodyText = "bodytext"
+        case callToActionText = "callToActionText"
     }
 }
+

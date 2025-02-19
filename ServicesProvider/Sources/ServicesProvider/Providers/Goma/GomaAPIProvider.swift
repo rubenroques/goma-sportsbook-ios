@@ -1,6 +1,6 @@
 //
 //  GomaAPIProvider.swift
-//  
+//
 //
 //  Created by Ruben Roques on 12/12/2023.
 //
@@ -10,57 +10,58 @@ import Combine
 import SharedModels
 
 class GomaAPIProvider {
-    
+
     var connector: GomaConnector
-    
+
     private let userSessionStateSubject: CurrentValueSubject<UserSessionStatus, Error> = .init(.anonymous)
     private let userProfileSubject: CurrentValueSubject<UserProfile?, Error> = .init(nil)
 
     //Paginators cache
     private var paginatorsCache: [String: GomaEventPaginator<GomaModels.Event>] = [:]
-    
+
     private var cancellables: Set<AnyCancellable> = []
 
     var isProviderEnabled: Bool = false
 
     init(deviceIdentifier: String) {
-        
+
         self.connector = GomaConnector(deviceIdentifier: deviceIdentifier)
-        
+
     }
 
 }
 
 extension GomaAPIProvider: PrivilegedAccessManager, PromotionsProvider {
+    
     var providerEnabled: Bool {
         return self.isProviderEnabled
     }
-    
+
     func isPromotionsProviderEnabled(isEnabled: Bool) -> AnyPublisher<Bool, ServiceProviderError> {
         self.isProviderEnabled = isEnabled
         return Just(isEnabled).setFailureType(to: ServiceProviderError.self).eraseToAnyPublisher()
     }
-    
+
     var userSessionStatePublisher: AnyPublisher<UserSessionStatus, Error> {
         return userSessionStateSubject.eraseToAnyPublisher()
     }
     var userProfilePublisher: AnyPublisher<UserProfile?, Error> {
         return userProfileSubject.eraseToAnyPublisher()
     }
-    
+
     var accessToken: String? {
         return self.connector.authenticator.getToken()
     }
-    
+
     var hasSecurityQuestions: Bool {
         return false
     }
-    
+
     func anonymousLogin() -> AnyPublisher<String, ServiceProviderError> {
         let endpoint = GomaAPIClient.anonymousAuth(deviceId: self.connector.authenticator.deviceIdentifier, pushToken: self.connector.getPushNotificationToken())
-        
+
         let publisher: AnyPublisher<GomaModels.AnonymousLoginResponse, ServiceProviderError> = self.connector.request(endpoint)
-        
+
         return publisher
             .handleEvents(receiveOutput: { [weak self] response in
                 self?.connector.updateToken(newToken: response.token)
@@ -69,12 +70,12 @@ extension GomaAPIProvider: PrivilegedAccessManager, PromotionsProvider {
                 return anonymousLoginResponse.token
             }).eraseToAnyPublisher()
     }
-    
+
     func login(username: String, password: String) -> AnyPublisher<UserProfile, ServiceProviderError> {
         let endpoint = GomaAPIClient.login(username: username,
                                            password: password,
                                            pushToken: self.connector.getPushNotificationToken())
-        
+
         let publisher: AnyPublisher<GomaModels.LoginResponse, ServiceProviderError> = self.connector.request(endpoint)
         return publisher
             .handleEvents(receiveOutput: { [weak self] response in
@@ -85,13 +86,13 @@ extension GomaAPIProvider: PrivilegedAccessManager, PromotionsProvider {
             return mappedLoginResponse.userProfile
         }).eraseToAnyPublisher()
     }
-    
+
     func logoutUser() -> AnyPublisher<String, ServiceProviderError> {
-        
+
         let endpoint = GomaAPIClient.logout
-        
+
         let publisher: AnyPublisher<GomaModels.LogoutResponse, ServiceProviderError> = self.connector.request(endpoint)
-        
+
         return publisher
             .handleEvents(receiveOutput: { [weak self] response in
                 self?.connector.clearToken()
@@ -100,81 +101,84 @@ extension GomaAPIProvider: PrivilegedAccessManager, PromotionsProvider {
             return logoutResponse.message
         }).eraseToAnyPublisher()
     }
-    
+
     func getUserProfile() -> AnyPublisher<UserProfile, ServiceProviderError> {
         return Fail(error: ServiceProviderError.privilegedAccessManagerNotFound).eraseToAnyPublisher()
     }
-    
+
     func updateUserProfile(form: UpdateUserProfileForm) -> AnyPublisher<Bool, ServiceProviderError> {
-        
+
         let endpoint = GomaAPIClient.updatePersonalInfo(fullname: form.firstName ?? "", avatar: form.avatar ?? "")
 
         let publisher: AnyPublisher<String, ServiceProviderError> = self.connector.request(endpoint)
 
         return publisher.flatMap({ statusResponse -> AnyPublisher<Bool, ServiceProviderError> in
-            
+
             return Just(true).setFailureType(to: ServiceProviderError.self).eraseToAnyPublisher()
         })
         .eraseToAnyPublisher()
-        
+
 //        return Fail(error: ServiceProviderError.privilegedAccessManagerNotFound).eraseToAnyPublisher()
     }
-    
+
     func checkEmailRegistered(_ email: String) -> AnyPublisher<Bool, ServiceProviderError> {
         return Fail(error: ServiceProviderError.privilegedAccessManagerNotFound).eraseToAnyPublisher()
     }
-    
+
     func validateUsername(_ username: String) -> AnyPublisher<UsernameValidation, ServiceProviderError> {
         return Fail(error: ServiceProviderError.privilegedAccessManagerNotFound).eraseToAnyPublisher()
     }
-    
+
     func simpleSignUp(form: SimpleSignUpForm) -> AnyPublisher<Bool, ServiceProviderError> {
         return Fail(error: ServiceProviderError.privilegedAccessManagerNotFound).eraseToAnyPublisher()
     }
-    
-    func basicSignUp(form: BasicSignUpForm) -> AnyPublisher<BasicSignUpResponse, ServiceProviderError> {
-        let endpoint = GomaAPIClient.register(name: form.name, email: form.email, username: form.username, password: form.password, avatarName: form.avatarName)
-        
+
+    func basicSignUp(form: SignUpForm) -> AnyPublisher<DetailedSignUpResponse, ServiceProviderError> {
+        let endpoint = GomaAPIClient.register(name: form.firstName + " " + form.lastName,
+                                            email: form.email,
+                                            username: form.username,
+                                            password: form.password,
+                                              avatarName: form.avatarName ?? "")
         let publisher: AnyPublisher<GomaModels.GomaResponse<GomaModels.BasicRegisterResponse>, ServiceProviderError> = self.connector.request(endpoint)
-        
+
         return publisher.map({ gomaResponse in
             let basicRegisterResponse = gomaResponse.data
-            
+
             let basicSignUpResponse = GomaModelMapper.basicRegisterResponse(fromInternalBasicRegisterResponse: basicRegisterResponse)
-            
+
             return basicSignUpResponse
         }).eraseToAnyPublisher()
     }
-    
+
     func signUp(form: SignUpForm) -> AnyPublisher<SignUpResponse, ServiceProviderError> {
         return Fail(error: ServiceProviderError.privilegedAccessManagerNotFound).eraseToAnyPublisher()
     }
-    
+
     func updateExtraInfo(placeOfBirth: String?, address2: String?) -> AnyPublisher<BasicResponse, ServiceProviderError> {
         return Fail(error: ServiceProviderError.privilegedAccessManagerNotFound).eraseToAnyPublisher()
     }
-    
+
     func updateDeviceIdentifier(deviceIdentifier: String) -> AnyPublisher<BasicResponse, ServiceProviderError> {
         self.connector.updatePushNotificationToken(newToken: deviceIdentifier)
         return Just(BasicResponse(status: "ok")).setFailureType(to: ServiceProviderError.self).eraseToAnyPublisher()
     }
-    
+
     func getAllCountries() -> AnyPublisher<[SharedModels.Country], ServiceProviderError> {
         return Fail(error: ServiceProviderError.privilegedAccessManagerNotFound).eraseToAnyPublisher()
     }
-    
+
     func getCountries() -> AnyPublisher<[SharedModels.Country], ServiceProviderError> {
         return Fail(error: ServiceProviderError.privilegedAccessManagerNotFound).eraseToAnyPublisher()
     }
-    
+
     func getCurrentCountry() -> AnyPublisher<SharedModels.Country?, ServiceProviderError> {
         return Fail(error: ServiceProviderError.privilegedAccessManagerNotFound).eraseToAnyPublisher()
     }
-    
+
     func signupConfirmation(_ email: String, confirmationCode: String) -> AnyPublisher<Bool, ServiceProviderError> {
         return Fail(error: ServiceProviderError.privilegedAccessManagerNotFound).eraseToAnyPublisher()
     }
-    
+
     func forgotPassword(email: String, secretQuestion: String?, secretAnswer: String?) -> AnyPublisher<Bool, ServiceProviderError> {
         let endpoint: GomaAPIClient = GomaAPIClient.requestPasswordResetEmail(email: email)
         let publisher: AnyPublisher<BasicMessageResponse, ServiceProviderError> = self.connector.request(endpoint)
@@ -182,57 +186,57 @@ extension GomaAPIProvider: PrivilegedAccessManager, PromotionsProvider {
             return basicMessageResponse.message.lowercased().contains("reset link sent")
         }).eraseToAnyPublisher()
     }
-    
+
     func updatePassword(oldPassword: String, newPassword: String) -> AnyPublisher<Bool, ServiceProviderError> {
-        
+
         let endpoint: GomaAPIClient = GomaAPIClient.updatePassword(oldPassword: oldPassword, password: newPassword, passwordConfirmation: newPassword)
         let publisher: AnyPublisher<BasicMessageResponse, ServiceProviderError> = self.connector.request(endpoint)
         return publisher.map({ basicMessageResponse -> Bool in
             return basicMessageResponse.message.lowercased().contains("successfully")
         }).eraseToAnyPublisher()
-        
+
     }
-    
+
     func getPasswordPolicy() -> AnyPublisher<PasswordPolicy, ServiceProviderError> {
         return Fail(error: ServiceProviderError.privilegedAccessManagerNotFound).eraseToAnyPublisher()
     }
-    
+
     func updateWeeklyDepositLimits(newLimit: Double) -> AnyPublisher<Bool, ServiceProviderError> {
         return Fail(error: ServiceProviderError.privilegedAccessManagerNotFound).eraseToAnyPublisher()
     }
-    
+
     func updateWeeklyBettingLimits(newLimit: Double) -> AnyPublisher<Bool, ServiceProviderError> {
         return Fail(error: ServiceProviderError.privilegedAccessManagerNotFound).eraseToAnyPublisher()
     }
-    
+
     func updateResponsibleGamingLimits(newLimit: Double) -> AnyPublisher<Bool, ServiceProviderError> {
         return Fail(error: ServiceProviderError.privilegedAccessManagerNotFound).eraseToAnyPublisher()
     }
-    
+
     func getPersonalDepositLimits() -> AnyPublisher<PersonalDepositLimitResponse, ServiceProviderError> {
         return Fail(error: ServiceProviderError.privilegedAccessManagerNotFound).eraseToAnyPublisher()
     }
-    
+
     func getLimits() -> AnyPublisher<LimitsResponse, ServiceProviderError> {
         return Fail(error: ServiceProviderError.privilegedAccessManagerNotFound).eraseToAnyPublisher()
     }
-    
+
     func getResponsibleGamingLimits() -> AnyPublisher<ResponsibleGamingLimitsResponse, ServiceProviderError> {
         return Fail(error: ServiceProviderError.privilegedAccessManagerNotFound).eraseToAnyPublisher()
     }
-    
+
     func lockPlayer(isPermanent: Bool?, lockPeriodUnit: String?, lockPeriod: String?) -> AnyPublisher<BasicResponse, ServiceProviderError> {
-        
+
         let endpoint: GomaAPIClient = GomaAPIClient.closeAccount
-        
+
         let publisher: AnyPublisher<String, ServiceProviderError> = self.connector.request(endpoint)
-        
+
         return publisher.map({ closeAccountResponse in
             let basicResponse = BasicResponse(status: "success", message: closeAccountResponse)
             return basicResponse
         }).eraseToAnyPublisher()
     }
-    
+
     func getUserBalance() -> AnyPublisher<UserWallet, ServiceProviderError> {
         let endpoint: GomaAPIClient = GomaAPIClient.getUserWallet
         let publisher: AnyPublisher<GomaModels.UserWallet, ServiceProviderError> = self.connector.request(endpoint)
@@ -264,17 +268,16 @@ extension GomaAPIProvider: PrivilegedAccessManager, PromotionsProvider {
             return wallet
         }).eraseToAnyPublisher()
     }
-    
+
     func getUserCashbackBalance() -> AnyPublisher<CashbackBalance, ServiceProviderError> {
         let endpoint: GomaAPIClient = GomaAPIClient.getUserWallet
         let publisher: AnyPublisher<GomaModels.UserWallet, ServiceProviderError> = self.connector.request(endpoint)
         return publisher.map({ userWallet in
-            let total = userWallet.balance + userWallet.cashbackBalance
             let wallet = CashbackBalance(status: "", balance: "\(userWallet.cashbackBalance)", message: nil)
             return wallet
         }).eraseToAnyPublisher()
     }
-    
+
     func depositOnWallet(amount: Double) -> AnyPublisher<Bool, ServiceProviderError> {
         let endpoint: GomaAPIClient = GomaAPIClient.addAmoutToUserWallet(amount: amount)
         let publisher: AnyPublisher<GomaModels.UserWallet, ServiceProviderError> = self.connector.request(endpoint)
@@ -282,224 +285,265 @@ extension GomaAPIProvider: PrivilegedAccessManager, PromotionsProvider {
             return true
         }).eraseToAnyPublisher()
     }
-    
+
     func signUpCompletion(form: UpdateUserProfileForm) -> AnyPublisher<Bool, ServiceProviderError> {
         return Fail(error: ServiceProviderError.privilegedAccessManagerNotFound).eraseToAnyPublisher()
     }
-    
+
     func getDocumentTypes() -> AnyPublisher<DocumentTypesResponse, ServiceProviderError> {
         return Fail(error: ServiceProviderError.privilegedAccessManagerNotFound).eraseToAnyPublisher()
     }
-    
+
     func getUserDocuments() -> AnyPublisher<UserDocumentsResponse, ServiceProviderError> {
         return Fail(error: ServiceProviderError.privilegedAccessManagerNotFound).eraseToAnyPublisher()
     }
-    
+
     func uploadUserDocument(documentType: String, file: Data, fileName: String) -> AnyPublisher<UploadDocumentResponse, ServiceProviderError> {
         return Fail(error: ServiceProviderError.privilegedAccessManagerNotFound).eraseToAnyPublisher()
     }
-    
+
     func uploadMultipleUserDocuments(documentType: String, files: [String : Data]) -> AnyPublisher<UploadDocumentResponse, ServiceProviderError> {
         return Fail(error: ServiceProviderError.privilegedAccessManagerNotFound).eraseToAnyPublisher()
     }
-    
+
     func getPayments() -> AnyPublisher<SimplePaymentMethodsResponse, ServiceProviderError> {
         return Fail(error: ServiceProviderError.privilegedAccessManagerNotFound).eraseToAnyPublisher()
     }
-    
+
     func processDeposit(paymentMethod: String, amount: Double, option: String) -> AnyPublisher<ProcessDepositResponse, ServiceProviderError> {
         return Fail(error: ServiceProviderError.privilegedAccessManagerNotFound).eraseToAnyPublisher()
     }
-    
+
     func updatePayment(amount: Double, paymentId: String, type: String, returnUrl: String?) -> AnyPublisher<UpdatePaymentResponse, ServiceProviderError> {
         return Fail(error: ServiceProviderError.privilegedAccessManagerNotFound).eraseToAnyPublisher()
     }
-    
+
     func cancelDeposit(paymentId: String) -> AnyPublisher<BasicResponse, ServiceProviderError> {
         return Fail(error: ServiceProviderError.privilegedAccessManagerNotFound).eraseToAnyPublisher()
     }
-    
+
     func checkPaymentStatus(paymentMethod: String, paymentId: String) -> AnyPublisher<PaymentStatusResponse, ServiceProviderError> {
         return Fail(error: ServiceProviderError.privilegedAccessManagerNotFound).eraseToAnyPublisher()
     }
-    
+
     func getWithdrawalMethods() -> AnyPublisher<[WithdrawalMethod], ServiceProviderError> {
         return Fail(error: ServiceProviderError.privilegedAccessManagerNotFound).eraseToAnyPublisher()
     }
-    
+
     func processWithdrawal(paymentMethod: String, amount: Double) -> AnyPublisher<ProcessWithdrawalResponse, ServiceProviderError> {
         return Fail(error: ServiceProviderError.privilegedAccessManagerNotFound).eraseToAnyPublisher()
     }
-    
+
     func getPendingWithdrawals() -> AnyPublisher<[PendingWithdrawal], ServiceProviderError> {
         return Fail(error: ServiceProviderError.privilegedAccessManagerNotFound).eraseToAnyPublisher()
     }
-    
+
     func cancelWithdrawal(paymentId: Int) -> AnyPublisher<CancelWithdrawalResponse, ServiceProviderError> {
         return Fail(error: ServiceProviderError.privilegedAccessManagerNotFound).eraseToAnyPublisher()
     }
-    
+
     func getPaymentInformation() -> AnyPublisher<PaymentInformation, ServiceProviderError> {
         return Fail(error: ServiceProviderError.privilegedAccessManagerNotFound).eraseToAnyPublisher()
     }
-    
+
     func addPaymentInformation(type: String, fields: String) -> AnyPublisher<AddPaymentInformationResponse, ServiceProviderError> {
         return Fail(error: ServiceProviderError.privilegedAccessManagerNotFound).eraseToAnyPublisher()
     }
-    
+
     func getTransactionsHistory(startDate: String, endDate: String, transactionTypes: [TransactionType]?, pageNumber: Int?) -> AnyPublisher<[TransactionDetail], ServiceProviderError> {
         return Fail(error: ServiceProviderError.privilegedAccessManagerNotFound).eraseToAnyPublisher()
     }
-    
+
     func getGrantedBonuses() -> AnyPublisher<[GrantedBonus], ServiceProviderError> {
         return Fail(error: ServiceProviderError.privilegedAccessManagerNotFound).eraseToAnyPublisher()
     }
-    
+
     func redeemBonus(code: String) -> AnyPublisher<RedeemBonusResponse, ServiceProviderError> {
         return Fail(error: ServiceProviderError.privilegedAccessManagerNotFound).eraseToAnyPublisher()
     }
-    
+
     func getAvailableBonuses() -> AnyPublisher<[AvailableBonus], ServiceProviderError> {
         return Fail(error: ServiceProviderError.privilegedAccessManagerNotFound).eraseToAnyPublisher()
     }
-    
+
     func redeemAvailableBonus(partyId: String, code: String) -> AnyPublisher<BasicResponse, ServiceProviderError> {
         return Fail(error: ServiceProviderError.privilegedAccessManagerNotFound).eraseToAnyPublisher()
     }
-    
+
     func cancelBonus(bonusId: String) -> AnyPublisher<BasicResponse, ServiceProviderError> {
         return Fail(error: ServiceProviderError.privilegedAccessManagerNotFound).eraseToAnyPublisher()
     }
-    
+
     func optOutBonus(partyId: String, code: String) -> AnyPublisher<BasicResponse, ServiceProviderError> {
         return Fail(error: ServiceProviderError.privilegedAccessManagerNotFound).eraseToAnyPublisher()
     }
-    
+
     func contactUs(firstName: String, lastName: String, email: String, subject: String, message: String) -> AnyPublisher<BasicResponse, ServiceProviderError> {
         return Fail(error: ServiceProviderError.privilegedAccessManagerNotFound).eraseToAnyPublisher()
     }
-    
+
     func contactSupport(userIdentifier: String, firstName: String, lastName: String,
                         email: String, subject: String, subjectType: String,
                         message: String, isLogged: Bool) -> AnyPublisher<SupportResponse, ServiceProviderError> {
-        return Fail(error: ServiceProviderError.privilegedAccessManagerNotFound).eraseToAnyPublisher()
+        return Fail(error: ServiceProviderError.notSupportedForProvider).eraseToAnyPublisher()
     }
-    
+
     func getAllConsents() -> AnyPublisher<[ConsentInfo], ServiceProviderError> {
-        return Fail(error: ServiceProviderError.privilegedAccessManagerNotFound).eraseToAnyPublisher()
+        return Fail(error: ServiceProviderError.notSupportedForProvider).eraseToAnyPublisher()
     }
-    
+
     func getUserConsents() -> AnyPublisher<[UserConsent], ServiceProviderError> {
-        return Fail(error: ServiceProviderError.privilegedAccessManagerNotFound).eraseToAnyPublisher()
+        return Fail(error: ServiceProviderError.notSupportedForProvider).eraseToAnyPublisher()
     }
-    
+
     func setUserConsents(consentVersionIds: [Int]?, unconsenVersionIds: [Int]?) -> AnyPublisher<BasicResponse, ServiceProviderError> {
-        return Fail(error: ServiceProviderError.privilegedAccessManagerNotFound).eraseToAnyPublisher()
+        return Fail(error: ServiceProviderError.notSupportedForProvider).eraseToAnyPublisher()
     }
-    
+
     func getSumsubAccessToken(userId: String, levelName: String) -> AnyPublisher<AccessTokenResponse, ServiceProviderError> {
-        return Fail(error: ServiceProviderError.privilegedAccessManagerNotFound).eraseToAnyPublisher()
+        return Fail(error: ServiceProviderError.notSupportedForProvider).eraseToAnyPublisher()
     }
-    
+
     func getSumsubApplicantData(userId: String) -> AnyPublisher<ApplicantDataResponse, ServiceProviderError> {
-        return Fail(error: ServiceProviderError.privilegedAccessManagerNotFound).eraseToAnyPublisher()
+        return Fail(error: ServiceProviderError.notSupportedForProvider).eraseToAnyPublisher()
     }
-    
+
     func generateDocumentTypeToken(docType: String) -> AnyPublisher<AccessTokenResponse, ServiceProviderError> {
-        return Fail(error: ServiceProviderError.privilegedAccessManagerNotFound).eraseToAnyPublisher()
+        return Fail(error: ServiceProviderError.notSupportedForProvider).eraseToAnyPublisher()
     }
-    
+
     func checkDocumentationData() -> AnyPublisher<ApplicantDataResponse, ServiceProviderError> {
-        return Fail(error: ServiceProviderError.privilegedAccessManagerNotFound).eraseToAnyPublisher()
+        return Fail(error: ServiceProviderError.notSupportedForProvider).eraseToAnyPublisher()
     }
-    
+
     func getMobileVerificationCode(forMobileNumber mobileNumber: String) -> AnyPublisher<MobileVerifyResponse, ServiceProviderError> {
-        return Fail(error: ServiceProviderError.privilegedAccessManagerNotFound).eraseToAnyPublisher()
+        return Fail(error: ServiceProviderError.notSupportedForProvider).eraseToAnyPublisher()
     }
-    
+
     func verifyMobileCode(code: String, requestId: String) -> AnyPublisher<MobileVerifyResponse, ServiceProviderError> {
-        return Fail(error: ServiceProviderError.privilegedAccessManagerNotFound).eraseToAnyPublisher()
+        return Fail(error: ServiceProviderError.notSupportedForProvider).eraseToAnyPublisher()
     }
     
+    //
+    //
+    //
+    func getUserProfile(withKycExpire: String?) -> AnyPublisher<UserProfile, ServiceProviderError> {
+        return Fail(error: ServiceProviderError.notSupportedForProvider).eraseToAnyPublisher()
+    }
+    
+    func updateDeviceIdentifier(deviceIdentifier: String, appVersion: String) -> AnyPublisher<BasicResponse, ServiceProviderError> {
+        return Fail(error: ServiceProviderError.notSupportedForProvider).eraseToAnyPublisher()
+    }
+    
+    func updateResponsibleGamingLimits(newLimit: Double, limitType: String, hasRollingWeeklyLimits: Bool) -> AnyPublisher<Bool, ServiceProviderError> {
+        return Fail(error: ServiceProviderError.notSupportedForProvider).eraseToAnyPublisher()
+    }
+    
+    func getResponsibleGamingLimits(periodTypes: String?, limitTypes: String?) -> AnyPublisher<ResponsibleGamingLimitsResponse, ServiceProviderError> {
+        return Fail(error: ServiceProviderError.notSupportedForProvider).eraseToAnyPublisher()
+    }
+    
+    func updatePayment(amount: Double, paymentId: String, type: String, returnUrl: String?, nameOnCard: String?, encryptedExpiryYear: String?, encryptedExpiryMonth: String?, encryptedSecurityCode: String?, encryptedCardNumber: String?) -> AnyPublisher<UpdatePaymentResponse, ServiceProviderError> {
+        return Fail(error: ServiceProviderError.notSupportedForProvider).eraseToAnyPublisher()
+    }
+    
+    func processWithdrawal(paymentMethod: String, amount: Double, conversionId: String?) -> AnyPublisher<ProcessWithdrawalResponse, ServiceProviderError> {
+        return Fail(error: ServiceProviderError.notSupportedForProvider).eraseToAnyPublisher()
+    }
+    
+    func prepareWithdrawal(paymentMethod: String) -> AnyPublisher<PrepareWithdrawalResponse, ServiceProviderError> {
+        return Fail(error: ServiceProviderError.notSupportedForProvider).eraseToAnyPublisher()
+    }
+    
+    func getReferralLink() -> AnyPublisher<ReferralLink, ServiceProviderError> {
+        return Fail(error: ServiceProviderError.notSupportedForProvider).eraseToAnyPublisher()
+    }
+    
+    func getReferees() -> AnyPublisher<[Referee], ServiceProviderError> {
+        return Fail(error: ServiceProviderError.notSupportedForProvider).eraseToAnyPublisher()
+    }
+    //
+    //
+    //
     func getFollowees() -> AnyPublisher<[Follower], ServiceProviderError> {
-        
+
         let endpoint: GomaAPIClient = GomaAPIClient.getFollowees
-        
+
         let publisher: AnyPublisher<GomaModels.GomaResponse<GomaModels.FolloweesResponse>, ServiceProviderError> = self.connector.request(endpoint)
-        
+
         return publisher.map({ followeesResponse in
-            
+
             let mappedFollowers = followeesResponse.data.followees.map( {
-                
+
                 return GomaModelMapper.follower(fromFollower: $0)
             })
-            
+
             return mappedFollowers
-            
+
         }).eraseToAnyPublisher()
     }
-    
+
     func getTotalFollowees() -> AnyPublisher<Int, ServiceProviderError> {
-        
+
         let endpoint: GomaAPIClient = GomaAPIClient.getTotalFollowees
-        
+
         let publisher: AnyPublisher<GomaModels.GomaResponse<GomaModels.TotalFolloweesResponse>, ServiceProviderError> = self.connector.request(endpoint)
-        
+
         return publisher.map({ totalFolloweesResponse in
-            
+
             return totalFolloweesResponse.data.count
-            
+
         }).eraseToAnyPublisher()
     }
-    
+
     func getFollowers() -> AnyPublisher<[Follower], ServiceProviderError> {
-        
+
         let endpoint: GomaAPIClient = GomaAPIClient.getFollowers
-        
+
         let publisher: AnyPublisher<GomaModels.GomaResponse<GomaModels.FollowersResponse>, ServiceProviderError> = self.connector.request(endpoint)
-        
+
         return publisher.map({ followersResponse in
-            
+
             let mappedFollowers = followersResponse.data.followers.map( {
-                
+
                 return GomaModelMapper.follower(fromFollower: $0)
             })
-            
+
             return mappedFollowers
-            
+
         }).eraseToAnyPublisher()
     }
-    
+
     func getTotalFollowers() -> AnyPublisher<Int, ServiceProviderError> {
-        
+
         let endpoint: GomaAPIClient = GomaAPIClient.getTotalFollowers
-        
+
         let publisher: AnyPublisher<GomaModels.GomaResponse<GomaModels.TotalFollowersResponse>, ServiceProviderError> = self.connector.request(endpoint)
-        
+
         return publisher.map({ totalFollowersResponse in
-            
+
             return totalFollowersResponse.data.count
-            
+
         }).eraseToAnyPublisher()
     }
-    
+
     func addFollowee(userId: String) -> AnyPublisher<[String], ServiceProviderError> {
-        
+
         let endpoint: GomaAPIClient = GomaAPIClient.addFollowee(userId: userId)
-        
+
         let publisher: AnyPublisher<GomaModels.GomaResponse<GomaModels.FolloweeActionResponse>, ServiceProviderError> = self.connector.request(endpoint)
-        
+
         return publisher.map({ followeeActionResponse in
-            
+
             let followeeIds = followeeActionResponse.data.followeeIds.map({
                 return "\($0)"
             })
-            
+
             return followeeIds
-            
+
         }).eraseToAnyPublisher()
     }
-    
+
     func removeFollowee(userId: String) -> AnyPublisher<[String], ServiceProviderError> {
         let endpoint: GomaAPIClient = GomaAPIClient.removeFollowee(userId: userId)
         let publisher: AnyPublisher<GomaModels.GomaResponse<GomaModels.FolloweeActionResponse>, ServiceProviderError> = self.connector.request(endpoint)
@@ -510,37 +554,37 @@ extension GomaAPIProvider: PrivilegedAccessManager, PromotionsProvider {
             return followeeIds
         }).eraseToAnyPublisher()
     }
-    
+
     func getTipsRankings(type: String?, followers: Bool?) -> AnyPublisher<[TipRanking], ServiceProviderError> {
-        
+
         let endpoint: GomaAPIClient = GomaAPIClient.getTipsRankings(type: type, followers: followers)
-        
+
         let publisher: AnyPublisher<[GomaModels.TipRanking], ServiceProviderError> = self.connector.request(endpoint)
-        
+
         return publisher.map({ tipsRankings in
-            
+
             let mappedTipsRankings = tipsRankings.map( {
-                
+
                 return GomaModelMapper.tipRanking(fromTipRanking: $0)
             })
-            
+
             return mappedTipsRankings
-            
+
         }).eraseToAnyPublisher()
     }
-    
+
     func getUserProfileInfo(userId: String) -> AnyPublisher<UserProfileInfo, ServiceProviderError> {
-        
+
         let endpoint: GomaAPIClient = GomaAPIClient.getUserProfile(userId: userId)
-        
+
         let publisher: AnyPublisher<GomaModels.UserProfileInfo, ServiceProviderError> = self.connector.request(endpoint)
-        
+
         return publisher.map({ userProfileInfo in
-            
+
             let mappedUserProfileInfo = GomaModelMapper.userProfileInfo(fromUserProfileInfo: userProfileInfo)
-            
+
             return mappedUserProfileInfo
-            
+
         }).eraseToAnyPublisher()
     }
 
@@ -549,7 +593,7 @@ extension GomaAPIProvider: PrivilegedAccessManager, PromotionsProvider {
         let publisher: AnyPublisher<GomaModels.UserNotificationsSettings, ServiceProviderError> = self.connector.request(endpoint)
         return publisher.map(GomaModelMapper.userNotificationsSettings(fromInternalUserNotificationsSettings:)).eraseToAnyPublisher()
     }
-    
+
     func updateUserNotifications(settings: UserNotificationsSettings) -> AnyPublisher<Bool, ServiceProviderError> {
         let settings = GomaModelMapper.internalUserNotificationsSettings(fromUserNotificationsSettings: settings)
         let endpoint: GomaAPIClient = GomaAPIClient.updateUserNotificationsSettings(settings: settings)
@@ -558,172 +602,172 @@ extension GomaAPIProvider: PrivilegedAccessManager, PromotionsProvider {
             return response.status.lowercased() == "success"
         }).eraseToAnyPublisher()
     }
-    
+
     func getFriendRequests() -> AnyPublisher<[FriendRequest], ServiceProviderError> {
-        
+
         let endpoint: GomaAPIClient = GomaAPIClient.getFriendRequests
-        
+
         let publisher: AnyPublisher<GomaModels.GomaResponse<[GomaModels.FriendRequest]>, ServiceProviderError> = self.connector.request(endpoint)
-        
+
         return publisher.map({ response in
-            
+
             let friendRequests = response.data.map({
                 return GomaModelMapper.friendRequest(fromFriendRequest: $0)
             })
-            
+
             return friendRequests
         }).eraseToAnyPublisher()
     }
-    
-    func getFriends() -> AnyPublisher<[UserFriend], ServiceProviderError> {
-        
+
+    func getFriends() -> AnyPublisher<[GomaFriend], ServiceProviderError> {
+
         let endpoint: GomaAPIClient = GomaAPIClient.getFriends
-        
-        let publisher: AnyPublisher<GomaModels.GomaResponse<[GomaModels.UserFriend]>, ServiceProviderError> = self.connector.request(endpoint)
-        
+
+        let publisher: AnyPublisher<GomaModels.GomaResponse<[GomaModels.GomaFriend]>, ServiceProviderError> = self.connector.request(endpoint)
+
         return publisher.map({ response in
-            
+
             let userFriends = response.data.map({
-                return GomaModelMapper.userFriend(fromUserFriend: $0)
+                return GomaModelMapper.userFriend(fromGomaFriend: $0)
             })
-            
+
             return userFriends
         }).eraseToAnyPublisher()
     }
-    
+
     func addFriends(userIds: [String], request: Bool) -> AnyPublisher<AddFriendResponse, ServiceProviderError> {
-        
+
         let endpoint: GomaAPIClient = GomaAPIClient.addFriends(userIds: userIds, request: request)
-        
+
         let publisher: AnyPublisher<GomaModels.GomaResponse<GomaModels.AddFriendResponse>, ServiceProviderError> = self.connector.request(endpoint)
-        
+
         return publisher.map({ response in
-            
+
             let userFriends = GomaModelMapper.addFriendResponse(fromAddFriendResponse: response.data)
-            
+
             return userFriends
         }).eraseToAnyPublisher()
     }
-    
+
     func removeFriend(userId: Int) -> AnyPublisher<String, ServiceProviderError> {
-        
+
         let endpoint: GomaAPIClient = GomaAPIClient.removeFriend(userId: userId)
-        
+
         let publisher: AnyPublisher<String, ServiceProviderError> = self.connector.request(endpoint)
-        
+
         return publisher.eraseToAnyPublisher()
     }
-    
+
     func getChatrooms() -> AnyPublisher<[ChatroomData], ServiceProviderError> {
-        
+
         let endpoint: GomaAPIClient = GomaAPIClient.getChatrooms
-        
+
         let publisher: AnyPublisher<GomaModels.GomaResponse<[GomaModels.ChatroomData]>, ServiceProviderError> = self.connector.request(endpoint)
-        
+
         return publisher.map({ response in
-            
+
             let chatroomData = response.data.map({
                 return GomaModelMapper.chatroomData(fromChatroomData: $0)
             })
-            
+
             return chatroomData
         }).eraseToAnyPublisher()
     }
-    
+
     func addGroup(name: String, userIds: [String]) -> AnyPublisher<ChatroomId, ServiceProviderError> {
-        
+
         let endpoint: GomaAPIClient = GomaAPIClient.addGroup(name: name, userIds: userIds)
-        
+
         let publisher: AnyPublisher<GomaModels.GomaResponse<GomaModels.ChatroomId>, ServiceProviderError> = self.connector.request(endpoint)
-        
+
         return publisher.map({ response in
-            
+
             let chatroomId = GomaModelMapper.chatroomId(fromChatroomId: response.data)
-            
+
             return chatroomId
         }).eraseToAnyPublisher()
     }
-    
+
     func deleteGroup(id: Int) -> AnyPublisher<String, ServiceProviderError> {
-        
+
         let endpoint: GomaAPIClient = GomaAPIClient.deleteGroup(id: id)
-        
+
         let publisher: AnyPublisher<GomaModels.DeleteGroupResponse, ServiceProviderError> = self.connector.request(endpoint)
-        
+
         return publisher.map({ response in
-            
+
             return response.message ?? ""
         }).eraseToAnyPublisher()
     }
-    
+
     func editGroup(id: Int, name: String) -> AnyPublisher<String, ServiceProviderError> {
-        
+
         let endpoint: GomaAPIClient = GomaAPIClient.editGroup(id: id, name: name)
-        
+
         let publisher: AnyPublisher<String, ServiceProviderError> = self.connector.request(endpoint)
-        
+
         return publisher.eraseToAnyPublisher()
     }
-    
+
     func leaveGroup(id: Int) -> AnyPublisher<String, ServiceProviderError> {
-        
+
         let endpoint: GomaAPIClient = GomaAPIClient.leaveGroup(id: id)
-        
+
         let publisher: AnyPublisher<String, ServiceProviderError> = self.connector.request(endpoint)
-        
+
         return publisher.eraseToAnyPublisher()
     }
-    
+
     func addUsersToGroup(groupId: Int, userIds: [String]) -> AnyPublisher<String, ServiceProviderError> {
-        
+
         let endpoint: GomaAPIClient = GomaAPIClient.addUsersFromGroup(groupId: groupId, userIds: userIds)
-        
+
         let publisher: AnyPublisher<String, ServiceProviderError> = self.connector.request(endpoint)
-        
+
         return publisher.eraseToAnyPublisher()
     }
-    
+
     func removeUsersToGroup(groupId: Int, userIds: [String]) -> AnyPublisher<String, ServiceProviderError> {
-        
+
         let endpoint: GomaAPIClient = GomaAPIClient.removeUsersFromGroup(groupId: groupId, userIds: userIds)
-        
+
         let publisher: AnyPublisher<String, ServiceProviderError> = self.connector.request(endpoint)
-        
+
         return publisher.eraseToAnyPublisher()
     }
-    
+
     func searchUserWithCode(code: String) -> AnyPublisher<SearchUser, ServiceProviderError> {
-        
+
         let endpoint: GomaAPIClient = GomaAPIClient.searchUserWithCode(code: code)
-        
+
         let publisher: AnyPublisher<GomaModels.SearchUser, ServiceProviderError> = self.connector.request(endpoint)
-        
+
         return publisher.map({ searchUser in
-            
+
             let searchUser = GomaModelMapper.searchUser(fromSearchUser: searchUser)
-            
+
             return searchUser
         }).eraseToAnyPublisher()
     }
 }
 
 extension GomaAPIProvider: EventsProvider {
-    
+
     var connectionStatePublisher: AnyPublisher<ConnectorState, Never> {
         return self.connector.connectionStatePublisher.eraseToAnyPublisher()
     }
-    
+
     func reconnectIfNeeded() {
-        
+
     }
-    
+
     func subscribeLiveMatches(forSportType sportType: SportType) -> AnyPublisher<SubscribableContent<[EventsGroup]>, ServiceProviderError> {
         guard
             let sportId = sportType.numericId
         else {
             return Fail(error: ServiceProviderError.incompletedSportData).eraseToAnyPublisher()
         }
-        
+
         let paginatorId = "live-\(sportType)"
 
         if let paginator = self.paginatorsCache[paginatorId] {
@@ -739,25 +783,25 @@ extension GomaAPIProvider: EventsProvider {
                 let publisher: AnyPublisher<[GomaModels.Event], ServiceProviderError> = self.connector.request(endpoint)
                 return publisher.eraseToAnyPublisher()
             }
-            
+
             self.paginatorsCache[paginatorId] = paginator
-            
+
             paginator.requestInitialPage()
-            
+
             return paginator.eventsGroupPublisher.map({ events in
                 let mappedEvents = GomaModelMapper.eventsGroup(fromInternalEvents: events)
                 return SubscribableContent.contentUpdate(content: [mappedEvents])
             }).eraseToAnyPublisher()
         }
     }
-    
+
     func requestLiveMatchesNextPage(forSportType sportType: SportType) -> AnyPublisher<Bool, ServiceProviderError> {
         guard
             let sportId = sportType.numericId
         else {
             return Fail(error: ServiceProviderError.incompletedSportData).eraseToAnyPublisher()
         }
-        
+
         let paginatorId = "live-\(sportType)"
 
         if let paginator = self.paginatorsCache[paginatorId] {
@@ -775,7 +819,7 @@ extension GomaAPIProvider: EventsProvider {
             return paginator.hasNextPagePublisher.eraseToAnyPublisher()
         }
     }
-    
+
     func subscribePreLiveMatches(forSportType sportType: SportType, initialDate: Date?, endDate: Date?, eventCount: Int?, sortType: EventListSort) -> AnyPublisher<SubscribableContent<[EventsGroup]>, ServiceProviderError> {
 
         guard
@@ -785,7 +829,7 @@ extension GomaAPIProvider: EventsProvider {
         }
 
         let paginatorId = "preLive-\(sortType)-\(sportType)"
-        
+
         if let paginator = self.paginatorsCache[paginatorId] {
             paginator.requestInitialPage()
             return paginator.eventsGroupPublisher.map({ events in
@@ -802,24 +846,24 @@ extension GomaAPIProvider: EventsProvider {
                 case .popular:
                     endpoint = GomaAPIClient.getTrendingEvents(sportCode: sportId, page: page)
                 }
-                
+
                 let publisher: AnyPublisher<GomaModels.GomaPagedResponse<[GomaModels.Event]>, ServiceProviderError> = self.connector.request(endpoint)
                 return publisher.map(\.data).eraseToAnyPublisher()
             }
-            
+
             self.paginatorsCache[paginatorId] = paginator
-            
+
             paginator.requestInitialPage()
-            
+
             return paginator.eventsGroupPublisher.map({ events in
                 let mappedEvents = GomaModelMapper.eventsGroup(fromInternalEvents: events)
                 return SubscribableContent.contentUpdate(content: [mappedEvents])
             }).eraseToAnyPublisher()
         }
     }
-    
+
     func requestPreLiveMatchesNextPage(forSportType sportType: SportType, initialDate: Date?, endDate: Date?, sortType: EventListSort) -> AnyPublisher<Bool, ServiceProviderError> {
-        
+
         guard
             let sportId = sportType.numericId
         else {
@@ -841,7 +885,7 @@ extension GomaAPIProvider: EventsProvider {
                 case .popular:
                     endpoint = GomaAPIClient.getTrendingEvents(sportCode: sportId, page: page)
                 }
-                
+
                 let publisher: AnyPublisher<GomaModels.GomaPagedResponse<[GomaModels.Event]>, ServiceProviderError> = self.connector.request(endpoint)
                 return publisher.map(\.data).eraseToAnyPublisher()
             }
@@ -849,16 +893,16 @@ extension GomaAPIProvider: EventsProvider {
             paginator.requestNextPage()
             return paginator.hasNextPagePublisher.eraseToAnyPublisher()
         }
-        
+
     }
-    
+
     func subscribeEndedMatches(forSportType sportType: SportType) -> AnyPublisher<SubscribableContent<[EventsGroup]>, ServiceProviderError> {
         guard
             let sportId = sportType.numericId
         else {
             return Fail(error: ServiceProviderError.incompletedSportData).eraseToAnyPublisher()
         }
-        
+
         let paginatorId = "ended-\(sportType)"
 
         if let paginator = self.paginatorsCache[paginatorId] {
@@ -874,25 +918,25 @@ extension GomaAPIProvider: EventsProvider {
                 let publisher: AnyPublisher<GomaModels.GomaPagedResponse<[GomaModels.Event]>, ServiceProviderError> = self.connector.request(endpoint)
                 return publisher.map(\.data).eraseToAnyPublisher()
             }
-            
+
             self.paginatorsCache[paginatorId] = paginator
-            
+
             paginator.requestInitialPage()
-            
+
             return paginator.eventsGroupPublisher.map({ events in
                 let mappedEvents = GomaModelMapper.eventsGroup(fromInternalEvents: events)
                 return SubscribableContent.contentUpdate(content: [mappedEvents])
             }).eraseToAnyPublisher()
         }
     }
-    
+
     func requestEndedMatchesNextPage(forSportType sportType: SportType) -> AnyPublisher<Bool, ServiceProviderError> {
         guard
             let sportId = sportType.numericId
         else {
             return Fail(error: ServiceProviderError.incompletedSportData).eraseToAnyPublisher()
         }
-        
+
         let paginatorId = "ended-\(sportType)"
 
         if let paginator = self.paginatorsCache[paginatorId] {
@@ -911,11 +955,87 @@ extension GomaAPIProvider: EventsProvider {
         }
     }
     
+    func subscribePreLiveSportTypes(initialDate: Date?, endDate: Date?) -> AnyPublisher<SubscribableContent<[SportType]>, ServiceProviderError> {
+        return Fail(error: ServiceProviderError.notSupportedForProvider).eraseToAnyPublisher()
+    }
+    
+    func subscribeLiveSportTypes() -> AnyPublisher<SubscribableContent<[SportType]>, ServiceProviderError> {
+        return Fail(error: ServiceProviderError.notSupportedForProvider).eraseToAnyPublisher()
+    }
+    
+    func subscribeAllSportTypes() -> AnyPublisher<SubscribableContent<[SportType]>, ServiceProviderError> {
+        return Fail(error: ServiceProviderError.notSupportedForProvider).eraseToAnyPublisher()
+    }
+    
+    func getEventsForEventGroup(withId eventGroupId: String) -> AnyPublisher<EventsGroup, ServiceProviderError> {
+        return Fail(error: ServiceProviderError.notSupportedForProvider).eraseToAnyPublisher()
+    }
+    
+    func getHighlightedLiveEventsIds(eventCount: Int, userId: String?) -> AnyPublisher<[String], ServiceProviderError> {
+        return Fail(error: ServiceProviderError.notSupportedForProvider).eraseToAnyPublisher()
+    }
+    
+    func getPromotedBetslips(userId: String?) -> AnyPublisher<[PromotedBetslip], ServiceProviderError> {
+        return Fail(error: ServiceProviderError.notSupportedForProvider).eraseToAnyPublisher()
+    }
+    
     //
     //
     //
-    func subscribeCompetitionMatches(forId id: String) -> AnyPublisher<SubscribableContent<[EventsGroup]>, ServiceProviderError> {
-        let endpoint: GomaAPIClient = GomaAPIClient.getEventsFromCompetition(competitionId: id)
+    func subscribeOutrightEvent(forMarketGroupId marketGroupId: String) -> AnyPublisher<SubscribableContent<Event>, ServiceProviderError> {
+        return Fail(error: ServiceProviderError.notSupportedForProvider).eraseToAnyPublisher()
+    }
+    
+    func subscribeToEventOnListsLiveDataUpdates(withId id: String) -> AnyPublisher<Event?, ServiceProviderError> {
+        return Fail(error: ServiceProviderError.notSupportedForProvider).eraseToAnyPublisher()
+    }
+    
+    func subscribeToEventOnListsMarketUpdates(withId id: String) -> AnyPublisher<Market?, ServiceProviderError> {
+        return Fail(error: ServiceProviderError.notSupportedForProvider).eraseToAnyPublisher()
+    }
+    
+    func subscribeToEventOnListsOutcomeUpdates(withId id: String) -> AnyPublisher<Outcome?, ServiceProviderError> {
+        return Fail(error: ServiceProviderError.notSupportedForProvider).eraseToAnyPublisher()
+    }
+    
+    func getHighlightedMarkets() -> AnyPublisher<[HighlightMarket], ServiceProviderError> {
+        return Fail(error: ServiceProviderError.notSupportedForProvider).eraseToAnyPublisher()
+    }
+    
+    func getEventForMarketGroup(withId marketGroupId: String) -> AnyPublisher<Event, ServiceProviderError> {
+        return Fail(error: ServiceProviderError.notSupportedForProvider).eraseToAnyPublisher()
+    }
+    
+    func getEventDetails(eventId: String) -> AnyPublisher<Event, ServiceProviderError> {
+        return Fail(error: ServiceProviderError.notSupportedForProvider).eraseToAnyPublisher()
+    }
+    
+    func getEventSecundaryMarkets(eventId: String) -> AnyPublisher<Event, ServiceProviderError> {
+        return Fail(error: ServiceProviderError.notSupportedForProvider).eraseToAnyPublisher()
+    }
+    
+    func getEventLiveData(eventId: String) -> AnyPublisher<EventLiveData, ServiceProviderError> {
+        return Fail(error: ServiceProviderError.notSupportedForProvider).eraseToAnyPublisher()
+    }
+    
+    func subscribeEventMarkets(eventId: String) -> AnyPublisher<SubscribableContent<Event>, ServiceProviderError> {
+        return Fail(error: ServiceProviderError.notSupportedForProvider).eraseToAnyPublisher()
+    }
+    
+    func subscribeToEventAndSecondaryMarkets(withId id: String) -> AnyPublisher<SubscribableContent<Event>, ServiceProviderError> {
+        return Fail(error: ServiceProviderError.notSupportedForProvider).eraseToAnyPublisher()
+    }
+    
+    func getHighlightedLiveEvents(eventCount: Int, userId: String?) -> AnyPublisher<[Event], ServiceProviderError> {
+        return Fail(error: ServiceProviderError.notSupportedForProvider).eraseToAnyPublisher()
+    }
+    
+
+    //
+    //
+    //
+    func subscribeCompetitionMatches(forMarketGroupId marketGroupId: String) -> AnyPublisher<SubscribableContent<[EventsGroup]>, ServiceProviderError> {
+        let endpoint: GomaAPIClient = GomaAPIClient.getEventsFromCompetition(competitionId: marketGroupId)
         let publisher: AnyPublisher<GomaModels.GomaPagedResponse<[GomaModels.Event]>, ServiceProviderError> = self.connector.request(endpoint)
         return publisher.map({ upcomingEventsResponse in
             let events = upcomingEventsResponse.data
@@ -923,11 +1043,11 @@ extension GomaAPIProvider: EventsProvider {
             return SubscribableContent.contentUpdate(content: [liveSports] )
         }).eraseToAnyPublisher()
     }
-    
+
     func subscribeToMarketDetails(withId marketId: String, onEventId eventId: String) -> AnyPublisher<SubscribableContent<Market>, ServiceProviderError> {
         return Fail(error: ServiceProviderError.eventsProviderNotFound).eraseToAnyPublisher()
     }
-    
+
     func subscribeEventDetails(eventId: String) -> AnyPublisher<SubscribableContent<Event>, ServiceProviderError> {
         return self.getEventDetails(eventId: eventId, marketLimit: nil)
             .map { event -> SubscribableContent<Event> in
@@ -935,15 +1055,15 @@ extension GomaAPIProvider: EventsProvider {
             }
             .eraseToAnyPublisher()
     }
-    
+
     func subscribeEventSummary(eventId: String) -> AnyPublisher<SubscribableContent<[EventsGroup]>, ServiceProviderError> {
         return Fail(error: ServiceProviderError.eventsProviderNotFound).eraseToAnyPublisher()
     }
-    
+
     func subscribeOutrightMarkets(forMarketGroupId marketGroupId: String) -> AnyPublisher<SubscribableContent<[EventsGroup]>, ServiceProviderError> {
         return Fail(error: ServiceProviderError.eventsProviderNotFound).eraseToAnyPublisher()
     }
- 
+
     func subscribeSportTypes() -> AnyPublisher<SubscribableContent<[SportType]>, ServiceProviderError> {
         let endpoint = GomaAPIClient.getSports
         let publisher: AnyPublisher<GomaModels.Sports, ServiceProviderError> = self.connector.request(endpoint)
@@ -951,16 +1071,16 @@ extension GomaAPIProvider: EventsProvider {
             return SubscribableContent.contentUpdate(content: GomaModelMapper.sportsType(fromSports:sports))
         }).eraseToAnyPublisher()
     }
-    
+
     func subscribeToLiveDataUpdates(forEventWithId id: String) -> AnyPublisher<SubscribableContent<EventLiveData>, ServiceProviderError> {
         let endpointDetails = GomaAPIClient.getEventDetails(identifier: id)
         let publisherDetails: AnyPublisher<GomaModels.Event, ServiceProviderError> = self.connector.request(endpointDetails)
-        
+
         let subscription = Subscription.init(contentType: ContentType.eventDetails,
                                              contentRoute: ContentRoute.eventDetails(eventId: id),
                                              sessionToken: "",
                                              unsubscriber: GomaDummyUnsubscriber())
-        
+
         return publisherDetails.map({ eventDetails -> SubscribableContent in
             let mappedEventStatus = GomaModelMapper.eventStatus(fromInternalEvent: eventDetails.status)
             let eventLiveData = EventLiveData(id: eventDetails.identifier,
@@ -973,23 +1093,23 @@ extension GomaAPIProvider: EventsProvider {
         .prepend(SubscribableContent.connected(subscription: subscription))
         .eraseToAnyPublisher()
     }
-    
+
     func subscribeToEventLiveDataUpdates(withId id: String) -> AnyPublisher<Event?, ServiceProviderError> {
         return Fail(error: ServiceProviderError.eventsProviderNotFound).eraseToAnyPublisher()
     }
-    
+
     func subscribeToEventMarketUpdates(withId id: String) -> AnyPublisher<Market?, ServiceProviderError> {
         return Fail(error: ServiceProviderError.eventsProviderNotFound).eraseToAnyPublisher()
     }
-    
+
     func subscribeToEventOutcomeUpdates(withId id: String) -> AnyPublisher<Outcome?, ServiceProviderError> {
         return Fail(error: ServiceProviderError.eventsProviderNotFound).eraseToAnyPublisher()
     }
-    
+
     func getAvailableSportTypes(initialDate: Date?, endDate: Date?) -> AnyPublisher<[SportType], ServiceProviderError> {
         return Fail(error: ServiceProviderError.eventsProviderNotFound).eraseToAnyPublisher()
     }
-    
+
     func getMarketGroups(forEvent event: Event) -> AnyPublisher<[MarketGroup], Never> {
         let defaultMarketGroup = [MarketGroup.init(type: "0",
                                                    id: "0",
@@ -1002,19 +1122,19 @@ extension GomaAPIProvider: EventsProvider {
                                                    markets: event.markets)]
         return Just(defaultMarketGroup).eraseToAnyPublisher()
     }
-    
+
     func getFieldWidgetId(eventId: String) -> AnyPublisher<FieldWidget, ServiceProviderError> {
         return Fail(error: ServiceProviderError.eventsProviderNotFound).eraseToAnyPublisher()
     }
-    
+
     func getFieldWidget(eventId: String, isDarkTheme: Bool?) -> AnyPublisher<FieldWidgetRenderDataType, ServiceProviderError> {
         return Fail(error: ServiceProviderError.eventsProviderNotFound).eraseToAnyPublisher()
     }
-    
+
     func getStatsWidget(eventId: String, marketTypeName: String, isDarkTheme: Bool?) -> AnyPublisher<StatsWidgetRenderDataType, ServiceProviderError> {
         return Fail(error: ServiceProviderError.eventsProviderNotFound).eraseToAnyPublisher()
     }
-    
+
     func getSportRegions(sportId: String) -> AnyPublisher<SportNodeInfo, ServiceProviderError> {
         let endpoint = GomaAPIClient.getRegions(sportCode: sportId)
         let publisher: AnyPublisher<[GomaModels.Region], ServiceProviderError> = self.connector.request(endpoint)
@@ -1024,7 +1144,7 @@ extension GomaAPIProvider: EventsProvider {
             return sportNodeInfo
         }).eraseToAnyPublisher()
     }
-    
+
     func getRegionCompetitions(regionId: String) -> AnyPublisher<SportRegionInfo, ServiceProviderError> {
         let endpoint = GomaAPIClient.getCompetitions(regionId: regionId)
         let publisher: AnyPublisher<[GomaModels.Competition], ServiceProviderError> = self.connector.request(endpoint)
@@ -1033,9 +1153,9 @@ extension GomaAPIProvider: EventsProvider {
             return SportRegionInfo(id: regionId, name: "", competitionNodes: convertedCompetitions)
         }).eraseToAnyPublisher()
     }
-    
+
     func getCompetitionMarketGroups(competitionId: String) -> AnyPublisher<SportCompetitionInfo, ServiceProviderError> {
-        
+
         let endpoint = GomaAPIClient.getCompetitionDetails(identifier: competitionId)
         let publisher: AnyPublisher<GomaModels.Competition, ServiceProviderError> = self.connector.request(endpoint)
         return publisher.map({ competition in
@@ -1047,34 +1167,34 @@ extension GomaAPIProvider: EventsProvider {
                                                             numberOutrightMarkets: "0")
             return sportCompetitionInfo
         }).eraseToAnyPublisher()
-        
+
     }
-    
+
     func getSearchEvents(query: String, resultLimit: String, page: String, isLive: Bool) -> AnyPublisher<EventsGroup, ServiceProviderError> {
-        
+
         let endpoint = GomaAPIClient.search(query: query)
 
         let requestPublisher: AnyPublisher<GomaModels.GomaResponse<[GomaModels.Event]>, ServiceProviderError> = self.connector.request(endpoint)
 
         return requestPublisher.map( { gomaResponse in
             let events = gomaResponse.data
-            
+
             let mappedEventsGroup = GomaModelMapper.eventsGroup(fromInternalEvents: events)
 
             return mappedEventsGroup
         })
         .eraseToAnyPublisher()
-        
+
     }
-    
+
     func getEventSummary(eventId: String, marketLimit: String?) -> AnyPublisher<Event, ServiceProviderError> {
-        
+
         let endpointDetails = GomaAPIClient.getEventDetails(identifier: eventId)
         let publisherDetails: AnyPublisher<GomaModels.Event, ServiceProviderError> = self.connector.request(endpointDetails)
-        
+
         let endpointMarkets = GomaAPIClient.getEventMarkets(identifier: eventId, limit: marketLimit)
         let publisherMarkets: AnyPublisher<[GomaModels.Market], ServiceProviderError> = self.connector.request(endpointMarkets)
-        
+
         return Publishers.CombineLatest(publisherDetails, publisherMarkets)
             .map({ eventDetails, markets -> Event in
                 var event = eventDetails
@@ -1083,45 +1203,49 @@ extension GomaAPIProvider: EventsProvider {
         }).eraseToAnyPublisher()
 //        return Fail(error: ServiceProviderError.eventsProviderNotFound).eraseToAnyPublisher()
     }
-    
+
     func getEventSummary(forMarketId marketId: String) -> AnyPublisher<Event, ServiceProviderError> {
-        return Fail(error: ServiceProviderError.eventsProviderNotFound).eraseToAnyPublisher()
+        return Fail(error: ServiceProviderError.notSupportedForProvider).eraseToAnyPublisher()
+    }
+
+    func getEventSummary(eventId: String) -> AnyPublisher<Event, ServiceProviderError> {
+        return Fail(error: ServiceProviderError.notSupportedForProvider).eraseToAnyPublisher()
     }
     
     func getMarketInfo(marketId: String) -> AnyPublisher<Market, ServiceProviderError> {
-        return Fail(error: ServiceProviderError.eventsProviderNotFound).eraseToAnyPublisher()
+        return Fail(error: ServiceProviderError.notSupportedForProvider).eraseToAnyPublisher()
     }
-    
+
     func getHomeSliders() -> AnyPublisher<BannerResponse, ServiceProviderError> {
-        return Fail(error: ServiceProviderError.eventsProviderNotFound).eraseToAnyPublisher()
+        return Fail(error: ServiceProviderError.notSupportedForProvider).eraseToAnyPublisher()
     }
-    
+
     func getAlertBanners() -> AnyPublisher<[AlertBanner], ServiceProviderError> {
         let endpoint = GomaAPIClient.getHomeAlerts
         let publisher: AnyPublisher<GomaModels.AlertBanner, ServiceProviderError> = self.connector.request(endpoint)
         return publisher.map({ banner in
-            var alertBanners = [banner]
+            let alertBanners = [banner]
             let banners = alertBanners.filter({ $0.isActive == 1 })
-            let convertedBanners = GomaModelMapper.alertBanners(fromAlertBanners: alertBanners)
+            let convertedBanners = GomaModelMapper.alertBanners(fromAlertBanners: banners)
             return convertedBanners
         }).eraseToAnyPublisher()
     }
-    
+
     func getNews() -> AnyPublisher<[News], ServiceProviderError> {
         let endpoint = GomaAPIClient.getNews
-        
+
         let publisher: AnyPublisher<[GomaModels.News], ServiceProviderError> = self.connector.request(endpoint)
-        
+
         return publisher.map({ news in
-            
+
             let mappedNews = news.map({
                 return GomaModelMapper.news(fromNews: $0)
             })
-            
+
             return mappedNews
         }).eraseToAnyPublisher()
     }
-    
+
     func getPromotedEventGroupsPointers() -> AnyPublisher<[EventGroupPointer], ServiceProviderError> {
         let endpoint = GomaAPIClient.getPopularEventPointers
         let publisher: AnyPublisher<[GomaModels.EventsPointerGroup], ServiceProviderError> = self.connector.request(endpoint)
@@ -1133,13 +1257,13 @@ extension GomaAPIProvider: EventsProvider {
             }
             return eventGroupPointers
         }).eraseToAnyPublisher()
-        
+
     }
-    
+
     func getPromotedEventsGroups() -> AnyPublisher<[EventsGroup], ServiceProviderError> {
         return Fail(error: ServiceProviderError.notSupportedForProvider).eraseToAnyPublisher()
     }
-    
+
     func getPromotionalTopBanners() -> AnyPublisher<[PromotionalBanner], ServiceProviderError> {
 
         let endpoint = GomaAPIClient.getBanners
@@ -1150,7 +1274,7 @@ extension GomaAPIProvider: EventsProvider {
             return convertedBanners
         }).eraseToAnyPublisher()
     }
-    
+
     func getPromotionalSlidingTopEventsPointers() -> AnyPublisher<[EventMetadataPointer], ServiceProviderError> {
         let endpoint = GomaAPIClient.getEventsBanners
         let publisher: AnyPublisher<[GomaModels.EventMetadataPointer], ServiceProviderError> = self.connector.request(endpoint)
@@ -1158,7 +1282,7 @@ extension GomaAPIProvider: EventsProvider {
             return metadataPointers.map(GomaModelMapper.eventMetadataPointer(fromInternalEventMetadataPointer:))
         }).eraseToAnyPublisher()
     }
-    
+
     func getPromotionalSlidingTopEvents() -> AnyPublisher<[Event], ServiceProviderError> {
         let endpoint = GomaAPIClient.getEventsBanners
         let publisher: AnyPublisher<[GomaModels.SportAssociatedEventBanner], ServiceProviderError> = self.connector.request(endpoint)
@@ -1167,23 +1291,23 @@ extension GomaAPIProvider: EventsProvider {
             return convertedEvents
         }).eraseToAnyPublisher()
     }
-    
+
     func getPromotionalTopStories() -> AnyPublisher<[PromotionalStory], ServiceProviderError> {
-        
+
         let endpoint = GomaAPIClient.getStories
         let publisher: AnyPublisher<[GomaModels.Story], ServiceProviderError> = self.connector.request(endpoint)
-        
+
         return publisher.map({ stories in
             let convertedStories = GomaModelMapper.promotionalStories(fromStories: stories)
             return convertedStories
         }).eraseToAnyPublisher()
-        
+
     }
-    
+
     func getHighlightedBoostedEventsPointers() -> AnyPublisher<[EventMetadataPointer], ServiceProviderError> {
         return Fail(error: ServiceProviderError.eventsProviderNotFound).eraseToAnyPublisher()
     }
-    
+
     func getHighlightedVisualImageEventsPointers() -> AnyPublisher<[EventMetadataPointer], ServiceProviderError> {
         let endpoint = GomaAPIClient.getHighlights
         let publisher: AnyPublisher<[GomaModels.EventMetadataPointer], ServiceProviderError> = self.connector.request(endpoint)
@@ -1191,21 +1315,21 @@ extension GomaAPIProvider: EventsProvider {
             return metadataPointers.map(GomaModelMapper.eventMetadataPointer(fromInternalEventMetadataPointer:))
         }).eraseToAnyPublisher()
     }
-    
+
     func getHighlightedBoostedEvents() -> AnyPublisher<[Event], ServiceProviderError> {
         let endpoint = GomaAPIClient.getBoostedOddEvents
         let publisher: AnyPublisher<[GomaModels.BoostedEvent], ServiceProviderError> = self.connector.request(endpoint)
         return publisher.print("getBoostedEvents").map({ boostedOddEvents in
-            
+
             let convertedEvents = boostedOddEvents.map({
                 return GomaModelMapper.event(fromInternalBoostedEvent: $0)
             })
-            
+
             return convertedEvents
         }).eraseToAnyPublisher()
 //        return Fail(error: ServiceProviderError.eventsProviderNotFound).eraseToAnyPublisher()
     }
-    
+
     func getHighlightedVisualImageEvents() -> AnyPublisher<[Event], ServiceProviderError> {
         let endpoint = GomaAPIClient.getHighlights
         let publisher: AnyPublisher<[GomaModels.Event], ServiceProviderError> = self.connector.request(endpoint)
@@ -1215,26 +1339,26 @@ extension GomaAPIProvider: EventsProvider {
             return convertedEvents
         }).eraseToAnyPublisher()
     }
-    
+
     func getHeroGameEvent() -> AnyPublisher<[Event], ServiceProviderError> {
-        
+
         let endpoint = GomaAPIClient.getHeroCards
         let publisher: AnyPublisher<[GomaModels.HeroCardEvents], ServiceProviderError> = self.connector.request(endpoint)
         return publisher.print("getHeroCards").map({ heroCardEvents in
-            
+
             let convertedEvents = heroCardEvents.map({
                 return GomaModelMapper.event(fromInternalHeroCardEvent: $0)
             })
-            
+
             return convertedEvents
         }).eraseToAnyPublisher()
 
     }
-    
+
     func getPromotedSports() -> AnyPublisher<[PromotedSport], ServiceProviderError> {
         return Fail(error: ServiceProviderError.eventsProviderNotFound).eraseToAnyPublisher()
     }
-    
+
     func getPromotedEventsBySport() -> AnyPublisher<[SportType: [Event]], ServiceProviderError> {
 
         let endpoint = GomaAPIClient.getPopularEvents
@@ -1247,48 +1371,48 @@ extension GomaAPIProvider: EventsProvider {
 //            let groupedEvents: [SportType: [Event]] = convertedEvents.reduce(into: [:]) { dict, event in
 //                dict[event.sport, default: []].append(event)
 //            }
-            
+
             var groupedEvents: [SportType: [Event]] = [:]
-            
+
             for popularEvent in popularEvents {
-                
+
                 if popularEvent.events.isEmpty {
                     continue
                 }
-                
+
                 let eventTitle = popularEvent.title ?? ""
-                
+
                 let convertedEvents = GomaModelMapper.events(fromInternalEvents: popularEvent.events)
-                
+
                 var newSportType = SportType(name: eventTitle, numericId: nil, alphaId: nil, iconId: nil, showEventCategory: false, numberEvents: popularEvent.events.count, numberOutrightEvents: 0, numberOutrightMarkets: 0, numberLiveEvents: 0)
                 if let sportType = convertedEvents.first?.sport,
                    eventTitle == sportType.name {
                     newSportType = sportType
                 }
-                
+
                 groupedEvents[newSportType] = convertedEvents
             }
-            
+
             return groupedEvents
         }).eraseToAnyPublisher()
-        
+
     }
-    
+
     func getCashbackSuccessBanner() -> AnyPublisher<BannerResponse, ServiceProviderError> {
         return Fail(error: ServiceProviderError.eventsProviderNotFound).eraseToAnyPublisher()
     }
-    
+
     func getTopCompetitionsPointers() -> AnyPublisher<[TopCompetitionPointer], ServiceProviderError> {
-        
+
         let endpoint = GomaAPIClient.getFeaturedCompetitions
         let publisher: AnyPublisher<[GomaModels.Competition], ServiceProviderError> = self.connector.request(endpoint)
         return publisher.map({ competitions in
             return GomaModelMapper.topCompetitionsPointers(fromCompetitions: competitions)
         }).eraseToAnyPublisher()
-        
+
 //        return Fail(error: ServiceProviderError.eventsProviderNotFound).eraseToAnyPublisher()
     }
-    
+
     func getTopCompetitions() -> AnyPublisher<[TopCompetition], ServiceProviderError> {
         let endpoint = GomaAPIClient.getFeaturedCompetitions
         let publisher: AnyPublisher<[GomaModels.Competition], ServiceProviderError> = self.connector.request(endpoint)
@@ -1296,19 +1420,19 @@ extension GomaAPIProvider: EventsProvider {
             return GomaModelMapper.topCompetitions(fromCompetitions: competitions)
         }).eraseToAnyPublisher()
     }
-    
+
     func getEventsForMarketGroup(withId marketGroupId: String) -> AnyPublisher<EventsGroup, ServiceProviderError> {
         return Fail(error: ServiceProviderError.eventsProviderNotFound).eraseToAnyPublisher()
     }
-    
+
     func getEventDetails(eventId: String, marketLimit: String?) -> AnyPublisher<Event, ServiceProviderError> {
-        
+
         let endpointDetails = GomaAPIClient.getEventDetails(identifier: eventId)
         let publisherDetails: AnyPublisher<GomaModels.Event, ServiceProviderError> = self.connector.request(endpointDetails)
-        
+
         let endpointMarkets = GomaAPIClient.getEventMarkets(identifier: eventId, limit: marketLimit)
         let publisherMarkets: AnyPublisher<[GomaModels.Market], ServiceProviderError> = self.connector.request(endpointMarkets)
-        
+
         return Publishers.CombineLatest(publisherDetails, publisherMarkets)
             .map({ eventDetails, markets -> Event in
                 var event = eventDetails
@@ -1316,105 +1440,105 @@ extension GomaAPIProvider: EventsProvider {
                 return GomaModelMapper.event(fromInternalEvent: event)
         }).eraseToAnyPublisher()
     }
-    
+
     func getFavoritesList() -> AnyPublisher<FavoritesListResponse, ServiceProviderError> {
-        
+
         let endpoint = GomaAPIClient.getFavorites
-        
+
         let publisher: AnyPublisher<GomaModels.GomaResponse<[GomaModels.FavoriteItem]>, ServiceProviderError> = self.connector.request(endpoint)
-        
+
         return publisher.map({ favoritesResponse in
-            
+
             let favoriteItems = favoritesResponse.data
-            
+
             let favoritesList = favoriteItems.map({ favoriteItem in
-                
+
                 let favoriteList = GomaModelMapper.favoriteList(fromInternalFavoriteItem: favoriteItem)
-                
+
                 return favoriteList
             })
-            
+
             let favoritesListResponse = FavoritesListResponse(favoritesList: favoritesList)
-            
+
             return favoritesListResponse
         }).eraseToAnyPublisher()
-        
+
     }
-    
+
     func addFavoritesList(name: String) -> AnyPublisher<FavoritesListAddResponse, ServiceProviderError> {
         return Fail(error: ServiceProviderError.eventsProviderNotFound).eraseToAnyPublisher()
     }
-    
+
     func deleteFavoritesList(listId: Int) -> AnyPublisher<FavoritesListDeleteResponse, ServiceProviderError> {
         return Fail(error: ServiceProviderError.eventsProviderNotFound).eraseToAnyPublisher()
     }
-    
+
     func addFavoriteToList(listId: Int, eventId: String) -> AnyPublisher<FavoriteAddResponse, ServiceProviderError> {
         return Fail(error: ServiceProviderError.eventsProviderNotFound).eraseToAnyPublisher()
     }
-    
+
     func getFavoritesFromList(listId: Int) -> AnyPublisher<FavoriteEventResponse, ServiceProviderError> {
         return Fail(error: ServiceProviderError.eventsProviderNotFound).eraseToAnyPublisher()
     }
-    
+
     func deleteFavoriteFromList(eventId: Int) -> AnyPublisher<FavoritesListDeleteResponse, ServiceProviderError> {
         return Fail(error: ServiceProviderError.eventsProviderNotFound).eraseToAnyPublisher()
     }
-    
+
     func addFavoriteItem(favoriteId: Int, type: String) -> AnyPublisher<BasicMessageResponse, ServiceProviderError> {
-        
+
         let endpoint = GomaAPIClient.addFavorite(favoriteId: favoriteId, type: type)
-        
+
         let publisher: AnyPublisher<BasicMessageResponse, ServiceProviderError> = self.connector.request(endpoint)
-        
+
         return publisher.map({ basicMessageResponse in
-            
+
             return basicMessageResponse
         }).eraseToAnyPublisher()
-        
+
     }
-    
+
     func deleteFavoriteItem(favoriteId: Int, type: String) -> AnyPublisher<BasicMessageResponse, ServiceProviderError> {
-       
+
         let endpoint = GomaAPIClient.deleteFavorite(favoriteId: favoriteId, type: type)
-        
+
         let publisher: AnyPublisher<BasicMessageResponse, ServiceProviderError> = self.connector.request(endpoint)
-        
+
         return publisher.map({ basicMessageResponse in
-            
+
             return basicMessageResponse
         }).eraseToAnyPublisher()
     }
-    
+
     func getDatesFilter(timeRange: String) -> [Date] {
         // TODO: Implement this func
         return []
     }
-    
+
     func getFeaturedTips(page: Int?, limit: Int?, topTips: Bool?, followersTips: Bool?, friendsTips: Bool?, userId: String?, homeTips: Bool?) -> AnyPublisher<FeaturedTips, ServiceProviderError> {
         let endpoint = GomaAPIClient.getFeaturedTips(page: page, limit: limit, topTips: topTips, followersTips: followersTips, friendsTips: friendsTips, userId: userId, homeTips: homeTips)
-        
+
         let publisher: AnyPublisher<GomaModels.FeaturedTipsPagedResponse, ServiceProviderError> = self.connector.request(endpoint)
         return publisher.map({ featuredTipsResponse in
             return GomaModelMapper.featuredTips(fromInternaFeaturedTips: featuredTipsResponse.featuredTips)
         }).eraseToAnyPublisher()
     }
-    
+
 }
 
 extension GomaAPIProvider: BettingProvider {
-    
+
     func getBetHistory(pageIndex: Int) -> AnyPublisher<BettingHistory, ServiceProviderError> {
-        
+
         let endpoint = GomaAPIClient.getMyTickets(states: nil, limit: "20", page: "\(pageIndex)")
-        
+
         let publisher: AnyPublisher<GomaModels.MyTicketsResponse, ServiceProviderError> = self.connector.request(endpoint)
-        
+
         return publisher
             .map(GomaModelMapper.bettingHistory(fromMyTicketsResponse:))
             .eraseToAnyPublisher()
     }
-    
+
     func getBetDetails(identifier: String) -> AnyPublisher<Bet, ServiceProviderError> {
         let endpoint = GomaAPIClient.getTicketDetails(betId: identifier)
         let publisher: AnyPublisher<GomaModels.MyTicket, ServiceProviderError> = self.connector.request(endpoint)
@@ -1422,7 +1546,7 @@ extension GomaAPIProvider: BettingProvider {
             .map(GomaModelMapper.bet(fromMyTicket:))
             .eraseToAnyPublisher()
     }
-    
+
     func getOpenBetsHistory(pageIndex: Int, startDate: String?, endDate: String?) -> AnyPublisher<BettingHistory, ServiceProviderError> {
         let endpoint = GomaAPIClient.getMyTickets(states: [GomaModels.MyTicketStatus.pending], limit: "20", page: "\(pageIndex)")
         let publisher: AnyPublisher<GomaModels.MyTicketsResponse, ServiceProviderError> = self.connector.request(endpoint)
@@ -1430,7 +1554,7 @@ extension GomaAPIProvider: BettingProvider {
             .map(GomaModelMapper.bettingHistory(fromMyTicketsResponse:))
             .eraseToAnyPublisher()
     }
-    
+
     func getResolvedBetsHistory(pageIndex: Int, startDate: String?, endDate: String?) -> AnyPublisher<BettingHistory, ServiceProviderError> {
         let endpoint = GomaAPIClient.getMyTickets(states: [GomaModels.MyTicketStatus.won, GomaModels.MyTicketStatus.lost, GomaModels.MyTicketStatus.push], limit: "20", page: "\(pageIndex)")
         let publisher: AnyPublisher<GomaModels.MyTicketsResponse, ServiceProviderError> = self.connector.request(endpoint)
@@ -1438,7 +1562,7 @@ extension GomaAPIProvider: BettingProvider {
             .map(GomaModelMapper.bettingHistory(fromMyTicketsResponse:))
             .eraseToAnyPublisher()
     }
-    
+
     func getWonBetsHistory(pageIndex: Int, startDate: String?, endDate: String?) -> AnyPublisher<BettingHistory, ServiceProviderError> {
         let endpoint = GomaAPIClient.getMyTickets(states: [GomaModels.MyTicketStatus.won], limit: "20", page: "\(pageIndex)")
         let publisher: AnyPublisher<GomaModels.MyTicketsResponse, ServiceProviderError> = self.connector.request(endpoint)
@@ -1446,7 +1570,7 @@ extension GomaAPIProvider: BettingProvider {
             .map(GomaModelMapper.bettingHistory(fromMyTicketsResponse:))
             .eraseToAnyPublisher()
     }
-    
+
     func getAllowedBetTypes(withBetTicketSelections betTicketSelections: [BetTicketSelection]) -> AnyPublisher<[BetType], ServiceProviderError> {
         var argumentSelections: [GomaAPIClient.ArgumentModels.BetSelection] = []
         for betTicketSelection in betTicketSelections {
@@ -1461,7 +1585,7 @@ extension GomaAPIProvider: BettingProvider {
             return GomaModelMapper.betTypes(fromGomaBetTypes: allowedBetsResponse.allowedTypes)
         }).eraseToAnyPublisher()
     }
-    
+
     func calculatePotentialReturn(forBetTicket betTicket: BetTicket) -> AnyPublisher<BetslipPotentialReturn, ServiceProviderError> {
         var argumentSelections: [GomaAPIClient.ArgumentModels.BetSelection] = []
         for betTicketSelection in betTicket.tickets {
@@ -1471,7 +1595,7 @@ extension GomaAPIProvider: BettingProvider {
             }
         }
         let betType = GomaModelMapper.gomaBetType(fromBetGroupingType: betTicket.betGroupingType)
-        
+
         let endpoint = GomaAPIClient.getCalculatePossibleBetResult(stake: betTicket.globalStake ?? 0.0, type: betType, selections: argumentSelections)
         let publisher: AnyPublisher<GomaModels.BetslipPotentialReturn, ServiceProviderError> = self.connector.request(endpoint)
         return publisher.map({ betslipPotentialReturn in
@@ -1482,9 +1606,9 @@ extension GomaAPIProvider: BettingProvider {
             return betslipPotentialReturn
         }).eraseToAnyPublisher()
     }
-    
+
     func placeBets(betTickets: [BetTicket], useFreebetBalance: Bool) -> AnyPublisher<PlacedBetsResponse, ServiceProviderError> {
-        
+
         let publishers = betTickets.map { betTicket in
             let endpoint = GomaAPIClient.placeBetTicket(betTicket: betTicket, useCashback: useFreebetBalance)
             let publisher: AnyPublisher<GomaModels.PlaceBetTicketResponse, ServiceProviderError> = self.connector.request(endpoint)
@@ -1494,15 +1618,15 @@ extension GomaAPIProvider: BettingProvider {
                 .setFailureType(to: ServiceProviderError.self)
                 .eraseToAnyPublisher()
         }
-        
+
         return Publishers.MergeMany(publishers)
             .collect()
-            .flatMap({ (results: [Result<GomaModels.PlaceBetTicketResponse, ServiceProviderError>]) 
+            .flatMap({ (results: [Result<GomaModels.PlaceBetTicketResponse, ServiceProviderError>])
                 -> AnyPublisher<PlacedBetsResponse, ServiceProviderError> in
-                 
+
                 var validResults: [GomaModels.PlaceBetTicketResponse] = []
                 var errors: [ServiceProviderError] = []
-                
+
                 for result in results {
                     switch result {
                     case .success(let success):
@@ -1511,9 +1635,9 @@ extension GomaAPIProvider: BettingProvider {
                         errors.append(failure)
                     }
                 }
-                
+
                 let placeBetResponse = GomaModelMapper.placedBetsResponse(fromPlaceBetTicketsResponses: validResults)
-                
+
                 if validResults.isEmpty {
                     if let firstError = errors.first {
                         return Fail(outputType: PlacedBetsResponse.self, failure: firstError).eraseToAnyPublisher()
@@ -1527,42 +1651,42 @@ extension GomaAPIProvider: BettingProvider {
             })
             .eraseToAnyPublisher()
     }
-    
+
     func calculateCashout(betId: String, stakeValue: String?) -> AnyPublisher<Cashout, ServiceProviderError> {
-        return Fail(error: ServiceProviderError.bettingProviderNotFound).eraseToAnyPublisher()
+        return Fail(error: ServiceProviderError.notSupportedForProvider).eraseToAnyPublisher()
     }
-    
+
     func cashoutBet(betId: String, cashoutValue: Double, stakeValue: Double?) -> AnyPublisher<CashoutResult, ServiceProviderError> {
-        return Fail(error: ServiceProviderError.bettingProviderNotFound).eraseToAnyPublisher()
+        return Fail(error: ServiceProviderError.notSupportedForProvider).eraseToAnyPublisher()
     }
-    
+
     func calculateCashback(forBetTicket betTicket: BetTicket) -> AnyPublisher<CashbackResult, ServiceProviderError> {
-        return Fail(error: ServiceProviderError.bettingProviderNotFound).eraseToAnyPublisher()
+        return Fail(error: ServiceProviderError.notSupportedForProvider).eraseToAnyPublisher()
     }
-    
+
     func getBetslipSettings() -> AnyPublisher<BetslipSettings?, Never> {
         // TODO: Implement this func
         return Just(nil).eraseToAnyPublisher()
     }
-    
+
     func updateBetslipSettings(_ betslipSettings: BetslipSettings) -> AnyPublisher<Bool, Never> {
         // TODO: Implement this func
         return Just(false).eraseToAnyPublisher()
     }
-    
+
     func getFreebet() -> AnyPublisher<FreebetBalance, ServiceProviderError> {
-        return Fail(error: ServiceProviderError.bettingProviderNotFound).eraseToAnyPublisher()
+        return Fail(error: ServiceProviderError.notSupportedForProvider).eraseToAnyPublisher()
     }
-    
+
     func getSharedTicket(betslipId: String) -> AnyPublisher<SharedTicketResponse, ServiceProviderError> {
-        
-        return Fail(error: ServiceProviderError.bettingProviderNotFound).eraseToAnyPublisher()
+
+        return Fail(error: ServiceProviderError.notSupportedForProvider).eraseToAnyPublisher()
     }
-    
+
     func getTicketSelection(ticketSelectionId: String) -> AnyPublisher<TicketSelection, ServiceProviderError> {
-        return Fail(error: ServiceProviderError.bettingProviderNotFound).eraseToAnyPublisher()
+        return Fail(error: ServiceProviderError.notSupportedForProvider).eraseToAnyPublisher()
     }
-    
+
     func updateTicketOdds(betId: String) -> AnyPublisher<Bet, ServiceProviderError> {
         let endpoint = GomaAPIClient.updateTicketOdds(betId: betId)
         let publisher: AnyPublisher<GomaModels.MyTicket, ServiceProviderError> = self.connector.request(endpoint)
@@ -1570,7 +1694,7 @@ extension GomaAPIProvider: BettingProvider {
             .map(GomaModelMapper.bet(fromMyTicket:))
             .eraseToAnyPublisher()
     }
-    
+
     func getTicketQRCode(betId: String) -> AnyPublisher<BetQRCode, ServiceProviderError> {
         let endpoint = GomaAPIClient.getTicketQRCode(betId: betId)
         let publisher: AnyPublisher<GomaModels.MyTicketQRCode, ServiceProviderError> = self.connector.request(endpoint)
@@ -1578,32 +1702,52 @@ extension GomaAPIProvider: BettingProvider {
             .map(GomaModelMapper.betQRCode(fromMyTicketQRCode:))
             .eraseToAnyPublisher()
     }
-    
+
     func getSocialSharedTicket(shareId: String) -> AnyPublisher<Bet, ServiceProviderError> {
-        
+
         let endpoint = GomaAPIClient.getSharedTicket(sharedId: shareId)
-        
+
         let publisher: AnyPublisher<GomaModels.MyTicket, ServiceProviderError> = self.connector.request(endpoint)
         return publisher.print("getSharedTicket").map({ sharedTicket in
-            
+
             let mappedBet = GomaModelMapper.bet(fromMyTicket: sharedTicket)
-            
+
             return mappedBet
         }).eraseToAnyPublisher()
     }
-    
+
     func deleteTicket(betId: String) -> AnyPublisher<Bool, ServiceProviderError> {
         let endpoint = GomaAPIClient.deleteTicket(betId: betId)
         let publisher: AnyPublisher<Bool, ServiceProviderError> = self.connector.request(endpoint)
         return publisher
     }
-    
+
     func updateTicket(betId: String, betTicket: BetTicket) -> AnyPublisher<PlacedBetsResponse, ServiceProviderError> {
         let endpoint = GomaAPIClient.updateTicket(betId: betId, betTicket: betTicket)
         let publisher: AnyPublisher<GomaModels.MyTicket, ServiceProviderError> = self.connector.request(endpoint)
         return publisher
             .map(GomaModelMapper.placedBetsResponse(fromMyTicket:))
             .eraseToAnyPublisher()
+    }
+    
+    func calculateBetBuilderPotentialReturn(forBetTicket betTicket: BetTicket) -> AnyPublisher<BetBuilderPotentialReturn, ServiceProviderError> {
+        return Fail(error: ServiceProviderError.notSupportedForProvider).eraseToAnyPublisher()
+    }
+    
+    func placeBetBuilderBet(betTicket: BetTicket, calculatedOdd: Double) -> AnyPublisher<PlacedBetsResponse, ServiceProviderError> {
+        return Fail(error: ServiceProviderError.notSupportedForProvider).eraseToAnyPublisher()
+    }
+    
+    func confirmBoostedBet(identifier: String) -> AnyPublisher<Bool, ServiceProviderError> {
+        return Fail(error: ServiceProviderError.notSupportedForProvider).eraseToAnyPublisher()
+    }
+    
+    func rejectBoostedBet(identifier: String) -> AnyPublisher<Bool, ServiceProviderError> {
+        return Fail(error: ServiceProviderError.notSupportedForProvider).eraseToAnyPublisher()
+    }
+    
+    func allowedCashoutBetIds() -> AnyPublisher<[String], ServiceProviderError> {
+        return Fail(error: ServiceProviderError.notSupportedForProvider).eraseToAnyPublisher()
     }
     
 }

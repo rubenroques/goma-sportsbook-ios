@@ -157,7 +157,7 @@ extension GomaModels {
         }
     }
     
-    struct UserFriend: Codable {
+    struct GomaFriend: Codable {
         var id: Int
         var name: String
         var avatar: String?
@@ -171,15 +171,15 @@ extension GomaModels {
         }
         
         init(from decoder: Decoder) throws {
-            let container: KeyedDecodingContainer<GomaModels.UserFriend.CodingKeys> = try decoder.container(keyedBy: GomaModels.UserFriend.CodingKeys.self)
+            let container: KeyedDecodingContainer<GomaModels.GomaFriend.CodingKeys> = try decoder.container(keyedBy: GomaModels.GomaFriend.CodingKeys.self)
             
-            self.id = try container.decode(Int.self, forKey: GomaModels.UserFriend.CodingKeys.id)
+            self.id = try container.decode(Int.self, forKey: GomaModels.GomaFriend.CodingKeys.id)
             
-            self.name = try container.decode(String.self, forKey: GomaModels.UserFriend.CodingKeys.name)
+            self.name = try container.decode(String.self, forKey: GomaModels.GomaFriend.CodingKeys.name)
 
-            self.avatar = try container.decodeIfPresent(String.self, forKey: GomaModels.UserFriend.CodingKeys.avatar)
+            self.avatar = try container.decodeIfPresent(String.self, forKey: GomaModels.GomaFriend.CodingKeys.avatar)
 
-            let isAdminValue = try container.decodeIfPresent(Int.self, forKey: GomaModels.UserFriend.CodingKeys.isAdmin)
+            let isAdminValue = try container.decodeIfPresent(Int.self, forKey: GomaModels.GomaFriend.CodingKeys.isAdmin)
             
             self.isAdmin = isAdminValue == 1 ? true : false
 
@@ -188,7 +188,7 @@ extension GomaModels {
     
     struct ChatroomData: Codable {
         let chatroom: Chatroom
-        let users: [UserFriend]
+        let users: [GomaFriend]
 
         enum CodingKeys: String, CodingKey {
             case chatroom = "chat_room"

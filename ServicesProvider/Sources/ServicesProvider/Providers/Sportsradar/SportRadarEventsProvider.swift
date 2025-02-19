@@ -969,6 +969,54 @@ extension SportRadarEventsProvider: SportRadarConnectorSubscriber {
     }
 
 }
+//
+//
+extension SportRadarEventsProvider {
+
+    func getAlertBanners() -> AnyPublisher<[AlertBanner], ServiceProviderError> {
+        return Fail(error: ServiceProviderError.notSupportedForProvider).eraseToAnyPublisher()
+    }
+
+    func getNews() -> AnyPublisher<[News], ServiceProviderError> {
+        return Fail(error: ServiceProviderError.notSupportedForProvider).eraseToAnyPublisher()
+    }
+
+    func getPromotedEventGroupsPointers() -> AnyPublisher<[EventGroupPointer], ServiceProviderError> {
+        return Fail(error: ServiceProviderError.notSupportedForProvider).eraseToAnyPublisher()
+    }
+
+    func getPromotedEventsGroups() -> AnyPublisher<[EventsGroup], ServiceProviderError> {
+        return Fail(error: ServiceProviderError.notSupportedForProvider).eraseToAnyPublisher()
+    }
+
+    func getPromotionalSlidingTopEventsPointers() -> AnyPublisher<[EventMetadataPointer], ServiceProviderError> {
+        return Fail(error: ServiceProviderError.notSupportedForProvider).eraseToAnyPublisher()
+    }
+
+    func getHighlightedBoostedEventsPointers() -> AnyPublisher<[EventMetadataPointer], ServiceProviderError> {
+        return Fail(error: ServiceProviderError.notSupportedForProvider).eraseToAnyPublisher()
+    }
+
+    func getHighlightedVisualImageEventsPointers() -> AnyPublisher<[EventMetadataPointer], ServiceProviderError> {
+        return Fail(error: ServiceProviderError.notSupportedForProvider).eraseToAnyPublisher()
+    }
+
+    func getPromotedEventsBySport() -> AnyPublisher<[SportType : [Event]], ServiceProviderError> {
+        return Fail(error: ServiceProviderError.notSupportedForProvider).eraseToAnyPublisher()
+    }
+
+    func addFavoriteItem(favoriteId: Int, type: String) -> AnyPublisher<BasicMessageResponse, ServiceProviderError> {
+        return Fail(error: ServiceProviderError.notSupportedForProvider).eraseToAnyPublisher()
+    }
+
+    func deleteFavoriteItem(favoriteId: Int, type: String) -> AnyPublisher<BasicMessageResponse, ServiceProviderError> {
+        return Fail(error: ServiceProviderError.notSupportedForProvider).eraseToAnyPublisher()
+    }
+
+    func getFeaturedTips(page: Int?, limit: Int?, topTips: Bool?, followersTips: Bool?, friendsTips: Bool?, userId: String?, homeTips: Bool?) -> AnyPublisher<FeaturedTips, ServiceProviderError> {
+        return Fail(error: ServiceProviderError.notSupportedForProvider).eraseToAnyPublisher()
+    }
+}
 
 //
 // MARK: - Competition and Match Details
@@ -984,6 +1032,7 @@ extension SportRadarEventsProvider {
                                                     position: 0,
                                                     isDefault: true,
                                                     numberOfMarkets: nil,
+                                                    loaded: true,
                                                     markets: event.markets)]
 
         let endpoint = SportRadarRestAPIClient.marketsFilter
@@ -1734,36 +1783,11 @@ extension SportRadarEventsProvider {
         let requestPublisher: AnyPublisher<SportRadarModels.SportRadarResponse<SportRadarModels.MarketGroup>, ServiceProviderError> = self.restConnector.request(endpoint)
 
         return requestPublisher.tryMap( { sportRadarResponse -> Event in
-
-            let mappedMarkets = sportRadarResponse.data.markets.map(SportRadarModelMapper.market(fromInternalMarket: ))
-
             guard
-                let firstMarket = mappedMarkets.first,
-                let eventId = firstMarket.eventId,
-                let competitionId = firstMarket.competitionId,
-                let competitionName = firstMarket.competitionName,
-                let sport = firstMarket.sport
-            else {
-                throw ServiceProviderError.errorMessage(message: "No market found for marketGroup")
+                let event = SportRadarModelMapper.event(fromInternalMarkets: sportRadarResponse.data.markets)
+                else {
+                throw ServiceProviderError.errorMessage(message: "No event found for marketGroup")
             }
-
-            let event = Event(id: eventId,
-                              homeTeamName: "",
-                              awayTeamName: "",
-                              homeTeamScore: nil,
-                              awayTeamScore: nil,
-                              competitionId: competitionId,
-                              competitionName: competitionName,
-                              sport: sport,
-                              sportIdCode: nil,
-                              startDate: firstMarket.startDate ?? Date(timeIntervalSince1970: 0),
-                              markets: mappedMarkets,
-                              venueCountry: firstMarket.venueCountry,
-                              trackableReference: nil,
-                              status: nil,
-                              matchTime: nil,
-                              activePlayerServing: nil,
-                              scores: [:])
             return event
         })
         .mapError { error -> ServiceProviderError in
@@ -2250,6 +2274,7 @@ extension SportRadarEventsProvider {
                                           position: availableMarket.value.first?.orderGroupOrder ?? 120,
                                           isDefault: false,
                                           numberOfMarkets: availableMarket.value.count,
+                                          loaded: true,
                                           markets: sortedMarkets)
 
             marketGroups[availableMarket.key] = marketGroup
@@ -2299,6 +2324,7 @@ extension SportRadarEventsProvider {
                                                 position: 99,
                                                 isDefault: false,
                                                 numberOfMarkets: betBuilderMarkets.count,
+                                                loaded: true,
                                                 markets: betBuilderMarkets)
 
         if sortedMarketGroupsArray.count >= 1 && !betBuilderMarkets.isEmpty {

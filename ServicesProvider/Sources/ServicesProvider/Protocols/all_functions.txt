@@ -1,0 +1,170 @@
+// BettingProvider
+func getBetHistory(pageIndex: Int) -> AnyPublisher<BettingHistory, ServiceProviderError> {
+func getBetDetails(identifier: String) -> AnyPublisher<Bet, ServiceProviderError> {
+func getOpenBetsHistory(pageIndex: Int, startDate: String?, endDate: String?) -> AnyPublisher<BettingHistory, ServiceProviderError> {
+func getResolvedBetsHistory(pageIndex: Int, startDate: String?, endDate: String?) -> AnyPublisher<BettingHistory, ServiceProviderError> {
+func getWonBetsHistory(pageIndex: Int, startDate: String?, endDate: String?) -> AnyPublisher<BettingHistory, ServiceProviderError> {
+func getAllowedBetTypes(withBetTicketSelections betTicketSelections: [BetTicketSelection]) -> AnyPublisher<[BetType], ServiceProviderError> {
+func calculatePotentialReturn(forBetTicket betTicket: BetTicket) -> AnyPublisher<BetslipPotentialReturn, ServiceProviderError> {
+func placeBets(betTickets: [BetTicket], useFreebetBalance: Bool) -> AnyPublisher<PlacedBetsResponse, ServiceProviderError> {
+func calculateCashout(betId: String, stakeValue: String?) -> AnyPublisher<Cashout, ServiceProviderError> {
+func cashoutBet(betId: String, cashoutValue: Double, stakeValue: Double?) -> AnyPublisher<CashoutResult, ServiceProviderError> {
+func calculateCashback(forBetTicket betTicket: BetTicket) -> AnyPublisher<CashbackResult, ServiceProviderError> {
+func getBetslipSettings() -> AnyPublisher<BetslipSettings?, Never> {
+func updateBetslipSettings(_ betslipSettings: BetslipSettings) -> AnyPublisher<Bool, Never> {
+func getFreebet() -> AnyPublisher<FreebetBalance, ServiceProviderError> {
+func getSharedTicket(betslipId: String) -> AnyPublisher<SharedTicketResponse, ServiceProviderError> {
+func getTicketSelection(ticketSelectionId: String) -> AnyPublisher<TicketSelection, ServiceProviderError> {
+func updateTicketOdds(betId: String) -> AnyPublisher<Bet, ServiceProviderError> {
+func getTicketQRCode(betId: String) -> AnyPublisher<BetQRCode, ServiceProviderError> {
+func getSocialSharedTicket(shareId: String) -> AnyPublisher<Bet, ServiceProviderError> {
+func deleteTicket(betId: String) -> AnyPublisher<Bool, ServiceProviderError> {
+func updateTicket(betId: String, betTicket: BetTicket) -> AnyPublisher<PlacedBetsResponse, ServiceProviderError> {
+
+// Mixed
+func isPromotionsProviderEnabled(isEnabled: Bool) -> AnyPublisher<Bool, ServiceProviderError> {
+func anonymousLogin() -> AnyPublisher<String, ServiceProviderError> {
+func login(username: String, password: String) -> AnyPublisher<UserProfile, ServiceProviderError> {
+func logoutUser() -> AnyPublisher<String, ServiceProviderError> {
+func getUserProfile() -> AnyPublisher<UserProfile, ServiceProviderError> {
+func updateUserProfile(form: UpdateUserProfileForm) -> AnyPublisher<Bool, ServiceProviderError> {
+func checkEmailRegistered(_ email: String) -> AnyPublisher<Bool, ServiceProviderError> {
+func validateUsername(_ username: String) -> AnyPublisher<UsernameValidation, ServiceProviderError> {
+func simpleSignUp(form: SimpleSignUpForm) -> AnyPublisher<Bool, ServiceProviderError> {
+func basicSignUp(form: BasicSignUpForm) -> AnyPublisher<DetailedSignUpResponse, ServiceProviderError> {
+func signUp(form: SignUpForm) -> AnyPublisher<SignUpResponse, ServiceProviderError> {
+func updateExtraInfo(placeOfBirth: String?, address2: String?) -> AnyPublisher<BasicResponse, ServiceProviderError> {
+func updateDeviceIdentifier(deviceIdentifier: String) -> AnyPublisher<BasicResponse, ServiceProviderError> {
+func getAllCountries() -> AnyPublisher<[SharedModels.Country], ServiceProviderError> {
+func getCountries() -> AnyPublisher<[SharedModels.Country], ServiceProviderError> {
+func getCurrentCountry() -> AnyPublisher<SharedModels.Country?, ServiceProviderError> {
+func signupConfirmation(_ email: String, confirmationCode: String) -> AnyPublisher<Bool, ServiceProviderError> {
+func forgotPassword(email: String, secretQuestion: String?, secretAnswer: String?) -> AnyPublisher<Bool, ServiceProviderError> {
+func updatePassword(oldPassword: String, newPassword: String) -> AnyPublisher<Bool, ServiceProviderError> {
+func getPasswordPolicy() -> AnyPublisher<PasswordPolicy, ServiceProviderError> {
+func updateWeeklyDepositLimits(newLimit: Double) -> AnyPublisher<Bool, ServiceProviderError> {
+func updateWeeklyBettingLimits(newLimit: Double) -> AnyPublisher<Bool, ServiceProviderError> {
+func updateResponsibleGamingLimits(newLimit: Double) -> AnyPublisher<Bool, ServiceProviderError> {
+func getPersonalDepositLimits() -> AnyPublisher<PersonalDepositLimitResponse, ServiceProviderError> {
+func getLimits() -> AnyPublisher<LimitsResponse, ServiceProviderError> {
+func getResponsibleGamingLimits() -> AnyPublisher<ResponsibleGamingLimitsResponse, ServiceProviderError> {
+func lockPlayer(isPermanent: Bool?, lockPeriodUnit: String?, lockPeriod: String?) -> AnyPublisher<BasicResponse, ServiceProviderError> {
+func getUserBalance() -> AnyPublisher<UserWallet, ServiceProviderError> {
+func getUserCashbackBalance() -> AnyPublisher<CashbackBalance, ServiceProviderError> {
+func depositOnWallet(amount: Double) -> AnyPublisher<Bool, ServiceProviderError> {
+func signUpCompletion(form: UpdateUserProfileForm) -> AnyPublisher<Bool, ServiceProviderError> {
+func getDocumentTypes() -> AnyPublisher<DocumentTypesResponse, ServiceProviderError> {
+func getUserDocuments() -> AnyPublisher<UserDocumentsResponse, ServiceProviderError> {
+func uploadUserDocument(documentType: String, file: Data, fileName: String) -> AnyPublisher<UploadDocumentResponse, ServiceProviderError> {
+func uploadMultipleUserDocuments(documentType: String, files: [String : Data]) -> AnyPublisher<UploadDocumentResponse, ServiceProviderError> {
+func getPayments() -> AnyPublisher<SimplePaymentMethodsResponse, ServiceProviderError> {
+func processDeposit(paymentMethod: String, amount: Double, option: String) -> AnyPublisher<ProcessDepositResponse, ServiceProviderError> {
+func updatePayment(amount: Double, paymentId: String, type: String, returnUrl: String?) -> AnyPublisher<UpdatePaymentResponse, ServiceProviderError> {
+func cancelDeposit(paymentId: String) -> AnyPublisher<BasicResponse, ServiceProviderError> {
+func checkPaymentStatus(paymentMethod: String, paymentId: String) -> AnyPublisher<PaymentStatusResponse, ServiceProviderError> {
+func getWithdrawalMethods() -> AnyPublisher<[WithdrawalMethod], ServiceProviderError> {
+func processWithdrawal(paymentMethod: String, amount: Double) -> AnyPublisher<ProcessWithdrawalResponse, ServiceProviderError> {
+func getPendingWithdrawals() -> AnyPublisher<[PendingWithdrawal], ServiceProviderError> {
+func cancelWithdrawal(paymentId: Int) -> AnyPublisher<CancelWithdrawalResponse, ServiceProviderError> {
+func getPaymentInformation() -> AnyPublisher<PaymentInformation, ServiceProviderError> {
+func addPaymentInformation(type: String, fields: String) -> AnyPublisher<AddPaymentInformationResponse, ServiceProviderError> {
+func getTransactionsHistory(startDate: String, endDate: String, transactionTypes: [TransactionType]?, pageNumber: Int?) -> AnyPublisher<[TransactionDetail], ServiceProviderError> {
+func getGrantedBonuses() -> AnyPublisher<[GrantedBonus], ServiceProviderError> {
+func redeemBonus(code: String) -> AnyPublisher<RedeemBonusResponse, ServiceProviderError> {
+func getAvailableBonuses() -> AnyPublisher<[AvailableBonus], ServiceProviderError> {
+func redeemAvailableBonus(partyId: String, code: String) -> AnyPublisher<BasicResponse, ServiceProviderError> {
+func cancelBonus(bonusId: String) -> AnyPublisher<BasicResponse, ServiceProviderError> {
+func optOutBonus(partyId: String, code: String) -> AnyPublisher<BasicResponse, ServiceProviderError> {
+func contactUs(firstName: String, lastName: String, email: String, subject: String, message: String) -> AnyPublisher<BasicResponse, ServiceProviderError> {
+func contactSupport(userIdentifier: String, firstName: String, lastName: String,
+func getAllConsents() -> AnyPublisher<[ConsentInfo], ServiceProviderError> {
+func getUserConsents() -> AnyPublisher<[UserConsent], ServiceProviderError> {
+func setUserConsents(consentVersionIds: [Int]?, unconsenVersionIds: [Int]?) -> AnyPublisher<BasicResponse, ServiceProviderError> {
+func getSumsubAccessToken(userId: String, levelName: String) -> AnyPublisher<AccessTokenResponse, ServiceProviderError> {
+func getSumsubApplicantData(userId: String) -> AnyPublisher<ApplicantDataResponse, ServiceProviderError> {
+func generateDocumentTypeToken(docType: String) -> AnyPublisher<AccessTokenResponse, ServiceProviderError> {
+func checkDocumentationData() -> AnyPublisher<ApplicantDataResponse, ServiceProviderError> {
+func getMobileVerificationCode(forMobileNumber mobileNumber: String) -> AnyPublisher<MobileVerifyResponse, ServiceProviderError> {
+func verifyMobileCode(code: String, requestId: String) -> AnyPublisher<MobileVerifyResponse, ServiceProviderError> {
+func getFollowees() -> AnyPublisher<[Follower], ServiceProviderError> {
+func getTotalFollowees() -> AnyPublisher<Int, ServiceProviderError> {
+func getFollowers() -> AnyPublisher<[Follower], ServiceProviderError> {
+func getTotalFollowers() -> AnyPublisher<Int, ServiceProviderError> {
+func addFollowee(userId: String) -> AnyPublisher<[String], ServiceProviderError> {
+func removeFollowee(userId: String) -> AnyPublisher<[String], ServiceProviderError> {
+func getTipsRankings(type: String?, followers: Bool?) -> AnyPublisher<[TipRanking], ServiceProviderError> {
+func getUserProfileInfo(userId: String) -> AnyPublisher<UserProfileInfo, ServiceProviderError> {
+func getUserNotifications() -> AnyPublisher<UserNotificationsSettings, ServiceProviderError> {
+func updateUserNotifications(settings: UserNotificationsSettings) -> AnyPublisher<Bool, ServiceProviderError> {
+func getFriendRequests() -> AnyPublisher<[FriendRequest], ServiceProviderError> {
+func getFriends() -> AnyPublisher<[GomaFriend], ServiceProviderError> {
+func addFriends(userIds: [String], request: Bool) -> AnyPublisher<AddFriendResponse, ServiceProviderError> {
+func removeFriend(userId: Int) -> AnyPublisher<String, ServiceProviderError> {
+func getChatrooms() -> AnyPublisher<[ChatroomData], ServiceProviderError> {
+func addGroup(name: String, userIds: [String]) -> AnyPublisher<ChatroomId, ServiceProviderError> {
+func deleteGroup(id: Int) -> AnyPublisher<String, ServiceProviderError> {
+func editGroup(id: Int, name: String) -> AnyPublisher<String, ServiceProviderError> {
+func leaveGroup(id: Int) -> AnyPublisher<String, ServiceProviderError> {
+func addUsersToGroup(groupId: Int, userIds: [String]) -> AnyPublisher<String, ServiceProviderError> {
+func removeUsersToGroup(groupId: Int, userIds: [String]) -> AnyPublisher<String, ServiceProviderError> {
+func searchUserWithCode(code: String) -> AnyPublisher<SearchUser, ServiceProviderError> {
+func reconnectIfNeeded() {
+func subscribeLiveMatches(forSportType sportType: SportType) -> AnyPublisher<SubscribableContent<[EventsGroup]>, ServiceProviderError> {
+func requestLiveMatchesNextPage(forSportType sportType: SportType) -> AnyPublisher<Bool, ServiceProviderError> {
+func subscribePreLiveMatches(forSportType sportType: SportType, initialDate: Date?, endDate: Date?, eventCount: Int?, sortType: EventListSort) -> AnyPublisher<SubscribableContent<[EventsGroup]>, ServiceProviderError> {
+func requestPreLiveMatchesNextPage(forSportType sportType: SportType, initialDate: Date?, endDate: Date?, sortType: EventListSort) -> AnyPublisher<Bool, ServiceProviderError> {
+func subscribeEndedMatches(forSportType sportType: SportType) -> AnyPublisher<SubscribableContent<[EventsGroup]>, ServiceProviderError> {
+func requestEndedMatchesNextPage(forSportType sportType: SportType) -> AnyPublisher<Bool, ServiceProviderError> {
+func subscribeCompetitionMatches(forId id: String) -> AnyPublisher<SubscribableContent<[EventsGroup]>, ServiceProviderError> {
+func subscribeToMarketDetails(withId marketId: String, onEventId eventId: String) -> AnyPublisher<SubscribableContent<Market>, ServiceProviderError> {
+func subscribeEventDetails(eventId: String) -> AnyPublisher<SubscribableContent<Event>, ServiceProviderError> {
+func subscribeEventSummary(eventId: String) -> AnyPublisher<SubscribableContent<[EventsGroup]>, ServiceProviderError> {
+func subscribeOutrightMarkets(forMarketGroupId marketGroupId: String) -> AnyPublisher<SubscribableContent<[EventsGroup]>, ServiceProviderError> {
+func subscribeSportTypes() -> AnyPublisher<SubscribableContent<[SportType]>, ServiceProviderError> {
+func subscribeToLiveDataUpdates(forEventWithId id: String) -> AnyPublisher<SubscribableContent<EventLiveData>, ServiceProviderError> {
+func subscribeToEventLiveDataUpdates(withId id: String) -> AnyPublisher<Event?, ServiceProviderError> {
+func subscribeToEventMarketUpdates(withId id: String) -> AnyPublisher<Market?, ServiceProviderError> {
+func subscribeToEventOutcomeUpdates(withId id: String) -> AnyPublisher<Outcome?, ServiceProviderError> {
+func getAvailableSportTypes(initialDate: Date?, endDate: Date?) -> AnyPublisher<[SportType], ServiceProviderError> {
+func getMarketGroups(forEvent event: Event) -> AnyPublisher<[MarketGroup], Never> {
+func getFieldWidgetId(eventId: String) -> AnyPublisher<FieldWidget, ServiceProviderError> {
+func getFieldWidget(eventId: String, isDarkTheme: Bool?) -> AnyPublisher<FieldWidgetRenderDataType, ServiceProviderError> {
+func getStatsWidget(eventId: String, marketTypeName: String, isDarkTheme: Bool?) -> AnyPublisher<StatsWidgetRenderDataType, ServiceProviderError> {
+func getSportRegions(sportId: String) -> AnyPublisher<SportNodeInfo, ServiceProviderError> {
+func getRegionCompetitions(regionId: String) -> AnyPublisher<SportRegionInfo, ServiceProviderError> {
+func getCompetitionMarketGroups(competitionId: String) -> AnyPublisher<SportCompetitionInfo, ServiceProviderError> {
+func getSearchEvents(query: String, resultLimit: String, page: String, isLive: Bool) -> AnyPublisher<EventsGroup, ServiceProviderError> {
+func getEventSummary(eventId: String, marketLimit: String?) -> AnyPublisher<Event, ServiceProviderError> {
+func getEventSummary(forMarketId marketId: String) -> AnyPublisher<Event, ServiceProviderError> {
+func getMarketInfo(marketId: String) -> AnyPublisher<Market, ServiceProviderError> {
+func getHomeSliders() -> AnyPublisher<BannerResponse, ServiceProviderError> {
+func getAlertBanners() -> AnyPublisher<[AlertBanner], ServiceProviderError> {
+func getNews() -> AnyPublisher<[News], ServiceProviderError> {
+func getPromotedEventGroupsPointers() -> AnyPublisher<[EventGroupPointer], ServiceProviderError> {
+func getPromotedEventsGroups() -> AnyPublisher<[EventsGroup], ServiceProviderError> {
+func getPromotionalTopBanners() -> AnyPublisher<[PromotionalBanner], ServiceProviderError> {
+func getPromotionalSlidingTopEventsPointers() -> AnyPublisher<[EventMetadataPointer], ServiceProviderError> {
+func getPromotionalSlidingTopEvents() -> AnyPublisher<[Event], ServiceProviderError> {
+func getPromotionalTopStories() -> AnyPublisher<[PromotionalStory], ServiceProviderError> {
+func getHighlightedBoostedEventsPointers() -> AnyPublisher<[EventMetadataPointer], ServiceProviderError> {
+func getHighlightedVisualImageEventsPointers() -> AnyPublisher<[EventMetadataPointer], ServiceProviderError> {
+func getHighlightedBoostedEvents() -> AnyPublisher<[Event], ServiceProviderError> {
+func getHighlightedVisualImageEvents() -> AnyPublisher<[Event], ServiceProviderError> {
+func getHeroGameEvent() -> AnyPublisher<[Event], ServiceProviderError> {
+func getPromotedSports() -> AnyPublisher<[PromotedSport], ServiceProviderError> {
+func getPromotedEventsBySport() -> AnyPublisher<[SportType: [Event]], ServiceProviderError> {
+func getCashbackSuccessBanner() -> AnyPublisher<BannerResponse, ServiceProviderError> {
+func getTopCompetitionsPointers() -> AnyPublisher<[TopCompetitionPointer], ServiceProviderError> {
+func getTopCompetitions() -> AnyPublisher<[TopCompetition], ServiceProviderError> {
+func getEventsForMarketGroup(withId marketGroupId: String) -> AnyPublisher<EventsGroup, ServiceProviderError> {
+func getEventDetails(eventId: String, marketLimit: String?) -> AnyPublisher<Event, ServiceProviderError> {
+func getFavoritesList() -> AnyPublisher<FavoritesListResponse, ServiceProviderError> {
+func addFavoritesList(name: String) -> AnyPublisher<FavoritesListAddResponse, ServiceProviderError> {
+func deleteFavoritesList(listId: Int) -> AnyPublisher<FavoritesListDeleteResponse, ServiceProviderError> {
+func addFavoriteToList(listId: Int, eventId: String) -> AnyPublisher<FavoriteAddResponse, ServiceProviderError> {
+func getFavoritesFromList(listId: Int) -> AnyPublisher<FavoriteEventResponse, ServiceProviderError> {
+func deleteFavoriteFromList(eventId: Int) -> AnyPublisher<FavoritesListDeleteResponse, ServiceProviderError> {
+func addFavoriteItem(favoriteId: Int, type: String) -> AnyPublisher<BasicMessageResponse, ServiceProviderError> {
+func deleteFavoriteItem(favoriteId: Int, type: String) -> AnyPublisher<BasicMessageResponse, ServiceProviderError> {
+func getDatesFilter(timeRange: String) -> [Date] {
+func getFeaturedTips(page: Int?, limit: Int?, topTips: Bool?, followersTips: Bool?, friendsTips: Bool?, userId: String?, homeTips: Bool?) -> AnyPublisher<FeaturedTips, ServiceProviderError> {

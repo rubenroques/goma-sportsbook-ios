@@ -49,6 +49,8 @@ extension SportRadarModelMapper {
                      awayTeamName: internalEvent.awayName ?? "",
                      homeTeamScore: internalEvent.homeScore,
                      awayTeamScore: internalEvent.awayScore,
+                     homeTeamLogoUrl: nil,
+                     awayTeamLogoUrl: nil,
                      competitionId: internalEvent.competitionId ?? "",
                      competitionName: internalEvent.competitionName ?? "",
                      sport: sport,
@@ -62,9 +64,48 @@ extension SportRadarModelMapper {
                      status: Self.eventStatus(fromInternalEvent: internalEvent.status),
                      matchTime: internalEvent.matchTime,
                      activePlayerServing: mappedActivePlayerServing,
+                     boostedMarket: nil,
+                     promoImageURL: nil,
                      scores: scores)
     }
+    
+    static func event(fromInternalMarkets internalMarkets: [SportRadarModels.Market]) -> Event? {
+        let mappedMarkets = internalMarkets.map(SportRadarModelMapper.market(fromInternalMarket: ))
 
+        guard
+            let firstMarket = mappedMarkets.first,
+            let eventId = firstMarket.eventId,
+            let competitionId = firstMarket.competitionId,
+            let competitionName = firstMarket.competitionName,
+            let sport = firstMarket.sport
+        else {
+            return nil
+        }
+
+        let event = Event(id: eventId,
+                          homeTeamName: "",
+                          awayTeamName: "",
+                          homeTeamScore: nil,
+                          awayTeamScore: nil,
+                          homeTeamLogoUrl: nil,
+                          awayTeamLogoUrl: nil,
+                          competitionId: competitionId,
+                          competitionName: competitionName,
+                          sport: sport,
+                          sportIdCode: nil,
+                          startDate: firstMarket.startDate ?? Date(timeIntervalSince1970: 0),
+                          markets: mappedMarkets,
+                          venueCountry: firstMarket.venueCountry,
+                          trackableReference: nil,
+                          status: nil,
+                          matchTime: nil,
+                          activePlayerServing: nil,
+                          boostedMarket: nil,
+                          promoImageURL: nil,
+                          scores: [:])
+        return event
+    }
+    
     static func scoresDictionary(fromInternalScoresDictionary internalScores: [String: SportRadarModels.Score]) -> [String: Score] {
         return internalScores.mapValues(Self.score(fromInternalScore:))
     }
@@ -95,7 +136,7 @@ extension SportRadarModelMapper {
         case .inProgress(let detail):
             return EventStatus.inProgress(detail)
         case .ended:
-            return EventStatus.ended
+            return EventStatus.ended(internalEventStatus.stringValue)
         }
     }
     
@@ -232,7 +273,12 @@ extension SportRadarModelMapper {
     }
 
     static func promotionalStory(fromInternalPromotionalStory internalPromotionalStory: SportRadarModels.PromotionalStory) -> PromotionalStory {
-        return PromotionalStory(id: internalPromotionalStory.id , title: internalPromotionalStory.title, imageUrl: internalPromotionalStory.imageUrl, linkUrl: internalPromotionalStory.linkUrl, bodyText: internalPromotionalStory.bodyText)
+        return PromotionalStory(id: internalPromotionalStory.id,
+                                title: internalPromotionalStory.title,
+                                imageUrl: internalPromotionalStory.imageUrl,
+                                linkUrl: internalPromotionalStory.linkUrl,
+                                bodyText: internalPromotionalStory.bodyText,
+                                callToActionText: nil)
     }
 
     // Favorites
@@ -250,7 +296,9 @@ extension SportRadarModelMapper {
     }
 
     static func favoriteList(fromInternalFavoriteList internalFavoriteList: SportRadarModels.FavoriteList) -> FavoriteList {
-        return FavoriteList(id: internalFavoriteList.id, name: internalFavoriteList.name, customerId: internalFavoriteList.customerId)
+        return FavoriteList(id: internalFavoriteList.id,
+                            name: internalFavoriteList.name,
+                            customerId: internalFavoriteList.customerId)
     }
 
     static func favoritesListAddResponse(fromInternalFavoritesListAddResponse internalFavoritesListAddResponse: SportRadarModels.FavoritesListAddResponse) -> FavoritesListAddResponse {

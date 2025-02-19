@@ -50,12 +50,17 @@ extension GomaModelMapper {
                    shareId: myTicket.shareId)
     }
     
+    /// Maps a Goma MyTicketSelection to the unified BetSelection model
+    /// - Parameter myTicketSelection: The source Goma ticket selection
+    /// - Returns: A unified BetSelection instance
     static func betSelection(fromMyTicketSelection myTicketSelection: GomaModels.MyTicketSelection) -> BetSelection {
-        
+        // Map bet state from ticket status
         let betState = Self.betState(fromMyTicketStatus: myTicketSelection.status)
         
+        // Map country from region, defaulting to empty string if no region
         let country = Country(isoCode: myTicketSelection.event.region?.isoCode ?? "")
         
+        // Convert scores to string representation
         var homeScore: String? = nil
         var awayScore: String? = nil
         
@@ -66,30 +71,47 @@ extension GomaModelMapper {
         if let betAwayScore = myTicketSelection.event.awayScore {
             awayScore = "\(betAwayScore)"
         }
-                
+        
+        // Map sport type using the existing helper
         let mappedSportType = Self.sportType(fromSport: myTicketSelection.event.sport)
         
-        return BetSelection(identifier: "\(myTicketSelection.id)",
-                            state: betState,
-                            result: .notSpecified,
-                            globalState: betState,
-                            eventName: "\(myTicketSelection.event.homeTeam) x \(myTicketSelection.event.awayTeam)",
-                            homeTeamName: myTicketSelection.event.homeTeam,
-                            awayTeamName: myTicketSelection.event.awayTeam,
-                            marketName: myTicketSelection.outcome.market.name,
-                            marketId: "\(myTicketSelection.outcome.market.id)",
-                            outcomeId: "\(myTicketSelection.outcome.id)",
-                            outcomeName: myTicketSelection.outcome.name,
-                            odd: .decimal(odd: myTicketSelection.odd),
-                            homeResult: homeScore,
-                            awayResult: awayScore,
-                            eventId: "\(myTicketSelection.sportEventId)",
-                            eventDate: myTicketSelection.event.dateTime,
-                            country: country,
-                            sportType: mappedSportType,
-                            tournamentName: myTicketSelection.event.competition?.name ?? "",
-                            homeLogoUrl: myTicketSelection.event.homeLogoUrl,
-                            awayLogoUrl: myTicketSelection.event.awayLogoUrl)
+        // Create event name by combining home and away team names
+        let eventName = "\(myTicketSelection.event.homeTeam) x \(myTicketSelection.event.awayTeam)"
+        
+        return BetSelection(
+            // Core properties
+            identifier: "\(myTicketSelection.id)",
+            state: betState,
+            result: .notSpecified,
+            globalState: betState,
+            eventName: eventName,
+            homeTeamName: myTicketSelection.event.homeTeam,
+            awayTeamName: myTicketSelection.event.awayTeam,
+            marketName: myTicketSelection.outcome.market.name,
+            outcomeName: myTicketSelection.outcome.name,
+            odd: .decimal(odd: myTicketSelection.odd),
+            
+            // Score properties
+            homeResult: homeScore,
+            awayResult: awayScore,
+            
+            // Event properties
+            eventId: "\(myTicketSelection.sportEventId)",
+            eventDate: myTicketSelection.event.dateTime,
+            country: country,
+            
+            // Sport properties
+            sportType: mappedSportType,
+            tournamentName: myTicketSelection.event.competition?.name ?? "",
+            
+            // Market and outcome IDs
+            marketId: "\(myTicketSelection.outcome.market.id)",
+            outcomeId: "\(myTicketSelection.outcome.id)",
+            
+            // Team logo properties
+            homeLogoUrl: myTicketSelection.event.homeLogoUrl,
+            awayLogoUrl: myTicketSelection.event.awayLogoUrl
+        )
     }
     
     static func betState(fromMyTicketStatus myTicketStatus: GomaModels.MyTicketStatus) -> BetState {

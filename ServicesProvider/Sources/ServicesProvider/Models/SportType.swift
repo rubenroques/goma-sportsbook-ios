@@ -7,7 +7,7 @@
 
 import Foundation
 
-public struct SportType: Codable, Equatable {
+public struct SportType: Codable, Equatable, Hashable {
 
     public var name: String
     public var numericId: String?
@@ -39,6 +39,17 @@ public struct SportType: Codable, Equatable {
         self.numberLiveEvents = numberLiveEvents
     }
     
+    public init(name: String) {
+        self.name = name
+        self.numericId = nil
+        self.alphaId = nil
+        self.iconId = nil
+        self.showEventCategory = false
+        self.numberEvents = 0
+        self.numberOutrightEvents = 0
+        self.numberOutrightMarkets = 0
+        self.numberLiveEvents = 0
+    }
 }
 
 // TODO: TASK André - Este devia ser o unico modelo publico

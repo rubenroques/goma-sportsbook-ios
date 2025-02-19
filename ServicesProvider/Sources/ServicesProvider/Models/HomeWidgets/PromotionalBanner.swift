@@ -7,11 +7,11 @@
 
 import Foundation
 
-public struct PromotionalBannersResponse {
+public struct PromotionalBannersResponse: Codable, Equatable, Hashable {
     public var promotionalBannerItems: [PromotionalBanner]
 }
 
-public struct PromotionalBanner {
+public struct PromotionalBanner: Codable, Equatable, Hashable {
     public let id: String
     public let name: String?
     public let bannerType: String?
@@ -23,7 +23,17 @@ public struct PromotionalBanner {
     public let specialAction: BannerSpecialAction
 }
 
-public enum BannerSpecialAction {
+public enum BannerSpecialAction: Codable, Equatable, Hashable {
     case register
+    case callToAction(url: String, text: String)
     case none
+}
+
+public struct AlertBanner: Codable, Equatable, Hashable {
+    public var identifier: String
+    public var title: String
+    public var subtitle: String?
+    public var callToActionText: String?
+    public var callToActionUrl: String?
+    public var isActive: Bool
 }

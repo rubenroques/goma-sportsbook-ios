@@ -154,12 +154,12 @@ class GomaConnector: Connector {
                 case 403:
                     throw ServiceProviderError.forbidden
                 case 404:
-                    if let messageResponse = try? JSONDecoder().decode(ErrorResponse.self, from: urlSessionOutput.data) {
+                    if let messageResponse = try? JSONDecoder().decode(BasicMessageResponse.self, from: urlSessionOutput.data) {
                         throw ServiceProviderError.errorMessage(message: messageResponse.message)
                     }
                     throw ServiceProviderError.unknown
                 case 422:
-                    if let messageResponse = try? JSONDecoder().decode(ErrorResponse.self, from: urlSessionOutput.data) {
+                    if let messageResponse = try? JSONDecoder().decode(BasicMessageResponse.self, from: urlSessionOutput.data) {
                         if messageResponse.message.lowercased().contains("does not allow selections") {
                             throw ServiceProviderError.notPlacedBet(message: messageResponse.message)
                         }

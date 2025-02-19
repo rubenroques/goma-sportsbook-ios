@@ -9,19 +9,19 @@ import Foundation
 import SharedModels
 
 extension GomaModelMapper {
-    
+
     static func eventsGroup(fromInternalEvents internalEvents: [GomaModels.Event]) -> EventsGroup {
         let events = internalEvents.map(Self.event(fromInternalEvent:))
         return EventsGroup(events: events, marketGroupId: nil, title: nil)
     }
-    
+
     static func events(fromInternalEvents internalEvents: [GomaModels.Event]) -> [Event] {
         let events = internalEvents.map(Self.event(fromInternalEvent:))
         return events
     }
-    
+
     static func event(fromInternalEvent internalEvent: GomaModels.Event) -> Event {
-        
+
         var country: Country?
         if let regionIsoCode = internalEvent.region.isoCode {
             country = Country.country(withISOCode: regionIsoCode)
@@ -29,7 +29,7 @@ extension GomaModelMapper {
         else {
             country = Country.country(withName: internalEvent.region.name)
         }
-        
+
         //
         var eventName: String?
         if !internalEvent.homeName.isEmpty, !internalEvent.awayName.isEmpty {
@@ -38,12 +38,12 @@ extension GomaModelMapper {
         else {
             eventName = internalEvent.competition.name
         }
-        
+
         let hasLiveOdds = internalEvent.isLive
-        
+
         //
 //        let mappedMarkets = internalEvent.markets.map(Self.market(fromInternalMarket:))
-        
+
         let mappedMarkets = internalEvent.markets.map({
             Self.market(fromInternalMarket: $0, withLiveOdds: hasLiveOdds)
         })
@@ -54,9 +54,9 @@ extension GomaModelMapper {
             market.eventId = internalEvent.identifier
             market.eventName = eventName
         }
-        
+
         let sportType = Self.sportType(fromSport: internalEvent.sport)
-        
+
         let event = Event(id: internalEvent.identifier,
                           homeTeamName: internalEvent.homeName,
                           awayTeamName: internalEvent.awayName,
@@ -72,14 +72,15 @@ extension GomaModelMapper {
                           markets: mappedMarkets,
                           venueCountry: country,
                           numberMarkets: mappedMarkets.count,
-                          name: eventName, 
+                          name: eventName,
                           trackableReference: nil,
                           status: Self.eventStatus(fromInternalEvent: internalEvent.status),
                           matchTime: internalEvent.matchTime,
                           activePlayerServing: nil,
+                          boostedMarket: nil,
                           promoImageURL: internalEvent.metaDetails?.imageUrl,
                           scores: internalEvent.scores)
-        
+
         return event
     }
 
@@ -92,18 +93,18 @@ extension GomaModelMapper {
         case .inProgress(let detail):
             return EventStatus.inProgress(detail)
         case .ended(let detail):
-            return EventStatus.ended(details: detail)
+            return EventStatus.ended(detail ?? "")
         }
     }
-    
+
     static func market(fromInternalMarket internalMarket: GomaModels.Market, withLiveOdds: Bool = false) -> Market {
         var mappedStats: Stats?
         if let stats = internalMarket.stats {
             mappedStats = Self.stats(fromInternalStats: stats)
         }
-        
+
 //        let outcomes = internalMarket.outcomes.map(Self.outcome(fromInternalOutcome:))
-        
+
         let outcomes = internalMarket.outcomes.map({
             Self.outcome(fromInternalOutcome: $0, withLiveOdds: withLiveOdds)
         })
@@ -112,6 +113,7 @@ extension GomaModelMapper {
                       name: internalMarket.name,
                       outcomes: outcomes,
                       marketTypeId: internalMarket.groupId,
+                      marketFilterId: internalMarket.groupId,
                       eventMarketTypeId: internalMarket.groupId,
                       eventName: nil,
                       isMainOutright: false,
@@ -122,18 +124,25 @@ extension GomaModelMapper {
                       awayParticipant: nil,
                       eventId: nil,
                       marketDigitLine: nil,
-                      stats: mappedStats,
-                      customBetAvailable: nil)
+                      outcomesOrder: .none,
+                      competitionId: nil,
+                      competitionName: nil,
+                      sport: nil,
+                      sportIdCode: nil,
+                      venueCountry: nil,
+                      customBetAvailable: nil,
+                      isMainMarket: false,
+                      stats: mappedStats)
     }
 
     static func outcome(fromInternalOutcome internalOutcome: GomaModels.Outcome, withLiveOdds: Bool = false) -> Outcome {
-        
+
         var odd = internalOutcome.odd
-        
+
         if withLiveOdds {
             odd = internalOutcome.oddLive ?? odd
         }
-        
+
         return Outcome(id: internalOutcome.identifier,
                        name: internalOutcome.name,
                        odd: odd,
@@ -142,9 +151,10 @@ extension GomaModelMapper {
                        orderValue: internalOutcome.code,
                        externalReference: nil,
                        isTradable: true,
+                       isTerminated: false,
                        customBetAvailableMarket: nil)
     }
-    
+
 
 }
 
@@ -154,14 +164,14 @@ extension GomaModelMapper {
     static func events(fromSportAssociatedEventBanners eventBanners: [GomaModels.SportAssociatedEventBanner]) -> [Event] {
         return eventBanners.map(Self.event(fromSportAssociatedEventBanner:)).compactMap({ $0 })
     }
-    
+
     static func event(fromSportAssociatedEventBanner eventBanner: GomaModels.SportAssociatedEventBanner) -> Event? {
         let associatedEvent = eventBanner.event
         let convertedEvent: Event = Self.event(fromInternalEvent: associatedEvent)
         convertedEvent.promoImageURL = eventBanner.imageUrl
         return convertedEvent
     }
-    
+
 }
 
 
@@ -170,15 +180,15 @@ extension GomaModelMapper {
     static func topCompetitions(fromCompetitions competitions: [GomaModels.Competition]) -> [TopCompetition] {
         return competitions.map(Self.topCompetition(fromCompetition:)).compactMap({ $0 })
     }
-    
+
     static func topCompetition(fromCompetition competition: GomaModels.Competition) -> TopCompetition? {
-        
+
         guard
             let sport = competition.sport
         else {
             return nil
         }
-        
+
         let convertedSport = Self.sportType(fromSport: sport)
 
         var convertedCountry: Country?
@@ -188,37 +198,37 @@ extension GomaModelMapper {
         else {
             convertedCountry = Country.country(withName: competition.region?.name ?? "")
         }
-        
+
         return TopCompetition(id: competition.identifier,
                               name: competition.name,
                               country: convertedCountry,
                               sportType: convertedSport)
-        
+
     }
-    
+
     static func topCompetitionsPointers(fromCompetitions competitions: [GomaModels.Competition]) -> [TopCompetitionPointer] {
         return competitions.map(Self.topCompetitionPointer(fromCompetition:)).compactMap({ $0 })
     }
-    
+
     static func topCompetitionPointer(fromCompetition competition: GomaModels.Competition) -> TopCompetitionPointer? {
         guard
             let sport = competition.sport
         else {
             return nil
         }
-        
+
         return TopCompetitionPointer(id: sport.name, name: competition.name, competitionId: competition.identifier)
     }
-    
+
     static func eventMetadataPointer(fromInternalEventMetadataPointer eventMetadataPointer: GomaModels.EventMetadataPointer) -> EventMetadataPointer {
-        
+
         return EventMetadataPointer(id: eventMetadataPointer.id,
                                     eventId: eventMetadataPointer.eventId,
                                     eventMarketId: eventMetadataPointer.eventMarketId,
                                     callToActionURL: eventMetadataPointer.callToActionURL,
                                     imageURL: eventMetadataPointer.imageURL)
     }
-    
+
 }
 
 
@@ -227,9 +237,9 @@ extension GomaModelMapper {
     static func sportRegions(fromRegions regions: [GomaModels.Region]) -> [SportRegion] {
         return regions.map(Self.sportRegion(fromRegion:))
     }
-    
+
     static func sportRegion(fromRegion region: GomaModels.Region) -> SportRegion {
-        
+
         var convertedCountry: Country? = Country.country(withName: region.name)
         if let regionIsoCode = region.isoCode {
             convertedCountry = Country.country(withISOCode: regionIsoCode)
@@ -237,25 +247,25 @@ extension GomaModelMapper {
         else {
             convertedCountry = Country.country(withName: region.name)
         }
-        
+
         return SportRegion(id: region.identifier,
                            name: region.name,
-                           numberEvents: "\(region.preLiveEventsCount)",
+                           numberEvents: "\(region.preLiveEventsCount ?? 0)",
                            numberOutrightEvents: "0",
                            country: convertedCountry)
     }
-    
+
     static func sportCompetitions(fromCompetitions competitions: [GomaModels.Competition]) -> [SportCompetition] {
         return competitions.map(Self.sportCompetition(fromCompetition:))
     }
-    
+
     static func sportCompetition(fromCompetition competition: GomaModels.Competition) -> SportCompetition {
         return SportCompetition(id: competition.identifier,
                                 name: competition.name,
                                 numberEvents: "\(competition.preLiveEventsCount ?? 0)",
                                 numberOutrightEvents: "0")
     }
-    
+
 }
 
 // Stats
@@ -276,26 +286,18 @@ extension GomaModelMapper {
     }
     
     static func event(fromInternalHeroCardEvent heroCardEvent: GomaModels.HeroCardEvents) -> Event {
-        
-        var mappedEvent = Self.event(fromInternalEvent: heroCardEvent.event)
-        
+        let mappedEvent = Self.event(fromInternalEvent: heroCardEvent.event)
         mappedEvent.promoImageURL = heroCardEvent.imageUrl
-        
         return mappedEvent
     }
     
     static func event(fromInternalBoostedEvent boostedEvent: GomaModels.BoostedEvent) -> Event {
-        
-        var mappedEvent = Self.event(fromInternalEvent: boostedEvent.event)
-        
+        let mappedEvent = Self.event(fromInternalEvent: boostedEvent.event)
         let mappedBoostedMarket = Self.market(fromInternalMarket: boostedEvent.boostedMarket)
-        
         mappedEvent.promoImageURL = boostedEvent.imageUrl
-        
         mappedEvent.boostedMarket = mappedBoostedMarket
-        
         mappedEvent.oldMainMarketId = boostedEvent.event.markets.first?.identifier
-        
         return mappedEvent
     }
+    
 }

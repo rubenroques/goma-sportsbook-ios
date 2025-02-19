@@ -15,53 +15,53 @@ struct GomaModelMapper {
         return dateFormatter.date(from: dateString)
     }
 
-    static func basicRegisterResponse(fromInternalBasicRegisterResponse basicRegisterResponse: GomaModels.BasicRegisterResponse) -> BasicSignUpResponse {
-        
-        let successful = basicRegisterResponse.id != nil ? true : false
-        
+    static func basicRegisterResponse(fromInternalBasicRegisterResponse basicRegisterResponse: GomaModels.BasicRegisterResponse) -> DetailedSignUpResponse {
+
         let userData = SignUpUserData(id: basicRegisterResponse.id,
                                       name: basicRegisterResponse.name,
                                       email: basicRegisterResponse.email,
                                       username: basicRegisterResponse.username,
                                       avatarName: basicRegisterResponse.avatar ?? "")
         
-        let signUpResponse = BasicSignUpResponse(successful: successful, errors: nil, userData: userData)
-        
+        let signUpResponse = DetailedSignUpResponse(successful: true, errors: nil, userData: userData)
         return signUpResponse
     }
     
     static func loginResponse(fromInternalLoginResponse loginResponse: GomaModels.LoginResponse) -> LoginResponse {
-        
-        let userProfile = UserProfile(userIdentifier: "\(loginResponse.userData.id)",
-                                      sessionKey: "",
-                                      username: loginResponse.userData.username,
-                                      email: loginResponse.userData.email,
-                                      firstName: loginResponse.userData.name,
-                                      lastName: nil,
-                                      birthDate: Date(),
-                                      gender: nil,
-                                      nationalityCode: nil,
-                                      countryCode: nil,
-                                      personalIdNumber: nil,
-                                      address: nil,
-                                      province: nil,
-                                      city: nil,
-                                      postalCode: nil,
-                                      birthDepartment: nil,
-                                      streetNumber: nil,
-                                      phoneNumber: nil,
-                                      mobilePhone: nil,
-                                      mobileCountryCode: nil,
-                                      mobileLocalNumber: nil,
-                                      avatarName: loginResponse.userData.avatar,
-                                      godfatherCode: loginResponse.userData.code,
-                                      placeOfBirth: nil,
-                                      additionalStreetLine: nil,
-                                      emailVerificationStatus: .verified,
-                                      userRegistrationStatus: .completed,
-                                      kycStatus: .pass,
-                                      currency: nil)
-        
+            let userProfile = UserProfile(userIdentifier: "\(loginResponse.userData.id)",
+                                        sessionKey: "",
+                                        username: loginResponse.userData.username,
+                                        email: loginResponse.userData.email,
+                                        firstName: loginResponse.userData.name,
+                                        middleName: nil,  // Added
+                                        lastName: nil,
+                                        birthDate: Date(),
+                                        gender: nil,
+                                        nationalityCode: nil,
+                                        countryCode: nil,
+                                        personalIdNumber: nil,
+                                        address: nil,
+                                        province: nil,
+                                        city: nil,
+                                        postalCode: nil,
+                                        birthDepartment: nil,
+                                        streetNumber: nil,
+                                        phoneNumber: nil,
+                                        mobilePhone: nil,
+                                        mobileCountryCode: nil,
+                                        mobileLocalNumber: nil,
+                                        avatarName: loginResponse.userData.avatar,
+                                        godfatherCode: loginResponse.userData.code,
+                                        placeOfBirth: nil,
+                                        additionalStreetLine: nil,
+                                        emailVerificationStatus: .verified,
+                                        userRegistrationStatus: .completed,
+                                        kycStatus: .pass,
+                                        lockedStatus: .notLocked,  // Added
+                                        hasMadeDeposit: false,    // Added
+                                        kycExpiryDate: nil,      // Added
+                                        currency: nil)
+            
         let mappedLoginResponse = LoginResponse(token: loginResponse.token,
                                                 userProfile: userProfile)
         
