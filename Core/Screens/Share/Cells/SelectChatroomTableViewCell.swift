@@ -13,7 +13,7 @@ class SelectChatroomCellViewModel {
     private var cancellables = Set<AnyCancellable>()
 
     var chatroomData: ChatroomData
-    var users: [GomaFriend]
+    var users: [UserFriend]
     var isCheckboxSelected: Bool
     var isOnlinePublisher: CurrentValueSubject<Bool, Never> = .init(false)
 
