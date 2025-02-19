@@ -54,7 +54,7 @@ enum GomaAPIClient {
     case getEventsFromCompetition(competitionId: String)
     
     case getEventDetails(identifier: String)
-    case getEventMarkets(identifier: String, limit: String?)
+    case getEventMarkets(identifier: String, limit: Int?)
     
     case getFeaturedTips(page: Int?, limit: Int?, topTips: Bool?, followersTips: Bool?, friendsTips: Bool?, userId: String?, homeTips: Bool?)
 
@@ -379,8 +379,8 @@ extension GomaAPIClient: Endpoint {
             
             var queryItemsURL: [URLQueryItem] = []
 
-            if let limit {
-                let queryItem = URLQueryItem(name: "limit", value: limit)
+            if let limitValue = limit {
+                let queryItem = URLQueryItem(name: "limit", value: "\(limitValue)")
                 queryItemsURL.append(queryItem)
             }
             

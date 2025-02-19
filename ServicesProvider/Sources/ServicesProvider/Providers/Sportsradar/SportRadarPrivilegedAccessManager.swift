@@ -315,7 +315,7 @@ class SportRadarPrivilegedAccessManager: PrivilegedAccessManager {
         .eraseToAnyPublisher()
     }
 
-    public func getAllCountries() -> AnyPublisher<[Country], ServiceProviderError> {
+    public func getAllCountries() -> AnyPublisher<[SharedModels.Country], ServiceProviderError> {
         let allCountries = Country.allCountries
         return Just(allCountries).setFailureType(to: ServiceProviderError.self).eraseToAnyPublisher()
     }

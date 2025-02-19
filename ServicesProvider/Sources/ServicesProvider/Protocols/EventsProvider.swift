@@ -22,6 +22,10 @@ protocol EventsProvider: Connector {
     func requestPreLiveMatchesNextPage(forSportType sportType: SportType, initialDate: Date?, endDate: Date?, sortType: EventListSort) -> AnyPublisher<Bool, ServiceProviderError>
 
     //
+    func subscribeEndedMatches(forSportType sportType: SportType) -> AnyPublisher<SubscribableContent<[EventsGroup]>, ServiceProviderError>
+    func requestEndedMatchesNextPage(forSportType sportType: SportType) -> AnyPublisher<Bool, ServiceProviderError>
+    
+    //
     //
     func subscribeCompetitionMatches(forMarketGroupId marketGroupId: String) -> AnyPublisher<SubscribableContent<[EventsGroup]>, ServiceProviderError>
 
@@ -35,6 +39,9 @@ protocol EventsProvider: Connector {
 
     //
     //
+    // TODO: SP Merge - subscribePreLiveSportTypes , subscribeAllSportTypes and subscribeLiveSportTypes should all be merged into -> subscribeSportTypes
+    func subscribeSportTypes() -> AnyPublisher<SubscribableContent<[SportType]>, ServiceProviderError>
+    // <->
     func subscribePreLiveSportTypes(initialDate: Date?, endDate: Date?) -> AnyPublisher<SubscribableContent<[SportType]>, ServiceProviderError>
     func subscribeLiveSportTypes() -> AnyPublisher<SubscribableContent<[SportType]>, ServiceProviderError>
     func subscribeAllSportTypes() -> AnyPublisher<SubscribableContent<[SportType]>, ServiceProviderError>
@@ -71,9 +78,8 @@ protocol EventsProvider: Connector {
 
     func getSearchEvents(query: String, resultLimit: String, page: String, isLive: Bool) -> AnyPublisher<EventsGroup, ServiceProviderError>
 
-    func getEventSummary(eventId: String) -> AnyPublisher<Event, ServiceProviderError>
-
-    func getEventSummary(forMarketId marketId: String) -> AnyPublisher<Event, ServiceProviderError>
+    func getEventSummary(eventId: String, marketLimit: Int?) -> AnyPublisher<Event, ServiceProviderError>
+    func getEventSummary(forMarketId: String) -> AnyPublisher<Event, ServiceProviderError>
 
     func getMarketInfo(marketId: String) -> AnyPublisher<Market, ServiceProviderError>
 
@@ -114,7 +120,7 @@ protocol EventsProvider: Connector {
     // Event and markets updates
     func subscribeToEventAndSecondaryMarkets(withId id: String) -> AnyPublisher<SubscribableContent<Event>, ServiceProviderError>
 
-    func getHighlightedLiveEventsIds(eventCount: Int, userId: String?) -> AnyPublisher<[String], ServiceProviderError>
+    func getHighlightedLiveEventsPointers(eventCount: Int, userId: String?) -> AnyPublisher<[String], ServiceProviderError>
     func getHighlightedLiveEvents(eventCount: Int, userId: String?) -> AnyPublisher<[Event], ServiceProviderError>
 
     func getPromotedBetslips(userId: String?) -> AnyPublisher<[PromotedBetslip], ServiceProviderError>

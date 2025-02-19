@@ -35,9 +35,11 @@ protocol PrivilegedAccessManager {
     func updateExtraInfo(placeOfBirth: String?, address2: String?) -> AnyPublisher<BasicResponse, ServiceProviderError>
     func updateDeviceIdentifier(deviceIdentifier: String, appVersion: String) -> AnyPublisher<BasicResponse, ServiceProviderError>
 
-    func getAllCountries() -> AnyPublisher<[Country], ServiceProviderError>
-    func getCountries() -> AnyPublisher<[Country], ServiceProviderError>
-    func getCurrentCountry() -> AnyPublisher<Country?, ServiceProviderError>
+    // TODO: SP Merge - We need to understand the difference between and rename it to better understand
+    func getAllCountries() -> AnyPublisher<[SharedModels.Country], ServiceProviderError>
+    func getCountries() -> AnyPublisher<[SharedModels.Country], ServiceProviderError>
+
+    func getCurrentCountry() -> AnyPublisher<SharedModels.Country?, ServiceProviderError>
 
     func signupConfirmation(_ email: String, confirmationCode: String) -> AnyPublisher<Bool, ServiceProviderError>
 
@@ -56,7 +58,7 @@ protocol PrivilegedAccessManager {
     func getUserBalance() -> AnyPublisher<UserWallet, ServiceProviderError>
     func getUserCashbackBalance() -> AnyPublisher<CashbackBalance, ServiceProviderError>
 
-    func signUpCompletion(form: ServicesProvider.UpdateUserProfileForm)  -> AnyPublisher<Bool, ServiceProviderError>
+    func signUpCompletion(form: UpdateUserProfileForm)  -> AnyPublisher<Bool, ServiceProviderError>
 
     func getDocumentTypes() -> AnyPublisher<DocumentTypesResponse, ServiceProviderError>
     func getUserDocuments() -> AnyPublisher<UserDocumentsResponse, ServiceProviderError>
@@ -88,6 +90,7 @@ protocol PrivilegedAccessManager {
     func cancelBonus(bonusId: String) -> AnyPublisher<BasicResponse, ServiceProviderError>
     func optOutBonus(partyId: String, code: String) -> AnyPublisher<BasicResponse, ServiceProviderError>
 
+    // TODO: SP Merge - Extract this into a new "SupportProvider"
     func contactUs(firstName: String, lastName: String, email: String, subject: String, message: String) -> AnyPublisher<BasicResponse, ServiceProviderError>
     func contactSupport(userIdentifier: String, firstName: String, lastName: String, email: String, subject: String, subjectType: String , message: String, isLogged: Bool) -> AnyPublisher<SupportResponse, ServiceProviderError>
 

@@ -34,4 +34,5 @@ protocol PromotionsProvider {
     func logoutUser() -> AnyPublisher<String, ServiceProviderError>
     
     func basicSignUp(form: SignUpForm) -> AnyPublisher<DetailedSignUpResponse, ServiceProviderError>
+    
 }

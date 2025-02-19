@@ -242,7 +242,7 @@ class StaticHomeViewTemplateDataSource {
 
         for eventId in favoriteEventsId {
 
-            Env.servicesProvider.getEventSummary(eventId: eventId)
+            Env.servicesProvider.getEventSummary(eventId: eventId, marketLimit: nil)
                 .receive(on: DispatchQueue.main)
                 .sink(receiveCompletion: { completion in
                     switch completion {

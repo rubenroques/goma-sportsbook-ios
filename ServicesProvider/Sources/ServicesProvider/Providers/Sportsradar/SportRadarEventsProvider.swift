@@ -320,6 +320,10 @@ class SportRadarEventsProvider: EventsProvider {
             return publisher.eraseToAnyPublisher()
         }
     }
+    
+    func subscribeSportTypes() -> AnyPublisher<SubscribableContent<[SportType]>, ServiceProviderError> {
+        fatalError("TODO: SP Merge - subscribePreLiveSportTypes , subscribeAllSportTypes and subscribeLiveSportTypes should all be merged into -> subscribeSportTypes ")
+    }
 
     func subscribeLiveSportTypes() -> AnyPublisher<SubscribableContent<[SportType]>, ServiceProviderError> {
 
@@ -500,7 +504,18 @@ class SportRadarEventsProvider: EventsProvider {
         sessionDataTask.resume()
         return publisher.eraseToAnyPublisher()
     }
-
+    
+    //
+    //
+    func subscribeEndedMatches(forSportType sportType: SportType) -> AnyPublisher<SubscribableContent<[EventsGroup]>, ServiceProviderError> {
+        return Fail(error: ServiceProviderError.notSupportedForProvider).eraseToAnyPublisher()
+    }
+    
+    func requestEndedMatchesNextPage(forSportType sportType: SportType) -> AnyPublisher<Bool, ServiceProviderError> {
+        return Fail(error: ServiceProviderError.notSupportedForProvider).eraseToAnyPublisher()
+    }
+    
+    //
     func subscribeOutrightEvent(forMarketGroupId marketGroupId: String) -> AnyPublisher<SubscribableContent<Event>, ServiceProviderError> {
 
         return self.getEventForMarketGroup(withId: marketGroupId)
@@ -1741,7 +1756,7 @@ extension SportRadarEventsProvider {
         return publisher.eraseToAnyPublisher()
     }
 
-    func getEventSummary(eventId: String) -> AnyPublisher<Event, ServiceProviderError> {
+    func getEventSummary(eventId: String, marketLimit: Int?) -> AnyPublisher<Event, ServiceProviderError> {
         let endpoint = SportRadarRestAPIClient.getEventSummary(eventId: eventId)
         let requestPublisher: AnyPublisher<SportRadarModels.SportRadarResponse<SportRadarModels.Event>, ServiceProviderError> = self.restConnector.request(endpoint)
         return requestPublisher.map( { sportRadarResponse -> Event in
@@ -1752,7 +1767,7 @@ extension SportRadarEventsProvider {
         .eraseToAnyPublisher()
     }
 
-    public func getEventSummary(forMarketId marketId: String) -> AnyPublisher<Event, ServiceProviderError> {
+    func getEventSummary(forMarketId marketId: String) -> AnyPublisher<Event, ServiceProviderError> {
 
         let endpoint = SportRadarRestAPIClient.getMarketInfo(marketId: marketId)
         let requestPublisher: AnyPublisher<SportRadarModels.SportRadarResponse<SportRadarModels.Event>, ServiceProviderError> = self.restConnector.request(endpoint)
@@ -2007,7 +2022,7 @@ extension SportRadarEventsProvider {
             .eraseToAnyPublisher()
     }
 
-    func getHighlightedLiveEventsIds(eventCount: Int, userId: String?) -> AnyPublisher<[String], ServiceProviderError> {
+    func getHighlightedLiveEventsPointers(eventCount: Int, userId: String?) -> AnyPublisher<[String], ServiceProviderError> {
         let endpoint = VaixAPIClient.popularEvents(eventsCount: eventCount, userId: userId)
         let requestPublisher: AnyPublisher<SportRadarModels.SportRadarResponse<[SportRadarModels.HighlightedEventPointer]>, ServiceProviderError> = self.restConnector.request(endpoint)
 
@@ -2028,12 +2043,12 @@ extension SportRadarEventsProvider {
 
     func getHighlightedLiveEvents(eventCount: Int, userId: String?) -> AnyPublisher<[Event], ServiceProviderError> {
 
-        let publisher = self.getHighlightedLiveEventsIds(eventCount: eventCount, userId: userId) // Get the ids
+        let publisher = self.getHighlightedLiveEventsPointers(eventCount: eventCount, userId: userId) // Get the ids
             .flatMap({ (eventPointers: [String]) -> AnyPublisher<[Event], ServiceProviderError> in
 
                 let getEventSummaryRequests: [AnyPublisher<Event?, ServiceProviderError>] = eventPointers
                     .map { (eventId: String) -> AnyPublisher<Event?, ServiceProviderError> in
-                        return self.getEventSummary(eventId: eventId) // Get the event summary for each id
+                        return self.getEventSummary(eventId: eventId, marketLimit: nil) // Get the event summary for each id
                             .map({ Optional<Event>.some($0) })
                             // Replace the errors for nil so we can continue with other requests
                             .catch({ (error: ServiceProviderError) -> AnyPublisher<Event?, ServiceProviderError> in
