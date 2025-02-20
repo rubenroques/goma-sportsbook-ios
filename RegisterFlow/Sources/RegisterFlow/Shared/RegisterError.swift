@@ -9,10 +9,10 @@ import Foundation
 
 public struct RegisterError {
 
-    var field: String
-    var error: String
+    public var field: String
+    public var error: String
 
-    var associatedFormStep: FormStep? {
+    public var associatedFormStep: FormStep? {
         switch field {
         case "gender": return .gender
         case "firstName", "lastName", "fullName": return .names

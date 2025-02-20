@@ -5328,6 +5328,7 @@
 		6547C88E2C650BA50041409C /* CustomPageIndicator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6547C8882C650BA50041409C /* CustomPageIndicator.swift */; };
 		6547C88F2C650BA50041409C /* CustomPageIndicator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6547C8882C650BA50041409C /* CustomPageIndicator.swift */; };
 		6547C8902C650BA50041409C /* CustomPageIndicator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6547C8882C650BA50041409C /* CustomPageIndicator.swift */; };
+		6550BFA92D676BD300270C58 /* RegisterFlowDataValidationTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6550BFA82D676BD300270C58 /* RegisterFlowDataValidationTests.swift */; };
 		655E1FFE2B21E8A500C95337 /* NotificationService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 655E1FFD2B21E8A500C95337 /* NotificationService.swift */; };
 		655E20022B21E8A500C95337 /* NotificationsService.appex in Embed Foundation Extensions */ = {isa = PBXBuildFile; fileRef = 655E1FFB2B21E8A500C95337 /* NotificationsService.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
 		655E20072B21E9E100C95337 /* OptimoveNotificationServiceExtension in Frameworks */ = {isa = PBXBuildFile; productRef = 655E20062B21E9E100C95337 /* OptimoveNotificationServiceExtension */; };
@@ -9763,6 +9764,7 @@
 		6547C8752C63C0AC0041409C /* HeroCardSecondaryMarketCollectionViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HeroCardSecondaryMarketCollectionViewCell.swift; sourceTree = "<group>"; };
 		6547C87F2C63DBF00041409C /* CustomPageControl.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomPageControl.swift; sourceTree = "<group>"; };
 		6547C8882C650BA50041409C /* CustomPageIndicator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomPageIndicator.swift; sourceTree = "<group>"; };
+		6550BFA82D676BD300270C58 /* RegisterFlowDataValidationTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RegisterFlowDataValidationTests.swift; sourceTree = "<group>"; };
 		655E1FFB2B21E8A500C95337 /* NotificationsService.appex */ = {isa = PBXFileReference; explicitFileType = "wrapper.app-extension"; includeInIndex = 0; path = NotificationsService.appex; sourceTree = BUILT_PRODUCTS_DIR; };
 		655E1FFD2B21E8A500C95337 /* NotificationService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotificationService.swift; sourceTree = "<group>"; };
 		655E1FFF2B21E8A500C95337 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
@@ -11221,6 +11223,7 @@
 			children = (
 				455A0C6A26BD902F00EC572D /* SportsbookTests.swift */,
 				455A0C6C26BD903000EC572D /* Info.plist */,
+				6550BFA82D676BD300270C58 /* RegisterFlowDataValidationTests.swift */,
 			);
 			path = CoreTests;
 			sourceTree = "<group>";
@@ -17541,6 +17544,7 @@
 				A9B6305D29102BF900BB850E /* RecoverPasswordViewController.swift in Sources */,
 				A9DF8E0728DDF64C0083BF56 /* UserInfoMultipleCardView.swift in Sources */,
 				450B7B4628F637FB009229E3 /* ServiceProviderModelMapper+Sports.swift in Sources */,
+				6550BFA92D676BD300270C58 /* RegisterFlowDataValidationTests.swift in Sources */,
 				A99DE669299E825900AA24AA /* RecoverPasswordViewModel.swift in Sources */,
 				A9A43C7F2A4B2B68008FB399 /* RibDocsViewModel.swift in Sources */,
 				A99DE67B29A643F800AA24AA /* PaymentStatus.swift in Sources */,

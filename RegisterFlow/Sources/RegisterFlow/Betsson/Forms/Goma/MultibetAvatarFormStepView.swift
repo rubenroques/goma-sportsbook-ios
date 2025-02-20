@@ -51,7 +51,7 @@ class MultibetAvatarFormStepViewModel {
             self.selectedAvatarName = .init(first)
         }
         else {
-            self.selectedAvatarName = .init("avatar1")
+            self.selectedAvatarName = .init("avatar1_alt")
         }
 
         self.userRegisterEnvelopUpdater = userRegisterEnvelopUpdater

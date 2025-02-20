@@ -18,22 +18,6 @@ import PhoneNumberKit
 
 class ContactsFormStepViewModel {
 
-    enum EmailState {
-        case empty
-        case needsValidation
-        case validating
-        case serverError
-        case alreadyInUse
-        case invalidSyntax
-        case valid
-    }
-
-    enum CountriesState {
-        case idle
-        case loading
-        case loaded(countries: [SharedModels.Country])
-    }
-
     let title: String
 
     let defaultCountryIso3Code: String

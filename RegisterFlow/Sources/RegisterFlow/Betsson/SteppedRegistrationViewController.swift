@@ -17,12 +17,12 @@ public class SteppedRegistrationViewModel {
 
     var registerSteps: [RegisterStep] = []
 
-    var currentStep: CurrentValueSubject<Int, Never> = .init(0)
-    var numberOfSteps: Int {
+    public var currentStep: CurrentValueSubject<Int, Never> = .init(0)
+    public var numberOfSteps: Int {
         return self.registerSteps.count
     }
 
-    var progressPercentage: AnyPublisher<Float, Never> {
+    public var progressPercentage: AnyPublisher<Float, Never> {
         return self.currentStep.map { [weak self] currentStep in
             let totalSteps = self?.numberOfSteps ?? 0
             if totalSteps > 0 {
@@ -33,15 +33,15 @@ public class SteppedRegistrationViewModel {
         }.eraseToAnyPublisher()
     }
 
-    var userRegisterEnvelop: UserRegisterEnvelop
+    public var userRegisterEnvelop: UserRegisterEnvelop
 
     let serviceProvider: ServicesProviderClient
     let userRegisterEnvelopUpdater: UserRegisterEnvelopUpdater
 
     var isLoading: CurrentValueSubject<Bool, Never> = .init(false)
 
-    var shouldPushSuccessStep: PassthroughSubject<Void, Never> = .init()
-    var showRegisterErrors: CurrentValueSubject<[RegisterError]?, Never> = .init(nil)
+    public var shouldPushSuccessStep: PassthroughSubject<Void, Never> = .init()
+    public var showRegisterErrors: CurrentValueSubject<[RegisterError]?, Never> = .init(nil)
 
     var confirmationCodeFilled: String?
     
@@ -116,7 +116,7 @@ public class SteppedRegistrationViewModel {
         
     }
 
-    func scrollToPreviousStep() {
+    public func scrollToPreviousStep() {
         var nextStep = currentStep.value - 1
         if nextStep < 0 {
             nextStep = 0
@@ -124,7 +124,7 @@ public class SteppedRegistrationViewModel {
         self.currentStep.send(nextStep)
     }
 
-    func scrollToNextStep() {
+    public func scrollToNextStep() {
         var nextStep = currentStep.value + 1
         if nextStep > numberOfSteps {
             nextStep = numberOfSteps
@@ -132,7 +132,7 @@ public class SteppedRegistrationViewModel {
         self.currentStep.send(nextStep)
     }
 
-    func scrollToIndex(_ index: Int) {
+    public func scrollToIndex(_ index: Int) {
 
         if index > numberOfSteps {
             return
@@ -157,7 +157,7 @@ public class SteppedRegistrationViewModel {
         return nil
     }
 
-    func requestRegister() -> Bool {
+    public func requestRegister() -> Bool {
 
         guard
             var form = self.userRegisterEnvelop.convertToSignUpForm()
@@ -1082,18 +1082,4 @@ public extension SteppedRegistrationViewController {
                                                                     constant: 0)
         self.headerViewTopToBannerConstraint.isActive = false
     }
-}
-
-class TallProgressBarView: UIProgressView {
-    
-    override func layoutSubviews() {
-         super.layoutSubviews()
-
-         let maskLayerPath = UIBezierPath(roundedRect: bounds, cornerRadius: 6.0)
-         let maskLayer = CAShapeLayer()
-         maskLayer.frame = self.bounds
-         maskLayer.path = maskLayerPath.cgPath
-         layer.mask = maskLayer
-     }
-    
 }
