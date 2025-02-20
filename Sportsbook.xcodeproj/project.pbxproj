@@ -3,7 +3,7 @@
 	archiveVersion = 1;
 	classes = {
 	};
-	objectVersion = 54;
+	objectVersion = 70;
 	objects = {
 
 /* Begin PBXBuildFile section */
@@ -5328,7 +5328,6 @@
 		6547C88E2C650BA50041409C /* CustomPageIndicator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6547C8882C650BA50041409C /* CustomPageIndicator.swift */; };
 		6547C88F2C650BA50041409C /* CustomPageIndicator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6547C8882C650BA50041409C /* CustomPageIndicator.swift */; };
 		6547C8902C650BA50041409C /* CustomPageIndicator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6547C8882C650BA50041409C /* CustomPageIndicator.swift */; };
-		6550BFA92D676BD300270C58 /* RegisterFlowDataValidationTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6550BFA82D676BD300270C58 /* RegisterFlowDataValidationTests.swift */; };
 		655E1FFE2B21E8A500C95337 /* NotificationService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 655E1FFD2B21E8A500C95337 /* NotificationService.swift */; };
 		655E20022B21E8A500C95337 /* NotificationsService.appex in Embed Foundation Extensions */ = {isa = PBXBuildFile; fileRef = 655E1FFB2B21E8A500C95337 /* NotificationsService.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
 		655E20072B21E9E100C95337 /* OptimoveNotificationServiceExtension in Frameworks */ = {isa = PBXBuildFile; productRef = 655E20062B21E9E100C95337 /* OptimoveNotificationServiceExtension */; };
@@ -9241,6 +9240,13 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
+		6550BFB22D67706800270C58 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 455A0C4826BD902C00EC572D /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 45F6BAA72AB3732C00C81DE1;
+			remoteInfo = "Betsson UAT";
+		};
 		655E20002B21E8A500C95337 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = 455A0C4826BD902C00EC572D /* Project object */;
@@ -9764,7 +9770,7 @@
 		6547C8752C63C0AC0041409C /* HeroCardSecondaryMarketCollectionViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HeroCardSecondaryMarketCollectionViewCell.swift; sourceTree = "<group>"; };
 		6547C87F2C63DBF00041409C /* CustomPageControl.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomPageControl.swift; sourceTree = "<group>"; };
 		6547C8882C650BA50041409C /* CustomPageIndicator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomPageIndicator.swift; sourceTree = "<group>"; };
-		6550BFA82D676BD300270C58 /* RegisterFlowDataValidationTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RegisterFlowDataValidationTests.swift; sourceTree = "<group>"; };
+		6550BFAE2D67706800270C58 /* RegisterFlowUnitTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = RegisterFlowUnitTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		655E1FFB2B21E8A500C95337 /* NotificationsService.appex */ = {isa = PBXFileReference; explicitFileType = "wrapper.app-extension"; includeInIndex = 0; path = NotificationsService.appex; sourceTree = BUILT_PRODUCTS_DIR; };
 		655E1FFD2B21E8A500C95337 /* NotificationService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotificationService.swift; sourceTree = "<group>"; };
 		655E1FFF2B21E8A500C95337 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
@@ -10297,6 +10303,10 @@
 		F4F8C9F127C0126D0082CC08 /* FilterHistoryViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FilterHistoryViewController.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
+/* Begin PBXFileSystemSynchronizedRootGroup section */
+		6550BFAF2D67706800270C58 /* RegisterFlowUnitTests */ = {isa = PBXFileSystemSynchronizedRootGroup; explicitFileTypes = {}; explicitFolders = (); path = RegisterFlowUnitTests; sourceTree = "<group>"; };
+/* End PBXFileSystemSynchronizedRootGroup section */
+
 /* Begin PBXFrameworksBuildPhase section */
 		450B7A8F28F58574009229E3 /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
@@ -10639,6 +10649,13 @@
 				45C10F232C652AC500D187A1 /* FirebaseDatabase in Frameworks */,
 				45C10F3C2C652AC500D187A1 /* IdensicMobileSDK in Frameworks */,
 				45C10F202C652AC500D187A1 /* FirebaseAnalytics in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		6550BFAB2D67706800270C58 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -11177,6 +11194,7 @@
 				455A0C5226BD902C00EC572D /* Core */,
 				455A0C9226BD906700EC572D /* Clients */,
 				655E1FFC2B21E8A500C95337 /* NotificationsService */,
+				6550BFAF2D67706800270C58 /* RegisterFlowUnitTests */,
 				455A0C5126BD902C00EC572D /* Products */,
 				455A0D2F26BDF61200EC572D /* Frameworks */,
 			);
@@ -11197,6 +11215,7 @@
 				655E1FFB2B21E8A500C95337 /* NotificationsService.appex */,
 				CE12A4C02D31347E0022BDF7 /* SportRadar PROD.app */,
 				CEA5699C2D5A58D800696793 /* ATP.app */,
+				6550BFAE2D67706800270C58 /* RegisterFlowUnitTests.xctest */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -11223,7 +11242,6 @@
 			children = (
 				455A0C6A26BD902F00EC572D /* SportsbookTests.swift */,
 				455A0C6C26BD903000EC572D /* Info.plist */,
-				6550BFA82D676BD300270C58 /* RegisterFlowDataValidationTests.swift */,
 			);
 			path = CoreTests;
 			sourceTree = "<group>";
@@ -14814,6 +14832,29 @@
 			productReference = 45F6BE372AB3732C00C81DE1 /* Betsson UAT.app */;
 			productType = "com.apple.product-type.application";
 		};
+		6550BFAD2D67706800270C58 /* RegisterFlowUnitTests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 6550BFB62D67706800270C58 /* Build configuration list for PBXNativeTarget "RegisterFlowUnitTests" */;
+			buildPhases = (
+				6550BFAA2D67706800270C58 /* Sources */,
+				6550BFAB2D67706800270C58 /* Frameworks */,
+				6550BFAC2D67706800270C58 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				6550BFB32D67706800270C58 /* PBXTargetDependency */,
+			);
+			fileSystemSynchronizedGroups = (
+				6550BFAF2D67706800270C58 /* RegisterFlowUnitTests */,
+			);
+			name = RegisterFlowUnitTests;
+			packageProductDependencies = (
+			);
+			productName = RegisterFlowUnitTests;
+			productReference = 6550BFAE2D67706800270C58 /* RegisterFlowUnitTests.xctest */;
+			productType = "com.apple.product-type.bundle.unit-test";
+		};
 		655E1FFA2B21E8A500C95337 /* NotificationsService */ = {
 			isa = PBXNativeTarget;
 			buildConfigurationList = 655E20032B21E8A500C95337 /* Build configuration list for PBXNativeTarget "NotificationsService" */;
@@ -15007,12 +15048,16 @@
 			isa = PBXProject;
 			attributes = {
 				BuildIndependentTargetsInParallel = YES;
-				LastSwiftUpdateCheck = 1500;
+				LastSwiftUpdateCheck = 1600;
 				LastUpgradeCheck = 1610;
 				TargetAttributes = {
 					455A0C6526BD902F00EC572D = {
 						CreatedOnToolsVersion = 12.5.1;
 						TestTargetID = 455A0C4F26BD902C00EC572D;
+					};
+					6550BFAD2D67706800270C58 = {
+						CreatedOnToolsVersion = 16.0;
+						TestTargetID = 45F6BAA72AB3732C00C81DE1;
 					};
 					655E1FFA2B21E8A500C95337 = {
 						CreatedOnToolsVersion = 15.0.1;
@@ -15066,6 +15111,7 @@
 				457CBC6C282D2CD100ED0F00 /* Crocobet */,
 				455A0C6526BD902F00EC572D /* SportsbookTests */,
 				655E1FFA2B21E8A500C95337 /* NotificationsService */,
+				6550BFAD2D67706800270C58 /* RegisterFlowUnitTests */,
 			);
 		};
 /* End PBXProject section */
@@ -16131,6 +16177,13 @@
 				45F6BE302AB3732C00C81DE1 /* RootViewController.xib in Resources */,
 				45F6BE312AB3732C00C81DE1 /* MyTicketBetLineView.xib in Resources */,
 				45F6BE322AB3732C00C81DE1 /* OddTripleCollectionViewCell.xib in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		6550BFAC2D67706800270C58 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -17544,7 +17597,6 @@
 				A9B6305D29102BF900BB850E /* RecoverPasswordViewController.swift in Sources */,
 				A9DF8E0728DDF64C0083BF56 /* UserInfoMultipleCardView.swift in Sources */,
 				450B7B4628F637FB009229E3 /* ServiceProviderModelMapper+Sports.swift in Sources */,
-				6550BFA92D676BD300270C58 /* RegisterFlowDataValidationTests.swift in Sources */,
 				A99DE669299E825900AA24AA /* RecoverPasswordViewModel.swift in Sources */,
 				A9A43C7F2A4B2B68008FB399 /* RibDocsViewModel.swift in Sources */,
 				A99DE67B29A643F800AA24AA /* PaymentStatus.swift in Sources */,
@@ -22040,6 +22092,13 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		6550BFAA2D67706800270C58 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		655E1FF72B21E8A500C95337 /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
@@ -24251,6 +24310,11 @@
 /* End PBXSourcesBuildPhase section */
 
 /* Begin PBXTargetDependency section */
+		6550BFB32D67706800270C58 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 45F6BAA72AB3732C00C81DE1 /* Betsson UAT */;
+			targetProxy = 6550BFB22D67706800270C58 /* PBXContainerItemProxy */;
+		};
 		655E20012B21E8A500C95337 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
 			target = 655E1FFA2B21E8A500C95337 /* NotificationsService */;
@@ -24927,6 +24991,60 @@
 			};
 			name = Release;
 		};
+		6550BFB42D67706800270C58 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_GENERATE_SWIFT_ASSET_SYMBOL_EXTENSIONS = YES;
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++20";
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				DEVELOPMENT_TEAM = QN2DYX5K4M;
+				ENABLE_USER_SCRIPT_SANDBOXING = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu17;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				GENERATE_INFOPLIST_FILE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 18.0;
+				LOCALIZATION_PREFERS_STRING_CATALOGS = YES;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.gomagaming.sportsbook.RegisterFlowUnitTests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = "DEBUG $(inherited)";
+				SWIFT_EMIT_LOC_STRINGS = NO;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/Betsson UAT.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/Betsson UAT";
+			};
+			name = Debug;
+		};
+		6550BFB52D67706800270C58 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_GENERATE_SWIFT_ASSET_SYMBOL_EXTENSIONS = YES;
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++20";
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = QN2DYX5K4M;
+				ENABLE_USER_SCRIPT_SANDBOXING = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu17;
+				GENERATE_INFOPLIST_FILE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 18.0;
+				LOCALIZATION_PREFERS_STRING_CATALOGS = YES;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.gomagaming.sportsbook.RegisterFlowUnitTests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_EMIT_LOC_STRINGS = NO;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/Betsson UAT.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/Betsson UAT";
+			};
+			name = Release;
+		};
 		655E20042B21E8A500C95337 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
@@ -25278,6 +25396,15 @@
 			buildConfigurations = (
 				45F6BE352AB3732C00C81DE1 /* Debug */,
 				45F6BE362AB3732C00C81DE1 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		6550BFB62D67706800270C58 /* Build configuration list for PBXNativeTarget "RegisterFlowUnitTests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				6550BFB42D67706800270C58 /* Debug */,
+				6550BFB52D67706800270C58 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;

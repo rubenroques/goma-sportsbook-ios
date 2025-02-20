@@ -67,6 +67,10 @@ public class UserRegisterEnvelopUpdater {
         self.userRegisterEnvelop = userRegisterEnvelop
         self.filledDataUpdated = .init(userRegisterEnvelop)
     }
+    
+    public func getUserRegisterEnvelop() -> UserRegisterEnvelop {
+        return self.userRegisterEnvelop
+    }
 
     public func setGender(_ gender: UserRegisterEnvelop.Gender) {
         var newUserEnvelop = self.userRegisterEnvelop

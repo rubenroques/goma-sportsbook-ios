@@ -36,7 +36,7 @@ public class SteppedRegistrationViewModel {
     public var userRegisterEnvelop: UserRegisterEnvelop
 
     let serviceProvider: ServicesProviderClient
-    let userRegisterEnvelopUpdater: UserRegisterEnvelopUpdater
+    public let userRegisterEnvelopUpdater: UserRegisterEnvelopUpdater
 
     var isLoading: CurrentValueSubject<Bool, Never> = .init(false)
 
