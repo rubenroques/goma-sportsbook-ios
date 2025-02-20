@@ -353,7 +353,7 @@ extension ServicesProviderClient {
         return eventsProvider.subscribeEventMarkets(eventId: eventId)
     }
 
-    func subscribeSportTypes() -> AnyPublisher<SubscribableContent<[SportType]>, ServiceProviderError> {
+    public func subscribeSportTypes() -> AnyPublisher<SubscribableContent<[SportType]>, ServiceProviderError> {
          guard
             let eventsProvider = self.eventsProvider
         else {
@@ -362,7 +362,7 @@ extension ServicesProviderClient {
         return eventsProvider.subscribeSportTypes()
     }
 
-    func addFavoriteToList(listId: Int, eventId: String) -> AnyPublisher<FavoriteAddResponse, ServiceProviderError> {
+    public func addFavoriteToList(listId: Int, eventId: String) -> AnyPublisher<FavoriteAddResponse, ServiceProviderError> {
         guard
             let eventsProvider = self.eventsProvider
         else {
@@ -371,7 +371,7 @@ extension ServicesProviderClient {
         return eventsProvider.addFavoriteToList(listId: listId, eventId: eventId)
     }
 
-    func getAlertBanners() -> AnyPublisher<[AlertBanner], ServiceProviderError> {
+    public func getAlertBanners() -> AnyPublisher<[AlertBanner], ServiceProviderError> {
         guard
             let eventsProvider = self.eventsProvider
         else {
@@ -380,7 +380,7 @@ extension ServicesProviderClient {
         return eventsProvider.getAlertBanners()
     }
 
-    func getNews() -> AnyPublisher<[News], ServiceProviderError> {
+    public func getNews() -> AnyPublisher<[News], ServiceProviderError> {
         guard
             let eventsProvider = self.eventsProvider
         else {
@@ -389,7 +389,7 @@ extension ServicesProviderClient {
         return eventsProvider.getNews()
     }
 
-    func getPromotedEventGroupsPointers() -> AnyPublisher<[EventGroupPointer], ServiceProviderError> {
+    public func getPromotedEventGroupsPointers() -> AnyPublisher<[EventGroupPointer], ServiceProviderError> {
         guard
             let eventsProvider = self.eventsProvider
         else {
@@ -398,7 +398,7 @@ extension ServicesProviderClient {
         return eventsProvider.getPromotedEventGroupsPointers()
     }
 
-    func getPromotedEventsGroups() -> AnyPublisher<[EventsGroup], ServiceProviderError> {
+    public func getPromotedEventsGroups() -> AnyPublisher<[EventsGroup], ServiceProviderError> {
         guard
             let eventsProvider = self.eventsProvider
         else {
@@ -407,7 +407,7 @@ extension ServicesProviderClient {
         return eventsProvider.getPromotedEventsGroups()
     }
 
-    func getPromotionalSlidingTopEventsPointers() -> AnyPublisher<[EventMetadataPointer], ServiceProviderError> {
+    public func getPromotionalSlidingTopEventsPointers() -> AnyPublisher<[EventMetadataPointer], ServiceProviderError> {
         guard
             let eventsProvider = self.eventsProvider
         else {
@@ -416,7 +416,7 @@ extension ServicesProviderClient {
         return eventsProvider.getPromotionalSlidingTopEventsPointers()
     }
 
-    func getHighlightedBoostedEventsPointers() -> AnyPublisher<[EventMetadataPointer], ServiceProviderError> {
+    public func getHighlightedBoostedEventsPointers() -> AnyPublisher<[EventMetadataPointer], ServiceProviderError> {
         guard
             let eventsProvider = self.eventsProvider
         else {
@@ -425,7 +425,7 @@ extension ServicesProviderClient {
         return eventsProvider.getHighlightedBoostedEventsPointers()
     }
 
-    func getHighlightedVisualImageEventsPointers() -> AnyPublisher<[EventMetadataPointer], ServiceProviderError> {
+    public func getHighlightedVisualImageEventsPointers() -> AnyPublisher<[EventMetadataPointer], ServiceProviderError> {
         guard
             let eventsProvider = self.eventsProvider
         else {
@@ -434,7 +434,7 @@ extension ServicesProviderClient {
         return eventsProvider.getHighlightedVisualImageEventsPointers()
     }
 
-    func getPromotedEventsBySport() -> AnyPublisher<[SportType : [Event]], ServiceProviderError> {
+    public func getPromotedEventsBySport() -> AnyPublisher<[SportType : [Event]], ServiceProviderError> {
         guard
             let eventsProvider = self.eventsProvider
         else {
@@ -443,7 +443,7 @@ extension ServicesProviderClient {
         return eventsProvider.getPromotedEventsBySport()
     }
 
-    func addFavoriteItem(favoriteId: Int, type: String) -> AnyPublisher<BasicMessageResponse, ServiceProviderError> {
+    public func addFavoriteItem(favoriteId: Int, type: String) -> AnyPublisher<BasicMessageResponse, ServiceProviderError> {
         guard
             let eventsProvider = self.eventsProvider
         else {
@@ -452,7 +452,7 @@ extension ServicesProviderClient {
         return eventsProvider.addFavoriteItem(favoriteId: favoriteId, type: type)
     }
 
-    func deleteFavoriteItem(favoriteId: Int, type: String) -> AnyPublisher<BasicMessageResponse, ServiceProviderError> {
+    public func deleteFavoriteItem(favoriteId: Int, type: String) -> AnyPublisher<BasicMessageResponse, ServiceProviderError> {
         guard
             let eventsProvider = self.eventsProvider
         else {
@@ -461,7 +461,7 @@ extension ServicesProviderClient {
         return eventsProvider.deleteFavoriteItem(favoriteId: favoriteId, type: type)
     }
 
-    func getFeaturedTips(page: Int?, limit: Int?, topTips: Bool?, followersTips: Bool?, friendsTips: Bool?, userId: String?, homeTips: Bool?) -> AnyPublisher<FeaturedTips, ServiceProviderError> {
+    public func getFeaturedTips(page: Int?, limit: Int?, topTips: Bool?, followersTips: Bool?, friendsTips: Bool?, userId: String?, homeTips: Bool?) -> AnyPublisher<FeaturedTips, ServiceProviderError> {
         guard
             let eventsProvider = self.eventsProvider
         else {
@@ -1270,7 +1270,7 @@ extension ServicesProviderClient {
         return bettingProvider.updateBetslipSettings(betslipSettings)
     }
 
-    func getBetHistory(pageIndex: Int) -> AnyPublisher<BettingHistory, ServiceProviderError> {
+    public func getBetHistory(pageIndex: Int) -> AnyPublisher<BettingHistory, ServiceProviderError> {
         guard
             let bettingProvider = self.bettingProvider
         else {
@@ -1279,7 +1279,7 @@ extension ServicesProviderClient {
         return bettingProvider.getBetHistory(pageIndex: pageIndex)
     }
 
-    func updateTicketOdds(betId: String) -> AnyPublisher<Bet, ServiceProviderError> {
+    public func updateTicketOdds(betId: String) -> AnyPublisher<Bet, ServiceProviderError> {
         guard
             let bettingProvider = self.bettingProvider
         else {
@@ -1288,7 +1288,7 @@ extension ServicesProviderClient {
         return bettingProvider.updateTicketOdds(betId: betId)
     }
 
-    func getTicketQRCode(betId: String) -> AnyPublisher<BetQRCode, ServiceProviderError> {
+    public func getTicketQRCode(betId: String) -> AnyPublisher<BetQRCode, ServiceProviderError> {
         guard
             let bettingProvider = self.bettingProvider
         else {
@@ -1297,7 +1297,7 @@ extension ServicesProviderClient {
         return bettingProvider.getTicketQRCode(betId: betId)
     }
 
-    func getSocialSharedTicket(shareId: String) -> AnyPublisher<Bet, ServiceProviderError> {
+    public func getSocialSharedTicket(shareId: String) -> AnyPublisher<Bet, ServiceProviderError> {
         guard
             let bettingProvider = self.bettingProvider
         else {
@@ -1306,7 +1306,7 @@ extension ServicesProviderClient {
         return bettingProvider.getSocialSharedTicket(shareId: shareId)
     }
 
-    func deleteTicket(betId: String) -> AnyPublisher<Bool, ServiceProviderError> {
+    public func deleteTicket(betId: String) -> AnyPublisher<Bool, ServiceProviderError> {
         guard
             let bettingProvider = self.bettingProvider
         else {
@@ -1315,7 +1315,7 @@ extension ServicesProviderClient {
         return bettingProvider.deleteTicket(betId: betId)
     }
 
-    func updateTicket(betId: String, betTicket: BetTicket) -> AnyPublisher<PlacedBetsResponse, ServiceProviderError> {
+    public func updateTicket(betId: String, betTicket: BetTicket) -> AnyPublisher<PlacedBetsResponse, ServiceProviderError> {
         guard
             let bettingProvider = self.bettingProvider
         else {
@@ -1752,15 +1752,13 @@ extension ServicesProviderClient {
         let vaixAnalyticsEvent = SportRadarModelMapper.vaixAnalyticsEvent(fromAnalyticsTrackedEvent: event)
 
         return analyticsProvider.trackEvent(vaixAnalyticsEvent, userIdentifer: userIdentifer).eraseToAnyPublisher()
-
     }
-
+    
 }
-
 
 extension ServicesProviderClient {
 
-    func updateDeviceIdentifier(deviceIdentifier: String) -> AnyPublisher<BasicResponse, ServiceProviderError> {
+    public func updateDeviceIdentifier(deviceIdentifier: String) -> AnyPublisher<BasicResponse, ServiceProviderError> {
         guard
             let promotionsProvider = self.promotionsProvider
         else {
@@ -1770,7 +1768,7 @@ extension ServicesProviderClient {
         return promotionsProvider.updateDeviceIdentifier(deviceIdentifier: deviceIdentifier)
     }
 
-    func isPromotionsProviderEnabled(isEnabled: Bool) -> AnyPublisher<Bool, ServiceProviderError> {
+    public func isPromotionsProviderEnabled(isEnabled: Bool) -> AnyPublisher<Bool, ServiceProviderError> {
         guard
             let promotionsProvider = self.promotionsProvider
         else {
@@ -1780,7 +1778,7 @@ extension ServicesProviderClient {
         return promotionsProvider.isPromotionsProviderEnabled(isEnabled: isEnabled)
     }
 
-    func login(username: String, password: String) -> AnyPublisher<UserProfile, ServiceProviderError> {
+    public func login(username: String, password: String) -> AnyPublisher<UserProfile, ServiceProviderError> {
         guard
             let promotionsProvider = self.promotionsProvider
         else {
@@ -1790,7 +1788,7 @@ extension ServicesProviderClient {
         return promotionsProvider.login(username: username, password: password)
     }
 
-    func anonymousLogin() -> AnyPublisher<String, ServiceProviderError> {
+    public func anonymousLogin() -> AnyPublisher<String, ServiceProviderError> {
         guard
             let promotionsProvider = self.promotionsProvider
         else {
@@ -1800,7 +1798,7 @@ extension ServicesProviderClient {
         return promotionsProvider.anonymousLogin()
     }
 
-    func logoutUser() -> AnyPublisher<String, ServiceProviderError> {
+    public func logoutUser() -> AnyPublisher<String, ServiceProviderError> {
         guard
             let promotionsProvider = self.promotionsProvider
         else {
@@ -1810,7 +1808,7 @@ extension ServicesProviderClient {
         return promotionsProvider.logoutUser()
     }
 
-    func basicSignUp(form: SignUpForm) -> AnyPublisher<DetailedSignUpResponse, ServiceProviderError> {
+    public func basicSignUp(form: SignUpForm) -> AnyPublisher<DetailedSignUpResponse, ServiceProviderError> {
         guard
             let promotionsProvider = self.promotionsProvider
         else {

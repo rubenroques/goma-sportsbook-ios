@@ -25,17 +25,21 @@ class SportRadarEventsProvider: EventsProvider {
 
     private var cancellables = Set<AnyCancellable>()
 
+    private var sportsMerger: SportsMerger?
+
     required init(sessionCoordinator: SportRadarSessionCoordinator,
                   socketConnector: SportRadarSocketConnector = SportRadarSocketConnector(),
                   restConnector: SportRadarRestConnector = SportRadarRestConnector()) {
+        print("[SPORTSBOOK][PROVIDER] Initializing SportRadarEventsProvider")
         self.sessionCoordinator = sessionCoordinator
 
         self.socketConnector = socketConnector
         self.restConnector = restConnector
 
         self.socketConnector.connectionStatePublisher.sink { completion in
-            print("socketConnector connectionStatePublisher completed")
+            print("[SPORTSBOOK][SOCKET] Socket connection publisher completed")
         } receiveValue: { [weak self] connectorState in
+            print("[SPORTSBOOK][SOCKET] Socket connection state changed to: \(connectorState)")
             self?.connectionStateSubject.send(connectorState)
         }
         .store(in: &self.cancellables)
@@ -43,10 +47,11 @@ class SportRadarEventsProvider: EventsProvider {
         self.sessionCoordinator.token(forKey: .launchToken)
             .sink { [weak self] launchToken in
                 if let launchTokenValue = launchToken  {
-                    print("LAUCH TOKEN: \(launchTokenValue)")
+                    print("[SPORTSBOOK][PROVIDER] Launch token received: \(launchTokenValue)")
                     self?.restConnector.saveSessionKey(launchTokenValue)
                 }
                 else {
+                    print("[SPORTSBOOK][PROVIDER] No launch token available, clearing session key")
                     self?.restConnector.clearSessionKey()
                 }
             }
@@ -57,20 +62,21 @@ class SportRadarEventsProvider: EventsProvider {
             .compactMap({ $0 })
             .withPrevious()
             .sink(receiveValue: { [weak self] (oldToken, newToken) in
-
+                print("[SPORTSBOOK][SOCKET] Socket token updated")
                 self?.sessionCoordinator.saveToken(newToken.hash, withKey: .socketSessionToken)
 
                 if let oldToken, oldToken != newToken {
-                    print("ServiceProvider SportRadarSocketConnector: [\(oldToken)] -> [\(newToken)] Has reconnected")
+                    print("[SPORTSBOOK][SOCKET] Socket reconnected with new token: \(newToken.hash)")
                     self?.subscribePreviousTopics(withNewSocketToken: newToken.hash)
                 }
                 else {
-                    print("ServiceProvider SportRadarSocketConnector: [\(newToken)] initial connection")
+                    print("[SPORTSBOOK][SOCKET] Initial socket connection with token: \(newToken.hash)")
                 }
             })
             .store(in: &self.cancellables)
 
         self.socketConnector.messageSubscriber = self
+        print("[SPORTSBOOK][SOCKET] Initiating socket connection")
         self.socketConnector.connect()
 
     }
@@ -103,25 +109,31 @@ class SportRadarEventsProvider: EventsProvider {
     private let defaultEventCount = 10
 
     func reconnectIfNeeded() {
+        print("[SPORTSBOOK][SOCKET] Attempting socket reconnection if needed")
         self.socketConnector.refreshConnection()
     }
 
     func subscribePreviousTopics(withNewSocketToken newSocketToken: String) {
+        print("[SPORTSBOOK][PROVIDER] Resubscribing to previous topics with new socket token")
         self.eventsPaginators = self.eventsPaginators.filter { $0.value.isActive }
         for paginator in self.eventsPaginators.values where paginator.isActive {
+            print("[SPORTSBOOK][PROVIDER] Reconnecting paginator")
             paginator.reconnect(withNewSessionToken: newSocketToken)
         }
 
         for eventDetailsCoordinator in self.getValidEventDetailsCoordinators() {
+            print("[SPORTSBOOK][PROVIDER] Reconnecting event details coordinator")
             eventDetailsCoordinator.reconnect(withNewSessionToken: newSocketToken)
         }
 
         for liveEventDetailsCoordinator in self.getValidLiveEventDetailsCoordinators() {
+            print("[SPORTSBOOK][PROVIDER] Reconnecting live event details coordinator")
             liveEventDetailsCoordinator.reconnect(withNewSessionToken: newSocketToken)
         }
 
         self.marketUpdatesCoordinators = self.marketUpdatesCoordinators.filter { $0.value.isActive }
         for marketUpdatesCoordinator in self.marketUpdatesCoordinators.values {
+            print("[SPORTSBOOK][PROVIDER] Reconnecting market updates coordinator")
             marketUpdatesCoordinator.reconnect(withNewSessionToken: newSocketToken)
         }
     }
@@ -320,201 +332,51 @@ class SportRadarEventsProvider: EventsProvider {
             return publisher.eraseToAnyPublisher()
         }
     }
-    
+
     func subscribeSportTypes() -> AnyPublisher<SubscribableContent<[SportType]>, ServiceProviderError> {
-        fatalError("TODO: SP Merge - subscribePreLiveSportTypes , subscribeAllSportTypes and subscribeLiveSportTypes should all be merged into -> subscribeSportTypes ")
-    }
-
-    func subscribeLiveSportTypes() -> AnyPublisher<SubscribableContent<[SportType]>, ServiceProviderError> {
-
-        guard
-            let sessionToken = self.socketConnector.token
-        else {
+        print("[SPORTSBOOK][PROVIDER] Starting sports types subscription")
+        guard let sessionToken = self.socketConnector.token else {
+            print("[SPORTSBOOK][PROVIDER] Failed to subscribe to sport types: No session token available")
             return Fail(error: ServiceProviderError.userSessionNotFound).eraseToAnyPublisher()
         }
 
-        let contentType = ContentType.liveSports
-        let contentRoute = ContentRoute.liveSports
-        let contentIdentifier = ContentIdentifier(contentType: contentType, contentRoute: contentRoute)
-
-        let liveSportsSubscription = self.liveSportsSubscription ?? Subscription(contentIdentifier: contentIdentifier, sessionToken: sessionToken.hash, unsubscriber: self)
-        self.liveSportsSubscription = liveSportsSubscription
-
-        let endpoint = SportRadarRestAPIClient.subscribe(sessionToken: sessionToken.hash, contentIdentifier: contentIdentifier)
-
-        if let liveSportTypesPublisher = self.liveSportTypesPublisher {
-            if case let .connected(liveSportsSubscription) = liveSportTypesPublisher.value {
-                return liveSportTypesPublisher
-                    .prepend(.connected(subscription: liveSportsSubscription))
-                    .eraseToAnyPublisher()
-            }
-            else if case .contentUpdate(_) = liveSportTypesPublisher.value {
-                return liveSportTypesPublisher
-                    .prepend(.connected(subscription: liveSportsSubscription))
-                    .eraseToAnyPublisher()
-            }
-            else {
-                return liveSportTypesPublisher.eraseToAnyPublisher()
-            }
-        }
-        else {
-            self.liveSportTypesPublisher = CurrentValueSubject<SubscribableContent<[SportType]>, ServiceProviderError>.init(.disconnected)
+        if let existingMerger = sportsMerger, existingMerger.isActive {
+            print("[SPORTSBOOK][PROVIDER] Reusing existing active sports merger")
+            return existingMerger.sportsPublisher
         }
 
-        guard
-            let publisher = self.liveSportTypesPublisher,
-            let request = endpoint.request()
-        else {
-            return Fail(error: ServiceProviderError.invalidRequestFormat).eraseToAnyPublisher()
-        }
+        print("[SPORTSBOOK][PROVIDER] Creating new SportsMerger instance")
+        let merger = SportsMerger(sessionToken: sessionToken.hash)
+        self.sportsMerger = merger
+        self.socketConnector.messageSubscriber = self
+        print("[SPORTSBOOK][PROVIDER] SportsMerger created and message subscriber set")
 
-        let sessionDataTask = URLSession.shared.dataTask(with: request) { data, response, error in
+        return merger.sportsPublisher
+    }
 
-            if error == nil, let httpResponse = response as? HTTPURLResponse, (200...299).contains(httpResponse.statusCode) {
-                publisher.send(.connected(subscription: liveSportsSubscription))
-            }
-            else if let httpResponse = response as? HTTPURLResponse,
-                        httpResponse.statusCode == 403,
-                        let dataValue = data,
-                        let stringData = String(data: dataValue, encoding: .utf8),
-                        stringData.lowercased().contains("unauthorised location")
-            {
-                publisher.send(completion: .failure(ServiceProviderError.invalidUserLocation))
-            }
-            else {
-                publisher.send(completion: .failure(ServiceProviderError.onSubscribe))
-            }
-
-        }
-
-        sessionDataTask.resume()
-        return publisher.eraseToAnyPublisher()
+    // Remove these methods as they are now handled by SportsMerger
+    func subscribeLiveSportTypes() -> AnyPublisher<SubscribableContent<[SportType]>, ServiceProviderError> {
+        fatalError("Use subscribeSportTypes() instead")
     }
 
     func subscribeAllSportTypes() -> AnyPublisher<SubscribableContent<[SportType]>, ServiceProviderError> {
-
-        guard
-            let sessionToken = self.socketConnector.token
-        else {
-            return Fail(error: ServiceProviderError.userSessionNotFound).eraseToAnyPublisher()
-        }
-
-        let contentType = ContentType.allSports
-        let contentRoute = ContentRoute.allSports
-        let contentIdentifier = ContentIdentifier(contentType: contentType, contentRoute: contentRoute)
-
-        let allSportsSubscription = self.allSportTypesSubscription ?? Subscription(contentIdentifier: contentIdentifier, sessionToken: sessionToken.hash, unsubscriber: self)
-        self.allSportTypesSubscription = allSportsSubscription
-
-        let endpoint = SportRadarRestAPIClient.subscribe(sessionToken: sessionToken.hash, contentIdentifier: contentIdentifier)
-
-        if let allSportsListTypesPublisher = self.allSportsListTypesPublisher {
-            if case let .connected(allSportsSubscription) = allSportsListTypesPublisher.value {
-                return allSportsListTypesPublisher
-                    .prepend(.connected(subscription: allSportsSubscription))
-                    .eraseToAnyPublisher()
-            }
-            else if case .contentUpdate(_) = allSportsListTypesPublisher.value {
-                return allSportsListTypesPublisher
-                    .prepend(.connected(subscription: allSportsSubscription))
-                    .eraseToAnyPublisher()
-            }
-            else {
-                return allSportsListTypesPublisher.eraseToAnyPublisher()
-            }
-        }
-        else {
-            self.allSportsListTypesPublisher = CurrentValueSubject<SubscribableContent<[SportType]>, ServiceProviderError>.init(.disconnected)
-        }
-
-        guard
-            let publisher = self.allSportsListTypesPublisher,
-            let request = endpoint.request()
-        else {
-            self.allSportsListTypesPublisher = nil
-            self.allSportTypesSubscription = nil
-            return Fail(error: ServiceProviderError.invalidRequestFormat).eraseToAnyPublisher()
-        }
-
-        let sessionDataTask = URLSession.shared.dataTask(with: request) { data, response, error in
-
-            if error == nil, let httpResponse = response as? HTTPURLResponse, (200...299).contains(httpResponse.statusCode) {
-                publisher.send(.connected(subscription: allSportsSubscription))
-            }
-            else if let httpResponse = response as? HTTPURLResponse,
-                        httpResponse.statusCode == 403,
-                        let dataValue = data,
-                        let stringData = String(data: dataValue, encoding: .utf8),
-                        stringData.lowercased().contains("unauthorised location")
-            {
-                publisher.send(completion: .failure(ServiceProviderError.invalidUserLocation))
-            }
-            else {
-                publisher.send(completion: .failure(ServiceProviderError.onSubscribe))
-            }
-
-        }
-
-        sessionDataTask.resume()
-        return publisher.eraseToAnyPublisher()
+        fatalError("Use subscribeSportTypes() instead")
     }
 
     func subscribePreLiveSportTypes(initialDate: Date? = nil, endDate: Date? = nil) -> AnyPublisher<SubscribableContent<[SportType]>, ServiceProviderError> {
-        if self.allSportTypesPublisher == nil {
-            self.allSportTypesPublisher = CurrentValueSubject<SubscribableContent<[SportType]>, ServiceProviderError>.init(.disconnected)
-        }
-
-        guard
-            let sessionToken = socketConnector.token,
-            let publisher = self.allSportTypesPublisher
-        else {
-            return Fail(error: ServiceProviderError.userSessionNotFound).eraseToAnyPublisher()
-        }
-
-        let contentType = ContentType.preLiveSports
-        let contentRoute = ContentRoute.preLiveSports(startDate: initialDate, endDate: endDate)
-        let contentIdentifier = ContentIdentifier(contentType: contentType, contentRoute: contentRoute)
-
-        let preLiveSportsSubscription = Subscription(contentIdentifier: contentIdentifier, sessionToken: sessionToken.hash, unsubscriber: self)
-
-        let endpoint = SportRadarRestAPIClient.subscribe(sessionToken: sessionToken.hash, contentIdentifier: contentIdentifier)
-
-        guard
-            let request = endpoint.request()
-        else {
-            return Fail(error: ServiceProviderError.invalidRequestFormat).eraseToAnyPublisher()
-        }
-
-        let sessionDataTask = URLSession.shared.dataTask(with: request) { data, response, error in
-
-            guard
-                error == nil,
-                let httpResponse = response as? HTTPURLResponse,
-                (200...299).contains(httpResponse.statusCode)
-            else {
-                print("ServiceProvider subscribePreLiveSportTypes \(error) \(response)")
-                publisher.send(completion: .failure(ServiceProviderError.onSubscribe))
-                return
-            }
-
-            // TODO: send subscription
-            publisher.send(.connected(subscription: preLiveSportsSubscription))
-        }
-
-        sessionDataTask.resume()
-        return publisher.eraseToAnyPublisher()
+        fatalError("Use subscribeSportTypes() instead")
     }
-    
+
     //
     //
     func subscribeEndedMatches(forSportType sportType: SportType) -> AnyPublisher<SubscribableContent<[EventsGroup]>, ServiceProviderError> {
         return Fail(error: ServiceProviderError.notSupportedForProvider).eraseToAnyPublisher()
     }
-    
+
     func requestEndedMatchesNextPage(forSportType sportType: SportType) -> AnyPublisher<Bool, ServiceProviderError> {
         return Fail(error: ServiceProviderError.notSupportedForProvider).eraseToAnyPublisher()
     }
-    
+
     //
     func subscribeOutrightEvent(forMarketGroupId marketGroupId: String) -> AnyPublisher<SubscribableContent<Event>, ServiceProviderError> {
 
@@ -804,6 +666,9 @@ class SportRadarEventsProvider: EventsProvider {
 //
 extension SportRadarEventsProvider: SportRadarConnectorSubscriber {
 
+    //
+    // EVENTS
+    //
     func liveEventsUpdated(forContentIdentifier identifier: ContentIdentifier, withEvents events: [EventsGroup]) {
         if let eventPaginator = self.eventsPaginators[identifier.pageableId] {
             let flattenedEvents = events.flatMap({ $0.events })
@@ -818,47 +683,18 @@ extension SportRadarEventsProvider: SportRadarConnectorSubscriber {
         }
     }
 
+    //
+    // SPORTS
+    //
+    // Update the socket delegate methods to use SportsMerger
     func liveSportsUpdated(withSportTypes sportTypes: [SportRadarModels.SportType]) {
-        if let liveSportTypesPublisher = self.liveSportTypesPublisher {
-
-            let externalSports = sportTypes.map(SportRadarModelMapper.sportType(fromSportRadarSportType:))
-
-            // Navigation Sports
-            let sportsEndpoint = SportRadarRestAPIClient.sportsBoNavigationList
-            let sportsRequestPublisher: AnyPublisher<SportRadarModels.RestResponse<SportRadarModels.SportsList>, ServiceProviderError> = self.restConnector.request(sportsEndpoint)
-            sportsRequestPublisher
-                .sink { _ in
-
-                } receiveValue: { numericSports in
-                    var compleatedExternalSportTypes = [SportType]()
-                    let newNumericSports = (numericSports.data?.sportNodes ?? []).map(SportRadarModelMapper.sportType(fromSportNode:))
-                    for externalSport in externalSports {
-                        var numericSportId: String?
-                        for numericSport in newNumericSports { // Try to find a numeric Id from the boNavigationList of sports
-                            if externalSport.name.lowercased() == numericSport.name.lowercased() {
-                                numericSportId = numericSport.numericId
-                            }
-                        }
-                        let compleatedExternalSportType = SportType(name: externalSport.name,
-                                  numericId: numericSportId,
-                                  alphaId: externalSport.alphaId,
-                                  iconId: externalSport.iconId,
-                                  showEventCategory: externalSport.showEventCategory,
-                                  numberEvents: externalSport.numberEvents,
-                                  numberOutrightEvents: externalSport.numberOutrightEvents,
-                                  numberOutrightMarkets: externalSport.numberOutrightMarkets,
-                                                                    numberLiveEvents: externalSport.numberLiveEvents)
-
-                        compleatedExternalSportTypes.append(compleatedExternalSportType)
-                    }
-                    liveSportTypesPublisher.send(.contentUpdate(content: compleatedExternalSportTypes))
-                }
-                .store(in: &self.cancellables)
-
-        }
+        print("[SPORTSBOOK][DELEGATE] Received live sports update with \(sportTypes.count) sports")
+        let sports = sportTypes.map(SportRadarModelMapper.sportType(fromSportRadarSportType:))
+        sportsMerger?.updateSports(sports, forContentIdentifier: ContentIdentifier(contentType: .liveSports, contentRoute: .liveSports))
     }
 
     func preLiveSportsUpdated(withSportTypes sportTypes: [SportRadarModels.SportType]) {
+        print("[SPORTSBOOK][DELEGATE] Received pre-live sports update with \(sportTypes.count) sports")
         if let allSportTypesPublisher = self.allSportTypesPublisher {
             let sports = sportTypes.map(SportRadarModelMapper.sportType(fromSportRadarSportType:))
             allSportTypesPublisher.send(.contentUpdate(content: sports))
@@ -866,49 +702,33 @@ extension SportRadarEventsProvider: SportRadarConnectorSubscriber {
     }
 
     func allSportsUpdated(withSportTypes sportTypes: [SportRadarModels.SportType]) {
-
-        if let allSportsListTypesPublisher = self.allSportsListTypesPublisher {
-            let sports = sportTypes.map(SportRadarModelMapper.sportType(fromSportRadarSportType:))
-            allSportsListTypesPublisher.send(.contentUpdate(content: sports))
-        }
+        print("[SPORTSBOOK][DELEGATE] Received all sports update with \(sportTypes.count) sports")
+        let sports = sportTypes.map(SportRadarModelMapper.sportType(fromSportRadarSportType:))
+        sportsMerger?.updateSports(sports, forContentIdentifier: ContentIdentifier(contentType: .allSports, contentRoute: .allSports))
     }
 
+
     func updateSportLiveCount(nodeId: String, liveCount: Int) {
-        if let allSportsListTypesPublisher = self.allSportsListTypesPublisher {
-            let content = allSportsListTypesPublisher.value
-            switch content {
-            case .contentUpdate(let content):
-                var sportTypes = content
-
-                if let sportIndex = sportTypes.firstIndex(where: {$0.numericId == nodeId}) {
-                    sportTypes[sportIndex].numberLiveEvents = liveCount
-
-                    allSportsListTypesPublisher.send(.contentUpdate(content: sportTypes))
-                }
-            default:
-                ()
-            }
+        print("[SPORTSBOOK][DELEGATE] Updating live count for sport \(nodeId): \(liveCount)")
+        guard let merger = self.sportsMerger else {
+            print("[SPORTSBOOK][DELEGATE] Error: SportsMerger not available")
+            return
         }
+        merger.updateSportLiveCount(nodeId: nodeId, liveCount: liveCount)
     }
 
     func updateSportEventCount(nodeId: String, eventCount: Int) {
-        if let allSportsListTypesPublisher = self.allSportsListTypesPublisher {
-            let content = allSportsListTypesPublisher.value
-            switch content {
-            case .contentUpdate(let content):
-                var sportTypes = content
-
-                if let sportIndex = sportTypes.firstIndex(where: {$0.numericId == nodeId}) {
-                    sportTypes[sportIndex].numberEvents = eventCount
-
-                    allSportsListTypesPublisher.send(.contentUpdate(content: sportTypes))
-                }
-            default:
-                ()
-            }
+        print("[SPORTSBOOK][DELEGATE] Updating event count for sport \(nodeId): \(eventCount)")
+        guard let merger = self.sportsMerger else {
+            print("[SPORTSBOOK][DELEGATE] Error: SportsMerger not available")
+            return
         }
+        merger.updateSportEventCount(nodeId: nodeId, eventCount: eventCount)
     }
 
+    //
+    // EVENTS DETAILS
+    //
     func eventDetailsUpdated(forContentIdentifier identifier: ContentIdentifier, event: Event) {
         for eventDetailsCoordinator in self.getValidEventDetailsCoordinators() {
             eventDetailsCoordinator.updateEventDetails(event, forContentIdentifier: identifier)

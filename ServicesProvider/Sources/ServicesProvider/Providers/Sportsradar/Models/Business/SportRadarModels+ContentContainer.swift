@@ -217,7 +217,7 @@ extension SportRadarModels {
                 return .liveEvents(contentIdentifier: contentIdentifier, events: validEvents)
 
             case .liveSports:
-                let sportsTypeDetails: [FailableDecodable<SportRadarModels.SportTypeDetails>] = try container.decode([FailableDecodable<SportRadarModels.SportTypeDetails>].self, forKey: .change)
+                let sportsTypeDetails: [FailableDecodable<SportRadarModels.LiveSportTypeDetails>] = try container.decode([FailableDecodable<SportRadarModels.LiveSportTypeDetails>].self, forKey: .change)
                 let sportsTypes = sportsTypeDetails.compactMap({ $0.content }).map(\.sportType)
                 return .liveSports(sportsTypes: sportsTypes)
 
@@ -723,16 +723,15 @@ extension SportRadarModels {
             let contentIdentifier = try container.decode(ContentIdentifier.self, forKey: .content)
             let path: String = try container.decodeIfPresent(String.self, forKey: .path) ?? ""
 
-            if case let ContentRoute.liveSports = contentIdentifier.contentRoute {
+            if case ContentRoute.liveSports = contentIdentifier.contentRoute {
                 if path.contains("idfosporttype"),
-                   let newSport = try? container.decodeIfPresent(SportRadarModels.SportTypeDetails.self, forKey: .change) {
+                   let newSport = try? container.decodeIfPresent(SportRadarModels.LiveSportTypeDetails.self, forKey: .change) {
                     let newSportType = SportType(name: newSport.sportName,
                                                  alphaId: newSport.sportType.alphaId,
                                                  numberEvents: newSport.eventsCount, numberOutrightEvents: 0, numberOutrightMarkets: 0, numberLiveEvents: newSport.eventsCount)
                     
                     return .liveSports(sportsTypes: [newSportType])
                 }
-                    
             }
 
             if path.contains("idfomarket"), let newMarket = try? container.decode(SportRadarModels.Market.self, forKey: .change) {
@@ -741,7 +740,7 @@ extension SportRadarModels {
             else if path.contains("idfoevent"), let newEvent = try? container.decode(SportRadarModels.Event.self, forKey: .change) {
                 return .addEvent(contentIdentifier: contentIdentifier, event: newEvent)
             }
-            else if path.contains("idfosporttype"), let newSport = try? container.decodeIfPresent(SportRadarModels.SportTypeDetails.self, forKey: .change) {
+            else if path.contains("idfosporttype"), let newSport = try? container.decodeIfPresent(SportRadarModels.LiveSportTypeDetails.self, forKey: .change) {
                 return .addSport(contentIdentifier: contentIdentifier, sportType: newSport.sportType)
             }
             else if path.contains("status"), let eventId = SocketMessageParseHelper.extractEventId(path) {
