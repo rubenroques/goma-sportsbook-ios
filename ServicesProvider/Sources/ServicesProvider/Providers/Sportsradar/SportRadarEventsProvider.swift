@@ -30,16 +30,16 @@ class SportRadarEventsProvider: EventsProvider {
     required init(sessionCoordinator: SportRadarSessionCoordinator,
                   socketConnector: SportRadarSocketConnector = SportRadarSocketConnector(),
                   restConnector: SportRadarRestConnector = SportRadarRestConnector()) {
-        print("[SPORTSBOOK][PROVIDER] Initializing SportRadarEventsProvider")
+        print("[SERVICEPROVIDER][PROVIDER] Initializing SportRadarEventsProvider")
         self.sessionCoordinator = sessionCoordinator
 
         self.socketConnector = socketConnector
         self.restConnector = restConnector
 
         self.socketConnector.connectionStatePublisher.sink { completion in
-            print("[SPORTSBOOK][SOCKET] Socket connection publisher completed")
+            print("[SERVICEPROVIDER][SOCKET] Socket connection publisher completed")
         } receiveValue: { [weak self] connectorState in
-            print("[SPORTSBOOK][SOCKET] Socket connection state changed to: \(connectorState)")
+            print("[SERVICEPROVIDER][SOCKET] Socket connection state changed to: \(connectorState)")
             self?.connectionStateSubject.send(connectorState)
         }
         .store(in: &self.cancellables)
@@ -47,11 +47,11 @@ class SportRadarEventsProvider: EventsProvider {
         self.sessionCoordinator.token(forKey: .launchToken)
             .sink { [weak self] launchToken in
                 if let launchTokenValue = launchToken  {
-                    print("[SPORTSBOOK][PROVIDER] Launch token received: \(launchTokenValue)")
+                    print("[SERVICEPROVIDER][PROVIDER] Launch token received: \(launchTokenValue)")
                     self?.restConnector.saveSessionKey(launchTokenValue)
                 }
                 else {
-                    print("[SPORTSBOOK][PROVIDER] No launch token available, clearing session key")
+                    print("[SERVICEPROVIDER][PROVIDER] No launch token available, clearing session key")
                     self?.restConnector.clearSessionKey()
                 }
             }
@@ -62,21 +62,21 @@ class SportRadarEventsProvider: EventsProvider {
             .compactMap({ $0 })
             .withPrevious()
             .sink(receiveValue: { [weak self] (oldToken, newToken) in
-                print("[SPORTSBOOK][SOCKET] Socket token updated")
+                print("[SERVICEPROVIDER][SOCKET] Socket token updated")
                 self?.sessionCoordinator.saveToken(newToken.hash, withKey: .socketSessionToken)
 
                 if let oldToken, oldToken != newToken {
-                    print("[SPORTSBOOK][SOCKET] Socket reconnected with new token: \(newToken.hash)")
+                    print("[SERVICEPROVIDER][SOCKET] Socket reconnected with new token: \(newToken.hash)")
                     self?.subscribePreviousTopics(withNewSocketToken: newToken.hash)
                 }
                 else {
-                    print("[SPORTSBOOK][SOCKET] Initial socket connection with token: \(newToken.hash)")
+                    print("[SERVICEPROVIDER][SOCKET] Initial socket connection with token: \(newToken.hash)")
                 }
             })
             .store(in: &self.cancellables)
 
         self.socketConnector.messageSubscriber = self
-        print("[SPORTSBOOK][SOCKET] Initiating socket connection")
+        print("[SERVICEPROVIDER][SOCKET] Initiating socket connection")
         self.socketConnector.connect()
 
     }
@@ -109,31 +109,31 @@ class SportRadarEventsProvider: EventsProvider {
     private let defaultEventCount = 10
 
     func reconnectIfNeeded() {
-        print("[SPORTSBOOK][SOCKET] Attempting socket reconnection if needed")
+        print("[SERVICEPROVIDER][SOCKET] Attempting socket reconnection if needed")
         self.socketConnector.refreshConnection()
     }
 
     func subscribePreviousTopics(withNewSocketToken newSocketToken: String) {
-        print("[SPORTSBOOK][PROVIDER] Resubscribing to previous topics with new socket token")
+        print("[SERVICEPROVIDER][PROVIDER] Resubscribing to previous topics with new socket token")
         self.eventsPaginators = self.eventsPaginators.filter { $0.value.isActive }
         for paginator in self.eventsPaginators.values where paginator.isActive {
-            print("[SPORTSBOOK][PROVIDER] Reconnecting paginator")
+            print("[SERVICEPROVIDER][PROVIDER] Reconnecting paginator")
             paginator.reconnect(withNewSessionToken: newSocketToken)
         }
 
         for eventDetailsCoordinator in self.getValidEventDetailsCoordinators() {
-            print("[SPORTSBOOK][PROVIDER] Reconnecting event details coordinator")
+            print("[SERVICEPROVIDER][PROVIDER] Reconnecting event details coordinator")
             eventDetailsCoordinator.reconnect(withNewSessionToken: newSocketToken)
         }
 
         for liveEventDetailsCoordinator in self.getValidLiveEventDetailsCoordinators() {
-            print("[SPORTSBOOK][PROVIDER] Reconnecting live event details coordinator")
+            print("[SERVICEPROVIDER][PROVIDER] Reconnecting live event details coordinator")
             liveEventDetailsCoordinator.reconnect(withNewSessionToken: newSocketToken)
         }
 
         self.marketUpdatesCoordinators = self.marketUpdatesCoordinators.filter { $0.value.isActive }
         for marketUpdatesCoordinator in self.marketUpdatesCoordinators.values {
-            print("[SPORTSBOOK][PROVIDER] Reconnecting market updates coordinator")
+            print("[SERVICEPROVIDER][PROVIDER] Reconnecting market updates coordinator")
             marketUpdatesCoordinator.reconnect(withNewSessionToken: newSocketToken)
         }
     }
@@ -334,22 +334,22 @@ class SportRadarEventsProvider: EventsProvider {
     }
 
     func subscribeSportTypes() -> AnyPublisher<SubscribableContent<[SportType]>, ServiceProviderError> {
-        print("[SPORTSBOOK][PROVIDER] Starting sports types subscription")
+        print("[SERVICEPROVIDER][PROVIDER] Starting sports types subscription")
         guard let sessionToken = self.socketConnector.token else {
-            print("[SPORTSBOOK][PROVIDER] Failed to subscribe to sport types: No session token available")
+            print("[SERVICEPROVIDER][PROVIDER] Failed to subscribe to sport types: No session token available")
             return Fail(error: ServiceProviderError.userSessionNotFound).eraseToAnyPublisher()
         }
 
         if let existingMerger = sportsMerger, existingMerger.isActive {
-            print("[SPORTSBOOK][PROVIDER] Reusing existing active sports merger")
+            print("[SERVICEPROVIDER][PROVIDER] Reusing existing active sports merger")
             return existingMerger.sportsPublisher
         }
 
-        print("[SPORTSBOOK][PROVIDER] Creating new SportsMerger instance")
+        print("[SERVICEPROVIDER][PROVIDER] Creating new SportsMerger instance")
         let merger = SportsMerger(sessionToken: sessionToken.hash)
         self.sportsMerger = merger
         self.socketConnector.messageSubscriber = self
-        print("[SPORTSBOOK][PROVIDER] SportsMerger created and message subscriber set")
+        print("[SERVICEPROVIDER][PROVIDER] SportsMerger created and message subscriber set")
 
         return merger.sportsPublisher
     }
@@ -688,13 +688,13 @@ extension SportRadarEventsProvider: SportRadarConnectorSubscriber {
     //
     // Update the socket delegate methods to use SportsMerger
     func liveSportsUpdated(withSportTypes sportTypes: [SportRadarModels.SportType]) {
-        print("[SPORTSBOOK][DELEGATE] Received live sports update with \(sportTypes.count) sports")
+        print("[SERVICEPROVIDER][DELEGATE] Received live sports update with \(sportTypes.count) sports")
         let sports = sportTypes.map(SportRadarModelMapper.sportType(fromSportRadarSportType:))
         sportsMerger?.updateSports(sports, forContentIdentifier: ContentIdentifier(contentType: .liveSports, contentRoute: .liveSports))
     }
 
     func preLiveSportsUpdated(withSportTypes sportTypes: [SportRadarModels.SportType]) {
-        print("[SPORTSBOOK][DELEGATE] Received pre-live sports update with \(sportTypes.count) sports")
+        print("[SERVICEPROVIDER][DELEGATE] Received pre-live sports update with \(sportTypes.count) sports")
         if let allSportTypesPublisher = self.allSportTypesPublisher {
             let sports = sportTypes.map(SportRadarModelMapper.sportType(fromSportRadarSportType:))
             allSportTypesPublisher.send(.contentUpdate(content: sports))
@@ -702,25 +702,25 @@ extension SportRadarEventsProvider: SportRadarConnectorSubscriber {
     }
 
     func allSportsUpdated(withSportTypes sportTypes: [SportRadarModels.SportType]) {
-        print("[SPORTSBOOK][DELEGATE] Received all sports update with \(sportTypes.count) sports")
+        print("[SERVICEPROVIDER][DELEGATE] Received all sports update with \(sportTypes.count) sports")
         let sports = sportTypes.map(SportRadarModelMapper.sportType(fromSportRadarSportType:))
         sportsMerger?.updateSports(sports, forContentIdentifier: ContentIdentifier(contentType: .allSports, contentRoute: .allSports))
     }
 
 
     func updateSportLiveCount(nodeId: String, liveCount: Int) {
-        print("[SPORTSBOOK][DELEGATE] Updating live count for sport \(nodeId): \(liveCount)")
+        print("[SERVICEPROVIDER][DELEGATE] Updating live count for sport \(nodeId): \(liveCount)")
         guard let merger = self.sportsMerger else {
-            print("[SPORTSBOOK][DELEGATE] Error: SportsMerger not available")
+            print("[SERVICEPROVIDER][DELEGATE] Error: SportsMerger not available")
             return
         }
         merger.updateSportLiveCount(nodeId: nodeId, liveCount: liveCount)
     }
 
     func updateSportEventCount(nodeId: String, eventCount: Int) {
-        print("[SPORTSBOOK][DELEGATE] Updating event count for sport \(nodeId): \(eventCount)")
+        print("[SERVICEPROVIDER][DELEGATE] Updating event count for sport \(nodeId): \(eventCount)")
         guard let merger = self.sportsMerger else {
-            print("[SPORTSBOOK][DELEGATE] Error: SportsMerger not available")
+            print("[SERVICEPROVIDER][DELEGATE] Error: SportsMerger not available")
             return
         }
         merger.updateSportEventCount(nodeId: nodeId, eventCount: eventCount)
