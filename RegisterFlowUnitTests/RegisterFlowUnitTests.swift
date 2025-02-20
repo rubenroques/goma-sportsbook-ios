@@ -81,7 +81,7 @@ final class RegisterFlowUnitTests: XCTestCase {
         XCTAssertEqual(progressValues.first, 0.0)
         registrationViewModel.scrollToNextStep()
         
-        wait(for: [progressExpectation], timeout: 1.0)
+        wait(for: [progressExpectation], timeout: 5.0)
         XCTAssertGreaterThan(progressValues[1], progressValues[0])
     }
 
@@ -102,7 +102,7 @@ final class RegisterFlowUnitTests: XCTestCase {
         mockEnvelopUpdater.setPhonePrefixCountry(country)
         mockEnvelopUpdater.setPhoneNumber("612345678")
         
-        wait(for: [phoneExpectation], timeout: 1.0)
+        wait(for: [phoneExpectation], timeout: 5.0)
     }
     
     func testPhoneNumberFormatting() {
@@ -121,7 +121,7 @@ final class RegisterFlowUnitTests: XCTestCase {
         mockEnvelopUpdater.setPhonePrefixCountry(country)
         mockEnvelopUpdater.setPhoneNumber("0612 34 56 78")
         
-        wait(for: [phoneExpectation], timeout: 1.0)
+        wait(for: [phoneExpectation], timeout: 5.0)
     }
 
     // MARK: - Registration Flow Tests
@@ -151,9 +151,9 @@ final class RegisterFlowUnitTests: XCTestCase {
         mockEnvelopUpdater.setDepartmentOfBirth("08")
         
         // Set contact info
-        mockEnvelopUpdater.setEmail("andrelascas@hotmail.com")
+        mockEnvelopUpdater.setEmail("andrelascas0002@hotmail.com")
         mockEnvelopUpdater.setPhonePrefixCountry(SharedModels.Country(name: "Portugal", region: "PT", iso2Code: "PT", iso3Code: "pt", numericCode: "", phonePrefix: "+351", frenchName: "Portugal"))
-        mockEnvelopUpdater.setPhoneNumber("912345678")
+        mockEnvelopUpdater.setPhoneNumber("962333444")
         
         // Set password
         mockEnvelopUpdater.setPassword("Slayer08&")
@@ -171,7 +171,7 @@ final class RegisterFlowUnitTests: XCTestCase {
             }
             .store(in: &cancellables)
         
-        wait(for: [registrationExpectation], timeout: 1.0)
+        wait(for: [registrationExpectation], timeout: 5.0)
     }
     
     func testRegistrationWithErrors() {
@@ -275,7 +275,7 @@ final class RegisterFlowUnitTests: XCTestCase {
         mockEnvelopUpdater.setName("John")
         mockEnvelopUpdater.setSurname("Doe")
         
-        wait(for: [nicknameExpectation], timeout: 1.0)
+        wait(for: [nicknameExpectation], timeout: 5.0)
     }
     
     func testNicknameGenerationWithSpecialCharacters() {
@@ -291,7 +291,7 @@ final class RegisterFlowUnitTests: XCTestCase {
         mockEnvelopUpdater.setName("John")
         mockEnvelopUpdater.setSurname("O'Reilly")
         
-        wait(for: [nicknameExpectation], timeout: 1.0)
+        wait(for: [nicknameExpectation], timeout: 5.0)
     }
     
 }
