@@ -6,8 +6,53 @@
 //
 
 import Foundation
+import Core
 
 struct TargetVariables: SportsbookTarget {
+
+    // MARK: - URLEndpointProvider Implementation
+
+    static var apiEndpoints: Set<URLEndpoint.API> {
+        [
+            .gomaGaming(url: "https://gomagaming.com"),
+            .sportsbook(url: "https://betsson.fr"),
+            .firebase(url: "https://goma-sportsbook-sportradar-viab-95a78.europe-west1.firebasedatabase.app/"),
+            .casino(url: "https://sportsbook-cms.gomagaming.com/casino/"),
+            .promotions(url: "https://sportradar.gomadevelopment.pt")
+        ]
+    }
+
+    static var supportEndpoints: Set<URLEndpoint.Support> {
+        [
+            .helpCenter(url: "https://support.betsson.fr/hc/fr"),
+            .zendesk(url: "https://betssonfrance.zendesk.com/hc/fr"),
+            .customerSupport(url: "https://betssonfrance.zendesk.com")
+        ]
+    }
+
+    static var responsibleGamingEndpoints: Set<URLEndpoint.ResponsibleGaming> {
+        [
+            .sosjoueurs(url: "https://sosjoueurs.org/"),
+            .gamban(url: "https://gamban.com/fr/"),
+            .evalujeu(url: "https://www.evalujeu.fr/"),
+            .bettorTime(url: "https://play.google.com/store/apps/details?id=com.goozix.bettor_time&hl=fr_CA&gl=US&pli=1"),
+            .jouersInfoService(url: "https://www.joueurs-info-service.fr/"),
+            .anj(url: "https://anj.fr/"),
+            .eEnfance(url: "https://e-enfance.org/informer/controle-parental/"),
+            .chuNimes(url: "https://www.chu-nimes.fr/actu-cht/addiction-aux-jeux--participez-a-letude-train-online.html")
+        ]
+    }
+
+    static var socialMediaEndpoints: Set<URLEndpoint.SocialMedia> {
+        [
+            .facebook(url: "https://www.facebook.com/profile.php?id=61551148828863&locale=fr_FR"),
+            .twitter(url: "https://twitter.com/BetssonFR"),
+            .youtube(url: "https://www.youtube.com/channel/UCVYLZg-cDBbe1h8ege0N5Eg"),
+            .instagram(url: "https://www.instagram.com/betsson_france/")
+        ]
+    }
+
+    // MARK: - Other SportsbookTarget Requirements
 
     static var environmentType: EnvironmentType = .prod
 
@@ -84,7 +129,11 @@ struct TargetVariables: SportsbookTarget {
     }
 
     static func generatePromotionsPageUrlString(forAppLanguage appLanguage: String?, isDarkTheme: Bool?) -> String {
-        let baseUrl = "https://sportradar.gomadevelopment.pt"
+        let promotionsEndpoint = apiEndpoints.first(where: { 
+            if case .promotions = $0 { return true }
+            return false
+        })
+        let baseUrl = promotionsEndpoint?.url ?? ""
         let isDarkThemeString = isDarkTheme?.description ?? ""
         let urlString = "\(baseUrl)/\(appLanguage ?? "")/in-app/promotions?dark=\(isDarkThemeString)"
         return urlString
