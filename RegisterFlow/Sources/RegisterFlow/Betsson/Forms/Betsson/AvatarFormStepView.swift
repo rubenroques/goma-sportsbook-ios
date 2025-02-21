@@ -138,7 +138,11 @@ class AvatarFormStepView: FormStepView {
 //                ])
 
                 let imageView = Self.createAvatarImageView()
-                imageView.image = UIImage(named: avatarName, in: Bundle.main, with: nil)
+
+//                imageView.image = UIImage(named: "GOMA/avatar1")
+                
+                imageView.image = AvatarAssets.image(named: avatarName, brand: .betsson)
+                                                
                 imageView.tag = tagCounter
 
                 baseView.addSubview(imageView)

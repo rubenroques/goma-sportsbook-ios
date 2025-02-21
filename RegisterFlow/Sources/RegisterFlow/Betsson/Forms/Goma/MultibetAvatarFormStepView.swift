@@ -51,7 +51,7 @@ class MultibetAvatarFormStepViewModel {
             self.selectedAvatarName = .init(first)
         }
         else {
-            self.selectedAvatarName = .init("avatar1_alt")
+            self.selectedAvatarName = .init("avatar1")
         }
 
         self.userRegisterEnvelopUpdater = userRegisterEnvelopUpdater
@@ -138,7 +138,10 @@ class MultibetAvatarFormStepView: FormStepView {
 //                ])
 
                 let imageView = Self.createAvatarImageView()
-                imageView.image = UIImage(named: avatarName, in: Bundle.module, with: nil)
+                
+//                imageView.image = UIImage(named: avatarName, in: Bundle.module, with: nil)
+                imageView.image = AvatarAssets.image(named: avatarName, brand: .goma)
+                                
                 imageView.tag = tagCounter
 
                 baseView.addSubview(imageView)

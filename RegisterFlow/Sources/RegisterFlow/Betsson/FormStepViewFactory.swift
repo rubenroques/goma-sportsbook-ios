@@ -50,7 +50,7 @@ struct FormStepViewFactory {
             case .goma:
                 let avatarFormStepViewModel = MultibetAvatarFormStepViewModel(title: Localization.localized("avatar"),
                                                                               subtitle: Localization.localized("choose_avatar"),
-                                                                              avatarIconNames: ["avatar1_alt", "avatar2_alt", "avatar3_alt", "avatar4_alt", "avatar5_alt", "avatar6_alt"],
+                                                                              avatarIconNames: ["avatar1", "avatar2", "avatar3", "avatar4", "avatar5", "avatar6"],
                                                                               selectedAvatarName: userRegisterEnvelop.avatarName,
                                                                               userRegisterEnvelopUpdater: userRegisterEnvelopUpdater)
                 return MultibetAvatarFormStepView(viewModel: avatarFormStepViewModel)
