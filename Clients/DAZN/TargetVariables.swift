@@ -8,13 +8,13 @@
 import Foundation
 
 struct TargetVariables: SportsbookTarget {
-        
+
     static var environmentType: EnvironmentType = .prod
-    
+
     static var gomaGamingHost: String {
         return "https://sportsbook-api.gomagaming.com"
     }
-    
+
     static var gomaGamingAnonymousAuthEndpoint: String {
         return "https://gomagaming.com" // https://sportsbook-api.gomagaming.com/api/auth/v1"
     }
@@ -30,11 +30,11 @@ struct TargetVariables: SportsbookTarget {
     static var supportedThemes: [Theme] {
         return [Theme.dark]
     }
-    
+
     static var defaultCardStyle: CardsStyle {
         return .normal
     }
-    
+
     static var competitionListStyle: CompetitionListStyle {
         return .navigateToDetails
     }
@@ -46,7 +46,7 @@ struct TargetVariables: SportsbookTarget {
     static var casinoURL: String {
         return "https://sportsbook-cms.gomagaming.com/casino/"
     }
-    
+
     static var serviceProviderType: ServiceProviderType {
         return .sportradar
     }
@@ -85,11 +85,11 @@ struct TargetVariables: SportsbookTarget {
     static var shouldUseAlternateTopBar: Bool {
         return true
     }
-    
+
     static var serviceProviderEnvironment: EnvironmentType {
         return .prod
     }
-    
+
     static var supportedLanguages: [SportsbookSupportedLanguage] {
         return SportsbookSupportedLanguage.allCases
     }
@@ -98,11 +98,50 @@ struct TargetVariables: SportsbookTarget {
         return "https://goma-uat.betsson.fr"
     }
 
+    static var api: URLEndpoint.APIs {
+        URLEndpoint.APIs(
+            gomaGaming: "https://gomagaming.com",
+            sportsbook: "https://dazn.betsson.fr",
+            firebase: "https://goma-sportsbook-dazn.europe-west1.firebasedatabase.app/",
+            casino: "https://sportsbook-cms.gomagaming.com/casino/",
+            promotions: "https://dazn.betsson.fr"
+        )
+    }
+
+    static var support: URLEndpoint.Support {
+        URLEndpoint.Support(
+            helpCenter: "https://support.betsson.fr/hc/fr",
+            zendesk: "https://betssonfrance.zendesk.com/hc/fr",
+            customerSupport: "https://betssonfrance.zendesk.com"
+        )
+    }
+
+    static var responsibleGaming: URLEndpoint.ResponsibleGaming {
+        URLEndpoint.ResponsibleGaming(
+            sosjoueurs: "https://sosjoueurs.org/",
+            gamban: "https://gamban.com/fr/",
+            evalujeu: "https://www.evalujeu.fr/",
+            bettorTime: "https://play.google.com/store/apps/details?id=com.goozix.bettor_time&hl=fr_CA&gl=US&pli=1",
+            jouersInfoService: "https://www.joueurs-info-service.fr/",
+            anj: "https://anj.fr/",
+            eEnfance: "https://e-enfance.org/informer/controle-parental/",
+            chuNimes: "https://www.chu-nimes.fr/actu-cht/addiction-aux-jeux--participez-a-letude-train-online.html"
+        )
+    }
+
+    static var socialMedia: URLEndpoint.SocialMedia {
+        URLEndpoint.SocialMedia(
+            facebook: "https://www.facebook.com/profile.php?id=61551148828863&locale=fr_FR",
+            twitter: "https://twitter.com/BetssonFR",
+            youtube: "https://www.youtube.com/channel/UCVYLZg-cDBbe1h8ege0N5Eg",
+            instagram: "https://www.instagram.com/betsson_france/"
+        )
+    }
+
     static func generatePromotionsPageUrlString(forAppLanguage appLanguage: String?, isDarkTheme: Bool?) -> String {
-        let baseUrl = "https://sportradar.gomadevelopment.pt"
+        let baseUrl = api.promotions
         let isDarkThemeString = isDarkTheme?.description ?? ""
-        let urlString = "\(baseUrl)/\(appLanguage ?? "")/in-app/promotions?dark=\(isDarkThemeString)"
-        return urlString
+        return "\(baseUrl)/\(appLanguage ?? "")/in-app/promotions?dark=\(isDarkThemeString)"
     }
 
     static var appStoreUrl: String? {
@@ -127,5 +166,5 @@ struct TargetVariables: SportsbookTarget {
             "app_version_profile_2": "® Tous droits réservés",
         ]
     }
-    
+
 }

@@ -6,49 +6,50 @@
 //
 
 import Foundation
+import Core
 
 struct TargetVariables: SportsbookTarget {
 
     // MARK: - URLEndpointProvider Implementation
 
-    static var apiEndpoints: Set<URLEndpoint.API> {
-        [
-            .gomaGaming(url: "https://gomagaming.com"),
-            .sportsbook(url: "https://betsson.fr"),
-            .firebase(url: "https://betssonfr-74f1b-default-rtdb.europe-west1.firebasedatabase.app/"),
-            .casino(url: "https://sportsbook-cms.gomagaming.com/casino/"),
-            .promotions(url: "https://betsson.fr")
-        ]
+    static var api: URLEndpoint.APIs {
+        URLEndpoint.APIs(
+            gomaGaming: "https://sportsbook-stage.gomagaming.com/",
+            sportsbook: "https://sportsbook.betsson.fr/",
+            firebase: "https://betsson-fr.firebaseapp.com/",
+            casino: "https://casino.betsson.fr/",
+            promotions: "https://promotions.betsson.fr/"
+        )
     }
 
-    static var supportEndpoints: Set<URLEndpoint.Support> {
-        [
-            .helpCenter(url: "https://support.betsson.fr/hc/fr"),
-            .zendesk(url: "https://betssonfrance.zendesk.com/hc/fr"),
-            .customerSupport(url: "https://betssonfrance.zendesk.com")
-        ]
+    static var support: URLEndpoint.Support {
+        URLEndpoint.Support(
+            helpCenter: "https://support.betsson.fr/hc/fr",
+            zendesk: "https://betssonfrance.zendesk.com/hc/fr",
+            customerSupport: "https://support.betsson.fr/hc/fr/requests/new"
+        )
     }
 
-    static var responsibleGamingEndpoints: Set<URLEndpoint.ResponsibleGaming> {
-        [
-            .sosjoueurs(url: "https://sosjoueurs.org/"),
-            .gamban(url: "https://gamban.com/fr/"),
-            .evalujeu(url: "https://www.evalujeu.fr/"),
-            .bettorTime(url: "https://play.google.com/store/apps/details?id=com.goozix.bettor_time&hl=fr_CA&gl=US&pli=1"),
-            .jouersInfoService(url: "https://www.joueurs-info-service.fr/"),
-            .anj(url: "https://anj.fr/"),
-            .eEnfance(url: "https://e-enfance.org/informer/controle-parental/"),
-            .chuNimes(url: "https://www.chu-nimes.fr/actu-cht/addiction-aux-jeux--participez-a-letude-train-online.html")
-        ]
+    static var responsibleGaming: URLEndpoint.ResponsibleGaming {
+        URLEndpoint.ResponsibleGaming(
+            sosjoueurs: "https://sosjoueurs.org/",
+            gamban: "https://gamban.com/",
+            evalujeu: "https://www.evalujeu.fr/ou-en-etes-vous-avec-les-jeux-dargent",
+            bettorTime: "https://www.bettor-time.com/",
+            jouersInfoService: "https://www.joueurs-info-service.fr/",
+            anj: "https://anj.fr/",
+            eEnfance: "https://e-enfance.org/",
+            chuNimes: "https://www.chu-nimes.fr/addictologie-unite-de-coordination-et-de-soins-en-addictologie.html"
+        )
     }
 
-    static var socialMediaEndpoints: Set<URLEndpoint.SocialMedia> {
-        [
-            .facebook(url: "https://www.facebook.com/profile.php?id=61551148828863&locale=fr_FR"),
-            .twitter(url: "https://twitter.com/BetssonFR"),
-            .youtube(url: "https://www.youtube.com/channel/UCVYLZg-cDBbe1h8ege0N5Eg"),
-            .instagram(url: "https://www.instagram.com/betsson_france/")
-        ]
+    static var socialMedia: URLEndpoint.SocialMedia {
+        URLEndpoint.SocialMedia(
+            facebook: "https://www.facebook.com/profile.php?id=61551148828863&locale=fr_FR",
+            twitter: "https://twitter.com/BetssonFrance",
+            youtube: "https://www.youtube.com/@betssonfrance",
+            instagram: "https://www.instagram.com/betssonfrance/"
+        )
     }
 
     // MARK: - Other SportsbookTarget Requirements
@@ -132,14 +133,9 @@ struct TargetVariables: SportsbookTarget {
     }
 
     static func generatePromotionsPageUrlString(forAppLanguage appLanguage: String?, isDarkTheme: Bool?) -> String {
-        let promotionsEndpoint = apiEndpoints.first(where: { 
-            if case .promotions = $0 { return true }
-            return false
-        })
-        let baseUrl = promotionsEndpoint?.url ?? ""
+        let baseUrl = api.promotions
         let isDarkThemeString = isDarkTheme?.description ?? ""
-        let urlString = "\(baseUrl)/\(appLanguage ?? "")/in-app/promotions?dark=\(isDarkThemeString)"
-        return urlString
+        return "\(baseUrl)/\(appLanguage ?? "")/in-app/promotions?dark=\(isDarkThemeString)"
     }
 
     static var appStoreUrl: String? {

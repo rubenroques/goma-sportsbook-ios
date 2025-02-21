@@ -7,6 +7,7 @@
 
 import Foundation
 
+/// Protocol to be implemented by each client to provide their specific URLs
 protocol SportsbookClient {
 
 }
@@ -129,11 +130,7 @@ extension SportsbookTarget {
     }
 
     static func generatePromotionsPageUrlString(forAppLanguage: String?, isDarkTheme: Bool?) -> String {
-        let promotionsEndpoint = apiEndpoints.first(where: {
-            if case .promotions = $0 { return true }
-            return false
-        })
-        let baseUrl = promotionsEndpoint?.url ?? ""
+        let baseUrl = api.promotions
         let isDarkThemeString = isDarkTheme?.description ?? ""
         return "\(baseUrl)/\(forAppLanguage ?? "")/in-app/promotions?dark=\(isDarkThemeString)"
     }
