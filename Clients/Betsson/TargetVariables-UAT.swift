@@ -9,50 +9,6 @@ import Foundation
 
 struct TargetVariables: SportsbookTarget {
 
-    // MARK: - URLEndpointProvider Implementation
-
-    static var api: URLEndpoint.APIs {
-        URLEndpoint.APIs(
-            gomaGaming: "https://gomagaming.com",
-            sportsbook: "https://goma-uat.betsson.fr",
-            firebase: "https://goma-sportsbook-sportradar-viab-95a78.europe-west1.firebasedatabase.app/",
-            casino: "https://sportsbook-cms.gomagaming.com/casino/",
-            promotions: "https://goma-uat.betsson.fr"
-        )
-    }
-
-    static var support: URLEndpoint.Support {
-        URLEndpoint.Support(
-            helpCenter: "https://support.betsson.fr/hc/fr",
-            zendesk: "https://betssonfrance.zendesk.com/hc/fr",
-            customerSupport: "https://betssonfrance.zendesk.com"
-        )
-    }
-
-    static var responsibleGaming: URLEndpoint.ResponsibleGaming {
-        URLEndpoint.ResponsibleGaming(
-            sosjoueurs: "https://sosjoueurs.org/",
-            gamban: "https://gamban.com/fr/",
-            evalujeu: "https://www.evalujeu.fr/",
-            bettorTime: "https://play.google.com/store/apps/details?id=com.goozix.bettor_time&hl=fr_CA&gl=US&pli=1",
-            jouersInfoService: "https://www.joueurs-info-service.fr/",
-            anj: "https://anj.fr/",
-            eEnfance: "https://e-enfance.org/informer/controle-parental/",
-            chuNimes: "https://www.chu-nimes.fr/actu-cht/addiction-aux-jeux--participez-a-letude-train-online.html"
-        )
-    }
-
-    static var socialMedia: URLEndpoint.SocialMedia {
-        URLEndpoint.SocialMedia(
-            facebook: "https://www.facebook.com/profile.php?id=61551148828863&locale=fr_FR",
-            twitter: "https://twitter.com/BetssonFR",
-            youtube: "https://www.youtube.com/channel/UCVYLZg-cDBbe1h8ege0N5Eg",
-            instagram: "https://www.instagram.com/betsson_france/"
-        )
-    }
-
-    // MARK: - Other SportsbookTarget Requirements
-
     static var environmentType: EnvironmentType = .prod
 
     static var gomaGamingHost: String {
@@ -132,8 +88,7 @@ struct TargetVariables: SportsbookTarget {
     }
 
     static func generatePromotionsPageUrlString(forAppLanguage appLanguage: String?, isDarkTheme: Bool?) -> String {
-        let promotionsEndpoint = api.promotions
-        let baseUrl = promotionsEndpoint ?? ""
+        let baseUrl = self.links.api.promotions
         let isDarkThemeString = isDarkTheme?.description ?? ""
         let urlString = "\(baseUrl)/\(appLanguage ?? "")/in-app/promotions?dark=\(isDarkThemeString)"
         return urlString
@@ -157,3 +112,54 @@ struct TargetVariables: SportsbookTarget {
         return [:]
     }
 }
+
+extension TargetVariables {
+    // MARK: - URLEndpointProvider Implementation
+    static var links: URLEndpoint.Links {
+        URLEndpoint.Links(
+            api: URLEndpoint.APIs(
+                gomaGaming: "https://sportsbook-stage.gomagaming.com/",
+                sportsbook: "https://sportsbook.betsson.fr/",
+                firebase: "https://betsson-fr.firebaseapp.com/",
+                casino: "https://casino.betsson.fr/",
+                promotions: "https://promotions.betsson.fr/",
+                affiliateSystem: "http://www.partenaire-betsson.fr/",
+                secundaryMarketSpecsUrl: "https://betsson.fr/secondary_markets_config.json"
+            ),
+            support: URLEndpoint.Support(
+                helpCenter: "https://support.betsson.fr/hc/fr",
+                zendesk: "https://betssonfrance.zendesk.com/hc/fr",
+                customerSupport: "https://support.betsson.fr/hc/fr/requests/new"
+            ),
+            responsibleGaming: URLEndpoint.ResponsibleGaming(
+                gamblingAddictionHelpline: "https://sosjoueurs.org/",
+                gamblingBlockingSoftware: "https://gamban.com/",
+                gamblingBehaviorAssessment: "https://www.evalujeu.fr/ou-en-etes-vous-avec-les-jeux-dargent",
+                timeManagementApp: "https://www.bettor-time.com/",
+                gamblingAddictionSupport: "https://www.joueurs-info-service.fr/",
+                gamblingAuthority: "https://anj.fr/",
+                parentalControl: "https://e-enfance.org/",
+                addictionTreatmentCenter: "https://www.chu-nimes.fr/addictologie-unite-de-coordination-et-de-soins-en-addictologie.html",
+                selfExclusionService: "https://interdictiondejeux.anj.fr"
+            ),
+            socialMedia: URLEndpoint.SocialMedia(
+                facebook: "https://www.facebook.com/profile.php?id=61551148828863&locale=fr_FR",
+                twitter: "https://twitter.com/BetssonFrance",
+                youtube: "https://www.youtube.com/@betssonfrance",
+                instagram: "https://www.instagram.com/betssonfrance/"
+            ),
+            legalAndInfo: URLEndpoint.LegalAndInfo(
+                responsibleGambling: "https://betsson.fr/fr/jeu-responsable",
+                privacyPolicy: "https://betsson.fr/fr/politique-de-confidentialite",
+                cookiePolicy: "https://betsson.fr/fr/politique-de-cookies",
+                sportsBettingRules: "https://betsson.fr/betting-rules.pdf",
+                termsAndConditions: "https://betsson.fr/terms-and-conditions.pdf",
+                bonusRules: "https://betsson.fr/bonus_TC.pdf",
+                partners: "https://betsson.fr/fr/partenaires",
+                about: "https://betsson.fr/fr/a-propos",
+                appStoreUrl: "https://apps.apple.com/fr/app/betsson/id6463237718"
+            )
+        )
+    }
+}
+

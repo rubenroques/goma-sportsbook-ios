@@ -12,7 +12,7 @@ protocol SportsbookClient {
 
 }
 
-protocol SportsbookTarget: URLEndpointProvider {
+protocol SportsbookTarget: SportsbookClient, URLEndpointProvider {
 
     static var environmentType: EnvironmentType { get }
 
@@ -45,6 +45,7 @@ protocol SportsbookTarget: URLEndpointProvider {
 
     static var localizationOverrides: [String: String] { get }
 }
+
 
 enum SportsbookTargetFeatures: CaseIterable {
     case homeBanners
@@ -130,7 +131,7 @@ extension SportsbookTarget {
     }
 
     static func generatePromotionsPageUrlString(forAppLanguage: String?, isDarkTheme: Bool?) -> String {
-        let baseUrl = api.promotions
+        let baseUrl = self.links.api.promotions
         let isDarkThemeString = isDarkTheme?.description ?? ""
         return "\(baseUrl)/\(forAppLanguage ?? "")/in-app/promotions?dark=\(isDarkThemeString)"
     }
@@ -138,4 +139,9 @@ extension SportsbookTarget {
     static var localizationOverrides: [String: String] {
         return [:]
     }
+    
+    static var links: URLEndpoint.Links {
+        return URLEndpoint.Links.empty
+    }
+    
 }

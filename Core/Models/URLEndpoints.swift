@@ -3,15 +3,44 @@ import Foundation
 /// Represents all possible URL endpoints categories in the application
 enum URLEndpoint {
 
+    /// Represents all possible URL endpoints categories in the application
+    struct Links: Hashable {
+        let api: APIs
+        let support: Support
+        let responsibleGaming: ResponsibleGaming
+        let socialMedia: SocialMedia
+        let legalAndInfo: LegalAndInfo
+
+        static var empty: Links {
+            Links(
+                api: .empty,
+                support: .empty,
+                responsibleGaming: .empty,
+                socialMedia: .empty,
+                legalAndInfo: .empty
+            )
+        }
+    }
+
     struct APIs: Hashable {
         let gomaGaming: String
         let sportsbook: String
         let firebase: String
         let casino: String
         let promotions: String
+        let affiliateSystem: String
+        let secundaryMarketSpecsUrl: String
 
         static var empty: APIs {
-            APIs(gomaGaming: "", sportsbook: "", firebase: "", casino: "", promotions: "")
+            APIs(
+                gomaGaming: "",
+                sportsbook: "",
+                firebase: "",
+                casino: "",
+                promotions: "",
+                affiliateSystem: "",
+                secundaryMarketSpecsUrl: ""
+            )
         }
     }
 
@@ -21,30 +50,36 @@ enum URLEndpoint {
         let customerSupport: String
 
         static var empty: Support {
-            Support(helpCenter: "", zendesk: "", customerSupport: "")
+            Support(
+                helpCenter: "",
+                zendesk: "",
+                customerSupport: ""
+            )
         }
     }
 
     struct ResponsibleGaming: Hashable {
-        let sosjoueurs: String
-        let gamban: String
-        let evalujeu: String
-        let bettorTime: String
-        let jouersInfoService: String
-        let anj: String
-        let eEnfance: String
-        let chuNimes: String
+        let gamblingAddictionHelpline: String
+        let gamblingBlockingSoftware: String
+        let gamblingBehaviorAssessment: String
+        let timeManagementApp: String
+        let gamblingAddictionSupport: String
+        let gamblingAuthority: String
+        let parentalControl: String
+        let addictionTreatmentCenter: String
+        let selfExclusionService: String
 
         static var empty: ResponsibleGaming {
             ResponsibleGaming(
-                sosjoueurs: "",
-                gamban: "",
-                evalujeu: "",
-                bettorTime: "",
-                jouersInfoService: "",
-                anj: "",
-                eEnfance: "",
-                chuNimes: ""
+                gamblingAddictionHelpline: "",
+                gamblingBlockingSoftware: "",
+                gamblingBehaviorAssessment: "",
+                timeManagementApp: "",
+                gamblingAddictionSupport: "",
+                gamblingAuthority: "",
+                parentalControl: "",
+                addictionTreatmentCenter: "",
+                selfExclusionService: ""
             )
         }
     }
@@ -56,23 +91,43 @@ enum URLEndpoint {
         let instagram: String
 
         static var empty: SocialMedia {
-            SocialMedia(facebook: "", twitter: "", youtube: "", instagram: "")
+            SocialMedia(
+                facebook: "",
+                twitter: "",
+                youtube: "",
+                instagram: ""
+            )
+        }
+    }
+
+    struct LegalAndInfo: Hashable {
+        let responsibleGambling: String
+        let privacyPolicy: String
+        let cookiePolicy: String
+        let sportsBettingRules: String
+        let termsAndConditions: String
+        let bonusRules: String
+        let partners: String
+        let about: String
+        let appStoreUrl: String
+
+        static var empty: LegalAndInfo {
+            LegalAndInfo(
+                responsibleGambling: "",
+                privacyPolicy: "",
+                cookiePolicy: "",
+                sportsBettingRules: "",
+                termsAndConditions: "",
+                bonusRules: "",
+                partners: "",
+                about: "",
+                appStoreUrl: ""
+            )
         }
     }
 }
 
 /// Protocol to be implemented by each client to provide their specific URLs
 protocol URLEndpointProvider {
-    static var api: URLEndpoint.APIs { get }
-    static var support: URLEndpoint.Support { get }
-    static var responsibleGaming: URLEndpoint.ResponsibleGaming { get }
-    static var socialMedia: URLEndpoint.SocialMedia { get }
-}
-
-/// Default implementation for optional endpoints
-extension URLEndpointProvider {
-    static var api: URLEndpoint.APIs { .empty }
-    static var support: URLEndpoint.Support { .empty }
-    static var responsibleGaming: URLEndpoint.ResponsibleGaming { .empty }
-    static var socialMedia: URLEndpoint.SocialMedia { .empty }
+    static var links: URLEndpoint.Links { get }
 }
