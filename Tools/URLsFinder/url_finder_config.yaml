@@ -4,6 +4,7 @@ ignore_paths:
   - "Pods/"
   - "fastlane/"
   - "Tests/"
+  - "ServicesProvider/.build/"
 
 # Files to ignore (exact matches)
 ignore_files:

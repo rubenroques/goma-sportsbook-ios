@@ -383,7 +383,7 @@ class SupportPageViewController: UIViewController {
     }
 
     @objc func didTapHelpButton() {
-        guard let url = URL(string: "https://betssonfrance.zendesk.com/hc/fr") else { return }
+        guard let url = URL(string: TargetVariables.links.support.zendesk) else { return }
         UIApplication.shared.open(url)
     }
     

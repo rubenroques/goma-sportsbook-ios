@@ -135,10 +135,11 @@ extension TargetVariables {
             responsibleGaming: URLEndpoint.ResponsibleGaming(
                 gamblingAddictionHelpline: "https://sosjoueurs.org/",
                 gamblingBlockingSoftware: "https://gamban.com/",
-                gamblingBehaviorAssessment: "https://www.evalujeu.fr/ou-en-etes-vous-avec-les-jeux-dargent",
+                gamblingBehaviorSelfAssessment: "https://www.evalujeu.fr/ou-en-etes-vous-avec-les-jeux-dargent",
                 timeManagementApp: "https://www.bettor-time.com/",
                 gamblingAddictionSupport: "https://www.joueurs-info-service.fr/",
                 gamblingAuthority: "https://anj.fr/",
+                gamblingAuthorityTerms: "https://anj.fr/ts",
                 parentalControl: "https://e-enfance.org/",
                 addictionTreatmentCenter: "https://www.chu-nimes.fr/addictologie-unite-de-coordination-et-de-soins-en-addictologie.html",
                 selfExclusionService: "https://interdictiondejeux.anj.fr"
@@ -152,12 +153,12 @@ extension TargetVariables {
             legalAndInfo: URLEndpoint.LegalAndInfo(
                 responsibleGambling: "https://betsson.fr/fr/jeu-responsable",
                 privacyPolicy: "https://betsson.fr/fr/politique-de-confidentialite",
-                cookiePolicy: "https://betsson.fr/fr/politique-de-cookies",
+                cookiePolicy: "https://betsson.fr/fr/politique-de-confidentialite/#cookies",
                 sportsBettingRules: "https://betsson.fr/betting-rules.pdf",
                 termsAndConditions: "https://betsson.fr/terms-and-conditions.pdf",
                 bonusRules: "https://betsson.fr/bonus_TC.pdf",
-                partners: "https://betsson.fr/fr/partenaires",
-                about: "https://betsson.fr/fr/a-propos",
+                partners: "https://betsson.fr/fr/nos-partenaires",
+                about: "https://betsson.fr/fr/about",
                 appStoreUrl: "https://apps.apple.com/fr/app/betsson/id6463237718"
             )
         )

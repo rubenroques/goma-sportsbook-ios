@@ -313,7 +313,7 @@ class TipsControlViewController: UIViewController {
         let link1Range = (localized("tips_control_fourth_section_text_2") as NSString).range(of: "ANJ")
                 
         if sender.didTapAttributedTextInLabel(label: self.accordionFourthSectionDescriptionLabel2, inRange: link1Range, alignment: .left) {
-            if let url = URL(string: "https://anj.fr/") {
+            if let url = URL(string: TargetVariables.links.responsibleGaming.gamblingAuthority) {
                 UIApplication.shared.open(url)
             }
         }
@@ -355,7 +355,7 @@ class TipsControlViewController: UIViewController {
     }
     
     @objc private func didTapLogo3(_ sender: UITapGestureRecognizer) {
-        if let url = URL(string: "https://anj.fr/") {
+        if let url = URL(string: TargetVariables.links.responsibleGaming.gamblingAuthority) {
             UIApplication.shared.open(url)
         }
     }

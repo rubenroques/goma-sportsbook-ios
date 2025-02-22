@@ -193,7 +193,9 @@ class FooterResponsibleGamingView: UIView {
     }
 
     @objc func didTapBaseView() {
-        if let url = URL(string: "https://www.joueurs-info-service.fr/") {
+        
+        let urlString = TargetVariables.links.responsibleGaming.gamblingAddictionSupport
+        if let url = URL(string: urlString) {
 
             // Firebase Analytics
             AnalyticsClient.sendEvent(event: .playersInfo)
@@ -210,88 +212,91 @@ class FooterResponsibleGamingView: UIView {
     }
 
     @objc func openAffiliateSystemURL() {
-        self.openURL("http://www.partenaire-betsson.fr/")
+        let urlString = TargetVariables.links.api.affiliateSystem
+        self.openURLString(urlString)
     }
 
     @objc func openResponsibleGamblingURL() {
-        let url = "\(TargetVariables.clientBaseUrl)/fr/jeu-responsable"
-        self.openURL(url)
+        
+        let urlString = TargetVariables.links.legalAndInfo.responsibleGambling
+        self.openURLString(urlString)
     }
 
     @objc func openPrivacyPolicyURL() {
-        let url = "\(TargetVariables.clientBaseUrl)/fr/politique-de-confidentialite"
-        self.openURL(url)
+        let urlString = TargetVariables.links.legalAndInfo.privacyPolicy
+        self.openURLString(urlString)
     }
 
     @objc func openCookiePolicyURL() {
-        let url = "\(TargetVariables.clientBaseUrl)/fr/politique-de-confidentialite/#cookies"
-        self.openURL(url)
+        let urlString = TargetVariables.links.legalAndInfo.cookiePolicy
+        self.openURLString(urlString)
     }
 
     @objc func openSportsBettingRulesURL() {
-        let url = "\(TargetVariables.clientBaseUrl)/betting-rules.pdf"
-        self.openURL(url)
+        let urlString = TargetVariables.links.legalAndInfo.sportsBettingRules
+        self.openURLString(urlString)
     }
 
     @objc func openTermsAndConditionsURL() {
-        let url = "\(TargetVariables.clientBaseUrl)/terms-and-conditions.pdf"
-        self.openURL(url)
+        let urlString = TargetVariables.links.legalAndInfo.termsAndConditions
+        self.openURLString(urlString)
     }
 
     @objc func openBonusRulesURL() {
-        let url = "\(TargetVariables.clientBaseUrl)/bonus_TC.pdf"
-        self.openURL(url)
+        TargetVariables.links.legalAndInfo.bonusRules
+        let urlString = TargetVariables.links.legalAndInfo.bonusRules
+        self.openURLString(urlString)
     }
 
     @objc func nosPartenairesURL() {
-        let url = "\(TargetVariables.clientBaseUrl)/fr/nos-partenaires"
-        self.openURL(url)
+        let urlString = TargetVariables.links.legalAndInfo.partners
+        self.openURLString(urlString)
     }
 
 
     @objc func openAboutURL() {
-        let url = "\(TargetVariables.clientBaseUrl)/fr/about"
-        self.openURL(url)
+        let url = TargetVariables.links.legalAndInfo.about
+        self.openURLString(url)
     }
 
     @objc func openFAQsURL() {
-        self.openURL("https://betssonfrance.zendesk.com/hc/fr")
+        self.openURLString(TargetVariables.links.support.zendesk)
     }
 
-    func openURL(_ urlString: String) {
+    func openURLString(_ urlString: String) {
         guard let url = URL(string: urlString) else { return }
         UIApplication.shared.open(url, options: [:], completionHandler: nil)
     }
 
     @objc func openFacebookURL() {
-        self.openURL("https://www.facebook.com/profile.php?id=61551148828863&locale=fr_FR")
+        self.openURLString(TargetVariables.links.socialMedia.facebook)
     }
 
     @objc func openYoutubeURL() {
-        self.openURL("https://www.youtube.com/channel/UCVYLZg-cDBbe1h8ege0N5Eg")
+        self.openURLString(TargetVariables.links.socialMedia.youtube)
     }
 
     @objc func openIntagramURL() {
-        self.openURL("https://www.instagram.com/betsson_france/")
+        self.openURLString(TargetVariables.links.socialMedia.instagram)
     }
 
     @objc func openTwitterURL() {
-        self.openURL("https://twitter.com/BetssonFR")
+        self.openURLString(TargetVariables.links.socialMedia.twitter)
     }
 
     @objc func openInterdictionURL() {
-        let url = "https://anj.fr/ts"
-        self.openURL(url)
+        self.openURLString(TargetVariables.links.responsibleGaming.gamblingAuthorityTerms)
     }
 
     @objc private func didTapLogo1(_ sender: UITapGestureRecognizer) {
-        if let url = URL(string: "https://anj.fr/") {
+        if let url = URL(string: TargetVariables.links.responsibleGaming.gamblingAuthority) {
             UIApplication.shared.open(url)
         }
     }
 
     @objc private func didTapLogo2(_ sender: UITapGestureRecognizer) {
-        if let url = URL(string: "https://sosjoueurs.org/") {
+        let urlString = TargetVariables.links.responsibleGaming.gamblingAddictionHelpline
+        if let url = URL(string: urlString) {
 
             // Firebase Analytics
             AnalyticsClient.sendEvent(event: .sosPlayers)

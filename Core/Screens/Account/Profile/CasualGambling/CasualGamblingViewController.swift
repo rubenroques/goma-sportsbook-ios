@@ -311,7 +311,7 @@ class CasualGamblingViewController: UIViewController {
     }
     
     @objc private func didTapLogo1(_ sender: UITapGestureRecognizer) {
-        if let url = URL(string: "https://sosjoueurs.org/") {
+        if let url = URL(string: TargetVariables.links.responsibleGaming.gamblingAddictionHelpline) {
             
             // Firebase Analytics
             AnalyticsClient.sendEvent(event: .sosPlayers)
@@ -328,6 +328,7 @@ class CasualGamblingViewController: UIViewController {
     }
     
     @objc private func didTapLogo2(_ sender: UITapGestureRecognizer) {
+        
         if let url = URL(string: "https://www.evalujeu.fr/") {
             
             // Firebase Analytics
@@ -345,7 +346,7 @@ class CasualGamblingViewController: UIViewController {
     }
     
     @objc private func didTapLogo3(_ sender: UITapGestureRecognizer) {
-        if let url = URL(string: "https://anj.fr/") {
+        if let url = URL(string: TargetVariables.links.responsibleGaming.gamblingAuthority) {
             UIApplication.shared.open(url)
         }
     }
