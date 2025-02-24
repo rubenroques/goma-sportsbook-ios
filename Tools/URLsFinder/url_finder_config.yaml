@@ -10,6 +10,10 @@ ignore_paths:
 ignore_files:
   - "Package.swift"
   - "Package.resolved"
+  - "URLEndpoints.swift"
+  - "DummyWidgetShowcaseHomeViewTemplateDataSource.swift"
+  - "SwiftyJSON.swift"
+  - "UIImageView+Extensions.swift"
 
 # URLs to ignore (partial matches)
 ignore_urls:

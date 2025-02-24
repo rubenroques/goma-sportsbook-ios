@@ -281,7 +281,7 @@ class CasualGamblingViewController: UIViewController {
         let link1Range = (localized("responsible_gaming_second_section_text_2") as NSString).range(of: "SOS joueur")
                 
         if sender.didTapAttributedTextInLabel(label: self.accordionSecondSectionDescriptionLabel2, inRange: link1Range, alignment: .left) {
-            if let url = URL(string: "https://sosjoueurs.org/") {
+            if let url = URL(string: TargetVariables.links.responsibleGaming.gamblingAddictionHelpline) {
                 
                 // Firebase Analytics
                 AnalyticsClient.sendEvent(event: .sosPlayers)
@@ -300,10 +300,10 @@ class CasualGamblingViewController: UIViewController {
     }
     
     @objc private func didTapFourthSectionLabel(_ sender: UITapGestureRecognizer) {
-        let link1Range = (localized("responsible_gaming_fourth_section_text") as NSString).range(of: "https://e-enfance.org/informer/controle-parental/")
+        let link1Range = (localized("responsible_gaming_fourth_section_text") as NSString).range(of: TargetVariables.links.responsibleGaming.parentalControl)
                 
         if sender.didTapAttributedTextInLabel(label: self.accordionFourthSectionDescriptionLabel, inRange: link1Range, alignment: .left) {
-            if let url = URL(string: "https://e-enfance.org/informer/controle-parental/") {
+            if let url = URL(string: TargetVariables.links.responsibleGaming.parentalControl) {
                 UIApplication.shared.open(url)
             }
         }
@@ -329,7 +329,7 @@ class CasualGamblingViewController: UIViewController {
     
     @objc private func didTapLogo2(_ sender: UITapGestureRecognizer) {
         
-        if let url = URL(string: "https://www.evalujeu.fr/") {
+        if let url = URL(string: TargetVariables.links.responsibleGaming.gamblingBehaviorSelfAssessment) {
             
             // Firebase Analytics
             AnalyticsClient.sendEvent(event: .evaluejeu)
@@ -361,7 +361,7 @@ extension CasualGamblingViewController {
     }
 
     @objc private func didTapTipButton() {
-        if let url = URL(string: "https://www.evalujeu.fr/") {
+        if let url = URL(string: TargetVariables.links.responsibleGaming.gamblingBehaviorSelfAssessment) {
             UIApplication.shared.open(url)
         }
     }
@@ -763,7 +763,7 @@ extension CasualGamblingViewController {
         let range1 = (fullText as NSString).range(of: "interdits aux mineurs")
         let range2 = (fullText as NSString).range(of: "L’utilisateur sera exclu et son compte fermé")
         let range3 = (fullText as NSString).range(of: "Ne permettez pas que votre enfant joue avec votre compte en ligne")
-        let range4 = (fullText as NSString).range(of: "https://e-enfance.org/informer/controle-parental/")
+        let range4 = (fullText as NSString).range(of: TargetVariables.links.responsibleGaming.parentalControl)
 
         let paragraphStyle = NSMutableParagraphStyle()
 

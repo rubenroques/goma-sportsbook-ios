@@ -122,7 +122,7 @@ extension TargetVariables {
                 gomaGaming: "https://sportsbook-stage.gomagaming.com/",
                 sportsbook: "https://sportsbook.betsson.fr/",
                 firebase: "https://betsson-fr.firebaseapp.com/",
-                casino: "https://casino.betsson.fr/",
+                casino: "",
                 promotions: "https://promotions.betsson.fr/",
                 affiliateSystem: "http://www.partenaire-betsson.fr/",
                 secundaryMarketSpecsUrl: "https://betsson.fr/secondary_markets_config.json"
@@ -133,22 +133,25 @@ extension TargetVariables {
                 customerSupport: "https://support.betsson.fr/hc/fr/requests/new"
             ),
             responsibleGaming: URLEndpoint.ResponsibleGaming(
-                gamblingAddictionHelpline: "https://sosjoueurs.org/",
-                gamblingBlockingSoftware: "https://gamban.com/",
-                gamblingBehaviorSelfAssessment: "https://www.evalujeu.fr/ou-en-etes-vous-avec-les-jeux-dargent",
+                gamblingAddictionHelpline: "https://sosjoueurs.org/", // used
+                gamblingBlockingSoftware: "https://gamban.com/fr/", // used
+                gamblingBehaviorSelfAssessment: "https://www.evalujeu.fr/",
+                gamblingBehaviorSelfAssessmentQuiz: "https://www.evalujeu.fr/ou-en-etes-vous-avec-les-jeux-dargent", // used
                 timeManagementApp: "https://www.bettor-time.com/",
-                gamblingAddictionSupport: "https://www.joueurs-info-service.fr/",
+                gamblingAddictionSupport: "https://www.joueurs-info-service.fr/", // used
                 gamblingAuthority: "https://anj.fr/",
                 gamblingAuthorityTerms: "https://anj.fr/ts",
-                parentalControl: "https://e-enfance.org/",
-                addictionTreatmentCenter: "https://www.chu-nimes.fr/addictologie-unite-de-coordination-et-de-soins-en-addictologie.html",
-                selfExclusionService: "https://interdictiondejeux.anj.fr"
+                parentalControl: "https://e-enfance.org/informer/controle-parental/", // used
+                addictionTreatmentCenter: "https://www.chu-nimes.fr/actu-cht/addiction-aux-jeux--participez-a-letude-train-online.html", // used
+                selfExclusionService: "https://interdictiondejeux.anj.fr",
+                gamblingHabitsApp: "https://play.google.com/store/apps/details?id=com.goozix.bettor_time&hl=fr_CA&gl=US&pli=1" // used
             ),
+            
             socialMedia: URLEndpoint.SocialMedia(
                 facebook: "https://www.facebook.com/profile.php?id=61551148828863&locale=fr_FR",
                 twitter: "https://twitter.com/BetssonFrance",
                 youtube: "https://www.youtube.com/@betssonfrance",
-                instagram: "https://www.instagram.com/betssonfrance/"
+                instagram: "https://www.instagram.com/betsson_france/"
             ),
             legalAndInfo: URLEndpoint.LegalAndInfo(
                 responsibleGambling: "https://betsson.fr/fr/jeu-responsable",
