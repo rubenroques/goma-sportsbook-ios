@@ -180,7 +180,7 @@ class SportRadarEventDetailsCoordinator {
                 return
             }
             if let liveDataExtendedSubscription = self?.liveDataExtendedSubscription {
-                // the liveDataSubscription isn't managed by this class
+                print("liveDataSubscription isn't managed by this class \(liveDataExtendedSubscription)")
             }
             else if let weakSelf = self {
                 let liveDataExtendedSubscription = Subscription(contentIdentifier: weakSelf.liveDataContentIdentifier,

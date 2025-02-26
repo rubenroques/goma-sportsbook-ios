@@ -47,7 +47,7 @@ class GomaAPIAuthenticator {
     }
     
     func updatePushNotificationToken(newToken: String?) {
-        var shouldForceUpdateToken = (self.pushNotificationsToken == nil && newToken != nil )
+        let shouldForceUpdateToken = (self.pushNotificationsToken == nil && newToken != nil )
         self.pushNotificationsToken = newToken
         
         // We need to force an auth or login in the next requests so we can send the PushToken

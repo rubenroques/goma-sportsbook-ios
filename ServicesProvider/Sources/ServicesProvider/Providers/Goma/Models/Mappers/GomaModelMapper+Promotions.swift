@@ -10,15 +10,9 @@ import Foundation
 extension GomaModelMapper {
 
     // MARK: - Home Template
-
     static func homeTemplate(fromInternalHomeTemplate template: GomaModels.HomeTemplateResponse) -> HomeTemplate {
         let sections = template.sections.map { section in
-            TemplateSection(
-                type: section.type,
-                title: section.title,
-                source: section.source,
-                options: section.options?.mapValues { $0.value }
-            )
+            TemplateSection(type: section.type, title: section.title, source: section.source)
         }
 
         return HomeTemplate(
@@ -26,30 +20,26 @@ extension GomaModelMapper {
             clientId: template.clientId,
             title: template.title,
             platform: template.platform,
-            sections: sections,
-            createdAt: ISO8601DateFormatter().date(from: template.createdAt) ?? Date(),
-            updatedAt: ISO8601DateFormatter().date(from: template.updatedAt) ?? Date()
-        )
+            sections: sections)
     }
 
     // MARK: - Alert Banner
-
     static func alertBanner(fromInternalAlertBanner banner: GomaModels.AlertBannerData) -> AlertBanner {
-        let dateFormatter = ISO8601DateFormatter()
-
         return AlertBanner(
-            id: banner.id,
+            id: String(banner.id),
             title: banner.title,
+            subtitle: nil,
             content: banner.content,
             backgroundColor: banner.backgroundColor,
             textColor: banner.textColor,
+            callToActionText: nil,
             actionType: banner.actionType,
             actionTarget: banner.actionTarget,
-            startDate: dateFormatter.date(from: banner.startDate) ?? Date(),
-            endDate: dateFormatter.date(from: banner.endDate) ?? Date(),
+            isActive: banner.status.lowercased() == "active",
+            startDate: isoDateFormatter.date(from: banner.startDate),
+            endDate: isoDateFormatter.date(from: banner.endDate),
             status: banner.status,
-            imageUrl: banner.imageUrl != nil ? URL(string: banner.imageUrl!) : nil
-        )
+            imageUrl: banner.imageUrl != nil ? URL(string: banner.imageUrl!) : nil)
     }
 
     // MARK: - Banners
@@ -59,16 +49,16 @@ extension GomaModelMapper {
     }
 
     static func banner(fromInternalBanner banner: GomaModels.BannerData) -> Banner {
-        let dateFormatter = ISO8601DateFormatter()
-
         return Banner(
-            id: banner.id,
+            id: String(banner.id),
             title: banner.title,
             subtitle: banner.subtitle,
             actionType: banner.actionType,
             actionTarget: banner.actionTarget,
-            startDate: dateFormatter.date(from: banner.startDate) ?? Date(),
-            endDate: dateFormatter.date(from: banner.endDate) ?? Date(),
+            callToActionText: nil,
+            isActive: banner.status.lowercased() == "active",
+            startDate: isoDateFormatter.date(from: banner.startDate),
+            endDate: isoDateFormatter.date(from: banner.endDate),
             status: banner.status,
             imageUrl: banner.imageUrl != nil ? URL(string: banner.imageUrl!) : nil
         )
@@ -81,15 +71,13 @@ extension GomaModelMapper {
     }
 
     static func sportBanner(fromInternalSportBanner banner: GomaModels.SportBannerData) -> SportBanner {
-        let dateFormatter = ISO8601DateFormatter()
-
         return SportBanner(
             id: banner.id,
             title: banner.title,
             subtitle: banner.subtitle,
             sportEventId: banner.sportEventId,
-            startDate: dateFormatter.date(from: banner.startDate) ?? Date(),
-            endDate: dateFormatter.date(from: banner.endDate) ?? Date(),
+            startDate: isoDateFormatter.date(from: banner.startDate) ?? Date(),
+            endDate: isoDateFormatter.date(from: banner.endDate) ?? Date(),
             status: banner.status,
             imageUrl: banner.imageUrl != nil ? URL(string: banner.imageUrl!) : nil,
             event: banner.event != nil ? sportEventSummary(fromInternalSportEvent: banner.event!) : nil
@@ -102,7 +90,7 @@ extension GomaModelMapper {
             sportId: event.sportId,
             homeTeamId: event.homeTeamId,
             awayTeamId: event.awayTeamId,
-            dateTime: ISO8601DateFormatter().date(from: event.dateTime) ?? Date(),
+            dateTime: isoDateFormatter.date(from: event.dateTime) ?? Date(),
             homeTeam: event.homeTeam.name,
             awayTeam: event.awayTeam.name,
             homeTeamLogo: event.homeTeam.logo != nil ? URL(string: event.homeTeam.logo!) : nil,
@@ -117,16 +105,14 @@ extension GomaModelMapper {
     }
 
     static func boostedOddsBanner(fromInternalBoostedOddsBanner banner: GomaModels.BoostedOddsBannerData) -> BoostedOddsBanner {
-        let dateFormatter = ISO8601DateFormatter()
-
         return BoostedOddsBanner(
             id: banner.id,
             title: banner.title,
             originalOdd: banner.originalOdd,
             boostedOdd: banner.boostedOdd,
             sportEventId: banner.sportEventId,
-            startDate: dateFormatter.date(from: banner.startDate) ?? Date(),
-            endDate: dateFormatter.date(from: banner.endDate) ?? Date(),
+            startDate: isoDateFormatter.date(from: banner.startDate) ?? Date(),
+            endDate: isoDateFormatter.date(from: banner.endDate) ?? Date(),
             status: banner.status,
             imageUrl: banner.imageUrl != nil ? URL(string: banner.imageUrl!) : nil,
             event: banner.event != nil ? sportEventSummary(fromInternalSportEvent: banner.event!) : nil
@@ -140,16 +126,14 @@ extension GomaModelMapper {
     }
 
     static func heroCard(fromInternalHeroCard card: GomaModels.HeroCardData) -> HeroCard {
-        let dateFormatter = ISO8601DateFormatter()
-
         return HeroCard(
             id: card.id,
             title: card.title,
             subtitle: card.subtitle,
             actionType: card.actionType,
             actionTarget: card.actionTarget,
-            startDate: dateFormatter.date(from: card.startDate) ?? Date(),
-            endDate: dateFormatter.date(from: card.endDate) ?? Date(),
+            startDate: isoDateFormatter.date(from: card.startDate) ?? Date(),
+            endDate: isoDateFormatter.date(from: card.endDate) ?? Date(),
             status: card.status,
             imageUrl: card.imageUrl != nil ? URL(string: card.imageUrl!) : nil,
             eventId: card.eventId
@@ -163,16 +147,14 @@ extension GomaModelMapper {
     }
 
     static func story(fromInternalStory story: GomaModels.StoryData) -> Story {
-        let dateFormatter = ISO8601DateFormatter()
-
         return Story(
             id: story.id,
             title: story.title,
             content: story.content,
             actionType: story.actionType,
             actionTarget: story.actionTarget,
-            startDate: dateFormatter.date(from: story.startDate) ?? Date(),
-            endDate: dateFormatter.date(from: story.endDate) ?? Date(),
+            startDate: isoDateFormatter.date(from: story.startDate) ?? Date(),
+            endDate: isoDateFormatter.date(from: story.endDate) ?? Date(),
             status: story.status,
             imageUrl: story.imageUrl != nil ? URL(string: story.imageUrl!) : nil,
             duration: story.duration
@@ -186,15 +168,13 @@ extension GomaModelMapper {
     }
 
     static func newsItem(fromInternalNewsItem item: GomaModels.NewsItemData) -> NewsItem {
-        let dateFormatter = ISO8601DateFormatter()
-
         return NewsItem(
             id: item.id,
             title: item.title,
             subtitle: item.subtitle,
             content: item.content,
             author: item.author,
-            publishedDate: dateFormatter.date(from: item.publishedDate) ?? Date(),
+            publishedDate: isoDateFormatter.date(from: item.publishedDate) ?? Date(),
             status: item.status,
             imageUrl: item.imageUrl != nil ? URL(string: item.imageUrl!) : nil,
             tags: item.tags ?? []
@@ -232,7 +212,7 @@ extension GomaModelMapper {
             id: event.id,
             homeTeam: event.homeTeam,
             awayTeam: event.awayTeam,
-            dateTime: ISO8601DateFormatter().date(from: event.dateTime) ?? Date()
+            dateTime: isoDateFormatter.date(from: event.dateTime) ?? Date()
         )
     }
 

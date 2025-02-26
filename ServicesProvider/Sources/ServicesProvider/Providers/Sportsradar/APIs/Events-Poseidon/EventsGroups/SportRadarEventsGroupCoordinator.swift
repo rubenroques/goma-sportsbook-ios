@@ -207,7 +207,7 @@ extension SportRadarEventsGroupCoordinator {
             self.storage.updateOutcomeTradability(withId: selectionId, isTradable: isTradable)
 
         // Live Data
-        case .updateEventLiveDataExtended(_, let eventId, let eventLiveDataExtended):
+        case .updateEventLiveDataExtended(_, _, let eventLiveDataExtended):
             if let newTime = eventLiveDataExtended.matchTime {
                 self.storage.updateEventTime(newTime: newTime)
             }

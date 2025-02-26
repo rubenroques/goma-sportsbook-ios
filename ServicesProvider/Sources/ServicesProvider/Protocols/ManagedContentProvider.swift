@@ -12,7 +12,7 @@ import Combine
 ///
 /// This protocol provides methods for retrieving promotional and templated content
 /// used throughout the application, including banners, stories, news, and other promotional items.
-public protocol ManagedContentProvider: Connector {
+protocol ManagedContentProvider: Connector {
 
     // MARK: - Home Template
 
@@ -71,34 +71,4 @@ public protocol ManagedContentProvider: Connector {
     /// - Returns: Publisher that emits an array of pro choices
     func getProChoices() -> AnyPublisher<[ProChoice], ServiceProviderError>
 
-    // MARK: - Dynamic Content
-
-    /// Retrieves content based on the section type from the home template
-    /// - Parameters:
-    ///   - sectionType: The type of section as defined in the template
-    ///   - options: Additional options for the request, as specified in the template
-    /// - Returns: Publisher that emits the appropriate content for the section
-    func getContentForSection(sectionType: String, options: [String: Any]?) -> AnyPublisher<Any, ServiceProviderError>
-
-    // MARK: - Cache Management
-
-    /// Invalidates all cached content
-    func invalidateCache()
-
-    /// Invalidates specific cached content by type
-    /// - Parameter contentType: The type of content to invalidate
-    func invalidateCache(for contentType: ManagedContentType)
-}
-
-/// Types of managed content for cache invalidation
-enum ManagedContentType {
-    case homeTemplate
-    case alertBanner
-    case banners
-    case sportBanners
-    case boostedOddsBanners
-    case heroCards
-    case stories
-    case news
-    case proChoices
 }

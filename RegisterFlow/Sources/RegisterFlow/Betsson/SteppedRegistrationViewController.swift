@@ -193,7 +193,7 @@ public class SteppedRegistrationViewModel {
     func requestRegister() -> Bool {
 
         guard
-            var form = self.userRegisterEnvelop.convertToSignUpForm()
+            let form = self.userRegisterEnvelop.convertToSignUpForm()
         else {
             return false
         }

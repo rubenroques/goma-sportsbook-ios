@@ -9,6 +9,13 @@ import Foundation
 
 struct GomaModelMapper {
     
+    // Shared ISO8601DateFormatter for use across all mapping methods
+    // This is more efficient than creating a new formatter in each method
+    static let isoDateFormatter: ISO8601DateFormatter = {
+        let formatter = ISO8601DateFormatter() // 2024-04-01T12:34:56.789Z
+        return formatter
+    }()
+    
     static func parseDateString(dateString: String) -> Date? {
         let dateFormatter = DateFormatter()
         dateFormatter.dateFormat = "yyyy-MM-dd'T'HH:mm:ss.SSSSSSZ"

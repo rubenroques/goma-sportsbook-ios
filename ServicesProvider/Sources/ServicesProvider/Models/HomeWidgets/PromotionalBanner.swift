@@ -1,6 +1,6 @@
 //
 //  File.swift
-//  
+//
 //
 //  Created by Ruben Roques on 30/05/2023.
 //
@@ -29,11 +29,4 @@ public enum BannerSpecialAction: Codable, Equatable, Hashable {
     case none
 }
 
-public struct AlertBanner: Codable, Equatable, Hashable {
-    public var identifier: String
-    public var title: String
-    public var subtitle: String?
-    public var callToActionText: String?
-    public var callToActionUrl: String?
-    public var isActive: Bool
-}
+// AlertBanner has been moved to ServicesProvider/Models/Promotions/AlertBanner.swift

@@ -37,58 +37,42 @@ class SportRadarManagedContentProvider: ManagedContentProvider {
             .store(in: &cancellables)
     }
 
-    // MARK: - API Request Helper
-
-    private func request<T: Decodable>(_ endpoint: String, parameters: [String: Any]? = nil) -> AnyPublisher<T, ServiceProviderError> {
-        // This is a simplified placeholder for API requests
-        // In a real implementation, you would use your preferred networking approach
-        return Fail(error: ServiceProviderError.notSupportedForProvider)
-            .eraseToAnyPublisher()
-    }
-
     // MARK: - ManagedContentProvider Implementation
 
     func getHomeTemplate() -> AnyPublisher<HomeTemplate, ServiceProviderError> {
-        return request("/api/home-template")
+        fatalError("")
     }
 
     func getAlertBanner() -> AnyPublisher<AlertBanner?, ServiceProviderError> {
-        return request("/api/alert-banner")
+        fatalError("")
     }
 
     func getBanners() -> AnyPublisher<[Banner], ServiceProviderError> {
-        return request("/api/banners")
+        fatalError("")
     }
 
     func getSportBanners() -> AnyPublisher<[SportBanner], ServiceProviderError> {
-        return request("/api/sport-banners")
+        fatalError("")
     }
 
     func getBoostedOddsBanners() -> AnyPublisher<[BoostedOddsBanner], ServiceProviderError> {
-        return request("/api/boosted-odds-banners")
+        fatalError("")
     }
 
     func getHeroCards() -> AnyPublisher<[HeroCard], ServiceProviderError> {
-        return request("/api/hero-cards")
+        fatalError("")
     }
 
     func getStories() -> AnyPublisher<[Story], ServiceProviderError> {
-        return request("/api/stories")
+        fatalError("")
     }
 
     func getNews(pageIndex: Int, pageSize: Int) -> AnyPublisher<[NewsItem], ServiceProviderError> {
-        return request("/api/news", parameters: ["page": pageIndex, "pageSize": pageSize])
+        fatalError("")
     }
 
     func getProChoices() -> AnyPublisher<[ProChoice], ServiceProviderError> {
-        return request("/api/pro-choices")
+        fatalError("")
     }
 
-    func invalidateCache() {
-        // No caching implemented in this version
-    }
-
-    func invalidateCache(for contentType: ManagedContentType) {
-        // No caching implemented in this version
-    }
 }

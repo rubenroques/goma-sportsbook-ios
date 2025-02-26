@@ -234,21 +234,15 @@ extension SportRadarModelMapper {
                        customBetAvailableMarket: internalOutcome.customBetAvailableMarket)
     }
 
-    static func bannerResponse(fromInternalBannerResponse internalBannerResponse: SportRadarModels.BannerResponse) -> BannerResponse {
-
-        let banners = internalBannerResponse.bannerItems.map({ banner -> Banner in
-            let banner = Self.banner(fromInternalBanner: banner)
-
-            return banner
-
+    static func banners(fromInternalBanners internalBanners: [SportRadarModels.Banner]) -> BannerResponse {
+        let banners = internalBanners.map({ internalBanner in
+            return banner(fromInternalBanner: internalBanner)
         })
-
         return BannerResponse(bannerItems: banners)
-
     }
 
-    static func banner(fromInternalBanner internalBanner: SportRadarModels.Banner) -> Banner {
-        return Banner(id: internalBanner.id,
+    static func banner(fromInternalBanner internalBanner: SportRadarModels.Banner) -> EventBanner {
+        return EventBanner(id: internalBanner.id,
                       name: internalBanner.name,
                       title: internalBanner.title,
                       imageUrl: internalBanner.imageUrl,

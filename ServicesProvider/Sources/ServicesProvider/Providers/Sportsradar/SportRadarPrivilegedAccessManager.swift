@@ -100,8 +100,8 @@ class SportRadarPrivilegedAccessManager: PrivilegedAccessManager {
         let publisher: AnyPublisher<SportRadarModels.PlayerInfoResponse, ServiceProviderError> = self.connector.request(endpoint)
 
         return publisher.flatMap({ playerInfoResponse -> AnyPublisher<UserProfile, ServiceProviderError> in
-            if playerInfoResponse.status == "SUCCESS", var userOverview = SportRadarModelMapper.userProfile(fromPlayerInfoResponse: playerInfoResponse, withKycExpire: kycExpire) {
-
+            if playerInfoResponse.status == "SUCCESS", let userOverview = SportRadarModelMapper.userProfile(fromPlayerInfoResponse: playerInfoResponse, withKycExpire: kycExpire) {
+                print("getUserProfile(withKycExpire \(userOverview))")
                 return Just(userOverview).setFailureType(to: ServiceProviderError.self).eraseToAnyPublisher()
             }
             return Fail(outputType: UserProfile.self, failure: ServiceProviderError.invalidResponse).eraseToAnyPublisher()

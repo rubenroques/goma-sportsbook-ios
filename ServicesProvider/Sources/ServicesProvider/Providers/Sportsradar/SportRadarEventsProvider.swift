@@ -470,7 +470,7 @@ class SportRadarEventsProvider: EventsProvider {
                 let httpResponse = response as? HTTPURLResponse,
                 (200...299).contains(httpResponse.statusCode)
             else {
-                print("ServiceProvider subscribeEventSummary \(error) \(response)")
+                print("ServiceProvider subscribeEventSummary \(String(describing: error)) \(String(describing: response))")
                 publisher.send(completion: .failure(ServiceProviderError.onSubscribe))
                 return
             }
@@ -545,11 +545,11 @@ class SportRadarEventsProvider: EventsProvider {
     public func subscribeToEventOnListsLiveDataUpdates(withId id: String) -> AnyPublisher<Event?, ServiceProviderError> {
 
         guard
-            let sessionToken = self.socketConnector.token
+            self.socketConnector.token != nil
         else {
             return Fail(error: ServiceProviderError.userSessionNotFound).eraseToAnyPublisher()
         }
-
+        
         // events lists
         for paginator in self.eventsPaginators.values {
             if paginator.containsEvent(withid: id), let publisher = paginator.subscribeToEventOnListsLiveDataUpdates(withId: id) {
@@ -1088,7 +1088,7 @@ extension SportRadarEventsProvider {
 
         return requestPublisher.map( { sportRadarResponse -> BannerResponse in
             let bannersResponse = sportRadarResponse.data
-            let mappedBannersResponse = SportRadarModelMapper.bannerResponse(fromInternalBannerResponse: bannersResponse)
+            let mappedBannersResponse = SportRadarModelMapper.banners(fromInternalBanners: bannersResponse.bannerItems)
             //            let mappedEventsGroup = SportRadarModelMapper.events(fromInternalEvents: events)
 
             return mappedBannersResponse
@@ -1447,7 +1447,7 @@ extension SportRadarEventsProvider {
         let requestPublisher: AnyPublisher<SportRadarModels.SportRadarResponse<SportRadarModels.BannerResponse>, ServiceProviderError> = self.restConnector.request(endpoint)
         return requestPublisher.map( { sportRadarResponse -> BannerResponse in
             let bannersResponse = sportRadarResponse.data
-            let mappedBannersResponse = SportRadarModelMapper.bannerResponse(fromInternalBannerResponse: bannersResponse)
+            let mappedBannersResponse = SportRadarModelMapper.banners(fromInternalBanners: bannersResponse.bannerItems)
             return mappedBannersResponse
         })
         .eraseToAnyPublisher()

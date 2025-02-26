@@ -16,14 +16,10 @@ extension GomaModels {
         let title: String
         let platform: String
         let sections: [TemplateSectionData]
-        let createdAt: String
-        let updatedAt: String
 
         enum CodingKeys: String, CodingKey {
             case id, title, platform, sections
             case clientId = "client_id"
-            case createdAt = "created_at"
-            case updatedAt = "updated_at"
         }
     }
 

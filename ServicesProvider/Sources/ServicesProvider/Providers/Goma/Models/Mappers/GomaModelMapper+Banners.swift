@@ -48,12 +48,25 @@ extension GomaModelMapper {
     }
 
     static func alertBanner(fromAlertBanner alertBanner: GomaModels.AlertBanner) -> AlertBanner {
-        return AlertBanner(identifier: alertBanner.identifier,
-                           title: alertBanner.title,
-                           subtitle: alertBanner.subtitle,
-                           callToActionText: alertBanner.callToActionText,
-                           callToActionUrl: alertBanner.callToActionUrl,
-                           isActive: (alertBanner.isActive ?? 0) == 1)
+        // Convert callToActionUrl to URL if present
+        let imageUrl: URL? = nil // GomaModels.AlertBanner doesn't have an imageUrl property
+
+        return AlertBanner(
+            id: alertBanner.identifier,
+            title: alertBanner.title,
+            subtitle: alertBanner.subtitle,
+            content: nil, // No content in GomaModels.AlertBanner
+            backgroundColor: nil, // No backgroundColor in GomaModels.AlertBanner
+            textColor: nil, // No textColor in GomaModels.AlertBanner
+            callToActionText: alertBanner.callToActionText,
+            actionType: alertBanner.callToActionUrl != nil ? "url" : nil,
+            actionTarget: alertBanner.callToActionUrl,
+            isActive: (alertBanner.isActive ?? 0) == 1,
+            startDate: nil, // No startDate in GomaModels.AlertBanner
+            endDate: nil, // No endDate in GomaModels.AlertBanner
+            status: nil, // No status in GomaModels.AlertBanner
+            imageUrl: imageUrl
+        )
     }
 
     static func bannerAlert(fromBannerAlert bannerAlert: GomaModels.BannerAlert) -> BannerAlert {

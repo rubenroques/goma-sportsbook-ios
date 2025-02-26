@@ -730,14 +730,15 @@ public struct SportCompetitionMarketGroup: Codable, Hashable {
 }
 
 public struct BannerResponse: Codable {
-    public var bannerItems: [Banner]
+    public var bannerItems: [EventBanner]
 
     enum CodingKeys: String, CodingKey {
         case bannerItems = "headlineItems"
     }
 }
 
-public struct Banner: Codable {
+// Renamed from Banner to EventBanner to avoid conflict with the consolidated version in Promotions
+public struct EventBanner: Codable {
     public var id: String
     public var name: String
     public var title: String

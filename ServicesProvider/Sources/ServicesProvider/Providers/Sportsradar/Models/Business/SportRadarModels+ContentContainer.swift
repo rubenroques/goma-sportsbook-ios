@@ -322,13 +322,13 @@ extension SportRadarModels {
 
         private static func parseUpdated(container: KeyedDecodingContainer<CodingKeys>) throws -> ContentContainer {
             
-            let contentTypeContainer = try container.nestedContainer(keyedBy: CodingKeys.self, forKey: .content)
-            let contentType = try contentTypeContainer.decode(ContentType.self, forKey: .contentType)
+            // let contentTypeContainer = try container.nestedContainer(keyedBy: CodingKeys.self, forKey: .content)
+            // let contentType = try contentTypeContainer.decode(ContentType.self, forKey: .contentType)
             
             let contentIdentifier = try container.decode(ContentIdentifier.self, forKey: .content)
             let path: String = try container.decodeIfPresent(String.self, forKey: .path) ?? ""
             
-            if case let ContentRoute.eventMainMarket(eventId) = contentIdentifier.contentRoute {
+            if case ContentRoute.eventMainMarket = contentIdentifier.contentRoute {
                 if let event = try? container.decode(SportRadarModels.Event.self, forKey: .change) {
                     return .updateEventMainMarket(contentIdentifier: contentIdentifier, event: event)
                 }
@@ -702,7 +702,7 @@ extension SportRadarModels {
                 return .updateMarketTradability(contentIdentifier: contentIdentifier, marketId: marketId, isTradable: newIsTradable)
             }
             else if path.contains("selections"), let selectionId = SocketMessageParseHelper.extractSelectionId(path) {
-                // print("Updated Selection \(selectionId)")
+                print("Updated Selection \(selectionId)")
             }
             else if contentIdentifier.contentType == .market, // Is a contentRout of market updates
                     path == "istradable", // the path is istradable
@@ -717,8 +717,8 @@ extension SportRadarModels {
         }
 
         private static func parseAdded(container: KeyedDecodingContainer<CodingKeys>) throws -> ContentContainer {
-            let contentTypeContainer = try container.nestedContainer(keyedBy: CodingKeys.self, forKey: .content)
-            let contentType = try contentTypeContainer.decode(ContentType.self, forKey: .contentType)
+            // let contentTypeContainer = try container.nestedContainer(keyedBy: CodingKeys.self, forKey: .content)
+            // let contentType = try contentTypeContainer.decode(ContentType.self, forKey: .contentType)
             
             let contentIdentifier = try container.decode(ContentIdentifier.self, forKey: .content)
             let path: String = try container.decodeIfPresent(String.self, forKey: .path) ?? ""
@@ -767,9 +767,8 @@ extension SportRadarModels {
         }
 
         private static func parseRemoved(container: KeyedDecodingContainer<CodingKeys>) throws -> ContentContainer {
-
-            let contentTypeContainer = try container.nestedContainer(keyedBy: CodingKeys.self, forKey: .content)
-            let contentType = try contentTypeContainer.decode(ContentType.self, forKey: .contentType)
+            // let contentTypeContainer = try container.nestedContainer(keyedBy: CodingKeys.self, forKey: .content)
+            // let contentType = try contentTypeContainer.decode(ContentType.self, forKey: .contentType)
             
             let contentIdentifier = try container.decode(ContentIdentifier.self, forKey: .content)
             let path: String = try container.decodeIfPresent(String.self, forKey: .path) ?? ""

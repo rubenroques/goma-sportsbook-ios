@@ -355,7 +355,7 @@ public extension UserRegisterEnvelop {
             formattedPhoneNumber.removeFirst()
         }
         
-        var middleName = self.middleName
+        let middleName = self.middleName
         
         return ServicesProvider.SignUpForm.init(email: email,
                                                 username: username,

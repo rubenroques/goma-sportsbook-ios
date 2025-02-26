@@ -10,8 +10,8 @@ import Combine
 
 /// Implementation of ManagedContentProvider for the Goma API
 class GomaManagedContentProvider: ManagedContentProvider {
+    
     // MARK: - Properties
-
     var connectionStatePublisher: AnyPublisher<ConnectorState, Never> {
         connectionStateSubject.eraseToAnyPublisher()
     }
@@ -25,17 +25,6 @@ class GomaManagedContentProvider: ManagedContentProvider {
     init(gomaAPIAuthenticator: GomaAPIAuthenticator) {
         self.gomaAPIAuthenticator = gomaAPIAuthenticator
 
-        // Set up token handling
-        self.gomaAPIAuthenticator.tokenPublisher
-            .sink { [weak self] result in
-                switch result {
-                case .success:
-                    self?.connectionStateSubject.send(.connected)
-                case .failure:
-                    self?.connectionStateSubject.send(.disconnected)
-                }
-            }
-            .store(in: &cancellables)
     }
 
     // MARK: - API Request Helper
@@ -50,83 +39,39 @@ class GomaManagedContentProvider: ManagedContentProvider {
     // MARK: - ManagedContentProvider Implementation
 
     func getHomeTemplate() -> AnyPublisher<HomeTemplate, ServiceProviderError> {
-        return request(.homeTemplate)
-    }
-
-    func getAllPromotions() -> AnyPublisher<AllPromotions, ServiceProviderError> {
-        return request(.allPromotions)
+        fatalError("")
     }
 
     func getAlertBanner() -> AnyPublisher<AlertBanner?, ServiceProviderError> {
-        return request(.alertBanner)
+        fatalError("")
     }
 
     func getBanners() -> AnyPublisher<[Banner], ServiceProviderError> {
-        return request(.banners)
+        fatalError("")
     }
 
     func getSportBanners() -> AnyPublisher<[SportBanner], ServiceProviderError> {
-        return request(.sportBanners)
+        fatalError("")
     }
 
     func getBoostedOddsBanners() -> AnyPublisher<[BoostedOddsBanner], ServiceProviderError> {
-        return request(.boostedOddsBanners)
+        fatalError("")
     }
 
     func getHeroCards() -> AnyPublisher<[HeroCard], ServiceProviderError> {
-        return request(.heroCards)
+        fatalError("")
     }
 
     func getStories() -> AnyPublisher<[Story], ServiceProviderError> {
-        return request(.stories)
+        fatalError("")
     }
 
     func getNews(pageIndex: Int, pageSize: Int) -> AnyPublisher<[NewsItem], ServiceProviderError> {
-        return request(.news(page: pageIndex, pageSize: pageSize))
+        fatalError("")
     }
 
     func getProChoices() -> AnyPublisher<[ProChoice], ServiceProviderError> {
-        return request(.proChoices)
+        fatalError("")
     }
-
-    func invalidateCache() {
-        // No caching implemented in this version
-    }
-
-    func invalidateCache(for contentType: ManagedContentType) {
-        // No caching implemented in this version
-    }
-}
-
-// MARK: - Helper Classes
-
-/// Class to store cached content with expiration date
-private class CachedContentItem {
-    let content: Any
-    let expirationDate: Date
-
-    init(content: Any, expirationDate: Date) {
-        self.content = content
-        self.expirationDate = expirationDate
-    }
-}
-
-/// Network connectivity monitor
-private class NetworkMonitor {
-    static let shared = NetworkMonitor()
-
-    // In a real implementation, we'd use NWPathMonitor to monitor network connectivity
-    private var isMonitoring = false
-
-    func startMonitoring(callback: @escaping (Bool) -> Void) {
-        guard !isMonitoring else { return }
-        isMonitoring = true
-
-        // Simulate initial connected state
-        callback(true)
-    }
-
-    func stopMonitoring() {
-        isMonitoring = false
-    }
+    
 }

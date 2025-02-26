@@ -782,7 +782,7 @@ extension GomaAPIClient: Endpoint {
                        let username,
                        let password,
                        let avatarName,
-                       let deviceToken):
+                       _):
             let body = """
                        {
                         "name": "\(name)",
@@ -1008,7 +1008,7 @@ extension GomaAPIClient: Endpoint {
                     """
             
             if request {
-                var body = """
+                body = """
                         {"users_ids": \(userIds),
                         "request": 1
                         }
