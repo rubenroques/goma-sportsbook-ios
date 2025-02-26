@@ -574,12 +574,11 @@ class ClientManagedHomeViewTemplateDataSource {
 
     func fetchHighlightedLiveMatches() {
         
-        var homeLiveEventsCount = Env.businessSettingsSocket.clientSettings.homeLiveEventsCount
+        let homeLiveEventsCount = Env.businessSettingsSocket.clientSettings.homeLiveEventsCount
 
         self.highlightedLiveMatches = []
         
         var userId: String? = nil
-        
         if let loggedUserId = Env.userSessionStore.userProfilePublisher.value?.userIdentifier {
             userId = loggedUserId
         }

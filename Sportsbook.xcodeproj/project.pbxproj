@@ -24319,7 +24319,7 @@
 				DEVELOPMENT_TEAM = "";
 				"DEVELOPMENT_TEAM[sdk=iphoneos*]" = 422GNXXZJR;
 				INFOPLIST_FILE = "./Clients/SportRadar/Misc-UAT/SportRadar-UAT-Info.plist";
-				IPHONEOS_DEPLOYMENT_TARGET = 13.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 15.6;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -24351,7 +24351,7 @@
 				DEVELOPMENT_TEAM = "";
 				"DEVELOPMENT_TEAM[sdk=iphoneos*]" = 422GNXXZJR;
 				INFOPLIST_FILE = "./Clients/SportRadar/Misc-UAT/SportRadar-UAT-Info.plist";
-				IPHONEOS_DEPLOYMENT_TARGET = 13.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 15.6;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -24546,7 +24546,7 @@
 				CURRENT_PROJECT_VERSION = 103454;
 				DEVELOPMENT_TEAM = 422GNXXZJR;
 				INFOPLIST_FILE = "./Clients/EveryMatrix/Misc/EveryMatrix-Info.plist";
-				IPHONEOS_DEPLOYMENT_TARGET = 13.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 15.6;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -24575,7 +24575,7 @@
 				CURRENT_PROJECT_VERSION = 103454;
 				DEVELOPMENT_TEAM = 422GNXXZJR;
 				INFOPLIST_FILE = "./Clients/EveryMatrix/Misc/EveryMatrix-Info.plist";
-				IPHONEOS_DEPLOYMENT_TARGET = 13.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 15.6;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -24604,7 +24604,7 @@
 				CURRENT_PROJECT_VERSION = 103454;
 				DEVELOPMENT_TEAM = "";
 				INFOPLIST_FILE = "./Clients/Crocobet/Misc/Crocobet-Info.plist";
-				IPHONEOS_DEPLOYMENT_TARGET = 13.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 15.6;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -24633,7 +24633,7 @@
 				CURRENT_PROJECT_VERSION = 103454;
 				DEVELOPMENT_TEAM = "";
 				INFOPLIST_FILE = "./Clients/Crocobet/Misc/Crocobet-Info.plist";
-				IPHONEOS_DEPLOYMENT_TARGET = 13.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 15.6;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -24662,7 +24662,7 @@
 				CURRENT_PROJECT_VERSION = 103454;
 				DEVELOPMENT_TEAM = 422GNXXZJR;
 				INFOPLIST_FILE = "./Clients/GOMASports/Misc/GOMASports-Info.plist";
-				IPHONEOS_DEPLOYMENT_TARGET = 13.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 15.6;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -24691,7 +24691,7 @@
 				CURRENT_PROJECT_VERSION = 103454;
 				DEVELOPMENT_TEAM = 422GNXXZJR;
 				INFOPLIST_FILE = "./Clients/GOMASports/Misc/GOMASports-Info.plist";
-				IPHONEOS_DEPLOYMENT_TARGET = 13.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 15.6;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -24722,7 +24722,7 @@
 				DEVELOPMENT_TEAM = QN2DYX5K4M;
 				"DEVELOPMENT_TEAM[sdk=iphoneos*]" = QN2DYX5K4M;
 				INFOPLIST_FILE = "./Clients/Betsson/Misc-PROD/Betsson-PROD-Info.plist";
-				IPHONEOS_DEPLOYMENT_TARGET = 13.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 15.6;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -24754,7 +24754,7 @@
 				DEVELOPMENT_TEAM = QN2DYX5K4M;
 				"DEVELOPMENT_TEAM[sdk=iphoneos*]" = QN2DYX5K4M;
 				INFOPLIST_FILE = "./Clients/Betsson/Misc-PROD/Betsson-PROD-Info.plist";
-				IPHONEOS_DEPLOYMENT_TARGET = 13.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 15.6;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -24786,7 +24786,7 @@
 				DEVELOPMENT_TEAM = "";
 				"DEVELOPMENT_TEAM[sdk=iphoneos*]" = 422GNXXZJR;
 				INFOPLIST_FILE = "./Clients/DAZN/Misc/DAZN-Info.plist";
-				IPHONEOS_DEPLOYMENT_TARGET = 13.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 15.6;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -24818,7 +24818,7 @@
 				DEVELOPMENT_TEAM = "";
 				"DEVELOPMENT_TEAM[sdk=iphoneos*]" = 422GNXXZJR;
 				INFOPLIST_FILE = "./Clients/DAZN/Misc/DAZN-Info.plist";
-				IPHONEOS_DEPLOYMENT_TARGET = 13.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 15.6;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -24850,7 +24850,7 @@
 				DEVELOPMENT_TEAM = 422GNXXZJR;
 				"DEVELOPMENT_TEAM[sdk=iphoneos*]" = 422GNXXZJR;
 				INFOPLIST_FILE = "./Clients/Betsson/Misc-UAT/Betsson-UAT-Info.plist";
-				IPHONEOS_DEPLOYMENT_TARGET = 13.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 15.6;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -24882,7 +24882,7 @@
 				DEVELOPMENT_TEAM = 422GNXXZJR;
 				"DEVELOPMENT_TEAM[sdk=iphoneos*]" = 422GNXXZJR;
 				INFOPLIST_FILE = "./Clients/Betsson/Misc-UAT/Betsson-UAT-Info.plist";
-				IPHONEOS_DEPLOYMENT_TARGET = 13.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 15.6;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -24996,7 +24996,7 @@
 				CURRENT_PROJECT_VERSION = 103454;
 				DEVELOPMENT_TEAM = 422GNXXZJR;
 				INFOPLIST_FILE = "./Clients/GOMASportRadar/Misc/GOMASportRadar-Info.plist";
-				IPHONEOS_DEPLOYMENT_TARGET = 13.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 15.6;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -25026,7 +25026,7 @@
 				CURRENT_PROJECT_VERSION = 103454;
 				DEVELOPMENT_TEAM = 422GNXXZJR;
 				INFOPLIST_FILE = "./Clients/GOMASportRadar/Misc/GOMASportRadar-Info.plist";
-				IPHONEOS_DEPLOYMENT_TARGET = 13.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 15.6;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -25057,7 +25057,7 @@
 				DEVELOPMENT_TEAM = "";
 				"DEVELOPMENT_TEAM[sdk=iphoneos*]" = 422GNXXZJR;
 				INFOPLIST_FILE = "./Clients/SportRadar/Misc-PROD/SportRadar-PROD-Info.plist";
-				IPHONEOS_DEPLOYMENT_TARGET = 13.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 15.6;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -25089,7 +25089,7 @@
 				DEVELOPMENT_TEAM = "";
 				"DEVELOPMENT_TEAM[sdk=iphoneos*]" = 422GNXXZJR;
 				INFOPLIST_FILE = "./Clients/SportRadar/Misc-PROD/SportRadar-PROD-Info.plist";
-				IPHONEOS_DEPLOYMENT_TARGET = 13.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 15.6;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -25121,7 +25121,7 @@
 				DEVELOPMENT_TEAM = "";
 				"DEVELOPMENT_TEAM[sdk=iphoneos*]" = 422GNXXZJR;
 				INFOPLIST_FILE = "./Clients/ATP/Misc/ATP-Info.plist";
-				IPHONEOS_DEPLOYMENT_TARGET = 13.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 15.6;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -25153,7 +25153,7 @@
 				DEVELOPMENT_TEAM = "";
 				"DEVELOPMENT_TEAM[sdk=iphoneos*]" = 422GNXXZJR;
 				INFOPLIST_FILE = "./Clients/ATP/Misc/ATP-Info.plist";
-				IPHONEOS_DEPLOYMENT_TARGET = 13.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 15.6;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
