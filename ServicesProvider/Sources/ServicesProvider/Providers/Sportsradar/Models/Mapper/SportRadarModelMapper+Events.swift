@@ -27,7 +27,7 @@ extension SportRadarModelMapper {
 
         let eventMarkets = internalEvent.markets
         let markets = eventMarkets.map(Self.market(fromInternalMarket:))
-        
+
         let sportRadarSportType = SportRadarModels.SportType(name: internalEvent.sportTypeName ?? "",
                                                              alphaId: internalEvent.sportTypeCode,
                                                              numberEvents: 0,
@@ -38,12 +38,12 @@ extension SportRadarModelMapper {
         let sport = SportRadarModelMapper.sportType(fromSportRadarSportType: sportRadarSportType)
 
         let scores = Self.scoresDictionary(fromInternalScoresDictionary: internalEvent.scores)
-        
+
         var mappedActivePlayerServing: ActivePlayerServe?
         if let internalActivePlayerServing = internalEvent.activePlayerServing {
             mappedActivePlayerServing = Self.activePlayerServe(fromInternalActivePlayerServe: internalActivePlayerServing)
         }
-        
+
         return Event(id: internalEvent.id,
                      homeTeamName: internalEvent.homeName ?? "",
                      awayTeamName: internalEvent.awayName ?? "",
@@ -68,7 +68,7 @@ extension SportRadarModelMapper {
                      promoImageURL: nil,
                      scores: scores)
     }
-    
+
     static func event(fromInternalMarkets internalMarkets: [SportRadarModels.Market]) -> Event? {
         let mappedMarkets = internalMarkets.map(SportRadarModelMapper.market(fromInternalMarket: ))
 
@@ -105,18 +105,18 @@ extension SportRadarModelMapper {
                           scores: [:])
         return event
     }
-    
+
     static func scoresDictionary(fromInternalScoresDictionary internalScores: [String: SportRadarModels.Score]) -> [String: Score] {
         return internalScores.mapValues(Self.score(fromInternalScore:))
     }
-    
+
     static func scores(fromInternalScores internalScores: [SportRadarModels.Score]) -> [Score] {
         return internalScores.map(Self.score(fromInternalScore:))
     }
-    
+
     static func score(fromInternalScore internalScore: SportRadarModels.Score) -> Score {
         switch internalScore {
-            
+
         case .set(index: let index, home: let home, away: let away):
             return Score.set(index: index, home: home, away: away)
         case .gamePart(home: let home, away: let away):
@@ -124,9 +124,9 @@ extension SportRadarModelMapper {
         case .matchFull(home: let home, away: let away):
             return Score.matchFull(home: home, away: away)
         }
-        
+
     }
-    
+
     static func eventStatus(fromInternalEvent internalEventStatus: SportRadarModels.EventStatus) -> EventStatus? {
         switch internalEventStatus {
         case .unknown:
@@ -139,21 +139,21 @@ extension SportRadarModelMapper {
             return EventStatus.ended(internalEventStatus.stringValue)
         }
     }
-    
+
     static func eventLiveData(fromInternalEventLiveData internalEventLiveData: SportRadarModels.EventLiveDataExtended) -> EventLiveData {
-        
+
         var eventStatus: EventStatus?
         if let statusValue = internalEventLiveData.status {
             eventStatus = Self.eventStatus(fromInternalEvent: statusValue)
         }
-        
+
         let mappedScores = Self.scoresDictionary(fromInternalScoresDictionary: internalEventLiveData.scores)
-        
+
         var mappedActivePlayerServing: ActivePlayerServe?
         if let internalActivePlayerServing = internalEventLiveData.activePlayerServing {
             mappedActivePlayerServing = Self.activePlayerServe(fromInternalActivePlayerServe: internalActivePlayerServing)
         }
-        
+
         return EventLiveData(id: internalEventLiveData.id,
                              homeScore: internalEventLiveData.homeScore,
                              awayScore: internalEventLiveData.awayScore,
@@ -162,15 +162,15 @@ extension SportRadarModelMapper {
                              detailedScores: mappedScores,
                              activePlayerServing: mappedActivePlayerServing)
     }
-    
-    
-    
+
+
+
     static func market(fromInternalMarket internalMarket: SportRadarModels.Market) -> Market {
         var country: Country?
         if let tournamentCountryName = internalMarket.tournamentCountryName {
            country = Country.country(withName: tournamentCountryName)
         }
-        
+
         var mappedSport: SportType?
         if  let sportTypeCode = internalMarket.sportTypeCode {
             let sportRadarSportType = SportRadarModels.SportType(name: internalMarket.sportTypeName ?? "",
@@ -181,9 +181,9 @@ extension SportRadarModelMapper {
                                                                  numberLiveEvents: 0)
             mappedSport = SportRadarModelMapper.sportType(fromSportRadarSportType: sportRadarSportType)
         }
-        
+
         let outcomes = internalMarket.outcomes.map(Self.outcome(fromInternalOutcome:))
-        
+
         var outcomesOrder: Market.OutcomesOrder
         switch internalMarket.outcomesOrder {
         case .name:
@@ -195,7 +195,7 @@ extension SportRadarModelMapper {
         case.none:
             outcomesOrder = .none
         }
-    
+
         return Market(id: internalMarket.id,
                       name: internalMarket.name,
                       outcomes: outcomes,
@@ -211,7 +211,7 @@ extension SportRadarModelMapper {
                       awayParticipant: internalMarket.awayParticipant,
                       eventId: internalMarket.eventId,
                       marketDigitLine: internalMarket.marketDigitLine,
-                      outcomesOrder: outcomesOrder, 
+                      outcomesOrder: outcomesOrder,
                       // event related properties
                       competitionId: internalMarket.competitionId,
                       competitionName: internalMarket.competitionName,
@@ -356,5 +356,5 @@ extension SportRadarModelMapper {
         case .away: return .away
         }
     }
-    
+
 }
