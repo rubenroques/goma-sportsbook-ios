@@ -71,7 +71,8 @@ class SportRadarRestConnector {
                 }
 
                 //
-                // print("SportRadarRestConnector.Data: \(String(data: result.data, encoding: .utf8)!) ")
+                
+                print("SportRadarRestConnector.Data: \(String(data: result.data, encoding: .utf8)!) ")
                 
                 return result.data
             }

@@ -181,9 +181,11 @@ class HomeViewController: UIViewController {
         self.view.setNeedsLayout()
         self.view.layoutIfNeeded()
 
-        executeDelayed(2.0) {
+        executeDelayed(2.1) {
             self.hideLoading()
         }
+        
+        
     }
 
     override func viewWillAppear(_ animated: Bool) {

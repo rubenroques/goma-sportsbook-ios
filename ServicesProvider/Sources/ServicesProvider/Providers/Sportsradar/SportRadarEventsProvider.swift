@@ -1983,6 +1983,22 @@ extension SportRadarEventsProvider {
             .eraseToAnyPublisher()
     }
 
+    func getRecommendedBetBuilders(eventId: String, multibetsCount: Int, selectionsCount: Int, userId: String?) -> AnyPublisher<RecommendedBetBuilders, ServiceProviderError> {
+        let endpoint = VaixAPIClient.recommendedBetBuilders(eventId: eventId, multibetsCount: multibetsCount, selectionsCount: selectionsCount, userId: userId)
+
+        let requestPublisher: AnyPublisher<SportRadarModels.RecommendedBetBuildersResponse, ServiceProviderError> = self.restConnector.request(endpoint)
+
+        return requestPublisher
+            .mapError({ error in
+                return error
+            })
+            .map { response in
+                let recommendedBetBuilders = SportRadarModelMapper.recommendedBetBuildersResponse(fromInternalResponse: response)
+                return recommendedBetBuilders
+            }
+            .eraseToAnyPublisher()
+    }
+
     func getHighlightedLiveEventsIds(eventCount: Int, userId: String?) -> AnyPublisher<[String], ServiceProviderError> {
         let endpoint = VaixAPIClient.popularEvents(eventsCount: eventCount, userId: userId)
         let requestPublisher: AnyPublisher<SportRadarModels.SportRadarResponse<[SportRadarModels.HighlightedEventPointer]>, ServiceProviderError> = self.restConnector.request(endpoint)
