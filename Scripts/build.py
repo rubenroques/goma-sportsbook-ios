@@ -173,8 +173,8 @@ class XcodeBuildRunner:
         """Construct the xcodebuild command with all options and flags"""
         cmd = ["xcodebuild"]
 
-        # Project
-        cmd.extend(["-project", self.project_path])
+        # Use workspace instead of project
+        cmd.extend(["-workspace", "Sportsbook.xcodeproj/project.xcworkspace"])
 
         # Scheme
         cmd.extend(["-scheme", args.scheme])
@@ -184,6 +184,13 @@ class XcodeBuildRunner:
 
         # Destination
         cmd.extend(["-destination", args.destination])
+
+        # Result bundle path for better error reporting
+        cmd.extend(["-resultBundlePath", os.path.expanduser("~/Library/Developer/Xcode/DerivedData/build_results")])
+
+        # Allow provisioning updates if code signing is enabled
+        if args.enable_code_signing:
+            cmd.append("-allowProvisioningUpdates")
 
         # Base build settings
         cmd.extend([
