@@ -29,6 +29,8 @@ class MarketGroupDetailsViewController: UIViewController {
 
     weak var innerTableViewScrollDelegate: InnerTableViewScrollDelegate?
 
+    private var presentationMode: ClientManagedHomeViewTemplateDataSource.HighlightsPresentationMode = .multiplesPerLineByType
+
     //
     // MARK: - Stored Properties for Scroll Delegate
     private var dragDirection: InnerScrollDragDirection = .up
@@ -63,29 +65,12 @@ class MarketGroupDetailsViewController: UIViewController {
         self.tableView.register(SimpleListMarketDetailTableViewCell.nib, forCellReuseIdentifier: SimpleListMarketDetailTableViewCell.identifier)
         self.tableView.register(ThreeAwayMarketDetailTableViewCell.nib, forCellReuseIdentifier: ThreeAwayMarketDetailTableViewCell.identifier)
         self.tableView.register(OverUnderMarketDetailTableViewCell.nib, forCellReuseIdentifier: OverUnderMarketDetailTableViewCell.identifier)
+        self.tableView.register(BetbuilderLineTableViewCell.self, forCellReuseIdentifier: BetbuilderLineTableViewCell.identifier)
+        self.tableView.register(IconTitleHeaderFooterView.self, forHeaderFooterViewReuseIdentifier: IconTitleHeaderFooterView.identifier)
 
 //        self.tableView.bounces = false
-
-        let headerView = UIView(frame: CGRect(x: 0, y: 0, width: 186, height: 20))
-        headerView.backgroundColor = UIColor.clear
-
-        self.expandCollapseButton.setTitle(localized("collapse_all"), for: .normal)
-        self.expandCollapseButton.setTitleColor(UIColor.App.textSecondary, for: .normal)
-        self.expandCollapseButton.titleLabel?.textAlignment = .right
-        self.expandCollapseButton.titleLabel?.font = AppFont.with(type: .medium, size: 11)
-        self.expandCollapseButton.translatesAutoresizingMaskIntoConstraints = false
-        headerView.addSubview(self.expandCollapseButton)
-        self.expandCollapseButton.addTarget(self, action: #selector(toggleExpandAll), for: .primaryActionTriggered)
-
-        // Set constraints
-        NSLayoutConstraint.activate([
-            self.expandCollapseButton.widthAnchor.constraint(equalToConstant: 120),
-            self.expandCollapseButton.trailingAnchor.constraint(equalTo: headerView.trailingAnchor, constant: -16),
-            self.expandCollapseButton.topAnchor.constraint(equalTo: headerView.topAnchor, constant: 8),
-            self.expandCollapseButton.bottomAnchor.constraint(equalTo: headerView.bottomAnchor, constant: 1),
-        ])
-
-        self.tableView.tableHeaderView = headerView
+        
+        self.presentationMode = TargetVariables.popularBetbuilderPresentationMode
 
         self.addChildViewController(self.loadingSpinnerViewController, toView: self.loadingBaseView)
 
@@ -169,12 +154,12 @@ class MarketGroupDetailsViewController: UIViewController {
     private func reloadTableView() {
         self.tableView.reloadData()
 
-        if self.isCollapsedMarketGroupIds.isEmpty {
-            self.expandCollapseButton.setTitle(localized("collapse_all"), for: .normal)
-        }
-        else {
-            self.expandCollapseButton.setTitle(localized("expand_all"), for: .normal)
-        }
+//        if self.isCollapsedMarketGroupIds.isEmpty {
+//            self.expandCollapseButton.setTitle(localized("collapse_all"), for: .normal)
+//        }
+//        else {
+//            self.expandCollapseButton.setTitle(localized("expand_all"), for: .normal)
+//        }
     }
 
     private func showLoading() {
@@ -257,17 +242,50 @@ class MarketGroupDetailsViewController: UIViewController {
 extension MarketGroupDetailsViewController: UITableViewDataSource, UITableViewDelegate {
 
     func numberOfSections(in tableView: UITableView) -> Int {
-        return self.viewModel.numberOfSections()
+//        return self.viewModel.numberOfSections()
+        return self.viewModel.hasPopularBetbuilder ? self.viewModel.numberOfSections() + 1 : self.viewModel.numberOfSections()
     }
 
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+//        return self.viewModel.numberOfRows()
+        if self.viewModel.hasPopularBetbuilder && section == 0 {
+            switch presentationMode {
+            case .onePerLine:
+                return self.viewModel.betbuilderCellViewModels.count
+            case .multiplesPerLineByType:
+                return 1
+            }
+        }
+        
         return self.viewModel.numberOfRows()
     }
 
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
 
+        if self.viewModel.hasPopularBetbuilder && indexPath.section == 0 {
+            guard let cell = tableView.dequeueReusableCell(withIdentifier: BetbuilderLineTableViewCell.identifier) as? BetbuilderLineTableViewCell else {
+                return UITableViewCell()
+            }
+            
+            // Configure the cell with the options
+            let viewModel = self.viewModel.getBetbuilderLineCellViewModel(withIndex: indexPath.row, presentationMode: self.presentationMode)
+            
+            cell.configure(withViewModel: viewModel, presentationMode: self.presentationMode)
+            
+            return cell
+        }
+        
+//        guard
+//            let marketGroupOrganizer = self.viewModel.marketGroupOrganizer(forRow: indexPath.row)
+//        else {
+//            return UITableViewCell()
+//        }
+        // For other sections, use the existing logic but adjust the section index
+        let adjustedIndexPath = TargetVariables.hasPopularBetbuilder ?
+        IndexPath(row: indexPath.row, section: indexPath.section - 1) : indexPath
+        
         guard
-            let marketGroupOrganizer = self.viewModel.marketGroupOrganizer(forRow: indexPath.row)
+            let marketGroupOrganizer = self.viewModel.marketGroupOrganizer(forRow: adjustedIndexPath.row)
         else {
             return UITableViewCell()
         }
@@ -408,11 +426,65 @@ extension MarketGroupDetailsViewController: UITableViewDataSource, UITableViewDe
     }
 
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
+        if self.viewModel.hasPopularBetbuilder && indexPath.section == 0 {
+            return 200
+        }
         return UITableView.automaticDimension
     }
 
     func tableView(_ tableView: UITableView, estimatedHeightForRowAt indexPath: IndexPath) -> CGFloat {
+        if self.viewModel.hasPopularBetbuilder && indexPath.section == 0 {
+            return 200
+        }
         return 120
+    }
+    
+//    func tableView(_ tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
+//        if self.viewModel.hasPopularBetbuilder && section == 0 {
+//            return localized("popular_betbuilder")
+//        }
+//        
+//        return nil
+//    }
+    func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
+        if self.viewModel.hasPopularBetbuilder && section == 0 {
+            // Popular betbuilder section header
+            guard
+                let headerView = tableView.dequeueReusableHeaderFooterView(withIdentifier: IconTitleHeaderFooterView.identifier) as? IconTitleHeaderFooterView
+            else {
+                fatalError()
+            }
+
+            headerView.configureHeader(iconName: "mix_match_icon", title: "Mon petit MixMatch", backgroundColor: UIColor.App.backgroundPrimary)
+
+            return headerView
+        } else {
+            // Markets section header with expand/collapse button
+            let headerView = UIView(frame: CGRect(x: 0, y: 0, width: tableView.bounds.width, height: 20))
+            headerView.backgroundColor = .clear
+            
+            if self.isCollapsedMarketGroupIds.isEmpty {
+                self.expandCollapseButton.setTitle(localized("collapse_all"), for: .normal)
+            }
+            else {
+                self.expandCollapseButton.setTitle(localized("expand_all"), for: .normal)
+            }
+            
+            self.expandCollapseButton.setTitleColor(UIColor.App.textSecondary, for: .normal)
+            self.expandCollapseButton.titleLabel?.textAlignment = .right
+            self.expandCollapseButton.titleLabel?.font = AppFont.with(type: .medium, size: 11)
+            self.expandCollapseButton.translatesAutoresizingMaskIntoConstraints = false
+            self.expandCollapseButton.addTarget(self, action: #selector(toggleExpandAll), for: .primaryActionTriggered)
+            headerView.addSubview(self.expandCollapseButton)
+            
+            NSLayoutConstraint.activate([
+                self.expandCollapseButton.trailingAnchor.constraint(equalTo: headerView.trailingAnchor, constant: -16),
+                self.expandCollapseButton.topAnchor.constraint(equalTo: headerView.topAnchor, constant: 8),
+                self.expandCollapseButton.bottomAnchor.constraint(equalTo: headerView.bottomAnchor, constant: 1)
+            ])
+            
+            return headerView
+        }
     }
 
 }
@@ -458,10 +530,15 @@ extension MarketGroupDetailsViewController: UIScrollViewDelegate {
 extension MarketGroupDetailsViewController {
 
     private static func createTableView() -> UITableView {
-        let tableView = UITableView.init(frame: .zero, style: .plain)
+        let tableView = UITableView.init(frame: .zero, style: .grouped)
         tableView.translatesAutoresizingMaskIntoConstraints = false
         tableView.separatorStyle = .none
         tableView.allowsSelection = false
+        
+        if #available(iOS 15.0, *) {
+            tableView.sectionHeaderTopPadding = 0
+        }
+        
         return tableView
     }
 
