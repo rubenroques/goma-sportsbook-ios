@@ -5382,6 +5382,16 @@
 		659510F02B2C7004001B2F2E /* Trademob in Frameworks */ = {isa = PBXBuildFile; productRef = 659510EF2B2C7004001B2F2E /* Trademob */; };
 		659510F22B2C7004001B2F2E /* WebBridge in Frameworks */ = {isa = PBXBuildFile; productRef = 659510F12B2C7004001B2F2E /* WebBridge */; };
 		65A4BA092C09E58B00279143 /* AdServices.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 65A4BA072C09E54700279143 /* AdServices.framework */; };
+		65EFF2E62D707DDF00F1FC57 /* SpinWheelWebViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65EFF2E52D707DDF00F1FC57 /* SpinWheelWebViewController.swift */; };
+		65EFF2E72D707DDF00F1FC57 /* SpinWheelWebViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65EFF2E52D707DDF00F1FC57 /* SpinWheelWebViewController.swift */; };
+		65EFF2E82D707DDF00F1FC57 /* SpinWheelWebViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65EFF2E52D707DDF00F1FC57 /* SpinWheelWebViewController.swift */; };
+		65EFF2E92D707DDF00F1FC57 /* SpinWheelWebViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65EFF2E52D707DDF00F1FC57 /* SpinWheelWebViewController.swift */; };
+		65EFF2EA2D707DDF00F1FC57 /* SpinWheelWebViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65EFF2E52D707DDF00F1FC57 /* SpinWheelWebViewController.swift */; };
+		65EFF2EB2D707DDF00F1FC57 /* SpinWheelWebViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65EFF2E52D707DDF00F1FC57 /* SpinWheelWebViewController.swift */; };
+		65EFF2EC2D707DDF00F1FC57 /* SpinWheelWebViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65EFF2E52D707DDF00F1FC57 /* SpinWheelWebViewController.swift */; };
+		65EFF2ED2D707DDF00F1FC57 /* SpinWheelWebViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65EFF2E52D707DDF00F1FC57 /* SpinWheelWebViewController.swift */; };
+		65EFF2EE2D707DDF00F1FC57 /* SpinWheelWebViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65EFF2E52D707DDF00F1FC57 /* SpinWheelWebViewController.swift */; };
+		65EFF2EF2D707DDF00F1FC57 /* SpinWheelWebViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65EFF2E52D707DDF00F1FC57 /* SpinWheelWebViewController.swift */; };
 		65F884152C1B081E00A56983 /* PromotedCompetitionTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65F884142C1B081E00A56983 /* PromotedCompetitionTableViewCell.swift */; };
 		65F884162C1B081E00A56983 /* PromotedCompetitionTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65F884142C1B081E00A56983 /* PromotedCompetitionTableViewCell.swift */; };
 		65F884172C1B081E00A56983 /* PromotedCompetitionTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65F884142C1B081E00A56983 /* PromotedCompetitionTableViewCell.swift */; };
@@ -9764,6 +9774,7 @@
 		658A4CB52B9F6C4800F73772 /* Referrals.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Referrals.swift; sourceTree = "<group>"; };
 		658A4CBE2B9F6C7F00F73772 /* ServiceProviderModelMapper+Referrals.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "ServiceProviderModelMapper+Referrals.swift"; sourceTree = "<group>"; };
 		65A4BA072C09E54700279143 /* AdServices.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AdServices.framework; path = System/Library/Frameworks/AdServices.framework; sourceTree = SDKROOT; };
+		65EFF2E52D707DDF00F1FC57 /* SpinWheelWebViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SpinWheelWebViewController.swift; sourceTree = "<group>"; };
 		65F884142C1B081E00A56983 /* PromotedCompetitionTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PromotedCompetitionTableViewCell.swift; sourceTree = "<group>"; };
 		65F8841D2C1B4A3600A56983 /* FeaturedCompetitionDetailRootViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FeaturedCompetitionDetailRootViewController.swift; sourceTree = "<group>"; };
 		65F884272C1C43D300A56983 /* BannerTournamentTableViewHeader.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BannerTournamentTableViewHeader.swift; sourceTree = "<group>"; };
@@ -11784,6 +11795,7 @@
 		4589F3E926BF0160005DF543 /* Screens */ = {
 			isa = PBXGroup;
 			children = (
+				65EFF2E42D707DAF00F1FC57 /* SpinWheel */,
 				A9C7190F2A5EEA57005EB891 /* RecruitFriend */,
 				452047BE27036D4600B277B5 /* Splash */,
 				455C962526FE11B300456F30 /* Root */,
@@ -12721,6 +12733,14 @@
 				655E1FFF2B21E8A500C95337 /* Info.plist */,
 			);
 			path = NotificationsService;
+			sourceTree = "<group>";
+		};
+		65EFF2E42D707DAF00F1FC57 /* SpinWheel */ = {
+			isa = PBXGroup;
+			children = (
+				65EFF2E52D707DDF00F1FC57 /* SpinWheelWebViewController.swift */,
+			);
+			path = SpinWheel;
 			sourceTree = "<group>";
 		};
 		65F884262C1C439F00A56983 /* Cells */ = {
@@ -17270,6 +17290,7 @@
 				450B79DE28F58574009229E3 /* SportSectionHeaderView.swift in Sources */,
 				450B79DF28F58574009229E3 /* MyTicketBetLineViewModel.swift in Sources */,
 				450B79E028F58574009229E3 /* CheckboxButton.swift in Sources */,
+				65EFF2EE2D707DDF00F1FC57 /* SpinWheelWebViewController.swift in Sources */,
 				A90FB7C829AF7C1700D08A7C /* ResponsibleGamingViewController.swift in Sources */,
 				450B79E128F58574009229E3 /* SocialViewController.swift in Sources */,
 				A9C2D52529C2286F00DB95BD /* IBANProofViewController.swift in Sources */,
@@ -18133,6 +18154,7 @@
 				457CBB32282D27D000ED0F00 /* BannerInfo.swift in Sources */,
 				450FC4032A2B2589000DB866 /* BoostedArrowView.swift in Sources */,
 				457CBB33282D27D000ED0F00 /* LiveEventsViewModel.swift in Sources */,
+				65EFF2E82D707DDF00F1FC57 /* SpinWheelWebViewController.swift in Sources */,
 				A996B3F729893FEC00A535FC /* PaymentsDropIn.swift in Sources */,
 				A98EFDAD28801DF300655A26 /* SharedTicketBetLineView.swift in Sources */,
 				A9CB3E7329CDC25600BEF9C1 /* ApplicableBonus.swift in Sources */,
@@ -18758,6 +18780,7 @@
 				450FC4042A2B2589000DB866 /* BoostedArrowView.swift in Sources */,
 				45B6E1FF283E3F13001B570C /* EditContactViewController.swift in Sources */,
 				457CBD91282D2CD100ED0F00 /* CurrencyHelper.swift in Sources */,
+				65EFF2ED2D707DDF00F1FC57 /* SpinWheelWebViewController.swift in Sources */,
 				A9BA04262A33399D007880FC /* UploadDocumentsInformationView.swift in Sources */,
 				457CBD93282D2CD100ED0F00 /* Theme.swift in Sources */,
 				457CBD94282D2CD100ED0F00 /* UserActionView.swift in Sources */,
@@ -19597,6 +19620,7 @@
 				4589C8B1282024E400243547 /* SportSectionHeaderView.swift in Sources */,
 				4589C8B2282024E400243547 /* MyTicketBetLineViewModel.swift in Sources */,
 				4589C8B3282024E400243547 /* CheckboxButton.swift in Sources */,
+				65EFF2EF2D707DDF00F1FC57 /* SpinWheelWebViewController.swift in Sources */,
 				A90FB7C929AF7C1700D08A7C /* ResponsibleGamingViewController.swift in Sources */,
 				4589C8B4282024E400243547 /* SocialViewController.swift in Sources */,
 				A9C2D52629C2286F00DB95BD /* IBANProofViewController.swift in Sources */,
@@ -20330,6 +20354,7 @@
 				45A331FD298976BA008181E9 /* SportSectionHeaderView.swift in Sources */,
 				45A331FE298976BA008181E9 /* MyTicketBetLineViewModel.swift in Sources */,
 				A90FB7C729AF7C1700D08A7C /* ResponsibleGamingViewController.swift in Sources */,
+				65EFF2EC2D707DDF00F1FC57 /* SpinWheelWebViewController.swift in Sources */,
 				45A331FF298976BA008181E9 /* CheckboxButton.swift in Sources */,
 				A9C2D52429C2286F00DB95BD /* IBANProofViewController.swift in Sources */,
 				45A33200298976BA008181E9 /* SocialViewController.swift in Sources */,
@@ -21063,6 +21088,7 @@
 				45A6BD0A28246A7500D9B416 /* BannerInfo.swift in Sources */,
 				45A6BD0B28246A7500D9B416 /* SocialModels.swift in Sources */,
 				45A6BD0C28246A7500D9B416 /* LiveEventsViewModel.swift in Sources */,
+				65EFF2E72D707DDF00F1FC57 /* SpinWheelWebViewController.swift in Sources */,
 				A9BA041C2A30EA3B007880FC /* CardOptionRadioView.swift in Sources */,
 				A98EFDAC28801DF300655A26 /* SharedTicketBetLineView.swift in Sources */,
 				A98EC7D72889AF210044FC46 /* ShareTicketFriendGroupViewModel.swift in Sources */,
@@ -21796,6 +21822,7 @@
 				45F6BCB22AB3732C00C81DE1 /* TabularBarDataSource.swift in Sources */,
 				45F6BCB32AB3732C00C81DE1 /* SportSectionHeaderView.swift in Sources */,
 				45F6BCB42AB3732C00C81DE1 /* MyTicketBetLineViewModel.swift in Sources */,
+				65EFF2EB2D707DDF00F1FC57 /* SpinWheelWebViewController.swift in Sources */,
 				45F6BCB52AB3732C00C81DE1 /* ResponsibleGamingViewController.swift in Sources */,
 				45F6BCB62AB3732C00C81DE1 /* CheckboxButton.swift in Sources */,
 				45F6BCB72AB3732C00C81DE1 /* IBANProofViewController.swift in Sources */,
@@ -22429,6 +22456,7 @@
 				A9C341D628F9A74A0055360B /* SelectFriendCellViewModel.swift in Sources */,
 				A9C341D728F9A74A0055360B /* MatchStatsCollectionViewCell.swift in Sources */,
 				A9C341DA28F9A74A0055360B /* CountryName.swift in Sources */,
+				65EFF2E92D707DDF00F1FC57 /* SpinWheelWebViewController.swift in Sources */,
 				A9C341DB28F9A74A0055360B /* ProfileViewController.swift in Sources */,
 				A9C341DC28F9A74A0055360B /* TipsViewController.swift in Sources */,
 				45ECD7682A90013C00492CB9 /* TopCompetitionsLineTableViewCell.swift in Sources */,
@@ -23268,6 +23296,7 @@
 				CE12A3292D31347E0022BDF7 /* MyTicketBetLineViewModel.swift in Sources */,
 				CE12A32A2D31347E0022BDF7 /* CheckboxButton.swift in Sources */,
 				CE12A32B2D31347E0022BDF7 /* ResponsibleGamingViewController.swift in Sources */,
+				65EFF2E62D707DDF00F1FC57 /* SpinWheelWebViewController.swift in Sources */,
 				CE12A32C2D31347E0022BDF7 /* SocialViewController.swift in Sources */,
 				CE12A32D2D31347E0022BDF7 /* IBANProofViewController.swift in Sources */,
 				CE12A32E2D31347E0022BDF7 /* BannerInfo.swift in Sources */,
@@ -24001,6 +24030,7 @@
 				CEA567F72D5A58D800696793 /* LiveEventsViewModel.swift in Sources */,
 				CEA567F82D5A58D800696793 /* CardOptionRadioView.swift in Sources */,
 				CEA567F92D5A58D800696793 /* SharedTicketBetLineView.swift in Sources */,
+				65EFF2EA2D707DDF00F1FC57 /* SpinWheelWebViewController.swift in Sources */,
 				CEA567FA2D5A58D800696793 /* ShareTicketFriendGroupViewModel.swift in Sources */,
 				CEA567FB2D5A58D800696793 /* WithdrawViewController.swift in Sources */,
 				CEA567FC2D5A58D800696793 /* OutrightCompetitionLargeLineTableViewCell.swift in Sources */,

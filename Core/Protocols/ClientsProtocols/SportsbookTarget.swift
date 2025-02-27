@@ -87,6 +87,8 @@ enum SportsbookTargetFeatures: CaseIterable {
     
     case responsibleGamingForm
     case legalAgeWarning
+    
+    case spinWheel
 }
 
 enum SportsbookSupportedLanguage: String, CaseIterable {

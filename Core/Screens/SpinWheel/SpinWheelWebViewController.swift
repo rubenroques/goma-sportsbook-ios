@@ -1,32 +1,24 @@
 //
-//  PromotionsWebViewController.swift
+//  SpinWheelWebViewController.swift
 //  Sportsbook
 //
-//  Created by André Lascas on 27/03/2023.
+//  Created by André Lascas on 27/02/2025.
 //
 
 import UIKit
 import WebKit
 
-class PromotionsWebViewModel {
+class SpinWheelWebViewModel {
+    
     init() {
+        
     }
 }
 
-class PromotionsWebViewController: UIViewController {
-
-    var openRegisterAction: () -> Void = { }
-    var openBetSwipeAction: () -> Void = { }
-    var openHomeAction: () -> Void = { }
-    var openRecruitAction: () -> Void = { }
-    var openLiveAction: () -> Void = { }
-    var openContactSettingsAction: () -> Void = { }
+class SpinWheelWebViewController: UIViewController {
 
     // MARK: - Private Properties
     private lazy var topSafeAreaView: UIView = Self.createTopSafeAreaView()
-    private lazy var navigationView: UIView = Self.createNavigationView()
-    private lazy var titleLabel: UILabel = Self.createTitleLabel()
-    private lazy var backButton: UIButton = Self.createBackButton()
     
     private lazy var webView: WKWebView = {
         let configuration = WKWebViewConfiguration()
@@ -39,17 +31,18 @@ class PromotionsWebViewController: UIViewController {
         return webView
     }()
     
-    private lazy var botttomSafeAreaView: UIView = Self.createBottomSafeAreaView()
+    private lazy var bottomSafeAreaView: UIView = Self.createBottomSafeAreaView()
 
     private lazy var loadingBaseView: UIView = Self.createLoadingBaseView()
     private lazy var loadingActivityIndicatorView: UIActivityIndicatorView = Self.createLoadingActivityIndicatorView()
 
     private var url: URL
-    private var viewModel: PromotionsWebViewModel
+    private var viewModel: SpinWheelWebViewModel
 
     private var shouldShowBackButton: Bool = false
-
-    init(url: URL, viewModel: PromotionsWebViewModel) {
+    
+    // MARK: Lifetime and cycle
+    init(url: URL, viewModel: SpinWheelWebViewModel) {
 
         self.url = url
         self.viewModel = viewModel
@@ -61,7 +54,7 @@ class PromotionsWebViewController: UIViewController {
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
-
+    
     override func viewDidLoad() {
         super.viewDidLoad()
 
@@ -69,8 +62,6 @@ class PromotionsWebViewController: UIViewController {
         self.setupWithTheme()
 
         self.webView.navigationDelegate = self
-
-        self.backButton.addTarget(self, action: #selector(didTapBackButton), for: .primaryActionTriggered)
 
         self.showLoading()
 
@@ -81,12 +72,8 @@ class PromotionsWebViewController: UIViewController {
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         
-        if self.isRootModal {
-            self.backButton.setImage(UIImage(named: "arrow_close_icon"), for: .normal)
-        }
-        
     }
-
+    
     // MARK: - Layout and Theme
     override func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {
         super.traitCollectionDidChange(previousTraitCollection)
@@ -99,12 +86,7 @@ class PromotionsWebViewController: UIViewController {
         self.view.backgroundColor = UIColor.App.backgroundPrimary
 
         self.topSafeAreaView.backgroundColor = UIColor.App.backgroundPrimary
-        self.botttomSafeAreaView.backgroundColor = UIColor.App.backgroundPrimary
-
-        self.navigationView.backgroundColor = UIColor.App.backgroundPrimary
-
-        self.titleLabel.backgroundColor = .clear
-        self.titleLabel.textColor = UIColor.App.textPrimary
+        self.bottomSafeAreaView.backgroundColor = UIColor.App.backgroundPrimary
 
         self.webView.backgroundColor = .clear
 
@@ -115,6 +97,7 @@ class PromotionsWebViewController: UIViewController {
 
     }
 
+    // MARK: Functions
     private func showLoading() {
         self.loadingBaseView.isHidden = false
         self.loadingActivityIndicatorView.startAnimating()
@@ -124,9 +107,10 @@ class PromotionsWebViewController: UIViewController {
         self.loadingBaseView.isHidden = true
         self.loadingActivityIndicatorView.stopAnimating()
     }
-
+    
+    // MARK: Actions
     @objc private func didTapBackButton() {
-
+        
         if let currentUrl = self.webView.url, currentUrl != self.url {
             self.webView.goBack()
         }
@@ -136,11 +120,12 @@ class PromotionsWebViewController: UIViewController {
             }
             else {
                 self.navigationController?.popViewController(animated: true)
-            }        }
+            }
+        }
     }
 }
 
-extension PromotionsWebViewController: WKNavigationDelegate {
+extension SpinWheelWebViewController: WKNavigationDelegate {
 
     func webView(_ webView: WKWebView, didStartProvisionalNavigation navigation: WKNavigation!) {
         self.showLoading()
@@ -172,67 +157,44 @@ extension PromotionsWebViewController: WKNavigationDelegate {
     }
 }
 
-extension PromotionsWebViewController: WKScriptMessageHandler {
+extension SpinWheelWebViewController: WKScriptMessageHandler {
 
     func userContentController(_ userContentController: WKUserContentController, didReceive message: WKScriptMessage) {
-        if message.name == "postMessageListener" {
-            // Parse the JSON data directly into the WebMessage struct
-            if let jsonData = try? JSONSerialization.data(withJSONObject: message.body, options: []),
-               let webMessage = try? JSONDecoder().decode(WebMessage.self, from: jsonData) {
-
-                switch webMessage.messageType {
-                case "openRegister":
-                    self.openRegisterAction()
-                case "openBetSwipe":
-                    self.openBetSwipeAction()
-                case "goHome":
-                    self.openHomeAction()
-                case "goLive":
-                    self.openLiveAction()
-                case "openRAF":
-                    self.navigationController?.popViewController(animated: true)
-                    self.openRecruitAction()
-                case "goNotifications":
-                    self.openContactSettingsAction()
-                default:
-                    break
-                }
-            }
-        }
+        // TODO: If needed to implement callbacks in webview
+//        if message.name == "postMessageListener" {
+//            // Parse the JSON data directly into the WebMessage struct
+//            if let jsonData = try? JSONSerialization.data(withJSONObject: message.body, options: []),
+//               let webMessage = try? JSONDecoder().decode(WebMessage.self, from: jsonData) {
+//
+//                switch webMessage.messageType {
+//                case "openRegister":
+//                    self.openRegisterAction()
+//                case "openBetSwipe":
+//                    self.openBetSwipeAction()
+//                case "goHome":
+//                    self.openHomeAction()
+//                case "goLive":
+//                    self.openLiveAction()
+//                case "openRAF":
+//                    self.navigationController?.popViewController(animated: true)
+//                    self.openRecruitAction()
+//                case "goNotifications":
+//                    self.openContactSettingsAction()
+//                default:
+//                    break
+//                }
+//            }
+//        }
     }
     
 }
 
-extension PromotionsWebViewController {
+extension SpinWheelWebViewController {
 
     private static func createTopSafeAreaView() -> UIView {
         let view = UIView()
         view.translatesAutoresizingMaskIntoConstraints = false
         return view
-    }
-
-    private static func createNavigationView() -> UIView {
-        let view = UIView()
-        view.translatesAutoresizingMaskIntoConstraints = false
-        return view
-    }
-
-    private static func createTitleLabel() -> UILabel {
-        let titleLabel = UILabel()
-        titleLabel.translatesAutoresizingMaskIntoConstraints = false
-        titleLabel.textColor = UIColor.App.textPrimary
-        titleLabel.font = AppFont.with(type: .semibold, size: 14)
-        titleLabel.textAlignment = .center
-        titleLabel.text = localized("promotions")
-        return titleLabel
-    }
-
-    private static func createBackButton() -> UIButton {
-        let backButton = UIButton.init(type: .custom)
-        backButton.setImage(UIImage(named: "arrow_back_icon"), for: .normal)
-        backButton.setTitle(nil, for: .normal)
-        backButton.translatesAutoresizingMaskIntoConstraints = false
-        return backButton
     }
 
     private static func createBottomSafeAreaView() -> UIView {
@@ -257,12 +219,8 @@ extension PromotionsWebViewController {
 
     private func setupSubviews() {
         self.view.addSubview(self.topSafeAreaView)
-        self.view.addSubview(self.navigationView)
-        self.navigationView.addSubview(self.backButton)
-        self.navigationView.addSubview(self.titleLabel)
-
         self.view.addSubview(self.webView)
-        self.view.addSubview(self.botttomSafeAreaView)
+        self.view.addSubview(self.bottomSafeAreaView)
         self.view.addSubview(self.loadingBaseView)
 
         self.loadingBaseView.addSubview(self.loadingActivityIndicatorView)
@@ -280,33 +238,17 @@ extension PromotionsWebViewController {
         ])
 
         NSLayoutConstraint.activate([
-            self.botttomSafeAreaView.leadingAnchor.constraint(equalTo: self.view.leadingAnchor),
-            self.botttomSafeAreaView.trailingAnchor.constraint(equalTo: self.view.trailingAnchor),
-            self.botttomSafeAreaView.topAnchor.constraint(equalTo: self.view.safeAreaLayoutGuide.bottomAnchor),
-            self.botttomSafeAreaView.bottomAnchor.constraint(equalTo: self.view.bottomAnchor)
-        ])
-
-        NSLayoutConstraint.activate([
-            self.navigationView.leadingAnchor.constraint(equalTo: self.view.leadingAnchor),
-            self.navigationView.trailingAnchor.constraint(equalTo: self.view.trailingAnchor),
-            self.navigationView.topAnchor.constraint(equalTo: self.topSafeAreaView.bottomAnchor),
-            self.navigationView.heightAnchor.constraint(equalToConstant: 46),
-
-            self.titleLabel.centerXAnchor.constraint(equalTo: self.navigationView.centerXAnchor),
-            self.titleLabel.leadingAnchor.constraint(equalTo: self.navigationView.leadingAnchor, constant: 44),
-            self.titleLabel.centerYAnchor.constraint(equalTo: self.navigationView.centerYAnchor),
-
-            self.backButton.widthAnchor.constraint(equalTo: self.backButton.heightAnchor),
-            self.backButton.widthAnchor.constraint(equalToConstant: 40),
-            self.backButton.centerYAnchor.constraint(equalTo: self.navigationView.centerYAnchor),
-            self.backButton.leadingAnchor.constraint(equalTo: self.navigationView.leadingAnchor, constant: 10),
+            self.bottomSafeAreaView.leadingAnchor.constraint(equalTo: self.view.leadingAnchor),
+            self.bottomSafeAreaView.trailingAnchor.constraint(equalTo: self.view.trailingAnchor),
+            self.bottomSafeAreaView.topAnchor.constraint(equalTo: self.view.safeAreaLayoutGuide.bottomAnchor),
+            self.bottomSafeAreaView.bottomAnchor.constraint(equalTo: self.view.bottomAnchor)
         ])
 
         NSLayoutConstraint.activate([
             self.webView.leadingAnchor.constraint(equalTo: self.view.leadingAnchor),
             self.webView.trailingAnchor.constraint(equalTo: self.view.trailingAnchor),
-            self.webView.topAnchor.constraint(equalTo: self.navigationView.bottomAnchor),
-            self.webView.bottomAnchor.constraint(equalTo: self.botttomSafeAreaView.topAnchor)
+            self.webView.topAnchor.constraint(equalTo: self.topSafeAreaView.bottomAnchor),
+            self.webView.bottomAnchor.constraint(equalTo: self.bottomSafeAreaView.topAnchor)
         ])
 
         NSLayoutConstraint.activate([
@@ -315,7 +257,7 @@ extension PromotionsWebViewController {
 
             self.view.leadingAnchor.constraint(equalTo: self.loadingBaseView.leadingAnchor),
             self.view.trailingAnchor.constraint(equalTo: self.loadingBaseView.trailingAnchor),
-            self.navigationView.bottomAnchor.constraint(equalTo: self.loadingBaseView.topAnchor),
+            self.topSafeAreaView.bottomAnchor.constraint(equalTo: self.loadingBaseView.topAnchor),
             self.view.bottomAnchor.constraint(equalTo: self.loadingBaseView.bottomAnchor)
         ])
 
