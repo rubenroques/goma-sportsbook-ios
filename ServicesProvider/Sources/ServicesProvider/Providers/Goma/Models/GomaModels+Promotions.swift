@@ -10,23 +10,35 @@ import Foundation
 extension GomaModels {
     // MARK: - Home Template
 
-    struct HomeTemplateResponse: Codable {
+    struct HomeTemplate: Codable {
         let id: Int
-        let clientId: Int
-        let title: String
-        let platform: String
-        let sections: [TemplateSectionData]
+        let type: String
+        let widgets: [HomeWidget]
 
         enum CodingKeys: String, CodingKey {
-            case id, title, platform, sections
-            case clientId = "client_id"
+            case id
+            case type = "name"
+            case widgets
         }
     }
 
-    struct TemplateSectionData: Codable {
+    struct HomeWidget: Codable {
+        
+        let id: String
         let type: String
-        let title: String
-        let source: String
+        let description: String
+        let userType: String
+        let sortOrder: Int
+        let orientation: String?
+        
+        enum CodingKeys: String, CodingKey {
+            case id = "id"
+            case type = "name"
+            case description = "description"
+            case userType = "user_type"
+            case sortOrder = "sort_order"
+            case orientation = "orientation"
+        }
     }
 
     // MARK: - Alert Banner

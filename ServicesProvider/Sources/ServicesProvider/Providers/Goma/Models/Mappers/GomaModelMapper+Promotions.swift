@@ -9,18 +9,20 @@ import Foundation
 
 extension GomaModelMapper {
 
-    // MARK: - Home Template
-    static func homeTemplate(fromInternalHomeTemplate template: GomaModels.HomeTemplateResponse) -> HomeTemplate {
-        let sections = template.sections.map { section in
-            TemplateSection(type: section.type, title: section.title, source: section.source)
+    // MARK: - Model mapper Home Template
+    static func homeTemplate(fromInternalHomeTemplate template: GomaModels.HomeTemplate) -> HomeTemplate {
+        let widgets = template.widgets.compactMap { internalWidget -> HomeWidget? in
+            // Initialize using the failable initializer
+            return HomeWidget(
+                id: Int(internalWidget.id) ?? 0,
+                type: internalWidget.type,
+                description: internalWidget.description,
+                userState: internalWidget.userType,
+                sortOrder: internalWidget.sortOrder,
+                orientation: internalWidget.orientation)
         }
 
-        return HomeTemplate(
-            id: template.id,
-            clientId: template.clientId,
-            title: template.title,
-            platform: template.platform,
-            sections: sections)
+        return HomeTemplate(id: template.id, type: template.type, widgets: widgets)
     }
 
     // MARK: - Alert Banner
