@@ -58,7 +58,7 @@ class MarketGroupDetailsViewModel {
             }
             .store(in: &cancellables)
         
-        self.createPopularBetbuilderDummyContent()
+//        self.createPopularBetbuilderDummyContent()
     }
     
     func createPopularBetbuilderDummyContent() {

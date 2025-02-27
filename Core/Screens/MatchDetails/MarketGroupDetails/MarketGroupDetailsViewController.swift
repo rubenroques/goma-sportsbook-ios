@@ -31,6 +31,8 @@ class MarketGroupDetailsViewController: UIViewController {
 
     private var presentationMode: ClientManagedHomeViewTemplateDataSource.HighlightsPresentationMode = .multiplesPerLineByType
 
+    var shouldShowBetbuilderSection: Bool = false
+    
     //
     // MARK: - Stored Properties for Scroll Delegate
     private var dragDirection: InnerScrollDragDirection = .up
@@ -71,6 +73,8 @@ class MarketGroupDetailsViewController: UIViewController {
 //        self.tableView.bounces = false
         
         self.presentationMode = TargetVariables.popularBetbuilderPresentationMode
+        
+        self.shouldShowBetbuilderSection = self.viewModel.hasPopularBetbuilder && !self.viewModel.betbuilderCellViewModels.isEmpty
 
         self.addChildViewController(self.loadingSpinnerViewController, toView: self.loadingBaseView)
 
@@ -242,13 +246,14 @@ class MarketGroupDetailsViewController: UIViewController {
 extension MarketGroupDetailsViewController: UITableViewDataSource, UITableViewDelegate {
 
     func numberOfSections(in tableView: UITableView) -> Int {
-//        return self.viewModel.numberOfSections()
-        return self.viewModel.hasPopularBetbuilder ? self.viewModel.numberOfSections() + 1 : self.viewModel.numberOfSections()
+        
+        return self.shouldShowBetbuilderSection ? self.viewModel.numberOfSections() + 1 : self.viewModel.numberOfSections()
+
     }
 
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-//        return self.viewModel.numberOfRows()
-        if self.viewModel.hasPopularBetbuilder && section == 0 {
+        
+        if self.shouldShowBetbuilderSection && section == 0 {
             switch presentationMode {
             case .onePerLine:
                 return self.viewModel.betbuilderCellViewModels.count
@@ -262,7 +267,7 @@ extension MarketGroupDetailsViewController: UITableViewDataSource, UITableViewDe
 
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
 
-        if self.viewModel.hasPopularBetbuilder && indexPath.section == 0 {
+        if self.shouldShowBetbuilderSection && indexPath.section == 0 {
             guard let cell = tableView.dequeueReusableCell(withIdentifier: BetbuilderLineTableViewCell.identifier) as? BetbuilderLineTableViewCell else {
                 return UITableViewCell()
             }
@@ -275,13 +280,8 @@ extension MarketGroupDetailsViewController: UITableViewDataSource, UITableViewDe
             return cell
         }
         
-//        guard
-//            let marketGroupOrganizer = self.viewModel.marketGroupOrganizer(forRow: indexPath.row)
-//        else {
-//            return UITableViewCell()
-//        }
         // For other sections, use the existing logic but adjust the section index
-        let adjustedIndexPath = TargetVariables.hasPopularBetbuilder ?
+        let adjustedIndexPath = shouldShowBetbuilderSection ?
         IndexPath(row: indexPath.row, section: indexPath.section - 1) : indexPath
         
         guard
@@ -426,14 +426,14 @@ extension MarketGroupDetailsViewController: UITableViewDataSource, UITableViewDe
     }
 
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
-        if self.viewModel.hasPopularBetbuilder && indexPath.section == 0 {
+        if self.shouldShowBetbuilderSection && indexPath.section == 0 {
             return 200
         }
         return UITableView.automaticDimension
     }
 
     func tableView(_ tableView: UITableView, estimatedHeightForRowAt indexPath: IndexPath) -> CGFloat {
-        if self.viewModel.hasPopularBetbuilder && indexPath.section == 0 {
+        if self.shouldShowBetbuilderSection && indexPath.section == 0 {
             return 200
         }
         return 120
@@ -447,7 +447,8 @@ extension MarketGroupDetailsViewController: UITableViewDataSource, UITableViewDe
 //        return nil
 //    }
     func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
-        if self.viewModel.hasPopularBetbuilder && section == 0 {
+        
+        if self.shouldShowBetbuilderSection && section == 0 {
             // Popular betbuilder section header
             guard
                 let headerView = tableView.dequeueReusableHeaderFooterView(withIdentifier: IconTitleHeaderFooterView.identifier) as? IconTitleHeaderFooterView
