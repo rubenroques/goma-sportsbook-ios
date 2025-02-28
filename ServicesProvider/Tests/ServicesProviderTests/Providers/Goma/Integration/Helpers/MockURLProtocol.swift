@@ -12,11 +12,28 @@ class MockURLProtocol: URLProtocol {
     /// Dictionary to track requests that have been made
     static var requestsMap: [String: Int] = [:]
     
+    /// Dictionary to store requests by URL
+    static var requestsByURL: [String: [URLRequest]] = [:]
+    
     /// Reset all mock responses and request tracking
     static func reset() {
         mockResponses = [:]
         mockResponsePatterns = []
         requestsMap = [:]
+        requestsByURL = [:]
+    }
+    
+    /// Returns all requests made to a specific endpoint
+    /// - Parameter endpoint: The endpoint path to check for (e.g., "/api/promotions/v1/home-template")
+    /// - Returns: An array of URLRequests made to the endpoint
+    static func requestsForEndpoint(_ endpoint: String) -> [URLRequest] {
+        let requests = requestsByURL.flatMap { (key, requests) -> [URLRequest] in
+            if key.contains(endpoint) {
+                return requests
+            }
+            return []
+        }
+        return requests
     }
     
     /// Register a mock response for a specific URL
@@ -87,6 +104,11 @@ class MockURLProtocol: URLProtocol {
         
         // Track the request
         MockURLProtocol.requestsMap[url] = (MockURLProtocol.requestsMap[url] ?? 0) + 1
+        
+        // Store the request by URL
+        var requests = MockURLProtocol.requestsByURL[url] ?? []
+        requests.append(request)
+        MockURLProtocol.requestsByURL[url] = requests
         
         // Check for exact URL match
         if let mockResponse = MockURLProtocol.mockResponses[url] {
