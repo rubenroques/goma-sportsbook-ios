@@ -1530,6 +1530,7 @@ extension SportRadarEventsProvider {
                     .collect()
                     // Restore the original order of events
                     .map { events in
+                        
                         return events.sorted { leftEvent, rightEvent in
                             let leftEventMarketGroupId = eventMarketGroupRelations[leftEvent.id] ?? ""
                             let rightEventMarketGroupId = eventMarketGroupRelations[rightEvent.id] ?? ""

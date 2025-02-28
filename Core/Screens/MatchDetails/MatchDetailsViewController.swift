@@ -832,6 +832,16 @@ class MatchDetailsViewController: UIViewController {
                 self?.reloadStatsCollectionView()
             })
             .store(in: &self.cancellables)
+        
+        self.viewModel.recommendedBetBuilders
+            .receive(on: DispatchQueue.main)
+            .sink(receiveValue: { [weak self] recommendedBetBuilder in
+                
+                if recommendedBetBuilder.isNotEmpty {
+                    self?.configureRecommendedBetBuilder(recommendedBetBuilder: recommendedBetBuilder)
+                }
+            })
+            .store(in: &cancellables)
 
         self.viewModel.homeRedCardsScorePublisher
             .receive(on: DispatchQueue.main)
@@ -1043,6 +1053,16 @@ class MatchDetailsViewController: UIViewController {
 
     func selectMarketType(atIndex index: Int) {
         self.viewModel.selectMarketType(atIndex: index)
+    }
+    
+    func configureRecommendedBetBuilder(recommendedBetBuilder: [RecommendedBetBuilder]) {
+        
+        for marketGroupsViewController in self.marketGroupsViewControllers {
+            if let marketGroupDetailsViewController = marketGroupsViewController as? MarketGroupDetailsViewController,
+               marketGroupDetailsViewController.getMarketGroupId() == "Popular" {
+                marketGroupDetailsViewController.setupRecommendedBetBuilder(recommendedBetBuilder: recommendedBetBuilder)
+            }
+        }
     }
 
     func setupMatchField() {

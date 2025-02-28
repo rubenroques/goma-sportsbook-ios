@@ -20,7 +20,7 @@ class MarketGroupDetailsViewModel {
         return marketGroupId == "Bet_Builder"
     }
     
-    private var marketGroupId: String
+    var marketGroupId: String
 
     private var store: MarketGroupDetailsStore
 

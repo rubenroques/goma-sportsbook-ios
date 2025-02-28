@@ -48,4 +48,14 @@ extension Sequence {
             return left[keyPath: keyPath] < right[keyPath: keyPath]
         }
     }
+    
+    func uniqued(by areTheSame: (Element, Element) -> Bool) -> [Element] {
+        var result: [Element] = []
+        for element in self {
+            if !result.contains(where: { areTheSame($0, element) }) {
+                result.append(element)
+            }
+        }
+        return result
+    }
 }

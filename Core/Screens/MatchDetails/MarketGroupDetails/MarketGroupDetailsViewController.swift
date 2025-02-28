@@ -9,6 +9,7 @@ import Foundation
 import UIKit
 import Combine
 import OrderedCollections
+import ServicesProvider
 
 class MarketGroupDetailsViewController: UIViewController {
 
@@ -74,7 +75,7 @@ class MarketGroupDetailsViewController: UIViewController {
         
         self.presentationMode = TargetVariables.popularBetbuilderPresentationMode
         
-        self.shouldShowBetbuilderSection = self.viewModel.hasPopularBetbuilder && !self.viewModel.betbuilderCellViewModels.isEmpty
+        self.shouldShowBetbuilderSection = self.viewModel.hasPopularBetbuilder && !self.viewModel.betbuilderLineCellViewModels.isEmpty
 
         self.addChildViewController(self.loadingSpinnerViewController, toView: self.loadingBaseView)
 
@@ -237,6 +238,55 @@ class MarketGroupDetailsViewController: UIViewController {
         }
 
         self.reloadTableView()
+    }
+    
+    func setupRecommendedBetBuilder(recommendedBetBuilder: [RecommendedBetBuilder]) {
+        
+        var betbuilderLineCellViewModels = [BetbuilderLineCellViewModel]()
+        
+        switch self.presentationMode {
+        case .onePerLine:
+            for betbuilder in recommendedBetBuilder {
+                
+                let bettingTickets = betbuilder.selections.map({
+                    return ServiceProviderModelMapper.bettingTicket(fromRecommendedBetbuilderSelection: $0)
+                })
+                
+                let betbuilderCellViewModel = BetbuilderSelectionCellViewModel(betSelections: bettingTickets)
+                
+                let betbuilderLineCellViewModel = BetbuilderLineCellViewModel(betBuilderoptions: [betbuilderCellViewModel])
+                
+                betbuilderLineCellViewModels.append(betbuilderLineCellViewModel)
+            }
+        case .multiplesPerLineByType:
+            
+            var betbuilderSelectionCellViewModels = [BetbuilderSelectionCellViewModel]()
+            
+            for betbuilder in recommendedBetBuilder {
+                
+                let bettingTickets = betbuilder.selections.map({
+                    return ServiceProviderModelMapper.bettingTicket(fromRecommendedBetbuilderSelection: $0)
+                })
+                
+                let betbuilderCellViewModel = BetbuilderSelectionCellViewModel(betSelections: bettingTickets)
+                
+                betbuilderSelectionCellViewModels.append(betbuilderCellViewModel)
+            }
+            
+            let betbuilderLineCellViewModel = BetbuilderLineCellViewModel(betBuilderoptions: betbuilderSelectionCellViewModels)
+            
+            betbuilderLineCellViewModels.append(betbuilderLineCellViewModel)
+        }
+        
+        self.viewModel.betbuilderLineCellViewModels = betbuilderLineCellViewModels
+        
+        self.shouldShowBetbuilderSection = self.viewModel.hasPopularBetbuilder && !self.viewModel.betbuilderLineCellViewModels.isEmpty
+        
+        self.reloadTableView()
+    }
+    
+    func getMarketGroupId() -> String {
+        return self.viewModel.marketGroupId
     }
 }
 

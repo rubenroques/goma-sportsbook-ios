@@ -6,13 +6,43 @@
 //
 
 import UIKit
+import Combine
 
 class BetbuilderSelectionCellViewModel {
     
+    // MARK: Public properties
     var betSelections = [BettingTicket]()
+        
+    var totalOdd: CurrentValueSubject<Double, Never> = .init(0.0)
+    
+    // MARK: Private properties
+    var cancellables = Set<AnyCancellable>()
     
     init(betSelections: [BettingTicket]) {
         self.betSelections = betSelections
+        
+        self.requestBetBuilderTotalOdd()
+    }
+    
+    func requestBetBuilderTotalOdd() {
+        
+        let betbuilderTransformer = BetBuilderTransformer()
+        
+        betbuilderTransformer.requestBetBuilderPotentialReturnForTickets(self.betSelections, withStake: 0.0)
+            .receive(on: DispatchQueue.main)
+            .sink(receiveCompletion: { [weak self] completion in
+                switch completion {
+                case .finished:
+                    print("BetBuilder Total Odd finished")
+                case .failure(let error):
+                    print("BetBuilder Total Odd failure \(error)")
+                }
+            }, receiveValue: { [weak self] betBuilderCalculateResponse in
+                
+                self?.totalOdd.send(betBuilderCalculateResponse.totalOdd)
+            })
+            .store(in: &cancellables)
+                
     }
 }
 
@@ -47,7 +77,21 @@ class BetbuilderSelectionCollectionViewCell: UICollectionViewCell {
     
     private var viewModel: BetbuilderSelectionCellViewModel?
     
-    // MAKR: Lifetime and cycle
+    private var cancellables = Set<AnyCancellable>()
+    
+    private var isBetbuilderSelected: Bool = false {
+        didSet {
+            if isBetbuilderSelected {
+                self.actionButton.setBackgroundColor(UIColor.App.buttonBackgroundPrimary, for: .normal)
+            }
+            else {
+                self.actionButton.setBackgroundColor(UIColor.App.backgroundOdds, for: .normal)
+
+            }
+        }
+    }
+    
+    // MARK: Lifetime and cycle
     override init(frame: CGRect) {
         super.init(frame: frame)
 
@@ -150,11 +194,62 @@ class BetbuilderSelectionCollectionViewCell: UICollectionViewCell {
             
             self.thirdSelectionSubtitleLabel.text = thirdSelection.marketDescription
         }
+        
+        viewModel.totalOdd
+            .receive(on: DispatchQueue.main)
+            .sink(receiveValue: { [weak self] totalOdd in
+                
+                if totalOdd > 0.0 {
+                    self?.actionButton.setTitle("\(totalOdd)", for: .normal)
+                }
+                else {
+                    self?.actionButton.setTitle("-.-", for: .normal)
+                }
+            })
+            .store(in: &cancellables)
+        
+        Env.betslipManager.bettingTicketsPublisher
+            .receive(on: DispatchQueue.main)
+            .sink(receiveValue: { [weak self] bettingTickets in
+                
+                guard let self = self else { return }
+                
+                let allSelectionsPresent = viewModel.betSelections.allSatisfy { betSelection in
+                    bettingTickets.contains { bettingTicket in
+                        betSelection.id == bettingTicket.id
+                    }
+                }
+                
+                self.isBetbuilderSelected = allSelectionsPresent
+                
+            })
+            .store(in: &cancellables)
     }
     
     // MARK: Action
     @objc private func didTapActionButton() {
         print("ACTION BETBUILDER!")
+        
+        if let bettingTickets = self.viewModel?.betSelections {
+            
+            if self.isBetbuilderSelected {
+                for bettingTicket in bettingTickets {
+                    if Env.betslipManager.hasBettingTicket(bettingTicket) {
+                        Env.betslipManager.removeBettingTicket(bettingTicket)
+                    }
+                    
+                }
+            }
+            else {
+                for bettingTicket in bettingTickets {
+                    if !Env.betslipManager.hasBettingTicket(bettingTicket) {
+                        Env.betslipManager.addBettingTicket(bettingTicket)
+                    }
+                    
+                }
+            }
+            
+        }
     }
 }
 
@@ -280,7 +375,7 @@ extension BetbuilderSelectionCollectionViewCell {
     private static func createActionButton() -> UIButton {
         let button = UIButton()
         button.translatesAutoresizingMaskIntoConstraints = false
-        button.setTitle("1.0", for: .normal)
+        button.setTitle("-.-", for: .normal)
         button.titleLabel?.font = AppFont.with(type: .bold, size: 14)
         return button
     }
