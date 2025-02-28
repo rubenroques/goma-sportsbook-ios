@@ -214,18 +214,18 @@ curl --request GET \
 
 ## 3. Banners Tests
 
-- [ ] 3.1 Verify GomaPromotionsAPIClient.banners endpoint builds the correct URL with query parameters
-- [ ] 3.2 Verify GomaPromotionsAPIClient.banners endpoint uses correct HTTP method (GET)
-- [ ] 3.3 Mock a JSON response for banners and verify it decodes to [GomaModels.BannerData]
-- [ ] 3.4 Test GomaModelMapper.banner transforms single GomaModels.BannerData to Banner correctly
-- [ ] 3.5 Test GomaModelMapper.banners transforms array of GomaModels.BannerData to [Banner] correctly
-- [ ] 3.6 Test transformation correctly sets isActive based on status field
-- [ ] 3.7 Test URL construction for imageUrl field
-- [ ] 3.8 Test GomaManagedContentProvider.getBanners() calls the correct API endpoint
-- [ ] 3.9 Test GomaManagedContentProvider.getBanners() handles successful responses
-- [ ] 3.10 Test GomaManagedContentProvider.getBanners() handles error responses
-- [ ] 3.11 Test GomaManagedContentProvider.getBanners() handles empty array responses
-- [ ] 3.12 Verify end-to-end flow with mocked API response to final domain model
+- [x] 3.1 Verify GomaPromotionsAPIClient.banners endpoint builds the correct URL with query parameters
+- [x] 3.2 Verify GomaPromotionsAPIClient.banners endpoint uses correct HTTP method (GET)
+- [x] 3.3 Mock a JSON response for banners and verify it decodes to [GomaModels.BannerData]
+- [x] 3.4 Test GomaModelMapper.banner transforms single GomaModels.BannerData to Banner correctly
+- [x] 3.5 Test GomaModelMapper.banners transforms array of GomaModels.BannerData to [Banner] correctly
+- [x] 3.6 Test transformation correctly sets isActive based on status field
+- [x] 3.7 Test URL construction for imageUrl field
+- [x] 3.8 Test GomaManagedContentProvider.getBanners() calls the correct API endpoint
+- [x] 3.9 Test GomaManagedContentProvider.getBanners() handles successful responses
+- [x] 3.10 Test GomaManagedContentProvider.getBanners() handles error responses
+- [x] 3.11 Test GomaManagedContentProvider.getBanners() handles empty array responses
+- [x] 3.12 Verify end-to-end flow with mocked API response to final domain model
 
 ## 4. Sport Banners Tests
 
