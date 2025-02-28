@@ -261,19 +261,19 @@ curl --request GET \
 
 ## 6. Hero Cards Tests
 
-- [ ] 6.1 Verify GomaPromotionsAPIClient.heroCards endpoint builds the correct URL with query parameters
-- [ ] 6.2 Verify GomaPromotionsAPIClient.heroCards endpoint uses correct HTTP method (GET)
-- [ ] 6.3 Mock a JSON response for heroCards and verify it decodes to [GomaModels.HeroCardData]
-- [ ] 6.4 Test GomaModelMapper.heroCard transforms GomaModels.HeroCardData to HeroCard correctly
-- [ ] 6.5 Test GomaModelMapper.heroCards transforms array of GomaModels.HeroCardData to [HeroCard] correctly
-- [ ] 6.6 Test actionType and actionTarget fields are correctly mapped
-- [ ] 6.7 Test eventId and eventData fields are correctly mapped
-- [ ] 6.8 Test URL construction for imageUrl field
-- [ ] 6.9 Test GomaManagedContentProvider.getHeroCards() calls the correct API endpoint
-- [ ] 6.10 Test GomaManagedContentProvider.getHeroCards() handles successful responses
-- [ ] 6.11 Test GomaManagedContentProvider.getHeroCards() handles error responses
-- [ ] 6.12 Test GomaManagedContentProvider.getHeroCards() handles empty array responses
-- [ ] 6.13 Verify end-to-end flow with mocked API response to final domain model
+- [x] 6.1 Verify GomaPromotionsAPIClient.heroCards endpoint builds the correct URL with query parameters
+- [x] 6.2 Verify GomaPromotionsAPIClient.heroCards endpoint uses correct HTTP method (GET)
+- [x] 6.3 Mock a JSON response for heroCards and verify it decodes to [GomaModels.HeroCardData]
+- [x] 6.4 Test GomaModelMapper.heroCard transforms GomaModels.HeroCardData to HeroCard correctly
+- [x] 6.5 Test GomaModelMapper.heroCards transforms array of GomaModels.HeroCardData to [HeroCard] correctly
+- [x] 6.6 Test actionType and actionTarget fields are correctly mapped
+- [x] 6.7 Test eventId and eventData fields are correctly mapped
+- [x] 6.8 Test URL construction for imageUrl field
+- [x] 6.9 Test GomaManagedContentProvider.getHeroCards() calls the correct API endpoint
+- [x] 6.10 Test GomaManagedContentProvider.getHeroCards() handles successful responses
+- [x] 6.11 Test GomaManagedContentProvider.getHeroCards() handles error responses
+- [x] 6.12 Test GomaManagedContentProvider.getHeroCards() handles empty array responses
+- [x] 6.13 Verify end-to-end flow with mocked API response to final domain model
 
 ## 7. Stories Tests
 
