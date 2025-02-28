@@ -85,7 +85,7 @@ class StoriesTests: BaseIntegrationTest {
         }
 
         // When
-        let domainModel = GomaModelMapper.story(from: internalModel)
+        let domainModel = GomaModelMapper.story(fromInternalStory: internalModel)
 
         // Then
         XCTAssertEqual(domainModel.id, internalModel.id)
@@ -118,7 +118,7 @@ class StoriesTests: BaseIntegrationTest {
         let internalModels = try decoder.decode([GomaModels.StoryData].self, from: jsonData)
 
         // When
-        let domainModels = GomaModelMapper.stories(from: internalModels)
+        let domainModels = GomaModelMapper.stories(fromInternalStories: internalModels)
 
         // Then
         XCTAssertEqual(domainModels.count, internalModels.count, "Domain model count should match internal model count")
@@ -157,7 +157,7 @@ class StoriesTests: BaseIntegrationTest {
         }
 
         // When
-        let domainModel = GomaModelMapper.story(from: internalModel)
+        let domainModel = GomaModelMapper.story(fromInternalStory: internalModel)
 
         // Then
         XCTAssertEqual(domainModel.content, internalModel.content)
@@ -181,7 +181,7 @@ class StoriesTests: BaseIntegrationTest {
         }
 
         // When
-        let domainModel = GomaModelMapper.story(from: internalModel)
+        let domainModel = GomaModelMapper.story(fromInternalStory: internalModel)
 
         // Then
         XCTAssertEqual(domainModel.duration, internalModel.duration)
@@ -205,7 +205,7 @@ class StoriesTests: BaseIntegrationTest {
         }
 
         // When
-        let domainModel = GomaModelMapper.story(from: internalModel)
+        let domainModel = GomaModelMapper.story(fromInternalStory: internalModel)
 
         // Then
         if let imageUrl = internalModel.imageUrl {
@@ -273,8 +273,8 @@ class StoriesTests: BaseIntegrationTest {
         let errorURL = URL(string: "\(TestConfiguration.API.baseURL)\(TestConfiguration.EndpointPaths.stories)")!
         MockURLProtocol.registerMockResponse(
             for: errorURL,
-            statusCode: 500,
-            data: "Internal Server Error".data(using: .utf8)!
+            data: "Internal Server Error".data(using: .utf8)!,
+            statusCode: 500
         )
 
         let contentProvider = createMockContentProvider()
@@ -307,8 +307,8 @@ class StoriesTests: BaseIntegrationTest {
         let emptyURL = URL(string: "\(TestConfiguration.API.baseURL)\(TestConfiguration.EndpointPaths.stories)")!
         MockURLProtocol.registerMockResponse(
             for: emptyURL,
-            statusCode: 200,
-            data: "[]".data(using: .utf8)!
+            data: "[]".data(using: .utf8)!,
+            statusCode: 200
         )
 
         let contentProvider = createMockContentProvider()
@@ -347,7 +347,7 @@ class StoriesTests: BaseIntegrationTest {
         let decoder = JSONDecoder()
         decoder.keyDecodingStrategy = .convertFromSnakeCase
         let internalModels = try decoder.decode([GomaModels.StoryData].self, from: jsonData)
-        let expectedDomainModels = GomaModelMapper.stories(from: internalModels)
+        let expectedDomainModels = GomaModelMapper.stories(fromInternalStories: internalModels)
 
         // When
         contentProvider.getStories()

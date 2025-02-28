@@ -85,7 +85,7 @@ class HeroCardsTests: BaseIntegrationTest {
         }
         
         // When
-        let domainModel = GomaModelMapper.heroCard(from: internalModel)
+        let domainModel = GomaModelMapper.heroCard(fromInternalHeroCard: internalModel)
         
         // Then
         XCTAssertEqual(domainModel.id, internalModel.id)
@@ -118,7 +118,7 @@ class HeroCardsTests: BaseIntegrationTest {
         let internalModels = try decoder.decode([GomaModels.HeroCardData].self, from: jsonData)
         
         // When
-        let domainModels = GomaModelMapper.heroCards(from: internalModels)
+        let domainModels = GomaModelMapper.heroCards(fromInternalHeroCards: internalModels)
         
         // Then
         XCTAssertEqual(domainModels.count, internalModels.count, "Domain model count should match internal model count")
@@ -157,7 +157,7 @@ class HeroCardsTests: BaseIntegrationTest {
         }
         
         // When
-        let domainModel = GomaModelMapper.heroCard(from: internalModel)
+        let domainModel = GomaModelMapper.heroCard(fromInternalHeroCard: internalModel)
         
         // Then
         XCTAssertEqual(domainModel.actionType, internalModel.actionType)
@@ -183,7 +183,7 @@ class HeroCardsTests: BaseIntegrationTest {
         }
         
         // When
-        let domainModel = GomaModelMapper.heroCard(from: cardWithEvent)
+        let domainModel = GomaModelMapper.heroCard(fromInternalHeroCard: cardWithEvent)
         
         // Then
         XCTAssertNotNil(domainModel.event)
@@ -222,7 +222,7 @@ class HeroCardsTests: BaseIntegrationTest {
         }
         
         // When
-        let domainModel = GomaModelMapper.heroCard(from: internalModel)
+        let domainModel = GomaModelMapper.heroCard(fromInternalHeroCard: internalModel)
         
         // Then
         if let imageUrl = internalModel.imageUrl {
@@ -290,8 +290,8 @@ class HeroCardsTests: BaseIntegrationTest {
         let errorURL = URL(string: "\(TestConfiguration.API.baseURL)\(TestConfiguration.EndpointPaths.heroCards)")!
         MockURLProtocol.registerMockResponse(
             for: errorURL,
-            statusCode: 500,
-            data: "Internal Server Error".data(using: .utf8)!
+            data: "Internal Server Error".data(using: .utf8)!,
+            statusCode: 500
         )
         
         let contentProvider = createMockContentProvider()
@@ -324,8 +324,8 @@ class HeroCardsTests: BaseIntegrationTest {
         let emptyURL = URL(string: "\(TestConfiguration.API.baseURL)\(TestConfiguration.EndpointPaths.heroCards)")!
         MockURLProtocol.registerMockResponse(
             for: emptyURL,
-            statusCode: 200,
-            data: "[]".data(using: .utf8)!
+            data: "[]".data(using: .utf8)!,
+            statusCode: 200
         )
         
         let contentProvider = createMockContentProvider()
@@ -364,7 +364,7 @@ class HeroCardsTests: BaseIntegrationTest {
         let decoder = JSONDecoder()
         decoder.keyDecodingStrategy = .convertFromSnakeCase
         let internalModels = try decoder.decode([GomaModels.HeroCardData].self, from: jsonData)
-        let expectedDomainModels = GomaModelMapper.heroCards(from: internalModels)
+        let expectedDomainModels = GomaModelMapper.heroCards(fromInternalHeroCards: internalModels)
         
         // When
         contentProvider.getHeroCards()

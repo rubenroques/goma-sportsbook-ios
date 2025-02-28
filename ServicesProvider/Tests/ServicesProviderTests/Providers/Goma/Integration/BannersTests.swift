@@ -84,7 +84,7 @@ class BannersTests: BaseIntegrationTest {
         }
         
         // When
-        let domainModel = GomaModelMapper.banner(from: internalModel)
+        let domainModel = GomaModelMapper.banner(fromInternalBanner: internalModel)
         
         // Then
         XCTAssertEqual(domainModel.id, internalModel.id)
@@ -117,7 +117,7 @@ class BannersTests: BaseIntegrationTest {
         let internalModels = try decoder.decode([GomaModels.BannerData].self, from: jsonData)
         
         // When
-        let domainModels = GomaModelMapper.banners(from: internalModels)
+        let domainModels = GomaModelMapper.banners(fromInternalBanners: internalModels)
         
         // Then
         XCTAssertEqual(domainModels.count, internalModels.count, "Domain model count should match internal model count")
@@ -156,7 +156,7 @@ class BannersTests: BaseIntegrationTest {
         }
         
         // When
-        let domainModel = GomaModelMapper.banner(from: internalModel)
+        let domainModel = GomaModelMapper.banner(fromInternalBanner: internalModel)
         
         // Then
         if internalModel.status == "published" {
@@ -184,7 +184,7 @@ class BannersTests: BaseIntegrationTest {
         }
         
         // When
-        let domainModel = GomaModelMapper.banner(from: internalModel)
+        let domainModel = GomaModelMapper.banner(fromInternalBanner: internalModel)
         
         // Then
         if let imageUrl = internalModel.imageUrl {
@@ -252,8 +252,8 @@ class BannersTests: BaseIntegrationTest {
         let errorURL = URL(string: "\(TestConfiguration.API.baseURL)\(TestConfiguration.EndpointPaths.banners)")!
         MockURLProtocol.registerMockResponse(
             for: errorURL,
-            statusCode: 500,
-            data: "Internal Server Error".data(using: .utf8)!
+            data: "Internal Server Error".data(using: .utf8)!,
+            statusCode: 500
         )
         
         let contentProvider = createMockContentProvider()
@@ -286,8 +286,8 @@ class BannersTests: BaseIntegrationTest {
         let emptyURL = URL(string: "\(TestConfiguration.API.baseURL)\(TestConfiguration.EndpointPaths.banners)")!
         MockURLProtocol.registerMockResponse(
             for: emptyURL,
-            statusCode: 200,
-            data: "[]".data(using: .utf8)!
+            data: "[]".data(using: .utf8)!,
+            statusCode: 200
         )
         
         let contentProvider = createMockContentProvider()
@@ -326,7 +326,7 @@ class BannersTests: BaseIntegrationTest {
         let decoder = JSONDecoder()
         decoder.keyDecodingStrategy = .convertFromSnakeCase
         let internalModels = try decoder.decode([GomaModels.BannerData].self, from: jsonData)
-        let expectedDomainModels = GomaModelMapper.banners(from: internalModels)
+        let expectedDomainModels = GomaModelMapper.banners(fromInternalBanners: internalModels)
         
         // When
         contentProvider.getBanners()

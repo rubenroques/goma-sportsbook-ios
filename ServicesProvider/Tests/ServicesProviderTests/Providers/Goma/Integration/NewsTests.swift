@@ -113,7 +113,7 @@ class NewsTests: BaseIntegrationTest {
         }
         
         // When
-        let domainModel = GomaModelMapper.newsItem(from: internalModel)
+        let domainModel = GomaModelMapper.newsItem(fromInternalNewsItem: internalModel)
         
         // Then
         XCTAssertEqual(domainModel.id, internalModel.id)
@@ -146,7 +146,7 @@ class NewsTests: BaseIntegrationTest {
         let internalModels = try decoder.decode([GomaModels.NewsItemData].self, from: jsonData)
         
         // When
-        let domainModels = GomaModelMapper.newsItems(from: internalModels)
+        let domainModels = GomaModelMapper.newsItems(fromInternalNewsItems: internalModels)
         
         // Then
         XCTAssertEqual(domainModels.count, internalModels.count, "Domain model count should match internal model count")
@@ -185,7 +185,7 @@ class NewsTests: BaseIntegrationTest {
         }
         
         // When
-        let domainModel = GomaModelMapper.newsItem(from: internalModel)
+        let domainModel = GomaModelMapper.newsItem(fromInternalNewsItem: internalModel)
         
         // Then
         XCTAssertEqual(domainModel.author, internalModel.author)
@@ -210,7 +210,7 @@ class NewsTests: BaseIntegrationTest {
         }
         
         // When
-        let domainModel = GomaModelMapper.newsItem(from: internalModel)
+        let domainModel = GomaModelMapper.newsItem(fromInternalNewsItem: internalModel)
         
         // Then
         XCTAssertEqual(domainModel.content, internalModel.content)
@@ -234,7 +234,7 @@ class NewsTests: BaseIntegrationTest {
         }
         
         // When
-        let domainModel = GomaModelMapper.newsItem(from: internalModel)
+        let domainModel = GomaModelMapper.newsItem(fromInternalNewsItem: internalModel)
         
         // Then
         if let imageUrl = internalModel.imageUrl {
@@ -302,8 +302,8 @@ class NewsTests: BaseIntegrationTest {
         let errorURL = URL(string: "\(TestConfiguration.API.baseURL)\(TestConfiguration.EndpointPaths.news)?pageIndex=0&pageSize=10")!
         MockURLProtocol.registerMockResponse(
             for: errorURL,
-            statusCode: 500,
-            data: "Internal Server Error".data(using: .utf8)!
+            data: "Internal Server Error".data(using: .utf8)!,
+            statusCode: 500
         )
         
         let contentProvider = createMockContentProvider()
@@ -336,8 +336,8 @@ class NewsTests: BaseIntegrationTest {
         let emptyURL = URL(string: "\(TestConfiguration.API.baseURL)\(TestConfiguration.EndpointPaths.news)?pageIndex=0&pageSize=10")!
         MockURLProtocol.registerMockResponse(
             for: emptyURL,
-            statusCode: 200,
-            data: "[]".data(using: .utf8)!
+            data: "[]".data(using: .utf8)!,
+            statusCode: 200
         )
         
         let contentProvider = createMockContentProvider()
@@ -394,8 +394,8 @@ class NewsTests: BaseIntegrationTest {
             
             MockURLProtocol.registerMockResponse(
                 for: url,
-                statusCode: 200,
-                data: mockResponse
+                data: mockResponse,
+                statusCode: 200
             )
             
             let contentProvider = createMockContentProvider()
@@ -433,13 +433,13 @@ class NewsTests: BaseIntegrationTest {
         
         // Load the expected data for comparison
         let jsonData = try JSONLoader.loadJSON(
-            fileName: "response.json",
-            subdirectory: TestConfiguration.MockResponseDirectories.news
+            fromSubdirectory: TestConfiguration.MockResponseDirectories.news,
+            filename: "response.json"
         )
         let decoder = JSONDecoder()
         decoder.keyDecodingStrategy = .convertFromSnakeCase
         let internalModels = try decoder.decode([GomaModels.NewsItemData].self, from: jsonData)
-        let expectedDomainModels = GomaModelMapper.newsItems(from: internalModels)
+        let expectedDomainModels = GomaModelMapper.newsItems(fromInternalNewsItems: internalModels)
         
         // When
         contentProvider.getNews(pageIndex: 0, pageSize: 10)
@@ -485,15 +485,15 @@ class NewsTests: BaseIntegrationTest {
     /// Register a mock response for the news endpoint with the specified pagination parameters
     private func registerMockNewsResponse(pageIndex: Int = 0, pageSize: Int = 10) throws {
         let jsonData = try JSONLoader.loadJSON(
-            fileName: "response.json",
-            subdirectory: TestConfiguration.MockResponseDirectories.news
+            fromSubdirectory: TestConfiguration.MockResponseDirectories.news,
+            filename: "response.json"
         )
         
         let url = URL(string: "\(TestConfiguration.API.baseURL)\(TestConfiguration.EndpointPaths.news)?pageIndex=\(pageIndex)&pageSize=\(pageSize)")!
         MockURLProtocol.registerMockResponse(
             for: url,
-            statusCode: 200,
-            data: jsonData
+            data: jsonData,
+            statusCode: 200
         )
     }
 } 

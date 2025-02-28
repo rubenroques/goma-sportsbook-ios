@@ -85,7 +85,7 @@ class SportBannersTests: BaseIntegrationTest {
         }
         
         // When
-        let domainModel = GomaModelMapper.sportBanner(from: internalModel)
+        let domainModel = GomaModelMapper.sportBanner(fromInternalSportBanner: internalModel)
         
         // Then
         XCTAssertEqual(domainModel.id, internalModel.id)
@@ -125,7 +125,7 @@ class SportBannersTests: BaseIntegrationTest {
         let internalModels = try decoder.decode([GomaModels.SportBannerData].self, from: jsonData)
         
         // When
-        let domainModels = GomaModelMapper.sportBanners(from: internalModels)
+        let domainModels = GomaModelMapper.sportBanners(fromInternalSportBanners: internalModels)
         
         // Then
         XCTAssertEqual(domainModels.count, internalModels.count, "Domain model count should match internal model count")
@@ -164,7 +164,7 @@ class SportBannersTests: BaseIntegrationTest {
         }
         
         // When
-        let domainModel = GomaModelMapper.sportBanner(from: internalModel)
+        let domainModel = GomaModelMapper.sportBanner(fromInternalSportBanner: internalModel)
         
         // Then
         XCTAssertNotNil(domainModel.event)
@@ -203,7 +203,7 @@ class SportBannersTests: BaseIntegrationTest {
         }
         
         // When
-        let domainModel = GomaModelMapper.sportBanner(from: internalModel)
+        let domainModel = GomaModelMapper.sportBanner(fromInternalSportBanner: internalModel)
         
         // Then
         XCTAssertNotNil(domainModel.event?.homeTeam)
@@ -239,7 +239,7 @@ class SportBannersTests: BaseIntegrationTest {
         }
         
         // When
-        let domainModel = GomaModelMapper.sportBanner(from: internalModel)
+        let domainModel = GomaModelMapper.sportBanner(fromInternalSportBanner: internalModel)
         
         // Then
         // Check banner image URL
@@ -322,8 +322,8 @@ class SportBannersTests: BaseIntegrationTest {
         let errorURL = URL(string: "\(TestConfiguration.API.baseURL)\(TestConfiguration.EndpointPaths.sportBanners)")!
         MockURLProtocol.registerMockResponse(
             for: errorURL,
-            statusCode: 500,
-            data: "Internal Server Error".data(using: .utf8)!
+            data: "Internal Server Error".data(using: .utf8)!,
+            statusCode: 500
         )
         
         let contentProvider = createMockContentProvider()
@@ -356,8 +356,8 @@ class SportBannersTests: BaseIntegrationTest {
         let emptyURL = URL(string: "\(TestConfiguration.API.baseURL)\(TestConfiguration.EndpointPaths.sportBanners)")!
         MockURLProtocol.registerMockResponse(
             for: emptyURL,
-            statusCode: 200,
-            data: "[]".data(using: .utf8)!
+            data: "[]".data(using: .utf8)!,
+            statusCode: 200
         )
         
         let contentProvider = createMockContentProvider()
@@ -396,7 +396,7 @@ class SportBannersTests: BaseIntegrationTest {
         let decoder = JSONDecoder()
         decoder.keyDecodingStrategy = .convertFromSnakeCase
         let internalModels = try decoder.decode([GomaModels.SportBannerData].self, from: jsonData)
-        let expectedDomainModels = GomaModelMapper.sportBanners(from: internalModels)
+        let expectedDomainModels = GomaModelMapper.sportBanners(fromInternalSportBanners: internalModels)
         
         // When
         contentProvider.getSportBanners()

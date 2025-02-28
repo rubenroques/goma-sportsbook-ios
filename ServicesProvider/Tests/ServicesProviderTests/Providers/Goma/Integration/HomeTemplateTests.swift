@@ -73,7 +73,7 @@ class HomeTemplateTests: BaseIntegrationTest {
         let internalModel = try decoder.decode(GomaModels.HomeTemplate.self, from: jsonData)
         
         // When
-        let domainModel = GomaModelMapper.homeTemplate(from: internalModel)
+        let domainModel = GomaModelMapper.homeTemplate(fromInternalHomeTemplate: internalModel)
         
         // Then
         XCTAssertEqual(domainModel.id, internalModel.id)
@@ -93,7 +93,7 @@ class HomeTemplateTests: BaseIntegrationTest {
         let internalModel = try decoder.decode(GomaModels.HomeTemplate.self, from: jsonData)
         
         // When
-        let domainModel = GomaModelMapper.homeTemplate(from: internalModel)
+        let domainModel = GomaModelMapper.homeTemplate(fromInternalHomeTemplate: internalModel)
         
         // Then
         for (index, widget) in internalModel.widgets.enumerated() {
@@ -184,8 +184,8 @@ class HomeTemplateTests: BaseIntegrationTest {
         let errorURL = URL(string: "\(TestConfiguration.API.baseURL)\(TestConfiguration.EndpointPaths.homeTemplate)?platform=ios")!
         MockURLProtocol.registerMockResponse(
             for: errorURL,
-            statusCode: 500,
-            data: "Internal Server Error".data(using: .utf8)!
+            data: "Internal Server Error".data(using: .utf8)!,
+            statusCode: 500
         )
         
         let contentProvider = createMockContentProvider()
@@ -255,7 +255,7 @@ class HomeTemplateTests: BaseIntegrationTest {
         let decoder = JSONDecoder()
         decoder.keyDecodingStrategy = .convertFromSnakeCase
         let internalModel = try decoder.decode(GomaModels.HomeTemplate.self, from: jsonData)
-        let expectedDomainModel = GomaModelMapper.homeTemplate(from: internalModel)
+        let expectedDomainModel = GomaModelMapper.homeTemplate(fromInternalHomeTemplate: internalModel)
         
         // When
         contentProvider.getHomeTemplate()

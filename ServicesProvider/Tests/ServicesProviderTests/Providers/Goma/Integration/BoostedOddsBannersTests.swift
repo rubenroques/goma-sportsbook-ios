@@ -127,7 +127,7 @@ class BoostedOddsBannersTests: BaseIntegrationTest {
         let internalModels = try decoder.decode([GomaModels.BoostedOddsBannerData].self, from: jsonData)
         
         // When
-        let domainModels = GomaModelMapper.boostedOddsBanners(from: internalModels)
+        let domainModels = GomaModelMapper.boostedOddsBanners(fromInternalBoostedOddsBanners: internalModels)
         
         // Then
         XCTAssertEqual(domainModels.count, internalModels.count, "Domain model count should match internal model count")
@@ -166,7 +166,7 @@ class BoostedOddsBannersTests: BaseIntegrationTest {
         }
         
         // When
-        let domainModel = GomaModelMapper.boostedOddsBanner(from: internalModel)
+        let domainModel = GomaModelMapper.boostedOddsBanner(fromInternalBoostedOddsBanner: internalModel)
         
         // Then
         XCTAssertEqual(domainModel.originalOdd, internalModel.originalOdd)
@@ -191,7 +191,7 @@ class BoostedOddsBannersTests: BaseIntegrationTest {
         }
         
         // When
-        let domainModel = GomaModelMapper.boostedOddsBanner(from: internalModel)
+        let domainModel = GomaModelMapper.boostedOddsBanner(fromInternalBoostedOddsBanner: internalModel)
         
         // Then
         XCTAssertNotNil(domainModel.event)
@@ -235,7 +235,7 @@ class BoostedOddsBannersTests: BaseIntegrationTest {
         }
         
         // When
-        let domainModel = GomaModelMapper.boostedOddsBanner(from: internalModel)
+        let domainModel = GomaModelMapper.boostedOddsBanner(fromInternalBoostedOddsBanner: internalModel)
         
         // Then
         if let imageUrl = internalModel.imageUrl {
@@ -303,8 +303,8 @@ class BoostedOddsBannersTests: BaseIntegrationTest {
         let errorURL = URL(string: "\(TestConfiguration.API.baseURL)\(TestConfiguration.EndpointPaths.boostedOddsBanners)")!
         MockURLProtocol.registerMockResponse(
             for: errorURL,
-            statusCode: 500,
-            data: "Internal Server Error".data(using: .utf8)!
+            data: "Internal Server Error".data(using: .utf8)!,
+            statusCode: 500
         )
         
         let contentProvider = createMockContentProvider()
@@ -337,8 +337,8 @@ class BoostedOddsBannersTests: BaseIntegrationTest {
         let emptyURL = URL(string: "\(TestConfiguration.API.baseURL)\(TestConfiguration.EndpointPaths.boostedOddsBanners)")!
         MockURLProtocol.registerMockResponse(
             for: emptyURL,
-            statusCode: 200,
-            data: "[]".data(using: .utf8)!
+            data: "[]".data(using: .utf8)!,
+            statusCode: 200
         )
         
         let contentProvider = createMockContentProvider()
@@ -377,7 +377,7 @@ class BoostedOddsBannersTests: BaseIntegrationTest {
         let decoder = JSONDecoder()
         decoder.keyDecodingStrategy = .convertFromSnakeCase
         let internalModels = try decoder.decode([GomaModels.BoostedOddsBannerData].self, from: jsonData)
-        let expectedDomainModels = GomaModelMapper.boostedOddsBanners(from: internalModels)
+        let expectedDomainModels = GomaModelMapper.boostedOddsBanners(fromInternalBoostedOddsBanners: internalModels)
         
         // When
         contentProvider.getBoostedOddsBanners()
