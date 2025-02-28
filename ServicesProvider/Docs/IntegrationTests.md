@@ -44,7 +44,7 @@ This section outlines critical preparatory tasks required before implementing th
 
 ### 0.1 Authentication Setup
 
-- [ ] 0.1.1 Create a helper script to obtain authentication 'token' (it is a string) using the following cURL command:
+- [x] 0.1.1 Create a helper script to obtain authentication 'token' (it is a string) using the following cURL command:
 ```sh
 curl --request POST \
   --url https://api.gomademo.com/api/auth/v1 \
@@ -65,13 +65,13 @@ Response:
 }
 ```
 
-- [ ] 0.1.2 Store authentication response in a secure location for test use
-- [ ] 0.1.3 Create a helper function to extract token from authentication response
-- [ ] 0.1.4 Add token refresh mechanism for tests that may run beyond token expiration
+- [x] 0.1.2 Store authentication response in a secure location for test use
+- [x] 0.1.3 Create a helper function to extract token from authentication response
+- [x] 0.1.4 Add token refresh mechanism for tests that may run beyond token expiration
 
 ### 0.2 API Response Collection
 
-- [ ] 0.2.1 Create a directory structure for storing JSON response mocks:
+- [x] 0.2.1 Create a directory structure for storing JSON response mocks:
 ```
 /Tests/GomaTests/MockResponses/
   ├── HomeTemplate/
@@ -178,12 +178,12 @@ curl --request GET \
 
 ### 0.3 Test Preparation
 
-- [ ] 0.3.1 Create a JSONLoader utility to load saved JSON files in tests
-- [ ] 0.3.2 Create a MockURLProtocol to intercept network requests and return saved JSON responses
-- [ ] 0.3.3 Create a test configuration file to manage paths to mock responses
-- [ ] 0.3.4 Add test extension to verify JSON is correctly parsed into internal models
-- [ ] 0.3.5 Create helper function to compare internal models with domain models after mapping
-- [ ] 0.3.6 Implement a standard test setup method to configure environment for all tests
+- [x] 0.3.1 Create a JSONLoader utility to load saved JSON files in tests
+- [x] 0.3.2 Create a MockURLProtocol to intercept network requests and return saved JSON responses
+- [x] 0.3.3 Create a test configuration file to manage paths to mock responses
+- [x] 0.3.4 Add test extension to verify JSON is correctly parsed into internal models
+- [x] 0.3.5 Create helper function to compare internal models with domain models after mapping
+- [x] 0.3.6 Implement a standard test setup method to configure environment for all tests
 
 ## 1. Home Template Tests
 
