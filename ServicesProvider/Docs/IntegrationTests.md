@@ -245,19 +245,19 @@ curl --request GET \
 
 ## 5. Boosted Odds Banners Tests
 
-- [ ] 5.1 Verify GomaPromotionsAPIClient.boostedOddsBanners endpoint builds the correct URL with query parameters
-- [ ] 5.2 Verify GomaPromotionsAPIClient.boostedOddsBanners endpoint uses correct HTTP method (GET)
-- [ ] 5.3 Mock a JSON response for boostedOddsBanners and verify it decodes to [GomaModels.BoostedOddsBannerData]
-- [ ] 5.4 Test GomaModelMapper.boostedOddsBanner transforms GomaModels.BoostedOddsBannerData to BoostedOddsBanner correctly
-- [ ] 5.5 Test GomaModelMapper.boostedOddsBanners transforms array of GomaModels.BoostedOddsBannerData to [BoostedOddsBanner] correctly
-- [ ] 5.6 Test originalOdd and boostedOdd values are correctly mapped
-- [ ] 5.7 Test nested SportEventData mapping to SportEventSummary
-- [ ] 5.8 Test URL construction for imageUrl field
-- [ ] 5.9 Test GomaManagedContentProvider.getBoostedOddsBanners() calls the correct API endpoint
-- [ ] 5.10 Test GomaManagedContentProvider.getBoostedOddsBanners() handles successful responses
-- [ ] 5.11 Test GomaManagedContentProvider.getBoostedOddsBanners() handles error responses
-- [ ] 5.12 Test GomaManagedContentProvider.getBoostedOddsBanners() handles empty array responses
-- [ ] 5.13 Verify end-to-end flow with mocked API response to final domain model
+- [x] 5.1 Verify GomaPromotionsAPIClient.boostedOddsBanners endpoint builds the correct URL with query parameters
+- [x] 5.2 Verify GomaPromotionsAPIClient.boostedOddsBanners endpoint uses correct HTTP method (GET)
+- [x] 5.3 Mock a JSON response for boostedOddsBanners and verify it decodes to [GomaModels.BoostedOddsBannerData]
+- [x] 5.4 Test GomaModelMapper.boostedOddsBanner transforms GomaModels.BoostedOddsBannerData to BoostedOddsBanner correctly
+- [x] 5.5 Test GomaModelMapper.boostedOddsBanners transforms array of GomaModels.BoostedOddsBannerData to [BoostedOddsBanner] correctly
+- [x] 5.6 Test originalOdd and boostedOdd values are correctly mapped
+- [x] 5.7 Test nested SportEventData mapping to SportEventSummary
+- [x] 5.8 Test URL construction for imageUrl field
+- [x] 5.9 Test GomaManagedContentProvider.getBoostedOddsBanners() calls the correct API endpoint
+- [x] 5.10 Test GomaManagedContentProvider.getBoostedOddsBanners() handles successful responses
+- [x] 5.11 Test GomaManagedContentProvider.getBoostedOddsBanners() handles error responses
+- [x] 5.12 Test GomaManagedContentProvider.getBoostedOddsBanners() handles empty array responses
+- [x] 5.13 Verify end-to-end flow with mocked API response to final domain model
 
 ## 6. Hero Cards Tests
 
