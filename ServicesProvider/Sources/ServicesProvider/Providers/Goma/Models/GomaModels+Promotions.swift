@@ -2,7 +2,7 @@
 //  GomaModels+Promotions.swift
 //
 //
-//  Created on: May 15, 2024
+//  Created on: Feb 28, 2025
 //
 
 import Foundation
@@ -23,14 +23,14 @@ extension GomaModels {
     }
 
     struct HomeWidget: Codable {
-        
+
         let id: String
         let type: String
         let description: String
         let userType: String
         let sortOrder: Int
         let orientation: String?
-        
+
         enum CodingKeys: String, CodingKey {
             case id = "id"
             case type = "name"

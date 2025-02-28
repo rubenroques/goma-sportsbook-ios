@@ -44,8 +44,8 @@ class ProChoicesTests: BaseIntegrationTest {
     func testProChoicesResponseDecodesToInternalModel() throws {
         // Given
         let jsonData = try JSONLoader.loadJSON(
-            fromSubdirectory: TestConfiguration.MockResponseDirectories.proChoices,
-            filename: "response.json"
+            fileName: "response.json",
+            subdirectory: TestConfiguration.MockResponseDirectories.proChoices
         )
         
         // When
@@ -71,8 +71,8 @@ class ProChoicesTests: BaseIntegrationTest {
     func testSingleProChoiceModelMapperTransformsCorrectly() throws {
         // Given
         let jsonData = try JSONLoader.loadJSON(
-            fromSubdirectory: TestConfiguration.MockResponseDirectories.proChoices,
-            filename: "response.json"
+            fileName: "response.json",
+            subdirectory: TestConfiguration.MockResponseDirectories.proChoices
         )
         let decoder = JSONDecoder()
         decoder.keyDecodingStrategy = .convertFromSnakeCase
@@ -105,8 +105,8 @@ class ProChoicesTests: BaseIntegrationTest {
     func testProChoicesArrayModelMapperTransformsCorrectly() throws {
         // Given
         let jsonData = try JSONLoader.loadJSON(
-            fromSubdirectory: TestConfiguration.MockResponseDirectories.proChoices,
-            filename: "response.json"
+            fileName: "response.json",
+            subdirectory: TestConfiguration.MockResponseDirectories.proChoices
         )
         let decoder = JSONDecoder()
         decoder.keyDecodingStrategy = .convertFromSnakeCase
@@ -138,8 +138,8 @@ class ProChoicesTests: BaseIntegrationTest {
     func testTipsterDataMapping() throws {
         // Given
         let jsonData = try JSONLoader.loadJSON(
-            fromSubdirectory: TestConfiguration.MockResponseDirectories.proChoices,
-            filename: "response.json"
+            fileName: "response.json",
+            subdirectory: TestConfiguration.MockResponseDirectories.proChoices
         )
         let decoder = JSONDecoder()
         decoder.keyDecodingStrategy = .convertFromSnakeCase
@@ -172,8 +172,8 @@ class ProChoicesTests: BaseIntegrationTest {
     func testEventSummaryMapping() throws {
         // Given
         let jsonData = try JSONLoader.loadJSON(
-            fromSubdirectory: TestConfiguration.MockResponseDirectories.proChoices,
-            filename: "response.json"
+            fileName: "response.json",
+            subdirectory: TestConfiguration.MockResponseDirectories.proChoices
         )
         let decoder = JSONDecoder()
         decoder.keyDecodingStrategy = .convertFromSnakeCase
@@ -214,8 +214,8 @@ class ProChoicesTests: BaseIntegrationTest {
     func testSelectionMapping() throws {
         // Given
         let jsonData = try JSONLoader.loadJSON(
-            fromSubdirectory: TestConfiguration.MockResponseDirectories.proChoices,
-            filename: "response.json"
+            fileName: "response.json",
+            subdirectory: TestConfiguration.MockResponseDirectories.proChoices
         )
         let decoder = JSONDecoder()
         decoder.keyDecodingStrategy = .convertFromSnakeCase
@@ -241,8 +241,8 @@ class ProChoicesTests: BaseIntegrationTest {
     func testReasoningFieldIsCorrectlyMapped() throws {
         // Given
         let jsonData = try JSONLoader.loadJSON(
-            fromSubdirectory: TestConfiguration.MockResponseDirectories.proChoices,
-            filename: "response.json"
+            fileName: "response.json",
+            subdirectory: TestConfiguration.MockResponseDirectories.proChoices
         )
         let decoder = JSONDecoder()
         decoder.keyDecodingStrategy = .convertFromSnakeCase
@@ -265,8 +265,8 @@ class ProChoicesTests: BaseIntegrationTest {
     func testURLConstructionForTipsterAvatar() throws {
         // Given
         let jsonData = try JSONLoader.loadJSON(
-            fromSubdirectory: TestConfiguration.MockResponseDirectories.proChoices,
-            filename: "response.json"
+            fileName: "response.json",
+            subdirectory: TestConfiguration.MockResponseDirectories.proChoices
         )
         let decoder = JSONDecoder()
         decoder.keyDecodingStrategy = .convertFromSnakeCase
@@ -415,8 +415,8 @@ class ProChoicesTests: BaseIntegrationTest {
         
         // Load the expected data for comparison
         let jsonData = try JSONLoader.loadJSON(
-            fromSubdirectory: TestConfiguration.MockResponseDirectories.proChoices,
-            filename: "response.json"
+            fileName: "response.json",
+            subdirectory: TestConfiguration.MockResponseDirectories.proChoices
         )
         let decoder = JSONDecoder()
         decoder.keyDecodingStrategy = .convertFromSnakeCase

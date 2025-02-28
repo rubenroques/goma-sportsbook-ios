@@ -44,8 +44,8 @@ class HomeTemplateTests: BaseIntegrationTest {
     func testHomeTemplateResponseDecodesToInternalModel() throws {
         // Given
         let jsonData = try JSONLoader.loadJSON(
-            fromSubdirectory: TestConfiguration.MockResponseDirectories.homeTemplate,
-            filename: "response.json"
+            fileName: "response.json",
+            subdirectory: TestConfiguration.MockResponseDirectories.homeTemplate
         )
         
         // When
@@ -65,8 +65,8 @@ class HomeTemplateTests: BaseIntegrationTest {
     func testHomeTemplateModelMapperTransformsCorrectly() throws {
         // Given
         let jsonData = try JSONLoader.loadJSON(
-            fromSubdirectory: TestConfiguration.MockResponseDirectories.homeTemplate,
-            filename: "response.json"
+            fileName: "response.json",
+            subdirectory: TestConfiguration.MockResponseDirectories.homeTemplate
         )
         let decoder = JSONDecoder()
         decoder.keyDecodingStrategy = .convertFromSnakeCase
@@ -85,8 +85,8 @@ class HomeTemplateTests: BaseIntegrationTest {
     func testWidgetTypesAreCorrectlyMapped() throws {
         // Given
         let jsonData = try JSONLoader.loadJSON(
-            fromSubdirectory: TestConfiguration.MockResponseDirectories.homeTemplate,
-            filename: "response.json"
+            fileName: "response.json",
+            subdirectory: TestConfiguration.MockResponseDirectories.homeTemplate
         )
         let decoder = JSONDecoder()
         decoder.keyDecodingStrategy = .convertFromSnakeCase
@@ -249,8 +249,8 @@ class HomeTemplateTests: BaseIntegrationTest {
         
         // Load the expected data for comparison
         let jsonData = try JSONLoader.loadJSON(
-            fromSubdirectory: TestConfiguration.MockResponseDirectories.homeTemplate,
-            filename: "response.json"
+            fileName: "response.json",
+            subdirectory: TestConfiguration.MockResponseDirectories.homeTemplate
         )
         let decoder = JSONDecoder()
         decoder.keyDecodingStrategy = .convertFromSnakeCase

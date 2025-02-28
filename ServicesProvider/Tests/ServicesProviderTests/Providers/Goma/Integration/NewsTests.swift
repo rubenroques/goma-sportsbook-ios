@@ -72,8 +72,8 @@ class NewsTests: BaseIntegrationTest {
     func testNewsResponseDecodesToInternalModel() throws {
         // Given
         let jsonData = try JSONLoader.loadJSON(
-            fromSubdirectory: TestConfiguration.MockResponseDirectories.news,
-            filename: "response.json"
+            fileName: "response.json",
+            subdirectory: TestConfiguration.MockResponseDirectories.news
         )
         
         // When
@@ -99,8 +99,8 @@ class NewsTests: BaseIntegrationTest {
     func testSingleNewsItemModelMapperTransformsCorrectly() throws {
         // Given
         let jsonData = try JSONLoader.loadJSON(
-            fromSubdirectory: TestConfiguration.MockResponseDirectories.news,
-            filename: "response.json"
+            fileName: "response.json",
+            subdirectory: TestConfiguration.MockResponseDirectories.news
         )
         let decoder = JSONDecoder()
         decoder.keyDecodingStrategy = .convertFromSnakeCase
@@ -138,8 +138,8 @@ class NewsTests: BaseIntegrationTest {
     func testNewsItemsArrayModelMapperTransformsCorrectly() throws {
         // Given
         let jsonData = try JSONLoader.loadJSON(
-            fromSubdirectory: TestConfiguration.MockResponseDirectories.news,
-            filename: "response.json"
+            fileName: "response.json",
+            subdirectory: TestConfiguration.MockResponseDirectories.news
         )
         let decoder = JSONDecoder()
         decoder.keyDecodingStrategy = .convertFromSnakeCase
@@ -171,8 +171,8 @@ class NewsTests: BaseIntegrationTest {
     func testAuthorAndTagsFieldsAreCorrectlyMapped() throws {
         // Given
         let jsonData = try JSONLoader.loadJSON(
-            fromSubdirectory: TestConfiguration.MockResponseDirectories.news,
-            filename: "response.json"
+            fileName: "response.json",
+            subdirectory: TestConfiguration.MockResponseDirectories.news
         )
         let decoder = JSONDecoder()
         decoder.keyDecodingStrategy = .convertFromSnakeCase
@@ -196,8 +196,8 @@ class NewsTests: BaseIntegrationTest {
     func testContentFieldIsCorrectlyMapped() throws {
         // Given
         let jsonData = try JSONLoader.loadJSON(
-            fromSubdirectory: TestConfiguration.MockResponseDirectories.news,
-            filename: "response.json"
+            fileName: "response.json",
+            subdirectory: TestConfiguration.MockResponseDirectories.news
         )
         let decoder = JSONDecoder()
         decoder.keyDecodingStrategy = .convertFromSnakeCase
@@ -220,8 +220,8 @@ class NewsTests: BaseIntegrationTest {
     func testURLConstructionForImageUrl() throws {
         // Given
         let jsonData = try JSONLoader.loadJSON(
-            fromSubdirectory: TestConfiguration.MockResponseDirectories.news,
-            filename: "response.json"
+            fileName: "response.json",
+            subdirectory: TestConfiguration.MockResponseDirectories.news
         )
         let decoder = JSONDecoder()
         decoder.keyDecodingStrategy = .convertFromSnakeCase
@@ -433,8 +433,8 @@ class NewsTests: BaseIntegrationTest {
         
         // Load the expected data for comparison
         let jsonData = try JSONLoader.loadJSON(
-            fromSubdirectory: TestConfiguration.MockResponseDirectories.news,
-            filename: "response.json"
+            fileName: "response.json",
+            subdirectory: TestConfiguration.MockResponseDirectories.news
         )
         let decoder = JSONDecoder()
         decoder.keyDecodingStrategy = .convertFromSnakeCase
@@ -485,8 +485,8 @@ class NewsTests: BaseIntegrationTest {
     /// Register a mock response for the news endpoint with the specified pagination parameters
     private func registerMockNewsResponse(pageIndex: Int = 0, pageSize: Int = 10) throws {
         let jsonData = try JSONLoader.loadJSON(
-            fromSubdirectory: TestConfiguration.MockResponseDirectories.news,
-            filename: "response.json"
+            fileName: "response.json",
+            subdirectory: TestConfiguration.MockResponseDirectories.news
         )
         
         let url = URL(string: "\(TestConfiguration.API.baseURL)\(TestConfiguration.EndpointPaths.news)?pageIndex=\(pageIndex)&pageSize=\(pageSize)")!

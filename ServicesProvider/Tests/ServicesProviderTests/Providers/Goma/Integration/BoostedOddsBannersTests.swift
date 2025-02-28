@@ -44,8 +44,8 @@ class BoostedOddsBannersTests: BaseIntegrationTest {
     func testBoostedOddsBannersResponseDecodesToInternalModel() throws {
         // Given
         let jsonData = try JSONLoader.loadJSON(
-            fromSubdirectory: TestConfiguration.MockResponseDirectories.boostedOddsBanners,
-            filename: "response.json"
+            fileName: "response.json",
+            subdirectory: TestConfiguration.MockResponseDirectories.boostedOddsBanners
         )
         
         // When
@@ -73,8 +73,8 @@ class BoostedOddsBannersTests: BaseIntegrationTest {
     func testSingleBoostedOddsBannerModelMapperTransformsCorrectly() throws {
         // Given
         let jsonData = try JSONLoader.loadJSON(
-            fromSubdirectory: TestConfiguration.MockResponseDirectories.boostedOddsBanners,
-            filename: "response.json"
+            fileName: "response.json",
+            subdirectory: TestConfiguration.MockResponseDirectories.boostedOddsBanners
         )
         let decoder = JSONDecoder()
         decoder.keyDecodingStrategy = .convertFromSnakeCase
@@ -87,7 +87,7 @@ class BoostedOddsBannersTests: BaseIntegrationTest {
         }
         
         // When
-        let domainModel = GomaModelMapper.boostedOddsBanner(from: internalModel)
+        let domainModel = GomaModelMapper.boostedOddsBanner(fromInternalBoostedOddsBanner: internalModel)
         
         // Then
         XCTAssertEqual(domainModel.id, internalModel.id)
@@ -119,8 +119,8 @@ class BoostedOddsBannersTests: BaseIntegrationTest {
     func testBoostedOddsBannersArrayModelMapperTransformsCorrectly() throws {
         // Given
         let jsonData = try JSONLoader.loadJSON(
-            fromSubdirectory: TestConfiguration.MockResponseDirectories.boostedOddsBanners,
-            filename: "response.json"
+            fileName: "response.json",
+            subdirectory: TestConfiguration.MockResponseDirectories.boostedOddsBanners
         )
         let decoder = JSONDecoder()
         decoder.keyDecodingStrategy = .convertFromSnakeCase
@@ -152,8 +152,8 @@ class BoostedOddsBannersTests: BaseIntegrationTest {
     func testOddsValuesAreCorrectlyMapped() throws {
         // Given
         let jsonData = try JSONLoader.loadJSON(
-            fromSubdirectory: TestConfiguration.MockResponseDirectories.boostedOddsBanners,
-            filename: "response.json"
+            fileName: "response.json",
+            subdirectory: TestConfiguration.MockResponseDirectories.boostedOddsBanners
         )
         let decoder = JSONDecoder()
         decoder.keyDecodingStrategy = .convertFromSnakeCase
@@ -177,8 +177,8 @@ class BoostedOddsBannersTests: BaseIntegrationTest {
     func testNestedSportEventDataMapping() throws {
         // Given
         let jsonData = try JSONLoader.loadJSON(
-            fromSubdirectory: TestConfiguration.MockResponseDirectories.boostedOddsBanners,
-            filename: "response.json"
+            fileName: "response.json",
+            subdirectory: TestConfiguration.MockResponseDirectories.boostedOddsBanners
         )
         let decoder = JSONDecoder()
         decoder.keyDecodingStrategy = .convertFromSnakeCase
@@ -221,8 +221,8 @@ class BoostedOddsBannersTests: BaseIntegrationTest {
     func testURLConstructionForImageUrl() throws {
         // Given
         let jsonData = try JSONLoader.loadJSON(
-            fromSubdirectory: TestConfiguration.MockResponseDirectories.boostedOddsBanners,
-            filename: "response.json"
+            fileName: "response.json",
+            subdirectory: TestConfiguration.MockResponseDirectories.boostedOddsBanners
         )
         let decoder = JSONDecoder()
         decoder.keyDecodingStrategy = .convertFromSnakeCase
@@ -371,8 +371,8 @@ class BoostedOddsBannersTests: BaseIntegrationTest {
         
         // Load the expected data for comparison
         let jsonData = try JSONLoader.loadJSON(
-            fromSubdirectory: TestConfiguration.MockResponseDirectories.boostedOddsBanners,
-            filename: "response.json"
+            fileName: "response.json",
+            subdirectory: TestConfiguration.MockResponseDirectories.boostedOddsBanners
         )
         let decoder = JSONDecoder()
         decoder.keyDecodingStrategy = .convertFromSnakeCase

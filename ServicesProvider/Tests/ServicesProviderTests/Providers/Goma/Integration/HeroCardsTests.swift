@@ -44,8 +44,8 @@ class HeroCardsTests: BaseIntegrationTest {
     func testHeroCardsResponseDecodesToInternalModel() throws {
         // Given
         let jsonData = try JSONLoader.loadJSON(
-            fromSubdirectory: TestConfiguration.MockResponseDirectories.heroCards,
-            filename: "response.json"
+            fileName: "response.json",
+            subdirectory: TestConfiguration.MockResponseDirectories.heroCards
         )
         
         // When
@@ -71,8 +71,8 @@ class HeroCardsTests: BaseIntegrationTest {
     func testSingleHeroCardModelMapperTransformsCorrectly() throws {
         // Given
         let jsonData = try JSONLoader.loadJSON(
-            fromSubdirectory: TestConfiguration.MockResponseDirectories.heroCards,
-            filename: "response.json"
+            fileName: "response.json",
+            subdirectory: TestConfiguration.MockResponseDirectories.heroCards
         )
         let decoder = JSONDecoder()
         decoder.keyDecodingStrategy = .convertFromSnakeCase
@@ -110,8 +110,8 @@ class HeroCardsTests: BaseIntegrationTest {
     func testHeroCardsArrayModelMapperTransformsCorrectly() throws {
         // Given
         let jsonData = try JSONLoader.loadJSON(
-            fromSubdirectory: TestConfiguration.MockResponseDirectories.heroCards,
-            filename: "response.json"
+            fileName: "response.json",
+            subdirectory: TestConfiguration.MockResponseDirectories.heroCards
         )
         let decoder = JSONDecoder()
         decoder.keyDecodingStrategy = .convertFromSnakeCase
@@ -143,8 +143,8 @@ class HeroCardsTests: BaseIntegrationTest {
     func testActionTypeAndTargetAreCorrectlyMapped() throws {
         // Given
         let jsonData = try JSONLoader.loadJSON(
-            fromSubdirectory: TestConfiguration.MockResponseDirectories.heroCards,
-            filename: "response.json"
+            fileName: "response.json",
+            subdirectory: TestConfiguration.MockResponseDirectories.heroCards
         )
         let decoder = JSONDecoder()
         decoder.keyDecodingStrategy = .convertFromSnakeCase
@@ -168,8 +168,8 @@ class HeroCardsTests: BaseIntegrationTest {
     func testEventDataIsCorrectlyMapped() throws {
         // Given
         let jsonData = try JSONLoader.loadJSON(
-            fromSubdirectory: TestConfiguration.MockResponseDirectories.heroCards,
-            filename: "response.json"
+            fileName: "response.json",
+            subdirectory: TestConfiguration.MockResponseDirectories.heroCards
         )
         let decoder = JSONDecoder()
         decoder.keyDecodingStrategy = .convertFromSnakeCase
@@ -208,8 +208,8 @@ class HeroCardsTests: BaseIntegrationTest {
     func testURLConstructionForImageUrl() throws {
         // Given
         let jsonData = try JSONLoader.loadJSON(
-            fromSubdirectory: TestConfiguration.MockResponseDirectories.heroCards,
-            filename: "response.json"
+            fileName: "response.json",
+            subdirectory: TestConfiguration.MockResponseDirectories.heroCards
         )
         let decoder = JSONDecoder()
         decoder.keyDecodingStrategy = .convertFromSnakeCase
@@ -358,8 +358,8 @@ class HeroCardsTests: BaseIntegrationTest {
         
         // Load the expected data for comparison
         let jsonData = try JSONLoader.loadJSON(
-            fromSubdirectory: TestConfiguration.MockResponseDirectories.heroCards,
-            filename: "response.json"
+            fileName: "response.json",
+            subdirectory: TestConfiguration.MockResponseDirectories.heroCards
         )
         let decoder = JSONDecoder()
         decoder.keyDecodingStrategy = .convertFromSnakeCase
