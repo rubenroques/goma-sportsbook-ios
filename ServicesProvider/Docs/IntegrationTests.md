@@ -311,18 +311,18 @@ curl --request GET \
 
 ## 9. Pro Choices Tests
 
-- [ ] 9.1 Verify GomaPromotionsAPIClient.proChoices endpoint builds the correct URL with query parameters
-- [ ] 9.2 Verify GomaPromotionsAPIClient.proChoices endpoint uses correct HTTP method (GET)
-- [ ] 9.3 Mock a JSON response for proChoices and verify it decodes to [GomaModels.ProChoiceData]
-- [ ] 9.4 Test GomaModelMapper.proChoice transforms GomaModels.ProChoiceData to ProChoice correctly
-- [ ] 9.5 Test GomaModelMapper.proChoices transforms array of GomaModels.ProChoiceData to [ProChoice] correctly
-- [ ] 9.6 Test tipster data mapping (id, name, winRate, avatar)
-- [ ] 9.7 Test event summary mapping (id, homeTeam, awayTeam, dateTime)
-- [ ] 9.8 Test selection mapping (marketName, outcomeName, odds)
-- [ ] 9.9 Test reasoning field is correctly mapped
-- [ ] 9.10 Test URL construction for tipster avatar
-- [ ] 9.11 Test GomaManagedContentProvider.getProChoices() calls the correct API endpoint
-- [ ] 9.12 Test GomaManagedContentProvider.getProChoices() handles successful responses
-- [ ] 9.13 Test GomaManagedContentProvider.getProChoices() handles error responses
-- [ ] 9.14 Test GomaManagedContentProvider.getProChoices() handles empty array responses
-- [ ] 9.15 Verify end-to-end flow with mocked API response to final domain model
+- [x] 9.1 Verify the correct URL construction for the `GomaPromotionsAPIClient.proChoices` endpoint
+- [x] 9.2 Ensure the correct HTTP method (GET) is used for the endpoint
+- [x] 9.3 Mock a JSON response for the endpoint and verify it decodes to the internal model `[GomaModels.ProChoiceData]`
+- [x] 9.4 Verify that `GomaModelMapper.proChoice` transforms a single `GomaModels.ProChoiceData` to `ProChoice` correctly
+- [x] 9.5 Verify that `GomaModelMapper.proChoices` transforms an array of `GomaModels.ProChoiceData` to `[ProChoice]` correctly
+- [x] 9.6 Test tipster data mapping (id, name, winRate, avatar)
+- [x] 9.7 Test event summary mapping (id, homeTeam, awayTeam, dateTime)
+- [x] 9.8 Test selection mapping (marketName, outcomeName, odds)
+- [x] 9.9 Test reasoning field is correctly mapped
+- [x] 9.10 Test URL construction for tipster avatar
+- [x] 9.11 Test that `GomaManagedContentProvider.getProChoices()` calls the correct API endpoint
+- [x] 9.12 Test that `GomaManagedContentProvider.getProChoices()` handles successful responses
+- [x] 9.13 Test that `GomaManagedContentProvider.getProChoices()` handles error responses
+- [x] 9.14 Test that `GomaManagedContentProvider.getProChoices()` handles empty array responses
+- [x] 9.15 Test the end-to-end flow with mocked API response to final domain model
