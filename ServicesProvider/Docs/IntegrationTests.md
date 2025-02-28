@@ -229,19 +229,19 @@ curl --request GET \
 
 ## 4. Sport Banners Tests
 
-- [ ] 4.1 Verify GomaPromotionsAPIClient.sportBanners endpoint builds the correct URL with query parameters
-- [ ] 4.2 Verify GomaPromotionsAPIClient.sportBanners endpoint uses correct HTTP method (GET)
-- [ ] 4.3 Mock a JSON response for sportBanners and verify it decodes to [GomaModels.SportBannerData]
-- [ ] 4.4 Test GomaModelMapper.sportBanner transforms GomaModels.SportBannerData to SportBanner correctly
-- [ ] 4.5 Test GomaModelMapper.sportBanners transforms array of GomaModels.SportBannerData to [SportBanner] correctly
-- [ ] 4.6 Test nested SportEventData mapping to SportEventSummary
-- [ ] 4.7 Test team data mapping for home and away teams
-- [ ] 4.8 Test URL construction for imageUrl and team logo URLs
-- [ ] 4.9 Test GomaManagedContentProvider.getSportBanners() calls the correct API endpoint
-- [ ] 4.10 Test GomaManagedContentProvider.getSportBanners() handles successful responses
-- [ ] 4.11 Test GomaManagedContentProvider.getSportBanners() handles error responses
-- [ ] 4.12 Test GomaManagedContentProvider.getSportBanners() handles empty array responses
-- [ ] 4.13 Verify end-to-end flow with mocked API response to final domain model
+- [x] 4.1 Verify GomaPromotionsAPIClient.sportBanners endpoint builds the correct URL with query parameters
+- [x] 4.2 Verify GomaPromotionsAPIClient.sportBanners endpoint uses correct HTTP method (GET)
+- [x] 4.3 Mock a JSON response for sportBanners and verify it decodes to [GomaModels.SportBannerData]
+- [x] 4.4 Test GomaModelMapper.sportBanner transforms GomaModels.SportBannerData to SportBanner correctly
+- [x] 4.5 Test GomaModelMapper.sportBanners transforms array of GomaModels.SportBannerData to [SportBanner] correctly
+- [x] 4.6 Test nested SportEventData mapping to SportEventSummary
+- [x] 4.7 Test team data mapping for home and away teams
+- [x] 4.8 Test URL construction for imageUrl and team logo URLs
+- [x] 4.9 Test GomaManagedContentProvider.getSportBanners() calls the correct API endpoint
+- [x] 4.10 Test GomaManagedContentProvider.getSportBanners() handles successful responses
+- [x] 4.11 Test GomaManagedContentProvider.getSportBanners() handles error responses
+- [x] 4.12 Test GomaManagedContentProvider.getSportBanners() handles empty array responses
+- [x] 4.13 Verify end-to-end flow with mocked API response to final domain model
 
 ## 5. Boosted Odds Banners Tests
 
