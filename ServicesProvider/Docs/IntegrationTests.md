@@ -176,6 +176,16 @@ curl --request GET \
   > /Tests/GomaTests/MockResponses/ProChoices/response.json
 ```
 
+- [x] 0.2.12 Capture Initial Dump response:
+```sh
+curl --request GET \
+  --url 'https://api.gomademo.com/api/initial-dump/v1?platform=ios' \
+  --header 'Accept: application/json' \
+  --header 'Authorization: Bearer TOKEN_FROM_AUTH_STEP' \
+  --header 'x-api-key: i4iStOcZWBFbrmWvwaccKpdVhyRpRB6uZGE9akT6IFMpSwIa0Ghl4lqsFSvqPNhi' \
+  > /Tests/GomaTests/MockResponses/InitialDump/response.json
+```
+
 ### 0.3 Test Preparation
 
 - [x] 0.3.1 Create a JSONLoader utility to load saved JSON files in tests
@@ -326,3 +336,72 @@ curl --request GET \
 - [x] 9.13 Test that `GomaManagedContentProvider.getProChoices()` handles error responses
 - [x] 9.14 Test that `GomaManagedContentProvider.getProChoices()` handles empty array responses
 - [x] 9.15 Test the end-to-end flow with mocked API response to final domain model
+
+## 10. Initial Dump Tests
+
+### Initial Dump Endpoint Overview
+
+The Initial Dump endpoint (`https://api.gomademo.com/api/initial-dump/v1?platform=ios`) serves as a critical optimization for app startup performance. This endpoint consolidates data from all other content endpoints into a single API call, allowing the app to fetch its initial state with minimal network overhead.
+
+#### Response Structure Analysis
+
+The Initial Dump response contains a comprehensive JSON structure with the following key sections:
+
+1. **`home_template`**: Contains the complete home screen layout configuration, including widget definitions, their order, and display rules based on user state.
+
+2. **`promotions`**: A nested object containing all promotional content:
+   - `alert_banner`: The current active alert banner
+   - `banners`: Standard promotional banners
+   - `sport_banners`: Sport-specific promotional banners with event data
+   - `highlighted_events`: Featured sporting events
+   - `pro_choices`: Expert betting picks
+   - `boosted_odds_banners`: Special promotions with enhanced odds
+   - `hero_cards`: Large featured promotional cards
+   - `stories`: Instagram-style promotional content
+   - `popular_events`: Categorized lists of popular events (e.g., "Top Football", "Top Tennis")
+
+3. **`competitions`**: Featured competitions data, including:
+   - League/tournament information
+   - Region and sport associations
+   - Icon identifiers
+
+4. **`cms`**: Content Management System data, such as PDFs and other resources
+
+This consolidated endpoint is particularly valuable for the app's cold start experience, as it eliminates the need for multiple sequential API calls. The response contains identical data structures to the individual endpoints, allowing the same model mappers to be reused for transforming the data into domain models.
+
+The tests in this section will verify that the Initial Dump endpoint correctly returns all expected data and that our implementation properly transforms this data into the appropriate domain models.
+
+### Initial Dump Tasks
+- [ ] 10.1 Verify GomaPromotionsAPIClient.initialDump endpoint builds the correct URL with query parameters
+- [ ] 10.2 Verify GomaPromotionsAPIClient.initialDump endpoint uses correct HTTP method (GET)
+- [ ] 10.3 Mock a JSON response for initialDump and verify it decodes to GomaModels.InitialDumpData
+- [ ] 10.4 Test that all nested objects within InitialDumpData decode correctly:
+  - [ ] 10.4.1 Verify homeTemplate decodes to GomaModels.HomeTemplate
+  - [ ] 10.4.2 Verify alertBanner decodes to GomaModels.AlertBannerData
+  - [ ] 10.4.3 Verify banners decodes to [GomaModels.BannerData]
+  - [ ] 10.4.4 Verify sportBanners decodes to [GomaModels.SportBannerData]
+  - [ ] 10.4.5 Verify boostedOddsBanners decodes to [GomaModels.BoostedOddsBannerData]
+  - [ ] 10.4.6 Verify heroCards decodes to [GomaModels.HeroCardData]
+  - [ ] 10.4.7 Verify stories decodes to [GomaModels.StoryData]
+  - [ ] 10.4.8 Verify news decodes to [GomaModels.NewsItemData]
+  - [ ] 10.4.9 Verify proChoices decodes to [GomaModels.ProChoiceData]
+- [ ] 10.5 Create GomaModelMapper.initialDump method to transform GomaModels.InitialDumpData to InitialDump domain model
+- [ ] 10.6 Test GomaModelMapper.initialDump transforms GomaModels.InitialDumpData to InitialDump correctly
+- [ ] 10.7 Verify all nested transformations work correctly:
+  - [ ] 10.7.1 Test homeTemplate transforms to HomeTemplate correctly
+  - [ ] 10.7.2 Test alertBanner transforms to AlertBanner correctly
+  - [ ] 10.7.3 Test banners transforms to [Banner] correctly
+  - [ ] 10.7.4 Test sportBanners transforms to [SportBanner] correctly
+  - [ ] 10.7.5 Test boostedOddsBanners transforms to [BoostedOddsBanner] correctly
+  - [ ] 10.7.6 Test heroCards transforms to [HeroCard] correctly
+  - [ ] 10.7.7 Test stories transforms to [Story] correctly
+  - [ ] 10.7.8 Test news transforms to [NewsItem] correctly
+  - [ ] 10.7.9 Test proChoices transforms to [ProChoice] correctly
+- [ ] 10.8 Test GomaManagedContentProvider.getInitialDump() calls the correct API endpoint
+- [ ] 10.9 Test GomaManagedContentProvider.getInitialDump() handles successful responses
+- [ ] 10.10 Test GomaManagedContentProvider.getInitialDump() handles error responses
+- [ ] 10.11 Test GomaManagedContentProvider.getInitialDump() applies authentication correctly
+- [ ] 10.12 Test GomaManagedContentProvider.getInitialDump() handles partial data (some fields missing)
+- [ ] 10.13 Compare performance between calling getInitialDump() vs. calling individual endpoints
+- [ ] 10.14 Verify end-to-end flow with mocked API response to final domain model
+- [ ] 10.15 Create integration test that verifies data consistency between InitialDump and individual endpoint calls

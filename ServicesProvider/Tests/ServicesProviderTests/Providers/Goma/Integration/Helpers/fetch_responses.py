@@ -66,6 +66,11 @@ ENDPOINTS = {
         "path": "/api/promotions/v1/pro-choices",
         "method": "GET",
         "params": {}
+    },
+    "InitialDump": {
+        "path": "/api/initial-dump/v1",
+        "method": "GET",
+        "params": {"platform": "ios"}
     }
 }
 

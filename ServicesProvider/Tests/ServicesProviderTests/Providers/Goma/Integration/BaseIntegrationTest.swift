@@ -72,6 +72,7 @@ class BaseIntegrationTest: XCTestCase {
         try registerMockStoriesResponse()
         try registerMockNewsResponse()
         try registerMockProChoicesResponse()
+        try registerMockInitialDumpResponse()
     }
     
     /// Register a mock response for the home template endpoint
@@ -152,6 +153,15 @@ class BaseIntegrationTest: XCTestCase {
         try MockURLProtocol.registerMockResponseForGomaEndpoint(
             endpoint: TestConfiguration.EndpointPaths.proChoices,
             subdirectory: TestConfiguration.MockResponseDirectories.proChoices
+        )
+    }
+    
+    /// Register a mock response for the initial dump endpoint
+    /// - Throws: If loading the mock response fails
+    func registerMockInitialDumpResponse() throws {
+        try MockURLProtocol.registerMockResponseForGomaEndpoint(
+            endpoint: TestConfiguration.EndpointPaths.initialDump,
+            subdirectory: TestConfiguration.MockResponseDirectories.initialDump
         )
     }
 } 
