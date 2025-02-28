@@ -200,17 +200,17 @@ curl --request GET \
 
 ## 2. Alert Banner Tests
 
-- [ ] 2.1 Verify GomaPromotionsAPIClient.alertBanner endpoint builds the correct URL with query parameters
-- [ ] 2.2 Verify GomaPromotionsAPIClient.alertBanner endpoint uses correct HTTP method (GET)
-- [ ] 2.3 Mock a JSON response for alertBanner and verify it decodes to GomaModels.AlertBannerData
-- [ ] 2.4 Test GomaModelMapper.alertBanner transforms GomaModels.AlertBannerData to AlertBanner correctly
-- [ ] 2.5 Test transformation correctly sets isActive based on status field
-- [ ] 2.6 Test URL construction for imageUrl field
-- [ ] 2.7 Test GomaManagedContentProvider.getAlertBanner() calls the correct API endpoint
-- [ ] 2.8 Test GomaManagedContentProvider.getAlertBanner() handles successful responses
-- [ ] 2.9 Test GomaManagedContentProvider.getAlertBanner() handles error responses
-- [ ] 2.10 Test GomaManagedContentProvider.getAlertBanner() handles empty/null responses
-- [ ] 2.11 Verify end-to-end flow with mocked API response to final domain model
+- [x] 2.1 Verify GomaPromotionsAPIClient.alertBanner endpoint builds the correct URL with query parameters
+- [x] 2.2 Verify GomaPromotionsAPIClient.alertBanner endpoint uses correct HTTP method (GET)
+- [x] 2.3 Mock a JSON response for alertBanner and verify it decodes to GomaModels.AlertBannerData
+- [x] 2.4 Test GomaModelMapper.alertBanner transforms GomaModels.AlertBannerData to AlertBanner correctly
+- [x] 2.5 Test transformation correctly sets isActive based on status field
+- [x] 2.6 Test URL construction for imageUrl field
+- [x] 2.7 Test GomaManagedContentProvider.getAlertBanner() calls the correct API endpoint
+- [x] 2.8 Test GomaManagedContentProvider.getAlertBanner() handles successful responses
+- [x] 2.9 Test GomaManagedContentProvider.getAlertBanner() handles error responses
+- [x] 2.10 Test GomaManagedContentProvider.getAlertBanner() handles empty/null responses
+- [x] 2.11 Verify end-to-end flow with mocked API response to final domain model
 
 ## 3. Banners Tests
 
