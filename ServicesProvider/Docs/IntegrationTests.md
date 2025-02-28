@@ -293,21 +293,21 @@ curl --request GET \
 
 ## 8. News Tests
 
-- [ ] 8.1 Verify GomaPromotionsAPIClient.news endpoint builds the correct URL with query parameters
-- [ ] 8.2 Verify GomaPromotionsAPIClient.news endpoint uses correct HTTP method (GET)
-- [ ] 8.3 Verify pagination parameters (pageIndex, pageSize) are correctly added to URL
-- [ ] 8.4 Mock a JSON response for news and verify it decodes to [GomaModels.NewsItemData]
-- [ ] 8.5 Test GomaModelMapper.newsItem transforms GomaModels.NewsItemData to NewsItem correctly
-- [ ] 8.6 Test GomaModelMapper.newsItems transforms array of GomaModels.NewsItemData to [NewsItem] correctly
-- [ ] 8.7 Test author and tags fields are correctly mapped
-- [ ] 8.8 Test content field is correctly mapped
-- [ ] 8.9 Test URL construction for imageUrl field
-- [ ] 8.10 Test GomaManagedContentProvider.getNews() calls the correct API endpoint
-- [ ] 8.11 Test GomaManagedContentProvider.getNews() handles successful responses
-- [ ] 8.12 Test GomaManagedContentProvider.getNews() handles error responses
-- [ ] 8.13 Test GomaManagedContentProvider.getNews() handles empty array responses
-- [ ] 8.14 Test pagination works correctly with different page indexes and sizes
-- [ ] 8.15 Verify end-to-end flow with mocked API response to final domain model
+- [x] 8.1 Verify GomaPromotionsAPIClient.news endpoint builds the correct URL with query parameters
+- [x] 8.2 Verify GomaPromotionsAPIClient.news endpoint uses correct HTTP method (GET)
+- [x] 8.3 Verify pagination parameters (pageIndex, pageSize) are correctly added to URL
+- [x] 8.4 Mock a JSON response for news and verify it decodes to [GomaModels.NewsItemData]
+- [x] 8.5 Test GomaModelMapper.newsItem transforms GomaModels.NewsItemData to NewsItem correctly
+- [x] 8.6 Test GomaModelMapper.newsItems transforms array of GomaModels.NewsItemData to [NewsItem] correctly
+- [x] 8.7 Test author and tags fields are correctly mapped
+- [x] 8.8 Test content field is correctly mapped
+- [x] 8.9 Test URL construction for imageUrl field
+- [x] 8.10 Test GomaManagedContentProvider.getNews() calls the correct API endpoint
+- [x] 8.11 Test GomaManagedContentProvider.getNews() handles successful responses
+- [x] 8.12 Test GomaManagedContentProvider.getNews() handles error responses
+- [x] 8.13 Test GomaManagedContentProvider.getNews() handles empty array responses
+- [x] 8.14 Test pagination works correctly with different page indexes and sizes
+- [x] 8.15 Verify end-to-end flow with mocked API response to final domain model
 
 ## 9. Pro Choices Tests
 
