@@ -277,19 +277,19 @@ curl --request GET \
 
 ## 7. Stories Tests
 
-- [ ] 7.1 Verify GomaPromotionsAPIClient.stories endpoint builds the correct URL with query parameters
-- [ ] 7.2 Verify GomaPromotionsAPIClient.stories endpoint uses correct HTTP method (GET)
-- [ ] 7.3 Mock a JSON response for stories and verify it decodes to [GomaModels.StoryData]
-- [ ] 7.4 Test GomaModelMapper.story transforms GomaModels.StoryData to Story correctly
-- [ ] 7.5 Test GomaModelMapper.stories transforms array of GomaModels.StoryData to [Story] correctly
-- [ ] 7.6 Test content field is correctly mapped
-- [ ] 7.7 Test duration field is correctly mapped
-- [ ] 7.8 Test URL construction for imageUrl field
-- [ ] 7.9 Test GomaManagedContentProvider.getStories() calls the correct API endpoint
-- [ ] 7.10 Test GomaManagedContentProvider.getStories() handles successful responses
-- [ ] 7.11 Test GomaManagedContentProvider.getStories() handles error responses
-- [ ] 7.12 Test GomaManagedContentProvider.getStories() handles empty array responses
-- [ ] 7.13 Verify end-to-end flow with mocked API response to final domain model
+- [x] 7.1 Verify GomaPromotionsAPIClient.stories endpoint builds the correct URL with query parameters
+- [x] 7.2 Verify GomaPromotionsAPIClient.stories endpoint uses correct HTTP method (GET)
+- [x] 7.3 Mock a JSON response for stories and verify it decodes to [GomaModels.StoryData]
+- [x] 7.4 Test GomaModelMapper.story transforms GomaModels.StoryData to Story correctly
+- [x] 7.5 Test GomaModelMapper.stories transforms array of GomaModels.StoryData to [Story] correctly
+- [x] 7.6 Test content field is correctly mapped
+- [x] 7.7 Test duration field is correctly mapped
+- [x] 7.8 Test URL construction for imageUrl field
+- [x] 7.9 Test GomaManagedContentProvider.getStories() calls the correct API endpoint
+- [x] 7.10 Test GomaManagedContentProvider.getStories() handles successful responses
+- [x] 7.11 Test GomaManagedContentProvider.getStories() handles error responses
+- [x] 7.12 Test GomaManagedContentProvider.getStories() handles empty array responses
+- [x] 7.13 Verify end-to-end flow with mocked API response to final domain model
 
 ## 8. News Tests
 
