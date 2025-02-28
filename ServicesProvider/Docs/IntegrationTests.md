@@ -85,18 +85,18 @@ Response:
   └── ProChoices/
 ```
 
-- [ ] 0.2.2 Create helper script to fetch and save responses for all endpoints
-- [ ] 0.2.3 Capture Home Template response:
+- [x] 0.2.2 Create helper script to fetch and save responses for all endpoints
+- [x] 0.2.3 Capture Home Template response:
 ```sh
 curl --request GET \
-  --url https://api.gomademo.com/api/promotions/v1/home-template \
+  --url https://api.gomademo.com/api/home/v1/template?platform=ios \
   --header 'Accept: application/json' \
   --header 'Authorization: Bearer TOKEN_FROM_AUTH_STEP' \
   --header 'x-api-key: i4iStOcZWBFbrmWvwaccKpdVhyRpRB6uZGE9akT6IFMpSwIa0Ghl4lqsFSvqPNhi' \
   > /Tests/GomaTests/MockResponses/HomeTemplate/response.json
 ```
 
-- [ ] 0.2.4 Capture Alert Banner response:
+- [x] 0.2.4 Capture Alert Banner response:
 ```sh
 curl --request GET \
   --url https://api.gomademo.com/api/promotions/v1/alert-banner \
@@ -106,7 +106,7 @@ curl --request GET \
   > /Tests/GomaTests/MockResponses/AlertBanner/response.json
 ```
 
-- [ ] 0.2.5 Capture Banners response:
+- [x] 0.2.5 Capture Banners response:
 ```sh
 curl --request GET \
   --url https://api.gomademo.com/api/promotions/v1/banners \
@@ -116,7 +116,7 @@ curl --request GET \
   > /Tests/GomaTests/MockResponses/Banners/response.json
 ```
 
-- [ ] 0.2.6 Capture Sport Banners response:
+- [x] 0.2.6 Capture Sport Banners response:
 ```sh
 curl --request GET \
   --url https://api.gomademo.com/api/promotions/v1/sport-banners \
@@ -126,7 +126,7 @@ curl --request GET \
   > /Tests/GomaTests/MockResponses/SportBanners/response.json
 ```
 
-- [ ] 0.2.7 Capture Boosted Odds Banners response:
+- [x] 0.2.7 Capture Boosted Odds Banners response:
 ```sh
 curl --request GET \
   --url https://api.gomademo.com/api/promotions/v1/boosted-odds-banners \
@@ -136,7 +136,7 @@ curl --request GET \
   > /Tests/GomaTests/MockResponses/BoostedOddsBanners/response.json
 ```
 
-- [ ] 0.2.8 Capture Hero Cards response:
+- [x] 0.2.8 Capture Hero Cards response:
 ```sh
 curl --request GET \
   --url https://api.gomademo.com/api/promotions/v1/hero-cards \
@@ -146,7 +146,7 @@ curl --request GET \
   > /Tests/GomaTests/MockResponses/HeroCards/response.json
 ```
 
-- [ ] 0.2.9 Capture Stories response:
+- [x] 0.2.9 Capture Stories response:
 ```sh
 curl --request GET \
   --url https://api.gomademo.com/api/promotions/v1/stories \
@@ -156,7 +156,7 @@ curl --request GET \
   > /Tests/GomaTests/MockResponses/Stories/response.json
 ```
 
-- [ ] 0.2.10 Capture News response (with pagination):
+- [x] 0.2.10 Capture News response (with pagination):
 ```sh
 curl --request GET \
   --url 'https://api.gomademo.com/api/promotions/v1/news?pageIndex=0&pageSize=10' \
@@ -166,7 +166,7 @@ curl --request GET \
   > /Tests/GomaTests/MockResponses/News/response.json
 ```
 
-- [ ] 0.2.11 Capture Pro Choices response:
+- [x] 0.2.11 Capture Pro Choices response:
 ```sh
 curl --request GET \
   --url https://api.gomademo.com/api/promotions/v1/pro-choices \
@@ -187,16 +187,16 @@ curl --request GET \
 
 ## 1. Home Template Tests
 
-- [ ] 1.1 Verify GomaPromotionsAPIClient.homeTemplate endpoint builds the correct URL with query parameters
-- [ ] 1.2 Verify GomaPromotionsAPIClient.homeTemplate endpoint uses correct HTTP method (GET)
-- [ ] 1.3 Mock a JSON response for homeTemplate and verify it decodes to GomaModels.HomeTemplate
-- [ ] 1.4 Test GomaModelMapper.homeTemplate transforms GomaModels.HomeTemplate to HomeTemplate correctly
-- [ ] 1.5 Verify widget types are correctly mapped in the transformation
-- [ ] 1.6 Test GomaManagedContentProvider.getHomeTemplate() calls the correct API endpoint
-- [ ] 1.7 Test GomaManagedContentProvider.getHomeTemplate() handles successful responses
-- [ ] 1.8 Test GomaManagedContentProvider.getHomeTemplate() handles error responses
-- [ ] 1.9 Test GomaManagedContentProvider.getHomeTemplate() applies authentication correctly
-- [ ] 1.10 Verify end-to-end flow with mocked API response to final domain model
+- [x] 1.1 Verify GomaPromotionsAPIClient.homeTemplate endpoint builds the correct URL with query parameters
+- [x] 1.2 Verify GomaPromotionsAPIClient.homeTemplate endpoint uses correct HTTP method (GET)
+- [x] 1.3 Mock a JSON response for homeTemplate and verify it decodes to GomaModels.HomeTemplate
+- [x] 1.4 Test GomaModelMapper.homeTemplate transforms GomaModels.HomeTemplate to HomeTemplate correctly
+- [x] 1.5 Verify widget types are correctly mapped in the transformation
+- [x] 1.6 Test GomaManagedContentProvider.getHomeTemplate() calls the correct API endpoint
+- [x] 1.7 Test GomaManagedContentProvider.getHomeTemplate() handles successful responses
+- [x] 1.8 Test GomaManagedContentProvider.getHomeTemplate() handles error responses
+- [x] 1.9 Test GomaManagedContentProvider.getHomeTemplate() applies authentication correctly
+- [x] 1.10 Verify end-to-end flow with mocked API response to final domain model
 
 ## 2. Alert Banner Tests
 

@@ -5,7 +5,7 @@ struct TestConfiguration {
     
     /// Endpoint paths for the Goma API
     struct EndpointPaths {
-        static let homeTemplate = "/api/promotions/v1/home-template"
+        static let homeTemplate = "/api/home/v1/template"
         static let alertBanner = "/api/promotions/v1/alert-banner"
         static let banners = "/api/promotions/v1/banners"
         static let sportBanners = "/api/promotions/v1/sport-banners"
