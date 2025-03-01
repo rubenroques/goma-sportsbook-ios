@@ -35,7 +35,7 @@ class AddFriendViewModel {
     init() {
         self.canAddFriendPublisher.send(false)
 
-        self.getUserFriends()
+        self.getGomaFriends()
     }
 
     func getUserInfo(friendCode: String) {
@@ -70,7 +70,7 @@ class AddFriendViewModel {
         //self.dataNeedsReload.send()
     }
 
-    private func getUserFriends() {
+    private func getGomaFriends() {
         Env.gomaNetworkClient.requestFriends(deviceId: Env.deviceId)
             .receive(on: DispatchQueue.main)
             .sink(receiveCompletion: { [weak self] completion in

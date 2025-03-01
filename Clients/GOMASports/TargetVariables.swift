@@ -36,10 +36,6 @@ struct TargetVariables: SportsbookTarget {
         #endif
     }
 
-    static var everyMatrixHost: String {
-        return ""
-    }
-
     static var supportedThemes: [Theme] {
         return Theme.allCases
     }
@@ -47,11 +43,11 @@ struct TargetVariables: SportsbookTarget {
     static var defaultCardStyle: CardsStyle {
         return .normal
     }
-    
+
     static var casinoURL: String {
         return "https://sportsbook-cms.gomagaming.com/casino/"
     }
-    
+
     static var serviceProviderType: ServiceProviderType {
         return .everymatrix
     }
@@ -63,26 +59,25 @@ struct TargetVariables: SportsbookTarget {
     static var features: [SportsbookTargetFeatures] {
         return SportsbookTargetFeatures.allCases
     }
-    
+
     static var serviceProviderEnvironment: EnvironmentType {
         return .dev
     }
-    
+
     static var supportedLanguages: [SportsbookSupportedLanguage] {
         return SportsbookSupportedLanguage.allCases
     }
-    
+
     static var clientBaseUrl: String {
         return ""
     }
-    
+
     static var appStoreUrl: String? {
         return nil
     }
-    
+
     static var secundaryMarketSpecsUrl: String? {
         return nil
     }
 
-    
 }

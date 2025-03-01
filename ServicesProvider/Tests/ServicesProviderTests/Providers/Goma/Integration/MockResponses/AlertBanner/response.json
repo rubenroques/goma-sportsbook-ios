@@ -1,0 +1,15 @@
+{
+  "id": 4,
+  "client_id": 2,
+  "title": "Alert Banner 1",
+  "subtitle": "subtitle information",
+  "cta_text": "Button 123",
+  "cta_url": "https://betsson.fr",
+  "platform": "all",
+  "status": "published",
+  "start_date": "2025-02-26 12:39:00",
+  "end_date": "2026-02-26 12:39:00",
+  "user_type": "all",
+  "created_at": "2025-02-26T12:39:57.000000Z",
+  "updated_at": "2025-02-26T13:28:03.000000Z"
+}

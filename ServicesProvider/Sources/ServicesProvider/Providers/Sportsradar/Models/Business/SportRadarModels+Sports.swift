@@ -36,7 +36,7 @@ extension SportRadarModels {
         }
     }
 
-    struct SportTypeDetails: Codable {
+    struct LiveSportTypeDetails: Codable {
         var sportType: SportType
         var eventsCount: Int
         var sportName: String
@@ -58,13 +58,14 @@ extension SportRadarModels {
             let sportTypeIdString = try container.decode(String.self, forKey: .sportType)
             let sportTypeName = try container.decode(String.self, forKey: .sportName)
             let eventsCount = try container.decode(Int.self, forKey: .eventsCount)
-
+            
             self.sportType = SportType(name: sportTypeName,
-                                           numericId: nil,
-                                           alphaId: sportTypeIdString,
-                                           numberEvents: eventsCount,
-                                           numberOutrightEvents: 0,
-                                       numberOutrightMarkets: 0, numberLiveEvents: 0)
+                                       numericId: nil,
+                                       alphaId: sportTypeIdString,
+                                       numberEvents: eventsCount,
+                                       numberOutrightEvents: 0,
+                                       numberOutrightMarkets: 0,
+                                       numberLiveEvents: eventsCount)
 
             self.eventsCount = eventsCount
             self.sportName = sportTypeName

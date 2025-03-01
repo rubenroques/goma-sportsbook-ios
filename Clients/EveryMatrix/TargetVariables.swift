@@ -9,11 +9,7 @@ import Foundation
 
 struct TargetVariables: SportsbookTarget {
 
-    #if DEBUG
-    static var environmentType: EnvironmentType = .dev
-    #else
     static var environmentType: EnvironmentType = .prod
-    #endif
 
     static var gomaGamingHost: String {
         return "https://sportsbook-api.gomagaming.com"
@@ -34,10 +30,6 @@ struct TargetVariables: SportsbookTarget {
         "https://goma-sportsbook-dev.europe-west1.firebasedatabase.app/"
         // "ht tps://goma-sportsbook.europe-west1.firebasedatabase.app/"
         #endif
-    }
-
-    static var everyMatrixHost: String {
-        return ""
     }
 
     static var supportedThemes: [Theme] {

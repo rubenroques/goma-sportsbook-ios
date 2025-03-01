@@ -42,9 +42,11 @@ protocol HomeViewTemplateDataSource {
     func highlightedLiveMatchLineTableCellViewModel(forSection section: Int, forIndex index: Int) -> MatchLineTableCellViewModel?
     func matchLineTableCellViewModel(forSection section: Int, forIndex index: Int) -> MatchLineTableCellViewModel?
     func topCompetitionsLineCellViewModel(forSection section: Int) -> TopCompetitionsLineCellViewModel?
-    
+
     func setStoryLineViewModel(viewModel: StoriesLineCellViewModel)
-    
+
     func heroCardMatchViewModel(forIndex index: Int) -> MatchWidgetCellViewModel?
+
+    func videoNewsLineViewModel() -> VideoPreviewLineCellViewModel?
 
 }

@@ -734,7 +734,6 @@ extension BettingAPIClient: Endpoint {
 
         var legsStringArray: [String] = []
         for selection in betTicket.tickets {
-            let sport = selection
             let priceDown: String
             let priceUp: String
 

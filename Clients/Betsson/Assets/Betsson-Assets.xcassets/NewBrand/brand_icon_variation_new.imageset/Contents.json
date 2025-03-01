@@ -1,6 +1,7 @@
 {
   "images" : [
     {
+      "filename" : "splash beflag-orange_ios 1.png",
       "idiom" : "universal",
       "scale" : "1x"
     },
@@ -11,6 +12,7 @@
           "value" : "dark"
         }
       ],
+      "filename" : "splash beflag-white_ios 1.png",
       "idiom" : "universal",
       "scale" : "1x"
     },

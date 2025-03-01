@@ -183,7 +183,7 @@ class MyGamesViewModel {
 
             for eventId in favoriteMatchesIds {
 
-                Env.servicesProvider.getEventSummary(eventId: eventId)
+                Env.servicesProvider.getEventSummary(eventId: eventId, marketLimit: nil)
                     .receive(on: DispatchQueue.main)
                     .sink(receiveCompletion: { [weak self] completion in
                         switch completion {

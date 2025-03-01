@@ -223,7 +223,7 @@ class MyFavoritesViewModel: NSObject {
 
             for eventId in favoriteMatchesIds {
 
-                Env.servicesProvider.getEventSummary(eventId: eventId)
+                Env.servicesProvider.getEventSummary(eventId: eventId, marketLimit: nil)
                     .receive(on: DispatchQueue.main)
                     .sink(receiveCompletion: { [weak self] completion in
                         switch completion {
@@ -234,18 +234,12 @@ class MyFavoritesViewModel: NSObject {
 
                             Env.favoritesManager.removeFavorite(eventId: eventId, favoriteType: .match)
                         }
-
                         self?.fetchedEventSummaryPublisher.value.append(eventId)
-
                     }, receiveValue: { [weak self] eventSummary in
                         guard let self = self else { return }
-
-                        if (eventSummary.homeTeamName != "" || eventSummary.awayTeamName != ""),
-                            let match = ServiceProviderModelMapper.match(fromEvent: eventSummary) 
-                        {
+                        if (eventSummary.homeTeamName != "" || eventSummary.awayTeamName != ""), let match = ServiceProviderModelMapper.match(fromEvent: eventSummary) {
                             self.favoriteMatchesDataPublisher.value.append(match)
                         }
-
                     })
                     .store(in: &cancellables)
             }

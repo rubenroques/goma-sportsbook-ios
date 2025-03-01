@@ -170,6 +170,7 @@ class OmegaConnector: Connector {
                 }
                 else if let requestStatus = try? JSONDecoder().decode(SportRadarModels.SupportResponse.self, from: data) {
                     do {
+                        print("OmegaConnector requestStatus \(requestStatus)")
                         let mappedObject = try self.decoder.decode(T.self, from: data)
                         return Just(mappedObject).setFailureType(to: ServiceProviderError.self).eraseToAnyPublisher()
                     }

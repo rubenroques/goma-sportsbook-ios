@@ -1,6 +1,6 @@
 public struct RegisterFlow {
 
-    enum FlowType {
+    public enum FlowType {
         case goma
         case betson
     }

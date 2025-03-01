@@ -101,8 +101,9 @@ class SportRadarLiveEventDataCoordinator {
                     self.liveEventCurrentValueSubject.send(completion: .failure(error))
                 }
                 self.waitingSubscription = false
-            } receiveValue: { [weak self] success in
-                // Publish the event live details
+            } receiveValue: { connected in
+                // [weak self] Publish the event live details
+                print("checkLiveEventDetailsAvailable connected \(connected)")
             }
             .store(in: &self.cancellables)
 

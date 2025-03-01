@@ -1,6 +1,6 @@
 //
 //  Betting.swift
-//  
+//
 //
 //  Created by Ruben Roques on 16/11/2022.
 //
@@ -12,7 +12,11 @@ public struct BettingHistory: Codable {
     public var bets: [Bet]
 }
 
-public struct Bet: Codable {
+/// Represents a bet in the system
+/// This struct is a merged version of both Sportsbook and Multibet implementations
+public struct Bet: Codable, Equatable, Hashable {
+
+    // Core properties - present in both implementations
     public var identifier: String
     public var type: String
     public var state: BetState
@@ -25,16 +29,74 @@ public struct Bet: Codable {
     public var totalReturn: Double?
     public var date: Date
     public var freebet: Bool
+
+    // Cashout related properties - present in both implementations
     public var partialCashoutReturn: Double?
     public var partialCashoutStake: Double?
+
+    // Betslip identifier - present in both implementations
     public var betslipId: Int?
+
+    // Return calculation properties - present in both implementations
     public var cashbackReturn: Double?
     public var freebetReturn: Double?
     public var potentialCashbackReturn: Double?
     public var potentialFreebetReturn: Double?
+
+    // MARK: - Properties specific to Multibet
+    // Unique identifier for sharing bets
+    // Note: This property was only present in Multibet implementation
+    public var shareId: String?
+
+    public init(
+        identifier: String,
+        type: String,
+        state: BetState,
+        result: BetResult,
+        globalState: BetState,
+        stake: Double,
+        totalOdd: Double,
+        selections: [BetSelection],
+        potentialReturn: Double? = nil,
+        totalReturn: Double? = nil,
+        date: Date,
+        freebet: Bool,
+        partialCashoutReturn: Double? = nil,
+        partialCashoutStake: Double? = nil,
+        betslipId: Int? = nil,
+        cashbackReturn: Double? = nil,
+        freebetReturn: Double? = nil,
+        potentialCashbackReturn: Double? = nil,
+        potentialFreebetReturn: Double? = nil,
+        shareId: String? = nil
+    ) {
+        self.identifier = identifier
+        self.type = type
+        self.state = state
+        self.result = result
+        self.globalState = globalState
+        self.stake = stake
+        self.totalOdd = totalOdd
+        self.selections = selections
+        self.potentialReturn = potentialReturn
+        self.totalReturn = totalReturn
+        self.date = date
+        self.freebet = freebet
+        self.partialCashoutReturn = partialCashoutReturn
+        self.partialCashoutStake = partialCashoutStake
+        self.betslipId = betslipId
+        self.cashbackReturn = cashbackReturn
+        self.freebetReturn = freebetReturn
+        self.potentialCashbackReturn = potentialCashbackReturn
+        self.potentialFreebetReturn = potentialFreebetReturn
+        self.shareId = shareId
+    }
 }
 
-public struct BetSelection: Codable {
+/// Represents a selection within a bet
+/// This struct is a merged version of both Sportsbook and Multibet implementations
+public struct BetSelection: Codable, Equatable, Hashable {
+    // MARK: - Core Properties (present in both implementations)
     public var identifier: String
     public var state: BetState
     public var result: BetResult
@@ -45,33 +107,64 @@ public struct BetSelection: Codable {
     public var marketName: String
     public var outcomeName: String
     public var odd: OddFormat
-    
+
+    // MARK: - Score Properties (present in both implementations)
     public var homeResult: String?
     public var awayResult: String?
 
+    // MARK: - Event Properties (present in both implementations)
     public var eventId: String
     public var eventDate: Date?
     public var country: Country?
-    public var sportTypeName: String
     public var tournamentName: String
 
-    init(identifier: String,
-         state: BetState,
-         result: BetResult,
-         globalState: BetState,
-         eventName: String,
-         homeTeamName: String?,
-         awayTeamName: String?,
-         marketName: String,
-         outcomeName: String,
-         odd: OddFormat,
-         homeResult: String?,
-         awayResult: String?,
-         eventId: String,
-         eventDate: Date?,
-         country: Country?,
-         sportTypeName: String,
-         tournamentName: String) {
+    // MARK: - Sport Properties (implementation differences)
+    /// Sport type information
+    /// Note: Sportsbook uses String, Multibet uses SportType enum
+    /// Migration: When converting from Sportsbook, use SportType(fromString:) to convert
+    public var sportType: SportType
+
+    // MARK: - Market and Outcome Properties (Multibet specific)
+    /// Unique identifier for the market
+    /// Note: Only present in Multibet implementation
+    public var marketId: String?
+
+    /// Unique identifier for the outcome
+    /// Note: Only present in Multibet implementation
+    public var outcomeId: String?
+
+    // MARK: - Team Logo Properties (Multibet specific)
+    /// URL for the home team's logo
+    /// Note: Only present in Multibet implementation
+    public var homeLogoUrl: String?
+
+    /// URL for the away team's logo
+    /// Note: Only present in Multibet implementation
+    public var awayLogoUrl: String?
+
+    public init(
+        identifier: String,
+        state: BetState,
+        result: BetResult,
+        globalState: BetState,
+        eventName: String,
+        homeTeamName: String?,
+        awayTeamName: String?,
+        marketName: String,
+        outcomeName: String,
+        odd: OddFormat,
+        homeResult: String?,
+        awayResult: String?,
+        eventId: String,
+        eventDate: Date?,
+        country: Country?,
+        sportType: SportType,
+        tournamentName: String,
+        marketId: String? = nil,
+        outcomeId: String? = nil,
+        homeLogoUrl: String? = nil,
+        awayLogoUrl: String? = nil
+    ) {
         self.identifier = identifier
         self.state = state
         self.result = result
@@ -87,12 +180,16 @@ public struct BetSelection: Codable {
         self.eventId = eventId
         self.eventDate = eventDate
         self.country = country
-        self.sportTypeName = sportTypeName
+        self.sportType = sportType
         self.tournamentName = tournamentName
+        self.marketId = marketId
+        self.outcomeId = outcomeId
+        self.homeLogoUrl = homeLogoUrl
+        self.awayLogoUrl = awayLogoUrl
     }
 }
 
-public enum BetResult: String, Codable {
+public enum BetResult: String, Codable, Equatable, Hashable {
     case won
     case lost
     case drawn
@@ -102,7 +199,7 @@ public enum BetResult: String, Codable {
     case notSpecified
 }
 
-public enum BetState: String, Codable {
+public enum BetState: String, Codable, Equatable, Hashable {
     case opened
     case closed
     case settled
@@ -118,11 +215,10 @@ public enum BetState: String, Codable {
 //public struct BetTicketStake: Codable {
 //    var stake: Double
 //}
-
-public enum BetGroupingType: Codable {
+public enum BetGroupingType: Codable, Equatable, Hashable {
     case single(identifier: String)
     case multiple(identifier: String)
-    case system(identifier: String, name: String)
+    case system(identifier: String, name: String, numberOfBets: Int)
 
     var identifier: String {
         switch self {
@@ -130,13 +226,13 @@ public enum BetGroupingType: Codable {
             return identifier
         case .multiple(let identifier):
             return identifier
-        case .system(let identifier, _):
+        case .system(let identifier, _, _):
             return identifier
         }
     }
 }
 
-public struct BetType: Codable {
+public struct BetType: Codable, Equatable, Hashable {
     public var name: String
     public var grouping: BetGroupingType
     public var code: String
@@ -145,14 +241,14 @@ public struct BetType: Codable {
     public var totalStake: Double?
 }
 
-public struct BetslipPotentialReturn: Codable {
+public struct BetslipPotentialReturn: Codable, Equatable, Hashable {
     public var potentialReturn: Double
     public var totalStake: Double
     public var numberOfBets: Int
     public var totalOdd: Double
 }
 
-public struct BetBuilderPotentialReturn: Codable {
+public struct BetBuilderPotentialReturn: Codable, Equatable, Hashable {
     public var potentialReturn: Double
     public var calculatedOdds: Double
 }
@@ -170,13 +266,13 @@ public struct BetTicket: Codable {
     }
 }
 
-public enum BetslipOddChangeSetting: String, Codable, Hashable {
+public enum BetslipOddChangeSetting: String, Codable, Equatable, Hashable {
     case none
     // case any
     case higher
 }
-    
-public enum OddFormat: Codable, Hashable {
+
+public enum OddFormat: Codable, Equatable, Hashable {
     case fraction(numerator: Int, denominator: Int)
     case decimal(odd: Double)
 
@@ -203,10 +299,9 @@ public enum OddFormat: Codable, Hashable {
             return odd
         }
     }
-
 }
 
-public struct BetTicketSelection: Codable {
+public struct BetTicketSelection: Codable, Equatable, Hashable {
 
     public var identifier: String
     public var eventName: String
@@ -216,7 +311,11 @@ public struct BetTicketSelection: Codable {
     public var outcomeName: String
     public var odd: OddFormat
     public var stake: Double
+
     public var sportIdCode: String?
+    public var eventId: String?
+    public var marketId: String?
+    public var outcomeId: String?
 
     public init(identifier: String,
                 eventName: String,
@@ -226,8 +325,11 @@ public struct BetTicketSelection: Codable {
                 outcomeName: String,
                 odd: OddFormat,
                 stake: Double,
-                sportIdCode: String?) {
-        
+                sportIdCode: String?,
+                eventId: String? = nil,
+                marketId: String? = nil,
+                outcomeId: String? = nil) {
+
         self.identifier = identifier
         self.eventName = eventName
         self.homeTeamName = homeTeamName
@@ -237,34 +339,43 @@ public struct BetTicketSelection: Codable {
         self.odd = odd
         self.stake = stake
         self.sportIdCode = sportIdCode
+        self.eventId = eventId
+        self.marketId = marketId
+        self.outcomeId = outcomeId
     }
 
 }
 
-public struct PlacedBetsResponse: Codable {
+public struct PlacedBetsResponse: Codable, Equatable, Hashable {
 
     public var identifier: String
+
     public var bets: [PlacedBetEntry]
+    public var detailedBets: [Bet]? // Contain all the details of the bet and event/outcome
+
     public var requiredConfirmation: Bool
     public var totalStake: Double
 
-    public init(identifier: String, 
+    public init(identifier: String,
                 bets: [PlacedBetEntry],
+                detailedBets: [Bet]?,
                 requiredConfirmation: Bool = false,
                 totalStake: Double) {
+
         self.identifier = identifier
         self.bets = bets
-        self.requiredConfirmation = false
+        self.detailedBets = detailedBets
+        self.requiredConfirmation = requiredConfirmation
         self.totalStake = totalStake
     }
 
 }
 
 public struct NoReply: Codable {
-    
+
 }
 
-public struct PlacedBetEntry: Codable {
+public struct PlacedBetEntry: Codable, Equatable, Hashable {
 
     public var identifier: String
     public var potentialReturn: Double
@@ -289,7 +400,7 @@ public struct PlacedBetEntry: Codable {
     }
 }
 
-public struct PlacedBetLeg: Codable {
+public struct PlacedBetLeg: Codable, Equatable, Hashable {
     public var identifier: String
     public var priceType: String
 
@@ -322,10 +433,10 @@ public struct BetslipSettings: Codable {
 
     public var oddChangeLegacy: BetslipOddChangeSetting?
     public var oddChangeRunningOrPreMatch: BetslipOddChangeSetting?
-    
+
     public init(oddChangeLegacy: BetslipOddChangeSetting?, oddChangeRunningOrPreMatch: BetslipOddChangeSetting?) {
         self.oddChangeLegacy = oddChangeLegacy
         self.oddChangeRunningOrPreMatch = oddChangeRunningOrPreMatch
     }
-    
+
 }

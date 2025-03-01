@@ -1200,7 +1200,7 @@ class RootViewController: UIViewController {
 //        
 //        self.present(navigationController, animated: true, completion: nil)
         
-        if let url = URL(string: "https://support.betsson.fr/hc/fr") {
+        if let url = URL(string: TargetVariables.links.support.helpCenter) {
             UIApplication.shared.open(url)
         }
         

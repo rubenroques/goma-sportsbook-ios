@@ -27,10 +27,6 @@ struct TargetVariables: SportsbookTarget {
         return "https://goma-sportsbook-sportradar-viab-95a78.europe-west1.firebasedatabase.app/"
     }
 
-    static var everyMatrixHost: String {
-        return ""
-    }
-
     static var supportedThemes: [Theme] {
         return Theme.allCases
     }
@@ -88,10 +84,9 @@ struct TargetVariables: SportsbookTarget {
     }
 
     static func generatePromotionsPageUrlString(forAppLanguage appLanguage: String?, isDarkTheme: Bool?) -> String {
-        let baseUrl = "https://sportradar.gomadevelopment.pt"
+        let baseUrl = api.promotions
         let isDarkThemeString = isDarkTheme?.description ?? ""
-        let urlString = "\(baseUrl)/\(appLanguage ?? "")/in-app/promotions?dark=\(isDarkThemeString)"
-        return urlString
+        return "\(baseUrl)/\(appLanguage ?? "")/in-app/promotions?dark=\(isDarkThemeString)"
     }
 
     static var appStoreUrl: String? {
@@ -116,5 +111,4 @@ struct TargetVariables: SportsbookTarget {
             "app_version_profile_2": "® Tous droits réservés",
         ]
     }
-
 }

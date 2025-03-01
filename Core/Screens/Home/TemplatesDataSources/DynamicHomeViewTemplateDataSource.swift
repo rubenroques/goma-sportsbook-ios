@@ -469,4 +469,8 @@ extension DynamicHomeViewTemplateDataSource: HomeViewTemplateDataSource {
         return nil
     }
     
+    func videoNewsLineViewModel() -> VideoPreviewLineCellViewModel? {
+        return nil
+    }
+    
 }

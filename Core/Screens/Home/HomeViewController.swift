@@ -23,7 +23,7 @@ class HomeViewController: UIViewController {
     var didSelectActivationAlertAction: ((ActivationAlertType) -> Void)?
 
     var didTapUserProfileAction: ((UserBasicInfo) -> Void)?
-    
+
     var requestBetSwipeAction: () -> Void = { }
     var requestHomeAction: () -> Void = { }
     var requestRegisterAction: () -> Void = { }
@@ -40,7 +40,7 @@ class HomeViewController: UIViewController {
     private let loadingSpinnerViewController = LoadingSpinnerViewController()
 
     private lazy var floatingShortcutsView: FloatingShortcutsView = Self.createFloatingShortcutsView()
-    
+
     private let refreshControl = UIRefreshControl()
 
     // Logic
@@ -48,9 +48,9 @@ class HomeViewController: UIViewController {
     private let viewModel: HomeViewModel
 
     private var shortcutSelectedOption: Int = -1
-    
+
     private var featuredTipsCenterIndex: Int = 0
-    
+
     // MARK: - Lifetime and Cycle
     init(viewModel: HomeViewModel = HomeViewModel()) {
         self.viewModel = viewModel
@@ -75,10 +75,10 @@ class HomeViewController: UIViewController {
         self.tableView.register(SportMatchSingleLineTableViewCell.self, forCellReuseIdentifier: SportMatchSingleLineTableViewCell.identifier)
         self.tableView.register(PromotedCompetitionLineTableViewCell.self, forCellReuseIdentifier: PromotedCompetitionLineTableViewCell.identifier)
         self.tableView.register(BannerScrollTableViewCell.nib, forCellReuseIdentifier: BannerScrollTableViewCell.identifier)
-        
+
         self.tableView.register(MatchLineTableViewCell.nib, forCellReuseIdentifier: MatchLineTableViewCell.identifier)
         self.tableView.register(MatchLineTableViewCell.nib, forCellReuseIdentifier: MatchLineTableViewCell.identifier+"Live") // Live only cards
-        
+
         self.tableView.register(SuggestedBetLineTableViewCell.self, forCellReuseIdentifier: SuggestedBetLineTableViewCell.identifier)
         self.tableView.register(UITableViewCell.self, forCellReuseIdentifier: UITableViewCell.identifier)
         self.tableView.register(ActivationAlertScrollableTableViewCell.nib, forCellReuseIdentifier: ActivationAlertScrollableTableViewCell.identifier)
@@ -141,17 +141,17 @@ class HomeViewController: UIViewController {
         ])
         // New Footer
         //
-        
+
         self.loadingBaseView.isHidden = true
 
         self.floatingShortcutsView.didTapBetslipButtonAction = { [weak self] in
             self?.didTapBetslipView()
         }
-        
+
         self.floatingShortcutsView.didTapChatButtonAction = { [weak self] in
             self?.didTapChatView()
         }
-        
+
         self.bind(toViewModel: self.viewModel)
 
         self.didSelectActivationAlertAction = { alertType in
@@ -173,14 +173,14 @@ class HomeViewController: UIViewController {
             }
         }
 
-        
+
         self.addChildViewController(self.loadingSpinnerViewController, toView: self.loadingBaseView)
 
         self.showLoading()
 
         self.view.setNeedsLayout()
         self.view.layoutIfNeeded()
-        
+
         executeDelayed(2.0) {
             self.hideLoading()
         }
@@ -188,19 +188,19 @@ class HomeViewController: UIViewController {
 
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
-        
+
         self.floatingShortcutsView.resetAnimations()
     }
-    
+
     override func viewWillDisappear(_ animated: Bool) {
         super.viewWillDisappear(animated)
-        
+
         self.floatingShortcutsView.resetAnimations()
     }
-    
+
     override func viewDidLayoutSubviews() {
         super.viewDidLayoutSubviews()
-        
+
         if let footerView = self.tableView.tableFooterView {
             let size = self.footerInnerView.frame.size
             if footerView.frame.size.height != size.height {
@@ -209,7 +209,7 @@ class HomeViewController: UIViewController {
             }
         }
     }
-    
+
     override func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {
         super.traitCollectionDidChange(previousTraitCollection)
 
@@ -282,7 +282,7 @@ class HomeViewController: UIViewController {
         self.tableView.setContentOffset(topOffset, animated: true)
 
     }
-    
+
     public func openBetSwipe() {
         self.openBetSwipeWebView()
     }
@@ -297,7 +297,7 @@ class HomeViewController: UIViewController {
     private func openTopCompetitionsDetails(competitionsIds: [String], sport: Sport, isFeaturedCompetition: Bool = false) {
         let topCompetitionDetailsViewModel = TopCompetitionDetailsViewModel(competitionsIds: competitionsIds, sport: sport)
         let topCompetitionDetailsViewController = TopCompetitionDetailsViewController(viewModel: topCompetitionDetailsViewModel, isFeaturedCompetition: isFeaturedCompetition)
-                
+
         self.navigationController?.pushViewController(topCompetitionDetailsViewController, animated: true)
     }
 
@@ -310,12 +310,12 @@ class HomeViewController: UIViewController {
     private func openMatchDetails(matchId: String, isMixMatch: Bool = false) {
         if isMixMatch {
             let matchDetailsViewModel = MatchDetailsViewModel(matchId: matchId)
-            
+
             let matchDetailsViewController = MatchDetailsViewController(viewModel: matchDetailsViewModel)
-            
+
             matchDetailsViewController.showMixMatchDefault = true
             matchDetailsViewModel.showMixMatchDefault = true
-            
+
             self.navigationController?.pushViewController(matchDetailsViewController, animated: true)
         }
         else {
@@ -323,7 +323,7 @@ class HomeViewController: UIViewController {
             self.navigationController?.pushViewController(matchDetailsViewController, animated: true)
         }
     }
-    
+
     private func openOutrightDetails(competition: Competition) {
         let viewModel = OutrightMarketDetailsViewModel(competition: competition, store: OutrightMarketDetailsStore())
         let outrightMarketDetailsViewController = OutrightMarketDetailsViewController(viewModel: viewModel)
@@ -362,55 +362,55 @@ class HomeViewController: UIViewController {
 
             if let url = URL(string: urlString) {
                 let promotionsWebViewController = PromotionsWebViewController(url: url, viewModel: promotionsWebViewModel)
-                
+
                 let navigationViewController = Router.navigationController(with: promotionsWebViewController)
 
                 promotionsWebViewController.openBetSwipeAction = { [weak self] in
-                    
+
                     navigationViewController.dismiss(animated: true, completion: {
                         self?.openBetSwipe()
                     })
                 }
-                
+
                 promotionsWebViewController.openRegisterAction = { [weak self] in
                     navigationViewController.dismiss(animated: true, completion: {
                         self?.requestRegisterAction()
                     })
-                    
+
                 }
-                
+
                 promotionsWebViewController.openHomeAction = { [weak self] in
                     navigationViewController.dismiss(animated: true)
                 }
-                
+
                 promotionsWebViewController.openLiveAction = { [weak self] in
                     navigationViewController.dismiss(animated: true, completion: {
                         self?.requestLiveAction()
                     })
                 }
-                
+
                 promotionsWebViewController.openRecruitAction = { [weak self] in
                     navigationViewController.dismiss(animated: true, completion: {
                         self?.openRecruitScreen()
                     })
                 }
-                
+
                 promotionsWebViewController.openContactSettingsAction = { [weak self] in
                     navigationViewController.dismiss(animated: true, completion: {
                         self?.requestContactSettingsAction()
                     })
                 }
-                
+
                 self.present(navigationViewController, animated: true, completion: nil)
 
 //                self.navigationController?.pushViewController(promotionsWebViewController, animated: true)
             }
         }
     }
-    
+
     private func openRecruitScreen() {
         let recruitAFriendViewModel = RecruitAFriendViewModel()
-        
+
         let recruitAFriendViewController = RecruitAFriendViewController(viewModel: recruitAFriendViewModel)
 
         self.navigationController?.pushViewController(recruitAFriendViewController, animated: true)
@@ -424,7 +424,7 @@ class HomeViewController: UIViewController {
         }
         self.present(tipsSliderViewController, animated: true)
     }
-    
+
     private func openFeaturedTipSlider(suggestedBetslips: [SuggestedBetslip], atIndex index: Int = 0) {
         let tipsSliderViewController = TipsSliderViewController(viewModel: TipsSliderViewModel(suggestedBetslip: suggestedBetslips, startIndex: index))
         tipsSliderViewController.shift.enable()
@@ -446,29 +446,29 @@ class HomeViewController: UIViewController {
             storiesFullScreenViewController.markReadAction = { [weak self] storyId in
                 self?.markStoryRead(id: storyId)
             }
-            
+
             storiesFullScreenViewController.requestRegisterAction = { [weak self] in
-                                
+
                 storiesFullScreenViewController.dismiss(animated: true, completion: {
                     self?.presentRegisterScreen()
                 })
-                
+
             }
-            
+
             storiesFullScreenViewController.requestBetswipeAction = { [weak self] in
-                
+
                 storiesFullScreenViewController.dismiss(animated: true, completion: {
                     self?.openBetSwipe()
                 })
-                
+
             }
-            
+
             storiesFullScreenViewController.requestHomeAction = { [weak self] in
                 storiesFullScreenViewController.dismiss(animated: true)
             }
-            
+
             storiesFullScreenViewController.requestFavoritesAction = { [weak self] in
-                
+
                 storiesFullScreenViewController.dismiss(animated: true, completion: {
                     self?.openFavorites()
                 })
@@ -477,14 +477,14 @@ class HomeViewController: UIViewController {
             self.present(storiesFullScreenViewController, animated: true)
         }
     }
-    
+
     private func trackOutcomeClick(matchId: String, outcomeId: String) {
         guard
             let userIdentifier = Env.userSessionStore.loggedUserProfile?.userIdentifier
         else {
             return
         }
-        
+
         Env.servicesProvider.trackEvent(.clickOutcome(eventId: matchId, outcomeId: outcomeId), userIdentifer: userIdentifier)
             .sink { completion in
                 switch completion {
@@ -498,14 +498,14 @@ class HomeViewController: UIViewController {
             }
             .store(in: &self.cancellables)
     }
-    
+
     private func trackEventClick(_ eventId: String) {
         guard
             let userIdentifier = Env.userSessionStore.loggedUserProfile?.userIdentifier
         else {
             return
         }
-        
+
         Env.servicesProvider.trackEvent(.clickEvent(id: eventId), userIdentifer: userIdentifier)
             .sink { completion in
                 switch completion {
@@ -518,44 +518,44 @@ class HomeViewController: UIViewController {
                 print("trackEvent clickEvent called ok")
             }
             .store(in: &self.cancellables)
-        
+
     }
-    
+
     private func presentRegisterScreen() {
         let loginViewController = Router.navigationController(with: LoginViewController(shouldPresentRegisterFlow: true))
-        
+
         self.present(loginViewController, animated: true, completion: nil)
     }
 
     private func openBetSwipeWebView() {
         let userId = Env.userSessionStore.loggedUserProfile?.userIdentifier ?? "0"
         let iframeURL = URL(string: "\(TargetVariables.clientBaseUrl)/betswipe.html?user=\(userId)&mobile=true&language=fr")!
-        
+
         let betSelectorViewConroller = BetslipProxyWebViewController(url: iframeURL)
         let navigationViewController = Router.navigationController(with: betSelectorViewConroller)
         navigationViewController.modalPresentationStyle = .fullScreen
-        
+
         betSelectorViewConroller.showsBetslip = { [weak self] in
             navigationViewController.dismiss(animated: true) {
                 self?.didTapBetslipButtonAction?()
             }
         }
-        
+
         betSelectorViewConroller.closeBetSwipe = {
             navigationViewController.dismiss(animated: true)
         }
-        
+
         betSelectorViewConroller.addToBetslip = { [weak self] betSwipeData in
             self?.addBetToBetslip(withBetSwipeData: betSwipeData)
         }
-        
+
         self.present(navigationViewController, animated: true, completion: nil)
     }
 
     func addBetToBetslip(withBetSwipeData betSwipeData: BetSwipeData) {
-        
+
         if let externalMarketId = betSwipeData.externalMarketId, let selectedOutcomeId = betSwipeData.externalOutcomeId {
-            
+
             Publishers.CombineLatest(
                 Env.servicesProvider.getEventSummary(forMarketId: externalMarketId),
                 Env.servicesProvider.getMarketInfo(marketId: externalMarketId)
@@ -585,16 +585,16 @@ class HomeViewController: UIViewController {
                 Env.betslipManager.addBettingTicket(bettingTicket)
             }
             .store(in: &self.cancellables)
-            
+
         }
-        
+
     }
-    
+
     private func markStoryRead(id: String) {
 
         // Save story
         ClientManagedHomeViewTemplateDataSource.appendToReadInstaStoriesArray(id)
-        
+
         // Refresh view models
         if var storyLineViewModel = self.viewModel.storyLineViewModel() {
 
@@ -638,29 +638,29 @@ class HomeViewController: UIViewController {
     @objc private func didTapOpenFeaturedTips() {
         // Not used
     }
-    
+
     @objc private func didTapSeeAllLiveButton() {
         self.didTapSeeAllLiveButtonAction?()
     }
-    
+
     private func openFavorites() {
-        
+
         if Env.userSessionStore.isUserLogged() {
             let myFavoritesRootViewController = MyFavoritesRootViewController()
             self.navigationController?.pushViewController(myFavoritesRootViewController, animated: true)
         }
         else {
-            
+
             let loginViewController = LoginViewController()
-            
+
             let navigationViewController = Router.navigationController(with: loginViewController)
-            
+
             loginViewController.hasPendingRedirect = true
-            
+
             loginViewController.needsRedirect = { [weak self] in
                 self?.openFavorites()
             }
-            
+
             self.present(navigationViewController, animated: true, completion: nil)
         }
     }
@@ -674,11 +674,11 @@ class HomeViewController: UIViewController {
 
             quickbetViewController.modalPresentationStyle = .overCurrentContext
             quickbetViewController.modalTransitionStyle = .crossDissolve
-            
+
             quickbetViewController.shouldShowBetSuccess = { bettingTicket, betPlacedDetails in
-                
+
                 quickbetViewController.dismiss(animated: true, completion: {
-                    
+
                     self.showBetSucess(bettingTicket: bettingTicket, betPlacedDetails: betPlacedDetails)
                 })
             }
@@ -690,14 +690,14 @@ class HomeViewController: UIViewController {
             self.present(loginViewController, animated: true, completion: nil)
         }
     }
-    
+
     private func showBetSucess(bettingTicket: BettingTicket, betPlacedDetails: [BetPlacedDetails]) {
-        
+
         let betSubmissionSuccessViewController = BetSubmissionSuccessViewController(betPlacedDetailsArray: betPlacedDetails,
                                                                                     cashbackResultValue: nil,
                                                                                     usedCashback: false,
         bettingTickets: [bettingTicket])
-        
+
         self.present(Router.navigationController(with: betSubmissionSuccessViewController), animated: true)
     }
 }
@@ -733,6 +733,7 @@ extension HomeViewController: UITableViewDelegate, UITableViewDataSource {
             return cell
         case .userMessage:
             return UITableViewCell()
+    
         case .bannerLine:
             guard
                 let cell = tableView.dequeueReusableCell(withIdentifier: BannerScrollTableViewCell.identifier) as? BannerScrollTableViewCell,
@@ -765,7 +766,7 @@ extension HomeViewController: UITableViewDelegate, UITableViewDataSource {
             cell.didLongPressOdd = { [weak self] bettingTicket in
                 self?.openQuickbet(bettingTicket)
             }
-            
+
             return cell
 
         case .userFavorites:
@@ -777,10 +778,10 @@ extension HomeViewController: UITableViewDelegate, UITableViewDataSource {
             }
 
             cell.matchStatsViewModel = self.viewModel.matchStatsViewModel(forMatch: match)
-            
+
             let viewModel = MatchLineTableCellViewModel(match: match)
             cell.configure(withViewModel: viewModel)
-            
+
             cell.tappedMatchLineAction = { [weak self] match in
                 self?.openMatchDetails(matchId: match.id)
             }
@@ -788,7 +789,7 @@ extension HomeViewController: UITableViewDelegate, UITableViewDataSource {
             cell.didLongPressOdd = { [weak self] bettingTicket in
                 self?.openQuickbet(bettingTicket)
             }
-            
+
             cell.tappedMixMatchAction = { [weak self] match in
                 self?.openMatchDetails(matchId: match.id, isMixMatch: true)
             }
@@ -847,7 +848,7 @@ extension HomeViewController: UITableViewDelegate, UITableViewDataSource {
             else {
                 return UITableViewCell()
             }
-            
+
             switch sportMatchLineViewModel.loadingPublisher.value {
             case .loading, .empty:
                 let cell = tableView.dequeueReusableCell(withIdentifier: UITableViewCell.identifier, for: indexPath)
@@ -855,7 +856,7 @@ extension HomeViewController: UITableViewDelegate, UITableViewDataSource {
             case.loaded:
                 ()
             }
-            
+
             switch sportMatchLineViewModel.layoutTypePublisher.value {
             case .doubleLine:
                 guard
@@ -916,7 +917,7 @@ extension HomeViewController: UITableViewDelegate, UITableViewDataSource {
                 }
 
                 return cell
-                
+
             case .competition:
                 guard
                     let cell = tableView.dequeueCellType(PromotedCompetitionLineTableViewCell.self)
@@ -986,22 +987,22 @@ extension HomeViewController: UITableViewDelegate, UITableViewDataSource {
 
         case .topCompetitionsShortcuts:
             if let featuredCompetitionId = Env.businessSettingsSocket.clientSettings.featuredCompetition?.id {
-                
+
                 if indexPath.row == 0 {
                     guard
                         let cell = tableView.dequeueReusableCell(withIdentifier: PromotedCompetitionTableViewCell.identifier) as? PromotedCompetitionTableViewCell
                     else {
                         return UITableViewCell()
                     }
-                    
+
                     cell.configure()
-                    
+
                     cell.didTapPromotedCompetition = { [weak self] competitionId in
                         let sport = Sport(id: "", name: "", alphaId: "", numericId: "", showEventCategory: false, liveEventsCount: 0)
-                        
+
                         self?.openTopCompetitionsDetails(competitionsIds: [competitionId], sport: sport, isFeaturedCompetition: true)
                     }
-                    
+
                     return cell
                 }
                 else {
@@ -1011,9 +1012,9 @@ extension HomeViewController: UITableViewDelegate, UITableViewDataSource {
                     else {
                         return UITableViewCell()
                     }
-                    
+
                     cell.configure(withViewModel: viewModel)
-                    
+
                     cell.selectedItemAction = { [weak self] competitionId in
                         let sport = Sport(id: "", name: "", alphaId: "", numericId: "", showEventCategory: false, liveEventsCount: 0)
                         self?.openTopCompetitionsDetails(competitionsIds: [competitionId], sport: sport)
@@ -1028,9 +1029,9 @@ extension HomeViewController: UITableViewDelegate, UITableViewDataSource {
                 else {
                     return UITableViewCell()
                 }
-                
+
                 cell.configure(withViewModel: viewModel)
-                
+
                 cell.selectedItemAction = { [weak self] competitionId in
                     let sport = Sport(id: "", name: "", alphaId: "", numericId: "", showEventCategory: false, liveEventsCount: 0)
                     self?.openTopCompetitionsDetails(competitionsIds: [competitionId], sport: sport)
@@ -1056,23 +1057,23 @@ extension HomeViewController: UITableViewDelegate, UITableViewDataSource {
             }
 
             cell.setupWithViewModel(viewModel)
-            
+
             cell.tappedMatchLineAction = { [weak self] match in
                 self?.openMatchDetails(matchId: match.id)
             }
-                
+
             cell.tappedMatchOutrightLineAction = { [weak self] competition in
                 self?.openOutrightDetails(competition: competition)
             }
-            
+
             cell.didLongPressOdd = { [weak self] bettingTicket in
                 self?.openQuickbet(bettingTicket)
             }
-            
+
             cell.tappedMixMatchAction = { [weak self] match in
                 self?.openMatchDetails(matchId: match.id, isMixMatch: true)
             }
-            
+
             return cell
 
         case .promotionalStories:
@@ -1131,7 +1132,7 @@ extension HomeViewController: UITableViewDelegate, UITableViewDataSource {
             }
 
             return cell
-            
+
         case .highlightedLiveMatches:
             guard
                 let cell = tableView.dequeueReusableCell(withIdentifier: MatchLineTableViewCell.identifier+"Live") as? MatchLineTableViewCell,
@@ -1148,7 +1149,7 @@ extension HomeViewController: UITableViewDelegate, UITableViewDataSource {
                 }
                 self?.openMatchDetails(matchId: match.id)
             }
-            
+
             cell.selectedOutcome = { [weak self] match, market, outcome in
                 if let matchTrackableReference = match.trackableReference,
                    let outcomeTrackableReference = outcome.externalReference {
@@ -1161,7 +1162,7 @@ extension HomeViewController: UITableViewDelegate, UITableViewDataSource {
             }
 
             return cell
-            
+
         case .heroCard:
 
             guard
@@ -1180,7 +1181,7 @@ extension HomeViewController: UITableViewDelegate, UITableViewDataSource {
                 self?.openMatchDetails(matchId: match.id)
             }
             cell.configure(withViewModel: viewModel)
-            
+
             return cell
         case .highlightedMarketProChoices:
             guard
@@ -1210,10 +1211,24 @@ extension HomeViewController: UITableViewDelegate, UITableViewDataSource {
             }
 
             return cell
+        case .videoNewsLine:
+            guard
+                let cell = tableView.dequeueReusableCell(withIdentifier: VideoPreviewLineTableViewCell.identifier) as? VideoPreviewLineTableViewCell,
+                let videoPreviewLineCellViewModel = self.viewModel.videoNewsLineViewModel()
+            else {
+                return UITableViewCell()
+            }
+            cell.configure(withViewModel: videoPreviewLineCellViewModel)
+            cell.didTapVideoPreviewLineCellAction = { [weak self] viewModel in
+                if let externalStreamURL = viewModel.externalStreamURL {
+                    self?.didTapExternalVideoAction(externalStreamURL)
+                }
+            }
+            return cell
         }
 
     }
-    
+
     func tableView(_ tableView: UITableView, didEndDisplaying cell: UITableViewCell, forRowAt indexPath: IndexPath) {
         guard
             let contentType = self.viewModel.contentType(forSection: indexPath.section)
@@ -1223,7 +1238,7 @@ extension HomeViewController: UITableViewDelegate, UITableViewDataSource {
 
         switch contentType {
         case .heroCard:
-            
+
             if let cell = cell as? HeroCardTableViewCell {
                 cell.stopTimer()
             }
@@ -1257,7 +1272,7 @@ extension HomeViewController: UITableViewDelegate, UITableViewDataSource {
             else {
                 return UITableView.automaticDimension
             }
-            
+
             if sportMatchLineViewModel.loadingPublisher.value == .empty {
                 return .leastNormalMagnitude
             }
@@ -1318,6 +1333,8 @@ extension HomeViewController: UITableViewDelegate, UITableViewDataSource {
 //                }
 //            }
             return UITableView.automaticDimension
+        case .videoNewsLine:
+            return 258
         }
 
     }
@@ -1405,6 +1422,8 @@ extension HomeViewController: UITableViewDelegate, UITableViewDataSource {
 //                }
 //            }
             return 679
+        case .videoNewsLine:
+            return 258
         }
     }
 
@@ -1527,41 +1546,43 @@ extension HomeViewController: UITableViewDataSourcePrefetching {
 
             switch contentType {
             case .footerBanner:
-                ()
+                break
             case .userMessage:
-                ()
+                break
             case .bannerLine:
                 _ = self.viewModel.bannerLineViewModel()
             case .userFavorites:
-                ()
+                break
             case .featuredTips:
-                ()
+                break
             case .suggestedBets:
                 _ = self.viewModel.suggestedBetLineViewModel()
             case .sportGroup:
                 _ = self.viewModel.sportGroupViewModel(forSection: indexPath.section)
             case .userProfile:
-                ()
+                break
             case .quickSwipeStack:
-                ()
+                break
             case .makeOwnBetCallToAction:
-                ()
+                break
             case .topCompetitionsShortcuts:
-                ()
+                break
             case .highlightedMatches, .highlightedBoostedOddsMatches:
                 _ = self.viewModel.highlightedMatchViewModel(forSection: indexPath.section, forIndex: indexPath.row)
             case .highlightedMarketProChoices:
                 _ = self.viewModel.highlightedMarket(forIndex: indexPath.row)
             case .promotionalStories:
-                ()
+                break
             case .promotedSportSection:
-                ()
+                break
             case .supplementaryEvents:
-                ()
+                break
             case .highlightedLiveMatches:
-                ()
+                break
             case .heroCard:
-                ()
+                break
+            case .videoNewsLine:
+                break
             }
         }
     }

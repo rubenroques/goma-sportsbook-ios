@@ -11,7 +11,7 @@ import SharedModels
 import CryptoKit
 
 class SportRadarPrivilegedAccessManager: PrivilegedAccessManager {
-
+  
     var connector: OmegaConnector
     var userSessionStatePublisher: AnyPublisher<UserSessionStatus, Error> {
         return userSessionStateSubject.eraseToAnyPublisher()
@@ -89,14 +89,19 @@ class SportRadarPrivilegedAccessManager: PrivilegedAccessManager {
         return self.connector.logout()
     }
 
+    // TODO: SP Migration 
+    func depositOnWallet(amount: Double) -> AnyPublisher<Bool, ServiceProviderError> {
+        return Fail(error: ServiceProviderError.notSupportedForProvider).eraseToAnyPublisher()
+    }
+
     func getUserProfile(withKycExpire kycExpire: String?) -> AnyPublisher<UserProfile, ServiceProviderError> {
 
         let endpoint = OmegaAPIClient.playerInfo
         let publisher: AnyPublisher<SportRadarModels.PlayerInfoResponse, ServiceProviderError> = self.connector.request(endpoint)
 
         return publisher.flatMap({ playerInfoResponse -> AnyPublisher<UserProfile, ServiceProviderError> in
-            if playerInfoResponse.status == "SUCCESS", var userOverview = SportRadarModelMapper.userProfile(fromPlayerInfoResponse: playerInfoResponse, withKycExpire: kycExpire) {
-
+            if playerInfoResponse.status == "SUCCESS", let userOverview = SportRadarModelMapper.userProfile(fromPlayerInfoResponse: playerInfoResponse, withKycExpire: kycExpire) {
+                print("getUserProfile(withKycExpire \(userOverview))")
                 return Just(userOverview).setFailureType(to: ServiceProviderError.self).eraseToAnyPublisher()
             }
             return Fail(outputType: UserProfile.self, failure: ServiceProviderError.invalidResponse).eraseToAnyPublisher()
@@ -310,7 +315,7 @@ class SportRadarPrivilegedAccessManager: PrivilegedAccessManager {
         .eraseToAnyPublisher()
     }
 
-    public func getAllCountries() -> AnyPublisher<[Country], ServiceProviderError> {
+    public func getAllCountries() -> AnyPublisher<[SharedModels.Country], ServiceProviderError> {
         let allCountries = Country.allCountries
         return Just(allCountries).setFailureType(to: ServiceProviderError.self).eraseToAnyPublisher()
     }
@@ -1322,7 +1327,7 @@ class SportRadarPrivilegedAccessManager: PrivilegedAccessManager {
     func getSumsubAccessToken(userId: String, levelName: String) -> AnyPublisher<AccessTokenResponse, ServiceProviderError> {
 
         // let url = "/resources/accessTokens?userId=\(userId)&levelName=\(levelName)&ttlInSecs=600".replacingOccurrences(of: " ", with: "%20")
-        var customAllowedSet =  NSCharacterSet(charactersIn:"; ").inverted
+        let customAllowedSet =  NSCharacterSet(charactersIn:"; ").inverted
 
         let url = "/resources/accessTokens?userId=\(userId)&levelName=\(levelName)".addingPercentEncoding(withAllowedCharacters: customAllowedSet) ?? ""
 
@@ -1337,7 +1342,7 @@ class SportRadarPrivilegedAccessManager: PrivilegedAccessManager {
         let publisher: AnyPublisher<SportRadarModels.AccessTokenResponse, ServiceProviderError> = self.connector.request(endpoint)
 
         return publisher.flatMap({ accessTokenResponse -> AnyPublisher<AccessTokenResponse, ServiceProviderError> in
-            if let acessToken = accessTokenResponse.token {
+            if accessTokenResponse.token != nil {
                 let mappedAccessTokenResponse = SportRadarModelMapper.accessTokenResponse(fromInternalAccessTokenResponse: accessTokenResponse)
 
                 return Just(mappedAccessTokenResponse).setFailureType(to: ServiceProviderError.self).eraseToAnyPublisher()
@@ -1351,7 +1356,7 @@ class SportRadarPrivilegedAccessManager: PrivilegedAccessManager {
     func getSumsubApplicantData(userId: String) -> AnyPublisher<ApplicantDataResponse, ServiceProviderError> {
 
         //let url = "/resources/applicants/-;externalUserId=\(userId)/one".replacingOccurrences(of: " ", with: "%20")
-        var customAllowedSet =  NSCharacterSet(charactersIn:" ").inverted
+        let customAllowedSet =  NSCharacterSet(charactersIn:" ").inverted
 
         let url = "/resources/applicants/-;externalUserId=\(userId)/one".addingPercentEncoding(withAllowedCharacters: customAllowedSet) ?? ""
 
@@ -1366,7 +1371,7 @@ class SportRadarPrivilegedAccessManager: PrivilegedAccessManager {
         let publisher: AnyPublisher<SportRadarModels.ApplicantDataResponse, ServiceProviderError> = self.connector.request(endpoint)
 
         return publisher.flatMap({ applicantDataResponse -> AnyPublisher<ApplicantDataResponse, ServiceProviderError> in
-            if let acessToken = applicantDataResponse.info {
+            if applicantDataResponse.info != nil {
                 let mappedApplicantDataResponse = SportRadarModelMapper.applicantDataResponse(fromInternalApplicantDataResponse: applicantDataResponse)
 
                 return Just(mappedApplicantDataResponse).setFailureType(to: ServiceProviderError.self).eraseToAnyPublisher()
@@ -1384,7 +1389,7 @@ class SportRadarPrivilegedAccessManager: PrivilegedAccessManager {
         let publisher: AnyPublisher<SportRadarModels.AccessTokenResponse, ServiceProviderError> = self.connector.request(endpoint)
 
         return publisher.flatMap({ accessTokenResponse -> AnyPublisher<AccessTokenResponse, ServiceProviderError> in
-            if let acessToken = accessTokenResponse.token {
+            if accessTokenResponse.token != nil {
 
                 let mappedAccessTokenResponse = SportRadarModelMapper.accessTokenResponse(fromInternalAccessTokenResponse: accessTokenResponse)
 
@@ -1497,6 +1502,98 @@ class SportRadarPrivilegedAccessManager: PrivilegedAccessManager {
             }
         }).eraseToAnyPublisher()
     }
+}
+
+extension SportRadarPrivilegedAccessManager {
+        
+    func getFollowees() -> AnyPublisher<[Follower], ServiceProviderError> {
+        return Fail(error: ServiceProviderError.notSupportedForProvider).eraseToAnyPublisher()
+    }
+
+    func getTotalFollowees() -> AnyPublisher<Int, ServiceProviderError> {
+        return Fail(error: ServiceProviderError.notSupportedForProvider).eraseToAnyPublisher()
+    }
+
+    func getFollowers() -> AnyPublisher<[Follower], ServiceProviderError> {
+        return Fail(error: ServiceProviderError.notSupportedForProvider).eraseToAnyPublisher()
+    }
+
+    func getTotalFollowers() -> AnyPublisher<Int, ServiceProviderError> {
+        return Fail(error: ServiceProviderError.notSupportedForProvider).eraseToAnyPublisher()
+    }
+
+    func addFollowee(userId: String) -> AnyPublisher<[String], ServiceProviderError> {
+        return Fail(error: ServiceProviderError.notSupportedForProvider).eraseToAnyPublisher()
+    }
+
+    func removeFollowee(userId: String) -> AnyPublisher<[String], ServiceProviderError> {
+        return Fail(error: ServiceProviderError.notSupportedForProvider).eraseToAnyPublisher()
+    }
+
+    func getTipsRankings(type: String?, followers: Bool?) -> AnyPublisher<[TipRanking], ServiceProviderError> {
+        return Fail(error: ServiceProviderError.notSupportedForProvider).eraseToAnyPublisher()
+    }
+
+    func getUserProfileInfo(userId: String) -> AnyPublisher<UserProfileInfo, ServiceProviderError> {
+        return Fail(error: ServiceProviderError.notSupportedForProvider).eraseToAnyPublisher()
+    }
+
+    func getUserNotifications() -> AnyPublisher<UserNotificationsSettings, ServiceProviderError> {
+        return Fail(error: ServiceProviderError.notSupportedForProvider).eraseToAnyPublisher()
+    }
+
+    func updateUserNotifications(settings: UserNotificationsSettings) -> AnyPublisher<Bool, ServiceProviderError> {
+        return Fail(error: ServiceProviderError.notSupportedForProvider).eraseToAnyPublisher()
+    }
+
+    func getFriendRequests() -> AnyPublisher<[FriendRequest], ServiceProviderError> {
+        return Fail(error: ServiceProviderError.notSupportedForProvider).eraseToAnyPublisher()
+    }
+
+    func getFriends() -> AnyPublisher<[GomaFriend], ServiceProviderError> {
+        return Fail(error: ServiceProviderError.notSupportedForProvider).eraseToAnyPublisher()
+    }
+
+    func addFriends(userIds: [String], request: Bool) -> AnyPublisher<AddFriendResponse, ServiceProviderError> {
+        return Fail(error: ServiceProviderError.notSupportedForProvider).eraseToAnyPublisher()
+    }
+
+    func removeFriend(userId: Int) -> AnyPublisher<String, ServiceProviderError> {
+        return Fail(error: ServiceProviderError.notSupportedForProvider).eraseToAnyPublisher()
+    }
+
+    func getChatrooms() -> AnyPublisher<[ChatroomData], ServiceProviderError> {
+        return Fail(error: ServiceProviderError.notSupportedForProvider).eraseToAnyPublisher()
+    }
+
+    func addGroup(name: String, userIds: [String]) -> AnyPublisher<ChatroomId, ServiceProviderError> {
+        return Fail(error: ServiceProviderError.notSupportedForProvider).eraseToAnyPublisher()
+    }
+
+    func deleteGroup(id: Int) -> AnyPublisher<String, ServiceProviderError> {
+        return Fail(error: ServiceProviderError.notSupportedForProvider).eraseToAnyPublisher()
+    }
+
+    func editGroup(id: Int, name: String) -> AnyPublisher<String, ServiceProviderError> {
+        return Fail(error: ServiceProviderError.notSupportedForProvider).eraseToAnyPublisher()
+    }
+
+    func leaveGroup(id: Int) -> AnyPublisher<String, ServiceProviderError> {
+        return Fail(error: ServiceProviderError.notSupportedForProvider).eraseToAnyPublisher()
+    }
+
+    func addUsersToGroup(groupId: Int, userIds: [String]) -> AnyPublisher<String, ServiceProviderError> {
+        return Fail(error: ServiceProviderError.notSupportedForProvider).eraseToAnyPublisher()
+    }
+
+    func removeUsersToGroup(groupId: Int, userIds: [String]) -> AnyPublisher<String, ServiceProviderError> {
+        return Fail(error: ServiceProviderError.notSupportedForProvider).eraseToAnyPublisher()
+    }
+
+    func searchUserWithCode(code: String) -> AnyPublisher<SearchUser, ServiceProviderError> {
+        return Fail(error: ServiceProviderError.notSupportedForProvider).eraseToAnyPublisher()
+    }
+
 }
 
 extension SportRadarPrivilegedAccessManager: SportRadarSessionTokenUpdater {

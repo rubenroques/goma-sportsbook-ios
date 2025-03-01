@@ -380,7 +380,7 @@ extension SharedTicketCardView {
     private static func createCashbackValueLabel() -> UILabel {
         let label = UILabel()
         label.translatesAutoresizingMaskIntoConstraints = false
-        label.font = AppFont.with(type: .bold , size: 14)
+        label.font = AppFont.with(type: .bold, size: 14)
         label.text = "-.--"
         label.textAlignment = .center
         return label

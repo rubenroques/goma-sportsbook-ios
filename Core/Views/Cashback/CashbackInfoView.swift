@@ -6,6 +6,7 @@
 //
 
 import UIKit
+import SwiftUI
 
 class CashbackInfoView: UIView {
 
@@ -39,6 +40,8 @@ class CashbackInfoView: UIView {
     }
 
     func commonInit() {
+        self.translatesAutoresizingMaskIntoConstraints = false
+
         let infoTap = UITapGestureRecognizer(target: self, action: #selector(self.tapInfo))
         self.containerView.addGestureRecognizer(infoTap)
     }
@@ -92,7 +95,6 @@ extension CashbackInfoView {
 
     private func initConstraints() {
 
-        // Top bar
         NSLayoutConstraint.activate([
             self.containerView.leadingAnchor.constraint(equalTo: self.leadingAnchor),
             self.containerView.trailingAnchor.constraint(equalTo: self.trailingAnchor),
@@ -108,9 +110,39 @@ extension CashbackInfoView {
             self.iconImageView.trailingAnchor.constraint(equalTo: self.containerView.trailingAnchor, constant: -5),
             self.iconImageView.widthAnchor.constraint(equalToConstant: 11),
             self.iconImageView.heightAnchor.constraint(equalTo: self.iconImageView.widthAnchor)
-
         ])
 
     }
 
 }
+
+#if DEBUG
+// MARK: - Preview
+@available(iOS 17.0, *)
+#Preview("CashbackInfoView") {
+    // Create container view with auto layout
+    let container = UIView()
+    container.translatesAutoresizingMaskIntoConstraints = false
+
+    // Create CashbackInfoView
+    let cashbackView = CashbackInfoView()
+    cashbackView.translatesAutoresizingMaskIntoConstraints = false
+    container.addSubview(cashbackView)
+
+    // Setup constraints to show a reasonable preview size
+    NSLayoutConstraint.activate([
+        cashbackView.leadingAnchor.constraint(equalTo: container.leadingAnchor, constant: 16),
+        cashbackView.trailingAnchor.constraint(lessThanOrEqualTo: container.trailingAnchor, constant: -16),
+        cashbackView.topAnchor.constraint(equalTo: container.topAnchor, constant: 20),
+        container.heightAnchor.constraint(equalToConstant: 100),
+        container.widthAnchor.constraint(equalToConstant: 200)
+    ])
+
+    // Add tap action for testing
+    cashbackView.didTapInfoAction = {
+        print("Info tapped in preview")
+    }
+
+    return container
+}
+#endif

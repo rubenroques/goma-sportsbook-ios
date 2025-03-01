@@ -52,12 +52,17 @@ extension UIColor {
         static let inputTextTitle = UIColor(named: "inputTextTitle")!
         static let inputText = UIColor(named: "inputText")!
         static let inputError = UIColor(named: "inputError")!
-        static let inputTextDisable = UIColor(named: "inputTextDisable")
+
+        static var inputTextDisable: UIColor {
+            return UIColor(named: "inputTextDisable") ?? Self.inputText
+        }
 
         static var iconPrimary: UIColor {
             return UIColor(named: "iconPrimary") ?? Self.textPrimary
         }
-        static let iconSecondary = UIColor(named: "iconSecondary")!
+        static var iconSecondary: UIColor {
+            return UIColor(named: "iconSecondary") ?? Self.textSecondary
+        }
 
         static let backgroundDrop: UIColor = UIColor(named: "backgroundDrop")!
         static let borderDrop = UIColor(named: "borderDrop")!
@@ -176,7 +181,7 @@ extension UIColor {
         }
 
         static var textHeroCard: UIColor {
-            return UIColor(named: "textHeroCard") ?? Self.textHeroCard
+            return UIColor(named: "textHeroCard") ?? Self.textPrimary
         }
 
         static var textSecondaryHeroCard: UIColor {
@@ -191,6 +196,100 @@ extension UIColor {
             return UIColor(named: "iconSportsHeroCard") ?? Self.iconSportsHeroCard
         }
 
+        static var textSecondaryHeroCard: UIColor {
+            return UIColor(named: "textSecondaryHeroCard") ?? Self.textSecondary
+        }
+
+        static var backgroundOddsHeroCard: UIColor {
+            return UIColor(named: "backgroundOddsHeroCard") ?? Self.backgroundOdds
+        }
+
+        static var iconSportsHeroCard: UIColor {
+            return UIColor(named: "iconSportsHeroCard") ?? Self.textPrimary
+        }
+
+        static func validateThemeColors() -> [UIColor] {
+            return [
+                Self.backgroundPrimary,
+                Self.backgroundSecondary,
+                Self.backgroundTertiary,
+                Self.backgroundBorder,
+                Self.backgroundCards,
+                Self.backgroundHeader,
+                Self.textPrimary,
+                Self.textHeadlinePrimary,
+                Self.textDisablePrimary,
+                Self.textSecondary,
+                Self.backgroundOdds,
+                Self.backgroundDisabledOdds,
+                Self.separatorLine,
+                Self.scroll,
+                Self.pillBackground,
+                Self.pillNavigation,
+                Self.pillSettings,
+                Self.inputBackground,
+                Self.inputBorderActive,
+                Self.inputBorderDisabled,
+                Self.inputBackgroundSecondary,
+                Self.inputTextTitle,
+                Self.inputText,
+                Self.inputError,
+                Self.inputTextDisable,
+                Self.iconPrimary,
+                Self.iconSecondary,
+                Self.backgroundDrop,
+                Self.borderDrop,
+                Self.highlightPrimary,
+                Self.highlightSecondary,
+                Self.buttonTextPrimary,
+                Self.buttonBackgroundPrimary,
+                Self.buttonActiveHoverPrimary,
+                Self.buttonDisablePrimary,
+                Self.buttonTextDisablePrimary,
+                Self.buttonBackgroundSecondary,
+                Self.buttonActiveHoverSecondary,
+                Self.buttonActiveHoverTertiary,
+                Self.buttonBorderTertiary,
+                Self.bubblesPrimary,
+                Self.alertError,
+                Self.alertSuccess,
+                Self.alertWarning,
+                Self.myTicketsLost,
+                Self.myTicketsLostFaded,
+                Self.myTicketsWon,
+                Self.myTicketsWonFaded,
+                Self.myTicketsOther,
+                Self.backgroundDarker,
+                Self.statsHome,
+                Self.statsAway,
+                Self.highlightPrimaryContrast,
+                Self.highlightSecondaryContrast,
+                Self.backgroundGradient1,
+                Self.backgroundGradient2,
+                Self.headerGradient1,
+                Self.headerGradient2,
+                Self.headerGradient3,
+                Self.cardBorderLineGradient1,
+                Self.cardBorderLineGradient2,
+                Self.cardBorderLineGradient3,
+                Self.gameHeader,
+                Self.separatorLineHighlightPrimary,
+                Self.separatorLineHighlightSecondary,
+                Self.separatorLineSecondary,
+                Self.navBanner,
+                Self.navBannerActive,
+                Self.backgroundHeaderGradient1,
+                Self.backgroundHeaderGradient2,
+                Self.highlightTertiary,
+                Self.liveBorderGradient1,
+                Self.liveBorderGradient2,
+                Self.liveBorderGradient3,
+                Self.textHeroCard,
+                Self.textSecondaryHeroCard,
+                Self.backgroundOddsHeroCard,
+                Self.iconSportsHeroCard,
+            ]
+        }
     }
 
 }

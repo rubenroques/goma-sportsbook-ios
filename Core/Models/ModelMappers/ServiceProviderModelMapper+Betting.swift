@@ -94,7 +94,7 @@ extension ServiceProviderModelMapper {
                                                                 result: result,
                                                                 priceValue: decimalOdd,
                                                                 sportId: nil,
-                                                                sportName: betSelection.sportTypeName,
+                                                                sportName: betSelection.sportType.name,
                                                                 venueId: nil,
                                                                 venueName: betSelection.country?.iso2Code,
                                                                 tournamentId: nil,

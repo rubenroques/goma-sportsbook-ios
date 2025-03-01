@@ -373,7 +373,6 @@ class OutrightMarketDetailsViewController: UIViewController {
         let metadata = LPLinkMetadata()
 
         let matchSlugUrl = self.generateUrlSlug(competition: self.viewModel.competition)
-        print("OUTRIGHT SLUG: \(matchSlugUrl)")
         
         if let matchUrl = URL(string: matchSlugUrl) {
 

@@ -1,6 +1,6 @@
 //
 //  Events.swift
-//  
+//
 //
 //  Created by Ruben Roques on 11/10/2022.
 //
@@ -8,13 +8,48 @@
 import Foundation
 import SharedModels
 
+
+public class EventMetadataPointer: Codable {
+
+    public var id: String?
+    public var eventId: String
+    public var eventMarketId: String
+    public var callToActionURL: String?
+    public var imageURL: String?
+
+    init(id: String?, eventId: String, eventMarketId: String, callToActionURL: String?, imageURL: String?) {
+        self.id = id
+        self.eventId = eventId
+        self.eventMarketId = eventMarketId
+        self.callToActionURL = callToActionURL
+        self.imageURL = imageURL
+    }
+
+}
+
+public class EventGroupPointer: Codable {
+
+    public var eventsPointers: [String]
+    public var marketGroupId: String?
+    public var title: String?
+
+    public init(eventsPointers: [String], marketGroupId: String?, title: String?) {
+        self.eventsPointers = eventsPointers
+        self.marketGroupId = marketGroupId
+        self.title = title
+    }
+
+}
+
 public class EventsGroup {
     public var events: [Event]
     public var marketGroupId: String?
+    public var title: String?
 
-    public init(events: [Event], marketGroupId: String?) {
+    public init(events: [Event], marketGroupId: String?, title: String? = nil) {
         self.events = events
         self.marketGroupId = marketGroupId
+        self.title = title
     }
 }
 
@@ -27,12 +62,12 @@ public enum EventStatus: Hashable {
     case unknown
     case notStarted
     case inProgress(String)
-    case ended
-    
+    case ended(String)
+
     public init(value: String) {
         switch value {
         case "not_started": self = .notStarted
-        case "ended": self = .ended
+        case "ended": self = .ended(value)
         default: self = .inProgress(value)
         }
     }
@@ -48,11 +83,13 @@ public class Event: Codable, Equatable {
 
     public var homeTeamScore: Int?
     public var awayTeamScore: Int?
+    public var homeTeamLogoUrl: String?
+    public var awayTeamLogoUrl: String?
 
     public var competitionId: String
     public var competitionName: String
     public var startDate: Date
-    
+
     public var markets: [Market]
 
     public var venueCountry: Country?
@@ -63,14 +100,16 @@ public class Event: Codable, Equatable {
     public var status: EventStatus?
 
     public var matchTime: String?
-    
+
     public var promoImageURL: String?
     public var oldMainMarketId: String?
 
     public var trackableReference: String?
-    
+
     public var activePlayerServing: ActivePlayerServe?
-    
+
+    public var boostedMarket: Market?
+
     public var type: EventType {
         if self.homeTeamName.isEmpty && self.awayTeamName.isEmpty {
             return .competition
@@ -79,9 +118,9 @@ public class Event: Codable, Equatable {
             return .match
         }
     }
-    
+
     public var scores: [String: Score]
-    
+
     enum CodingKeys: String, CodingKey {
         case id = "id"
         case homeTeamName = "homeName"
@@ -97,6 +136,10 @@ public class Event: Codable, Equatable {
         case scores = "scores"
         case trackableReference = "trackableReference"
         case activePlayerServing = "activePlayerServing"
+        case homeTeamLogoUrl = "homeTeamLogoUrl"
+        case awayTeamLogoUrl = "awayTeamLogoUrl"
+        case promoImageURL = "promoImageURL"
+        case boostedMarket = "boostedMarket"
     }
 
     public init(id: String,
@@ -104,6 +147,8 @@ public class Event: Codable, Equatable {
                 awayTeamName: String,
                 homeTeamScore: Int?,
                 awayTeamScore: Int?,
+                homeTeamLogoUrl: String?,
+                awayTeamLogoUrl: String?,
                 competitionId: String,
                 competitionName: String,
                 sport: SportType,
@@ -117,6 +162,8 @@ public class Event: Codable, Equatable {
                 status: EventStatus?,
                 matchTime: String?,
                 activePlayerServing: ActivePlayerServe?,
+                boostedMarket: Market?,
+                promoImageURL: String?,
                 scores: [String: Score]) {
 
         self.id = id
@@ -125,6 +172,8 @@ public class Event: Codable, Equatable {
 
         self.homeTeamScore = homeTeamScore
         self.awayTeamScore = awayTeamScore
+        self.homeTeamLogoUrl = homeTeamLogoUrl
+        self.awayTeamLogoUrl = awayTeamLogoUrl
 
         self.competitionId = competitionId
         self.competitionName = competitionName
@@ -133,7 +182,7 @@ public class Event: Codable, Equatable {
         self.sportIdCode = sportIdCode
 
         self.trackableReference = trackableReference
-        
+
         self.startDate = startDate
         self.markets = markets
         self.venueCountry = venueCountry
@@ -142,12 +191,14 @@ public class Event: Codable, Equatable {
         self.name = name
         self.status = status
         self.matchTime = matchTime
-        
-        self.promoImageURL = nil
+
+        self.promoImageURL = promoImageURL
         self.oldMainMarketId = nil
-        
+
         self.activePlayerServing = activePlayerServing
-        
+
+        self.boostedMarket = boostedMarket
+
         self.scores = scores
     }
 
@@ -166,8 +217,9 @@ public class Event: Codable, Equatable {
         self.sportIdCode = try container.decodeIfPresent(String.self, forKey: .sportIdCode)
         self.trackableReference = try container.decodeIfPresent(String.self, forKey: .trackableReference)
         self.activePlayerServing = try container.decodeIfPresent(ActivePlayerServe.self, forKey: .activePlayerServing)
+        self.boostedMarket = try container.decodeIfPresent(Market.self, forKey: .boostedMarket)
         self.scores = (try? container.decode([String: Score].self, forKey: .scores)) ?? [:]
-        
+
     }
 
     public func encode(to encoder: Encoder) throws {
@@ -185,7 +237,7 @@ public class Event: Codable, Equatable {
         try container.encodeIfPresent(self.sportIdCode, forKey: .sportIdCode)
         try container.encodeIfPresent(self.trackableReference, forKey: .trackableReference)
         try container.encodeIfPresent(self.activePlayerServing, forKey: .activePlayerServing)
-        
+        try container.encodeIfPresent(self.boostedMarket, forKey: .boostedMarket)
     }
 
     public static func == (lhs: Event, rhs: Event) -> Bool {
@@ -233,18 +285,19 @@ public class HighlightMarket: Codable, Equatable {
 }
 
 public class Market: Codable, Equatable {
-    
+
     public enum OutcomesOrder: Codable, Hashable {
         case none
         case odds // by odd
         case name // by name
         case setup // The original order that the server sends us
     }
-    
+
     public var id: String
     public var name: String
     public var outcomes: [Outcome]
     public var marketTypeId: String?
+    public var marketFilterId: String?
     public var eventMarketTypeId: String?
     public var eventName: String?
     public var isMainOutright: Bool?
@@ -257,6 +310,8 @@ public class Market: Codable, Equatable {
     public var marketDigitLine: String?
     public var outcomesOrder: OutcomesOrder
     public var customBetAvailable: Bool?
+
+    public var stats: Stats?
 
     public var isMainMarket: Bool
 
@@ -273,6 +328,7 @@ public class Market: Codable, Equatable {
         case name = "name"
         case outcomes = "outcomes"
         case marketTypeId = "marketTypeId"
+        case marketFilterId = "marketFilterId"
         case eventMarketTypeId = "eventMarketTypeId"
         case eventName = "eventName"
         case isMainOutright = "ismainoutright"
@@ -289,12 +345,14 @@ public class Market: Codable, Equatable {
         case sportIdCode = "sportIdCode"
         case venueCountry = "venueCountry"
         case isMainMarket = "isMainMarket"
+        case stats = "stats"
     }
 
     public init(id: String,
                 name: String,
                 outcomes: [Outcome],
                 marketTypeId: String?,
+                marketFilterId: String?,
                 eventMarketTypeId: String?,
                 eventName: String?,
                 isMainOutright: Bool?,
@@ -312,12 +370,14 @@ public class Market: Codable, Equatable {
                 sportIdCode: String?,
                 venueCountry: Country? = nil,
                 customBetAvailable: Bool?,
-                isMainMarket: Bool) {
+                isMainMarket: Bool,
+                stats: Stats? = nil) {
 
         self.id = id
         self.name = name
         self.outcomes = outcomes
         self.marketTypeId = marketTypeId
+        self.marketFilterId = marketFilterId
         self.eventMarketTypeId = eventMarketTypeId
         self.eventName = eventName
         self.isMainOutright = isMainOutright
@@ -329,18 +389,19 @@ public class Market: Codable, Equatable {
         self.eventId = eventId
         self.marketDigitLine = marketDigitLine
         self.outcomesOrder = outcomesOrder
-        
+
         // Event related properties
         self.competitionId = competitionId
         self.competitionName = competitionName
-        
+
         self.sport = sport
         self.sportIdCode = sportIdCode
-        
+
         self.venueCountry = venueCountry
-        
+
         self.customBetAvailable = customBetAvailable
         self.isMainMarket = isMainMarket
+        self.stats = stats
     }
 
     public static func == (lhs: Market, rhs: Market) -> Bool {
@@ -366,24 +427,26 @@ public class Market: Codable, Equatable {
 
 
 public class Outcome: Codable, Equatable {
-    
+
     public var id: String
     public var name: String
     public var odd: OddFormat
     public var marketId: String?
+    public var bettingOfferId: String?
     public var orderValue: String?
     public var externalReference: String?
-    
+
     public var isTradable: Bool
     public var isTerminated: Bool
 
     public var customBetAvailableMarket: Bool?
-    
+
     enum CodingKeys: String, CodingKey {
         case id = "id"
         case name = "name"
         case odd = "odd"
         case marketId = "marketId"
+        case bettingOfferId = "bettingOfferId"
         case orderValue = "orderValue"
         case externalReference = "externalReference"
         case isTradable = "isTradable"
@@ -394,17 +457,19 @@ public class Outcome: Codable, Equatable {
     public init(id: String,
                 name: String,
                 odd: OddFormat,
-                marketId: String?,
-                orderValue: String?,
-                externalReference: String?,
-                isTradable: Bool,
-                isTerminated: Bool,
+                marketId: String? = nil,
+                bettingOfferId: String? = nil,
+                orderValue: String? = nil,
+                externalReference: String? = nil,
+                isTradable: Bool = true,
+                isTerminated: Bool = false,
                 customBetAvailableMarket: Bool?) {
-        
+
         self.id = id
         self.name = name
         self.odd = odd
         self.marketId = marketId
+        self.bettingOfferId = bettingOfferId
         self.orderValue = orderValue
         self.externalReference = externalReference
         self.isTradable = isTradable
@@ -418,6 +483,7 @@ public class Outcome: Codable, Equatable {
         self.name = try container.decode(String.self, forKey: .name)
         self.odd = try container.decode(OddFormat.self, forKey: .odd)
         self.marketId = try container.decodeIfPresent(String.self, forKey: .marketId)
+        self.bettingOfferId = try container.decodeIfPresent(String.self, forKey: .bettingOfferId)
         self.orderValue = try container.decodeIfPresent(String.self, forKey: .orderValue)
         self.externalReference = try container.decodeIfPresent(String.self, forKey: .externalReference)
         self.isTradable = (try? container.decode(Bool.self, forKey: .isTradable)) ?? false
@@ -431,6 +497,7 @@ public class Outcome: Codable, Equatable {
         lhs.name == rhs.name &&
         lhs.odd == rhs.odd &&
         lhs.marketId == rhs.marketId &&
+        lhs.bettingOfferId == rhs.bettingOfferId &&
         lhs.orderValue == rhs.orderValue &&
         lhs.externalReference == rhs.externalReference &&
         lhs.isTradable == rhs.isTradable &&
@@ -440,7 +507,7 @@ public class Outcome: Codable, Equatable {
 }
 
 public struct EventLiveData: Equatable {
-    
+
     public var id: String
     public var homeScore: Int?
     public var awayScore: Int?
@@ -448,7 +515,7 @@ public struct EventLiveData: Equatable {
     public var status: EventStatus?
     public var detailedScores: [String: Score]?
     public var activePlayerServing: ActivePlayerServe?
-    
+
     enum CodingKeys: String, CodingKey {
         case id = "id"
         case homeScore = "homeScore"
@@ -458,7 +525,7 @@ public struct EventLiveData: Equatable {
         case detailedScores = "detailedScores"
         case activePlayerServing = "activePlayerServing"
     }
-    
+
     public init(id: String,
                 homeScore: Int?,
                 awayScore: Int?,
@@ -475,32 +542,32 @@ public struct EventLiveData: Equatable {
         self.detailedScores = detailedScores
         self.activePlayerServing = activePlayerServing
     }
-    
+
     public init(from decoder: Decoder) throws {
         let container = try decoder.container(keyedBy: CodingKeys.self)
         id = try container.decode(String.self, forKey: .id)
         homeScore = try container.decodeIfPresent(Int.self, forKey: .homeScore)
         awayScore = try container.decodeIfPresent(Int.self, forKey: .awayScore)
         matchTime = try container.decodeIfPresent(String.self, forKey: .matchTime)
-        
+
         // Decode the status based on the "status" key
         let statusValue = try container.decode(String.self, forKey: .status)
         status = EventStatus(value: statusValue)
-        
+
         detailedScores = try container.decodeIfPresent([String: Score].self, forKey: .detailedScores)
         activePlayerServing = try container.decodeIfPresent(ActivePlayerServe.self, forKey: .activePlayerServing)
     }
-    
+
     public func encode(to encoder: Encoder) throws {
         var container = encoder.container(keyedBy: CodingKeys.self)
-        
+
         try container.encode(id, forKey: .id)
         try container.encodeIfPresent(homeScore, forKey: .homeScore)
         try container.encodeIfPresent(awayScore, forKey: .awayScore)
         try container.encodeIfPresent(matchTime, forKey: .matchTime)
         try container.encodeIfPresent(detailedScores, forKey: .detailedScores)
         try container.encodeIfPresent(activePlayerServing, forKey: .activePlayerServing)
-        
+
         if let status = self.status {
             switch status {
             case .unknown:
@@ -514,7 +581,7 @@ public struct EventLiveData: Equatable {
             }
         }
     }
-    
+
 }
 
 public struct FieldWidget: Codable {
@@ -527,10 +594,10 @@ public struct FieldWidget: Codable {
     }
 }
 
-public struct EventMarket {
+public struct MarketGroupPointer {
     public var id: String
     public var name: String
-    public var marketIds: [String]
+    public var marketGroupIds: [String]
     public var groupOrder: Int
 }
 
@@ -550,8 +617,9 @@ public struct MarketGroup {
     public var position: Int?
     public var isDefault: Bool?
     public var numberOfMarkets: Int?
+    public var loaded: Bool
     public var markets: [Market]?
-    
+
 }
 
 public struct FieldWidgetRenderData {
@@ -648,7 +716,7 @@ public struct SportCompetitionInfo: Codable, Hashable {
         case numberOutrightEvents = "numoutrightevents"
         case numberOutrightMarkets = "numoutrightmarkets"
     }
-    
+
 }
 
 public struct SportCompetitionMarketGroup: Codable, Hashable {
@@ -662,14 +730,15 @@ public struct SportCompetitionMarketGroup: Codable, Hashable {
 }
 
 public struct BannerResponse: Codable {
-    public var bannerItems: [Banner]
+    public var bannerItems: [EventBanner]
 
     enum CodingKeys: String, CodingKey {
         case bannerItems = "headlineItems"
     }
 }
 
-public struct Banner: Codable {
+// Renamed from Banner to EventBanner to avoid conflict with the consolidated version in Promotions
+public struct EventBanner: Codable {
     public var id: String
     public var name: String
     public var title: String
@@ -779,13 +848,26 @@ public struct HighlightedEventPointer : Codable {
     }
 }
 
+public struct Stats: Codable, Equatable {
+    public var homeParticipant: ParticipantStats
+    public var awayParticipant: ParticipantStats
+}
+
+public struct ParticipantStats: Codable, Equatable {
+    public var total: Int
+    public var wins: Int?
+    public var draws: Int?
+    public var losses: Int?
+    public var over: Int?
+    public var under: Int?
+}
 
 public enum Score: Codable, Hashable {
-    
+
     case set(index: Int, home: Int?, away: Int?)
     case gamePart(home: Int?, away: Int?)
     case matchFull(home: Int?, away: Int?)
-    
+
     public var sortValue: Int {
         switch self {
         case .set(let index, _, _):
@@ -796,7 +878,7 @@ public enum Score: Codable, Hashable {
             return 200
         }
     }
-    
+
     public var key: String {
         switch self {
         case .set(let index, _, _):
@@ -807,7 +889,7 @@ public enum Score: Codable, Hashable {
             return "matchFull"
         }
     }
-    
+
 }
 
 

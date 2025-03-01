@@ -420,3 +420,26 @@ class SportRadarBettingProvider: BettingProvider, Connector {
     }
 }
 
+extension SportRadarBettingProvider {
+
+    func updateTicketOdds(betId: String) -> AnyPublisher<Bet, ServiceProviderError> {
+        return Fail(error: ServiceProviderError.notSupportedForProvider).eraseToAnyPublisher()
+    }
+    
+    func getTicketQRCode(betId: String) -> AnyPublisher<BetQRCode, ServiceProviderError> {
+        return Fail(error: ServiceProviderError.notSupportedForProvider).eraseToAnyPublisher()
+    }
+    
+    func getSocialSharedTicket(shareId: String) -> AnyPublisher<Bet, ServiceProviderError> {
+        return Fail(error: ServiceProviderError.notSupportedForProvider).eraseToAnyPublisher()
+    }
+    
+    func deleteTicket(betId: String) -> AnyPublisher<Bool, ServiceProviderError> {
+        return Fail(error: ServiceProviderError.notSupportedForProvider).eraseToAnyPublisher()
+    }
+    
+    func updateTicket(betId: String, betTicket: BetTicket) -> AnyPublisher<PlacedBetsResponse, ServiceProviderError> {
+        return Fail(error: ServiceProviderError.notSupportedForProvider).eraseToAnyPublisher()
+    }
+    
+}

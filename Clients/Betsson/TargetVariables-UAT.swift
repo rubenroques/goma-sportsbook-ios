@@ -27,10 +27,6 @@ struct TargetVariables: SportsbookTarget {
         return "https://goma-sportsbook.europe-west1.firebasedatabase.app/"
     }
 
-    static var everyMatrixHost: String {
-        return ""
-    }
-
     static var supportedThemes: [Theme] {
         return Theme.allCases
     }
@@ -64,7 +60,7 @@ struct TargetVariables: SportsbookTarget {
     }
 
     static var features: [SportsbookTargetFeatures] {
-        return [.cashback]
+        return [.cashback, .legalAgeWarning]
     }
 
     static var shouldUserBlurEffectTabBar: Bool {
@@ -92,7 +88,7 @@ struct TargetVariables: SportsbookTarget {
     }
 
     static func generatePromotionsPageUrlString(forAppLanguage appLanguage: String?, isDarkTheme: Bool?) -> String {
-        let baseUrl = Self.clientBaseUrl
+        let baseUrl = self.links.api.promotions
         let isDarkThemeString = isDarkTheme?.description ?? ""
         let urlString = "\(baseUrl)/\(appLanguage ?? "")/in-app/promotions?dark=\(isDarkThemeString)"
         return urlString
@@ -115,4 +111,9 @@ struct TargetVariables: SportsbookTarget {
     static var localizationOverrides: [String: String] {
         return [:]
     }
+    
+    static var registerFlowType: RegisterFlowType {
+        return .betsson
+    }
 }
+

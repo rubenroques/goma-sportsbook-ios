@@ -322,7 +322,7 @@ extension OmegaAPIClient: Endpoint {
     
     var query: [URLQueryItem]? {
         switch self {
-        case .login(let username, let password):
+        case .login:
 //            return [URLQueryItem(name: "username", value: username),
 //                    URLQueryItem(name: "password", value: password)]
             return nil
@@ -365,7 +365,7 @@ extension OmegaAPIClient: Endpoint {
                      let birthDate,
                      let mobilePrefix,
                      let mobileNumber,
-                     let nationalityIso2Code,
+                     _,
                      let currencyCode,
                      let firstName,
                      let lastName,
