@@ -253,6 +253,10 @@ class SportRadarPrivilegedAccessManager: PrivilegedAccessManager {
         })
         .eraseToAnyPublisher()
     }
+    
+    func basicSignUp(form: BasicSignUpForm) -> AnyPublisher<BasicSignUpResponse, ServiceProviderError> {
+        return Fail(outputType: BasicSignUpResponse.self, failure: ServiceProviderError.notSupportedForProvider).eraseToAnyPublisher()
+    }
 
     func updateUserProfile(form: UpdateUserProfileForm) -> AnyPublisher<Bool, ServiceProviderError> {
 

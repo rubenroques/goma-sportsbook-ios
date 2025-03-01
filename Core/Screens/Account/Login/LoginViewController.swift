@@ -317,37 +317,49 @@ class LoginViewController: UIViewController {
             .store(in: &self.cancellables)
 
         var registerSteps: [RegisterStep]
-        if Env.businessSettingsSocket.clientSettings.requiredPhoneVerification {
+        
+        switch TargetVariables.registerFlowType {
+        case .betsson:
+            if Env.businessSettingsSocket.clientSettings.requiredPhoneVerification {
+                registerSteps = [
+                            RegisterStep(forms: [.gender, .names]),
+                            RegisterStep(forms: [.avatar, .nickname]),
+                            RegisterStep(forms: [.ageCountry]),
+                            RegisterStep(forms: [.address]),
+                            RegisterStep(forms: [.contacts]),
+                            RegisterStep(forms: [.password]),
+                            RegisterStep(forms: [.terms, .promoCodes]),
+                            RegisterStep(forms: [.phoneConfirmation])
+                        ]
+            }
+            else {
+                registerSteps = [
+                            RegisterStep(forms: [.gender, .names]),
+                            RegisterStep(forms: [.avatar, .nickname]),
+                            RegisterStep(forms: [.ageCountry]),
+                            RegisterStep(forms: [.address]),
+                            RegisterStep(forms: [.contacts]),
+                            RegisterStep(forms: [.password]),
+                            RegisterStep(forms: [.terms, .promoCodes])
+                        ]
+            }
+        case .goma:
             registerSteps = [
-                        RegisterStep(forms: [.gender, .names]),
-                        RegisterStep(forms: [.avatar, .nickname]),
-                        RegisterStep(forms: [.ageCountry]),
-                        RegisterStep(forms: [.address]),
-                        RegisterStep(forms: [.contacts]),
-                        RegisterStep(forms: [.password]),
-                        RegisterStep(forms: [.terms, .promoCodes]),
-                        RegisterStep(forms: [.phoneConfirmation])
-                    ]
-        }
-        else {
-            registerSteps = [
-                        RegisterStep(forms: [.gender, .names]),
-                        RegisterStep(forms: [.avatar, .nickname]),
-                        RegisterStep(forms: [.ageCountry]),
-                        RegisterStep(forms: [.address]),
-                        RegisterStep(forms: [.contacts]),
-                        RegisterStep(forms: [.password]), 
-                        RegisterStep(forms: [.terms, .promoCodes])
-                    ]
+                RegisterStep(forms: [.personalInfo]),
+                RegisterStep(forms: [.avatar]),
+                RegisterStep(forms: [.password]),
+            ]
         }
         
         let hasLegalAgeWarning = TargetVariables.features.contains(.legalAgeWarning) ? true : false
+        
+        let registerFlowType = self.setupRegisterFlowType(registerFlowType: TargetVariables.registerFlowType)
 
         let viewModel = SteppedRegistrationViewModel(registerSteps: registerSteps,
                                                      userRegisterEnvelop: userRegisterEnvelopValue,
                                                      serviceProvider: Env.servicesProvider,
                                                      userRegisterEnvelopUpdater: userRegisterEnvelopUpdater,
-                                                     hasLegalAgeWarning: hasLegalAgeWarning)
+                                                     hasLegalAgeWarning: hasLegalAgeWarning, registerFlowType: registerFlowType)
         
         viewModel.hasReferralCode = self.referralCode != nil ? true : false
 
@@ -385,6 +397,16 @@ class LoginViewController: UIViewController {
         }
 
         self.present(registerNavigationController, animated: animated)
+    }
+    
+    private func setupRegisterFlowType(registerFlowType: RegisterFlowType) -> RegisterFlow.FlowType {
+        
+        switch TargetVariables.registerFlowType {
+        case .betsson:
+            return .betson
+        case .goma:
+            return .goma
+        }
     }
 
     private func setUserConsents(enabled: Bool) {

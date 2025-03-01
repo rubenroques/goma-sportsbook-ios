@@ -13,63 +13,16 @@ import Theming
 import Extensions
 import Lottie
 
-public enum FormStep: String {
-    case gender
-    case names
-    case avatar
-    case nickname
-    case ageCountry
-    case address
-    case contacts
-    case password
-    case terms
-    case promoCodes
-    case phoneConfirmation
-}
-
-public struct RegisterStep {
-    var forms: [FormStep]
-
-    public init(forms: [FormStep]) {
-        self.forms = forms
-    }
-
-}
-
-public struct RegisterError {
-
-    var field: String
-    var error: String
-
-    var associatedFormStep: FormStep? {
-        switch field {
-        case "gender": return .gender
-        case "firstName", "lastName", "middleName": return .names
-        case "username": return .nickname
-        case "password": return .password
-        case "email", "mobile": return .contacts
-        case "birthDate", "nationality", "country": return .ageCountry
-        case "city", "address", "province": return .address
-        case "phoneConfirmation": return .phoneConfirmation
-        case "bonusCode": return .promoCodes
-        case "receiveEmail": return .terms
-        default:
-            return nil
-        }
-    }
-    
-}
-
 public class SteppedRegistrationViewModel {
 
-    var registerSteps: [RegisterStep]
+    var registerSteps: [RegisterStep] = []
 
-    var currentStep: CurrentValueSubject<Int, Never> = .init(0)
-    var numberOfSteps: Int {
+    public var currentStep: CurrentValueSubject<Int, Never> = .init(0)
+    public var numberOfSteps: Int {
         return self.registerSteps.count
     }
 
-    var progressPercentage: AnyPublisher<Float, Never> {
+    public var progressPercentage: AnyPublisher<Float, Never> {
         return self.currentStep.map { [weak self] currentStep in
             let totalSteps = self?.numberOfSteps ?? 0
             if totalSteps > 0 {
@@ -80,40 +33,37 @@ public class SteppedRegistrationViewModel {
         }.eraseToAnyPublisher()
     }
 
-    var userRegisterEnvelop: UserRegisterEnvelop
+    public var userRegisterEnvelop: UserRegisterEnvelop
 
     let serviceProvider: ServicesProviderClient
-    let userRegisterEnvelopUpdater: UserRegisterEnvelopUpdater
+    public let userRegisterEnvelopUpdater: UserRegisterEnvelopUpdater
 
     var isLoading: CurrentValueSubject<Bool, Never> = .init(false)
 
-    var shouldPushSuccessStep: PassthroughSubject<Void, Never> = .init()
-    var showRegisterErrors: CurrentValueSubject<[RegisterError]?, Never> = .init(nil)
+    public var shouldPushSuccessStep: PassthroughSubject<Void, Never> = .init()
+    public var showRegisterErrors: CurrentValueSubject<[RegisterError]?, Never> = .init(nil)
 
     var confirmationCodeFilled: String?
     
     public var hasReferralCode: Bool = false
     
     public var hasLegalAgeWarning: Bool
+    
+    var registerFlowType: RegisterFlow.FlowType
 
     private var cancellables = Set<AnyCancellable>()
-    
 
     public init(registerSteps: [RegisterStep]? = nil,
                 currentStep: Int? = nil,
                 userRegisterEnvelop: UserRegisterEnvelop,
                 serviceProvider: ServicesProviderClient,
                 userRegisterEnvelopUpdater: UserRegisterEnvelopUpdater,
-                hasLegalAgeWarning: Bool = false) {
+                hasLegalAgeWarning: Bool = false,
+                registerFlowType: RegisterFlow.FlowType) {
+        
+        self.registerFlowType = registerFlowType
         
         self.hasLegalAgeWarning = hasLegalAgeWarning
-
-        if let registerSteps {
-            self.registerSteps = registerSteps
-        }
-        else {
-            self.registerSteps = Self.defaultRegisterSteps()
-        }
 
         self.userRegisterEnvelop = userRegisterEnvelop
 
@@ -121,11 +71,18 @@ public class SteppedRegistrationViewModel {
             self.currentStep = .init(currentStep)
         }
         else {
-            self.currentStep = .init(self.userRegisterEnvelop.currentRegisterStep())
+            self.currentStep = .init(self.userRegisterEnvelop.currentRegisterStep(registerFlowType: self.registerFlowType))
         }
 
         self.serviceProvider = serviceProvider
         self.userRegisterEnvelopUpdater = userRegisterEnvelopUpdater
+        
+        if let registerSteps {
+            self.registerSteps = registerSteps
+        }
+        else {
+            self.registerSteps = self.defaultRegisterSteps()
+        }
         
         self.userRegisterEnvelopUpdater.didUpdateUserRegisterEnvelop
             .receive(on: DispatchQueue.main)
@@ -137,19 +94,29 @@ public class SteppedRegistrationViewModel {
         
     }
 
-    private static func defaultRegisterSteps() -> [RegisterStep] {
-        return [
-            RegisterStep(forms: [.gender, .names]),
-            RegisterStep(forms: [.avatar, .nickname]),
-            RegisterStep(forms: [.ageCountry]),
-            RegisterStep(forms: [.address]),
-            RegisterStep(forms: [.contacts]),
-            RegisterStep(forms: [.password]),
-            RegisterStep(forms: [.terms, .promoCodes])
-        ]
+    private func defaultRegisterSteps() -> [RegisterStep] {
+        switch self.registerFlowType {
+        case .goma:
+            return [
+                RegisterStep(forms: [.personalInfo]),
+                RegisterStep(forms: [.avatar]),
+                RegisterStep(forms: [.password]),
+            ]
+        case .betson:
+            return [
+                RegisterStep(forms: [.gender, .names]),
+                RegisterStep(forms: [.avatar, .nickname]),
+                RegisterStep(forms: [.ageCountry]),
+                RegisterStep(forms: [.address]),
+                RegisterStep(forms: [.contacts]),
+                RegisterStep(forms: [.password]),
+                RegisterStep(forms: [.terms, .promoCodes])
+            ]
+        }
+        
     }
 
-    func scrollToPreviousStep() {
+    public func scrollToPreviousStep() {
         var nextStep = currentStep.value - 1
         if nextStep < 0 {
             nextStep = 0
@@ -157,7 +124,7 @@ public class SteppedRegistrationViewModel {
         self.currentStep.send(nextStep)
     }
 
-    func scrollToNextStep() {
+    public func scrollToNextStep() {
         var nextStep = currentStep.value + 1
         if nextStep > numberOfSteps {
             nextStep = numberOfSteps
@@ -165,7 +132,7 @@ public class SteppedRegistrationViewModel {
         self.currentStep.send(nextStep)
     }
 
-    func scrollToIndex(_ index: Int) {
+    public func scrollToIndex(_ index: Int) {
 
         if index > numberOfSteps {
             return
@@ -190,7 +157,7 @@ public class SteppedRegistrationViewModel {
         return nil
     }
 
-    func requestRegister() -> Bool {
+    public func requestRegister() -> Bool {
 
         guard
             var form = self.userRegisterEnvelop.convertToSignUpForm()
@@ -254,7 +221,72 @@ public class SteppedRegistrationViewModel {
 
         return true
     }
+    
+    func requestBasicRegister() -> Bool {
 
+        guard
+            var form = self.userRegisterEnvelop.convertToBasicSignUpForm()
+
+        else {
+            return false
+        }
+
+        self.isLoading.send(true)
+        
+        self.serviceProvider.basicSignUp(form: form)
+            .receive(on: DispatchQueue.main)
+            .sink { [weak self] completion in
+                switch completion {
+                case .failure(let error):
+                    print("RegisterFlow ServiceProvider.basicSignUp Error \(error)")
+                    switch error {
+                    case .errorMessage(let message):
+                        self?.processRegisterError(errorMessage: message)
+                    default:
+                        let errorsDictionary = [RegisterError(field: "personalInfo", error: "INVALID_PERSONAL_INFO")]
+                        self?.showRegisterErrors.send(errorsDictionary)
+                    }
+                    
+                case .finished:
+                    ()
+                }
+                self?.isLoading.send(false)
+            } receiveValue: { [weak self] basicSignUpResponse in
+                if basicSignUpResponse.successful {
+                    self?.shouldPushSuccessStep.send()
+                }
+                else {
+                    if let basicSignUpErrors = basicSignUpResponse.errors {
+                        let errorsDictionary = basicSignUpErrors.map { error in
+                            return RegisterError(field: error.field, error: error.error)
+                        }
+                        self?.showRegisterErrors.send(errorsDictionary)
+                    }
+                }
+            }
+            .store(in: &self.cancellables)
+        
+        return true
+    }
+
+    func processRegisterError(errorMessage: String) {
+        var errorsDictionary = [RegisterError]()
+        
+        if errorMessage.contains("1 more error") {
+            let registerError = RegisterError(field: "personalInfo", error: "INVALID_PERSONAL_INFO")
+            errorsDictionary.append(registerError)
+        }
+        else if errorMessage.contains("The email has already been taken") {
+            let registerError = RegisterError(field: "personalInfo", error: "EMAIL_DUPLICATE")
+            errorsDictionary.append(registerError)
+        }
+        else if errorMessage.contains("The username has already been taken") {
+            let registerError = RegisterError(field: "personalInfo", error: "USERNAME_DUPLICATE")
+            errorsDictionary.append(registerError)
+        }
+        
+        self.showRegisterErrors.send(errorsDictionary)
+    }
 }
 
 public class SteppedRegistrationViewController: UIViewController {
@@ -513,7 +545,8 @@ public class SteppedRegistrationViewController: UIViewController {
                 let formStepView = FormStepViewFactory.formStepView(forFormStep: formStep,
                                                                     serviceProvider: self.viewModel.serviceProvider,
                                                                     userRegisterEnvelop: self.viewModel.userRegisterEnvelop,
-                                                                    userRegisterEnvelopUpdater: self.viewModel.userRegisterEnvelopUpdater, hasReferralCode: hasReferralCode)
+                                                                    userRegisterEnvelopUpdater: self.viewModel.userRegisterEnvelopUpdater, hasReferralCode: hasReferralCode,
+                                                                    registerFlowType: self.viewModel.registerFlowType)
                 registerStepView.addFormView(formView: formStepView)
                 self.formStepViews.append(formStepView)
             }
@@ -649,7 +682,13 @@ public extension SteppedRegistrationViewController {
 public extension SteppedRegistrationViewController {
 
     func requestSignUp() {
-        _ = self.viewModel.requestRegister()
+        switch self.viewModel.registerFlowType {
+        case .goma:
+            _ = self.viewModel.requestBasicRegister()
+        case .betson:
+            _ = self.viewModel.requestRegister()
+        }
+        
     }
 
     func presentRegisterErrors(_ registerErrors: [RegisterError]) {
@@ -1043,18 +1082,4 @@ public extension SteppedRegistrationViewController {
                                                                     constant: 0)
         self.headerViewTopToBannerConstraint.isActive = false
     }
-}
-
-class TallProgressBarView: UIProgressView {
-    
-    override func layoutSubviews() {
-         super.layoutSubviews()
-
-         let maskLayerPath = UIBezierPath(roundedRect: bounds, cornerRadius: 6.0)
-         let maskLayer = CAShapeLayer()
-         maskLayer.frame = self.bounds
-         maskLayer.path = maskLayerPath.cgPath
-         layer.mask = maskLayer
-     }
-    
 }

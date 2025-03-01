@@ -111,6 +111,9 @@ struct TargetVariables: SportsbookTarget {
         return [:]
     }
 
+    static var registerFlowType: RegisterFlowType {
+        return .betsson
+    }
 }
 
 extension TargetVariables {

@@ -408,15 +408,8 @@ public struct UpdateUserProfileForm {
     public var securityQuestion: String?
     public var securityAnswer: String?
     
-    public var avatar: String?
-    
-    public init(username: String? = nil, email: String? = nil,
-                firstName: String? = nil, middleName: String? = nil, lastName: String? = nil,
-                birthDate: Date? = nil, gender: String? = nil,
                 address: String? = nil, province: String? = nil, city: String? = nil,
                 postalCode: String? = nil, country: Country? = nil, cardId: String? = nil,
-                mobileNumber: String? = nil, securityQuestion: String? = nil, securityAnswer: String? = nil,
-                avatar: String? = nil) {
         self.username = username
         self.email = email
         self.firstName = firstName
@@ -433,7 +426,6 @@ public struct UpdateUserProfileForm {
         self.mobileNumber = mobileNumber
         self.securityQuestion = securityQuestion
         self.securityAnswer = securityAnswer
-        self.avatar = avatar
     }
     
 }

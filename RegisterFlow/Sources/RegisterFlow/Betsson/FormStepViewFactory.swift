@@ -16,7 +16,8 @@ struct FormStepViewFactory {
                              serviceProvider: ServicesProviderClient,
                              userRegisterEnvelop: UserRegisterEnvelop,
                              userRegisterEnvelopUpdater: UserRegisterEnvelopUpdater,
-                             hasReferralCode: Bool? = nil) -> FormStepView {
+                             hasReferralCode: Bool? = nil,
+                             registerFlowType: RegisterFlow.FlowType) -> FormStepView {
 
         let defaultCountryIso3Code = "FRA"
 
@@ -44,13 +45,25 @@ struct FormStepViewFactory {
             //
             //
         case .avatar:
-            let avatarFormStepViewModel = AvatarFormStepViewModel(title: Localization.localized("avatar"),
-                                                                  subtitle: Localization.localized("choose_avatar"),
-                                                                  avatarIconNames: ["avatar1", "avatar2", "avatar3", "avatar4", "avatar5", "avatar6",],
-                                                                  selectedAvatarName: userRegisterEnvelop.avatarName,
-                                                                  userRegisterEnvelopUpdater: userRegisterEnvelopUpdater)
-            return AvatarFormStepView(viewModel: avatarFormStepViewModel)
-            //
+            // Betsson
+            switch registerFlowType {
+            case .goma:
+                let avatarFormStepViewModel = MultibetAvatarFormStepViewModel(title: Localization.localized("avatar"),
+                                                                              subtitle: Localization.localized("choose_avatar"),
+                                                                              avatarIconNames: ["avatar1", "avatar2", "avatar3", "avatar4", "avatar5", "avatar6"],
+                                                                              selectedAvatarName: userRegisterEnvelop.avatarName,
+                                                                              userRegisterEnvelopUpdater: userRegisterEnvelopUpdater)
+                return MultibetAvatarFormStepView(viewModel: avatarFormStepViewModel)
+                
+            case .betson:
+                let avatarFormStepViewModel = AvatarFormStepViewModel(title: Localization.localized("avatar"),
+                                                                      subtitle: Localization.localized("choose_avatar"),
+                                                                      avatarIconNames: ["avatar1", "avatar2", "avatar3", "avatar4", "avatar5", "avatar6",],
+                                                                      selectedAvatarName: userRegisterEnvelop.avatarName,
+                                                                      userRegisterEnvelopUpdater: userRegisterEnvelopUpdater)
+                return AvatarFormStepView(viewModel: avatarFormStepViewModel)
+            }
+            
             //
         case .nickname:
             let nicknameFormStepViewModel = NicknameFormStepViewModel(title: Localization.localized("nickname"),
@@ -93,9 +106,17 @@ struct FormStepViewFactory {
             //
             //
         case .password:
-            return PasswordFormStepView(viewModel: PasswordFormStepViewModel(title: Localization.localized("security"),
-                                                                             password: nil,
-                                                                             userRegisterEnvelopUpdater: userRegisterEnvelopUpdater))
+            
+            switch registerFlowType {
+            case .goma:
+                return MultibetPasswordFormStepView(viewModel: MultibetPasswordFormStepViewModel(title: Localization.localized("security"),
+                                                                                                 password: nil,
+                                                                                                 userRegisterEnvelopUpdater: userRegisterEnvelopUpdater))
+            case .betson:
+                return PasswordFormStepView(viewModel: PasswordFormStepViewModel(title: Localization.localized("security"),
+                                                                                 password: nil,
+                                                                                 userRegisterEnvelopUpdater: userRegisterEnvelopUpdater))
+            }
             //
             //
         case .terms:
@@ -116,6 +137,13 @@ struct FormStepViewFactory {
             return ConfirmationCodeFormStepView(viewModel: ConfirmationCodeFormStepViewModel(title: Localization.localized("verification_code"),
                                                                                              serviceProvider: serviceProvider,
                                                                                              userRegisterEnvelopUpdater: userRegisterEnvelopUpdater))
+        case .personalInfo:
+            let personalInfoFormStepViewModel = MultibetPersonalInfoFormStepViewModel(title: Localization.localized("personal_info"),
+                                                                                      fullName: userRegisterEnvelop.fullName,
+                                                                                      email: userRegisterEnvelop.email,
+                                                                                      nickname: userRegisterEnvelop.nickname,
+                                                                                      serviceProvider: serviceProvider, userRegisterEnvelopUpdater: userRegisterEnvelopUpdater)
+            return MultibetPersonalInfoFormStepView(viewModel: personalInfoFormStepViewModel)
         }
     }
 }
