@@ -185,18 +185,6 @@ extension UIColor {
         }
 
         static var textSecondaryHeroCard: UIColor {
-            return UIColor(named: "textSecondaryHeroCard") ?? Self.textSecondaryHeroCard
-        }
-
-        static var backgroundOddsHeroCard: UIColor {
-            return UIColor(named: "backgroundOddsHeroCard") ?? Self.backgroundOddsHeroCard
-        }
-
-        static var iconSportsHeroCard: UIColor {
-            return UIColor(named: "iconSportsHeroCard") ?? Self.iconSportsHeroCard
-        }
-
-        static var textSecondaryHeroCard: UIColor {
             return UIColor(named: "textSecondaryHeroCard") ?? Self.textSecondary
         }
 
