@@ -53,10 +53,6 @@ public enum ServiceProviderError: Error, Equatable, Hashable {
     case errorDetailedMessage(key: String, message: String)
 
     case invalidUserLocation
-    
     case notSupportedForProvider
-
-    case notSupportedForProvider
-    
     case unknown
 }

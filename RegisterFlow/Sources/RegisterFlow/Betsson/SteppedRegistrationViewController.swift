@@ -225,15 +225,14 @@ public class SteppedRegistrationViewModel {
     func requestBasicRegister() -> Bool {
 
         guard
-            var form = self.userRegisterEnvelop.convertToBasicSignUpForm()
-
+            let form = self.userRegisterEnvelop.convertToSignUpForm()
         else {
             return false
         }
 
         self.isLoading.send(true)
         
-        self.serviceProvider.basicSignUp(form: form)
+        self.serviceProvider.signUp(form: form)
             .receive(on: DispatchQueue.main)
             .sink { [weak self] completion in
                 switch completion {

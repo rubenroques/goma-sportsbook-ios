@@ -372,7 +372,7 @@ public extension UserRegisterEnvelop {
             formattedPhoneNumber.removeFirst()
         }
         
-        var middleName = self.middleName
+        let middleName = self.middleName
         
         return ServicesProvider.SignUpForm.init(email: email,
                                                 username: username,
@@ -383,7 +383,8 @@ public extension UserRegisterEnvelop {
                                                 nationalityIsoCode: countryBirthIsoCode,
                                                 currencyCode: "EUR",
                                                 firstName: firstName,
-                                                lastName: lastName, middleName: middleName,
+                                                lastName: lastName,
+                                                middleName: middleName,
                                                 gender: genderString,
                                                 address: streetAddress,
                                                 city: placeAddress,
@@ -400,20 +401,6 @@ public extension UserRegisterEnvelop {
                                                 mobileVerificationRequestId: self.mobileVerificationRequestId,
                                                 consentedIds: [],
                                                 unConsentedIds: [])
-    }
-    
-    func convertToBasicSignUpForm() -> ServicesProvider.BasicSignUpForm? {
-        
-        guard
-            let email = self.email,
-            let username = self.nickname,
-            let password = self.password,
-            let fullName = self.fullName
-        else {
-            return nil
-        }
-        
-        return ServicesProvider.BasicSignUpForm.init(name: fullName, email: email, username: username, avatarName: self.avatarName ?? "", password: password)
     }
     
 }
