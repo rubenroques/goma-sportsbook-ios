@@ -1,8 +1,8 @@
 //
-//  AddressFormStepView.swift
-//  
+//  MultibetAvatarFormStepView.swift
 //
-//  Created by Ruben Roques on 16/01/2023.
+//
+//  Created by André Lascas on 08/01/2024.
 //
 
 import UIKit
@@ -11,7 +11,7 @@ import Combine
 import Theming
 import Lottie
 
-class AvatarFormStepViewModel {
+class MultibetAvatarFormStepViewModel {
 
     let title: String
     let subtitle: String
@@ -64,7 +64,7 @@ class AvatarFormStepViewModel {
 
 }
 
-class AvatarFormStepView: FormStepView {
+class MultibetAvatarFormStepView: FormStepView {
 
     private lazy var subtitleLabel: UILabel = Self.createSubtitleLabel()
     private lazy var verticalStackView: UIStackView = Self.createVerticalStackView()
@@ -76,13 +76,13 @@ class AvatarFormStepView: FormStepView {
     private var avatarViews: [String: UIView] = [:]
     private var avatarViewsTags: [Int: String] = [:]
 
-    let viewModel: AvatarFormStepViewModel
+    let viewModel: MultibetAvatarFormStepViewModel
 
     override var isFormCompleted: AnyPublisher<Bool, Never> {
         return self.viewModel.isFormCompleted
     }
 
-    init(viewModel: AvatarFormStepViewModel) {
+    init(viewModel: MultibetAvatarFormStepViewModel) {
         self.viewModel = viewModel
 
         super.init()
@@ -138,7 +138,10 @@ class AvatarFormStepView: FormStepView {
 //                ])
 
                 let imageView = Self.createAvatarImageView()
-                imageView.image = UIImage(named: avatarName, in: Bundle.main, with: nil)
+                
+//                imageView.image = UIImage(named: avatarName, in: Bundle.module, with: nil)
+                imageView.image = AvatarAssets.image(named: avatarName, brand: .goma)
+                                
                 imageView.tag = tagCounter
 
                 baseView.addSubview(imageView)
@@ -149,6 +152,9 @@ class AvatarFormStepView: FormStepView {
                     imageView.centerXAnchor.constraint(equalTo: baseView.centerXAnchor),
                     imageView.centerYAnchor.constraint(equalTo: baseView.centerYAnchor)
                 ])
+                
+                imageView.layoutIfNeeded()
+                imageView.layer.cornerRadius = imageView.frame.width / 2
 
                 baseView.bringSubviewToFront(imageView)
                 lineStackView.addArrangedSubview(outerBaseView)
@@ -208,7 +214,8 @@ class AvatarFormStepView: FormStepView {
             selectedView.alpha = 1.0
         }
 
-        self.animateForAvatarWithName(name)
+        // TODO: Animate after new animations are available
+//        self.animateForAvatarWithName(name)
         self.viewModel.setSelectedAvatarName(name)
     }
 
@@ -303,7 +310,7 @@ class AvatarFormStepView: FormStepView {
 
 }
 
-extension AvatarFormStepView {
+extension MultibetAvatarFormStepView {
 
     private static func createSubtitleLabel() -> UILabel {
         let label = UILabel()
@@ -372,7 +379,6 @@ extension AvatarFormStepView {
     }
 
     private func createAvatarAnimationView(withFrame frame: CGRect, andName name: String) -> LottieAnimationView {
-        
         let animationView = LottieAnimationView(frame: frame)
         animationView.contentMode = .scaleAspectFill
         animationView.clipsToBounds = false
@@ -385,8 +391,10 @@ extension AvatarFormStepView {
             animationName = name + "-light"
         }
         
-        let avatarAnimation = LottieAnimation.named(animationName, bundle: Bundle.main)
+        let avatarAnimation = LottieAnimation.named(animationName)
         animationView.animation = avatarAnimation
+
         return animationView
     }
+
 }

@@ -408,14 +408,14 @@ class WithdrawViewController: UIViewController {
         let stringRange2 = (text as NSString).range(of: localized("contact_us"))
 
         if gesture.didTapAttributedTextInLabel(label: self.faqLabel, inRange: stringRange1, alignment: .left) {
-            guard let url = URL(string: "https://betssonfrance.zendesk.com/hc/fr") else { return }
+            guard let url = URL(string: TargetVariables.links.support.zendesk) else { return }
             UIApplication.shared.open(url)
         }
         else if gesture.didTapAttributedTextInLabel(label: self.faqLabel, inRange: stringRange2, alignment: .left) {
 //            let supportViewController = SupportPageViewController(viewModel: SupportPageViewModel())
 //            
 //            self.navigationController?.pushViewController(supportViewController, animated: true)
-            if let url = URL(string: "https://support.betsson.fr/hc/fr") {
+            if let url = URL(string: TargetVariables.links.support.helpCenter) {
                 UIApplication.shared.open(url)
             }
         }

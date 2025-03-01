@@ -239,7 +239,6 @@ struct SocialAppInfo {
     var name: String
     var urlScheme: String
     var urlShare: String
-
 }
 
 struct InAppMessage: Decodable {
