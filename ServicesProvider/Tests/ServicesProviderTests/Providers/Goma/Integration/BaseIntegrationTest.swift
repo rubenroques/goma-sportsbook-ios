@@ -43,13 +43,8 @@ class BaseIntegrationTest: XCTestCase {
     /// Create a GomaAPIAuthenticator with a mock token
     /// - Returns: A configured GomaAPIAuthenticator
     func createMockAuthenticator() -> GomaAPIAuthenticator {
-        let authenticator = GomaAPIAuthenticator(deviceUUID: TestConfiguration.API.deviceUUID,
-                                                deviceType: TestConfiguration.API.deviceType,
-                                                apiKey: TestConfiguration.API.apiKey)
-
-        // Set a mock token
-        authenticator.setToken(TestConfiguration.authToken)
-
+        let authenticator = GomaAPIAuthenticator(deviceIdentifier: TestConfiguration.API.deviceUUID,
+                                                 session: self.mockURLSession)
         return authenticator
     }
 
@@ -106,8 +101,8 @@ class BaseIntegrationTest: XCTestCase {
     /// - Throws: If loading the mock response fails
     func registerMockSportBannersResponse() throws {
         try MockURLProtocol.registerMockResponseForGomaEndpoint(
-            endpoint: TestConfiguration.EndpointPaths.sportBanners,
-            subdirectory: TestConfiguration.MockResponseDirectories.sportBanners
+            endpoint: TestConfiguration.EndpointPaths.carouselEvent,
+            subdirectory: TestConfiguration.MockResponseDirectories.carouselEvent
         )
     }
 

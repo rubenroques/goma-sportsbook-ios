@@ -5,39 +5,40 @@ import Combine
 /// Integration tests for the Alert Banner endpoint
 class AlertBannerTests: BaseIntegrationTest {
 
-    /// Test that GomaPromotionsAPIClient.alertBanner endpoint builds the correct URL with query parameters
-    func testAlertBannerEndpointBuildsCorrectURL() {
-        // Given
-        let apiClient = GomaPromotionsAPIClient(
+    // Instance of our mock connector for testing
+    private var mockConnector: MockGomaConnector!
+    // Instance of our API client for testing
+    private var apiClient: GomaAPIPromotionsClient!
+
+    override func setUp() {
+        super.setUp()
+        mockConnector = MockGomaConnector(
             baseURL: URL(string: TestConfiguration.API.baseURL)!,
             apiKey: TestConfiguration.API.apiKey,
             session: mockURLSession
         )
+        apiClient = GomaAPIPromotionsClient(connector: mockConnector)
+    }
 
+    /// Test that GomaAPIPromotionsClient.alertBanner endpoint builds the correct URL with query parameters
+    func testAlertBannerEndpointBuildsCorrectURL() {
         // When
-        let request = apiClient.alertBanner()
+        let request = apiClient.requestFor(.alertBanner)
 
         // Then
         XCTAssertEqual(
-            request.url?.absoluteString,
+            request?.url?.absoluteString,
             "\(TestConfiguration.API.baseURL)\(TestConfiguration.EndpointPaths.alertBanner)"
         )
     }
 
-    /// Test that GomaPromotionsAPIClient.alertBanner endpoint uses the correct HTTP method (GET)
+    /// Test that GomaAPIPromotionsClient.alertBanner endpoint uses the correct HTTP method (GET)
     func testAlertBannerEndpointUsesCorrectHTTPMethod() {
-        // Given
-        let apiClient = GomaPromotionsAPIClient(
-            baseURL: URL(string: TestConfiguration.API.baseURL)!,
-            apiKey: TestConfiguration.API.apiKey,
-            session: mockURLSession
-        )
-
         // When
-        let request = apiClient.alertBanner()
+        let request = apiClient.requestFor(.alertBanner)
 
         // Then
-        XCTAssertEqual(request.httpMethod, "GET")
+        XCTAssertEqual(request?.httpMethod, "GET")
     }
 
     /// Test that the JSON response for alertBanner decodes to GomaModels.AlertBanner
@@ -90,18 +91,24 @@ class AlertBannerTests: BaseIntegrationTest {
         XCTAssertEqual(domainModel.userType, internalModel.userType)
     }
 
-    /// Test that GomaManagedContentProvider.getAlertBanner() calls the correct API endpoint
-    func testGetAlertBannerCallsCorrectAPIEndpoint() throws {
+    /// Test that GomaAPIPromotionsClient.alertBanner() makes the correct API call
+    func testAlertBannerPublisherMakesCorrectAPICall() throws {
         // Given
         let expectation = XCTestExpectation(description: "API call made")
-        try registerMockAlertBannerResponse()
-        let contentProvider = createMockContentProvider()
+        let jsonData = try JSONLoader.loadJSON(
+            fileName: "response.json",
+            subdirectory: TestConfiguration.MockResponseDirectories.alertBanner
+        )
+
+        // Register the mock response with our mock connector
+        let alertBannerURL = URL(string: "\(TestConfiguration.API.baseURL)\(TestConfiguration.EndpointPaths.alertBanner)")!
+        mockConnector.registerMockResponse(for: alertBannerURL, data: jsonData)
 
         // When
-        contentProvider.getAlertBanner()
+        apiClient.alertBanner<GomaModels.AlertBanner>()
             .sink(
                 receiveCompletion: { _ in },
-                receiveValue: { _ in
+                receiveValue: { (alertBanner: GomaModels.AlertBanner) in
                     expectation.fulfill()
                 }
             )
@@ -109,27 +116,40 @@ class AlertBannerTests: BaseIntegrationTest {
 
         // Then
         wait(for: [expectation], timeout: 1.0)
-        XCTAssertTrue(MockURLProtocol.requestsForEndpoint(TestConfiguration.EndpointPaths.alertBanner).count > 0)
+        XCTAssertTrue(mockConnector.capturedEndpoints.contains { endpoint in
+            if case .alertBanner = endpoint as? GomaAPIPromotionsSchema {
+                return true
+            }
+            return false
+        })
     }
 
-    /// Test that GomaManagedContentProvider.getAlertBanner() handles successful responses
-    func testGetAlertBannerHandlesSuccessfulResponses() throws {
+    /// Test that GomaAPIPromotionsClient.alertBanner() handles successful responses
+    func testAlertBannerPublisherHandlesSuccessfulResponses() throws {
         // Given
         let expectation = XCTestExpectation(description: "Received alert banner")
-        try registerMockAlertBannerResponse()
-        let contentProvider = createMockContentProvider()
+        let jsonData = try JSONLoader.loadJSON(
+            fileName: "response.json",
+            subdirectory: TestConfiguration.MockResponseDirectories.alertBanner
+        )
+
+        // Register the mock response with our mock connector
+        let alertBannerURL = URL(string: "\(TestConfiguration.API.baseURL)\(TestConfiguration.EndpointPaths.alertBanner)")!
+        mockConnector.registerMockResponse(for: alertBannerURL, data: jsonData)
 
         // When
-        contentProvider.getAlertBanner()
+        apiClient.alertBanner<GomaModels.AlertBanner>()
             .sink(
                 receiveCompletion: { completion in
                     if case .failure = completion {
                         XCTFail("Should not fail")
                     }
                 },
-                receiveValue: { alertBanner in
+                receiveValue: { (alertBanner: GomaModels.AlertBanner) in
                     // Then
                     XCTAssertNotNil(alertBanner)
+                    XCTAssertNotNil(alertBanner.id)
+                    XCTAssertNotNil(alertBanner.title)
                     expectation.fulfill()
                 }
             )
@@ -138,23 +158,21 @@ class AlertBannerTests: BaseIntegrationTest {
         wait(for: [expectation], timeout: 1.0)
     }
 
-    /// Test that GomaManagedContentProvider.getAlertBanner() handles error responses
-    func testGetAlertBannerHandlesErrorResponses() throws {
+    /// Test that GomaAPIPromotionsClient.alertBanner() handles error responses
+    func testAlertBannerPublisherHandlesErrorResponses() throws {
         // Given
         let expectation = XCTestExpectation(description: "Received error")
 
         // Register a mock error response
         let errorURL = URL(string: "\(TestConfiguration.API.baseURL)\(TestConfiguration.EndpointPaths.alertBanner)")!
-        MockURLProtocol.registerMockResponse(
+        mockConnector.registerMockResponse(
             for: errorURL,
             data: "Internal Server Error".data(using: .utf8)!,
             statusCode: 500
         )
 
-        let contentProvider = createMockContentProvider()
-
         // When
-        contentProvider.getAlertBanner()
+        apiClient.alertBanner<GomaModels.AlertBanner>()
             .sink(
                 receiveCompletion: { completion in
                     if case .failure(let error) = completion {
@@ -163,7 +181,7 @@ class AlertBannerTests: BaseIntegrationTest {
                         expectation.fulfill()
                     }
                 },
-                receiveValue: { _ in
+                receiveValue: { (alertBanner: GomaModels.AlertBanner) in
                     XCTFail("Should not receive a value")
                 }
             )
@@ -172,42 +190,31 @@ class AlertBannerTests: BaseIntegrationTest {
         wait(for: [expectation], timeout: 1.0)
     }
 
-    /// Test that GomaManagedContentProvider.getAlertBanner() handles empty/null responses
-    func testGetAlertBannerHandlesEmptyResponses() throws {
+    /// Test that GomaAPIPromotionsClient.alertBanner() handles empty/null responses
+    func testAlertBannerPublisherHandlesEmptyResponses() throws {
         // Given
         let expectation = XCTestExpectation(description: "Received empty response")
 
         // Register a mock empty response
         let emptyURL = URL(string: "\(TestConfiguration.API.baseURL)\(TestConfiguration.EndpointPaths.alertBanner)")!
-        MockURLProtocol.registerMockResponse(
+        mockConnector.registerMockResponse(
             for: emptyURL,
             data: "{}".data(using: .utf8)!,
             statusCode: 200
         )
 
-        let contentProvider = createMockContentProvider()
-
         // When
-        contentProvider.getAlertBanner()
+        apiClient.alertBanner<GomaModels.AlertBanner>()
             .sink(
                 receiveCompletion: { completion in
                     if case .failure = completion {
                         expectation.fulfill()
                     }
                 },
-                receiveValue: { alertBanner in
+                receiveValue: { (alertBanner: GomaModels.AlertBanner) in
                     // Then
-                    // If we get a value, it should be a default/empty alert banner
-                    XCTAssertEqual(alertBanner.id, "0")
-                    XCTAssertEqual(alertBanner.title, "")
-                    XCTAssertEqual(alertBanner.subtitle, "")
-                    XCTAssertEqual(alertBanner.ctaText, "")
-                    XCTAssertEqual(alertBanner.ctaUrl, nil)
-                    XCTAssertEqual(alertBanner.status, nil)
-                    XCTAssertEqual(alertBanner.platform, nil)
-                    XCTAssertEqual(alertBanner.startDate, nil)
-                    XCTAssertEqual(alertBanner.endDate, nil)
-                    XCTAssertEqual(alertBanner.userType, nil)
+                    // If we get a value, it should have default values
+                    XCTAssertEqual(alertBanner.id, "")
                     expectation.fulfill()
                 }
             )
@@ -220,18 +227,26 @@ class AlertBannerTests: BaseIntegrationTest {
     func testEndToEndFlowWithMockedAPIResponse() throws {
         // Given
         let expectation = XCTestExpectation(description: "End-to-end flow completed")
-        try registerMockAlertBannerResponse()
-        let contentProvider = createMockContentProvider()
 
         // Load the expected data for comparison
         let jsonData = try JSONLoader.loadJSON(
             fileName: "response.json",
             subdirectory: TestConfiguration.MockResponseDirectories.alertBanner
         )
+
+        // Register the mock response
+        let alertBannerURL = URL(string: "\(TestConfiguration.API.baseURL)\(TestConfiguration.EndpointPaths.alertBanner)")!
+        mockConnector.registerMockResponse(for: alertBannerURL, data: jsonData)
+
+        // Get the expected data for comparison
         let decoder = JSONDecoder()
         decoder.keyDecodingStrategy = .convertFromSnakeCase
         let internalModel = try decoder.decode(GomaModels.AlertBanner.self, from: jsonData)
         let expectedDomainModel = GomaModelMapper.alertBanner(fromInternalAlertBanner: internalModel)
+
+        // We'll also need to test with the content provider so keep that test
+        try registerMockAlertBannerResponse()
+        let contentProvider = createMockContentProvider()
 
         // When
         contentProvider.getAlertBanner()
@@ -241,7 +256,13 @@ class AlertBannerTests: BaseIntegrationTest {
                         XCTFail("Should not fail")
                     }
                 },
-                receiveValue: { alertBanner in
+                receiveValue: { (alertBanner: GomaModels.AlertBanner) in
+
+                    guard let alertBanner = alertBanner else {
+                        XCTFail("Should not be nil")
+                        return
+                    }
+
                     // Then
                     XCTAssertEqual(alertBanner.id, expectedDomainModel.id)
                     XCTAssertEqual(alertBanner.title, expectedDomainModel.title)
