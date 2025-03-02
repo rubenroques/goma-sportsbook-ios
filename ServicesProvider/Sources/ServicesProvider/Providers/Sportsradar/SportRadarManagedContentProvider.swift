@@ -51,10 +51,10 @@ class SportRadarManagedContentProvider: ManagedContentProvider {
         fatalError("")
     }
 
-    func getSportBanners() -> AnyPublisher<[SportBanner], ServiceProviderError> {
+    func getCarouselEvents() -> AnyPublisher<CarouselEvents, ServiceProviderError> {
         fatalError("")
     }
-
+    
     func getBoostedOddsBanners() -> AnyPublisher<[BoostedOddsBanner], ServiceProviderError> {
         fatalError("")
     }

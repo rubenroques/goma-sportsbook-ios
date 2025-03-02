@@ -158,23 +158,6 @@ extension GomaModelMapper {
 
 }
 
-
-extension GomaModelMapper {
-
-    static func events(fromSportAssociatedEventBanners eventBanners: [GomaModels.SportAssociatedEventBanner]) -> [Event] {
-        return eventBanners.map(Self.event(fromSportAssociatedEventBanner:)).compactMap({ $0 })
-    }
-
-    static func event(fromSportAssociatedEventBanner eventBanner: GomaModels.SportAssociatedEventBanner) -> Event? {
-        let associatedEvent = eventBanner.event
-        let convertedEvent: Event = Self.event(fromInternalEvent: associatedEvent)
-        convertedEvent.promoImageURL = eventBanner.imageUrl
-        return convertedEvent
-    }
-
-}
-
-
 extension GomaModelMapper {
 
     static func topCompetitions(fromCompetitions competitions: [GomaModels.Competition]) -> [TopCompetition] {

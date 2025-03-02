@@ -7,20 +7,20 @@
 
 import Foundation
 
-public struct HomeTemplate: Codable {
-    public let id: Int
+public struct HomeTemplate: Codable, Equatable, Hashable {
+    public let id: String
     public let type: String
     public let widgets: [HomeWidget]
-    
-    init(id: Int, type: String, widgets: [HomeWidget]) {
+
+    public init(id: String, type: String, widgets: [HomeWidget]) {
         self.id = id
         self.type = type
         self.widgets = widgets
     }
-    
+
 }
 
-public enum HomeWidget: Codable {
+public enum HomeWidget: Codable, Equatable, Hashable {
     case alertBanners(WidgetData)
     case banners(WidgetData)
     case carouselEvents(WidgetData)
@@ -34,22 +34,22 @@ public enum HomeWidget: Codable {
     case topCompetitions(WidgetData)
     case suggestedBets(WidgetData)
     case popularEvents(WidgetData)
-    
-    public init?(id: Int,
+
+    public init?(id: String,
                  type: String,
                  description: String,
                  userState: String,
                  sortOrder: Int,
                  orientation: String?) {
-        
+
         let widgetData = WidgetData.init(id: id,
                                          type: type,
                                          description: description,
                                          userState: userState,
                                          sortOrder: sortOrder,
                                          orientation: orientation)
-        
-        
+
+
         // Use the actual widget names from the API
         switch type.lowercased() {
         case "alertbanners":
@@ -81,48 +81,48 @@ public enum HomeWidget: Codable {
         default:
             return nil
         }
-        
+
     }
-    
-    public struct WidgetData: Codable {
-        public let id: Int
+
+    public struct WidgetData: Codable, Equatable, Hashable {
+        public let id: String
         public let type: String
         public let description: String
         public let userState: UserState
         public let sortOrder: Int
         public let orientation: Orientation?
-        
-        public enum Orientation: String, Codable {
+
+        public enum Orientation: String, Codable, Equatable, Hashable {
             case horizontal
             case vertical
             case notSupported
         }
-        
-        public enum UserState: String, Codable {
+
+        public enum UserState: String, Codable, Equatable, Hashable {
             case authenticated
             case anonymous
             case any
         }
-        
-        init(id: Int,
+
+        init(id: String,
              type: String,
              description: String,
              userState: String,
              sortOrder: Int,
              orientation: String?) {
-            
+
             let userStateEnum: WidgetData.UserState
             switch userState {
             case "authenticated": userStateEnum = .authenticated
             case "anonymous": userStateEnum = .anonymous
             default: userStateEnum = .any
             }
-            
+
             var orientationEnum: WidgetData.Orientation? = nil
             if let orientationStr = orientation {
                 orientationEnum = WidgetData.Orientation(rawValue: orientationStr)
             }
-            
+
             self.id = id
             self.type = type
             self.description = description
@@ -131,7 +131,7 @@ public enum HomeWidget: Codable {
             self.orientation = orientationEnum
         }
     }
-    
+
     // Properties that access the associated value
     public var widgetData: WidgetData {
         switch self {
@@ -151,13 +151,13 @@ public enum HomeWidget: Codable {
             return data
         }
     }
-    
+
     // Convenience accessors
-    public var id: Int { return widgetData.id }
+    public var id: String { return widgetData.id }
     public var type: String { return widgetData.type }
     public var description: String { return widgetData.description }
     public var userType: WidgetData.UserState { return widgetData.userState }
     public var sortOrder: Int { return widgetData.sortOrder }
     public var orientation: WidgetData.Orientation? { return widgetData.orientation }
-    
+
 }

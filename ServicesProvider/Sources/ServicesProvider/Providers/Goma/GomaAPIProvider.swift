@@ -1195,23 +1195,18 @@ extension GomaAPIProvider: EventsProvider {
         let publisher: AnyPublisher<GomaModels.AlertBanner, ServiceProviderError> = self.connector.request(endpoint)
         return publisher.map({ banner in
             let alertBanners = [banner]
-            let banners = alertBanners.filter({ $0.isActive == 1 })
-            let convertedBanners = GomaModelMapper.alertBanners(fromAlertBanners: banners)
+            let convertedBanners = GomaModelMapper.alertBanners(fromInternalAlertBanners: alertBanners)
             return convertedBanners
         }).eraseToAnyPublisher()
     }
 
     func getNews() -> AnyPublisher<[News], ServiceProviderError> {
         let endpoint = GomaAPIClient.getNews
-
         let publisher: AnyPublisher<[GomaModels.News], ServiceProviderError> = self.connector.request(endpoint)
-
         return publisher.map({ news in
-
             let mappedNews = news.map({
                 return GomaModelMapper.news(fromNews: $0)
             })
-
             return mappedNews
         }).eraseToAnyPublisher()
     }
@@ -1235,43 +1230,44 @@ extension GomaAPIProvider: EventsProvider {
     }
 
     func getPromotionalTopBanners() -> AnyPublisher<[PromotionalBanner], ServiceProviderError> {
-
-        let endpoint = GomaAPIClient.getBanners
-        let publisher: AnyPublisher<[GomaModels.Banner], ServiceProviderError> = self.connector.request(endpoint)
-        return publisher.map({ banners in
-//            let banners = banners.filter({ $0.isActive == 1 })
-            let convertedBanners = GomaModelMapper.promotionalBanners(fromBanners: banners)
-            return convertedBanners
-        }).eraseToAnyPublisher()
+        return Fail(error: ServiceProviderError.eventsProviderNotFound).eraseToAnyPublisher()
+//        let endpoint = GomaAPIClient.getBanners
+//        let publisher: AnyPublisher<[GomaModels.Banner], ServiceProviderError> = self.connector.request(endpoint)
+//        return publisher.map({ banners in
+////            let banners = banners.filter({ $0.isActive == 1 })
+//            let convertedBanners = GomaModelMapper.promotionalBanners(fromBanners: banners)
+//            return convertedBanners
+//        }).eraseToAnyPublisher()
     }
 
     func getPromotionalSlidingTopEventsPointers() -> AnyPublisher<[EventMetadataPointer], ServiceProviderError> {
-        let endpoint = GomaAPIClient.getEventsBanners
-        let publisher: AnyPublisher<[GomaModels.EventMetadataPointer], ServiceProviderError> = self.connector.request(endpoint)
-        return publisher.map({ metadataPointers in
-            return metadataPointers.map(GomaModelMapper.eventMetadataPointer(fromInternalEventMetadataPointer:))
-        }).eraseToAnyPublisher()
+        return Fail(error: ServiceProviderError.eventsProviderNotFound).eraseToAnyPublisher()
+//        let endpoint = GomaAPIClient.getEventsBanners
+//        let publisher: AnyPublisher<[GomaModels.EventMetadataPointer], ServiceProviderError> = self.connector.request(endpoint)
+//        return publisher.map({ metadataPointers in
+//            return metadataPointers.map(GomaModelMapper.eventMetadataPointer(fromInternalEventMetadataPointer:))
+//        }).eraseToAnyPublisher()
     }
 
     func getPromotionalSlidingTopEvents() -> AnyPublisher<[Event], ServiceProviderError> {
-        let endpoint = GomaAPIClient.getEventsBanners
-        let publisher: AnyPublisher<[GomaModels.SportAssociatedEventBanner], ServiceProviderError> = self.connector.request(endpoint)
-        return publisher.map({ eventBanners in
-            let convertedEvents = GomaModelMapper.events(fromSportAssociatedEventBanners: eventBanners)
-            return convertedEvents
-        }).eraseToAnyPublisher()
+        return Fail(error: ServiceProviderError.eventsProviderNotFound).eraseToAnyPublisher()
+//        let endpoint = GomaAPIClient.getEventsBanners
+//        let publisher: AnyPublisher<[GomaModels.SportAssociatedEventBanner], ServiceProviderError> = self.connector.request(endpoint)
+//        return publisher.map({ eventBanners in
+//            let convertedEvents = GomaModelMapper.events(fromSportAssociatedEventBanners: eventBanners)
+//            return convertedEvents
+//        }).eraseToAnyPublisher()
     }
 
     func getPromotionalTopStories() -> AnyPublisher<[PromotionalStory], ServiceProviderError> {
-
-        let endpoint = GomaAPIClient.getStories
-        let publisher: AnyPublisher<[GomaModels.Story], ServiceProviderError> = self.connector.request(endpoint)
-
-        return publisher.map({ stories in
-            let convertedStories = GomaModelMapper.promotionalStories(fromStories: stories)
-            return convertedStories
-        }).eraseToAnyPublisher()
-
+        return Fail(error: ServiceProviderError.eventsProviderNotFound).eraseToAnyPublisher()
+//        let endpoint = GomaAPIClient.getStories
+//        let publisher: AnyPublisher<[GomaModels.Story], ServiceProviderError> = self.connector.request(endpoint)
+//
+//        return publisher.map({ stories in
+//            let convertedStories = GomaModelMapper.promotionalStories(fromStories: stories)
+//            return convertedStories
+//        }).eraseToAnyPublisher()
     }
 
     func getHighlightedBoostedEventsPointers() -> AnyPublisher<[EventMetadataPointer], ServiceProviderError> {

@@ -10,7 +10,7 @@ import Combine
 
 /// Implementation of ManagedContentProvider for the Goma API
 class GomaManagedContentProvider: ManagedContentProvider {
-    
+        
     // MARK: - Properties
     var connectionStatePublisher: AnyPublisher<ConnectorState, Never> {
         connectionStateSubject.eraseToAnyPublisher()
@@ -50,7 +50,7 @@ class GomaManagedContentProvider: ManagedContentProvider {
         fatalError("")
     }
 
-    func getSportBanners() -> AnyPublisher<[SportBanner], ServiceProviderError> {
+    func getCarouselEvents() -> AnyPublisher<CarouselEvents, ServiceProviderError> {
         fatalError("")
     }
 

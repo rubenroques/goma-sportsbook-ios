@@ -36,7 +36,7 @@ protocol ManagedContentProvider: Connector {
 
     /// Retrieves sport-specific promotional banners
     /// - Returns: Publisher that emits an array of sport banners
-    func getSportBanners() -> AnyPublisher<[SportBanner], ServiceProviderError>
+    func getCarouselEvents() -> AnyPublisher<CarouselEvents, ServiceProviderError>
 
     // MARK: - Boosted Odds
 
