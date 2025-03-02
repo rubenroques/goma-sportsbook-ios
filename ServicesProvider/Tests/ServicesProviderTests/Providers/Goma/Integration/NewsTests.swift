@@ -68,7 +68,7 @@ class NewsTests: BaseIntegrationTest {
         }
     }
     
-    /// Test that the JSON response for news decodes to [GomaModels.NewsItemData]
+    /// Test that the JSON response for news decodes to [GomaModels.NewsItem]
     func testNewsResponseDecodesToInternalModel() throws {
         // Given
         let jsonData = try JSONLoader.loadJSON(
@@ -79,7 +79,7 @@ class NewsTests: BaseIntegrationTest {
         // When
         let decoder = JSONDecoder()
         decoder.keyDecodingStrategy = .convertFromSnakeCase
-        let news = try decoder.decode([GomaModels.NewsItemData].self, from: jsonData)
+        let news = try decoder.decode([GomaModels.NewsItem].self, from: jsonData)
         
         // Then
         XCTAssertNotNil(news)
@@ -90,12 +90,13 @@ class NewsTests: BaseIntegrationTest {
             XCTAssertNotNil(firstItem.id)
             XCTAssertNotNil(firstItem.title)
             XCTAssertNotNil(firstItem.imageUrl)
+            XCTAssertNotNil(firstItem.platform)
             XCTAssertNotNil(firstItem.status)
             XCTAssertNotNil(firstItem.content)
         }
     }
     
-    /// Test that GomaModelMapper.newsItem transforms GomaModels.NewsItemData to NewsItem correctly
+    /// Test that GomaModelMapper.newsItem transforms GomaModels.NewsItem to NewsItem correctly
     func testSingleNewsItemModelMapperTransformsCorrectly() throws {
         // Given
         let jsonData = try JSONLoader.loadJSON(
@@ -104,7 +105,7 @@ class NewsTests: BaseIntegrationTest {
         )
         let decoder = JSONDecoder()
         decoder.keyDecodingStrategy = .convertFromSnakeCase
-        let news = try decoder.decode([GomaModels.NewsItemData].self, from: jsonData)
+        let news = try decoder.decode([GomaModels.NewsItem].self, from: jsonData)
         
         // Ensure we have at least one news item to test
         guard let internalModel = news.first else {
@@ -116,25 +117,20 @@ class NewsTests: BaseIntegrationTest {
         let domainModel = GomaModelMapper.newsItem(fromInternalNewsItem: internalModel)
         
         // Then
-        XCTAssertEqual(domainModel.id, internalModel.id)
+        XCTAssertEqual(domainModel.id, String(internalModel.id))
         XCTAssertEqual(domainModel.title, internalModel.title)
-        
-        // Check URL transformation
-        if let imageUrl = internalModel.imageUrl {
-            XCTAssertEqual(domainModel.imageUrl?.absoluteString, imageUrl)
-        } else {
-            XCTAssertNil(domainModel.imageUrl)
-        }
-        
-        // Check isActive transformation
-        if internalModel.status == "published" {
-            XCTAssertTrue(domainModel.isActive)
-        } else {
-            XCTAssertFalse(domainModel.isActive)
-        }
+        XCTAssertEqual(domainModel.imageUrl, internalModel.imageUrl)
+        XCTAssertEqual(domainModel.platform, internalModel.platform)
+        XCTAssertEqual(domainModel.status, internalModel.status)
+        XCTAssertEqual(domainModel.content, internalModel.content)
+        XCTAssertEqual(domainModel.author, internalModel.author)
+        XCTAssertEqual(domainModel.tags, internalModel.tags)
+        XCTAssertEqual(domainModel.startDate, internalModel.startDate)
+        XCTAssertEqual(domainModel.endDate, internalModel.endDate)
+        XCTAssertEqual(domainModel.userType, internalModel.userType)
     }
     
-    /// Test that GomaModelMapper.newsItems transforms array of GomaModels.NewsItemData to [NewsItem] correctly
+    /// Test that GomaModelMapper.newsItems transforms array of GomaModels.NewsItem to [NewsItem] correctly
     func testNewsItemsArrayModelMapperTransformsCorrectly() throws {
         // Given
         let jsonData = try JSONLoader.loadJSON(
@@ -143,7 +139,7 @@ class NewsTests: BaseIntegrationTest {
         )
         let decoder = JSONDecoder()
         decoder.keyDecodingStrategy = .convertFromSnakeCase
-        let internalModels = try decoder.decode([GomaModels.NewsItemData].self, from: jsonData)
+        let internalModels = try decoder.decode([GomaModels.NewsItem].self, from: jsonData)
         
         // When
         let domainModels = GomaModelMapper.newsItems(fromInternalNewsItems: internalModels)
@@ -155,15 +151,9 @@ class NewsTests: BaseIntegrationTest {
         for (index, internalModel) in internalModels.enumerated() {
             let domainModel = domainModels[index]
             
-            XCTAssertEqual(domainModel.id, internalModel.id)
+            XCTAssertEqual(domainModel.id, String(internalModel.id))
             XCTAssertEqual(domainModel.title, internalModel.title)
-            
-            // Check URL transformation
-            if let imageUrl = internalModel.imageUrl {
-                XCTAssertEqual(domainModel.imageUrl?.absoluteString, imageUrl)
-            } else {
-                XCTAssertNil(domainModel.imageUrl)
-            }
+            XCTAssertEqual(domainModel.imageUrl, internalModel.imageUrl)
         }
     }
     
@@ -176,7 +166,7 @@ class NewsTests: BaseIntegrationTest {
         )
         let decoder = JSONDecoder()
         decoder.keyDecodingStrategy = .convertFromSnakeCase
-        let news = try decoder.decode([GomaModels.NewsItemData].self, from: jsonData)
+        let news = try decoder.decode([GomaModels.NewsItem].self, from: jsonData)
         
         // Ensure we have at least one news item to test
         guard let internalModel = news.first else {
@@ -201,7 +191,7 @@ class NewsTests: BaseIntegrationTest {
         )
         let decoder = JSONDecoder()
         decoder.keyDecodingStrategy = .convertFromSnakeCase
-        let news = try decoder.decode([GomaModels.NewsItemData].self, from: jsonData)
+        let news = try decoder.decode([GomaModels.NewsItem].self, from: jsonData)
         
         // Ensure we have at least one news item to test
         guard let internalModel = news.first else {
@@ -225,7 +215,7 @@ class NewsTests: BaseIntegrationTest {
         )
         let decoder = JSONDecoder()
         decoder.keyDecodingStrategy = .convertFromSnakeCase
-        let news = try decoder.decode([GomaModels.NewsItemData].self, from: jsonData)
+        let news = try decoder.decode([GomaModels.NewsItem].self, from: jsonData)
         
         // Ensure we have at least one news item to test
         guard let internalModel = news.first else {
@@ -381,10 +371,11 @@ class NewsTests: BaseIntegrationTest {
             let mockResponse = """
             [
                 {
-                    "id": "test-\(pageIndex)-\(pageSize)",
+                    "id": \(pageIndex + pageSize),
                     "title": "News Item Page \(pageIndex) Size \(pageSize)",
                     "image_url": "https://example.com/image.jpg",
                     "status": "published",
+                    "platform": "ios",
                     "content": "Test content",
                     "author": "Test Author",
                     "tags": ["test", "pagination"]
@@ -412,7 +403,7 @@ class NewsTests: BaseIntegrationTest {
                         // Then
                         XCTAssertFalse(news.isEmpty, "News array should not be empty")
                         if let firstItem = news.first {
-                            XCTAssertEqual(firstItem.id, "test-\(pageIndex)-\(pageSize)")
+                            XCTAssertEqual(firstItem.id, String(pageIndex + pageSize))
                             XCTAssertEqual(firstItem.title, "News Item Page \(pageIndex) Size \(pageSize)")
                         }
                         expectation.fulfill()
@@ -438,7 +429,7 @@ class NewsTests: BaseIntegrationTest {
         )
         let decoder = JSONDecoder()
         decoder.keyDecodingStrategy = .convertFromSnakeCase
-        let internalModels = try decoder.decode([GomaModels.NewsItemData].self, from: jsonData)
+        let internalModels = try decoder.decode([GomaModels.NewsItem].self, from: jsonData)
         let expectedDomainModels = GomaModelMapper.newsItems(fromInternalNewsItems: internalModels)
         
         // When
@@ -459,17 +450,15 @@ class NewsTests: BaseIntegrationTest {
                         
                         XCTAssertEqual(actualItem.id, expectedItem.id)
                         XCTAssertEqual(actualItem.title, expectedItem.title)
-                        XCTAssertEqual(actualItem.isActive, expectedItem.isActive)
+                        XCTAssertEqual(actualItem.status, expectedItem.status)
                         XCTAssertEqual(actualItem.content, expectedItem.content)
                         XCTAssertEqual(actualItem.author, expectedItem.author)
                         XCTAssertEqual(actualItem.tags, expectedItem.tags)
-                        
-                        // Compare URLs
-                        if let expectedImageURL = expectedItem.imageUrl {
-                            XCTAssertEqual(actualItem.imageUrl?.absoluteString, expectedImageURL.absoluteString)
-                        } else {
-                            XCTAssertNil(actualItem.imageUrl)
-                        }
+                        XCTAssertEqual(actualItem.platform, expectedItem.platform)
+                        XCTAssertEqual(actualItem.imageUrl, expectedItem.imageUrl)
+                        XCTAssertEqual(actualItem.startDate, expectedItem.startDate)
+                        XCTAssertEqual(actualItem.endDate, expectedItem.endDate)
+                        XCTAssertEqual(actualItem.userType, expectedItem.userType)
                     }
                     
                     expectation.fulfill()

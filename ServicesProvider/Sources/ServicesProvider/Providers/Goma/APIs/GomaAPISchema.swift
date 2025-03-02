@@ -7,7 +7,7 @@
 
 import Foundation
 
-extension GomaAPIClient {
+extension GomaAPISchema {
     enum ArgumentModels {
         
         struct BetSelection {
@@ -18,7 +18,7 @@ extension GomaAPIClient {
     }
 }
 
-enum GomaAPIClient {
+enum GomaAPISchema {
     case anonymousAuth(deviceId: String, pushToken: String?)
     case login(username: String, password: String, pushToken: String?)
     case register(name: String, email: String, username: String, password: String, avatarName: String, deviceToken: String? = nil)
@@ -114,7 +114,7 @@ enum GomaAPIClient {
     case searchUserWithCode(code: String)
 }
 
-extension GomaAPIClient: Endpoint {
+extension GomaAPISchema: Endpoint {
     
     var url: String {
         return "https://api.gomademo.com/"
@@ -1099,7 +1099,7 @@ extension GomaAPIClient: Endpoint {
     
 }
 
-extension GomaAPIClient {
+extension GomaAPISchema {
     
     private static func jsonData(from betTicket: BetTicket, withCashback useCashback: Bool?, withId ticketId: String?) -> String {
         struct RequestBody: Codable {

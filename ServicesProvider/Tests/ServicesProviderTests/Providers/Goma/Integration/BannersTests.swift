@@ -40,7 +40,7 @@ class BannersTests: BaseIntegrationTest {
         XCTAssertEqual(request.httpMethod, "GET")
     }
     
-    /// Test that the JSON response for banners decodes to [GomaModels.BannerData]
+    /// Test that the JSON response for banners decodes to [GomaModels.Banner]
     func testBannersResponseDecodesToInternalModel() throws {
         // Given
         let jsonData = try JSONLoader.loadJSON(
@@ -51,7 +51,7 @@ class BannersTests: BaseIntegrationTest {
         // When
         let decoder = JSONDecoder()
         decoder.keyDecodingStrategy = .convertFromSnakeCase
-        let banners = try decoder.decode([GomaModels.BannerData].self, from: jsonData)
+        let banners = try decoder.decode([GomaModels.Banner].self, from: jsonData)
         
         // Then
         XCTAssertNotNil(banners)
@@ -66,7 +66,7 @@ class BannersTests: BaseIntegrationTest {
         }
     }
     
-    /// Test that GomaModelMapper.banner transforms single GomaModels.BannerData to Banner correctly
+    /// Test that GomaModelMapper.banner transforms single GomaModels.Banner to Banner correctly
     func testSingleBannerModelMapperTransformsCorrectly() throws {
         // Given
         let jsonData = try JSONLoader.loadJSON(
@@ -75,7 +75,7 @@ class BannersTests: BaseIntegrationTest {
         )
         let decoder = JSONDecoder()
         decoder.keyDecodingStrategy = .convertFromSnakeCase
-        let banners = try decoder.decode([GomaModels.BannerData].self, from: jsonData)
+        let banners = try decoder.decode([GomaModels.Banner].self, from: jsonData)
         
         // Ensure we have at least one banner to test
         guard let internalModel = banners.first else {
@@ -89,23 +89,18 @@ class BannersTests: BaseIntegrationTest {
         // Then
         XCTAssertEqual(domainModel.id, internalModel.id)
         XCTAssertEqual(domainModel.title, internalModel.title)
-        
-        // Check URL transformation
-        if let imageUrl = internalModel.imageUrl {
-            XCTAssertEqual(domainModel.imageUrl?.absoluteString, imageUrl)
-        } else {
-            XCTAssertNil(domainModel.imageUrl)
-        }
-        
-        // Check action URL transformation
-        if let actionUrl = internalModel.actionUrl {
-            XCTAssertEqual(domainModel.actionUrl?.absoluteString, actionUrl)
-        } else {
-            XCTAssertNil(domainModel.actionUrl)
-        }
+        XCTAssertEqual(domainModel.subtitle, internalModel.subtitle)
+        XCTAssertEqual(domainModel.ctaText, internalModel.ctaText)
+        XCTAssertEqual(domainModel.ctaUrl, internalModel.ctaUrl)
+        XCTAssertEqual(domainModel.platform, internalModel.platform)
+        XCTAssertEqual(domainModel.status, internalModel.status)
+        XCTAssertEqual(domainModel.startDate, internalModel.startDate)
+        XCTAssertEqual(domainModel.endDate, internalModel.endDate)
+        XCTAssertEqual(domainModel.userType, internalModel.userType)
+        XCTAssertEqual(domainModel.imageUrl, internalModel.imageUrl)
     }
     
-    /// Test that GomaModelMapper.banners transforms array of GomaModels.BannerData to [Banner] correctly
+    /// Test that GomaModelMapper.banners transforms array of GomaModels.Banner to [Banner] correctly
     func testBannersArrayModelMapperTransformsCorrectly() throws {
         // Given
         let jsonData = try JSONLoader.loadJSON(
@@ -114,7 +109,7 @@ class BannersTests: BaseIntegrationTest {
         )
         let decoder = JSONDecoder()
         decoder.keyDecodingStrategy = .convertFromSnakeCase
-        let internalModels = try decoder.decode([GomaModels.BannerData].self, from: jsonData)
+        let internalModels = try decoder.decode([GomaModels.Banner].self, from: jsonData)
         
         // When
         let domainModels = GomaModelMapper.banners(fromInternalBanners: internalModels)
@@ -128,69 +123,15 @@ class BannersTests: BaseIntegrationTest {
             
             XCTAssertEqual(domainModel.id, internalModel.id)
             XCTAssertEqual(domainModel.title, internalModel.title)
-            
-            // Check URL transformation
-            if let imageUrl = internalModel.imageUrl {
-                XCTAssertEqual(domainModel.imageUrl?.absoluteString, imageUrl)
-            } else {
-                XCTAssertNil(domainModel.imageUrl)
-            }
-        }
-    }
-    
-    /// Test that transformation correctly sets isActive based on status field
-    func testIsActiveIsCorrectlyMappedFromStatus() throws {
-        // Given
-        let jsonData = try JSONLoader.loadJSON(
-            fileName: "response.json",
-            subdirectory: TestConfiguration.MockResponseDirectories.banners
-        )
-        let decoder = JSONDecoder()
-        decoder.keyDecodingStrategy = .convertFromSnakeCase
-        let banners = try decoder.decode([GomaModels.BannerData].self, from: jsonData)
-        
-        // Ensure we have at least one banner to test
-        guard let internalModel = banners.first else {
-            XCTFail("No banners found in test data")
-            return
-        }
-        
-        // When
-        let domainModel = GomaModelMapper.banner(fromInternalBanner: internalModel)
-        
-        // Then
-        if internalModel.status == "published" {
-            XCTAssertTrue(domainModel.isActive)
-        } else {
-            XCTAssertFalse(domainModel.isActive)
-        }
-    }
-    
-    /// Test URL construction for imageUrl field
-    func testURLConstructionForImageUrl() throws {
-        // Given
-        let jsonData = try JSONLoader.loadJSON(
-            fileName: "response.json",
-            subdirectory: TestConfiguration.MockResponseDirectories.banners
-        )
-        let decoder = JSONDecoder()
-        decoder.keyDecodingStrategy = .convertFromSnakeCase
-        let banners = try decoder.decode([GomaModels.BannerData].self, from: jsonData)
-        
-        // Ensure we have at least one banner to test
-        guard let internalModel = banners.first else {
-            XCTFail("No banners found in test data")
-            return
-        }
-        
-        // When
-        let domainModel = GomaModelMapper.banner(fromInternalBanner: internalModel)
-        
-        // Then
-        if let imageUrl = internalModel.imageUrl {
-            XCTAssertEqual(domainModel.imageUrl?.absoluteString, imageUrl)
-        } else {
-            XCTAssertNil(domainModel.imageUrl)
+            XCTAssertEqual(domainModel.subtitle, internalModel.subtitle)
+            XCTAssertEqual(domainModel.ctaText, internalModel.ctaText)
+            XCTAssertEqual(domainModel.ctaUrl, internalModel.ctaUrl)
+            XCTAssertEqual(domainModel.platform, internalModel.platform)
+            XCTAssertEqual(domainModel.status, internalModel.status)
+            XCTAssertEqual(domainModel.startDate, internalModel.startDate)
+            XCTAssertEqual(domainModel.endDate, internalModel.endDate)
+            XCTAssertEqual(domainModel.userType, internalModel.userType)
+            XCTAssertEqual(domainModel.imageUrl, internalModel.imageUrl)
         }
     }
     
@@ -325,7 +266,7 @@ class BannersTests: BaseIntegrationTest {
         )
         let decoder = JSONDecoder()
         decoder.keyDecodingStrategy = .convertFromSnakeCase
-        let internalModels = try decoder.decode([GomaModels.BannerData].self, from: jsonData)
+        let internalModels = try decoder.decode([GomaModels.Banner].self, from: jsonData)
         let expectedDomainModels = GomaModelMapper.banners(fromInternalBanners: internalModels)
         
         // When
@@ -346,20 +287,15 @@ class BannersTests: BaseIntegrationTest {
                         
                         XCTAssertEqual(actualBanner.id, expectedBanner.id)
                         XCTAssertEqual(actualBanner.title, expectedBanner.title)
-                        XCTAssertEqual(actualBanner.isActive, expectedBanner.isActive)
-                        
-                        // Compare URLs
-                        if let expectedImageURL = expectedBanner.imageUrl {
-                            XCTAssertEqual(actualBanner.imageUrl?.absoluteString, expectedImageURL.absoluteString)
-                        } else {
-                            XCTAssertNil(actualBanner.imageUrl)
-                        }
-                        
-                        if let expectedActionURL = expectedBanner.actionUrl {
-                            XCTAssertEqual(actualBanner.actionUrl?.absoluteString, expectedActionURL.absoluteString)
-                        } else {
-                            XCTAssertNil(actualBanner.actionUrl)
-                        }
+                        XCTAssertEqual(actualBanner.subtitle, expectedBanner.subtitle)
+                        XCTAssertEqual(actualBanner.ctaText, expectedBanner.ctaText)
+                        XCTAssertEqual(actualBanner.ctaUrl, expectedBanner.ctaUrl)
+                        XCTAssertEqual(actualBanner.platform, expectedBanner.platform)
+                        XCTAssertEqual(actualBanner.status, expectedBanner.status)
+                        XCTAssertEqual(actualBanner.startDate, expectedBanner.startDate)
+                        XCTAssertEqual(actualBanner.endDate, expectedBanner.endDate)
+                        XCTAssertEqual(actualBanner.userType, expectedBanner.userType)
+                        XCTAssertEqual(actualBanner.imageUrl, expectedBanner.imageUrl)
                     }
                     
                     expectation.fulfill()

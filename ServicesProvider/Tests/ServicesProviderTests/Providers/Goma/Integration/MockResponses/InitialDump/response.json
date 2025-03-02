@@ -1,0 +1,313 @@
+{
+  "home_template": {
+    "id": 4,
+    "name": "Default Layout",
+    "widgets": [
+      {
+        "id": 1,
+        "name": "alertBanners",
+        "description": "Display important alerts and notifications to users",
+        "web_namespace": "UserAlertBox",
+        "ios_namespace": "UserProfile",
+        "android_namespace": "UserProfile",
+        "user_type": "authenticated",
+        "sort_order": 1,
+        "orientation": null
+      },
+      {
+        "id": 2,
+        "name": "banners",
+        "description": "Horizontal scrollable strip of promotional banners",
+        "web_namespace": "PromotionBanners",
+        "ios_namespace": "PromotionBanners",
+        "android_namespace": "PromotionBanners",
+        "user_type": "all",
+        "sort_order": 2,
+        "orientation": null
+      },
+      {
+        "id": 3,
+        "name": "carouselEvents",
+        "description": "Swipeable match cards for quick access",
+        "web_namespace": "MatchBanners",
+        "ios_namespace": "MatchBanners",
+        "android_namespace": "MatchBanners",
+        "user_type": "all",
+        "sort_order": 3,
+        "orientation": null
+      },
+      {
+        "id": 4,
+        "name": "stories",
+        "description": "Instagram-style promotional stories",
+        "web_namespace": "PromotionStories",
+        "ios_namespace": "PromotionStories",
+        "android_namespace": "PromotionStories",
+        "user_type": "all",
+        "sort_order": 4,
+        "orientation": null
+      },
+      {
+        "id": 5,
+        "name": "heroCardEvents",
+        "description": "Large featured promotional banner",
+        "web_namespace": "HeroBanners",
+        "ios_namespace": "HeroBanners",
+        "android_namespace": "HeroBanners",
+        "user_type": "all",
+        "sort_order": 5,
+        "orientation": null
+      },
+      {
+        "id": 6,
+        "name": "highlightedLiveEvents",
+        "description": "Featured currently live matches",
+        "web_namespace": "LiveGamesHome",
+        "ios_namespace": "LiveGamesHome",
+        "android_namespace": "LiveGamesHome",
+        "user_type": "all",
+        "sort_order": 6,
+        "orientation": null
+      },
+      {
+        "id": 7,
+        "name": "betSwipe",
+        "description": "Call-to-action for custom bet creation (Bet Swipe).",
+        "web_namespace": "MakeYourOwnBet",
+        "ios_namespace": "MakeYourOwnBet",
+        "android_namespace": "MakeYourOwnBet",
+        "user_type": "all",
+        "sort_order": 7,
+        "orientation": null
+      },
+      {
+        "id": 8,
+        "name": "highlightedEvents",
+        "description": "Highlighted match cards",
+        "web_namespace": "HighlightsImageCards",
+        "ios_namespace": "HighlightsImageCards",
+        "android_namespace": "HighlightsImageCards",
+        "user_type": "all",
+        "sort_order": 8,
+        "orientation": "horizontal"
+      },
+      {
+        "id": 9,
+        "name": "boostedEvents",
+        "description": "Matches with enhanced odds",
+        "web_namespace": "HighlightsBoostedCards",
+        "ios_namespace": "HighlightsBoostedCards",
+        "android_namespace": "HighlightsBoostedCards",
+        "user_type": "all",
+        "sort_order": 9,
+        "orientation": "horizontal"
+      },
+      {
+        "id": 10,
+        "name": "proChoices",
+        "description": "Professional betting picks and choices",
+        "web_namespace": "HighlightsProChoices",
+        "ios_namespace": "HighlightsProChoices",
+        "android_namespace": "HighlightsProChoices",
+        "user_type": "all",
+        "sort_order": 10,
+        "orientation": "horizontal"
+      },
+      {
+        "id": 11,
+        "name": "topCompetitions",
+        "description": "Quick access to popular competitions",
+        "web_namespace": "TopCompetitionsMobile",
+        "ios_namespace": "TopCompetitionsMobile",
+        "android_namespace": "TopCompetitionsMobile",
+        "user_type": "all",
+        "sort_order": 11,
+        "orientation": null
+      },
+      {
+        "id": 12,
+        "name": "suggestedBets",
+        "description": "Curated betting suggestions",
+        "web_namespace": "SuggestedBets",
+        "ios_namespace": "SuggestedBets",
+        "android_namespace": "SuggestedBets",
+        "user_type": "all",
+        "sort_order": 12,
+        "orientation": null
+      },
+      {
+        "id": 13,
+        "name": "popularEvents",
+        "description": "Popular events list",
+        "web_namespace": "Games",
+        "ios_namespace": "Games",
+        "android_namespace": "Games",
+        "user_type": "all",
+        "sort_order": 13,
+        "orientation": null
+      }
+    ]
+  },
+  "promotions": {
+    "alert_banner": {
+      "id": 4,
+      "client_id": 2,
+      "title": "Alert Banner 1",
+      "subtitle": "subtitle information",
+      "cta_text": "Button 123",
+      "cta_url": "https://betsson.fr",
+      "platform": "all",
+      "status": "published",
+      "start_date": "2025-02-26 12:39:00",
+      "end_date": "2026-02-26 12:39:00",
+      "user_type": "all",
+      "created_at": "2025-02-26T12:39:57.000000Z",
+      "updated_at": "2025-02-26T13:28:03.000000Z"
+    },
+    "banners": [
+      {
+        "id": 4,
+        "client_id": 2,
+        "title": "Banner 1",
+        "subtitle": "subtitle",
+        "cta_text": null,
+        "cta_url": null,
+        "platform": "all",
+        "status": "published",
+        "start_date": "2025-02-26 14:03:00",
+        "end_date": "2026-02-26 14:03:00",
+        "user_type": "all",
+        "created_at": "2025-02-26T14:03:33.000000Z",
+        "updated_at": "2025-02-26T14:03:33.000000Z",
+        "image_url": "https://cms.gomademo.com/storage/32/01JN193T46MEGK8JP4AZEP93EY.jpg"
+      }
+    ],
+    "sport_banners": [
+      {
+        "id": 6,
+        "sport_event_id": "4067574.1",
+        "sport_event_market_id": "67677928.1",
+        "cta_url": null,
+        "image_url": "https://cms.gomademo.com/storage/33/01JN1BK4W59DSA5NTCDN7PZ5Z3.png"
+      }
+    ],
+    "highlighted_events": [
+      {
+        "sport_event_id": "4067574.1",
+        "sport_event_market_id": "67677928.1",
+        "image_url": "https://cms.gomademo.com/storage/41/01JN1JGAA9DEVP2STJQ95XFKSJ.png"
+      },
+      {
+        "sport_event_id": "4057834.1",
+        "sport_event_market_id": "66859225.1",
+        "image_url": "https://cms.gomademo.com/storage/44/01JN45TPDSQKY5N1HRSV6AZBND.png"
+      },
+      {
+        "sport_event_id": "4068041.1",
+        "sport_event_market_id": "67713812.1",
+        "image_url": "https://cms.gomademo.com/storage/45/01JN4643VVNJYR6Y4Q906NBC3H.png"
+      }
+    ],
+    "pro_choices": [
+      {
+        "sport_event_id": "4067574.1",
+        "sport_event_market_id": "67677928.1",
+        "image_url": "https://cms.gomademo.com/storage/43/01JN44GTRM13CHZJ63M573RS4W.png"
+      },
+      {
+        "sport_event_id": "4057834.1",
+        "sport_event_market_id": "66935497.1",
+        "image_url": "https://cms.gomademo.com/storage/46/01JN47B1K46WNNXR01NR65T9AC.png"
+      }
+    ],
+    "boosted_odds_banners": [
+      {
+        "id": 4,
+        "name": null,
+        "title": null,
+        "sport_event_id": "4067992.1",
+        "sport_event_market_id": "67701007.1",
+        "sport_event_boosted_market_id": "67701178.1",
+        "cta_url": null
+      }
+    ],
+    "hero_cards": [
+      {
+        "id": 3,
+        "sport_event_id": "4067574.1",
+        "sport_event_market_ids": [
+          "67677928.1",
+          "67677925.1",
+          "67680507.1"
+        ],
+        "image_url": "https://cms.gomademo.com/storage/34/01JN1C45A72Y6Q3DN2AQ43WB6Q.png"
+      }
+    ],
+    "stories": [
+      {
+        "id": 5,
+        "client_id": 2,
+        "title": "Story 1",
+        "media_type": "image",
+        "cta_text": null,
+        "cta_url": null,
+        "platform": "all",
+        "status": "published",
+        "start_date": "2025-02-26 16:02:00",
+        "end_date": "2026-02-26 16:02:00",
+        "user_type": "all",
+        "created_at": "2025-02-26T16:02:53.000000Z",
+        "updated_at": "2025-02-26T16:02:53.000000Z",
+        "media_url": "https://cms.gomademo.com/storage/36/01JN1FYATNGDZC3A5SVX7BPQ2B.jpg",
+        "icon_url": "https://cms.gomademo.com/storage/35/01JN1FYARZZ76AJ65K0JR33WND.png"
+      },
+      {
+        "id": 6,
+        "client_id": 2,
+        "title": "Story 2",
+        "media_type": "image",
+        "cta_text": null,
+        "cta_url": null,
+        "platform": "all",
+        "status": "published",
+        "start_date": "2025-02-26 16:04:00",
+        "end_date": "2026-02-26 16:04:00",
+        "user_type": "all",
+        "created_at": "2025-02-26T16:04:27.000000Z",
+        "updated_at": "2025-02-26T16:04:27.000000Z",
+        "media_url": "https://cms.gomademo.com/storage/38/01JN1G16MDG7E45WR863HDVYA8.png",
+        "icon_url": "https://cms.gomademo.com/storage/37/01JN1G16KDQ4115KZ0HQ69H186.png"
+      },
+      {
+        "id": 7,
+        "client_id": 2,
+        "title": "Story 3",
+        "media_type": "video",
+        "cta_text": null,
+        "cta_url": "https://betsson.fr",
+        "platform": "all",
+        "status": "published",
+        "start_date": "2025-02-26 16:08:00",
+        "end_date": "2026-02-26 16:08:00",
+        "user_type": "all",
+        "created_at": "2025-02-26T16:11:10.000000Z",
+        "updated_at": "2025-02-26T16:11:10.000000Z",
+        "media_url": "https://cms.gomademo.com/storage/40/01JN1GDFZ8BWV9H58FH0P7CT5Q.mp4",
+        "icon_url": "https://cms.gomademo.com/storage/39/01JN1GDFY2X828DTFX21M2YAFY.png"
+      }
+    ],
+    "popular_events": [],
+    "news": []
+  },
+  "competitions": {
+    "featured": [
+      "55807.1",
+      "55834.1",
+      "55806.1",
+      "55852.1"
+    ]
+  },
+  "cms": {
+    "pdfs": []
+  }
+}

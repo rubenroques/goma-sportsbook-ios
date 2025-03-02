@@ -92,7 +92,7 @@ class GomaAPIAuthenticator {
                 return Just(token).setFailureType(to: Error.self).eraseToAnyPublisher()
             }
             
-            let endpoint = GomaAPIClient.login(username: loggedUser.username,
+            let endpoint = GomaAPISchema.login(username: loggedUser.username,
                                                password: loggedUser.password,
                                                pushToken: pushToken)
             
@@ -156,7 +156,7 @@ class GomaAPIAuthenticator {
                 return Just(token).setFailureType(to: Error.self).eraseToAnyPublisher()
             }
 
-            let endpoint = GomaAPIClient.anonymousAuth(deviceId: deviceId,
+            let endpoint = GomaAPISchema.anonymousAuth(deviceId: deviceId,
                                                        pushToken: pushToken)
             
             guard

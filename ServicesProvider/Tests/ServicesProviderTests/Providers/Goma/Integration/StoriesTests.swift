@@ -40,7 +40,7 @@ class StoriesTests: BaseIntegrationTest {
         XCTAssertEqual(request.httpMethod, "GET")
     }
 
-    /// Test that the JSON response for stories decodes to [GomaModels.StoryData]
+    /// Test that the JSON response for stories decodes to [GomaModels.Story]
     func testStoriesResponseDecodesToInternalModel() throws {
         // Given
         let jsonData = try JSONLoader.loadJSON(
@@ -51,7 +51,7 @@ class StoriesTests: BaseIntegrationTest {
         // When
         let decoder = JSONDecoder()
         decoder.keyDecodingStrategy = .convertFromSnakeCase
-        let stories = try decoder.decode([GomaModels.StoryData].self, from: jsonData)
+        let stories = try decoder.decode([GomaModels.Story].self, from: jsonData)
 
         // Then
         XCTAssertNotNil(stories)
@@ -64,10 +64,11 @@ class StoriesTests: BaseIntegrationTest {
             XCTAssertNotNil(firstStory.imageUrl)
             XCTAssertNotNil(firstStory.status)
             XCTAssertNotNil(firstStory.content)
+            XCTAssertNotNil(firstStory.platform)
         }
     }
 
-    /// Test that GomaModelMapper.story transforms GomaModels.StoryData to Story correctly
+    /// Test that GomaModelMapper.story transforms GomaModels.Story to Story correctly
     func testSingleStoryModelMapperTransformsCorrectly() throws {
         // Given
         let jsonData = try JSONLoader.loadJSON(
@@ -76,7 +77,7 @@ class StoriesTests: BaseIntegrationTest {
         )
         let decoder = JSONDecoder()
         decoder.keyDecodingStrategy = .convertFromSnakeCase
-        let stories = try decoder.decode([GomaModels.StoryData].self, from: jsonData)
+        let stories = try decoder.decode([GomaModels.Story].self, from: jsonData)
 
         // Ensure we have at least one story to test
         guard let internalModel = stories.first else {
@@ -88,25 +89,19 @@ class StoriesTests: BaseIntegrationTest {
         let domainModel = GomaModelMapper.story(fromInternalStory: internalModel)
 
         // Then
-        XCTAssertEqual(domainModel.id, internalModel.id)
+        XCTAssertEqual(domainModel.id, String(internalModel.id))
         XCTAssertEqual(domainModel.title, internalModel.title)
-
-        // Check URL transformation
-        if let imageUrl = internalModel.imageUrl {
-            XCTAssertEqual(domainModel.imageUrl?.absoluteString, imageUrl)
-        } else {
-            XCTAssertNil(domainModel.imageUrl)
-        }
-
-        // Check isActive transformation
-        if internalModel.status == "published" {
-            XCTAssertTrue(domainModel.isActive)
-        } else {
-            XCTAssertFalse(domainModel.isActive)
-        }
+        XCTAssertEqual(domainModel.imageUrl, internalModel.imageUrl)
+        XCTAssertEqual(domainModel.status, internalModel.status)
+        XCTAssertEqual(domainModel.content, internalModel.content)
+        XCTAssertEqual(domainModel.platform, internalModel.platform)
+        XCTAssertEqual(domainModel.startDate, internalModel.startDate)
+        XCTAssertEqual(domainModel.endDate, internalModel.endDate)
+        XCTAssertEqual(domainModel.userType, internalModel.userType)
+        XCTAssertEqual(domainModel.duration, internalModel.duration)
     }
 
-    /// Test that GomaModelMapper.stories transforms array of GomaModels.StoryData to [Story] correctly
+    /// Test that GomaModelMapper.stories transforms array of GomaModels.Story to [Story] correctly
     func testStoriesArrayModelMapperTransformsCorrectly() throws {
         // Given
         let jsonData = try JSONLoader.loadJSON(
@@ -115,7 +110,7 @@ class StoriesTests: BaseIntegrationTest {
         )
         let decoder = JSONDecoder()
         decoder.keyDecodingStrategy = .convertFromSnakeCase
-        let internalModels = try decoder.decode([GomaModels.StoryData].self, from: jsonData)
+        let internalModels = try decoder.decode([GomaModels.Story].self, from: jsonData)
 
         // When
         let domainModels = GomaModelMapper.stories(fromInternalStories: internalModels)
@@ -127,15 +122,9 @@ class StoriesTests: BaseIntegrationTest {
         for (index, internalModel) in internalModels.enumerated() {
             let domainModel = domainModels[index]
 
-            XCTAssertEqual(domainModel.id, internalModel.id)
+            XCTAssertEqual(domainModel.id, String(internalModel.id))
             XCTAssertEqual(domainModel.title, internalModel.title)
-
-            // Check URL transformation
-            if let imageUrl = internalModel.imageUrl {
-                XCTAssertEqual(domainModel.imageUrl?.absoluteString, imageUrl)
-            } else {
-                XCTAssertNil(domainModel.imageUrl)
-            }
+            XCTAssertEqual(domainModel.imageUrl, internalModel.imageUrl)
         }
     }
 
@@ -148,7 +137,7 @@ class StoriesTests: BaseIntegrationTest {
         )
         let decoder = JSONDecoder()
         decoder.keyDecodingStrategy = .convertFromSnakeCase
-        let stories = try decoder.decode([GomaModels.StoryData].self, from: jsonData)
+        let stories = try decoder.decode([GomaModels.Story].self, from: jsonData)
 
         // Ensure we have at least one story to test
         guard let internalModel = stories.first else {
@@ -172,7 +161,7 @@ class StoriesTests: BaseIntegrationTest {
         )
         let decoder = JSONDecoder()
         decoder.keyDecodingStrategy = .convertFromSnakeCase
-        let stories = try decoder.decode([GomaModels.StoryData].self, from: jsonData)
+        let stories = try decoder.decode([GomaModels.Story].self, from: jsonData)
 
         // Ensure we have at least one story to test
         guard let internalModel = stories.first else {
@@ -196,7 +185,7 @@ class StoriesTests: BaseIntegrationTest {
         )
         let decoder = JSONDecoder()
         decoder.keyDecodingStrategy = .convertFromSnakeCase
-        let stories = try decoder.decode([GomaModels.StoryData].self, from: jsonData)
+        let stories = try decoder.decode([GomaModels.Story].self, from: jsonData)
 
         // Ensure we have at least one story to test
         guard let internalModel = stories.first else {
@@ -346,7 +335,7 @@ class StoriesTests: BaseIntegrationTest {
         )
         let decoder = JSONDecoder()
         decoder.keyDecodingStrategy = .convertFromSnakeCase
-        let internalModels = try decoder.decode([GomaModels.StoryData].self, from: jsonData)
+        let internalModels = try decoder.decode([GomaModels.Story].self, from: jsonData)
         let expectedDomainModels = GomaModelMapper.stories(fromInternalStories: internalModels)
 
         // When
@@ -367,16 +356,14 @@ class StoriesTests: BaseIntegrationTest {
 
                         XCTAssertEqual(actualStory.id, expectedStory.id)
                         XCTAssertEqual(actualStory.title, expectedStory.title)
-                        XCTAssertEqual(actualStory.isActive, expectedStory.isActive)
+                        XCTAssertEqual(actualStory.status, expectedStory.status)
                         XCTAssertEqual(actualStory.content, expectedStory.content)
                         XCTAssertEqual(actualStory.duration, expectedStory.duration)
-
-                        // Compare URLs
-                        if let expectedImageURL = expectedStory.imageUrl {
-                            XCTAssertEqual(actualStory.imageUrl?.absoluteString, expectedImageURL.absoluteString)
-                        } else {
-                            XCTAssertNil(actualStory.imageUrl)
-                        }
+                        XCTAssertEqual(actualStory.imageUrl, expectedStory.imageUrl)
+                        XCTAssertEqual(actualStory.platform, expectedStory.platform)
+                        XCTAssertEqual(actualStory.startDate, expectedStory.startDate)
+                        XCTAssertEqual(actualStory.endDate, expectedStory.endDate)
+                        XCTAssertEqual(actualStory.userType, expectedStory.userType)
                     }
 
                     expectation.fulfill()
@@ -385,5 +372,22 @@ class StoriesTests: BaseIntegrationTest {
             .store(in: &cancellables)
 
         wait(for: [expectation], timeout: 1.0)
+    }
+    
+    // MARK: - Helper Methods
+    
+    /// Register a mock response for the stories endpoint
+    private func registerMockStoriesResponse() throws {
+        let jsonData = try JSONLoader.loadJSON(
+            fromSubdirectory: TestConfiguration.MockResponseDirectories.stories,
+            filename: "response.json"
+        )
+        
+        let url = URL(string: "\(TestConfiguration.API.baseURL)\(TestConfiguration.EndpointPaths.stories)")!
+        MockURLProtocol.registerMockResponse(
+            for: url,
+            data: jsonData,
+            statusCode: 200
+        )
     }
 }

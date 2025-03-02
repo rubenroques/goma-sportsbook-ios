@@ -37,7 +37,7 @@ ENDPOINTS = {
         "method": "GET",
         "params": {}
     },
-    "SportBanners": {
+    "CarouselEvents": {
         "path": "/api/promotions/v1/sport-banners",
         "method": "GET",
         "params": {}

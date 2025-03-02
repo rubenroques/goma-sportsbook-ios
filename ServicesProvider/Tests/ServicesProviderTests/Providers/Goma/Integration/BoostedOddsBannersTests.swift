@@ -40,7 +40,7 @@ class BoostedOddsBannersTests: BaseIntegrationTest {
         XCTAssertEqual(request.httpMethod, "GET")
     }
     
-    /// Test that the JSON response for boostedOddsBanners decodes to [GomaModels.BoostedOddsBannerData]
+    /// Test that the JSON response for boostedOddsBanners decodes to [GomaModels.BoostedOddsBanner]
     func testBoostedOddsBannersResponseDecodesToInternalModel() throws {
         // Given
         let jsonData = try JSONLoader.loadJSON(
@@ -51,7 +51,7 @@ class BoostedOddsBannersTests: BaseIntegrationTest {
         // When
         let decoder = JSONDecoder()
         decoder.keyDecodingStrategy = .convertFromSnakeCase
-        let boostedOddsBanners = try decoder.decode([GomaModels.BoostedOddsBannerData].self, from: jsonData)
+        let boostedOddsBanners = try decoder.decode([GomaModels.BoostedOddsBanner].self, from: jsonData)
         
         // Then
         XCTAssertNotNil(boostedOddsBanners)
@@ -63,13 +63,10 @@ class BoostedOddsBannersTests: BaseIntegrationTest {
             XCTAssertNotNil(firstBanner.title)
             XCTAssertNotNil(firstBanner.imageUrl)
             XCTAssertNotNil(firstBanner.status)
-            XCTAssertNotNil(firstBanner.originalOdd)
-            XCTAssertNotNil(firstBanner.boostedOdd)
-            XCTAssertNotNil(firstBanner.event)
         }
     }
     
-    /// Test that GomaModelMapper.boostedOddsBanner transforms GomaModels.BoostedOddsBannerData to BoostedOddsBanner correctly
+    /// Test that GomaModelMapper.boostedOddsBanner transforms GomaModels.BoostedOddsBanner to BoostedOddsBanner correctly
     func testSingleBoostedOddsBannerModelMapperTransformsCorrectly() throws {
         // Given
         let jsonData = try JSONLoader.loadJSON(
@@ -78,7 +75,7 @@ class BoostedOddsBannersTests: BaseIntegrationTest {
         )
         let decoder = JSONDecoder()
         decoder.keyDecodingStrategy = .convertFromSnakeCase
-        let boostedOddsBanners = try decoder.decode([GomaModels.BoostedOddsBannerData].self, from: jsonData)
+        let boostedOddsBanners = try decoder.decode([GomaModels.BoostedOddsBanner].self, from: jsonData)
         
         // Ensure we have at least one boosted odds banner to test
         guard let internalModel = boostedOddsBanners.first else {
@@ -90,32 +87,16 @@ class BoostedOddsBannersTests: BaseIntegrationTest {
         let domainModel = GomaModelMapper.boostedOddsBanner(fromInternalBoostedOddsBanner: internalModel)
         
         // Then
-        XCTAssertEqual(domainModel.id, internalModel.id)
+        XCTAssertEqual(domainModel.id, String(internalModel.id))
+        XCTAssertEqual(domainModel.clientId, internalModel.clientId != nil ? String(internalModel.clientId!) : nil)
         XCTAssertEqual(domainModel.title, internalModel.title)
-        
-        // Check URL transformation
-        if let imageUrl = internalModel.imageUrl {
-            XCTAssertEqual(domainModel.imageUrl?.absoluteString, imageUrl)
-        } else {
-            XCTAssertNil(domainModel.imageUrl)
-        }
-        
-        // Check action URL transformation
-        if let actionUrl = internalModel.actionUrl {
-            XCTAssertEqual(domainModel.actionUrl?.absoluteString, actionUrl)
-        } else {
-            XCTAssertNil(domainModel.actionUrl)
-        }
-        
-        // Check isActive transformation
-        if internalModel.status == "published" {
-            XCTAssertTrue(domainModel.isActive)
-        } else {
-            XCTAssertFalse(domainModel.isActive)
-        }
+        XCTAssertEqual(domainModel.subtitle, internalModel.subtitle)
+        XCTAssertEqual(domainModel.platform, internalModel.platform)
+        XCTAssertEqual(domainModel.status, internalModel.status)
+        XCTAssertEqual(domainModel.imageUrl, internalModel.imageUrl)
     }
     
-    /// Test that GomaModelMapper.boostedOddsBanners transforms array of GomaModels.BoostedOddsBannerData to [BoostedOddsBanner] correctly
+    /// Test that GomaModelMapper.boostedOddsBanners transforms array of GomaModels.BoostedOddsBanner to [BoostedOddsBanner] correctly
     func testBoostedOddsBannersArrayModelMapperTransformsCorrectly() throws {
         // Given
         let jsonData = try JSONLoader.loadJSON(
@@ -124,7 +105,7 @@ class BoostedOddsBannersTests: BaseIntegrationTest {
         )
         let decoder = JSONDecoder()
         decoder.keyDecodingStrategy = .convertFromSnakeCase
-        let internalModels = try decoder.decode([GomaModels.BoostedOddsBannerData].self, from: jsonData)
+        let internalModels = try decoder.decode([GomaModels.BoostedOddsBanner].self, from: jsonData)
         
         // When
         let domainModels = GomaModelMapper.boostedOddsBanners(fromInternalBoostedOddsBanners: internalModels)
@@ -136,112 +117,13 @@ class BoostedOddsBannersTests: BaseIntegrationTest {
         for (index, internalModel) in internalModels.enumerated() {
             let domainModel = domainModels[index]
             
-            XCTAssertEqual(domainModel.id, internalModel.id)
+            XCTAssertEqual(domainModel.id, String(internalModel.id))
+            XCTAssertEqual(domainModel.clientId, internalModel.clientId != nil ? String(internalModel.clientId!) : nil)
             XCTAssertEqual(domainModel.title, internalModel.title)
-            
-            // Check URL transformation
-            if let imageUrl = internalModel.imageUrl {
-                XCTAssertEqual(domainModel.imageUrl?.absoluteString, imageUrl)
-            } else {
-                XCTAssertNil(domainModel.imageUrl)
-            }
-        }
-    }
-    
-    /// Test originalOdd and boostedOdd values are correctly mapped
-    func testOddsValuesAreCorrectlyMapped() throws {
-        // Given
-        let jsonData = try JSONLoader.loadJSON(
-            fileName: "response.json",
-            subdirectory: TestConfiguration.MockResponseDirectories.boostedOddsBanners
-        )
-        let decoder = JSONDecoder()
-        decoder.keyDecodingStrategy = .convertFromSnakeCase
-        let boostedOddsBanners = try decoder.decode([GomaModels.BoostedOddsBannerData].self, from: jsonData)
-        
-        // Ensure we have at least one boosted odds banner to test
-        guard let internalModel = boostedOddsBanners.first else {
-            XCTFail("No boosted odds banners found in test data")
-            return
-        }
-        
-        // When
-        let domainModel = GomaModelMapper.boostedOddsBanner(fromInternalBoostedOddsBanner: internalModel)
-        
-        // Then
-        XCTAssertEqual(domainModel.originalOdd, internalModel.originalOdd)
-        XCTAssertEqual(domainModel.boostedOdd, internalModel.boostedOdd)
-    }
-    
-    /// Test nested SportEventData mapping to SportEventSummary
-    func testNestedSportEventDataMapping() throws {
-        // Given
-        let jsonData = try JSONLoader.loadJSON(
-            fileName: "response.json",
-            subdirectory: TestConfiguration.MockResponseDirectories.boostedOddsBanners
-        )
-        let decoder = JSONDecoder()
-        decoder.keyDecodingStrategy = .convertFromSnakeCase
-        let boostedOddsBanners = try decoder.decode([GomaModels.BoostedOddsBannerData].self, from: jsonData)
-        
-        // Ensure we have at least one boosted odds banner with event data to test
-        guard let internalModel = boostedOddsBanners.first, let eventData = internalModel.event else {
-            XCTFail("No boosted odds banners with event data found in test data")
-            return
-        }
-        
-        // When
-        let domainModel = GomaModelMapper.boostedOddsBanner(fromInternalBoostedOddsBanner: internalModel)
-        
-        // Then
-        XCTAssertNotNil(domainModel.event)
-        XCTAssertEqual(domainModel.event?.id, eventData.id)
-        XCTAssertEqual(domainModel.event?.sportId, eventData.sportId)
-        XCTAssertEqual(domainModel.event?.competitionId, eventData.competitionId)
-        
-        // Check date transformation
-        if let dateTimeString = eventData.dateTime {
-            let dateFormatter = ISO8601DateFormatter()
-            let expectedDate = dateFormatter.date(from: dateTimeString)
-            XCTAssertEqual(domainModel.event?.dateTime, expectedDate)
-        } else {
-            XCTAssertNil(domainModel.event?.dateTime)
-        }
-        
-        // Check team data if present
-        if let homeTeam = eventData.homeTeam, let awayTeam = eventData.awayTeam {
-            XCTAssertEqual(domainModel.event?.homeTeam.id, homeTeam.id)
-            XCTAssertEqual(domainModel.event?.homeTeam.name, homeTeam.name)
-            XCTAssertEqual(domainModel.event?.awayTeam.id, awayTeam.id)
-            XCTAssertEqual(domainModel.event?.awayTeam.name, awayTeam.name)
-        }
-    }
-    
-    /// Test URL construction for imageUrl field
-    func testURLConstructionForImageUrl() throws {
-        // Given
-        let jsonData = try JSONLoader.loadJSON(
-            fileName: "response.json",
-            subdirectory: TestConfiguration.MockResponseDirectories.boostedOddsBanners
-        )
-        let decoder = JSONDecoder()
-        decoder.keyDecodingStrategy = .convertFromSnakeCase
-        let boostedOddsBanners = try decoder.decode([GomaModels.BoostedOddsBannerData].self, from: jsonData)
-        
-        // Ensure we have at least one boosted odds banner to test
-        guard let internalModel = boostedOddsBanners.first else {
-            XCTFail("No boosted odds banners found in test data")
-            return
-        }
-        
-        // When
-        let domainModel = GomaModelMapper.boostedOddsBanner(fromInternalBoostedOddsBanner: internalModel)
-        
-        // Then
-        if let imageUrl = internalModel.imageUrl {
-            XCTAssertEqual(domainModel.imageUrl?.absoluteString, imageUrl)
-        } else {
-            XCTAssertNil(domainModel.imageUrl)
+            XCTAssertEqual(domainModel.subtitle, internalModel.subtitle)
+            XCTAssertEqual(domainModel.platform, internalModel.platform)
+            XCTAssertEqual(domainModel.status, internalModel.status)
+            XCTAssertEqual(domainModel.imageUrl, internalModel.imageUrl)
         }
     }
     
@@ -376,7 +258,7 @@ class BoostedOddsBannersTests: BaseIntegrationTest {
         )
         let decoder = JSONDecoder()
         decoder.keyDecodingStrategy = .convertFromSnakeCase
-        let internalModels = try decoder.decode([GomaModels.BoostedOddsBannerData].self, from: jsonData)
+        let internalModels = try decoder.decode([GomaModels.BoostedOddsBanner].self, from: jsonData)
         let expectedDomainModels = GomaModelMapper.boostedOddsBanners(fromInternalBoostedOddsBanners: internalModels)
         
         // When
@@ -396,47 +278,12 @@ class BoostedOddsBannersTests: BaseIntegrationTest {
                         let actualBanner = boostedOddsBanners[index]
                         
                         XCTAssertEqual(actualBanner.id, expectedBanner.id)
+                        XCTAssertEqual(actualBanner.clientId, expectedBanner.clientId)
                         XCTAssertEqual(actualBanner.title, expectedBanner.title)
-                        XCTAssertEqual(actualBanner.isActive, expectedBanner.isActive)
-                        XCTAssertEqual(actualBanner.originalOdd, expectedBanner.originalOdd)
-                        XCTAssertEqual(actualBanner.boostedOdd, expectedBanner.boostedOdd)
-                        
-                        // Compare URLs
-                        if let expectedImageURL = expectedBanner.imageUrl {
-                            XCTAssertEqual(actualBanner.imageUrl?.absoluteString, expectedImageURL.absoluteString)
-                        } else {
-                            XCTAssertNil(actualBanner.imageUrl)
-                        }
-                        
-                        if let expectedActionURL = expectedBanner.actionUrl {
-                            XCTAssertEqual(actualBanner.actionUrl?.absoluteString, expectedActionURL.absoluteString)
-                        } else {
-                            XCTAssertNil(actualBanner.actionUrl)
-                        }
-                        
-                        // Compare event data if present
-                        if let expectedEvent = expectedBanner.event, let actualEvent = actualBanner.event {
-                            XCTAssertEqual(actualEvent.id, expectedEvent.id)
-                            XCTAssertEqual(actualEvent.sportId, expectedEvent.sportId)
-                            XCTAssertEqual(actualEvent.competitionId, expectedEvent.competitionId)
-                            
-                            // Compare teams if present
-                            if expectedEvent.homeTeam != nil && expectedEvent.awayTeam != nil {
-                                XCTAssertEqual(actualEvent.homeTeam.id, expectedEvent.homeTeam.id)
-                                XCTAssertEqual(actualEvent.homeTeam.name, expectedEvent.homeTeam.name)
-                                XCTAssertEqual(actualEvent.awayTeam.id, expectedEvent.awayTeam.id)
-                                XCTAssertEqual(actualEvent.awayTeam.name, expectedEvent.awayTeam.name)
-                            }
-                            
-                            // Compare date
-                            if let expectedDate = expectedEvent.dateTime {
-                                XCTAssertEqual(actualEvent.dateTime, expectedDate)
-                            } else {
-                                XCTAssertNil(actualEvent.dateTime)
-                            }
-                        } else {
-                            XCTAssertEqual(actualBanner.event == nil, expectedBanner.event == nil)
-                        }
+                        XCTAssertEqual(actualBanner.subtitle, expectedBanner.subtitle)
+                        XCTAssertEqual(actualBanner.platform, expectedBanner.platform)
+                        XCTAssertEqual(actualBanner.status, expectedBanner.status)
+                        XCTAssertEqual(actualBanner.imageUrl, expectedBanner.imageUrl)
                     }
                     
                     expectation.fulfill()

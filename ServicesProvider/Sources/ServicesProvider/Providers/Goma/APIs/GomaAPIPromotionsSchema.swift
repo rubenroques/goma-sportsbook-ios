@@ -7,23 +7,25 @@
 
 import Foundation
 
-enum GomaPromotionsAPIClient {
+enum GomaAPIPromotionsSchema {
     // Home Template
-    case homeTemplate(platform: String, clientId: Int?, userType: String?)
+    case homeTemplate
 
     // Promotions
-    case allPromotions(clientId: Int?, platform: String?, userType: String?)
-    case alertBanner(clientId: Int?, platform: String?, userType: String?)
-    case banners(clientId: Int?, platform: String?, userType: String?)
-    case sportBanners(clientId: Int?, platform: String?, userType: String?)
-    case boostedOddsBanners(clientId: Int?, platform: String?, userType: String?)
-    case heroCards(clientId: Int?, platform: String?, userType: String?)
-    case stories(clientId: Int?, platform: String?, userType: String?)
-    case news(clientId: Int?, platform: String?, userType: String?, pageIndex: Int, pageSize: Int)
-    case proChoices(clientId: Int?, platform: String?, userType: String?)
+    case allPromotions
+    case alertBanner
+    case banners
+    case sportBanners
+    case boostedOddsBanners
+    case heroCards
+    case stories
+    case news(pageIndex: Int, pageSize: Int)
+    case proChoices
+    // Initial Dump
+    case initialDump
 }
 
-extension GomaPromotionsAPIClient: Endpoint {
+extension GomaAPIPromotionsSchema: Endpoint {
     var url: String {
         return SportRadarConfiguration.shared.clientBaseUrl
     }
@@ -50,60 +52,23 @@ extension GomaPromotionsAPIClient: Endpoint {
             return "/api/promotions/v1/news"
         case .proChoices:
             return "/api/promotions/v1/pro-choices"
+        case .initialDump:
+            return "/api/initial-dump/v1"
         }
     }
 
     var query: [URLQueryItem]? {
         var queryItems: [URLQueryItem] = []
 
+        // Always add platform=ios for all endpoints
+        queryItems.append(URLQueryItem(name: "platform", value: "ios"))
+
         switch self {
-        case .homeTemplate(let platform, let clientId, let userType):
-            queryItems.append(URLQueryItem(name: "platform", value: platform))
-
-            if let clientId = clientId {
-                queryItems.append(URLQueryItem(name: "client_id", value: "\(clientId)"))
-            }
-
-            if let userType = userType {
-                queryItems.append(URLQueryItem(name: "user_type", value: userType))
-            }
-
-        case .allPromotions(let clientId, let platform, let userType),
-             .alertBanner(let clientId, let platform, let userType),
-             .banners(let clientId, let platform, let userType),
-             .sportBanners(let clientId, let platform, let userType),
-             .boostedOddsBanners(let clientId, let platform, let userType),
-             .heroCards(let clientId, let platform, let userType),
-             .stories(let clientId, let platform, let userType),
-             .proChoices(let clientId, let platform, let userType):
-
-            if let clientId = clientId {
-                queryItems.append(URLQueryItem(name: "client_id", value: "\(clientId)"))
-            }
-
-            if let platform = platform {
-                queryItems.append(URLQueryItem(name: "platform", value: platform))
-            }
-
-            if let userType = userType {
-                queryItems.append(URLQueryItem(name: "user_type", value: userType))
-            }
-
-        case .news(let clientId, let platform, let userType, let pageIndex, let pageSize):
-            if let clientId = clientId {
-                queryItems.append(URLQueryItem(name: "client_id", value: "\(clientId)"))
-            }
-
-            if let platform = platform {
-                queryItems.append(URLQueryItem(name: "platform", value: platform))
-            }
-
-            if let userType = userType {
-                queryItems.append(URLQueryItem(name: "user_type", value: userType))
-            }
-
+        case .news(let pageIndex, let pageSize):
             queryItems.append(URLQueryItem(name: "page", value: "\(pageIndex)"))
             queryItems.append(URLQueryItem(name: "page_size", value: "\(pageSize)"))
+        default:
+            break
         }
 
         return queryItems.isEmpty ? nil : queryItems
@@ -137,6 +102,8 @@ extension GomaPromotionsAPIClient: Endpoint {
             return 30.0
         case .news:
             return 20.0
+        case .initialDump:
+            return 30.0 // Longer timeout since this is a large data dump
         default:
             return 10.0
         }
@@ -168,6 +135,8 @@ extension GomaPromotionsAPIClient: Endpoint {
             return "Get news articles"
         case .proChoices:
             return "Get pro betting choices"
+        case .initialDump:
+            return "Get initial data dump including sports, competitions, and events"
         }
     }
 }

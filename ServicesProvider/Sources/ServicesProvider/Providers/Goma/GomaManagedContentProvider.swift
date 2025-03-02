@@ -29,7 +29,7 @@ class GomaManagedContentProvider: ManagedContentProvider {
 
     // MARK: - API Request Helper
 
-    private func request<T: Decodable>(_ endpoint: GomaPromotionsAPIClient) -> AnyPublisher<T, ServiceProviderError> {
+    private func request<T: Decodable>(_ endpoint: GomaAPIPromotionsSchema) -> AnyPublisher<T, ServiceProviderError> {
         // This is a simplified placeholder for API requests
         // In a real implementation, you would handle authentication and network requests here
         return Fail(error: ServiceProviderError.notSupportedForProvider)

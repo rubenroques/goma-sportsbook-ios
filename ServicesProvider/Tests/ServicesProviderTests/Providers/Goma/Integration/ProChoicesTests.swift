@@ -40,7 +40,7 @@ class ProChoicesTests: BaseIntegrationTest {
         XCTAssertEqual(request.httpMethod, "GET")
     }
 
-    /// Test that the JSON response for proChoices decodes to [GomaModels.ProChoiceData]
+    /// Test that the JSON response for proChoices decodes to [GomaModels.ProChoice]
     func testProChoicesResponseDecodesToInternalModel() throws {
         // Given
         let jsonData = try JSONLoader.loadJSON(
@@ -51,7 +51,7 @@ class ProChoicesTests: BaseIntegrationTest {
         // When
         let decoder = JSONDecoder()
         decoder.keyDecodingStrategy = .convertFromSnakeCase
-        let proChoices = try decoder.decode([GomaModels.ProChoiceData].self, from: jsonData)
+        let proChoices = try decoder.decode([GomaModels.ProChoice].self, from: jsonData)
 
         // Then
         XCTAssertNotNil(proChoices)
@@ -64,10 +64,11 @@ class ProChoicesTests: BaseIntegrationTest {
             XCTAssertNotNil(firstChoice.event)
             XCTAssertNotNil(firstChoice.selection)
             XCTAssertNotNil(firstChoice.status)
+            XCTAssertNotNil(firstChoice.platform)
         }
     }
 
-    /// Test that GomaModelMapper.proChoice transforms GomaModels.ProChoiceData to ProChoice correctly
+    /// Test that GomaModelMapper.proChoice transforms GomaModels.ProChoice to ProChoice correctly
     func testSingleProChoiceModelMapperTransformsCorrectly() throws {
         // Given
         let jsonData = try JSONLoader.loadJSON(
@@ -76,7 +77,7 @@ class ProChoicesTests: BaseIntegrationTest {
         )
         let decoder = JSONDecoder()
         decoder.keyDecodingStrategy = .convertFromSnakeCase
-        let proChoices = try decoder.decode([GomaModels.ProChoiceData].self, from: jsonData)
+        let proChoices = try decoder.decode([GomaModels.ProChoice].self, from: jsonData)
 
         // Ensure we have at least one pro choice to test
         guard let internalModel = proChoices.first else {
@@ -88,20 +89,16 @@ class ProChoicesTests: BaseIntegrationTest {
         let domainModel = GomaModelMapper.proChoice(fromInternalProChoice: internalModel)
 
         // Then
-        XCTAssertEqual(domainModel.id, internalModel.id)
-
-        // Check isActive transformation
-        if internalModel.status == "published" {
-            XCTAssertTrue(domainModel.isActive)
-        } else {
-            XCTAssertFalse(domainModel.isActive)
-        }
-
-        // Check reasoning field
+        XCTAssertEqual(domainModel.id, String(internalModel.id))
+        XCTAssertEqual(domainModel.status, internalModel.status)
+        XCTAssertEqual(domainModel.platform, internalModel.platform)
         XCTAssertEqual(domainModel.reasoning, internalModel.reasoning)
+        XCTAssertEqual(domainModel.startDate, internalModel.startDate)
+        XCTAssertEqual(domainModel.endDate, internalModel.endDate)
+        XCTAssertEqual(domainModel.userType, internalModel.userType)
     }
 
-    /// Test that GomaModelMapper.proChoices transforms array of GomaModels.ProChoiceData to [ProChoice] correctly
+    /// Test that GomaModelMapper.proChoices transforms array of GomaModels.ProChoice to [ProChoice] correctly
     func testProChoicesArrayModelMapperTransformsCorrectly() throws {
         // Given
         let jsonData = try JSONLoader.loadJSON(
@@ -110,7 +107,7 @@ class ProChoicesTests: BaseIntegrationTest {
         )
         let decoder = JSONDecoder()
         decoder.keyDecodingStrategy = .convertFromSnakeCase
-        let internalModels = try decoder.decode([GomaModels.ProChoiceData].self, from: jsonData)
+        let internalModels = try decoder.decode([GomaModels.ProChoice].self, from: jsonData)
 
         // When
         let domainModels = GomaModelMapper.proChoices(fromInternalProChoices: internalModels)
@@ -122,15 +119,9 @@ class ProChoicesTests: BaseIntegrationTest {
         for (index, internalModel) in internalModels.enumerated() {
             let domainModel = domainModels[index]
 
-            XCTAssertEqual(domainModel.id, internalModel.id)
+            XCTAssertEqual(domainModel.id, String(internalModel.id))
             XCTAssertEqual(domainModel.reasoning, internalModel.reasoning)
-
-            // Check isActive transformation
-            if internalModel.status == "published" {
-                XCTAssertTrue(domainModel.isActive)
-            } else {
-                XCTAssertFalse(domainModel.isActive)
-            }
+            XCTAssertEqual(domainModel.status, internalModel.status)
         }
     }
 
@@ -143,7 +134,7 @@ class ProChoicesTests: BaseIntegrationTest {
         )
         let decoder = JSONDecoder()
         decoder.keyDecodingStrategy = .convertFromSnakeCase
-        let proChoices = try decoder.decode([GomaModels.ProChoiceData].self, from: jsonData)
+        let proChoices = try decoder.decode([GomaModels.ProChoice].self, from: jsonData)
 
         // Ensure we have at least one pro choice with tipster data to test
         guard let internalModel = proChoices.first, let tipsterData = internalModel.tipster else {
@@ -156,16 +147,10 @@ class ProChoicesTests: BaseIntegrationTest {
 
         // Then
         XCTAssertNotNil(domainModel.tipster)
-        XCTAssertEqual(domainModel.tipster.id, tipsterData.id)
+        XCTAssertEqual(domainModel.tipster.id, String(tipsterData.id))
         XCTAssertEqual(domainModel.tipster.name, tipsterData.name)
         XCTAssertEqual(domainModel.tipster.winRate, tipsterData.winRate)
-
-        // Check avatar URL transformation
-        if let avatarUrl = tipsterData.avatarUrl {
-            XCTAssertEqual(domainModel.tipster.avatarUrl?.absoluteString, avatarUrl)
-        } else {
-            XCTAssertNil(domainModel.tipster.avatarUrl)
-        }
+        XCTAssertEqual(domainModel.tipster.avatarUrl, tipsterData.avatarUrl)
     }
 
     /// Test event summary mapping (id, homeTeam, awayTeam, dateTime)
@@ -177,7 +162,7 @@ class ProChoicesTests: BaseIntegrationTest {
         )
         let decoder = JSONDecoder()
         decoder.keyDecodingStrategy = .convertFromSnakeCase
-        let proChoices = try decoder.decode([GomaModels.ProChoiceData].self, from: jsonData)
+        let proChoices = try decoder.decode([GomaModels.ProChoice].self, from: jsonData)
 
         // Ensure we have at least one pro choice with event data to test
         guard let internalModel = proChoices.first, let eventData = internalModel.event else {
@@ -190,24 +175,18 @@ class ProChoicesTests: BaseIntegrationTest {
 
         // Then
         XCTAssertNotNil(domainModel.event)
-        XCTAssertEqual(domainModel.event.id, eventData.id)
+        XCTAssertEqual(domainModel.event.id, String(eventData.id))
 
         // Check teams data
         if let homeTeam = eventData.homeTeam, let awayTeam = eventData.awayTeam {
-            XCTAssertEqual(domainModel.event.homeTeam.id, homeTeam.id)
+            XCTAssertEqual(domainModel.event.homeTeam.id, String(homeTeam.id))
             XCTAssertEqual(domainModel.event.homeTeam.name, homeTeam.name)
-            XCTAssertEqual(domainModel.event.awayTeam.id, awayTeam.id)
+            XCTAssertEqual(domainModel.event.awayTeam.id, String(awayTeam.id))
             XCTAssertEqual(domainModel.event.awayTeam.name, awayTeam.name)
         }
 
-        // Check date transformation
-        if let dateTimeString = eventData.dateTime {
-            let dateFormatter = ISO8601DateFormatter()
-            let expectedDate = dateFormatter.date(from: dateTimeString)
-            XCTAssertEqual(domainModel.event.dateTime, expectedDate)
-        } else {
-            XCTAssertNil(domainModel.event.dateTime)
-        }
+        // Check dateTime
+        XCTAssertEqual(domainModel.event.dateTime, eventData.dateTime)
     }
 
     /// Test selection mapping (marketName, outcomeName, odds)
@@ -219,7 +198,7 @@ class ProChoicesTests: BaseIntegrationTest {
         )
         let decoder = JSONDecoder()
         decoder.keyDecodingStrategy = .convertFromSnakeCase
-        let proChoices = try decoder.decode([GomaModels.ProChoiceData].self, from: jsonData)
+        let proChoices = try decoder.decode([GomaModels.ProChoice].self, from: jsonData)
 
         // Ensure we have at least one pro choice with selection data to test
         guard let internalModel = proChoices.first, let selectionData = internalModel.selection else {
@@ -246,7 +225,7 @@ class ProChoicesTests: BaseIntegrationTest {
         )
         let decoder = JSONDecoder()
         decoder.keyDecodingStrategy = .convertFromSnakeCase
-        let proChoices = try decoder.decode([GomaModels.ProChoiceData].self, from: jsonData)
+        let proChoices = try decoder.decode([GomaModels.ProChoice].self, from: jsonData)
 
         // Ensure we have at least one pro choice to test
         guard let internalModel = proChoices.first else {
@@ -259,34 +238,6 @@ class ProChoicesTests: BaseIntegrationTest {
 
         // Then
         XCTAssertEqual(domainModel.reasoning, internalModel.reasoning)
-    }
-
-    /// Test URL construction for tipster avatar
-    func testURLConstructionForTipsterAvatar() throws {
-        // Given
-        let jsonData = try JSONLoader.loadJSON(
-            fileName: "response.json",
-            subdirectory: TestConfiguration.MockResponseDirectories.proChoices
-        )
-        let decoder = JSONDecoder()
-        decoder.keyDecodingStrategy = .convertFromSnakeCase
-        let proChoices = try decoder.decode([GomaModels.ProChoiceData].self, from: jsonData)
-
-        // Ensure we have at least one pro choice with tipster data to test
-        guard let internalModel = proChoices.first, let tipsterData = internalModel.tipster else {
-            XCTFail("No pro choices with tipster data found in test data")
-            return
-        }
-
-        // When
-        let domainModel = GomaModelMapper.proChoice(fromInternalProChoice: internalModel)
-
-        // Then
-        if let avatarUrl = tipsterData.avatarUrl {
-            XCTAssertEqual(domainModel.tipster.avatarUrl?.absoluteString, avatarUrl)
-        } else {
-            XCTAssertNil(domainModel.tipster.avatarUrl)
-        }
     }
 
     /// Test that GomaManagedContentProvider.getProChoices() calls the correct API endpoint
@@ -420,7 +371,7 @@ class ProChoicesTests: BaseIntegrationTest {
         )
         let decoder = JSONDecoder()
         decoder.keyDecodingStrategy = .convertFromSnakeCase
-        let internalModels = try decoder.decode([GomaModels.ProChoiceData].self, from: jsonData)
+        let internalModels = try decoder.decode([GomaModels.ProChoice].self, from: jsonData)
         let expectedDomainModels = GomaModelMapper.proChoices(fromInternalProChoices: internalModels)
 
         // When
@@ -440,19 +391,18 @@ class ProChoicesTests: BaseIntegrationTest {
                         let actualChoice = proChoices[index]
 
                         XCTAssertEqual(actualChoice.id, expectedChoice.id)
-                        XCTAssertEqual(actualChoice.isActive, expectedChoice.isActive)
+                        XCTAssertEqual(actualChoice.status, expectedChoice.status)
                         XCTAssertEqual(actualChoice.reasoning, expectedChoice.reasoning)
+                        XCTAssertEqual(actualChoice.platform, expectedChoice.platform)
+                        XCTAssertEqual(actualChoice.startDate, expectedChoice.startDate)
+                        XCTAssertEqual(actualChoice.endDate, expectedChoice.endDate)
+                        XCTAssertEqual(actualChoice.userType, expectedChoice.userType)
 
                         // Compare tipster data
                         XCTAssertEqual(actualChoice.tipster.id, expectedChoice.tipster.id)
                         XCTAssertEqual(actualChoice.tipster.name, expectedChoice.tipster.name)
                         XCTAssertEqual(actualChoice.tipster.winRate, expectedChoice.tipster.winRate)
-
-                        if let expectedAvatarURL = expectedChoice.tipster.avatarUrl {
-                            XCTAssertEqual(actualChoice.tipster.avatarUrl?.absoluteString, expectedAvatarURL.absoluteString)
-                        } else {
-                            XCTAssertNil(actualChoice.tipster.avatarUrl)
-                        }
+                        XCTAssertEqual(actualChoice.tipster.avatarUrl, expectedChoice.tipster.avatarUrl)
 
                         // Compare event data
                         XCTAssertEqual(actualChoice.event.id, expectedChoice.event.id)
@@ -460,12 +410,7 @@ class ProChoicesTests: BaseIntegrationTest {
                         XCTAssertEqual(actualChoice.event.homeTeam.name, expectedChoice.event.homeTeam.name)
                         XCTAssertEqual(actualChoice.event.awayTeam.id, expectedChoice.event.awayTeam.id)
                         XCTAssertEqual(actualChoice.event.awayTeam.name, expectedChoice.event.awayTeam.name)
-
-                        if let expectedDate = expectedChoice.event.dateTime {
-                            XCTAssertEqual(actualChoice.event.dateTime, expectedDate)
-                        } else {
-                            XCTAssertNil(actualChoice.event.dateTime)
-                        }
+                        XCTAssertEqual(actualChoice.event.dateTime, expectedChoice.event.dateTime)
 
                         // Compare selection data
                         XCTAssertEqual(actualChoice.selection.marketName, expectedChoice.selection.marketName)
@@ -479,5 +424,22 @@ class ProChoicesTests: BaseIntegrationTest {
             .store(in: &cancellables)
 
         wait(for: [expectation], timeout: 1.0)
+    }
+    
+    // MARK: - Helper Methods
+    
+    /// Register a mock response for the proChoices endpoint
+    private func registerMockProChoicesResponse() throws {
+        let jsonData = try JSONLoader.loadJSON(
+            fromSubdirectory: TestConfiguration.MockResponseDirectories.proChoices,
+            filename: "response.json"
+        )
+        
+        let url = URL(string: "\(TestConfiguration.API.baseURL)\(TestConfiguration.EndpointPaths.proChoices)")!
+        MockURLProtocol.registerMockResponse(
+            for: url,
+            data: jsonData,
+            statusCode: 200
+        )
     }
 }
