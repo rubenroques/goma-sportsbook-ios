@@ -32,10 +32,10 @@ extension GomaModelMapper {
     static func alertBanners(fromInternalAlertBanners banners: [GomaModels.AlertBanner]) -> [AlertBanner] {
         return banners.map { alertBanner(fromInternalAlertBanner: $0) }
     }
-    
+
     static func alertBanner(fromInternalAlertBanner alertBanner: GomaModels.AlertBanner) -> AlertBanner {
         return AlertBanner(
-            id: alertBanner.id,
+            id: String(alertBanner.id),
             title: alertBanner.title,
             subtitle: alertBanner.subtitle,
             ctaText: alertBanner.ctaText,
@@ -45,7 +45,7 @@ extension GomaModelMapper {
             startDate: alertBanner.startDate,
             endDate: alertBanner.endDate,
             userType: alertBanner.userType)
-        
+
     }
 
     // MARK: - Banners
@@ -77,7 +77,7 @@ extension GomaModelMapper {
 
     static func carouselEvent(fromInternalCarouselEvent carousel: GomaModels.CarouselEvent) -> CarouselEvent {
         return CarouselEvent(
-            id: carousel.id,
+            id: String(carousel.id),
             eventId: carousel.eventId,
             eventMarketId: carousel.eventMarketId,
             ctaUrl: carousel.ctaUrl,
@@ -92,8 +92,8 @@ extension GomaModelMapper {
 
     static func boostedOddsBanner(fromInternalBoostedOddsBanner banner: GomaModels.BoostedOddsBanner) -> BoostedOddsBanner {
         return BoostedOddsBanner(
-            id: banner.id,
-            clientId: banner.clientId,
+            id: String(banner.id),
+            clientId: banner.clientId != nil ? String(banner.clientId!) : nil,
             title: banner.title,
             subtitle: banner.subtitle,
             platform: banner.platform,
@@ -109,7 +109,7 @@ extension GomaModelMapper {
 
     static func heroCard(fromInternalHeroCard heroCard: GomaModels.HeroCard) -> HeroCard {
         return HeroCard.init(
-            id: heroCard.id,
+            id: String(heroCard.id),
             eventId: heroCard.eventId,
             eventMarketIds: heroCard.eventMarketIds,
             imageUrl: heroCard.imageUrl)
@@ -123,7 +123,7 @@ extension GomaModelMapper {
 
     static func story(fromInternalStory story: GomaModels.Story) -> Story {
         return Story(
-            id: story.id,
+            id: String(story.id),
             title: story.title,
             mediaType: story.mediaType,
             ctaText: story.ctaText,
@@ -145,7 +145,7 @@ extension GomaModelMapper {
 
     static func newsItem(fromInternalNewsItem item: GomaModels.NewsItem) -> NewsItem {
         return NewsItem(
-            id: item.id,
+            id: String(item.id),
             title: item.title,
             subtitle: item.subtitle,
             content: item.content,

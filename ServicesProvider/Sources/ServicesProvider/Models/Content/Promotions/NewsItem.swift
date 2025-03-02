@@ -10,7 +10,7 @@ import Foundation
 /// News article
 public struct NewsItem: Codable, Identifiable, Equatable, Hashable {
     /// Unique identifier
-    public let id: Int
+    public let id: String
 
     /// News article title
     public let title: String
@@ -36,7 +36,7 @@ public struct NewsItem: Codable, Identifiable, Equatable, Hashable {
     /// Tags associated with the article
     public let tags: [String]
 
-    public init(id: Int,
+    public init(id: String,
                 title: String,
                 subtitle: String?,
                 content: String,

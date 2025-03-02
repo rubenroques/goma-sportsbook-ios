@@ -10,7 +10,7 @@ import Foundation
 /// Feature card displayed prominently in the app
 public struct HeroCard: Identifiable, Equatable, Hashable, Codable {
     /// Unique identifier
-    public let id: Int
+    public let id: String
 
     /// Associated sport event ID
     public let eventId: String?
@@ -28,8 +28,8 @@ public struct HeroCard: Identifiable, Equatable, Hashable, Codable {
         case eventMarketIds = "sport_event_market_ids"
         case imageUrl = "image_url"
     }
-    
-    public init(id: Int, eventId: String?, eventMarketIds: [String]?, imageUrl: String?) {
+
+    public init(id: String, eventId: String?, eventMarketIds: [String]?, imageUrl: String?) {
         self.id = id
         self.eventId = eventId
         self.eventMarketIds = eventMarketIds

@@ -8,8 +8,8 @@
 import Foundation
 
 public struct AlertBanner: Identifiable, Equatable, Hashable, Codable {
-    
-    public let id: Int
+
+    public let id: String
     public let title: String
     public let subtitle: String?
     public let ctaText: String?

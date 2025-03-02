@@ -10,10 +10,10 @@ import Foundation
 /// Banner showcasing boosted odds for a sport event
 public struct BoostedOddsBanner: Identifiable, Equatable, Hashable, Codable {
     /// Unique identifier
-    public let id: Int
+    public let id: String
 
     /// Client identifier
-    public let clientId: Int?
+    public let clientId: String?
 
     /// Banner title
     public let title: String
@@ -40,9 +40,9 @@ public struct BoostedOddsBanner: Identifiable, Equatable, Hashable, Codable {
         case status = "status"
         case imageUrl = "image_url"
     }
-    
-    init(id: Int,
-         clientId: Int?,
+
+    init(id: String,
+         clientId: String?,
          title: String,
          subtitle: String?,
          platform: String?,

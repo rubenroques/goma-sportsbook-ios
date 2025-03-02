@@ -10,7 +10,7 @@ import Foundation
 /// Ephemeral promotional story (similar to social media stories)
 public struct Story: Identifiable, Equatable, Hashable, Codable {
     /// Unique identifier
-    public let id: Int
+    public let id: String
 
     /// Story title
     public let title: String

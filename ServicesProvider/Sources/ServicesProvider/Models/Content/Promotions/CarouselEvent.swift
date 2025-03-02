@@ -11,7 +11,7 @@ public typealias CarouselEvents = [CarouselEvent]
 /// Sport-related promotional banner
 public struct CarouselEvent: Identifiable, Equatable, Hashable, Codable {
     /// Unique identifier
-    public let id: Int
+    public let id: String
 
     /// Associated sport event ID
     public let eventId: String
@@ -32,8 +32,12 @@ public struct CarouselEvent: Identifiable, Equatable, Hashable, Codable {
         case ctaUrl = "cta_url"
         case imageUrl = "image_url"
     }
-    
-    public init(id: Int, eventId: String, eventMarketId: String, ctaUrl: String?, imageUrl: String?) {
+
+    public init(id: String,
+                eventId: String,
+                eventMarketId: String,
+                ctaUrl: String?,
+                imageUrl: String?) {
         self.id = id
         self.eventId = eventId
         self.eventMarketId = eventMarketId
