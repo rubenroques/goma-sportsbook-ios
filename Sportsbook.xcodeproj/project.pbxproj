@@ -599,7 +599,6 @@
 		450B7AC028F58574009229E3 /* SimpleListMarketDetailTableViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = A9BCF43C274FB5CC006DD528 /* SimpleListMarketDetailTableViewCell.xib */; };
 		450B7AC128F58574009229E3 /* ActivationAlertScrollableTableViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = A9627A14274564890001E1D5 /* ActivationAlertScrollableTableViewCell.xib */; };
 		450B7AC228F58574009229E3 /* ThreeAwayMarketDetailTableViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 45626E37275541790069B89B /* ThreeAwayMarketDetailTableViewCell.xib */; };
-		450B7AC328F58574009229E3 /* SeeMoreMarketsCollectionViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 45CD7B57271738C7003044C5 /* SeeMoreMarketsCollectionViewCell.xib */; };
 		450B7AC528F58574009229E3 /* PreLiveEventsViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 45D712F127031DDE00AC0364 /* PreLiveEventsViewController.xib */; };
 		450B7AC628F58574009229E3 /* FullRegisterDocumentsViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = A92F5DA9272C44CD00884BDF /* FullRegisterDocumentsViewController.xib */; };
 		450B7AC728F58574009229E3 /* README.md in Resources */ = {isa = PBXBuildFile; fileRef = 45C3E8D127B406D8007A1A0F /* README.md */; };
@@ -613,8 +612,6 @@
 		450B7AD128F58574009229E3 /* UploadView.xib in Resources */ = {isa = PBXBuildFile; fileRef = A92F5DA2272C44A000884BDF /* UploadView.xib */; };
 		450B7AD228F58574009229E3 /* MyTicketTableViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 458BAC742770ACAE006C4BC7 /* MyTicketTableViewCell.xib */; };
 		450B7AD328F58574009229E3 /* HeadToHeadCardStatsView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 45A642D627985AAB008EFD5B /* HeadToHeadCardStatsView.xib */; };
-		450B7AD728F58574009229E3 /* LoadingMoreTableViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 45726330272B13D7002F2959 /* LoadingMoreTableViewCell.xib */; };
-		450B7AD828F58574009229E3 /* MatchLineTableViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 457816A82706679400F66878 /* MatchLineTableViewCell.xib */; };
 		450B7AD928F58574009229E3 /* RecentSearchHeaderView.xib in Resources */ = {isa = PBXBuildFile; fileRef = A96B619027A0496C005DC376 /* RecentSearchHeaderView.xib */; };
 		450B7ADA28F58574009229E3 /* SportSelectionViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = A98D3B29271481A8003BAE6F /* SportSelectionViewController.xib */; };
 		450B7ADB28F58574009229E3 /* FilterRowView.xib in Resources */ = {isa = PBXBuildFile; fileRef = A92F5D7B271716B900884BDF /* FilterRowView.xib */; };
@@ -1515,7 +1512,6 @@
 		457CBBEB282D27D000ED0F00 /* SimpleListMarketDetailTableViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = A9BCF43C274FB5CC006DD528 /* SimpleListMarketDetailTableViewCell.xib */; };
 		457CBBEC282D27D000ED0F00 /* ActivationAlertScrollableTableViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = A9627A14274564890001E1D5 /* ActivationAlertScrollableTableViewCell.xib */; };
 		457CBBED282D27D000ED0F00 /* ThreeAwayMarketDetailTableViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 45626E37275541790069B89B /* ThreeAwayMarketDetailTableViewCell.xib */; };
-		457CBBEE282D27D000ED0F00 /* SeeMoreMarketsCollectionViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 45CD7B57271738C7003044C5 /* SeeMoreMarketsCollectionViewCell.xib */; };
 		457CBBF0282D27D000ED0F00 /* PreLiveEventsViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 45D712F127031DDE00AC0364 /* PreLiveEventsViewController.xib */; };
 		457CBBF1282D27D000ED0F00 /* FullRegisterDocumentsViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = A92F5DA9272C44CD00884BDF /* FullRegisterDocumentsViewController.xib */; };
 		457CBBF2282D27D000ED0F00 /* README.md in Resources */ = {isa = PBXBuildFile; fileRef = 45C3E8D127B406D8007A1A0F /* README.md */; };
@@ -1529,8 +1525,6 @@
 		457CBBFC282D27D000ED0F00 /* UploadView.xib in Resources */ = {isa = PBXBuildFile; fileRef = A92F5DA2272C44A000884BDF /* UploadView.xib */; };
 		457CBBFD282D27D000ED0F00 /* MyTicketTableViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 458BAC742770ACAE006C4BC7 /* MyTicketTableViewCell.xib */; };
 		457CBBFE282D27D000ED0F00 /* HeadToHeadCardStatsView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 45A642D627985AAB008EFD5B /* HeadToHeadCardStatsView.xib */; };
-		457CBC02282D27D000ED0F00 /* LoadingMoreTableViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 45726330272B13D7002F2959 /* LoadingMoreTableViewCell.xib */; };
-		457CBC03282D27D000ED0F00 /* MatchLineTableViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 457816A82706679400F66878 /* MatchLineTableViewCell.xib */; };
 		457CBC04282D27D000ED0F00 /* RecentSearchHeaderView.xib in Resources */ = {isa = PBXBuildFile; fileRef = A96B619027A0496C005DC376 /* RecentSearchHeaderView.xib */; };
 		457CBC05282D27D000ED0F00 /* SportSelectionViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = A98D3B29271481A8003BAE6F /* SportSelectionViewController.xib */; };
 		457CBC06282D27D000ED0F00 /* FilterRowView.xib in Resources */ = {isa = PBXBuildFile; fileRef = A92F5D7B271716B900884BDF /* FilterRowView.xib */; };
@@ -2045,7 +2039,6 @@
 		457CBE94282D2CD100ED0F00 /* SimpleListMarketDetailTableViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = A9BCF43C274FB5CC006DD528 /* SimpleListMarketDetailTableViewCell.xib */; };
 		457CBE95282D2CD100ED0F00 /* ActivationAlertScrollableTableViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = A9627A14274564890001E1D5 /* ActivationAlertScrollableTableViewCell.xib */; };
 		457CBE96282D2CD100ED0F00 /* ThreeAwayMarketDetailTableViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 45626E37275541790069B89B /* ThreeAwayMarketDetailTableViewCell.xib */; };
-		457CBE97282D2CD100ED0F00 /* SeeMoreMarketsCollectionViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 45CD7B57271738C7003044C5 /* SeeMoreMarketsCollectionViewCell.xib */; };
 		457CBE99282D2CD100ED0F00 /* PreLiveEventsViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 45D712F127031DDE00AC0364 /* PreLiveEventsViewController.xib */; };
 		457CBE9A282D2CD100ED0F00 /* FullRegisterDocumentsViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = A92F5DA9272C44CD00884BDF /* FullRegisterDocumentsViewController.xib */; };
 		457CBE9B282D2CD100ED0F00 /* README.md in Resources */ = {isa = PBXBuildFile; fileRef = 45C3E8D127B406D8007A1A0F /* README.md */; };
@@ -2059,8 +2052,6 @@
 		457CBEA4282D2CD100ED0F00 /* UploadView.xib in Resources */ = {isa = PBXBuildFile; fileRef = A92F5DA2272C44A000884BDF /* UploadView.xib */; };
 		457CBEA5282D2CD100ED0F00 /* MyTicketTableViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 458BAC742770ACAE006C4BC7 /* MyTicketTableViewCell.xib */; };
 		457CBEA6282D2CD100ED0F00 /* HeadToHeadCardStatsView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 45A642D627985AAB008EFD5B /* HeadToHeadCardStatsView.xib */; };
-		457CBEAA282D2CD100ED0F00 /* LoadingMoreTableViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 45726330272B13D7002F2959 /* LoadingMoreTableViewCell.xib */; };
-		457CBEAB282D2CD100ED0F00 /* MatchLineTableViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 457816A82706679400F66878 /* MatchLineTableViewCell.xib */; };
 		457CBEAC282D2CD100ED0F00 /* RecentSearchHeaderView.xib in Resources */ = {isa = PBXBuildFile; fileRef = A96B619027A0496C005DC376 /* RecentSearchHeaderView.xib */; };
 		457CBEAD282D2CD100ED0F00 /* SportSelectionViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = A98D3B29271481A8003BAE6F /* SportSelectionViewController.xib */; };
 		457CBEAE282D2CD100ED0F00 /* FilterRowView.xib in Resources */ = {isa = PBXBuildFile; fileRef = A92F5D7B271716B900884BDF /* FilterRowView.xib */; };
@@ -2577,7 +2568,6 @@
 		4589C96A282024E400243547 /* SimpleListMarketDetailTableViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = A9BCF43C274FB5CC006DD528 /* SimpleListMarketDetailTableViewCell.xib */; };
 		4589C96B282024E400243547 /* ActivationAlertScrollableTableViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = A9627A14274564890001E1D5 /* ActivationAlertScrollableTableViewCell.xib */; };
 		4589C96C282024E400243547 /* ThreeAwayMarketDetailTableViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 45626E37275541790069B89B /* ThreeAwayMarketDetailTableViewCell.xib */; };
-		4589C96D282024E400243547 /* SeeMoreMarketsCollectionViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 45CD7B57271738C7003044C5 /* SeeMoreMarketsCollectionViewCell.xib */; };
 		4589C96F282024E400243547 /* PreLiveEventsViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 45D712F127031DDE00AC0364 /* PreLiveEventsViewController.xib */; };
 		4589C970282024E400243547 /* FullRegisterDocumentsViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = A92F5DA9272C44CD00884BDF /* FullRegisterDocumentsViewController.xib */; };
 		4589C971282024E400243547 /* README.md in Resources */ = {isa = PBXBuildFile; fileRef = 45C3E8D127B406D8007A1A0F /* README.md */; };
@@ -2591,8 +2581,6 @@
 		4589C97A282024E400243547 /* UploadView.xib in Resources */ = {isa = PBXBuildFile; fileRef = A92F5DA2272C44A000884BDF /* UploadView.xib */; };
 		4589C97B282024E400243547 /* MyTicketTableViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 458BAC742770ACAE006C4BC7 /* MyTicketTableViewCell.xib */; };
 		4589C97C282024E400243547 /* HeadToHeadCardStatsView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 45A642D627985AAB008EFD5B /* HeadToHeadCardStatsView.xib */; };
-		4589C980282024E400243547 /* LoadingMoreTableViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 45726330272B13D7002F2959 /* LoadingMoreTableViewCell.xib */; };
-		4589C981282024E400243547 /* MatchLineTableViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 457816A82706679400F66878 /* MatchLineTableViewCell.xib */; };
 		4589C982282024E400243547 /* RecentSearchHeaderView.xib in Resources */ = {isa = PBXBuildFile; fileRef = A96B619027A0496C005DC376 /* RecentSearchHeaderView.xib */; };
 		4589C983282024E400243547 /* SportSelectionViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = A98D3B29271481A8003BAE6F /* SportSelectionViewController.xib */; };
 		4589C984282024E400243547 /* FilterRowView.xib in Resources */ = {isa = PBXBuildFile; fileRef = A92F5D7B271716B900884BDF /* FilterRowView.xib */; };
@@ -3347,7 +3335,6 @@
 		45A332EA298976BA008181E9 /* SimpleListMarketDetailTableViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = A9BCF43C274FB5CC006DD528 /* SimpleListMarketDetailTableViewCell.xib */; };
 		45A332EB298976BA008181E9 /* ActivationAlertScrollableTableViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = A9627A14274564890001E1D5 /* ActivationAlertScrollableTableViewCell.xib */; };
 		45A332EC298976BA008181E9 /* ThreeAwayMarketDetailTableViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 45626E37275541790069B89B /* ThreeAwayMarketDetailTableViewCell.xib */; };
-		45A332ED298976BA008181E9 /* SeeMoreMarketsCollectionViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 45CD7B57271738C7003044C5 /* SeeMoreMarketsCollectionViewCell.xib */; };
 		45A332EF298976BA008181E9 /* PreLiveEventsViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 45D712F127031DDE00AC0364 /* PreLiveEventsViewController.xib */; };
 		45A332F0298976BA008181E9 /* FullRegisterDocumentsViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = A92F5DA9272C44CD00884BDF /* FullRegisterDocumentsViewController.xib */; };
 		45A332F1298976BA008181E9 /* README.md in Resources */ = {isa = PBXBuildFile; fileRef = 45C3E8D127B406D8007A1A0F /* README.md */; };
@@ -3361,8 +3348,6 @@
 		45A332FA298976BA008181E9 /* UploadView.xib in Resources */ = {isa = PBXBuildFile; fileRef = A92F5DA2272C44A000884BDF /* UploadView.xib */; };
 		45A332FB298976BA008181E9 /* MyTicketTableViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 458BAC742770ACAE006C4BC7 /* MyTicketTableViewCell.xib */; };
 		45A332FC298976BA008181E9 /* HeadToHeadCardStatsView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 45A642D627985AAB008EFD5B /* HeadToHeadCardStatsView.xib */; };
-		45A33300298976BA008181E9 /* LoadingMoreTableViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 45726330272B13D7002F2959 /* LoadingMoreTableViewCell.xib */; };
-		45A33301298976BA008181E9 /* MatchLineTableViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 457816A82706679400F66878 /* MatchLineTableViewCell.xib */; };
 		45A33302298976BA008181E9 /* RecentSearchHeaderView.xib in Resources */ = {isa = PBXBuildFile; fileRef = A96B619027A0496C005DC376 /* RecentSearchHeaderView.xib */; };
 		45A33303298976BA008181E9 /* SportSelectionViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = A98D3B29271481A8003BAE6F /* SportSelectionViewController.xib */; };
 		45A33304298976BA008181E9 /* FilterRowView.xib in Resources */ = {isa = PBXBuildFile; fileRef = A92F5D7B271716B900884BDF /* FilterRowView.xib */; };
@@ -3884,7 +3869,6 @@
 		45A6BDC328246A7500D9B416 /* SimpleListMarketDetailTableViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = A9BCF43C274FB5CC006DD528 /* SimpleListMarketDetailTableViewCell.xib */; };
 		45A6BDC428246A7500D9B416 /* ActivationAlertScrollableTableViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = A9627A14274564890001E1D5 /* ActivationAlertScrollableTableViewCell.xib */; };
 		45A6BDC528246A7500D9B416 /* ThreeAwayMarketDetailTableViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 45626E37275541790069B89B /* ThreeAwayMarketDetailTableViewCell.xib */; };
-		45A6BDC628246A7500D9B416 /* SeeMoreMarketsCollectionViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 45CD7B57271738C7003044C5 /* SeeMoreMarketsCollectionViewCell.xib */; };
 		45A6BDC828246A7500D9B416 /* PreLiveEventsViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 45D712F127031DDE00AC0364 /* PreLiveEventsViewController.xib */; };
 		45A6BDC928246A7500D9B416 /* FullRegisterDocumentsViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = A92F5DA9272C44CD00884BDF /* FullRegisterDocumentsViewController.xib */; };
 		45A6BDCA28246A7500D9B416 /* README.md in Resources */ = {isa = PBXBuildFile; fileRef = 45C3E8D127B406D8007A1A0F /* README.md */; };
@@ -3898,8 +3882,6 @@
 		45A6BDD328246A7500D9B416 /* UploadView.xib in Resources */ = {isa = PBXBuildFile; fileRef = A92F5DA2272C44A000884BDF /* UploadView.xib */; };
 		45A6BDD428246A7500D9B416 /* MyTicketTableViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 458BAC742770ACAE006C4BC7 /* MyTicketTableViewCell.xib */; };
 		45A6BDD528246A7500D9B416 /* HeadToHeadCardStatsView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 45A642D627985AAB008EFD5B /* HeadToHeadCardStatsView.xib */; };
-		45A6BDD928246A7500D9B416 /* LoadingMoreTableViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 45726330272B13D7002F2959 /* LoadingMoreTableViewCell.xib */; };
-		45A6BDDA28246A7500D9B416 /* MatchLineTableViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 457816A82706679400F66878 /* MatchLineTableViewCell.xib */; };
 		45A6BDDB28246A7500D9B416 /* RecentSearchHeaderView.xib in Resources */ = {isa = PBXBuildFile; fileRef = A96B619027A0496C005DC376 /* RecentSearchHeaderView.xib */; };
 		45A6BDDC28246A7500D9B416 /* SportSelectionViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = A98D3B29271481A8003BAE6F /* SportSelectionViewController.xib */; };
 		45A6BDDD28246A7500D9B416 /* FilterRowView.xib in Resources */ = {isa = PBXBuildFile; fileRef = A92F5D7B271716B900884BDF /* FilterRowView.xib */; };
@@ -5105,7 +5087,6 @@
 		45F6BDC62AB3732C00C81DE1 /* ThreeAwayMarketDetailTableViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 45626E37275541790069B89B /* ThreeAwayMarketDetailTableViewCell.xib */; };
 		45F6BDC72AB3732C00C81DE1 /* TinderStyleBetBuilder.html in Resources */ = {isa = PBXBuildFile; fileRef = 45ED1AE52A37781100770CEF /* TinderStyleBetBuilder.html */; };
 		45F6BDC82AB3732C00C81DE1 /* sports-loading.json in Resources */ = {isa = PBXBuildFile; fileRef = 45E46C162A08FEB900BB9B85 /* sports-loading.json */; };
-		45F6BDC92AB3732C00C81DE1 /* SeeMoreMarketsCollectionViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 45CD7B57271738C7003044C5 /* SeeMoreMarketsCollectionViewCell.xib */; };
 		45F6BDCB2AB3732C00C81DE1 /* Betsson-Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 45A3335C298976E3008181E9 /* Betsson-Assets.xcassets */; };
 		45F6BDCC2AB3732C00C81DE1 /* PreLiveEventsViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 45D712F127031DDE00AC0364 /* PreLiveEventsViewController.xib */; };
 		45F6BDCD2AB3732C00C81DE1 /* FullRegisterDocumentsViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = A92F5DA9272C44CD00884BDF /* FullRegisterDocumentsViewController.xib */; };
@@ -5122,8 +5103,6 @@
 		45F6BDDC2AB3732C00C81DE1 /* MyTicketTableViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 458BAC742770ACAE006C4BC7 /* MyTicketTableViewCell.xib */; };
 		45F6BDDD2AB3732C00C81DE1 /* HeadToHeadCardStatsView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 45A642D627985AAB008EFD5B /* HeadToHeadCardStatsView.xib */; };
 		45F6BDDE2AB3732C00C81DE1 /* success_thumbs_up.json in Resources */ = {isa = PBXBuildFile; fileRef = A92BDCF72A163D0100E9B045 /* success_thumbs_up.json */; };
-		45F6BDE22AB3732C00C81DE1 /* LoadingMoreTableViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 45726330272B13D7002F2959 /* LoadingMoreTableViewCell.xib */; };
-		45F6BDE32AB3732C00C81DE1 /* MatchLineTableViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 457816A82706679400F66878 /* MatchLineTableViewCell.xib */; };
 		45F6BDE42AB3732C00C81DE1 /* RecentSearchHeaderView.xib in Resources */ = {isa = PBXBuildFile; fileRef = A96B619027A0496C005DC376 /* RecentSearchHeaderView.xib */; };
 		45F6BDE52AB3732C00C81DE1 /* SportSelectionViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = A98D3B29271481A8003BAE6F /* SportSelectionViewController.xib */; };
 		45F6BDE62AB3732C00C81DE1 /* FilterRowView.xib in Resources */ = {isa = PBXBuildFile; fileRef = A92F5D7B271716B900884BDF /* FilterRowView.xib */; };
@@ -6885,7 +6864,6 @@
 		A9C3431828F9A74A0055360B /* SimpleListMarketDetailTableViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = A9BCF43C274FB5CC006DD528 /* SimpleListMarketDetailTableViewCell.xib */; };
 		A9C3431928F9A74A0055360B /* ActivationAlertScrollableTableViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = A9627A14274564890001E1D5 /* ActivationAlertScrollableTableViewCell.xib */; };
 		A9C3431A28F9A74A0055360B /* ThreeAwayMarketDetailTableViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 45626E37275541790069B89B /* ThreeAwayMarketDetailTableViewCell.xib */; };
-		A9C3431B28F9A74A0055360B /* SeeMoreMarketsCollectionViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 45CD7B57271738C7003044C5 /* SeeMoreMarketsCollectionViewCell.xib */; };
 		A9C3431D28F9A74A0055360B /* PreLiveEventsViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 45D712F127031DDE00AC0364 /* PreLiveEventsViewController.xib */; };
 		A9C3431E28F9A74A0055360B /* FullRegisterDocumentsViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = A92F5DA9272C44CD00884BDF /* FullRegisterDocumentsViewController.xib */; };
 		A9C3431F28F9A74A0055360B /* README.md in Resources */ = {isa = PBXBuildFile; fileRef = 45C3E8D127B406D8007A1A0F /* README.md */; };
@@ -6899,8 +6877,6 @@
 		A9C3432928F9A74A0055360B /* UploadView.xib in Resources */ = {isa = PBXBuildFile; fileRef = A92F5DA2272C44A000884BDF /* UploadView.xib */; };
 		A9C3432A28F9A74A0055360B /* MyTicketTableViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 458BAC742770ACAE006C4BC7 /* MyTicketTableViewCell.xib */; };
 		A9C3432B28F9A74A0055360B /* HeadToHeadCardStatsView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 45A642D627985AAB008EFD5B /* HeadToHeadCardStatsView.xib */; };
-		A9C3432F28F9A74A0055360B /* LoadingMoreTableViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 45726330272B13D7002F2959 /* LoadingMoreTableViewCell.xib */; };
-		A9C3433028F9A74A0055360B /* MatchLineTableViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 457816A82706679400F66878 /* MatchLineTableViewCell.xib */; };
 		A9C3433128F9A74A0055360B /* RecentSearchHeaderView.xib in Resources */ = {isa = PBXBuildFile; fileRef = A96B619027A0496C005DC376 /* RecentSearchHeaderView.xib */; };
 		A9C3433228F9A74A0055360B /* SportSelectionViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = A98D3B29271481A8003BAE6F /* SportSelectionViewController.xib */; };
 		A9C3433328F9A74A0055360B /* FilterRowView.xib in Resources */ = {isa = PBXBuildFile; fileRef = A92F5D7B271716B900884BDF /* FilterRowView.xib */; };
@@ -8011,7 +7987,6 @@
 		CE12A44F2D31347E0022BDF7 /* SimpleListMarketDetailTableViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = A9BCF43C274FB5CC006DD528 /* SimpleListMarketDetailTableViewCell.xib */; };
 		CE12A4502D31347E0022BDF7 /* ActivationAlertScrollableTableViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = A9627A14274564890001E1D5 /* ActivationAlertScrollableTableViewCell.xib */; };
 		CE12A4512D31347E0022BDF7 /* ThreeAwayMarketDetailTableViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 45626E37275541790069B89B /* ThreeAwayMarketDetailTableViewCell.xib */; };
-		CE12A4522D31347E0022BDF7 /* SeeMoreMarketsCollectionViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 45CD7B57271738C7003044C5 /* SeeMoreMarketsCollectionViewCell.xib */; };
 		CE12A4532D31347E0022BDF7 /* PreLiveEventsViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 45D712F127031DDE00AC0364 /* PreLiveEventsViewController.xib */; };
 		CE12A4542D31347E0022BDF7 /* Media.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = CE12A0E32D2D992C0022BDF7 /* Media.xcassets */; };
 		CE12A4552D31347E0022BDF7 /* FullRegisterDocumentsViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = A92F5DA9272C44CD00884BDF /* FullRegisterDocumentsViewController.xib */; };
@@ -8031,9 +8006,7 @@
 		CE12A4632D31347E0022BDF7 /* replay_coin.json in Resources */ = {isa = PBXBuildFile; fileRef = 6531BB8D2C0A295B002C696D /* replay_coin.json */; };
 		CE12A4642D31347E0022BDF7 /* MyTicketTableViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 458BAC742770ACAE006C4BC7 /* MyTicketTableViewCell.xib */; };
 		CE12A4652D31347E0022BDF7 /* HeadToHeadCardStatsView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 45A642D627985AAB008EFD5B /* HeadToHeadCardStatsView.xib */; };
-		CE12A4662D31347E0022BDF7 /* LoadingMoreTableViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 45726330272B13D7002F2959 /* LoadingMoreTableViewCell.xib */; };
 		CE12A4672D31347E0022BDF7 /* Gradients.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = CE12A0E82D302CE90022BDF7 /* Gradients.xcassets */; };
-		CE12A4682D31347E0022BDF7 /* MatchLineTableViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 457816A82706679400F66878 /* MatchLineTableViewCell.xib */; };
 		CE12A4692D31347E0022BDF7 /* RecentSearchHeaderView.xib in Resources */ = {isa = PBXBuildFile; fileRef = A96B619027A0496C005DC376 /* RecentSearchHeaderView.xib */; };
 		CE12A46A2D31347E0022BDF7 /* SportSelectionViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = A98D3B29271481A8003BAE6F /* SportSelectionViewController.xib */; };
 		CE12A46B2D31347E0022BDF7 /* FilterRowView.xib in Resources */ = {isa = PBXBuildFile; fileRef = A92F5D7B271716B900884BDF /* FilterRowView.xib */; };
@@ -9082,7 +9055,6 @@
 		CEA569212D5A58D800696793 /* SimpleListMarketDetailTableViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = A9BCF43C274FB5CC006DD528 /* SimpleListMarketDetailTableViewCell.xib */; };
 		CEA569222D5A58D800696793 /* ActivationAlertScrollableTableViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = A9627A14274564890001E1D5 /* ActivationAlertScrollableTableViewCell.xib */; };
 		CEA569232D5A58D800696793 /* ThreeAwayMarketDetailTableViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 45626E37275541790069B89B /* ThreeAwayMarketDetailTableViewCell.xib */; };
-		CEA569242D5A58D800696793 /* SeeMoreMarketsCollectionViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 45CD7B57271738C7003044C5 /* SeeMoreMarketsCollectionViewCell.xib */; };
 		CEA569252D5A58D800696793 /* PreLiveEventsViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 45D712F127031DDE00AC0364 /* PreLiveEventsViewController.xib */; };
 		CEA569262D5A58D800696793 /* FullRegisterDocumentsViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = A92F5DA9272C44CD00884BDF /* FullRegisterDocumentsViewController.xib */; };
 		CEA569272D5A58D800696793 /* README.md in Resources */ = {isa = PBXBuildFile; fileRef = 45C3E8D127B406D8007A1A0F /* README.md */; };
@@ -9101,8 +9073,6 @@
 		CEA569342D5A58D800696793 /* replay_coin.json in Resources */ = {isa = PBXBuildFile; fileRef = 6531BB8D2C0A295B002C696D /* replay_coin.json */; };
 		CEA569352D5A58D800696793 /* MyTicketTableViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 458BAC742770ACAE006C4BC7 /* MyTicketTableViewCell.xib */; };
 		CEA569362D5A58D800696793 /* HeadToHeadCardStatsView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 45A642D627985AAB008EFD5B /* HeadToHeadCardStatsView.xib */; };
-		CEA569372D5A58D800696793 /* LoadingMoreTableViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 45726330272B13D7002F2959 /* LoadingMoreTableViewCell.xib */; };
-		CEA5693A2D5A58D800696793 /* MatchLineTableViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 457816A82706679400F66878 /* MatchLineTableViewCell.xib */; };
 		CEA5693B2D5A58D800696793 /* RecentSearchHeaderView.xib in Resources */ = {isa = PBXBuildFile; fileRef = A96B619027A0496C005DC376 /* RecentSearchHeaderView.xib */; };
 		CEA5693C2D5A58D800696793 /* SportSelectionViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = A98D3B29271481A8003BAE6F /* SportSelectionViewController.xib */; };
 		CEA5693D2D5A58D800696793 /* FilterRowView.xib in Resources */ = {isa = PBXBuildFile; fileRef = A92F5D7B271716B900884BDF /* FilterRowView.xib */; };
@@ -9525,11 +9495,9 @@
 		456D6FC8289ACE5600B7E542 /* MessageDetailWebViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MessageDetailWebViewController.swift; sourceTree = "<group>"; };
 		45711906294B9A27000395F0 /* BetType.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BetType.swift; sourceTree = "<group>"; };
 		4572632F272B13D7002F2959 /* LoadingMoreTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoadingMoreTableViewCell.swift; sourceTree = "<group>"; };
-		45726330272B13D7002F2959 /* LoadingMoreTableViewCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = LoadingMoreTableViewCell.xib; sourceTree = "<group>"; };
 		45726335272C0998002F2959 /* LiveEventsViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LiveEventsViewModel.swift; sourceTree = "<group>"; };
 		4572633C272C2220002F2959 /* MatchInfo.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MatchInfo.swift; sourceTree = "<group>"; };
 		457816A72706679400F66878 /* MatchLineTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MatchLineTableViewCell.swift; sourceTree = "<group>"; };
-		457816A82706679400F66878 /* MatchLineTableViewCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = MatchLineTableViewCell.xib; sourceTree = "<group>"; };
 		457816AD2706699900F66878 /* MatchWidgetCollectionViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MatchWidgetCollectionViewCell.swift; sourceTree = "<group>"; };
 		457816AE2706699900F66878 /* MatchWidgetCollectionViewCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = MatchWidgetCollectionViewCell.xib; sourceTree = "<group>"; };
 		457816B32707631000F66878 /* TournamentTableViewHeader.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TournamentTableViewHeader.swift; sourceTree = "<group>"; };
@@ -9734,7 +9702,6 @@
 		45CD7B4C2716F5CB003044C5 /* OddTripleCollectionViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = OddTripleCollectionViewCell.swift; sourceTree = "<group>"; };
 		45CD7B4D2716F5CB003044C5 /* OddTripleCollectionViewCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = OddTripleCollectionViewCell.xib; sourceTree = "<group>"; };
 		45CD7B56271738C7003044C5 /* SeeMoreMarketsCollectionViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SeeMoreMarketsCollectionViewCell.swift; sourceTree = "<group>"; };
-		45CD7B57271738C7003044C5 /* SeeMoreMarketsCollectionViewCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = SeeMoreMarketsCollectionViewCell.xib; sourceTree = "<group>"; };
 		45CE4DCD2B04DDB8005C2414 /* SecundaryMarketDetails.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SecundaryMarketDetails.swift; sourceTree = "<group>"; };
 		45CE4DD62B04E357005C2414 /* SecundaryMarketsService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SecundaryMarketsService.swift; sourceTree = "<group>"; };
 		45CE91482A2F3B4B00BB3AB7 /* StoriesFullScreenViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StoriesFullScreenViewController.swift; sourceTree = "<group>"; };
@@ -12588,7 +12555,6 @@
 				4515901A2CC1BC9E008EF4C3 /* TypedCells */,
 				A9A43C922A4B3106008FB399 /* Lists */,
 				457816A72706679400F66878 /* MatchLineTableViewCell.swift */,
-				457816A82706679400F66878 /* MatchLineTableViewCell.xib */,
 				457816AD2706699900F66878 /* MatchWidgetCollectionViewCell.swift */,
 				457816AE2706699900F66878 /* MatchWidgetCollectionViewCell.xib */,
 				450FC3DC2A2A3899000DB866 /* MatchWidgetContainerTableViewCell.swift */,
@@ -12598,9 +12564,7 @@
 				454E091027EDF45200391560 /* LargeOutrightTournaments */,
 				45CD7B5C27173D81003044C5 /* Banner */,
 				45CD7B56271738C7003044C5 /* SeeMoreMarketsCollectionViewCell.swift */,
-				45CD7B57271738C7003044C5 /* SeeMoreMarketsCollectionViewCell.xib */,
 				4572632F272B13D7002F2959 /* LoadingMoreTableViewCell.swift */,
-				45726330272B13D7002F2959 /* LoadingMoreTableViewCell.xib */,
 				A96279FD27440F300001E1D5 /* EmailVerificationTableViewCell.swift */,
 				A96279FE27440F300001E1D5 /* EmailVerificationTableViewCell.xib */,
 				A9627A0A274548610001E1D5 /* ActivationAlertCollectionViewCell.swift */,
@@ -15212,7 +15176,6 @@
 				450B7AC028F58574009229E3 /* SimpleListMarketDetailTableViewCell.xib in Resources */,
 				450B7AC128F58574009229E3 /* ActivationAlertScrollableTableViewCell.xib in Resources */,
 				450B7AC228F58574009229E3 /* ThreeAwayMarketDetailTableViewCell.xib in Resources */,
-				450B7AC328F58574009229E3 /* SeeMoreMarketsCollectionViewCell.xib in Resources */,
 				450B7AC528F58574009229E3 /* PreLiveEventsViewController.xib in Resources */,
 				CE12A0E42D2D992C0022BDF7 /* Media.xcassets in Resources */,
 				450B7AC628F58574009229E3 /* FullRegisterDocumentsViewController.xib in Resources */,
@@ -15232,7 +15195,6 @@
 				6531BB902C0A295B002C696D /* replay_coin.json in Resources */,
 				450B7AD228F58574009229E3 /* MyTicketTableViewCell.xib in Resources */,
 				450B7AD328F58574009229E3 /* HeadToHeadCardStatsView.xib in Resources */,
-				450B7AD728F58574009229E3 /* LoadingMoreTableViewCell.xib in Resources */,
 				CE0C6CE02D56377800EAD26B /* avatar5-dark.json in Resources */,
 				CE0C6CE12D56377800EAD26B /* avatar3-light.json in Resources */,
 				CE0C6CE22D56377800EAD26B /* avatar4-dark.json in Resources */,
@@ -15246,7 +15208,6 @@
 				CE0C6CEA2D56377800EAD26B /* avatar5-light.json in Resources */,
 				CE0C6CEB2D56377800EAD26B /* avatar3-dark.json in Resources */,
 				CE12A0EB2D302CE90022BDF7 /* Gradients.xcassets in Resources */,
-				450B7AD828F58574009229E3 /* MatchLineTableViewCell.xib in Resources */,
 				450B7AD928F58574009229E3 /* RecentSearchHeaderView.xib in Resources */,
 				450B7ADA28F58574009229E3 /* SportSelectionViewController.xib in Resources */,
 				450B7ADB28F58574009229E3 /* FilterRowView.xib in Resources */,
@@ -15380,7 +15341,6 @@
 				457CBBEB282D27D000ED0F00 /* SimpleListMarketDetailTableViewCell.xib in Resources */,
 				457CBBEC282D27D000ED0F00 /* ActivationAlertScrollableTableViewCell.xib in Resources */,
 				457CBBED282D27D000ED0F00 /* ThreeAwayMarketDetailTableViewCell.xib in Resources */,
-				457CBBEE282D27D000ED0F00 /* SeeMoreMarketsCollectionViewCell.xib in Resources */,
 				457CBBF0282D27D000ED0F00 /* PreLiveEventsViewController.xib in Resources */,
 				450FC3EA2A2A6737000DB866 /* DummyImages.xcassets in Resources */,
 				457CBBF1282D27D000ED0F00 /* FullRegisterDocumentsViewController.xib in Resources */,
@@ -15399,8 +15359,6 @@
 				457CBBFC282D27D000ED0F00 /* UploadView.xib in Resources */,
 				457CBBFD282D27D000ED0F00 /* MyTicketTableViewCell.xib in Resources */,
 				457CBBFE282D27D000ED0F00 /* HeadToHeadCardStatsView.xib in Resources */,
-				457CBC02282D27D000ED0F00 /* LoadingMoreTableViewCell.xib in Resources */,
-				457CBC03282D27D000ED0F00 /* MatchLineTableViewCell.xib in Resources */,
 				457CBC04282D27D000ED0F00 /* RecentSearchHeaderView.xib in Resources */,
 				457CBC05282D27D000ED0F00 /* SportSelectionViewController.xib in Resources */,
 				457CBC06282D27D000ED0F00 /* FilterRowView.xib in Resources */,
@@ -15521,7 +15479,6 @@
 				457CBE94282D2CD100ED0F00 /* SimpleListMarketDetailTableViewCell.xib in Resources */,
 				457CBE95282D2CD100ED0F00 /* ActivationAlertScrollableTableViewCell.xib in Resources */,
 				457CBE96282D2CD100ED0F00 /* ThreeAwayMarketDetailTableViewCell.xib in Resources */,
-				457CBE97282D2CD100ED0F00 /* SeeMoreMarketsCollectionViewCell.xib in Resources */,
 				457CBE99282D2CD100ED0F00 /* PreLiveEventsViewController.xib in Resources */,
 				457CBE9A282D2CD100ED0F00 /* FullRegisterDocumentsViewController.xib in Resources */,
 				450FC3EB2A2A6737000DB866 /* DummyImages.xcassets in Resources */,
@@ -15540,8 +15497,6 @@
 				457CBEA4282D2CD100ED0F00 /* UploadView.xib in Resources */,
 				457CBEA5282D2CD100ED0F00 /* MyTicketTableViewCell.xib in Resources */,
 				457CBEA6282D2CD100ED0F00 /* HeadToHeadCardStatsView.xib in Resources */,
-				457CBEAA282D2CD100ED0F00 /* LoadingMoreTableViewCell.xib in Resources */,
-				457CBEAB282D2CD100ED0F00 /* MatchLineTableViewCell.xib in Resources */,
 				457CBEAC282D2CD100ED0F00 /* RecentSearchHeaderView.xib in Resources */,
 				457CBEAD282D2CD100ED0F00 /* SportSelectionViewController.xib in Resources */,
 				457CBEAE282D2CD100ED0F00 /* FilterRowView.xib in Resources */,
@@ -15662,7 +15617,6 @@
 				4589C96A282024E400243547 /* SimpleListMarketDetailTableViewCell.xib in Resources */,
 				4589C96B282024E400243547 /* ActivationAlertScrollableTableViewCell.xib in Resources */,
 				4589C96C282024E400243547 /* ThreeAwayMarketDetailTableViewCell.xib in Resources */,
-				4589C96D282024E400243547 /* SeeMoreMarketsCollectionViewCell.xib in Resources */,
 				4589C96F282024E400243547 /* PreLiveEventsViewController.xib in Resources */,
 				4589C970282024E400243547 /* FullRegisterDocumentsViewController.xib in Resources */,
 				4589C971282024E400243547 /* README.md in Resources */,
@@ -15682,8 +15636,6 @@
 				4589C97A282024E400243547 /* UploadView.xib in Resources */,
 				4589C97B282024E400243547 /* MyTicketTableViewCell.xib in Resources */,
 				4589C97C282024E400243547 /* HeadToHeadCardStatsView.xib in Resources */,
-				4589C980282024E400243547 /* LoadingMoreTableViewCell.xib in Resources */,
-				4589C981282024E400243547 /* MatchLineTableViewCell.xib in Resources */,
 				4589C982282024E400243547 /* RecentSearchHeaderView.xib in Resources */,
 				4589C983282024E400243547 /* SportSelectionViewController.xib in Resources */,
 				4589C984282024E400243547 /* FilterRowView.xib in Resources */,
@@ -15820,7 +15772,6 @@
 				45A332EC298976BA008181E9 /* ThreeAwayMarketDetailTableViewCell.xib in Resources */,
 				45ED1AE62A37781100770CEF /* TinderStyleBetBuilder.html in Resources */,
 				45E46C172A08FEB900BB9B85 /* sports-loading.json in Resources */,
-				45A332ED298976BA008181E9 /* SeeMoreMarketsCollectionViewCell.xib in Resources */,
 				45A33363298976E3008181E9 /* Betsson-Assets.xcassets in Resources */,
 				45A332EF298976BA008181E9 /* PreLiveEventsViewController.xib in Resources */,
 				45A332F0298976BA008181E9 /* FullRegisterDocumentsViewController.xib in Resources */,
@@ -15837,8 +15788,6 @@
 				45A332FB298976BA008181E9 /* MyTicketTableViewCell.xib in Resources */,
 				45A332FC298976BA008181E9 /* HeadToHeadCardStatsView.xib in Resources */,
 				A92BDCF82A163D0200E9B045 /* success_thumbs_up.json in Resources */,
-				45A33300298976BA008181E9 /* LoadingMoreTableViewCell.xib in Resources */,
-				45A33301298976BA008181E9 /* MatchLineTableViewCell.xib in Resources */,
 				45A33302298976BA008181E9 /* RecentSearchHeaderView.xib in Resources */,
 				45A33303298976BA008181E9 /* SportSelectionViewController.xib in Resources */,
 				45A33304298976BA008181E9 /* FilterRowView.xib in Resources */,
@@ -15962,7 +15911,6 @@
 				45A6BDC328246A7500D9B416 /* SimpleListMarketDetailTableViewCell.xib in Resources */,
 				45A6BDC428246A7500D9B416 /* ActivationAlertScrollableTableViewCell.xib in Resources */,
 				45A6BDC528246A7500D9B416 /* ThreeAwayMarketDetailTableViewCell.xib in Resources */,
-				45A6BDC628246A7500D9B416 /* SeeMoreMarketsCollectionViewCell.xib in Resources */,
 				45A6BDC828246A7500D9B416 /* PreLiveEventsViewController.xib in Resources */,
 				45A6BDC928246A7500D9B416 /* FullRegisterDocumentsViewController.xib in Resources */,
 				45A6BDCA28246A7500D9B416 /* README.md in Resources */,
@@ -15981,10 +15929,8 @@
 				6531BB932C0A295B002C696D /* replay_coin.json in Resources */,
 				45A6BDD428246A7500D9B416 /* MyTicketTableViewCell.xib in Resources */,
 				45A6BDD528246A7500D9B416 /* HeadToHeadCardStatsView.xib in Resources */,
-				45A6BDD928246A7500D9B416 /* LoadingMoreTableViewCell.xib in Resources */,
 				45A6BE3528246AFA00D9B416 /* Colors.xcassets in Resources */,
 				45A6BE3728246AFA00D9B416 /* GoogleService-Info.plist in Resources */,
-				45A6BDDA28246A7500D9B416 /* MatchLineTableViewCell.xib in Resources */,
 				45A6BDDB28246A7500D9B416 /* RecentSearchHeaderView.xib in Resources */,
 				45A6BDDC28246A7500D9B416 /* SportSelectionViewController.xib in Resources */,
 				45A6BDDD28246A7500D9B416 /* FilterRowView.xib in Resources */,
@@ -16120,7 +16066,6 @@
 				45F6BDC62AB3732C00C81DE1 /* ThreeAwayMarketDetailTableViewCell.xib in Resources */,
 				45F6BDC72AB3732C00C81DE1 /* TinderStyleBetBuilder.html in Resources */,
 				45F6BDC82AB3732C00C81DE1 /* sports-loading.json in Resources */,
-				45F6BDC92AB3732C00C81DE1 /* SeeMoreMarketsCollectionViewCell.xib in Resources */,
 				CE12A0E62D2D99B60022BDF7 /* Media.xcassets in Resources */,
 				45F6BDCB2AB3732C00C81DE1 /* Betsson-Assets.xcassets in Resources */,
 				45F6BDCC2AB3732C00C81DE1 /* PreLiveEventsViewController.xib in Resources */,
@@ -16139,8 +16084,6 @@
 				45F6BDDC2AB3732C00C81DE1 /* MyTicketTableViewCell.xib in Resources */,
 				45F6BDDD2AB3732C00C81DE1 /* HeadToHeadCardStatsView.xib in Resources */,
 				45F6BDDE2AB3732C00C81DE1 /* success_thumbs_up.json in Resources */,
-				45F6BDE22AB3732C00C81DE1 /* LoadingMoreTableViewCell.xib in Resources */,
-				45F6BDE32AB3732C00C81DE1 /* MatchLineTableViewCell.xib in Resources */,
 				45F6BDE42AB3732C00C81DE1 /* RecentSearchHeaderView.xib in Resources */,
 				45F6BDE52AB3732C00C81DE1 /* SportSelectionViewController.xib in Resources */,
 				45F6BDE62AB3732C00C81DE1 /* FilterRowView.xib in Resources */,
@@ -16289,7 +16232,6 @@
 				A9C3431828F9A74A0055360B /* SimpleListMarketDetailTableViewCell.xib in Resources */,
 				A9C3431928F9A74A0055360B /* ActivationAlertScrollableTableViewCell.xib in Resources */,
 				A9C3431A28F9A74A0055360B /* ThreeAwayMarketDetailTableViewCell.xib in Resources */,
-				A9C3431B28F9A74A0055360B /* SeeMoreMarketsCollectionViewCell.xib in Resources */,
 				45ED1AE92A37781100770CEF /* TinderStyleBetBuilder.html in Resources */,
 				45E46C1A2A08FEB900BB9B85 /* sports-loading.json in Resources */,
 				A9C3431D28F9A74A0055360B /* PreLiveEventsViewController.xib in Resources */,
@@ -16310,8 +16252,6 @@
 				A9C3432A28F9A74A0055360B /* MyTicketTableViewCell.xib in Resources */,
 				A9C3432B28F9A74A0055360B /* HeadToHeadCardStatsView.xib in Resources */,
 				A92BDCFB2A163D0200E9B045 /* success_thumbs_up.json in Resources */,
-				A9C3432F28F9A74A0055360B /* LoadingMoreTableViewCell.xib in Resources */,
-				A9C3433028F9A74A0055360B /* MatchLineTableViewCell.xib in Resources */,
 				A9C3433128F9A74A0055360B /* RecentSearchHeaderView.xib in Resources */,
 				A9C3433228F9A74A0055360B /* SportSelectionViewController.xib in Resources */,
 				A9C3433328F9A74A0055360B /* FilterRowView.xib in Resources */,
@@ -16432,7 +16372,6 @@
 				CE12A44F2D31347E0022BDF7 /* SimpleListMarketDetailTableViewCell.xib in Resources */,
 				CE12A4502D31347E0022BDF7 /* ActivationAlertScrollableTableViewCell.xib in Resources */,
 				CE12A4512D31347E0022BDF7 /* ThreeAwayMarketDetailTableViewCell.xib in Resources */,
-				CE12A4522D31347E0022BDF7 /* SeeMoreMarketsCollectionViewCell.xib in Resources */,
 				CE12A4532D31347E0022BDF7 /* PreLiveEventsViewController.xib in Resources */,
 				CE12A4542D31347E0022BDF7 /* Media.xcassets in Resources */,
 				CE12A4552D31347E0022BDF7 /* FullRegisterDocumentsViewController.xib in Resources */,
@@ -16452,7 +16391,6 @@
 				CE12A4632D31347E0022BDF7 /* replay_coin.json in Resources */,
 				CE12A4642D31347E0022BDF7 /* MyTicketTableViewCell.xib in Resources */,
 				CE12A4652D31347E0022BDF7 /* HeadToHeadCardStatsView.xib in Resources */,
-				CE12A4662D31347E0022BDF7 /* LoadingMoreTableViewCell.xib in Resources */,
 				CE0C6CD42D56377800EAD26B /* avatar5-dark.json in Resources */,
 				CE0C6CD52D56377800EAD26B /* avatar3-light.json in Resources */,
 				CE0C6CD62D56377800EAD26B /* avatar4-dark.json in Resources */,
@@ -16466,7 +16404,6 @@
 				CE0C6CDE2D56377800EAD26B /* avatar5-light.json in Resources */,
 				CE0C6CDF2D56377800EAD26B /* avatar3-dark.json in Resources */,
 				CE12A4672D31347E0022BDF7 /* Gradients.xcassets in Resources */,
-				CE12A4682D31347E0022BDF7 /* MatchLineTableViewCell.xib in Resources */,
 				CE12A4692D31347E0022BDF7 /* RecentSearchHeaderView.xib in Resources */,
 				CE12A46A2D31347E0022BDF7 /* SportSelectionViewController.xib in Resources */,
 				CE12A46B2D31347E0022BDF7 /* FilterRowView.xib in Resources */,
@@ -16589,7 +16526,6 @@
 				CEA569212D5A58D800696793 /* SimpleListMarketDetailTableViewCell.xib in Resources */,
 				CEA569222D5A58D800696793 /* ActivationAlertScrollableTableViewCell.xib in Resources */,
 				CEA569232D5A58D800696793 /* ThreeAwayMarketDetailTableViewCell.xib in Resources */,
-				CEA569242D5A58D800696793 /* SeeMoreMarketsCollectionViewCell.xib in Resources */,
 				CEA569252D5A58D800696793 /* PreLiveEventsViewController.xib in Resources */,
 				CEA569262D5A58D800696793 /* FullRegisterDocumentsViewController.xib in Resources */,
 				CEA569272D5A58D800696793 /* README.md in Resources */,
@@ -16627,8 +16563,6 @@
 				CEA569342D5A58D800696793 /* replay_coin.json in Resources */,
 				CEA569352D5A58D800696793 /* MyTicketTableViewCell.xib in Resources */,
 				CEA569362D5A58D800696793 /* HeadToHeadCardStatsView.xib in Resources */,
-				CEA569372D5A58D800696793 /* LoadingMoreTableViewCell.xib in Resources */,
-				CEA5693A2D5A58D800696793 /* MatchLineTableViewCell.xib in Resources */,
 				CEA5693B2D5A58D800696793 /* RecentSearchHeaderView.xib in Resources */,
 				CEA5693C2D5A58D800696793 /* SportSelectionViewController.xib in Resources */,
 				CEA5693D2D5A58D800696793 /* FilterRowView.xib in Resources */,
