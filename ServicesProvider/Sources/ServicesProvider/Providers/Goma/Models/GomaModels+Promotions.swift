@@ -177,8 +177,8 @@ extension GomaModels {
         }
     }
     
-    typealias HeroCards = [HeroCard]
-    struct HeroCard: Identifiable, Equatable, Hashable, Codable {
+    typealias HeroCardPointers = [HeroCardPointer]
+    struct HeroCardPointer: Identifiable, Equatable, Hashable, Codable {
         
         let id: Int
         let eventId: String

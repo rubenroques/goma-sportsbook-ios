@@ -442,7 +442,7 @@ class ClientManagedHomeViewTemplateDataSource {
 
     func fetchHeroMatches() {
         
-        let cancellable = Env.servicesProvider.getHeroGameEvent()
+        let cancellable = Env.servicesProvider.getHeroCards()
             .receive(on: DispatchQueue.main)
             .map(ServiceProviderModelMapper.matches(fromEvents:))
             .compactMap({ $0 })

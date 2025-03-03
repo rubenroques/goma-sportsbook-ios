@@ -23,7 +23,7 @@ public struct PromotionsContent: Codable, Equatable, Hashable {
     public let alertBanner: AlertBanner?
 
     /// Promotional banners
-    public let banners: [Banner]
+    public let banners: Banners
 
     /// Sport-specific banners
     public let carouselEvents: CarouselEvents
@@ -32,19 +32,19 @@ public struct PromotionsContent: Codable, Equatable, Hashable {
     public let highlightedEvents: [HighlightedEventData]
 
     /// Expert betting picks
-    public let proChoices: [ProChoice]
+    public let proChoices: ProChoiceItems
 
     /// Boosted odds promotions
-    public let boostedOddsBanners: [BoostedOddsBanner]
+    public let boostedOddsBanners: BoostedOddsBanners
 
     /// Featured hero card promotions
-    public let heroCards: [HeroCard]
+    public let heroCardPointers: HeroCardPointers
 
     /// Promotional stories
-    public let stories: [Story]
+    public let stories: Stories
 
     /// News items
-    public let news: [NewsItem]
+    public let news: NewsItems
 
 }
 

@@ -7,6 +7,8 @@
 
 import Foundation
 
+public typealias ProChoiceItems = [ProChoice]
+
 /// Expert betting tip
 public struct ProChoice: Identifiable, Equatable, Hashable, Codable {
     /// Unique identifier based on the sport event

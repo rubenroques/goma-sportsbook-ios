@@ -100,12 +100,12 @@ extension GomaModelMapper {
 
     // MARK: - Hero Cards
 
-    static func heroCards(fromInternalHeroCards cards: [GomaModels.HeroCard]) -> [HeroCard] {
-        return cards.map { heroCard(fromInternalHeroCard: $0) }
+    static func heroCardPointers(fromInternalHeroCardPointers cards: [GomaModels.HeroCardPointer]) -> [HeroCardPointer] {
+        return cards.map { heroCardPointer(fromInternalHeroCardPointer: $0) }
     }
 
-    static func heroCard(fromInternalHeroCard heroCard: GomaModels.HeroCard) -> HeroCard {
-        return HeroCard.init(
+    static func heroCardPointer(fromInternalHeroCardPointer heroCard: GomaModels.HeroCardPointer) -> HeroCardPointer {
+        return HeroCardPointer.init(
             id: String(heroCard.id),
             eventId: heroCard.eventId,
             eventMarketIds: heroCard.eventMarketIds,

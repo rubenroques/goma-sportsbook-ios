@@ -116,8 +116,12 @@ class GomaAPIPromotionsClient {
     /// For testing purposes - get the URLRequest for an endpoint without executing it
     /// - Parameter endpoint: The endpoint to create a request for
     /// - Returns: The URLRequest that would be used for the endpoint
-    func requestFor(_ endpoint: GomaAPIPromotionsSchema) -> URLRequest? {
+    func requestFor(_ endpoint: Endpoint) -> URLRequest? {
         return endpoint.request()
+    }
+    
+    func requestPublisher<T: Codable>(_ endpoint: Endpoint) -> AnyPublisher<T, ServiceProviderError> {
+        return self.connector.request(endpoint)
     }
 
     // MARK: - API Methods
@@ -167,7 +171,7 @@ class GomaAPIPromotionsClient {
 
     /// Get hero cards
     /// - Returns: A publisher with the decoded response or error
-    func heroCards() -> AnyPublisher<GomaModels.HeroCards, ServiceProviderError> {
+    func heroCards() -> AnyPublisher<GomaModels.HeroCardPointers, ServiceProviderError> {
         let endpoint = GomaAPIPromotionsSchema.heroCards
         return self.connector.request(endpoint)
     }

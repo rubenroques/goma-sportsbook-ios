@@ -29,7 +29,7 @@ extension GomaModels {
         let highlightedEvents: [HighlightedEventData]
         let proChoices: [GomaModels.ProChoice]
         let boostedOddsBanners: [GomaModels.BoostedOddsBanner]
-        let heroCards: [GomaModels.HeroCard]
+        let heroCardPointers: GomaModels.HeroCardPointers
         let stories: [GomaModels.Story]
         let news: [GomaModels.NewsItem]
 
@@ -40,7 +40,7 @@ extension GomaModels {
             case highlightedEvents = "highlighted_events"
             case proChoices = "pro_choices"
             case boostedOddsBanners = "boosted_odds_banners"
-            case heroCards = "hero_cards"
+            case heroCardPointers = "hero_cards"
             case stories
             case news
         }

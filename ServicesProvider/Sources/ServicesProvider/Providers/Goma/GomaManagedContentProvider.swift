@@ -103,13 +103,23 @@ class GomaManagedContentProvider: ManagedContentProvider {
             .eraseToAnyPublisher()
     }
 
-    func getHeroCards() -> AnyPublisher<[HeroCard], ServiceProviderError> {
-
+    func getHeroCardPointers() -> AnyPublisher<HeroCardPointers, ServiceProviderError> {
         return self.apiClient.heroCards()
-            .map({ internalHeroCards in
-                return GomaModelMapper.heroCards(fromInternalHeroCards: internalHeroCards)
+            .map({ internalHeroCardPointers in
+                return GomaModelMapper.heroCardPointers(fromInternalHeroCardPointers: internalHeroCardPointers)
             })
             .eraseToAnyPublisher()
+    }
+    
+    func getHeroCards() -> AnyPublisher<[Event], ServiceProviderError> {
+        let endpoint = GomaAPISchema.getHeroCards
+        let publisher: AnyPublisher<[GomaModels.HeroCardEvents], ServiceProviderError> = self.apiClient.requestPublisher(endpoint)
+        return publisher.print("getHeroCards").map({ heroCardEvents in
+            let convertedEvents = heroCardEvents.map({
+                return GomaModelMapper.event(fromInternalHeroCardEvent: $0)
+            })
+            return convertedEvents
+        }).eraseToAnyPublisher()
     }
 
     func getStories() -> AnyPublisher<[Story], ServiceProviderError> {

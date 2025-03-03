@@ -1,5 +1,5 @@
 //
-//  DummyWidgetShowcaseHomeViewTemplateDataSource.swift
+//  CMSManagedHomeViewTemplateDataSource.swift
 //  Sportsbook
 //
 //  Created by Ruben Roques on 24/05/2023.
@@ -9,17 +9,10 @@ import Foundation
 import Combine
 import ServicesProvider
 
-class DummyWidgetShowcaseHomeViewTemplateDataSource {
+class CMSManagedHomeViewTemplateDataSource {
 
-    // Define the array mapping sections to content types
-    private var contentTypes: [HomeViewModel.Content] {
-        switch TargetVariables.homeTemplateBuilder {
-        case .backendDynamic, .locallyManaged, .cmsManaged:
-            return []
-        case .dummyWidgetShowcase(widgets: let widgets):
-            return widgets
-        }
-    }
+    // Dynamic content types array populated from CMS
+    private var contentTypes: [HomeViewModel.Content] = []
 
     private var fixedSections: Int {
         return self.contentTypes.count
@@ -29,39 +22,6 @@ class DummyWidgetShowcaseHomeViewTemplateDataSource {
 
     // User Alert
     private var alertsArray: [ActivationAlert] = []
-
-    // Video News
-    private lazy var videoNewsLineCellViewModel: VideoPreviewLineCellViewModel = {
-        // Create mock video content
-        let mockVideos: [VideoItemFeedContent] = [
-            VideoItemFeedContent(
-                title: "Madrid Derby Preview",
-                description: "Real Madrid vs Atletico",
-                imageURL: "https://img.youtube.com/vi/qmkOkbpxQ7M/maxresdefault.jpg",
-                streamURL: "https://www.youtube.com/embed/qmkOkbpxQ7M"
-            ),
-            VideoItemFeedContent(
-                title: "Al-Nassr Match Highlights",
-                description: "Saudi Pro League Action",
-                imageURL: "https://img.youtube.com/vi/WZ9hhG1Mh_Y/maxresdefault.jpg",
-                streamURL: "https://www.youtube.com/embed/WZ9hhG1Mh_Y"
-            ),
-            VideoItemFeedContent(
-                title: "Cholet vs Strasbourg",
-                description: "Betclic Elite Basketball",
-                imageURL: "https://img.youtube.com/vi/dg9kzzGQusA/maxresdefault.jpg",
-                streamURL: "https://www.youtube.com/embed/dg9kzzGQusA"
-            ),
-            VideoItemFeedContent(
-                title: "Joshua vs Povetkin",
-                description: "Full Fight Highlights",
-                imageURL: "https://img.youtube.com/vi/kykzl5WbZMA/maxresdefault.jpg",
-                streamURL: "https://www.youtube.com/embed/kykzl5WbZMA"
-            )
-        ]
-
-        return VideoPreviewLineCellViewModel(title: "Video Highlights", videoItemFeedContents: mockVideos)
-    }()
 
     // Banners
     private var banners: [BannerInfo] = [] {
@@ -210,7 +170,8 @@ class DummyWidgetShowcaseHomeViewTemplateDataSource {
     private var cancellables: Set<AnyCancellable> = []
 
     init() {
-        self.refreshData()
+        // First, fetch the home template from the CMS
+        fetchHomeTemplate()
 
         // Banners are associated with profile publisher
         let profileCancellable = Env.userSessionStore.userProfilePublisher
@@ -221,13 +182,97 @@ class DummyWidgetShowcaseHomeViewTemplateDataSource {
             }
 
         self.addCancellable(profileCancellable)
+    }
 
-        // Alerts are associated with KYC publisher
-        self.fetchAlerts()
+    // Fetch the home template from the CMS
+    private func fetchHomeTemplate() {
+        let homeTemplateCancellable = Env.servicesProvider.getHomeTemplate()
+            .receive(on: DispatchQueue.main)
+            .sink(receiveCompletion: { [weak self] completion in
+                if case .failure(let error) = completion {
+                    print("Error fetching home template: \(error)")
+                    // Use default template as fallback
+                    self?.setDefaultContentTypes()
+                    self?.refreshData()
+                }
+            }, receiveValue: { [weak self] homeTemplate in
+                self?.processHomeTemplate(homeTemplate)
+                self?.refreshData()
+            })
+
+        self.addCancellable(homeTemplateCancellable)
+    }
+
+    // Process the home template received from the CMS
+    private func processHomeTemplate(_ homeTemplate: HomeTemplate) {
+        // Sort widgets by sortOrder
+        let sortedWidgets = homeTemplate.widgets.sorted { $0.sortOrder < $1.sortOrder }
+
+        // Convert CMS widgets to app content types
+        self.contentTypes = sortedWidgets.compactMap { widget in
+            return self.mapWidgetToContentType(widget)
+        }
+
+        // Trigger a refresh since we've updated the content types
+        self.refreshPublisher.send()
+    }
+
+    // Map CMS widget types to app content types
+    private func mapWidgetToContentType(_ widget: HomeWidget) -> HomeViewModel.Content? {
+        switch widget {
+        case .alertBanners:
+            return .userProfile
+        case .banners:
+            return .bannerLine
+        case .carouselEvents:
+            return .quickSwipeStack
+        case .stories:
+            return .promotionalStories
+        case .heroCardEvents:
+            return .heroCard
+        case .highlightedLiveEvents:
+            return .highlightedLiveMatches
+        case .betSwipe:
+            return .makeOwnBetCallToAction
+        case .highlightedEvents:
+            return .highlightedMatches
+        case .boostedEvents:
+            return .highlightedBoostedOddsMatches
+        case .proChoices:
+            return .highlightedMarketProChoices
+        case .topCompetitions:
+            return .topCompetitionsShortcuts
+        case .suggestedBets:
+            return .featuredTips
+        case .popularEvents:
+            return .promotedSportSection
+        }
+    }
+
+    // Set default content types in case of failure
+    private func setDefaultContentTypes() {
+        self.contentTypes = [
+            .userProfile, // AlertBanners
+            .bannerLine, // PromotionBanners
+            .quickSwipeStack, // MatchBanners
+            .promotionalStories, // PromotionStories - instagram style stories
+            .heroCard, // HeroBanner
+            .highlightedLiveMatches, // LiveGamesHome
+            .makeOwnBetCallToAction, // MakeYourOwnBet
+            .highlightedMatches, // Highlights image cards
+            .highlightedMarketProChoices, // Pro Choices Markets
+            .highlightedBoostedOddsMatches, // Boosted Odds
+            .topCompetitionsShortcuts, // TopCompetitionsMobile
+            .featuredTips, // SuggestedBets
+        ]
+    }
+
+    func refreshTemplate() {
+        // First refresh the home template
+        fetchHomeTemplate()
     }
 
     func refreshData() {
-
         self.matchWidgetContainerTableViewModelCache = [:]
         self.matchWidgetCellViewModelCache = [:]
         self.matchLineTableCellViewModelCache = [:]
@@ -686,7 +731,7 @@ class DummyWidgetShowcaseHomeViewTemplateDataSource {
 
 }
 
-extension DummyWidgetShowcaseHomeViewTemplateDataSource {
+extension CMSManagedHomeViewTemplateDataSource {
 
     private func addCancellable(_ cancellable: AnyCancellable) {
         self.cancellablesLock.lock()
@@ -701,7 +746,7 @@ extension DummyWidgetShowcaseHomeViewTemplateDataSource {
     }
 }
 
-extension DummyWidgetShowcaseHomeViewTemplateDataSource: HomeViewTemplateDataSource {
+extension CMSManagedHomeViewTemplateDataSource: HomeViewTemplateDataSource {
 
     var refreshRequestedPublisher: AnyPublisher<Void, Never> {
         return self.refreshPublisher
@@ -710,7 +755,7 @@ extension DummyWidgetShowcaseHomeViewTemplateDataSource: HomeViewTemplateDataSou
     }
 
     func refresh() {
-        self.refreshData()
+        self.fetchHomeTemplate()
     }
 
     func numberOfSections() -> Int {
@@ -753,8 +798,6 @@ extension DummyWidgetShowcaseHomeViewTemplateDataSource: HomeViewTemplateDataSou
             } else {
                 return !self.topCompetitionsLineCellViewModel.isEmpty ? 1 : 0
             }
-        case .videoNewsLine:
-            return self.videoNewsLineCellViewModel.numberOfItems() > 0 ? 1 : 0
         case .promotedSportSection:
             let croppedSection = section - self.fixedSections
             if let promotedSportId = self.promotedSports[safe: croppedSection]?.id,
@@ -785,8 +828,6 @@ extension DummyWidgetShowcaseHomeViewTemplateDataSource: HomeViewTemplateDataSou
             return self.suggestedBetslips.isNotEmpty ? localized("suggested_bets") : nil
         case .topCompetitionsShortcuts:
             return localized("top_competitions")
-        case .videoNewsLine:
-            return self.videoNewsLineCellViewModel.titleSection
         case .promotedSportSection:
             let croppedSection = section - self.fixedSections
             if let promotedSportName = self.promotedSports[safe: croppedSection]?.name {
@@ -817,8 +858,6 @@ extension DummyWidgetShowcaseHomeViewTemplateDataSource: HomeViewTemplateDataSou
             return "trophy_icon"
         case .featuredTips:
             return "suggested_bet_icon"
-        case .videoNewsLine:
-            return "video_small_icon"
         case .promotedSportSection:
             let activeSports = Env.sportsStore.getActiveSports()
             let croppedSection = section - self.fixedSections
@@ -852,8 +891,6 @@ extension DummyWidgetShowcaseHomeViewTemplateDataSource: HomeViewTemplateDataSou
             return self.suggestedBetslips.isNotEmpty
         case .topCompetitionsShortcuts:
             return !self.topCompetitionsLineCellViewModel.isEmpty
-        case .videoNewsLine:
-            return self.videoNewsLineCellViewModel.numberOfItems() > 0
         case .promotedSportSection:
             let croppedSection = section - self.fixedSections
             if let promotedSportId = self.promotedSports[safe: croppedSection]?.id,
@@ -1183,12 +1220,12 @@ extension DummyWidgetShowcaseHomeViewTemplateDataSource: HomeViewTemplateDataSou
     }
 
     func videoNewsLineViewModel() -> VideoPreviewLineCellViewModel? {
-        return self.videoNewsLineCellViewModel
+        return nil
     }
 
 }
 
-extension DummyWidgetShowcaseHomeViewTemplateDataSource {
+extension CMSManagedHomeViewTemplateDataSource {
 
     static func appendToReadInstaStoriesArray(_ newStory: String) {
         let key = "readInstaStoriesArray"

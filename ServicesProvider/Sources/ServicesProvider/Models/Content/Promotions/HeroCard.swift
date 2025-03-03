@@ -7,10 +7,10 @@
 
 import Foundation
 
-public typealias HeroCards = [HeroCard]
+public typealias HeroCardPointers = [HeroCardPointer]
 
 /// Feature card displayed prominently in the app
-public struct HeroCard: Identifiable, Equatable, Hashable, Codable {
+public struct HeroCardPointer: Identifiable, Equatable, Hashable, Codable {
     /// Unique identifier
     public let id: String
 

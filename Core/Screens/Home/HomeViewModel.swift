@@ -10,10 +10,10 @@ import Combine
 import OrderedCollections
 
 enum HomeTemplateBuilderType {
-    case appStatic
     case backendDynamic(clientTemplateKey: String)
-    case clientDynamic
+    case locallyManaged
     case dummyWidgetShowcase(widgets: [HomeViewModel.Content] )
+    case cmsManaged
 }
 
 class HomeViewModel {
@@ -90,8 +90,6 @@ class HomeViewModel {
     init() {
 
         switch TargetVariables.homeTemplateBuilder {
-        case .appStatic: // hardcoded in the app code
-            self.homeViewTemplateDataSource = StaticHomeViewTemplateDataSource()
         case .backendDynamic: // provided by our backend
             if let homeFeedTemplate = Env.appSession.homeFeedTemplate {
                 self.homeViewTemplateDataSource = DynamicHomeViewTemplateDataSource(homeFeedTemplate: homeFeedTemplate)
@@ -99,10 +97,12 @@ class HomeViewModel {
             else {
                 fatalError("homeFeedTemplate or homeTemplateKey not found for client with homeTemplateBuilder = backendDynamic")
             }
-        case .clientDynamic: // provided by the client backend
+        case .locallyManaged: // provided by the client backend
             self.homeViewTemplateDataSource = ClientManagedHomeViewTemplateDataSource()
         case .dummyWidgetShowcase:
             self.homeViewTemplateDataSource = DummyWidgetShowcaseHomeViewTemplateDataSource()
+        case .cmsManaged:
+            self.homeViewTemplateDataSource = CMSManagedHomeViewTemplateDataSource()
         }
 
         self.homeViewTemplateDataSource.refreshRequestedPublisher

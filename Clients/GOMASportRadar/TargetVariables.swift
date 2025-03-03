@@ -53,7 +53,7 @@ struct TargetVariables: SportsbookTarget {
     }
 
     static var homeTemplateBuilder: HomeTemplateBuilderType {
-        return HomeTemplateBuilderType.appStatic
+        return HomeTemplateBuilderType.locallyManaged
     }
 
     static var features: [SportsbookTargetFeatures] {

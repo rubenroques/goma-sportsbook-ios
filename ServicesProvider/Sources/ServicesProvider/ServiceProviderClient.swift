@@ -647,15 +647,6 @@ extension ServicesProviderClient {
         return eventsProvider.getHighlightedMarkets()
     }
 
-    public func getHeroGameEvent() -> AnyPublisher<[Event], ServiceProviderError> {
-        guard
-            let eventsProvider = self.eventsProvider
-        else {
-            return Fail(error: .eventsProviderNotFound).eraseToAnyPublisher()
-        }
-        return eventsProvider.getHeroGameEvent()
-    }
-
     //
     //
     public func getPromotedSports() -> AnyPublisher<[PromotedSport], ServiceProviderError> {
@@ -1890,13 +1881,22 @@ extension ServicesProviderClient {
         return managedContentProvider.getBoostedOddsBanners()
     }
 
-    public func getHeroCards() -> AnyPublisher<[HeroCard], ServiceProviderError> {
+    public func getHeroCardPointers() -> AnyPublisher<HeroCardPointers, ServiceProviderError> {
         guard
             let managedContentProvider = self.managedContentProvider
         else {
             return Fail(error: ServiceProviderError.managedContentProviderNotFound).eraseToAnyPublisher()
         }
 
+        return managedContentProvider.getHeroCardPointers()
+    }
+    
+    public func getHeroCards() -> AnyPublisher<[Event], ServiceProviderError> {
+        guard
+            let managedContentProvider = self.managedContentProvider
+        else {
+            return Fail(error: .managedContentProviderNotFound).eraseToAnyPublisher()
+        }
         return managedContentProvider.getHeroCards()
     }
 

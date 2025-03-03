@@ -52,8 +52,14 @@ protocol ManagedContentProvider: Connector {
 
     /// Retrieves hero cards for featured promotions
     /// - Returns: Publisher that emits an array of hero cards
-    func getHeroCards() -> AnyPublisher<[HeroCard], ServiceProviderError>
+    func getHeroCards() -> AnyPublisher<[Event], ServiceProviderError>
 
+    // MARK: - Hero Cards
+
+    /// Retrieves hero cards for featured promotions
+    /// - Returns: Publisher that emits an array of hero cards
+    func getHeroCardPointers() -> AnyPublisher<HeroCardPointers, ServiceProviderError>
+    
     // MARK: - Stories
 
     /// Retrieves ephemeral promotional stories

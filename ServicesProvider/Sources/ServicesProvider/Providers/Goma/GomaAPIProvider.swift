@@ -1312,19 +1312,16 @@ extension GomaAPIProvider: EventsProvider {
         }).eraseToAnyPublisher()
     }
 
-    func getHeroGameEvent() -> AnyPublisher<[Event], ServiceProviderError> {
+    func getHeroCards() -> AnyPublisher<[Event], ServiceProviderError> {
 
         let endpoint = GomaAPISchema.getHeroCards
         let publisher: AnyPublisher<[GomaModels.HeroCardEvents], ServiceProviderError> = self.connector.request(endpoint)
         return publisher.print("getHeroCards").map({ heroCardEvents in
-
             let convertedEvents = heroCardEvents.map({
                 return GomaModelMapper.event(fromInternalHeroCardEvent: $0)
             })
-
             return convertedEvents
         }).eraseToAnyPublisher()
-
     }
 
     func getPromotedSports() -> AnyPublisher<[PromotedSport], ServiceProviderError> {

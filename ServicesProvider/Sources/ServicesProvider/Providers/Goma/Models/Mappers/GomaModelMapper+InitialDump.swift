@@ -37,7 +37,7 @@ extension GomaModelMapper {
             highlightedEvents: highlightedEvents,
             proChoices: proChoices(fromInternalProChoices: content.proChoices),
             boostedOddsBanners: boostedOddsBanners(fromInternalBoostedOddsBanners: content.boostedOddsBanners),
-            heroCards: heroCards(fromInternalHeroCards: content.heroCards),
+            heroCardPointers: heroCardPointers(fromInternalHeroCardPointers: content.heroCardPointers),
             stories: stories(fromInternalStories: content.stories),
             news: newsItems(fromInternalNewsItems: content.news)
         )
