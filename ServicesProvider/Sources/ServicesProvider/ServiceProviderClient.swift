@@ -424,25 +424,7 @@ extension ServicesProviderClient {
         return eventsProvider.getPromotionalSlidingTopEventsPointers()
     }
 
-    public func getHighlightedBoostedEventsPointers() -> AnyPublisher<[EventMetadataPointer], ServiceProviderError> {
-        guard
-            let eventsProvider = self.eventsProvider
-        else {
-            return Fail(error: ServiceProviderError.eventsProviderNotFound).eraseToAnyPublisher()
-        }
-        return eventsProvider.getHighlightedBoostedEventsPointers()
-    }
-
-    public func getHighlightedVisualImageEventsPointers() -> AnyPublisher<[EventMetadataPointer], ServiceProviderError> {
-        guard
-            let eventsProvider = self.eventsProvider
-        else {
-            return Fail(error: ServiceProviderError.eventsProviderNotFound).eraseToAnyPublisher()
-        }
-        return eventsProvider.getHighlightedVisualImageEventsPointers()
-    }
-
-    public func getPromotedEventsBySport() -> AnyPublisher<[SportType : [Event]], ServiceProviderError> {
+    public func getPromotedEventsBySport() -> AnyPublisher<[SportType : Events], ServiceProviderError> {
         guard
             let eventsProvider = self.eventsProvider
         else {
@@ -598,7 +580,7 @@ extension ServicesProviderClient {
         return eventsProvider.getPromotionalTopBanners()
     }
 
-    public func getPromotionalSlidingTopEvents() -> AnyPublisher<[Event], ServiceProviderError> {
+    public func getPromotionalSlidingTopEvents() -> AnyPublisher<Events, ServiceProviderError> {
         guard
             let eventsProvider = self.eventsProvider
         else {
@@ -616,35 +598,6 @@ extension ServicesProviderClient {
         }
 
         return eventsProvider.getPromotionalTopStories()
-    }
-
-
-    public func getHighlightedBoostedEvents() -> AnyPublisher<[Event], ServiceProviderError> {
-        guard
-            let eventsProvider = self.eventsProvider
-        else {
-            return Fail(error: .eventsProviderNotFound).eraseToAnyPublisher()
-        }
-
-        return eventsProvider.getHighlightedBoostedEvents()
-    }
-
-    public func getHighlightedVisualImageEvents() -> AnyPublisher<[Event], ServiceProviderError> {
-        guard
-            let eventsProvider = self.eventsProvider
-        else {
-            return Fail(error: .eventsProviderNotFound).eraseToAnyPublisher()
-        }
-        return eventsProvider.getHighlightedVisualImageEvents()
-    }
-
-    public func getHighlightedMarkets() -> AnyPublisher<[HighlightMarket], ServiceProviderError> {
-        guard
-            let eventsProvider = self.eventsProvider
-        else {
-            return Fail(error: .eventsProviderNotFound).eraseToAnyPublisher()
-        }
-        return eventsProvider.getHighlightedMarkets()
     }
 
     //
@@ -833,7 +786,7 @@ extension ServicesProviderClient {
         return eventsProvider.getHighlightedLiveEventsPointers(eventCount: eventCount, userId: userId)
     }
 
-    public func getHighlightedLiveEvents(eventCount: Int, userId: String?) -> AnyPublisher<[Event], ServiceProviderError> {
+    public func getHighlightedLiveEvents(eventCount: Int, userId: String?) -> AnyPublisher<Events, ServiceProviderError> {
         guard
             let eventsProvider = self.eventsProvider
         else {
@@ -1871,14 +1824,24 @@ extension ServicesProviderClient {
         return managedContentProvider.getCarouselEvents()
     }
 
-    public func getBoostedOddsBanners() -> AnyPublisher<[BoostedOddsBanner], ServiceProviderError> {
+    public func getBoostedOddsBanners() -> AnyPublisher<[BoostedOddsPointer], ServiceProviderError> {
         guard
             let managedContentProvider = self.managedContentProvider
         else {
             return Fail(error: ServiceProviderError.managedContentProviderNotFound).eraseToAnyPublisher()
         }
 
-        return managedContentProvider.getBoostedOddsBanners()
+        return managedContentProvider.getBoostedOddsPointers()
+    }
+
+    public func getBoostedOddsEvents() -> AnyPublisher<Events, ServiceProviderError> {
+        guard
+            let managedContentProvider = self.managedContentProvider
+        else {
+            return Fail(error: ServiceProviderError.managedContentProviderNotFound).eraseToAnyPublisher()
+        }
+
+        return managedContentProvider.getBoostedOddsEvents()
     }
 
     public func getHeroCardPointers() -> AnyPublisher<HeroCardPointers, ServiceProviderError> {
@@ -1890,14 +1853,24 @@ extension ServicesProviderClient {
 
         return managedContentProvider.getHeroCardPointers()
     }
-    
-    public func getHeroCards() -> AnyPublisher<[Event], ServiceProviderError> {
+
+    public func getHeroCardEvents() -> AnyPublisher<Events, ServiceProviderError> {
         guard
             let managedContentProvider = self.managedContentProvider
         else {
             return Fail(error: .managedContentProviderNotFound).eraseToAnyPublisher()
         }
-        return managedContentProvider.getHeroCards()
+        return managedContentProvider.getHeroCardEvents()
+    }
+
+    public func getTopImageCardEvents() -> AnyPublisher<Events, ServiceProviderError> {
+        guard
+            let managedContentProvider = self.managedContentProvider
+        else {
+            return Fail(error: ServiceProviderError.managedContentProviderNotFound).eraseToAnyPublisher()
+        }
+
+        return managedContentProvider.getTopImageCardEvents()
     }
 
     public func getStories() -> AnyPublisher<[Story], ServiceProviderError> {
@@ -1920,16 +1893,23 @@ extension ServicesProviderClient {
         return managedContentProvider.getNews(pageIndex: pageIndex, pageSize: pageSize)
     }
 
-    public func getProChoices() -> AnyPublisher<[ProChoice], ServiceProviderError> {
+    public func getProChoiceCardPointers() -> AnyPublisher<ProChoiceCardPointers, ServiceProviderError> {
         guard
             let managedContentProvider = self.managedContentProvider
         else {
             return Fail(error: ServiceProviderError.managedContentProviderNotFound).eraseToAnyPublisher()
         }
-
-        return managedContentProvider.getProChoices()
+        return managedContentProvider.getProChoiceCardPointers()
     }
 
+    public func getProChoiceMarketCards() -> AnyPublisher<[HighlightMarket], ServiceProviderError> {
+        guard
+            let managedContentProvider = self.managedContentProvider
+        else {
+            return Fail(error: ServiceProviderError.managedContentProviderNotFound).eraseToAnyPublisher()
+        }
+        return managedContentProvider.getProChoiceMarketCards()
+    }
 }
 
 // Utilities

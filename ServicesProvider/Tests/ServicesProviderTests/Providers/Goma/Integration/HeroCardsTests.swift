@@ -119,7 +119,7 @@ class HeroCardsTests: BaseIntegrationTest {
         }
     }
 
-    /// Test that GomaManagedContentProvider.getHeroCards() calls the correct API endpoint
+    /// Test that GomaManagedContentProvider.getHeroCardEvents() calls the correct API endpoint
     func testGetHeroCardsCallsCorrectAPIEndpoint() throws {
         // Given
         let expectation = XCTestExpectation(description: "API call made")
@@ -127,7 +127,7 @@ class HeroCardsTests: BaseIntegrationTest {
         let contentProvider = createMockContentProvider()
 
         // When
-        contentProvider.getHeroCards()
+        contentProvider.getHeroCardEvents()
             .sink(
                 receiveCompletion: { _ in },
                 receiveValue: { _ in
@@ -141,7 +141,7 @@ class HeroCardsTests: BaseIntegrationTest {
         XCTAssertTrue(MockURLProtocol.requestsForEndpoint(TestConfiguration.EndpointPaths.heroCards).count > 0)
     }
 
-    /// Test that GomaManagedContentProvider.getHeroCards() handles successful responses
+    /// Test that GomaManagedContentProvider.getHeroCardEvents() handles successful responses
     func testGetHeroCardsHandlesSuccessfulResponses() throws {
         // Given
         let expectation = XCTestExpectation(description: "Received hero cards")
@@ -149,7 +149,7 @@ class HeroCardsTests: BaseIntegrationTest {
         let contentProvider = createMockContentProvider()
 
         // When
-        contentProvider.getHeroCards()
+        contentProvider.getHeroCardEvents()
             .sink(
                 receiveCompletion: { completion in
                     if case .failure = completion {
@@ -168,7 +168,7 @@ class HeroCardsTests: BaseIntegrationTest {
         wait(for: [expectation], timeout: 1.0)
     }
 
-    /// Test that GomaManagedContentProvider.getHeroCards() handles error responses
+    /// Test that GomaManagedContentProvider.getHeroCardEvents() handles error responses
     func testGetHeroCardsHandlesErrorResponses() throws {
         // Given
         let expectation = XCTestExpectation(description: "Received error")
@@ -184,7 +184,7 @@ class HeroCardsTests: BaseIntegrationTest {
         let contentProvider = createMockContentProvider()
 
         // When
-        contentProvider.getHeroCards()
+        contentProvider.getHeroCardEvents()
             .sink(
                 receiveCompletion: { completion in
                     if case .failure(let error) = completion {
@@ -202,7 +202,7 @@ class HeroCardsTests: BaseIntegrationTest {
         wait(for: [expectation], timeout: 1.0)
     }
 
-    /// Test that GomaManagedContentProvider.getHeroCards() handles empty array responses
+    /// Test that GomaManagedContentProvider.getHeroCardEvents() handles empty array responses
     func testGetHeroCardsHandlesEmptyArrayResponses() throws {
         // Given
         let expectation = XCTestExpectation(description: "Received empty array")
@@ -218,7 +218,7 @@ class HeroCardsTests: BaseIntegrationTest {
         let contentProvider = createMockContentProvider()
 
         // When
-        contentProvider.getHeroCards()
+        contentProvider.getHeroCardEvents()
             .sink(
                 receiveCompletion: { completion in
                     if case .failure = completion {
@@ -254,7 +254,7 @@ class HeroCardsTests: BaseIntegrationTest {
         let expectedDomainModels = GomaModelMapper.heroCards(fromInternalHeroCards: internalModels)
 
         // When
-        contentProvider.getHeroCards()
+        contentProvider.getHeroCardEvents()
             .sink(
                 receiveCompletion: { completion in
                     if case .failure = completion {

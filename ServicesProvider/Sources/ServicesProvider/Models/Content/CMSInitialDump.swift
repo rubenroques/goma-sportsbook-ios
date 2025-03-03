@@ -23,40 +23,66 @@ public struct PromotionsContent: Codable, Equatable, Hashable {
     public let alertBanner: AlertBanner?
 
     /// Promotional banners
-    public let banners: Banners
+    public let banners: Banners?
 
     /// Sport-specific banners
-    public let carouselEvents: CarouselEvents
+    public let carouselEvents: CarouselEvents?
 
     /// Highlighted events with custom images
-    public let highlightedEvents: [HighlightedEventData]
+    public let topImageCardPointers: TopImageCardPointers?
 
     /// Expert betting picks
-    public let proChoices: ProChoiceItems
+    public let proChoiceCardPointers: ProChoiceCardPointers?
 
     /// Boosted odds promotions
-    public let boostedOddsBanners: BoostedOddsBanners
+    public let boostedOddsBanners: BoostedOddsPointers?
 
     /// Featured hero card promotions
-    public let heroCardPointers: HeroCardPointers
+    public let heroCardPointers: HeroCardPointers?
 
     /// Promotional stories
-    public let stories: Stories
+    public let stories: Stories?
 
     /// News items
-    public let news: NewsItems
+    public let news: NewsItems?
+    
+    init(alertBanner: AlertBanner?,
+         banners: Banners?,
+         carouselEvents: CarouselEvents?,
+         topImageCardPointers: TopImageCardPointers?,
+         proChoiceCardPointers: ProChoiceCardPointers?,
+         boostedOddsBanners: BoostedOddsPointers?,
+         heroCardPointers: HeroCardPointers?,
+         stories: Stories?,
+         news: NewsItems?) {
+        self.alertBanner = alertBanner
+        self.banners = banners
+        self.carouselEvents = carouselEvents
+        self.topImageCardPointers = topImageCardPointers
+        self.proChoiceCardPointers = proChoiceCardPointers
+        self.boostedOddsBanners = boostedOddsBanners
+        self.heroCardPointers = heroCardPointers
+        self.stories = stories
+        self.news = news
+    }
 
 }
 
 /// Highlighted event model
-public struct HighlightedEventData: Codable, Equatable, Hashable {
+public typealias TopImageCardPointers = [TopImageCardPointer]
+public struct TopImageCardPointer: Codable, Equatable, Hashable {
     /// Sport event identifier
-    public let sportEventId: String
+    public let eventId: String
 
     /// Sport event market identifier
-    public let sportEventMarketId: String
+    public let eventMarketId: String
 
     /// Image URL for the event
-    public let imageUrl: URL?
-
+    public let imageUrl: String?
+    
+    init(eventId: String, eventMarketId: String, imageUrl: String?) {
+        self.eventId = eventId
+        self.eventMarketId = eventMarketId
+        self.imageUrl = imageUrl
+    }
 }

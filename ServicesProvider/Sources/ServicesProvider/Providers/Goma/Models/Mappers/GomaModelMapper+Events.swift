@@ -15,7 +15,7 @@ extension GomaModelMapper {
         return EventsGroup(events: events, marketGroupId: nil, title: nil)
     }
 
-    static func events(fromInternalEvents internalEvents: [GomaModels.Event]) -> [Event] {
+    static func events(fromInternalEvents internalEvents: [GomaModels.Event]) -> Events {
         let events = internalEvents.map(Self.event(fromInternalEvent:))
         return events
     }

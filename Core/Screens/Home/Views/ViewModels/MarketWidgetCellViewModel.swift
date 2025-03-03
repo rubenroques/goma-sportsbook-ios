@@ -14,7 +14,7 @@ class MarketWidgetCellViewModel {
 //    private var highlightedMarket: HighlightedContent<Market>
     var match: Match?
     
-    @Published private(set) var highlightedMarket: HighlightedContent<Market>
+    @Published private(set) var highlightedMarket: ImageHighlightedContent<Market>
 
     var availableOutcomes: [Outcome] {
         let highlightedMarket = self.highlightedMarket.content
@@ -39,7 +39,7 @@ class MarketWidgetCellViewModel {
     var eventImagePublisher: AnyPublisher<String, Never> {
         return self.$highlightedMarket
             .map { highlightedMarket in
-                return highlightedMarket.promotionalImageURL ?? ""
+                return highlightedMarket.imageURLString ?? ""
             }
             .eraseToAnyPublisher()
     }
@@ -157,7 +157,7 @@ class MarketWidgetCellViewModel {
             .eraseToAnyPublisher()
     }
 
-    init(highlightedMarket: HighlightedContent<Market>) {
+    init(highlightedMarket: ImageHighlightedContent<Market>) {
         self.highlightedMarket = highlightedMarket
     }
 }

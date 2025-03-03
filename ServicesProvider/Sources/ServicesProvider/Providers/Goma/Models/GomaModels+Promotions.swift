@@ -124,30 +124,47 @@ extension GomaModels {
         }
     }
     
-    typealias BoostedOddsBanners = [BoostedOddsBanner]
-    struct BoostedOddsBanner: Identifiable, Equatable, Hashable, Codable {
+    typealias BoostedOddsPointers = [BoostedOddsPointer]
+    struct BoostedOddsPointer: Identifiable, Equatable, Hashable, Codable {
         
         let id: Int
         let eventId: String
         let eventMarketId: String
-        let title: String?
-        let imageUrl: String?
+        let boostedEventMarketId: String
         
         private enum CodingKeys: String, CodingKey {
             case id = "id"
             case eventId = "sport_event_id"
             case eventMarketId = "sport_event_market_id"
-            case title = "title"
-            case imageUrl = "image_url"
+            case boostedEventMarketId = "sport_event_boosted_market_id"
+        }
+        
+        init(id: Int, eventId: String, eventMarketId: String, boostedEventMarketId: String) {
+            self.id = id
+            self.eventId = eventId
+            self.eventMarketId = eventMarketId
+            self.boostedEventMarketId = boostedEventMarketId
         }
         
         init(from decoder: any Decoder) throws {
-            let container: KeyedDecodingContainer<GomaModels.BoostedOddsBanner.CodingKeys> = try decoder.container(keyedBy: GomaModels.BoostedOddsBanner.CodingKeys.self)
-            self.id = try container.decode(Int.self, forKey: GomaModels.BoostedOddsBanner.CodingKeys.id)
-            self.eventId = try container.decode(String.self, forKey: GomaModels.BoostedOddsBanner.CodingKeys.eventId)
-            self.eventMarketId = try container.decode(String.self, forKey: GomaModels.BoostedOddsBanner.CodingKeys.eventMarketId)
-            self.title = try container.decodeIfPresent(String.self, forKey: GomaModels.BoostedOddsBanner.CodingKeys.title)
-            self.imageUrl = try container.decodeIfPresent(String.self, forKey: GomaModels.BoostedOddsBanner.CodingKeys.imageUrl)
+            let container = try decoder.container(keyedBy: CodingKeys.self)
+            self.id = try container.decode(Int.self, forKey: .id)
+            self.eventId = try container.decode(String.self, forKey: .eventId)
+            self.eventMarketId = try container.decode(String.self, forKey: .eventMarketId)
+            self.boostedEventMarketId = try container.decode(String.self, forKey: .boostedEventMarketId)
+        }
+    }
+    
+    typealias TopImageCardPointers = [TopImageCardPointer]
+    struct TopImageCardPointer: Codable, Equatable, Hashable {
+        let eventId: String
+        let eventMarketId: String
+        let imageUrl: String?
+        
+        private enum CodingKeys: String, CodingKey {
+            case eventId = "sport_event_id"
+            case eventMarketId = "sport_event_market_id"
+            case imageUrl = "image_url"
         }
     }
     
@@ -234,8 +251,8 @@ extension GomaModels {
         }
     }
     
-    typealias ProChoiceItems = [ProChoice]
-    struct ProChoice: Identifiable, Equatable, Hashable, Codable {
+    typealias ProChoiceCardPointers = [ProChoiceCardPointer]
+    struct ProChoiceCardPointer: Identifiable, Equatable, Hashable, Codable {
         
         var id: String { eventId }
         let eventId: String

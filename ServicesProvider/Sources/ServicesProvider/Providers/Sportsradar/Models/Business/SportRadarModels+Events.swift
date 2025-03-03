@@ -21,7 +21,7 @@ extension SportRadarModels {
 
 
     struct EventsGroup: Codable {
-        var events: [Event]
+        var events: Events
         var marketGroupId: String?
 
         enum CodingKeys: String, CodingKey {
@@ -29,7 +29,7 @@ extension SportRadarModels {
             case marketGroupId = "idfwmarketgroup"
         }
 
-        init(events: [Event], marketGroupId: String?) {
+        init(events: Events, marketGroupId: String?) {
             self.events = events
             self.marketGroupId = marketGroupId
         }
@@ -74,6 +74,7 @@ extension SportRadarModels {
         }
     }
     
+    typealias Events = [Event]
     struct Event: Codable {
         
         var id: String

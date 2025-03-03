@@ -16,11 +16,13 @@ enum GomaAPIPromotionsSchema {
     case alertBanner
     case banners
     case sportBanners
-    case boostedOddsBanners
+    case boostedOdds
+    case topImageCards
     case heroCards
     case stories
     case news(pageIndex: Int, pageSize: Int)
     case proChoices
+    
     // Initial Dump
     case initialDump
 }
@@ -42,8 +44,10 @@ extension GomaAPIPromotionsSchema: Endpoint {
             return "/api/promotions/v1/banners"
         case .sportBanners:
             return "/api/promotions/v1/sport-banners"
-        case .boostedOddsBanners:
+        case .boostedOdds:
             return "/api/promotions/v1/boosted-odds-banners"
+        case .topImageCards:
+            return "/api/events/v1/highlights"
         case .heroCards:
             return "/api/promotions/v1/hero-cards"
         case .stories:
@@ -125,8 +129,10 @@ extension GomaAPIPromotionsSchema: Endpoint {
             return "Get promotional banners"
         case .sportBanners:
             return "Get sport banners"
-        case .boostedOddsBanners:
+        case .boostedOdds:
             return "Get boosted odds banners"
+        case .topImageCards:
+            return "Get highilights with the top image card style"
         case .heroCards:
             return "Get hero cards"
         case .stories:

@@ -46,20 +46,32 @@ protocol ManagedContentProvider: Connector {
 
     /// Retrieves boosted odds banners
     /// - Returns: Publisher that emits an array of boosted odds banners
-    func getBoostedOddsBanners() -> AnyPublisher<[BoostedOddsBanner], ServiceProviderError>
+    func getBoostedOddsPointers() -> AnyPublisher<BoostedOddsPointers, ServiceProviderError>
+
+    /// Retrieves boosted odds events
+    /// - Returns: Publisher that emits an array of boosted odds events
+    func getBoostedOddsEvents() -> AnyPublisher<Events, ServiceProviderError>
 
     // MARK: - Hero Cards
 
     /// Retrieves hero cards for featured promotions
     /// - Returns: Publisher that emits an array of hero cards
-    func getHeroCards() -> AnyPublisher<[Event], ServiceProviderError>
-
-    // MARK: - Hero Cards
+    func getHeroCardEvents() -> AnyPublisher<Events, ServiceProviderError>
 
     /// Retrieves hero cards for featured promotions
     /// - Returns: Publisher that emits an array of hero cards
     func getHeroCardPointers() -> AnyPublisher<HeroCardPointers, ServiceProviderError>
-    
+
+    // MARK: - Top Image Cards
+
+    /// Retrieves top image card pointers
+    /// - Returns: Publisher that emits an array of top image card pointers
+    func getTopImageCardPointers() -> AnyPublisher<TopImageCardPointers, ServiceProviderError>
+
+    /// Retrieves top image card events
+    /// - Returns: Publisher that emits an array of top image card events
+    func getTopImageCardEvents() -> AnyPublisher<Events, ServiceProviderError>
+
     // MARK: - Stories
 
     /// Retrieves ephemeral promotional stories
@@ -79,6 +91,8 @@ protocol ManagedContentProvider: Connector {
 
     /// Retrieves expert betting tips
     /// - Returns: Publisher that emits an array of pro choices
-    func getProChoices() -> AnyPublisher<[ProChoice], ServiceProviderError>
-
+    func getProChoiceCardPointers() -> AnyPublisher<ProChoiceCardPointers, ServiceProviderError>
+    
+    func getProChoiceMarketCards() -> AnyPublisher<[HighlightMarket], ServiceProviderError>
+    
 }

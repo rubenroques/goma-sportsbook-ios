@@ -7,10 +7,10 @@
 
 import Foundation
 
-public typealias ProChoiceItems = [ProChoice]
+public typealias ProChoiceCardPointers = [ProChoiceCardPointer]
 
 /// Expert betting tip
-public struct ProChoice: Identifiable, Equatable, Hashable, Codable {
+public struct ProChoiceCardPointer: Identifiable, Equatable, Hashable, Codable {
     /// Unique identifier based on the sport event
     public var id: String { eventId }
 
@@ -42,5 +42,26 @@ public struct ProChoice: Identifiable, Equatable, Hashable, Codable {
         self.eventId = eventId
         self.eventMarketId = eventMarketId
         self.imageUrl = imageUrl
+    }
+}
+
+public struct ProChoiceMarketCard: Identifiable, Equatable, Hashable, Codable {
+    public var id: String {
+        return market.id
+    }
+    public var market: Market
+    public var enabledSelectionsCount: Int
+    public var promotionImageURl: String?
+
+    public init(market: Market, enabledSelectionsCount: Int, promotionImageURl: String?) {
+        self.market = market
+        self.enabledSelectionsCount = enabledSelectionsCount
+        self.promotionImageURl = promotionImageURl
+    }
+
+    public static func == (lhs: ProChoiceMarketCard, rhs: ProChoiceMarketCard) -> Bool {
+        // Compare all properties for equality
+        return lhs.market == rhs.market &&
+        lhs.enabledSelectionsCount == rhs.enabledSelectionsCount
     }
 }

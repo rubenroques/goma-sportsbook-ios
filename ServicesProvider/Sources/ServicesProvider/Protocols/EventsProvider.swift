@@ -86,13 +86,8 @@ protocol EventsProvider: Connector {
     func getHomeSliders() -> AnyPublisher<BannerResponse, ServiceProviderError>
 
     func getPromotionalTopBanners() -> AnyPublisher<[PromotionalBanner], ServiceProviderError>
-    func getPromotionalSlidingTopEvents() -> AnyPublisher<[Event], ServiceProviderError>
+    func getPromotionalSlidingTopEvents() -> AnyPublisher<Events, ServiceProviderError>
     func getPromotionalTopStories() -> AnyPublisher<[PromotionalStory], ServiceProviderError>
-
-    func getHighlightedBoostedEvents() -> AnyPublisher<[Event], ServiceProviderError>
-    func getHighlightedVisualImageEvents() -> AnyPublisher<[Event], ServiceProviderError>
-
-    func getHighlightedMarkets() -> AnyPublisher<[HighlightMarket], ServiceProviderError>
 
     func getPromotedSports() -> AnyPublisher<[PromotedSport], ServiceProviderError>
 
@@ -119,7 +114,7 @@ protocol EventsProvider: Connector {
     func subscribeToEventAndSecondaryMarkets(withId id: String) -> AnyPublisher<SubscribableContent<Event>, ServiceProviderError>
 
     func getHighlightedLiveEventsPointers(eventCount: Int, userId: String?) -> AnyPublisher<[String], ServiceProviderError>
-    func getHighlightedLiveEvents(eventCount: Int, userId: String?) -> AnyPublisher<[Event], ServiceProviderError>
+    func getHighlightedLiveEvents(eventCount: Int, userId: String?) -> AnyPublisher<Events, ServiceProviderError>
 
     func getPromotedBetslips(userId: String?) -> AnyPublisher<[PromotedBetslip], ServiceProviderError>
 
@@ -141,9 +136,8 @@ protocol EventsProvider: Connector {
     func getPromotedEventGroupsPointers() -> AnyPublisher<[EventGroupPointer], ServiceProviderError>
     func getPromotedEventsGroups() -> AnyPublisher<[EventsGroup], ServiceProviderError>
     func getPromotionalSlidingTopEventsPointers() -> AnyPublisher<[EventMetadataPointer], ServiceProviderError>
-    func getHighlightedBoostedEventsPointers() -> AnyPublisher<[EventMetadataPointer], ServiceProviderError>
-    func getHighlightedVisualImageEventsPointers() -> AnyPublisher<[EventMetadataPointer], ServiceProviderError>
-    func getPromotedEventsBySport() -> AnyPublisher<[SportType: [Event]], ServiceProviderError>
+    
+    func getPromotedEventsBySport() -> AnyPublisher<[SportType: Events], ServiceProviderError>
     func addFavoriteItem(favoriteId: Int, type: String) -> AnyPublisher<BasicMessageResponse, ServiceProviderError>
     func deleteFavoriteItem(favoriteId: Int, type: String) -> AnyPublisher<BasicMessageResponse, ServiceProviderError>
     func getFeaturedTips(page: Int?, limit: Int?, topTips: Bool?, followersTips: Bool?, friendsTips: Bool?, userId: String?, homeTips: Bool?) -> AnyPublisher<FeaturedTips, ServiceProviderError>

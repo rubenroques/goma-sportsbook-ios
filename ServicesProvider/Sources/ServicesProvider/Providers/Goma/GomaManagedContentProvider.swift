@@ -94,13 +94,43 @@ class GomaManagedContentProvider: ManagedContentProvider {
             .eraseToAnyPublisher()
     }
 
-    func getBoostedOddsBanners() -> AnyPublisher<[BoostedOddsBanner], ServiceProviderError> {
-
-        return self.apiClient.boostedOddsBanners()
+    func getBoostedOddsPointers() -> AnyPublisher<[BoostedOddsPointer], ServiceProviderError> {
+        return self.apiClient.boostedOddsPointers()
             .map({ internalBoostedOddsBanners in
-                return GomaModelMapper.boostedOddsBanners(fromInternalBoostedOddsBanners: internalBoostedOddsBanners)
+                return GomaModelMapper.boostedOddsPointers(fromInternalBoostedOddsPointers: internalBoostedOddsBanners)
             })
             .eraseToAnyPublisher()
+    }
+
+    func getBoostedOddsEvents() -> AnyPublisher<Events, ServiceProviderError> {
+        let endpoint = GomaAPISchema.getBoostedOddEvents
+        let publisher: AnyPublisher<[GomaModels.BoostedEvent], ServiceProviderError> = self.apiClient.requestPublisher(endpoint)
+        return publisher.print("getBoostedEvents").map({ boostedOddEvents in
+
+            let convertedEvents = boostedOddEvents.map({
+                return GomaModelMapper.event(fromInternalBoostedEvent: $0)
+            })
+
+            return convertedEvents
+        }).eraseToAnyPublisher()
+    }
+
+    func getTopImageCardPointers() -> AnyPublisher<TopImageCardPointers, ServiceProviderError> {
+        return self.apiClient.topImageCardPointers()
+            .map({ topImageCardPointers in
+                return GomaModelMapper.topImageCardPointers(fromInternaTopImageCardPointers: topImageCardPointers)
+            })
+            .eraseToAnyPublisher()
+    }
+    func getTopImageCardEvents() -> AnyPublisher<Events, ServiceProviderError> {
+        let endpoint = GomaAPISchema.getHighlights
+        let publisher: AnyPublisher<[GomaModels.HeroCardEvents], ServiceProviderError> = self.apiClient.requestPublisher(endpoint)
+        return publisher.map({ heroCardEvents in
+            let convertedEvents = heroCardEvents.map({
+                return GomaModelMapper.event(fromInternalHeroCardEvent: $0)
+            })
+            return convertedEvents
+        }).eraseToAnyPublisher()
     }
 
     func getHeroCardPointers() -> AnyPublisher<HeroCardPointers, ServiceProviderError> {
@@ -110,11 +140,11 @@ class GomaManagedContentProvider: ManagedContentProvider {
             })
             .eraseToAnyPublisher()
     }
-    
-    func getHeroCards() -> AnyPublisher<[Event], ServiceProviderError> {
+
+    func getHeroCardEvents() -> AnyPublisher<Events, ServiceProviderError> {
         let endpoint = GomaAPISchema.getHeroCards
         let publisher: AnyPublisher<[GomaModels.HeroCardEvents], ServiceProviderError> = self.apiClient.requestPublisher(endpoint)
-        return publisher.print("getHeroCards").map({ heroCardEvents in
+        return publisher.map({ heroCardEvents in
             let convertedEvents = heroCardEvents.map({
                 return GomaModelMapper.event(fromInternalHeroCardEvent: $0)
             })
@@ -134,7 +164,6 @@ class GomaManagedContentProvider: ManagedContentProvider {
     }
 
     func getNews(pageIndex: Int, pageSize: Int) -> AnyPublisher<[NewsItem], ServiceProviderError> {
-
         return self.apiClient.newsItems(pageIndex: pageIndex, pageSize: pageSize)
             .map({ internalNewsItems in
                 return GomaModelMapper.newsItems(fromInternalNewsItems: internalNewsItems)
@@ -142,13 +171,16 @@ class GomaManagedContentProvider: ManagedContentProvider {
             .eraseToAnyPublisher()
     }
 
-    func getProChoices() -> AnyPublisher<[ProChoice], ServiceProviderError> {
-
+    func getProChoiceCardPointers() -> AnyPublisher<ProChoiceCardPointers, ServiceProviderError> {
         return self.apiClient.proChoices()
-            .map({ internalProChoiceitems in
-                return GomaModelMapper.proChoices(fromInternalProChoices: internalProChoiceitems)
+            .map({ pointers in
+                return GomaModelMapper.proChoiceCardPointers(fromInternalProChoiceCardPointers: pointers)
             })
             .eraseToAnyPublisher()
     }
 
+    func getProChoiceMarketCards() -> AnyPublisher<[HighlightMarket], ServiceProviderError> {
+        fatalError("")
+    }
+    
 }

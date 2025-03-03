@@ -42,11 +42,11 @@ public class EventGroupPointer: Codable {
 }
 
 public class EventsGroup {
-    public var events: [Event]
+    public var events: Events
     public var marketGroupId: String?
     public var title: String?
 
-    public init(events: [Event], marketGroupId: String?, title: String? = nil) {
+    public init(events: Events, marketGroupId: String?, title: String? = nil) {
         self.events = events
         self.marketGroupId = marketGroupId
         self.title = title
@@ -73,6 +73,7 @@ public enum EventStatus: Hashable {
     }
 }
 
+public typealias Events = [Event]
 public class Event: Codable, Equatable {
 
     public var id: String
@@ -284,7 +285,7 @@ public class HighlightMarket: Codable, Equatable {
     }
 }
 
-public class Market: Codable, Equatable {
+public class Market: Codable, Equatable, Hashable {
 
     public enum OutcomesOrder: Codable, Hashable {
         case none
@@ -423,10 +424,29 @@ public class Market: Codable, Equatable {
         lhs.customBetAvailable == rhs.customBetAvailable &&
         lhs.isMainMarket == rhs.isMainMarket
     }
+
+    public func hash(into hasher: inout Hasher) {
+        hasher.combine(id)
+        hasher.combine(name)
+        hasher.combine(outcomes)
+        hasher.combine(marketTypeId)
+        hasher.combine(eventMarketTypeId)
+        hasher.combine(eventName)
+        hasher.combine(isMainOutright)
+        hasher.combine(eventMarketCount)
+        hasher.combine(isTradable)
+        hasher.combine(startDate)
+        hasher.combine(homeParticipant)
+        hasher.combine(awayParticipant)
+        hasher.combine(eventId)
+        hasher.combine(outcomesOrder)
+        hasher.combine(customBetAvailable)
+        hasher.combine(isMainMarket)
+    }
 }
 
 
-public class Outcome: Codable, Equatable {
+public class Outcome: Codable, Equatable, Hashable {
 
     public var id: String
     public var name: String
@@ -503,6 +523,19 @@ public class Outcome: Codable, Equatable {
         lhs.isTradable == rhs.isTradable &&
         lhs.isTerminated == rhs.isTerminated &&
         lhs.customBetAvailableMarket == rhs.customBetAvailableMarket
+    }
+
+    public func hash(into hasher: inout Hasher) {
+        hasher.combine(id)
+        hasher.combine(name)
+        hasher.combine(odd)
+        hasher.combine(marketId)
+        hasher.combine(bettingOfferId)
+        hasher.combine(orderValue)
+        hasher.combine(externalReference)
+        hasher.combine(isTradable)
+        hasher.combine(isTerminated)
+        hasher.combine(customBetAvailableMarket)
     }
 }
 

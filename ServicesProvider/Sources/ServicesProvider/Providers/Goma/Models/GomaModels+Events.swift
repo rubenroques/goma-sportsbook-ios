@@ -91,7 +91,7 @@ extension GomaModels {
     }
     
     struct EventsGroup: Codable {
-        var events: [Event]
+        var events: Events
         var marketGroupId: String?
         
         enum CodingKeys: String, CodingKey {
@@ -99,7 +99,7 @@ extension GomaModels {
             case marketGroupId = "market_id"
         }
         
-        init(events: [Event], marketGroupId: String?) {
+        init(events: Events, marketGroupId: String?) {
             self.events = events
             self.marketGroupId = marketGroupId
         }

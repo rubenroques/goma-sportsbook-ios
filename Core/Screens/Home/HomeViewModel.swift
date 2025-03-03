@@ -11,7 +11,7 @@ import OrderedCollections
 
 enum HomeTemplateBuilderType {
     case backendDynamic(clientTemplateKey: String)
-    case locallyManaged
+    case clientBackendManaged
     case dummyWidgetShowcase(widgets: [HomeViewModel.Content] )
     case cmsManaged
 }
@@ -97,11 +97,11 @@ class HomeViewModel {
             else {
                 fatalError("homeFeedTemplate or homeTemplateKey not found for client with homeTemplateBuilder = backendDynamic")
             }
-        case .locallyManaged: // provided by the client backend
+        case .clientBackendManaged: // provided by the client backend
             self.homeViewTemplateDataSource = ClientManagedHomeViewTemplateDataSource()
-        case .dummyWidgetShowcase:
+        case .dummyWidgetShowcase: // hardcoded
             self.homeViewTemplateDataSource = DummyWidgetShowcaseHomeViewTemplateDataSource()
-        case .cmsManaged:
+        case .cmsManaged: // provided by GOMA CMS
             self.homeViewTemplateDataSource = CMSManagedHomeViewTemplateDataSource()
         }
 

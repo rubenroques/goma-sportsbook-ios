@@ -119,7 +119,7 @@ class GomaAPIPromotionsClient {
     func requestFor(_ endpoint: Endpoint) -> URLRequest? {
         return endpoint.request()
     }
-    
+
     func requestPublisher<T: Codable>(_ endpoint: Endpoint) -> AnyPublisher<T, ServiceProviderError> {
         return self.connector.request(endpoint)
     }
@@ -129,14 +129,14 @@ class GomaAPIPromotionsClient {
     /// Get the home template configuration
     /// - Returns: A publisher with the decoded response or error
     func homeTemplate() -> AnyPublisher<GomaModels.HomeTemplate, ServiceProviderError> {
-        
+
         // First check if we have a valid cached version
         if let cachedData = self.cache.getCachedInitialDump() {
             return Just(cachedData.homeTemplate)
                 .setFailureType(to: ServiceProviderError.self)
                 .eraseToAnyPublisher()
         }
-        
+
         let endpoint = GomaAPIPromotionsSchema.homeTemplate
         return self.connector.request(endpoint)
     }
@@ -164,14 +164,33 @@ class GomaAPIPromotionsClient {
 
     /// Get boosted odds banners
     /// - Returns: A publisher with the decoded response or error
-    func boostedOddsBanners() -> AnyPublisher<GomaModels.BoostedOddsBanners, ServiceProviderError> {
-        let endpoint = GomaAPIPromotionsSchema.boostedOddsBanners
+    func boostedOddsPointers() -> AnyPublisher<GomaModels.BoostedOddsPointers, ServiceProviderError> {
+        let endpoint = GomaAPIPromotionsSchema.boostedOdds
+        return self.connector.request(endpoint)
+    }
+
+    func topImageCardPointers() -> AnyPublisher<GomaModels.TopImageCardPointers, ServiceProviderError> {
+        // First check if we have a valid cached version
+        if let cachedData = self.cache.getCachedInitialDump(), let topImageCardPointers = cachedData.promotions.topImageCardPointers {
+            return Just(topImageCardPointers)
+                .setFailureType(to: ServiceProviderError.self)
+                .eraseToAnyPublisher()
+        }
+
+        let endpoint = GomaAPIPromotionsSchema.topImageCards
         return self.connector.request(endpoint)
     }
 
     /// Get hero cards
     /// - Returns: A publisher with the decoded response or error
     func heroCards() -> AnyPublisher<GomaModels.HeroCardPointers, ServiceProviderError> {
+        // First check if we have a valid cached version
+        if let cachedData = self.cache.getCachedInitialDump(), let heroCardPointers = cachedData.promotions.heroCardPointers {
+            return Just(heroCardPointers)
+                .setFailureType(to: ServiceProviderError.self)
+                .eraseToAnyPublisher()
+        }
+
         let endpoint = GomaAPIPromotionsSchema.heroCards
         return self.connector.request(endpoint)
     }
@@ -195,7 +214,7 @@ class GomaAPIPromotionsClient {
 
     /// Get pro betting choices
     /// - Returns: A publisher with the decoded response or error
-    func proChoices() -> AnyPublisher<GomaModels.ProChoiceItems, ServiceProviderError> {
+    func proChoices() -> AnyPublisher<GomaModels.ProChoiceCardPointers, ServiceProviderError> {
         let endpoint = GomaAPIPromotionsSchema.proChoices
         return self.connector.request(endpoint)
     }

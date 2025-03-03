@@ -86,16 +86,15 @@ extension GomaModelMapper {
 
     // MARK: - Boosted Odds Banners
 
-    static func boostedOddsBanners(fromInternalBoostedOddsBanners banners: [GomaModels.BoostedOddsBanner]) -> [BoostedOddsBanner] {
-        return banners.map { boostedOddsBanner(fromInternalBoostedOddsBanner: $0) }
+    static func boostedOddsPointers(fromInternalBoostedOddsPointers pointers: GomaModels.BoostedOddsPointers) -> BoostedOddsPointers {
+        return pointers.map { boostedOddsPointer(fromInternalBoostedOddsPointer: $0) }
     }
 
-    static func boostedOddsBanner(fromInternalBoostedOddsBanner banner: GomaModels.BoostedOddsBanner) -> BoostedOddsBanner {
-        return BoostedOddsBanner(id: String(banner.id),
-                                 eventId: banner.eventId,
-                                 eventMarketId: banner.eventMarketId,
-                                 title: banner.title,
-                                 imageUrl: banner.imageUrl)
+    static func boostedOddsPointer(fromInternalBoostedOddsPointer pointer: GomaModels.BoostedOddsPointer) -> BoostedOddsPointer {
+        return BoostedOddsPointer(id: String(pointer.id),
+                                  eventId: pointer.eventId,
+                                  eventMarketId: pointer.eventMarketId,
+                                  boostedEventMarketId: pointer.boostedEventMarketId)
     }
 
     // MARK: - Hero Cards
@@ -156,15 +155,30 @@ extension GomaModelMapper {
 
     // MARK: - Pro Choices
 
-    static func proChoices(fromInternalProChoices choices: [GomaModels.ProChoice]) -> [ProChoice] {
-        return choices.map { proChoice(fromInternalProChoice: $0) }
+    static func proChoiceCardPointers(fromInternalProChoiceCardPointers pointers: GomaModels.ProChoiceCardPointers) -> ProChoiceCardPointers {
+        return pointers.map { proChoiceCardPointer(fromInternalProChoiceCardPointers: $0) }
     }
 
-    static func proChoice(fromInternalProChoice choice: GomaModels.ProChoice) -> ProChoice {
-        return ProChoice(
-            eventId: choice.eventId,
-            eventMarketId: choice.eventMarketId,
-            imageUrl: choice.imageUrl
+    static func proChoiceCardPointer(fromInternalProChoiceCardPointers pointer: GomaModels.ProChoiceCardPointer) -> ProChoiceCardPointer {
+        return ProChoiceCardPointer(
+            eventId: pointer.eventId,
+            eventMarketId: pointer.eventMarketId,
+            imageUrl: pointer.imageUrl
         )
     }
+    
+    
+    // MARK: - TopImageCardPointer AKA Highlighted Event Mapper
+    static func topImageCardPointers(fromInternaTopImageCardPointers pointers: GomaModels.TopImageCardPointers) -> TopImageCardPointers {
+        return pointers.map { topImageCardPointer(fromInternaTopImageCardPointer: $0) }
+    }
+    
+    static func topImageCardPointer(fromInternaTopImageCardPointer pointer: GomaModels.TopImageCardPointer) -> TopImageCardPointer {
+        return TopImageCardPointer(
+            eventId: pointer.eventId,
+            eventMarketId: pointer.eventMarketId,
+            imageUrl: pointer.imageUrl
+        )
+    }
+    
 }

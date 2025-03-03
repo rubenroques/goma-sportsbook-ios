@@ -208,7 +208,6 @@ final class SportsMerger {
         }
 
         print("[SERVICEPROVIDER][MERGER] Updating sports for identifier: \(identifier.contentType.rawValue)")
-        print("[SERVICEPROVIDER][MERGER.value] Current sportsCurrentValueSubject state: \(String(describing: self.sportsCurrentValueSubject.value))")
 
         if identifier == self.allSportsIdentifier {
             print("[SERVICEPROVIDER][MERGER] Updating base sports list with \(sports.count) sports")

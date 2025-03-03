@@ -24,21 +24,21 @@ extension GomaModels {
     // MARK: - Promotions Content
     struct PromotionsContent: Codable {
         let alertBanner: GomaModels.AlertBanner?
-        let banners: [GomaModels.Banner]
-        let carouselEvents: GomaModels.CarouselEvents
-        let highlightedEvents: [HighlightedEventData]
-        let proChoices: [GomaModels.ProChoice]
-        let boostedOddsBanners: [GomaModels.BoostedOddsBanner]
-        let heroCardPointers: GomaModels.HeroCardPointers
-        let stories: [GomaModels.Story]
-        let news: [GomaModels.NewsItem]
+        let banners: GomaModels.Banners?
+        let carouselEvents: GomaModels.CarouselEvents?
+        let topImageCardPointers: GomaModels.TopImageCardPointers?
+        let proChoiceCardPointers: GomaModels.ProChoiceCardPointers?
+        let boostedOddsBanners: GomaModels.BoostedOddsPointers?
+        let heroCardPointers: GomaModels.HeroCardPointers?
+        let stories: GomaModels.Stories?
+        let news: GomaModels.NewsItems?
 
         enum CodingKeys: String, CodingKey {
             case alertBanner = "alert_banner"
             case banners
             case carouselEvents = "sport_banners"
-            case highlightedEvents = "highlighted_events"
-            case proChoices = "pro_choices"
+            case topImageCardPointers = "highlighted_events"
+            case proChoiceCardPointers = "pro_choices"
             case boostedOddsBanners = "boosted_odds_banners"
             case heroCardPointers = "hero_cards"
             case stories

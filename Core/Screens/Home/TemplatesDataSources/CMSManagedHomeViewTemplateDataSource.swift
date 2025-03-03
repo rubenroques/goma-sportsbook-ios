@@ -161,7 +161,7 @@ class CMSManagedHomeViewTemplateDataSource {
 
     private var highlightedLiveMatches: [Match] = []
 
-    private var highlightedMarkets: [HighlightedContent<Market>] = []
+    private var highlightedMarkets: [ImageHighlightedContent<Market>] = []
 
     //
     private var pendingUserTrackRequest: AnyCancellable?
@@ -171,7 +171,7 @@ class CMSManagedHomeViewTemplateDataSource {
 
     init() {
         // First, fetch the home template from the CMS
-        fetchHomeTemplate()
+        self.fetchHomeTemplate()
 
         // Banners are associated with profile publisher
         let profileCancellable = Env.userSessionStore.userProfilePublisher
@@ -425,14 +425,17 @@ class CMSManagedHomeViewTemplateDataSource {
 
     func fetchHighlightMatches() {
 
-        let imageMatches = Env.servicesProvider.getHighlightedVisualImageEvents()
+        let imageMatches = Env.servicesProvider.getTopImageCardEvents()
             .receive(on: DispatchQueue.main)
             .map(ServiceProviderModelMapper.matches(fromEvents:))
             .replaceError(with: [])
 
-        let boostedMatches = Env.servicesProvider.getHighlightedBoostedEvents()
+        let boostedMatches = Env.servicesProvider.getBoostedOddsEvents()
             .receive(on: DispatchQueue.main)
-            .map(ServiceProviderModelMapper.matches(fromEvents:))
+            .map({ events in
+                return ServiceProviderModelMapper.matches(fromEvents: events)
+            })
+            // .map(ServiceProviderModelMapper.matches(fromEvents:))
             .replaceError(with: [])
 
         let combinedCancellable = Publishers.CombineLatest(imageMatches, boostedMatches)
@@ -485,22 +488,19 @@ class CMSManagedHomeViewTemplateDataSource {
     }
 
     func fetchHighlightMarkets() {
-        let cancellable = Env.servicesProvider.getHighlightedMarkets()
+        let cancellable = Env.servicesProvider.getProChoiceMarketCards()
             .receive(on: DispatchQueue.main)
             .sink { completion in
 
             } receiveValue: { [weak self] highlightMarkets in
-                let markets = highlightMarkets.map(\.market)
-                let mappedMarkets = ServiceProviderModelMapper.markets(fromServiceProviderMarkets: markets)
-
-                var mappedHighlightMarket: [HighlightedContent<Market>] = []
-
+                var mappedHighlightMarket: [ImageHighlightedContent<Market>] = []
                 for highlightMarket in highlightMarkets {
                     let mappedMarket = ServiceProviderModelMapper.market(fromServiceProviderMarket: highlightMarket.market)
 
-                    mappedHighlightMarket.append(HighlightedContent<Market>.init(content: mappedMarket,
-                                                promotionalImageURL: highlightMarket.promotionImageURl,
-                                                promotedDetailsCount: highlightMarket.enabledSelectionsCount))
+                    mappedHighlightMarket.append(ImageHighlightedContent<Market>(
+                        content: mappedMarket,
+                        imageURLString: highlightMarket.promotionImageURl,
+                        promotedDetailsCount: highlightMarket.enabledSelectionsCount))
                 }
 
                 self?.highlightedMarkets = mappedHighlightMarket
@@ -514,7 +514,7 @@ class CMSManagedHomeViewTemplateDataSource {
 
     func fetchHeroMatches() {
 
-        let cancellable = Env.servicesProvider.getHeroCards()
+        let cancellable = Env.servicesProvider.getHeroCardEvents()
             .receive(on: DispatchQueue.main)
             .map(ServiceProviderModelMapper.matches(fromEvents:))
             .compactMap({ $0 })
@@ -646,11 +646,11 @@ class CMSManagedHomeViewTemplateDataSource {
 
     func fetchHighlightedLiveMatches() {
 
-        var homeLiveEventsCount = Env.businessSettingsSocket.clientSettings.homeLiveEventsCount
+        let homeLiveEventsCount = Env.businessSettingsSocket.clientSettings.homeLiveEventsCount
 
         self.highlightedLiveMatches = []
 
-        var userId: String? = nil
+        var userId: String?
 
         if let loggedUserId = Env.userSessionStore.userProfilePublisher.value?.userIdentifier {
             userId = loggedUserId

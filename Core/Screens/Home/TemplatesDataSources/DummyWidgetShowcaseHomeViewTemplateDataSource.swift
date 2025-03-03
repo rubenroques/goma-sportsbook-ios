@@ -14,7 +14,7 @@ class DummyWidgetShowcaseHomeViewTemplateDataSource {
     // Define the array mapping sections to content types
     private var contentTypes: [HomeViewModel.Content] {
         switch TargetVariables.homeTemplateBuilder {
-        case .backendDynamic, .locallyManaged, .cmsManaged:
+        case .backendDynamic, .clientBackendManaged, .cmsManaged:
             return []
         case .dummyWidgetShowcase(widgets: let widgets):
             return widgets
@@ -201,7 +201,7 @@ class DummyWidgetShowcaseHomeViewTemplateDataSource {
 
     private var highlightedLiveMatches: [Match] = []
 
-    private var highlightedMarkets: [HighlightedContent<Market>] = []
+    private var highlightedMarkets: [ImageHighlightedContent<Market>] = []
 
     //
     private var pendingUserTrackRequest: AnyCancellable?
@@ -380,12 +380,12 @@ class DummyWidgetShowcaseHomeViewTemplateDataSource {
 
     func fetchHighlightMatches() {
 
-        let imageMatches = Env.servicesProvider.getHighlightedVisualImageEvents()
+        let imageMatches = Env.servicesProvider.getTopImageCardEvents()
             .receive(on: DispatchQueue.main)
             .map(ServiceProviderModelMapper.matches(fromEvents:))
             .replaceError(with: [])
 
-        let boostedMatches = Env.servicesProvider.getHighlightedBoostedEvents()
+        let boostedMatches = Env.servicesProvider.getBoostedOddsEvents()
             .receive(on: DispatchQueue.main)
             .map(ServiceProviderModelMapper.matches(fromEvents:))
             .replaceError(with: [])
@@ -440,7 +440,7 @@ class DummyWidgetShowcaseHomeViewTemplateDataSource {
     }
 
     func fetchHighlightMarkets() {
-        let cancellable = Env.servicesProvider.getHighlightedMarkets()
+        let cancellable = Env.servicesProvider.getProChoiceMarketCards()
             .receive(on: DispatchQueue.main)
             .sink { completion in
 
@@ -448,14 +448,15 @@ class DummyWidgetShowcaseHomeViewTemplateDataSource {
                 let markets = highlightMarkets.map(\.market)
                 let mappedMarkets = ServiceProviderModelMapper.markets(fromServiceProviderMarkets: markets)
 
-                var mappedHighlightMarket: [HighlightedContent<Market>] = []
+                var mappedHighlightMarket: [ImageHighlightedContent<Market>] = []
 
                 for highlightMarket in highlightMarkets {
                     let mappedMarket = ServiceProviderModelMapper.market(fromServiceProviderMarket: highlightMarket.market)
 
-                    mappedHighlightMarket.append(HighlightedContent<Market>.init(content: mappedMarket,
-                                                promotionalImageURL: highlightMarket.promotionImageURl,
-                                                promotedDetailsCount: highlightMarket.enabledSelectionsCount))
+                    mappedHighlightMarket.append(ImageHighlightedContent<Market>(
+                        content: mappedMarket,
+                        imageURLString: highlightMarket.promotionImageURl,
+                        promotedDetailsCount: highlightMarket.enabledSelectionsCount))
                 }
 
                 self?.highlightedMarkets = mappedHighlightMarket
@@ -469,7 +470,7 @@ class DummyWidgetShowcaseHomeViewTemplateDataSource {
 
     func fetchHeroMatches() {
 
-        let cancellable = Env.servicesProvider.getHeroCards()
+        let cancellable = Env.servicesProvider.getHeroCardEvents()
             .receive(on: DispatchQueue.main)
             .map(ServiceProviderModelMapper.matches(fromEvents:))
             .compactMap({ $0 })

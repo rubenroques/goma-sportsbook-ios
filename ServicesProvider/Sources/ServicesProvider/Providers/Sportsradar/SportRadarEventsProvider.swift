@@ -100,7 +100,7 @@ class SportRadarEventsProvider: EventsProvider {
     private var competitionEventsPublisher: [ContentIdentifier: CurrentValueSubject<SubscribableContent<[EventsGroup]>, ServiceProviderError>] = [:]
     private var outrightDetailsPublisher: CurrentValueSubject<SubscribableContent<[EventsGroup]>, ServiceProviderError>?
     private var eventSummaryPublisher: CurrentValueSubject<SubscribableContent<[EventsGroup]>, ServiceProviderError>?
-    private var eventLiveDataPublisher: CurrentValueSubject<SubscribableContent<[Event]>, ServiceProviderError>?
+    private var eventLiveDataPublisher: CurrentValueSubject<SubscribableContent<Events>, ServiceProviderError>?
 
     //
     // Keep a reference for all the subscriptions. This allows the ServiceProvider to subscribe to the same content in two different app places
@@ -828,15 +828,7 @@ extension SportRadarEventsProvider {
         return Fail(error: ServiceProviderError.notSupportedForProvider).eraseToAnyPublisher()
     }
 
-    func getHighlightedBoostedEventsPointers() -> AnyPublisher<[EventMetadataPointer], ServiceProviderError> {
-        return Fail(error: ServiceProviderError.notSupportedForProvider).eraseToAnyPublisher()
-    }
-
-    func getHighlightedVisualImageEventsPointers() -> AnyPublisher<[EventMetadataPointer], ServiceProviderError> {
-        return Fail(error: ServiceProviderError.notSupportedForProvider).eraseToAnyPublisher()
-    }
-
-    func getPromotedEventsBySport() -> AnyPublisher<[SportType : [Event]], ServiceProviderError> {
+    func getPromotedEventsBySport() -> AnyPublisher<[SportType : Events], ServiceProviderError> {
         return Fail(error: ServiceProviderError.notSupportedForProvider).eraseToAnyPublisher()
     }
 
@@ -1097,7 +1089,7 @@ extension SportRadarEventsProvider {
 
     }
 
-    public func getPromotionalTopBanners() -> AnyPublisher<[PromotionalBanner], ServiceProviderError> {
+    func getPromotionalTopBanners() -> AnyPublisher<[PromotionalBanner], ServiceProviderError> {
         let endpoint = SportRadarRestAPIClient.promotionalTopBanners
         let requestPublisher: AnyPublisher<SportRadarModels.SportRadarResponse<[SportRadarModels.PromotionalBannersResponse]>, ServiceProviderError> = self.restConnector.request(endpoint)
 
@@ -1109,13 +1101,13 @@ extension SportRadarEventsProvider {
         .eraseToAnyPublisher()
     }
 
-    public func getPromotionalSlidingTopEvents() -> AnyPublisher<[Event], ServiceProviderError> {
+    func getPromotionalSlidingTopEvents() -> AnyPublisher<Events, ServiceProviderError> {
         let endpoint = SportRadarRestAPIClient.promotionalTopEvents
         let requestPublisher: AnyPublisher<SportRadarModels.SportRadarResponse<SportRadarModels.HeadlineResponse>, ServiceProviderError> = self.restConnector.request(endpoint)
 
         return requestPublisher
             .map(\.data)
-            .flatMap({ headlineResponse -> AnyPublisher<[Event], ServiceProviderError> in
+            .flatMap({ headlineResponse -> AnyPublisher<Events, ServiceProviderError> in
 
                 let headlineItems = headlineResponse.headlineItems ?? []
                 var headlineItemsImages: [String: String] = [:]
@@ -1129,10 +1121,10 @@ extension SportRadarEventsProvider {
                 let publishers = marketIds.map(self.getEventForMarket(withId:))
                 let finalPublisher = Publishers.MergeMany(publishers)
                     .collect()
-                    .map({ (events: [Event?]) -> [Event] in
+                    .map({ (events: [Event?]) -> Events in
                         return events.compactMap({ $0 })
                     })
-                    .map({ events -> [Event] in // Configure the image of each market
+                    .map({ events -> Events in // Configure the image of each market
                         for event in events {
                             let firstMarketId = event.markets.first?.id ?? ""
                             event.promoImageURL =  headlineItemsImages[firstMarketId]
@@ -1159,189 +1151,8 @@ extension SportRadarEventsProvider {
             })
             .eraseToAnyPublisher()
     }
-
-    func getHighlightedBoostedEvents() -> AnyPublisher<[Event], ServiceProviderError> {
-        let endpoint = SportRadarRestAPIClient.highlightsBoostedOddsEvents
-        let requestPublisher: AnyPublisher<SportRadarModels.SportRadarResponse<SportRadarModels.HeadlineResponse>, ServiceProviderError> = self.restConnector.request(endpoint)
-
-        return requestPublisher
-            .map(\.data)
-            .flatMap({ headlineResponse -> AnyPublisher<[Event], ServiceProviderError> in
-
-                let headlineItems = headlineResponse.headlineItems ?? []
-                var headlineItemsOldMarkets: [String: String] = [:]
-                headlineItems.forEach({ item in
-                    if let id = item.marketId, let oldMarketId = item.oldMarketId {
-                        headlineItemsOldMarkets[id] = oldMarketId
-                    }
-                })
-
-                let marketIds = headlineItems.map({ item in return item.marketId }).compactMap({ $0 })
-
-                let publishers = marketIds.map(self.getEventForMarket(withId:))
-                let finalPublisher = Publishers.MergeMany(publishers)
-                    .collect()
-                    .map({ (events: [Event?]) -> [Event] in
-                        return events.compactMap({ $0 })
-                    })
-                    .map({ (events: [Event]) -> [Event] in
-
-                        for event in events {
-                            let firstMarketId = event.markets.first?.id ?? ""
-                            event.oldMainMarketId =  headlineItemsOldMarkets[firstMarketId]
-                        }
-
-                        let cleanedEvents = events.compactMap({ $0 })
-
-                        // create a dictionary from cleanedEvents using marketId as a key
-                        var eventDict: [String: Event] = [:]
-                        cleanedEvents.forEach({ event in
-                            let firstMarketId = event.markets.first?.id ?? ""
-                            eventDict[firstMarketId] = event
-                        })
-
-                        // re-order the cleanedEvents based on the order of marketIds in headlineItems
-                        let orderedEvents = headlineItems.compactMap { item in eventDict[item.marketId ?? ""] }
-                        return orderedEvents
-                    })
-
-                    .eraseToAnyPublisher()
-
-                return finalPublisher
-                    .setFailureType(to: ServiceProviderError.self)
-                    .eraseToAnyPublisher()
-            })
-            .eraseToAnyPublisher()
-    }
-
-    func getHighlightedVisualImageEvents() -> AnyPublisher<[Event], ServiceProviderError> {
-        let endpoint = SportRadarRestAPIClient.highlightsImageVisualEvents
-        let requestPublisher: AnyPublisher<SportRadarModels.SportRadarResponse<SportRadarModels.HeadlineResponse>, ServiceProviderError> = self.restConnector.request(endpoint)
-
-        return requestPublisher
-            .map(\.data)
-            .flatMap({ headlineResponse -> AnyPublisher<[Event], ServiceProviderError> in
-
-                let headlineItems = headlineResponse.headlineItems ?? []
-                var headlineItemsImages: [String: String] = [:]
-
-                headlineItems.forEach({ item in
-                    if let id = item.marketId, let imageURL = item.imageURL {
-                        headlineItemsImages[id] = imageURL
-                    }
-                })
-                let marketIds = headlineItems.map({ item in return item.marketId }).compactMap({ $0 })
-
-                let publishers = marketIds.map(self.getEventForMarket(withId:))
-                let finalPublisher = Publishers.MergeMany(publishers)
-                    .collect()
-                    .map({ (events: [Event?]) -> [Event] in
-                        return events.compactMap({ $0 })
-                    })
-                    .map({ events -> [Event] in // Configure the image of each market
-                        for event in events {
-                            let firstMarketId = event.markets.first?.id ?? ""
-                            event.promoImageURL =  headlineItemsImages[firstMarketId]
-                        }
-
-                        let cleanedEvents = events.compactMap({ $0 })
-
-                        // create a dictionary from cleanedEvents using marketId as a key
-                        var eventDict: [String: Event] = [:]
-                        cleanedEvents.forEach({ event in
-                            let firstMarketId = event.markets.first?.id ?? ""
-                            eventDict[firstMarketId] = event
-                        })
-
-                        // re-order the cleanedEvents based on the order of marketIds in headlineItems
-                        let orderedEvents = headlineItems.compactMap { eventDict[$0.marketId ?? ""] }
-                        return orderedEvents
-                    })
-                    .eraseToAnyPublisher()
-
-                return finalPublisher
-                    .setFailureType(to: ServiceProviderError.self)
-                    .eraseToAnyPublisher()
-            })
-            .eraseToAnyPublisher()
-    }
-
-    public func getHighlightedMarkets() -> AnyPublisher<[HighlightMarket], ServiceProviderError> {
-        let endpoint = SportRadarRestAPIClient.highlightsMarkets
-        let requestPublisher: AnyPublisher<SportRadarModels.SportRadarResponse<SportRadarModels.HeadlineResponse>, ServiceProviderError> = self.restConnector.request(endpoint)
-
-        return requestPublisher
-            .map(\.data)
-            .flatMap { headlineResponse -> AnyPublisher<[HighlightMarket], ServiceProviderError> in
-                let headlineItems = headlineResponse.headlineItems ?? []
-                var headlineItemsImages: [String: String] = [:]
-                var headlineItemsPresentedSelection: [String: String] = [:]
-
-                headlineItems.forEach { item in
-                    if let id = item.marketId, let imageURL = item.imageURL {
-                        headlineItemsImages[id] = imageURL
-                        headlineItemsPresentedSelection[id] = item.numofselections
-                    }
-                }
-
-                // Mapeia `marketIds` com índices para preservar a ordem original
-                let marketIds = headlineItems.compactMap { $0.marketId }
-
-                var uniqueMarketIds = [String]()
-                for id in marketIds {
-                    if !uniqueMarketIds.contains(id) {
-                        uniqueMarketIds.append(id)
-                    }
-                }
-
-                let marketIdIndexMap = Dictionary(uniqueKeysWithValues: uniqueMarketIds.enumerated().map { ($1, $0) })
-
-                let publishers = marketIds.map { id in
-                    return self.getMarketInfo(marketId: id)
-                        .map { market in
-                            return Optional(market)
-                        }
-                        .replaceError(with: nil)
-                }
-
-                let finalPublisher = Publishers.MergeMany(publishers)
-                    .collect()
-                    .map { (markets: [Market?]) -> [HighlightMarket] in
-                        let marketValue = markets.compactMap { $0 }
-                        var highlightMarkets = [HighlightMarket]()
-
-                        for market in marketValue {
-                            let enableSelections = headlineItemsPresentedSelection[market.id] ?? "0"
-                            let enabledSelectionsCount = Int(enableSelections) ?? 0
-                            let imageURL = headlineItemsImages[market.id]
-
-                            let highlightMarket = HighlightMarket(
-                                market: market,
-                                enabledSelectionsCount: enabledSelectionsCount,
-                                promotionImageURl: imageURL
-                            )
-                            highlightMarkets.append(highlightMarket)
-                        }
-
-                        // Ordena `highlightMarkets` com base na posição original em `marketIdIndexMap`
-                        return highlightMarkets.sorted {
-                            guard let index1 = marketIdIndexMap[$0.market.id],
-                                  let index2 = marketIdIndexMap[$1.market.id]
-                            else { return false }
-                            return index1 < index2
-                        }
-                    }
-                    .eraseToAnyPublisher()
-
-                return finalPublisher
-                    .setFailureType(to: ServiceProviderError.self)
-                    .eraseToAnyPublisher()
-            }
-            .eraseToAnyPublisher()
-    }
-
-
-    public func getPromotionalTopStories() -> AnyPublisher<[PromotionalStory], ServiceProviderError> {
+    
+    func getPromotionalTopStories() -> AnyPublisher<[PromotionalStory], ServiceProviderError> {
 
         let endpoint = SportRadarRestAPIClient.promotionalTopStories
 
@@ -1360,7 +1171,7 @@ extension SportRadarEventsProvider {
         .eraseToAnyPublisher()
     }
 
-    public func getPromotedSports() -> AnyPublisher<[PromotedSport], ServiceProviderError> {
+    func getPromotedSports() -> AnyPublisher<[PromotedSport], ServiceProviderError> {
         let endpoint = SportRadarRestAPIClient.promotedSports
         let requestPublisher: AnyPublisher<SportRadarModels.SportRadarResponse<SportRadarModels.PromotedSportsResponse>, ServiceProviderError> = self.restConnector.request(endpoint)
 
@@ -1791,10 +1602,10 @@ extension SportRadarEventsProvider {
 
     }
 
-    func getHighlightedLiveEvents(eventCount: Int, userId: String?) -> AnyPublisher<[Event], ServiceProviderError> {
+    func getHighlightedLiveEvents(eventCount: Int, userId: String?) -> AnyPublisher<Events, ServiceProviderError> {
 
         let publisher = self.getHighlightedLiveEventsPointers(eventCount: eventCount, userId: userId) // Get the ids
-            .flatMap({ (eventPointers: [String]) -> AnyPublisher<[Event], ServiceProviderError> in
+            .flatMap({ (eventPointers: [String]) -> AnyPublisher<Events, ServiceProviderError> in
 
                 let getEventSummaryRequests: [AnyPublisher<Event?, ServiceProviderError>] = eventPointers
                     .map { (eventId: String) -> AnyPublisher<Event?, ServiceProviderError> in
