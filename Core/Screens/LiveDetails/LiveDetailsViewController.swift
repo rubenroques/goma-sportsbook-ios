@@ -63,7 +63,7 @@ class LiveDetailsViewController: UIViewController {
         self.refreshControl.addTarget(self, action: #selector(self.refreshControllPulled), for: .valueChanged)
         self.tableView.addSubview(self.refreshControl)
 
-        self.tableView.register(MatchLineTableViewCell.nib, forCellReuseIdentifier: MatchLineTableViewCell.identifier)
+        self.tableView.register(Betsson.MatchLineTableViewCell.self, forCellReuseIdentifier: MatchLineTableViewCell.identifier)
 
         self.tableView.register(OutrightCompetitionLineTableViewCell.self,
                                 forCellReuseIdentifier: OutrightCompetitionLineTableViewCell.identifier)

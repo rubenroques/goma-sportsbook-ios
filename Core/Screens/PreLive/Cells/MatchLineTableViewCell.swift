@@ -14,23 +14,23 @@ class MatchLineTableViewCell: UITableViewCell {
     //
     private var debugUUID = UUID()
     //
-    
+
     private var viewModel: MatchLineTableCellViewModel?
 
     var matchStatsViewModel: MatchStatsViewModel?
 
-    @IBOutlet private var debugLabel: UILabel!
-    @IBOutlet private var backSliderView: UIView!
-    @IBOutlet private var backSliderIconImageView: UIImageView!
-    
-    @IBOutlet private var collectionBaseView: UIView!
-    @IBOutlet private var collectionView: UICollectionView!
+    // MARK: - UI Components
+    private lazy var collectionBaseView: UIView = Self.createCollectionBaseView()
+    private lazy var collectionView: UICollectionView = Self.createCollectionView()
+    private lazy var backSliderView: UIView = Self.createBackSliderView()
+    private lazy var backSliderIconImageView: UIImageView = Self.createBackSliderIconImageView()
+    private lazy var debugLabel: UILabel = Self.createDebugLabel()
+    private lazy var loadingView: UIActivityIndicatorView = Self.createLoadingView()
 
-    @IBOutlet private var collectionViewHeightConstraint: NSLayoutConstraint!
-    @IBOutlet private var collectionViewTopMarginConstraint: NSLayoutConstraint!
-    @IBOutlet private var collectionViewBottomMarginConstraint: NSLayoutConstraint!
-
-    @IBOutlet private var loadingView: UIActivityIndicatorView!
+    // MARK: - Constraints
+    private var collectionViewHeightConstraint: NSLayoutConstraint!
+    private var collectionViewTopMarginConstraint: NSLayoutConstraint!
+    private var collectionViewBottomMarginConstraint: NSLayoutConstraint!
 
     private var cachedCardsStyle: CardsStyle?
 
@@ -44,7 +44,7 @@ class MatchLineTableViewCell: UITableViewCell {
     var tappedMatchLineAction: ((Match) -> Void)?
     var selectedOutcome: ((Match, Market, Outcome) -> Void)?
     var unselectedOutcome: ((Match, Market, Outcome) -> Void)?
-    
+
     var matchWentLive: (() -> Void)?
     var didTapFavoriteMatchAction: ((Match) -> Void)?
     var didLongPressOdd: ((BettingTicket) -> Void)?
@@ -56,7 +56,7 @@ class MatchLineTableViewCell: UITableViewCell {
         let cardHeight = StyleHelper.cardsStyleHeight()
         return cardHeight + cellInternSpace + cellInternSpace
     }
-    
+
     private var selectedSeeMoreMarketsCollectionViewCell: SeeMoreMarketsCollectionViewCell? {
         willSet {
             self.selectedSeeMoreMarketsCollectionViewCell?.transitionId = nil
@@ -68,22 +68,39 @@ class MatchLineTableViewCell: UITableViewCell {
 
     private var cancellables: Set<AnyCancellable> = []
 
-    override func awakeFromNib() {
-        super.awakeFromNib()
+    // MARK: - Initialization
+    override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
+        super.init(style: style, reuseIdentifier: reuseIdentifier)
+        setupUI()
+    }
 
+    required init?(coder: NSCoder) {
+        super.init(coder: coder)
+        setupUI()
+    }
+
+    private func setupUI() {
         // print("BlinkDebug: line awakeFromNib")
-        
+
         self.selectionStyle = .none
 
         self.loadingView.hidesWhenStopped = true
         self.loadingView.stopAnimating()
 
         self.cachedCardsStyle = StyleHelper.cardsStyleActive()
-        
+
         self.debugLabel.isHidden = true
 
         self.backSliderView.alpha = 0.0
 
+        setupSubviews()
+        setupCollectionView()
+        setupGestureRecognizers()
+        setupConstraints()
+        setupWithTheme()
+    }
+
+    private func setupCollectionView() {
         self.collectionView.delegate = self
         self.collectionView.dataSource = self
 
@@ -95,7 +112,7 @@ class MatchLineTableViewCell: UITableViewCell {
         self.collectionView.register(UICollectionViewCell.self, forCellWithReuseIdentifier: "UICollectionViewCell")
 
         self.collectionView.clipsToBounds = false
-        
+
         self.collectionView.showsVerticalScrollIndicator = false
         self.collectionView.showsHorizontalScrollIndicator = false
 
@@ -104,33 +121,31 @@ class MatchLineTableViewCell: UITableViewCell {
         self.collectionView.collectionViewLayout = flowLayout
 
         self.collectionView.contentInset = UIEdgeInsets(top: 0, left: 8, bottom: 0, right: 8)
+    }
 
-        self.backSliderView.layer.cornerRadius = 6
-
+    private func setupGestureRecognizers() {
         let backSliderTapGesture = UITapGestureRecognizer(target: self, action: #selector(didTapBackSliderButton))
         self.backSliderView.addGestureRecognizer(backSliderTapGesture)
+    }
 
-        //
-        self.collectionViewHeightConstraint.constant = self.collectionViewHeight
-        self.collectionViewTopMarginConstraint.constant = StyleHelper.cardsStyleMargin()
-        self.collectionViewBottomMarginConstraint.constant = StyleHelper.cardsStyleMargin()
-
-        self.setupWithTheme()
+    override func awakeFromNib() {
+        super.awakeFromNib()
+        // No-op, UI is setup in init methods
     }
 
     override func prepareForReuse() {
         super.prepareForReuse()
-        
+
         self.selectionStyle = .none
 
         self.matchInfoPublisher?.cancel()
         self.matchInfoPublisher = nil
-        
+
         self.viewModel = nil
         self.match = nil
 
         self.cancellables.removeAll()
-        
+
         self.matchStatsViewModel = nil
 
         self.loadingView.hidesWhenStopped = true
@@ -176,26 +191,26 @@ class MatchLineTableViewCell: UITableViewCell {
         self.backSliderView.backgroundColor = UIColor.App.backgroundOdds
         self.backSliderIconImageView.setTintColor(color: UIColor.App.iconPrimary)
     }
-    
+
     func configure(withViewModel viewModel: MatchLineTableCellViewModel) {
         self.viewModel = viewModel
-        
+
         // let matchDesc = "[\(viewModel.match.id) \(viewModel.match.homeParticipant.name) vs \(viewModel.match.awayParticipant.name)]"
         // print("BlinkDebug line (\(self.debugUUID.uuidString)) configure(withViewModel \(matchDesc)")
-        
+
 //        self.loadingView.stopAnimating()
 //        self.setupWithMatch(viewModel.match)
 
         self.matchInfoPublisher?.cancel()
         self.matchInfoPublisher = nil
-        
+
         self.matchInfoPublisher = viewModel.$match
             .removeDuplicates(by: { [weak self] oldMatch, newMatch in
-                
+
                 // let oldMatchDesc = "[\(oldMatch.id) \(oldMatch.homeParticipant.name) vs \(oldMatch.awayParticipant.name)]"
                 // let newMatchDesc = "[\(newMatch.id) \(newMatch.homeParticipant.name) vs \(newMatch.awayParticipant.name)]"
                 // print("BlinkDebug Line comparing \(oldMatchDesc) <> \(newMatchDesc)")
-                
+
                 let visuallySimilar = Match.visuallySimilar(lhs: oldMatch, rhs: newMatch)
                 if visuallySimilar.0 {
                     // print("BlinkDebug Line (\(self?.debugUUID.uuidString ?? "")) ignoring")
@@ -220,16 +235,11 @@ class MatchLineTableViewCell: UITableViewCell {
             }
 
     }
-
-
     private func setupWithMatch(_ newMatch: Match) {
-
-
         self.match = newMatch
         self.collectionView.reloadData()
         return
-        
-        
+
         // TODO: Implement diffable updates
         // currently some cells appear with old data from previous VM
         //
@@ -237,36 +247,36 @@ class MatchLineTableViewCell: UITableViewCell {
         guard
             let currentMatch = self.match
         else {
-            
+
             let matchDesc = "[\(newMatch.id) \(newMatch.homeParticipant.name) vs \(newMatch.awayParticipant.name)]"
             // print("BlinkDebug Line (\(self.debugUUID.uuidString)) setupWithMatch reload all \(matchDesc)")
-            
+
             // If no self.match was found it should refresh all sections
             self.match = newMatch
             self.collectionView.reloadData()
             return
         }
-        
+
         // We have a match already
-        
+
         // if Match.visuallySimilar(lhs: newMatch, rhs: currentMatch).0 {
         if
             newMatch.id == currentMatch.id &&
             newMatch.status == currentMatch.status &&
             newMatch.markets.first == currentMatch.markets.first {
-        
+
             let matchDesc = "[\(newMatch.id) \(newMatch.homeParticipant.name) vs \(newMatch.awayParticipant.name)]"
             let oldMatchDesc = "[\(currentMatch.id) \(currentMatch.homeParticipant.name) vs \(currentMatch.awayParticipant.name)]"
 
             // print("BlinkDebug Line (\(self.debugUUID.uuidString)) setupWithMatch reload sec markest \(matchDesc) <> \(oldMatchDesc)")
-            
+
             self.match = newMatch
             self.collectionView.reloadSections(IndexSet(integer: 1)) // reload secundary markets
         }
         else {
             let matchDesc = "[\(newMatch.id) \(newMatch.homeParticipant.name) vs \(newMatch.awayParticipant.name)]"
             // print("BlinkDebug Line (\(self.debugUUID.uuidString)) setupWithMatch match diff reload all \(matchDesc)")
-            
+
             self.match = newMatch
             self.collectionView.reloadData()
         }
@@ -286,7 +296,131 @@ class MatchLineTableViewCell: UITableViewCell {
             self.tappedMatchLineAction?(match)
         }
     }
-    
+
+}
+
+// MARK: - UI Setup
+private extension MatchLineTableViewCell {
+    func setupSubviews() {
+        contentView.addSubview(collectionBaseView)
+        contentView.addSubview(backSliderView)
+        contentView.addSubview(debugLabel)
+        contentView.addSubview(loadingView)
+
+        collectionBaseView.addSubview(collectionView)
+        backSliderView.addSubview(backSliderIconImageView)
+    }
+
+    func setupConstraints() {
+        // Collection base view constraints
+        NSLayoutConstraint.activate([
+            collectionBaseView.topAnchor.constraint(equalTo: contentView.topAnchor),
+            collectionBaseView.leadingAnchor.constraint(equalTo: contentView.leadingAnchor),
+            collectionBaseView.trailingAnchor.constraint(equalTo: contentView.trailingAnchor),
+            collectionBaseView.bottomAnchor.constraint(equalTo: contentView.bottomAnchor)
+        ])
+
+        // Collection view constraints with IBOutlet-like references
+        collectionViewHeightConstraint = collectionView.heightAnchor.constraint(equalToConstant: 160)
+        collectionViewTopMarginConstraint = collectionView.topAnchor.constraint(equalTo: collectionBaseView.topAnchor, constant: 8)
+        collectionViewBottomMarginConstraint = collectionBaseView.bottomAnchor.constraint(equalTo: collectionView.bottomAnchor, constant: 8)
+
+        NSLayoutConstraint.activate([
+            collectionView.leadingAnchor.constraint(equalTo: collectionBaseView.leadingAnchor),
+            collectionView.trailingAnchor.constraint(equalTo: collectionBaseView.trailingAnchor),
+            collectionViewHeightConstraint,
+            collectionViewTopMarginConstraint,
+            collectionViewBottomMarginConstraint
+        ])
+
+        // Back slider view constraints
+        NSLayoutConstraint.activate([
+            backSliderView.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: -36),
+            backSliderView.centerYAnchor.constraint(equalTo: contentView.centerYAnchor, constant: -6),
+            backSliderView.widthAnchor.constraint(equalToConstant: 78),
+            backSliderView.heightAnchor.constraint(equalToConstant: 38)
+        ])
+
+        // Back slider icon constraints
+        NSLayoutConstraint.activate([
+            backSliderIconImageView.trailingAnchor.constraint(equalTo: backSliderView.trailingAnchor, constant: -7),
+            backSliderIconImageView.centerYAnchor.constraint(equalTo: backSliderView.centerYAnchor),
+            backSliderIconImageView.widthAnchor.constraint(equalToConstant: 24),
+            backSliderIconImageView.heightAnchor.constraint(equalTo: backSliderIconImageView.widthAnchor)
+        ])
+
+        // Debug label constraints
+        NSLayoutConstraint.activate([
+            debugLabel.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 9),
+            debugLabel.topAnchor.constraint(equalTo: contentView.topAnchor, constant: 30)
+        ])
+
+        // Loading view constraints
+        NSLayoutConstraint.activate([
+            loadingView.centerXAnchor.constraint(equalTo: contentView.centerXAnchor),
+            loadingView.centerYAnchor.constraint(equalTo: contentView.centerYAnchor)
+        ])
+
+        // Initialize constraint values
+        collectionViewHeightConstraint.constant = self.collectionViewHeight
+        collectionViewTopMarginConstraint.constant = StyleHelper.cardsStyleMargin()
+        collectionViewBottomMarginConstraint.constant = StyleHelper.cardsStyleMargin()
+    }
+
+    // MARK: - Factory Methods
+    static func createCollectionBaseView() -> UIView {
+        let view = UIView()
+        view.translatesAutoresizingMaskIntoConstraints = false
+        view.backgroundColor = UIColor(white: 0.67, alpha: 1.0)
+        return view
+    }
+
+    static func createCollectionView() -> UICollectionView {
+        let layout = UICollectionViewFlowLayout()
+        layout.minimumLineSpacing = 10
+        layout.minimumInteritemSpacing = 10
+        layout.scrollDirection = .horizontal
+
+        let collectionView = UICollectionView(frame: .zero, collectionViewLayout: layout)
+        collectionView.translatesAutoresizingMaskIntoConstraints = false
+        collectionView.backgroundColor = .systemBackground
+        collectionView.clipsToBounds = true
+        return collectionView
+    }
+
+    static func createBackSliderView() -> UIView {
+        let view = UIView()
+        view.translatesAutoresizingMaskIntoConstraints = false
+        view.backgroundColor = UIColor(white: 0.33, alpha: 1.0)
+        view.layer.cornerRadius = 6
+        return view
+    }
+
+    static func createBackSliderIconImageView() -> UIImageView {
+        let imageView = UIImageView(image: UIImage(named: "arrow_circle_left_icon"))
+        imageView.translatesAutoresizingMaskIntoConstraints = false
+        imageView.contentMode = .scaleAspectFit
+        imageView.clipsToBounds = true
+        return imageView
+    }
+
+    static func createDebugLabel() -> UILabel {
+        let label = UILabel()
+        label.translatesAutoresizingMaskIntoConstraints = false
+        label.text = "-"
+        label.font = .systemFont(ofSize: 14)
+        label.textColor = UIColor(white: 0.67, alpha: 1.0)
+        label.backgroundColor = .black
+        return label
+    }
+
+    static func createLoadingView() -> UIActivityIndicatorView {
+        let activityIndicator = UIActivityIndicatorView(style: .large)
+        activityIndicator.translatesAutoresizingMaskIntoConstraints = false
+        activityIndicator.color = .systemGray4
+        activityIndicator.hidesWhenStopped = true
+        return activityIndicator
+    }
 }
 
 extension MatchLineTableViewCell: UIScrollViewDelegate {
@@ -297,19 +431,19 @@ extension MatchLineTableViewCell: UIScrollViewDelegate {
 
         let pushScreenMargin = 100.0
         let bounceXPosition = ( (scrollView.contentOffset.x - scrollView.contentInset.left) + scrollView.frame.width) - scrollView.contentSize.width
-        
+
         var activeSeeMoreCell: SeeMoreMarketsCollectionViewCell?
-        
+
         if bounceXPosition >= 0 {
             for cell in self.collectionView.visibleCells {
                 if let seeMoreCell = cell as? SeeMoreMarketsCollectionViewCell {
                     seeMoreCell.setAnimationPercentage(bounceXPosition / Double(pushScreenMargin * 0.98))
-                    
+
                     activeSeeMoreCell = seeMoreCell
                 }
             }
         }
-        
+
         if scrollView.isTracking && scrollView.contentSize.width > screenWidth {
             if scrollView.contentOffset.x + scrollView.frame.width > scrollView.contentSize.width + pushScreenMargin {
 
@@ -375,9 +509,9 @@ extension MatchLineTableViewCell: UICollectionViewDelegate, UICollectionViewData
     }
 
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
-        
+
         let knownStatus = self.viewModel?.status ?? .unknown
-        
+
         guard
             let match = self.viewModel?.match
         else {
@@ -395,7 +529,7 @@ extension MatchLineTableViewCell: UICollectionViewDelegate, UICollectionViewData
             else {
                 fatalError()
             }
-            
+
             if let cellViewModel = self.viewModel?.matchWidgetCellViewModel {
                 // print("BlinkDebug line (\(self.debugUUID.uuidString)) viewModel for cell found")
                 cell.configure(withViewModel: cellViewModel)
@@ -415,32 +549,32 @@ extension MatchLineTableViewCell: UICollectionViewDelegate, UICollectionViewData
             cell.didLongPressOdd = { [weak self] bettingTicket in
                 self?.didLongPressOdd?(bettingTicket)
             }
-            
+
             cell.tappedMixMatchAction = { [weak self] match in
                 self?.tappedMixMatchAction?(match)
             }
-            
+
             cell.shouldShowCountryFlag(self.shouldShowCountryFlag)
 
             return cell
-            
+
         case 1:
             if match.markets.count > 1, let market = match.markets[safe: indexPath.row + 1] {
 
                 let cellViewModel = self.viewModel?.matchWidgetCellViewModel ?? MatchWidgetCellViewModel(match: match, matchWidgetStatus: knownStatus)
-                
+
                 let teamsText = "\(match.homeParticipant.name) - \(match.awayParticipant.name)"
                 let countryIso = match.venue?.isoCode ?? ""
 
                 if market.outcomes.count == 2 {
                     if let cell = collectionView.dequeueCellType(OddDoubleCollectionViewCell.self, indexPath: indexPath) {
                         cell.matchStatsViewModel = self.matchStatsViewModel
-                        cell.setupWithMarket(market, 
+                        cell.setupWithMarket(market,
                                              match: match,
                                              teamsText: teamsText,
                                              countryIso: countryIso,
                                              isLive: cellViewModel.matchWidgetStatus == .live )
-                        
+
                         cell.tappedMatchWidgetAction = { [weak self] in
                             self?.tappedMatchLine()
                         }
@@ -460,7 +594,7 @@ extension MatchLineTableViewCell: UICollectionViewDelegate, UICollectionViewData
                                              teamsText: teamsText,
                                              countryIso: countryIso,
                                              isLive: cellViewModel.matchWidgetStatus == .live)
-                        
+
                         cell.tappedMatchWidgetAction = {  [weak self] in
                             self?.tappedMatchLine()
                         }
@@ -520,7 +654,7 @@ extension MatchLineTableViewCell: UICollectionViewDelegate, UICollectionViewData
     func collectionView(_ collectionView: UICollectionView,
                         layout collectionViewLayout: UICollectionViewLayout,
                         minimumInteritemSpacingForSectionAt section: Int) -> CGFloat {
-        
+
         if section == 1, (self.match?.markets.count ?? 0) <= 1 {
             return 0
         }
@@ -571,8 +705,169 @@ extension MatchLineTableViewCell: UICollectionViewDelegate, UICollectionViewData
             if width > 390 {
                 width = 390
             }
-            
+
             return CGSize(width: width, height: height) // design width: 331
         }
     }
 }
+
+#if DEBUG
+import SwiftUI
+
+// MARK: - Preview Helper
+private struct PreviewContainer<T: UIViewController>: UIViewControllerRepresentable {
+    let viewController: T
+
+    init(_ viewControllerBuilder: @escaping () -> T) {
+        viewController = viewControllerBuilder()
+    }
+
+    func makeUIViewController(context: Context) -> T {
+        return viewController
+    }
+
+    func updateUIViewController(_ uiViewController: T, context: Context) {}
+}
+
+// MARK: - Preview View Controller
+private class MatchLinePreviewViewController: UIViewController {
+    private let tableView = UITableView(frame: .zero, style: .plain)
+
+    // Define our preview states
+    private enum PreviewState {
+        case standard
+        case live
+        case multipleMarkets
+        case loading
+
+        var title: String {
+            switch self {
+            case .standard: return "Default State"
+            case .live: return "Live Match"
+            case .multipleMarkets: return "Multiple Markets"
+            case .loading: return "Loading State"
+            }
+        }
+    }
+
+    private let states: [PreviewState] = [.standard, .live, .multipleMarkets, .loading]
+
+    override func viewDidLoad() {
+        super.viewDidLoad()
+        view.backgroundColor = .systemBackground
+        setupTableView()
+    }
+
+    private func setupTableView() {
+        view.addSubview(tableView)
+        tableView.translatesAutoresizingMaskIntoConstraints = false
+
+        NSLayoutConstraint.activate([
+            tableView.topAnchor.constraint(equalTo: view.topAnchor),
+            tableView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
+            tableView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
+            tableView.bottomAnchor.constraint(equalTo: view.bottomAnchor)
+        ])
+
+        tableView.register(MatchLineTableViewCell.self, forCellReuseIdentifier: "MatchLineTableViewCell")
+        tableView.register(UITableViewCell.self, forCellReuseIdentifier: "HeaderCell")
+
+        tableView.delegate = self
+        tableView.dataSource = self
+        tableView.separatorStyle = .none
+        tableView.backgroundColor = .systemGroupedBackground
+    }
+}
+
+// MARK: - UITableView Delegate & DataSource
+extension MatchLinePreviewViewController: UITableViewDelegate, UITableViewDataSource {
+    func numberOfSections(in tableView: UITableView) -> Int {
+        return states.count
+    }
+
+    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+        return 1
+    }
+
+    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+        guard let cell = tableView.dequeueReusableCell(withIdentifier: "MatchLineTableViewCell") as? MatchLineTableViewCell else {
+            return UITableViewCell()
+        }
+
+        let state = states[indexPath.section]
+
+        // Configure cell based on state
+        switch state {
+        case .standard:
+            let match = PreviewModelsHelper.createFootballMatch()
+            let viewModel = MatchLineTableCellViewModel(match: match)
+            cell.configure(withViewModel: viewModel)
+
+        case .live:
+            let match = PreviewModelsHelper.createLiveFootballMatch()
+            let viewModel = MatchLineTableCellViewModel(match: match)
+            cell.configure(withViewModel: viewModel)
+
+        case .multipleMarkets:
+            let match = PreviewModelsHelper.createFootballMatchWithMultipleMarkets()
+            let viewModel = MatchLineTableCellViewModel(match: match)
+            cell.configure(withViewModel: viewModel)
+
+        case .loading:
+            let match = PreviewModelsHelper.createFootballMatch()
+            let viewModel = MatchLineTableCellViewModel(match: match)
+            cell.configure(withViewModel: viewModel)
+            if let loadingView = cell.value(forKey: "loadingView") as? UIActivityIndicatorView {
+                loadingView.startAnimating()
+            }
+        }
+
+        return cell
+    }
+
+    func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
+        let headerView = UIView()
+        headerView.backgroundColor = .systemGroupedBackground
+
+        let label = UILabel()
+        label.text = states[section].title
+        label.font = .boldSystemFont(ofSize: 16)
+        label.textColor = .label
+
+        headerView.addSubview(label)
+        label.translatesAutoresizingMaskIntoConstraints = false
+
+        NSLayoutConstraint.activate([
+            label.leadingAnchor.constraint(equalTo: headerView.leadingAnchor, constant: 16),
+            label.centerYAnchor.constraint(equalTo: headerView.centerYAnchor)
+        ])
+
+        return headerView
+    }
+
+    func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
+        return 44
+    }
+
+    func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
+        return 176
+    }
+}
+
+// MARK: - SwiftUI Previews
+@available(iOS 17.0, *)
+#Preview("MatchLineTableViewCell States") {
+    PreviewContainer {
+        MatchLinePreviewViewController()
+    }
+}
+
+@available(iOS 17.0, *)
+#Preview("MatchLineTableViewCell States (Dark)") {
+    PreviewContainer {
+        MatchLinePreviewViewController()
+    }
+    .preferredColorScheme(.dark)
+}
+
+#endif

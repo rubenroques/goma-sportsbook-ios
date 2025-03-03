@@ -9219,6 +9219,16 @@
 		CEB739D82D754A86009C4E0F /* CMSManagedHomeViewTemplateDataSource.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEB739D02D754A86009C4E0F /* CMSManagedHomeViewTemplateDataSource.swift */; };
 		CEB739D92D754A86009C4E0F /* CMSManagedHomeViewTemplateDataSource.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEB739D02D754A86009C4E0F /* CMSManagedHomeViewTemplateDataSource.swift */; };
 		CEB739DA2D754A86009C4E0F /* CMSManagedHomeViewTemplateDataSource.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEB739D02D754A86009C4E0F /* CMSManagedHomeViewTemplateDataSource.swift */; };
+		CEB739DE2D762BB3009C4E0F /* PreviewModelsHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEB739DB2D762BB3009C4E0F /* PreviewModelsHelper.swift */; };
+		CEB739E02D762BB3009C4E0F /* PreviewModelsHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEB739DB2D762BB3009C4E0F /* PreviewModelsHelper.swift */; };
+		CEB739E32D762BB3009C4E0F /* PreviewModelsHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEB739DB2D762BB3009C4E0F /* PreviewModelsHelper.swift */; };
+		CEB739E52D762BB3009C4E0F /* PreviewModelsHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEB739DB2D762BB3009C4E0F /* PreviewModelsHelper.swift */; };
+		CEB739E72D762BB3009C4E0F /* PreviewModelsHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEB739DB2D762BB3009C4E0F /* PreviewModelsHelper.swift */; };
+		CEB739E92D762BB3009C4E0F /* PreviewModelsHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEB739DB2D762BB3009C4E0F /* PreviewModelsHelper.swift */; };
+		CEB739EA2D762BB3009C4E0F /* PreviewModelsHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEB739DB2D762BB3009C4E0F /* PreviewModelsHelper.swift */; };
+		CEB739ED2D762BB3009C4E0F /* PreviewModelsHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEB739DB2D762BB3009C4E0F /* PreviewModelsHelper.swift */; };
+		CEB739EF2D762BB3009C4E0F /* PreviewModelsHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEB739DB2D762BB3009C4E0F /* PreviewModelsHelper.swift */; };
+		CEB739F02D762BB3009C4E0F /* PreviewModelsHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEB739DB2D762BB3009C4E0F /* PreviewModelsHelper.swift */; };
 		CEC57BD72D53C74900EA0D60 /* zendesk_support.html in Resources */ = {isa = PBXBuildFile; fileRef = CEC57BD62D53C74900EA0D60 /* zendesk_support.html */; };
 		CEC57BD82D53C74900EA0D60 /* zendesk_support.html in Resources */ = {isa = PBXBuildFile; fileRef = CEC57BD62D53C74900EA0D60 /* zendesk_support.html */; };
 		CECF6A1E2D68D534003ABDDF /* URLEndpoints.swift in Sources */ = {isa = PBXBuildFile; fileRef = CECF6A1D2D68D534003ABDDF /* URLEndpoints.swift */; };
@@ -10309,6 +10319,7 @@
 		CEA569BA2D5A59C500696793 /* TargetVariables.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TargetVariables.swift; sourceTree = "<group>"; };
 		CEB24B9E2CED274D0031F470 /* ScaleAspectFitImageView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScaleAspectFitImageView.swift; sourceTree = "<group>"; };
 		CEB739D02D754A86009C4E0F /* CMSManagedHomeViewTemplateDataSource.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CMSManagedHomeViewTemplateDataSource.swift; sourceTree = "<group>"; };
+		CEB739DB2D762BB3009C4E0F /* PreviewModelsHelper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PreviewModelsHelper.swift; sourceTree = "<group>"; };
 		CEC57BD62D53C74900EA0D60 /* zendesk_support.html */ = {isa = PBXFileReference; lastKnownFileType = text.html; path = zendesk_support.html; sourceTree = "<group>"; };
 		CECF6A1D2D68D534003ABDDF /* URLEndpoints.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = URLEndpoints.swift; sourceTree = "<group>"; };
 		CEE502CF2D66A609001B0342 /* SportTypeStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SportTypeStore.swift; sourceTree = "<group>"; };
@@ -11266,6 +11277,7 @@
 				455A0CBF26BD9D9000EC572D /* Tools */,
 				455A0C9E26BD958600EC572D /* Resources */,
 				455A0C9826BD945900EC572D /* Tests */,
+				CEB739DD2D762BB3009C4E0F /* PreviewsHelper */,
 			);
 			path = Core;
 			sourceTree = "<group>";
@@ -14406,6 +14418,14 @@
 			path = ATP;
 			sourceTree = "<group>";
 		};
+		CEB739DD2D762BB3009C4E0F /* PreviewsHelper */ = {
+			isa = PBXGroup;
+			children = (
+				CEB739DB2D762BB3009C4E0F /* PreviewModelsHelper.swift */,
+			);
+			path = PreviewsHelper;
+			sourceTree = "<group>";
+		};
 		CEC57BD52D53C6C400EA0D60 /* Resources */ = {
 			isa = PBXGroup;
 			children = (
@@ -17475,6 +17495,7 @@
 				450B7A3428F58574009229E3 /* PolicyLinkView.swift in Sources */,
 				450B7A3628F58574009229E3 /* HomeFilterOptions.swift in Sources */,
 				A9A1B2BF2A0E55B800F7A8ED /* UserConsentType.swift in Sources */,
+				CEB739E72D762BB3009C4E0F /* PreviewModelsHelper.swift in Sources */,
 				450B7A3728F58574009229E3 /* Aggregator.swift in Sources */,
 				CE25A5FE2D42940E00B748D6 /* ChipCollectionViewCell.swift in Sources */,
 				450B7A3828F58574009229E3 /* OutrightMarketDetailsViewModel.swift in Sources */,
@@ -18342,6 +18363,7 @@
 				457CBB76282D27D000ED0F00 /* OutrightMarketDetailsViewModel.swift in Sources */,
 				457CBB77282D27D000ED0F00 /* BonusActiveCellViewModel.swift in Sources */,
 				A9C9C39E2A9F612F00DD3A03 /* GenericAvatarWarningViewController.swift in Sources */,
+				CEB739DE2D762BB3009C4E0F /* PreviewModelsHelper.swift in Sources */,
 				457CBB78282D27D000ED0F00 /* CompetitionFilterHeaderView.swift in Sources */,
 				457CBB79282D27D000ED0F00 /* CashoutSubmission.swift in Sources */,
 				457CBB7A282D27D000ED0F00 /* ProfileLimitsManagementViewModel.swift in Sources */,
@@ -18666,6 +18688,7 @@
 				457CBD0B282D2CD100ED0F00 /* MarketGroup.swift in Sources */,
 				457CBD0C282D2CD100ED0F00 /* MarketGroupDetailsStore.swift in Sources */,
 				45085660284A640D00F4FB52 /* FriendProfileViewModel.swift in Sources */,
+				CEB739E92D762BB3009C4E0F /* PreviewModelsHelper.swift in Sources */,
 				4546A89A29D64C4D00ABD562 /* FooterResponsibleGamingView.swift in Sources */,
 				A986D35128CB47A900AF95D7 /* TipsViewModel.swift in Sources */,
 				457CBD0D282D2CD100ED0F00 /* StyleHelpers.swift in Sources */,
@@ -19812,6 +19835,7 @@
 				4589C8F6282024E400243547 /* HomeFilterOptions.swift in Sources */,
 				4589C8F7282024E400243547 /* Aggregator.swift in Sources */,
 				A9A1B2C02A0E55B800F7A8ED /* UserConsentType.swift in Sources */,
+				CEB739F02D762BB3009C4E0F /* PreviewModelsHelper.swift in Sources */,
 				4589C8F8282024E400243547 /* OutrightMarketDetailsViewModel.swift in Sources */,
 				CE25A5FD2D42940E00B748D6 /* ChipCollectionViewCell.swift in Sources */,
 				4589C8F9282024E400243547 /* BonusActiveCellViewModel.swift in Sources */,
@@ -20548,6 +20572,7 @@
 				45A33253298976BA008181E9 /* DropDownSelectionView.swift in Sources */,
 				45A33254298976BA008181E9 /* PolicyLinkView.swift in Sources */,
 				45A33256298976BA008181E9 /* HomeFilterOptions.swift in Sources */,
+				CEB739E02D762BB3009C4E0F /* PreviewModelsHelper.swift in Sources */,
 				A9A1B2BE2A0E55B800F7A8ED /* UserConsentType.swift in Sources */,
 				CE25A6042D42940E00B748D6 /* ChipCollectionViewCell.swift in Sources */,
 				45A33257298976BA008181E9 /* Aggregator.swift in Sources */,
@@ -21284,6 +21309,7 @@
 				45A6BD4628246A7500D9B416 /* CompetitionDetailsViewController.swift in Sources */,
 				A986D34628CB473700AF95D7 /* TipsCellViewModel.swift in Sources */,
 				45A6BD4728246A7500D9B416 /* MyFavoritesViewController.swift in Sources */,
+				CEB739E32D762BB3009C4E0F /* PreviewModelsHelper.swift in Sources */,
 				A9B331C6288EFE0F00D097F0 /* InAppMessageTableViewCell.swift in Sources */,
 				45A6BD4928246A7500D9B416 /* PreSubmissionBetslipViewController.swift in Sources */,
 				45A6BD4A28246A7500D9B416 /* DropDownSelectionView.swift in Sources */,
@@ -22020,6 +22046,7 @@
 				45F6BD0A2AB3732C00C81DE1 /* DropDownSelectionView.swift in Sources */,
 				45F6BD0B2AB3732C00C81DE1 /* PolicyLinkView.swift in Sources */,
 				45F6BD0C2AB3732C00C81DE1 /* HomeFilterOptions.swift in Sources */,
+				CEB739EF2D762BB3009C4E0F /* PreviewModelsHelper.swift in Sources */,
 				45F6BD0D2AB3732C00C81DE1 /* UserConsentType.swift in Sources */,
 				CE25A6032D42940E00B748D6 /* ChipCollectionViewCell.swift in Sources */,
 				45F6BD0E2AB3732C00C81DE1 /* Aggregator.swift in Sources */,
@@ -22359,6 +22386,7 @@
 				A9C3412F28F9A74A0055360B /* UILabel+Extensions.swift in Sources */,
 				A9527C372A9E4868006F4E37 /* GenericAvatarSuccessViewController.swift in Sources */,
 				A9C3413028F9A74A0055360B /* WelcomeViewController.swift in Sources */,
+				CEB739EA2D762BB3009C4E0F /* PreviewModelsHelper.swift in Sources */,
 				A9C3413128F9A74A0055360B /* CGPoint+Shift.swift in Sources */,
 				45ECD7812A9001E200492CB9 /* TopCompetitionDetailsViewController.swift in Sources */,
 				A90FB80629B0F8B100D08A7C /* GenericAlertView.swift in Sources */,
@@ -23505,6 +23533,7 @@
 				CE12A3862D31347E0022BDF7 /* HomeFilterOptions.swift in Sources */,
 				CE12A3872D31347E0022BDF7 /* UserConsentType.swift in Sources */,
 				CE12A3882D31347E0022BDF7 /* Aggregator.swift in Sources */,
+				CEB739ED2D762BB3009C4E0F /* PreviewModelsHelper.swift in Sources */,
 				CE12A3892D31347E0022BDF7 /* OutrightMarketDetailsViewModel.swift in Sources */,
 				CE25A6022D42940E00B748D6 /* ChipCollectionViewCell.swift in Sources */,
 				CE12A38A2D31347E0022BDF7 /* CardsCollectionViewLayout.swift in Sources */,
@@ -24241,6 +24270,7 @@
 				CEA568562D5A58D800696793 /* MyFavoritesViewController.swift in Sources */,
 				CEA568572D5A58D800696793 /* InAppMessageTableViewCell.swift in Sources */,
 				CEA568582D5A58D800696793 /* PreSubmissionBetslipViewController.swift in Sources */,
+				CEB739E52D762BB3009C4E0F /* PreviewModelsHelper.swift in Sources */,
 				CEA568592D5A58D800696793 /* DropDownSelectionView.swift in Sources */,
 				CEA5685A2D5A58D800696793 /* ChipCollectionViewCell.swift in Sources */,
 				CEA5685B2D5A58D800696793 /* PaymentStatus.swift in Sources */,
