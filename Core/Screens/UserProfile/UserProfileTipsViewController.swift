@@ -68,7 +68,7 @@ class UserProfileTipsViewController: UIViewController {
         self.tableView.dataSource = self
 
         self.tableView.register(TipsTableViewCell.self, forCellReuseIdentifier: TipsTableViewCell.identifier)
-        self.tableView.register(LoadingMoreTableViewCell.nib, forCellReuseIdentifier: LoadingMoreTableViewCell.identifier)
+        self.tableView.register(LoadingMoreTableViewCell.self, forCellReuseIdentifier: LoadingMoreTableViewCell.identifier)
 
         self.isLoading = false
 

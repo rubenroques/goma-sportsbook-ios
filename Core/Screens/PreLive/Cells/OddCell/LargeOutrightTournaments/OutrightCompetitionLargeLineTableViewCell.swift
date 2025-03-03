@@ -54,7 +54,7 @@ class OutrightCompetitionLargeLineTableViewCell: UITableViewCell {
 
         self.collectionView.register(OutrightCompetitionLargeWidgetCollectionViewCell.self,
                                      forCellWithReuseIdentifier: OutrightCompetitionLargeWidgetCollectionViewCell.identifier)
-        self.collectionView.register(SeeMoreMarketsCollectionViewCell.nib,
+        self.collectionView.register(SeeMoreMarketsCollectionViewCell.self,
                                      forCellWithReuseIdentifier: SeeMoreMarketsCollectionViewCell.identifier)
         self.collectionView.register(UICollectionViewCell.self,
                                      forCellWithReuseIdentifier: UICollectionViewCell.identifier)

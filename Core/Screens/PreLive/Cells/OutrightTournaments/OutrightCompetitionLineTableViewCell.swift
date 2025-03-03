@@ -268,7 +268,7 @@ extension OutrightCompetitionLineTableViewCell {
         self.collectionView.dataSource = self
 
         self.collectionView.register(OutrightCompetitionWidgetCollectionViewCell.self, forCellWithReuseIdentifier: OutrightCompetitionWidgetCollectionViewCell.identifier)
-        self.collectionView.register(SeeMoreMarketsCollectionViewCell.nib, forCellWithReuseIdentifier: SeeMoreMarketsCollectionViewCell.identifier)
+        self.collectionView.register(SeeMoreMarketsCollectionViewCell.self, forCellWithReuseIdentifier: SeeMoreMarketsCollectionViewCell.identifier)
         self.collectionView.register(UICollectionViewCell.self, forCellWithReuseIdentifier: UICollectionViewCell.identifier)
 
         // Initialize constraints

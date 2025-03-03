@@ -70,7 +70,7 @@ class LiveDetailsViewController: UIViewController {
         self.tableView.register(OutrightCompetitionLargeLineTableViewCell.self,
                                 forCellReuseIdentifier: OutrightCompetitionLargeLineTableViewCell.identifier)
 
-        self.tableView.register(LoadingMoreTableViewCell.nib, forCellReuseIdentifier: LoadingMoreTableViewCell.identifier)
+        self.tableView.register(LoadingMoreTableViewCell.self, forCellReuseIdentifier: LoadingMoreTableViewCell.identifier)
         self.tableView.register(TournamentTableViewHeader.nib, forHeaderFooterViewReuseIdentifier: TournamentTableViewHeader.identifier)
 
         self.backButton.addTarget(self, action: #selector(didTapBackButton), for: .primaryActionTriggered)
