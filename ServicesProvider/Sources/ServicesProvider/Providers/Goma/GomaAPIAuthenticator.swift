@@ -166,6 +166,8 @@ class GomaAPIAuthenticator {
                 return Fail(error: ServiceProviderError.invalidRequestFormat).eraseToAnyPublisher()
             }
             
+            print("GGAPI Anon Auth - Request: \n", request.cURL(pretty: true), "\n==========================================")
+
             let publisher = weakSelf.session.dataTaskPublisher(for: request)
                 .tryMap { result in
                     if let httpResponse = result.response as? HTTPURLResponse, httpResponse.statusCode == 401 {
@@ -179,7 +181,6 @@ class GomaAPIAuthenticator {
                     }
                     return result.data
                 }
-            
                 .share()
                 .decode(type: GomaSessionAccessToken.self, decoder: JSONDecoder())
                 .handleEvents(receiveOutput: { token in

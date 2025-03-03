@@ -7,6 +7,8 @@
 
 import Foundation
 
+public typealias Stories = [Story]
+
 /// Ephemeral promotional story (similar to social media stories)
 public struct Story: Identifiable, Equatable, Hashable, Codable {
     /// Unique identifier

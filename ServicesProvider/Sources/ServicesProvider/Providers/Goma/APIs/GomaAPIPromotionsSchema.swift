@@ -27,7 +27,7 @@ enum GomaAPIPromotionsSchema {
 
 extension GomaAPIPromotionsSchema: Endpoint {
     var url: String {
-        return SportRadarConfiguration.shared.clientBaseUrl
+        return GomaAPIClientConfiguration.shared.apiHostname
     }
 
     var endpoint: String {

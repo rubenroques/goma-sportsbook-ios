@@ -24,7 +24,8 @@ public class ServicesProviderClient {
     private var bettingProvider: (any BettingProvider)?
     private var eventsProvider: (any EventsProvider)?
     private var promotionsProvider: (any PromotionsProvider)? // TODO: SP Merge - Use login connectors
-    
+
+    private var managedContentProvider: (any ManagedContentProvider)? // TODO: SP Merge - Use login connectors
 
     private var analyticsProvider: (any AnalyticsProvider)?
 
@@ -79,10 +80,17 @@ public class ServicesProviderClient {
                                                                              connector: OmegaConnector())
 
             self.privilegedAccessManager = sportRadarPrivilegedAccessManager
-            self.eventsProvider = SportRadarEventsProvider(sessionCoordinator: sessionCoordinator,
+            let eventsProvider = SportRadarEventsProvider(sessionCoordinator: sessionCoordinator,
                                                            socketConnector: SportRadarSocketConnector(),
                                                            restConnector: SportRadarRestConnector())
+            self.eventsProvider = eventsProvider
             self.bettingProvider = SportRadarBettingProvider(sessionCoordinator: sessionCoordinator)
+
+            self.managedContentProvider = SportRadarManagedContentProvider(
+                sessionCoordinator: sessionCoordinator,
+                eventsProvider: eventsProvider,
+                gomaManagedContentProvider: GomaManagedContentProvider(gomaAPIAuthenticator: GomaAPIAuthenticator(deviceIdentifier: self.configuration.deviceUUID ?? ""))
+            )
 
             sessionCoordinator.registerUpdater(sportRadarPrivilegedAccessManager, forKey: .launchToken)
 
@@ -896,7 +904,7 @@ extension ServicesProviderClient {
         }
         return privilegedAccessManager.simpleSignUp(form: form)
     }
- 
+
     public func signUp(form: SignUpForm) -> AnyPublisher<SignUpResponse, ServiceProviderError> {
         guard
             let privilegedAccessManager = self.privilegedAccessManager
@@ -1753,7 +1761,7 @@ extension ServicesProviderClient {
 
         return analyticsProvider.trackEvent(vaixAnalyticsEvent, userIdentifer: userIdentifer).eraseToAnyPublisher()
     }
-    
+
 }
 
 extension ServicesProviderClient {
@@ -1817,6 +1825,111 @@ extension ServicesProviderClient {
 
         return promotionsProvider.basicSignUp(form: form)
     }
+}
+
+// MARK: - ManagedContentProvider Implementation
+extension ServicesProviderClient {
+
+    public func preFetchHomeContent() -> AnyPublisher<CMSInitialDump, ServiceProviderError> {
+        guard
+            let managedContentProvider = self.managedContentProvider
+        else {
+            return Fail(error: ServiceProviderError.managedContentProviderNotFound).eraseToAnyPublisher()
+        }
+
+        return managedContentProvider.preFetchHomeContent()
+    }
+
+    public func getHomeTemplate() -> AnyPublisher<HomeTemplate, ServiceProviderError> {
+        guard
+            let managedContentProvider = self.managedContentProvider
+        else {
+            return Fail(error: ServiceProviderError.managedContentProviderNotFound).eraseToAnyPublisher()
+        }
+
+        return managedContentProvider.getHomeTemplate()
+    }
+
+    public func getAlertBanner() -> AnyPublisher<AlertBanner?, ServiceProviderError> {
+        guard
+            let managedContentProvider = self.managedContentProvider
+        else {
+            return Fail(error: ServiceProviderError.managedContentProviderNotFound).eraseToAnyPublisher()
+        }
+
+        return managedContentProvider.getAlertBanner()
+    }
+
+    public func getBanners() -> AnyPublisher<[Banner], ServiceProviderError> {
+        guard
+            let managedContentProvider = self.managedContentProvider
+        else {
+            return Fail(error: ServiceProviderError.managedContentProviderNotFound).eraseToAnyPublisher()
+        }
+
+        return managedContentProvider.getBanners()
+    }
+
+    public func getCarouselEvents() -> AnyPublisher<CarouselEvents, ServiceProviderError> {
+        guard
+            let managedContentProvider = self.managedContentProvider
+        else {
+            return Fail(error: ServiceProviderError.managedContentProviderNotFound).eraseToAnyPublisher()
+        }
+
+        return managedContentProvider.getCarouselEvents()
+    }
+
+    public func getBoostedOddsBanners() -> AnyPublisher<[BoostedOddsBanner], ServiceProviderError> {
+        guard
+            let managedContentProvider = self.managedContentProvider
+        else {
+            return Fail(error: ServiceProviderError.managedContentProviderNotFound).eraseToAnyPublisher()
+        }
+
+        return managedContentProvider.getBoostedOddsBanners()
+    }
+
+    public func getHeroCards() -> AnyPublisher<[HeroCard], ServiceProviderError> {
+        guard
+            let managedContentProvider = self.managedContentProvider
+        else {
+            return Fail(error: ServiceProviderError.managedContentProviderNotFound).eraseToAnyPublisher()
+        }
+
+        return managedContentProvider.getHeroCards()
+    }
+
+    public func getStories() -> AnyPublisher<[Story], ServiceProviderError> {
+        guard
+            let managedContentProvider = self.managedContentProvider
+        else {
+            return Fail(error: ServiceProviderError.managedContentProviderNotFound).eraseToAnyPublisher()
+        }
+
+        return managedContentProvider.getStories()
+    }
+
+    public func getNews(pageIndex: Int, pageSize: Int) -> AnyPublisher<[NewsItem], ServiceProviderError> {
+        guard
+            let managedContentProvider = self.managedContentProvider
+        else {
+            return Fail(error: ServiceProviderError.managedContentProviderNotFound).eraseToAnyPublisher()
+        }
+
+        return managedContentProvider.getNews(pageIndex: pageIndex, pageSize: pageSize)
+    }
+
+    public func getProChoices() -> AnyPublisher<[ProChoice], ServiceProviderError> {
+        guard
+            let managedContentProvider = self.managedContentProvider
+        else {
+            return Fail(error: ServiceProviderError.managedContentProviderNotFound).eraseToAnyPublisher()
+        }
+
+        return managedContentProvider.getProChoices()
+    }
+
 }
 
 // Utilities

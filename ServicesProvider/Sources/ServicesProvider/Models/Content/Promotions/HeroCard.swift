@@ -7,6 +7,8 @@
 
 import Foundation
 
+public typealias HeroCards = [HeroCard]
+
 /// Feature card displayed prominently in the app
 public struct HeroCard: Identifiable, Equatable, Hashable, Codable {
     /// Unique identifier

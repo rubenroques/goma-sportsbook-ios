@@ -10,21 +10,31 @@ import Combine
 
 /// Implementation of ManagedContentProvider for the Goma API
 class GomaManagedContentProvider: ManagedContentProvider {
-        
+
     // MARK: - Properties
     var connectionStatePublisher: AnyPublisher<ConnectorState, Never> {
         connectionStateSubject.eraseToAnyPublisher()
     }
 
     private let connectionStateSubject = CurrentValueSubject<ConnectorState, Never>(.disconnected)
-    private let gomaAPIAuthenticator: GomaAPIAuthenticator
+    private let authenticator: GomaAPIAuthenticator
+    private let apiClient: GomaAPIPromotionsClient
+
     private var cancellables = Set<AnyCancellable>()
 
     // MARK: - Initialization
 
-    init(gomaAPIAuthenticator: GomaAPIAuthenticator) {
-        self.gomaAPIAuthenticator = gomaAPIAuthenticator
+    init(gomaAPIAuthenticator: GomaAPIAuthenticator = GomaAPIAuthenticator(deviceIdentifier: "") ) {
+        self.authenticator = gomaAPIAuthenticator
 
+        self.apiClient = GomaAPIPromotionsClient(
+            connector: GomaConnector(gomaAPIAuthenticator: gomaAPIAuthenticator),
+            cache: GomaAPIPromotionsCache()
+        )
+    }
+
+    func invalidateCache() {
+        self.apiClient.clearCache()
     }
 
     // MARK: - API Request Helper
@@ -37,41 +47,98 @@ class GomaManagedContentProvider: ManagedContentProvider {
     }
 
     // MARK: - ManagedContentProvider Implementation
+    func preFetchHomeContent() -> AnyPublisher<CMSInitialDump, ServiceProviderError> {
+
+        return self.apiClient.preFetchHomeContent()
+            .map({ (initialDump: GomaModels.InitialDump) in
+                return GomaModelMapper.initialDump(fromInternalInitialDump: initialDump)
+            })
+            .eraseToAnyPublisher()
+    }
 
     func getHomeTemplate() -> AnyPublisher<HomeTemplate, ServiceProviderError> {
-        fatalError("")
+
+        return self.apiClient.homeTemplate()
+            .map({ internalHomeTemplate in
+                return GomaModelMapper.homeTemplate(fromInternalHomeTemplate: internalHomeTemplate)
+            })
+            .eraseToAnyPublisher()
     }
 
     func getAlertBanner() -> AnyPublisher<AlertBanner?, ServiceProviderError> {
-        fatalError("")
+
+        return self.apiClient.alertBanner()
+            .map({ internalAlertBanner in
+                return GomaModelMapper.alertBanner(fromInternalAlertBanner: internalAlertBanner)
+            })
+            .eraseToAnyPublisher()
     }
 
     func getBanners() -> AnyPublisher<[Banner], ServiceProviderError> {
-        fatalError("")
+
+        return self.apiClient.banners()
+            .map({ internalBanners in
+                return internalBanners.map({ internalBanner in
+                    return GomaModelMapper.banner(fromInternalBanner: internalBanner)
+                })
+            })
+            .eraseToAnyPublisher()
     }
 
     func getCarouselEvents() -> AnyPublisher<CarouselEvents, ServiceProviderError> {
-        fatalError("")
+
+        return self.apiClient.carouselEvents()
+            .map({ internalCarouselEvents in
+                return GomaModelMapper.carouselEvents(fromInternalCarouselEvents: internalCarouselEvents)
+            })
+            .eraseToAnyPublisher()
     }
 
     func getBoostedOddsBanners() -> AnyPublisher<[BoostedOddsBanner], ServiceProviderError> {
-        fatalError("")
+
+        return self.apiClient.boostedOddsBanners()
+            .map({ internalBoostedOddsBanners in
+                return GomaModelMapper.boostedOddsBanners(fromInternalBoostedOddsBanners: internalBoostedOddsBanners)
+            })
+            .eraseToAnyPublisher()
     }
 
     func getHeroCards() -> AnyPublisher<[HeroCard], ServiceProviderError> {
-        fatalError("")
+
+        return self.apiClient.heroCards()
+            .map({ internalHeroCards in
+                return GomaModelMapper.heroCards(fromInternalHeroCards: internalHeroCards)
+            })
+            .eraseToAnyPublisher()
     }
 
     func getStories() -> AnyPublisher<[Story], ServiceProviderError> {
-        fatalError("")
+
+        return self.apiClient.stories()
+            .map({ internalStories in
+                return internalStories.map({ internalStory in
+                    return GomaModelMapper.story(fromInternalStory: internalStory)
+                })
+            })
+            .eraseToAnyPublisher()
     }
 
     func getNews(pageIndex: Int, pageSize: Int) -> AnyPublisher<[NewsItem], ServiceProviderError> {
-        fatalError("")
+
+        return self.apiClient.newsItems(pageIndex: pageIndex, pageSize: pageSize)
+            .map({ internalNewsItems in
+                return GomaModelMapper.newsItems(fromInternalNewsItems: internalNewsItems)
+            })
+            .eraseToAnyPublisher()
     }
 
     func getProChoices() -> AnyPublisher<[ProChoice], ServiceProviderError> {
-        fatalError("")
+
+        return self.apiClient.proChoices()
+            .map({ internalProChoiceitems in
+                return GomaModelMapper.proChoices(fromInternalProChoices: internalProChoiceitems)
+            })
+            .eraseToAnyPublisher()
     }
-    
+
 }

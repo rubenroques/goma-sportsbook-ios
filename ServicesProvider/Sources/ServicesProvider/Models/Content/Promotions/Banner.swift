@@ -9,6 +9,8 @@ import Foundation
 
 /// Promotional banner displayed in the app
 /// This unified model incorporates requirements from both Goma and SportRadar providers
+public typealias Banners = [Banner]
+
 public struct Banner: Identifiable, Equatable, Hashable, Codable {
     
     /// Unique identifier for the banner

@@ -10,20 +10,30 @@ import Combine
 
 /// Implementation of ManagedContentProvider for the Sportradar API
 class SportRadarManagedContentProvider: ManagedContentProvider {
-    // MARK: - Properties
 
+    // MARK: - Properties
     var connectionStatePublisher: AnyPublisher<ConnectorState, Never> {
         connectionStateSubject.eraseToAnyPublisher()
     }
 
     private let connectionStateSubject = CurrentValueSubject<ConnectorState, Never>(.disconnected)
-    private let sessionCoordinator: SportRadarSessionCoordinator
+
+    private unowned let sessionCoordinator: SportRadarSessionCoordinator
+    private let eventsProvider: SportRadarEventsProvider
+    
+    private let gomaManagedContentProvider: GomaManagedContentProvider
+
     private var cancellables = Set<AnyCancellable>()
 
     // MARK: - Initialization
+    init(sessionCoordinator: SportRadarSessionCoordinator,
+         eventsProvider: SportRadarEventsProvider,
+         gomaManagedContentProvider: GomaManagedContentProvider = GomaManagedContentProvider()) {
 
-    init(sessionCoordinator: SportRadarSessionCoordinator) {
         self.sessionCoordinator = sessionCoordinator
+        self.eventsProvider = eventsProvider
+        
+        self.gomaManagedContentProvider = gomaManagedContentProvider
 
         // Set up token handling
         self.sessionCoordinator.token(forKey: .launchToken)
@@ -38,41 +48,44 @@ class SportRadarManagedContentProvider: ManagedContentProvider {
     }
 
     // MARK: - ManagedContentProvider Implementation
+    func preFetchHomeContent() -> AnyPublisher<CMSInitialDump, ServiceProviderError> {
+        return self.gomaManagedContentProvider.preFetchHomeContent()
+    }
 
     func getHomeTemplate() -> AnyPublisher<HomeTemplate, ServiceProviderError> {
-        fatalError("")
+        return self.gomaManagedContentProvider.getHomeTemplate()
     }
 
     func getAlertBanner() -> AnyPublisher<AlertBanner?, ServiceProviderError> {
-        fatalError("")
+        return self.gomaManagedContentProvider.getAlertBanner()
     }
 
     func getBanners() -> AnyPublisher<[Banner], ServiceProviderError> {
-        fatalError("")
+        return self.gomaManagedContentProvider.getBanners()
     }
 
     func getCarouselEvents() -> AnyPublisher<CarouselEvents, ServiceProviderError> {
-        fatalError("")
+        return self.gomaManagedContentProvider.getCarouselEvents()
     }
-    
+
     func getBoostedOddsBanners() -> AnyPublisher<[BoostedOddsBanner], ServiceProviderError> {
-        fatalError("")
+        return self.gomaManagedContentProvider.getBoostedOddsBanners()
     }
 
     func getHeroCards() -> AnyPublisher<[HeroCard], ServiceProviderError> {
-        fatalError("")
+        return self.gomaManagedContentProvider.getHeroCards()
     }
 
     func getStories() -> AnyPublisher<[Story], ServiceProviderError> {
-        fatalError("")
+        return self.gomaManagedContentProvider.getStories()
     }
 
     func getNews(pageIndex: Int, pageSize: Int) -> AnyPublisher<[NewsItem], ServiceProviderError> {
-        fatalError("")
+        return self.gomaManagedContentProvider.getNews(pageIndex: pageIndex, pageSize: pageSize)
     }
 
     func getProChoices() -> AnyPublisher<[ProChoice], ServiceProviderError> {
-        fatalError("")
+        return self.gomaManagedContentProvider.getProChoices()
     }
 
 }

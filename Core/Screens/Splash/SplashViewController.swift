@@ -45,9 +45,15 @@ class SplashViewController: UIViewController {
             self.present(alert, animated: true, completion: nil)
         }
 
+        
+        
+        
+        
         // Env.appSession.isLoadingAppSettingsPublisher,
-        self.isLoadingBootDataSubscription = Env.sportsStore.activeSportsPublisher
-            .map({ loadableContent -> Bool in
+        self.isLoadingBootDataSubscription = Publishers.CombineLatest(
+            Env.sportsStore.activeSportsPublisher,
+            Env.servicesProvider.preFetchHomeContent())
+            .map({ (loadableContent, preFetchedHomeContent) -> Bool in
                 switch loadableContent { // isLoading?
                 case .loading, .idle:
                     // we need to wait for the request result
@@ -58,6 +64,7 @@ class SplashViewController: UIViewController {
                     return false
                 }
             })
+            .map({ !$0 })
             .receive(on: DispatchQueue.main)
             .sink(receiveCompletion: { [weak self] completion in
                 switch completion {
@@ -71,8 +78,8 @@ class SplashViewController: UIViewController {
                         break
                     }
                 }
-            }, receiveValue: { [weak self] isLoadingSportTypes in
-                if !isLoadingSportTypes {
+            }, receiveValue: { [weak self] loadedBootData in
+                if loadedBootData {
                     self?.splashLoadingCompleted()
                 }
             })

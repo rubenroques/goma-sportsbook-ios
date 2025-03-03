@@ -1201,14 +1201,16 @@ extension GomaAPIProvider: EventsProvider {
     }
 
     func getNews() -> AnyPublisher<[News], ServiceProviderError> {
-        let endpoint = GomaAPISchema.getNews
-        let publisher: AnyPublisher<[GomaModels.News], ServiceProviderError> = self.connector.request(endpoint)
-        return publisher.map({ news in
-            let mappedNews = news.map({
-                return GomaModelMapper.news(fromNews: $0)
-            })
-            return mappedNews
-        }).eraseToAnyPublisher()
+        // TODO: SP MErge - it should have been replaced
+        return Fail(error: ServiceProviderError.notSupportedForProvider).eraseToAnyPublisher()
+//        let endpoint = GomaAPISchema.getNews
+//        let publisher: AnyPublisher<[GomaModels.News], ServiceProviderError> = self.connector.request(endpoint)
+//        return publisher.map({ news in
+//            let mappedNews = news.map({
+//                return GomaModelMapper.news(fromNews: $0)
+//            })
+//            return mappedNews
+//        }).eraseToAnyPublisher()
     }
 
     func getPromotedEventGroupsPointers() -> AnyPublisher<[EventGroupPointer], ServiceProviderError> {
@@ -1230,6 +1232,7 @@ extension GomaAPIProvider: EventsProvider {
     }
 
     func getPromotionalTopBanners() -> AnyPublisher<[PromotionalBanner], ServiceProviderError> {
+        // TODO: SP MErge - it should have been replaced
         return Fail(error: ServiceProviderError.eventsProviderNotFound).eraseToAnyPublisher()
 //        let endpoint = GomaAPIClient.getBanners
 //        let publisher: AnyPublisher<[GomaModels.Banner], ServiceProviderError> = self.connector.request(endpoint)
@@ -1241,6 +1244,7 @@ extension GomaAPIProvider: EventsProvider {
     }
 
     func getPromotionalSlidingTopEventsPointers() -> AnyPublisher<[EventMetadataPointer], ServiceProviderError> {
+        // TODO: SP MErge - it should have been replaced
         return Fail(error: ServiceProviderError.eventsProviderNotFound).eraseToAnyPublisher()
 //        let endpoint = GomaAPIClient.getEventsBanners
 //        let publisher: AnyPublisher<[GomaModels.EventMetadataPointer], ServiceProviderError> = self.connector.request(endpoint)
@@ -1250,6 +1254,7 @@ extension GomaAPIProvider: EventsProvider {
     }
 
     func getPromotionalSlidingTopEvents() -> AnyPublisher<[Event], ServiceProviderError> {
+        // TODO: SP MErge - it should have been replaced
         return Fail(error: ServiceProviderError.eventsProviderNotFound).eraseToAnyPublisher()
 //        let endpoint = GomaAPIClient.getEventsBanners
 //        let publisher: AnyPublisher<[GomaModels.SportAssociatedEventBanner], ServiceProviderError> = self.connector.request(endpoint)
@@ -1260,6 +1265,7 @@ extension GomaAPIProvider: EventsProvider {
     }
 
     func getPromotionalTopStories() -> AnyPublisher<[PromotionalStory], ServiceProviderError> {
+        // TODO: SP MErge - it should have been replaced
         return Fail(error: ServiceProviderError.eventsProviderNotFound).eraseToAnyPublisher()
 //        let endpoint = GomaAPIClient.getStories
 //        let publisher: AnyPublisher<[GomaModels.Story], ServiceProviderError> = self.connector.request(endpoint)

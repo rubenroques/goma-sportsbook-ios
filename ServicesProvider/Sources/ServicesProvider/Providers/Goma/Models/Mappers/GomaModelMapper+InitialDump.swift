@@ -11,7 +11,7 @@ extension GomaModelMapper {
 
     // MARK: - Initial Dump Mapper
 
-    static func cmsInitialDump(fromInternalInitialDump dump: GomaModels.InitialDump) -> CMSInitialDump {
+    static func initialDump(fromInternalInitialDump dump: GomaModels.InitialDump) -> CMSInitialDump {
         return CMSInitialDump(
             homeTemplate: homeTemplate(fromInternalHomeTemplate: dump.homeTemplate),
             promotions: promotionsContent(fromInternalPromotionsContent: dump.promotions)

@@ -223,7 +223,7 @@ final class SportsMerger {
 
             print("[SERVICEPROVIDER][MERGER] Sending contentUpdate with \(updatedSports.count) sports")
             self.sportsCurrentValueSubject.send(.contentUpdate(content: updatedSports))
-            print("[SERVICEPROVIDER][MERGER] New sportsCurrentValueSubject state after all sports update: \(String(describing: self.sportsCurrentValueSubject.value))")
+            print("[SERVICEPROVIDER][MERGER] New sportsCurrentValueSubject state after all sports update")
 
         } else if identifier == self.liveSportsIdentifier {
             print("[SERVICEPROVIDER][MERGER] Updating live counts")
@@ -251,7 +251,7 @@ final class SportsMerger {
 
                 print("[SERVICEPROVIDER][MERGER] Sending contentUpdate with \(updatedSports.count) sports")
                 self.sportsCurrentValueSubject.send(.contentUpdate(content: updatedSports))
-                print("[SERVICEPROVIDER][MERGER] New sportsCurrentValueSubject state after live update: \(String(describing: self.sportsCurrentValueSubject.value))")
+                print("[SERVICEPROVIDER][MERGER] New sportsCurrentValueSubject state after live update")
             }
         }
     }

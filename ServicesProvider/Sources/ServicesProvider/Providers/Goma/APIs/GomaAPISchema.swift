@@ -117,7 +117,7 @@ enum GomaAPISchema {
 extension GomaAPISchema: Endpoint {
     
     var url: String {
-        return "https://api.gomademo.com/"
+        return GomaAPIClientConfiguration.shared.apiHostname
     }
     
     private static var version: String {
@@ -1070,7 +1070,7 @@ extension GomaAPISchema: Endpoint {
                 "Content-Type": "application/json",
                 "Accept": "application/json",
                 "App-Origin": "ios",
-//                "x-api-key": "J3uLrOcZWBFbrmWvwaccKpdVhyRpRB6uZGE9akT6IFMpSwIa0Ghl4lqsFSFsTHbG"
+                "x-api-key": GomaAPIClientConfiguration.shared.instanceBusinessUnitToken
             ]
             return defaultHeaders
         }

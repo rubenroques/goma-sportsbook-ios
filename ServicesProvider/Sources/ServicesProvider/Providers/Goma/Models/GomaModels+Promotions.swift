@@ -41,6 +41,7 @@ extension GomaModels {
         }
     }
     
+    typealias AlertBanners = [AlertBanner]
     struct AlertBanner: Identifiable, Equatable, Hashable, Codable {
         
         let id: Int
@@ -54,8 +55,6 @@ extension GomaModels {
         let endDate: String?
         let userType: String?
         
-        /// Coding keys for JSON serialization/deserialization
-        /// Ensures compatibility with API responses
         enum CodingKeys: String, CodingKey {
             case id
             case title
@@ -70,8 +69,9 @@ extension GomaModels {
         }
     }
     
+    typealias Banners = [Banner]
     struct Banner: Identifiable, Equatable, Hashable, Codable {
-        let id: String
+        let id: Int
         let title: String
         let subtitle: String?
         let ctaText: String?
@@ -98,7 +98,7 @@ extension GomaModels {
         }
         
         init(
-            id: String,
+            id: Int,
             title: String,
             subtitle: String?,
             ctaText: String?,
@@ -124,36 +124,30 @@ extension GomaModels {
         }
     }
     
+    typealias BoostedOddsBanners = [BoostedOddsBanner]
     struct BoostedOddsBanner: Identifiable, Equatable, Hashable, Codable {
         
         let id: Int
-        let clientId: Int?
-        let title: String
-        let subtitle: String?
-        let platform: String?
-        let status: String?
+        let eventId: String
+        let eventMarketId: String
+        let title: String?
         let imageUrl: String?
         
         private enum CodingKeys: String, CodingKey {
             case id = "id"
-            case clientId = "client_id"
+            case eventId = "sport_event_id"
+            case eventMarketId = "sport_event_market_id"
             case title = "title"
-            case subtitle = "subtitle"
-            case platform = "platform"
-            case status = "status"
             case imageUrl = "image_url"
         }
         
-        init(from decoder: Decoder) throws {
-            let container = try decoder.container(keyedBy: CodingKeys.self)
-            
-            self.id = try container.decode(Int.self, forKey: .id)
-            self.clientId = try container.decodeIfPresent(Int.self, forKey: .clientId)
-            self.title = try container.decode(String.self, forKey: .title)
-            self.subtitle = try container.decodeIfPresent(String.self, forKey: .subtitle)
-            self.platform = try container.decodeIfPresent(String.self, forKey: .platform)
-            self.status = try container.decodeIfPresent(String.self, forKey: .status)
-            self.imageUrl = try container.decodeIfPresent(String.self, forKey: .imageUrl)
+        init(from decoder: any Decoder) throws {
+            let container: KeyedDecodingContainer<GomaModels.BoostedOddsBanner.CodingKeys> = try decoder.container(keyedBy: GomaModels.BoostedOddsBanner.CodingKeys.self)
+            self.id = try container.decode(Int.self, forKey: GomaModels.BoostedOddsBanner.CodingKeys.id)
+            self.eventId = try container.decode(String.self, forKey: GomaModels.BoostedOddsBanner.CodingKeys.eventId)
+            self.eventMarketId = try container.decode(String.self, forKey: GomaModels.BoostedOddsBanner.CodingKeys.eventMarketId)
+            self.title = try container.decodeIfPresent(String.self, forKey: GomaModels.BoostedOddsBanner.CodingKeys.title)
+            self.imageUrl = try container.decodeIfPresent(String.self, forKey: GomaModels.BoostedOddsBanner.CodingKeys.imageUrl)
         }
     }
     
@@ -183,21 +177,14 @@ extension GomaModels {
         }
     }
     
-    /// Feature card displayed prominently in the app
+    typealias HeroCards = [HeroCard]
     struct HeroCard: Identifiable, Equatable, Hashable, Codable {
-        /// Unique identifier
+        
         let id: Int
-        
-        /// Associated sport event ID
         let eventId: String
-        
-        /// Market IDs related to the sport event
         let eventMarketIds: [String]
-        
-        /// Image URL for the card
         let imageUrl: String?
         
-        /// Coding keys for JSON parsing
         private enum CodingKeys: String, CodingKey {
             case id
             case eventId = "sport_event_id"
@@ -214,34 +201,16 @@ extension GomaModels {
     }
     
     
-    
-    /// News article
-    struct NewsItem: Codable, Identifiable, Equatable, Hashable {
-        /// Unique identifier
+    typealias NewsItems = [NewsItem]
+    struct NewsItem: Identifiable, Equatable, Hashable, Codable {
         let id: Int
-        
-        /// News article title
         let title: String
-        
-        /// Optional subtitle
         let subtitle: String?
-        
-        /// Article content
         let content: String
-        
-        /// Article author
         let author: String?
-        
-        /// Date when the article was published
         let publishedDate: Date?
-        
-        /// Status of the article
         let status: String?
-        
-        /// Featured image URL for the article
         let imageUrl: String?
-        
-        /// Tags associated with the article
         let tags: [String]
         
         init(id: Int,
@@ -265,19 +234,12 @@ extension GomaModels {
         }
     }
     
-    
-    /// Expert betting tip
+    typealias ProChoiceItems = [ProChoice]
     struct ProChoice: Identifiable, Equatable, Hashable, Codable {
-        /// Unique identifier based on the sport event
+        
         var id: String { eventId }
-        
-        /// Sport event identifier
         let eventId: String
-        
-        /// Sport event market identifier
         let eventMarketId: String
-        
-        /// Image URL for the pro choice
         let imageUrl: String?
         
         enum CodingKeys: String, CodingKey {
@@ -302,7 +264,7 @@ extension GomaModels {
         }
     }
     
-    
+    typealias Stories = [Story]
     /// Ephemeral promotional story (similar to social media stories)
     struct Story: Identifiable, Equatable, Hashable, Codable {
         /// Unique identifier

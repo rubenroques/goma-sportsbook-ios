@@ -8,6 +8,39 @@
 import Foundation
 import Extensions
 
+
+public struct GomaAPIClientConfiguration {
+    
+    enum Environment {
+        case production
+        case staging
+        case development
+    }
+    
+    var environment: Environment
+    public static var shared = GomaAPIClientConfiguration(environment: .production)
+    
+    init(environment: Environment) {
+        self.environment = environment
+    }
+    
+    public var apiHostname: String {
+        switch self.environment {
+        case .production: return "https://api.gomademo.com/"
+        case .staging, .development: return "https://api.gomademo.com/"
+        }
+    }
+    
+    public var instanceBusinessUnitToken: String {
+        switch self.environment {
+        case .production: return "i4iStOcZWBFbrmWvwaccKpdVhyRpRB6uZGE9akT6IFMpSwIa0Ghl4lqsFSvqPNhi"
+        case .staging, .development: return "i4iStOcZWBFbrmWvwaccKpdVhyRpRB6uZGE9akT6IFMpSwIa0Ghl4lqsFSvqPNhi"
+        }
+    }
+    
+    
+}
+
 public struct SportRadarConfiguration {
 
     enum Environment {

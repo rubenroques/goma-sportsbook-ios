@@ -55,7 +55,7 @@ extension GomaModelMapper {
 
     static func banner(fromInternalBanner banner: GomaModels.Banner) -> Banner {
         return Banner(
-            id: banner.id,
+            id: String(banner.id),
             title: banner.title,
             subtitle: banner.subtitle,
             ctaText: banner.ctaText,
@@ -91,14 +91,11 @@ extension GomaModelMapper {
     }
 
     static func boostedOddsBanner(fromInternalBoostedOddsBanner banner: GomaModels.BoostedOddsBanner) -> BoostedOddsBanner {
-        return BoostedOddsBanner(
-            id: String(banner.id),
-            clientId: banner.clientId != nil ? String(banner.clientId!) : nil,
-            title: banner.title,
-            subtitle: banner.subtitle,
-            platform: banner.platform,
-            status: banner.status,
-            imageUrl: banner.imageUrl)
+        return BoostedOddsBanner(id: String(banner.id),
+                                 eventId: banner.eventId,
+                                 eventMarketId: banner.eventMarketId,
+                                 title: banner.title,
+                                 imageUrl: banner.imageUrl)
     }
 
     // MARK: - Hero Cards
@@ -139,7 +136,7 @@ extension GomaModelMapper {
 
     // MARK: - News
 
-    static func newsItems(fromInternalNewsItems items: [GomaModels.NewsItem]) -> [NewsItem] {
+    static func newsItems(fromInternalNewsItems items: [GomaModels.NewsItem]) -> NewsItems {
         return items.map { newsItem(fromInternalNewsItem: $0) }
     }
 

@@ -16,6 +16,10 @@ protocol ManagedContentProvider: Connector {
 
     // MARK: - Home Template
 
+    /// Prefetches and caches the home content for faster access
+    /// - Returns: A publisher that emits the initial dump data (either from cache or fresh fetch)
+    func preFetchHomeContent() -> AnyPublisher<CMSInitialDump, ServiceProviderError>
+
     /// Retrieves the home template configuration for the current platform
     /// - Returns: Publisher that emits the home template or an error
     func getHomeTemplate() -> AnyPublisher<HomeTemplate, ServiceProviderError>

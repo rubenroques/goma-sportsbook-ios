@@ -8,6 +8,8 @@
 import Foundation
 
 /// News article
+public typealias NewsItems = [NewsItem]
+///
 public struct NewsItem: Codable, Identifiable, Equatable, Hashable {
     /// Unique identifier
     public let id: String
