@@ -445,27 +445,22 @@ class DummyWidgetShowcaseHomeViewTemplateDataSource {
             .sink { completion in
 
             } receiveValue: { [weak self] highlightMarkets in
-                let markets = highlightMarkets.map(\.market)
+                let markets = highlightMarkets.map(\.content)
                 let mappedMarkets = ServiceProviderModelMapper.markets(fromServiceProviderMarkets: markets)
 
                 var mappedHighlightMarket: [ImageHighlightedContent<Market>] = []
 
                 for highlightMarket in highlightMarkets {
-                    let mappedMarket = ServiceProviderModelMapper.market(fromServiceProviderMarket: highlightMarket.market)
-
+                    let mappedMarket = ServiceProviderModelMapper.market(fromServiceProviderMarket: highlightMarket.content)
                     mappedHighlightMarket.append(ImageHighlightedContent<Market>(
                         content: mappedMarket,
-                        imageURLString: highlightMarket.promotionImageURl,
-                        promotedDetailsCount: highlightMarket.enabledSelectionsCount))
+                        imageURLString: highlightMarket.imageURL,
+                        promotedDetailsCount: highlightMarket.promotedChildCount))
                 }
-
                 self?.highlightedMarkets = mappedHighlightMarket
-
                 self?.refreshPublisher.send()
             }
-
         self.addCancellable(cancellable)
-
     }
 
     func fetchHeroMatches() {

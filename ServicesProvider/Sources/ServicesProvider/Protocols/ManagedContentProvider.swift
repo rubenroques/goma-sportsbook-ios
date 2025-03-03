@@ -93,6 +93,6 @@ protocol ManagedContentProvider: Connector {
     /// - Returns: Publisher that emits an array of pro choices
     func getProChoiceCardPointers() -> AnyPublisher<ProChoiceCardPointers, ServiceProviderError>
     
-    func getProChoiceMarketCards() -> AnyPublisher<[HighlightMarket], ServiceProviderError>
+    func getProChoiceMarketCards() -> AnyPublisher<ImageHighlightedContents<Market>, ServiceProviderError>
     
 }

@@ -276,11 +276,11 @@ class SportRadarManagedContentProvider: ManagedContentProvider {
         return self.gomaManagedContentProvider.getProChoiceCardPointers()
     }
     
-    func getProChoiceMarketCards() -> AnyPublisher<[HighlightMarket], ServiceProviderError> {
+    func getProChoiceMarketCards() -> AnyPublisher<ImageHighlightedContents<Market>, ServiceProviderError> {
         let requestPublisher = self.getProChoiceCardPointers()
 
         return requestPublisher
-            .flatMap { proChoiceCardPointers -> AnyPublisher<[HighlightMarket], ServiceProviderError> in
+            .flatMap { proChoiceCardPointers -> AnyPublisher<ImageHighlightedContents<Market>, ServiceProviderError> in
                 
                 var headlineItemsImages: [String: String] = [:]
                 var headlineItemsPresentedSelection: [String: String] = [:]
@@ -314,27 +314,27 @@ class SportRadarManagedContentProvider: ManagedContentProvider {
 
                 let finalPublisher = Publishers.MergeMany(publishers)
                     .collect()
-                    .map { (markets: [Market?]) -> [HighlightMarket] in
+                    .map { (markets: [Market?]) -> ImageHighlightedContents<Market> in
                         let marketValue = markets.compactMap { $0 }
-                        var highlightMarkets = [HighlightMarket]()
+                        var highlightMarkets = ImageHighlightedContents<Market>()
 
                         for market in marketValue {
                             let enableSelections = headlineItemsPresentedSelection[market.id] ?? "0"
                             let enabledSelectionsCount = Int(enableSelections) ?? 0
                             let imageURL = headlineItemsImages[market.id]
+                            
+                            let highlightMarket = ImageHighlightedContent<Market>.init(
+                                content: market,
+                                promotedChildCount: enabledSelectionsCount,
+                                imageURL: imageURL)
 
-                            let highlightMarket = HighlightMarket(
-                                market: market,
-                                enabledSelectionsCount: enabledSelectionsCount,
-                                promotionImageURl: imageURL
-                            )
                             highlightMarkets.append(highlightMarket)
                         }
 
                         // Ordena `highlightMarkets` com base na posição original em `marketIdIndexMap`
                         return highlightMarkets.sorted {
-                            guard let index1 = marketIdIndexMap[$0.market.id],
-                                  let index2 = marketIdIndexMap[$1.market.id]
+                            guard let index1 = marketIdIndexMap[$0.id],
+                                  let index2 = marketIdIndexMap[$1.id]
                             else { return false }
                             return index1 < index2
                         }

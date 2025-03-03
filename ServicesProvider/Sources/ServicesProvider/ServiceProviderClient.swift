@@ -1902,7 +1902,7 @@ extension ServicesProviderClient {
         return managedContentProvider.getProChoiceCardPointers()
     }
 
-    public func getProChoiceMarketCards() -> AnyPublisher<[HighlightMarket], ServiceProviderError> {
+    public func getProChoiceMarketCards() -> AnyPublisher<ImageHighlightedContents<Market>, ServiceProviderError> {
         guard
             let managedContentProvider = self.managedContentProvider
         else {

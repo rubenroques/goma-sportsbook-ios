@@ -179,7 +179,7 @@ class GomaManagedContentProvider: ManagedContentProvider {
             .eraseToAnyPublisher()
     }
 
-    func getProChoiceMarketCards() -> AnyPublisher<[HighlightMarket], ServiceProviderError> {
+    func getProChoiceMarketCards() -> AnyPublisher<ImageHighlightedContents<Market>, ServiceProviderError> {
         fatalError("")
     }
     
