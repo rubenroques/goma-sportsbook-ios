@@ -41,7 +41,8 @@ struct AppFont {
     }
 
     static func with(type: AppFontType = .regular, size: CGFloat = 17.0) -> UIFont {
-        return type.instance(size)
+        let adustedSize: CGFloat = size // adjust this setting to globally apply to all the fonts
+        return type.instance(adustedSize)
     }
 
     static func printFonts() {

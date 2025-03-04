@@ -13,8 +13,8 @@ import Combine
 class RealtimeSocketClient {
 
     enum MaintenanceModeType: Equatable {
-        case on(message: String)
-        case off
+        case enabled(message: String)
+        case disabled
         case unknown
     }
     
@@ -103,10 +103,10 @@ class RealtimeSocketClient {
         self.clientSettingsPublisher.send(firebaseClientSettings)
 
         if firebaseClientSettings.isOnMaintenance {
-            self.maintenanceModeSubject.send(.on(message: firebaseClientSettings.maintenanceReason))
+            self.maintenanceModeSubject.send(.enabled(message: firebaseClientSettings.maintenanceReason))
         }
         else {
-            self.maintenanceModeSubject.send(.off)
+            self.maintenanceModeSubject.send(.disabled)
         }
     }
     

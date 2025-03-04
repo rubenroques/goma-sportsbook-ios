@@ -68,9 +68,9 @@ class Bootstrap {
             .receive(on: DispatchQueue.main)
             .sink(receiveValue: { [weak self] maintenanceModeType in
                 switch maintenanceModeType {
-                case .on:
+                case .enabled:
                     self?.router.showUnderMaintenanceScreenOnBoot()
-                case .off:
+                case .disabled:
                     self?.router.makeKeyAndVisible()
                     self?.bootTriggerCancelable?.cancel()
                 case .unknown:

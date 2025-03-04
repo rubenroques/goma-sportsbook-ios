@@ -11,7 +11,7 @@ import Combine
 import ServicesProvider
 
 extension XCTestCase {
-    
+
     func awaitPublisher<T: Publisher>(
         _ publisher: T,
         timeout: TimeInterval = 20,
@@ -58,7 +58,7 @@ extension XCTestCase {
 
         return try unwrappedResult.get()
     }
-    
+
     func awaitWebSocketSubscription<T: Publisher, Content>(
             _ publisher: T,
             timeout: TimeInterval = 20,
@@ -67,16 +67,14 @@ extension XCTestCase {
             connectedAssertion: @escaping (ServicesProvider.Subscription) -> Void,
             contentUpdateAssertion: @escaping ([Content]) -> Void
         ) throws where T.Output == SubscribableContent<[Content]>, T.Failure: Error {
-            
+
             var didReceiveConnected = false
             var didReceiveContentUpdate = false
-            var completionOccurred = false
 
             let expectation = self.expectation(description: "Awaiting WebSocket subscription")
 
             let cancellable = publisher.sink(
                 receiveCompletion: { completion in
-                    completionOccurred = true
                     switch completion {
                     case .failure(let error):
                         XCTFail("Subscription failed with error: \(error)", file: file, line: line)

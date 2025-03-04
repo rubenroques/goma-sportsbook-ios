@@ -126,9 +126,9 @@ class Router {
             .sink { maintenanceMode in
                 
                 switch maintenanceMode {
-                case .on(let message):
+                case .enabled(let message):
                     self.showUnderMaintenanceScreen(withReason: message)
-                case .off:
+                case .disabled:
                     self.hideUnderMaintenanceScreen()
                 case .unknown:
                     break

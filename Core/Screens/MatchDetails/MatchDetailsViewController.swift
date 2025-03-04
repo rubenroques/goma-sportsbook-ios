@@ -1582,7 +1582,6 @@ extension MatchDetailsViewController {
     }
 
     // MARK: - Stats Section
-
     static func createStatsBaseView() -> UIView {
         let view = UIView()
         view.translatesAutoresizingMaskIntoConstraints = false
