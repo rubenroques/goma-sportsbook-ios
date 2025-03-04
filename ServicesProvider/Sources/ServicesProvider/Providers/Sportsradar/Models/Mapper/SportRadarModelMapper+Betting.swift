@@ -119,8 +119,12 @@ extension SportRadarModelMapper {
                             eventId: eventIdString,
                             eventDate: internalBet.eventDate,
                             country: country,
-                            sportTypeName: internalBet.sportTypeName,
-                            tournamentName: internalBet.tournamentName ?? "")
+                            sportType: SportType(name: internalBet.sportTypeName),
+                            tournamentName: internalBet.tournamentName ?? "",
+                            marketId: nil,
+                            outcomeId: nil,
+                            homeLogoUrl: nil,
+                            awayLogoUrl: nil)
     }
 
     //  ServiceProvider ----> SportRadar
@@ -131,6 +135,8 @@ extension SportRadarModelMapper {
         let bets = placedBetsResponse.bets.map(Self.placedBetEntry(fromInternalPlacedBetEntry:))
         return PlacedBetsResponse(identifier: placedBetsResponse.identifier,
                                   bets: bets,
+                                  detailedBets: nil,
+                                  requiredConfirmation: false,
                                   totalStake: placedBetsResponse.totalStake)
     }
 
@@ -172,7 +178,7 @@ extension SportRadarModelMapper {
                                 potencialReturn: betType.potencialReturn)
         default:
             return BetType.init(name: betType.typeName,
-                                grouping: .system(identifier: betType.typeCode, name: betType.typeName),
+                                grouping: .system(identifier: betType.typeCode, name: betType.typeName, numberOfBets: betType.numberOfIndividualBets),
                                 code: betType.typeCode,
                                 numberOfBets: betType.numberOfIndividualBets,
                                 potencialReturn: betType.potencialReturn)

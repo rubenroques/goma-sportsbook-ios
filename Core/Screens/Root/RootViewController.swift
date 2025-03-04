@@ -1200,7 +1200,7 @@ class RootViewController: UIViewController {
 //        
 //        self.present(navigationController, animated: true, completion: nil)
         
-        if let url = URL(string: "https://support.betsson.fr/hc/fr") {
+        if let url = URL(string: TargetVariables.links.support.helpCenter) {
             UIApplication.shared.open(url)
         }
         
@@ -1244,12 +1244,9 @@ class RootViewController: UIViewController {
     func openPromotions() {
         
         let promotionsWebViewModel = PromotionsWebViewModel()
-
-        let gomaBaseUrl = TargetVariables.clientBaseUrl
         let appLanguage = "fr"
-
         let isDarkTheme = self.traitCollection.userInterfaceStyle == .dark ? true : false
-        let urlString = "\(gomaBaseUrl)/\(appLanguage)/in-app/promotions?dark=\(isDarkTheme)"
+        let urlString = TargetVariables.generatePromotionsPageUrlString(forAppLanguage: appLanguage, isDarkTheme: isDarkTheme)
 
         if let url = URL(string: urlString) {
             
@@ -1290,6 +1287,41 @@ class RootViewController: UIViewController {
     func openRegisterWithCode(code: String) {
         
         self.presentRegisterScreen(withReferralCode: code)
+    }
+    
+    func openResponsibleForm() {
+        
+        Env.userSessionStore.isLoadingUserSessionPublisher
+            .filter({ $0 == false })
+            .receive(on: DispatchQueue.main)
+            .first()
+            .sink(receiveValue: { [weak self] _ in
+                
+                if Env.userSessionStore.isUserLogged() {
+                    let bettingPracticesViewController = BettingPracticesViewController()
+                    
+                    let navigationController = Router.navigationController(with: bettingPracticesViewController)
+                    
+                    self?.present(navigationController, animated: true, completion: nil)
+                }
+                else {
+                    
+                    let loginViewController = LoginViewController()
+                    
+                    let navigationViewController = Router.navigationController(with: loginViewController)
+                    
+                    loginViewController.hasPendingRedirect = true
+                    
+                    loginViewController.needsRedirect = { [weak self] in
+                        self?.openResponsibleForm()
+                    }
+                    
+                    self?.present(navigationViewController, animated: true, completion: nil)
+                }
+                
+            })
+            .store(in: &cancellables)
+
     }
 
     //

@@ -76,10 +76,10 @@ class ChatNotificationsViewController: UIViewController {
                                 forCellReuseIdentifier: UserNotificationTableViewCell.identifier)
         self.tableView.register(UserNotificationInviteTableViewCell.self,
                                 forCellReuseIdentifier: UserNotificationInviteTableViewCell.identifier)
-        self.tableView.register(LoadingMoreTableViewCell.nib, forCellReuseIdentifier: LoadingMoreTableViewCell.identifier)
+        self.tableView.register(LoadingMoreTableViewCell.self, forCellReuseIdentifier: LoadingMoreTableViewCell.identifier)
         self.tableView.register(ListTitleHeaderFooterView.self, forHeaderFooterViewReuseIdentifier: ListTitleHeaderFooterView.identifier)
         self.tableView.register(ListActionHeaderFooterView.self, forHeaderFooterViewReuseIdentifier: ListActionHeaderFooterView.identifier)
-        self.tableView.register(LoadingMoreTableViewCell.nib, forCellReuseIdentifier: LoadingMoreTableViewCell.identifier)
+        self.tableView.register(LoadingMoreTableViewCell.self, forCellReuseIdentifier: LoadingMoreTableViewCell.identifier)
 
         self.bind(toViewModel: self.viewModel)
 

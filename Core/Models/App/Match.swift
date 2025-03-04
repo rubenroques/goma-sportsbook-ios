@@ -7,9 +7,9 @@
 
 import Foundation
 
-struct HighlightedContent<T> {
+struct ImageHighlightedContent<T> {
     var content: T
-    var promotionalImageURL: String?
+    var imageURLString: String?
     var promotedDetailsCount: Int
 }
 

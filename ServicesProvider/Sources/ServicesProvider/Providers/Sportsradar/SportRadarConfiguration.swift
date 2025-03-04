@@ -8,8 +8,9 @@
 import Foundation
 import Extensions
 
-public struct SportRadarConfiguration {
 
+public struct GomaAPIClientConfiguration {
+    
     enum Environment {
         case production
         case staging
@@ -17,23 +18,55 @@ public struct SportRadarConfiguration {
     }
     
     var environment: Environment
-    public static var shared = SportRadarConfiguration(environment: .production)
+    public static var shared = GomaAPIClientConfiguration(environment: .production)
     
     init(environment: Environment) {
         self.environment = environment
     }
     
+    public var apiHostname: String {
+        switch self.environment {
+        case .production: return "https://api.gomademo.com/"
+        case .staging, .development: return "https://api.gomademo.com/"
+        }
+    }
+    
+    public var instanceBusinessUnitToken: String {
+        switch self.environment {
+        case .production: return "i4iStOcZWBFbrmWvwaccKpdVhyRpRB6uZGE9akT6IFMpSwIa0Ghl4lqsFSvqPNhi"
+        case .staging, .development: return "i4iStOcZWBFbrmWvwaccKpdVhyRpRB6uZGE9akT6IFMpSwIa0Ghl4lqsFSvqPNhi"
+        }
+    }
+    
+    
+}
+
+public struct SportRadarConfiguration {
+
+    enum Environment {
+        case production
+        case staging
+        case development
+    }
+
+    var environment: Environment
+    public static var shared = SportRadarConfiguration(environment: .production)
+
+    init(environment: Environment) {
+        self.environment = environment
+    }
+
     public var socketHostname: String {
         switch self.environment {
         case .production: return "wss://velnt-bson-ssb-pr.betsson.fr"
         case .staging, .development: return "wss://velnt-bson-ssb-ua.betsson.fr"
         }
     }
-    
+
     public var socketURL: String {
         return socketHostname + "/notification/listen/websocket"
     }
-    
+
     public var servicesRestHostname: String {
         switch self.environment {
         case .production: return "https://www-bson-ssb-pr.betsson.fr"
@@ -99,33 +132,33 @@ public struct SportRadarConfiguration {
             return "https://sportsbook-stage.gomagaming.com"
         }
     }
-    
-    
+
+
     public var vaixHostname: String {
         switch self.environment {
         case .production: return "https://api.vaix.ai/api/"
         default: return "https://staging-api.vaix.ai/api/"
         }
     }
-    
+
     public var vaixAuthTokenValue: String {
         switch self.environment {
         case .production: return "db5d16b721e3176e9723554747c54b02f1a3eaf74b933865ef71ab4b604fc927"
         default: return "a27724e2756e427d99db9e7f3d58c164ced4d6c941d2355feaefca14af0bcc02"
-            
-            
+
+
         }
     }
-    
+
 }
 
 
 
 
 /**
- 
- 
- 
+
+
+
  //    =======================================
  //       GOMA ENV
  //    =======================================
@@ -183,7 +216,7 @@ public struct SportRadarConfiguration {
      static var sumsubHostname = "https://api.sumsub.com"
 
      static var frontEndCode = "1356"
-     
+
      //static var sportRadarLegacyFrontEndURL = "https://cdn1.optimahq.com"
 
  //    ===================================================================================================================
@@ -213,6 +246,6 @@ public struct SportRadarConfiguration {
 
  //    ===================================================================================================================
 
- 
- 
+
+
  */

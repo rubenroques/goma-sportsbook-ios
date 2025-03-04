@@ -12,13 +12,13 @@ enum UserDefaultsKey: String {
 
     case theme = "appThemeKey"
     case userSession = "userSession"
-    case userSkippedLoginFlow = "userSkippedLoginFlow"    
+    case userSkippedLoginFlow = "userSkippedLoginFlow"
     case userOddsFormat = "userOddsFormat"
     case cardsStyle = "cardsStyleKey"
     case cachedBetslipTickets = "cachedBetslipTickets"
-    
+
     case cachedBetBuilderState = "betBuilderState"
-    
+
     case bettingUserSettings = "bettingUserSettings"
     case notificationsUserSettings = "notificationsUserSettings"
 
@@ -28,7 +28,7 @@ enum UserDefaultsKey: String {
     case oddsValueType = "oddsValueType"
 
     case startedUserRegisterInfo = "RegistrationFormDataKey"
-    
+
     var key: String {
         return self.rawValue
     }
@@ -76,7 +76,7 @@ extension UserDefaults {
             self.synchronize()
         }
     }
-    
+
     var cachedBetslipTickets: [BettingTicket] {
         get {
             let defaultValue = [BettingTicket]()
@@ -84,7 +84,7 @@ extension UserDefaults {
             if let bettingTicketsValue = bettingTickets {
                 return bettingTicketsValue
             }
-            
+
             self.set(defaultValue, forKey: UserDefaultsKey.cachedBetslipTickets.key)
             self.synchronize()
             return defaultValue
@@ -93,9 +93,9 @@ extension UserDefaults {
             self.set(codable: newValue, forKey: UserDefaultsKey.cachedBetslipTickets.key)
             self.synchronize()
         }
-        
+
     }
-    
+
     var cachedBetBuilderProcessor: BetBuilderProcessor {
         get {
             let defaultValue = BetBuilderProcessor()
@@ -103,7 +103,7 @@ extension UserDefaults {
             if let betBuilderProcessorValue = betBuilderProcessor {
                 return betBuilderProcessorValue
             }
-            
+
             self.set(codable: defaultValue, forKey: UserDefaultsKey.cachedBetBuilderState.key)
             self.synchronize()
             return defaultValue
@@ -112,9 +112,9 @@ extension UserDefaults {
             self.set(codable: newValue, forKey: UserDefaultsKey.cachedBetBuilderState.key)
             self.synchronize()
         }
-        
+
     }
-    
+
     var userOddsFormat: OddsFormat {
         get {
             return OddsFormat(rawValue: integer(forKey: UserDefaultsKey.userOddsFormat.key)) ?? .europe
@@ -129,7 +129,7 @@ extension UserDefaults {
         get {
             let defaultValue = BettingUserSettings.defaultSettings
             let bettingUserSettings: BettingUserSettings? = self.codable(forKey: UserDefaultsKey.bettingUserSettings.key)
-            
+
             if let bettingUserSettingsValue = bettingUserSettings {
                 return bettingUserSettingsValue
             }
@@ -144,12 +144,12 @@ extension UserDefaults {
             self.synchronize()
         }
     }
-    
+
     var notificationsUserSettings: NotificationsUserSettings {
         get {
             let defaultValue = NotificationsUserSettings.defaultSettings
             let notificationsUserSettings: NotificationsUserSettings? = self.codable(forKey: UserDefaultsKey.notificationsUserSettings.key)
-            
+
             if let notificationsUserSettingsValue = notificationsUserSettings {
                 return notificationsUserSettingsValue
             }
@@ -164,12 +164,12 @@ extension UserDefaults {
             self.synchronize()
         }
     }
-    
+
     var startedUserRegisterInfo: UserRegisterEnvelop? {
         get {
             let defaultValue = UserRegisterEnvelop()
             let userRegisterEnvelop: UserRegisterEnvelop? = self.codable(forKey: UserDefaultsKey.startedUserRegisterInfo.key)
-            
+
             if let userRegisterEnvelopValue = userRegisterEnvelop {
                 return userRegisterEnvelopValue
             }
@@ -189,20 +189,20 @@ extension UserDefaults {
             self.synchronize()
         }
     }
-    
+
     var cardsStyle: CardsStyle {
         get {
             let defaultValue = TargetVariables.defaultCardStyle
-            if let skipped = self.value(forKey: UserDefaultsKey.cardsStyle.key) as? Int {
-                return CardsStyle(rawValue: skipped) ?? defaultValue // Has a previous stored value, use it
+            if let style: CardsStyle = self.codable(forKey: UserDefaultsKey.cardsStyle.key) {
+                return style
             }
             else {
-                self.setValue(defaultValue.rawValue, forKey: UserDefaultsKey.cardsStyle.key)
+                self.set(codable: defaultValue, forKey: UserDefaultsKey.cardsStyle.key)
                 return defaultValue
             }
         }
         set {
-            self.setValue(newValue.rawValue, forKey: UserDefaultsKey.cardsStyle.key)
+            self.set(codable: newValue, forKey: UserDefaultsKey.cardsStyle.key)
             self.synchronize()
         }
     }
@@ -278,15 +278,20 @@ extension UserDefaults {
         catch {
             return nil
         }
-        
+
     }
 }
 
-enum CardsStyle: Int {
-    case small = 3
-    case normal = 5
+enum CardsStyle: Codable, CaseIterable {
+    case small
+    case normal
 }
 
+
+enum CompetitionListStyle: Codable, CaseIterable {
+    case toggle
+    case navigateToDetails
+}
 
 public enum BetslipOddChangeSettingMode {
     case legacy
@@ -297,7 +302,7 @@ public enum BetslipOddChangeSetting: String, Codable, Hashable, CaseIterable {
     case none
     // case any // remover
     case higher
-    
+
     var localizedString: String {
         switch self {
         case .none:
@@ -314,7 +319,7 @@ enum BetslipOddValidationType: String, CaseIterable {
 
     case acceptAny = "ACCEPT_ANY"
     case acceptHigher = "ACCEPT_HIGHER"
-    
+
     static var defaultValue: BetslipOddValidationType {
         return .acceptAny
     }

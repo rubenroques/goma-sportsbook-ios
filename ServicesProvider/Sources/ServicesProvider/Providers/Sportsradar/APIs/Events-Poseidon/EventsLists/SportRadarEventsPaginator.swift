@@ -77,7 +77,7 @@ class SportRadarEventsPaginator {
                     return false
                 }
             })
-            .compactMap({ (newEvents: [Event]?, _)  in
+            .compactMap({ (newEvents: Events?, _)  in
                 if let newEvents {
                     return EventsGroup(events: newEvents, marketGroupId: nil)
                 }
@@ -204,7 +204,7 @@ class SportRadarEventsPaginator {
         return Just(true).setFailureType(to: ServiceProviderError.self).eraseToAnyPublisher()
     }
 
-    func updateEventsList(events: [Event]) {
+    func updateEventsList(events: Events) {
         // If the number of received events is >= than eventsPerPage it means we can try request more
         self.hasNextPage = events.count >= self.eventsPerPage
 

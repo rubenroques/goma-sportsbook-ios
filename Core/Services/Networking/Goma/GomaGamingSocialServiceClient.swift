@@ -49,9 +49,7 @@ class GomaGamingSocialServiceClient {
     var chatPage: Int = 1
 
     var locations: OrderedDictionary<String, EveryMatrix.Location> = [:]
-    var socialAppNamesSupported: [String] = ["Facebook", "Telegram", "Twitter", "Whatsapp", "Discord", "Messenger"]
-    var socialAppNamesSchemesSupported: [String] = ["fb://", "tg://", "twitter://", "whatsapp://", "discord://", "fb-messenger://"]
-    var socialAppSharesAvailable: [String] = ["https://www.facebook.com/sharer.php?u=%url", "tg://msg_url?url=%url", "https://twitter.com/intent/tweet?url=%url", "whatsapp://send/?text=%url", "", ""]
+    
     var socialAppsInfo: [SocialAppInfo] = []
 
     // Followers
@@ -103,14 +101,13 @@ class GomaGamingSocialServiceClient {
 
         Env.gomaNetworkClient.getFollowingUsers(deviceId: Env.deviceId)
             .receive(on: DispatchQueue.main)
-            .sink(receiveCompletion: { [weak self] completion in
+            .sink(receiveCompletion: { completion in
                 switch completion {
                 case .failure(let error):
                     print("FOLLOWING USERS ERROR: \(error)")
                 case .finished:
                     ()
                 }
-
             }, receiveValue: { [weak self] response in
                 print("FOLLOWING USERS RESPONSE: \(response)")
 
@@ -124,16 +121,6 @@ class GomaGamingSocialServiceClient {
 
     func storeSocialAppsInfo() {
 
-        for (index, socialApp) in self.socialAppNamesSupported.enumerated() {
-
-            if let socialAppUrlScheme = self.socialAppNamesSchemesSupported[safe: index],
-               let socialAppShareAvailable = self.socialAppSharesAvailable[safe: index] {
-
-                let socialAppInfo = SocialAppInfo(name: socialApp, urlScheme: socialAppUrlScheme, urlShare: socialAppShareAvailable)
-
-                self.socialAppsInfo.append(socialAppInfo)
-            }
-        }
     }
 
     func connectSocket() {

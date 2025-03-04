@@ -26,7 +26,7 @@ class Environment {
             serviceProviderEnvironment = .staging
         }
         
-        let servicesProviderConfiguration = ServicesProviderConfiguration(environment: serviceProviderEnvironment)
+        let servicesProviderConfiguration = ServicesProviderConfiguration(environment: serviceProviderEnvironment, deviceUUID: Env.deviceId)
         let provider = TargetVariables.serviceProviderType
         switch provider {
         case .everymatrix:

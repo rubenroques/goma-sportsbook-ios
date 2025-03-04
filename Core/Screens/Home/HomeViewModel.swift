@@ -10,9 +10,10 @@ import Combine
 import OrderedCollections
 
 enum HomeTemplateBuilderType {
-    case appStatic
     case backendDynamic(clientTemplateKey: String)
-    case clientDynamic
+    case clientBackendManaged
+    case dummyWidgetShowcase(widgets: [HomeViewModel.Content] )
+    case cmsManaged
 }
 
 class HomeViewModel {
@@ -35,7 +36,7 @@ class HomeViewModel {
 
         case highlightedMatches
         case highlightedBoostedOddsMatches
-        
+
         case highlightedLiveMatches
 
         case promotionalStories
@@ -45,6 +46,7 @@ class HomeViewModel {
         case heroCard
 
         case highlightedMarketProChoices
+        case videoNewsLine
 
         var identifier: String {
             switch self {
@@ -60,19 +62,21 @@ class HomeViewModel {
             case .quickSwipeStack: return "quickSwipeStack"
             case .makeOwnBetCallToAction: return "makeOwnBetCallToAction"
             case .topCompetitionsShortcuts: return "topCompetitionsShortcuts"
-                
+
             case .highlightedMatches: return "highlightedMatches"
             case .highlightedBoostedOddsMatches: return "highlightedBoostedOddsMatches"
-                
+
             case .highlightedLiveMatches: return "highlightedLiveMatches"
-                
+
             case .promotionalStories: return "promotionalStories"
             case .promotedSportSection: return "promotedSportSection"
 
             case .supplementaryEvents: return "supplementaryEvents"
-                
+
             case .heroCard: return "heroCard"
             case .highlightedMarketProChoices: return "highlightedMarketProChoices"
+
+            case .videoNewsLine: return "videoNewsLine"
             }
         }
     }
@@ -86,8 +90,6 @@ class HomeViewModel {
     init() {
 
         switch TargetVariables.homeTemplateBuilder {
-        case .appStatic: // hardcoded in the app code
-            self.homeViewTemplateDataSource = StaticHomeViewTemplateDataSource()
         case .backendDynamic: // provided by our backend
             if let homeFeedTemplate = Env.appSession.homeFeedTemplate {
                 self.homeViewTemplateDataSource = DynamicHomeViewTemplateDataSource(homeFeedTemplate: homeFeedTemplate)
@@ -95,8 +97,12 @@ class HomeViewModel {
             else {
                 fatalError("homeFeedTemplate or homeTemplateKey not found for client with homeTemplateBuilder = backendDynamic")
             }
-        case .clientDynamic: // provided by the client backend
+        case .clientBackendManaged: // provided by the client backend
             self.homeViewTemplateDataSource = ClientManagedHomeViewTemplateDataSource()
+        case .dummyWidgetShowcase: // hardcoded
+            self.homeViewTemplateDataSource = DummyWidgetShowcaseHomeViewTemplateDataSource()
+        case .cmsManaged: // provided by GOMA CMS
+            self.homeViewTemplateDataSource = CMSManagedHomeViewTemplateDataSource()
         }
 
         self.homeViewTemplateDataSource.refreshRequestedPublisher
@@ -154,7 +160,7 @@ extension HomeViewModel {
     func setStoryLineViewModel(viewModel: StoriesLineCellViewModel) {
         self.homeViewTemplateDataSource.setStoryLineViewModel(viewModel: viewModel)
     }
-    
+
     func sportGroupViewModel(forSection section: Int) -> SportGroupViewModel? {
         return self.homeViewTemplateDataSource.sportGroupViewModel(forSection: section)
     }
@@ -165,7 +171,7 @@ extension HomeViewModel {
     func featuredTipLineViewModel() -> FeaturedTipLineViewModel? {
         return self.homeViewTemplateDataSource.featuredTipLineViewModel()
     }
-    
+
     func suggestedBetLineViewModel() -> SuggestedBetLineViewModel? {
         return self.homeViewTemplateDataSource.suggestedBetLineViewModel()
     }
@@ -185,7 +191,7 @@ extension HomeViewModel {
     func highlightedLiveMatchLineTableCellViewModel(forSection section: Int, forIndex index: Int) -> MatchLineTableCellViewModel? {
         return self.homeViewTemplateDataSource.highlightedLiveMatchLineTableCellViewModel(forSection: section, forIndex: index)
     }
-    
+
     func matchLineTableCellViewModel(forSection section: Int, forIndex index: Int) -> MatchLineTableCellViewModel? {
         return self.homeViewTemplateDataSource.matchLineTableCellViewModel(forSection: section, forIndex: index)
     }
@@ -193,12 +199,16 @@ extension HomeViewModel {
     func topCompetitionsLineCellViewModel(forSection section: Int) -> TopCompetitionsLineCellViewModel? {
         return self.homeViewTemplateDataSource.topCompetitionsLineCellViewModel(forSection: section)
     }
-    
+
     func heroCardMatchViewModel(forIndex index: Int) -> MatchWidgetCellViewModel? {
         return self.homeViewTemplateDataSource.heroCardMatchViewModel(forIndex: index)
     }
 
     func highlightedMarket(forIndex index: Int) -> MarketWidgetContainerTableViewModel? {
         return self.homeViewTemplateDataSource.highlightedMarket(forIndex: index)
+    }
+
+    func videoNewsLineViewModel() -> VideoPreviewLineCellViewModel? {
+        return self.homeViewTemplateDataSource.videoNewsLineViewModel()
     }
 }

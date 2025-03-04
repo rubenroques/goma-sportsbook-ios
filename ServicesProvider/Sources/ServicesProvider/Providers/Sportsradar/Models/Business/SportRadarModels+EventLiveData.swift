@@ -59,7 +59,7 @@ extension SportRadarModels {
         init(from decoder: Decoder) throws {
             let container: KeyedDecodingContainer<CodingKeys> = try decoder.container(keyedBy: CodingKeys.self)
             
-            self.id = (try? container.decode(String.self, forKey: .targetEventId)) ?? "000"
+            self.id = (try? container.decode(String.self, forKey: .targetEventId)) ?? "NO_ID_FOUND"
             
             self.matchTime = nil
             if let fullMatchTime = try container.decodeIfPresent(String.self, forKey: .matchTime),
@@ -172,8 +172,8 @@ extension SportRadarModels {
             
             var attributesContainer = container.nestedContainer(keyedBy: CodingKeys.self, forKey: .attributedContainer)
             var completeContainer = attributesContainer.nestedContainer(keyedBy: CodingKeys.self, forKey: .completeContainer)
-            var statusContainer = completeContainer.nestedContainer(keyedBy: CodingKeys.self, forKey: .statusContainer)
-            var eventContainer = statusContainer.nestedContainer(keyedBy: CodingKeys.self, forKey: .eventContainer)
+            // var statusContainer = completeContainer.nestedContainer(keyedBy: CodingKeys.self, forKey: .statusContainer)
+            // var eventContainer = statusContainer.nestedContainer(keyedBy: CodingKeys.self, forKey: .eventContainer)
             
             var currentScoreContainer = completeContainer.nestedContainer(keyedBy: CodingKeys.self, forKey: .currentScoreContainer)
             var competitorContainer = currentScoreContainer.nestedContainer(keyedBy: CodingKeys.self, forKey: .competitorContainer)

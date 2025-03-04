@@ -142,7 +142,7 @@ class BannerCellViewModel {
             .sink { completion in
                 switch completion {
                 case .failure(let error):
-                    print("Error retrieving data! \(error)")
+                    print("Error retrieving data! requestMatchInfo subscribeToMarketDetails \(error)")
                 case .finished:
                     print("Data retrieved!")
                 }

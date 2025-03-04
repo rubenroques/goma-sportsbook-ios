@@ -81,10 +81,10 @@ platform :ios do
     # Get current build number
     current_build = get_build_number(xcodeproj: "Sportsbook.xcodeproj")
     puts "Current build number (CURRENT_PROJECT_VERSION): #{current_build}"
-    
+
     # Prompt for new build number using UI.input
     new_build = UI.input("Enter new build number (CURRENT_PROJECT_VERSION), press enter to keep current, or '+' to increment:")
-    
+
     # Handle the input
     new_build = if new_build.to_s.strip.empty?
       current_build  # Keep current if empty
@@ -93,14 +93,14 @@ platform :ios do
     else
       new_build  # Use provided number
     end
-    
+
     # Update build number
     increment_build_number(
       build_number: new_build,
       xcodeproj: "Sportsbook.xcodeproj",
       skip_info_plist: true
     )
-    
+
     puts "Build number updated to: #{new_build}"
   end
 
@@ -109,33 +109,33 @@ platform :ios do
     # Get current version
     current_version = get_version_number(xcodeproj: "Sportsbook.xcodeproj")
     puts "Current version (MARKETING_VERSION): #{current_version}"
-    
+
     # Prompt for new version using UI.input
     new_version = UI.input("Enter new version number (MARKETING_VERSION) or press enter to keep current:")
-    
+
     # Use current version if input is empty
     new_version = new_version.to_s.strip.empty? ? current_version : new_version
-    
+
     # Update version
     increment_version_number(
       version_number: new_version,
       xcodeproj: "Sportsbook.xcodeproj"
     )
-    
+
     puts "Version updated to: #{new_version}"
   end
 
   desc "Setup certificates and provisioning profiles"
   lane :certificates do |options|
     app_scheme = options[:app_scheme]
-    
+
     # Get internal ID from scheme mapping if a scheme is provided
     internal_id = app_scheme ? SCHEME_MAPPING[app_scheme] : app_scheme
 
     # Set Match parameters based on environment
     match_params = {
       type: "adhoc",
-      force_for_new_devices: false,
+      force_for_new_devices: true,
       readonly: true,
       force: false,
       verbose: false
@@ -159,14 +159,20 @@ platform :ios do
     else
       UI.user_error!("Please specify a valid scheme: 'Betsson UAT' or 'Betsson PROD'")
     end
-    
-    # Register new devices
-    register_devices(
-      devices_file: "./fastlane/devices.txt",
-      username: match_params[:username],
-      team_id: match_params[:team_id]
-    )
-    
+
+    # Register new devices if devices.txt exists
+    devices_file = "./fastlane/devices.txt"
+    if File.exist?(devices_file)
+      require 'csv'
+      register_devices(
+        devices_file: devices_file,
+        username: match_params[:username],
+        team_id: match_params[:team_id]
+      )
+    else
+      UI.message "ℹNo devices.txt file found, skipping device registration"
+    end
+
     # Fetch certificates and profiles
     match(match_params)
   end
@@ -174,40 +180,40 @@ platform :ios do
   desc "Build and distribute to Firebase"
   lane :distribute_to_firebase do |options|
     is_verbose = options[:verbose] == true
-    
+
     UI.message "🚀 Starting distribution process..."
-    
+
     app_scheme = options[:app_scheme]
     environment = options[:environment]
     release_notes = options[:release_notes]
-    
+
     UI.message "📱 Building for scheme: #{app_scheme}"
     UI.message "🌍 Environment: #{environment}"
-    
+
     # Get internal ID from scheme mapping
     internal_id = SCHEME_MAPPING[app_scheme]
     unless internal_id
       UI.user_error!("Invalid scheme: #{app_scheme}. Must be one of: #{SCHEME_MAPPING.keys.join(', ')}")
     end
-    
+
     UI.message "🔍 Using internal ID: #{internal_id}" if is_verbose
-    
+
     # Validate scheme and environment variables
     unless ENV["#{internal_id}_FIREBASE_APP_ID"]
       UI.user_error!("Missing Firebase App ID for scheme: #{app_scheme}")
     end
-    
+
     firebase_cli_token = ENV["FIREBASE_#{environment}_CLI_TOKEN"]
     firebase_groups = ENV["FIREBASE_#{environment}_DISTRIBUTION_GROUPS"] || "ios-internal"
-    
+
     unless firebase_cli_token
       UI.user_error!("Missing Firebase CLI token for environment: #{environment}")
     end
-    
+
     # Update certificates
     UI.message "🔐 Updating certificates..." if is_verbose
     certificates(app_scheme: app_scheme)
-    
+
     # Print Xcode version
     if is_verbose
       UI.message "🛠 Xcode Version:"
@@ -215,7 +221,7 @@ platform :ios do
     end
 
     UI.message "🏗 Starting build process..." if is_verbose
-    
+
     # Build app with detailed output
     build_ios_app(
       scheme: app_scheme,
@@ -240,9 +246,9 @@ platform :ios do
       export_xcargs: is_verbose ? "-verbose" : nil,
       xcodebuild_formatter: nil  # Remove xcpretty since we're using suppress_xcode_output
     )
-    
+
     UI.message "📦 Build completed. Uploading to Firebase..."
-    
+
     # Upload to Firebase
     firebase_app_distribution(
       app: ENV["#{internal_id}_FIREBASE_APP_ID"],
@@ -251,7 +257,7 @@ platform :ios do
       release_notes: release_notes,
       debug: is_verbose
     )
-    
+
     UI.success "✅ Distribution completed successfully!"
   end
 

@@ -12,27 +12,47 @@ import SwiftUI
 
 class PreLiveEventsViewController: UIViewController {
 
-    @IBOutlet private weak var filtersBarBaseView: UIView!
-    @IBOutlet private weak var filtersCollectionView: UICollectionView!
-    @IBOutlet private weak var filtersSeparatorLineView: UIView!
-    @IBOutlet private weak var tableView: UITableView!
+    // MARK: - Views
+    private lazy var competitionHistoryBaseView: UIView = Self.createCompetitionHistoryBaseView()
+    private lazy var competitionHistoryCollectionView: UICollectionView = Self.createCompetitionHistoryCollectionView()
+    private lazy var competitionHistorySeparatorLine: UIView = Self.createCompetitionHistorySeparatorLine()
+    private lazy var competitionsContainerView: UIView = Self.createCompetitionsContainerView()
+    private lazy var competitionsFiltersBaseView: UIView = Self.createCompetitionsFiltersBaseView()
+    private lazy var competitionsFiltersDarkBackgroundView: UIView = Self.createCompetitionsFiltersDarkBackgroundView()
+    private lazy var emptyBaseView: UIView = Self.createEmptyBaseView()
+    private lazy var filtersBarBaseView: UIView = Self.createFiltersBarBaseView()
+    private lazy var filtersButtonView: UIView = Self.createFiltersButtonView()
+    private lazy var filtersCollectionView: UICollectionView = Self.createFiltersCollectionView()
+    private lazy var filtersCountLabel: UILabel = Self.createFiltersCountLabel()
+    private lazy var filtersSeparatorLineView: UIView = Self.createFiltersSeparatorLineView()
+    private lazy var firstTextFieldEmptyStateLabel: UILabel = Self.createFirstTextFieldEmptyStateLabel()
+    private lazy var leftGradientBaseView: UIView = Self.createLeftGradientBaseView()
+    private lazy var loadingBaseView: UIView = Self.createLoadingBaseView()
+    private lazy var rightGradientBaseView: UIView = Self.createRightGradientBaseView()
+    private lazy var secondTextFieldEmptyStateLabel: UILabel = Self.createSecondTextFieldEmptyStateLabel()
+    private lazy var sportTypeIconImageView: UIImageView = Self.createSportTypeIconImageView()
+    private lazy var sportTypeNameLabel: UILabel = Self.createSportTypeNameLabel()
+    private lazy var sportsSelectorButtonView: UIView = Self.createSportsSelectorButtonView()
+    private lazy var sportsSelectorExpandImageView: UIImageView = Self.createSportsSelectorExpandImageView()
+    private lazy var tableView: UITableView = Self.createTableView()
+    private lazy var emptyStateButton: UIButton = Self.createEmptyStateButton()
+    private lazy var emptyStateImage: UIImageView = Self.createEmptyStateImage()
+    private lazy var filtersButtonIconImageView: UIImageView = Self.createFiltersButtonIconImageView()
+    private lazy var sportsSelectorContentView: UIView = Self.createSportsSelectorContentView()
+    private lazy var emptyStateContentView: UIView = Self.createEmptyStateContentView()
 
-    @IBOutlet private weak var sportsSelectorButtonView: UIView!
-    @IBOutlet private weak var sportsSelectorExpandImageView: UIImageView!
-    @IBOutlet private weak var sportTypeIconImageView: UIImageView!
-    @IBOutlet private weak var sportTypeNameLabel: UILabel!
+    // Constraints
+    private lazy var tableTopViewConstraint: NSLayoutConstraint = {
+        return tableView.topAnchor.constraint(equalTo: competitionsContainerView.topAnchor)
+    }()
 
-    @IBOutlet private weak var leftGradientBaseView: UIView!
+    private lazy var tableFilterTopViewConstraint: NSLayoutConstraint = {
+        return tableView.topAnchor.constraint(equalTo: competitionHistoryBaseView.bottomAnchor)
+    }()
 
-    @IBOutlet private weak var rightGradientBaseView: UIView!
-    @IBOutlet private weak var filtersButtonView: UIView!
-
-    @IBOutlet private weak var emptyBaseView: UIView!
-    @IBOutlet private weak var filtersCountLabel: UILabel!
-    @IBOutlet private weak var firstTextFieldEmptyStateLabel: UILabel!
-    @IBOutlet private weak var secondTextFieldEmptyStateLabel: UILabel!
-    @IBOutlet private weak var emptyStateImage: UIImageView!
-    @IBOutlet private weak var emptyStateButton: UIButton!
+    private lazy var openedCompetitionsFiltersConstraint: NSLayoutConstraint = {
+        return view.bottomAnchor.constraint(equalTo: self.competitionsFiltersBaseView.bottomAnchor)
+    }()
 
     private let refreshControl = UIRefreshControl()
 
@@ -47,27 +67,11 @@ class PreLiveEventsViewController: UIViewController {
         return floatingShortcutsView
     }
 
-    @IBOutlet private weak var loadingBaseView: UIView!
     private let loadingSpinnerViewController = LoadingSpinnerViewController()
-
-    @IBOutlet private weak var openedCompetitionsFiltersConstraint: NSLayoutConstraint!
-    @IBOutlet private weak var competitionsFiltersBaseView: UIView!
-    @IBOutlet private weak var competitionsFiltersDarkBackgroundView: UIView!
-
-    @IBOutlet private weak var competitionsContainerView: UIView!
-
-    @IBOutlet private weak var competitionHistoryBaseView: UIView!
-
-    @IBOutlet private weak var competitionHistoryCollectionView: UICollectionView!
-
-    // Constraints
-
-    @IBOutlet private weak var tableTopViewConstraint: NSLayoutConstraint!
-    @IBOutlet private weak var tableFilterTopViewConstraint: NSLayoutConstraint!
 
     private let footerInnerView = UIView(frame: .zero)
 
-    private var competitionsFiltersView: CompetitionsFiltersView = CompetitionsFiltersView()
+    private var competitionsFiltersView = CompetitionsFiltersView()
 
     var selectedTopCompetitionIndex: Int = 0
     var reachedTopCompetitionSection: Int = 0
@@ -95,20 +99,28 @@ class PreLiveEventsViewController: UIViewController {
     private var isLoadingFromPullToRefresh = false
 
     init(viewModel: PreLiveEventsViewModel) {
-
         self.viewModel = viewModel
-
-        super.init(nibName: "PreLiveEventsViewController", bundle: nil)
+        super.init(nibName: nil, bundle: nil)
     }
 
-    @available(iOS, unavailable)
+    @available(*, unavailable)
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
+    }
+
+    override func loadView() {
+        view = UIView()
+        view.backgroundColor = .systemBackground
     }
 
     override func viewDidLoad() {
         super.viewDidLoad()
 
+        self.setupSubviews()
+        
+        self.tableTopViewConstraint.isActive = true
+        self.tableFilterTopViewConstraint.isActive = false
+        
         self.competitionsFiltersView.shouldLoadCompetitions = { [weak self] regionId in
             self?.viewModel.loadCompetitionByRegion(regionId: regionId)
         }
@@ -121,7 +133,7 @@ class PreLiveEventsViewController: UIViewController {
         // Setup fonts
         self.filtersCountLabel.font = AppFont.with(type: .heavy, size: 10)
         self.sportTypeNameLabel.font = AppFont.with(type: .heavy, size: 7)
-    
+
         //
         self.viewModel.didSelectMatchAction = { match in
             let matchDetailsViewController = MatchDetailsViewController(viewModel: MatchDetailsViewModel(match: match))
@@ -171,7 +183,7 @@ class PreLiveEventsViewController: UIViewController {
 
         self.floatingShortcutsView.resetAnimations()
         self.setHomeFilters(homeFilters: self.viewModel.homeFilterOptions)
-        
+
         self.reloadData()
     }
 
@@ -289,18 +301,18 @@ class PreLiveEventsViewController: UIViewController {
         tableView.separatorStyle = .none
 
         tableView.register(UITableViewCell.self, forCellReuseIdentifier: UITableViewCell.identifier) // fallback
-        
+
         tableView.register(OutrightCompetitionLineTableViewCell.self, forCellReuseIdentifier: OutrightCompetitionLineTableViewCell.identifier)
         tableView.register(OutrightCompetitionLargeLineTableViewCell.self, forCellReuseIdentifier: OutrightCompetitionLargeLineTableViewCell.identifier)
 
-        tableView.register(MatchLineTableViewCell.nib, forCellReuseIdentifier: MatchLineTableViewCell.identifier)
+        tableView.register(Betsson.MatchLineTableViewCell.self, forCellReuseIdentifier: MatchLineTableViewCell.identifier)
         tableView.register(BannerScrollTableViewCell.nib, forCellReuseIdentifier: BannerScrollTableViewCell.identifier)
-        tableView.register(LoadingMoreTableViewCell.nib, forCellReuseIdentifier: LoadingMoreTableViewCell.identifier)
+        tableView.register(LoadingMoreTableViewCell.self, forCellReuseIdentifier: LoadingMoreTableViewCell.identifier)
 
         tableView.register(EmptyCardTableViewCell.nib, forCellReuseIdentifier: EmptyCardTableViewCell.identifier)
 
         tableView.register(FooterResponsibleGamingViewCell.self, forCellReuseIdentifier: FooterResponsibleGamingViewCell.identifier)
-        
+
         tableView.register(TitleTableViewHeader.nib, forHeaderFooterViewReuseIdentifier: TitleTableViewHeader.identifier)
         tableView.register(TournamentTableViewHeader.nib, forHeaderFooterViewReuseIdentifier: TournamentTableViewHeader.identifier)
 
@@ -308,7 +320,7 @@ class PreLiveEventsViewController: UIViewController {
         tableView.dataSource = self
 
         tableView.clipsToBounds = false
-        
+
         tableView.estimatedRowHeight = 155
         tableView.estimatedSectionHeaderHeight = 0
         tableView.estimatedSectionFooterHeight = 0
@@ -358,6 +370,9 @@ class PreLiveEventsViewController: UIViewController {
         }
         self.competitionsFiltersView.tapHeaderViewAction = { [unowned self] in
             self.openCompetitionsFilters()
+        }
+        self.competitionsFiltersView.didTapCompetitionNavigationAction = { [unowned self] competitionId in
+            self.openCompetitionsDetails(competitionsIds: [competitionId], sport: self.viewModel.selectedSport)
         }
 
         self.competitionsFiltersDarkBackgroundView.alpha = 1
@@ -428,7 +443,7 @@ class PreLiveEventsViewController: UIViewController {
                 }
 
                 self.sportTypeNameLabel.text = newSelectedSport.name
-                
+
                 self.competitionsFiltersView.resetSelection()
             }
             .store(in: &self.cancellables)
@@ -748,11 +763,11 @@ class PreLiveEventsViewController: UIViewController {
 
             quickbetViewController.modalPresentationStyle = .overCurrentContext
             quickbetViewController.modalTransitionStyle = .crossDissolve
-            
+
             quickbetViewController.shouldShowBetSuccess = { bettingTicket, betPlacedDetails in
-                
+
                 quickbetViewController.dismiss(animated: true, completion: {
-                    
+
                     self.showBetSucess(bettingTicket: bettingTicket, betPlacedDetails: betPlacedDetails)
                 })
             }
@@ -764,14 +779,14 @@ class PreLiveEventsViewController: UIViewController {
             self.present(loginViewController, animated: true, completion: nil)
         }
     }
-    
+
     private func showBetSucess(bettingTicket: BettingTicket, betPlacedDetails: [BetPlacedDetails]) {
-        
+
         let betSubmissionSuccessViewController = BetSubmissionSuccessViewController(betPlacedDetailsArray: betPlacedDetails,
                                                                                     cashbackResultValue: nil,
                                                                                     usedCashback: false,
         bettingTickets: [bettingTicket])
-        
+
         self.present(Router.navigationController(with: betSubmissionSuccessViewController), animated: true)
     }
 
@@ -840,6 +855,14 @@ class PreLiveEventsViewController: UIViewController {
     @IBAction private func didTapLoginButton() {
         let loginViewController = Router.navigationController(with: LoginViewController())
         self.present(loginViewController, animated: true, completion: nil)
+    }
+
+    private func openCompetitionsDetails(competitionsIds: [String], sport: Sport) {
+        if let competitionId = competitionsIds.first {
+            let competitionDetailsViewModel = SimpleCompetitionDetailsViewModel(competitionId: competitionId, sport: sport)
+            let competitionDetailsViewController = SimpleCompetitionDetailsViewController(viewModel: competitionDetailsViewModel)
+            self.navigationController?.pushViewController(competitionDetailsViewController, animated: true)
+        }
     }
 
     func setHighlightedTopCompetition(section: Int) {
@@ -1158,4 +1181,450 @@ extension PreLiveEventsViewController: HomeFilterOptionsViewDelegate {
         self.filtersCountLabel.isHidden = (homeFiltersActive == 0)
     }
 
+}
+
+// MARK: - User Interface setup
+extension PreLiveEventsViewController {
+
+    private static func createCompetitionHistoryBaseView() -> UIView {
+        let view = UIView()
+        view.translatesAutoresizingMaskIntoConstraints = false
+        view.backgroundColor = .systemRed
+        return view
+    }
+
+    private static func createCompetitionHistoryCollectionView() -> UICollectionView {
+        let layout = UICollectionViewLayout()
+        let collectionView = UICollectionView(frame: .zero, collectionViewLayout: layout)
+        collectionView.translatesAutoresizingMaskIntoConstraints = false
+        collectionView.backgroundColor = .systemBackground
+        collectionView.tag = 1
+        return collectionView
+    }
+
+    private static func createCompetitionHistorySeparatorLine() -> UIView {
+        let view = UIView()
+        view.translatesAutoresizingMaskIntoConstraints = false
+        view.backgroundColor = UIColor.App.separatorLine
+        return view
+    }
+
+    private static func createCompetitionsContainerView() -> UIView {
+        let view = UIView()
+        view.translatesAutoresizingMaskIntoConstraints = false
+        view.backgroundColor = .systemBackground
+        return view
+    }
+
+    private static func createCompetitionsFiltersBaseView() -> UIView {
+        let view = UIView()
+        view.translatesAutoresizingMaskIntoConstraints = false
+        return view
+    }
+
+    private static func createCompetitionsFiltersDarkBackgroundView() -> UIView {
+        let view = UIView()
+        view.translatesAutoresizingMaskIntoConstraints = false
+        view.backgroundColor = UIColor.black.withAlphaComponent(0.7)
+        return view
+    }
+
+    private static func createEmptyBaseView() -> UIView {
+        let view = UIView()
+        view.translatesAutoresizingMaskIntoConstraints = false
+        view.backgroundColor = UIColor.black.withAlphaComponent(0.7)
+        return view
+    }
+
+    private static func createFiltersBarBaseView() -> UIView {
+        let view = UIView()
+        view.translatesAutoresizingMaskIntoConstraints = false
+        return view
+    }
+
+    private static func createFiltersCollectionView() -> UICollectionView {
+        let layout = UICollectionViewFlowLayout()
+        layout.minimumLineSpacing = 10
+        layout.minimumInteritemSpacing = 10
+        let collectionView = UICollectionView(frame: .zero, collectionViewLayout: layout)
+        collectionView.translatesAutoresizingMaskIntoConstraints = false
+        collectionView.backgroundColor = .white
+        return collectionView
+    }
+
+    private static func createLeftGradientBaseView() -> UIView {
+        let view = UIView()
+        view.translatesAutoresizingMaskIntoConstraints = false
+        return view
+    }
+
+    private static func createRightGradientBaseView() -> UIView {
+        let view = UIView()
+        view.translatesAutoresizingMaskIntoConstraints = false
+        return view
+    }
+
+    private static func createFiltersButtonView() -> UIView {
+        let view = UIView()
+        view.translatesAutoresizingMaskIntoConstraints = false
+        return view
+    }
+
+    private static func createFiltersButtonIconImageView() -> UIImageView {
+        let imageView = UIImageView(image: UIImage(named: "match_filters_icons"))
+        imageView.translatesAutoresizingMaskIntoConstraints = false
+        imageView.contentMode = .scaleAspectFit
+        return imageView
+    }
+
+    private static func createFiltersCountLabel() -> UILabel {
+        let label = UILabel()
+        label.translatesAutoresizingMaskIntoConstraints = false
+        label.backgroundColor = UIColor(red: 0.016, green: 0.49, blue: 1, alpha: 1)
+        label.font = UIFont(name: "Roboto-Black", size: 10)
+        label.textColor = .white
+        label.textAlignment = .center
+        label.layer.cornerRadius = 8
+        label.clipsToBounds = true
+        return label
+    }
+
+    private static func createSportsSelectorButtonView() -> UIView {
+        let view = UIView()
+        view.translatesAutoresizingMaskIntoConstraints = false
+        return view
+    }
+
+    private static func createSportsSelectorContentView() -> UIView {
+        let view = UIView()
+        view.translatesAutoresizingMaskIntoConstraints = false
+        view.backgroundColor = .clear
+        return view
+    }
+
+    private static func createSportTypeIconImageView() -> UIImageView {
+        let imageView = UIImageView(image: UIImage(named: "sport_type_soccer_icon"))
+        imageView.translatesAutoresizingMaskIntoConstraints = false
+        imageView.contentMode = .scaleAspectFit
+        return imageView
+    }
+
+    private static func createSportTypeNameLabel() -> UILabel {
+        let label = UILabel()
+        label.translatesAutoresizingMaskIntoConstraints = false
+        label.font = UIFont(name: "Roboto-Black", size: 7)
+        label.text = "Sport"
+        label.textAlignment = .center
+        label.numberOfLines = 2
+        return label
+    }
+
+    private static func createSportsSelectorExpandImageView() -> UIImageView {
+        let imageView = UIImageView(image: UIImage(named: "expand_top_down_arrows_icon"))
+        imageView.translatesAutoresizingMaskIntoConstraints = false
+        imageView.contentMode = .scaleAspectFit
+        return imageView
+    }
+
+    private static func createTableView() -> UITableView {
+        let tableView = UITableView(frame: .zero, style: .grouped)
+        tableView.translatesAutoresizingMaskIntoConstraints = false
+        tableView.backgroundColor = .systemBackground
+        tableView.separatorStyle = .none
+        tableView.allowsSelection = false
+        return tableView
+    }
+
+    private static func createEmptyStateButton() -> UIButton {
+        let button = UIButton(type: .system)
+        button.translatesAutoresizingMaskIntoConstraints = false
+        button.setTitle("Go to popular games", for: .normal)
+        button.titleLabel?.font = UIFont(name: "Roboto-Black", size: 18)
+        return button
+    }
+
+    private static func createEmptyStateImage() -> UIImageView {
+        let imageView = UIImageView(image: UIImage(named: "no_content_icon"))
+        imageView.translatesAutoresizingMaskIntoConstraints = false
+        imageView.contentMode = .scaleAspectFit
+        return imageView
+    }
+
+    private static func createEmptyStateContentView() -> UIView {
+        let view = UIView()
+        view.translatesAutoresizingMaskIntoConstraints = false
+        view.backgroundColor = .clear
+        return view
+    }
+
+    private static func createFirstTextFieldEmptyStateLabel() -> UILabel {
+        let label = UILabel()
+        label.translatesAutoresizingMaskIntoConstraints = false
+        label.textColor = .white
+        label.font = .systemFont(ofSize: 20)
+        label.textAlignment = .center
+        label.numberOfLines = 2
+        return label
+    }
+
+    private static func createSecondTextFieldEmptyStateLabel() -> UILabel {
+        let label = UILabel()
+        label.translatesAutoresizingMaskIntoConstraints = false
+        label.textColor = .clear
+        label.font = .systemFont(ofSize: 14)
+        label.textAlignment = .center
+        return label
+    }
+
+    private static func createFiltersSeparatorLineView() -> UIView {
+        let view = UIView()
+        view.translatesAutoresizingMaskIntoConstraints = false
+        view.backgroundColor = UIColor.App.separatorLine
+        return view
+    }
+
+    private static func createLoadingBaseView() -> UIView {
+        let view = UIView()
+        view.translatesAutoresizingMaskIntoConstraints = false
+        return view
+    }
+
+    private func setupSubviews() {
+        // Add main container views
+        view.addSubview(competitionsContainerView)
+        view.addSubview(filtersBarBaseView)
+        view.addSubview(competitionsFiltersDarkBackgroundView)
+        view.addSubview(competitionsFiltersBaseView)
+        view.addSubview(emptyBaseView)
+        view.addSubview(loadingBaseView)
+
+        // Setup filters bar
+        filtersBarBaseView.addSubview(filtersCollectionView)
+        filtersBarBaseView.addSubview(rightGradientBaseView)
+        filtersBarBaseView.addSubview(leftGradientBaseView)
+        filtersBarBaseView.addSubview(filtersButtonView)
+        filtersBarBaseView.addSubview(sportsSelectorButtonView)
+        filtersBarBaseView.addSubview(filtersSeparatorLineView)
+
+        // Setup filters button
+        filtersButtonView.addSubview(filtersButtonIconImageView)
+        filtersButtonView.addSubview(filtersCountLabel)
+
+        // Setup sports selector
+        sportsSelectorButtonView.addSubview(sportsSelectorContentView)
+        sportsSelectorContentView.addSubview(sportTypeIconImageView)
+        sportsSelectorContentView.addSubview(sportTypeNameLabel)
+        sportsSelectorButtonView.addSubview(sportsSelectorExpandImageView)
+
+        // Setup competitions container
+        competitionsContainerView.addSubview(competitionHistoryBaseView)
+        competitionHistoryBaseView.addSubview(competitionHistoryCollectionView)
+        competitionHistoryBaseView.addSubview(competitionHistorySeparatorLine)
+        competitionsContainerView.addSubview(tableView)
+
+        // Setup empty state
+        emptyBaseView.addSubview(emptyStateContentView)
+        emptyStateContentView.addSubview(emptyStateImage)
+        emptyStateContentView.addSubview(emptyStateButton)
+        emptyStateContentView.addSubview(firstTextFieldEmptyStateLabel)
+        emptyStateContentView.addSubview(secondTextFieldEmptyStateLabel)
+
+        // Setup competitions filters
+        competitionsFiltersView.translatesAutoresizingMaskIntoConstraints = false
+        competitionsFiltersBaseView.addSubview(competitionsFiltersView)
+
+        // Setup floating shortcuts
+        view.addSubview(floatingShortcutsView)
+
+        // Initialize the bottom constraint
+        floatingShortcutsBottomConstraint = floatingShortcutsView.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor, constant: -12)
+
+        initConstraints()
+
+        // Initial state setup
+        self.competitionsFiltersDarkBackgroundView.alpha = 1
+        self.competitionsFiltersDarkBackgroundView.backgroundColor = .black
+        self.competitionsFiltersBaseView.backgroundColor = .clear
+
+        self.shouldDetectScrollMovement = false
+        self.competitionsFiltersBaseView.isHidden = true
+        self.competitionsFiltersDarkBackgroundView.isHidden = true
+
+        // Bring views to front in correct order
+        self.view.bringSubviewToFront(self.competitionsFiltersDarkBackgroundView)
+        self.view.bringSubviewToFront(self.competitionsFiltersBaseView)
+        self.view.bringSubviewToFront(self.loadingBaseView)
+    }
+
+    private func initConstraints() {
+        NSLayoutConstraint.activate([
+            // Filters Bar
+            filtersBarBaseView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
+            filtersBarBaseView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
+            filtersBarBaseView.topAnchor.constraint(equalTo: view.topAnchor),
+            filtersBarBaseView.heightAnchor.constraint(equalToConstant: 70),
+
+            // Filters Collection
+            filtersCollectionView.leadingAnchor.constraint(equalTo: filtersBarBaseView.leadingAnchor),
+            filtersCollectionView.trailingAnchor.constraint(equalTo: filtersBarBaseView.trailingAnchor),
+            filtersCollectionView.topAnchor.constraint(equalTo: filtersBarBaseView.topAnchor),
+            filtersCollectionView.bottomAnchor.constraint(equalTo: filtersBarBaseView.bottomAnchor, constant: -1),
+
+            // Right Gradient
+            rightGradientBaseView.trailingAnchor.constraint(equalTo: filtersBarBaseView.trailingAnchor),
+            rightGradientBaseView.topAnchor.constraint(equalTo: filtersBarBaseView.topAnchor),
+            rightGradientBaseView.bottomAnchor.constraint(equalTo: filtersBarBaseView.bottomAnchor),
+            rightGradientBaseView.widthAnchor.constraint(equalToConstant: 55),
+
+            // Left Gradient
+            leftGradientBaseView.leadingAnchor.constraint(equalTo: filtersBarBaseView.leadingAnchor),
+            leftGradientBaseView.topAnchor.constraint(equalTo: filtersBarBaseView.topAnchor),
+            leftGradientBaseView.bottomAnchor.constraint(equalTo: filtersBarBaseView.bottomAnchor),
+            leftGradientBaseView.widthAnchor.constraint(equalTo: leftGradientBaseView.heightAnchor, multiplier: 20.0/19.0),
+
+            // Filters Button
+            filtersButtonView.trailingAnchor.constraint(equalTo: rightGradientBaseView.trailingAnchor),
+            filtersButtonView.centerYAnchor.constraint(equalTo: rightGradientBaseView.centerYAnchor),
+            filtersButtonView.widthAnchor.constraint(equalToConstant: 40),
+            filtersButtonView.heightAnchor.constraint(equalToConstant: 40),
+
+            // Filters Icon
+            filtersButtonIconImageView.centerXAnchor.constraint(equalTo: filtersButtonView.centerXAnchor),
+            filtersButtonIconImageView.centerYAnchor.constraint(equalTo: filtersButtonView.centerYAnchor),
+            filtersButtonIconImageView.widthAnchor.constraint(equalToConstant: 23),
+            filtersButtonIconImageView.heightAnchor.constraint(equalToConstant: 21),
+
+            // Filters Count Label
+            filtersCountLabel.trailingAnchor.constraint(equalTo: filtersButtonView.trailingAnchor, constant: -6),
+            filtersCountLabel.topAnchor.constraint(equalTo: filtersButtonView.topAnchor, constant: -6),
+            filtersCountLabel.widthAnchor.constraint(equalToConstant: 16),
+            filtersCountLabel.heightAnchor.constraint(equalToConstant: 16),
+
+            // Sports Selector Button
+            sportsSelectorButtonView.leadingAnchor.constraint(equalTo: leftGradientBaseView.leadingAnchor),
+            sportsSelectorButtonView.centerYAnchor.constraint(equalTo: filtersBarBaseView.centerYAnchor),
+            sportsSelectorButtonView.widthAnchor.constraint(equalToConstant: 55),
+            sportsSelectorButtonView.heightAnchor.constraint(equalToConstant: 40),
+
+            // Sport Type Icon
+            sportTypeIconImageView.centerXAnchor.constraint(equalTo: sportsSelectorContentView.centerXAnchor),
+            sportTypeIconImageView.topAnchor.constraint(equalTo: sportsSelectorContentView.topAnchor, constant: 2),
+            sportTypeIconImageView.widthAnchor.constraint(equalToConstant: 16),
+            sportTypeIconImageView.heightAnchor.constraint(equalToConstant: 16),
+
+            // Sport Type Label
+            sportTypeNameLabel.topAnchor.constraint(equalTo: sportTypeIconImageView.bottomAnchor, constant: 4),
+            sportTypeNameLabel.leadingAnchor.constraint(equalTo: sportsSelectorContentView.leadingAnchor),
+            sportTypeNameLabel.trailingAnchor.constraint(equalTo: sportsSelectorContentView.trailingAnchor),
+            sportTypeNameLabel.bottomAnchor.constraint(equalTo: sportsSelectorContentView.bottomAnchor, constant: -2),
+
+            // Sports Selector Content View
+            sportsSelectorContentView.leadingAnchor.constraint(equalTo: sportsSelectorButtonView.leadingAnchor, constant: 4),
+            sportsSelectorContentView.centerYAnchor.constraint(equalTo: sportsSelectorButtonView.centerYAnchor),
+            sportsSelectorContentView.trailingAnchor.constraint(equalTo: sportsSelectorExpandImageView.leadingAnchor, constant: -2),
+            sportsSelectorContentView.topAnchor.constraint(equalTo: sportsSelectorButtonView.topAnchor, constant: 4),
+            sportsSelectorContentView.bottomAnchor.constraint(equalTo: sportsSelectorButtonView.bottomAnchor, constant: -4),
+
+            // Sports Selector Expand Image
+            sportsSelectorExpandImageView.trailingAnchor.constraint(equalTo: sportsSelectorButtonView.trailingAnchor, constant: -8),
+            sportsSelectorExpandImageView.centerYAnchor.constraint(equalTo: sportsSelectorButtonView.centerYAnchor, constant: 1),
+            sportsSelectorExpandImageView.widthAnchor.constraint(equalToConstant: 10),
+            sportsSelectorExpandImageView.heightAnchor.constraint(equalToConstant: 23),
+
+            // Separator Line
+            filtersSeparatorLineView.leadingAnchor.constraint(equalTo: filtersBarBaseView.leadingAnchor),
+            filtersSeparatorLineView.trailingAnchor.constraint(equalTo: filtersBarBaseView.trailingAnchor),
+            filtersSeparatorLineView.bottomAnchor.constraint(equalTo: filtersBarBaseView.bottomAnchor),
+            filtersSeparatorLineView.heightAnchor.constraint(equalToConstant: 1),
+
+            // Main Container
+            competitionsContainerView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
+            competitionsContainerView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
+            competitionsContainerView.topAnchor.constraint(equalTo: filtersBarBaseView.bottomAnchor),
+            competitionsContainerView.bottomAnchor.constraint(equalTo: view.bottomAnchor),
+
+            // Competition History
+            competitionHistoryBaseView.leadingAnchor.constraint(equalTo: competitionsContainerView.leadingAnchor),
+            competitionHistoryBaseView.trailingAnchor.constraint(equalTo: competitionsContainerView.trailingAnchor),
+            competitionHistoryBaseView.topAnchor.constraint(equalTo: competitionsContainerView.topAnchor),
+            competitionHistoryBaseView.heightAnchor.constraint(equalToConstant: 42),
+
+            // Competition History Collection
+            competitionHistoryCollectionView.leadingAnchor.constraint(equalTo: competitionHistoryBaseView.leadingAnchor),
+            competitionHistoryCollectionView.trailingAnchor.constraint(equalTo: competitionHistoryBaseView.trailingAnchor),
+            competitionHistoryCollectionView.topAnchor.constraint(equalTo: competitionHistoryBaseView.topAnchor),
+            competitionHistoryCollectionView.bottomAnchor.constraint(equalTo: competitionHistoryBaseView.bottomAnchor),
+
+            // Competition History Separator
+            competitionHistorySeparatorLine.leadingAnchor.constraint(equalTo: competitionHistoryBaseView.leadingAnchor),
+            competitionHistorySeparatorLine.trailingAnchor.constraint(equalTo: competitionHistoryBaseView.trailingAnchor),
+            competitionHistorySeparatorLine.bottomAnchor.constraint(equalTo: competitionHistoryBaseView.bottomAnchor),
+            competitionHistorySeparatorLine.heightAnchor.constraint(equalToConstant: 1),
+
+            // Table View
+            tableView.leadingAnchor.constraint(equalTo: competitionsContainerView.leadingAnchor),
+            tableView.trailingAnchor.constraint(equalTo: competitionsContainerView.trailingAnchor),
+            tableView.topAnchor.constraint(equalTo: competitionsContainerView.topAnchor),
+            tableView.bottomAnchor.constraint(equalTo: competitionsContainerView.bottomAnchor),
+
+            // Empty Base View
+            emptyBaseView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
+            emptyBaseView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
+            emptyBaseView.topAnchor.constraint(equalTo: filtersBarBaseView.bottomAnchor),
+            emptyBaseView.bottomAnchor.constraint(equalTo: view.bottomAnchor),
+
+            // Loading Base View
+            loadingBaseView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
+            loadingBaseView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
+            loadingBaseView.topAnchor.constraint(equalTo: filtersBarBaseView.bottomAnchor),
+            loadingBaseView.bottomAnchor.constraint(equalTo: view.bottomAnchor),
+
+            // Competitions Filters
+            competitionsFiltersBaseView.leadingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leadingAnchor, constant: 10),
+            competitionsFiltersBaseView.trailingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.trailingAnchor, constant: -10),
+            competitionsFiltersBaseView.heightAnchor.constraint(equalTo: emptyBaseView.heightAnchor, multiplier: 0.95),
+            openedCompetitionsFiltersConstraint,
+
+            // Competitions Filters View
+            competitionsFiltersView.leadingAnchor.constraint(equalTo: competitionsFiltersBaseView.leadingAnchor),
+            competitionsFiltersView.trailingAnchor.constraint(equalTo: competitionsFiltersBaseView.trailingAnchor),
+            competitionsFiltersView.topAnchor.constraint(equalTo: competitionsFiltersBaseView.topAnchor),
+            competitionsFiltersView.bottomAnchor.constraint(equalTo: competitionsFiltersBaseView.bottomAnchor),
+
+            // Floating Shortcuts
+            floatingShortcutsView.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -12),
+            floatingShortcutsBottomConstraint,
+
+            // Dark Background
+            competitionsFiltersDarkBackgroundView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
+            competitionsFiltersDarkBackgroundView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
+            competitionsFiltersDarkBackgroundView.topAnchor.constraint(equalTo: filtersBarBaseView.bottomAnchor),
+            competitionsFiltersDarkBackgroundView.bottomAnchor.constraint(equalTo: view.bottomAnchor),
+
+            // Empty State Content View
+            emptyStateContentView.leadingAnchor.constraint(equalTo: emptyBaseView.leadingAnchor, constant: 8),
+            emptyStateContentView.centerXAnchor.constraint(equalTo: emptyBaseView.centerXAnchor),
+            emptyStateContentView.centerYAnchor.constraint(equalTo: emptyBaseView.centerYAnchor, constant: -16),
+
+            // Empty State Image
+            emptyStateImage.centerXAnchor.constraint(equalTo: emptyStateContentView.centerXAnchor),
+            emptyStateImage.topAnchor.constraint(equalTo: emptyStateContentView.topAnchor),
+
+            // Empty State Labels
+            firstTextFieldEmptyStateLabel.topAnchor.constraint(equalTo: emptyStateImage.bottomAnchor, constant: 12),
+            firstTextFieldEmptyStateLabel.leadingAnchor.constraint(equalTo: emptyStateContentView.leadingAnchor, constant: -22),
+            firstTextFieldEmptyStateLabel.trailingAnchor.constraint(equalTo: emptyStateContentView.trailingAnchor, constant: -22),
+
+            secondTextFieldEmptyStateLabel.topAnchor.constraint(equalTo: firstTextFieldEmptyStateLabel.bottomAnchor, constant: 12),
+            secondTextFieldEmptyStateLabel.leadingAnchor.constraint(equalTo: emptyStateContentView.leadingAnchor, constant: -22),
+            secondTextFieldEmptyStateLabel.trailingAnchor.constraint(equalTo: emptyStateContentView.trailingAnchor, constant: -22),
+
+            // Empty State Button
+            emptyStateButton.topAnchor.constraint(equalTo: secondTextFieldEmptyStateLabel.bottomAnchor, constant: 50),
+            emptyStateButton.leadingAnchor.constraint(equalTo: emptyStateContentView.leadingAnchor),
+            emptyStateButton.trailingAnchor.constraint(equalTo: emptyStateContentView.trailingAnchor),
+            emptyStateButton.heightAnchor.constraint(equalToConstant: 50),
+            emptyStateButton.bottomAnchor.constraint(equalTo: emptyStateContentView.bottomAnchor)
+        ])
+    }
 }

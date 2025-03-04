@@ -13,10 +13,10 @@ class ClientManagedHomeViewTemplateDataSource {
 
     // Define the array mapping sections to content types
     private let contentTypes: [HomeViewModel.Content] = [
-        .userProfile,
+        .userProfile, // AlertBanners
         .bannerLine, // PromotionBanners
         .quickSwipeStack, // MatchBanners
-        .promotionalStories, // PromotionStories
+        .promotionalStories, // PromotionStories - instagram style stories
         .heroCard, // HeroBanner
         .highlightedLiveMatches, // LiveGamesHome
         .makeOwnBetCallToAction, // MakeYourOwnBet
@@ -174,7 +174,7 @@ class ClientManagedHomeViewTemplateDataSource {
     
     private var highlightedLiveMatches: [Match] = []
 
-    private var highlightedMarkets: [HighlightedContent<Market>] = []
+    private var highlightedMarkets: [ImageHighlightedContent<Market>] = []
 
     //
     private var pendingUserTrackRequest: AnyCancellable?
@@ -353,12 +353,12 @@ class ClientManagedHomeViewTemplateDataSource {
 
     func fetchHighlightMatches() {
 
-        let imageMatches = Env.servicesProvider.getHighlightedVisualImageEvents()
+        let imageMatches = Env.servicesProvider.getTopImageCardEvents()
             .receive(on: DispatchQueue.main)
             .map(ServiceProviderModelMapper.matches(fromEvents:))
             .replaceError(with: [])
         
-        let boostedMatches = Env.servicesProvider.getHighlightedBoostedEvents()
+        let boostedMatches = Env.servicesProvider.getBoostedOddsEvents()
             .receive(on: DispatchQueue.main)
             .map(ServiceProviderModelMapper.matches(fromEvents:))
             .replaceError(with: [])
@@ -413,22 +413,23 @@ class ClientManagedHomeViewTemplateDataSource {
     }
 
     func fetchHighlightMarkets() {
-        let cancellable = Env.servicesProvider.getHighlightedMarkets()
+        let cancellable = Env.servicesProvider.getProChoiceMarketCards()
             .receive(on: DispatchQueue.main)
             .sink { completion in
 
             } receiveValue: { [weak self] highlightMarkets in
-                let markets = highlightMarkets.map(\.market)
+                let markets = highlightMarkets.map(\.content)
                 let mappedMarkets = ServiceProviderModelMapper.markets(fromServiceProviderMarkets: markets)
 
-                var mappedHighlightMarket: [HighlightedContent<Market>] = []
+                var mappedHighlightMarket: [ImageHighlightedContent<Market>] = []
 
                 for highlightMarket in highlightMarkets {
-                    let mappedMarket = ServiceProviderModelMapper.market(fromServiceProviderMarket: highlightMarket.market)
+                    let mappedMarket = ServiceProviderModelMapper.market(fromServiceProviderMarket: highlightMarket.content)
 
-                    mappedHighlightMarket.append(HighlightedContent<Market>.init(content: mappedMarket,
-                                                promotionalImageURL: highlightMarket.promotionImageURl,
-                                                promotedDetailsCount: highlightMarket.enabledSelectionsCount))
+                    mappedHighlightMarket.append(ImageHighlightedContent<Market>(
+                        content: mappedMarket,
+                        imageURLString: highlightMarket.imageURL,
+                        promotedDetailsCount: highlightMarket.promotedChildCount))
                 }
 
                 self?.highlightedMarkets = mappedHighlightMarket
@@ -442,7 +443,7 @@ class ClientManagedHomeViewTemplateDataSource {
 
     func fetchHeroMatches() {
         
-        let cancellable = Env.servicesProvider.getHeroGameEvent()
+        let cancellable = Env.servicesProvider.getHeroCardEvents()
             .receive(on: DispatchQueue.main)
             .map(ServiceProviderModelMapper.matches(fromEvents:))
             .compactMap({ $0 })
@@ -1145,6 +1146,10 @@ extension ClientManagedHomeViewTemplateDataSource: HomeViewTemplateDataSource {
     
     func topCompetitionsLineCellViewModel(forSection section: Int) -> TopCompetitionsLineCellViewModel? {
         return self.topCompetitionsLineCellViewModel
+    }
+    
+    func videoNewsLineViewModel() -> VideoPreviewLineCellViewModel? {
+        return nil
     }
 
 }

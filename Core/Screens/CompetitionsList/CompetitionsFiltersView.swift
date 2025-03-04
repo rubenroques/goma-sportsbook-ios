@@ -8,25 +8,27 @@
 import UIKit
 import Combine
 import OrderedCollections
+import SwiftUI
 
-class CompetitionsFiltersView: UIView, NibLoadable {
+class CompetitionsFiltersView: UIView {
 
-    @IBOutlet private weak var headerBaseView: UIView!
+    // MARK: - Views
+    private lazy var headerStackView: UIStackView = Self.createHeaderStackView()
+    private lazy var headerBaseView: UIView = Self.createHeaderBaseView()
+    private lazy var closeButton: UIButton = Self.createCloseButton()
+    private lazy var clearButton: UIButton = Self.createClearButton()
+    private lazy var searchBarBaseView: UIView = Self.createSearchBarBaseView()
+    private lazy var searchBarView: UISearchBar = Self.createSearchBarView()
+    private lazy var titleLabel: UILabel = Self.createTitleLabel()
+    private lazy var smallTitleLabel: UILabel = Self.createSmallTitleLabel()
+    private lazy var tableView: UITableView = Self.createTableView()
+    private lazy var loadingView: UIActivityIndicatorView = Self.createLoadingView()
 
-    @IBOutlet private weak var closeButton: UIButton!
-    @IBOutlet private weak var clearButton: UIButton!
-
-    @IBOutlet private weak var searchBarBaseView: UIView!
-    @IBOutlet private weak var searchBarView: UISearchBar!
-
-    @IBOutlet private weak var titleLabel: UILabel!
-    @IBOutlet private weak var smallTitleLabel: UILabel!
-
-    @IBOutlet private weak var tableView: UITableView!
-    @IBOutlet private weak var loadingView: UIActivityIndicatorView!
-
+    // MARK: - Properties
     var applyFiltersAction: (([String]) -> Void)?
     var tapHeaderViewAction: (() -> Void)?
+
+    var didTapCompetitionNavigationAction: (String) -> Void = { _ in }
 
     private var competitionSelectedIds: [String: Set<String>] = [:]
     private var initialSelectedIds: Set<String> = []
@@ -50,7 +52,7 @@ class CompetitionsFiltersView: UIView, NibLoadable {
             }
         }
     }
-    
+
     var competitions: [CompetitionFilterSectionViewModel] = [] {
         didSet {
             if self.loadedExpandedCells.isEmpty {
@@ -148,7 +150,7 @@ class CompetitionsFiltersView: UIView, NibLoadable {
                 self.headerBaseView.backgroundColor = UIColor.App.highlightSecondary
                 self.titleLabel.textColor = UIColor.App.buttonTextPrimary
                 self.smallTitleLabel.textColor = UIColor.App.buttonTextPrimary
-                
+
                 UIView.animate(withDuration: 0.4) {
                     self.titleLabel.alpha = 0.0
                     self.smallTitleLabel.alpha = 1.0
@@ -160,118 +162,46 @@ class CompetitionsFiltersView: UIView, NibLoadable {
         }
     }
 
-    convenience init() {
-        self.init(frame: .zero)
-    }
-
+    // MARK: - Initialization
     override init(frame: CGRect) {
         super.init(frame: frame)
-
-        loadFromNib()
         commonInit()
         setupWithTheme()
     }
 
-    required init?(coder aDecoder: NSCoder) {
-        super.init(coder: aDecoder)
-
-        loadFromNib()
+    required init?(coder: NSCoder) {
+        super.init(coder: coder)
         commonInit()
         setupWithTheme()
     }
 
-    func commonInit() {
+    // MARK: - View Setup Methods
+    private func setupSubviews() {
+        addSubview(headerStackView)
+        headerStackView.addArrangedSubview(headerBaseView)
+        headerStackView.addArrangedSubview(searchBarBaseView)
 
-        self.translatesAutoresizingMaskIntoConstraints = false
+        headerBaseView.addSubview(titleLabel)
+        headerBaseView.addSubview(smallTitleLabel)
+        headerBaseView.addSubview(closeButton)
+        headerBaseView.addSubview(clearButton)
 
-        self.closeButton.setTitle(localized("close"), for: .normal)
-        self.clearButton.setTitle(localized("clear_all"), for: .normal)
+        searchBarBaseView.addSubview(searchBarView)
 
-        self.titleLabel.font = AppFont.with(type: .heavy, size: 16)
-        self.smallTitleLabel.font = AppFont.with(type: .heavy, size: 8)
-        
-        self.loadingView.hidesWhenStopped = true
-        self.loadingView.stopAnimating()
+        addSubview(tableView)
+        addSubview(loadingView)
+    }
 
-        self.tableView.backgroundView?.backgroundColor = .clear
-        self.tableView.backgroundColor = .clear
-        self.tableView.delegate = self
-        self.tableView.dataSource = self
-        self.tableView.separatorStyle = .none
-        self.tableView.allowsSelection = false
-        self.tableView.register(CompetitionFilterTableViewCell.self, forCellReuseIdentifier: CompetitionFilterTableViewCell.identifier)
-        self.tableView.register(CompetitionFilterHeaderView.self, forHeaderFooterViewReuseIdentifier: CompetitionFilterHeaderView.identifier)
-        self.tableView.contentInset = UIEdgeInsets(top: 2, left: 0, bottom: 16, right: 0)
-
-        self.searchBarBaseView.backgroundColor = .clear
-
-        self.searchBarView.returnKeyType = .done
-        self.searchBarView.searchBarStyle = UISearchBar.Style.prominent
-        self.searchBarView.sizeToFit()
-        self.searchBarView.isTranslucent = false
-        self.searchBarView.backgroundImage = UIImage()
-        self.searchBarView.delegate = self
-
-        self.smallTitleLabel.alpha = 0.0
-
-        let backgroundTapGesture = UITapGestureRecognizer(target: self, action: #selector(didTapBackground))
-        headerBaseView.addGestureRecognizer(backgroundTapGesture)
-
-        let headerTapGesture = UITapGestureRecognizer(target: self, action: #selector(didTapHeaderView))
-        headerBaseView.addGestureRecognizer(headerTapGesture)
-
-        let swipeHeaderTapGesture = UISwipeGestureRecognizer(target: self, action: #selector(didTapHeaderView))
-        swipeHeaderTapGesture.direction = .up
-        headerBaseView.addGestureRecognizer(swipeHeaderTapGesture)
-
-//        self.headerBaseView.layer.borderColor = UIColor.black.cgColor
-//        self.headerBaseView.layer.borderWidth = 2
-
-        let swipeGestureRecognizer = UISwipeGestureRecognizer(target: self, action: #selector(self.didSwipeDownToClose))
-        swipeGestureRecognizer.direction = .down
-        self.addGestureRecognizer(swipeGestureRecognizer)
-
-        self.selectedIds
-            .map(\.isNotEmpty)
-            .receive(on: DispatchQueue.main)
-            .assign(to: \.isEnabled, on: clearButton)
-            .store(in: &cancellables)
-
-        self.selectedIds
-            .receive(on: DispatchQueue.main)
-            .sink(receiveValue: { [weak self] currentSelection in
-                if (self?.initialSelectedIds ?? []) == currentSelection {
-                    self?.closeButton.setTitle(localized("close"), for: .normal)
-                }
-                else {
-                    self?.closeButton.setTitle(localized("apply"), for: .normal)
-                }
-            })
-            .store(in: &cancellables)
-
-        self.selectedIds
-            .map(\.count)
-            .receive(on: DispatchQueue.main)
-            .sink(receiveValue: { count in
-                // swiftlint:disable empty_count
-                if count == 0 {
-                    self.titleLabel.text = localized("choose_competitions")
-                    self.smallTitleLabel.text = localized("choose_competitions")
-                }
-                else {
-                    self.titleLabel.text = localized("choose_competitions")+" (\(count))"
-                    self.smallTitleLabel.text = localized("choose_competitions")+" (\(count))"
-                }
-            })
-            .store(in: &cancellables)
-
+    private func commonInit() {
+        setupSubviews()
+        initConstraints()
     }
 
     override func layoutSubviews() {
         super.layoutSubviews()
 
         self.headerBaseView.roundCorners(corners: [.topRight, .topLeft], radius: 20)
-        
+
     }
 
     override func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {
@@ -429,6 +359,142 @@ class CompetitionsFiltersView: UIView, NibLoadable {
     }
 }
 
+// MARK: - View Setup
+private extension CompetitionsFiltersView {
+    static func createHeaderStackView() -> UIStackView {
+        let stackView = UIStackView()
+        stackView.translatesAutoresizingMaskIntoConstraints = false
+        stackView.axis = .vertical
+        return stackView
+    }
+
+    static func createHeaderBaseView() -> UIView {
+        let view = UIView()
+        view.translatesAutoresizingMaskIntoConstraints = false
+        view.backgroundColor = UIColor.App.backgroundSecondary
+        return view
+    }
+
+    static func createCloseButton() -> UIButton {
+        let button = UIButton(type: .system)
+        button.translatesAutoresizingMaskIntoConstraints = false
+        button.titleLabel?.font = AppFont.with(type: .bold, size: 13)
+        button.setTitle(localized("close"), for: .normal)
+        return button
+    }
+
+    static func createClearButton() -> UIButton {
+        let button = UIButton(type: .system)
+        button.translatesAutoresizingMaskIntoConstraints = false
+        button.titleLabel?.font = AppFont.with(type: .bold, size: 13)
+        button.setTitle(localized("clear_all"), for: .normal)
+        return button
+    }
+
+    static func createSearchBarBaseView() -> UIView {
+        let view = UIView()
+        view.translatesAutoresizingMaskIntoConstraints = false
+        view.backgroundColor = .clear
+        return view
+    }
+
+    static func createSearchBarView() -> UISearchBar {
+        let searchBar = UISearchBar()
+        searchBar.translatesAutoresizingMaskIntoConstraints = false
+        searchBar.returnKeyType = .done
+        searchBar.searchBarStyle = .prominent
+        searchBar.backgroundImage = UIImage()
+        searchBar.isTranslucent = false
+        return searchBar
+    }
+
+    static func createTitleLabel() -> UILabel {
+        let label = UILabel()
+        label.translatesAutoresizingMaskIntoConstraints = false
+        label.font = AppFont.with(type: .bold, size: 16)
+        label.textColor = .white
+        label.textAlignment = .center
+        label.numberOfLines = 0
+        return label
+    }
+
+    static func createSmallTitleLabel() -> UILabel {
+        let label = UILabel()
+        label.translatesAutoresizingMaskIntoConstraints = false
+        label.font = AppFont.with(type: .bold, size: 8)
+        label.textColor = .white
+        label.textAlignment = .center
+        return label
+    }
+
+    static func createTableView() -> UITableView {
+        let tableView = UITableView(frame: .zero, style: .grouped)
+        tableView.translatesAutoresizingMaskIntoConstraints = false
+        tableView.backgroundColor = .clear
+        tableView.separatorInset = UIEdgeInsets(top: 0, left: 24, bottom: 0, right: 24)
+        tableView.allowsMultipleSelection = true
+        tableView.contentInset = UIEdgeInsets(top: 2, left: 0, bottom: 16, right: 0)
+        return tableView
+    }
+
+    static func createLoadingView() -> UIActivityIndicatorView {
+        let activityIndicator = UIActivityIndicatorView(style: .large)
+        activityIndicator.translatesAutoresizingMaskIntoConstraints = false
+        activityIndicator.hidesWhenStopped = true
+        return activityIndicator
+    }
+
+    func initConstraints() {
+        NSLayoutConstraint.activate([
+            // Header Stack View
+            headerStackView.topAnchor.constraint(equalTo: topAnchor),
+            headerStackView.leadingAnchor.constraint(equalTo: leadingAnchor),
+            headerStackView.trailingAnchor.constraint(equalTo: trailingAnchor),
+
+            // Header Base View
+            headerBaseView.heightAnchor.constraint(equalToConstant: 54),
+
+            // Search Bar Base View
+            searchBarBaseView.heightAnchor.constraint(equalToConstant: 70),
+
+            // Title Label
+            titleLabel.centerXAnchor.constraint(equalTo: headerBaseView.centerXAnchor),
+            titleLabel.centerYAnchor.constraint(equalTo: headerBaseView.centerYAnchor),
+            titleLabel.leadingAnchor.constraint(equalTo: clearButton.trailingAnchor, constant: 5),
+            titleLabel.trailingAnchor.constraint(equalTo: closeButton.leadingAnchor, constant: 5),
+
+            // Small Title Label
+            smallTitleLabel.topAnchor.constraint(equalTo: headerBaseView.topAnchor),
+            smallTitleLabel.leadingAnchor.constraint(equalTo: headerBaseView.leadingAnchor, constant: 8),
+            smallTitleLabel.trailingAnchor.constraint(equalTo: headerBaseView.trailingAnchor, constant: -8),
+            smallTitleLabel.heightAnchor.constraint(equalToConstant: 18),
+
+            // Close Button
+            closeButton.centerYAnchor.constraint(equalTo: titleLabel.centerYAnchor),
+            closeButton.trailingAnchor.constraint(equalTo: headerBaseView.trailingAnchor, constant: -16),
+
+            // Clear Button
+            clearButton.centerYAnchor.constraint(equalTo: titleLabel.centerYAnchor),
+            clearButton.leadingAnchor.constraint(equalTo: headerBaseView.leadingAnchor, constant: 18),
+
+            // Search Bar
+            searchBarView.leadingAnchor.constraint(equalTo: searchBarBaseView.leadingAnchor, constant: 18),
+            searchBarView.trailingAnchor.constraint(equalTo: searchBarBaseView.trailingAnchor, constant: -18),
+            searchBarView.centerYAnchor.constraint(equalTo: searchBarBaseView.centerYAnchor, constant: -5),
+
+            // Table View
+            tableView.topAnchor.constraint(equalTo: headerStackView.bottomAnchor),
+            tableView.leadingAnchor.constraint(equalTo: leadingAnchor),
+            tableView.trailingAnchor.constraint(equalTo: trailingAnchor),
+            tableView.bottomAnchor.constraint(equalTo: bottomAnchor),
+
+            // Loading View
+            loadingView.centerXAnchor.constraint(equalTo: tableView.centerXAnchor),
+            loadingView.centerYAnchor.constraint(equalTo: tableView.centerYAnchor)
+        ])
+    }
+}
+
 extension CompetitionsFiltersView: UIScrollViewDelegate {
     func scrollViewDidScroll(_ scrollView: UIScrollView) {
         if scrollView == tableView {
@@ -462,37 +528,42 @@ extension CompetitionsFiltersView: UITableViewDelegate, UITableViewDataSource {
         let isSelected = self.selectedIds.value.contains(viewModel.id)
         let isLastCell = tableView.numberOfRows(inSection: indexPath.section) == indexPath.row + 1
 
+        let competitionStyles = TargetVariables.competitionListStyle
+        let mode: CompetitionFilterCellMode = competitionStyles == .navigateToDetails ? CompetitionFilterCellMode.navigate : CompetitionFilterCellMode.toggle
+
         cell.configure(withViewModel: CompetitionFilterCellViewModel(competition: viewModel.competition,
                                                                      locationId: groupViewModel.id,
                                                                      isSelected: isSelected,
                                                                      isLastCell: isLastCell,
-                                                                     country: groupViewModel.country))
+                                                                     country: groupViewModel.country,
+                                                                     mode: mode))
 
-        cell.didTapCellAction = { [weak self] viewModel in
+        if mode == .toggle {
+            cell.didToggleCellAction = { [weak self] competitionId, locationId in
+                guard let self = self else { return }
 
-            guard let self = self else { return }
+                if !self.selectedIds.value.contains(competitionId) {
+                    var selectedIdsCopy = self.selectedIds.value
+                    selectedIdsCopy.insert(competitionId)
+                    self.selectedIds.send(selectedIdsCopy)
 
-            if viewModel.isSelected {
-                var selectedIdsCopy = self.selectedIds.value
-                selectedIdsCopy.insert(viewModel.id)
-                self.selectedIds.send(selectedIdsCopy)
+                    self.insertCompetition(withId: competitionId, countryGroupId: locationId)
+                } else {
+                    var selectedIdsCopy = self.selectedIds.value
+                    selectedIdsCopy.remove(competitionId)
+                    self.selectedIds.send(selectedIdsCopy)
 
-                self.insertCompetition(withId: viewModel.id, countryGroupId: viewModel.locationId)
+                    self.removeCompetition(withId: competitionId, countryGroupId: locationId)
+                }
+
+                self.reloadTableView()
             }
-            else {
-                var selectedIdsCopy = self.selectedIds.value
-                selectedIdsCopy.remove(viewModel.id)
-                self.selectedIds.send(selectedIdsCopy)
-
-                self.removeCompetition(withId: viewModel.id, countryGroupId: viewModel.locationId)
+        } else if mode == .navigate {
+            cell.didTapNavigationAction = { [weak self] competitionId in
+                self?.didTapCompetitionNavigationAction(competitionId)
             }
-
-            self.reloadTableView()
         }
 
-        // cell.titleLabel.text = viewModel.name
-        // cell.selectionStyle = .none
-        
         return cell
     }
 

@@ -1,0 +1,16 @@
+[
+  {
+    "id": 4,
+    "client_id": 2,
+    "title": "Banner 1",
+    "subtitle": "subtitle",
+    "cta_text": null,
+    "cta_url": null,
+    "platform": "all",
+    "status": "published",
+    "start_date": "2025-02-26 14:03:00",
+    "end_date": "2026-02-26 14:03:00",
+    "user_type": "all",
+    "image_url": "https://cms.gomademo.com/storage/32/01JN193T46MEGK8JP4AZEP93EY.jpg"
+  }
+]

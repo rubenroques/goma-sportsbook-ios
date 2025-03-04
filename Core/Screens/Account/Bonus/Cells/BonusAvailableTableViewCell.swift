@@ -221,7 +221,7 @@ extension BonusAvailableTableViewCell {
         let imageView = UIImageView()
         imageView.translatesAutoresizingMaskIntoConstraints = false
         imageView.contentMode = .scaleAspectFit
-        imageView.image = UIImage(named: "brand_icon_variation_1")
+        imageView.image = UIImage(named: "brand_icon_variation_new")
         imageView.isHidden = true
         return imageView
     }

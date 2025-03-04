@@ -161,7 +161,7 @@ class BetslipManager: NSObject {
                     case .resourceUnavailableOrDeleted:
                         self?.disableBettingTicket(bettingTicket)
                     default:
-                        print("Error retrieving data! \(error)")
+                        print("Error retrieving data! subscribeToMarketDetails \(error)")
                     }
                 case .finished:
                     print("Data retrieved!")
@@ -629,7 +629,8 @@ extension BetslipManager {
         
         let betTicket = BetTicket.init(tickets: betTicketSelections,
                                        stake: stake,
-                                       betGroupingType: BetGroupingType.system(identifier: systemBetType.id, name: systemBetType.name ?? ""))
+                                       betGroupingType: BetGroupingType.system(identifier: systemBetType.id,
+                                                                               name: systemBetType.name ?? "", numberOfBets: systemBetType.numberOfBets ?? 1))
         
         let publisher =  Env.servicesProvider.placeBets(betTickets: [betTicket], useFreebetBalance: useFreebetBalance)
             .mapError({ error in
@@ -811,7 +812,9 @@ extension BetslipManager {
         
         let betTicket = BetTicket.init(tickets: betTicketSelections,
                                        stake: processedStake,
-                                       betGroupingType: BetGroupingType.system(identifier: systemBetType.id, name: systemBetType.name ?? ""))
+                                       betGroupingType: BetGroupingType.system(identifier: systemBetType.id,
+                                                                               name: systemBetType.name ?? "",
+                                                                               numberOfBets: systemBetType.numberOfBets ?? 1))
         
         return Env.servicesProvider.calculatePotentialReturn(forBetTicket: betTicket)
             .map({ betslipPotentialReturn in

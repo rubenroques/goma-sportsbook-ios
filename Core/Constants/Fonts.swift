@@ -53,3 +53,12 @@ struct AppFont {
        }
    }
 }
+
+// MARK: - SwiftUI Font Extension
+import SwiftUI
+
+extension Font {
+    static func appFont(type: AppFont.AppFontType, size: CGFloat) -> Font {
+        return Font(AppFont.with(type: type, size: size) as CTFont)
+    }
+}

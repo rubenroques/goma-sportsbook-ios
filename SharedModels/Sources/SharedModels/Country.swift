@@ -1,6 +1,6 @@
 import Foundation
 
-public struct Country: Codable, Equatable {
+public struct Country: Codable, Equatable, Hashable {
 
     public var name: String
     public var capital: String?

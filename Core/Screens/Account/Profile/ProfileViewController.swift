@@ -64,8 +64,6 @@ class ProfileViewController: UIViewController {
 
     @IBOutlet private weak var stackView: UIStackView!
 
-
-
     @IBOutlet private weak var logoutBaseView: UIView!
     @IBOutlet private weak var logoutButton: UIButton!
 
@@ -74,7 +72,7 @@ class ProfileViewController: UIViewController {
 
     @IBOutlet private weak var footerBaseView: UIView!
     private var footerResponsibleGamingView = FooterResponsibleGamingView()
-
+    
     // Custom views
     lazy var totalBalanceInfoDialogView: InfoDialogView = {
         let view = InfoDialogView()
@@ -82,7 +80,23 @@ class ProfileViewController: UIViewController {
         view.configure(title: localized("total_balance_automated_withdrawal"))
         return view
     }()
+    
+    lazy var legalAgeWarningImageView: UIImageView = {
+        let imageView = UIImageView()
+        imageView.translatesAutoresizingMaskIntoConstraints = false
+        imageView.image = UIImage(named: "minus_18_icon")
+        imageView.contentMode = .scaleAspectFit
+        return imageView
+    }()
 
+    // Constraints
+    @IBOutlet private weak var profileBaseViewLeadingConstraint: NSLayoutConstraint!
+    @IBOutlet private weak var profileBaseViewCenterXConstraint: NSLayoutConstraint!
+    
+    @IBOutlet private weak var titleLabelTopConstraint: NSLayoutConstraint!
+    
+    @IBOutlet private weak var topBarViewHeightConstraint: NSLayoutConstraint!
+    
     var depositOnRegisterViewController: DepositOnRegisterViewController?
 
     var userProfile: UserProfile?
@@ -278,6 +292,33 @@ class ProfileViewController: UIViewController {
 
     func commonInit() {
         
+        if TargetVariables.features.contains(.legalAgeWarning) {
+            self.profileBaseViewLeadingConstraint.isActive = false
+            self.profileBaseViewCenterXConstraint.isActive = true
+            self.topBarViewHeightConstraint.isActive = false
+            self.titleLabelTopConstraint.isActive = true
+            
+            self.topBarView.addSubview(self.legalAgeWarningImageView)
+            
+            NSLayoutConstraint.activate([
+                
+                self.legalAgeWarningImageView.leadingAnchor.constraint(equalTo: self.topBarView.leadingAnchor, constant: 16),
+                self.legalAgeWarningImageView.topAnchor.constraint(equalTo: self.topBarView.topAnchor, constant: 8),
+                self.legalAgeWarningImageView.widthAnchor.constraint(equalToConstant: 60),
+                self.legalAgeWarningImageView.heightAnchor.constraint(equalTo: self.legalAgeWarningImageView.widthAnchor)
+            ])
+            
+        }
+        else {
+            self.profileBaseViewLeadingConstraint.isActive = true
+            self.profileBaseViewCenterXConstraint.isActive = false
+            self.topBarViewHeightConstraint.isActive = true
+            self.titleLabelTopConstraint.isActive = false
+        }
+
+        // Trigger layout update
+        self.view.layoutIfNeeded()
+        
         // Default label setup
         self.usernameLabel.font = AppFont.with(type: .heavy, size: 22)
         self.userIdLabel.font = AppFont.with(type: .bold, size: 11)
@@ -400,14 +441,12 @@ class ProfileViewController: UIViewController {
         Env.servicesProvider.getAvailableBonuses()
             .receive(on: DispatchQueue.main)
             .sink(receiveCompletion: { [weak self] completion in
-
                 switch completion {
                 case .finished:
                     ()
                 case .failure(let error):
                     print("AVAILABLE BONUSES ERROR: \(error)")
                 }
-
             }, receiveValue: { [weak self] availableBonuses in
 
                 let filteredBonus = availableBonuses.filter({
@@ -840,11 +879,10 @@ extension ProfileViewController {
 
     @objc func promotionsViewTapped(sender: UITapGestureRecognizer) {
 
-        var gomaBaseUrl = TargetVariables.clientBaseUrl
+        let promotionsWebViewModel = PromotionsWebViewModel()
         let appLanguage = "fr"
-
         let isDarkTheme = self.traitCollection.userInterfaceStyle == .dark ? true : false
-        let urlString = "\(gomaBaseUrl)/\(appLanguage)/in-app/promotions?dark=\(isDarkTheme)"
+        let urlString = TargetVariables.generatePromotionsPageUrlString(forAppLanguage: appLanguage, isDarkTheme: isDarkTheme)
 
         if let url = URL(string: urlString) {
             let promotionsWebViewModel = PromotionsWebViewModel()
@@ -899,7 +937,7 @@ extension ProfileViewController {
     @objc func supportViewTapped(sender: UITapGestureRecognizer) {
 //        let supportViewController = SupportPageViewController(viewModel: SupportPageViewModel())
 //        self.navigationController?.pushViewController(supportViewController, animated: true)
-        if let url = URL(string: "https://support.betsson.fr/hc/fr") {
+        if let url = URL(string: TargetVariables.links.support.helpCenter) {
             UIApplication.shared.open(url)
         }
     }

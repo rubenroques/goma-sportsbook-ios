@@ -176,9 +176,9 @@ class HeroCardMarketCollectionViewCell: UICollectionViewCell {
 
         self.oddsStackView.backgroundColor = .clear
         
-        self.homeBaseView.backgroundColor = UIColor.App.backgroundOdds
-        self.drawBaseView.backgroundColor = UIColor.App.backgroundOdds
-        self.awayBaseView.backgroundColor = UIColor.App.backgroundOdds
+        self.homeBaseView.backgroundColor = UIColor.App.backgroundOddsHeroCard
+        self.drawBaseView.backgroundColor = UIColor.App.backgroundOddsHeroCard
+        self.awayBaseView.backgroundColor = UIColor.App.backgroundOddsHeroCard
         
         self.homeOddBaseView.backgroundColor = .clear
         self.drawOddBaseView.backgroundColor = .clear
@@ -190,7 +190,7 @@ class HeroCardMarketCollectionViewCell: UICollectionViewCell {
             self.homeOddValueLabel.textColor = UIColor.App.buttonTextPrimary
         }
         else {
-            self.homeBaseView.backgroundColor = UIColor.App.backgroundOdds
+            self.homeBaseView.backgroundColor = UIColor.App.backgroundOddsHeroCard
             self.homeOddTitleLabel.textColor = UIColor.App.textPrimary
             self.homeOddValueLabel.textColor = UIColor.App.textPrimary
         }
@@ -201,7 +201,7 @@ class HeroCardMarketCollectionViewCell: UICollectionViewCell {
             self.drawOddValueLabel.textColor = UIColor.App.buttonTextPrimary
         }
         else {
-            self.drawBaseView.backgroundColor = UIColor.App.backgroundOdds
+            self.drawBaseView.backgroundColor = UIColor.App.backgroundOddsHeroCard
             self.drawOddTitleLabel.textColor = UIColor.App.textPrimary
             self.drawOddValueLabel.textColor = UIColor.App.textPrimary
         }
@@ -212,7 +212,7 @@ class HeroCardMarketCollectionViewCell: UICollectionViewCell {
             self.awayOddValueLabel.textColor = UIColor.App.buttonTextPrimary
         }
         else {
-            self.awayBaseView.backgroundColor = UIColor.App.backgroundOdds
+            self.awayBaseView.backgroundColor = UIColor.App.backgroundOddsHeroCard
             self.awayOddTitleLabel.textColor = UIColor.App.textPrimary
             self.awayOddValueLabel.textColor = UIColor.App.textPrimary
         }

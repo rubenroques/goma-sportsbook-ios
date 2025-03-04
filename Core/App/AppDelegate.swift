@@ -15,6 +15,8 @@ import PhraseSDK
 import AdyenActions
 import OptimoveSDK
 import Adjust
+import FirebaseCore
+import FirebaseFirestore
 
 @main
 class AppDelegate: UIResponder, UIApplicationDelegate, MessagingDelegate {
@@ -51,11 +53,11 @@ class AppDelegate: UIResponder, UIApplicationDelegate, MessagingDelegate {
         catch {
             print("PhraseSDK updateTranslation crashed error \(error)")
         }
-        
+
         //
         //
         // Disable autolayout errors/warnings console logs
-        UserDefaults.standard.set(false, forKey: "_UIConstraintBasedLayoutLogUnsatisfiable")
+        UserDefaults.standard.set(true, forKey: "_UIConstraintBasedLayoutLogUnsatisfiable")
 
         //
         IQKeyboardManager.shared.keyboardDistanceFromTextField = 24.0
@@ -102,7 +104,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate, MessagingDelegate {
         let config = OptimoveConfigBuilder(optimoveCredentials: optimoveCredentials, optimobileCredentials: optimobileCredentials)
             .setPushOpenedHandler(pushOpenedHandlerBlock: { (notification: PushNotification) -> Void in
                 //- Inspect notification data and do work.
-                
+
                 var route: Route?
                 let application = UIApplication.shared
 
@@ -114,8 +116,8 @@ class AppDelegate: UIResponder, UIApplicationDelegate, MessagingDelegate {
                 else if let routeIdValue = notification.data["routeId"] as? Double {
                     print("ROUTE ID AS DOUBLE")
                     routeId = String(routeIdValue)
-                }          
-                
+                }
+
                 let routeLabel = notification.data["routeLabel"] as? String ?? ""
                 let routeType = notification.data["routeType"] as? String ?? ""
 
@@ -149,21 +151,27 @@ class AppDelegate: UIResponder, UIApplicationDelegate, MessagingDelegate {
                 }
             })
             .build()
-        
+
         Optimove.initialize(with: config)
 
         application.registerForRemoteNotifications()
-        
+
         // Adjust
         // Sandbox ENV = ADJEnvironmentSandbox
         let appToken = "u9xpbb9chxj4"
         let environment = ADJEnvironmentProduction
         let adjustConfig = ADJConfig(appToken: appToken, environment: environment)
-        
+
         adjustConfig?.logLevel = ADJLogLevelSuppress
-        
+        adjustConfig?.delegate = self
+
         Adjust.appDidLaunch(adjustConfig)
 
+        //
+        #if DEBUG
+        let allColors = UIColor.App.validateThemeColors()
+        
+        #endif
         //
         self.window = UIWindow()
 
@@ -204,11 +212,10 @@ class AppDelegate: UIResponder, UIApplicationDelegate, MessagingDelegate {
 
             let urlSections = url.pathComponents
             let urlComponents = URLComponents(url: url, resolvingAgainstBaseURL: false)
-            
+
             if (urlSections.contains("competitions") || urlSections.contains("live")) && urlSections.count > 6 {
                 if let gameDetailId = urlSections.last {
                     self.openSharedRoute(Route.event(id: gameDetailId), onApplication: application)
-                    
                 }
             }
             else if urlSections.contains("competitions") && urlSections.count <= 6 {
@@ -218,9 +225,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate, MessagingDelegate {
             }
             else if urlSections.contains("bet") {
                 if let ticketId = urlSections.last {
-
                     self.openSharedRoute(Route.ticket(id: ticketId), onApplication: application)
-
                 }
             }
             else if urlSections.contains("contact-settings") {
@@ -253,26 +258,31 @@ class AppDelegate: UIResponder, UIApplicationDelegate, MessagingDelegate {
                     self.openSharedRoute(Route.referral(code: code), onApplication: application)
                 }
             }
+            else if url.absoluteString.contains("betting-questionnaire") {
+                if TargetVariables.features.contains(.responsibleGamingForm) {
+                    self.openSharedRoute(Route.responsibleForm, onApplication: application)
+                }
+            }
         }
         return true
     }
-    
+
     func application(_ application: UIApplication, didRegisterForRemoteNotificationsWithDeviceToken deviceToken: Data) {
         let tokenParts = deviceToken.map {
             data in String(format: "%02.2hhx", data)
         }
         let token = tokenParts.joined()
         print("Device Token: \(token)")
-        
+
         Optimove.shared.pushRegister(deviceToken)
         Messaging.messaging().apnsToken = deviceToken
     }
-    
+
     func application(_ application: UIApplication, didReceiveRemoteNotification userInfo: [AnyHashable: Any], fetchCompletionHandler completionHandler: @escaping (UIBackgroundFetchResult) -> Void) {
             // userInfo["aps"]["content-available"] will be set to 1
             // userInfo["custom"]["a"] will contain any additional data sent with the push
             let userInfo = userInfo
-            
+
             completionHandler(UIBackgroundFetchResult.noData)
         }
 
@@ -362,7 +372,7 @@ extension AppDelegate: UNUserNotificationCenterDelegate {
     }
 
     private func openRoute(_ route: Route, onApplication application: UIApplication) {
-        
+
         if application.applicationState == .active {
 
             self.bootstrap.router.openedNotificationRouteWhileActive(route)
@@ -372,7 +382,7 @@ extension AppDelegate: UNUserNotificationCenterDelegate {
             self.bootstrap.router.configureStartingRoute(route)
         }
         else if application.applicationState == .background {
-            
+
             self.bootstrap.router.configureStartingRoute(route)
         }
 
@@ -382,9 +392,18 @@ extension AppDelegate: UNUserNotificationCenterDelegate {
 
         self.bootstrap.router.openPushNotificationRoute(route)
     }
-    
+
     private func openPushNotificationRoute(_ route: Route) {
         self.bootstrap.router.openPushNotificationRoute(route)
+    }
+
+}
+
+extension AppDelegate: AdjustDelegate {
+
+    func adjustDeeplinkResponse(_ deeplink: URL?) -> Bool {
+
+        return false
     }
 
 }

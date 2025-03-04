@@ -342,23 +342,28 @@ extension ServiceProviderModelMapper {
         
         let competitionGroups = sportRegions.map({ sportRegion in
             
-            if let regionCompetitions = regionCompetitions[sportRegion.id] {
-                var competitionGroup = CompetitionGroup(id: sportRegion.id,
-                                                        name: sportRegion.name ?? "",
-                                                        aggregationType: .region,
-                                                        competitions: self.competitions(fromSportCompetitions: regionCompetitions))
-                
-                if let country = sportRegion.country {
-                    competitionGroup.country = Self.country(fromServiceProviderCountry: country)
-                }
-                
-                return competitionGroup
+            var country: Country?
+            if let serviceProviderCountry = sportRegion.country {
+                country = Self.country(fromServiceProviderCountry: serviceProviderCountry)
             }
             
-            let competitionGroup = CompetitionGroup(id: sportRegion.id, name: sportRegion.name ?? "", aggregationType: .region, competitions: [])
-            return competitionGroup
+            if let regionCompetitions = regionCompetitions[sportRegion.id] {
+                let competitionGroup = CompetitionGroup(id: sportRegion.id,
+                                                        name: sportRegion.name ?? "",
+                                                        aggregationType: .region,
+                                                        competitions: self.competitions(fromSportCompetitions: regionCompetitions),
+                                                        country: country)
+                return competitionGroup
+            }
+            else {
+                let competitionGroup = CompetitionGroup(id: sportRegion.id,
+                                                        name: sportRegion.name ?? "",
+                                                        aggregationType: .region,
+                                                        competitions: [],
+                                                        country: country)
+                return competitionGroup
+            }
         })
-        
         return competitionGroups
     }
     
@@ -426,5 +431,5 @@ extension ServiceProviderModelMapper {
         
         return suggestedBetslipSelection
     }
-    
+
 }

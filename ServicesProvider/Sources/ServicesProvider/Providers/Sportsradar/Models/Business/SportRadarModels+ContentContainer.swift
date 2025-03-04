@@ -217,7 +217,7 @@ extension SportRadarModels {
                 return .liveEvents(contentIdentifier: contentIdentifier, events: validEvents)
 
             case .liveSports:
-                let sportsTypeDetails: [FailableDecodable<SportRadarModels.SportTypeDetails>] = try container.decode([FailableDecodable<SportRadarModels.SportTypeDetails>].self, forKey: .change)
+                let sportsTypeDetails: [FailableDecodable<SportRadarModels.LiveSportTypeDetails>] = try container.decode([FailableDecodable<SportRadarModels.LiveSportTypeDetails>].self, forKey: .change)
                 let sportsTypes = sportsTypeDetails.compactMap({ $0.content }).map(\.sportType)
                 return .liveSports(sportsTypes: sportsTypes)
 
@@ -322,13 +322,13 @@ extension SportRadarModels {
 
         private static func parseUpdated(container: KeyedDecodingContainer<CodingKeys>) throws -> ContentContainer {
             
-            let contentTypeContainer = try container.nestedContainer(keyedBy: CodingKeys.self, forKey: .content)
-            let contentType = try contentTypeContainer.decode(ContentType.self, forKey: .contentType)
+            // let contentTypeContainer = try container.nestedContainer(keyedBy: CodingKeys.self, forKey: .content)
+            // let contentType = try contentTypeContainer.decode(ContentType.self, forKey: .contentType)
             
             let contentIdentifier = try container.decode(ContentIdentifier.self, forKey: .content)
             let path: String = try container.decodeIfPresent(String.self, forKey: .path) ?? ""
             
-            if case let ContentRoute.eventMainMarket(eventId) = contentIdentifier.contentRoute {
+            if case ContentRoute.eventMainMarket = contentIdentifier.contentRoute {
                 if let event = try? container.decode(SportRadarModels.Event.self, forKey: .change) {
                     return .updateEventMainMarket(contentIdentifier: contentIdentifier, event: event)
                 }
@@ -702,7 +702,7 @@ extension SportRadarModels {
                 return .updateMarketTradability(contentIdentifier: contentIdentifier, marketId: marketId, isTradable: newIsTradable)
             }
             else if path.contains("selections"), let selectionId = SocketMessageParseHelper.extractSelectionId(path) {
-                // print("Updated Selection \(selectionId)")
+                print("Updated Selection \(selectionId)")
             }
             else if contentIdentifier.contentType == .market, // Is a contentRout of market updates
                     path == "istradable", // the path is istradable
@@ -717,22 +717,21 @@ extension SportRadarModels {
         }
 
         private static func parseAdded(container: KeyedDecodingContainer<CodingKeys>) throws -> ContentContainer {
-            let contentTypeContainer = try container.nestedContainer(keyedBy: CodingKeys.self, forKey: .content)
-            let contentType = try contentTypeContainer.decode(ContentType.self, forKey: .contentType)
+            // let contentTypeContainer = try container.nestedContainer(keyedBy: CodingKeys.self, forKey: .content)
+            // let contentType = try contentTypeContainer.decode(ContentType.self, forKey: .contentType)
             
             let contentIdentifier = try container.decode(ContentIdentifier.self, forKey: .content)
             let path: String = try container.decodeIfPresent(String.self, forKey: .path) ?? ""
 
-            if case let ContentRoute.liveSports = contentIdentifier.contentRoute {
+            if case ContentRoute.liveSports = contentIdentifier.contentRoute {
                 if path.contains("idfosporttype"),
-                   let newSport = try? container.decodeIfPresent(SportRadarModels.SportTypeDetails.self, forKey: .change) {
+                   let newSport = try? container.decodeIfPresent(SportRadarModels.LiveSportTypeDetails.self, forKey: .change) {
                     let newSportType = SportType(name: newSport.sportName,
                                                  alphaId: newSport.sportType.alphaId,
                                                  numberEvents: newSport.eventsCount, numberOutrightEvents: 0, numberOutrightMarkets: 0, numberLiveEvents: newSport.eventsCount)
                     
                     return .liveSports(sportsTypes: [newSportType])
                 }
-                    
             }
 
             if path.contains("idfomarket"), let newMarket = try? container.decode(SportRadarModels.Market.self, forKey: .change) {
@@ -741,7 +740,7 @@ extension SportRadarModels {
             else if path.contains("idfoevent"), let newEvent = try? container.decode(SportRadarModels.Event.self, forKey: .change) {
                 return .addEvent(contentIdentifier: contentIdentifier, event: newEvent)
             }
-            else if path.contains("idfosporttype"), let newSport = try? container.decodeIfPresent(SportRadarModels.SportTypeDetails.self, forKey: .change) {
+            else if path.contains("idfosporttype"), let newSport = try? container.decodeIfPresent(SportRadarModels.LiveSportTypeDetails.self, forKey: .change) {
                 return .addSport(contentIdentifier: contentIdentifier, sportType: newSport.sportType)
             }
             else if path.contains("status"), let eventId = SocketMessageParseHelper.extractEventId(path) {
@@ -768,9 +767,8 @@ extension SportRadarModels {
         }
 
         private static func parseRemoved(container: KeyedDecodingContainer<CodingKeys>) throws -> ContentContainer {
-
-            let contentTypeContainer = try container.nestedContainer(keyedBy: CodingKeys.self, forKey: .content)
-            let contentType = try contentTypeContainer.decode(ContentType.self, forKey: .contentType)
+            // let contentTypeContainer = try container.nestedContainer(keyedBy: CodingKeys.self, forKey: .content)
+            // let contentType = try contentTypeContainer.decode(ContentType.self, forKey: .contentType)
             
             let contentIdentifier = try container.decode(ContentIdentifier.self, forKey: .content)
             let path: String = try container.decodeIfPresent(String.self, forKey: .path) ?? ""

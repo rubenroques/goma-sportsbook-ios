@@ -153,7 +153,7 @@ class LoginViewController: UIViewController {
         self.dismissButton.titleLabel?.font = AppFont.with(type: AppFont.AppFontType.semibold, size: 17)
         self.dismissButton.setTitle(localized("close"), for: .normal)
         
-        self.logoImageView.image = UIImage(named: "brand_icon_variation_1")
+        self.logoImageView.image = UIImage(named: "brand_icon_variation_new")
         self.logoImageView.sizeToFit()
         
         self.loginLabel.font = AppFont.with(type: AppFont.AppFontType.bold, size: 24)
@@ -317,34 +317,49 @@ class LoginViewController: UIViewController {
             .store(in: &self.cancellables)
 
         var registerSteps: [RegisterStep]
-        if Env.businessSettingsSocket.clientSettings.requiredPhoneVerification {
+        
+        switch TargetVariables.registerFlowType {
+        case .betsson:
+            if Env.businessSettingsSocket.clientSettings.requiredPhoneVerification {
+                registerSteps = [
+                            RegisterStep(forms: [.gender, .names]),
+                            RegisterStep(forms: [.avatar, .nickname]),
+                            RegisterStep(forms: [.ageCountry]),
+                            RegisterStep(forms: [.address]),
+                            RegisterStep(forms: [.contacts]),
+                            RegisterStep(forms: [.password]),
+                            RegisterStep(forms: [.terms, .promoCodes]),
+                            RegisterStep(forms: [.phoneConfirmation])
+                        ]
+            }
+            else {
+                registerSteps = [
+                            RegisterStep(forms: [.gender, .names]),
+                            RegisterStep(forms: [.avatar, .nickname]),
+                            RegisterStep(forms: [.ageCountry]),
+                            RegisterStep(forms: [.address]),
+                            RegisterStep(forms: [.contacts]),
+                            RegisterStep(forms: [.password]),
+                            RegisterStep(forms: [.terms, .promoCodes])
+                        ]
+            }
+        case .goma:
             registerSteps = [
-                        RegisterStep(forms: [.gender, .names]),
-                        RegisterStep(forms: [.avatar, .nickname]),
-                        RegisterStep(forms: [.ageCountry]),
-                        RegisterStep(forms: [.address]),
-                        RegisterStep(forms: [.contacts]),
-                        RegisterStep(forms: [.password]),
-                        RegisterStep(forms: [.terms, .promoCodes]),
-                        RegisterStep(forms: [.phoneConfirmation])
-                    ]
+                RegisterStep(forms: [.personalInfo]),
+                RegisterStep(forms: [.avatar]),
+                RegisterStep(forms: [.password]),
+            ]
         }
-        else {
-            registerSteps = [
-                        RegisterStep(forms: [.gender, .names]),
-                        RegisterStep(forms: [.avatar, .nickname]),
-                        RegisterStep(forms: [.ageCountry]),
-                        RegisterStep(forms: [.address]),
-                        RegisterStep(forms: [.contacts]),
-                        RegisterStep(forms: [.password]), 
-                        RegisterStep(forms: [.terms, .promoCodes])
-                    ]
-        }
+        
+        let hasLegalAgeWarning = TargetVariables.features.contains(.legalAgeWarning) ? true : false
+        
+        let registerFlowType = self.setupRegisterFlowType(registerFlowType: TargetVariables.registerFlowType)
 
         let viewModel = SteppedRegistrationViewModel(registerSteps: registerSteps,
                                                      userRegisterEnvelop: userRegisterEnvelopValue,
                                                      serviceProvider: Env.servicesProvider,
-                                                     userRegisterEnvelopUpdater: userRegisterEnvelopUpdater)
+                                                     userRegisterEnvelopUpdater: userRegisterEnvelopUpdater,
+                                                     hasLegalAgeWarning: hasLegalAgeWarning, registerFlowType: registerFlowType)
         
         viewModel.hasReferralCode = self.referralCode != nil ? true : false
 
@@ -382,6 +397,16 @@ class LoginViewController: UIViewController {
         }
 
         self.present(registerNavigationController, animated: animated)
+    }
+    
+    private func setupRegisterFlowType(registerFlowType: RegisterFlowType) -> RegisterFlow.FlowType {
+        
+        switch TargetVariables.registerFlowType {
+        case .betsson:
+            return .betson
+        case .goma:
+            return .goma
+        }
     }
 
     private func setUserConsents(enabled: Bool) {
@@ -787,8 +812,8 @@ extension LoginViewController {
             self.passwordHeaderTextFieldView.setText("Ruben-Goma-12345")
             self.loginButton.isEnabled = true
         }
-        else if self.usernameHeaderTextFieldView.text == "gomaTest" {
-            self.usernameHeaderTextFieldView.setText("ivogoma")
+        else if self.usernameHeaderTextFieldView.text == "rroques107" {
+            self.usernameHeaderTextFieldView.setText("ivouat")
             self.passwordHeaderTextFieldView.setText("testesdoIvo1@")
             self.loginButton.isEnabled = true
         }

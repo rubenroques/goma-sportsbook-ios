@@ -94,8 +94,6 @@ class RealtimeSocketClient {
         else {
             return
         }
-                    
-        // print("DebugRouter firebaseClientSettings \(firebaseClientSettings)")
 
         let versions = (required: firebaseClientSettings.requiredAppVersion, current: firebaseClientSettings.currentAppVersion)
         self.requiredVersionPublisher.send(versions)

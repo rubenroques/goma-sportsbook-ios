@@ -21,7 +21,7 @@ extension SportRadarModels {
 
 
     struct EventsGroup: Codable {
-        var events: [Event]
+        var events: Events
         var marketGroupId: String?
 
         enum CodingKeys: String, CodingKey {
@@ -29,7 +29,7 @@ extension SportRadarModels {
             case marketGroupId = "idfwmarketgroup"
         }
 
-        init(events: [Event], marketGroupId: String?) {
+        init(events: Events, marketGroupId: String?) {
             self.events = events
             self.marketGroupId = marketGroupId
         }
@@ -74,6 +74,7 @@ extension SportRadarModels {
         }
     }
     
+    typealias Events = [Event]
     struct Event: Codable {
         
         var id: String
@@ -305,6 +306,7 @@ extension SportRadarModels {
         var marketTypeId: String?
         var eventMarketTypeId: String?
         var marketTypeCategoryId: String?
+        var marketFilterId: String?
         
         var eventName: String?
         var isMainOutright: Bool?
@@ -336,6 +338,7 @@ extension SportRadarModels {
             case marketTypeId = "idefmarkettype"
             case eventMarketTypeId = "idfomarkettype"
             case marketTypeCategoryId = "idfomarkettypecategory"
+            case marketFilterId = "marketFilterId"
             
             case isMainOutright = "ismainoutright"
             case eventMarketCount = "eventMarketCount"
@@ -361,11 +364,14 @@ extension SportRadarModels {
             case isMainMarket = "isMainMarket"
         }
 
-        init(id: String, name: String,
+        init(id: String,
+             name: String,
              outcomes: [Outcome],
              marketTypeId: String? = nil,
              eventMarketTypeId: String? = nil,
              marketTypeCategoryId: String? = nil,
+             marketFilterId: String? = nil,
+             
              eventName: String? = nil,
              isMainOutright: Bool? = nil,
              eventMarketCount: Int? = nil,
@@ -394,6 +400,7 @@ extension SportRadarModels {
             self.marketTypeId = marketTypeId
             self.eventMarketTypeId = eventMarketTypeId
             self.marketTypeCategoryId = marketTypeCategoryId
+            self.marketFilterId = marketFilterId
             
             self.eventName = eventName
             self.isMainOutright = isMainOutright
@@ -427,16 +434,20 @@ extension SportRadarModels {
             nameValue = nameValue.replacingOccurrences(of: "\r", with: "")
             self.name = nameValue
             
-            
             self.marketTypeId = try container.decodeIfPresent(String.self, forKey: .marketTypeId)
+            
+            // a marketTypeId with fallback if empty / used to group markets in filters/tabs
+            self.marketFilterId = try container.decodeIfPresent(String.self, forKey: .marketTypeId)
             
             self.eventMarketTypeId = try container.decodeIfPresent(String.self, forKey: .eventMarketTypeId)
             self.marketTypeCategoryId = try container.decodeIfPresent(String.self, forKey: .marketTypeCategoryId)
 
-            if self.marketTypeId == nil && self.marketTypeCategoryId != nil {
-                self.marketTypeId = self.marketTypeCategoryId
-            }
             
+            // Fallback to marketTypeCategoryId if marketTypeId is empty
+            if self.marketFilterId == nil && self.marketTypeCategoryId != nil {
+                self.marketFilterId = self.marketTypeCategoryId
+            }
+
             self.eventName = try container.decodeIfPresent(String.self, forKey: .eventName)
             self.isMainOutright = try container.decodeIfPresent(Bool.self, forKey: .isMainOutright)
             self.eventMarketCount = try container.decodeIfPresent(Int.self, forKey: .eventMarketCount)

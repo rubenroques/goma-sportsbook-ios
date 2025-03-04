@@ -62,6 +62,11 @@ class ResponsibleGamingViewController: UIViewController {
         tipsControlView.setupView(title: localized("tips_to_keep_control"), iconTitle: "responsible_gaming_icon")
         let tipsControlTap = UITapGestureRecognizer(target: self, action: #selector(didTapTipsControl(sender:)))
         tipsControlView.addGestureRecognizer(tipsControlTap)
+        
+        let bettingPracticesView = NavigationCardView()
+        bettingPracticesView.setupView(title: localized("betting_questionnaire"), iconTitle: "check_profile_icon")
+        let bettingPracticesTap = UITapGestureRecognizer(target: self, action: #selector(didTapBettingPractices(sender:)))
+        bettingPracticesView.addGestureRecognizer(bettingPracticesTap)
 
         let limitsView = NavigationCardView()
         limitsView.setupView(title: localized("limits_management"), iconTitle: "limits_profile_icon")
@@ -82,6 +87,10 @@ class ResponsibleGamingViewController: UIViewController {
         self.stackView.addArrangedSubview(tipsControlView)
 
         if Env.userSessionStore.isUserLogged() {
+            
+            if TargetVariables.features.contains(.responsibleGamingForm) {
+                self.stackView.addArrangedSubview(bettingPracticesView)
+            }
             self.stackView.addArrangedSubview(limitsView)
             self.stackView.addArrangedSubview(selfExclusionView)
             self.stackView.addArrangedSubview(closeAccountView)
@@ -109,6 +118,12 @@ extension ResponsibleGamingViewController {
 
         self.navigationController?.pushViewController(tipsControlViewController, animated: true)
 
+    }
+    
+    @objc private func didTapBettingPractices(sender: UITapGestureRecognizer) {
+        let bettingPracticesViewController = BettingPracticesViewController()
+        
+        self.navigationController?.pushViewController(bettingPracticesViewController, animated: true)
     }
 
     @objc private func didTapLimits(sender: UITapGestureRecognizer) {

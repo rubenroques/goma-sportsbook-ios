@@ -1,0 +1,149 @@
+{
+  "id": 4,
+  "name": "Default Layout",
+  "widgets": [
+    {
+      "id": 1,
+      "name": "alertBanners",
+      "description": "Display important alerts and notifications to users",
+      "web_namespace": "UserAlertBox",
+      "ios_namespace": "UserProfile",
+      "android_namespace": "UserProfile",
+      "user_type": "authenticated",
+      "sort_order": 1,
+      "orientation": null
+    },
+    {
+      "id": 2,
+      "name": "banners",
+      "description": "Horizontal scrollable strip of promotional banners",
+      "web_namespace": "PromotionBanners",
+      "ios_namespace": "PromotionBanners",
+      "android_namespace": "PromotionBanners",
+      "user_type": "all",
+      "sort_order": 2,
+      "orientation": null
+    },
+    {
+      "id": 3,
+      "name": "carouselEvents",
+      "description": "Swipeable match cards for quick access",
+      "web_namespace": "MatchBanners",
+      "ios_namespace": "MatchBanners",
+      "android_namespace": "MatchBanners",
+      "user_type": "all",
+      "sort_order": 3,
+      "orientation": null
+    },
+    {
+      "id": 4,
+      "name": "stories",
+      "description": "Instagram-style promotional stories",
+      "web_namespace": "PromotionStories",
+      "ios_namespace": "PromotionStories",
+      "android_namespace": "PromotionStories",
+      "user_type": "all",
+      "sort_order": 4,
+      "orientation": null
+    },
+    {
+      "id": 5,
+      "name": "heroCardEvents",
+      "description": "Large featured promotional banner",
+      "web_namespace": "HeroBanners",
+      "ios_namespace": "HeroBanners",
+      "android_namespace": "HeroBanners",
+      "user_type": "all",
+      "sort_order": 5,
+      "orientation": null
+    },
+    {
+      "id": 6,
+      "name": "highlightedLiveEvents",
+      "description": "Featured currently live matches",
+      "web_namespace": "LiveGamesHome",
+      "ios_namespace": "LiveGamesHome",
+      "android_namespace": "LiveGamesHome",
+      "user_type": "all",
+      "sort_order": 6,
+      "orientation": null
+    },
+    {
+      "id": 7,
+      "name": "betSwipe",
+      "description": "Call-to-action for custom bet creation (Bet Swipe).",
+      "web_namespace": "MakeYourOwnBet",
+      "ios_namespace": "MakeYourOwnBet",
+      "android_namespace": "MakeYourOwnBet",
+      "user_type": "all",
+      "sort_order": 7,
+      "orientation": null
+    },
+    {
+      "id": 8,
+      "name": "highlightedEvents",
+      "description": "Highlighted match cards",
+      "web_namespace": "HighlightsImageCards",
+      "ios_namespace": "HighlightsImageCards",
+      "android_namespace": "HighlightsImageCards",
+      "user_type": "all",
+      "sort_order": 8,
+      "orientation": "horizontal"
+    },
+    {
+      "id": 9,
+      "name": "boostedEvents",
+      "description": "Matches with enhanced odds",
+      "web_namespace": "HighlightsBoostedCards",
+      "ios_namespace": "HighlightsBoostedCards",
+      "android_namespace": "HighlightsBoostedCards",
+      "user_type": "all",
+      "sort_order": 9,
+      "orientation": "horizontal"
+    },
+    {
+      "id": 10,
+      "name": "proChoices",
+      "description": "Professional betting picks and choices",
+      "web_namespace": "HighlightsProChoices",
+      "ios_namespace": "HighlightsProChoices",
+      "android_namespace": "HighlightsProChoices",
+      "user_type": "all",
+      "sort_order": 10,
+      "orientation": "horizontal"
+    },
+    {
+      "id": 11,
+      "name": "topCompetitions",
+      "description": "Quick access to popular competitions",
+      "web_namespace": "TopCompetitionsMobile",
+      "ios_namespace": "TopCompetitionsMobile",
+      "android_namespace": "TopCompetitionsMobile",
+      "user_type": "all",
+      "sort_order": 11,
+      "orientation": null
+    },
+    {
+      "id": 12,
+      "name": "suggestedBets",
+      "description": "Curated betting suggestions",
+      "web_namespace": "SuggestedBets",
+      "ios_namespace": "SuggestedBets",
+      "android_namespace": "SuggestedBets",
+      "user_type": "all",
+      "sort_order": 12,
+      "orientation": null
+    },
+    {
+      "id": 13,
+      "name": "popularEvents",
+      "description": "Popular events list",
+      "web_namespace": "Games",
+      "ios_namespace": "Games",
+      "android_namespace": "Games",
+      "user_type": "all",
+      "sort_order": 13,
+      "orientation": null
+    }
+  ]
+}

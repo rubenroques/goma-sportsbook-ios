@@ -7,14 +7,6 @@
 
 import UIKit
 import Combine
-import ZendeskCoreSDK // Core
-import MessagingSDK // UI provider
-import AnswerBotSDK // UI provider
-import SupportSDK // UI provider
-import ChatSDK // UI provider
-import SupportProvidersSDK // API provider
-import AnswerBotProvidersSDK // API provider
-import ChatProvidersSDK
 import WebKit
 
 class SupportPageViewController: UIViewController {
@@ -391,7 +383,7 @@ class SupportPageViewController: UIViewController {
     }
 
     @objc func didTapHelpButton() {
-        guard let url = URL(string: "https://betssonfrance.zendesk.com/hc/fr") else { return }
+        guard let url = URL(string: TargetVariables.links.support.zendesk) else { return }
         UIApplication.shared.open(url)
     }
     
@@ -426,55 +418,6 @@ class SupportPageViewController: UIViewController {
                 self.showWebView = true
             }
         }
-//        webView.evaluateJavaScript("document.documentElement.outerHTML") { (result, error) in
-//            if let htmlString = result as? String {
-//                print(htmlString)
-//            } else if let error = error {
-//                print("Error: \(error)")
-//            }
-//        }
-
-        // Old Key: 90015cb5fb43daa2fc5307a61d4b8cdae1ee3e50c4b88d0b
-        // client old key: mobile_sdk_client_96ee05c0fdb1b08671ec
-
-//        Zendesk.initialize(appId: "84369c27e05c03aabf1bc75b598675dda4cec2ed96392451",
-//                           clientId: "mobile_sdk_client_d1c0e4365472c8ce5078",
-//                           zendeskUrl: "https://betssonfrance.zendesk.com/")
-//
-//        if let userLogged = Env.userSessionStore.userProfilePublisher.value,
-//           Env.userSessionStore.isUserLogged() {
-//
-//            Zendesk.instance?.setIdentity(Identity.createAnonymous(name: userLogged.username, email: userLogged.email))
-//
-//        }
-//        else {
-//            Zendesk.instance?.setIdentity(Identity.createAnonymous())
-//        }
-//
-//        Support.initialize(withZendesk: Zendesk.instance)
-//        AnswerBot.initialize(withZendesk: Zendesk.instance, support: Support.instance!)
-//
-//        ChatProvidersSDK.Chat.initialize(accountKey: "ogZPdo3sXdALS3KRca771UZ6WSxOlqHM")
-//
-//        do {
-//            let messagingConfiguration = MessagingConfiguration()
-//            let answerBotEngine = try AnswerBotEngine.engine()
-//            let supportEngine = try SupportEngine.engine()
-//            let chatEngine = try ChatEngine.engine()
-//
-//            let viewController = try Messaging.instance.buildUI(engines: [answerBotEngine, supportEngine, chatEngine], configs: [messagingConfiguration])
-//
-//            let button = UIBarButtonItem(title: localized("close"), style: .plain, target: self, action: #selector(dismissView))
-//            viewController.navigationItem.leftBarButtonItem = button
-//
-//            let helpNavigationController = UINavigationController(rootViewController: viewController)
-//
-//            self.present(helpNavigationController, animated: true, completion: nil)
-//        }
-//        catch {
-//            print(error)
-//        }
-
     }
 
     @objc func dismissView() {

@@ -32,7 +32,7 @@ class VideoPreviewLineCellViewModel {
     }
 
     var titleSection: String {
-        return (self.title ?? "").uppercased()
+        return (self.title ?? "")
     }
 }
 
@@ -41,6 +41,7 @@ class VideoPreviewLineTableViewCell: UITableViewCell {
     var didTapVideoPreviewLineCellAction: ((VideoPreviewCellViewModel) -> Void) = { _ in }
 
     private lazy var baseView: UIView = Self.createBaseView()
+    private lazy var stackView: UIStackView = Self.createStackView()
     private lazy var collectionView: UICollectionView = Self.createCollectionView()
     private lazy var titleLabel: UILabel = Self.createTitleLabel()
 
@@ -91,6 +92,9 @@ class VideoPreviewLineTableViewCell: UITableViewCell {
     func configure(withViewModel viewModel: VideoPreviewLineCellViewModel) {
         self.viewModel = viewModel
         self.titleLabel.text = viewModel.titleSection
+
+        self.titleLabel.isHidden = true
+
         self.reloadData()
     }
 
@@ -98,6 +102,9 @@ class VideoPreviewLineTableViewCell: UITableViewCell {
         self.collectionView.reloadData()
     }
 
+    func setTitleHidden(_ hidden: Bool) {
+        self.titleLabel.isHidden = hidden
+    }
 }
 
 extension VideoPreviewLineTableViewCell: UICollectionViewDelegate, UICollectionViewDataSource, UICollectionViewDelegateFlowLayout {
@@ -158,6 +165,16 @@ extension VideoPreviewLineTableViewCell {
         return view
     }
 
+    private static func createStackView() -> UIStackView {
+        let stackView = UIStackView()
+        stackView.axis = .vertical
+        stackView.spacing = 0
+        stackView.alignment = .fill
+        stackView.distribution = .fill
+        stackView.translatesAutoresizingMaskIntoConstraints = false
+        return stackView
+    }
+
     private static func createTitleLabel() -> UILabel {
         let titleLabel = UILabel()
         titleLabel.numberOfLines = 1
@@ -182,11 +199,12 @@ extension VideoPreviewLineTableViewCell {
     }
 
     private func setupSubviews() {
-
         // Add subviews to self.view or each other
         self.contentView.addSubview(self.baseView)
-        self.baseView.addSubview(self.collectionView)
-        self.baseView.addSubview(self.titleLabel)
+        self.baseView.addSubview(self.stackView)
+
+        self.stackView.addArrangedSubview(self.titleLabel)
+        self.stackView.addArrangedSubview(self.collectionView)
 
         // Initialize constraints
         self.initConstraints()
@@ -199,15 +217,12 @@ extension VideoPreviewLineTableViewCell {
             self.baseView.topAnchor.constraint(equalTo: self.contentView.topAnchor),
             self.baseView.bottomAnchor.constraint(equalTo: self.contentView.bottomAnchor),
 
-            self.titleLabel.heightAnchor.constraint(equalToConstant: 25),
-            self.titleLabel.topAnchor.constraint(equalTo: self.baseView.topAnchor),
-            self.titleLabel.leadingAnchor.constraint(equalTo: self.baseView.leadingAnchor, constant: 24),
-            self.titleLabel.trailingAnchor.constraint(equalTo: self.baseView.trailingAnchor, constant: -18),
+            self.stackView.leadingAnchor.constraint(equalTo: self.baseView.leadingAnchor),
+            self.stackView.trailingAnchor.constraint(equalTo: self.baseView.trailingAnchor),
+            self.stackView.topAnchor.constraint(equalTo: self.baseView.topAnchor),
+            self.stackView.bottomAnchor.constraint(equalTo: self.baseView.bottomAnchor, constant: -8),
 
-            self.collectionView.leadingAnchor.constraint(equalTo: self.baseView.leadingAnchor, constant: 0),
-            self.collectionView.trailingAnchor.constraint(equalTo: self.baseView.trailingAnchor, constant: 0),
-            self.collectionView.topAnchor.constraint(equalTo: self.titleLabel.bottomAnchor),
-            self.collectionView.bottomAnchor.constraint(equalTo: self.baseView.bottomAnchor, constant: -8),
-     ])
+            self.titleLabel.heightAnchor.constraint(equalToConstant: 25),
+        ])
     }
 }

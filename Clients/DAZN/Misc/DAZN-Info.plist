@@ -26,8 +26,10 @@
 	<string>$(CURRENT_PROJECT_VERSION)</string>
 	<key>LSRequiresIPhoneOS</key>
 	<true/>
+	<key>NSCameraUsageDescription</key>
+	<string>Let us take a photo</string>
 	<key>NSContactsUsageDescription</key>
-	<string>The app needs permission to use your contacs</string>
+	<string>This app requires contacts access to function properly.</string>
 	<key>NSFaceIDUsageDescription</key>
 	<string>User Authentication</string>
 	<key>NSLocationAlwaysAndWhenInUseUsageDescription</key>
@@ -38,20 +40,28 @@
 	<string>The app needs your permission to use your location</string>
 	<key>NSLocationWhenInUseUsageDescription</key>
 	<string>The app needs localization permission when in use</string>
+	<key>NSMicrophoneUsageDescription</key>
+	<string>Let us use your microphone</string>
+	<key>NSPhotoLibraryAddUsageDescription</key>
+	<string>The app needs permission to use your photo library.</string>
+	<key>NSPhotoLibraryUsageDescription</key>
+	<string>Let us take a photo</string>
+	<key>NSUserTrackingUsageDescription</key>
+	<string>This information will be used to deliver personalized ads to you.</string>
 	<key>UIAppFonts</key>
 	<array>
-        <string>Roboto-Black.ttf</string>
-        <string>Roboto-BlackItalic.ttf</string>
-        <string>Roboto-Bold.ttf</string>
-        <string>Roboto-BoldItalic.ttf</string>
-        <string>Roboto-Italic.ttf</string>
-        <string>Roboto-Light.ttf</string>
-        <string>Roboto-LightItalic.ttf</string>
-        <string>Roboto-Medium.ttf</string>
-        <string>Roboto-MediumItalic.ttf</string>
-        <string>Roboto-Regular.ttf</string>
-        <string>Roboto-Thin.ttf</string>
-        <string>Roboto-ThinItalic.ttf</string>
+		<string>Roboto-Black.ttf</string>
+		<string>Roboto-BlackItalic.ttf</string>
+		<string>Roboto-Bold.ttf</string>
+		<string>Roboto-BoldItalic.ttf</string>
+		<string>Roboto-Italic.ttf</string>
+		<string>Roboto-Light.ttf</string>
+		<string>Roboto-LightItalic.ttf</string>
+		<string>Roboto-Medium.ttf</string>
+		<string>Roboto-MediumItalic.ttf</string>
+		<string>Roboto-Regular.ttf</string>
+		<string>Roboto-Thin.ttf</string>
+		<string>Roboto-ThinItalic.ttf</string>
 	</array>
 	<key>UIApplicationSupportsIndirectInputEvents</key>
 	<true/>

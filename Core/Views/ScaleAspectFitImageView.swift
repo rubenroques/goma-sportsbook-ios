@@ -83,8 +83,8 @@ public class ScaleAspectFitImageView : UIImageView
     /// Removes any pre-existing aspect ratio constraint, and adds a new one based on the current image
     private func updateAspectRatioConstraint() {
         // remove any existing aspect ratio constraint
-        if let c = self.aspectRatioConstraint {
-            self.removeConstraint(c)
+        if let constraint = self.aspectRatioConstraint {
+            self.removeConstraint(constraint)
         }
         self.aspectRatioConstraint = nil
         

@@ -24,11 +24,9 @@ class RecruitAFriendViewModel {
     }
     
     private func getReferralLink() {
-        
         Env.servicesProvider.getReferralLink()
             .receive(on: DispatchQueue.main)
             .sink(receiveCompletion: { [weak self] completion in
-                
                 switch completion {
                 case .finished:
                     ()
@@ -36,9 +34,7 @@ class RecruitAFriendViewModel {
                     print("GET REFERRAL LINK ERROR: \(error)")
                 }
             }, receiveValue: { [weak self] referralLink in
-                
                 let mappedReferralLink = ServiceProviderModelMapper.referralLink(fromServiceProviderReferralLink: referralLink)
-                
                 self?.referralLink = mappedReferralLink
             })
             .store(in: &cancellables)
@@ -49,16 +45,13 @@ class RecruitAFriendViewModel {
         Env.servicesProvider.getReferees()
             .receive(on: DispatchQueue.main)
             .sink(receiveCompletion: { [weak self] completion in
-                
                 switch completion {
                 case .finished:
                     ()
                 case .failure(let error):
                     print("GET REFEREES ERROR: \(error)")
                 }
-                
                 self?.shouldSetupReferees.send()
-
             }, receiveValue: { [weak self] referees in
                 
                 let mappedReferees = referees.map( {

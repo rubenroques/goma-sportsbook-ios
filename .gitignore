@@ -111,3 +111,13 @@ iOSInjectionProject/
 .env
 fastlane/logs
 culprits.txt
+.vscode
+.vscode/
+
+Agents/APIDocAnalyzer/venv
+Scripts/APIDocAnalyzer/venv
+
+ServicesProvider/swagger/node_modules
+
+**/__pycache__/
+

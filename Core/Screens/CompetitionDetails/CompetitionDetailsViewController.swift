@@ -23,7 +23,7 @@ class CompetitionDetailsViewController: UIViewController {
     private lazy var tableView: UITableView = Self.createTableView()
 
     private lazy var floatingShortcutsView: FloatingShortcutsView = Self.createFloatingShortcutsView()
-    
+
     private lazy var loadingBaseView: UIView = Self.createLoadingBaseView()
     private lazy var loadingActivityIndicatorView: UIActivityIndicatorView = Self.createLoadingActivityIndicatorView()
 
@@ -58,7 +58,7 @@ class CompetitionDetailsViewController: UIViewController {
         self.tableView.delegate = self
         self.tableView.dataSource = self
 
-        self.tableView.register(MatchLineTableViewCell.nib, forCellReuseIdentifier: MatchLineTableViewCell.identifier)
+        self.tableView.register(Betsson.MatchLineTableViewCell.self, forCellReuseIdentifier: MatchLineTableViewCell.identifier)
 
         self.tableView.register(OutrightCompetitionLineTableViewCell.self, forCellReuseIdentifier: OutrightCompetitionLineTableViewCell.identifier)
         self.tableView.register(OutrightCompetitionLargeLineTableViewCell.self, forCellReuseIdentifier: OutrightCompetitionLargeLineTableViewCell.identifier)
@@ -73,7 +73,7 @@ class CompetitionDetailsViewController: UIViewController {
         self.floatingShortcutsView.didTapChatButtonAction = { [weak self] in
             self?.didTapChatView()
         }
-        
+
         let accountValueTapGesture = UITapGestureRecognizer(target: self, action: #selector(didTapAccountValue))
         self.accountValueView.addGestureRecognizer(accountValueTapGesture)
         self.accountValueView.isHidden = true
@@ -82,7 +82,7 @@ class CompetitionDetailsViewController: UIViewController {
 
         self.bind(toViewModel: self.viewModel)
     }
-    
+
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
 
@@ -95,7 +95,7 @@ class CompetitionDetailsViewController: UIViewController {
 
         self.navigationController?.interactivePopGestureRecognizer?.delegate = nil
     }
-    
+
     // MARK: - Layout and Theme
     override func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {
         super.traitCollectionDidChange(previousTraitCollection)
@@ -129,7 +129,7 @@ class CompetitionDetailsViewController: UIViewController {
             self.backgroundGradientView.colors = []
             self.backgroundGradientView.backgroundColor = UIColor.App.backgroundPrimary
         }
-        
+
     }
 
 
@@ -161,7 +161,7 @@ class CompetitionDetailsViewController: UIViewController {
                 }
             }
             .store(in: &cancellables)
-        
+
 //        Env.userSessionStore.userBalanceWallet
 //            .compactMap({$0})
 //            .map(\.amount)
@@ -231,7 +231,7 @@ class CompetitionDetailsViewController: UIViewController {
     @objc func didTapChatView() {
         self.openChatModal()
     }
-    
+
     func openChatModal() {
         if Env.userSessionStore.isUserLogged() {
             let socialViewController = SocialViewController()
@@ -242,12 +242,12 @@ class CompetitionDetailsViewController: UIViewController {
             self.present(loginViewController, animated: true, completion: nil)
         }
     }
-    
+
     func presentLoginViewController() {
       let loginViewController = Router.navigationController(with: LoginViewController())
       self.present(loginViewController, animated: true, completion: nil)
     }
-    
+
     private func openCompetitionDetails(_ competition: Competition) {
         let viewModel = OutrightMarketDetailsViewModel(competition: competition, store: OutrightMarketDetailsStore())
         let outrightMarketDetailsViewController = OutrightMarketDetailsViewController(viewModel: viewModel)
@@ -266,7 +266,7 @@ class CompetitionDetailsViewController: UIViewController {
         depositViewController.shouldRefreshUserWallet = { [weak self] in
             Env.userSessionStore.refreshUserWallet()
         }
-        
+
         self.present(navigationViewController, animated: true, completion: nil)
     }
 
@@ -369,7 +369,7 @@ extension CompetitionDetailsViewController: UITableViewDelegate, UITableViewData
         }
 
         headerView.didTapFavoriteCompetitionAction = { [weak self] competition in
-            
+
             if !Env.userSessionStore.isUserLogged() {
                 self?.presentLoginViewController()
             }
@@ -377,9 +377,9 @@ extension CompetitionDetailsViewController: UITableViewDelegate, UITableViewData
                 self?.viewModel.markCompetitionAsFavorite(competition: competition)
                 tableView.reloadData()
             }
-            
+
         }
-    
+
         return headerView
     }
 
@@ -522,13 +522,13 @@ extension CompetitionDetailsViewController {
         }
         return tableView
     }
-    
+
     private static func createFloatingShortcutsView() -> FloatingShortcutsView {
         let floatingShortcutsView = FloatingShortcutsView()
         floatingShortcutsView.translatesAutoresizingMaskIntoConstraints = false
         return floatingShortcutsView
     }
-    
+
     private static func createLoadingBaseView() -> UIView {
         let view = UIView()
         view.translatesAutoresizingMaskIntoConstraints = false

@@ -21,6 +21,7 @@ public struct UserRegisterEnvelop: Codable, Equatable {
     public var name: String?
     public var surname: String?
     public var middleName: String?
+    public var fullName: String?
     
     public var avatarName: String?
     public var nickname: String?
@@ -224,28 +225,43 @@ public struct UserRegisterEnvelop: Codable, Equatable {
         lhs.godfatherCode == rhs.godfatherCode &&
         lhs.simpleRegistered == rhs.simpleRegistered &&
         lhs.confirmationCode == rhs.confirmationCode &&
-        lhs.mobileVerificationRequestId == rhs.mobileVerificationRequestId
+        lhs.mobileVerificationRequestId == rhs.mobileVerificationRequestId &&
+        lhs.fullName == rhs.fullName
     }
     
-    func currentRegisterStep() -> Int {
+    func currentRegisterStep(registerFlowType: RegisterFlow.FlowType) -> Int {
         
-        if self.gender == nil || self.name.isEmptyOrNil || self.surname.isEmptyOrNil || self.middleName.isEmptyOrNil {
-            return 0
-        }
-        if self.avatarName == nil || self.nickname.isEmptyOrNil {
-            return 1
-        }
-        if self.dateOfBirth == nil || self.countryBirth == nil || self.deparmentOfBirth.isEmptyOrNil || self.placeBirth.isEmptyOrNil {
+        switch registerFlowType {
+        case .goma:
+            if self.fullName.isEmptyOrNil ||
+                self.email.isEmptyOrNil ||
+                self.nickname.isEmptyOrNil {
+                return 0
+            }
+            if self.avatarName == nil {
+                return 1
+            }
             return 2
+        case .betson:
+            if self.gender == nil || self.name.isEmptyOrNil || self.surname.isEmptyOrNil || self.middleName.isEmptyOrNil {
+                return 0
+            }
+            if self.avatarName == nil || self.nickname.isEmptyOrNil {
+                return 1
+            }
+            if self.dateOfBirth == nil || self.countryBirth == nil || self.deparmentOfBirth.isEmptyOrNil || self.placeBirth.isEmptyOrNil {
+                return 2
+            }
+            if self.placeAddress.isEmptyOrNil || self.postcode.isEmptyOrNil || self.streetAddress.isEmptyOrNil || self.streetNumber.isEmptyOrNil {
+                return 3
+            }
+            if self.email.isEmptyOrNil || self.phonePrefixCountry == nil || self.phoneNumber.isEmptyOrNil {
+                return 4
+            }
+        
+            return 5
         }
-        if self.placeAddress.isEmptyOrNil || self.postcode.isEmptyOrNil || self.streetAddress.isEmptyOrNil || self.streetNumber.isEmptyOrNil {
-            return 3
-        }
-        if self.email.isEmptyOrNil || self.phonePrefixCountry == nil || self.phoneNumber.isEmptyOrNil {
-            return 4
-        }
-    
-        return 5
+        
     }
     
 }
@@ -279,7 +295,8 @@ extension UserRegisterEnvelop: CustomStringConvertible {
             godfatherCode: \(String(describing: godfatherCode)),
             simpleRegistered: \(simpleRegistered),
             confirmationCode: \(String(describing: confirmationCode)),
-            mobileVerificationRequestId: \(String(describing: mobileVerificationRequestId))
+            mobileVerificationRequestId: \(String(describing: mobileVerificationRequestId)),
+            fullName: \(String(describing: fullName))
         )
         """
     }
@@ -355,7 +372,7 @@ public extension UserRegisterEnvelop {
             formattedPhoneNumber.removeFirst()
         }
         
-        var middleName = self.middleName
+        let middleName = self.middleName
         
         return ServicesProvider.SignUpForm.init(email: email,
                                                 username: username,
@@ -366,7 +383,8 @@ public extension UserRegisterEnvelop {
                                                 nationalityIsoCode: countryBirthIsoCode,
                                                 currencyCode: "EUR",
                                                 firstName: firstName,
-                                                lastName: lastName, middleName: middleName,
+                                                lastName: lastName,
+                                                middleName: middleName,
                                                 gender: genderString,
                                                 address: streetAddress,
                                                 city: placeAddress,
@@ -383,14 +401,6 @@ public extension UserRegisterEnvelop {
                                                 mobileVerificationRequestId: self.mobileVerificationRequestId,
                                                 consentedIds: [],
                                                 unConsentedIds: [])
-    }
-    
-}
-
-private extension Optional where Wrapped == String {
-    
-    var isEmptyOrNil: Bool {
-        return self?.isEmpty ?? true
     }
     
 }

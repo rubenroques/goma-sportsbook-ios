@@ -238,12 +238,9 @@ extension AnonymousSideMenuViewController {
 
     @objc func promotionsViewTapped() {
         let promotionsWebViewModel = PromotionsWebViewModel()
-
-        let baseUrl = TargetVariables.clientBaseUrl
         let appLanguage = "fr"
-
         let isDarkTheme = self.traitCollection.userInterfaceStyle == .dark ? true : false
-        let urlString = "\(baseUrl)/\(appLanguage)/in-app/promotions?dark=\(isDarkTheme)"
+        let urlString = TargetVariables.generatePromotionsPageUrlString(forAppLanguage: appLanguage, isDarkTheme: isDarkTheme)
 
         if let url = URL(string: urlString) {
             let promotionsWebViewController = PromotionsWebViewController(url: url, viewModel: promotionsWebViewModel)
@@ -283,7 +280,7 @@ extension AnonymousSideMenuViewController {
 //        let supportViewController = SupportPageViewController(viewModel: SupportPageViewModel())
 //        self.navigationController?.pushViewController(supportViewController, animated: true)
         
-        if let url = URL(string: "https://support.betsson.fr/hc/fr") {
+        if let url = URL(string: TargetVariables.links.support.helpCenter) {
             UIApplication.shared.open(url)
         }
     }

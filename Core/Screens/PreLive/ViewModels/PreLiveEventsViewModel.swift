@@ -682,7 +682,6 @@ class PreLiveEventsViewModel: NSObject {
                 }
             }, receiveValue: { [weak self] sportRegionInfo in
                 self?.regionCompetitionsPublisher.value[sportRegionInfo.id] = sportRegionInfo.competitionNodes
-                self?.setupCompetitionGroups()
             })
             .store(in: &cancellables)
     }

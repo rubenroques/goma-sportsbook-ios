@@ -187,9 +187,9 @@ class SearchViewController: UIViewController {
         
         self.tableView.register(UITableViewCell.self, forCellReuseIdentifier: UITableViewCell.identifier) // fallback
         
-        self.tableView.register(MatchLineTableViewCell.nib, forCellReuseIdentifier: MatchLineTableViewCell.identifier)
+        self.tableView.register(Betsson.MatchLineTableViewCell.self, forCellReuseIdentifier: MatchLineTableViewCell.identifier)
         self.tableView.register(CompetitionSearchTableViewCell.nib, forCellReuseIdentifier: CompetitionSearchTableViewCell.identifier)
-        self.tableView.register(LoadingMoreTableViewCell.nib, forCellReuseIdentifier: LoadingMoreTableViewCell.identifier)
+        self.tableView.register(LoadingMoreTableViewCell.self, forCellReuseIdentifier: LoadingMoreTableViewCell.identifier)
         self.tableView.register(SearchSportHeaderView.self, forHeaderFooterViewReuseIdentifier: SearchSportHeaderView.identifier)
 
         self.tableView.register(RecentSearchHeaderView.nib, forHeaderFooterViewReuseIdentifier: RecentSearchHeaderView.identifier)
@@ -213,7 +213,7 @@ class SearchViewController: UIViewController {
         // No Results View
         self.noResultsView.isHidden = true
 
-        self.noResultsImageView.image = UIImage(named: "no_search_results_icon")
+        self.noResultsImageView.image = UIImage(named: "no_results_image")
         self.noResultsImageView.layer.cornerRadius = self.noResultsImageView.frame.width/2
 
         self.noResultsLabel.text = ""

@@ -9,11 +9,7 @@ import Foundation
 
 struct TargetVariables: SportsbookTarget {
 
-    #if DEBUG
-    static var environmentType: EnvironmentType = .dev
-    #else
     static var environmentType: EnvironmentType = .prod
-    #endif
 
     static var gomaGamingHost: String {
         return "https://gomagaming.com" // https://sportsbook-api.gomagaming.com"
@@ -31,16 +27,20 @@ struct TargetVariables: SportsbookTarget {
         return "https://goma-sportsbook.europe-west1.firebasedatabase.app/"
     }
 
-    static var everyMatrixHost: String {
-        return ""
-    }
-
     static var supportedThemes: [Theme] {
         return Theme.allCases
     }
 
+    static var supportedCardStyles: [CardsStyle] {
+        return [CardsStyle.normal]
+    }
+
     static var defaultCardStyle: CardsStyle {
         return .normal
+    }
+
+    static var competitionListStyle: CompetitionListStyle {
+        return .navigateToDetails
     }
 
     static var defaultOddsValueType: OddsValueType {
@@ -56,11 +56,11 @@ struct TargetVariables: SportsbookTarget {
     }
 
     static var homeTemplateBuilder: HomeTemplateBuilderType {
-        return HomeTemplateBuilderType.clientDynamic
+        return HomeTemplateBuilderType.cmsManaged
     }
 
     static var features: [SportsbookTargetFeatures] {
-        return [.cashback]
+        return [.cashback, .legalAgeWarning]
     }
 
     static var shouldUserBlurEffectTabBar: Bool {
@@ -78,7 +78,7 @@ struct TargetVariables: SportsbookTarget {
     static var serviceProviderEnvironment: EnvironmentType {
         return .dev
     }
-    
+
     static var supportedLanguages: [SportsbookSupportedLanguage] {
         return [SportsbookSupportedLanguage.french]
     }
@@ -86,7 +86,14 @@ struct TargetVariables: SportsbookTarget {
     static var clientBaseUrl: String {
         return "https://goma-uat.betsson.fr"
     }
-    
+
+    static func generatePromotionsPageUrlString(forAppLanguage appLanguage: String?, isDarkTheme: Bool?) -> String {
+        let baseUrl = self.links.api.promotions
+        let isDarkThemeString = isDarkTheme?.description ?? ""
+        let urlString = "\(baseUrl)/\(appLanguage ?? "")/in-app/promotions?dark=\(isDarkThemeString)"
+        return urlString
+    }
+
     static var appStoreUrl: String? {
         return "https://apps.apple.com/fr/app/betsson/id6463237718"
     }
@@ -94,11 +101,19 @@ struct TargetVariables: SportsbookTarget {
     static var secundaryMarketSpecsUrl: String? {
         return "https://goma-uat.betsson.fr/secondary_markets_config.json"
     }
-    
+
     static var knowYourClientLevels: [KnowYourCustomerLevel: String] {
         return [.identification: "kyc-level-1-id-verification-UAT",
                 .proofOfAddress: "kyc-level-2-poa-verification-UAT",
                 .bankAccountIdentification: "RIB Verification"]
     }
 
+    static var localizationOverrides: [String: String] {
+        return [:]
+    }
+    
+    static var registerFlowType: RegisterFlowType {
+        return .betsson
+    }
 }
+

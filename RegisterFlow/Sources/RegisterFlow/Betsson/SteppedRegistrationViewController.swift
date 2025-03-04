@@ -13,63 +13,16 @@ import Theming
 import Extensions
 import Lottie
 
-public enum FormStep: String {
-    case gender
-    case names
-    case avatar
-    case nickname
-    case ageCountry
-    case address
-    case contacts
-    case password
-    case terms
-    case promoCodes
-    case phoneConfirmation
-}
-
-public struct RegisterStep {
-    var forms: [FormStep]
-
-    public init(forms: [FormStep]) {
-        self.forms = forms
-    }
-
-}
-
-public struct RegisterError {
-
-    var field: String
-    var error: String
-
-    var associatedFormStep: FormStep? {
-        switch field {
-        case "gender": return .gender
-        case "firstName", "lastName", "middleName": return .names
-        case "username": return .nickname
-        case "password": return .password
-        case "email", "mobile": return .contacts
-        case "birthDate", "nationality", "country": return .ageCountry
-        case "city", "address", "province": return .address
-        case "phoneConfirmation": return .phoneConfirmation
-        case "bonusCode": return .promoCodes
-        case "receiveEmail": return .terms
-        default:
-            return nil
-        }
-    }
-    
-}
-
 public class SteppedRegistrationViewModel {
 
-    var registerSteps: [RegisterStep]
+    var registerSteps: [RegisterStep] = []
 
-    var currentStep: CurrentValueSubject<Int, Never> = .init(0)
-    var numberOfSteps: Int {
+    public var currentStep: CurrentValueSubject<Int, Never> = .init(0)
+    public var numberOfSteps: Int {
         return self.registerSteps.count
     }
 
-    var progressPercentage: AnyPublisher<Float, Never> {
+    public var progressPercentage: AnyPublisher<Float, Never> {
         return self.currentStep.map { [weak self] currentStep in
             let totalSteps = self?.numberOfSteps ?? 0
             if totalSteps > 0 {
@@ -80,19 +33,23 @@ public class SteppedRegistrationViewModel {
         }.eraseToAnyPublisher()
     }
 
-    var userRegisterEnvelop: UserRegisterEnvelop
+    public var userRegisterEnvelop: UserRegisterEnvelop
 
     let serviceProvider: ServicesProviderClient
-    let userRegisterEnvelopUpdater: UserRegisterEnvelopUpdater
+    public let userRegisterEnvelopUpdater: UserRegisterEnvelopUpdater
 
     var isLoading: CurrentValueSubject<Bool, Never> = .init(false)
 
-    var shouldPushSuccessStep: PassthroughSubject<Void, Never> = .init()
-    var showRegisterErrors: CurrentValueSubject<[RegisterError]?, Never> = .init(nil)
+    public var shouldPushSuccessStep: PassthroughSubject<Void, Never> = .init()
+    public var showRegisterErrors: CurrentValueSubject<[RegisterError]?, Never> = .init(nil)
 
     var confirmationCodeFilled: String?
     
     public var hasReferralCode: Bool = false
+    
+    public var hasLegalAgeWarning: Bool
+    
+    var registerFlowType: RegisterFlow.FlowType
 
     private var cancellables = Set<AnyCancellable>()
 
@@ -100,14 +57,13 @@ public class SteppedRegistrationViewModel {
                 currentStep: Int? = nil,
                 userRegisterEnvelop: UserRegisterEnvelop,
                 serviceProvider: ServicesProviderClient,
-                userRegisterEnvelopUpdater: UserRegisterEnvelopUpdater) {
-
-        if let registerSteps {
-            self.registerSteps = registerSteps
-        }
-        else {
-            self.registerSteps = Self.defaultRegisterSteps()
-        }
+                userRegisterEnvelopUpdater: UserRegisterEnvelopUpdater,
+                hasLegalAgeWarning: Bool = false,
+                registerFlowType: RegisterFlow.FlowType) {
+        
+        self.registerFlowType = registerFlowType
+        
+        self.hasLegalAgeWarning = hasLegalAgeWarning
 
         self.userRegisterEnvelop = userRegisterEnvelop
 
@@ -115,11 +71,18 @@ public class SteppedRegistrationViewModel {
             self.currentStep = .init(currentStep)
         }
         else {
-            self.currentStep = .init(self.userRegisterEnvelop.currentRegisterStep())
+            self.currentStep = .init(self.userRegisterEnvelop.currentRegisterStep(registerFlowType: self.registerFlowType))
         }
 
         self.serviceProvider = serviceProvider
         self.userRegisterEnvelopUpdater = userRegisterEnvelopUpdater
+        
+        if let registerSteps {
+            self.registerSteps = registerSteps
+        }
+        else {
+            self.registerSteps = self.defaultRegisterSteps()
+        }
         
         self.userRegisterEnvelopUpdater.didUpdateUserRegisterEnvelop
             .receive(on: DispatchQueue.main)
@@ -131,19 +94,29 @@ public class SteppedRegistrationViewModel {
         
     }
 
-    private static func defaultRegisterSteps() -> [RegisterStep] {
-        return [
-            RegisterStep(forms: [.gender, .names]),
-            RegisterStep(forms: [.avatar, .nickname]),
-            RegisterStep(forms: [.ageCountry]),
-            RegisterStep(forms: [.address]),
-            RegisterStep(forms: [.contacts]),
-            RegisterStep(forms: [.password]),
-            RegisterStep(forms: [.terms, .promoCodes])
-        ]
+    private func defaultRegisterSteps() -> [RegisterStep] {
+        switch self.registerFlowType {
+        case .goma:
+            return [
+                RegisterStep(forms: [.personalInfo]),
+                RegisterStep(forms: [.avatar]),
+                RegisterStep(forms: [.password]),
+            ]
+        case .betson:
+            return [
+                RegisterStep(forms: [.gender, .names]),
+                RegisterStep(forms: [.avatar, .nickname]),
+                RegisterStep(forms: [.ageCountry]),
+                RegisterStep(forms: [.address]),
+                RegisterStep(forms: [.contacts]),
+                RegisterStep(forms: [.password]),
+                RegisterStep(forms: [.terms, .promoCodes])
+            ]
+        }
+        
     }
 
-    func scrollToPreviousStep() {
+    public func scrollToPreviousStep() {
         var nextStep = currentStep.value - 1
         if nextStep < 0 {
             nextStep = 0
@@ -151,7 +124,7 @@ public class SteppedRegistrationViewModel {
         self.currentStep.send(nextStep)
     }
 
-    func scrollToNextStep() {
+    public func scrollToNextStep() {
         var nextStep = currentStep.value + 1
         if nextStep > numberOfSteps {
             nextStep = numberOfSteps
@@ -159,7 +132,7 @@ public class SteppedRegistrationViewModel {
         self.currentStep.send(nextStep)
     }
 
-    func scrollToIndex(_ index: Int) {
+    public func scrollToIndex(_ index: Int) {
 
         if index > numberOfSteps {
             return
@@ -184,10 +157,10 @@ public class SteppedRegistrationViewModel {
         return nil
     }
 
-    func requestRegister() -> Bool {
+    public func requestRegister() -> Bool {
 
         guard
-            var form = self.userRegisterEnvelop.convertToSignUpForm()
+            let form = self.userRegisterEnvelop.convertToSignUpForm()
         else {
             return false
         }
@@ -248,7 +221,71 @@ public class SteppedRegistrationViewModel {
 
         return true
     }
+    
+    func requestBasicRegister() -> Bool {
 
+        guard
+            let form = self.userRegisterEnvelop.convertToSignUpForm()
+        else {
+            return false
+        }
+
+        self.isLoading.send(true)
+        
+        self.serviceProvider.signUp(form: form)
+            .receive(on: DispatchQueue.main)
+            .sink { [weak self] completion in
+                switch completion {
+                case .failure(let error):
+                    print("RegisterFlow ServiceProvider.basicSignUp Error \(error)")
+                    switch error {
+                    case .errorMessage(let message):
+                        self?.processRegisterError(errorMessage: message)
+                    default:
+                        let errorsDictionary = [RegisterError(field: "personalInfo", error: "INVALID_PERSONAL_INFO")]
+                        self?.showRegisterErrors.send(errorsDictionary)
+                    }
+                    
+                case .finished:
+                    ()
+                }
+                self?.isLoading.send(false)
+            } receiveValue: { [weak self] basicSignUpResponse in
+                if basicSignUpResponse.successful {
+                    self?.shouldPushSuccessStep.send()
+                }
+                else {
+                    if let basicSignUpErrors = basicSignUpResponse.errors {
+                        let errorsDictionary = basicSignUpErrors.map { error in
+                            return RegisterError(field: error.field, error: error.error)
+                        }
+                        self?.showRegisterErrors.send(errorsDictionary)
+                    }
+                }
+            }
+            .store(in: &self.cancellables)
+        
+        return true
+    }
+
+    func processRegisterError(errorMessage: String) {
+        var errorsDictionary = [RegisterError]()
+        
+        if errorMessage.contains("1 more error") {
+            let registerError = RegisterError(field: "personalInfo", error: "INVALID_PERSONAL_INFO")
+            errorsDictionary.append(registerError)
+        }
+        else if errorMessage.contains("The email has already been taken") {
+            let registerError = RegisterError(field: "personalInfo", error: "EMAIL_DUPLICATE")
+            errorsDictionary.append(registerError)
+        }
+        else if errorMessage.contains("The username has already been taken") {
+            let registerError = RegisterError(field: "personalInfo", error: "USERNAME_DUPLICATE")
+            errorsDictionary.append(registerError)
+        }
+        
+        self.showRegisterErrors.send(errorsDictionary)
+    }
 }
 
 public class SteppedRegistrationViewController: UIViewController {
@@ -257,6 +294,9 @@ public class SteppedRegistrationViewController: UIViewController {
     public var sendRegisterEventAction: ((String) -> Void)?
 
     private lazy var topSafeAreaView: UIView = Self.createTopSafeAreaView()
+    
+    private lazy var bannerImageView: UIImageView = Self.createBannerImageView()
+    private lazy var legalAgeImageView: UIImageView = Self.createLegalAgeImageView()
 
     private lazy var headerBaseView: UIView = Self.createHeaderBaseView()
     private lazy var backButton: UIButton = Self.createBackButton()
@@ -281,6 +321,10 @@ public class SteppedRegistrationViewController: UIViewController {
 
     private lazy var loadingBaseView: UIView = Self.createLoadingBaseView()
     private lazy var loadingView: UIActivityIndicatorView = Self.createLoadingView()
+    
+    // Constraints
+    private lazy var headerViewTopToBannerConstraint: NSLayoutConstraint = Self.createHeaderViewTopToBannerConstraint()
+    private lazy var headerViewTopToScreenConstraint: NSLayoutConstraint = Self.createHeaderViewTopToScreenConstraint()
 
     private let viewModel: SteppedRegistrationViewModel
 
@@ -342,6 +386,15 @@ public class SteppedRegistrationViewController: UIViewController {
 
         self.setupSubviews()
         self.setupWithTheme()
+        
+        if self.viewModel.hasLegalAgeWarning {
+            self.headerViewTopToScreenConstraint.isActive = false
+            self.headerViewTopToBannerConstraint.isActive = true
+        }
+        else {
+            self.headerViewTopToScreenConstraint.isActive = true
+            self.headerViewTopToBannerConstraint.isActive = false
+        }
 
         self.viewModel.progressPercentage
             .withPrevious()
@@ -491,7 +544,8 @@ public class SteppedRegistrationViewController: UIViewController {
                 let formStepView = FormStepViewFactory.formStepView(forFormStep: formStep,
                                                                     serviceProvider: self.viewModel.serviceProvider,
                                                                     userRegisterEnvelop: self.viewModel.userRegisterEnvelop,
-                                                                    userRegisterEnvelopUpdater: self.viewModel.userRegisterEnvelopUpdater, hasReferralCode: hasReferralCode)
+                                                                    userRegisterEnvelopUpdater: self.viewModel.userRegisterEnvelopUpdater, hasReferralCode: hasReferralCode,
+                                                                    registerFlowType: self.viewModel.registerFlowType)
                 registerStepView.addFormView(formView: formStepView)
                 self.formStepViews.append(formStepView)
             }
@@ -627,7 +681,13 @@ public extension SteppedRegistrationViewController {
 public extension SteppedRegistrationViewController {
 
     func requestSignUp() {
-        _ = self.viewModel.requestRegister()
+        switch self.viewModel.registerFlowType {
+        case .goma:
+            _ = self.viewModel.requestBasicRegister()
+        case .betson:
+            _ = self.viewModel.requestRegister()
+        }
+        
     }
 
     func presentRegisterErrors(_ registerErrors: [RegisterError]) {
@@ -709,6 +769,22 @@ public extension SteppedRegistrationViewController {
 
     private static var footerHeight: CGFloat {
         76
+    }
+    
+    private static func createBannerImageView() -> UIImageView {
+        let imageView = UIImageView()
+        imageView.translatesAutoresizingMaskIntoConstraints = false
+        imageView.image = UIImage(named: "banner_register", in: Bundle.module, compatibleWith: nil)
+        imageView.contentMode = .scaleAspectFit
+        return imageView
+    }
+    
+    private static func createLegalAgeImageView() -> UIImageView {
+        let imageView = UIImageView()
+        imageView.translatesAutoresizingMaskIntoConstraints = false
+        imageView.image = UIImage(named: "minus_18_icon", in: Bundle.module, compatibleWith: nil)
+        imageView.contentMode = .scaleAspectFit
+        return imageView
     }
 
     private static func createHeaderBaseView() -> UIView {
@@ -824,7 +900,7 @@ public extension SteppedRegistrationViewController {
 
     private static func createProgressImageView() -> UIImageView {
         let imageView = UIImageView()
-        imageView.image = UIImage(named: "progress_bar_animation")
+        imageView.image = UIImage(named: "progress_bar_animation", in: Bundle.module, compatibleWith: nil)
         imageView.contentMode = .scaleAspectFit
         imageView.translatesAutoresizingMaskIntoConstraints = false
         return imageView
@@ -836,6 +912,17 @@ public extension SteppedRegistrationViewController {
         view.backgroundColor = .clear
         view.clipsToBounds = false
         return view
+    }
+    
+    // Constraints
+    private static func createHeaderViewTopToBannerConstraint() -> NSLayoutConstraint {
+        let constraint = NSLayoutConstraint()
+        return constraint
+    }
+    
+    private static func createHeaderViewTopToScreenConstraint() -> NSLayoutConstraint {
+        let constraint = NSLayoutConstraint()
+        return constraint
     }
 
     private func setupSubviews() {
@@ -853,6 +940,10 @@ public extension SteppedRegistrationViewController {
 
     private func initConstraints() {
         self.view.addSubview(self.topSafeAreaView)
+        
+        self.view.addSubview(self.bannerImageView)
+        
+        self.bannerImageView.addSubview(self.legalAgeImageView)
 
         self.view.addSubview(self.headerBaseView)
         self.headerBaseView.addSubview(self.backButton)
@@ -883,8 +974,18 @@ public extension SteppedRegistrationViewController {
             self.topSafeAreaView.trailingAnchor.constraint(equalTo: self.view.trailingAnchor),
             self.topSafeAreaView.topAnchor.constraint(equalTo: self.view.topAnchor),
             self.topSafeAreaView.bottomAnchor.constraint(equalTo: self.view.safeAreaLayoutGuide.topAnchor),
+            
+            self.bannerImageView.leadingAnchor.constraint(equalTo: self.view.leadingAnchor),
+            self.bannerImageView.trailingAnchor.constraint(equalTo: self.view.trailingAnchor),
+            self.bannerImageView.topAnchor.constraint(equalTo: self.view.safeAreaLayoutGuide.topAnchor),
+            self.bannerImageView.heightAnchor.constraint(equalToConstant: 70),
+            
+            self.legalAgeImageView.trailingAnchor.constraint(equalTo: self.bannerImageView.trailingAnchor, constant: -5),
+            self.legalAgeImageView.centerYAnchor.constraint(equalTo: self.bannerImageView.centerYAnchor),
+            self.legalAgeImageView.heightAnchor.constraint(equalToConstant: 60),
+            self.legalAgeImageView.widthAnchor.constraint(equalTo: self.bannerImageView.heightAnchor),
 
-            self.headerBaseView.topAnchor.constraint(equalTo: self.view.safeAreaLayoutGuide.topAnchor),
+//            self.headerBaseView.topAnchor.constraint(equalTo: self.view.safeAreaLayoutGuide.topAnchor),
             self.headerBaseView.leadingAnchor.constraint(equalTo: self.view.leadingAnchor),
             self.headerBaseView.trailingAnchor.constraint(equalTo: self.view.trailingAnchor),
             self.headerBaseView.heightAnchor.constraint(equalToConstant: Self.headerHeight),
@@ -960,20 +1061,24 @@ public extension SteppedRegistrationViewController {
             self.progressEndImageView.widthAnchor.constraint(equalToConstant: 23),
             self.progressEndImageView.heightAnchor.constraint(equalToConstant: 23),
         ])
+        
+        // Constraints
+        self.headerViewTopToScreenConstraint = NSLayoutConstraint(item: self.headerBaseView,
+                                                                  attribute: .top,
+                                                                    relatedBy: .equal,
+                                                                  toItem: self.view.safeAreaLayoutGuide,
+                                                                  attribute: .top,
+                                                                    multiplier: 1,
+                                                                    constant: 0)
+        self.headerViewTopToScreenConstraint.isActive = true
+        
+        self.headerViewTopToBannerConstraint = NSLayoutConstraint(item: self.headerBaseView,
+                                                                  attribute: .top,
+                                                                    relatedBy: .equal,
+                                                                  toItem: self.bannerImageView,
+                                                                  attribute: .bottom,
+                                                                    multiplier: 1,
+                                                                    constant: 0)
+        self.headerViewTopToBannerConstraint.isActive = false
     }
-
-}
-
-class TallProgressBarView: UIProgressView {
-    
-    override func layoutSubviews() {
-         super.layoutSubviews()
-
-         let maskLayerPath = UIBezierPath(roundedRect: bounds, cornerRadius: 6.0)
-         let maskLayer = CAShapeLayer()
-         maskLayer.frame = self.bounds
-         maskLayer.path = maskLayerPath.cgPath
-         layer.mask = maskLayer
-     }
-    
 }
